@@ -1,0 +1,45 @@
+{
+   "metadata" : {
+      "@generated" : true
+   },
+   "models" : [
+      {
+         "issues" : [
+            {
+               "rule" : 2,
+               "sinks" : [
+                  {
+                     "call_position" : {
+                        "line" : 2,
+                        "path" : "Flow.java"
+                     },
+                     "callee" : "LSink;.sink_with_two_kinds:(LData;)V",
+                     "callee_port" : "Argument(1)",
+                     "distance" : 1,
+                     "kind" : "AlternativeSink",
+                     "origins" : [ "LSink;.sink_with_two_kinds:(LData;)V" ]
+                  }
+               ],
+               "sources" : [
+                  {
+                     "call_position" : {
+                        "line" : 1,
+                        "path" : "Flow.java"
+                     },
+                     "callee" : "LSource;.alternative_source:()LData;",
+                     "callee_port" : "Return",
+                     "distance" : 1,
+                     "kind" : "AlternativeSource",
+                     "origins" : [ "LSource;.alternative_source:()LData;" ]
+                  }
+               ]
+            }
+         ],
+         "method" : "LFlow;.flow:(LSink;LSource;)V",
+         "position" : {
+            "line" : 1,
+            "path" : "Flow.java"
+         }
+      }
+   ]
+}

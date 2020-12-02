@@ -1,0 +1,21 @@
+{
+  "model_generators": [
+    {
+      "find": "methods",
+      "where": [
+        {
+          "constraint": "signature",
+          "pattern": "Lcom/facebook/auth/viewercontext/ViewerContext\\$ViewerContextBuilder;\\.set.*"
+        }
+      ],
+      "model": {
+        "sinks": [
+          {
+            "kind": "ViewerContextCreation",
+            "port": "Argument(1)"
+          }
+        ]
+      }
+    }
+  ]
+}

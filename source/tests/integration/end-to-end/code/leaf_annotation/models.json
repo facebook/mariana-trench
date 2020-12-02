@@ -1,0 +1,32 @@
+[
+  {
+    "method": "Lcom/facebook/marianatrench/integrationtests/LeafAnnotationFlows;.callback:(Ljava/lang/String;)V",
+    "parameter_sources": [
+      {
+        "kind": "LocationData",
+        "caller_port": "Argument(1)",
+        "callee_port": "Producer"
+      }
+    ]
+  },
+  {
+    "generations": [
+      {
+        "kind": "LocationData",
+        "caller_port": "Return",
+        "callee_port": "Anchor"
+      }
+    ],
+    "method": "Lcom/facebook/marianatrench/integrationtests/LeafAnnotationFlows;.nativeGetLocationName:()Ljava/lang/String;"
+  },
+  {
+    "method": "Lcom/facebook/graphql/calls/LocationUpdateData;.setPlaceId:(Ljava/lang/String;)Lcom/facebook/graphql/calls/LocationUpdateData;",
+    "sinks": [
+      {
+        "kind": "GraphQLMutation",
+        "caller_port": "Argument(1)",
+        "callee_port": "Anchor"
+      }
+    ]
+  }
+]

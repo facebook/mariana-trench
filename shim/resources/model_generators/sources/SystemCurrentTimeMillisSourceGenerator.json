@@ -1,0 +1,20 @@
+{
+  "model_generators": [
+    {
+      "find": "methods",
+      "where": [
+        {
+          "constraint": "signature",
+          "pattern": "Ljava/lang/System;\\.currentTimeMillis:\\(\\)J"
+        }
+      ],
+      "model": {
+        "sources": [
+          {
+            "kind": "SystemCurrentTimeMillis"
+          }
+        ]
+      }
+    }
+  ]
+}

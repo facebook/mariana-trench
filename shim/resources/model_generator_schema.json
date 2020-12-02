@@ -1,0 +1,703 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$comment": "Format of the JSON Model generator DSL (https://www.internalfb.com/intern/wiki/Mariana_Trench/Writing_Models/#json-model-generators). Please keep this in sync with the implementation in JsonModelGenerator.cpp",
+  "definitions": {
+    "integer_constraint": {
+      "$id": "#/definitions/integer_constraint",
+      "type": "object",
+      "description": "Applicable to integers",
+      "oneOf": [
+        {
+          "type": "object",
+          "properties": {
+            "constraint": {
+              "enum": [
+                "<",
+                "<=",
+                ">",
+                ">=",
+                "==",
+                "!="
+              ]
+            },
+            "value": {
+              "type": "integer"
+            }
+          },
+          "required": [
+            "constraint",
+            "value"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "constraint": {
+              "enum": [
+                "all_of",
+                "any_of"
+              ]
+            },
+            "inners": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/integer_constraint"
+              }
+            }
+          },
+          "required": [
+            "constraint",
+            "inners"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "constraint": {
+              "const": "not"
+            },
+            "inner": {
+              "$ref": "#/definitions/integer_constraint"
+            }
+          },
+          "required": [
+            "constraint",
+            "inner"
+          ],
+          "additionalProperties": false
+        }
+      ]
+    },
+    "type_constraint": {
+      "$id": "#/definitions/type_constraint",
+      "type": "object",
+      "description": "Applicable to types",
+      "oneOf": [
+        {
+          "type": "object",
+          "properties": {
+            "constraint": {
+              "const": "name"
+            },
+            "pattern": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "constraint",
+            "pattern"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "constraint": {
+              "const": "extends"
+            },
+            "include_self": {
+              "type": "boolean"
+            },
+            "inner": {
+              "$ref": "#/definitions/type_constraint",
+              "description": "Applicable to types"
+            }
+          },
+          "required": [
+            "constraint",
+            "inner"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "constraint": {
+              "const": "super"
+            },
+            "inner": {
+              "$ref": "#/definitions/type_constraint"
+            }
+          },
+          "required": [
+            "constraint",
+            "inner"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "constraint": {
+              "enum": [
+                "is_class",
+                "is_interface",
+                "is_abstract"
+              ]
+            },
+            "value": {
+              "type": "boolean"
+            }
+          },
+          "required": [
+            "constraint"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "constraint": {
+              "const": "has_annotation"
+            },
+            "type": {
+              "type": "string"
+            },
+            "pattern": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "constraint",
+            "type"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "constraint": {
+              "enum": [
+                "all_of",
+                "any_of"
+              ]
+            },
+            "inners": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/type_constraint"
+              }
+            }
+          },
+          "required": [
+            "constraint",
+            "inners"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "constraint": {
+              "const": "not"
+            },
+            "inner": {
+              "$ref": "#/definitions/type_constraint"
+            }
+          },
+          "required": [
+            "constraint",
+            "inner"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "constraint": {
+              "const": "visibility"
+            },
+            "is": {
+              "enum": [
+                "public",
+                "private",
+                "protected"
+              ]
+            }
+          },
+          "required": [
+            "constraint",
+            "is"
+          ],
+          "additionalProperties": false
+        }
+      ]
+    },
+    "method_constraint": {
+      "$id": "#/definitions/method_constraint",
+      "type": "object",
+      "description": "Applicable to methods",
+      "oneOf": [
+        {
+          "type": "object",
+          "properties": {
+            "constraint": {
+              "const": "name"
+            },
+            "pattern": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "constraint",
+            "pattern"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "constraint": {
+              "enum": [
+                "parent",
+                "return"
+              ]
+            },
+            "inner": {
+              "$ref": "#/definitions/type_constraint"
+            }
+          },
+          "required": [
+            "constraint",
+            "inner"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "constraint": {
+              "const": "signature"
+            },
+            "pattern": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "constraint",
+            "pattern"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "constraint": {
+              "const": "parameter"
+            },
+            "idx": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "inner": {
+              "$ref": "#/definitions/type_constraint"
+            }
+          },
+          "required": [
+            "constraint",
+            "idx",
+            "inner"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "constraint": {
+              "const": "visibility"
+            },
+            "is": {
+              "enum": [
+                "public",
+                "private",
+                "protected"
+              ]
+            }
+          },
+          "required": [
+            "constraint",
+            "is"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "constraint": {
+              "enum": [
+                "is_static",
+                "is_constructor",
+                "is_native",
+                "has_code"
+              ]
+            },
+            "value": {
+              "type": "boolean"
+            }
+          },
+          "required": [
+            "constraint"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "constraint": {
+              "const": "has_annotation"
+            },
+            "type": {
+              "type": "string"
+            },
+            "pattern": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "constraint",
+            "type"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "constraint": {
+              "enum": [
+                "number_parameters",
+                "number_overrides"
+              ]
+            },
+            "inner": {
+              "$ref": "#/definitions/integer_constraint"
+            }
+          },
+          "required": [
+            "constraint",
+            "inner"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "constraint": {
+              "enum": [
+                "all_of",
+                "any_of"
+              ]
+            },
+            "inners": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/method_constraint"
+              }
+            }
+          },
+          "required": [
+            "constraint",
+            "inners"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "constraint": {
+              "const": "not"
+            },
+            "inner": {
+              "$ref": "#/definitions/method_constraint"
+            }
+          },
+          "required": [
+            "constraint",
+            "inner"
+          ],
+          "additionalProperties": false
+        }
+      ]
+    },
+    "generation": {
+      "type": "object",
+      "properties": {
+        "kind": {
+          "type": "string"
+        },
+        "port": {
+          "type": "string"
+        },
+        "callee_port": {
+          "type": "string"
+        },
+        "features": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "required": [
+        "kind"
+      ],
+      "additionalProperties": false
+    },
+    "source_or_sink": {
+      "type": "object",
+      "properties": {
+        "kind": {
+          "type": "string"
+        },
+        "port": {
+          "type": "string"
+        },
+        "callee_port": {
+          "type": "string"
+        },
+        "features": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "required": [
+        "kind",
+        "port"
+      ],
+      "additionalProperties": false
+    },
+    "propagation": {
+      "type": "object",
+      "properties": {
+        "input": {
+          "type": "string"
+        },
+        "output": {
+          "type": "string"
+        },
+        "features": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "required": [
+        "input",
+        "output"
+      ],
+      "additionalProperties": false
+    },
+    "attach_to": {
+      "type": "object",
+      "properties": {
+        "port": {
+          "type": "string"
+        },
+        "features": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "required": [
+        "port",
+        "features"
+      ],
+      "additionalProperties": false
+    },
+    "for_all_parameter": {
+      "type": "object",
+      "properties": {
+        "variable": {
+          "type": "string"
+        },
+        "where": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/type_constraint"
+          }
+        },
+        "generations": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/generation"
+          }
+        },
+        "parameter_sources": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/source_or_sink"
+          }
+        },
+        "sources": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/generation"
+          }
+        },
+        "sinks": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/source_or_sink"
+          }
+        },
+        "propagation": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/propagation"
+          }
+        },
+        "attach_to_sources": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/attach_to"
+          }
+        },
+        "attach_to_sinks": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/attach_to"
+          }
+        },
+        "attach_to_propagations": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/attach_to"
+          }
+        },
+        "add_features_to_arguments": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/attach_to"
+          }
+        }
+      },
+      "required": [
+        "variable"
+      ],
+      "additionalProperties": false
+    },
+    "model": {
+      "$id": "#/definitions/model",
+      "type": "object",
+      "properties": {
+        "generations": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/generation"
+          }
+        },
+        "parameter_sources": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/source_or_sink"
+          }
+        },
+        "sources": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/generation"
+          }
+        },
+        "sinks": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/source_or_sink"
+          }
+        },
+        "propagation": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/propagation"
+          }
+        },
+        "attach_to_sources": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/attach_to"
+          }
+        },
+        "attach_to_sinks": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/attach_to"
+          }
+        },
+        "attach_to_propagations": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/attach_to"
+          }
+        },
+        "add_features_to_arguments": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/attach_to"
+          }
+        },
+        "modes": {
+          "type": "array",
+          "items": {
+            "enum": [
+              "override-default",
+              "skip-analysis",
+              "add-via-obscure-feature",
+              "taint-in-taint-out",
+              "no-join-virtual-overrides"
+            ]
+          }
+        },
+        "for_all_parameters": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/for_all_parameter"
+          }
+        }
+      }
+    },
+    "model_generators": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "find": {
+            "enum": [
+              "methods"
+            ]
+          },
+          "where": {
+            "type": "array",
+            "items": {
+              "$ref": "#/definitions/method_constraint"
+            }
+          },
+          "model": {
+            "$ref": "#/definitions/model"
+          },
+          "verbosity": {
+            "type": "integer",
+            "minimum": 1,
+            "inclusiveMaximum": 5
+          }
+        },
+        "required": [
+          "find",
+          "where",
+          "model"
+        ],
+        "additionalProperties": false
+      }
+    }
+  },
+  "type": "object",
+  "properties": {
+    "model_generators": {
+      "$ref": "#/definitions/model_generators"
+    }
+  }
+}

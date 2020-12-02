@@ -1,0 +1,391 @@
+{
+  "model_generators": [
+    {
+      "find": "methods",
+      "where": [
+        {
+          "constraint": "signature",
+          "pattern": ".+:\\(.*Lcom/facebook/inject/InjectorLike;.*\\).*"
+        }
+      ],
+      "model": {
+        "modes": [
+          "override-default",
+          "skip-analysis"
+        ]
+      }
+    },
+    {
+      "find": "methods",
+      "where": [
+        {
+          "constraint": "not",
+          "inner": {
+            "constraint": "signature",
+            "pattern": ".+:\\(.*Lcom/facebook/inject/InjectorLike;.*\\).*"
+          }
+        },
+        {
+          "constraint": "parent",
+          "inner": {
+            "constraint": "name",
+            "pattern": "Lcom/google.*"
+          }
+        },
+        {
+          "constraint": "any_of",
+          "inners": [
+            {
+              "constraint": "name",
+              "pattern": "put"
+            },
+            {
+              "constraint": "name",
+              "pattern": "isEmpty"
+            },
+            {
+              "constraint": "name",
+              "pattern": "add"
+            }
+          ]
+        }
+      ],
+      "model": {
+        "modes": [
+          "skip-analysis",
+          "taint-in-taint-out"
+        ]
+      }
+    },
+    {
+      "find": "methods",
+      "where": [
+        {
+          "constraint": "name",
+          "pattern": "finish"
+        },
+        {
+          "constraint": "any_of",
+          "inners": [
+            {
+              "constraint": "all_of",
+              "inners": [
+                {
+                  "constraint": "is_static",
+                  "value": true
+                },
+                {
+                  "constraint": "number_parameters",
+                  "inner": {
+                    "constraint": "==",
+                    "value": 0
+                  }
+                }
+              ]
+            },
+            {
+              "constraint": "all_of",
+              "inners": [
+                {
+                  "constraint": "is_static",
+                  "value": false
+                },
+                {
+                  "constraint": "number_parameters",
+                  "inner": {
+                    "constraint": "==",
+                    "value": 1
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "constraint": "return",
+          "inner": {
+            "constraint": "name",
+            "pattern": "V"
+          }
+        }
+      ],
+      "model": {
+        "modes": [
+          "no-join-virtual-overrides"
+        ]
+      }
+    },
+    {
+      "find": "methods",
+      "where": [
+        {
+          "constraint": "not",
+          "inner": {
+            "constraint": "signature",
+            "pattern": ".+:\\(.*Lcom/facebook/inject/InjectorLike;.*\\).*"
+          }
+        },
+        {
+          "constraint": "any_of",
+          "inners": [
+            {
+              "constraint": "signature",
+              "pattern": ".+:\\(.*Ljava/lang/Runnable;.*\\).*"
+            },
+            {
+              "constraint": "signature",
+              "pattern": ".+:\\(.*Lcom/instagram/common/task/ObservableTask;.*\\).*"
+            }
+          ]
+        }
+      ],
+      "model": {
+        "modes": [
+          "no-join-virtual-overrides"
+        ]
+      }
+    },
+    {
+      "find": "methods",
+      "where": [
+        {
+          "constraint": "not",
+          "inner": {
+            "constraint": "signature",
+            "pattern": ".+:\\(.*Lcom/facebook/inject/InjectorLike;.*\\).*"
+          }
+        },
+        {
+          "constraint": "parent",
+          "inner": {
+            "constraint": "name",
+            "pattern": ".*/JsonParser;"
+          }
+        },
+        {
+          "constraint": "name",
+          "pattern": "next"
+        }
+      ],
+      "model": {
+        "modes": [
+          "no-join-virtual-overrides"
+        ]
+      }
+    },
+    {
+      "find": "methods",
+      "where": [
+        {
+          "constraint": "not",
+          "inner": {
+            "constraint": "signature",
+            "pattern": ".+:\\(.*Lcom/facebook/inject/InjectorLike;.*\\).*"
+          }
+        },
+        {
+          "constraint": "any_of",
+          "inners": [
+            {
+              "constraint": "all_of",
+              "inners": [
+                {
+                  "constraint": "parent",
+                  "inner": {
+                    "constraint": "name",
+                    "pattern": ".*SignedOutHelper;"
+                  }
+                },
+                {
+                  "constraint": "name",
+                  "pattern": "redirectToSignedOutState"
+                }
+              ]
+            },
+            {
+              "constraint": "all_of",
+              "inners": [
+                {
+                  "constraint": "parent",
+                  "inner": {
+                    "constraint": "name",
+                    "pattern": ".*FragmentNavigator;"
+                  }
+                },
+                {
+                  "constraint": "name",
+                  "pattern": "transitionInternal"
+                }
+              ]
+            },
+            {
+              "constraint": "all_of",
+              "inners": [
+                {
+                  "constraint": "parent",
+                  "inner": {
+                    "constraint": "name",
+                    "pattern": ".*Waterfall;"
+                  }
+                },
+                {
+                  "constraint": "name",
+                  "pattern": "ensureStarted"
+                }
+              ]
+            },
+            {
+              "constraint": "all_of",
+              "inners": [
+                {
+                  "constraint": "parent",
+                  "inner": {
+                    "constraint": "name",
+                    "pattern": ".*Waterfall;"
+                  }
+                },
+                {
+                  "constraint": "name",
+                  "pattern": "reset"
+                }
+              ]
+            },
+            {
+              "constraint": "all_of",
+              "inners": [
+                {
+                  "constraint": "parent",
+                  "inner": {
+                    "constraint": "name",
+                    "pattern": ".*IgSessionManager;"
+                  }
+                },
+                {
+                  "constraint": "name",
+                  "pattern": "getSession"
+                }
+              ]
+            },
+            {
+              "constraint": "all_of",
+              "inners": [
+                {
+                  "constraint": "parent",
+                  "inner": {
+                    "constraint": "name",
+                    "pattern": ".*/FbFragmentActivity;"
+                  }
+                },
+                {
+                  "constraint": "name",
+                  "pattern": "onActivityResult"
+                }
+              ]
+            },
+            {
+              "constraint": "all_of",
+              "inners": [
+                {
+                  "constraint": "parent",
+                  "inner": {
+                    "constraint": "name",
+                    "pattern": ".*/ActivityLike;"
+                  }
+                },
+                {
+                  "constraint": "name",
+                  "pattern": "onActivityResult"
+                }
+              ]
+            },
+            {
+              "constraint": "all_of",
+              "inners": [
+                {
+                  "constraint": "parent",
+                  "inner": {
+                    "constraint": "name",
+                    "pattern": ".*/LispyInterpreter;"
+                  }
+                },
+                {
+                  "constraint": "name",
+                  "pattern": "visitFunctionCall"
+                }
+              ]
+            },
+            {
+              "constraint": "all_of",
+              "inners": [
+                {
+                  "constraint": "parent",
+                  "inner": {
+                    "constraint": "name",
+                    "pattern": ".*/UserListFragmentFactory;"
+                  }
+                },
+                {
+                  "constraint": "name",
+                  "pattern": "newFacebookFriends"
+                }
+              ]
+            },
+            {
+              "constraint": "all_of",
+              "inners": [
+                {
+                  "constraint": "parent",
+                  "inner": {
+                    "constraint": "name",
+                    "pattern": ".*DefaultContextServiceBinder;"
+                  }
+                },
+                {
+                  "constraint": "name",
+                  "pattern": "bindService"
+                }
+              ]
+            },
+            {
+              "constraint": "all_of",
+              "inners": [
+                {
+                  "constraint": "parent",
+                  "inner": {
+                    "constraint": "name",
+                    "pattern": ".*/ObservableTask;"
+                  }
+                },
+                {
+                  "constraint": "name",
+                  "pattern": "onFinish"
+                }
+              ]
+            },
+            {
+              "constraint": "all_of",
+              "inners": [
+                {
+                  "constraint": "parent",
+                  "inner": {
+                    "constraint": "name",
+                    "pattern": ".*IgSessionManager;"
+                  }
+                },
+                {
+                  "constraint": "name",
+                  "pattern": "getUserSession"
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "model": {
+        "modes": [
+          "skip-analysis"
+        ]
+      }
+    }
+  ]
+}

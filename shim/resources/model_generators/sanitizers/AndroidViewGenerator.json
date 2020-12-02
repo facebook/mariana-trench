@@ -1,0 +1,55 @@
+{
+  "model_generators": [
+    {
+      "find": "methods",
+      "where": [
+        {
+          "constraint": "any_of",
+          "inners": [
+            {
+              "constraint": "signature",
+              "pattern": "Landroid/view/View;\\.set.*"
+            },
+            {
+              "constraint": "signature",
+              "pattern": "Landroid.*;\\.show:\\(\\).*"
+            }
+          ]
+        }
+      ],
+      "model": {
+        "modes": [
+          "no-join-virtual-overrides"
+        ]
+      }
+    },
+    {
+      "find": "methods",
+      "where": [
+        {
+          "constraint": "signature",
+          "pattern": ".*lifecycle/ViewModelProvider;\\.get:.*"
+        }
+      ],
+      "model": {
+        "modes": [
+          "skip-analysis"
+        ]
+      }
+    },
+    {
+      "find": "methods",
+      "where": [
+        {
+          "constraint": "signature",
+          "pattern": "Landroidx/lifecycle/LifecycleRegistry;.addObserver:.*"
+        }
+      ],
+      "model": {
+        "modes": [
+          "skip-analysis"
+        ]
+      }
+    }
+  ]
+}

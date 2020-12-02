@@ -1,0 +1,30 @@
+{
+  "model_generators": [
+    {
+      "find": "methods",
+      "where": [
+        {
+          "constraint": "has_annotation",
+          "type": "Lcom/facebook/privacy/datacollection/DisallowSensitive;"
+        }
+      ],
+      "model": {
+        "modes": [
+          "skip-analysis"
+        ],
+        "for_all_parameters": [
+          {
+            "variable": "x",
+            "where": [],
+            "sinks": [
+              {
+                "kind": "DisallowSensitive",
+                "port": "Argument(x)"
+              }
+            ]
+          }
+        ]
+      }
+    }
+  ]
+}

@@ -1,0 +1,48 @@
+{
+  "model_generators": [
+    {
+      "find": "methods",
+      "where": [
+        {
+          "constraint": "parent",
+          "inner": {
+            "constraint": "name",
+            "pattern": "Landroid/content/Intent;"
+          }
+        },
+        {
+          "constraint": "name",
+          "pattern": "\\<init\\>"
+        }
+      ],
+      "model": {
+        "generations": [
+          {
+            "kind": "IntentCreation",
+            "port": "Argument(0)"
+          }
+        ],
+        "for_all_parameters": [
+          {
+            "variable": "x",
+            "where": [
+              {
+                "constraint": "name",
+                "pattern": "Ljava/lang/Class;"
+              }
+            ],
+            "generations": [
+              {
+                "kind": "IntentCreation",
+                "port": "Argument(0)",
+                "features": [
+                  "via-explicit-intent"
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    }
+  ]
+}

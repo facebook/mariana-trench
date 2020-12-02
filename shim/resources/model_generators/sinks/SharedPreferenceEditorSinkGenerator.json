@@ -1,0 +1,50 @@
+{
+  "model_generators": [
+    {
+      "find": "methods",
+      "where": [
+        {
+          "constraint": "signature",
+          "pattern": "Landroid/content/SharedPreferences\\$Editor;\\.put.*:.*"
+        }
+      ],
+      "model": {
+        "modes": [
+          "skip-analysis",
+          "no-join-virtual-overrides"
+        ],
+        "sinks": [
+          {
+            "kind": "SharedPreferenceEditor",
+            "port": "Argument(1)"
+          },
+          {
+            "kind": "SharedPreferenceEditor",
+            "port": "Argument(2)"
+          }
+        ]
+      }
+    },
+    {
+      "find": "methods",
+      "where": [
+        {
+          "constraint": "signature",
+          "pattern": "Landroid/content/SharedPreferences\\$Editor;\\.remove:.*"
+        }
+      ],
+      "model": {
+        "modes": [
+          "skip-analysis",
+          "no-join-virtual-overrides"
+        ],
+        "sinks": [
+          {
+            "kind": "SharedPreferenceEditor",
+            "port": "Argument(1)"
+          }
+        ]
+      }
+    }
+  ]
+}

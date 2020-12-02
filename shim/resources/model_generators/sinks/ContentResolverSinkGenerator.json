@@ -1,0 +1,70 @@
+{
+  "model_generators": [
+    {
+      "find": "methods",
+      "where": [
+        {
+          "constraint": "any_of",
+          "inners": [
+            {
+              "constraint": "name",
+              "pattern": "open.*"
+            },
+            {
+              "constraint": "name",
+              "pattern": "applyBatch"
+            },
+            {
+              "constraint": "name",
+              "pattern": "bulkInsert"
+            },
+            {
+              "constraint": "name",
+              "pattern": "call"
+            },
+            {
+              "constraint": "name",
+              "pattern": "delete"
+            },
+            {
+              "constraint": "name",
+              "pattern": "query"
+            },
+            {
+              "constraint": "name",
+              "pattern": "update"
+            },
+            {
+              "constraint": "name",
+              "pattern": "insert"
+            }
+          ]
+        },
+        {
+          "constraint": "parent",
+          "inner": {
+            "constraint": "name",
+            "pattern": "Landroid/content/ContentResolver;"
+          }
+        }
+      ],
+      "model": {
+        "modes": [
+          "skip-analysis"
+        ],
+        "for_all_parameters": [
+          {
+            "variable": "x",
+            "where": [],
+            "sinks": [
+              {
+                "kind": "ContentResolver",
+                "port": "Argument(x)"
+              }
+            ]
+          }
+        ]
+      }
+    }
+  ]
+}

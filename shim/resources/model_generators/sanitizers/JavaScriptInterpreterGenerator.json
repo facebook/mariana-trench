@@ -1,0 +1,18 @@
+{
+  "model_generators": [
+    {
+      "find": "methods",
+      "where": [
+        {
+          "constraint": "signature",
+          "pattern": "Lorg/mozilla/javascript/Interpreter;.*"
+        }
+      ],
+      "model": {
+        "modes": [
+          "skip-analysis"
+        ]
+      }
+    }
+  ]
+}

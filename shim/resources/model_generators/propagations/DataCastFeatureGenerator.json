@@ -1,0 +1,292 @@
+{
+  "model_generators": [
+    {
+      "find": "methods",
+      "where": [
+        {
+          "constraint": "any_of",
+          "inners": [
+            {
+              "constraint": "name",
+              "pattern": "formatStrLocaleSafe"
+            },
+            {
+              "constraint": "parent",
+              "inner": {
+                "constraint": "name",
+                "pattern": "Lcom/facebook/common/stringformat/StringFormatUtil;"
+              }
+            }
+          ]
+        }
+      ],
+      "model": {
+        "modes": [
+          "override-default",
+          "taint-in-taint-out",
+          "skip-analysis"
+        ]
+      }
+    },
+    {
+      "find": "methods",
+      "where": [
+        {
+          "constraint": "name",
+          "pattern": "parseInt|intValue|valueOf"
+        },
+        {
+          "constraint": "parent",
+          "inner": {
+            "constraint": "name",
+            "pattern": "Ljava/lang/Integer;"
+          }
+        }
+      ],
+      "model": {
+        "propagation": [
+          {
+            "input": "Argument(0)",
+            "output": "Return",
+            "features": [
+              "cast:numeric"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "find": "methods",
+      "where": [
+        {
+          "constraint": "name",
+          "pattern": "getBoolean|parseBoolean|booleanValue|valueOf"
+        },
+        {
+          "constraint": "parent",
+          "inner": {
+            "constraint": "name",
+            "pattern": "Ljava/lang/Boolean;"
+          }
+        }
+      ],
+      "model": {
+        "propagation": [
+          {
+            "input": "Argument(0)",
+            "output": "Return",
+            "features": [
+              "cast:boolean"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "find": "methods",
+      "where": [
+        {
+          "constraint": "not",
+          "inner": {
+            "constraint": "signature",
+            "pattern": "(Lcom/facebook/common/stringformat/StringFormatUtil;\\.formatStrLocaleSafe.*)|(Ljava/lang/Integer;\\.(parseInt|intValue|valueOf).*)|(Ljava/lang/Boolean;\\.(getBoolean|parseBoolean|booleanValue|valueOf).*)"
+          }
+        },
+        {
+          "constraint": "has_code",
+          "value": false
+        },
+        {
+          "constraint": "is_static",
+          "value": false
+        }
+      ],
+      "model": {
+        "for_all_parameters": [
+          {
+            "variable": "x",
+            "where": [
+              {
+                "constraint": "name",
+                "pattern": "Z"
+              }
+            ],
+            "propagation": [
+              {
+                "input": "Argument(x)",
+                "output": "Argument(0)",
+                "features": [
+                  "cast:boolean"
+                ]
+              }
+            ]
+          },
+          {
+            "variable": "x",
+            "where": [
+              {
+                "constraint": "name",
+                "pattern": "I|S|F|J|D"
+              }
+            ],
+            "propagation": [
+              {
+                "input": "Argument(x)",
+                "output": "Argument(0)",
+                "features": [
+                  "cast:numeric"
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "find": "methods",
+      "where": [
+        {
+          "constraint": "not",
+          "inner": {
+            "constraint": "signature",
+            "pattern": "(Lcom/facebook/common/stringformat/StringFormatUtil;\\.formatStrLocaleSafe.*)|(Ljava/lang/Integer;\\.(parseInt|intValue|valueOf).*)|(Ljava/lang/Boolean;\\.(getBoolean|parseBoolean|booleanValue|valueOf).*)"
+          }
+        },
+        {
+          "constraint": "has_code",
+          "value": false
+        },
+        {
+          "constraint": "return",
+          "inner": {
+            "constraint": "not",
+            "inner": {
+              "constraint": "name",
+              "pattern": "V"
+            }
+          }
+        }
+      ],
+      "model": {
+        "for_all_parameters": [
+          {
+            "variable": "x",
+            "where": [
+              {
+                "constraint": "name",
+                "pattern": "Z"
+              }
+            ],
+            "propagation": [
+              {
+                "input": "Argument(x)",
+                "output": "Return",
+                "features": [
+                  "cast:boolean"
+                ]
+              }
+            ]
+          },
+          {
+            "variable": "x",
+            "where": [
+              {
+                "constraint": "name",
+                "pattern": "I|S|F|J|D"
+              }
+            ],
+            "propagation": [
+              {
+                "input": "Argument(x)",
+                "output": "Return",
+                "features": [
+                  "cast:numeric"
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "find": "methods",
+      "where": [
+        {
+          "constraint": "not",
+          "inner": {
+            "constraint": "signature",
+            "pattern": "(Lcom/facebook/common/stringformat/StringFormatUtil;\\.formatStrLocaleSafe.*)|(Ljava/lang/Integer;\\.(parseInt|intValue|valueOf).*)|(Ljava/lang/Boolean;\\.(getBoolean|parseBoolean|booleanValue|valueOf).*)"
+          }
+        },
+        {
+          "constraint": "has_code",
+          "value": false
+        },
+        {
+          "constraint": "return",
+          "inner": {
+            "constraint": "name",
+            "pattern": "Z"
+          }
+        }
+      ],
+      "model": {
+        "for_all_parameters": [
+          {
+            "variable": "x",
+            "where": [],
+            "propagation": [
+              {
+                "input": "Argument(x)",
+                "output": "Return",
+                "features": [
+                  "cast:boolean"
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "find": "methods",
+      "where": [
+        {
+          "constraint": "not",
+          "inner": {
+            "constraint": "signature",
+            "pattern": "(Lcom/facebook/common/stringformat/StringFormatUtil;\\.formatStrLocaleSafe.*)|(Ljava/lang/Integer;\\.(parseInt|intValue|valueOf).*)|(Ljava/lang/Boolean;\\.(getBoolean|parseBoolean|booleanValue|valueOf).*)"
+          }
+        },
+        {
+          "constraint": "has_code",
+          "value": false
+        },
+        {
+          "constraint": "return",
+          "inner": {
+            "constraint": "name",
+            "pattern": "I|S|F|J|D"
+          }
+        }
+      ],
+      "model": {
+        "for_all_parameters": [
+          {
+            "variable": "x",
+            "where": [],
+            "propagation": [
+              {
+                "input": "Argument(x)",
+                "output": "Return",
+                "features": [
+                  "cast:numeric"
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    }
+  ]
+}

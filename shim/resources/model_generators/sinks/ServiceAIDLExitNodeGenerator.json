@@ -1,0 +1,38 @@
+{
+  "model_generators": [
+    {
+      "find": "methods",
+      "where": [
+        {
+          "constraint": "not",
+          "inner": {
+            "constraint": "return",
+            "inner": {
+              "constraint": "name",
+              "pattern": "V"
+            }
+          }
+        },
+        {
+          "constraint": "parent",
+          "inner": {
+            "constraint": "extends",
+            "include_self": false,
+            "inner": {
+              "constraint": "name",
+              "pattern": "[^\\.]*\\$Stub[\\$;].*"
+            }
+          }
+        }
+      ],
+      "model": {
+        "sinks": [
+          {
+            "kind": "ServiceAIDLExitNode",
+            "port": "Return"
+          }
+        ]
+      }
+    }
+  ]
+}

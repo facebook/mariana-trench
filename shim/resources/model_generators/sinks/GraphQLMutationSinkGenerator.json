@@ -1,0 +1,41 @@
+{
+  "model_generators": [
+    {
+      "find": "methods",
+      "where": [
+        {
+          "constraint": "signature",
+          "pattern": "Lcom/facebook/graphql/calls/.*;\\.set.*"
+        },
+        {
+          "constraint": "parent",
+          "inner": {
+            "constraint": "super",
+            "inner": {
+              "constraint": "name",
+              "pattern": "Lcom/facebook/graphql/calls/GraphQl(Mutation|Subscription)CallInput;"
+            }
+          }
+        }
+      ],
+      "model": {
+        "modes": [
+          "skip-analysis"
+        ],
+        "for_all_parameters": [
+          {
+            "variable": "x",
+            "where": [],
+            "sinks": [
+              {
+                "kind": "GraphQLMutation",
+                "port": "Argument(x)",
+                "callee_port": "Anchor"
+              }
+            ]
+          }
+        ]
+      }
+    }
+  ]
+}

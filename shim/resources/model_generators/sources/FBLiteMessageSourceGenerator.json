@@ -1,0 +1,30 @@
+{
+  "model_generators": [
+    {
+      "find": "methods",
+      "where": [
+        {
+          "constraint": "name",
+          "pattern": "get.*"
+        },
+        {
+          "constraint": "parent",
+          "inner": {
+            "constraint": "extends",
+            "inner": {
+              "constraint": "name",
+              "pattern": "Lcom/moblica/dmg/msg/AbstractClientMessage;"
+            }
+          }
+        }
+      ],
+      "model": {
+        "sources": [
+          {
+            "kind": "UnityClientMessageUserInput"
+          }
+        ]
+      }
+    }
+  ]
+}

@@ -1,0 +1,64 @@
+// (c) Facebook, Inc. and its affiliates. Confidential and proprietary.
+
+#pragma once
+
+#include <string>
+
+#include <boost/filesystem/path.hpp>
+#include <gmock/gmock.h>
+#include <json/json.h>
+
+#include <DexStore.h>
+
+#include <mariana-trench/ArtificialMethods.h>
+#include <mariana-trench/CallGraph.h>
+#include <mariana-trench/ClassHierarchies.h>
+#include <mariana-trench/ClassProperties.h>
+#include <mariana-trench/Context.h>
+#include <mariana-trench/Dependencies.h>
+#include <mariana-trench/Features.h>
+#include <mariana-trench/Kinds.h>
+#include <mariana-trench/Methods.h>
+#include <mariana-trench/Options.h>
+#include <mariana-trench/Overrides.h>
+#include <mariana-trench/Positions.h>
+#include <mariana-trench/Rules.h>
+#include <mariana-trench/Scheduler.h>
+#include <mariana-trench/Statistics.h>
+#include <mariana-trench/Types.h>
+
+namespace marianatrench {
+namespace test {
+
+class Test : public testing::Test {
+ public:
+  Test();
+  virtual ~Test();
+};
+
+class ContextGuard {
+ public:
+  ContextGuard();
+  ~ContextGuard();
+};
+
+Context make_empty_context();
+Context make_context(const DexStore& store);
+
+Json::Value parse_json(const std::string& input);
+Json::Value sorted_json(const Json::Value& value);
+
+boost::filesystem::path find_dex_path(
+    const boost::filesystem::path& test_directory);
+
+std::vector<std::string> sub_directories(
+    const boost::filesystem::path& directory);
+
+/**
+ * Normalizes input in json-lines form where the json-lines themselves can
+ * span multiple lines to make it easier to read the test output.
+ */
+std::string normalize_json_lines(const std::string& input);
+
+} // namespace test
+} // namespace marianatrench

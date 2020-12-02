@@ -1,0 +1,33 @@
+{
+   "metadata" : {
+      "@generated" : true
+   },
+   "models" : [
+      {
+         "generations" : [
+            {
+               "call_position" : {
+                  "line" : 1,
+                  "path" : "Flow.java"
+               },
+               "callee" : "LSource;.source:()LData;",
+               "callee_port" : "Return",
+               "caller_port" : "Argument(0).field",
+               "distance" : 1,
+               "kind" : "TestSource",
+               "local_positions" : [
+                  {
+                     "line" : 2
+                  }
+               ],
+               "origins" : [ "LSource;.source:()LData;" ]
+            }
+         ],
+         "method" : "LFlow;.flow:(LData;)V",
+         "position" : {
+            "line" : 1,
+            "path" : "Flow.java"
+         }
+      }
+   ]
+}

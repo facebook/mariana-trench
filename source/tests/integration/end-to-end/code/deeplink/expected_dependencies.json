@@ -1,0 +1,289 @@
+// @generated
+{
+   "Landroid/app/Activity;.<init>:()V" : [
+      "Landroidx/fragment/app/FragmentActivity;.<init>:()V",
+      "Lcom/facebook/marianatrench/integrationtests/IntentHandlerUtil;.startActivityDetectInternalOrExternal:(Landroid/content/Context;Landroid/content/Intent;)V"
+   ],
+   "Landroid/app/Activity;.getIntent:()Landroid/content/Intent;" : [
+      "Lcom/facebook/marianatrench/integrationtests/IntentUriHandler;.onActivityCreate:()V"
+   ],
+   "Landroid/content/Context;.<init>:()V" : [ "Landroid/app/Activity;.<init>:()V" ],
+   "Landroid/content/Intent;.<init>:()V" : [
+      "Landroid/app/Activity;.getIntent:()Landroid/content/Intent;",
+      "Lcom/facebook/base/activity/FragmentBaseActivityUtil;.getDefaultActivityIntent:()Landroid/content/Intent;"
+   ],
+   "Landroid/content/Intent;.<init>:(Ljava/lang/String;Landroid/net/Uri;)V" : [
+      "Lcom/facebook/marianatrench/integrationtests/ExternalLinkUriIntentBuilder;.getIntentForUri:(Landroid/content/Context;Ljava/lang/String;)Landroid/content/Intent;"
+   ],
+   "Landroid/content/Intent;.getBundleExtra:(Ljava/lang/String;)Landroid/os/Bundle;" : [
+      "Lcom/facebook/marianatrench/integrationtests/IntentHandlerUtil;.launchNextActivity:(Landroid/content/Context;Landroid/content/Intent;)V"
+   ],
+   "Landroid/content/Intent;.getData:()Landroid/net/Uri;" : [
+      "Lcom/facebook/marianatrench/integrationtests/IntentHandlerUtil;.launchNextActivity:(Landroid/content/Context;Landroid/content/Intent;)V"
+   ],
+   "Landroid/content/Intent;.getDataString:()Ljava/lang/String;" : [
+      "Lcom/facebook/marianatrench/integrationtests/IntentResolver;.isIntentInternallyResolvableToOneComponent:(Landroid/content/Context;Landroid/content/Intent;)Z"
+   ],
+   "Landroid/content/Intent;.getExtras:()Landroid/os/Bundle;" : [
+      "Lcom/facebook/marianatrench/integrationtests/IntentHandlerUtil;.launchNextActivity:(Landroid/content/Context;Landroid/content/Intent;)V"
+   ],
+   "Landroid/content/Intent;.getFlags:()I" : [
+      "Lcom/facebook/marianatrench/integrationtests/IntentHandlerUtil;.handleDestinationIntent:(Landroid/content/Context;Ljava/lang/String;Landroid/content/Intent;)Z"
+   ],
+   "Landroid/content/Intent;.getIntExtra:(Ljava/lang/String;I)I" : [
+      "Lcom/facebook/marianatrench/integrationtests/IntentHandlerUtil;.startActivityDetectInternalOrExternal:(Landroid/content/Context;Landroid/content/Intent;)V"
+   ],
+   "Landroid/content/Intent;.getStringExtra:(Ljava/lang/String;)Ljava/lang/String;" : [
+      "Lcom/facebook/marianatrench/integrationtests/IntentHandlerUtil;.launchNextActivity:(Landroid/content/Context;Landroid/content/Intent;)V"
+   ],
+   "Landroid/content/Intent;.hasExtra:(Ljava/lang/String;)Z" : [
+      "Lcom/facebook/marianatrench/integrationtests/IntentHandlerUtil;.launchNextActivity:(Landroid/content/Context;Landroid/content/Intent;)V",
+      "Lcom/facebook/marianatrench/integrationtests/IntentHandlerUtil;.startActivityDetectInternalOrExternal:(Landroid/content/Context;Landroid/content/Intent;)V"
+   ],
+   "Landroid/content/Intent;.putExtra:(Ljava/lang/String;Ljava/lang/String;)V" : [
+      "Lcom/facebook/marianatrench/integrationtests/AppLinksUtil;.generateFacewebFallbackIntent:(Lcom/facebook/marianatrench/integrationtests/CustomUriIntentMapper;Landroid/content/Context;Ljava/lang/String;)Landroid/content/Intent;"
+   ],
+   "Landroid/content/Intent;.putExtra:(Ljava/lang/String;Z)V" : [
+      "Lcom/facebook/marianatrench/integrationtests/ExternalLinkUriIntentBuilder;.getIntentForUri:(Landroid/content/Context;Ljava/lang/String;)Landroid/content/Intent;"
+   ],
+   "Landroid/content/Intent;.putExtras:(Landroid/os/Bundle;)V" : [
+      "Lcom/facebook/marianatrench/integrationtests/IntentHandlerUtil;.handleUri:(Landroid/content/Context;Ljava/lang/String;Landroid/os/Bundle;Landroid/content/Intent;)Z"
+   ],
+   "Landroid/content/Intent;.setFlags:(I)V" : [
+      "Lcom/facebook/marianatrench/integrationtests/IntentHandlerUtil;.handleDestinationIntent:(Landroid/content/Context;Ljava/lang/String;Landroid/content/Intent;)Z"
+   ],
+   "Landroid/database/Cursor;.<init>:()V" : [
+      "Landroid/content/ContentProvider;.query:(Landroid/net/Uri;[Ljava/lang/String;Ljava/lang/String;[Ljava/lang/String;Ljava/lang/String;)Landroid/database/Cursor;"
+   ],
+   "Landroid/net/Uri;.<init>:()V" : [
+      "Landroid/content/Intent;.getData:()Landroid/net/Uri;",
+      "Landroid/net/Uri;.parse:(Ljava/lang/String;)Landroid/net/Uri;"
+   ],
+   "Landroid/net/Uri;.<init>:(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V" : [ "Landroid/net/Uri$Builder;.build:()Landroid/net/Uri;" ],
+   "Landroid/net/Uri;.getHost:()Ljava/lang/String;" : [
+      "Lcom/facebook/marianatrench/integrationtests/ExternalLinkUriIntentBuilder;.getIntentForUri:(Landroid/content/Context;Ljava/lang/String;)Landroid/content/Intent;"
+   ],
+   "Landroid/net/Uri;.getQueryParameter:(Ljava/lang/String;)Ljava/lang/String;" : [
+      "Lcom/facebook/marianatrench/integrationtests/ExternalLinkUriIntentBuilder;.getIntentForUri:(Landroid/content/Context;Ljava/lang/String;)Landroid/content/Intent;"
+   ],
+   "Landroid/net/Uri;.getScheme:()Ljava/lang/String;" : [
+      "Lcom/facebook/marianatrench/integrationtests/ExternalLinkUriIntentBuilder;.getIntentForUri:(Landroid/content/Context;Ljava/lang/String;)Landroid/content/Intent;"
+   ],
+   "Landroid/net/Uri;.parse:(Ljava/lang/String;)Landroid/net/Uri;" : [
+      "Lcom/facebook/marianatrench/integrationtests/ExternalLinkUriIntentBuilder;.getIntentForUri:(Landroid/content/Context;Ljava/lang/String;)Landroid/content/Intent;"
+   ],
+   "Landroid/net/Uri;.toString:()Ljava/lang/String;" : [
+      "Lcom/facebook/marianatrench/integrationtests/IntentHandlerUtil;.launchNextActivity:(Landroid/content/Context;Landroid/content/Intent;)V"
+   ],
+   "Landroid/os/Bundle;.<init>:()V" : [
+      "Landroid/content/Intent;.getBundleExtra:(Ljava/lang/String;)Landroid/os/Bundle;",
+      "Landroid/content/Intent;.getExtras:()Landroid/os/Bundle;",
+      "Lcom/facebook/marianatrench/integrationtests/IntentHandlerUtil;.launchNextActivity:(Landroid/content/Context;Landroid/content/Intent;)V"
+   ],
+   "Landroid/os/Bundle;.containsKey:(Ljava/lang/String;)Z" : [
+      "Lcom/facebook/marianatrench/integrationtests/IntentHandlerUtil;.launchNextActivity:(Landroid/content/Context;Landroid/content/Intent;)V"
+   ],
+   "Landroid/os/Bundle;.getString:(Ljava/lang/String;)Ljava/lang/String;" : [
+      "Lcom/facebook/marianatrench/integrationtests/IntentHandlerUtil;.launchNextActivity:(Landroid/content/Context;Landroid/content/Intent;)V"
+   ],
+   "Landroid/os/Bundle;.putBoolean:(Ljava/lang/String;Ljava/lang/Boolean;)V" : [
+      "Lcom/facebook/marianatrench/integrationtests/IntentHandlerUtil;.launchNextActivity:(Landroid/content/Context;Landroid/content/Intent;)V"
+   ],
+   "Landroid/os/Bundle;.putString:(Ljava/lang/String;Ljava/lang/String;)V" : [
+      "Lcom/facebook/marianatrench/integrationtests/IntentHandlerUtil;.launchNextActivity:(Landroid/content/Context;Landroid/content/Intent;)V"
+   ],
+   "Landroidx/fragment/app/FragmentActivity;.<init>:()V" : [
+      "Lcom/facebook/marianatrench/integrationtests/IntentUriHandler;.<init>:()V"
+   ],
+   "Landroidx/fragment/app/FragmentActivity;.onActivityCreate:()V" : [
+      "Lcom/facebook/marianatrench/integrationtests/IntentUriHandler;.onActivityCreate:()V"
+   ],
+   "Lcom/facebook/content/SecureContextHelper;.<init>:()V" : [
+      "Lcom/facebook/marianatrench/integrationtests/IntentHandlerUtil;.<init>:()V"
+   ],
+   "Lcom/facebook/content/SecureContextHelper;.startFacebookActivity:(Landroid/content/Intent;Landroid/content/Context;)V" : [
+      "Lcom/facebook/marianatrench/integrationtests/IntentHandlerUtil;.startActivityDetectInternalOrExternalImpl:(Landroid/content/Context;Landroid/content/Intent;)V"
+   ],
+   "Lcom/facebook/content/SecureContextHelper;.startFacebookActivityForResult:(Landroid/content/Intent;ILandroid/app/Activity;)V" : [
+      "Lcom/facebook/marianatrench/integrationtests/IntentHandlerUtil;.startActivityDetectInternalOrExternalForResult:(Landroid/content/Context;Landroid/content/Intent;ILandroid/app/Activity;)V"
+   ],
+   "Lcom/facebook/content/SecureContextHelper;.startNonFacebookActivity:(Landroid/content/Intent;Landroid/content/Context;)V" : [
+      "Lcom/facebook/marianatrench/integrationtests/IntentHandlerUtil;.startActivityDetectInternalOrExternalImpl:(Landroid/content/Context;Landroid/content/Intent;)V"
+   ],
+   "Lcom/facebook/content/SecureContextHelper;.startNonFacebookActivityForResult:(Landroid/content/Intent;ILandroid/app/Activity;)V" : [
+      "Lcom/facebook/marianatrench/integrationtests/IntentHandlerUtil;.startActivityDetectInternalOrExternalForResult:(Landroid/content/Context;Landroid/content/Intent;ILandroid/app/Activity;)V"
+   ],
+   "Lcom/facebook/marianatrench/integrationtests/AppLinksUtil;.<init>:()V" : [
+      "Lcom/facebook/marianatrench/integrationtests/IntentHandlerUtil;.<init>:()V"
+   ],
+   "Lcom/facebook/marianatrench/integrationtests/AppLinksUtil;.generateFacewebFallbackIntent:(Lcom/facebook/marianatrench/integrationtests/CustomUriIntentMapper;Landroid/content/Context;Ljava/lang/String;)Landroid/content/Intent;" : [
+      "Lcom/facebook/marianatrench/integrationtests/IntentHandlerUtil;.launchNextActivity:(Landroid/content/Context;Landroid/content/Intent;)V"
+   ],
+   "Lcom/facebook/marianatrench/integrationtests/CustomUriIntentMapper;.<init>:()V" : [
+      "Lcom/facebook/marianatrench/integrationtests/Fb4aUriIntentMapper;.<init>:()V",
+      "Lcom/facebook/marianatrench/integrationtests/StaticUriIntentMapper;.<init>:()V"
+   ],
+   "Lcom/facebook/marianatrench/integrationtests/CustomUriIntentMapper;.getIntentForUri:(Landroid/content/Context;Ljava/lang/String;)Landroid/content/Intent;" : [
+      "Lcom/facebook/marianatrench/integrationtests/AppLinksUtil;.generateFacewebFallbackIntent:(Lcom/facebook/marianatrench/integrationtests/CustomUriIntentMapper;Landroid/content/Context;Ljava/lang/String;)Landroid/content/Intent;",
+      "Lcom/facebook/marianatrench/integrationtests/IntentHandlerUtil;.handleUri:(Landroid/content/Context;Ljava/lang/String;Landroid/os/Bundle;Landroid/content/Intent;)Z"
+   ],
+   "Lcom/facebook/marianatrench/integrationtests/ExternalLinkUriIntentBuilder;.<init>:()V" : [
+      "Lcom/facebook/marianatrench/integrationtests/LegacyUriMap;.getIntent:(Landroid/content/Context;Ljava/lang/String;Ljava/lang/String;)Landroid/content/Intent;"
+   ],
+   "Lcom/facebook/marianatrench/integrationtests/ExternalLinkUriIntentBuilder;.getIntentForUri:(Landroid/content/Context;Ljava/lang/String;)Landroid/content/Intent;" : [
+      "Lcom/facebook/marianatrench/integrationtests/LegacyUriMap;.getIntent:(Landroid/content/Context;Ljava/lang/String;Ljava/lang/String;)Landroid/content/Intent;"
+   ],
+   "Lcom/facebook/marianatrench/integrationtests/Fb4aUriIntentMapper;.<init>:()V" : [
+      "Lcom/facebook/marianatrench/integrationtests/IntentHandlerUtil;.<init>:()V"
+   ],
+   "Lcom/facebook/marianatrench/integrationtests/Fb4aUriIntentMapper;.getIntentByUriLookup:(Landroid/content/Context;Ljava/lang/String;)Landroid/content/Intent;" : [
+      "Lcom/facebook/marianatrench/integrationtests/Fb4aUriIntentMapper;.getIntentForUri:(Landroid/content/Context;Ljava/lang/String;)Landroid/content/Intent;"
+   ],
+   "Lcom/facebook/marianatrench/integrationtests/Fb4aUriIntentMapper;.getIntentForUri:(Landroid/content/Context;Ljava/lang/String;)Landroid/content/Intent;" : [
+      "Lcom/facebook/marianatrench/integrationtests/AppLinksUtil;.generateFacewebFallbackIntent:(Lcom/facebook/marianatrench/integrationtests/CustomUriIntentMapper;Landroid/content/Context;Ljava/lang/String;)Landroid/content/Intent;",
+      "Lcom/facebook/marianatrench/integrationtests/IntentHandlerUtil;.handleUri:(Landroid/content/Context;Ljava/lang/String;Landroid/os/Bundle;Landroid/content/Intent;)Z"
+   ],
+   "Lcom/facebook/marianatrench/integrationtests/IntentHandlerUtil;.<init>:()V" : [
+      "Lcom/facebook/marianatrench/integrationtests/IntentUriHandler;.onActivityCreate:()V"
+   ],
+   "Lcom/facebook/marianatrench/integrationtests/IntentHandlerUtil;.handleDestinationIntent:(Landroid/content/Context;Ljava/lang/String;Landroid/content/Intent;)Z" : [
+      "Lcom/facebook/marianatrench/integrationtests/IntentHandlerUtil;.handleUri:(Landroid/content/Context;Ljava/lang/String;Landroid/os/Bundle;Landroid/content/Intent;)Z",
+      "Lcom/facebook/marianatrench/integrationtests/IntentHandlerUtil;.launchNextActivity:(Landroid/content/Context;Landroid/content/Intent;)V"
+   ],
+   "Lcom/facebook/marianatrench/integrationtests/IntentHandlerUtil;.handleUri:(Landroid/content/Context;Ljava/lang/String;)Z" : [
+      "Lcom/facebook/marianatrench/integrationtests/IntentHandlerUtil;.launchNextActivity:(Landroid/content/Context;Landroid/content/Intent;)V"
+   ],
+   "Lcom/facebook/marianatrench/integrationtests/IntentHandlerUtil;.handleUri:(Landroid/content/Context;Ljava/lang/String;Landroid/os/Bundle;)Z" : [
+      "Lcom/facebook/marianatrench/integrationtests/IntentHandlerUtil;.launchNextActivity:(Landroid/content/Context;Landroid/content/Intent;)V"
+   ],
+   "Lcom/facebook/marianatrench/integrationtests/IntentHandlerUtil;.handleUri:(Landroid/content/Context;Ljava/lang/String;Landroid/os/Bundle;Landroid/content/Intent;)Z" : [
+      "Lcom/facebook/marianatrench/integrationtests/IntentHandlerUtil;.handleUri:(Landroid/content/Context;Ljava/lang/String;)Z",
+      "Lcom/facebook/marianatrench/integrationtests/IntentHandlerUtil;.handleUri:(Landroid/content/Context;Ljava/lang/String;Landroid/os/Bundle;)Z"
+   ],
+   "Lcom/facebook/marianatrench/integrationtests/IntentHandlerUtil;.isShortenedNotificationUri:(Landroid/net/Uri;)Z" : [
+      "Lcom/facebook/marianatrench/integrationtests/IntentHandlerUtil;.launchNextActivity:(Landroid/content/Context;Landroid/content/Intent;)V"
+   ],
+   "Lcom/facebook/marianatrench/integrationtests/IntentHandlerUtil;.launchNextActivity:(Landroid/content/Context;Landroid/content/Intent;)V" : [
+      "Lcom/facebook/marianatrench/integrationtests/IntentUriHandler;.onActivityCreate:()V"
+   ],
+   "Lcom/facebook/marianatrench/integrationtests/IntentHandlerUtil;.startActivityDetectInternalOrExternal:(Landroid/content/Context;Landroid/content/Intent;)V" : [
+      "Lcom/facebook/marianatrench/integrationtests/IntentHandlerUtil;.handleDestinationIntent:(Landroid/content/Context;Ljava/lang/String;Landroid/content/Intent;)Z"
+   ],
+   "Lcom/facebook/marianatrench/integrationtests/IntentHandlerUtil;.startActivityDetectInternalOrExternalForResult:(Landroid/content/Context;Landroid/content/Intent;ILandroid/app/Activity;)V" : [
+      "Lcom/facebook/marianatrench/integrationtests/IntentHandlerUtil;.startActivityDetectInternalOrExternal:(Landroid/content/Context;Landroid/content/Intent;)V"
+   ],
+   "Lcom/facebook/marianatrench/integrationtests/IntentHandlerUtil;.startActivityDetectInternalOrExternalImpl:(Landroid/content/Context;Landroid/content/Intent;)V" : [
+      "Lcom/facebook/marianatrench/integrationtests/IntentHandlerUtil;.startActivityDetectInternalOrExternal:(Landroid/content/Context;Landroid/content/Intent;)V"
+   ],
+   "Lcom/facebook/marianatrench/integrationtests/IntentHandlerUtil;.transformNotificationUri:(Landroid/content/Context;Landroid/net/Uri;)V" : [
+      "Lcom/facebook/marianatrench/integrationtests/IntentHandlerUtil;.launchNextActivity:(Landroid/content/Context;Landroid/content/Intent;)V"
+   ],
+   "Lcom/facebook/marianatrench/integrationtests/IntentResolver;.isIntentInternallyResolvableToOneComponent:(Landroid/content/Context;Landroid/content/Intent;)Z" : [
+      "Lcom/facebook/marianatrench/integrationtests/IntentHandlerUtil;.startActivityDetectInternalOrExternalForResult:(Landroid/content/Context;Landroid/content/Intent;ILandroid/app/Activity;)V",
+      "Lcom/facebook/marianatrench/integrationtests/IntentHandlerUtil;.startActivityDetectInternalOrExternalImpl:(Landroid/content/Context;Landroid/content/Intent;)V"
+   ],
+   "Lcom/facebook/marianatrench/integrationtests/LegacyUriMap;.getIntent:(Landroid/content/Context;Ljava/lang/String;Ljava/lang/String;)Landroid/content/Intent;" : [
+      "Lcom/facebook/marianatrench/integrationtests/StaticUriIntentMapper;.getIntentForUri:(Landroid/content/Context;Ljava/lang/String;)Landroid/content/Intent;"
+   ],
+   "Lcom/facebook/marianatrench/integrationtests/StaticUriIntentMapper;.<init>:()V" : [
+      "Lcom/facebook/marianatrench/integrationtests/Fb4aUriIntentMapper;.<init>:()V"
+   ],
+   "Lcom/facebook/marianatrench/integrationtests/StaticUriIntentMapper;.getHostname:(Ljava/lang/String;)Ljava/lang/String;" : [
+      "Lcom/facebook/marianatrench/integrationtests/StaticUriIntentMapper;.getIntentForUri:(Landroid/content/Context;Ljava/lang/String;)Landroid/content/Intent;"
+   ],
+   "Lcom/facebook/marianatrench/integrationtests/StaticUriIntentMapper;.getIntentForUri:(Landroid/content/Context;Ljava/lang/String;)Landroid/content/Intent;" : [
+      "Lcom/facebook/marianatrench/integrationtests/AppLinksUtil;.generateFacewebFallbackIntent:(Lcom/facebook/marianatrench/integrationtests/CustomUriIntentMapper;Landroid/content/Context;Ljava/lang/String;)Landroid/content/Intent;",
+      "Lcom/facebook/marianatrench/integrationtests/Fb4aUriIntentMapper;.getIntentByUriLookup:(Landroid/content/Context;Ljava/lang/String;)Landroid/content/Intent;",
+      "Lcom/facebook/marianatrench/integrationtests/IntentHandlerUtil;.handleUri:(Landroid/content/Context;Ljava/lang/String;Landroid/os/Bundle;Landroid/content/Intent;)Z"
+   ],
+   "Lcom/facebook/marianatrench/integrationtests/UriIntentBuilder;.<init>:()V" : [
+      "Lcom/facebook/marianatrench/integrationtests/ExternalLinkUriIntentBuilder;.<init>:()V"
+   ],
+   "Lcom/facebook/secure/context/IntentLauncher;.<init>:()V" : [
+      "Lcom/facebook/secure/context/SecureContextHelperV2;.inAppBrowser:()Lcom/facebook/secure/context/IntentLauncher;",
+      "Lcom/facebook/secure/context/SecureContextHelperV2;.internal:()Lcom/facebook/secure/context/IntentLauncher;"
+   ],
+   "Lcom/facebook/secure/context/SecureContextHelperV2;.<init>:()V" : [
+      "Lcom/facebook/secure/context/SecureContextHelperV2;.get:()Lcom/facebook/secure/context/SecureContextHelperV2;"
+   ],
+   "Lcom/facebook/user/model/User;.<init>:()V" : [
+      "Lcom/facebook/auth/datastore/LoggedInUserAuthDataStore;.getLoggedInUser:()Lcom/facebook/user/model/User;"
+   ],
+   "Lcom/instagram/common/analytics/IgAnalyticsLogger;.<init>:()V" : [
+      "Lcom/instagram/common/analytics/IgAnalyticsLogger;.getInstance:()Lcom/instagram/common/analytics/IgAnalyticsLogger;"
+   ],
+   "Lcom/instagram/common/analytics/intf/AnalyticsEvent;.<init>:()V" : [
+      "Lcom/instagram/common/analytics/intf/AnalyticsEvent;.obtain:(Ljava/lang/String;)Lcom/instagram/common/analytics/intf/AnalyticsEvent;"
+   ],
+   "Ljava/lang/Object;.<init>:()V" : [
+      "Landroid/content/ContentProvider;.<init>:()V",
+      "Landroid/content/Context;.<init>:()V",
+      "Landroid/content/Intent;.<init>:()V",
+      "Landroid/content/Intent;.<init>:(Ljava/lang/String;Landroid/net/Uri;)V",
+      "Landroid/database/Cursor;.<init>:()V",
+      "Landroid/location/Location;.<init>:()V",
+      "Landroid/net/Uri$Builder;.<init>:()V",
+      "Landroid/net/Uri;.<init>:()V",
+      "Landroid/net/Uri;.<init>:(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V",
+      "Landroid/os/Bundle;.<init>:()V",
+      "Landroid/util/Log;.<init>:()V",
+      "Landroid/webkit/WebViewClient;.<init>:()V",
+      "Lcom/facebook/auth/datastore/LoggedInUserAuthDataStore;.<init>:()V",
+      "Lcom/facebook/base/activity/FragmentBaseActivityUtil;.<init>:()V",
+      "Lcom/facebook/content/SecureContextHelper;.<init>:()V",
+      "Lcom/facebook/marianatrench/integrationtests/AppLinksUtil;.<init>:()V",
+      "Lcom/facebook/marianatrench/integrationtests/CustomUriIntentMapper;.<init>:()V",
+      "Lcom/facebook/marianatrench/integrationtests/FBLinks;.<init>:()V",
+      "Lcom/facebook/marianatrench/integrationtests/IntentHandlerUtil;.<init>:()V",
+      "Lcom/facebook/marianatrench/integrationtests/IntentResolver;.<init>:()V",
+      "Lcom/facebook/marianatrench/integrationtests/LegacyUriMap;.<init>:()V",
+      "Lcom/facebook/marianatrench/integrationtests/Origin;.<init>:()V",
+      "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;",
+      "Lcom/facebook/marianatrench/integrationtests/UriIntentBuilder;.<init>:()V",
+      "Lcom/facebook/secure/context/IntentLauncher;.<init>:()V",
+      "Lcom/facebook/secure/context/SecureContextHelperV2;.<init>:()V",
+      "Lcom/facebook/user/model/User;.<init>:()V",
+      "Lcom/instagram/common/analytics/IgAnalyticsLogger;.<init>:()V",
+      "Lcom/instagram/common/analytics/intf/AnalyticsEvent;.<init>:()V",
+      "Ljava/lang/Integer;.<init>:()V",
+      "Ljava/lang/String;.<init>:()V",
+      "Ljava/lang/Thread;.<init>:(Ljava/lang/Runnable;)V",
+      "Ljava/util/TreeMap;.<init>:()V"
+   ],
+   "Ljava/lang/Object;.equals:(Ljava/lang/Object;)Z" : [
+      "Lcom/facebook/marianatrench/integrationtests/ExternalLinkUriIntentBuilder;.getIntentForUri:(Landroid/content/Context;Ljava/lang/String;)Landroid/content/Intent;",
+      "Lcom/facebook/marianatrench/integrationtests/LegacyUriMap;.getIntent:(Landroid/content/Context;Ljava/lang/String;Ljava/lang/String;)Landroid/content/Intent;"
+   ],
+   "Ljava/lang/Object;.hashCode:()I" : [
+      "Lcom/facebook/marianatrench/integrationtests/LegacyUriMap;.getIntent:(Landroid/content/Context;Ljava/lang/String;Ljava/lang/String;)Landroid/content/Intent;"
+   ],
+   "Ljava/lang/Runnable;.run:()V" : [ "Ljava/lang/Thread;.run:()V" ],
+   "Ljava/lang/String;.charAt:(I)C" : [
+      "Lcom/facebook/marianatrench/integrationtests/StaticUriIntentMapper;.getHostname:(Ljava/lang/String;)Ljava/lang/String;"
+   ],
+   "Ljava/lang/String;.concat:(Ljava/lang/String;)Ljava/lang/String;" : [ "Landroid/net/Uri;.toString:()Ljava/lang/String;" ],
+   "Ljava/lang/String;.contains:(Ljava/lang/String;)Z" : [
+      "Lcom/facebook/marianatrench/integrationtests/IntentHandlerUtil;.launchNextActivity:(Landroid/content/Context;Landroid/content/Intent;)V",
+      "Lcom/facebook/marianatrench/integrationtests/IntentResolver;.isIntentInternallyResolvableToOneComponent:(Landroid/content/Context;Landroid/content/Intent;)Z",
+      "Lcom/facebook/marianatrench/integrationtests/StaticUriIntentMapper;.getHostname:(Ljava/lang/String;)Ljava/lang/String;"
+   ],
+   "Ljava/lang/String;.indexOf:(Ljava/lang/String;)I" : [
+      "Lcom/facebook/marianatrench/integrationtests/StaticUriIntentMapper;.getHostname:(Ljava/lang/String;)Ljava/lang/String;"
+   ],
+   "Ljava/lang/String;.isEmpty:()Z" : [
+      "Lcom/facebook/marianatrench/integrationtests/IntentHandlerUtil;.launchNextActivity:(Landroid/content/Context;Landroid/content/Intent;)V"
+   ],
+   "Ljava/lang/String;.length:()I" : [
+      "Lcom/facebook/marianatrench/integrationtests/StaticUriIntentMapper;.getHostname:(Ljava/lang/String;)Ljava/lang/String;"
+   ],
+   "Ljava/lang/String;.startsWith:(Ljava/lang/String;)Z" : [
+      "Lcom/facebook/marianatrench/integrationtests/IntentHandlerUtil;.launchNextActivity:(Landroid/content/Context;Landroid/content/Intent;)V"
+   ],
+   "Ljava/lang/String;.substring:(I)Ljava/lang/String;" : [
+      "Lcom/facebook/marianatrench/integrationtests/StaticUriIntentMapper;.getHostname:(Ljava/lang/String;)Ljava/lang/String;"
+   ],
+   "Ljava/lang/String;.substring:(II)Ljava/lang/String;" : [
+      "Lcom/facebook/marianatrench/integrationtests/StaticUriIntentMapper;.getHostname:(Ljava/lang/String;)Ljava/lang/String;"
+   ],
+   "Ljava/lang/Thread;.run:()V" : [ "Ljava/lang/Thread;.run:()V" ]
+}

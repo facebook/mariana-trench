@@ -1,0 +1,101 @@
+{
+  "model_generators": [
+    {
+      "find": "methods",
+      "where": [
+        {
+          "constraint": "any_of",
+          "inners": [
+            {
+              "constraint": "all_of",
+              "inners": [
+                {
+                  "constraint": "signature",
+                  "pattern": ".*\\.onReceive:\\(Landroid/content/Context;Landroid/content/Intent;\\)V"
+                },
+                {
+                  "constraint": "parent",
+                  "inner": {
+                    "constraint": "extends",
+                    "inner": {
+                      "constraint": "name",
+                      "pattern": "Landroid/content/BroadcastReceiver;"
+                    }
+                  }
+                }
+              ]
+            },
+            {
+              "constraint": "all_of",
+              "inners": [
+                {
+                  "constraint": "signature",
+                  "pattern": ".*\\.onReceive:\\(Landroid/content/Context;Landroid/content/Intent;Lcom/facebook/secure/receiver/BroadcastReceiverLike;\\)V"
+                },
+                {
+                  "constraint": "parent",
+                  "inner": {
+                    "constraint": "extends",
+                    "inner": {
+                      "constraint": "name",
+                      "pattern": "Lcom/facebook/secure/receiver/ActionReceiver;"
+                    }
+                  }
+                }
+              ]
+            },
+            {
+              "constraint": "all_of",
+              "inners": [
+                {
+                  "constraint": "signature",
+                  "pattern": ".*\\.onReceive:\\(Landroid/content/Context;Landroid/content/Intent;Lcom/facebook/secure/receiver/BroadcastReceiverLike;\\)V"
+                },
+                {
+                  "constraint": "parent",
+                  "inner": {
+                    "constraint": "extends",
+                    "inner": {
+                      "constraint": "name",
+                      "pattern": "Lcom/facebook/common/init/BroadcastReceiver;"
+                    }
+                  }
+                }
+              ]
+            },
+            {
+              "constraint": "all_of",
+              "inners": [
+                {
+                  "constraint": "signature",
+                  "pattern": ".*\\.onReceive:\\(Landroid/content/Context;Landroid/content/Intent;Lcom/facebook/secure/receiver/BroadcastReceiverLike;Ljava/lang/String;\\)V"
+                },
+                {
+                  "constraint": "parent",
+                  "inner": {
+                    "constraint": "extends",
+                    "inner": {
+                      "constraint": "name",
+                      "pattern": "Lcom/facebook/content/FacebookOnlySecureBroadcastReceiver;"
+                    }
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "model": {
+        "modes": [
+          "no-join-virtual-overrides"
+        ],
+        "sources": [
+          {
+            "kind": "ReceiverUserInput",
+            "port": "Argument(2)"
+          }
+        ]
+      }
+    }
+  ]
+}

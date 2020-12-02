@@ -1,0 +1,25 @@
+{
+  "model_generators": [
+    {
+      "find": "methods",
+      "where": [
+        {
+          "constraint": "any_of",
+          "inners": [
+            {
+              "constraint": "signature",
+              "pattern": "Lcom/instagram/user/model/User;.get.*"
+            }
+          ]
+        }
+      ],
+      "model": {
+        "sources": [
+          {
+            "kind": "UserIdentityData"
+          }
+        ]
+      }
+    }
+  ]
+}

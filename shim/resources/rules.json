@@ -1,0 +1,514 @@
+[
+  {
+    "name": "User input flows into Intent launcher",
+    "code": 1,
+    "description": "Values from user-controlled source may eventually flow into sink LaunchingComponent",
+    "sources": [
+      "FragmentUserInput",
+      "ActivityUserInput",
+      "ReceiverUserInput",
+      "ProviderUserInput",
+      "ServiceAIDLUserInput",
+      "ServiceUserInput",
+      "WebViewUserInput",
+      "JavascriptInterfaceUserInput"
+    ],
+    "sinks": [
+      "LaunchingComponent",
+      "LaunchingInternalComponent",
+      "LaunchingExternalComponent"
+    ]
+  },
+  {
+    "name": "User input flows into Logger",
+    "code": 2,
+    "description": "Values from user-controlled source may eventually flow into a logger sink",
+    "sources": [
+      "FragmentUserInput",
+      "ActivityUserInput",
+      "ReceiverUserInput",
+      "ProviderUserInput",
+      "ServiceAIDLUserInput",
+      "ServiceUserInput",
+      "WebViewUserInput",
+      "UnityClientMessageUserInput",
+      "EditableText"
+    ],
+    "sinks": [
+      "Logging",
+      "Logcat"
+    ]
+  },
+  {
+    "name": "Sensitive data flows into Logger",
+    "code": 3,
+    "description": "Values from a sensitive data source may eventually flow into a logger sink",
+    "sources": [
+      "AccessToken",
+      "ClipboardText",
+      "Password",
+      "PaymentInformation",
+      "SensitiveData",
+      "SessionData",
+      "SensitiveString",
+      "LocationData",
+      "ContentResolverData"
+    ],
+    "sinks": [
+      "Logging",
+      "Logcat"
+    ]
+  },
+  {
+    "name": "User input flows into WebView load",
+    "code": 4,
+    "description": "Values from user-controlled source may eventually flow into sink WebViewLoadContent",
+    "sources": [
+      "FragmentUserInput",
+      "ActivityUserInput",
+      "ReceiverUserInput",
+      "ProviderUserInput",
+      "ServiceAIDLUserInput",
+      "ServiceUserInput",
+      "WebViewUserInput",
+      "JavascriptInterfaceUserInput",
+      "ExternalDirectory"
+    ],
+    "sinks": [
+      "WebViewLoadContent"
+    ]
+  },
+  {
+    "name": "User input flows into ContentResolver",
+    "code": 5,
+    "description": "Values from user-controlled source may eventually flow into sink ContentResolver",
+    "sources": [
+      "FragmentUserInput",
+      "ActivityUserInput",
+      "ReceiverUserInput",
+      "ProviderUserInput",
+      "ServiceAIDLUserInput",
+      "ServiceUserInput",
+      "WebViewUserInput",
+      "JavascriptInterfaceUserInput"
+    ],
+    "sinks": [
+      "ContentResolver"
+    ]
+  },
+  {
+    "name": "User input flows into Demo",
+    "code": 6,
+    "description": "Values from user-controlled source may eventually flow into sink Demo",
+    "sources": [
+      "FragmentUserInput",
+      "ActivityUserInput",
+      "ReceiverUserInput",
+      "ProviderUserInput",
+      "ServiceAIDLUserInput",
+      "ServiceUserInput",
+      "WebViewUserInput",
+      "UnityClientMessageUserInput",
+      "JavascriptInterfaceUserInput"
+    ],
+    "sinks": [
+      "Demo"
+    ]
+  },
+  {
+    "name": "User input flows into JNI method",
+    "code": 7,
+    "description": "Values from user-controlled source may eventually flow into sink JNI method",
+    "sources": [
+      "FragmentUserInput",
+      "ActivityUserInput",
+      "ReceiverUserInput",
+      "ProviderUserInput",
+      "ServiceAIDLUserInput",
+      "ServiceUserInput",
+      "WebViewUserInput",
+      "UnityClientMessageUserInput",
+      "JavascriptInterfaceUserInput"
+    ],
+    "sinks": [
+      "JNI"
+    ]
+  },
+  {
+    "name": "User input flows into JavaScript or HTML parser (XSS)",
+    "code": 6054,
+    "description": "Values from user-controlled source may eventually flow into sink XSS",
+    "sources": [
+      "FragmentUserInput",
+      "ActivityUserInput",
+      "ReceiverUserInput",
+      "ProviderUserInput",
+      "ServiceAIDLUserInput",
+      "ServiceUserInput",
+      "WebViewUserInput",
+      "UnityClientMessageUserInput",
+      "JavascriptInterfaceUserInput"
+    ],
+    "sinks": [
+      "ExecuteJavascript",
+      "HTMLParser"
+    ]
+  },
+  {
+    "name": "User input flows into a mutation (CSRF)",
+    "code": 6100,
+    "description": "Values from user-controlled source may eventually flow into sink CSRF",
+    "sources": [
+      "FragmentUserInput",
+      "ActivityUserInput",
+      "ReceiverUserInput",
+      "ProviderUserInput",
+      "ServiceAIDLUserInput",
+      "ServiceUserInput",
+      "WebViewUserInput",
+      "UnityClientMessageUserInput",
+      "JavascriptInterfaceUserInput"
+    ],
+    "sinks": [
+      "GraphQLMutation",
+      "BlueServiceOperation",
+      "SharedPreferenceEditor",
+      "MQTTPublishMessage",
+      "IGDirectMutation"
+    ]
+  },
+  {
+    "name": "User input flows into network request",
+    "code": 10,
+    "description": "Values from user-controlled source may eventually flow into sink network request",
+    "sources": [
+      "FragmentUserInput",
+      "ActivityUserInput",
+      "ReceiverUserInput",
+      "ProviderUserInput",
+      "ServiceAIDLUserInput",
+      "ServiceUserInput",
+      "WebViewUserInput",
+      "UnityClientMessageUserInput",
+      "JavascriptInterfaceUserInput"
+    ],
+    "sinks": [
+      "NetworkRequest"
+    ]
+  },
+  {
+    "name": "User input flows into code execution (RCE)",
+    "code": 11,
+    "description": "Values from user-controlled source may eventually flow into code execution",
+    "sources": [
+      "FragmentUserInput",
+      "ActivityUserInput",
+      "ReceiverUserInput",
+      "ProviderUserInput",
+      "ServiceAIDLUserInput",
+      "ServiceUserInput",
+      "WebViewUserInput",
+      "UnityClientMessageUserInput",
+      "JavascriptInterfaceUserInput",
+      "ExternalDirectory"
+    ],
+    "sinks": [
+      "CodeExecution",
+      "DynamicCodeLoading",
+      "PackageInstaller"
+    ]
+  },
+  {
+    "name": "Intent flows into PendingIntent creation",
+    "code": 12,
+    "description": "Intent constructor may eventually flow into PendingIntent creation",
+    "sources": [
+      "IntentCreation"
+    ],
+    "sinks": [
+      "PendingIntentCreation"
+    ]
+  },
+  {
+    "name": "WebView permission request flows into permission grant",
+    "code": 13,
+    "description": "WebView permission request may eventually flow into permission grant",
+    "sources": [
+      "WebViewUserInput"
+    ],
+    "sinks": [
+      "WebViewGrantCheck"
+    ]
+  },
+  {
+    "name": "User input flows into SQL statements",
+    "code": 6026,
+    "description": "Values from user-controlled source may eventually flow into SQL statement",
+    "sources": [
+      "FragmentUserInput",
+      "ActivityUserInput",
+      "ReceiverUserInput",
+      "ProviderUserInput",
+      "ServiceAIDLUserInput",
+      "ServiceUserInput",
+      "WebViewUserInput",
+      "UnityClientMessageUserInput",
+      "JavascriptInterfaceUserInput",
+      "ExternalDirectory"
+    ],
+    "sinks": [
+      "SQLQuery"
+    ]
+  },
+  {
+    "name": "Sensitive data flows into DisallowSensitive annotated method",
+    "code": 15,
+    "description": "Values from a sensitive data source may eventually flow into a DisallowSensitive annotated method",
+    "sources": [
+      "AccessToken",
+      "SensitiveData",
+      "SensitiveString",
+      "LocationData",
+      "SessionData",
+      "Password",
+      "PaymentInformation",
+      "ContentResolverData"
+    ],
+    "sinks": [
+      "DisallowSensitive"
+    ]
+  },
+  {
+    "name": "Sensitive data flows into network request",
+    "code": 16,
+    "description": "Values from a sensitive data source may eventually flow into network request",
+    "sources": [
+      "AccessToken",
+      "SensitiveData",
+      "SensitiveString",
+      "LocationData",
+      "SessionData",
+      "Password",
+      "PaymentInformation",
+      "ContentResolverData"
+    ],
+    "sinks": [
+      "GraphQLMutation",
+      "NetworkRequest",
+      "MQTTPublishMessage"
+    ]
+  },
+  {
+    "name": "Sensitive data flows into exit node",
+    "code": 17,
+    "description": "Values from a sensitive data source may eventually flow into exit node",
+    "sources": [
+      "AccessToken",
+      "SensitiveData",
+      "SensitiveString",
+      "LocationData",
+      "UserIdentityData",
+      "SessionData",
+      "Password",
+      "PaymentInformation",
+      "ContentResolverData"
+    ],
+    "sinks": [
+      "ActivityExitNode",
+      "ClipboardExitNode",
+      "ContentResolver",
+      "ExecuteJavascript",
+      "FileExitNode",
+      "LaunchingComponent",
+      "LaunchingExternalComponent",
+      "ProviderExitNode",
+      "ServiceAIDLExitNode",
+      "WebViewLoadContent"
+    ]
+  },
+  {
+    "name": "(Implicit) Intent constructor flows into Intent launcher",
+    "code": 18,
+    "description": "Intent constructor may eventually flow into Intent launch",
+    "sources": [
+      "IntentCreation"
+    ],
+    "sinks": [
+      "LaunchingComponent",
+      "LaunchingExternalComponent"
+    ]
+  },
+  {
+    "name": "User input flows into ViewerContext creation",
+    "code": 19,
+    "description": "Values from user-controlled source may eventually flow into ViewerContext creation",
+    "sources": [
+      "FragmentUserInput",
+      "ActivityUserInput",
+      "ReceiverUserInput",
+      "ProviderUserInput",
+      "ServiceAIDLUserInput",
+      "ServiceUserInput",
+      "WebViewUserInput",
+      "UnityClientMessageUserInput",
+      "JavascriptInterfaceUserInput"
+    ],
+    "sinks": [
+      "ViewerContextCreation"
+    ]
+  },
+  {
+    "name": "User input flows into Array allocation (DoS)",
+    "code": 20,
+    "description": "Values from user-controlled source may eventually flow into array allocation",
+    "sources": [
+      "ActivityUserInput",
+      "FragmentUserInput",
+      "JavascriptInterfaceUserInput",
+      "ProviderUserInput",
+      "ReceiverUserInput",
+      "ServiceAIDLUserInput",
+      "ServiceUserInput",
+      "UnityClientMessageUserInput",
+      "WebViewUserInput"
+    ],
+    "sinks": [
+      "ArrayAllocation"
+    ]
+  },
+  {
+    "name": "User input flows into Bloks screen creation",
+    "code": 21,
+    "description": "Values from user-controlled source may eventually flow into bloks screen creation",
+    "sources": [
+      "ActivityUserInput",
+      "FragmentUserInput",
+      "JavascriptInterfaceUserInput",
+      "ProviderUserInput",
+      "ReceiverUserInput",
+      "ServiceAIDLUserInput",
+      "ServiceUserInput",
+      "WebViewUserInput"
+    ],
+    "sinks": [
+      "BloksScreenCreation"
+    ]
+  },
+  {
+    "name": "User input in secure template flows into logger",
+    "code": 22,
+    "description": "User input from secure template flows into logger.",
+    "sources": [
+      "SecureTemplateUserInput"
+    ],
+    "sinks": [
+      "Logging"
+    ]
+  },
+  {
+    "name": "User input flows into file resolver",
+    "code": 23,
+    "description": "Values from user-controlled source may eventually flow into sink file resolver",
+    "sources": [
+      "FragmentUserInput",
+      "ActivityUserInput",
+      "ReceiverUserInput",
+      "ProviderUserInput",
+      "ServiceAIDLUserInput",
+      "ServiceUserInput",
+      "WebViewUserInput",
+      "UnityClientMessageUserInput",
+      "JavascriptInterfaceUserInput"
+    ],
+    "sinks": [
+      "FileResolver",
+      "InputStream",
+      "WebViewFileResolver"
+    ]
+  },
+  {
+    "name": "External files (SDCard) loaded into application",
+    "code": 24,
+    "description": "Files from user-controlled directory may eventually flow into sink file resolver",
+    "sources": [
+      "ExternalDirectory"
+    ],
+    "sinks": [
+      "FileResolver",
+      "InputStream",
+      "WebViewFileResolver"
+    ]
+  },
+  {
+    "name": "User input flows into Snaptu Screen controller",
+    "code": 5025,
+    "description": "Values from user-controlled source may eventually flow into Snaptu Screen controller",
+    "sources": [
+      "UnityClientMessageUserInput"
+    ],
+    "sinks": [
+      "SnaptuScreenUri"
+    ]
+  },
+  {
+    "name": "User controlled Intent flows into setResult",
+    "code": 5026,
+    "description": "Values from user-controlled Activity may eventually flow into setResult",
+    "sources": [
+      "ActivityUserInput"
+    ],
+    "sinks": [
+      "ActivityExitNode"
+    ]
+  },
+  {
+    "name": "User input flows into phone call or SMS request",
+    "code": 5027,
+    "description": "Values from user-controlled source may eventually flow into a phone call or SMS request",
+    "sources": [
+      "FragmentUserInput",
+      "ActivityUserInput",
+      "ReceiverUserInput",
+      "ProviderUserInput",
+      "ServiceAIDLUserInput",
+      "ServiceUserInput",
+      "WebViewUserInput",
+      "JavascriptInterfaceUserInput"
+    ],
+    "sinks": [
+      "SmsRequest",
+      "PhoneCall"
+    ]
+  },
+  {
+    "name": "Server response flows into a sink",
+    "code": 5028,
+    "description": "Values from server-controlled source may eventually flow into a dangerious sink",
+    "sources": [
+      "ServerResponse"
+    ],
+    "sinks": [
+      "SmsRequest",
+      "PhoneCall",
+      "FileResolver",
+      "InputStream",
+      "FileExitNode",
+      "WebViewFileResolver",
+      "BloksScreenCreation",
+      "LaunchingComponent",
+      "LaunchingExternalComponent",
+      "LaunchingInternalComponent",
+      "ContentResolver",
+      "WebViewLoadContent",
+      "ExecuteJavascript",
+      "ClipboardExitNode",
+      "ProviderExitNode",
+      "ActivityExitNode",
+      "SQLQuery",
+      "CodeExecution",
+      "DynamicCodeLoading",
+      "PackageInstaller",
+      "HTMLParser"
+    ]
+  }
+]

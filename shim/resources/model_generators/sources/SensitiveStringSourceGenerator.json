@@ -1,0 +1,35 @@
+{
+  "model_generators": [
+    {
+      "find": "methods",
+      "where": [
+        {
+          "constraint": "signature",
+          "pattern": ".*:\\(.*SensitiveString.*\\).*"
+        }
+      ],
+      "model": {
+        "for_all_parameters": [
+          {
+            "variable": "x",
+            "where": [
+              {
+                "constraint": "extends",
+                "inner": {
+                  "constraint": "name",
+                  "pattern": ".*SensitiveString;"
+                }
+              }
+            ],
+            "sources": [
+              {
+                "kind": "SensitiveString",
+                "port": "Argument(x)"
+              }
+            ]
+          }
+        ]
+      }
+    }
+  ]
+}

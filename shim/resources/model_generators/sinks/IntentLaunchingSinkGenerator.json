@@ -1,0 +1,490 @@
+{
+  "model_generators": [
+    {
+      "find": "methods",
+      "where": [
+        {
+          "constraint": "parent",
+          "inner": {
+            "constraint": "name",
+            "pattern": "Lcom/oculus/.*"
+          }
+        },
+        {
+          "constraint": "any_of",
+          "inners": [
+            {
+              "constraint": "name",
+              "pattern": "nativeInit"
+            },
+            {
+              "constraint": "name",
+              "pattern": "nativeNewIntent"
+            },
+            {
+              "constraint": "name",
+              "pattern": "nativeTrustedAppLaunch"
+            },
+            {
+              "constraint": "name",
+              "pattern": "nativeBroadcastIntent"
+            }
+          ]
+        },
+        {
+          "constraint": "signature",
+          "pattern": ".+\\(.*\\[Ljava/lang/String;.*\\).+"
+        }
+      ],
+      "model": {
+        "modes": [
+          "skip-analysis"
+        ],
+        "for_all_parameters": [
+          {
+            "variable": "x",
+            "where": [
+              {
+                "constraint": "name",
+                "pattern": "\\[Ljava/lang/String;"
+              }
+            ],
+            "sinks": [
+              {
+                "kind": "LaunchingComponent",
+                "port": "Argument(x)"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "find": "methods",
+      "where": [
+        {
+          "constraint": "name",
+          "pattern": "<init>"
+        },
+        {
+          "constraint": "parent",
+          "inner": {
+            "constraint": "name",
+            "pattern": ".*AdInterfacesEvents\\$IntentEvent;"
+          }
+        }
+      ],
+      "model": {
+        "sinks": [
+          {
+            "kind": "LaunchingComponent",
+            "port": "Argument(1)"
+          }
+        ]
+      }
+    },
+    {
+      "find": "methods",
+      "where": [
+        {
+          "constraint": "parent",
+          "inner": {
+            "constraint": "name",
+            "pattern": "Landroidx/core/app/JobIntentService.*"
+          }
+        },
+        {
+          "constraint": "name",
+          "pattern": "enqueueWork"
+        },
+        {
+          "constraint": "signature",
+          "pattern": ".+\\(.*Landroid/content/Intent;.*\\).+"
+        }
+      ],
+      "model": {
+        "modes": [
+          "skip-analysis",
+          "no-join-virtual-overrides"
+        ],
+        "for_all_parameters": [
+          {
+            "variable": "x",
+            "where": [
+              {
+                "constraint": "name",
+                "pattern": "Landroid/content/Intent;"
+              }
+            ],
+            "sinks": [
+              {
+                "kind": "LaunchingComponent",
+                "port": "Argument(x)"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "find": "methods",
+      "where": [
+        {
+          "constraint": "parent",
+          "inner": {
+            "constraint": "name",
+            "pattern": ".*/app/TaskStackBuilder;"
+          }
+        },
+        {
+          "constraint": "any_of",
+          "inners": [
+            {
+              "constraint": "signature",
+              "pattern": ".+\\(.*Landroid/content/Intent;.*\\).+"
+            },
+            {
+              "constraint": "signature",
+              "pattern": ".+\\(.*Landroid/os/Bundle;.*\\).+"
+            }
+          ]
+        }
+      ],
+      "model": {
+        "modes": [
+          "skip-analysis",
+          "no-join-virtual-overrides"
+        ],
+        "for_all_parameters": [
+          {
+            "variable": "x",
+            "where": [
+              {
+                "constraint": "any_of",
+                "inners": [
+                  {
+                    "constraint": "name",
+                    "pattern": "Landroid/content/Intent;"
+                  },
+                  {
+                    "constraint": "name",
+                    "pattern": "Landroid/os/Bundle;"
+                  }
+                ]
+              }
+            ],
+            "sinks": [
+              {
+                "kind": "LaunchingComponent",
+                "port": "Argument(x)"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "find": "methods",
+      "where": [
+        {
+          "constraint": "parent",
+          "inner": {
+            "constraint": "name",
+            "pattern": "Landroid/app/PendingIntent;"
+          }
+        },
+        {
+          "constraint": "name",
+          "pattern": "send"
+        }
+      ],
+      "model": {
+        "sinks": [
+          {
+            "kind": "LaunchingComponent",
+            "port": "Argument(0)"
+          }
+        ]
+      }
+    },
+    {
+      "find": "methods",
+      "where": [
+        {
+          "constraint": "parent",
+          "inner": {
+            "constraint": "any_of",
+            "inners": [
+              {
+                "constraint": "name",
+                "pattern": "Landroid/content/Context;"
+              },
+              {
+                "constraint": "name",
+                "pattern": "Landroid/content/ContextWrapper;"
+              },
+              {
+                "constraint": "name",
+                "pattern": "Landroid/app/Activity;"
+              },
+              {
+                "constraint": "name",
+                "pattern": "Landroid/app/Fragment;"
+              },
+              {
+                "constraint": "name",
+                "pattern": "Landroid/app/FragmentActivity;"
+              },
+              {
+                "constraint": "name",
+                "pattern": "Landroidx/core/content/ContextCompat;"
+              },
+              {
+                "constraint": "name",
+                "pattern": "Landroidx/fragment/app/Fragment;"
+              },
+              {
+                "constraint": "name",
+                "pattern": "Landroidx/fragment/app/FragmentActivity;"
+              },
+              {
+                "constraint": "name",
+                "pattern": "Lcom/facebook/secure/context/IntentLauncher;"
+              },
+              {
+                "constraint": "name",
+                "pattern": "Lcom/facebook/secure/context/ScopedIntentLauncher;"
+              }
+            ]
+          }
+        },
+        {
+          "constraint": "any_of",
+          "inners": [
+            {
+              "constraint": "name",
+              "pattern": "start.*"
+            },
+            {
+              "constraint": "name",
+              "pattern": "launch.*"
+            },
+            {
+              "constraint": "name",
+              "pattern": "send.*"
+            },
+            {
+              "constraint": "name",
+              "pattern": "bind.*"
+            }
+          ]
+        },
+        {
+          "constraint": "signature",
+          "pattern": ".+\\((.*[;A-Z])?Landroid/content/Intent;.*\\).*"
+        }
+      ],
+      "model": {
+        "modes": [
+          "no-join-virtual-overrides",
+          "skip-analysis"
+        ],
+        "for_all_parameters": [
+          {
+            "variable": "x",
+            "where": [
+              {
+                "constraint": "name",
+                "pattern": "Landroid/content/Intent;"
+              }
+            ],
+            "sinks": [
+              {
+                "kind": "LaunchingComponent",
+                "port": "Argument(x)"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "find": "methods",
+      "where": [
+        {
+          "constraint": "parent",
+          "inner": {
+            "constraint": "any_of",
+            "inners": [
+              {
+                "constraint": "name",
+                "pattern": " Landroidx/localbroadcastmanager/content/LocalBroadcastManager;"
+              },
+              {
+                "constraint": "name",
+                "pattern": "Landroid/app/LocalActivityManager;"
+              },
+              {
+                "constraint": "name",
+                "pattern": "Lcom/facebook/secure/context/SecureContext;"
+              },
+              {
+                "constraint": "name",
+                "pattern": "Lcom/instagram/common/api/security/context/IgSecureContext;"
+              },
+              {
+                "constraint": "name",
+                "pattern": "Lcom/facebook/portal/context/PortalSecureContext;"
+              },
+              {
+                "constraint": "name",
+                "pattern": "Lcom/facebook/mlite/util/context/MLiteSecureContext;"
+              },
+              {
+                "constraint": "name",
+                "pattern": "Lcom/facebook/content/SecureContextHelper;"
+              },
+              {
+                "constraint": "name",
+                "pattern": "Lcom/facebook/content/DefaultSecureContextHelper;"
+              }
+            ]
+          }
+        },
+        {
+          "constraint": "any_of",
+          "inners": [
+            {
+              "constraint": "name",
+              "pattern": "start(Facebook|Activity|Portal|Internal).*"
+            },
+            {
+              "constraint": "name",
+              "pattern": "launch(SameKey|Family|Internal).*"
+            },
+            {
+              "constraint": "name",
+              "pattern": "send(SameKey|Family|Internal|Broadcast|Portal).*"
+            },
+            {
+              "constraint": "name",
+              "pattern": "bind(SameKey|Family|Internal|Portal).*"
+            }
+          ]
+        },
+        {
+          "constraint": "signature",
+          "pattern": ".+\\((.*[;A-Z])?Landroid/content/Intent;.*\\).*"
+        }
+      ],
+      "model": {
+        "modes": [
+          "no-join-virtual-overrides",
+          "skip-analysis"
+        ],
+        "for_all_parameters": [
+          {
+            "variable": "x",
+            "where": [
+              {
+                "constraint": "name",
+                "pattern": "Landroid/content/Intent;"
+              }
+            ],
+            "sinks": [
+              {
+                "kind": "LaunchingInternalComponent",
+                "port": "Argument(x)"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "find": "methods",
+      "where": [
+        {
+          "constraint": "parent",
+          "inner": {
+            "constraint": "any_of",
+            "inners": [
+              {
+                "constraint": "name",
+                "pattern": "Lcom/facebook/secure/context/SecureContext;"
+              },
+              {
+                "constraint": "name",
+                "pattern": "Lcom/instagram/common/api/security/context/IgSecureContext;"
+              },
+              {
+                "constraint": "name",
+                "pattern": "Lcom/facebook/portal/context/PortalSecureContext;"
+              },
+              {
+                "constraint": "name",
+                "pattern": "Lcom/facebook/mlite/util/context/MLiteSecureContext;"
+              },
+              {
+                "constraint": "name",
+                "pattern": "Lcom/facebook/content/SecureContextHelper;"
+              },
+              {
+                "constraint": "name",
+                "pattern": "Lcom/facebook/content/DefaultSecureContextHelper;"
+              }
+            ]
+          }
+        },
+        {
+          "constraint": "any_of",
+          "inners": [
+            {
+              "constraint": "name",
+              "pattern": "start(NonFacebook|ThirdParty).*"
+            },
+            {
+              "constraint": "name",
+              "pattern": "launch(External|AnyPublic|ThirdParty|Accessible).*"
+            },
+            {
+              "constraint": "name",
+              "pattern": "send(External|AnyPublic|ThirdParty|Accessible).*"
+            },
+            {
+              "constraint": "name",
+              "pattern": "bind(External|AnyPublic|ThirdParty|Accessible).*"
+            }
+          ]
+        },
+        {
+          "constraint": "signature",
+          "pattern": ".+\\((.*[;A-Z])?Landroid/content/Intent;.*\\).*"
+        }
+      ],
+      "model": {
+        "modes": [
+          "no-join-virtual-overrides",
+          "skip-analysis"
+        ],
+        "for_all_parameters": [
+          {
+            "variable": "x",
+            "where": [
+              {
+                "constraint": "name",
+                "pattern": "Landroid/content/Intent;"
+              }
+            ],
+            "sinks": [
+              {
+                "kind": "LaunchingExternalComponent",
+                "port": "Argument(x)"
+              }
+            ]
+          }
+        ]
+      }
+    }
+  ]
+}

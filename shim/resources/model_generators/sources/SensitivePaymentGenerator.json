@@ -1,0 +1,86 @@
+{
+  "model_generators": [
+    {
+      "find": "methods",
+      "where": [
+        {
+          "constraint": "any_of",
+          "inners": [
+            {
+              "constraint": "signature",
+              "pattern": ".*\\.getCardNumber:\\(\\).*(String|LiveData);"
+            },
+            {
+              "constraint": "signature",
+              "pattern": "Lcom/facebook/payments/paymentmethods/model/BillingAddress;\\.getZip:.*"
+            },
+            {
+              "constraint": "signature",
+              "pattern": "Lcom/facebook/payments/paymentmethods/model/CreditCard;\\.(getLastFourDigits|getExpiryMonth|getAddress|getBillingZipCode):.*"
+            },
+            {
+              "constraint": "signature",
+              "pattern": "Lcom/facebook/payments/paymentmethods/model/FbPaymentCard;\\.(getExpiryMonth|getLastFourDigits|getBillingZipCode):.*"
+            },
+            {
+              "constraint": "signature",
+              "pattern": "Lcom/facebook/payments/paymentmethods/model/PayPalJwtToken;\\.getId:.*"
+            }
+          ]
+        }
+      ],
+      "model": {
+        "sources": [
+          {
+            "kind": "PaymentInformation"
+          }
+        ]
+      }
+    },
+    {
+      "find": "methods",
+      "where": [
+        {
+          "constraint": "name",
+          "pattern": "(getBalance|getDisplayTitle)"
+        },
+        {
+          "constraint": "parent",
+          "inner": {
+            "constraint": "extends",
+            "inner": {
+              "constraint": "name",
+              "pattern": "Lcom/facebook/payments/paymentmethods/model/(PaymentMethod|PaymentMethodWithBalance);"
+            }
+          }
+        }
+      ],
+      "model": {
+        "sources": [
+          {
+            "kind": "PaymentInformation"
+          }
+        ]
+      }
+    },
+    {
+      "find": "methods",
+      "where": [
+        {
+          "constraint": "return",
+          "inner": {
+            "constraint": "name",
+            "pattern": "Lcom/facebook/payments/paymentmethods/model/BankAccount;"
+          }
+        }
+      ],
+      "model": {
+        "sources": [
+          {
+            "kind": "PaymentInformation"
+          }
+        ]
+      }
+    }
+  ]
+}

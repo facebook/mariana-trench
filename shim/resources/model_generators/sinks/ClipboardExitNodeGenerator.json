@@ -1,0 +1,21 @@
+{
+  "model_generators": [
+    {
+      "find": "methods",
+      "where": [
+        {
+          "constraint": "signature",
+          "pattern": "Landroid/content/ClipboardManager;\\.set.*"
+        }
+      ],
+      "model": {
+        "sinks": [
+          {
+            "kind": "ClipboardExitNode",
+            "port": "Argument(1)"
+          }
+        ]
+      }
+    }
+  ]
+}

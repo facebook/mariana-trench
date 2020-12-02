@@ -1,0 +1,110 @@
+{
+  "model_generators": [
+    {
+      "find": "methods",
+      "where": [
+        {
+          "constraint": "signature",
+          "pattern": ".*;\\.write0:\\(Lorg/apache/thrift/protocol/TProtocol;\\)V"
+        }
+      ],
+      "model": {
+        "modes": [
+          "add-via-obscure-feature",
+          "skip-analysis",
+          "no-join-virtual-overrides",
+          "taint-in-taint-out"
+        ]
+      }
+    },
+    {
+      "find": "methods",
+      "where": [
+        {
+          "constraint": "signature",
+          "pattern": ".*;\\.write:\\(Lcom/facebook/thrift/protocol/TProtocol;\\)V"
+        }
+      ],
+      "model": {
+        "modes": [
+          "add-via-obscure-feature",
+          "skip-analysis",
+          "no-join-virtual-overrides",
+          "taint-in-taint-out"
+        ]
+      }
+    },
+    {
+      "find": "methods",
+      "where": [
+        {
+          "constraint": "signature",
+          "pattern": ".*;\\.read0:\\(Lorg/apache/thrift/protocol/TProtocol;\\).*"
+        }
+      ],
+      "model": {
+        "modes": [
+          "add-via-obscure-feature",
+          "skip-analysis",
+          "no-join-virtual-overrides",
+          "taint-in-taint-out"
+        ]
+      }
+    },
+    {
+      "find": "methods",
+      "where": [
+        {
+          "constraint": "signature",
+          "pattern": ".*ClassReader;\\.readCode.*MethodVisitor.*\\)V"
+        }
+      ],
+      "model": {
+        "modes": [
+          "add-via-obscure-feature",
+          "skip-analysis",
+          "no-join-virtual-overrides",
+          "taint-in-taint-out"
+        ]
+      }
+    },
+    {
+      "find": "methods",
+      "where": [
+        {
+          "constraint": "name",
+          "pattern": "(debug|info|error|fatal|log)"
+        },
+        {
+          "constraint": "parent",
+          "inner": {
+            "constraint": "extends",
+            "inner": {
+              "constraint": "name",
+              "pattern": "Lorg/slf4j/Logger;"
+            }
+          }
+        }
+      ],
+      "model": {
+        "modes": [
+          "skip-analysis"
+        ]
+      }
+    },
+    {
+      "find": "methods",
+      "where": [
+        {
+          "constraint": "signature",
+          "pattern": "Lcom/moblica/dmg/appsrv/ApplicationConnector;\\.sendAbstractGwMessage:.*"
+        }
+      ],
+      "model": {
+        "modes": [
+          "skip-analysis"
+        ]
+      }
+    }
+  ]
+}

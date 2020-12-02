@@ -1,0 +1,36 @@
+{
+  "model_generators": [
+    {
+      "find": "methods",
+      "where": [
+        {
+          "constraint": "is_native",
+          "value": true
+        },
+        {
+          "constraint": "not",
+          "inner": {
+            "constraint": "parent",
+            "inner": {
+              "constraint": "name",
+              "pattern": "^L(android|java)/.*"
+            }
+          }
+        }
+      ],
+      "model": {
+        "for_all_parameters": [
+          {
+            "variable": "x",
+            "sinks": [
+              {
+                "kind": "JNI",
+                "port": "Argument(x)"
+              }
+            ]
+          }
+        ]
+      }
+    }
+  ]
+}

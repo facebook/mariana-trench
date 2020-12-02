@@ -1,0 +1,61 @@
+{
+  "model_generators": [
+    {
+      "find": "methods",
+      "where": [
+        {
+          "constraint": "name",
+          "pattern": "newInstance"
+        },
+        {
+          "constraint": "parent",
+          "inner": {
+            "constraint": "extends",
+            "inner": {
+              "constraint": "name",
+              "pattern": "Lcom/facebook/fbservice/ops/BlueServiceOperationFactory;"
+            }
+          }
+        }
+      ],
+      "model": {
+        "modes": [
+          "skip-analysis"
+        ],
+        "sinks": [
+          {
+            "kind": "BlueServiceOperation",
+            "port": "Argument(2)"
+          }
+        ]
+      }
+    },
+    {
+      "find": "methods",
+      "where": [
+        {
+          "constraint": "name",
+          "pattern": "set.*"
+        },
+        {
+          "constraint": "parent",
+          "inner": {
+            "constraint": "name",
+            "pattern": "Lcom/facebook/messaging/model/messages/MessageBuilder;"
+          }
+        }
+      ],
+      "model": {
+        "modes": [
+          "skip-analysis"
+        ],
+        "sinks": [
+          {
+            "kind": "BlueServiceOperation",
+            "port": "Argument(1)"
+          }
+        ]
+      }
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+[
+  {
+    "name": "Flow",
+    "code": 1,
+    "description": "",
+    "sources": [
+      "Source"
+    ],
+    "sinks": [
+      "ArrayAllocation"
+    ]
+  }
+]

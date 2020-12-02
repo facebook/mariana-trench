@@ -1,0 +1,20 @@
+{
+   "metadata" : {
+      "@generated" : true
+   },
+   "models" : [
+      {
+         "method" : "LFlow;.flow:(LData;LData;)LData;",
+         "position" : {
+            "line" : 1,
+            "path" : "Flow.java"
+         },
+         "propagation" : [
+            {
+               "input" : "Argument(1)",
+               "output" : "Return"
+            }
+         ]
+      }
+   ]
+}

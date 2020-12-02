@@ -1,0 +1,35 @@
+{
+  "model_generators": [
+    {
+      "find": "methods",
+      "where": [
+        {
+          "constraint": "any_of",
+          "inners": [
+            {
+              "constraint": "has_annotation",
+              "type": "Lcom/facebook/marianatrench/integrationtests/TestMethodAnnotation;",
+              "pattern": ".*"
+            },
+            {
+              "constraint": "return",
+              "inner": {
+                "constraint": "has_annotation",
+                "type": "Lcom/facebook/marianatrench/integrationtests/TestClassAnnotation;",
+                "pattern": ".*"
+              }
+            }
+          ]
+        }
+      ],
+      "model": {
+        "generations": [
+          {
+            "kind": "SensitiveData",
+            "port": "Return"
+          }
+        ]
+      }
+    }
+  ]
+}

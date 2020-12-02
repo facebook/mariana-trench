@@ -1,0 +1,440 @@
+{
+  "model_generators": [
+    {
+      "find": "methods",
+      "where": [
+        {
+          "constraint": "any_of",
+          "inners": [
+            {
+              "constraint": "signature",
+              "pattern": ".*\\.getExtras:\\(\\)Landroid/os/Bundle;"
+            },
+            {
+              "constraint": "signature",
+              "pattern": ".*\\.getLatitude:\\(\\)D"
+            },
+            {
+              "constraint": "signature",
+              "pattern": ".*\\.getLongitude:\\(\\)D"
+            },
+            {
+              "constraint": "signature",
+              "pattern": ".*\\.toString:\\(\\)Ljava/lang/String;"
+            }
+          ]
+        },
+        {
+          "constraint": "parent",
+          "inner": {
+            "constraint": "extends",
+            "inner": {
+              "constraint": "name",
+              "pattern": "Landroid/location/Location;"
+            }
+          }
+        }
+      ],
+      "model": {
+        "sources": [
+          {
+            "kind": "LocationData"
+          }
+        ]
+      }
+    },
+    {
+      "find": "methods",
+      "where": [
+        {
+          "constraint": "any_of",
+          "inners": [
+            {
+              "constraint": "signature",
+              "pattern": ".*\\.getAllCellInfo:\\(\\)Ljava/util/List;"
+            },
+            {
+              "constraint": "signature",
+              "pattern": ".*\\.getCellLocation:\\(\\)Landroid/telephony/CellLocation;"
+            },
+            {
+              "constraint": "signature",
+              "pattern": ".*\\.getEmergencyNumberList:\\(\\)Ljava/util/Map;"
+            },
+            {
+              "constraint": "signature",
+              "pattern": ".*\\.getEmergencyNumberList:\\(I\\)Ljava/util/Map;"
+            },
+            {
+              "constraint": "signature",
+              "pattern": ".*\\.getNetworkCountryIso:\\(\\)Ljava/lang/String;"
+            },
+            {
+              "constraint": "signature",
+              "pattern": ".*\\.getNetworkOperator:\\(\\)Ljava/lang/String;"
+            },
+            {
+              "constraint": "signature",
+              "pattern": ".*\\.getServiceState:\\(\\)Landroid/telephony/ServiceState;"
+            },
+            {
+              "constraint": "signature",
+              "pattern": ".*\\.getSimCountryIso:\\(\\)Ljava/lang/String;"
+            },
+            {
+              "constraint": "signature",
+              "pattern": ".*\\.getNetworkCountryIso:\\(I\\)Ljava/lang/String;"
+            }
+          ]
+        },
+        {
+          "constraint": "parent",
+          "inner": {
+            "constraint": "extends",
+            "inner": {
+              "constraint": "name",
+              "pattern": "Landroid/telephony/TelephonyManager;"
+            }
+          }
+        }
+      ],
+      "model": {
+        "sources": [
+          {
+            "kind": "LocationData"
+          }
+        ]
+      }
+    },
+    {
+      "find": "methods",
+      "where": [
+        {
+          "constraint": "any_of",
+          "inners": [
+            {
+              "constraint": "signature",
+              "pattern": ".*\\.getAllCellInfo:\\(\\)Ljava/util/List;"
+            },
+            {
+              "constraint": "signature",
+              "pattern": ".*\\.getCellLocation:\\(\\)Landroid/telephony/CellLocation;"
+            },
+            {
+              "constraint": "signature",
+              "pattern": ".*\\.getEmergencyNumberList:\\(\\)Ljava/util/Map;"
+            },
+            {
+              "constraint": "signature",
+              "pattern": ".*\\.getEmergencyNumberList:\\(I\\)Ljava/util/Map;"
+            },
+            {
+              "constraint": "signature",
+              "pattern": ".*\\.getNetworkCountryIso:\\(\\)Ljava/lang/String;"
+            },
+            {
+              "constraint": "signature",
+              "pattern": ".*\\.getNetworkOperator:\\(\\)Ljava/lang/String;"
+            },
+            {
+              "constraint": "signature",
+              "pattern": ".*\\.getServiceState:\\(\\)Landroid/telephony/ServiceState;"
+            },
+            {
+              "constraint": "signature",
+              "pattern": ".*\\.getSimCountryIso:\\(\\)Ljava/lang/String;"
+            },
+            {
+              "constraint": "signature",
+              "pattern": ".*\\.getNetworkCountryIso:\\(I\\)Ljava/lang/String;"
+            }
+          ]
+        },
+        {
+          "constraint": "parent",
+          "inner": {
+            "constraint": "extends",
+            "inner": {
+              "constraint": "name",
+              "pattern": "Landroid/telephony/TelephonyManager;"
+            }
+          }
+        }
+      ],
+      "model": {
+        "sources": [
+          {
+            "kind": "LocationData"
+          }
+        ]
+      }
+    },
+    {
+      "find": "methods",
+      "where": [
+        {
+          "constraint": "any_of",
+          "inners": [
+            {
+              "constraint": "signature",
+              "pattern": ".*\\.getScanResults:\\(\\)Ljava/util/List;"
+            },
+            {
+              "constraint": "signature",
+              "pattern": ".*\\.getConnectionInfo:\\(\\)Landroid/net/wifi/WifiInfo;"
+            },
+            {
+              "constraint": "signature",
+              "pattern": ".*\\.getConfiguredNetworks:\\(\\)Ljava/util/List;"
+            }
+          ]
+        },
+        {
+          "constraint": "parent",
+          "inner": {
+            "constraint": "extends",
+            "inner": {
+              "constraint": "name",
+              "pattern": "Landroid/net/wifi/WifiManager;"
+            }
+          }
+        }
+      ],
+      "model": {
+        "sources": [
+          {
+            "kind": "LocationData"
+          }
+        ]
+      }
+    },
+    {
+      "find": "methods",
+      "where": [
+        {
+          "constraint": "any_of",
+          "inners": [
+            {
+              "constraint": "signature",
+              "pattern": ".*\\.onCellLocationChanged:\\(Landroid/telephony/CellLocation;\\)V"
+            },
+            {
+              "constraint": "signature",
+              "pattern": ".*\\.onCellInfoChanged:\\(Ljava/util/List;\\)V"
+            },
+            {
+              "constraint": "signature",
+              "pattern": ".*\\.onServiceStateChanged:\\(Landroid/telephony/ServiceState;\\)V"
+            }
+          ]
+        },
+        {
+          "constraint": "parent",
+          "inner": {
+            "constraint": "extends",
+            "inner": {
+              "constraint": "name",
+              "pattern": "Landroid/telephony/PhoneStateListener;"
+            }
+          }
+        }
+      ],
+      "model": {
+        "sources": [
+          {
+            "kind": "LocationData",
+            "port": "Argument(1)"
+          }
+        ]
+      }
+    },
+    {
+      "find": "methods",
+      "where": [
+        {
+          "constraint": "any_of",
+          "inners": [
+            {
+              "constraint": "signature",
+              "pattern": ".*\\.getScanResults:\\(\\)Ljava/util/List;"
+            },
+            {
+              "constraint": "signature",
+              "pattern": ".*\\.getConnectionInfo:\\(\\)Landroid/net/wifi/WifiInfo;"
+            },
+            {
+              "constraint": "signature",
+              "pattern": ".*\\.getConfiguredNetworks:\\(\\)Ljava/util/List;"
+            }
+          ]
+        },
+        {
+          "constraint": "parent",
+          "inner": {
+            "constraint": "extends",
+            "inner": {
+              "constraint": "name",
+              "pattern": "Landroid/net/wifi/WifiManager;"
+            }
+          }
+        }
+      ],
+      "model": {
+        "sources": [
+          {
+            "kind": "LocationData"
+          }
+        ]
+      }
+    },
+    {
+      "find": "methods",
+      "where": [
+        {
+          "constraint": "signature",
+          "pattern": ".*\\.onResults:\\(Ljava/util/List;\\)V"
+        },
+        {
+          "constraint": "parent",
+          "inner": {
+            "constraint": "extends",
+            "inner": {
+              "constraint": "name",
+              "pattern": "Landroid/telephony/TelephonyScanManager\\$NetworkScanCallback;"
+            }
+          }
+        }
+      ],
+      "model": {
+        "sources": [
+          {
+            "kind": "LocationData",
+            "port": "Argument(1)"
+          }
+        ]
+      }
+    },
+    {
+      "find": "methods",
+      "where": [
+        {
+          "constraint": "any_of",
+          "inners": [
+            {
+              "constraint": "all_of",
+              "inners": [
+                {
+                  "constraint": "signature",
+                  "pattern": ".*\\.onLeScan:\\(Landroid/bluetooth/BluetoothDevice;I\\[B\\)V"
+                },
+                {
+                  "constraint": "parent",
+                  "inner": {
+                    "constraint": "extends",
+                    "inner": {
+                      "constraint": "name",
+                      "pattern": "Landroid/bluetooth/BluetoothAdapter\\$LeScanCallback;"
+                    }
+                  }
+                }
+              ]
+            },
+            {
+              "constraint": "all_of",
+              "inners": [
+                {
+                  "constraint": "signature",
+                  "pattern": ".*\\.onBatchScanResults:\\(Ljava/util/List;\\)V"
+                },
+                {
+                  "constraint": "parent",
+                  "inner": {
+                    "constraint": "extends",
+                    "inner": {
+                      "constraint": "name",
+                      "pattern": "Landroid/bluetooth/le/ScanCallback;"
+                    }
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "model": {
+        "sources": [
+          {
+            "kind": "LocationData",
+            "port": "Argument(1)"
+          }
+        ]
+      }
+    },
+    {
+      "find": "methods",
+      "where": [
+        {
+          "constraint": "signature",
+          "pattern": ".*\\.onScanResult:\\(ILandroid/bluetooth/le/ScanResult;\\)V"
+        },
+        {
+          "constraint": "parent",
+          "inner": {
+            "constraint": "extends",
+            "inner": {
+              "constraint": "name",
+              "pattern": "Landroid/bluetooth/le/ScanCallback;"
+            }
+          }
+        }
+      ],
+      "model": {
+        "sources": [
+          {
+            "kind": "LocationData",
+            "port": "Argument(2)"
+          }
+        ]
+      }
+    },
+    {
+      "find": "methods",
+      "where": [
+        {
+          "constraint": "any_of",
+          "inners": [
+            {
+              "constraint": "signature",
+              "pattern": ".*\\.query:\\(Landroid/net/Uri;\\[Ljava/lang/String;Ljava/lang/String;\\[Ljava/lang/String;Ljava/lang/String;\\)Landroid/database/Cursor;"
+            },
+            {
+              "constraint": "signature",
+              "pattern": ".*\\.query:\\(Landroid/net/Uri;\\[Ljava/lang/String;Landroid/os/Bundle;Landroid/os/CancellationSignal;\\)Landroid/database/Cursor;"
+            },
+            {
+              "constraint": "signature",
+              "pattern": ".*\\.query:\\(Landroid/net/Uri;\\[Ljava/lang/String;Ljava/lang/String;\\[Ljava/lang/String;Ljava/lang/String;Landroid/os/CancellationSignal;\\)Landroid/database/Cursor;"
+            }
+          ]
+        },
+        {
+          "constraint": "parent",
+          "inner": {
+            "constraint": "extends",
+            "inner": {
+              "constraint": "name",
+              "pattern": "Landroid/content/ContentResolver;"
+            }
+          }
+        }
+      ],
+      "model": {
+        "sources": [
+          {
+            "kind": "ContentResolverData"
+          }
+        ]
+      }
+    }
+  ]
+}

@@ -1,0 +1,62 @@
+{
+  "model_generators": [
+    {
+      "find": "methods",
+      "where": [
+        {
+          "constraint": "any_of",
+          "inners": [
+            {
+              "constraint": "signature",
+              "pattern": ".*;\\.deserialize:\\(Lcom/facebook/thrift/protocol/TProtocol;\\).*"
+            },
+            {
+              "constraint": "signature",
+              "pattern": ".*\\$Serializer;\\.serialize:.*"
+            },
+            {
+              "constraint": "signature",
+              "pattern": ".*\\$Deserializer;\\.deserialize:.*"
+            },
+            {
+              "constraint": "signature",
+              "pattern": "Lcom/facebook/graphql/model/GraphQLNode$Builder;\\.from:.*"
+            },
+            {
+              "constraint": "signature",
+              "pattern": "Lcom/fasterxml/jackson/databind/util/TokenBuffer;\\.serialize:.*"
+            },
+            {
+              "constraint": "signature",
+              "pattern": "Lcom/google/android/exoplayer2/upstream/cache/CacheUtil;\\.readAndDiscard:.*"
+            },
+            {
+              "constraint": "name",
+              "pattern": "mountToGroot"
+            },
+            {
+              "constraint": "name",
+              "pattern": "Lcom/facebook/imagepipeline/internal/FbImageDecodeExperimentsProducer;\\.produceResults:.*"
+            },
+            {
+              "constraint": "name",
+              "pattern": "Lcom/google/android/exoplayer2/extractor/mp4/FragmentedMp4Extractor;\\.readSample:.*"
+            },
+            {
+              "constraint": "signature",
+              "pattern": "Lcom/facebook/common/fragmentfactory/FragmentFactoryMapImpl;.loadNecessaryModule:\\(I\\)V"
+            }
+          ]
+        }
+      ],
+      "model": {
+        "modes": [
+          "add-via-obscure-feature",
+          "skip-analysis",
+          "no-join-virtual-overrides",
+          "taint-in-taint-out"
+        ]
+      }
+    }
+  ]
+}

@@ -1,0 +1,44 @@
+{
+  "model_generators": [
+    {
+      "find": "methods",
+      "where": [
+        {
+          "constraint": "signature",
+          "pattern": "Lcom/facebook/httpclient/abstraction/IHttpClient;\\.sendRequest.*"
+        }
+      ],
+      "model": {
+        "for_all_parameters": [
+          {
+            "variable": "x",
+            "where": [],
+            "sinks": [
+              {
+                "kind": "NetworkRequest",
+                "port": "Argument(x)"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "find": "methods",
+      "where": [
+        {
+          "constraint": "signature",
+          "pattern": "Lcom/moblica/data/ICacheableAsyncDataAccess;\\.get.*"
+        }
+      ],
+      "model": {
+        "sinks": [
+          {
+            "kind": "NetworkRequest",
+            "port": "Argument(1)"
+          }
+        ]
+      }
+    }
+  ]
+}

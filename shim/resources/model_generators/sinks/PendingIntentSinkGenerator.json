@@ -1,0 +1,83 @@
+{
+  "model_generators": [
+    {
+      "find": "methods",
+      "where": [
+        {
+          "constraint": "signature",
+          "pattern": "Lcom/facebook/content/SecurePendingIntent;\\.get.*"
+        }
+      ],
+      "model": {
+        "add_features_to_arguments": [
+          {
+            "features": [
+              "via-content-securependingintent"
+            ],
+            "port": "Argument(2)"
+          }
+        ]
+      }
+    },
+    {
+      "find": "methods",
+      "where": [
+        {
+          "constraint": "signature",
+          "pattern": "Lcom/facebook/secure/pendingintent/SecurePendingIntent\\$Builder;\\.fromIntent.*"
+        }
+      ],
+      "model": {
+        "add_features_to_arguments": [
+          {
+            "features": [
+              "via-secure-securependingintent"
+            ],
+            "port": "Argument(1)"
+          }
+        ]
+      }
+    },
+    {
+      "find": "methods",
+      "where": [
+        {
+          "constraint": "any_of",
+          "inners": [
+            {
+              "constraint": "name",
+              "pattern": "getActivit.*"
+            },
+            {
+              "constraint": "name",
+              "pattern": "getBroadcast"
+            },
+            {
+              "constraint": "name",
+              "pattern": "getService"
+            },
+            {
+              "constraint": "name",
+              "pattern": "getForegroundService"
+            }
+          ]
+        },
+        {
+          "constraint": "parent",
+          "inner": {
+            "constraint": "name",
+            "pattern": "Landroid/app/PendingIntent;"
+          }
+        }
+      ],
+      "model": {
+        "sinks": [
+          {
+            "kind": "PendingIntentCreation",
+            "port": "Argument(2)"
+          }
+        ]
+      }
+    }
+  ]
+}

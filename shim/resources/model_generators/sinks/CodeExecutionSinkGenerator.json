@@ -1,0 +1,140 @@
+{
+  "model_generators": [
+    {
+      "find": "methods",
+      "where": [
+        {
+          "constraint": "name",
+          "pattern": "isInternalComponent"
+        },
+        {
+          "constraint": "parent",
+          "inner": {
+            "constraint": "name",
+            "pattern": "Lcom/facebook/content/IntentSanitizer;"
+          }
+        }
+      ],
+      "model": {
+        "modes": [
+          "skip-analysis",
+          "override-default"
+        ]
+      }
+    },
+    {
+      "find": "methods",
+      "where": [
+        {
+          "constraint": "name",
+          "pattern": "exec"
+        },
+        {
+          "constraint": "parent",
+          "inner": {
+            "constraint": "name",
+            "pattern": "Ljava/lang/Runtime;"
+          }
+        }
+      ],
+      "model": {
+        "modes": [
+          "skip-analysis"
+        ],
+        "for_all_parameters": [
+          {
+            "variable": "x",
+            "where": [],
+            "sinks": [
+              {
+                "kind": "CodeExecution",
+                "port": "Argument(x)"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "find": "methods",
+      "where": [
+        {
+          "constraint": "any_of",
+          "inners": [
+            {
+              "constraint": "parent",
+              "inner": {
+                "constraint": "name",
+                "pattern": "Ljava/lang/ProcessBuilder;"
+              }
+            },
+            {
+              "constraint": "parent",
+              "inner": {
+                "constraint": "name",
+                "pattern": "Lcom/facebook/forker/ProcessBuilder;"
+              }
+            }
+          ]
+        },
+        {
+          "constraint": "any_of",
+          "inners": [
+            {
+              "constraint": "name",
+              "pattern": "\\<init\\>"
+            },
+            {
+              "constraint": "name",
+              "pattern": "command"
+            }
+          ]
+        }
+      ],
+      "model": {
+        "modes": [
+          "skip-analysis"
+        ],
+        "for_all_parameters": [
+          {
+            "variable": "x",
+            "where": [],
+            "sinks": [
+              {
+                "kind": "CodeExecution",
+                "port": "Argument(x)"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "find": "methods",
+      "where": [
+        {
+          "constraint": "name",
+          "pattern": "forName.*"
+        },
+        {
+          "constraint": "parent",
+          "inner": {
+            "constraint": "name",
+            "pattern": "Ljava/lang/Class;"
+          }
+        }
+      ],
+      "model": {
+        "modes": [
+          "skip-analysis"
+        ],
+        "sinks": [
+          {
+            "kind": "CodeExecution",
+            "port": "Argument(0)"
+          }
+        ]
+      }
+    }
+  ]
+}

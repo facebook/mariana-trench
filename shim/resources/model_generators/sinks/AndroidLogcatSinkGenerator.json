@@ -1,0 +1,31 @@
+{
+  "model_generators": [
+    {
+      "find": "methods",
+      "where": [
+        {
+          "constraint": "name",
+          "pattern": "(w)|(e)|(wtf)|(wtfStack)|(println)"
+        },
+        {
+          "constraint": "parent",
+          "inner": {
+            "constraint": "name",
+            "pattern": "Landroid/util/Log;"
+          }
+        }
+      ],
+      "model": {
+        "modes": [
+          "skip-analysis"
+        ],
+        "sinks": [
+          {
+            "kind": "Logcat",
+            "port": "Argument(1)"
+          }
+        ]
+      }
+    }
+  ]
+}

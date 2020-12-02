@@ -1,0 +1,13 @@
+[
+  {
+    "name": "LocationToGraphQL",
+    "code": 1,
+    "description": "",
+    "sources": [
+      "LocationData"
+    ],
+    "sinks": [
+      "GraphQLMutation"
+    ]
+  }
+]

@@ -1,0 +1,47 @@
+[
+  {
+    "method": "Lcom/facebook/marianatrench/integrationtests/Flow$EventPropagateOne;.propagate:()V",
+    "propagation": [
+      {
+        "input": "Argument(0).a",
+        "output": "Argument(0).b"
+      }
+    ]
+  },
+  {
+    "method": "Lcom/facebook/marianatrench/integrationtests/Flow$EventPropagateTwo;.propagate:()V",
+    "propagation": [
+      {
+        "input": "Argument(0).b",
+        "output": "Argument(0).c"
+      }
+    ]
+  },
+  {
+    "method": "Lcom/facebook/marianatrench/integrationtests/Flow$EventPropagateThree;.propagate:()V",
+    "propagation": [
+      {
+        "input": "Argument(0).a",
+        "output": "Argument(0).b"
+      }
+    ]
+  },
+  {
+    "method": "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;",
+    "generations": [
+      {
+        "kind": "Source",
+        "port": "Return"
+      }
+    ]
+  },
+  {
+    "method": "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
+    "sinks": [
+      {
+        "kind": "Sink",
+        "port": "Argument(0)"
+      }
+    ]
+  }
+]

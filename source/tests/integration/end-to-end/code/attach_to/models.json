@@ -1,0 +1,108 @@
+[
+  {
+    "method": "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;",
+    "generations": [
+      {
+        "kind": "Source",
+        "port": "Return"
+      }
+    ]
+  },
+  {
+    "method": "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
+    "sinks": [
+      {
+        "kind": "Sink",
+        "port": "Argument(0)"
+      }
+    ]
+  },
+  {
+    "method": "Lcom/facebook/marianatrench/integrationtests/Flow;.attach_to_return_sources:()Ljava/lang/Object;",
+    "attach_to_sources": [
+      {
+        "features": [
+          "via-attach-sources-return"
+        ],
+        "port": "Return"
+      }
+    ]
+  },
+  {
+    "method": "Lcom/facebook/marianatrench/integrationtests/Flow;.attach_to_this_sources:()V",
+    "attach_to_sources": [
+      {
+        "features": [
+          "via-attach-sources-this"
+        ],
+        "port": "Argument(0)"
+      }
+    ]
+  },
+  {
+    "method": "Lcom/facebook/marianatrench/integrationtests/Flow;.attach_to_sinks:(Ljava/lang/Object;)V",
+    "attach_to_sinks": [
+      {
+        "features": [
+          "via-attach-sinks"
+        ],
+        "port": "Argument(1)"
+      }
+    ]
+  },
+  {
+    "method": "Lcom/facebook/marianatrench/integrationtests/Flow;.attach_to_return_propagations:(Ljava/lang/Object;)Ljava/lang/Object;",
+    "attach_to_propagations": [
+      {
+        "features": [
+          "via-attach-propagations-return"
+        ],
+        "port": "Return"
+      }
+    ]
+  },
+  {
+    "method": "Lcom/facebook/marianatrench/integrationtests/Flow;.attach_to_this_propagations:(Ljava/lang/Object;)V",
+    "attach_to_propagations": [
+      {
+        "features": [
+          "via-attach-propagations-return"
+        ],
+        "port": "Argument(0)"
+      }
+    ]
+  },
+  {
+    "method": "Lcom/facebook/marianatrench/integrationtests/Flow;.attach_to_argument_propagations:(Ljava/lang/Object;)Ljava/lang/Object;",
+    "attach_to_propagations": [
+      {
+        "features": [
+          "via-attach-propagations-argument"
+        ],
+        "port": "Argument(1)"
+      }
+    ]
+  },
+  {
+    "method": "Lcom/facebook/marianatrench/integrationtests/Flow;.add_features_to_arguments:(Ljava/lang/Object;)V",
+    "add_features_to_arguments": [
+      {
+        "features": [
+          "via-add-features-to-argument"
+        ],
+        "port": "Argument(1)"
+      }
+    ]
+  },
+  {
+    "method": "Lcom/facebook/marianatrench/integrationtests/Flow$Obscure;.add_features_to_arguments_on_obscure:(Ljava/lang/Object;)Ljava/lang/Object;",
+    "add_features_to_arguments": [
+      {
+        "features": [
+          "via-add-features-to-argument-on-obscure"
+        ],
+        "port": "Argument(1)"
+      }
+    ]
+  }
+]

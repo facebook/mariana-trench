@@ -1,0 +1,34 @@
+{
+  "model_generators": [
+    {
+      "find": "methods",
+      "where": [
+        {
+          "constraint": "parent",
+          "inner": {
+            "constraint": "extends",
+            "include_self": false,
+            "inner": {
+              "constraint": "name",
+              "pattern": "[^\\.]*\\$Stub[\\$;].*"
+            }
+          }
+        }
+      ],
+      "model": {
+        "for_all_parameters": [
+          {
+            "variable": "x",
+            "where": [],
+            "sources": [
+              {
+                "kind": "ServiceAIDLUserInput",
+                "port": "Argument(x)"
+              }
+            ]
+          }
+        ]
+      }
+    }
+  ]
+}
