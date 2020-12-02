@@ -12,7 +12,7 @@
    ],
    "method" : "Lcom/facebook/marianatrench/integrationtests/HasAnnotation;.functionA:()V",
    "position" : {
-      "line" : 7,
+      "line" : 6,
       "path" : "com/facebook/marianatrench/integrationtests/HasAnnotation.java"
    }
 }
@@ -29,7 +29,7 @@
    ],
    "method" : "Lcom/facebook/marianatrench/integrationtests/HasAnnotation;.functionB:()Lcom/facebook/marianatrench/integrationtests/MyClass;",
    "position" : {
-      "line" : 10,
+      "line" : 9,
       "path" : "com/facebook/marianatrench/integrationtests/HasAnnotation.java"
    }
 }

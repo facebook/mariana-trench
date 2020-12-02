@@ -6,14 +6,14 @@
       {
          "method" : "LFlow;.indirect:()V",
          "position" : {
-            "line" : 1,
+            "line" : 0,
             "path" : "Flow.java"
          }
       },
       {
          "method" : "LFlow;.into_sink:(LData;LData;)V",
          "position" : {
-            "line" : 1,
+            "line" : 0,
             "path" : "Flow.java"
          },
          "sinks" : [

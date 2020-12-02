@@ -51,7 +51,7 @@
          ],
          "method" : "LFlow;.attribute_into_sink:(LSink;LSource;)V",
          "position" : {
-            "line" : 1,
+            "line" : 0,
             "path" : "Flow.java"
          },
          "sinks" : [
@@ -91,7 +91,7 @@
          ],
          "method" : "LFlow;.into_attribute:()V",
          "position" : {
-            "line" : 1,
+            "line" : 0,
             "path" : "Flow.java"
          }
       }

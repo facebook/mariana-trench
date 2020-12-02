@@ -227,9 +227,12 @@ Positions::Positions(const Options& options, const DexStoresVector& stores) {
 
       for (const auto& instruction : *code) {
         if (instruction.type == MFLOW_POSITION) {
-          auto instruction_position = instruction.pos.get();
+          const auto* instruction_position = instruction.pos.get();
           if (instruction_position) {
-            method_to_line_.emplace(method, instruction_position->line);
+            // Assume the method signature is on the previous line.
+            int line =
+                std::max(static_cast<int>(instruction_position->line) - 1, 0);
+            method_to_line_.emplace(method, line);
           }
           break;
         }

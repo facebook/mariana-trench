@@ -6,7 +6,7 @@
       {
          "method" : "LFlow;.flow:(LData;)V",
          "position" : {
-            "line" : 2,
+            "line" : 1,
             "path" : "Flow.java"
          },
          "sinks" : [

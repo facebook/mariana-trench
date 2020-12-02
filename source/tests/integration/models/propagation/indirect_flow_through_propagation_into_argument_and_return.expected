@@ -61,7 +61,7 @@
          ],
          "method" : "LFlow;.flow:()V",
          "position" : {
-            "line" : 1,
+            "line" : 0,
             "path" : "Flow.java"
          },
          "sinks" : [
@@ -87,7 +87,7 @@
       {
          "method" : "LFlow;.propagate_argument_into_this:(LSource;)LFlow;",
          "position" : {
-            "line" : 4,
+            "line" : 3,
             "path" : "Flow.java"
          },
          "propagation" : [

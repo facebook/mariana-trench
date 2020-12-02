@@ -37,14 +37,14 @@
          ],
          "method" : "LFlow;.flow:()V",
          "position" : {
-            "line" : 1,
+            "line" : 0,
             "path" : "Flow.java"
          }
       },
       {
          "method" : "LImplementation;.sink:(LData;)V",
          "position" : {
-            "line" : 1,
+            "line" : 0,
             "path" : "Implementation.java"
          },
          "sinks" : [
@@ -65,7 +65,7 @@
       {
          "method" : "LInterface;.sink:(LData;)V",
          "position" : {
-            "line" : 1,
+            "line" : 0,
             "path" : "Interface.java"
          }
       }

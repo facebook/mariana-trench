@@ -42,14 +42,14 @@
          ],
          "method" : "LFlow;.indirect:()V",
          "position" : {
-            "line" : 1,
+            "line" : 0,
             "path" : "Flow.java"
          }
       },
       {
          "method" : "LFlow;.into_sink:(LData;)V",
          "position" : {
-            "line" : 1,
+            "line" : 0,
             "path" : "Flow.java"
          },
          "sinks" : [
@@ -70,7 +70,7 @@
       {
          "method" : "LFlow;.propagation:(LData;)LData;",
          "position" : {
-            "line" : 1,
+            "line" : 0,
             "path" : "Flow.java"
          },
          "propagation" : [

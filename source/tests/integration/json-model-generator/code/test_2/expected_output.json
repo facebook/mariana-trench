@@ -103,7 +103,7 @@
       }
    ],
    "position" : {
-      "line" : 6,
+      "line" : 5,
       "path" : "com/facebook/marianatrench/integrationtests/JsonModelGeneratorIntegrationTest2.java"
    },
    "propagation" : [
