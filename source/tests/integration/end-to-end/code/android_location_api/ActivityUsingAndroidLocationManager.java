@@ -18,6 +18,8 @@ public class ActivityUsingAndroidLocationManager extends Activity implements Loc
 
   @Override
   public void onLocationChanged(Location location) {
+    Log.e("Activity", "fixed string");
+
     mLastKnownLoaction = location;
     Log.e("Activity", mLastKnownLoaction.toString());
 

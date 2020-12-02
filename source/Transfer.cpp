@@ -565,8 +565,7 @@ bool Transfer::analyze_load_param(
       context->class_properties.parameter_source_features(context->method());
 
   // Add the position of the instruction to the parameter sources.
-  auto* position =
-      context->positions.get(context->method(), environment->last_position());
+  auto* position = context->positions.get(context->method());
   taint.map([&features, position](Taint& sources) {
     sources = sources.attach_position(position, features);
   });

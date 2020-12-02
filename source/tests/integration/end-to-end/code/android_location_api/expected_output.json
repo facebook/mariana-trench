@@ -11,7 +11,7 @@
          "kind" : "LocationData",
          "local_positions" : [
             {
-               "line" : 21
+               "line" : 23
             }
          ],
          "origins" : [
@@ -25,7 +25,7 @@
          "sinks" : [
             {
                "call_position" : {
-                  "line" : 22,
+                  "line" : 24,
                   "path" : "android_location_api/ActivityUsingAndroidLocationManager.java"
                },
                "callee" : "Landroid/util/Log;.e:(Ljava/lang/String;Ljava/lang/String;)I",
@@ -38,7 +38,7 @@
          "sources" : [
             {
                "call_position" : {
-                  "line" : 22,
+                  "line" : 24,
                   "path" : "android_location_api/ActivityUsingAndroidLocationManager.java"
                },
                "callee" : "Landroid/location/Location;.toString:()Ljava/lang/String;",
