@@ -31,5 +31,5 @@ We value consistent code. Please follow the style of the surrounding code. Usefu
 * use autoformatters to minimize debates about spacing, indentation and line breaks.
 
 ## License
-By contributing to Pyre, you agree that your contributions will be licensed
+By contributing to Mariana Trench, you agree that your contributions will be licensed
 under the LICENSE file in the root directory of this source tree.
