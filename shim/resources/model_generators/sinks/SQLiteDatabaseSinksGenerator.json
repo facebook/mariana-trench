@@ -94,7 +94,7 @@
                 "constraint": "not",
                 "inner": {
                   "constraint": "name",
-                  "pattern": "Landroid/content/ContentValues;"
+                  "pattern": "\\[?Landroid/content/ContentValues;"
                 }
               }
             ],
