@@ -45,6 +45,10 @@ public class String implements CharSequence {
   }
 
   public String concat(String other) {
-    return this;
+    if (isEmpty()) {
+      return this;
+    } else {
+      return other;
+    }
   }
 }

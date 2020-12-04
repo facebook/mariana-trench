@@ -80,6 +80,7 @@
    ],
    "Ljava/lang/Runnable;.run:()V" : [ "Ljava/lang/Thread;.run:()V" ],
    "Ljava/lang/String;.concat:(Ljava/lang/String;)Ljava/lang/String;" : [ "Landroid/net/Uri;.toString:()Ljava/lang/String;" ],
+   "Ljava/lang/String;.isEmpty:()Z" : [ "Ljava/lang/String;.concat:(Ljava/lang/String;)Ljava/lang/String;" ],
    "Ljava/lang/Thread;.<init>:(Ljava/lang/Runnable;)V[0: Lcom/facebook/marianatrench/integrationtests/RunnableActivity$1;]" : [
       "Lcom/facebook/marianatrench/integrationtests/RunnableActivity;.onCreate:()V"
    ],

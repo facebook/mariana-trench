@@ -141,6 +141,9 @@
    "Ljava/lang/String;.<init>:()V" : {
       "static" : [ "Ljava/lang/Object;.<init>:()V" ]
    },
+   "Ljava/lang/String;.concat:(Ljava/lang/String;)Ljava/lang/String;" : {
+      "virtual" : [ "Ljava/lang/String;.isEmpty:()Z" ]
+   },
    "Ljava/lang/Thread;.<init>:(Ljava/lang/Runnable;)V" : {
       "static" : [ "Ljava/lang/Object;.<init>:()V" ]
    },

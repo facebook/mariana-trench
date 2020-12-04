@@ -271,7 +271,8 @@
       "Lcom/facebook/marianatrench/integrationtests/StaticUriIntentMapper;.getHostname:(Ljava/lang/String;)Ljava/lang/String;"
    ],
    "Ljava/lang/String;.isEmpty:()Z" : [
-      "Lcom/facebook/marianatrench/integrationtests/IntentHandlerUtil;.launchNextActivity:(Landroid/content/Context;Landroid/content/Intent;)V"
+      "Lcom/facebook/marianatrench/integrationtests/IntentHandlerUtil;.launchNextActivity:(Landroid/content/Context;Landroid/content/Intent;)V",
+      "Ljava/lang/String;.concat:(Ljava/lang/String;)Ljava/lang/String;"
    ],
    "Ljava/lang/String;.length:()I" : [
       "Lcom/facebook/marianatrench/integrationtests/StaticUriIntentMapper;.getHostname:(Ljava/lang/String;)Ljava/lang/String;"

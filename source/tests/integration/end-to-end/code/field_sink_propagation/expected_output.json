@@ -453,7 +453,7 @@
    },
    "propagation" : [
       {
-         "input" : "Argument(0).scheme",
+         "input" : "Argument(0)",
          "output" : "Return"
       }
    ]
@@ -913,6 +913,10 @@
    "propagation" : [
       {
          "input" : "Argument(0)",
+         "output" : "Return"
+      },
+      {
+         "input" : "Argument(1)",
          "output" : "Return"
       }
    ]

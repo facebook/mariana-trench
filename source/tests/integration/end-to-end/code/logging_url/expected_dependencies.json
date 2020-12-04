@@ -105,5 +105,6 @@
    "Ljava/lang/String;.contains:(Ljava/lang/String;)Z" : [
       "Lcom/instagram/url/UrlHandlerActivity;.handleIntent:(Landroid/content/Intent;)V"
    ],
+   "Ljava/lang/String;.isEmpty:()Z" : [ "Ljava/lang/String;.concat:(Ljava/lang/String;)Ljava/lang/String;" ],
    "Ljava/lang/Thread;.run:()V" : [ "Ljava/lang/Thread;.run:()V" ]
 }

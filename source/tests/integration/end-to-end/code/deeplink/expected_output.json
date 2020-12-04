@@ -1434,6 +1434,10 @@
       {
          "input" : "Argument(0)",
          "output" : "Return"
+      },
+      {
+         "input" : "Argument(1)",
+         "output" : "Return"
       }
    ]
 }

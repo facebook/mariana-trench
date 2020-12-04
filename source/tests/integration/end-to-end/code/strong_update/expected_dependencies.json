@@ -81,5 +81,6 @@
    ],
    "Ljava/lang/Runnable;.run:()V" : [ "Ljava/lang/Thread;.run:()V" ],
    "Ljava/lang/String;.concat:(Ljava/lang/String;)Ljava/lang/String;" : [ "Landroid/net/Uri;.toString:()Ljava/lang/String;" ],
+   "Ljava/lang/String;.isEmpty:()Z" : [ "Ljava/lang/String;.concat:(Ljava/lang/String;)Ljava/lang/String;" ],
    "Ljava/lang/Thread;.run:()V" : [ "Ljava/lang/Thread;.run:()V" ]
 }
