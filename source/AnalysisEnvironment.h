@@ -91,6 +91,8 @@ class AnalysisEnvironment final
 
   TaintTree read(MemoryLocation* memory_location, const Path& path) const;
 
+  TaintTree read(const MemoryLocationsDomain& memory_locations) const;
+
   TaintTree read(Register register_id) const;
 
   TaintTree read(Register register_id, const Path& path) const;

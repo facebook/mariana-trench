@@ -1661,6 +1661,52 @@ TEST_F(JsonTest, Model) {
         ]
       })#"));
 
+  EXPECT_EQ(
+      Model::from_json(
+          method,
+          test::parse_json(R"#({
+            "inline_as": "Argument(1).foo"
+          })#"),
+          context),
+      Model(
+          method,
+          context,
+          Model::Mode::Normal,
+          /* generations */ {},
+          /* parameter_sources */ {},
+          /* sinks */ {},
+          /* propagations */ {},
+          /* attach_to_sources */ {},
+          /* attach_to_sinks */ {},
+          /* attach_to_propagations */ {},
+          /* add_features_to_arguments */ {},
+          /* inline_as */
+          AccessPathConstantDomain(AccessPath(
+              Root(Root::Kind::Argument, 1),
+              Path{DexString::make_string("foo")}))));
+  EXPECT_EQ(
+      test::sorted_json(Model(
+                            method,
+                            context,
+                            Model::Mode::Normal,
+                            /* generations */ {},
+                            /* parameter_sources */ {},
+                            /* sinks */ {},
+                            /* propagations */ {},
+                            /* attach_to_sources */ {},
+                            /* attach_to_sinks */ {},
+                            /* attach_to_propagations */ {},
+                            /* add_features_to_arguments */ {},
+                            /* inline_as */
+                            AccessPathConstantDomain(AccessPath(
+                                Root(Root::Kind::Argument, 1),
+                                Path{DexString::make_string("foo")})))
+                            .to_json()),
+      test::parse_json(R"#({
+        "method": "LData;.method:(LData;LData;)V",
+        "inline_as": "Argument(1).foo"
+      })#"));
+
   // We do not parse issues for now.
   EXPECT_THROW(
       Model::from_json(method, test::parse_json(R"({"issues": 1})"), context),
@@ -1692,6 +1738,7 @@ TEST_F(JsonTest, Model) {
               /* attach_to_sinks */ {},
               /* attach_to_propagations */ {},
               /* add_features_to_arguments */ {},
+              /* inline_as */ AccessPathConstantDomain::bottom(),
               IssueSet{Issue(
                   /* source */ FrameSet{Frame::leaf(
                       context.kinds->get("first_source"))},

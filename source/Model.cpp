@@ -83,6 +83,7 @@ Model::Model(
     const std::vector<std::pair<Root, FeatureSet>>& attach_to_sinks,
     const std::vector<std::pair<Root, FeatureSet>>& attach_to_propagations,
     const std::vector<std::pair<Root, FeatureSet>>& add_features_to_arguments,
+    const AccessPathConstantDomain& inline_as,
     const IssueSet& issues)
     : method_(method), modes_(modes) {
   if (method_ && !modes_.test(Model::Mode::OverrideDefault)) {
@@ -138,6 +139,8 @@ Model::Model(
     add_add_features_to_arguments(root, features);
   }
 
+  set_inline_as(inline_as);
+
   for (const auto& issue : issues) {
     add_issue(issue);
   }
@@ -151,7 +154,7 @@ bool Model::operator==(const Model& other) const {
       attach_to_sinks_ == other.attach_to_sinks_ &&
       attach_to_propagations_ == other.attach_to_propagations_ &&
       add_features_to_arguments_ == other.add_features_to_arguments_ &&
-      issues_ == other.issues_;
+      inline_as_ == other.inline_as_ && issues_ == other.issues_;
 }
 
 bool Model::operator!=(const Model& other) const {
@@ -207,6 +210,8 @@ Model Model::instantiate(const Method* method, Context& context) const {
   for (const auto& [root, features] : add_features_to_arguments_) {
     model.add_add_features_to_arguments(root, features);
   }
+
+  model.set_inline_as(inline_as_);
 
   return model;
 }
@@ -270,6 +275,13 @@ Model Model::at_callsite(
   model.propagations_ = propagations_;
   model.add_features_to_arguments_ = add_features_to_arguments_;
 
+  model.inline_as_ = inline_as_;
+  if (inline_as_.is_bottom()) {
+    // This is bottom when the method was never analyzed.
+    // Set it to top to be sound when joining models.
+    model.inline_as_.set_to_top();
+  }
+
   return model;
 }
 
@@ -285,7 +297,8 @@ bool Model::empty() const {
       parameter_sources_.is_bottom() && sinks_.is_bottom() &&
       propagations_.is_bottom() && attach_to_sources_.is_bottom() &&
       attach_to_sinks_.is_bottom() && attach_to_propagations_.is_bottom() &&
-      add_features_to_arguments_.is_bottom() && issues_.is_bottom();
+      add_features_to_arguments_.is_bottom() && inline_as_.is_bottom() &&
+      issues_.is_bottom();
 }
 
 void Model::check_root_consistency(Root root) const {
@@ -356,6 +369,23 @@ void Model::check_parameter_source_port_consistency(
 void Model::check_propagation_consistency(
     const Propagation& propagation) const {
   check_port_consistency(propagation.input());
+}
+
+void Model::check_inline_as_consistency(
+    const AccessPathConstantDomain& inline_as) const {
+  auto access_path = inline_as.get_constant();
+
+  if (!access_path) {
+    return;
+  }
+
+  if (!access_path->root().is_argument()) {
+    ModelConsistencyError::raise(fmt::format(
+        "Model for method `{}` has an inline-as with a non-argument root.",
+        show(method_)));
+  }
+
+  check_port_consistency(*access_path);
 }
 
 void Model::add_mode(Model::Mode mode) {
@@ -511,6 +541,16 @@ FeatureSet Model::add_features_to_arguments(Root root) const {
   return add_features_to_arguments_.get(root);
 }
 
+const AccessPathConstantDomain& Model::inline_as() const {
+  return inline_as_;
+}
+
+void Model::set_inline_as(AccessPathConstantDomain inline_as) {
+  check_inline_as_consistency(inline_as);
+
+  inline_as_ = std::move(inline_as);
+}
+
 void Model::add_issue(Issue trace) {
   issues_.add(std::move(trace));
 }
@@ -544,7 +584,7 @@ bool Model::leq(const Model& other) const {
       attach_to_sinks_.leq(other.attach_to_sinks_) &&
       attach_to_propagations_.leq(other.attach_to_propagations_) &&
       add_features_to_arguments_.leq(other.add_features_to_arguments_) &&
-      issues_.leq(other.issues_);
+      inline_as_.leq(other.inline_as_) && issues_.leq(other.issues_);
 }
 
 void Model::join_with(const Model& other) {
@@ -563,6 +603,7 @@ void Model::join_with(const Model& other) {
   attach_to_sinks_.join_with(other.attach_to_sinks_);
   attach_to_propagations_.join_with(other.attach_to_propagations_);
   add_features_to_arguments_.join_with(other.add_features_to_arguments_);
+  inline_as_.join_with(other.inline_as_);
   issues_.join_with(other.issues_);
 
   mt_expensive_assert(previous.leq(*this) && other.leq(*this));
@@ -712,6 +753,12 @@ Model Model::from_json(
     model.add_add_features_to_arguments(port.root(), features);
   }
 
+  if (value.isMember("inline_as")) {
+    JsonValidation::string(value, /* field */ "inline_as");
+    model.set_inline_as(
+        AccessPathConstantDomain(AccessPath::from_json(value["inline_as"])));
+  }
+
   // We cannot parse issues for now.
   if (value.isMember("issues")) {
     throw JsonValidationError(
@@ -842,6 +889,10 @@ Json::Value Model::to_json() const {
     value["add_features_to_arguments"] = add_features_to_arguments_value;
   }
 
+  if (auto access_path = inline_as_.get_constant()) {
+    value["inline_as"] = access_path->to_json();
+  }
+
   if (!issues_.is_bottom()) {
     auto issues_value = Json::Value(Json::arrayValue);
     for (const auto& issue : issues_) {
@@ -946,6 +997,9 @@ std::ostream& operator<<(std::ostream& out, const Model& model) {
       out << "    " << root << " -> " << features << ",\n";
     }
     out << "  }";
+  }
+  if (auto access_path = model.inline_as_.get_constant()) {
+    out << ",\n  inline_as=" << *access_path;
   }
   if (!model.issues_.is_bottom()) {
     out << ",\n  issues={\n";

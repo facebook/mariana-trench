@@ -30,11 +30,6 @@
                      "callee_port" : "Return",
                      "distance" : 1,
                      "kind" : "TestSource",
-                     "local_positions" : [
-                        {
-                           "line" : 2
-                        }
-                     ],
                      "origins" : [ "LSource;.source:()LData;" ]
                   }
                ]
@@ -68,6 +63,7 @@
          ]
       },
       {
+         "inline_as" : "Argument(1)",
          "method" : "LFlow;.propagation:(LData;)LData;",
          "position" : {
             "line" : 0,

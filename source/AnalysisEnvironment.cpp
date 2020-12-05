@@ -182,9 +182,8 @@ TaintTree AnalysisEnvironment::read(
       .read(full_path, propagate_artificial_sources);
 }
 
-TaintTree AnalysisEnvironment::read(Register register_id) const {
-  MemoryLocationsDomain memory_locations = memory_locations_.get(register_id);
-
+TaintTree AnalysisEnvironment::read(
+    const MemoryLocationsDomain& memory_locations) const {
   if (!memory_locations.is_value()) {
     return TaintTree::bottom();
   }
@@ -193,8 +192,11 @@ TaintTree AnalysisEnvironment::read(Register register_id) const {
   for (auto* memory_location : memory_locations.elements()) {
     taint.join_with(read(memory_location));
   }
-
   return taint;
+}
+
+TaintTree AnalysisEnvironment::read(Register register_id) const {
+  return read(memory_locations_.get(register_id));
 }
 
 TaintTree AnalysisEnvironment::read(Register register_id, const Path& path)

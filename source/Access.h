@@ -15,6 +15,7 @@
 #include <boost/functional/hash.hpp>
 #include <json/json.h>
 
+#include <ConstantAbstractDomain.h>
 #include <DexClass.h>
 #include <IRInstruction.h>
 
@@ -149,6 +150,9 @@ class Root final {
   explicit Root(IntegerEncoding value) : value_(value) {}
 
  public:
+  /* Default constructor required by sparta. */
+  explicit Root() : value_(static_cast<IntegerEncoding>(Kind::Return)) {}
+
   explicit Root(Kind kind, ParameterPosition parameter_position = 0) {
     if (kind == Kind::Argument) {
       value_ = parameter_position;
@@ -250,6 +254,9 @@ namespace marianatrench {
  */
 class AccessPath final {
  public:
+  /* Default constructor required by sparta. */
+  explicit AccessPath() {}
+
   explicit AccessPath(Root root, Path path = {})
       : root_(root), path_(std::move(path)) {}
 
@@ -332,3 +339,14 @@ struct std::hash<marianatrench::AccessPath> {
     return seed;
   }
 };
+
+namespace marianatrench {
+
+/**
+ * Represents the access path constant abstract domain.
+ *
+ * This is either bottom, top or an access path.
+ */
+using AccessPathConstantDomain = sparta::ConstantAbstractDomain<AccessPath>;
+
+} // namespace marianatrench

@@ -457,6 +457,47 @@ void analyze_artificial_calls(
   }
 }
 
+// If the method invoke can be safely inlined, return the result memory
+// location, otherwise return nullptr.
+MemoryLocation* MT_NULLABLE try_inline_invoke(
+    MethodContext* context,
+    const AnalysisEnvironment* environment,
+    const IRInstruction* instruction,
+    const Callee& callee) {
+  auto access_path = callee.model.inline_as().get_constant();
+  if (!access_path) {
+    return nullptr;
+  }
+
+  auto register_id = instruction->src(access_path->root().parameter_position());
+  auto memory_locations = environment->memory_locations(register_id);
+  if (!memory_locations.is_value() || memory_locations.size() != 1) {
+    return nullptr;
+  }
+
+  auto memory_location = *memory_locations.elements().begin();
+  for (const auto* field : access_path->path()) {
+    memory_location = memory_location->make_field(field);
+  }
+
+  // Only inline if the model does not generate or propagate extra taint.
+  if (!callee.model.generations().is_bottom() ||
+      !callee.model.propagations().leq(PropagationAccessPathTree({
+          {AccessPath(Root(Root::Kind::Return)),
+           PropagationSet{Propagation(
+               /* input */ *access_path,
+               /* inferred_features */ FeatureMayAlwaysSet(),
+               /* user_features */ FeatureSet::bottom())}},
+      })) ||
+      callee.model.add_via_obscure_feature() ||
+      callee.model.has_add_features_to_arguments()) {
+    return nullptr;
+  }
+
+  LOG_OR_DUMP(context, 4, "Inlining method call");
+  return memory_location;
+}
+
 } // namespace
 
 bool Transfer::analyze_invoke(
@@ -483,10 +524,16 @@ bool Transfer::analyze_invoke(
       callee.resolved_base_method->returns_void()) {
     LOG_OR_DUMP(context, 4, "Resetting the result register");
     environment->assign(k_result_register, MemoryLocationsDomain::bottom());
+  } else if (
+      auto* memory_location =
+          try_inline_invoke(context, environment, instruction, callee)) {
+    LOG_OR_DUMP(
+        context, 4, "Setting result register to {}", show(memory_location));
+    environment->assign(k_result_register, memory_location);
   } else {
     // Assume the method call returns a new memory location,
     // that does not alias with anything.
-    auto memory_location = context->memory_factory.make_location(instruction);
+    memory_location = context->memory_factory.make_location(instruction);
     LOG_OR_DUMP(
         context, 4, "Setting result register to {}", show(memory_location));
     environment->assign(k_result_register, memory_location);
@@ -811,6 +858,95 @@ void infer_output_taint(
   }
 }
 
+bool has_side_effect(const MethodItemEntry& instruction) {
+  switch (instruction.type) {
+    case MFLOW_OPCODE:
+      switch (instruction.insn->opcode()) {
+        case IOPCODE_LOAD_PARAM:
+        case IOPCODE_LOAD_PARAM_OBJECT:
+        case IOPCODE_LOAD_PARAM_WIDE:
+        case OPCODE_NOP:
+        case OPCODE_MOVE:
+        case OPCODE_MOVE_WIDE:
+        case OPCODE_MOVE_OBJECT:
+        case OPCODE_MOVE_RESULT:
+        case OPCODE_MOVE_RESULT_WIDE:
+        case OPCODE_MOVE_RESULT_OBJECT:
+        case IOPCODE_MOVE_RESULT_PSEUDO:
+        case IOPCODE_MOVE_RESULT_PSEUDO_OBJECT:
+        case IOPCODE_MOVE_RESULT_PSEUDO_WIDE:
+        case OPCODE_RETURN_VOID:
+        case OPCODE_RETURN:
+        case OPCODE_RETURN_WIDE:
+        case OPCODE_RETURN_OBJECT:
+        case OPCODE_CONST:
+        case OPCODE_CONST_WIDE:
+        case OPCODE_IGET:
+        case OPCODE_IGET_WIDE:
+        case OPCODE_IGET_OBJECT:
+        case OPCODE_IGET_BOOLEAN:
+        case OPCODE_IGET_BYTE:
+        case OPCODE_IGET_CHAR:
+        case OPCODE_IGET_SHORT:
+          return false;
+        default:
+          return true;
+      }
+      break;
+    case MFLOW_DEBUG:
+    case MFLOW_POSITION:
+    case MFLOW_FALLTHROUGH:
+      return false;
+    default:
+      return true;
+  }
+}
+
+// Infer whether the method could be inlined.
+AccessPathConstantDomain infer_inline_as(
+    MethodContext* context,
+    const MemoryLocationsDomain& memory_locations) {
+  // Check if we are returning an argument access path.
+  if (!memory_locations.is_value() || memory_locations.size() != 1) {
+    return AccessPathConstantDomain::top();
+  }
+
+  auto* memory_location = *memory_locations.elements().begin();
+  auto access_path = memory_location->access_path();
+  if (!access_path) {
+    return AccessPathConstantDomain::top();
+  }
+
+  LOG_OR_DUMP(
+      context, 4, "Instruction returns the access path: {}", *access_path);
+
+  // Check if the method has any side effect.
+  const auto* code = context->method()->get_code();
+  mt_assert(code != nullptr);
+  const auto& cfg = code->cfg();
+  if (cfg.blocks().size() != 1) {
+    // There could be multiple return statements.
+    LOG_OR_DUMP(
+        context, 4, "Method has multiple basic blocks, it cannot be inlined.");
+    return AccessPathConstantDomain::top();
+  }
+
+  auto* entry_block = cfg.entry_block();
+  auto found =
+      std::find_if(entry_block->begin(), entry_block->end(), has_side_effect);
+  if (found != entry_block->end()) {
+    LOG_OR_DUMP(
+        context,
+        4,
+        "Method has an instruction with possible side effects: {}, it cannot be inlined.",
+        show(*found));
+    return AccessPathConstantDomain::top();
+  }
+
+  LOG_OR_DUMP(context, 4, "Method can be inlined as {}", *access_path);
+  return AccessPathConstantDomain(*access_path);
+}
+
 } // namespace
 
 bool Transfer::analyze_return(
@@ -829,8 +965,10 @@ bool Transfer::analyze_return(
   });
 
   for (auto register_id : instruction->srcs()) {
+    auto memory_locations = environment->memory_locations(register_id);
+    context->model.set_inline_as(infer_inline_as(context, memory_locations));
     infer_output_taint(
-        context, Root(Root::Kind::Return), environment->read(register_id));
+        context, Root(Root::Kind::Return), environment->read(memory_locations));
 
     for (const auto& [path, sinks] : return_sinks.elements()) {
       Taint sources = environment->read(register_id, path).collapse();

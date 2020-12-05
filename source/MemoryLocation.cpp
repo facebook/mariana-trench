@@ -53,6 +53,15 @@ const Path& MemoryLocation::path() {
   return empty_path;
 }
 
+std::optional<AccessPath> MemoryLocation::access_path() {
+  auto* parameter = root()->dyn_cast<ParameterMemoryLocation>();
+  if (!parameter) {
+    return std::nullopt;
+  }
+
+  return AccessPath(Root(Root::Kind::Argument, parameter->position()), path());
+}
+
 std::ostream& operator<<(
     std::ostream& out,
     const MemoryLocation& memory_location) {

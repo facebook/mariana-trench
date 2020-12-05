@@ -8,6 +8,7 @@
 #pragma once
 
 #include <memory>
+#include <optional>
 #include <ostream>
 #include <string>
 #include <type_traits>
@@ -63,6 +64,13 @@ class MemoryLocation {
    * location.
    */
   virtual const Path& path();
+
+  /**
+   * Return the access path that this memory location describes.
+   *
+   * This returns std::nullopt if the root is not a parameter.
+   */
+  std::optional<AccessPath> access_path();
 
   virtual std::string str() const = 0;
 

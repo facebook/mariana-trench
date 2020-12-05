@@ -68,6 +68,9 @@ namespace marianatrench {
  * f(x);
  * // Here x has the feature, regardless of the propagations of f.
  * ```
+ *
+ * *inline as* is either top, bottom or an argument access path that will be
+ * used to inline the method at call sites.
  */
 class Model final {
  public:
@@ -122,6 +125,8 @@ class Model final {
           {},
       const std::vector<std::pair<Root, FeatureSet>>&
           add_features_to_arguments = {},
+      const AccessPathConstantDomain& inline_as =
+          AccessPathConstantDomain::bottom(),
       const IssueSet& issues = {});
 
   Model(const Model& other) = default;
@@ -156,6 +161,8 @@ class Model final {
       const AccessPath& access_path) const;
   void check_frame_consistency(const Frame& frame, std::string_view kind) const;
   void check_propagation_consistency(const Propagation& propagation) const;
+  void check_inline_as_consistency(
+      const AccessPathConstantDomain& inline_as) const;
 
   void add_mode(Model::Mode mode);
   void add_taint_in_taint_out();
@@ -201,6 +208,9 @@ class Model final {
   bool has_add_features_to_arguments() const;
   FeatureSet add_features_to_arguments(Root root) const;
 
+  const AccessPathConstantDomain& inline_as() const;
+  void set_inline_as(AccessPathConstantDomain inline_as);
+
   void add_issue(Issue issue);
   const IssueSet& issues() const {
     return issues_;
@@ -243,6 +253,7 @@ class Model final {
   RootPatriciaTreeAbstractPartition<FeatureSet> attach_to_sinks_;
   RootPatriciaTreeAbstractPartition<FeatureSet> attach_to_propagations_;
   RootPatriciaTreeAbstractPartition<FeatureSet> add_features_to_arguments_;
+  AccessPathConstantDomain inline_as_;
   IssueSet issues_;
 };
 

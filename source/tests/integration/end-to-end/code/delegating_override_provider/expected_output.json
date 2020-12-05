@@ -161,6 +161,62 @@
    ]
 }
 {
+   "inline_as" : "Argument(0)",
+   "method" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sanitize:(Ljava/lang/Object;)Ljava/lang/Object;",
+   "position" : {
+      "line" : 17,
+      "path" : "com/facebook/marianatrench/integrationtests/Origin.java"
+   },
+   "propagation" : [
+      {
+         "input" : "Argument(0)",
+         "output" : "Return"
+      }
+   ]
+}
+{
+   "inline_as" : "Argument(0)",
+   "method" : "Lcom/instagram/common/analytics/intf/AnalyticsEvent;.addExtra:(Ljava/lang/String;Ljava/lang/String;)Lcom/instagram/common/analytics/intf/AnalyticsEvent;",
+   "position" : {
+      "line" : 18,
+      "path" : "com/instagram/common/analytics/intf/AnalyticsEvent.java"
+   },
+   "propagation" : [
+      {
+         "input" : "Argument(0)",
+         "output" : "Return"
+      }
+   ]
+}
+{
+   "inline_as" : "Argument(0).host",
+   "method" : "Landroid/net/Uri;.getHost:()Ljava/lang/String;",
+   "position" : {
+      "line" : 35,
+      "path" : "android/net/Uri.java"
+   },
+   "propagation" : [
+      {
+         "input" : "Argument(0).host",
+         "output" : "Return"
+      }
+   ]
+}
+{
+   "inline_as" : "Argument(0).scheme",
+   "method" : "Landroid/net/Uri;.getScheme:()Ljava/lang/String;",
+   "position" : {
+      "line" : 31,
+      "path" : "android/net/Uri.java"
+   },
+   "propagation" : [
+      {
+         "input" : "Argument(0).scheme",
+         "output" : "Return"
+      }
+   ]
+}
+{
    "method" : "Landroid/app/Activity;.<init>:()V",
    "position" : {
       "line" : 12,
@@ -503,37 +559,11 @@
    }
 }
 {
-   "method" : "Landroid/net/Uri;.getHost:()Ljava/lang/String;",
-   "position" : {
-      "line" : 35,
-      "path" : "android/net/Uri.java"
-   },
-   "propagation" : [
-      {
-         "input" : "Argument(0).host",
-         "output" : "Return"
-      }
-   ]
-}
-{
    "method" : "Landroid/net/Uri;.getQueryParameter:(Ljava/lang/String;)Ljava/lang/String;",
    "position" : {
       "line" : 39,
       "path" : "android/net/Uri.java"
    }
-}
-{
-   "method" : "Landroid/net/Uri;.getScheme:()Ljava/lang/String;",
-   "position" : {
-      "line" : 31,
-      "path" : "android/net/Uri.java"
-   },
-   "propagation" : [
-      {
-         "input" : "Argument(0).scheme",
-         "output" : "Return"
-      }
-   ]
 }
 {
    "method" : "Landroid/net/Uri;.parse:(Ljava/lang/String;)Landroid/net/Uri;",
@@ -800,19 +830,6 @@
    }
 }
 {
-   "method" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sanitize:(Ljava/lang/Object;)Ljava/lang/Object;",
-   "position" : {
-      "line" : 17,
-      "path" : "com/facebook/marianatrench/integrationtests/Origin.java"
-   },
-   "propagation" : [
-      {
-         "input" : "Argument(0)",
-         "output" : "Return"
-      }
-   ]
-}
-{
    "method" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
    "position" : {
       "line" : 14,
@@ -919,19 +936,6 @@
       "line" : 11,
       "path" : "com/instagram/common/analytics/intf/AnalyticsEvent.java"
    }
-}
-{
-   "method" : "Lcom/instagram/common/analytics/intf/AnalyticsEvent;.addExtra:(Ljava/lang/String;Ljava/lang/String;)Lcom/instagram/common/analytics/intf/AnalyticsEvent;",
-   "position" : {
-      "line" : 18,
-      "path" : "com/instagram/common/analytics/intf/AnalyticsEvent.java"
-   },
-   "propagation" : [
-      {
-         "input" : "Argument(0)",
-         "output" : "Return"
-      }
-   ]
 }
 {
    "method" : "Lcom/instagram/common/analytics/intf/AnalyticsEvent;.obtain:(Ljava/lang/String;)Lcom/instagram/common/analytics/intf/AnalyticsEvent;",
