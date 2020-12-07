@@ -59,8 +59,8 @@ class MethodVisitorGenerator : public Generator {
 
 namespace generator {
 
-std::optional<std::string> get_class_name(const Method* method);
-std::optional<std::string> get_method_name(const Method* method);
+const std::string& get_class_name(const Method* method);
+const std::string& get_method_name(const Method* method);
 std::optional<std::string> get_super_type(const Method* method);
 std::optional<const DexType*> get_return_type(const Method* method);
 std::optional<std::string> get_return_type_string(const Method* method);

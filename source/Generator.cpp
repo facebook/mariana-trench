@@ -55,11 +55,11 @@ std::vector<Model> MethodVisitorGenerator::run(const DexStoresVector& stores) {
   return models;
 }
 
-std::optional<std::string> generator::get_class_name(const Method* method) {
+const std::string& generator::get_class_name(const Method* method) {
   return method->get_class()->get_name()->str();
 }
 
-std::optional<std::string> generator::get_method_name(const Method* method) {
+const std::string& generator::get_method_name(const Method* method) {
   return method->get_name();
 }
 

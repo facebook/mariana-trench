@@ -22,9 +22,6 @@ class StructuredLoggerSinkGenerator : public MethodVisitorGenerator {
   std::vector<Model> visit_method(const Method* method) const override {
     const auto class_name = generator::get_class_name(method);
     const auto method_name = generator::get_method_name(method);
-    if (!class_name || !method_name) {
-      return {};
-    }
 
     auto argument_size = generator::get_argument_types(method).size();
     if (argument_size == 0) {
@@ -33,9 +30,9 @@ class StructuredLoggerSinkGenerator : public MethodVisitorGenerator {
 
     // Look for logging methods in FB USL generated classes.
     if (boost::starts_with(
-            *class_name, "Lcom/facebook/analytics/structuredlogger/events") &&
-        !boost::algorithm::ends_with(*class_name, "Impl;") &&
-        boost::starts_with(*method_name, "set")) {
+            class_name, "Lcom/facebook/analytics/structuredlogger/events") &&
+        !boost::algorithm::ends_with(class_name, "Impl;") &&
+        boost::starts_with(method_name, "set")) {
       auto model = Model(method, context_);
       model.add_mode(Model::Mode::SkipAnalysis);
       model.add_sink(
@@ -50,12 +47,11 @@ class StructuredLoggerSinkGenerator : public MethodVisitorGenerator {
     }
 
     // Look for IG logger methods and legacy HoneyClientEvent logging methods.
-    if ((*class_name ==
-             "Lcom/instagram/common/analytics/intf/AnalyticsEvent;" &&
-         boost::starts_with(*method_name, "addExtra")) ||
-        ((boost::algorithm::ends_with(*class_name, "HoneyClientEvent;") ||
-          boost::algorithm::ends_with(*class_name, "HoneyAnalyticsEvent;")) &&
-         boost::starts_with(*method_name, "addParameter"))) {
+    if ((class_name == "Lcom/instagram/common/analytics/intf/AnalyticsEvent;" &&
+         boost::starts_with(method_name, "addExtra")) ||
+        ((boost::algorithm::ends_with(class_name, "HoneyClientEvent;") ||
+          boost::algorithm::ends_with(class_name, "HoneyAnalyticsEvent;")) &&
+         boost::starts_with(method_name, "addParameter"))) {
       ParameterPosition position = argument_size == 1 ? 1 : 2;
       auto model = Model(method, context_);
       model.add_mode(Model::Mode::SkipAnalysis);

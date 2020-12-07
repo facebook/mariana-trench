@@ -95,9 +95,9 @@ class ServiceSourceGenerator : public Generator {
         const auto* method = methods_.get(dex_method);
         const auto method_name = generator::get_method_name(method);
         const auto argument_types = generator::get_argument_types(method);
-        const auto class_name = *generator::get_class_name(method);
+        const auto class_name = generator::get_class_name(method);
 
-        if (!method_name || boost::starts_with(class_name, "Landroid") ||
+        if (boost::starts_with(class_name, "Landroid") ||
             argument_types.size() < 1) {
           return;
         }
@@ -109,7 +109,7 @@ class ServiceSourceGenerator : public Generator {
           return;
         }
 
-        if (boost::equals(*method_name, "handleMessage") &&
+        if (boost::equals(method_name, "handleMessage") &&
             boost::contains(class_name, "ervice") &&
             argument_types.size() == 1) {
           auto model = source_first_argument(method, context_);
@@ -117,7 +117,7 @@ class ServiceSourceGenerator : public Generator {
           models.push_back(model);
         }
 
-        if (service_methods.find(*method_name) != service_methods.end() &&
+        if (service_methods.find(method_name) != service_methods.end() &&
             manifest_services.find(generator::get_outer_class(class_name)) !=
                 manifest_services.end()) {
           auto model = source_first_argument(method, context_);
