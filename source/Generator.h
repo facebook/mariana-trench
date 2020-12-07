@@ -19,6 +19,7 @@
 #include <mariana-trench/Methods.h>
 #include <mariana-trench/Model.h>
 #include <mariana-trench/Options.h>
+#include <mariana-trench/Overrides.h>
 
 namespace marianatrench {
 
