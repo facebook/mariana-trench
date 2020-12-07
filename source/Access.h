@@ -150,7 +150,7 @@ class Root final {
   explicit Root(IntegerEncoding value) : value_(value) {}
 
  public:
-  /* Default constructor required by sparta. */
+  /* Default constructor required by sparta, do not use. */
   explicit Root() : value_(static_cast<IntegerEncoding>(Kind::Return)) {}
 
   explicit Root(Kind kind, ParameterPosition parameter_position = 0) {
@@ -254,8 +254,8 @@ namespace marianatrench {
  */
 class AccessPath final {
  public:
-  /* Default constructor required by sparta. */
-  explicit AccessPath() {}
+  /* Default constructor required by sparta, do not use. */
+  explicit AccessPath() = default;
 
   explicit AccessPath(Root root, Path path = {})
       : root_(root), path_(std::move(path)) {}
