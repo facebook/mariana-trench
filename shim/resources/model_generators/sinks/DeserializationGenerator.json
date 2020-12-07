@@ -1,0 +1,21 @@
+{
+  "model_generators": [
+    {
+      "find": "methods",
+      "where": [
+        {
+          "constraint": "signature",
+          "pattern": "Ljava/io/ObjectInputStream;\\.readObject.*"
+        }
+      ],
+      "model": {
+        "sinks": [
+          {
+            "kind": "Deserialization",
+            "port": "Argument(0)"
+          }
+        ]
+      }
+    }
+  ]
+}

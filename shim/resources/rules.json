@@ -214,8 +214,10 @@
     ],
     "sinks": [
       "CodeExecution",
+      "Deserialization",
       "DynamicCodeLoading",
-      "PackageInstaller"
+      "PackageInstaller",
+      "Reflection"
     ]
   },
   {

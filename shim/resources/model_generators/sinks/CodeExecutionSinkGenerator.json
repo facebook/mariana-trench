@@ -130,7 +130,7 @@
         ],
         "sinks": [
           {
-            "kind": "CodeExecution",
+            "kind": "Reflection",
             "port": "Argument(0)"
           }
         ]
