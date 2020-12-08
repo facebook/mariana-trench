@@ -25,6 +25,23 @@
           }
         ]
       }
+    },
+    {
+      "find": "methods",
+      "where": [
+        {
+          "constraint": "signature",
+          "pattern": "Lcom/moblica/dmg/msg/fromclient.*decode:\\(Lorg/apache/mina/core/buffer/IoBuffer;\\).*"
+        }
+      ],
+      "model": {
+        "sources": [
+          {
+            "kind": "UnityClientDecodeMessageUserInput",
+            "port": "Argument(1)"
+          }
+        ]
+      }
     }
   ]
 }

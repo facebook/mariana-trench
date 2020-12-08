@@ -364,15 +364,7 @@
     "code": 20,
     "description": "Values from user-controlled source may eventually flow into array allocation",
     "sources": [
-      "ActivityUserInput",
-      "FragmentUserInput",
-      "JavascriptInterfaceUserInput",
-      "ProviderUserInput",
-      "ReceiverUserInput",
-      "ServiceAIDLUserInput",
-      "ServiceUserInput",
-      "UnityClientMessageUserInput",
-      "WebViewUserInput"
+      "UnityClientDecodeMessageUserInput"
     ],
     "sinks": [
       "ArrayAllocation"
