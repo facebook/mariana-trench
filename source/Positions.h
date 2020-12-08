@@ -38,15 +38,27 @@ class Positions final {
    */
   const Position* get(
       const DexMethod* method,
-      const DexPosition* position = nullptr) const;
+      const DexPosition* position = nullptr,
+      std::optional<Root> port = {},
+      const IRInstruction* instruction = nullptr) const;
 
   const Position* get(
       const Method* method,
-      const DexPosition* position = nullptr) const;
+      const DexPosition* position = nullptr,
+      std::optional<Root> port = {},
+      const IRInstruction* instruction = nullptr) const;
 
-  const Position* get(const DexMethod* method, int line) const;
+  const Position* get(
+      const DexMethod* method,
+      int line,
+      std::optional<Root> port = {},
+      const IRInstruction* instruction = nullptr) const;
 
-  const Position* get(const std::optional<std::string>& path, int line) const;
+  const Position* get(
+      const std::optional<std::string>& path,
+      int line,
+      std::optional<Root> port = {},
+      const IRInstruction* instruction = nullptr) const;
 
   const Position* unknown() const;
 

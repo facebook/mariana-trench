@@ -19,11 +19,16 @@ constexpr int k_unknown_line = -1;
 
 } // namespace
 
-Position::Position(const std::string* path, int line)
-    : path_(path), line_(line) {}
+Position::Position(
+    const std::string* path,
+    int line,
+    std::optional<Root> port,
+    const IRInstruction* instruction)
+    : path_(path), line_(line), port_(port), instruction_(instruction) {}
 
 bool Position::operator==(const Position& other) const {
-  return path_ == other.path_ && line_ == other.line_;
+  return path_ == other.path_ && line_ == other.line_ && port_ == other.port_ &&
+      instruction_ == other.instruction_;
 }
 
 bool Position::operator!=(const Position& other) const {

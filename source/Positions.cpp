@@ -253,7 +253,9 @@ Positions::Positions(const Options& options, const DexStoresVector& stores) {
 
 const Position* Positions::get(
     const DexMethod* method,
-    const DexPosition* position) const {
+    const DexPosition* position,
+    std::optional<Root> port,
+    const IRInstruction* instruction) const {
   mt_assert(method != nullptr);
 
   const std::string* path = method_to_path_.get(method, /* default */ nullptr);
@@ -265,28 +267,39 @@ const Position* Positions::get(
     line = method_to_line_.get(method, /* default */ k_unknown_line);
   }
 
-  return positions_.insert(Position(path, line)).first;
+  return positions_.insert(Position(path, line, port, instruction)).first;
 }
 
 const Position* Positions::get(
     const Method* method,
-    const DexPosition* position) const {
-  return get(method->dex_method(), position);
+    const DexPosition* position,
+    std::optional<Root> port,
+    const IRInstruction* instruction) const {
+  return get(method->dex_method(), position, port, instruction);
 }
 
-const Position* Positions::get(const DexMethod* method, int line) const {
+const Position* Positions::get(
+    const DexMethod* method,
+    int line,
+    std::optional<Root> port,
+    const IRInstruction* instruction) const {
   mt_assert(method != nullptr);
 
   const std::string* path = method_to_path_.get(method, /* default */ nullptr);
 
-  return positions_.insert(Position(path, line)).first;
+  return positions_.insert(Position(path, line, port, instruction)).first;
 }
 
-const Position* Positions::get(const std::optional<std::string>& path, int line)
-    const {
+const Position* Positions::get(
+    const std::optional<std::string>& path,
+    int line,
+    std::optional<Root> port,
+    const IRInstruction* instruction) const {
   auto position = Position(
       /* path */ path ? paths_.insert(*path).first : nullptr,
-      /* line */ line);
+      /* line */ line,
+      /* port */ port,
+      /* instruction */ instruction);
   return positions_.insert(position).first;
 }
 

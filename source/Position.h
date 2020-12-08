@@ -12,6 +12,9 @@
 #include <boost/functional/hash.hpp>
 #include <json/json.h>
 
+#include <IRInstruction.h>
+
+#include <mariana-trench/Access.h>
 #include <mariana-trench/Compiler.h>
 #include <mariana-trench/Context.h>
 
@@ -19,7 +22,11 @@ namespace marianatrench {
 
 class Position final {
  public:
-  Position(const std::string* MT_NULLABLE path, int line);
+  Position(
+      const std::string* MT_NULLABLE path,
+      int line,
+      std::optional<Root> port = {},
+      const IRInstruction* instruction = nullptr);
 
   Position(const Position&) = default;
   Position(Position&&) = default;
@@ -38,6 +45,14 @@ class Position final {
     return line_;
   }
 
+  std::optional<Root> port() const {
+    return port_;
+  }
+
+  const IRInstruction* instruction() const {
+    return instruction_;
+  }
+
   friend std::ostream& operator<<(std::ostream& out, const Position& kind);
 
   static const Position* from_json(const Json::Value& value, Context& context);
@@ -48,6 +63,10 @@ class Position final {
 
   const std::string* MT_NULLABLE path_;
   int line_;
+  // The return value or argument through which taint is flowing in the
+  // IRInstruction on the given line
+  std::optional<Root> port_;
+  const IRInstruction* instruction_;
 };
 
 } // namespace marianatrench
@@ -58,6 +77,10 @@ struct std::hash<marianatrench::Position> {
     std::size_t seed = 0;
     boost::hash_combine(seed, position.path_);
     boost::hash_combine(seed, position.line_);
+    if (position.port_) {
+      boost::hash_combine(seed, position.port_->encode());
+    }
+    boost::hash_combine(seed, position.instruction_);
     return seed;
   }
 };
