@@ -170,11 +170,12 @@
       "JavascriptInterfaceUserInput"
     ],
     "sinks": [
-      "GraphQLMutation",
       "BlueServiceOperation",
-      "SharedPreferenceEditor",
+      "GraphQLMutation",
+      "IGDirectMutation",
       "MQTTPublishMessage",
-      "IGDirectMutation"
+      "SharedPreferenceEditor",
+      "SQLMutation"
     ]
   },
   {
