@@ -1744,13 +1744,18 @@ TEST_F(JsonTest, Model) {
                       context.kinds->get("first_source"))},
                   /* sink */
                   Taint{Frame::leaf(context.kinds->get("first_sink"))},
-                  &rule)})
+                  &rule,
+                  context.positions->get("Data.java", 1))})
               .to_json()),
       test::parse_json(R"({
         "method": "LData;.method:(LData;LData;)V",
         "issues": [
           {
             "rule": 1,
+            "position": {
+              "path": "Data.java",
+              "line": 1
+            },
             "sources": [
               {
                 "kind": "first_source",

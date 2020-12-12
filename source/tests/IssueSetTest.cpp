@@ -28,6 +28,9 @@ TEST_F(IssueSetTest, Insertion) {
       "rule 2", 2, "description", {other_source_kind}, {other_sink_kind});
   Rule rule_3("rule 3", 3, "description", {source_kind}, {other_sink_kind});
 
+  const auto* position_1 = context.positions->get(std::nullopt, 1);
+  const auto* position_2 = context.positions->get(std::nullopt, 2);
+
   Scope scope;
   auto* one = context.methods->create(
       redex::create_void_method(scope, "LClass;", "one"));
@@ -40,31 +43,36 @@ TEST_F(IssueSetTest, Insertion) {
   set.add(Issue(
       /* source */ Taint{Frame::leaf(source_kind)},
       /* sink */ Taint{Frame::leaf(sink_kind)},
-      &rule_1));
+      &rule_1,
+      position_1));
   EXPECT_EQ(
       set,
       (IssueSet{
           Issue(
               /* source */ Taint{Frame::leaf(source_kind)},
               /* sink */ Taint{Frame::leaf(sink_kind)},
-              &rule_1),
+              &rule_1,
+              position_1),
       }));
 
   set.add(Issue(
       /* source */ Taint{Frame::leaf(other_source_kind)},
       /* sink */ Taint{Frame::leaf(other_sink_kind)},
-      &rule_2));
+      &rule_2,
+      position_1));
   EXPECT_EQ(
       set,
       (IssueSet{
           Issue(
               /* source */ Taint{Frame::leaf(source_kind)},
               /* sink */ Taint{Frame::leaf(sink_kind)},
-              &rule_1),
+              &rule_1,
+              position_1),
           Issue(
               /* source */ Taint{Frame::leaf(other_source_kind)},
               /* sink */ Taint{Frame::leaf(other_sink_kind)},
-              &rule_2),
+              &rule_2,
+              position_1),
       }));
 
   set.add(Issue(
@@ -78,14 +86,16 @@ TEST_F(IssueSetTest, Insertion) {
           /* features */ {},
           /* local_positions */ {})},
       /* sink */ Taint{Frame::leaf(other_sink_kind)},
-      &rule_2));
+      &rule_2,
+      position_1));
   EXPECT_EQ(
       set,
       (IssueSet{
           Issue(
               /* source */ Taint{Frame::leaf(source_kind)},
               /* sink */ Taint{Frame::leaf(sink_kind)},
-              &rule_1),
+              &rule_1,
+              position_1),
           Issue(
               /* source */
               Taint{
@@ -101,7 +111,8 @@ TEST_F(IssueSetTest, Insertion) {
                       /* local_positions */ {}),
               },
               /* sink */ Taint{Frame::leaf(other_sink_kind)},
-              &rule_2),
+              &rule_2,
+              position_1),
       }));
 
   set.add(Issue(
@@ -116,14 +127,16 @@ TEST_F(IssueSetTest, Insertion) {
           /* origins */ MethodSet{two},
           /* features */ {},
           /* local_positions */ {})},
-      &rule_2));
+      &rule_2,
+      position_1));
   EXPECT_EQ(
       set,
       (IssueSet{
           Issue(
               /* source */ Taint{Frame::leaf(source_kind)},
               /* sink */ Taint{Frame::leaf(sink_kind)},
-              &rule_1),
+              &rule_1,
+              position_1),
           Issue(
               /* source */
               Taint{
@@ -151,7 +164,8 @@ TEST_F(IssueSetTest, Insertion) {
                       /* features */ {},
                       /* local_positions */ {}),
               },
-              &rule_2),
+              &rule_2,
+              position_1),
       }));
 
   set.add(Issue(
@@ -165,14 +179,16 @@ TEST_F(IssueSetTest, Insertion) {
           /* features */ {},
           /* local_positions */ {})},
       /* sink */ Taint{Frame::leaf(other_sink_kind)},
-      &rule_2));
+      &rule_2,
+      position_1));
   EXPECT_EQ(
       set,
       (IssueSet{
           Issue(
               /* source */ Taint{Frame::leaf(source_kind)},
               /* sink */ Taint{Frame::leaf(sink_kind)},
-              &rule_1),
+              &rule_1,
+              position_1),
           Issue(
               /* source */
               Taint{
@@ -209,24 +225,28 @@ TEST_F(IssueSetTest, Insertion) {
                       /* features */ {},
                       /* local_positions */ {}),
               },
-              &rule_2),
+              &rule_2,
+              position_1),
       }));
 
   set.add(Issue(
       /* source */ Taint{Frame::leaf(source_kind)},
       /* sink */ Taint{Frame::leaf(other_sink_kind)},
-      &rule_3));
+      &rule_3,
+      position_1));
   EXPECT_EQ(
       set,
       (IssueSet{
           Issue(
               /* source */ Taint{Frame::leaf(source_kind)},
               /* sink */ Taint{Frame::leaf(sink_kind)},
-              &rule_1),
+              &rule_1,
+              position_1),
           Issue(
               /* source */ Taint{Frame::leaf(source_kind)},
               /* sink */ Taint{Frame::leaf(other_sink_kind)},
-              &rule_3),
+              &rule_3,
+              position_1),
           Issue(
               /* source */
               Taint{
@@ -263,7 +283,60 @@ TEST_F(IssueSetTest, Insertion) {
                       /* features */ {},
                       /* local_positions */ {}),
               },
-              &rule_2),
+              &rule_2,
+              position_1),
+      }));
+
+  set = {};
+  set.add(Issue(
+      /* source */ Taint{Frame::leaf(source_kind)},
+      /* sink */ Taint{Frame::leaf(sink_kind)},
+      &rule_1,
+      position_1));
+  set.add(Issue(
+      /* source */ Taint{Frame::leaf(source_kind)},
+      /* sink */ Taint{Frame::leaf(sink_kind)},
+      &rule_1,
+      position_2));
+  EXPECT_EQ(
+      set,
+      (IssueSet{
+          Issue(
+              /* source */ Taint{Frame::leaf(source_kind)},
+              /* sink */ Taint{Frame::leaf(sink_kind)},
+              &rule_1,
+              position_1),
+          Issue(
+              /* source */ Taint{Frame::leaf(source_kind)},
+              /* sink */ Taint{Frame::leaf(sink_kind)},
+              &rule_1,
+              position_2),
+      }));
+
+  set.add(Issue(
+      /* source */ Taint{Frame::leaf(
+          source_kind,
+          FeatureMayAlwaysSet::make_always(
+              {context.features->get("Feature")}))},
+      /* sink */ Taint{Frame::leaf(sink_kind)},
+      &rule_1,
+      position_2));
+  EXPECT_EQ(
+      set,
+      (IssueSet{
+          Issue(
+              /* source */ Taint{Frame::leaf(source_kind)},
+              /* sink */ Taint{Frame::leaf(sink_kind)},
+              &rule_1,
+              position_1),
+          Issue(
+              /* source */ Taint{Frame::leaf(
+                  source_kind,
+                  FeatureMayAlwaysSet::make_may(
+                      {context.features->get("Feature")}))},
+              /* sink */ Taint{Frame::leaf(sink_kind)},
+              &rule_1,
+              position_2),
       }));
 }
 

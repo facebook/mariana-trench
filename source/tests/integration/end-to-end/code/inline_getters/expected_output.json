@@ -23,6 +23,10 @@
    ],
    "issues" : [
       {
+         "position" : {
+            "line" : 36,
+            "path" : "com/facebook/marianatrench/integrationtests/Flow.java"
+         },
          "rule" : 1,
          "sinks" : [
             {
@@ -151,6 +155,10 @@
    ],
    "issues" : [
       {
+         "position" : {
+            "line" : 46,
+            "path" : "com/facebook/marianatrench/integrationtests/Flow.java"
+         },
          "rule" : 1,
          "sinks" : [
             {
@@ -293,6 +301,10 @@
    ],
    "issues" : [
       {
+         "position" : {
+            "line" : 57,
+            "path" : "com/facebook/marianatrench/integrationtests/Flow.java"
+         },
          "rule" : 1,
          "sinks" : [
             {

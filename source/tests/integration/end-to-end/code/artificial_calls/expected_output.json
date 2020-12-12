@@ -76,6 +76,10 @@
    "issues" : [
       {
          "always_features" : [ "via-anonymous-class-to-obscure", "via-obscure" ],
+         "position" : {
+            "line" : 35,
+            "path" : "com/facebook/marianatrench/integrationtests/RunnableFlows.java"
+         },
          "rule" : 1,
          "sinks" : [
             {

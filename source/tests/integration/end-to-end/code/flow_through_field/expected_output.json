@@ -24,6 +24,10 @@
    ],
    "issues" : [
       {
+         "position" : {
+            "line" : 30,
+            "path" : "com/facebook/marianatrench/integrationtests/OfferRedirectToWebActivity.java"
+         },
          "rule" : 1,
          "sinks" : [
             {
@@ -38,7 +42,37 @@
                "origins" : [
                   "Lcom/facebook/secure/context/IntentLauncher;.launchActivity:(Landroid/content/Intent;Landroid/content/Context;)Z"
                ]
-            },
+            }
+         ],
+         "sources" : [
+            {
+               "call_position" : {
+                  "line" : 27,
+                  "path" : "com/facebook/marianatrench/integrationtests/OfferRedirectToWebActivity.java"
+               },
+               "callee" : "Landroid/app/Activity;.getIntent:()Landroid/content/Intent;",
+               "callee_port" : "Return",
+               "distance" : 1,
+               "kind" : "ExternalUserInput",
+               "local_positions" : [
+                  {
+                     "line" : 27
+                  },
+                  {
+                     "line" : 28
+                  }
+               ],
+               "origins" : [ "Landroid/app/Activity;.getIntent:()Landroid/content/Intent;" ]
+            }
+         ]
+      },
+      {
+         "position" : {
+            "line" : 32,
+            "path" : "com/facebook/marianatrench/integrationtests/OfferRedirectToWebActivity.java"
+         },
+         "rule" : 1,
+         "sinks" : [
             {
                "call_position" : {
                   "line" : 32,

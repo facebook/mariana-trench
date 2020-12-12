@@ -5,6 +5,10 @@
  * LICENSE file in the root directory of this source tree.
  */
 
+#include <boost/functional/hash.hpp>
+
+#include <Show.h>
+
 #include <mariana-trench/Issue.h>
 #include <mariana-trench/JsonValidation.h>
 
@@ -16,8 +20,8 @@ bool Issue::leq(const Issue& other) const {
   } else if (other.is_bottom()) {
     return false;
   } else {
-    return rule_ == other.rule_ && sources_.leq(other.sources_) &&
-        sinks_.leq(other.sinks_);
+    return rule_ == other.rule_ && position_ == other.position_ &&
+        sources_.leq(other.sources_) && sinks_.leq(other.sinks_);
   }
 }
 
@@ -27,8 +31,8 @@ bool Issue::equals(const Issue& other) const {
   } else if (other.is_bottom()) {
     return false;
   } else {
-    return rule_ == other.rule_ && sources_ == other.sources_ &&
-        sinks_ == other.sinks_;
+    return rule_ == other.rule_ && position_ == other.position_ &&
+        sources_ == other.sources_ && sinks_ == other.sinks_;
   }
 }
 
@@ -41,6 +45,7 @@ void Issue::join_with(const Issue& other) {
     return;
   } else {
     mt_assert(rule_ == other.rule_);
+    mt_assert(position_ == other.position_);
 
     sources_.join_with(other.sources_);
     sinks_.join_with(other.sinks_);
@@ -58,6 +63,7 @@ void Issue::widen_with(const Issue& other) {
     return;
   } else {
     mt_assert(rule_ == other.rule_);
+    mt_assert(position_ == other.position_);
 
     sources_.widen_with(other.sources_);
     sinks_.widen_with(other.sinks_);
@@ -73,6 +79,7 @@ void Issue::meet_with(const Issue& other) {
     set_to_bottom();
   } else {
     mt_assert(rule_ == other.rule_);
+    mt_assert(position_ == other.position_);
 
     sources_.meet_with(other.sources_);
     sinks_.meet_with(other.sinks_);
@@ -86,6 +93,7 @@ void Issue::narrow_with(const Issue& other) {
     set_to_bottom();
   } else {
     mt_assert(rule_ == other.rule_);
+    mt_assert(position_ == other.position_);
 
     sources_.narrow_with(other.sources_);
     sinks_.narrow_with(other.sinks_);
@@ -94,11 +102,14 @@ void Issue::narrow_with(const Issue& other) {
 
 bool Issue::GroupEqual::operator()(const Issue& left, const Issue& right)
     const {
-  return left.rule_ == right.rule_;
+  return left.rule_ == right.rule_ && left.position_ == right.position_;
 }
 
 std::size_t Issue::GroupHash::operator()(const Issue& issue) const {
-  return std::hash<const Rule*>()(issue.rule_);
+  std::size_t seed = 0;
+  boost::hash_combine(seed, issue.rule_);
+  boost::hash_combine(seed, issue.position_);
+  return seed;
 }
 
 void Issue::filter_sources(const std::function<bool(const Frame&)>& predicate) {
@@ -135,6 +146,7 @@ Json::Value Issue::to_json() const {
   value["sources"] = sources_.to_json();
   value["sinks"] = sinks_.to_json();
   value["rule"] = Json::Value(rule_->code());
+  value["position"] = position_->to_json();
   JsonValidation::update_object(value, features().to_json());
 
   return value;
@@ -148,7 +160,7 @@ std::ostream& operator<<(std::ostream& out, const Issue& issue) {
   } else {
     out << "null";
   }
-  return out << ")";
+  return out << ", position=" << show(issue.position_) << ")";
 }
 
 } // namespace marianatrench

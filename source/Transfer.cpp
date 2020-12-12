@@ -334,6 +334,7 @@ void check_flows(
     MethodContext* context,
     const Taint& sources,
     const Taint& sinks,
+    const Position* position,
     const FeatureMayAlwaysSet& extra_features = {}) {
   if (sources.is_bottom() || sinks.is_bottom()) {
     return;
@@ -348,7 +349,8 @@ void check_flows(
           auto new_sink = sink;
           new_sink.add_features(extra_features);
 
-          auto issue = Issue(Taint{source}, Taint{std::move(new_sink)}, rule);
+          auto issue =
+              Issue(Taint{source}, Taint{std::move(new_sink)}, rule, position);
           LOG_OR_DUMP(context, 4, "Found issue: {}", issue);
           context->model.add_issue(std::move(issue));
         }
@@ -405,7 +407,7 @@ void check_flows(
 
     auto register_id = instruction_sources.at(parameter_position);
     Taint sources = environment->read(register_id, port.path()).collapse();
-    check_flows(context, sources, sinks, extra_features);
+    check_flows(context, sources, sinks, callee.position, extra_features);
   }
 }
 
@@ -432,7 +434,7 @@ void check_flows_to_array_allocation(
        parameter_position++) {
     auto register_id = instruction_sources.at(parameter_position);
     Taint sources = environment->read(register_id).collapse();
-    check_flows(context, sources, array_allocation_sink);
+    check_flows(context, sources, array_allocation_sink, position);
   }
 }
 
@@ -985,7 +987,7 @@ bool Transfer::analyze_return(
 
     for (const auto& [path, sinks] : return_sinks.elements()) {
       Taint sources = environment->read(register_id, path).collapse();
-      check_flows(context, sources, sinks);
+      check_flows(context, sources, sinks, position);
     }
   }
 

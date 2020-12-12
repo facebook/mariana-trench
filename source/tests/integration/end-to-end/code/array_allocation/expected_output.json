@@ -93,6 +93,10 @@
    "issues" : [
       {
          "always_features" : [ "via-numerical-operator" ],
+         "position" : {
+            "line" : 58,
+            "path" : "com/facebook/marianatrench/integrationtests/ArrayAllocation.java"
+         },
          "rule" : 1,
          "sinks" : [
             {
@@ -134,6 +138,10 @@
 {
    "issues" : [
       {
+         "position" : {
+            "line" : 13,
+            "path" : "com/facebook/marianatrench/integrationtests/ArrayAllocation.java"
+         },
          "rule" : 1,
          "sinks" : [
             {
@@ -174,6 +182,10 @@
 {
    "issues" : [
       {
+         "position" : {
+            "line" : 18,
+            "path" : "com/facebook/marianatrench/integrationtests/ArrayAllocation.java"
+         },
          "rule" : 1,
          "sinks" : [
             {
@@ -219,6 +231,10 @@
 {
    "issues" : [
       {
+         "position" : {
+            "line" : 23,
+            "path" : "com/facebook/marianatrench/integrationtests/ArrayAllocation.java"
+         },
          "rule" : 1,
          "sinks" : [
             {
@@ -264,6 +280,10 @@
 {
    "issues" : [
       {
+         "position" : {
+            "line" : 28,
+            "path" : "com/facebook/marianatrench/integrationtests/ArrayAllocation.java"
+         },
          "rule" : 1,
          "sinks" : [
             {
@@ -304,6 +324,10 @@
 {
    "issues" : [
       {
+         "position" : {
+            "line" : 34,
+            "path" : "com/facebook/marianatrench/integrationtests/ArrayAllocation.java"
+         },
          "rule" : 1,
          "sinks" : [
             {
@@ -344,6 +368,10 @@
 {
    "issues" : [
       {
+         "position" : {
+            "line" : 40,
+            "path" : "com/facebook/marianatrench/integrationtests/ArrayAllocation.java"
+         },
          "rule" : 1,
          "sinks" : [
             {
@@ -384,6 +412,10 @@
 {
    "issues" : [
       {
+         "position" : {
+            "line" : 47,
+            "path" : "com/facebook/marianatrench/integrationtests/ArrayAllocation.java"
+         },
          "rule" : 1,
          "sinks" : [
             {
@@ -424,6 +456,10 @@
 {
    "issues" : [
       {
+         "position" : {
+            "line" : 53,
+            "path" : "com/facebook/marianatrench/integrationtests/ArrayAllocation.java"
+         },
          "rule" : 1,
          "sinks" : [
             {

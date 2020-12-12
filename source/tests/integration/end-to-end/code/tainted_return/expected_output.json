@@ -117,6 +117,10 @@
 {
    "issues" : [
       {
+         "position" : {
+            "line" : 17,
+            "path" : "com/facebook/marianatrench/integrationtests/Instantiate.java"
+         },
          "rule" : 1,
          "sinks" : [
             {

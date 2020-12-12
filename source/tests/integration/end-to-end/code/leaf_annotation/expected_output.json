@@ -37,6 +37,10 @@
    ],
    "issues" : [
       {
+         "position" : {
+            "line" : 19,
+            "path" : "com/facebook/marianatrench/integrationtests/LeafAnnotationFlows.java"
+         },
          "rule" : 1,
          "sinks" : [
             {
@@ -176,6 +180,10 @@
 {
    "issues" : [
       {
+         "position" : {
+            "line" : 25,
+            "path" : "com/facebook/marianatrench/integrationtests/LeafAnnotationFlows.java"
+         },
          "rule" : 1,
          "sinks" : [
             {

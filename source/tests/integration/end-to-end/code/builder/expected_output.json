@@ -75,6 +75,10 @@
 {
    "issues" : [
       {
+         "position" : {
+            "line" : 16,
+            "path" : "com/facebook/marianatrench/integrationtests/Test.java"
+         },
          "rule" : 1,
          "sinks" : [
             {
@@ -125,6 +129,10 @@
 {
    "issues" : [
       {
+         "position" : {
+            "line" : 21,
+            "path" : "com/facebook/marianatrench/integrationtests/Test.java"
+         },
          "rule" : 1,
          "sinks" : [
             {
@@ -175,6 +183,10 @@
 {
    "issues" : [
       {
+         "position" : {
+            "line" : 27,
+            "path" : "com/facebook/marianatrench/integrationtests/Test.java"
+         },
          "rule" : 1,
          "sinks" : [
             {

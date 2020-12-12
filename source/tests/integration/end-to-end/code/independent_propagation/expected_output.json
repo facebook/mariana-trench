@@ -75,6 +75,10 @@
 {
    "issues" : [
       {
+         "position" : {
+            "line" : 40,
+            "path" : "com/facebook/marianatrench/integrationtests/Flow.java"
+         },
          "rule" : 1,
          "sinks" : [
             {

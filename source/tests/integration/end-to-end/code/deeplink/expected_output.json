@@ -73,6 +73,10 @@
 {
    "issues" : [
       {
+         "position" : {
+            "line" : 23,
+            "path" : "com/facebook/marianatrench/integrationtests/IntentUriHandler.java"
+         },
          "rule" : 1,
          "sinks" : [
             {

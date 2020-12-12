@@ -316,6 +316,10 @@
             "via-attach-sources-return",
             "via-obscure"
          ],
+         "position" : {
+            "line" : 48,
+            "path" : "com/facebook/marianatrench/integrationtests/Flow.java"
+         },
          "rule" : 1,
          "sinks" : [
             {

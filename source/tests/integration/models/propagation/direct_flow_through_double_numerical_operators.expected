@@ -7,6 +7,10 @@
          "issues" : [
             {
                "always_features" : [ "via-numerical-operator" ],
+               "position" : {
+                  "line" : 6,
+                  "path" : "Flow.java"
+               },
                "rule" : 1,
                "sinks" : [
                   {

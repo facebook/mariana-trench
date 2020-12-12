@@ -25,6 +25,10 @@
          ],
          "issues" : [
             {
+               "position" : {
+                  "line" : 3,
+                  "path" : "Flow.java"
+               },
                "rule" : 1,
                "sinks" : [
                   {

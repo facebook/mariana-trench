@@ -75,6 +75,10 @@
 {
    "issues" : [
       {
+         "position" : {
+            "line" : 14,
+            "path" : "com/facebook/marianatrench/integrationtests/Activity.java"
+         },
          "rule" : 1,
          "sinks" : [
             {
@@ -89,7 +93,31 @@
                "origins" : [
                   "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V"
                ]
-            },
+            }
+         ],
+         "sources" : [
+            {
+               "call_position" : {
+                  "line" : 13,
+                  "path" : "com/facebook/marianatrench/integrationtests/Activity.java"
+               },
+               "callee" : "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;",
+               "callee_port" : "Return",
+               "distance" : 1,
+               "kind" : "Source",
+               "origins" : [
+                  "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;"
+               ]
+            }
+         ]
+      },
+      {
+         "position" : {
+            "line" : 15,
+            "path" : "com/facebook/marianatrench/integrationtests/Activity.java"
+         },
+         "rule" : 1,
+         "sinks" : [
             {
                "call_position" : {
                   "line" : 15,

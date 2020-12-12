@@ -58,6 +58,10 @@
 {
    "issues" : [
       {
+         "position" : {
+            "line" : 14,
+            "path" : "com/facebook/marianatrench/integrationtests/SourceWebViewClient.java"
+         },
          "rule" : 1,
          "sinks" : [
             {

@@ -75,6 +75,10 @@
 {
    "issues" : [
       {
+         "position" : {
+            "line" : 15,
+            "path" : "com/facebook/marianatrench/integrationtests/MainActivity.java"
+         },
          "rule" : 1,
          "sinks" : [
             {

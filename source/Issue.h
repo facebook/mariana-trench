@@ -22,10 +22,20 @@ class Issue final : public sparta::AbstractDomain<Issue> {
  public:
   /* Create the bottom issue. */
   explicit Issue()
-      : sources_(Taint::bottom()), sinks_(Taint::bottom()), rule_(nullptr) {}
+      : sources_(Taint::bottom()),
+        sinks_(Taint::bottom()),
+        rule_(nullptr),
+        position_(nullptr) {}
 
-  explicit Issue(Taint sources, Taint sinks, const Rule* rule)
-      : sources_(std::move(sources)), sinks_(std::move(sinks)), rule_(rule) {}
+  explicit Issue(
+      Taint sources,
+      Taint sinks,
+      const Rule* rule,
+      const Position* position)
+      : sources_(std::move(sources)),
+        sinks_(std::move(sinks)),
+        rule_(rule),
+        position_(position) {}
 
   Issue(const Issue&) = default;
   Issue(Issue&&) = default;
@@ -44,6 +54,10 @@ class Issue final : public sparta::AbstractDomain<Issue> {
     return rule_;
   }
 
+  const Position* MT_NULLABLE position() const {
+    return position_;
+  }
+
   static Issue bottom() {
     return Issue();
   }
@@ -53,7 +67,8 @@ class Issue final : public sparta::AbstractDomain<Issue> {
   }
 
   bool is_bottom() const override {
-    return sources_.is_bottom() || sinks_.is_bottom() || rule_ == nullptr;
+    return sources_.is_bottom() || sinks_.is_bottom() || rule_ == nullptr ||
+        position_ == nullptr;
   }
 
   bool is_top() const override {
@@ -64,6 +79,7 @@ class Issue final : public sparta::AbstractDomain<Issue> {
     sources_.set_to_bottom();
     sinks_.set_to_bottom();
     rule_ = nullptr;
+    position_ = nullptr;
   }
 
   void set_to_top() override {
@@ -106,6 +122,7 @@ class Issue final : public sparta::AbstractDomain<Issue> {
   Taint sources_;
   Taint sinks_;
   const Rule* MT_NULLABLE rule_;
+  const Position* MT_NULLABLE position_;
 };
 
 } // namespace marianatrench

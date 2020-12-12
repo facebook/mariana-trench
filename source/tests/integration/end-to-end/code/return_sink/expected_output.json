@@ -25,6 +25,10 @@
    "issues" : [
       {
          "always_features" : [ "via-array" ],
+         "position" : {
+            "line" : 19,
+            "path" : "com/facebook/marianatrench/integrationtests/Flow.java"
+         },
          "rule" : 1,
          "sinks" : [
             {
@@ -102,6 +106,10 @@
    ],
    "issues" : [
       {
+         "position" : {
+            "line" : 46,
+            "path" : "com/facebook/marianatrench/integrationtests/Flow.java"
+         },
          "rule" : 1,
          "sinks" : [
             {
@@ -305,6 +313,10 @@
    "issues" : [
       {
          "always_features" : [ "via-array" ],
+         "position" : {
+            "line" : 25,
+            "path" : "com/facebook/marianatrench/integrationtests/Flow.java"
+         },
          "rule" : 1,
          "sinks" : [
             {
@@ -354,6 +366,10 @@
 {
    "issues" : [
       {
+         "position" : {
+            "line" : 58,
+            "path" : "com/facebook/marianatrench/integrationtests/Flow.java"
+         },
          "rule" : 1,
          "sinks" : [
             {

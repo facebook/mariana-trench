@@ -84,6 +84,10 @@
    "issues" : [
       {
          "may_features" : [ "via-obscure" ],
+         "position" : {
+            "line" : 23,
+            "path" : "com/instagram/url/UrlHandlerActivity.java"
+         },
          "rule" : 1,
          "sinks" : [
             {
@@ -125,6 +129,10 @@
 {
    "issues" : [
       {
+         "position" : {
+            "line" : 23,
+            "path" : "simple/logging/SimpleLogging.java"
+         },
          "rule" : 1,
          "sinks" : [
             {

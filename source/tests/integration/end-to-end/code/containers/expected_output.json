@@ -75,6 +75,10 @@
 {
    "issues" : [
       {
+         "position" : {
+            "line" : 18,
+            "path" : "com/facebook/marianatrench/integrationtests/Test.java"
+         },
          "rule" : 1,
          "sinks" : [
             {

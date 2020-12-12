@@ -76,6 +76,10 @@
    "issues" : [
       {
          "always_features" : [ "via-obscure" ],
+         "position" : {
+            "line" : 20,
+            "path" : "com/facebook/marianatrench/integrationtests/Flow.java"
+         },
          "rule" : 1,
          "sinks" : [
             {

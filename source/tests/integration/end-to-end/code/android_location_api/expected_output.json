@@ -21,6 +21,10 @@
    ],
    "issues" : [
       {
+         "position" : {
+            "line" : 29,
+            "path" : "android_location_api/ActivityUsingAndroidLocationManager.java"
+         },
          "rule" : 1,
          "sinks" : [
             {

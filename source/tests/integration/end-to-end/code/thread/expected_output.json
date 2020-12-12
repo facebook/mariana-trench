@@ -76,6 +76,10 @@
    "issues" : [
       {
          "always_features" : [ "via-anonymous-class-to-field" ],
+         "position" : {
+            "line" : 23,
+            "path" : "com/facebook/marianatrench/integrationtests/RunnableActivity.java"
+         },
          "rule" : 1,
          "sinks" : [
             {

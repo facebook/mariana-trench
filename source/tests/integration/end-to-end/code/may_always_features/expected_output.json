@@ -107,6 +107,10 @@
       {
          "always_features" : [ "via-one" ],
          "may_features" : [ "via-two" ],
+         "position" : {
+            "line" : 32,
+            "path" : "com/facebook/marianatrench/integrationtests/Flow.java"
+         },
          "rule" : 2,
          "sinks" : [
             {
