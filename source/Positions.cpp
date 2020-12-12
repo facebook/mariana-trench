@@ -303,6 +303,19 @@ const Position* Positions::get(
   return positions_.insert(position).first;
 }
 
+const Position* Positions::get(
+    const Position* position,
+    std::optional<Root> port,
+    const IRInstruction* instruction) const {
+  auto new_position = Position(
+      /* path */ position->path() ? paths_.insert(*position->path()).first
+                                  : nullptr,
+      /* line */ position->line(),
+      /* port */ port,
+      /* instruction */ instruction);
+  return positions_.insert(new_position).first;
+}
+
 const Position* Positions::unknown() const {
   return positions_.insert(Position(nullptr, k_unknown_line)).first;
 }

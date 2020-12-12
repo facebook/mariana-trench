@@ -60,6 +60,11 @@ class Positions final {
       std::optional<Root> port = {},
       const IRInstruction* instruction = nullptr) const;
 
+  const Position* get(
+      const Position* position,
+      std::optional<Root> port,
+      const IRInstruction* instruction) const;
+
   const Position* unknown() const;
 
  private:

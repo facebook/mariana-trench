@@ -256,7 +256,9 @@ void apply_propagations(
       features.add(propagation.features());
       features.add_always(callee.model.add_features_to_arguments(input));
 
-      taint.add_features_and_local_position(features, callee.position);
+      taint.add_features_and_local_position(
+          features,
+          context->positions.get(callee.position, input, instruction));
 
       switch (output.root().kind()) {
         case Root::Kind::Return: {
@@ -298,10 +300,12 @@ void apply_propagations(
     for (std::size_t parameter_position = 0;
          parameter_position < instruction_sources.size();
          parameter_position++) {
+      auto parameter = Root(Root::Kind::Argument, parameter_position);
       auto features = FeatureMayAlwaysSet::make_always(
-          callee.model.add_features_to_arguments(
-              Root(Root::Kind::Argument, parameter_position)));
-      const auto* position = !features.empty() ? callee.position : nullptr;
+          callee.model.add_features_to_arguments(parameter));
+      const auto* position = !features.empty()
+          ? context->positions.get(callee.position, parameter, instruction)
+          : nullptr;
       if (callee.model.add_via_obscure_feature()) {
         features.add_always(context->features.get("via-obscure"));
       }
@@ -558,8 +562,11 @@ bool Transfer::analyze_iput(
 
   auto taint = environment->read(/* register */ instruction->srcs()[0]);
 
-  auto* position =
-      context->positions.get(context->method(), environment->last_position());
+  auto* position = context->positions.get(
+      context->method(),
+      environment->last_position(),
+      Root(Root::Kind::Return),
+      instruction);
   taint.map(
       [position](Taint& sources) { sources.add_local_position(position); });
 
@@ -704,8 +711,11 @@ bool Transfer::analyze_aput(
 
   auto features =
       FeatureMayAlwaysSet::make_always({context->features.get("via-array")});
-  auto* position =
-      context->positions.get(context->method(), environment->last_position());
+  auto* position = context->positions.get(
+      context->method(),
+      environment->last_position(),
+      Root(Root::Kind::Return),
+      instruction);
   taint.map([&features, position](Taint& sources) {
     sources.add_features_and_local_position(features, position);
   });
@@ -753,8 +763,11 @@ static bool analyze_numerical_operator(
 
   auto features = FeatureMayAlwaysSet::make_always(
       {context->features.get("via-numerical-operator")});
-  auto* position =
-      context->positions.get(context->method(), environment->last_position());
+  auto* position = context->positions.get(
+      context->method(),
+      environment->last_position(),
+      Root(Root::Kind::Return),
+      instruction);
   taint.map([&features, position](Taint& sources) {
     sources.add_features_and_local_position(features, position);
   });

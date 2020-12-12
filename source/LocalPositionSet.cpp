@@ -58,8 +58,14 @@ Json::Value LocalPositionSet::to_json() const {
   mt_assert(!is_bottom());
   auto lines = Json::Value(Json::arrayValue);
   if (set_.is_value()) {
+    std::unordered_set<int> seen_lines;
+
+    // As Position may hold a Root and IRInstruction but these are not exported,
+    // only export the unique lines within the local positions
     for (const auto* position : set_.elements()) {
-      lines.append(position->to_json(/* with_path */ false));
+      if (seen_lines.emplace(position->line()).second) {
+        lines.append(position->to_json(/* with_path */ false));
+      }
     }
   }
   return lines;
