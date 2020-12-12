@@ -1740,10 +1740,10 @@ TEST_F(JsonTest, Model) {
               /* add_features_to_arguments */ {},
               /* inline_as */ AccessPathConstantDomain::bottom(),
               IssueSet{Issue(
-                  /* source */ FrameSet{Frame::leaf(
+                  /* source */ Taint{Frame::leaf(
                       context.kinds->get("first_source"))},
                   /* sink */
-                  FrameSet{Frame::leaf(context.kinds->get("first_sink"))},
+                  Taint{Frame::leaf(context.kinds->get("first_sink"))},
                   &rule)})
               .to_json()),
       test::parse_json(R"({

@@ -5,8 +5,6 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-#include <boost/functional/hash.hpp>
-
 #include <mariana-trench/Issue.h>
 #include <mariana-trench/JsonValidation.h>
 
@@ -96,36 +94,34 @@ void Issue::narrow_with(const Issue& other) {
 
 bool Issue::GroupEqual::operator()(const Issue& left, const Issue& right)
     const {
-  return left.rule_ == right.rule_ &&
-      left.sources_.kind() == right.sources_.kind() &&
-      left.sinks_.kind() == right.sinks_.kind();
+  return left.rule_ == right.rule_;
 }
 
 std::size_t Issue::GroupHash::operator()(const Issue& issue) const {
-  std::size_t seed = 0;
-  boost::hash_combine(seed, issue.rule_);
-  boost::hash_combine(seed, issue.sources_.kind());
-  boost::hash_combine(seed, issue.sinks_.kind());
-  return seed;
+  return std::hash<const Rule*>()(issue.rule_);
 }
 
 void Issue::filter_sources(const std::function<bool(const Frame&)>& predicate) {
-  sources_.filter(predicate);
+  sources_.map([&](FrameSet& frames) { frames.filter(predicate); });
 }
 
 void Issue::filter_sinks(const std::function<bool(const Frame&)>& predicate) {
-  sinks_.filter(predicate);
+  sinks_.map([&](FrameSet& frames) { frames.filter(predicate); });
 }
 
 FeatureMayAlwaysSet Issue::features() const {
   auto source_features = FeatureMayAlwaysSet::bottom();
-  for (const auto& source : sources_) {
-    source_features.join_with(source.features());
+  for (const auto& frames : sources_) {
+    for (const auto& source : frames) {
+      source_features.join_with(source.features());
+    }
   }
 
   auto sink_features = FeatureMayAlwaysSet::bottom();
-  for (const auto& sink : sinks_) {
-    sink_features.join_with(sink.features());
+  for (const auto& frames : sinks_) {
+    for (const auto& sink : frames) {
+      sink_features.join_with(sink.features());
+    }
   }
 
   source_features.add(sink_features);

@@ -304,15 +304,15 @@ TEST_F(ModelTest, Join) {
       /* inline_as */ AccessPathConstantDomain::bottom(),
       /* issues */
       IssueSet{Issue(
-          /* source */ FrameSet{Frame::leaf(source_kind)},
-          /* sink */ FrameSet{Frame::leaf(sink_kind)},
+          /* source */ Taint{Frame::leaf(source_kind)},
+          /* sink */ Taint{Frame::leaf(sink_kind)},
           &rule)});
   model.join_with(model_with_trace);
   EXPECT_EQ(
       model.issues(),
       IssueSet{Issue(
-          /* source */ FrameSet{Frame::leaf(source_kind)},
-          /* sink */ FrameSet{Frame::leaf(sink_kind)},
+          /* source */ Taint{Frame::leaf(source_kind)},
+          /* sink */ Taint{Frame::leaf(sink_kind)},
           &rule)});
   EXPECT_TRUE(model.generations().is_bottom());
   EXPECT_TRUE(model.sinks().is_bottom());

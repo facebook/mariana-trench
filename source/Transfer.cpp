@@ -348,7 +348,7 @@ void check_flows(
           auto new_sink = sink;
           new_sink.add_features(extra_features);
 
-          auto issue = Issue(source, std::move(new_sink), rule);
+          auto issue = Issue(Taint{source}, Taint{std::move(new_sink)}, rule);
           LOG_OR_DUMP(context, 4, "Found issue: {}", issue);
           context->model.add_issue(std::move(issue));
         }

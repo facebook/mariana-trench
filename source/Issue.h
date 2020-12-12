@@ -13,8 +13,8 @@
 
 #include <mariana-trench/Assert.h>
 #include <mariana-trench/Compiler.h>
-#include <mariana-trench/FrameSet.h>
 #include <mariana-trench/Rule.h>
+#include <mariana-trench/Taint.h>
 
 namespace marianatrench {
 
@@ -22,11 +22,9 @@ class Issue final : public sparta::AbstractDomain<Issue> {
  public:
   /* Create the bottom issue. */
   explicit Issue()
-      : sources_(FrameSet::bottom()),
-        sinks_(FrameSet::bottom()),
-        rule_(nullptr) {}
+      : sources_(Taint::bottom()), sinks_(Taint::bottom()), rule_(nullptr) {}
 
-  explicit Issue(FrameSet sources, FrameSet sinks, const Rule* rule)
+  explicit Issue(Taint sources, Taint sinks, const Rule* rule)
       : sources_(std::move(sources)), sinks_(std::move(sinks)), rule_(rule) {}
 
   Issue(const Issue&) = default;
@@ -34,11 +32,11 @@ class Issue final : public sparta::AbstractDomain<Issue> {
   Issue& operator=(const Issue&) = default;
   Issue& operator=(Issue&&) = default;
 
-  const FrameSet& sources() const {
+  const Taint& sources() const {
     return sources_;
   }
 
-  const FrameSet& sinks() const {
+  const Taint& sinks() const {
     return sinks_;
   }
 
@@ -105,8 +103,8 @@ class Issue final : public sparta::AbstractDomain<Issue> {
   friend std::ostream& operator<<(std::ostream& out, const Issue& issue);
 
  private:
-  FrameSet sources_;
-  FrameSet sinks_;
+  Taint sources_;
+  Taint sinks_;
   const Rule* MT_NULLABLE rule_;
 };
 
