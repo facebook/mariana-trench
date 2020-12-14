@@ -109,9 +109,15 @@ std::vector<Model> ModelGenerator::run(Context& context) {
   }
 
   std::vector<Model> generated_models;
+  std::size_t iteration = 0;
+
   for (const auto& generator : generators) {
     Timer generator_timer;
-    LOG(2, "Running generator `{}`...", generator->name());
+    LOG(1,
+        "Running generator `{}` ({}/{})",
+        generator->name(),
+        ++iteration,
+        generators.size());
 
     std::vector<Model> models = generator->run(context.stores);
 
