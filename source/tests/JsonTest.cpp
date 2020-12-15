@@ -273,6 +273,10 @@ TEST_F(JsonTest, Position) {
   EXPECT_THROW(
       Position::from_json(test::parse_json(R"({"line": ""})"), context),
       JsonValidationError);
+  EXPECT_THROW(
+      Position::from_json(
+          test::parse_json(R"({"line": 3, "start": "2"})"), context),
+      JsonValidationError);
   EXPECT_JSON_EQ(
       Position,
       R"({"line": 1})",
@@ -291,6 +295,17 @@ TEST_F(JsonTest, Position) {
       Position,
       R"({"line": 2, "path": "Data.java"})",
       context.positions->get(dex_method, 2),
+      context);
+  EXPECT_JSON_EQ(
+      Position,
+      R"({"line": 2, "path": "Data.java", "start": 2, "end": 7})",
+      context.positions->get(
+          /* method */ dex_method,
+          /* line */ 2,
+          /* port */ std::nullopt,
+          /* instruction */ nullptr,
+          /* start */ 2,
+          /* end */ 7),
       context);
 }
 

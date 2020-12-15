@@ -13,22 +13,24 @@
 
 namespace marianatrench {
 
-namespace {
-
-constexpr int k_unknown_line = -1;
-
-} // namespace
-
 Position::Position(
     const std::string* path,
     int line,
     std::optional<Root> port,
-    const IRInstruction* instruction)
-    : path_(path), line_(line), port_(port), instruction_(instruction) {}
+    const IRInstruction* instruction,
+    int start,
+    int end)
+    : path_(path),
+      line_(line),
+      port_(port),
+      instruction_(instruction),
+      start_(start),
+      end_(end) {}
 
 bool Position::operator==(const Position& other) const {
   return path_ == other.path_ && line_ == other.line_ && port_ == other.port_ &&
-      instruction_ == other.instruction_;
+      instruction_ == other.instruction_ && start_ == other.start_ &&
+      end_ == other.end_;
 }
 
 bool Position::operator!=(const Position& other) const {
@@ -64,7 +66,23 @@ const Position* Position::from_json(
     path = JsonValidation::string(value, /* field */ "path");
   }
 
-  return context.positions->get(path, line);
+  int start = k_unknown_start;
+  if (value.isMember("start")) {
+    start = JsonValidation::integer(value, /* field */ "start");
+  }
+
+  int end = k_unknown_end;
+  if (value.isMember("end")) {
+    end = JsonValidation::integer(value, /* field */ "end");
+  }
+
+  return context.positions->get(
+      /* path */ path,
+      /* line */ line,
+      /* port */ std::nullopt,
+      /* instruction */ nullptr,
+      /* start */ start,
+      /* end */ end);
 }
 
 Json::Value Position::to_json(bool with_path) const {
@@ -74,6 +92,12 @@ Json::Value Position::to_json(bool with_path) const {
   }
   if (with_path && path_) {
     value["path"] = Json::Value(*path_);
+  }
+  if (start_ != k_unknown_start) {
+    value["start"] = Json::Value(start_);
+  }
+  if (end_ != k_unknown_end) {
+    value["end"] = Json::Value(end_);
   }
   return value;
 }

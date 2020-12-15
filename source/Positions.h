@@ -52,18 +52,24 @@ class Positions final {
       const DexMethod* method,
       int line,
       std::optional<Root> port = {},
-      const IRInstruction* instruction = nullptr) const;
+      const IRInstruction* instruction = nullptr,
+      int start = k_unknown_start,
+      int end = k_unknown_end) const;
 
   const Position* get(
       const std::optional<std::string>& path,
       int line,
       std::optional<Root> port = {},
-      const IRInstruction* instruction = nullptr) const;
+      const IRInstruction* instruction = nullptr,
+      int start = k_unknown_start,
+      int end = k_unknown_end) const;
 
   const Position* get(
       const Position* position,
       std::optional<Root> port,
       const IRInstruction* instruction) const;
+
+  const Position* get(const Position* position, int start, int end) const;
 
   const Position* unknown() const;
 

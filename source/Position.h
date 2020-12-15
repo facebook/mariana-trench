@@ -18,6 +18,14 @@
 #include <mariana-trench/Compiler.h>
 #include <mariana-trench/Context.h>
 
+namespace {
+
+constexpr int k_unknown_start = -1;
+constexpr int k_unknown_end = -1;
+constexpr int k_unknown_line = -1;
+
+} // namespace
+
 namespace marianatrench {
 
 class Position final {
@@ -26,7 +34,9 @@ class Position final {
       const std::string* MT_NULLABLE path,
       int line,
       std::optional<Root> port = {},
-      const IRInstruction* instruction = nullptr);
+      const IRInstruction* instruction = nullptr,
+      int start = k_unknown_start,
+      int end = k_unknown_end);
 
   Position(const Position&) = default;
   Position(Position&&) = default;
@@ -67,6 +77,10 @@ class Position final {
   // IRInstruction on the given line
   std::optional<Root> port_;
   const IRInstruction* instruction_;
+  // These describe the portion of the line (i.e, columns) of source code to
+  // highlight in the UI
+  int start_;
+  int end_;
 };
 
 } // namespace marianatrench
@@ -81,6 +95,8 @@ struct std::hash<marianatrench::Position> {
       boost::hash_combine(seed, position.port_->encode());
     }
     boost::hash_combine(seed, position.instruction_);
+    boost::hash_combine(seed, position.start_);
+    boost::hash_combine(seed, position.end_);
     return seed;
   }
 };
