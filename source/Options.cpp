@@ -89,9 +89,11 @@ Options::Options(
     const std::vector<std::string>& rules_paths,
     bool sequential,
     bool skip_source_indexing,
-    bool skip_model_generation)
+    bool skip_model_generation,
+    const std::string& source_root_directory)
     : models_paths_(models_paths),
       rules_paths_(rules_paths),
+      source_root_directory_(source_root_directory),
       sequential_(sequential),
       skip_source_indexing_(skip_source_indexing),
       skip_model_generation_(skip_model_generation),

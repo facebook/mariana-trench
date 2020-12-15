@@ -99,8 +99,9 @@ TEST_P(IntegrationTest, CompareFlows) {
       /* rules_path */
       std::vector<std::string>{(directory / "/rules.json").native()},
       /* sequential */ true,
-      /* skip_source_indexing */ true,
-      /* skip_model_generation */ true);
+      /* skip_source_indexing */ false,
+      /* skip_model_generation */ true,
+      /* source_root_directory */ directory.string());
 
   // Load test Java classes
   boost::filesystem::path dex_path = test::find_dex_path(directory);

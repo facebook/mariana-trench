@@ -26,7 +26,8 @@ class Options final {
       const std::vector<std::string>& rules_paths,
       bool sequential,
       bool skip_source_indexing,
-      bool skip_model_generationm);
+      bool skip_model_generation,
+      const std::string& source_root_directory = ".");
   explicit Options(const boost::program_options::variables_map& variables);
   Options(const Options&) = delete;
   Options(Options&&) = delete;
