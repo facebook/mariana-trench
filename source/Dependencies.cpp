@@ -103,8 +103,9 @@ Dependencies::Dependencies(
   }
 
   if (options.dump_dependencies()) {
-    LOG(1, "Writing dependencies to `dependencies.gv`");
-    boost::filesystem::save_string_file("dependencies.gv", to_dot());
+    LOG(1, "Writing dependencies to `dependencies.json`");
+    boost::filesystem::save_string_file(
+        "dependencies.json", Json::FastWriter().write(to_json()));
   }
 }
 
@@ -118,19 +119,6 @@ const std::unordered_set<const Method*>& Dependencies::dependencies(
   } else {
     return empty_method_set_;
   }
-}
-
-std::string Dependencies::to_dot() const {
-  std::string string;
-  string.append("digraph dependencies {\n");
-  for (const auto& [method, dependencies] : dependencies_) {
-    for (const auto* dependency : dependencies) {
-      string.append(
-          fmt::format("  \"{}\" -> \"{}\";\n", show(method), show(dependency)));
-    }
-  }
-  string.append("}");
-  return string;
 }
 
 Json::Value Dependencies::to_json() const {

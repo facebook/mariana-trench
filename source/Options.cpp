@@ -99,6 +99,9 @@ Options::Options(
       skip_model_generation_(skip_model_generation),
       disable_parameter_type_overrides_(false),
       maximum_source_sink_distance_(10),
+      dump_class_hierarchies_(false),
+      dump_overrides_(false),
+      dump_call_graph_(false),
       dump_dependencies_(false) {}
 
 Options::Options(const boost::program_options::variables_map& variables) {
@@ -153,6 +156,9 @@ Options::Options(const boost::program_options::variables_map& variables) {
   if (!variables["log-method"].empty()) {
     log_methods_ = variables["log-method"].as<std::vector<std::string>>();
   }
+  dump_class_hierarchies_ = variables.count("dump-class-hierarchies") > 0;
+  dump_overrides_ = variables.count("dump-overrides") > 0;
+  dump_call_graph_ = variables.count("dump-call-graph") > 0;
   dump_dependencies_ = variables.count("dump-dependencies") > 0;
 }
 
@@ -230,7 +236,14 @@ void Options::add_options(
       program_options::value<std::vector<std::string>>()->multitoken(),
       "Enable logging for the given methods.");
   options.add_options()(
-      "dump-dependencies", "Dump the dependency graph in `dependencies.gv`.");
+      "dump-class-hierarchies",
+      "Dump the class hierarchies in `class_hierarchies.json`.");
+  options.add_options()(
+      "dump-overrides", "Dump the override graph in `overrides.json`.");
+  options.add_options()(
+      "dump-call-graph", "Dump the call graph in `call_graph.json`.");
+  options.add_options()(
+      "dump-dependencies", "Dump the dependency graph in `dependencies.json`.");
 }
 
 const std::vector<std::string>& Options::models_paths() const {
@@ -320,6 +333,18 @@ int Options::maximum_source_sink_distance() const {
 
 const std::vector<std::string>& Options::log_methods() const {
   return log_methods_;
+}
+
+bool Options::dump_class_hierarchies() const {
+  return dump_class_hierarchies_;
+}
+
+bool Options::dump_overrides() const {
+  return dump_overrides_;
+}
+
+bool Options::dump_call_graph() const {
+  return dump_call_graph_;
 }
 
 bool Options::dump_dependencies() const {

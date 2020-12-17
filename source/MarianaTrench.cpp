@@ -77,7 +77,7 @@ Registry MarianaTrench::analyze(Context& context) {
   Timer class_hierarchies_timer;
   LOG(1, "Building class hierarchies...");
   context.class_hierarchies =
-      std::make_unique<ClassHierarchies>(context.stores);
+      std::make_unique<ClassHierarchies>(*context.options, context.stores);
   context.statistics->log_time("class_hierarchies", class_hierarchies_timer);
   LOG(1,
       "Built class hierarchies in {:.2f}s.",
@@ -85,8 +85,8 @@ Registry MarianaTrench::analyze(Context& context) {
 
   Timer overrides_timer;
   LOG(1, "Building override graph...");
-  context.overrides =
-      std::make_unique<Overrides>(*context.methods, context.stores);
+  context.overrides = std::make_unique<Overrides>(
+      *context.options, *context.methods, context.stores);
   context.statistics->log_time("overrides", overrides_timer);
   LOG(1,
       "Built override graph in {:.2f}s.",

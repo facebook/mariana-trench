@@ -67,6 +67,9 @@ class Options final {
   int maximum_source_sink_distance() const;
 
   const std::vector<std::string>& log_methods() const;
+  bool dump_class_hierarchies() const;
+  bool dump_overrides() const;
+  bool dump_call_graph() const;
   bool dump_dependencies() const;
 
  private:
@@ -98,6 +101,9 @@ class Options final {
   int maximum_source_sink_distance_;
 
   std::vector<std::string> log_methods_;
+  bool dump_class_hierarchies_;
+  bool dump_overrides_;
+  bool dump_call_graph_;
   bool dump_dependencies_;
 };
 

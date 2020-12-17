@@ -370,9 +370,24 @@ if __name__ == "__main__":
             help="Enable logging for the given methods.",
         )
         debug_arguments.add_argument(
+            "--dump-class-hierarchies",
+            action="store_true",
+            help="Dump the class hierarchies in `class_hierarchies.json`.",
+        )
+        debug_arguments.add_argument(
+            "--dump-overrides",
+            action="store_true",
+            help="Dump the override graph in `overrides.json`.",
+        )
+        debug_arguments.add_argument(
+            "--dump-call-graph",
+            action="store_true",
+            help="Dump the call graph in `call_graph.json`.",
+        )
+        debug_arguments.add_argument(
             "--dump-dependencies",
             action="store_true",
-            help="Dump the dependency graph in `dependencies.gv`.",
+            help="Dump the dependency graph in `dependencies.json`.",
         )
 
         arguments: argparse.Namespace = parser.parse_args()
@@ -453,6 +468,12 @@ if __name__ == "__main__":
         if arguments.log_method:
             for method in arguments.log_method:
                 options.append("--log-method=%s" % method.strip())
+        if arguments.dump_class_hierarchies:
+            options.append("--dump-class-hierarchies")
+        if arguments.dump_overrides:
+            options.append("--dump-overrides")
+        if arguments.dump_call_graph:
+            options.append("--dump-call-graph")
         if arguments.dump_dependencies:
             options.append("--dump-dependencies")
 

@@ -10,6 +10,7 @@
 
 #include <mariana-trench/Assert.h>
 #include <mariana-trench/ClassHierarchies.h>
+#include <mariana-trench/Log.h>
 
 namespace marianatrench {
 
@@ -54,7 +55,9 @@ class Graph {
 
 } // namespace
 
-ClassHierarchies::ClassHierarchies(const DexStoresVector& stores) {
+ClassHierarchies::ClassHierarchies(
+    const Options& options,
+    const DexStoresVector& stores) {
   Graph graph;
 
   // Compute the class hierarchy graph.
@@ -82,6 +85,12 @@ ClassHierarchies::ClassHierarchies(const DexStoresVector& stores) {
                 std::move(extends)));
       }
     });
+  }
+
+  if (options.dump_class_hierarchies()) {
+    LOG(1, "Writing class hierarchies to `class_hierarchies.json`");
+    boost::filesystem::save_string_file(
+        "class_hierarchies.json", Json::FastWriter().write(to_json()));
   }
 }
 

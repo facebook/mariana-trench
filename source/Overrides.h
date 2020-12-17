@@ -14,13 +14,17 @@
 #include <DexStore.h>
 
 #include <mariana-trench/Method.h>
+#include <mariana-trench/Options.h>
 #include <mariana-trench/UniquePointerConcurrentMap.h>
 
 namespace marianatrench {
 
 class Overrides final {
  public:
-  explicit Overrides(const Methods& methods, const DexStoresVector& stores);
+  explicit Overrides(
+      const Options& options,
+      const Methods& methods,
+      const DexStoresVector& stores);
 
   Overrides(const Overrides&) = delete;
   Overrides(Overrides&&) = delete;

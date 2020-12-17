@@ -496,6 +496,12 @@ CallGraph::CallGraph(
     number_methods = method_factory.size();
     queue.run_all();
   }
+
+  if (options.dump_call_graph()) {
+    LOG(1, "Writing call graph to `call_graph.json`");
+    boost::filesystem::save_string_file(
+        "call_graph.json", Json::FastWriter().write(to_json()));
+  }
 }
 
 std::vector<CallTarget> CallGraph::callees(const Method* caller) const {

@@ -13,12 +13,14 @@
 #include <Walkers.h>
 
 #include <mariana-trench/Assert.h>
+#include <mariana-trench/Log.h>
 #include <mariana-trench/Methods.h>
 #include <mariana-trench/Overrides.h>
 
 namespace marianatrench {
 
 Overrides::Overrides(
+    const Options& options,
     const Methods& method_factory,
     const DexStoresVector& stores) {
   // Compute overrides.
@@ -42,6 +44,12 @@ Overrides::Overrides(
 
       set(method_factory.get(dex_method), std::move(method_overrides));
     });
+  }
+
+  if (options.dump_overrides()) {
+    LOG(1, "Writing override graph to `overrides.json`");
+    boost::filesystem::save_string_file(
+        "overrides.json", Json::FastWriter().write(to_json()));
   }
 }
 

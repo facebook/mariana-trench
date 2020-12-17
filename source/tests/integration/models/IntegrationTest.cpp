@@ -368,9 +368,9 @@ TEST_P(IntegrationTest, ReturnsExpectedModel) {
   context.class_properties = std::make_unique<ClassProperties>(
       options, context.stores, *context.features);
   context.class_hierarchies =
-      std::make_unique<ClassHierarchies>(context.stores);
-  context.overrides =
-      std::make_unique<Overrides>(*context.methods, context.stores);
+      std::make_unique<ClassHierarchies>(*context.options, context.stores);
+  context.overrides = std::make_unique<Overrides>(
+      *context.options, *context.methods, context.stores);
   context.call_graph = std::make_unique<CallGraph>(
       *context.options,
       *context.methods,

@@ -43,7 +43,6 @@ class Dependencies final {
   const std::unordered_set<const Method*>& dependencies(
       const Method* method) const;
 
-  std::string to_dot() const;
   Json::Value to_json() const;
 
  private:

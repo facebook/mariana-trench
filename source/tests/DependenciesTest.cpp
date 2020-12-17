@@ -40,9 +40,9 @@ Context test_dependencies(const Scope& scope) {
   context.methods = std::make_unique<Methods>(context.stores);
   context.types = std::make_unique<Types>(context.stores);
   context.class_hierarchies =
-      std::make_unique<ClassHierarchies>(context.stores);
-  context.overrides =
-      std::make_unique<Overrides>(*context.methods, context.stores);
+      std::make_unique<ClassHierarchies>(*context.options, context.stores);
+  context.overrides = std::make_unique<Overrides>(
+      *context.options, *context.methods, context.stores);
   context.call_graph = std::make_unique<CallGraph>(
       *context.options,
       *context.methods,

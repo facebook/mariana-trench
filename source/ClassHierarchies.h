@@ -13,13 +13,16 @@
 
 #include <DexStore.h>
 
+#include <mariana-trench/Options.h>
 #include <mariana-trench/UniquePointerConcurrentMap.h>
 
 namespace marianatrench {
 
 class ClassHierarchies final {
  public:
-  explicit ClassHierarchies(const DexStoresVector& stores);
+  explicit ClassHierarchies(
+      const Options& options,
+      const DexStoresVector& stores);
 
   ClassHierarchies(const ClassHierarchies&) = delete;
   ClassHierarchies(ClassHierarchies&&) = delete;

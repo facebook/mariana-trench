@@ -33,7 +33,7 @@ Context test_class_hierarchies(const Scope& scope) {
   context.methods = std::make_unique<Methods>(context.stores);
   context.types = std::make_unique<Types>(context.stores);
   context.class_hierarchies =
-      std::make_unique<ClassHierarchies>(context.stores);
+      std::make_unique<ClassHierarchies>(*context.options, context.stores);
   return context;
 }
 
