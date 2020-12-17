@@ -1,0 +1,18 @@
+{
+  "model_generators": [
+    {
+      "find": "methods",
+      "where": [
+        {
+          "constraint": "signature",
+          "pattern": "Lcom/oculus/horizon/service/result/ResultBuilder;\\.build:.*"
+        }
+      ],
+      "model": {
+        "modes": [
+          "no-join-virtual-overrides"
+        ]
+      }
+    }
+  ]
+}
