@@ -78,8 +78,10 @@
          "sinks" : [
             {
                "call_position" : {
+                  "end" : 15,
                   "line" : 18,
-                  "path" : "Test.java"
+                  "path" : "Test.java",
+                  "start" : 11
                },
                "callee" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
                "callee_port" : "Argument(0)",
@@ -93,8 +95,10 @@
          "sources" : [
             {
                "call_position" : {
+                  "end" : 36,
                   "line" : 17,
-                  "path" : "Test.java"
+                  "path" : "Test.java",
+                  "start" : 30
                },
                "callee" : "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;",
                "callee_port" : "Return",

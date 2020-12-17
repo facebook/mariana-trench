@@ -29,8 +29,10 @@
          "sinks" : [
             {
                "call_position" : {
+                  "end" : 9,
                   "line" : 29,
-                  "path" : "ActivityUsingAndroidLocationManager.java"
+                  "path" : "ActivityUsingAndroidLocationManager.java",
+                  "start" : 8
                },
                "callee" : "Landroid/util/Log;.e:(Ljava/lang/String;Ljava/lang/String;)I",
                "callee_port" : "Argument(1)",
@@ -42,8 +44,10 @@
          "sources" : [
             {
                "call_position" : {
+                  "end" : 49,
                   "line" : 29,
-                  "path" : "ActivityUsingAndroidLocationManager.java"
+                  "path" : "ActivityUsingAndroidLocationManager.java",
+                  "start" : 41
                },
                "callee" : "Landroid/location/Location;.toString:()Ljava/lang/String;",
                "callee_port" : "Return",

@@ -320,8 +320,10 @@
             {
                "always_features" : [ "via-attach-sinks" ],
                "call_position" : {
+                  "end" : 19,
                   "line" : 48,
-                  "path" : "Flow.java"
+                  "path" : "Flow.java",
+                  "start" : 4
                },
                "callee" : "Lcom/facebook/marianatrench/integrationtests/Flow;.attach_to_sinks:(Ljava/lang/Object;)V",
                "callee_port" : "Argument(1)",
@@ -342,8 +344,10 @@
                   "via-obscure"
                ],
                "call_position" : {
+                  "end" : 39,
                   "line" : 44,
-                  "path" : "Flow.java"
+                  "path" : "Flow.java",
+                  "start" : 15
                },
                "callee" : "Lcom/facebook/marianatrench/integrationtests/Flow;.attach_to_return_sources:()Ljava/lang/Object;",
                "callee_port" : "Return",

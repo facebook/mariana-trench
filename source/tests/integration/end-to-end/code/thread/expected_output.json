@@ -103,8 +103,10 @@
          "sources" : [
             {
                "call_position" : {
+                  "end" : 49,
                   "line" : 13,
-                  "path" : "RunnableActivity.java"
+                  "path" : "RunnableActivity.java",
+                  "start" : 43
                },
                "callee" : "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;",
                "callee_port" : "Return",

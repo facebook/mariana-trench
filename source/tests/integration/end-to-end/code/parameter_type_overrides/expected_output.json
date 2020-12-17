@@ -78,8 +78,10 @@
          "sinks" : [
             {
                "call_position" : {
+                  "end" : 15,
                   "line" : 30,
-                  "path" : "RunnableFlows.java"
+                  "path" : "RunnableFlows.java",
+                  "start" : 4
                },
                "callee" : {
                   "name" : "Lcom/facebook/marianatrench/integrationtests/RunnableFlows;.runRunnable:(Lcom/facebook/marianatrench/integrationtests/RunnableWithArgument;Ljava/lang/Object;)V",
@@ -101,8 +103,10 @@
          "sources" : [
             {
                "call_position" : {
+                  "end" : 31,
                   "line" : 29,
-                  "path" : "RunnableFlows.java"
+                  "path" : "RunnableFlows.java",
+                  "start" : 25
                },
                "callee" : "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;",
                "callee_port" : "Return",
@@ -132,8 +136,10 @@
          "sinks" : [
             {
                "call_position" : {
+                  "end" : 15,
                   "line" : 42,
-                  "path" : "RunnableFlows.java"
+                  "path" : "RunnableFlows.java",
+                  "start" : 4
                },
                "callee" : "Lcom/facebook/marianatrench/integrationtests/RunnableFlows;.runRunnable:(Lcom/facebook/marianatrench/integrationtests/RunnableWithArgument;Ljava/lang/Object;)V",
                "callee_port" : "Argument(1)",
@@ -147,8 +153,10 @@
          "sources" : [
             {
                "call_position" : {
+                  "end" : 31,
                   "line" : 41,
-                  "path" : "RunnableFlows.java"
+                  "path" : "RunnableFlows.java",
+                  "start" : 25
                },
                "callee" : "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;",
                "callee_port" : "Return",

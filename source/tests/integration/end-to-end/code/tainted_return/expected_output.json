@@ -120,8 +120,10 @@
          "sinks" : [
             {
                "call_position" : {
+                  "end" : 20,
                   "line" : 17,
-                  "path" : "Instantiate.java"
+                  "path" : "Instantiate.java",
+                  "start" : 11
                },
                "callee" : "Lcom/facebook/marianatrench/integrationtests/Configerator;.configure:()V",
                "callee_port" : "Argument(0).mZeroRatingConnectionConfigOverrides",
@@ -133,8 +135,10 @@
             },
             {
                "call_position" : {
+                  "end" : 20,
                   "line" : 17,
-                  "path" : "Instantiate.java"
+                  "path" : "Instantiate.java",
+                  "start" : 11
                },
                "callee" : "Lcom/facebook/marianatrench/integrationtests/Configerator;.configure:()V",
                "callee_port" : "Argument(0).mZeroRatingConnectionConfigOverrides.mUri",
@@ -148,8 +152,10 @@
          "sources" : [
             {
                "call_position" : {
+                  "end" : 21,
                   "line" : 15,
-                  "path" : "Instantiate.java"
+                  "path" : "Instantiate.java",
+                  "start" : 13
                },
                "callee" : "Lcom/facebook/marianatrench/integrationtests/ZeroRatingConnectionConfigOverrides;.onCreate:()V",
                "callee_port" : "Argument(0).mUri",

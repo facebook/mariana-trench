@@ -96,8 +96,10 @@
             {
                "always_features" : [ "via-obscure" ],
                "call_position" : {
+                  "end" : 37,
                   "line" : 33,
-                  "path" : "RunnableFlows.java"
+                  "path" : "RunnableFlows.java",
+                  "start" : 31
                },
                "callee" : "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;",
                "callee_port" : "Return",

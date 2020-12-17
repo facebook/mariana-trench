@@ -76,8 +76,10 @@
          "sinks" : [
             {
                "call_position" : {
+                  "end" : 41,
                   "line" : 23,
-                  "path" : "IntentUriHandler.java"
+                  "path" : "IntentUriHandler.java",
+                  "start" : 23
                },
                "callee" : "Lcom/facebook/marianatrench/integrationtests/IntentHandlerUtil;.launchNextActivity:(Landroid/content/Context;Landroid/content/Intent;)V",
                "callee_port" : "Argument(2)",
@@ -94,8 +96,10 @@
          "sources" : [
             {
                "call_position" : {
+                  "end" : 57,
                   "line" : 23,
-                  "path" : "IntentUriHandler.java"
+                  "path" : "IntentUriHandler.java",
+                  "start" : 48
                },
                "callee" : "Landroid/app/Activity;.getIntent:()Landroid/content/Intent;",
                "callee_port" : "Return",

@@ -5,11 +5,14 @@
  * LICENSE file in the root directory of this source tree.
  */
 
+#include <cstdio>
+#include <fstream>
 #include <stdexcept>
 
 #include <boost/algorithm/string/predicate.hpp>
 #include <boost/filesystem/string_file.hpp>
 #include <fmt/format.h>
+#include <re2/re2.h>
 
 #include <SpartaWorkQueue.h>
 #include <Walkers.h>
@@ -19,6 +22,8 @@
 #include <mariana-trench/JsonValidation.h>
 #include <mariana-trench/Log.h>
 #include <mariana-trench/Methods.h>
+#include <mariana-trench/Options.h>
+#include <mariana-trench/Positions.h>
 #include <mariana-trench/Redex.h>
 #include <mariana-trench/Registry.h>
 #include <mariana-trench/Rules.h>
@@ -132,6 +137,50 @@ void Registry::join_with(const Registry& other) {
 
 namespace {
 
+Frame augment_frame_position(
+    const Frame& frame,
+    const std::vector<std::string>& lines,
+    const Context& context) {
+  if (frame.is_leaf()) {
+    return frame;
+  }
+  const auto* position = frame.call_position();
+  mt_assert(position != nullptr);
+
+  std::string current_line;
+  try {
+    // Subtracting 1 below as lines in files are counted starting at 1
+    current_line = lines.at(position->line() - 1);
+  } catch (const std::out_of_range&) {
+    WARNING(
+        1,
+        "Trying to access line {} of a file with {} lines",
+        position->line(),
+        lines.size());
+    return frame;
+  }
+
+  const auto* callee = frame.callee();
+  mt_assert(callee != nullptr);
+  const auto& callee_name = callee->get_name();
+  std::size_t start = current_line.find(callee_name);
+  if (start == std::string::npos) {
+    return frame;
+  }
+  std::size_t end =
+      std::min(start + callee_name.length(), current_line.length() - 1);
+
+  return Frame(
+      frame.kind(),
+      frame.callee_port(),
+      callee,
+      context.positions->get(position, start, end),
+      frame.distance(),
+      frame.origins(),
+      frame.features(),
+      frame.local_positions());
+}
+
 bool is_valid_generation(const Frame& generation, const Registry& registry) {
   if (generation.is_leaf()) {
     return true;
@@ -231,6 +280,68 @@ void Registry::postprocess_remove_collapsed_traces() {
     queue.run_all();
     methods = std::move(new_methods);
   }
+}
+
+void Registry::augment_positions() {
+  auto current_path = boost::filesystem::current_path();
+  boost::filesystem::current_path(context_.options->source_root_directory());
+
+  auto queue = sparta::work_queue<const Method*>(
+      [&](const Method* method) {
+        const auto old_model = models_.at(method);
+        if (old_model.issues().size() == 0) {
+          return;
+        }
+        auto* method_position = context_.positions->get(method);
+        if (!method_position || !method_position->path()) {
+          LOG(3,
+              "Method {} does not have a position or a path recorded",
+              method->get_name());
+          return;
+        }
+        const auto& filepath = *(method_position->path());
+        std::ifstream stream(filepath);
+        if (stream.bad()) {
+          WARNING(1, "File {} was not found.", filepath);
+          return;
+        }
+        std::vector<std::string> lines;
+        std::string line;
+        while (std::getline(stream, line)) {
+          lines.push_back(line);
+        }
+
+        IssueSet augmented_issues = {};
+        for (const auto& issue : old_model.issues()) {
+          Taint sources = Taint::bottom();
+          Taint sinks = Taint::bottom();
+          for (const auto& frames : issue.sources()) {
+            for (const auto& frame : frames) {
+              sources.add(augment_frame_position(frame, lines, context_));
+            }
+          }
+          for (const auto& frames : issue.sinks()) {
+            for (const auto& frame : frames) {
+              sinks.add(augment_frame_position(frame, lines, context_));
+            }
+          }
+          Issue augmented_issue =
+              Issue(sources, sinks, issue.rule(), issue.position());
+          augmented_issues.add(std::move(augmented_issue));
+        }
+
+        auto new_model = old_model;
+        new_model.set_issues(augmented_issues);
+        models_.insert_or_assign(std::pair(method, new_model));
+      },
+      sparta::parallel::default_num_threads());
+
+  for (const auto& [method, _] : models_) {
+    queue.add_item(method);
+  }
+  queue.run_all();
+
+  boost::filesystem::current_path(current_path);
 }
 
 void Registry::dump_metadata(const boost::filesystem::path& path) const {

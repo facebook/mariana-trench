@@ -96,6 +96,12 @@ class Registry final {
    */
   void postprocess_remove_collapsed_traces();
 
+  /*
+   * Add a start and end column to the positions involved in issues so that they
+   * can be highlighted in the Zoncolan UI
+   */
+  void augment_positions();
+
   void dump_metadata(const boost::filesystem::path& path) const;
   void dump_models(
       const boost::filesystem::path& path,

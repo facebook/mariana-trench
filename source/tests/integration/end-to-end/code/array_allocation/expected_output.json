@@ -97,8 +97,10 @@
             {
                "always_features" : [ "via-numerical-operator" ],
                "call_position" : {
+                  "end" : 17,
                   "line" : 58,
-                  "path" : "ArrayAllocation.java"
+                  "path" : "ArrayAllocation.java",
+                  "start" : 4
                },
                "callee" : "Lcom/facebook/marianatrench/integrationtests/ArrayAllocation;.allocateArray:(I)V",
                "callee_port" : "Argument(1)",
@@ -110,8 +112,10 @@
          "sources" : [
             {
                "call_position" : {
+                  "end" : 37,
                   "line" : 57,
-                  "path" : "ArrayAllocation.java"
+                  "path" : "ArrayAllocation.java",
+                  "start" : 31
                },
                "callee" : "Lcom/facebook/marianatrench/integrationtests/ArrayAllocation;.source:()I",
                "callee_port" : "Return",
@@ -154,8 +158,10 @@
          "sources" : [
             {
                "call_position" : {
+                  "end" : 37,
                   "line" : 12,
-                  "path" : "ArrayAllocation.java"
+                  "path" : "ArrayAllocation.java",
+                  "start" : 31
                },
                "callee" : "Lcom/facebook/marianatrench/integrationtests/ArrayAllocation;.source:()I",
                "callee_port" : "Return",
@@ -198,8 +204,10 @@
          "sources" : [
             {
                "call_position" : {
+                  "end" : 34,
                   "line" : 17,
-                  "path" : "ArrayAllocation.java"
+                  "path" : "ArrayAllocation.java",
+                  "start" : 28
                },
                "callee" : "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;",
                "callee_port" : "Return",
@@ -247,8 +255,10 @@
          "sources" : [
             {
                "call_position" : {
+                  "end" : 42,
                   "line" : 22,
-                  "path" : "ArrayAllocation.java"
+                  "path" : "ArrayAllocation.java",
+                  "start" : 36
                },
                "callee" : "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;",
                "callee_port" : "Return",
@@ -296,8 +306,10 @@
          "sources" : [
             {
                "call_position" : {
+                  "end" : 37,
                   "line" : 27,
-                  "path" : "ArrayAllocation.java"
+                  "path" : "ArrayAllocation.java",
+                  "start" : 31
                },
                "callee" : "Lcom/facebook/marianatrench/integrationtests/ArrayAllocation;.source:()I",
                "callee_port" : "Return",
@@ -340,8 +352,10 @@
          "sources" : [
             {
                "call_position" : {
+                  "end" : 38,
                   "line" : 33,
-                  "path" : "ArrayAllocation.java"
+                  "path" : "ArrayAllocation.java",
+                  "start" : 32
                },
                "callee" : "Lcom/facebook/marianatrench/integrationtests/ArrayAllocation;.source:()I",
                "callee_port" : "Return",
@@ -384,8 +398,10 @@
          "sources" : [
             {
                "call_position" : {
+                  "end" : 38,
                   "line" : 38,
-                  "path" : "ArrayAllocation.java"
+                  "path" : "ArrayAllocation.java",
+                  "start" : 32
                },
                "callee" : "Lcom/facebook/marianatrench/integrationtests/ArrayAllocation;.source:()I",
                "callee_port" : "Return",
@@ -428,8 +444,10 @@
          "sources" : [
             {
                "call_position" : {
+                  "end" : 38,
                   "line" : 46,
-                  "path" : "ArrayAllocation.java"
+                  "path" : "ArrayAllocation.java",
+                  "start" : 32
                },
                "callee" : "Lcom/facebook/marianatrench/integrationtests/ArrayAllocation;.source:()I",
                "callee_port" : "Return",
@@ -472,8 +490,10 @@
          "sources" : [
             {
                "call_position" : {
+                  "end" : 38,
                   "line" : 52,
-                  "path" : "ArrayAllocation.java"
+                  "path" : "ArrayAllocation.java",
+                  "start" : 32
                },
                "callee" : "Lcom/facebook/marianatrench/integrationtests/ArrayAllocation;.source:()I",
                "callee_port" : "Return",

@@ -45,8 +45,10 @@
          "sinks" : [
             {
                "call_position" : {
+                  "end" : 25,
                   "line" : 19,
-                  "path" : "LeafAnnotationFlows.java"
+                  "path" : "LeafAnnotationFlows.java",
+                  "start" : 4
                },
                "callee" : "Lcom/facebook/marianatrench/integrationtests/LeafAnnotationFlows;.intermediateFunction1:(Ljava/lang/String;)V",
                "callee_port" : "Argument(1)",
@@ -60,8 +62,10 @@
          "sources" : [
             {
                "call_position" : {
+                  "end" : 36,
                   "line" : 18,
-                  "path" : "LeafAnnotationFlows.java"
+                  "path" : "LeafAnnotationFlows.java",
+                  "start" : 15
                },
                "callee" : "Lcom/facebook/marianatrench/integrationtests/LeafAnnotationFlows;.nativeGetLocationName:()Ljava/lang/String;",
                "callee_port" : "Return",
@@ -184,8 +188,10 @@
          "sinks" : [
             {
                "call_position" : {
+                  "end" : 25,
                   "line" : 25,
-                  "path" : "LeafAnnotationFlows.java"
+                  "path" : "LeafAnnotationFlows.java",
+                  "start" : 4
                },
                "callee" : "Lcom/facebook/marianatrench/integrationtests/LeafAnnotationFlows;.intermediateFunction1:(Ljava/lang/String;)V",
                "callee_port" : "Argument(1)",

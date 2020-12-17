@@ -87,8 +87,10 @@
          "sinks" : [
             {
                "call_position" : {
+                  "end" : 16,
                   "line" : 23,
-                  "path" : "UrlHandlerActivity.java"
+                  "path" : "UrlHandlerActivity.java",
+                  "start" : 4
                },
                "callee" : "Lcom/instagram/url/UrlHandlerActivity;.handleIntent:(Landroid/content/Intent;)V",
                "callee_port" : "Argument(1)",
@@ -103,8 +105,10 @@
          "sources" : [
             {
                "call_position" : {
+                  "end" : 26,
                   "line" : 23,
-                  "path" : "UrlHandlerActivity.java"
+                  "path" : "UrlHandlerActivity.java",
+                  "start" : 17
                },
                "callee" : "Landroid/app/Activity;.getIntent:()Landroid/content/Intent;",
                "callee_port" : "Return",
@@ -132,8 +136,10 @@
          "sinks" : [
             {
                "call_position" : {
+                  "end" : 18,
                   "line" : 23,
-                  "path" : "SimpleLogging.java"
+                  "path" : "SimpleLogging.java",
+                  "start" : 10
                },
                "callee" : "Lcom/instagram/common/analytics/intf/AnalyticsEvent;.addExtra:(Ljava/lang/String;Ljava/lang/String;)Lcom/instagram/common/analytics/intf/AnalyticsEvent;",
                "callee_port" : "Argument(2)",
@@ -147,8 +153,10 @@
          "sources" : [
             {
                "call_position" : {
+                  "end" : 29,
                   "line" : 19,
-                  "path" : "SimpleLogging.java"
+                  "path" : "SimpleLogging.java",
+                  "start" : 20
                },
                "callee" : "Landroid/app/Activity;.getIntent:()Landroid/content/Intent;",
                "callee_port" : "Return",

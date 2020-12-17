@@ -78,8 +78,10 @@
          "sinks" : [
             {
                "call_position" : {
+                  "end" : 15,
                   "line" : 14,
-                  "path" : "Activity.java"
+                  "path" : "Activity.java",
+                  "start" : 11
                },
                "callee" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
                "callee_port" : "Argument(0)",
@@ -93,8 +95,10 @@
          "sources" : [
             {
                "call_position" : {
+                  "end" : 17,
                   "line" : 13,
-                  "path" : "Activity.java"
+                  "path" : "Activity.java",
+                  "start" : 11
                },
                "callee" : "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;",
                "callee_port" : "Return",
@@ -115,8 +119,10 @@
          "sinks" : [
             {
                "call_position" : {
+                  "end" : 8,
                   "line" : 15,
-                  "path" : "Activity.java"
+                  "path" : "Activity.java",
+                  "start" : 4
                },
                "callee" : "Lcom/facebook/marianatrench/integrationtests/Activity;.sink:(Ljava/lang/String;)V",
                "callee_port" : "Argument(1)",
@@ -130,8 +136,10 @@
          "sources" : [
             {
                "call_position" : {
+                  "end" : 17,
                   "line" : 13,
-                  "path" : "Activity.java"
+                  "path" : "Activity.java",
+                  "start" : 11
                },
                "callee" : "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;",
                "callee_port" : "Return",

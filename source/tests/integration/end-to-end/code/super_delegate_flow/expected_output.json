@@ -62,8 +62,10 @@
          "sinks" : [
             {
                "call_position" : {
+                  "end" : 24,
                   "line" : 14,
-                  "path" : "SourceWebViewClient.java"
+                  "path" : "SourceWebViewClient.java",
+                  "start" : 10
                },
                "callee" : "Lcom/facebook/marianatrench/integrationtests/SecureWebViewClient;.onPageFinished:(Ljava/lang/String;)V",
                "callee_port" : "Argument(1)",
