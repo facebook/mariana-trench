@@ -47,6 +47,7 @@ class Options final {
 
   const std::string& repository_root_directory() const;
   const std::string& source_root_directory() const;
+  const std::vector<std::string>& source_exclude_directories() const;
 
   const std::string& system_jars_configuration_path() const;
   const std::vector<std::string>& system_jar_paths() const;
@@ -84,6 +85,7 @@ class Options final {
 
   std::string repository_root_directory_;
   std::string source_root_directory_;
+  std::vector<std::string> source_exclude_directories_;
 
   std::string system_jars_configuration_path_;
   std::vector<std::string> system_jar_paths_;

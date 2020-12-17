@@ -140,6 +140,12 @@ Options::Options(const boost::program_options::variables_map& variables) {
   source_root_directory_ = check_directory_exists(
       variables["source-root-directory"].as<std::string>());
 
+  if (!variables["source-exclude-directories"].empty()) {
+    source_exclude_directories_ = parse_paths_list(
+        variables["source-exclude-directories"].as<std::string>(),
+        /* extension */ std::nullopt);
+  }
+
   apk_path_ = check_path_exists(variables["apk-path"].as<std::string>());
   output_directory_ = boost::filesystem::path(
       check_directory_exists(variables["output-directory"].as<std::string>()));
@@ -206,6 +212,10 @@ void Options::add_options(
       "source-root-directory",
       program_options::value<std::string>()->required(),
       "The root where source files for the APK can be found.");
+  options.add_options()(
+      "source-exclude-directories",
+      program_options::value<std::string>(),
+      "A `;`-separated list of directories that should be excluded from indexed source files.");
 
   options.add_options()(
       "apk-path",
@@ -277,6 +287,10 @@ const std::string& Options::repository_root_directory() const {
 
 const std::string& Options::source_root_directory() const {
   return source_root_directory_;
+}
+
+const std::vector<std::string>& Options::source_exclude_directories() const {
+  return source_exclude_directories_;
 }
 
 const std::string& Options::system_jars_configuration_path() const {

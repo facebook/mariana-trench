@@ -316,6 +316,12 @@ if __name__ == "__main__":
             help="The root where source files for the APK can be found.",
         )
         configuration_arguments.add_argument(
+            "--source-exclude-directories",
+            type=str,
+            default=None,
+            help="A `;`-separated list of directories that should be excluded from indexed source files.",
+        )
+        configuration_arguments.add_argument(
             "--proguard-configuration-paths",
             type=_path_exists,
             default=None,
@@ -450,6 +456,10 @@ if __name__ == "__main__":
         if arguments.proguard_configuration_paths:
             options.append("--proguard-configuration-paths")
             options.append(arguments.proguard_configuration_paths)
+
+        if arguments.source_exclude_directories:
+            options.append("--source-exclude-directories")
+            options.append(arguments.source_exclude_directories)
 
         if arguments.generated_models_directory:
             options.append("--generated-models-directory")

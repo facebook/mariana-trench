@@ -127,6 +127,13 @@ Positions::Positions(const Options& options, const DexStoresVector& stores) {
         "android/",
     };
 
+    auto exclude_directories = options.source_exclude_directories();
+    for (auto& exclude_directory : exclude_directories) {
+      if (!boost::ends_with(exclude_directory, "/")) {
+        exclude_directory.push_back('/');
+      }
+    }
+
     auto queue = sparta::work_queue<std::string*>(
         [&](std::string* path) {
           iteration++;
@@ -140,6 +147,11 @@ Positions::Positions(const Options& options, const DexStoresVector& stores) {
           }
           if (path->empty()) {
             return;
+          }
+          for (const auto& exclude_directory : exclude_directories) {
+            if (boost::starts_with(*path, exclude_directory)) {
+              return;
+            }
           }
 
           std::optional<std::string> package = std::nullopt;
