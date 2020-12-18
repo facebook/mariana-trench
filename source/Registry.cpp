@@ -168,7 +168,7 @@ Frame augment_frame_position(
     return frame;
   }
   std::size_t end =
-      std::min(start + callee_name.length(), current_line.length() - 1);
+      std::min(start + callee_name.length() - 1, current_line.length() - 1);
 
   return Frame(
       frame.kind(),

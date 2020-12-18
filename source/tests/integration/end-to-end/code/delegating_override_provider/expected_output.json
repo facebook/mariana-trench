@@ -48,7 +48,7 @@
          "sinks" : [
             {
                "call_position" : {
-                  "end" : 18,
+                  "end" : 17,
                   "line" : 18,
                   "path" : "AbstractContentProvider.java",
                   "start" : 11

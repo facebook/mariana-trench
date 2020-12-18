@@ -120,7 +120,7 @@
          "sinks" : [
             {
                "call_position" : {
-                  "end" : 20,
+                  "end" : 19,
                   "line" : 17,
                   "path" : "Instantiate.java",
                   "start" : 11
@@ -135,7 +135,7 @@
             },
             {
                "call_position" : {
-                  "end" : 20,
+                  "end" : 19,
                   "line" : 17,
                   "path" : "Instantiate.java",
                   "start" : 11
@@ -152,7 +152,7 @@
          "sources" : [
             {
                "call_position" : {
-                  "end" : 21,
+                  "end" : 20,
                   "line" : 15,
                   "path" : "Instantiate.java",
                   "start" : 13

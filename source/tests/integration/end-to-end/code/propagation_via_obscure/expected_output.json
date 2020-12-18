@@ -79,7 +79,7 @@
          "sinks" : [
             {
                "call_position" : {
-                  "end" : 15,
+                  "end" : 14,
                   "line" : 20,
                   "path" : "Flow.java",
                   "start" : 11
@@ -97,7 +97,7 @@
             {
                "always_features" : [ "via-obscure" ],
                "call_position" : {
-                  "end" : 37,
+                  "end" : 36,
                   "line" : 18,
                   "path" : "Flow.java",
                   "start" : 31

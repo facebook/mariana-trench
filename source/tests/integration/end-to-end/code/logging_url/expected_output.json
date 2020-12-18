@@ -87,7 +87,7 @@
          "sinks" : [
             {
                "call_position" : {
-                  "end" : 16,
+                  "end" : 15,
                   "line" : 23,
                   "path" : "UrlHandlerActivity.java",
                   "start" : 4
@@ -105,7 +105,7 @@
          "sources" : [
             {
                "call_position" : {
-                  "end" : 26,
+                  "end" : 25,
                   "line" : 23,
                   "path" : "UrlHandlerActivity.java",
                   "start" : 17
@@ -136,7 +136,7 @@
          "sinks" : [
             {
                "call_position" : {
-                  "end" : 18,
+                  "end" : 17,
                   "line" : 23,
                   "path" : "SimpleLogging.java",
                   "start" : 10
@@ -153,7 +153,7 @@
          "sources" : [
             {
                "call_position" : {
-                  "end" : 29,
+                  "end" : 28,
                   "line" : 19,
                   "path" : "SimpleLogging.java",
                   "start" : 20

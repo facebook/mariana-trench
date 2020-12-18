@@ -78,7 +78,7 @@
          "sinks" : [
             {
                "call_position" : {
-                  "end" : 15,
+                  "end" : 14,
                   "line" : 15,
                   "path" : "MainActivity.java",
                   "start" : 11
@@ -95,7 +95,7 @@
          "sources" : [
             {
                "call_position" : {
-                  "end" : 42,
+                  "end" : 41,
                   "line" : 14,
                   "path" : "MainActivity.java",
                   "start" : 36

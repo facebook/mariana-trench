@@ -110,7 +110,7 @@
          "sinks" : [
             {
                "call_position" : {
-                  "end" : 15,
+                  "end" : 14,
                   "line" : 32,
                   "path" : "Flow.java",
                   "start" : 11
@@ -128,7 +128,7 @@
             {
                "always_features" : [ "via-one" ],
                "call_position" : {
-                  "end" : 28,
+                  "end" : 27,
                   "line" : 24,
                   "path" : "Flow.java",
                   "start" : 22

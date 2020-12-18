@@ -76,7 +76,7 @@
          "sinks" : [
             {
                "call_position" : {
-                  "end" : 41,
+                  "end" : 40,
                   "line" : 23,
                   "path" : "IntentUriHandler.java",
                   "start" : 23
@@ -96,7 +96,7 @@
          "sources" : [
             {
                "call_position" : {
-                  "end" : 57,
+                  "end" : 56,
                   "line" : 23,
                   "path" : "IntentUriHandler.java",
                   "start" : 48

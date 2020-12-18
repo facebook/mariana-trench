@@ -320,7 +320,7 @@
             {
                "always_features" : [ "via-attach-sinks" ],
                "call_position" : {
-                  "end" : 19,
+                  "end" : 18,
                   "line" : 48,
                   "path" : "Flow.java",
                   "start" : 4
@@ -344,7 +344,7 @@
                   "via-obscure"
                ],
                "call_position" : {
-                  "end" : 39,
+                  "end" : 38,
                   "line" : 44,
                   "path" : "Flow.java",
                   "start" : 15

@@ -29,7 +29,7 @@
          "sinks" : [
             {
                "call_position" : {
-                  "end" : 9,
+                  "end" : 8,
                   "line" : 29,
                   "path" : "ActivityUsingAndroidLocationManager.java",
                   "start" : 8
@@ -44,7 +44,7 @@
          "sources" : [
             {
                "call_position" : {
-                  "end" : 49,
+                  "end" : 48,
                   "line" : 29,
                   "path" : "ActivityUsingAndroidLocationManager.java",
                   "start" : 41

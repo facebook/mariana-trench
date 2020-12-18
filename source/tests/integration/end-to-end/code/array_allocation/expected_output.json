@@ -97,7 +97,7 @@
             {
                "always_features" : [ "via-numerical-operator" ],
                "call_position" : {
-                  "end" : 17,
+                  "end" : 16,
                   "line" : 58,
                   "path" : "ArrayAllocation.java",
                   "start" : 4
@@ -112,7 +112,7 @@
          "sources" : [
             {
                "call_position" : {
-                  "end" : 37,
+                  "end" : 36,
                   "line" : 57,
                   "path" : "ArrayAllocation.java",
                   "start" : 31
@@ -158,7 +158,7 @@
          "sources" : [
             {
                "call_position" : {
-                  "end" : 37,
+                  "end" : 36,
                   "line" : 12,
                   "path" : "ArrayAllocation.java",
                   "start" : 31
@@ -204,7 +204,7 @@
          "sources" : [
             {
                "call_position" : {
-                  "end" : 34,
+                  "end" : 33,
                   "line" : 17,
                   "path" : "ArrayAllocation.java",
                   "start" : 28
@@ -255,7 +255,7 @@
          "sources" : [
             {
                "call_position" : {
-                  "end" : 42,
+                  "end" : 41,
                   "line" : 22,
                   "path" : "ArrayAllocation.java",
                   "start" : 36
@@ -306,7 +306,7 @@
          "sources" : [
             {
                "call_position" : {
-                  "end" : 37,
+                  "end" : 36,
                   "line" : 27,
                   "path" : "ArrayAllocation.java",
                   "start" : 31
@@ -352,7 +352,7 @@
          "sources" : [
             {
                "call_position" : {
-                  "end" : 38,
+                  "end" : 37,
                   "line" : 33,
                   "path" : "ArrayAllocation.java",
                   "start" : 32
@@ -398,7 +398,7 @@
          "sources" : [
             {
                "call_position" : {
-                  "end" : 38,
+                  "end" : 37,
                   "line" : 38,
                   "path" : "ArrayAllocation.java",
                   "start" : 32
@@ -444,7 +444,7 @@
          "sources" : [
             {
                "call_position" : {
-                  "end" : 38,
+                  "end" : 37,
                   "line" : 46,
                   "path" : "ArrayAllocation.java",
                   "start" : 32
@@ -490,7 +490,7 @@
          "sources" : [
             {
                "call_position" : {
-                  "end" : 38,
+                  "end" : 37,
                   "line" : 52,
                   "path" : "ArrayAllocation.java",
                   "start" : 32

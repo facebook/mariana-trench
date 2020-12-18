@@ -103,7 +103,7 @@
          "sources" : [
             {
                "call_position" : {
-                  "end" : 49,
+                  "end" : 48,
                   "line" : 13,
                   "path" : "RunnableActivity.java",
                   "start" : 43

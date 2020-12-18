@@ -78,7 +78,7 @@
          "sinks" : [
             {
                "call_position" : {
-                  "end" : 15,
+                  "end" : 14,
                   "line" : 16,
                   "path" : "Test.java",
                   "start" : 11
@@ -95,7 +95,7 @@
          "sources" : [
             {
                "call_position" : {
-                  "end" : 55,
+                  "end" : 54,
                   "line" : 15,
                   "path" : "Test.java",
                   "start" : 49
@@ -136,7 +136,7 @@
          "sinks" : [
             {
                "call_position" : {
-                  "end" : 15,
+                  "end" : 14,
                   "line" : 21,
                   "path" : "Test.java",
                   "start" : 11
@@ -153,7 +153,7 @@
          "sources" : [
             {
                "call_position" : {
-                  "end" : 74,
+                  "end" : 73,
                   "line" : 20,
                   "path" : "Test.java",
                   "start" : 68
@@ -194,7 +194,7 @@
          "sinks" : [
             {
                "call_position" : {
-                  "end" : 15,
+                  "end" : 14,
                   "line" : 27,
                   "path" : "Test.java",
                   "start" : 11
@@ -211,7 +211,7 @@
          "sources" : [
             {
                "call_position" : {
-                  "end" : 86,
+                  "end" : 85,
                   "line" : 26,
                   "path" : "Test.java",
                   "start" : 80

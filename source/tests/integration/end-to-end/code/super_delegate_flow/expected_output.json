@@ -62,7 +62,7 @@
          "sinks" : [
             {
                "call_position" : {
-                  "end" : 24,
+                  "end" : 23,
                   "line" : 14,
                   "path" : "SourceWebViewClient.java",
                   "start" : 10

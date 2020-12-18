@@ -140,7 +140,7 @@
          "sinks" : [
             {
                "call_position" : {
-                  "end" : 15,
+                  "end" : 14,
                   "line" : 14,
                   "path" : "DirectFlowWithSanitizer.java",
                   "start" : 11
@@ -158,7 +158,7 @@
             {
                "always_features" : [ "sanitize" ],
                "call_position" : {
-                  "end" : 28,
+                  "end" : 27,
                   "line" : 12,
                   "path" : "DirectFlowWithSanitizer.java",
                   "start" : 22
@@ -196,7 +196,7 @@
          "sinks" : [
             {
                "call_position" : {
-                  "end" : 26,
+                  "end" : 25,
                   "line" : 17,
                   "path" : "ExternalDirectFlow.java",
                   "start" : 13
@@ -211,7 +211,7 @@
          "sources" : [
             {
                "call_position" : {
-                  "end" : 38,
+                  "end" : 37,
                   "line" : 16,
                   "path" : "ExternalDirectFlow.java",
                   "start" : 29
@@ -242,7 +242,7 @@
          "sinks" : [
             {
                "call_position" : {
-                  "end" : 17,
+                  "end" : 16,
                   "line" : 19,
                   "path" : "DirectFlow.java",
                   "start" : 4
@@ -257,7 +257,7 @@
          "sources" : [
             {
                "call_position" : {
-                  "end" : 29,
+                  "end" : 28,
                   "line" : 18,
                   "path" : "DirectFlow.java",
                   "start" : 20
@@ -288,7 +288,7 @@
          "sinks" : [
             {
                "call_position" : {
-                  "end" : 26,
+                  "end" : 25,
                   "line" : 19,
                   "path" : "InheritanceFlows.java",
                   "start" : 13
@@ -303,7 +303,7 @@
          "sources" : [
             {
                "call_position" : {
-                  "end" : 38,
+                  "end" : 37,
                   "line" : 18,
                   "path" : "InheritanceFlows.java",
                   "start" : 29
@@ -334,7 +334,7 @@
          "sinks" : [
             {
                "call_position" : {
-                  "end" : 22,
+                  "end" : 21,
                   "line" : 29,
                   "path" : "FlowWithHops.java",
                   "start" : 9
@@ -351,7 +351,7 @@
          "sources" : [
             {
                "call_position" : {
-                  "end" : 44,
+                  "end" : 43,
                   "line" : 29,
                   "path" : "FlowWithHops.java",
                   "start" : 28
@@ -384,7 +384,7 @@
          "sinks" : [
             {
                "call_position" : {
-                  "end" : 49,
+                  "end" : 48,
                   "line" : 58,
                   "path" : "DirectOpenRedirectFlow.java",
                   "start" : 28
@@ -401,7 +401,7 @@
          "sources" : [
             {
                "call_position" : {
-                  "end" : 37,
+                  "end" : 36,
                   "line" : 26,
                   "path" : "DirectOpenRedirectFlow.java",
                   "start" : 28

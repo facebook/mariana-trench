@@ -45,7 +45,7 @@
          "sinks" : [
             {
                "call_position" : {
-                  "end" : 25,
+                  "end" : 24,
                   "line" : 19,
                   "path" : "LeafAnnotationFlows.java",
                   "start" : 4
@@ -62,7 +62,7 @@
          "sources" : [
             {
                "call_position" : {
-                  "end" : 36,
+                  "end" : 35,
                   "line" : 18,
                   "path" : "LeafAnnotationFlows.java",
                   "start" : 15
@@ -188,7 +188,7 @@
          "sinks" : [
             {
                "call_position" : {
-                  "end" : 25,
+                  "end" : 24,
                   "line" : 25,
                   "path" : "LeafAnnotationFlows.java",
                   "start" : 4

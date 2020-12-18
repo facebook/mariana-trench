@@ -79,7 +79,7 @@
          "sinks" : [
             {
                "call_position" : {
-                  "end" : 12,
+                  "end" : 11,
                   "line" : 19,
                   "path" : "Test.java",
                   "start" : 9
@@ -97,7 +97,7 @@
             {
                "always_features" : [ "via-array" ],
                "call_position" : {
-                  "end" : 44,
+                  "end" : 43,
                   "line" : 18,
                   "path" : "Test.java",
                   "start" : 38
@@ -136,7 +136,7 @@
          "sinks" : [
             {
                "call_position" : {
-                  "end" : 12,
+                  "end" : 11,
                   "line" : 26,
                   "path" : "Test.java",
                   "start" : 9
@@ -154,7 +154,7 @@
             {
                "always_features" : [ "via-array" ],
                "call_position" : {
-                  "end" : 44,
+                  "end" : 43,
                   "line" : 24,
                   "path" : "Test.java",
                   "start" : 38
