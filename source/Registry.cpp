@@ -163,7 +163,7 @@ Frame augment_frame_position(
   const auto* callee = frame.callee();
   mt_assert(callee != nullptr);
   const auto& callee_name = callee->get_name();
-  std::size_t start = current_line.find(callee_name);
+  std::size_t start = current_line.find(callee_name + "(");
   if (start == std::string::npos) {
     return frame;
   }

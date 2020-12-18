@@ -95,10 +95,10 @@
          "sources" : [
             {
                "call_position" : {
-                  "end" : 17,
+                  "end" : 42,
                   "line" : 13,
                   "path" : "Activity.java",
-                  "start" : 11
+                  "start" : 36
                },
                "callee" : "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;",
                "callee_port" : "Return",
@@ -136,10 +136,10 @@
          "sources" : [
             {
                "call_position" : {
-                  "end" : 17,
+                  "end" : 42,
                   "line" : 13,
                   "path" : "Activity.java",
-                  "start" : 11
+                  "start" : 36
                },
                "callee" : "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;",
                "callee_port" : "Return",
