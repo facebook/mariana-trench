@@ -350,6 +350,16 @@ if __name__ == "__main__":
             help="Run the analysis sequentially, one a single thread.",
         )
         analysis_arguments.add_argument(
+            "--skip-source-indexing",
+            action="store_true",
+            help="Skip indexing source files.",
+        )
+        analysis_arguments.add_argument(
+            "--skip-model-generation",
+            action="store_true",
+            help="Skip model generation.",
+        )
+        analysis_arguments.add_argument(
             "--disable-parameter-type-overrides",
             action="store_true",
             help="Disable analyzing methods with specific parameter type information.",
@@ -467,6 +477,10 @@ if __name__ == "__main__":
 
         if arguments.sequential:
             options.append("--sequential")
+        if arguments.skip_source_indexing:
+            options.append("--skip-source-indexing")
+        if arguments.skip_model_generation:
+            options.append("--skip-model-generation")
         if arguments.disable_parameter_type_overrides:
             options.append("--disable-parameter-type-overrides")
 
