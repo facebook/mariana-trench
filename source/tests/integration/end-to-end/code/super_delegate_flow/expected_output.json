@@ -109,8 +109,10 @@
    "sinks" : [
       {
          "call_position" : {
+            "end" : 23,
             "line" : 14,
-            "path" : "SourceWebViewClient.java"
+            "path" : "SourceWebViewClient.java",
+            "start" : 10
          },
          "callee" : "Lcom/facebook/marianatrench/integrationtests/SecureWebViewClient;.onPageFinished:(Ljava/lang/String;)V",
          "callee_port" : "Argument(1)",
@@ -634,8 +636,10 @@
    "sinks" : [
       {
          "call_position" : {
+            "end" : 40,
             "line" : 21,
-            "path" : "SecureWebViewClient.java"
+            "path" : "SecureWebViewClient.java",
+            "start" : 27
          },
          "callee" : "Lcom/facebook/marianatrench/integrationtests/SinkWebViewClient;.onPageFinished:(Ljava/lang/String;)V",
          "callee_port" : "Argument(1)",
@@ -664,8 +668,10 @@
    "sinks" : [
       {
          "call_position" : {
+            "end" : 14,
             "line" : 14,
-            "path" : "SinkWebViewClient.java"
+            "path" : "SinkWebViewClient.java",
+            "start" : 11
          },
          "callee" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
          "callee_port" : "Argument(0)",

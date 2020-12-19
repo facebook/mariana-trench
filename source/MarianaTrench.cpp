@@ -190,10 +190,10 @@ Registry MarianaTrench::analyze(Context& context) {
 
   if (!context.options->skip_source_indexing()) {
     Timer augment_positions_timer;
-    LOG(2, "Augmenting positions...");
+    LOG(1, "Augmenting positions...");
     registry.augment_positions();
     context.statistics->log_time("augment_positions", augment_positions_timer);
-    LOG(2,
+    LOG(1,
         "Augmented positions in {:2f}s.",
         augment_positions_timer.duration_in_seconds());
   } else {

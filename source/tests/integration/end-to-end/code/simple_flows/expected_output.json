@@ -3,8 +3,10 @@
    "generations" : [
       {
          "call_position" : {
+            "end" : 23,
             "line" : 13,
-            "path" : "FlowWithHops.java"
+            "path" : "FlowWithHops.java",
+            "start" : 18
          },
          "callee" : "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;",
          "callee_port" : "Return",
@@ -26,8 +28,10 @@
    "generations" : [
       {
          "call_position" : {
+            "end" : 24,
             "line" : 17,
-            "path" : "FlowWithHops.java"
+            "path" : "FlowWithHops.java",
+            "start" : 16
          },
          "callee" : "Lcom/facebook/marianatrench/integrationtests/FlowWithHops;.getSource:()Ljava/lang/Object;",
          "callee_port" : "Return",
@@ -975,8 +979,10 @@
    "sinks" : [
       {
          "call_position" : {
+            "end" : 14,
             "line" : 21,
-            "path" : "FlowWithHops.java"
+            "path" : "FlowWithHops.java",
+            "start" : 11
          },
          "callee" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
          "callee_port" : "Argument(0)",
@@ -998,8 +1004,10 @@
    "sinks" : [
       {
          "call_position" : {
+            "end" : 14,
             "line" : 25,
-            "path" : "FlowWithHops.java"
+            "path" : "FlowWithHops.java",
+            "start" : 9
          },
          "callee" : "Lcom/facebook/marianatrench/integrationtests/FlowWithHops;.toSink:(Ljava/lang/Object;)V",
          "callee_port" : "Argument(1)",

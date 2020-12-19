@@ -618,8 +618,10 @@
    "sinks" : [
       {
          "call_position" : {
+            "end" : 16,
             "line" : 19,
-            "path" : "Flow.java"
+            "path" : "Flow.java",
+            "start" : 13
          },
          "callee" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
          "callee_port" : "Argument(0)",
@@ -654,8 +656,10 @@
    "sinks" : [
       {
          "call_position" : {
+            "end" : 16,
             "line" : 25,
-            "path" : "Flow.java"
+            "path" : "Flow.java",
+            "start" : 13
          },
          "callee" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
          "callee_port" : "Argument(0)",

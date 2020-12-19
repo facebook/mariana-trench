@@ -4,8 +4,10 @@
       {
          "always_features" : [ "via-array" ],
          "call_position" : {
+            "end" : 27,
             "line" : 17,
-            "path" : "Flow.java"
+            "path" : "Flow.java",
+            "start" : 22
          },
          "callee" : "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;",
          "callee_port" : "Return",
@@ -88,8 +90,10 @@
    "generations" : [
       {
          "call_position" : {
+            "end" : 34,
             "line" : 45,
-            "path" : "Flow.java"
+            "path" : "Flow.java",
+            "start" : 29
          },
          "callee" : "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;",
          "callee_port" : "Return",
@@ -170,8 +174,10 @@
    "generations" : [
       {
          "call_position" : {
+            "end" : 34,
             "line" : 51,
-            "path" : "Flow.java"
+            "path" : "Flow.java",
+            "start" : 29
          },
          "callee" : "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;",
          "callee_port" : "Return",

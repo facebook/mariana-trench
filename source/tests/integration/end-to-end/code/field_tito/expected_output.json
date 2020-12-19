@@ -124,8 +124,10 @@
    "sinks" : [
       {
          "call_position" : {
+            "end" : 14,
             "line" : 15,
-            "path" : "MainActivity.java"
+            "path" : "MainActivity.java",
+            "start" : 11
          },
          "callee" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
          "callee_port" : "Argument(0)",

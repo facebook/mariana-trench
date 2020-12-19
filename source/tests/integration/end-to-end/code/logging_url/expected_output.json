@@ -752,8 +752,10 @@
    "sinks" : [
       {
          "call_position" : {
+            "end" : 19,
             "line" : 32,
-            "path" : "UrlHandlerActivity.java"
+            "path" : "UrlHandlerActivity.java",
+            "start" : 6
          },
          "callee" : "Lcom/instagram/url/UrlHandlerActivity;.reportUrlEvent:(Ljava/lang/String;Ljava/lang/String;)V",
          "callee_port" : "Argument(1)",
@@ -772,8 +774,10 @@
       {
          "always_features" : [ "via-obscure" ],
          "call_position" : {
+            "end" : 19,
             "line" : 32,
-            "path" : "UrlHandlerActivity.java"
+            "path" : "UrlHandlerActivity.java",
+            "start" : 6
          },
          "callee" : "Lcom/instagram/url/UrlHandlerActivity;.reportUrlEvent:(Ljava/lang/String;Ljava/lang/String;)V",
          "callee_port" : "Argument(2)",
@@ -800,8 +804,10 @@
    "sinks" : [
       {
          "call_position" : {
+            "end" : 73,
             "line" : 38,
-            "path" : "UrlHandlerActivity.java"
+            "path" : "UrlHandlerActivity.java",
+            "start" : 66
          },
          "callee" : "Lcom/instagram/common/analytics/intf/AnalyticsEvent;.addExtra:(Ljava/lang/String;Ljava/lang/String;)Lcom/instagram/common/analytics/intf/AnalyticsEvent;",
          "callee_port" : "Argument(2)",
@@ -815,8 +821,10 @@
       {
          "always_features" : [ "via-obscure" ],
          "call_position" : {
+            "end" : 19,
             "line" : 40,
-            "path" : "UrlHandlerActivity.java"
+            "path" : "UrlHandlerActivity.java",
+            "start" : 12
          },
          "callee" : "Lcom/instagram/common/analytics/intf/AnalyticsEvent;.addExtra:(Ljava/lang/String;Ljava/lang/String;)Lcom/instagram/common/analytics/intf/AnalyticsEvent;",
          "callee_port" : "Argument(2)",

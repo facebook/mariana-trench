@@ -153,7 +153,7 @@ Frame augment_frame_position(
     current_line = lines.at(position->line() - 1);
   } catch (const std::out_of_range&) {
     WARNING(
-        1,
+        3,
         "Trying to access line {} of a file with {} lines",
         position->line(),
         lines.size());
@@ -179,6 +179,46 @@ Frame augment_frame_position(
       frame.origins(),
       frame.features(),
       frame.local_positions());
+}
+
+Taint augment_taint_positions(
+    Taint taint,
+    const std::vector<std::string>& lines,
+    const Context& context) {
+  taint.map([&](FrameSet& frames) {
+    auto new_frames = FrameSet::bottom();
+    for (const auto& frame : frames) {
+      new_frames.add(augment_frame_position(frame, lines, context));
+    }
+    frames = std::move(new_frames);
+  });
+  return taint;
+}
+
+TaintAccessPathTree augment_taint_tree_positions(
+    TaintAccessPathTree taint_tree,
+    const std::vector<std::string>& lines,
+    const Context& context) {
+  taint_tree.map([&](Taint& taint) {
+    auto new_taint = augment_taint_positions(taint, lines, context);
+    taint = std::move(new_taint);
+  });
+  return taint_tree;
+}
+
+IssueSet augment_issue_positions(
+    IssueSet issues,
+    const std::vector<std::string>& lines,
+    const Context& context) {
+  issues.map([&](Issue& issue) {
+    Issue augmented_issue = Issue(
+        augment_taint_positions(issue.sources(), lines, context),
+        augment_taint_positions(issue.sinks(), lines, context),
+        issue.rule(),
+        issue.position());
+    issue = std::move(augmented_issue);
+  });
+  return issues;
 }
 
 bool is_valid_generation(const Frame& generation, const Registry& registry) {
@@ -289,9 +329,6 @@ void Registry::augment_positions() {
   auto queue = sparta::work_queue<const Method*>(
       [&](const Method* method) {
         const auto old_model = models_.at(method);
-        if (old_model.issues().size() == 0) {
-          return;
-        }
         auto* method_position = context_.positions->get(method);
         if (!method_position || !method_position->path()) {
           LOG(3,
@@ -311,27 +348,15 @@ void Registry::augment_positions() {
           lines.push_back(line);
         }
 
-        IssueSet augmented_issues = {};
-        for (const auto& issue : old_model.issues()) {
-          Taint sources = Taint::bottom();
-          Taint sinks = Taint::bottom();
-          for (const auto& frames : issue.sources()) {
-            for (const auto& frame : frames) {
-              sources.add(augment_frame_position(frame, lines, context_));
-            }
-          }
-          for (const auto& frames : issue.sinks()) {
-            for (const auto& frame : frames) {
-              sinks.add(augment_frame_position(frame, lines, context_));
-            }
-          }
-          Issue augmented_issue =
-              Issue(sources, sinks, issue.rule(), issue.position());
-          augmented_issues.add(std::move(augmented_issue));
-        }
-
         auto new_model = old_model;
-        new_model.set_issues(augmented_issues);
+        new_model.set_issues(
+            augment_issue_positions(old_model.issues(), lines, context_));
+        new_model.set_sinks(
+            augment_taint_tree_positions(old_model.sinks(), lines, context_));
+        new_model.set_generations(augment_taint_tree_positions(
+            old_model.generations(), lines, context_));
+        new_model.set_parameter_sources(augment_taint_tree_positions(
+            old_model.parameter_sources(), lines, context_));
         models_.insert_or_assign(std::pair(method, new_model));
       },
       sparta::parallel::default_num_threads());

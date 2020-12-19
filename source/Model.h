@@ -180,6 +180,9 @@ class Model final {
   const TaintAccessPathTree& parameter_sources() const {
     return parameter_sources_;
   }
+  void set_parameter_sources(TaintAccessPathTree parameter_sources) {
+    parameter_sources_ = std::move(parameter_sources);
+  }
 
   void add_sink(AccessPath port, Frame sink);
   void add_sinks(AccessPath port, Taint sinks);

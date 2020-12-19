@@ -3,8 +3,10 @@
    "generations" : [
       {
          "call_position" : {
+            "end" : 28,
             "line" : 27,
-            "path" : "OfferRedirectToWebActivity.java"
+            "path" : "OfferRedirectToWebActivity.java",
+            "start" : 20
          },
          "callee" : "Landroid/app/Activity;.getIntent:()Landroid/content/Intent;",
          "callee_port" : "Return",
@@ -126,13 +128,15 @@
    "sinks" : [
       {
          "call_position" : {
-            "line" : 30,
-            "path" : "OfferRedirectToWebActivity.java"
+            "end" : 20,
+            "line" : 32,
+            "path" : "OfferRedirectToWebActivity.java",
+            "start" : 4
          },
-         "callee" : "Lcom/facebook/marianatrench/integrationtests/OfferRenderingUtils;.navigateToStoreURL:(Landroid/content/Context;Ljava/lang/String;)V",
-         "callee_port" : "Argument(2)",
+         "callee" : "Lcom/facebook/marianatrench/integrationtests/OfferRedirectToWebActivity;.navigateToBrowser:()V",
+         "callee_port" : "Argument(0).mOfferURL",
          "caller_port" : "Argument(0).mOfferURL",
-         "distance" : 2,
+         "distance" : 3,
          "kind" : "LaunchingComponent",
          "origins" : [
             "Lcom/facebook/secure/context/IntentLauncher;.launchActivity:(Landroid/content/Intent;Landroid/content/Context;)Z"
@@ -140,13 +144,15 @@
       },
       {
          "call_position" : {
-            "line" : 32,
-            "path" : "OfferRedirectToWebActivity.java"
+            "end" : 42,
+            "line" : 30,
+            "path" : "OfferRedirectToWebActivity.java",
+            "start" : 25
          },
-         "callee" : "Lcom/facebook/marianatrench/integrationtests/OfferRedirectToWebActivity;.navigateToBrowser:()V",
-         "callee_port" : "Argument(0).mOfferURL",
+         "callee" : "Lcom/facebook/marianatrench/integrationtests/OfferRenderingUtils;.navigateToStoreURL:(Landroid/content/Context;Ljava/lang/String;)V",
+         "callee_port" : "Argument(2)",
          "caller_port" : "Argument(0).mOfferURL",
-         "distance" : 3,
+         "distance" : 2,
          "kind" : "LaunchingComponent",
          "origins" : [
             "Lcom/facebook/secure/context/IntentLauncher;.launchActivity:(Landroid/content/Intent;Landroid/content/Context;)Z"
@@ -713,8 +719,10 @@
    "sinks" : [
       {
          "call_position" : {
+            "end" : 42,
             "line" : 36,
-            "path" : "OfferRedirectToWebActivity.java"
+            "path" : "OfferRedirectToWebActivity.java",
+            "start" : 25
          },
          "callee" : "Lcom/facebook/marianatrench/integrationtests/OfferRenderingUtils;.navigateToStoreURL:(Landroid/content/Context;Ljava/lang/String;)V",
          "callee_port" : "Argument(2)",
@@ -743,8 +751,10 @@
    "sinks" : [
       {
          "call_position" : {
+            "end" : 53,
             "line" : 26,
-            "path" : "OfferRenderingUtils.java"
+            "path" : "OfferRenderingUtils.java",
+            "start" : 40
          },
          "callee" : "Lcom/facebook/secure/context/IntentLauncher;.launchActivity:(Landroid/content/Intent;Landroid/content/Context;)Z",
          "callee_port" : "Argument(1)",
