@@ -147,6 +147,7 @@
       "ServiceUserInput",
       "WebViewUserInput",
       "UnityClientMessageUserInput",
+      "UnityPublicDeepLinkURI",
       "JavascriptInterfaceUserInput"
     ],
     "sinks": [
@@ -167,6 +168,7 @@
       "ServiceUserInput",
       "WebViewUserInput",
       "UnityClientMessageUserInput",
+      "UnityPublicDeepLinkURI",
       "JavascriptInterfaceUserInput"
     ],
     "sinks": [
@@ -191,6 +193,7 @@
       "ServiceUserInput",
       "WebViewUserInput",
       "UnityClientMessageUserInput",
+      "UnityPublicDeepLinkURI",
       "JavascriptInterfaceUserInput"
     ],
     "sinks": [
@@ -210,6 +213,7 @@
       "ServiceUserInput",
       "WebViewUserInput",
       "UnityClientMessageUserInput",
+      "UnityPublicDeepLinkURI",
       "JavascriptInterfaceUserInput",
       "ExternalDirectory"
     ],
@@ -413,6 +417,7 @@
       "ServiceUserInput",
       "WebViewUserInput",
       "UnityClientMessageUserInput",
+      "UnityPublicDeepLinkURI",
       "JavascriptInterfaceUserInput"
     ],
     "sinks": [
@@ -439,7 +444,8 @@
     "code": 5025,
     "description": "Values from user-controlled source may eventually flow into Snaptu Screen controller",
     "sources": [
-      "UnityClientMessageUserInput"
+      "UnityClientMessageUserInput",
+      "UnityPublicDeepLinkURI"
     ],
     "sinks": [
       "SnaptuScreenUri"
