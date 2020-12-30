@@ -127,12 +127,12 @@ void FrameSet::filter(const std::function<bool(const Frame&)>& predicate) {
   });
 }
 
-void FrameSet::add_features(const FeatureMayAlwaysSet& features) {
+void FrameSet::add_inferred_features(const FeatureMayAlwaysSet& features) {
   if (features.empty()) {
     return;
   }
 
-  map([&features](Frame& frame) { frame.add_features(features); });
+  map([&features](Frame& frame) { frame.add_inferred_features(features); });
 }
 
 LocalPositionSet FrameSet::local_positions() const {
@@ -155,7 +155,7 @@ void FrameSet::set_local_positions(const LocalPositionSet& positions) {
   map([&positions](Frame& frame) { frame.set_local_positions(positions); });
 }
 
-void FrameSet::add_features_and_local_position(
+void FrameSet::add_inferred_features_and_local_position(
     const FeatureMayAlwaysSet& features,
     const Position* MT_NULLABLE position) {
   if (features.empty() && position == nullptr) {
@@ -164,7 +164,7 @@ void FrameSet::add_features_and_local_position(
 
   map([&features, position](Frame& frame) {
     if (!features.empty()) {
-      frame.add_features(features);
+      frame.add_inferred_features(features);
     }
     if (position != nullptr) {
       frame.add_local_position(position);
@@ -184,7 +184,7 @@ Frame FrameSet::propagate(
 
   int distance = std::numeric_limits<int>::max();
   auto origins = MethodSet::bottom();
-  auto features = FeatureMayAlwaysSet::bottom();
+  auto inferred_features = FeatureMayAlwaysSet::bottom();
 
   for (const auto& [_, position_map] : map_.bindings()) {
     for (const auto& [_, set] : position_map.bindings()) {
@@ -195,7 +195,9 @@ Frame FrameSet::propagate(
 
         distance = std::min(distance, frame.distance() + 1);
         origins.join_with(frame.origins());
-        features.join_with(frame.features());
+
+        // Note: This merges user features with existing inferred features.
+        inferred_features.join_with(frame.features());
       }
     }
   }
@@ -211,7 +213,8 @@ Frame FrameSet::propagate(
       call_position,
       distance,
       std::move(origins),
-      std::move(features),
+      std::move(inferred_features),
+      FeatureSet::bottom(),
       /* local_positions */ {});
 }
 
@@ -227,8 +230,9 @@ FrameSet FrameSet::attach_position(
           continue;
         }
 
-        auto features = frame.features();
-        features.add(extra_features);
+        // Note: This merges user features with existing inferred features.
+        auto inferred_features = frame.features();
+        inferred_features.add(extra_features);
 
         leaves.add(Frame(
             frame.kind(),
@@ -237,7 +241,8 @@ FrameSet FrameSet::attach_position(
             /* call_position */ position,
             /* distance */ 0,
             frame.origins(),
-            std::move(features),
+            std::move(inferred_features),
+            FeatureSet::bottom(),
             frame.local_positions()));
       }
     }

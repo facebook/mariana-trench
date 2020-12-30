@@ -2,10 +2,10 @@
 {
    "generations" : [
       {
+         "always_features" : [ "via-source" ],
          "callee_port" : "Leaf",
          "caller_port" : "Return",
          "kind" : "Source",
-         "may_features" : [ "via-source" ],
          "origins" : [
             "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;"
          ]
@@ -101,8 +101,8 @@
 {
    "issues" : [
       {
-         "always_features" : [ "via-one" ],
-         "may_features" : [ "via-source", "via-two" ],
+         "always_features" : [ "via-one", "via-source" ],
+         "may_features" : [ "via-two" ],
          "position" : {
             "line" : 32,
             "path" : "Flow.java"
@@ -127,7 +127,7 @@
          ],
          "sources" : [
             {
-               "always_features" : [ "via-one" ],
+               "always_features" : [ "via-one", "via-source" ],
                "call_position" : {
                   "end" : 27,
                   "line" : 24,
@@ -146,7 +146,7 @@
                      "line" : 29
                   }
                ],
-               "may_features" : [ "via-source", "via-two" ],
+               "may_features" : [ "via-two" ],
                "origins" : [
                   "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;"
                ]

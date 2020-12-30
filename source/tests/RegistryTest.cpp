@@ -113,12 +113,14 @@ TEST_F(RegistryTest, ConstructorUseJoin) {
           PortTaint{AccessPath(Root(Root::Kind::Return)),
                     Taint{Frame::leaf(
                         source_kind,
-                        /* features */ {},
+                        /* inferred_features */ FeatureMayAlwaysSet::bottom(),
+                        /* user_features */ FeatureSet::bottom(),
                         /* origins */ MethodSet{method})}},
           PortTaint{AccessPath(Root(Root::Kind::Argument, 2)),
                     Taint{Frame::leaf(
                         source_kind,
-                        /* features */ {},
+                        /* inferred_features */ FeatureMayAlwaysSet::bottom(),
+                        /* user_features */ FeatureSet::bottom(),
                         /* origins */ MethodSet{method})}}));
 }
 

@@ -81,11 +81,7 @@ Propagation Propagation::from_json(const Json::Value& value, Context& context) {
         value, /* field */ "input", "an access path to an argument");
   }
 
-  auto inferred_features = FeatureMayAlwaysSet::bottom();
-  if (value.isMember("may_features") || value.isMember("always_features")) {
-    inferred_features = FeatureMayAlwaysSet::from_json(value, context);
-  }
-
+  auto inferred_features = FeatureMayAlwaysSet::from_json(value, context);
   auto user_features = FeatureSet::from_json(value["features"], context);
 
   return Propagation(input, inferred_features, user_features);

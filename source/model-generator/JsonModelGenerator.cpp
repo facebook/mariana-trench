@@ -965,11 +965,7 @@ PropagationTemplate PropagationTemplate::from_json(
   JsonValidation::string(value, /* field */ "output");
   auto output = AccessPathTemplate::from_json(value["output"]);
 
-  auto inferred_features = FeatureMayAlwaysSet::bottom();
-  if (value.isMember("may_features") || value.isMember("always_features")) {
-    inferred_features = FeatureMayAlwaysSet::from_json(value, context);
-  }
-
+  auto inferred_features = FeatureMayAlwaysSet::from_json(value, context);
   auto user_features = FeatureSet::from_json(value["features"], context);
 
   return PropagationTemplate(input, output, inferred_features, user_features);

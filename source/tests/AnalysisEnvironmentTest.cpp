@@ -47,7 +47,8 @@ TEST_F(EnvironmentTest, LessOrEqualSuperSet) {
                /* call_position */ context.positions->unknown(),
                /* distance */ 1,
                /* origins */ MethodSet{method},
-               /* features */ {},
+               /* inferred_features */ {},
+               /* user_features */ {},
                /* local_positions */ {}),
        }}}};
 
@@ -76,7 +77,8 @@ TEST_F(EnvironmentTest, LessOrEqualDifferentSources) {
                /* call_position */ context.positions->unknown(),
                /* distance */ 1,
                /* origins */ MethodSet{method},
-               /* features */ {},
+               /* inferred_features */ {},
+               /* user_features */ {},
                /* local_positions */ {}),
        }}}};
 
@@ -105,7 +107,8 @@ TEST_F(EnvironmentTest, JoinSuperSet) {
                /* call_position */ context.positions->unknown(),
                /* distance */ 1,
                /* origins */ MethodSet{method},
-               /* features */ {},
+               /* inferred_features */ {},
+               /* user_features */ {},
                /* local_positions */ {}),
        }}}};
   domain1.join_with(domain2);
@@ -133,7 +136,8 @@ TEST_F(EnvironmentTest, JoinTwoDifferent) {
                /* call_position */ context.positions->unknown(),
                /* distance */ 1,
                /* origins */ MethodSet{method},
-               /* features */ {},
+               /* inferred_features */ {},
+               /* user_features */ {},
                /* local_positions */ {}),
        }}}};
 
@@ -148,7 +152,8 @@ TEST_F(EnvironmentTest, JoinTwoDifferent) {
                /* call_position */ context.positions->unknown(),
                /* distance */ 1,
                /* origins */ MethodSet{method},
-               /* features */ {},
+               /* inferred_features */ {},
+               /* user_features */ {},
                /* local_positions */ {}),
        }}}};
   domain1.join_with(domain2);
@@ -188,7 +193,8 @@ TEST_F(EnvironmentTest, JoinTwoEnvironmentWithDifferentSources) {
               /* call_position */ context.positions->unknown(),
               /* distance */ 1,
               /* origins */ MethodSet{method},
-              /* features */ {},
+              /* inferred_features */ {},
+              /* user_features */ {},
               /* local_positions */ {}),
       }},
       UpdateKind::Weak);
@@ -209,7 +215,8 @@ TEST_F(EnvironmentTest, JoinTwoEnvironmentWithDifferentSources) {
               /* call_position */ context.positions->unknown(),
               /* distance */ 1,
               /* origins */ MethodSet{method},
-              /* features */ {},
+              /* inferred_features */ {},
+              /* user_features */ {},
               /* local_positions */ {}),
       }}));
 }

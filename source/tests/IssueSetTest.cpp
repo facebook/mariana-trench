@@ -83,7 +83,8 @@ TEST_F(IssueSetTest, Insertion) {
           /* call_position */ context.positions->unknown(),
           /* distance */ 1,
           /* origins */ MethodSet{one},
-          /* features */ {},
+          /* inferred_features */ {},
+          /* user_features */ {},
           /* local_positions */ {})},
       /* sink */ Taint{Frame::leaf(other_sink_kind)},
       &rule_2,
@@ -107,7 +108,8 @@ TEST_F(IssueSetTest, Insertion) {
                       /* call_position */ context.positions->unknown(),
                       /* distance */ 1,
                       /* origins */ MethodSet{one},
-                      /* features */ {},
+                      /* inferred_features */ {},
+                      /* user_features */ {},
                       /* local_positions */ {}),
               },
               /* sink */ Taint{Frame::leaf(other_sink_kind)},
@@ -125,7 +127,8 @@ TEST_F(IssueSetTest, Insertion) {
           /* call_position */ context.positions->unknown(),
           /* distance */ 2,
           /* origins */ MethodSet{two},
-          /* features */ {},
+          /* inferred_features */ {},
+          /* user_features */ {},
           /* local_positions */ {})},
       &rule_2,
       position_1));
@@ -148,7 +151,8 @@ TEST_F(IssueSetTest, Insertion) {
                       /* call_position */ context.positions->unknown(),
                       /* distance */ 1,
                       /* origins */ MethodSet{one},
-                      /* features */ {},
+                      /* inferred_features */ {},
+                      /* user_features */ {},
                       /* local_positions */ {}),
               },
               /* sink */
@@ -161,7 +165,8 @@ TEST_F(IssueSetTest, Insertion) {
                       /* call_position */ context.positions->unknown(),
                       /* distance */ 2,
                       /* origins */ MethodSet{two},
-                      /* features */ {},
+                      /* inferred_features */ {},
+                      /* user_features */ {},
                       /* local_positions */ {}),
               },
               &rule_2,
@@ -176,7 +181,8 @@ TEST_F(IssueSetTest, Insertion) {
           /* call_position */ context.positions->unknown(),
           /* distance */ 3,
           /* origins */ MethodSet{two},
-          /* features */ {},
+          /* inferred_features */ {},
+          /* user_features */ {},
           /* local_positions */ {})},
       /* sink */ Taint{Frame::leaf(other_sink_kind)},
       &rule_2,
@@ -200,7 +206,8 @@ TEST_F(IssueSetTest, Insertion) {
                       /* call_position */ context.positions->unknown(),
                       /* distance */ 1,
                       /* origins */ MethodSet{one},
-                      /* features */ {},
+                      /* inferred_features */ {},
+                      /* user_features */ {},
                       /* local_positions */ {}),
                   Frame(
                       /* kind */ other_source_kind,
@@ -209,7 +216,8 @@ TEST_F(IssueSetTest, Insertion) {
                       /* call_position */ context.positions->unknown(),
                       /* distance */ 3,
                       /* origins */ MethodSet{two},
-                      /* features */ {},
+                      /* inferred_features */ {},
+                      /* user_features */ {},
                       /* local_positions */ {}),
               },
               /* sink */
@@ -222,7 +230,8 @@ TEST_F(IssueSetTest, Insertion) {
                       /* call_position */ context.positions->unknown(),
                       /* distance */ 2,
                       /* origins */ MethodSet{two},
-                      /* features */ {},
+                      /* inferred_features */ {},
+                      /* user_features */ {},
                       /* local_positions */ {}),
               },
               &rule_2,
@@ -258,7 +267,8 @@ TEST_F(IssueSetTest, Insertion) {
                       /* call_position */ context.positions->unknown(),
                       /* distance */ 1,
                       /* origins */ MethodSet{one},
-                      /* features */ {},
+                      /* inferred_features */ {},
+                      /* user_features */ {},
                       /* local_positions */ {}),
                   Frame(
                       /* kind */ other_source_kind,
@@ -267,7 +277,8 @@ TEST_F(IssueSetTest, Insertion) {
                       /* call_position */ context.positions->unknown(),
                       /* distance */ 3,
                       /* origins */ MethodSet{two},
-                      /* features */ {},
+                      /* inferred_features */ {},
+                      /* user_features */ {},
                       /* local_positions */ {}),
               },
               /* sink */
@@ -280,7 +291,8 @@ TEST_F(IssueSetTest, Insertion) {
                       /* call_position */ context.positions->unknown(),
                       /* distance */ 2,
                       /* origins */ MethodSet{two},
-                      /* features */ {},
+                      /* inferred_features */ {},
+                      /* user_features */ {},
                       /* local_positions */ {}),
               },
               &rule_2,
@@ -313,6 +325,8 @@ TEST_F(IssueSetTest, Insertion) {
               position_2),
       }));
 
+  // Merging with existing issues that have inferred_features == bottom()
+  // should retain the "always"-ness property of the issue.
   set.add(Issue(
       /* source */ Taint{Frame::leaf(
           source_kind,
@@ -332,8 +346,39 @@ TEST_F(IssueSetTest, Insertion) {
           Issue(
               /* source */ Taint{Frame::leaf(
                   source_kind,
-                  FeatureMayAlwaysSet::make_may(
+                  FeatureMayAlwaysSet::make_always(
                       {context.features->get("Feature")}))},
+              /* sink */ Taint{Frame::leaf(sink_kind)},
+              &rule_1,
+              position_2),
+      }));
+
+  // Merging with issues that have inferred_features != bottom() would convert
+  // "always" to "may" only for features that are not shared across the issues.
+  set.add(Issue(
+      /* source */ Taint{Frame::leaf(
+          source_kind,
+          FeatureMayAlwaysSet::make_always(
+              FeatureSet{context.features->get("Feature"),
+                         context.features->get("Feature2")}))},
+      /* sink */ Taint{Frame::leaf(sink_kind)},
+      &rule_1,
+      position_2));
+  EXPECT_EQ(
+      set,
+      (IssueSet{
+          Issue(
+              /* source */ Taint{Frame::leaf(source_kind)},
+              /* sink */ Taint{Frame::leaf(sink_kind)},
+              &rule_1,
+              position_1),
+          Issue(
+              /* source */ Taint{Frame::leaf(
+                  source_kind,
+                  FeatureMayAlwaysSet(
+                      /* may */ FeatureSet{context.features->get("Feature2")},
+                      /* always */
+                      FeatureSet{context.features->get("Feature")}))},
               /* sink */ Taint{Frame::leaf(sink_kind)},
               &rule_1,
               position_2),

@@ -103,19 +103,26 @@ FeatureMayAlwaysSet FeatureMayAlwaysSet::from_json(
   auto may_features = FeatureSet{};
   auto always_features = FeatureSet{};
 
+  // As long as either of the required keys are present, this will not be
+  // bottom(), even when the list is empty, e.g. "may_features: []".
+  bool is_bottom = true;
+
   JsonValidation::validate_object(value);
   if (value.isMember("may_features")) {
     JsonValidation::null_or_array(value, /* field */ "may_features");
     may_features.join_with(
         FeatureSet::from_json(value["may_features"], context));
+    is_bottom = false;
   }
   if (value.isMember("always_features")) {
     JsonValidation::null_or_array(value, /* field */ "always_features");
     always_features.join_with(
         FeatureSet::from_json(value["always_features"], context));
+    is_bottom = false;
   }
 
-  return FeatureMayAlwaysSet(may_features, always_features);
+  return is_bottom ? FeatureMayAlwaysSet::bottom()
+                   : FeatureMayAlwaysSet(may_features, always_features);
 }
 
 Json::Value FeatureMayAlwaysSet::to_json() const {

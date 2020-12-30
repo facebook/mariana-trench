@@ -28,6 +28,7 @@ TEST_F(FrameSetTest, Add) {
   auto* field = DexString::make_string("Field");
   auto* feature_one = context.features->get("FeatureOne");
   auto* feature_two = context.features->get("FeatureTwo");
+  auto* user_feature_one = context.features->get("UserFeatureOne");
 
   FrameSet frames;
   EXPECT_TRUE(frames.is_bottom());
@@ -41,7 +42,8 @@ TEST_F(FrameSetTest, Add) {
       /* call_position */ nullptr,
       /* distance */ 0,
       /* origins */ MethodSet{one},
-      /* features */ FeatureMayAlwaysSet{feature_one},
+      /* inferred_features */ FeatureMayAlwaysSet{feature_one},
+      /* user_features */ {},
       /* local_positions */ {}));
   EXPECT_FALSE(frames.is_bottom());
   EXPECT_EQ(frames.kind(), source_kind);
@@ -54,7 +56,8 @@ TEST_F(FrameSetTest, Add) {
           /* call_position */ nullptr,
           /* distance */ 0,
           /* origins */ MethodSet{one},
-          /* features */ FeatureMayAlwaysSet{feature_one},
+          /* inferred_features */ FeatureMayAlwaysSet{feature_one},
+          /* user_features */ {},
           /* local_positions */ {})});
 
   frames.add(Frame(
@@ -64,7 +67,8 @@ TEST_F(FrameSetTest, Add) {
       /* call_position */ nullptr,
       /* distance */ 0,
       /* origins */ MethodSet{two},
-      /* features */ FeatureMayAlwaysSet{feature_two},
+      /* inverred_features */ FeatureMayAlwaysSet{feature_two},
+      /* user_features */ FeatureSet{user_feature_one},
       /* local_positions */ {}));
   EXPECT_EQ(
       frames,
@@ -75,8 +79,9 @@ TEST_F(FrameSetTest, Add) {
           /* call_position */ nullptr,
           /* distance */ 0,
           /* origins */ MethodSet{one, two},
-          /* features */
+          /* inferred_features */
           FeatureMayAlwaysSet::make_may({feature_one, feature_two}),
+          /* user_features */ FeatureSet{user_feature_one},
           /* local_positions */ {})});
 
   frames.add(Frame(
@@ -86,7 +91,8 @@ TEST_F(FrameSetTest, Add) {
       /* call_position */ context.positions->unknown(),
       /* distance */ 3,
       /* origins */ MethodSet{one},
-      /* features */ FeatureMayAlwaysSet{feature_one},
+      /* inferred_features */ FeatureMayAlwaysSet{feature_one},
+      /* user_features */ {},
       /* local_positions */ {}));
   EXPECT_EQ(
       frames,
@@ -98,8 +104,9 @@ TEST_F(FrameSetTest, Add) {
               /* call_position */ nullptr,
               /* distance */ 0,
               /* origins */ MethodSet{one, two},
-              /* features */
+              /* inferred_features */
               FeatureMayAlwaysSet::make_may({feature_one, feature_two}),
+              /* user_features */ FeatureSet{user_feature_one},
               /* local_positions */ {}),
           Frame(
               /* kind */ source_kind,
@@ -108,7 +115,8 @@ TEST_F(FrameSetTest, Add) {
               /* call_position */ context.positions->unknown(),
               /* distance */ 3,
               /* origins */ MethodSet{one},
-              /* features */ FeatureMayAlwaysSet{feature_one},
+              /* inferred_features */ FeatureMayAlwaysSet{feature_one},
+              /* user_features */ {},
               /* local_positions */ {}),
       }));
 
@@ -119,7 +127,8 @@ TEST_F(FrameSetTest, Add) {
       /* call_position */ context.positions->unknown(),
       /* distance */ 3,
       /* origins */ MethodSet{two},
-      /* features */ FeatureMayAlwaysSet{feature_one, feature_two},
+      /* inferred_features */ FeatureMayAlwaysSet{feature_one, feature_two},
+      /* user_features */ {},
       /* local_positions */ {}));
   EXPECT_EQ(
       frames,
@@ -131,8 +140,9 @@ TEST_F(FrameSetTest, Add) {
               /* call_position */ nullptr,
               /* distance */ 0,
               /* origins */ MethodSet{one, two},
-              /* features */
+              /* inferred_features */
               FeatureMayAlwaysSet::make_may({feature_one, feature_two}),
+              /* user_features */ FeatureSet{user_feature_one},
               /* local_positions */ {}),
           Frame(
               /* kind */ source_kind,
@@ -141,10 +151,11 @@ TEST_F(FrameSetTest, Add) {
               /* call_position */ context.positions->unknown(),
               /* distance */ 3,
               /* origins */ MethodSet{one, two},
-              /* features */
+              /* inferred_features */
               FeatureMayAlwaysSet(
                   /* may */ FeatureSet{feature_one, feature_two},
                   /* always */ FeatureSet{feature_one}),
+              /* user_features */ {},
               /* local_positions */ {}),
       }));
 
@@ -156,7 +167,8 @@ TEST_F(FrameSetTest, Add) {
       /* call_position */ context.positions->unknown(),
       /* distance */ 3,
       /* origins */ MethodSet{one},
-      /* features */ FeatureMayAlwaysSet{feature_one},
+      /* inferred_features */ FeatureMayAlwaysSet{feature_one},
+      /* user_features */ {},
       /* local_positions */ {}));
   EXPECT_EQ(
       frames,
@@ -168,8 +180,9 @@ TEST_F(FrameSetTest, Add) {
               /* call_position */ nullptr,
               /* distance */ 0,
               /* origins */ MethodSet{one, two},
-              /* features */
+              /* inferred_features */
               FeatureMayAlwaysSet::make_may({feature_one, feature_two}),
+              /* user_features */ FeatureSet{user_feature_one},
               /* local_positions */ {}),
           Frame(
               /* kind */ source_kind,
@@ -178,10 +191,11 @@ TEST_F(FrameSetTest, Add) {
               /* call_position */ context.positions->unknown(),
               /* distance */ 3,
               /* origins */ MethodSet{one, two},
-              /* features */
+              /* inferred_features */
               FeatureMayAlwaysSet(
                   /* may */ FeatureSet{feature_one, feature_two},
                   /* always */ FeatureSet{feature_one}),
+              /* user_features */ {},
               /* local_positions */ {}),
           Frame(
               /* kind */ source_kind,
@@ -191,7 +205,8 @@ TEST_F(FrameSetTest, Add) {
               /* call_position */ context.positions->unknown(),
               /* distance */ 3,
               /* origins */ MethodSet{one},
-              /* features */ FeatureMayAlwaysSet{feature_one},
+              /* inferred_features */ FeatureMayAlwaysSet{feature_one},
+              /* user_features */ {},
               /* local_positions */ {}),
       }));
 }
@@ -204,6 +219,8 @@ TEST_F(FrameSetTest, ArtificialSources) {
   auto* field_three = DexString::make_string("FieldThree");
   auto* feature_one = context.features->get("FeatureOne");
   auto* feature_two = context.features->get("FeatureTwo");
+  auto* user_feature_one = context.features->get("UserFeatureOne");
+  auto* user_feature_two = context.features->get("UserFeatureTwo");
 
   FrameSet frames;
   frames.add(Frame(
@@ -214,7 +231,8 @@ TEST_F(FrameSetTest, ArtificialSources) {
       /* call_position */ nullptr,
       /* distance */ 0,
       /* origins */ {},
-      /* features */ FeatureMayAlwaysSet{feature_one},
+      /* inferred_features */ FeatureMayAlwaysSet{feature_one},
+      /* user_features */ FeatureSet{user_feature_one},
       /* local_positions */ {}));
   EXPECT_EQ(
       frames,
@@ -226,7 +244,8 @@ TEST_F(FrameSetTest, ArtificialSources) {
           /* call_position */ nullptr,
           /* distance */ 0,
           /* origins */ {},
-          /* features */ FeatureMayAlwaysSet{feature_one},
+          /* inferred_features */ FeatureMayAlwaysSet{feature_one},
+          /* user_features */ FeatureSet{user_feature_one},
           /* local_positions */ {})});
 
   // We use the common prefix of the callee port.
@@ -238,7 +257,8 @@ TEST_F(FrameSetTest, ArtificialSources) {
       /* call_position */ nullptr,
       /* distance */ 0,
       /* origins */ {},
-      /* features */ FeatureMayAlwaysSet{feature_two},
+      /* inferred_features */ FeatureMayAlwaysSet{feature_two},
+      /* user_features */ FeatureSet{user_feature_two},
       /* local_positions */ {}));
   EXPECT_EQ(
       frames,
@@ -250,8 +270,10 @@ TEST_F(FrameSetTest, ArtificialSources) {
           /* call_position */ nullptr,
           /* distance */ 0,
           /* origins */ {},
-          /* features */
+          /* inferred_features */
           FeatureMayAlwaysSet::make_may({feature_one, feature_two}),
+          /* user_features */
+          FeatureSet{user_feature_one, user_feature_two},
           /* local_positions */ {})});
 
   // We do not merge when the port root is different.
@@ -263,7 +285,8 @@ TEST_F(FrameSetTest, ArtificialSources) {
       /* call_position */ nullptr,
       /* distance */ 0,
       /* origins */ {},
-      /* features */ {},
+      /* inferred_features */ {},
+      /* user_features */ {},
       /* local_positions */ {}));
   EXPECT_EQ(
       frames,
@@ -276,8 +299,10 @@ TEST_F(FrameSetTest, ArtificialSources) {
               /* call_position */ nullptr,
               /* distance */ 0,
               /* origins */ {},
-              /* features */
+              /* inferred_features */
               FeatureMayAlwaysSet::make_may({feature_one, feature_two}),
+              /* user_features */
+              FeatureSet{user_feature_one, user_feature_two},
               /* local_positions */ {}),
           Frame(
               /* kind */ Kinds::artificial_source(),
@@ -287,7 +312,8 @@ TEST_F(FrameSetTest, ArtificialSources) {
               /* call_position */ nullptr,
               /* distance */ 0,
               /* origins */ {},
-              /* features */ {},
+              /* inferred_features */ {},
+              /* user_features */ {},
               /* local_positions */ {}),
       }));
 }
@@ -318,7 +344,8 @@ TEST_F(FrameSetTest, Leq) {
                /* call_position */ test_position,
                /* distance */ 1,
                /* origins */ MethodSet{one},
-               /* features */ {},
+               /* inferred_features */ {},
+               /* user_features */ {},
                /* local_positions */ {}),
            Frame(
                /* kind */ test_kind,
@@ -327,7 +354,8 @@ TEST_F(FrameSetTest, Leq) {
                /* call_position */ test_position,
                /* distance */ 1,
                /* origins */ MethodSet{two},
-               /* features */ {},
+               /* inferred_features */ {},
+               /* user_features */ {},
                /* local_positions */ {}),
        })
           .leq(FrameSet{
@@ -338,7 +366,8 @@ TEST_F(FrameSetTest, Leq) {
                   /* call_position */ test_position,
                   /* distance */ 1,
                   /* origins */ MethodSet{one},
-                  /* features */ {},
+                  /* inferred_features */ {},
+                  /* user_features */ {},
                   /* local_positions */ {}),
               Frame(
                   /* kind */ test_kind,
@@ -347,7 +376,8 @@ TEST_F(FrameSetTest, Leq) {
                   /* call_position */ test_position,
                   /* distance */ 1,
                   /* origins */ MethodSet{two},
-                  /* features */ {},
+                  /* inferred_features */ {},
+                  /* user_features */ {},
                   /* local_positions */ {}),
               Frame(
                   /* kind */ test_kind,
@@ -356,7 +386,8 @@ TEST_F(FrameSetTest, Leq) {
                   /* call_position */ test_position,
                   /* distance */ 1,
                   /* origins */ MethodSet{three},
-                  /* features */ {},
+                  /* inferred_features */ {},
+                  /* user_features */ {},
                   /* local_positions */ {}),
           }));
   EXPECT_FALSE(
@@ -368,7 +399,8 @@ TEST_F(FrameSetTest, Leq) {
                /* call_position */ test_position,
                /* distance */ 1,
                /* origins */ MethodSet{one},
-               /* features */ {},
+               /* inferred_features */ {},
+               /* user_features */ {},
                /* local_positions */ {}),
            Frame(
                /* kind */ test_kind,
@@ -377,7 +409,8 @@ TEST_F(FrameSetTest, Leq) {
                /* call_position */ test_position,
                /* distance */ 1,
                /* origins */ MethodSet{two},
-               /* features */ {},
+               /* inferred_features */ {},
+               /* user_features */ {},
                /* local_positions */ {}),
            Frame(
                /* kind */ test_kind,
@@ -386,7 +419,8 @@ TEST_F(FrameSetTest, Leq) {
                /* call_position */ test_position,
                /* distance */ 1,
                /* origins */ MethodSet{three},
-               /* features */ {},
+               /* inferred_features */ {},
+               /* user_features */ {},
                /* local_positions */ {}),
        })
           .leq(FrameSet{
@@ -397,7 +431,8 @@ TEST_F(FrameSetTest, Leq) {
                   /* call_position */ test_position,
                   /* distance */ 1,
                   /* origins */ MethodSet{one},
-                  /* features */ {},
+                  /* inferred_features */ {},
+                  /* user_features */ {},
                   /* local_positions */ {}),
               Frame(
                   /* kind */ test_kind,
@@ -406,7 +441,8 @@ TEST_F(FrameSetTest, Leq) {
                   /* call_position */ test_position,
                   /* distance */ 1,
                   /* origins */ MethodSet{two},
-                  /* features */ {},
+                  /* inferred_features */ {},
+                  /* user_features */ {},
                   /* local_positions */ {}),
           }));
   EXPECT_FALSE(
@@ -418,7 +454,8 @@ TEST_F(FrameSetTest, Leq) {
                /* call_position */ test_position,
                /* distance */ 1,
                /* origins */ MethodSet{one},
-               /* features */ {},
+               /* inferred_features */ {},
+               /* user_features */ {},
                /* local_positions */ {}),
            Frame(
                /* kind */ test_kind,
@@ -427,7 +464,8 @@ TEST_F(FrameSetTest, Leq) {
                /* call_position */ test_position,
                /* distance */ 1,
                /* origins */ MethodSet{two},
-               /* features */ {},
+               /* inferred_features */ {},
+               /* user_features */ {},
                /* local_positions */ {}),
        })
           .leq(FrameSet{
@@ -438,7 +476,8 @@ TEST_F(FrameSetTest, Leq) {
                   /* call_position */ test_position,
                   /* distance */ 1,
                   /* origins */ MethodSet{one},
-                  /* features */ {},
+                  /* inferred_features */ {},
+                  /* user_features */ {},
                   /* local_positions */ {}),
               Frame(
                   /* kind */ test_kind,
@@ -447,7 +486,8 @@ TEST_F(FrameSetTest, Leq) {
                   /* call_position */ test_position,
                   /* distance */ 1,
                   /* origins */ MethodSet{two},
-                  /* features */ {},
+                  /* inferred_features */ {},
+                  /* user_features */ {},
                   /* local_positions */ {}),
               Frame(
                   /* kind */ test_kind,
@@ -456,7 +496,8 @@ TEST_F(FrameSetTest, Leq) {
                   /* call_position */ test_position,
                   /* distance */ 1,
                   /* origins */ MethodSet{three},
-                  /* features */ {},
+                  /* inferred_features */ {},
+                  /* user_features */ {},
                   /* local_positions */ {}),
           }));
   EXPECT_TRUE(
@@ -469,7 +510,8 @@ TEST_F(FrameSetTest, Leq) {
                /* call_position */ test_position,
                /* distance */ 1,
                /* origins */ MethodSet{one},
-               /* features */ {},
+               /* inferred_features */ {},
+               /* user_features */ {},
                /* local_positions */ {}),
            Frame(
                /* kind */ test_kind,
@@ -479,7 +521,8 @@ TEST_F(FrameSetTest, Leq) {
                /* call_position */ test_position,
                /* distance */ 1,
                /* origins */ MethodSet{two},
-               /* features */ {},
+               /* inferred_features */ {},
+               /* user_features */ {},
                /* local_positions */ {}),
        })
           .leq(FrameSet{
@@ -491,7 +534,8 @@ TEST_F(FrameSetTest, Leq) {
                   /* call_position */ test_position,
                   /* distance */ 1,
                   /* origins */ MethodSet{one},
-                  /* features */ {},
+                  /* inferred_features */ {},
+                  /* user_features */ {},
                   /* local_positions */ {}),
               Frame(
                   /* kind */ test_kind,
@@ -501,7 +545,8 @@ TEST_F(FrameSetTest, Leq) {
                   /* call_position */ test_position,
                   /* distance */ 1,
                   /* origins */ MethodSet{two},
-                  /* features */ {},
+                  /* inferred_features */ {},
+                  /* user_features */ {},
                   /* local_positions */ {}),
               Frame(
                   /* kind */ test_kind,
@@ -510,7 +555,8 @@ TEST_F(FrameSetTest, Leq) {
                   /* call_position */ test_position,
                   /* distance */ 1,
                   /* origins */ MethodSet{three},
-                  /* features */ {},
+                  /* inferred_features */ {},
+                  /* user_features */ {},
                   /* local_positions */ {}),
           }));
   EXPECT_TRUE(
@@ -523,7 +569,8 @@ TEST_F(FrameSetTest, Leq) {
                /* call_position */ test_position,
                /* distance */ 1,
                /* origins */ MethodSet{one},
-               /* features */ {},
+               /* inferred_features */ {},
+               /* user_features */ {},
                /* local_positions */ {}),
            Frame(
                /* kind */ test_kind,
@@ -533,7 +580,8 @@ TEST_F(FrameSetTest, Leq) {
                /* call_position */ test_position,
                /* distance */ 1,
                /* origins */ MethodSet{two},
-               /* features */ {},
+               /* inferred_features */ {},
+               /* user_features */ {},
                /* local_positions */ {}),
            Frame(
                /* kind */ test_kind,
@@ -543,7 +591,8 @@ TEST_F(FrameSetTest, Leq) {
                /* call_position */ test_position,
                /* distance */ 1,
                /* origins */ MethodSet{three},
-               /* features */ {},
+               /* inferred_features */ {},
+               /* user_features */ {},
                /* local_positions */ {}),
        })
           .leq(FrameSet{
@@ -555,7 +604,8 @@ TEST_F(FrameSetTest, Leq) {
                   /* call_position */ test_position,
                   /* distance */ 1,
                   /* origins */ MethodSet{one},
-                  /* features */ {},
+                  /* inferred_features */ {},
+                  /* user_features */ {},
                   /* local_positions */ {}),
               Frame(
                   /* kind */ test_kind,
@@ -565,7 +615,8 @@ TEST_F(FrameSetTest, Leq) {
                   /* call_position */ test_position,
                   /* distance */ 1,
                   /* origins */ MethodSet{two},
-                  /* features */ {},
+                  /* inferred_features */ {},
+                  /* user_features */ {},
                   /* local_positions */ {}),
               Frame(
                   /* kind */ test_kind,
@@ -574,7 +625,8 @@ TEST_F(FrameSetTest, Leq) {
                   /* call_position */ test_position,
                   /* distance */ 1,
                   /* origins */ MethodSet{three},
-                  /* features */ {},
+                  /* inferred_features */ {},
+                  /* user_features */ {},
                   /* local_positions */ {}),
           }));
 }
@@ -598,6 +650,9 @@ TEST_F(FrameSetTest, Difference) {
   auto* feature_one = context.features->get("FeatureOne");
   auto* feature_two = context.features->get("FeatureTwo");
   auto* feature_three = context.features->get("FeatureThree");
+  auto* user_feature_one = context.features->get("UserFeatureOne");
+  auto* user_feature_two = context.features->get("UserFeatureTwo");
+  auto* user_feature_three = context.features->get("UserFeatureThree");
 
   FrameSet frames, initial_frames;
 
@@ -613,7 +668,8 @@ TEST_F(FrameSetTest, Difference) {
           /* call_position */ test_position,
           /* distance */ 1,
           /* origins */ MethodSet{one},
-          /* features */ {},
+          /* inferred_features */ {},
+          /* user_features */ {},
           /* local_positions */ {}),
   });
   EXPECT_TRUE(frames.is_bottom());
@@ -626,7 +682,8 @@ TEST_F(FrameSetTest, Difference) {
           /* call_position */ test_position,
           /* distance */ 1,
           /* origins */ MethodSet{one},
-          /* features */ FeatureMayAlwaysSet{feature_one},
+          /* inferred_features */ FeatureMayAlwaysSet{feature_one},
+          /* user_features */ FeatureSet{user_feature_one},
           /* local_positions */ {}),
   };
 
@@ -643,7 +700,8 @@ TEST_F(FrameSetTest, Difference) {
           /* call_position */ test_position,
           /* distance */ 1,
           /* origins */ MethodSet{one},
-          /* features */ FeatureMayAlwaysSet{feature_one},
+          /* inferred_features */ FeatureMayAlwaysSet{feature_one},
+          /* user_features */ FeatureSet{user_feature_one},
           /* local_positions */ {}),
   });
   EXPECT_TRUE(frames.is_bottom());
@@ -658,12 +716,13 @@ TEST_F(FrameSetTest, Difference) {
           /* call_position */ test_position,
           /* distance */ 1,
           /* origins */ MethodSet{one},
-          /* features */ {},
+          /* inferred_features */ {},
+          /* user_features */ {},
           /* local_positions */ {}),
   });
   EXPECT_EQ(frames, initial_frames);
 
-  // Left hand side and right hand side have different features.
+  // Left hand side and right hand side have different inferred features.
   frames = initial_frames;
   frames.difference_with(FrameSet{
       Frame(
@@ -673,7 +732,24 @@ TEST_F(FrameSetTest, Difference) {
           /* call_position */ test_position,
           /* distance */ 1,
           /* origins */ MethodSet{one},
-          /* features */ FeatureMayAlwaysSet{feature_two},
+          /* inferred_features */ FeatureMayAlwaysSet{feature_two},
+          /* user_features */ FeatureSet{user_feature_one},
+          /* local_positions */ {}),
+  });
+  EXPECT_EQ(frames, initial_frames);
+
+  // Left hand side and right hand side have different user features.
+  frames = initial_frames;
+  frames.difference_with(FrameSet{
+      Frame(
+          /* kind */ test_kind,
+          /* callee_port */ AccessPath(Root(Root::Kind::Argument, 0)),
+          /* callee */ one,
+          /* call_position */ test_position,
+          /* distance */ 1,
+          /* origins */ MethodSet{one},
+          /* inferred_features */ FeatureMayAlwaysSet{feature_one},
+          /* user_features */ FeatureSet{user_feature_two},
           /* local_positions */ {}),
   });
   EXPECT_EQ(frames, initial_frames);
@@ -688,7 +764,8 @@ TEST_F(FrameSetTest, Difference) {
           /* call_position */ test_position,
           /* distance */ 1,
           /* origins */ MethodSet{one},
-          /* features */ FeatureMayAlwaysSet{feature_one},
+          /* inferred_features */ FeatureMayAlwaysSet{feature_one},
+          /* user_features */ FeatureSet{user_feature_one},
           /* local_positions */ {}),
   });
   EXPECT_EQ(frames, initial_frames);
@@ -701,7 +778,8 @@ TEST_F(FrameSetTest, Difference) {
           /* call_position */ test_position,
           /* distance */ 1,
           /* origins */ MethodSet{one},
-          /* features */ FeatureMayAlwaysSet{feature_one},
+          /* inferred_features */ FeatureMayAlwaysSet{feature_one},
+          /* user_features */ FeatureSet{user_feature_one},
           /* local_positions */ {}),
       Frame(
           /* kind */ test_kind,
@@ -710,7 +788,8 @@ TEST_F(FrameSetTest, Difference) {
           /* call_position */ test_position,
           /* distance */ 1,
           /* origins */ MethodSet{two},
-          /* features */ FeatureMayAlwaysSet{feature_two},
+          /* inferred_features */ FeatureMayAlwaysSet{feature_two},
+          /* user_features */ FeatureSet{user_feature_two},
           /* local_positions */ {}),
   };
   frames.difference_with(FrameSet{
@@ -721,7 +800,8 @@ TEST_F(FrameSetTest, Difference) {
           /* call_position */ test_position,
           /* distance */ 1,
           /* origins */ MethodSet{one},
-          /* features */ FeatureMayAlwaysSet{feature_one},
+          /* inferred_features */ FeatureMayAlwaysSet{feature_one},
+          /* user_features */ FeatureSet{user_feature_one},
           /* local_positions */ {}),
       Frame(
           /* kind */ test_kind,
@@ -730,7 +810,8 @@ TEST_F(FrameSetTest, Difference) {
           /* call_position */ test_position,
           /* distance */ 1,
           /* origins */ MethodSet{two},
-          /* features */ FeatureMayAlwaysSet{feature_two},
+          /* inferred_features */ FeatureMayAlwaysSet{feature_two},
+          /* user_features */ FeatureSet{user_feature_two},
           /* local_positions */ {}),
       Frame(
           /* kind */ test_kind,
@@ -739,7 +820,8 @@ TEST_F(FrameSetTest, Difference) {
           /* call_position */ test_position,
           /* distance */ 1,
           /* origins */ MethodSet{three},
-          /* features */ FeatureMayAlwaysSet{feature_three},
+          /* inferred_features */ FeatureMayAlwaysSet{feature_three},
+          /* user_features */ FeatureSet{user_feature_three},
           /* local_positions */ {}),
   });
   EXPECT_TRUE(frames.is_bottom());
@@ -752,7 +834,8 @@ TEST_F(FrameSetTest, Difference) {
           /* call_position */ test_position,
           /* distance */ 1,
           /* origins */ MethodSet{one},
-          /* features */ {},
+          /* inferred_features */ {},
+          /* user_features */ {},
           /* local_positions */ {}),
       Frame(
           /* kind */ test_kind,
@@ -761,7 +844,8 @@ TEST_F(FrameSetTest, Difference) {
           /* call_position */ test_position,
           /* distance */ 1,
           /* origins */ MethodSet{two},
-          /* features */ {},
+          /* inferred_features */ {},
+          /* user_features */ {},
           /* local_positions */ {}),
       Frame(
           /* kind */ test_kind,
@@ -770,7 +854,8 @@ TEST_F(FrameSetTest, Difference) {
           /* call_position */ test_position,
           /* distance */ 1,
           /* origins */ MethodSet{three},
-          /* features */ {},
+          /* inferred_features */ {},
+          /* user_features */ {},
           /* local_positions */ {}),
   };
   frames.difference_with(FrameSet{
@@ -781,7 +866,8 @@ TEST_F(FrameSetTest, Difference) {
           /* call_position */ test_position,
           /* distance */ 1,
           /* origins */ MethodSet{one},
-          /* features */ {},
+          /* inferred_features */ {},
+          /* user_features */ {},
           /* local_positions */ {}),
       Frame(
           /* kind */ test_kind,
@@ -790,7 +876,8 @@ TEST_F(FrameSetTest, Difference) {
           /* call_position */ test_position,
           /* distance */ 1,
           /* origins */ MethodSet{two},
-          /* features */ {},
+          /* inferred_features */ {},
+          /* user_features */ {},
           /* local_positions */ {}),
   });
   EXPECT_EQ(
@@ -803,7 +890,8 @@ TEST_F(FrameSetTest, Difference) {
               /* call_position */ test_position,
               /* distance */ 1,
               /* origins */ MethodSet{three},
-              /* features */ {},
+              /* inferred_features */ {},
+              /* user_features */ {},
               /* local_positions */ {}),
       }));
 
@@ -815,7 +903,8 @@ TEST_F(FrameSetTest, Difference) {
           /* call_position */ test_position,
           /* distance */ 1,
           /* origins */ MethodSet{one},
-          /* features */ {},
+          /* inferred_features */ {},
+          /* user_features */ {},
           /* local_positions */ {}),
       Frame(
           /* kind */ test_kind,
@@ -824,7 +913,8 @@ TEST_F(FrameSetTest, Difference) {
           /* call_position */ test_position,
           /* distance */ 1,
           /* origins */ MethodSet{two},
-          /* features */ {},
+          /* inferred_features */ {},
+          /* user_features */ {},
           /* local_positions */ {}),
   };
   frames.difference_with(FrameSet{
@@ -835,7 +925,8 @@ TEST_F(FrameSetTest, Difference) {
           /* call_position */ test_position,
           /* distance */ 1,
           /* origins */ MethodSet{one},
-          /* features */ {},
+          /* inferred_features */ {},
+          /* user_features */ {},
           /* local_positions */ {}),
       Frame(
           /* kind */ test_kind,
@@ -844,7 +935,8 @@ TEST_F(FrameSetTest, Difference) {
           /* call_position */ test_position,
           /* distance */ 1,
           /* origins */ MethodSet{two},
-          /* features */ {},
+          /* inferred_features */ {},
+          /* user_features */ {},
           /* local_positions */ {}),
       Frame(
           /* kind */ test_kind,
@@ -853,7 +945,8 @@ TEST_F(FrameSetTest, Difference) {
           /* call_position */ test_position,
           /* distance */ 1,
           /* origins */ MethodSet{three},
-          /* features */ {},
+          /* inferred_features */ {},
+          /* user_features */ {},
           /* local_positions */ {}),
   });
   EXPECT_EQ(
@@ -866,7 +959,8 @@ TEST_F(FrameSetTest, Difference) {
               /* call_position */ test_position,
               /* distance */ 1,
               /* origins */ MethodSet{one},
-              /* features */ {},
+              /* inferred_features */ {},
+              /* user_features */ {},
               /* local_positions */ {}),
       }));
 
@@ -879,7 +973,8 @@ TEST_F(FrameSetTest, Difference) {
           /* call_position */ test_position,
           /* distance */ 1,
           /* origins */ MethodSet{one},
-          /* features */ {},
+          /* inferred_features */ {},
+          /* user_features */ {},
           /* local_positions */ {}),
       Frame(
           /* kind */ test_kind,
@@ -889,7 +984,8 @@ TEST_F(FrameSetTest, Difference) {
           /* call_position */ test_position,
           /* distance */ 1,
           /* origins */ MethodSet{two},
-          /* features */ {},
+          /* inferred_features */ {},
+          /* user_features */ {},
           /* local_positions */ {}),
   };
   frames.difference_with(FrameSet{
@@ -901,7 +997,8 @@ TEST_F(FrameSetTest, Difference) {
           /* call_position */ test_position,
           /* distance */ 1,
           /* origins */ MethodSet{one},
-          /* features */ {},
+          /* inferred_features */ {},
+          /* user_features */ {},
           /* local_positions */ {}),
       Frame(
           /* kind */ test_kind,
@@ -911,7 +1008,8 @@ TEST_F(FrameSetTest, Difference) {
           /* call_position */ test_position,
           /* distance */ 1,
           /* origins */ MethodSet{two},
-          /* features */ {},
+          /* inferred_features */ {},
+          /* user_features */ {},
           /* local_positions */ {}),
       Frame(
           /* kind */ test_kind,
@@ -920,7 +1018,8 @@ TEST_F(FrameSetTest, Difference) {
           /* call_position */ test_position,
           /* distance */ 1,
           /* origins */ MethodSet{three},
-          /* features */ {},
+          /* inferred_features */ {},
+          /* user_features */ {},
           /* local_positions */ {}),
   });
   EXPECT_TRUE(frames.is_bottom());
@@ -933,7 +1032,8 @@ TEST_F(FrameSetTest, Difference) {
           /* call_position */ test_position,
           /* distance */ 1,
           /* origins */ MethodSet{one, two},
-          /* features */ {},
+          /* inferred_features */ {},
+          /* user_features */ {},
           /* local_positions */ {}),
       Frame(
           /* kind */ test_kind,
@@ -942,7 +1042,8 @@ TEST_F(FrameSetTest, Difference) {
           /* call_position */ test_position,
           /* distance */ 1,
           /* origins */ MethodSet{two},
-          /* features */ {},
+          /* inferred_features */ {},
+          /* user_features */ {},
           /* local_positions */ {}),
       Frame(
           /* kind */ test_kind,
@@ -951,7 +1052,8 @@ TEST_F(FrameSetTest, Difference) {
           /* call_position */ test_position,
           /* distance */ 1,
           /* origins */ MethodSet{one, three},
-          /* features */ {},
+          /* inferred_features */ {},
+          /* user_features */ {},
           /* local_positions */ {}),
   };
   frames.difference_with(FrameSet{
@@ -962,7 +1064,8 @@ TEST_F(FrameSetTest, Difference) {
           /* call_position */ test_position,
           /* distance */ 1,
           /* origins */ MethodSet{one},
-          /* features */ {},
+          /* inferred_features */ {},
+          /* user_features */ {},
           /* local_positions */ {}),
       Frame(
           /* kind */ test_kind,
@@ -971,7 +1074,8 @@ TEST_F(FrameSetTest, Difference) {
           /* call_position */ test_position,
           /* distance */ 1,
           /* origins */ MethodSet{one, two, three},
-          /* features */ {},
+          /* inferred_features */ {},
+          /* user_features */ {},
           /* local_positions */ {}),
   });
   EXPECT_EQ(
@@ -984,7 +1088,8 @@ TEST_F(FrameSetTest, Difference) {
               /* call_position */ test_position,
               /* distance */ 1,
               /* origins */ MethodSet{one, two},
-              /* features */ {},
+              /* inferred_features */ {},
+              /* user_features */ {},
               /* local_positions */ {}),
           Frame(
               /* kind */ test_kind,
@@ -993,7 +1098,8 @@ TEST_F(FrameSetTest, Difference) {
               /* call_position */ test_position,
               /* distance */ 1,
               /* origins */ MethodSet{two},
-              /* features */ {},
+              /* inferred_features */ {},
+              /* user_features */ {},
               /* local_positions */ {}),
       }));
 }
@@ -1021,7 +1127,8 @@ TEST_F(FrameSetTest, Map) {
           /* call_position */ nullptr,
           /* distance */ 0,
           /* origins */ MethodSet{one},
-          /* features */ {},
+          /* inferred_features */ {},
+          /* user_features */ {},
           /* local_positions */ {}),
       Frame(
           /* kind */ test_kind,
@@ -1030,7 +1137,8 @@ TEST_F(FrameSetTest, Map) {
           /* call_position */ test_position,
           /* distance */ 1,
           /* origins */ MethodSet{two},
-          /* features */ {},
+          /* inferred_features */ {},
+          /* user_features */ {},
           /* local_positions */ {}),
       Frame(
           /* kind */ test_kind,
@@ -1039,11 +1147,13 @@ TEST_F(FrameSetTest, Map) {
           /* call_position */ test_position,
           /* distance */ 1,
           /* origins */ MethodSet{three},
-          /* features */ {},
+          /* inferred_features */ {},
+          /* user_features */ {},
           /* local_positions */ {}),
   };
-  frames.map(
-      [feature_one](Frame& frame) { frame.add_always_feature(feature_one); });
+  frames.map([feature_one](Frame& frame) {
+    frame.add_inferred_features(FeatureMayAlwaysSet{feature_one});
+  });
   EXPECT_EQ(
       frames,
       (FrameSet{
@@ -1054,7 +1164,8 @@ TEST_F(FrameSetTest, Map) {
               /* call_position */ nullptr,
               /* distance */ 0,
               /* origins */ MethodSet{one},
-              /* features */ FeatureMayAlwaysSet{feature_one},
+              /* inferred_features */ FeatureMayAlwaysSet{feature_one},
+              /* user_features */ {},
               /* local_positions */ {}),
           Frame(
               /* kind */ test_kind,
@@ -1063,7 +1174,8 @@ TEST_F(FrameSetTest, Map) {
               /* call_position */ test_position,
               /* distance */ 1,
               /* origins */ MethodSet{two},
-              /* features */ FeatureMayAlwaysSet{feature_one},
+              /* inferred_features */ FeatureMayAlwaysSet{feature_one},
+              /* user_features */ {},
               /* local_positions */ {}),
           Frame(
               /* kind */ test_kind,
@@ -1072,7 +1184,8 @@ TEST_F(FrameSetTest, Map) {
               /* call_position */ test_position,
               /* distance */ 1,
               /* origins */ MethodSet{three},
-              /* features */ FeatureMayAlwaysSet{feature_one},
+              /* inferred_features */ FeatureMayAlwaysSet{feature_one},
+              /* user_features */ {},
               /* local_positions */ {}),
       }));
 }
@@ -1099,7 +1212,8 @@ TEST_F(FrameSetTest, Filter) {
           /* call_position */ nullptr,
           /* distance */ 0,
           /* origins */ MethodSet{one},
-          /* features */ {},
+          /* inferred_features */ {},
+          /* user_features */ {},
           /* local_positions */ {}),
       Frame(
           /* kind */ test_kind,
@@ -1108,7 +1222,8 @@ TEST_F(FrameSetTest, Filter) {
           /* call_position */ test_position,
           /* distance */ 1,
           /* origins */ MethodSet{two},
-          /* features */ {},
+          /* inferred_features */ {},
+          /* user_features */ {},
           /* local_positions */ {}),
       Frame(
           /* kind */ test_kind,
@@ -1117,7 +1232,8 @@ TEST_F(FrameSetTest, Filter) {
           /* call_position */ test_position,
           /* distance */ 1,
           /* origins */ MethodSet{three},
-          /* features */ {},
+          /* inferred_features */ {},
+          /* user_features */ {},
           /* local_positions */ {}),
   };
   frames.filter(
@@ -1132,7 +1248,8 @@ TEST_F(FrameSetTest, Filter) {
               /* call_position */ nullptr,
               /* distance */ 0,
               /* origins */ MethodSet{one},
-              /* features */ {},
+              /* inferred_features */ {},
+              /* user_features */ {},
               /* local_positions */ {}),
       }));
 }

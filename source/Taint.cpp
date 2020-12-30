@@ -66,12 +66,14 @@ void Taint::filter(const std::function<bool(const FrameSet&)>& predicate) {
   set_.filter(predicate);
 }
 
-void Taint::add_features(const FeatureMayAlwaysSet& features) {
+void Taint::add_inferred_features(const FeatureMayAlwaysSet& features) {
   if (features.empty()) {
     return;
   }
 
-  map([&features](FrameSet& frames) { frames.add_features(features); });
+  map([&features](FrameSet& frames) {
+    frames.add_inferred_features(features);
+  });
 }
 
 void Taint::add_local_position(const Position* position) {
@@ -84,7 +86,7 @@ void Taint::set_local_positions(const LocalPositionSet& positions) {
   });
 }
 
-void Taint::add_features_and_local_position(
+void Taint::add_inferred_features_and_local_position(
     const FeatureMayAlwaysSet& features,
     const Position* MT_NULLABLE position) {
   if (features.empty() && position == nullptr) {
@@ -92,7 +94,7 @@ void Taint::add_features_and_local_position(
   }
 
   map([&features, position](FrameSet& frames) {
-    frames.add_features_and_local_position(features, position);
+    frames.add_inferred_features_and_local_position(features, position);
   });
 }
 
@@ -114,7 +116,7 @@ Taint Taint::propagate(
     if (propagated.is_bottom()) {
       continue;
     }
-    propagated.add_features(extra_features);
+    propagated.add_inferred_features(extra_features);
     result.add(propagated);
   }
   return result;

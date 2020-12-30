@@ -76,7 +76,8 @@ class Frame final : public sparta::AbstractDomain<Frame> {
       const Position* MT_NULLABLE call_position,
       int distance,
       MethodSet origins,
-      FeatureMayAlwaysSet features,
+      FeatureMayAlwaysSet inferred_features,
+      FeatureSet user_features,
       LocalPositionSet local_positions)
       : kind_(kind),
         callee_port_(std::move(callee_port)),
@@ -84,17 +85,18 @@ class Frame final : public sparta::AbstractDomain<Frame> {
         call_position_(call_position),
         distance_(distance),
         origins_(std::move(origins)),
-        features_(std::move(features)),
+        inferred_features_(std::move(inferred_features)),
+        user_features_(std::move(user_features)),
         local_positions_(std::move(local_positions)) {
     mt_assert(kind_ != nullptr);
     mt_assert(distance_ >= 0);
-    mt_assert(features_.is_value());
     mt_assert(!local_positions_.is_bottom());
   }
 
   static Frame leaf(
       const Kind* kind,
-      FeatureMayAlwaysSet features = {},
+      FeatureMayAlwaysSet inferred_features = FeatureMayAlwaysSet::bottom(),
+      FeatureSet user_features = FeatureSet::bottom(),
       MethodSet origins = {}) {
     return Frame(
         kind,
@@ -103,7 +105,8 @@ class Frame final : public sparta::AbstractDomain<Frame> {
         /* call_position */ nullptr,
         /* distance */ 0,
         origins,
-        features,
+        inferred_features,
+        user_features,
         /* local_positions */ {});
   }
 
@@ -141,15 +144,17 @@ class Frame final : public sparta::AbstractDomain<Frame> {
     return origins_;
   }
 
-  void add_may_feature(const Feature* feature);
-  void add_may_features(const FeatureSet& features);
-  void add_always_feature(const Feature* feature);
-  void add_always_features(const FeatureSet& features);
-  void add_features(const FeatureMayAlwaysSet& features);
+  void add_inferred_features(const FeatureMayAlwaysSet& features);
 
-  const FeatureMayAlwaysSet& features() const {
-    return features_;
+  const FeatureMayAlwaysSet& inferred_features() const {
+    return inferred_features_;
   }
+
+  const FeatureSet& user_features() const {
+    return user_features_;
+  }
+
+  FeatureMayAlwaysSet features() const;
 
   void add_local_position(const Position* position);
 
@@ -239,7 +244,8 @@ class Frame final : public sparta::AbstractDomain<Frame> {
   const Position* MT_NULLABLE call_position_;
   int distance_;
   MethodSet origins_;
-  FeatureMayAlwaysSet features_;
+  FeatureMayAlwaysSet inferred_features_;
+  FeatureSet user_features_;
   LocalPositionSet local_positions_;
 };
 

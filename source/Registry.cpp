@@ -177,7 +177,8 @@ Frame augment_frame_position(
       context.positions->get(position, start, end),
       frame.distance(),
       frame.origins(),
-      frame.features(),
+      frame.inferred_features(),
+      frame.user_features(),
       frame.local_positions());
 }
 

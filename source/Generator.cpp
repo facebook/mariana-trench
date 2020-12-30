@@ -309,19 +309,20 @@ Frame generator::source(
     const std::string& kind,
     const std::vector<std::string>& features,
     Root::Kind callee_port) {
-  auto source = Frame(
+  FeatureSet user_features;
+  for (const auto& feature : features) {
+    user_features.add(context.features->get(feature));
+  }
+  return Frame(
       /* kind */ context.kinds->get(kind),
       /* callee_port */ AccessPath(Root(callee_port)),
       /* callee */ nullptr,
       /* call_position */ nullptr,
       /* distance */ 0,
       /* origins */ MethodSet{method},
-      /* features */ {},
+      /* inferred features */ FeatureMayAlwaysSet::bottom(),
+      /* user features */ user_features,
       /* local_positions */ {});
-  for (const auto& feature : features) {
-    source.add_always_feature(context.features->get(feature));
-  }
-  return source;
 }
 
 Frame generator::sink(
@@ -330,19 +331,20 @@ Frame generator::sink(
     const std::string& kind,
     const std::vector<std::string>& features,
     Root::Kind callee_port) {
-  auto sink = Frame(
+  FeatureSet user_features;
+  for (const auto& feature : features) {
+    user_features.add(context.features->get(feature));
+  }
+  return Frame(
       /* kind */ context.kinds->get(kind),
       /* callee_port */ AccessPath(Root(callee_port)),
       /* callee */ nullptr,
       /* call_position */ nullptr,
       /* distance */ 0,
       /* origins */ MethodSet{method},
-      /* features */ {},
+      /* inferred features */ FeatureMayAlwaysSet::bottom(),
+      /* user features */ user_features,
       /* local_positions */ {});
-  for (const auto& feature : features) {
-    sink.add_always_feature(context.features->get(feature));
-  }
-  return sink;
 }
 
 } // namespace marianatrench

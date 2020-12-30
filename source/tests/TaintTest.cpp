@@ -34,7 +34,8 @@ TEST_F(TaintTest, Insertion) {
       /* call_position */ nullptr,
       /* distance */ 0,
       /* origins */ {},
-      /* features */ {},
+      /* inferred_features */ {},
+      /* user_features */ {},
       /* local_positions */ {}));
   EXPECT_EQ(
       taint,
@@ -46,7 +47,8 @@ TEST_F(TaintTest, Insertion) {
               /* call_position */ nullptr,
               /* distance */ 0,
               /* origins */ {},
-              /* features */ {},
+              /* inferred_features */ {},
+              /* user_features */ {},
               /* local_positions */ {}),
       }));
 
@@ -57,7 +59,8 @@ TEST_F(TaintTest, Insertion) {
       /* call_position */ nullptr,
       /* distance */ 0,
       /* origins */ {},
-      /* features */ {},
+      /* inferred_features */ {},
+      /* user_features */ {},
       /* local_positions */ {}));
   EXPECT_EQ(
       taint,
@@ -69,7 +72,8 @@ TEST_F(TaintTest, Insertion) {
               /* call_position */ nullptr,
               /* distance */ 0,
               /* origins */ {},
-              /* features */ {},
+              /* inferred_features */ {},
+              /* user_features */ {},
               /* local_positions */ {}),
           Frame(
               /* kind */ context.kinds->get("OtherSource"),
@@ -78,7 +82,8 @@ TEST_F(TaintTest, Insertion) {
               /* call_position */ nullptr,
               /* distance */ 0,
               /* origins */ {},
-              /* features */ {},
+              /* inferred_features */ {},
+              /* user_features */ {},
               /* local_positions */ {}),
       }));
 
@@ -89,7 +94,8 @@ TEST_F(TaintTest, Insertion) {
       /* call_position */ context.positions->unknown(),
       /* distance */ 2,
       /* origins */ MethodSet{one},
-      /* features */ {},
+      /* inferred_features */ {},
+      /* user_features */ {},
       /* local_positions */ {}));
   EXPECT_EQ(
       taint,
@@ -101,7 +107,8 @@ TEST_F(TaintTest, Insertion) {
               /* call_position */ nullptr,
               /* distance */ 0,
               /* origins */ {},
-              /* features */ {},
+              /* inferred_features */ {},
+              /* user_features */ {},
               /* local_positions */ {}),
           Frame(
               /* kind */ context.kinds->get("OtherSource"),
@@ -110,7 +117,8 @@ TEST_F(TaintTest, Insertion) {
               /* call_position */ nullptr,
               /* distance */ 0,
               /* origins */ {},
-              /* features */ {},
+              /* inferred_features */ {},
+              /* user_features */ {},
               /* local_positions */ {}),
           Frame(
               /* kind */ context.kinds->get("IndirectSource"),
@@ -119,7 +127,8 @@ TEST_F(TaintTest, Insertion) {
               /* call_position */ context.positions->unknown(),
               /* distance */ 2,
               /* origins */ MethodSet{one},
-              /* features */ {},
+              /* inferred_features */ {},
+              /* user_features */ {},
               /* local_positions */ {}),
       }));
 
@@ -130,7 +139,8 @@ TEST_F(TaintTest, Insertion) {
       /* call_position */ context.positions->unknown(),
       /* distance */ 3,
       /* origins */ MethodSet{two},
-      /* features */ {},
+      /* inferred_features */ {},
+      /* user_features */ {},
       /* local_positions */ {}));
   EXPECT_EQ(
       taint,
@@ -142,7 +152,8 @@ TEST_F(TaintTest, Insertion) {
               /* call_position */ nullptr,
               /* distance */ 0,
               /* origins */ {},
-              /* features */ {},
+              /* inferred_features */ {},
+              /* user_features */ {},
               /* local_positions */ {}),
           Frame(
               /* kind */ context.kinds->get("OtherSource"),
@@ -151,7 +162,8 @@ TEST_F(TaintTest, Insertion) {
               /* call_position */ nullptr,
               /* distance */ 0,
               /* origins */ {},
-              /* features */ {},
+              /* inferred_features */ {},
+              /* user_features */ {},
               /* local_positions */ {}),
           Frame(
               /* kind */ context.kinds->get("IndirectSource"),
@@ -160,7 +172,8 @@ TEST_F(TaintTest, Insertion) {
               /* call_position */ context.positions->unknown(),
               /* distance */ 2,
               /* origins */ MethodSet{one, two},
-              /* features */ {},
+              /* inferred_features */ {},
+              /* user_features */ {},
               /* local_positions */ {}),
       }));
 
@@ -171,7 +184,8 @@ TEST_F(TaintTest, Insertion) {
       /* call_position */ context.positions->unknown(),
       /* distance */ 3,
       /* origins */ MethodSet{two},
-      /* features */ {},
+      /* inferred_features */ {},
+      /* user_features */ {},
       /* local_positions */ {}));
   EXPECT_EQ(
       taint,
@@ -183,7 +197,8 @@ TEST_F(TaintTest, Insertion) {
               /* call_position */ nullptr,
               /* distance */ 0,
               /* origins */ {},
-              /* features */ {},
+              /* inferred_features */ {},
+              /* user_features */ {},
               /* local_positions */ {}),
           Frame(
               /* kind */ context.kinds->get("OtherSource"),
@@ -192,7 +207,8 @@ TEST_F(TaintTest, Insertion) {
               /* call_position */ nullptr,
               /* distance */ 0,
               /* origins */ {},
-              /* features */ {},
+              /* inferred_features */ {},
+              /* user_features */ {},
               /* local_positions */ {}),
           Frame(
               /* kind */ context.kinds->get("IndirectSource"),
@@ -201,7 +217,8 @@ TEST_F(TaintTest, Insertion) {
               /* call_position */ context.positions->unknown(),
               /* distance */ 2,
               /* origins */ MethodSet{one, two},
-              /* features */ {},
+              /* inferred_features */ {},
+              /* user_features */ {},
               /* local_positions */ {}),
           Frame(
               /* kind */ context.kinds->get("IndirectSource"),
@@ -210,7 +227,8 @@ TEST_F(TaintTest, Insertion) {
               /* call_position */ context.positions->unknown(),
               /* distance */ 3,
               /* origins */ MethodSet{two},
-              /* features */ {},
+              /* inferred_features */ {},
+              /* user_features */ {},
               /* local_positions */ {}),
       }));
 }
@@ -230,6 +248,9 @@ TEST_F(TaintTest, Difference) {
   auto* feature_one = context.features->get("FeatureOne");
   auto* feature_two = context.features->get("FeatureTwo");
   auto* feature_three = context.features->get("FeatureThree");
+  auto* user_feature_one = context.features->get("UserFeatureOne");
+  auto* user_feature_two = context.features->get("UserFeatureTwo");
+  auto* user_feature_three = context.features->get("UserFeatureThree");
 
   Taint taint = Taint{
       Frame(
@@ -239,7 +260,8 @@ TEST_F(TaintTest, Difference) {
           /* call_position */ test_position,
           /* distance */ 1,
           /* origins */ MethodSet{one},
-          /* features */ FeatureMayAlwaysSet{feature_one},
+          /* inferred_features */ FeatureMayAlwaysSet{feature_one},
+          /* user_features */ FeatureSet{user_feature_one},
           /* local_positions */ {}),
       Frame(
           /* kind */ context.kinds->get("OtherSource"),
@@ -248,7 +270,8 @@ TEST_F(TaintTest, Difference) {
           /* call_position */ test_position,
           /* distance */ 1,
           /* origins */ MethodSet{two},
-          /* features */ FeatureMayAlwaysSet{feature_two},
+          /* inferred_features */ FeatureMayAlwaysSet{feature_two},
+          /* user_features */ FeatureSet{user_feature_two},
           /* local_positions */ {}),
   };
   taint.difference_with(Taint{
@@ -259,7 +282,8 @@ TEST_F(TaintTest, Difference) {
           /* call_position */ test_position,
           /* distance */ 1,
           /* origins */ MethodSet{one},
-          /* features */ FeatureMayAlwaysSet{feature_one},
+          /* inferred_features */ FeatureMayAlwaysSet{feature_one},
+          /* user_features */ FeatureSet{user_feature_one},
           /* local_positions */ {}),
       Frame(
           /* kind */ context.kinds->get("OtherSource"),
@@ -268,7 +292,8 @@ TEST_F(TaintTest, Difference) {
           /* call_position */ test_position,
           /* distance */ 1,
           /* origins */ MethodSet{two},
-          /* features */ FeatureMayAlwaysSet{feature_two},
+          /* inferred_features */ FeatureMayAlwaysSet{feature_two},
+          /* user_features */ FeatureSet{user_feature_two},
           /* local_positions */ {}),
       Frame(
           /* kind */ context.kinds->get("OtherSource"),
@@ -277,7 +302,8 @@ TEST_F(TaintTest, Difference) {
           /* call_position */ test_position,
           /* distance */ 1,
           /* origins */ MethodSet{three},
-          /* features */ FeatureMayAlwaysSet{feature_three},
+          /* inferred_features */ FeatureMayAlwaysSet{feature_three},
+          /* user_features */ FeatureSet{user_feature_three},
           /* local_positions */ {}),
   });
   EXPECT_TRUE(taint.is_bottom());
@@ -290,7 +316,8 @@ TEST_F(TaintTest, Difference) {
           /* call_position */ test_position,
           /* distance */ 2,
           /* origins */ MethodSet{one},
-          /* features */ {},
+          /* inferred_features */ {},
+          /* user_features */ {},
           /* local_positions */ {}),
       Frame(
           /* kind */ context.kinds->get("OtherSource"),
@@ -299,7 +326,8 @@ TEST_F(TaintTest, Difference) {
           /* call_position */ test_position,
           /* distance */ 1,
           /* origins */ MethodSet{two},
-          /* features */ {},
+          /* inferred_features */ {},
+          /* user_features */ {},
           /* local_positions */ {}),
       Frame(
           /* kind */ context.kinds->get("TestSource"),
@@ -308,7 +336,8 @@ TEST_F(TaintTest, Difference) {
           /* call_position */ test_position,
           /* distance */ 1,
           /* origins */ MethodSet{three},
-          /* features */ {},
+          /* inferred_features */ {},
+          /* user_features */ {},
           /* local_positions */ {}),
   };
   taint.difference_with(Taint{
@@ -319,7 +348,8 @@ TEST_F(TaintTest, Difference) {
           /* call_position */ test_position,
           /* distance */ 1,
           /* origins */ MethodSet{one},
-          /* features */ {},
+          /* inferred_features */ {},
+          /* user_features */ {},
           /* local_positions */ {}),
       Frame(
           /* kind */ context.kinds->get("TestSource"),
@@ -328,7 +358,8 @@ TEST_F(TaintTest, Difference) {
           /* call_position */ test_position,
           /* distance */ 1,
           /* origins */ MethodSet{two},
-          /* features */ {},
+          /* inferred_features */ {},
+          /* user_features */ {},
           /* local_positions */ {}),
   });
   EXPECT_EQ(
@@ -341,7 +372,8 @@ TEST_F(TaintTest, Difference) {
               /* call_position */ test_position,
               /* distance */ 1,
               /* origins */ MethodSet{two},
-              /* features */ {},
+              /* inferred_features */ {},
+              /* user_features */ {},
               /* local_positions */ {}),
           Frame(
               /* kind */ context.kinds->get("TestSource"),
@@ -350,7 +382,8 @@ TEST_F(TaintTest, Difference) {
               /* call_position */ test_position,
               /* distance */ 1,
               /* origins */ MethodSet{three},
-              /* features */ {},
+              /* inferred_features */ {},
+              /* user_features */ {},
               /* local_positions */ {}),
       }));
 
@@ -362,7 +395,8 @@ TEST_F(TaintTest, Difference) {
           /* call_position */ test_position,
           /* distance */ 1,
           /* origins */ MethodSet{one},
-          /* features */ {},
+          /* inferred_features */ {},
+          /* user_features */ {},
           /* local_positions */ {}),
       Frame(
           /* kind */ context.kinds->get("SomeOtherSource"),
@@ -371,7 +405,8 @@ TEST_F(TaintTest, Difference) {
           /* call_position */ test_position,
           /* distance */ 1,
           /* origins */ MethodSet{two},
-          /* features */ {},
+          /* inferred_features */ {},
+          /* user_features */ {},
           /* local_positions */ {}),
   };
   taint.difference_with(Taint{
@@ -382,7 +417,8 @@ TEST_F(TaintTest, Difference) {
           /* call_position */ test_position,
           /* distance */ 1,
           /* origins */ MethodSet{one},
-          /* features */ {},
+          /* inferred_features */ {},
+          /* user_features */ {},
           /* local_positions */ {}),
       Frame(
           /* kind */ context.kinds->get("TestSource"),
@@ -391,7 +427,8 @@ TEST_F(TaintTest, Difference) {
           /* call_position */ test_position,
           /* distance */ 1,
           /* origins */ MethodSet{two},
-          /* features */ {},
+          /* inferred_features */ {},
+          /* user_features */ {},
           /* local_positions */ {}),
       Frame(
           /* kind */ context.kinds->get("TestSource"),
@@ -400,7 +437,8 @@ TEST_F(TaintTest, Difference) {
           /* call_position */ test_position,
           /* distance */ 1,
           /* origins */ MethodSet{three},
-          /* features */ {},
+          /* inferred_features */ {},
+          /* user_features */ {},
           /* local_positions */ {}),
   });
   EXPECT_EQ(
@@ -413,7 +451,8 @@ TEST_F(TaintTest, Difference) {
               /* call_position */ test_position,
               /* distance */ 1,
               /* origins */ MethodSet{two},
-              /* features */ {},
+              /* inferred_features */ {},
+              /* user_features */ {},
               /* local_positions */ {}),
       }));
 }
@@ -433,6 +472,8 @@ TEST_F(TaintTest, AddFeatures) {
   auto* feature_one = context.features->get("FeatureOne");
   auto* feature_two = context.features->get("FeatureTwo");
   auto* feature_three = context.features->get("FeatureThree");
+  auto* user_feature_one = context.features->get("UserFeatureOne");
+  auto* user_feature_two = context.features->get("UserFeatureTwo");
 
   auto taint = Taint{
       Frame(
@@ -442,7 +483,8 @@ TEST_F(TaintTest, AddFeatures) {
           /* call_position */ test_position,
           /* distance */ 1,
           /* origins */ MethodSet{one},
-          /* features */ FeatureMayAlwaysSet{feature_one},
+          /* inferred_features */ FeatureMayAlwaysSet{feature_one},
+          /* user_features */ FeatureSet{user_feature_one},
           /* local_positions */ {}),
       Frame(
           /* kind */ context.kinds->get("TestSource"),
@@ -451,7 +493,8 @@ TEST_F(TaintTest, AddFeatures) {
           /* call_position */ test_position,
           /* distance */ 1,
           /* origins */ MethodSet{two},
-          /* features */ FeatureMayAlwaysSet{feature_two},
+          /* inferred_features */ FeatureMayAlwaysSet{feature_two},
+          /* user_features */ FeatureSet{user_feature_two},
           /* local_positions */ {}),
       Frame(
           /* kind */ context.kinds->get("TestSource"),
@@ -460,10 +503,12 @@ TEST_F(TaintTest, AddFeatures) {
           /* call_position */ test_position,
           /* distance */ 1,
           /* origins */ MethodSet{three},
-          /* features */ {},
+          /* inferred_features */ {},
+          /* user_features */ {},
           /* local_positions */ {}),
   };
-  taint.add_features(FeatureMayAlwaysSet::make_always({feature_three}));
+  taint.add_inferred_features(
+      FeatureMayAlwaysSet::make_always({feature_three}));
   EXPECT_EQ(
       taint,
       (Taint{
@@ -474,7 +519,9 @@ TEST_F(TaintTest, AddFeatures) {
               /* call_position */ test_position,
               /* distance */ 1,
               /* origins */ MethodSet{one},
-              /* features */ FeatureMayAlwaysSet{feature_one, feature_three},
+              /* inferred_features */
+              FeatureMayAlwaysSet{feature_one, feature_three},
+              /* user_features */ FeatureSet{user_feature_one},
               /* local_positions */ {}),
           Frame(
               /* kind */ context.kinds->get("TestSource"),
@@ -483,7 +530,9 @@ TEST_F(TaintTest, AddFeatures) {
               /* call_position */ test_position,
               /* distance */ 1,
               /* origins */ MethodSet{two},
-              /* features */ FeatureMayAlwaysSet{feature_two, feature_three},
+              /* inferred_features */
+              FeatureMayAlwaysSet{feature_two, feature_three},
+              /* user_features */ FeatureSet{user_feature_two},
               /* local_positions */ {}),
           Frame(
               /* kind */ context.kinds->get("TestSource"),
@@ -492,7 +541,8 @@ TEST_F(TaintTest, AddFeatures) {
               /* call_position */ test_position,
               /* distance */ 1,
               /* origins */ MethodSet{three},
-              /* features */ FeatureMayAlwaysSet{feature_three},
+              /* inferred_features */ FeatureMayAlwaysSet{feature_three},
+              /* user_features */ {},
               /* local_positions */ {}),
       }));
 }
@@ -514,6 +564,8 @@ TEST_F(TaintTest, Propagate) {
   auto* feature_one = context.features->get("FeatureOne");
   auto* feature_two = context.features->get("FeatureTwo");
   auto* feature_three = context.features->get("FeatureThree");
+  auto* user_feature_one = context.features->get("UserFeatureOne");
+  auto* user_feature_two = context.features->get("UserFeatureTwo");
 
   auto taint = Taint{
       Frame(
@@ -523,7 +575,8 @@ TEST_F(TaintTest, Propagate) {
           /* call_position */ nullptr,
           /* distance */ 0,
           /* origins */ MethodSet{one},
-          /* features */ {},
+          /* inferred_features */ {},
+          /* user_features */ FeatureSet{user_feature_one},
           /* local_positions */ {}),
       Frame(
           /* kind */ context.kinds->get("OtherSource"),
@@ -532,7 +585,8 @@ TEST_F(TaintTest, Propagate) {
           /* call_position */ test_position,
           /* distance */ 2,
           /* origins */ MethodSet{two},
-          /* features */ FeatureMayAlwaysSet{feature_one},
+          /* inferred_features */ FeatureMayAlwaysSet{feature_one},
+          /* user_features */ FeatureSet{user_feature_one},
           /* local_positions */ {}),
       Frame(
           /* kind */ context.kinds->get("OtherSource"),
@@ -541,9 +595,12 @@ TEST_F(TaintTest, Propagate) {
           /* call_position */ test_position,
           /* distance */ 1,
           /* origins */ MethodSet{three},
-          /* features */ FeatureMayAlwaysSet{feature_one, feature_two},
+          /* inferred_features */ FeatureMayAlwaysSet{feature_one, feature_two},
+          /* user_features */ FeatureSet{user_feature_one, user_feature_two},
           /* local_positions */ {}),
   };
+
+  // When propagating, all user features become inferred features.
   EXPECT_EQ(
       taint.propagate(
           /* caller */ one,
@@ -560,7 +617,9 @@ TEST_F(TaintTest, Propagate) {
               /* call_position */ context.positions->get("Test.java", 1),
               /* distance */ 1,
               /* origins */ MethodSet{one},
-              /* features */ FeatureMayAlwaysSet{feature_three},
+              /* inferred_features */
+              FeatureMayAlwaysSet{user_feature_one, feature_three},
+              /* user_features */ {},
               /* local_positions */ {}),
           Frame(
               /* kind */ context.kinds->get("OtherSource"),
@@ -569,10 +628,12 @@ TEST_F(TaintTest, Propagate) {
               /* call_position */ context.positions->get("Test.java", 1),
               /* distance */ 2,
               /* origins */ MethodSet{two, three},
-              /* features */
+              /* inferred_features */
               FeatureMayAlwaysSet(
-                  /* may */ FeatureSet{feature_two},
-                  /* always */ FeatureSet{feature_one, feature_three}),
+                  /* may */ FeatureSet{user_feature_two, feature_two},
+                  /* always */
+                  FeatureSet{user_feature_one, feature_one, feature_three}),
+              /* user_features */ {},
               /* local_positions */ {}),
       }));
 }

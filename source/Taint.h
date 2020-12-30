@@ -136,13 +136,13 @@ class Taint final : public sparta::AbstractDomain<Taint> {
 
   void filter(const std::function<bool(const FrameSet&)>& predicate);
 
-  void add_features(const FeatureMayAlwaysSet& features);
+  void add_inferred_features(const FeatureMayAlwaysSet& features);
 
   void add_local_position(const Position* position);
 
   void set_local_positions(const LocalPositionSet& positions);
 
-  void add_features_and_local_position(
+  void add_inferred_features_and_local_position(
       const FeatureMayAlwaysSet& features,
       const Position* MT_NULLABLE position);
 

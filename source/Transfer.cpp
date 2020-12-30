@@ -256,7 +256,7 @@ void apply_propagations(
       features.add(propagation.features());
       features.add_always(callee.model.add_features_to_arguments(input));
 
-      taint.add_features_and_local_position(
+      taint.add_inferred_features_and_local_position(
           features,
           context->positions.get(callee.position, input, instruction));
 
@@ -321,7 +321,7 @@ void apply_propagations(
       for (auto* memory_location : memory_locations.elements()) {
         auto taint = new_environment->read(memory_location);
         taint.map([&features, position](Taint& sources) {
-          sources.add_features_and_local_position(features, position);
+          sources.add_inferred_features_and_local_position(features, position);
         });
         new_environment->write(
             memory_location, std::move(taint), UpdateKind::Strong);
@@ -347,7 +347,7 @@ void check_flows(
 
         for (const auto* rule : rules) {
           auto new_sink = sink;
-          new_sink.add_features(extra_features);
+          new_sink.add_inferred_features(extra_features);
 
           auto issue =
               Issue(Taint{source}, Taint{std::move(new_sink)}, rule, position);
@@ -367,7 +367,7 @@ void check_flows(
         features.add(artificial_source.features());
 
         auto new_sinks = sinks;
-        new_sinks.add_features(features);
+        new_sinks.add_inferred_features(features);
         new_sinks.set_local_positions(source.local_positions());
 
         LOG_OR_DUMP(
@@ -426,7 +426,8 @@ void check_flows_to_array_allocation(
       /* call_position */ position,
       /* distance */ 1,
       /* origins */ MethodSet{array_allocation_method},
-      /* features */ {},
+      /* inferred features */ {},
+      /* user features */ {},
       /* local_positions */ {})};
   auto instruction_sources = instruction->srcs_vec();
   for (std::size_t parameter_position = 0;
@@ -719,7 +720,7 @@ bool Transfer::analyze_aput(
       Root(Root::Kind::Return),
       instruction);
   taint.map([&features, position](Taint& sources) {
-    sources.add_features_and_local_position(features, position);
+    sources.add_inferred_features_and_local_position(features, position);
   });
 
   // We use a single memory location for the array and its elements.
@@ -771,7 +772,7 @@ static bool analyze_numerical_operator(
       Root(Root::Kind::Return),
       instruction);
   taint.map([&features, position](Taint& sources) {
-    sources.add_features_and_local_position(features, position);
+    sources.add_inferred_features_and_local_position(features, position);
   });
 
   // Assume the instruction creates a new memory location.
@@ -832,7 +833,7 @@ void infer_output_taint(
     for (const auto& source : sources) {
       if (!source.is_artificial_sources()) {
         auto generation = source;
-        generation.add_features(FeatureMayAlwaysSet::make_always(
+        generation.add_inferred_features(FeatureMayAlwaysSet::make_always(
             context->model.attach_to_sources(root)));
         auto port = AccessPath(root, path);
         LOG_OR_DUMP(

@@ -18,24 +18,19 @@ void Frame::set_origins(const MethodSet& origins) {
   origins_ = origins;
 }
 
-void Frame::add_may_feature(const Feature* feature) {
-  features_.add_may(feature);
+void Frame::add_inferred_features(const FeatureMayAlwaysSet& features) {
+  inferred_features_.add(features);
 }
 
-void Frame::add_may_features(const FeatureSet& features) {
-  features_.add_may(features);
-}
+FeatureMayAlwaysSet Frame::features() const {
+  if (inferred_features_.is_bottom()) {
+    return FeatureMayAlwaysSet::make_always(user_features_);
+  }
 
-void Frame::add_always_feature(const Feature* feature) {
-  features_.add_always(feature);
-}
-
-void Frame::add_always_features(const FeatureSet& features) {
-  features_.add_always(features);
-}
-
-void Frame::add_features(const FeatureMayAlwaysSet& features) {
-  features_.add(features);
+  auto features = inferred_features_;
+  features.add_always(user_features_);
+  mt_assert(!features.is_bottom());
+  return features;
 }
 
 void Frame::add_local_position(const Position* position) {
@@ -58,7 +53,8 @@ bool Frame::leq(const Frame& other) const {
                                 : callee_port_ == other.callee_port_) &&
         callee_ == other.callee_ && call_position_ == other.call_position_ &&
         distance_ >= other.distance_ && origins_.leq(other.origins_) &&
-        features_.leq(other.features_) &&
+        inferred_features_.leq(other.inferred_features_) &&
+        user_features_.leq(other.user_features_) &&
         local_positions_.leq(other.local_positions_);
   }
 }
@@ -72,7 +68,8 @@ bool Frame::equals(const Frame& other) const {
     return kind_ == other.kind_ && callee_port_ == other.callee_port_ &&
         callee_ == other.callee_ && call_position_ == other.call_position_ &&
         distance_ == other.distance_ && origins_ == other.origins_ &&
-        features_ == other.features_ &&
+        inferred_features_ == other.inferred_features_ &&
+        user_features_ == other.user_features_ &&
         local_positions_ == other.local_positions_;
   }
 }
@@ -97,7 +94,8 @@ void Frame::join_with(const Frame& other) {
 
     distance_ = std::min(distance_, other.distance_);
     origins_.join_with(other.origins_);
-    features_.join_with(other.features_);
+    inferred_features_.join_with(other.inferred_features_);
+    user_features_.join_with(other.user_features_);
     local_positions_.join_with(other.local_positions_);
   }
 
@@ -129,7 +127,8 @@ Frame Frame::artificial_source(AccessPath access_path) {
       /* call_position */ nullptr,
       /* distance */ 0,
       /* origins */ {},
-      /* features */ {},
+      /* inferred_features */ {},
+      /* user_features */ {},
       /* local_positions */ {});
 }
 
@@ -169,13 +168,16 @@ Frame Frame::from_json(const Json::Value& value, Context& context) {
   JsonValidation::null_or_array(value, /* field */ "origins");
   auto origins = MethodSet::from_json(value["origins"], context);
 
-  // Inferred may_features and always_features.
-  auto features = FeatureMayAlwaysSet::from_json(value, context);
+  // Inferred may_features and always_features. Technically, user-specified
+  // features should go under "user_features", but this gives a way to override
+  // that behavior and specify "may/always" features.
+  auto inferred_features = FeatureMayAlwaysSet::from_json(value, context);
 
   // User specified always-features.
+  FeatureSet user_features;
   if (value.isMember("features")) {
     JsonValidation::null_or_array(value, /* field */ "features");
-    features.add_always(FeatureSet::from_json(value["features"], context));
+    user_features = FeatureSet::from_json(value["features"], context);
   }
 
   LocalPositionSet local_positions;
@@ -229,7 +231,8 @@ Frame Frame::from_json(const Json::Value& value, Context& context) {
       call_position,
       distance,
       std::move(origins),
-      std::move(features),
+      std::move(inferred_features),
+      std::move(user_features),
       std::move(local_positions));
 }
 
@@ -257,7 +260,7 @@ Json::Value Frame::to_json() const {
     value["origins"] = origins_.to_json();
   }
 
-  JsonValidation::update_object(value, features_.to_json());
+  JsonValidation::update_object(value, features().to_json());
 
   if (local_positions_.is_value() && !local_positions_.empty()) {
     value["local_positions"] = local_positions_.to_json();
@@ -304,8 +307,11 @@ std::ostream& operator<<(std::ostream& out, const Frame& frame) {
   if (!frame.origins_.empty()) {
     out << ", origins=" << frame.origins_;
   }
-  if (!frame.features_.empty()) {
-    out << ", features=" << frame.features_;
+  if (!frame.inferred_features_.empty()) {
+    out << ", inferred_features=" << frame.inferred_features_;
+  }
+  if (!frame.user_features_.empty()) {
+    out << ", user_features=" << frame.user_features_;
   }
   if (!frame.local_positions_.empty()) {
     out << ", local_positions=" << frame.local_positions_;
