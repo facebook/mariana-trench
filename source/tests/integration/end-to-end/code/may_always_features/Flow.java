@@ -28,7 +28,7 @@ public class Flow {
     } else {
       y = via_two(via_one(x));
     }
-    // Always via-one, May via-two.
+    // Always via-one and via-source, May via-two.
     Origin.sink(y);
   }
 

@@ -9,6 +9,18 @@
     ]
   },
   {
+    "method": "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;",
+    "generations": [
+      {
+        "kind": "Source",
+        "port": "Return",
+        "features": [
+          "via-source"
+        ]
+      }
+    ]
+  },
+  {
     "method": "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
     "sinks": [
       {

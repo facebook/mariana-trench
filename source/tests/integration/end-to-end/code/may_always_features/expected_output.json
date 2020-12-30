@@ -5,6 +5,7 @@
          "callee_port" : "Leaf",
          "caller_port" : "Return",
          "kind" : "Source",
+         "may_features" : [ "via-source" ],
          "origins" : [
             "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;"
          ]
@@ -101,7 +102,7 @@
    "issues" : [
       {
          "always_features" : [ "via-one" ],
-         "may_features" : [ "via-two" ],
+         "may_features" : [ "via-source", "via-two" ],
          "position" : {
             "line" : 32,
             "path" : "Flow.java"
@@ -145,7 +146,7 @@
                      "line" : 29
                   }
                ],
-               "may_features" : [ "via-two" ],
+               "may_features" : [ "via-source", "via-two" ],
                "origins" : [
                   "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;"
                ]
