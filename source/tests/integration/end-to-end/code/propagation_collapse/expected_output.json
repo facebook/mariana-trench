@@ -327,7 +327,12 @@
 }
 {
    "method" : "Landroid/location/LocationListener;.onLocationChanged:(Landroid/location/Location;)V",
-   "modes" : [ "add-via-obscure-feature", "skip-analysis", "taint-in-taint-out" ],
+   "modes" : [
+      "add-via-obscure-feature",
+      "skip-analysis",
+      "taint-in-taint-out",
+      "taint-in-taint-this"
+   ],
    "position" : {},
    "propagation" : [
       {
@@ -801,7 +806,12 @@
 }
 {
    "method" : "Ljava/lang/Runnable;.run:()V",
-   "modes" : [ "add-via-obscure-feature", "skip-analysis", "taint-in-taint-out" ],
+   "modes" : [
+      "add-via-obscure-feature",
+      "skip-analysis",
+      "taint-in-taint-out",
+      "taint-in-taint-this"
+   ],
    "position" : {}
 }
 {
@@ -912,7 +922,12 @@
 }
 {
    "method" : "Ljava/util/Map;.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;",
-   "modes" : [ "add-via-obscure-feature", "skip-analysis", "taint-in-taint-out" ],
+   "modes" : [
+      "add-via-obscure-feature",
+      "skip-analysis",
+      "taint-in-taint-out",
+      "taint-in-taint-this"
+   ],
    "position" : {},
    "propagation" : [
       {

@@ -54,7 +54,8 @@
           "add-via-obscure-feature",
           "skip-analysis",
           "no-join-virtual-overrides",
-          "taint-in-taint-out"
+          "taint-in-taint-out",
+          "taint-in-taint-this"
         ]
       }
     }

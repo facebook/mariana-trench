@@ -293,7 +293,12 @@
 }
 {
    "method" : "Landroid/location/LocationListener;.onLocationChanged:(Landroid/location/Location;)V",
-   "modes" : [ "add-via-obscure-feature", "skip-analysis", "taint-in-taint-out" ],
+   "modes" : [
+      "add-via-obscure-feature",
+      "skip-analysis",
+      "taint-in-taint-out",
+      "taint-in-taint-this"
+   ],
    "position" : {},
    "propagation" : [
       {
@@ -572,7 +577,12 @@
 }
 {
    "method" : "Lcom/facebook/marianatrench/integrationtests/Flow$A;.sink:(Ljava/lang/Object;)V",
-   "modes" : [ "add-via-obscure-feature", "skip-analysis", "taint-in-taint-out" ],
+   "modes" : [
+      "add-via-obscure-feature",
+      "skip-analysis",
+      "taint-in-taint-out",
+      "taint-in-taint-this"
+   ],
    "position" : {
       "path" : "Flow.java"
    },
@@ -585,7 +595,12 @@
 }
 {
    "method" : "Lcom/facebook/marianatrench/integrationtests/Flow$B;.sink:(Ljava/lang/Object;)V",
-   "modes" : [ "add-via-obscure-feature", "skip-analysis", "taint-in-taint-out" ],
+   "modes" : [
+      "add-via-obscure-feature",
+      "skip-analysis",
+      "taint-in-taint-out",
+      "taint-in-taint-this"
+   ],
    "position" : {
       "path" : "Flow.java"
    },
@@ -774,7 +789,12 @@
 }
 {
    "method" : "Ljava/lang/Runnable;.run:()V",
-   "modes" : [ "add-via-obscure-feature", "skip-analysis", "taint-in-taint-out" ],
+   "modes" : [
+      "add-via-obscure-feature",
+      "skip-analysis",
+      "taint-in-taint-out",
+      "taint-in-taint-this"
+   ],
    "position" : {}
 }
 {
@@ -885,7 +905,12 @@
 }
 {
    "method" : "Ljava/util/Map;.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;",
-   "modes" : [ "add-via-obscure-feature", "skip-analysis", "taint-in-taint-out" ],
+   "modes" : [
+      "add-via-obscure-feature",
+      "skip-analysis",
+      "taint-in-taint-out",
+      "taint-in-taint-this"
+   ],
    "position" : {},
    "propagation" : [
       {

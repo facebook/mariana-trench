@@ -1160,21 +1160,22 @@ TEST_F(JsonTest, Model) {
               Model::Mode::TaintInTaintOut |
               Model::Mode::NoJoinVirtualOverrides));
   EXPECT_EQ(
-      test::sorted_json(Model(
-                            method,
-                            context,
-                            Model::Mode::SkipAnalysis |
-                                Model::Mode::AddViaObscureFeature |
-                                Model::Mode::TaintInTaintOut |
-                                Model::Mode::NoJoinVirtualOverrides)
-                            .to_json()),
+      test::sorted_json(
+          Model(
+              method,
+              context,
+              Model::Mode::SkipAnalysis | Model::Mode::AddViaObscureFeature |
+                  Model::Mode::TaintInTaintOut | Model::Mode::TaintInTaintThis |
+                  Model::Mode::NoJoinVirtualOverrides)
+              .to_json()),
       test::parse_json(R"#({
         "method": "LData;.method:(LData;LData;)V",
         "modes": [
           "add-via-obscure-feature",
           "no-join-virtual-overrides",
           "skip-analysis",
-          "taint-in-taint-out"
+          "taint-in-taint-out",
+          "taint-in-taint-this"
         ],
         "propagation": [
           {

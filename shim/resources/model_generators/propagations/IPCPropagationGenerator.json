@@ -53,7 +53,8 @@
       "model": {
         "modes": [
           "skip-analysis",
-          "taint-in-taint-out"
+          "taint-in-taint-out",
+          "taint-in-taint-this"
         ]
       }
     },

@@ -89,12 +89,14 @@ class Model final {
     // Add the 'via-obscure' feature to sources flowing through this method.
     AddViaObscureFeature = 0x4,
 
-    // Taint-in-taint-out (taint on arguments flow into the return value and
-    // into `this`).
+    // Taint-in-taint-out (taint on arguments flow into the return value).
     TaintInTaintOut = 0x8,
 
+    // Taint-in-taint-this (taint on arguments flow into `this`).
+    TaintInTaintThis = 0x10,
+
     // Do not join all overrides at virtual call sites.
-    NoJoinVirtualOverrides = 0x10,
+    NoJoinVirtualOverrides = 0x20,
 
     Normal = 0,
   };
@@ -166,6 +168,7 @@ class Model final {
 
   void add_mode(Model::Mode mode);
   void add_taint_in_taint_out();
+  void add_taint_in_taint_this();
 
   void add_generation(AccessPath port, Frame generation);
   void add_generations(AccessPath port, Taint generations);
@@ -226,6 +229,7 @@ class Model final {
   bool skip_analysis() const;
   bool add_via_obscure_feature() const;
   bool is_taint_in_taint_out() const;
+  bool is_taint_in_taint_this() const;
   bool no_join_virtual_overrides() const;
   Modes modes() const {
     return modes_;
@@ -267,11 +271,12 @@ inline Model::Modes operator|(Model::Mode left, Model::Mode right) {
 std::string model_mode_to_string(Model::Mode mode);
 std::optional<Model::Mode> string_to_model_mode(const std::string& mode);
 
-constexpr std::array<Model::Mode, 5> k_all_modes = {
+constexpr std::array<Model::Mode, 6> k_all_modes = {
     Model::Mode::OverrideDefault,
     Model::Mode::SkipAnalysis,
     Model::Mode::AddViaObscureFeature,
     Model::Mode::TaintInTaintOut,
+    Model::Mode::TaintInTaintThis,
     Model::Mode::NoJoinVirtualOverrides};
 
 } // namespace marianatrench

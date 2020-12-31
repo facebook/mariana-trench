@@ -44,6 +44,8 @@ std::string model_mode_to_string(Model::Mode mode) {
       return "add-via-obscure-feature";
     case Model::Mode::TaintInTaintOut:
       return "taint-in-taint-out";
+    case Model::Mode::TaintInTaintThis:
+      return "taint-in-taint-this";
     case Model::Mode::NoJoinVirtualOverrides:
       return "no-join-virtual-overrides";
     default:
@@ -62,6 +64,8 @@ std::optional<Model::Mode> string_to_model_mode(const std::string& mode) {
     return Model::Mode::AddViaObscureFeature;
   } else if (mode == "taint-in-taint-out") {
     return Model::Mode::TaintInTaintOut;
+  } else if (mode == "taint-in-taint-this") {
+    return Model::Mode::TaintInTaintThis;
   } else if (mode == "no-join-virtual-overrides") {
     return Model::Mode::NoJoinVirtualOverrides;
   } else {
@@ -93,6 +97,7 @@ Model::Model(
     if (!code) {
       modes_ |= Model::Mode::SkipAnalysis;
       modes_ |= Model::Mode::TaintInTaintOut;
+      modes_ |= Model::Mode::TaintInTaintThis;
       modes_ |= Model::Mode::AddViaObscureFeature;
     }
 
@@ -105,6 +110,9 @@ Model::Model(
 
   if (modes_.test(Model::Mode::TaintInTaintOut)) {
     add_taint_in_taint_out();
+  }
+  if (modes_.test(Model::Mode::TaintInTaintThis)) {
+    add_taint_in_taint_this();
   }
 
   for (const auto& [port, source] : generations) {
@@ -396,37 +404,48 @@ void Model::add_mode(Model::Mode mode) {
   if (mode == Model::Mode::TaintInTaintOut) {
     add_taint_in_taint_out();
   }
+  if (mode == Model::Mode::TaintInTaintThis) {
+    add_taint_in_taint_this();
+  }
 }
 
 void Model::add_taint_in_taint_out() {
   modes_ |= Model::Mode::TaintInTaintOut;
 
-  if (!method_) {
+  if (!method_ || method_->returns_void()) {
     return;
   }
 
   for (ParameterPosition parameter_position = 0;
        parameter_position < method_->number_of_parameters();
        parameter_position++) {
-    if (!method_->is_static() && parameter_position > 0) {
-      add_propagation(
-          Propagation(
-              /* input */ AccessPath(
-                  Root(Root::Kind::Argument, parameter_position)),
-              /* inferred_features */ FeatureMayAlwaysSet::bottom(),
-              /* user_features */ FeatureSet::bottom()),
-          /* output */
-          AccessPath(Root(Root::Kind::Argument, 0)));
-    }
-    if (!method_->returns_void()) {
-      add_propagation(
-          Propagation(
-              /* input */
-              AccessPath(Root(Root::Kind::Argument, parameter_position)),
-              /* inferred_features */ FeatureMayAlwaysSet::bottom(),
-              /* user_features */ FeatureSet::bottom()),
-          /* output */ AccessPath(Root(Root::Kind::Return)));
-    }
+    add_propagation(
+        Propagation(
+            /* input */
+            AccessPath(Root(Root::Kind::Argument, parameter_position)),
+            /* inferred_features */ FeatureMayAlwaysSet::bottom(),
+            /* user_features */ FeatureSet::bottom()),
+        /* output */ AccessPath(Root(Root::Kind::Return)));
+  }
+}
+
+void Model::add_taint_in_taint_this() {
+  modes_ |= Model::Mode::TaintInTaintThis;
+
+  if (!method_ || method_->is_static()) {
+    return;
+  }
+
+  for (ParameterPosition parameter_position = 1;
+       parameter_position < method_->number_of_parameters();
+       parameter_position++) {
+    add_propagation(
+        Propagation(
+            /* input */
+            AccessPath(Root(Root::Kind::Argument, parameter_position)),
+            /* inferred_features */ FeatureMayAlwaysSet::bottom(),
+            /* user_features */ FeatureSet::bottom()),
+        /* output */ AccessPath(Root(Root::Kind::Argument, 0)));
   }
 }
 
@@ -569,6 +588,10 @@ bool Model::add_via_obscure_feature() const {
 
 bool Model::is_taint_in_taint_out() const {
   return modes_.test(Model::Mode::TaintInTaintOut);
+}
+
+bool Model::is_taint_in_taint_this() const {
+  return modes_.test(Model::Mode::TaintInTaintThis);
 }
 
 bool Model::no_join_virtual_overrides() const {

@@ -36,7 +36,7 @@ TEST_F(ModelTest, ModelConstructor) {
   auto model_with_untracked_constructor = Model(
       /* method */ untracked_constructor,
       context,
-      /* modes */ Model::Mode::TaintInTaintOut);
+      /* modes */ Model::Mode::TaintInTaintOut | Model::Mode::TaintInTaintThis);
   EXPECT_EQ(
       model_with_untracked_constructor.propagations(),
       (PropagationAccessPathTree{
@@ -64,7 +64,7 @@ TEST_F(ModelTest, ModelConstructor) {
   auto model_with_untracked_method_returning_void = Model(
       /* method */ untracked_method_returning_void,
       context,
-      /* modes */ Model::Mode::TaintInTaintOut);
+      /* modes */ Model::Mode::TaintInTaintOut | Model::Mode::TaintInTaintThis);
   EXPECT_EQ(
       model_with_untracked_method_returning_void.propagations(),
       (PropagationAccessPathTree{
@@ -92,7 +92,7 @@ TEST_F(ModelTest, ModelConstructor) {
   auto model_with_untracked_method_returning_data = Model(
       /* method */ untracked_method_returning_data,
       context,
-      /* modes */ Model::Mode::TaintInTaintOut);
+      /* modes */ Model::Mode::TaintInTaintOut | Model::Mode::TaintInTaintThis);
   EXPECT_EQ(
       model_with_untracked_method_returning_data.propagations(),
       (PropagationAccessPathTree{
@@ -136,7 +136,7 @@ TEST_F(ModelTest, ModelConstructor) {
   auto model_with_untracked_static_method = Model(
       /* method */ untracked_static_method,
       context,
-      /* kind */ Model::Mode::TaintInTaintOut);
+      /* modes */ Model::Mode::TaintInTaintOut | Model::Mode::TaintInTaintThis);
   EXPECT_EQ(
       model_with_untracked_static_method.propagations(),
       (PropagationAccessPathTree{
