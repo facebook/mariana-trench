@@ -219,7 +219,7 @@ class CallGraph final {
       const Method* caller,
       const IRInstruction* instruction) const;
 
-  Json::Value to_json() const;
+  Json::Value to_json(bool with_overrides = true) const;
 
  private:
   const Types& types_;

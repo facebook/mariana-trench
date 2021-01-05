@@ -500,7 +500,8 @@ CallGraph::CallGraph(
   if (options.dump_call_graph()) {
     LOG(1, "Writing call graph to `call_graph.json`");
     boost::filesystem::save_string_file(
-        "call_graph.json", Json::FastWriter().write(to_json()));
+        "call_graph.json",
+        Json::FastWriter().write(to_json(/* with_overrides */ false)));
   }
 }
 
@@ -579,7 +580,7 @@ const ArtificialCallees& CallGraph::artificial_callees(
   }
 }
 
-Json::Value CallGraph::to_json() const {
+Json::Value CallGraph::to_json(bool with_overrides) const {
   auto value = Json::Value(Json::objectValue);
   for (const auto& [method, callees] : resolved_base_callees_) {
     auto method_value = Json::Value(Json::objectValue);
@@ -598,8 +599,10 @@ Json::Value CallGraph::to_json() const {
         continue;
       } else if (call_target.is_virtual()) {
         virtual_callees.insert(call_target.resolved_base_callee());
-        for (const auto* override : call_target.overrides()) {
-          virtual_callees.insert(override);
+        if (with_overrides) {
+          for (const auto* override : call_target.overrides()) {
+            virtual_callees.insert(override);
+          }
         }
       } else {
         static_callees.insert(call_target.resolved_base_callee());
