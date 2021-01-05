@@ -222,6 +222,29 @@ IssueSet augment_issue_positions(
   return issues;
 }
 
+ConcurrentMap<const std::string*, std::unordered_set<const Method*>>
+get_issue_files_to_methods(const Context& context) {
+  ConcurrentMap<const std::string*, std::unordered_set<const Method*>>
+      issue_files_to_methods;
+  auto queue = sparta::work_queue<const Method*>([&](const Method* method) {
+    auto* method_position = context.positions->get(method);
+    if (!method_position || !method_position->path()) {
+      return;
+    }
+    const auto* filepath = method_position->path();
+    issue_files_to_methods.update(
+        filepath,
+        [&](const std::string* /*filepath*/,
+            std::unordered_set<const Method*>& methods,
+            bool) { methods.emplace(method); });
+  });
+  for (const auto* method : *context.methods) {
+    queue.add_item(method);
+  }
+  queue.run_all();
+  return issue_files_to_methods;
+}
+
 bool is_valid_generation(const Frame& generation, const Registry& registry) {
   if (generation.is_leaf()) {
     return true;
@@ -327,20 +350,12 @@ void Registry::augment_positions() {
   auto current_path = boost::filesystem::current_path();
   boost::filesystem::current_path(context_.options->source_root_directory());
 
-  auto queue = sparta::work_queue<const Method*>(
-      [&](const Method* method) {
-        const auto old_model = models_.at(method);
-        auto* method_position = context_.positions->get(method);
-        if (!method_position || !method_position->path()) {
-          LOG(3,
-              "Method {} does not have a position or a path recorded",
-              method->get_name());
-          return;
-        }
-        const auto& filepath = *(method_position->path());
-        std::ifstream stream(filepath);
+  auto issue_files_to_methods = get_issue_files_to_methods(context_);
+  auto file_queue =
+      sparta::work_queue<const std::string*>([&](const std::string* filepath) {
+        std::ifstream stream(*filepath);
         if (stream.bad()) {
-          WARNING(1, "File {} was not found.", filepath);
+          WARNING(1, "File {} was not found.", *filepath);
           return;
         }
         std::vector<std::string> lines;
@@ -348,24 +363,25 @@ void Registry::augment_positions() {
         while (std::getline(stream, line)) {
           lines.push_back(line);
         }
+        for (const auto* method : issue_files_to_methods.get(filepath, {})) {
+          const auto old_model = models_.at(method);
+          auto new_model = old_model;
+          new_model.set_issues(
+              augment_issue_positions(old_model.issues(), lines, context_));
+          new_model.set_sinks(
+              augment_taint_tree_positions(old_model.sinks(), lines, context_));
+          new_model.set_generations(augment_taint_tree_positions(
+              old_model.generations(), lines, context_));
+          new_model.set_parameter_sources(augment_taint_tree_positions(
+              old_model.parameter_sources(), lines, context_));
+          models_.insert_or_assign(std::pair(method, new_model));
+        }
+      });
 
-        auto new_model = old_model;
-        new_model.set_issues(
-            augment_issue_positions(old_model.issues(), lines, context_));
-        new_model.set_sinks(
-            augment_taint_tree_positions(old_model.sinks(), lines, context_));
-        new_model.set_generations(augment_taint_tree_positions(
-            old_model.generations(), lines, context_));
-        new_model.set_parameter_sources(augment_taint_tree_positions(
-            old_model.parameter_sources(), lines, context_));
-        models_.insert_or_assign(std::pair(method, new_model));
-      },
-      sparta::parallel::default_num_threads());
-
-  for (const auto& [method, _] : models_) {
-    queue.add_item(method);
+  for (const auto& [filepath, _] : issue_files_to_methods) {
+    file_queue.add_item(filepath);
   }
-  queue.run_all();
+  file_queue.run_all();
 
   boost::filesystem::current_path(current_path);
 }
