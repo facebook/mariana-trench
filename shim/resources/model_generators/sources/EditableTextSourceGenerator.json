@@ -60,7 +60,7 @@
             },
             {
               "constraint": "signature",
-              "pattern": "Lcom/moblica/common/xmob/ui/MInputBox;\\.get(MarkupText|Editable|GenericEditable):"
+              "pattern": "Lcom/moblica/common/xmob/ui/client/MInputBox;\\.get(MarkupText|Editable|GenericEditable):.*"
             }
           ]
         }
