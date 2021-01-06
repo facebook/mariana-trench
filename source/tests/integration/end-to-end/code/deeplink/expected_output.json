@@ -815,10 +815,8 @@
    "sinks" : [
       {
          "call_position" : {
-            "end" : 19,
             "line" : 74,
-            "path" : "IntentHandlerUtil.java",
-            "start" : 11
+            "path" : "IntentHandlerUtil.java"
          },
          "callee" : "Lcom/facebook/marianatrench/integrationtests/IntentHandlerUtil;.handleUri:(Landroid/content/Context;Ljava/lang/String;Landroid/os/Bundle;Landroid/content/Intent;)Z",
          "callee_port" : "Argument(2)",

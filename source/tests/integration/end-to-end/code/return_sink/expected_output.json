@@ -174,10 +174,8 @@
    "generations" : [
       {
          "call_position" : {
-            "end" : 34,
             "line" : 51,
-            "path" : "Flow.java",
-            "start" : 29
+            "path" : "Flow.java"
          },
          "callee" : "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;",
          "callee_port" : "Return",

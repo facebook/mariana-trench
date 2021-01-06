@@ -137,6 +137,8 @@ void Registry::join_with(const Registry& other) {
 
 namespace {
 
+enum class FrameType { Source, Sink };
+
 Frame augment_frame_position(
     const Frame& frame,
     const std::vector<std::string>& lines,
@@ -222,18 +224,103 @@ IssueSet augment_issue_positions(
   return issues;
 }
 
+/**
+ * Run a fixpoint to go through all the sources(or sinks) involved in issues to
+ * add all the relevant files and methods to the mapping
+ * `issue_files_to_methods`.
+ */
+void get_frames_files_to_methods(
+    ConcurrentMap<const std::string*, std::unordered_set<const Method*>>&
+        issue_files_to_methods,
+    const ConcurrentSet<const Frame*>& frames,
+    const Context& context,
+    const Registry& registry,
+    FrameType frame_type) {
+  auto frames_to_check = std::make_unique<ConcurrentSet<const Frame*>>(frames);
+  auto seen_frames = std::make_unique<ConcurrentSet<const Frame*>>(frames);
+
+  while (frames_to_check->size() != 0) {
+    auto new_frames_to_check = std::make_unique<ConcurrentSet<const Frame*>>();
+    auto queue = sparta::work_queue<const Frame*>([&](const Frame* frame) {
+      const auto* callee = frame->callee();
+      if (!callee) {
+        return;
+      }
+      auto callee_model = registry.get(callee);
+      const auto& callee_port = frame->callee_port();
+      const auto* method_position = context.positions->get(callee);
+      if (method_position && method_position->path()) {
+        issue_files_to_methods.update(
+            method_position->path(),
+            [&](const std::string* /*filepath*/,
+                std::unordered_set<const Method*>& methods,
+                bool) { methods.emplace(callee); });
+      }
+
+      Taint taint;
+      if (frame_type == FrameType::Source) {
+        taint = callee_model.generations().raw_read(callee_port).root();
+      } else if (frame_type == FrameType::Sink) {
+        taint = callee_model.sinks().raw_read(callee_port).root();
+      }
+      for (const auto& frame_set : taint) {
+        for (const auto& callee_frame : frame_set) {
+          if (callee_frame.is_leaf() || !seen_frames->emplace(&callee_frame)) {
+            continue;
+          }
+          new_frames_to_check->emplace(&callee_frame);
+        }
+      }
+    });
+    for (const auto& frame : *frames_to_check) {
+      queue.add_item(frame);
+    }
+    queue.run_all();
+    frames_to_check = std::move(new_frames_to_check);
+  }
+}
+
+/**
+ * Returns a map of files involved in issues to the set of all the methods
+ * defined in that file that are involved in issues. This way, when finding
+ * highlights, we can open each file only once and only consider the
+ * relevant methods in that file.
+ */
 ConcurrentMap<const std::string*, std::unordered_set<const Method*>>
-get_issue_files_to_methods(const Context& context) {
+get_issue_files_to_methods(const Context& context, const Registry& registry) {
   ConcurrentMap<const std::string*, std::unordered_set<const Method*>>
       issue_files_to_methods;
+  ConcurrentSet<const Frame*> sources;
+  ConcurrentSet<const Frame*> sinks;
+
   auto queue = sparta::work_queue<const Method*>([&](const Method* method) {
+    auto model = registry.get(method);
+    if (model.issues().size() == 0) {
+      return;
+    }
+    for (const auto& issue : model.issues()) {
+      for (const auto& sink_frame_set : issue.sinks()) {
+        for (const auto& sink : sink_frame_set) {
+          if (!sink.is_leaf()) {
+            sinks.emplace(&sink);
+          }
+        }
+      }
+
+      for (const auto& source_frame_set : issue.sources()) {
+        for (const auto& source : source_frame_set) {
+          if (!source.is_leaf()) {
+            sources.emplace(&source);
+          }
+        }
+      }
+    }
     auto* method_position = context.positions->get(method);
     if (!method_position || !method_position->path()) {
       return;
     }
-    const auto* filepath = method_position->path();
     issue_files_to_methods.update(
-        filepath,
+        method_position->path(),
         [&](const std::string* /*filepath*/,
             std::unordered_set<const Method*>& methods,
             bool) { methods.emplace(method); });
@@ -242,6 +329,11 @@ get_issue_files_to_methods(const Context& context) {
     queue.add_item(method);
   }
   queue.run_all();
+
+  get_frames_files_to_methods(
+      issue_files_to_methods, sources, context, registry, FrameType::Source);
+  get_frames_files_to_methods(
+      issue_files_to_methods, sinks, context, registry, FrameType::Sink);
   return issue_files_to_methods;
 }
 
@@ -350,7 +442,7 @@ void Registry::augment_positions() {
   auto current_path = boost::filesystem::current_path();
   boost::filesystem::current_path(context_.options->source_root_directory());
 
-  auto issue_files_to_methods = get_issue_files_to_methods(context_);
+  auto issue_files_to_methods = get_issue_files_to_methods(context_, *this);
   auto file_queue =
       sparta::work_queue<const std::string*>([&](const std::string* filepath) {
         std::ifstream stream(*filepath);
