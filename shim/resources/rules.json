@@ -511,5 +511,17 @@
       "PackageInstaller",
       "HTMLParser"
     ]
+  },
+  {
+    "name": "User data in SQLite database flows into logger",
+    "code": 5029,
+    "description": "User data from SQLite database flows into logger.",
+    "sources": [
+      "DatabaseCursor"
+    ],
+    "sinks": [
+      "Logging",
+      "Logcat"
+    ]
   }
 ]

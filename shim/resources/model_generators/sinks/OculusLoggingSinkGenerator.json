@@ -1,0 +1,35 @@
+{
+  "model_generators": [
+    {
+      "find": "methods",
+      "where": [
+        {
+          "constraint": "any_of",
+          "inners": [
+            {
+              "constraint": "signature",
+              "pattern": "Lcom/oculus/logging/OculusLogger;\\.reportEvent.*"
+            },
+            {
+              "constraint": "signature",
+              "pattern": "Lcom/oculus/os/AnalyticsEvent;\\.setExtra.*"
+            }
+          ]
+        }
+      ],
+      "model": {
+        "for_all_parameters": [
+          {
+            "variable": "x",
+            "sinks": [
+              {
+                "kind": "Logging",
+                "port": "Argument(x)"
+              }
+            ]
+          }
+        ]
+      }
+    }
+  ]
+}

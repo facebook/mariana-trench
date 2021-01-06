@@ -53,6 +53,10 @@
   },
   {
     "kind": "json",
+    "path": "model_generators/sources/DatabaseCursorSourceGenerator.json"
+  },
+  {
+    "kind": "json",
     "path": "model_generators/sources/ClipboardSourceGenerator.json"
   },
   {
@@ -238,6 +242,10 @@
   {
     "kind": "json",
     "path": "model_generators/sanitizers/SlowMethodGenerator.json"
+  },
+  {
+    "kind": "json",
+    "path": "model_generators/sinks/OculusLoggingSinkGenerator.json"
   },
   {
     "kind": "json",
