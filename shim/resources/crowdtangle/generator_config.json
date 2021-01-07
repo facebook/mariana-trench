@@ -1,0 +1,66 @@
+[
+  {
+    "kind": "json",
+    "path": "../model_generators/sinks/CodeExecutionSinkGenerator.json"
+  },
+  {
+    "kind": "json",
+    "path": "../model_generators/propagations/DataCastFeatureGenerator.json"
+  },
+  {
+    "kind": "json",
+    "path": "../model_generators/sanitizers/InputStreamGenerator.json"
+  },
+  {
+    "kind": "json",
+    "path": "../model_generators/sinks/DeserializationGenerator.json"
+  },
+  {
+    "kind": "json",
+    "path": "../model_generators/sinks/DynamicCodeLoadingSinkGenerator.json"
+  },
+  {
+    "kind": "json",
+    "path": "../model_generators/sinks/FBLiteLoggerSinkGenerator.json"
+  },
+  {
+    "kind": "json",
+    "path": "../model_generators/sinks/FileExitNodeGenerator.json"
+  },
+  {
+    "kind": "json",
+    "path": "../model_generators/sinks/FileSinkGenerator.json"
+  },
+  {
+    "kind": "cpp",
+    "name": "no_join_overrides_propagations"
+  },
+  {
+    "kind": "json",
+    "path": "../model_generators/sanitizers/JsonJacksonGenerator.json"
+  },
+  {
+    "kind": "json",
+    "path": "../model_generators/sanitizers/KnownObscureModelsGenerator.json"
+  },
+  {
+    "kind": "json",
+    "path": "../model_generators/sinks/NetworkRequestSinkGenerator.json"
+  },
+  {
+    "kind": "json",
+    "path": "../model_generators/sanitizers/SlowMethodGenerator.json"
+  },
+  {
+    "kind": "json",
+    "path": "../model_generators/sources/SensitivePasswordSourceGenerator.json"
+  },
+  {
+    "kind": "json",
+    "path": "../model_generators/sources/SensitiveAccessTokenGenerator.json"
+  },
+  {
+    "kind": "json",
+    "path": "../model_generators/sanitizers/UnitySanitizerGenerator.json"
+  }
+]

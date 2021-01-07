@@ -1,0 +1,85 @@
+[
+  {
+    "name": "User input flows into Logger",
+    "code": 2,
+    "description": "Values from user-controlled source may eventually flow into a logger sink",
+    "sources": [
+      "Demo"
+    ],
+    "sinks": [
+      "Logging"
+    ]
+  },
+  {
+    "name": "Sensitive data flows into Logger",
+    "code": 3,
+    "description": "Values from a sensitive data source may eventually flow into a logger sink",
+    "sources": [
+      "AccessToken",
+      "Password"
+    ],
+    "sinks": [
+      "Logging"
+    ]
+  },
+  {
+    "name": "User input flows into Demo",
+    "code": 6,
+    "description": "Values from user-controlled source may eventually flow into sink Demo",
+    "sources": [
+      "Demo"
+    ],
+    "sinks": [
+      "Demo"
+    ]
+  },
+  {
+    "name": "User input flows into network request",
+    "code": 10,
+    "description": "Values from user-controlled source may eventually flow into sink network request",
+    "sources": [
+      "Demo"
+    ],
+    "sinks": [
+      "NetworkRequest"
+    ]
+  },
+  {
+    "name": "User input flows into code execution (RCE)",
+    "code": 11,
+    "description": "Values from user-controlled source may eventually flow into code execution",
+    "sources": [
+      "Demo"
+    ],
+    "sinks": [
+      "CodeExecution",
+      "Deserialization",
+      "DynamicCodeLoading",
+      "Reflection"
+    ]
+  },
+  {
+    "name": "Sensitive data flows into network request",
+    "code": 16,
+    "description": "Values from a sensitive data source may eventually flow into network request",
+    "sources": [
+      "AccessToken",
+      "Password"
+    ],
+    "sinks": [
+      "NetworkRequest"
+    ]
+  },
+  {
+    "name": "User input flows into file resolver",
+    "code": 23,
+    "description": "Values from user-controlled source may eventually flow into sink file resolver",
+    "sources": [
+      "Demo"
+    ],
+    "sinks": [
+      "FileResolver",
+      "InputStream"
+    ]
+  }
+]

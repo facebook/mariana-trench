@@ -69,6 +69,22 @@
             {
               "constraint": "signature",
               "pattern": "Lorg/apache/solr/common/util/XML;\\.write.*"
+            },
+            {
+              "constraint": "signature",
+              "pattern": "Lorg/elasticsearch/common/lucene/.*"
+            },
+            {
+              "constraint": "signature",
+              "pattern": "Lorg/apache/lucene/.*"
+            },
+            {
+              "constraint": "signature",
+              "pattern": "Lcom/amazonaws/.*\\.unmarshall:.*"
+            },
+            {
+              "constraint": "signature",
+              "pattern": ".*MethodInterceptorGenerator;\\.generateStatic.*"
             }
           ]
         }
