@@ -190,6 +190,7 @@ def _build_apk_from_jar(jar_path: pathlib.Path) -> pathlib.Path:
     output = subprocess.run(
         [
             "/opt/android/sdk_D23134735/build-tools/29.0.2/d8",
+            "-JXmx8G",
             jar_path,
             "--output",
             dex_file,
