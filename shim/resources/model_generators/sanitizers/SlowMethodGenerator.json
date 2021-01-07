@@ -12,6 +12,10 @@
             },
             {
               "constraint": "signature",
+              "pattern": ".*\\.read:\\(Lcom/facebook/thrift/protocol/TProtocol;\\)V"
+            },
+            {
+              "constraint": "signature",
               "pattern": ".*\\$Serializer;\\.serialize:.*"
             },
             {
@@ -45,6 +49,26 @@
             {
               "constraint": "signature",
               "pattern": "Lcom/facebook/common/fragmentfactory/FragmentFactoryMapImpl;.loadNecessaryModule:\\(I\\)V"
+            },
+            {
+              "constraint": "signature",
+              "pattern": "Lorg/eclipse/.*;\\.handle:\\(Ljava/lang/String;Lorg/eclipse/jetty/server/Request;Ljavax/servlet/http/HttpServletRequest;Ljavax/servlet/http/HttpServletResponse;\\)V"
+            },
+            {
+              "constraint": "signature",
+              "pattern": "Lorg/apache/commons/lang/StringEscapeUtils;\\.escape.*"
+            },
+            {
+              "constraint": "signature",
+              "pattern": "Lorg/apache/commons/lang/Entities;\\.doUnescape.*"
+            },
+            {
+              "constraint": "signature",
+              "pattern": "Lnet/bytebuddy/agent/builder/AgentBuilder.*"
+            },
+            {
+              "constraint": "signature",
+              "pattern": "Lorg/apache/solr/common/util/XML;\\.write.*"
             }
           ]
         }

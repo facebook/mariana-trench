@@ -1,0 +1,46 @@
+[
+  {
+    "kind": "json",
+    "path": "../model_generators/propagations/DataCastFeatureGenerator.json"
+  },
+  {
+    "kind": "json",
+    "path": "../model_generators/sinks/FBLiteLoggerSinkGenerator.json"
+  },
+  {
+    "kind": "json",
+    "path": "../model_generators/sinks/LoggerBaseSinkGenerator.json"
+  },
+  {
+    "kind": "cpp",
+    "name": "no_join_overrides_propagations"
+  },
+  {
+    "kind": "json",
+    "path": "../model_generators/sanitizers/JsonJacksonGenerator.json"
+  },
+  {
+    "kind": "json",
+    "path": "../model_generators/sanitizers/KnownObscureModelsGenerator.json"
+  },
+  {
+    "kind": "json",
+    "path": "model_generators/MQTTSensitiveDataGenerator.json"
+  },
+  {
+    "kind": "json",
+    "path": "../model_generators/sanitizers/SlowMethodGenerator.json"
+  },
+  {
+    "kind": "json",
+    "path": "../model_generators/sources/SensitivePasswordSourceGenerator.json"
+  },
+  {
+    "kind": "json",
+    "path": "../model_generators/sources/SensitiveAccessTokenGenerator.json"
+  },
+  {
+    "kind": "json",
+    "path": "../model_generators/sanitizers/UnitySanitizerGenerator.json"
+  }
+]
