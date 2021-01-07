@@ -39,7 +39,7 @@ std::vector<Model> NoJoinOverridesGenerator::visit_method(
        boost::starts_with(class_name, "Ljava/lang/") ||
        boost::starts_with(class_name, "Lkotlin"))) {
     auto model = Model(method, context_);
-    model.add_mode(Model::Mode::NoJoinVirtualOverrides);
+    model.add_mode(Model::Mode::NoJoinVirtualOverrides, context_);
     return {model};
   }
   return {};

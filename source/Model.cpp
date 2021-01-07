@@ -12,6 +12,7 @@
 #include <mariana-trench/Assert.h>
 #include <mariana-trench/ClassProperties.h>
 #include <mariana-trench/Compiler.h>
+#include <mariana-trench/Features.h>
 #include <mariana-trench/Heuristics.h>
 #include <mariana-trench/JsonValidation.h>
 #include <mariana-trench/Log.h>
@@ -109,10 +110,10 @@ Model::Model(
   }
 
   if (modes_.test(Model::Mode::TaintInTaintOut)) {
-    add_taint_in_taint_out();
+    add_taint_in_taint_out(context);
   }
   if (modes_.test(Model::Mode::TaintInTaintThis)) {
-    add_taint_in_taint_this();
+    add_taint_in_taint_this(context);
   }
 
   for (const auto& [port, source] : generations) {
@@ -396,24 +397,34 @@ void Model::check_inline_as_consistency(
   check_port_consistency(*access_path);
 }
 
-void Model::add_mode(Model::Mode mode) {
+void Model::add_mode(Model::Mode mode, Context& context) {
   mt_assert(mode != Model::Mode::OverrideDefault);
 
   modes_ |= mode;
 
-  if (mode == Model::Mode::TaintInTaintOut) {
-    add_taint_in_taint_out();
+  if (mode == Model::Mode::TaintInTaintOut ||
+      (mode == Model::Mode::AddViaObscureFeature &&
+       modes_.test(Model::Mode::TaintInTaintOut))) {
+    add_taint_in_taint_out(context);
   }
-  if (mode == Model::Mode::TaintInTaintThis) {
-    add_taint_in_taint_this();
+  if (mode == Model::Mode::TaintInTaintThis ||
+      (mode == Model::Mode::AddViaObscureFeature &&
+       modes_.test(Model::Mode::TaintInTaintThis))) {
+    add_taint_in_taint_this(context);
   }
 }
 
-void Model::add_taint_in_taint_out() {
+void Model::add_taint_in_taint_out(Context& context) {
   modes_ |= Model::Mode::TaintInTaintOut;
 
   if (!method_ || method_->returns_void()) {
     return;
+  }
+
+  auto user_features = FeatureSet::bottom();
+  if (modes_.test(Model::Mode::AddViaObscureFeature)) {
+    user_features.add(context.features->get("via-obscure"));
+    user_features.add(context.features->get("via-obscure-taint-in-taint-out"));
   }
 
   for (ParameterPosition parameter_position = 0;
@@ -424,16 +435,22 @@ void Model::add_taint_in_taint_out() {
             /* input */
             AccessPath(Root(Root::Kind::Argument, parameter_position)),
             /* inferred_features */ FeatureMayAlwaysSet::bottom(),
-            /* user_features */ FeatureSet::bottom()),
+            user_features),
         /* output */ AccessPath(Root(Root::Kind::Return)));
   }
 }
 
-void Model::add_taint_in_taint_this() {
+void Model::add_taint_in_taint_this(Context& context) {
   modes_ |= Model::Mode::TaintInTaintThis;
 
   if (!method_ || method_->is_static()) {
     return;
+  }
+
+  auto user_features = FeatureSet::bottom();
+  if (modes_.test(Model::Mode::AddViaObscureFeature)) {
+    user_features.add(context.features->get("via-obscure"));
+    user_features.add(context.features->get("via-obscure-taint-in-taint-this"));
   }
 
   for (ParameterPosition parameter_position = 1;
@@ -444,7 +461,7 @@ void Model::add_taint_in_taint_this() {
             /* input */
             AccessPath(Root(Root::Kind::Argument, parameter_position)),
             /* inferred_features */ FeatureMayAlwaysSet::bottom(),
-            /* user_features */ FeatureSet::bottom()),
+            user_features),
         /* output */ AccessPath(Root(Root::Kind::Argument, 0)));
   }
 }

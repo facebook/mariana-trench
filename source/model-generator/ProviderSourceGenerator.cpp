@@ -33,7 +33,7 @@ std::unordered_set<std::string> provider_regex_strings = {
 
 Model source_all_parameters(const Method* method, Context& context) {
   auto model = Model(method, context);
-  model.add_mode(Model::Mode::NoJoinVirtualOverrides);
+  model.add_mode(Model::Mode::NoJoinVirtualOverrides, context);
   for (const auto& argument : generator::get_argument_types(method)) {
     model.add_parameter_source(
         AccessPath(Root(Root::Kind::Argument, argument.first)),

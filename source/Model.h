@@ -166,9 +166,9 @@ class Model final {
   void check_inline_as_consistency(
       const AccessPathConstantDomain& inline_as) const;
 
-  void add_mode(Model::Mode mode);
-  void add_taint_in_taint_out();
-  void add_taint_in_taint_this();
+  void add_mode(Model::Mode mode, Context& context);
+  void add_taint_in_taint_out(Context& context);
+  void add_taint_in_taint_this(Context& context);
 
   void add_generation(AccessPath port, Frame generation);
   void add_generations(AccessPath port, Taint generations);

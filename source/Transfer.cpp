@@ -221,9 +221,6 @@ void apply_propagations(
        callee.model.propagations().elements()) {
     auto output_features = FeatureMayAlwaysSet::make_always(
         callee.model.add_features_to_arguments(output.root()));
-    if (callee.model.add_via_obscure_feature()) {
-      output_features.add_always(context->features.get("via-obscure"));
-    }
 
     for (const auto& propagation : propagations) {
       LOG_OR_DUMP(

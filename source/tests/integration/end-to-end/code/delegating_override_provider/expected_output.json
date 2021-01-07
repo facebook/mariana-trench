@@ -2,13 +2,13 @@
 {
    "generations" : [
       {
-         "always_features" : [ "via-obscure" ],
+         "always_features" : [ "via-obscure", "via-obscure-taint-in-taint-out" ],
          "call_position" : {
             "line" : 17,
             "path" : "AbstractContentProvider.java"
          },
          "callee_port" : "Leaf",
-         "caller_port" : "Argument(0)",
+         "caller_port" : "Return",
          "kind" : "Source",
          "local_positions" : [
             {
@@ -20,13 +20,13 @@
          ]
       },
       {
-         "always_features" : [ "via-obscure" ],
+         "always_features" : [ "via-obscure", "via-obscure-taint-in-taint-this" ],
          "call_position" : {
             "line" : 17,
             "path" : "AbstractContentProvider.java"
          },
          "callee_port" : "Leaf",
-         "caller_port" : "Return",
+         "caller_port" : "Argument(0)",
          "kind" : "Source",
          "local_positions" : [
             {
@@ -94,59 +94,59 @@
    },
    "propagation" : [
       {
-         "always_features" : [ "via-obscure" ],
+         "always_features" : [ "via-obscure", "via-obscure-taint-in-taint-out" ],
          "input" : "Argument(0)",
          "output" : "Return"
       },
       {
-         "always_features" : [ "via-obscure" ],
-         "input" : "Argument(1)",
-         "output" : "Argument(0)"
-      },
-      {
-         "always_features" : [ "via-obscure" ],
+         "always_features" : [ "via-obscure", "via-obscure-taint-in-taint-out" ],
          "input" : "Argument(1)",
          "output" : "Return"
       },
       {
-         "always_features" : [ "via-obscure" ],
-         "input" : "Argument(2)",
-         "output" : "Argument(0)"
-      },
-      {
-         "always_features" : [ "via-obscure" ],
+         "always_features" : [ "via-obscure", "via-obscure-taint-in-taint-out" ],
          "input" : "Argument(2)",
          "output" : "Return"
       },
       {
-         "always_features" : [ "via-obscure" ],
-         "input" : "Argument(3)",
-         "output" : "Argument(0)"
-      },
-      {
-         "always_features" : [ "via-obscure" ],
+         "always_features" : [ "via-obscure", "via-obscure-taint-in-taint-out" ],
          "input" : "Argument(3)",
          "output" : "Return"
       },
       {
-         "always_features" : [ "via-obscure" ],
-         "input" : "Argument(4)",
-         "output" : "Argument(0)"
-      },
-      {
-         "always_features" : [ "via-obscure" ],
+         "always_features" : [ "via-obscure", "via-obscure-taint-in-taint-out" ],
          "input" : "Argument(4)",
          "output" : "Return"
       },
       {
-         "always_features" : [ "via-obscure" ],
+         "always_features" : [ "via-obscure", "via-obscure-taint-in-taint-out" ],
          "input" : "Argument(5)",
+         "output" : "Return"
+      },
+      {
+         "always_features" : [ "via-obscure", "via-obscure-taint-in-taint-this" ],
+         "input" : "Argument(1)",
          "output" : "Argument(0)"
       },
       {
-         "always_features" : [ "via-obscure" ],
+         "always_features" : [ "via-obscure", "via-obscure-taint-in-taint-this" ],
+         "input" : "Argument(2)",
+         "output" : "Argument(0)"
+      },
+      {
+         "always_features" : [ "via-obscure", "via-obscure-taint-in-taint-this" ],
+         "input" : "Argument(3)",
+         "output" : "Argument(0)"
+      },
+      {
+         "always_features" : [ "via-obscure", "via-obscure-taint-in-taint-this" ],
+         "input" : "Argument(4)",
+         "output" : "Argument(0)"
+      },
+      {
+         "always_features" : [ "via-obscure", "via-obscure-taint-in-taint-this" ],
          "input" : "Argument(5)",
-         "output" : "Return"
+         "output" : "Argument(0)"
       }
    ],
    "sinks" : [
@@ -405,6 +405,7 @@
    "position" : {},
    "propagation" : [
       {
+         "always_features" : [ "via-obscure", "via-obscure-taint-in-taint-this" ],
          "input" : "Argument(1)",
          "output" : "Argument(0)"
       }
@@ -698,48 +699,59 @@
    },
    "propagation" : [
       {
+         "always_features" : [ "via-obscure", "via-obscure-taint-in-taint-out" ],
          "input" : "Argument(0)",
          "output" : "Return"
       },
       {
-         "input" : "Argument(1)",
-         "output" : "Argument(0)"
-      },
-      {
+         "always_features" : [ "via-obscure", "via-obscure-taint-in-taint-out" ],
          "input" : "Argument(1)",
          "output" : "Return"
       },
       {
-         "input" : "Argument(2)",
-         "output" : "Argument(0)"
-      },
-      {
+         "always_features" : [ "via-obscure", "via-obscure-taint-in-taint-out" ],
          "input" : "Argument(2)",
          "output" : "Return"
       },
       {
-         "input" : "Argument(3)",
-         "output" : "Argument(0)"
-      },
-      {
+         "always_features" : [ "via-obscure", "via-obscure-taint-in-taint-out" ],
          "input" : "Argument(3)",
          "output" : "Return"
       },
       {
-         "input" : "Argument(4)",
-         "output" : "Argument(0)"
-      },
-      {
+         "always_features" : [ "via-obscure", "via-obscure-taint-in-taint-out" ],
          "input" : "Argument(4)",
          "output" : "Return"
       },
       {
+         "always_features" : [ "via-obscure", "via-obscure-taint-in-taint-out" ],
          "input" : "Argument(5)",
+         "output" : "Return"
+      },
+      {
+         "always_features" : [ "via-obscure", "via-obscure-taint-in-taint-this" ],
+         "input" : "Argument(1)",
          "output" : "Argument(0)"
       },
       {
+         "always_features" : [ "via-obscure", "via-obscure-taint-in-taint-this" ],
+         "input" : "Argument(2)",
+         "output" : "Argument(0)"
+      },
+      {
+         "always_features" : [ "via-obscure", "via-obscure-taint-in-taint-this" ],
+         "input" : "Argument(3)",
+         "output" : "Argument(0)"
+      },
+      {
+         "always_features" : [ "via-obscure", "via-obscure-taint-in-taint-this" ],
+         "input" : "Argument(4)",
+         "output" : "Argument(0)"
+      },
+      {
+         "always_features" : [ "via-obscure", "via-obscure-taint-in-taint-this" ],
          "input" : "Argument(5)",
-         "output" : "Return"
+         "output" : "Argument(0)"
       }
    ]
 }
@@ -1057,24 +1069,29 @@
    "position" : {},
    "propagation" : [
       {
+         "always_features" : [ "via-obscure", "via-obscure-taint-in-taint-out" ],
          "input" : "Argument(0)",
          "output" : "Return"
       },
       {
-         "input" : "Argument(1)",
-         "output" : "Argument(0)"
-      },
-      {
+         "always_features" : [ "via-obscure", "via-obscure-taint-in-taint-out" ],
          "input" : "Argument(1)",
          "output" : "Return"
       },
       {
+         "always_features" : [ "via-obscure", "via-obscure-taint-in-taint-out" ],
          "input" : "Argument(2)",
+         "output" : "Return"
+      },
+      {
+         "always_features" : [ "via-obscure", "via-obscure-taint-in-taint-this" ],
+         "input" : "Argument(1)",
          "output" : "Argument(0)"
       },
       {
+         "always_features" : [ "via-obscure", "via-obscure-taint-in-taint-this" ],
          "input" : "Argument(2)",
-         "output" : "Return"
+         "output" : "Argument(0)"
       }
    ]
 }

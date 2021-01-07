@@ -48,7 +48,7 @@ TEST_F(DisallowSensitiveSinkGeneratorTest, SinkForDisallowSensitive) {
   auto* method = context.methods->get(dex_method);
 
   auto model = Model(method, context);
-  model.add_mode(Model::Mode::SkipAnalysis);
+  model.add_mode(Model::Mode::SkipAnalysis, context);
   model.add_sink(
       AccessPath(Root(Root::Kind::Argument, 1)),
       generator::sink(

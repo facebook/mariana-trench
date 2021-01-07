@@ -40,8 +40,8 @@ TEST_F(IntentLaunchingSinkGeneratorTest, SinkForContext) {
   auto* method = context.methods->get(dex_method);
 
   auto model = Model(method, context);
-  model.add_mode(Model::Mode::NoJoinVirtualOverrides);
-  model.add_mode(Model::Mode::SkipAnalysis);
+  model.add_mode(Model::Mode::NoJoinVirtualOverrides, context);
+  model.add_mode(Model::Mode::SkipAnalysis, context);
   model.add_sink(
       AccessPath(Root(Root::Kind::Argument, 1)),
       generator::sink(
@@ -74,8 +74,8 @@ TEST_F(IntentLaunchingSinkGeneratorTest, SinkForStaticMethod) {
   auto* method = context.methods->get(dex_method);
 
   auto model = Model(method, context);
-  model.add_mode(Model::Mode::NoJoinVirtualOverrides);
-  model.add_mode(Model::Mode::SkipAnalysis);
+  model.add_mode(Model::Mode::NoJoinVirtualOverrides, context);
+  model.add_mode(Model::Mode::SkipAnalysis, context);
   model.add_sink(
       AccessPath(Root(Root::Kind::Argument, 0)),
       generator::sink(
@@ -108,8 +108,8 @@ TEST_F(IntentLaunchingSinkGeneratorTest, SinkForActivity) {
   auto* method = context.methods->get(dex_method);
 
   auto model = Model(method, context);
-  model.add_mode(Model::Mode::NoJoinVirtualOverrides);
-  model.add_mode(Model::Mode::SkipAnalysis);
+  model.add_mode(Model::Mode::NoJoinVirtualOverrides, context);
+  model.add_mode(Model::Mode::SkipAnalysis, context);
   model.add_sink(
       AccessPath(Root(Root::Kind::Argument, 4)),
       generator::sink(
@@ -142,8 +142,8 @@ TEST_F(IntentLaunchingSinkGeneratorTest, SinkForFragment) {
   auto* method = context.methods->get(dex_method);
 
   auto model = Model(method, context);
-  model.add_mode(Model::Mode::NoJoinVirtualOverrides);
-  model.add_mode(Model::Mode::SkipAnalysis);
+  model.add_mode(Model::Mode::NoJoinVirtualOverrides, context);
+  model.add_mode(Model::Mode::SkipAnalysis, context);
   model.add_sink(
       AccessPath(Root(Root::Kind::Argument, 3)),
       generator::sink(
@@ -176,8 +176,8 @@ TEST_F(IntentLaunchingSinkGeneratorTest, SinkForIntentLauncher) {
   auto* method = context.methods->get(dex_method);
 
   auto model = Model(method, context);
-  model.add_mode(Model::Mode::NoJoinVirtualOverrides);
-  model.add_mode(Model::Mode::SkipAnalysis);
+  model.add_mode(Model::Mode::NoJoinVirtualOverrides, context);
+  model.add_mode(Model::Mode::SkipAnalysis, context);
   model.add_sink(
       AccessPath(Root(Root::Kind::Argument, 1)),
       generator::sink(
@@ -210,8 +210,8 @@ TEST_F(IntentLaunchingSinkGeneratorTest, SinkForSecureContextHelper) {
   auto* method = context.methods->get(dex_method);
 
   auto model = Model(method, context);
-  model.add_mode(Model::Mode::NoJoinVirtualOverrides);
-  model.add_mode(Model::Mode::SkipAnalysis);
+  model.add_mode(Model::Mode::NoJoinVirtualOverrides, context);
+  model.add_mode(Model::Mode::SkipAnalysis, context);
   model.add_sink(
       AccessPath(Root(Root::Kind::Argument, 1)),
       generator::sink(
@@ -244,8 +244,8 @@ TEST_F(IntentLaunchingSinkGeneratorTest, SinkForAndroidxFragment) {
   auto* method = context.methods->get(dex_method);
 
   auto model = Model(method, context);
-  model.add_mode(Model::Mode::NoJoinVirtualOverrides);
-  model.add_mode(Model::Mode::SkipAnalysis);
+  model.add_mode(Model::Mode::NoJoinVirtualOverrides, context);
+  model.add_mode(Model::Mode::SkipAnalysis, context);
   model.add_sink(
       AccessPath(Root(Root::Kind::Argument, 1)),
       generator::sink(
@@ -278,7 +278,7 @@ TEST_F(IntentLaunchingSinkGeneratorTest, SinkForNativeBroadcast) {
   auto* method = context.methods->get(dex_method);
 
   auto model = Model(method, context);
-  model.add_mode(Model::Mode::SkipAnalysis);
+  model.add_mode(Model::Mode::SkipAnalysis, context);
   model.add_sink(
       AccessPath(Root(Root::Kind::Argument, 1)),
       generator::sink(
@@ -310,8 +310,8 @@ TEST_F(IntentLaunchingSinkGeneratorTest, SinkForContextWrapper) {
   auto* method = context.methods->get(dex_method);
 
   auto model = Model(method, context);
-  model.add_mode(Model::Mode::NoJoinVirtualOverrides);
-  model.add_mode(Model::Mode::SkipAnalysis);
+  model.add_mode(Model::Mode::NoJoinVirtualOverrides, context);
+  model.add_mode(Model::Mode::SkipAnalysis, context);
   model.add_sink(
       AccessPath(Root(Root::Kind::Argument, 1)),
       generator::sink(
@@ -342,8 +342,8 @@ TEST_F(IntentLaunchingSinkGeneratorTest, SinkForTaskStackBuilder) {
   auto* method = context.methods->get(dex_method);
 
   auto model = Model(method, context);
-  model.add_mode(Model::Mode::SkipAnalysis);
-  model.add_mode(Model::Mode::NoJoinVirtualOverrides);
+  model.add_mode(Model::Mode::SkipAnalysis, context);
+  model.add_mode(Model::Mode::NoJoinVirtualOverrides, context);
   model.add_sink(
       AccessPath(Root(Root::Kind::Argument, 1)),
       generator::sink(

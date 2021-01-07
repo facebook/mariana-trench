@@ -28,7 +28,7 @@ std::vector<Model> StructuredLoggerSinkGenerator::visit_method(
       !boost::algorithm::ends_with(class_name, "Impl;") &&
       boost::starts_with(method_name, "set")) {
     auto model = Model(method, context_);
-    model.add_mode(Model::Mode::SkipAnalysis);
+    model.add_mode(Model::Mode::SkipAnalysis, context_);
     model.add_sink(
         AccessPath(Root(Root::Kind::Argument, 1)),
         generator::sink(
@@ -48,7 +48,7 @@ std::vector<Model> StructuredLoggerSinkGenerator::visit_method(
        boost::starts_with(method_name, "addParameter"))) {
     ParameterPosition position = argument_size == 1 ? 1 : 2;
     auto model = Model(method, context_);
-    model.add_mode(Model::Mode::SkipAnalysis);
+    model.add_mode(Model::Mode::SkipAnalysis, context_);
     model.add_sink(
         AccessPath(Root(Root::Kind::Argument, position)),
         generator::sink(

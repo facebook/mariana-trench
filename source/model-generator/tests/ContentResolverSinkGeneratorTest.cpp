@@ -40,7 +40,7 @@ TEST_F(ContentResolverSinkGeneratorTest, SinkForQuery) {
   auto* method = context.methods->get(dex_method);
 
   auto model = Model(method, context);
-  model.add_mode(Model::Mode::SkipAnalysis);
+  model.add_mode(Model::Mode::SkipAnalysis, context);
   for (int i = 1; i <= 4; i++) {
     model.add_sink(
         AccessPath(Root(Root::Kind::Argument, i)),
@@ -75,7 +75,7 @@ TEST_F(ContentResolverSinkGeneratorTest, SinkForDelete) {
   auto* method = context.methods->get(dex_method);
 
   auto model = Model(method, context);
-  model.add_mode(Model::Mode::SkipAnalysis);
+  model.add_mode(Model::Mode::SkipAnalysis, context);
   for (int i = 1; i <= 3; i++) {
     model.add_sink(
         AccessPath(Root(Root::Kind::Argument, i)),
@@ -110,7 +110,7 @@ TEST_F(ContentResolverSinkGeneratorTest, SinkForOpenAssetFile) {
   auto* method = context.methods->get(dex_method);
 
   auto model = Model(method, context);
-  model.add_mode(Model::Mode::SkipAnalysis);
+  model.add_mode(Model::Mode::SkipAnalysis, context);
   for (int i = 1; i <= 3; i++) {
     model.add_sink(
         AccessPath(Root(Root::Kind::Argument, i)),
@@ -144,7 +144,7 @@ TEST_F(ContentResolverSinkGeneratorTest, SinkForOpenInputStream) {
   auto* method = context.methods->get(dex_method);
 
   auto model = Model(method, context);
-  model.add_mode(Model::Mode::SkipAnalysis);
+  model.add_mode(Model::Mode::SkipAnalysis, context);
   for (int i = 1; i <= 1; i++) {
     model.add_sink(
         AccessPath(Root(Root::Kind::Argument, i)),

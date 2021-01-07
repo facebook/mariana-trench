@@ -38,7 +38,7 @@ std::unordered_set<std::string> service_methods = {"onBind",
 
 Model source_first_argument(const Method* method, Context& context) {
   auto model = Model(method, context);
-  model.add_mode(Model::Mode::NoJoinVirtualOverrides);
+  model.add_mode(Model::Mode::NoJoinVirtualOverrides, context);
   model.add_parameter_source(
       AccessPath(Root(Root::Kind::Argument, 1)),
       generator::source(

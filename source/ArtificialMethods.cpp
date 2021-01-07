@@ -36,7 +36,7 @@ std::vector<Model> ArtificialMethods::models(Context& context) const {
   {
     auto* method = context.methods->get(array_allocation_method_);
     auto model = Model(method, context);
-    model.add_mode(Model::Mode::SkipAnalysis);
+    model.add_mode(Model::Mode::SkipAnalysis, context);
     model.add_sink(
         AccessPath(Root(Root::Kind::Argument, 0)),
         Frame::leaf(array_allocation_kind_));

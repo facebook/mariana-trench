@@ -67,16 +67,19 @@
    },
    "propagation" : [
       {
+         "always_features" : [ "via-obscure", "via-obscure-taint-in-taint-out" ],
          "input" : "Argument(0)",
          "output" : "Return"
       },
       {
-         "input" : "Argument(1)",
-         "output" : "Argument(0)"
-      },
-      {
+         "always_features" : [ "via-obscure", "via-obscure-taint-in-taint-out" ],
          "input" : "Argument(1)",
          "output" : "Return"
+      },
+      {
+         "always_features" : [ "via-obscure", "via-obscure-taint-in-taint-this" ],
+         "input" : "Argument(1)",
+         "output" : "Argument(0)"
       }
    ]
 }
@@ -318,7 +321,8 @@
             "via-attach-propagations-return",
             "via-attach-sinks",
             "via-attach-sources-return",
-            "via-obscure"
+            "via-obscure",
+            "via-obscure-taint-in-taint-out"
          ],
          "position" : {
             "line" : 48,
@@ -350,7 +354,8 @@
                   "via-add-features-to-argument-on-obscure",
                   "via-attach-propagations-return",
                   "via-attach-sources-return",
-                  "via-obscure"
+                  "via-obscure",
+                  "via-obscure-taint-in-taint-out"
                ],
                "call_position" : {
                   "end" : 38,
@@ -387,7 +392,7 @@
    },
    "sinks" : [
       {
-         "always_features" : [ "via-attach-sinks", "via-obscure" ],
+         "always_features" : [ "via-attach-sinks", "via-obscure", "via-obscure-taint-in-taint-out" ],
          "call_position" : {
             "end" : 18,
             "line" : 48,
@@ -595,6 +600,7 @@
    "position" : {},
    "propagation" : [
       {
+         "always_features" : [ "via-obscure", "via-obscure-taint-in-taint-this" ],
          "input" : "Argument(1)",
          "output" : "Argument(0)"
       }
@@ -1151,24 +1157,29 @@
    "position" : {},
    "propagation" : [
       {
+         "always_features" : [ "via-obscure", "via-obscure-taint-in-taint-out" ],
          "input" : "Argument(0)",
          "output" : "Return"
       },
       {
-         "input" : "Argument(1)",
-         "output" : "Argument(0)"
-      },
-      {
+         "always_features" : [ "via-obscure", "via-obscure-taint-in-taint-out" ],
          "input" : "Argument(1)",
          "output" : "Return"
       },
       {
+         "always_features" : [ "via-obscure", "via-obscure-taint-in-taint-out" ],
          "input" : "Argument(2)",
+         "output" : "Return"
+      },
+      {
+         "always_features" : [ "via-obscure", "via-obscure-taint-in-taint-this" ],
+         "input" : "Argument(1)",
          "output" : "Argument(0)"
       },
       {
+         "always_features" : [ "via-obscure", "via-obscure-taint-in-taint-this" ],
          "input" : "Argument(2)",
-         "output" : "Return"
+         "output" : "Argument(0)"
       }
    ]
 }
