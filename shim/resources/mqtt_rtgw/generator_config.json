@@ -1,6 +1,10 @@
 [
   {
     "kind": "json",
+    "path": "../model_generators/sanitizers/CommonJavaSanitizer.json"
+  },
+  {
+    "kind": "json",
     "path": "../model_generators/propagations/DataCastFeatureGenerator.json"
   },
   {
@@ -38,9 +42,5 @@
   {
     "kind": "json",
     "path": "../model_generators/sources/SensitiveAccessTokenGenerator.json"
-  },
-  {
-    "kind": "json",
-    "path": "../model_generators/sanitizers/UnitySanitizerGenerator.json"
   }
 ]
