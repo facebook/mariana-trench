@@ -204,31 +204,31 @@ TEST_F(FrameTest, FrameLeq) {
                    context.features->get("FeatureTwo")}),
               /* user_features */ {},
               /* local_positions */ {})));
-  EXPECT_FALSE(
-      Frame(
-          /* kind */ context.kinds->get("TestSource"),
-          /* callee_port */ AccessPath(Root(Root::Kind::Leaf)),
-          /* callee */ nullptr,
-          /* call_position */ nullptr,
-          /* distance */ 0,
-          /* origins */ {},
-          /* inferred_features */
-          FeatureMayAlwaysSet::make_may({context.features->get("FeatureOne"),
-                                         context.features->get("FeatureTwo")}),
-          /* user_features */ {},
-          /* local_positions */ {})
-          .leq(Frame(
-              /* kind */ context.kinds->get("TestSource"),
-              /* callee_port */ AccessPath(Root(Root::Kind::Leaf)),
-              /* callee */ nullptr,
-              /* call_position */ nullptr,
-              /* distance */ 0,
-              /* origins */ {},
-              /* inferred_features */
-              FeatureMayAlwaysSet::make_may(
-                  {context.features->get("FeatureOne")}),
-              /* user_features */ {},
-              /* local_positions */ {})));
+  EXPECT_FALSE(Frame(
+                   /* kind */ context.kinds->get("TestSource"),
+                   /* callee_port */ AccessPath(Root(Root::Kind::Leaf)),
+                   /* callee */ nullptr,
+                   /* call_position */ nullptr,
+                   /* distance */ 0,
+                   /* origins */ {},
+                   /* inferred_features */
+                   FeatureMayAlwaysSet::make_may(
+                       {context.features->get("FeatureOne"),
+                        context.features->get("FeatureTwo")}),
+                   /* user_features */ {},
+                   /* local_positions */ {})
+                   .leq(Frame(
+                       /* kind */ context.kinds->get("TestSource"),
+                       /* callee_port */ AccessPath(Root(Root::Kind::Leaf)),
+                       /* callee */ nullptr,
+                       /* call_position */ nullptr,
+                       /* distance */ 0,
+                       /* origins */ {},
+                       /* inferred_features */
+                       FeatureMayAlwaysSet::make_may(
+                           {context.features->get("FeatureOne")}),
+                       /* user_features */ {},
+                       /* local_positions */ {})));
 
   // Compare user features.
   EXPECT_TRUE(
@@ -250,8 +250,9 @@ TEST_F(FrameTest, FrameLeq) {
               /* distance */ 0,
               /* origins */ {},
               /* inferred_features */ {},
-              FeatureSet{context.features->get("FeatureOne"),
-                         context.features->get("FeatureTwo")},
+              FeatureSet{
+                  context.features->get("FeatureOne"),
+                  context.features->get("FeatureTwo")},
               /* local_positions */ {})));
   EXPECT_FALSE(Frame(
                    /* kind */ context.kinds->get("TestSource"),
@@ -262,8 +263,9 @@ TEST_F(FrameTest, FrameLeq) {
                    /* origins */ {},
                    /* inferred_features */ {},
                    /* user_features */
-                   FeatureSet{context.features->get("FeatureOne"),
-                              context.features->get("FeatureTwo")},
+                   FeatureSet{
+                       context.features->get("FeatureOne"),
+                       context.features->get("FeatureTwo")},
                    /* local_positions */ {})
                    .leq(Frame(
                        /* kind */ context.kinds->get("TestSource"),
@@ -680,8 +682,9 @@ TEST_F(FrameTest, FrameJoin) {
           /* distance */ 2,
           /* origins */ {},
           /* inferred_features */
-          FeatureMayAlwaysSet::make_may({context.features->get("FeatureOne"),
-                                         context.features->get("FeatureTwo")}),
+          FeatureMayAlwaysSet::make_may(
+              {context.features->get("FeatureOne"),
+               context.features->get("FeatureTwo")}),
           /* user_features */ {},
           /* local_positions */ {}));
 
@@ -718,8 +721,9 @@ TEST_F(FrameTest, FrameJoin) {
           /* origins */ {},
           /* inferred_features */ {},
           /* user_features */
-          FeatureSet{context.features->get("FeatureOne"),
-                     context.features->get("FeatureTwo")},
+          FeatureSet{
+              context.features->get("FeatureOne"),
+              context.features->get("FeatureTwo")},
           /* local_positions */ {}));
 }
 

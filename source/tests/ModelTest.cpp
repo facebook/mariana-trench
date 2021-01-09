@@ -329,18 +329,18 @@ TEST_F(ModelTest, Join) {
   model.join_with(model_with_source);
   EXPECT_THAT(
       model.generations().elements(),
-      testing::UnorderedElementsAre(
-          PortTaint{AccessPath(Root(Root::Kind::Return)),
-                    Taint{Frame::leaf(source_kind)}}));
+      testing::UnorderedElementsAre(PortTaint{
+          AccessPath(Root(Root::Kind::Return)),
+          Taint{Frame::leaf(source_kind)}}));
   EXPECT_TRUE(model.sinks().is_bottom());
 
   // Repeated application is idempotent.
   model.join_with(model_with_source);
   EXPECT_THAT(
       model.generations().elements(),
-      testing::UnorderedElementsAre(
-          PortTaint{AccessPath(Root(Root::Kind::Return)),
-                    Taint{Frame::leaf(source_kind)}}));
+      testing::UnorderedElementsAre(PortTaint{
+          AccessPath(Root(Root::Kind::Return)),
+          Taint{Frame::leaf(source_kind)}}));
   EXPECT_TRUE(model.sinks().is_bottom());
 
   Model model_with_other_source(
@@ -374,9 +374,9 @@ TEST_F(ModelTest, Join) {
           Taint{Frame::leaf(source_kind), Frame::artificial_source(2)}}));
   EXPECT_THAT(
       model.sinks().elements(),
-      testing::UnorderedElementsAre(
-          PortTaint{AccessPath(Root(Root::Kind::Argument, 0)),
-                    Taint{Frame::leaf(sink_kind)}}));
+      testing::UnorderedElementsAre(PortTaint{
+          AccessPath(Root(Root::Kind::Argument, 0)),
+          Taint{Frame::leaf(sink_kind)}}));
 
   // Taint-in-taint-out is added.
   Model model_with_propagation(

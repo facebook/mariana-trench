@@ -358,9 +358,9 @@ TEST_F(IssueSetTest, Insertion) {
   set.add(Issue(
       /* source */ Taint{Frame::leaf(
           source_kind,
-          FeatureMayAlwaysSet::make_always(
-              FeatureSet{context.features->get("Feature"),
-                         context.features->get("Feature2")}))},
+          FeatureMayAlwaysSet::make_always(FeatureSet{
+              context.features->get("Feature"),
+              context.features->get("Feature2")}))},
       /* sink */ Taint{Frame::leaf(sink_kind)},
       &rule_1,
       position_2));

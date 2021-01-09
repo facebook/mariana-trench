@@ -110,18 +110,20 @@ TEST_F(RegistryTest, ConstructorUseJoin) {
   EXPECT_THAT(
       registry.get(method).generations().elements(),
       testing::UnorderedElementsAre(
-          PortTaint{AccessPath(Root(Root::Kind::Return)),
-                    Taint{Frame::leaf(
-                        source_kind,
-                        /* inferred_features */ FeatureMayAlwaysSet::bottom(),
-                        /* user_features */ FeatureSet::bottom(),
-                        /* origins */ MethodSet{method})}},
-          PortTaint{AccessPath(Root(Root::Kind::Argument, 2)),
-                    Taint{Frame::leaf(
-                        source_kind,
-                        /* inferred_features */ FeatureMayAlwaysSet::bottom(),
-                        /* user_features */ FeatureSet::bottom(),
-                        /* origins */ MethodSet{method})}}));
+          PortTaint{
+              AccessPath(Root(Root::Kind::Return)),
+              Taint{Frame::leaf(
+                  source_kind,
+                  /* inferred_features */ FeatureMayAlwaysSet::bottom(),
+                  /* user_features */ FeatureSet::bottom(),
+                  /* origins */ MethodSet{method})}},
+          PortTaint{
+              AccessPath(Root(Root::Kind::Argument, 2)),
+              Taint{Frame::leaf(
+                  source_kind,
+                  /* inferred_features */ FeatureMayAlwaysSet::bottom(),
+                  /* user_features */ FeatureSet::bottom(),
+                  /* origins */ MethodSet{method})}}));
 }
 
 } // namespace marianatrench

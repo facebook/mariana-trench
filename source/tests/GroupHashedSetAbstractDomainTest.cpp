@@ -477,21 +477,22 @@ TEST_F(GroupHashedSetAbstractDomainTest, Contains) {
       (AbstractDomainT{Element{/* group */ 1, /* values */ IntSet{10, 12}}})
           .contains(Element{/* group */ 1, /* values */ IntSet{11}}));
   EXPECT_TRUE(
-      (AbstractDomainT{Element{/* group */ 1, /* values */ IntSet{10, 11, 12}},
-                       Element{/* group */ 2, /* values */ IntSet{20}}})
+      (AbstractDomainT{
+           Element{/* group */ 1, /* values */ IntSet{10, 11, 12}},
+           Element{/* group */ 2, /* values */ IntSet{20}}})
           .contains(Element{/* group */ 1, /* values */ IntSet{10, 12}}));
-  EXPECT_FALSE(
-      (AbstractDomainT{Element{/* group */ 1, /* values */ IntSet{10, 12}},
-                       Element{/* group */ 2, /* values */ IntSet{11}}})
-          .contains(Element{/* group */ 1, /* values */ IntSet{11}}));
-  EXPECT_TRUE(
-      (AbstractDomainT{Element{/* group */ 1, /* values */ IntSet{10, 12}},
-                       Element{/* group */ 2, /* values */ IntSet{11}}})
-          .contains(Element{/* group */ 2, /* values */ IntSet{11}}));
-  EXPECT_FALSE(
-      (AbstractDomainT{Element{/* group */ 1, /* values */ IntSet{10, 12}},
-                       Element{/* group */ 3, /* values */ IntSet{11}}})
-          .contains(Element{/* group */ 2, /* values */ IntSet{11}}));
+  EXPECT_FALSE((AbstractDomainT{
+                    Element{/* group */ 1, /* values */ IntSet{10, 12}},
+                    Element{/* group */ 2, /* values */ IntSet{11}}})
+                   .contains(Element{/* group */ 1, /* values */ IntSet{11}}));
+  EXPECT_TRUE((AbstractDomainT{
+                   Element{/* group */ 1, /* values */ IntSet{10, 12}},
+                   Element{/* group */ 2, /* values */ IntSet{11}}})
+                  .contains(Element{/* group */ 2, /* values */ IntSet{11}}));
+  EXPECT_FALSE((AbstractDomainT{
+                    Element{/* group */ 1, /* values */ IntSet{10, 12}},
+                    Element{/* group */ 3, /* values */ IntSet{11}}})
+                   .contains(Element{/* group */ 2, /* values */ IntSet{11}}));
 }
 
 TEST_F(GroupHashedSetAbstractDomainTest, Remove) {
@@ -519,28 +520,33 @@ TEST_F(GroupHashedSetAbstractDomainTest, Remove) {
       domain,
       (AbstractDomainT{Element{/* group */ 1, /* values */ IntSet{10, 12}}}));
 
-  domain = AbstractDomainT{Element{/* group */ 1, /* values */ IntSet{10, 12}},
-                           Element{/* group */ 2, /* values */ IntSet{11}}};
+  domain = AbstractDomainT{
+      Element{/* group */ 1, /* values */ IntSet{10, 12}},
+      Element{/* group */ 2, /* values */ IntSet{11}}};
   domain.remove(Element{/* group */ 1, /* values */ IntSet{10, 11}});
   EXPECT_EQ(
       domain,
-      (AbstractDomainT{Element{/* group */ 1, /* values */ IntSet{10, 12}},
-                       Element{/* group */ 2, /* values */ IntSet{11}}}));
+      (AbstractDomainT{
+          Element{/* group */ 1, /* values */ IntSet{10, 12}},
+          Element{/* group */ 2, /* values */ IntSet{11}}}));
 
-  domain = AbstractDomainT{Element{/* group */ 1, /* values */ IntSet{10, 12}},
-                           Element{/* group */ 2, /* values */ IntSet{11}}};
+  domain = AbstractDomainT{
+      Element{/* group */ 1, /* values */ IntSet{10, 12}},
+      Element{/* group */ 2, /* values */ IntSet{11}}};
   domain.remove(Element{/* group */ 1, /* values */ IntSet{10, 12}});
   EXPECT_EQ(
       domain,
       (AbstractDomainT{Element{/* group */ 2, /* values */ IntSet{11}}}));
 
-  domain = AbstractDomainT{Element{/* group */ 1, /* values */ IntSet{10, 12}},
-                           Element{/* group */ 3, /* values */ IntSet{11}}};
+  domain = AbstractDomainT{
+      Element{/* group */ 1, /* values */ IntSet{10, 12}},
+      Element{/* group */ 3, /* values */ IntSet{11}}};
   domain.remove(Element{/* group */ 2, /* values */ IntSet{11}});
   EXPECT_EQ(
       domain,
-      (AbstractDomainT{Element{/* group */ 1, /* values */ IntSet{10, 12}},
-                       Element{/* group */ 3, /* values */ IntSet{11}}}));
+      (AbstractDomainT{
+          Element{/* group */ 1, /* values */ IntSet{10, 12}},
+          Element{/* group */ 3, /* values */ IntSet{11}}}));
 }
 
 TEST_F(GroupHashedSetAbstractDomainTest, Difference) {
@@ -564,31 +570,36 @@ TEST_F(GroupHashedSetAbstractDomainTest, Difference) {
       Element{/* group */ 1, /* values */ IntSet{10, 11, 12, 13}}});
   EXPECT_EQ(domain, AbstractDomainT{});
 
-  domain = AbstractDomainT{Element{/* group */ 1, /* values */ IntSet{10, 12}},
-                           Element{/* group */ 2, /* values */ IntSet{11}}};
+  domain = AbstractDomainT{
+      Element{/* group */ 1, /* values */ IntSet{10, 12}},
+      Element{/* group */ 2, /* values */ IntSet{11}}};
   domain.difference_with(
       AbstractDomainT{Element{/* group */ 1, /* values */ IntSet{10, 11}}});
   EXPECT_EQ(
       domain,
-      (AbstractDomainT{Element{/* group */ 1, /* values */ IntSet{10, 12}},
-                       Element{/* group */ 2, /* values */ IntSet{11}}}));
+      (AbstractDomainT{
+          Element{/* group */ 1, /* values */ IntSet{10, 12}},
+          Element{/* group */ 2, /* values */ IntSet{11}}}));
 
-  domain = AbstractDomainT{Element{/* group */ 1, /* values */ IntSet{10, 12}},
-                           Element{/* group */ 2, /* values */ IntSet{11}}};
+  domain = AbstractDomainT{
+      Element{/* group */ 1, /* values */ IntSet{10, 12}},
+      Element{/* group */ 2, /* values */ IntSet{11}}};
   domain.difference_with(
       AbstractDomainT{Element{/* group */ 1, /* values */ IntSet{10, 11, 12}}});
   EXPECT_EQ(
       domain,
       (AbstractDomainT{Element{/* group */ 2, /* values */ IntSet{11}}}));
 
-  domain = AbstractDomainT{Element{/* group */ 1, /* values */ IntSet{10, 12}},
-                           Element{/* group */ 3, /* values */ IntSet{11}}};
+  domain = AbstractDomainT{
+      Element{/* group */ 1, /* values */ IntSet{10, 12}},
+      Element{/* group */ 3, /* values */ IntSet{11}}};
   domain.difference_with(
       AbstractDomainT{Element{/* group */ 2, /* values */ IntSet{11}}});
   EXPECT_EQ(
       domain,
-      (AbstractDomainT{Element{/* group */ 1, /* values */ IntSet{10, 12}},
-                       Element{/* group */ 3, /* values */ IntSet{11}}}));
+      (AbstractDomainT{
+          Element{/* group */ 1, /* values */ IntSet{10, 12}},
+          Element{/* group */ 3, /* values */ IntSet{11}}}));
 
   domain =
       AbstractDomainT{Element{/* group */ 1, /* values */ IntSet{10, 11, 12}}};
@@ -624,21 +635,25 @@ TEST_F(GroupHashedSetAbstractDomainTest, Map) {
       (AbstractDomainT{
           Element{/* group */ 1, /* values */ IntSet{10, 11, 12, 20}}}));
 
-  domain = AbstractDomainT{Element{/* group */ 1, /* values */ IntSet{10, 12}},
-                           Element{/* group */ 2, /* values */ IntSet{11}}};
+  domain = AbstractDomainT{
+      Element{/* group */ 1, /* values */ IntSet{10, 12}},
+      Element{/* group */ 2, /* values */ IntSet{11}}};
   domain.map([](Element& element) { element.values.insert(20); });
   EXPECT_EQ(
       domain,
-      (AbstractDomainT{Element{/* group */ 1, /* values */ IntSet{10, 12, 20}},
-                       Element{/* group */ 2, /* values */ IntSet{11, 20}}}));
+      (AbstractDomainT{
+          Element{/* group */ 1, /* values */ IntSet{10, 12, 20}},
+          Element{/* group */ 2, /* values */ IntSet{11, 20}}}));
 
-  domain = AbstractDomainT{Element{/* group */ 1, /* values */ IntSet{10, 12}},
-                           Element{/* group */ 2, /* values */ IntSet{11}}};
+  domain = AbstractDomainT{
+      Element{/* group */ 1, /* values */ IntSet{10, 12}},
+      Element{/* group */ 2, /* values */ IntSet{11}}};
   domain.map([](Element& element) { element.values.clear(); });
   EXPECT_EQ(
       domain,
-      (AbstractDomainT{Element{/* group */ 1, /* values */ IntSet{}},
-                       Element{/* group */ 2, /* values */ IntSet{}}}));
+      (AbstractDomainT{
+          Element{/* group */ 1, /* values */ IntSet{}},
+          Element{/* group */ 2, /* values */ IntSet{}}}));
 }
 
 TEST_F(GroupHashedSetAbstractDomainTest, Filter) {
@@ -655,15 +670,17 @@ TEST_F(GroupHashedSetAbstractDomainTest, Filter) {
       (AbstractDomainT{
           Element{/* group */ 1, /* values */ IntSet{10, 11, 12}}}));
 
-  domain = AbstractDomainT{Element{/* group */ 1, /* values */ IntSet{10, 12}},
-                           Element{/* group */ 2, /* values */ IntSet{11}}};
+  domain = AbstractDomainT{
+      Element{/* group */ 1, /* values */ IntSet{10, 12}},
+      Element{/* group */ 2, /* values */ IntSet{11}}};
   domain.filter([](const Element& element) { return element.group == 1; });
   EXPECT_EQ(
       domain,
       (AbstractDomainT{Element{/* group */ 1, /* values */ IntSet{10, 12}}}));
 
-  domain = AbstractDomainT{Element{/* group */ 1, /* values */ IntSet{10, 12}},
-                           Element{/* group */ 2, /* values */ IntSet{11}}};
+  domain = AbstractDomainT{
+      Element{/* group */ 1, /* values */ IntSet{10, 12}},
+      Element{/* group */ 2, /* values */ IntSet{11}}};
   domain.filter(
       [](const Element& element) { return element.values.size() <= 1; });
   EXPECT_EQ(

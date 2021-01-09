@@ -21,20 +21,21 @@ namespace marianatrench {
 
 namespace {
 
-std::unordered_set<std::string> service_methods = {"onBind",
-                                                   "doBind",
-                                                   "onRebind",
-                                                   "onStart",
-                                                   "onHandleIntent",
-                                                   "doHandleIntent",
-                                                   "onSecuredHandleIntent",
-                                                   "onHandleWork",
-                                                   "onStartCommand",
-                                                   "doStartCommand",
-                                                   "onTaskRemoved",
-                                                   "onUnbind",
-                                                   "onFbStartCommand",
-                                                   "handleMessage"};
+std::unordered_set<std::string> service_methods = {
+    "onBind",
+    "doBind",
+    "onRebind",
+    "onStart",
+    "onHandleIntent",
+    "doHandleIntent",
+    "onSecuredHandleIntent",
+    "onHandleWork",
+    "onStartCommand",
+    "doStartCommand",
+    "onTaskRemoved",
+    "onUnbind",
+    "onFbStartCommand",
+    "handleMessage"};
 
 Model source_first_argument(const Method* method, Context& context) {
   auto model = Model(method, context);

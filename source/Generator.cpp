@@ -164,11 +164,12 @@ std::optional<std::string> generator::get_return_type_string(
 }
 
 bool generator::is_numeric_data_type(const DataType& type) {
-  std::unordered_set<DataType> numeric_types = {DataType::Short,
-                                                DataType::Float,
-                                                DataType::Int,
-                                                DataType::Long,
-                                                DataType::Double};
+  std::unordered_set<DataType> numeric_types = {
+      DataType::Short,
+      DataType::Float,
+      DataType::Int,
+      DataType::Long,
+      DataType::Double};
   return numeric_types.find(type) != numeric_types.end();
 }
 

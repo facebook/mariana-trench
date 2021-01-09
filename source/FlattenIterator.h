@@ -80,8 +80,8 @@ class FlattenIterator {
     if (outer_.begin == outer_.end) {
       return;
     }
-    inner_ = Range<InnerIterator>{Dereference::begin(*outer_.begin),
-                                  Dereference::end(*outer_.begin)};
+    inner_ = Range<InnerIterator>{
+        Dereference::begin(*outer_.begin), Dereference::end(*outer_.begin)};
     advance_empty();
   }
 
@@ -127,8 +127,8 @@ class FlattenIterator {
         inner_ = std::nullopt;
         return;
       } else {
-        inner_ = Range<InnerIterator>{Dereference::begin(*outer_.begin),
-                                      Dereference::end(*outer_.begin)};
+        inner_ = Range<InnerIterator>{
+            Dereference::begin(*outer_.begin), Dereference::end(*outer_.begin)};
       }
     }
   }

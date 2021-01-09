@@ -177,13 +177,14 @@ TEST_F(FlattenIteratorTest, MapVectorInt) {
           Iterator(container.cend(), container.cend())),
       (Vector{1, 2, 3, 4, 5, 6}));
 
-  container = {{0, {}},
-               {1, {1}},
-               {2, {}},
-               {3, {2, 3}},
-               {4, {}},
-               {5, {4, 5, 6}},
-               {6, {}}};
+  container = {
+      {0, {}},
+      {1, {1}},
+      {2, {}},
+      {3, {2, 3}},
+      {4, {}},
+      {5, {4, 5, 6}},
+      {6, {}}};
   EXPECT_EQ(
       collect(
           Iterator(container.cbegin(), container.cend()),
@@ -233,13 +234,14 @@ TEST_F(FlattenIteratorTest, MapListInt) {
           Iterator(container.cend(), container.cend())),
       (Vector{1, 2, 3, 4, 5, 6}));
 
-  container = {{0, {}},
-               {1, {1}},
-               {2, {}},
-               {3, {2, 3}},
-               {4, {}},
-               {5, {4, 5, 6}},
-               {6, {}}};
+  container = {
+      {0, {}},
+      {1, {1}},
+      {2, {}},
+      {3, {2, 3}},
+      {4, {}},
+      {5, {4, 5, 6}},
+      {6, {}}};
   EXPECT_EQ(
       collect(
           Iterator(container.cbegin(), container.cend()),

@@ -5,9 +5,9 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-#include <mariana-trench/model-generator/ModelGeneratorConfiguration.h>
 #include <mariana-trench/JsonValidation.h>
 #include <mariana-trench/Log.h>
+#include <mariana-trench/model-generator/ModelGeneratorConfiguration.h>
 
 namespace marianatrench {
 

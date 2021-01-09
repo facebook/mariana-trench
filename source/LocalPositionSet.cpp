@@ -5,9 +5,9 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-#include <mariana-trench/LocalPositionSet.h>
 #include <mariana-trench/Assert.h>
 #include <mariana-trench/JsonValidation.h>
+#include <mariana-trench/LocalPositionSet.h>
 #include <mariana-trench/Positions.h>
 
 namespace marianatrench {

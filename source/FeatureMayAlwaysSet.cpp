@@ -5,8 +5,8 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-#include <mariana-trench/FeatureMayAlwaysSet.h>
 #include <mariana-trench/Assert.h>
+#include <mariana-trench/FeatureMayAlwaysSet.h>
 #include <mariana-trench/JsonValidation.h>
 
 namespace marianatrench {

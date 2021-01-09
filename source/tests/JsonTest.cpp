@@ -642,8 +642,9 @@ TEST_F(JsonTest, Frame) {
           /* distance */ 0,
           /* origins */ {},
           /* inferred_features */
-          FeatureMayAlwaysSet{context.features->get("FeatureOne"),
-                              context.features->get("FeatureTwo")},
+          FeatureMayAlwaysSet{
+              context.features->get("FeatureOne"),
+              context.features->get("FeatureTwo")},
           /* user_features */ {},
           /* local_positions */ {}),
       context);
@@ -706,8 +707,10 @@ TEST_F(JsonTest, Frame) {
           /* origins */ {},
           /* inferred_features */
           FeatureMayAlwaysSet(
-              /* may */ FeatureSet{context.features->get("FeatureOne"),
-                                   context.features->get("FeatureTwo")},
+              /* may */
+              FeatureSet{
+                  context.features->get("FeatureOne"),
+                  context.features->get("FeatureTwo")},
               /* always */ FeatureSet{}),
           /* user_features */ {},
           /* local_positions */ {}),
@@ -748,8 +751,9 @@ TEST_F(JsonTest, Frame) {
           /* origins */ {},
           /* inferred_features */ FeatureMayAlwaysSet::bottom(),
           /* user_features */
-          FeatureSet{context.features->get("FeatureOne"),
-                     context.features->get("FeatureTwo")},
+          FeatureSet{
+              context.features->get("FeatureOne"),
+              context.features->get("FeatureTwo")},
           /* local_positions */ {}));
   EXPECT_EQ(
       Frame::from_json(
@@ -1001,8 +1005,9 @@ TEST_F(JsonTest, Propagation) {
       Propagation(
           /* input */ AccessPath(Root(Root::Kind::Argument, 1)),
           /* inferred_features */
-          FeatureMayAlwaysSet{context.features->get("FeatureOne"),
-                              context.features->get("FeatureTwo")},
+          FeatureMayAlwaysSet{
+              context.features->get("FeatureOne"),
+              context.features->get("FeatureTwo")},
           /* user_features */ {}),
       context);
   EXPECT_JSON_EQ(
@@ -1059,8 +1064,9 @@ TEST_F(JsonTest, Propagation) {
           /* input */ AccessPath(Root(Root::Kind::Argument, 1)),
           /* inferred_features */ FeatureMayAlwaysSet::bottom(),
           /* user_features */
-          FeatureSet{context.features->get("FeatureOne"),
-                     context.features->get("FeatureTwo")}));
+          FeatureSet{
+              context.features->get("FeatureOne"),
+              context.features->get("FeatureTwo")}));
   EXPECT_EQ(
       Propagation::from_json(
           test::parse_json(

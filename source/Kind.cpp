@@ -5,8 +5,8 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-#include <mariana-trench/Kind.h>
 #include <mariana-trench/JsonValidation.h>
+#include <mariana-trench/Kind.h>
 #include <mariana-trench/Kinds.h>
 
 namespace marianatrench {

@@ -474,21 +474,27 @@ TEST_F(AccessPathTreeDomainTest, Elements) {
       tree.elements(),
       testing::UnorderedElementsAre(
           Pair{AccessPath(Root(Root::Kind::Return)), IntSet{1, 2}},
-          Pair{AccessPath(Root(Root::Kind::Argument, 0), Path{x}),
-               IntSet{1, 2}},
-          Pair{AccessPath(Root(Root::Kind::Argument, 0), Path{x, y}),
-               IntSet{3, 4}},
-          Pair{AccessPath(Root(Root::Kind::Argument, 0), Path{x, z}),
-               IntSet{5, 6}},
-          Pair{AccessPath(Root(Root::Kind::Argument, 0), Path{x, z, y}),
-               IntSet{7, 8}},
-          Pair{AccessPath(Root(Root::Kind::Argument, 0), Path{x, x}),
-               IntSet{9, 10}},
-          Pair{AccessPath(Root(Root::Kind::Argument, 1), Path{x, y}),
-               IntSet{1, 2}},
+          Pair{
+              AccessPath(Root(Root::Kind::Argument, 0), Path{x}), IntSet{1, 2}},
+          Pair{
+              AccessPath(Root(Root::Kind::Argument, 0), Path{x, y}),
+              IntSet{3, 4}},
+          Pair{
+              AccessPath(Root(Root::Kind::Argument, 0), Path{x, z}),
+              IntSet{5, 6}},
+          Pair{
+              AccessPath(Root(Root::Kind::Argument, 0), Path{x, z, y}),
+              IntSet{7, 8}},
+          Pair{
+              AccessPath(Root(Root::Kind::Argument, 0), Path{x, x}),
+              IntSet{9, 10}},
+          Pair{
+              AccessPath(Root(Root::Kind::Argument, 1), Path{x, y}),
+              IntSet{1, 2}},
           Pair{AccessPath(Root(Root::Kind::Argument, 2)), IntSet{1, 2}},
-          Pair{AccessPath(Root(Root::Kind::Argument, 2), Path{x, y}),
-               IntSet{3, 4}}));
+          Pair{
+              AccessPath(Root(Root::Kind::Argument, 2), Path{x, y}),
+              IntSet{3, 4}}));
 }
 
 TEST_F(AccessPathTreeDomainTest, Map) {

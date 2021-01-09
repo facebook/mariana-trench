@@ -135,10 +135,11 @@ Callee get_callee(
 
   // Avoid copies using `std::move`.
   // https://fb.workplace.com/groups/2292641227666517/permalink/2478196942444277/
-  return Callee{instruction->get_method(),
-                call_target.resolved_base_callee(),
-                position,
-                std::move(model)};
+  return Callee{
+      instruction->get_method(),
+      call_target.resolved_base_callee(),
+      position,
+      std::move(model)};
 }
 
 Callee get_callee(
@@ -157,10 +158,11 @@ Callee get_callee(
   auto model = context->model_at_callsite(callee.call_target, position);
   LOG_OR_DUMP(context, 4, "Callee model: {}", model);
 
-  return Callee{resolved_base_callee->dex_method(),
-                resolved_base_callee,
-                position,
-                std::move(model)};
+  return Callee{
+      resolved_base_callee->dex_method(),
+      resolved_base_callee,
+      position,
+      std::move(model)};
 }
 
 void apply_generations(
