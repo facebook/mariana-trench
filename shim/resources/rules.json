@@ -32,6 +32,7 @@
       "ServiceUserInput",
       "WebViewUserInput",
       "UnityClientMessageUserInput",
+      "UnityMessagingData",
       "EditableText"
     ],
     "sinks": [

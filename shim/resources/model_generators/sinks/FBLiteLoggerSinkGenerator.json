@@ -7,6 +7,102 @@
           "constraint": "any_of",
           "inners": [
             {
+              "constraint": "parent",
+              "inner": {
+                "constraint": "name",
+                "pattern": "Lcom/facebook/snaptu/qe/QuickExperimentParameters;"
+              }
+            },
+            {
+              "constraint": "parent",
+              "inner": {
+                "constraint": "name",
+                "pattern": "Lcom/facebook/snaptu/qe/QuickExperiment;"
+              }
+            },
+            {
+              "constraint": "signature",
+              "pattern": "Lcom/facebook/snaptu/qe/QE;.*"
+            },
+            {
+              "constraint": "signature",
+              "pattern": "Lcom/moblica/apps/facebook/ui/bloks/common/script/FBLiteBloksCoreExtensions;\\.evaluate.*"
+            },
+            {
+              "constraint": "signature",
+              "pattern": "Lcom/moblica/appsrv/services/db/PartitionedClientPersistence;\\.getUserPersistenceData.*"
+            },
+            {
+              "constraint": "signature",
+              "pattern": "Lcom/moblica/data/AbstractDataAccess;\\.fireErrorOccured.*"
+            },
+            {
+              "constraint": "signature",
+              "pattern": "Lcom/moblica/apps/facebook/ui/iglitebloks/CarbonLoginService;\\.getCurrentSession.*"
+            },
+            {
+              "constraint": "signature",
+              "pattern": "Lcom/moblica/apps/facebook/ui/messaging/business/BusinessGreenDotAnalyticsLogger;\\.logGreenDotImpression.*"
+            },
+            {
+              "constraint": "signature",
+              "pattern": ".*iglite.*"
+            },
+            {
+              "constraint": "signature",
+              "pattern": "Lcom/moblica/appsrv/appdesc/v1/ApplicationDescriptionV1;\\.getPropertyString.*"
+            },
+            {
+              "constraint": "signature",
+              "pattern": "Lcom/moblica/apps/facebook/ui/bloks/ui/BloksDomParser;\\.getValue.*"
+            },
+            {
+              "constraint": "signature",
+              "pattern": "Lcom/moblica/dmg/adaptation/formatters/HtmlFormatter;\\.unmappedMarkupToHtml.*"
+            },
+            {
+              "constraint": "signature",
+              "pattern": "Lcom/moblica/appsrv/appapi/command/OpenUrlCommand;\\.warnOnEmptyUrl.*"
+            },
+            {
+              "constraint": "signature",
+              "pattern": "Lcom/moblica/apps/facebook/ui/composer/publish/retry/PendingStoryMutationDataInput\\$Codec;\\.encode.*"
+            },
+            {
+              "constraint": "signature",
+              "pattern": "Lcom/moblica/apps/facebook/ui/composer/upload/PendingComposerPost\\$Codec;\\.encode.*"
+            },
+            {
+              "constraint": "signature",
+              "pattern": "Lcom/moblica/apps/facebook/ui/messaging/ResourceResolver;\\.resolvePhotos.*"
+            }
+          ]
+        }
+      ],
+      "model": {
+        "for_all_parameters": [
+          {
+            "variable": "x",
+            "where": [],
+            "add_features_to_arguments": [
+              {
+                "features": [
+                  "has-no-epd-data"
+                ],
+                "port": "Argument(x)"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "find": "methods",
+      "where": [
+        {
+          "constraint": "any_of",
+          "inners": [
+            {
               "constraint": "signature",
               "pattern": "Lcom/facebook/lite/util/ILiteSystrace;.*"
             },
@@ -21,6 +117,10 @@
             {
               "constraint": "signature",
               "pattern": "Lcom/moblica/dmg/session;\\.recordMarauderEvent.*"
+            },
+            {
+              "constraint": "signature",
+              "pattern": "Lcom/facebook/lite/marauder/MarauderClient;\\.log.*"
             },
             {
               "constraint": "signature",
@@ -49,7 +149,7 @@
       "where": [
         {
           "constraint": "signature",
-          "pattern": "Lorg/slf4j/Logger;\\.(debug|info|error|fatal|log).*"
+          "pattern": "Lorg/slf4j/Logger;\\.(info|error|fatal|log).*"
         }
       ],
       "model": {
