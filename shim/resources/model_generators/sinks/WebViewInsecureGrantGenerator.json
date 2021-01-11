@@ -22,7 +22,6 @@
               "constraint": "signature",
               "pattern": "Landroid/webkit/PermissionRequest;\\.grant:.*"
             }
-
           ]
         }
       ],
@@ -31,6 +30,23 @@
           {
             "kind": "WebViewGrantCheck",
             "port": "Argument(0)"
+          }
+        ]
+      }
+    },
+    {
+      "find": "methods",
+      "where": [
+        {
+          "constraint": "signature",
+          "pattern": "Landroid/webkit/GeolocationPermissions;\\.allow:.*"
+        }
+      ],
+      "model": {
+        "sinks": [
+          {
+            "kind": "WebViewGrantCheck",
+            "port": "Argument(1)"
           }
         ]
       }

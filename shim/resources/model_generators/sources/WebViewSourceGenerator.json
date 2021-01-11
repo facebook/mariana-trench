@@ -75,7 +75,7 @@
         },
         {
           "constraint": "name",
-          "pattern": "shouldOverrideUrlLoading|onPageFinished|onPageStarted|onLoadResource|onPageCommitVisible|shouldInterceptRequest|onReceivedHttpError|onReceivedSslError|onReceivedClientCertRequest|onGeolocationPermissionsShowPrompt|onReceivedTitle|onJsAlert|onJsBeforeUnload|onJsConfirm|onJsPrompt"
+          "pattern": "shouldOverrideUrlLoading|onPageFinished|onPageStarted|onLoadResource|onPageCommitVisible|shouldInterceptRequest|onReceivedHttpError|onReceivedSslError|onReceivedClientCertRequest|onReceivedTitle|onJsAlert|onJsBeforeUnload|onJsConfirm|onJsPrompt"
         },
         {
           "constraint": "number_parameters",
@@ -93,6 +93,30 @@
           {
             "kind": "WebViewUserInput",
             "port": "Argument(2)"
+          }
+        ]
+      }
+    },
+    {
+      "find": "methods",
+      "where": [
+        {
+          "constraint": "name",
+          "pattern": "onGeolocationPermissionsShowPrompt"
+        }
+      ],
+      "model": {
+        "modes": [
+          "no-join-virtual-overrides"
+        ],
+        "sources": [
+          {
+            "kind": "WebViewUserInput",
+            "port": "Argument(2)"
+          },
+          {
+            "kind": "WebViewUserInput",
+            "port": "Argument(1)"
           }
         ]
       }
