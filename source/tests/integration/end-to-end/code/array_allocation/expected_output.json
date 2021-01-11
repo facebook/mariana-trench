@@ -97,10 +97,10 @@
             {
                "always_features" : [ "via-numerical-operator" ],
                "call_position" : {
-                  "end" : 16,
+                  "end" : 21,
                   "line" : 58,
                   "path" : "ArrayAllocation.java",
-                  "start" : 4
+                  "start" : 18
                },
                "callee" : "Lcom/facebook/marianatrench/integrationtests/ArrayAllocation;.allocateArray:(I)V",
                "callee_port" : "Argument(1)",
@@ -145,8 +145,10 @@
          "sinks" : [
             {
                "call_position" : {
+                  "end" : 0,
                   "line" : 13,
-                  "path" : "ArrayAllocation.java"
+                  "path" : "ArrayAllocation.java",
+                  "start" : 0
                },
                "callee" : "Lcom/mariana_trench/artificial/ArrayAllocation;.allocateArray:(I)V",
                "callee_port" : "Argument(0)",
@@ -191,8 +193,10 @@
          "sinks" : [
             {
                "call_position" : {
+                  "end" : 0,
                   "line" : 18,
-                  "path" : "ArrayAllocation.java"
+                  "path" : "ArrayAllocation.java",
+                  "start" : 0
                },
                "callee" : "Lcom/mariana_trench/artificial/ArrayAllocation;.allocateArray:(I)V",
                "callee_port" : "Argument(0)",
@@ -242,8 +246,10 @@
          "sinks" : [
             {
                "call_position" : {
+                  "end" : 0,
                   "line" : 23,
-                  "path" : "ArrayAllocation.java"
+                  "path" : "ArrayAllocation.java",
+                  "start" : 0
                },
                "callee" : "Lcom/mariana_trench/artificial/ArrayAllocation;.allocateArray:(I)V",
                "callee_port" : "Argument(0)",
@@ -293,8 +299,10 @@
          "sinks" : [
             {
                "call_position" : {
+                  "end" : 0,
                   "line" : 28,
-                  "path" : "ArrayAllocation.java"
+                  "path" : "ArrayAllocation.java",
+                  "start" : 0
                },
                "callee" : "Lcom/mariana_trench/artificial/ArrayAllocation;.allocateArray:(I)V",
                "callee_port" : "Argument(0)",
@@ -339,8 +347,10 @@
          "sinks" : [
             {
                "call_position" : {
+                  "end" : 0,
                   "line" : 34,
-                  "path" : "ArrayAllocation.java"
+                  "path" : "ArrayAllocation.java",
+                  "start" : 0
                },
                "callee" : "Lcom/mariana_trench/artificial/ArrayAllocation;.allocateArray:(I)V",
                "callee_port" : "Argument(0)",
@@ -385,8 +395,10 @@
          "sinks" : [
             {
                "call_position" : {
+                  "end" : 0,
                   "line" : 40,
-                  "path" : "ArrayAllocation.java"
+                  "path" : "ArrayAllocation.java",
+                  "start" : 0
                },
                "callee" : "Lcom/mariana_trench/artificial/ArrayAllocation;.allocateArray:(I)V",
                "callee_port" : "Argument(0)",
@@ -431,8 +443,10 @@
          "sinks" : [
             {
                "call_position" : {
+                  "end" : 0,
                   "line" : 47,
-                  "path" : "ArrayAllocation.java"
+                  "path" : "ArrayAllocation.java",
+                  "start" : 0
                },
                "callee" : "Lcom/mariana_trench/artificial/ArrayAllocation;.allocateArray:(I)V",
                "callee_port" : "Argument(0)",
@@ -477,8 +491,10 @@
          "sinks" : [
             {
                "call_position" : {
+                  "end" : 0,
                   "line" : 53,
-                  "path" : "ArrayAllocation.java"
+                  "path" : "ArrayAllocation.java",
+                  "start" : 0
                },
                "callee" : "Lcom/mariana_trench/artificial/ArrayAllocation;.allocateArray:(I)V",
                "callee_port" : "Argument(0)",
@@ -988,8 +1004,10 @@
       {
          "always_features" : [ "via-numerical-operator" ],
          "call_position" : {
+            "end" : 0,
             "line" : 62,
-            "path" : "ArrayAllocation.java"
+            "path" : "ArrayAllocation.java",
+            "start" : 0
          },
          "callee" : "Lcom/mariana_trench/artificial/ArrayAllocation;.allocateArray:(I)V",
          "callee_port" : "Argument(0)",

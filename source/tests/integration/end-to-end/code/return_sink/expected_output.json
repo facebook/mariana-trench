@@ -325,10 +325,10 @@
             {
                "always_features" : [ "via-array" ],
                "call_position" : {
-                  "end" : 14,
+                  "end" : 16,
                   "line" : 25,
                   "path" : "Flow.java",
-                  "start" : 4
+                  "start" : 16
                },
                "callee" : "Lcom/facebook/marianatrench/integrationtests/Flow;.return_sink:(Ljava/lang/Object;)Ljava/lang/Object;",
                "callee_port" : "Argument(0)",
@@ -381,10 +381,10 @@
          "sinks" : [
             {
                "call_position" : {
-                  "end" : 18,
+                  "end" : 23,
                   "line" : 58,
                   "path" : "Flow.java",
-                  "start" : 4
+                  "start" : 20
                },
                "callee" : "Lcom/facebook/marianatrench/integrationtests/Flow;.return_sink_foo:(Lcom/facebook/marianatrench/integrationtests/Flow$Tree;)Lcom/facebook/marianatrench/integrationtests/Flow$Tree;",
                "callee_port" : "Argument(0).foo",

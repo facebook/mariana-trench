@@ -29,10 +29,10 @@
          "sinks" : [
             {
                "call_position" : {
-                  "end" : 8,
+                  "end" : 50,
                   "line" : 29,
                   "path" : "ActivityUsingAndroidLocationManager.java",
-                  "start" : 8
+                  "start" : 10
                },
                "callee" : "Landroid/util/Log;.e:(Ljava/lang/String;Ljava/lang/String;)I",
                "callee_port" : "Argument(1)",

@@ -78,10 +78,10 @@
          "sinks" : [
             {
                "call_position" : {
-                  "end" : 14,
+                  "end" : 15,
                   "line" : 30,
                   "path" : "RunnableFlows.java",
-                  "start" : 4
+                  "start" : 15
                },
                "callee" : {
                   "name" : "Lcom/facebook/marianatrench/integrationtests/RunnableFlows;.runRunnable:(Lcom/facebook/marianatrench/integrationtests/RunnableWithArgument;Ljava/lang/Object;)V",
@@ -136,10 +136,10 @@
          "sinks" : [
             {
                "call_position" : {
-                  "end" : 14,
+                  "end" : 29,
                   "line" : 42,
                   "path" : "RunnableFlows.java",
-                  "start" : 4
+                  "start" : 16
                },
                "callee" : "Lcom/facebook/marianatrench/integrationtests/RunnableFlows;.runRunnable:(Lcom/facebook/marianatrench/integrationtests/RunnableWithArgument;Ljava/lang/Object;)V",
                "callee_port" : "Argument(1)",
@@ -686,10 +686,10 @@
    "sinks" : [
       {
          "call_position" : {
-            "end" : 22,
+            "end" : 27,
             "line" : 34,
             "path" : "RunnableFlows.java",
-            "start" : 19
+            "start" : 24
          },
          "callee" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
          "callee_port" : "Argument(0)",
@@ -725,10 +725,10 @@
    "sinks" : [
       {
          "call_position" : {
-            "end" : 15,
+            "end" : 20,
             "line" : 47,
             "path" : "RunnableFlows.java",
-            "start" : 13
+            "start" : 17
          },
          "callee" : "Lcom/facebook/marianatrench/integrationtests/RunnableFlows$2;.run:(Ljava/lang/Object;)V",
          "callee_port" : "Argument(1)",
@@ -1084,10 +1084,10 @@
    "sinks" : [
       {
          "call_position" : {
-            "end" : 15,
+            "end" : 20,
             "line" : 47,
             "path" : "RunnableFlows.java",
-            "start" : 13
+            "start" : 17
          },
          "callee" : "Lcom/facebook/marianatrench/integrationtests/RunnableFlows$2;.run:(Ljava/lang/Object;)V",
          "callee_port" : "Argument(1)",

@@ -76,10 +76,10 @@
          "sinks" : [
             {
                "call_position" : {
-                  "end" : 40,
+                  "end" : 58,
                   "line" : 23,
                   "path" : "IntentUriHandler.java",
-                  "start" : 23
+                  "start" : 42
                },
                "callee" : "Lcom/facebook/marianatrench/integrationtests/IntentHandlerUtil;.launchNextActivity:(Landroid/content/Context;Landroid/content/Intent;)V",
                "callee_port" : "Argument(2)",
@@ -769,10 +769,10 @@
    "sinks" : [
       {
          "call_position" : {
-            "end" : 44,
+            "end" : 60,
             "line" : 120,
             "path" : "IntentHandlerUtil.java",
-            "start" : 8
+            "start" : 46
          },
          "callee" : "Lcom/facebook/marianatrench/integrationtests/IntentHandlerUtil;.startActivityDetectInternalOrExternal:(Landroid/content/Context;Landroid/content/Intent;)V",
          "callee_port" : "Argument(2)",
@@ -788,10 +788,10 @@
       },
       {
          "call_position" : {
-            "end" : 44,
+            "end" : 60,
             "line" : 126,
             "path" : "IntentHandlerUtil.java",
-            "start" : 8
+            "start" : 46
          },
          "callee" : "Lcom/facebook/marianatrench/integrationtests/IntentHandlerUtil;.startActivityDetectInternalOrExternal:(Landroid/content/Context;Landroid/content/Intent;)V",
          "callee_port" : "Argument(2)",
@@ -842,10 +842,10 @@
    "sinks" : [
       {
          "call_position" : {
-            "end" : 19,
+            "end" : 46,
             "line" : 78,
             "path" : "IntentHandlerUtil.java",
-            "start" : 11
+            "start" : 21
          },
          "callee" : "Lcom/facebook/marianatrench/integrationtests/IntentHandlerUtil;.handleUri:(Landroid/content/Context;Ljava/lang/String;Landroid/os/Bundle;Landroid/content/Intent;)Z",
          "callee_port" : "Argument(2)",
@@ -870,10 +870,10 @@
    "sinks" : [
       {
          "call_position" : {
-            "end" : 33,
+            "end" : 65,
             "line" : 99,
             "path" : "IntentHandlerUtil.java",
-            "start" : 11
+            "start" : 35
          },
          "callee" : "Lcom/facebook/marianatrench/integrationtests/IntentHandlerUtil;.handleDestinationIntent:(Landroid/content/Context;Ljava/lang/String;Landroid/content/Intent;)Z",
          "callee_port" : "Argument(3)",
@@ -894,10 +894,10 @@
       },
       {
          "call_position" : {
-            "end" : 33,
+            "end" : 65,
             "line" : 99,
             "path" : "IntentHandlerUtil.java",
-            "start" : 11
+            "start" : 35
          },
          "callee" : "Lcom/facebook/marianatrench/integrationtests/IntentHandlerUtil;.handleDestinationIntent:(Landroid/content/Context;Ljava/lang/String;Landroid/content/Intent;)Z",
          "callee_port" : "Argument(3)",
@@ -934,10 +934,10 @@
    "sinks" : [
       {
          "call_position" : {
-            "end" : 33,
+            "end" : 53,
             "line" : 52,
             "path" : "IntentHandlerUtil.java",
-            "start" : 25
+            "start" : 35
          },
          "callee" : "Lcom/facebook/marianatrench/integrationtests/IntentHandlerUtil;.handleUri:(Landroid/content/Context;Ljava/lang/String;Landroid/os/Bundle;)Z",
          "callee_port" : "Argument(2)",
@@ -961,10 +961,10 @@
       },
       {
          "call_position" : {
-            "end" : 47,
+            "end" : 83,
             "line" : 62,
             "path" : "IntentHandlerUtil.java",
-            "start" : 25
+            "start" : 49
          },
          "callee" : "Lcom/facebook/marianatrench/integrationtests/IntentHandlerUtil;.handleDestinationIntent:(Landroid/content/Context;Ljava/lang/String;Landroid/content/Intent;)Z",
          "callee_port" : "Argument(3)",
@@ -1000,10 +1000,10 @@
    "sinks" : [
       {
          "call_position" : {
-            "end" : 46,
+            "end" : 62,
             "line" : 154,
             "path" : "IntentHandlerUtil.java",
-            "start" : 6
+            "start" : 48
          },
          "callee" : "Lcom/facebook/marianatrench/integrationtests/IntentHandlerUtil;.startActivityDetectInternalOrExternalImpl:(Landroid/content/Context;Landroid/content/Intent;)V",
          "callee_port" : "Argument(2)",
@@ -1017,10 +1017,10 @@
       },
       {
          "call_position" : {
-            "end" : 51,
+            "end" : 90,
             "line" : 152,
             "path" : "IntentHandlerUtil.java",
-            "start" : 6
+            "start" : 53
          },
          "callee" : "Lcom/facebook/marianatrench/integrationtests/IntentHandlerUtil;.startActivityDetectInternalOrExternalForResult:(Landroid/content/Context;Landroid/content/Intent;ILandroid/app/Activity;)V",
          "callee_port" : "Argument(2)",
@@ -1043,10 +1043,10 @@
    "sinks" : [
       {
          "call_position" : {
-            "end" : 56,
+            "end" : 86,
             "line" : 169,
             "path" : "IntentHandlerUtil.java",
-            "start" : 27
+            "start" : 58
          },
          "callee" : "Lcom/facebook/content/SecureContextHelper;.startFacebookActivityForResult:(Landroid/content/Intent;ILandroid/app/Activity;)V",
          "callee_port" : "Argument(1)",
@@ -1059,10 +1059,10 @@
       },
       {
          "call_position" : {
-            "end" : 59,
+            "end" : 89,
             "line" : 171,
             "path" : "IntentHandlerUtil.java",
-            "start" : 27
+            "start" : 61
          },
          "callee" : "Lcom/facebook/content/SecureContextHelper;.startNonFacebookActivityForResult:(Landroid/content/Intent;ILandroid/app/Activity;)V",
          "callee_port" : "Argument(1)",
@@ -1084,10 +1084,10 @@
    "sinks" : [
       {
          "call_position" : {
-            "end" : 47,
+            "end" : 63,
             "line" : 160,
             "path" : "IntentHandlerUtil.java",
-            "start" : 27
+            "start" : 49
          },
          "callee" : "Lcom/facebook/content/SecureContextHelper;.startFacebookActivity:(Landroid/content/Intent;Landroid/content/Context;)V",
          "callee_port" : "Argument(1)",
@@ -1100,10 +1100,10 @@
       },
       {
          "call_position" : {
-            "end" : 50,
+            "end" : 66,
             "line" : 162,
             "path" : "IntentHandlerUtil.java",
-            "start" : 27
+            "start" : 52
          },
          "callee" : "Lcom/facebook/content/SecureContextHelper;.startNonFacebookActivity:(Landroid/content/Intent;Landroid/content/Context;)V",
          "callee_port" : "Argument(1)",

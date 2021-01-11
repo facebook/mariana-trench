@@ -49,10 +49,10 @@
          "sinks" : [
             {
                "call_position" : {
-                  "end" : 24,
+                  "end" : 26,
                   "line" : 19,
                   "path" : "LeafAnnotationFlows.java",
-                  "start" : 4
+                  "start" : 26
                },
                "callee" : "Lcom/facebook/marianatrench/integrationtests/LeafAnnotationFlows;.intermediateFunction1:(Ljava/lang/String;)V",
                "callee_port" : "Argument(1)",
@@ -197,10 +197,10 @@
          "sinks" : [
             {
                "call_position" : {
-                  "end" : 24,
+                  "end" : 37,
                   "line" : 25,
                   "path" : "LeafAnnotationFlows.java",
-                  "start" : 4
+                  "start" : 26
                },
                "callee" : "Lcom/facebook/marianatrench/integrationtests/LeafAnnotationFlows;.intermediateFunction1:(Ljava/lang/String;)V",
                "callee_port" : "Argument(1)",
@@ -244,10 +244,10 @@
    "sinks" : [
       {
          "call_position" : {
-            "end" : 24,
+            "end" : 37,
             "line" : 25,
             "path" : "LeafAnnotationFlows.java",
-            "start" : 4
+            "start" : 26
          },
          "callee" : "Lcom/facebook/marianatrench/integrationtests/LeafAnnotationFlows;.intermediateFunction1:(Ljava/lang/String;)V",
          "callee_port" : "Argument(1)",
@@ -742,10 +742,10 @@
    "sinks" : [
       {
          "call_position" : {
-            "end" : 24,
+            "end" : 26,
             "line" : 29,
             "path" : "LeafAnnotationFlows.java",
-            "start" : 4
+            "start" : 26
          },
          "callee" : "Lcom/facebook/marianatrench/integrationtests/LeafAnnotationFlows;.intermediateFunction2:(Ljava/lang/String;)V",
          "callee_port" : "Argument(1)",
@@ -767,10 +767,10 @@
    "sinks" : [
       {
          "call_position" : {
-            "end" : 16,
+            "end" : 18,
             "line" : 33,
             "path" : "LeafAnnotationFlows.java",
-            "start" : 4
+            "start" : 18
          },
          "callee" : "Lcom/facebook/marianatrench/integrationtests/LeafAnnotationFlows;.sendToGraphQL:(Ljava/lang/String;)V",
          "callee_port" : "Argument(1)",
@@ -792,10 +792,10 @@
    "sinks" : [
       {
          "call_position" : {
-            "end" : 19,
+            "end" : 21,
             "line" : 38,
             "path" : "LeafAnnotationFlows.java",
-            "start" : 10
+            "start" : 21
          },
          "callee" : "Lcom/facebook/graphql/calls/LocationUpdateData;.setPlaceId:(Ljava/lang/String;)Lcom/facebook/graphql/calls/LocationUpdateData;",
          "callee_port" : "Argument(1)",

@@ -48,10 +48,10 @@
          "sinks" : [
             {
                "call_position" : {
-                  "end" : 17,
+                  "end" : 70,
                   "line" : 18,
                   "path" : "AbstractContentProvider.java",
-                  "start" : 11
+                  "start" : 19
                },
                "callee" : "Lcom/facebook/marianatrench/integrationtests/CallableContentProvider;.doQuery:(Landroid/net/Uri;[Ljava/lang/String;Ljava/lang/String;[Ljava/lang/String;Ljava/lang/String;)Landroid/database/Cursor;",
                "callee_port" : "Argument(1)",
@@ -152,10 +152,10 @@
    "sinks" : [
       {
          "call_position" : {
-            "end" : 17,
+            "end" : 70,
             "line" : 18,
             "path" : "AbstractContentProvider.java",
-            "start" : 11
+            "start" : 19
          },
          "callee" : "Lcom/facebook/marianatrench/integrationtests/CallableContentProvider;.doQuery:(Landroid/net/Uri;[Ljava/lang/String;Ljava/lang/String;[Ljava/lang/String;Ljava/lang/String;)Landroid/database/Cursor;",
          "callee_port" : "Argument(1)",
@@ -771,10 +771,10 @@
    "sinks" : [
       {
          "call_position" : {
-            "end" : 14,
+            "end" : 18,
             "line" : 18,
             "path" : "CallableContentProvider.java",
-            "start" : 11
+            "start" : 16
          },
          "callee" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
          "callee_port" : "Argument(0)",

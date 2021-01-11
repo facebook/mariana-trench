@@ -78,10 +78,10 @@
          "sinks" : [
             {
                "call_position" : {
-                  "end" : 14,
+                  "end" : 20,
                   "line" : 15,
                   "path" : "MainActivity.java",
-                  "start" : 11
+                  "start" : 16
                },
                "callee" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
                "callee_port" : "Argument(0)",
@@ -124,10 +124,10 @@
    "sinks" : [
       {
          "call_position" : {
-            "end" : 14,
+            "end" : 20,
             "line" : 15,
             "path" : "MainActivity.java",
-            "start" : 11
+            "start" : 16
          },
          "callee" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
          "callee_port" : "Argument(0)",

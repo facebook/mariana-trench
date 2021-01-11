@@ -78,10 +78,10 @@
          "sinks" : [
             {
                "call_position" : {
-                  "end" : 9,
+                  "end" : 11,
                   "line" : 25,
                   "path" : "Flow.java",
-                  "start" : 6
+                  "start" : 11
                },
                "callee" : "Lcom/facebook/marianatrench/integrationtests/Flow$B;.sink:(Ljava/lang/Object;)V",
                "callee_port" : "Argument(1)",

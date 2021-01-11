@@ -80,8 +80,10 @@
             {
                "always_features" : [ "via-anonymous-class-to-obscure" ],
                "call_position" : {
+                  "end" : 0,
                   "line" : 35,
-                  "path" : "RunnableFlows.java"
+                  "path" : "RunnableFlows.java",
+                  "start" : 0
                },
                "callee" : "Lcom/facebook/marianatrench/integrationtests/RunnableFlows$2;.run:()V",
                "callee_port" : "Argument(0).val$data",
@@ -671,10 +673,10 @@
    "sinks" : [
       {
          "call_position" : {
-            "end" : 22,
+            "end" : 27,
             "line" : 39,
             "path" : "RunnableFlows.java",
-            "start" : 19
+            "start" : 24
          },
          "callee" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
          "callee_port" : "Argument(0)",

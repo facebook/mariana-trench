@@ -139,6 +139,47 @@ namespace {
 
 enum class FrameType { Source, Sink };
 
+struct Bound {
+  int start;
+  int end;
+};
+
+Bound get_highlight_bounds(
+    const Method* callee,
+    const std::string& line,
+    const AccessPath& callee_port) {
+  const auto& callee_name = callee->get_name();
+  auto callee_start = line.find(callee_name + "(");
+  if (callee_start == std::string::npos) {
+    return {0, 0};
+  }
+  if (!callee_port.root().is_argument() ||
+      (!callee->is_static() && callee_port.root().parameter_position() == 0)) {
+    std::size_t end =
+        std::min(callee_start + callee_name.length() - 1, line.length() - 1);
+    return {static_cast<int>(callee_start), static_cast<int>(end)};
+  }
+  // Highlight till the end of the arguments or till the end of line if it is
+  // a multi-line call
+  int balanced_parentheses_counter = 1;
+  std::size_t arguments_start =
+      std::min(callee_start + callee_name.length() + 1, line.length() - 1);
+  std::size_t end = line.length() - 1;
+
+  for (auto i = arguments_start; i < line.length(); i++) {
+    if (line[i] == '(') {
+      balanced_parentheses_counter += 1;
+    } else if (line[i] == ')') {
+      balanced_parentheses_counter -= 1;
+    }
+    if (balanced_parentheses_counter == 0) {
+      end = i - 1;
+      break;
+    }
+  }
+  return {static_cast<int>(arguments_start), static_cast<int>(end)};
+}
+
 Frame augment_frame_position(
     const Frame& frame,
     const std::vector<std::string>& lines,
@@ -164,19 +205,12 @@ Frame augment_frame_position(
 
   const auto* callee = frame.callee();
   mt_assert(callee != nullptr);
-  const auto& callee_name = callee->get_name();
-  std::size_t start = current_line.find(callee_name + "(");
-  if (start == std::string::npos) {
-    return frame;
-  }
-  std::size_t end =
-      std::min(start + callee_name.length() - 1, current_line.length() - 1);
-
+  auto bounds = get_highlight_bounds(callee, current_line, frame.callee_port());
   return Frame(
       frame.kind(),
       frame.callee_port(),
       callee,
-      context.positions->get(position, start, end),
+      context.positions->get(position, bounds.start, bounds.end),
       frame.distance(),
       frame.origins(),
       frame.inferred_features(),

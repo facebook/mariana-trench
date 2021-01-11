@@ -34,10 +34,10 @@
          "sinks" : [
             {
                "call_position" : {
-                  "end" : 42,
+                  "end" : 58,
                   "line" : 30,
                   "path" : "OfferRedirectToWebActivity.java",
-                  "start" : 25
+                  "start" : 44
                },
                "callee" : "Lcom/facebook/marianatrench/integrationtests/OfferRenderingUtils;.navigateToStoreURL:(Landroid/content/Context;Ljava/lang/String;)V",
                "callee_port" : "Argument(2)",
@@ -144,10 +144,10 @@
       },
       {
          "call_position" : {
-            "end" : 42,
+            "end" : 58,
             "line" : 30,
             "path" : "OfferRedirectToWebActivity.java",
-            "start" : 25
+            "start" : 44
          },
          "callee" : "Lcom/facebook/marianatrench/integrationtests/OfferRenderingUtils;.navigateToStoreURL:(Landroid/content/Context;Ljava/lang/String;)V",
          "callee_port" : "Argument(2)",
@@ -725,10 +725,10 @@
    "sinks" : [
       {
          "call_position" : {
-            "end" : 42,
+            "end" : 58,
             "line" : 36,
             "path" : "OfferRedirectToWebActivity.java",
-            "start" : 25
+            "start" : 44
          },
          "callee" : "Lcom/facebook/marianatrench/integrationtests/OfferRenderingUtils;.navigateToStoreURL:(Landroid/content/Context;Ljava/lang/String;)V",
          "callee_port" : "Argument(2)",
@@ -757,10 +757,10 @@
    "sinks" : [
       {
          "call_position" : {
-            "end" : 53,
+            "end" : 69,
             "line" : 26,
             "path" : "OfferRenderingUtils.java",
-            "start" : 40
+            "start" : 55
          },
          "callee" : "Lcom/facebook/secure/context/IntentLauncher;.launchActivity:(Landroid/content/Intent;Landroid/content/Context;)Z",
          "callee_port" : "Argument(1)",

@@ -80,8 +80,10 @@
             {
                "always_features" : [ "via-anonymous-class-to-field" ],
                "call_position" : {
+                  "end" : 0,
                   "line" : 23,
-                  "path" : "RunnableActivity.java"
+                  "path" : "RunnableActivity.java",
+                  "start" : 0
                },
                "callee" : {
                   "name" : "Ljava/lang/Thread;.<init>:(Ljava/lang/Runnable;)V",
@@ -637,10 +639,10 @@
    "sinks" : [
       {
          "call_position" : {
-            "end" : 22,
+            "end" : 30,
             "line" : 19,
             "path" : "RunnableActivity.java",
-            "start" : 19
+            "start" : 24
          },
          "callee" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
          "callee_port" : "Argument(0)",

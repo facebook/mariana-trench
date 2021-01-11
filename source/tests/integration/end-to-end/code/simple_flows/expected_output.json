@@ -144,10 +144,10 @@
          "sinks" : [
             {
                "call_position" : {
-                  "end" : 14,
+                  "end" : 16,
                   "line" : 14,
                   "path" : "DirectFlowWithSanitizer.java",
-                  "start" : 11
+                  "start" : 16
                },
                "callee" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
                "callee_port" : "Argument(0)",
@@ -200,10 +200,10 @@
          "sinks" : [
             {
                "call_position" : {
-                  "end" : 25,
+                  "end" : 32,
                   "line" : 17,
                   "path" : "ExternalDirectFlow.java",
-                  "start" : 13
+                  "start" : 27
                },
                "callee" : "Landroid/app/Activity;.startActivity:(Landroid/content/Intent;)V",
                "callee_port" : "Argument(1)",
@@ -246,10 +246,10 @@
          "sinks" : [
             {
                "call_position" : {
-                  "end" : 16,
+                  "end" : 23,
                   "line" : 19,
                   "path" : "DirectFlow.java",
-                  "start" : 4
+                  "start" : 18
                },
                "callee" : "Landroid/app/Activity;.startActivity:(Landroid/content/Intent;)V",
                "callee_port" : "Argument(1)",
@@ -292,10 +292,10 @@
          "sinks" : [
             {
                "call_position" : {
-                  "end" : 25,
+                  "end" : 32,
                   "line" : 19,
                   "path" : "InheritanceFlows.java",
-                  "start" : 13
+                  "start" : 27
                },
                "callee" : "Landroid/app/Activity;.startActivity:(Landroid/content/Intent;)V",
                "callee_port" : "Argument(1)",
@@ -338,10 +338,10 @@
          "sinks" : [
             {
                "call_position" : {
-                  "end" : 21,
+                  "end" : 45,
                   "line" : 29,
                   "path" : "FlowWithHops.java",
-                  "start" : 9
+                  "start" : 23
                },
                "callee" : "Lcom/facebook/marianatrench/integrationtests/FlowWithHops;.toSinkWithHop:(Ljava/lang/Object;)V",
                "callee_port" : "Argument(1)",
@@ -388,10 +388,10 @@
          "sinks" : [
             {
                "call_position" : {
-                  "end" : 48,
+                  "end" : 70,
                   "line" : 58,
                   "path" : "DirectOpenRedirectFlow.java",
-                  "start" : 28
+                  "start" : 50
                },
                "callee" : "Lcom/facebook/content/SecureContextHelper;.startFacebookActivity:(Landroid/content/Intent;Landroid/content/Context;)V",
                "callee_port" : "Argument(1)",
@@ -985,10 +985,10 @@
    "sinks" : [
       {
          "call_position" : {
-            "end" : 14,
+            "end" : 23,
             "line" : 21,
             "path" : "FlowWithHops.java",
-            "start" : 11
+            "start" : 16
          },
          "callee" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
          "callee_port" : "Argument(0)",
@@ -1010,10 +1010,10 @@
    "sinks" : [
       {
          "call_position" : {
-            "end" : 14,
+            "end" : 23,
             "line" : 25,
             "path" : "FlowWithHops.java",
-            "start" : 9
+            "start" : 16
          },
          "callee" : "Lcom/facebook/marianatrench/integrationtests/FlowWithHops;.toSink:(Ljava/lang/Object;)V",
          "callee_port" : "Argument(1)",
