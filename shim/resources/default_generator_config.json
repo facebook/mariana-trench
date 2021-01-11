@@ -29,10 +29,6 @@
   },
   {
     "kind": "json",
-    "path": "model_generators/sources/ApacheMinaSourceGenerator.json"
-  },
-  {
-    "kind": "json",
     "path": "model_generators/sanitizers/BeanShellInterpreterGenerator.json"
   },
   {
@@ -110,22 +106,6 @@
   {
     "kind": "json",
     "path": "model_generators/sinks/FBLiteLoggerSinkGenerator.json"
-  },
-  {
-    "kind": "json",
-    "path": "model_generators/sources/FBLiteMessageSourceGenerator.json"
-  },
-  {
-    "kind": "json",
-    "path": "model_generators/sources/FBLitePublicDeepLinkSourceGenerator.json"
-  },
-  {
-    "kind": "json",
-    "path": "model_generators/sources/FBLiteMessageMetadataSourceGenerator.json"
-  },
-  {
-    "kind": "json",
-    "path": "model_generators/sinks/FBLiteNetworkRequestSinkGenerator.json"
   },
   {
     "kind": "json",
@@ -322,14 +302,6 @@
   {
     "kind": "json",
     "path": "model_generators/sinks/TextToHTMLSinkGenerator.json"
-  },
-  {
-    "kind": "json",
-    "path": "model_generators/sanitizers/UnitySanitizerGenerator.json"
-  },
-  {
-    "kind": "json",
-    "path": "model_generators/sinks/UnityScreenSinkGenerator.json"
   },
   {
     "kind": "json",

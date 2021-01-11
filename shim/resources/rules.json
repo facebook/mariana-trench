@@ -31,8 +31,6 @@
       "ServiceAIDLUserInput",
       "ServiceUserInput",
       "WebViewUserInput",
-      "UnityClientMessageUserInput",
-      "UnityMessagingData",
       "EditableText"
     ],
     "sinks": [
@@ -109,7 +107,6 @@
       "ServiceAIDLUserInput",
       "ServiceUserInput",
       "WebViewUserInput",
-      "UnityClientMessageUserInput",
       "JavascriptInterfaceUserInput"
     ],
     "sinks": [
@@ -128,7 +125,6 @@
       "ServiceAIDLUserInput",
       "ServiceUserInput",
       "WebViewUserInput",
-      "UnityClientMessageUserInput",
       "JavascriptInterfaceUserInput"
     ],
     "sinks": [
@@ -147,8 +143,6 @@
       "ServiceAIDLUserInput",
       "ServiceUserInput",
       "WebViewUserInput",
-      "UnityClientMessageUserInput",
-      "UnityPublicDeepLinkURI",
       "JavascriptInterfaceUserInput"
     ],
     "sinks": [
@@ -168,8 +162,6 @@
       "ServiceAIDLUserInput",
       "ServiceUserInput",
       "WebViewUserInput",
-      "UnityClientMessageUserInput",
-      "UnityPublicDeepLinkURI",
       "JavascriptInterfaceUserInput"
     ],
     "sinks": [
@@ -193,8 +185,6 @@
       "ServiceAIDLUserInput",
       "ServiceUserInput",
       "WebViewUserInput",
-      "UnityClientMessageUserInput",
-      "UnityPublicDeepLinkURI",
       "JavascriptInterfaceUserInput"
     ],
     "sinks": [
@@ -213,8 +203,6 @@
       "ServiceAIDLUserInput",
       "ServiceUserInput",
       "WebViewUserInput",
-      "UnityClientMessageUserInput",
-      "UnityPublicDeepLinkURI",
       "JavascriptInterfaceUserInput",
       "ExternalDirectory"
     ],
@@ -260,7 +248,6 @@
       "ServiceAIDLUserInput",
       "ServiceUserInput",
       "WebViewUserInput",
-      "UnityClientMessageUserInput",
       "JavascriptInterfaceUserInput",
       "ExternalDirectory"
     ],
@@ -358,22 +345,10 @@
       "ServiceAIDLUserInput",
       "ServiceUserInput",
       "WebViewUserInput",
-      "UnityClientMessageUserInput",
       "JavascriptInterfaceUserInput"
     ],
     "sinks": [
       "ViewerContextCreation"
-    ]
-  },
-  {
-    "name": "User input flows into Array allocation (DoS)",
-    "code": 20,
-    "description": "Values from user-controlled source may eventually flow into array allocation",
-    "sources": [
-      "UnityClientDecodeMessageUserInput"
-    ],
-    "sinks": [
-      "ArrayAllocation"
     ]
   },
   {
@@ -417,8 +392,6 @@
       "ServiceAIDLUserInput",
       "ServiceUserInput",
       "WebViewUserInput",
-      "UnityClientMessageUserInput",
-      "UnityPublicDeepLinkURI",
       "JavascriptInterfaceUserInput"
     ],
     "sinks": [
@@ -438,18 +411,6 @@
       "FileResolver",
       "InputStream",
       "WebViewFileResolver"
-    ]
-  },
-  {
-    "name": "User input flows into Snaptu Screen controller",
-    "code": 5025,
-    "description": "Values from user-controlled source may eventually flow into Snaptu Screen controller",
-    "sources": [
-      "UnityClientMessageUserInput",
-      "UnityPublicDeepLinkURI"
-    ],
-    "sinks": [
-      "SnaptuScreenUri"
     ]
   },
   {
