@@ -75,6 +75,22 @@
             {
               "constraint": "signature",
               "pattern": "Lcom/moblica/apps/facebook/ui/messaging/ResourceResolver;\\.resolvePhotos.*"
+            },
+            {
+              "constraint": "signature",
+              "pattern": "Lcom/moblica/apps/facebook/ui/util/MentionUtils;\\.generateMentionText.*"
+            },
+            {
+              "constraint": "signature",
+              "pattern": "Lcom/moblica/apps/facebook/ui/util/MentionUtils;\\.highlightNames.*"
+            },
+            {
+              "constraint": "signature",
+              "pattern": "Lcom/moblica/apps/facebook/ui/stories/analytics/StoriesAnalyticsLogger;\\.logOpenGalleryTray.*"
+            },
+            {
+              "constraint": "signature",
+              "pattern": "Lcom/facebook/lite/crypto/DevProdCrypto;\\.encrypt.*"
             }
           ]
         }
@@ -87,7 +103,7 @@
             "add_features_to_arguments": [
               {
                 "features": [
-                  "has-no-epd-data"
+                  "has-no-sensitive-data"
                 ],
                 "port": "Argument(x)"
               }
