@@ -8,6 +8,16 @@
           "pattern": "messageReceived"
         },
         {
+          "constraint": "not",
+          "inner": {
+            "constraint": "parent",
+            "inner": {
+              "constraint": "name",
+              "pattern": "Lorg/apache.*"
+            }
+          }
+        },
+        {
           "constraint": "parent",
           "inner": {
             "constraint": "extends",
