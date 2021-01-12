@@ -12,7 +12,7 @@
         "add_features_to_arguments": [
           {
             "features": [
-              "via-content-securependingintent"
+              "via-securependingintent"
             ],
             "port": "Argument(2)"
           }
@@ -31,7 +31,7 @@
         "add_features_to_arguments": [
           {
             "features": [
-              "via-secure-securependingintent"
+              "via-securependingintent"
             ],
             "port": "Argument(1)"
           }
