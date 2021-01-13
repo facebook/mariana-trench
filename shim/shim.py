@@ -226,13 +226,13 @@ if __name__ == "__main__":
     def _path_exists(path: str) -> str:
         path = os.path.expanduser(path)
         if not os.path.exists(path):
-            raise ValueError(f"Path `{path}` does not exist.")
+            raise argparse.ArgumentTypeError(f"Path `{path}` does not exist.")
         return os.path.realpath(path)
 
     def _directory_exists(path: str) -> str:
         path = os.path.expanduser(path)
         if not os.path.isdir(path):
-            raise ValueError(f"Path `{path}` is not a directory.")
+            raise argparse.ArgumentTypeError(f"Path `{path}` is not a directory.")
         path = os.path.realpath(path)
         if path and path[-1] != "/":
             path = path + "/"
