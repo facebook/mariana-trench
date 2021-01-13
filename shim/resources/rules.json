@@ -1,7 +1,7 @@
 [
   {
     "name": "User input flows into Intent launcher",
-    "code": 1,
+    "code": 4001,
     "description": "Values from user-controlled source may eventually flow into sink LaunchingComponent",
     "sources": [
       "FragmentUserInput",
@@ -21,7 +21,7 @@
   },
   {
     "name": "User input flows into Logger",
-    "code": 2,
+    "code": 4002,
     "description": "Values from user-controlled source may eventually flow into a logger sink",
     "sources": [
       "FragmentUserInput",
@@ -40,7 +40,7 @@
   },
   {
     "name": "Sensitive data flows into Logger",
-    "code": 3,
+    "code": 4003,
     "description": "Values from a sensitive data source may eventually flow into a logger sink",
     "sources": [
       "AccessToken",
@@ -60,7 +60,7 @@
   },
   {
     "name": "User input flows into WebView load",
-    "code": 4,
+    "code": 4004,
     "description": "Values from user-controlled source may eventually flow into sink WebViewLoadContent",
     "sources": [
       "FragmentUserInput",
@@ -79,7 +79,7 @@
   },
   {
     "name": "User input flows into ContentResolver",
-    "code": 5,
+    "code": 4005,
     "description": "Values from user-controlled source may eventually flow into sink ContentResolver",
     "sources": [
       "FragmentUserInput",
@@ -97,7 +97,7 @@
   },
   {
     "name": "User input flows into Demo",
-    "code": 6,
+    "code": 4006,
     "description": "Values from user-controlled source may eventually flow into sink Demo",
     "sources": [
       "FragmentUserInput",
@@ -115,7 +115,7 @@
   },
   {
     "name": "User input flows into JNI method",
-    "code": 7,
+    "code": 4007,
     "description": "Values from user-controlled source may eventually flow into sink JNI method",
     "sources": [
       "FragmentUserInput",
@@ -175,7 +175,7 @@
   },
   {
     "name": "User input flows into network request",
-    "code": 10,
+    "code": 4010,
     "description": "Values from user-controlled source may eventually flow into sink network request",
     "sources": [
       "FragmentUserInput",
@@ -216,7 +216,7 @@
   },
   {
     "name": "Intent flows into PendingIntent creation",
-    "code": 12,
+    "code": 4012,
     "description": "Intent constructor may eventually flow into PendingIntent creation",
     "sources": [
       "IntentCreation"
@@ -227,7 +227,7 @@
   },
   {
     "name": "WebView permission request flows into permission grant",
-    "code": 13,
+    "code": 4013,
     "description": "WebView permission request may eventually flow into permission grant",
     "sources": [
       "WebViewUserInput"
@@ -257,7 +257,7 @@
   },
   {
     "name": "Sensitive data flows into DisallowSensitive annotated method",
-    "code": 15,
+    "code": 4015,
     "description": "Values from a sensitive data source may eventually flow into a DisallowSensitive annotated method",
     "sources": [
       "AccessToken",
@@ -275,7 +275,7 @@
   },
   {
     "name": "Sensitive data flows into network request",
-    "code": 16,
+    "code": 4016,
     "description": "Values from a sensitive data source may eventually flow into network request",
     "sources": [
       "AccessToken",
@@ -295,7 +295,7 @@
   },
   {
     "name": "Sensitive data flows into exit node",
-    "code": 17,
+    "code": 4017,
     "description": "Values from a sensitive data source may eventually flow into exit node",
     "sources": [
       "AccessToken",
@@ -323,7 +323,7 @@
   },
   {
     "name": "(Implicit) Intent constructor flows into Intent launcher",
-    "code": 18,
+    "code": 4018,
     "description": "Intent constructor may eventually flow into Intent launch",
     "sources": [
       "IntentCreation"
@@ -353,7 +353,7 @@
   },
   {
     "name": "User input flows into Bloks screen creation",
-    "code": 21,
+    "code": 4021,
     "description": "Values from user-controlled source may eventually flow into bloks screen creation",
     "sources": [
       "ActivityUserInput",
@@ -382,7 +382,7 @@
   },
   {
     "name": "User input flows into file resolver",
-    "code": 23,
+    "code": 4023,
     "description": "Values from user-controlled source may eventually flow into sink file resolver",
     "sources": [
       "FragmentUserInput",
@@ -402,7 +402,7 @@
   },
   {
     "name": "External files (SDCard) loaded into application",
-    "code": 24,
+    "code": 4024,
     "description": "Files from user-controlled directory may eventually flow into sink file resolver",
     "sources": [
       "ExternalDirectory"
@@ -415,7 +415,7 @@
   },
   {
     "name": "User controlled Intent flows into setResult",
-    "code": 5026,
+    "code": 4026,
     "description": "Values from user-controlled Activity may eventually flow into setResult",
     "sources": [
       "ActivityUserInput"
@@ -426,7 +426,7 @@
   },
   {
     "name": "User input flows into phone call or SMS request",
-    "code": 5027,
+    "code": 4027,
     "description": "Values from user-controlled source may eventually flow into a phone call or SMS request",
     "sources": [
       "FragmentUserInput",
@@ -445,7 +445,7 @@
   },
   {
     "name": "Server response flows into a sink",
-    "code": 5028,
+    "code": 4028,
     "description": "Values from server-controlled source may eventually flow into a dangerious sink",
     "sources": [
       "ServerResponse"
@@ -476,7 +476,7 @@
   },
   {
     "name": "User data in SQLite database flows into logger",
-    "code": 5029,
+    "code": 4029,
     "description": "User data from SQLite database flows into logger.",
     "sources": [
       "DatabaseCursor"

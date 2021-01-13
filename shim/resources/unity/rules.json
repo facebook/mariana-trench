@@ -1,7 +1,7 @@
 [
   {
     "name": "User input flows into Logger",
-    "code": 2,
+    "code": 4002,
     "description": "Values from user-controlled source may eventually flow into a logger sink",
     "sources": [
       "UnityClientMessageUserInput",
@@ -14,7 +14,7 @@
   },
   {
     "name": "Sensitive data flows into Logger",
-    "code": 3,
+    "code": 4003,
     "description": "Values from a sensitive data source may eventually flow into a logger sink",
     "sources": [
       "AccessToken",
@@ -29,7 +29,7 @@
   },
   {
     "name": "User input flows into Demo",
-    "code": 6,
+    "code": 4006,
     "description": "Values from user-controlled source may eventually flow into sink Demo",
     "sources": [
       "UnityClientMessageUserInput",
@@ -41,7 +41,7 @@
   },
   {
     "name": "User input flows into network request",
-    "code": 10,
+    "code": 4010,
     "description": "Values from user-controlled source may eventually flow into sink network request",
     "sources": [
       "UnityClientMessageUserInput",
@@ -68,7 +68,7 @@
   },
   {
     "name": "Sensitive data flows into network request",
-    "code": 16,
+    "code": 4016,
     "description": "Values from a sensitive data source may eventually flow into network request",
     "sources": [
       "AccessToken",
@@ -82,7 +82,7 @@
   },
   {
     "name": "User input flows into Array allocation (DoS)",
-    "code": 20,
+    "code": 4020,
     "description": "Values from user-controlled source may eventually flow into array allocation",
     "sources": [
       "UnityClientDecodeMessageUserInput"
@@ -93,7 +93,7 @@
   },
   {
     "name": "User input flows into file resolver",
-    "code": 23,
+    "code": 4023,
     "description": "Values from user-controlled source may eventually flow into sink file resolver",
     "sources": [
       "UnityClientMessageUserInput",
@@ -106,7 +106,7 @@
   },
   {
     "name": "User input flows into Snaptu Screen controller",
-    "code": 5025,
+    "code": 4025,
     "description": "Values from user-controlled source may eventually flow into Snaptu Screen controller",
     "sources": [
       "UnityClientMessageUserInput",

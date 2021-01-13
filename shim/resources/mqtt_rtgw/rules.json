@@ -1,7 +1,7 @@
 [
   {
     "name": "Sensitive data flows into Logger",
-    "code": 3,
+    "code": 4003,
     "description": "Values from a sensitive data source may eventually flow into a logger sink",
     "sources": [
       "AccessToken",
