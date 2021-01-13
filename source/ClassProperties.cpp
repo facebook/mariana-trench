@@ -59,6 +59,10 @@ bool is_class_exported_via_uri(const DexClass* clazz) {
   // https://our.internmc.facebook.com/intern/diffusion/FBS/browse/master/fbandroid/java/com/facebook/crudolib/urimap/UriScheme.java
   const std::vector<std::string> private_schemes = {
       "scheme:Lcom/facebook/crudolib/urimap/UriScheme;.FBINTERNAL:Lcom/facebook/crudolib/urimap/UriScheme;",
+      "scheme:Lcom/facebook/crudolib/urimap/UriScheme;.MESSENGER_SECURE:Lcom/facebook/crudolib/urimap/UriScheme;",
+      "scheme:Lcom/facebook/crudolib/urimap/UriScheme;.MLITE_SECURE:Lcom/facebook/crudolib/urimap/UriScheme;",
+      "scheme:Lcom/facebook/crudolib/urimap/UriScheme;.BIZAPP_INTERNAL:Lcom/facebook/crudolib/urimap/UriScheme;",
+      "scheme:Lcom/facebook/crudolib/urimap/UriScheme;.MESSENGER_SAMETASK:Lcom/facebook/crudolib/urimap/UriScheme;",
       "pattern:fbinternal://",
   };
 
