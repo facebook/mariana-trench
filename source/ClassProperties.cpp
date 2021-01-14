@@ -360,4 +360,9 @@ FeatureMayAlwaysSet ClassProperties::parameter_source_features(
   return FeatureMayAlwaysSet::make_always(features);
 }
 
+FeatureMayAlwaysSet ClassProperties::issue_features(
+    const Method* /*method*/) const {
+  return FeatureMayAlwaysSet::bottom();
+}
+
 } // namespace marianatrench

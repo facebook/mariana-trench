@@ -345,11 +345,18 @@ void check_flows(
         const auto& rules = context->rules.rules(source.kind(), sink.kind());
 
         for (const auto* rule : rules) {
+          auto new_source = source;
+          new_source.add_inferred_features(
+              context->class_properties.issue_features(context->method()));
+
           auto new_sink = sink;
           new_sink.add_inferred_features(extra_features);
 
-          auto issue =
-              Issue(Taint{source}, Taint{std::move(new_sink)}, rule, position);
+          auto issue = Issue(
+              Taint{std::move(new_source)},
+              Taint{std::move(new_sink)},
+              rule,
+              position);
           LOG_OR_DUMP(context, 4, "Found issue: {}", issue);
           context->model.add_issue(std::move(issue));
         }

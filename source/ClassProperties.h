@@ -50,6 +50,9 @@ class ClassProperties final {
   /* A set of features to add to parameter sources. */
   FeatureMayAlwaysSet parameter_source_features(const Method* method) const;
 
+  /* A set of features to add on issues found in the given method. */
+  FeatureMayAlwaysSet issue_features(const Method* method) const;
+
  private:
   std::unordered_set<std::string> exported_classes_;
   std::unordered_set<std::string> unexported_classes_;
