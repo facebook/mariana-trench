@@ -69,7 +69,8 @@ class Positions final {
       std::optional<Root> port,
       const IRInstruction* instruction) const;
 
-  const Position* get(const Position* position, int start, int end) const;
+  const Position* get(const Position* position, int line, int start, int end)
+      const;
 
   const Position* unknown() const;
 

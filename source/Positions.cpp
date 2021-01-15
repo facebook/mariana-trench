@@ -335,12 +335,12 @@ const Position* Positions::get(
   return positions_.insert(new_position).first;
 }
 
-const Position* Positions::get(const Position* position, int start, int end)
-    const {
+const Position*
+Positions::get(const Position* position, int line, int start, int end) const {
   auto new_position = Position(
       /* path */ position->path() ? paths_.insert(*position->path()).first
                                   : nullptr,
-      /* line */ position->line(),
+      /* line */ line,
       /* port */ position->port(),
       /* instruction */ position->instruction(),
       /* start */ start,

@@ -139,31 +139,49 @@ namespace {
 
 enum class FrameType { Source, Sink };
 
-struct Bound {
+struct Bounds {
+  int line;
   int start;
   int end;
 };
 
-Bound get_highlight_bounds(
+Bounds get_highlight_bounds(
     const Method* callee,
-    const std::string& line,
+    const std::vector<std::string>& lines,
+    int callee_line_number,
     const AccessPath& callee_port) {
+  std::string line;
+  try {
+    // Subtracting 1 below as lines in files are counted starting at 1
+    line = lines.at(callee_line_number - 1);
+  } catch (const std::out_of_range&) {
+    WARNING(
+        3,
+        "Trying to access line {} of a file with {} lines",
+        callee_line_number,
+        lines.size());
+    return {callee_line_number, 0, 0};
+  }
+
   const auto& callee_name = callee->get_name();
   auto callee_start = line.find(callee_name + "(");
   if (callee_start == std::string::npos) {
-    return {0, 0};
+    return {callee_line_number, 0, 0};
   }
   if (!callee_port.root().is_argument() ||
       (!callee->is_static() && callee_port.root().parameter_position() == 0)) {
     std::size_t end =
         std::min(callee_start + callee_name.length() - 1, line.length() - 1);
-    return {static_cast<int>(callee_start), static_cast<int>(end)};
+    return {
+        callee_line_number,
+        static_cast<int>(callee_start),
+        static_cast<int>(end)};
   }
   // Highlight the parameter or till the end of the line if the parameter is
   // not on this line
   auto callee_parameter_position = callee_port.root().parameter_position();
+  auto current_parameter_position = callee->first_parameter_index();
   int balanced_parentheses_counter = 1;
-  std::size_t current_parameter_position = callee->first_parameter_index();
   std::size_t arguments_start =
       std::min(callee_start + callee_name.length() + 1, line.length() - 1);
   std::size_t end = line.length() - 1;
@@ -190,7 +208,10 @@ Bound get_highlight_bounds(
       break;
     }
   }
-  return {static_cast<int>(arguments_start), static_cast<int>(end)};
+  return {
+      callee_line_number,
+      static_cast<int>(arguments_start),
+      static_cast<int>(end)};
 }
 
 Frame augment_frame_position(
@@ -203,27 +224,15 @@ Frame augment_frame_position(
   const auto* position = frame.call_position();
   mt_assert(position != nullptr);
 
-  std::string current_line;
-  try {
-    // Subtracting 1 below as lines in files are counted starting at 1
-    current_line = lines.at(position->line() - 1);
-  } catch (const std::out_of_range&) {
-    WARNING(
-        3,
-        "Trying to access line {} of a file with {} lines",
-        position->line(),
-        lines.size());
-    return frame;
-  }
-
   const auto* callee = frame.callee();
   mt_assert(callee != nullptr);
-  auto bounds = get_highlight_bounds(callee, current_line, frame.callee_port());
+  auto bounds = get_highlight_bounds(
+      callee, lines, position->line(), frame.callee_port());
   return Frame(
       frame.kind(),
       frame.callee_port(),
       callee,
-      context.positions->get(position, bounds.start, bounds.end),
+      context.positions->get(position, bounds.line, bounds.start, bounds.end),
       frame.distance(),
       frame.origins(),
       frame.inferred_features(),
