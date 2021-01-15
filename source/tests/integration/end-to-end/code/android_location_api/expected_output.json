@@ -32,7 +32,7 @@
                   "end" : 50,
                   "line" : 29,
                   "path" : "ActivityUsingAndroidLocationManager.java",
-                  "start" : 10
+                  "start" : 22
                },
                "callee" : "Landroid/util/Log;.e:(Ljava/lang/String;Ljava/lang/String;)I",
                "callee_port" : "Argument(1)",

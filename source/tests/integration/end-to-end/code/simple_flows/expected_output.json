@@ -388,7 +388,7 @@
          "sinks" : [
             {
                "call_position" : {
-                  "end" : 70,
+                  "end" : 64,
                   "line" : 58,
                   "path" : "DirectOpenRedirectFlow.java",
                   "start" : 50

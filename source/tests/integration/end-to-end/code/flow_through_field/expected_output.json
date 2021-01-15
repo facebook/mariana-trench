@@ -37,7 +37,7 @@
                   "end" : 58,
                   "line" : 30,
                   "path" : "OfferRedirectToWebActivity.java",
-                  "start" : 44
+                  "start" : 50
                },
                "callee" : "Lcom/facebook/marianatrench/integrationtests/OfferRenderingUtils;.navigateToStoreURL:(Landroid/content/Context;Ljava/lang/String;)V",
                "callee_port" : "Argument(2)",
@@ -147,7 +147,7 @@
             "end" : 58,
             "line" : 30,
             "path" : "OfferRedirectToWebActivity.java",
-            "start" : 44
+            "start" : 50
          },
          "callee" : "Lcom/facebook/marianatrench/integrationtests/OfferRenderingUtils;.navigateToStoreURL:(Landroid/content/Context;Ljava/lang/String;)V",
          "callee_port" : "Argument(2)",
@@ -728,7 +728,7 @@
             "end" : 58,
             "line" : 36,
             "path" : "OfferRedirectToWebActivity.java",
-            "start" : 44
+            "start" : 50
          },
          "callee" : "Lcom/facebook/marianatrench/integrationtests/OfferRenderingUtils;.navigateToStoreURL:(Landroid/content/Context;Ljava/lang/String;)V",
          "callee_port" : "Argument(2)",
@@ -757,7 +757,7 @@
    "sinks" : [
       {
          "call_position" : {
-            "end" : 69,
+            "end" : 60,
             "line" : 26,
             "path" : "OfferRenderingUtils.java",
             "start" : 55

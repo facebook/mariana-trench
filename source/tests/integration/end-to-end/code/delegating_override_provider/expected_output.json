@@ -48,7 +48,7 @@
          "sinks" : [
             {
                "call_position" : {
-                  "end" : 70,
+                  "end" : 21,
                   "line" : 18,
                   "path" : "AbstractContentProvider.java",
                   "start" : 19
@@ -152,7 +152,7 @@
    "sinks" : [
       {
          "call_position" : {
-            "end" : 70,
+            "end" : 21,
             "line" : 18,
             "path" : "AbstractContentProvider.java",
             "start" : 19

@@ -79,7 +79,7 @@
          "sinks" : [
             {
                "call_position" : {
-                  "end" : 84,
+                  "end" : 45,
                   "line" : 19,
                   "path" : "Test.java",
                   "start" : 13

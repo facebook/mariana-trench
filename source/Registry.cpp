@@ -159,18 +159,31 @@ Bound get_highlight_bounds(
         std::min(callee_start + callee_name.length() - 1, line.length() - 1);
     return {static_cast<int>(callee_start), static_cast<int>(end)};
   }
-  // Highlight till the end of the arguments or till the end of line if it is
-  // a multi-line call
+  // Highlight the parameter or till the end of the line if the parameter is
+  // not on this line
+  auto callee_parameter_position = callee_port.root().parameter_position();
   int balanced_parentheses_counter = 1;
+  std::size_t current_parameter_position = callee->first_parameter_index();
   std::size_t arguments_start =
       std::min(callee_start + callee_name.length() + 1, line.length() - 1);
   std::size_t end = line.length() - 1;
 
   for (auto i = arguments_start; i < line.length(); i++) {
     if (line[i] == '(') {
-      balanced_parentheses_counter += 1;
+      balanced_parentheses_counter++;
     } else if (line[i] == ')') {
-      balanced_parentheses_counter -= 1;
+      balanced_parentheses_counter--;
+    } else if (line[i] == ',' && balanced_parentheses_counter == 1) {
+      if (current_parameter_position == callee_parameter_position) {
+        end = i - 1;
+        break;
+      }
+      current_parameter_position++;
+      if (current_parameter_position == callee_parameter_position) {
+        // The argument usually starts one space after the comma (current
+        // position) so add 2
+        arguments_start = i + 2;
+      }
     }
     if (balanced_parentheses_counter == 0) {
       end = i - 1;
@@ -259,8 +272,8 @@ IssueSet augment_issue_positions(
 }
 
 /**
- * Run a fixpoint to go through all the sources(or sinks) involved in issues to
- * add all the relevant files and methods to the mapping
+ * Run a fixpoint to go through all the sources(or sinks) involved in issues
+ * to add all the relevant files and methods to the mapping
  * `issue_files_to_methods`.
  */
 void get_frames_files_to_methods(
