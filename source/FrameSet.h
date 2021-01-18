@@ -184,9 +184,7 @@ class FrameSet final : public sparta::AbstractDomain<FrameSet> {
       int maximum_source_sink_distance) const;
 
   /* Return the set of leaf frames with the given position. */
-  FrameSet attach_position(
-      const Position* position,
-      const FeatureMayAlwaysSet& extra_features) const;
+  FrameSet attach_position(const Position* position) const;
 
   static FrameSet from_json(const Json::Value& value, Context& context);
   Json::Value to_json() const;

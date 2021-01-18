@@ -122,12 +122,10 @@ Taint Taint::propagate(
   return result;
 }
 
-Taint Taint::attach_position(
-    const Position* position,
-    const FeatureMayAlwaysSet& extra_features) const {
+Taint Taint::attach_position(const Position* position) const {
   Taint result;
   for (const auto& frames : set_) {
-    result.add(frames.attach_position(position, extra_features));
+    result.add(frames.attach_position(position));
   }
   return result;
 }

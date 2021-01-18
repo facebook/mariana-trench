@@ -160,9 +160,7 @@ class Taint final : public sparta::AbstractDomain<Taint> {
       const FeatureMayAlwaysSet& extra_features) const;
 
   /* Return the set of leaf frames with the given position. */
-  Taint attach_position(
-      const Position* position,
-      const FeatureMayAlwaysSet& extra_features) const;
+  Taint attach_position(const Position* position) const;
 
   static Taint from_json(const Json::Value& value, Context& context);
   Json::Value to_json() const;

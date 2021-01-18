@@ -218,9 +218,7 @@ Frame FrameSet::propagate(
       /* local_positions */ {});
 }
 
-FrameSet FrameSet::attach_position(
-    const Position* position,
-    const FeatureMayAlwaysSet& extra_features) const {
+FrameSet FrameSet::attach_position(const Position* position) const {
   FrameSet leaves;
 
   for (const auto& [_, position_map] : map_.bindings()) {
@@ -230,10 +228,6 @@ FrameSet FrameSet::attach_position(
           continue;
         }
 
-        // Note: This merges user features with existing inferred features.
-        auto inferred_features = frame.features();
-        inferred_features.add(extra_features);
-
         leaves.add(Frame(
             frame.kind(),
             frame.callee_port(),
@@ -241,7 +235,7 @@ FrameSet FrameSet::attach_position(
             /* call_position */ position,
             /* distance */ 0,
             frame.origins(),
-            std::move(inferred_features),
+            frame.features(),
             FeatureSet::bottom(),
             frame.local_positions()));
       }

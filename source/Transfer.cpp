@@ -628,14 +628,10 @@ bool Transfer::analyze_load_param(
   auto root = Root(Root::Kind::Argument, parameter_position);
   auto taint = context->model.parameter_sources().read(root);
 
-  // Add special features that cannot be done in model generators.
-  auto features =
-      context->class_properties.parameter_source_features(context->method());
-
   // Add the position of the instruction to the parameter sources.
   auto* position = context->positions.get(context->method());
-  taint.map([&features, position](Taint& sources) {
-    sources = sources.attach_position(position, features);
+  taint.map([position](Taint& sources) {
+    sources = sources.attach_position(position);
   });
 
   // Introduce an artificial parameter source in order to infer sinks and
@@ -982,9 +978,8 @@ bool Transfer::analyze_return(
   // Add the position of the instruction to the return sinks.
   auto* position =
       context->positions.get(context->method(), environment->last_position());
-  return_sinks.map([position](Taint& sinks) {
-    sinks = sinks.attach_position(position, /* features */ {});
-  });
+  return_sinks.map(
+      [position](Taint& sinks) { sinks = sinks.attach_position(position); });
 
   for (auto register_id : instruction->srcs()) {
     auto memory_locations = environment->memory_locations(register_id);

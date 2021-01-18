@@ -158,13 +158,12 @@ ClassProperties::ClassProperties(
     const DexStoresVector& stores,
     const Features& features)
     : via_caller_exported_(features.get("via-caller-exported")),
-      via_child_exported_(features.get("via-child-exported")),
+      via_child_exposed_(features.get("via-child-exposed")),
       via_caller_unexported_(features.get("via-caller-unexported")),
       via_public_dfa_scheme_(features.get("via-public-dfa-scheme")),
       via_caller_permission_(features.get("via-caller-permission")),
-      via_child_permission_(features.get("via-child-permission")),
-      via_caller_protection_level_(features.get("via-caller-protection-level")),
-      via_child_protection_level_(features.get("via-child-protection-level")) {
+      via_caller_protection_level_(
+          features.get("via-caller-protection-level")) {
   try {
     const auto manifest_class_info = get_manifest_class_info(
         options.apk_directory() + "/AndroidManifest.xml");
@@ -172,27 +171,27 @@ ClassProperties::ClassProperties(
     for (const auto& tag_info : manifest_class_info.component_tags) {
       std::unordered_set<std::string> parent_classes;
       auto dex_class = redex::get_class(tag_info.classname);
-      if (dex_class) {
-        parent_classes = generator::get_custom_parents_from_class(dex_class);
-      }
+      bool protection_level = false;
+      bool permission = false;
 
       if (!tag_info.protection_level.empty() &&
-          tag_info.protection_level.compare("normal") != 0) {
+          tag_info.protection_level != "normal") {
         protection_level_classes_.emplace(tag_info.classname);
-        parent_protection_level_classes_.insert(
-            parent_classes.begin(), parent_classes.end());
+        protection_level = true;
       }
       if (!tag_info.permission.empty()) {
         permission_classes_.emplace(tag_info.classname);
-        parent_permission_classes_.insert(
-            parent_classes.begin(), parent_classes.end());
+        permission = true;
       }
       if (tag_info.is_exported == BooleanXMLAttribute::True ||
           (tag_info.is_exported == BooleanXMLAttribute::Undefined &&
            tag_info.has_intent_filters)) {
         exported_classes_.emplace(tag_info.classname);
-        parent_exported_classes_.insert(
-            parent_classes.begin(), parent_classes.end());
+        if (!protection_level && !permission && dex_class) {
+          parent_classes = generator::get_custom_parents_from_class(dex_class);
+          parent_exposed_classes_.insert(
+              parent_classes.begin(), parent_classes.end());
+        }
       } else {
         unexported_classes_.emplace(tag_info.classname);
       }
@@ -225,8 +224,8 @@ bool ClassProperties::is_class_exported(const std::string& class_name) const {
   return exported_classes_.count(class_name) > 0;
 }
 
-bool ClassProperties::is_child_exported(const std::string& class_name) const {
-  return parent_exported_classes_.count(class_name) > 0;
+bool ClassProperties::is_child_exposed(const std::string& class_name) const {
+  return parent_exposed_classes_.count(class_name) > 0;
 }
 
 bool ClassProperties::is_class_unexported(const std::string& class_name) const {
@@ -242,18 +241,8 @@ bool ClassProperties::has_protection_level(
   return protection_level_classes_.count(class_name) > 0;
 }
 
-bool ClassProperties::has_child_protection_level(
-    const std::string& class_name) const {
-  return parent_protection_level_classes_.count(class_name) > 0;
-}
-
 bool ClassProperties::has_permission(const std::string& class_name) const {
   return permission_classes_.count(class_name) > 0;
-}
-
-bool ClassProperties::has_child_permission(
-    const std::string& class_name) const {
-  return parent_permission_classes_.count(class_name) > 0;
 }
 
 std::optional<std::string>
@@ -290,32 +279,6 @@ FeatureMayAlwaysSet ClassProperties::propagate_features(
     const Method* callee,
     const Features& feature_factory) const {
   FeatureSet features;
-  auto base_caller_class = strip_subclass(caller->get_class()->str());
-
-  if (is_class_exported(base_caller_class)) {
-    features.add(via_caller_exported_);
-  }
-  if (is_child_exported(base_caller_class)) {
-    features.add(via_child_exported_);
-  }
-  if (is_class_unexported(base_caller_class)) {
-    features.add(via_caller_unexported_);
-  }
-  if (is_dfa_public(base_caller_class)) {
-    features.add(via_public_dfa_scheme_);
-  }
-  if (has_permission(base_caller_class)) {
-    features.add(via_caller_permission_);
-  }
-  if (has_child_permission(base_caller_class)) {
-    features.add(via_child_permission_);
-  }
-  if (has_protection_level(base_caller_class)) {
-    features.add(via_caller_protection_level_);
-  }
-  if (has_child_protection_level(base_caller_class)) {
-    features.add(via_child_protection_level_);
-  }
 
   std::optional<std::string> privacy_decision_number =
       get_privacy_decision_number_from_method(caller);
@@ -327,7 +290,7 @@ FeatureMayAlwaysSet ClassProperties::propagate_features(
   return FeatureMayAlwaysSet::make_always(features);
 }
 
-FeatureMayAlwaysSet ClassProperties::parameter_source_features(
+FeatureMayAlwaysSet ClassProperties::issue_features(
     const Method* method) const {
   FeatureSet features;
   auto base_class = strip_subclass(method->get_class()->str());
@@ -335,8 +298,8 @@ FeatureMayAlwaysSet ClassProperties::parameter_source_features(
   if (is_class_exported(base_class)) {
     features.add(via_caller_exported_);
   }
-  if (is_child_exported(base_class)) {
-    features.add(via_child_exported_);
+  if (is_child_exposed(base_class)) {
+    features.add(via_child_exposed_);
   }
   if (is_class_unexported(base_class)) {
     features.add(via_caller_unexported_);
@@ -347,22 +310,11 @@ FeatureMayAlwaysSet ClassProperties::parameter_source_features(
   if (has_permission(base_class)) {
     features.add(via_caller_permission_);
   }
-  if (has_child_permission(base_class)) {
-    features.add(via_child_permission_);
-  }
   if (has_protection_level(base_class)) {
     features.add(via_caller_protection_level_);
   }
-  if (has_child_protection_level(base_class)) {
-    features.add(via_child_protection_level_);
-  }
 
   return FeatureMayAlwaysSet::make_always(features);
-}
-
-FeatureMayAlwaysSet ClassProperties::issue_features(
-    const Method* /*method*/) const {
-  return FeatureMayAlwaysSet::bottom();
 }
 
 } // namespace marianatrench
