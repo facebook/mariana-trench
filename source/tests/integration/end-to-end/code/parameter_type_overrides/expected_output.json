@@ -78,10 +78,10 @@
          "sinks" : [
             {
                "call_position" : {
-                  "end" : 15,
-                  "line" : 30,
+                  "end" : 11,
+                  "line" : 37,
                   "path" : "RunnableFlows.java",
-                  "start" : 15
+                  "start" : 8
                },
                "callee" : {
                   "name" : "Lcom/facebook/marianatrench/integrationtests/RunnableFlows;.runRunnable:(Lcom/facebook/marianatrench/integrationtests/RunnableWithArgument;Ljava/lang/Object;)V",

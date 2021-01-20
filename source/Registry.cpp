@@ -145,6 +145,88 @@ struct Bounds {
   int end;
 };
 
+Bounds remove_surrounding_whitespace(Bounds bounds, const std::string& line) {
+  auto new_start = bounds.start;
+  auto new_end = bounds.end;
+  while (new_start < bounds.end && std::isspace(line[new_start])) {
+    new_start++;
+  }
+  while (new_end > new_start && std::isspace(line[new_end])) {
+    new_end--;
+  }
+  return {bounds.line, new_start, new_end};
+}
+
+Bounds get_argument_bounds(
+    ParameterPosition callee_parameter_position,
+    ParameterPosition first_parameter_position,
+    const std::vector<std::string>& lines,
+    const Bounds& callee_name_bounds) {
+  auto current_parameter_position = first_parameter_position;
+  std::size_t line_number = callee_name_bounds.line;
+  std::string current_line = lines[line_number - 1];
+  std::size_t arguments_start = callee_name_bounds.end + 2;
+  if (arguments_start > current_line.length() - 1) {
+    if (line_number == lines.size()) {
+      return callee_name_bounds;
+    }
+    line_number++;
+    current_line = lines[line_number - 1];
+    arguments_start = 0;
+  }
+  std::size_t end = current_line.length() - 1;
+  int balanced_parentheses_counter = 1;
+
+  while (line_number <= lines.size()) {
+    current_line = lines[line_number - 1];
+    end = current_line.length() - 1;
+    for (auto i = arguments_start; i < current_line.length(); i++) {
+      if (current_line[i] == '(') {
+        balanced_parentheses_counter++;
+      } else if (current_line[i] == ')') {
+        balanced_parentheses_counter--;
+      } else if (current_line[i] == ',' && balanced_parentheses_counter == 1) {
+        if (current_parameter_position == callee_parameter_position) {
+          end = i - 1;
+          break;
+        }
+        current_parameter_position++;
+        if (current_parameter_position == callee_parameter_position) {
+          arguments_start = i + 1;
+        }
+      }
+      if (balanced_parentheses_counter == 0) {
+        end = i - 1;
+        break;
+      }
+    }
+    mt_assert(current_parameter_position <= callee_parameter_position);
+    auto highlighted_portion =
+        current_line.substr(arguments_start, end - arguments_start + 1);
+    if (balanced_parentheses_counter == 0 ||
+        (callee_parameter_position == current_parameter_position &&
+         std::any_of(
+             std::begin(highlighted_portion),
+             std::end(highlighted_portion),
+             [](unsigned char c) { return std::isalpha(c); }))) {
+      break;
+    }
+
+    line_number++;
+    arguments_start = 0;
+  }
+  // In either of these cases, we have failed to find the argument
+  if (callee_parameter_position < current_parameter_position ||
+      line_number > lines.size()) {
+    return callee_name_bounds;
+  }
+  Bounds highlight_bounds = {
+      static_cast<int>(line_number),
+      static_cast<int>(arguments_start),
+      static_cast<int>(end)};
+  return remove_surrounding_whitespace(highlight_bounds, current_line);
+}
+
 Bounds get_highlight_bounds(
     const Method* callee,
     const std::vector<std::string>& lines,
@@ -168,50 +250,21 @@ Bounds get_highlight_bounds(
   if (callee_start == std::string::npos) {
     return {callee_line_number, 0, 0};
   }
+  std::size_t callee_end =
+      std::min(callee_start + callee_name.length() - 1, line.length() - 1);
+  Bounds callee_name_bounds = {
+      callee_line_number,
+      static_cast<int>(callee_start),
+      static_cast<int>(callee_end)};
   if (!callee_port.root().is_argument() ||
       (!callee->is_static() && callee_port.root().parameter_position() == 0)) {
-    std::size_t end =
-        std::min(callee_start + callee_name.length() - 1, line.length() - 1);
-    return {
-        callee_line_number,
-        static_cast<int>(callee_start),
-        static_cast<int>(end)};
+    return callee_name_bounds;
   }
-  // Highlight the parameter or till the end of the line if the parameter is
-  // not on this line
-  auto callee_parameter_position = callee_port.root().parameter_position();
-  auto current_parameter_position = callee->first_parameter_index();
-  int balanced_parentheses_counter = 1;
-  std::size_t arguments_start =
-      std::min(callee_start + callee_name.length() + 1, line.length() - 1);
-  std::size_t end = line.length() - 1;
-
-  for (auto i = arguments_start; i < line.length(); i++) {
-    if (line[i] == '(') {
-      balanced_parentheses_counter++;
-    } else if (line[i] == ')') {
-      balanced_parentheses_counter--;
-    } else if (line[i] == ',' && balanced_parentheses_counter == 1) {
-      if (current_parameter_position == callee_parameter_position) {
-        end = i - 1;
-        break;
-      }
-      current_parameter_position++;
-      if (current_parameter_position == callee_parameter_position) {
-        // The argument usually starts one space after the comma (current
-        // position) so add 2
-        arguments_start = i + 2;
-      }
-    }
-    if (balanced_parentheses_counter == 0) {
-      end = i - 1;
-      break;
-    }
-  }
-  return {
-      callee_line_number,
-      static_cast<int>(arguments_start),
-      static_cast<int>(end)};
+  return get_argument_bounds(
+      callee_port.root().parameter_position(),
+      callee->first_parameter_index(),
+      lines,
+      callee_name_bounds);
 }
 
 Frame augment_frame_position(
