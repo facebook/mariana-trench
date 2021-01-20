@@ -227,6 +227,25 @@ Bounds get_argument_bounds(
   return remove_surrounding_whitespace(highlight_bounds, current_line);
 }
 
+Bounds get_callee_this_parameter_bounds(
+    const std::string& line,
+    const Bounds& callee_name_bounds) {
+  auto callee_start = callee_name_bounds.start;
+  if (callee_start - 1 < 0 || line[callee_start - 1] != '.') {
+    return callee_name_bounds;
+  }
+  auto start = callee_start - 1;
+  while (start > 1 && !std::isspace(line[start - 1])) {
+    start--;
+  }
+  if (start != callee_start - 1) {
+    return {callee_name_bounds.line, start, callee_start - 2};
+  }
+  // If the current line doesn't contain the argument, just highlight the
+  // callee so that we don't highlight a previous chained method call, etc
+  return callee_name_bounds;
+}
+
 Bounds get_highlight_bounds(
     const Method* callee,
     const std::vector<std::string>& lines,
@@ -256,9 +275,11 @@ Bounds get_highlight_bounds(
       callee_line_number,
       static_cast<int>(callee_start),
       static_cast<int>(callee_end)};
-  if (!callee_port.root().is_argument() ||
-      (!callee->is_static() && callee_port.root().parameter_position() == 0)) {
+  if (!callee_port.root().is_argument()) {
     return callee_name_bounds;
+  }
+  if (callee_port.root().parameter_position() == 0 && !callee->is_static()) {
+    return get_callee_this_parameter_bounds(line, callee_name_bounds);
   }
   return get_argument_bounds(
       callee_port.root().parameter_position(),

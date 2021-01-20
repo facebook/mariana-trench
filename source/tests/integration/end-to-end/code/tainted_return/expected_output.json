@@ -122,10 +122,10 @@
          "sinks" : [
             {
                "call_position" : {
-                  "end" : 19,
+                  "end" : 9,
                   "line" : 17,
                   "path" : "Instantiate.java",
-                  "start" : 11
+                  "start" : 4
                },
                "callee" : "Lcom/facebook/marianatrench/integrationtests/Configerator;.configure:()V",
                "callee_port" : "Argument(0).mZeroRatingConnectionConfigOverrides",
@@ -137,10 +137,10 @@
             },
             {
                "call_position" : {
-                  "end" : 19,
+                  "end" : 9,
                   "line" : 17,
                   "path" : "Instantiate.java",
-                  "start" : 11
+                  "start" : 4
                },
                "callee" : "Lcom/facebook/marianatrench/integrationtests/Configerator;.configure:()V",
                "callee_port" : "Argument(0).mZeroRatingConnectionConfigOverrides.mUri",
@@ -154,10 +154,10 @@
          "sources" : [
             {
                "call_position" : {
-                  "end" : 20,
+                  "end" : 11,
                   "line" : 15,
                   "path" : "Instantiate.java",
-                  "start" : 13
+                  "start" : 4
                },
                "callee" : "Lcom/facebook/marianatrench/integrationtests/ZeroRatingConnectionConfigOverrides;.onCreate:()V",
                "callee_port" : "Argument(0).mUri",
@@ -669,10 +669,10 @@
    "sinks" : [
       {
          "call_position" : {
-            "end" : 59,
+            "end" : 52,
             "line" : 24,
             "path" : "Configerator.java",
-            "start" : 54
+            "start" : 17
          },
          "callee" : "Lcom/facebook/marianatrench/integrationtests/ZeroRatingConnectionConfigOverrides;.getUri:()Landroid/net/Uri;",
          "callee_port" : "Argument(0)",
@@ -685,10 +685,10 @@
       },
       {
          "call_position" : {
-            "end" : 59,
+            "end" : 52,
             "line" : 24,
             "path" : "Configerator.java",
-            "start" : 54
+            "start" : 17
          },
          "callee" : "Lcom/facebook/marianatrench/integrationtests/ZeroRatingConnectionConfigOverrides;.getUri:()Landroid/net/Uri;",
          "callee_port" : "Argument(0).mUri",
