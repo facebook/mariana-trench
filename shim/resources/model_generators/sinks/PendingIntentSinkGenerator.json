@@ -78,6 +78,20 @@
           }
         ]
       }
+    },
+    {
+      "find": "methods",
+      "where": [
+        {
+          "constraint": "signature",
+          "pattern": "Lcom/facebook/secure/pendingintent/SecurePendingIntent\\$Builder;\\.createIntent.*"
+        }
+      ],
+      "model": {
+        "modes": [
+          "skip-analysis"
+        ]
+      }
     }
   ]
 }
