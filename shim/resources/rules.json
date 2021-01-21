@@ -11,7 +11,8 @@
       "ServiceAIDLUserInput",
       "ServiceUserInput",
       "WebViewUserInput",
-      "JavascriptInterfaceUserInput"
+      "JavascriptInterfaceUserInput",
+      "OculusFitnessInput"
     ],
     "sinks": [
       "LaunchingComponent",
@@ -31,7 +32,8 @@
       "ServiceAIDLUserInput",
       "ServiceUserInput",
       "WebViewUserInput",
-      "EditableText"
+      "EditableText",
+      "OculusFitnessInput"
     ],
     "sinks": [
       "Logging",
@@ -71,7 +73,8 @@
       "ServiceUserInput",
       "WebViewUserInput",
       "JavascriptInterfaceUserInput",
-      "ExternalDirectory"
+      "ExternalDirectory",
+      "OculusFitnessInput"
     ],
     "sinks": [
       "WebViewLoadContent"
@@ -89,7 +92,8 @@
       "ServiceAIDLUserInput",
       "ServiceUserInput",
       "WebViewUserInput",
-      "JavascriptInterfaceUserInput"
+      "JavascriptInterfaceUserInput",
+      "OculusFitnessInput"
     ],
     "sinks": [
       "ContentResolver"
@@ -125,7 +129,8 @@
       "ServiceAIDLUserInput",
       "ServiceUserInput",
       "WebViewUserInput",
-      "JavascriptInterfaceUserInput"
+      "JavascriptInterfaceUserInput",
+      "OculusFitnessInput"
     ],
     "sinks": [
       "JNI"
@@ -143,7 +148,8 @@
       "ServiceAIDLUserInput",
       "ServiceUserInput",
       "WebViewUserInput",
-      "JavascriptInterfaceUserInput"
+      "JavascriptInterfaceUserInput",
+      "OculusFitnessInput"
     ],
     "sinks": [
       "ExecuteJavascript",
@@ -162,7 +168,8 @@
       "ServiceAIDLUserInput",
       "ServiceUserInput",
       "WebViewUserInput",
-      "JavascriptInterfaceUserInput"
+      "JavascriptInterfaceUserInput",
+      "OculusFitnessInput"
     ],
     "sinks": [
       "BlueServiceOperation",
@@ -185,7 +192,8 @@
       "ServiceAIDLUserInput",
       "ServiceUserInput",
       "WebViewUserInput",
-      "JavascriptInterfaceUserInput"
+      "JavascriptInterfaceUserInput",
+      "OculusFitnessInput"
     ],
     "sinks": [
       "NetworkRequest"
@@ -204,7 +212,8 @@
       "ServiceUserInput",
       "WebViewUserInput",
       "JavascriptInterfaceUserInput",
-      "ExternalDirectory"
+      "ExternalDirectory",
+      "OculusFitnessInput"
     ],
     "sinks": [
       "CodeExecution",
@@ -249,7 +258,8 @@
       "ServiceUserInput",
       "WebViewUserInput",
       "JavascriptInterfaceUserInput",
-      "ExternalDirectory"
+      "ExternalDirectory",
+      "OculusFitnessInput"
     ],
     "sinks": [
       "SQLQuery"
@@ -345,7 +355,8 @@
       "ServiceAIDLUserInput",
       "ServiceUserInput",
       "WebViewUserInput",
-      "JavascriptInterfaceUserInput"
+      "JavascriptInterfaceUserInput",
+      "OculusFitnessInput"
     ],
     "sinks": [
       "ViewerContextCreation"
@@ -363,7 +374,8 @@
       "ReceiverUserInput",
       "ServiceAIDLUserInput",
       "ServiceUserInput",
-      "WebViewUserInput"
+      "WebViewUserInput",
+      "OculusFitnessInput"
     ],
     "sinks": [
       "BloksScreenCreation"
@@ -392,7 +404,8 @@
       "ServiceAIDLUserInput",
       "ServiceUserInput",
       "WebViewUserInput",
-      "JavascriptInterfaceUserInput"
+      "JavascriptInterfaceUserInput",
+      "OculusFitnessInput"
     ],
     "sinks": [
       "FileResolver",
@@ -418,7 +431,8 @@
     "code": 4026,
     "description": "Values from user-controlled Activity may eventually flow into setResult",
     "sources": [
-      "ActivityUserInput"
+      "ActivityUserInput",
+      "OculusFitnessInput"
     ],
     "sinks": [
       "ActivityExitNode"
@@ -436,7 +450,8 @@
       "ServiceAIDLUserInput",
       "ServiceUserInput",
       "WebViewUserInput",
-      "JavascriptInterfaceUserInput"
+      "JavascriptInterfaceUserInput",
+      "OculusFitnessInput"
     ],
     "sinks": [
       "SmsRequest",

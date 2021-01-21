@@ -237,6 +237,10 @@
   },
   {
     "kind": "json",
+    "path": "model_generators/sources/OculusMoveFitnessDataModuleSourceGenerator.json"
+  },
+  {
+    "kind": "json",
     "path": "model_generators/sources/SecureTemplatePIISourceGenerator.json"
   },
   {

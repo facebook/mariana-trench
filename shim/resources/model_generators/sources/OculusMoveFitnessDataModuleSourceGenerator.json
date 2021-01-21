@@ -1,0 +1,39 @@
+{
+  "model_generators": [
+    {
+      "find": "methods",
+      "where": [
+        {
+          "constraint": "any_of",
+          "inners": [
+            {
+              "constraint": "signature",
+              "pattern": "Lcom/oculus/modules/FitnessDataModuleImpl;\\.insertOrUpdateUserInfoImpl.*"
+            },
+            {
+              "constraint": "signature",
+              "pattern": "Lcom/oculus/modules/FitnessDataModuleImpl;\\.insertUserMetricsImpl.*"
+            },
+            {
+              "constraint": "signature",
+              "pattern": "Lcom/oculus/modules/FitnessDataModuleImpl;\\.insertUserGoalsImpl.*"
+            }
+          ]
+        }
+      ],
+      "model": {
+        "for_all_parameters": [
+          {
+            "variable": "x",
+            "sources": [
+              {
+                "kind": "OculusFitnessInput",
+                "port": "Argument(x)"
+              }
+            ]
+          }
+        ]
+      }
+    }
+  ]
+}
