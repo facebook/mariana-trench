@@ -31,16 +31,52 @@ std::unordered_set<std::string> provider_regex_strings = {
     ".*;\\.(doO|o)penTypedAssetFile:\\(Landroid/net/Uri;Ljava/lang/String;.*\\)Landroid/content/res/AssetFileDescriptor;",
     ".*;\\.(doQ|q)uery:\\(Landroid/net/Uri;\\[Ljava/lang/String;.*\\)Landroid/database/Cursor;"};
 
-Model source_all_parameters(const Method* method, Context& context) {
+std::unordered_set<std::string> permission_method_suffixes = {
+    ".onCheckPermissions:()Z",
+    ".getFbPermission:()Ljava/lang/String;",
+    ".getWhitelistedPackages:()Lcom/google/common/collect/ImmutableSet;"};
+
+std::unordered_set<std::string> permission_base_class_prefixes = {
+    "Lcom/facebook/secure/content/FbPermissions",
+    "Lcom/facebook/secure/content/Secure"};
+
+bool has_inline_permissions(DexClass* dex_class) {
+  for (const auto& method_suffix : permission_method_suffixes) {
+    if (redex::get_method(dex_class->str() + method_suffix)) {
+      return true;
+    }
+  }
+
+  std::unordered_set<std::string> parent_classes =
+      generator::get_custom_parents_from_class(dex_class);
+  for (const auto& parent_class : parent_classes) {
+    for (const auto& class_prefix : permission_base_class_prefixes) {
+      if (boost::starts_with(parent_class, class_prefix)) {
+        return true;
+      }
+    }
+  }
+  return false;
+}
+
+Model source_all_parameters(
+    const Method* method,
+    bool has_permissions,
+    Context& context) {
+  std::vector<std::string> features;
   auto model = Model(method, context);
   model.add_mode(Model::Mode::NoJoinVirtualOverrides, context);
+  if (has_permissions) {
+    features.push_back("via-caller-permission");
+  }
   for (const auto& argument : generator::get_argument_types(method)) {
     model.add_parameter_source(
         AccessPath(Root(Root::Kind::Argument, argument.first)),
         generator::source(
             context,
             method,
-            /* kind */ "ProviderUserInput"));
+            /* kind */ "ProviderUserInput",
+            features));
   }
   return model;
 }
@@ -48,10 +84,7 @@ Model source_all_parameters(const Method* method, Context& context) {
 } // namespace
 
 std::vector<Model> ProviderSourceGenerator::run(const DexStoresVector& stores) {
-  std::vector<Model> models;
   std::unordered_set<std::string> manifest_providers = {};
-  std::vector<std::unique_ptr<re2::RE2>> provider_regexes;
-
   try {
     const auto manifest_class_info = get_manifest_class_info(
         options_.apk_directory() + "/AndroidManifest.xml");
@@ -77,22 +110,37 @@ std::vector<Model> ProviderSourceGenerator::run(const DexStoresVector& stores) {
     return {};
   }
 
+  std::vector<std::unique_ptr<re2::RE2>> provider_regexes;
   for (const auto& regex_string : provider_regex_strings) {
     provider_regexes.push_back(std::make_unique<re2::RE2>(regex_string));
   }
 
   std::mutex mutex;
+  std::vector<Model> models;
+  std::unordered_map<DexClass*, bool> permission_providers = {};
   for (auto& scope : DexStoreClassesIterator(stores)) {
     walk::parallel::methods(scope, [&](DexMethod* dex_method) {
       const auto* method = methods_.get(dex_method);
       std::string signature = show(method);
-
-      if (manifest_providers.find(generator::get_outer_class(signature)) !=
-          manifest_providers.end()) {
+      const auto outer_class = generator::get_outer_class(signature);
+      if (manifest_providers.count(outer_class)) {
         for (const auto& regex : provider_regexes) {
           if (re2::RE2::FullMatch(signature, *regex)) {
+            bool has_permissions = false;
             std::lock_guard<std::mutex> lock(mutex);
-            models.push_back(source_all_parameters(method, context_));
+            auto* dex_class = type_class(dex_method->get_class());
+
+            if (dex_class) {
+              auto found = permission_providers.find(dex_class);
+              if (found != permission_providers.end()) {
+                has_permissions = found->second;
+              } else {
+                has_permissions = has_inline_permissions(dex_class);
+                permission_providers.emplace(dex_class, has_permissions);
+              }
+            }
+            models.push_back(
+                source_all_parameters(method, has_permissions, context_));
             break;
           }
         }
