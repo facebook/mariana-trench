@@ -102,6 +102,25 @@ class Registry final {
    */
   void augment_positions();
 
+  /*
+   * The following struct and method have been included here only for testing
+   * purposes
+   */
+  struct Bounds {
+    int line;
+    int start;
+    int end;
+
+    bool operator==(const Bounds& rhs) const {
+      return (rhs.line == line) && (rhs.start == start) && (rhs.end == end);
+    }
+  };
+  static Bounds get_highlight_bounds(
+      const Method* callee,
+      const std::vector<std::string>& lines,
+      int callee_line_number,
+      const AccessPath& callee_port);
+
   void dump_metadata(const boost::filesystem::path& path) const;
   void dump_models(
       const boost::filesystem::path& path,

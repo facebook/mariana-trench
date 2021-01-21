@@ -137,13 +137,8 @@ void Registry::join_with(const Registry& other) {
 
 namespace {
 
+using Bounds = Registry::Bounds;
 enum class FrameType { Source, Sink };
-
-struct Bounds {
-  int line;
-  int start;
-  int end;
-};
 
 Bounds remove_surrounding_whitespace(Bounds bounds, const std::string& line) {
   auto new_start = bounds.start;
@@ -216,7 +211,7 @@ Bounds get_argument_bounds(
     arguments_start = 0;
   }
   // In either of these cases, we have failed to find the argument
-  if (callee_parameter_position < current_parameter_position ||
+  if (current_parameter_position < callee_parameter_position ||
       line_number > lines.size()) {
     return callee_name_bounds;
   }
@@ -235,7 +230,7 @@ Bounds get_callee_this_parameter_bounds(
     return callee_name_bounds;
   }
   auto start = callee_start - 1;
-  while (start > 1 && !std::isspace(line[start - 1])) {
+  while (start >= 1 && !std::isspace(line[start - 1])) {
     start--;
   }
   if (start != callee_start - 1) {
@@ -244,48 +239,6 @@ Bounds get_callee_this_parameter_bounds(
   // If the current line doesn't contain the argument, just highlight the
   // callee so that we don't highlight a previous chained method call, etc
   return callee_name_bounds;
-}
-
-Bounds get_highlight_bounds(
-    const Method* callee,
-    const std::vector<std::string>& lines,
-    int callee_line_number,
-    const AccessPath& callee_port) {
-  std::string line;
-  try {
-    // Subtracting 1 below as lines in files are counted starting at 1
-    line = lines.at(callee_line_number - 1);
-  } catch (const std::out_of_range&) {
-    WARNING(
-        3,
-        "Trying to access line {} of a file with {} lines",
-        callee_line_number,
-        lines.size());
-    return {callee_line_number, 0, 0};
-  }
-
-  const auto& callee_name = callee->get_name();
-  auto callee_start = line.find(callee_name + "(");
-  if (callee_start == std::string::npos) {
-    return {callee_line_number, 0, 0};
-  }
-  std::size_t callee_end =
-      std::min(callee_start + callee_name.length() - 1, line.length() - 1);
-  Bounds callee_name_bounds = {
-      callee_line_number,
-      static_cast<int>(callee_start),
-      static_cast<int>(callee_end)};
-  if (!callee_port.root().is_argument()) {
-    return callee_name_bounds;
-  }
-  if (callee_port.root().parameter_position() == 0 && !callee->is_static()) {
-    return get_callee_this_parameter_bounds(line, callee_name_bounds);
-  }
-  return get_argument_bounds(
-      callee_port.root().parameter_position(),
-      callee->first_parameter_index(),
-      lines,
-      callee_name_bounds);
 }
 
 Frame augment_frame_position(
@@ -300,7 +253,7 @@ Frame augment_frame_position(
 
   const auto* callee = frame.callee();
   mt_assert(callee != nullptr);
-  auto bounds = get_highlight_bounds(
+  auto bounds = Registry::get_highlight_bounds(
       callee, lines, position->line(), frame.callee_port());
   return Frame(
       frame.kind(),
@@ -527,6 +480,48 @@ IssueSet cull_collapsed_issues(IssueSet issues, const Registry& registry) {
 }
 
 } // namespace
+
+Registry::Bounds Registry::get_highlight_bounds(
+    const Method* callee,
+    const std::vector<std::string>& lines,
+    int callee_line_number,
+    const AccessPath& callee_port) {
+  std::string line;
+  try {
+    // Subtracting 1 below as lines in files are counted starting at 1
+    line = lines.at(callee_line_number - 1);
+  } catch (const std::out_of_range&) {
+    WARNING(
+        3,
+        "Trying to access line {} of a file with {} lines",
+        callee_line_number,
+        lines.size());
+    return {callee_line_number, 0, 0};
+  }
+
+  const auto& callee_name = callee->get_name();
+  auto callee_start = line.find(callee_name + "(");
+  if (callee_start == std::string::npos) {
+    return {callee_line_number, 0, 0};
+  }
+  std::size_t callee_end =
+      std::min(callee_start + callee_name.length() - 1, line.length() - 1);
+  Bounds callee_name_bounds = {
+      callee_line_number,
+      static_cast<int>(callee_start),
+      static_cast<int>(callee_end)};
+  if (!callee_port.root().is_argument()) {
+    return callee_name_bounds;
+  }
+  if (callee_port.root().parameter_position() == 0 && !callee->is_static()) {
+    return get_callee_this_parameter_bounds(line, callee_name_bounds);
+  }
+  return get_argument_bounds(
+      callee_port.root().parameter_position(),
+      callee->first_parameter_index(),
+      lines,
+      callee_name_bounds);
+}
 
 void Registry::postprocess_remove_collapsed_traces() {
   // We need to compute a decreasing fixpoint since we might remove empty
