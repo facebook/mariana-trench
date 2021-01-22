@@ -68,59 +68,6 @@ class Registry final {
   void join_with(const Model& model);
   void join_with(const Registry& other);
 
-  /*
-   * After an analysis, the registry might contain invalid traces because of
-   * collapses in the abstract tree domain.
-   *
-   * # Example
-   * At global iteration 1, method `f` as a source on port `Return.foo`.
-   * Method `g` is analyzed and finds an issue, referring to the source from
-   * `f`. The issue has the following sources:
-   * ```
-   * Taint{Frame(callee=`f`, callee_port=`Return.foo`, ...)}
-   * ```
-   *
-   * At global iteration 2, the source in `f` gets collapse into port `Return`.
-   * This can happen for many reasons, for instance if the source tree gets too
-   * wide. Method `g` now infers an issue with the sources:
-   * ```
-   * Taint{
-   *    Frame(callee=`f`, callee_port=`Return`, ...),
-   *    Frame(callee=`f`, callee_port=`Return.foo`, ...),
-   * }
-   * ```
-   * If we export this in our results, this would result in invalid traces
-   * because in `f`, there is no more source for `Return.foo`.
-   *
-   * To prevent that, we remove the frame with callee port `Return.foo` here.
-   */
-  void postprocess_remove_collapsed_traces();
-
-  /*
-   * Add a start and end column to the positions involved in issues so that they
-   * can be highlighted in the Zoncolan UI
-   */
-  void augment_positions();
-
-  /*
-   * The following struct and method have been included here only for testing
-   * purposes
-   */
-  struct Bounds {
-    int line;
-    int start;
-    int end;
-
-    bool operator==(const Bounds& rhs) const {
-      return (rhs.line == line) && (rhs.start == start) && (rhs.end == end);
-    }
-  };
-  static Bounds get_highlight_bounds(
-      const Method* callee,
-      const std::vector<std::string>& lines,
-      int callee_line_number,
-      const AccessPath& callee_port);
-
   void dump_metadata(const boost::filesystem::path& path) const;
   void dump_models(
       const boost::filesystem::path& path,

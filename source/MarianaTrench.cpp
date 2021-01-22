@@ -17,6 +17,7 @@
 #include <mariana-trench/ClassProperties.h>
 #include <mariana-trench/Context.h>
 #include <mariana-trench/Dependencies.h>
+#include <mariana-trench/Highlights.h>
 #include <mariana-trench/Interprocedural.h>
 #include <mariana-trench/Kind.h>
 #include <mariana-trench/Log.h>
@@ -25,6 +26,7 @@
 #include <mariana-trench/Options.h>
 #include <mariana-trench/Overrides.h>
 #include <mariana-trench/Positions.h>
+#include <mariana-trench/PostprocessTraces.h>
 #include <mariana-trench/Redex.h>
 #include <mariana-trench/Rules.h>
 #include <mariana-trench/Scheduler.h>
@@ -181,7 +183,7 @@ Registry MarianaTrench::analyze(Context& context) {
 
   Timer remove_collapsed_traces_timer;
   LOG(2, "Removing invalid traces due to collapsing...");
-  registry.postprocess_remove_collapsed_traces();
+  PostprocessTraces::postprocess_remove_collapsed_traces(registry, context);
   context.statistics->log_time(
       "remove_collapsed_traces", remove_collapsed_traces_timer);
   LOG(2,
@@ -191,7 +193,7 @@ Registry MarianaTrench::analyze(Context& context) {
   if (!context.options->skip_source_indexing()) {
     Timer augment_positions_timer;
     LOG(1, "Augmenting positions...");
-    registry.augment_positions();
+    Highlights::augment_positions(registry, context);
     context.statistics->log_time("augment_positions", augment_positions_timer);
     LOG(1,
         "Augmented positions in {:.2f}s.",
