@@ -1,6 +1,8 @@
-<p align="center">
-  <img src="https://raw.githubusercontent.com/facebookincubator/mariana-trench/master/logo.png">
-</p>
+# Mariana Trench
+
+![logo](https://github.com/facebookincubator/mariana-trench/blob/master/logo.png?raw=true)
+
+[![MIT License](https://img.shields.io/badge/license-MIT-blue.svg?style=flat)](http://choosealicense.com/licenses/mit/)
 
 Mariana Trench is a security focused static analysis platform targeting Android.
 
