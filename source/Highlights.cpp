@@ -124,6 +124,46 @@ Bounds get_callee_this_parameter_bounds(
   return callee_name_bounds;
 }
 
+Bounds get_local_position_bounds(
+    const Position& local_position,
+    const std::vector<std::string>& lines) {
+  std::string line;
+  try {
+    // Subtracting 1 below as lines in files are counted starting at 1
+    line = lines.at(local_position.line() - 1);
+  } catch (const std::out_of_range&) {
+    WARNING(
+        3,
+        "Trying to access line {} of a file with {} lines",
+        local_position.line(),
+        lines.size());
+    return {local_position.line(), 0, 0};
+  }
+
+  return {local_position.line(), 0, 0};
+}
+
+LocalPositionSet augment_local_positions(
+    const LocalPositionSet& local_positions,
+    const std::vector<std::string>& lines,
+    const Context& context) {
+  if (local_positions.is_bottom() || local_positions.is_top()) {
+    return local_positions;
+  }
+  auto new_local_positions = LocalPositionSet();
+  for (const auto* local_position : local_positions.elements()) {
+    if (!local_position->path() || !local_position->instruction() ||
+        local_position->port() == std::nullopt) {
+      new_local_positions.add(local_position);
+      continue;
+    }
+    auto bounds = get_local_position_bounds(*local_position, lines);
+    new_local_positions.add(context.positions->get(
+        local_position, bounds.line, bounds.start, bounds.end));
+  }
+  return new_local_positions;
+}
+
 Frame augment_frame_position(
     const Frame& frame,
     const std::vector<std::string>& lines,
@@ -147,7 +187,7 @@ Frame augment_frame_position(
       frame.origins(),
       frame.inferred_features(),
       frame.user_features(),
-      frame.local_positions());
+      augment_local_positions(frame.local_positions(), lines, context));
 }
 
 Taint augment_taint_positions(

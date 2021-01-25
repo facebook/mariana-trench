@@ -16,7 +16,9 @@
          "kind" : "Source",
          "local_positions" : [
             {
-               "line" : 18
+               "end" : 0,
+               "line" : 18,
+               "start" : 0
             }
          ],
          "origins" : [
@@ -60,7 +62,9 @@
                "kind" : "Source",
                "local_positions" : [
                   {
-                     "line" : 18
+                     "end" : 0,
+                     "line" : 18,
+                     "start" : 0
                   }
                ],
                "origins" : [
@@ -102,7 +106,9 @@
          "kind" : "Source",
          "local_positions" : [
             {
-               "line" : 45
+               "end" : 0,
+               "line" : 45,
+               "start" : 0
             }
          ],
          "origins" : [
@@ -144,7 +150,9 @@
                "kind" : "Source",
                "local_positions" : [
                   {
-                     "line" : 45
+                     "end" : 0,
+                     "line" : 45,
+                     "start" : 0
                   }
                ],
                "origins" : [
@@ -354,7 +362,9 @@
                "kind" : "Source",
                "local_positions" : [
                   {
-                     "line" : 24
+                     "end" : 0,
+                     "line" : 24,
+                     "start" : 0
                   }
                ],
                "origins" : [
@@ -409,7 +419,9 @@
                "kind" : "Source",
                "local_positions" : [
                   {
-                     "line" : 57
+                     "end" : 0,
+                     "line" : 57,
+                     "start" : 0
                   }
                ],
                "origins" : [

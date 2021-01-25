@@ -106,7 +106,9 @@
                "kind" : "Source",
                "local_positions" : [
                   {
-                     "line" : 17
+                     "end" : 0,
+                     "line" : 17,
+                     "start" : 0
                   }
                ],
                "origins" : [

@@ -219,7 +219,9 @@
                "kind" : "Source",
                "local_positions" : [
                   {
-                     "line" : 17
+                     "end" : 0,
+                     "line" : 17,
+                     "start" : 0
                   }
                ],
                "origins" : [
@@ -272,7 +274,9 @@
                "kind" : "Source",
                "local_positions" : [
                   {
-                     "line" : 23
+                     "end" : 0,
+                     "line" : 23,
+                     "start" : 0
                   }
                ],
                "origins" : [
@@ -1016,7 +1020,9 @@
          "kind" : "ArrayAllocation",
          "local_positions" : [
             {
-               "line" : 62
+               "end" : 0,
+               "line" : 62,
+               "start" : 0
             }
          ],
          "origins" : [ "Lcom/mariana_trench/artificial/ArrayAllocation;.allocateArray:(I)V" ]

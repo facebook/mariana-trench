@@ -164,10 +164,14 @@
                "kind" : "ExternalUserInput",
                "local_positions" : [
                   {
-                     "line" : 20
+                     "end" : 0,
+                     "line" : 20,
+                     "start" : 0
                   },
                   {
-                     "line" : 23
+                     "end" : 0,
+                     "line" : 23,
+                     "start" : 0
                   }
                ],
                "origins" : [ "Landroid/app/Activity;.getIntent:()Landroid/content/Intent;" ]
@@ -770,7 +774,9 @@
          "kind" : "Logging",
          "local_positions" : [
             {
-               "line" : 27
+               "end" : 0,
+               "line" : 27,
+               "start" : 0
             }
          ],
          "origins" : [
@@ -792,7 +798,9 @@
          "kind" : "Logging",
          "local_positions" : [
             {
-               "line" : 32
+               "end" : 0,
+               "line" : 32,
+               "start" : 0
             }
          ],
          "origins" : [

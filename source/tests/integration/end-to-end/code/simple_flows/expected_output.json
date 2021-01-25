@@ -173,7 +173,9 @@
                "kind" : "Source",
                "local_positions" : [
                   {
-                     "line" : 13
+                     "end" : 0,
+                     "line" : 13,
+                     "start" : 0
                   }
                ],
                "origins" : [
@@ -416,13 +418,19 @@
                "kind" : "ExternalUserInput",
                "local_positions" : [
                   {
-                     "line" : 34
+                     "end" : 0,
+                     "line" : 34,
+                     "start" : 0
                   },
                   {
-                     "line" : 38
+                     "end" : 0,
+                     "line" : 38,
+                     "start" : 0
                   },
                   {
-                     "line" : 42
+                     "end" : 0,
+                     "line" : 42,
+                     "start" : 0
                   }
                ],
                "origins" : [ "Landroid/app/Activity;.getIntent:()Landroid/content/Intent;" ]

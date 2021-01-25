@@ -15,10 +15,14 @@
          "kind" : "ExternalUserInput",
          "local_positions" : [
             {
-               "line" : 27
+               "end" : 0,
+               "line" : 27,
+               "start" : 0
             },
             {
-               "line" : 28
+               "end" : 0,
+               "line" : 28,
+               "start" : 0
             }
          ],
          "origins" : [ "Landroid/app/Activity;.getIntent:()Landroid/content/Intent;" ]
@@ -62,10 +66,14 @@
                "kind" : "ExternalUserInput",
                "local_positions" : [
                   {
-                     "line" : 27
+                     "end" : 0,
+                     "line" : 27,
+                     "start" : 0
                   },
                   {
-                     "line" : 28
+                     "end" : 0,
+                     "line" : 28,
+                     "start" : 0
                   }
                ],
                "origins" : [ "Landroid/app/Activity;.getIntent:()Landroid/content/Intent;" ]
@@ -109,10 +117,14 @@
                "kind" : "ExternalUserInput",
                "local_positions" : [
                   {
-                     "line" : 27
+                     "end" : 0,
+                     "line" : 27,
+                     "start" : 0
                   },
                   {
-                     "line" : 28
+                     "end" : 0,
+                     "line" : 28,
+                     "start" : 0
                   }
                ],
                "origins" : [ "Landroid/app/Activity;.getIntent:()Landroid/content/Intent;" ]
@@ -769,7 +781,9 @@
          "kind" : "LaunchingComponent",
          "local_positions" : [
             {
-               "line" : 25
+               "end" : 0,
+               "line" : 25,
+               "start" : 0
             }
          ],
          "origins" : [

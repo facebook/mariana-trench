@@ -140,10 +140,14 @@
                "kind" : "Source",
                "local_positions" : [
                   {
-                     "line" : 27
+                     "end" : 0,
+                     "line" : 27,
+                     "start" : 0
                   },
                   {
-                     "line" : 29
+                     "end" : 0,
+                     "line" : 29,
+                     "start" : 0
                   }
                ],
                "may_features" : [ "via-two" ],

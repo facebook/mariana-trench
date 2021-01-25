@@ -106,10 +106,14 @@
                "kind" : "Source",
                "local_positions" : [
                   {
-                     "line" : 38
+                     "end" : 0,
+                     "line" : 38,
+                     "start" : 0
                   },
                   {
-                     "line" : 39
+                     "end" : 0,
+                     "line" : 39,
+                     "start" : 0
                   }
                ],
                "origins" : [
@@ -139,7 +143,9 @@
          "kind" : "Sink",
          "local_positions" : [
             {
-               "line" : 39
+               "end" : 0,
+               "line" : 39,
+               "start" : 0
             }
          ],
          "origins" : [

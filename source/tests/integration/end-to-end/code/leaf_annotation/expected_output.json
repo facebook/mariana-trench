@@ -31,7 +31,9 @@
          "kind" : "LocationData",
          "local_positions" : [
             {
-               "line" : 20
+               "end" : 0,
+               "line" : 20,
+               "start" : 0
             }
          ],
          "origins" : [
