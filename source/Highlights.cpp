@@ -21,6 +21,7 @@ namespace marianatrench {
 namespace {
 
 using Bounds = Highlights::Bounds;
+using FileLines = Highlights::FileLines;
 enum class FrameType { Source, Sink };
 
 Bounds remove_surrounding_whitespace(Bounds bounds, const std::string& line) {
@@ -38,25 +39,25 @@ Bounds remove_surrounding_whitespace(Bounds bounds, const std::string& line) {
 Bounds get_argument_bounds(
     ParameterPosition callee_parameter_position,
     ParameterPosition first_parameter_position,
-    const std::vector<std::string>& lines,
+    const FileLines& lines,
     const Bounds& callee_name_bounds) {
   auto current_parameter_position = first_parameter_position;
   std::size_t line_number = callee_name_bounds.line;
-  std::string current_line = lines[line_number - 1];
+  auto current_line = lines.line(line_number);
   std::size_t arguments_start = callee_name_bounds.end + 2;
   if (arguments_start > current_line.length() - 1) {
-    if (line_number == lines.size()) {
+    if (!lines.has_line_number(line_number + 1)) {
       return callee_name_bounds;
     }
     line_number++;
-    current_line = lines[line_number - 1];
+    current_line = lines.line(line_number);
     arguments_start = 0;
   }
   std::size_t end = current_line.length() - 1;
   int balanced_parentheses_counter = 1;
 
-  while (line_number <= lines.size()) {
-    current_line = lines[line_number - 1];
+  while (lines.has_line_number(line_number)) {
+    current_line = lines.line(line_number);
     end = current_line.length() - 1;
     for (auto i = arguments_start; i < current_line.length(); i++) {
       if (current_line[i] == '(') {
@@ -95,7 +96,7 @@ Bounds get_argument_bounds(
   }
   // In either of these cases, we have failed to find the argument
   if (current_parameter_position < callee_parameter_position ||
-      line_number > lines.size()) {
+      !lines.has_line_number(line_number)) {
     return callee_name_bounds;
   }
   Bounds highlight_bounds = {
@@ -126,26 +127,22 @@ Bounds get_callee_this_parameter_bounds(
 
 Bounds get_local_position_bounds(
     const Position& local_position,
-    const std::vector<std::string>& lines) {
-  std::string line;
-  try {
-    // Subtracting 1 below as lines in files are counted starting at 1
-    line = lines.at(local_position.line() - 1);
-  } catch (const std::out_of_range&) {
+    const FileLines& lines) {
+  auto line_number = local_position.line();
+  if (!lines.has_line_number(line_number)) {
     WARNING(
         3,
         "Trying to access line {} of a file with {} lines",
-        local_position.line(),
+        line_number,
         lines.size());
-    return {local_position.line(), 0, 0};
+    return {line_number, 0, 0};
   }
-
   return {local_position.line(), 0, 0};
 }
 
 LocalPositionSet augment_local_positions(
     const LocalPositionSet& local_positions,
-    const std::vector<std::string>& lines,
+    const FileLines& lines,
     const Context& context) {
   if (local_positions.is_bottom() || local_positions.is_top()) {
     return local_positions;
@@ -166,7 +163,7 @@ LocalPositionSet augment_local_positions(
 
 Frame augment_frame_position(
     const Frame& frame,
-    const std::vector<std::string>& lines,
+    const FileLines& lines,
     const Context& context) {
   if (frame.is_leaf()) {
     return frame;
@@ -192,7 +189,7 @@ Frame augment_frame_position(
 
 Taint augment_taint_positions(
     Taint taint,
-    const std::vector<std::string>& lines,
+    const FileLines& lines,
     const Context& context) {
   taint.map([&](FrameSet& frames) {
     auto new_frames = FrameSet::bottom();
@@ -206,7 +203,7 @@ Taint augment_taint_positions(
 
 TaintAccessPathTree augment_taint_tree_positions(
     TaintAccessPathTree taint_tree,
-    const std::vector<std::string>& lines,
+    const FileLines& lines,
     const Context& context) {
   taint_tree.map([&](Taint& taint) {
     auto new_taint = augment_taint_positions(taint, lines, context);
@@ -217,7 +214,7 @@ TaintAccessPathTree augment_taint_tree_positions(
 
 IssueSet augment_issue_positions(
     IssueSet issues,
-    const std::vector<std::string>& lines,
+    const FileLines& lines,
     const Context& context) {
   issues.map([&](Issue& issue) {
     Issue augmented_issue = Issue(
@@ -345,16 +342,32 @@ get_issue_files_to_methods(const Context& context, const Registry& registry) {
 
 } // namespace
 
+FileLines::FileLines(std::ifstream& stream) {
+  std::string line;
+  while (std::getline(stream, line)) {
+    lines_.push_back(line);
+  }
+}
+
+bool FileLines::has_line_number(std::size_t index) const {
+  return index >= 1 && index <= lines_.size();
+}
+
+const std::string& FileLines::line(std::size_t index) const {
+  mt_assert(has_line_number(index));
+  return lines_[index - 1];
+}
+
+std::size_t FileLines::size() const {
+  return lines_.size();
+}
+
 Bounds Highlights::get_highlight_bounds(
     const Method* callee,
-    const std::vector<std::string>& lines,
+    const FileLines& lines,
     int callee_line_number,
     const AccessPath& callee_port) {
-  std::string line;
-  try {
-    // Subtracting 1 below as lines in files are counted starting at 1
-    line = lines.at(callee_line_number - 1);
-  } catch (const std::out_of_range&) {
+  if (!lines.has_line_number(callee_line_number)) {
     WARNING(
         3,
         "Trying to access line {} of a file with {} lines",
@@ -362,6 +375,7 @@ Bounds Highlights::get_highlight_bounds(
         lines.size());
     return {callee_line_number, 0, 0};
   }
+  auto line = lines.line(callee_line_number);
 
   const auto& callee_name = callee->get_name();
   auto callee_start = line.find(callee_name + "(");
@@ -399,11 +413,7 @@ void Highlights::augment_positions(Registry& registry, const Context& context) {
           WARNING(1, "File {} was not found.", *filepath);
           return;
         }
-        std::vector<std::string> lines;
-        std::string line;
-        while (std::getline(stream, line)) {
-          lines.push_back(line);
-        }
+        auto lines = FileLines(stream);
         for (const auto* method : issue_files_to_methods.get(filepath, {})) {
           const auto old_model = registry.get(method);
           auto new_model = old_model;
