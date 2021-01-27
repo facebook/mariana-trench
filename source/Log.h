@@ -19,14 +19,7 @@ class Logger {
  public:
   static void set_level(int level);
   static int get_level();
-
-#ifdef NDEBUG
-  static constexpr bool enabled(int level) {
-    return false;
-  }
-#else
   static bool enabled(int level);
-#endif // NDEBUG
 
   template <typename... Args>
   static void log(
