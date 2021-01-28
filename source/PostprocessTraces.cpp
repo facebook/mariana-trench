@@ -77,7 +77,7 @@ IssueSet cull_collapsed_issues(IssueSet issues, const Registry& registry) {
 
 } // namespace
 
-void PostprocessTraces::postprocess_remove_collapsed_traces(
+void PostprocessTraces::remove_collapsed_traces(
     Registry& registry,
     const Context& context) {
   // We need to compute a decreasing fixpoint since we might remove empty

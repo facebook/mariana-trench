@@ -183,7 +183,7 @@ Registry MarianaTrench::analyze(Context& context) {
 
   Timer remove_collapsed_traces_timer;
   LOG(2, "Removing invalid traces due to collapsing...");
-  PostprocessTraces::postprocess_remove_collapsed_traces(registry, context);
+  PostprocessTraces::remove_collapsed_traces(registry, context);
   context.statistics->log_time(
       "remove_collapsed_traces", remove_collapsed_traces_timer);
   LOG(2,

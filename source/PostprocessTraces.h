@@ -39,7 +39,7 @@ class PostprocessTraces {
    *
    * To prevent that, we remove the frame with callee port `Return.foo` here.
    */
-  static void postprocess_remove_collapsed_traces(
+  static void remove_collapsed_traces(
       Registry& registry,
       const Context& context);
 };
