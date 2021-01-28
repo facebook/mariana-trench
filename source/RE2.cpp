@@ -37,7 +37,7 @@ bool is_escapable(char byte) {
 
 } // namespace
 
-std::optional<std::string> as_literal_string(
+std::optional<std::string> as_string_literal(
     const re2::RE2& regular_expression) {
   if (!regular_expression.ok()) {
     return std::nullopt;
