@@ -143,16 +143,17 @@ void Registry::dump_metadata(const boost::filesystem::path& path) const {
   value["rules"] = rules;
 
   auto statistics = context_.statistics->to_json();
-  statistics["issues"] = issues_size();
-  statistics["methods_analyzed"] = models_.size();
-  statistics["methods_without_code"] = Json::Value(
+  statistics["issues"] = Json::Value(static_cast<Json::UInt64>(issues_size()));
+  statistics["methods_analyzed"] =
+      Json::Value(static_cast<Json::UInt64>(models_.size()));
+  statistics["methods_without_code"] = Json::Value(static_cast<Json::UInt64>(
       std::count_if(models_.begin(), models_.end(), [](const auto& model) {
         return model.first->get_code() == nullptr;
-      }));
-  statistics["methods_skipped"] = Json::Value(
+      })));
+  statistics["methods_skipped"] = Json::Value(static_cast<Json::UInt64>(
       std::count_if(models_.begin(), models_.end(), [](const auto& model) {
         return model.second.skip_analysis();
-      }));
+      })));
   value["stats"] = statistics;
 
   value["filename_spec"] = Json::Value("model@*.json");

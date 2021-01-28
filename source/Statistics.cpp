@@ -72,7 +72,8 @@ double round(double x, int digits) {
 
 Json::Value Statistics::to_json() const {
   auto value = Json::Value(Json::objectValue);
-  value["iterations"] = Json::Value(number_iterations_);
+  value["iterations"] =
+      Json::Value(static_cast<Json::UInt64>(number_iterations_));
   value["rss"] = Json::Value(round(max_resident_set_size_, 6));
   value["cores"] = Json::Value(sparta::parallel::default_num_threads());
 
