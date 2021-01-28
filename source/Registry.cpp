@@ -53,7 +53,7 @@ Registry::Registry(Context& context, const Json::Value& models_value)
 Registry Registry::load(
     Context& context,
     const Options& options,
-    const DexStoresVector& stores,
+    const DexStoresVector& /*stores*/,
     const std::vector<Model>& generated_models) {
   // Create a registry with the generated models
   Registry registry(context, generated_models);

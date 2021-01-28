@@ -71,7 +71,7 @@ class FixpointIterator final
   }
 
   AnalysisEnvironment analyze_edge(
-      const EdgeId& edge,
+      const EdgeId& /*edge*/,
       const AnalysisEnvironment& taint) const override {
     return taint;
   }

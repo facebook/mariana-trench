@@ -64,7 +64,9 @@ class AbstractTreeDomain final
           x.children_.reference_equals(y.children_);
     }
 
-    static bool leq(const AbstractTreeDomain& x, const AbstractTreeDomain& y) {
+    static bool leq(
+        const AbstractTreeDomain& /*x*/,
+        const AbstractTreeDomain& /*y*/) {
       mt_unreachable(); // Never used.
     }
   };

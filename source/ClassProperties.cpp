@@ -276,7 +276,7 @@ ClassProperties::get_privacy_decision_number_from_method(
 
 FeatureMayAlwaysSet ClassProperties::propagate_features(
     const Method* caller,
-    const Method* callee,
+    const Method* /*callee*/,
     const Features& feature_factory) const {
   FeatureSet features;
 

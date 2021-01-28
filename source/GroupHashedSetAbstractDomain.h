@@ -276,7 +276,7 @@ class GroupHashedSetAbstractDomain final
     join_with(other);
   }
 
-  void meet_with(const GroupHashedSetAbstractDomain& other) override {
+  void meet_with(const GroupHashedSetAbstractDomain& /*other*/) override {
     mt_unreachable(); // Not implemented.
   }
 
