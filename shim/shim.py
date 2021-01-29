@@ -57,7 +57,7 @@ class ExtractJexException(ClientError):
 def _extract_jex_file_if_exists(
     path: pathlib.Path, target: str, resource_directory: pathlib.Path
 ) -> pathlib.Path:
-    jex_extract_directory = pathlib.Path(resource_directory) / "jex"
+    jex_extract_directory: pathlib.Path = pathlib.Path(resource_directory) / "jex"
 
     def run_unzip_command(command: typing.List[str]) -> pathlib.Path:
         output = subprocess.run(command, stderr=subprocess.PIPE)
