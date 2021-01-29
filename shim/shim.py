@@ -162,14 +162,8 @@ def _get_analysis_binary(arguments: argparse.Namespace) -> pathlib.Path:
 
 def _desugar_jar_file(jar_path: pathlib.Path) -> pathlib.Path:
     LOG.info(f"Desugaring `{jar_path}`...")
-    target = "fbsource//fbandroid/native/mariana-trench/desugar/com/facebook/marianatrench:desugar"
-    subprocess.check_call(["buck", "build", target])
-    binary = (
-        subprocess.check_output(
-            ["buck", "targets", "--show-output", target], stderr=subprocess.DEVNULL
-        )
-        .decode("utf-8")
-        .strip()
+    desugar_tool = _build_target(
+        "fbsource//fbandroid/native/mariana-trench/desugar/com/facebook/marianatrench:desugar"
     )
     desugared_jar_file = jar_path.parent / (jar_path.stem + "-desugared.jar")
     subprocess.check_call(
@@ -177,7 +171,7 @@ def _desugar_jar_file(jar_path: pathlib.Path) -> pathlib.Path:
             "java",
             "-Dlog4j.configurationFile=fbandroid/native/mariana-trench/desugar/resources/log4j2.properties",
             "-jar",
-            binary.split(" ")[1],
+            desugar_tool,
             os.fspath(jar_path),
             os.fspath(desugared_jar_file),
         ]
