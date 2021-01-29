@@ -63,10 +63,20 @@ class Position final {
     return instruction_;
   }
 
+  int start() const {
+    return start_;
+  }
+
+  int end() const {
+    return end_;
+  }
+
   friend std::ostream& operator<<(std::ostream& out, const Position& kind);
 
   static const Position* from_json(const Json::Value& value, Context& context);
   Json::Value to_json(bool with_path = true) const;
+
+  bool overlaps(const Position& other) const;
 
  private:
   friend struct std::hash<Position>;

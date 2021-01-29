@@ -154,4 +154,39 @@ TEST_F(HighlightsTest, TestGeneratedBounds) {
           method, FileLines({"method(", "foo);"}), 1, argument_port2));
 }
 
+TEST_F(HighlightsTest, TestFilterOverlappingHighlights) {
+  auto context = test::make_empty_context();
+  const auto* position1 =
+      context.positions->get("path", 1, std::nullopt, nullptr, 0, 0);
+  const auto* position2 =
+      context.positions->get("path", 1, std::nullopt, nullptr, 1, 4);
+  const auto* position3 =
+      context.positions->get("path", 1, std::nullopt, nullptr, 1, 8);
+  const auto* position4 =
+      context.positions->get("path", 1, std::nullopt, nullptr, 7, 10);
+  EXPECT_EQ(
+      Highlights::filter_overlapping_highlights(
+          LocalPositionSet({position1, position2})),
+      LocalPositionSet({position2}));
+  EXPECT_EQ(
+      Highlights::filter_overlapping_highlights(
+          LocalPositionSet({position3, position4})),
+      LocalPositionSet({position4}));
+  EXPECT_EQ(
+      Highlights::filter_overlapping_highlights(
+          LocalPositionSet({position1, position2, position3, position4})),
+      LocalPositionSet({position2, position4}));
+
+  const auto* position5 =
+      context.positions->get("path", 2, std::nullopt, nullptr, 1, 3);
+  const auto* position6 =
+      context.positions->get("path", 2, std::nullopt, nullptr, 5, 10);
+  const auto* position7 =
+      context.positions->get("path", 2, std::nullopt, nullptr, 7, 9);
+  EXPECT_EQ(
+      Highlights::filter_overlapping_highlights(LocalPositionSet(
+          {position1, position3, position5, position6, position7})),
+      LocalPositionSet({position3, position5, position7}));
+}
+
 } // namespace marianatrench

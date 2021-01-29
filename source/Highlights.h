@@ -57,6 +57,13 @@ class Highlights {
       const FileLines& lines,
       int callee_line_number,
       const AccessPath& callee_port);
+
+  /*
+   * If there are multiple overlapping local positions on a line, choose the one
+   * with the shortest highlight
+   */
+  static LocalPositionSet filter_overlapping_highlights(
+      const LocalPositionSet& local_positions);
 };
 
 } // namespace marianatrench

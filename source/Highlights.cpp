@@ -158,7 +158,7 @@ LocalPositionSet augment_local_positions(
     new_local_positions.add(context.positions->get(
         local_position, bounds.line, bounds.start, bounds.end));
   }
-  return new_local_positions;
+  return Highlights::filter_overlapping_highlights(new_local_positions);
 }
 
 Frame augment_frame_position(
@@ -435,6 +435,51 @@ void Highlights::augment_positions(Registry& registry, const Context& context) {
   file_queue.run_all();
 
   boost::filesystem::current_path(current_path);
+}
+
+LocalPositionSet Highlights::filter_overlapping_highlights(
+    const LocalPositionSet& local_positions) {
+  mt_assert(local_positions.is_value());
+  std::unordered_map<int, std::vector<const Position*>> grouped_by_line;
+  for (const auto* local_position : local_positions.elements()) {
+    auto line = local_position->line();
+    auto& same_line_positions = grouped_by_line[line];
+    if (same_line_positions.empty()) {
+      same_line_positions.push_back(local_position);
+      continue;
+    }
+    // No need to replace any existing highlights if the current one is empty
+    if (local_position->end() <= 0) {
+      continue;
+    }
+    auto current_start = local_position->start();
+    auto current_end = local_position->end();
+    std::vector<const Position*> new_positions;
+    bool seen_shorter_overlapping_with_current = false;
+    for (const auto* position : same_line_positions) {
+      if (position->end() <= 0) {
+        continue;
+      }
+      if (!position->overlaps(*local_position)) {
+        new_positions.push_back(position);
+      } else if (
+          current_end - current_start > position->end() - position->start()) {
+        new_positions.push_back(position);
+        seen_shorter_overlapping_with_current = true;
+      }
+    }
+    if (!seen_shorter_overlapping_with_current) {
+      new_positions.push_back(local_position);
+    }
+    same_line_positions = std::move(new_positions);
+  }
+  auto new_local_positions = LocalPositionSet();
+  for (const auto& [_, positions] : grouped_by_line) {
+    for (const auto* position : positions) {
+      new_local_positions.add(position);
+    }
+  }
+  return new_local_positions;
 }
 
 } // namespace marianatrench

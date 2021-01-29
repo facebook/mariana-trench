@@ -102,4 +102,13 @@ Json::Value Position::to_json(bool with_path) const {
   return value;
 }
 
+bool Position::overlaps(const Position& other) const {
+  mt_assert(path_ != nullptr);
+  mt_assert(other.path() != nullptr);
+  if (path_ != other.path() || line_ != other.line()) {
+    return false;
+  }
+  return start_ <= other.end() && other.start() <= end_;
+}
+
 } // namespace marianatrench
