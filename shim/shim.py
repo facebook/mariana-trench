@@ -27,9 +27,13 @@ import redex
 LOG: logging.Logger = logging.getLogger(__name__)
 
 
+class ClientError(Exception):
+    pass
+
+
 def _check_executable(path: pathlib.Path) -> pathlib.Path:
     if not (path.exists() and os.access(path, os.X_OK)):
-        raise EnvironmentError(f"Invalid binary `{path}`")
+        raise ClientError(f"Invalid binary `{path}`.")
     return path
 
 
@@ -46,7 +50,7 @@ class BuildMode(enum.Enum):
         return self.value
 
 
-class ExtractJexException(Exception):
+class ExtractJexException(ClientError):
     pass
 
 
@@ -69,7 +73,7 @@ def _extract_jex_file_if_exists(
             else:
                 command_string = " ".join(command)
                 raise ExtractJexException(
-                    f"Unable to extract binary file `{path}` with command `{command_string}`: {stderr}."
+                    f"Unable to extract binary file `{path}` with command `{command_string}`:\n{stderr}"
                 )
 
         jar_file_path = jex_extract_directory / (
@@ -78,8 +82,8 @@ def _extract_jex_file_if_exists(
         if jar_file_path.exists():
             return jar_file_path
         else:
-            raise EnvironmentError(
-                f"Cannot find jar file {path} in {jex_extract_directory}"
+            raise ClientError(
+                f"Could not find jar file `{path}` in `{jex_extract_directory}`."
             )
 
     # If the target is java_binary, then the output is a JEX file
@@ -93,7 +97,7 @@ def _extract_jex_file_if_exists(
         )
     except ExtractJexException:
         LOG.warning(f"Running `unsquashfs` on file `{path}` failed.")
-        LOG.warning(f"Now try to extract file `{path}` with `unzip`.")
+        LOG.warning(f"Trying to extract file `{path}` with `unzip`.")
         return run_unzip_command(["unzip", "-d", str(jex_extract_directory), str(path)])
 
 
@@ -124,9 +128,7 @@ def _build_target(
     )
     output = subprocess.run(command, stdout=subprocess.PIPE, cwd=working_directory)
     if output.returncode:
-        raise EnvironmentError(
-            f"Error while building buck target `{target}`, aborting."
-        )
+        raise ClientError(f"Error while building buck target `{target}`, aborting.")
 
     try:
         response = json.loads(output.stdout)
@@ -134,7 +136,7 @@ def _build_target(
         response = {}
 
     if len(response) != 1 or len(next(iter(response.values()))) == 0:
-        raise EnvironmentError(f"Unexpected buck output:\n{output.stdout.decode()}")
+        raise ClientError(f"Unexpected buck output:\n{output.stdout.decode()}")
 
     return working_directory / next(iter(response.values()))
 
@@ -203,7 +205,7 @@ def _build_apk_from_jar(jar_path: pathlib.Path) -> pathlib.Path:
         stderr=subprocess.PIPE,
     )
     if output.returncode:
-        raise EnvironmentError(f"Fail to run d8:\n{output.stderr.decode()}")
+        raise ClientError(f"Failed to run d8:\n{output.stderr.decode()}")
 
     return pathlib.Path(dex_file)
 
@@ -513,15 +515,12 @@ if __name__ == "__main__":
     except subprocess.CalledProcessError as error:
         # pyre-fixme[16]: `Logger` has no attribute `fatal`.
         LOG.fatal(f"Command `{' '.join(error.cmd)}` exited with non-zero exit code.")
-        LOG.fatal(f"Exiting...")
         sys.exit(1)
-    except ExtractJexException as error:
+    except ClientError as error:
         LOG.fatal(error.args[0])
-        LOG.fatal(f"Exiting...")
         sys.exit(1)
     except Exception:
-        LOG.fatal(f"Unexpected error: {traceback.format_exc()}")
-        LOG.fatal(f"Exiting...")
+        LOG.fatal(f"Unexpected error:\n{traceback.format_exc()}")
         sys.exit(1)
     finally:
         try:
