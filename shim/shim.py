@@ -127,7 +127,7 @@ def _build_target(
         else current_working_directory
     )
     output = subprocess.run(command, stdout=subprocess.PIPE, cwd=working_directory)
-    if output.returncode:
+    if output.returncode != 0:
         raise ClientError(f"Error while building buck target `{target}`, aborting.")
 
     try:
@@ -166,7 +166,7 @@ def _desugar_jar_file(jar_path: pathlib.Path) -> pathlib.Path:
         "fbsource//fbandroid/native/mariana-trench/desugar/com/facebook/marianatrench:desugar"
     )
     desugared_jar_file = jar_path.parent / (jar_path.stem + "-desugared.jar")
-    subprocess.check_call(
+    output = subprocess.run(
         [
             "java",
             "-Dlog4j.configurationFile=fbandroid/native/mariana-trench/desugar/resources/log4j2.properties",
@@ -176,7 +176,10 @@ def _desugar_jar_file(jar_path: pathlib.Path) -> pathlib.Path:
             os.fspath(desugared_jar_file),
         ]
     )
-    LOG.info(f"Desugared jar file: `{desugared_jar_file}`...")
+    if output.returncode != 0:
+        raise ClientError("Error while desugaring jar file, aborting.")
+
+    LOG.info(f"Desugared jar file: `{desugared_jar_file}`.")
     return desugared_jar_file
 
 
@@ -195,11 +198,10 @@ def _build_apk_from_jar(jar_path: pathlib.Path) -> pathlib.Path:
             "/opt/android/sdk_D23134735/platforms/android-29/android.jar",
             "--min-api",
             "25",  # mininum api 25 corresponds to dex 37
-        ],
-        stderr=subprocess.PIPE,
+        ]
     )
-    if output.returncode:
-        raise ClientError(f"Failed to run d8:\n{output.stderr.decode()}")
+    if output.returncode != 0:
+        raise ClientError("Error while running d8, aborting.")
 
     return pathlib.Path(dex_file)
 
@@ -505,11 +507,11 @@ if __name__ == "__main__":
         elif arguments.lldb:
             command = ["lldb", "--"] + command
         LOG.info(f"Running Mariana Trench: {' '.join(command)}")
-        subprocess.run(command, check=True)
-    except subprocess.CalledProcessError as error:
-        # pyre-fixme[16]: `Logger` has no attribute `fatal`.
-        LOG.fatal(f"Command `{' '.join(error.cmd)}` exited with non-zero exit code.")
-        sys.exit(1)
+        output = subprocess.run(command)
+        if output.returncode != 0:
+            # pyre-fixme[16]: `Logger` has no attribute `fatal`.
+            LOG.fatal(f"Analysis binary exited with exit code {output.returncode}.")
+            sys.exit(output.returncode)
     except ClientError as error:
         LOG.fatal(error.args[0])
         sys.exit(1)
