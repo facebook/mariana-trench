@@ -8,6 +8,7 @@
 
 import argparse
 import enum
+import json
 import logging
 import os
 import pathlib
@@ -111,7 +112,7 @@ def _build_target(
     if is_fbcode_target:
         target = target[len(fbcode_target_prefix) :]
 
-    command = ["buck", "build"]
+    command = ["buck", "build", "--show-json-output"]
     if mode:
         command.append(str(mode))
     command.append(target)
@@ -121,21 +122,21 @@ def _build_target(
         if is_fbcode_target
         else current_working_directory
     )
-    output = subprocess.run(command, stderr=subprocess.PIPE, cwd=working_directory)
+    output = subprocess.run(command, stdout=subprocess.PIPE, cwd=working_directory)
     if output.returncode:
-        raise EnvironmentError(f"Unable to build binary:\n{output.stderr.decode()}")
-
-    LOG.info("Getting binary...")
-    output = (
-        subprocess.check_output(
-            ["buck", "targets", "--show-output", target],
-            stderr=subprocess.DEVNULL,
-            cwd=working_directory,
+        raise EnvironmentError(
+            f"Error while building buck target `{target}`, aborting."
         )
-        .decode("utf-8")
-        .strip()
-    )
-    return working_directory / output.split(" ")[1]
+
+    try:
+        response = json.loads(output.stdout)
+    except json.JSONDecodeError:
+        response = {}
+
+    if len(response) != 1 or len(next(iter(response.values()))) == 0:
+        raise EnvironmentError(f"Unexpected buck output:\n{output.stdout.decode()}")
+
+    return working_directory / next(iter(response.values()))
 
 
 def _build_executable_target(
