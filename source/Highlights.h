@@ -64,6 +64,10 @@ class Highlights {
    */
   static LocalPositionSet filter_overlapping_highlights(
       const LocalPositionSet& local_positions);
+
+  static Bounds get_local_position_bounds(
+      const Position& local_position,
+      const FileLines& lines);
 };
 
 } // namespace marianatrench

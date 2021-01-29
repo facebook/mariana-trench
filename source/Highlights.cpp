@@ -19,10 +19,36 @@
 namespace marianatrench {
 
 namespace {
-
 using Bounds = Highlights::Bounds;
 using FileLines = Highlights::FileLines;
 enum class FrameType { Source, Sink };
+
+/*
+ * Given a line and column that is assumed not to be a whitespace's position,
+ * returns a Bounds object describing the location of the next non-whitespace
+ * character, if one exists before EOF.
+ */
+std::optional<Bounds> get_next_non_whitespace_position(
+    const FileLines& lines,
+    std::size_t current_line_number,
+    std::size_t current_column) {
+  current_column++;
+  while (lines.has_line_number(current_line_number)) {
+    const auto& line = lines.line(current_line_number);
+    while (current_column < line.length()) {
+      if (!std::isspace(line[current_column])) {
+        return Bounds(
+            {static_cast<int>(current_line_number),
+             static_cast<int>(current_column),
+             static_cast<int>(current_column)});
+      }
+      current_column++;
+    }
+    current_column = 0;
+    current_line_number++;
+  }
+  return std::nullopt;
+}
 
 Bounds remove_surrounding_whitespace(Bounds bounds, const std::string& line) {
   auto new_start = bounds.start;
@@ -125,19 +151,38 @@ Bounds get_callee_this_parameter_bounds(
   return callee_name_bounds;
 }
 
-Bounds get_local_position_bounds(
-    const Position& local_position,
-    const FileLines& lines) {
-  auto line_number = local_position.line();
-  if (!lines.has_line_number(line_number)) {
-    WARNING(
-        3,
-        "Trying to access line {} of a file with {} lines",
-        line_number,
-        lines.size());
+Bounds get_iput_local_position_bounds(
+    const FileLines& lines,
+    const std::string& field_name,
+    int line_number) {
+  auto line = lines.line(line_number);
+  auto field_start = line.find(field_name);
+  if (field_start == std::string::npos) {
     return {line_number, 0, 0};
   }
-  return {local_position.line(), 0, 0};
+  Bounds field_name_bounds = {
+      line_number,
+      static_cast<int>(field_start),
+      static_cast<int>(field_start + field_name.length() - 1)};
+  // The next non-whitespace character read must be an = sign
+  auto next_character = get_next_non_whitespace_position(
+      lines, line_number, field_name_bounds.end);
+  if (!next_character ||
+      lines.line(next_character->line)[next_character->start] != '=') {
+    return field_name_bounds;
+  }
+  auto assignee = get_next_non_whitespace_position(
+      lines, next_character->line, next_character->start);
+  if (!assignee) {
+    return field_name_bounds;
+  }
+
+  line = lines.line(assignee->line);
+  Bounds highlight_bounds = {
+      static_cast<int>(assignee->line),
+      static_cast<int>(assignee->start),
+      static_cast<int>(line.length() - 1)};
+  return remove_surrounding_whitespace(highlight_bounds, line);
 }
 
 LocalPositionSet augment_local_positions(
@@ -154,7 +199,7 @@ LocalPositionSet augment_local_positions(
       new_local_positions.add(local_position);
       continue;
     }
-    auto bounds = get_local_position_bounds(*local_position, lines);
+    auto bounds = Highlights::get_local_position_bounds(*local_position, lines);
     new_local_positions.add(context.positions->get(
         local_position, bounds.line, bounds.start, bounds.end));
   }
@@ -360,6 +405,28 @@ const std::string& FileLines::line(std::size_t index) const {
 
 std::size_t FileLines::size() const {
   return lines_.size();
+}
+
+Bounds Highlights::get_local_position_bounds(
+    const Position& local_position,
+    const FileLines& lines) {
+  auto line_number = local_position.line();
+  Bounds empty_bounds = {line_number, 0, 0};
+  if (!lines.has_line_number(line_number)) {
+    WARNING(
+        3,
+        "Trying to access line {} of a file with {} lines",
+        line_number,
+        lines.size());
+    return empty_bounds;
+  }
+  mt_assert(local_position.instruction() != nullptr);
+  if (opcode::is_an_iput(local_position.instruction()->opcode())) {
+    const auto& field_name =
+        local_position.instruction()->get_field()->get_name()->str();
+    return get_iput_local_position_bounds(lines, field_name, line_number);
+  }
+  return empty_bounds;
 }
 
 Bounds Highlights::get_highlight_bounds(

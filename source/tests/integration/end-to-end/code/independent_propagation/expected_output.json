@@ -107,13 +107,13 @@
                "local_positions" : [
                   {
                      "end" : 0,
-                     "line" : 38,
+                     "line" : 39,
                      "start" : 0
                   },
                   {
-                     "end" : 0,
-                     "line" : 39,
-                     "start" : 0
+                     "end" : 29,
+                     "line" : 38,
+                     "start" : 14
                   }
                ],
                "origins" : [

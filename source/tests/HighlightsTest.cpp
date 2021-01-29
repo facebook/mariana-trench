@@ -7,6 +7,8 @@
 
 #include <gmock/gmock.h>
 
+#include <IROpcode.h>
+
 #include <mariana-trench/Access.h>
 #include <mariana-trench/Highlights.h>
 #include <mariana-trench/Redex.h>
@@ -187,6 +189,60 @@ TEST_F(HighlightsTest, TestFilterOverlappingHighlights) {
       Highlights::filter_overlapping_highlights(LocalPositionSet(
           {position1, position3, position5, position6, position7})),
       LocalPositionSet({position3, position5, position7}));
+}
+
+TEST_F(HighlightsTest, TestLocalPositionHighlights) {
+  using Bounds = Highlights::Bounds;
+  using FileLines = Highlights::FileLines;
+  auto return_port = Root(Root::Kind::Return);
+  auto iput_instruction = IRInstruction(OPCODE_IPUT);
+  auto dex_field = DexField::make_field(
+      DexType::make_type(DexString::make_string("parent_type")),
+      DexString::make_string("field"),
+      DexType::make_type(DexString::make_string("field_type")));
+  iput_instruction.set_field(dex_field);
+
+  // Test iput instructions (assign to an object's field)
+  EXPECT_EQ(
+      (Bounds{0, 0, 0}),
+      Highlights::get_local_position_bounds(
+          Position(nullptr, 0, return_port, &iput_instruction),
+          FileLines({"", "object.field = taint;"})));
+  EXPECT_EQ(
+      (Bounds{2, 15, 20}),
+      Highlights::get_local_position_bounds(
+          Position(nullptr, 2, return_port, &iput_instruction),
+          FileLines({"", "object.field = taint;"})));
+  EXPECT_EQ(
+      (Bounds{3, 2, 7}),
+      Highlights::get_local_position_bounds(
+          Position(nullptr, 1, return_port, &iput_instruction),
+          FileLines({"object.field ", "", "= taint;"})));
+  EXPECT_EQ(
+      (Bounds{1, 7, 11}),
+      Highlights::get_local_position_bounds(
+          Position(nullptr, 1, return_port, &iput_instruction),
+          FileLines({"object.field ", "", "= "})));
+  EXPECT_EQ(
+      (Bounds{1, 7, 11}),
+      Highlights::get_local_position_bounds(
+          Position(nullptr, 1, return_port, &iput_instruction),
+          FileLines({"object.field ", "", ""})));
+  EXPECT_EQ(
+      (Bounds{1, 7, 11}),
+      Highlights::get_local_position_bounds(
+          Position(nullptr, 1, return_port, &iput_instruction),
+          FileLines({"object.field.method()"})));
+  EXPECT_EQ(
+      (Bounds{1, 13, 17}),
+      Highlights::get_local_position_bounds(
+          Position(nullptr, 1, return_port, &iput_instruction),
+          FileLines({"object.field=taint"})));
+  EXPECT_EQ(
+      (Bounds{1, 15, 19}),
+      Highlights::get_local_position_bounds(
+          Position(nullptr, 1, return_port, &iput_instruction),
+          FileLines({"object.field = a + b"})));
 }
 
 } // namespace marianatrench

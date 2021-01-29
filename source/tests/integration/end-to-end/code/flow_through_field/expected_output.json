@@ -20,9 +20,9 @@
                "start" : 0
             },
             {
-               "end" : 0,
+               "end" : 55,
                "line" : 28,
-               "start" : 0
+               "start" : 16
             }
          ],
          "origins" : [ "Landroid/app/Activity;.getIntent:()Landroid/content/Intent;" ]
@@ -71,9 +71,9 @@
                      "start" : 0
                   },
                   {
-                     "end" : 0,
+                     "end" : 55,
                      "line" : 28,
-                     "start" : 0
+                     "start" : 16
                   }
                ],
                "origins" : [ "Landroid/app/Activity;.getIntent:()Landroid/content/Intent;" ]
@@ -122,9 +122,9 @@
                      "start" : 0
                   },
                   {
-                     "end" : 0,
+                     "end" : 55,
                      "line" : 28,
-                     "start" : 0
+                     "start" : 16
                   }
                ],
                "origins" : [ "Landroid/app/Activity;.getIntent:()Landroid/content/Intent;" ]
