@@ -106,9 +106,9 @@
                "kind" : "Source",
                "local_positions" : [
                   {
-                     "end" : 0,
+                     "end" : 37,
                      "line" : 17,
-                     "start" : 0
+                     "start" : 23
                   }
                ],
                "origins" : [

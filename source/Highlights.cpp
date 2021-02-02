@@ -218,8 +218,8 @@ Frame augment_frame_position(
 
   const auto* callee = frame.callee();
   mt_assert(callee != nullptr);
-  auto bounds = Highlights::get_highlight_bounds(
-      callee, lines, position->line(), frame.callee_port());
+  auto bounds = Highlights::get_callee_highlight_bounds(
+      callee->dex_method(), lines, position->line(), frame.callee_port());
   return Frame(
       frame.kind(),
       frame.callee_port(),
@@ -426,11 +426,23 @@ Bounds Highlights::get_local_position_bounds(
         local_position.instruction()->get_field()->get_name()->str();
     return get_iput_local_position_bounds(lines, field_name, line_number);
   }
+  if (opcode::is_an_invoke(local_position.instruction()->opcode())) {
+    const auto* callee_dex_method = local_position.instruction()->get_method();
+    if (!callee_dex_method->as_def()) {
+      return empty_bounds;
+    }
+    mt_assert(local_position.port() != std::nullopt);
+    return get_callee_highlight_bounds(
+        callee_dex_method->as_def(),
+        lines,
+        local_position.line(),
+        AccessPath(*local_position.port()));
+  }
   return empty_bounds;
 }
 
-Bounds Highlights::get_highlight_bounds(
-    const Method* callee,
+Bounds Highlights::get_callee_highlight_bounds(
+    const DexMethod* callee,
     const FileLines& lines,
     int callee_line_number,
     const AccessPath& callee_port) {
@@ -444,7 +456,7 @@ Bounds Highlights::get_highlight_bounds(
   }
   auto line = lines.line(callee_line_number);
 
-  const auto& callee_name = callee->get_name();
+  const auto& callee_name = callee->get_name()->str();
   auto callee_start = line.find(callee_name + "(");
   if (callee_start == std::string::npos) {
     return {callee_line_number, 0, 0};
@@ -458,12 +470,13 @@ Bounds Highlights::get_highlight_bounds(
   if (!callee_port.root().is_argument()) {
     return callee_name_bounds;
   }
-  if (callee_port.root().parameter_position() == 0 && !callee->is_static()) {
+  bool is_static = ::is_static(callee);
+  if (callee_port.root().parameter_position() == 0 && !is_static) {
     return get_callee_this_parameter_bounds(line, callee_name_bounds);
   }
   return get_argument_bounds(
       callee_port.root().parameter_position(),
-      callee->first_parameter_index(),
+      is_static ? 0 : 1,
       lines,
       callee_name_bounds);
 }

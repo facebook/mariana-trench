@@ -52,8 +52,8 @@ class Highlights {
     std::vector<std::string> lines_;
   };
 
-  static Bounds get_highlight_bounds(
-      const Method* callee,
+  static Bounds get_callee_highlight_bounds(
+      const DexMethod* callee,
       const FileLines& lines,
       int callee_line_number,
       const AccessPath& callee_port);

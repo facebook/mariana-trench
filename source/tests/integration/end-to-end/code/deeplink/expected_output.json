@@ -882,9 +882,9 @@
          "kind" : "LaunchingComponent",
          "local_positions" : [
             {
-               "end" : 0,
+               "end" : 70,
                "line" : 91,
-               "start" : 0
+               "start" : 68
             }
          ],
          "origins" : [
@@ -908,9 +908,9 @@
          "kind" : "LaunchingComponent",
          "local_positions" : [
             {
-               "end" : 0,
+               "end" : 70,
                "line" : 91,
-               "start" : 0
+               "start" : 68
             }
          ],
          "origins" : [
@@ -950,14 +950,14 @@
          "kind" : "LaunchingComponent",
          "local_positions" : [
             {
-               "end" : 0,
-               "line" : 31,
-               "start" : 0
+               "end" : 25,
+               "line" : 40,
+               "start" : 17
             },
             {
-               "end" : 0,
-               "line" : 40,
-               "start" : 0
+               "end" : 33,
+               "line" : 31,
+               "start" : 20
             }
          ],
          "origins" : [
@@ -981,19 +981,19 @@
          "kind" : "LaunchingComponent",
          "local_positions" : [
             {
-               "end" : 0,
-               "line" : 56,
-               "start" : 0
-            },
-            {
-               "end" : 0,
+               "end" : 43,
                "line" : 58,
-               "start" : 0
+               "start" : 30
             },
             {
-               "end" : 0,
+               "end" : 45,
+               "line" : 56,
+               "start" : 32
+            },
+            {
+               "end" : 96,
                "line" : 61,
-               "start" : 0
+               "start" : 87
             }
          ],
          "origins" : [

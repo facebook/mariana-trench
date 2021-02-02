@@ -15,12 +15,12 @@
          "kind" : "ExternalUserInput",
          "local_positions" : [
             {
-               "end" : 0,
+               "end" : 30,
                "line" : 27,
-               "start" : 0
+               "start" : 20
             },
             {
-               "end" : 55,
+               "end" : 32,
                "line" : 28,
                "start" : 16
             }
@@ -66,12 +66,12 @@
                "kind" : "ExternalUserInput",
                "local_positions" : [
                   {
-                     "end" : 0,
+                     "end" : 30,
                      "line" : 27,
-                     "start" : 0
+                     "start" : 20
                   },
                   {
-                     "end" : 55,
+                     "end" : 32,
                      "line" : 28,
                      "start" : 16
                   }
@@ -117,12 +117,12 @@
                "kind" : "ExternalUserInput",
                "local_positions" : [
                   {
-                     "end" : 0,
+                     "end" : 30,
                      "line" : 27,
-                     "start" : 0
+                     "start" : 20
                   },
                   {
-                     "end" : 55,
+                     "end" : 32,
                      "line" : 28,
                      "start" : 16
                   }
@@ -781,9 +781,9 @@
          "kind" : "LaunchingComponent",
          "local_positions" : [
             {
-               "end" : 0,
+               "end" : 39,
                "line" : 25,
-               "start" : 0
+               "start" : 29
             }
          ],
          "origins" : [
