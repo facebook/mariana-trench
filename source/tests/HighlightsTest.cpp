@@ -42,6 +42,19 @@ TEST_F(HighlightsTest, TestGeneratedBounds) {
       /* return_type */ "Ljava/lang/Object;",
       /* super */ nullptr,
       /* is_static */ true);
+  auto* dex_init_method = redex::create_void_method(
+      scope,
+      /* class_name */ "LPackage/name/Class;",
+      /* method_name */ "<init>",
+      /* parameter_types */ "Ljava/lang/Object;",
+      /* return_type */ "Ljava/lang/Object;");
+  // Ivalid class name provided
+  auto* dex_init_method_invalid = redex::create_void_method(
+      scope,
+      /* class_name */ ";",
+      /* method_name */ "<init>",
+      /* parameter_types */ "Ljava/lang/Object;",
+      /* return_type */ "Ljava/lang/Object;");
   auto return_port = AccessPath(Root(Root::Kind::Return));
   auto argument_port0 = AccessPath(Root(Root::Kind::Argument, 0));
   auto argument_port1 = AccessPath(Root(Root::Kind::Argument, 1));
@@ -147,6 +160,30 @@ TEST_F(HighlightsTest, TestGeneratedBounds) {
       (Bounds{1, 0, 5}),
       Highlights::get_callee_highlight_bounds(
           dex_method, FileLines({"method(", "foo);"}), 1, argument_port2));
+
+  // Method name is <init>
+  EXPECT_EQ(
+      (Bounds{1, 12, 20}),
+      Highlights::get_callee_highlight_bounds(
+          dex_init_method,
+          FileLines({"Class obj = new Class(x)"}),
+          1,
+          return_port));
+  EXPECT_EQ(
+      (Bounds{1, 22, 22}),
+      Highlights::get_callee_highlight_bounds(
+          dex_init_method,
+          FileLines({"Class obj = new Class(x)"}),
+          1,
+          argument_port1));
+  // <init> with invalid class name
+  EXPECT_EQ(
+      (Bounds{1, 0, 0}),
+      Highlights::get_callee_highlight_bounds(
+          dex_init_method_invalid,
+          FileLines({"Class obj = new Class(x)"}),
+          1,
+          argument_port0));
 }
 
 TEST_F(HighlightsTest, TestFilterOverlappingHighlights) {

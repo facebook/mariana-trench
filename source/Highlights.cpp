@@ -7,6 +7,7 @@
 
 #include <fstream>
 
+#include <DexUtil.h>
 #include <SpartaWorkQueue.h>
 
 #include <mariana-trench/Highlights.h>
@@ -149,6 +150,23 @@ Bounds get_callee_this_parameter_bounds(
   // If the current line doesn't contain the argument, just highlight the
   // callee so that we don't highlight a previous chained method call, etc
   return callee_name_bounds;
+}
+
+std::optional<std::string> get_class_name(const DexMethod* callee) {
+  const auto& class_name = callee->get_class()->get_name()->str();
+  auto length = class_name.length();
+  if (length <= 2 || class_name[length - 1] != ';' ||
+      class_name[length - 2] == '/') {
+    return std::nullopt;
+  }
+  auto i = length - 2;
+  while (i >= 0 && class_name[i] != '/') {
+    i--;
+  }
+  if (i < 0) {
+    return std::nullopt;
+  }
+  return class_name.substr(i + 1, length - i - 2);
 }
 
 Bounds get_iput_local_position_bounds(
@@ -455,8 +473,14 @@ Bounds Highlights::get_callee_highlight_bounds(
     return {callee_line_number, 0, 0};
   }
   auto line = lines.line(callee_line_number);
-
-  const auto& callee_name = callee->get_name()->str();
+  auto callee_name = callee->get_name()->str();
+  if (method::is_init(callee)) {
+    auto class_name = get_class_name(callee);
+    if (!class_name) {
+      return {callee_line_number, 0, 0};
+    }
+    callee_name = "new " + *class_name;
+  }
   auto callee_start = line.find(callee_name + "(");
   if (callee_start == std::string::npos) {
     return {callee_line_number, 0, 0};
@@ -467,7 +491,9 @@ Bounds Highlights::get_callee_highlight_bounds(
       callee_line_number,
       static_cast<int>(callee_start),
       static_cast<int>(callee_end)};
-  if (!callee_port.root().is_argument()) {
+  if (!callee_port.root().is_argument() ||
+      (method::is_init(callee) &&
+       callee_port.root().parameter_position() == 0)) {
     return callee_name_bounds;
   }
   bool is_static = ::is_static(callee);

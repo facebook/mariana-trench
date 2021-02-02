@@ -80,10 +80,10 @@
             {
                "always_features" : [ "via-anonymous-class-to-field" ],
                "call_position" : {
-                  "end" : 0,
+                  "end" : 38,
                   "line" : 23,
                   "path" : "RunnableActivity.java",
-                  "start" : 0
+                  "start" : 31
                },
                "callee" : {
                   "name" : "Ljava/lang/Thread;.<init>:(Ljava/lang/Runnable;)V",
