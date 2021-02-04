@@ -15,6 +15,7 @@
 #include <mariana-trench/Assert.h>
 #include <mariana-trench/CallGraph.h>
 #include <mariana-trench/Features.h>
+#include <mariana-trench/JsonValidation.h>
 #include <mariana-trench/Log.h>
 #include <mariana-trench/Methods.h>
 
@@ -499,9 +500,8 @@ CallGraph::CallGraph(
 
   if (options.dump_call_graph()) {
     LOG(1, "Writing call graph to `call_graph.json`");
-    boost::filesystem::save_string_file(
-        "call_graph.json",
-        Json::FastWriter().write(to_json(/* with_overrides */ false)));
+    JsonValidation::write_json_file(
+        "call_graph.json", to_json(/* with_overrides */ false));
   }
 }
 

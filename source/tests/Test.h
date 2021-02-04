@@ -50,7 +50,7 @@ class ContextGuard {
 Context make_empty_context();
 Context make_context(const DexStore& store);
 
-Json::Value parse_json(const std::string& input);
+Json::Value parse_json(std::string input);
 Json::Value sorted_json(const Json::Value& value);
 
 boost::filesystem::path find_dex_path(

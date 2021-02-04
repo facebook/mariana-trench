@@ -14,6 +14,7 @@
 #include <mariana-trench/Assert.h>
 #include <mariana-trench/Dependencies.h>
 #include <mariana-trench/Heuristics.h>
+#include <mariana-trench/JsonValidation.h>
 #include <mariana-trench/Log.h>
 #include <mariana-trench/Methods.h>
 
@@ -104,8 +105,7 @@ Dependencies::Dependencies(
 
   if (options.dump_dependencies()) {
     LOG(1, "Writing dependencies to `dependencies.json`");
-    boost::filesystem::save_string_file(
-        "dependencies.json", Json::FastWriter().write(to_json()));
+    JsonValidation::write_json_file("dependencies.json", to_json());
   }
 }
 

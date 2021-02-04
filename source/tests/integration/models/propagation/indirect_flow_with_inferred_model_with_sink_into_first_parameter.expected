@@ -1,70 +1,91 @@
 {
-   "metadata" : {
-      "@generated" : true
-   },
-   "models" : [
-      {
-         "issues" : [
-            {
-               "position" : {
-                  "line" : 2,
-                  "path" : "Flow.java"
-               },
-               "rule" : 1,
-               "sinks" : [
-                  {
-                     "call_position" : {
-                        "line" : 2,
-                        "path" : "Flow.java"
-                     },
-                     "callee" : "LFlow;.into_sink:(LData;LData;)V",
-                     "callee_port" : "Argument(1)",
-                     "distance" : 2,
-                     "kind" : "TestSink",
-                     "origins" : [ "LSink;.sink:(LData;)V" ]
-                  }
-               ],
-               "sources" : [
-                  {
-                     "call_position" : {
-                        "line" : 1,
-                        "path" : "Flow.java"
-                     },
-                     "callee" : "LSource;.source:()LData;",
-                     "callee_port" : "Return",
-                     "distance" : 1,
-                     "kind" : "TestSource",
-                     "origins" : [ "LSource;.source:()LData;" ]
-                  }
-               ]
-            }
-         ],
-         "method" : "LFlow;.indirect:()V",
-         "position" : {
-            "line" : 0,
+  "metadata" : 
+  {
+    "@generated" : true
+  },
+  "models" : 
+  [
+    {
+      "issues" : 
+      [
+        {
+          "position" : 
+          {
+            "line" : 2,
             "path" : "Flow.java"
-         }
-      },
-      {
-         "method" : "LFlow;.into_sink:(LData;LData;)V",
-         "position" : {
-            "line" : 0,
-            "path" : "Flow.java"
-         },
-         "sinks" : [
+          },
+          "rule" : 1,
+          "sinks" : 
+          [
             {
-               "call_position" : {
-                  "line" : 1,
-                  "path" : "Flow.java"
-               },
-               "callee" : "LSink;.sink:(LData;)V",
-               "callee_port" : "Argument(1)",
-               "caller_port" : "Argument(1)",
-               "distance" : 1,
-               "kind" : "TestSink",
-               "origins" : [ "LSink;.sink:(LData;)V" ]
+              "call_position" : 
+              {
+                "line" : 2,
+                "path" : "Flow.java"
+              },
+              "callee" : "LFlow;.into_sink:(LData;LData;)V",
+              "callee_port" : "Argument(1)",
+              "distance" : 2,
+              "kind" : "TestSink",
+              "origins" : 
+              [
+                "LSink;.sink:(LData;)V"
+              ]
             }
-         ]
+          ],
+          "sources" : 
+          [
+            {
+              "call_position" : 
+              {
+                "line" : 1,
+                "path" : "Flow.java"
+              },
+              "callee" : "LSource;.source:()LData;",
+              "callee_port" : "Return",
+              "distance" : 1,
+              "kind" : "TestSource",
+              "origins" : 
+              [
+                "LSource;.source:()LData;"
+              ]
+            }
+          ]
+        }
+      ],
+      "method" : "LFlow;.indirect:()V",
+      "position" : 
+      {
+        "line" : 0,
+        "path" : "Flow.java"
       }
-   ]
+    },
+    {
+      "method" : "LFlow;.into_sink:(LData;LData;)V",
+      "position" : 
+      {
+        "line" : 0,
+        "path" : "Flow.java"
+      },
+      "sinks" : 
+      [
+        {
+          "call_position" : 
+          {
+            "line" : 1,
+            "path" : "Flow.java"
+          },
+          "callee" : "LSink;.sink:(LData;)V",
+          "callee_port" : "Argument(1)",
+          "caller_port" : "Argument(1)",
+          "distance" : 1,
+          "kind" : "TestSink",
+          "origins" : 
+          [
+            "LSink;.sink:(LData;)V"
+          ]
+        }
+      ]
+    }
+  ]
 }

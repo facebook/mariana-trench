@@ -63,8 +63,16 @@ class JsonValidation final {
       const Json::Value& value,
       const std::string& field);
 
+  static Json::Value parse_json(std::string string);
   static Json::Value parse_json_file(const boost::filesystem::path& path);
   static Json::Value parse_json_file(const std::string& path);
+
+  static std::unique_ptr<Json::StreamWriter> compact_writer();
+  static std::unique_ptr<Json::StreamWriter> styled_writer();
+  static void write_json_file(
+      const std::string& path,
+      const Json::Value& value);
+  static std::string to_styled_string(const Json::Value& value);
 
   /**
    * Add (key, value) pairs from the given `right` object into the given `left`

@@ -5,7 +5,10 @@
  * LICENSE file in the root directory of this source tree.
  */
 
+#include <sstream>
+
 #include <boost/algorithm/string/trim.hpp>
+#include <boost/filesystem/fstream.hpp>
 #include <fmt/format.h>
 
 #include <mariana-trench/Assert.h>
@@ -23,7 +26,7 @@ std::string invalid_argument_message(
   auto field_information = field ? fmt::format(" for field `{}`", *field) : "";
   return fmt::format(
       "Error validating `{}`. Expected {}{}.",
-      boost::algorithm::trim_copy(value.toStyledString()),
+      boost::algorithm::trim_copy(JsonValidation::to_styled_string(value)),
       expected,
       field_information);
 }
@@ -200,22 +203,81 @@ DexFieldRef* JsonValidation::dex_field(
   return dex_field;
 }
 
-// Parse a json file into a json value
+Json::Value JsonValidation::parse_json(std::string string) {
+  std::istringstream stream(std::move(string));
+
+  static const auto reader = Json::CharReaderBuilder();
+  std::string errors;
+  Json::Value json;
+
+  if (!Json::parseFromStream(reader, stream, &json, &errors)) {
+    throw std::invalid_argument(fmt::format("Invalid json: {}", errors));
+  }
+  return json;
+}
+
 Json::Value JsonValidation::parse_json_file(
     const boost::filesystem::path& path) {
-  std::string content;
-  boost::filesystem::load_string_file(path, content);
+  boost::filesystem::ifstream file;
+  file.exceptions(std::ifstream::failbit | std::ifstream::badbit);
+  file.open(path, std::ios_base::binary);
 
+  static const auto reader = Json::CharReaderBuilder();
+  std::string errors;
   Json::Value json;
-  if (!Json::Reader().parse(content, json)) {
+
+  if (!Json::parseFromStream(reader, file, &json, &errors)) {
     throw std::invalid_argument(
-        fmt::format("File `{}` is not valid json.", path.string()));
+        fmt::format("File `{}` is not valid json: {}", path.string(), errors));
   }
   return json;
 }
 
 Json::Value JsonValidation::parse_json_file(const std::string& path) {
   return parse_json_file(boost::filesystem::path(path));
+}
+
+namespace {
+
+Json::StreamWriterBuilder compact_writer_builder() {
+  Json::StreamWriterBuilder writer;
+  writer["indentation"] = "";
+  return writer;
+}
+
+Json::StreamWriterBuilder styled_writer_builder() {
+  Json::StreamWriterBuilder writer;
+  writer["indentation"] = "  ";
+  return writer;
+}
+
+} // namespace
+
+std::unique_ptr<Json::StreamWriter> JsonValidation::compact_writer() {
+  static const auto writer_builder = compact_writer_builder();
+  return std::unique_ptr<Json::StreamWriter>(writer_builder.newStreamWriter());
+}
+
+std::unique_ptr<Json::StreamWriter> JsonValidation::styled_writer() {
+  static const auto writer_builder = styled_writer_builder();
+  return std::unique_ptr<Json::StreamWriter>(writer_builder.newStreamWriter());
+}
+
+void JsonValidation::write_json_file(
+    const std::string& path,
+    const Json::Value& value) {
+  boost::filesystem::ofstream file;
+  file.exceptions(std::ofstream::failbit | std::ofstream::badbit);
+  file.open(path, std::ios_base::binary);
+  compact_writer()->write(value, &file);
+  file << "\n";
+  file.close();
+}
+
+std::string JsonValidation::to_styled_string(const Json::Value& value) {
+  std::ostringstream string;
+  styled_writer()->write(value, &string);
+  return string.str();
 }
 
 void JsonValidation::update_object(

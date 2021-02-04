@@ -1,22 +1,33 @@
 // @generated
 {
-   "Landroid/content/Context;.startActivity:(Landroid/content/Intent;)V" : [ "Landroid/app/Activity;.startActivity:(Landroid/content/Intent;)V" ],
-   "Landroidx/fragment/app/FragmentActivity;.onActivityCreate:()V" : [
-      "Lcom/facebook/marianatrench/integrationtests/IntentUriHandler;.onActivityCreate:()V"
-   ],
-   "Lcom/facebook/marianatrench/integrationtests/CustomUriIntentMapper;.getIntentForUri:(Landroid/content/Context;Ljava/lang/String;)Landroid/content/Intent;" : [
-      "Lcom/facebook/marianatrench/integrationtests/Fb4aUriIntentMapper;.getIntentForUri:(Landroid/content/Context;Ljava/lang/String;)Landroid/content/Intent;",
-      "Lcom/facebook/marianatrench/integrationtests/StaticUriIntentMapper;.getIntentForUri:(Landroid/content/Context;Ljava/lang/String;)Landroid/content/Intent;"
-   ],
-   "Lcom/facebook/marianatrench/integrationtests/UriIntentBuilder;.getIntentForUri:(Landroid/content/Context;Ljava/lang/String;)Landroid/content/Intent;" : [
-      "Lcom/facebook/marianatrench/integrationtests/ExternalLinkUriIntentBuilder;.getIntentForUri:(Landroid/content/Context;Ljava/lang/String;)Landroid/content/Intent;"
-   ],
-   "Ljava/lang/Object;.toString:()Ljava/lang/String;" : [
-      "Landroid/location/Location;.toString:()Ljava/lang/String;",
-      "Landroid/net/Uri;.toString:()Ljava/lang/String;"
-   ],
-   "Ljava/lang/Runnable;.run:()V" : [ "Ljava/lang/Thread;.run:()V" ],
-   "Ljava/util/Map;.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;" : [
-      "Ljava/util/TreeMap;.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;"
-   ]
+  "Landroid/content/Context;.startActivity:(Landroid/content/Intent;)V" : 
+  [
+    "Landroid/app/Activity;.startActivity:(Landroid/content/Intent;)V"
+  ],
+  "Landroidx/fragment/app/FragmentActivity;.onActivityCreate:()V" : 
+  [
+    "Lcom/facebook/marianatrench/integrationtests/IntentUriHandler;.onActivityCreate:()V"
+  ],
+  "Lcom/facebook/marianatrench/integrationtests/CustomUriIntentMapper;.getIntentForUri:(Landroid/content/Context;Ljava/lang/String;)Landroid/content/Intent;" : 
+  [
+    "Lcom/facebook/marianatrench/integrationtests/Fb4aUriIntentMapper;.getIntentForUri:(Landroid/content/Context;Ljava/lang/String;)Landroid/content/Intent;",
+    "Lcom/facebook/marianatrench/integrationtests/StaticUriIntentMapper;.getIntentForUri:(Landroid/content/Context;Ljava/lang/String;)Landroid/content/Intent;"
+  ],
+  "Lcom/facebook/marianatrench/integrationtests/UriIntentBuilder;.getIntentForUri:(Landroid/content/Context;Ljava/lang/String;)Landroid/content/Intent;" : 
+  [
+    "Lcom/facebook/marianatrench/integrationtests/ExternalLinkUriIntentBuilder;.getIntentForUri:(Landroid/content/Context;Ljava/lang/String;)Landroid/content/Intent;"
+  ],
+  "Ljava/lang/Object;.toString:()Ljava/lang/String;" : 
+  [
+    "Landroid/location/Location;.toString:()Ljava/lang/String;",
+    "Landroid/net/Uri;.toString:()Ljava/lang/String;"
+  ],
+  "Ljava/lang/Runnable;.run:()V" : 
+  [
+    "Ljava/lang/Thread;.run:()V"
+  ],
+  "Ljava/util/Map;.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;" : 
+  [
+    "Ljava/util/TreeMap;.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;"
+  ]
 }

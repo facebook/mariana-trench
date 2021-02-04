@@ -13,6 +13,7 @@
 #include <Walkers.h>
 
 #include <mariana-trench/Assert.h>
+#include <mariana-trench/JsonValidation.h>
 #include <mariana-trench/Log.h>
 #include <mariana-trench/Methods.h>
 #include <mariana-trench/Overrides.h>
@@ -48,8 +49,7 @@ Overrides::Overrides(
 
   if (options.dump_overrides()) {
     LOG(1, "Writing override graph to `overrides.json`");
-    boost::filesystem::save_string_file(
-        "overrides.json", Json::FastWriter().write(to_json()));
+    JsonValidation::write_json_file("overrides.json", to_json());
   }
 }
 

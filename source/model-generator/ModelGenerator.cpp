@@ -13,6 +13,7 @@
 #include <mariana-trench/Context.h>
 #include <mariana-trench/Dependencies.h>
 #include <mariana-trench/Generator.h>
+#include <mariana-trench/JsonValidation.h>
 #include <mariana-trench/Log.h>
 #include <mariana-trench/Options.h>
 #include <mariana-trench/Timer.h>
@@ -146,9 +147,9 @@ std::vector<Model> ModelGenerator::run(Context& context) {
 
       // Merge models
       auto registry = Registry(context, models);
-      boost::filesystem::save_string_file(
+      JsonValidation::write_json_file(
           *generated_models_directory + "/" + generator->name() + ".json",
-          registry.models_to_json().toStyledString());
+          registry.models_to_json());
 
       LOG(2,
           "Wrote {} generated models to `{}` in {:.2f}s.",

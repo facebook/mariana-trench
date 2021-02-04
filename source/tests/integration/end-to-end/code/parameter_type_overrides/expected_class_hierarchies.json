@@ -1,13 +1,28 @@
 // @generated
 {
-   "extends" : {
-      "Landroid/app/Activity;" : [ "Landroidx/fragment/app/FragmentActivity;" ],
-      "Landroid/content/Context;" : [ "Landroid/app/Activity;", "Landroidx/fragment/app/FragmentActivity;" ],
-      "Lcom/facebook/marianatrench/integrationtests/RunnableWithArgument;" : [
-         "Lcom/facebook/marianatrench/integrationtests/RunnableFlows$1;",
-         "Lcom/facebook/marianatrench/integrationtests/RunnableFlows$2;"
-      ],
-      "Ljava/lang/Runnable;" : [ "Ljava/lang/Thread;" ],
-      "Ljava/util/Map;" : [ "Ljava/util/TreeMap;" ]
-   }
+  "extends" : 
+  {
+    "Landroid/app/Activity;" : 
+    [
+      "Landroidx/fragment/app/FragmentActivity;"
+    ],
+    "Landroid/content/Context;" : 
+    [
+      "Landroid/app/Activity;",
+      "Landroidx/fragment/app/FragmentActivity;"
+    ],
+    "Lcom/facebook/marianatrench/integrationtests/RunnableWithArgument;" : 
+    [
+      "Lcom/facebook/marianatrench/integrationtests/RunnableFlows$1;",
+      "Lcom/facebook/marianatrench/integrationtests/RunnableFlows$2;"
+    ],
+    "Ljava/lang/Runnable;" : 
+    [
+      "Ljava/lang/Thread;"
+    ],
+    "Ljava/util/Map;" : 
+    [
+      "Ljava/util/TreeMap;"
+    ]
+  }
 }

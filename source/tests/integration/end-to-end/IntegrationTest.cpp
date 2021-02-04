@@ -63,12 +63,13 @@ void compare_expected(
     const std::string& filename,
     const std::string& expected,
     const Json::Value& actual) {
-  Json::FastWriter writer;
-  std::string actual_string;
-  actual_string.append("// @");
-  actual_string.append("generated\n");
-  actual_string.append(Json::FastWriter().write(actual));
-  compare_expected(directory, filename, expected, actual_string);
+  auto writer = JsonValidation::compact_writer();
+  std::ostringstream actual_string;
+  actual_string << "// @";
+  actual_string << "generated\n";
+  writer->write(actual, &actual_string);
+  actual_string << "\n";
+  compare_expected(directory, filename, expected, actual_string.str());
 }
 
 } // namespace

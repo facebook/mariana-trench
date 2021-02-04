@@ -13,6 +13,7 @@
 
 #include <RedexContext.h>
 
+#include <mariana-trench/JsonValidation.h>
 #include <mariana-trench/SanitizersOptions.h>
 #include <mariana-trench/tests/Test.h>
 
@@ -73,12 +74,8 @@ Context make_context(const DexStore& store) {
   return context;
 }
 
-Json::Value parse_json(const std::string& input) {
-  Json::Value root;
-  if (!Json::Reader().parse(input, root)) {
-    throw std::invalid_argument("Input is not valid JSON: " + input);
-  }
-  return root;
+Json::Value parse_json(std::string input) {
+  return JsonValidation::parse_json(std::move(input));
 }
 
 Json::Value sorted_json(const Json::Value& value) {
@@ -177,8 +174,8 @@ std::string normalize_json_lines(const std::string& input) {
       }
       *buffer += line;
 
-      auto value = parse_json(*buffer);
-      auto normalized = sorted_json(value).toStyledString();
+      auto value = test::parse_json(*buffer);
+      auto normalized = JsonValidation::to_styled_string(sorted_json(value));
       boost::trim(normalized);
       normalized_elements.push_back(normalized);
 

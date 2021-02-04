@@ -1,85 +1,117 @@
 // @generated
 {
-   "add_features_to_arguments" : [
-      {
-         "features" : [ "via-features-to-arguments" ],
-         "port" : "Argument(1)"
-      }
-   ],
-   "attach_to_propagations" : [
-      {
-         "features" : [ "via-features-to-arguments", "via-function-propagation" ],
-         "port" : "Argument(1)"
-      }
-   ],
-   "attach_to_sinks" : [
-      {
-         "features" : [ "via-features-to-arguments", "via-function-sink" ],
-         "port" : "Argument(1)"
-      }
-   ],
-   "attach_to_sources" : [
-      {
-         "features" : [ "via-features-to-arguments", "via-function-source" ],
-         "port" : "Argument(1)"
-      }
-   ],
-   "generations" : [
-      {
-         "callee_port" : "Leaf",
-         "caller_port" : "Return",
-         "kind" : "TestGeneration",
-         "origins" : [
-            "Lcom/facebook/marianatrench/integrationtests/JsonModelGeneratorIntegrationTest1;.function:(II)V"
-         ]
-      },
-      {
-         "callee_port" : "Leaf",
-         "caller_port" : "Return",
-         "kind" : "TestOtherGeneration",
-         "origins" : [
-            "Lcom/facebook/marianatrench/integrationtests/JsonModelGeneratorIntegrationTest1;.function:(II)V"
-         ]
-      }
-   ],
-   "method" : "Lcom/facebook/marianatrench/integrationtests/JsonModelGeneratorIntegrationTest1;.function:(II)V",
-   "modes" : [ "skip-analysis" ],
-   "parameter_sources" : [
-      {
-         "callee_port" : "Leaf",
-         "caller_port" : "Argument(1)",
-         "kind" : "TestParameterSource",
-         "origins" : [
-            "Lcom/facebook/marianatrench/integrationtests/JsonModelGeneratorIntegrationTest1;.function:(II)V"
-         ]
-      },
-      {
-         "callee_port" : "Leaf",
-         "caller_port" : "Argument(2)",
-         "kind" : "TestParameterSource",
-         "origins" : [
-            "Lcom/facebook/marianatrench/integrationtests/JsonModelGeneratorIntegrationTest1;.function:(II)V"
-         ]
-      }
-   ],
-   "position" : {
-      "line" : 11,
-      "path" : "com/facebook/marianatrench/integrationtests/JsonModelGeneratorIntegrationTest1.java"
-   },
-   "propagation" : [
-      {
-         "input" : "Argument(1)",
-         "output" : "Argument(2)"
-      }
-   ],
-   "sinks" : [
-      {
-         "callee_port" : "Leaf",
-         "caller_port" : "Argument(2)",
-         "kind" : "TestSink",
-         "origins" : [
-            "Lcom/facebook/marianatrench/integrationtests/JsonModelGeneratorIntegrationTest1;.function:(II)V"
-         ]
-      }
-   ]
+  "add_features_to_arguments" : 
+  [
+    {
+      "features" : 
+      [
+        "via-features-to-arguments"
+      ],
+      "port" : "Argument(1)"
+    }
+  ],
+  "attach_to_propagations" : 
+  [
+    {
+      "features" : 
+      [
+        "via-features-to-arguments",
+        "via-function-propagation"
+      ],
+      "port" : "Argument(1)"
+    }
+  ],
+  "attach_to_sinks" : 
+  [
+    {
+      "features" : 
+      [
+        "via-features-to-arguments",
+        "via-function-sink"
+      ],
+      "port" : "Argument(1)"
+    }
+  ],
+  "attach_to_sources" : 
+  [
+    {
+      "features" : 
+      [
+        "via-features-to-arguments",
+        "via-function-source"
+      ],
+      "port" : "Argument(1)"
+    }
+  ],
+  "generations" : 
+  [
+    {
+      "callee_port" : "Leaf",
+      "caller_port" : "Return",
+      "kind" : "TestGeneration",
+      "origins" : 
+      [
+        "Lcom/facebook/marianatrench/integrationtests/JsonModelGeneratorIntegrationTest1;.function:(II)V"
+      ]
+    },
+    {
+      "callee_port" : "Leaf",
+      "caller_port" : "Return",
+      "kind" : "TestOtherGeneration",
+      "origins" : 
+      [
+        "Lcom/facebook/marianatrench/integrationtests/JsonModelGeneratorIntegrationTest1;.function:(II)V"
+      ]
+    }
+  ],
+  "method" : "Lcom/facebook/marianatrench/integrationtests/JsonModelGeneratorIntegrationTest1;.function:(II)V",
+  "modes" : 
+  [
+    "skip-analysis"
+  ],
+  "parameter_sources" : 
+  [
+    {
+      "callee_port" : "Leaf",
+      "caller_port" : "Argument(1)",
+      "kind" : "TestParameterSource",
+      "origins" : 
+      [
+        "Lcom/facebook/marianatrench/integrationtests/JsonModelGeneratorIntegrationTest1;.function:(II)V"
+      ]
+    },
+    {
+      "callee_port" : "Leaf",
+      "caller_port" : "Argument(2)",
+      "kind" : "TestParameterSource",
+      "origins" : 
+      [
+        "Lcom/facebook/marianatrench/integrationtests/JsonModelGeneratorIntegrationTest1;.function:(II)V"
+      ]
+    }
+  ],
+  "position" : 
+  {
+    "line" : 11,
+    "path" : "com/facebook/marianatrench/integrationtests/JsonModelGeneratorIntegrationTest1.java"
+  },
+  "propagation" : 
+  [
+    {
+      "input" : "Argument(1)",
+      "output" : "Argument(2)"
+    }
+  ],
+  "sinks" : 
+  [
+    {
+      "callee_port" : "Leaf",
+      "caller_port" : "Argument(2)",
+      "kind" : "TestSink",
+      "origins" : 
+      [
+        "Lcom/facebook/marianatrench/integrationtests/JsonModelGeneratorIntegrationTest1;.function:(II)V"
+      ]
+    }
+  ]
 }

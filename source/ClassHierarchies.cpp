@@ -10,6 +10,7 @@
 
 #include <mariana-trench/Assert.h>
 #include <mariana-trench/ClassHierarchies.h>
+#include <mariana-trench/JsonValidation.h>
 #include <mariana-trench/Log.h>
 
 namespace marianatrench {
@@ -89,8 +90,7 @@ ClassHierarchies::ClassHierarchies(
 
   if (options.dump_class_hierarchies()) {
     LOG(1, "Writing class hierarchies to `class_hierarchies.json`");
-    boost::filesystem::save_string_file(
-        "class_hierarchies.json", Json::FastWriter().write(to_json()));
+    JsonValidation::write_json_file("class_hierarchies.json", to_json());
   }
 }
 

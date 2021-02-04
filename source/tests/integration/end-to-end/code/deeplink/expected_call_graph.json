@@ -1,343 +1,601 @@
 // @generated
 {
-   "Landroid/app/Activity;.<init>:()V" : {
-      "static" : [ "Landroid/content/Context;.<init>:()V" ]
-   },
-   "Landroid/app/Activity;.getIntent:()Landroid/content/Intent;" : {
-      "static" : [ "Landroid/content/Intent;.<init>:()V" ]
-   },
-   "Landroid/content/ContentProvider;.<init>:()V" : {
-      "static" : [ "Ljava/lang/Object;.<init>:()V" ]
-   },
-   "Landroid/content/ContentProvider;.query:(Landroid/net/Uri;[Ljava/lang/String;Ljava/lang/String;[Ljava/lang/String;Ljava/lang/String;)Landroid/database/Cursor;" : {
-      "static" : [ "Landroid/database/Cursor;.<init>:()V" ]
-   },
-   "Landroid/content/Context;.<init>:()V" : {
-      "static" : [ "Ljava/lang/Object;.<init>:()V" ]
-   },
-   "Landroid/content/Intent;.<init>:()V" : {
-      "static" : [ "Ljava/lang/Object;.<init>:()V" ]
-   },
-   "Landroid/content/Intent;.<init>:(Ljava/lang/String;Landroid/net/Uri;)V" : {
-      "static" : [ "Ljava/lang/Object;.<init>:()V" ]
-   },
-   "Landroid/content/Intent;.getBundleExtra:(Ljava/lang/String;)Landroid/os/Bundle;" : {
-      "static" : [ "Landroid/os/Bundle;.<init>:()V" ]
-   },
-   "Landroid/content/Intent;.getData:()Landroid/net/Uri;" : {
-      "static" : [ "Landroid/net/Uri;.<init>:()V" ]
-   },
-   "Landroid/content/Intent;.getExtras:()Landroid/os/Bundle;" : {
-      "static" : [ "Landroid/os/Bundle;.<init>:()V" ]
-   },
-   "Landroid/database/Cursor;.<init>:()V" : {
-      "static" : [ "Ljava/lang/Object;.<init>:()V" ]
-   },
-   "Landroid/location/Location;.<init>:()V" : {
-      "static" : [ "Ljava/lang/Object;.<init>:()V" ]
-   },
-   "Landroid/net/Uri$Builder;.<init>:()V" : {
-      "static" : [ "Ljava/lang/Object;.<init>:()V" ]
-   },
-   "Landroid/net/Uri$Builder;.build:()Landroid/net/Uri;" : {
-      "static" : [
-         "Landroid/net/Uri;.<init>:(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V"
-      ]
-   },
-   "Landroid/net/Uri;.<init>:()V" : {
-      "static" : [ "Ljava/lang/Object;.<init>:()V" ]
-   },
-   "Landroid/net/Uri;.<init>:(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V" : {
-      "static" : [ "Ljava/lang/Object;.<init>:()V" ]
-   },
-   "Landroid/net/Uri;.parse:(Ljava/lang/String;)Landroid/net/Uri;" : {
-      "static" : [ "Landroid/net/Uri;.<init>:()V" ]
-   },
-   "Landroid/net/Uri;.toString:()Ljava/lang/String;" : {
-      "virtual" : [ "Ljava/lang/String;.concat:(Ljava/lang/String;)Ljava/lang/String;" ]
-   },
-   "Landroid/os/Bundle;.<init>:()V" : {
-      "static" : [ "Ljava/lang/Object;.<init>:()V" ]
-   },
-   "Landroid/util/Log;.<init>:()V" : {
-      "static" : [ "Ljava/lang/Object;.<init>:()V" ]
-   },
-   "Landroid/webkit/WebViewClient;.<init>:()V" : {
-      "static" : [ "Ljava/lang/Object;.<init>:()V" ]
-   },
-   "Landroidx/fragment/app/FragmentActivity;.<init>:()V" : {
-      "static" : [ "Landroid/app/Activity;.<init>:()V" ]
-   },
-   "Lcom/facebook/auth/datastore/LoggedInUserAuthDataStore;.<init>:()V" : {
-      "static" : [ "Ljava/lang/Object;.<init>:()V" ]
-   },
-   "Lcom/facebook/auth/datastore/LoggedInUserAuthDataStore;.getLoggedInUser:()Lcom/facebook/user/model/User;" : {
-      "static" : [ "Lcom/facebook/user/model/User;.<init>:()V" ]
-   },
-   "Lcom/facebook/base/activity/FragmentBaseActivityUtil;.<init>:()V" : {
-      "static" : [ "Ljava/lang/Object;.<init>:()V" ]
-   },
-   "Lcom/facebook/base/activity/FragmentBaseActivityUtil;.getDefaultActivityIntent:()Landroid/content/Intent;" : {
-      "static" : [ "Landroid/content/Intent;.<init>:()V" ]
-   },
-   "Lcom/facebook/content/SecureContextHelper;.<init>:()V" : {
-      "static" : [ "Ljava/lang/Object;.<init>:()V" ]
-   },
-   "Lcom/facebook/marianatrench/integrationtests/AppLinksUtil;.<init>:()V" : {
-      "static" : [ "Ljava/lang/Object;.<init>:()V" ]
-   },
-   "Lcom/facebook/marianatrench/integrationtests/AppLinksUtil;.generateFacewebFallbackIntent:(Lcom/facebook/marianatrench/integrationtests/CustomUriIntentMapper;Landroid/content/Context;Ljava/lang/String;)Landroid/content/Intent;" : {
-      "virtual" : [
-         "Landroid/content/Intent;.putExtra:(Ljava/lang/String;Ljava/lang/String;)V",
-         "Lcom/facebook/marianatrench/integrationtests/CustomUriIntentMapper;.getIntentForUri:(Landroid/content/Context;Ljava/lang/String;)Landroid/content/Intent;",
-         "Lcom/facebook/marianatrench/integrationtests/Fb4aUriIntentMapper;.getIntentForUri:(Landroid/content/Context;Ljava/lang/String;)Landroid/content/Intent;",
-         "Lcom/facebook/marianatrench/integrationtests/StaticUriIntentMapper;.getIntentForUri:(Landroid/content/Context;Ljava/lang/String;)Landroid/content/Intent;"
-      ]
-   },
-   "Lcom/facebook/marianatrench/integrationtests/CustomUriIntentMapper;.<init>:()V" : {
-      "static" : [ "Ljava/lang/Object;.<init>:()V" ]
-   },
-   "Lcom/facebook/marianatrench/integrationtests/ExternalLinkUriIntentBuilder;.<init>:()V" : {
-      "static" : [
-         "Lcom/facebook/marianatrench/integrationtests/UriIntentBuilder;.<init>:()V"
-      ]
-   },
-   "Lcom/facebook/marianatrench/integrationtests/ExternalLinkUriIntentBuilder;.getIntentForUri:(Landroid/content/Context;Ljava/lang/String;)Landroid/content/Intent;" : {
-      "static" : [
-         "Landroid/content/Intent;.<init>:(Ljava/lang/String;Landroid/net/Uri;)V",
-         "Landroid/net/Uri;.parse:(Ljava/lang/String;)Landroid/net/Uri;"
-      ],
-      "virtual" : [
-         "Landroid/content/Intent;.putExtra:(Ljava/lang/String;Z)V",
-         "Landroid/net/Uri;.getHost:()Ljava/lang/String;",
-         "Landroid/net/Uri;.getQueryParameter:(Ljava/lang/String;)Ljava/lang/String;",
-         "Landroid/net/Uri;.getScheme:()Ljava/lang/String;",
-         "Ljava/lang/Object;.equals:(Ljava/lang/Object;)Z"
-      ]
-   },
-   "Lcom/facebook/marianatrench/integrationtests/FBLinks;.<init>:()V" : {
-      "static" : [ "Ljava/lang/Object;.<init>:()V" ]
-   },
-   "Lcom/facebook/marianatrench/integrationtests/Fb4aUriIntentMapper;.<init>:()V" : {
-      "static" : [
-         "Lcom/facebook/marianatrench/integrationtests/CustomUriIntentMapper;.<init>:()V",
-         "Lcom/facebook/marianatrench/integrationtests/StaticUriIntentMapper;.<init>:()V"
-      ]
-   },
-   "Lcom/facebook/marianatrench/integrationtests/Fb4aUriIntentMapper;.getIntentByUriLookup:(Landroid/content/Context;Ljava/lang/String;)Landroid/content/Intent;" : {
-      "virtual" : [
-         "Lcom/facebook/marianatrench/integrationtests/StaticUriIntentMapper;.getIntentForUri:(Landroid/content/Context;Ljava/lang/String;)Landroid/content/Intent;"
-      ]
-   },
-   "Lcom/facebook/marianatrench/integrationtests/Fb4aUriIntentMapper;.getIntentForUri:(Landroid/content/Context;Ljava/lang/String;)Landroid/content/Intent;" : {
-      "static" : [
-         "Lcom/facebook/marianatrench/integrationtests/Fb4aUriIntentMapper;.getIntentByUriLookup:(Landroid/content/Context;Ljava/lang/String;)Landroid/content/Intent;"
-      ]
-   },
-   "Lcom/facebook/marianatrench/integrationtests/IntentHandlerUtil;.<init>:()V" : {
-      "static" : [
-         "Lcom/facebook/content/SecureContextHelper;.<init>:()V",
-         "Lcom/facebook/marianatrench/integrationtests/AppLinksUtil;.<init>:()V",
-         "Lcom/facebook/marianatrench/integrationtests/Fb4aUriIntentMapper;.<init>:()V",
-         "Ljava/lang/Object;.<init>:()V"
-      ]
-   },
-   "Lcom/facebook/marianatrench/integrationtests/IntentHandlerUtil;.handleDestinationIntent:(Landroid/content/Context;Ljava/lang/String;Landroid/content/Intent;)Z" : {
-      "static" : [
-         "Lcom/facebook/marianatrench/integrationtests/IntentHandlerUtil;.startActivityDetectInternalOrExternal:(Landroid/content/Context;Landroid/content/Intent;)V"
-      ],
-      "virtual" : [
-         "Landroid/content/Intent;.getFlags:()I",
-         "Landroid/content/Intent;.setFlags:(I)V"
-      ]
-   },
-   "Lcom/facebook/marianatrench/integrationtests/IntentHandlerUtil;.handleUri:(Landroid/content/Context;Ljava/lang/String;)Z" : {
-      "static" : [
-         "Lcom/facebook/marianatrench/integrationtests/IntentHandlerUtil;.handleUri:(Landroid/content/Context;Ljava/lang/String;Landroid/os/Bundle;Landroid/content/Intent;)Z"
-      ]
-   },
-   "Lcom/facebook/marianatrench/integrationtests/IntentHandlerUtil;.handleUri:(Landroid/content/Context;Ljava/lang/String;Landroid/os/Bundle;)Z" : {
-      "static" : [
-         "Lcom/facebook/marianatrench/integrationtests/IntentHandlerUtil;.handleUri:(Landroid/content/Context;Ljava/lang/String;Landroid/os/Bundle;Landroid/content/Intent;)Z"
-      ]
-   },
-   "Lcom/facebook/marianatrench/integrationtests/IntentHandlerUtil;.handleUri:(Landroid/content/Context;Ljava/lang/String;Landroid/os/Bundle;Landroid/content/Intent;)Z" : {
-      "static" : [
-         "Lcom/facebook/marianatrench/integrationtests/IntentHandlerUtil;.handleDestinationIntent:(Landroid/content/Context;Ljava/lang/String;Landroid/content/Intent;)Z"
-      ],
-      "virtual" : [
-         "Landroid/content/Intent;.putExtras:(Landroid/os/Bundle;)V",
-         "Lcom/facebook/marianatrench/integrationtests/CustomUriIntentMapper;.getIntentForUri:(Landroid/content/Context;Ljava/lang/String;)Landroid/content/Intent;",
-         "Lcom/facebook/marianatrench/integrationtests/Fb4aUriIntentMapper;.getIntentForUri:(Landroid/content/Context;Ljava/lang/String;)Landroid/content/Intent;",
-         "Lcom/facebook/marianatrench/integrationtests/StaticUriIntentMapper;.getIntentForUri:(Landroid/content/Context;Ljava/lang/String;)Landroid/content/Intent;"
-      ]
-   },
-   "Lcom/facebook/marianatrench/integrationtests/IntentHandlerUtil;.launchNextActivity:(Landroid/content/Context;Landroid/content/Intent;)V" : {
-      "static" : [
-         "Landroid/os/Bundle;.<init>:()V",
-         "Lcom/facebook/marianatrench/integrationtests/IntentHandlerUtil;.handleDestinationIntent:(Landroid/content/Context;Ljava/lang/String;Landroid/content/Intent;)Z",
-         "Lcom/facebook/marianatrench/integrationtests/IntentHandlerUtil;.isShortenedNotificationUri:(Landroid/net/Uri;)Z",
-         "Lcom/facebook/marianatrench/integrationtests/IntentHandlerUtil;.transformNotificationUri:(Landroid/content/Context;Landroid/net/Uri;)V"
-      ],
-      "virtual" : [
-         "Landroid/content/Intent;.getBundleExtra:(Ljava/lang/String;)Landroid/os/Bundle;",
-         "Landroid/content/Intent;.getData:()Landroid/net/Uri;",
-         "Landroid/content/Intent;.getExtras:()Landroid/os/Bundle;",
-         "Landroid/content/Intent;.getStringExtra:(Ljava/lang/String;)Ljava/lang/String;",
-         "Landroid/content/Intent;.hasExtra:(Ljava/lang/String;)Z",
-         "Landroid/net/Uri;.toString:()Ljava/lang/String;",
-         "Landroid/os/Bundle;.containsKey:(Ljava/lang/String;)Z",
-         "Landroid/os/Bundle;.getString:(Ljava/lang/String;)Ljava/lang/String;",
-         "Landroid/os/Bundle;.putBoolean:(Ljava/lang/String;Ljava/lang/Boolean;)V",
-         "Landroid/os/Bundle;.putString:(Ljava/lang/String;Ljava/lang/String;)V",
-         "Lcom/facebook/marianatrench/integrationtests/AppLinksUtil;.generateFacewebFallbackIntent:(Lcom/facebook/marianatrench/integrationtests/CustomUriIntentMapper;Landroid/content/Context;Ljava/lang/String;)Landroid/content/Intent;",
-         "Lcom/facebook/marianatrench/integrationtests/IntentHandlerUtil;.handleUri:(Landroid/content/Context;Ljava/lang/String;)Z",
-         "Lcom/facebook/marianatrench/integrationtests/IntentHandlerUtil;.handleUri:(Landroid/content/Context;Ljava/lang/String;Landroid/os/Bundle;)Z",
-         "Ljava/lang/String;.contains:(Ljava/lang/String;)Z",
-         "Ljava/lang/String;.isEmpty:()Z",
-         "Ljava/lang/String;.startsWith:(Ljava/lang/String;)Z"
-      ]
-   },
-   "Lcom/facebook/marianatrench/integrationtests/IntentHandlerUtil;.startActivityDetectInternalOrExternal:(Landroid/content/Context;Landroid/content/Intent;)V" : {
-      "static" : [
-         "Landroid/app/Activity;.<init>:()V",
-         "Lcom/facebook/marianatrench/integrationtests/IntentHandlerUtil;.startActivityDetectInternalOrExternalForResult:(Landroid/content/Context;Landroid/content/Intent;ILandroid/app/Activity;)V",
-         "Lcom/facebook/marianatrench/integrationtests/IntentHandlerUtil;.startActivityDetectInternalOrExternalImpl:(Landroid/content/Context;Landroid/content/Intent;)V"
-      ],
-      "virtual" : [
-         "Landroid/content/Intent;.getIntExtra:(Ljava/lang/String;I)I",
-         "Landroid/content/Intent;.hasExtra:(Ljava/lang/String;)Z"
-      ]
-   },
-   "Lcom/facebook/marianatrench/integrationtests/IntentHandlerUtil;.startActivityDetectInternalOrExternalForResult:(Landroid/content/Context;Landroid/content/Intent;ILandroid/app/Activity;)V" : {
-      "static" : [
-         "Lcom/facebook/marianatrench/integrationtests/IntentResolver;.isIntentInternallyResolvableToOneComponent:(Landroid/content/Context;Landroid/content/Intent;)Z"
-      ],
-      "virtual" : [
-         "Lcom/facebook/content/SecureContextHelper;.startFacebookActivityForResult:(Landroid/content/Intent;ILandroid/app/Activity;)V",
-         "Lcom/facebook/content/SecureContextHelper;.startNonFacebookActivityForResult:(Landroid/content/Intent;ILandroid/app/Activity;)V"
-      ]
-   },
-   "Lcom/facebook/marianatrench/integrationtests/IntentHandlerUtil;.startActivityDetectInternalOrExternalImpl:(Landroid/content/Context;Landroid/content/Intent;)V" : {
-      "static" : [
-         "Lcom/facebook/marianatrench/integrationtests/IntentResolver;.isIntentInternallyResolvableToOneComponent:(Landroid/content/Context;Landroid/content/Intent;)Z"
-      ],
-      "virtual" : [
-         "Lcom/facebook/content/SecureContextHelper;.startFacebookActivity:(Landroid/content/Intent;Landroid/content/Context;)V",
-         "Lcom/facebook/content/SecureContextHelper;.startNonFacebookActivity:(Landroid/content/Intent;Landroid/content/Context;)V"
-      ]
-   },
-   "Lcom/facebook/marianatrench/integrationtests/IntentResolver;.<init>:()V" : {
-      "static" : [ "Ljava/lang/Object;.<init>:()V" ]
-   },
-   "Lcom/facebook/marianatrench/integrationtests/IntentResolver;.isIntentInternallyResolvableToOneComponent:(Landroid/content/Context;Landroid/content/Intent;)Z" : {
-      "virtual" : [
-         "Landroid/content/Intent;.getDataString:()Ljava/lang/String;",
-         "Ljava/lang/String;.contains:(Ljava/lang/String;)Z"
-      ]
-   },
-   "Lcom/facebook/marianatrench/integrationtests/IntentUriHandler;.<init>:()V" : {
-      "static" : [ "Landroidx/fragment/app/FragmentActivity;.<init>:()V" ]
-   },
-   "Lcom/facebook/marianatrench/integrationtests/IntentUriHandler;.onActivityCreate:()V" : {
-      "static" : [
-         "Landroidx/fragment/app/FragmentActivity;.onActivityCreate:()V",
-         "Lcom/facebook/marianatrench/integrationtests/IntentHandlerUtil;.<init>:()V"
-      ],
-      "virtual" : [
-         "Landroid/app/Activity;.getIntent:()Landroid/content/Intent;",
-         "Lcom/facebook/marianatrench/integrationtests/IntentHandlerUtil;.launchNextActivity:(Landroid/content/Context;Landroid/content/Intent;)V"
-      ]
-   },
-   "Lcom/facebook/marianatrench/integrationtests/LegacyUriMap;.<init>:()V" : {
-      "static" : [ "Ljava/lang/Object;.<init>:()V" ]
-   },
-   "Lcom/facebook/marianatrench/integrationtests/LegacyUriMap;.getIntent:(Landroid/content/Context;Ljava/lang/String;Ljava/lang/String;)Landroid/content/Intent;" : {
-      "static" : [
-         "Lcom/facebook/marianatrench/integrationtests/ExternalLinkUriIntentBuilder;.<init>:()V"
-      ],
-      "virtual" : [
-         "Lcom/facebook/marianatrench/integrationtests/ExternalLinkUriIntentBuilder;.getIntentForUri:(Landroid/content/Context;Ljava/lang/String;)Landroid/content/Intent;",
-         "Ljava/lang/Object;.equals:(Ljava/lang/Object;)Z",
-         "Ljava/lang/Object;.hashCode:()I"
-      ]
-   },
-   "Lcom/facebook/marianatrench/integrationtests/Origin;.<init>:()V" : {
-      "static" : [ "Ljava/lang/Object;.<init>:()V" ]
-   },
-   "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;" : {
-      "static" : [ "Ljava/lang/Object;.<init>:()V" ]
-   },
-   "Lcom/facebook/marianatrench/integrationtests/StaticUriIntentMapper;.<init>:()V" : {
-      "static" : [
-         "Lcom/facebook/marianatrench/integrationtests/CustomUriIntentMapper;.<init>:()V"
-      ]
-   },
-   "Lcom/facebook/marianatrench/integrationtests/StaticUriIntentMapper;.getHostname:(Ljava/lang/String;)Ljava/lang/String;" : {
-      "virtual" : [
-         "Ljava/lang/String;.charAt:(I)C",
-         "Ljava/lang/String;.contains:(Ljava/lang/String;)Z",
-         "Ljava/lang/String;.indexOf:(Ljava/lang/String;)I",
-         "Ljava/lang/String;.length:()I",
-         "Ljava/lang/String;.substring:(I)Ljava/lang/String;",
-         "Ljava/lang/String;.substring:(II)Ljava/lang/String;"
-      ]
-   },
-   "Lcom/facebook/marianatrench/integrationtests/StaticUriIntentMapper;.getIntentForUri:(Landroid/content/Context;Ljava/lang/String;)Landroid/content/Intent;" : {
-      "static" : [
-         "Lcom/facebook/marianatrench/integrationtests/LegacyUriMap;.getIntent:(Landroid/content/Context;Ljava/lang/String;Ljava/lang/String;)Landroid/content/Intent;",
-         "Lcom/facebook/marianatrench/integrationtests/StaticUriIntentMapper;.getHostname:(Ljava/lang/String;)Ljava/lang/String;"
-      ]
-   },
-   "Lcom/facebook/marianatrench/integrationtests/UriIntentBuilder;.<init>:()V" : {
-      "static" : [ "Ljava/lang/Object;.<init>:()V" ]
-   },
-   "Lcom/facebook/secure/context/IntentLauncher;.<init>:()V" : {
-      "static" : [ "Ljava/lang/Object;.<init>:()V" ]
-   },
-   "Lcom/facebook/secure/context/SecureContextHelperV2;.<init>:()V" : {
-      "static" : [ "Ljava/lang/Object;.<init>:()V" ]
-   },
-   "Lcom/facebook/secure/context/SecureContextHelperV2;.get:()Lcom/facebook/secure/context/SecureContextHelperV2;" : {
-      "static" : [ "Lcom/facebook/secure/context/SecureContextHelperV2;.<init>:()V" ]
-   },
-   "Lcom/facebook/secure/context/SecureContextHelperV2;.inAppBrowser:()Lcom/facebook/secure/context/IntentLauncher;" : {
-      "static" : [ "Lcom/facebook/secure/context/IntentLauncher;.<init>:()V" ]
-   },
-   "Lcom/facebook/secure/context/SecureContextHelperV2;.internal:()Lcom/facebook/secure/context/IntentLauncher;" : {
-      "static" : [ "Lcom/facebook/secure/context/IntentLauncher;.<init>:()V" ]
-   },
-   "Lcom/facebook/user/model/User;.<init>:()V" : {
-      "static" : [ "Ljava/lang/Object;.<init>:()V" ]
-   },
-   "Lcom/instagram/common/analytics/IgAnalyticsLogger;.<init>:()V" : {
-      "static" : [ "Ljava/lang/Object;.<init>:()V" ]
-   },
-   "Lcom/instagram/common/analytics/IgAnalyticsLogger;.getInstance:()Lcom/instagram/common/analytics/IgAnalyticsLogger;" : {
-      "static" : [ "Lcom/instagram/common/analytics/IgAnalyticsLogger;.<init>:()V" ]
-   },
-   "Lcom/instagram/common/analytics/intf/AnalyticsEvent;.<init>:()V" : {
-      "static" : [ "Ljava/lang/Object;.<init>:()V" ]
-   },
-   "Lcom/instagram/common/analytics/intf/AnalyticsEvent;.obtain:(Ljava/lang/String;)Lcom/instagram/common/analytics/intf/AnalyticsEvent;" : {
-      "static" : [ "Lcom/instagram/common/analytics/intf/AnalyticsEvent;.<init>:()V" ]
-   },
-   "Ljava/lang/Integer;.<init>:()V" : {
-      "static" : [ "Ljava/lang/Object;.<init>:()V" ]
-   },
-   "Ljava/lang/String;.<init>:()V" : {
-      "static" : [ "Ljava/lang/Object;.<init>:()V" ]
-   },
-   "Ljava/lang/String;.concat:(Ljava/lang/String;)Ljava/lang/String;" : {
-      "virtual" : [ "Ljava/lang/String;.isEmpty:()Z" ]
-   },
-   "Ljava/lang/Thread;.<init>:(Ljava/lang/Runnable;)V" : {
-      "static" : [ "Ljava/lang/Object;.<init>:()V" ]
-   },
-   "Ljava/lang/Thread;.run:()V" : {
-      "virtual" : [ "Ljava/lang/Runnable;.run:()V", "Ljava/lang/Thread;.run:()V" ]
-   },
-   "Ljava/util/TreeMap;.<init>:()V" : {
-      "static" : [ "Ljava/lang/Object;.<init>:()V" ]
-   }
+  "Landroid/app/Activity;.<init>:()V" : 
+  {
+    "static" : 
+    [
+      "Landroid/content/Context;.<init>:()V"
+    ]
+  },
+  "Landroid/app/Activity;.getIntent:()Landroid/content/Intent;" : 
+  {
+    "static" : 
+    [
+      "Landroid/content/Intent;.<init>:()V"
+    ]
+  },
+  "Landroid/content/ContentProvider;.<init>:()V" : 
+  {
+    "static" : 
+    [
+      "Ljava/lang/Object;.<init>:()V"
+    ]
+  },
+  "Landroid/content/ContentProvider;.query:(Landroid/net/Uri;[Ljava/lang/String;Ljava/lang/String;[Ljava/lang/String;Ljava/lang/String;)Landroid/database/Cursor;" : 
+  {
+    "static" : 
+    [
+      "Landroid/database/Cursor;.<init>:()V"
+    ]
+  },
+  "Landroid/content/Context;.<init>:()V" : 
+  {
+    "static" : 
+    [
+      "Ljava/lang/Object;.<init>:()V"
+    ]
+  },
+  "Landroid/content/Intent;.<init>:()V" : 
+  {
+    "static" : 
+    [
+      "Ljava/lang/Object;.<init>:()V"
+    ]
+  },
+  "Landroid/content/Intent;.<init>:(Ljava/lang/String;Landroid/net/Uri;)V" : 
+  {
+    "static" : 
+    [
+      "Ljava/lang/Object;.<init>:()V"
+    ]
+  },
+  "Landroid/content/Intent;.getBundleExtra:(Ljava/lang/String;)Landroid/os/Bundle;" : 
+  {
+    "static" : 
+    [
+      "Landroid/os/Bundle;.<init>:()V"
+    ]
+  },
+  "Landroid/content/Intent;.getData:()Landroid/net/Uri;" : 
+  {
+    "static" : 
+    [
+      "Landroid/net/Uri;.<init>:()V"
+    ]
+  },
+  "Landroid/content/Intent;.getExtras:()Landroid/os/Bundle;" : 
+  {
+    "static" : 
+    [
+      "Landroid/os/Bundle;.<init>:()V"
+    ]
+  },
+  "Landroid/database/Cursor;.<init>:()V" : 
+  {
+    "static" : 
+    [
+      "Ljava/lang/Object;.<init>:()V"
+    ]
+  },
+  "Landroid/location/Location;.<init>:()V" : 
+  {
+    "static" : 
+    [
+      "Ljava/lang/Object;.<init>:()V"
+    ]
+  },
+  "Landroid/net/Uri$Builder;.<init>:()V" : 
+  {
+    "static" : 
+    [
+      "Ljava/lang/Object;.<init>:()V"
+    ]
+  },
+  "Landroid/net/Uri$Builder;.build:()Landroid/net/Uri;" : 
+  {
+    "static" : 
+    [
+      "Landroid/net/Uri;.<init>:(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V"
+    ]
+  },
+  "Landroid/net/Uri;.<init>:()V" : 
+  {
+    "static" : 
+    [
+      "Ljava/lang/Object;.<init>:()V"
+    ]
+  },
+  "Landroid/net/Uri;.<init>:(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V" : 
+  {
+    "static" : 
+    [
+      "Ljava/lang/Object;.<init>:()V"
+    ]
+  },
+  "Landroid/net/Uri;.parse:(Ljava/lang/String;)Landroid/net/Uri;" : 
+  {
+    "static" : 
+    [
+      "Landroid/net/Uri;.<init>:()V"
+    ]
+  },
+  "Landroid/net/Uri;.toString:()Ljava/lang/String;" : 
+  {
+    "virtual" : 
+    [
+      "Ljava/lang/String;.concat:(Ljava/lang/String;)Ljava/lang/String;"
+    ]
+  },
+  "Landroid/os/Bundle;.<init>:()V" : 
+  {
+    "static" : 
+    [
+      "Ljava/lang/Object;.<init>:()V"
+    ]
+  },
+  "Landroid/util/Log;.<init>:()V" : 
+  {
+    "static" : 
+    [
+      "Ljava/lang/Object;.<init>:()V"
+    ]
+  },
+  "Landroid/webkit/WebViewClient;.<init>:()V" : 
+  {
+    "static" : 
+    [
+      "Ljava/lang/Object;.<init>:()V"
+    ]
+  },
+  "Landroidx/fragment/app/FragmentActivity;.<init>:()V" : 
+  {
+    "static" : 
+    [
+      "Landroid/app/Activity;.<init>:()V"
+    ]
+  },
+  "Lcom/facebook/auth/datastore/LoggedInUserAuthDataStore;.<init>:()V" : 
+  {
+    "static" : 
+    [
+      "Ljava/lang/Object;.<init>:()V"
+    ]
+  },
+  "Lcom/facebook/auth/datastore/LoggedInUserAuthDataStore;.getLoggedInUser:()Lcom/facebook/user/model/User;" : 
+  {
+    "static" : 
+    [
+      "Lcom/facebook/user/model/User;.<init>:()V"
+    ]
+  },
+  "Lcom/facebook/base/activity/FragmentBaseActivityUtil;.<init>:()V" : 
+  {
+    "static" : 
+    [
+      "Ljava/lang/Object;.<init>:()V"
+    ]
+  },
+  "Lcom/facebook/base/activity/FragmentBaseActivityUtil;.getDefaultActivityIntent:()Landroid/content/Intent;" : 
+  {
+    "static" : 
+    [
+      "Landroid/content/Intent;.<init>:()V"
+    ]
+  },
+  "Lcom/facebook/content/SecureContextHelper;.<init>:()V" : 
+  {
+    "static" : 
+    [
+      "Ljava/lang/Object;.<init>:()V"
+    ]
+  },
+  "Lcom/facebook/marianatrench/integrationtests/AppLinksUtil;.<init>:()V" : 
+  {
+    "static" : 
+    [
+      "Ljava/lang/Object;.<init>:()V"
+    ]
+  },
+  "Lcom/facebook/marianatrench/integrationtests/AppLinksUtil;.generateFacewebFallbackIntent:(Lcom/facebook/marianatrench/integrationtests/CustomUriIntentMapper;Landroid/content/Context;Ljava/lang/String;)Landroid/content/Intent;" : 
+  {
+    "virtual" : 
+    [
+      "Landroid/content/Intent;.putExtra:(Ljava/lang/String;Ljava/lang/String;)V",
+      "Lcom/facebook/marianatrench/integrationtests/CustomUriIntentMapper;.getIntentForUri:(Landroid/content/Context;Ljava/lang/String;)Landroid/content/Intent;",
+      "Lcom/facebook/marianatrench/integrationtests/Fb4aUriIntentMapper;.getIntentForUri:(Landroid/content/Context;Ljava/lang/String;)Landroid/content/Intent;",
+      "Lcom/facebook/marianatrench/integrationtests/StaticUriIntentMapper;.getIntentForUri:(Landroid/content/Context;Ljava/lang/String;)Landroid/content/Intent;"
+    ]
+  },
+  "Lcom/facebook/marianatrench/integrationtests/CustomUriIntentMapper;.<init>:()V" : 
+  {
+    "static" : 
+    [
+      "Ljava/lang/Object;.<init>:()V"
+    ]
+  },
+  "Lcom/facebook/marianatrench/integrationtests/ExternalLinkUriIntentBuilder;.<init>:()V" : 
+  {
+    "static" : 
+    [
+      "Lcom/facebook/marianatrench/integrationtests/UriIntentBuilder;.<init>:()V"
+    ]
+  },
+  "Lcom/facebook/marianatrench/integrationtests/ExternalLinkUriIntentBuilder;.getIntentForUri:(Landroid/content/Context;Ljava/lang/String;)Landroid/content/Intent;" : 
+  {
+    "static" : 
+    [
+      "Landroid/content/Intent;.<init>:(Ljava/lang/String;Landroid/net/Uri;)V",
+      "Landroid/net/Uri;.parse:(Ljava/lang/String;)Landroid/net/Uri;"
+    ],
+    "virtual" : 
+    [
+      "Landroid/content/Intent;.putExtra:(Ljava/lang/String;Z)V",
+      "Landroid/net/Uri;.getHost:()Ljava/lang/String;",
+      "Landroid/net/Uri;.getQueryParameter:(Ljava/lang/String;)Ljava/lang/String;",
+      "Landroid/net/Uri;.getScheme:()Ljava/lang/String;",
+      "Ljava/lang/Object;.equals:(Ljava/lang/Object;)Z"
+    ]
+  },
+  "Lcom/facebook/marianatrench/integrationtests/FBLinks;.<init>:()V" : 
+  {
+    "static" : 
+    [
+      "Ljava/lang/Object;.<init>:()V"
+    ]
+  },
+  "Lcom/facebook/marianatrench/integrationtests/Fb4aUriIntentMapper;.<init>:()V" : 
+  {
+    "static" : 
+    [
+      "Lcom/facebook/marianatrench/integrationtests/CustomUriIntentMapper;.<init>:()V",
+      "Lcom/facebook/marianatrench/integrationtests/StaticUriIntentMapper;.<init>:()V"
+    ]
+  },
+  "Lcom/facebook/marianatrench/integrationtests/Fb4aUriIntentMapper;.getIntentByUriLookup:(Landroid/content/Context;Ljava/lang/String;)Landroid/content/Intent;" : 
+  {
+    "virtual" : 
+    [
+      "Lcom/facebook/marianatrench/integrationtests/StaticUriIntentMapper;.getIntentForUri:(Landroid/content/Context;Ljava/lang/String;)Landroid/content/Intent;"
+    ]
+  },
+  "Lcom/facebook/marianatrench/integrationtests/Fb4aUriIntentMapper;.getIntentForUri:(Landroid/content/Context;Ljava/lang/String;)Landroid/content/Intent;" : 
+  {
+    "static" : 
+    [
+      "Lcom/facebook/marianatrench/integrationtests/Fb4aUriIntentMapper;.getIntentByUriLookup:(Landroid/content/Context;Ljava/lang/String;)Landroid/content/Intent;"
+    ]
+  },
+  "Lcom/facebook/marianatrench/integrationtests/IntentHandlerUtil;.<init>:()V" : 
+  {
+    "static" : 
+    [
+      "Lcom/facebook/content/SecureContextHelper;.<init>:()V",
+      "Lcom/facebook/marianatrench/integrationtests/AppLinksUtil;.<init>:()V",
+      "Lcom/facebook/marianatrench/integrationtests/Fb4aUriIntentMapper;.<init>:()V",
+      "Ljava/lang/Object;.<init>:()V"
+    ]
+  },
+  "Lcom/facebook/marianatrench/integrationtests/IntentHandlerUtil;.handleDestinationIntent:(Landroid/content/Context;Ljava/lang/String;Landroid/content/Intent;)Z" : 
+  {
+    "static" : 
+    [
+      "Lcom/facebook/marianatrench/integrationtests/IntentHandlerUtil;.startActivityDetectInternalOrExternal:(Landroid/content/Context;Landroid/content/Intent;)V"
+    ],
+    "virtual" : 
+    [
+      "Landroid/content/Intent;.getFlags:()I",
+      "Landroid/content/Intent;.setFlags:(I)V"
+    ]
+  },
+  "Lcom/facebook/marianatrench/integrationtests/IntentHandlerUtil;.handleUri:(Landroid/content/Context;Ljava/lang/String;)Z" : 
+  {
+    "static" : 
+    [
+      "Lcom/facebook/marianatrench/integrationtests/IntentHandlerUtil;.handleUri:(Landroid/content/Context;Ljava/lang/String;Landroid/os/Bundle;Landroid/content/Intent;)Z"
+    ]
+  },
+  "Lcom/facebook/marianatrench/integrationtests/IntentHandlerUtil;.handleUri:(Landroid/content/Context;Ljava/lang/String;Landroid/os/Bundle;)Z" : 
+  {
+    "static" : 
+    [
+      "Lcom/facebook/marianatrench/integrationtests/IntentHandlerUtil;.handleUri:(Landroid/content/Context;Ljava/lang/String;Landroid/os/Bundle;Landroid/content/Intent;)Z"
+    ]
+  },
+  "Lcom/facebook/marianatrench/integrationtests/IntentHandlerUtil;.handleUri:(Landroid/content/Context;Ljava/lang/String;Landroid/os/Bundle;Landroid/content/Intent;)Z" : 
+  {
+    "static" : 
+    [
+      "Lcom/facebook/marianatrench/integrationtests/IntentHandlerUtil;.handleDestinationIntent:(Landroid/content/Context;Ljava/lang/String;Landroid/content/Intent;)Z"
+    ],
+    "virtual" : 
+    [
+      "Landroid/content/Intent;.putExtras:(Landroid/os/Bundle;)V",
+      "Lcom/facebook/marianatrench/integrationtests/CustomUriIntentMapper;.getIntentForUri:(Landroid/content/Context;Ljava/lang/String;)Landroid/content/Intent;",
+      "Lcom/facebook/marianatrench/integrationtests/Fb4aUriIntentMapper;.getIntentForUri:(Landroid/content/Context;Ljava/lang/String;)Landroid/content/Intent;",
+      "Lcom/facebook/marianatrench/integrationtests/StaticUriIntentMapper;.getIntentForUri:(Landroid/content/Context;Ljava/lang/String;)Landroid/content/Intent;"
+    ]
+  },
+  "Lcom/facebook/marianatrench/integrationtests/IntentHandlerUtil;.launchNextActivity:(Landroid/content/Context;Landroid/content/Intent;)V" : 
+  {
+    "static" : 
+    [
+      "Landroid/os/Bundle;.<init>:()V",
+      "Lcom/facebook/marianatrench/integrationtests/IntentHandlerUtil;.handleDestinationIntent:(Landroid/content/Context;Ljava/lang/String;Landroid/content/Intent;)Z",
+      "Lcom/facebook/marianatrench/integrationtests/IntentHandlerUtil;.isShortenedNotificationUri:(Landroid/net/Uri;)Z",
+      "Lcom/facebook/marianatrench/integrationtests/IntentHandlerUtil;.transformNotificationUri:(Landroid/content/Context;Landroid/net/Uri;)V"
+    ],
+    "virtual" : 
+    [
+      "Landroid/content/Intent;.getBundleExtra:(Ljava/lang/String;)Landroid/os/Bundle;",
+      "Landroid/content/Intent;.getData:()Landroid/net/Uri;",
+      "Landroid/content/Intent;.getExtras:()Landroid/os/Bundle;",
+      "Landroid/content/Intent;.getStringExtra:(Ljava/lang/String;)Ljava/lang/String;",
+      "Landroid/content/Intent;.hasExtra:(Ljava/lang/String;)Z",
+      "Landroid/net/Uri;.toString:()Ljava/lang/String;",
+      "Landroid/os/Bundle;.containsKey:(Ljava/lang/String;)Z",
+      "Landroid/os/Bundle;.getString:(Ljava/lang/String;)Ljava/lang/String;",
+      "Landroid/os/Bundle;.putBoolean:(Ljava/lang/String;Ljava/lang/Boolean;)V",
+      "Landroid/os/Bundle;.putString:(Ljava/lang/String;Ljava/lang/String;)V",
+      "Lcom/facebook/marianatrench/integrationtests/AppLinksUtil;.generateFacewebFallbackIntent:(Lcom/facebook/marianatrench/integrationtests/CustomUriIntentMapper;Landroid/content/Context;Ljava/lang/String;)Landroid/content/Intent;",
+      "Lcom/facebook/marianatrench/integrationtests/IntentHandlerUtil;.handleUri:(Landroid/content/Context;Ljava/lang/String;)Z",
+      "Lcom/facebook/marianatrench/integrationtests/IntentHandlerUtil;.handleUri:(Landroid/content/Context;Ljava/lang/String;Landroid/os/Bundle;)Z",
+      "Ljava/lang/String;.contains:(Ljava/lang/String;)Z",
+      "Ljava/lang/String;.isEmpty:()Z",
+      "Ljava/lang/String;.startsWith:(Ljava/lang/String;)Z"
+    ]
+  },
+  "Lcom/facebook/marianatrench/integrationtests/IntentHandlerUtil;.startActivityDetectInternalOrExternal:(Landroid/content/Context;Landroid/content/Intent;)V" : 
+  {
+    "static" : 
+    [
+      "Landroid/app/Activity;.<init>:()V",
+      "Lcom/facebook/marianatrench/integrationtests/IntentHandlerUtil;.startActivityDetectInternalOrExternalForResult:(Landroid/content/Context;Landroid/content/Intent;ILandroid/app/Activity;)V",
+      "Lcom/facebook/marianatrench/integrationtests/IntentHandlerUtil;.startActivityDetectInternalOrExternalImpl:(Landroid/content/Context;Landroid/content/Intent;)V"
+    ],
+    "virtual" : 
+    [
+      "Landroid/content/Intent;.getIntExtra:(Ljava/lang/String;I)I",
+      "Landroid/content/Intent;.hasExtra:(Ljava/lang/String;)Z"
+    ]
+  },
+  "Lcom/facebook/marianatrench/integrationtests/IntentHandlerUtil;.startActivityDetectInternalOrExternalForResult:(Landroid/content/Context;Landroid/content/Intent;ILandroid/app/Activity;)V" : 
+  {
+    "static" : 
+    [
+      "Lcom/facebook/marianatrench/integrationtests/IntentResolver;.isIntentInternallyResolvableToOneComponent:(Landroid/content/Context;Landroid/content/Intent;)Z"
+    ],
+    "virtual" : 
+    [
+      "Lcom/facebook/content/SecureContextHelper;.startFacebookActivityForResult:(Landroid/content/Intent;ILandroid/app/Activity;)V",
+      "Lcom/facebook/content/SecureContextHelper;.startNonFacebookActivityForResult:(Landroid/content/Intent;ILandroid/app/Activity;)V"
+    ]
+  },
+  "Lcom/facebook/marianatrench/integrationtests/IntentHandlerUtil;.startActivityDetectInternalOrExternalImpl:(Landroid/content/Context;Landroid/content/Intent;)V" : 
+  {
+    "static" : 
+    [
+      "Lcom/facebook/marianatrench/integrationtests/IntentResolver;.isIntentInternallyResolvableToOneComponent:(Landroid/content/Context;Landroid/content/Intent;)Z"
+    ],
+    "virtual" : 
+    [
+      "Lcom/facebook/content/SecureContextHelper;.startFacebookActivity:(Landroid/content/Intent;Landroid/content/Context;)V",
+      "Lcom/facebook/content/SecureContextHelper;.startNonFacebookActivity:(Landroid/content/Intent;Landroid/content/Context;)V"
+    ]
+  },
+  "Lcom/facebook/marianatrench/integrationtests/IntentResolver;.<init>:()V" : 
+  {
+    "static" : 
+    [
+      "Ljava/lang/Object;.<init>:()V"
+    ]
+  },
+  "Lcom/facebook/marianatrench/integrationtests/IntentResolver;.isIntentInternallyResolvableToOneComponent:(Landroid/content/Context;Landroid/content/Intent;)Z" : 
+  {
+    "virtual" : 
+    [
+      "Landroid/content/Intent;.getDataString:()Ljava/lang/String;",
+      "Ljava/lang/String;.contains:(Ljava/lang/String;)Z"
+    ]
+  },
+  "Lcom/facebook/marianatrench/integrationtests/IntentUriHandler;.<init>:()V" : 
+  {
+    "static" : 
+    [
+      "Landroidx/fragment/app/FragmentActivity;.<init>:()V"
+    ]
+  },
+  "Lcom/facebook/marianatrench/integrationtests/IntentUriHandler;.onActivityCreate:()V" : 
+  {
+    "static" : 
+    [
+      "Landroidx/fragment/app/FragmentActivity;.onActivityCreate:()V",
+      "Lcom/facebook/marianatrench/integrationtests/IntentHandlerUtil;.<init>:()V"
+    ],
+    "virtual" : 
+    [
+      "Landroid/app/Activity;.getIntent:()Landroid/content/Intent;",
+      "Lcom/facebook/marianatrench/integrationtests/IntentHandlerUtil;.launchNextActivity:(Landroid/content/Context;Landroid/content/Intent;)V"
+    ]
+  },
+  "Lcom/facebook/marianatrench/integrationtests/LegacyUriMap;.<init>:()V" : 
+  {
+    "static" : 
+    [
+      "Ljava/lang/Object;.<init>:()V"
+    ]
+  },
+  "Lcom/facebook/marianatrench/integrationtests/LegacyUriMap;.getIntent:(Landroid/content/Context;Ljava/lang/String;Ljava/lang/String;)Landroid/content/Intent;" : 
+  {
+    "static" : 
+    [
+      "Lcom/facebook/marianatrench/integrationtests/ExternalLinkUriIntentBuilder;.<init>:()V"
+    ],
+    "virtual" : 
+    [
+      "Lcom/facebook/marianatrench/integrationtests/ExternalLinkUriIntentBuilder;.getIntentForUri:(Landroid/content/Context;Ljava/lang/String;)Landroid/content/Intent;",
+      "Ljava/lang/Object;.equals:(Ljava/lang/Object;)Z",
+      "Ljava/lang/Object;.hashCode:()I"
+    ]
+  },
+  "Lcom/facebook/marianatrench/integrationtests/Origin;.<init>:()V" : 
+  {
+    "static" : 
+    [
+      "Ljava/lang/Object;.<init>:()V"
+    ]
+  },
+  "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;" : 
+  {
+    "static" : 
+    [
+      "Ljava/lang/Object;.<init>:()V"
+    ]
+  },
+  "Lcom/facebook/marianatrench/integrationtests/StaticUriIntentMapper;.<init>:()V" : 
+  {
+    "static" : 
+    [
+      "Lcom/facebook/marianatrench/integrationtests/CustomUriIntentMapper;.<init>:()V"
+    ]
+  },
+  "Lcom/facebook/marianatrench/integrationtests/StaticUriIntentMapper;.getHostname:(Ljava/lang/String;)Ljava/lang/String;" : 
+  {
+    "virtual" : 
+    [
+      "Ljava/lang/String;.charAt:(I)C",
+      "Ljava/lang/String;.contains:(Ljava/lang/String;)Z",
+      "Ljava/lang/String;.indexOf:(Ljava/lang/String;)I",
+      "Ljava/lang/String;.length:()I",
+      "Ljava/lang/String;.substring:(I)Ljava/lang/String;",
+      "Ljava/lang/String;.substring:(II)Ljava/lang/String;"
+    ]
+  },
+  "Lcom/facebook/marianatrench/integrationtests/StaticUriIntentMapper;.getIntentForUri:(Landroid/content/Context;Ljava/lang/String;)Landroid/content/Intent;" : 
+  {
+    "static" : 
+    [
+      "Lcom/facebook/marianatrench/integrationtests/LegacyUriMap;.getIntent:(Landroid/content/Context;Ljava/lang/String;Ljava/lang/String;)Landroid/content/Intent;",
+      "Lcom/facebook/marianatrench/integrationtests/StaticUriIntentMapper;.getHostname:(Ljava/lang/String;)Ljava/lang/String;"
+    ]
+  },
+  "Lcom/facebook/marianatrench/integrationtests/UriIntentBuilder;.<init>:()V" : 
+  {
+    "static" : 
+    [
+      "Ljava/lang/Object;.<init>:()V"
+    ]
+  },
+  "Lcom/facebook/secure/context/IntentLauncher;.<init>:()V" : 
+  {
+    "static" : 
+    [
+      "Ljava/lang/Object;.<init>:()V"
+    ]
+  },
+  "Lcom/facebook/secure/context/SecureContextHelperV2;.<init>:()V" : 
+  {
+    "static" : 
+    [
+      "Ljava/lang/Object;.<init>:()V"
+    ]
+  },
+  "Lcom/facebook/secure/context/SecureContextHelperV2;.get:()Lcom/facebook/secure/context/SecureContextHelperV2;" : 
+  {
+    "static" : 
+    [
+      "Lcom/facebook/secure/context/SecureContextHelperV2;.<init>:()V"
+    ]
+  },
+  "Lcom/facebook/secure/context/SecureContextHelperV2;.inAppBrowser:()Lcom/facebook/secure/context/IntentLauncher;" : 
+  {
+    "static" : 
+    [
+      "Lcom/facebook/secure/context/IntentLauncher;.<init>:()V"
+    ]
+  },
+  "Lcom/facebook/secure/context/SecureContextHelperV2;.internal:()Lcom/facebook/secure/context/IntentLauncher;" : 
+  {
+    "static" : 
+    [
+      "Lcom/facebook/secure/context/IntentLauncher;.<init>:()V"
+    ]
+  },
+  "Lcom/facebook/user/model/User;.<init>:()V" : 
+  {
+    "static" : 
+    [
+      "Ljava/lang/Object;.<init>:()V"
+    ]
+  },
+  "Lcom/instagram/common/analytics/IgAnalyticsLogger;.<init>:()V" : 
+  {
+    "static" : 
+    [
+      "Ljava/lang/Object;.<init>:()V"
+    ]
+  },
+  "Lcom/instagram/common/analytics/IgAnalyticsLogger;.getInstance:()Lcom/instagram/common/analytics/IgAnalyticsLogger;" : 
+  {
+    "static" : 
+    [
+      "Lcom/instagram/common/analytics/IgAnalyticsLogger;.<init>:()V"
+    ]
+  },
+  "Lcom/instagram/common/analytics/intf/AnalyticsEvent;.<init>:()V" : 
+  {
+    "static" : 
+    [
+      "Ljava/lang/Object;.<init>:()V"
+    ]
+  },
+  "Lcom/instagram/common/analytics/intf/AnalyticsEvent;.obtain:(Ljava/lang/String;)Lcom/instagram/common/analytics/intf/AnalyticsEvent;" : 
+  {
+    "static" : 
+    [
+      "Lcom/instagram/common/analytics/intf/AnalyticsEvent;.<init>:()V"
+    ]
+  },
+  "Ljava/lang/Integer;.<init>:()V" : 
+  {
+    "static" : 
+    [
+      "Ljava/lang/Object;.<init>:()V"
+    ]
+  },
+  "Ljava/lang/String;.<init>:()V" : 
+  {
+    "static" : 
+    [
+      "Ljava/lang/Object;.<init>:()V"
+    ]
+  },
+  "Ljava/lang/String;.concat:(Ljava/lang/String;)Ljava/lang/String;" : 
+  {
+    "virtual" : 
+    [
+      "Ljava/lang/String;.isEmpty:()Z"
+    ]
+  },
+  "Ljava/lang/Thread;.<init>:(Ljava/lang/Runnable;)V" : 
+  {
+    "static" : 
+    [
+      "Ljava/lang/Object;.<init>:()V"
+    ]
+  },
+  "Ljava/lang/Thread;.run:()V" : 
+  {
+    "virtual" : 
+    [
+      "Ljava/lang/Runnable;.run:()V",
+      "Ljava/lang/Thread;.run:()V"
+    ]
+  },
+  "Ljava/util/TreeMap;.<init>:()V" : 
+  {
+    "static" : 
+    [
+      "Ljava/lang/Object;.<init>:()V"
+    ]
+  }
 }

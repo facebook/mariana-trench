@@ -52,8 +52,8 @@ void Rules::add(const Rule& rule) {
         1,
         "A rule for code {} already exists! Duplicate rules are:\n{}\n{}",
         rule.code(),
-        rule.to_json().toStyledString(),
-        rule_pointer->to_json().toStyledString());
+        JsonValidation::to_styled_string(rule.to_json()),
+        JsonValidation::to_styled_string(rule_pointer->to_json()));
     return;
   }
 

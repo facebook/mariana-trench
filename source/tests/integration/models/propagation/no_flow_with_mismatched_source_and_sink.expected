@@ -1,14 +1,17 @@
 {
-   "metadata" : {
-      "@generated" : true
-   },
-   "models" : [
+  "metadata" : 
+  {
+    "@generated" : true
+  },
+  "models" : 
+  [
+    {
+      "method" : "LFlow;.flow:(LSink;LSource;)V",
+      "position" : 
       {
-         "method" : "LFlow;.flow:(LSink;LSource;)V",
-         "position" : {
-            "line" : 0,
-            "path" : "Flow.java"
-         }
+        "line" : 0,
+        "path" : "Flow.java"
       }
-   ]
+    }
+  ]
 }

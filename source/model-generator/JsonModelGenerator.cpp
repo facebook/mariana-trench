@@ -1405,8 +1405,8 @@ std::optional<Model> ModelTemplate::instantiate(
         "Method {} generates no new sinks/generations/propagations/sources from {} for_all_parameters constraints:\nInstantiated model: {}.\nModel template: {}.",
         show(method),
         for_all_parameters_.size(),
-        model.to_json().toStyledString(),
-        model_.to_json().toStyledString());
+        JsonValidation::to_styled_string(model.to_json()),
+        JsonValidation::to_styled_string(model_.to_json()));
     return std::nullopt;
   }
 }

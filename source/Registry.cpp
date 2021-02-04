@@ -163,18 +163,20 @@ void Registry::dump_metadata(const boost::filesystem::path& path) const {
   value["tool"] = Json::Value("mariana_trench");
   value["version"] = Json::Value("0.1");
 
-  boost::filesystem::save_string_file(path, value.toStyledString());
+  boost::filesystem::save_string_file(
+      path, JsonValidation::to_styled_string(value));
 }
 
 std::string Registry::dump_models() const {
-  Json::FastWriter writer;
-  std::string string;
-  string.append("// @");
-  string.append("generated\n");
+  auto writer = JsonValidation::compact_writer();
+  std::stringstream string;
+  string << "// @";
+  string << "generated\n";
   for (const auto& model : models_) {
-    string.append(writer.write(model.second.to_json(context_)));
+    writer->write(model.second.to_json(context_), &string);
+    string << "\n";
   }
-  return string;
+  return string.str();
 }
 
 Json::Value Registry::models_to_json() const {
@@ -212,7 +214,7 @@ void Registry::dump_models(
         const auto batch_path = path /
             ("model@" + padded_batch + "-of-" + padded_total_batch + ".json");
 
-        std::fstream batch_stream(batch_path.native(), std::ios_base::out);
+        std::ofstream batch_stream(batch_path.native(), std::ios_base::out);
         if (!batch_stream.is_open()) {
           ERROR(1, "Unable to write models to `{}`.", batch_path.native());
           return;
@@ -221,11 +223,12 @@ void Registry::dump_models(
                      << "generated\n";
 
         // Write the current batch of models to file.
-        Json::FastWriter writer;
+        auto writer = JsonValidation::compact_writer();
         for (std::size_t i = batch_size * batch;
              i < batch_size * (batch + 1) && i < models.size();
              i++) {
-          batch_stream << writer.write(models[i].to_json(context_));
+          writer->write(models[i].to_json(context_), &batch_stream);
+          batch_stream << "\n";
         }
         batch_stream.close();
       },

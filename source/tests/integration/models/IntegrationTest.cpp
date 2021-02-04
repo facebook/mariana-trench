@@ -22,6 +22,7 @@
 #include <mariana-trench/ClassProperties.h>
 #include <mariana-trench/Dependencies.h>
 #include <mariana-trench/Interprocedural.h>
+#include <mariana-trench/JsonValidation.h>
 #include <mariana-trench/Log.h>
 #include <mariana-trench/Options.h>
 #include <mariana-trench/Overrides.h>
@@ -420,14 +421,14 @@ TEST_P(IntegrationTest, ReturnsExpectedModel) {
   if (boost::filesystem::exists(expected_path)) {
     boost::filesystem::load_string_file(expected_path, expected_output);
   }
-  auto models_output = value.toStyledString();
+  auto models_output = JsonValidation::to_styled_string(value);
 
   if (models_output != expected_output) {
     boost::filesystem::save_string_file(
         path.replace_extension(".expected.actual"), models_output);
   }
 
-  EXPECT_EQ(value.toStyledString(), expected_output);
+  EXPECT_EQ(JsonValidation::to_styled_string(value), expected_output);
 }
 
 INSTANTIATE_TEST_CASE_P(
