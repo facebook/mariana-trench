@@ -1,0 +1,23 @@
+{
+  "model_generators": [
+    {
+      "find": "methods",
+      "where": [
+        {
+          "constraint": "signature",
+          "pattern": "Lcom/facebook/secure/html/SecureHtml;\\.escapeVarArgs:.*"
+        }
+      ],
+      "model": {
+        "add_features_to_arguments": [
+          {
+            "features": [
+              "via-escape-html"
+            ],
+            "port": "Argument(0)"
+          }
+        ]
+      }
+    }
+  ]
+}
