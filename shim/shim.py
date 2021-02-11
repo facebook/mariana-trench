@@ -21,7 +21,6 @@ import typing
 import zipfile
 
 import pyredex
-import redex
 
 
 LOG: logging.Logger = logging.getLogger(__name__)
