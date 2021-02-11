@@ -356,6 +356,18 @@ AllOfMethodConstraint::AllOfMethodConstraint(
     std::vector<std::unique_ptr<MethodConstraint>> constraints)
     : constraints_(std::move(constraints)) {}
 
+bool AllOfMethodConstraint::has_children() const {
+  return true;
+}
+
+std::vector<const MethodConstraint*> AllOfMethodConstraint::children() const {
+  std::vector<const MethodConstraint*> constraints;
+  for (const auto& constraint : constraints_) {
+    constraints.push_back(constraint.get());
+  }
+  return constraints;
+}
+
 bool AllOfMethodConstraint::satisfy(const Method* method) const {
   return std::all_of(
       constraints_.begin(),
@@ -380,6 +392,18 @@ bool AllOfMethodConstraint::operator==(const MethodConstraint& other) const {
 AnyOfMethodConstraint::AnyOfMethodConstraint(
     std::vector<std::unique_ptr<MethodConstraint>> constraints)
     : constraints_(std::move(constraints)) {}
+
+bool AnyOfMethodConstraint::has_children() const {
+  return true;
+}
+
+std::vector<const MethodConstraint*> AnyOfMethodConstraint::children() const {
+  std::vector<const MethodConstraint*> constraints;
+  for (const auto& constraint : constraints_) {
+    constraints.push_back(constraint.get());
+  }
+  return constraints;
+}
 
 bool AnyOfMethodConstraint::satisfy(const Method* method) const {
   // If there is no constraint, the method vacuously satisfies the constraint
@@ -413,6 +437,14 @@ bool AnyOfMethodConstraint::operator==(const MethodConstraint& other) const {
 NotMethodConstraint::NotMethodConstraint(
     std::unique_ptr<MethodConstraint> constraint)
     : constraint_(std::move(constraint)) {}
+
+bool NotMethodConstraint::has_children() const {
+  return true;
+}
+
+std::vector<const MethodConstraint*> NotMethodConstraint::children() const {
+  return {constraint_.get()};
+}
 
 bool NotMethodConstraint::satisfy(const Method* method) const {
   return !constraint_->satisfy(method);
@@ -615,6 +647,14 @@ bool VisibilityMethodConstraint::operator==(
   } else {
     return false;
   }
+}
+
+bool MethodConstraint::has_children() const {
+  return false;
+}
+
+std::vector<const MethodConstraint*> MethodConstraint::children() const {
+  return {};
 }
 
 namespace {
@@ -1455,6 +1495,26 @@ std::vector<Model> JsonModelGeneratorItem::visit_method(
     }
   }
   return models;
+}
+
+std::unordered_set<const MethodConstraint*>
+JsonModelGeneratorItem::constraint_leaves() const {
+  std::unordered_set<const MethodConstraint*> flattened_constraints;
+  std::vector<const MethodConstraint*> constraints = constraint_->children();
+  while (!constraints.empty()) {
+    const MethodConstraint* constraint = constraints.back();
+    constraints.pop_back();
+    if (constraint->has_children()) {
+      const std::vector<const MethodConstraint*> children =
+          constraint->children();
+      for (const auto* child : children) {
+        constraints.push_back(child);
+      }
+    } else {
+      flattened_constraints.insert(constraint);
+    }
+  }
+  return flattened_constraints;
 }
 
 JsonModelGenerator::JsonModelGenerator(

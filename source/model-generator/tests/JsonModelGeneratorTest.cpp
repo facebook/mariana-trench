@@ -2103,3 +2103,69 @@ TEST_F(JsonModelGeneratorTest, MethodConstraintFromJson) {
       JsonValidationError);
   // NotMethodConstraint
 }
+
+TEST_F(JsonModelGeneratorTest, UniqueConstraints) {
+  Scope scope;
+  DexStore store("stores");
+  store.add_classes(scope);
+  auto context = test::make_context(store);
+  std::string class_name = "Landroid/test;";
+  auto model_template = test::parse_json(R"({"sources": [{"kind": "Test"}]})");
+  {
+    std::vector<std::unique_ptr<MethodConstraint>> constraints;
+    constraints.push_back(std::make_unique<MethodNameConstraint>("test"));
+
+    std::unordered_set<const MethodConstraint*> expected_constraints;
+    for (const auto& constraint : constraints) {
+      expected_constraints.insert(constraint.get());
+    }
+
+    const JsonModelGeneratorItem generator = JsonModelGeneratorItem(
+        "test_generator_name",
+        context,
+        std::make_unique<AllOfMethodConstraint>(std::move(constraints)),
+        ModelTemplate::from_json(model_template, context),
+        0);
+    EXPECT_EQ(generator.constraint_leaves(), expected_constraints);
+  }
+
+  {
+    // Constraint components
+    auto constraint_a = std::make_unique<MethodNameConstraint>("test_a");
+    auto constraint_b = std::make_unique<MethodNameConstraint>("test_b");
+    auto constraint_c = std::make_unique<MethodNameConstraint>("test_c");
+    auto constraint_d = std::make_unique<ParentConstraint>(
+        std::make_unique<TypeNameConstraint>("test_d"));
+
+    std::unordered_set<const MethodConstraint*> expected_constraints = {
+        constraint_a.get(),
+        constraint_b.get(),
+        constraint_c.get(),
+        constraint_d.get()};
+
+    // Aggregate and nested constraints
+    std::vector<std::unique_ptr<MethodConstraint>> all_constraint_elements;
+    all_constraint_elements.push_back(std::move(constraint_a));
+    all_constraint_elements.push_back(std::move(constraint_b));
+    auto all_constraint = std::make_unique<AllOfMethodConstraint>(
+        std::move(all_constraint_elements));
+    auto not_constraint =
+        std::make_unique<NotMethodConstraint>(std::move(constraint_c));
+    std::vector<std::unique_ptr<MethodConstraint>> any_constraint_elements;
+    any_constraint_elements.push_back(std::move(constraint_d));
+    any_constraint_elements.push_back(std::move(all_constraint));
+    any_constraint_elements.push_back(std::move(not_constraint));
+    auto any_constraint = std::make_unique<AnyOfMethodConstraint>(
+        std::move(any_constraint_elements));
+    std::vector<std::unique_ptr<MethodConstraint>> constraints;
+    constraints.push_back(std::move(any_constraint));
+
+    const JsonModelGeneratorItem generator = JsonModelGeneratorItem(
+        "test_generator_name",
+        context,
+        std::make_unique<AllOfMethodConstraint>(std::move(constraints)),
+        ModelTemplate::from_json(model_template, context),
+        0);
+    EXPECT_EQ(generator.constraint_leaves(), expected_constraints);
+  }
+}

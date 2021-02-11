@@ -165,6 +165,8 @@ class MethodConstraint {
   static std::unique_ptr<MethodConstraint> from_json(
       const Json::Value& constraint,
       Context& context);
+  virtual bool has_children() const;
+  virtual std::vector<const MethodConstraint*> children() const;
   virtual bool satisfy(const Method* method) const = 0;
   virtual bool operator==(const MethodConstraint& other) const = 0;
 };
@@ -193,6 +195,8 @@ class AllOfMethodConstraint final : public MethodConstraint {
  public:
   explicit AllOfMethodConstraint(
       std::vector<std::unique_ptr<MethodConstraint>> constraints);
+  bool has_children() const override;
+  std::vector<const MethodConstraint*> children() const override;
   bool satisfy(const Method* method) const override;
   bool operator==(const MethodConstraint& other) const override;
 
@@ -204,6 +208,8 @@ class AnyOfMethodConstraint final : public MethodConstraint {
  public:
   explicit AnyOfMethodConstraint(
       std::vector<std::unique_ptr<MethodConstraint>> constraints);
+  bool has_children() const override;
+  std::vector<const MethodConstraint*> children() const override;
   bool satisfy(const Method* method) const override;
   bool operator==(const MethodConstraint& other) const override;
 
@@ -214,6 +220,8 @@ class AnyOfMethodConstraint final : public MethodConstraint {
 class NotMethodConstraint final : public MethodConstraint {
  public:
   explicit NotMethodConstraint(std::unique_ptr<MethodConstraint> constraint);
+  bool has_children() const override;
+  std::vector<const MethodConstraint*> children() const override;
   bool satisfy(const Method* method) const override;
   bool operator==(const MethodConstraint& other) const override;
 
@@ -700,6 +708,7 @@ class JsonModelGeneratorItem final : public MethodVisitorGenerator {
       std::unique_ptr<AllOfMethodConstraint> constraint,
       ModelTemplate model_template,
       int verbosity);
+  std::unordered_set<const MethodConstraint*> constraint_leaves() const;
   std::vector<Model> visit_method(const Method* method) const override;
 
  private:
