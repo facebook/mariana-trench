@@ -90,6 +90,7 @@ Options::Options(
     bool sequential,
     bool skip_source_indexing,
     bool skip_model_generation,
+    bool optimized_model_generation,
     const std::string& source_root_directory)
     : models_paths_(models_paths),
       rules_paths_(rules_paths),
@@ -97,6 +98,7 @@ Options::Options(
       sequential_(sequential),
       skip_source_indexing_(skip_source_indexing),
       skip_model_generation_(skip_model_generation),
+      optimized_model_generation_(optimized_model_generation),
       disable_parameter_type_overrides_(false),
       maximum_source_sink_distance_(10),
       dump_class_hierarchies_(false),
@@ -153,6 +155,8 @@ Options::Options(const boost::program_options::variables_map& variables) {
   sequential_ = variables.count("sequential") > 0;
   skip_source_indexing_ = variables.count("skip-source-indexing") > 0;
   skip_model_generation_ = variables.count("skip-model-generation") > 0;
+  optimized_model_generation_ =
+      variables.count("optimized-model-generation") > 0;
   disable_parameter_type_overrides_ =
       variables.count("disable-parameter-type-overrides") > 0;
 
@@ -232,6 +236,8 @@ void Options::add_options(
       "skip-source-indexing", "Skip indexing java source files.");
   options.add_options()(
       "skip-model-generation", "Skip running model generation.");
+  options.add_options()(
+      "optimized-model-generation", "Use alternative model generation logic.");
   options.add_options()(
       "disable-parameter-type-overrides",
       "Disable analyzing methods with specific parameter type information.");
@@ -335,6 +341,10 @@ bool Options::skip_source_indexing() const {
 
 bool Options::skip_model_generation() const {
   return skip_model_generation_;
+}
+
+bool Options::optimized_model_generation() const {
+  return optimized_model_generation_;
 }
 
 bool Options::disable_parameter_type_overrides() const {

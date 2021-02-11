@@ -47,7 +47,8 @@ TEST_P(JsonModelGeneratorIntegrationTest, CompareModels) {
       /* rules_path */ std::vector<std::string>{},
       /* sequential */ true,
       /* skip_source_indexing */ true,
-      /* skip_model_generation */ false);
+      /* skip_model_generation */ false,
+      /* optimized_model_generation */ false);
 
   // Read from the expected generated models
   std::string expected_output = "";

@@ -26,7 +26,8 @@ Context test_components(const Scope& scope) {
       /* rules_path */ std::vector<std::string>{},
       /* sequential */ false,
       /* skip_source_indexing */ true,
-      /* skip_model_generation */ true);
+      /* skip_model_generation */ true,
+      /* optimized_model_generation */ false);
   DexStore store("test_store");
   store.add_classes(scope);
   context.stores = {store};

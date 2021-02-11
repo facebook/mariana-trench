@@ -360,6 +360,9 @@ if __name__ == "__main__":
             help="Skip model generation.",
         )
         analysis_arguments.add_argument(
+            "--optimized-model-generation", action="store_true", help=argparse.SUPPRESS
+        )
+        analysis_arguments.add_argument(
             "--disable-parameter-type-overrides",
             action="store_true",
             help="Disable analyzing methods with specific parameter type information.",
@@ -481,6 +484,8 @@ if __name__ == "__main__":
             options.append("--skip-source-indexing")
         if arguments.skip_model_generation:
             options.append("--skip-model-generation")
+        if arguments.optimized_model_generation:
+            options.append("--optimized-model-generation")
         if arguments.disable_parameter_type_overrides:
             options.append("--disable-parameter-type-overrides")
 
