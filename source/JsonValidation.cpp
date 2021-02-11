@@ -49,6 +49,7 @@ void JsonValidation::validate_object(const Json::Value& value) {
 const Json::Value& JsonValidation::object(
     const Json::Value& value,
     const std::string& field) {
+  validate_object(value);
   const auto& attribute = value[field];
   if (attribute.isNull() || !attribute.isObject()) {
     throw JsonValidationError(value, field, /* expected */ "non-null object");
