@@ -23,6 +23,7 @@
 #include <mariana-trench/Log.h>
 #include <mariana-trench/MarianaTrench.h>
 #include <mariana-trench/Methods.h>
+#include <mariana-trench/ModelGeneration.h>
 #include <mariana-trench/Options.h>
 #include <mariana-trench/Overrides.h>
 #include <mariana-trench/Positions.h>
@@ -33,7 +34,6 @@
 #include <mariana-trench/Statistics.h>
 #include <mariana-trench/Timer.h>
 #include <mariana-trench/Types.h>
-#include <mariana-trench/model-generator/ModelGenerator.h>
 
 namespace marianatrench {
 
@@ -112,7 +112,7 @@ Registry MarianaTrench::analyze(Context& context) {
   if (!context.options->skip_model_generation()) {
     Timer generation_timer;
     LOG(1, "Generating models...");
-    generated_models = ModelGenerator::run(context);
+    generated_models = ModelGeneration::run(context);
     context.statistics->log_time("models_generation", generation_timer);
     LOG(1,
         "Generated {} models in {:.2f}s.",

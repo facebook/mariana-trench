@@ -16,8 +16,8 @@
 #include <mariana-trench/Access.h>
 #include <mariana-trench/Context.h>
 #include <mariana-trench/Frame.h>
-#include <mariana-trench/Generator.h>
 #include <mariana-trench/Model.h>
+#include <mariana-trench/model-generator/ModelGenerator.h>
 
 namespace marianatrench {
 
@@ -700,7 +700,7 @@ class ModelTemplate final {
 };
 
 /* This class parses a json format model generator and stores its information */
-class JsonModelGeneratorItem final : public MethodVisitorGenerator {
+class JsonModelGeneratorItem final : public MethodVisitorModelGenerator {
  public:
   JsonModelGeneratorItem(
       const std::string& name,
@@ -717,7 +717,7 @@ class JsonModelGeneratorItem final : public MethodVisitorGenerator {
   int verbosity_;
 };
 
-class JsonModelGenerator final : public Generator {
+class JsonModelGenerator final : public ModelGenerator {
  public:
   explicit JsonModelGenerator(
       const std::string& name,

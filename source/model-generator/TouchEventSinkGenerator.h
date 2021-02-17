@@ -7,14 +7,14 @@
 
 #pragma once
 
-#include <mariana-trench/Generator.h>
+#include <mariana-trench/model-generator/ModelGenerator.h>
 
 namespace marianatrench {
 
-class TouchEventSinkGenerator : public Generator {
+class TouchEventSinkGenerator : public ModelGenerator {
  public:
   explicit TouchEventSinkGenerator(Context& context)
-      : Generator("touch_event_sinks", context) {}
+      : ModelGenerator("touch_event_sinks", context) {}
 
   std::vector<Model> run(const DexStoresVector& stores) override;
 };

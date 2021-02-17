@@ -7,14 +7,14 @@
 
 #pragma once
 
-#include <mariana-trench/Generator.h>
+#include <mariana-trench/model-generator/ModelGenerator.h>
 
 namespace marianatrench {
 
-class RepeatingAlarmSinkGenerator : public Generator {
+class RepeatingAlarmSinkGenerator : public ModelGenerator {
  public:
   explicit RepeatingAlarmSinkGenerator(Context& context)
-      : Generator("repeating_alarm_sinks", context) {}
+      : ModelGenerator("repeating_alarm_sinks", context) {}
 
   std::vector<Model> run(const DexStoresVector& stores) override;
 };

@@ -7,14 +7,14 @@
 
 #pragma once
 
-#include <mariana-trench/Generator.h>
+#include <mariana-trench/model-generator/ModelGenerator.h>
 
 namespace marianatrench {
 
-class ServiceSourceGenerator : public Generator {
+class ServiceSourceGenerator : public ModelGenerator {
  public:
   explicit ServiceSourceGenerator(Context& context)
-      : Generator("service_sources", context) {}
+      : ModelGenerator("service_sources", context) {}
 
   std::vector<Model> run(const DexStoresVector& stores) override;
 };

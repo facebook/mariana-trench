@@ -7,14 +7,14 @@
 
 #pragma once
 
-#include <mariana-trench/Generator.h>
+#include <mariana-trench/model-generator/ModelGenerator.h>
 
 namespace marianatrench {
 
-class StructuredLoggerSinkGenerator : public MethodVisitorGenerator {
+class StructuredLoggerSinkGenerator : public MethodVisitorModelGenerator {
  public:
   explicit StructuredLoggerSinkGenerator(Context& context)
-      : MethodVisitorGenerator("structured_logger_sinks", context) {}
+      : MethodVisitorModelGenerator("structured_logger_sinks", context) {}
 
   std::vector<Model> visit_method(const Method* method) const override;
 };

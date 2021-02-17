@@ -7,14 +7,15 @@
 
 #pragma once
 
-#include <mariana-trench/Generator.h>
+#include <mariana-trench/model-generator/ModelGenerator.h>
 
 namespace marianatrench {
 
-class NoJoinOverridesGenerator : public MethodVisitorGenerator {
+class NoJoinOverridesGenerator : public MethodVisitorModelGenerator {
  public:
   explicit NoJoinOverridesGenerator(Context& context)
-      : MethodVisitorGenerator("no_join_overrides_propagations", context) {}
+      : MethodVisitorModelGenerator("no_join_overrides_propagations", context) {
+  }
 
   std::vector<Model> visit_method(const Method* method) const override;
 };

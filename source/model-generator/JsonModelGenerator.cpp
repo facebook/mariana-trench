@@ -1474,7 +1474,7 @@ JsonModelGeneratorItem::JsonModelGeneratorItem(
     std::unique_ptr<AllOfMethodConstraint> constraint,
     ModelTemplate model_template,
     int verbosity)
-    : MethodVisitorGenerator(name, context),
+    : MethodVisitorModelGenerator(name, context),
       constraint_(std::move(constraint)),
       model_template_(std::move(model_template)),
       verbosity_(verbosity) {}
@@ -1521,7 +1521,7 @@ JsonModelGenerator::JsonModelGenerator(
     const std::string& name,
     Context& context,
     const boost::filesystem::path& json_configuration_file)
-    : Generator(name, context),
+    : ModelGenerator(name, context),
       json_configuration_file_(json_configuration_file) {
   const Json::Value& value =
       JsonValidation::parse_json_file(json_configuration_file);

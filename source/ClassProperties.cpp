@@ -16,10 +16,10 @@
 #include <mariana-trench/Assert.h>
 #include <mariana-trench/ClassProperties.h>
 #include <mariana-trench/Features.h>
-#include <mariana-trench/Generator.h>
 #include <mariana-trench/Log.h>
 #include <mariana-trench/Options.h>
 #include <mariana-trench/Redex.h>
+#include <mariana-trench/model-generator/ModelGenerator.h>
 
 namespace {
 
