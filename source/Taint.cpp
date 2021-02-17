@@ -130,6 +130,25 @@ Taint Taint::attach_position(const Position* position) const {
   return result;
 }
 
+Taint Taint::transform_kind(
+    const std::function<const Kind * MT_NULLABLE(const Kind*)>& f) const {
+  Taint new_taint;
+  for (const auto& frame_set : set_) {
+    const auto* old_kind = frame_set.kind();
+    const auto* new_kind = f(old_kind);
+    if (!new_kind) {
+      continue;
+    }
+
+    if (new_kind == old_kind) {
+      new_taint.add(frame_set); // no transformation
+    } else {
+      new_taint.add(frame_set.with_kind(new_kind));
+    }
+  }
+  return new_taint;
+}
+
 Taint Taint::from_json(const Json::Value& value, Context& context) {
   Taint taint;
   for (const auto& frame_value : JsonValidation::null_or_array(value)) {

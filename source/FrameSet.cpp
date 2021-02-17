@@ -245,6 +245,23 @@ FrameSet FrameSet::attach_position(const Position* position) const {
   return leaves;
 }
 
+FrameSet FrameSet::with_kind(const Kind* kind) const {
+  FrameSet frames_copy(*this);
+  frames_copy.kind_ = kind;
+  frames_copy.map_.map([kind](const CallPositionToSetMap& position_map) {
+    auto position_map_copy = position_map;
+    position_map_copy.map([kind](const Set& set) {
+      Set new_set;
+      for (const auto& frame : set) {
+        new_set.add(frame.with_kind(kind));
+      }
+      return new_set;
+    });
+    return position_map_copy;
+  });
+  return frames_copy;
+}
+
 FrameSet FrameSet::from_json(const Json::Value& value, Context& context) {
   FrameSet frames;
   for (const auto& frame_value : JsonValidation::null_or_array(value)) {

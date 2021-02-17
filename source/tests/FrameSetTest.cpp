@@ -1254,4 +1254,67 @@ TEST_F(FrameSetTest, Filter) {
       }));
 }
 
+TEST_F(FrameSetTest, WithKind) {
+  auto context = test::make_empty_context();
+
+  Scope scope;
+  auto* one =
+      context.methods->create(redex::create_void_method(scope, "LOne;", "one"));
+  auto* two =
+      context.methods->create(redex::create_void_method(scope, "LTwo;", "two"));
+
+  auto* test_kind = context.kinds->get("TestSink");
+  auto* test_position = context.positions->get(std::nullopt, 1);
+
+  auto frames = FrameSet{
+      Frame(
+          /* kind */ test_kind,
+          /* callee_port */ AccessPath(Root(Root::Kind::Leaf)),
+          /* callee */ nullptr,
+          /* call_position */ nullptr,
+          /* distance */ 0,
+          /* origins */ MethodSet{one},
+          /* inferred_features */ {},
+          /* user_features */ {},
+          /* local_positions */ {}),
+      Frame(
+          /* kind */ test_kind,
+          /* callee_port */ AccessPath(Root(Root::Kind::Argument, 0)),
+          /* callee */ two,
+          /* call_position */ test_position,
+          /* distance */ 1,
+          /* origins */ MethodSet{two},
+          /* inferred_features */ {},
+          /* user_features */ {},
+          /* local_positions */ {})};
+
+  auto new_kind = context.kinds->get("TestSink2");
+  auto frame_with_new_kind = frames.with_kind(new_kind);
+
+  EXPECT_EQ(frame_with_new_kind.kind(), new_kind);
+  EXPECT_EQ(
+      frame_with_new_kind,
+      (FrameSet{
+          Frame(
+              /* kind */ new_kind,
+              /* callee_port */ AccessPath(Root(Root::Kind::Leaf)),
+              /* callee */ nullptr,
+              /* call_position */ nullptr,
+              /* distance */ 0,
+              /* origins */ MethodSet{one},
+              /* inferred_features */ {},
+              /* user_features */ {},
+              /* local_positions */ {}),
+          Frame(
+              /* kind */ new_kind,
+              /* callee_port */ AccessPath(Root(Root::Kind::Argument, 0)),
+              /* callee */ two,
+              /* call_position */ test_position,
+              /* distance */ 1,
+              /* origins */ MethodSet{two},
+              /* inferred_features */ {},
+              /* user_features */ {},
+              /* local_positions */ {})}));
+}
+
 } // namespace marianatrench

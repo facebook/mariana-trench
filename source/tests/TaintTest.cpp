@@ -638,4 +638,108 @@ TEST_F(TaintTest, Propagate) {
       }));
 }
 
+TEST_F(TaintTest, TransformKind) {
+  auto context = test::make_empty_context();
+
+  Scope scope;
+  auto* one =
+      context.methods->create(redex::create_void_method(scope, "LOne;", "one"));
+  auto* two =
+      context.methods->create(redex::create_void_method(scope, "LTwo;", "two"));
+  auto* three = context.methods->create(
+      redex::create_void_method(scope, "LThree;", "three"));
+
+  auto* test_position = context.positions->get(std::nullopt, 1);
+  auto* feature_one = context.features->get("FeatureOne");
+  auto* feature_two = context.features->get("FeatureTwo");
+  auto* user_feature_one = context.features->get("UserFeatureOne");
+  auto* user_feature_two = context.features->get("UserFeatureTwo");
+
+  auto* test_source = context.kinds->get("TestSource");
+  auto* transformed_test_source = context.kinds->get("TransformedTestSource");
+
+  auto taint = Taint{
+      Frame(
+          /* kind */ test_source,
+          /* callee_port */ AccessPath(Root(Root::Kind::Leaf)),
+          /* callee */ nullptr,
+          /* call_position */ nullptr,
+          /* distance */ 0,
+          /* origins */ MethodSet{one},
+          /* inferred_features */ {},
+          /* user_features */ FeatureSet{user_feature_one},
+          /* local_positions */ {}),
+      Frame(
+          /* kind */ context.kinds->get("OtherSource"),
+          /* callee_port */ AccessPath(Root(Root::Kind::Argument, 1)),
+          /* callee */ two,
+          /* call_position */ test_position,
+          /* distance */ 2,
+          /* origins */ MethodSet{two},
+          /* inferred_features */ FeatureMayAlwaysSet{feature_one},
+          /* user_features */ FeatureSet{user_feature_one},
+          /* local_positions */ {}),
+      Frame(
+          /* kind */ context.kinds->get("OtherSource"),
+          /* callee_port */ AccessPath(Root(Root::Kind::Argument, 0)),
+          /* callee */ three,
+          /* call_position */ test_position,
+          /* distance */ 1,
+          /* origins */ MethodSet{three},
+          /* inferred_features */ FeatureMayAlwaysSet{feature_one, feature_two},
+          /* user_features */ FeatureSet{user_feature_one, user_feature_two},
+          /* local_positions */ {}),
+  };
+
+  // This works the same way as filter.
+  auto empty_taint = taint.transform_kind(
+      [](const auto* /* unused kind */) { return nullptr; });
+  EXPECT_EQ(empty_taint, Taint::bottom());
+
+  // This actually performs a transformation.
+  auto map_test_source_taint = taint.transform_kind(
+      [test_source, transformed_test_source](const auto* kind) -> const Kind* {
+        if (kind == test_source) {
+          return transformed_test_source;
+        }
+        return kind;
+      });
+  EXPECT_EQ(
+      map_test_source_taint,
+      (Taint{
+          Frame(
+              /* kind */ transformed_test_source,
+              /* callee_port */ AccessPath(Root(Root::Kind::Leaf)),
+              /* callee */ nullptr,
+              /* call_position */ nullptr,
+              /* distance */ 0,
+              /* origins */ MethodSet{one},
+              /* inferred_features */ {},
+              /* user_features */ FeatureSet{user_feature_one},
+              /* local_positions */ {}),
+          Frame(
+              /* kind */ context.kinds->get("OtherSource"),
+              /* callee_port */ AccessPath(Root(Root::Kind::Argument, 1)),
+              /* callee */ two,
+              /* call_position */ test_position,
+              /* distance */ 2,
+              /* origins */ MethodSet{two},
+              /* inferred_features */ FeatureMayAlwaysSet{feature_one},
+              /* user_features */ FeatureSet{user_feature_one},
+              /* local_positions */ {}),
+          Frame(
+              /* kind */ context.kinds->get("OtherSource"),
+              /* callee_port */ AccessPath(Root(Root::Kind::Argument, 0)),
+              /* callee */ three,
+              /* call_position */ test_position,
+              /* distance */ 1,
+              /* origins */ MethodSet{three},
+              /* inferred_features */
+              FeatureMayAlwaysSet{feature_one, feature_two},
+              /* user_features */
+              FeatureSet{user_feature_one, user_feature_two},
+              /* local_positions */ {}),
+      }));
+}
+
 } // namespace marianatrench

@@ -136,6 +136,12 @@ void Frame::callee_port_append(Path::Element path_element) {
   callee_port_.append(path_element);
 }
 
+Frame Frame::with_kind(const Kind* kind) const {
+  Frame new_frame(*this);
+  new_frame.kind_ = kind;
+  return new_frame;
+}
+
 Frame Frame::from_json(const Json::Value& value, Context& context) {
   JsonValidation::validate_object(value);
 

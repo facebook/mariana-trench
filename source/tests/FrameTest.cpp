@@ -727,4 +727,43 @@ TEST_F(FrameTest, FrameJoin) {
           /* local_positions */ {}));
 }
 
+TEST_F(FrameTest, FrameWithKind) {
+  auto context = test::make_empty_context();
+
+  auto kind_a = context.kinds->get("TestSourceA");
+  auto kind_b = context.kinds->get("TestSourceB");
+
+  Scope scope;
+  auto* one = context.methods->create(
+      redex::create_void_method(scope, "LClass;", "one"));
+  auto* two = context.methods->create(
+      redex::create_void_method(scope, "LOther;", "two"));
+
+  Frame frame1(
+      /* kind */ kind_a,
+      /* callee_port */ AccessPath(Root(Root::Kind::Leaf)),
+      /* callee */ one,
+      /* call_position */ context.positions->unknown(),
+      /* distance */ 5,
+      /* origins */ MethodSet{two},
+      /* inferred_features */
+      FeatureMayAlwaysSet::make_may(
+          {context.features->get("FeatureOne"),
+           context.features->get("FeatureTwo")}),
+      /* user_features */ {},
+      /* local_positions */ {});
+
+  auto frame2 = frame1.with_kind(kind_b);
+  EXPECT_EQ(frame1.callee(), frame2.callee());
+  EXPECT_EQ(frame1.callee_port(), frame2.callee_port());
+  EXPECT_EQ(frame1.call_position(), frame2.call_position());
+  EXPECT_EQ(frame1.distance(), frame2.distance());
+  EXPECT_EQ(frame1.origins(), frame2.origins());
+  EXPECT_EQ(frame1.inferred_features(), frame2.inferred_features());
+
+  EXPECT_NE(frame1.kind(), frame2.kind());
+  EXPECT_EQ(frame1.kind(), kind_a);
+  EXPECT_EQ(frame2.kind(), kind_b);
+}
+
 } // namespace marianatrench

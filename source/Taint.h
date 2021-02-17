@@ -162,6 +162,13 @@ class Taint final : public sparta::AbstractDomain<Taint> {
   /* Return the set of leaf frames with the given position. */
   Taint attach_position(const Position* position) const;
 
+  /**
+   * Transforms kinds in the taint according to the given function. A nullptr
+   * will cause frames for the input kind to be dropped.
+   */
+  Taint transform_kind(
+      const std::function<const Kind * MT_NULLABLE(const Kind*)>&) const;
+
   static Taint from_json(const Json::Value& value, Context& context);
   Json::Value to_json() const;
 

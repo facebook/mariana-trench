@@ -186,6 +186,13 @@ class FrameSet final : public sparta::AbstractDomain<FrameSet> {
   /* Return the set of leaf frames with the given position. */
   FrameSet attach_position(const Position* position) const;
 
+  /**
+   * Convert the kind of these frames into the given kind.
+   *
+   * Return A new FrameSet, identical in everyway except in "kind".
+   */
+  FrameSet with_kind(const Kind* kind) const;
+
   static FrameSet from_json(const Json::Value& value, Context& context);
   Json::Value to_json() const;
 
