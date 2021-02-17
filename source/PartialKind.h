@@ -54,6 +54,19 @@ class PartialKind final : public Kind {
     return label_;
   }
 
+  /**
+   * The "other" kind is a counterpart of this if both share the name but have
+   * different labels. If two kinds are counterparts of each other, together,
+   * they form a "full" sink for a `MultiSourceMultiSinkRule`, e.g.:
+   *   multi_sink(partial_kind_a, partial_kind_b)
+   * The two partial kinds above are counterparts of each other.
+   *
+   * This comparison is the reason we do not currently support more than
+   * 2 sources -> 2 sinks in a `MultiSourceMultiSinkRule`. It assumes there can
+   * only be one other sink.
+   */
+  bool is_counterpart(const PartialKind* other) const;
+
  private:
   std::string name_;
   std::string label_;

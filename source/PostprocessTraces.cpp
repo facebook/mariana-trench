@@ -35,7 +35,21 @@ bool is_valid_sink(const Frame& sink, const Registry& registry) {
   auto model = registry.get(sink.callee());
   auto sinks = model.sinks().raw_read(sink.callee_port()).root();
   return std::any_of(sinks.begin(), sinks.end(), [&](const FrameSet& frames) {
-    return frames.kind() == sink.kind();
+    const auto* frame_kind = frames.kind();
+    const auto* sink_kind = sink.kind();
+    if (frame_kind == sink_kind) {
+      return true;
+    }
+
+    // For triggered kinds, this is trickier. Its callee's kind (frame_kind)
+    // could be a PartialKind that turned into a TriggeredPartialKind in the
+    // caller (sink_kind). The sink is valid as long as its underlying partial
+    // kind matches that of its callee's.
+    const auto* sink_triggered_kind = sink_kind->as<TriggeredPartialKind>();
+    if (!sink_triggered_kind) {
+      return false;
+    }
+    return frame_kind == sink_triggered_kind->partial_kind();
   });
 }
 

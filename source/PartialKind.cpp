@@ -12,7 +12,7 @@
 namespace marianatrench {
 
 void PartialKind::show(std::ostream& out) const {
-  out << "Partial:" << label_ << ":" << name();
+  out << "Partial:" << name_ << ":" << label_;
 }
 
 const PartialKind* PartialKind::from_json(
@@ -24,10 +24,12 @@ const PartialKind* PartialKind::from_json(
 }
 
 Json::Value PartialKind::to_json() const {
-  // TODO(T66517244): Should this be { "name": name(), "label": label() }?
-  // Also check what is needed for traces to work..
-  auto value = "Partial:" + label() + ":" + name();
+  auto value = "Partial:" + name_ + ":" + label_;
   return Json::Value(value);
+}
+
+bool PartialKind::is_counterpart(const PartialKind* other) const {
+  return other->name() == name_ && other->label() != label_;
 }
 
 } // namespace marianatrench

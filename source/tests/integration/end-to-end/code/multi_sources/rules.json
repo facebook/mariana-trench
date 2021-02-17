@@ -1,0 +1,34 @@
+[
+  {
+    "name": "MultiSourceRule",
+    "code": 1,
+    "description": "Test multi source rule",
+    "multi_sources": {
+      "a": [
+        "TestSourceA"
+      ],
+      "b": [
+        "TestSourceB"
+      ]
+    },
+    "partial_sinks": [
+      "TestSink"
+    ]
+  },
+  {
+    "name": "MultiSourceSingleArgRule",
+    "code": 2,
+    "description": "Test multi source rule into single arg",
+    "multi_sources": {
+      "a": [
+        "TestSourceA"
+      ],
+      "b": [
+        "TestSourceB"
+      ]
+    },
+    "partial_sinks": [
+      "TestSinkSingleArg"
+    ]
+  }
+]

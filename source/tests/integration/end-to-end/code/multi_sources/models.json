@@ -1,0 +1,68 @@
+[
+  {
+    "method": "Lcom/facebook/marianatrench/integrationtests/MultiSources;.sourceA:()Ljava/lang/Object;",
+    "generations": [
+      {
+        "kind": "TestSourceA",
+        "port": "Return"
+      }
+    ]
+  },
+  {
+    "method": "Lcom/facebook/marianatrench/integrationtests/MultiSources;.sourceB:()Ljava/lang/Object;",
+    "generations": [
+      {
+        "kind": "TestSourceB",
+        "port": "Return"
+      }
+    ]
+  },
+  {
+    "method": "Lcom/facebook/marianatrench/integrationtests/MultiSources;.sink:(Ljava/lang/Object;Ljava/lang/Object;)V",
+    "sinks": [
+      {
+        "kind": "TestSink",
+        "partial_label": "a",
+        "port": "Argument(0)"
+      },
+      {
+        "kind": "TestSink",
+        "partial_label": "b",
+        "port": "Argument(1)"
+      }
+    ]
+  },
+  {
+    "method": "Lcom/facebook/marianatrench/integrationtests/MultiSourcesSingleArg;.sourceA:()Ljava/lang/Object;",
+    "generations": [
+      {
+        "kind": "TestSourceA",
+        "port": "Return"
+      }
+    ]
+  },
+  {
+    "method": "Lcom/facebook/marianatrench/integrationtests/MockObjectWithThisPropagation;.<init>:()V",
+    "generations": [
+      {
+        "kind": "TestSourceB",
+        "port": "Argument(0)"
+      }
+    ]
+  },
+  {
+    "method": "Lcom/facebook/marianatrench/integrationtests/MultiSourcesSingleArg;.sink:(Lcom/facebook/marianatrench/integrationtests/MockObjectWithThisPropagation;)V",
+    "sinks": [
+      {
+        "kind": "TestSinkSingleArg",
+        "partial_label": "a",
+        "port": "Argument(0)"
+      },
+      {
+        "kind": "TestSinkSingleArg",
+        "partial_label": "b",
+        "port": "Argument(0)"
+      }
+    ]
+  }
+]

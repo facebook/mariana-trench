@@ -15,9 +15,12 @@
 #include <mariana-trench/Features.h>
 #include <mariana-trench/Log.h>
 #include <mariana-trench/Methods.h>
+#include <mariana-trench/MultiSourceMultiSinkRule.h>
+#include <mariana-trench/PartialKind.h>
 #include <mariana-trench/Positions.h>
 #include <mariana-trench/Rules.h>
 #include <mariana-trench/Transfer.h>
+#include <mariana-trench/TriggeredPartialKind.h>
 
 namespace marianatrench {
 
@@ -329,63 +332,190 @@ void apply_propagations(
   }
 }
 
+void create_issue(
+    MethodContext* context,
+    FrameSet source,
+    FrameSet sink,
+    const Rule* rule,
+    const Position* position,
+    const FeatureMayAlwaysSet& extra_features) {
+  source.add_inferred_features(
+      context->class_properties.issue_features(context->method()));
+  sink.add_inferred_features(extra_features);
+  auto issue =
+      Issue(Taint{std::move(source)}, Taint{std::move(sink)}, rule, position);
+  LOG_OR_DUMP(context, 4, "Found issue: {}", issue);
+  context->model.add_issue(std::move(issue));
+}
+
+// Called when a source is detected to be flowing into a partial sink for a
+// multi source rule. The set of fulfilled sinks should be accumulated for
+// each argument at a callsite (an invoke operation).
+void check_multi_source_multi_sink_rules(
+    MethodContext* context,
+    const FrameSet& source,
+    const FrameSet& sink,
+    std::unordered_set<const PartialKind*>& fulfilled_partial_sinks,
+    const MultiSourceMultiSinkRule* rule,
+    const Position* position,
+    const FeatureMayAlwaysSet& extra_features) {
+  const auto* partial_sink = sink.kind()->as<PartialKind>();
+  mt_assert(partial_sink != nullptr);
+
+  // Check if the partial counterpart for this sink has been fulfilled.
+  auto counterpart = std::find_if(
+      fulfilled_partial_sinks.begin(),
+      fulfilled_partial_sinks.end(),
+      [partial_sink](const auto* other_sink) {
+        return other_sink->is_counterpart(partial_sink);
+      });
+
+  if (counterpart != fulfilled_partial_sinks.end()) {
+    // If both partial sinks for the callsite have been fulfilled, the rule
+    // is satisfied. Make this a triggered sink and create the issue.
+    create_issue(
+        context,
+        source,
+        sink.with_kind(context->kinds.get_triggered(partial_sink)),
+        rule,
+        position,
+        extra_features);
+    // Issue was found. No need to track the counterpart nor itself.
+    fulfilled_partial_sinks.erase(counterpart);
+  } else {
+    fulfilled_partial_sinks.insert(partial_sink);
+    LOG_OR_DUMP(
+        context,
+        4,
+        "Found source kind {} flowing into partial sink: {}",
+        *source.kind(),
+        *partial_sink);
+  }
+}
+
+const TriggeredPartialKind* MT_NULLABLE transform_partial_sinks(
+    MethodContext* context,
+    const std::unordered_set<const PartialKind*>& fulfilled_partial_sinks,
+    const PartialKind* sink_kind) {
+  for (const auto* fulfilled_partial_sink : fulfilled_partial_sinks) {
+    if (fulfilled_partial_sink->is_counterpart(sink_kind)) {
+      // The counterpart sink was triggered when a source was found to flow into
+      // it. Make this a triggered sink. This will be propagated.
+      return context->kinds.get_triggered(sink_kind);
+    }
+  }
+
+  // If the partial sink does not have a corresponding triggered
+  // sink it is dropped (not propagated).
+  return nullptr;
+}
+
+void create_sinks(
+    MethodContext* context,
+    const Taint& sources,
+    const Taint& sinks,
+    const FeatureMayAlwaysSet& extra_features = {},
+    const std::unordered_set<const PartialKind*>& fulfilled_partial_sinks =
+        {}) {
+  if (sources.is_bottom() || sinks.is_bottom()) {
+    return;
+  }
+
+  for (const auto& source : sources) {
+    if (!source.is_artificial_sources()) {
+      continue;
+    }
+    for (const auto& artificial_source : source) {
+      auto features = extra_features;
+      features.add_always(context->model.attach_to_sinks(
+          artificial_source.callee_port().root()));
+      features.add(artificial_source.features());
+
+      auto new_sinks = sinks.transform_kind(
+          [context, &fulfilled_partial_sinks](
+              const Kind* sink_kind) -> const Kind* MT_NULLABLE {
+            const auto* partial_sink = sink_kind->as<PartialKind>();
+            if (!partial_sink) {
+              // No transformation. Keep sink as it is.
+              return sink_kind;
+            }
+            return transform_partial_sinks(
+                context, fulfilled_partial_sinks, partial_sink);
+          });
+      new_sinks.add_inferred_features(features);
+      new_sinks.set_local_positions(source.local_positions());
+
+      LOG_OR_DUMP(
+          context,
+          4,
+          "Inferred sink for port {}: {}",
+          artificial_source.callee_port(),
+          new_sinks);
+      context->model.add_sinks(
+          artificial_source.callee_port(), std::move(new_sinks));
+    }
+  }
+}
+
+// Checks if the given sources/sinks fulfill any rule. If so, create an issue.
+//
+// If fulfilled_partial_sinks is non-null, also checks for multi-source rules
+// (partial rules). If a partial rule is fulfilled, this converts a partial
+// sink to a triggered sink and accumulates this list of triggered sinks. How
+// these sinks should be handled depends on what happens at other sinks/ports
+// within the same callsite/invoke. The caller MUST accumulate triggered sinks
+// at the callsite then call create_sinks. Regular sinks are also not created in
+// this mode.
+//
+// If fulfilled_partial_sinks is null, regular sinks will be created if an
+// artificial source is found to be flowing into a sink.
 void check_flows(
     MethodContext* context,
     const Taint& sources,
     const Taint& sinks,
     const Position* position,
-    const FeatureMayAlwaysSet& extra_features = {}) {
+    const FeatureMayAlwaysSet& extra_features,
+    std::unordered_set<const PartialKind*>* MT_NULLABLE
+        fulfilled_partial_sinks) {
   if (sources.is_bottom() || sinks.is_bottom()) {
     return;
   }
 
-  for (const auto& sink : sinks) {
-    for (const auto& source : sources) {
-      if (!source.is_artificial_sources()) {
-        const auto& rules = context->rules.rules(source.kind(), sink.kind());
+  for (const auto& source : sources) {
+    if (source.is_artificial_sources()) {
+      continue;
+    }
 
-        for (const auto* rule : rules) {
-          auto new_source = source;
-          new_source.add_inferred_features(
-              context->class_properties.issue_features(context->method()));
+    for (const auto& sink : sinks) {
+      // Check if this satisfies any rule. If so, create the issue.
+      const auto& rules = context->rules.rules(source.kind(), sink.kind());
+      for (const auto* rule : rules) {
+        create_issue(context, source, sink, rule, position, extra_features);
+      }
 
-          auto new_sink = sink;
-          new_sink.add_inferred_features(extra_features);
-
-          auto issue = Issue(
-              Taint{std::move(new_source)},
-              Taint{std::move(new_sink)},
-              rule,
-              position);
-          LOG_OR_DUMP(context, 4, "Found issue: {}", issue);
-          context->model.add_issue(std::move(issue));
+      // Check if this satisfies any partial (multi-source/sink) rule.
+      if (fulfilled_partial_sinks) {
+        const auto* MT_NULLABLE partial_sink = sink.kind()->as<PartialKind>();
+        if (partial_sink) {
+          const auto& partial_rules =
+              context->rules.partial_rules(source.kind(), partial_sink);
+          for (const auto* partial_rule : partial_rules) {
+            check_multi_source_multi_sink_rules(
+                context,
+                source,
+                sink,
+                *fulfilled_partial_sinks,
+                partial_rule,
+                position,
+                extra_features);
+          }
         }
       }
     }
   }
 
-  for (const auto& source : sources) {
-    if (source.is_artificial_sources()) {
-      for (const auto& artificial_source : source) {
-        auto features = extra_features;
-        features.add_always(context->model.attach_to_sinks(
-            artificial_source.callee_port().root()));
-        features.add(artificial_source.features());
-
-        auto new_sinks = sinks;
-        new_sinks.add_inferred_features(features);
-        new_sinks.set_local_positions(source.local_positions());
-
-        LOG_OR_DUMP(
-            context,
-            4,
-            "Inferred sink for port {}: {}",
-            artificial_source.callee_port(),
-            new_sinks);
-        context->model.add_sinks(
-            artificial_source.callee_port(), std::move(new_sinks));
-      }
-    }
+  if (!fulfilled_partial_sinks) {
+    create_sinks(context, sources, sinks, extra_features);
   }
 }
 
@@ -401,6 +531,9 @@ void check_flows(
       "Processing sinks for call to `{}`",
       show(callee.method_reference));
 
+  std::unordered_set<const PartialKind*> fulfilled_partial_sinks;
+  std::vector<std::tuple<AccessPath, Taint, const Taint&>> port_sources_sinks;
+
   for (const auto& [port, sinks] : callee.model.sinks().elements()) {
     if (!port.root().is_argument()) {
       continue;
@@ -413,7 +546,34 @@ void check_flows(
 
     auto register_id = instruction_sources.at(parameter_position);
     Taint sources = environment->read(register_id, port.path()).collapse();
-    check_flows(context, sources, sinks, callee.position, extra_features);
+    check_flows(
+        context,
+        sources,
+        sinks,
+        callee.position,
+        extra_features,
+        &fulfilled_partial_sinks);
+
+    port_sources_sinks.push_back(
+        std::make_tuple(port, std::move(sources), std::cref(sinks)));
+  }
+
+  // Create the sinks, checking at each point, if any partial sinks should
+  // become triggered. This must not happen in the loop above because we need
+  // the full set of triggered sinks at all positions/port of the callsite.
+  //
+  // Example: callsite(partial_sink_A, triggered_sink_B).
+  // Scenario: triggered_sink_B discovered in check_flows above when a source
+  // flows into the argument.
+  //
+  // This next loop needs that information to convert partial_sink_A into a
+  // triggered sink to be propagated if it is reachable via artifical sources.
+  //
+  // Outside of multi-source rules, this also creates regular sinks for the
+  // method if an artificial source is found flowing into a sink.
+  for (const auto& [port, sources, sinks] : port_sources_sinks) {
+    create_sinks(
+        context, sources, sinks, extra_features, fulfilled_partial_sinks);
   }
 }
 
@@ -441,7 +601,14 @@ void check_flows_to_array_allocation(
        parameter_position++) {
     auto register_id = instruction_sources.at(parameter_position);
     Taint sources = environment->read(register_id).collapse();
-    check_flows(context, sources, array_allocation_sink, position);
+    // Fulfilled partial sinks ignored. No partial sinks for array allocation.
+    check_flows(
+        context,
+        sources,
+        array_allocation_sink,
+        position,
+        /* extra_features */ {},
+        /* fulfilled_partial_sinks */ nullptr);
   }
 }
 
@@ -989,7 +1156,15 @@ bool Transfer::analyze_return(
 
     for (const auto& [path, sinks] : return_sinks.elements()) {
       Taint sources = environment->read(register_id, path).collapse();
-      check_flows(context, sources, sinks, position);
+      // Fulfilled partial sinks are not expected to be produced here. Return
+      // sinks are never partial.
+      check_flows(
+          context,
+          sources,
+          sinks,
+          position,
+          /* extra_features */ {},
+          /* fulfilled_partial_sinks */ nullptr);
     }
   }
 
