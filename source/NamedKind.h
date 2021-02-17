@@ -21,7 +21,7 @@ namespace marianatrench {
  * A simple source or sink identified only by its name. Most sources/sinks
  * would fall under this category.
  */
-class NamedKind : public Kind {
+class NamedKind final : public Kind {
  public:
   explicit NamedKind(std::string name) : name_(std::move(name)) {}
   NamedKind(const NamedKind&) = delete;

@@ -28,7 +28,7 @@ namespace marianatrench {
  * On argument x, the label would be "labelX". The label must match that used
  * in the rule specifications' sources.
  */
-class PartialKind : public Kind {
+class PartialKind final : public Kind {
  public:
   explicit PartialKind(std::string name, std::string label)
       : name_(std::move(name)), label_(std::move(label)) {}

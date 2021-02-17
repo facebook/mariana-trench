@@ -17,6 +17,7 @@
 #include <mariana-trench/Kind.h>
 #include <mariana-trench/PartialKind.h>
 #include <mariana-trench/Rule.h>
+#include <mariana-trench/TriggeredPartialKind.h>
 
 namespace marianatrench {
 
@@ -37,7 +38,13 @@ class MultiSourceMultiSinkRule final : public Rule {
       const PartialKindSet& partial_sink_kinds)
       : Rule(name, code, description),
         multi_source_kinds_(multi_source_kinds),
-        partial_sink_kinds_(partial_sink_kinds) {}
+        partial_sink_kinds_(partial_sink_kinds) {
+    // Currently, multi-source rules only support exactly 2 sources flowing
+    // into 2 sinks. There can be > 2 partial sinks, but each they must come
+    // in pairs (one for each source kind's label).
+    mt_assert(multi_source_kinds.size() == 2);
+    mt_assert(partial_sink_kinds.size() % 2 == 0);
+  }
   MultiSourceMultiSinkRule(const MultiSourceMultiSinkRule&) = delete;
   MultiSourceMultiSinkRule(MultiSourceMultiSinkRule&&) = delete;
   MultiSourceMultiSinkRule& operator=(const MultiSourceMultiSinkRule&) = delete;

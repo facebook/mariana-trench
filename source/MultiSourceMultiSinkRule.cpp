@@ -6,6 +6,7 @@
  */
 
 #include <mariana-trench/JsonValidation.h>
+#include <mariana-trench/Kinds.h>
 #include <mariana-trench/MultiSourceMultiSinkRule.h>
 #include <mariana-trench/NamedKind.h>
 #include <mariana-trench/PartialKind.h>
@@ -13,10 +14,14 @@
 
 namespace marianatrench {
 
-bool MultiSourceMultiSinkRule::uses(const Kind*) const {
-  // TBD: Implement this when we have implemented the necessary kind support
-  // for multi source/sink rules.
-  return false;
+bool MultiSourceMultiSinkRule::uses(const Kind* kind) const {
+  for (const auto& [_label, kinds] : multi_source_kinds_) {
+    if (kinds.count(kind) != 0) {
+      return true;
+    }
+  }
+
+  return partial_sink_kinds_.count(kind->as<PartialKind>()) != 0;
 }
 
 std::unique_ptr<Rule> MultiSourceMultiSinkRule::from_json(

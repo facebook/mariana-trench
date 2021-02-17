@@ -22,10 +22,10 @@ namespace marianatrench {
  * A partial sink becomes triggered when a matching source flows into either of
  * the 2 partial sinks at the callsite.
  */
-class TriggeredPartialKind final : public PartialKind {
+class TriggeredPartialKind final : public Kind {
  public:
-  explicit TriggeredPartialKind(std::string name, std::string label)
-      : PartialKind(std::move(name), std::move(label)) {}
+  explicit TriggeredPartialKind(const PartialKind* partial_kind)
+      : partial_kind_(partial_kind) {}
   TriggeredPartialKind(const TriggeredPartialKind&) = delete;
   TriggeredPartialKind(TriggeredPartialKind&&) = delete;
   TriggeredPartialKind& operator=(const TriggeredPartialKind&) = delete;
@@ -33,6 +33,15 @@ class TriggeredPartialKind final : public PartialKind {
   ~TriggeredPartialKind() override = default;
 
   void show(std::ostream&) const override;
+
+  Json::Value to_json() const override;
+
+  const PartialKind* partial_kind() const {
+    return partial_kind_;
+  }
+
+ private:
+  const PartialKind* partial_kind_;
 };
 
 } // namespace marianatrench

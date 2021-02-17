@@ -16,6 +16,8 @@
 
 #include <mariana-trench/Context.h>
 #include <mariana-trench/Kind.h>
+#include <mariana-trench/MultiSourceMultiSinkRule.h>
+#include <mariana-trench/PartialKind.h>
 #include <mariana-trench/Rule.h>
 
 namespace marianatrench {
@@ -51,7 +53,7 @@ class Rules final {
  public:
   explicit Rules();
 
-  explicit Rules(std::vector<std::unique_ptr<Rule>> rules);
+  explicit Rules(Context& context, std::vector<std::unique_ptr<Rule>> rules);
 
   explicit Rules(Context& context, const Json::Value& rules_value);
 
@@ -65,12 +67,26 @@ class Rules final {
   ~Rules() = default;
 
   /* This is NOT thread-safe. */
-  void add(std::unique_ptr<Rule> rule);
+  void add(Context& context, std::unique_ptr<Rule> rule);
 
-  /* Return the set of rules matching the given source kind and sink kind. */
+  /**
+   * Return the set of rules matching the given source kind and sink kind.
+   * Satisfying these rules should result in the creation of an issue (this
+   * is the responsibility of the caller).
+   */
   const std::vector<const Rule*>& rules(
       const Kind* source_kind,
       const Kind* sink_kind) const;
+
+  /**
+   * Return the set of rules matching the given source kind and sink kind.
+   * Only for multi-source/sink rules. The rule is partially satisfied. The
+   * other sink in the rule still needs to be met with its corresponding source
+   * for an issue to be created (also the responsibility of the caller).
+   */
+  const std::vector<const MultiSourceMultiSinkRule*>& partial_rules(
+      const Kind* source_kind,
+      const PartialKind* sink_kind) const;
 
   void warn_unused_kinds(const Kinds& kinds) const;
 
@@ -92,7 +108,14 @@ class Rules final {
       const Kind*,
       std::unordered_map<const Kind*, std::vector<const Rule*>>>
       source_to_sink_to_rules_;
-  std::vector<const Rule*> empty_rule_set;
+  std::unordered_map<
+      const Kind*,
+      std::unordered_map<
+          const PartialKind*,
+          std::vector<const MultiSourceMultiSinkRule*>>>
+      source_to_partial_sink_to_rules_;
+  std::vector<const Rule*> empty_rule_set_;
+  std::vector<const MultiSourceMultiSinkRule*> empty_multi_source_rule_set_;
 };
 
 } // namespace marianatrench

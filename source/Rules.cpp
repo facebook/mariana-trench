@@ -10,6 +10,7 @@
 #include <mariana-trench/JsonValidation.h>
 #include <mariana-trench/Kinds.h>
 #include <mariana-trench/Log.h>
+#include <mariana-trench/MultiSourceMultiSinkRule.h>
 #include <mariana-trench/Options.h>
 #include <mariana-trench/Rules.h>
 #include <mariana-trench/SourceSinkRule.h>
@@ -18,15 +19,15 @@ namespace marianatrench {
 
 Rules::Rules() = default;
 
-Rules::Rules(std::vector<std::unique_ptr<Rule>> rules) {
+Rules::Rules(Context& context, std::vector<std::unique_ptr<Rule>> rules) {
   for (auto& rule : rules) {
-    add(std::move(rule));
+    add(context, std::move(rule));
   }
 }
 
 Rules::Rules(Context& context, const Json::Value& rules_value) {
   for (const auto& rule_value : JsonValidation::null_or_array(rules_value)) {
-    add(Rule::from_json(rule_value, context));
+    add(context, Rule::from_json(rule_value, context));
   }
 }
 
@@ -36,7 +37,7 @@ Rules Rules::load(Context& context, const Options& options) {
   for (const auto& rules_path : options.rules_paths()) {
     auto rules_value = JsonValidation::parse_json_file(rules_path);
     for (const auto& rule_value : JsonValidation::null_or_array(rules_value)) {
-      rules.add(Rule::from_json(rule_value, context));
+      rules.add(context, Rule::from_json(rule_value, context));
     }
   }
 
@@ -44,7 +45,7 @@ Rules Rules::load(Context& context, const Options& options) {
   return rules;
 }
 
-void Rules::add(std::unique_ptr<Rule> rule) {
+void Rules::add(Context& context, std::unique_ptr<Rule> rule) {
   auto existing = rules_.find(rule->code());
   if (existing != rules_.end()) {
     ERROR(
@@ -60,8 +61,6 @@ void Rules::add(std::unique_ptr<Rule> rule) {
   auto result = rules_.emplace(code, std::move(rule));
   const Rule* rule_pointer = result.first->second.get();
 
-  // For now, only support rules with kind SourceSink when looking up connecting
-  // source<->sink kinds. TBD: Support multi-source rules.
   if (auto* source_sink_rule = rule_pointer->as<SourceSinkRule>()) {
     for (const auto* source_kind : source_sink_rule->source_kinds()) {
       for (const auto* sink_kind : source_sink_rule->sink_kinds()) {
@@ -69,6 +68,27 @@ void Rules::add(std::unique_ptr<Rule> rule) {
             rule_pointer);
       }
     }
+  } else if (
+      const auto* multi_source_rule =
+          rule_pointer->as<MultiSourceMultiSinkRule>()) {
+    for (const auto& [source_label, source_kinds] :
+         multi_source_rule->multi_source_kinds()) {
+      for (const auto* source_kind : source_kinds) {
+        for (const auto* sink_kind : multi_source_rule->partial_sink_kinds()) {
+          // Create Source -> Sink(label, kind) only if they share the label.
+          if (sink_kind->label() == source_label) {
+            const auto* triggered = context.kinds->get_triggered(sink_kind);
+            source_to_sink_to_rules_[source_kind][triggered].push_back(
+                rule_pointer);
+            source_to_partial_sink_to_rules_[source_kind][sink_kind].push_back(
+                multi_source_rule);
+          }
+        }
+      }
+    }
+  } else {
+    // Unreachable code. Did we add a new type of rule?
+    mt_unreachable();
   }
 }
 
@@ -77,12 +97,28 @@ const std::vector<const Rule*>& Rules::rules(
     const Kind* sink_kind) const {
   auto sink_to_rules = source_to_sink_to_rules_.find(source_kind);
   if (sink_to_rules == source_to_sink_to_rules_.end()) {
-    return empty_rule_set;
+    return empty_rule_set_;
   }
 
   auto rules = sink_to_rules->second.find(sink_kind);
   if (rules == sink_to_rules->second.end()) {
-    return empty_rule_set;
+    return empty_rule_set_;
+  }
+
+  return rules->second;
+}
+
+const std::vector<const MultiSourceMultiSinkRule*>& Rules::partial_rules(
+    const Kind* source_kind,
+    const PartialKind* sink_kind) const {
+  auto sink_to_rules = source_to_partial_sink_to_rules_.find(source_kind);
+  if (sink_to_rules == source_to_partial_sink_to_rules_.end()) {
+    return empty_multi_source_rule_set_;
+  }
+
+  auto rules = sink_to_rules->second.find(sink_kind);
+  if (rules == sink_to_rules->second.end()) {
+    return empty_multi_source_rule_set_;
   }
 
   return rules->second;
@@ -90,6 +126,10 @@ const std::vector<const Rule*>& Rules::rules(
 
 void Rules::warn_unused_kinds(const Kinds& kinds) const {
   for (const auto* kind : kinds.kinds()) {
+    if (kind->as<TriggeredPartialKind>() != nullptr) {
+      // Triggered kinds are never used in rules. No need to warn.
+      continue;
+    }
     if (std::all_of(begin(), end(), [kind](const Rule* rule) {
           return !rule->uses(kind);
         })) {

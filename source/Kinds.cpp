@@ -25,10 +25,7 @@ const PartialKind* Kinds::get_partial(
 
 const TriggeredPartialKind* Kinds::get_triggered(
     const PartialKind* partial) const {
-  mt_assert(partial->as<TriggeredPartialKind>() == nullptr);
-  const auto& name = partial->name();
-  const auto& label = partial->label();
-  return triggered_partial_.create(partial, name, label);
+  return triggered_partial_.create(partial);
 }
 
 std::vector<const Kind*> Kinds::kinds() const {

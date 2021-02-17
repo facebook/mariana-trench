@@ -11,7 +11,16 @@
 namespace marianatrench {
 
 void TriggeredPartialKind::show(std::ostream& out) const {
-  out << "TriggeredPartial:" << label() << ":" << name();
+  out << "TriggeredPartial:" << partial_kind_->label() << ":"
+      << partial_kind_->name();
+}
+
+Json::Value TriggeredPartialKind::to_json() const {
+  // TODO(T66517244): Should this be { "name": name(), "label": label() }?
+  // Also check what is needed for traces to work..
+  auto value = "TriggeredPartial:" + partial_kind_->label() + ":" +
+      partial_kind_->name();
+  return Json::Value(value);
 }
 
 } // namespace marianatrench
