@@ -89,7 +89,7 @@ const std::vector<const Rule*>& Rules::rules(
 }
 
 void Rules::warn_unused_kinds(const Kinds& kinds) const {
-  for (const auto* kind : kinds) {
+  for (const auto* kind : kinds.kinds()) {
     if (std::all_of(begin(), end(), [kind](const Rule* rule) {
           return !rule->uses(kind);
         })) {

@@ -7,6 +7,8 @@
 
 #include <mariana-trench/JsonValidation.h>
 #include <mariana-trench/MultiSourceMultiSinkRule.h>
+#include <mariana-trench/NamedKind.h>
+#include <mariana-trench/PartialKind.h>
 #include <mariana-trench/Rule.h>
 
 namespace marianatrench {
@@ -30,7 +32,7 @@ std::unique_ptr<Rule> MultiSourceMultiSinkRule::from_json(
   for (const auto& label : labels) {
     KindSet kinds;
     for (const auto& kind : JsonValidation::nonempty_array(sources, label)) {
-      kinds.insert(Kind::from_json(kind, context));
+      kinds.insert(NamedKind::from_json(kind, context));
     }
     multi_source_kinds.emplace(label, std::move(kinds));
   }
@@ -42,10 +44,13 @@ std::unique_ptr<Rule> MultiSourceMultiSinkRule::from_json(
         "exactly 2 labels (as JSON object keys) in the multi_sources object");
   }
 
-  KindSet partial_sink_kinds;
+  PartialKindSet partial_sink_kinds;
   for (const auto& sink_kind :
        JsonValidation::nonempty_array(value, "partial_sinks")) {
-    partial_sink_kinds.insert(Kind::from_json(sink_kind, context));
+    for (const auto& label : labels) {
+      partial_sink_kinds.insert(
+          PartialKind::from_json(sink_kind, label, context));
+    }
   }
 
   return std::make_unique<MultiSourceMultiSinkRule>(

@@ -14,8 +14,10 @@
 #include <mariana-trench/Method.h>
 #include <mariana-trench/Model.h>
 #include <mariana-trench/MultiSourceMultiSinkRule.h>
+#include <mariana-trench/PartialKind.h>
 #include <mariana-trench/Redex.h>
 #include <mariana-trench/SourceSinkRule.h>
+#include <mariana-trench/TriggeredPartialKind.h>
 #include <mariana-trench/tests/Test.h>
 
 namespace marianatrench {
@@ -514,7 +516,9 @@ TEST_F(JsonTest, Rule) {
   EXPECT_NE(rule_with_combined_sources, nullptr);
   EXPECT_THAT(
       rule_with_combined_sources->partial_sink_kinds(),
-      testing::UnorderedElementsAre(context.kinds->get("rule_sink")));
+      testing::UnorderedElementsAre(
+          context.kinds->get_partial("rule_sink", "labelA"),
+          context.kinds->get_partial("rule_sink", "labelB")));
   const auto& multi_sources = rule_with_combined_sources->multi_source_kinds();
   EXPECT_THAT(
       multi_sources.find("labelA")->second,
@@ -595,6 +599,37 @@ TEST_F(JsonTest, Frame) {
           /* inferred_features */ FeatureMayAlwaysSet::bottom(),
           /* user_features */ {},
           /* local_positions */ {}));
+
+  // Parse the kind for partial leaves.
+  EXPECT_THROW(
+      Frame::from_json(
+          test::parse_json(R"({"kind": "TestSink", "partial_label": 1})"),
+          context),
+      JsonValidationError);
+  auto frame = Frame::from_json(
+      test::parse_json(
+          R"({
+                "kind": "TestSink",
+                "partial_label": "X"
+              })"),
+      context);
+  EXPECT_EQ(
+      frame,
+      Frame(
+          /* kind */ context.kinds->get_partial("TestSink", "X"),
+          /* callee_port */ AccessPath(Root(Root::Kind::Leaf)),
+          /* callee */ nullptr,
+          /* call_position */ nullptr,
+          /* distance */ 0,
+          /* origins */ {},
+          /* inferred_features */ FeatureMayAlwaysSet::bottom(),
+          /* user_features */ {},
+          /* local_positions */ {}));
+  const auto* frame_kind = frame.kind()->as<PartialKind>();
+  EXPECT_NE(frame_kind, nullptr);
+  EXPECT_EQ(frame_kind->name(), "TestSink");
+  EXPECT_EQ(frame_kind->label(), "X");
+  EXPECT_EQ(frame_kind->as<TriggeredPartialKind>(), nullptr);
 
   // Parse the callee port.
   EXPECT_THROW(

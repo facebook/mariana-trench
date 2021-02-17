@@ -6,13 +6,12 @@
  */
 
 #include <mariana-trench/JsonValidation.h>
-#include <mariana-trench/Kind.h>
+#include <mariana-trench/TriggeredPartialKind.h>
 
 namespace marianatrench {
 
-std::ostream& operator<<(std::ostream& out, const Kind& kind) {
-  kind.show(out);
-  return out;
+void TriggeredPartialKind::show(std::ostream& out) const {
+  out << "TriggeredPartial:" << label() << ":" << name();
 }
 
 } // namespace marianatrench

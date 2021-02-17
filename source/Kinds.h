@@ -12,6 +12,9 @@
 #include <boost/iterator/transform_iterator.hpp>
 
 #include <mariana-trench/Kind.h>
+#include <mariana-trench/NamedKind.h>
+#include <mariana-trench/PartialKind.h>
+#include <mariana-trench/TriggeredPartialKind.h>
 #include <mariana-trench/UniquePointerFactory.h>
 
 namespace marianatrench {
@@ -21,31 +24,15 @@ namespace marianatrench {
  */
 class Kinds final {
  private:
-  struct ExposeKind {
-    const Kind* operator()(
-        const std::pair<const std::string, const Kind*>& pair) const {
-      return pair.second;
+  struct StringPairHash {
+    std::size_t operator()(
+        const std::pair<std::string, std::string>& string_tuple) const {
+      std::size_t seed = 0;
+      boost::hash_combine(seed, string_tuple.first);
+      boost::hash_combine(seed, string_tuple.second);
+      return seed;
     }
   };
-
- public:
-  // C++ container concept member types
-  using iterator = boost::transform_iterator<
-      ExposeKind,
-      UniquePointerFactory<std::string, Kind>::const_iterator>;
-  using const_iterator = iterator;
-  using value_type = const Kind*;
-  using difference_type = std::ptrdiff_t;
-  using size_type = std::size_t;
-  using const_reference = const Kind*;
-  using const_pointer = typename iterator::pointer;
-
- private:
-  // Safety checks of `boost::transform_iterator`.
-  static_assert(std::is_same_v<typename iterator::value_type, value_type>);
-  static_assert(
-      std::is_same_v<typename iterator::difference_type, difference_type>);
-  static_assert(std::is_same_v<typename iterator::reference, const_reference>);
 
  public:
   Kinds() = default;
@@ -55,20 +42,28 @@ class Kinds final {
   Kinds& operator=(Kinds&&) = delete;
   ~Kinds() = default;
 
-  const Kind* get(const std::string& name) const;
+  const NamedKind* get(const std::string& name) const;
+
+  const PartialKind* get_partial(
+      const std::string& name,
+      const std::string& label) const;
+
+  const TriggeredPartialKind* get_triggered(
+      const PartialKind* partial_kind) const;
+
+  std::vector<const Kind*> kinds() const;
 
   static const Kind* artificial_source();
 
-  iterator begin() const {
-    return boost::make_transform_iterator(factory_.begin(), ExposeKind());
-  }
-
-  iterator end() const {
-    return boost::make_transform_iterator(factory_.end(), ExposeKind());
-  }
-
  private:
-  UniquePointerFactory<std::string, Kind> factory_;
+  UniquePointerFactory<std::string, NamedKind> named_;
+  UniquePointerFactory<
+      std::pair<std::string, std::string>,
+      PartialKind,
+      StringPairHash>
+      partial_;
+  UniquePointerFactory<const PartialKind*, TriggeredPartialKind>
+      triggered_partial_;
 };
 
 } // namespace marianatrench

@@ -16,10 +16,10 @@ namespace marianatrench {
 /**
  * A thread-safe factory that returns a unique pointer for a given key.
  */
-template <typename Key, typename Value>
+template <typename Key, typename Value, typename Hash = std::hash<Key>>
 class UniquePointerFactory final {
  private:
-  using Map = ConcurrentMap<Key, const Value*>;
+  using Map = ConcurrentMap<Key, const Value*, Hash>;
 
  public:
   // C++ container concept member types
@@ -60,6 +60,22 @@ class UniquePointerFactory final {
           // This is an atomic block.
           if (!exists) {
             pointer = new Value(key);
+          }
+          result = pointer;
+        });
+    return result;
+  }
+
+  /* Gets or creates a pointer for the key. Value is not updated if the key
+   * already exists. Otherwise, Value is instantiated using the args. */
+  template <class... Args>
+  const Value* create(const Key& key, Args&&... args) const {
+    const Value* result = nullptr;
+    map_.update(
+        key, [&](const Key& /* key */, const Value*& pointer, bool exists) {
+          // This is an atomic block.
+          if (!exists) {
+            pointer = new Value(std::forward<Args>(args)...);
           }
           result = pointer;
         });

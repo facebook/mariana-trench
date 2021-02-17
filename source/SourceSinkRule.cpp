@@ -6,6 +6,7 @@
  */
 
 #include <mariana-trench/JsonValidation.h>
+#include <mariana-trench/NamedKind.h>
 #include <mariana-trench/Rule.h>
 #include <mariana-trench/SourceSinkRule.h>
 
@@ -24,13 +25,13 @@ std::unique_ptr<Rule> SourceSinkRule::from_json(
   KindSet source_kinds;
   for (const auto& source_kind :
        JsonValidation::nonempty_array(value, /* field */ "sources")) {
-    source_kinds.insert(Kind::from_json(source_kind, context));
+    source_kinds.insert(NamedKind::from_json(source_kind, context));
   }
 
   KindSet sink_kinds;
   for (const auto& sink_kind :
        JsonValidation::nonempty_array(value, /* field */ "sinks")) {
-    sink_kinds.insert(Kind::from_json(sink_kind, context));
+    sink_kinds.insert(NamedKind::from_json(sink_kind, context));
   }
 
   return std::make_unique<SourceSinkRule>(

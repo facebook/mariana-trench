@@ -139,8 +139,14 @@ void Frame::callee_port_append(Path::Element path_element) {
 Frame Frame::from_json(const Json::Value& value, Context& context) {
   JsonValidation::validate_object(value);
 
-  const auto* kind =
-      context.kinds->get(JsonValidation::string(value, /* field */ "kind"));
+  const Kind* kind = nullptr;
+  const auto leaf_kind = JsonValidation::string(value, /* field */ "kind");
+  if (value.isMember("partial_label")) {
+    kind = context.kinds->get_partial(
+        leaf_kind, JsonValidation::string(value, /* field */ "partial_label"));
+  } else {
+    kind = context.kinds->get(leaf_kind);
+  }
 
   auto callee_port = AccessPath(Root(Root::Kind::Leaf));
   if (value.isMember("callee_port")) {

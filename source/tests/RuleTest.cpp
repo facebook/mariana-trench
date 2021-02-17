@@ -36,6 +36,7 @@ TEST_F(RuleTest, Rules) {
   auto* sink_x = context.kinds->get("X");
   auto* sink_y = context.kinds->get("Y");
   auto* sink_z = context.kinds->get("Z");
+  auto* partial_sink = context.kinds->get_partial("kind", "label");
 
   std::vector<std::unique_ptr<Rule>> rule_list;
   rule_list.push_back(std::make_unique<SourceSinkRule>(
@@ -69,7 +70,8 @@ TEST_F(RuleTest, Rules) {
       /* multi_source_kinds */
       MultiSourceMultiSinkRule::MultiSourceKindsByLabel{
           {"labelA", {source_a, source_b}}, {"labelB", {source_a}}},
-      /* partial_sink_kinds */ Rule::KindSet{sink_x}));
+      /* partial_sink_kinds */
+      MultiSourceMultiSinkRule::PartialKindSet{partial_sink}));
 
   auto rules = Rules(std::move(rule_list));
 
@@ -88,6 +90,8 @@ TEST_F(RuleTest, Rules) {
       to_codes(rules.rules(source_b, sink_y)),
       testing::UnorderedElementsAre(3, 4));
   EXPECT_TRUE(rules.rules(source_b, sink_z).empty());
+
+  // TODO(T66517244): Add tests for matching of combined_source rules.
 }
 
 TEST_F(RuleTest, Uses) {
@@ -108,7 +112,7 @@ TEST_F(RuleTest, Uses) {
   EXPECT_TRUE(rule1->uses(sink_x));
   EXPECT_FALSE(rule1->uses(sink_y));
 
-  // TBD: Check for MultiSourceMultiSink rule as well.
+  // TODO(T66517244): Check for MultiSourceMultiSink rule as well.
 }
 
 } // namespace marianatrench

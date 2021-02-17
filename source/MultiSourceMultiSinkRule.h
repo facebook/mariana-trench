@@ -15,6 +15,7 @@
 
 #include <mariana-trench/Context.h>
 #include <mariana-trench/Kind.h>
+#include <mariana-trench/PartialKind.h>
 #include <mariana-trench/Rule.h>
 
 namespace marianatrench {
@@ -26,13 +27,14 @@ namespace marianatrench {
 class MultiSourceMultiSinkRule final : public Rule {
  public:
   using MultiSourceKindsByLabel = std::unordered_map<std::string, KindSet>;
+  using PartialKindSet = std::unordered_set<const PartialKind*>;
 
   MultiSourceMultiSinkRule(
       const std::string& name,
       int code,
       const std::string& description,
       const MultiSourceKindsByLabel& multi_source_kinds,
-      const KindSet& partial_sink_kinds)
+      const PartialKindSet& partial_sink_kinds)
       : Rule(name, code, description),
         multi_source_kinds_(multi_source_kinds),
         partial_sink_kinds_(partial_sink_kinds) {}
@@ -46,7 +48,7 @@ class MultiSourceMultiSinkRule final : public Rule {
     return multi_source_kinds_;
   }
 
-  const KindSet& partial_sink_kinds() const {
+  const PartialKindSet& partial_sink_kinds() const {
     return partial_sink_kinds_;
   }
 
@@ -62,7 +64,7 @@ class MultiSourceMultiSinkRule final : public Rule {
 
  private:
   MultiSourceKindsByLabel multi_source_kinds_;
-  KindSet partial_sink_kinds_;
+  PartialKindSet partial_sink_kinds_;
 };
 
 } // namespace marianatrench
