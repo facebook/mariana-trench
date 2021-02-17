@@ -5,6 +5,8 @@
  * LICENSE file in the root directory of this source tree.
  */
 
+#include <memory>
+
 #include <gmock/gmock.h>
 
 #include <Show.h>
@@ -12,6 +14,7 @@
 #include <mariana-trench/JsonValidation.h>
 #include <mariana-trench/Model.h>
 #include <mariana-trench/Redex.h>
+#include <mariana-trench/SourceSinkRule.h>
 #include <mariana-trench/tests/Test.h>
 
 namespace marianatrench {
@@ -282,7 +285,8 @@ TEST_F(ModelTest, Join) {
   auto context = test::make_empty_context();
   const auto* source_kind = context.kinds->get("TestSource");
   const auto* sink_kind = context.kinds->get("TestSink");
-  auto rule = Rule("rule", 1, "", {source_kind}, {sink_kind});
+  auto rule = std::make_unique<SourceSinkRule>(
+      "rule", 1, "", Rule::KindSet{source_kind}, Rule::KindSet{sink_kind});
 
   Model model;
   EXPECT_EQ(model.issues().size(), 0);
@@ -306,7 +310,7 @@ TEST_F(ModelTest, Join) {
       IssueSet{Issue(
           /* source */ Taint{Frame::leaf(source_kind)},
           /* sink */ Taint{Frame::leaf(sink_kind)},
-          &rule,
+          rule.get(),
           context.positions->unknown())});
   model.join_with(model_with_trace);
   EXPECT_EQ(
@@ -314,7 +318,7 @@ TEST_F(ModelTest, Join) {
       IssueSet{Issue(
           /* source */ Taint{Frame::leaf(source_kind)},
           /* sink */ Taint{Frame::leaf(sink_kind)},
-          &rule,
+          rule.get(),
           context.positions->unknown())});
   EXPECT_TRUE(model.generations().is_bottom());
   EXPECT_TRUE(model.sinks().is_bottom());

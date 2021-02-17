@@ -13,7 +13,9 @@
 #include <mariana-trench/LocalPositionSet.h>
 #include <mariana-trench/Method.h>
 #include <mariana-trench/Model.h>
+#include <mariana-trench/MultiSourceMultiSinkRule.h>
 #include <mariana-trench/Redex.h>
+#include <mariana-trench/SourceSinkRule.h>
 #include <mariana-trench/tests/Test.h>
 
 namespace marianatrench {
@@ -362,8 +364,94 @@ TEST_F(JsonTest, Rule) {
           })"),
           context),
       JsonValidationError);
+  EXPECT_THROW(
+      Rule::from_json(
+          test::parse_json(R"({
+            "name": "rule_name",
+            "code": 1,
+            "description": "rule_description",
+            "sources": ["rule_source"],
+            "sinks": []
+          })"),
+          context),
+      JsonValidationError);
 
-  auto rule_with_single_source_and_sink = Rule::from_json(
+  /* Rule kind determination fails in the following cases. */
+  EXPECT_THROW(
+      Rule::from_json(
+          test::parse_json(R"({
+            "name": "rule_name",
+            "code": 1,
+            "description": "rule_description",
+            "sources": ["rule_source"]
+          })"),
+          context),
+      JsonValidationError);
+  EXPECT_THROW(
+      Rule::from_json(
+          test::parse_json(R"({
+            "name": "rule_name",
+            "code": 1,
+            "description": "rule_description",
+            "sinks": ["rule_sink"]
+          })"),
+          context),
+      JsonValidationError);
+  EXPECT_THROW(
+      Rule::from_json(
+          test::parse_json(R"({
+            "name": "rule_name",
+            "code": 1,
+            "description": "rule_description",
+            "multi_sources": {
+              "labelA": ["rule_source"],
+              "labelB": ["rule_source"]
+            }
+          })"),
+          context),
+      JsonValidationError);
+  EXPECT_THROW(
+      Rule::from_json(
+          test::parse_json(R"({
+            "name": "rule_name",
+            "code": 1,
+            "description": "rule_description",
+            "partial_sinks": ["rule_sink"]
+          })"),
+          context),
+      JsonValidationError);
+
+  /* Multi source rules need exactly 2 labels. */
+  EXPECT_THROW(
+      Rule::from_json(
+          test::parse_json(R"({
+            "name": "rule_name",
+            "code": 1,
+            "description": "rule_description",
+            "multi_sources": {
+              "labelA": ["rule_source"]
+            },
+            "partial_sinks": ["rule_sink"]
+          })"),
+          context),
+      JsonValidationError);
+  EXPECT_THROW(
+      Rule::from_json(
+          test::parse_json(R"({
+            "name": "rule_name",
+            "code": 1,
+            "description": "rule_description",
+            "multi_sources": {
+              "labelA": ["rule_source"],
+              "labelB": ["rule_source"],
+              "labelC": ["rule_source"]
+            },
+            "partial_sinks": ["rule_sink"]
+          })"),
+          context),
+      JsonValidationError);
+
+  auto rule = Rule::from_json(
       test::parse_json(R"({
         "name": "rule_name",
         "code": 1,
@@ -372,17 +460,21 @@ TEST_F(JsonTest, Rule) {
         "sinks": ["rule_sink"]
       })"),
       context);
-  EXPECT_EQ(rule_with_single_source_and_sink.name_, "rule_name");
-  EXPECT_EQ(rule_with_single_source_and_sink.code_, 1);
-  EXPECT_EQ(rule_with_single_source_and_sink.description_, "rule_description");
+  EXPECT_EQ(rule->as<MultiSourceMultiSinkRule>(), nullptr);
+  auto rule_with_single_source_and_sink = rule->as<SourceSinkRule>();
+  EXPECT_NE(rule_with_single_source_and_sink, nullptr);
+  EXPECT_EQ(rule_with_single_source_and_sink->name(), "rule_name");
+  EXPECT_EQ(rule_with_single_source_and_sink->code(), 1);
+  EXPECT_EQ(
+      rule_with_single_source_and_sink->description(), "rule_description");
   EXPECT_THAT(
-      rule_with_single_source_and_sink.source_kinds(),
+      rule_with_single_source_and_sink->source_kinds(),
       testing::ElementsAre(context.kinds->get("rule_source")));
   EXPECT_THAT(
-      rule_with_single_source_and_sink.sink_kinds(),
+      rule_with_single_source_and_sink->sink_kinds(),
       testing::ElementsAre(context.kinds->get("rule_sink")));
 
-  auto rule_with_multiple_sources_and_sinks = Rule::from_json(
+  rule = Rule::from_json(
       test::parse_json(R"({
         "name": "rule_name",
         "code": 1,
@@ -391,16 +483,47 @@ TEST_F(JsonTest, Rule) {
         "sinks": ["rule_sink_one", "rule_sink_two"]
       })"),
       context);
+  EXPECT_EQ(rule->as<MultiSourceMultiSinkRule>(), nullptr);
+  auto rule_with_multiple_sources_and_sinks = rule->as<SourceSinkRule>();
+  EXPECT_NE(rule_with_multiple_sources_and_sinks, nullptr);
   EXPECT_THAT(
-      rule_with_multiple_sources_and_sinks.source_kinds(),
+      rule_with_multiple_sources_and_sinks->source_kinds(),
       testing::UnorderedElementsAre(
           context.kinds->get("rule_source_one"),
           context.kinds->get("rule_source_two")));
   EXPECT_THAT(
-      rule_with_multiple_sources_and_sinks.sink_kinds(),
+      rule_with_multiple_sources_and_sinks->sink_kinds(),
       testing::UnorderedElementsAre(
           context.kinds->get("rule_sink_one"),
           context.kinds->get("rule_sink_two")));
+
+  rule = Rule::from_json(
+      test::parse_json(R"({
+            "name": "rule_name",
+            "code": 1,
+            "description": "rule_description",
+            "multi_sources": {
+              "labelA": ["rule_source_one", "rule_source_two"],
+              "labelB": ["rule_source_one"]
+            },
+            "partial_sinks": ["rule_sink"]
+          })"),
+      context);
+  EXPECT_EQ(rule->as<SourceSinkRule>(), nullptr);
+  auto rule_with_combined_sources = rule->as<MultiSourceMultiSinkRule>();
+  EXPECT_NE(rule_with_combined_sources, nullptr);
+  EXPECT_THAT(
+      rule_with_combined_sources->partial_sink_kinds(),
+      testing::UnorderedElementsAre(context.kinds->get("rule_sink")));
+  const auto& multi_sources = rule_with_combined_sources->multi_source_kinds();
+  EXPECT_THAT(
+      multi_sources.find("labelA")->second,
+      testing::UnorderedElementsAre(
+          context.kinds->get("rule_source_one"),
+          context.kinds->get("rule_source_two")));
+  EXPECT_THAT(
+      multi_sources.find("labelB")->second,
+      testing::UnorderedElementsAre(context.kinds->get("rule_source_one")));
 }
 
 TEST_F(JsonTest, LocalPositionSet) {
@@ -1761,12 +1884,12 @@ TEST_F(JsonTest, Model) {
       Model::from_json(method, test::parse_json(R"({"issues": []})"), context),
       JsonValidationError);
 
-  Rule rule(
+  auto rule = std::make_unique<SourceSinkRule>(
       /* name */ "Rule",
       /* code */ 1,
       /* description */ "",
-      {context.kinds->get("first_source")},
-      {context.kinds->get("first_sink")});
+      Rule::KindSet{context.kinds->get("first_source")},
+      Rule::KindSet{context.kinds->get("first_sink")});
   EXPECT_EQ(
       test::sorted_json(
           Model(
@@ -1787,7 +1910,7 @@ TEST_F(JsonTest, Model) {
                       context.kinds->get("first_source"))},
                   /* sink */
                   Taint{Frame::leaf(context.kinds->get("first_sink"))},
-                  &rule,
+                  rule.get(),
                   context.positions->get("Data.java", 1))})
               .to_json()),
       test::parse_json(R"({

@@ -8,34 +8,30 @@
 #pragma once
 
 #include <string>
+#include <unordered_map>
 #include <unordered_set>
 
 #include <gtest/gtest_prod.h>
 #include <json/json.h>
 
+#include <mariana-trench/Assert.h>
+#include <mariana-trench/Compiler.h>
 #include <mariana-trench/Context.h>
 #include <mariana-trench/Kind.h>
 
 namespace marianatrench {
 
-class Rule final {
+class Rule {
  public:
-  Rule(
-      const std::string& name,
-      int code,
-      const std::string& description,
-      const std::unordered_set<const Kind*>& source_kinds,
-      const std::unordered_set<const Kind*>& sink_kinds)
-      : name_(name),
-        code_(code),
-        description_(description),
-        source_kinds_(source_kinds),
-        sink_kinds_(sink_kinds) {}
-  Rule(const Rule&) = default;
-  Rule(Rule&&) = default;
-  Rule& operator=(const Rule&) = default;
-  Rule& operator=(Rule&&) = default;
-  ~Rule() = default;
+  using KindSet = std::unordered_set<const Kind*>;
+
+  Rule(const std::string& name, int code, const std::string& description)
+      : name_(name), code_(code), description_(description) {}
+  Rule(const Rule&) = delete;
+  Rule(Rule&&) = delete;
+  Rule& operator=(const Rule&) = delete;
+  Rule& operator=(Rule&&) = delete;
+  virtual ~Rule() = default;
 
   const std::string& name() const {
     return name_;
@@ -45,25 +41,31 @@ class Rule final {
     return code_;
   }
 
-  const std::unordered_set<const Kind*>& source_kinds() const {
-    return source_kinds_;
+  const std::string& description() const {
+    return description_;
   }
 
-  const std::unordered_set<const Kind*>& sink_kinds() const {
-    return sink_kinds_;
+  virtual bool uses(const Kind*) const = 0;
+
+  template <typename T>
+  const T* MT_NULLABLE as() const {
+    return dynamic_cast<const T*>(this);
   }
 
-  static Rule from_json(const Json::Value& value, Context& context);
-  Json::Value to_json() const;
+  template <typename T>
+  T* MT_NULLABLE as() {
+    return dynamic_cast<T*>(this);
+  }
 
-  FRIEND_TEST(JsonTest, Rule);
+  static std::unique_ptr<Rule> from_json(
+      const Json::Value& value,
+      Context& context);
+  virtual Json::Value to_json() const;
 
  private:
   std::string name_;
   int code_;
   std::string description_;
-  std::unordered_set<const Kind*> source_kinds_;
-  std::unordered_set<const Kind*> sink_kinds_;
 };
 
 } // namespace marianatrench

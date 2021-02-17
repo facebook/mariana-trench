@@ -9,6 +9,7 @@
 
 #include <mariana-trench/IssueSet.h>
 #include <mariana-trench/Redex.h>
+#include <mariana-trench/SourceSinkRule.h>
 #include <mariana-trench/tests/Test.h>
 
 namespace marianatrench {
@@ -23,10 +24,11 @@ TEST_F(IssueSetTest, Insertion) {
   const auto* sink_kind = context.kinds->get("TestSink");
   const auto* other_sink_kind = context.kinds->get("OtherSink");
 
-  Rule rule_1("rule 1", 1, "description", {source_kind}, {sink_kind});
-  Rule rule_2(
+  SourceSinkRule rule_1("rule 1", 1, "description", {source_kind}, {sink_kind});
+  SourceSinkRule rule_2(
       "rule 2", 2, "description", {other_source_kind}, {other_sink_kind});
-  Rule rule_3("rule 3", 3, "description", {source_kind}, {other_sink_kind});
+  SourceSinkRule rule_3(
+      "rule 3", 3, "description", {source_kind}, {other_sink_kind});
 
   const auto* position_1 = context.positions->get(std::nullopt, 1);
   const auto* position_2 = context.positions->get(std::nullopt, 2);

@@ -12,14 +12,15 @@
 #include <mariana-trench/Log.h>
 #include <mariana-trench/Options.h>
 #include <mariana-trench/Rules.h>
+#include <mariana-trench/SourceSinkRule.h>
 
 namespace marianatrench {
 
 Rules::Rules() = default;
 
-Rules::Rules(const std::vector<Rule>& rules) {
-  for (const auto& rule : rules) {
-    add(rule);
+Rules::Rules(std::vector<std::unique_ptr<Rule>> rules) {
+  for (auto& rule : rules) {
+    add(std::move(rule));
   }
 }
 
@@ -43,23 +44,30 @@ Rules Rules::load(Context& context, const Options& options) {
   return rules;
 }
 
-void Rules::add(const Rule& rule) {
-  auto result = rules_.emplace(rule.code(), rule);
-  const Rule* rule_pointer = &result.first->second;
-
-  if (!result.second) {
+void Rules::add(std::unique_ptr<Rule> rule) {
+  auto existing = rules_.find(rule->code());
+  if (existing != rules_.end()) {
     ERROR(
         1,
         "A rule for code {} already exists! Duplicate rules are:\n{}\n{}",
-        rule.code(),
-        JsonValidation::to_styled_string(rule.to_json()),
-        JsonValidation::to_styled_string(rule_pointer->to_json()));
+        rule->code(),
+        JsonValidation::to_styled_string(rule->to_json()),
+        JsonValidation::to_styled_string(existing->second->to_json()));
     return;
   }
 
-  for (const auto* source_kind : rule.source_kinds()) {
-    for (const auto sink_kind : rule.sink_kinds()) {
-      source_to_sink_to_rules_[source_kind][sink_kind].push_back(rule_pointer);
+  auto code = rule->code();
+  auto result = rules_.emplace(code, std::move(rule));
+  const Rule* rule_pointer = result.first->second.get();
+
+  // For now, only support rules with kind SourceSink when looking up connecting
+  // source<->sink kinds. TBD: Support multi-source rules.
+  if (auto* source_sink_rule = rule_pointer->as<SourceSinkRule>()) {
+    for (const auto* source_kind : source_sink_rule->source_kinds()) {
+      for (const auto* sink_kind : source_sink_rule->sink_kinds()) {
+        source_to_sink_to_rules_[source_kind][sink_kind].push_back(
+            rule_pointer);
+      }
     }
   }
 }
@@ -83,8 +91,7 @@ const std::vector<const Rule*>& Rules::rules(
 void Rules::warn_unused_kinds(const Kinds& kinds) const {
   for (const auto* kind : kinds) {
     if (std::all_of(begin(), end(), [kind](const Rule* rule) {
-          return rule->source_kinds().count(kind) == 0 &&
-              rule->sink_kinds().count(kind) == 0;
+          return !rule->uses(kind);
         })) {
       WARNING(
           1,

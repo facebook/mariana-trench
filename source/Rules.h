@@ -7,6 +7,7 @@
 
 #pragma once
 
+#include <memory>
 #include <unordered_map>
 #include <vector>
 
@@ -22,8 +23,9 @@ namespace marianatrench {
 class Rules final {
  private:
   struct ExposeRulePointer {
-    const Rule* operator()(const std::pair<const int, Rule>& pair) const {
-      return &pair.second;
+    const Rule* operator()(
+        const std::pair<const int, std::unique_ptr<Rule>>& pair) const {
+      return pair.second.get();
     }
   };
 
@@ -31,7 +33,7 @@ class Rules final {
   // C++ container concept member types
   using iterator = boost::transform_iterator<
       ExposeRulePointer,
-      std::unordered_map<int, Rule>::const_iterator>;
+      std::unordered_map<int, std::unique_ptr<Rule>>::const_iterator>;
   using const_iterator = iterator;
   using value_type = const Rule*;
   using difference_type = std::ptrdiff_t;
@@ -49,7 +51,7 @@ class Rules final {
  public:
   explicit Rules();
 
-  explicit Rules(const std::vector<Rule>& rules);
+  explicit Rules(std::vector<std::unique_ptr<Rule>> rules);
 
   explicit Rules(Context& context, const Json::Value& rules_value);
 
@@ -63,7 +65,7 @@ class Rules final {
   ~Rules() = default;
 
   /* This is NOT thread-safe. */
-  void add(const Rule& rule);
+  void add(std::unique_ptr<Rule> rule);
 
   /* Return the set of rules matching the given source kind and sink kind. */
   const std::vector<const Rule*>& rules(
@@ -85,7 +87,7 @@ class Rules final {
   }
 
  private:
-  std::unordered_map<int, Rule> rules_;
+  std::unordered_map<int, std::unique_ptr<Rule>> rules_;
   std::unordered_map<
       const Kind*,
       std::unordered_map<const Kind*, std::vector<const Rule*>>>

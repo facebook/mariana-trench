@@ -6,49 +6,44 @@
  */
 
 #include <mariana-trench/JsonValidation.h>
+#include <mariana-trench/MultiSourceMultiSinkRule.h>
 #include <mariana-trench/Rule.h>
+#include <mariana-trench/SourceSinkRule.h>
 
 namespace marianatrench {
 
-Rule Rule::from_json(const Json::Value& value, Context& context) {
+std::unique_ptr<Rule> Rule::from_json(
+    const Json::Value& value,
+    Context& context) {
   JsonValidation::validate_object(value);
 
   auto name = JsonValidation::string(value, /* field */ "name");
   int code = JsonValidation::integer(value, /* field */ "code");
   auto description = JsonValidation::string(value, /* field */ "description");
 
-  std::unordered_set<const Kind*> source_kinds;
-  for (const auto& source_kind :
-       JsonValidation::nonempty_array(value, /* field */ "sources")) {
-    source_kinds.insert(Kind::from_json(source_kind, context));
+  // This uses the presence of specific keys to determine the rule kind.
+  // Unfortunately, it means users can write ambiguous nonsense without being
+  // warned that a certain field is meaningless, such as:
+  //   "sources": [...], "sinks": [...], "partial_sinks": [...]
+  if (value.isMember("sources") && value.isMember("sinks")) {
+    return SourceSinkRule::from_json(name, code, description, value, context);
+  } else if (
+      value.isMember("multi_sources") && value.isMember("partial_sinks")) {
+    return MultiSourceMultiSinkRule::from_json(
+        name, code, description, value, context);
   }
 
-  std::unordered_set<const Kind*> sink_kinds;
-  for (const auto& sink_kind :
-       JsonValidation::nonempty_array(value, /* field */ "sinks")) {
-    sink_kinds.insert(Kind::from_json(sink_kind, context));
-  }
-
-  return Rule(name, code, description, source_kinds, sink_kinds);
+  throw JsonValidationError(
+      value,
+      std::nullopt,
+      "keys: sources+sinks or multi_sources+partial_sinks");
 }
 
 Json::Value Rule::to_json() const {
-  auto source_kinds_value = Json::Value(Json::arrayValue);
-  for (const auto source_kind : source_kinds_) {
-    source_kinds_value.append(source_kind->to_json());
-  }
-
-  auto sink_kinds_value = Json::Value(Json::arrayValue);
-  for (const auto sink_kind : sink_kinds_) {
-    sink_kinds_value.append(sink_kind->to_json());
-  }
-
   auto value = Json::Value(Json::objectValue);
   value["name"] = name_;
   value["code"] = Json::Value(code_);
   value["description"] = description_;
-  value["sources"] = source_kinds_value;
-  value["sinks"] = sink_kinds_value;
   return value;
 }
 
