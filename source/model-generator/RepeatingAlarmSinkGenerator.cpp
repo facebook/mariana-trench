@@ -19,8 +19,7 @@ std::unordered_map<std::string, marianatrench::ParameterPosition>
 
 namespace marianatrench {
 
-std::vector<Model> RepeatingAlarmSinkGenerator::run(
-    const DexStoresVector& /*stores*/) {
+std::vector<Model> RepeatingAlarmSinkGenerator::run(const Methods&) {
   std::vector<Model> models;
 
   for (const auto& alarm_signature : k_alarm_signatures) {

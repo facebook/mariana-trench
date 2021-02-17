@@ -37,7 +37,7 @@ class ModelGenerator {
     return name_;
   }
 
-  virtual std::vector<Model> run(const DexStoresVector& stores) = 0;
+  virtual std::vector<Model> run(const Methods&) = 0;
 
  protected:
   std::string name_;
@@ -52,7 +52,7 @@ class MethodVisitorModelGenerator : public ModelGenerator {
   MethodVisitorModelGenerator(const std::string& name, Context& context)
       : ModelGenerator(name, context) {}
 
-  virtual std::vector<Model> run(const DexStoresVector& stores) override;
+  virtual std::vector<Model> run(const Methods&) override;
 
   // This method has to be thread-safe.
   virtual std::vector<Model> visit_method(const Method* method) const = 0;

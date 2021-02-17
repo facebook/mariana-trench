@@ -56,7 +56,7 @@ TEST_F(DisallowSensitiveSinkGeneratorTest, SinkForDisallowSensitive) {
   EXPECT_THAT(
       JsonModelGenerator(
           "DisallowSensitiveSinkGenerator", context, json_file_path)
-          .run(context.stores),
+          .run(*context.methods),
       testing::UnorderedElementsAre(model));
 }
 
@@ -75,6 +75,6 @@ TEST_F(DisallowSensitiveSinkGeneratorTest, NoSinkForDisallowSensitive) {
   EXPECT_THAT(
       JsonModelGenerator(
           "DisallowSensitiveSinkGenerator", context, json_file_path)
-          .run(context.stores),
+          .run(*context.methods),
       testing::UnorderedElementsAre());
 }

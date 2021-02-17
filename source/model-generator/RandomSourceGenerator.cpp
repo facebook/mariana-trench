@@ -21,8 +21,7 @@ std::unordered_set<std::string> k_random_signatures = {
 
 namespace marianatrench {
 
-std::vector<Model> RandomSourceGenerator::run(
-    const DexStoresVector& /*stores*/) {
+std::vector<Model> RandomSourceGenerator::run(const Methods&) {
   std::vector<Model> models;
 
   for (const auto& random_signature : k_random_signatures) {

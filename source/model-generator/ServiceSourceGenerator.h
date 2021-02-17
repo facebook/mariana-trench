@@ -16,7 +16,7 @@ class ServiceSourceGenerator : public ModelGenerator {
   explicit ServiceSourceGenerator(Context& context)
       : ModelGenerator("service_sources", context) {}
 
-  std::vector<Model> run(const DexStoresVector& stores) override;
+  std::vector<Model> run(const Methods&) override;
 };
 
 } // namespace marianatrench

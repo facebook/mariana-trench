@@ -36,7 +36,7 @@ TEST_F(ServiceSourceGeneratorTest, ServiceMessengerHandler) {
   auto* method = context.methods->get(dex_method);
 
   EXPECT_THAT(
-      ServiceSourceGenerator(context).run(context.stores),
+      ServiceSourceGenerator(context).run(*context.methods),
       testing::UnorderedElementsAre(Model(
           /* method */ method,
           context,
@@ -66,7 +66,7 @@ TEST_F(ServiceSourceGeneratorTest, GenericMessengerHandler) {
   auto context = test::make_context(store);
 
   EXPECT_THAT(
-      ServiceSourceGenerator(context).run(context.stores),
+      ServiceSourceGenerator(context).run(*context.methods),
       testing::UnorderedElementsAre());
 }
 
@@ -86,6 +86,6 @@ TEST_F(ServiceSourceGeneratorTest, AndroidXMessengerHandler) {
   auto context = test::make_context(store);
 
   EXPECT_THAT(
-      ServiceSourceGenerator(context).run(context.stores),
+      ServiceSourceGenerator(context).run(*context.methods),
       testing::UnorderedElementsAre());
 }

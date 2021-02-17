@@ -42,7 +42,7 @@ TEST_F(AndroidLogcatSinkGeneratorTest, SinkForLogcatV) {
 
   EXPECT_THAT(
       JsonModelGenerator("AndroidLogcatSinkGenerator", context, json_file_path)
-          .run(context.stores),
+          .run(*context.methods),
       testing::UnorderedElementsAre());
 }
 
@@ -65,7 +65,7 @@ TEST_F(AndroidLogcatSinkGeneratorTest, SinkForLogcatD) {
 
   EXPECT_THAT(
       JsonModelGenerator("AndroidLogcatSinkGenerator", context, json_file_path)
-          .run(context.stores),
+          .run(*context.methods),
       testing::UnorderedElementsAre());
 }
 
@@ -88,7 +88,7 @@ TEST_F(AndroidLogcatSinkGeneratorTest, SinkForLogcatI) {
 
   EXPECT_THAT(
       JsonModelGenerator("AndroidLogcatSinkGenerator", context, json_file_path)
-          .run(context.stores),
+          .run(*context.methods),
       testing::UnorderedElementsAre());
 }
 
@@ -112,7 +112,7 @@ TEST_F(AndroidLogcatSinkGeneratorTest, SinkForLogcatW) {
 
   EXPECT_THAT(
       JsonModelGenerator("AndroidLogcatSinkGenerator", context, json_file_path)
-          .run(context.stores),
+          .run(*context.methods),
       testing::UnorderedElementsAre(Model(
           /* method */ method,
           context,
@@ -142,6 +142,6 @@ TEST_F(AndroidLogcatSinkGeneratorTest, NoSinkForNonLog) {
 
   EXPECT_THAT(
       JsonModelGenerator("AndroidLogcatSinkGenerator", context, json_file_path)
-          .run(context.stores),
+          .run(*context.methods),
       testing::UnorderedElementsAre());
 }

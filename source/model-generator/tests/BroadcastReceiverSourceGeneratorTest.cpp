@@ -49,7 +49,7 @@ TEST_F(BroadcastReceiverSourceGeneratorTest, OverrideSourceMethod) {
   EXPECT_THAT(
       JsonModelGenerator(
           "BroadcastReceiverSourceGenerator", context, json_file_path)
-          .run(context.stores),
+          .run(*context.methods),
       testing::UnorderedElementsAre(
           Model(
               /* method */ base_method,
@@ -92,6 +92,6 @@ TEST_F(BroadcastReceiverSourceGeneratorTest, NoOverrideMethod) {
   EXPECT_THAT(
       JsonModelGenerator(
           "BroadcastReceiverSourceGenerator", context, json_file_path)
-          .run(context.stores),
+          .run(*context.methods),
       testing::UnorderedElementsAre());
 }

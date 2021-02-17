@@ -22,8 +22,7 @@ std::unordered_map<std::string, marianatrench::ParameterPosition>
 
 namespace marianatrench {
 
-std::vector<Model> TouchEventSinkGenerator::run(
-    const DexStoresVector& /*stores*/) {
+std::vector<Model> TouchEventSinkGenerator::run(const Methods&) {
   std::vector<Model> models;
 
   for (const auto& touch_signature : k_touch_signatures) {

@@ -51,7 +51,7 @@ Model source_first_argument(const Method* method, Context& context) {
 
 } // namespace
 
-std::vector<Model> ServiceSourceGenerator::run(const DexStoresVector& stores) {
+std::vector<Model> ServiceSourceGenerator::run(const Methods& methods) {
   std::vector<Model> models;
 
   std::unordered_set<std::string> manifest_services = {};
@@ -83,40 +83,41 @@ std::vector<Model> ServiceSourceGenerator::run(const DexStoresVector& stores) {
   }
 
   std::mutex mutex;
-  for (auto& scope : DexStoreClassesIterator(stores)) {
-    walk::parallel::methods(scope, [&](DexMethod* dex_method) {
-      const auto* method = methods_.get(dex_method);
-      const auto method_name = generator::get_method_name(method);
-      const auto argument_types = generator::get_argument_types(method);
-      const auto class_name = generator::get_class_name(method);
+  auto queue = sparta::work_queue<const Method*>([&](const Method* method) {
+    const auto method_name = generator::get_method_name(method);
+    const auto argument_types = generator::get_argument_types(method);
+    const auto class_name = generator::get_class_name(method);
 
-      if (boost::starts_with(class_name, "Landroid") ||
-          argument_types.size() < 1) {
-        return;
-      }
+    if (boost::starts_with(class_name, "Landroid") ||
+        argument_types.size() < 1) {
+      return;
+    }
 
-      if (boost::equals(
-              class_name, "Lcom/facebook/secure/service/SecureService;") ||
-          boost::equals(class_name, "Lcom/facebook/base/service/FbService;")) {
-        return;
-      }
+    if (boost::equals(
+            class_name, "Lcom/facebook/secure/service/SecureService;") ||
+        boost::equals(class_name, "Lcom/facebook/base/service/FbService;")) {
+      return;
+    }
 
-      if (boost::equals(method_name, "handleMessage") &&
-          boost::contains(class_name, "ervice") && argument_types.size() == 1) {
-        auto model = source_first_argument(method, context_);
-        std::lock_guard<std::mutex> lock(mutex);
-        models.push_back(model);
-      }
+    if (boost::equals(method_name, "handleMessage") &&
+        boost::contains(class_name, "ervice") && argument_types.size() == 1) {
+      auto model = source_first_argument(method, context_);
+      std::lock_guard<std::mutex> lock(mutex);
+      models.push_back(model);
+    }
 
-      if (service_methods.find(method_name) != service_methods.end() &&
-          manifest_services.find(generator::get_outer_class(class_name)) !=
-              manifest_services.end()) {
-        auto model = source_first_argument(method, context_);
-        std::lock_guard<std::mutex> lock(mutex);
-        models.push_back(model);
-      }
-    });
+    if (service_methods.find(method_name) != service_methods.end() &&
+        manifest_services.find(generator::get_outer_class(class_name)) !=
+            manifest_services.end()) {
+      auto model = source_first_argument(method, context_);
+      std::lock_guard<std::mutex> lock(mutex);
+      models.push_back(model);
+    }
+  });
+  for (const auto* method : methods) {
+    queue.add_item(method);
   }
+  queue.run_all();
   return models;
 }
 

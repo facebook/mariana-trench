@@ -62,6 +62,6 @@ TEST_F(
   EXPECT_THAT(
       JsonModelGenerator(
           "JavaScriptInterfaceSourceGenerator", context, json_file_path)
-          .run(context.stores),
+          .run(*context.methods),
       testing::UnorderedElementsAre(model));
 }

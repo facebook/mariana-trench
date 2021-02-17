@@ -16,7 +16,7 @@ class TouchEventSinkGenerator : public ModelGenerator {
   explicit TouchEventSinkGenerator(Context& context)
       : ModelGenerator("touch_event_sinks", context) {}
 
-  std::vector<Model> run(const DexStoresVector& stores) override;
+  std::vector<Model> run(const Methods&) override;
 };
 
 } // namespace marianatrench

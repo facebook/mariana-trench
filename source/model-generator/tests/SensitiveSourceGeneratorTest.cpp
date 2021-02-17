@@ -56,7 +56,7 @@ TEST_F(SensitiveSourceGeneratorTest, SensitiveSourceMethod1) {
           /* kind */ "SensitiveData"));
   EXPECT_THAT(
       JsonModelGenerator("SensitiveSourceGenerator", context, json_file_path)
-          .run(context.stores),
+          .run(*context.methods),
       testing::UnorderedElementsAre(model));
 }
 
@@ -94,7 +94,7 @@ TEST_F(SensitiveSourceGeneratorTest, SensitiveSourceMethod2) {
           /* kind */ "SensitiveData"));
   EXPECT_THAT(
       JsonModelGenerator("SensitiveSourceGenerator", context, json_file_path)
-          .run(context.stores),
+          .run(*context.methods),
       testing::UnorderedElementsAre(model));
 }
 
@@ -114,6 +114,6 @@ TEST_F(SensitiveSourceGeneratorTest, NonSensitiveSourceMethod) {
 
   EXPECT_THAT(
       JsonModelGenerator("SensitiveSourceGenerator", context, json_file_path)
-          .run(context.stores),
+          .run(*context.methods),
       testing::UnorderedElementsAre());
 }

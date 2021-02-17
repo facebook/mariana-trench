@@ -48,7 +48,7 @@ TEST_F(EditableTextSourceGeneratorTest, OverrideSourceMethod) {
 
   EXPECT_THAT(
       JsonModelGenerator("EditableTextSourceGenerator", context, json_file_path)
-          .run(context.stores),
+          .run(*context.methods),
       testing::UnorderedElementsAre(
           Model(
               /* method */ base_method,
@@ -90,6 +90,6 @@ TEST_F(EditableTextSourceGeneratorTest, NoOverrideMethod) {
 
   EXPECT_THAT(
       JsonModelGenerator("EditableTextSourceGenerator", context, json_file_path)
-          .run(context.stores),
+          .run(*context.methods),
       testing::UnorderedElementsAre());
 }

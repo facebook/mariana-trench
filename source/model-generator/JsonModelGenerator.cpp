@@ -1555,10 +1555,10 @@ JsonModelGenerator::JsonModelGenerator(
   }
 }
 
-std::vector<Model> JsonModelGenerator::run(const DexStoresVector& stores) {
+std::vector<Model> JsonModelGenerator::run(const Methods& methods) {
   std::vector<Model> models;
   for (auto& item : items_) {
-    std::vector<Model> method_models = item.run(stores);
+    std::vector<Model> method_models = item.run(methods);
     models.insert(
         models.end(),
         std::make_move_iterator(method_models.begin()),

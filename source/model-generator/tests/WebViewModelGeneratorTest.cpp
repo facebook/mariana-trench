@@ -55,7 +55,7 @@ TEST_F(WebViewModelGeneratorTest, OverrideSourceMethod) {
           "WebViewSourceGenerator",
           context,
           client_override_source_json_file_path)
-          .run(context.stores),
+          .run(*context.methods),
       testing::UnorderedElementsAre(
           Model(
               /* method */ base_method,
@@ -110,7 +110,7 @@ TEST_F(WebViewModelGeneratorTest, OverrideSinkMethod) {
           "WebViewModelGenerator",
           context,
           client_webview_source_json_file_path)
-          .run(context.stores),
+          .run(*context.methods),
       testing::UnorderedElementsAre(
           Model(
               /* method */ base_method,
@@ -157,6 +157,6 @@ TEST_F(WebViewModelGeneratorTest, NoOverrideMethod) {
           "WebViewSourceGenerator",
           context,
           client_override_source_json_file_path)
-          .run(context.stores),
+          .run(*context.methods),
       testing::UnorderedElementsAre());
 }

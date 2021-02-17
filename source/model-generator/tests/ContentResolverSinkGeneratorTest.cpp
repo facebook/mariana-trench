@@ -53,7 +53,7 @@ TEST_F(ContentResolverSinkGeneratorTest, SinkForQuery) {
   EXPECT_THAT(
       JsonModelGenerator(
           "ContentResolverSinkGenerator", context, json_file_path)
-          .run(context.stores),
+          .run(*context.methods),
       testing::UnorderedElementsAre(model));
 }
 
@@ -88,7 +88,7 @@ TEST_F(ContentResolverSinkGeneratorTest, SinkForDelete) {
   EXPECT_THAT(
       JsonModelGenerator(
           "ContentResolverSinkGenerator", context, json_file_path)
-          .run(context.stores),
+          .run(*context.methods),
       testing::UnorderedElementsAre(model));
 }
 
@@ -123,7 +123,7 @@ TEST_F(ContentResolverSinkGeneratorTest, SinkForOpenAssetFile) {
   EXPECT_THAT(
       JsonModelGenerator(
           "ContentResolverSinkGenerator", context, json_file_path)
-          .run(context.stores),
+          .run(*context.methods),
       testing::UnorderedElementsAre(model));
 }
 
@@ -157,6 +157,6 @@ TEST_F(ContentResolverSinkGeneratorTest, SinkForOpenInputStream) {
   EXPECT_THAT(
       JsonModelGenerator(
           "ContentResolverSinkGenerator", context, json_file_path)
-          .run(context.stores),
+          .run(*context.methods),
       testing::UnorderedElementsAre(model));
 }

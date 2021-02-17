@@ -93,7 +93,7 @@ TEST_P(JsonModelGeneratorIntegrationTest, CompareModels) {
   auto models =
       JsonModelGenerator(
           "TestModelGenerator", context, (directory / "model_generator.json"))
-          .run(context.stores);
+          .run(*context.methods);
   auto registry = Registry(context, models);
 
   std::string actual_output =

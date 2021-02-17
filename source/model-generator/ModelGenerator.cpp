@@ -35,24 +35,25 @@ ModelGenerator::ModelGenerator(const std::string& name, Context& context)
   mt_assert_log(context.overrides != nullptr, "invalid context");
 }
 
-std::vector<Model> MethodVisitorModelGenerator::run(
-    const DexStoresVector& stores) {
+std::vector<Model> MethodVisitorModelGenerator::run(const Methods& methods) {
   std::vector<Model> models;
   std::mutex mutex;
 
-  for (auto& scope : DexStoreClassesIterator(stores)) {
-    walk::parallel::methods(scope, [&](DexMethod* method) {
-      std::vector<Model> method_models = visit_method(methods_.get(method));
+  auto queue = sparta::work_queue<const Method*>([&](const Method* method) {
+    std::vector<Model> method_models = this->visit_method(method);
 
-      if (!method_models.empty()) {
-        std::lock_guard<std::mutex> lock(mutex);
-        models.insert(
-            models.end(),
-            std::make_move_iterator(method_models.begin()),
-            std::make_move_iterator(method_models.end()));
-      }
-    });
+    if (!method_models.empty()) {
+      std::lock_guard<std::mutex> lock(mutex);
+      models.insert(
+          models.end(),
+          std::make_move_iterator(method_models.begin()),
+          std::make_move_iterator(method_models.end()));
+    }
+  });
+  for (const auto* method : methods) {
+    queue.add_item(method);
   }
+  queue.run_all();
   return models;
 }
 

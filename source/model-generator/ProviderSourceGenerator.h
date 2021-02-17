@@ -16,7 +16,7 @@ class ProviderSourceGenerator : public ModelGenerator {
   explicit ProviderSourceGenerator(Context& context)
       : ModelGenerator("provider_source_generator", context) {}
 
-  std::vector<Model> run(const DexStoresVector& stores) override;
+  std::vector<Model> run(const Methods&) override;
 };
 
 } // namespace marianatrench

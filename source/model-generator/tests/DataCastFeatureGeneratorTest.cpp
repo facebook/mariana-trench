@@ -42,7 +42,7 @@ TEST_F(DataCastFeatureGeneratorTest, CastToInt) {
 
   EXPECT_THAT(
       JsonModelGenerator("DataCastFeatureGenerator", context, json_file_path)
-          .run(context.stores),
+          .run(*context.methods),
       testing::UnorderedElementsAre(Model(
           /* method */ method,
           context,
@@ -77,7 +77,7 @@ TEST_F(DataCastFeatureGeneratorTest, CastToBool) {
 
   EXPECT_THAT(
       JsonModelGenerator("DataCastFeatureGenerator", context, json_file_path)
-          .run(context.stores),
+          .run(*context.methods),
       testing::UnorderedElementsAre(Model(
           /* method */ method,
           context,

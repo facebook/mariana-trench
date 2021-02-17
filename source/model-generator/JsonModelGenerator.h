@@ -724,7 +724,7 @@ class JsonModelGenerator final : public ModelGenerator {
       Context& context,
       const boost::filesystem::path& json_configuration_file);
 
-  std::vector<Model> run(const DexStoresVector& stores) override;
+  std::vector<Model> run(const Methods&) override;
 
  private:
   boost::filesystem::path json_configuration_file_;

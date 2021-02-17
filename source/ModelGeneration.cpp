@@ -120,7 +120,7 @@ std::vector<Model> ModelGeneration::run(Context& context) {
         ++iteration,
         model_generators.size());
 
-    std::vector<Model> models = model_generator->run(context.stores);
+    std::vector<Model> models = model_generator->run(*context.methods);
 
     // Remove models for the `null` method
     models.erase(

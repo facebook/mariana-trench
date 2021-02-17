@@ -83,7 +83,7 @@ Model source_all_parameters(
 
 } // namespace
 
-std::vector<Model> ProviderSourceGenerator::run(const DexStoresVector& stores) {
+std::vector<Model> ProviderSourceGenerator::run(const Methods& methods) {
   std::unordered_set<std::string> manifest_providers = {};
   try {
     const auto manifest_class_info = get_manifest_class_info(
@@ -118,35 +118,36 @@ std::vector<Model> ProviderSourceGenerator::run(const DexStoresVector& stores) {
   std::mutex mutex;
   std::vector<Model> models;
   std::unordered_map<DexClass*, bool> permission_providers = {};
-  for (auto& scope : DexStoreClassesIterator(stores)) {
-    walk::parallel::methods(scope, [&](DexMethod* dex_method) {
-      const auto* method = methods_.get(dex_method);
-      std::string signature = show(method);
-      const auto outer_class = generator::get_outer_class(signature);
-      if (manifest_providers.count(outer_class)) {
-        for (const auto& regex : provider_regexes) {
-          if (re2::RE2::FullMatch(signature, *regex)) {
-            bool has_permissions = false;
-            std::lock_guard<std::mutex> lock(mutex);
-            auto* dex_class = type_class(dex_method->get_class());
+  auto queue = sparta::work_queue<const Method*>([&](const Method* method) {
+    std::string signature = show(method);
+    const auto outer_class = generator::get_outer_class(signature);
+    if (manifest_providers.count(outer_class)) {
+      for (const auto& regex : provider_regexes) {
+        if (re2::RE2::FullMatch(signature, *regex)) {
+          bool has_permissions = false;
+          std::lock_guard<std::mutex> lock(mutex);
+          auto* dex_class = type_class(method->get_class());
 
-            if (dex_class) {
-              auto found = permission_providers.find(dex_class);
-              if (found != permission_providers.end()) {
-                has_permissions = found->second;
-              } else {
-                has_permissions = has_inline_permissions(dex_class);
-                permission_providers.emplace(dex_class, has_permissions);
-              }
+          if (dex_class) {
+            auto found = permission_providers.find(dex_class);
+            if (found != permission_providers.end()) {
+              has_permissions = found->second;
+            } else {
+              has_permissions = has_inline_permissions(dex_class);
+              permission_providers.emplace(dex_class, has_permissions);
             }
-            models.push_back(
-                source_all_parameters(method, has_permissions, context_));
-            break;
           }
+          models.push_back(
+              source_all_parameters(method, has_permissions, context_));
+          break;
         }
       }
-    });
+    }
+  });
+  for (const auto* method : methods) {
+    queue.add_item(method);
   }
+  queue.run_all();
   return models;
 }
 

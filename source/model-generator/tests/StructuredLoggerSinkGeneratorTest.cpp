@@ -36,7 +36,7 @@ TEST_F(StructuredLoggerSinkGeneratorTest, StructuredLoggerModel) {
   auto* method = context.methods->get(dex_method);
 
   EXPECT_THAT(
-      StructuredLoggerSinkGenerator(context).run(context.stores),
+      StructuredLoggerSinkGenerator(context).run(*context.methods),
       testing::UnorderedElementsAre(Model(
           /* method */ method,
           context,
@@ -70,7 +70,7 @@ TEST_F(StructuredLoggerSinkGeneratorTest, InstagramLoggerModel) {
   auto* method = context.methods->get(dex_method);
 
   EXPECT_THAT(
-      StructuredLoggerSinkGenerator(context).run(context.stores),
+      StructuredLoggerSinkGenerator(context).run(*context.methods),
       testing::UnorderedElementsAre(Model(
           /* method */ method,
           context,
@@ -104,7 +104,7 @@ TEST_F(StructuredLoggerSinkGeneratorTest, HoneyClientLoggerModel) {
   auto* method = context.methods->get(dex_method);
 
   EXPECT_THAT(
-      StructuredLoggerSinkGenerator(context).run(context.stores),
+      StructuredLoggerSinkGenerator(context).run(*context.methods),
       testing::UnorderedElementsAre(Model(
           /* method */ method,
           context,
@@ -135,7 +135,7 @@ TEST_F(StructuredLoggerSinkGeneratorTest, NoModelForImplClass) {
   auto context = test::make_context(store);
 
   EXPECT_THAT(
-      StructuredLoggerSinkGenerator(context).run(context.stores),
+      StructuredLoggerSinkGenerator(context).run(*context.methods),
       testing::UnorderedElementsAre());
 }
 
@@ -153,6 +153,6 @@ TEST_F(StructuredLoggerSinkGeneratorTest, NoModelForNonLoggingMethod) {
   auto context = test::make_context(store);
 
   EXPECT_THAT(
-      StructuredLoggerSinkGenerator(context).run(context.stores),
+      StructuredLoggerSinkGenerator(context).run(*context.methods),
       testing::UnorderedElementsAre());
 }

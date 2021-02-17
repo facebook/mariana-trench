@@ -46,7 +46,7 @@ TEST_F(JNISinkGeneratorTest, SinkForNative) {
 
   EXPECT_THAT(
       JsonModelGenerator("JNISinkGenerator", context, json_file_path)
-          .run(context.stores),
+          .run(*context.methods),
       testing::UnorderedElementsAre(Model(
           /* method */ method,
           context,
@@ -88,7 +88,7 @@ TEST_F(JNISinkGeneratorTest, SinkForStaticNative) {
 
   EXPECT_THAT(
       JsonModelGenerator("JNISinkGenerator", context, json_file_path)
-          .run(context.stores),
+          .run(*context.methods),
       testing::UnorderedElementsAre(Model(
           /* method */ method,
           context,
@@ -124,6 +124,6 @@ TEST_F(JNISinkGeneratorTest, NoSinkForNonNative) {
 
   EXPECT_THAT(
       JsonModelGenerator("JNISinkGenerator", context, json_file_path)
-          .run(context.stores),
+          .run(*context.methods),
       testing::UnorderedElementsAre());
 }
