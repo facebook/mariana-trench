@@ -87,9 +87,7 @@ def _extract_jex_file_if_exists(
         return run_unzip_command(["unzip", "-d", str(jex_extract_directory), str(path)])
 
 
-def _build_target(
-    target: str, *, mode: typing.Optional[str] = None
-) -> pathlib.Path:
+def _build_target(target: str, *, mode: typing.Optional[str] = None) -> pathlib.Path:
     LOG.info(f"Building `{target}`%s...", f" with `{mode}`" if mode else "")
 
     # If a target starts with fbcode, then it needs to be built from fbcode instead of from fbsource
