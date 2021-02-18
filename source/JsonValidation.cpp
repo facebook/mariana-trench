@@ -13,6 +13,7 @@
 
 #include <mariana-trench/Assert.h>
 #include <mariana-trench/JsonValidation.h>
+#include <mariana-trench/Log.h>
 #include <mariana-trench/Redex.h>
 
 namespace marianatrench {
@@ -221,7 +222,12 @@ Json::Value JsonValidation::parse_json_file(
     const boost::filesystem::path& path) {
   boost::filesystem::ifstream file;
   file.exceptions(std::ifstream::failbit | std::ifstream::badbit);
-  file.open(path, std::ios_base::binary);
+  try {
+    file.open(path, std::ios_base::binary);
+  } catch (const std::ifstream::failure&) {
+    ERROR(1, "Could not open json file: `{}`.", path.string());
+    throw;
+  }
 
   static const auto reader = Json::CharReaderBuilder();
   std::string errors;
