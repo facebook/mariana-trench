@@ -58,6 +58,24 @@ class MethodVisitorModelGenerator : public ModelGenerator {
   virtual std::vector<Model> visit_method(const Method* method) const = 0;
 };
 
+class MappingGenerator {
+ public:
+  explicit MappingGenerator(Context& context);
+
+  static ConcurrentMap<std::string, std::vector<const Method*>> name_to_methods(
+      const Methods&);
+
+  static ConcurrentMap<std::string, std::vector<const Method*>>
+  class_to_methods(const Methods&);
+
+  static ConcurrentMap<std::string, std::vector<const Method*>>
+  class_to_override_methods(const Methods&);
+
+ protected:
+  Context& context_;
+  const Methods& methods_;
+};
+
 namespace generator {
 
 const std::string& get_class_name(const Method* method);
@@ -65,6 +83,7 @@ const std::string& get_method_name(const Method* method);
 std::optional<std::string> get_super_type(const Method* method);
 std::optional<const DexType*> get_return_type(const Method* method);
 std::optional<std::string> get_return_type_string(const Method* method);
+std::unordered_set<std::string> get_parents_from_class(DexClass* dex_class);
 std::unordered_set<std::string> get_custom_parents_from_class(
     DexClass* dex_class);
 std::string get_outer_class(const std::string& classname);

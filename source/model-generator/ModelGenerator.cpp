@@ -57,6 +57,74 @@ std::vector<Model> MethodVisitorModelGenerator::run(const Methods& methods) {
   return models;
 }
 
+MappingGenerator::MappingGenerator(Context& context)
+    : context_(context), methods_(*context.methods) {
+  mt_assert_log(context.methods != nullptr, "invalid context");
+}
+
+ConcurrentMap<std::string, std::vector<const Method*>>
+MappingGenerator::name_to_methods(const Methods& methods) {
+  ConcurrentMap<std::string, std::vector<const Method*>> method_mapping;
+
+  auto queue = sparta::work_queue<const Method*>([&](const Method* method) {
+    const auto& method_name = method->get_name();
+    method_mapping.update(
+        method_name,
+        [&](const std::string& /* name */,
+            std::vector<const Method*>& methods,
+            bool /* exists */) { methods.insert(methods.end(), method); });
+  });
+  for (const auto* method : methods) {
+    queue.add_item(method);
+  }
+  queue.run_all();
+  return method_mapping;
+};
+
+ConcurrentMap<std::string, std::vector<const Method*>>
+MappingGenerator::class_to_methods(const Methods& methods) {
+  ConcurrentMap<std::string, std::vector<const Method*>> method_mapping;
+
+  auto queue = sparta::work_queue<const Method*>([&](const Method* method) {
+    std::string parent_class = method->get_class()->get_name()->str();
+    method_mapping.update(
+        parent_class,
+        [&](const std::string& /* parent_name */,
+            std::vector<const Method*>& methods,
+            bool /* exists */) { methods.insert(methods.end(), method); });
+  });
+  for (const auto* method : methods) {
+    queue.add_item(method);
+  }
+  queue.run_all();
+  return method_mapping;
+};
+
+ConcurrentMap<std::string, std::vector<const Method*>>
+MappingGenerator::class_to_override_methods(const Methods& methods) {
+  ConcurrentMap<std::string, std::vector<const Method*>> method_mapping;
+
+  auto queue = sparta::work_queue<const Method*>([&](const Method* method) {
+    std::string class_name = method->get_class()->get_name()->str();
+    auto* dex_class = redex::get_class(class_name);
+    std::unordered_set<std::string> parent_classes =
+        generator::get_parents_from_class(dex_class);
+    parent_classes.insert(class_name);
+    for (const auto& parent_class : parent_classes) {
+      method_mapping.update(
+          parent_class,
+          [&](const std::string& /* parent_name */,
+              std::vector<const Method*>& methods,
+              bool /* exists */) { methods.insert(methods.end(), method); });
+    }
+  });
+  for (const auto* method : methods) {
+    queue.add_item(method);
+  }
+  queue.run_all();
+  return method_mapping;
+};
+
 const std::string& generator::get_class_name(const Method* method) {
   return method->get_class()->get_name()->str();
 }
@@ -72,6 +140,27 @@ std::optional<std::string> generator::get_super_type(const Method* method) {
     return std::nullopt;
   }
   return super_class->get_name()->str();
+}
+
+std::unordered_set<std::string> generator::get_parents_from_class(
+    DexClass* dex_class) {
+  std::unordered_set<std::string> parent_classes;
+
+  while (true) {
+    const DexType* super_type = dex_class->get_super_class();
+    if (super_type) {
+      parent_classes.emplace(super_type->get_name()->str());
+      DexClass* super_class = type_class(super_type);
+      if (super_class) {
+        dex_class = super_class;
+      } else {
+        break;
+      }
+    } else {
+      break;
+    }
+  }
+  return parent_classes;
 }
 
 std::unordered_set<std::string> generator::get_custom_parents_from_class(
@@ -241,12 +330,17 @@ void generator::add_propagation_to_self(
     ParameterPosition parameter_position,
     const std::vector<std::string>& features) {
   add_propagation_to_parameter(
-      context, model, parameter_position, /* parameter self */ 0, features);
+      context,
+      model,
+      parameter_position,
+      /* parameter self */ 0,
+      features);
 }
 
 namespace {
 
-/* Checks whether the given annotation set has a given annotation type/value. */
+/* Checks whether the given annotation set has a given annotation
+ * type/value. */
 bool has_annotation(
     const DexAnnotationSet* annotations_set,
     const std::string& expected_type,
@@ -261,7 +355,8 @@ bool has_annotation(
       continue;
     }
 
-    // If we expect a certain value, check values of the current annotation.
+    // If we expect a certain value, check values of the current
+    // annotation.
     if (expected_values && !expected_values->empty()) {
       for (const auto& element : annotation->anno_elems()) {
         if (expected_values->find(element.encoded_value->show()) !=
@@ -275,7 +370,8 @@ bool has_annotation(
       }
     }
 
-    // If we do not expect a certain value, return as we found the annotation.
+    // If we do not expect a certain value, return as we found the
+    // annotation.
     return true;
   }
 

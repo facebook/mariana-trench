@@ -109,6 +109,10 @@ std::vector<Model> ModelGeneration::run(Context& context) {
     }
   }
 
+  if (context.options->optimized_model_generation()) {
+    // TODO (T79362585)
+  }
+
   std::vector<Model> generated_models;
   std::size_t iteration = 0;
 
