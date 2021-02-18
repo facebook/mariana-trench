@@ -313,6 +313,10 @@
   },
   {
     "kind": "json",
+    "path": "model_generators/propagations/UriFeatureGenerator.json"
+  },
+  {
+    "kind": "json",
     "path": "model_generators/propagations/UriIntentBuilderModelGenerator.json"
   },
   {
