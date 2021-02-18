@@ -37,15 +37,49 @@ std::unordered_set<std::string> service_methods = {
     "onFbStartCommand",
     "handleMessage"};
 
-Model source_first_argument(const Method* method, Context& context) {
+std::unordered_set<std::string> permission_method_suffixes = {
+    ".getFbPermission:()Ljava/lang/String;"};
+
+std::unordered_set<std::string> permission_base_class_prefixes = {
+    "Lcom/oculus/security/basecomponent/OculusFbPermission",
+    "Lcom/facebook/secure/service/FbPermissions"};
+
+bool has_inline_permissions(DexClass* dex_class) {
+  for (const auto& method_suffix : permission_method_suffixes) {
+    if (redex::get_method(dex_class->str() + method_suffix)) {
+      return true;
+    }
+  }
+
+  std::unordered_set<std::string> parent_classes =
+      generator::get_custom_parents_from_class(dex_class);
+  for (const auto& parent_class : parent_classes) {
+    for (const auto& class_prefix : permission_base_class_prefixes) {
+      if (boost::starts_with(parent_class, class_prefix)) {
+        return true;
+      }
+    }
+  }
+  return false;
+}
+
+Model source_first_argument(
+    const Method* method,
+    bool has_permissions,
+    Context& context) {
+  std::vector<std::string> features;
   auto model = Model(method, context);
+  if (has_permissions) {
+    features.push_back("via-caller-permission");
+  }
   model.add_mode(Model::Mode::NoJoinVirtualOverrides, context);
   model.add_parameter_source(
       AccessPath(Root(Root::Kind::Argument, 1)),
       generator::source(
           context,
           method,
-          /* kind */ "ServiceUserInput"));
+          /* kind */ "ServiceUserInput",
+          features));
   return model;
 }
 
@@ -83,6 +117,7 @@ std::vector<Model> ServiceSourceGenerator::run(const Methods& methods) {
   }
 
   std::mutex mutex;
+  std::unordered_map<DexClass*, bool> permission_services = {};
   auto queue = sparta::work_queue<const Method*>([&](const Method* method) {
     const auto method_name = generator::get_method_name(method);
     const auto argument_types = generator::get_argument_types(method);
@@ -101,7 +136,8 @@ std::vector<Model> ServiceSourceGenerator::run(const Methods& methods) {
 
     if (boost::equals(method_name, "handleMessage") &&
         boost::contains(class_name, "ervice") && argument_types.size() == 1) {
-      auto model = source_first_argument(method, context_);
+      auto model =
+          source_first_argument(method, /* has_permissions */ false, context_);
       std::lock_guard<std::mutex> lock(mutex);
       models.push_back(model);
     }
@@ -109,7 +145,21 @@ std::vector<Model> ServiceSourceGenerator::run(const Methods& methods) {
     if (service_methods.find(method_name) != service_methods.end() &&
         manifest_services.find(generator::get_outer_class(class_name)) !=
             manifest_services.end()) {
-      auto model = source_first_argument(method, context_);
+      bool has_permissions = false;
+      auto* dex_class = type_class(method->dex_method()->get_class());
+
+      if (dex_class) {
+        std::lock_guard<std::mutex> lock(mutex);
+        auto found = permission_services.find(dex_class);
+        if (found != permission_services.end()) {
+          has_permissions = found->second;
+        } else {
+          has_permissions = has_inline_permissions(dex_class);
+          permission_services.emplace(dex_class, has_permissions);
+        }
+      }
+
+      auto model = source_first_argument(method, has_permissions, context_);
       std::lock_guard<std::mutex> lock(mutex);
       models.push_back(model);
     }
