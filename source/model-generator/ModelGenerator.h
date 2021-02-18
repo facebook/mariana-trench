@@ -58,23 +58,16 @@ class MethodVisitorModelGenerator : public ModelGenerator {
   virtual std::vector<Model> visit_method(const Method* method) const = 0;
 };
 
-class MappingGenerator {
- public:
-  explicit MappingGenerator(Context& context);
+namespace mapping_generator {
+ConcurrentMap<std::string, std::vector<const Method*>> name_to_methods(
+    const Methods&);
 
-  static ConcurrentMap<std::string, std::vector<const Method*>> name_to_methods(
-      const Methods&);
+ConcurrentMap<std::string, std::vector<const Method*>> class_to_methods(
+    const Methods&);
 
-  static ConcurrentMap<std::string, std::vector<const Method*>>
-  class_to_methods(const Methods&);
-
-  static ConcurrentMap<std::string, std::vector<const Method*>>
-  class_to_override_methods(const Methods&);
-
- protected:
-  Context& context_;
-  const Methods& methods_;
-};
+ConcurrentMap<std::string, std::vector<const Method*>>
+class_to_override_methods(const Methods&);
+} // namespace mapping_generator
 
 namespace generator {
 

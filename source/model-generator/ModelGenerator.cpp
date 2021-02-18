@@ -57,13 +57,8 @@ std::vector<Model> MethodVisitorModelGenerator::run(const Methods& methods) {
   return models;
 }
 
-MappingGenerator::MappingGenerator(Context& context)
-    : context_(context), methods_(*context.methods) {
-  mt_assert_log(context.methods != nullptr, "invalid context");
-}
-
 ConcurrentMap<std::string, std::vector<const Method*>>
-MappingGenerator::name_to_methods(const Methods& methods) {
+mapping_generator::name_to_methods(const Methods& methods) {
   ConcurrentMap<std::string, std::vector<const Method*>> method_mapping;
 
   auto queue = sparta::work_queue<const Method*>([&](const Method* method) {
@@ -82,7 +77,7 @@ MappingGenerator::name_to_methods(const Methods& methods) {
 };
 
 ConcurrentMap<std::string, std::vector<const Method*>>
-MappingGenerator::class_to_methods(const Methods& methods) {
+mapping_generator::class_to_methods(const Methods& methods) {
   ConcurrentMap<std::string, std::vector<const Method*>> method_mapping;
 
   auto queue = sparta::work_queue<const Method*>([&](const Method* method) {
@@ -101,7 +96,7 @@ MappingGenerator::class_to_methods(const Methods& methods) {
 };
 
 ConcurrentMap<std::string, std::vector<const Method*>>
-MappingGenerator::class_to_override_methods(const Methods& methods) {
+mapping_generator::class_to_override_methods(const Methods& methods) {
   ConcurrentMap<std::string, std::vector<const Method*>> method_mapping;
 
   auto queue = sparta::work_queue<const Method*>([&](const Method* method) {

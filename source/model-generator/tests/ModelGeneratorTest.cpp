@@ -61,7 +61,6 @@ TEST_F(ModelGeneratorTest, MappingGenerator) {
       context.methods->get(dex_second_overriding_method);
 
   {
-    MappingGenerator generator = MappingGenerator(context);
     std::unordered_map<std::string, std::vector<const Method*>>
         expected_name_to_methods = {
             {"onReceive",
@@ -90,7 +89,7 @@ TEST_F(ModelGeneratorTest, MappingGenerator) {
               second_overriding_method}},
         };
 
-    auto name_to_methods = generator.name_to_methods(*context.methods);
+    auto name_to_methods = mapping_generator::name_to_methods(*context.methods);
     auto name_to_methods_map =
         std::unordered_map<std::string, std::vector<const Method*>>(
             name_to_methods.begin(), name_to_methods.end());
@@ -102,7 +101,8 @@ TEST_F(ModelGeneratorTest, MappingGenerator) {
     }
     EXPECT_EQ(name_to_methods_map, expected_name_to_methods);
 
-    auto class_to_methods = generator.class_to_methods(*context.methods);
+    auto class_to_methods =
+        mapping_generator::class_to_methods(*context.methods);
     auto class_to_methods_map =
         std::unordered_map<std::string, std::vector<const Method*>>(
             class_to_methods.begin(), class_to_methods.end());
@@ -115,7 +115,7 @@ TEST_F(ModelGeneratorTest, MappingGenerator) {
     EXPECT_EQ(class_to_methods_map, expected_class_to_methods);
 
     auto class_to_override_methods =
-        generator.class_to_override_methods(*context.methods);
+        mapping_generator::class_to_override_methods(*context.methods);
     auto class_to_override_methods_map =
         std::unordered_map<std::string, std::vector<const Method*>>(
             class_to_override_methods.begin(), class_to_override_methods.end());
