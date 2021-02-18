@@ -18,7 +18,7 @@ import sys
 import tempfile
 import traceback
 import typing
-import zipfile
+from typing import Optional
 
 import pyredex
 
@@ -41,9 +41,9 @@ class ExtractJexException(ClientError):
 
 
 def _extract_jex_file_if_exists(
-    path: pathlib.Path, target: str, resource_directory: pathlib.Path
+    path: pathlib.Path, target: str, build_directory: pathlib.Path
 ) -> pathlib.Path:
-    jex_extract_directory: pathlib.Path = pathlib.Path(resource_directory) / "jex"
+    jex_extract_directory: pathlib.Path = pathlib.Path(build_directory) / "jex"
 
     def run_unzip_command(command: typing.List[str]) -> pathlib.Path:
         output = subprocess.run(command, stderr=subprocess.PIPE)
@@ -190,17 +190,21 @@ def _build_apk_from_jar(jar_path: pathlib.Path) -> pathlib.Path:
     return pathlib.Path(dex_file)
 
 
-def _get_resource_path(path: str, resource_directory: pathlib.Path) -> str:
+def _get_resource_path(path: str) -> Optional[str]:
+    fbsource = pathlib.Path(__file__)
+    root = pathlib.Path("/")
+    while fbsource.parent != root:
+        fbsource = fbsource.parent
+        if fbsource.name == "fbsource":
+            break
+
+    if fbsource == root:
+        return None
+
     return os.fspath(
-        resource_directory
+        fbsource
         / (pathlib.Path("fbandroid/native/mariana-trench/shim/resources") / path)
     )
-
-
-def _extract_all_resources(resource_directory: pathlib.Path) -> None:
-    pex_path = __file__.split(".pex")[0] + ".pex"
-    with zipfile.ZipFile(pex_path, "r") as file:
-        file.extractall(path=resource_directory)
 
 
 if __name__ == "__main__":
@@ -221,10 +225,8 @@ if __name__ == "__main__":
             path = path + "/"
         return path
 
-    resource_directory = pathlib.Path(tempfile.mkdtemp())
+    build_directory = pathlib.Path(tempfile.mkdtemp())
     try:
-        _extract_all_resources(resource_directory)
-
         parser = argparse.ArgumentParser()
 
         target_arguments = parser.add_argument_group("Target arguments")
@@ -269,21 +271,19 @@ if __name__ == "__main__":
         configuration_arguments.add_argument(
             "--system-jar-configuration-path",
             type=_path_exists,
-            default=_get_resource_path(
-                "default_system_jar_paths.json", resource_directory
-            ),
+            default=_get_resource_path("default_system_jar_paths.json"),
             help="A JSON configuration file with a list of paths to the system jars.",
         )
         configuration_arguments.add_argument(
             "--models-paths",
             type=str,
-            default=_get_resource_path("default_models.json", resource_directory),
+            default=_get_resource_path("default_models.json"),
             help="A `;`-separated list of models files and directories containing models files.",
         )
         configuration_arguments.add_argument(
             "--rules-paths",
             type=str,
-            default=_get_resource_path("rules.json", resource_directory),
+            default=_get_resource_path("rules.json"),
             help="A `;`-separated list of rules files and directories containing rules files.",
         )
         configuration_arguments.add_argument(
@@ -313,9 +313,7 @@ if __name__ == "__main__":
         configuration_arguments.add_argument(
             "--generator-configuration-path",
             type=_path_exists,
-            default=_get_resource_path(
-                "default_generator_config.json", resource_directory
-            ),
+            default=_get_resource_path("default_generator_config.json"),
             help="""A JSON configuration file specifying a list of absolute paths
             to JSON model generators or names of CPP model generators.""",
         )
@@ -408,7 +406,7 @@ if __name__ == "__main__":
             jar_file = _extract_jex_file_if_exists(
                 _build_target(arguments.java_target, mode=arguments.java_mode),
                 arguments.java_target,
-                resource_directory,
+                build_directory,
             )
             desugared_jar_file = _desugar_jar_file(jar_file)
             arguments.apk_path = os.fspath(_build_apk_from_jar(desugared_jar_file))
@@ -508,6 +506,6 @@ if __name__ == "__main__":
         sys.exit(1)
     finally:
         try:
-            shutil.rmtree(resource_directory)
+            shutil.rmtree(build_directory)
         except IOError:
             pass  # Swallow.
