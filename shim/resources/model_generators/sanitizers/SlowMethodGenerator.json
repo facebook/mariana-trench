@@ -35,6 +35,10 @@
               "pattern": "Lcom/google/android/exoplayer2/upstream/cache/CacheUtil;\\.readAndDiscard:.*"
             },
             {
+              "constraint": "signature",
+              "pattern": "Lcom/facebook/graphql/model/GraphQLNode.*"
+            },
+            {
               "constraint": "name",
               "pattern": "mountToGroot"
             },
@@ -77,6 +81,10 @@
             {
               "constraint": "signature",
               "pattern": "Lorg/apache/lucene/.*"
+            },
+            {
+              "constraint": "signature",
+              "pattern": "Lsun/tools/tree/.*"
             },
             {
               "constraint": "signature",
