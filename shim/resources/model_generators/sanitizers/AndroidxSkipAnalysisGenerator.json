@@ -47,8 +47,17 @@
       "find": "methods",
       "where": [
         {
-          "constraint": "signature",
-          "pattern": "Landroidx/core/app/NotificationCompat\\$Builder;\\.setContentIntent:.*"
+          "constraint": "any_of",
+          "inners": [
+            {
+              "constraint": "signature",
+              "pattern": "Landroidx/core/app/NotificationCompat\\$Builder;\\.setContentIntent:.*"
+            },
+            {
+              "constraint": "signature",
+              "pattern": "Landroidx/fragment/app/Fragment;\\.onActivityCreated:.*"
+            }
+          ]
         }
       ],
       "model": {
