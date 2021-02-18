@@ -36,19 +36,6 @@ def _check_executable(path: pathlib.Path) -> pathlib.Path:
     return path
 
 
-class BuildMode(enum.Enum):
-    ASAN = "@fbandroid/mode/asan"
-    ASAN_LSAN = "@fbandroid/mode/asan_lsan"
-    ASAN_UBSAN = "@fbandroid/mode/asan_ubsan"
-    TSAN = "@fbandroid/mode/tsan"
-    UBSAN = "@fbandroid/mode/ubsan"
-    DEV = "@fbandroid/mode/dev"
-    OPT = "@fbandroid/mode/opt"
-
-    def __str__(self) -> str:
-        return self.value
-
-
 class ExtractJexException(ClientError):
     pass
 
@@ -101,7 +88,7 @@ def _extract_jex_file_if_exists(
 
 
 def _build_target(
-    target: str, *, mode: typing.Optional[BuildMode] = None
+    target: str, *, mode: typing.Optional[str] = None
 ) -> pathlib.Path:
     LOG.info(f"Building `{target}`%s...", f" with `{mode}`" if mode else "")
 
@@ -141,7 +128,7 @@ def _build_target(
 
 
 def _build_executable_target(
-    target: str, *, mode: typing.Optional[BuildMode] = None
+    target: str, *, mode: typing.Optional[str] = None
 ) -> pathlib.Path:
     return _check_executable(_build_target(target, mode=mode))
 
@@ -274,9 +261,8 @@ if __name__ == "__main__":
         )
         binary_arguments.add_argument(
             "--build",
-            type=BuildMode,
-            choices=BuildMode,
-            default=BuildMode.OPT,
+            type=str,
+            default="@fbandroid/mode/opt",
             metavar="BUILD_MODE",
             help="The Mariana Trench binary build mode.",
         )
