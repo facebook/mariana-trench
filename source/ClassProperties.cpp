@@ -27,7 +27,8 @@ namespace {
 // manifest leading to features (like exported) not being added.
 std::string strip_subclass(std::string class_name) {
   const static re2::RE2 anonymous_class_regex = re2::RE2("(\\$[0-9]+)+;");
-  const static re2::RE2 service_regex = re2::RE2("Service[^;]*\\$[^;]*Handler");
+  const static re2::RE2 service_regex =
+      re2::RE2("Service[^;]*\\$[^;]*(Handler|Stub)");
 
   re2::RE2::Replace(&class_name, anonymous_class_regex, ";");
   if (boost::contains(class_name, "Provider$Impl")) {
