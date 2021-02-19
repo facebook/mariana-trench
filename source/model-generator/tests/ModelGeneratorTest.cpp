@@ -5,6 +5,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
+#include <Creators.h>
 #include <gtest/gtest.h>
 
 #include <mariana-trench/Redex.h>
@@ -49,6 +50,23 @@ TEST_F(ModelGeneratorTest, MappingGenerator) {
       /* return_type */ "V",
       /* super */ dex_first_overriding_method->get_class());
   DexStore store("test-stores");
+
+  auto interface = DexType::make_type("LInterface;");
+  ClassCreator creator(interface);
+  creator.set_access(DexAccessFlags::ACC_INTERFACE);
+  creator.set_super(type::java_lang_Object());
+  creator.create();
+  auto super_interface = DexType::make_type("LSuperInterface;");
+  ClassCreator super_creator(super_interface);
+  super_creator.set_access(DexAccessFlags::ACC_INTERFACE);
+  super_creator.set_super(type::java_lang_Object());
+  super_creator.create();
+
+  type_class(dex_base_method->get_class())
+      ->set_interfaces(DexTypeList::make_type_list({interface}));
+  type_class(interface)->set_interfaces(
+      DexTypeList::make_type_list({super_interface}));
+
   store.add_classes(scope);
   auto context = test::make_context(store);
 
@@ -78,6 +96,10 @@ TEST_F(ModelGeneratorTest, MappingGenerator) {
         expected_class_to_override_methods = {
             {"Lcom/mariana_trench/artificial/ArrayAllocation;",
              {array_allocation_method}},
+            {"LSuperInterface;",
+             {base_method, first_overriding_method, second_overriding_method}},
+            {"LInterface;",
+             {base_method, first_overriding_method, second_overriding_method}},
             {"LClass;",
              {base_method, first_overriding_method, second_overriding_method}},
             {"LSubclass;", {first_overriding_method, second_overriding_method}},

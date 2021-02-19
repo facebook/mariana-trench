@@ -103,7 +103,8 @@ mapping_generator::class_to_override_methods(const Methods& methods) {
     std::string class_name = method->get_class()->get_name()->str();
     auto* dex_class = redex::get_class(class_name);
     std::unordered_set<std::string> parent_classes =
-        generator::get_parents_from_class(dex_class);
+        generator::get_parents_from_class(
+            dex_class, /* include_interfaces */ true);
     parent_classes.insert(class_name);
     for (const auto& parent_class : parent_classes) {
       method_mapping.update(
@@ -137,22 +138,40 @@ std::optional<std::string> generator::get_super_type(const Method* method) {
   return super_class->get_name()->str();
 }
 
-std::unordered_set<std::string> generator::get_parents_from_class(
+std::unordered_set<std::string> generator::get_interfaces_from_class(
     DexClass* dex_class) {
+  std::unordered_set<std::string> interfaces;
+  std::deque<DexType*> interface_types =
+      dex_class->get_interfaces()->get_type_list();
+  while (!interface_types.empty()) {
+    DexType* interface = interface_types.back();
+    interface_types.pop_back();
+    interfaces.emplace(interface->get_name()->str());
+    std::deque<DexType*> super_interface_types =
+        type_class(interface)->get_interfaces()->get_type_list();
+    interface_types.insert(
+        interface_types.end(),
+        super_interface_types.begin(),
+        super_interface_types.end());
+  }
+  return interfaces;
+}
+
+std::unordered_set<std::string> generator::get_parents_from_class(
+    DexClass* dex_class,
+    bool include_interfaces = false) {
   std::unordered_set<std::string> parent_classes;
 
-  while (true) {
+  while (dex_class != nullptr) {
     const DexType* super_type = dex_class->get_super_class();
     if (super_type) {
       parent_classes.emplace(super_type->get_name()->str());
       DexClass* super_class = type_class(super_type);
-      if (super_class) {
-        dex_class = super_class;
-      } else {
-        break;
+      if (include_interfaces) {
+        auto interfaces = generator::get_interfaces_from_class(dex_class);
+        parent_classes.merge(interfaces);
       }
-    } else {
-      break;
+      dex_class = super_class;
     }
   }
   return parent_classes;

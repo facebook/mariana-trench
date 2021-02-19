@@ -76,7 +76,11 @@ const std::string& get_method_name(const Method* method);
 std::optional<std::string> get_super_type(const Method* method);
 std::optional<const DexType*> get_return_type(const Method* method);
 std::optional<std::string> get_return_type_string(const Method* method);
-std::unordered_set<std::string> get_parents_from_class(DexClass* dex_class);
+std::unordered_set<std::string> get_interfaces_from_class(
+    DexClass* dex_class);
+std::unordered_set<std::string> get_parents_from_class(
+    DexClass* dex_class,
+    bool include_interfaces);
 std::unordered_set<std::string> get_custom_parents_from_class(
     DexClass* dex_class);
 std::string get_outer_class(const std::string& classname);
