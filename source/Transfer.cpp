@@ -594,6 +594,7 @@ void check_flows_to_array_allocation(
       /* origins */ MethodSet{array_allocation_method},
       /* inferred features */ {},
       /* user features */ {},
+      /* via_type_of_ports */ {},
       /* local_positions */ {})};
   auto instruction_sources = instruction->srcs_vec();
   for (std::size_t parameter_position = 0;

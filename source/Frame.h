@@ -13,6 +13,7 @@
 #include <json/json.h>
 
 #include <AbstractDomain.h>
+#include <HashedSetAbstractDomain.h>
 
 #include <mariana-trench/Access.h>
 #include <mariana-trench/Assert.h>
@@ -29,6 +30,8 @@
 #include <mariana-trench/Position.h>
 
 namespace marianatrench {
+
+using RootSetAbstractDomain = sparta::HashedSetAbstractDomain<Root>;
 
 /**
  * Represents a frame of a trace, i.e a single hop between methods.
@@ -54,6 +57,11 @@ namespace marianatrench {
  * For instance, "via-numerical-operator" could be used to express that the
  * trace goes through a numerical operator.
  *
+ * `via_type_of_ports` is a set of ports for each of which we would like to
+ * materialize a 'via-type-of' feature with the type of the port seen at a
+ * callsite and include it in the inferred features of the taint at that
+ * callsite
+ *
  * `local_positions` is the set of positions that the taint flowed through
  * within the current method.
  *
@@ -78,6 +86,7 @@ class Frame final : public sparta::AbstractDomain<Frame> {
       MethodSet origins,
       FeatureMayAlwaysSet inferred_features,
       FeatureSet user_features,
+      RootSetAbstractDomain via_type_of_ports,
       LocalPositionSet local_positions)
       : kind_(kind),
         callee_port_(std::move(callee_port)),
@@ -87,6 +96,7 @@ class Frame final : public sparta::AbstractDomain<Frame> {
         origins_(std::move(origins)),
         inferred_features_(std::move(inferred_features)),
         user_features_(std::move(user_features)),
+        via_type_of_ports_(std::move(via_type_of_ports)),
         local_positions_(std::move(local_positions)) {
     mt_assert(kind_ != nullptr);
     mt_assert(distance_ >= 0);
@@ -107,6 +117,7 @@ class Frame final : public sparta::AbstractDomain<Frame> {
         origins,
         inferred_features,
         user_features,
+        /* via_type_of_ports */ {},
         /* local_positions */ {});
   }
 
@@ -136,6 +147,10 @@ class Frame final : public sparta::AbstractDomain<Frame> {
 
   int distance() const {
     return distance_;
+  }
+
+  const RootSetAbstractDomain& via_type_of_ports() const {
+    return via_type_of_ports_;
   }
 
   void set_origins(const MethodSet& origins);
@@ -249,6 +264,7 @@ class Frame final : public sparta::AbstractDomain<Frame> {
   MethodSet origins_;
   FeatureMayAlwaysSet inferred_features_;
   FeatureSet user_features_;
+  RootSetAbstractDomain via_type_of_ports_;
   LocalPositionSet local_positions_;
 };
 

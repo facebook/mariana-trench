@@ -55,6 +55,7 @@ bool Frame::leq(const Frame& other) const {
         distance_ >= other.distance_ && origins_.leq(other.origins_) &&
         inferred_features_.leq(other.inferred_features_) &&
         user_features_.leq(other.user_features_) &&
+        via_type_of_ports_.leq(other.via_type_of_ports_) &&
         local_positions_.leq(other.local_positions_);
   }
 }
@@ -70,6 +71,7 @@ bool Frame::equals(const Frame& other) const {
         distance_ == other.distance_ && origins_ == other.origins_ &&
         inferred_features_ == other.inferred_features_ &&
         user_features_ == other.user_features_ &&
+        via_type_of_ports_ == other.via_type_of_ports_ &&
         local_positions_ == other.local_positions_;
   }
 }
@@ -96,6 +98,7 @@ void Frame::join_with(const Frame& other) {
     origins_.join_with(other.origins_);
     inferred_features_.join_with(other.inferred_features_);
     user_features_.join_with(other.user_features_);
+    via_type_of_ports_.join_with(other.via_type_of_ports_);
     local_positions_.join_with(other.local_positions_);
   }
 
@@ -129,6 +132,7 @@ Frame Frame::artificial_source(AccessPath access_path) {
       /* origins */ {},
       /* inferred_features */ {},
       /* user_features */ {},
+      /* via_type_of_ports */ {},
       /* local_positions */ {});
 }
 
@@ -245,6 +249,7 @@ Frame Frame::from_json(const Json::Value& value, Context& context) {
       std::move(origins),
       std::move(inferred_features),
       std::move(user_features),
+      {},
       std::move(local_positions));
 }
 

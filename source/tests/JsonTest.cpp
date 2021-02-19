@@ -598,6 +598,7 @@ TEST_F(JsonTest, Frame) {
           /* origins */ {},
           /* inferred_features */ FeatureMayAlwaysSet::bottom(),
           /* user_features */ {},
+          /* via_type_of_ports */ {},
           /* local_positions */ {}));
 
   // Parse the kind for partial leaves.
@@ -624,6 +625,7 @@ TEST_F(JsonTest, Frame) {
           /* origins */ {},
           /* inferred_features */ FeatureMayAlwaysSet::bottom(),
           /* user_features */ {},
+          /* via_type_of_ports */ {},
           /* local_positions */ {}));
   const auto* frame_kind = frame.kind()->as<PartialKind>();
   EXPECT_NE(frame_kind, nullptr);
@@ -655,6 +657,7 @@ TEST_F(JsonTest, Frame) {
           /* origins */ {},
           /* inferred_features */ FeatureMayAlwaysSet::bottom(),
           /* user_features */ {},
+          /* via_type_of_ports */ {},
           /* local_positions */ {}),
       context);
   EXPECT_JSON_EQ(
@@ -674,6 +677,7 @@ TEST_F(JsonTest, Frame) {
           /* origins */ {},
           /* inferred_features */ FeatureMayAlwaysSet::bottom(),
           /* user_features */ {},
+          /* via_type_of_ports */ {},
           /* local_positions */ {}),
       context);
 
@@ -696,6 +700,7 @@ TEST_F(JsonTest, Frame) {
           /* origins */ {},
           /* inferred_features */ FeatureMayAlwaysSet::bottom(),
           /* user_features */ {},
+          /* via_type_of_ports */ {},
           /* local_positions */ {}),
       context);
   EXPECT_JSON_EQ(
@@ -716,6 +721,7 @@ TEST_F(JsonTest, Frame) {
           /* origins */ {},
           /* inferred_features */ FeatureMayAlwaysSet::bottom(),
           /* user_features */ {},
+          /* via_type_of_ports */ {},
           /* local_positions */ {}),
       context);
 
@@ -744,6 +750,7 @@ TEST_F(JsonTest, Frame) {
           /* origins */ MethodSet{source_one},
           /* inferred_features */ FeatureMayAlwaysSet::bottom(),
           /* user_features */ {},
+          /* via_type_of_ports */ {},
           /* local_positions */ {}),
       context);
   EXPECT_JSON_EQ(
@@ -762,6 +769,7 @@ TEST_F(JsonTest, Frame) {
           /* origins */ MethodSet{source_one, source_two},
           /* inferred_features */ FeatureMayAlwaysSet::bottom(),
           /* user_features */ {},
+          /* via_type_of_ports */ {},
           /* local_positions */ {}),
       context);
 
@@ -783,6 +791,7 @@ TEST_F(JsonTest, Frame) {
           /* inferred_features */
           FeatureMayAlwaysSet{context.features->get("FeatureOne")},
           /* user_features */ {},
+          /* via_type_of_ports */ {},
           /* local_positions */ {}),
       context);
   EXPECT_JSON_EQ(
@@ -804,6 +813,7 @@ TEST_F(JsonTest, Frame) {
               context.features->get("FeatureOne"),
               context.features->get("FeatureTwo")},
           /* user_features */ {},
+          /* via_type_of_ports */ {},
           /* local_positions */ {}),
       context);
   EXPECT_JSON_EQ(
@@ -826,6 +836,7 @@ TEST_F(JsonTest, Frame) {
               /* may */ FeatureSet{context.features->get("FeatureOne")},
               /* always */ FeatureSet{context.features->get("FeatureTwo")}),
           /* user_features */ {},
+          /* via_type_of_ports */ {},
           /* local_positions */ {}),
       context);
   EXPECT_JSON_EQ(
@@ -847,6 +858,7 @@ TEST_F(JsonTest, Frame) {
               /* may */ FeatureSet{context.features->get("FeatureOne")},
               /* always */ FeatureSet{}),
           /* user_features */ {},
+          /* via_type_of_ports */ {},
           /* local_positions */ {}),
       context);
   EXPECT_JSON_EQ(
@@ -871,6 +883,7 @@ TEST_F(JsonTest, Frame) {
                   context.features->get("FeatureTwo")},
               /* always */ FeatureSet{}),
           /* user_features */ {},
+          /* via_type_of_ports */ {},
           /* local_positions */ {}),
       context);
   EXPECT_EQ(
@@ -891,6 +904,7 @@ TEST_F(JsonTest, Frame) {
           /* inferred_features */ FeatureMayAlwaysSet::bottom(),
           /* user_features */
           FeatureSet{context.features->get("FeatureOne")},
+          /* via_type_of_ports */ {},
           /* local_positions */ {}));
   EXPECT_EQ(
       Frame::from_json(
@@ -912,6 +926,7 @@ TEST_F(JsonTest, Frame) {
           FeatureSet{
               context.features->get("FeatureOne"),
               context.features->get("FeatureTwo")},
+          /* via_type_of_ports */ {},
           /* local_positions */ {}));
   EXPECT_EQ(
       Frame::from_json(
@@ -934,6 +949,7 @@ TEST_F(JsonTest, Frame) {
               /* may */ FeatureSet{context.features->get("FeatureTwo")},
               /* always */ FeatureSet{}),
           /* user_features */ FeatureSet{context.features->get("FeatureOne")},
+          /* via_type_of_ports */ {},
           /* local_positions */ {}));
   EXPECT_EQ(
       Frame::from_json(
@@ -958,6 +974,7 @@ TEST_F(JsonTest, Frame) {
               /* always */
               FeatureSet{context.features->get("FeatureThree")}),
           /* user_features */ FeatureSet{context.features->get("FeatureOne")},
+          /* via_type_of_ports */ {},
           /* local_positions */ {}));
   EXPECT_EQ(
       Frame::from_json(
@@ -979,6 +996,7 @@ TEST_F(JsonTest, Frame) {
           /* inferred_features */ {},
           /* user_features */
           FeatureSet{context.features->get("FeatureOne")},
+          /* via_type_of_ports */ {},
           /* local_positions */ {}));
 
   // Parse local positions.
@@ -999,6 +1017,7 @@ TEST_F(JsonTest, Frame) {
           /* inferred_features */ FeatureMayAlwaysSet::bottom(),
           /* user_features */ {},
           /* local_positions */
+          /* via_type_of_ports */ {},
           LocalPositionSet{context.positions->get(std::nullopt, 1)}),
       context);
   EXPECT_JSON_EQ(
@@ -1021,6 +1040,7 @@ TEST_F(JsonTest, Frame) {
           /* origins */ {},
           /* inferred_features */ FeatureMayAlwaysSet::bottom(),
           /* user_features */ {},
+          /* via_type_of_ports */ {},
           /* local_positions */
           LocalPositionSet{
               context.positions->get(std::nullopt, 10),
@@ -1050,6 +1070,7 @@ TEST_F(JsonTest, Frame) {
           /* origins */ {},
           /* inferred_features */ FeatureMayAlwaysSet::bottom(),
           /* user_features */ {},
+          /* via_type_of_ports */ {},
           /* local_positions */
           LocalPositionSet{
               context.positions->get(std::nullopt, 1),

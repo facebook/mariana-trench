@@ -215,6 +215,7 @@ Frame FrameSet::propagate(
       std::move(origins),
       std::move(inferred_features),
       FeatureSet::bottom(),
+      /* via_type_of_ports */ {},
       /* local_positions */ {});
 }
 
@@ -237,6 +238,7 @@ FrameSet FrameSet::attach_position(const Position* position) const {
             frame.origins(),
             frame.features(),
             FeatureSet::bottom(),
+            /* via_type_of_ports */ {},
             frame.local_positions()));
       }
     }

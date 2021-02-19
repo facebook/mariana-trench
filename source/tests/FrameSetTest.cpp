@@ -44,6 +44,7 @@ TEST_F(FrameSetTest, Add) {
       /* origins */ MethodSet{one},
       /* inferred_features */ FeatureMayAlwaysSet{feature_one},
       /* user_features */ {},
+      /* via_type_of_ports */ {},
       /* local_positions */ {}));
   EXPECT_FALSE(frames.is_bottom());
   EXPECT_EQ(frames.kind(), source_kind);
@@ -58,6 +59,7 @@ TEST_F(FrameSetTest, Add) {
           /* origins */ MethodSet{one},
           /* inferred_features */ FeatureMayAlwaysSet{feature_one},
           /* user_features */ {},
+          /* via_type_of_ports */ {},
           /* local_positions */ {})});
 
   frames.add(Frame(
@@ -69,6 +71,7 @@ TEST_F(FrameSetTest, Add) {
       /* origins */ MethodSet{two},
       /* inverred_features */ FeatureMayAlwaysSet{feature_two},
       /* user_features */ FeatureSet{user_feature_one},
+      /* via_type_of_ports */ {},
       /* local_positions */ {}));
   EXPECT_EQ(
       frames,
@@ -82,6 +85,7 @@ TEST_F(FrameSetTest, Add) {
           /* inferred_features */
           FeatureMayAlwaysSet::make_may({feature_one, feature_two}),
           /* user_features */ FeatureSet{user_feature_one},
+          /* via_type_of_ports */ {},
           /* local_positions */ {})});
 
   frames.add(Frame(
@@ -93,6 +97,7 @@ TEST_F(FrameSetTest, Add) {
       /* origins */ MethodSet{one},
       /* inferred_features */ FeatureMayAlwaysSet{feature_one},
       /* user_features */ {},
+      /* via_type_of_ports */ {},
       /* local_positions */ {}));
   EXPECT_EQ(
       frames,
@@ -107,6 +112,7 @@ TEST_F(FrameSetTest, Add) {
               /* inferred_features */
               FeatureMayAlwaysSet::make_may({feature_one, feature_two}),
               /* user_features */ FeatureSet{user_feature_one},
+              /* via_type_of_ports */ {},
               /* local_positions */ {}),
           Frame(
               /* kind */ source_kind,
@@ -117,6 +123,7 @@ TEST_F(FrameSetTest, Add) {
               /* origins */ MethodSet{one},
               /* inferred_features */ FeatureMayAlwaysSet{feature_one},
               /* user_features */ {},
+              /* via_type_of_ports */ {},
               /* local_positions */ {}),
       }));
 
@@ -129,6 +136,7 @@ TEST_F(FrameSetTest, Add) {
       /* origins */ MethodSet{two},
       /* inferred_features */ FeatureMayAlwaysSet{feature_one, feature_two},
       /* user_features */ {},
+      /* via_type_of_ports */ {},
       /* local_positions */ {}));
   EXPECT_EQ(
       frames,
@@ -143,6 +151,7 @@ TEST_F(FrameSetTest, Add) {
               /* inferred_features */
               FeatureMayAlwaysSet::make_may({feature_one, feature_two}),
               /* user_features */ FeatureSet{user_feature_one},
+              /* via_type_of_ports */ {},
               /* local_positions */ {}),
           Frame(
               /* kind */ source_kind,
@@ -156,6 +165,7 @@ TEST_F(FrameSetTest, Add) {
                   /* may */ FeatureSet{feature_one, feature_two},
                   /* always */ FeatureSet{feature_one}),
               /* user_features */ {},
+              /* via_type_of_ports */ {},
               /* local_positions */ {}),
       }));
 
@@ -169,6 +179,7 @@ TEST_F(FrameSetTest, Add) {
       /* origins */ MethodSet{one},
       /* inferred_features */ FeatureMayAlwaysSet{feature_one},
       /* user_features */ {},
+      /* via_type_of_ports */ {},
       /* local_positions */ {}));
   EXPECT_EQ(
       frames,
@@ -183,6 +194,7 @@ TEST_F(FrameSetTest, Add) {
               /* inferred_features */
               FeatureMayAlwaysSet::make_may({feature_one, feature_two}),
               /* user_features */ FeatureSet{user_feature_one},
+              /* via_type_of_ports */ {},
               /* local_positions */ {}),
           Frame(
               /* kind */ source_kind,
@@ -196,6 +208,7 @@ TEST_F(FrameSetTest, Add) {
                   /* may */ FeatureSet{feature_one, feature_two},
                   /* always */ FeatureSet{feature_one}),
               /* user_features */ {},
+              /* via_type_of_ports */ {},
               /* local_positions */ {}),
           Frame(
               /* kind */ source_kind,
@@ -207,6 +220,7 @@ TEST_F(FrameSetTest, Add) {
               /* origins */ MethodSet{one},
               /* inferred_features */ FeatureMayAlwaysSet{feature_one},
               /* user_features */ {},
+              /* via_type_of_ports */ {},
               /* local_positions */ {}),
       }));
 }
@@ -233,6 +247,7 @@ TEST_F(FrameSetTest, ArtificialSources) {
       /* origins */ {},
       /* inferred_features */ FeatureMayAlwaysSet{feature_one},
       /* user_features */ FeatureSet{user_feature_one},
+      /* via_type_of_ports */ {},
       /* local_positions */ {}));
   EXPECT_EQ(
       frames,
@@ -246,6 +261,7 @@ TEST_F(FrameSetTest, ArtificialSources) {
           /* origins */ {},
           /* inferred_features */ FeatureMayAlwaysSet{feature_one},
           /* user_features */ FeatureSet{user_feature_one},
+          /* via_type_of_ports */ {},
           /* local_positions */ {})});
 
   // We use the common prefix of the callee port.
@@ -259,6 +275,7 @@ TEST_F(FrameSetTest, ArtificialSources) {
       /* origins */ {},
       /* inferred_features */ FeatureMayAlwaysSet{feature_two},
       /* user_features */ FeatureSet{user_feature_two},
+      /* via_type_of_ports */ {},
       /* local_positions */ {}));
   EXPECT_EQ(
       frames,
@@ -274,6 +291,7 @@ TEST_F(FrameSetTest, ArtificialSources) {
           FeatureMayAlwaysSet::make_may({feature_one, feature_two}),
           /* user_features */
           FeatureSet{user_feature_one, user_feature_two},
+          /* via_type_of_ports */ {},
           /* local_positions */ {})});
 
   // We do not merge when the port root is different.
@@ -287,6 +305,7 @@ TEST_F(FrameSetTest, ArtificialSources) {
       /* origins */ {},
       /* inferred_features */ {},
       /* user_features */ {},
+      /* via_type_of_ports */ {},
       /* local_positions */ {}));
   EXPECT_EQ(
       frames,
@@ -303,6 +322,7 @@ TEST_F(FrameSetTest, ArtificialSources) {
               FeatureMayAlwaysSet::make_may({feature_one, feature_two}),
               /* user_features */
               FeatureSet{user_feature_one, user_feature_two},
+              /* via_type_of_ports */ {},
               /* local_positions */ {}),
           Frame(
               /* kind */ Kinds::artificial_source(),
@@ -314,6 +334,7 @@ TEST_F(FrameSetTest, ArtificialSources) {
               /* origins */ {},
               /* inferred_features */ {},
               /* user_features */ {},
+              /* via_type_of_ports */ {},
               /* local_positions */ {}),
       }));
 }
@@ -346,6 +367,7 @@ TEST_F(FrameSetTest, Leq) {
                /* origins */ MethodSet{one},
                /* inferred_features */ {},
                /* user_features */ {},
+               /* via_type_of_ports */ {},
                /* local_positions */ {}),
            Frame(
                /* kind */ test_kind,
@@ -356,6 +378,7 @@ TEST_F(FrameSetTest, Leq) {
                /* origins */ MethodSet{two},
                /* inferred_features */ {},
                /* user_features */ {},
+               /* via_type_of_ports */ {},
                /* local_positions */ {}),
        })
           .leq(FrameSet{
@@ -368,6 +391,7 @@ TEST_F(FrameSetTest, Leq) {
                   /* origins */ MethodSet{one},
                   /* inferred_features */ {},
                   /* user_features */ {},
+                  /* via_type_of_ports */ {},
                   /* local_positions */ {}),
               Frame(
                   /* kind */ test_kind,
@@ -378,6 +402,7 @@ TEST_F(FrameSetTest, Leq) {
                   /* origins */ MethodSet{two},
                   /* inferred_features */ {},
                   /* user_features */ {},
+                  /* via_type_of_ports */ {},
                   /* local_positions */ {}),
               Frame(
                   /* kind */ test_kind,
@@ -388,6 +413,7 @@ TEST_F(FrameSetTest, Leq) {
                   /* origins */ MethodSet{three},
                   /* inferred_features */ {},
                   /* user_features */ {},
+                  /* via_type_of_ports */ {},
                   /* local_positions */ {}),
           }));
   EXPECT_FALSE(
@@ -401,6 +427,7 @@ TEST_F(FrameSetTest, Leq) {
                /* origins */ MethodSet{one},
                /* inferred_features */ {},
                /* user_features */ {},
+               /* via_type_of_ports */ {},
                /* local_positions */ {}),
            Frame(
                /* kind */ test_kind,
@@ -411,6 +438,7 @@ TEST_F(FrameSetTest, Leq) {
                /* origins */ MethodSet{two},
                /* inferred_features */ {},
                /* user_features */ {},
+               /* via_type_of_ports */ {},
                /* local_positions */ {}),
            Frame(
                /* kind */ test_kind,
@@ -421,6 +449,7 @@ TEST_F(FrameSetTest, Leq) {
                /* origins */ MethodSet{three},
                /* inferred_features */ {},
                /* user_features */ {},
+               /* via_type_of_ports */ {},
                /* local_positions */ {}),
        })
           .leq(FrameSet{
@@ -433,6 +462,7 @@ TEST_F(FrameSetTest, Leq) {
                   /* origins */ MethodSet{one},
                   /* inferred_features */ {},
                   /* user_features */ {},
+                  /* via_type_of_ports */ {},
                   /* local_positions */ {}),
               Frame(
                   /* kind */ test_kind,
@@ -443,6 +473,7 @@ TEST_F(FrameSetTest, Leq) {
                   /* origins */ MethodSet{two},
                   /* inferred_features */ {},
                   /* user_features */ {},
+                  /* via_type_of_ports */ {},
                   /* local_positions */ {}),
           }));
   EXPECT_FALSE(
@@ -456,6 +487,7 @@ TEST_F(FrameSetTest, Leq) {
                /* origins */ MethodSet{one},
                /* inferred_features */ {},
                /* user_features */ {},
+               /* via_type_of_ports */ {},
                /* local_positions */ {}),
            Frame(
                /* kind */ test_kind,
@@ -466,6 +498,7 @@ TEST_F(FrameSetTest, Leq) {
                /* origins */ MethodSet{two},
                /* inferred_features */ {},
                /* user_features */ {},
+               /* via_type_of_ports */ {},
                /* local_positions */ {}),
        })
           .leq(FrameSet{
@@ -478,6 +511,7 @@ TEST_F(FrameSetTest, Leq) {
                   /* origins */ MethodSet{one},
                   /* inferred_features */ {},
                   /* user_features */ {},
+                  /* via_type_of_ports */ {},
                   /* local_positions */ {}),
               Frame(
                   /* kind */ test_kind,
@@ -488,6 +522,7 @@ TEST_F(FrameSetTest, Leq) {
                   /* origins */ MethodSet{two},
                   /* inferred_features */ {},
                   /* user_features */ {},
+                  /* via_type_of_ports */ {},
                   /* local_positions */ {}),
               Frame(
                   /* kind */ test_kind,
@@ -498,6 +533,7 @@ TEST_F(FrameSetTest, Leq) {
                   /* origins */ MethodSet{three},
                   /* inferred_features */ {},
                   /* user_features */ {},
+                  /* via_type_of_ports */ {},
                   /* local_positions */ {}),
           }));
   EXPECT_TRUE(
@@ -512,6 +548,7 @@ TEST_F(FrameSetTest, Leq) {
                /* origins */ MethodSet{one},
                /* inferred_features */ {},
                /* user_features */ {},
+               /* via_type_of_ports */ {},
                /* local_positions */ {}),
            Frame(
                /* kind */ test_kind,
@@ -523,6 +560,7 @@ TEST_F(FrameSetTest, Leq) {
                /* origins */ MethodSet{two},
                /* inferred_features */ {},
                /* user_features */ {},
+               /* via_type_of_ports */ {},
                /* local_positions */ {}),
        })
           .leq(FrameSet{
@@ -536,6 +574,7 @@ TEST_F(FrameSetTest, Leq) {
                   /* origins */ MethodSet{one},
                   /* inferred_features */ {},
                   /* user_features */ {},
+                  /* via_type_of_ports */ {},
                   /* local_positions */ {}),
               Frame(
                   /* kind */ test_kind,
@@ -547,6 +586,7 @@ TEST_F(FrameSetTest, Leq) {
                   /* origins */ MethodSet{two},
                   /* inferred_features */ {},
                   /* user_features */ {},
+                  /* via_type_of_ports */ {},
                   /* local_positions */ {}),
               Frame(
                   /* kind */ test_kind,
@@ -557,6 +597,7 @@ TEST_F(FrameSetTest, Leq) {
                   /* origins */ MethodSet{three},
                   /* inferred_features */ {},
                   /* user_features */ {},
+                  /* via_type_of_ports */ {},
                   /* local_positions */ {}),
           }));
   EXPECT_TRUE(
@@ -571,6 +612,7 @@ TEST_F(FrameSetTest, Leq) {
                /* origins */ MethodSet{one},
                /* inferred_features */ {},
                /* user_features */ {},
+               /* via_type_of_ports */ {},
                /* local_positions */ {}),
            Frame(
                /* kind */ test_kind,
@@ -582,6 +624,7 @@ TEST_F(FrameSetTest, Leq) {
                /* origins */ MethodSet{two},
                /* inferred_features */ {},
                /* user_features */ {},
+               /* via_type_of_ports */ {},
                /* local_positions */ {}),
            Frame(
                /* kind */ test_kind,
@@ -593,6 +636,7 @@ TEST_F(FrameSetTest, Leq) {
                /* origins */ MethodSet{three},
                /* inferred_features */ {},
                /* user_features */ {},
+               /* via_type_of_ports */ {},
                /* local_positions */ {}),
        })
           .leq(FrameSet{
@@ -606,6 +650,7 @@ TEST_F(FrameSetTest, Leq) {
                   /* origins */ MethodSet{one},
                   /* inferred_features */ {},
                   /* user_features */ {},
+                  /* via_type_of_ports */ {},
                   /* local_positions */ {}),
               Frame(
                   /* kind */ test_kind,
@@ -617,6 +662,7 @@ TEST_F(FrameSetTest, Leq) {
                   /* origins */ MethodSet{two},
                   /* inferred_features */ {},
                   /* user_features */ {},
+                  /* via_type_of_ports */ {},
                   /* local_positions */ {}),
               Frame(
                   /* kind */ test_kind,
@@ -627,6 +673,7 @@ TEST_F(FrameSetTest, Leq) {
                   /* origins */ MethodSet{three},
                   /* inferred_features */ {},
                   /* user_features */ {},
+                  /* via_type_of_ports */ {},
                   /* local_positions */ {}),
           }));
 }
@@ -670,6 +717,7 @@ TEST_F(FrameSetTest, Difference) {
           /* origins */ MethodSet{one},
           /* inferred_features */ {},
           /* user_features */ {},
+          /* via_type_of_ports */ {},
           /* local_positions */ {}),
   });
   EXPECT_TRUE(frames.is_bottom());
@@ -684,6 +732,7 @@ TEST_F(FrameSetTest, Difference) {
           /* origins */ MethodSet{one},
           /* inferred_features */ FeatureMayAlwaysSet{feature_one},
           /* user_features */ FeatureSet{user_feature_one},
+          /* via_type_of_ports */ {},
           /* local_positions */ {}),
   };
 
@@ -702,6 +751,7 @@ TEST_F(FrameSetTest, Difference) {
           /* origins */ MethodSet{one},
           /* inferred_features */ FeatureMayAlwaysSet{feature_one},
           /* user_features */ FeatureSet{user_feature_one},
+          /* via_type_of_ports */ {},
           /* local_positions */ {}),
   });
   EXPECT_TRUE(frames.is_bottom());
@@ -718,6 +768,7 @@ TEST_F(FrameSetTest, Difference) {
           /* origins */ MethodSet{one},
           /* inferred_features */ {},
           /* user_features */ {},
+          /* via_type_of_ports */ {},
           /* local_positions */ {}),
   });
   EXPECT_EQ(frames, initial_frames);
@@ -734,6 +785,7 @@ TEST_F(FrameSetTest, Difference) {
           /* origins */ MethodSet{one},
           /* inferred_features */ FeatureMayAlwaysSet{feature_two},
           /* user_features */ FeatureSet{user_feature_one},
+          /* via_type_of_ports */ {},
           /* local_positions */ {}),
   });
   EXPECT_EQ(frames, initial_frames);
@@ -750,6 +802,7 @@ TEST_F(FrameSetTest, Difference) {
           /* origins */ MethodSet{one},
           /* inferred_features */ FeatureMayAlwaysSet{feature_one},
           /* user_features */ FeatureSet{user_feature_two},
+          /* via_type_of_ports */ {},
           /* local_positions */ {}),
   });
   EXPECT_EQ(frames, initial_frames);
@@ -766,6 +819,7 @@ TEST_F(FrameSetTest, Difference) {
           /* origins */ MethodSet{one},
           /* inferred_features */ FeatureMayAlwaysSet{feature_one},
           /* user_features */ FeatureSet{user_feature_one},
+          /* via_type_of_ports */ {},
           /* local_positions */ {}),
   });
   EXPECT_EQ(frames, initial_frames);
@@ -780,6 +834,7 @@ TEST_F(FrameSetTest, Difference) {
           /* origins */ MethodSet{one},
           /* inferred_features */ FeatureMayAlwaysSet{feature_one},
           /* user_features */ FeatureSet{user_feature_one},
+          /* via_type_of_ports */ {},
           /* local_positions */ {}),
       Frame(
           /* kind */ test_kind,
@@ -790,6 +845,7 @@ TEST_F(FrameSetTest, Difference) {
           /* origins */ MethodSet{two},
           /* inferred_features */ FeatureMayAlwaysSet{feature_two},
           /* user_features */ FeatureSet{user_feature_two},
+          /* via_type_of_ports */ {},
           /* local_positions */ {}),
   };
   frames.difference_with(FrameSet{
@@ -802,6 +858,7 @@ TEST_F(FrameSetTest, Difference) {
           /* origins */ MethodSet{one},
           /* inferred_features */ FeatureMayAlwaysSet{feature_one},
           /* user_features */ FeatureSet{user_feature_one},
+          /* via_type_of_ports */ {},
           /* local_positions */ {}),
       Frame(
           /* kind */ test_kind,
@@ -812,6 +869,7 @@ TEST_F(FrameSetTest, Difference) {
           /* origins */ MethodSet{two},
           /* inferred_features */ FeatureMayAlwaysSet{feature_two},
           /* user_features */ FeatureSet{user_feature_two},
+          /* via_type_of_ports */ {},
           /* local_positions */ {}),
       Frame(
           /* kind */ test_kind,
@@ -822,6 +880,7 @@ TEST_F(FrameSetTest, Difference) {
           /* origins */ MethodSet{three},
           /* inferred_features */ FeatureMayAlwaysSet{feature_three},
           /* user_features */ FeatureSet{user_feature_three},
+          /* via_type_of_ports */ {},
           /* local_positions */ {}),
   });
   EXPECT_TRUE(frames.is_bottom());
@@ -836,6 +895,7 @@ TEST_F(FrameSetTest, Difference) {
           /* origins */ MethodSet{one},
           /* inferred_features */ {},
           /* user_features */ {},
+          /* via_type_of_ports */ {},
           /* local_positions */ {}),
       Frame(
           /* kind */ test_kind,
@@ -846,6 +906,7 @@ TEST_F(FrameSetTest, Difference) {
           /* origins */ MethodSet{two},
           /* inferred_features */ {},
           /* user_features */ {},
+          /* via_type_of_ports */ {},
           /* local_positions */ {}),
       Frame(
           /* kind */ test_kind,
@@ -856,6 +917,7 @@ TEST_F(FrameSetTest, Difference) {
           /* origins */ MethodSet{three},
           /* inferred_features */ {},
           /* user_features */ {},
+          /* via_type_of_ports */ {},
           /* local_positions */ {}),
   };
   frames.difference_with(FrameSet{
@@ -868,6 +930,7 @@ TEST_F(FrameSetTest, Difference) {
           /* origins */ MethodSet{one},
           /* inferred_features */ {},
           /* user_features */ {},
+          /* via_type_of_ports */ {},
           /* local_positions */ {}),
       Frame(
           /* kind */ test_kind,
@@ -878,6 +941,7 @@ TEST_F(FrameSetTest, Difference) {
           /* origins */ MethodSet{two},
           /* inferred_features */ {},
           /* user_features */ {},
+          /* via_type_of_ports */ {},
           /* local_positions */ {}),
   });
   EXPECT_EQ(
@@ -892,6 +956,7 @@ TEST_F(FrameSetTest, Difference) {
               /* origins */ MethodSet{three},
               /* inferred_features */ {},
               /* user_features */ {},
+              /* via_type_of_ports */ {},
               /* local_positions */ {}),
       }));
 
@@ -905,6 +970,7 @@ TEST_F(FrameSetTest, Difference) {
           /* origins */ MethodSet{one},
           /* inferred_features */ {},
           /* user_features */ {},
+          /* via_type_of_ports */ {},
           /* local_positions */ {}),
       Frame(
           /* kind */ test_kind,
@@ -915,6 +981,7 @@ TEST_F(FrameSetTest, Difference) {
           /* origins */ MethodSet{two},
           /* inferred_features */ {},
           /* user_features */ {},
+          /* via_type_of_ports */ {},
           /* local_positions */ {}),
   };
   frames.difference_with(FrameSet{
@@ -927,6 +994,7 @@ TEST_F(FrameSetTest, Difference) {
           /* origins */ MethodSet{one},
           /* inferred_features */ {},
           /* user_features */ {},
+          /* via_type_of_ports */ {},
           /* local_positions */ {}),
       Frame(
           /* kind */ test_kind,
@@ -937,6 +1005,7 @@ TEST_F(FrameSetTest, Difference) {
           /* origins */ MethodSet{two},
           /* inferred_features */ {},
           /* user_features */ {},
+          /* via_type_of_ports */ {},
           /* local_positions */ {}),
       Frame(
           /* kind */ test_kind,
@@ -947,6 +1016,7 @@ TEST_F(FrameSetTest, Difference) {
           /* origins */ MethodSet{three},
           /* inferred_features */ {},
           /* user_features */ {},
+          /* via_type_of_ports */ {},
           /* local_positions */ {}),
   });
   EXPECT_EQ(
@@ -961,6 +1031,7 @@ TEST_F(FrameSetTest, Difference) {
               /* origins */ MethodSet{one},
               /* inferred_features */ {},
               /* user_features */ {},
+              /* via_type_of_ports */ {},
               /* local_positions */ {}),
       }));
 
@@ -975,6 +1046,7 @@ TEST_F(FrameSetTest, Difference) {
           /* origins */ MethodSet{one},
           /* inferred_features */ {},
           /* user_features */ {},
+          /* via_type_of_ports */ {},
           /* local_positions */ {}),
       Frame(
           /* kind */ test_kind,
@@ -986,6 +1058,7 @@ TEST_F(FrameSetTest, Difference) {
           /* origins */ MethodSet{two},
           /* inferred_features */ {},
           /* user_features */ {},
+          /* via_type_of_ports */ {},
           /* local_positions */ {}),
   };
   frames.difference_with(FrameSet{
@@ -999,6 +1072,7 @@ TEST_F(FrameSetTest, Difference) {
           /* origins */ MethodSet{one},
           /* inferred_features */ {},
           /* user_features */ {},
+          /* via_type_of_ports */ {},
           /* local_positions */ {}),
       Frame(
           /* kind */ test_kind,
@@ -1010,6 +1084,7 @@ TEST_F(FrameSetTest, Difference) {
           /* origins */ MethodSet{two},
           /* inferred_features */ {},
           /* user_features */ {},
+          /* via_type_of_ports */ {},
           /* local_positions */ {}),
       Frame(
           /* kind */ test_kind,
@@ -1020,6 +1095,7 @@ TEST_F(FrameSetTest, Difference) {
           /* origins */ MethodSet{three},
           /* inferred_features */ {},
           /* user_features */ {},
+          /* via_type_of_ports */ {},
           /* local_positions */ {}),
   });
   EXPECT_TRUE(frames.is_bottom());
@@ -1034,6 +1110,7 @@ TEST_F(FrameSetTest, Difference) {
           /* origins */ MethodSet{one, two},
           /* inferred_features */ {},
           /* user_features */ {},
+          /* via_type_of_ports */ {},
           /* local_positions */ {}),
       Frame(
           /* kind */ test_kind,
@@ -1044,6 +1121,7 @@ TEST_F(FrameSetTest, Difference) {
           /* origins */ MethodSet{two},
           /* inferred_features */ {},
           /* user_features */ {},
+          /* via_type_of_ports */ {},
           /* local_positions */ {}),
       Frame(
           /* kind */ test_kind,
@@ -1054,6 +1132,7 @@ TEST_F(FrameSetTest, Difference) {
           /* origins */ MethodSet{one, three},
           /* inferred_features */ {},
           /* user_features */ {},
+          /* via_type_of_ports */ {},
           /* local_positions */ {}),
   };
   frames.difference_with(FrameSet{
@@ -1066,6 +1145,7 @@ TEST_F(FrameSetTest, Difference) {
           /* origins */ MethodSet{one},
           /* inferred_features */ {},
           /* user_features */ {},
+          /* via_type_of_ports */ {},
           /* local_positions */ {}),
       Frame(
           /* kind */ test_kind,
@@ -1076,6 +1156,7 @@ TEST_F(FrameSetTest, Difference) {
           /* origins */ MethodSet{one, two, three},
           /* inferred_features */ {},
           /* user_features */ {},
+          /* via_type_of_ports */ {},
           /* local_positions */ {}),
   });
   EXPECT_EQ(
@@ -1090,6 +1171,7 @@ TEST_F(FrameSetTest, Difference) {
               /* origins */ MethodSet{one, two},
               /* inferred_features */ {},
               /* user_features */ {},
+              /* via_type_of_ports */ {},
               /* local_positions */ {}),
           Frame(
               /* kind */ test_kind,
@@ -1100,6 +1182,7 @@ TEST_F(FrameSetTest, Difference) {
               /* origins */ MethodSet{two},
               /* inferred_features */ {},
               /* user_features */ {},
+              /* via_type_of_ports */ {},
               /* local_positions */ {}),
       }));
 }
@@ -1129,6 +1212,7 @@ TEST_F(FrameSetTest, Map) {
           /* origins */ MethodSet{one},
           /* inferred_features */ {},
           /* user_features */ {},
+          /* via_type_of_ports */ {},
           /* local_positions */ {}),
       Frame(
           /* kind */ test_kind,
@@ -1139,6 +1223,7 @@ TEST_F(FrameSetTest, Map) {
           /* origins */ MethodSet{two},
           /* inferred_features */ {},
           /* user_features */ {},
+          /* via_type_of_ports */ {},
           /* local_positions */ {}),
       Frame(
           /* kind */ test_kind,
@@ -1149,6 +1234,7 @@ TEST_F(FrameSetTest, Map) {
           /* origins */ MethodSet{three},
           /* inferred_features */ {},
           /* user_features */ {},
+          /* via_type_of_ports */ {},
           /* local_positions */ {}),
   };
   frames.map([feature_one](Frame& frame) {
@@ -1166,6 +1252,7 @@ TEST_F(FrameSetTest, Map) {
               /* origins */ MethodSet{one},
               /* inferred_features */ FeatureMayAlwaysSet{feature_one},
               /* user_features */ {},
+              /* via_type_of_ports */ {},
               /* local_positions */ {}),
           Frame(
               /* kind */ test_kind,
@@ -1176,6 +1263,7 @@ TEST_F(FrameSetTest, Map) {
               /* origins */ MethodSet{two},
               /* inferred_features */ FeatureMayAlwaysSet{feature_one},
               /* user_features */ {},
+              /* via_type_of_ports */ {},
               /* local_positions */ {}),
           Frame(
               /* kind */ test_kind,
@@ -1186,6 +1274,7 @@ TEST_F(FrameSetTest, Map) {
               /* origins */ MethodSet{three},
               /* inferred_features */ FeatureMayAlwaysSet{feature_one},
               /* user_features */ {},
+              /* via_type_of_ports */ {},
               /* local_positions */ {}),
       }));
 }
@@ -1214,6 +1303,7 @@ TEST_F(FrameSetTest, Filter) {
           /* origins */ MethodSet{one},
           /* inferred_features */ {},
           /* user_features */ {},
+          /* via_type_of_ports */ {},
           /* local_positions */ {}),
       Frame(
           /* kind */ test_kind,
@@ -1224,6 +1314,7 @@ TEST_F(FrameSetTest, Filter) {
           /* origins */ MethodSet{two},
           /* inferred_features */ {},
           /* user_features */ {},
+          /* via_type_of_ports */ {},
           /* local_positions */ {}),
       Frame(
           /* kind */ test_kind,
@@ -1234,6 +1325,7 @@ TEST_F(FrameSetTest, Filter) {
           /* origins */ MethodSet{three},
           /* inferred_features */ {},
           /* user_features */ {},
+          /* via_type_of_ports */ {},
           /* local_positions */ {}),
   };
   frames.filter(
@@ -1250,6 +1342,7 @@ TEST_F(FrameSetTest, Filter) {
               /* origins */ MethodSet{one},
               /* inferred_features */ {},
               /* user_features */ {},
+              /* via_type_of_ports */ {},
               /* local_positions */ {}),
       }));
 }
@@ -1276,6 +1369,7 @@ TEST_F(FrameSetTest, WithKind) {
           /* origins */ MethodSet{one},
           /* inferred_features */ {},
           /* user_features */ {},
+          /* via_type_of_ports */ {},
           /* local_positions */ {}),
       Frame(
           /* kind */ test_kind,
@@ -1286,6 +1380,7 @@ TEST_F(FrameSetTest, WithKind) {
           /* origins */ MethodSet{two},
           /* inferred_features */ {},
           /* user_features */ {},
+          /* via_type_of_ports */ {},
           /* local_positions */ {})};
 
   auto new_kind = context.kinds->get("TestSink2");
@@ -1304,6 +1399,7 @@ TEST_F(FrameSetTest, WithKind) {
               /* origins */ MethodSet{one},
               /* inferred_features */ {},
               /* user_features */ {},
+              /* via_type_of_ports */ {},
               /* local_positions */ {}),
           Frame(
               /* kind */ new_kind,
@@ -1314,6 +1410,7 @@ TEST_F(FrameSetTest, WithKind) {
               /* origins */ MethodSet{two},
               /* inferred_features */ {},
               /* user_features */ {},
+              /* via_type_of_ports */ {},
               /* local_positions */ {})}));
 }
 

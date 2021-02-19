@@ -247,6 +247,7 @@ Frame augment_frame_position(
       frame.origins(),
       frame.inferred_features(),
       frame.user_features(),
+      frame.via_type_of_ports(),
       augment_local_positions(frame.local_positions(), lines, context));
 }
 

@@ -49,6 +49,7 @@ TEST_F(EnvironmentTest, LessOrEqualSuperSet) {
                /* origins */ MethodSet{method},
                /* inferred_features */ {},
                /* user_features */ {},
+               /* via_type_of_ports */ {},
                /* local_positions */ {}),
        }}}};
 
@@ -79,6 +80,7 @@ TEST_F(EnvironmentTest, LessOrEqualDifferentSources) {
                /* origins */ MethodSet{method},
                /* inferred_features */ {},
                /* user_features */ {},
+               /* via_type_of_ports */ {},
                /* local_positions */ {}),
        }}}};
 
@@ -109,6 +111,7 @@ TEST_F(EnvironmentTest, JoinSuperSet) {
                /* origins */ MethodSet{method},
                /* inferred_features */ {},
                /* user_features */ {},
+               /* via_type_of_ports */ {},
                /* local_positions */ {}),
        }}}};
   domain1.join_with(domain2);
@@ -138,6 +141,7 @@ TEST_F(EnvironmentTest, JoinTwoDifferent) {
                /* origins */ MethodSet{method},
                /* inferred_features */ {},
                /* user_features */ {},
+               /* via_type_of_ports */ {},
                /* local_positions */ {}),
        }}}};
 
@@ -154,6 +158,7 @@ TEST_F(EnvironmentTest, JoinTwoDifferent) {
                /* origins */ MethodSet{method},
                /* inferred_features */ {},
                /* user_features */ {},
+               /* via_type_of_ports */ {},
                /* local_positions */ {}),
        }}}};
   domain1.join_with(domain2);
@@ -195,6 +200,7 @@ TEST_F(EnvironmentTest, JoinTwoEnvironmentWithDifferentSources) {
               /* origins */ MethodSet{method},
               /* inferred_features */ {},
               /* user_features */ {},
+              /* via_type_of_ports */ {},
               /* local_positions */ {}),
       }},
       UpdateKind::Weak);
@@ -217,6 +223,7 @@ TEST_F(EnvironmentTest, JoinTwoEnvironmentWithDifferentSources) {
               /* origins */ MethodSet{method},
               /* inferred_features */ {},
               /* user_features */ {},
+              /* via_type_of_ports */ {},
               /* local_positions */ {}),
       }}));
 }
