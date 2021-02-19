@@ -485,6 +485,23 @@
           }
         ]
       }
+    },
+    {
+      "find": "methods",
+      "where": [
+        {
+          "constraint": "signature",
+          "pattern": "Landroid/content/Intent;\\.parseUri:.*"
+        }
+      ],
+      "model": {
+        "sinks": [
+          {
+            "kind": "IntentParseUri",
+            "port": "Argument(0)"
+          }
+        ]
+      }
     }
   ]
 }

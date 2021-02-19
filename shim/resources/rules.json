@@ -500,5 +500,24 @@
       "Logging",
       "Logcat"
     ]
+  },
+  {
+    "name": "User input flows into Intent Uri Parser",
+    "code": 4030,
+    "description": "Values from user-controlled source may eventually flow into Intent Uri Parser",
+    "sources": [
+      "FragmentUserInput",
+      "ActivityUserInput",
+      "ReceiverUserInput",
+      "ProviderUserInput",
+      "ServiceAIDLUserInput",
+      "ServiceUserInput",
+      "WebViewUserInput",
+      "JavascriptInterfaceUserInput",
+      "OculusFitnessInput"
+    ],
+    "sinks": [
+      "IntentParseUri"
+    ]
   }
 ]
