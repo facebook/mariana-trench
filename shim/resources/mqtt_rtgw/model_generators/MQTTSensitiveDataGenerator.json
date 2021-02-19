@@ -15,6 +15,38 @@
           }
         ]
       }
+    },
+    {
+      "find": "methods",
+      "where": [
+        {
+          "constraint": "signature",
+          "pattern": "Lcom/facebook/rtgw/handlers/delivery/PostProcessRequest;\\.getRequestPayload:.*"
+        }
+      ],
+      "model": {
+        "sources": [
+          {
+            "kind": "SensitiveData"
+          }
+        ]
+      }
+    },
+    {
+      "find": "methods",
+      "where": [
+        {
+          "constraint": "signature",
+          "pattern": "Lcom/facebook/rtgw/handlers/delivery/RealtimeDeliveryContext;\\.getRequestPayload:.*"
+        }
+      ],
+      "model": {
+        "sources": [
+          {
+            "kind": "SensitiveData"
+          }
+        ]
+      }
     }
   ]
 }
