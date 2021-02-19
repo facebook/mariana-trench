@@ -999,6 +999,29 @@ TEST_F(JsonTest, Frame) {
           /* via_type_of_ports */ {},
           /* local_positions */ {}));
 
+  // Parse via_type_of_ports
+  EXPECT_JSON_EQ(
+      Frame,
+      R"#({
+        "kind": "TestSource",
+        "callee_port": "Leaf",
+        "via_type_of": ["Argument(1)", "Return"]
+      })#",
+      Frame(
+          /* kind */ context.kinds->get("TestSource"),
+          /* callee_port */ AccessPath(Root(Root::Kind::Leaf)),
+          /* callee */ nullptr,
+          /* call_position */ nullptr,
+          /* distance */ 0,
+          /* origins */ {},
+          /* inferred_features */ FeatureMayAlwaysSet::bottom(),
+          /* user_features */ {},
+          /* via_type_of_ports */
+          RootSetAbstractDomain(
+              {Root(Root::Kind::Return), Root(Root::Kind::Argument, 1)}),
+          /* local_positions */ {}),
+      context);
+
   // Parse local positions.
   EXPECT_JSON_EQ(
       Frame,
@@ -1016,8 +1039,8 @@ TEST_F(JsonTest, Frame) {
           /* origins */ {},
           /* inferred_features */ FeatureMayAlwaysSet::bottom(),
           /* user_features */ {},
-          /* local_positions */
           /* via_type_of_ports */ {},
+          /* local_positions */
           LocalPositionSet{context.positions->get(std::nullopt, 1)}),
       context);
   EXPECT_JSON_EQ(

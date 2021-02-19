@@ -402,7 +402,8 @@ Frame generator::source(
     const Method* method,
     const std::string& kind,
     const std::vector<std::string>& features,
-    Root::Kind callee_port) {
+    Root::Kind callee_port,
+    RootSetAbstractDomain via_type_of_ports) {
   FeatureSet user_features;
   for (const auto& feature : features) {
     user_features.add(context.features->get(feature));
@@ -416,7 +417,7 @@ Frame generator::source(
       /* origins */ MethodSet{method},
       /* inferred features */ FeatureMayAlwaysSet::bottom(),
       /* user features */ user_features,
-      /* via_type_of_ports */ {},
+      /* via_type_of_ports */ via_type_of_ports,
       /* local_positions */ {});
 }
 
@@ -425,7 +426,8 @@ Frame generator::sink(
     const Method* method,
     const std::string& kind,
     const std::vector<std::string>& features,
-    Root::Kind callee_port) {
+    Root::Kind callee_port,
+    RootSetAbstractDomain via_type_of_ports) {
   FeatureSet user_features;
   for (const auto& feature : features) {
     user_features.add(context.features->get(feature));
@@ -439,7 +441,7 @@ Frame generator::sink(
       /* origins */ MethodSet{method},
       /* inferred features */ FeatureMayAlwaysSet::bottom(),
       /* user features */ user_features,
-      /* via_type_of_ports */ {},
+      /* via_type_of_ports */ via_type_of_ports,
       /* local_positions */ {});
 }
 

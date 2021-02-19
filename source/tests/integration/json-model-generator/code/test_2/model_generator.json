@@ -61,7 +61,10 @@
             "sinks": [
               {
                 "kind": "TestSink",
-                "port": "Argument(x)"
+                "port": "Argument(x)",
+                "via_type_of": [
+                  "Argument(0)"
+                ]
               }
             ],
             "propagation": [
@@ -79,7 +82,10 @@
             "sources": [
               {
                 "kind": "TestOtherGeneration",
-                "port": "Return"
+                "port": "Return",
+                "via_type_of": [
+                  "Return"
+                ]
               },
               {
                 "kind": "TestOtherParameterSource",

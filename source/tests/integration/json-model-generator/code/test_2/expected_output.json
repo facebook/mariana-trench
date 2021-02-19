@@ -101,6 +101,10 @@
       "origins" : 
       [
         "Lcom/facebook/marianatrench/integrationtests/JsonModelGeneratorIntegrationTest2;.function:(II)V"
+      ],
+      "via_type_of" : 
+      [
+        "Return"
       ]
     }
   ],
@@ -173,6 +177,10 @@
       "origins" : 
       [
         "Lcom/facebook/marianatrench/integrationtests/JsonModelGeneratorIntegrationTest2;.function:(II)V"
+      ],
+      "via_type_of" : 
+      [
+        "Argument(0)"
       ]
     },
     {
@@ -182,6 +190,10 @@
       "origins" : 
       [
         "Lcom/facebook/marianatrench/integrationtests/JsonModelGeneratorIntegrationTest2;.function:(II)V"
+      ],
+      "via_type_of" : 
+      [
+        "Argument(0)"
       ]
     }
   ]

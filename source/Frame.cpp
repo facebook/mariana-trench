@@ -9,6 +9,7 @@
 
 #include <Show.h>
 
+#include <mariana-trench/Access.h>
 #include <mariana-trench/Frame.h>
 #include <mariana-trench/JsonValidation.h>
 
@@ -196,6 +197,14 @@ Frame Frame::from_json(const Json::Value& value, Context& context) {
     user_features = FeatureSet::from_json(value["features"], context);
   }
 
+  RootSetAbstractDomain via_type_of_ports;
+  if (value.isMember("via_type_of")) {
+    for (const auto& root :
+         JsonValidation::null_or_array(value, /* field */ "via_type_of")) {
+      via_type_of_ports.add(AccessPath::from_json(root).root());
+    }
+  }
+
   LocalPositionSet local_positions;
   if (value.isMember("local_positions")) {
     JsonValidation::null_or_array(value, /* field */ "local_positions");
@@ -249,7 +258,7 @@ Frame Frame::from_json(const Json::Value& value, Context& context) {
       std::move(origins),
       std::move(inferred_features),
       std::move(user_features),
-      {},
+      std::move(via_type_of_ports),
       std::move(local_positions));
 }
 
@@ -278,6 +287,14 @@ Json::Value Frame::to_json() const {
   }
 
   JsonValidation::update_object(value, features().to_json());
+
+  if (via_type_of_ports_.is_value() && !via_type_of_ports_.elements().empty()) {
+    auto ports = Json::Value(Json::arrayValue);
+    for (const auto& port : via_type_of_ports_.elements()) {
+      ports.append(AccessPath(port).to_json());
+    }
+    value["via_type_of"] = ports;
+  }
 
   if (local_positions_.is_value() && !local_positions_.empty()) {
     value["local_positions"] = local_positions_.to_json();
@@ -329,6 +346,10 @@ std::ostream& operator<<(std::ostream& out, const Frame& frame) {
   }
   if (!frame.user_features_.empty()) {
     out << ", user_features=" << frame.user_features_;
+  }
+  if (frame.via_type_of_ports_.is_value() &&
+      !frame.via_type_of_ports_.elements().empty()) {
+    out << ", via_type_of_ports=" << frame.via_type_of_ports_;
   }
   if (!frame.local_positions_.empty()) {
     out << ", local_positions=" << frame.local_positions_;

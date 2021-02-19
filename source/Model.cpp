@@ -363,6 +363,11 @@ void Model::check_frame_consistency(const Frame& frame, std::string_view kind)
         show(method_),
         kind));
   }
+  if (frame.via_type_of_ports().is_value()) {
+    for (const auto& root : frame.via_type_of_ports().elements()) {
+      check_port_consistency(AccessPath(root));
+    }
+  }
 }
 
 void Model::check_parameter_source_port_consistency(
