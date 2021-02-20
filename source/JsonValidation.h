@@ -70,7 +70,7 @@ class JsonValidation final {
   static std::unique_ptr<Json::StreamWriter> compact_writer();
   static std::unique_ptr<Json::StreamWriter> styled_writer();
   static void write_json_file(
-      const std::string& path,
+      const boost::filesystem::path& path,
       const Json::Value& value);
   static std::string to_styled_string(const Json::Value& value);
 

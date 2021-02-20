@@ -271,7 +271,7 @@ std::unique_ptr<Json::StreamWriter> JsonValidation::styled_writer() {
 }
 
 void JsonValidation::write_json_file(
-    const std::string& path,
+    const boost::filesystem::path& path,
     const Json::Value& value) {
   boost::filesystem::ofstream file;
   file.exceptions(std::ofstream::failbit | std::ofstream::badbit);
