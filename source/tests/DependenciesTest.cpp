@@ -808,13 +808,13 @@ TEST_F(DependenciesTest, ArtificialCalleesInvoke) {
       (ArtificialCallees{
           ArtificialCallee{
               /* call_target */ CallTarget::static_call(invoke, anonymous_one),
-              /* register_parameters */ {{1}},
+              /* register_parameters */ {1},
               /* features */
               FeatureSet{
                   context.features->get("via-anonymous-class-to-obscure")}},
           ArtificialCallee{
               /* call_target */ CallTarget::static_call(invoke, anonymous_two),
-              /* register_parameters */ {{1}},
+              /* register_parameters */ {1},
               /* features */
               FeatureSet{
                   context.features->get("via-anonymous-class-to-obscure")}},
@@ -911,13 +911,13 @@ TEST_F(DependenciesTest, ArtificialCalleesIput) {
       (ArtificialCallees{
           ArtificialCallee{
               /* call_target */ CallTarget::static_call(iput, anonymous_one),
-              /* register_parameters */ {{1}},
+              /* register_parameters */ {1},
               /* features */
               FeatureSet{
                   context.features->get("via-anonymous-class-to-field")}},
           ArtificialCallee{
               /* call_target */ CallTarget::static_call(iput, anonymous_two),
-              /* register_parameters */ {{1}},
+              /* register_parameters */ {1},
               /* features */
               FeatureSet{
                   context.features->get("via-anonymous-class-to-field")}},

@@ -149,7 +149,7 @@ ArtificialCallees anonymous_class_artificial_callees(
 
     callees.push_back(ArtificialCallee{
         /* call_target */ CallTarget::static_call(instruction, method),
-        /* register_parameters */ {{register_id}},
+        /* register_parameters */ {register_id},
         /* features */ features,
     });
   }
