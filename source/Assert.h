@@ -12,15 +12,24 @@
 // Uncomment the following line to enable expensive assertions.
 // #define MT_ENABLE_EXPENSIVE_ASSERT
 
-#define mt_assert(condition) redex_assert(condition)
+#define mt_assert(condition) always_assert(condition)
 #define mt_assert_log(condition, message, ...) \
-  assert_log(condition, message, ##__VA_ARGS__)
-#define mt_unreachable() not_reached()
+  always_assert_log(condition, message, ##__VA_ARGS__)
+#define mt_unreachable()     \
+  do {                       \
+    always_assert(false);    \
+    __builtin_unreachable(); \
+  } while (true)
+#define mt_unreachable_log(message, ...)              \
+  do {                                                \
+    always_assert_log(false, message, ##__VA_ARGS__); \
+    __builtin_unreachable();                          \
+  } while (true)
 
 #ifdef MT_ENABLE_EXPENSIVE_ASSERT
-#define mt_expensive_assert(condition) redex_assert(condition)
+#define mt_expensive_assert(condition) always_assert(condition)
 #define mt_expensive_assert_log(condition, message, ...) \
-  assert_log(condition, message, ##__VA_ARGS__)
+  always_assert_log(condition, message, ##__VA_ARGS__)
 #define mt_if_expensive_assert(statement) statement
 #else
 #define mt_expensive_assert(condition) static_cast<void>(0)
