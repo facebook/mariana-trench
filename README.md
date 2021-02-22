@@ -67,3 +67,10 @@ cmake -DREDEX_ROOT="<install-directory>" -DCMAKE_INSTALL_PREFIX="<install-direct
 make -j4
 make install
 ```
+
+### Run the tests
+
+To run the tests after you have built Mariana Trench, use:
+```
+make check
+```

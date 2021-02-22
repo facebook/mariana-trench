@@ -20,6 +20,8 @@ message(STATUS "Build type: ${CMAKE_BUILD_TYPE}")
 message(STATUS "CMake version: ${CMAKE_VERSION}")
 message(STATUS "CMake generator: ${CMAKE_GENERATOR}")
 
+enable_testing()
+
 # Add path for custom cmake modules.
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
 
@@ -35,7 +37,9 @@ find_package(Threads REQUIRED)
 find_package(ZLIB REQUIRED)
 find_package(Boost 1.75.0 REQUIRED
              COMPONENTS system regex filesystem program_options iostreams thread)
-find_package(GTest 1.10.0 REQUIRED)
+# CMake's provided `FindGTest.cmake` does not define GMock.
+# We use `CONFIG` to find the `GTestConfig.cmake` provided by gtest, which properly defines GMock.
+find_package(GTest 1.10.0 REQUIRED CONFIG)
 find_package(JsonCpp 1.9.4 REQUIRED)
 find_package(fmt 7.1.2 REQUIRED)
 find_package(re2 REQUIRED)
@@ -77,3 +81,31 @@ target_include_directories(mariana-trench-library PUBLIC "${CMAKE_CURRENT_BINARY
 add_executable(mariana-trench-binary "source/Main.cpp")
 target_link_libraries(mariana-trench-binary PUBLIC mariana-trench-library)
 install(TARGETS mariana-trench-binary DESTINATION "bin")
+
+# Tests
+include(GoogleTest)
+add_custom_target(build-tests)
+
+add_library(mariana-trench-test-library STATIC EXCLUDE_FROM_ALL "source/tests/Test.cpp")
+target_link_libraries(mariana-trench-test-library PUBLIC mariana-trench-library)
+
+file(GLOB unit_test_sources "source/tests/*.cpp")
+add_executable(mariana-trench-unit-tests EXCLUDE_FROM_ALL ${unit_test_sources})
+target_link_libraries(mariana-trench-unit-tests PUBLIC
+                      mariana-trench-test-library
+                      GTest::gmock
+                      GTest::gtest_main)
+add_dependencies(build-tests mariana-trench-unit-tests)
+gtest_discover_tests(mariana-trench-unit-tests)
+
+file(GLOB model_generator_test_sources "source/model-generator/tests/*.cpp")
+add_executable(mariana-trench-model-generator-tests EXCLUDE_FROM_ALL ${model_generator_test_sources})
+target_link_libraries(mariana-trench-model-generator-tests PUBLIC
+                      mariana-trench-test-library
+                      GTest::gmock
+                      GTest::gtest_main)
+add_dependencies(build-tests mariana-trench-model-generator-tests)
+gtest_discover_tests(mariana-trench-model-generator-tests)
+
+# CMake's `test` target does not build the tests, so we define our own `check` target.
+add_custom_target(check COMMAND ${CMAKE_CTEST_COMMAND} DEPENDS build-tests)
