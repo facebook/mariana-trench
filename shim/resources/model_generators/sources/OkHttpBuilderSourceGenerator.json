@@ -1,0 +1,21 @@
+{
+  "model_generators": [
+    {
+      "find": "methods",
+      "where": [
+        {
+          "constraint": "signature",
+          "pattern": "Lokhttp3/OkHttpClient\\$Builder;.<init>:.*"
+        }
+      ],
+      "model": {
+        "sources": [
+          {
+            "kind": "OkHttpBuilder",
+            "port": "Argument(0)"
+          }
+        ]
+      }
+    }
+  ]
+}

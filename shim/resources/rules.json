@@ -519,5 +519,16 @@
     "sinks": [
       "IntentParseUri"
     ]
+  },
+  {
+    "name": "OkHttp missing certificate pinning",
+    "code": 4031,
+    "description": "OkHttp client initiated without certificate pinning.",
+    "sources": [
+      "OkHttpBuilder"
+    ],
+    "sinks": [
+      "OkHttpBuild"
+    ]
   }
 ]

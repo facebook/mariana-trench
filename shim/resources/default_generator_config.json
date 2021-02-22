@@ -45,6 +45,10 @@
   },
   {
     "kind": "json",
+    "path": "model_generators/propagations/CertificatePinnerFeature.json"
+  },
+  {
+    "kind": "json",
     "path": "model_generators/sinks/ClipboardExitNodeGenerator.json"
   },
   {
@@ -242,6 +246,14 @@
   {
     "kind": "json",
     "path": "model_generators/sources/OculusMoveFitnessDataModuleSourceGenerator.json"
+  },
+  {
+    "kind": "json",
+    "path": "model_generators/sinks/OkHttpBuildSinkGenerator.json"
+  },
+  {
+    "kind": "json",
+    "path": "model_generators/sources/OkHttpBuilderSourceGenerator.json"
   },
   {
     "kind": "json",
