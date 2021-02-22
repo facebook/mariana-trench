@@ -150,6 +150,26 @@ std::optional<std::string> get_privacy_decision_number_from_class(
       clazz->get_anno_set()->get_annotations());
 }
 
+std::unordered_set<std::string> get_class_fragments(const DexClass* clazz) {
+  std::unordered_set<std::string> exported_fragments;
+  const static re2::RE2 fragment_regex = re2::RE2("(L[^a][^; ]*Fragment;)");
+
+  auto methods = clazz->get_all_methods();
+  for (DexMethod* method : methods) {
+    const cfg::ControlFlowGraph& cfg = method->get_code()->cfg();
+    for (const auto* block : cfg.blocks()) {
+      std::string match;
+      // [0x7f5380273670] OPCODE: INVOKE_STATIC
+      // Lcom/example/myapplication/ui/main/MainFragment;.newIn[...]
+      // Here we match the class of any Fragment
+      if (re2::RE2::PartialMatch(show(block), fragment_regex, &match)) {
+        exported_fragments.emplace(match);
+      }
+    }
+  }
+  return exported_fragments;
+}
+
 } // namespace
 
 namespace marianatrench {
@@ -189,6 +209,11 @@ ClassProperties::ClassProperties(
            tag_info.has_intent_filters)) {
         exported_classes_.emplace(tag_info.classname);
         if (!protection_level && !permission && dex_class) {
+          if (tag_info.tag == ComponentTag::Activity) {
+            const auto& exported_fragments = get_class_fragments(dex_class);
+            exported_classes_.insert(
+                exported_fragments.begin(), exported_fragments.end());
+          }
           parent_classes = generator::get_custom_parents_from_class(dex_class);
           parent_exposed_classes_.insert(
               parent_classes.begin(), parent_classes.end());
