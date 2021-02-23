@@ -10,6 +10,7 @@
 #include <memory>
 #include <vector>
 
+#include <PatriciaTreeSetAbstractDomain.h>
 #include <json/json.h>
 #include <re2/re2.h>
 
@@ -167,6 +168,8 @@ class MethodConstraint {
       Context& context);
   virtual bool has_children() const;
   virtual std::vector<const MethodConstraint*> children() const;
+  virtual sparta::PatriciaTreeSetAbstractDomain<const Method*> may_satisfy(
+      const MethodMappings& method_mappings) const;
   virtual bool satisfy(const Method* method) const = 0;
   virtual bool operator==(const MethodConstraint& other) const = 0;
 };

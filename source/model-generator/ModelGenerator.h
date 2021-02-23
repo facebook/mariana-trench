@@ -16,6 +16,7 @@
 
 #include <mariana-trench/Context.h>
 #include <mariana-trench/Frame.h>
+#include <mariana-trench/MethodSet.h>
 #include <mariana-trench/Methods.h>
 #include <mariana-trench/Model.h>
 #include <mariana-trench/Options.h>
@@ -58,16 +59,12 @@ class MethodVisitorModelGenerator : public ModelGenerator {
   virtual std::vector<Model> visit_method(const Method* method) const = 0;
 };
 
-namespace mapping_generator {
-ConcurrentMap<std::string, std::vector<const Method*>> name_to_methods(
-    const Methods&);
-
-ConcurrentMap<std::string, std::vector<const Method*>> class_to_methods(
-    const Methods&);
-
-ConcurrentMap<std::string, std::vector<const Method*>>
-class_to_override_methods(const Methods&);
-} // namespace mapping_generator
+struct MethodMappings {
+  explicit MethodMappings(const Methods& methods);
+  ConcurrentMap<std::string, MethodSet> name_to_methods;
+  ConcurrentMap<std::string, MethodSet> class_to_methods;
+  ConcurrentMap<std::string, MethodSet> class_to_override_methods;
+};
 
 namespace generator {
 

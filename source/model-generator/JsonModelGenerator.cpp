@@ -9,6 +9,7 @@
 
 #include <json/json.h>
 
+#include <PatriciaTreeSetAbstractDomain.h>
 #include <Show.h>
 #include <Walkers.h>
 
@@ -655,6 +656,11 @@ bool MethodConstraint::has_children() const {
 
 std::vector<const MethodConstraint*> MethodConstraint::children() const {
   return {};
+}
+
+sparta::PatriciaTreeSetAbstractDomain<const Method*>
+MethodConstraint::may_satisfy(const MethodMappings& method_mappings) const {
+  return sparta::PatriciaTreeSetAbstractDomain<const Method*>::top();
 }
 
 namespace {

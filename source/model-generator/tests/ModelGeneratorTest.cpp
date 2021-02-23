@@ -111,10 +111,18 @@ TEST_F(ModelGeneratorTest, MappingGenerator) {
               second_overriding_method}},
         };
 
-    auto name_to_methods = mapping_generator::name_to_methods(*context.methods);
-    auto name_to_methods_map =
-        std::unordered_map<std::string, std::vector<const Method*>>(
-            name_to_methods.begin(), name_to_methods.end());
+    const auto method_mappings = MethodMappings(*context.methods);
+
+    auto name_to_methods_result = std::unordered_map<std::string, MethodSet>(
+        method_mappings.name_to_methods.begin(),
+        method_mappings.name_to_methods.end());
+    std::unordered_map<std::string, std::vector<const Method*>>
+        name_to_methods_map;
+    for (const auto& pair : name_to_methods_result) {
+      std::vector<const Method*> methods = {
+          pair.second.begin(), pair.second.end()};
+      name_to_methods_map.insert({pair.first, methods});
+    }
     for (auto& pair : name_to_methods_map) {
       std::sort(pair.second.begin(), pair.second.end(), compare_methods);
     }
@@ -123,11 +131,16 @@ TEST_F(ModelGeneratorTest, MappingGenerator) {
     }
     EXPECT_EQ(name_to_methods_map, expected_name_to_methods);
 
-    auto class_to_methods =
-        mapping_generator::class_to_methods(*context.methods);
-    auto class_to_methods_map =
-        std::unordered_map<std::string, std::vector<const Method*>>(
-            class_to_methods.begin(), class_to_methods.end());
+    auto class_to_methods_result = std::unordered_map<std::string, MethodSet>(
+        method_mappings.class_to_methods.begin(),
+        method_mappings.class_to_methods.end());
+    std::unordered_map<std::string, std::vector<const Method*>>
+        class_to_methods_map;
+    for (const auto& pair : class_to_methods_result) {
+      std::vector<const Method*> methods = {
+          pair.second.begin(), pair.second.end()};
+      class_to_methods_map.insert({pair.first, methods});
+    }
     for (auto& pair : class_to_methods_map) {
       std::sort(pair.second.begin(), pair.second.end(), compare_methods);
     }
@@ -136,11 +149,17 @@ TEST_F(ModelGeneratorTest, MappingGenerator) {
     }
     EXPECT_EQ(class_to_methods_map, expected_class_to_methods);
 
-    auto class_to_override_methods =
-        mapping_generator::class_to_override_methods(*context.methods);
-    auto class_to_override_methods_map =
-        std::unordered_map<std::string, std::vector<const Method*>>(
-            class_to_override_methods.begin(), class_to_override_methods.end());
+    auto class_to_override_methods_result =
+        std::unordered_map<std::string, MethodSet>(
+            method_mappings.class_to_override_methods.begin(),
+            method_mappings.class_to_override_methods.end());
+    std::unordered_map<std::string, std::vector<const Method*>>
+        class_to_override_methods_map;
+    for (const auto& pair : class_to_override_methods_result) {
+      std::vector<const Method*> methods = {
+          pair.second.begin(), pair.second.end()};
+      class_to_override_methods_map.insert({pair.first, methods});
+    }
     for (auto& pair : class_to_override_methods_map) {
       std::sort(pair.second.begin(), pair.second.end(), compare_methods);
     }

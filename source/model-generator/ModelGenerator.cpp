@@ -18,6 +18,7 @@
 #include <mariana-trench/Features.h>
 #include <mariana-trench/JsonValidation.h>
 #include <mariana-trench/Log.h>
+#include <mariana-trench/MethodSet.h>
 #include <mariana-trench/Methods.h>
 #include <mariana-trench/Redex.h>
 #include <mariana-trench/model-generator/ModelGenerator.h>
@@ -57,47 +58,48 @@ std::vector<Model> MethodVisitorModelGenerator::run(const Methods& methods) {
   return models;
 }
 
-ConcurrentMap<std::string, std::vector<const Method*>>
-mapping_generator::name_to_methods(const Methods& methods) {
-  ConcurrentMap<std::string, std::vector<const Method*>> method_mapping;
+namespace {
+ConcurrentMap<std::string, MethodSet> create_name_to_methods(
+    const Methods& methods) {
+  ConcurrentMap<std::string, MethodSet> method_mapping;
 
   auto queue = sparta::work_queue<const Method*>([&](const Method* method) {
     const auto& method_name = method->get_name();
     method_mapping.update(
         method_name,
         [&](const std::string& /* name */,
-            std::vector<const Method*>& methods,
-            bool /* exists */) { methods.insert(methods.end(), method); });
+            MethodSet& methods,
+            bool /* exists */) { methods.add(method); });
   });
   for (const auto* method : methods) {
     queue.add_item(method);
   }
   queue.run_all();
   return method_mapping;
-};
+}
 
-ConcurrentMap<std::string, std::vector<const Method*>>
-mapping_generator::class_to_methods(const Methods& methods) {
-  ConcurrentMap<std::string, std::vector<const Method*>> method_mapping;
+ConcurrentMap<std::string, MethodSet> create_class_to_methods(
+    const Methods& methods) {
+  ConcurrentMap<std::string, MethodSet> method_mapping;
 
   auto queue = sparta::work_queue<const Method*>([&](const Method* method) {
     std::string parent_class = method->get_class()->get_name()->str();
     method_mapping.update(
         parent_class,
         [&](const std::string& /* parent_name */,
-            std::vector<const Method*>& methods,
-            bool /* exists */) { methods.insert(methods.end(), method); });
+            MethodSet& methods,
+            bool /* exists */) { methods.add(method); });
   });
   for (const auto* method : methods) {
     queue.add_item(method);
   }
   queue.run_all();
   return method_mapping;
-};
+}
 
-ConcurrentMap<std::string, std::vector<const Method*>>
-mapping_generator::class_to_override_methods(const Methods& methods) {
-  ConcurrentMap<std::string, std::vector<const Method*>> method_mapping;
+ConcurrentMap<std::string, MethodSet> create_class_to_override_methods(
+    const Methods& methods) {
+  ConcurrentMap<std::string, MethodSet> method_mapping;
 
   auto queue = sparta::work_queue<const Method*>([&](const Method* method) {
     std::string class_name = method->get_class()->get_name()->str();
@@ -110,8 +112,8 @@ mapping_generator::class_to_override_methods(const Methods& methods) {
       method_mapping.update(
           parent_class,
           [&](const std::string& /* parent_name */,
-              std::vector<const Method*>& methods,
-              bool /* exists */) { methods.insert(methods.end(), method); });
+              MethodSet& methods,
+              bool /* exists */) { methods.add(method); });
     }
   });
   for (const auto* method : methods) {
@@ -119,7 +121,13 @@ mapping_generator::class_to_override_methods(const Methods& methods) {
   }
   queue.run_all();
   return method_mapping;
-};
+}
+} // namespace
+
+MethodMappings::MethodMappings(const Methods& methods)
+    : name_to_methods(create_name_to_methods(methods)),
+      class_to_methods(create_class_to_methods(methods)),
+      class_to_override_methods(create_class_to_override_methods(methods)) {}
 
 const std::string& generator::get_class_name(const Method* method) {
   return method->get_class()->get_name()->str();
