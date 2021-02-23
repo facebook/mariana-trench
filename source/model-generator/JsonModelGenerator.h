@@ -10,7 +10,6 @@
 #include <memory>
 #include <vector>
 
-#include <PatriciaTreeSetAbstractDomain.h>
 #include <json/json.h>
 #include <re2/re2.h>
 
@@ -168,8 +167,7 @@ class MethodConstraint {
       Context& context);
   virtual bool has_children() const;
   virtual std::vector<const MethodConstraint*> children() const;
-  virtual sparta::PatriciaTreeSetAbstractDomain<const Method*> may_satisfy(
-      const MethodMappings& method_mappings) const;
+  virtual MethodSet may_satisfy(const MethodMappings& method_mappings) const;
   virtual bool satisfy(const Method* method) const = 0;
   virtual bool operator==(const MethodConstraint& other) const = 0;
 };
@@ -711,11 +709,11 @@ class JsonModelGeneratorItem final : public MethodVisitorModelGenerator {
       std::unique_ptr<AllOfMethodConstraint> constraint,
       ModelTemplate model_template,
       int verbosity);
-  std::vector<Model> run_filtered(
-      const sparta::PatriciaTreeSet<const Method*>& methods);
+  std::vector<Model> run_filtered(const MethodSet& methods);
   std::unordered_set<const MethodConstraint*> constraint_leaves() const;
-  sparta::PatriciaTreeSetAbstractDomain<const Method*> may_satisfy(
-      const MethodMappings method_mappings) const;
+  /* Returns filtered method set to run full satisfy checks on. Returns Top if
+   * filtered set cannot be determined. */
+  MethodSet may_satisfy(const MethodMappings& method_mappings) const;
   std::vector<Model> visit_method(const Method* method) const override;
 
  private:

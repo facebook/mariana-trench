@@ -9,7 +9,6 @@
 
 #include <json/json.h>
 
-#include <PatriciaTreeSetAbstractDomain.h>
 #include <Show.h>
 #include <Walkers.h>
 
@@ -658,9 +657,9 @@ std::vector<const MethodConstraint*> MethodConstraint::children() const {
   return {};
 }
 
-sparta::PatriciaTreeSetAbstractDomain<const Method*>
-MethodConstraint::may_satisfy(const MethodMappings& method_mappings) const {
-  return sparta::PatriciaTreeSetAbstractDomain<const Method*>::top();
+MethodSet MethodConstraint::may_satisfy(
+    const MethodMappings& /* method_mappings */) const {
+  return MethodSet::top();
 }
 
 namespace {
@@ -1486,7 +1485,7 @@ JsonModelGeneratorItem::JsonModelGeneratorItem(
       verbosity_(verbosity) {}
 
 std::vector<Model> JsonModelGeneratorItem::run_filtered(
-    const sparta::PatriciaTreeSet<const Method*>& methods) {
+    const MethodSet& methods) {
   return this->run_impl(methods.begin(), methods.end());
 }
 
@@ -1528,9 +1527,8 @@ JsonModelGeneratorItem::constraint_leaves() const {
   return flattened_constraints;
 }
 
-sparta::PatriciaTreeSetAbstractDomain<const Method*>
-JsonModelGeneratorItem::may_satisfy(
-    const MethodMappings method_mappings) const {
+MethodSet JsonModelGeneratorItem::may_satisfy(
+    const MethodMappings& method_mappings) const {
   return constraint_->may_satisfy(method_mappings);
 }
 
@@ -1589,16 +1587,15 @@ std::vector<Model> JsonModelGenerator::run_optimized(
     const MethodMappings& method_mappings) {
   std::vector<Model> models;
   for (auto& item : items_) {
-    sparta::PatriciaTreeSetAbstractDomain<const Method*>
-        filtered_methods_domain = item.may_satisfy(method_mappings);
-    if (filtered_methods_domain.is_bottom()) {
+    MethodSet filtered_methods = item.may_satisfy(method_mappings);
+    if (filtered_methods.is_bottom()) {
       continue;
     }
     std::vector<Model> method_models;
-    if (filtered_methods_domain.is_top()) {
+    if (filtered_methods.is_top()) {
       method_models = item.run(methods);
     } else {
-      method_models = item.run_filtered(filtered_methods_domain.elements());
+      method_models = item.run_filtered(filtered_methods);
     }
     models.insert(
         models.end(),
