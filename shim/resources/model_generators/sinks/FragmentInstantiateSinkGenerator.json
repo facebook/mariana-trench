@@ -1,0 +1,52 @@
+{
+  "model_generators": [
+    {
+      "find": "methods",
+      "where": [
+        {
+          "constraint": "any_of",
+          "inners": [
+            {
+              "constraint": "signature",
+              "pattern": "Landroid/app/Fragment;\\.instantiate:.*"
+            },
+            {
+              "constraint": "signature",
+              "pattern": "Landroidx/fragment/app/Fragment;\\.instantiate:.*"
+            },
+            {
+              "constraint": "signature",
+              "pattern": "Landroid/app/FragmentManager;\\.findFragmentByTag:.*"
+            },
+            {
+              "constraint": "signature",
+              "pattern": "Landroidx/fragment/app/FragmentManager;\\.findFragmentByTag:.*"
+            }
+          ]
+        }
+      ],
+      "model": {
+        "for_all_parameters": [
+          {
+            "variable": "x",
+            "where": [
+              {
+                "constraint": "not",
+                "inner": {
+                  "constraint": "name",
+                  "pattern": "Landroid/content/Context;"
+                }
+              }
+            ],
+            "sinks": [
+              {
+                "kind": "FragmentInstantiate",
+                "port": "Argument(x)"
+              }
+            ]
+          }
+        ]
+      }
+    }
+  ]
+}

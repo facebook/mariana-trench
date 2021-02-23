@@ -540,5 +540,24 @@
     "sinks": [
       "HTMLParser"
     ]
+  },
+  {
+    "name": "User input flows into Fragment instantiator",
+    "code": 4033,
+    "description": "Values from user-controlled source may eventually flow into Fragment instantiate",
+    "sources": [
+      "FragmentUserInput",
+      "ActivityUserInput",
+      "ReceiverUserInput",
+      "ProviderUserInput",
+      "ServiceAIDLUserInput",
+      "ServiceUserInput",
+      "WebViewUserInput",
+      "JavascriptInterfaceUserInput",
+      "OculusFitnessInput"
+    ],
+    "sinks": [
+      "FragmentInstantiate"
+    ]
   }
 ]
