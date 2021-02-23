@@ -485,8 +485,7 @@
       "SQLQuery",
       "CodeExecution",
       "DynamicCodeLoading",
-      "PackageInstaller",
-      "HTMLParser"
+      "PackageInstaller"
     ]
   },
   {
@@ -529,6 +528,17 @@
     ],
     "sinks": [
       "OkHttpBuild"
+    ]
+  },
+  {
+    "name": "Server response flows into a HTMLParser",
+    "code": 4032,
+    "description": "Values from server-controlled source may eventually flow into a HTML parser sink",
+    "sources": [
+      "ServerResponse"
+    ],
+    "sinks": [
+      "HTMLParser"
     ]
   }
 ]
