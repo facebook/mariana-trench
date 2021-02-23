@@ -36,26 +36,14 @@ ModelGenerator::ModelGenerator(const std::string& name, Context& context)
   mt_assert_log(context.overrides != nullptr, "invalid context");
 }
 
+std::vector<Model> ModelGenerator::run_optimized(
+    const Methods& methods,
+    const MethodMappings& /* method_mappings */) {
+  return this->run(methods);
+}
+
 std::vector<Model> MethodVisitorModelGenerator::run(const Methods& methods) {
-  std::vector<Model> models;
-  std::mutex mutex;
-
-  auto queue = sparta::work_queue<const Method*>([&](const Method* method) {
-    std::vector<Model> method_models = this->visit_method(method);
-
-    if (!method_models.empty()) {
-      std::lock_guard<std::mutex> lock(mutex);
-      models.insert(
-          models.end(),
-          std::make_move_iterator(method_models.begin()),
-          std::make_move_iterator(method_models.end()));
-    }
-  });
-  for (const auto* method : methods) {
-    queue.add_item(method);
-  }
-  queue.run_all();
-  return models;
+  return this->run_impl(methods.begin(), methods.end());
 }
 
 namespace {
@@ -104,6 +92,9 @@ ConcurrentMap<std::string, MethodSet> create_class_to_override_methods(
   auto queue = sparta::work_queue<const Method*>([&](const Method* method) {
     std::string class_name = method->get_class()->get_name()->str();
     auto* dex_class = redex::get_class(class_name);
+    if (!dex_class) {
+      return;
+    }
     std::unordered_set<std::string> parent_classes =
         generator::get_parents_from_class(
             dex_class, /* include_interfaces */ true);
@@ -155,12 +146,15 @@ std::unordered_set<std::string> generator::get_interfaces_from_class(
     DexType* interface = interface_types.back();
     interface_types.pop_back();
     interfaces.emplace(interface->get_name()->str());
-    std::deque<DexType*> super_interface_types =
-        type_class(interface)->get_interfaces()->get_type_list();
-    interface_types.insert(
-        interface_types.end(),
-        super_interface_types.begin(),
-        super_interface_types.end());
+    DexClass* interface_class = type_class(interface);
+    if (interface_class) {
+      const auto& super_interface_types =
+          interface_class->get_interfaces()->get_type_list();
+      interface_types.insert(
+          interface_types.end(),
+          super_interface_types.begin(),
+          super_interface_types.end());
+    }
   }
   return interfaces;
 }

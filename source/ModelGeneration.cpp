@@ -109,10 +109,6 @@ std::vector<Model> ModelGeneration::run(Context& context) {
     }
   }
 
-  if (context.options->optimized_model_generation()) {
-    // TODO (T79362585)
-  }
-
   std::vector<Model> generated_models;
   std::size_t iteration = 0;
 
@@ -124,7 +120,14 @@ std::vector<Model> ModelGeneration::run(Context& context) {
         ++iteration,
         model_generators.size());
 
-    std::vector<Model> models = model_generator->run(*context.methods);
+    std::vector<Model> models;
+    if (context.options->optimized_model_generation()) {
+      const auto method_mappings = MethodMappings(*context.methods);
+      models =
+          model_generator->run_optimized(*context.methods, method_mappings);
+    } else {
+      models = model_generator->run(*context.methods);
+    }
 
     // Remove models for the `null` method
     models.erase(

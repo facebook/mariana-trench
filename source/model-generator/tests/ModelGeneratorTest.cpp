@@ -113,9 +113,10 @@ TEST_F(ModelGeneratorTest, MappingGenerator) {
 
     const auto method_mappings = MethodMappings(*context.methods);
 
-    auto name_to_methods_result = std::unordered_map<std::string, MethodSet>(
-        method_mappings.name_to_methods.begin(),
-        method_mappings.name_to_methods.end());
+    auto name_to_methods_result =
+        std::unordered_map<std::string, marianatrench::MethodSet>(
+            method_mappings.name_to_methods.begin(),
+            method_mappings.name_to_methods.end());
     std::unordered_map<std::string, std::vector<const Method*>>
         name_to_methods_map;
     for (const auto& pair : name_to_methods_result) {
@@ -131,9 +132,10 @@ TEST_F(ModelGeneratorTest, MappingGenerator) {
     }
     EXPECT_EQ(name_to_methods_map, expected_name_to_methods);
 
-    auto class_to_methods_result = std::unordered_map<std::string, MethodSet>(
-        method_mappings.class_to_methods.begin(),
-        method_mappings.class_to_methods.end());
+    auto class_to_methods_result =
+        std::unordered_map<std::string, marianatrench::MethodSet>(
+            method_mappings.class_to_methods.begin(),
+            method_mappings.class_to_methods.end());
     std::unordered_map<std::string, std::vector<const Method*>>
         class_to_methods_map;
     for (const auto& pair : class_to_methods_result) {
@@ -150,7 +152,7 @@ TEST_F(ModelGeneratorTest, MappingGenerator) {
     EXPECT_EQ(class_to_methods_map, expected_class_to_methods);
 
     auto class_to_override_methods_result =
-        std::unordered_map<std::string, MethodSet>(
+        std::unordered_map<std::string, marianatrench::MethodSet>(
             method_mappings.class_to_override_methods.begin(),
             method_mappings.class_to_override_methods.end());
     std::unordered_map<std::string, std::vector<const Method*>>

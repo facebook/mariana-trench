@@ -1485,6 +1485,11 @@ JsonModelGeneratorItem::JsonModelGeneratorItem(
       model_template_(std::move(model_template)),
       verbosity_(verbosity) {}
 
+std::vector<Model> JsonModelGeneratorItem::run_filtered(
+    const sparta::PatriciaTreeSet<const Method*>& methods) {
+  return this->run_impl(methods.begin(), methods.end());
+}
+
 std::vector<Model> JsonModelGeneratorItem::visit_method(
     const Method* method) const {
   std::vector<Model> models;
@@ -1521,6 +1526,12 @@ JsonModelGeneratorItem::constraint_leaves() const {
     }
   }
   return flattened_constraints;
+}
+
+sparta::PatriciaTreeSetAbstractDomain<const Method*>
+JsonModelGeneratorItem::may_satisfy(
+    const MethodMappings method_mappings) const {
+  return constraint_->may_satisfy(method_mappings);
 }
 
 JsonModelGenerator::JsonModelGenerator(
@@ -1565,6 +1576,30 @@ std::vector<Model> JsonModelGenerator::run(const Methods& methods) {
   std::vector<Model> models;
   for (auto& item : items_) {
     std::vector<Model> method_models = item.run(methods);
+    models.insert(
+        models.end(),
+        std::make_move_iterator(method_models.begin()),
+        std::make_move_iterator(method_models.end()));
+  }
+  return models;
+}
+
+std::vector<Model> JsonModelGenerator::run_optimized(
+    const Methods& methods,
+    const MethodMappings& method_mappings) {
+  std::vector<Model> models;
+  for (auto& item : items_) {
+    sparta::PatriciaTreeSetAbstractDomain<const Method*>
+        filtered_methods_domain = item.may_satisfy(method_mappings);
+    if (filtered_methods_domain.is_bottom()) {
+      continue;
+    }
+    std::vector<Model> method_models;
+    if (filtered_methods_domain.is_top()) {
+      method_models = item.run(methods);
+    } else {
+      method_models = item.run_filtered(filtered_methods_domain.elements());
+    }
     models.insert(
         models.end(),
         std::make_move_iterator(method_models.begin()),

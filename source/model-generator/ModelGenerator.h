@@ -13,6 +13,7 @@
 #include <DexClass.h>
 #include <DexUtil.h>
 #include <RedexResources.h>
+#include <Walkers.h>
 
 #include <mariana-trench/Context.h>
 #include <mariana-trench/Frame.h>
@@ -23,6 +24,13 @@
 #include <mariana-trench/Overrides.h>
 
 namespace marianatrench {
+
+struct MethodMappings {
+  explicit MethodMappings(const Methods& methods);
+  ConcurrentMap<std::string, MethodSet> name_to_methods;
+  ConcurrentMap<std::string, MethodSet> class_to_methods;
+  ConcurrentMap<std::string, MethodSet> class_to_override_methods;
+};
 
 class ModelGenerator {
  public:
@@ -39,6 +47,9 @@ class ModelGenerator {
   }
 
   virtual std::vector<Model> run(const Methods&) = 0;
+  virtual std::vector<Model> run_optimized(
+      const Methods&,
+      const MethodMappings& method_mappings);
 
  protected:
   std::string name_;
@@ -57,13 +68,30 @@ class MethodVisitorModelGenerator : public ModelGenerator {
 
   // This method has to be thread-safe.
   virtual std::vector<Model> visit_method(const Method* method) const = 0;
-};
 
-struct MethodMappings {
-  explicit MethodMappings(const Methods& methods);
-  ConcurrentMap<std::string, MethodSet> name_to_methods;
-  ConcurrentMap<std::string, MethodSet> class_to_methods;
-  ConcurrentMap<std::string, MethodSet> class_to_override_methods;
+ protected:
+  template <typename InputIt>
+  std::vector<Model> run_impl(InputIt begin, InputIt end) {
+    std::vector<Model> models;
+    std::mutex mutex;
+
+    auto queue = sparta::work_queue<const Method*>([&](const Method* method) {
+      std::vector<Model> method_models = this->visit_method(method);
+
+      if (!method_models.empty()) {
+        std::lock_guard<std::mutex> lock(mutex);
+        models.insert(
+            models.end(),
+            std::make_move_iterator(method_models.begin()),
+            std::make_move_iterator(method_models.end()));
+      }
+    });
+    for (auto iterator = begin; iterator != end; ++iterator) {
+      queue.add_item(*iterator);
+    }
+    queue.run_all();
+    return models;
+  }
 };
 
 namespace generator {

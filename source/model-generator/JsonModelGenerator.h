@@ -711,7 +711,11 @@ class JsonModelGeneratorItem final : public MethodVisitorModelGenerator {
       std::unique_ptr<AllOfMethodConstraint> constraint,
       ModelTemplate model_template,
       int verbosity);
+  std::vector<Model> run_filtered(
+      const sparta::PatriciaTreeSet<const Method*>& methods);
   std::unordered_set<const MethodConstraint*> constraint_leaves() const;
+  sparta::PatriciaTreeSetAbstractDomain<const Method*> may_satisfy(
+      const MethodMappings method_mappings) const;
   std::vector<Model> visit_method(const Method* method) const override;
 
  private:
@@ -728,6 +732,9 @@ class JsonModelGenerator final : public ModelGenerator {
       const boost::filesystem::path& json_configuration_file);
 
   std::vector<Model> run(const Methods&) override;
+  std::vector<Model> run_optimized(
+      const Methods&,
+      const MethodMappings& method_mappings) override;
 
  private:
   boost::filesystem::path json_configuration_file_;
