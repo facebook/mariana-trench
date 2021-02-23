@@ -16,11 +16,14 @@ using namespace marianatrench;
 
 namespace {
 
-const auto json_file_path = boost::filesystem::current_path() /
-    "fbandroid/native/mariana-trench/shim/resources/model_generators/sinks/DisallowSensitiveSinkGenerator.json";
-class DisallowSensitiveSinkGeneratorTest : public test::Test {};
+boost::filesystem::path json_file_path() {
+  return test::find_repository_root() /
+      "shim/resources/model_generators/sinks/DisallowSensitiveSinkGenerator.json";
+}
 
 } // namespace
+
+class DisallowSensitiveSinkGeneratorTest : public test::Test {};
 
 TEST_F(DisallowSensitiveSinkGeneratorTest, SinkForDisallowSensitive) {
   Scope scope;
@@ -55,7 +58,7 @@ TEST_F(DisallowSensitiveSinkGeneratorTest, SinkForDisallowSensitive) {
           context, /* method */ method, /* kind */ "DisallowSensitive"));
   EXPECT_THAT(
       JsonModelGenerator(
-          "DisallowSensitiveSinkGenerator", context, json_file_path)
+          "DisallowSensitiveSinkGenerator", context, json_file_path())
           .run(*context.methods),
       testing::UnorderedElementsAre(model));
 }
@@ -74,7 +77,7 @@ TEST_F(DisallowSensitiveSinkGeneratorTest, NoSinkForDisallowSensitive) {
 
   EXPECT_THAT(
       JsonModelGenerator(
-          "DisallowSensitiveSinkGenerator", context, json_file_path)
+          "DisallowSensitiveSinkGenerator", context, json_file_path())
           .run(*context.methods),
       testing::UnorderedElementsAre());
 }

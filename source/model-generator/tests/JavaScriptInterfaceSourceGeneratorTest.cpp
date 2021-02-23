@@ -16,11 +16,14 @@ using namespace marianatrench;
 
 namespace {
 
-const auto json_file_path = boost::filesystem::current_path() /
-    "fbandroid/native/mariana-trench/shim/resources/model_generators/sources/JavaScriptInterfaceSourceGenerator.json";
-class JavaScriptInterfaceSourceGeneratorTest : public test::Test {};
+boost::filesystem::path json_file_path() {
+  return test::find_repository_root() /
+      "shim/resources/model_generators/sources/JavaScriptInterfaceSourceGenerator.json";
+}
 
 } // namespace
+
+class JavaScriptInterfaceSourceGeneratorTest : public test::Test {};
 
 TEST_F(
     JavaScriptInterfaceSourceGeneratorTest,
@@ -61,7 +64,7 @@ TEST_F(
   }
   EXPECT_THAT(
       JsonModelGenerator(
-          "JavaScriptInterfaceSourceGenerator", context, json_file_path)
+          "JavaScriptInterfaceSourceGenerator", context, json_file_path())
           .run(*context.methods),
       testing::UnorderedElementsAre(model));
 }

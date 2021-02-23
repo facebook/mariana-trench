@@ -16,11 +16,14 @@ using namespace marianatrench;
 
 namespace {
 
-const auto json_file_path = boost::filesystem::current_path() /
-    "fbandroid/native/mariana-trench/shim/resources/model_generators/propagations/DataCastFeatureGenerator.json";
-class DataCastFeatureGeneratorTest : public test::Test {};
+boost::filesystem::path json_file_path() {
+  return test::find_repository_root() /
+      "shim/resources/model_generators/propagations/DataCastFeatureGenerator.json";
+}
 
 } // namespace
+
+class DataCastFeatureGeneratorTest : public test::Test {};
 
 TEST_F(DataCastFeatureGeneratorTest, CastToInt) {
   Scope scope;
@@ -41,7 +44,7 @@ TEST_F(DataCastFeatureGeneratorTest, CastToInt) {
   auto* method = context.methods->get(dex_method);
 
   EXPECT_THAT(
-      JsonModelGenerator("DataCastFeatureGenerator", context, json_file_path)
+      JsonModelGenerator("DataCastFeatureGenerator", context, json_file_path())
           .run(*context.methods),
       testing::UnorderedElementsAre(Model(
           /* method */ method,
@@ -76,7 +79,7 @@ TEST_F(DataCastFeatureGeneratorTest, CastToBool) {
   auto* method = context.methods->get(dex_method);
 
   EXPECT_THAT(
-      JsonModelGenerator("DataCastFeatureGenerator", context, json_file_path)
+      JsonModelGenerator("DataCastFeatureGenerator", context, json_file_path())
           .run(*context.methods),
       testing::UnorderedElementsAre(Model(
           /* method */ method,

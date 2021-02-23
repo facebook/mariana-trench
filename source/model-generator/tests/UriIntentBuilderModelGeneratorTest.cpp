@@ -17,8 +17,10 @@ using namespace marianatrench;
 
 namespace {
 
-const auto json_file_path = boost::filesystem::current_path() /
-    "fbandroid/native/mariana-trench/shim/resources/model_generators/propagations/UriIntentBuilderModelGenerator.json";
+boost::filesystem::path json_file_path() {
+  return test::find_repository_root() /
+      "shim/resources/model_generators/propagations/UriIntentBuilderModelGenerator.json";
+}
 
 class UriIntentBuilderModelGeneratorTest : public test::Test {};
 
@@ -40,7 +42,7 @@ TEST_F(UriIntentBuilderModelGeneratorTest, UriIntentBuilderModel) {
 
   EXPECT_THAT(
       JsonModelGenerator(
-          "UriIntentBuilderModelGenerator", context, json_file_path)
+          "UriIntentBuilderModelGenerator", context, json_file_path())
           .run(*context.methods),
       testing::UnorderedElementsAre(Model(
           /* method */ nullptr,
@@ -74,7 +76,7 @@ TEST_F(UriIntentBuilderModelGeneratorTest, UriIntentMapperModel) {
 
   EXPECT_THAT(
       JsonModelGenerator(
-          "UriIntentBuilderModelGenerator", context, json_file_path)
+          "UriIntentBuilderModelGenerator", context, json_file_path())
           .run(*context.methods),
       testing::UnorderedElementsAre(Model(
           /* method */ nullptr,
@@ -109,7 +111,7 @@ TEST_F(UriIntentBuilderModelGeneratorTest, NativeThirdPartyUriHelperModel) {
 
   EXPECT_THAT(
       JsonModelGenerator(
-          "UriIntentBuilderModelGenerator", context, json_file_path)
+          "UriIntentBuilderModelGenerator", context, json_file_path())
           .run(*context.methods),
       testing::UnorderedElementsAre(Model(
           /* method */ nullptr,
@@ -148,7 +150,7 @@ TEST_F(
 
   EXPECT_THAT(
       JsonModelGenerator(
-          "UriIntentBuilderModelGenerator", context, json_file_path)
+          "UriIntentBuilderModelGenerator", context, json_file_path())
           .run(*context.methods),
       testing::UnorderedElementsAre(Model(
           /* method */ nullptr,
@@ -178,7 +180,7 @@ TEST_F(UriIntentBuilderModelGeneratorTest, NoModelForOtherClass) {
 
   EXPECT_THAT(
       JsonModelGenerator(
-          "UriIntentBuilderModelGenerator", context, json_file_path)
+          "UriIntentBuilderModelGenerator", context, json_file_path())
           .run(*context.methods),
       testing::UnorderedElementsAre());
 }
@@ -200,7 +202,7 @@ TEST_F(UriIntentBuilderModelGeneratorTest, NoModelForNonIntentMethod) {
 
   EXPECT_THAT(
       JsonModelGenerator(
-          "UriIntentBuilderModelGenerator", context, json_file_path)
+          "UriIntentBuilderModelGenerator", context, json_file_path())
           .run(*context.methods),
       testing::UnorderedElementsAre());
 }
@@ -223,7 +225,7 @@ TEST_F(UriIntentBuilderModelGeneratorTest, NoModelForConstructor) {
 
   EXPECT_THAT(
       JsonModelGenerator(
-          "UriIntentBuilderModelGenerator", context, json_file_path)
+          "UriIntentBuilderModelGenerator", context, json_file_path())
           .run(*context.methods),
       testing::UnorderedElementsAre());
 }
@@ -248,7 +250,7 @@ TEST_F(UriIntentBuilderModelGeneratorTest, NoModelForPrivateMethod) {
 
   EXPECT_THAT(
       JsonModelGenerator(
-          "UriIntentBuilderModelGenerator", context, json_file_path)
+          "UriIntentBuilderModelGenerator", context, json_file_path())
           .run(*context.methods),
       testing::UnorderedElementsAre());
 }

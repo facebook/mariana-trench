@@ -16,11 +16,14 @@ using namespace marianatrench;
 
 namespace {
 
-const auto json_file_path = boost::filesystem::current_path() /
-    "fbandroid/native/mariana-trench/shim/resources/model_generators/sources/SensitiveSourceGenerator.json";
-class SensitiveSourceGeneratorTest : public test::Test {};
+boost::filesystem::path json_file_path() {
+  return test::find_repository_root() /
+      "shim/resources/model_generators/sources/SensitiveSourceGenerator.json";
+}
 
 } // namespace
+
+class SensitiveSourceGeneratorTest : public test::Test {};
 
 TEST_F(SensitiveSourceGeneratorTest, SensitiveSourceMethod1) {
   Scope scope;
@@ -55,7 +58,7 @@ TEST_F(SensitiveSourceGeneratorTest, SensitiveSourceMethod1) {
           /* method */ base_method,
           /* kind */ "SensitiveData"));
   EXPECT_THAT(
-      JsonModelGenerator("SensitiveSourceGenerator", context, json_file_path)
+      JsonModelGenerator("SensitiveSourceGenerator", context, json_file_path())
           .run(*context.methods),
       testing::UnorderedElementsAre(model));
 }
@@ -93,7 +96,7 @@ TEST_F(SensitiveSourceGeneratorTest, SensitiveSourceMethod2) {
           /* method */ base_method,
           /* kind */ "SensitiveData"));
   EXPECT_THAT(
-      JsonModelGenerator("SensitiveSourceGenerator", context, json_file_path)
+      JsonModelGenerator("SensitiveSourceGenerator", context, json_file_path())
           .run(*context.methods),
       testing::UnorderedElementsAre(model));
 }
@@ -113,7 +116,7 @@ TEST_F(SensitiveSourceGeneratorTest, NonSensitiveSourceMethod) {
   auto context = test::make_context(store);
 
   EXPECT_THAT(
-      JsonModelGenerator("SensitiveSourceGenerator", context, json_file_path)
+      JsonModelGenerator("SensitiveSourceGenerator", context, json_file_path())
           .run(*context.methods),
       testing::UnorderedElementsAre());
 }

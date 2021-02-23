@@ -16,11 +16,14 @@ using namespace marianatrench;
 
 namespace {
 
-const auto json_file_path = boost::filesystem::current_path() /
-    "fbandroid/native/mariana-trench/shim/resources/model_generators/sources/EditableTextSourceGenerator.json";
-class EditableTextSourceGeneratorTest : public test::Test {};
+boost::filesystem::path json_file_path() {
+  return test::find_repository_root() /
+      "shim/resources/model_generators/sources/EditableTextSourceGenerator.json";
+}
 
 } // namespace
+
+class EditableTextSourceGeneratorTest : public test::Test {};
 
 TEST_F(EditableTextSourceGeneratorTest, OverrideSourceMethod) {
   Scope scope;
@@ -47,7 +50,8 @@ TEST_F(EditableTextSourceGeneratorTest, OverrideSourceMethod) {
   auto* method = context.methods->get(dex_method);
 
   EXPECT_THAT(
-      JsonModelGenerator("EditableTextSourceGenerator", context, json_file_path)
+      JsonModelGenerator(
+          "EditableTextSourceGenerator", context, json_file_path())
           .run(*context.methods),
       testing::UnorderedElementsAre(
           Model(
@@ -89,7 +93,8 @@ TEST_F(EditableTextSourceGeneratorTest, NoOverrideMethod) {
   auto context = test::make_context(store);
 
   EXPECT_THAT(
-      JsonModelGenerator("EditableTextSourceGenerator", context, json_file_path)
+      JsonModelGenerator(
+          "EditableTextSourceGenerator", context, json_file_path())
           .run(*context.methods),
       testing::UnorderedElementsAre());
 }

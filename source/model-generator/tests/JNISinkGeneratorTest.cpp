@@ -18,11 +18,14 @@ using namespace marianatrench;
 
 namespace {
 
-const auto json_file_path = boost::filesystem::current_path() /
-    "fbandroid/native/mariana-trench/shim/resources/model_generators/sinks/JNISinkGenerator.json";
-class JNISinkGeneratorTest : public test::Test {};
+boost::filesystem::path json_file_path() {
+  return test::find_repository_root() /
+      "shim/resources/model_generators/sinks/JNISinkGenerator.json";
+}
 
 } // namespace
+
+class JNISinkGeneratorTest : public test::Test {};
 
 TEST_F(JNISinkGeneratorTest, SinkForNative) {
   Scope scope;
@@ -45,7 +48,7 @@ TEST_F(JNISinkGeneratorTest, SinkForNative) {
   auto* method = context.methods->get(dex_method);
 
   EXPECT_THAT(
-      JsonModelGenerator("JNISinkGenerator", context, json_file_path)
+      JsonModelGenerator("JNISinkGenerator", context, json_file_path())
           .run(*context.methods),
       testing::UnorderedElementsAre(Model(
           /* method */ method,
@@ -87,7 +90,7 @@ TEST_F(JNISinkGeneratorTest, SinkForStaticNative) {
   auto* method = context.methods->get(dex_method);
 
   EXPECT_THAT(
-      JsonModelGenerator("JNISinkGenerator", context, json_file_path)
+      JsonModelGenerator("JNISinkGenerator", context, json_file_path())
           .run(*context.methods),
       testing::UnorderedElementsAre(Model(
           /* method */ method,
@@ -123,7 +126,7 @@ TEST_F(JNISinkGeneratorTest, NoSinkForNonNative) {
   auto context = test::make_context(store);
 
   EXPECT_THAT(
-      JsonModelGenerator("JNISinkGenerator", context, json_file_path)
+      JsonModelGenerator("JNISinkGenerator", context, json_file_path())
           .run(*context.methods),
       testing::UnorderedElementsAre());
 }

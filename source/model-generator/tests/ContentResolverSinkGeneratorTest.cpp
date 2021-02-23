@@ -16,11 +16,14 @@ using namespace marianatrench;
 
 namespace {
 
-const auto json_file_path = boost::filesystem::current_path() /
-    "fbandroid/native/mariana-trench/shim/resources/model_generators/sinks/ContentResolverSinkGenerator.json";
-class ContentResolverSinkGeneratorTest : public test::Test {};
+boost::filesystem::path json_file_path() {
+  return test::find_repository_root() /
+      "shim/resources/model_generators/sinks/ContentResolverSinkGenerator.json";
+}
 
 } // namespace
+
+class ContentResolverSinkGeneratorTest : public test::Test {};
 
 TEST_F(ContentResolverSinkGeneratorTest, SinkForQuery) {
   Scope scope;
@@ -52,7 +55,7 @@ TEST_F(ContentResolverSinkGeneratorTest, SinkForQuery) {
 
   EXPECT_THAT(
       JsonModelGenerator(
-          "ContentResolverSinkGenerator", context, json_file_path)
+          "ContentResolverSinkGenerator", context, json_file_path())
           .run(*context.methods),
       testing::UnorderedElementsAre(model));
 }
@@ -87,7 +90,7 @@ TEST_F(ContentResolverSinkGeneratorTest, SinkForDelete) {
 
   EXPECT_THAT(
       JsonModelGenerator(
-          "ContentResolverSinkGenerator", context, json_file_path)
+          "ContentResolverSinkGenerator", context, json_file_path())
           .run(*context.methods),
       testing::UnorderedElementsAre(model));
 }
@@ -122,7 +125,7 @@ TEST_F(ContentResolverSinkGeneratorTest, SinkForOpenAssetFile) {
 
   EXPECT_THAT(
       JsonModelGenerator(
-          "ContentResolverSinkGenerator", context, json_file_path)
+          "ContentResolverSinkGenerator", context, json_file_path())
           .run(*context.methods),
       testing::UnorderedElementsAre(model));
 }
@@ -156,7 +159,7 @@ TEST_F(ContentResolverSinkGeneratorTest, SinkForOpenInputStream) {
 
   EXPECT_THAT(
       JsonModelGenerator(
-          "ContentResolverSinkGenerator", context, json_file_path)
+          "ContentResolverSinkGenerator", context, json_file_path())
           .run(*context.methods),
       testing::UnorderedElementsAre(model));
 }

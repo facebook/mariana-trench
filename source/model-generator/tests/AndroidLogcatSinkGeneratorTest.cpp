@@ -17,11 +17,14 @@ using namespace marianatrench;
 
 namespace {
 
-const auto json_file_path = boost::filesystem::current_path() /
-    "fbandroid/native/mariana-trench/shim/resources/model_generators/sinks/AndroidLogcatSinkGenerator.json";
-class AndroidLogcatSinkGeneratorTest : public test::Test {};
+boost::filesystem::path json_file_path() {
+  return test::find_repository_root() /
+      "shim/resources/model_generators/sinks/AndroidLogcatSinkGenerator.json";
+}
 
 } // namespace
+
+class AndroidLogcatSinkGeneratorTest : public test::Test {};
 
 TEST_F(AndroidLogcatSinkGeneratorTest, SinkForLogcatV) {
   Scope scope;
@@ -41,7 +44,8 @@ TEST_F(AndroidLogcatSinkGeneratorTest, SinkForLogcatV) {
   auto context = test::make_context(store);
 
   EXPECT_THAT(
-      JsonModelGenerator("AndroidLogcatSinkGenerator", context, json_file_path)
+      JsonModelGenerator(
+          "AndroidLogcatSinkGenerator", context, json_file_path())
           .run(*context.methods),
       testing::UnorderedElementsAre());
 }
@@ -64,7 +68,8 @@ TEST_F(AndroidLogcatSinkGeneratorTest, SinkForLogcatD) {
   auto context = test::make_context(store);
 
   EXPECT_THAT(
-      JsonModelGenerator("AndroidLogcatSinkGenerator", context, json_file_path)
+      JsonModelGenerator(
+          "AndroidLogcatSinkGenerator", context, json_file_path())
           .run(*context.methods),
       testing::UnorderedElementsAre());
 }
@@ -87,7 +92,8 @@ TEST_F(AndroidLogcatSinkGeneratorTest, SinkForLogcatI) {
   auto context = test::make_context(store);
 
   EXPECT_THAT(
-      JsonModelGenerator("AndroidLogcatSinkGenerator", context, json_file_path)
+      JsonModelGenerator(
+          "AndroidLogcatSinkGenerator", context, json_file_path())
           .run(*context.methods),
       testing::UnorderedElementsAre());
 }
@@ -111,7 +117,8 @@ TEST_F(AndroidLogcatSinkGeneratorTest, SinkForLogcatW) {
   auto* method = context.methods->get(dex_method);
 
   EXPECT_THAT(
-      JsonModelGenerator("AndroidLogcatSinkGenerator", context, json_file_path)
+      JsonModelGenerator(
+          "AndroidLogcatSinkGenerator", context, json_file_path())
           .run(*context.methods),
       testing::UnorderedElementsAre(Model(
           /* method */ method,
@@ -141,7 +148,8 @@ TEST_F(AndroidLogcatSinkGeneratorTest, NoSinkForNonLog) {
   auto context = test::make_context(store);
 
   EXPECT_THAT(
-      JsonModelGenerator("AndroidLogcatSinkGenerator", context, json_file_path)
+      JsonModelGenerator(
+          "AndroidLogcatSinkGenerator", context, json_file_path())
           .run(*context.methods),
       testing::UnorderedElementsAre());
 }

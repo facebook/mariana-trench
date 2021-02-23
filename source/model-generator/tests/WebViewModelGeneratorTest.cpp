@@ -16,15 +16,19 @@ using namespace marianatrench;
 
 namespace {
 
-const auto client_override_source_json_file_path =
-    boost::filesystem::current_path() /
-    "fbandroid/native/mariana-trench/shim/resources/model_generators/sources/WebViewSourceGenerator.json";
-const auto client_webview_source_json_file_path =
-    boost::filesystem::current_path() /
-    "fbandroid/native/mariana-trench/shim/resources/model_generators/sinks/WebViewModelGenerator.json";
-class WebViewModelGeneratorTest : public test::Test {};
+boost::filesystem::path client_override_source_json_file_path() {
+  return test::find_repository_root() /
+      "shim/resources/model_generators/sources/WebViewSourceGenerator.json";
+}
+
+boost::filesystem::path client_webview_source_json_file_path() {
+  return test::find_repository_root() /
+      "shim/resources/model_generators/sinks/WebViewModelGenerator.json";
+}
 
 } // namespace
+
+class WebViewModelGeneratorTest : public test::Test {};
 
 TEST_F(WebViewModelGeneratorTest, OverrideSourceMethod) {
   Scope scope;
@@ -54,7 +58,7 @@ TEST_F(WebViewModelGeneratorTest, OverrideSourceMethod) {
       JsonModelGenerator(
           "WebViewSourceGenerator",
           context,
-          client_override_source_json_file_path)
+          client_override_source_json_file_path())
           .run(*context.methods),
       testing::UnorderedElementsAre(
           Model(
@@ -109,7 +113,7 @@ TEST_F(WebViewModelGeneratorTest, OverrideSinkMethod) {
       JsonModelGenerator(
           "WebViewModelGenerator",
           context,
-          client_webview_source_json_file_path)
+          client_webview_source_json_file_path())
           .run(*context.methods),
       testing::UnorderedElementsAre(
           Model(
@@ -156,7 +160,7 @@ TEST_F(WebViewModelGeneratorTest, NoOverrideMethod) {
       JsonModelGenerator(
           "WebViewSourceGenerator",
           context,
-          client_override_source_json_file_path)
+          client_override_source_json_file_path())
           .run(*context.methods),
       testing::UnorderedElementsAre());
 }

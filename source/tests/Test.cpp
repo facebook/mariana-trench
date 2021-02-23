@@ -75,6 +75,20 @@ Context make_context(const DexStore& store) {
   return context;
 }
 
+#ifndef MARIANA_TRENCH_FACEBOOK_BUILD
+boost::filesystem::path find_repository_root() {
+  auto path = boost::filesystem::current_path();
+  while (!path.empty() && !boost::filesystem::is_directory(path / "source")) {
+    path = path.parent_path();
+  }
+  if (path.empty()) {
+    throw std::logic_error(
+        "Could not find the root directory of the repository");
+  }
+  return path;
+}
+#endif
+
 Json::Value parse_json(std::string input) {
   return JsonValidation::parse_json(std::move(input));
 }

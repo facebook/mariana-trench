@@ -17,11 +17,14 @@ using namespace marianatrench;
 
 namespace {
 
-const auto json_file_path = boost::filesystem::current_path() /
-    "fbandroid/native/mariana-trench/shim/resources/model_generators/sinks/IntentLaunchingSinkGenerator.json";
-class IntentLaunchingSinkGeneratorTest : public test::Test {};
+boost::filesystem::path json_file_path() {
+  return test::find_repository_root() /
+      "shim/resources/model_generators/sinks/IntentLaunchingSinkGenerator.json";
+}
 
 } // namespace
+
+class IntentLaunchingSinkGeneratorTest : public test::Test {};
 
 TEST_F(IntentLaunchingSinkGeneratorTest, SinkForContext) {
   Scope scope;
@@ -51,7 +54,7 @@ TEST_F(IntentLaunchingSinkGeneratorTest, SinkForContext) {
 
   EXPECT_THAT(
       JsonModelGenerator(
-          "IntentLaunchingSinkGenerator", context, json_file_path)
+          "IntentLaunchingSinkGenerator", context, json_file_path())
           .run(*context.methods),
       testing::UnorderedElementsAre(model));
 }
@@ -85,7 +88,7 @@ TEST_F(IntentLaunchingSinkGeneratorTest, SinkForStaticMethod) {
 
   EXPECT_THAT(
       JsonModelGenerator(
-          "IntentLaunchingSinkGenerator", context, json_file_path)
+          "IntentLaunchingSinkGenerator", context, json_file_path())
           .run(*context.methods),
       testing::UnorderedElementsAre(model));
 }
@@ -119,7 +122,7 @@ TEST_F(IntentLaunchingSinkGeneratorTest, SinkForActivity) {
 
   EXPECT_THAT(
       JsonModelGenerator(
-          "IntentLaunchingSinkGenerator", context, json_file_path)
+          "IntentLaunchingSinkGenerator", context, json_file_path())
           .run(*context.methods),
       testing::UnorderedElementsAre(model));
 }
@@ -153,7 +156,7 @@ TEST_F(IntentLaunchingSinkGeneratorTest, SinkForFragment) {
 
   EXPECT_THAT(
       JsonModelGenerator(
-          "IntentLaunchingSinkGenerator", context, json_file_path)
+          "IntentLaunchingSinkGenerator", context, json_file_path())
           .run(*context.methods),
       testing::UnorderedElementsAre(model));
 }
@@ -187,7 +190,7 @@ TEST_F(IntentLaunchingSinkGeneratorTest, SinkForIntentLauncher) {
 
   EXPECT_THAT(
       JsonModelGenerator(
-          "IntentLaunchingSinkGenerator", context, json_file_path)
+          "IntentLaunchingSinkGenerator", context, json_file_path())
           .run(*context.methods),
       testing::UnorderedElementsAre(model));
 }
@@ -221,7 +224,7 @@ TEST_F(IntentLaunchingSinkGeneratorTest, SinkForSecureContextHelper) {
 
   EXPECT_THAT(
       JsonModelGenerator(
-          "IntentLaunchingSinkGenerator", context, json_file_path)
+          "IntentLaunchingSinkGenerator", context, json_file_path())
           .run(*context.methods),
       testing::UnorderedElementsAre(model));
 }
@@ -255,7 +258,7 @@ TEST_F(IntentLaunchingSinkGeneratorTest, SinkForAndroidxFragment) {
 
   EXPECT_THAT(
       JsonModelGenerator(
-          "IntentLaunchingSinkGenerator", context, json_file_path)
+          "IntentLaunchingSinkGenerator", context, json_file_path())
           .run(*context.methods),
       testing::UnorderedElementsAre(model));
 }
@@ -288,7 +291,7 @@ TEST_F(IntentLaunchingSinkGeneratorTest, SinkForNativeBroadcast) {
 
   EXPECT_THAT(
       JsonModelGenerator(
-          "IntentLaunchingSinkGenerator", context, json_file_path)
+          "IntentLaunchingSinkGenerator", context, json_file_path())
           .run(*context.methods),
       testing::UnorderedElementsAre(model));
 }
@@ -321,7 +324,7 @@ TEST_F(IntentLaunchingSinkGeneratorTest, SinkForContextWrapper) {
 
   EXPECT_THAT(
       JsonModelGenerator(
-          "IntentLaunchingSinkGenerator", context, json_file_path)
+          "IntentLaunchingSinkGenerator", context, json_file_path())
           .run(*context.methods),
       testing::UnorderedElementsAre(model));
 }
@@ -353,7 +356,7 @@ TEST_F(IntentLaunchingSinkGeneratorTest, SinkForTaskStackBuilder) {
 
   EXPECT_THAT(
       JsonModelGenerator(
-          "IntentLaunchingSinkGenerator", context, json_file_path)
+          "IntentLaunchingSinkGenerator", context, json_file_path())
           .run(*context.methods),
       testing::UnorderedElementsAre(model));
 }
@@ -375,7 +378,7 @@ TEST_F(IntentLaunchingSinkGeneratorTest, NoSinkForNonStartMethod) {
 
   EXPECT_THAT(
       JsonModelGenerator(
-          "IntentLaunchingSinkGenerator", context, json_file_path)
+          "IntentLaunchingSinkGenerator", context, json_file_path())
           .run(*context.methods),
       testing::UnorderedElementsAre());
 }
@@ -398,7 +401,7 @@ TEST_F(IntentLaunchingSinkGeneratorTest, NoSinkForNonIntentParamMethod) {
 
   EXPECT_THAT(
       JsonModelGenerator(
-          "IntentLaunchingSinkGenerator", context, json_file_path)
+          "IntentLaunchingSinkGenerator", context, json_file_path())
           .run(*context.methods),
       testing::UnorderedElementsAre());
 }
@@ -420,7 +423,7 @@ TEST_F(IntentLaunchingSinkGeneratorTest, NoSinkForArrayOfIntentAsParam) {
 
   EXPECT_THAT(
       JsonModelGenerator(
-          "IntentLaunchingSinkGenerator", context, json_file_path)
+          "IntentLaunchingSinkGenerator", context, json_file_path())
           .run(*context.methods),
       testing::UnorderedElementsAre());
 }

@@ -16,11 +16,14 @@ using namespace marianatrench;
 
 namespace {
 
-const auto json_file_path = boost::filesystem::current_path() /
-    "fbandroid/native/mariana-trench/shim/resources/model_generators/sources/BroadcastReceiverSourceGenerator.json";
-class BroadcastReceiverSourceGeneratorTest : public test::Test {};
+boost::filesystem::path json_file_path() {
+  return test::find_repository_root() /
+      "shim/resources/model_generators/sources/BroadcastReceiverSourceGenerator.json";
+}
 
 } // namespace
+
+class BroadcastReceiverSourceGeneratorTest : public test::Test {};
 
 TEST_F(BroadcastReceiverSourceGeneratorTest, OverrideSourceMethod) {
   Scope scope;
@@ -48,7 +51,7 @@ TEST_F(BroadcastReceiverSourceGeneratorTest, OverrideSourceMethod) {
 
   EXPECT_THAT(
       JsonModelGenerator(
-          "BroadcastReceiverSourceGenerator", context, json_file_path)
+          "BroadcastReceiverSourceGenerator", context, json_file_path())
           .run(*context.methods),
       testing::UnorderedElementsAre(
           Model(
@@ -91,7 +94,7 @@ TEST_F(BroadcastReceiverSourceGeneratorTest, NoOverrideMethod) {
 
   EXPECT_THAT(
       JsonModelGenerator(
-          "BroadcastReceiverSourceGenerator", context, json_file_path)
+          "BroadcastReceiverSourceGenerator", context, json_file_path())
           .run(*context.methods),
       testing::UnorderedElementsAre());
 }
