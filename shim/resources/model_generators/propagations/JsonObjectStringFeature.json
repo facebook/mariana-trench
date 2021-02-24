@@ -1,0 +1,24 @@
+{
+  "model_generators": [
+    {
+      "find": "methods",
+      "where": [
+        {
+          "constraint": "signature",
+          "pattern": "Lorg/json/JSONObject;\\.toString:.*"
+        }
+      ],
+      "model": {
+        "propagation": [
+          {
+            "input": "Argument(0)",
+            "output": "Return",
+            "features": [
+              "via-json-string"
+            ]
+          }
+        ]
+      }
+    }
+  ]
+}
