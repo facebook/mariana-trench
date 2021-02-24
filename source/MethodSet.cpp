@@ -9,11 +9,15 @@
 
 #include <mariana-trench/JsonValidation.h>
 #include <mariana-trench/MethodSet.h>
+#include <mariana-trench/Methods.h>
 
 namespace marianatrench {
 
 MethodSet::MethodSet(std::initializer_list<const Method*> methods)
     : set_(methods) {}
+
+MethodSet::MethodSet(const Methods& methods)
+    : set_(methods.begin(), methods.end()) {}
 
 void MethodSet::add(const Method* method) {
   if (is_top_) {
@@ -71,6 +75,17 @@ void MethodSet::meet_with(const MethodSet& other) {
 
 void MethodSet::narrow_with(const MethodSet& other) {
   meet_with(other);
+}
+
+void MethodSet::difference_with(const MethodSet& other) {
+  if (other.is_top_) {
+    set_to_bottom();
+    return;
+  }
+  if (is_top_) {
+    return;
+  }
+  set_.difference_with(other.set_);
 }
 
 MethodSet MethodSet::from_json(const Json::Value& value, Context& context) {

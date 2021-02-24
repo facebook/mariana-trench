@@ -368,6 +368,15 @@ std::vector<const MethodConstraint*> AllOfMethodConstraint::children() const {
   return constraints;
 }
 
+MethodSet AllOfMethodConstraint::may_satisfy(
+    const MethodMappings& method_mappings) const {
+  auto intersection_set = MethodSet::top();
+  for (const auto& constraint : constraints_) {
+    intersection_set.meet_with(constraint->may_satisfy(method_mappings));
+  }
+  return intersection_set;
+}
+
 bool AllOfMethodConstraint::satisfy(const Method* method) const {
   return std::all_of(
       constraints_.begin(),
@@ -403,6 +412,18 @@ std::vector<const MethodConstraint*> AnyOfMethodConstraint::children() const {
     constraints.push_back(constraint.get());
   }
   return constraints;
+}
+
+MethodSet AnyOfMethodConstraint::may_satisfy(
+    const MethodMappings& method_mappings) const {
+  if (constraints_.empty()) {
+    return MethodSet::top();
+  }
+  auto union_set = MethodSet::bottom();
+  for (const auto& constraint : constraints_) {
+    union_set.join_with(constraint->may_satisfy(method_mappings));
+  }
+  return union_set;
 }
 
 bool AnyOfMethodConstraint::satisfy(const Method* method) const {
@@ -444,6 +465,17 @@ bool NotMethodConstraint::has_children() const {
 
 std::vector<const MethodConstraint*> NotMethodConstraint::children() const {
   return {constraint_.get()};
+}
+
+MethodSet NotMethodConstraint::may_satisfy(
+    const MethodMappings& method_mappings) const {
+  MethodSet child_methods = constraint_->may_satisfy(method_mappings);
+  if (child_methods.is_top()) {
+    return child_methods;
+  }
+  MethodSet all_methods = method_mappings.all_methods;
+  all_methods.difference_with(child_methods);
+  return all_methods;
 }
 
 bool NotMethodConstraint::satisfy(const Method* method) const {

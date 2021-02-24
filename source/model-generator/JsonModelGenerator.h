@@ -198,6 +198,7 @@ class AllOfMethodConstraint final : public MethodConstraint {
       std::vector<std::unique_ptr<MethodConstraint>> constraints);
   bool has_children() const override;
   std::vector<const MethodConstraint*> children() const override;
+  MethodSet may_satisfy(const MethodMappings& method_mappings) const override;
   bool satisfy(const Method* method) const override;
   bool operator==(const MethodConstraint& other) const override;
 
@@ -211,6 +212,7 @@ class AnyOfMethodConstraint final : public MethodConstraint {
       std::vector<std::unique_ptr<MethodConstraint>> constraints);
   bool has_children() const override;
   std::vector<const MethodConstraint*> children() const override;
+  MethodSet may_satisfy(const MethodMappings& method_mappings) const override;
   bool satisfy(const Method* method) const override;
   bool operator==(const MethodConstraint& other) const override;
 
@@ -223,6 +225,7 @@ class NotMethodConstraint final : public MethodConstraint {
   explicit NotMethodConstraint(std::unique_ptr<MethodConstraint> constraint);
   bool has_children() const override;
   std::vector<const MethodConstraint*> children() const override;
+  MethodSet may_satisfy(const MethodMappings& method_mappings) const override;
   bool satisfy(const Method* method) const override;
   bool operator==(const MethodConstraint& other) const override;
 

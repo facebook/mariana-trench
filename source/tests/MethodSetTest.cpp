@@ -119,4 +119,36 @@ TEST_F(MethodSetTest, Meet) {
   EXPECT_EQ(methods_top.meet(MethodSet()), MethodSet());
 }
 
+TEST_F(MethodSetTest, Difference) {
+  auto methods = MethodSet();
+  methods.difference_with(MethodSet{method_a});
+  EXPECT_EQ(methods, MethodSet());
+
+  methods = MethodSet({method_a});
+  methods.difference_with(MethodSet{method_a});
+  EXPECT_EQ(methods, MethodSet());
+
+  methods = MethodSet({method_a});
+  methods.difference_with(MethodSet{method_b});
+  EXPECT_EQ(methods, MethodSet({method_a}));
+
+  methods = MethodSet({method_a, method_b});
+  methods.difference_with(MethodSet{method_a});
+  EXPECT_EQ(methods, MethodSet({method_b}));
+
+  methods = MethodSet({method_a, method_b});
+  methods.difference_with(MethodSet::top());
+  EXPECT_EQ(methods, MethodSet());
+
+  auto methods_top = MethodSet::top();
+  methods_top.difference_with(MethodSet{method_b});
+  EXPECT_TRUE(methods_top.is_top());
+
+  methods_top.difference_with(MethodSet());
+  EXPECT_TRUE(methods_top.is_top());
+
+  methods_top.difference_with(MethodSet::top());
+  EXPECT_EQ(methods_top, MethodSet());
+}
+
 } // namespace marianatrench

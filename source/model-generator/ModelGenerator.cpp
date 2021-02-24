@@ -118,7 +118,8 @@ ConcurrentMap<std::string, MethodSet> create_class_to_override_methods(
 MethodMappings::MethodMappings(const Methods& methods)
     : name_to_methods(create_name_to_methods(methods)),
       class_to_methods(create_class_to_methods(methods)),
-      class_to_override_methods(create_class_to_override_methods(methods)) {}
+      class_to_override_methods(create_class_to_override_methods(methods)),
+      all_methods(methods) {}
 
 const std::string& generator::get_class_name(const Method* method) {
   return method->get_class()->get_name()->str();

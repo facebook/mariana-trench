@@ -42,6 +42,7 @@ class MethodSet final : public sparta::AbstractDomain<MethodSet> {
   MethodSet() = default;
 
   explicit MethodSet(std::initializer_list<const Method*> methods);
+  explicit MethodSet(const Methods& methods);
 
   MethodSet(const MethodSet&) = default;
   MethodSet(MethodSet&&) = default;
@@ -105,6 +106,8 @@ class MethodSet final : public sparta::AbstractDomain<MethodSet> {
   void meet_with(const MethodSet& other) override;
 
   void narrow_with(const MethodSet& other) override;
+
+  void difference_with(const MethodSet& other);
 
   static MethodSet from_json(const Json::Value& value, Context& context);
   Json::Value to_json() const;

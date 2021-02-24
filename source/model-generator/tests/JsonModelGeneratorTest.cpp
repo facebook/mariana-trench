@@ -2104,6 +2104,71 @@ TEST_F(JsonModelGeneratorTest, MethodConstraintFromJson) {
   // NotMethodConstraint
 }
 
+TEST_F(JsonModelGeneratorTest, AllOfMethodConstraintMaySatisfy) {
+  Scope scope;
+  auto context = test::make_empty_context();
+
+  std::string class_name = "Landroid/util/Log;";
+  std::string method_name = "println";
+  auto method_mappings = MethodMappings(*context.methods);
+
+  EXPECT_EQ(
+      AllOfMethodConstraint({}).may_satisfy(method_mappings),
+      marianatrench::MethodSet::top());
+
+  {
+    std::vector<std::unique_ptr<MethodConstraint>> constraints;
+    constraints.push_back(std::make_unique<MethodNameConstraint>(method_name));
+
+    EXPECT_EQ(
+        AllOfMethodConstraint(std::move(constraints))
+            .may_satisfy(method_mappings),
+        marianatrench::MethodSet::top());
+  }
+}
+
+TEST_F(JsonModelGeneratorTest, AnyOfMethodConstraintMaySatisfy) {
+  Scope scope;
+  auto context = test::make_empty_context();
+
+  std::string class_name = "Landroid/util/Log;";
+  std::string method_name = "println";
+  auto method_mappings = MethodMappings(*context.methods);
+
+  EXPECT_EQ(
+      AnyOfMethodConstraint({}).may_satisfy(method_mappings),
+      marianatrench::MethodSet::top());
+
+  {
+    std::vector<std::unique_ptr<MethodConstraint>> constraints;
+    constraints.push_back(std::make_unique<MethodNameConstraint>(method_name));
+
+    EXPECT_EQ(
+        AnyOfMethodConstraint(std::move(constraints))
+            .may_satisfy(method_mappings),
+        marianatrench::MethodSet::top());
+  }
+}
+
+TEST_F(JsonModelGeneratorTest, NotMethodConstraintMaySatisfy) {
+  Scope scope;
+  auto context = test::make_empty_context();
+
+  std::string class_name = "Landroid/util/Log;";
+  std::string method_name = "println";
+  auto method_mappings = MethodMappings(*context.methods);
+
+  EXPECT_EQ(
+      NotMethodConstraint(std::make_unique<MethodNameConstraint>("printLn"))
+          .may_satisfy(method_mappings),
+      marianatrench::MethodSet::top());
+
+  EXPECT_EQ(
+      NotMethodConstraint(std::make_unique<MethodNameConstraint>(method_name))
+          .may_satisfy(method_mappings),
+      marianatrench::MethodSet::top());
+}
+
 TEST_F(JsonModelGeneratorTest, UniqueConstraints) {
   Scope scope;
   DexStore store("stores");
