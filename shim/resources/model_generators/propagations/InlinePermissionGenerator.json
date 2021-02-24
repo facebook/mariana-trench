@@ -42,6 +42,45 @@
           }
         ]
       }
+    },
+    {
+      "find": "methods",
+      "where": [
+        {
+          "constraint": "any_of",
+          "inners": [
+            {
+              "constraint": "signature",
+              "pattern": "Lcom/facebook/aloha.*;\\.check[a-zA-Z]*Permission:.*"
+            },
+            {
+              "constraint": "name",
+              "pattern": "enforceCallingUidCanAccessUri"
+            }
+          ]
+        }
+      ],
+      "model": {
+        "for_all_parameters": [
+          {
+            "variable": "x",
+            "where": [
+              {
+                "constraint": "name",
+                "pattern": "Landroid/net/Uri;"
+              }
+            ],
+            "add_features_to_arguments": [
+              {
+                "features": [
+                  "via-permission-check"
+                ],
+                "port": "Argument(x)"
+              }
+            ]
+          }
+        ]
+      }
     }
   ]
 }
