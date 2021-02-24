@@ -16,22 +16,41 @@ MethodSet::MethodSet(std::initializer_list<const Method*> methods)
     : set_(methods) {}
 
 void MethodSet::add(const Method* method) {
+  if (is_top_) {
+    return;
+  }
   set_.insert(method);
 }
 
 void MethodSet::remove(const Method* method) {
+  if (is_top_) {
+    return;
+  }
   set_.remove(method);
 }
 
 bool MethodSet::leq(const MethodSet& other) const {
+  if (is_top_) {
+    return other.is_top_;
+  }
+  if (other.is_top_) {
+    return true;
+  }
   return set_.is_subset_of(other.set_);
 }
 
 bool MethodSet::equals(const MethodSet& other) const {
-  return set_.equals(other.set_);
+  return is_top_ == other.is_top_ && set_.equals(other.set_);
 }
 
 void MethodSet::join_with(const MethodSet& other) {
+  if (is_top_) {
+    return;
+  }
+  if (other.is_top_) {
+    set_to_top();
+    return;
+  }
   set_.union_with(other.set_);
 }
 
@@ -40,6 +59,13 @@ void MethodSet::widen_with(const MethodSet& other) {
 }
 
 void MethodSet::meet_with(const MethodSet& other) {
+  if (is_top_) {
+    *this = other;
+    return;
+  }
+  if (other.is_top_) {
+    return;
+  }
   set_.intersection_with(other.set_);
 }
 
@@ -64,6 +90,9 @@ Json::Value MethodSet::to_json() const {
 }
 
 std::ostream& operator<<(std::ostream& out, const MethodSet& methods) {
+  if (methods.is_top_) {
+    return out << "TOP";
+  }
   out << "{";
   for (auto iterator = methods.begin(), end = methods.end(); iterator != end;) {
     out << "`" << show(*iterator) << "`";

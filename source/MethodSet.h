@@ -53,34 +53,40 @@ class MethodSet final : public sparta::AbstractDomain<MethodSet> {
   }
 
   static MethodSet top() {
-    mt_unreachable(); // Not implemented.
+    auto method_set = MethodSet();
+    method_set.set_to_top();
+    return method_set;
   }
 
   bool is_bottom() const override {
-    return set_.empty();
+    return !is_top_ && set_.empty();
   }
 
   bool is_top() const override {
-    return false;
+    return is_top_;
   }
 
   void set_to_bottom() override {
+    is_top_ = false;
     set_.clear();
   }
 
   void set_to_top() override {
-    mt_unreachable(); // Not implemented.
+    set_.clear();
+    is_top_ = true;
   }
 
   bool empty() const {
-    return set_.empty();
+    return is_bottom();
   }
 
   iterator begin() const {
+    mt_assert(!is_top_);
     return set_.begin();
   }
 
   iterator end() const {
+    mt_assert(!is_top_);
     return set_.end();
   }
 
@@ -105,8 +111,9 @@ class MethodSet final : public sparta::AbstractDomain<MethodSet> {
 
   friend std::ostream& operator<<(std::ostream& out, const MethodSet& methods);
 
- public:
+ private:
   Set set_;
+  bool is_top_ = false;
 };
 
 } // namespace marianatrench
