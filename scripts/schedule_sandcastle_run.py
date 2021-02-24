@@ -7,24 +7,83 @@
 import argparse
 import json
 import logging
+import os
 import subprocess
+import sys
+import traceback
+from typing import Any, Dict, Iterable, Optional
 
 LOG: logging.Logger = logging.getLogger(__name__)
 
 
-def get_job_definition(project_names, input_tenant):
+class ArgumentError(Exception):
+    pass
+
+
+def save_to_everpaste(path: str) -> str:
+    return subprocess.check_output(
+        [
+            "clowder",
+            "put",
+            "--fbtype=EVERSTORE_EVERPASTEBLOB",
+            "--extension=apk",
+            path,
+        ],
+        universal_newlines=True,
+    ).strip()
+
+
+def sanitize_name(name: str) -> str:
+    """
+    The name here is used for naming a sandcastle job.
+    The allowed characters are lowercase alphabets, digits, hyphens and underscores.
+    """
+    sanitized_name = ""
+    for character in name:
+        if character.isalnum() or character == "-" or character == "_":
+            sanitized_name += character
+    return sanitized_name.lower()[:200]
+
+
+def get_names_to_everstore_handles(
+    custom_projects_map: Iterable[str],
+) -> Dict[str, str]:
+    processed_paths = {}
+    for pair in custom_projects_map:
+        split_pair = pair.split("=", 1)
+        path = split_pair[1]
+        if not os.path.exists(path):
+            raise ArgumentError(f"The provided path {path} doesn't exist")
+        if len(path) < 4 or ".apk" != path[-4:]:
+            raise ArgumentError(f"The provided path {path} does not point to an apk")
+        name = sanitize_name(split_pair[0].strip())
+        if name in processed_paths.keys():
+            raise ArgumentError(
+                f"Duplicate santized names: {name}. Please provide unique names consisting of lowercase alphabets, digits, underscores and hyphens for each apk."
+            )
+        processed_paths[name] = save_to_everpaste(path)
+    return processed_paths
+
+
+def get_job_definition(
+    sitevar_projects: Iterable[str],
+    input_tenant: Optional[str],
+    custom_projects_map: Iterable[str],
+) -> Dict[str, Any]:
     current_hash = subprocess.check_output(
         ["hg", "whereami"], universal_newlines=True
     ).strip()
     user = subprocess.check_output(["whoami"], universal_newlines=True).strip()
     tenant = input_tenant or "default-tenant"
+    everstore_handles = get_names_to_everstore_handles(custom_projects_map)
 
     return {
         "command": "SandcastleMarianaTrenchLocalChangesAnalysis",
         "args": {
-            "project_names": project_names,
+            "project_names": sitevar_projects,
             "hash": current_hash,
             "analysis_binary": "master",
+            "custom_projects": everstore_handles,
         },
         "capabilities": {
             "type": "android",
@@ -47,12 +106,20 @@ if __name__ == "__main__":
         description="Schedule a sandcastle job to run Mariana Trench analyses with local changes"
     )
     parser.add_argument(
-        "project_names",
-        metavar="project_name",
+        "-s",
+        "--sitevar-projects",
         type=str,
         nargs="+",
-        help="The name of an apk or java target for the command to run on.\n"
+        help="The name of an apk or java target for the analysis to run on."
         + "Must be one of the projects in the sitevar SV_MARIANA_TRENCH_ANALYSIS_CONFIGURATION \n",
+    )
+    parser.add_argument(
+        "-c",
+        "--custom-projects",
+        metavar="KEY=VALUE",
+        type=str,
+        nargs="+",
+        help="Pairs of a name and a path to a local apk to run the analysis on. The name will be used to name the individual sandcastle job analyzing that apk.",
     )
     parser.add_argument(
         "-t",
@@ -62,9 +129,24 @@ if __name__ == "__main__":
     )
 
     arguments = parser.parse_args()
-    job = get_job_definition(arguments.project_names, arguments.tenant)
-    spec = json.dumps(job, indent=2)
+    if arguments.sitevar_projects is None and arguments.custom_projects is None:
+        LOG.critical(
+            "Please provide either the names of sitevar projects or paths to custom apks for the analysis to run on"
+        )
+        sys.exit(1)
 
+    try:
+        job = get_job_definition(
+            arguments.sitevar_projects, arguments.tenant, arguments.custom_projects
+        )
+    except ArgumentError as error:
+        LOG.critical(error.args[0])
+        sys.exit(1)
+    except Exception:
+        LOG.critical(f"Unexpected error:\n{traceback.format_exc()}")
+        sys.exit(1)
+
+    spec = json.dumps(job, indent=2)
     results = json.loads(
         subprocess.check_output(
             ["scutil", "create", "--view", "json", "--bundle"],
@@ -72,5 +154,4 @@ if __name__ == "__main__":
             universal_newlines=True,
         )
     )
-
     LOG.info("Sandcastle URL: " + results["url"])
