@@ -21,6 +21,11 @@
 
 namespace marianatrench {
 
+enum class MaySatisfyMethodConstraintKind {
+  Parent,
+  Extends,
+};
+
 class TypeConstraint {
  public:
   TypeConstraint() = default;
@@ -32,6 +37,9 @@ class TypeConstraint {
 
   static std::unique_ptr<TypeConstraint> from_json(
       const Json::Value& constraint);
+  virtual MethodSet may_satisfy(
+      const MethodMappings& method_mappings,
+      MaySatisfyMethodConstraintKind constraint_kind) const;
   virtual bool satisfy(const DexType* type) const = 0;
   virtual bool operator==(const TypeConstraint& other) const = 0;
 };
@@ -39,6 +47,9 @@ class TypeConstraint {
 class TypeNameConstraint final : public TypeConstraint {
  public:
   explicit TypeNameConstraint(std::string regex_string);
+  MethodSet may_satisfy(
+      const MethodMappings& method_mappings,
+      MaySatisfyMethodConstraintKind constraint_kind) const override;
   bool satisfy(const DexType* type) const override;
   bool operator==(const TypeConstraint& other) const override;
 
@@ -64,6 +75,9 @@ class ExtendsConstraint final : public TypeConstraint {
   explicit ExtendsConstraint(
       std::unique_ptr<TypeConstraint> inner_constraint,
       bool include_self = true);
+  MethodSet may_satisfy(
+      const MethodMappings& method_mappings,
+      MaySatisfyMethodConstraintKind constraint_kind) const override;
   /* Check if a superclass of the given type, or an interface that the given
    * type implements satisfies the given type constraint */
   bool satisfy(const DexType* type) const override;
@@ -110,6 +124,9 @@ class AllOfTypeConstraint final : public TypeConstraint {
  public:
   explicit AllOfTypeConstraint(
       std::vector<std::unique_ptr<TypeConstraint>> constraints);
+  MethodSet may_satisfy(
+      const MethodMappings& method_mappings,
+      MaySatisfyMethodConstraintKind constraint_kind) const override;
   bool satisfy(const DexType* type) const override;
   bool operator==(const TypeConstraint& other) const override;
 
@@ -121,6 +138,9 @@ class AnyOfTypeConstraint final : public TypeConstraint {
  public:
   explicit AnyOfTypeConstraint(
       std::vector<std::unique_ptr<TypeConstraint>> constraints);
+  MethodSet may_satisfy(
+      const MethodMappings& method_mappings,
+      MaySatisfyMethodConstraintKind constraint_kind) const override;
   bool satisfy(const DexType* type) const override;
   bool operator==(const TypeConstraint& other) const override;
 
@@ -131,6 +151,9 @@ class AnyOfTypeConstraint final : public TypeConstraint {
 class NotTypeConstraint final : public TypeConstraint {
  public:
   explicit NotTypeConstraint(std::unique_ptr<TypeConstraint> constraint);
+  MethodSet may_satisfy(
+      const MethodMappings& method_mappings,
+      MaySatisfyMethodConstraintKind constraint_kind) const override;
   bool satisfy(const DexType* type) const override;
   bool operator==(const TypeConstraint& other) const override;
 

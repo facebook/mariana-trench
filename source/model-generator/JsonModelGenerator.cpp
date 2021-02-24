@@ -58,8 +58,27 @@ bool has_annotation(
 
 namespace marianatrench {
 
+MethodSet TypeConstraint::may_satisfy(
+    const MethodMappings& /* method_mappings */,
+    MaySatisfyMethodConstraintKind /* constraint_kind */) const {
+  return MethodSet::top();
+}
+
 TypeNameConstraint::TypeNameConstraint(std::string regex_string)
     : pattern_(regex_string) {}
+
+MethodSet TypeNameConstraint::may_satisfy(
+    const MethodMappings& method_mappings,
+    MaySatisfyMethodConstraintKind constraint_kind) const {
+  switch (constraint_kind) {
+    case MaySatisfyMethodConstraintKind::Parent:
+      return method_mappings.class_to_methods.get(
+          pattern_.pattern(), MethodSet::top());
+    case MaySatisfyMethodConstraintKind::Extends:
+      return method_mappings.class_to_override_methods.get(
+          pattern_.pattern(), MethodSet::top());
+  }
+}
 
 bool TypeNameConstraint::satisfy(const DexType* type) const {
   return re2::RE2::FullMatch(type->str(), pattern_);
@@ -102,6 +121,13 @@ ExtendsConstraint::ExtendsConstraint(
     bool include_self)
     : inner_constraint_(std::move(inner_constraint)),
       include_self_(include_self) {}
+
+MethodSet ExtendsConstraint::may_satisfy(
+    const MethodMappings& method_mappings,
+    MaySatisfyMethodConstraintKind /* constraint_kind */) const {
+  return inner_constraint_->may_satisfy(
+      method_mappings, MaySatisfyMethodConstraintKind::Extends);
+};
 
 bool ExtendsConstraint::satisfy(const DexType* type) const {
   auto* current_type = type;
@@ -195,6 +221,17 @@ AllOfTypeConstraint::AllOfTypeConstraint(
     std::vector<std::unique_ptr<TypeConstraint>> constraints)
     : inner_constraints_(std::move(constraints)) {}
 
+MethodSet AllOfTypeConstraint::may_satisfy(
+    const MethodMappings& method_mappings,
+    MaySatisfyMethodConstraintKind constraint_kind) const {
+  MethodSet intersection_set = MethodSet::top();
+  for (const auto& constraint : inner_constraints_) {
+    intersection_set.meet_with(
+        constraint->may_satisfy(method_mappings, constraint_kind));
+  }
+  return intersection_set;
+}
+
 bool AllOfTypeConstraint::satisfy(const DexType* type) const {
   return std::all_of(
       inner_constraints_.begin(),
@@ -219,6 +256,20 @@ bool AllOfTypeConstraint::operator==(const TypeConstraint& other) const {
 AnyOfTypeConstraint::AnyOfTypeConstraint(
     std::vector<std::unique_ptr<TypeConstraint>> constraints)
     : inner_constraints_(std::move(constraints)) {}
+
+MethodSet AnyOfTypeConstraint::may_satisfy(
+    const MethodMappings& method_mappings,
+    MaySatisfyMethodConstraintKind constraint_kind) const {
+  if (inner_constraints_.empty()) {
+    return MethodSet::top();
+  }
+  MethodSet union_set = MethodSet::bottom();
+  for (const auto& constraint : inner_constraints_) {
+    union_set.join_with(
+        constraint->may_satisfy(method_mappings, constraint_kind));
+  }
+  return union_set;
+}
 
 bool AnyOfTypeConstraint::satisfy(const DexType* type) const {
   // If there is no constraint, the type vacuously satisfies the constraint
@@ -248,6 +299,19 @@ bool AnyOfTypeConstraint::operator==(const TypeConstraint& other) const {
 
 NotTypeConstraint::NotTypeConstraint(std::unique_ptr<TypeConstraint> constraint)
     : constraint_(std::move(constraint)) {}
+
+MethodSet NotTypeConstraint::may_satisfy(
+    const MethodMappings& method_mappings,
+    MaySatisfyMethodConstraintKind constraint_kind) const {
+  MethodSet child_methods =
+      constraint_->may_satisfy(method_mappings, constraint_kind);
+  if (child_methods.is_top()) {
+    return child_methods;
+  }
+  MethodSet all_methods = method_mappings.all_methods;
+  all_methods.difference_with(child_methods);
+  return all_methods;
+}
 
 bool NotTypeConstraint::satisfy(const DexType* type) const {
   return !constraint_->satisfy(type);
