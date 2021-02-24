@@ -1,0 +1,47 @@
+{
+  "model_generators": [
+    {
+      "find": "methods",
+      "where": [
+        {
+          "constraint": "any_of",
+          "inners": [
+            {
+              "constraint": "signature",
+              "pattern": "Lcom/facebook/secure/trustedapp/TrustedCaller;.*Intent.*"
+            },
+            {
+              "constraint": "signature",
+              "pattern": "Lcom/facebook/secure/trustedapp/CallerIdentityUtil;.*Intent.*"
+            },
+            {
+              "constraint": "signature",
+              "pattern": "Lcom/facebook/rti/mqtt/common/util/SignatureAuthSecureIntent;\\.(get|verify)Sender:.*"
+            }
+          ]
+        }
+      ],
+      "model": {
+        "for_all_parameters": [
+          {
+            "variable": "x",
+            "where": [
+              {
+                "constraint": "name",
+                "pattern": "Landroid/content/Intent;"
+              }
+            ],
+            "add_features_to_arguments": [
+              {
+                "features": [
+                  "via-permission-check"
+                ],
+                "port": "Argument(x)"
+              }
+            ]
+          }
+        ]
+      }
+    }
+  ]
+}
