@@ -25,6 +25,23 @@ bool compare_methods(const Method* left, const Method* right) {
   return left->get_name() < right->get_name();
 };
 
+std::unordered_map<std::string, std::vector<const Method*>> sort_mapping(
+    const ConcurrentMap<std::string, marianatrench::MethodSet>& mapping) {
+  auto unordered_mapping =
+      std::unordered_map<std::string, marianatrench::MethodSet>(
+          mapping.begin(), mapping.end());
+  std::unordered_map<std::string, std::vector<const Method*>> result;
+
+  for (const auto& [key, methods] : unordered_mapping) {
+    std::vector<const Method*> new_methods(methods.begin(), methods.end());
+    result.insert({key, new_methods});
+  }
+
+  for (auto& [_key, methods] : result) {
+    std::sort(methods.begin(), methods.end(), compare_methods);
+  }
+  return result;
+}
 } // namespace
 
 TEST_F(ModelGeneratorTest, MappingGenerator) {
@@ -112,59 +129,23 @@ TEST_F(ModelGeneratorTest, MappingGenerator) {
         };
 
     const auto method_mappings = MethodMappings(*context.methods);
-
-    auto name_to_methods_result =
-        std::unordered_map<std::string, marianatrench::MethodSet>(
-            method_mappings.name_to_methods.begin(),
-            method_mappings.name_to_methods.end());
     std::unordered_map<std::string, std::vector<const Method*>>
-        name_to_methods_map;
-    for (const auto& pair : name_to_methods_result) {
-      std::vector<const Method*> methods = {
-          pair.second.begin(), pair.second.end()};
-      name_to_methods_map.insert({pair.first, methods});
-    }
-    for (auto& pair : name_to_methods_map) {
-      std::sort(pair.second.begin(), pair.second.end(), compare_methods);
-    }
+        name_to_methods_map = sort_mapping(method_mappings.name_to_methods);
     for (auto& pair : expected_name_to_methods) {
       std::sort(pair.second.begin(), pair.second.end(), compare_methods);
     }
     EXPECT_EQ(name_to_methods_map, expected_name_to_methods);
 
-    auto class_to_methods_result =
-        std::unordered_map<std::string, marianatrench::MethodSet>(
-            method_mappings.class_to_methods.begin(),
-            method_mappings.class_to_methods.end());
     std::unordered_map<std::string, std::vector<const Method*>>
-        class_to_methods_map;
-    for (const auto& pair : class_to_methods_result) {
-      std::vector<const Method*> methods = {
-          pair.second.begin(), pair.second.end()};
-      class_to_methods_map.insert({pair.first, methods});
-    }
-    for (auto& pair : class_to_methods_map) {
-      std::sort(pair.second.begin(), pair.second.end(), compare_methods);
-    }
+        class_to_methods_map = sort_mapping(method_mappings.class_to_methods);
     for (auto& pair : expected_class_to_methods) {
       std::sort(pair.second.begin(), pair.second.end(), compare_methods);
     }
     EXPECT_EQ(class_to_methods_map, expected_class_to_methods);
 
-    auto class_to_override_methods_result =
-        std::unordered_map<std::string, marianatrench::MethodSet>(
-            method_mappings.class_to_override_methods.begin(),
-            method_mappings.class_to_override_methods.end());
     std::unordered_map<std::string, std::vector<const Method*>>
-        class_to_override_methods_map;
-    for (const auto& pair : class_to_override_methods_result) {
-      std::vector<const Method*> methods = {
-          pair.second.begin(), pair.second.end()};
-      class_to_override_methods_map.insert({pair.first, methods});
-    }
-    for (auto& pair : class_to_override_methods_map) {
-      std::sort(pair.second.begin(), pair.second.end(), compare_methods);
-    }
+        class_to_override_methods_map =
+            sort_mapping(method_mappings.class_to_override_methods);
     for (auto& pair : expected_class_to_override_methods) {
       std::sort(pair.second.begin(), pair.second.end(), compare_methods);
     }
