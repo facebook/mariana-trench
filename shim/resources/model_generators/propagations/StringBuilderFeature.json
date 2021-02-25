@@ -1,0 +1,24 @@
+{
+  "model_generators": [
+    {
+      "find": "methods",
+      "where": [
+        {
+          "constraint": "signature",
+          "pattern": "Ljava/lang/StringBuilder;\\.append:.*"
+        }
+      ],
+      "model": {
+        "propagation": [
+          {
+            "input": "Argument(1)",
+            "output": "Argument(0)",
+            "features": [
+              "via-string-concatenation"
+            ]
+          }
+        ]
+      }
+    }
+  ]
+}
