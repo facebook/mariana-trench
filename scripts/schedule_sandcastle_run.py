@@ -66,16 +66,19 @@ def get_names_to_everstore_handles(
 
 
 def get_job_definition(
-    sitevar_projects: Iterable[str],
+    input_sitevar_projects: Optional[Iterable[str]],
     input_tenant: Optional[str],
-    custom_projects_map: Iterable[str],
+    custom_projects_map: Optional[Iterable[str]],
 ) -> Dict[str, Any]:
     current_hash = subprocess.check_output(
         ["hg", "whereami"], universal_newlines=True
     ).strip()
     user = subprocess.check_output(["whoami"], universal_newlines=True).strip()
     tenant = input_tenant or "default-tenant"
-    everstore_handles = get_names_to_everstore_handles(custom_projects_map)
+    sitevar_projects = input_sitevar_projects or []
+    everstore_handles = {}
+    if custom_projects_map is not None:
+        everstore_handles = get_names_to_everstore_handles(custom_projects_map)
 
     return {
         "command": "SandcastleMarianaTrenchLocalChangesAnalysis",
