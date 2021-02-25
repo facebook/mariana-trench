@@ -323,8 +323,8 @@ if __name__ == "__main__":
             "--generator-configuration-path",
             type=_path_exists,
             default=_get_resource_path("default_generator_config.json"),
-            help="""A JSON configuration file specifying a list of absolute paths
-            to JSON model generators or names of CPP model generators.""",
+            help="""A JSON configuration file specifying a list of paths
+            to JSON model generators relative to the configuration file or names of CPP model generators.""",
         )
         configuration_arguments.add_argument(
             "--maximum-source-sink-distance",
