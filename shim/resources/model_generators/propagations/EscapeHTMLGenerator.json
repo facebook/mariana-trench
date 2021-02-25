@@ -18,6 +18,20 @@
           }
         ]
       }
+    },
+    {
+      "find": "methods",
+      "where": [
+        {
+          "constraint": "signature",
+          "pattern": "Lcom/facebook/video/plugins/MatureContentRatePillPlugin;\\.setupPlugin:.*"
+        }
+      ],
+      "model": {
+        "modes": [
+          "skip-analysis"
+        ]
+      }
     }
   ]
 }
