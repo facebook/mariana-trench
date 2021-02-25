@@ -15,6 +15,7 @@
 #include <mariana-trench/JsonValidation.h>
 #include <mariana-trench/Log.h>
 #include <mariana-trench/Overrides.h>
+#include <mariana-trench/RE2.h>
 #include <mariana-trench/Redex.h>
 #include <mariana-trench/Timer.h>
 #include <mariana-trench/model-generator/JsonModelGenerator.h>
@@ -70,13 +71,17 @@ TypeNameConstraint::TypeNameConstraint(std::string regex_string)
 MethodSet TypeNameConstraint::may_satisfy(
     const MethodMappings& method_mappings,
     MaySatisfyMethodConstraintKind constraint_kind) const {
+  auto string_pattern = as_string_literal(pattern_);
+  if (!string_pattern) {
+    return MethodSet::top();
+  }
   switch (constraint_kind) {
     case MaySatisfyMethodConstraintKind::Parent:
       return method_mappings.class_to_methods.get(
-          pattern_.pattern(), MethodSet::top());
+          *string_pattern, MethodSet::bottom());
     case MaySatisfyMethodConstraintKind::Extends:
       return method_mappings.class_to_override_methods.get(
-          pattern_.pattern(), MethodSet::top());
+          *string_pattern, MethodSet::bottom());
   }
 }
 
@@ -305,8 +310,8 @@ MethodSet NotTypeConstraint::may_satisfy(
     MaySatisfyMethodConstraintKind constraint_kind) const {
   MethodSet child_methods =
       constraint_->may_satisfy(method_mappings, constraint_kind);
-  if (child_methods.is_top()) {
-    return child_methods;
+  if (child_methods.is_top() || child_methods.is_bottom()) {
+    return MethodSet::top();
   }
   MethodSet all_methods = method_mappings.all_methods;
   all_methods.difference_with(child_methods);
@@ -389,8 +394,12 @@ MethodNameConstraint::MethodNameConstraint(std::string regex_string)
 
 MethodSet MethodNameConstraint::may_satisfy(
     const MethodMappings& method_mappings) const {
+  auto string_pattern = as_string_literal(pattern_);
+  if (!string_pattern) {
+    return MethodSet::top();
+  }
   return method_mappings.name_to_methods.get(
-      pattern_.pattern(), MethodSet::top());
+      *string_pattern, MethodSet::bottom());
 }
 
 bool MethodNameConstraint::satisfy(const Method* method) const {
@@ -546,8 +555,8 @@ std::vector<const MethodConstraint*> NotMethodConstraint::children() const {
 MethodSet NotMethodConstraint::may_satisfy(
     const MethodMappings& method_mappings) const {
   MethodSet child_methods = constraint_->may_satisfy(method_mappings);
-  if (child_methods.is_top()) {
-    return child_methods;
+  if (child_methods.is_top() || child_methods.is_bottom()) {
+    return MethodSet::top();
   }
   MethodSet all_methods = method_mappings.all_methods;
   all_methods.difference_with(child_methods);

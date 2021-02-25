@@ -5,9 +5,8 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-#include <gtest/gtest.h>
-
 #include <Creators.h>
+#include <gtest/gtest.h>
 
 #include <mariana-trench/JsonValidation.h>
 #include <mariana-trench/Redex.h>
@@ -2123,6 +2122,9 @@ TEST_F(JsonModelGeneratorTest, MethodNameConstraintMaySatisfy) {
       marianatrench::MethodSet({context.methods->get(method_b)}));
   EXPECT_TRUE(MethodNameConstraint("method_name_nonexistent")
                   .may_satisfy(method_mappings)
+                  .is_bottom());
+  EXPECT_TRUE(MethodNameConstraint("method_name_*")
+                  .may_satisfy(method_mappings)
                   .is_top());
 }
 
@@ -2160,7 +2162,12 @@ TEST_F(JsonModelGeneratorTest, ParentConstraintMaySatisfy) {
   EXPECT_TRUE(ParentConstraint(std::make_unique<TypeNameConstraint>(
                                    "class_name_nonexistant"))
                   .may_satisfy(method_mappings)
-                  .is_top());
+                  .is_bottom());
+
+  EXPECT_TRUE(
+      ParentConstraint(std::make_unique<TypeNameConstraint>("L(Sub)?Class;"))
+          .may_satisfy(method_mappings)
+          .is_top());
 
   /* With Extends */
   EXPECT_EQ(
@@ -2195,7 +2202,7 @@ TEST_F(JsonModelGeneratorTest, ParentConstraintMaySatisfy) {
                                    std::make_unique<TypeNameConstraint>(
                                        "class_name_nonexistant")))
                   .may_satisfy(method_mappings)
-                  .is_top());
+                  .is_bottom());
 }
 
 TEST_F(JsonModelGeneratorTest, AllOfMethodConstraintMaySatisfy) {
@@ -2241,7 +2248,20 @@ TEST_F(JsonModelGeneratorTest, AllOfMethodConstraintMaySatisfy) {
 
     EXPECT_TRUE(AllOfMethodConstraint(std::move(constraints))
                     .may_satisfy(method_mappings)
-                    .is_top());
+                    .is_bottom());
+  }
+
+  {
+    std::vector<std::unique_ptr<MethodConstraint>> constraints;
+    constraints.push_back(
+        std::make_unique<MethodNameConstraint>("method_name_a"));
+    constraints.push_back(
+        std::make_unique<MethodNameConstraint>("method_name_*"));
+
+    EXPECT_EQ(
+        AllOfMethodConstraint(std::move(constraints))
+            .may_satisfy(method_mappings),
+        marianatrench::MethodSet({context.methods->get(method_a)}));
   }
 }
 
@@ -2290,6 +2310,18 @@ TEST_F(JsonModelGeneratorTest, AnyOfMethodConstraintMaySatisfy) {
 
     EXPECT_TRUE(AnyOfMethodConstraint(std::move(constraints))
                     .may_satisfy(method_mappings)
+                    .is_bottom());
+  }
+
+  {
+    std::vector<std::unique_ptr<MethodConstraint>> constraints;
+    constraints.push_back(
+        std::make_unique<MethodNameConstraint>("method_name_a"));
+    constraints.push_back(
+        std::make_unique<MethodNameConstraint>("method_name_*"));
+
+    EXPECT_TRUE(AnyOfMethodConstraint(std::move(constraints))
+                    .may_satisfy(method_mappings)
                     .is_top());
   }
 }
@@ -2316,6 +2348,11 @@ TEST_F(JsonModelGeneratorTest, NotMethodConstraintMaySatisfy) {
 
   EXPECT_TRUE(NotMethodConstraint(std::make_unique<MethodNameConstraint>(
                                       "method_name_nonexistant"))
+                  .may_satisfy(method_mappings)
+                  .is_top());
+
+  EXPECT_TRUE(NotMethodConstraint(
+                  std::make_unique<MethodNameConstraint>("method_name*"))
                   .may_satisfy(method_mappings)
                   .is_top());
 }
