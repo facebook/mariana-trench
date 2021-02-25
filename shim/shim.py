@@ -18,7 +18,7 @@ import sys
 import tempfile
 import traceback
 import typing
-from typing import Optional
+from typing import Optional, Sequence
 
 import pyredex
 
@@ -190,6 +190,13 @@ def _build_apk_from_jar(jar_path: pathlib.Path) -> pathlib.Path:
     return pathlib.Path(dex_file)
 
 
+RESOURCE_DIRECTORY_CANDIDATES: Sequence[pathlib.Path] = [
+    pathlib.Path("fbandroid/native/mariana-trench/configuration"),
+    pathlib.Path("fbandroid/native/mariana-trench/facebook/internal-configuration"),
+    pathlib.Path("fbandroid/native/mariana-trench/shim/resources"),
+]
+
+
 def _get_resource_path(path: str) -> Optional[str]:
     fbsource = pathlib.Path(__file__)
     root = pathlib.Path("/")
@@ -201,10 +208,12 @@ def _get_resource_path(path: str) -> Optional[str]:
     if fbsource == root:
         return None
 
-    return os.fspath(
-        fbsource
-        / (pathlib.Path("fbandroid/native/mariana-trench/shim/resources") / path)
-    )
+    for candidate in RESOURCE_DIRECTORY_CANDIDATES:
+        resource_path = fbsource / candidate / path
+        if resource_path.exists():
+            return os.fspath(resource_path)
+
+    return None
 
 
 if __name__ == "__main__":
