@@ -91,32 +91,50 @@ TEST_F(MethodSetTest, Equal) {
 }
 
 TEST_F(MethodSetTest, Join) {
-  EXPECT_EQ(MethodSet().join(MethodSet{method_a}), MethodSet({method_a}));
-  EXPECT_EQ(
-      MethodSet({method_a}).join(MethodSet{method_a}), MethodSet({method_a}));
-  EXPECT_EQ(
-      MethodSet({method_a}).join(MethodSet{method_b}),
-      MethodSet({method_a, method_b}));
+  auto methods = MethodSet();
+  methods.join_with(MethodSet{method_a});
+  EXPECT_EQ(methods, MethodSet({method_a}));
 
-  auto methods_top = MethodSet({method_a});
-  methods_top.set_to_top();
-  EXPECT_TRUE(methods_top.join(MethodSet({method_b})).is_top());
-  EXPECT_TRUE(methods_top.join(MethodSet()).is_top());
+  methods = MethodSet({method_a});
+  methods.join_with(MethodSet({method_a}));
+  EXPECT_EQ(methods, MethodSet({method_a}));
+
+  methods.join_with(MethodSet({method_b}));
+  EXPECT_EQ(methods, MethodSet({method_a, method_b}));
+
+  auto methods_top = MethodSet::top();
+  methods_top.join_with(MethodSet({method_b}));
+  EXPECT_TRUE(methods_top.is_top());
+
+  methods_top.join_with(MethodSet());
+  EXPECT_TRUE(methods_top.is_top());
 }
 
 TEST_F(MethodSetTest, Meet) {
-  EXPECT_EQ(MethodSet().meet(MethodSet{method_a}), MethodSet());
-  EXPECT_EQ(
-      MethodSet({method_a}).meet(MethodSet{method_a}), MethodSet({method_a}));
-  EXPECT_EQ(MethodSet({method_a}).meet(MethodSet{method_b}), MethodSet());
-  EXPECT_EQ(
-      MethodSet({method_a}).meet(MethodSet{method_a, method_b}),
-      MethodSet({method_a}));
+  auto methods = MethodSet({method_a});
+  methods.meet_with(MethodSet());
+  EXPECT_EQ(methods, MethodSet());
+
+  methods = MethodSet({method_a});
+  methods.meet_with(MethodSet{method_a});
+  EXPECT_EQ(methods, MethodSet({method_a}));
+
+  methods = MethodSet({method_a});
+  methods.meet_with(MethodSet{method_b});
+  EXPECT_EQ(methods, MethodSet());
+
+  methods = MethodSet({method_a});
+  methods.meet_with(MethodSet{method_a, method_b});
+  EXPECT_EQ(methods, MethodSet({method_a}));
 
   auto methods_top = MethodSet({method_a});
   methods_top.set_to_top();
-  EXPECT_EQ(methods_top.meet(MethodSet({method_b})), MethodSet({method_b}));
-  EXPECT_EQ(methods_top.meet(MethodSet()), MethodSet());
+  methods_top.meet_with(MethodSet({method_b}));
+  EXPECT_EQ(methods_top, MethodSet({method_b}));
+
+  methods_top = MethodSet::top();
+  methods_top.meet_with(MethodSet());
+  EXPECT_EQ(methods_top, MethodSet());
 }
 
 TEST_F(MethodSetTest, Difference) {
