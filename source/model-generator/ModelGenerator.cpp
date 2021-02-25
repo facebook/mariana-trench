@@ -167,15 +167,16 @@ std::unordered_set<std::string> generator::get_parents_from_class(
 
   while (dex_class != nullptr) {
     const DexType* super_type = dex_class->get_super_class();
-    if (super_type) {
-      parent_classes.emplace(super_type->get_name()->str());
-      DexClass* super_class = type_class(super_type);
-      if (include_interfaces) {
-        auto interfaces = generator::get_interfaces_from_class(dex_class);
-        parent_classes.merge(interfaces);
-      }
-      dex_class = super_class;
+    if (!super_type) {
+      break;
     }
+    parent_classes.emplace(super_type->get_name()->str());
+    DexClass* super_class = type_class(super_type);
+    if (include_interfaces) {
+      auto interfaces = generator::get_interfaces_from_class(dex_class);
+      parent_classes.merge(interfaces);
+    }
+    dex_class = super_class;
   }
   return parent_classes;
 }
