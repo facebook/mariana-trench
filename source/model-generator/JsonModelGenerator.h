@@ -198,6 +198,7 @@ class MethodConstraint {
 class MethodNameConstraint final : public MethodConstraint {
  public:
   explicit MethodNameConstraint(std::string regex_string);
+  MethodSet may_satisfy(const MethodMappings& method_mappings) const override;
   bool satisfy(const Method* method) const override;
   bool operator==(const MethodConstraint& other) const override;
 
@@ -208,6 +209,7 @@ class MethodNameConstraint final : public MethodConstraint {
 class ParentConstraint final : public MethodConstraint {
  public:
   explicit ParentConstraint(std::unique_ptr<TypeConstraint> inner_constraint);
+  MethodSet may_satisfy(const MethodMappings& method_mappings) const override;
   bool satisfy(const Method* method) const override;
   bool operator==(const MethodConstraint& other) const override;
 

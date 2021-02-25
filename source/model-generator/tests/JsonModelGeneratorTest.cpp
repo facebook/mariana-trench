@@ -2104,69 +2104,220 @@ TEST_F(JsonModelGeneratorTest, MethodConstraintFromJson) {
   // NotMethodConstraint
 }
 
-TEST_F(JsonModelGeneratorTest, AllOfMethodConstraintMaySatisfy) {
+TEST_F(JsonModelGeneratorTest, MethodNameConstraintMaySatisfy) {
   Scope scope;
-  auto context = test::make_empty_context();
-
-  std::string class_name = "Landroid/util/Log;";
-  std::string method_name = "println";
+  auto* method_a =
+      redex::create_void_method(scope, "class_name", "method_name_a");
+  auto* method_b =
+      redex::create_void_method(scope, "class_name_b", "method_name_b");
+  DexStore store("test-stores");
+  store.add_classes(scope);
+  auto context = test::make_context(store);
   auto method_mappings = MethodMappings(*context.methods);
 
   EXPECT_EQ(
-      AllOfMethodConstraint({}).may_satisfy(method_mappings),
-      marianatrench::MethodSet::top());
+      MethodNameConstraint("method_name_a").may_satisfy(method_mappings),
+      marianatrench::MethodSet({context.methods->get(method_a)}));
+  EXPECT_EQ(
+      MethodNameConstraint("method_name_b").may_satisfy(method_mappings),
+      marianatrench::MethodSet({context.methods->get(method_b)}));
+  EXPECT_TRUE(MethodNameConstraint("method_name_nonexistent")
+                  .may_satisfy(method_mappings)
+                  .is_top());
+}
+
+TEST_F(JsonModelGeneratorTest, ParentConstraintMaySatisfy) {
+  Scope scope;
+  auto* method_a =
+      redex::create_void_method(scope, "LClass;", "method_name_a", "", "V");
+  auto* method_b = redex::create_void_method(
+      scope, "LSubClass;", "method_name_b", "", "V", method_a->get_class());
+  DexStore store("test-stores");
+  auto interface = DexType::make_type("LInterface;");
+  ClassCreator creator(interface);
+  creator.set_access(DexAccessFlags::ACC_INTERFACE);
+  creator.set_super(type::java_lang_Object());
+  creator.create();
+  auto super_interface = DexType::make_type("LSuperInterface;");
+  ClassCreator super_creator(super_interface);
+  super_creator.set_access(DexAccessFlags::ACC_INTERFACE);
+  super_creator.set_super(type::java_lang_Object());
+  super_creator.create();
+
+  type_class(method_a->get_class())
+      ->set_interfaces(DexTypeList::make_type_list({interface}));
+  type_class(interface)->set_interfaces(
+      DexTypeList::make_type_list({super_interface}));
+  store.add_classes(scope);
+  auto context = test::make_context(store);
+  auto method_mappings = MethodMappings(*context.methods);
+
+  EXPECT_EQ(
+      ParentConstraint(std::make_unique<TypeNameConstraint>("LClass;"))
+          .may_satisfy(method_mappings),
+      marianatrench::MethodSet({context.methods->get(method_a)}));
+
+  EXPECT_TRUE(ParentConstraint(std::make_unique<TypeNameConstraint>(
+                                   "class_name_nonexistant"))
+                  .may_satisfy(method_mappings)
+                  .is_top());
+
+  /* With Extends */
+  EXPECT_EQ(
+      ParentConstraint(std::make_unique<ExtendsConstraint>(
+                           std::make_unique<TypeNameConstraint>("LClass;")))
+          .may_satisfy(method_mappings),
+      marianatrench::MethodSet(
+          {context.methods->get(method_a), context.methods->get(method_b)}));
+
+  EXPECT_EQ(
+      ParentConstraint(std::make_unique<ExtendsConstraint>(
+                           std::make_unique<TypeNameConstraint>("LSubClass;")))
+          .may_satisfy(method_mappings),
+      marianatrench::MethodSet({context.methods->get(method_b)}));
+
+  EXPECT_EQ(
+      ParentConstraint(std::make_unique<ExtendsConstraint>(
+                           std::make_unique<TypeNameConstraint>("LInterface;")))
+          .may_satisfy(method_mappings),
+      marianatrench::MethodSet(
+          {context.methods->get(method_a), context.methods->get(method_b)}));
+
+  EXPECT_EQ(
+      ParentConstraint(
+          std::make_unique<ExtendsConstraint>(
+              std::make_unique<TypeNameConstraint>("LSuperInterface;")))
+          .may_satisfy(method_mappings),
+      marianatrench::MethodSet(
+          {context.methods->get(method_a), context.methods->get(method_b)}));
+
+  EXPECT_TRUE(ParentConstraint(std::make_unique<ExtendsConstraint>(
+                                   std::make_unique<TypeNameConstraint>(
+                                       "class_name_nonexistant")))
+                  .may_satisfy(method_mappings)
+                  .is_top());
+}
+
+TEST_F(JsonModelGeneratorTest, AllOfMethodConstraintMaySatisfy) {
+  Scope scope;
+  auto* method_a =
+      redex::create_void_method(scope, "class_name", "method_name_a");
+  redex::create_void_method(scope, "class_name_b", "method_name_b");
+  DexStore store("test-stores");
+  store.add_classes(scope);
+  auto context = test::make_context(store);
+  auto method_mappings = MethodMappings(*context.methods);
+
+  EXPECT_TRUE(AllOfMethodConstraint({}).may_satisfy(method_mappings).is_top());
 
   {
     std::vector<std::unique_ptr<MethodConstraint>> constraints;
-    constraints.push_back(std::make_unique<MethodNameConstraint>(method_name));
+    constraints.push_back(
+        std::make_unique<MethodNameConstraint>("method_name_a"));
 
     EXPECT_EQ(
         AllOfMethodConstraint(std::move(constraints))
             .may_satisfy(method_mappings),
-        marianatrench::MethodSet::top());
+        marianatrench::MethodSet({context.methods->get(method_a)}));
+  }
+
+  {
+    std::vector<std::unique_ptr<MethodConstraint>> constraints;
+    constraints.push_back(
+        std::make_unique<MethodNameConstraint>("method_name_a"));
+    constraints.push_back(
+        std::make_unique<MethodNameConstraint>("method_name_b"));
+
+    EXPECT_EQ(
+        AllOfMethodConstraint(std::move(constraints))
+            .may_satisfy(method_mappings),
+        marianatrench::MethodSet::bottom());
+  }
+
+  {
+    std::vector<std::unique_ptr<MethodConstraint>> constraints;
+    constraints.push_back(
+        std::make_unique<MethodNameConstraint>("method_name_nonexistant"));
+
+    EXPECT_TRUE(AllOfMethodConstraint(std::move(constraints))
+                    .may_satisfy(method_mappings)
+                    .is_top());
   }
 }
 
 TEST_F(JsonModelGeneratorTest, AnyOfMethodConstraintMaySatisfy) {
   Scope scope;
-  auto context = test::make_empty_context();
-
-  std::string class_name = "Landroid/util/Log;";
-  std::string method_name = "println";
+  auto* method_a =
+      redex::create_void_method(scope, "class_name", "method_name_a");
+  auto* method_b =
+      redex::create_void_method(scope, "class_name_b", "method_name_b");
+  DexStore store("test-stores");
+  store.add_classes(scope);
+  auto context = test::make_context(store);
   auto method_mappings = MethodMappings(*context.methods);
 
-  EXPECT_EQ(
-      AnyOfMethodConstraint({}).may_satisfy(method_mappings),
-      marianatrench::MethodSet::top());
+  EXPECT_TRUE(AnyOfMethodConstraint({}).may_satisfy(method_mappings).is_top());
 
   {
     std::vector<std::unique_ptr<MethodConstraint>> constraints;
-    constraints.push_back(std::make_unique<MethodNameConstraint>(method_name));
+    constraints.push_back(
+        std::make_unique<MethodNameConstraint>("method_name_a"));
 
     EXPECT_EQ(
         AnyOfMethodConstraint(std::move(constraints))
             .may_satisfy(method_mappings),
-        marianatrench::MethodSet::top());
+        marianatrench::MethodSet({context.methods->get(method_a)}));
+  }
+
+  {
+    std::vector<std::unique_ptr<MethodConstraint>> constraints;
+    constraints.push_back(
+        std::make_unique<MethodNameConstraint>("method_name_a"));
+    constraints.push_back(
+        std::make_unique<MethodNameConstraint>("method_name_b"));
+
+    EXPECT_EQ(
+        AnyOfMethodConstraint(std::move(constraints))
+            .may_satisfy(method_mappings),
+        marianatrench::MethodSet(
+            {context.methods->get(method_a), context.methods->get(method_b)}));
+  }
+
+  {
+    std::vector<std::unique_ptr<MethodConstraint>> constraints;
+    constraints.push_back(
+        std::make_unique<MethodNameConstraint>("method_name_nonexistant"));
+
+    EXPECT_TRUE(AnyOfMethodConstraint(std::move(constraints))
+                    .may_satisfy(method_mappings)
+                    .is_top());
   }
 }
 
 TEST_F(JsonModelGeneratorTest, NotMethodConstraintMaySatisfy) {
   Scope scope;
-  auto context = test::make_empty_context();
-
-  std::string class_name = "Landroid/util/Log;";
-  std::string method_name = "println";
+  redex::create_void_method(scope, "class_name", "method_name_a");
+  auto* method_b =
+      redex::create_void_method(scope, "class_name_b", "method_name_b");
+  DexStore store("test-stores");
+  store.add_classes(scope);
+  auto context = test::make_context(store);
+  auto* array_allocation_method =
+      context.artificial_methods->array_allocation_method();
   auto method_mappings = MethodMappings(*context.methods);
 
   EXPECT_EQ(
-      NotMethodConstraint(std::make_unique<MethodNameConstraint>("printLn"))
+      NotMethodConstraint(
+          std::make_unique<MethodNameConstraint>("method_name_a"))
           .may_satisfy(method_mappings),
-      marianatrench::MethodSet::top());
+      marianatrench::MethodSet(
+          {context.methods->get(array_allocation_method),
+           context.methods->get(method_b)}));
 
-  EXPECT_EQ(
-      NotMethodConstraint(std::make_unique<MethodNameConstraint>(method_name))
-          .may_satisfy(method_mappings),
-      marianatrench::MethodSet::top());
+  EXPECT_TRUE(NotMethodConstraint(std::make_unique<MethodNameConstraint>(
+                                      "method_name_nonexistant"))
+                  .may_satisfy(method_mappings)
+                  .is_top());
 }
 
 TEST_F(JsonModelGeneratorTest, UniqueConstraints) {

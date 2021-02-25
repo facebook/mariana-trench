@@ -387,6 +387,12 @@ IntegerConstraint IntegerConstraint::from_json(const Json::Value& constraint) {
 MethodNameConstraint::MethodNameConstraint(std::string regex_string)
     : pattern_(regex_string) {}
 
+MethodSet MethodNameConstraint::may_satisfy(
+    const MethodMappings& method_mappings) const {
+  return method_mappings.name_to_methods.get(
+      pattern_.pattern(), MethodSet::top());
+}
+
 bool MethodNameConstraint::satisfy(const Method* method) const {
   return re2::RE2::FullMatch(method->get_name(), pattern_);
 }
@@ -403,6 +409,12 @@ bool MethodNameConstraint::operator==(const MethodConstraint& other) const {
 ParentConstraint::ParentConstraint(
     std::unique_ptr<TypeConstraint> inner_constraint)
     : inner_constraint_(std::move(inner_constraint)) {}
+
+MethodSet ParentConstraint::may_satisfy(
+    const MethodMappings& method_mappings) const {
+  return inner_constraint_->may_satisfy(
+      method_mappings, MaySatisfyMethodConstraintKind::Parent);
+}
 
 bool ParentConstraint::satisfy(const Method* method) const {
   return inner_constraint_->satisfy(method->get_class());
