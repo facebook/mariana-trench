@@ -7,17 +7,16 @@
 # TODO (T47489191): remove FB specific paths from this script
 
 import argparse
-import enum
 import json
 import logging
 import os
-import pathlib
 import shutil
 import subprocess
 import sys
 import tempfile
 import traceback
 import typing
+from pathlib import Path
 from typing import Optional, Sequence
 
 import pyredex
@@ -30,7 +29,7 @@ class ClientError(Exception):
     pass
 
 
-def _check_executable(path: pathlib.Path) -> pathlib.Path:
+def _check_executable(path: Path) -> Path:
     if not (path.exists() and os.access(path, os.X_OK)):
         raise ClientError(f"Invalid binary `{path}`.")
     return path
@@ -40,12 +39,10 @@ class ExtractJexException(ClientError):
     pass
 
 
-def _extract_jex_file_if_exists(
-    path: pathlib.Path, target: str, build_directory: pathlib.Path
-) -> pathlib.Path:
-    jex_extract_directory: pathlib.Path = pathlib.Path(build_directory) / "jex"
+def _extract_jex_file_if_exists(path: Path, target: str, build_directory: Path) -> Path:
+    jex_extract_directory: Path = Path(build_directory) / "jex"
 
-    def run_unzip_command(command: typing.List[str]) -> pathlib.Path:
+    def run_unzip_command(command: typing.List[str]) -> Path:
         output = subprocess.run(command, stderr=subprocess.PIPE)
         if output.returncode != 0:
             stderr = output.stderr.decode()
@@ -87,7 +84,7 @@ def _extract_jex_file_if_exists(
         return run_unzip_command(["unzip", "-d", str(jex_extract_directory), str(path)])
 
 
-def _build_target(target: str, *, mode: typing.Optional[str] = None) -> pathlib.Path:
+def _build_target(target: str, *, mode: typing.Optional[str] = None) -> Path:
     LOG.info(f"Building `{target}`%s...", f" with `{mode}`" if mode else "")
 
     # If a target starts with fbcode, then it needs to be built from fbcode instead of from fbsource
@@ -104,7 +101,7 @@ def _build_target(target: str, *, mode: typing.Optional[str] = None) -> pathlib.
     if mode:
         command.append(str(mode))
     command.append(target)
-    current_working_directory = pathlib.Path(os.getcwd())
+    current_working_directory = Path(os.getcwd())
     working_directory = (
         current_working_directory / "fbcode"
         if is_fbcode_target
@@ -125,17 +122,15 @@ def _build_target(target: str, *, mode: typing.Optional[str] = None) -> pathlib.
     return working_directory / next(iter(response.values()))
 
 
-def _build_executable_target(
-    target: str, *, mode: typing.Optional[str] = None
-) -> pathlib.Path:
+def _build_executable_target(target: str, *, mode: typing.Optional[str] = None) -> Path:
     return _check_executable(_build_target(target, mode=mode))
 
 
-def _get_analysis_binary(arguments: argparse.Namespace) -> pathlib.Path:
+def _get_analysis_binary(arguments: argparse.Namespace) -> Path:
     from_arguments = arguments.binary
     if from_arguments:
         # Use the user-provided binary.
-        return _check_executable(pathlib.Path(from_arguments))
+        return _check_executable(Path(from_arguments))
 
     # Build the mariana-trench binary from source.
     return _build_executable_target(
@@ -144,7 +139,7 @@ def _get_analysis_binary(arguments: argparse.Namespace) -> pathlib.Path:
     )
 
 
-def _desugar_jar_file(jar_path: pathlib.Path) -> pathlib.Path:
+def _desugar_jar_file(jar_path: Path) -> Path:
     LOG.info(f"Desugaring `{jar_path}`...")
     desugar_tool = _build_target(
         "fbsource//fbandroid/native/mariana-trench/desugar/com/facebook/marianatrench:desugar"
@@ -167,7 +162,7 @@ def _desugar_jar_file(jar_path: pathlib.Path) -> pathlib.Path:
     return desugared_jar_file
 
 
-def _build_apk_from_jar(jar_path: pathlib.Path) -> pathlib.Path:
+def _build_apk_from_jar(jar_path: Path) -> Path:
     _, dex_file = tempfile.mkstemp(suffix=".jar")
 
     LOG.info(f"Running d8 on `{jar_path}`...")
@@ -187,19 +182,19 @@ def _build_apk_from_jar(jar_path: pathlib.Path) -> pathlib.Path:
     if output.returncode != 0:
         raise ClientError("Error while running d8, aborting.")
 
-    return pathlib.Path(dex_file)
+    return Path(dex_file)
 
 
-RESOURCE_DIRECTORY_CANDIDATES: Sequence[pathlib.Path] = [
-    pathlib.Path("fbandroid/native/mariana-trench/configuration"),
-    pathlib.Path("fbandroid/native/mariana-trench/facebook/internal-configuration"),
-    pathlib.Path("fbandroid/native/mariana-trench/shim/resources"),
+RESOURCE_DIRECTORY_CANDIDATES: Sequence[Path] = [
+    Path("fbandroid/native/mariana-trench/configuration"),
+    Path("fbandroid/native/mariana-trench/facebook/internal-configuration"),
+    Path("fbandroid/native/mariana-trench/shim/resources"),
 ]
 
 
 def _get_resource_path(path: str) -> Optional[str]:
-    fbsource = pathlib.Path(__file__)
-    root = pathlib.Path("/")
+    fbsource = Path(__file__)
+    root = Path("/")
     while fbsource.parent != root:
         fbsource = fbsource.parent
         if fbsource.name == "fbsource":
@@ -234,7 +229,7 @@ if __name__ == "__main__":
             path = path + "/"
         return path
 
-    build_directory = pathlib.Path(tempfile.mkdtemp())
+    build_directory = Path(tempfile.mkdtemp())
     try:
         parser = argparse.ArgumentParser()
 
