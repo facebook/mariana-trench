@@ -26,6 +26,9 @@ namespace marianatrench {
 
 namespace {
 
+using FulfilledPartialKindMap =
+    std::unordered_map<const PartialKind*, FeatureMayAlwaysSet>;
+
 constexpr Register k_result_register = std::numeric_limits<Register>::max();
 
 inline void log_instruction(
@@ -355,7 +358,7 @@ void check_multi_source_multi_sink_rules(
     MethodContext* context,
     const FrameSet& source,
     const FrameSet& sink,
-    std::unordered_set<const PartialKind*>& fulfilled_partial_sinks,
+    FulfilledPartialKindMap& fulfilled_partial_sinks,
     const MultiSourceMultiSinkRule* rule,
     const Position* position,
     const FeatureMayAlwaysSet& extra_features) {
@@ -366,24 +369,28 @@ void check_multi_source_multi_sink_rules(
   auto counterpart = std::find_if(
       fulfilled_partial_sinks.begin(),
       fulfilled_partial_sinks.end(),
-      [partial_sink](const auto* other_sink) {
-        return other_sink->is_counterpart(partial_sink);
+      [partial_sink](const auto& other_sink) {
+        return other_sink.first->is_counterpart(partial_sink);
       });
+
+  // Features found by this branch of the multi-source-sink flow. Should be
+  // reported as part of the final issue discovered.
+  auto features = source.features_joined();
+  features.add(sink.features_joined());
 
   if (counterpart != fulfilled_partial_sinks.end()) {
     // If both partial sinks for the callsite have been fulfilled, the rule
-    // is satisfied. Make this a triggered sink and create the issue.
-    create_issue(
-        context,
-        source,
-        sink.with_kind(context->kinds.get_triggered(partial_sink)),
-        rule,
-        position,
-        extra_features);
+    // is satisfied. Make this a triggered sink and create the issue. Make
+    // sure to include the features from the counterpart flow.
+    auto issue_sink =
+        sink.with_kind(context->kinds.get_triggered(partial_sink));
+    issue_sink.add_inferred_features(counterpart->second);
+    issue_sink.add_inferred_features(features);
+    create_issue(context, source, issue_sink, rule, position, extra_features);
     // Issue was found. No need to track the counterpart nor itself.
-    fulfilled_partial_sinks.erase(counterpart);
+    fulfilled_partial_sinks.erase(counterpart->first);
   } else {
-    fulfilled_partial_sinks.insert(partial_sink);
+    fulfilled_partial_sinks.emplace(partial_sink, features);
     LOG_OR_DUMP(
         context,
         4,
@@ -395,10 +402,10 @@ void check_multi_source_multi_sink_rules(
 
 const TriggeredPartialKind* MT_NULLABLE transform_partial_sinks(
     MethodContext* context,
-    const std::unordered_set<const PartialKind*>& fulfilled_partial_sinks,
+    const FulfilledPartialKindMap& fulfilled_partial_sinks,
     const PartialKind* sink_kind) {
-  for (const auto* fulfilled_partial_sink : fulfilled_partial_sinks) {
-    if (fulfilled_partial_sink->is_counterpart(sink_kind)) {
+  for (const auto& [fulfilled_kind, _features] : fulfilled_partial_sinks) {
+    if (fulfilled_kind->is_counterpart(sink_kind)) {
       // The counterpart sink was triggered when a source was found to flow into
       // it. Make this a triggered sink. This will be propagated.
       return context->kinds.get_triggered(sink_kind);
@@ -415,8 +422,7 @@ void create_sinks(
     const Taint& sources,
     const Taint& sinks,
     const FeatureMayAlwaysSet& extra_features = {},
-    const std::unordered_set<const PartialKind*>& fulfilled_partial_sinks =
-        {}) {
+    const FulfilledPartialKindMap& fulfilled_partial_sinks = {}) {
   if (sources.is_bottom() || sinks.is_bottom()) {
     return;
   }
@@ -431,6 +437,11 @@ void create_sinks(
           artificial_source.callee_port().root()));
       features.add(artificial_source.features());
 
+      // TODO(T66517244): This needs to be a transform_map_kind or something to
+      // copy breadcrumbs when a kind transformation happens. We may also want
+      // to include data about the other counterpart in the Frame so that the
+      // issue created will be searchable by both this source/sink and its
+      // counterpart.
       auto new_sinks = sinks.transform_kind(
           [context, &fulfilled_partial_sinks](
               const Kind* sink_kind) -> const Kind* MT_NULLABLE {
@@ -475,8 +486,7 @@ void check_flows(
     const Taint& sinks,
     const Position* position,
     const FeatureMayAlwaysSet& extra_features,
-    std::unordered_set<const PartialKind*>* MT_NULLABLE
-        fulfilled_partial_sinks) {
+    FulfilledPartialKindMap* MT_NULLABLE fulfilled_partial_sinks) {
   if (sources.is_bottom() || sinks.is_bottom()) {
     return;
   }
@@ -531,7 +541,7 @@ void check_flows(
       "Processing sinks for call to `{}`",
       show(callee.method_reference));
 
-  std::unordered_set<const PartialKind*> fulfilled_partial_sinks;
+  FulfilledPartialKindMap fulfilled_partial_sinks;
   std::vector<std::tuple<AccessPath, Taint, const Taint&>> port_sources_sinks;
 
   for (const auto& [port, sinks] : callee.model.sinks().elements()) {

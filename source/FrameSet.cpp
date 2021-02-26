@@ -172,6 +172,14 @@ void FrameSet::add_inferred_features_and_local_position(
   });
 }
 
+FeatureMayAlwaysSet FrameSet::features_joined() const {
+  auto features = FeatureMayAlwaysSet::bottom();
+  for (const auto& frame : *this) {
+    features.join_with(frame.features());
+  }
+  return features;
+}
+
 Frame FrameSet::propagate(
     const Method* /*caller*/,
     const Method* callee,

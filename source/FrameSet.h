@@ -171,6 +171,8 @@ class FrameSet final : public sparta::AbstractDomain<FrameSet> {
       const FeatureMayAlwaysSet& features,
       const Position* MT_NULLABLE position);
 
+  FeatureMayAlwaysSet features_joined() const;
+
   /**
    * Propagate the taint from the callee to the caller.
    *
