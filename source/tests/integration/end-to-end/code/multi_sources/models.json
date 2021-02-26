@@ -4,7 +4,10 @@
     "generations": [
       {
         "kind": "TestSourceA",
-        "port": "Return"
+        "port": "Return",
+        "features": [
+          "source-a"
+        ]
       }
     ]
   },
@@ -13,7 +16,10 @@
     "generations": [
       {
         "kind": "TestSourceB",
-        "port": "Return"
+        "port": "Return",
+        "features": [
+          "source-b"
+        ]
       }
     ]
   },
@@ -23,12 +29,18 @@
       {
         "kind": "TestSink",
         "partial_label": "a",
-        "port": "Argument(0)"
+        "port": "Argument(0)",
+        "features": [
+          "sink-a"
+        ]
       },
       {
         "kind": "TestSink",
         "partial_label": "b",
-        "port": "Argument(1)"
+        "port": "Argument(1)",
+        "features": [
+          "sink-b"
+        ]
       }
     ]
   },
@@ -37,7 +49,10 @@
     "generations": [
       {
         "kind": "TestSourceA",
-        "port": "Return"
+        "port": "Return",
+        "features": [
+          "source-a"
+        ]
       }
     ]
   },
@@ -46,7 +61,10 @@
     "generations": [
       {
         "kind": "TestSourceB",
-        "port": "Argument(0)"
+        "port": "Argument(0)",
+        "features": [
+          "source-b"
+        ]
       }
     ]
   },
@@ -56,12 +74,18 @@
       {
         "kind": "TestSinkSingleArg",
         "partial_label": "a",
-        "port": "Argument(0)"
+        "port": "Argument(0)",
+        "features": [
+          "sink-a"
+        ]
       },
       {
         "kind": "TestSinkSingleArg",
         "partial_label": "b",
-        "port": "Argument(0)"
+        "port": "Argument(0)",
+        "features": [
+          "sink-b"
+        ]
       }
     ]
   }

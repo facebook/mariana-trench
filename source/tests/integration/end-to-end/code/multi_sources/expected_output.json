@@ -3,26 +3,10 @@
   "generations" : 
   [
     {
-      "callee_port" : "Leaf",
-      "caller_port" : "Argument(0)",
-      "kind" : "TestSourceB",
-      "origins" : 
+      "always_features" : 
       [
-        "Lcom/facebook/marianatrench/integrationtests/MockObjectWithThisPropagation;.<init>:()V"
-      ]
-    }
-  ],
-  "method" : "Lcom/facebook/marianatrench/integrationtests/MockObjectWithThisPropagation;.<init>:()V",
-  "position" : 
-  {
-    "line" : 12,
-    "path" : "MockObjectWithThisPropagation.java"
-  }
-}
-{
-  "generations" : 
-  [
-    {
+        "source-a"
+      ],
       "callee_port" : "Leaf",
       "caller_port" : "Return",
       "kind" : "TestSourceA",
@@ -43,6 +27,10 @@
   "generations" : 
   [
     {
+      "always_features" : 
+      [
+        "source-a"
+      ],
       "callee_port" : "Leaf",
       "caller_port" : "Return",
       "kind" : "TestSourceA",
@@ -63,6 +51,34 @@
   "generations" : 
   [
     {
+      "always_features" : 
+      [
+        "source-b"
+      ],
+      "callee_port" : "Leaf",
+      "caller_port" : "Argument(0)",
+      "kind" : "TestSourceB",
+      "origins" : 
+      [
+        "Lcom/facebook/marianatrench/integrationtests/MockObjectWithThisPropagation;.<init>:()V"
+      ]
+    }
+  ],
+  "method" : "Lcom/facebook/marianatrench/integrationtests/MockObjectWithThisPropagation;.<init>:()V",
+  "position" : 
+  {
+    "line" : 12,
+    "path" : "MockObjectWithThisPropagation.java"
+  }
+}
+{
+  "generations" : 
+  [
+    {
+      "always_features" : 
+      [
+        "source-b"
+      ],
       "callee_port" : "Leaf",
       "caller_port" : "Return",
       "kind" : "TestSourceB",
@@ -143,6 +159,83 @@
   "issues" : 
   [
     {
+      "always_features" : 
+      [
+        "sink-a",
+        "source-a"
+      ],
+      "position" : 
+      {
+        "line" : 37,
+        "path" : "MultiSources.java"
+      },
+      "rule" : 1,
+      "sinks" : 
+      [
+        {
+          "always_features" : 
+          [
+            "sink-a"
+          ],
+          "call_position" : 
+          {
+            "end" : 40,
+            "line" : 37,
+            "path" : "MultiSources.java",
+            "start" : 19
+          },
+          "callee" : "Lcom/facebook/marianatrench/integrationtests/MultiSources;.triggeredSinkA:(Ljava/lang/Object;)V",
+          "callee_port" : "Argument(1)",
+          "distance" : 2,
+          "kind" : "Partial:TestSink:a",
+          "origins" : 
+          [
+            "Lcom/facebook/marianatrench/integrationtests/MultiSources;.sink:(Ljava/lang/Object;Ljava/lang/Object;)V"
+          ]
+        }
+      ],
+      "sources" : 
+      [
+        {
+          "always_features" : 
+          [
+            "source-a"
+          ],
+          "call_position" : 
+          {
+            "end" : 38,
+            "line" : 37,
+            "path" : "MultiSources.java",
+            "start" : 32
+          },
+          "callee" : "Lcom/facebook/marianatrench/integrationtests/MultiSources;.sourceA:()Ljava/lang/Object;",
+          "callee_port" : "Return",
+          "distance" : 1,
+          "kind" : "TestSourceA",
+          "origins" : 
+          [
+            "Lcom/facebook/marianatrench/integrationtests/MultiSources;.sourceA:()Ljava/lang/Object;"
+          ]
+        }
+      ]
+    }
+  ],
+  "method" : "Lcom/facebook/marianatrench/integrationtests/MultiSources;.issueViaTriggeredSinkA:()V",
+  "position" : 
+  {
+    "line" : 36,
+    "path" : "MultiSources.java"
+  }
+}
+{
+  "issues" : 
+  [
+    {
+      "always_features" : 
+      [
+        "sink-b",
+        "source-b"
+      ],
       "position" : 
       {
         "line" : 20,
@@ -152,6 +245,10 @@
       "sinks" : 
       [
         {
+          "always_features" : 
+          [
+            "sink-b"
+          ],
           "call_position" : 
           {
             "end" : 36,
@@ -172,6 +269,10 @@
       "sources" : 
       [
         {
+          "always_features" : 
+          [
+            "source-b"
+          ],
           "call_position" : 
           {
             "end" : 75,
@@ -202,6 +303,11 @@
   "issues" : 
   [
     {
+      "always_features" : 
+      [
+        "sink-b",
+        "source-b"
+      ],
       "position" : 
       {
         "line" : 23,
@@ -211,6 +317,10 @@
       "sinks" : 
       [
         {
+          "always_features" : 
+          [
+            "sink-b"
+          ],
           "call_position" : 
           {
             "end" : 67,
@@ -231,6 +341,10 @@
       "sources" : 
       [
         {
+          "always_features" : 
+          [
+            "source-b"
+          ],
           "call_position" : 
           {
             "end" : 65,
@@ -261,6 +375,11 @@
   "issues" : 
   [
     {
+      "always_features" : 
+      [
+        "sink-b",
+        "source-b"
+      ],
       "position" : 
       {
         "line" : 27,
@@ -270,6 +389,10 @@
       "sinks" : 
       [
         {
+          "always_features" : 
+          [
+            "sink-b"
+          ],
           "call_position" : 
           {
             "end" : 40,
@@ -290,6 +413,10 @@
       "sources" : 
       [
         {
+          "always_features" : 
+          [
+            "source-b"
+          ],
           "call_position" : 
           {
             "end" : 38,
@@ -313,65 +440,6 @@
   "position" : 
   {
     "line" : 26,
-    "path" : "MultiSources.java"
-  }
-}
-{
-  "issues" : 
-  [
-    {
-      "position" : 
-      {
-        "line" : 37,
-        "path" : "MultiSources.java"
-      },
-      "rule" : 1,
-      "sinks" : 
-      [
-        {
-          "call_position" : 
-          {
-            "end" : 40,
-            "line" : 37,
-            "path" : "MultiSources.java",
-            "start" : 19
-          },
-          "callee" : "Lcom/facebook/marianatrench/integrationtests/MultiSources;.triggeredSinkA:(Ljava/lang/Object;)V",
-          "callee_port" : "Argument(1)",
-          "distance" : 2,
-          "kind" : "Partial:TestSink:a",
-          "origins" : 
-          [
-            "Lcom/facebook/marianatrench/integrationtests/MultiSources;.sink:(Ljava/lang/Object;Ljava/lang/Object;)V"
-          ]
-        }
-      ],
-      "sources" : 
-      [
-        {
-          "call_position" : 
-          {
-            "end" : 38,
-            "line" : 37,
-            "path" : "MultiSources.java",
-            "start" : 32
-          },
-          "callee" : "Lcom/facebook/marianatrench/integrationtests/MultiSources;.sourceA:()Ljava/lang/Object;",
-          "callee_port" : "Return",
-          "distance" : 1,
-          "kind" : "TestSourceA",
-          "origins" : 
-          [
-            "Lcom/facebook/marianatrench/integrationtests/MultiSources;.sourceA:()Ljava/lang/Object;"
-          ]
-        }
-      ]
-    }
-  ],
-  "method" : "Lcom/facebook/marianatrench/integrationtests/MultiSources;.issueViaTriggeredSinkA:()V",
-  "position" : 
-  {
-    "line" : 36,
     "path" : "MultiSources.java"
   }
 }
@@ -956,6 +1024,10 @@
   "sinks" : 
   [
     {
+      "always_features" : 
+      [
+        "sink-a"
+      ],
       "callee_port" : "Leaf",
       "caller_port" : "Argument(0)",
       "kind" : "Partial:TestSink:a",
@@ -965,6 +1037,10 @@
       ]
     },
     {
+      "always_features" : 
+      [
+        "sink-b"
+      ],
       "callee_port" : "Leaf",
       "caller_port" : "Argument(1)",
       "kind" : "Partial:TestSink:b",
@@ -985,6 +1061,10 @@
   "sinks" : 
   [
     {
+      "always_features" : 
+      [
+        "sink-a"
+      ],
       "call_position" : 
       {
         "end" : 27,
@@ -1014,6 +1094,10 @@
   "sinks" : 
   [
     {
+      "always_features" : 
+      [
+        "sink-b"
+      ],
       "call_position" : 
       {
         "end" : 51,
@@ -1059,6 +1143,10 @@
   "sinks" : 
   [
     {
+      "always_features" : 
+      [
+        "sink-a"
+      ],
       "callee_port" : "Leaf",
       "caller_port" : "Argument(0)",
       "kind" : "Partial:TestSinkSingleArg:a",
@@ -1068,6 +1156,10 @@
       ]
     },
     {
+      "always_features" : 
+      [
+        "sink-b"
+      ],
       "callee_port" : "Leaf",
       "caller_port" : "Argument(0)",
       "kind" : "Partial:TestSinkSingleArg:b",
@@ -1088,6 +1180,10 @@
   "sinks" : 
   [
     {
+      "always_features" : 
+      [
+        "sink-a"
+      ],
       "call_position" : 
       {
         "line" : 32,
@@ -1121,6 +1217,10 @@
   "sinks" : 
   [
     {
+      "always_features" : 
+      [
+        "sink-b"
+      ],
       "call_position" : 
       {
         "line" : 25,
