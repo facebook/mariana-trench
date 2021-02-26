@@ -417,6 +417,22 @@ const TriggeredPartialKind* MT_NULLABLE transform_partial_sinks(
   return nullptr;
 }
 
+void add_fulfilled_sink_features(
+    const FulfilledPartialKindMap& fulfilled_partial_sinks,
+    FrameSet& new_frame_set) {
+  mt_assert(!new_frame_set.is_bottom());
+  const auto* new_kind = new_frame_set.kind()->as<TriggeredPartialKind>();
+  // Called only after transform_partial_sinks above creates a `new_frame_set`
+  // containing the triggered kind, so this must be a TriggeredPartialKind.
+  mt_assert(new_kind != nullptr);
+  for (const auto& [kind, features] : fulfilled_partial_sinks) {
+    if (kind->is_counterpart(new_kind->partial_kind())) {
+      new_frame_set.add_inferred_features(features);
+      return;
+    }
+  }
+}
+
 void create_sinks(
     MethodContext* context,
     const Taint& sources,
@@ -437,12 +453,7 @@ void create_sinks(
           artificial_source.callee_port().root()));
       features.add(artificial_source.features());
 
-      // TODO(T66517244): This needs to be a transform_map_kind or something to
-      // copy breadcrumbs when a kind transformation happens. We may also want
-      // to include data about the other counterpart in the Frame so that the
-      // issue created will be searchable by both this source/sink and its
-      // counterpart.
-      auto new_sinks = sinks.transform_kind(
+      auto new_sinks = sinks.transform_map_kind(
           [context, &fulfilled_partial_sinks](
               const Kind* sink_kind) -> const Kind* MT_NULLABLE {
             const auto* partial_sink = sink_kind->as<PartialKind>();
@@ -452,6 +463,9 @@ void create_sinks(
             }
             return transform_partial_sinks(
                 context, fulfilled_partial_sinks, partial_sink);
+          },
+          [&fulfilled_partial_sinks](FrameSet& new_frame_set) {
+            add_fulfilled_sink_features(fulfilled_partial_sinks, new_frame_set);
           });
       new_sinks.add_inferred_features(features);
       new_sinks.set_local_positions(source.local_positions());

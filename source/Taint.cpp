@@ -130,12 +130,13 @@ Taint Taint::attach_position(const Position* position) const {
   return result;
 }
 
-Taint Taint::transform_kind(
-    const std::function<const Kind * MT_NULLABLE(const Kind*)>& f) const {
+Taint Taint::transform_map_kind(
+    const std::function<const Kind * MT_NULLABLE(const Kind*)>& transform_kind,
+    const std::function<void(FrameSet&)>& map_frame_set) const {
   Taint new_taint;
   for (const auto& frame_set : set_) {
     const auto* old_kind = frame_set.kind();
-    const auto* new_kind = f(old_kind);
+    const auto* new_kind = transform_kind(old_kind);
     if (!new_kind) {
       continue;
     }
@@ -143,7 +144,9 @@ Taint Taint::transform_kind(
     if (new_kind == old_kind) {
       new_taint.add(frame_set); // no transformation
     } else {
-      new_taint.add(frame_set.with_kind(new_kind));
+      auto new_frame_set = frame_set.with_kind(new_kind);
+      map_frame_set(new_frame_set);
+      new_taint.add(new_frame_set);
     }
   }
   return new_taint;

@@ -163,11 +163,14 @@ class Taint final : public sparta::AbstractDomain<Taint> {
   Taint attach_position(const Position* position) const;
 
   /**
-   * Transforms kinds in the taint according to the given function. A nullptr
-   * will cause frames for the input kind to be dropped.
+   * Transforms kinds in the taint according to the function in the first arg.
+   * A nullptr will cause frames for the input kind to be dropped.
+   * If a transformation occurs, a map operation in the second arg will be
+   * called on the resulting FrameSet (contains the transformed kind).
    */
-  Taint transform_kind(
-      const std::function<const Kind * MT_NULLABLE(const Kind*)>&) const;
+  Taint transform_map_kind(
+      const std::function<const Kind * MT_NULLABLE(const Kind*)>&,
+      const std::function<void(FrameSet&)>&) const;
 
   static Taint from_json(const Json::Value& value, Context& context);
   Json::Value to_json() const;

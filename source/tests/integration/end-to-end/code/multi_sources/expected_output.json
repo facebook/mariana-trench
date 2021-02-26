@@ -316,78 +316,8 @@
       "always_features" : 
       [
         "sink-a",
-        "source-a"
-      ],
-      "position" : 
-      {
-        "line" : 37,
-        "path" : "MultiSources.java"
-      },
-      "rule" : 1,
-      "sinks" : 
-      [
-        {
-          "always_features" : 
-          [
-            "sink-a"
-          ],
-          "call_position" : 
-          {
-            "end" : 40,
-            "line" : 37,
-            "path" : "MultiSources.java",
-            "start" : 19
-          },
-          "callee" : "Lcom/facebook/marianatrench/integrationtests/MultiSources;.triggeredSinkA:(Ljava/lang/Object;)V",
-          "callee_port" : "Argument(1)",
-          "distance" : 2,
-          "kind" : "Partial:TestSink:a",
-          "origins" : 
-          [
-            "Lcom/facebook/marianatrench/integrationtests/MultiSources;.sink:(Ljava/lang/Object;Ljava/lang/Object;)V"
-          ]
-        }
-      ],
-      "sources" : 
-      [
-        {
-          "always_features" : 
-          [
-            "source-a"
-          ],
-          "call_position" : 
-          {
-            "end" : 38,
-            "line" : 37,
-            "path" : "MultiSources.java",
-            "start" : 32
-          },
-          "callee" : "Lcom/facebook/marianatrench/integrationtests/MultiSources;.sourceA:()Ljava/lang/Object;",
-          "callee_port" : "Return",
-          "distance" : 1,
-          "kind" : "TestSourceA",
-          "origins" : 
-          [
-            "Lcom/facebook/marianatrench/integrationtests/MultiSources;.sourceA:()Ljava/lang/Object;"
-          ]
-        }
-      ]
-    }
-  ],
-  "method" : "Lcom/facebook/marianatrench/integrationtests/MultiSources;.issueViaTriggeredSinkA:()V",
-  "position" : 
-  {
-    "line" : 36,
-    "path" : "MultiSources.java"
-  }
-}
-{
-  "issues" : 
-  [
-    {
-      "always_features" : 
-      [
         "sink-b",
+        "source-a",
         "source-b"
       ],
       "position" : 
@@ -401,7 +331,9 @@
         {
           "always_features" : 
           [
-            "sink-b"
+            "sink-a",
+            "sink-b",
+            "source-a"
           ],
           "call_position" : 
           {
@@ -450,6 +382,82 @@
   "position" : 
   {
     "line" : 26,
+    "path" : "MultiSources.java"
+  }
+}
+{
+  "issues" : 
+  [
+    {
+      "always_features" : 
+      [
+        "sink-a",
+        "sink-b",
+        "source-a",
+        "source-b"
+      ],
+      "position" : 
+      {
+        "line" : 37,
+        "path" : "MultiSources.java"
+      },
+      "rule" : 1,
+      "sinks" : 
+      [
+        {
+          "always_features" : 
+          [
+            "sink-a",
+            "sink-b",
+            "source-b"
+          ],
+          "call_position" : 
+          {
+            "end" : 40,
+            "line" : 37,
+            "path" : "MultiSources.java",
+            "start" : 19
+          },
+          "callee" : "Lcom/facebook/marianatrench/integrationtests/MultiSources;.triggeredSinkA:(Ljava/lang/Object;)V",
+          "callee_port" : "Argument(1)",
+          "distance" : 2,
+          "kind" : "Partial:TestSink:a",
+          "origins" : 
+          [
+            "Lcom/facebook/marianatrench/integrationtests/MultiSources;.sink:(Ljava/lang/Object;Ljava/lang/Object;)V"
+          ]
+        }
+      ],
+      "sources" : 
+      [
+        {
+          "always_features" : 
+          [
+            "source-a"
+          ],
+          "call_position" : 
+          {
+            "end" : 38,
+            "line" : 37,
+            "path" : "MultiSources.java",
+            "start" : 32
+          },
+          "callee" : "Lcom/facebook/marianatrench/integrationtests/MultiSources;.sourceA:()Ljava/lang/Object;",
+          "callee_port" : "Return",
+          "distance" : 1,
+          "kind" : "TestSourceA",
+          "origins" : 
+          [
+            "Lcom/facebook/marianatrench/integrationtests/MultiSources;.sourceA:()Ljava/lang/Object;"
+          ]
+        }
+      ]
+    }
+  ],
+  "method" : "Lcom/facebook/marianatrench/integrationtests/MultiSources;.issueViaTriggeredSinkA:()V",
+  "position" : 
+  {
+    "line" : 36,
     "path" : "MultiSources.java"
   }
 }
@@ -1073,7 +1081,9 @@
     {
       "always_features" : 
       [
-        "sink-a"
+        "sink-a",
+        "sink-b",
+        "source-b"
       ],
       "call_position" : 
       {
@@ -1106,7 +1116,9 @@
     {
       "always_features" : 
       [
-        "sink-b"
+        "sink-a",
+        "sink-b",
+        "source-a"
       ],
       "call_position" : 
       {
@@ -1192,7 +1204,9 @@
     {
       "always_features" : 
       [
-        "sink-a"
+        "sink-a",
+        "sink-b",
+        "source-b"
       ],
       "call_position" : 
       {
@@ -1229,7 +1243,9 @@
     {
       "always_features" : 
       [
-        "sink-b"
+        "sink-a",
+        "sink-b",
+        "source-a"
       ],
       "call_position" : 
       {
