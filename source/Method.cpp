@@ -21,7 +21,8 @@ Method::Method(
     const DexMethod* method,
     ParameterTypeOverrides parameter_type_overrides)
     : method_(method),
-      parameter_type_overrides_(std::move(parameter_type_overrides)) {
+      parameter_type_overrides_(std::move(parameter_type_overrides)),
+      show_cached_(::show(this)) {
   mt_assert(method != nullptr);
 }
 
@@ -72,6 +73,10 @@ bool Method::is_constructor() const {
 
 bool Method::returns_void() const {
   return method_->get_proto()->get_rtype() == type::_void();
+}
+
+const std::string& Method::show() const {
+  return show_cached_;
 }
 
 ParameterPosition Method::number_of_parameters() const {
@@ -142,18 +147,18 @@ const Method* Method::from_json(const Json::Value& value, Context& context) {
 Json::Value Method::to_json() const {
   if (parameter_type_overrides_.empty()) {
     // Use a simpler form to be less verbose.
-    return Json::Value(show(method_));
+    return Json::Value(::show(method_));
   }
 
   auto value = Json::Value(Json::objectValue);
-  value["name"] = Json::Value(show(method_));
+  value["name"] = Json::Value(::show(method_));
 
   auto parameter_type_overrides = Json::Value(Json::arrayValue);
   for (auto [parameter, type] : parameter_type_overrides_) {
     auto parameter_type_override = Json::Value(Json::objectValue);
     parameter_type_override["parameter"] =
         Json::Value(static_cast<int>(parameter));
-    parameter_type_override["type"] = Json::Value(show(type));
+    parameter_type_override["type"] = Json::Value(::show(type));
     parameter_type_overrides.append(parameter_type_override);
   }
   value["parameter_type_overrides"] = parameter_type_overrides;

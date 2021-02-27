@@ -64,6 +64,7 @@ class Method final {
 
   bool is_constructor() const;
   bool returns_void() const;
+  const std::string& show() const;
 
   /**
    * Return the number of parameters, including the implicit `this` parameter.
@@ -92,6 +93,7 @@ class Method final {
 
   const DexMethod* method_;
   ParameterTypeOverrides parameter_type_overrides_;
+  std::string show_cached_;
 };
 
 } // namespace marianatrench

@@ -720,7 +720,7 @@ SignatureConstraint::SignatureConstraint(std::string regex_string)
     : pattern_(regex_string) {}
 
 bool SignatureConstraint::satisfy(const Method* method) const {
-  return re2::RE2::FullMatch(show(method), pattern_);
+  return re2::RE2::FullMatch(method->show(), pattern_);
 }
 
 bool SignatureConstraint::operator==(const MethodConstraint& other) const {
@@ -1565,7 +1565,7 @@ std::optional<Model> ModelTemplate::instantiate(
   } else {
     LOG(3,
         "Method {} generates no new sinks/generations/propagations/sources from {} for_all_parameters constraints:\nInstantiated model: {}.\nModel template: {}.",
-        show(method),
+        method->show(),
         for_all_parameters_.size(),
         JsonValidation::to_styled_string(model.to_json()),
         JsonValidation::to_styled_string(model_.to_json()));
@@ -1613,7 +1613,7 @@ std::vector<Model> JsonModelGeneratorItem::visit_method(
     LOG(verbosity_,
         "Method `{}{}` satisfies all constraints in json model generator {}",
         method->is_static() ? "(static) " : "",
-        show(method),
+        method->show(),
         name_);
     auto model = model_template_.instantiate(context_, method);
     // If a method has an empty model, then don't add a model
