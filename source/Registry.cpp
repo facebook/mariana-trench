@@ -91,7 +91,7 @@ Model Registry::get(const Method* method) const {
     return models_.at(method);
   } catch (const std::out_of_range&) {
     throw std::runtime_error(fmt::format(
-        "Trying to get model for untracked method `{}`.", show(method)));
+        "Trying to get model for untracked method `{}`.", method->show()));
   }
 }
 

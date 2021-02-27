@@ -88,7 +88,7 @@ Json::Value Overrides::to_json() const {
     for (const auto* override : *overrides) {
       overrides_value.append(Json::Value(show(override)));
     }
-    value[show(method)] = overrides_value;
+    value[method->show()] = overrides_value;
   }
   return value;
 }

@@ -143,17 +143,17 @@ Model analyze(
       std::make_unique<MethodContext>(global_context, registry, model);
 
   LOG_OR_DUMP(
-      method_context, 3, "Analyzing `\033[33m{}\033[0m`...", show(method));
+      method_context, 3, "Analyzing `\033[33m{}\033[0m`...", method->show());
 
   auto* code = method->get_code();
   if (!code) {
     throw std::runtime_error(fmt::format(
-        "Attempting to analyze method `{}` with no code!", show(method)));
+        "Attempting to analyze method `{}` with no code!", method->show()));
   }
   if (!code->cfg_built()) {
     throw std::runtime_error(fmt::format(
         "Attempting to analyze method `{}` with no control flow graph!",
-        show(method)));
+        method->show()));
   } else {
     LOG_OR_DUMP(
         method_context, 4, "Code:\n{}", show_control_flow_graph(code->cfg()));
@@ -165,12 +165,12 @@ Model analyze(
   model.approximate();
 
   LOG_OR_DUMP(
-      method_context, 4, "Computed model for `{}`: {}", show(method), model);
+      method_context, 4, "Computed model for `{}`: {}", method->show(), model);
 
   global_context.statistics->log_time(method, timer);
   auto duration = timer.duration_in_seconds();
   if (duration > 10.0) {
-    WARNING(1, "Analyzing `{}` took {:.2f}s!", show(method), duration);
+    WARNING(1, "Analyzing `{}` took {:.2f}s!", method->show(), duration);
   }
 
   return model;
@@ -202,7 +202,7 @@ void Interprocedural::run_analysis(Context& context, Registry& registry) {
       ERROR(1, "Too many iterations");
       std::string message = "Unstable methods are:";
       for (const auto* method : *methods_to_analyze) {
-        message.append(fmt::format("\n`{}`", show(method)));
+        message.append(fmt::format("\n`{}`", method->show()));
       }
       LOG(1, message);
       throw std::runtime_error("Too many iterations, exiting.");
@@ -235,7 +235,7 @@ void Interprocedural::run_analysis(Context& context, Registry& registry) {
 
           const auto old_model = registry.get(method);
           if (old_model.skip_analysis()) {
-            LOG(3, "Skipping `{}`...", show(method));
+            LOG(3, "Skipping `{}`...", method->show());
             return;
           }
 

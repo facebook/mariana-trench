@@ -99,7 +99,7 @@ Dependencies::Dependencies(
     WARNING(
         1,
         "Method `{}` has {} overrides, consider marking it with `no-join-virtual-overrides` if the analysis is slow.",
-        show(method),
+        method->show(),
         overrides.get(method).size());
   }
 
@@ -128,7 +128,7 @@ Json::Value Dependencies::to_json() const {
     for (const auto* dependency : dependencies) {
       dependencies_value.append(Json::Value(show(dependency)));
     }
-    value[show(method)] = dependencies_value;
+    value[method->show()] = dependencies_value;
   }
   return value;
 }

@@ -80,7 +80,7 @@ const TypeEnvironments& Types::environments(const Method* method) const {
     WARNING(
         4,
         "Trying to get types for `{}` which does not have code.",
-        show(method));
+        method->show());
     return empty_environments;
   }
 
@@ -115,7 +115,7 @@ const TypeEnvironments& Types::environments(const Method* method) const {
     ERROR(
         1,
         "Cannot infer types for method `{}`: {}.",
-        show(method),
+        method->show(),
         rethrown_exception.what());
     environments_.emplace(method, std::make_unique<TypeEnvironments>());
   }
