@@ -18,7 +18,7 @@ namespace {
 
 boost::filesystem::path json_file_path() {
   return test::find_repository_root() /
-      "facebook/internal-configuration/model_generators/sinks/DisallowSensitiveSinkGenerator.json";
+      "facebook/internal-configuration/model-generators/sinks/DisallowSensitiveSinkGenerator.json";
 }
 
 } // namespace

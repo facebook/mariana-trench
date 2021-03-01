@@ -19,7 +19,7 @@ namespace {
 
 boost::filesystem::path json_file_path() {
   return test::find_repository_root() /
-      "facebook/internal-configuration/model_generators/propagations/UriIntentBuilderModelGenerator.json";
+      "facebook/internal-configuration/model-generators/propagations/UriIntentBuilderModelGenerator.json";
 }
 
 class UriIntentBuilderModelGeneratorTest : public test::Test {};

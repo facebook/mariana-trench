@@ -18,12 +18,12 @@ namespace {
 
 boost::filesystem::path client_override_source_json_file_path() {
   return test::find_repository_root() /
-      "facebook/internal-configuration/model_generators/sources/WebViewSourceGenerator.json";
+      "facebook/internal-configuration/model-generators/sources/WebViewSourceGenerator.json";
 }
 
 boost::filesystem::path client_webview_source_json_file_path() {
   return test::find_repository_root() /
-      "facebook/internal-configuration/model_generators/sinks/WebViewModelGenerator.json";
+      "facebook/internal-configuration/model-generators/sinks/WebViewModelGenerator.json";
 }
 
 } // namespace
