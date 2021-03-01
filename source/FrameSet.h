@@ -183,7 +183,10 @@ class FrameSet final : public sparta::AbstractDomain<FrameSet> {
       const Method* callee,
       const AccessPath& callee_port,
       const Position* call_position,
-      int maximum_source_sink_distance) const;
+      int maximum_source_sink_distance,
+      Context& context,
+      const std::vector<const DexType * MT_NULLABLE>& source_register_types)
+      const;
 
   /* Return the set of leaf frames with the given position. */
   FrameSet attach_position(const Position* position) const;

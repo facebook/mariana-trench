@@ -157,7 +157,10 @@ class Taint final : public sparta::AbstractDomain<Taint> {
       const AccessPath& callee_port,
       const Position* call_position,
       int maximum_source_sink_distance,
-      const FeatureMayAlwaysSet& extra_features) const;
+      const FeatureMayAlwaysSet& extra_features,
+      Context& context,
+      const std::vector<const DexType * MT_NULLABLE>& source_register_types)
+      const;
 
   /* Return the set of leaf frames with the given position. */
   Taint attach_position(const Position* position) const;

@@ -151,7 +151,9 @@ class Model final {
   Model at_callsite(
       const Method* caller,
       const Position* position,
-      Context& context) const;
+      Context& context,
+      const std::vector<const DexType * MT_NULLABLE>& source_register_types)
+      const;
 
   void approximate();
 

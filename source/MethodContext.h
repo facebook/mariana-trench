@@ -42,7 +42,9 @@ class MethodContext final {
 
   Model model_at_callsite(
       const CallTarget& call_target,
-      const Position* position) const;
+      const Position* position,
+      const std::vector<const DexType * MT_NULLABLE>& source_register_types)
+      const;
 
   const Options& options;
   const ArtificialMethods& artificial_methods;

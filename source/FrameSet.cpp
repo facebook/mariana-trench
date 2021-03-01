@@ -6,8 +6,10 @@
  */
 
 #include <mariana-trench/Assert.h>
+#include <mariana-trench/Features.h>
 #include <mariana-trench/FrameSet.h>
 #include <mariana-trench/JsonValidation.h>
+#include <mariana-trench/Log.h>
 
 namespace marianatrench {
 
@@ -185,7 +187,10 @@ Frame FrameSet::propagate(
     const Method* callee,
     const AccessPath& callee_port,
     const Position* call_position,
-    int maximum_source_sink_distance) const {
+    int maximum_source_sink_distance,
+    Context& context,
+    const std::vector<const DexType * MT_NULLABLE>& source_register_types)
+    const {
   if (is_bottom()) {
     return Frame::bottom();
   }
@@ -206,6 +211,27 @@ Frame FrameSet::propagate(
 
         // Note: This merges user features with existing inferred features.
         inferred_features.join_with(frame.features());
+        // Materialize via_type_of_ports into features and add them to the
+        // inferred features
+        if (!frame.via_type_of_ports().is_value() ||
+            frame.via_type_of_ports().elements().empty()) {
+          continue;
+        }
+        for (const auto& port : frame.via_type_of_ports().elements()) {
+          if (!port.is_argument() ||
+              port.parameter_position() >= source_register_types.size()) {
+            ERROR(
+                1,
+                "Invalid port {} provided for via_type_of ports of method {}.{}",
+                port,
+                callee->get_class()->str(),
+                callee->get_name());
+            continue;
+          }
+          inferred_features.add_always(
+              context.features->get_via_type_of_feature(
+                  source_register_types[port.parameter_position()]));
+        }
       }
     }
   }

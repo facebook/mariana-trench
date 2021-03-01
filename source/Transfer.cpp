@@ -112,6 +112,17 @@ struct Callee {
   Model model;
 };
 
+const std::vector<const DexType * MT_NULLABLE> get_source_register_types(
+    const MethodContext* context,
+    const IRInstruction* instruction) {
+  std::vector<const DexType* MT_NULLABLE> register_types = {};
+  for (const auto& source_register : instruction->srcs_vec()) {
+    register_types.push_back(context->types.register_type(
+        context->method(), instruction, source_register));
+  }
+  return register_types;
+}
+
 Callee get_callee(
     MethodContext* context,
     AnalysisEnvironment* environment,
@@ -136,7 +147,8 @@ Callee get_callee(
   auto* position =
       context->positions.get(context->method(), environment->last_position());
 
-  auto model = context->model_at_callsite(call_target, position);
+  auto model = context->model_at_callsite(
+      call_target, position, get_source_register_types(context, instruction));
   LOG_OR_DUMP(context, 4, "Callee model: {}", model);
 
   // Avoid copies using `std::move`.
@@ -161,7 +173,8 @@ Callee get_callee(
   auto* position =
       context->positions.get(context->method(), environment->last_position());
 
-  auto model = context->model_at_callsite(callee.call_target, position);
+  auto model = context->model_at_callsite(
+      callee.call_target, position, /* source_register_types */ {});
   LOG_OR_DUMP(context, 4, "Callee model: {}", model);
 
   return Callee{

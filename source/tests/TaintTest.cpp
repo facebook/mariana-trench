@@ -653,7 +653,9 @@ TEST_F(TaintTest, Propagate) {
           /* callee_port */ AccessPath(Root(Root::Kind::Argument, 2)),
           /* call_position */ context.positions->get("Test.java", 1),
           /* maximum_source_sink_distance */ 100,
-          /* extra_features */ FeatureMayAlwaysSet{feature_three}),
+          /* extra_features */ FeatureMayAlwaysSet{feature_three},
+          /* context */ context,
+          /* source_register_types */ {}),
       (Taint{
           Frame(
               /* kind */ context.kinds->get("TestSource"),

@@ -228,7 +228,9 @@ Model Model::instantiate(const Method* method, Context& context) const {
 Model Model::at_callsite(
     const Method* caller,
     const Position* call_position,
-    Context& context) const {
+    Context& context,
+    const std::vector<const DexType * MT_NULLABLE>& source_register_types)
+    const {
   const auto* callee = method_;
 
   Model model;
@@ -248,7 +250,9 @@ Model Model::at_callsite(
        callee,
        call_position,
        maximum_source_sink_distance,
-       &extra_features](
+       &extra_features,
+       &context,
+       &source_register_types](
           const AccessPath& callee_port, const Taint& generations) {
         model.generations_.write(
             callee_port,
@@ -258,28 +262,34 @@ Model Model::at_callsite(
                 callee_port,
                 call_position,
                 maximum_source_sink_distance,
-                extra_features),
+                extra_features,
+                context,
+                source_register_types),
             UpdateKind::Weak);
       });
 
-  sinks_.visit(
-      [&model,
-       caller,
-       callee,
-       call_position,
-       maximum_source_sink_distance,
-       &extra_features](const AccessPath& callee_port, const Taint& sinks) {
-        model.sinks_.write(
-            callee_port,
-            sinks.propagate(
+  sinks_.visit([&model,
                 caller,
                 callee,
-                callee_port,
                 call_position,
                 maximum_source_sink_distance,
-                extra_features),
-            UpdateKind::Weak);
-      });
+                &extra_features,
+                &context,
+                &source_register_types](
+                   const AccessPath& callee_port, const Taint& sinks) {
+    model.sinks_.write(
+        callee_port,
+        sinks.propagate(
+            caller,
+            callee,
+            callee_port,
+            call_position,
+            maximum_source_sink_distance,
+            extra_features,
+            context,
+            source_register_types),
+        UpdateKind::Weak);
+  });
 
   model.propagations_ = propagations_;
   model.add_features_to_arguments_ = add_features_to_arguments_;
