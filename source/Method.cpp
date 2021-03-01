@@ -22,6 +22,7 @@ Method::Method(
     ParameterTypeOverrides parameter_type_overrides)
     : method_(method),
       parameter_type_overrides_(std::move(parameter_type_overrides)),
+      signature_(::show(method)),
       show_cached_(::show(this)) {
   mt_assert(method != nullptr);
 }
@@ -73,6 +74,10 @@ bool Method::is_constructor() const {
 
 bool Method::returns_void() const {
   return method_->get_proto()->get_rtype() == type::_void();
+}
+
+const std::string& Method::signature() const {
+  return signature_;
 }
 
 const std::string& Method::show() const {
@@ -147,11 +152,11 @@ const Method* Method::from_json(const Json::Value& value, Context& context) {
 Json::Value Method::to_json() const {
   if (parameter_type_overrides_.empty()) {
     // Use a simpler form to be less verbose.
-    return Json::Value(::show(method_));
+    return Json::Value(signature_);
   }
 
   auto value = Json::Value(Json::objectValue);
-  value["name"] = Json::Value(::show(method_));
+  value["name"] = Json::Value(signature_);
 
   auto parameter_type_overrides = Json::Value(Json::arrayValue);
   for (auto [parameter, type] : parameter_type_overrides_) {
@@ -167,7 +172,7 @@ Json::Value Method::to_json() const {
 }
 
 std::ostream& operator<<(std::ostream& out, const Method& method) {
-  out << show(method.method_);
+  out << method.signature_;
   if (!method.parameter_type_overrides_.empty()) {
     out << "[";
     for (auto iterator = method.parameter_type_overrides_.begin(),

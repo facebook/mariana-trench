@@ -64,6 +64,8 @@ class Method final {
 
   bool is_constructor() const;
   bool returns_void() const;
+
+  const std::string& signature() const;
   const std::string& show() const;
 
   /**
@@ -93,6 +95,7 @@ class Method final {
 
   const DexMethod* method_;
   ParameterTypeOverrides parameter_type_overrides_;
+  std::string signature_;
   std::string show_cached_;
 };
 

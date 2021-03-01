@@ -119,7 +119,7 @@ std::vector<Model> ProviderSourceGenerator::run(const Methods& methods) {
   std::vector<Model> models;
   std::unordered_map<DexClass*, bool> permission_providers = {};
   auto queue = sparta::work_queue<const Method*>([&](const Method* method) {
-    std::string signature = method->show();
+    const auto& signature = method->signature();
     const auto outer_class = generator::get_outer_class(signature);
     if (manifest_providers.count(outer_class)) {
       for (const auto& regex : provider_regexes) {

@@ -720,7 +720,7 @@ SignatureConstraint::SignatureConstraint(std::string regex_string)
     : pattern_(regex_string) {}
 
 bool SignatureConstraint::satisfy(const Method* method) const {
-  return re2::RE2::FullMatch(method->show(), pattern_);
+  return re2::RE2::FullMatch(method->signature(), pattern_);
 }
 
 bool SignatureConstraint::operator==(const MethodConstraint& other) const {
