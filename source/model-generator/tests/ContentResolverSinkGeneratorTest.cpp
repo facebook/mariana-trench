@@ -18,7 +18,7 @@ namespace {
 
 boost::filesystem::path json_file_path() {
   return test::find_repository_root() /
-      "shim/resources/model_generators/sinks/ContentResolverSinkGenerator.json";
+      "facebook/internal-configuration/model_generators/sinks/ContentResolverSinkGenerator.json";
 }
 
 } // namespace
