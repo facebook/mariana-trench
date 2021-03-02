@@ -66,9 +66,8 @@ Positions::Positions(const Options& options, const DexStoresVector& stores) {
     // Create a dummy path for all methods.
     for (auto& scope : DexStoreClassesIterator(stores)) {
       walk::parallel::methods(scope, [&](DexMethod* method) {
-        std::string method_signature = show(method);
-        std::string class_name =
-            method_signature.substr(0, method_signature.find(";"));
+        auto class_name = method->get_class()->str();
+        class_name = class_name.substr(0, class_name.find(";"));
         class_name = class_name.substr(0, class_name.find("$")) + ";";
         if (class_name.size() > 2) {
           class_name = class_name.substr(1, class_name.size() - 2);
@@ -212,9 +211,8 @@ Positions::Positions(const Options& options, const DexStoresVector& stores) {
 
     for (auto& scope : DexStoreClassesIterator(stores)) {
       walk::parallel::methods(scope, [&](DexMethod* method) {
-        std::string method_signature = show(method);
-        std::string class_name =
-            method_signature.substr(0, method_signature.find(";"));
+        auto class_name = method->get_class()->str();
+        class_name = class_name.substr(0, class_name.find(";"));
         class_name = class_name.substr(0, class_name.find("$")) + ";";
         std::string path = class_to_path.get(class_name, /* default */ "");
 
