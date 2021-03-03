@@ -57,6 +57,15 @@ std::string execute_and_catch_output(
   return output;
 }
 
+// Performance optimization to avoid calling more expensive regex matches on
+// every line.
+bool maybe_class(const std::string& line) {
+  return line.find("class") != std::string::npos ||
+      line.find("interface") != std::string::npos ||
+      line.find("object") != std::string::npos ||
+      line.find("enum") != std::string::npos;
+}
+
 } // namespace
 
 Positions::Positions() {}
@@ -186,7 +195,8 @@ Positions::Positions(const Options& options, const DexStoresVector& stores) {
             }
 
             re2::StringPiece class_match;
-            if (package && re2::RE2::PartialMatch(line, class_regex) &&
+            if (package && maybe_class(line) &&
+                re2::RE2::PartialMatch(line, class_regex) &&
                 re2::RE2::PartialMatch(line, class_regex, &class_match)) {
               class_to_path.emplace(
                   fmt::format("L{}/{};", *package, class_match), *path);
