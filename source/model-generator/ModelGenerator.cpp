@@ -47,79 +47,62 @@ std::vector<Model> MethodVisitorModelGenerator::run(const Methods& methods) {
 }
 
 namespace {
-ConcurrentMap<std::string, MethodSet> create_name_to_methods(
-    const Methods& methods) {
-  ConcurrentMap<std::string, MethodSet> method_mapping;
 
-  auto queue = sparta::work_queue<const Method*>([&](const Method* method) {
-    const auto& method_name = method->get_name();
-    method_mapping.update(
-        method_name,
-        [&](const std::string& /* name */,
-            MethodSet& methods,
-            bool /* exists */) { methods.add(method); });
-  });
-  for (const auto* method : methods) {
-    queue.add_item(method);
-  }
-  queue.run_all();
-  return method_mapping;
+void create_name_to_method(
+    const Method* method,
+    ConcurrentMap<std::string, MethodSet>& method_mapping) {
+  const auto& method_name = method->get_name();
+  method_mapping.update(
+      method_name,
+      [&](const std::string& /* name */,
+          MethodSet& methods,
+          bool /* exists */) { methods.add(method); });
 }
 
-ConcurrentMap<std::string, MethodSet> create_class_to_methods(
-    const Methods& methods) {
-  ConcurrentMap<std::string, MethodSet> method_mapping;
+void create_class_to_method(
+    const Method* method,
+    ConcurrentMap<std::string, MethodSet>& method_mapping) {
+  std::string parent_class = method->get_class()->get_name()->str();
+  method_mapping.update(
+      parent_class,
+      [&](const std::string& /* parent_name */,
+          MethodSet& methods,
+          bool /* exists */) { methods.add(method); });
+}
 
-  auto queue = sparta::work_queue<const Method*>([&](const Method* method) {
-    std::string parent_class = method->get_class()->get_name()->str();
+void create_class_to_override_method(
+    const Method* method,
+    ConcurrentMap<std::string, MethodSet>& method_mapping) {
+  std::string class_name = method->get_class()->get_name()->str();
+  auto* dex_class = redex::get_class(class_name);
+  if (!dex_class) {
+    return;
+  }
+  std::unordered_set<std::string> parent_classes =
+      generator::get_parents_from_class(
+          dex_class, /* include_interfaces */ true);
+  parent_classes.insert(class_name);
+  for (const auto& parent_class : parent_classes) {
     method_mapping.update(
         parent_class,
         [&](const std::string& /* parent_name */,
             MethodSet& methods,
             bool /* exists */) { methods.add(method); });
-  });
-  for (const auto* method : methods) {
-    queue.add_item(method);
   }
-  queue.run_all();
-  return method_mapping;
-}
-
-ConcurrentMap<std::string, MethodSet> create_class_to_override_methods(
-    const Methods& methods) {
-  ConcurrentMap<std::string, MethodSet> method_mapping;
-
-  auto queue = sparta::work_queue<const Method*>([&](const Method* method) {
-    std::string class_name = method->get_class()->get_name()->str();
-    auto* dex_class = redex::get_class(class_name);
-    if (!dex_class) {
-      return;
-    }
-    std::unordered_set<std::string> parent_classes =
-        generator::get_parents_from_class(
-            dex_class, /* include_interfaces */ true);
-    parent_classes.insert(class_name);
-    for (const auto& parent_class : parent_classes) {
-      method_mapping.update(
-          parent_class,
-          [&](const std::string& /* parent_name */,
-              MethodSet& methods,
-              bool /* exists */) { methods.add(method); });
-    }
-  });
-  for (const auto* method : methods) {
-    queue.add_item(method);
-  }
-  queue.run_all();
-  return method_mapping;
 }
 } // namespace
 
-MethodMappings::MethodMappings(const Methods& methods)
-    : name_to_methods(create_name_to_methods(methods)),
-      class_to_methods(create_class_to_methods(methods)),
-      class_to_override_methods(create_class_to_override_methods(methods)),
-      all_methods(methods) {}
+MethodMappings::MethodMappings(const Methods& methods) : all_methods(methods) {
+  auto queue = sparta::work_queue<const Method*>([&](const Method* method) {
+    create_name_to_method(method, name_to_methods);
+    create_class_to_method(method, class_to_methods);
+    create_class_to_override_method(method, class_to_override_methods);
+  });
+  for (const auto* method : methods) {
+    queue.add_item(method);
+  }
+  queue.run_all();
+}
 
 const std::string& generator::get_class_name(const Method* method) {
   return method->get_class()->get_name()->str();
