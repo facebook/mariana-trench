@@ -59,7 +59,7 @@ std::map<std::string, std::unique_ptr<ModelGenerator>> make_model_generators(
   // Find JSON model generators in search path.
   for (const auto& path : context.options->model_generator_search_paths()) {
     LOG(3, "Searching for model generators in `{}`...", path);
-    for (auto& entry : boost::filesystem::directory_iterator(path)) {
+    for (auto& entry : boost::filesystem::recursive_directory_iterator(path)) {
       if (entry.path().extension() != ".json") {
         continue;
       }
