@@ -10,6 +10,7 @@
 
 #include <json/json.h>
 
+#include <mariana-trench/Assert.h>
 #include <mariana-trench/Context.h>
 #include <mariana-trench/Dependencies.h>
 #include <mariana-trench/JsonValidation.h>
@@ -31,17 +32,29 @@ namespace marianatrench {
 
 namespace {
 
-std::vector<std::unique_ptr<ModelGenerator>> make_model_generators(
+std::map<std::string, std::unique_ptr<ModelGenerator>> make_model_generators(
     Context& context) {
-  std::vector<std::unique_ptr<ModelGenerator>> generators;
-  generators.push_back(std::make_unique<NoJoinOverridesGenerator>(context));
-  generators.push_back(std::make_unique<ProviderSourceGenerator>(context));
-  generators.push_back(std::make_unique<RandomSourceGenerator>(context));
-  generators.push_back(std::make_unique<RepeatingAlarmSinkGenerator>(context));
-  generators.push_back(std::make_unique<ServiceSourceGenerator>(context));
-  generators.push_back(
+  std::vector<std::unique_ptr<ModelGenerator>> builtin_generators;
+  builtin_generators.push_back(
+      std::make_unique<NoJoinOverridesGenerator>(context));
+  builtin_generators.push_back(
+      std::make_unique<ProviderSourceGenerator>(context));
+  builtin_generators.push_back(
+      std::make_unique<RandomSourceGenerator>(context));
+  builtin_generators.push_back(
+      std::make_unique<RepeatingAlarmSinkGenerator>(context));
+  builtin_generators.push_back(
+      std::make_unique<ServiceSourceGenerator>(context));
+  builtin_generators.push_back(
       std::make_unique<StructuredLoggerSinkGenerator>(context));
-  generators.push_back(std::make_unique<TouchEventSinkGenerator>(context));
+  builtin_generators.push_back(
+      std::make_unique<TouchEventSinkGenerator>(context));
+
+  std::map<std::string, std::unique_ptr<ModelGenerator>> generators;
+  for (auto& generator : builtin_generators) {
+    auto name = generator->name();
+    generators.emplace(name, std::move(generator));
+  }
 
   // Find JSON model generators in search path.
   for (const auto& path : context.options->model_generator_search_paths()) {
@@ -55,8 +68,14 @@ std::vector<std::unique_ptr<ModelGenerator>> make_model_generators(
       auto name = path_copy.replace_extension("").filename().string();
 
       try {
-        generators.push_back(
+        auto [_, inserted] = generators.emplace(
+            name,
             std::make_unique<JsonModelGenerator>(name, context, entry.path()));
+        if (!inserted) {
+          auto error = fmt::format(
+              "Duplicate model generator {} defined at {}", name, entry.path());
+          throw std::invalid_argument(error);
+        }
         LOG(3, "Found model generator `{}`", name);
       } catch (const JsonValidationError&) {
         LOG(3, "Unable to parse generator at `{}`", path);
@@ -112,10 +131,7 @@ std::vector<Model> ModelGeneration::run(Context& context) {
       const std::string& name = entry.name_or_path();
       LOG(2, "Found CPP model generator: `{}`", name);
 
-      auto iterator = std::find_if(
-          builtin_generators.begin(),
-          builtin_generators.end(),
-          [&](const auto& generator) { return generator->name() == name; });
+      auto iterator = builtin_generators.find(name);
       if (iterator == builtin_generators.end()) {
         bool generator_exists = std::any_of(
             model_generators.begin(),
@@ -125,7 +141,7 @@ std::vector<Model> ModelGeneration::run(Context& context) {
           ERROR(1, "Model generator `{}` does not exist.", name);
         }
       } else {
-        model_generators.push_back(std::move(*iterator));
+        model_generators.push_back(std::move(iterator->second));
         builtin_generators.erase(iterator);
       }
     } else {
