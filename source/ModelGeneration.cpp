@@ -42,6 +42,28 @@ std::vector<std::unique_ptr<ModelGenerator>> make_model_generators(
   generators.push_back(
       std::make_unique<StructuredLoggerSinkGenerator>(context));
   generators.push_back(std::make_unique<TouchEventSinkGenerator>(context));
+
+  // Find JSON model generators in search path.
+  for (const auto& path : context.options->model_generator_search_paths()) {
+    LOG(3, "Searching for model generators in `{}`...", path);
+    for (auto& entry : boost::filesystem::directory_iterator(path)) {
+      if (entry.path().extension() != ".json") {
+        continue;
+      }
+
+      auto path_copy = entry.path();
+      auto name = path_copy.replace_extension("").filename().string();
+
+      try {
+        generators.push_back(
+            std::make_unique<JsonModelGenerator>(name, context, entry.path()));
+        LOG(3, "Found model generator `{}`", name);
+      } catch (const JsonValidationError&) {
+        LOG(3, "Unable to parse generator at `{}`", path);
+      }
+    }
+  }
+
   return generators;
 }
 
@@ -74,6 +96,8 @@ std::vector<Model> ModelGeneration::run(Context& context) {
   auto directory_of_json_model_generators =
       boost::filesystem::path{options.generator_configuration_path()}
           .parent_path();
+  // TODO(T84659873): deprecate path lookup. We want to lookup by name instead
+  // to to support search path.
   for (const auto& entry : configuration_entries) {
     if (entry.kind() == ModelGeneratorConfiguration::Kind::JSON) {
       auto relative_path = boost::filesystem::path{entry.name_or_path()};

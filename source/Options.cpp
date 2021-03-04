@@ -58,6 +58,19 @@ std::vector<std::string> parse_paths_list(
   return paths;
 }
 
+std::vector<std::string> parse_search_paths(const std::string& input) {
+  std::vector<std::string> paths;
+  boost::split(paths, input, boost::is_any_of(",;"));
+
+  for (const auto& path : paths) {
+    if (!boost::filesystem::is_directory(path)) {
+      throw std::invalid_argument(
+          fmt::format("Directory `{}` does not exist.", path));
+    }
+  }
+  return paths;
+}
+
 std::vector<std::string> parse_json_file_to_string_list(
     const std::string& path) {
   Json::Value json = JsonValidation::parse_json_file(path);
@@ -137,6 +150,11 @@ Options::Options(const boost::program_options::variables_map& variables) {
   model_generators_configuration_ =
       parse_json_configuration_file(generator_configuration_path_);
 
+  if (!variables["model-generator-search-paths"].empty()) {
+    model_generator_search_paths_ = parse_search_paths(
+        variables["model-generator-search-paths"].as<std::string>());
+  }
+
   repository_root_directory_ = check_directory_exists(
       variables["repository-root-directory"].as<std::string>());
   source_root_directory_ = check_directory_exists(
@@ -207,6 +225,10 @@ void Options::add_options(
       "generator-configuration-path",
       program_options::value<std::string>(),
       "A JSON configuration file specifying a list of absolute paths to JSON model generators or names of CPP model generators.");
+  options.add_options()(
+      "model-generator-search-paths",
+      program_options::value<std::string>(),
+      "A `;` separated list of paths where we look for JSON model generators.");
 
   options.add_options()(
       "repository-root-directory",
@@ -285,6 +307,10 @@ const std::optional<std::string>& Options::generated_models_directory() const {
 
 const std::string& Options::generator_configuration_path() const {
   return generator_configuration_path_;
+}
+
+const std::vector<std::string>& Options::model_generator_search_paths() const {
+  return model_generator_search_paths_;
 }
 
 const std::string& Options::repository_root_directory() const {

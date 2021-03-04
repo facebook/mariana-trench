@@ -229,6 +229,13 @@ if __name__ == "__main__":
             path = path + "/"
         return path
 
+    def _separated_paths_exist(paths: Optional[str]) -> Optional[str]:
+        if paths is None:
+            return None
+
+        elements = paths.split(";")
+        return ";".join([_path_exists(element) for element in elements])
+
     build_directory = Path(tempfile.mkdtemp())
     try:
         parser = argparse.ArgumentParser()
@@ -320,6 +327,12 @@ if __name__ == "__main__":
             default=_get_resource_path("default_generator_config.json"),
             help="""A JSON configuration file specifying a list of paths
             to JSON model generators relative to the configuration file or names of CPP model generators.""",
+        )
+        configuration_arguments.add_argument(
+            "--model-generator-search-paths",
+            type=_separated_paths_exist,
+            default=None,
+            help="A `;`-separated list of paths where we look up JSON model generators.",
         )
         configuration_arguments.add_argument(
             "--maximum-source-sink-distance",
@@ -450,6 +463,10 @@ if __name__ == "__main__":
             "--generator-configuration-path",
             arguments.generator_configuration_path,
         ]
+
+        if arguments.model_generator_search_paths is not None:
+            options.append("--model-generator-search-paths")
+            options.append(arguments.model_generator_search_paths)
 
         if arguments.proguard_configuration_paths:
             options.append("--proguard-configuration-paths")

@@ -44,7 +44,9 @@ class Options final {
   const std::vector<std::string>& rules_paths() const;
   const std::vector<std::string>& proguard_configuration_paths() const;
   const std::optional<std::string>& generated_models_directory() const;
+
   const std::string& generator_configuration_path() const;
+  const std::vector<std::string>& model_generator_search_paths() const;
 
   const std::string& repository_root_directory() const;
   const std::string& source_root_directory() const;
@@ -82,6 +84,7 @@ class Options final {
 
   std::string generator_configuration_path_;
   std::vector<ModelGeneratorConfiguration> model_generators_configuration_;
+  std::vector<std::string> model_generator_search_paths_;
 
   std::optional<std::string> generated_models_directory_;
 
