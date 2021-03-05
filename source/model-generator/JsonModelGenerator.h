@@ -350,6 +350,7 @@ class ParameterConstraint final : public MethodConstraint {
 class SignatureConstraint final : public MethodConstraint {
  public:
   SignatureConstraint(std::string regex_string);
+  MethodSet may_satisfy(const MethodMappings& method_mappings) const override;
   bool satisfy(const Method* method) const override;
   bool operator==(const MethodConstraint& other) const override;
 

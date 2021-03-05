@@ -719,6 +719,16 @@ bool ParameterConstraint::operator==(const MethodConstraint& other) const {
 SignatureConstraint::SignatureConstraint(std::string regex_string)
     : pattern_(regex_string) {}
 
+MethodSet SignatureConstraint::may_satisfy(
+    const MethodMappings& method_mappings) const {
+  auto string_pattern = as_string_literal(pattern_);
+  if (!string_pattern) {
+    return MethodSet::top();
+  }
+  return method_mappings.signature_to_methods.get(
+      *string_pattern, MethodSet::bottom());
+}
+
 bool SignatureConstraint::satisfy(const Method* method) const {
   return re2::RE2::FullMatch(method->signature(), pattern_);
 }
