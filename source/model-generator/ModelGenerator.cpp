@@ -90,6 +90,17 @@ void create_class_to_override_method(
             bool /* exists */) { methods.add(method); });
   }
 }
+
+void create_signature_to_method(
+    const Method* method,
+    ConcurrentMap<std::string, MethodSet>& method_mapping) {
+  std::string signature = method->signature();
+  method_mapping.update(
+      signature,
+      [&](const std::string& /* parent_name */,
+          MethodSet& methods,
+          bool /* exists */) { methods.add(method); });
+}
 } // namespace
 
 MethodMappings::MethodMappings(const Methods& methods) : all_methods(methods) {
@@ -97,6 +108,7 @@ MethodMappings::MethodMappings(const Methods& methods) : all_methods(methods) {
     create_name_to_method(method, name_to_methods);
     create_class_to_method(method, class_to_methods);
     create_class_to_override_method(method, class_to_override_methods);
+    create_signature_to_method(method, signature_to_methods);
   });
   for (const auto* method : methods) {
     queue.add_item(method);

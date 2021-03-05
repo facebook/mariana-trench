@@ -94,13 +94,18 @@ TEST_F(ModelGeneratorTest, MappingGenerator) {
       context.methods->get(dex_first_overriding_method);
   auto* second_overriding_method =
       context.methods->get(dex_second_overriding_method);
+  auto* second_overriding_method_with_overrides = context.methods->create(
+      dex_second_overriding_method, {{0, DexType::get_type("LString;")}});
 
   {
     std::unordered_map<std::string, std::vector<const Method*>>
         expected_name_to_methods = {
-            {"onReceive",
-             {base_method, first_overriding_method, second_overriding_method}},
             {"allocateArray", {array_allocation_method}},
+            {"onReceive",
+             {base_method,
+              first_overriding_method,
+              second_overriding_method,
+              second_overriding_method_with_overrides}},
         };
     std::unordered_map<std::string, std::vector<const Method*>>
         expected_class_to_methods = {
@@ -108,24 +113,53 @@ TEST_F(ModelGeneratorTest, MappingGenerator) {
              {array_allocation_method}},
             {"LClass;", {base_method}},
             {"LSubclass;", {first_overriding_method}},
-            {"LSubSubclass;", {second_overriding_method}}};
+            {"LSubSubclass;",
+             {second_overriding_method,
+              second_overriding_method_with_overrides}}};
     std::unordered_map<std::string, std::vector<const Method*>>
         expected_class_to_override_methods = {
             {"Lcom/mariana_trench/artificial/ArrayAllocation;",
              {array_allocation_method}},
             {"LSuperInterface;",
-             {base_method, first_overriding_method, second_overriding_method}},
+             {base_method,
+              first_overriding_method,
+              second_overriding_method,
+              second_overriding_method_with_overrides}},
             {"LInterface;",
-             {base_method, first_overriding_method, second_overriding_method}},
+             {base_method,
+              first_overriding_method,
+              second_overriding_method,
+              second_overriding_method_with_overrides}},
             {"LClass;",
-             {base_method, first_overriding_method, second_overriding_method}},
-            {"LSubclass;", {first_overriding_method, second_overriding_method}},
-            {"LSubSubclass;", {second_overriding_method}},
+             {base_method,
+              first_overriding_method,
+              second_overriding_method,
+              second_overriding_method_with_overrides}},
+            {"LSubclass;",
+             {first_overriding_method,
+              second_overriding_method,
+              second_overriding_method_with_overrides}},
+            {"LSubSubclass;",
+             {second_overriding_method,
+              second_overriding_method_with_overrides}},
             {"Ljava/lang/Object;",
              {array_allocation_method,
               base_method,
               first_overriding_method,
-              second_overriding_method}},
+              second_overriding_method,
+              second_overriding_method_with_overrides}},
+        };
+    std::unordered_map<std::string, std::vector<const Method*>>
+        expected_signature_to_methods = {
+            {"LClass;.onReceive:(Landroid/content/Context;Landroid/content/Intent;)V",
+             {base_method}},
+            {"LSubclass;.onReceive:(Landroid/content/Context;Landroid/content/Intent;)V",
+             {first_overriding_method}},
+            {"LSubSubclass;.onReceive:(Landroid/content/Context;Landroid/content/Intent;)V",
+             {second_overriding_method,
+              second_overriding_method_with_overrides}},
+            {"Lcom/mariana_trench/artificial/ArrayAllocation;.allocateArray:(I)V",
+             {array_allocation_method}},
         };
 
     const auto method_mappings = MethodMappings(*context.methods);
@@ -151,5 +185,13 @@ TEST_F(ModelGeneratorTest, MappingGenerator) {
     }
     EXPECT_EQ(
         class_to_override_methods_map, expected_class_to_override_methods);
+
+    std::unordered_map<std::string, std::vector<const Method*>>
+        signature_to_methods_map =
+            sort_mapping(method_mappings.signature_to_methods);
+    for (auto& pair : expected_signature_to_methods) {
+      std::sort(pair.second.begin(), pair.second.end(), compare_methods);
+    }
+    EXPECT_EQ(signature_to_methods_map, expected_signature_to_methods);
   }
 }
