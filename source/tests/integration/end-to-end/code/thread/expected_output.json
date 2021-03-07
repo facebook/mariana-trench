@@ -202,6 +202,13 @@
       "caller_port" : "Argument(1).val$tainted",
       "distance" : 2,
       "kind" : "Sink",
+      "local_features" : 
+      {
+        "always_features" : 
+        [
+          "via-anonymous-class-to-field"
+        ]
+      },
       "origins" : 
       [
         "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V"

@@ -211,6 +211,13 @@
           "callee_port" : "Return",
           "distance" : 1,
           "kind" : "Source",
+          "local_features" : 
+          {
+            "always_features" : 
+            [
+              "sanitize"
+            ]
+          },
           "local_positions" : 
           [
             {

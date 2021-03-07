@@ -38,6 +38,7 @@ TEST_F(FrameTest, FrameLeq) {
       /* distance */ 0,
       /* origins */ {},
       /* inferred_features */ {},
+      /* locally_inferred_features */ {},
       /* user_features */ {},
       /* via_type_of_ports */ {},
       /* local_positions */ {})));
@@ -49,6 +50,7 @@ TEST_F(FrameTest, FrameLeq) {
                    /* distance */ 0,
                    /* origins */ {},
                    /* inferred_features */ {},
+                   /* locally_inferred_features */ {},
                    /* user_features */ {},
                    /* via_type_of_ports */ {},
                    /* local_positions */ {})
@@ -63,6 +65,7 @@ TEST_F(FrameTest, FrameLeq) {
                   /* distance */ 0,
                   /* origins */ {},
                   /* inferred_features */ {},
+                  /* locally_inferred_features */ {},
                   /* user_features */ {},
                   /* via_type_of_ports */ {},
                   /* local_positions */ {})
@@ -74,6 +77,7 @@ TEST_F(FrameTest, FrameLeq) {
                       /* distance */ 0,
                       /* origins */ {},
                       /* inferred_features */ {},
+                      /* locally_inferred_features */ {},
                       /* user_features */ {},
                       /* via_type_of_ports */ {},
                       /* local_positions */ {})));
@@ -85,6 +89,7 @@ TEST_F(FrameTest, FrameLeq) {
                    /* distance */ 0,
                    /* origins */ {},
                    /* inferred_features */ {},
+                   /* locally_inferred_features */ {},
                    /* user_features */ {},
                    /* via_type_of_ports */ {},
                    /* local_positions */ {})
@@ -96,6 +101,7 @@ TEST_F(FrameTest, FrameLeq) {
                        /* distance */ 0,
                        /* origins */ {},
                        /* inferred_features */ {},
+                       /* locally_inferred_features */ {},
                        /* user_features */ {},
                        /* via_type_of_ports */ {},
                        /* local_positions */ {})));
@@ -109,6 +115,7 @@ TEST_F(FrameTest, FrameLeq) {
                   /* distance */ 1,
                   /* origins */ {},
                   /* inferred_features */ {},
+                  /* locally_inferred_features */ {},
                   /* user_features */ {},
                   /* via_type_of_ports */ {},
                   /* local_positions */ {})
@@ -120,6 +127,7 @@ TEST_F(FrameTest, FrameLeq) {
                       /* distance */ 0,
                       /* origins */ {},
                       /* inferred_features */ {},
+                      /* locally_inferred_features */ {},
                       /* user_features */ {},
                       /* via_type_of_ports */ {},
                       /* local_positions */ {})));
@@ -131,6 +139,7 @@ TEST_F(FrameTest, FrameLeq) {
                    /* distance */ 0,
                    /* origins */ {},
                    /* inferred_features */ {},
+                   /* locally_inferred_features */ {},
                    /* user_features */ {},
                    /* via_type_of_ports */ {},
                    /* local_positions */ {})
@@ -142,6 +151,7 @@ TEST_F(FrameTest, FrameLeq) {
                        /* distance */ 1,
                        /* origins */ {},
                        /* inferred_features */ {},
+                       /* locally_inferred_features */ {},
                        /* user_features */ {},
                        /* via_type_of_ports */ {},
                        /* local_positions */ {})));
@@ -155,6 +165,7 @@ TEST_F(FrameTest, FrameLeq) {
                   /* distance */ 0,
                   /* origins */ MethodSet{one},
                   /* inferred_features */ {},
+                  /* locally_inferred_features */ {},
                   /* user_features */ {},
                   /* via_type_of_ports */ {},
                   /* local_positions */ {})
@@ -166,6 +177,7 @@ TEST_F(FrameTest, FrameLeq) {
                       /* distance */ 0,
                       /* origins */ MethodSet{one, two},
                       /* inferred_features */ {},
+                      /* locally_inferred_features */ {},
                       /* user_features */ {},
                       /* via_type_of_ports */ {},
                       /* local_positions */ {})));
@@ -177,6 +189,7 @@ TEST_F(FrameTest, FrameLeq) {
                    /* distance */ 0,
                    /* origins */ MethodSet{one, two},
                    /* inferred_features */ {},
+                   /* locally_inferred_features */ {},
                    /* user_features */ {},
                    /* via_type_of_ports */ {},
                    /* local_positions */ {})
@@ -188,6 +201,7 @@ TEST_F(FrameTest, FrameLeq) {
                        /* distance */ 0,
                        /* origins */ MethodSet{one},
                        /* inferred_features */ {},
+                       /* locally_inferred_features */ {},
                        /* user_features */ {},
                        /* via_type_of_ports */ {},
                        /* local_positions */ {})));
@@ -203,6 +217,7 @@ TEST_F(FrameTest, FrameLeq) {
           /* origins */ {},
           /* inferred_features */
           FeatureMayAlwaysSet::make_may({context.features->get("FeatureOne")}),
+          /* locally_inferred_features */ {},
           /* user_features */ {},
           /* via_type_of_ports */ {},
           /* local_positions */ {})
@@ -213,10 +228,11 @@ TEST_F(FrameTest, FrameLeq) {
               /* call_position */ nullptr,
               /* distance */ 0,
               /* origins */ {},
-              /* features */
+              /* inferred_features */
               FeatureMayAlwaysSet::make_may(
                   {context.features->get("FeatureOne"),
                    context.features->get("FeatureTwo")}),
+              /* locally_inferred_features */ {},
               /* user_features */ {},
               /* via_type_of_ports */ {},
               /* local_positions */ {})));
@@ -231,6 +247,7 @@ TEST_F(FrameTest, FrameLeq) {
                    FeatureMayAlwaysSet::make_may(
                        {context.features->get("FeatureOne"),
                         context.features->get("FeatureTwo")}),
+                   /* locally_inferred_features */ {},
                    /* user_features */ {},
                    /* via_type_of_ports */ {},
                    /* local_positions */ {})
@@ -244,6 +261,7 @@ TEST_F(FrameTest, FrameLeq) {
                        /* inferred_features */
                        FeatureMayAlwaysSet::make_may(
                            {context.features->get("FeatureOne")}),
+                       /* locally_inferred_features */ {},
                        /* user_features */ {},
                        /* via_type_of_ports */ {},
                        /* local_positions */ {})));
@@ -258,6 +276,7 @@ TEST_F(FrameTest, FrameLeq) {
           /* distance */ 0,
           /* origins */ {},
           /* inferred_features */ {},
+          /* locally_inferred_features */ {},
           /* user_features */ FeatureSet{context.features->get("FeatureOne")},
           /* via_type_of_ports */ {},
           /* local_positions */ {})
@@ -269,6 +288,7 @@ TEST_F(FrameTest, FrameLeq) {
               /* distance */ 0,
               /* origins */ {},
               /* inferred_features */ {},
+              /* locally_inferred_features */ {},
               FeatureSet{
                   context.features->get("FeatureOne"),
                   context.features->get("FeatureTwo")},
@@ -282,6 +302,7 @@ TEST_F(FrameTest, FrameLeq) {
                    /* distance */ 0,
                    /* origins */ {},
                    /* inferred_features */ {},
+                   /* locally_inferred_features */ {},
                    /* user_features */
                    FeatureSet{
                        context.features->get("FeatureOne"),
@@ -296,6 +317,7 @@ TEST_F(FrameTest, FrameLeq) {
                        /* distance */ 0,
                        /* origins */ {},
                        /* inferred_features */ {},
+                       /* locally_inferred_features */ {},
                        /* user_features */
                        FeatureSet{context.features->get("FeatureOne")},
                        /* via_type_of_ports */ {},
@@ -310,6 +332,7 @@ TEST_F(FrameTest, FrameLeq) {
           /* distance */ 0,
           /* origins */ {},
           /* inferred_features */ {},
+          /* locally_inferred_features */ {},
           /* user_features */ {},
           /* via_type_of_ports */
           RootSetAbstractDomain({Root(Root::Kind::Return)}),
@@ -322,6 +345,7 @@ TEST_F(FrameTest, FrameLeq) {
               /* distance */ 0,
               /* origins */ {},
               /* inferred_features */ {},
+              /* locally_inferred_features */ {},
               /* user_features */ {},
               /* via_type_of_ports */
               RootSetAbstractDomain(
@@ -335,6 +359,7 @@ TEST_F(FrameTest, FrameLeq) {
                    /* distance */ 0,
                    /* origins */ {},
                    /* inferred_features */ {},
+                   /* locally_inferred_features */ {},
                    /* user_features */ {},
                    /* via_type_of_ports */
                    RootSetAbstractDomain({Root(Root::Kind::Return)}),
@@ -347,6 +372,7 @@ TEST_F(FrameTest, FrameLeq) {
                        /* distance */ 0,
                        /* origins */ {},
                        /* inferred_features */ {},
+                       /* locally_inferred_features */ {},
                        /* user_features */ {},
                        /* via_type_of_ports */
                        RootSetAbstractDomain({Root(Root::Kind::Argument, 1)}),
@@ -361,6 +387,7 @@ TEST_F(FrameTest, FrameLeq) {
                   /* distance */ 1,
                   /* origins */ MethodSet{one},
                   /* inferred_features */ {},
+                  /* locally_inferred_features */ {},
                   /* user_features */ {},
                   /* via_type_of_ports */ {},
                   /* local_positions */ {})
@@ -372,6 +399,7 @@ TEST_F(FrameTest, FrameLeq) {
                       /* distance */ 1,
                       /* origins */ MethodSet{one},
                       /* inferred_features */ {},
+                      /* locally_inferred_features */ {},
                       /* user_features */ {},
                       /* via_type_of_ports */ {},
                       /* local_positions */ {})));
@@ -384,6 +412,7 @@ TEST_F(FrameTest, FrameLeq) {
           /* distance */ 1,
           /* origins */ MethodSet{one},
           /* inferred_features */ {},
+          /* locally_inferred_features */ {},
           /* user_features */ {},
           /* via_type_of_ports */ {},
           /* local_positions */ {})
@@ -395,6 +424,7 @@ TEST_F(FrameTest, FrameLeq) {
               /* distance */ 1,
               /* origins */ MethodSet{one},
               /* inferred_features */ {},
+              /* locally_inferred_features */ {},
               /* user_features */ {},
               /* via_type_of_ports */ {},
               /* local_positions */ {})));
@@ -406,6 +436,7 @@ TEST_F(FrameTest, FrameLeq) {
                    /* distance */ 1,
                    /* origins */ MethodSet{one},
                    /* inferred_features */ {},
+                   /* locally_inferred_features */ {},
                    /* user_features */ {},
                    /* via_type_of_ports */ {},
                    /* local_positions */ {})
@@ -417,6 +448,7 @@ TEST_F(FrameTest, FrameLeq) {
                        /* distance */ 1,
                        /* origins */ MethodSet{one},
                        /* inferred_features */ {},
+                       /* locally_inferred_features */ {},
                        /* user_features */ {},
                        /* via_type_of_ports */ {},
                        /* local_positions */ {})));
@@ -429,6 +461,7 @@ TEST_F(FrameTest, FrameLeq) {
           /* distance */ 1,
           /* origins */ MethodSet{one},
           /* inferred_features */ {},
+          /* locally_inferred_features */ {},
           /* user_features */ {},
           /* via_type_of_ports */ {},
           /* local_positions */ {})
@@ -440,6 +473,7 @@ TEST_F(FrameTest, FrameLeq) {
               /* distance */ 1,
               /* origins */ MethodSet{one},
               /* inferred_features */ {},
+              /* locally_inferred_features */ {},
               /* user_features */ {},
               /* via_type_of_ports */ {},
               /* local_positions */ {})));
@@ -456,6 +490,7 @@ TEST_F(FrameTest, FrameLeq) {
           /* distance */ 0,
           /* origins */ {},
           /* inferred_features */ {},
+          /* locally_inferred_features */ {},
           /* user_features */ {},
           /* via_type_of_ports */ {},
           /* local_positions */ {})
@@ -467,6 +502,7 @@ TEST_F(FrameTest, FrameLeq) {
               /* distance */ 0,
               /* origins */ {},
               /* inferred_features */ {},
+              /* locally_inferred_features */ {},
               /* user_features */ {},
               /* via_type_of_ports */ {},
               /* local_positions */ {})));
@@ -478,6 +514,7 @@ TEST_F(FrameTest, FrameLeq) {
                    /* distance */ 0,
                    /* origins */ {},
                    /* inferred_features */ {},
+                   /* locally_inferred_features */ {},
                    /* user_features */ {},
                    /* via_type_of_ports */ {},
                    /* local_positions */ {})
@@ -492,6 +529,7 @@ TEST_F(FrameTest, FrameLeq) {
                        /* distance */ 0,
                        /* origins */ {},
                        /* inferred_features */ {},
+                       /* locally_inferred_features */ {},
                        /* user_features */ {},
                        /* via_type_of_ports */ {},
                        /* local_positions */ {})));
@@ -509,6 +547,7 @@ TEST_F(FrameTest, FrameEquals) {
       /* distance */ 0,
       /* origins */ {},
       /* inferred_features */ {},
+      /* locally_inferred_features */ {},
       /* user_features */ {},
       /* via_type_of_ports */ {},
       /* local_positions */ {})));
@@ -520,6 +559,7 @@ TEST_F(FrameTest, FrameEquals) {
                    /* distance */ 0,
                    /* origins */ {},
                    /* inferred_features */ {},
+                   /* locally_inferred_features */ {},
                    /* user_features */ {},
                    /* via_type_of_ports */ {},
                    /* local_positions */ {})
@@ -545,6 +585,7 @@ TEST_F(FrameTest, FrameJoin) {
           /* distance */ 0,
           /* origins */ {},
           /* inferred_features */ {},
+          /* locally_inferred_features */ {},
           /* user_features */ {},
           /* via_type_of_ports */ {},
           /* local_positions */ {})),
@@ -556,6 +597,7 @@ TEST_F(FrameTest, FrameJoin) {
           /* distance */ 0,
           /* origins */ {},
           /* inferred_features */ {},
+          /* locally_inferred_features */ {},
           /* user_features */ {},
           /* via_type_of_ports */ {},
           /* local_positions */ {}));
@@ -568,6 +610,7 @@ TEST_F(FrameTest, FrameJoin) {
           /* distance */ 0,
           /* origins */ {},
           /* inferred_features */ {},
+          /* locally_inferred_features */ {},
           /* user_features */ {},
           /* via_type_of_ports */ {},
           /* local_positions */ {})
@@ -580,6 +623,7 @@ TEST_F(FrameTest, FrameJoin) {
           /* distance */ 0,
           /* origins */ {},
           /* inferred_features */ {},
+          /* locally_inferred_features */ {},
           /* user_features */ {},
           /* via_type_of_ports */ {},
           /* local_positions */ {}));
@@ -594,6 +638,7 @@ TEST_F(FrameTest, FrameJoin) {
           /* distance */ 0,
           /* origins */ {},
           /* inferred_features */ {},
+          /* locally_inferred_features */ {},
           /* user_features */ {},
           /* via_type_of_ports */ {},
           /* local_positions */ {})
@@ -605,6 +650,7 @@ TEST_F(FrameTest, FrameJoin) {
               /* distance */ 0,
               /* origins */ {},
               /* inferred_features */ {},
+              /* locally_inferred_features */ {},
               /* user_features */ {},
               /* via_type_of_ports */ {},
               /* local_positions */ {})),
@@ -618,6 +664,7 @@ TEST_F(FrameTest, FrameJoin) {
           /* distance */ 0,
           /* origins */ {},
           /* inferred_features */ {},
+          /* locally_inferred_features */ {},
           /* user_features */ {},
           /* via_type_of_ports */ {},
           /* local_positions */ {})
@@ -629,6 +676,7 @@ TEST_F(FrameTest, FrameJoin) {
               /* distance */ 0,
               /* origins */ {},
               /* inferred_features */ {},
+              /* locally_inferred_features */ {},
               /* user_features */ {},
               /* via_type_of_ports */ {},
               /* local_positions */ {})),
@@ -642,6 +690,7 @@ TEST_F(FrameTest, FrameJoin) {
           /* distance */ 1,
           /* origins */ {},
           /* inferred_features */ {},
+          /* locally_inferred_features */ {},
           /* user_features */ {},
           /* via_type_of_ports */ {},
           /* local_positions */ {})
@@ -653,6 +702,7 @@ TEST_F(FrameTest, FrameJoin) {
               /* distance */ 1,
               /* origins */ {},
               /* inferred_features */ {},
+              /* locally_inferred_features */ {},
               /* user_features */ {},
               /* via_type_of_ports */ {},
               /* local_positions */ {})),
@@ -666,6 +716,7 @@ TEST_F(FrameTest, FrameJoin) {
           /* distance */ 1,
           /* origins */ {},
           /* inferred_features */ {},
+          /* locally_inferred_features */ {},
           /* user_features */ {},
           /* via_type_of_ports */ {},
           /* local_positions */ {})
@@ -677,6 +728,7 @@ TEST_F(FrameTest, FrameJoin) {
               /* distance */ 1,
               /* origins */ {},
               /* inferred_features */ {},
+              /* locally_inferred_features */ {},
               /* user_features */ {},
               /* via_type_of_ports */ {},
               /* local_positions */ {})),
@@ -692,6 +744,7 @@ TEST_F(FrameTest, FrameJoin) {
           /* distance */ 2,
           /* origins */ {},
           /* inferred_features */ {},
+          /* locally_inferred_features */ {},
           /* user_features */ {},
           /* via_type_of_ports */ {},
           /* local_positions */ {})
@@ -703,6 +756,7 @@ TEST_F(FrameTest, FrameJoin) {
               /* distance */ 1,
               /* origins */ {},
               /* inferred_features */ {},
+              /* locally_inferred_features */ {},
               /* user_features */ {},
               /* via_type_of_ports */ {},
               /* local_positions */ {})),
@@ -714,6 +768,7 @@ TEST_F(FrameTest, FrameJoin) {
           /* distance */ 1,
           /* origins */ {},
           /* inferred_features */ {},
+          /* locally_inferred_features */ {},
           /* user_features */ {},
           /* via_type_of_ports */ {},
           /* local_positions */ {}));
@@ -728,6 +783,7 @@ TEST_F(FrameTest, FrameJoin) {
           /* distance */ 1,
           /* origins */ MethodSet{one},
           /* inferred_features */ {},
+          /* locally_inferred_features */ {},
           /* user_features */ {},
           /* via_type_of_ports */ {},
           /* local_positions */ {})
@@ -739,6 +795,7 @@ TEST_F(FrameTest, FrameJoin) {
               /* distance */ 1,
               /* origins */ MethodSet{two},
               /* inferred_features */ {},
+              /* locally_inferred_features */ {},
               /* user_features */ {},
               /* via_type_of_ports */ {},
               /* local_positions */ {})),
@@ -750,6 +807,7 @@ TEST_F(FrameTest, FrameJoin) {
           /* distance */ 1,
           /* origins */ MethodSet{one, two},
           /* inferred_features */ {},
+          /* locally_inferred_features */ {},
           /* user_features */ {},
           /* via_type_of_ports */ {},
           /* local_positions */ {}));
@@ -765,6 +823,7 @@ TEST_F(FrameTest, FrameJoin) {
           /* origins */ {},
           /* inferred_features */
           FeatureMayAlwaysSet{context.features->get("FeatureOne")},
+          /* locally_inferred_features */ {},
           /* user_features */ {},
           /* via_type_of_ports */ {},
           /* local_positions */ {})
@@ -777,6 +836,7 @@ TEST_F(FrameTest, FrameJoin) {
               /* origins */ {},
               /* inferred_features */
               FeatureMayAlwaysSet{context.features->get("FeatureTwo")},
+              /* locally_inferred_features */ {},
               /* user_features */ {},
               /* via_type_of_ports */ {},
               /* local_positions */ {})),
@@ -791,6 +851,7 @@ TEST_F(FrameTest, FrameJoin) {
           FeatureMayAlwaysSet::make_may(
               {context.features->get("FeatureOne"),
                context.features->get("FeatureTwo")}),
+          /* locally_inferred_features */ {},
           /* user_features */ {},
           /* via_type_of_ports */ {},
           /* local_positions */ {}));
@@ -805,6 +866,7 @@ TEST_F(FrameTest, FrameJoin) {
           /* distance */ 2,
           /* origins */ {},
           /* inferred_features */ {},
+          /* locally_inferred_features */ {},
           /* user_features */
           FeatureSet{context.features->get("FeatureOne")},
           /* via_type_of_ports */ {},
@@ -817,6 +879,7 @@ TEST_F(FrameTest, FrameJoin) {
               /* distance */ 2,
               /* origins */ {},
               /* inferred_features */ {},
+              /* locally_inferred_features */ {},
               /* user_features */
               FeatureSet{context.features->get("FeatureTwo")},
               /* via_type_of_ports */ {},
@@ -829,6 +892,7 @@ TEST_F(FrameTest, FrameJoin) {
           /* distance */ 2,
           /* origins */ {},
           /* inferred_features */ {},
+          /* locally_inferred_features */ {},
           /* user_features */
           FeatureSet{
               context.features->get("FeatureOne"),
@@ -846,6 +910,7 @@ TEST_F(FrameTest, FrameJoin) {
           /* distance */ 2,
           /* origins */ {},
           /* inferred_features */ {},
+          /* locally_inferred_features */ {},
           /* user_features */ {},
           /* via_type_of_ports */
           RootSetAbstractDomain({Root(Root::Kind::Return)}),
@@ -858,6 +923,7 @@ TEST_F(FrameTest, FrameJoin) {
               /* distance */ 2,
               /* origins */ {},
               /* inferred_features */ {},
+              /* locally_inferred_features */ {},
               /* user_features */ {},
               /* via_type_of_ports */
               RootSetAbstractDomain({Root(Root::Kind::Argument, 1)}),
@@ -870,6 +936,7 @@ TEST_F(FrameTest, FrameJoin) {
           /* distance */ 2,
           /* origins */ {},
           /* inferred_features */ {},
+          /* locally_inferred_features */ {},
           /* user_features */ {},
           /* via_type_of_ports */
           RootSetAbstractDomain(
@@ -900,6 +967,7 @@ TEST_F(FrameTest, FrameWithKind) {
       FeatureMayAlwaysSet::make_may(
           {context.features->get("FeatureOne"),
            context.features->get("FeatureTwo")}),
+      /* locally_inferred_features */ {},
       /* user_features */ {},
       /* via_type_of_ports */ {},
       /* local_positions */ {});
@@ -911,6 +979,8 @@ TEST_F(FrameTest, FrameWithKind) {
   EXPECT_EQ(frame1.distance(), frame2.distance());
   EXPECT_EQ(frame1.origins(), frame2.origins());
   EXPECT_EQ(frame1.inferred_features(), frame2.inferred_features());
+  EXPECT_EQ(
+      frame1.locally_inferred_features(), frame2.locally_inferred_features());
 
   EXPECT_NE(frame1.kind(), frame2.kind());
   EXPECT_EQ(frame1.kind(), kind_a);

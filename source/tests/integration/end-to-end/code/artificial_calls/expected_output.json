@@ -111,6 +111,13 @@
           "callee_port" : "Argument(0).val$data",
           "distance" : 2,
           "kind" : "Sink",
+          "local_features" : 
+          {
+            "always_features" : 
+            [
+              "via-anonymous-class-to-obscure"
+            ]
+          },
           "origins" : 
           [
             "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V"
@@ -135,6 +142,13 @@
           "callee_port" : "Return",
           "distance" : 1,
           "kind" : "Source",
+          "local_features" : 
+          {
+            "always_features" : 
+            [
+              "via-obscure"
+            ]
+          },
           "local_positions" : 
           [
             {

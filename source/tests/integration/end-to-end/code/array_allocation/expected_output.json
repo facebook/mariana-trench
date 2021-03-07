@@ -1219,6 +1219,13 @@
       "caller_port" : "Argument(1)",
       "distance" : 1,
       "kind" : "ArrayAllocation",
+      "local_features" : 
+      {
+        "always_features" : 
+        [
+          "via-numerical-operator"
+        ]
+      },
       "local_positions" : 
       [
         {

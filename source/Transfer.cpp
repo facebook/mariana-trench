@@ -630,6 +630,7 @@ void check_flows_to_array_allocation(
       /* distance */ 1,
       /* origins */ MethodSet{array_allocation_method},
       /* inferred features */ {},
+      /* locally_inferred_features */ {},
       /* user features */ {},
       /* via_type_of_ports */ {},
       /* local_positions */ {})};

@@ -434,6 +434,7 @@ Frame generator::source(
       /* distance */ 0,
       /* origins */ MethodSet{method},
       /* inferred features */ FeatureMayAlwaysSet::bottom(),
+      /* locally_inferred_features */ FeatureMayAlwaysSet::bottom(),
       /* user features */ user_features,
       /* via_type_of_ports */ via_type_of_ports,
       /* local_positions */ {});
@@ -458,6 +459,7 @@ Frame generator::sink(
       /* distance */ 0,
       /* origins */ MethodSet{method},
       /* inferred features */ FeatureMayAlwaysSet::bottom(),
+      /* locally_inferred_features */ FeatureMayAlwaysSet::bottom(),
       /* user features */ user_features,
       /* via_type_of_ports */ via_type_of_ports,
       /* local_positions */ {});

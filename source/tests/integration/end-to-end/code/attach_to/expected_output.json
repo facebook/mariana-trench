@@ -256,6 +256,13 @@
       "caller_port" : "Argument(1)",
       "distance" : 1,
       "kind" : "Sink",
+      "local_features" : 
+      {
+        "always_features" : 
+        [
+          "via-attach-sinks"
+        ]
+      },
       "origins" : 
       [
         "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V"
@@ -293,6 +300,13 @@
       "caller_port" : "Return",
       "distance" : 1,
       "kind" : "Source",
+      "local_features" : 
+      {
+        "always_features" : 
+        [
+          "via-attach-sources-return"
+        ]
+      },
       "origins" : 
       [
         "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;"
@@ -334,6 +348,13 @@
       "caller_port" : "Argument(0).field",
       "distance" : 1,
       "kind" : "Source",
+      "local_features" : 
+      {
+        "always_features" : 
+        [
+          "via-attach-sources-this"
+        ]
+      },
       "local_positions" : 
       [
         {
@@ -499,6 +520,17 @@
           "callee_port" : "Return",
           "distance" : 2,
           "kind" : "Source",
+          "local_features" : 
+          {
+            "always_features" : 
+            [
+              "via-add-features-to-argument",
+              "via-add-features-to-argument-on-obscure",
+              "via-attach-propagations-return",
+              "via-obscure",
+              "via-obscure-taint-in-taint-out"
+            ]
+          },
           "local_positions" : 
           [
             {
@@ -552,6 +584,14 @@
       "caller_port" : "Argument(1)",
       "distance" : 2,
       "kind" : "Sink",
+      "local_features" : 
+      {
+        "always_features" : 
+        [
+          "via-obscure",
+          "via-obscure-taint-in-taint-out"
+        ]
+      },
       "local_positions" : 
       [
         {

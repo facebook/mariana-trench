@@ -86,6 +86,7 @@ TEST_F(IssueSetTest, Insertion) {
           /* distance */ 1,
           /* origins */ MethodSet{one},
           /* inferred_features */ {},
+          /* locally_inferred_features */ {},
           /* user_features */ {},
           /* via_type_of_ports */ {},
           /* local_positions */ {})},
@@ -112,6 +113,7 @@ TEST_F(IssueSetTest, Insertion) {
                       /* distance */ 1,
                       /* origins */ MethodSet{one},
                       /* inferred_features */ {},
+                      /* locally_inferred_features */ {},
                       /* user_features */ {},
                       /* via_type_of_ports */ {},
                       /* local_positions */ {}),
@@ -132,6 +134,7 @@ TEST_F(IssueSetTest, Insertion) {
           /* distance */ 2,
           /* origins */ MethodSet{two},
           /* inferred_features */ {},
+          /* locally_inferred_features */ {},
           /* user_features */ {},
           /* via_type_of_ports */ {},
           /* local_positions */ {})},
@@ -157,6 +160,7 @@ TEST_F(IssueSetTest, Insertion) {
                       /* distance */ 1,
                       /* origins */ MethodSet{one},
                       /* inferred_features */ {},
+                      /* locally_inferred_features */ {},
                       /* user_features */ {},
                       /* via_type_of_ports */ {},
                       /* local_positions */ {}),
@@ -172,6 +176,7 @@ TEST_F(IssueSetTest, Insertion) {
                       /* distance */ 2,
                       /* origins */ MethodSet{two},
                       /* inferred_features */ {},
+                      /* locally_inferred_features */ {},
                       /* user_features */ {},
                       /* via_type_of_ports */ {},
                       /* local_positions */ {}),
@@ -189,6 +194,7 @@ TEST_F(IssueSetTest, Insertion) {
           /* distance */ 3,
           /* origins */ MethodSet{two},
           /* inferred_features */ {},
+          /* locally_inferred_features */ {},
           /* user_features */ {},
           /* via_type_of_ports */ {},
           /* local_positions */ {})},
@@ -215,6 +221,7 @@ TEST_F(IssueSetTest, Insertion) {
                       /* distance */ 1,
                       /* origins */ MethodSet{one},
                       /* inferred_features */ {},
+                      /* locally_inferred_features */ {},
                       /* user_features */ {},
                       /* via_type_of_ports */ {},
                       /* local_positions */ {}),
@@ -226,6 +233,7 @@ TEST_F(IssueSetTest, Insertion) {
                       /* distance */ 3,
                       /* origins */ MethodSet{two},
                       /* inferred_features */ {},
+                      /* locally_inferred_features */ {},
                       /* user_features */ {},
                       /* via_type_of_ports */ {},
                       /* local_positions */ {}),
@@ -241,6 +249,7 @@ TEST_F(IssueSetTest, Insertion) {
                       /* distance */ 2,
                       /* origins */ MethodSet{two},
                       /* inferred_features */ {},
+                      /* locally_inferred_features */ {},
                       /* user_features */ {},
                       /* via_type_of_ports */ {},
                       /* local_positions */ {}),
@@ -279,6 +288,7 @@ TEST_F(IssueSetTest, Insertion) {
                       /* distance */ 1,
                       /* origins */ MethodSet{one},
                       /* inferred_features */ {},
+                      /* locally_inferred_features */ {},
                       /* user_features */ {},
                       /* via_type_of_ports */ {},
                       /* local_positions */ {}),
@@ -290,6 +300,7 @@ TEST_F(IssueSetTest, Insertion) {
                       /* distance */ 3,
                       /* origins */ MethodSet{two},
                       /* inferred_features */ {},
+                      /* locally_inferred_features */ {},
                       /* user_features */ {},
                       /* via_type_of_ports */ {},
                       /* local_positions */ {}),
@@ -305,6 +316,7 @@ TEST_F(IssueSetTest, Insertion) {
                       /* distance */ 2,
                       /* origins */ MethodSet{two},
                       /* inferred_features */ {},
+                      /* locally_inferred_features */ {},
                       /* user_features */ {},
                       /* via_type_of_ports */ {},
                       /* local_positions */ {}),
@@ -344,8 +356,11 @@ TEST_F(IssueSetTest, Insertion) {
   set.add(Issue(
       /* source */ Taint{Frame::leaf(
           source_kind,
-          FeatureMayAlwaysSet::make_always(
-              {context.features->get("Feature")}))},
+          /* inferred_features */
+          FeatureMayAlwaysSet::make_always({context.features->get("Feature")}),
+          /* locally_inferred_features */ FeatureMayAlwaysSet::bottom(),
+          /* user_features */ FeatureSet::bottom(),
+          /* origins */ {})},
       /* sink */ Taint{Frame::leaf(sink_kind)},
       &rule_1,
       position_2));
@@ -360,8 +375,12 @@ TEST_F(IssueSetTest, Insertion) {
           Issue(
               /* source */ Taint{Frame::leaf(
                   source_kind,
+                  /* inferred_features */
                   FeatureMayAlwaysSet::make_always(
-                      {context.features->get("Feature")}))},
+                      {context.features->get("Feature")}),
+                  /* locally_inferred_features */ FeatureMayAlwaysSet::bottom(),
+                  /* user_features */ FeatureSet::bottom(),
+                  /* origins */ {})},
               /* sink */ Taint{Frame::leaf(sink_kind)},
               &rule_1,
               position_2),
@@ -372,9 +391,13 @@ TEST_F(IssueSetTest, Insertion) {
   set.add(Issue(
       /* source */ Taint{Frame::leaf(
           source_kind,
+          /* inferred_features */
           FeatureMayAlwaysSet::make_always(FeatureSet{
               context.features->get("Feature"),
-              context.features->get("Feature2")}))},
+              context.features->get("Feature2")}),
+          /* locally_inferred_features */ FeatureMayAlwaysSet::bottom(),
+          /* user_features */ FeatureSet::bottom(),
+          /* origins */ {})},
       /* sink */ Taint{Frame::leaf(sink_kind)},
       &rule_1,
       position_2));
@@ -389,10 +412,14 @@ TEST_F(IssueSetTest, Insertion) {
           Issue(
               /* source */ Taint{Frame::leaf(
                   source_kind,
+                  /* inferred_features */
                   FeatureMayAlwaysSet(
                       /* may */ FeatureSet{context.features->get("Feature2")},
                       /* always */
-                      FeatureSet{context.features->get("Feature")}))},
+                      FeatureSet{context.features->get("Feature")}),
+                  /* locally_inferred_features */ FeatureMayAlwaysSet::bottom(),
+                  /* user_features */ FeatureSet::bottom(),
+                  /* origins */ {})},
               /* sink */ Taint{Frame::leaf(sink_kind)},
               &rule_1,
               position_2),

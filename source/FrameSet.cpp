@@ -248,7 +248,8 @@ Frame FrameSet::propagate(
       distance,
       std::move(origins),
       std::move(inferred_features),
-      FeatureSet::bottom(),
+      /* locally_inferred_features */ FeatureMayAlwaysSet::bottom(),
+      /* user_features */ FeatureSet::bottom(),
       /* via_type_of_ports */ {},
       /* local_positions */ {});
 }
@@ -271,7 +272,8 @@ FrameSet FrameSet::attach_position(const Position* position) const {
             /* distance */ 0,
             frame.origins(),
             frame.features(),
-            FeatureSet::bottom(),
+            /* locally_inferred_features */ FeatureMayAlwaysSet::bottom(),
+            /* user_features */ FeatureSet::bottom(),
             /* via_type_of_ports */ {},
             frame.local_positions()));
       }

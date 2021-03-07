@@ -16,6 +16,14 @@
       "callee_port" : "Leaf",
       "caller_port" : "Return",
       "kind" : "Source",
+      "local_features" : 
+      {
+        "always_features" : 
+        [
+          "via-obscure",
+          "via-obscure-taint-in-taint-out"
+        ]
+      },
       "local_positions" : 
       [
         {
@@ -41,6 +49,14 @@
       "callee_port" : "Leaf",
       "caller_port" : "Argument(0)",
       "kind" : "Source",
+      "local_features" : 
+      {
+        "always_features" : 
+        [
+          "via-obscure",
+          "via-obscure-taint-in-taint-this"
+        ]
+      },
       "local_positions" : 
       [
         {

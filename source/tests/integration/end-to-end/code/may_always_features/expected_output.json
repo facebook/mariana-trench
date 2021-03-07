@@ -180,6 +180,17 @@
           "callee_port" : "Return",
           "distance" : 1,
           "kind" : "Source",
+          "local_features" : 
+          {
+            "always_features" : 
+            [
+              "via-one"
+            ],
+            "may_features" : 
+            [
+              "via-two"
+            ]
+          },
           "local_positions" : 
           [
             {
@@ -784,6 +795,17 @@
       "caller_port" : "Argument(0)",
       "distance" : 1,
       "kind" : "Sink",
+      "local_features" : 
+      {
+        "always_features" : 
+        [
+          "via-two"
+        ],
+        "may_features" : 
+        [
+          "via-one"
+        ]
+      },
       "local_positions" : 
       [
         {

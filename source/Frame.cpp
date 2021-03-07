@@ -20,15 +20,17 @@ void Frame::set_origins(const MethodSet& origins) {
 }
 
 void Frame::add_inferred_features(const FeatureMayAlwaysSet& features) {
-  inferred_features_.add(features);
+  locally_inferred_features_.add(features);
 }
 
 FeatureMayAlwaysSet Frame::features() const {
-  if (inferred_features_.is_bottom()) {
+  auto features = inferred_features_;
+  features.add(locally_inferred_features_);
+
+  if (features.is_bottom()) {
     return FeatureMayAlwaysSet::make_always(user_features_);
   }
 
-  auto features = inferred_features_;
   features.add_always(user_features_);
   mt_assert(!features.is_bottom());
   return features;
@@ -55,6 +57,7 @@ bool Frame::leq(const Frame& other) const {
         callee_ == other.callee_ && call_position_ == other.call_position_ &&
         distance_ >= other.distance_ && origins_.leq(other.origins_) &&
         inferred_features_.leq(other.inferred_features_) &&
+        locally_inferred_features_.leq(other.locally_inferred_features_) &&
         user_features_.leq(other.user_features_) &&
         via_type_of_ports_.leq(other.via_type_of_ports_) &&
         local_positions_.leq(other.local_positions_);
@@ -71,6 +74,7 @@ bool Frame::equals(const Frame& other) const {
         callee_ == other.callee_ && call_position_ == other.call_position_ &&
         distance_ == other.distance_ && origins_ == other.origins_ &&
         inferred_features_ == other.inferred_features_ &&
+        locally_inferred_features_ == other.locally_inferred_features_ &&
         user_features_ == other.user_features_ &&
         via_type_of_ports_ == other.via_type_of_ports_ &&
         local_positions_ == other.local_positions_;
@@ -98,6 +102,7 @@ void Frame::join_with(const Frame& other) {
     distance_ = std::min(distance_, other.distance_);
     origins_.join_with(other.origins_);
     inferred_features_.join_with(other.inferred_features_);
+    locally_inferred_features_.join_with(other.locally_inferred_features_);
     user_features_.join_with(other.user_features_);
     via_type_of_ports_.join_with(other.via_type_of_ports_);
     local_positions_.join_with(other.local_positions_);
@@ -132,6 +137,7 @@ Frame Frame::artificial_source(AccessPath access_path) {
       /* distance */ 0,
       /* origins */ {},
       /* inferred_features */ {},
+      /* locally_inferred_features */ {},
       /* user_features */ {},
       /* via_type_of_ports */ {},
       /* local_positions */ {});
@@ -187,7 +193,8 @@ Frame Frame::from_json(const Json::Value& value, Context& context) {
 
   // Inferred may_features and always_features. Technically, user-specified
   // features should go under "user_features", but this gives a way to override
-  // that behavior and specify "may/always" features.
+  // that behavior and specify "may/always" features. Note that local inferred
+  // features cannot be user-specified.
   auto inferred_features = FeatureMayAlwaysSet::from_json(value, context);
 
   // User specified always-features.
@@ -257,6 +264,7 @@ Frame Frame::from_json(const Json::Value& value, Context& context) {
       distance,
       std::move(origins),
       std::move(inferred_features),
+      /* locally_inferred_features */ FeatureMayAlwaysSet::bottom(),
       std::move(user_features),
       std::move(via_type_of_ports),
       std::move(local_positions));
@@ -287,6 +295,11 @@ Json::Value Frame::to_json() const {
   }
 
   JsonValidation::update_object(value, features().to_json());
+
+  if (!locally_inferred_features_.is_bottom() &&
+      !locally_inferred_features_.empty()) {
+    value["local_features"] = locally_inferred_features_.to_json();
+  }
 
   if (via_type_of_ports_.is_value() && !via_type_of_ports_.elements().empty()) {
     auto ports = Json::Value(Json::arrayValue);
@@ -343,6 +356,9 @@ std::ostream& operator<<(std::ostream& out, const Frame& frame) {
   }
   if (!frame.inferred_features_.empty()) {
     out << ", inferred_features=" << frame.inferred_features_;
+  }
+  if (!frame.locally_inferred_features_.empty()) {
+    out << ", locally_inferred_features=" << frame.locally_inferred_features_;
   }
   if (!frame.user_features_.empty()) {
     out << ", user_features=" << frame.user_features_;

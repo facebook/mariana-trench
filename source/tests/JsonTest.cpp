@@ -597,6 +597,7 @@ TEST_F(JsonTest, Frame) {
           /* distance */ 0,
           /* origins */ {},
           /* inferred_features */ FeatureMayAlwaysSet::bottom(),
+          /* locally_inferred_features */ FeatureMayAlwaysSet::bottom(),
           /* user_features */ {},
           /* via_type_of_ports */ {},
           /* local_positions */ {}));
@@ -624,6 +625,7 @@ TEST_F(JsonTest, Frame) {
           /* distance */ 0,
           /* origins */ {},
           /* inferred_features */ FeatureMayAlwaysSet::bottom(),
+          /* locally_inferred_features */ FeatureMayAlwaysSet::bottom(),
           /* user_features */ {},
           /* via_type_of_ports */ {},
           /* local_positions */ {}));
@@ -656,6 +658,7 @@ TEST_F(JsonTest, Frame) {
           /* distance */ 0,
           /* origins */ {},
           /* inferred_features */ FeatureMayAlwaysSet::bottom(),
+          /* locally_inferred_features */ FeatureMayAlwaysSet::bottom(),
           /* user_features */ {},
           /* via_type_of_ports */ {},
           /* local_positions */ {}),
@@ -676,6 +679,7 @@ TEST_F(JsonTest, Frame) {
           /* distance */ 0,
           /* origins */ {},
           /* inferred_features */ FeatureMayAlwaysSet::bottom(),
+          /* locally_inferred_features */ FeatureMayAlwaysSet::bottom(),
           /* user_features */ {},
           /* via_type_of_ports */ {},
           /* local_positions */ {}),
@@ -699,6 +703,7 @@ TEST_F(JsonTest, Frame) {
           /* distance */ 1,
           /* origins */ {},
           /* inferred_features */ FeatureMayAlwaysSet::bottom(),
+          /* locally_inferred_features */ FeatureMayAlwaysSet::bottom(),
           /* user_features */ {},
           /* via_type_of_ports */ {},
           /* local_positions */ {}),
@@ -720,6 +725,7 @@ TEST_F(JsonTest, Frame) {
           /* distance */ 2,
           /* origins */ {},
           /* inferred_features */ FeatureMayAlwaysSet::bottom(),
+          /* locally_inferred_features */ FeatureMayAlwaysSet::bottom(),
           /* user_features */ {},
           /* via_type_of_ports */ {},
           /* local_positions */ {}),
@@ -749,6 +755,7 @@ TEST_F(JsonTest, Frame) {
           /* distance */ 0,
           /* origins */ MethodSet{source_one},
           /* inferred_features */ FeatureMayAlwaysSet::bottom(),
+          /* locally_inferred_features */ FeatureMayAlwaysSet::bottom(),
           /* user_features */ {},
           /* via_type_of_ports */ {},
           /* local_positions */ {}),
@@ -768,6 +775,7 @@ TEST_F(JsonTest, Frame) {
           /* distance */ 0,
           /* origins */ MethodSet{source_one, source_two},
           /* inferred_features */ FeatureMayAlwaysSet::bottom(),
+          /* locally_inferred_features */ FeatureMayAlwaysSet::bottom(),
           /* user_features */ {},
           /* via_type_of_ports */ {},
           /* local_positions */ {}),
@@ -790,6 +798,7 @@ TEST_F(JsonTest, Frame) {
           /* origins */ {},
           /* inferred_features */
           FeatureMayAlwaysSet{context.features->get("FeatureOne")},
+          /* locally_inferred_features */ FeatureMayAlwaysSet::bottom(),
           /* user_features */ {},
           /* via_type_of_ports */ {},
           /* local_positions */ {}),
@@ -812,6 +821,7 @@ TEST_F(JsonTest, Frame) {
           FeatureMayAlwaysSet{
               context.features->get("FeatureOne"),
               context.features->get("FeatureTwo")},
+          /* locally_inferred_features */ FeatureMayAlwaysSet::bottom(),
           /* user_features */ {},
           /* via_type_of_ports */ {},
           /* local_positions */ {}),
@@ -835,6 +845,7 @@ TEST_F(JsonTest, Frame) {
           FeatureMayAlwaysSet(
               /* may */ FeatureSet{context.features->get("FeatureOne")},
               /* always */ FeatureSet{context.features->get("FeatureTwo")}),
+          /* locally_inferred_features */ FeatureMayAlwaysSet::bottom(),
           /* user_features */ {},
           /* via_type_of_ports */ {},
           /* local_positions */ {}),
@@ -857,6 +868,7 @@ TEST_F(JsonTest, Frame) {
           FeatureMayAlwaysSet(
               /* may */ FeatureSet{context.features->get("FeatureOne")},
               /* always */ FeatureSet{}),
+          /* locally_inferred_features */ FeatureMayAlwaysSet::bottom(),
           /* user_features */ {},
           /* via_type_of_ports */ {},
           /* local_positions */ {}),
@@ -882,6 +894,7 @@ TEST_F(JsonTest, Frame) {
                   context.features->get("FeatureOne"),
                   context.features->get("FeatureTwo")},
               /* always */ FeatureSet{}),
+          /* locally_inferred_features */ FeatureMayAlwaysSet::bottom(),
           /* user_features */ {},
           /* via_type_of_ports */ {},
           /* local_positions */ {}),
@@ -902,6 +915,7 @@ TEST_F(JsonTest, Frame) {
           /* distance */ 0,
           /* origins */ {},
           /* inferred_features */ FeatureMayAlwaysSet::bottom(),
+          /* locally_inferred_features */ FeatureMayAlwaysSet::bottom(),
           /* user_features */
           FeatureSet{context.features->get("FeatureOne")},
           /* via_type_of_ports */ {},
@@ -922,6 +936,7 @@ TEST_F(JsonTest, Frame) {
           /* distance */ 0,
           /* origins */ {},
           /* inferred_features */ FeatureMayAlwaysSet::bottom(),
+          /* locally_inferred_features */ FeatureMayAlwaysSet::bottom(),
           /* user_features */
           FeatureSet{
               context.features->get("FeatureOne"),
@@ -948,6 +963,7 @@ TEST_F(JsonTest, Frame) {
           FeatureMayAlwaysSet(
               /* may */ FeatureSet{context.features->get("FeatureTwo")},
               /* always */ FeatureSet{}),
+          /* locally_inferred_features */ FeatureMayAlwaysSet::bottom(),
           /* user_features */ FeatureSet{context.features->get("FeatureOne")},
           /* via_type_of_ports */ {},
           /* local_positions */ {}));
@@ -973,6 +989,7 @@ TEST_F(JsonTest, Frame) {
               /* may */ FeatureSet{context.features->get("FeatureTwo")},
               /* always */
               FeatureSet{context.features->get("FeatureThree")}),
+          /* locally_inferred_features */ FeatureMayAlwaysSet::bottom(),
           /* user_features */ FeatureSet{context.features->get("FeatureOne")},
           /* via_type_of_ports */ {},
           /* local_positions */ {}));
@@ -994,6 +1011,7 @@ TEST_F(JsonTest, Frame) {
           /* distance */ 0,
           /* origins */ {},
           /* inferred_features */ {},
+          /* locally_inferred_features */ FeatureMayAlwaysSet::bottom(),
           /* user_features */
           FeatureSet{context.features->get("FeatureOne")},
           /* via_type_of_ports */ {},
@@ -1015,6 +1033,7 @@ TEST_F(JsonTest, Frame) {
           /* distance */ 0,
           /* origins */ {},
           /* inferred_features */ FeatureMayAlwaysSet::bottom(),
+          /* locally_inferred_features */ FeatureMayAlwaysSet::bottom(),
           /* user_features */ {},
           /* via_type_of_ports */
           RootSetAbstractDomain(
@@ -1038,6 +1057,7 @@ TEST_F(JsonTest, Frame) {
           /* distance */ 0,
           /* origins */ {},
           /* inferred_features */ FeatureMayAlwaysSet::bottom(),
+          /* locally_inferred_features */ FeatureMayAlwaysSet::bottom(),
           /* user_features */ {},
           /* via_type_of_ports */ {},
           /* local_positions */
@@ -1062,6 +1082,7 @@ TEST_F(JsonTest, Frame) {
           /* distance */ 0,
           /* origins */ {},
           /* inferred_features */ FeatureMayAlwaysSet::bottom(),
+          /* locally_inferred_features */ FeatureMayAlwaysSet::bottom(),
           /* user_features */ {},
           /* via_type_of_ports */ {},
           /* local_positions */
@@ -1092,6 +1113,7 @@ TEST_F(JsonTest, Frame) {
           /* distance */ 0,
           /* origins */ {},
           /* inferred_features */ FeatureMayAlwaysSet::bottom(),
+          /* locally_inferred_features */ FeatureMayAlwaysSet::bottom(),
           /* user_features */ {},
           /* via_type_of_ports */ {},
           /* local_positions */
@@ -1099,6 +1121,40 @@ TEST_F(JsonTest, Frame) {
               context.positions->get(std::nullopt, 1),
               context.positions->get(std::nullopt, 2),
           }));
+
+  // Verifies to_json behavior for local inferred features. These cannot be
+  // covered by from_json tests as they are never specified in json. Note that
+  // locally_inferred_features show up twice in the json, once within a
+  // "local_features" key, another as "may/always_features" in the object
+  // alongside any existing inferred features.
+  EXPECT_EQ(
+      Frame(
+          /* kind */ context.kinds->get("TestSource"),
+          /* callee_port */ AccessPath(Root(Root::Kind::Leaf)),
+          /* callee */ nullptr,
+          /* call_position */ nullptr,
+          /* distance */ 0,
+          /* origins */ {},
+          /* inferred_features */
+          FeatureMayAlwaysSet::make_always(
+              {context.features->get("FeatureTwo")}),
+          /* locally_inferred_features */
+          FeatureMayAlwaysSet(
+              /* may */ FeatureSet{context.features->get("FeatureOne")},
+              /* always */ {}),
+          /* user_features */ {},
+          /* via_type_of_ports */ {},
+          /* local_positions */ {})
+          .to_json(),
+      test::parse_json(R"({
+        "kind": "TestSource",
+        "callee_port": "Leaf",
+        "may_features": ["FeatureOne"],
+        "always_features": ["FeatureTwo"],
+        "local_features": {
+          "may_features": ["FeatureOne"]
+        }
+      })"));
 
   // Consistency checks.
   EXPECT_THROW(

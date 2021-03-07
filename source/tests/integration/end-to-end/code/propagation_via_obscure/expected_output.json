@@ -130,6 +130,13 @@
           "callee_port" : "Return",
           "distance" : 1,
           "kind" : "Source",
+          "local_features" : 
+          {
+            "always_features" : 
+            [
+              "via-obscure"
+            ]
+          },
           "local_positions" : 
           [
             {

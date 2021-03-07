@@ -55,7 +55,14 @@ using RootSetAbstractDomain = sparta::HashedSetAbstractDomain<Root>;
  *
  * `features` is a set of tags used to give extra information about the trace.
  * For instance, "via-numerical-operator" could be used to express that the
- * trace goes through a numerical operator.
+ * trace goes through a numerical operator. Internally, this is represented by:
+ *   inferred_features:
+ *     Features propagated into this frame, usually from its callee.
+ *   locally_inferred_features:
+ *     Features inferred within this frame (not propagated from a callee).
+ *     These features are only ever added after frame creation.
+ *   user_features:
+ *     User-defined features from a JSON.
  *
  * `via_type_of_ports` is a set of ports for each of which we would like to
  * materialize a 'via-type-of' feature with the type of the port seen at a
@@ -85,6 +92,7 @@ class Frame final : public sparta::AbstractDomain<Frame> {
       int distance,
       MethodSet origins,
       FeatureMayAlwaysSet inferred_features,
+      FeatureMayAlwaysSet locally_inferred_features,
       FeatureSet user_features,
       RootSetAbstractDomain via_type_of_ports,
       LocalPositionSet local_positions)
@@ -95,6 +103,7 @@ class Frame final : public sparta::AbstractDomain<Frame> {
         distance_(distance),
         origins_(std::move(origins)),
         inferred_features_(std::move(inferred_features)),
+        locally_inferred_features_(std::move(locally_inferred_features)),
         user_features_(std::move(user_features)),
         via_type_of_ports_(std::move(via_type_of_ports)),
         local_positions_(std::move(local_positions)) {
@@ -105,9 +114,10 @@ class Frame final : public sparta::AbstractDomain<Frame> {
 
   static Frame leaf(
       const Kind* kind,
-      FeatureMayAlwaysSet inferred_features = FeatureMayAlwaysSet::bottom(),
-      FeatureSet user_features = FeatureSet::bottom(),
-      MethodSet origins = {}) {
+      FeatureMayAlwaysSet inferred_features,
+      FeatureMayAlwaysSet locally_inferred_features,
+      FeatureSet user_features,
+      MethodSet origins) {
     return Frame(
         kind,
         /* callee_port */ AccessPath(Root(Root::Kind::Leaf)),
@@ -116,9 +126,19 @@ class Frame final : public sparta::AbstractDomain<Frame> {
         /* distance */ 0,
         origins,
         inferred_features,
+        locally_inferred_features,
         user_features,
         /* via_type_of_ports */ {},
         /* local_positions */ {});
+  }
+
+  static Frame leaf(const Kind* kind) {
+    return Frame::leaf(
+        kind,
+        /* inferred_features */ FeatureMayAlwaysSet::bottom(),
+        /* locally_inferred_features */ FeatureMayAlwaysSet::bottom(),
+        /* user_features */ FeatureSet::bottom(),
+        /* origins */ {});
   }
 
   Frame(const Frame&) = default;
@@ -159,10 +179,18 @@ class Frame final : public sparta::AbstractDomain<Frame> {
     return origins_;
   }
 
+  /**
+   * Despite its name, this adds to locally_inferred_features. Non-local
+   * inferred features are used only for frame propagation.
+   */
   void add_inferred_features(const FeatureMayAlwaysSet& features);
 
   const FeatureMayAlwaysSet& inferred_features() const {
     return inferred_features_;
+  }
+
+  const FeatureMayAlwaysSet& locally_inferred_features() const {
+    return locally_inferred_features_;
   }
 
   const FeatureSet& user_features() const {
@@ -263,6 +291,7 @@ class Frame final : public sparta::AbstractDomain<Frame> {
   int distance_;
   MethodSet origins_;
   FeatureMayAlwaysSet inferred_features_;
+  FeatureMayAlwaysSet locally_inferred_features_;
   FeatureSet user_features_;
   RootSetAbstractDomain via_type_of_ports_;
   LocalPositionSet local_positions_;

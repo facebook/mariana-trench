@@ -115,6 +115,7 @@ TEST_F(RegistryTest, ConstructorUseJoin) {
               Taint{Frame::leaf(
                   source_kind,
                   /* inferred_features */ FeatureMayAlwaysSet::bottom(),
+                  /* locally_inferred_features */ FeatureMayAlwaysSet::bottom(),
                   /* user_features */ FeatureSet::bottom(),
                   /* origins */ MethodSet{method})}},
           PortTaint{
@@ -122,6 +123,7 @@ TEST_F(RegistryTest, ConstructorUseJoin) {
               Taint{Frame::leaf(
                   source_kind,
                   /* inferred_features */ FeatureMayAlwaysSet::bottom(),
+                  /* locally_inferred_features */ FeatureMayAlwaysSet::bottom(),
                   /* user_features */ FeatureSet::bottom(),
                   /* origins */ MethodSet{method})}}));
 }
