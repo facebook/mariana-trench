@@ -8,6 +8,7 @@
 #include <memory>
 #include <vector>
 
+#include <boost/algorithm/string.hpp>
 #include <json/json.h>
 
 #include <mariana-trench/Assert.h>
@@ -117,6 +118,7 @@ std::vector<Model> ModelGeneration::run(Context& context) {
           .parent_path();
   // TODO(T84659873): deprecate path lookup. We want to lookup by name instead
   // to to support search path.
+  std::vector<std::string> nonexistent_model_generators;
   for (const auto& entry : configuration_entries) {
     if (entry.kind() == ModelGeneratorConfiguration::Kind::JSON) {
       auto relative_path = boost::filesystem::path{entry.name_or_path()};
@@ -138,7 +140,7 @@ std::vector<Model> ModelGeneration::run(Context& context) {
             model_generators.end(),
             [&](const auto& generator) { return generator->name() == name; });
         if (!generator_exists) {
-          ERROR(1, "Model generator `{}` does not exist.", name);
+          nonexistent_model_generators.push_back(name);
         }
       } else {
         model_generators.push_back(std::move(iterator->second));
@@ -147,6 +149,12 @@ std::vector<Model> ModelGeneration::run(Context& context) {
     } else {
       mt_unreachable();
     }
+  }
+
+  if (!nonexistent_model_generators.empty()) {
+    throw std::invalid_argument(fmt::format(
+        "Model generator(s) {} do not exist.",
+        boost::algorithm::join(nonexistent_model_generators, ", ")));
   }
 
   std::vector<Model> generated_models;
