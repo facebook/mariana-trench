@@ -1,0 +1,86 @@
+{
+  "model_generators": [
+    {
+      "find": "methods",
+      "where": [
+        {
+          "constraint": "signature",
+          "pattern": "Ljava/io/File;\\.<init>.*"
+        }
+      ],
+      "model": {
+        "for_all_parameters": [
+          {
+            "variable": "x",
+            "where": [],
+            "sinks": [
+              {
+                "kind": "FileResolver",
+                "port": "Argument(x)"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "find": "methods",
+      "where": [
+        {
+          "constraint": "name",
+          "pattern": "(copy|create|delete|new|read|walk|write).*"
+        },
+        {
+          "constraint": "parent",
+          "inner": {
+            "constraint": "name",
+            "pattern": "Ljava/nio/file/Files;"
+          }
+        }
+      ],
+      "model": {
+        "for_all_parameters": [
+          {
+            "variable": "x",
+            "where": [
+              {
+                "constraint": "name",
+                "pattern": "Ljava/nio/file/Path;"
+              }
+            ],
+            "sinks": [
+              {
+                "kind": "FileResolver",
+                "port": "Argument(x)"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "find": "methods",
+      "where": [
+        {
+          "constraint": "signature",
+          "pattern": "Ljava/.*InputStream;\\.<init>:.*"
+        },
+        {
+          "constraint": "number_parameters",
+          "inner": {
+            "constraint": ">",
+            "value": 1
+          }
+        }
+      ],
+      "model": {
+        "sinks": [
+          {
+            "kind": "InputStream",
+            "port": "Argument(1)"
+          }
+        ]
+      }
+    }
+  ]
+}

@@ -1,0 +1,34 @@
+{
+  "model_generators": [
+    {
+      "find": "methods",
+      "where": [
+        {
+          "constraint": "signature",
+          "pattern": ".*:\\(.*Landroid/content/Context;.*\\).*"
+        }
+      ],
+      "model": {
+        "for_all_parameters": [
+          {
+            "variable": "x",
+            "where": [
+              {
+                "constraint": "name",
+                "pattern": "Landroid/content/Context;"
+              }
+            ],
+            "add_features_to_arguments": [
+              {
+                "features": [
+                  "via:context"
+                ],
+                "port": "Argument(x)"
+              }
+            ]
+          }
+        ]
+      }
+    }
+  ]
+}

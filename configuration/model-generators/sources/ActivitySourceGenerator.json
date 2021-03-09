@@ -1,0 +1,51 @@
+{
+  "model_generators": [
+    {
+      "find": "methods",
+      "where": [
+        {
+          "constraint": "signature",
+          "pattern": "Landroid/app/Activity;\\.getIntent:\\(\\)Landroid/content/Intent;"
+        }
+      ],
+      "model": {
+        "modes": [
+          "no-join-virtual-overrides"
+        ],
+        "sources": [
+          {
+            "kind": "ActivityUserInput"
+          }
+        ]
+      }
+    },
+    {
+      "find": "methods",
+      "where": [
+        {
+          "constraint": "any_of",
+          "inners": [
+            {
+              "constraint": "signature",
+              "pattern": "Landroidx/fragment/app/Fragment;\\.getArguments:\\(\\)Landroid/os/Bundle;"
+            },
+            {
+              "constraint": "signature",
+              "pattern": "Landroid/app/Fragment;\\.getArguments:\\(\\)Landroid/os/Bundle;"
+            }
+          ]
+        }
+      ],
+      "model": {
+        "modes": [
+          "no-join-virtual-overrides"
+        ],
+        "sources": [
+          {
+            "kind": "FragmentUserInput"
+          }
+        ]
+      }
+    }
+  ]
+}
