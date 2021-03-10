@@ -19,8 +19,13 @@ class ModelGeneratorTest : public test::Test {};
 
 bool compare_methods(const Method* left, const Method* right) {
   if (left->get_name() == right->get_name()) {
-    return left->get_class()->get_name()->str() <
-        right->get_class()->get_name()->str();
+    const auto& left_class_name = left->get_class()->get_name()->str();
+    const auto& right_class_name = right->get_class()->get_name()->str();
+    if (left_class_name == right_class_name) {
+      return left->parameter_type_overrides() <
+          right->parameter_type_overrides();
+    }
+    return left_class_name < right_class_name;
   }
   return left->get_name() < right->get_name();
 };
