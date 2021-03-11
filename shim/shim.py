@@ -292,12 +292,6 @@ if __name__ == "__main__":
             help="A JSON configuration file with a list of paths to the system jars.",
         )
         configuration_arguments.add_argument(
-            "--models-paths",
-            type=str,
-            default=_get_resource_path("default_models.json"),
-            help="A `;`-separated list of models files and directories containing models files.",
-        )
-        configuration_arguments.add_argument(
             "--rules-paths",
             type=str,
             default=_get_resource_path("rules.json"),
@@ -452,8 +446,6 @@ if __name__ == "__main__":
             apk_directory,
             "--dex-directory",
             dex_directory,
-            "--models-paths",
-            arguments.models_paths,
             "--rules-paths",
             arguments.rules_paths,
             "--repository-root-directory",

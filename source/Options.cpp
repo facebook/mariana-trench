@@ -130,8 +130,10 @@ Options::Options(const boost::program_options::variables_map& variables) {
   dex_directory_ =
       check_directory_exists(variables["dex-directory"].as<std::string>());
 
-  models_paths_ = parse_paths_list(
-      variables["models-paths"].as<std::string>(), /* extension */ ".json");
+  if (!variables["models-paths"].empty()) {
+    models_paths_ = parse_paths_list(
+        variables["models-paths"].as<std::string>(), /* extension */ ".json");
+  }
   rules_paths_ = parse_paths_list(
       variables["rules-paths"].as<std::string>(), /* extension */ ".json");
 
@@ -207,7 +209,7 @@ void Options::add_options(
 
   options.add_options()(
       "models-paths",
-      program_options::value<std::string>()->required(),
+      program_options::value<std::string>(),
       "A `;` separated list of models files and directories containing models files.");
   options.add_options()(
       "rules-paths",
