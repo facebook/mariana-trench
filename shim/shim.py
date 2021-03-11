@@ -4,8 +4,6 @@
 # This source code is licensed under the MIT license found in the
 # LICENSE file in the root directory of this source tree.
 
-# TODO (T47489191): remove FB specific paths from this script
-
 import argparse
 import json
 import logging
@@ -18,6 +16,14 @@ import traceback
 import typing
 from pathlib import Path
 from typing import Optional, Sequence
+
+from .constant import Constant
+
+try:
+    from ..facebook.shim import resources
+except Exception:
+    # pyre-ignore[21]
+    from . import resources
 
 import pyredex
 
@@ -134,21 +140,20 @@ def _get_analysis_binary(arguments: argparse.Namespace) -> Path:
 
     # Build the mariana-trench binary from source.
     return _build_executable_target(
-        "fbsource//fbandroid/native/mariana-trench/source:mariana-trench",
+        resources.get_string(Constant.BINARY_TARGET),
         mode=arguments.build,
     )
 
 
 def _desugar_jar_file(jar_path: Path) -> Path:
     LOG.info(f"Desugaring `{jar_path}`...")
-    desugar_tool = _build_target(
-        "fbsource//fbandroid/native/mariana-trench/desugar/com/facebook/marianatrench:desugar"
-    )
+    desugar_tool = _build_target(resources.get_string(Constant.DESUGAR_TARGET))
     desugared_jar_file = jar_path.parent / (jar_path.stem + "-desugared.jar")
     output = subprocess.run(
         [
             "java",
-            "-Dlog4j.configurationFile=fbandroid/native/mariana-trench/desugar/resources/log4j2.properties",
+            "-Dlog4j.configurationFile",
+            resources.get_string(Constant.DESUGAR_LOG_CONFIGURATION_PATH),
             "-jar",
             desugar_tool,
             os.fspath(jar_path),
@@ -185,10 +190,11 @@ def _build_apk_from_jar(jar_path: Path) -> Path:
     return Path(dex_file)
 
 
+SOURCE_ROOT: Path = resources.get_path(Constant.SOURCE_ROOT)
 RESOURCE_DIRECTORY_CANDIDATES: Sequence[Path] = [
-    Path("fbandroid/native/mariana-trench/configuration"),
-    Path("fbandroid/native/mariana-trench/facebook/internal-configuration"),
-    Path("fbandroid/native/mariana-trench/shim/resources"),
+    SOURCE_ROOT / "configuration",
+    SOURCE_ROOT / "facebook/internal-configuration",
+    SOURCE_ROOT / "shim/resources",
 ]
 
 
@@ -273,7 +279,7 @@ if __name__ == "__main__":
         binary_arguments.add_argument(
             "--build",
             type=str,
-            default="@fbandroid/mode/opt",
+            default=resources.get_string(Constant.BINARY_BUILD_MODE),
             metavar="BUILD_MODE",
             help="The Mariana Trench binary build mode.",
         )
