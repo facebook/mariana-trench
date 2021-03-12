@@ -28,6 +28,7 @@ class ClassProperties final {
   ClassProperties& operator=(ClassProperties&&) = delete;
   ~ClassProperties() = default;
 
+ private:
   bool is_class_unexported(const std::string& class_name) const;
   bool is_class_exported(const std::string& class_name) const;
   bool is_child_exposed(const std::string& class_name) const;
@@ -39,6 +40,7 @@ class ClassProperties final {
   std::optional<std::string> get_privacy_decision_number_from_method(
       const Method* method) const;
 
+ public:
   /* A set of features to add to sources propagated from callee to caller. */
   FeatureMayAlwaysSet propagate_features(
       const Method* caller,
