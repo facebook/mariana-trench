@@ -178,13 +178,7 @@ ClassProperties::ClassProperties(
     const Options& options,
     const DexStoresVector& stores,
     const Features& features)
-    : via_caller_exported_(features.get("via-caller-exported")),
-      via_child_exposed_(features.get("via-child-exposed")),
-      via_caller_unexported_(features.get("via-caller-unexported")),
-      via_public_dfa_scheme_(features.get("via-public-dfa-scheme")),
-      via_caller_permission_(features.get("via-caller-permission")),
-      via_caller_protection_level_(
-          features.get("via-caller-protection-level")) {
+    : features_(features) {
   try {
     const auto manifest_class_info = get_manifest_class_info(
         options.apk_directory() + "/AndroidManifest.xml");
@@ -322,22 +316,22 @@ FeatureMayAlwaysSet ClassProperties::issue_features(
   auto base_class = strip_subclass(method->get_class()->str());
 
   if (is_class_exported(base_class)) {
-    features.add(via_caller_exported_);
+    features.add(features_.get("via-caller-exported"));
   }
   if (is_child_exposed(base_class)) {
-    features.add(via_child_exposed_);
+    features.add(features_.get("via-child-exposed"));
   }
   if (is_class_unexported(base_class)) {
-    features.add(via_caller_unexported_);
+    features.add(features_.get("via-caller-unexported"));
   }
   if (is_dfa_public(base_class)) {
-    features.add(via_public_dfa_scheme_);
+    features.add(features_.get("via-public-dfa-scheme"));
   }
   if (has_permission(base_class)) {
-    features.add(via_caller_permission_);
+    features.add(features_.get("via-caller-permission"));
   }
   if (has_protection_level(base_class)) {
-    features.add(via_caller_protection_level_);
+    features.add(features_.get("via-caller-protection-level"));
   }
 
   return FeatureMayAlwaysSet::make_always(features);

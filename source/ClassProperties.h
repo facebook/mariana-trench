@@ -59,12 +59,7 @@ class ClassProperties final {
   std::unordered_set<std::string> protection_level_classes_;
   std::unordered_map<std::string, std::string> privacy_decision_classes_;
 
-  const Feature* via_caller_exported_;
-  const Feature* via_child_exposed_;
-  const Feature* via_caller_unexported_;
-  const Feature* via_public_dfa_scheme_;
-  const Feature* via_caller_permission_;
-  const Feature* via_caller_protection_level_;
+  const Features& features_;
 };
 
 } // namespace marianatrench
