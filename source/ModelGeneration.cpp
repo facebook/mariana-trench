@@ -111,43 +111,24 @@ std::vector<Model> ModelGeneration::run(Context& context) {
   auto builtin_generators = make_model_generators(context);
   std::vector<std::unique_ptr<ModelGenerator>> model_generators;
   const auto& configuration_entries = options.model_generators_configuration();
-  // We assume that the path to a json model generator is relative to the
-  // path of the json configuration file that specifies model generators
-  auto directory_of_json_model_generators =
-      boost::filesystem::path{options.generator_configuration_path()}
-          .parent_path();
-  // TODO(T84659873): deprecate path lookup. We want to lookup by name instead
-  // to to support search path.
+
   std::vector<std::string> nonexistent_model_generators;
   for (const auto& entry : configuration_entries) {
-    if (entry.kind() == ModelGeneratorConfiguration::Kind::JSON) {
-      auto relative_path = boost::filesystem::path{entry.name_or_path()};
-      auto absolute_path = (directory_of_json_model_generators / relative_path);
-      LOG(2, "Found JSON model generator: `{}`", absolute_path);
+    const std::string& name = entry.name();
+    LOG(2, "Found model generator: `{}`", name);
 
-      model_generators.push_back(std::make_unique<JsonModelGenerator>(
-          /* generator name */ relative_path.filename().stem().string(),
-          context,
-          /* absolute path */ absolute_path));
-    } else if (entry.kind() == ModelGeneratorConfiguration::Kind::CPP) {
-      const std::string& name = entry.name_or_path();
-      LOG(2, "Found CPP model generator: `{}`", name);
-
-      auto iterator = builtin_generators.find(name);
-      if (iterator == builtin_generators.end()) {
-        bool generator_exists = std::any_of(
-            model_generators.begin(),
-            model_generators.end(),
-            [&](const auto& generator) { return generator->name() == name; });
-        if (!generator_exists) {
-          nonexistent_model_generators.push_back(name);
-        }
-      } else {
-        model_generators.push_back(std::move(iterator->second));
-        builtin_generators.erase(iterator);
+    auto iterator = builtin_generators.find(name);
+    if (iterator == builtin_generators.end()) {
+      bool generator_exists = std::any_of(
+          model_generators.begin(),
+          model_generators.end(),
+          [&](const auto& generator) { return generator->name() == name; });
+      if (!generator_exists) {
+        nonexistent_model_generators.push_back(name);
       }
     } else {
-      mt_unreachable();
+      model_generators.push_back(std::move(iterator->second));
+      builtin_generators.erase(iterator);
     }
   }
 

@@ -15,17 +15,13 @@ namespace marianatrench {
 
 class ModelGeneratorConfiguration {
  public:
-  enum class Kind { JSON, CPP };
-
-  explicit ModelGeneratorConfiguration(Kind kind, std::string name_or_path);
+  explicit ModelGeneratorConfiguration(const std::string& name);
 
   static ModelGeneratorConfiguration from_json(const Json::Value& value);
 
-  ModelGeneratorConfiguration::Kind kind() const;
-  const std::string& name_or_path() const;
+  const std::string& name() const;
 
  private:
-  ModelGeneratorConfiguration::Kind kind_;
-  std::string name_or_path_;
+  std::string name_;
 };
 } // namespace marianatrench
