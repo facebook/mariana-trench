@@ -15,6 +15,7 @@
 
 #include <mariana-trench/Assert.h>
 #include <mariana-trench/ClassProperties.h>
+#include <mariana-trench/Constants.h>
 #include <mariana-trench/Features.h>
 #include <mariana-trench/Log.h>
 #include <mariana-trench/Options.h>
@@ -51,26 +52,13 @@ bool is_class_exported_via_uri(const DexClass* clazz) {
     return false;
   }
 
-  const std::string dfa_annotation_type =
-      "Lcom/facebook/crudolib/urimap/UriMatchPatterns;";
-  const std::string dfa_annotation_pattern_type =
-      "Lcom/facebook/crudolib/urimap/UriPattern;";
-
-  // TODO (T57415229): keep this list in sync with
-  // https://our.internmc.facebook.com/intern/diffusion/FBS/browse/master/fbandroid/java/com/facebook/crudolib/urimap/UriScheme.java
-  const std::vector<std::string> private_schemes = {
-      "scheme:Lcom/facebook/crudolib/urimap/UriScheme;.FBINTERNAL:Lcom/facebook/crudolib/urimap/UriScheme;",
-      "scheme:Lcom/facebook/crudolib/urimap/UriScheme;.MESSENGER_SECURE:Lcom/facebook/crudolib/urimap/UriScheme;",
-      "scheme:Lcom/facebook/crudolib/urimap/UriScheme;.MLITE_SECURE:Lcom/facebook/crudolib/urimap/UriScheme;",
-      "scheme:Lcom/facebook/crudolib/urimap/UriScheme;.BIZAPP_INTERNAL:Lcom/facebook/crudolib/urimap/UriScheme;",
-      "scheme:Lcom/facebook/crudolib/urimap/UriScheme;.MESSENGER_SAMETASK:Lcom/facebook/crudolib/urimap/UriScheme;",
-      "pattern:fbinternal://",
-  };
+  auto dfa_annotation = marianatrench::constants::get_dfa_annotation();
+  auto private_schemes = marianatrench::constants::get_private_uri_schemes();
 
   for (const DexAnnotation* annotation :
        clazz->get_anno_set()->get_annotations()) {
     if (!annotation->type() ||
-        annotation->type()->str() != dfa_annotation_type) {
+        annotation->type()->str() != dfa_annotation.type) {
       continue;
     }
 
@@ -89,7 +77,7 @@ bool is_class_exported_via_uri(const DexClass* clazz) {
         mt_assert(pattern != nullptr);
 
         if (!pattern->type() ||
-            pattern->type()->str() != dfa_annotation_pattern_type) {
+            pattern->type()->str() != dfa_annotation.pattern_type) {
           continue;
         }
 
@@ -121,8 +109,8 @@ bool is_class_exported_via_uri(const DexClass* clazz) {
 
 std::optional<std::string> get_privacy_decision_number_from_annotations(
     const std::vector<DexAnnotation*>& annotations) {
-  const std::string privacy_decision_type =
-      "Lcom/facebook/privacy/datacollection/PrivacyDecision;";
+  auto privacy_decision_type =
+      marianatrench::constants::get_privacy_decision_type();
   for (const DexAnnotation* annotation : annotations) {
     if (!annotation->type() ||
         annotation->type()->str() != privacy_decision_type) {
