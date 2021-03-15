@@ -35,19 +35,19 @@ You will need to choose an installation directory that will contain all the bina
 
 You will need Xcode with command line tools installed. To get the command line tools, use:
 
-```
+```shell
 xcode-select --install
 ```
 
 Then, install all the required dependencies with [Homebrew](https://brew.sh/):
 
-```
+```shell
 brew upgrade
 brew install python3 cmake zlib boost googletest jsoncpp fmt re2
 ```
 
 Now, you will need to build [Redex](https://fbredex.com/) from source:
-```
+```shell
 brew install git
 git clone https://github.com/facebook/redex.git
 cd redex
@@ -59,7 +59,7 @@ make install
 ```
 
 Finally, you can build and install Mariana Trench:
-```
+```shell
 cd ../..  # Go back to the root directory
 mkdir build
 cd build
@@ -71,6 +71,6 @@ make install
 ### Run the tests
 
 To run the tests after you have built Mariana Trench, use:
-```
+```shell
 make check
 ```
