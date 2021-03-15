@@ -340,7 +340,7 @@ if __name__ == "__main__":
         configuration_arguments.add_argument(
             "--model-generator-search-paths",
             type=_separated_paths_exist,
-            default=None,
+            default=resources.get_string(Constant.DEFAULT_GENERATOR_SEARCH_PATHS),
             help="A `;`-separated list of paths where we look up JSON model generators.",
         )
         configuration_arguments.add_argument(

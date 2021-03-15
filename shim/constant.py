@@ -14,3 +14,5 @@ class Constant(Enum):
 
     DESUGAR_TARGET = auto()
     DESUGAR_LOG_CONFIGURATION_PATH = auto()
+
+    DEFAULT_GENERATOR_SEARCH_PATHS = auto()
