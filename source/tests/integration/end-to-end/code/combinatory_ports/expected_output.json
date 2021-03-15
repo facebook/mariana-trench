@@ -620,6 +620,10 @@
   "propagation" : 
   [
     {
+      "always_features" : 
+      [
+        "via-inner-class-this"
+      ],
       "input" : "Argument(1)",
       "output" : "Argument(0).this$0"
     }
@@ -1286,6 +1290,10 @@
   "propagation" : 
   [
     {
+      "always_features" : 
+      [
+        "via-inner-class-this"
+      ],
       "input" : "Argument(1)",
       "output" : "Argument(0).this$0"
     }
@@ -1966,6 +1974,10 @@
   "propagation" : 
   [
     {
+      "always_features" : 
+      [
+        "via-inner-class-this"
+      ],
       "input" : "Argument(1)",
       "output" : "Argument(0).this$0"
     }

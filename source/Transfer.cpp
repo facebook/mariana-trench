@@ -767,6 +767,24 @@ bool Transfer::analyze_invoke(
   return false;
 }
 
+bool is_inner_class_this(const FieldMemoryLocation* location) {
+  return location->parent()->is<ThisParameterMemoryLocation>() &&
+      location->field()->str() == "this$0";
+}
+
+void add_field_features(
+    MethodContext* context,
+    AbstractTreeDomain<Taint>& taint,
+    const FieldMemoryLocation* field_memory_location) {
+  if (!is_inner_class_this(field_memory_location)) {
+    return;
+  }
+  auto features = FeatureMayAlwaysSet::make_always(
+      {context->features.get("via-inner-class-this")});
+  taint.map(
+      [&features](Taint& sources) { sources.add_inferred_features(features); });
+}
+
 bool Transfer::analyze_iput(
     MethodContext* context,
     const IRInstruction* instruction,
@@ -792,11 +810,18 @@ bool Transfer::analyze_iput(
 
   for (auto* memory_location : target_memory_locations.elements()) {
     auto field_memory_location = memory_location->make_field(field);
+    auto taint_copy = taint;
+    add_field_features(context, taint_copy, field_memory_location);
+
     LOG_OR_DUMP(
-        context, 4, "Tainting {} with {}", show(field_memory_location), taint);
+        context,
+        4,
+        "Tainting {} with {}",
+        show(field_memory_location),
+        taint_copy);
     environment->write(
         field_memory_location,
-        taint,
+        taint_copy,
         is_singleton ? UpdateKind::Strong : UpdateKind::Weak);
   }
 

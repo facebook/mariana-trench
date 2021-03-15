@@ -147,6 +147,10 @@
   "sinks" : 
   [
     {
+      "always_features" : 
+      [
+        "via-inner-class-this"
+      ],
       "call_position" : 
       {
         "end" : 20,
@@ -159,6 +163,13 @@
       "caller_port" : "Argument(0)",
       "distance" : 1,
       "kind" : "Sink",
+      "local_features" : 
+      {
+        "always_features" : 
+        [
+          "via-inner-class-this"
+        ]
+      },
       "local_positions" : 
       [
         {
@@ -716,6 +727,10 @@
   "propagation" : 
   [
     {
+      "always_features" : 
+      [
+        "via-inner-class-this"
+      ],
       "input" : "Argument(1)",
       "output" : "Argument(0).this$0"
     }
@@ -731,6 +746,10 @@
   "propagation" : 
   [
     {
+      "always_features" : 
+      [
+        "via-inner-class-this"
+      ],
       "input" : "Argument(1)",
       "output" : "Argument(0).this$0"
     }

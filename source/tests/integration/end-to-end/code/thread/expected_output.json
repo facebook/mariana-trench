@@ -784,12 +784,16 @@
   "propagation" : 
   [
     {
-      "input" : "Argument(1)",
-      "output" : "Argument(0).this$0"
-    },
-    {
       "input" : "Argument(2)",
       "output" : "Argument(0).val$tainted"
+    },
+    {
+      "always_features" : 
+      [
+        "via-inner-class-this"
+      ],
+      "input" : "Argument(1)",
+      "output" : "Argument(0).this$0"
     }
   ]
 }
