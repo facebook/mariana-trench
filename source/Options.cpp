@@ -83,12 +83,14 @@ std::vector<std::string> parse_json_file_to_string_list(
   return result;
 }
 
-std::vector<ModelGeneratorConfiguration> parse_json_configuration_file(
-    const std::string& path) {
+std::vector<ModelGeneratorConfiguration> parse_json_configuration_files(
+    const std::vector<std::string>& paths) {
   std::vector<ModelGeneratorConfiguration> result;
-  Json::Value json = JsonValidation::parse_json_file(path);
-  for (const auto& value : JsonValidation::null_or_array(json)) {
-    result.push_back(ModelGeneratorConfiguration::from_json(value));
+  for (const auto& path : paths) {
+    Json::Value json = JsonValidation::parse_json_file(path);
+    for (const auto& value : JsonValidation::null_or_array(json)) {
+      result.push_back(ModelGeneratorConfiguration::from_json(value));
+    }
   }
   return result;
 }
@@ -147,10 +149,12 @@ Options::Options(const boost::program_options::variables_map& variables) {
     generated_models_directory_ = check_path_exists(
         variables["generated-models-directory"].as<std::string>());
   }
-  generator_configuration_path_ = check_path_exists(
-      variables["generator-configuration-path"].as<std::string>());
+
+  generator_configuration_paths_ = parse_paths_list(
+      variables["model-generator-configuration-paths"].as<std::string>(),
+      /* extension */ ".json");
   model_generators_configuration_ =
-      parse_json_configuration_file(generator_configuration_path_);
+      parse_json_configuration_files(generator_configuration_paths_);
 
   if (!variables["model-generator-search-paths"].empty()) {
     model_generator_search_paths_ = parse_search_paths(
@@ -224,9 +228,9 @@ void Options::add_options(
       program_options::value<std::string>(),
       "Directory where generated models will be stored.");
   options.add_options()(
-      "generator-configuration-path",
-      program_options::value<std::string>(),
-      "A JSON configuration file specifying a list of absolute paths to JSON model generators or names of CPP model generators.");
+      "model-generator-configuration-paths",
+      program_options::value<std::string>()->required(),
+      "A `;` separated list of JSON configuration files each specifying a list of absolute paths to JSON model generators or names of CPP model generators.");
   options.add_options()(
       "model-generator-search-paths",
       program_options::value<std::string>(),
@@ -307,8 +311,8 @@ const std::optional<std::string>& Options::generated_models_directory() const {
   return generated_models_directory_;
 }
 
-const std::string& Options::generator_configuration_path() const {
-  return generator_configuration_path_;
+const std::vector<std::string>& Options::generator_configuration_paths() const {
+  return generator_configuration_paths_;
 }
 
 const std::vector<std::string>& Options::model_generator_search_paths() const {

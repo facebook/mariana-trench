@@ -321,11 +321,20 @@ if __name__ == "__main__":
             default=None,
             help="If ProGuard configurations are provided, Mariana Trench will save time by ignoring unreachable objects.",
         )
+        # To be removed in favor of --generator-configuration-paths after uses have been updated.
         configuration_arguments.add_argument(
             "--generator-configuration-path",
             type=_path_exists,
             default=_get_resource_path("default_generator_config.json"),
             help="""A JSON configuration file specifying a list of paths
+            to JSON model generators relative to the configuration file or names of CPP model generators.""",
+        )
+        configuration_arguments.add_argument(
+            "--model-generator-configuration-paths",
+            type=_separated_paths_exist,
+            # Enable this default when --generator-configuration-path is removed.
+            # default=_get_resource_path("default_generator_config.json"),
+            help="""A `;`-separated list of paths specifying JSON configuration files. Each file is a list of paths
             to JSON model generators relative to the configuration file or names of CPP model generators.""",
         )
         configuration_arguments.add_argument(
@@ -458,8 +467,12 @@ if __name__ == "__main__":
             arguments.output_directory,
             "--maximum-source-sink-distance",
             str(arguments.maximum_source_sink_distance),
-            "--generator-configuration-path",
-            arguments.generator_configuration_path,
+            "--model-generator-configuration-paths",
+            (
+                arguments.model_generator_configuration_paths
+                if arguments.model_generator_configuration_paths
+                else arguments.generator_configuration_path
+            ),
         ]
 
         if arguments.model_generator_search_paths is not None:
