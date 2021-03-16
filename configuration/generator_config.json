@@ -1,0 +1,22 @@
+[
+  {
+    "kind": "cpp",
+    "name": "ActivityExitNodeGenerator"
+  },
+  {
+    "kind": "cpp",
+    "name": "CodeExecutionSinkGenerator"
+  },
+  {
+    "kind": "cpp",
+    "name": "ContextFeature"
+  },
+  {
+    "kind": "cpp",
+    "name": "DataCastFeatureGenerator"
+  },
+  {
+    "kind": "cpp",
+    "name": "FileSinkGenerator"
+  }
+]

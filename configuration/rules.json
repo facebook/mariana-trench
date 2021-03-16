@@ -1,0 +1,27 @@
+[
+  {
+    "name": "User input flows into code execution sink (RCE)",
+    "code": 1,
+    "description": "Values from user-controlled source may eventually flow into code execution sink",
+    "sources": [
+      "ActivityUserInput",
+      "FragmentUserInput"
+    ],
+    "sinks": [
+      "CodeExecution"
+    ]
+  },
+  {
+    "name": "User input flows into file resolver",
+    "code": 2,
+    "description": "Values from user-controlled source may eventually flow into sink file resolver",
+    "sources": [
+      "FragmentUserInput",
+      "ActivityUserInput"
+    ],
+    "sinks": [
+      "FileResolver",
+      "InputStream"
+    ]
+  }
+]
