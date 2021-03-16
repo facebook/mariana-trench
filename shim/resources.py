@@ -9,6 +9,9 @@ from .constant import Constant
 
 
 def get_string(constant: Constant) -> str:
+    if constant == Constant.BINARY_BUILD_MODE:
+        return "<build mode>"
+
     raise NotImplementedError(f"Unknown string constant `{constant}`")
 
 
