@@ -152,8 +152,7 @@ def _desugar_jar_file(jar_path: Path) -> Path:
     output = subprocess.run(
         [
             "java",
-            "-Dlog4j.configurationFile",
-            resources.get_string(Constant.DESUGAR_LOG_CONFIGURATION_PATH),
+            f"-Dlog4j.configurationFile={resources.get_string(Constant.DESUGAR_LOG_CONFIGURATION_PATH)}",
             "-jar",
             desugar_tool,
             os.fspath(jar_path),
