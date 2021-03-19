@@ -69,6 +69,8 @@ def get_job_definition(
     input_sitevar_projects: Optional[Iterable[str]],
     input_tenant: Optional[str],
     custom_projects_map: Optional[Iterable[str]],
+    model_generator_configuration_paths: Optional[Iterable[str]],
+    rules_paths: Optional[Iterable[str]],
 ) -> Dict[str, Any]:
     current_hash = subprocess.check_output(
         ["hg", "whereami"], universal_newlines=True
@@ -87,6 +89,8 @@ def get_job_definition(
             "hash": current_hash,
             "analysis_binary": "master",
             "custom_projects": everstore_handles,
+            "model_generator_configuration_paths": model_generator_configuration_paths,
+            "rules_paths": rules_paths,
         },
         "capabilities": {
             "type": "android",
@@ -130,6 +134,23 @@ if __name__ == "__main__":
         type=str,
         help="If specified, the job will run on the specified Sandcastle tenant. Otherwise, it will run on default-tenant",
     )
+    parser.add_argument(
+        "-m",
+        "--model-generator-configuration-paths",
+        type=str,
+        nargs="+",
+        help="If specified, the analysis will use these configs. The paths "
+        "should be relative to fbandroid/native/mariana-trench/facebook/[configuration|internal-configuration]. "
+        "Otherwise, it will use the configuration in the SV, or the default "
+        "set of configs if unspecified in the SV as well.",
+    )
+    parser.add_argument(
+        "-r",
+        "--rules-paths",
+        type=str,
+        nargs="+",
+        help="Similar to --model-generator-configuration-paths, but for rules.",
+    )
 
     arguments = parser.parse_args()
     if arguments.sitevar_projects is None and arguments.custom_projects is None:
@@ -140,7 +161,11 @@ if __name__ == "__main__":
 
     try:
         job = get_job_definition(
-            arguments.sitevar_projects, arguments.tenant, arguments.custom_projects
+            arguments.sitevar_projects,
+            arguments.tenant,
+            arguments.custom_projects,
+            arguments.model_generator_configuration_paths,
+            arguments.rules_paths,
         )
     except ArgumentError as error:
         LOG.critical(error.args[0])
