@@ -141,10 +141,13 @@ std::optional<std::string> get_privacy_decision_number_from_class(
 std::unordered_set<std::string> get_class_fragments(const DexClass* clazz) {
   std::unordered_set<std::string> exported_fragments;
   const static re2::RE2 fragment_regex = re2::RE2("(L[^a][^; ]*Fragment;)");
-
   auto methods = clazz->get_all_methods();
   for (DexMethod* method : methods) {
-    const cfg::ControlFlowGraph& cfg = method->get_code()->cfg();
+    const auto& code = method->get_code();
+    if (!code) {
+      continue;
+    }
+    const cfg::ControlFlowGraph& cfg = code->cfg();
     for (const auto* block : cfg.blocks()) {
       std::string match;
       // [0x7f5380273670] OPCODE: INVOKE_STATIC
