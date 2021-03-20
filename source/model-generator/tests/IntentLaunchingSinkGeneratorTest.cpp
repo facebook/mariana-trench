@@ -51,6 +51,20 @@ TEST_F(IntentLaunchingSinkGeneratorTest, SinkForContext) {
           context,
           method,
           /* kind */ "LaunchingComponent"));
+  model.add_sink(
+      AccessPath(Root(Root::Kind::Argument, 1)),
+      generator::partial_sink(
+          context,
+          method,
+          /* kind */ "LaunchingComponent",
+          /* label */ "a"));
+  model.add_sink(
+      AccessPath(Root(Root::Kind::Argument, 1)),
+      generator::partial_sink(
+          context,
+          method,
+          /* kind */ "LaunchingComponent",
+          /* label */ "b"));
 
   EXPECT_THAT(
       JsonModelGenerator(
@@ -119,6 +133,20 @@ TEST_F(IntentLaunchingSinkGeneratorTest, SinkForActivity) {
           context,
           method,
           /* kind */ "LaunchingComponent"));
+  model.add_sink(
+      AccessPath(Root(Root::Kind::Argument, 4)),
+      generator::partial_sink(
+          context,
+          method,
+          /* kind */ "LaunchingComponent",
+          /* label */ "a"));
+  model.add_sink(
+      AccessPath(Root(Root::Kind::Argument, 4)),
+      generator::partial_sink(
+          context,
+          method,
+          /* kind */ "LaunchingComponent",
+          /* label */ "b"));
 
   EXPECT_THAT(
       JsonModelGenerator(
@@ -153,6 +181,20 @@ TEST_F(IntentLaunchingSinkGeneratorTest, SinkForFragment) {
           context,
           method,
           /* kind */ "LaunchingComponent"));
+  model.add_sink(
+      AccessPath(Root(Root::Kind::Argument, 3)),
+      generator::partial_sink(
+          context,
+          method,
+          /* kind */ "LaunchingComponent",
+          /* label */ "a"));
+  model.add_sink(
+      AccessPath(Root(Root::Kind::Argument, 3)),
+      generator::partial_sink(
+          context,
+          method,
+          /* kind */ "LaunchingComponent",
+          /* label */ "b"));
 
   EXPECT_THAT(
       JsonModelGenerator(
@@ -187,6 +229,20 @@ TEST_F(IntentLaunchingSinkGeneratorTest, SinkForIntentLauncher) {
           context,
           method,
           /* kind */ "LaunchingComponent"));
+  model.add_sink(
+      AccessPath(Root(Root::Kind::Argument, 1)),
+      generator::partial_sink(
+          context,
+          method,
+          /* kind */ "LaunchingComponent",
+          /* label */ "a"));
+  model.add_sink(
+      AccessPath(Root(Root::Kind::Argument, 1)),
+      generator::partial_sink(
+          context,
+          method,
+          /* kind */ "LaunchingComponent",
+          /* label */ "b"));
 
   EXPECT_THAT(
       JsonModelGenerator(
@@ -255,6 +311,20 @@ TEST_F(IntentLaunchingSinkGeneratorTest, SinkForAndroidxFragment) {
           context,
           method,
           /* kind */ "LaunchingComponent"));
+  model.add_sink(
+      AccessPath(Root(Root::Kind::Argument, 1)),
+      generator::partial_sink(
+          context,
+          method,
+          /* kind */ "LaunchingComponent",
+          /* label */ "a"));
+  model.add_sink(
+      AccessPath(Root(Root::Kind::Argument, 1)),
+      generator::partial_sink(
+          context,
+          method,
+          /* kind */ "LaunchingComponent",
+          /* label */ "b"));
 
   EXPECT_THAT(
       JsonModelGenerator(
@@ -288,6 +358,20 @@ TEST_F(IntentLaunchingSinkGeneratorTest, SinkForNativeBroadcast) {
           context,
           method,
           /* kind */ "LaunchingComponent"));
+  model.add_sink(
+      AccessPath(Root(Root::Kind::Argument, 1)),
+      generator::partial_sink(
+          context,
+          method,
+          /* kind */ "LaunchingComponent",
+          /* label */ "a"));
+  model.add_sink(
+      AccessPath(Root(Root::Kind::Argument, 1)),
+      generator::partial_sink(
+          context,
+          method,
+          /* kind */ "LaunchingComponent",
+          /* label */ "b"));
 
   EXPECT_THAT(
       JsonModelGenerator(
@@ -321,6 +405,20 @@ TEST_F(IntentLaunchingSinkGeneratorTest, SinkForContextWrapper) {
           context,
           method,
           /* kind */ "LaunchingComponent"));
+  model.add_sink(
+      AccessPath(Root(Root::Kind::Argument, 1)),
+      generator::partial_sink(
+          context,
+          method,
+          /* kind */ "LaunchingComponent",
+          /* label */ "a"));
+  model.add_sink(
+      AccessPath(Root(Root::Kind::Argument, 1)),
+      generator::partial_sink(
+          context,
+          method,
+          /* kind */ "LaunchingComponent",
+          /* label */ "b"));
 
   EXPECT_THAT(
       JsonModelGenerator(
@@ -353,6 +451,20 @@ TEST_F(IntentLaunchingSinkGeneratorTest, SinkForTaskStackBuilder) {
           context,
           method,
           /* kind */ "LaunchingComponent"));
+  model.add_sink(
+      AccessPath(Root(Root::Kind::Argument, 1)),
+      generator::partial_sink(
+          context,
+          method,
+          /* kind */ "LaunchingComponent",
+          /* label */ "a"));
+  model.add_sink(
+      AccessPath(Root(Root::Kind::Argument, 1)),
+      generator::partial_sink(
+          context,
+          method,
+          /* kind */ "LaunchingComponent",
+          /* label */ "b"));
 
   EXPECT_THAT(
       JsonModelGenerator(

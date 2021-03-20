@@ -167,6 +167,14 @@ Frame sink(
     const std::vector<std::string>& features = {},
     Root::Kind callee_port = Root::Kind::Leaf,
     RootSetAbstractDomain via_type_of_ports = {});
+Frame partial_sink(
+    Context& context,
+    const Method* method,
+    const std::string& kind,
+    const std::string& label,
+    const std::vector<std::string>& features = {},
+    Root::Kind callee_port = Root::Kind::Leaf,
+    RootSetAbstractDomain via_type_of_ports = {});
 
 } // namespace generator
 } // namespace marianatrench

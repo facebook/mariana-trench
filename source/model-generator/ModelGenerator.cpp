@@ -465,4 +465,30 @@ Frame generator::sink(
       /* local_positions */ {});
 }
 
+Frame generator::partial_sink(
+    Context& context,
+    const Method* method,
+    const std::string& kind,
+    const std::string& label,
+    const std::vector<std::string>& features,
+    Root::Kind callee_port,
+    RootSetAbstractDomain via_type_of_ports) {
+  FeatureSet user_features;
+  for (const auto& feature : features) {
+    user_features.add(context.features->get(feature));
+  }
+  return Frame(
+      /* kind */ context.kinds->get_partial(kind, label),
+      /* callee_port */ AccessPath(Root(callee_port)),
+      /* callee */ nullptr,
+      /* call_position */ nullptr,
+      /* distance */ 0,
+      /* origins */ MethodSet{method},
+      /* inferred features */ FeatureMayAlwaysSet::bottom(),
+      /* locally_inferred_features */ FeatureMayAlwaysSet::bottom(),
+      /* user features */ user_features,
+      /* via_type_of_ports */ via_type_of_ports,
+      /* local_positions */ {});
+}
+
 } // namespace marianatrench
