@@ -1,7 +1,7 @@
 [
   {
     "kind": "cpp",
-    "name": "ActivityExitNodeGenerator"
+    "name": "ActivitySourceGenerator"
   },
   {
     "kind": "cpp",
