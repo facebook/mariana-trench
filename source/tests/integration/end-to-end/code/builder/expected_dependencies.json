@@ -112,6 +112,7 @@
     "Landroid/net/Uri;.<init>:()V",
     "Landroid/net/Uri;.<init>:(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V",
     "Landroid/os/Bundle;.<init>:()V",
+    "Landroid/text/TextUtils;.<init>:()V",
     "Landroid/util/Log;.<init>:()V",
     "Landroid/webkit/WebViewClient;.<init>:()V",
     "Lcom/facebook/auth/datastore/LoggedInUserAuthDataStore;.<init>:()V",

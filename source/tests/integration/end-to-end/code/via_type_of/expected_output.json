@@ -65,7 +65,7 @@
   "method" : "Lcom/instagram/common/analytics/intf/AnalyticsEvent;.addExtra:(Ljava/lang/String;Ljava/lang/String;)Lcom/instagram/common/analytics/intf/AnalyticsEvent;",
   "position" : 
   {
-    "line" : 18
+    "line" : 16
   },
   "propagation" : 
   [
@@ -650,6 +650,20 @@
   }
 }
 {
+  "method" : "Landroid/text/TextUtils;.<init>:()V",
+  "position" : 
+  {
+    "line" : 9
+  }
+}
+{
+  "method" : "Landroid/text/TextUtils;.isEmpty:(Ljava/lang/String;)Z",
+  "position" : 
+  {
+    "line" : 11
+  }
+}
+{
   "method" : "Landroid/util/Log;.<init>:()V",
   "position" : 
   {
@@ -900,14 +914,14 @@
   "method" : "Lcom/instagram/common/analytics/intf/AnalyticsEvent;.<init>:()V",
   "position" : 
   {
-    "line" : 11
+    "line" : 9
   }
 }
 {
   "method" : "Lcom/instagram/common/analytics/intf/AnalyticsEvent;.obtain:(Ljava/lang/String;)Lcom/instagram/common/analytics/intf/AnalyticsEvent;",
   "position" : 
   {
-    "line" : 14
+    "line" : 12
   }
 }
 {

@@ -52,6 +52,10 @@
     "Landroid/content/Intent;.getBundleExtra:(Ljava/lang/String;)Landroid/os/Bundle;",
     "Landroid/content/Intent;.getExtras:()Landroid/os/Bundle;"
   ],
+  "Landroid/text/TextUtils;.isEmpty:(Ljava/lang/String;)Z" : 
+  [
+    "Lcom/instagram/url/UrlHandlerActivity;.reportUrlEvent:(Ljava/lang/String;Ljava/lang/String;)V"
+  ],
   "Lcom/facebook/secure/context/IntentLauncher;.<init>:()V" : 
   [
     "Lcom/facebook/secure/context/SecureContextHelperV2;.inAppBrowser:()Lcom/facebook/secure/context/IntentLauncher;",
@@ -111,6 +115,7 @@
     "Landroid/net/Uri;.<init>:()V",
     "Landroid/net/Uri;.<init>:(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V",
     "Landroid/os/Bundle;.<init>:()V",
+    "Landroid/text/TextUtils;.<init>:()V",
     "Landroid/util/Log;.<init>:()V",
     "Landroid/webkit/WebViewClient;.<init>:()V",
     "Lcom/facebook/auth/datastore/LoggedInUserAuthDataStore;.<init>:()V",

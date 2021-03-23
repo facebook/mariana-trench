@@ -10,7 +10,6 @@ package com.facebook.marianatrench.integrationtests;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
-import javax.annotation.Nullable;
 
 public class ExternalLinkUriIntentBuilder extends UriIntentBuilder {
 
@@ -19,7 +18,6 @@ public class ExternalLinkUriIntentBuilder extends UriIntentBuilder {
   public ExternalLinkUriIntentBuilder() {}
 
   @Override
-  @Nullable
   public Intent getIntentForUri(Context context, String uri) {
     Uri parsed = Uri.parse(uri);
     if (FBLinks.SCHEME.equals(parsed.getScheme()) && HOSTNAME.equals(parsed.getHost())) {

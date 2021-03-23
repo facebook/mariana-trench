@@ -38,7 +38,7 @@
   "method" : "Lcom/instagram/common/analytics/intf/AnalyticsEvent;.addExtra:(Ljava/lang/String;Ljava/lang/String;)Lcom/instagram/common/analytics/intf/AnalyticsEvent;",
   "position" : 
   {
-    "line" : 18
+    "line" : 16
   },
   "propagation" : 
   [
@@ -89,73 +89,6 @@
       "output" : "Return"
     }
   ]
-}
-{
-  "issues" : 
-  [
-    {
-      "may_features" : 
-      [
-        "via-obscure"
-      ],
-      "position" : 
-      {
-        "line" : 23,
-        "path" : "UrlHandlerActivity.java"
-      },
-      "rule" : 1,
-      "sinks" : 
-      [
-        {
-          "call_position" : 
-          {
-            "end" : 27,
-            "line" : 23,
-            "path" : "UrlHandlerActivity.java",
-            "start" : 17
-          },
-          "callee" : "Lcom/instagram/url/UrlHandlerActivity;.handleIntent:(Landroid/content/Intent;)V",
-          "callee_port" : "Argument(1)",
-          "distance" : 3,
-          "kind" : "Logging",
-          "may_features" : 
-          [
-            "via-obscure"
-          ],
-          "origins" : 
-          [
-            "Lcom/instagram/common/analytics/intf/AnalyticsEvent;.addExtra:(Ljava/lang/String;Ljava/lang/String;)Lcom/instagram/common/analytics/intf/AnalyticsEvent;"
-          ]
-        }
-      ],
-      "sources" : 
-      [
-        {
-          "call_position" : 
-          {
-            "end" : 25,
-            "line" : 23,
-            "path" : "UrlHandlerActivity.java",
-            "start" : 17
-          },
-          "callee" : "Landroid/app/Activity;.getIntent:()Landroid/content/Intent;",
-          "callee_port" : "Return",
-          "distance" : 1,
-          "kind" : "ExternalUserInput",
-          "origins" : 
-          [
-            "Landroid/app/Activity;.getIntent:()Landroid/content/Intent;"
-          ]
-        }
-      ]
-    }
-  ],
-  "method" : "Lcom/instagram/url/UrlHandlerActivity;.onCreate:()V",
-  "position" : 
-  {
-    "line" : 21,
-    "path" : "UrlHandlerActivity.java"
-  }
 }
 {
   "issues" : 
@@ -227,6 +160,65 @@
   {
     "line" : 17,
     "path" : "SimpleLogging.java"
+  }
+}
+{
+  "issues" : 
+  [
+    {
+      "position" : 
+      {
+        "line" : 23,
+        "path" : "UrlHandlerActivity.java"
+      },
+      "rule" : 1,
+      "sinks" : 
+      [
+        {
+          "call_position" : 
+          {
+            "end" : 27,
+            "line" : 23,
+            "path" : "UrlHandlerActivity.java",
+            "start" : 17
+          },
+          "callee" : "Lcom/instagram/url/UrlHandlerActivity;.handleIntent:(Landroid/content/Intent;)V",
+          "callee_port" : "Argument(1)",
+          "distance" : 3,
+          "kind" : "Logging",
+          "origins" : 
+          [
+            "Lcom/instagram/common/analytics/intf/AnalyticsEvent;.addExtra:(Ljava/lang/String;Ljava/lang/String;)Lcom/instagram/common/analytics/intf/AnalyticsEvent;"
+          ]
+        }
+      ],
+      "sources" : 
+      [
+        {
+          "call_position" : 
+          {
+            "end" : 25,
+            "line" : 23,
+            "path" : "UrlHandlerActivity.java",
+            "start" : 17
+          },
+          "callee" : "Landroid/app/Activity;.getIntent:()Landroid/content/Intent;",
+          "callee_port" : "Return",
+          "distance" : 1,
+          "kind" : "ExternalUserInput",
+          "origins" : 
+          [
+            "Landroid/app/Activity;.getIntent:()Landroid/content/Intent;"
+          ]
+        }
+      ]
+    }
+  ],
+  "method" : "Lcom/instagram/url/UrlHandlerActivity;.onCreate:()V",
+  "position" : 
+  {
+    "line" : 21,
+    "path" : "UrlHandlerActivity.java"
   }
 }
 {
@@ -657,6 +649,20 @@
   }
 }
 {
+  "method" : "Landroid/text/TextUtils;.<init>:()V",
+  "position" : 
+  {
+    "line" : 9
+  }
+}
+{
+  "method" : "Landroid/text/TextUtils;.isEmpty:(Ljava/lang/String;)Z",
+  "position" : 
+  {
+    "line" : 11
+  }
+}
+{
   "method" : "Landroid/util/Log;.<init>:()V",
   "position" : 
   {
@@ -870,14 +876,14 @@
   "method" : "Lcom/instagram/common/analytics/intf/AnalyticsEvent;.<init>:()V",
   "position" : 
   {
-    "line" : 11
+    "line" : 9
   }
 }
 {
   "method" : "Lcom/instagram/common/analytics/intf/AnalyticsEvent;.obtain:(Ljava/lang/String;)Lcom/instagram/common/analytics/intf/AnalyticsEvent;",
   "position" : 
   {
-    "line" : 14
+    "line" : 12
   }
 }
 {
@@ -924,10 +930,6 @@
       ]
     },
     {
-      "always_features" : 
-      [
-        "via-obscure"
-      ],
       "call_position" : 
       {
         "end" : 57,
@@ -967,28 +969,6 @@
     {
       "call_position" : 
       {
-        "end" : 84,
-        "line" : 38,
-        "path" : "UrlHandlerActivity.java",
-        "start" : 82
-      },
-      "callee" : "Lcom/instagram/common/analytics/intf/AnalyticsEvent;.addExtra:(Ljava/lang/String;Ljava/lang/String;)Lcom/instagram/common/analytics/intf/AnalyticsEvent;",
-      "callee_port" : "Argument(2)",
-      "caller_port" : "Argument(1)",
-      "distance" : 1,
-      "kind" : "Logging",
-      "origins" : 
-      [
-        "Lcom/instagram/common/analytics/intf/AnalyticsEvent;.addExtra:(Ljava/lang/String;Ljava/lang/String;)Lcom/instagram/common/analytics/intf/AnalyticsEvent;"
-      ]
-    },
-    {
-      "always_features" : 
-      [
-        "via-obscure"
-      ],
-      "call_position" : 
-      {
         "end" : 41,
         "line" : 40,
         "path" : "UrlHandlerActivity.java",
@@ -999,13 +979,24 @@
       "caller_port" : "Argument(2)",
       "distance" : 1,
       "kind" : "Logging",
-      "local_features" : 
+      "origins" : 
+      [
+        "Lcom/instagram/common/analytics/intf/AnalyticsEvent;.addExtra:(Ljava/lang/String;Ljava/lang/String;)Lcom/instagram/common/analytics/intf/AnalyticsEvent;"
+      ]
+    },
+    {
+      "call_position" : 
       {
-        "always_features" : 
-        [
-          "via-obscure"
-        ]
+        "end" : 84,
+        "line" : 38,
+        "path" : "UrlHandlerActivity.java",
+        "start" : 82
       },
+      "callee" : "Lcom/instagram/common/analytics/intf/AnalyticsEvent;.addExtra:(Ljava/lang/String;Ljava/lang/String;)Lcom/instagram/common/analytics/intf/AnalyticsEvent;",
+      "callee_port" : "Argument(2)",
+      "caller_port" : "Argument(1)",
+      "distance" : 1,
+      "kind" : "Logging",
       "origins" : 
       [
         "Lcom/instagram/common/analytics/intf/AnalyticsEvent;.addExtra:(Ljava/lang/String;Ljava/lang/String;)Lcom/instagram/common/analytics/intf/AnalyticsEvent;"

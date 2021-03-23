@@ -7,15 +7,13 @@
 
 package com.instagram.common.analytics.intf;
 
-import javax.annotation.Nullable;
-
 public class AnalyticsEvent {
 
   public static AnalyticsEvent obtain(String name) {
     return new AnalyticsEvent();
   }
 
-  public AnalyticsEvent addExtra(String key, @Nullable String value) {
+  public AnalyticsEvent addExtra(String key, String value) {
     return this;
   }
 }

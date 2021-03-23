@@ -13,7 +13,6 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import com.facebook.content.SecureContextHelper;
-import javax.annotation.Nullable;
 
 public class IntentHandlerUtil {
 
@@ -74,7 +73,7 @@ public class IntentHandlerUtil {
     return handleUri(context, uri, null, null);
   }
 
-  public boolean handleUri(Context context, String uri, @Nullable Bundle extras) {
+  public boolean handleUri(Context context, String uri, Bundle extras) {
     return handleUri(context, uri, extras, null);
   }
 
@@ -85,8 +84,7 @@ public class IntentHandlerUtil {
    *
    * <p>Returns true if the uri has handled, false if not.
    */
-  private boolean handleUri(
-      Context context, String uri, @Nullable Bundle extras, @Nullable Intent destinationIntent) {
+  private boolean handleUri(Context context, String uri, Bundle extras, Intent destinationIntent) {
     if (destinationIntent == null) {
       destinationIntent = mUriIntentMapper.getIntentForUri(context, uri);
     }
@@ -137,7 +135,7 @@ public class IntentHandlerUtil {
    *
    * @return Returns true if the uri is a notification uri, false if not.
    */
-  private boolean isShortenedNotificationUri(@Nullable Uri intentUri) {
+  private boolean isShortenedNotificationUri(Uri intentUri) {
     return true;
   }
 

@@ -133,6 +133,13 @@
       "Ljava/lang/Object;.<init>:()V"
     ]
   },
+  "Landroid/text/TextUtils;.<init>:()V" : 
+  {
+    "static" : 
+    [
+      "Ljava/lang/Object;.<init>:()V"
+    ]
+  },
   "Landroid/util/Log;.<init>:()V" : 
   {
     "static" : 
