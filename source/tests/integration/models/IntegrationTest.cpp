@@ -299,9 +299,12 @@ Scope stubs() {
 struct IntegrationTest : public test::ContextGuard,
                          public testing::TestWithParam<std::string> {};
 
-std::vector<std::string> sexp_paths(
-    boost::filesystem::path root =
-        boost::filesystem::path(__FILE__).parent_path()) {
+boost::filesystem::path root_directory() {
+  return boost::filesystem::path(__FILE__).parent_path();
+}
+
+std::vector<std::string> sexp_paths() {
+  auto root = root_directory();
   std::vector<std::string> paths;
 
   for (const auto& directory :
@@ -310,7 +313,7 @@ std::vector<std::string> sexp_paths(
     if (path.extension() != ".sexp") {
       continue;
     }
-    paths.push_back(path.native());
+    paths.push_back(boost::filesystem::relative(path, root).native());
   }
 
   return paths;
@@ -321,6 +324,7 @@ std::vector<std::string> sexp_paths(
 TEST_P(IntegrationTest, ReturnsExpectedModel) {
   boost::filesystem::path path = GetParam();
   LOG(1, "Test case {}", path);
+  path = root_directory() / path;
 
   Scope scope(stubs());
   std::vector<const DexMethod*> methods;

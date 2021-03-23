@@ -107,5 +107,14 @@ target_link_libraries(mariana-trench-model-generator-tests PUBLIC
 add_dependencies(build-tests mariana-trench-model-generator-tests)
 gtest_discover_tests(mariana-trench-model-generator-tests)
 
+add_executable(mariana-trench-integration-test-models EXCLUDE_FROM_ALL
+               "source/tests/integration/models/IntegrationTest.cpp")
+target_link_libraries(mariana-trench-integration-test-models PUBLIC
+                      mariana-trench-test-library
+                      GTest::gmock
+                      GTest::gtest_main)
+add_dependencies(build-tests mariana-trench-integration-test-models)
+gtest_discover_tests(mariana-trench-integration-test-models)
+
 # CMake's `test` target does not build the tests, so we define our own `check` target.
 add_custom_target(check COMMAND ${CMAKE_CTEST_COMMAND} DEPENDS build-tests)
