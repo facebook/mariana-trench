@@ -27,17 +27,23 @@
 using namespace marianatrench;
 
 namespace {
+
 struct JsonModelGeneratorIntegrationTest
     : public test::ContextGuard,
       public testing::TestWithParam<std::string> {};
+
+boost::filesystem::path root_directory() {
+  return boost::filesystem::path(__FILE__).parent_path() / "code";
+}
 
 } // namespace
 
 namespace marianatrench {
 
 TEST_P(JsonModelGeneratorIntegrationTest, CompareModels) {
-  boost::filesystem::path directory = GetParam();
-  LOG(1, "Test case {}", directory);
+  boost::filesystem::path name = GetParam();
+  LOG(1, "Test case `{}`", name);
+  boost::filesystem::path directory = root_directory() / name;
 
   Context context;
 
@@ -61,7 +67,7 @@ TEST_P(JsonModelGeneratorIntegrationTest, CompareModels) {
 
   // Load test Java classes
   boost::filesystem::path dex_path = test::find_dex_path(directory);
-  LOG(3, "Dex path is {}", dex_path);
+  LOG(3, "Dex path is `{}`", dex_path);
 
   // Properly initialize context
   DexMetadata dexmetadata;
@@ -109,7 +115,6 @@ TEST_P(JsonModelGeneratorIntegrationTest, CompareModels) {
 MT_INSTANTIATE_TEST_SUITE_P(
     JsonModelGeneratorIntegration,
     JsonModelGeneratorIntegrationTest,
-    testing::ValuesIn(test::sub_directories(
-        boost::filesystem::path(__FILE__).parent_path() / "code")));
+    testing::ValuesIn(test::sub_directories(root_directory())));
 
 } // namespace marianatrench

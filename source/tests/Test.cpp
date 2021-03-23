@@ -159,7 +159,7 @@ std::vector<std::string> sub_directories(
 
   for (const auto& sub_directory :
        boost::filesystem::directory_iterator(directory)) {
-    directories.push_back(boost::filesystem::canonical(sub_directory).string());
+    directories.push_back(sub_directory.path().filename().string());
   }
 
   return directories;

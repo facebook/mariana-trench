@@ -322,9 +322,9 @@ std::vector<std::string> sexp_paths() {
 } // namespace
 
 TEST_P(IntegrationTest, ReturnsExpectedModel) {
-  boost::filesystem::path path = GetParam();
-  LOG(1, "Test case {}", path);
-  path = root_directory() / path;
+  boost::filesystem::path name = GetParam();
+  LOG(1, "Test case `{}`", name);
+  boost::filesystem::path path = root_directory() / name;
 
   Scope scope(stubs());
   std::vector<const DexMethod*> methods;

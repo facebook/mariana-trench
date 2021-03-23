@@ -31,6 +31,10 @@ namespace {
 struct IntegrationTest : public test::ContextGuard,
                          public testing::TestWithParam<std::string> {};
 
+boost::filesystem::path root_directory() {
+  return boost::filesystem::path(__FILE__).parent_path() / "code";
+}
+
 std::string load_expected_json(
     const boost::filesystem::path& directory,
     const std::string& filename) {
@@ -77,8 +81,9 @@ void compare_expected(
 namespace marianatrench {
 
 TEST_P(IntegrationTest, CompareFlows) {
-  boost::filesystem::path directory = GetParam();
-  LOG(1, "Test case {}", directory);
+  boost::filesystem::path name = GetParam();
+  LOG(1, "Test case `{}`", name);
+  boost::filesystem::path directory = root_directory() / name;
 
   std::string expected_output =
       load_expected_json(directory, "expected_output.json");
@@ -107,7 +112,7 @@ TEST_P(IntegrationTest, CompareFlows) {
 
   // Load test Java classes
   boost::filesystem::path dex_path = test::find_dex_path(directory);
-  LOG(3, "Dex path is {}", dex_path);
+  LOG(3, "Dex path is `{}`", dex_path);
 
   DexMetadata dexmetadata;
   dexmetadata.set_id("classes");
@@ -150,7 +155,6 @@ TEST_P(IntegrationTest, CompareFlows) {
 MT_INSTANTIATE_TEST_SUITE_P(
     Integration,
     IntegrationTest,
-    testing::ValuesIn(test::sub_directories(
-        boost::filesystem::path(__FILE__).parent_path() / "code")));
+    testing::ValuesIn(test::sub_directories(root_directory())));
 
 } // namespace marianatrench
