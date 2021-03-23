@@ -147,7 +147,7 @@ TEST_P(IntegrationTest, CompareFlows) {
       context.dependencies->to_json());
 }
 
-INSTANTIATE_TEST_CASE_P(
+MT_INSTANTIATE_TEST_SUITE_P(
     Integration,
     IntegrationTest,
     testing::ValuesIn(test::sub_directories(

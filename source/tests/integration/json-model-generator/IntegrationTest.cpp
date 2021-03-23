@@ -106,7 +106,7 @@ TEST_P(JsonModelGeneratorIntegrationTest, CompareModels) {
   EXPECT_TRUE(actual_output == expected_output);
 }
 
-INSTANTIATE_TEST_CASE_P(
+MT_INSTANTIATE_TEST_SUITE_P(
     JsonModelGeneratorIntegration,
     JsonModelGeneratorIntegrationTest,
     testing::ValuesIn(test::sub_directories(

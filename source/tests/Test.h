@@ -67,5 +67,11 @@ std::vector<std::string> sub_directories(
  */
 std::string normalize_json_lines(const std::string& input);
 
+#ifndef MARIANA_TRENCH_FACEBOOK_BUILD
+#define MT_INSTANTIATE_TEST_SUITE_P INSTANTIATE_TEST_SUITE_P
+#else
+#define MT_INSTANTIATE_TEST_SUITE_P INSTANTIATE_TEST_CASE_P
+#endif
+
 } // namespace test
 } // namespace marianatrench

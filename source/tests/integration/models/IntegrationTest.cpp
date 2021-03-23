@@ -436,7 +436,7 @@ TEST_P(IntegrationTest, ReturnsExpectedModel) {
   EXPECT_EQ(JsonValidation::to_styled_string(value), expected_output);
 }
 
-INSTANTIATE_TEST_CASE_P(
+MT_INSTANTIATE_TEST_SUITE_P(
     ModelIntegration,
     IntegrationTest,
     testing::ValuesIn(sexp_paths()));
