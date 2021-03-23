@@ -25,6 +25,8 @@ Below is a list of the required dependencies. Most of them can be installed with
 * JsonCpp >= 1.9.4
 * fmt >= 7.1.2
 * RE2
+* Java (Optional)
+* Android SDK (Optional)
 * Redex (master)
 
 ### macOS

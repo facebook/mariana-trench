@@ -116,5 +116,61 @@ target_link_libraries(mariana-trench-integration-test-models PUBLIC
 add_dependencies(build-tests mariana-trench-integration-test-models)
 gtest_discover_tests(mariana-trench-integration-test-models)
 
+find_package(Java)
+find_package(AndroidSDK)
+
+if (NOT Java_FOUND)
+  message(STATUS "Integration tests are disabled because Java could not be found.")
+elseif (NOT AndroidSDK_FOUND)
+  message(STATUS "Integration tests are disable because Android SDK could not be found.")
+else()
+  include(UseJava)
+
+  function(generate_integration_test_code directory name)
+    # Target that compiles the source to a .jar
+    set(CMAKE_JAVA_COMPILE_FLAGS -source 7 -target 7 -nowarn)
+    file(GLOB test_sources "${directory}/*.java")
+    file(GLOB android_sources "source/tests/integration/end-to-end/android_classes/*.java")
+    file(GLOB library_sources "source/tests/integration/end-to-end/library_classes/*.java")
+    add_jar(java-class-${name}
+            SOURCES ${test_sources} ${android_sources} ${library_sources})
+    set_property(TARGET java-class-${name} PROPERTY EXCLUDE_FROM_ALL TRUE)
+
+    # Target that compiles the .jar to a .dex
+    add_custom_command(OUTPUT java-dex-${name}.dex
+                       COMMAND
+                         ${ANDROID_DX}
+                         --core-library
+                         --dex
+                         --output=java-dex-${name}.dex
+                         $<TARGET_PROPERTY:java-class-${name},JAR_FILE>
+                       DEPENDS java-class-${name})
+    add_custom_target(java-dex-${name} DEPENDS java-dex-${name}.dex)
+    set_property(TARGET java-dex-${name} PROPERTY EXCLUDE_FROM_ALL TRUE)
+  endfunction()
+
+  function(generate_integration_test directory)
+    add_executable(mariana-trench-integration-test-${directory} EXCLUDE_FROM_ALL
+                   "source/tests/integration/${directory}/IntegrationTest.cpp")
+    target_link_libraries(mariana-trench-integration-test-${directory} PUBLIC
+                          mariana-trench-test-library
+                          GTest::gmock
+                          GTest::gtest_main)
+    add_dependencies(build-tests mariana-trench-integration-test-${directory})
+    set(test_properties "")
+    file(GLOB codes "source/tests/integration/${directory}/code/*")
+    foreach(path ${codes})
+      get_filename_component(name "${path}" NAME)
+      generate_integration_test_code("${path}" "${directory}-${name}")
+      add_dependencies(mariana-trench-integration-test-${directory} "java-dex-${directory}-${name}")
+      list(APPEND test_properties ENVIRONMENT "${name}=java-dex-${directory}-${name}.dex")
+    endforeach()
+    gtest_discover_tests(mariana-trench-integration-test-${directory} PROPERTIES "${test_properties}")
+  endfunction()
+
+  generate_integration_test(end-to-end)
+  generate_integration_test(json-model-generator)
+endif()
+
 # CMake's `test` target does not build the tests, so we define our own `check` target.
 add_custom_target(check COMMAND ${CMAKE_CTEST_COMMAND} DEPENDS build-tests)
