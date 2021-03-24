@@ -12,8 +12,8 @@ import subprocess
 from typing import Any, Union, Dict, Tuple, Iterable, NamedTuple
 
 """
-Set of functions that can be used in bento to explore models.
-Usage: bento console -i --file explore_models.py
+Set of functions that can be used to explore models.
+Usage: python3 -i explore_models.py
 """
 
 Model = Dict[str, Any]
