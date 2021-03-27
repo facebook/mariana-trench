@@ -13,6 +13,7 @@
 #include <mariana-trench/CallGraph.h>
 #include <mariana-trench/ClassProperties.h>
 #include <mariana-trench/Features.h>
+#include <mariana-trench/FulfilledPartialKindState.h>
 #include <mariana-trench/Log.h>
 #include <mariana-trench/Methods.h>
 #include <mariana-trench/MultiSourceMultiSinkRule.h>
@@ -27,7 +28,7 @@ namespace marianatrench {
 namespace {
 
 using FulfilledPartialKindMap =
-    std::unordered_map<const PartialKind*, FeatureMayAlwaysSet>;
+    std::unordered_map<const PartialKind*, FulfilledPartialKindState>;
 
 constexpr Register k_result_register = std::numeric_limits<Register>::max();
 
@@ -397,13 +398,14 @@ void check_multi_source_multi_sink_rules(
     // sure to include the features from the counterpart flow.
     auto issue_sink =
         sink.with_kind(context->kinds.get_triggered(partial_sink));
-    issue_sink.add_inferred_features(counterpart->second);
+    issue_sink.add_inferred_features(counterpart->second.features());
     issue_sink.add_inferred_features(features);
     create_issue(context, source, issue_sink, rule, position, extra_features);
     // Issue was found. No need to track the counterpart nor itself.
     fulfilled_partial_sinks.erase(counterpart->first);
   } else {
-    fulfilled_partial_sinks.emplace(partial_sink, features);
+    fulfilled_partial_sinks.emplace(
+        partial_sink, FulfilledPartialKindState(features));
     LOG_OR_DUMP(
         context,
         4,
@@ -417,7 +419,7 @@ const TriggeredPartialKind* MT_NULLABLE transform_partial_sinks(
     MethodContext* context,
     const FulfilledPartialKindMap& fulfilled_partial_sinks,
     const PartialKind* sink_kind) {
-  for (const auto& [fulfilled_kind, _features] : fulfilled_partial_sinks) {
+  for (const auto& [fulfilled_kind, _state] : fulfilled_partial_sinks) {
     if (fulfilled_kind->is_counterpart(sink_kind)) {
       // The counterpart sink was triggered when a source was found to flow into
       // it. Make this a triggered sink. This will be propagated.
@@ -438,9 +440,9 @@ void add_fulfilled_sink_features(
   // Called only after transform_partial_sinks above creates a `new_frame_set`
   // containing the triggered kind, so this must be a TriggeredPartialKind.
   mt_assert(new_kind != nullptr);
-  for (const auto& [kind, features] : fulfilled_partial_sinks) {
+  for (const auto& [kind, state] : fulfilled_partial_sinks) {
     if (kind->is_counterpart(new_kind->partial_kind())) {
-      new_frame_set.add_inferred_features(features);
+      new_frame_set.add_inferred_features(state.features());
       return;
     }
   }
