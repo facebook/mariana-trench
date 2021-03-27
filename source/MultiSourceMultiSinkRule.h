@@ -17,12 +17,12 @@
 #include <mariana-trench/Kind.h>
 #include <mariana-trench/PartialKind.h>
 #include <mariana-trench/Rule.h>
-#include <mariana-trench/TriggeredPartialKind.h>
 
 namespace marianatrench {
 
 /**
- * Rules where multiple sources flow into a sink
+ * Rules where multiple sources flow into a sink.
+ * Supports exactly 2 sources(/sinks).
  * e.g. UserControlled + Implicit Intent -> Launch Intent
  */
 class MultiSourceMultiSinkRule final : public Rule {
@@ -55,9 +55,7 @@ class MultiSourceMultiSinkRule final : public Rule {
     return multi_source_kinds_;
   }
 
-  const PartialKindSet& partial_sink_kinds() const {
-    return partial_sink_kinds_;
-  }
+  PartialKindSet partial_sink_kinds(const std::string& label) const;
 
   bool uses(const Kind*) const override;
 

@@ -12,6 +12,7 @@
 #include <boost/iterator/transform_iterator.hpp>
 
 #include <mariana-trench/Kind.h>
+#include <mariana-trench/MultiSourceMultiSinkRule.h>
 #include <mariana-trench/NamedKind.h>
 #include <mariana-trench/PartialKind.h>
 #include <mariana-trench/TriggeredPartialKind.h>
@@ -24,12 +25,12 @@ namespace marianatrench {
  */
 class Kinds final {
  private:
-  struct StringPairHash {
-    std::size_t operator()(
-        const std::pair<std::string, std::string>& string_tuple) const {
+  template <class T1, class T2>
+  struct PairHash {
+    std::size_t operator()(const std::pair<T1, T2>& tuple) const {
       std::size_t seed = 0;
-      boost::hash_combine(seed, string_tuple.first);
-      boost::hash_combine(seed, string_tuple.second);
+      boost::hash_combine(seed, tuple.first);
+      boost::hash_combine(seed, tuple.second);
       return seed;
     }
   };
@@ -49,7 +50,8 @@ class Kinds final {
       const std::string& label) const;
 
   const TriggeredPartialKind* get_triggered(
-      const PartialKind* partial_kind) const;
+      const PartialKind* partial_kind,
+      const MultiSourceMultiSinkRule* rule) const;
 
   std::vector<const Kind*> kinds() const;
 
@@ -60,9 +62,12 @@ class Kinds final {
   UniquePointerFactory<
       std::pair<std::string, std::string>,
       PartialKind,
-      StringPairHash>
+      PairHash<std::string, std::string>>
       partial_;
-  UniquePointerFactory<const PartialKind*, TriggeredPartialKind>
+  UniquePointerFactory<
+      std::pair<const PartialKind*, const MultiSourceMultiSinkRule*>,
+      TriggeredPartialKind,
+      PairHash<const PartialKind*, const MultiSourceMultiSinkRule*>>
       triggered_partial_;
 };
 

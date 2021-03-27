@@ -71,18 +71,43 @@ void Rules::add(Context& context, std::unique_ptr<Rule> rule) {
   } else if (
       const auto* multi_source_rule =
           rule_pointer->as<MultiSourceMultiSinkRule>()) {
+    // Consider the rule:
+    //   Code: 1000
+    //   Sources: { lblA: [SourceA], lblB: [SourceB] }
+    //   Sinks: [ Partial(SinkX, lblA), Partial(SinkX, lblB) ]
+    //
+    // A flow like SourceA -> Partial(SinkX, lblA) fulfills half the rule
+    // (tracked in `source_to_partial_sink_to_rules_`).
+    //
+    // When a half-fulfilled rule is seen, the analysis creates a triggered
+    // partial sink:
+    //   B = Triggered(SinkX, lblB, rule: 1000)
+    //
+    // The rule is completely fulfilled when "SourceB -> B" is detected,
+    // which is what `source_to_sink_to_rules_` tracks.
+    //
+    // Tracking the rule in the triggered sink is necessary because there can
+    // be another rule with the same sinks but different sources:
+    //   Code: 2000
+    //   Sources: { lblA: [SourceC], lblB: [SourceB] }
+    //   Sinks: [ Partial(SinkX, lblA), Partial(SinkX, lblB) ]
+    //
+    // Without the rule, we cannot tell which rule is satisfied:
+    //   SourceB -> Triggered(SinkX, lblB)  can match either rule.
+    // With the rule, it is clear that only the first rule applies:
+    //   SourceB -> Triggered(SinkX, lblB, rule: 1000)
+
     for (const auto& [source_label, source_kinds] :
          multi_source_rule->multi_source_kinds()) {
       for (const auto* source_kind : source_kinds) {
-        for (const auto* sink_kind : multi_source_rule->partial_sink_kinds()) {
-          // Create Source -> Sink(label, kind) only if they share the label.
-          if (sink_kind->label() == source_label) {
-            const auto* triggered = context.kinds->get_triggered(sink_kind);
-            source_to_sink_to_rules_[source_kind][triggered].push_back(
-                rule_pointer);
-            source_to_partial_sink_to_rules_[source_kind][sink_kind].push_back(
-                multi_source_rule);
-          }
+        for (const auto* sink_kind :
+             multi_source_rule->partial_sink_kinds(source_label)) {
+          const auto* triggered =
+              context.kinds->get_triggered(sink_kind, multi_source_rule);
+          source_to_partial_sink_to_rules_[source_kind][sink_kind].push_back(
+              multi_source_rule);
+          source_to_sink_to_rules_[source_kind][triggered].push_back(
+              multi_source_rule);
         }
       }
     }

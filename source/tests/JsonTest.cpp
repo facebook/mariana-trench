@@ -515,10 +515,14 @@ TEST_F(JsonTest, Rule) {
   auto rule_with_combined_sources = rule->as<MultiSourceMultiSinkRule>();
   EXPECT_NE(rule_with_combined_sources, nullptr);
   EXPECT_THAT(
-      rule_with_combined_sources->partial_sink_kinds(),
+      rule_with_combined_sources->partial_sink_kinds("labelA"),
       testing::UnorderedElementsAre(
-          context.kinds->get_partial("rule_sink", "labelA"),
+          context.kinds->get_partial("rule_sink", "labelA")));
+  EXPECT_THAT(
+      rule_with_combined_sources->partial_sink_kinds("labelB"),
+      testing::UnorderedElementsAre(
           context.kinds->get_partial("rule_sink", "labelB")));
+  EXPECT_TRUE(rule_with_combined_sources->partial_sink_kinds("labelC").empty());
   const auto& multi_sources = rule_with_combined_sources->multi_source_kinds();
   EXPECT_THAT(
       multi_sources.find("labelA")->second,

@@ -14,6 +14,17 @@
 
 namespace marianatrench {
 
+MultiSourceMultiSinkRule::PartialKindSet
+MultiSourceMultiSinkRule::partial_sink_kinds(const std::string& label) const {
+  PartialKindSet result;
+  for (const auto* sink_kind : partial_sink_kinds_) {
+    if (sink_kind->label() == label) {
+      result.insert(sink_kind);
+    }
+  }
+  return result;
+}
+
 bool MultiSourceMultiSinkRule::uses(const Kind* kind) const {
   for (const auto& [_label, kinds] : multi_source_kinds_) {
     if (kinds.count(kind) != 0) {

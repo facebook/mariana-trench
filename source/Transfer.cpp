@@ -396,8 +396,8 @@ void check_multi_source_multi_sink_rules(
     // If both partial sinks for the callsite have been fulfilled, the rule
     // is satisfied. Make this a triggered sink and create the issue. Make
     // sure to include the features from the counterpart flow.
-    auto issue_sink =
-        sink.with_kind(context->kinds.get_triggered(partial_sink));
+    auto issue_sink = sink.with_kind(
+        context->kinds.get_triggered(partial_sink, counterpart->second.rule()));
     issue_sink.add_inferred_features(counterpart->second.features());
     issue_sink.add_inferred_features(features);
     create_issue(context, source, issue_sink, rule, position, extra_features);
@@ -405,7 +405,7 @@ void check_multi_source_multi_sink_rules(
     fulfilled_partial_sinks.erase(counterpart->first);
   } else {
     fulfilled_partial_sinks.emplace(
-        partial_sink, FulfilledPartialKindState(features));
+        partial_sink, FulfilledPartialKindState(features, rule));
     LOG_OR_DUMP(
         context,
         4,
@@ -419,11 +419,11 @@ const TriggeredPartialKind* MT_NULLABLE transform_partial_sinks(
     MethodContext* context,
     const FulfilledPartialKindMap& fulfilled_partial_sinks,
     const PartialKind* sink_kind) {
-  for (const auto& [fulfilled_kind, _state] : fulfilled_partial_sinks) {
+  for (const auto& [fulfilled_kind, state] : fulfilled_partial_sinks) {
     if (fulfilled_kind->is_counterpart(sink_kind)) {
       // The counterpart sink was triggered when a source was found to flow into
       // it. Make this a triggered sink. This will be propagated.
-      return context->kinds.get_triggered(sink_kind);
+      return context->kinds.get_triggered(sink_kind, state.rule());
     }
   }
 

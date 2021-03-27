@@ -12,7 +12,7 @@ namespace marianatrench {
 
 void TriggeredPartialKind::show(std::ostream& out) const {
   out << "TriggeredPartial:" << partial_kind_->name() << ":"
-      << partial_kind_->label();
+      << partial_kind_->label() << ":" << rule_->code();
 }
 
 Json::Value TriggeredPartialKind::to_json() const {

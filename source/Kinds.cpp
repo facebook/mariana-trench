@@ -24,8 +24,10 @@ const PartialKind* Kinds::get_partial(
 }
 
 const TriggeredPartialKind* Kinds::get_triggered(
-    const PartialKind* partial) const {
-  return triggered_partial_.create(partial);
+    const PartialKind* partial,
+    const MultiSourceMultiSinkRule* rule) const {
+  return triggered_partial_.create(
+      std::make_pair(partial, rule), partial, rule);
 }
 
 std::vector<const Kind*> Kinds::kinds() const {
