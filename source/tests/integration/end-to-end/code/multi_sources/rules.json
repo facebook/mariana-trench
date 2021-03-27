@@ -30,5 +30,21 @@
     "partial_sinks": [
       "TestSinkSingleArg"
     ]
+  },
+  {
+    "name": "MultiSourceRule_ReuseSink",
+    "code": 3,
+    "description": "Test multi source rule with partial sink re-use",
+    "multi_sources": {
+      "a": [
+        "TestSourceC"
+      ],
+      "b": [
+        "TestSourceB"
+      ]
+    },
+    "partial_sinks": [
+      "TestSink"
+    ]
   }
 ]
