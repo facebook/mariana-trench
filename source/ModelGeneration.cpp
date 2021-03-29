@@ -19,6 +19,7 @@
 #include <mariana-trench/ModelGeneration.h>
 #include <mariana-trench/Options.h>
 #include <mariana-trench/Timer.h>
+#include <mariana-trench/model-generator/BroadcastReceiverGenerator.h>
 #include <mariana-trench/model-generator/JsonModelGenerator.h>
 #include <mariana-trench/model-generator/ModelGeneratorConfiguration.h>
 #include <mariana-trench/model-generator/NoJoinOverridesGenerator.h>
@@ -36,6 +37,8 @@ namespace {
 std::map<std::string, std::unique_ptr<ModelGenerator>> make_model_generators(
     Context& context) {
   std::vector<std::unique_ptr<ModelGenerator>> builtin_generators;
+  builtin_generators.push_back(
+      std::make_unique<BroadcastReceiverGenerator>(context));
   builtin_generators.push_back(
       std::make_unique<NoJoinOverridesGenerator>(context));
   builtin_generators.push_back(
