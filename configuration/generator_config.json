@@ -1,22 +1,26 @@
 [
   {
-    "kind": "cpp",
     "name": "ActivitySourceGenerator"
   },
   {
-    "kind": "cpp",
+    "name": "AndroidIntentLaunchSinkGenerator"
+  },
+  {
     "name": "CodeExecutionSinkGenerator"
   },
   {
-    "kind": "cpp",
     "name": "ContextFeature"
   },
   {
-    "kind": "cpp",
     "name": "DataCastFeatureGenerator"
   },
   {
-    "kind": "cpp",
+    "name": "ExplicitIntentFeatureGenerator"
+  },
+  {
     "name": "FileSinkGenerator"
+  },
+  {
+    "name": "ImplicitIntentSourceGenerator"
   }
 ]

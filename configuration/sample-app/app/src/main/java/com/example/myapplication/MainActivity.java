@@ -28,5 +28,11 @@ public class MainActivity extends AppCompatActivity {
             CodeExecuteUtil.execute(intent.getStringExtra("command"));
           }
         });
+
+    if (intent.getBooleanExtra("redirect", false)) {
+      Intent redirectIntent = new Intent();
+      redirectIntent.setData(intent.getData());
+      startActivity(redirectIntent);
+    }
   }
 }

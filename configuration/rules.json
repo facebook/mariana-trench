@@ -23,5 +23,22 @@
       "FileResolver",
       "InputStream"
     ]
+  },
+  {
+    "name": "User input flows into implicitly launched intent",
+    "code": 3,
+    "description": "Values from user-controlled source may eventually flow into an implicit intent and intent launcher",
+    "multi_sources": {
+      "a": [
+        "IntentCreation"
+      ],
+      "b": [
+        "FragmentUserInput",
+        "ActivityUserInput"
+      ]
+    },
+    "partial_sinks": [
+      "LaunchingComponent"
+    ]
   }
 ]

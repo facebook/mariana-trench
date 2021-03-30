@@ -1,0 +1,99 @@
+{
+  "model_generators": [
+    {
+      "find": "methods",
+      "where": [
+        {
+          "constraint": "parent",
+          "inner": {
+            "constraint": "any_of",
+            "inners": [
+              {
+                "constraint": "name",
+                "pattern": "Landroid/content/Context;"
+              },
+              {
+                "constraint": "name",
+                "pattern": "Landroid/content/ContextWrapper;"
+              },
+              {
+                "constraint": "name",
+                "pattern": "Landroid/app/Activity;"
+              },
+              {
+                "constraint": "name",
+                "pattern": "Landroid/app/Fragment;"
+              },
+              {
+                "constraint": "name",
+                "pattern": "Landroid/app/FragmentActivity;"
+              },
+              {
+                "constraint": "name",
+                "pattern": "Landroidx/core/content/ContextCompat;"
+              },
+              {
+                "constraint": "name",
+                "pattern": "Landroidx/fragment/app/Fragment;"
+              },
+              {
+                "constraint": "name",
+                "pattern": "Landroidx/fragment/app/FragmentActivity;"
+              }
+            ]
+          }
+        },
+        {
+          "constraint": "any_of",
+          "inners": [
+            {
+              "constraint": "name",
+              "pattern": "start.*"
+            },
+            {
+              "constraint": "name",
+              "pattern": "launch.*"
+            },
+            {
+              "constraint": "name",
+              "pattern": "send.*"
+            },
+            {
+              "constraint": "name",
+              "pattern": "bind.*"
+            }
+          ]
+        }
+      ],
+      "model": {
+        "modes": [
+          "no-join-virtual-overrides",
+          "skip-analysis"
+        ],
+        "for_all_parameters": [
+          {
+            "variable": "x",
+            "where": [
+              {
+                "constraint": "name",
+                "pattern": "Landroid/content/Intent;"
+              }
+            ],
+            "sinks": [
+              {
+                "kind": "LaunchingComponent",
+                "partial_label": "a",
+                "port": "Argument(x)"
+              },
+              {
+                "kind": "LaunchingComponent",
+                "partial_label": "b",
+                "port": "Argument(x)"
+              }
+            ]
+          }
+        ]
+      }
+    }
+  ]
+}
