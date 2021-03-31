@@ -23,9 +23,8 @@ const PartialKind* PartialKind::from_json(
   return context.kinds->get_partial(name, label);
 }
 
-Json::Value PartialKind::to_json() const {
-  auto value = "Partial:" + name_ + ":" + label_;
-  return Json::Value(value);
+std::string PartialKind::to_trace_string() const {
+  return "Partial:" + name_ + ":" + label_;
 }
 
 bool PartialKind::is_counterpart(const PartialKind* other) const {

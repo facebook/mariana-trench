@@ -44,7 +44,7 @@ class PartialKind final : public Kind {
       const Json::Value& value,
       const std::string& partial_label,
       Context& context);
-  Json::Value to_json() const override;
+  std::string to_trace_string() const override;
 
   const auto& name() const {
     return name_;

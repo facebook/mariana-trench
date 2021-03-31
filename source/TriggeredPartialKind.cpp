@@ -16,10 +16,19 @@ void TriggeredPartialKind::show(std::ostream& out) const {
 }
 
 Json::Value TriggeredPartialKind::to_json() const {
+  auto value = Kind::to_json();
+
+  // Include the rule for debugging.
+  value["triggered_rule"] = rule_->code();
+
+  return value;
+}
+
+std::string TriggeredPartialKind::to_trace_string() const {
   // This value must be the same as the partial kind's value for traces from a
   // frame with a triggered kind to connect to its callee frame with a partial
   // non-triggered kind. This string equality property is used by the UI.
-  return partial_kind_->to_json();
+  return partial_kind_->to_trace_string();
 }
 
 } // namespace marianatrench

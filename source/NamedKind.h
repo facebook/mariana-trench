@@ -33,7 +33,7 @@ class NamedKind final : public Kind {
   void show(std::ostream&) const override;
 
   static const NamedKind* from_json(const Json::Value& value, Context& context);
-  Json::Value to_json() const override;
+  std::string to_trace_string() const override;
 
   const auto& name() const {
     return name_;

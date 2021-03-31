@@ -22,8 +22,8 @@ const NamedKind* NamedKind::from_json(
   return context.kinds->get(name);
 }
 
-Json::Value NamedKind::to_json() const {
-  return Json::Value(name_);
+std::string NamedKind::to_trace_string() const {
+  return name_;
 }
 
 } // namespace marianatrench

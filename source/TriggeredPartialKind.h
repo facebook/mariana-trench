@@ -46,6 +46,8 @@ class TriggeredPartialKind final : public Kind {
 
   Json::Value to_json() const override;
 
+  std::string to_trace_string() const override;
+
   const PartialKind* partial_kind() const {
     return partial_kind_;
   }

@@ -42,7 +42,13 @@ class Kind {
 
   /* For the equivalent from_json, use the appropriate method for the specific
    * kind. */
-  virtual Json::Value to_json() const = 0;
+  virtual Json::Value to_json() const;
+
+  /**
+   * String value used for connecting traces of the same kind.
+   * Each instance of each kind should have a unique string representation.
+   */
+  virtual std::string to_trace_string() const = 0;
 
  private:
   friend std::ostream& operator<<(std::ostream& out, const Kind& kind);

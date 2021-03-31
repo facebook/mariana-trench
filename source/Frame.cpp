@@ -274,11 +274,10 @@ Json::Value Frame::to_json() const {
   auto value = Json::Value(Json::objectValue);
 
   mt_assert(kind_ != nullptr);
-  value["kind"] = kind_->to_json();
-  if (const auto* triggered = kind_->as<TriggeredPartialKind>()) {
-    // Triggered "kind"s should have the same "kind" as the underlying partial
-    // kind for traces to match, but include the rule separately for debugging.
-    value["triggered_rule"] = triggered->rule()->code();
+  auto kind_json = kind_->to_json();
+  mt_assert(kind_json.isObject());
+  for (const auto& member : kind_json.getMemberNames()) {
+    value[member] = kind_json[member];
   }
 
   value["callee_port"] = callee_port_.to_json();
