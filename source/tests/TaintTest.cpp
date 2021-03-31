@@ -755,6 +755,7 @@ TEST_F(TaintTest, TransformKind) {
 
   auto* test_source = context.kinds->get("TestSource");
   auto* transformed_test_source = context.kinds->get("TransformedTestSource");
+  auto* transformed_test_source2 = context.kinds->get("TransformedTestSource2");
 
   auto taint = Taint{
       Frame(
@@ -797,16 +798,18 @@ TEST_F(TaintTest, TransformKind) {
 
   // This works the same way as filter.
   auto empty_taint = taint.transform_map_kind(
-      [](const auto* /* unused kind */) { return nullptr; }, [](FrameSet&) {});
+      [](const auto* /* unused kind */) { return std::vector<const Kind*>(); },
+      [](FrameSet&) {});
   EXPECT_EQ(empty_taint, Taint::bottom());
 
   // This actually performs a transformation.
   auto map_test_source_taint = taint.transform_map_kind(
-      [test_source, transformed_test_source](const auto* kind) -> const Kind* {
+      [test_source,
+       transformed_test_source](const auto* kind) -> std::vector<const Kind*> {
         if (kind == test_source) {
-          return transformed_test_source;
+          return {transformed_test_source};
         }
-        return kind;
+        return {kind};
       },
       [](FrameSet&) {});
   EXPECT_EQ(
@@ -854,11 +857,11 @@ TEST_F(TaintTest, TransformKind) {
 
   // Another transformation. Covers mapping transformed frames.
   map_test_source_taint = taint.transform_map_kind(
-      [test_source, transformed_test_source](const auto* kind) -> const Kind* {
+      [test_source, transformed_test_source](const auto* kind) {
         if (kind == test_source) {
-          return transformed_test_source;
+          return std::vector<const Kind*>{transformed_test_source};
         }
-        return kind;
+        return std::vector<const Kind*>{kind};
       },
       [feature_one](FrameSet& frames) {
         frames.add_inferred_features(FeatureMayAlwaysSet{feature_one});
@@ -902,6 +905,60 @@ TEST_F(TaintTest, TransformKind) {
               /* locally_inferred_features */ {},
               /* user_features */
               FeatureSet{user_feature_one, user_feature_two},
+              /* via_type_of_ports */ {},
+              /* local_positions */ {}),
+      }));
+
+  // Tests one -> many transformations (with features).
+  map_test_source_taint = taint.transform_map_kind(
+      [test_source, transformed_test_source, transformed_test_source2](
+          const auto* kind) {
+        if (kind == test_source) {
+          return std::vector<const Kind*>{
+              test_source, transformed_test_source, transformed_test_source2};
+        }
+        return std::vector<const Kind*>{};
+      },
+      [feature_one](FrameSet& frames) {
+        frames.add_inferred_features(FeatureMayAlwaysSet{feature_one});
+      });
+  EXPECT_EQ(
+      map_test_source_taint,
+      (Taint{
+          Frame(
+              /* kind */ test_source,
+              /* callee_port */ AccessPath(Root(Root::Kind::Leaf)),
+              /* callee */ nullptr,
+              /* call_position */ nullptr,
+              /* distance */ 0,
+              /* origins */ MethodSet{one},
+              /* inferred_features */ {},
+              /* locally_inferred_features */ FeatureMayAlwaysSet{feature_one},
+              /* user_features */ FeatureSet{user_feature_one},
+              /* via_type_of_ports */ {},
+              /* local_positions */ {}),
+          Frame(
+              /* kind */ transformed_test_source,
+              /* callee_port */ AccessPath(Root(Root::Kind::Leaf)),
+              /* callee */ nullptr,
+              /* call_position */ nullptr,
+              /* distance */ 0,
+              /* origins */ MethodSet{one},
+              /* inferred_features */ {},
+              /* locally_inferred_features */ FeatureMayAlwaysSet{feature_one},
+              /* user_features */ FeatureSet{user_feature_one},
+              /* via_type_of_ports */ {},
+              /* local_positions */ {}),
+          Frame(
+              /* kind */ transformed_test_source2,
+              /* callee_port */ AccessPath(Root(Root::Kind::Leaf)),
+              /* callee */ nullptr,
+              /* call_position */ nullptr,
+              /* distance */ 0,
+              /* origins */ MethodSet{one},
+              /* inferred_features */ {},
+              /* locally_inferred_features */ FeatureMayAlwaysSet{feature_one},
+              /* user_features */ FeatureSet{user_feature_one},
               /* via_type_of_ports */ {},
               /* local_positions */ {}),
       }));

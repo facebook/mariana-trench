@@ -7,47 +7,86 @@
 
 #pragma once
 
+#include <unordered_map>
+
 #include <mariana-trench/FeatureMayAlwaysSet.h>
+#include <mariana-trench/MethodContext.h>
 #include <mariana-trench/MultiSourceMultiSinkRule.h>
+#include <mariana-trench/TriggeredPartialKind.h>
 
 namespace marianatrench {
 
 /**
  * Represents the state of a fulfilled partial kind (sink).
  * Used by `Transfer` to track the state of partially-fulfilled
- * `MultiSourceMultiSink` rules. The actual partial kind this applies to
- * is not represented in this class.
+ * `MultiSourceMultiSink` rules.
  */
 class FulfilledPartialKindState final {
+ private:
+  using Value = FeatureMayAlwaysSet;
+  using RuleMap = std::unordered_map<const MultiSourceMultiSinkRule*, Value>;
+
  public:
-  explicit FulfilledPartialKindState(
-      const FeatureMayAlwaysSet& features,
-      const MultiSourceMultiSinkRule* rule)
-      : features_(features), rule_(rule) {}
+  FulfilledPartialKindState() = default;
   FulfilledPartialKindState(const FulfilledPartialKindState&) = delete;
-  FulfilledPartialKindState(FulfilledPartialKindState&&) = default;
+  FulfilledPartialKindState(FulfilledPartialKindState&&) = delete;
   FulfilledPartialKindState& operator=(const FulfilledPartialKindState&) =
       delete;
   FulfilledPartialKindState& operator=(FulfilledPartialKindState&&) = delete;
 
   /**
-   * Features belonging to the flow in which the partial kind (sink) was
-   * fulfilled. Includes features from both the source and sink flows.
+   * Called when sink `kind` is fulfilled under `rule`, i.e. has a matching
+   * source flow into the sink as defined by the rule.
+   *
+   * `features` is the combined set of features from the source and sink flow
+   * of the fulfilled rule.
+   * `context` MethodContext of the method where the kind was fulfilled.
+   * `sink` FrameSet of the sink portion of the fulfilled flow.
+   *
+   * Returns `std::nullopt` if rule is only half fulfilled, or a FrameSet
+   * representing the sink flow of the issue if both parts of the rule is
+   * fulfilled.
    */
-  const FeatureMayAlwaysSet& features() const {
-    return features_;
-  }
+  std::optional<FrameSet> fulfill_kind(
+      const PartialKind* kind,
+      const MultiSourceMultiSinkRule* rule,
+      const FeatureMayAlwaysSet& features,
+      MethodContext* context,
+      const FrameSet& sink);
 
   /**
-   * The rule which caused the partial kind to be fulfilled.
+   * Given an `unfufilled_kind`, check if its counterpart flow has been
+   * fulfilled under the given rule. Returns the `PartialKind` of the fulfilled
+   * counterpart, or nullptr if the counterpart was not fulfilled.
    */
-  const MultiSourceMultiSinkRule* rule() const {
-    return rule_;
-  }
+  const PartialKind* MT_NULLABLE get_fulfilled_counterpart(
+      const PartialKind* unfulfilled_kind,
+      const MultiSourceMultiSinkRule* rule) const;
+
+  /**
+   * Returns features of the flow where `kind` was fulfilled under `rule`.
+   */
+  FeatureMayAlwaysSet get_features(
+      const PartialKind* kind,
+      const MultiSourceMultiSinkRule* rule) const;
+
+  /**
+   * Given an `unfulfilled_kind`, create its `TriggeredPartialKind`s from any
+   * fulfilled counterparts. There can be more than one resulting triggered
+   * kind because it may have fulfilled counterparts in more than one rule.
+   */
+  std::vector<const Kind*> make_triggered_counterparts(
+      MethodContext* context,
+      const PartialKind* unfulfilled_kind) const;
 
  private:
-  FeatureMayAlwaysSet features_;
-  const MultiSourceMultiSinkRule* rule_;
+  void add_fulfilled_kind(
+      const PartialKind* kind,
+      const MultiSourceMultiSinkRule* rule,
+      const FeatureMayAlwaysSet& features);
+  void erase(const PartialKind* kind, const MultiSourceMultiSinkRule* rule);
+
+  std::unordered_map<const PartialKind*, RuleMap> map_;
 };
 
 } // namespace marianatrench

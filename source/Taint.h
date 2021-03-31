@@ -167,12 +167,13 @@ class Taint final : public sparta::AbstractDomain<Taint> {
 
   /**
    * Transforms kinds in the taint according to the function in the first arg.
-   * A nullptr will cause frames for the input kind to be dropped.
-   * If a transformation occurs, a map operation in the second arg will be
-   * called on the resulting FrameSet (contains the transformed kind).
+   * Returning an empty vec will cause frames for the input kind to be dropped.
+   * If a transformation occurs (returns more than a vector containing just the
+   * input kind), a map operation in the second arg will be called on the
+   * resulting FrameSets (of all returned kinds).
    */
   Taint transform_map_kind(
-      const std::function<const Kind * MT_NULLABLE(const Kind*)>&,
+      const std::function<std::vector<const Kind*>(const Kind*)>&,
       const std::function<void(FrameSet&)>&) const;
 
   static Taint from_json(const Json::Value& value, Context& context);
