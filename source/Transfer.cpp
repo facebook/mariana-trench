@@ -409,9 +409,10 @@ void check_multi_source_multi_sink_rules(
     LOG_OR_DUMP(
         context,
         4,
-        "Found source kind {} flowing into partial sink: {}",
+        "Found source kind: {} flowing into partial sink: {}, rule code: {}",
         *source.kind(),
-        *partial_sink);
+        *partial_sink,
+        rule->code());
   }
 }
 

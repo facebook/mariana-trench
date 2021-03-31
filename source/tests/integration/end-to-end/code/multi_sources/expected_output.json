@@ -206,7 +206,8 @@
           "origins" : 
           [
             "Lcom/facebook/marianatrench/integrationtests/MultiSourcesSingleArg;.sink:(Lcom/facebook/marianatrench/integrationtests/MockObjectWithThisPropagation;)V"
-          ]
+          ],
+          "triggered_rule" : 2
         }
       ],
       "sources" : 
@@ -293,7 +294,8 @@
           "origins" : 
           [
             "Lcom/facebook/marianatrench/integrationtests/MultiSources;.sink:(Ljava/lang/Object;Ljava/lang/Object;)V"
-          ]
+          ],
+          "triggered_rule" : 1
         }
       ],
       "sources" : 
@@ -369,7 +371,8 @@
           "origins" : 
           [
             "Lcom/facebook/marianatrench/integrationtests/MultiSources;.sink:(Ljava/lang/Object;Ljava/lang/Object;)V"
-          ]
+          ],
+          "triggered_rule" : 1
         }
       ],
       "sources" : 
@@ -445,7 +448,8 @@
           "origins" : 
           [
             "Lcom/facebook/marianatrench/integrationtests/MultiSources;.sink:(Ljava/lang/Object;Ljava/lang/Object;)V"
-          ]
+          ],
+          "triggered_rule" : 1
         }
       ],
       "sources" : 
@@ -1142,7 +1146,8 @@
       "origins" : 
       [
         "Lcom/facebook/marianatrench/integrationtests/MultiSources;.sink:(Ljava/lang/Object;Ljava/lang/Object;)V"
-      ]
+      ],
+      "triggered_rule" : 1
     }
   ]
 }
@@ -1185,7 +1190,8 @@
       "origins" : 
       [
         "Lcom/facebook/marianatrench/integrationtests/MultiSources;.sink:(Ljava/lang/Object;Ljava/lang/Object;)V"
-      ]
+      ],
+      "triggered_rule" : 1
     }
   ]
 }
@@ -1285,7 +1291,8 @@
       "origins" : 
       [
         "Lcom/facebook/marianatrench/integrationtests/MultiSourcesSingleArg;.sink:(Lcom/facebook/marianatrench/integrationtests/MockObjectWithThisPropagation;)V"
-      ]
+      ],
+      "triggered_rule" : 2
     }
   ]
 }
@@ -1326,7 +1333,8 @@
       "origins" : 
       [
         "Lcom/facebook/marianatrench/integrationtests/MultiSourcesSingleArg;.sink:(Lcom/facebook/marianatrench/integrationtests/MockObjectWithThisPropagation;)V"
-      ]
+      ],
+      "triggered_rule" : 2
     }
   ]
 }
