@@ -16,9 +16,13 @@ module.exports = {
   onBrokenLinks: 'throw',
   onBrokenMarkdownLinks: 'warn',
   favicon: 'img/favicon.ico',
-  organizationName: 'facebook', // Usually your GitHub org/user name.
-  projectName: 'mariana-trench', // Usually your repo name.
+  organizationName: 'facebook',
+  projectName: 'mariana-trench',
   themeConfig: {
+    colorMode: {
+      defaultMode: 'light',
+      disableSwitch: true,
+    },
     navbar: {
       title: 'Mariana Trench',
       items: [
@@ -28,8 +32,6 @@ module.exports = {
           label: 'Documentation',
           position: 'left',
         },
-        {to: 'blog', label: 'Blog', position: 'left'},
-        // Please keep GitHub link to the right for consistency.
         {
           href: 'https://github.com/facebook/mariana-trench',
           label: 'GitHub',
@@ -61,10 +63,6 @@ module.exports = {
         {
           title: 'More',
           items: [
-            {
-              label: 'Blog',
-              to: 'blog',
-            },
             {
               label: 'GitHub',
               href: 'https://github.com/facebook/mariana-trench',
@@ -100,11 +98,8 @@ module.exports = {
       '@docusaurus/preset-classic',
       {
         docs: {
-          path: '../documentation',
+          path: 'documentation',
           sidebarPath: require.resolve('./sidebars.js'),
-        },
-        blog: {
-          showReadingTime: true,
         },
         theme: {
           customCss: require.resolve('./src/css/custom.css'),
