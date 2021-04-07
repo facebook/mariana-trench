@@ -943,12 +943,11 @@ TEST_F(JsonModelGeneratorTest, TypeConstraintFromJson) {
     auto constraint = TypeConstraint::from_json(test::parse_json(
         R"({
           "constraint": "has_annotation",
-          "type": "Lcom/facebook/privacy/datacollection/DisallowSensitive;",
+          "type": "Lcom/facebook/Annotation;",
           "pattern": "A"
         })"));
     EXPECT_EQ(
-        HasAnnotationTypeConstraint(
-            "Lcom/facebook/privacy/datacollection/DisallowSensitive;", "A"),
+        HasAnnotationTypeConstraint("Lcom/facebook/Annotation;", "A"),
         *constraint);
   }
 
@@ -956,12 +955,10 @@ TEST_F(JsonModelGeneratorTest, TypeConstraintFromJson) {
     auto constraint = TypeConstraint::from_json(test::parse_json(
         R"({
           "constraint": "has_annotation",
-          "type": "Lcom/facebook/privacy/datacollection/DisallowSensitive;"
+          "type": "Lcom/facebook/Annotation;"
         })"));
     EXPECT_EQ(
-        HasAnnotationTypeConstraint(
-            "Lcom/facebook/privacy/datacollection/DisallowSensitive;",
-            std::nullopt),
+        HasAnnotationTypeConstraint("Lcom/facebook/Annotation;", std::nullopt),
         *constraint);
   }
 
@@ -969,7 +966,7 @@ TEST_F(JsonModelGeneratorTest, TypeConstraintFromJson) {
       TypeConstraint::from_json(test::parse_json(
           R"({
             "Constraint": "has_annotation",
-            "type": "Lcom/facebook/privacy/datacollection/DisallowSensitive;",
+            "type": "Lcom/facebook/Annotation;",
             "pattern": "A"
           })")),
       JsonValidationError);
@@ -978,7 +975,7 @@ TEST_F(JsonModelGeneratorTest, TypeConstraintFromJson) {
       TypeConstraint::from_json(test::parse_json(
           R"({
             "constraint": "Has_annotation",
-            "type": "Lcom/facebook/privacy/datacollection/DisallowSensitive;",
+            "type": "Lcom/facebook/Annotation;",
             "pattern": "A"
           })")),
       JsonValidationError);
@@ -987,7 +984,7 @@ TEST_F(JsonModelGeneratorTest, TypeConstraintFromJson) {
       TypeConstraint::from_json(test::parse_json(
           R"({
             "constraint": "has_annotation",
-            "Type": "Lcom/facebook/privacy/datacollection/DisallowSensitive;",
+            "Type": "Lcom/facebook/Annotation;",
             "pattern": "A"
           })")),
       JsonValidationError);
@@ -996,7 +993,7 @@ TEST_F(JsonModelGeneratorTest, TypeConstraintFromJson) {
       TypeConstraint::from_json(test::parse_json(
           R"({
             "constraint": "Has_annotation",
-            "type": "Lcom/facebook/privacy/datacollection/DisallowSensitive;",
+            "type": "Lcom/facebook/Annotation;",
             "Pattern": "A"
           })")),
       JsonValidationError);
@@ -1517,13 +1514,12 @@ TEST_F(JsonModelGeneratorTest, MethodConstraintFromJson) {
         test::parse_json(
             R"({
           "constraint": "has_annotation",
-          "type": "Lcom/facebook/privacy/datacollection/DisallowSensitive;",
+          "type": "Lcom/facebook/Annotation;",
           "pattern": "A"
         })"),
         context);
     EXPECT_EQ(
-        HasAnnotationMethodConstraint(
-            "Lcom/facebook/privacy/datacollection/DisallowSensitive;", "A"),
+        HasAnnotationMethodConstraint("Lcom/facebook/Annotation;", "A"),
         *constraint);
   }
 
@@ -1532,13 +1528,12 @@ TEST_F(JsonModelGeneratorTest, MethodConstraintFromJson) {
         test::parse_json(
             R"({
           "constraint": "has_annotation",
-          "type": "Lcom/facebook/privacy/datacollection/DisallowSensitive;"
+          "type": "Lcom/facebook/Annotation;"
         })"),
         context);
     EXPECT_EQ(
         HasAnnotationMethodConstraint(
-            "Lcom/facebook/privacy/datacollection/DisallowSensitive;",
-            std::nullopt),
+            "Lcom/facebook/Annotation;", std::nullopt),
         *constraint);
   }
 
@@ -1547,7 +1542,7 @@ TEST_F(JsonModelGeneratorTest, MethodConstraintFromJson) {
           test::parse_json(
               R"({
             "Constraint": "has_annotation",
-            "type": "Lcom/facebook/privacy/datacollection/DisallowSensitive;",
+            "type": "Lcom/facebook/Annotation;",
             "pattern": "A"
           })"),
           context),
@@ -1558,7 +1553,7 @@ TEST_F(JsonModelGeneratorTest, MethodConstraintFromJson) {
           test::parse_json(
               R"({
             "constraint": "Has_annotation",
-            "type": "Lcom/facebook/privacy/datacollection/DisallowSensitive;",
+            "type": "Lcom/facebook/Annotation;",
             "pattern": "A"
           })"),
           context),
@@ -1569,7 +1564,7 @@ TEST_F(JsonModelGeneratorTest, MethodConstraintFromJson) {
           test::parse_json(
               R"({
             "constraint": "has_annotation",
-            "Type": "Lcom/facebook/privacy/datacollection/DisallowSensitive;",
+            "Type": "Lcom/facebook/Annotation;",
             "pattern": "A"
           })"),
           context),
@@ -1580,7 +1575,7 @@ TEST_F(JsonModelGeneratorTest, MethodConstraintFromJson) {
           test::parse_json(
               R"({
             "constraint": "Has_annotation",
-            "type": "Lcom/facebook/privacy/datacollection/DisallowSensitive;",
+            "type": "Lcom/facebook/Annotation;",
             "Pattern": "A"
           })"),
           context),
