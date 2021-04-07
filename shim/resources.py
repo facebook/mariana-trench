@@ -12,6 +12,9 @@ def get_string(constant: Constant) -> str:
     if constant == Constant.BINARY_BUILD_MODE:
         return "<build mode>"
 
+    if constant == Constant.DEFAULT_GENERATOR_SEARCH_PATHS:
+        return "<generator search paths>"
+
     raise NotImplementedError(f"Unknown string constant `{constant}`")
 
 
