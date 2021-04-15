@@ -91,7 +91,9 @@ bool is_anonymous_class(const DexType* type) {
   return re2::RE2::FullMatch(show(type), regex);
 }
 
-ParameterTypeOverrides anonymous_class_parameters(
+// Return mapping of argument index to argument type for all anonymous class
+// arguments.
+ParameterTypeOverrides anonymous_class_arguments(
     const Types& types,
     const Method* caller,
     const IRInstruction* instruction,
@@ -157,7 +159,7 @@ ArtificialCallees anonymous_class_artificial_callees(
   return callees;
 }
 
-ArtificialCallees parameter_types_artificial_callees(
+ArtificialCallees artificial_callees_from_arguments(
     const Methods& method_factory,
     const Features& features,
     const IRInstruction* instruction,
@@ -167,7 +169,7 @@ ArtificialCallees parameter_types_artificial_callees(
 
   // For each anonymous class parameter, simulate calls to all its methods.
   for (auto [parameter, anonymous_class_type] : parameter_type_overrides) {
-    auto parameter_callees = anonymous_class_artificial_callees(
+    auto artificial_callees_from_parameter = anonymous_class_artificial_callees(
         method_factory,
         instruction,
         anonymous_class_type,
@@ -177,8 +179,8 @@ ArtificialCallees parameter_types_artificial_callees(
         FeatureSet{features.get("via-anonymous-class-to-obscure")});
     callees.insert(
         callees.end(),
-        std::make_move_iterator(parameter_callees.begin()),
-        std::make_move_iterator(parameter_callees.end()));
+        std::make_move_iterator(artificial_callees_from_parameter.begin()),
+        std::make_move_iterator(artificial_callees_from_parameter.end()));
   }
 
   return callees;
@@ -376,15 +378,15 @@ CallGraph::CallGraph(
               const IRInstruction* instruction = entry.insn;
 
               if (opcode::is_an_iput(instruction->opcode())) {
-                // Add artificial calls to anonymous class methods.
-                const auto* type = types.source_type(
+                // Add artificial calls to all methods in an anonymous class.
+                const auto* iput_type = types.source_type(
                     caller, instruction, /* source_position */ 0);
-                if (type && is_anonymous_class(type)) {
+                if (iput_type && is_anonymous_class(iput_type)) {
                   auto artificial_callees_for_instruction =
                       anonymous_class_artificial_callees(
                           method_factory,
                           instruction,
-                          type,
+                          iput_type,
                           /* register */ instruction->src(0),
                           /* features */
                           FeatureSet{
@@ -411,14 +413,15 @@ CallGraph::CallGraph(
               }
 
               ParameterTypeOverrides parameter_type_overrides =
-                  anonymous_class_parameters(
+                  anonymous_class_arguments(
                       types, caller, instruction, dex_callee);
 
               const Method* callee = nullptr;
               if (dex_callee->get_code() == nullptr) {
-                // Add artificial calls to anonymous class methods.
+                // When passing an anonymous class into a callee, add artificial
+                // calls to all methods of the anonymous class.
                 auto artificial_callees_for_instruction =
-                    parameter_types_artificial_callees(
+                    artificial_callees_from_arguments(
                         method_factory,
                         features,
                         instruction,
