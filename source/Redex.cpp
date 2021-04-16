@@ -171,11 +171,20 @@ DexMethod* redex::create_void_method(
   if (is_native) {
     access.append(" native");
   }
+  std::string return_statement = "(return-void)";
+  if (return_type != "V") {
+    return_statement =
+        R"(
+          (new-instance "Ljava/lang/Object;")
+          (move-result-pseudo-object v0)
+          (return-object v0)
+        )";
+  }
   auto body = fmt::format(
       R"(
         (method ({}) "{}.{}:({}){}"
          (
-          (return-void)
+          {}
          )
         )
       )",
@@ -183,7 +192,8 @@ DexMethod* redex::create_void_method(
       class_name,
       method_name,
       parameter_types,
-      return_type);
+      return_type,
+      return_statement);
   auto* dex_method = create_method(scope, class_name, body, super, annotations);
 
   // Sanity checks
