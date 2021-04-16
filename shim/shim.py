@@ -216,7 +216,7 @@ def _get_resource_path(path: str) -> Optional[str]:
     return None
 
 
-if __name__ == "__main__":
+def main() -> None:
     logging.basicConfig(level=logging.INFO, format="%(levelname)s %(message)s")
 
     def _path_exists(path: str) -> str:
@@ -531,3 +531,7 @@ if __name__ == "__main__":
             shutil.rmtree(build_directory)
         except IOError:
             pass  # Swallow.
+
+
+if __name__ == "__main__":
+    main()
