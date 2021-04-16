@@ -33,7 +33,7 @@ Below is a list of the required dependencies. Most of them can be installed with
 
 Here are the steps to install Mariana Trench on **macOS** using **[Homebrew](https://brew.sh/)**.
 
-You will need to choose an installation directory that will contain all the binaries, libraries and headers after installation. If you do not specify it, everything will be installed under `/usr/local`.
+First, you will need to choose a temporary directory to store the C++ binaries and libraries. You can safely remove these after installation if you do not intend to update the C++ code. We will refer to this temporary directory as `<temporary-directory>` in the following instructions.
 
 You will need Xcode with command line tools installed. To get the command line tools, use:
 
@@ -48,31 +48,42 @@ brew upgrade
 brew install python3 cmake zlib boost googletest jsoncpp fmt re2
 ```
 
-Now, you will need to build [Redex](https://fbredex.com/) from source:
+Now, let's build [Redex](https://fbredex.com/) from source:
 ```shell
 brew install git
 git clone https://github.com/facebook/redex.git
 cd redex
 mkdir build
 cd build
-cmake -DCMAKE_INSTALL_PREFIX="<install-directory>" ..
+cmake -DCMAKE_INSTALL_PREFIX="<temporary-directory>" ..
 make -j4
 make install
 ```
 
-Finally, you can build and install Mariana Trench:
+Now, let's build the Mariana Trench binary:
 ```shell
 cd ../..  # Go back to the root directory
 mkdir build
 cd build
-cmake -DREDEX_ROOT="<install-directory>" -DCMAKE_INSTALL_PREFIX="<install-directory>" ..
+cmake -DREDEX_ROOT="<temporary-directory>" -DCMAKE_INSTALL_PREFIX="<temporary-directory>" ..
 make -j4
 make install
 ```
 
+Finally, let's install Mariana Trench as a Python package.
+We recommend to run this step inside a [virtual environment](https://packaging.python.org/tutorials/installing-packages/#creating-virtual-environments).
+```shell
+cd .. # Go back to the root directory
+python scripts/setup.py \
+  --binary "<temporary-directory>/bin/mariana-trench-binary" \
+  --pyredex "<temporary-directory>/bin/pyredex" \
+  install
+```
+
 ### Run the tests
 
-To run the tests after you have built Mariana Trench, use:
+To run the tests after building Mariana Trench, use:
 ```shell
+cd build
 make check
 ```
