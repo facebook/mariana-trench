@@ -41,7 +41,9 @@ DexMethod* empty_method_with_signature(const std::string& signature) {
       R"(
         (method {}
          (
-          (return-void)
+          (new-instance "Ljava/lang/Object;")
+          (move-result-pseudo-object v0)
+          (return-object v0)
          )
         )
       )",
