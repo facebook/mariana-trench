@@ -17,13 +17,11 @@ import typing
 from pathlib import Path
 from typing import Optional, Sequence
 
-from .constant import Constant
-
 try:
-    from ..facebook.shim import resources
+    from ..facebook.shim import configuration
 except Exception:
     # pyre-ignore[21]
-    from . import resources
+    from . import configuration
 
 import pyredex
 
@@ -140,19 +138,19 @@ def _get_analysis_binary(arguments: argparse.Namespace) -> Path:
 
     # Build the mariana-trench binary from source.
     return _build_executable_target(
-        resources.get_string(Constant.BINARY_TARGET),
+        configuration.BINARY_TARGET,
         mode=arguments.build,
     )
 
 
 def _desugar_jar_file(jar_path: Path) -> Path:
     LOG.info(f"Desugaring `{jar_path}`...")
-    desugar_tool = _build_target(resources.get_string(Constant.DESUGAR_TARGET))
+    desugar_tool = _build_target(configuration.DESUGAR_TARGET)
     desugared_jar_file = jar_path.parent / (jar_path.stem + "-desugared.jar")
     output = subprocess.run(
         [
             "java",
-            f"-Dlog4j.configurationFile={resources.get_string(Constant.DESUGAR_LOG_CONFIGURATION_PATH)}",
+            f"-Dlog4j.configurationFile={configuration.DESUGAR_LOG_CONFIGURATION_PATH}",
             "-jar",
             desugar_tool,
             os.fspath(jar_path),
@@ -189,7 +187,7 @@ def _build_apk_from_jar(jar_path: Path) -> Path:
     return Path(dex_file)
 
 
-SOURCE_ROOT: Path = resources.get_path(Constant.SOURCE_ROOT)
+SOURCE_ROOT: Path = configuration.SOURCE_ROOT
 RESOURCE_DIRECTORY_CANDIDATES: Sequence[Path] = [
     SOURCE_ROOT / "configuration",
     SOURCE_ROOT / "facebook/internal-configuration",
@@ -278,7 +276,7 @@ def main() -> None:
         binary_arguments.add_argument(
             "--build",
             type=str,
-            default=resources.get_string(Constant.BINARY_BUILD_MODE),
+            default=configuration.BINARY_BUILD_MODE,
             metavar="BUILD_MODE",
             help="The Mariana Trench binary build mode.",
         )
@@ -330,7 +328,7 @@ def main() -> None:
         configuration_arguments.add_argument(
             "--model-generator-search-paths",
             type=_separated_paths_exist,
-            default=resources.get_string(Constant.DEFAULT_GENERATOR_SEARCH_PATHS),
+            default=configuration.DEFAULT_GENERATOR_SEARCH_PATHS,
             help="A `;`-separated list of paths where we look up JSON model generators.",
         )
         configuration_arguments.add_argument(
@@ -517,7 +515,6 @@ def main() -> None:
         LOG.info(f"Running Mariana Trench: {' '.join(command)}")
         output = subprocess.run(command)
         if output.returncode != 0:
-            # pyre-fixme[16]: `Logger` has no attribute `fatal`.
             LOG.fatal(f"Analysis binary exited with exit code {output.returncode}.")
             sys.exit(output.returncode)
     except ClientError as error:
