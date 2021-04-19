@@ -14,3 +14,5 @@ DESUGAR_TARGET: str = "<target>"
 DESUGAR_LOG_CONFIGURATION_PATH: str = "<path>"
 
 DEFAULT_GENERATOR_SEARCH_PATHS: str = "<generator search path>"
+
+DEFAULT_MAXIMUM_SOURCE_SINK_DISTANCE: int = 99

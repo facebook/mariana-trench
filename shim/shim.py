@@ -335,7 +335,7 @@ def main() -> None:
         configuration_arguments.add_argument(
             "--maximum-source-sink-distance",
             type=int,
-            default=7,
+            default=configuration.DEFAULT_MAXIMUM_SOURCE_SINK_DISTANCE,
             help="Limits the distance of sources and sinks from a trace entry point.",
         )
 
