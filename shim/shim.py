@@ -191,7 +191,6 @@ SOURCE_ROOT: Path = configuration.SOURCE_ROOT
 RESOURCE_DIRECTORY_CANDIDATES: Sequence[Path] = [
     SOURCE_ROOT / "configuration",
     SOURCE_ROOT / "facebook/internal-configuration",
-    SOURCE_ROOT / "shim/resources",
 ]
 
 
