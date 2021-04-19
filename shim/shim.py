@@ -33,6 +33,31 @@ class ClientError(Exception):
     pass
 
 
+def _path_exists(path: str) -> str:
+    path = os.path.expanduser(path)
+    if not os.path.exists(path):
+        raise argparse.ArgumentTypeError(f"Path `{path}` does not exist.")
+    return os.path.realpath(path)
+
+
+def _directory_exists(path: str) -> str:
+    path = os.path.expanduser(path)
+    if not os.path.isdir(path):
+        raise argparse.ArgumentTypeError(f"Path `{path}` is not a directory.")
+    path = os.path.realpath(path)
+    if path and path[-1] != "/":
+        path = path + "/"
+    return path
+
+
+def _separated_paths_exist(paths: Optional[str]) -> Optional[str]:
+    if paths is None:
+        return None
+
+    elements = paths.split(";")
+    return ";".join([_path_exists(element) for element in elements])
+
+
 def _check_executable(path: Path) -> Path:
     if not (path.exists() and os.access(path, os.X_OK)):
         raise ClientError(f"Invalid binary `{path}`.")
@@ -215,29 +240,6 @@ def _get_resource_path(path: str) -> Optional[str]:
 
 def main() -> None:
     logging.basicConfig(level=logging.INFO, format="%(levelname)s %(message)s")
-
-    def _path_exists(path: str) -> str:
-        path = os.path.expanduser(path)
-        if not os.path.exists(path):
-            raise argparse.ArgumentTypeError(f"Path `{path}` does not exist.")
-        return os.path.realpath(path)
-
-    def _directory_exists(path: str) -> str:
-        path = os.path.expanduser(path)
-        if not os.path.isdir(path):
-            raise argparse.ArgumentTypeError(f"Path `{path}` is not a directory.")
-        path = os.path.realpath(path)
-        if path and path[-1] != "/":
-            path = path + "/"
-        return path
-
-    def _separated_paths_exist(paths: Optional[str]) -> Optional[str]:
-        if paths is None:
-            return None
-
-        elements = paths.split(";")
-        return ";".join([_path_exists(element) for element in elements])
-
     build_directory = Path(tempfile.mkdtemp())
     try:
         parser = argparse.ArgumentParser(
