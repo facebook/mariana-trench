@@ -1,0 +1,52 @@
+// @generated
+{
+  "Landroid/app/Activity;.onCreate:(Landroid/os/Bundle;)V" : 
+  [
+    "Lcom/facebook/marianatrench/integrationtests/BaseFragment;.onCreate:(Landroid/os/Bundle;)V",
+    "Lcom/facebook/marianatrench/integrationtests/SimpleFragment;.onCreate:(Landroid/os/Bundle;)V"
+  ],
+  "Landroid/app/Activity;.onStart:()V" : 
+  [
+    "Lcom/facebook/marianatrench/integrationtests/BaseFragment;.onStart:()V",
+    "Lcom/facebook/marianatrench/integrationtests/ChildFragment;.onStart:()V",
+    "Lcom/facebook/marianatrench/integrationtests/SimpleFragment;.onStart:()V"
+  ],
+  "Landroid/content/Context;.startActivity:(Landroid/content/Intent;)V" : 
+  [
+    "Landroid/app/Activity;.startActivity:(Landroid/content/Intent;)V"
+  ],
+  "Landroidx/fragment/app/FragmentActivity;.onActivityCreate:()V" : 
+  [
+    "Lcom/facebook/marianatrench/integrationtests/BaseFragment;.onActivityCreate:()V",
+    "Lcom/facebook/marianatrench/integrationtests/ChildFragment;.onActivityCreate:()V"
+  ],
+  "Lcom/facebook/marianatrench/integrationtests/BaseFragment;.onActivityCreate:()V" : 
+  [
+    "Lcom/facebook/marianatrench/integrationtests/ChildFragment;.onActivityCreate:()V"
+  ],
+  "Lcom/facebook/marianatrench/integrationtests/BaseFragment;.onAfterActivityCreate:()V" : 
+  [
+    "Lcom/facebook/marianatrench/integrationtests/ChildFragment;.onAfterActivityCreate:()V"
+  ],
+  "Lcom/facebook/marianatrench/integrationtests/BaseFragment;.onBeforeActivityCreate:()V" : 
+  [
+    "Lcom/facebook/marianatrench/integrationtests/ChildFragment;.onBeforeActivityCreate:()V"
+  ],
+  "Lcom/facebook/marianatrench/integrationtests/BaseFragment;.onStart:()V" : 
+  [
+    "Lcom/facebook/marianatrench/integrationtests/ChildFragment;.onStart:()V"
+  ],
+  "Ljava/lang/Object;.toString:()Ljava/lang/String;" : 
+  [
+    "Landroid/location/Location;.toString:()Ljava/lang/String;",
+    "Landroid/net/Uri;.toString:()Ljava/lang/String;"
+  ],
+  "Ljava/lang/Runnable;.run:()V" : 
+  [
+    "Ljava/lang/Thread;.run:()V"
+  ],
+  "Ljava/util/Map;.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;" : 
+  [
+    "Ljava/util/TreeMap;.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;"
+  ]
+}

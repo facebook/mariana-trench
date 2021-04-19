@@ -322,28 +322,42 @@
   "method" : "Landroid/app/Activity;.<init>:()V",
   "position" : 
   {
-    "line" : 12
+    "line" : 13
   }
 }
 {
   "method" : "Landroid/app/Activity;.getIntent:()Landroid/content/Intent;",
   "position" : 
   {
-    "line" : 17
+    "line" : 22
   }
 }
 {
   "method" : "Landroid/app/Activity;.onCreate:()V",
   "position" : 
   {
-    "line" : 14
+    "line" : 15
+  }
+}
+{
+  "method" : "Landroid/app/Activity;.onCreate:(Landroid/os/Bundle;)V",
+  "position" : 
+  {
+    "line" : 17
+  }
+}
+{
+  "method" : "Landroid/app/Activity;.onStart:()V",
+  "position" : 
+  {
+    "line" : 19
   }
 }
 {
   "method" : "Landroid/app/Activity;.startActivity:(Landroid/content/Intent;)V",
   "position" : 
   {
-    "line" : 21
+    "line" : 26
   }
 }
 {
