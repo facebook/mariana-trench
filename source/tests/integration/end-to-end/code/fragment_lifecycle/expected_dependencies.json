@@ -90,6 +90,14 @@
     "Lcom/facebook/marianatrench/integrationtests/ChildFragment;.onBeforeActivityCreate:()V",
     "Lcom/facebook/marianatrench/integrationtests/SimpleFragment;.onCreate:(Landroid/os/Bundle;)V"
   ],
+  "Lcom/facebook/marianatrench/integrationtests/SimpleFragment;.onCreate:(Landroid/os/Bundle;)V" : 
+  [
+    "Lcom/facebook/marianatrench/integrationtests/SimpleFragment;.activity_lifecycle_wrapper:(Landroid/os/Bundle;)V"
+  ],
+  "Lcom/facebook/marianatrench/integrationtests/SimpleFragment;.onStart:()V" : 
+  [
+    "Lcom/facebook/marianatrench/integrationtests/SimpleFragment;.activity_lifecycle_wrapper:(Landroid/os/Bundle;)V"
+  ],
   "Lcom/facebook/secure/context/IntentLauncher;.<init>:()V" : 
   [
     "Lcom/facebook/secure/context/SecureContextHelperV2;.inAppBrowser:()Lcom/facebook/secure/context/IntentLauncher;",

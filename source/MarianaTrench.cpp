@@ -20,6 +20,7 @@
 #include <mariana-trench/Highlights.h>
 #include <mariana-trench/Interprocedural.h>
 #include <mariana-trench/Kind.h>
+#include <mariana-trench/LifecycleMethods.h>
 #include <mariana-trench/Log.h>
 #include <mariana-trench/MarianaTrench.h>
 #include <mariana-trench/Methods.h>
@@ -84,6 +85,14 @@ Registry MarianaTrench::analyze(Context& context) {
   LOG(1,
       "Built class hierarchies in {:.2f}s.",
       class_hierarchies_timer.duration_in_seconds());
+
+  Timer lifecycle_methods_timer;
+  LOG(1, "Creating life-cycle wrapper methods...");
+  LifecycleMethods::run(context);
+  context.statistics->log_time("lifecycle_methods", lifecycle_methods_timer);
+  LOG(1,
+      "Created lifecycle methods in {:.2f}s.",
+      lifecycle_methods_timer.duration_in_seconds());
 
   Timer overrides_timer;
   LOG(1, "Building override graph...");

@@ -277,6 +277,14 @@
       "Landroidx/fragment/app/FragmentActivity;.<init>:()V"
     ]
   },
+  "Lcom/facebook/marianatrench/integrationtests/SimpleFragment;.activity_lifecycle_wrapper:(Landroid/os/Bundle;)V" : 
+  {
+    "static" : 
+    [
+      "Lcom/facebook/marianatrench/integrationtests/SimpleFragment;.onCreate:(Landroid/os/Bundle;)V",
+      "Lcom/facebook/marianatrench/integrationtests/SimpleFragment;.onStart:()V"
+    ]
+  },
   "Lcom/facebook/marianatrench/integrationtests/SimpleFragment;.onCreate:(Landroid/os/Bundle;)V" : 
   {
     "static" : 
