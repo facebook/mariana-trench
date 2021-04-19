@@ -29,9 +29,8 @@ using KindSetAbstractDomain =
  * method), Sinks (sanitize all flows into sinks rechable within the method) or
  * Propagations (sanitize propagations from one port of the method to another).
  *
- * `source_kinds` and `sinks_kinds` represent the kinds for which to sanitize
- * flows. Top will sanitize all flows, regardless of kind and bottom will not
- * sanitize any flows
+ * `kinds` represents the kinds for which to sanitize flows. Top will sanitize
+ * all flows, regardless of kind and bottom will not sanitize any flows.
  *
  */
 class Sanitizer final : public sparta::AbstractDomain<Sanitizer> {
@@ -39,12 +38,11 @@ class Sanitizer final : public sparta::AbstractDomain<Sanitizer> {
   // Default constructor for sparta. Returns the Bottom Sanitizer
   Sanitizer()
       : sanitizer_kind_(SanitizerKind::Sources),
-        source_kinds_(KindSetAbstractDomain::bottom()),
-        sink_kinds_(KindSetAbstractDomain::bottom()) {}
+        kinds_(KindSetAbstractDomain::bottom()) {}
   Sanitizer(
       const SanitizerKind& sanitizer_kind,
-      const KindSetAbstractDomain& source_kinds,
-      const KindSetAbstractDomain& sink_kinds);
+      const KindSetAbstractDomain& kinds)
+      : sanitizer_kind_(sanitizer_kind), kinds_(kinds) {}
 
   Sanitizer(const Sanitizer&) = default;
   Sanitizer(Sanitizer&&) = default;
@@ -60,7 +58,7 @@ class Sanitizer final : public sparta::AbstractDomain<Sanitizer> {
   }
 
   bool is_bottom() const override {
-    return source_kinds_.is_bottom() && sink_kinds_.is_bottom();
+    return kinds_.is_bottom();
   }
 
   bool is_top() const override {
@@ -68,8 +66,7 @@ class Sanitizer final : public sparta::AbstractDomain<Sanitizer> {
   }
 
   void set_to_bottom() override {
-    source_kinds_.set_to_bottom();
-    sink_kinds_.set_to_bottom();
+    kinds_.set_to_bottom();
   }
 
   void set_to_top() override {
@@ -94,8 +91,7 @@ class Sanitizer final : public sparta::AbstractDomain<Sanitizer> {
 
  private:
   SanitizerKind sanitizer_kind_;
-  KindSetAbstractDomain source_kinds_;
-  KindSetAbstractDomain sink_kinds_;
+  KindSetAbstractDomain kinds_;
 };
 
 } // namespace marianatrench

@@ -10,28 +10,13 @@
 
 namespace marianatrench {
 
-Sanitizer::Sanitizer(
-    const SanitizerKind& sanitizer_kind,
-    const KindSetAbstractDomain& source_kinds,
-    const KindSetAbstractDomain& sink_kinds)
-    : sanitizer_kind_(sanitizer_kind),
-      source_kinds_(source_kinds),
-      sink_kinds_(sink_kinds) {
-  mt_assert(
-      !(sanitizer_kind_ == SanitizerKind::Sources && !sink_kinds.is_bottom()));
-  mt_assert(
-      !(sanitizer_kind_ == SanitizerKind::Sinks && !source_kinds.is_bottom()));
-}
-
 bool Sanitizer::leq(const Sanitizer& other) const {
   if (is_bottom()) {
     return true;
   } else if (other.is_bottom()) {
     return false;
   }
-  return sanitizer_kind_ == other.sanitizer_kind_ &&
-      source_kinds_.leq(other.source_kinds_) &&
-      sink_kinds_.leq(other.sink_kinds_);
+  return sanitizer_kind_ == other.sanitizer_kind_ && kinds_.leq(other.kinds_);
 }
 
 bool Sanitizer::equals(const Sanitizer& other) const {
@@ -40,9 +25,7 @@ bool Sanitizer::equals(const Sanitizer& other) const {
   } else if (other.is_bottom()) {
     return false;
   } else {
-    return sanitizer_kind_ == other.sanitizer_kind_ &&
-        source_kinds_ == other.source_kinds_ &&
-        sink_kinds_ == other.sink_kinds_;
+    return sanitizer_kind_ == other.sanitizer_kind_ && kinds_ == other.kinds_;
   }
 }
 
@@ -55,8 +38,7 @@ void Sanitizer::join_with(const Sanitizer& other) {
     return;
   } else {
     mt_assert(sanitizer_kind_ == other.sanitizer_kind_);
-    source_kinds_.join_with(other.source_kinds_);
-    sink_kinds_.join_with(other.sink_kinds_);
+    kinds_.join_with(other.kinds_);
   }
 
   mt_expensive_assert(previous.leq(*this) && other.leq(*this));
@@ -88,10 +70,7 @@ std::ostream& operator<<(std::ostream& out, const Sanitizer& sanitizer) {
       break;
   }
   if (sanitizer.sanitizer_kind_ != SanitizerKind::Sinks) {
-    out << ", source_kinds = " << sanitizer.source_kinds_;
-  }
-  if (sanitizer.sanitizer_kind_ != SanitizerKind::Sources) {
-    out << ", sink_kinds = " << sanitizer.sink_kinds_;
+    out << ", kinds = " << sanitizer.kinds_;
   }
   return out << ")";
 }
