@@ -241,7 +241,9 @@ def main() -> None:
 
     build_directory = Path(tempfile.mkdtemp())
     try:
-        parser = argparse.ArgumentParser()
+        parser = argparse.ArgumentParser(
+            description="A security-focused static analyzer targeting Android."
+        )
 
         target_arguments = parser.add_argument_group("Target arguments")
         target_arguments.add_argument(
