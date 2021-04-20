@@ -15,7 +15,9 @@ import tempfile
 import traceback
 import typing
 from pathlib import Path
-from typing import TypeVar, Optional, Sequence
+from typing import Optional, Sequence
+
+from pyre_extensions import none_throws
 
 try:
     from ..facebook.shim import configuration
@@ -31,15 +33,6 @@ LOG: logging.Logger = logging.getLogger(__name__)
 
 class ClientError(Exception):
     pass
-
-
-_T = TypeVar("_T")
-
-
-def _none_throws(optional: Optional[_T]) -> _T:
-    if optional is None:
-        raise AssertionError("Unexpected `None`")
-    return optional
 
 
 def _path_exists(path: str) -> str:
@@ -191,7 +184,7 @@ def _get_analysis_binary(arguments: argparse.Namespace) -> Path:
 
 def _desugar_jar_file(jar_path: Path) -> Path:
     LOG.info(f"Desugaring `{jar_path}`...")
-    desugar_tool = _build_target(_none_throws(configuration.DESUGAR_BUCK_TARGET))
+    desugar_tool = _build_target(none_throws(configuration.DESUGAR_BUCK_TARGET))
     desugared_jar_file = jar_path.parent / (jar_path.stem + "-desugared.jar")
     output = subprocess.run(
         [
@@ -280,7 +273,7 @@ def main() -> None:
             binary_arguments.add_argument(
                 "--build",
                 type=str,
-                default=_none_throws(configuration.BINARY_BUCK_BUILD_MODE),
+                default=none_throws(configuration.BINARY_BUCK_BUILD_MODE),
                 metavar="BUILD_MODE",
                 help="The Mariana Trench binary buck build mode.",
             )

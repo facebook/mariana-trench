@@ -227,6 +227,9 @@ classifiers =
 [options]
 packages = find:
 python_requires = >=3.6
+install_requires =
+    pyre_extensions
+    fb-sapp
 
 [options.entry_points]
 console_scripts =
