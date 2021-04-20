@@ -422,7 +422,7 @@ def main() -> None:
                 "The analysis target can either be a java target (--java-target)"
                 + " or an apk file (--apk-path), but not both."
             )
-        elif (
+        if (
             configuration.FACEBOOK_SHIM
             and arguments.java_target is None
             and arguments.apk_path is None
@@ -431,7 +431,7 @@ def main() -> None:
                 "The analysis target should either be a java target (--java-target)"
                 + " or an apk file (--apk-path)."
             )
-        elif not configuration.FACEBOOK_SHIM and arguments.apk_path is None:
+        if not configuration.FACEBOOK_SHIM and arguments.apk_path is None:
             parser.error("The argument --apk-path is required.")
 
         # Build the vanilla java project.
