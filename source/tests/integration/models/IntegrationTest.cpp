@@ -358,6 +358,7 @@ TEST_P(IntegrationTest, ReturnsExpectedModel) {
   context.options = std::make_unique<Options>(
       /* models_path */ std::vector<std::string>{},
       /* rules_path */ std::vector<std::string>{},
+      /* lifecycles_path */ std::vector<std::string>{},
       /* sequential */ true,
       /* skip_source_indexing */ true,
       /* skip_model_generation */ true,

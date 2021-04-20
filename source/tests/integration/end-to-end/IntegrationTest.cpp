@@ -6,6 +6,7 @@
  */
 
 #include <boost/algorithm/string.hpp>
+#include <boost/filesystem/operations.hpp>
 #include <boost/filesystem/string_file.hpp>
 #include <boost/program_options.hpp>
 #include <fmt/format.h>
@@ -98,12 +99,20 @@ TEST_P(IntegrationTest, CompareFlows) {
 
   Context context;
 
+  std::vector<std::string> lifecycles_paths;
+  auto lifecycles_path = directory / "lifecycles.json";
+  if (boost::filesystem::exists(lifecycles_path)) {
+    lifecycles_paths.emplace_back(lifecycles_path.native());
+  }
+
   // Read the configuration for this test case.
   context.options = std::make_unique<Options>(
-      /* models_path */
+      /* models_paths */
       std::vector<std::string>{(directory / "/models.json").native()},
-      /* rules_path */
+      /* rules_paths */
       std::vector<std::string>{(directory / "/rules.json").native()},
+      /* lifecycles_paths */
+      lifecycles_paths,
       /* sequential */ true,
       /* skip_source_indexing */ false,
       /* skip_model_generation */ true,

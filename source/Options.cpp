@@ -102,6 +102,7 @@ namespace program_options = boost::program_options;
 Options::Options(
     const std::vector<std::string>& models_paths,
     const std::vector<std::string>& rules_paths,
+    const std::vector<std::string>& lifecycles_paths,
     bool sequential,
     bool skip_source_indexing,
     bool skip_model_generation,
@@ -109,6 +110,7 @@ Options::Options(
     const std::string& source_root_directory)
     : models_paths_(models_paths),
       rules_paths_(rules_paths),
+      lifecycles_paths_(lifecycles_paths),
       source_root_directory_(source_root_directory),
       sequential_(sequential),
       skip_source_indexing_(skip_source_indexing),
@@ -143,6 +145,12 @@ Options::Options(const boost::program_options::variables_map& variables) {
     proguard_configuration_paths_ = parse_paths_list(
         variables["proguard-configuration-paths"].as<std::string>(),
         /* extension */ ".pro");
+  }
+
+  if (!variables["lifecycles-paths"].empty()) {
+    lifecycles_paths_ = parse_paths_list(
+        variables["lifecycles-paths"].as<std::string>(),
+        /* extension */ ".json");
   }
 
   if (!variables["generated-models-directory"].empty()) {
@@ -223,6 +231,10 @@ void Options::add_options(
       "proguard-configuration-paths",
       program_options::value<std::string>(),
       "A `;` separated list of ProGuard configuration files or directories containing ProGuard configuration files.");
+  options.add_options()(
+      "lifecycles-paths",
+      program_options::value<std::string>(),
+      "A `;` separated list of files and directories containing life-cycles files.");
   options.add_options()(
       "generated-models-directory",
       program_options::value<std::string>(),
@@ -305,6 +317,10 @@ const std::vector<std::string>& Options::rules_paths() const {
 
 const std::vector<std::string>& Options::proguard_configuration_paths() const {
   return proguard_configuration_paths_;
+}
+
+const std::vector<std::string>& Options::lifecycles_paths() const {
+  return lifecycles_paths_;
 }
 
 const std::optional<std::string>& Options::generated_models_directory() const {

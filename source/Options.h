@@ -24,6 +24,7 @@ class Options final {
   explicit Options(
       const std::vector<std::string>& models_paths,
       const std::vector<std::string>& rules_paths,
+      const std::vector<std::string>& lifecycles_paths,
       bool sequential,
       bool skip_source_indexing,
       bool skip_model_generation,
@@ -43,6 +44,7 @@ class Options final {
   model_generators_configuration() const;
   const std::vector<std::string>& rules_paths() const;
   const std::vector<std::string>& proguard_configuration_paths() const;
+  const std::vector<std::string>& lifecycles_paths() const;
   const std::optional<std::string>& generated_models_directory() const;
 
   const std::vector<std::string>& generator_configuration_paths() const;
@@ -81,6 +83,7 @@ class Options final {
   std::vector<std::string> models_paths_;
   std::vector<std::string> rules_paths_;
   std::vector<std::string> proguard_configuration_paths_;
+  std::vector<std::string> lifecycles_paths_;
 
   std::vector<std::string> generator_configuration_paths_;
   std::vector<ModelGeneratorConfiguration> model_generators_configuration_;

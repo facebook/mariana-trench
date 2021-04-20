@@ -10,6 +10,7 @@
 #include <mariana-trench/Access.h>
 #include <mariana-trench/Frame.h>
 #include <mariana-trench/JsonValidation.h>
+#include <mariana-trench/LifecycleMethod.h>
 #include <mariana-trench/LocalPositionSet.h>
 #include <mariana-trench/Method.h>
 #include <mariana-trench/Model.h>
@@ -2076,6 +2077,46 @@ TEST_F(JsonTest, Model) {
           }
         ]
       })"));
+}
+
+TEST_F(JsonTest, LifecycleMethod) {
+  EXPECT_THROW(
+      LifecycleMethod::from_json(test::parse_json("{}")), JsonValidationError);
+  EXPECT_THROW(
+      LifecycleMethod::from_json(test::parse_json("1")), JsonValidationError);
+  EXPECT_THROW(
+      LifecycleMethod::from_json(test::parse_json(R"({
+        "base_class_name": "Landroidx/fragment/app/FragmentActivity;",
+        "method_name": "activity_lifecycle_wrapper",
+        "callees": []
+      })")),
+      JsonValidationError);
+
+  EXPECT_EQ(
+      LifecycleMethod::from_json(test::parse_json(R"({
+        "base_class_name": "Landroidx/fragment/app/FragmentActivity;",
+        "method_name": "activity_lifecycle_wrapper",
+        "callees": [
+          {
+            "method_name": "onCreate",
+            "return_type": "V",
+            "argument_types": [
+              "Landroid/os/Bundle;"
+            ]
+          },
+          {
+            "method_name": "onStart",
+            "return_type": "V",
+            "argument_types": []
+          }
+        ]
+      })")),
+      LifecycleMethod(
+          /* base_class_name */ "Landroidx/fragment/app/FragmentActivity;",
+          /* method_name */ "activity_lifecycle_wrapper",
+          /* callees */
+          {LifecycleMethodCall("onCreate", "V", {"Landroid/os/Bundle;"}),
+           LifecycleMethodCall("onStart", "V", {})}));
 }
 
 } // namespace marianatrench
