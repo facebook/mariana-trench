@@ -233,32 +233,6 @@ def _build_apk_from_jar(jar_path: Path) -> Path:
     return Path(dex_file)
 
 
-SOURCE_ROOT: Path = configuration.SOURCE_ROOT
-RESOURCE_DIRECTORY_CANDIDATES: Sequence[Path] = [
-    SOURCE_ROOT / "configuration",
-    SOURCE_ROOT / "facebook/internal-configuration",
-]
-
-
-def _get_resource_path(path: str) -> Optional[str]:
-    fbsource = Path(__file__)
-    root = Path("/")
-    while fbsource.parent != root:
-        fbsource = fbsource.parent
-        if fbsource.name == "fbsource":
-            break
-
-    if fbsource == root:
-        return None
-
-    for candidate in RESOURCE_DIRECTORY_CANDIDATES:
-        resource_path = fbsource / candidate / path
-        if resource_path.exists():
-            return os.fspath(resource_path)
-
-    return None
-
-
 def main() -> None:
     logging.basicConfig(level=logging.INFO, format="%(levelname)s %(message)s")
     build_directory = Path(tempfile.mkdtemp())
@@ -315,13 +289,13 @@ def main() -> None:
         configuration_arguments.add_argument(
             "--system-jar-configuration-path",
             type=_path_exists,
-            default=_get_resource_path("default_system_jar_paths.json"),
+            default=os.fspath(configuration.get_path("default_system_jar_paths.json")),
             help="A JSON configuration file with a list of paths to the system jars.",
         )
         configuration_arguments.add_argument(
             "--rules-paths",
             type=str,
-            default=_get_resource_path("rules.json"),
+            default=os.fspath(configuration.get_path("rules.json")),
             help="A `;`-separated list of rules files and directories containing rules files.",
         )
         configuration_arguments.add_argument(
@@ -351,14 +325,17 @@ def main() -> None:
         configuration_arguments.add_argument(
             "--model-generator-configuration-paths",
             type=_separated_paths_exist,
-            default=_get_resource_path("default_generator_config.json"),
+            default=os.fspath(configuration.get_path("default_generator_config.json")),
             help="""A `;`-separated list of paths specifying JSON configuration files. Each file is a list of paths
             to JSON model generators relative to the configuration file or names of CPP model generators.""",
         )
         configuration_arguments.add_argument(
             "--model-generator-search-paths",
             type=_separated_paths_exist,
-            default=configuration.DEFAULT_GENERATOR_SEARCH_PATHS,
+            default=";".join(
+                os.fspath(path)
+                for path in configuration.get_default_generator_search_paths()
+            ),
             help="A `;`-separated list of paths where we look up JSON model generators.",
         )
         configuration_arguments.add_argument(
@@ -498,11 +475,7 @@ def main() -> None:
             "--maximum-source-sink-distance",
             str(arguments.maximum_source_sink_distance),
             "--model-generator-configuration-paths",
-            (
-                arguments.model_generator_configuration_paths
-                if arguments.model_generator_configuration_paths
-                else arguments.generator_configuration_path
-            ),
+            arguments.model_generator_configuration_paths,
         ]
 
         if arguments.model_generator_search_paths is not None:
@@ -559,7 +532,7 @@ def main() -> None:
         if output.returncode != 0:
             LOG.fatal(f"Analysis binary exited with exit code {output.returncode}.")
             sys.exit(output.returncode)
-    except ClientError as error:
+    except (ClientError, configuration.Error) as error:
         LOG.fatal(error.args[0])
         sys.exit(1)
     except Exception:
