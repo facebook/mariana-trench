@@ -15,7 +15,7 @@ import tempfile
 import traceback
 import typing
 from pathlib import Path
-from typing import Optional, Sequence
+from typing import TypeVar, Optional, Sequence
 
 try:
     from ..facebook.shim import configuration
@@ -31,6 +31,15 @@ LOG: logging.Logger = logging.getLogger(__name__)
 
 class ClientError(Exception):
     pass
+
+
+_T = TypeVar("_T")
+
+
+def _none_throws(optional: Optional[_T]) -> _T:
+    if optional is None:
+        raise AssertionError("Unexpected `None`")
+    return optional
 
 
 def _path_exists(path: str) -> str:
@@ -161,16 +170,28 @@ def _get_analysis_binary(arguments: argparse.Namespace) -> Path:
         # Use the user-provided binary.
         return _check_executable(Path(from_arguments))
 
-    # Build the mariana-trench binary from source.
-    return _build_executable_target(
-        configuration.BINARY_TARGET,
-        mode=arguments.build,
-    )
+    buck_target = configuration.BINARY_BUCK_TARGET
+    if buck_target:
+        # Build the mariana-trench binary from buck (facebook-only).
+        return _build_executable_target(
+            buck_target,
+            mode=arguments.build,
+        )
+
+    path_command = configuration.BINARY_PATH_COMMAND
+    if path_command:
+        # Find the mariana-trench binary in the path (open-source).
+        command = shutil.which(path_command)
+        if command is None:
+            raise ClientError(f"Could not find `{path_command}` in PATH.")
+        return Path(command)
+
+    raise ClientError("Could not find the analyzer binary.")
 
 
 def _desugar_jar_file(jar_path: Path) -> Path:
     LOG.info(f"Desugaring `{jar_path}`...")
-    desugar_tool = _build_target(configuration.DESUGAR_TARGET)
+    desugar_tool = _build_target(_none_throws(configuration.DESUGAR_BUCK_TARGET))
     desugared_jar_file = jar_path.parent / (jar_path.stem + "-desugared.jar")
     output = subprocess.run(
         [
@@ -248,16 +269,21 @@ def main() -> None:
 
         target_arguments = parser.add_argument_group("Target arguments")
         target_arguments.add_argument(
-            "--apk-path", type=_path_exists, help="The APK to analyze."
+            "--apk-path",
+            type=_path_exists,
+            help="The APK to analyze.",
         )
-        target_arguments.add_argument(
-            "--java-target",
-            type=str,
-            help="The java buck target to analyze. If the target is `java_library`, append `-javaX` were X is the java version (e.g. 11).",
-        )
-        target_arguments.add_argument(
-            "--java-mode", type=str, help="The buck mode for building the java target."
-        )
+        if configuration.FACEBOOK_SHIM:
+            target_arguments.add_argument(
+                "--java-target",
+                type=str,
+                help="The java buck target to analyze. If the target is `java_library`, append `-javaX` were X is the java version (e.g. 11).",
+            )
+            target_arguments.add_argument(
+                "--java-mode",
+                type=str,
+                help="The buck mode for building the java target.",
+            )
 
         output_arguments = parser.add_argument_group("Output arguments")
         output_arguments.add_argument(
@@ -276,13 +302,14 @@ def main() -> None:
         binary_arguments.add_argument(
             "--binary", type=str, help="The Mariana Trench binary."
         )
-        binary_arguments.add_argument(
-            "--build",
-            type=str,
-            default=configuration.BINARY_BUILD_MODE,
-            metavar="BUILD_MODE",
-            help="The Mariana Trench binary build mode.",
-        )
+        if configuration.FACEBOOK_SHIM:
+            binary_arguments.add_argument(
+                "--build",
+                type=str,
+                default=_none_throws(configuration.BINARY_BUCK_BUILD_MODE),
+                metavar="BUILD_MODE",
+                help="The Mariana Trench binary buck build mode.",
+            )
 
         configuration_arguments = parser.add_argument_group("Configuration arguments")
         configuration_arguments.add_argument(
@@ -409,17 +436,29 @@ def main() -> None:
 
         arguments: argparse.Namespace = parser.parse_args()
 
-        if arguments.java_target and arguments.apk_path:
+        if (
+            configuration.FACEBOOK_SHIM
+            and arguments.java_target is not None
+            and arguments.apk_path is not None
+        ):
             parser.error(
-                "The analysis target can either be a java target (--java-target) or an apk file (--apk-path), but not both."
+                "The analysis target can either be a java target (--java-target)"
+                + " or an apk file (--apk-path), but not both."
             )
-        if arguments.java_target is None and arguments.apk_path is None:
+        elif (
+            configuration.FACEBOOK_SHIM
+            and arguments.java_target is None
+            and arguments.apk_path is None
+        ):
             parser.error(
-                "The analysis target should either be a java target (--java-target) or an apk file (--apk-path)."
+                "The analysis target should either be a java target (--java-target)"
+                + " or an apk file (--apk-path)."
             )
+        elif not configuration.FACEBOOK_SHIM and arguments.apk_path is None:
+            parser.error("The argument --apk-path is required.")
 
         # Build the vanilla java project.
-        if arguments.java_target:
+        if configuration.FACEBOOK_SHIM and arguments.java_target:
             jar_file = _extract_jex_file_if_exists(
                 _build_target(arguments.java_target, mode=arguments.java_mode),
                 arguments.java_target,

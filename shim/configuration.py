@@ -4,14 +4,18 @@
 # LICENSE file in the root directory of this source tree.
 
 from pathlib import Path
+from typing import Optional
+
+FACEBOOK_SHIM: bool = False
 
 SOURCE_ROOT: Path = Path(".")
 
-BINARY_TARGET: str = "<target>"
-BINARY_BUILD_MODE: str = "<build mode>"
+BINARY_BUCK_TARGET: Optional[str] = None
+BINARY_BUCK_BUILD_MODE: Optional[str] = None
+BINARY_PATH_COMMAND: Optional[str] = "mariana-trench-binary"
 
-DESUGAR_TARGET: str = "<target>"
-DESUGAR_LOG_CONFIGURATION_PATH: str = "<path>"
+DESUGAR_BUCK_TARGET: Optional[str] = None
+DESUGAR_LOG_CONFIGURATION_PATH: Optional[str] = None
 
 DEFAULT_GENERATOR_SEARCH_PATHS: str = "<generator search path>"
 
