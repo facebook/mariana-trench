@@ -5,6 +5,7 @@
 # LICENSE file in the root directory of this source tree.
 
 import argparse
+import collections
 import logging
 import os
 import shutil
@@ -74,6 +75,7 @@ def _prepare_build_directory(
     _add_initial_files(build_root)
     _sync_readme(build_root, repository)
     _sync_python_files(build_root, repository, pyredex)
+    _sync_configuration_files(build_root, repository)
     _sync_binary(build_root, binary)
     _add_pyproject(build_root)
     _add_setup_cfg(build_root, package_name, package_version)
@@ -105,9 +107,10 @@ def _mkdir_and_init(module_path: Path) -> None:
 
 
 def _add_initial_files(build_root: Path) -> None:
-    module_path = build_root / "mariana_trench"
-    _mkdir_and_init(module_path)
-    _mkdir_and_init(module_path / "shim")
+    _mkdir_and_init(build_root / "mariana_trench")
+    _mkdir_and_init(build_root / "mariana_trench" / "shim")
+    (build_root / "share").mkdir()
+    (build_root / "share" / "mariana-trench").mkdir()
 
 
 def _copy(source_path: Path, target_path: Path) -> None:
@@ -140,6 +143,16 @@ def _sync_python_files(build_root: Path, repository: Path, pyredex: Path) -> Non
     _rsync_files(filters, pyredex, build_root, ["-avm"])
 
 
+def _sync_configuration_files(build_root: Path, repository: Path) -> None:
+    filters = ["+ */", "-! *.json"]
+    _rsync_files(
+        filters,
+        repository / "configuration",
+        build_root / "share/mariana-trench",
+        ["-avm"],
+    )
+
+
 def _sync_binary(build_root: Path, binary: Path) -> None:
     (build_root / "bin").mkdir()
     _copy(binary, build_root / "bin" / "mariana-trench-binary")
@@ -166,6 +179,19 @@ def _add_setup_cfg(
     package_version: str,
 ) -> None:
     LOG.info(f"Generating `{build_root}/setup.cfg`")
+
+    configuration_directories = collections.defaultdict(list)
+    for path in build_root.glob("share/mariana-trench/**/*"):
+        if path.is_file():
+            path = path.relative_to(build_root)
+            configuration_directories[path.parent].append(path)
+
+    configuration_files = ""
+    for directory, paths in configuration_directories.items():
+        configuration_files += f"{directory} =\n"
+        for path in paths:
+            configuration_files += f"    {path}\n"
+
     setup_cfg = build_root / "setup.cfg"
     setup_cfg.write_text(
         f"""\
@@ -208,6 +234,7 @@ console_scripts =
 
 [options.data_files]
 bin = bin/mariana-trench-binary
+{configuration_files}
 """
     )
 
