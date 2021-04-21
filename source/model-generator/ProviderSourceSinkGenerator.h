@@ -11,10 +11,10 @@
 
 namespace marianatrench {
 
-class ProviderSourceGenerator : public ModelGenerator {
+class ProviderSourceSinkGenerator : public ModelGenerator {
  public:
-  explicit ProviderSourceGenerator(Context& context)
-      : ModelGenerator("provider_source_generator", context) {}
+  explicit ProviderSourceSinkGenerator(Context& context)
+      : ModelGenerator("provider_source_sink_generator", context) {}
 
   std::vector<Model> run(const Methods&) override;
 };

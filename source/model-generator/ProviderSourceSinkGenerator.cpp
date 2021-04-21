@@ -11,7 +11,7 @@
 
 #include <mariana-trench/Log.h>
 #include <mariana-trench/Redex.h>
-#include <mariana-trench/model-generator/ProviderSourceGenerator.h>
+#include <mariana-trench/model-generator/ProviderSourceSinkGenerator.h>
 
 namespace marianatrench {
 
@@ -28,8 +28,7 @@ std::unordered_set<std::string> provider_regex_strings = {
     ".*;\\.(doO|o)penAssetFile:\\(Landroid/net/Uri;Ljava/lang/String;.*\\)Landroid/content/res/AssetFileDescriptor;",
     ".*;\\.(doO|o)penFile:\\(Landroid/net/Uri;Ljava/lang/String;.*\\)Landroid/os/ParcelFileDescriptor;",
     ".*;\\.(doO|o)penPipeHelper:\\(Landroid/net/Uri;Ljava/lang/String;.*\\)Landroid/os/ParcelFileDescriptor;",
-    ".*;\\.(doO|o)penTypedAssetFile:\\(Landroid/net/Uri;Ljava/lang/String;.*\\)Landroid/content/res/AssetFileDescriptor;",
-    ".*;\\.(doQ|q)uery:\\(Landroid/net/Uri;\\[Ljava/lang/String;.*\\)Landroid/database/Cursor;"};
+    ".*;\\.(doO|o)penTypedAssetFile:\\(Landroid/net/Uri;Ljava/lang/String;.*\\)Landroid/content/res/AssetFileDescriptor;"};
 
 std::unordered_set<std::string> permission_method_suffixes = {
     ".onCheckPermissions:()Z",
@@ -59,7 +58,7 @@ bool has_inline_permissions(DexClass* dex_class) {
   return false;
 }
 
-Model source_all_parameters(
+Model create_model(
     const Method* method,
     bool has_permissions,
     Context& context) {
@@ -78,12 +77,25 @@ Model source_all_parameters(
             /* kind */ "ProviderUserInput",
             features));
   }
+  auto return_type = generator::get_return_type_string(method);
+  if (!return_type) {
+    return model;
+  }
+  if (!boost::equals(*return_type, "I")) {
+    model.add_sink(
+        AccessPath(Root(Root::Kind::Return)),
+        generator::sink(
+            context,
+            method,
+            /* kind */ "ProviderExitNode",
+            /* features */ features));
+  }
   return model;
 }
 
 } // namespace
 
-std::vector<Model> ProviderSourceGenerator::run(const Methods& methods) {
+std::vector<Model> ProviderSourceSinkGenerator::run(const Methods& methods) {
   std::unordered_set<std::string> manifest_providers = {};
   try {
     const auto manifest_class_info = get_manifest_class_info(
@@ -137,8 +149,7 @@ std::vector<Model> ProviderSourceGenerator::run(const Methods& methods) {
               permission_providers.emplace(dex_class, has_permissions);
             }
           }
-          models.push_back(
-              source_all_parameters(method, has_permissions, context_));
+          models.push_back(create_model(method, has_permissions, context_));
           break;
         }
       }

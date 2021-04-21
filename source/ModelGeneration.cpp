@@ -23,7 +23,7 @@
 #include <mariana-trench/model-generator/JsonModelGenerator.h>
 #include <mariana-trench/model-generator/ModelGeneratorConfiguration.h>
 #include <mariana-trench/model-generator/NoJoinOverridesGenerator.h>
-#include <mariana-trench/model-generator/ProviderSourceGenerator.h>
+#include <mariana-trench/model-generator/ProviderSourceSinkGenerator.h>
 #include <mariana-trench/model-generator/RandomSourceGenerator.h>
 #include <mariana-trench/model-generator/RepeatingAlarmSinkGenerator.h>
 #include <mariana-trench/model-generator/ServiceSourceGenerator.h>
@@ -42,7 +42,7 @@ std::map<std::string, std::unique_ptr<ModelGenerator>> make_model_generators(
   builtin_generators.push_back(
       std::make_unique<NoJoinOverridesGenerator>(context));
   builtin_generators.push_back(
-      std::make_unique<ProviderSourceGenerator>(context));
+      std::make_unique<ProviderSourceSinkGenerator>(context));
   builtin_generators.push_back(
       std::make_unique<RandomSourceGenerator>(context));
   builtin_generators.push_back(
