@@ -82,6 +82,13 @@ add_executable(mariana-trench-binary "source/Main.cpp")
 target_link_libraries(mariana-trench-binary PUBLIC mariana-trench-library)
 install(TARGETS mariana-trench-binary DESTINATION "bin")
 
+function(generate_shim_wrapper)
+  set(REPOSITORY_ROOT "${CMAKE_SOURCE_DIR}")
+  set(BUILD_ROOT "${CMAKE_BINARY_DIR}")
+  configure_file("scripts/cmake_shim.py" "${CMAKE_CURRENT_BINARY_DIR}/mariana-trench")
+endfunction()
+generate_shim_wrapper()
+
 # Tests
 include(GoogleTest)
 add_custom_target(build-tests)

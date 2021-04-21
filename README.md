@@ -80,6 +80,23 @@ python scripts/setup.py \
   install
 ```
 
+### Development
+
+If you are making changes to Mariana Trench, you can use the `mariana-trench` wrapper inside the build directory:
+```shell
+cd build
+./mariana-trench -h
+```
+
+This way, you don't have to use `scripts/setup.py` between every changes.
+Python changes will be automatically picked up.
+C++ changes will be picked up after running `make`.
+
+Note that you will need to install all python dependencies:
+```shell
+pip install pyre_extensions fb-sapp
+```
+
 ### Run the tests
 
 To run the tests after building Mariana Trench, use:
