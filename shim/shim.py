@@ -15,7 +15,7 @@ import tempfile
 import traceback
 import typing
 from pathlib import Path
-from typing import Optional, Sequence
+from typing import Optional, Any
 
 from pyre_extensions import none_throws
 
@@ -226,12 +226,27 @@ def _build_apk_from_jar(jar_path: Path) -> Path:
     return Path(dex_file)
 
 
+class VersionAction(argparse.Action):
+    def __call__(self, parser: argparse.ArgumentParser, *_: Any) -> None:
+        from . import package
+
+        print(f"{package.name} {package.version}")
+        print("Copyright (c) Facebook, Inc. and its affiliates.")
+        parser.exit()
+
+
 def main() -> None:
     logging.basicConfig(level=logging.INFO, format="%(levelname)s %(message)s")
     build_directory = Path(tempfile.mkdtemp())
     try:
         parser = argparse.ArgumentParser(
             description="A security-focused static analyzer targeting Android."
+        )
+        parser.add_argument(
+            "--version",
+            action=VersionAction,
+            nargs=0,
+            help="Print the version and exit",
         )
 
         target_arguments = parser.add_argument_group("Target arguments")
@@ -523,6 +538,7 @@ def main() -> None:
         LOG.info(f"Running Mariana Trench: {' '.join(command)}")
         output = subprocess.run(command)
         if output.returncode != 0:
+            # pyre-ignore [16]: `logging.Logger` has no attribute `fatal`.
             LOG.fatal(f"Analysis binary exited with exit code {output.returncode}.")
             sys.exit(output.returncode)
     except (ClientError, configuration.Error) as error:

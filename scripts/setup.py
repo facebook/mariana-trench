@@ -77,6 +77,7 @@ def _prepare_build_directory(
     _sync_python_files(build_root, repository, pyredex)
     _sync_configuration_files(build_root, repository)
     _sync_binary(build_root, binary)
+    _add_package_py(build_root, package_name, package_version)
     _add_pyproject(build_root)
     _add_setup_cfg(build_root, package_name, package_version)
 
@@ -156,6 +157,21 @@ def _sync_configuration_files(build_root: Path, repository: Path) -> None:
 def _sync_binary(build_root: Path, binary: Path) -> None:
     (build_root / "bin").mkdir()
     _copy(binary, build_root / "bin" / "mariana-trench-binary")
+
+
+def _add_package_py(build_root: Path, package_name: str, package_version: str) -> None:
+    path = build_root / "mariana_trench/shim/package.py"
+    path.write_text(
+        f"""\
+# Copyright (c) Facebook, Inc. and its affiliates.
+#
+# This source code is licensed under the MIT license found in the
+# LICENSE file in the root directory of this source tree.
+
+name = '{package_name}'
+version = '{package_version}'
+"""
+    )
 
 
 def _add_pyproject(build_root: Path) -> None:
