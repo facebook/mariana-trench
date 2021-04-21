@@ -17,16 +17,33 @@ import styles from './styles.module.css';
 
 const features = [
   {
-    title: 'Feature 1',
-    description: <>Description of Feature 1</>,
+    title: 'Android and Java',
+    description: (
+      <>
+        Find security vulnerabilities in Android and Java applications. Mariana
+        Trench analyzes Dalvik bytecode.
+      </>
+    ),
   },
   {
-    title: 'Feature 2',
-    description: <>Description of Feature 2</>,
+    title: 'Fast',
+    description: (
+      <>
+        Mariana Trench is built to run fast on large codebases (10s of millions
+        of lines of code). It can find vulnerabilities as code changes, before
+        it ever lands in your repository.
+      </>
+    ),
   },
   {
-    title: 'Feature 3',
-    description: <>Description of Feature 3</>,
+    title: 'Customizable',
+    description: (
+      <>
+        Adapt Mariana Trench to your needs. Find the vulnerabilities that you
+        care about by teaching Mariana Trench where data comes from and where
+        you do not want it to go.
+      </>
+    ),
   },
 ];
 
@@ -78,7 +95,6 @@ function Home() {
         <div className="container padding-vert--xl text--left">
           <div className="row">
             <div className="col">
-              <h1 className="text--center">Key Features</h1>
               {features && features.length > 0 && (
                 <section className={styles.features}>
                   <div className="container">
