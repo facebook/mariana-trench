@@ -5,13 +5,6 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-#include <fstream>
-#include <optional>
-#include <sstream>
-#include <unordered_map>
-
-#include <boost/algorithm/string.hpp>
-#include <boost/filesystem/string_file.hpp>
 #include <fmt/format.h>
 
 #include <AbstractDomain.h>
@@ -30,6 +23,7 @@
 #include <mariana-trench/Interprocedural.h>
 #include <mariana-trench/Log.h>
 #include <mariana-trench/Methods.h>
+#include <mariana-trench/OperatingSystem.h>
 #include <mariana-trench/Overrides.h>
 #include <mariana-trench/Scheduler.h>
 #include <mariana-trench/Statistics.h>
@@ -108,22 +102,6 @@ std::string show_control_flow_graph(const cfg::ControlFlowGraph& cfg) {
     }
   }
   return string;
-}
-
-double resident_set_size_in_gb() {
-  try {
-    std::ifstream infile("/proc/self/status");
-    std::string line;
-    while (std::getline(infile, line)) {
-      if (boost::starts_with(line, "VmRSS:")) {
-        return (double)std::stoi(line.substr(7), nullptr) / 1000 / 1000;
-      }
-    }
-    ERROR(1, "Resident set size not found.");
-  } catch (const std::exception& error) {
-    ERROR(1, "Unable to get resident set size: {}", error.what());
-  }
-  return -1.0;
 }
 
 Model analyze(
