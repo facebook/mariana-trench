@@ -116,6 +116,7 @@ std::vector<DexMethod*> redex::create_methods(
     const std::string& class_name,
     const std::vector<std::string>& bodies,
     const DexType* super,
+    const bool abstract,
     const std::optional<std::vector<std::string>>& annotations) {
   std::vector<DexMethod*> dex_methods;
 
@@ -130,9 +131,11 @@ std::vector<DexMethod*> redex::create_methods(
 
   for (const auto& body : bodies) {
     auto* dex_method = assembler::method_from_string(body);
-    if (annotations) {
+    if (annotations || abstract) {
       dex_method->make_non_concrete();
       dex_method->set_external();
+    }
+    if (annotations) {
       dex_method->attach_annotation_set(create_annotation_set(*annotations));
     }
     dex_methods.push_back(dex_method);
@@ -149,8 +152,10 @@ DexMethod* redex::create_method(
     const std::string& class_name,
     const std::string& body,
     const DexType* super,
+    const bool abstract,
     const std::optional<std::vector<std::string>>& annotations) {
-  return create_methods(scope, class_name, {body}, super, annotations).front();
+  return create_methods(scope, class_name, {body}, super, abstract, annotations)
+      .front();
 }
 
 DexMethod* redex::create_void_method(
@@ -163,6 +168,7 @@ DexMethod* redex::create_void_method(
     bool is_static,
     bool is_private,
     bool is_native,
+    bool is_abstract,
     const std::optional<std::vector<std::string>>& annotations) {
   std::string access = is_private ? "private" : "public";
   if (is_static) {
@@ -194,7 +200,8 @@ DexMethod* redex::create_void_method(
       parameter_types,
       return_type,
       return_statement);
-  auto* dex_method = create_method(scope, class_name, body, super, annotations);
+  auto* dex_method =
+      create_method(scope, class_name, body, super, is_abstract, annotations);
 
   // Sanity checks
   if (!dex_method->is_external()) {

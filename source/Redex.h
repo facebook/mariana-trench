@@ -39,6 +39,7 @@ std::vector<DexMethod*> create_methods(
     const std::string& class_name,
     const std::vector<std::string>& bodies,
     const DexType* super = nullptr,
+    const bool abstract = false,
     const std::optional<std::vector<std::string>>& annotations = std::nullopt);
 
 DexMethod* create_method(
@@ -46,6 +47,7 @@ DexMethod* create_method(
     const std::string& class_name,
     const std::string& body,
     const DexType* super = nullptr,
+    const bool abstract = false,
     const std::optional<std::vector<std::string>>& annotations = std::nullopt);
 
 DexMethod* create_void_method(
@@ -58,6 +60,7 @@ DexMethod* create_void_method(
     bool is_static = false,
     bool is_private = false,
     bool is_native = false,
+    bool is_abstract = false,
     const std::optional<std::vector<std::string>>& annotations = std::nullopt);
 
 DexAnnotationSet* create_annotation_set(
