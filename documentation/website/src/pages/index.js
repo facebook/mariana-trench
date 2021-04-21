@@ -92,7 +92,7 @@ function Home() {
         </div>
       </header>
       <main>
-        <div className="container padding-vert--xl text--left">
+        <div className="container padding-vert--s text--left">
           <div className="row">
             <div className="col">
               {features && features.length > 0 && (

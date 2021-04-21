@@ -8,7 +8,5 @@
  */
 
 module.exports = {
-  someSidebar: {
-       'Quick Start': ['introduction'],
-  },
+  someSidebar: ['introduction'],
 };
