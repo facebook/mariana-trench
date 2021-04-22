@@ -1,13 +1,13 @@
 {
-  "metadata" : 
+  "metadata" :
   {
     "@generated" : true
   },
-  "models" : 
+  "models" :
   [
     {
       "method" : "LFlow;.flow:(LSink;LSource;)V",
-      "position" : 
+      "position" :
       {
         "line" : 0,
         "path" : "Flow.java"

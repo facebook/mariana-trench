@@ -1,21 +1,21 @@
 {
-  "metadata" : 
+  "metadata" :
   {
     "@generated" : true
   },
-  "models" : 
+  "models" :
   [
     {
       "method" : "LFlow;.different_lengths:(LData;)V",
-      "position" : 
+      "position" :
       {
         "line" : 0,
         "path" : "Flow.java"
       },
-      "sinks" : 
+      "sinks" :
       [
         {
-          "call_position" : 
+          "call_position" :
           {
             "line" : 1,
             "path" : "Flow.java"
@@ -25,13 +25,13 @@
           "caller_port" : "Argument(1)",
           "distance" : 3,
           "kind" : "TestSink",
-          "origins" : 
+          "origins" :
           [
             "LSink;.sink:(LData;)V"
           ]
         },
         {
-          "call_position" : 
+          "call_position" :
           {
             "line" : 1,
             "path" : "Flow.java"
@@ -41,7 +41,7 @@
           "caller_port" : "Argument(1)",
           "distance" : 2,
           "kind" : "TestSink",
-          "origins" : 
+          "origins" :
           [
             "LSink;.sink:(LData;)V"
           ]
@@ -50,15 +50,15 @@
     },
     {
       "method" : "LFlow;.into_different_lengths:(LData;)V",
-      "position" : 
+      "position" :
       {
         "line" : 0,
         "path" : "Flow.java"
       },
-      "sinks" : 
+      "sinks" :
       [
         {
-          "call_position" : 
+          "call_position" :
           {
             "line" : 1,
             "path" : "Flow.java"
@@ -68,7 +68,7 @@
           "caller_port" : "Argument(1)",
           "distance" : 3,
           "kind" : "TestSink",
-          "origins" : 
+          "origins" :
           [
             "LSink;.sink:(LData;)V"
           ]
@@ -77,15 +77,15 @@
     },
     {
       "method" : "LFlow;.into_into_sink:(LData;)V",
-      "position" : 
+      "position" :
       {
         "line" : 0,
         "path" : "Flow.java"
       },
-      "sinks" : 
+      "sinks" :
       [
         {
-          "call_position" : 
+          "call_position" :
           {
             "line" : 1,
             "path" : "Flow.java"
@@ -95,7 +95,7 @@
           "caller_port" : "Argument(1)",
           "distance" : 2,
           "kind" : "TestSink",
-          "origins" : 
+          "origins" :
           [
             "LSink;.sink:(LData;)V"
           ]
@@ -104,15 +104,15 @@
     },
     {
       "method" : "LFlow;.into_sink:(LData;)V",
-      "position" : 
+      "position" :
       {
         "line" : 0,
         "path" : "Flow.java"
       },
-      "sinks" : 
+      "sinks" :
       [
         {
-          "call_position" : 
+          "call_position" :
           {
             "line" : 1,
             "path" : "Flow.java"
@@ -122,7 +122,7 @@
           "caller_port" : "Argument(1)",
           "distance" : 1,
           "kind" : "TestSink",
-          "origins" : 
+          "origins" :
           [
             "LSink;.sink:(LData;)V"
           ]

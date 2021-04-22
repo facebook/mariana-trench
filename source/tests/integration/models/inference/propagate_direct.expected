@@ -1,19 +1,19 @@
 {
-  "metadata" : 
+  "metadata" :
   {
     "@generated" : true
   },
-  "models" : 
+  "models" :
   [
     {
       "inline_as" : "Argument(1)",
       "method" : "LFlow;.flow:(LData;LData;)LData;",
-      "position" : 
+      "position" :
       {
         "line" : 0,
         "path" : "Flow.java"
       },
-      "propagation" : 
+      "propagation" :
       [
         {
           "input" : "Argument(1)",

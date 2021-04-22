@@ -1,21 +1,21 @@
 {
-  "metadata" : 
+  "metadata" :
   {
     "@generated" : true
   },
-  "models" : 
+  "models" :
   [
     {
       "method" : "LFlow;.flow:(LData;LData;)V",
-      "position" : 
+      "position" :
       {
         "line" : 0,
         "path" : "Flow.java"
       },
-      "sinks" : 
+      "sinks" :
       [
         {
-          "call_position" : 
+          "call_position" :
           {
             "line" : 1,
             "path" : "Flow.java"
@@ -25,13 +25,13 @@
           "caller_port" : "Argument(1)",
           "distance" : 1,
           "kind" : "TestSink",
-          "origins" : 
+          "origins" :
           [
             "LSink;.sink:(LData;)V"
           ]
         },
         {
-          "call_position" : 
+          "call_position" :
           {
             "line" : 3,
             "path" : "Flow.java"
@@ -41,7 +41,7 @@
           "caller_port" : "Argument(2)",
           "distance" : 1,
           "kind" : "TestSink",
-          "origins" : 
+          "origins" :
           [
             "LSink;.sink:(LData;)V"
           ]

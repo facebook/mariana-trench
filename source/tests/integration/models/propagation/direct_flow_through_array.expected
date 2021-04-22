@@ -1,28 +1,28 @@
 {
-  "metadata" : 
+  "metadata" :
   {
     "@generated" : true
   },
-  "models" : 
+  "models" :
   [
     {
-      "issues" : 
+      "issues" :
       [
         {
-          "always_features" : 
+          "always_features" :
           [
             "via-array"
           ],
-          "position" : 
+          "position" :
           {
             "line" : 5,
             "path" : "Flow.java"
           },
           "rule" : 1,
-          "sinks" : 
+          "sinks" :
           [
             {
-              "call_position" : 
+              "call_position" :
               {
                 "line" : 5,
                 "path" : "Flow.java"
@@ -31,20 +31,20 @@
               "callee_port" : "Argument(1)",
               "distance" : 1,
               "kind" : "TestSink",
-              "origins" : 
+              "origins" :
               [
                 "LSink;.sink:(LData;)V"
               ]
             }
           ],
-          "sources" : 
+          "sources" :
           [
             {
-              "always_features" : 
+              "always_features" :
               [
                 "via-array"
               ],
-              "call_position" : 
+              "call_position" :
               {
                 "line" : 2,
                 "path" : "Flow.java"
@@ -53,20 +53,20 @@
               "callee_port" : "Return",
               "distance" : 1,
               "kind" : "TestSource",
-              "local_features" : 
+              "local_features" :
               {
-                "always_features" : 
+                "always_features" :
                 [
                   "via-array"
                 ]
               },
-              "local_positions" : 
+              "local_positions" :
               [
                 {
                   "line" : 3
                 }
               ],
-              "origins" : 
+              "origins" :
               [
                 "LSource;.source:()LData;"
               ]
@@ -75,7 +75,7 @@
         }
       ],
       "method" : "LFlow;.flow:()V",
-      "position" : 
+      "position" :
       {
         "line" : 0,
         "path" : "Flow.java"

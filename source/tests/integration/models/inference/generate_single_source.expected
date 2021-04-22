@@ -1,15 +1,15 @@
 {
-  "metadata" : 
+  "metadata" :
   {
     "@generated" : true
   },
-  "models" : 
+  "models" :
   [
     {
-      "generations" : 
+      "generations" :
       [
         {
-          "call_position" : 
+          "call_position" :
           {
             "line" : 1,
             "path" : "Flow.java"
@@ -19,14 +19,14 @@
           "caller_port" : "Return",
           "distance" : 1,
           "kind" : "TestSource",
-          "origins" : 
+          "origins" :
           [
             "LSource;.source:()LData;"
           ]
         }
       ],
       "method" : "LFlow;.flow:()LData;",
-      "position" : 
+      "position" :
       {
         "line" : 0,
         "path" : "Flow.java"

@@ -1,21 +1,21 @@
 {
-  "metadata" : 
+  "metadata" :
   {
     "@generated" : true
   },
-  "models" : 
+  "models" :
   [
     {
       "method" : "LFlow;.flow:(LData;)V",
-      "position" : 
+      "position" :
       {
         "line" : 0,
         "path" : "Flow.java"
       },
-      "sinks" : 
+      "sinks" :
       [
         {
-          "call_position" : 
+          "call_position" :
           {
             "line" : 3,
             "path" : "Flow.java"
@@ -25,7 +25,7 @@
           "caller_port" : "Argument(1).other_field",
           "distance" : 1,
           "kind" : "TestSink",
-          "origins" : 
+          "origins" :
           [
             "LSink;.sink:(LData;)V"
           ]

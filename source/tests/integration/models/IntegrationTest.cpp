@@ -15,6 +15,7 @@
 #include <IRAssembler.h>
 #include <RedexContext.h>
 #include <Show.h>
+#include <boost/regex.hpp>
 
 #include <mariana-trench/ArtificialMethods.h>
 #include <mariana-trench/CallGraph.h>
@@ -494,6 +495,9 @@ TEST_P(IntegrationTest, ReturnsExpectedModel) {
     boost::filesystem::load_string_file(expected_path, expected_output);
   }
   auto models_output = JsonValidation::to_styled_string(value);
+  models_output =
+      boost::regex_replace(models_output, boost::regex("\\s+\n"), "\n");
+  models_output += "\n";
 
   if (models_output != expected_output) {
     boost::filesystem::save_string_file(
