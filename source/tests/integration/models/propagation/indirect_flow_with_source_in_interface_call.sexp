@@ -1,4 +1,4 @@
-(method (public) "LInterface;.source:()LData;"
+(abstract method (public) "LInterface;.source:()LData;"
  (
    LINE(1)
    (return-void)

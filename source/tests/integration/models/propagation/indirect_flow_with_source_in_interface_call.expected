@@ -89,11 +89,29 @@
     },
     {
       "method" : "LInterface;.source:()LData;",
+      "modes" : 
+      [
+        "add-via-obscure-feature",
+        "skip-analysis",
+        "taint-in-taint-out",
+        "taint-in-taint-this"
+      ],
       "position" : 
       {
-        "line" : 0,
         "path" : "Interface.java"
-      }
+      },
+      "propagation" : 
+      [
+        {
+          "always_features" : 
+          [
+            "via-obscure",
+            "via-obscure-taint-in-taint-out"
+          ],
+          "input" : "Argument(0)",
+          "output" : "Return"
+        }
+      ]
     }
   ]
 }

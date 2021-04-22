@@ -152,9 +152,10 @@ const auto rules = test::parse_json(R"(
 )");
 
 struct TestSource {
-  const std::string class_name;
-  const std::vector<std::string> methods;
-  const std::optional<std::string> super = std::nullopt;
+  std::string class_name;
+  std::vector<std::string> methods;
+  std::vector<std::string> abstract_methods;
+  std::optional<std::string> super = std::nullopt;
 };
 
 class Parser {
@@ -163,10 +164,46 @@ class Parser {
     return Parser().parse_source(source);
   }
 
+  static std::vector<TestSource> sort_by_hierarchy(
+      std::vector<TestSource>& sources) {
+    // Ensure dependencies are created first, if they contain methods.
+    auto sorted_sources = std::vector<TestSource>();
+    while (sources.size() != sorted_sources.size()) {
+      auto unsorted_sources = std::vector<TestSource>();
+      for (const auto& source : sources) {
+        if (!source.super ||
+            std::find_if(
+                sorted_sources.begin(),
+                sorted_sources.end(),
+                [source](const TestSource& sorted_source) {
+                  return sorted_source.class_name == source.super;
+                }) != sorted_sources.end()) {
+          sorted_sources.push_back(source);
+        } else {
+          unsorted_sources.push_back(source);
+        }
+      }
+      if (unsorted_sources.size() < sources.size()) {
+        sources = unsorted_sources;
+      } else {
+        // Remaining classes do not have dependencies with methods.
+        for (const auto& source : unsorted_sources) {
+          if (source.super) {
+            DexType::make_type(DexString::make_string(*source.super));
+          }
+          sorted_sources.push_back(source);
+        }
+        break;
+      }
+    }
+    return sorted_sources;
+  }
+
  private:
   void parse_method(
       const std::string& source,
-      const std::optional<std::string>& super) {
+      const std::optional<std::string>& super,
+      const bool abstract) {
     // Extract class name.
     auto offset = source.find("\"") + 1;
     auto class_name = source.substr(offset, source.find(".") - offset);
@@ -186,29 +223,38 @@ class Parser {
       preprocessed_source.replace(start, end - start + 1, replacement);
       start += replacement.size();
     }
-
+    if (abstract) {
+      class_name_to_abstract_methods_[class_name].push_back(
+          preprocessed_source);
+      class_name_to_methods_[class_name] = std::vector<std::string>();
+    } else {
+      class_name_to_methods_[class_name].push_back(preprocessed_source);
+      class_name_to_abstract_methods_[class_name] = std::vector<std::string>();
+    }
     if (std::find(class_order_.begin(), class_order_.end(), class_name) ==
         class_order_.end()) {
       class_order_.push_back(class_name);
     }
-    class_name_to_methods_[class_name].push_back(preprocessed_source);
   }
 
   std::vector<TestSource> parse_source(const std::string& source) {
-    // TODO(T54979484) proper parsing.
+    std::vector<TestSource> parsed_sources;
     std::vector<std::string> lines;
     boost::split(lines, source, boost::is_any_of("\n"));
 
     std::vector<std::string> buffer;
     std::optional<std::string> super = std::nullopt;
+    bool abstract = false;
 
     for (const auto& line : lines) {
       if (boost::starts_with(line, "(method ") ||
-          boost::starts_with(line, "(super")) {
+          boost::starts_with(line, "(super ") ||
+          boost::starts_with(line, "(abstract method ")) {
         if (!buffer.empty()) {
-          parse_method(boost::join(buffer, "\n"), super);
+          parse_method(boost::join(buffer, "\n"), super, abstract);
           buffer.clear();
           super = std::nullopt;
+          abstract = false;
         }
       }
 
@@ -218,27 +264,37 @@ class Parser {
         continue;
       }
 
+      if (boost::starts_with(line, "(abstract method ")) {
+        abstract = true;
+        auto modified_line = line;
+        buffer.push_back(
+            modified_line.replace(0, sizeof("(abstract method"), "(method"));
+        continue;
+      }
+
       buffer.push_back(line);
     }
 
     if (!buffer.empty()) {
-      parse_method(boost::join(buffer, "\n"), super);
+      parse_method(boost::join(buffer, "\n"), super, abstract);
     }
 
-    std::vector<TestSource> sources;
     for (const auto& class_name : class_order_) {
-      sources.push_back(TestSource{
+      parsed_sources.push_back(TestSource{
           class_name,
           /* methods */ class_name_to_methods_.at(class_name),
+          /* abstract methods */ class_name_to_abstract_methods_.at(class_name),
           /* super */ class_name_to_super_.at(class_name),
       });
     }
-    return sources;
+    return parsed_sources;
   }
 
   std::vector<std::string> class_order_;
   std::unordered_map<std::string, std::vector<std::string>>
       class_name_to_methods_;
+  std::unordered_map<std::string, std::vector<std::string>>
+      class_name_to_abstract_methods_;
   std::unordered_map<std::string, std::optional<std::string>>
       class_name_to_super_;
 };
@@ -331,18 +387,26 @@ TEST_P(IntegrationTest, ReturnsExpectedModel) {
   Scope scope(stubs());
   std::vector<const DexMethod*> methods;
 
-  std::string source;
-  boost::filesystem::load_string_file(path, source);
-  auto sources = Parser::parse(source);
+  std::string unparsed_source;
+  boost::filesystem::load_string_file(path, unparsed_source);
+  auto sources = Parser::parse(unparsed_source);
+  auto sorted_sources = Parser::sort_by_hierarchy(sources);
 
-  for (const auto& source : sources) {
-    auto* super = source.super
-        ? DexType::make_type(DexString::make_string(*source.super))
-        : nullptr;
+  // Create redex classes.
+  for (const auto& source : sorted_sources) {
+    auto* super = source.super ? DexType::get_type(*source.super) : nullptr;
+    std::vector<redex::DexMethodSpecification> method_specifications;
+    for (const auto& method : source.methods) {
+      method_specifications.push_back(redex::DexMethodSpecification{method});
+    }
+    for (const auto& method : source.abstract_methods) {
+      method_specifications.push_back(redex::DexMethodSpecification{
+          /* body */ method, /* abstract */ true});
+    }
     const auto new_methods = redex::create_methods(
         scope,
         /* class_name */ source.class_name,
-        /* methods */ source.methods,
+        /* methods */ method_specifications,
         /* super */ super);
     methods.insert(methods.end(), new_methods.begin(), new_methods.end());
   }
@@ -436,7 +500,7 @@ TEST_P(IntegrationTest, ReturnsExpectedModel) {
         path.replace_extension(".expected.actual"), models_output);
   }
 
-  EXPECT_EQ(JsonValidation::to_styled_string(value), expected_output);
+  EXPECT_EQ(expected_output, models_output);
 }
 
 MT_INSTANTIATE_TEST_SUITE_P(

@@ -1,4 +1,4 @@
-(method (public) "LInterface;.sink:(LData;)V"
+(abstract method (public) "LInterface;.sink:(LData;)V"
  (
    LINE(1)
    (return-void)
