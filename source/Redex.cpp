@@ -131,12 +131,13 @@ std::vector<DexMethod*> redex::create_methods(
 
   for (const auto& body : bodies) {
     auto* dex_method = assembler::method_from_string(body);
-    if (annotations || abstract) {
+    if (annotations) {
       dex_method->make_non_concrete();
       dex_method->set_external();
-    }
-    if (annotations) {
       dex_method->attach_annotation_set(create_annotation_set(*annotations));
+    }
+    if (abstract) {
+      dex_method->set_code(nullptr);
     }
     dex_methods.push_back(dex_method);
     creator.add_method(dex_method);
