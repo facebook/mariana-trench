@@ -114,10 +114,8 @@ void redex::remove_unreachable(
 std::vector<DexMethod*> redex::create_methods(
     Scope& scope,
     const std::string& class_name,
-    const std::vector<std::string>& bodies,
-    const DexType* super,
-    const bool abstract,
-    const std::optional<std::vector<std::string>>& annotations) {
+    const std::vector<DexMethodSpecification>& methods,
+    const DexType* super) {
   std::vector<DexMethod*> dex_methods;
 
   auto* type = DexType::make_type(DexString::make_string(class_name));
@@ -129,23 +127,35 @@ std::vector<DexMethod*> redex::create_methods(
     creator.set_super(type::java_lang_Object());
   }
 
-  for (const auto& body : bodies) {
-    auto* dex_method = assembler::method_from_string(body);
-    if (annotations) {
+  for (const auto& method : methods) {
+    auto* dex_method = assembler::method_from_string(method.body);
+    if (!method.annotations.empty()) {
       dex_method->make_non_concrete();
       dex_method->set_external();
-      dex_method->attach_annotation_set(create_annotation_set(*annotations));
+      dex_method->attach_annotation_set(
+          create_annotation_set(method.annotations));
     }
-    if (abstract) {
+    if (method.abstract) {
       dex_method->set_code(nullptr);
     }
     dex_methods.push_back(dex_method);
     creator.add_method(dex_method);
   }
-
   scope.push_back(creator.create());
 
   return dex_methods;
+}
+
+std::vector<DexMethod*> redex::create_methods(
+    Scope& scope,
+    const std::string& class_name,
+    const std::vector<std::string>& bodies,
+    const DexType* super) {
+  std::vector<DexMethodSpecification> methods;
+  for (const auto& body : bodies) {
+    methods.push_back(DexMethodSpecification{body});
+  }
+  return create_methods(scope, class_name, methods, super);
 }
 
 DexMethod* redex::create_method(
@@ -154,9 +164,13 @@ DexMethod* redex::create_method(
     const std::string& body,
     const DexType* super,
     const bool abstract,
-    const std::optional<std::vector<std::string>>& annotations) {
-  return create_methods(scope, class_name, {body}, super, abstract, annotations)
-      .front();
+    const std::vector<std::string>& annotations) {
+  auto method = DexMethodSpecification{
+      body,
+      abstract,
+      annotations,
+  };
+  return create_methods(scope, class_name, {method}, super).front();
 }
 
 DexMethod* redex::create_void_method(
@@ -170,7 +184,7 @@ DexMethod* redex::create_void_method(
     bool is_private,
     bool is_native,
     bool is_abstract,
-    const std::optional<std::vector<std::string>>& annotations) {
+    const std::vector<std::string>& annotations) {
   std::string access = is_private ? "private" : "public";
   if (is_static) {
     access.append(" static");

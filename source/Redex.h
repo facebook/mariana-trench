@@ -20,6 +20,12 @@ namespace marianatrench {
 
 namespace redex {
 
+struct DexMethodSpecification {
+  std::string body;
+  bool abstract = false;
+  std::vector<std::string> annotations = std::vector<std::string>();
+};
+
 DexClass* MT_NULLABLE get_class(const std::string& class_name);
 
 DexMethod* MT_NULLABLE get_method(const std::string& signature);
@@ -37,10 +43,14 @@ void remove_unreachable(
 std::vector<DexMethod*> create_methods(
     Scope& scope,
     const std::string& class_name,
+    const std::vector<DexMethodSpecification>& bodies,
+    const DexType* super);
+
+std::vector<DexMethod*> create_methods(
+    Scope& scope,
+    const std::string& class_name,
     const std::vector<std::string>& bodies,
-    const DexType* super = nullptr,
-    const bool abstract = false,
-    const std::optional<std::vector<std::string>>& annotations = std::nullopt);
+    const DexType* super = nullptr);
 
 DexMethod* create_method(
     Scope& scope,
@@ -48,7 +58,7 @@ DexMethod* create_method(
     const std::string& body,
     const DexType* super = nullptr,
     const bool abstract = false,
-    const std::optional<std::vector<std::string>>& annotations = std::nullopt);
+    const std::vector<std::string>& annotations = std::vector<std::string>());
 
 DexMethod* create_void_method(
     Scope& scope,
@@ -61,7 +71,7 @@ DexMethod* create_void_method(
     bool is_private = false,
     bool is_native = false,
     bool is_abstract = false,
-    const std::optional<std::vector<std::string>>& annotations = std::nullopt);
+    const std::vector<std::string>& annotations = std::vector<std::string>());
 
 DexAnnotationSet* create_annotation_set(
     const std::vector<std::string>& annotations);
