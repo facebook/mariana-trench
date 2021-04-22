@@ -49,8 +49,8 @@ if __name__ == "__main__":
     file_1 = Path(arguments.first)
     file_2 = Path(arguments.second)
 
-    data_1 = json.loads(file_1.read_text())
-    data_2 = json.loads(file_2.read_text())
+    data_1: object = json.loads(file_1.read_text())
+    data_2: object = json.loads(file_2.read_text())
 
     data_1 = _recursive_sort(data_1)
     data_2 = _recursive_sort(data_2)

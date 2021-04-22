@@ -9,7 +9,7 @@ import multiprocessing
 import os
 import re
 import subprocess
-from typing import Any, Union, Dict, Tuple, Iterable, NamedTuple
+from typing import Any, Union, Dict, Tuple, Iterable, NamedTuple, List
 
 """
 Set of functions that can be used to explore models.
@@ -93,13 +93,13 @@ def _assert_loaded() -> None:
         raise AssertionError("call index() first")
 
 
-def method_containing(string: str):
+def method_containing(string: str) -> List[str]:
     """Find all methods containing the given string."""
     _assert_loaded()
     return sorted(filter(lambda name: string in name, __index.keys()))
 
 
-def method_matching(pattern: str):
+def method_matching(pattern: str) -> List[str]:
     """Find all methods matching the given regular expression."""
     _assert_loaded()
     regex = re.compile(pattern)

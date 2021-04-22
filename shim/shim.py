@@ -22,7 +22,7 @@ from pyre_extensions import none_throws
 try:
     from ..facebook.shim import configuration
 except Exception:
-    # pyre-ignore[21]
+    # pyre-ignore
     from . import configuration
 
 import pyredex
@@ -538,7 +538,6 @@ def main() -> None:
         LOG.info(f"Running Mariana Trench: {' '.join(command)}")
         output = subprocess.run(command)
         if output.returncode != 0:
-            # pyre-ignore [16]: `logging.Logger` has no attribute `fatal`.
             LOG.fatal(f"Analysis binary exited with exit code {output.returncode}.")
             sys.exit(output.returncode)
     except (ClientError, configuration.Error) as error:

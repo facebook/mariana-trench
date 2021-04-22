@@ -62,6 +62,7 @@ if __name__ == "__main__":
         )
         sys.path.insert(0, os.fspath(fake_root))
 
+        # pyre-ignore
         from mariana_trench.shim.shim import main
 
         main()
