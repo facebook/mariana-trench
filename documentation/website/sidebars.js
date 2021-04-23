@@ -8,5 +8,5 @@
  */
 
 module.exports = {
-  someSidebar: ['introduction'],
+  someSidebar: ['getting-started'],
 };

@@ -27,7 +27,7 @@ module.exports = {
       title: 'Mariana Trench',
       items: [
         {
-          to: 'docs/introduction',
+          to: 'docs/getting-started',
           activeBasePath: 'docs',
           label: 'Documentation',
           position: 'left',
@@ -47,7 +47,7 @@ module.exports = {
           items: [
             {
               label: 'Getting Started',
-              to: 'docs/introduction',
+              to: 'docs/getting-started',
             },
           ],
         },
