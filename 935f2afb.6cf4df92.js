@@ -1,0 +1,1 @@
+(window.webpackJsonp=window.webpackJsonp||[]).push([[9],{79:function(e){e.exports=JSON.parse('{"pluginId":"default","version":"current","label":"Next","isLast":true,"docsSidebars":{"someSidebar":[{"type":"link","label":"Getting Started","href":"/docs/getting-started"}]},"permalinkToSidebar":{"/docs/getting-started":"someSidebar"}}')}}]);
