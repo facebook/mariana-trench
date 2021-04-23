@@ -82,7 +82,6 @@ LifecycleMethod LifecycleMethod::from_json(const Json::Value& value) {
 
 ConcurrentSet<const DexMethod*> LifecycleMethod::create_methods(
     Context& context) {
-  // Initialize `type_index_map_`.
   // All DexMethods created by `LifecycleMethod` have the same signature:
   //   void <method_name_>(<arguments>)
   // The arguments are determined by the callees' arguments. This creates the
@@ -90,6 +89,7 @@ ConcurrentSet<const DexMethod*> LifecycleMethod::create_methods(
   // The position corresponds to the register location containing the argument
   // in the DexMethod's code. The register location will be used to create the
   // invoke operation for methods that take a given DexType* as its argument.
+  TypeIndexMap type_index_map;
   for (const auto& callee : callees_) {
     const auto* type_list = callee.get_argument_types();
     if (type_list == nullptr) {
@@ -97,7 +97,7 @@ ConcurrentSet<const DexMethod*> LifecycleMethod::create_methods(
       continue;
     }
     for (auto* type : type_list->get_type_list()) {
-      type_index_map_.emplace(type, type_index_map_.size() + 1);
+      type_index_map.emplace(type, type_index_map.size() + 1);
     }
   }
 
@@ -127,7 +127,7 @@ ConcurrentSet<const DexMethod*> LifecycleMethod::create_methods(
       final_children.size());
 
   auto queue = sparta::work_queue<DexType*>([&](DexType* child) {
-    const auto* method = create_dex_method(context, child);
+    const auto* method = create_dex_method(context, child, type_index_map);
     if (method != nullptr) {
       result.insert(method);
     }
@@ -145,19 +145,19 @@ ConcurrentSet<const DexMethod*> LifecycleMethod::create_methods(
 }
 
 bool LifecycleMethod::operator==(const LifecycleMethod& other) const {
-  // Note: type_index_map_ intentionally ignored. It stores state for the
-  // class rather than data.
   return base_class_name_ == other.base_class_name_ &&
       method_name_ == other.method_name_ && callees_ == other.callees_;
 }
 
-const DexMethod* MT_NULLABLE
-LifecycleMethod::create_dex_method(Context& context, DexType* klass) const {
+const DexMethod* MT_NULLABLE LifecycleMethod::create_dex_method(
+    Context& context,
+    DexType* klass,
+    const TypeIndexMap& type_index_map) const {
   auto method = MethodCreator(
       /* class */ klass,
       /* name */ DexString::make_string(method_name_),
       /* proto */
-      DexProto::make_proto(type::_void(), get_argument_types()),
+      DexProto::make_proto(type::_void(), get_argument_types(type_index_map)),
       /* access */ DexAccessFlags::ACC_PRIVATE);
 
   auto this_location = method.get_local(0);
@@ -180,7 +180,7 @@ LifecycleMethod::create_dex_method(Context& context, DexType* klass) const {
     // This should have been verified at the start of `create_methods`
     mt_assert(type_list != nullptr);
     for (auto* type : type_list->get_type_list()) {
-      auto argument_register = method.get_local(type_index_map_.at(type));
+      auto argument_register = method.get_local(type_index_map.at(type));
       invoke_with_registers.push_back(argument_register);
     }
     main_block->invoke(
@@ -207,12 +207,13 @@ LifecycleMethod::create_dex_method(Context& context, DexType* klass) const {
   return new_method;
 }
 
-const DexTypeList* LifecycleMethod::get_argument_types() const {
+const DexTypeList* LifecycleMethod::get_argument_types(
+    const TypeIndexMap& type_index_map) const {
   // While the register locations for the arguments start at 1, the actual
   // argument index for the method's prototype start at index 0.
-  int num_args = type_index_map_.size();
+  int num_args = type_index_map.size();
   std::deque<DexType*> argument_types(num_args, nullptr);
-  for (const auto& [type, pos] : type_index_map_) {
+  for (const auto& [type, pos] : type_index_map) {
     mt_assert(pos > 0); // 0 is for "this", should not be in the map.
     mt_assert(static_cast<size_t>(pos) - 1 < argument_types.max_size());
     argument_types[pos - 1] = type;

@@ -86,6 +86,9 @@ class LifecycleMethodCall {
  * callee. The return value of the callees are currently ignored.
  */
 class LifecycleMethod {
+ private:
+  using TypeIndexMap = std::unordered_map<DexType*, int>;
+
  public:
   explicit LifecycleMethod(
       std::string base_class_name,
@@ -112,15 +115,16 @@ class LifecycleMethod {
   bool operator==(const LifecycleMethod& other) const;
 
  private:
-  const DexMethod* MT_NULLABLE
-  create_dex_method(Context& context, DexType* klass) const;
+  const DexMethod* MT_NULLABLE create_dex_method(
+      Context& context,
+      DexType* klass,
+      const TypeIndexMap& type_index_map) const;
 
-  const DexTypeList* get_argument_types() const;
+  const DexTypeList* get_argument_types(const TypeIndexMap&) const;
 
   std::string base_class_name_;
   std::string method_name_;
   std::vector<LifecycleMethodCall> callees_;
-  std::unordered_map<DexType*, int> type_index_map_;
 };
 
 } // namespace marianatrench
