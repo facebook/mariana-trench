@@ -80,8 +80,7 @@ MethodSet TypeNameConstraint::may_satisfy(
       return method_mappings.class_to_methods.get(
           *string_pattern, MethodSet::bottom());
     case MaySatisfyMethodConstraintKind::Extends:
-      return method_mappings.class_to_override_methods.get(
-          *string_pattern, MethodSet::bottom());
+      return MethodSet::top();
   }
 }
 

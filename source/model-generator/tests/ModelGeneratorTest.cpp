@@ -122,39 +122,6 @@ TEST_F(ModelGeneratorTest, MappingGenerator) {
              {second_overriding_method,
               second_overriding_method_with_overrides}}};
     std::unordered_map<std::string, std::vector<const Method*>>
-        expected_class_to_override_methods = {
-            {"Lcom/mariana_trench/artificial/ArrayAllocation;",
-             {array_allocation_method}},
-            {"LSuperInterface;",
-             {base_method,
-              first_overriding_method,
-              second_overriding_method,
-              second_overriding_method_with_overrides}},
-            {"LInterface;",
-             {base_method,
-              first_overriding_method,
-              second_overriding_method,
-              second_overriding_method_with_overrides}},
-            {"LClass;",
-             {base_method,
-              first_overriding_method,
-              second_overriding_method,
-              second_overriding_method_with_overrides}},
-            {"LSubclass;",
-             {first_overriding_method,
-              second_overriding_method,
-              second_overriding_method_with_overrides}},
-            {"LSubSubclass;",
-             {second_overriding_method,
-              second_overriding_method_with_overrides}},
-            {"Ljava/lang/Object;",
-             {array_allocation_method,
-              base_method,
-              first_overriding_method,
-              second_overriding_method,
-              second_overriding_method_with_overrides}},
-        };
-    std::unordered_map<std::string, std::vector<const Method*>>
         expected_signature_to_methods = {
             {"LClass;.onReceive:(Landroid/content/Context;Landroid/content/Intent;)V",
              {base_method}},
@@ -181,15 +148,6 @@ TEST_F(ModelGeneratorTest, MappingGenerator) {
       std::sort(pair.second.begin(), pair.second.end(), compare_methods);
     }
     EXPECT_EQ(class_to_methods_map, expected_class_to_methods);
-
-    std::unordered_map<std::string, std::vector<const Method*>>
-        class_to_override_methods_map =
-            sort_mapping(method_mappings.class_to_override_methods);
-    for (auto& pair : expected_class_to_override_methods) {
-      std::sort(pair.second.begin(), pair.second.end(), compare_methods);
-    }
-    EXPECT_EQ(
-        class_to_override_methods_map, expected_class_to_override_methods);
 
     std::unordered_map<std::string, std::vector<const Method*>>
         signature_to_methods_map =
