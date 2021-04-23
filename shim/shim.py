@@ -331,6 +331,12 @@ def main() -> None:
             help="If ProGuard configurations are provided, Mariana Trench will save time by ignoring unreachable objects.",
         )
         configuration_arguments.add_argument(
+            "--lifecycles-paths",
+            type=_separated_paths_exist,
+            default=None,
+            help="A `;`-separated list of files and directories containing lifecycle definitions.",
+        )
+        configuration_arguments.add_argument(
             "--model-generator-configuration-paths",
             type=_separated_paths_exist,
             default=os.fspath(configuration.get_path("default_generator_config.json")),
@@ -493,6 +499,10 @@ def main() -> None:
         if arguments.proguard_configuration_paths:
             options.append("--proguard-configuration-paths")
             options.append(arguments.proguard_configuration_paths)
+
+        if arguments.lifecycles_paths:
+            options.append("--lifecycles-paths")
+            options.append(arguments.lifecycles_paths)
 
         if arguments.source_exclude_directories:
             options.append("--source-exclude-directories")
