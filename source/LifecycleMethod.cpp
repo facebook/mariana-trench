@@ -80,8 +80,9 @@ LifecycleMethod LifecycleMethod::from_json(const Json::Value& value) {
   return LifecycleMethod(base_class_name, method_name, callees);
 }
 
-ConcurrentSet<const DexMethod*> LifecycleMethod::create_methods(
-    Context& context) {
+void LifecycleMethod::create_methods(
+    const ClassHierarchies& class_hierarchies,
+    Methods& methods) {
   // All DexMethods created by `LifecycleMethod` have the same signature:
   //   void <method_name_>(<arguments>)
   // The arguments are determined by the callees' arguments. This creates the
@@ -101,21 +102,21 @@ ConcurrentSet<const DexMethod*> LifecycleMethod::create_methods(
     }
   }
 
-  ConcurrentSet<const DexMethod*> result;
-
   auto* MT_NULLABLE base_class_type = DexType::get_type(base_class_name_);
   if (!base_class_type) {
     WARNING(
         1,
         "Could not find type for base class name `{}`. Will skip creating life-cycle methods.",
         base_class_name_);
-    return result;
+    return;
   }
 
-  const auto& children = context.class_hierarchies->extends(base_class_type);
+  std::atomic<int> methods_created_count = 0;
+
+  const auto& children = class_hierarchies.extends(base_class_type);
   std::unordered_set<const DexType*> final_children;
   for (const auto* child : children) {
-    const auto& grandchildren = context.class_hierarchies->extends(child);
+    const auto& grandchildren = class_hierarchies.extends(child);
     if (grandchildren.empty()) {
       final_children.insert(child);
     }
@@ -127,9 +128,10 @@ ConcurrentSet<const DexMethod*> LifecycleMethod::create_methods(
       final_children.size());
 
   auto queue = sparta::work_queue<DexType*>([&](DexType* child) {
-    const auto* method = create_dex_method(context, child, type_index_map);
+    const auto* method = create_dex_method(child, type_index_map);
     if (method != nullptr) {
-      result.insert(method);
+      ++methods_created_count;
+      methods.create(method);
     }
   });
   for (const auto* final_child : final_children) {
@@ -139,9 +141,8 @@ ConcurrentSet<const DexMethod*> LifecycleMethod::create_methods(
 
   LOG(1,
       "Created {} life-cycle methods for classes inheriting from `{}`",
-      result.size(),
+      methods_created_count,
       base_class_name_);
-  return result;
 }
 
 bool LifecycleMethod::operator==(const LifecycleMethod& other) const {
@@ -150,7 +151,6 @@ bool LifecycleMethod::operator==(const LifecycleMethod& other) const {
 }
 
 const DexMethod* MT_NULLABLE LifecycleMethod::create_dex_method(
-    Context& context,
     DexType* klass,
     const TypeIndexMap& type_index_map) const {
   auto method = MethodCreator(
@@ -201,8 +201,7 @@ const DexMethod* MT_NULLABLE LifecycleMethod::create_dex_method(
   auto* new_method = method.create();
   mt_assert(new_method != nullptr && new_method->get_code() != nullptr);
   new_method->get_code()->build_cfg();
-  LOG(5, "Creating life-cycle method `{}`", new_method->str());
-  context.methods->create(new_method);
+  LOG(5, "Created life-cycle method `{}`", new_method->str());
 
   return new_method;
 }

@@ -88,7 +88,8 @@ Registry MarianaTrench::analyze(Context& context) {
 
   Timer lifecycle_methods_timer;
   LOG(1, "Creating life-cycle wrapper methods...");
-  LifecycleMethods::run(context);
+  LifecycleMethods::run(
+      *context.options, *context.class_hierarchies, *context.methods);
   context.statistics->log_time("lifecycle_methods", lifecycle_methods_timer);
   LOG(1,
       "Created lifecycle methods in {:.2f}s.",

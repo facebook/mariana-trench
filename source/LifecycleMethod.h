@@ -107,18 +107,17 @@ class LifecycleMethod {
   static LifecycleMethod from_json(const Json::Value& value);
 
   /**
-   * Creates the relevant dex methods. These methods are returned and also
-   * added to context.methods.
+   * Creates the relevant dex methods. These methods are added to `methods`.
    */
-  ConcurrentSet<const DexMethod*> create_methods(Context& context);
+  void create_methods(
+      const ClassHierarchies& class_hierarchies,
+      Methods& methods);
 
   bool operator==(const LifecycleMethod& other) const;
 
  private:
-  const DexMethod* MT_NULLABLE create_dex_method(
-      Context& context,
-      DexType* klass,
-      const TypeIndexMap& type_index_map) const;
+  const DexMethod* MT_NULLABLE
+  create_dex_method(DexType* klass, const TypeIndexMap& type_index_map) const;
 
   const DexTypeList* get_argument_types(const TypeIndexMap&) const;
 

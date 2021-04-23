@@ -7,7 +7,9 @@
 
 #pragma once
 
-#include <mariana-trench/Context.h>
+#include <mariana-trench/ClassHierarchies.h>
+#include <mariana-trench/Methods.h>
+#include <mariana-trench/Options.h>
 
 namespace marianatrench {
 
@@ -17,7 +19,10 @@ namespace marianatrench {
  */
 class LifecycleMethods final {
  public:
-  static void run(Context&);
+  static void run(
+      const Options& options,
+      const ClassHierarchies& class_hierarchies,
+      Methods& methods);
 };
 
 } // namespace marianatrench

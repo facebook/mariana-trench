@@ -12,18 +12,22 @@
 
 namespace marianatrench {
 
-void LifecycleMethods::run(Context& context) {
-  std::vector<LifecycleMethod> methods;
-  for (const auto& path : context.options->lifecycles_paths()) {
+void LifecycleMethods::run(
+    const Options& options,
+    const ClassHierarchies& class_hierarchies,
+    Methods& methods) {
+  std::vector<LifecycleMethod> lifecycle_methods;
+  for (const auto& path : options.lifecycles_paths()) {
     auto lifecycle_definitions = JsonValidation::parse_json_file(path);
     for (const auto& lifecycle_definition :
          JsonValidation::null_or_array(lifecycle_definitions)) {
-      methods.emplace_back(LifecycleMethod::from_json(lifecycle_definition));
+      lifecycle_methods.emplace_back(
+          LifecycleMethod::from_json(lifecycle_definition));
     }
   }
 
-  for (auto& method : methods) {
-    method.create_methods(context);
+  for (auto& lifecycle_method : lifecycle_methods) {
+    lifecycle_method.create_methods(class_hierarchies, methods);
   }
 }
 
