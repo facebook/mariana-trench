@@ -164,7 +164,7 @@ const DexMethod* MT_NULLABLE LifecycleMethod::create_dex_method(
   auto* main_block = method.get_main_block();
   mt_assert(main_block != nullptr);
 
-  int num_callees_found = 0;
+  int callee_count = 0;
   for (const auto& callee : callees_) {
     auto* dex_method = callee.get_dex_method(klass);
     if (!dex_method) {
@@ -173,7 +173,7 @@ const DexMethod* MT_NULLABLE LifecycleMethod::create_dex_method(
       continue;
     }
 
-    ++num_callees_found;
+    ++callee_count;
 
     std::vector<Location> invoke_with_registers{this_location};
     auto* type_list = callee.get_argument_types();
@@ -187,7 +187,7 @@ const DexMethod* MT_NULLABLE LifecycleMethod::create_dex_method(
         IROpcode::OPCODE_INVOKE_DIRECT, dex_method, invoke_with_registers);
   }
 
-  if (num_callees_found < 2) {
+  if (callee_count < 2) {
     // The point of life-cycle methods is to find flows where tainted member
     // variables flow from one callee into another. If only one (or no) method
     // is overridden, there is no need to create the artificial method.
