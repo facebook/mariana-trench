@@ -144,17 +144,15 @@ std::vector<Model> ModelGeneration::run(Context& context) {
   std::vector<Model> generated_models;
   std::size_t iteration = 0;
 
-  std::unique_ptr<MethodMappings> method_mappings = nullptr;
-  if (context.options->optimized_model_generation()) {
-    LOG(1,
-        "Building method mappings for model generation over {} methods",
-        context.methods->size());
-    Timer method_mapping_timer;
-    method_mappings = std::make_unique<MethodMappings>(*context.methods);
-    LOG(1,
-        "Generated method mappings in {:.2f}s",
-        method_mapping_timer.duration_in_seconds());
-  }
+  LOG(1,
+      "Building method mappings for model generation over {} methods",
+      context.methods->size());
+  Timer method_mapping_timer;
+  std::unique_ptr<MethodMappings> method_mappings =
+      std::make_unique<MethodMappings>(*context.methods);
+  LOG(1,
+      "Generated method mappings in {:.2f}s",
+      method_mapping_timer.duration_in_seconds());
 
   for (const auto& model_generator : model_generators) {
     Timer generator_timer;
@@ -165,12 +163,7 @@ std::vector<Model> ModelGeneration::run(Context& context) {
         model_generators.size());
 
     std::vector<Model> models;
-    if (method_mappings != nullptr) {
-      models =
-          model_generator->run_optimized(*context.methods, *method_mappings);
-    } else {
-      models = model_generator->run(*context.methods);
-    }
+    models = model_generator->run_optimized(*context.methods, *method_mappings);
 
     // Remove models for the `null` method
     models.erase(

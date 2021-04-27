@@ -51,8 +51,7 @@ Context make_context(const DexStore& store) {
       /* lifecycles_paths */ std::vector<std::string>{},
       /* sequential */ false,
       /* skip_source_indexing */ true,
-      /* skip_model_generation */ true,
-      /* optimized_model_generation */ false);
+      /* skip_model_generation */ true);
   context.stores = {store};
   context.artificial_methods =
       std::make_unique<ArtificialMethods>(*context.kinds, context.stores);

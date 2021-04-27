@@ -28,7 +28,6 @@ class Options final {
       bool sequential,
       bool skip_source_indexing,
       bool skip_model_generation,
-      bool optimized_model_generation,
       const std::string& source_root_directory = ".");
   explicit Options(const boost::program_options::variables_map& variables);
   Options(const Options&) = delete;
@@ -68,7 +67,6 @@ class Options final {
   bool sequential() const;
   bool skip_source_indexing() const;
   bool skip_model_generation() const;
-  bool optimized_model_generation() const;
   bool disable_parameter_type_overrides() const;
 
   int maximum_source_sink_distance() const;
@@ -106,7 +104,6 @@ class Options final {
   bool sequential_;
   bool skip_source_indexing_;
   bool skip_model_generation_;
-  bool optimized_model_generation_;
   bool disable_parameter_type_overrides_;
 
   int maximum_source_sink_distance_;

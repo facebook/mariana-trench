@@ -25,8 +25,7 @@ Context test_overrides(const Scope& scope) {
       /* lifecycles_path */ std::vector<std::string>{},
       /* sequential */ false,
       /* skip_source_indexing */ true,
-      /* skip_model_generation */ true,
-      /* optimized_model_generation */ false);
+      /* skip_model_generation */ true);
   DexStore store("test_store");
   store.add_classes(scope);
   context.stores = {store};
