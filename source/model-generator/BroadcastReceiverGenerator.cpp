@@ -141,7 +141,7 @@ std::vector<Model> BroadcastReceiverGenerator::run(const Methods& methods) {
                 context_,
                 method,
                 /* kind */ "ReceiverUserInput",
-                {":via-caller-exported"}));
+                {"via-caller-exported"}));
         model.add_mode(Model::Mode::NoJoinVirtualOverrides, context_);
         models.push_back(model);
       }
