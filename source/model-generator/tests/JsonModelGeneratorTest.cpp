@@ -2127,7 +2127,7 @@ TEST_F(JsonModelGeneratorTest, ParentConstraintMaySatisfy) {
   Scope scope;
   auto* method_a =
       redex::create_void_method(scope, "LClass;", "method_name_a", "", "V");
-  redex::create_void_method(
+  auto* method_b = redex::create_void_method(
       scope, "LSubClass;", "method_name_b", "", "V", method_a->get_class());
   DexStore store("test-stores");
   auto interface = DexType::make_type("LInterface;");
@@ -2165,11 +2165,39 @@ TEST_F(JsonModelGeneratorTest, ParentConstraintMaySatisfy) {
           .is_top());
 
   /* With Extends */
-  EXPECT_TRUE(
+  EXPECT_EQ(
       ParentConstraint(std::make_unique<ExtendsConstraint>(
                            std::make_unique<TypeNameConstraint>("LClass;")))
-          .may_satisfy(method_mappings)
-          .is_top());
+          .may_satisfy(method_mappings),
+      marianatrench::MethodSet(
+          {context.methods->get(method_a), context.methods->get(method_b)}));
+
+  EXPECT_EQ(
+      ParentConstraint(std::make_unique<ExtendsConstraint>(
+                           std::make_unique<TypeNameConstraint>("LSubClass;")))
+          .may_satisfy(method_mappings),
+      marianatrench::MethodSet({context.methods->get(method_b)}));
+
+  EXPECT_EQ(
+      ParentConstraint(std::make_unique<ExtendsConstraint>(
+                           std::make_unique<TypeNameConstraint>("LInterface;")))
+          .may_satisfy(method_mappings),
+      marianatrench::MethodSet(
+          {context.methods->get(method_a), context.methods->get(method_b)}));
+
+  EXPECT_EQ(
+      ParentConstraint(
+          std::make_unique<ExtendsConstraint>(
+              std::make_unique<TypeNameConstraint>("LSuperInterface;")))
+          .may_satisfy(method_mappings),
+      marianatrench::MethodSet(
+          {context.methods->get(method_a), context.methods->get(method_b)}));
+
+  EXPECT_TRUE(ParentConstraint(std::make_unique<ExtendsConstraint>(
+                                   std::make_unique<TypeNameConstraint>(
+                                       "class_name_nonexistant")))
+                  .may_satisfy(method_mappings)
+                  .is_bottom());
 }
 
 TEST_F(JsonModelGeneratorTest, AllOfMethodConstraintMaySatisfy) {

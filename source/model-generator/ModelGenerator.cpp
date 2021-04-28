@@ -70,6 +70,27 @@ void create_class_to_method(
           bool /* exists */) { methods.add(method); });
 }
 
+void create_class_to_override_method(
+    const Method* method,
+    ConcurrentMap<std::string, MethodSet>& method_mapping) {
+  std::string class_name = method->get_class()->get_name()->str();
+  auto* dex_class = redex::get_class(class_name);
+  if (!dex_class) {
+    return;
+  }
+  std::unordered_set<std::string> parent_classes =
+      generator::get_parents_from_class(
+          dex_class, /* include_interfaces */ true);
+  parent_classes.insert(class_name);
+  for (const auto& parent_class : parent_classes) {
+    method_mapping.update(
+        parent_class,
+        [&](const std::string& /* parent_name */,
+            MethodSet& methods,
+            bool /* exists */) { methods.add(method); });
+  }
+}
+
 void create_signature_to_method(
     const Method* method,
     ConcurrentMap<std::string, MethodSet>& method_mapping) {
@@ -86,6 +107,7 @@ MethodMappings::MethodMappings(const Methods& methods) : all_methods(methods) {
   auto queue = sparta::work_queue<const Method*>([&](const Method* method) {
     create_name_to_method(method, name_to_methods);
     create_class_to_method(method, class_to_methods);
+    create_class_to_override_method(method, class_to_override_methods);
     create_signature_to_method(method, signature_to_methods);
   });
   for (const auto* method : methods) {
