@@ -25,13 +25,15 @@
 
 namespace marianatrench {
 
+using MethodHashedSet = sparta::HashedSetAbstractDomain<const Method*>;
+
 struct MethodMappings {
   explicit MethodMappings(const Methods& methods);
-  ConcurrentMap<std::string, MethodSet> name_to_methods;
-  ConcurrentMap<std::string, MethodSet> class_to_methods;
-  ConcurrentMap<std::string, MethodSet> class_to_override_methods;
-  ConcurrentMap<std::string, MethodSet> signature_to_methods;
-  MethodSet all_methods;
+  ConcurrentMap<std::string, MethodHashedSet> name_to_methods;
+  ConcurrentMap<std::string, MethodHashedSet> class_to_methods;
+  ConcurrentMap<std::string, MethodHashedSet> class_to_override_methods;
+  ConcurrentMap<std::string, MethodHashedSet> signature_to_methods;
+  MethodHashedSet all_methods;
 };
 
 class ModelGenerator {

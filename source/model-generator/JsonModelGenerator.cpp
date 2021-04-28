@@ -59,29 +59,29 @@ bool has_annotation(
 
 namespace marianatrench {
 
-MethodSet TypeConstraint::may_satisfy(
+MethodHashedSet TypeConstraint::may_satisfy(
     const MethodMappings& /* method_mappings */,
     MaySatisfyMethodConstraintKind /* constraint_kind */) const {
-  return MethodSet::top();
+  return MethodHashedSet::top();
 }
 
 TypeNameConstraint::TypeNameConstraint(std::string regex_string)
     : pattern_(regex_string) {}
 
-MethodSet TypeNameConstraint::may_satisfy(
+MethodHashedSet TypeNameConstraint::may_satisfy(
     const MethodMappings& method_mappings,
     MaySatisfyMethodConstraintKind constraint_kind) const {
   auto string_pattern = as_string_literal(pattern_);
   if (!string_pattern) {
-    return MethodSet::top();
+    return MethodHashedSet::top();
   }
   switch (constraint_kind) {
     case MaySatisfyMethodConstraintKind::Parent:
       return method_mappings.class_to_methods.get(
-          *string_pattern, MethodSet::bottom());
+          *string_pattern, MethodHashedSet::bottom());
     case MaySatisfyMethodConstraintKind::Extends:
       return method_mappings.class_to_override_methods.get(
-          *string_pattern, MethodSet::bottom());
+          *string_pattern, MethodHashedSet::bottom());
   }
 }
 
@@ -127,7 +127,7 @@ ExtendsConstraint::ExtendsConstraint(
     : inner_constraint_(std::move(inner_constraint)),
       include_self_(include_self) {}
 
-MethodSet ExtendsConstraint::may_satisfy(
+MethodHashedSet ExtendsConstraint::may_satisfy(
     const MethodMappings& method_mappings,
     MaySatisfyMethodConstraintKind /* constraint_kind */) const {
   return inner_constraint_->may_satisfy(
@@ -226,10 +226,10 @@ AllOfTypeConstraint::AllOfTypeConstraint(
     std::vector<std::unique_ptr<TypeConstraint>> constraints)
     : inner_constraints_(std::move(constraints)) {}
 
-MethodSet AllOfTypeConstraint::may_satisfy(
+MethodHashedSet AllOfTypeConstraint::may_satisfy(
     const MethodMappings& method_mappings,
     MaySatisfyMethodConstraintKind constraint_kind) const {
-  MethodSet intersection_set = MethodSet::top();
+  MethodHashedSet intersection_set = MethodHashedSet::top();
   for (const auto& constraint : inner_constraints_) {
     intersection_set.meet_with(
         constraint->may_satisfy(method_mappings, constraint_kind));
@@ -262,13 +262,13 @@ AnyOfTypeConstraint::AnyOfTypeConstraint(
     std::vector<std::unique_ptr<TypeConstraint>> constraints)
     : inner_constraints_(std::move(constraints)) {}
 
-MethodSet AnyOfTypeConstraint::may_satisfy(
+MethodHashedSet AnyOfTypeConstraint::may_satisfy(
     const MethodMappings& method_mappings,
     MaySatisfyMethodConstraintKind constraint_kind) const {
   if (inner_constraints_.empty()) {
-    return MethodSet::top();
+    return MethodHashedSet::top();
   }
-  MethodSet union_set = MethodSet::bottom();
+  auto union_set = MethodHashedSet::bottom();
   for (const auto& constraint : inner_constraints_) {
     union_set.join_with(
         constraint->may_satisfy(method_mappings, constraint_kind));
@@ -305,15 +305,15 @@ bool AnyOfTypeConstraint::operator==(const TypeConstraint& other) const {
 NotTypeConstraint::NotTypeConstraint(std::unique_ptr<TypeConstraint> constraint)
     : constraint_(std::move(constraint)) {}
 
-MethodSet NotTypeConstraint::may_satisfy(
+MethodHashedSet NotTypeConstraint::may_satisfy(
     const MethodMappings& method_mappings,
     MaySatisfyMethodConstraintKind constraint_kind) const {
-  MethodSet child_methods =
+  MethodHashedSet child_methods =
       constraint_->may_satisfy(method_mappings, constraint_kind);
   if (child_methods.is_top() || child_methods.is_bottom()) {
-    return MethodSet::top();
+    return MethodHashedSet::top();
   }
-  MethodSet all_methods = method_mappings.all_methods;
+  MethodHashedSet all_methods = method_mappings.all_methods;
   all_methods.difference_with(child_methods);
   return all_methods;
 }
@@ -392,14 +392,14 @@ IntegerConstraint IntegerConstraint::from_json(const Json::Value& constraint) {
 MethodNameConstraint::MethodNameConstraint(std::string regex_string)
     : pattern_(regex_string) {}
 
-MethodSet MethodNameConstraint::may_satisfy(
+MethodHashedSet MethodNameConstraint::may_satisfy(
     const MethodMappings& method_mappings) const {
   auto string_pattern = as_string_literal(pattern_);
   if (!string_pattern) {
-    return MethodSet::top();
+    return MethodHashedSet::top();
   }
   return method_mappings.name_to_methods.get(
-      *string_pattern, MethodSet::bottom());
+      *string_pattern, MethodHashedSet::bottom());
 }
 
 bool MethodNameConstraint::satisfy(const Method* method) const {
@@ -419,7 +419,7 @@ ParentConstraint::ParentConstraint(
     std::unique_ptr<TypeConstraint> inner_constraint)
     : inner_constraint_(std::move(inner_constraint)) {}
 
-MethodSet ParentConstraint::may_satisfy(
+MethodHashedSet ParentConstraint::may_satisfy(
     const MethodMappings& method_mappings) const {
   return inner_constraint_->may_satisfy(
       method_mappings, MaySatisfyMethodConstraintKind::Parent);
@@ -453,9 +453,9 @@ std::vector<const MethodConstraint*> AllOfMethodConstraint::children() const {
   return constraints;
 }
 
-MethodSet AllOfMethodConstraint::may_satisfy(
+MethodHashedSet AllOfMethodConstraint::may_satisfy(
     const MethodMappings& method_mappings) const {
-  auto intersection_set = MethodSet::top();
+  auto intersection_set = MethodHashedSet::top();
   for (const auto& constraint : constraints_) {
     intersection_set.meet_with(constraint->may_satisfy(method_mappings));
   }
@@ -499,12 +499,12 @@ std::vector<const MethodConstraint*> AnyOfMethodConstraint::children() const {
   return constraints;
 }
 
-MethodSet AnyOfMethodConstraint::may_satisfy(
+MethodHashedSet AnyOfMethodConstraint::may_satisfy(
     const MethodMappings& method_mappings) const {
   if (constraints_.empty()) {
-    return MethodSet::top();
+    return MethodHashedSet::top();
   }
-  auto union_set = MethodSet::bottom();
+  auto union_set = MethodHashedSet::bottom();
   for (const auto& constraint : constraints_) {
     union_set.join_with(constraint->may_satisfy(method_mappings));
   }
@@ -552,13 +552,13 @@ std::vector<const MethodConstraint*> NotMethodConstraint::children() const {
   return {constraint_.get()};
 }
 
-MethodSet NotMethodConstraint::may_satisfy(
+MethodHashedSet NotMethodConstraint::may_satisfy(
     const MethodMappings& method_mappings) const {
-  MethodSet child_methods = constraint_->may_satisfy(method_mappings);
+  MethodHashedSet child_methods = constraint_->may_satisfy(method_mappings);
   if (child_methods.is_top() || child_methods.is_bottom()) {
-    return MethodSet::top();
+    return MethodHashedSet::top();
   }
-  MethodSet all_methods = method_mappings.all_methods;
+  MethodHashedSet all_methods = method_mappings.all_methods;
   all_methods.difference_with(child_methods);
   return all_methods;
 }
@@ -719,14 +719,14 @@ bool ParameterConstraint::operator==(const MethodConstraint& other) const {
 SignatureConstraint::SignatureConstraint(std::string regex_string)
     : pattern_(regex_string) {}
 
-MethodSet SignatureConstraint::may_satisfy(
+MethodHashedSet SignatureConstraint::may_satisfy(
     const MethodMappings& method_mappings) const {
   auto string_pattern = as_string_literal(pattern_);
   if (!string_pattern) {
-    return MethodSet::top();
+    return MethodHashedSet::top();
   }
   return method_mappings.signature_to_methods.get(
-      *string_pattern, MethodSet::bottom());
+      *string_pattern, MethodHashedSet::bottom());
 }
 
 bool SignatureConstraint::satisfy(const Method* method) const {
@@ -784,9 +784,9 @@ std::vector<const MethodConstraint*> MethodConstraint::children() const {
   return {};
 }
 
-MethodSet MethodConstraint::may_satisfy(
+MethodHashedSet MethodConstraint::may_satisfy(
     const MethodMappings& /* method_mappings */) const {
-  return MethodSet::top();
+  return MethodHashedSet::top();
 }
 
 namespace {
@@ -1612,8 +1612,8 @@ JsonModelGeneratorItem::JsonModelGeneratorItem(
       verbosity_(verbosity) {}
 
 std::vector<Model> JsonModelGeneratorItem::run_filtered(
-    const MethodSet& methods) {
-  return this->run_impl(methods.begin(), methods.end());
+    const MethodHashedSet& methods) {
+  return this->run_impl(methods.elements().begin(), methods.elements().end());
 }
 
 std::vector<Model> JsonModelGeneratorItem::visit_method(
@@ -1654,7 +1654,7 @@ JsonModelGeneratorItem::constraint_leaves() const {
   return flattened_constraints;
 }
 
-MethodSet JsonModelGeneratorItem::may_satisfy(
+MethodHashedSet JsonModelGeneratorItem::may_satisfy(
     const MethodMappings& method_mappings) const {
   return constraint_->may_satisfy(method_mappings);
 }
@@ -1714,7 +1714,7 @@ std::vector<Model> JsonModelGenerator::run_optimized(
     const MethodMappings& method_mappings) {
   std::vector<Model> models;
   for (auto& item : items_) {
-    MethodSet filtered_methods = item.may_satisfy(method_mappings);
+    MethodHashedSet filtered_methods = item.may_satisfy(method_mappings);
     if (filtered_methods.is_bottom()) {
       continue;
     }

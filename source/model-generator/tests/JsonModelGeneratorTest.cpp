@@ -2111,10 +2111,10 @@ TEST_F(JsonModelGeneratorTest, MethodNameConstraintMaySatisfy) {
 
   EXPECT_EQ(
       MethodNameConstraint("method_name_a").may_satisfy(method_mappings),
-      marianatrench::MethodSet({context.methods->get(method_a)}));
+      marianatrench::MethodHashedSet({context.methods->get(method_a)}));
   EXPECT_EQ(
       MethodNameConstraint("method_name_b").may_satisfy(method_mappings),
-      marianatrench::MethodSet({context.methods->get(method_b)}));
+      marianatrench::MethodHashedSet({context.methods->get(method_b)}));
   EXPECT_TRUE(MethodNameConstraint("method_name_nonexistent")
                   .may_satisfy(method_mappings)
                   .is_bottom());
@@ -2152,7 +2152,7 @@ TEST_F(JsonModelGeneratorTest, ParentConstraintMaySatisfy) {
   EXPECT_EQ(
       ParentConstraint(std::make_unique<TypeNameConstraint>("LClass;"))
           .may_satisfy(method_mappings),
-      marianatrench::MethodSet({context.methods->get(method_a)}));
+      marianatrench::MethodHashedSet({context.methods->get(method_a)}));
 
   EXPECT_TRUE(ParentConstraint(std::make_unique<TypeNameConstraint>(
                                    "class_name_nonexistant"))
@@ -2169,20 +2169,20 @@ TEST_F(JsonModelGeneratorTest, ParentConstraintMaySatisfy) {
       ParentConstraint(std::make_unique<ExtendsConstraint>(
                            std::make_unique<TypeNameConstraint>("LClass;")))
           .may_satisfy(method_mappings),
-      marianatrench::MethodSet(
+      marianatrench::MethodHashedSet(
           {context.methods->get(method_a), context.methods->get(method_b)}));
 
   EXPECT_EQ(
       ParentConstraint(std::make_unique<ExtendsConstraint>(
                            std::make_unique<TypeNameConstraint>("LSubClass;")))
           .may_satisfy(method_mappings),
-      marianatrench::MethodSet({context.methods->get(method_b)}));
+      marianatrench::MethodHashedSet({context.methods->get(method_b)}));
 
   EXPECT_EQ(
       ParentConstraint(std::make_unique<ExtendsConstraint>(
                            std::make_unique<TypeNameConstraint>("LInterface;")))
           .may_satisfy(method_mappings),
-      marianatrench::MethodSet(
+      marianatrench::MethodHashedSet(
           {context.methods->get(method_a), context.methods->get(method_b)}));
 
   EXPECT_EQ(
@@ -2190,7 +2190,7 @@ TEST_F(JsonModelGeneratorTest, ParentConstraintMaySatisfy) {
           std::make_unique<ExtendsConstraint>(
               std::make_unique<TypeNameConstraint>("LSuperInterface;")))
           .may_satisfy(method_mappings),
-      marianatrench::MethodSet(
+      marianatrench::MethodHashedSet(
           {context.methods->get(method_a), context.methods->get(method_b)}));
 
   EXPECT_TRUE(ParentConstraint(std::make_unique<ExtendsConstraint>(
@@ -2220,7 +2220,7 @@ TEST_F(JsonModelGeneratorTest, AllOfMethodConstraintMaySatisfy) {
     EXPECT_EQ(
         AllOfMethodConstraint(std::move(constraints))
             .may_satisfy(method_mappings),
-        marianatrench::MethodSet({context.methods->get(method_a)}));
+        marianatrench::MethodHashedSet({context.methods->get(method_a)}));
   }
 
   {
@@ -2233,7 +2233,7 @@ TEST_F(JsonModelGeneratorTest, AllOfMethodConstraintMaySatisfy) {
     EXPECT_EQ(
         AllOfMethodConstraint(std::move(constraints))
             .may_satisfy(method_mappings),
-        marianatrench::MethodSet::bottom());
+        marianatrench::MethodHashedSet());
   }
 
   {
@@ -2256,7 +2256,7 @@ TEST_F(JsonModelGeneratorTest, AllOfMethodConstraintMaySatisfy) {
     EXPECT_EQ(
         AllOfMethodConstraint(std::move(constraints))
             .may_satisfy(method_mappings),
-        marianatrench::MethodSet({context.methods->get(method_a)}));
+        marianatrench::MethodHashedSet({context.methods->get(method_a)}));
   }
 }
 
@@ -2281,7 +2281,7 @@ TEST_F(JsonModelGeneratorTest, AnyOfMethodConstraintMaySatisfy) {
     EXPECT_EQ(
         AnyOfMethodConstraint(std::move(constraints))
             .may_satisfy(method_mappings),
-        marianatrench::MethodSet({context.methods->get(method_a)}));
+        marianatrench::MethodHashedSet({context.methods->get(method_a)}));
   }
 
   {
@@ -2294,7 +2294,7 @@ TEST_F(JsonModelGeneratorTest, AnyOfMethodConstraintMaySatisfy) {
     EXPECT_EQ(
         AnyOfMethodConstraint(std::move(constraints))
             .may_satisfy(method_mappings),
-        marianatrench::MethodSet(
+        marianatrench::MethodHashedSet(
             {context.methods->get(method_a), context.methods->get(method_b)}));
   }
 
@@ -2337,7 +2337,7 @@ TEST_F(JsonModelGeneratorTest, NotMethodConstraintMaySatisfy) {
       NotMethodConstraint(
           std::make_unique<MethodNameConstraint>("method_name_a"))
           .may_satisfy(method_mappings),
-      marianatrench::MethodSet(
+      marianatrench::MethodHashedSet(
           {context.methods->get(array_allocation_method),
            context.methods->get(method_b)}));
 

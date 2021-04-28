@@ -50,29 +50,29 @@ namespace {
 
 void create_name_to_method(
     const Method* method,
-    ConcurrentMap<std::string, MethodSet>& method_mapping) {
+    ConcurrentMap<std::string, MethodHashedSet>& method_mapping) {
   const auto& method_name = method->get_name();
   method_mapping.update(
       method_name,
       [&](const std::string& /* name */,
-          MethodSet& methods,
+          MethodHashedSet& methods,
           bool /* exists */) { methods.add(method); });
 }
 
 void create_class_to_method(
     const Method* method,
-    ConcurrentMap<std::string, MethodSet>& method_mapping) {
+    ConcurrentMap<std::string, MethodHashedSet>& method_mapping) {
   std::string parent_class = method->get_class()->get_name()->str();
   method_mapping.update(
       parent_class,
       [&](const std::string& /* parent_name */,
-          MethodSet& methods,
+          MethodHashedSet& methods,
           bool /* exists */) { methods.add(method); });
 }
 
 void create_class_to_override_method(
     const Method* method,
-    ConcurrentMap<std::string, MethodSet>& method_mapping) {
+    ConcurrentMap<std::string, MethodHashedSet>& method_mapping) {
   std::string class_name = method->get_class()->get_name()->str();
   auto* dex_class = redex::get_class(class_name);
   if (!dex_class) {
@@ -86,24 +86,24 @@ void create_class_to_override_method(
     method_mapping.update(
         parent_class,
         [&](const std::string& /* parent_name */,
-            MethodSet& methods,
+            MethodHashedSet& methods,
             bool /* exists */) { methods.add(method); });
   }
 }
 
 void create_signature_to_method(
     const Method* method,
-    ConcurrentMap<std::string, MethodSet>& method_mapping) {
+    ConcurrentMap<std::string, MethodHashedSet>& method_mapping) {
   std::string signature = method->signature();
   method_mapping.update(
       signature,
       [&](const std::string& /* parent_name */,
-          MethodSet& methods,
+          MethodHashedSet& methods,
           bool /* exists */) { methods.add(method); });
 }
 } // namespace
 
-MethodMappings::MethodMappings(const Methods& methods) : all_methods(methods) {
+MethodMappings::MethodMappings(const Methods& methods) {
   auto queue = sparta::work_queue<const Method*>([&](const Method* method) {
     create_name_to_method(method, name_to_methods);
     create_class_to_method(method, class_to_methods);
@@ -111,6 +111,7 @@ MethodMappings::MethodMappings(const Methods& methods) : all_methods(methods) {
     create_signature_to_method(method, signature_to_methods);
   });
   for (const auto* method : methods) {
+    all_methods.add(method);
     queue.add_item(method);
   }
   queue.run_all();

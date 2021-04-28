@@ -31,14 +31,15 @@ bool compare_methods(const Method* left, const Method* right) {
 };
 
 std::unordered_map<std::string, std::vector<const Method*>> sort_mapping(
-    const ConcurrentMap<std::string, marianatrench::MethodSet>& mapping) {
+    const ConcurrentMap<std::string, marianatrench::MethodHashedSet>& mapping) {
   auto unordered_mapping =
-      std::unordered_map<std::string, marianatrench::MethodSet>(
+      std::unordered_map<std::string, marianatrench::MethodHashedSet>(
           mapping.begin(), mapping.end());
   std::unordered_map<std::string, std::vector<const Method*>> result;
 
   for (const auto& [key, methods] : unordered_mapping) {
-    std::vector<const Method*> new_methods(methods.begin(), methods.end());
+    std::vector<const Method*> new_methods(
+        methods.elements().begin(), methods.elements().end());
     result.insert({key, new_methods});
   }
 

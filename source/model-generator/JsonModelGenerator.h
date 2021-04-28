@@ -37,7 +37,7 @@ class TypeConstraint {
 
   static std::unique_ptr<TypeConstraint> from_json(
       const Json::Value& constraint);
-  virtual MethodSet may_satisfy(
+  virtual MethodHashedSet may_satisfy(
       const MethodMappings& method_mappings,
       MaySatisfyMethodConstraintKind constraint_kind) const;
   virtual bool satisfy(const DexType* type) const = 0;
@@ -47,7 +47,7 @@ class TypeConstraint {
 class TypeNameConstraint final : public TypeConstraint {
  public:
   explicit TypeNameConstraint(std::string regex_string);
-  MethodSet may_satisfy(
+  MethodHashedSet may_satisfy(
       const MethodMappings& method_mappings,
       MaySatisfyMethodConstraintKind constraint_kind) const override;
   bool satisfy(const DexType* type) const override;
@@ -75,7 +75,7 @@ class ExtendsConstraint final : public TypeConstraint {
   explicit ExtendsConstraint(
       std::unique_ptr<TypeConstraint> inner_constraint,
       bool include_self = true);
-  MethodSet may_satisfy(
+  MethodHashedSet may_satisfy(
       const MethodMappings& method_mappings,
       MaySatisfyMethodConstraintKind constraint_kind) const override;
   /* Check if a superclass of the given type, or an interface that the given
@@ -124,7 +124,7 @@ class AllOfTypeConstraint final : public TypeConstraint {
  public:
   explicit AllOfTypeConstraint(
       std::vector<std::unique_ptr<TypeConstraint>> constraints);
-  MethodSet may_satisfy(
+  MethodHashedSet may_satisfy(
       const MethodMappings& method_mappings,
       MaySatisfyMethodConstraintKind constraint_kind) const override;
   bool satisfy(const DexType* type) const override;
@@ -138,7 +138,7 @@ class AnyOfTypeConstraint final : public TypeConstraint {
  public:
   explicit AnyOfTypeConstraint(
       std::vector<std::unique_ptr<TypeConstraint>> constraints);
-  MethodSet may_satisfy(
+  MethodHashedSet may_satisfy(
       const MethodMappings& method_mappings,
       MaySatisfyMethodConstraintKind constraint_kind) const override;
   bool satisfy(const DexType* type) const override;
@@ -151,7 +151,7 @@ class AnyOfTypeConstraint final : public TypeConstraint {
 class NotTypeConstraint final : public TypeConstraint {
  public:
   explicit NotTypeConstraint(std::unique_ptr<TypeConstraint> constraint);
-  MethodSet may_satisfy(
+  MethodHashedSet may_satisfy(
       const MethodMappings& method_mappings,
       MaySatisfyMethodConstraintKind constraint_kind) const override;
   bool satisfy(const DexType* type) const override;
@@ -190,7 +190,8 @@ class MethodConstraint {
       Context& context);
   virtual bool has_children() const;
   virtual std::vector<const MethodConstraint*> children() const;
-  virtual MethodSet may_satisfy(const MethodMappings& method_mappings) const;
+  virtual MethodHashedSet may_satisfy(
+      const MethodMappings& method_mappings) const;
   virtual bool satisfy(const Method* method) const = 0;
   virtual bool operator==(const MethodConstraint& other) const = 0;
 };
@@ -198,7 +199,8 @@ class MethodConstraint {
 class MethodNameConstraint final : public MethodConstraint {
  public:
   explicit MethodNameConstraint(std::string regex_string);
-  MethodSet may_satisfy(const MethodMappings& method_mappings) const override;
+  MethodHashedSet may_satisfy(
+      const MethodMappings& method_mappings) const override;
   bool satisfy(const Method* method) const override;
   bool operator==(const MethodConstraint& other) const override;
 
@@ -209,7 +211,8 @@ class MethodNameConstraint final : public MethodConstraint {
 class ParentConstraint final : public MethodConstraint {
  public:
   explicit ParentConstraint(std::unique_ptr<TypeConstraint> inner_constraint);
-  MethodSet may_satisfy(const MethodMappings& method_mappings) const override;
+  MethodHashedSet may_satisfy(
+      const MethodMappings& method_mappings) const override;
   bool satisfy(const Method* method) const override;
   bool operator==(const MethodConstraint& other) const override;
 
@@ -223,7 +226,8 @@ class AllOfMethodConstraint final : public MethodConstraint {
       std::vector<std::unique_ptr<MethodConstraint>> constraints);
   bool has_children() const override;
   std::vector<const MethodConstraint*> children() const override;
-  MethodSet may_satisfy(const MethodMappings& method_mappings) const override;
+  MethodHashedSet may_satisfy(
+      const MethodMappings& method_mappings) const override;
   bool satisfy(const Method* method) const override;
   bool operator==(const MethodConstraint& other) const override;
 
@@ -237,7 +241,8 @@ class AnyOfMethodConstraint final : public MethodConstraint {
       std::vector<std::unique_ptr<MethodConstraint>> constraints);
   bool has_children() const override;
   std::vector<const MethodConstraint*> children() const override;
-  MethodSet may_satisfy(const MethodMappings& method_mappings) const override;
+  MethodHashedSet may_satisfy(
+      const MethodMappings& method_mappings) const override;
   bool satisfy(const Method* method) const override;
   bool operator==(const MethodConstraint& other) const override;
 
@@ -250,7 +255,8 @@ class NotMethodConstraint final : public MethodConstraint {
   explicit NotMethodConstraint(std::unique_ptr<MethodConstraint> constraint);
   bool has_children() const override;
   std::vector<const MethodConstraint*> children() const override;
-  MethodSet may_satisfy(const MethodMappings& method_mappings) const override;
+  MethodHashedSet may_satisfy(
+      const MethodMappings& method_mappings) const override;
   bool satisfy(const Method* method) const override;
   bool operator==(const MethodConstraint& other) const override;
 
@@ -350,7 +356,8 @@ class ParameterConstraint final : public MethodConstraint {
 class SignatureConstraint final : public MethodConstraint {
  public:
   SignatureConstraint(std::string regex_string);
-  MethodSet may_satisfy(const MethodMappings& method_mappings) const override;
+  MethodHashedSet may_satisfy(
+      const MethodMappings& method_mappings) const override;
   bool satisfy(const Method* method) const override;
   bool operator==(const MethodConstraint& other) const override;
 
@@ -738,11 +745,11 @@ class JsonModelGeneratorItem final : public MethodVisitorModelGenerator {
       std::unique_ptr<AllOfMethodConstraint> constraint,
       ModelTemplate model_template,
       int verbosity);
-  std::vector<Model> run_filtered(const MethodSet& methods);
+  std::vector<Model> run_filtered(const MethodHashedSet& methods);
   std::unordered_set<const MethodConstraint*> constraint_leaves() const;
   /* Returns filtered method set to run full satisfy checks on. Returns Top if
    * filtered set cannot be determined. */
-  MethodSet may_satisfy(const MethodMappings& method_mappings) const;
+  MethodHashedSet may_satisfy(const MethodMappings& method_mappings) const;
   std::vector<Model> visit_method(const Method* method) const override;
 
  private:
