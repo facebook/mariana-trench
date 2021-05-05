@@ -19,16 +19,8 @@
 #include <mariana-trench/ModelGeneration.h>
 #include <mariana-trench/Options.h>
 #include <mariana-trench/Timer.h>
-#include <mariana-trench/model-generator/BroadcastReceiverGenerator.h>
 #include <mariana-trench/model-generator/JsonModelGenerator.h>
 #include <mariana-trench/model-generator/ModelGeneratorConfiguration.h>
-#include <mariana-trench/model-generator/NoJoinOverridesGenerator.h>
-#include <mariana-trench/model-generator/ProviderSourceSinkGenerator.h>
-#include <mariana-trench/model-generator/RandomSourceGenerator.h>
-#include <mariana-trench/model-generator/RepeatingAlarmSinkGenerator.h>
-#include <mariana-trench/model-generator/ServiceSourceGenerator.h>
-#include <mariana-trench/model-generator/StructuredLoggerSinkGenerator.h>
-#include <mariana-trench/model-generator/TouchEventSinkGenerator.h>
 
 namespace marianatrench {
 
@@ -36,30 +28,8 @@ namespace {
 
 std::map<std::string, std::unique_ptr<ModelGenerator>> make_model_generators(
     Context& context) {
-  std::vector<std::unique_ptr<ModelGenerator>> builtin_generators;
-  builtin_generators.push_back(
-      std::make_unique<BroadcastReceiverGenerator>(context));
-  builtin_generators.push_back(
-      std::make_unique<NoJoinOverridesGenerator>(context));
-  builtin_generators.push_back(
-      std::make_unique<ProviderSourceSinkGenerator>(context));
-  builtin_generators.push_back(
-      std::make_unique<RandomSourceGenerator>(context));
-  builtin_generators.push_back(
-      std::make_unique<RepeatingAlarmSinkGenerator>(context));
-  builtin_generators.push_back(
-      std::make_unique<ServiceSourceGenerator>(context));
-  builtin_generators.push_back(
-      std::make_unique<StructuredLoggerSinkGenerator>(context));
-  builtin_generators.push_back(
-      std::make_unique<TouchEventSinkGenerator>(context));
-
-  std::map<std::string, std::unique_ptr<ModelGenerator>> generators;
-  for (auto& generator : builtin_generators) {
-    auto name = generator->name();
-    generators.emplace(name, std::move(generator));
-  }
-
+  std::map<std::string, std::unique_ptr<ModelGenerator>> generators =
+      ModelGeneration::make_builtin_model_generators(context);
   // Find JSON model generators in search path.
   for (const auto& path : context.options->model_generator_search_paths()) {
     LOG(3, "Searching for model generators in `{}`...", path);
@@ -91,6 +61,13 @@ std::map<std::string, std::unique_ptr<ModelGenerator>> make_model_generators(
 }
 
 } // namespace
+
+#ifndef MARIANA_TRENCH_FACEBOOK_BUILD
+std::map<std::string, std::unique_ptr<ModelGenerator>>
+ModelGeneration::make_builtin_model_generators(Context& /*context*/) {
+  return {};
+}
+#endif
 
 std::vector<Model> ModelGeneration::run(Context& context) {
   const auto& options = *context.options;
