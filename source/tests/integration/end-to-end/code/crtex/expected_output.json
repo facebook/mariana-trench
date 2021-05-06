@@ -801,7 +801,9 @@
       "caller_port" : "Argument(0)",
       "canonical_names" : 
       [
-        "%programmatic_leaf_name%__%via_type_of%"
+        {
+          "template" : "%programmatic_leaf_name%__%via_type_of%"
+        }
       ],
       "kind" : "Sink",
       "origins" : 

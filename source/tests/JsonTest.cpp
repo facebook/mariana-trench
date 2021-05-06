@@ -1258,12 +1258,43 @@ TEST_F(JsonTest, Frame_Crtex) {
           test::parse_json(R"({"kind": "TestSource", "canonical_names": []})"),
           context),
       JsonValidationError);
+  EXPECT_THROW(
+      Frame::from_json(
+          test::parse_json(
+              R"({"kind": "TestSource", "canonical_names": [ { "irrelevant": "field" } ]})"),
+          context),
+      JsonValidationError);
+  EXPECT_THROW(
+      Frame::from_json(
+          test::parse_json(
+              R"({
+                "kind": "TestSource",
+                "canonical_names": [ {"template": "%programmatic_leaf_name%", "instantiated": "MyMethod::MyClass"} ]
+              })"),
+          context),
+      JsonValidationError);
   EXPECT_EQ(
       Frame::from_json(
           test::parse_json(
               R"({
                 "kind": "TestSource",
-                "canonical_names": [ "%programmatic_leaf_name%" ]
+                "canonical_names": [ {"template": "%programmatic_leaf_name%"} ]
+              })"),
+          context),
+      Frame::crtex_leaf(
+          context.kinds->get("TestSource"),
+          /* origins */ {},
+          /* user_features */ {},
+          /* via_type_of_ports */ {},
+          /* canonical_names */
+          CanonicalNameSetAbstractDomain{CanonicalName(
+              CanonicalName::TemplateValue{"%programmatic_leaf_name%"})}));
+  EXPECT_EQ(
+      Frame::from_json(
+          test::parse_json(
+              R"({
+                "kind": "TestSource",
+                "canonical_names": [ {"instantiated": "Lcom/android/MyClass;.MyMethod"} ]
               })"),
           context),
       Frame::crtex_leaf(
@@ -1273,7 +1304,8 @@ TEST_F(JsonTest, Frame_Crtex) {
           /* via_type_of_ports */ {},
           /* canonical_names */
           CanonicalNameSetAbstractDomain{
-              CanonicalName("%programmatic_leaf_name%")}));
+              CanonicalName(CanonicalName::InstantiatedValue{
+                  "Lcom/android/MyClass;.MyMethod"})}));
 }
 
 TEST_F(JsonTest, Propagation) {

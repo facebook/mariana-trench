@@ -573,62 +573,64 @@ TEST_F(FrameTest, FrameLeq) {
                        /* canonical_names */ {})));
 
   // Compare canonical names.
-  EXPECT_TRUE(Frame(
-                  /* kind */ context.kinds->get("TestSource"),
-                  /* callee_port */ AccessPath(Root(Root::Kind::Leaf)),
-                  /* callee */ nullptr,
-                  /* call_position */ nullptr,
-                  /* distance */ 0,
-                  /* origins */ {},
-                  /* inferred_features */ {},
-                  /* locally_inferred_features */ {},
-                  /* user_features */ {},
-                  /* via_type_of_ports */ {},
-                  /* local_positions */ {},
-                  /* canonical_names */ {})
-                  .leq(Frame(
-                      /* kind */ context.kinds->get("TestSource"),
-                      /* callee_port */ AccessPath(Root(Root::Kind::Leaf)),
-                      /* callee */ nullptr,
-                      /* call_position */ nullptr,
-                      /* distance */ 0,
-                      /* origins */ {},
-                      /* inferred_features */ {},
-                      /* locally_inferred_features */ {},
-                      /* user_features */ {},
-                      /* via_type_of_ports */ {},
-                      /* local_positions */ {},
-                      /* canonical_names */
-                      CanonicalNameSetAbstractDomain{
-                          CanonicalName("%programmatic_leaf_name%")})));
-  EXPECT_FALSE(Frame(
-                   /* kind */ context.kinds->get("TestSource"),
-                   /* callee_port */ AccessPath(Root(Root::Kind::Leaf)),
-                   /* callee */ nullptr,
-                   /* call_position */ nullptr,
-                   /* distance */ 0,
-                   /* origins */ {},
-                   /* inferred_features */ {},
-                   /* locally_inferred_features */ {},
-                   /* user_features */ {},
-                   /* via_type_of_ports */ {},
-                   /* local_positions */ {},
-                   /* canonical_names */
-                   CanonicalNameSetAbstractDomain{
-                       CanonicalName("%programmatic_leaf_name%")})
-                   .leq(Frame(
-                       /* kind */ context.kinds->get("TestSource"),
-                       /* callee_port */ AccessPath(Root(Root::Kind::Leaf)),
-                       /* callee */ nullptr,
-                       /* call_position */ nullptr,
-                       /* distance */ 1,
-                       /* origins */ {},
-                       /* inferred_features */ {},
-                       /* locally_inferred_features */ {},
-                       /* user_features */ {},
-                       /* via_type_of_ports */ {},
-                       /* local_positions */ {},
-                       /* canonical_names */ {})));
+  EXPECT_TRUE(
+      Frame(
+          /* kind */ context.kinds->get("TestSource"),
+          /* callee_port */ AccessPath(Root(Root::Kind::Leaf)),
+          /* callee */ nullptr,
+          /* call_position */ nullptr,
+          /* distance */ 0,
+          /* origins */ {},
+          /* inferred_features */ {},
+          /* locally_inferred_features */ {},
+          /* user_features */ {},
+          /* via_type_of_ports */ {},
+          /* local_positions */ {},
+          /* canonical_names */ {})
+          .leq(Frame(
+              /* kind */ context.kinds->get("TestSource"),
+              /* callee_port */ AccessPath(Root(Root::Kind::Leaf)),
+              /* callee */ nullptr,
+              /* call_position */ nullptr,
+              /* distance */ 0,
+              /* origins */ {},
+              /* inferred_features */ {},
+              /* locally_inferred_features */ {},
+              /* user_features */ {},
+              /* via_type_of_ports */ {},
+              /* local_positions */ {},
+              /* canonical_names */
+              CanonicalNameSetAbstractDomain{CanonicalName(
+                  CanonicalName::TemplateValue{"%programmatic_leaf_name%"})})));
+  EXPECT_FALSE(
+      Frame(
+          /* kind */ context.kinds->get("TestSource"),
+          /* callee_port */ AccessPath(Root(Root::Kind::Leaf)),
+          /* callee */ nullptr,
+          /* call_position */ nullptr,
+          /* distance */ 0,
+          /* origins */ {},
+          /* inferred_features */ {},
+          /* locally_inferred_features */ {},
+          /* user_features */ {},
+          /* via_type_of_ports */ {},
+          /* local_positions */ {},
+          /* canonical_names */
+          CanonicalNameSetAbstractDomain{CanonicalName(
+              CanonicalName::TemplateValue{"%programmatic_leaf_name%"})})
+          .leq(Frame(
+              /* kind */ context.kinds->get("TestSource"),
+              /* callee_port */ AccessPath(Root(Root::Kind::Leaf)),
+              /* callee */ nullptr,
+              /* call_position */ nullptr,
+              /* distance */ 1,
+              /* origins */ {},
+              /* inferred_features */ {},
+              /* locally_inferred_features */ {},
+              /* user_features */ {},
+              /* via_type_of_ports */ {},
+              /* local_positions */ {},
+              /* canonical_names */ {})));
 }
 
 TEST_F(FrameTest, FrameEquals) {
@@ -1083,8 +1085,8 @@ TEST_F(FrameTest, FrameJoin) {
           /* via_type_of_ports */ {},
           /* local_positions */ {},
           /* canonical_names */
-          CanonicalNameSetAbstractDomain{
-              CanonicalName("%programmatic_leaf_name%")})
+          CanonicalNameSetAbstractDomain{CanonicalName(
+              CanonicalName::TemplateValue{"%programmatic_leaf_name%"})})
           .join(Frame(
               /* kind */ context.kinds->get("TestSource"),
               /* callee_port */ AccessPath(Root(Root::Kind::Leaf)),
@@ -1098,7 +1100,8 @@ TEST_F(FrameTest, FrameJoin) {
               /* via_type_of_ports */ {},
               /* local_positions */ {},
               /* canonical_names */
-              CanonicalNameSetAbstractDomain{CanonicalName("%via_type_of%")})),
+              CanonicalNameSetAbstractDomain{CanonicalName(
+                  CanonicalName::TemplateValue{"%via_type_of%"})})),
       Frame(
           /* kind */ context.kinds->get("TestSource"),
           /* callee_port */ AccessPath(Root(Root::Kind::Leaf)),
@@ -1113,8 +1116,9 @@ TEST_F(FrameTest, FrameJoin) {
           /* local_positions */ {},
           /* canonical_names */
           CanonicalNameSetAbstractDomain{
-              CanonicalName("%programmatic_leaf_name%"),
-              CanonicalName("%via_type_of%")}));
+              CanonicalName(
+                  CanonicalName::TemplateValue{"%programmatic_leaf_name%"}),
+              CanonicalName(CanonicalName::TemplateValue{"%via_type_of%"})}));
 }
 
 TEST_F(FrameTest, FrameWithKind) {

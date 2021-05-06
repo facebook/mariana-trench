@@ -373,7 +373,7 @@ Json::Value Frame::to_json() const {
   if (canonical_names_.is_value() && !canonical_names_.elements().empty()) {
     auto canonical_names = Json::Value(Json::arrayValue);
     for (const auto& canonical_name : canonical_names_.elements()) {
-      canonical_names.append(canonical_name.value());
+      canonical_names.append(canonical_name.to_json());
     }
     value["canonical_names"] = canonical_names;
   }

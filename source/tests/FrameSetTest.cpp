@@ -1585,8 +1585,8 @@ TEST_F(FrameSetTest, Propagate) {
           /* via_type_of_ports */ {},
           /* local_positions */ {},
           /* canonical_names */
-          CanonicalNameSetAbstractDomain{
-              CanonicalName("%programmatic_leaf_name%")})};
+          CanonicalNameSetAbstractDomain{CanonicalName(
+              CanonicalName::TemplateValue{"%programmatic_leaf_name%"})})};
 
   // TODO: The crtex frame should result in a separate Frame in the set.
   EXPECT_EQ(
@@ -1738,8 +1738,8 @@ TEST_F(FrameSetTest, PartitionMap) {
           /* via_type_of_ports */ {},
           /* local_positions */ {},
           /* canonical_names */
-          CanonicalNameSetAbstractDomain{
-              CanonicalName("%programmatic_leaf_name%")})};
+          CanonicalNameSetAbstractDomain{CanonicalName(
+              CanonicalName::TemplateValue{"%programmatic_leaf_name%"})})};
 
   auto partitions = frames.partition_map<bool>(
       [](const Frame& frame) { return frame.is_crtex(); });
@@ -1763,8 +1763,8 @@ TEST_F(FrameSetTest, PartitionMap) {
           /* via_type_of_ports */ {},
           /* local_positions */ {},
           /* canonical_names */
-          CanonicalNameSetAbstractDomain{
-              CanonicalName("%programmatic_leaf_name%")})});
+          CanonicalNameSetAbstractDomain{CanonicalName(
+              CanonicalName::TemplateValue{"%programmatic_leaf_name%"})})});
 
   FrameSet non_crtex_partition;
   for (auto frame : partitions[false]) {

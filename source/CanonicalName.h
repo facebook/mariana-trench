@@ -8,6 +8,7 @@
 #pragma once
 
 #include <string>
+#include <variant>
 
 #include <boost/array.hpp>
 #include <boost/container_hash/extensions.hpp>
@@ -23,7 +24,35 @@ namespace marianatrench {
  */
 class CanonicalName final {
  public:
-  explicit CanonicalName(std::string value) : value_(std::move(value)) {}
+  struct TemplateValue {
+    std::string value;
+
+    bool operator==(const TemplateValue& other) const {
+      return value == other.value;
+    }
+
+    bool operator!=(const TemplateValue& other) const {
+      return value != other.value;
+    }
+  };
+  struct InstantiatedValue {
+    std::string value;
+
+    bool operator==(const InstantiatedValue& other) const {
+      return value == other.value;
+    }
+
+    bool operator!=(const InstantiatedValue& other) const {
+      return value != other.value;
+    }
+  };
+
+ public:
+  explicit CanonicalName(const TemplateValue& template_value)
+      : value_(template_value) {}
+
+  explicit CanonicalName(const InstantiatedValue& instantiated_value)
+      : value_(instantiated_value) {}
 
   CanonicalName(const CanonicalName&) = default;
   CanonicalName(CanonicalName&&) = default;
@@ -39,17 +68,30 @@ class CanonicalName final {
     return value_ != other.value_;
   }
 
-  const std::string& value() const {
-    return value_;
+  std::optional<std::string> template_value() const {
+    if (std::holds_alternative<TemplateValue>(value_)) {
+      return std::get<TemplateValue>(value_).value;
+    } else {
+      return std::nullopt;
+    }
+  }
+
+  std::optional<std::string> instantiated_value() const {
+    if (std::holds_alternative<InstantiatedValue>(value_)) {
+      return std::get<InstantiatedValue>(value_).value;
+    } else {
+      return std::nullopt;
+    }
   }
 
   static CanonicalName from_json(const Json::Value& value);
+  Json::Value to_json() const;
 
  private:
   friend std::ostream& operator<<(std::ostream& out, const CanonicalName& root);
 
  private:
-  std::string value_;
+  std::variant<TemplateValue, InstantiatedValue> value_;
 };
 
 } // namespace marianatrench
@@ -57,6 +99,9 @@ class CanonicalName final {
 template <>
 struct std::hash<marianatrench::CanonicalName> {
   std::size_t operator()(const marianatrench::CanonicalName& name) const {
-    return std::hash<std::string>()(name.value());
+    std::size_t seed = 0;
+    boost::hash_combine(seed, name.template_value());
+    boost::hash_combine(seed, name.instantiated_value());
+    return seed;
   }
 };
