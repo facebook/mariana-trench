@@ -1,0 +1,44 @@
+[
+  {
+    "method": "Landroid/content/Intent;.<init>:(Ljava/lang/String;Landroid/net/Uri;)V",
+    "generations": [
+      {
+        "port": "Argument(0)",
+        "kind": "Source"
+      }
+    ]
+  },
+  {
+    "method": "Lcom/facebook/marianatrench/integrationtests/Crtex;.startActivityHelper:(Landroid/content/Intent;Landroid/app/Activity;)V",
+    "sinks": [
+      {
+        "port": "Argument(0)",
+        "kind": "Sink",
+        "via_type_of": [
+          "Argument(1)"
+        ],
+        "canonical_names": [
+          "%programmatic_leaf_name%__%via_type_of%"
+        ]
+      }
+    ]
+  },
+  {
+    "method": "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;",
+    "generations": [
+      {
+        "kind": "Source",
+        "port": "Return"
+      }
+    ]
+  },
+  {
+    "method": "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
+    "sinks": [
+      {
+        "kind": "Sink",
+        "port": "Argument(0)"
+      }
+    ]
+  }
+]
