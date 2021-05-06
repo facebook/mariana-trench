@@ -603,7 +603,8 @@ void check_flows_to_array_allocation(
       /* locally_inferred_features */ {},
       /* user features */ {},
       /* via_type_of_ports */ {},
-      /* local_positions */ {})};
+      /* local_positions */ {},
+      /* canonical_names */ {})};
   auto instruction_sources = instruction->srcs_vec();
   for (std::size_t parameter_position = 0;
        parameter_position < instruction_sources.size();

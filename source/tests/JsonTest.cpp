@@ -8,6 +8,7 @@
 #include <gmock/gmock.h>
 
 #include <mariana-trench/Access.h>
+#include <mariana-trench/CanonicalName.h>
 #include <mariana-trench/Frame.h>
 #include <mariana-trench/JsonValidation.h>
 #include <mariana-trench/LifecycleMethod.h>
@@ -605,7 +606,8 @@ TEST_F(JsonTest, Frame) {
           /* locally_inferred_features */ FeatureMayAlwaysSet::bottom(),
           /* user_features */ {},
           /* via_type_of_ports */ {},
-          /* local_positions */ {}));
+          /* local_positions */ {},
+          /* canonical_names */ {}));
 
   // Parse the kind for partial leaves.
   EXPECT_THROW(
@@ -633,7 +635,8 @@ TEST_F(JsonTest, Frame) {
           /* locally_inferred_features */ FeatureMayAlwaysSet::bottom(),
           /* user_features */ {},
           /* via_type_of_ports */ {},
-          /* local_positions */ {}));
+          /* local_positions */ {},
+          /* canonical_names */ {}));
   const auto* frame_kind = frame.kind()->as<PartialKind>();
   EXPECT_NE(frame_kind, nullptr);
   EXPECT_EQ(frame_kind->name(), "TestSink");
@@ -666,7 +669,8 @@ TEST_F(JsonTest, Frame) {
           /* locally_inferred_features */ FeatureMayAlwaysSet::bottom(),
           /* user_features */ {},
           /* via_type_of_ports */ {},
-          /* local_positions */ {}),
+          /* local_positions */ {},
+          /* canonical_names */ {}),
       context);
   EXPECT_JSON_EQ(
       Frame,
@@ -687,7 +691,8 @@ TEST_F(JsonTest, Frame) {
           /* locally_inferred_features */ FeatureMayAlwaysSet::bottom(),
           /* user_features */ {},
           /* via_type_of_ports */ {},
-          /* local_positions */ {}),
+          /* local_positions */ {},
+          /* canonical_names */ {}),
       context);
 
   // Parse the callee, position and distance.
@@ -711,7 +716,8 @@ TEST_F(JsonTest, Frame) {
           /* locally_inferred_features */ FeatureMayAlwaysSet::bottom(),
           /* user_features */ {},
           /* via_type_of_ports */ {},
-          /* local_positions */ {}),
+          /* local_positions */ {},
+          /* canonical_names */ {}),
       context);
   EXPECT_JSON_EQ(
       Frame,
@@ -733,7 +739,8 @@ TEST_F(JsonTest, Frame) {
           /* locally_inferred_features */ FeatureMayAlwaysSet::bottom(),
           /* user_features */ {},
           /* via_type_of_ports */ {},
-          /* local_positions */ {}),
+          /* local_positions */ {},
+          /* canonical_names */ {}),
       context);
 
   // Parse the origins.
@@ -763,7 +770,8 @@ TEST_F(JsonTest, Frame) {
           /* locally_inferred_features */ FeatureMayAlwaysSet::bottom(),
           /* user_features */ {},
           /* via_type_of_ports */ {},
-          /* local_positions */ {}),
+          /* local_positions */ {},
+          /* canonical_names */ {}),
       context);
   EXPECT_JSON_EQ(
       Frame,
@@ -783,7 +791,8 @@ TEST_F(JsonTest, Frame) {
           /* locally_inferred_features */ FeatureMayAlwaysSet::bottom(),
           /* user_features */ {},
           /* via_type_of_ports */ {},
-          /* local_positions */ {}),
+          /* local_positions */ {},
+          /* canonical_names */ {}),
       context);
 
   // Parse the features.
@@ -806,7 +815,8 @@ TEST_F(JsonTest, Frame) {
           /* locally_inferred_features */ FeatureMayAlwaysSet::bottom(),
           /* user_features */ {},
           /* via_type_of_ports */ {},
-          /* local_positions */ {}),
+          /* local_positions */ {},
+          /* canonical_names */ {}),
       context);
   EXPECT_JSON_EQ(
       Frame,
@@ -829,7 +839,8 @@ TEST_F(JsonTest, Frame) {
           /* locally_inferred_features */ FeatureMayAlwaysSet::bottom(),
           /* user_features */ {},
           /* via_type_of_ports */ {},
-          /* local_positions */ {}),
+          /* local_positions */ {},
+          /* canonical_names */ {}),
       context);
   EXPECT_JSON_EQ(
       Frame,
@@ -853,7 +864,8 @@ TEST_F(JsonTest, Frame) {
           /* locally_inferred_features */ FeatureMayAlwaysSet::bottom(),
           /* user_features */ {},
           /* via_type_of_ports */ {},
-          /* local_positions */ {}),
+          /* local_positions */ {},
+          /* canonical_names */ {}),
       context);
   EXPECT_JSON_EQ(
       Frame,
@@ -876,7 +888,8 @@ TEST_F(JsonTest, Frame) {
           /* locally_inferred_features */ FeatureMayAlwaysSet::bottom(),
           /* user_features */ {},
           /* via_type_of_ports */ {},
-          /* local_positions */ {}),
+          /* local_positions */ {},
+          /* canonical_names */ {}),
       context);
   EXPECT_JSON_EQ(
       Frame,
@@ -902,7 +915,8 @@ TEST_F(JsonTest, Frame) {
           /* locally_inferred_features */ FeatureMayAlwaysSet::bottom(),
           /* user_features */ {},
           /* via_type_of_ports */ {},
-          /* local_positions */ {}),
+          /* local_positions */ {},
+          /* canonical_names */ {}),
       context);
   EXPECT_EQ(
       Frame::from_json(
@@ -924,7 +938,8 @@ TEST_F(JsonTest, Frame) {
           /* user_features */
           FeatureSet{context.features->get("FeatureOne")},
           /* via_type_of_ports */ {},
-          /* local_positions */ {}));
+          /* local_positions */ {},
+          /* canonical_names */ {}));
   EXPECT_EQ(
       Frame::from_json(
           test::parse_json(
@@ -947,7 +962,8 @@ TEST_F(JsonTest, Frame) {
               context.features->get("FeatureOne"),
               context.features->get("FeatureTwo")},
           /* via_type_of_ports */ {},
-          /* local_positions */ {}));
+          /* local_positions */ {},
+          /* canonical_names */ {}));
   EXPECT_EQ(
       Frame::from_json(
           test::parse_json(
@@ -971,7 +987,8 @@ TEST_F(JsonTest, Frame) {
           /* locally_inferred_features */ FeatureMayAlwaysSet::bottom(),
           /* user_features */ FeatureSet{context.features->get("FeatureOne")},
           /* via_type_of_ports */ {},
-          /* local_positions */ {}));
+          /* local_positions */ {},
+          /* canonical_names */ {}));
   EXPECT_EQ(
       Frame::from_json(
           test::parse_json(
@@ -997,7 +1014,8 @@ TEST_F(JsonTest, Frame) {
           /* locally_inferred_features */ FeatureMayAlwaysSet::bottom(),
           /* user_features */ FeatureSet{context.features->get("FeatureOne")},
           /* via_type_of_ports */ {},
-          /* local_positions */ {}));
+          /* local_positions */ {},
+          /* canonical_names */ {}));
   EXPECT_EQ(
       Frame::from_json(
           test::parse_json(
@@ -1020,7 +1038,8 @@ TEST_F(JsonTest, Frame) {
           /* user_features */
           FeatureSet{context.features->get("FeatureOne")},
           /* via_type_of_ports */ {},
-          /* local_positions */ {}));
+          /* local_positions */ {},
+          /* canonical_names */ {}));
 
   // Parse via_type_of_ports
   EXPECT_JSON_EQ(
@@ -1043,7 +1062,8 @@ TEST_F(JsonTest, Frame) {
           /* via_type_of_ports */
           RootSetAbstractDomain(
               {Root(Root::Kind::Return), Root(Root::Kind::Argument, 1)}),
-          /* local_positions */ {}),
+          /* local_positions */ {},
+          /* canonical_names */ {}),
       context);
 
   // Parse local positions.
@@ -1066,7 +1086,8 @@ TEST_F(JsonTest, Frame) {
           /* user_features */ {},
           /* via_type_of_ports */ {},
           /* local_positions */
-          LocalPositionSet{context.positions->get(std::nullopt, 1)}),
+          LocalPositionSet{context.positions->get(std::nullopt, 1)},
+          /* canonical_names */ {}),
       context);
   EXPECT_JSON_EQ(
       Frame,
@@ -1095,7 +1116,8 @@ TEST_F(JsonTest, Frame) {
               context.positions->get(std::nullopt, 10),
               context.positions->get(std::nullopt, 20),
               context.positions->get(std::nullopt, 30),
-          }),
+          },
+          /* canonical_names */ {}),
       context);
   EXPECT_EQ(
       Frame::from_json(
@@ -1125,7 +1147,8 @@ TEST_F(JsonTest, Frame) {
           LocalPositionSet{
               context.positions->get(std::nullopt, 1),
               context.positions->get(std::nullopt, 2),
-          }));
+          },
+          /* canonical_names */ {}));
 
   // Verifies to_json behavior for local inferred features. These cannot be
   // covered by from_json tests as they are never specified in json. Note that
@@ -1149,7 +1172,8 @@ TEST_F(JsonTest, Frame) {
               /* always */ {}),
           /* user_features */ {},
           /* via_type_of_ports */ {},
-          /* local_positions */ {})
+          /* local_positions */ {},
+          /* canonical_names */ {})
           .to_json(),
       test::parse_json(R"({
         "kind": "TestSource",
@@ -1214,6 +1238,42 @@ TEST_F(JsonTest, Frame) {
           })"),
           context),
       JsonValidationError);
+}
+
+TEST_F(JsonTest, Frame_Crtex) {
+  Scope scope;
+  DexStore store("stores");
+  store.add_classes(scope);
+  auto context = test::make_context(store);
+
+  EXPECT_THROW(
+      Frame::from_json(test::parse_json(R"(1)"), context), JsonValidationError);
+  EXPECT_THROW(
+      Frame::from_json(test::parse_json(R"({})"), context),
+      JsonValidationError);
+
+  // canonical_names cannot be empty.
+  EXPECT_THROW(
+      Frame::from_json(
+          test::parse_json(R"({"kind": "TestSource", "canonical_names": []})"),
+          context),
+      JsonValidationError);
+  EXPECT_EQ(
+      Frame::from_json(
+          test::parse_json(
+              R"({
+                "kind": "TestSource",
+                "canonical_names": [ "%programmatic_leaf_name%" ]
+              })"),
+          context),
+      Frame::crtex_leaf(
+          context.kinds->get("TestSource"),
+          /* origins */ {},
+          /* user_features */ {},
+          /* via_type_of_ports */ {},
+          /* canonical_names */
+          CanonicalNameSetAbstractDomain{
+              CanonicalName("%programmatic_leaf_name%")}));
 }
 
 TEST_F(JsonTest, Propagation) {

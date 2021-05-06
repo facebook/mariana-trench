@@ -249,7 +249,8 @@ Frame augment_frame_position(
       frame.locally_inferred_features(),
       frame.user_features(),
       frame.via_type_of_ports(),
-      augment_local_positions(frame.local_positions(), lines, context));
+      augment_local_positions(frame.local_positions(), lines, context),
+      frame.canonical_names());
 }
 
 Taint augment_taint_positions(

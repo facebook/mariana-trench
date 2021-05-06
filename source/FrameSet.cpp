@@ -251,7 +251,8 @@ Frame FrameSet::propagate(
       /* locally_inferred_features */ FeatureMayAlwaysSet::bottom(),
       /* user_features */ FeatureSet::bottom(),
       /* via_type_of_ports */ {},
-      /* local_positions */ {});
+      /* local_positions */ {},
+      /* canonical_names */ {});
 }
 
 FrameSet FrameSet::attach_position(const Position* position) const {
@@ -275,7 +276,8 @@ FrameSet FrameSet::attach_position(const Position* position) const {
             /* locally_inferred_features */ FeatureMayAlwaysSet::bottom(),
             /* user_features */ FeatureSet::bottom(),
             /* via_type_of_ports */ {},
-            frame.local_positions()));
+            frame.local_positions(),
+            /* canonical_names */ {}));
       }
     }
   }

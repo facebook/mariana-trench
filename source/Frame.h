@@ -17,6 +17,7 @@
 
 #include <mariana-trench/Access.h>
 #include <mariana-trench/Assert.h>
+#include <mariana-trench/CanonicalName.h>
 #include <mariana-trench/Compiler.h>
 #include <mariana-trench/Context.h>
 #include <mariana-trench/Feature.h>
@@ -32,6 +33,8 @@
 namespace marianatrench {
 
 using RootSetAbstractDomain = sparta::HashedSetAbstractDomain<Root>;
+using CanonicalNameSetAbstractDomain =
+    sparta::HashedSetAbstractDomain<CanonicalName>;
 
 /**
  * Represents a frame of a trace, i.e a single hop between methods.
@@ -72,6 +75,10 @@ using RootSetAbstractDomain = sparta::HashedSetAbstractDomain<Root>;
  * `local_positions` is the set of positions that the taint flowed through
  * within the current method.
  *
+ * `canonical_names` is used for cross-repo taint exchange (crtex) which
+ * requires that callee names at the leaves conform to a naming format. This
+ * format is defined using placeholders. See `CanonicalName`.
+ *
  * For artificial sources, the callee port is used as the origin of the source.
  */
 class Frame final : public sparta::AbstractDomain<Frame> {
@@ -95,7 +102,8 @@ class Frame final : public sparta::AbstractDomain<Frame> {
       FeatureMayAlwaysSet locally_inferred_features,
       FeatureSet user_features,
       RootSetAbstractDomain via_type_of_ports,
-      LocalPositionSet local_positions)
+      LocalPositionSet local_positions,
+      CanonicalNameSetAbstractDomain canonical_names = {})
       : kind_(kind),
         callee_port_(std::move(callee_port)),
         callee_(callee),
@@ -106,10 +114,16 @@ class Frame final : public sparta::AbstractDomain<Frame> {
         locally_inferred_features_(std::move(locally_inferred_features)),
         user_features_(std::move(user_features)),
         via_type_of_ports_(std::move(via_type_of_ports)),
-        local_positions_(std::move(local_positions)) {
+        local_positions_(std::move(local_positions)),
+        canonical_names_(std::move(canonical_names)) {
     mt_assert(kind_ != nullptr);
     mt_assert(distance_ >= 0);
     mt_assert(!local_positions_.is_bottom());
+    // If canonical names are provided, callee_ must be `nullptr` (a leaf).
+    mt_assert(
+        (canonical_names_.is_value() && !canonical_names_.elements().empty() &&
+         callee_ == nullptr) ||
+        (!canonical_names_.is_value() || canonical_names_.elements().empty()));
   }
 
   static Frame leaf(
@@ -129,7 +143,8 @@ class Frame final : public sparta::AbstractDomain<Frame> {
         locally_inferred_features,
         user_features,
         /* via_type_of_ports */ {},
-        /* local_positions */ {});
+        /* local_positions */ {},
+        /* canonical_names */ {});
   }
 
   static Frame leaf(const Kind* kind) {
@@ -139,6 +154,27 @@ class Frame final : public sparta::AbstractDomain<Frame> {
         /* locally_inferred_features */ FeatureMayAlwaysSet::bottom(),
         /* user_features */ FeatureSet::bottom(),
         /* origins */ {});
+  }
+
+  static Frame crtex_leaf(
+      const Kind* kind,
+      MethodSet origins,
+      FeatureSet user_features,
+      RootSetAbstractDomain via_type_of_ports,
+      CanonicalNameSetAbstractDomain canonical_names) {
+    return Frame(
+        kind,
+        /* callee_port */ AccessPath(Root(Root::Kind::Leaf)),
+        /* callee */ nullptr,
+        /* call_position */ nullptr,
+        /* distance */ 0,
+        origins,
+        /* inferred_features */ FeatureMayAlwaysSet::bottom(),
+        /* locally_inferred_features */ FeatureMayAlwaysSet::bottom(),
+        user_features,
+        via_type_of_ports,
+        /* local_positions */ {},
+        canonical_names);
   }
 
   Frame(const Frame&) = default;
@@ -171,6 +207,10 @@ class Frame final : public sparta::AbstractDomain<Frame> {
 
   const RootSetAbstractDomain& via_type_of_ports() const {
     return via_type_of_ports_;
+  }
+
+  const CanonicalNameSetAbstractDomain& canonical_names() const {
+    return canonical_names_;
   }
 
   void set_origins(const MethodSet& origins);
@@ -295,6 +335,7 @@ class Frame final : public sparta::AbstractDomain<Frame> {
   FeatureSet user_features_;
   RootSetAbstractDomain via_type_of_ports_;
   LocalPositionSet local_positions_;
+  CanonicalNameSetAbstractDomain canonical_names_;
 };
 
 } // namespace marianatrench

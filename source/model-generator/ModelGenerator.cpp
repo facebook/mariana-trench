@@ -438,7 +438,8 @@ Frame generator::source(
       /* locally_inferred_features */ FeatureMayAlwaysSet::bottom(),
       /* user features */ user_features,
       /* via_type_of_ports */ via_type_of_ports,
-      /* local_positions */ {});
+      /* local_positions */ {},
+      /* canonical_names */ {});
 }
 
 Frame generator::sink(
@@ -463,7 +464,8 @@ Frame generator::sink(
       /* locally_inferred_features */ FeatureMayAlwaysSet::bottom(),
       /* user features */ user_features,
       /* via_type_of_ports */ via_type_of_ports,
-      /* local_positions */ {});
+      /* local_positions */ {},
+      /* canonical_names */ {});
 }
 
 Frame generator::partial_sink(
@@ -489,7 +491,8 @@ Frame generator::partial_sink(
       /* locally_inferred_features */ FeatureMayAlwaysSet::bottom(),
       /* user features */ user_features,
       /* via_type_of_ports */ via_type_of_ports,
-      /* local_positions */ {});
+      /* local_positions */ {},
+      /* canonical_names */ {});
 }
 
 } // namespace marianatrench

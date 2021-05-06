@@ -41,7 +41,8 @@ TEST_F(FrameTest, FrameLeq) {
       /* locally_inferred_features */ {},
       /* user_features */ {},
       /* via_type_of_ports */ {},
-      /* local_positions */ {})));
+      /* local_positions */ {},
+      /* canonical_names */ {})));
   EXPECT_FALSE(Frame(
                    /* kind */ context.kinds->get("TestSource"),
                    /* callee_port */ AccessPath(Root(Root::Kind::Leaf)),
@@ -53,7 +54,8 @@ TEST_F(FrameTest, FrameLeq) {
                    /* locally_inferred_features */ {},
                    /* user_features */ {},
                    /* via_type_of_ports */ {},
-                   /* local_positions */ {})
+                   /* local_positions */ {},
+                   /* canonical_names */ {})
                    .leq(Frame::bottom()));
 
   // Compare kind.
@@ -68,7 +70,8 @@ TEST_F(FrameTest, FrameLeq) {
                   /* locally_inferred_features */ {},
                   /* user_features */ {},
                   /* via_type_of_ports */ {},
-                  /* local_positions */ {})
+                  /* local_positions */ {},
+                  /* canonical_names */ {})
                   .leq(Frame(
                       /* kind */ context.kinds->get("TestSource"),
                       /* callee_port */ AccessPath(Root(Root::Kind::Leaf)),
@@ -80,7 +83,8 @@ TEST_F(FrameTest, FrameLeq) {
                       /* locally_inferred_features */ {},
                       /* user_features */ {},
                       /* via_type_of_ports */ {},
-                      /* local_positions */ {})));
+                      /* local_positions */ {},
+                      /* canonical_names */ {})));
   EXPECT_FALSE(Frame(
                    /* kind */ context.kinds->get("TestSource"),
                    /* callee_port */ AccessPath(Root(Root::Kind::Leaf)),
@@ -92,7 +96,8 @@ TEST_F(FrameTest, FrameLeq) {
                    /* locally_inferred_features */ {},
                    /* user_features */ {},
                    /* via_type_of_ports */ {},
-                   /* local_positions */ {})
+                   /* local_positions */ {},
+                   /* canonical_names */ {})
                    .leq(Frame(
                        /* kind */ context.kinds->get("TestSink"),
                        /* callee_port */ AccessPath(Root(Root::Kind::Leaf)),
@@ -104,7 +109,8 @@ TEST_F(FrameTest, FrameLeq) {
                        /* locally_inferred_features */ {},
                        /* user_features */ {},
                        /* via_type_of_ports */ {},
-                       /* local_positions */ {})));
+                       /* local_positions */ {},
+                       /* canonical_names */ {})));
 
   // Compare distances.
   EXPECT_TRUE(Frame(
@@ -118,7 +124,8 @@ TEST_F(FrameTest, FrameLeq) {
                   /* locally_inferred_features */ {},
                   /* user_features */ {},
                   /* via_type_of_ports */ {},
-                  /* local_positions */ {})
+                  /* local_positions */ {},
+                  /* canonical_names */ {})
                   .leq(Frame(
                       /* kind */ context.kinds->get("TestSource"),
                       /* callee_port */ AccessPath(Root(Root::Kind::Leaf)),
@@ -130,7 +137,8 @@ TEST_F(FrameTest, FrameLeq) {
                       /* locally_inferred_features */ {},
                       /* user_features */ {},
                       /* via_type_of_ports */ {},
-                      /* local_positions */ {})));
+                      /* local_positions */ {},
+                      /* canonical_names */ {})));
   EXPECT_FALSE(Frame(
                    /* kind */ context.kinds->get("TestSource"),
                    /* callee_port */ AccessPath(Root(Root::Kind::Leaf)),
@@ -142,7 +150,8 @@ TEST_F(FrameTest, FrameLeq) {
                    /* locally_inferred_features */ {},
                    /* user_features */ {},
                    /* via_type_of_ports */ {},
-                   /* local_positions */ {})
+                   /* local_positions */ {},
+                   /* canonical_names */ {})
                    .leq(Frame(
                        /* kind */ context.kinds->get("TestSource"),
                        /* callee_port */ AccessPath(Root(Root::Kind::Leaf)),
@@ -154,7 +163,8 @@ TEST_F(FrameTest, FrameLeq) {
                        /* locally_inferred_features */ {},
                        /* user_features */ {},
                        /* via_type_of_ports */ {},
-                       /* local_positions */ {})));
+                       /* local_positions */ {},
+                       /* canonical_names */ {})));
 
   // Compare origins.
   EXPECT_TRUE(Frame(
@@ -168,7 +178,8 @@ TEST_F(FrameTest, FrameLeq) {
                   /* locally_inferred_features */ {},
                   /* user_features */ {},
                   /* via_type_of_ports */ {},
-                  /* local_positions */ {})
+                  /* local_positions */ {},
+                  /* canonical_names */ {})
                   .leq(Frame(
                       /* kind */ context.kinds->get("TestSource"),
                       /* callee_port */ AccessPath(Root(Root::Kind::Leaf)),
@@ -180,7 +191,8 @@ TEST_F(FrameTest, FrameLeq) {
                       /* locally_inferred_features */ {},
                       /* user_features */ {},
                       /* via_type_of_ports */ {},
-                      /* local_positions */ {})));
+                      /* local_positions */ {},
+                      /* canonical_names */ {})));
   EXPECT_FALSE(Frame(
                    /* kind */ context.kinds->get("TestSource"),
                    /* callee_port */ AccessPath(Root(Root::Kind::Leaf)),
@@ -192,7 +204,8 @@ TEST_F(FrameTest, FrameLeq) {
                    /* locally_inferred_features */ {},
                    /* user_features */ {},
                    /* via_type_of_ports */ {},
-                   /* local_positions */ {})
+                   /* local_positions */ {},
+                   /* canonical_names */ {})
                    .leq(Frame(
                        /* kind */ context.kinds->get("TestSource"),
                        /* callee_port */ AccessPath(Root(Root::Kind::Leaf)),
@@ -204,7 +217,8 @@ TEST_F(FrameTest, FrameLeq) {
                        /* locally_inferred_features */ {},
                        /* user_features */ {},
                        /* via_type_of_ports */ {},
-                       /* local_positions */ {})));
+                       /* local_positions */ {},
+                       /* canonical_names */ {})));
 
   // Compare inferred features.
   EXPECT_TRUE(
@@ -220,7 +234,8 @@ TEST_F(FrameTest, FrameLeq) {
           /* locally_inferred_features */ {},
           /* user_features */ {},
           /* via_type_of_ports */ {},
-          /* local_positions */ {})
+          /* local_positions */ {},
+          /* canonical_names */ {})
           .leq(Frame(
               /* kind */ context.kinds->get("TestSource"),
               /* callee_port */ AccessPath(Root(Root::Kind::Leaf)),
@@ -235,7 +250,8 @@ TEST_F(FrameTest, FrameLeq) {
               /* locally_inferred_features */ {},
               /* user_features */ {},
               /* via_type_of_ports */ {},
-              /* local_positions */ {})));
+              /* local_positions */ {},
+              /* canonical_names */ {})));
   EXPECT_FALSE(Frame(
                    /* kind */ context.kinds->get("TestSource"),
                    /* callee_port */ AccessPath(Root(Root::Kind::Leaf)),
@@ -250,7 +266,8 @@ TEST_F(FrameTest, FrameLeq) {
                    /* locally_inferred_features */ {},
                    /* user_features */ {},
                    /* via_type_of_ports */ {},
-                   /* local_positions */ {})
+                   /* local_positions */ {},
+                   /* canonical_names */ {})
                    .leq(Frame(
                        /* kind */ context.kinds->get("TestSource"),
                        /* callee_port */ AccessPath(Root(Root::Kind::Leaf)),
@@ -264,7 +281,8 @@ TEST_F(FrameTest, FrameLeq) {
                        /* locally_inferred_features */ {},
                        /* user_features */ {},
                        /* via_type_of_ports */ {},
-                       /* local_positions */ {})));
+                       /* local_positions */ {},
+                       /* canonical_names */ {})));
 
   // Compare user features.
   EXPECT_TRUE(
@@ -279,7 +297,8 @@ TEST_F(FrameTest, FrameLeq) {
           /* locally_inferred_features */ {},
           /* user_features */ FeatureSet{context.features->get("FeatureOne")},
           /* via_type_of_ports */ {},
-          /* local_positions */ {})
+          /* local_positions */ {},
+          /* canonical_names */ {})
           .leq(Frame(
               /* kind */ context.kinds->get("TestSource"),
               /* callee_port */ AccessPath(Root(Root::Kind::Leaf)),
@@ -293,7 +312,8 @@ TEST_F(FrameTest, FrameLeq) {
                   context.features->get("FeatureOne"),
                   context.features->get("FeatureTwo")},
               /* via_type_of_ports */ {},
-              /* local_positions */ {})));
+              /* local_positions */ {},
+              /* canonical_names */ {})));
   EXPECT_FALSE(Frame(
                    /* kind */ context.kinds->get("TestSource"),
                    /* callee_port */ AccessPath(Root(Root::Kind::Leaf)),
@@ -308,7 +328,8 @@ TEST_F(FrameTest, FrameLeq) {
                        context.features->get("FeatureOne"),
                        context.features->get("FeatureTwo")},
                    /* via_type_of_ports */ {},
-                   /* local_positions */ {})
+                   /* local_positions */ {},
+                   /* canonical_names */ {})
                    .leq(Frame(
                        /* kind */ context.kinds->get("TestSource"),
                        /* callee_port */ AccessPath(Root(Root::Kind::Leaf)),
@@ -321,7 +342,8 @@ TEST_F(FrameTest, FrameLeq) {
                        /* user_features */
                        FeatureSet{context.features->get("FeatureOne")},
                        /* via_type_of_ports */ {},
-                       /* local_positions */ {})));
+                       /* local_positions */ {},
+                       /* canonical_names */ {})));
   // Compare via_type_of_ports
   EXPECT_TRUE(
       Frame(
@@ -336,7 +358,8 @@ TEST_F(FrameTest, FrameLeq) {
           /* user_features */ {},
           /* via_type_of_ports */
           RootSetAbstractDomain({Root(Root::Kind::Return)}),
-          /* local_positions */ {})
+          /* local_positions */ {},
+          /* canonical_names */ {})
           .leq(Frame(
               /* kind */ context.kinds->get("TestSource"),
               /* callee_port */ AccessPath(Root(Root::Kind::Leaf)),
@@ -350,7 +373,8 @@ TEST_F(FrameTest, FrameLeq) {
               /* via_type_of_ports */
               RootSetAbstractDomain(
                   {Root(Root::Kind::Return), Root(Root::Kind::Argument, 1)}),
-              /* local_positions */ {})));
+              /* local_positions */ {},
+              /* canonical_names */ {})));
   EXPECT_FALSE(Frame(
                    /* kind */ context.kinds->get("TestSource"),
                    /* callee_port */ AccessPath(Root(Root::Kind::Leaf)),
@@ -363,7 +387,8 @@ TEST_F(FrameTest, FrameLeq) {
                    /* user_features */ {},
                    /* via_type_of_ports */
                    RootSetAbstractDomain({Root(Root::Kind::Return)}),
-                   /* local_positions */ {})
+                   /* local_positions */ {},
+                   /* canonical_names */ {})
                    .leq(Frame(
                        /* kind */ context.kinds->get("TestSource"),
                        /* callee_port */ AccessPath(Root(Root::Kind::Leaf)),
@@ -376,7 +401,8 @@ TEST_F(FrameTest, FrameLeq) {
                        /* user_features */ {},
                        /* via_type_of_ports */
                        RootSetAbstractDomain({Root(Root::Kind::Argument, 1)}),
-                       /* local_positions */ {})));
+                       /* local_positions */ {},
+                       /* canonical_names */ {})));
   // callee_port, callee and call_position must be equal for non-artificial
   // taint.
   EXPECT_TRUE(Frame(
@@ -390,7 +416,8 @@ TEST_F(FrameTest, FrameLeq) {
                   /* locally_inferred_features */ {},
                   /* user_features */ {},
                   /* via_type_of_ports */ {},
-                  /* local_positions */ {})
+                  /* local_positions */ {},
+                  /* canonical_names */ {})
                   .leq(Frame(
                       /* kind */ context.kinds->get("TestSource"),
                       /* callee_port */ AccessPath(Root(Root::Kind::Return)),
@@ -402,7 +429,8 @@ TEST_F(FrameTest, FrameLeq) {
                       /* locally_inferred_features */ {},
                       /* user_features */ {},
                       /* via_type_of_ports */ {},
-                      /* local_positions */ {})));
+                      /* local_positions */ {},
+                      /* canonical_names */ {})));
   EXPECT_FALSE(
       Frame(
           /* kind */ context.kinds->get("TestSource"),
@@ -415,7 +443,8 @@ TEST_F(FrameTest, FrameLeq) {
           /* locally_inferred_features */ {},
           /* user_features */ {},
           /* via_type_of_ports */ {},
-          /* local_positions */ {})
+          /* local_positions */ {},
+          /* canonical_names */ {})
           .leq(Frame(
               /* kind */ context.kinds->get("TestSource"),
               /* callee_port */ AccessPath(Root(Root::Kind::Argument, 0)),
@@ -427,7 +456,8 @@ TEST_F(FrameTest, FrameLeq) {
               /* locally_inferred_features */ {},
               /* user_features */ {},
               /* via_type_of_ports */ {},
-              /* local_positions */ {})));
+              /* local_positions */ {},
+              /* canonical_names */ {})));
   EXPECT_FALSE(Frame(
                    /* kind */ context.kinds->get("TestSource"),
                    /* callee_port */ AccessPath(Root(Root::Kind::Return)),
@@ -439,7 +469,8 @@ TEST_F(FrameTest, FrameLeq) {
                    /* locally_inferred_features */ {},
                    /* user_features */ {},
                    /* via_type_of_ports */ {},
-                   /* local_positions */ {})
+                   /* local_positions */ {},
+                   /* canonical_names */ {})
                    .leq(Frame(
                        /* kind */ context.kinds->get("TestSource"),
                        /* callee_port */ AccessPath(Root(Root::Kind::Return)),
@@ -451,7 +482,8 @@ TEST_F(FrameTest, FrameLeq) {
                        /* locally_inferred_features */ {},
                        /* user_features */ {},
                        /* via_type_of_ports */ {},
-                       /* local_positions */ {})));
+                       /* local_positions */ {},
+                       /* canonical_names */ {})));
   EXPECT_FALSE(
       Frame(
           /* kind */ context.kinds->get("TestSource"),
@@ -464,7 +496,8 @@ TEST_F(FrameTest, FrameLeq) {
           /* locally_inferred_features */ {},
           /* user_features */ {},
           /* via_type_of_ports */ {},
-          /* local_positions */ {})
+          /* local_positions */ {},
+          /* canonical_names */ {})
           .leq(Frame(
               /* kind */ context.kinds->get("TestSource"),
               /* callee_port */ AccessPath(Root(Root::Kind::Return)),
@@ -476,7 +509,8 @@ TEST_F(FrameTest, FrameLeq) {
               /* locally_inferred_features */ {},
               /* user_features */ {},
               /* via_type_of_ports */ {},
-              /* local_positions */ {})));
+              /* local_positions */ {},
+              /* canonical_names */ {})));
 
   // For artificial sources, compare the common prefix of callee ports.
   EXPECT_TRUE(
@@ -493,7 +527,8 @@ TEST_F(FrameTest, FrameLeq) {
           /* locally_inferred_features */ {},
           /* user_features */ {},
           /* via_type_of_ports */ {},
-          /* local_positions */ {})
+          /* local_positions */ {},
+          /* canonical_names */ {})
           .leq(Frame(
               /* kind */ Kinds::artificial_source(),
               /* callee_port */ AccessPath(Root(Root::Kind::Argument, 0)),
@@ -505,7 +540,8 @@ TEST_F(FrameTest, FrameLeq) {
               /* locally_inferred_features */ {},
               /* user_features */ {},
               /* via_type_of_ports */ {},
-              /* local_positions */ {})));
+              /* local_positions */ {},
+              /* canonical_names */ {})));
   EXPECT_FALSE(Frame(
                    /* kind */ Kinds::artificial_source(),
                    /* callee_port */ AccessPath(Root(Root::Kind::Argument, 0)),
@@ -517,7 +553,8 @@ TEST_F(FrameTest, FrameLeq) {
                    /* locally_inferred_features */ {},
                    /* user_features */ {},
                    /* via_type_of_ports */ {},
-                   /* local_positions */ {})
+                   /* local_positions */ {},
+                   /* canonical_names */ {})
                    .leq(Frame(
                        /* kind */ Kinds::artificial_source(),
                        /* callee_port */
@@ -532,7 +569,66 @@ TEST_F(FrameTest, FrameLeq) {
                        /* locally_inferred_features */ {},
                        /* user_features */ {},
                        /* via_type_of_ports */ {},
-                       /* local_positions */ {})));
+                       /* local_positions */ {},
+                       /* canonical_names */ {})));
+
+  // Compare canonical names.
+  EXPECT_TRUE(Frame(
+                  /* kind */ context.kinds->get("TestSource"),
+                  /* callee_port */ AccessPath(Root(Root::Kind::Leaf)),
+                  /* callee */ nullptr,
+                  /* call_position */ nullptr,
+                  /* distance */ 0,
+                  /* origins */ {},
+                  /* inferred_features */ {},
+                  /* locally_inferred_features */ {},
+                  /* user_features */ {},
+                  /* via_type_of_ports */ {},
+                  /* local_positions */ {},
+                  /* canonical_names */ {})
+                  .leq(Frame(
+                      /* kind */ context.kinds->get("TestSource"),
+                      /* callee_port */ AccessPath(Root(Root::Kind::Leaf)),
+                      /* callee */ nullptr,
+                      /* call_position */ nullptr,
+                      /* distance */ 0,
+                      /* origins */ {},
+                      /* inferred_features */ {},
+                      /* locally_inferred_features */ {},
+                      /* user_features */ {},
+                      /* via_type_of_ports */ {},
+                      /* local_positions */ {},
+                      /* canonical_names */
+                      CanonicalNameSetAbstractDomain{
+                          CanonicalName("%programmatic_leaf_name%")})));
+  EXPECT_FALSE(Frame(
+                   /* kind */ context.kinds->get("TestSource"),
+                   /* callee_port */ AccessPath(Root(Root::Kind::Leaf)),
+                   /* callee */ nullptr,
+                   /* call_position */ nullptr,
+                   /* distance */ 0,
+                   /* origins */ {},
+                   /* inferred_features */ {},
+                   /* locally_inferred_features */ {},
+                   /* user_features */ {},
+                   /* via_type_of_ports */ {},
+                   /* local_positions */ {},
+                   /* canonical_names */
+                   CanonicalNameSetAbstractDomain{
+                       CanonicalName("%programmatic_leaf_name%")})
+                   .leq(Frame(
+                       /* kind */ context.kinds->get("TestSource"),
+                       /* callee_port */ AccessPath(Root(Root::Kind::Leaf)),
+                       /* callee */ nullptr,
+                       /* call_position */ nullptr,
+                       /* distance */ 1,
+                       /* origins */ {},
+                       /* inferred_features */ {},
+                       /* locally_inferred_features */ {},
+                       /* user_features */ {},
+                       /* via_type_of_ports */ {},
+                       /* local_positions */ {},
+                       /* canonical_names */ {})));
 }
 
 TEST_F(FrameTest, FrameEquals) {
@@ -550,7 +646,8 @@ TEST_F(FrameTest, FrameEquals) {
       /* locally_inferred_features */ {},
       /* user_features */ {},
       /* via_type_of_ports */ {},
-      /* local_positions */ {})));
+      /* local_positions */ {},
+      /* canonical_names */ {})));
   EXPECT_FALSE(Frame(
                    /* kind */ context.kinds->get("TestSource"),
                    /* callee_port */ AccessPath(Root(Root::Kind::Leaf)),
@@ -562,7 +659,8 @@ TEST_F(FrameTest, FrameEquals) {
                    /* locally_inferred_features */ {},
                    /* user_features */ {},
                    /* via_type_of_ports */ {},
-                   /* local_positions */ {})
+                   /* local_positions */ {},
+                   /* canonical_names */ {})
                    .equals(Frame::bottom()));
 }
 
@@ -588,7 +686,8 @@ TEST_F(FrameTest, FrameJoin) {
           /* locally_inferred_features */ {},
           /* user_features */ {},
           /* via_type_of_ports */ {},
-          /* local_positions */ {})),
+          /* local_positions */ {},
+          /* canonical_names */ {})),
       Frame(
           /* kind */ context.kinds->get("TestSource"),
           /* callee_port */ AccessPath(Root(Root::Kind::Leaf)),
@@ -600,7 +699,8 @@ TEST_F(FrameTest, FrameJoin) {
           /* locally_inferred_features */ {},
           /* user_features */ {},
           /* via_type_of_ports */ {},
-          /* local_positions */ {}));
+          /* local_positions */ {},
+          /* canonical_names */ {}));
   EXPECT_EQ(
       Frame(
           /* kind */ context.kinds->get("TestSource"),
@@ -613,7 +713,8 @@ TEST_F(FrameTest, FrameJoin) {
           /* locally_inferred_features */ {},
           /* user_features */ {},
           /* via_type_of_ports */ {},
-          /* local_positions */ {})
+          /* local_positions */ {},
+          /* canonical_names */ {})
           .join(Frame::bottom()),
       Frame(
           /* kind */ context.kinds->get("TestSource"),
@@ -626,7 +727,8 @@ TEST_F(FrameTest, FrameJoin) {
           /* locally_inferred_features */ {},
           /* user_features */ {},
           /* via_type_of_ports */ {},
-          /* local_positions */ {}));
+          /* local_positions */ {},
+          /* canonical_names */ {}));
 
   // Test incompatible joins.
   EXPECT_THROW(
@@ -641,7 +743,8 @@ TEST_F(FrameTest, FrameJoin) {
           /* locally_inferred_features */ {},
           /* user_features */ {},
           /* via_type_of_ports */ {},
-          /* local_positions */ {})
+          /* local_positions */ {},
+          /* canonical_names */ {})
           .join_with(Frame(
               /* kind */ context.kinds->get("TestSink"),
               /* callee_port */ AccessPath(Root(Root::Kind::Leaf)),
@@ -653,7 +756,8 @@ TEST_F(FrameTest, FrameJoin) {
               /* locally_inferred_features */ {},
               /* user_features */ {},
               /* via_type_of_ports */ {},
-              /* local_positions */ {})),
+              /* local_positions */ {},
+              /* canonical_names */ {})),
       std::exception);
   EXPECT_THROW(
       Frame(
@@ -667,7 +771,8 @@ TEST_F(FrameTest, FrameJoin) {
           /* locally_inferred_features */ {},
           /* user_features */ {},
           /* via_type_of_ports */ {},
-          /* local_positions */ {})
+          /* local_positions */ {},
+          /* canonical_names */ {})
           .join_with(Frame(
               /* kind */ context.kinds->get("TestSource"),
               /* callee_port */ AccessPath(Root(Root::Kind::Anchor)),
@@ -679,7 +784,8 @@ TEST_F(FrameTest, FrameJoin) {
               /* locally_inferred_features */ {},
               /* user_features */ {},
               /* via_type_of_ports */ {},
-              /* local_positions */ {})),
+              /* local_positions */ {},
+              /* canonical_names */ {})),
       std::exception);
   EXPECT_THROW(
       Frame(
@@ -693,7 +799,8 @@ TEST_F(FrameTest, FrameJoin) {
           /* locally_inferred_features */ {},
           /* user_features */ {},
           /* via_type_of_ports */ {},
-          /* local_positions */ {})
+          /* local_positions */ {},
+          /* canonical_names */ {})
           .join_with(Frame(
               /* kind */ context.kinds->get("TestSource"),
               /* callee_port */ AccessPath(Root(Root::Kind::Return)),
@@ -705,7 +812,8 @@ TEST_F(FrameTest, FrameJoin) {
               /* locally_inferred_features */ {},
               /* user_features */ {},
               /* via_type_of_ports */ {},
-              /* local_positions */ {})),
+              /* local_positions */ {},
+              /* canonical_names */ {})),
       std::exception);
   EXPECT_THROW(
       Frame(
@@ -719,7 +827,8 @@ TEST_F(FrameTest, FrameJoin) {
           /* locally_inferred_features */ {},
           /* user_features */ {},
           /* via_type_of_ports */ {},
-          /* local_positions */ {})
+          /* local_positions */ {},
+          /* canonical_names */ {})
           .join_with(Frame(
               /* kind */ context.kinds->get("TestSource"),
               /* callee_port */ AccessPath(Root(Root::Kind::Return)),
@@ -731,7 +840,8 @@ TEST_F(FrameTest, FrameJoin) {
               /* locally_inferred_features */ {},
               /* user_features */ {},
               /* via_type_of_ports */ {},
-              /* local_positions */ {})),
+              /* local_positions */ {},
+              /* canonical_names */ {})),
       std::exception);
 
   // Minimum distance.
@@ -747,7 +857,8 @@ TEST_F(FrameTest, FrameJoin) {
           /* locally_inferred_features */ {},
           /* user_features */ {},
           /* via_type_of_ports */ {},
-          /* local_positions */ {})
+          /* local_positions */ {},
+          /* canonical_names */ {})
           .join(Frame(
               /* kind */ context.kinds->get("TestSource"),
               /* callee_port */ AccessPath(Root(Root::Kind::Return)),
@@ -759,7 +870,8 @@ TEST_F(FrameTest, FrameJoin) {
               /* locally_inferred_features */ {},
               /* user_features */ {},
               /* via_type_of_ports */ {},
-              /* local_positions */ {})),
+              /* local_positions */ {},
+              /* canonical_names */ {})),
       Frame(
           /* kind */ context.kinds->get("TestSource"),
           /* callee_port */ AccessPath(Root(Root::Kind::Return)),
@@ -771,7 +883,8 @@ TEST_F(FrameTest, FrameJoin) {
           /* locally_inferred_features */ {},
           /* user_features */ {},
           /* via_type_of_ports */ {},
-          /* local_positions */ {}));
+          /* local_positions */ {},
+          /* canonical_names */ {}));
 
   // Join origins.
   EXPECT_EQ(
@@ -786,7 +899,8 @@ TEST_F(FrameTest, FrameJoin) {
           /* locally_inferred_features */ {},
           /* user_features */ {},
           /* via_type_of_ports */ {},
-          /* local_positions */ {})
+          /* local_positions */ {},
+          /* canonical_names */ {})
           .join(Frame(
               /* kind */ context.kinds->get("TestSource"),
               /* callee_port */ AccessPath(Root(Root::Kind::Return)),
@@ -798,7 +912,8 @@ TEST_F(FrameTest, FrameJoin) {
               /* locally_inferred_features */ {},
               /* user_features */ {},
               /* via_type_of_ports */ {},
-              /* local_positions */ {})),
+              /* local_positions */ {},
+              /* canonical_names */ {})),
       Frame(
           /* kind */ context.kinds->get("TestSource"),
           /* callee_port */ AccessPath(Root(Root::Kind::Return)),
@@ -810,7 +925,8 @@ TEST_F(FrameTest, FrameJoin) {
           /* locally_inferred_features */ {},
           /* user_features */ {},
           /* via_type_of_ports */ {},
-          /* local_positions */ {}));
+          /* local_positions */ {},
+          /* canonical_names */ {}));
 
   // Join inferred features.
   EXPECT_EQ(
@@ -826,7 +942,8 @@ TEST_F(FrameTest, FrameJoin) {
           /* locally_inferred_features */ {},
           /* user_features */ {},
           /* via_type_of_ports */ {},
-          /* local_positions */ {})
+          /* local_positions */ {},
+          /* canonical_names */ {})
           .join(Frame(
               /* kind */ context.kinds->get("TestSource"),
               /* callee_port */ AccessPath(Root(Root::Kind::Return)),
@@ -839,7 +956,8 @@ TEST_F(FrameTest, FrameJoin) {
               /* locally_inferred_features */ {},
               /* user_features */ {},
               /* via_type_of_ports */ {},
-              /* local_positions */ {})),
+              /* local_positions */ {},
+              /* canonical_names */ {})),
       Frame(
           /* kind */ context.kinds->get("TestSource"),
           /* callee_port */ AccessPath(Root(Root::Kind::Return)),
@@ -854,7 +972,8 @@ TEST_F(FrameTest, FrameJoin) {
           /* locally_inferred_features */ {},
           /* user_features */ {},
           /* via_type_of_ports */ {},
-          /* local_positions */ {}));
+          /* local_positions */ {},
+          /* canonical_names */ {}));
 
   // Join user features.
   EXPECT_EQ(
@@ -870,7 +989,8 @@ TEST_F(FrameTest, FrameJoin) {
           /* user_features */
           FeatureSet{context.features->get("FeatureOne")},
           /* via_type_of_ports */ {},
-          /* local_positions */ {})
+          /* local_positions */ {},
+          /* canonical_names */ {})
           .join(Frame(
               /* kind */ context.kinds->get("TestSource"),
               /* callee_port */ AccessPath(Root(Root::Kind::Return)),
@@ -883,7 +1003,8 @@ TEST_F(FrameTest, FrameJoin) {
               /* user_features */
               FeatureSet{context.features->get("FeatureTwo")},
               /* via_type_of_ports */ {},
-              /* local_positions */ {})),
+              /* local_positions */ {},
+              /* canonical_names */ {})),
       Frame(
           /* kind */ context.kinds->get("TestSource"),
           /* callee_port */ AccessPath(Root(Root::Kind::Return)),
@@ -898,7 +1019,8 @@ TEST_F(FrameTest, FrameJoin) {
               context.features->get("FeatureOne"),
               context.features->get("FeatureTwo")},
           /* via_type_of_ports */ {},
-          /* local_positions */ {}));
+          /* local_positions */ {},
+          /* canonical_names */ {}));
 
   // Join via_type_of_ports
   EXPECT_EQ(
@@ -914,7 +1036,8 @@ TEST_F(FrameTest, FrameJoin) {
           /* user_features */ {},
           /* via_type_of_ports */
           RootSetAbstractDomain({Root(Root::Kind::Return)}),
-          /* local_positions */ {})
+          /* local_positions */ {},
+          /* canonical_names */ {})
           .join(Frame(
               /* kind */ context.kinds->get("TestSource"),
               /* callee_port */ AccessPath(Root(Root::Kind::Return)),
@@ -927,7 +1050,8 @@ TEST_F(FrameTest, FrameJoin) {
               /* user_features */ {},
               /* via_type_of_ports */
               RootSetAbstractDomain({Root(Root::Kind::Argument, 1)}),
-              /* local_positions */ {})),
+              /* local_positions */ {},
+              /* canonical_names */ {})),
       Frame(
           /* kind */ context.kinds->get("TestSource"),
           /* callee_port */ AccessPath(Root(Root::Kind::Return)),
@@ -941,7 +1065,56 @@ TEST_F(FrameTest, FrameJoin) {
           /* via_type_of_ports */
           RootSetAbstractDomain(
               {Root(Root::Kind::Return), Root(Root::Kind::Argument, 1)}),
-          /* local_positions */ {}));
+          /* local_positions */ {},
+          /* canonical_names */ {}));
+
+  // Join canonical names.
+  EXPECT_EQ(
+      Frame(
+          /* kind */ context.kinds->get("TestSource"),
+          /* callee_port */ AccessPath(Root(Root::Kind::Leaf)),
+          /* callee */ nullptr,
+          /* call_position */ context.positions->unknown(),
+          /* distance */ 0,
+          /* origins */ {},
+          /* inferred_features */ {},
+          /* locally_inferred_features */ {},
+          /* user_features */ {},
+          /* via_type_of_ports */ {},
+          /* local_positions */ {},
+          /* canonical_names */
+          CanonicalNameSetAbstractDomain{
+              CanonicalName("%programmatic_leaf_name%")})
+          .join(Frame(
+              /* kind */ context.kinds->get("TestSource"),
+              /* callee_port */ AccessPath(Root(Root::Kind::Leaf)),
+              /* callee */ nullptr,
+              /* call_position */ context.positions->unknown(),
+              /* distance */ 0,
+              /* origins */ {},
+              /* inferred_features */ {},
+              /* locally_inferred_features */ {},
+              /* user_features */ {},
+              /* via_type_of_ports */ {},
+              /* local_positions */ {},
+              /* canonical_names */
+              CanonicalNameSetAbstractDomain{CanonicalName("%via_type_of%")})),
+      Frame(
+          /* kind */ context.kinds->get("TestSource"),
+          /* callee_port */ AccessPath(Root(Root::Kind::Leaf)),
+          /* callee */ nullptr,
+          /* call_position */ context.positions->unknown(),
+          /* distance */ 0,
+          /* origins */ {},
+          /* inferred_features */ {},
+          /* locally_inferred_features */ {},
+          /* user_features */ {},
+          /* via_type_of_ports */ {},
+          /* local_positions */ {},
+          /* canonical_names */
+          CanonicalNameSetAbstractDomain{
+              CanonicalName("%programmatic_leaf_name%"),
+              CanonicalName("%via_type_of%")}));
 }
 
 TEST_F(FrameTest, FrameWithKind) {
@@ -970,7 +1143,8 @@ TEST_F(FrameTest, FrameWithKind) {
       /* locally_inferred_features */ {},
       /* user_features */ {},
       /* via_type_of_ports */ {},
-      /* local_positions */ {});
+      /* local_positions */ {},
+      /* canonical_names */ {});
 
   auto frame2 = frame1.with_kind(kind_b);
   EXPECT_EQ(frame1.callee(), frame2.callee());
