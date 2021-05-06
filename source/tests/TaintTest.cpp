@@ -38,7 +38,8 @@ TEST_F(TaintTest, Insertion) {
       /* locally_inferred_features */ {},
       /* user_features */ {},
       /* via_type_of_ports */ {},
-      /* local_positions */ {}));
+      /* local_positions */ {},
+      /* canonical_names */ {}));
   EXPECT_EQ(
       taint,
       (Taint{
@@ -53,7 +54,8 @@ TEST_F(TaintTest, Insertion) {
               /* locally_inferred_features */ {},
               /* user_features */ {},
               /* via_type_of_ports */ {},
-              /* local_positions */ {}),
+              /* local_positions */ {},
+              /* canonical_names */ {}),
       }));
 
   taint.add(Frame(
@@ -67,7 +69,8 @@ TEST_F(TaintTest, Insertion) {
       /* locally_inferred_features */ {},
       /* user_features */ {},
       /* via_type_of_ports */ {},
-      /* local_positions */ {}));
+      /* local_positions */ {},
+      /* canonical_names */ {}));
   EXPECT_EQ(
       taint,
       (Taint{
@@ -82,7 +85,8 @@ TEST_F(TaintTest, Insertion) {
               /* locally_inferred_features */ {},
               /* user_features */ {},
               /* via_type_of_ports */ {},
-              /* local_positions */ {}),
+              /* local_positions */ {},
+              /* canonical_names */ {}),
           Frame(
               /* kind */ context.kinds->get("OtherSource"),
               /* callee_port */ AccessPath(Root(Root::Kind::Leaf)),
@@ -94,7 +98,8 @@ TEST_F(TaintTest, Insertion) {
               /* locally_inferred_features */ {},
               /* user_features */ {},
               /* via_type_of_ports */ {},
-              /* local_positions */ {}),
+              /* local_positions */ {},
+              /* canonical_names */ {}),
       }));
 
   taint.add(Frame(
@@ -108,7 +113,8 @@ TEST_F(TaintTest, Insertion) {
       /* locally_inferred_features */ {},
       /* user_features */ {},
       /* via_type_of_ports */ {},
-      /* local_positions */ {}));
+      /* local_positions */ {},
+      /* canonical_names */ {}));
   EXPECT_EQ(
       taint,
       (Taint{
@@ -123,7 +129,8 @@ TEST_F(TaintTest, Insertion) {
               /* locally_inferred_features */ {},
               /* user_features */ {},
               /* via_type_of_ports */ {},
-              /* local_positions */ {}),
+              /* local_positions */ {},
+              /* canonical_names */ {}),
           Frame(
               /* kind */ context.kinds->get("OtherSource"),
               /* callee_port */ AccessPath(Root(Root::Kind::Leaf)),
@@ -135,7 +142,8 @@ TEST_F(TaintTest, Insertion) {
               /* locally_inferred_features */ {},
               /* user_features */ {},
               /* via_type_of_ports */ {},
-              /* local_positions */ {}),
+              /* local_positions */ {},
+              /* canonical_names */ {}),
           Frame(
               /* kind */ context.kinds->get("IndirectSource"),
               /* callee_port */ AccessPath(Root(Root::Kind::Return)),
@@ -147,7 +155,8 @@ TEST_F(TaintTest, Insertion) {
               /* locally_inferred_features */ {},
               /* user_features */ {},
               /* via_type_of_ports */ {},
-              /* local_positions */ {}),
+              /* local_positions */ {},
+              /* canonical_names */ {}),
       }));
 
   taint.add(Frame(
@@ -161,7 +170,8 @@ TEST_F(TaintTest, Insertion) {
       /* locally_inferred_features */ {},
       /* user_features */ {},
       /* via_type_of_ports */ {},
-      /* local_positions */ {}));
+      /* local_positions */ {},
+      /* canonical_names */ {}));
   EXPECT_EQ(
       taint,
       (Taint{
@@ -176,7 +186,8 @@ TEST_F(TaintTest, Insertion) {
               /* locally_inferred_features */ {},
               /* user_features */ {},
               /* via_type_of_ports */ {},
-              /* local_positions */ {}),
+              /* local_positions */ {},
+              /* canonical_names */ {}),
           Frame(
               /* kind */ context.kinds->get("OtherSource"),
               /* callee_port */ AccessPath(Root(Root::Kind::Leaf)),
@@ -188,7 +199,8 @@ TEST_F(TaintTest, Insertion) {
               /* locally_inferred_features */ {},
               /* user_features */ {},
               /* via_type_of_ports */ {},
-              /* local_positions */ {}),
+              /* local_positions */ {},
+              /* canonical_names */ {}),
           Frame(
               /* kind */ context.kinds->get("IndirectSource"),
               /* callee_port */ AccessPath(Root(Root::Kind::Return)),
@@ -200,7 +212,8 @@ TEST_F(TaintTest, Insertion) {
               /* locally_inferred_features */ {},
               /* user_features */ {},
               /* via_type_of_ports */ {},
-              /* local_positions */ {}),
+              /* local_positions */ {},
+              /* canonical_names */ {}),
       }));
 
   taint.add(Frame(
@@ -214,7 +227,8 @@ TEST_F(TaintTest, Insertion) {
       /* locally_inferred_features */ {},
       /* user_features */ {},
       /* via_type_of_ports */ {},
-      /* local_positions */ {}));
+      /* local_positions */ {},
+      /* canonical_names */ {}));
   EXPECT_EQ(
       taint,
       (Taint{
@@ -229,7 +243,8 @@ TEST_F(TaintTest, Insertion) {
               /* locally_inferred_features */ {},
               /* user_features */ {},
               /* via_type_of_ports */ {},
-              /* local_positions */ {}),
+              /* local_positions */ {},
+              /* canonical_names */ {}),
           Frame(
               /* kind */ context.kinds->get("OtherSource"),
               /* callee_port */ AccessPath(Root(Root::Kind::Leaf)),
@@ -241,7 +256,8 @@ TEST_F(TaintTest, Insertion) {
               /* locally_inferred_features */ {},
               /* user_features */ {},
               /* via_type_of_ports */ {},
-              /* local_positions */ {}),
+              /* local_positions */ {},
+              /* canonical_names */ {}),
           Frame(
               /* kind */ context.kinds->get("IndirectSource"),
               /* callee_port */ AccessPath(Root(Root::Kind::Return)),
@@ -253,7 +269,8 @@ TEST_F(TaintTest, Insertion) {
               /* locally_inferred_features */ {},
               /* user_features */ {},
               /* via_type_of_ports */ {},
-              /* local_positions */ {}),
+              /* local_positions */ {},
+              /* canonical_names */ {}),
           Frame(
               /* kind */ context.kinds->get("IndirectSource"),
               /* callee_port */ AccessPath(Root(Root::Kind::Return)),
@@ -265,7 +282,8 @@ TEST_F(TaintTest, Insertion) {
               /* locally_inferred_features */ {},
               /* user_features */ {},
               /* via_type_of_ports */ {},
-              /* local_positions */ {}),
+              /* local_positions */ {},
+              /* canonical_names */ {}),
       }));
 }
 
@@ -300,7 +318,8 @@ TEST_F(TaintTest, Difference) {
           /* locally_inferred_features */ {},
           /* user_features */ FeatureSet{user_feature_one},
           /* via_type_of_ports */ {},
-          /* local_positions */ {}),
+          /* local_positions */ {},
+          /* canonical_names */ {}),
       Frame(
           /* kind */ context.kinds->get("OtherSource"),
           /* callee_port */ AccessPath(Root(Root::Kind::Argument, 0)),
@@ -312,7 +331,8 @@ TEST_F(TaintTest, Difference) {
           /* locally_inferred_features */ {},
           /* user_features */ FeatureSet{user_feature_two},
           /* via_type_of_ports */ {},
-          /* local_positions */ {}),
+          /* local_positions */ {},
+          /* canonical_names */ {}),
   };
   taint.difference_with(Taint{
       Frame(
@@ -326,7 +346,8 @@ TEST_F(TaintTest, Difference) {
           /* locally_inferred_features */ {},
           /* user_features */ FeatureSet{user_feature_one},
           /* via_type_of_ports */ {},
-          /* local_positions */ {}),
+          /* local_positions */ {},
+          /* canonical_names */ {}),
       Frame(
           /* kind */ context.kinds->get("OtherSource"),
           /* callee_port */ AccessPath(Root(Root::Kind::Argument, 0)),
@@ -338,7 +359,8 @@ TEST_F(TaintTest, Difference) {
           /* locally_inferred_features */ {},
           /* user_features */ FeatureSet{user_feature_two},
           /* via_type_of_ports */ {},
-          /* local_positions */ {}),
+          /* local_positions */ {},
+          /* canonical_names */ {}),
       Frame(
           /* kind */ context.kinds->get("OtherSource"),
           /* callee_port */ AccessPath(Root(Root::Kind::Argument, 0)),
@@ -350,7 +372,8 @@ TEST_F(TaintTest, Difference) {
           /* locally_inferred_features */ {},
           /* user_features */ FeatureSet{user_feature_three},
           /* via_type_of_ports */ {},
-          /* local_positions */ {}),
+          /* local_positions */ {},
+          /* canonical_names */ {}),
   });
   EXPECT_TRUE(taint.is_bottom());
 
@@ -366,7 +389,8 @@ TEST_F(TaintTest, Difference) {
           /* locally_inferred_features */ {},
           /* user_features */ {},
           /* via_type_of_ports */ {},
-          /* local_positions */ {}),
+          /* local_positions */ {},
+          /* canonical_names */ {}),
       Frame(
           /* kind */ context.kinds->get("OtherSource"),
           /* callee_port */ AccessPath(Root(Root::Kind::Argument, 0)),
@@ -378,7 +402,8 @@ TEST_F(TaintTest, Difference) {
           /* locally_inferred_features */ {},
           /* user_features */ {},
           /* via_type_of_ports */ {},
-          /* local_positions */ {}),
+          /* local_positions */ {},
+          /* canonical_names */ {}),
       Frame(
           /* kind */ context.kinds->get("TestSource"),
           /* callee_port */ AccessPath(Root(Root::Kind::Argument, 0)),
@@ -390,7 +415,8 @@ TEST_F(TaintTest, Difference) {
           /* locally_inferred_features */ {},
           /* user_features */ {},
           /* via_type_of_ports */ {},
-          /* local_positions */ {}),
+          /* local_positions */ {},
+          /* canonical_names */ {}),
   };
   taint.difference_with(Taint{
       Frame(
@@ -404,7 +430,8 @@ TEST_F(TaintTest, Difference) {
           /* locally_inferred_features */ {},
           /* user_features */ {},
           /* via_type_of_ports */ {},
-          /* local_positions */ {}),
+          /* local_positions */ {},
+          /* canonical_names */ {}),
       Frame(
           /* kind */ context.kinds->get("TestSource"),
           /* callee_port */ AccessPath(Root(Root::Kind::Argument, 0)),
@@ -416,7 +443,8 @@ TEST_F(TaintTest, Difference) {
           /* locally_inferred_features */ {},
           /* user_features */ {},
           /* via_type_of_ports */ {},
-          /* local_positions */ {}),
+          /* local_positions */ {},
+          /* canonical_names */ {}),
   });
   EXPECT_EQ(
       taint,
@@ -432,7 +460,8 @@ TEST_F(TaintTest, Difference) {
               /* locally_inferred_features */ {},
               /* user_features */ {},
               /* via_type_of_ports */ {},
-              /* local_positions */ {}),
+              /* local_positions */ {},
+              /* canonical_names */ {}),
           Frame(
               /* kind */ context.kinds->get("TestSource"),
               /* callee_port */ AccessPath(Root(Root::Kind::Argument, 0)),
@@ -444,7 +473,8 @@ TEST_F(TaintTest, Difference) {
               /* locally_inferred_features */ {},
               /* user_features */ {},
               /* via_type_of_ports */ {},
-              /* local_positions */ {}),
+              /* local_positions */ {},
+              /* canonical_names */ {}),
       }));
 
   taint = Taint{
@@ -459,7 +489,8 @@ TEST_F(TaintTest, Difference) {
           /* locally_inferred_features */ {},
           /* user_features */ {},
           /* via_type_of_ports */ {},
-          /* local_positions */ {}),
+          /* local_positions */ {},
+          /* canonical_names */ {}),
       Frame(
           /* kind */ context.kinds->get("SomeOtherSource"),
           /* callee_port */ AccessPath(Root(Root::Kind::Argument, 0)),
@@ -471,7 +502,8 @@ TEST_F(TaintTest, Difference) {
           /* locally_inferred_features */ {},
           /* user_features */ {},
           /* via_type_of_ports */ {},
-          /* local_positions */ {}),
+          /* local_positions */ {},
+          /* canonical_names */ {}),
   };
   taint.difference_with(Taint{
       Frame(
@@ -485,7 +517,8 @@ TEST_F(TaintTest, Difference) {
           /* locally_inferred_features */ {},
           /* user_features */ {},
           /* via_type_of_ports */ {},
-          /* local_positions */ {}),
+          /* local_positions */ {},
+          /* canonical_names */ {}),
       Frame(
           /* kind */ context.kinds->get("TestSource"),
           /* callee_port */ AccessPath(Root(Root::Kind::Argument, 0)),
@@ -497,7 +530,8 @@ TEST_F(TaintTest, Difference) {
           /* locally_inferred_features */ {},
           /* user_features */ {},
           /* via_type_of_ports */ {},
-          /* local_positions */ {}),
+          /* local_positions */ {},
+          /* canonical_names */ {}),
       Frame(
           /* kind */ context.kinds->get("TestSource"),
           /* callee_port */ AccessPath(Root(Root::Kind::Argument, 0)),
@@ -509,7 +543,8 @@ TEST_F(TaintTest, Difference) {
           /* locally_inferred_features */ {},
           /* user_features */ {},
           /* via_type_of_ports */ {},
-          /* local_positions */ {}),
+          /* local_positions */ {},
+          /* canonical_names */ {}),
   });
   EXPECT_EQ(
       taint,
@@ -525,7 +560,8 @@ TEST_F(TaintTest, Difference) {
               /* locally_inferred_features */ {},
               /* user_features */ {},
               /* via_type_of_ports */ {},
-              /* local_positions */ {}),
+              /* local_positions */ {},
+              /* canonical_names */ {}),
       }));
 }
 
@@ -559,7 +595,8 @@ TEST_F(TaintTest, AddFeatures) {
           /* locally_inferred_features */ {},
           /* user_features */ FeatureSet{user_feature_one},
           /* via_type_of_ports */ {},
-          /* local_positions */ {}),
+          /* local_positions */ {},
+          /* canonical_names */ {}),
       Frame(
           /* kind */ context.kinds->get("TestSource"),
           /* callee_port */ AccessPath(Root(Root::Kind::Argument, 0)),
@@ -571,7 +608,8 @@ TEST_F(TaintTest, AddFeatures) {
           /* locally_inferred_features */ {},
           /* user_features */ FeatureSet{user_feature_two},
           /* via_type_of_ports */ {},
-          /* local_positions */ {}),
+          /* local_positions */ {},
+          /* canonical_names */ {}),
       Frame(
           /* kind */ context.kinds->get("TestSource"),
           /* callee_port */ AccessPath(Root(Root::Kind::Argument, 0)),
@@ -583,7 +621,8 @@ TEST_F(TaintTest, AddFeatures) {
           /* locally_inferred_features */ {},
           /* user_features */ {},
           /* via_type_of_ports */ {},
-          /* local_positions */ {}),
+          /* local_positions */ {},
+          /* canonical_names */ {}),
   };
   taint.add_inferred_features(
       FeatureMayAlwaysSet::make_always({feature_three}));
@@ -602,7 +641,8 @@ TEST_F(TaintTest, AddFeatures) {
               FeatureMayAlwaysSet{feature_three},
               /* user_features */ FeatureSet{user_feature_one},
               /* via_type_of_ports */ {},
-              /* local_positions */ {}),
+              /* local_positions */ {},
+              /* canonical_names */ {}),
           Frame(
               /* kind */ context.kinds->get("TestSource"),
               /* callee_port */ AccessPath(Root(Root::Kind::Argument, 0)),
@@ -615,7 +655,8 @@ TEST_F(TaintTest, AddFeatures) {
               FeatureMayAlwaysSet{feature_three},
               /* user_features */ FeatureSet{user_feature_two},
               /* via_type_of_ports */ {},
-              /* local_positions */ {}),
+              /* local_positions */ {},
+              /* canonical_names */ {}),
           Frame(
               /* kind */ context.kinds->get("TestSource"),
               /* callee_port */ AccessPath(Root(Root::Kind::Argument, 0)),
@@ -628,7 +669,8 @@ TEST_F(TaintTest, AddFeatures) {
               FeatureMayAlwaysSet{feature_three},
               /* user_features */ {},
               /* via_type_of_ports */ {},
-              /* local_positions */ {}),
+              /* local_positions */ {},
+              /* canonical_names */ {}),
       }));
 }
 
@@ -664,7 +706,8 @@ TEST_F(TaintTest, Propagate) {
           /* locally_inferred_features */ {},
           /* user_features */ FeatureSet{user_feature_one},
           /* via_type_of_ports */ {},
-          /* local_positions */ {}),
+          /* local_positions */ {},
+          /* canonical_names */ {}),
       Frame(
           /* kind */ context.kinds->get("OtherSource"),
           /* callee_port */ AccessPath(Root(Root::Kind::Argument, 1)),
@@ -676,7 +719,8 @@ TEST_F(TaintTest, Propagate) {
           /* locally_inferred_features */ {},
           /* user_features */ FeatureSet{user_feature_one},
           /* via_type_of_ports */ {},
-          /* local_positions */ {}),
+          /* local_positions */ {},
+          /* canonical_names */ {}),
       Frame(
           /* kind */ context.kinds->get("OtherSource"),
           /* callee_port */ AccessPath(Root(Root::Kind::Argument, 0)),
@@ -688,7 +732,8 @@ TEST_F(TaintTest, Propagate) {
           /* locally_inferred_features */ FeatureMayAlwaysSet{feature_two},
           /* user_features */ FeatureSet{user_feature_one, user_feature_two},
           /* via_type_of_ports */ {},
-          /* local_positions */ {}),
+          /* local_positions */ {},
+          /* canonical_names */ {}),
   };
 
   // When propagating, all user features become inferred features.
@@ -715,7 +760,8 @@ TEST_F(TaintTest, Propagate) {
               FeatureMayAlwaysSet{feature_three},
               /* user_features */ {},
               /* via_type_of_ports */ {},
-              /* local_positions */ {}),
+              /* local_positions */ {},
+              /* canonical_names */ {}),
           Frame(
               /* kind */ context.kinds->get("OtherSource"),
               /* callee_port */ AccessPath(Root(Root::Kind::Argument, 2)),
@@ -732,7 +778,8 @@ TEST_F(TaintTest, Propagate) {
               FeatureMayAlwaysSet{feature_three},
               /* user_features */ {},
               /* via_type_of_ports */ {},
-              /* local_positions */ {}),
+              /* local_positions */ {},
+              /* canonical_names */ {}),
       }));
 }
 
@@ -769,7 +816,8 @@ TEST_F(TaintTest, TransformKind) {
           /* locally_inferred_features */ {},
           /* user_features */ FeatureSet{user_feature_one},
           /* via_type_of_ports */ {},
-          /* local_positions */ {}),
+          /* local_positions */ {},
+          /* canonical_names */ {}),
       Frame(
           /* kind */ context.kinds->get("OtherSource"),
           /* callee_port */ AccessPath(Root(Root::Kind::Argument, 1)),
@@ -781,7 +829,8 @@ TEST_F(TaintTest, TransformKind) {
           /* locally_inferred_features */ {},
           /* user_features */ FeatureSet{user_feature_one},
           /* via_type_of_ports */ {},
-          /* local_positions */ {}),
+          /* local_positions */ {},
+          /* canonical_names */ {}),
       Frame(
           /* kind */ context.kinds->get("OtherSource"),
           /* callee_port */ AccessPath(Root(Root::Kind::Argument, 0)),
@@ -793,7 +842,8 @@ TEST_F(TaintTest, TransformKind) {
           /* locally_inferred_features */ {},
           /* user_features */ FeatureSet{user_feature_one, user_feature_two},
           /* via_type_of_ports */ {},
-          /* local_positions */ {}),
+          /* local_positions */ {},
+          /* canonical_names */ {}),
   };
 
   // This works the same way as filter.
@@ -826,7 +876,8 @@ TEST_F(TaintTest, TransformKind) {
               /* locally_inferred_features */ {},
               /* user_features */ FeatureSet{user_feature_one},
               /* via_type_of_ports */ {},
-              /* local_positions */ {}),
+              /* local_positions */ {},
+              /* canonical_names */ {}),
           Frame(
               /* kind */ context.kinds->get("OtherSource"),
               /* callee_port */ AccessPath(Root(Root::Kind::Argument, 1)),
@@ -838,7 +889,8 @@ TEST_F(TaintTest, TransformKind) {
               /* locally_inferred_features */ {},
               /* user_features */ FeatureSet{user_feature_one},
               /* via_type_of_ports */ {},
-              /* local_positions */ {}),
+              /* local_positions */ {},
+              /* canonical_names */ {}),
           Frame(
               /* kind */ context.kinds->get("OtherSource"),
               /* callee_port */ AccessPath(Root(Root::Kind::Argument, 0)),
@@ -852,7 +904,8 @@ TEST_F(TaintTest, TransformKind) {
               /* user_features */
               FeatureSet{user_feature_one, user_feature_two},
               /* via_type_of_ports */ {},
-              /* local_positions */ {}),
+              /* local_positions */ {},
+              /* canonical_names */ {}),
       }));
 
   // Another transformation. Covers mapping transformed frames.
@@ -880,7 +933,8 @@ TEST_F(TaintTest, TransformKind) {
               /* locally_inferred_features */ FeatureMayAlwaysSet{feature_one},
               /* user_features */ FeatureSet{user_feature_one},
               /* via_type_of_ports */ {},
-              /* local_positions */ {}),
+              /* local_positions */ {},
+              /* canonical_names */ {}),
           Frame(
               /* kind */ context.kinds->get("OtherSource"),
               /* callee_port */ AccessPath(Root(Root::Kind::Argument, 1)),
@@ -892,7 +946,8 @@ TEST_F(TaintTest, TransformKind) {
               /* locally_inferred_features */ {},
               /* user_features */ FeatureSet{user_feature_one},
               /* via_type_of_ports */ {},
-              /* local_positions */ {}),
+              /* local_positions */ {},
+              /* canonical_names */ {}),
           Frame(
               /* kind */ context.kinds->get("OtherSource"),
               /* callee_port */ AccessPath(Root(Root::Kind::Argument, 0)),
@@ -906,7 +961,8 @@ TEST_F(TaintTest, TransformKind) {
               /* user_features */
               FeatureSet{user_feature_one, user_feature_two},
               /* via_type_of_ports */ {},
-              /* local_positions */ {}),
+              /* local_positions */ {},
+              /* canonical_names */ {}),
       }));
 
   // Tests one -> many transformations (with features).
@@ -936,7 +992,8 @@ TEST_F(TaintTest, TransformKind) {
               /* locally_inferred_features */ FeatureMayAlwaysSet{feature_one},
               /* user_features */ FeatureSet{user_feature_one},
               /* via_type_of_ports */ {},
-              /* local_positions */ {}),
+              /* local_positions */ {},
+              /* canonical_names */ {}),
           Frame(
               /* kind */ transformed_test_source,
               /* callee_port */ AccessPath(Root(Root::Kind::Leaf)),
@@ -948,7 +1005,8 @@ TEST_F(TaintTest, TransformKind) {
               /* locally_inferred_features */ FeatureMayAlwaysSet{feature_one},
               /* user_features */ FeatureSet{user_feature_one},
               /* via_type_of_ports */ {},
-              /* local_positions */ {}),
+              /* local_positions */ {},
+              /* canonical_names */ {}),
           Frame(
               /* kind */ transformed_test_source2,
               /* callee_port */ AccessPath(Root(Root::Kind::Leaf)),
@@ -960,7 +1018,8 @@ TEST_F(TaintTest, TransformKind) {
               /* locally_inferred_features */ FeatureMayAlwaysSet{feature_one},
               /* user_features */ FeatureSet{user_feature_one},
               /* via_type_of_ports */ {},
-              /* local_positions */ {}),
+              /* local_positions */ {},
+              /* canonical_names */ {}),
       }));
 }
 

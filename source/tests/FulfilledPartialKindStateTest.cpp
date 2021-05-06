@@ -76,7 +76,8 @@ TEST_F(FulfilledPartialKindStateTest, Basic) {
       /* locally_inferred_features */ {},
       /* user_features */ {},
       /* via_type_of_ports */ {},
-      /* local_positions */ {});
+      /* local_positions */ {},
+      /* canonical_names */ {});
 
   // Simulate kind fulfilled, i.e. source_1 -> fulfilled under rule_1 with
   // some features. Note: rule_2 not fulfilled.
@@ -134,7 +135,8 @@ TEST_F(FulfilledPartialKindStateTest, Basic) {
       /* locally_inferred_features */ {},
       /* user_features */ {},
       /* via_type_of_ports */ {},
-      /* local_positions */ {});
+      /* local_positions */ {},
+      /* canonical_names */ {});
   EXPECT_EQ(
       state.fulfill_kind(
           unfulfilled,
@@ -153,7 +155,8 @@ TEST_F(FulfilledPartialKindStateTest, Basic) {
           /* locally_inferred_features */ FeatureMayAlwaysSet{feature_1},
           /* user_features */ {},
           /* via_type_of_ports */ {},
-          /* local_positions */ {})});
+          /* local_positions */ {},
+          /* canonical_names */ {})});
 
   // Triggered counterparts now exclude rule_1 which was previously fulfilled.
   EXPECT_THAT(

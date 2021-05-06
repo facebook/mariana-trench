@@ -103,7 +103,7 @@ class Frame final : public sparta::AbstractDomain<Frame> {
       FeatureSet user_features,
       RootSetAbstractDomain via_type_of_ports,
       LocalPositionSet local_positions,
-      CanonicalNameSetAbstractDomain canonical_names = {})
+      CanonicalNameSetAbstractDomain canonical_names)
       : kind_(kind),
         callee_port_(std::move(callee_port)),
         callee_(callee),

@@ -46,7 +46,8 @@ TEST_F(FrameSetTest, Add) {
       /* locally_inferred_features */ {},
       /* user_features */ {},
       /* via_type_of_ports */ {},
-      /* local_positions */ {}));
+      /* local_positions */ {},
+      /* canonical_names */ {}));
   EXPECT_FALSE(frames.is_bottom());
   EXPECT_EQ(frames.kind(), source_kind);
   EXPECT_EQ(
@@ -62,7 +63,8 @@ TEST_F(FrameSetTest, Add) {
           /* locally_inferred_features */ {},
           /* user_features */ {},
           /* via_type_of_ports */ {},
-          /* local_positions */ {})});
+          /* local_positions */ {},
+          /* canonical_names */ {})});
 
   frames.add(Frame(
       /* kind */ source_kind,
@@ -75,7 +77,8 @@ TEST_F(FrameSetTest, Add) {
       /* locally_inferred_features */ {},
       /* user_features */ FeatureSet{user_feature_one},
       /* via_type_of_ports */ {},
-      /* local_positions */ {}));
+      /* local_positions */ {},
+      /* canonical_names */ {}));
   EXPECT_EQ(
       frames,
       FrameSet{Frame(
@@ -90,7 +93,8 @@ TEST_F(FrameSetTest, Add) {
           /* locally_inferred_features */ {},
           /* user_features */ FeatureSet{user_feature_one},
           /* via_type_of_ports */ {},
-          /* local_positions */ {})});
+          /* local_positions */ {},
+          /* canonical_names */ {})});
 
   frames.add(Frame(
       /* kind */ source_kind,
@@ -103,7 +107,8 @@ TEST_F(FrameSetTest, Add) {
       /* locally_inferred_features */ {},
       /* user_features */ {},
       /* via_type_of_ports */ {},
-      /* local_positions */ {}));
+      /* local_positions */ {},
+      /* canonical_names */ {}));
   EXPECT_EQ(
       frames,
       (FrameSet{
@@ -119,7 +124,8 @@ TEST_F(FrameSetTest, Add) {
               /* locally_inferred_features */ {},
               /* user_features */ FeatureSet{user_feature_one},
               /* via_type_of_ports */ {},
-              /* local_positions */ {}),
+              /* local_positions */ {},
+              /* canonical_names */ {}),
           Frame(
               /* kind */ source_kind,
               /* callee_port */ AccessPath(Root(Root::Kind::Return)),
@@ -131,7 +137,8 @@ TEST_F(FrameSetTest, Add) {
               /* locally_inferred_features */ {},
               /* user_features */ {},
               /* via_type_of_ports */ {},
-              /* local_positions */ {}),
+              /* local_positions */ {},
+              /* canonical_names */ {}),
       }));
 
   frames.add(Frame(
@@ -145,7 +152,8 @@ TEST_F(FrameSetTest, Add) {
       /* locally_inferred_features */ {},
       /* user_features */ {},
       /* via_type_of_ports */ {},
-      /* local_positions */ {}));
+      /* local_positions */ {},
+      /* canonical_names */ {}));
   EXPECT_EQ(
       frames,
       (FrameSet{
@@ -161,7 +169,8 @@ TEST_F(FrameSetTest, Add) {
               /* locally_inferred_features */ {},
               /* user_features */ FeatureSet{user_feature_one},
               /* via_type_of_ports */ {},
-              /* local_positions */ {}),
+              /* local_positions */ {},
+              /* canonical_names */ {}),
           Frame(
               /* kind */ source_kind,
               /* callee_port */ AccessPath(Root(Root::Kind::Return)),
@@ -176,7 +185,8 @@ TEST_F(FrameSetTest, Add) {
               /* locally_inferred_features */ {},
               /* user_features */ {},
               /* via_type_of_ports */ {},
-              /* local_positions */ {}),
+              /* local_positions */ {},
+              /* canonical_names */ {}),
       }));
 
   // Frames with different callee ports are not merged.
@@ -191,7 +201,8 @@ TEST_F(FrameSetTest, Add) {
       /* locally_inferred_features */ {},
       /* user_features */ {},
       /* via_type_of_ports */ {},
-      /* local_positions */ {}));
+      /* local_positions */ {},
+      /* canonical_names */ {}));
   EXPECT_EQ(
       frames,
       (FrameSet{
@@ -207,7 +218,8 @@ TEST_F(FrameSetTest, Add) {
               /* locally_inferred_features */ {},
               /* user_features */ FeatureSet{user_feature_one},
               /* via_type_of_ports */ {},
-              /* local_positions */ {}),
+              /* local_positions */ {},
+              /* canonical_names */ {}),
           Frame(
               /* kind */ source_kind,
               /* callee_port */ AccessPath(Root(Root::Kind::Return)),
@@ -222,7 +234,8 @@ TEST_F(FrameSetTest, Add) {
               /* locally_inferred_features */ {},
               /* user_features */ {},
               /* via_type_of_ports */ {},
-              /* local_positions */ {}),
+              /* local_positions */ {},
+              /* canonical_names */ {}),
           Frame(
               /* kind */ source_kind,
               /* callee_port */
@@ -235,7 +248,8 @@ TEST_F(FrameSetTest, Add) {
               /* locally_inferred_features */ {},
               /* user_features */ {},
               /* via_type_of_ports */ {},
-              /* local_positions */ {}),
+              /* local_positions */ {},
+              /* canonical_names */ {}),
       }));
 }
 
@@ -263,7 +277,8 @@ TEST_F(FrameSetTest, ArtificialSources) {
       /* locally_inferred_features */ {},
       /* user_features */ FeatureSet{user_feature_one},
       /* via_type_of_ports */ {},
-      /* local_positions */ {}));
+      /* local_positions */ {},
+      /* canonical_names */ {}));
   EXPECT_EQ(
       frames,
       FrameSet{Frame(
@@ -278,7 +293,8 @@ TEST_F(FrameSetTest, ArtificialSources) {
           /* locally_inferred_features */ {},
           /* user_features */ FeatureSet{user_feature_one},
           /* via_type_of_ports */ {},
-          /* local_positions */ {})});
+          /* local_positions */ {},
+          /* canonical_names */ {})});
 
   // We use the common prefix of the callee port.
   frames.add(Frame(
@@ -293,7 +309,8 @@ TEST_F(FrameSetTest, ArtificialSources) {
       /* locally_inferred_features */ {},
       /* user_features */ FeatureSet{user_feature_two},
       /* via_type_of_ports */ {},
-      /* local_positions */ {}));
+      /* local_positions */ {},
+      /* canonical_names */ {}));
   EXPECT_EQ(
       frames,
       FrameSet{Frame(
@@ -310,7 +327,8 @@ TEST_F(FrameSetTest, ArtificialSources) {
           /* user_features */
           FeatureSet{user_feature_one, user_feature_two},
           /* via_type_of_ports */ {},
-          /* local_positions */ {})});
+          /* local_positions */ {},
+          /* canonical_names */ {})});
 
   // We do not merge when the port root is different.
   frames.add(Frame(
@@ -325,7 +343,8 @@ TEST_F(FrameSetTest, ArtificialSources) {
       /* locally_inferred_features */ {},
       /* user_features */ {},
       /* via_type_of_ports */ {},
-      /* local_positions */ {}));
+      /* local_positions */ {},
+      /* canonical_names */ {}));
   EXPECT_EQ(
       frames,
       (FrameSet{
@@ -343,7 +362,8 @@ TEST_F(FrameSetTest, ArtificialSources) {
               /* user_features */
               FeatureSet{user_feature_one, user_feature_two},
               /* via_type_of_ports */ {},
-              /* local_positions */ {}),
+              /* local_positions */ {},
+              /* canonical_names */ {}),
           Frame(
               /* kind */ Kinds::artificial_source(),
               /* callee_port */
@@ -356,7 +376,8 @@ TEST_F(FrameSetTest, ArtificialSources) {
               /* locally_inferred_features */ {},
               /* user_features */ {},
               /* via_type_of_ports */ {},
-              /* local_positions */ {}),
+              /* local_positions */ {},
+              /* canonical_names */ {}),
       }));
 }
 
@@ -390,7 +411,8 @@ TEST_F(FrameSetTest, Leq) {
                /* locally_inferred_features */ {},
                /* user_features */ {},
                /* via_type_of_ports */ {},
-               /* local_positions */ {}),
+               /* local_positions */ {},
+               /* canonical_names */ {}),
            Frame(
                /* kind */ test_kind,
                /* callee_port */ AccessPath(Root(Root::Kind::Argument, 0)),
@@ -402,7 +424,8 @@ TEST_F(FrameSetTest, Leq) {
                /* locally_inferred_features */ {},
                /* user_features */ {},
                /* via_type_of_ports */ {},
-               /* local_positions */ {}),
+               /* local_positions */ {},
+               /* canonical_names */ {}),
        })
           .leq(FrameSet{
               Frame(
@@ -416,7 +439,8 @@ TEST_F(FrameSetTest, Leq) {
                   /* locally_inferred_features */ {},
                   /* user_features */ {},
                   /* via_type_of_ports */ {},
-                  /* local_positions */ {}),
+                  /* local_positions */ {},
+                  /* canonical_names */ {}),
               Frame(
                   /* kind */ test_kind,
                   /* callee_port */ AccessPath(Root(Root::Kind::Argument, 0)),
@@ -428,7 +452,8 @@ TEST_F(FrameSetTest, Leq) {
                   /* locally_inferred_features */ {},
                   /* user_features */ {},
                   /* via_type_of_ports */ {},
-                  /* local_positions */ {}),
+                  /* local_positions */ {},
+                  /* canonical_names */ {}),
               Frame(
                   /* kind */ test_kind,
                   /* callee_port */ AccessPath(Root(Root::Kind::Argument, 0)),
@@ -440,7 +465,8 @@ TEST_F(FrameSetTest, Leq) {
                   /* locally_inferred_features */ {},
                   /* user_features */ {},
                   /* via_type_of_ports */ {},
-                  /* local_positions */ {}),
+                  /* local_positions */ {},
+                  /* canonical_names */ {}),
           }));
   EXPECT_FALSE(
       (FrameSet{
@@ -455,7 +481,8 @@ TEST_F(FrameSetTest, Leq) {
                /* locally_inferred_features */ {},
                /* user_features */ {},
                /* via_type_of_ports */ {},
-               /* local_positions */ {}),
+               /* local_positions */ {},
+               /* canonical_names */ {}),
            Frame(
                /* kind */ test_kind,
                /* callee_port */ AccessPath(Root(Root::Kind::Argument, 0)),
@@ -467,7 +494,8 @@ TEST_F(FrameSetTest, Leq) {
                /* locally_inferred_features */ {},
                /* user_features */ {},
                /* via_type_of_ports */ {},
-               /* local_positions */ {}),
+               /* local_positions */ {},
+               /* canonical_names */ {}),
            Frame(
                /* kind */ test_kind,
                /* callee_port */ AccessPath(Root(Root::Kind::Argument, 0)),
@@ -479,7 +507,8 @@ TEST_F(FrameSetTest, Leq) {
                /* locally_inferred_features */ {},
                /* user_features */ {},
                /* via_type_of_ports */ {},
-               /* local_positions */ {}),
+               /* local_positions */ {},
+               /* canonical_names */ {}),
        })
           .leq(FrameSet{
               Frame(
@@ -493,7 +522,8 @@ TEST_F(FrameSetTest, Leq) {
                   /* locally_inferred_features */ {},
                   /* user_features */ {},
                   /* via_type_of_ports */ {},
-                  /* local_positions */ {}),
+                  /* local_positions */ {},
+                  /* canonical_names */ {}),
               Frame(
                   /* kind */ test_kind,
                   /* callee_port */ AccessPath(Root(Root::Kind::Argument, 0)),
@@ -505,7 +535,8 @@ TEST_F(FrameSetTest, Leq) {
                   /* locally_inferred_features */ {},
                   /* user_features */ {},
                   /* via_type_of_ports */ {},
-                  /* local_positions */ {}),
+                  /* local_positions */ {},
+                  /* canonical_names */ {}),
           }));
   EXPECT_FALSE(
       (FrameSet{
@@ -520,7 +551,8 @@ TEST_F(FrameSetTest, Leq) {
                /* locally_inferred_features */ {},
                /* user_features */ {},
                /* via_type_of_ports */ {},
-               /* local_positions */ {}),
+               /* local_positions */ {},
+               /* canonical_names */ {}),
            Frame(
                /* kind */ test_kind,
                /* callee_port */ AccessPath(Root(Root::Kind::Argument, 0)),
@@ -532,7 +564,8 @@ TEST_F(FrameSetTest, Leq) {
                /* locally_inferred_features */ {},
                /* user_features */ {},
                /* via_type_of_ports */ {},
-               /* local_positions */ {}),
+               /* local_positions */ {},
+               /* canonical_names */ {}),
        })
           .leq(FrameSet{
               Frame(
@@ -546,7 +579,8 @@ TEST_F(FrameSetTest, Leq) {
                   /* locally_inferred_features */ {},
                   /* user_features */ {},
                   /* via_type_of_ports */ {},
-                  /* local_positions */ {}),
+                  /* local_positions */ {},
+                  /* canonical_names */ {}),
               Frame(
                   /* kind */ test_kind,
                   /* callee_port */ AccessPath(Root(Root::Kind::Argument, 0)),
@@ -558,7 +592,8 @@ TEST_F(FrameSetTest, Leq) {
                   /* locally_inferred_features */ {},
                   /* user_features */ {},
                   /* via_type_of_ports */ {},
-                  /* local_positions */ {}),
+                  /* local_positions */ {},
+                  /* canonical_names */ {}),
               Frame(
                   /* kind */ test_kind,
                   /* callee_port */ AccessPath(Root(Root::Kind::Argument, 0)),
@@ -570,7 +605,8 @@ TEST_F(FrameSetTest, Leq) {
                   /* locally_inferred_features */ {},
                   /* user_features */ {},
                   /* via_type_of_ports */ {},
-                  /* local_positions */ {}),
+                  /* local_positions */ {},
+                  /* canonical_names */ {}),
           }));
   EXPECT_TRUE(
       (FrameSet{
@@ -586,7 +622,8 @@ TEST_F(FrameSetTest, Leq) {
                /* locally_inferred_features */ {},
                /* user_features */ {},
                /* via_type_of_ports */ {},
-               /* local_positions */ {}),
+               /* local_positions */ {},
+               /* canonical_names */ {}),
            Frame(
                /* kind */ test_kind,
                /* callee_port */
@@ -599,7 +636,8 @@ TEST_F(FrameSetTest, Leq) {
                /* locally_inferred_features */ {},
                /* user_features */ {},
                /* via_type_of_ports */ {},
-               /* local_positions */ {}),
+               /* local_positions */ {},
+               /* canonical_names */ {}),
        })
           .leq(FrameSet{
               Frame(
@@ -614,7 +652,8 @@ TEST_F(FrameSetTest, Leq) {
                   /* locally_inferred_features */ {},
                   /* user_features */ {},
                   /* via_type_of_ports */ {},
-                  /* local_positions */ {}),
+                  /* local_positions */ {},
+                  /* canonical_names */ {}),
               Frame(
                   /* kind */ test_kind,
                   /* callee_port */
@@ -627,7 +666,8 @@ TEST_F(FrameSetTest, Leq) {
                   /* locally_inferred_features */ {},
                   /* user_features */ {},
                   /* via_type_of_ports */ {},
-                  /* local_positions */ {}),
+                  /* local_positions */ {},
+                  /* canonical_names */ {}),
               Frame(
                   /* kind */ test_kind,
                   /* callee_port */ AccessPath(Root(Root::Kind::Argument, 0)),
@@ -639,7 +679,8 @@ TEST_F(FrameSetTest, Leq) {
                   /* locally_inferred_features */ {},
                   /* user_features */ {},
                   /* via_type_of_ports */ {},
-                  /* local_positions */ {}),
+                  /* local_positions */ {},
+                  /* canonical_names */ {}),
           }));
   EXPECT_TRUE(
       (FrameSet{
@@ -655,7 +696,8 @@ TEST_F(FrameSetTest, Leq) {
                /* locally_inferred_features */ {},
                /* user_features */ {},
                /* via_type_of_ports */ {},
-               /* local_positions */ {}),
+               /* local_positions */ {},
+               /* canonical_names */ {}),
            Frame(
                /* kind */ test_kind,
                /* callee_port */
@@ -668,7 +710,8 @@ TEST_F(FrameSetTest, Leq) {
                /* locally_inferred_features */ {},
                /* user_features */ {},
                /* via_type_of_ports */ {},
-               /* local_positions */ {}),
+               /* local_positions */ {},
+               /* canonical_names */ {}),
            Frame(
                /* kind */ test_kind,
                /* callee_port */
@@ -681,7 +724,8 @@ TEST_F(FrameSetTest, Leq) {
                /* locally_inferred_features */ {},
                /* user_features */ {},
                /* via_type_of_ports */ {},
-               /* local_positions */ {}),
+               /* local_positions */ {},
+               /* canonical_names */ {}),
        })
           .leq(FrameSet{
               Frame(
@@ -696,7 +740,8 @@ TEST_F(FrameSetTest, Leq) {
                   /* locally_inferred_features */ {},
                   /* user_features */ {},
                   /* via_type_of_ports */ {},
-                  /* local_positions */ {}),
+                  /* local_positions */ {},
+                  /* canonical_names */ {}),
               Frame(
                   /* kind */ test_kind,
                   /* callee_port */
@@ -709,7 +754,8 @@ TEST_F(FrameSetTest, Leq) {
                   /* locally_inferred_features */ {},
                   /* user_features */ {},
                   /* via_type_of_ports */ {},
-                  /* local_positions */ {}),
+                  /* local_positions */ {},
+                  /* canonical_names */ {}),
               Frame(
                   /* kind */ test_kind,
                   /* callee_port */ AccessPath(Root(Root::Kind::Argument, 1)),
@@ -721,7 +767,8 @@ TEST_F(FrameSetTest, Leq) {
                   /* locally_inferred_features */ {},
                   /* user_features */ {},
                   /* via_type_of_ports */ {},
-                  /* local_positions */ {}),
+                  /* local_positions */ {},
+                  /* canonical_names */ {}),
           }));
 }
 
@@ -766,7 +813,8 @@ TEST_F(FrameSetTest, Difference) {
           /* locally_inferred_features */ {},
           /* user_features */ {},
           /* via_type_of_ports */ {},
-          /* local_positions */ {}),
+          /* local_positions */ {},
+          /* canonical_names */ {}),
   });
   EXPECT_TRUE(frames.is_bottom());
 
@@ -782,7 +830,8 @@ TEST_F(FrameSetTest, Difference) {
           /* locally_inferred_features */ {},
           /* user_features */ FeatureSet{user_feature_one},
           /* via_type_of_ports */ {},
-          /* local_positions */ {}),
+          /* local_positions */ {},
+          /* canonical_names */ {}),
   };
 
   frames = initial_frames;
@@ -802,7 +851,8 @@ TEST_F(FrameSetTest, Difference) {
           /* locally_inferred_features */ {},
           /* user_features */ FeatureSet{user_feature_one},
           /* via_type_of_ports */ {},
-          /* local_positions */ {}),
+          /* local_positions */ {},
+          /* canonical_names */ {}),
   });
   EXPECT_TRUE(frames.is_bottom());
 
@@ -820,7 +870,8 @@ TEST_F(FrameSetTest, Difference) {
           /* locally_inferred_features */ {},
           /* user_features */ {},
           /* via_type_of_ports */ {},
-          /* local_positions */ {}),
+          /* local_positions */ {},
+          /* canonical_names */ {}),
   });
   EXPECT_EQ(frames, initial_frames);
 
@@ -838,7 +889,8 @@ TEST_F(FrameSetTest, Difference) {
           /* locally_inferred_features */ {},
           /* user_features */ FeatureSet{user_feature_one},
           /* via_type_of_ports */ {},
-          /* local_positions */ {}),
+          /* local_positions */ {},
+          /* canonical_names */ {}),
   });
   EXPECT_EQ(frames, initial_frames);
 
@@ -856,7 +908,8 @@ TEST_F(FrameSetTest, Difference) {
           /* locally_inferred_features */ {},
           /* user_features */ FeatureSet{user_feature_two},
           /* via_type_of_ports */ {},
-          /* local_positions */ {}),
+          /* local_positions */ {},
+          /* canonical_names */ {}),
   });
   EXPECT_EQ(frames, initial_frames);
 
@@ -874,7 +927,8 @@ TEST_F(FrameSetTest, Difference) {
           /* locally_inferred_features */ {},
           /* user_features */ FeatureSet{user_feature_one},
           /* via_type_of_ports */ {},
-          /* local_positions */ {}),
+          /* local_positions */ {},
+          /* canonical_names */ {}),
   });
   EXPECT_EQ(frames, initial_frames);
 
@@ -890,7 +944,8 @@ TEST_F(FrameSetTest, Difference) {
           /* locally_inferred_features */ {},
           /* user_features */ FeatureSet{user_feature_one},
           /* via_type_of_ports */ {},
-          /* local_positions */ {}),
+          /* local_positions */ {},
+          /* canonical_names */ {}),
       Frame(
           /* kind */ test_kind,
           /* callee_port */ AccessPath(Root(Root::Kind::Argument, 0)),
@@ -902,7 +957,8 @@ TEST_F(FrameSetTest, Difference) {
           /* locally_inferred_features */ {},
           /* user_features */ FeatureSet{user_feature_two},
           /* via_type_of_ports */ {},
-          /* local_positions */ {}),
+          /* local_positions */ {},
+          /* canonical_names */ {}),
   };
   frames.difference_with(FrameSet{
       Frame(
@@ -916,7 +972,8 @@ TEST_F(FrameSetTest, Difference) {
           /* locally_inferred_features */ {},
           /* user_features */ FeatureSet{user_feature_one},
           /* via_type_of_ports */ {},
-          /* local_positions */ {}),
+          /* local_positions */ {},
+          /* canonical_names */ {}),
       Frame(
           /* kind */ test_kind,
           /* callee_port */ AccessPath(Root(Root::Kind::Argument, 0)),
@@ -928,7 +985,8 @@ TEST_F(FrameSetTest, Difference) {
           /* locally_inferred_features */ {},
           /* user_features */ FeatureSet{user_feature_two},
           /* via_type_of_ports */ {},
-          /* local_positions */ {}),
+          /* local_positions */ {},
+          /* canonical_names */ {}),
       Frame(
           /* kind */ test_kind,
           /* callee_port */ AccessPath(Root(Root::Kind::Argument, 0)),
@@ -940,7 +998,8 @@ TEST_F(FrameSetTest, Difference) {
           /* locally_inferred_features */ {},
           /* user_features */ FeatureSet{user_feature_three},
           /* via_type_of_ports */ {},
-          /* local_positions */ {}),
+          /* local_positions */ {},
+          /* canonical_names */ {}),
   });
   EXPECT_TRUE(frames.is_bottom());
 
@@ -956,7 +1015,8 @@ TEST_F(FrameSetTest, Difference) {
           /* locally_inferred_features */ {},
           /* user_features */ {},
           /* via_type_of_ports */ {},
-          /* local_positions */ {}),
+          /* local_positions */ {},
+          /* canonical_names */ {}),
       Frame(
           /* kind */ test_kind,
           /* callee_port */ AccessPath(Root(Root::Kind::Argument, 0)),
@@ -968,7 +1028,8 @@ TEST_F(FrameSetTest, Difference) {
           /* locally_inferred_features */ {},
           /* user_features */ {},
           /* via_type_of_ports */ {},
-          /* local_positions */ {}),
+          /* local_positions */ {},
+          /* canonical_names */ {}),
       Frame(
           /* kind */ test_kind,
           /* callee_port */ AccessPath(Root(Root::Kind::Argument, 0)),
@@ -980,7 +1041,8 @@ TEST_F(FrameSetTest, Difference) {
           /* locally_inferred_features */ {},
           /* user_features */ {},
           /* via_type_of_ports */ {},
-          /* local_positions */ {}),
+          /* local_positions */ {},
+          /* canonical_names */ {}),
   };
   frames.difference_with(FrameSet{
       Frame(
@@ -994,7 +1056,8 @@ TEST_F(FrameSetTest, Difference) {
           /* locally_inferred_features */ {},
           /* user_features */ {},
           /* via_type_of_ports */ {},
-          /* local_positions */ {}),
+          /* local_positions */ {},
+          /* canonical_names */ {}),
       Frame(
           /* kind */ test_kind,
           /* callee_port */ AccessPath(Root(Root::Kind::Argument, 0)),
@@ -1006,7 +1069,8 @@ TEST_F(FrameSetTest, Difference) {
           /* locally_inferred_features */ {},
           /* user_features */ {},
           /* via_type_of_ports */ {},
-          /* local_positions */ {}),
+          /* local_positions */ {},
+          /* canonical_names */ {}),
   });
   EXPECT_EQ(
       frames,
@@ -1022,7 +1086,8 @@ TEST_F(FrameSetTest, Difference) {
               /* locally_inferred_features */ {},
               /* user_features */ {},
               /* via_type_of_ports */ {},
-              /* local_positions */ {}),
+              /* local_positions */ {},
+              /* canonical_names */ {}),
       }));
 
   frames = FrameSet{
@@ -1037,7 +1102,8 @@ TEST_F(FrameSetTest, Difference) {
           /* locally_inferred_features */ {},
           /* user_features */ {},
           /* via_type_of_ports */ {},
-          /* local_positions */ {}),
+          /* local_positions */ {},
+          /* canonical_names */ {}),
       Frame(
           /* kind */ test_kind,
           /* callee_port */ AccessPath(Root(Root::Kind::Argument, 0)),
@@ -1049,7 +1115,8 @@ TEST_F(FrameSetTest, Difference) {
           /* locally_inferred_features */ {},
           /* user_features */ {},
           /* via_type_of_ports */ {},
-          /* local_positions */ {}),
+          /* local_positions */ {},
+          /* canonical_names */ {}),
   };
   frames.difference_with(FrameSet{
       Frame(
@@ -1063,7 +1130,8 @@ TEST_F(FrameSetTest, Difference) {
           /* locally_inferred_features */ {},
           /* user_features */ {},
           /* via_type_of_ports */ {},
-          /* local_positions */ {}),
+          /* local_positions */ {},
+          /* canonical_names */ {}),
       Frame(
           /* kind */ test_kind,
           /* callee_port */ AccessPath(Root(Root::Kind::Argument, 0)),
@@ -1075,7 +1143,8 @@ TEST_F(FrameSetTest, Difference) {
           /* locally_inferred_features */ {},
           /* user_features */ {},
           /* via_type_of_ports */ {},
-          /* local_positions */ {}),
+          /* local_positions */ {},
+          /* canonical_names */ {}),
       Frame(
           /* kind */ test_kind,
           /* callee_port */ AccessPath(Root(Root::Kind::Argument, 0)),
@@ -1087,7 +1156,8 @@ TEST_F(FrameSetTest, Difference) {
           /* locally_inferred_features */ {},
           /* user_features */ {},
           /* via_type_of_ports */ {},
-          /* local_positions */ {}),
+          /* local_positions */ {},
+          /* canonical_names */ {}),
   });
   EXPECT_EQ(
       frames,
@@ -1103,7 +1173,8 @@ TEST_F(FrameSetTest, Difference) {
               /* locally_inferred_features */ {},
               /* user_features */ {},
               /* via_type_of_ports */ {},
-              /* local_positions */ {}),
+              /* local_positions */ {},
+              /* canonical_names */ {}),
       }));
 
   frames = FrameSet{
@@ -1119,7 +1190,8 @@ TEST_F(FrameSetTest, Difference) {
           /* locally_inferred_features */ {},
           /* user_features */ {},
           /* via_type_of_ports */ {},
-          /* local_positions */ {}),
+          /* local_positions */ {},
+          /* canonical_names */ {}),
       Frame(
           /* kind */ test_kind,
           /* callee_port */
@@ -1132,7 +1204,8 @@ TEST_F(FrameSetTest, Difference) {
           /* locally_inferred_features */ {},
           /* user_features */ {},
           /* via_type_of_ports */ {},
-          /* local_positions */ {}),
+          /* local_positions */ {},
+          /* canonical_names */ {}),
   };
   frames.difference_with(FrameSet{
       Frame(
@@ -1147,7 +1220,8 @@ TEST_F(FrameSetTest, Difference) {
           /* locally_inferred_features */ {},
           /* user_features */ {},
           /* via_type_of_ports */ {},
-          /* local_positions */ {}),
+          /* local_positions */ {},
+          /* canonical_names */ {}),
       Frame(
           /* kind */ test_kind,
           /* callee_port */
@@ -1160,7 +1234,8 @@ TEST_F(FrameSetTest, Difference) {
           /* locally_inferred_features */ {},
           /* user_features */ {},
           /* via_type_of_ports */ {},
-          /* local_positions */ {}),
+          /* local_positions */ {},
+          /* canonical_names */ {}),
       Frame(
           /* kind */ test_kind,
           /* callee_port */ AccessPath(Root(Root::Kind::Argument, 0)),
@@ -1172,7 +1247,8 @@ TEST_F(FrameSetTest, Difference) {
           /* locally_inferred_features */ {},
           /* user_features */ {},
           /* via_type_of_ports */ {},
-          /* local_positions */ {}),
+          /* local_positions */ {},
+          /* canonical_names */ {}),
   });
   EXPECT_TRUE(frames.is_bottom());
 
@@ -1188,7 +1264,8 @@ TEST_F(FrameSetTest, Difference) {
           /* locally_inferred_features */ {},
           /* user_features */ {},
           /* via_type_of_ports */ {},
-          /* local_positions */ {}),
+          /* local_positions */ {},
+          /* canonical_names */ {}),
       Frame(
           /* kind */ test_kind,
           /* callee_port */ AccessPath(Root(Root::Kind::Argument, 0)),
@@ -1200,7 +1277,8 @@ TEST_F(FrameSetTest, Difference) {
           /* locally_inferred_features */ {},
           /* user_features */ {},
           /* via_type_of_ports */ {},
-          /* local_positions */ {}),
+          /* local_positions */ {},
+          /* canonical_names */ {}),
       Frame(
           /* kind */ test_kind,
           /* callee_port */ AccessPath(Root(Root::Kind::Argument, 0)),
@@ -1212,7 +1290,8 @@ TEST_F(FrameSetTest, Difference) {
           /* locally_inferred_features */ {},
           /* user_features */ {},
           /* via_type_of_ports */ {},
-          /* local_positions */ {}),
+          /* local_positions */ {},
+          /* canonical_names */ {}),
   };
   frames.difference_with(FrameSet{
       Frame(
@@ -1226,7 +1305,8 @@ TEST_F(FrameSetTest, Difference) {
           /* locally_inferred_features */ {},
           /* user_features */ {},
           /* via_type_of_ports */ {},
-          /* local_positions */ {}),
+          /* local_positions */ {},
+          /* canonical_names */ {}),
       Frame(
           /* kind */ test_kind,
           /* callee_port */ AccessPath(Root(Root::Kind::Argument, 0)),
@@ -1238,7 +1318,8 @@ TEST_F(FrameSetTest, Difference) {
           /* locally_inferred_features */ {},
           /* user_features */ {},
           /* via_type_of_ports */ {},
-          /* local_positions */ {}),
+          /* local_positions */ {},
+          /* canonical_names */ {}),
   });
   EXPECT_EQ(
       frames,
@@ -1254,7 +1335,8 @@ TEST_F(FrameSetTest, Difference) {
               /* locally_inferred_features */ {},
               /* user_features */ {},
               /* via_type_of_ports */ {},
-              /* local_positions */ {}),
+              /* local_positions */ {},
+              /* canonical_names */ {}),
           Frame(
               /* kind */ test_kind,
               /* callee_port */ AccessPath(Root(Root::Kind::Argument, 0)),
@@ -1266,7 +1348,8 @@ TEST_F(FrameSetTest, Difference) {
               /* locally_inferred_features */ {},
               /* user_features */ {},
               /* via_type_of_ports */ {},
-              /* local_positions */ {}),
+              /* local_positions */ {},
+              /* canonical_names */ {}),
       }));
 }
 
@@ -1297,7 +1380,8 @@ TEST_F(FrameSetTest, Map) {
           /* locally_inferred_features */ {},
           /* user_features */ {},
           /* via_type_of_ports */ {},
-          /* local_positions */ {}),
+          /* local_positions */ {},
+          /* canonical_names */ {}),
       Frame(
           /* kind */ test_kind,
           /* callee_port */ AccessPath(Root(Root::Kind::Argument, 0)),
@@ -1309,7 +1393,8 @@ TEST_F(FrameSetTest, Map) {
           /* locally_inferred_features */ {},
           /* user_features */ {},
           /* via_type_of_ports */ {},
-          /* local_positions */ {}),
+          /* local_positions */ {},
+          /* canonical_names */ {}),
       Frame(
           /* kind */ test_kind,
           /* callee_port */ AccessPath(Root(Root::Kind::Argument, 0)),
@@ -1321,7 +1406,8 @@ TEST_F(FrameSetTest, Map) {
           /* locally_inferred_features */ {},
           /* user_features */ {},
           /* via_type_of_ports */ {},
-          /* local_positions */ {}),
+          /* local_positions */ {},
+          /* canonical_names */ {}),
   };
   frames.map([feature_one](Frame& frame) {
     frame.add_inferred_features(FeatureMayAlwaysSet{feature_one});
@@ -1340,7 +1426,8 @@ TEST_F(FrameSetTest, Map) {
               /* locally_inferred_features */ FeatureMayAlwaysSet{feature_one},
               /* user_features */ {},
               /* via_type_of_ports */ {},
-              /* local_positions */ {}),
+              /* local_positions */ {},
+              /* canonical_names */ {}),
           Frame(
               /* kind */ test_kind,
               /* callee_port */ AccessPath(Root(Root::Kind::Argument, 0)),
@@ -1352,7 +1439,8 @@ TEST_F(FrameSetTest, Map) {
               /* locally_inferred_features */ FeatureMayAlwaysSet{feature_one},
               /* user_features */ {},
               /* via_type_of_ports */ {},
-              /* local_positions */ {}),
+              /* local_positions */ {},
+              /* canonical_names */ {}),
           Frame(
               /* kind */ test_kind,
               /* callee_port */ AccessPath(Root(Root::Kind::Argument, 0)),
@@ -1364,7 +1452,8 @@ TEST_F(FrameSetTest, Map) {
               /* locally_inferred_features */ FeatureMayAlwaysSet{feature_one},
               /* user_features */ {},
               /* via_type_of_ports */ {},
-              /* local_positions */ {}),
+              /* local_positions */ {},
+              /* canonical_names */ {}),
       }));
 }
 
@@ -1394,7 +1483,8 @@ TEST_F(FrameSetTest, Filter) {
           /* locally_inferred_features */ {},
           /* user_features */ {},
           /* via_type_of_ports */ {},
-          /* local_positions */ {}),
+          /* local_positions */ {},
+          /* canonical_names */ {}),
       Frame(
           /* kind */ test_kind,
           /* callee_port */ AccessPath(Root(Root::Kind::Argument, 0)),
@@ -1406,7 +1496,8 @@ TEST_F(FrameSetTest, Filter) {
           /* locally_inferred_features */ {},
           /* user_features */ {},
           /* via_type_of_ports */ {},
-          /* local_positions */ {}),
+          /* local_positions */ {},
+          /* canonical_names */ {}),
       Frame(
           /* kind */ test_kind,
           /* callee_port */ AccessPath(Root(Root::Kind::Argument, 0)),
@@ -1418,7 +1509,8 @@ TEST_F(FrameSetTest, Filter) {
           /* locally_inferred_features */ {},
           /* user_features */ {},
           /* via_type_of_ports */ {},
-          /* local_positions */ {}),
+          /* local_positions */ {},
+          /* canonical_names */ {}),
   };
   frames.filter(
       [](const Frame& frame) { return frame.callee_port().root().is_leaf(); });
@@ -1436,7 +1528,8 @@ TEST_F(FrameSetTest, Filter) {
               /* locally_inferred_features */ {},
               /* user_features */ {},
               /* via_type_of_ports */ {},
-              /* local_positions */ {}),
+              /* local_positions */ {},
+              /* canonical_names */ {}),
       }));
 }
 
@@ -1464,7 +1557,8 @@ TEST_F(FrameSetTest, WithKind) {
           /* locally_inferred_features */ {},
           /* user_features */ {},
           /* via_type_of_ports */ {},
-          /* local_positions */ {}),
+          /* local_positions */ {},
+          /* canonical_names */ {}),
       Frame(
           /* kind */ test_kind,
           /* callee_port */ AccessPath(Root(Root::Kind::Argument, 0)),
@@ -1476,7 +1570,8 @@ TEST_F(FrameSetTest, WithKind) {
           /* locally_inferred_features */ {},
           /* user_features */ {},
           /* via_type_of_ports */ {},
-          /* local_positions */ {})};
+          /* local_positions */ {},
+          /* canonical_names */ {})};
 
   auto new_kind = context.kinds->get("TestSink2");
   auto frame_with_new_kind = frames.with_kind(new_kind);
@@ -1496,7 +1591,8 @@ TEST_F(FrameSetTest, WithKind) {
               /* locally_inferred_features */ {},
               /* user_features */ {},
               /* via_type_of_ports */ {},
-              /* local_positions */ {}),
+              /* local_positions */ {},
+              /* canonical_names */ {}),
           Frame(
               /* kind */ new_kind,
               /* callee_port */ AccessPath(Root(Root::Kind::Argument, 0)),
@@ -1508,7 +1604,8 @@ TEST_F(FrameSetTest, WithKind) {
               /* locally_inferred_features */ {},
               /* user_features */ {},
               /* via_type_of_ports */ {},
-              /* local_positions */ {})}));
+              /* local_positions */ {},
+              /* canonical_names */ {})}));
 }
 
 } // namespace marianatrench

@@ -51,7 +51,8 @@ TEST_F(EnvironmentTest, LessOrEqualSuperSet) {
                /* locally_inferred_features */ {},
                /* user_features */ {},
                /* via_type_of_ports */ {},
-               /* local_positions */ {}),
+               /* local_positions */ {},
+               /* canonical_names */ {}),
        }}}};
 
   EXPECT_TRUE(domain1.leq(domain2));
@@ -83,7 +84,8 @@ TEST_F(EnvironmentTest, LessOrEqualDifferentSources) {
                /* locally_inferred_features */ {},
                /* user_features */ {},
                /* via_type_of_ports */ {},
-               /* local_positions */ {}),
+               /* local_positions */ {},
+               /* canonical_names */ {}),
        }}}};
 
   EXPECT_FALSE(domain1.leq(domain2));
@@ -115,7 +117,8 @@ TEST_F(EnvironmentTest, JoinSuperSet) {
                /* locally_inferred_features */ {},
                /* user_features */ {},
                /* via_type_of_ports */ {},
-               /* local_positions */ {}),
+               /* local_positions */ {},
+               /* canonical_names */ {}),
        }}}};
   domain1.join_with(domain2);
   EXPECT_TRUE(domain1 == domain2);
@@ -146,7 +149,8 @@ TEST_F(EnvironmentTest, JoinTwoDifferent) {
                /* locally_inferred_features */ {},
                /* user_features */ {},
                /* via_type_of_ports */ {},
-               /* local_positions */ {}),
+               /* local_positions */ {},
+               /* canonical_names */ {}),
        }}}};
 
   auto domain3 = TaintAbstractPartition{
@@ -164,7 +168,8 @@ TEST_F(EnvironmentTest, JoinTwoDifferent) {
                /* locally_inferred_features */ {},
                /* user_features */ {},
                /* via_type_of_ports */ {},
-               /* local_positions */ {}),
+               /* local_positions */ {},
+               /* canonical_names */ {}),
        }}}};
   domain1.join_with(domain2);
   EXPECT_TRUE(domain1 == domain3);
@@ -207,7 +212,8 @@ TEST_F(EnvironmentTest, JoinTwoEnvironmentWithDifferentSources) {
               /* locally_inferred_features */ {},
               /* user_features */ {},
               /* via_type_of_ports */ {},
-              /* local_positions */ {}),
+              /* local_positions */ {},
+              /* canonical_names */ {}),
       }},
       UpdateKind::Weak);
 
@@ -231,7 +237,8 @@ TEST_F(EnvironmentTest, JoinTwoEnvironmentWithDifferentSources) {
               /* locally_inferred_features */ {},
               /* user_features */ {},
               /* via_type_of_ports */ {},
-              /* local_positions */ {}),
+              /* local_positions */ {},
+              /* canonical_names */ {}),
       }}));
 }
 

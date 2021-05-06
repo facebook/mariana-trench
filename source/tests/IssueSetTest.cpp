@@ -89,7 +89,8 @@ TEST_F(IssueSetTest, Insertion) {
           /* locally_inferred_features */ {},
           /* user_features */ {},
           /* via_type_of_ports */ {},
-          /* local_positions */ {})},
+          /* local_positions */ {},
+          /* canonical_names */ {})},
       /* sink */ Taint{Frame::leaf(other_sink_kind)},
       &rule_2,
       position_1));
@@ -116,7 +117,8 @@ TEST_F(IssueSetTest, Insertion) {
                       /* locally_inferred_features */ {},
                       /* user_features */ {},
                       /* via_type_of_ports */ {},
-                      /* local_positions */ {}),
+                      /* local_positions */ {},
+                      /* canonical_names */ {}),
               },
               /* sink */ Taint{Frame::leaf(other_sink_kind)},
               &rule_2,
@@ -137,7 +139,8 @@ TEST_F(IssueSetTest, Insertion) {
           /* locally_inferred_features */ {},
           /* user_features */ {},
           /* via_type_of_ports */ {},
-          /* local_positions */ {})},
+          /* local_positions */ {},
+          /* canonical_names */ {})},
       &rule_2,
       position_1));
   EXPECT_EQ(
@@ -163,7 +166,8 @@ TEST_F(IssueSetTest, Insertion) {
                       /* locally_inferred_features */ {},
                       /* user_features */ {},
                       /* via_type_of_ports */ {},
-                      /* local_positions */ {}),
+                      /* local_positions */ {},
+                      /* canonical_names */ {}),
               },
               /* sink */
               Taint{
@@ -179,7 +183,8 @@ TEST_F(IssueSetTest, Insertion) {
                       /* locally_inferred_features */ {},
                       /* user_features */ {},
                       /* via_type_of_ports */ {},
-                      /* local_positions */ {}),
+                      /* local_positions */ {},
+                      /* canonical_names */ {}),
               },
               &rule_2,
               position_1),
@@ -197,7 +202,8 @@ TEST_F(IssueSetTest, Insertion) {
           /* locally_inferred_features */ {},
           /* user_features */ {},
           /* via_type_of_ports */ {},
-          /* local_positions */ {})},
+          /* local_positions */ {},
+          /* canonical_names */ {})},
       /* sink */ Taint{Frame::leaf(other_sink_kind)},
       &rule_2,
       position_1));
@@ -224,7 +230,8 @@ TEST_F(IssueSetTest, Insertion) {
                       /* locally_inferred_features */ {},
                       /* user_features */ {},
                       /* via_type_of_ports */ {},
-                      /* local_positions */ {}),
+                      /* local_positions */ {},
+                      /* canonical_names */ {}),
                   Frame(
                       /* kind */ other_source_kind,
                       /* callee_port */ AccessPath(Root(Root::Kind::Return)),
@@ -236,7 +243,8 @@ TEST_F(IssueSetTest, Insertion) {
                       /* locally_inferred_features */ {},
                       /* user_features */ {},
                       /* via_type_of_ports */ {},
-                      /* local_positions */ {}),
+                      /* local_positions */ {},
+                      /* canonical_names */ {}),
               },
               /* sink */
               Taint{
@@ -252,7 +260,8 @@ TEST_F(IssueSetTest, Insertion) {
                       /* locally_inferred_features */ {},
                       /* user_features */ {},
                       /* via_type_of_ports */ {},
-                      /* local_positions */ {}),
+                      /* local_positions */ {},
+                      /* canonical_names */ {}),
               },
               &rule_2,
               position_1),
@@ -291,7 +300,8 @@ TEST_F(IssueSetTest, Insertion) {
                       /* locally_inferred_features */ {},
                       /* user_features */ {},
                       /* via_type_of_ports */ {},
-                      /* local_positions */ {}),
+                      /* local_positions */ {},
+                      /* canonical_names */ {}),
                   Frame(
                       /* kind */ other_source_kind,
                       /* callee_port */ AccessPath(Root(Root::Kind::Return)),
@@ -303,7 +313,8 @@ TEST_F(IssueSetTest, Insertion) {
                       /* locally_inferred_features */ {},
                       /* user_features */ {},
                       /* via_type_of_ports */ {},
-                      /* local_positions */ {}),
+                      /* local_positions */ {},
+                      /* canonical_names */ {}),
               },
               /* sink */
               Taint{
@@ -319,7 +330,8 @@ TEST_F(IssueSetTest, Insertion) {
                       /* locally_inferred_features */ {},
                       /* user_features */ {},
                       /* via_type_of_ports */ {},
-                      /* local_positions */ {}),
+                      /* local_positions */ {},
+                      /* canonical_names */ {}),
               },
               &rule_2,
               position_1),
