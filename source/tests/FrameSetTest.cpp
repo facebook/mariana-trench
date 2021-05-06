@@ -1533,6 +1533,86 @@ TEST_F(FrameSetTest, Filter) {
       }));
 }
 
+TEST_F(FrameSetTest, Propagate) {
+  auto context = test::make_empty_context();
+
+  Scope scope;
+  auto* one =
+      context.methods->create(redex::create_void_method(scope, "LOne;", "one"));
+  auto* two =
+      context.methods->create(redex::create_void_method(scope, "LTwo;", "two"));
+
+  auto* test_kind = context.kinds->get("TestSink");
+  auto* call_position = context.positions->get("Test.java", 1);
+
+  auto frames = FrameSet{
+      Frame(
+          /* kind */ test_kind,
+          /* callee_port */ AccessPath(Root(Root::Kind::Leaf)),
+          /* callee */ two,
+          /* call_position */ nullptr,
+          /* distance */ 0,
+          /* origins */ MethodSet{two},
+          /* inferred_features */ {},
+          /* locally_inferred_features */ {},
+          /* user_features */ {},
+          /* via_type_of_ports */ {},
+          /* local_positions */ {},
+          /* canonical_names */ {}),
+      Frame(
+          /* kind */ test_kind,
+          /* callee_port */ AccessPath(Root(Root::Kind::Argument, 0)),
+          /* callee */ one,
+          /* call_position */ nullptr,
+          /* distance */ 1,
+          /* origins */ MethodSet{one},
+          /* inferred_features */ {},
+          /* locally_inferred_features */ {},
+          /* user_features */ {},
+          /* via_type_of_ports */ {},
+          /* local_positions */ {},
+          /* canonical_names */ {}),
+      Frame(
+          /* kind */ test_kind,
+          /* callee_port */ AccessPath(Root(Root::Kind::Leaf)),
+          /* callee */ nullptr,
+          /* call_position */ nullptr,
+          /* distance */ 0,
+          /* origins */ MethodSet{one},
+          /* inferred_features */ {},
+          /* locally_inferred_features */ {},
+          /* user_features */ {},
+          /* via_type_of_ports */ {},
+          /* local_positions */ {},
+          /* canonical_names */
+          CanonicalNameSetAbstractDomain{
+              CanonicalName("%programmatic_leaf_name%")})};
+
+  // TODO: The crtex frame should result in a separate Frame in the set.
+  EXPECT_EQ(
+      frames.propagate(
+          /* caller */ one,
+          /* callee */ two,
+          AccessPath(Root(Root::Kind::Argument, 0)),
+          call_position,
+          /* maximum_source_sink_distance */ 100,
+          context,
+          /* source_register_types */ {}),
+      FrameSet{Frame(
+          /* kind */ test_kind,
+          /* callee_port */ AccessPath(Root(Root::Kind::Argument, 0)),
+          /* callee */ two,
+          call_position,
+          /* distance */ 1,
+          /* origins */ MethodSet{one, two},
+          /* inferred_features */ {},
+          /* locally_inferred_features */ FeatureMayAlwaysSet::bottom(),
+          /* user_features */ {},
+          /* via_type_of_ports */ {},
+          /* local_positions */ {},
+          /* canonical_names */ {})});
+}
+
 TEST_F(FrameSetTest, WithKind) {
   auto context = test::make_empty_context();
 
@@ -1598,6 +1678,119 @@ TEST_F(FrameSetTest, WithKind) {
               /* callee_port */ AccessPath(Root(Root::Kind::Argument, 0)),
               /* callee */ two,
               /* call_position */ test_position,
+              /* distance */ 1,
+              /* origins */ MethodSet{two},
+              /* inferred_features */ {},
+              /* locally_inferred_features */ {},
+              /* user_features */ {},
+              /* via_type_of_ports */ {},
+              /* local_positions */ {},
+              /* canonical_names */ {})}));
+}
+
+TEST_F(FrameSetTest, PartitionMap) {
+  auto context = test::make_empty_context();
+
+  Scope scope;
+  auto* one =
+      context.methods->create(redex::create_void_method(scope, "LOne;", "one"));
+  auto* two =
+      context.methods->create(redex::create_void_method(scope, "LTwo;", "two"));
+  auto* test_kind = context.kinds->get("TestSink");
+
+  auto frames = FrameSet{
+      Frame(
+          /* kind */ test_kind,
+          /* callee_port */ AccessPath(Root(Root::Kind::Return)),
+          /* callee */ one,
+          /* call_position */ nullptr,
+          /* distance */ 0,
+          /* origins */ MethodSet{one},
+          /* inferred_features */ {},
+          /* locally_inferred_features */ {},
+          /* user_features */ {},
+          /* via_type_of_ports */ {},
+          /* local_positions */ {},
+          /* canonical_names */ {}),
+      Frame(
+          /* kind */ test_kind,
+          /* callee_port */ AccessPath(Root(Root::Kind::Argument, 0)),
+          /* callee */ two,
+          /* call_position */ nullptr,
+          /* distance */ 1,
+          /* origins */ MethodSet{two},
+          /* inferred_features */ {},
+          /* locally_inferred_features */ {},
+          /* user_features */ {},
+          /* via_type_of_ports */ {},
+          /* local_positions */ {},
+          /* canonical_names */ {}),
+      Frame(
+          /* kind */ test_kind,
+          /* callee_port */ AccessPath(Root(Root::Kind::Leaf)),
+          /* callee */ nullptr,
+          /* call_position */ nullptr,
+          /* distance */ 0,
+          /* origins */ MethodSet{one},
+          /* inferred_features */ {},
+          /* locally_inferred_features */ {},
+          /* user_features */ {},
+          /* via_type_of_ports */ {},
+          /* local_positions */ {},
+          /* canonical_names */
+          CanonicalNameSetAbstractDomain{
+              CanonicalName("%programmatic_leaf_name%")})};
+
+  auto partitions = frames.partition_map<bool>(
+      [](const Frame& frame) { return frame.is_crtex(); });
+
+  FrameSet crtex_partition;
+  for (auto frame : partitions[true]) {
+    crtex_partition.add(frame);
+  }
+  EXPECT_EQ(
+      crtex_partition,
+      FrameSet{Frame(
+          /* kind */ test_kind,
+          /* callee_port */ AccessPath(Root(Root::Kind::Leaf)),
+          /* callee */ nullptr,
+          /* call_position */ nullptr,
+          /* distance */ 0,
+          /* origins */ MethodSet{one},
+          /* inferred_features */ {},
+          /* locally_inferred_features */ {},
+          /* user_features */ {},
+          /* via_type_of_ports */ {},
+          /* local_positions */ {},
+          /* canonical_names */
+          CanonicalNameSetAbstractDomain{
+              CanonicalName("%programmatic_leaf_name%")})});
+
+  FrameSet non_crtex_partition;
+  for (auto frame : partitions[false]) {
+    non_crtex_partition.add(frame);
+  }
+  EXPECT_EQ(
+      non_crtex_partition,
+      (FrameSet{
+          Frame(
+              /* kind */ test_kind,
+              /* callee_port */ AccessPath(Root(Root::Kind::Return)),
+              /* callee */ one,
+              /* call_position */ nullptr,
+              /* distance */ 0,
+              /* origins */ MethodSet{one},
+              /* inferred_features */ {},
+              /* locally_inferred_features */ {},
+              /* user_features */ {},
+              /* via_type_of_ports */ {},
+              /* local_positions */ {},
+              /* canonical_names */ {}),
+          Frame(
+              /* kind */ test_kind,
+              /* callee_port */ AccessPath(Root(Root::Kind::Argument, 0)),
+              /* callee */ two,
+              /* call_position */ nullptr,
               /* distance */ 1,
               /* origins */ MethodSet{two},
               /* inferred_features */ {},

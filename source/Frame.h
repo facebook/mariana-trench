@@ -267,6 +267,10 @@ class Frame final : public sparta::AbstractDomain<Frame> {
     return callee_ == nullptr;
   }
 
+  bool is_crtex() const {
+    return canonical_names_.is_value() && !canonical_names_.elements().empty();
+  }
+
   void set_to_bottom() override {
     kind_ = nullptr;
   }

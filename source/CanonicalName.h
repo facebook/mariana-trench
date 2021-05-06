@@ -7,10 +7,10 @@
 
 #pragma once
 
-#include <boost/array.hpp>
-#include <boost/container_hash/extensions.hpp>
 #include <string>
 
+#include <boost/array.hpp>
+#include <boost/container_hash/extensions.hpp>
 #include <json/json.h>
 
 namespace marianatrench {
@@ -57,6 +57,6 @@ class CanonicalName final {
 template <>
 struct std::hash<marianatrench::CanonicalName> {
   std::size_t operator()(const marianatrench::CanonicalName& name) const {
-    return boost::hash<std::string>()(name.value());
+    return std::hash<std::string>()(name.value());
   }
 };

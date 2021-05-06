@@ -178,7 +178,7 @@ class FrameSet final : public sparta::AbstractDomain<FrameSet> {
    *
    * Return bottom if the taint should not be propagated.
    */
-  Frame propagate(
+  FrameSet propagate(
       const Method* caller,
       const Method* callee,
       const AccessPath& callee_port,
@@ -198,10 +198,33 @@ class FrameSet final : public sparta::AbstractDomain<FrameSet> {
    */
   FrameSet with_kind(const Kind* kind) const;
 
+  template <class T>
+  std::unordered_map<T, std::vector<std::reference_wrapper<const Frame>>>
+  partition_map(const std::function<T(const Frame&)>& map) const;
+
   static FrameSet from_json(const Json::Value& value, Context& context);
   Json::Value to_json() const;
 
   friend std::ostream& operator<<(std::ostream& out, const FrameSet& frames);
+
+ private:
+  Frame propagate_frames(
+      const Method* callee,
+      const AccessPath& callee_port,
+      const Position* call_position,
+      int maximum_source_sink_distance,
+      Context& context,
+      const std::vector<const DexType * MT_NULLABLE>& source_register_types,
+      std::vector<std::reference_wrapper<const Frame>> frames) const;
+
+  FrameSet propagate_crtex_frames(
+      const Method* callee,
+      const AccessPath& callee_port,
+      const Position* call_position,
+      int maximum_source_sink_distance,
+      Context& context,
+      const std::vector<const DexType * MT_NULLABLE>& source_register_types,
+      std::vector<std::reference_wrapper<const Frame>> frames) const;
 
  private:
   const Kind* MT_NULLABLE kind_;
