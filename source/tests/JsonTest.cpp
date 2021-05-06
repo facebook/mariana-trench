@@ -672,28 +672,6 @@ TEST_F(JsonTest, Frame) {
           /* local_positions */ {},
           /* canonical_names */ {}),
       context);
-  EXPECT_JSON_EQ(
-      Frame,
-      R"({
-        "kind": "TestSource",
-        "callee_port": "Anchor.x"
-      })",
-      Frame(
-          /* kind */ context.kinds->get("TestSource"),
-          /* callee_port */
-          AccessPath(
-              Root(Root::Kind::Anchor), Path{DexString::make_string("x")}),
-          /* callee */ nullptr,
-          /* call_position */ nullptr,
-          /* distance */ 0,
-          /* origins */ {},
-          /* inferred_features */ FeatureMayAlwaysSet::bottom(),
-          /* locally_inferred_features */ FeatureMayAlwaysSet::bottom(),
-          /* user_features */ {},
-          /* via_type_of_ports */ {},
-          /* local_positions */ {},
-          /* canonical_names */ {}),
-      context);
 
   // Parse the callee, position and distance.
   EXPECT_JSON_EQ(
@@ -1252,10 +1230,21 @@ TEST_F(JsonTest, Frame_Crtex) {
       Frame::from_json(test::parse_json(R"({})"), context),
       JsonValidationError);
 
-  // canonical_names cannot be empty.
   EXPECT_THROW(
       Frame::from_json(
           test::parse_json(R"({"kind": "TestSource", "canonical_names": []})"),
+          context),
+      JsonValidationError);
+  EXPECT_THROW(
+      Frame::from_json(
+          test::parse_json(
+              R"({"kind": "TestSource", "callee_port": "Anchor", "canonical_names": []})"),
+          context),
+      JsonValidationError);
+  EXPECT_THROW(
+      Frame::from_json(
+          test::parse_json(
+              R"({"kind": "TestSource", "callee_port": "Producer"})"),
           context),
       JsonValidationError);
   EXPECT_THROW(
@@ -1269,7 +1258,49 @@ TEST_F(JsonTest, Frame_Crtex) {
           test::parse_json(
               R"({
                 "kind": "TestSource",
-                "canonical_names": [ {"template": "%programmatic_leaf_name%", "instantiated": "MyMethod::MyClass"} ]
+                "canonical_names": [ { "template": "%programmatic_leaf_name%", "instantiated": "MyMethod::MyClass" } ]
+              })"),
+          context),
+      JsonValidationError);
+  EXPECT_THROW(
+      Frame::from_json(
+          test::parse_json(
+              R"#({
+                "kind": "TestSource",
+                "callee_port": "Argument(0)",
+                "canonical_names": [ { "template": "%programmatic_leaf_name%" } ]
+              })#"),
+          context),
+      JsonValidationError);
+  EXPECT_THROW(
+      Frame::from_json(
+          test::parse_json(
+              R"({
+                "kind": "TestSource",
+                "callee_port": "Producer",
+                "canonical_names": [ { "template": "%programmatic_leaf_name%" } ]
+              })"),
+          context),
+      JsonValidationError);
+  EXPECT_THROW(
+      Frame::from_json(
+          test::parse_json(
+              R"({
+                "kind": "TestSource",
+                "callee_port": "Anchor",
+                "canonical_names": [ { "instantiated": "MyMethod::MyClass" } ]
+              })"),
+          context),
+      JsonValidationError);
+  EXPECT_THROW(
+      Frame::from_json(
+          test::parse_json(
+              R"({
+                "kind": "TestSource",
+                "canonical_names": [
+                  { "instantiated": "MyMethod::MyClass" },
+                  { "template": "%programmatic_leaf_name%" }
+                ]
               })"),
           context),
       JsonValidationError);
@@ -1283,9 +1314,7 @@ TEST_F(JsonTest, Frame_Crtex) {
           context),
       Frame::crtex_leaf(
           context.kinds->get("TestSource"),
-          /* origins */ {},
-          /* user_features */ {},
-          /* via_type_of_ports */ {},
+          /* callee_port */ AccessPath(Root(Root::Kind::Anchor)),
           /* canonical_names */
           CanonicalNameSetAbstractDomain{CanonicalName(
               CanonicalName::TemplateValue{"%programmatic_leaf_name%"})}));
@@ -1299,9 +1328,7 @@ TEST_F(JsonTest, Frame_Crtex) {
           context),
       Frame::crtex_leaf(
           context.kinds->get("TestSource"),
-          /* origins */ {},
-          /* user_features */ {},
-          /* via_type_of_ports */ {},
+          /* callee_port */ AccessPath(Root(Root::Kind::Producer)),
           /* canonical_names */
           CanonicalNameSetAbstractDomain{
               CanonicalName(CanonicalName::InstantiatedValue{

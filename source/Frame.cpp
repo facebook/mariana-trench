@@ -15,55 +15,6 @@
 
 namespace marianatrench {
 
-namespace {
-
-const Kind* kind_from_json(const Json::Value& value, Context& context) {
-  const auto leaf_kind = JsonValidation::string(value, /* field */ "kind");
-  if (value.isMember("partial_label")) {
-    return context.kinds->get_partial(
-        leaf_kind, JsonValidation::string(value, /* field */ "partial_label"));
-  } else {
-    return context.kinds->get(leaf_kind);
-  }
-}
-
-FeatureSet user_features_from_json(const Json::Value& value, Context& context) {
-  FeatureSet user_features;
-  if (value.isMember("features")) {
-    JsonValidation::null_or_array(value, /* field */ "features");
-    user_features = FeatureSet::from_json(value["features"], context);
-  }
-  return user_features;
-}
-
-RootSetAbstractDomain via_type_of_from_json(const Json::Value& value) {
-  RootSetAbstractDomain via_type_of_ports;
-  if (value.isMember("via_type_of")) {
-    for (const auto& root :
-         JsonValidation::null_or_array(value, /* field */ "via_type_of")) {
-      via_type_of_ports.add(AccessPath::from_json(root).root());
-    }
-  }
-  return via_type_of_ports;
-}
-
-MethodSet origins_from_json(const Json::Value& value, Context& context) {
-  JsonValidation::null_or_array(value, /* field */ "origins");
-  return MethodSet::from_json(value["origins"], context);
-}
-
-CanonicalNameSetAbstractDomain canonical_names_from_json(
-    const Json::Value& value) {
-  CanonicalNameSetAbstractDomain canonical_names;
-  for (const auto& canonical_name :
-       JsonValidation::nonempty_array(value, /* field */ "canonical_names")) {
-    canonical_names.add(CanonicalName::from_json(canonical_name));
-  }
-  return canonical_names;
-}
-
-} // namespace
-
 void Frame::set_origins(const MethodSet& origins) {
   origins_ = origins;
 }
@@ -206,27 +157,66 @@ Frame Frame::with_kind(const Kind* kind) const {
   return new_frame;
 }
 
-Frame crtex_frame_from_json(const Json::Value& value, Context& context) {
-  const auto* kind = kind_from_json(value, context);
-  auto origins = origins_from_json(value, context);
-  auto user_features = user_features_from_json(value, context);
-  auto via_type_of = via_type_of_from_json(value);
-  auto canonical_names = canonical_names_from_json(value);
-  return Frame::crtex_leaf(
-      kind, origins, user_features, via_type_of, canonical_names);
+AccessPath validate_and_infer_crtex_callee_port(
+    const Json::Value& value,
+    const AccessPath& callee_port,
+    const CanonicalNameSetAbstractDomain& canonical_names) {
+  mt_assert(canonical_names.is_value() && !canonical_names.elements().empty());
+
+  // Anchor ports only go with templated canonical names. Producer ports only
+  // go with instantiated canonical names. No other ports are allowed.
+  bool is_templated = false;
+  bool is_instantiated = false;
+  for (const auto& canonical_name : canonical_names.elements()) {
+    if (canonical_name.instantiated_value()) {
+      is_instantiated = true;
+    } else {
+      is_templated = true;
+    }
+  }
+
+  if (is_instantiated == is_templated) {
+    throw JsonValidationError(
+        value,
+        /* field */ "canonical_names",
+        "all instantiated, or all templated values, not mix of both");
+  }
+
+  // If callee_port is user-specified and not Leaf, validate it.
+  if (callee_port.root().is_anchor() && is_instantiated) {
+    throw JsonValidationError(
+        value,
+        /* field */ std::nullopt,
+        "`Anchor` callee ports to go with templated canonical names.");
+  } else if (callee_port.root().is_producer() && is_templated) {
+    throw JsonValidationError(
+        value,
+        /* field */ std::nullopt,
+        "`Producer` callee ports to go with instantiated canonical names.");
+  } else if (!callee_port.root().is_leaf_port()) {
+    throw JsonValidationError(
+        value,
+        /* field */ std::nullopt,
+        "`Anchor` or `Producer` callee port for crtex frame with canonical_names defined.");
+  }
+
+  // If the callee_port is either specified of defaulted to Leaf, it should be
+  // updated to either Anchor or Producer.
+  return is_templated ? AccessPath(Root(Root::Kind::Anchor))
+                      : AccessPath(Root(Root::Kind::Producer));
 }
 
 Frame Frame::from_json(const Json::Value& value, Context& context) {
   JsonValidation::validate_object(value);
 
-  if (value.isMember("canonical_names")) {
-    // CRTEX frames contain only a subset of the fields for a frame. These
-    // are fields that strictly apply to leaves. Other fields such as "callee"
-    // and "distance" represent intermediate frames.
-    return crtex_frame_from_json(value, context);
+  const Kind* kind = nullptr;
+  const auto leaf_kind = JsonValidation::string(value, /* field */ "kind");
+  if (value.isMember("partial_label")) {
+    kind = context.kinds->get_partial(
+        leaf_kind, JsonValidation::string(value, /* field */ "partial_label"));
+  } else {
+    kind = context.kinds->get(leaf_kind);
   }
-
-  const auto* kind = kind_from_json(value, context);
 
   auto callee_port = AccessPath(Root(Root::Kind::Leaf));
   if (value.isMember("callee_port")) {
@@ -251,7 +241,8 @@ Frame Frame::from_json(const Json::Value& value, Context& context) {
     distance = JsonValidation::integer(value, /* field */ "distance");
   }
 
-  auto origins = origins_from_json(value, context);
+  JsonValidation::null_or_array(value, /* field */ "origins");
+  auto origins = MethodSet::from_json(value["origins"], context);
 
   // Inferred may_features and always_features. Technically, user-specified
   // features should go under "user_features", but this gives a way to override
@@ -260,15 +251,44 @@ Frame Frame::from_json(const Json::Value& value, Context& context) {
   auto inferred_features = FeatureMayAlwaysSet::from_json(value, context);
 
   // User specified always-features.
-  auto user_features = user_features_from_json(value, context);
+  FeatureSet user_features;
+  if (value.isMember("features")) {
+    JsonValidation::null_or_array(value, /* field */ "features");
+    user_features = FeatureSet::from_json(value["features"], context);
+  }
 
-  auto via_type_of_ports = via_type_of_from_json(value);
+  RootSetAbstractDomain via_type_of_ports;
+  if (value.isMember("via_type_of")) {
+    for (const auto& root :
+         JsonValidation::null_or_array(value, /* field */ "via_type_of")) {
+      via_type_of_ports.add(AccessPath::from_json(root).root());
+    }
+  }
 
   LocalPositionSet local_positions;
   if (value.isMember("local_positions")) {
     JsonValidation::null_or_array(value, /* field */ "local_positions");
     local_positions =
         LocalPositionSet::from_json(value["local_positions"], context);
+  }
+
+  CanonicalNameSetAbstractDomain canonical_names;
+  if (value.isMember("canonical_names")) {
+    for (const auto& canonical_name :
+         JsonValidation::nonempty_array(value, /* field */ "canonical_names")) {
+      canonical_names.add(CanonicalName::from_json(canonical_name));
+    }
+  }
+
+  if (canonical_names.is_value() && !canonical_names.elements().empty()) {
+    callee_port = validate_and_infer_crtex_callee_port(
+        value, callee_port, canonical_names);
+  } else if (
+      callee_port.root().is_anchor() || callee_port.root().is_producer()) {
+    throw JsonValidationError(
+        value,
+        /* field */ std::nullopt,
+        "canonical_names to be specified with `Anchor` or `Producer` callee_port.");
   }
 
   // Sanity checks.
@@ -320,7 +340,7 @@ Frame Frame::from_json(const Json::Value& value, Context& context) {
       std::move(user_features),
       std::move(via_type_of_ports),
       std::move(local_positions),
-      /* canonical_names */ {});
+      std::move(canonical_names));
 }
 
 Json::Value Frame::to_json() const {

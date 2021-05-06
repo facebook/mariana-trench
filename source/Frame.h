@@ -119,11 +119,6 @@ class Frame final : public sparta::AbstractDomain<Frame> {
     mt_assert(kind_ != nullptr);
     mt_assert(distance_ >= 0);
     mt_assert(!local_positions_.is_bottom());
-    // If canonical names are provided, callee_ must be `nullptr` (a leaf).
-    mt_assert(
-        (canonical_names_.is_value() && !canonical_names_.elements().empty() &&
-         callee_ == nullptr) ||
-        (!canonical_names_.is_value() || canonical_names_.elements().empty()));
   }
 
   static Frame leaf(
@@ -158,21 +153,21 @@ class Frame final : public sparta::AbstractDomain<Frame> {
 
   static Frame crtex_leaf(
       const Kind* kind,
-      MethodSet origins,
-      FeatureSet user_features,
-      RootSetAbstractDomain via_type_of_ports,
+      AccessPath callee_port,
       CanonicalNameSetAbstractDomain canonical_names) {
+    mt_assert(
+        callee_port.root().is_anchor() || callee_port.root().is_producer());
     return Frame(
         kind,
-        /* callee_port */ AccessPath(Root(Root::Kind::Leaf)),
+        /* callee_port */ callee_port,
         /* callee */ nullptr,
         /* call_position */ nullptr,
         /* distance */ 0,
-        origins,
+        /* origins */ {},
         /* inferred_features */ FeatureMayAlwaysSet::bottom(),
         /* locally_inferred_features */ FeatureMayAlwaysSet::bottom(),
-        user_features,
-        via_type_of_ports,
+        /* user_features */ {},
+        /* via_type_of_ports */ {},
         /* local_positions */ {},
         canonical_names);
   }
