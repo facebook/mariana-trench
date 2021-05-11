@@ -18,6 +18,7 @@
 #include <mariana-trench/MultiSourceMultiSinkRule.h>
 #include <mariana-trench/PartialKind.h>
 #include <mariana-trench/Redex.h>
+#include <mariana-trench/Sanitizer.h>
 #include <mariana-trench/SourceSinkRule.h>
 #include <mariana-trench/TriggeredPartialKind.h>
 #include <mariana-trench/tests/Test.h>
@@ -313,6 +314,96 @@ TEST_F(JsonTest, Position) {
           /* start */ 2,
           /* end */ 7),
       context);
+}
+
+TEST_F(JsonTest, Sanitizer) {
+  Scope scope;
+  DexStore store("stores");
+  store.add_classes(scope);
+  auto context = test::make_context(store);
+  EXPECT_THROW(
+      Sanitizer::from_json(
+          test::parse_json(R"({"sanitize": "Sources"})"), context),
+      JsonValidationError);
+  EXPECT_THROW(
+      Sanitizer::from_json(
+          test::parse_json(R"({"Sanitize": "sinks"})"), context),
+      JsonValidationError);
+  // kinds cannot be an empty array
+  EXPECT_THROW(
+      Sanitizer::from_json(
+          test::parse_json(R"({"sanitize": "sinks", "kinds": []})"), context),
+      JsonValidationError);
+  EXPECT_JSON_EQ(
+      Sanitizer,
+      R"({"sanitize": "sources"})",
+      Sanitizer(
+          SanitizerKind::Sources,
+          /* kinds */ KindSetAbstractDomain::top()),
+      context);
+  const auto* kind1 = context.kinds->get("Kind1");
+  const auto* kind2 = context.kinds->get("Kind2");
+  const auto* kind3 = context.kinds->get("Kind3");
+  const auto* partial_kind = context.kinds->get_partial("Kind3", "a");
+  const auto* partial_kind2 = context.kinds->get_partial("Kind3", "b");
+  // Test from_json
+  EXPECT_EQ(
+      Sanitizer::from_json(
+          test::parse_json(
+              R"({"sanitize": "sources", "kinds": [{"kind": "Kind1"}, {"kind": "Kind2"}]})"),
+          context),
+      Sanitizer(
+          SanitizerKind::Sources,
+          /* kinds */ KindSetAbstractDomain({kind1, kind2})));
+  EXPECT_EQ(
+      Sanitizer::from_json(
+          test::parse_json(
+              R"({"sanitize": "propagations", "kinds": [{"kind": "Kind1"}, {"kind": "Kind2"}, {"kind": "Kind3", "partial_label": "a"}]})"),
+          context),
+      Sanitizer(
+          SanitizerKind::Propagations,
+          /* kinds */ KindSetAbstractDomain({kind1, kind2, partial_kind})));
+  EXPECT_EQ(
+      Sanitizer::from_json(
+          test::parse_json(
+              R"({"sanitize": "propagations", "kinds": [{"kind": "Kind1"}, {"kind": "Kind2"}]})"),
+          context),
+      Sanitizer(
+          SanitizerKind::Propagations,
+          /* kinds */ KindSetAbstractDomain({kind1, kind2})));
+  EXPECT_EQ(
+      Sanitizer::from_json(
+          test::parse_json(
+              R"({"sanitize": "sinks", "kinds": [{"kind": "Kind1"}, {"kind": "Kind3", "partial_label": "a"}, {"kind": "Kind3", "partial_label": "b"}]})"),
+          context),
+      Sanitizer(
+          SanitizerKind::Sinks,
+          /* kinds */
+          KindSetAbstractDomain({kind1, partial_kind, partial_kind2})));
+
+  // Test to_json
+  EXPECT_EQ(
+      test::parse_json(
+          R"({"sanitize": "sources", "kinds": [{"kind": "Kind1"}, {"kind": "Kind2"}]})"),
+      test::sorted_json(Sanitizer(
+                            SanitizerKind::Sources,
+                            /* kinds */ KindSetAbstractDomain({kind1, kind2}))
+                            .to_json()));
+  EXPECT_EQ(
+      test::parse_json(
+          R"({"sanitize": "propagations", "kinds": [{"kind": "Kind1"}, {"kind": "Kind2"}, {"kind": "Partial:Kind3:a"}]})"),
+      test::sorted_json(
+          Sanitizer(
+              SanitizerKind::Propagations,
+              /* kinds */ KindSetAbstractDomain({kind1, kind2, partial_kind}))
+              .to_json()));
+  EXPECT_EQ(
+      test::parse_json(
+          R"({"sanitize": "sinks", "kinds": [{"kind": "Kind1"}, {"kind": "Kind3"}]})"),
+      test::sorted_json(Sanitizer(
+                            SanitizerKind::Sinks,
+                            /* kinds */ KindSetAbstractDomain({kind1, kind3}))
+                            .to_json()));
 }
 
 TEST_F(JsonTest, Rule) {

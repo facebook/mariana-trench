@@ -13,6 +13,7 @@
 #include <json/json.h>
 
 #include <mariana-trench/Compiler.h>
+#include <mariana-trench/Context.h>
 
 namespace marianatrench {
 
@@ -40,9 +41,14 @@ class Kind {
     return dynamic_cast<T*>(this);
   }
 
-  /* For the equivalent from_json, use the appropriate method for the specific
-   * kind. */
   virtual Json::Value to_json() const;
+  /**
+   * Constructs a NamedKind or a PartialKind based on whether the json value has
+   * the field partial_label.
+   * If it is known beforehand (as in Rules) whether the Kind is a Named or
+   * Partial kind then use the override of this method from the specific Kind.
+   */
+  static const Kind* from_json(const Json::Value& value, Context& context);
 
   /**
    * String value used for connecting traces of the same kind.

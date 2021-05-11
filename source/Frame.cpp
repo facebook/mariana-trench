@@ -224,14 +224,7 @@ AccessPath validate_and_infer_crtex_callee_port(
 Frame Frame::from_json(const Json::Value& value, Context& context) {
   JsonValidation::validate_object(value);
 
-  const Kind* kind = nullptr;
-  const auto leaf_kind = JsonValidation::string(value, /* field */ "kind");
-  if (value.isMember("partial_label")) {
-    kind = context.kinds->get_partial(
-        leaf_kind, JsonValidation::string(value, /* field */ "partial_label"));
-  } else {
-    kind = context.kinds->get(leaf_kind);
-  }
+  const Kind* kind = Kind::from_json(value, context);
 
   auto callee_port = AccessPath(Root(Root::Kind::Leaf));
   if (value.isMember("callee_port")) {

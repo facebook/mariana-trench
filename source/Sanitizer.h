@@ -7,12 +7,11 @@
 
 #pragma once
 
-#include <unordered_set>
-
 #include <AbstractDomain.h>
 #include <PatriciaTreeSetAbstractDomain.h>
 
 #include <mariana-trench/Assert.h>
+#include <mariana-trench/Context.h>
 #include <mariana-trench/Kind.h>
 
 namespace marianatrench {
@@ -85,9 +84,20 @@ class Sanitizer final : public sparta::AbstractDomain<Sanitizer> {
 
   void narrow_with(const Sanitizer& other) override;
 
+  SanitizerKind sanitizer_kind() const {
+    return sanitizer_kind_;
+  }
+
+  const KindSetAbstractDomain& kinds() const {
+    return kinds_;
+  }
+
   friend std::ostream& operator<<(
       std::ostream& out,
       const Sanitizer& sanitizer);
+
+  static const Sanitizer from_json(const Json::Value& value, Context& context);
+  Json::Value to_json() const;
 
  private:
   SanitizerKind sanitizer_kind_;

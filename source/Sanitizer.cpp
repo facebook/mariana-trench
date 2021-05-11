@@ -6,6 +6,10 @@
  */
 
 #include <mariana-trench/Assert.h>
+#include <mariana-trench/JsonValidation.h>
+#include <mariana-trench/Log.h>
+#include <mariana-trench/NamedKind.h>
+#include <mariana-trench/PartialKind.h>
 #include <mariana-trench/Sanitizer.h>
 
 namespace marianatrench {
@@ -69,10 +73,69 @@ std::ostream& operator<<(std::ostream& out, const Sanitizer& sanitizer) {
       out << "Propagations";
       break;
   }
-  if (sanitizer.sanitizer_kind_ != SanitizerKind::Sinks) {
+  if (sanitizer.kinds_.is_value()) {
     out << ", kinds = " << sanitizer.kinds_;
   }
   return out << ")";
+}
+
+const Sanitizer Sanitizer::from_json(
+    const Json::Value& value,
+    Context& context) {
+  JsonValidation::validate_object(value);
+  SanitizerKind sanitizer_kind;
+  auto sanitizer_kind_string =
+      JsonValidation::string(value, /* field */ "sanitize");
+  if (sanitizer_kind_string == "sources") {
+    sanitizer_kind = SanitizerKind::Sources;
+  } else if (sanitizer_kind_string == "sinks") {
+    sanitizer_kind = SanitizerKind::Sinks;
+  } else if (sanitizer_kind_string == "propagations") {
+    sanitizer_kind = SanitizerKind::Propagations;
+  } else {
+    throw JsonValidationError(
+        value,
+        /* field */ "sanitizer",
+        /* expected */ "`sources`, `sinks` or `propagations`");
+  }
+
+  KindSetAbstractDomain kinds;
+  if (value.isMember("kinds")) {
+    kinds = KindSetAbstractDomain();
+    for (const auto& kind_json :
+         JsonValidation::nonempty_array(value, "kinds")) {
+      kinds.add(Kind::from_json(kind_json, context));
+    }
+  } else {
+    kinds = KindSetAbstractDomain::top();
+  }
+
+  return Sanitizer(sanitizer_kind, kinds);
+}
+
+Json::Value Sanitizer::to_json() const {
+  mt_assert(!is_bottom());
+  auto value = Json::Value(Json::objectValue);
+  switch (sanitizer_kind_) {
+    case SanitizerKind::Sources:
+      value["sanitize"] = "sources";
+      break;
+    case SanitizerKind::Sinks:
+      value["sanitize"] = "sinks";
+      break;
+    case SanitizerKind::Propagations:
+      value["sanitize"] = "propagations";
+      break;
+  }
+
+  if (kinds_.is_value()) {
+    auto kinds_json = Json::Value(Json::arrayValue);
+    for (const auto* kind : kinds_.elements()) {
+      kinds_json.append(kind->to_json());
+    }
+    value["kinds"] = kinds_json;
+  }
+  return value;
 }
 
 } // namespace marianatrench
