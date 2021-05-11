@@ -44,6 +44,14 @@
   [
     "Lcom/facebook/marianatrench/integrationtests/Crtex;.precondition:(Landroid/content/Intent;)V"
   ],
+  "Lcom/facebook/marianatrench/integrationtests/Crtex;.crtex_with_regular_sink:(Landroid/content/Intent;)V" : 
+  [
+    "Lcom/facebook/marianatrench/integrationtests/Crtex;.crtex_with_regular_sink_precondition:(Landroid/content/Intent;)V"
+  ],
+  "Lcom/facebook/marianatrench/integrationtests/Crtex;.multiple_canonical_names:(Landroid/content/Intent;Landroid/app/Activity;I)V" : 
+  [
+    "Lcom/facebook/marianatrench/integrationtests/Crtex;.multiple_canonical_names_precondition:(Landroid/content/Intent;Landroid/app/Activity;I)V"
+  ],
   "Lcom/facebook/marianatrench/integrationtests/Crtex;.startActivityHelper:(Landroid/content/Intent;Landroid/app/Activity;)V" : 
   [
     "Lcom/facebook/marianatrench/integrationtests/Crtex;.crtex_precondition_leaf:(Landroid/content/Intent;)V",

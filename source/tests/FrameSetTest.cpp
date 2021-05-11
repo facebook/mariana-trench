@@ -1727,7 +1727,7 @@ TEST_F(FrameSetTest, PartitionMap) {
           /* canonical_names */ {}),
       Frame(
           /* kind */ test_kind,
-          /* callee_port */ AccessPath(Root(Root::Kind::Leaf)),
+          /* callee_port */ AccessPath(Root(Root::Kind::Anchor)),
           /* callee */ nullptr,
           /* call_position */ nullptr,
           /* distance */ 0,
@@ -1742,7 +1742,7 @@ TEST_F(FrameSetTest, PartitionMap) {
               CanonicalName::TemplateValue{"%programmatic_leaf_name%"})})};
 
   auto partitions = frames.partition_map<bool>(
-      [](const Frame& frame) { return frame.is_crtex(); });
+      [](const Frame& frame) { return frame.is_crtex_producer_declaration(); });
 
   FrameSet crtex_partition;
   for (auto frame : partitions[true]) {
@@ -1752,7 +1752,7 @@ TEST_F(FrameSetTest, PartitionMap) {
       crtex_partition,
       FrameSet{Frame(
           /* kind */ test_kind,
-          /* callee_port */ AccessPath(Root(Root::Kind::Leaf)),
+          /* callee_port */ AccessPath(Root(Root::Kind::Anchor)),
           /* callee */ nullptr,
           /* call_position */ nullptr,
           /* distance */ 0,

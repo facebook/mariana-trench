@@ -262,8 +262,11 @@ class Frame final : public sparta::AbstractDomain<Frame> {
     return callee_ == nullptr;
   }
 
-  bool is_crtex() const {
-    return canonical_names_.is_value() && !canonical_names_.elements().empty();
+  bool is_crtex_producer_declaration() const {
+    // If true, this frame corresponds to the crtex leaf frame declared by
+    // the user (callee == nullptr). Also, the producer run declarations use the
+    // `Anchor` port, while consumer runs use the `Producer` port.
+    return callee_ == nullptr && callee_port_.root().is_anchor();
   }
 
   void set_to_bottom() override {

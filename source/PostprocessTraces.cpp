@@ -19,6 +19,12 @@ namespace {
 bool is_valid_generation(const Frame& generation, const Registry& registry) {
   if (generation.is_leaf()) {
     return true;
+  } else if (generation.callee_port().root().is_anchor()) {
+    // Crtex frames which have canonical names instantiated during
+    // `Frame::propagate` will have callee_ports `Anchor`. These are considered
+    // leaves when it comes to traces (no next hop), even though the `Frame`
+    // itself is not a leaf (has a callee).
+    return true;
   }
   auto model = registry.get(generation.callee());
   auto sources = model.generations().raw_read(generation.callee_port()).root();
@@ -31,7 +37,14 @@ bool is_valid_generation(const Frame& generation, const Registry& registry) {
 bool is_valid_sink(const Frame& sink, const Registry& registry) {
   if (sink.is_leaf()) {
     return true;
+  } else if (sink.callee_port().root().is_anchor()) {
+    // Crtex frames which have canonical names instantiated during
+    // `Frame::propagate` will have callee_ports `Anchor`. These are considered
+    // leaves when it comes to traces (no next hop), even though the `Frame`
+    // itself is not a leaf (has a callee).
+    return true;
   }
+
   auto model = registry.get(sink.callee());
   auto sinks = model.sinks().raw_read(sink.callee_port()).root();
   return std::any_of(sinks.begin(), sinks.end(), [&](const FrameSet& frames) {

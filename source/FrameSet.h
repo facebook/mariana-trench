@@ -215,7 +215,8 @@ class FrameSet final : public sparta::AbstractDomain<FrameSet> {
       int maximum_source_sink_distance,
       Context& context,
       const std::vector<const DexType * MT_NULLABLE>& source_register_types,
-      std::vector<std::reference_wrapper<const Frame>> frames) const;
+      std::vector<std::reference_wrapper<const Frame>> frames,
+      std::vector<const Feature*>& via_type_of_features_added) const;
 
   FrameSet propagate_crtex_frames(
       const Method* callee,

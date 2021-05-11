@@ -195,8 +195,8 @@ FrameSet FrameSet::propagate(
     return FrameSet::bottom();
   }
 
-  auto partitioned =
-      partition_map<bool>([](const Frame& frame) { return frame.is_crtex(); });
+  auto partitioned = partition_map<bool>(
+      [](const Frame& frame) { return frame.is_crtex_producer_declaration(); });
 
   auto frames = propagate_crtex_frames(
       callee,
@@ -208,6 +208,7 @@ FrameSet FrameSet::propagate(
       partitioned[true]);
 
   // Non-CRTEX frames can be joined into the same callee
+  std::vector<const Feature*> via_type_of_features_added;
   auto non_crtex_frame = propagate_frames(
       callee,
       callee_port,
@@ -215,7 +216,8 @@ FrameSet FrameSet::propagate(
       maximum_source_sink_distance,
       context,
       source_register_types,
-      partitioned[false]);
+      partitioned[false],
+      via_type_of_features_added);
   if (!non_crtex_frame.is_bottom()) {
     frames.add(non_crtex_frame);
   }
@@ -331,7 +333,8 @@ Frame FrameSet::propagate_frames(
     int maximum_source_sink_distance,
     Context& context,
     const std::vector<const DexType * MT_NULLABLE>& source_register_types,
-    std::vector<std::reference_wrapper<const Frame>> frames) const {
+    std::vector<std::reference_wrapper<const Frame>> frames,
+    std::vector<const Feature*>& via_type_of_features_added) const {
   int distance = std::numeric_limits<int>::max();
   auto origins = MethodSet::bottom();
   auto inferred_features = FeatureMayAlwaysSet::bottom();
@@ -363,8 +366,10 @@ Frame FrameSet::propagate_frames(
             callee->get_name());
         continue;
       }
-      inferred_features.add_always(context.features->get_via_type_of_feature(
-          source_register_types[port.parameter_position()]));
+      const auto* feature = context.features->get_via_type_of_feature(
+          source_register_types[port.parameter_position()]);
+      via_type_of_features_added.push_back(feature);
+      inferred_features.add_always(feature);
     }
   }
 
@@ -398,6 +403,7 @@ FrameSet FrameSet::propagate_crtex_frames(
   FrameSet result;
 
   for (const Frame& frame : frames) {
+    std::vector<const Feature*> via_type_of_features_added;
     auto propagated = propagate_frames(
         callee,
         callee_port,
@@ -405,11 +411,53 @@ FrameSet FrameSet::propagate_crtex_frames(
         maximum_source_sink_distance,
         context,
         source_register_types,
-        {std::cref(frame)});
+        {std::cref(frame)},
+        via_type_of_features_added);
 
-    if (!propagated.is_bottom()) {
-      // TODO: Apply the canonical names (which will update the callee)
-      result.add(propagated);
+    if (propagated.is_bottom()) {
+      continue;
+    }
+
+    auto canonical_names = frame.canonical_names();
+    if (!canonical_names.is_value() || canonical_names.elements().empty()) {
+      WARNING(
+          2,
+          "Encountered crtex frame without canonical names. Frame: `{}`",
+          frame);
+      continue;
+    }
+
+    CanonicalNameSetAbstractDomain instantiated_names;
+    for (const auto& canonical_name : canonical_names.elements()) {
+      auto instantiated_name = canonical_name.instantiate(
+          propagated.callee(), via_type_of_features_added);
+      if (!instantiated_name) {
+        continue;
+      }
+      instantiated_names.add(*instantiated_name);
+    }
+
+    // All fields should be propagated like other frames, except the crtex
+    // fields. Ideally, origins should contain the canonical names as well,
+    // but canonical names are strings and cannot be stored in MethodSet.
+    // Frame is not propagated if none of the canonical names instantiated
+    // successfully.
+    // TODO(T90249898): callee port should be anchor:<canonical callee_port>.
+    if (instantiated_names.is_value() &&
+        !instantiated_names.elements().empty()) {
+      result.add(Frame(
+          kind_,
+          /* callee_port */ AccessPath(Root(Root::Kind::Anchor)),
+          propagated.callee(),
+          propagated.call_position(),
+          /* distance (always leaves for crtex frames) */ 0,
+          propagated.origins(),
+          propagated.inferred_features(),
+          propagated.locally_inferred_features(),
+          propagated.user_features(),
+          propagated.via_type_of_ports(),
+          propagated.local_positions(),
+          /* canonical_names */ instantiated_names));
     }
   }
 

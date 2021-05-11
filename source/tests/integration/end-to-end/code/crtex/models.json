@@ -26,6 +26,64 @@
     ]
   },
   {
+    "method": "Lcom/facebook/marianatrench/integrationtests/Crtex;.multiple_canonical_names:(Landroid/content/Intent;Landroid/app/Activity;I)V",
+    "sinks": [
+      {
+        "port": "Argument(0)",
+        "kind": "Sink",
+        "via_type_of": [
+          "Argument(1)"
+        ],
+        "canonical_names": [
+          {
+            "template": "%programmatic_leaf_name%__%via_type_of%"
+          },
+          {
+            "template": "%programmatic_leaf_name%"
+          }
+        ]
+      },
+      {
+        "port": "Argument(1)",
+        "kind": "Sink",
+        "canonical_names": [
+          {
+            "template": "%programmatic_leaf_name%"
+          }
+        ]
+      },
+      {
+        "port": "Argument(2)",
+        "kind": "Sink",
+        "canonical_names": [
+          {
+            "template": "%via_type_of%"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "method": "Lcom/facebook/marianatrench/integrationtests/Crtex;.crtex_with_regular_sink:(Landroid/content/Intent;)V",
+    "sinks": [
+      {
+        "port": "Argument(0)",
+        "callee_port": "Anchor",
+        "kind": "Sink",
+        "canonical_names": [
+          {
+            "template": "%programmatic_leaf_name%"
+          }
+        ]
+      },
+      {
+        "port": "Argument(0)",
+        "callee_port": "Leaf",
+        "kind": "Sink"
+      }
+    ]
+  },
+  {
     "method": "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;",
     "generations": [
       {
