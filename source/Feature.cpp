@@ -16,11 +16,11 @@ const Feature* Feature::from_json(const Json::Value& value, Context& context) {
 }
 
 Json::Value Feature::to_json() const {
-  return Json::Value(data_);
+  return Json::Value(name_);
 }
 
 std::ostream& operator<<(std::ostream& out, const Feature& data) {
-  return out << data.data_;
+  return out << data.name_;
 }
 
 } // namespace marianatrench

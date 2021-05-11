@@ -18,7 +18,7 @@ namespace marianatrench {
 
 class Feature final {
  public:
-  explicit Feature(std::string data) : data_(std::move(data)) {}
+  explicit Feature(std::string name) : name_(std::move(name)) {}
   Feature(const Feature&) = delete;
   Feature(Feature&&) = delete;
   Feature& operator=(const Feature&) = delete;
@@ -28,10 +28,14 @@ class Feature final {
   static const Feature* from_json(const Json::Value& value, Context& context);
   Json::Value to_json() const;
 
+  const std::string& name() const {
+    return name_;
+  }
+
  private:
   friend std::ostream& operator<<(std::ostream& out, const Feature& feature);
 
-  std::string data_;
+  std::string name_;
 };
 
 } // namespace marianatrench
