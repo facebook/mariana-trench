@@ -51,15 +51,6 @@
             "template": "%programmatic_leaf_name%"
           }
         ]
-      },
-      {
-        "port": "Argument(2)",
-        "kind": "Sink",
-        "canonical_names": [
-          {
-            "template": "%via_type_of%"
-          }
-        ]
       }
     ]
   },

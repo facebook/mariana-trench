@@ -1304,6 +1304,29 @@ TEST_F(JsonTest, Frame_Crtex) {
               })"),
           context),
       JsonValidationError);
+  EXPECT_THROW(
+      Frame::from_json(
+          test::parse_json(
+              R"({
+                "kind": "TestSource",
+                "canonical_names": [
+                  { "template": "%via_type_of%" }
+                ]
+              })"),
+          context),
+      JsonValidationError);
+  EXPECT_THROW(
+      Frame::from_json(
+          test::parse_json(
+              R"#({
+                "kind": "TestSource",
+                "via_type_of": [ "Argument(1)", "Return" ],
+                "canonical_names": [
+                  { "template": "%via_type_of%" }
+                ]
+              })#"),
+          context),
+      JsonValidationError);
   EXPECT_EQ(
       Frame::from_json(
           test::parse_json(

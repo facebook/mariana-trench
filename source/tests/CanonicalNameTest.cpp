@@ -58,11 +58,6 @@ TEST_F(CanonicalNameTest, Instantiate) {
       std::nullopt);
 
   EXPECT_EQ(
-      CanonicalName(CanonicalName::TemplateValue{"%via_type_of%"})
-          .instantiate(method, /* via_type_ofs */ {feature1, feature2}),
-      std::nullopt);
-
-  EXPECT_EQ(
       CanonicalName(CanonicalName::TemplateValue{"%programmatic_leaf_name%"})
           .instantiate(method, /* via_type_ofs */ {feature1, feature2})
           .value(),

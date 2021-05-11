@@ -160,7 +160,8 @@ Frame Frame::with_kind(const Kind* kind) const {
 AccessPath validate_and_infer_crtex_callee_port(
     const Json::Value& value,
     const AccessPath& callee_port,
-    const CanonicalNameSetAbstractDomain& canonical_names) {
+    const CanonicalNameSetAbstractDomain& canonical_names,
+    const RootSetAbstractDomain& via_type_of_ports) {
   mt_assert(canonical_names.is_value() && !canonical_names.elements().empty());
 
   // Anchor ports only go with templated canonical names. Producer ports only
@@ -180,6 +181,20 @@ AccessPath validate_and_infer_crtex_callee_port(
         value,
         /* field */ "canonical_names",
         "all instantiated, or all templated values, not mix of both");
+  }
+
+  if (is_templated) {
+    auto num_via_type_of_ports =
+        via_type_of_ports.is_value() ? via_type_of_ports.elements().size() : 0;
+    for (const auto& canonical_name : canonical_names.elements()) {
+      auto is_via_type_of = canonical_name.is_via_type_of_template();
+      if (is_via_type_of && num_via_type_of_ports != 1) {
+        throw JsonValidationError(
+            value,
+            /* field */ std::nullopt,
+            "exactly one 'via_type_of' port when canonical name contains 'via_type_of' template");
+      }
+    }
   }
 
   // If callee_port is user-specified and not Leaf, validate it.
@@ -282,7 +297,7 @@ Frame Frame::from_json(const Json::Value& value, Context& context) {
 
   if (canonical_names.is_value() && !canonical_names.elements().empty()) {
     callee_port = validate_and_infer_crtex_callee_port(
-        value, callee_port, canonical_names);
+        value, callee_port, canonical_names, via_type_of_ports);
   } else if (
       callee_port.root().is_anchor() || callee_port.root().is_producer()) {
     throw JsonValidationError(

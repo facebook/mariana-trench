@@ -15,6 +15,15 @@
 
 namespace marianatrench {
 
+bool CanonicalName::is_via_type_of_template() const {
+  auto value = template_value();
+  if (!value) {
+    return false;
+  }
+
+  return value->find(k_via_type_of_marker) != std::string::npos;
+}
+
 std::optional<CanonicalName> CanonicalName::instantiate(
     const Method* method,
     const std::vector<const Feature*>& via_type_ofs) const {
@@ -36,14 +45,13 @@ std::optional<CanonicalName> CanonicalName::instantiate(
           *value);
       return std::nullopt;
     } else if (via_type_ofs.size() > 1) {
-      // TODO(T90249898): Verify this does not happen during model-generation.
-      // If using %via_type_of% in the template, users should only specify one
-      // via_type_of port.
       ERROR(
           1,
           "Could not instantiate canonical name template '{}'. Unable to disambiguate between {} via-type-of features.",
           *value,
           via_type_ofs.size());
+      // Should have been verified when parsing models during model-generation.
+      mt_assert(false);
       return std::nullopt;
     }
 

@@ -100,6 +100,8 @@ class CanonicalName final {
     }
   }
 
+  bool is_via_type_of_template() const;
+
   /**
    * Determines the full form of this canonical name. Creates a `CanonicalName`
    * with the instantiated value.
