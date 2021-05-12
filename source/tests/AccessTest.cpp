@@ -8,6 +8,7 @@
 #include <gmock/gmock.h>
 
 #include <mariana-trench/Access.h>
+#include <mariana-trench/Redex.h>
 #include <mariana-trench/tests/Test.h>
 
 namespace marianatrench {
@@ -208,6 +209,57 @@ TEST_F(AccessTest, AccessPathJoin) {
   access_path = AccessPath(root, Path{x, y});
   access_path.join_with(AccessPath(root, Path{x, y, z}));
   EXPECT_EQ(access_path, AccessPath(root, Path{x, y}));
+}
+
+TEST_F(AccessTest, Canonicalize) {
+  Scope scope;
+  auto context = test::make_empty_context();
+  auto static_method = context.methods->create(redex::create_void_method(
+      scope,
+      "class_a",
+      "method_a",
+      /* parameter_types */ "",
+      /* return_type */ "V",
+      /* super */ nullptr,
+      /* is_static */ true));
+  auto non_static_method = context.methods->create(
+      redex::create_void_method(scope, "class_b", "method_b"));
+
+  auto return_root = Root(Root::Kind::Return);
+  auto return_path = AccessPath(return_root, Path{DexString::make_string("x")});
+  EXPECT_EQ(
+      return_path.canonicalize_for_method(static_method),
+      AccessPath(
+          Root(Root::Kind::Anchor),
+          Path{DexString::make_string(return_root.to_string())}));
+
+  auto argument_path = AccessPath(Root(Root::Kind::Argument, 1));
+  EXPECT_EQ(
+      argument_path.canonicalize_for_method(static_method),
+      AccessPath(
+          Root(Root::Kind::Anchor),
+          Path{DexString::make_string(
+              Root(Root::Kind::Argument, 1).to_string())}));
+  EXPECT_EQ(
+      argument_path.canonicalize_for_method(non_static_method),
+      AccessPath(
+          Root(Root::Kind::Anchor),
+          Path{DexString::make_string(
+              Root(Root::Kind::Argument, 0).to_string())}));
+
+  auto this_argument = AccessPath(Root(Root::Kind::Argument, 0));
+  EXPECT_EQ(
+      this_argument.canonicalize_for_method(static_method),
+      AccessPath(
+          Root(Root::Kind::Anchor),
+          Path{DexString::make_string(
+              Root(Root::Kind::Argument, 0).to_string())}));
+  EXPECT_EQ(
+      this_argument.canonicalize_for_method(non_static_method),
+      AccessPath(
+          Root(Root::Kind::Anchor),
+          Path{DexString::make_string(
+              Root(Root::Kind::CanonicalThis).to_string())}));
 }
 
 } // namespace marianatrench

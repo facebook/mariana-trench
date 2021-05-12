@@ -24,6 +24,8 @@
 
 namespace marianatrench {
 
+class Method;
+
 /* Integer type representing a register number. */
 using Register = std::uint32_t;
 
@@ -137,13 +139,20 @@ class Root final {
      * as "connection points" where data flows into another codebase, e.g.:
      * GraphQL, native. Information about these will be output to CRTEX. They
      * mark connection points with sources/sinks that flow to/from another
-     * codebase. `LeafKind::Anchor` is for those where Mariana Trench detected
-     * the flow and will output to CRTEX. `LeafKind::Producer` is for those
-     * detected by another analyzer and then read as input by Mariana Trench.
+     * codebase. `Anchor` is for those where Mariana Trench detected the flow
+     * and will output to CRTEX. `Producer` is for those detected by another
+     * analyzer and then read as input by Mariana Trench.
      */
     Anchor = std::numeric_limits<IntegerEncoding>::max() - 2,
     Producer = std::numeric_limits<IntegerEncoding>::max() - 3,
-    MaxArgument = std::numeric_limits<IntegerEncoding>::max() - 4,
+    /*
+     * In CRTEX, "this" argument, represented by argument(0) in Mariana Trench,
+     * has index -1 in other codebases. This cannot be represented by the
+     * unsigned encoding, so use a special kind. In the analysis,
+     * `CanonicalThis` is not considered an argument.
+     */
+    CanonicalThis = std::numeric_limits<IntegerEncoding>::max() - 4,
+    MaxArgument = std::numeric_limits<IntegerEncoding>::max() - 5,
   };
 
  private:
@@ -224,6 +233,8 @@ class Root final {
     return value_;
   }
 
+  std::string to_string() const;
+
   static Root decode(IntegerEncoding value) {
     return Root(value);
   }
@@ -293,6 +304,15 @@ class AccessPath final {
   void truncate(std::size_t max_size) {
     path_.truncate(max_size);
   }
+
+  /**
+   * Used to produce canonical ports (alongside canonical_names) for CRTEX.
+   *
+   * Returns the canonical port for `method` that is compatible with other
+   * analyses, in the form "Anchor:Argument(x)" with two roots. `Anchor` is
+   * stored as the root while "Argument(x)" is stored in the Path.
+   */
+  AccessPath canonicalize_for_method(const Method* method) const;
 
   /**
    * Split a json string into access path elements.

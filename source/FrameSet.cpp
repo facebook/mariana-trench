@@ -437,17 +437,19 @@ FrameSet FrameSet::propagate_crtex_frames(
       instantiated_names.add(*instantiated_name);
     }
 
+    auto canonical_callee_port =
+        propagated.callee_port().canonicalize_for_method(propagated.callee());
+
     // All fields should be propagated like other frames, except the crtex
     // fields. Ideally, origins should contain the canonical names as well,
     // but canonical names are strings and cannot be stored in MethodSet.
     // Frame is not propagated if none of the canonical names instantiated
     // successfully.
-    // TODO(T90249898): callee port should be anchor:<canonical callee_port>.
     if (instantiated_names.is_value() &&
         !instantiated_names.elements().empty()) {
       result.add(Frame(
           kind_,
-          /* callee_port */ AccessPath(Root(Root::Kind::Anchor)),
+          canonical_callee_port,
           propagated.callee(),
           propagated.call_position(),
           /* distance (always leaves for crtex frames) */ 0,

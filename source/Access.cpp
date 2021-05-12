@@ -14,6 +14,7 @@
 
 #include <mariana-trench/Access.h>
 #include <mariana-trench/JsonValidation.h>
+#include <mariana-trench/Method.h>
 #include <mariana-trench/Redex.h>
 
 namespace marianatrench {
@@ -98,21 +99,27 @@ std::ostream& operator<<(std::ostream& out, const Path& path) {
   return out << "]";
 }
 
-std::ostream& operator<<(std::ostream& out, const Root& root) {
-  switch (root.kind()) {
+std::string Root::to_string() const {
+  switch (kind()) {
     case Root::Kind::Argument:
-      return out << "Argument(" << root.parameter_position() << ")";
+      return fmt::format("Argument({})", parameter_position());
     case Root::Kind::Return:
-      return out << "Return";
+      return "Return";
     case Root::Kind::Leaf:
-      return out << "Leaf";
+      return "Leaf";
     case Root::Kind::Anchor:
-      return out << "Anchor";
+      return "Anchor";
     case Root::Kind::Producer:
-      return out << "Producer";
+      return "Producer";
+    case Root::Kind::CanonicalThis:
+      return "Argument(-1)";
     default:
       mt_unreachable();
   }
+}
+
+std::ostream& operator<<(std::ostream& out, const Root& root) {
+  return out << root.to_string();
 }
 
 bool AccessPath::operator==(const AccessPath& other) const {
@@ -126,6 +133,29 @@ bool AccessPath::leq(const AccessPath& other) const {
 void AccessPath::join_with(const AccessPath& other) {
   mt_assert(root_ == other.root_);
   path_.reduce_to_common_prefix(other.path_);
+}
+
+AccessPath AccessPath::canonicalize_for_method(const Method* method) const {
+  // The canonical port takes the form anchor:<root>. Path is ignored.
+  // For arguments, first argument starts at index 0. Non-static methods in
+  // Mariana Trench have their arguments off-by-one and are shifted down.
+  if (!root_.is_argument() || method->is_static()) {
+    return AccessPath(
+        Root(Root::Kind::Anchor),
+        Path{DexString::make_string(root_.to_string())});
+  }
+
+  auto position = root_.parameter_position();
+  if (position == 0) {
+    position = static_cast<Root::IntegerEncoding>(Root::Kind::CanonicalThis);
+  } else {
+    position = position - 1;
+  }
+
+  return AccessPath(
+      Root(Root::Kind::Anchor),
+      Path{DexString::make_string(
+          Root(Root::Kind::Argument, position).to_string())});
 }
 
 std::vector<std::string> AccessPath::split_path(const Json::Value& value) {
@@ -174,6 +204,8 @@ AccessPath AccessPath::from_json(const Json::Value& value) {
               "`Argument(<number>)` for access path root, got `{}`",
               root_string));
     }
+    // Note: `Root::Kind::CanonicalThis` (Argument(-1)) cannot be specified in
+    // JSON.
     root = Root(Root::Kind::Argument, *parameter);
   } else if (root_string == "Return") {
     root = Root(Root::Kind::Return);
@@ -206,33 +238,7 @@ Json::Value AccessPath::to_json() const {
   // We could return a json array containing path elements, but this would break
   // all our tests since we sort all json arrays before comparing them.
 
-  std::string value;
-
-  switch (root_.kind()) {
-    case Root::Kind::Argument: {
-      value.append(fmt::format("Argument({})", root_.parameter_position()));
-      break;
-    }
-    case Root::Kind::Return: {
-      value.append("Return");
-      break;
-    }
-    case Root::Kind::Leaf: {
-      value.append("Leaf");
-      break;
-    }
-    case Root::Kind::Anchor: {
-      value.append("Anchor");
-      break;
-    }
-    case Root::Kind::Producer: {
-      value.append("Producer");
-      break;
-    }
-    default: {
-      mt_unreachable();
-    }
-  }
+  std::string value = root_.to_string();
 
   for (auto* field : path_) {
     value.append(".");
