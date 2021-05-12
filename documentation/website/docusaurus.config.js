@@ -95,7 +95,7 @@ module.exports = {
   },
   presets: [
     [
-      '@docusaurus/preset-classic',
+      require.resolve('docusaurus-plugin-internaldocs-fb/docusaurus-preset'),
       {
         docs: {
           path: 'documentation',
