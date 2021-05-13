@@ -8,5 +8,9 @@
  */
 
 module.exports = {
-  someSidebar: ['getting-started', 'configuration'],
+  someSidebar: [
+    'getting-started',
+    'configuration',
+    'running-on-3rd-party-apps',
+  ],
 };
