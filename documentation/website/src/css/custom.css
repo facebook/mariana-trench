@@ -27,6 +27,11 @@
   --ifm-font-color-base-inverse: #0d2354;
   --ifm-navbar-link-hover-color: #0d2354;
   --ifm-menu-color-active: #0d2354;
+  --ifm-link-color: #0d2354;
+}
+
+.table-of-contents__link--active {
+  color: #0d2354;
 }
 
 .docusaurus-highlight-code-line {

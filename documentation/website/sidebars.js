@@ -8,5 +8,5 @@
  */
 
 module.exports = {
-  someSidebar: ['getting-started'],
+  someSidebar: ['getting-started', 'configuration'],
 };
