@@ -26,10 +26,16 @@
 #include <mariana-trench/PropagationSet.h>
 #include <mariana-trench/PropagationTree.h>
 #include <mariana-trench/RootPatriciaTreeAbstractPartition.h>
+#include <mariana-trench/Sanitizer.h>
 #include <mariana-trench/Taint.h>
 #include <mariana-trench/TaintTree.h>
 
 namespace marianatrench {
+
+using SanitizerSet = GroupHashedSetAbstractDomain<
+    Sanitizer,
+    Sanitizer::GroupHash,
+    Sanitizer::GroupEqual>;
 
 /**
  * A `Model` is a summary of what we know about a method. A `Model` should
@@ -49,6 +55,9 @@ namespace marianatrench {
  * specifically, how taint may flow from a parameter to the method's return
  * value or another parameters. A *propagation* will only propagate the taint
  * if the parameter is tainted. See `Propagation`.
+ *
+ * A *global sanitizer* sanitizes all sources, sinks or propagations flowing
+ * through the method that have a kind dictated by its kinds field
  *
  * *Attach to sources* automatically adds features to all sources flowing out of
  * the method.
@@ -121,6 +130,7 @@ class Model final {
       const std::vector<std::pair<AccessPath, Frame>>& parameter_sources = {},
       const std::vector<std::pair<AccessPath, Frame>>& sinks = {},
       const std::vector<std::pair<Propagation, AccessPath>>& propagations = {},
+      const std::vector<Sanitizer>& global_sanitizers = {},
       const std::vector<std::pair<Root, FeatureSet>>& attach_to_sources = {},
       const std::vector<std::pair<Root, FeatureSet>>& attach_to_sinks = {},
       const std::vector<std::pair<Root, FeatureSet>>& attach_to_propagations =
@@ -203,6 +213,11 @@ class Model final {
     return propagations_;
   }
 
+  void add_global_sanitizer(Sanitizer sanitizer);
+  const SanitizerSet& global_sanitizers() const {
+    return global_sanitizers_;
+  }
+
   void add_attach_to_sources(Root root, FeatureSet features);
   FeatureSet attach_to_sources(Root root) const;
 
@@ -258,6 +273,7 @@ class Model final {
   TaintAccessPathTree parameter_sources_;
   TaintAccessPathTree sinks_;
   PropagationAccessPathTree propagations_;
+  SanitizerSet global_sanitizers_;
   RootPatriciaTreeAbstractPartition<FeatureSet> attach_to_sources_;
   RootPatriciaTreeAbstractPartition<FeatureSet> attach_to_sinks_;
   RootPatriciaTreeAbstractPartition<FeatureSet> attach_to_propagations_;

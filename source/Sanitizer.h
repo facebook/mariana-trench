@@ -24,12 +24,14 @@ using KindSetAbstractDomain =
 /**
  * Represents a sanitizer for specific flows through a method.
  *
- * `sanitizer_kind` is either Sources (sanitize all sources flowing out of the
- * method), Sinks (sanitize all flows into sinks rechable within the method) or
- * Propagations (sanitize propagations from one port of the method to another).
+ * `sanitizer_kind` is either Sources (sanitize all sources flowing out of
+ * the method), Sinks (sanitize all flows into sinks rechable within the
+ * method) or Propagations (sanitize propagations from one port of the
+ * method to another).
  *
- * `kinds` represents the kinds for which to sanitize flows. Top will sanitize
- * all flows, regardless of kind and bottom will not sanitize any flows.
+ * `kinds` represents the kinds for which to sanitize flows. Top will
+ * sanitize all flows, regardless of kind and bottom will not sanitize any
+ * flows.
  *
  */
 class Sanitizer final : public sparta::AbstractDomain<Sanitizer> {
@@ -98,6 +100,14 @@ class Sanitizer final : public sparta::AbstractDomain<Sanitizer> {
 
   static const Sanitizer from_json(const Json::Value& value, Context& context);
   Json::Value to_json() const;
+
+  // Describe how to join sanitizers together in `SanitizerSet`.
+  struct GroupEqual {
+    bool operator()(const Sanitizer& left, const Sanitizer& right) const;
+  };
+  struct GroupHash {
+    std::size_t operator()(const Sanitizer& frame) const;
+  };
 
  private:
   SanitizerKind sanitizer_kind_;

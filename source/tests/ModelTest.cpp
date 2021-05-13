@@ -277,6 +277,55 @@ TEST_F(ModelTest, LessOrEqual) {
               /* parameter_sources */
               {{AccessPath(Root(Root::Kind::Argument, 2)),
                 Frame::leaf(source_kind)}})));
+
+  // Compare global_sanitizers
+  EXPECT_FALSE(
+      Model(
+          /* method */ nullptr,
+          context,
+          /* modes */ Model::Mode::Normal,
+          /* generations */ {},
+          /* parameter_sources */ {},
+          /* sinks */ {},
+          /* propagations */ {},
+          /* global_sanitizers */
+          {Sanitizer(SanitizerKind::Sources, KindSetAbstractDomain::top())})
+          .leq(Model(
+              /* method */ nullptr,
+              context,
+              /* modes */ Model::Mode::Normal,
+              /* generations */ {},
+              /* parameter_sources */ {},
+              /* sinks */ {},
+              /* propagations */ {},
+              /* global_sanitizers */
+              {Sanitizer(
+                  SanitizerKind::Propagations,
+                  KindSetAbstractDomain::top())})));
+  EXPECT_TRUE(
+      Model(
+          /* method */ nullptr,
+          context,
+          /* modes */ Model::Mode::Normal,
+          /* generations */ {},
+          /* parameter_sources */ {},
+          /* sinks */ {},
+          /* propagations */ {},
+          /* global_sanitizers */
+          {Sanitizer(
+              SanitizerKind::Sources,
+              KindSetAbstractDomain({context.kinds->get("Kind")}))})
+          .leq(Model(
+              /* method */ nullptr,
+              context,
+              /* modes */ Model::Mode::Normal,
+              /* generations */ {},
+              /* parameter_sources */ {},
+              /* sinks */ {},
+              /* propagations */ {},
+              /* global_sanitizers */
+              {Sanitizer(
+                  SanitizerKind::Sources, KindSetAbstractDomain::top())})));
 }
 
 TEST_F(ModelTest, Join) {
@@ -301,6 +350,7 @@ TEST_F(ModelTest, Join) {
       /* parameter_sources */ {},
       /* sinks */ {},
       /* propagations */ {},
+      /* global_sanitizers */ {},
       /* attach_to_sources */ {},
       /* attach_to_sinks */ {},
       /* attach_to_propagations */ {},
@@ -553,6 +603,70 @@ TEST_F(ModelTest, Join) {
                FeatureMayAlwaysSet::make_may({context.features->get("escape")}),
                /* user_features */ {})}},
       }));
+
+  // Join models with sanitizers
+  const auto* kind1 = context.kinds->get("Kind1");
+  const auto* kind2 = context.kinds->get("Kind2");
+  auto model_with_sanitizers = Model(
+      /* method */ nullptr,
+      context,
+      /* modes */ Model::Mode::Normal,
+      /* generations */ {},
+      /* parameter_sources */ {},
+      /* sinks */ {},
+      /* propagations */ {},
+      /* global_sanitizers */
+      {Sanitizer(SanitizerKind::Sources, KindSetAbstractDomain({kind1}))});
+  model_with_sanitizers.join_with(Model(
+      /* method */ nullptr,
+      context,
+      /* modes */ Model::Mode::Normal,
+      /* generations */ {},
+      /* parameter_sources */ {},
+      /* sinks */ {},
+      /* propagations */ {},
+      /* global_sanitizers */
+      {Sanitizer(SanitizerKind::Propagations, KindSetAbstractDomain::top())}));
+  EXPECT_EQ(
+      model_with_sanitizers,
+      Model(
+          /* method */ nullptr,
+          context,
+          /* modes */ Model::Mode::Normal,
+          /* generations */ {},
+          /* parameter_sources */ {},
+          /* sinks */ {},
+          /* propagations */ {},
+          /* global_sanitizers */
+          {Sanitizer(SanitizerKind::Sources, KindSetAbstractDomain({kind1})),
+           Sanitizer(
+               SanitizerKind::Propagations, KindSetAbstractDomain::top())}));
+
+  model_with_sanitizers.join_with(Model(
+      /* method */ nullptr,
+      context,
+      /* modes */ Model::Mode::Normal,
+      /* generations */ {},
+      /* parameter_sources */ {},
+      /* sinks */ {},
+      /* propagations */ {},
+      /* global_sanitizers */
+      {Sanitizer(SanitizerKind::Sources, KindSetAbstractDomain({kind2}))}));
+  EXPECT_EQ(
+      model_with_sanitizers,
+      Model(
+          /* method */ nullptr,
+          context,
+          /* modes */ Model::Mode::Normal,
+          /* generations */ {},
+          /* parameter_sources */ {},
+          /* sinks */ {},
+          /* propagations */ {},
+          /* global_sanitizers */
+          {Sanitizer(
+               SanitizerKind::Sources, KindSetAbstractDomain({kind1, kind2})),
+           Sanitizer(
+               SanitizerKind::Propagations, KindSetAbstractDomain::top())}));
 }
 
 } // namespace marianatrench

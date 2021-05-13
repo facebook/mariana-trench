@@ -138,4 +138,14 @@ Json::Value Sanitizer::to_json() const {
   return value;
 }
 
+bool Sanitizer::GroupEqual::operator()(
+    const Sanitizer& left,
+    const Sanitizer& right) const {
+  return left.sanitizer_kind() == right.sanitizer_kind();
+}
+
+std::size_t Sanitizer::GroupHash::operator()(const Sanitizer& sanitizer) const {
+  return std::hash<SanitizerKind>()(sanitizer.sanitizer_kind());
+}
+
 } // namespace marianatrench

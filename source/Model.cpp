@@ -84,6 +84,7 @@ Model::Model(
     const std::vector<std::pair<AccessPath, Frame>>& parameter_sources,
     const std::vector<std::pair<AccessPath, Frame>>& sinks,
     const std::vector<std::pair<Propagation, AccessPath>>& propagations,
+    const std::vector<Sanitizer>& global_sanitizers,
     const std::vector<std::pair<Root, FeatureSet>>& attach_to_sources,
     const std::vector<std::pair<Root, FeatureSet>>& attach_to_sinks,
     const std::vector<std::pair<Root, FeatureSet>>& attach_to_propagations,
@@ -132,6 +133,10 @@ Model::Model(
     add_propagation(propagation, output);
   }
 
+  for (const auto& sanitizer : global_sanitizers) {
+    add_global_sanitizer(sanitizer);
+  }
+
   for (const auto& [root, features] : attach_to_sources) {
     add_attach_to_sources(root, features);
   }
@@ -159,6 +164,7 @@ bool Model::operator==(const Model& other) const {
   return modes_ == other.modes_ && generations_ == other.generations_ &&
       parameter_sources_ == other.parameter_sources_ &&
       sinks_ == other.sinks_ && propagations_ == other.propagations_ &&
+      global_sanitizers_ == other.global_sanitizers_ &&
       attach_to_sources_ == other.attach_to_sources_ &&
       attach_to_sinks_ == other.attach_to_sinks_ &&
       attach_to_propagations_ == other.attach_to_propagations_ &&
@@ -202,6 +208,10 @@ Model Model::instantiate(const Method* method, Context& context) const {
     for (const auto& propagation : propagations) {
       model.add_propagation(propagation, output);
     }
+  }
+
+  for (const auto& sanitizer : global_sanitizers_) {
+    model.add_global_sanitizer(sanitizer);
   }
 
   for (const auto& [root, features] : attach_to_sources_) {
@@ -314,8 +324,9 @@ void Model::approximate() {
 bool Model::empty() const {
   return modes_.empty() && generations_.is_bottom() &&
       parameter_sources_.is_bottom() && sinks_.is_bottom() &&
-      propagations_.is_bottom() && attach_to_sources_.is_bottom() &&
-      attach_to_sinks_.is_bottom() && attach_to_propagations_.is_bottom() &&
+      propagations_.is_bottom() && global_sanitizers_.is_bottom() &&
+      attach_to_sources_.is_bottom() && attach_to_sinks_.is_bottom() &&
+      attach_to_propagations_.is_bottom() &&
       add_features_to_arguments_.is_bottom() && inline_as_.is_bottom() &&
       issues_.is_bottom();
 }
@@ -541,6 +552,10 @@ void Model::add_propagation(Propagation propagation, AccessPath output) {
       output, PropagationSet{std::move(propagation)}, UpdateKind::Weak);
 }
 
+void Model::add_global_sanitizer(Sanitizer sanitizer) {
+  global_sanitizers_.add(sanitizer);
+}
+
 void Model::add_attach_to_sources(Root root, FeatureSet features) {
   check_root_consistency(root);
 
@@ -635,6 +650,7 @@ bool Model::leq(const Model& other) const {
       generations_.leq(other.generations_) &&
       parameter_sources_.leq(other.parameter_sources_) &&
       sinks_.leq(other.sinks_) && propagations_.leq(other.propagations_) &&
+      global_sanitizers_.leq(other.global_sanitizers_) &&
       attach_to_sources_.leq(other.attach_to_sources_) &&
       attach_to_sinks_.leq(other.attach_to_sinks_) &&
       attach_to_propagations_.leq(other.attach_to_propagations_) &&
@@ -654,6 +670,7 @@ void Model::join_with(const Model& other) {
   parameter_sources_.join_with(other.parameter_sources_);
   sinks_.join_with(other.sinks_);
   propagations_.join_with(other.propagations_);
+  global_sanitizers_.join_with(other.global_sanitizers_);
   attach_to_sources_.join_with(other.attach_to_sources_);
   attach_to_sinks_.join_with(other.attach_to_sinks_);
   attach_to_propagations_.join_with(other.attach_to_propagations_);
@@ -738,6 +755,11 @@ Model Model::from_json(
     auto output = AccessPath::from_json(propagation_value["output"]);
     model.add_propagation(
         Propagation::from_json(propagation_value, context), output);
+  }
+
+  for (auto sanitizer_value :
+       JsonValidation::null_or_array(value, /* field */ "sanitizers")) {
+    model.add_global_sanitizer(Sanitizer::from_json(sanitizer_value, context));
   }
 
   for (auto attach_to_sources_value :
@@ -898,6 +920,18 @@ Json::Value Model::to_json() const {
     value["propagation"] = propagations_value;
   }
 
+  if (!global_sanitizers_.is_bottom()) {
+    auto sanitizers_value = Json::Value(Json::arrayValue);
+    for (const auto& sanitizer : global_sanitizers_) {
+      if (!sanitizer.is_bottom()) {
+        sanitizers_value.append(sanitizer.to_json());
+      }
+    }
+    if (!sanitizers_value.empty()) {
+      value["sanitizers"] = sanitizers_value;
+    }
+  }
+
   if (!attach_to_sources_.is_bottom()) {
     auto attach_to_sources_value = Json::Value(Json::arrayValue);
     for (const auto& [root, features] : attach_to_sources_) {
@@ -1024,6 +1058,9 @@ std::ostream& operator<<(std::ostream& out, const Model& model) {
       }
     }
     out << "  }";
+  }
+  if (!model.global_sanitizers_.is_bottom()) {
+    out << ",\n  sanitizers=" << model.global_sanitizers_;
   }
   if (!model.attach_to_sources_.is_bottom()) {
     out << ",\n attach_to_sources={\n";
