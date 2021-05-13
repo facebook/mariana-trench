@@ -11,6 +11,7 @@ module.exports = {
   someSidebar: [
     'getting-started',
     'configuration',
+    'models',
     'running-on-3rd-party-apps',
   ],
 };
