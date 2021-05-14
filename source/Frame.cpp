@@ -215,10 +215,20 @@ AccessPath validate_and_infer_crtex_callee_port(
         "`Anchor` or `Producer` callee port for crtex frame with canonical_names defined.");
   }
 
-  // If the callee_port is either specified of defaulted to Leaf, it should be
-  // updated to either Anchor or Producer.
-  return is_templated ? AccessPath(Root(Root::Kind::Anchor))
-                      : AccessPath(Root(Root::Kind::Producer));
+  if (callee_port.root().is_leaf()) {
+    if (is_instantiated) {
+      throw JsonValidationError(
+          value,
+          /* field */ std::nullopt,
+          "Instantiated canonical names must have callee_port defined as `Producer.<producer_id>.<canonical_port>`");
+    }
+
+    // If the callee_port is defaulted to Leaf, it should be updated to an
+    // Anchor to enable detection that this comes from a CRTEX producer.
+    return AccessPath(Root(Root::Kind::Anchor));
+  }
+
+  return callee_port;
 }
 
 Frame Frame::from_json(const Json::Value& value, Context& context) {

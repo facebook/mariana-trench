@@ -1418,6 +1418,15 @@ TEST_F(JsonTest, Frame_Crtex) {
               })#"),
           context),
       JsonValidationError);
+  EXPECT_THROW(
+      Frame::from_json(
+          test::parse_json(
+              R"({
+                "kind": "TestSource",
+                "canonical_names": [ {"instantiated": "Lcom/android/MyClass;.MyMethod"} ]
+              })"),
+          context),
+      JsonValidationError);
   EXPECT_EQ(
       Frame::from_json(
           test::parse_json(
@@ -1435,14 +1444,20 @@ TEST_F(JsonTest, Frame_Crtex) {
   EXPECT_EQ(
       Frame::from_json(
           test::parse_json(
-              R"({
+              R"#({
                 "kind": "TestSource",
+                "callee_port": "Producer.123.formal(0)",
                 "canonical_names": [ {"instantiated": "Lcom/android/MyClass;.MyMethod"} ]
-              })"),
+              })#"),
           context),
       Frame::crtex_leaf(
           context.kinds->get("TestSource"),
-          /* callee_port */ AccessPath(Root(Root::Kind::Producer)),
+          /* callee_port */
+          AccessPath(
+              Root(Root::Kind::Producer),
+              Path{
+                  DexString::make_string("123"),
+                  DexString::make_string("formal(0)")}),
           /* canonical_names */
           CanonicalNameSetAbstractDomain{
               CanonicalName(CanonicalName::InstantiatedValue{
