@@ -4,6 +4,8 @@ title: Models
 sidebar_label: Models
 ---
 
+import FbModels from './fb/models.md';
+
 The main way to configure the analysis is through defining models for methods.
 
 ## Models
@@ -538,3 +540,5 @@ Note, the implicit `this` parameter for methods has the parameter number 0.
   3. You can also check the output models.
       Use `grep SourceKind models@*` to see if your source or sink kind exists.
       Use `grep 'Lcom/example/<class-name>;.<method-name>:' models@*` to see if a given method exists in the app.
+
+<FbModels />
