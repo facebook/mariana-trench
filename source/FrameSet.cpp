@@ -235,6 +235,10 @@ FrameSet FrameSet::attach_position(const Position* position) const {
           continue;
         }
 
+        // Canonical names should theoretically be instantiated here the way
+        // they are instantiated in `propagate`, but there is currently no
+        // scenario that requires this. If a templated name does get configured,
+        // the name will be instantiated when this frame gets propagated.
         leaves.add(Frame(
             frame.kind(),
             frame.callee_port(),
@@ -247,7 +251,7 @@ FrameSet FrameSet::attach_position(const Position* position) const {
             /* user_features */ FeatureSet::bottom(),
             /* via_type_of_ports */ {},
             frame.local_positions(),
-            /* canonical_names */ {}));
+            frame.canonical_names()));
       }
     }
   }

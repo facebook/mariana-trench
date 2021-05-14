@@ -151,6 +151,12 @@
             "path" : "Consumer.java"
           },
           "callee_port" : "Producer.153993.Argument(0)",
+          "canonical_names" : 
+          [
+            {
+              "instantiated" : "Landroid/app/Activity;.startActivity:(Landroid/content/Intent;Landroid/os/Bundle;)V__via-type:Lcom/facebook/browser/lite/BrowserLiteActivity;"
+            }
+          ],
           "kind" : "Source",
           "origins" : 
           [
