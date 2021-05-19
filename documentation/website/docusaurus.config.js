@@ -9,8 +9,7 @@
 
 module.exports = {
   title: 'Mariana Trench',
-  tagline:
-    'Security focused static analysis tool for Android and Java applications.',
+  tagline: 'Security-Focused Static Analysis for Android and Java Applications',
   url: 'https://mariana-tren.ch',
   baseUrl: '/',
   onBrokenLinks: 'throw',
