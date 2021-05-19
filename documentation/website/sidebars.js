@@ -13,5 +13,6 @@ module.exports = {
     'configuration',
     'models',
     'running-on-3rd-party-apps',
+    'developers-guide',
   ],
 };
