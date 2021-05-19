@@ -21,6 +21,8 @@ On a Debian flavored Linux (Ubuntu, Mint, Debian), you can use `apt-get`:
 $ sudo apt-get install python3 python3-pip python3-venv
 ```
 
+This guide also assumes you have the [Android SDK](https://developer.android.com/studio) installed and an environment variable `$ANDROID_SDK` pointed to the location of the SDK.
+
 For the rest of this guide, we assume that you are working inside of a [virtual environment](https://docs.python.org/3/tutorial/venv.html). You can set this up with
 
 ```shell
@@ -49,7 +51,10 @@ We'll use a small app that is part of our documentation. You can get it by runni
 We are now ready to run the analysis
 
 ```shell
-(mariana-trench)$ mariana-trench --apk-path=sample-app-debug.apk --source-root-directory=app/src/main/java
+(mariana-trench)$ mariana-trench \
+  --system-jar-configuration-path=$ANDROID_SDK/platforms/android-30/android.jar
+  --apk-path=sample-app-debug.apk \
+  --source-root-directory=app/src/main/java
 # ...
 INFO Analyzed 68886 models in 4.04s. Found 4 issues!
 # ...
