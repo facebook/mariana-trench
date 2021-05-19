@@ -21,7 +21,7 @@ On a Debian flavored Linux (Ubuntu, Mint, Debian), you can use `apt-get`:
 $ sudo apt-get install python3 python3-pip python3-venv
 ```
 
-For the rest of this guide, we assume that you are working inside of a (virtual environment)[https://docs.python.org/3/tutorial/venv.html]. You can set this up with
+For the rest of this guide, we assume that you are working inside of a [virtual environment](https://docs.python.org/3/tutorial/venv.html). You can set this up with
 
 ```shell
 $ python3 -m venv ~/.venvs/mariana-trench
@@ -58,7 +58,7 @@ INFO Analyzed 68886 models in 4.04s. Found 4 issues!
 The analysis has found 4 issues in our sample app. The output of the analyis is a set of specifications for each method of the application.
 
 ## Post Processing
-The specifications themselves are not meant to be read by humans. We need an additional processing step in order to make the results more presentable. We do this with (SAPP)[https://github.com/facebook/sapp] PyPi installed for us:
+The specifications themselves are not meant to be read by humans. We need an additional processing step in order to make the results more presentable. We do this with [SAPP](https://github.com/facebook/sapp) PyPi installed for us:
 
 ```shell
 (mariana-trench)$ sapp --tool=mariana-trench analyze .
