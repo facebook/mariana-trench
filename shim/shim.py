@@ -13,11 +13,10 @@ import subprocess
 import sys
 import tempfile
 import traceback
-import typing
 from pathlib import Path
-from typing import Optional, Any
+from typing import Optional, Any, List
 
-from pyre_extensions import none_throws
+from pyre_extensions import none_throws, safe_json
 
 try:
     from ..facebook.shim import configuration
@@ -66,6 +65,23 @@ def _check_executable(path: Path) -> Path:
     return path
 
 
+def _system_jar_configuration_path(input: str) -> str:
+    if input.endswith(".json"):
+        path = _path_exists(input)
+        with open(path) as file:
+            try:
+                paths = safe_json.load(file, List[str])
+                return ";".join(paths)
+            except safe_json.InvalidJson:
+                raise argparse.ArgumentTypeError(
+                    f"`{path} must contain a list of strings"
+                )
+
+    # Validation deferred to backend if we pass `;` separated list of paths
+    # because they are allowed to not exist.
+    return input
+
+
 class ExtractJexException(ClientError):
     pass
 
@@ -73,7 +89,7 @@ class ExtractJexException(ClientError):
 def _extract_jex_file_if_exists(path: Path, target: str, build_directory: Path) -> Path:
     jex_extract_directory: Path = Path(build_directory) / "jex"
 
-    def run_unzip_command(command: typing.List[str]) -> Path:
+    def run_unzip_command(command: List[str]) -> Path:
         output = subprocess.run(command, stderr=subprocess.PIPE)
         if output.returncode != 0:
             stderr = output.stderr.decode()
@@ -115,7 +131,7 @@ def _extract_jex_file_if_exists(path: Path, target: str, build_directory: Path) 
         return run_unzip_command(["unzip", "-d", str(jex_extract_directory), str(path)])
 
 
-def _build_target(target: str, *, mode: typing.Optional[str] = None) -> Path:
+def _build_target(target: str, *, mode: Optional[str] = None) -> Path:
     LOG.info(f"Building `{target}`%s...", f" with `{mode}`" if mode else "")
 
     # If a target starts with fbcode, then it needs to be built from fbcode instead of from fbsource
@@ -153,7 +169,7 @@ def _build_target(target: str, *, mode: typing.Optional[str] = None) -> Path:
     return working_directory / next(iter(response.values()))
 
 
-def _build_executable_target(target: str, *, mode: typing.Optional[str] = None) -> Path:
+def _build_executable_target(target: str, *, mode: Optional[str] = None) -> Path:
     return _check_executable(_build_target(target, mode=mode))
 
 
@@ -296,9 +312,10 @@ def main() -> None:
         configuration_arguments = parser.add_argument_group("Configuration arguments")
         configuration_arguments.add_argument(
             "--system-jar-configuration-path",
-            type=_path_exists,
+            type=_system_jar_configuration_path,
             default=os.fspath(configuration.get_path("default_system_jar_paths.json")),
-            help="A JSON configuration file with a list of paths to the system jars.",
+            help="A JSON configuration file with a list of paths to the system jars "
+            + "or a `;` separated list of jars.",
         )
         configuration_arguments.add_argument(
             "--rules-paths",
@@ -467,7 +484,7 @@ def main() -> None:
         LOG.info(f"Extracted APK into `{apk_directory}` and DEX into `{dex_directory}`")
 
         options = [
-            "--system-jar-configuration-path",
+            "--system-jar-paths",
             arguments.system_jar_configuration_path,
             "--apk-directory",
             apk_directory,

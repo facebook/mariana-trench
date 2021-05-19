@@ -11,6 +11,7 @@
 #include <fmt/format.h>
 
 #include <mariana-trench/JsonValidation.h>
+#include <mariana-trench/Log.h>
 #include <mariana-trench/Options.h>
 
 namespace marianatrench {
@@ -35,7 +36,8 @@ std::string check_directory_exists(const std::string& path) {
 /* Parse a ';'-separated list of files or directories. */
 std::vector<std::string> parse_paths_list(
     const std::string& input,
-    const std::optional<std::string>& extension) {
+    const std::optional<std::string>& extension,
+    bool check_exist = true) {
   std::vector<std::string> input_paths;
   boost::split(input_paths, input, boost::is_any_of(",;"));
 
@@ -49,6 +51,9 @@ std::vector<std::string> parse_paths_list(
         }
       }
     } else if (boost::filesystem::exists(path)) {
+      paths.push_back(path);
+    } else if (!check_exist) {
+      WARNING(2, "Argument path does not exist: `{}`", path);
       paths.push_back(path);
     } else {
       throw std::invalid_argument(
@@ -69,18 +74,6 @@ std::vector<std::string> parse_search_paths(const std::string& input) {
     }
   }
   return paths;
-}
-
-std::vector<std::string> parse_json_file_to_string_list(
-    const std::string& path) {
-  Json::Value json = JsonValidation::parse_json_file(path);
-
-  std::vector<std::string> result;
-  for (const auto& item : JsonValidation::null_or_array(json)) {
-    result.push_back(JsonValidation::string(/* value */ item));
-  }
-
-  return result;
 }
 
 std::vector<ModelGeneratorConfiguration> parse_json_configuration_files(
@@ -122,10 +115,10 @@ Options::Options(
       dump_dependencies_(false) {}
 
 Options::Options(const boost::program_options::variables_map& variables) {
-  system_jars_configuration_path_ = check_path_exists(
-      variables["system-jar-configuration-path"].as<std::string>());
-  system_jar_paths_ =
-      parse_json_file_to_string_list(system_jars_configuration_path_);
+  system_jar_paths_ = parse_paths_list(
+      variables["system-jar-paths"].as<std::string>(),
+      std::nullopt,
+      /* check exist */ false);
 
   apk_directory_ =
       check_directory_exists(variables["apk-directory"].as<std::string>());
@@ -203,7 +196,7 @@ Options::Options(const boost::program_options::variables_map& variables) {
 void Options::add_options(
     boost::program_options::options_description& options) {
   options.add_options()(
-      "system-jar-configuration-path",
+      "system-jar-paths",
       program_options::value<std::string>()->required(),
       "A JSON configuration file with a list of paths to the system jars.");
   options.add_options()(
@@ -339,10 +332,6 @@ const std::string& Options::source_root_directory() const {
 
 const std::vector<std::string>& Options::source_exclude_directories() const {
   return source_exclude_directories_;
-}
-
-const std::string& Options::system_jars_configuration_path() const {
-  return system_jars_configuration_path_;
 }
 
 const std::vector<std::string>& Options::system_jar_paths() const {

@@ -53,8 +53,8 @@ class Options final {
   const std::string& source_root_directory() const;
   const std::vector<std::string>& source_exclude_directories() const;
 
-  const std::string& system_jars_configuration_path() const;
   const std::vector<std::string>& system_jar_paths() const;
+
   const std::string& apk_directory() const;
   const std::string& dex_directory() const;
 
@@ -93,7 +93,6 @@ class Options final {
   std::string source_root_directory_;
   std::vector<std::string> source_exclude_directories_;
 
-  std::string system_jars_configuration_path_;
   std::vector<std::string> system_jar_paths_;
   std::string apk_directory_;
   std::string dex_directory_;
