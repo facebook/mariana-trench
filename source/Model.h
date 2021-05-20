@@ -184,6 +184,8 @@ class Model final {
 
   void add_generation(AccessPath port, Frame generation);
   void add_generations(AccessPath port, Taint generations);
+  /* Add generations after applying sanitizers */
+  void add_inferred_generations(AccessPath port, Taint generations);
   const TaintAccessPathTree& generations() const {
     return generations_;
   }
@@ -201,6 +203,8 @@ class Model final {
 
   void add_sink(AccessPath port, Frame sink);
   void add_sinks(AccessPath port, Taint sinks);
+  /* Add sinks after applying sanitizers */
+  void add_inferred_sinks(AccessPath port, Taint sinks);
   const TaintAccessPathTree& sinks() const {
     return sinks_;
   }
@@ -209,6 +213,8 @@ class Model final {
   }
 
   void add_propagation(Propagation propagation, AccessPath output);
+  /* Add a propagation after applying sanitizers */
+  void add_inferred_propagation(Propagation propagation, AccessPath output);
   const PropagationAccessPathTree& propagations() const {
     return propagations_;
   }
@@ -217,6 +223,7 @@ class Model final {
   const SanitizerSet& global_sanitizers() const {
     return global_sanitizers_;
   }
+  Taint apply_source_sink_sanitizers(SanitizerKind kind, Taint taint);
 
   void add_attach_to_sources(Root root, FeatureSet features);
   FeatureSet attach_to_sources(Root root) const;

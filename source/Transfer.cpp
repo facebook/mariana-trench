@@ -459,7 +459,7 @@ void create_sinks(
           "Inferred sink for port {}: {}",
           artificial_source.callee_port(),
           new_sinks);
-      context->model.add_sinks(
+      context->model.add_inferred_sinks(
           artificial_source.callee_port(), std::move(new_sinks));
     }
   }
@@ -1046,7 +1046,7 @@ void infer_output_taint(
             "Inferred generation for port {}: {}",
             port,
             generation);
-        context->model.add_generations(
+        context->model.add_inferred_generations(
             std::move(port), Taint{std::move(generation)});
       }
 
@@ -1069,7 +1069,7 @@ void infer_output_taint(
                 "Inferred propagation {} to {}",
                 propagation,
                 output);
-            context->model.add_propagation(
+            context->model.add_inferred_propagation(
                 std::move(propagation), std::move(output));
           }
         }

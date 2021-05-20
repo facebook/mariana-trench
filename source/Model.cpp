@@ -511,6 +511,14 @@ void Model::add_generations(AccessPath port, Taint generations) {
   generations_.write(port, std::move(generations), UpdateKind::Weak);
 }
 
+void Model::add_inferred_generations(AccessPath port, Taint generations) {
+  auto sanitized_generations =
+      apply_source_sink_sanitizers(SanitizerKind::Sources, generations);
+  if (!sanitized_generations.is_bottom()) {
+    add_generations(port, sanitized_generations);
+  }
+}
+
 void Model::add_parameter_source(AccessPath port, Frame source) {
   if (method_ && source.origins().empty() && source.is_leaf()) {
     source.set_origins(MethodSet{method_});
@@ -543,6 +551,14 @@ void Model::add_sinks(AccessPath port, Taint sinks) {
   sinks_.write(port, std::move(sinks), UpdateKind::Weak);
 }
 
+void Model::add_inferred_sinks(AccessPath port, Taint sinks) {
+  auto sanitized_sinks =
+      apply_source_sink_sanitizers(SanitizerKind::Sinks, sinks);
+  if (!sanitized_sinks.is_bottom()) {
+    add_sinks(port, sanitized_sinks);
+  }
+}
+
 void Model::add_propagation(Propagation propagation, AccessPath output) {
   check_propagation_consistency(propagation);
 
@@ -552,8 +568,30 @@ void Model::add_propagation(Propagation propagation, AccessPath output) {
       output, PropagationSet{std::move(propagation)}, UpdateKind::Weak);
 }
 
+void Model::add_inferred_propagation(
+    Propagation propagation,
+    AccessPath output) {
+  if (global_sanitizers_.contains(Sanitizer(
+          SanitizerKind::Propagations, KindSetAbstractDomain::top()))) {
+    return;
+  }
+  add_propagation(propagation, output);
+}
+
 void Model::add_global_sanitizer(Sanitizer sanitizer) {
   global_sanitizers_.add(sanitizer);
+}
+
+Taint Model::apply_source_sink_sanitizers(SanitizerKind kind, Taint taint) {
+  mt_assert(kind != SanitizerKind::Propagations);
+  for (const auto& sanitizer : global_sanitizers_) {
+    if (sanitizer.sanitizer_kind() == kind) {
+      if (sanitizer.kinds().is_top()) {
+        return Taint::bottom();
+      }
+    }
+  }
+  return taint;
 }
 
 void Model::add_attach_to_sources(Root root, FeatureSet features) {
