@@ -203,6 +203,14 @@
       "Ljava/lang/Object;.<init>:()V"
     ]
   },
+  "Lcom/facebook/marianatrench/integrationtests/GlobalSanitizers;.getSanitizedKindSource:()[Ljava/lang/Object;" : 
+  {
+    "virtual" : 
+    [
+      "Lcom/facebook/marianatrench/integrationtests/GlobalSanitizers;.getSource:()Ljava/lang/Object;",
+      "Lcom/facebook/marianatrench/integrationtests/GlobalSanitizers;.getSourceB:()Ljava/lang/Object;"
+    ]
+  },
   "Lcom/facebook/marianatrench/integrationtests/GlobalSanitizers;.getSanitizedSource:()Ljava/lang/Object;" : 
   {
     "static" : 
@@ -217,14 +225,24 @@
       "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;"
     ]
   },
+  "Lcom/facebook/marianatrench/integrationtests/GlobalSanitizers;.getSourceB:()Ljava/lang/Object;" : 
+  {
+    "static" : 
+    [
+      "Ljava/lang/Object;.<init>:()V"
+    ]
+  },
   "Lcom/facebook/marianatrench/integrationtests/GlobalSanitizers;.sanitizedFlows:()V" : 
   {
     "virtual" : 
     [
+      "Lcom/facebook/marianatrench/integrationtests/GlobalSanitizers;.getSanitizedKindSource:()[Ljava/lang/Object;",
       "Lcom/facebook/marianatrench/integrationtests/GlobalSanitizers;.getSanitizedSource:()Ljava/lang/Object;",
       "Lcom/facebook/marianatrench/integrationtests/GlobalSanitizers;.getSource:()Ljava/lang/Object;",
       "Lcom/facebook/marianatrench/integrationtests/GlobalSanitizers;.sanitizedPropagation:(Ljava/lang/Object;)Ljava/lang/Object;",
       "Lcom/facebook/marianatrench/integrationtests/GlobalSanitizers;.sanitizedSinkWithReturn:(Ljava/lang/Object;)Ljava/lang/Object;",
+      "Lcom/facebook/marianatrench/integrationtests/GlobalSanitizers;.toArraySink:([Ljava/lang/Object;)V",
+      "Lcom/facebook/marianatrench/integrationtests/GlobalSanitizers;.toSanitizedKindSink:(Ljava/lang/Object;)V",
       "Lcom/facebook/marianatrench/integrationtests/GlobalSanitizers;.toSanitizedSink:(Ljava/lang/Object;)V",
       "Lcom/facebook/marianatrench/integrationtests/GlobalSanitizers;.toSink:(Ljava/lang/Object;)V"
     ]
@@ -235,6 +253,21 @@
     [
       "Lcom/facebook/marianatrench/integrationtests/GlobalSanitizers;.getSource:()Ljava/lang/Object;",
       "Lcom/facebook/marianatrench/integrationtests/GlobalSanitizers;.toSink:(Ljava/lang/Object;)V"
+    ]
+  },
+  "Lcom/facebook/marianatrench/integrationtests/GlobalSanitizers;.toArraySink:([Ljava/lang/Object;)V" : 
+  {
+    "virtual" : 
+    [
+      "Lcom/facebook/marianatrench/integrationtests/GlobalSanitizers;.toSink:(Ljava/lang/Object;)V"
+    ]
+  },
+  "Lcom/facebook/marianatrench/integrationtests/GlobalSanitizers;.toSanitizedKindSink:(Ljava/lang/Object;)V" : 
+  {
+    "virtual" : 
+    [
+      "Lcom/facebook/marianatrench/integrationtests/GlobalSanitizers;.toSink:(Ljava/lang/Object;)V",
+      "Lcom/facebook/marianatrench/integrationtests/GlobalSanitizers;.toSinkB:(Ljava/lang/Object;)V"
     ]
   },
   "Lcom/facebook/marianatrench/integrationtests/GlobalSanitizers;.toSanitizedSink:(Ljava/lang/Object;)V" : 

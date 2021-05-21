@@ -588,6 +588,14 @@ Taint Model::apply_source_sink_sanitizers(SanitizerKind kind, Taint taint) {
       if (sanitizer.kinds().is_top()) {
         return Taint::bottom();
       }
+      return taint.transform_map_kind(
+          [&sanitizer](const Kind* kind) -> std::vector<const Kind*> {
+            if (sanitizer.kinds().contains(kind)) {
+              return {};
+            }
+            return {kind};
+          },
+          /* map_frame_set */ nullptr);
     }
   }
   return taint;

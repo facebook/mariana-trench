@@ -31,20 +31,37 @@
     "Landroid/content/Intent;.getBundleExtra:(Ljava/lang/String;)Landroid/os/Bundle;",
     "Landroid/content/Intent;.getExtras:()Landroid/os/Bundle;"
   ],
+  "Lcom/facebook/marianatrench/integrationtests/GlobalSanitizers;.getSanitizedKindSource:()[Ljava/lang/Object;" : 
+  [
+    "Lcom/facebook/marianatrench/integrationtests/GlobalSanitizers;.sanitizedFlows:()V"
+  ],
   "Lcom/facebook/marianatrench/integrationtests/GlobalSanitizers;.getSanitizedSource:()Ljava/lang/Object;" : 
   [
     "Lcom/facebook/marianatrench/integrationtests/GlobalSanitizers;.sanitizedFlows:()V"
   ],
   "Lcom/facebook/marianatrench/integrationtests/GlobalSanitizers;.getSource:()Ljava/lang/Object;" : 
   [
+    "Lcom/facebook/marianatrench/integrationtests/GlobalSanitizers;.getSanitizedKindSource:()[Ljava/lang/Object;",
     "Lcom/facebook/marianatrench/integrationtests/GlobalSanitizers;.sanitizedFlows:()V",
     "Lcom/facebook/marianatrench/integrationtests/GlobalSanitizers;.sanitizedSinkWithReturn:(Ljava/lang/Object;)Ljava/lang/Object;"
+  ],
+  "Lcom/facebook/marianatrench/integrationtests/GlobalSanitizers;.getSourceB:()Ljava/lang/Object;" : 
+  [
+    "Lcom/facebook/marianatrench/integrationtests/GlobalSanitizers;.getSanitizedKindSource:()[Ljava/lang/Object;"
   ],
   "Lcom/facebook/marianatrench/integrationtests/GlobalSanitizers;.sanitizedPropagation:(Ljava/lang/Object;)Ljava/lang/Object;" : 
   [
     "Lcom/facebook/marianatrench/integrationtests/GlobalSanitizers;.sanitizedFlows:()V"
   ],
   "Lcom/facebook/marianatrench/integrationtests/GlobalSanitizers;.sanitizedSinkWithReturn:(Ljava/lang/Object;)Ljava/lang/Object;" : 
+  [
+    "Lcom/facebook/marianatrench/integrationtests/GlobalSanitizers;.sanitizedFlows:()V"
+  ],
+  "Lcom/facebook/marianatrench/integrationtests/GlobalSanitizers;.toArraySink:([Ljava/lang/Object;)V" : 
+  [
+    "Lcom/facebook/marianatrench/integrationtests/GlobalSanitizers;.sanitizedFlows:()V"
+  ],
+  "Lcom/facebook/marianatrench/integrationtests/GlobalSanitizers;.toSanitizedKindSink:(Ljava/lang/Object;)V" : 
   [
     "Lcom/facebook/marianatrench/integrationtests/GlobalSanitizers;.sanitizedFlows:()V"
   ],
@@ -56,7 +73,13 @@
   [
     "Lcom/facebook/marianatrench/integrationtests/GlobalSanitizers;.sanitizedFlows:()V",
     "Lcom/facebook/marianatrench/integrationtests/GlobalSanitizers;.sanitizedSinkWithReturn:(Ljava/lang/Object;)Ljava/lang/Object;",
+    "Lcom/facebook/marianatrench/integrationtests/GlobalSanitizers;.toArraySink:([Ljava/lang/Object;)V",
+    "Lcom/facebook/marianatrench/integrationtests/GlobalSanitizers;.toSanitizedKindSink:(Ljava/lang/Object;)V",
     "Lcom/facebook/marianatrench/integrationtests/GlobalSanitizers;.toSanitizedSink:(Ljava/lang/Object;)V"
+  ],
+  "Lcom/facebook/marianatrench/integrationtests/GlobalSanitizers;.toSinkB:(Ljava/lang/Object;)V" : 
+  [
+    "Lcom/facebook/marianatrench/integrationtests/GlobalSanitizers;.toSanitizedKindSink:(Ljava/lang/Object;)V"
   ],
   "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V" : 
   [
@@ -107,6 +130,7 @@
     "Lcom/facebook/base/activity/FragmentBaseActivityUtil;.<init>:()V",
     "Lcom/facebook/content/SecureContextHelper;.<init>:()V",
     "Lcom/facebook/marianatrench/integrationtests/GlobalSanitizers;.<init>:()V",
+    "Lcom/facebook/marianatrench/integrationtests/GlobalSanitizers;.getSourceB:()Ljava/lang/Object;",
     "Lcom/facebook/marianatrench/integrationtests/Origin;.<init>:()V",
     "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;",
     "Lcom/facebook/secure/context/IntentLauncher;.<init>:()V",
