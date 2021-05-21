@@ -14,6 +14,14 @@
 
 namespace marianatrench {
 
+Sanitizer::Sanitizer(
+    const SanitizerKind& sanitizer_kind,
+    const KindSetAbstractDomain& kinds)
+    : sanitizer_kind_(sanitizer_kind), kinds_(kinds) {
+  mt_assert(
+      sanitizer_kind_ != SanitizerKind::Propagations || !kinds_.is_value());
+}
+
 bool Sanitizer::leq(const Sanitizer& other) const {
   if (is_bottom()) {
     return true;
@@ -101,6 +109,13 @@ const Sanitizer Sanitizer::from_json(
 
   KindSetAbstractDomain kinds;
   if (value.isMember("kinds")) {
+    if (sanitizer_kind == SanitizerKind::Propagations) {
+      throw JsonValidationError(
+          value,
+          /* field */ "kinds",
+          /* expected */
+          "Unspecified kinds for propagation sanitizers");
+    }
     kinds = KindSetAbstractDomain();
     for (const auto& kind_json :
          JsonValidation::nonempty_array(value, "kinds")) {

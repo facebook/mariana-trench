@@ -19,6 +19,13 @@ TEST_F(SanitizerTest, Constructor) {
   // Test bottom
   EXPECT_TRUE(Sanitizer().is_bottom());
   EXPECT_TRUE(Sanitizer::bottom().is_bottom());
+
+  auto context = test::make_empty_context();
+  EXPECT_THROW(
+      Sanitizer(
+          SanitizerKind::Propagations,
+          KindSetAbstractDomain(context.kinds->get("kind"))),
+      std::exception);
 }
 
 TEST_F(SanitizerTest, SanitizerLeq) {
@@ -45,10 +52,10 @@ TEST_F(SanitizerTest, SanitizerLeq) {
                       SanitizerKind::Sources,
                       /* kinds */ KindSetAbstractDomain::top())));
   EXPECT_FALSE(Sanitizer(
-                   SanitizerKind::Propagations,
+                   SanitizerKind::Sources,
                    /* kinds */ KindSetAbstractDomain({kind1, kind2}))
                    .leq(Sanitizer(
-                       SanitizerKind::Propagations,
+                       SanitizerKind::Sources,
                        /* kinds */ KindSetAbstractDomain({kind1}))));
   EXPECT_TRUE(Sanitizer(
                   SanitizerKind::Sinks,
@@ -62,7 +69,7 @@ TEST_F(SanitizerTest, SanitizerLeq) {
                    SanitizerKind::Sinks,
                    /* kinds */ KindSetAbstractDomain({kind1, kind2}))
                    .leq(Sanitizer(
-                       SanitizerKind::Propagations,
+                       SanitizerKind::Sources,
                        /* kinds */ KindSetAbstractDomain({kind1, kind2}))));
 }
 
@@ -120,13 +127,13 @@ TEST_F(SanitizerTest, SanitizerJoin) {
           /* kinds */ KindSetAbstractDomain::top()));
   EXPECT_EQ(
       Sanitizer(
-          SanitizerKind::Propagations,
+          SanitizerKind::Sinks,
           /* kinds */ KindSetAbstractDomain({kind1, kind2}))
           .join(Sanitizer(
-              SanitizerKind::Propagations,
+              SanitizerKind::Sinks,
               /* kinds */ KindSetAbstractDomain({kind2, kind3}))),
       Sanitizer(
-          SanitizerKind::Propagations,
+          SanitizerKind::Sinks,
           /* kinds */ KindSetAbstractDomain({kind1, kind2, kind3})));
   EXPECT_EQ(
       Sanitizer(
@@ -145,7 +152,7 @@ TEST_F(SanitizerTest, SanitizerJoin) {
           SanitizerKind::Sources,
           /* kinds */ KindSetAbstractDomain::top())
           .join(Sanitizer(
-              SanitizerKind::Sinks,
+              SanitizerKind::Propagations,
               /* kinds */ KindSetAbstractDomain::top())),
       std::exception);
 }

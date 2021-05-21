@@ -42,8 +42,7 @@ class Sanitizer final : public sparta::AbstractDomain<Sanitizer> {
         kinds_(KindSetAbstractDomain::bottom()) {}
   Sanitizer(
       const SanitizerKind& sanitizer_kind,
-      const KindSetAbstractDomain& kinds)
-      : sanitizer_kind_(sanitizer_kind), kinds_(kinds) {}
+      const KindSetAbstractDomain& kinds);
 
   Sanitizer(const Sanitizer&) = default;
   Sanitizer(Sanitizer&&) = default;

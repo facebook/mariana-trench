@@ -334,6 +334,14 @@ TEST_F(JsonTest, Sanitizer) {
       Sanitizer::from_json(
           test::parse_json(R"({"sanitize": "sinks", "kinds": []})"), context),
       JsonValidationError);
+  // propagation sanitizer can't have kinds
+  EXPECT_THROW(
+      Sanitizer::from_json(
+          test::parse_json(
+              R"({"sanitize": "propgation", "kinds": [{"kind": "Kind1"}]})"),
+          context),
+      JsonValidationError);
+
   EXPECT_JSON_EQ(
       Sanitizer,
       R"({"sanitize": "sources"})",
@@ -358,22 +366,6 @@ TEST_F(JsonTest, Sanitizer) {
   EXPECT_EQ(
       Sanitizer::from_json(
           test::parse_json(
-              R"({"sanitize": "propagations", "kinds": [{"kind": "Kind1"}, {"kind": "Kind2"}, {"kind": "Kind3", "partial_label": "a"}]})"),
-          context),
-      Sanitizer(
-          SanitizerKind::Propagations,
-          /* kinds */ KindSetAbstractDomain({kind1, kind2, partial_kind})));
-  EXPECT_EQ(
-      Sanitizer::from_json(
-          test::parse_json(
-              R"({"sanitize": "propagations", "kinds": [{"kind": "Kind1"}, {"kind": "Kind2"}]})"),
-          context),
-      Sanitizer(
-          SanitizerKind::Propagations,
-          /* kinds */ KindSetAbstractDomain({kind1, kind2})));
-  EXPECT_EQ(
-      Sanitizer::from_json(
-          test::parse_json(
               R"({"sanitize": "sinks", "kinds": [{"kind": "Kind1"}, {"kind": "Kind3", "partial_label": "a"}, {"kind": "Kind3", "partial_label": "b"}]})"),
           context),
       Sanitizer(
@@ -391,10 +383,10 @@ TEST_F(JsonTest, Sanitizer) {
                             .to_json()));
   EXPECT_EQ(
       test::parse_json(
-          R"({"sanitize": "propagations", "kinds": [{"kind": "Kind1"}, {"kind": "Kind2"}, {"kind": "Partial:Kind3:a"}]})"),
+          R"({"sanitize": "sources", "kinds": [{"kind": "Kind1"}, {"kind": "Kind2"}, {"kind": "Partial:Kind3:a"}]})"),
       test::sorted_json(
           Sanitizer(
-              SanitizerKind::Propagations,
+              SanitizerKind::Sources,
               /* kinds */ KindSetAbstractDomain({kind1, kind2, partial_kind}))
               .to_json()));
   EXPECT_EQ(
@@ -1947,8 +1939,7 @@ TEST_F(JsonTest, Model) {
       })#"));
 
   const auto* kind1 = context.kinds->get("Kind1");
-  const auto* kind2 = context.kinds->get("Kind2");
-  const auto* kind3 = context.kinds->get_partial("Kind3", "a");
+  const auto* kind2 = context.kinds->get_partial("Kind2", "a");
   EXPECT_EQ(
       Model::from_json(
           method,
@@ -1961,7 +1952,7 @@ TEST_F(JsonTest, Model) {
             ],
           "sanitizers": [
             {"sanitize": "sources", "kinds": [{"kind": "Kind1"}]},
-            {"sanitize": "propagations", "kinds": [{"kind": "Kind1"}, {"kind": "Kind2"}]}
+            {"sanitize": "propagations"}
           ]
           })#"),
           context),
@@ -1983,8 +1974,7 @@ TEST_F(JsonTest, Model) {
           /* sanitizers */
           {Sanitizer(SanitizerKind::Sources, KindSetAbstractDomain({kind1})),
            Sanitizer(
-               SanitizerKind::Propagations,
-               KindSetAbstractDomain({kind1, kind2}))}));
+               SanitizerKind::Propagations, KindSetAbstractDomain::top())}));
   EXPECT_EQ(
       test::sorted_json(
           Model(
@@ -1997,16 +1987,16 @@ TEST_F(JsonTest, Model) {
               /* propagations */ {},
               /* sanitizers */
               {Sanitizer(
-                   SanitizerKind::Propagations, KindSetAbstractDomain({kind1})),
+                   SanitizerKind::Sources, KindSetAbstractDomain({kind1})),
                Sanitizer(
                    SanitizerKind::Sinks,
-                   KindSetAbstractDomain({kind1, kind3}))})
+                   KindSetAbstractDomain({kind1, kind2}))})
               .to_json()),
       test::sorted_json(test::parse_json(R"#({
         "method": "LData;.method:(LData;LData;)V",
         "sanitizers": [
-          {"sanitize": "propagations", "kinds": [{"kind": "Kind1"}]},
-          {"sanitize": "sinks", "kinds": [{"kind": "Kind1"}, {"kind": "Partial:Kind3:a"}]}
+          {"sanitize": "sources", "kinds": [{"kind": "Kind1"}]},
+          {"sanitize": "sinks", "kinds": [{"kind": "Kind1"}, {"kind": "Partial:Kind2:a"}]}
         ]
       })#")));
 
