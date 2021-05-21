@@ -571,8 +571,7 @@ void Model::add_propagation(Propagation propagation, AccessPath output) {
 void Model::add_inferred_propagation(
     Propagation propagation,
     AccessPath output) {
-  if (global_sanitizers_.contains(Sanitizer(
-          SanitizerKind::Propagations, KindSetAbstractDomain::top()))) {
+  if (has_global_propagation_sanitizer()) {
     return;
   }
   add_propagation(propagation, output);
@@ -592,6 +591,11 @@ Taint Model::apply_source_sink_sanitizers(SanitizerKind kind, Taint taint) {
     }
   }
   return taint;
+}
+
+bool Model::has_global_propagation_sanitizer() {
+  return global_sanitizers_.contains(
+      Sanitizer(SanitizerKind::Propagations, KindSetAbstractDomain::top()));
 }
 
 void Model::add_attach_to_sources(Root root, FeatureSet features) {

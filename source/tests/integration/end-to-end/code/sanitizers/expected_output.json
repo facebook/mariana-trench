@@ -108,80 +108,6 @@
   ]
 }
 {
-  "inline_as" : "Argument(1)",
-  "method" : "Lcom/facebook/marianatrench/integrationtests/GlobalSanitizers;.sanitizedPropagation:(Ljava/lang/Object;)Ljava/lang/Object;",
-  "position" : 
-  {
-    "line" : 28,
-    "path" : "GlobalSanitizers.java"
-  },
-  "sanitizers" : 
-  [
-    {
-      "sanitize" : "propagations"
-    }
-  ]
-}
-{
-  "issues" : 
-  [
-    {
-      "position" : 
-      {
-        "line" : 36,
-        "path" : "GlobalSanitizers.java"
-      },
-      "rule" : 1,
-      "sinks" : 
-      [
-        {
-          "call_position" : 
-          {
-            "end" : 43,
-            "line" : 36,
-            "path" : "GlobalSanitizers.java",
-            "start" : 11
-          },
-          "callee" : "Lcom/facebook/marianatrench/integrationtests/GlobalSanitizers;.toSink:(Ljava/lang/Object;)V",
-          "callee_port" : "Argument(1)",
-          "distance" : 2,
-          "kind" : "Sink",
-          "origins" : 
-          [
-            "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V"
-          ]
-        }
-      ],
-      "sources" : 
-      [
-        {
-          "call_position" : 
-          {
-            "end" : 40,
-            "line" : 36,
-            "path" : "GlobalSanitizers.java",
-            "start" : 32
-          },
-          "callee" : "Lcom/facebook/marianatrench/integrationtests/GlobalSanitizers;.getSource:()Ljava/lang/Object;",
-          "callee_port" : "Return",
-          "distance" : 2,
-          "kind" : "Source",
-          "origins" : 
-          [
-            "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;"
-          ]
-        }
-      ]
-    }
-  ],
-  "method" : "Lcom/facebook/marianatrench/integrationtests/GlobalSanitizers;.sanitizedFlows:()V",
-  "position" : 
-  {
-    "line" : 32,
-    "path" : "GlobalSanitizers.java"
-  }
-}
-{
   "issues" : 
   [
     {
@@ -844,6 +770,28 @@
   [
     {
       "sanitize" : "sources"
+    }
+  ]
+}
+{
+  "method" : "Lcom/facebook/marianatrench/integrationtests/GlobalSanitizers;.sanitizedFlows:()V",
+  "position" : 
+  {
+    "line" : 32,
+    "path" : "GlobalSanitizers.java"
+  }
+}
+{
+  "method" : "Lcom/facebook/marianatrench/integrationtests/GlobalSanitizers;.sanitizedPropagation:(Ljava/lang/Object;)Ljava/lang/Object;",
+  "position" : 
+  {
+    "line" : 28,
+    "path" : "GlobalSanitizers.java"
+  },
+  "sanitizers" : 
+  [
+    {
+      "sanitize" : "propagations"
     }
   ]
 }

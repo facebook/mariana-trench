@@ -224,6 +224,7 @@ class Model final {
     return global_sanitizers_;
   }
   Taint apply_source_sink_sanitizers(SanitizerKind kind, Taint taint);
+  bool has_global_propagation_sanitizer();
 
   void add_attach_to_sources(Root root, FeatureSet features);
   FeatureSet attach_to_sources(Root root) const;
