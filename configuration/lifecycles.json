@@ -209,6 +209,49 @@
     ]
   },
   {
+    "base_class_name": "Landroid/app/Activity;",
+    "method_name": "activity_lifecycle_wrapper",
+    "callees": [
+      {
+        "method_name": "onCreate",
+        "return_type": "V",
+        "argument_types": [
+          "Landroid/os/Bundle;"
+        ]
+      },
+      {
+        "method_name": "onStart",
+        "return_type": "V",
+        "argument_types": []
+      },
+      {
+        "method_name": "onResume",
+        "return_type": "V",
+        "argument_types": []
+      },
+      {
+        "method_name": "onPause",
+        "return_type": "V",
+        "argument_types": []
+      },
+      {
+        "method_name": "onStop",
+        "return_type": "V",
+        "argument_types": []
+      },
+      {
+        "method_name": "onRestart",
+        "return_type": "V",
+        "argument_types": []
+      },
+      {
+        "method_name": "onDestroy",
+        "return_type": "V",
+        "argument_types": []
+      }
+    ]
+  },
+  {
     "base_class_name": "Landroid/app/Service;",
     "method_name": "service_lifecycle_wrapper",
     "callees": [
