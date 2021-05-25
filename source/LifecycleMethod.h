@@ -104,6 +104,10 @@ class LifecycleMethod {
   LifecycleMethod& operator=(LifecycleMethod&&) = delete;
   ~LifecycleMethod() = default;
 
+  const std::string& method_name() const {
+    return method_name_;
+  }
+
   static LifecycleMethod from_json(const Json::Value& value);
 
   /**

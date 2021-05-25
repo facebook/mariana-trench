@@ -16,17 +16,28 @@ void LifecycleMethods::run(
     const Options& options,
     const ClassHierarchies& class_hierarchies,
     Methods& methods) {
-  std::vector<LifecycleMethod> lifecycle_methods;
+  std::unordered_map<std::string, LifecycleMethod> lifecycle_methods;
   for (const auto& path : options.lifecycles_paths()) {
     auto lifecycle_definitions = JsonValidation::parse_json_file(path);
     for (const auto& lifecycle_definition :
          JsonValidation::null_or_array(lifecycle_definitions)) {
-      lifecycle_methods.emplace_back(
-          LifecycleMethod::from_json(lifecycle_definition));
+      auto method = LifecycleMethod::from_json(lifecycle_definition);
+      auto [_, inserted] =
+          lifecycle_methods.emplace(method.method_name(), method);
+      if (!inserted) {
+        // Happens when another life-cycle definition has the same method name
+        // as the current one. Method names must be unique across all
+        // definitions because a `DexMethod` of the form
+        // `ChildClass;.<method_name>` will be created per `method` defined.
+        throw JsonValidationError(
+            lifecycle_definition,
+            /* field */ "method_name",
+            "unique values across all life-cycle definitions");
+      }
     }
   }
 
-  for (auto& lifecycle_method : lifecycle_methods) {
+  for (auto& [_, lifecycle_method] : lifecycle_methods) {
     lifecycle_method.create_methods(class_hierarchies, methods);
   }
 }
