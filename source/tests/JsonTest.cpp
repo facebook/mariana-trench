@@ -12,6 +12,7 @@
 #include <mariana-trench/Frame.h>
 #include <mariana-trench/JsonValidation.h>
 #include <mariana-trench/LifecycleMethod.h>
+#include <mariana-trench/LifecycleMethods.h>
 #include <mariana-trench/LocalPositionSet.h>
 #include <mariana-trench/Method.h>
 #include <mariana-trench/Model.h>
@@ -2430,6 +2431,62 @@ TEST_F(JsonTest, LifecycleMethod) {
           /* callees */
           {LifecycleMethodCall("onCreate", "V", {"Landroid/os/Bundle;"}),
            LifecycleMethodCall("onStart", "V", {})}));
+}
+
+TEST_F(JsonTest, LifecycleMethods) {
+  LifecycleMethods methods;
+  methods.add_methods_from_json(test::parse_json(R"([{
+        "base_class_name": "Landroidx/fragment/app/FragmentActivity;",
+        "method_name": "activity_lifecycle_wrapper",
+        "callees": [
+          {
+            "method_name": "onCreate",
+            "return_type": "V",
+            "argument_types": []
+          }
+        ]
+      }])"));
+
+  // Re-using name "activity_lifecycle_wrapper" should fail.
+  EXPECT_THROW(
+      methods.add_methods_from_json(test::parse_json(R"([{
+        "base_class_name": "Landroidx/fragment/app/FragmentActivity2;",
+        "method_name": "activity_lifecycle_wrapper",
+        "callees": [
+          {
+            "method_name": "onCreate",
+            "return_type": "V",
+            "argument_types": []
+          }
+        ]
+      }])")),
+      JsonValidationError);
+
+  // Re-using name "mymethodname" within the same JSON array should fail.
+  EXPECT_THROW(
+      methods.add_methods_from_json(test::parse_json(R"([{
+        "base_class_name": "Landroidx/fragment/app/FragmentActivity3;",
+        "method_name": "mymethodname",
+        "callees": [
+          {
+            "method_name": "onCreate",
+            "return_type": "V",
+            "argument_types": []
+          }
+        ]
+      },
+      {
+        "base_class_name": "Landroidx/fragment/app/FragmentActivity4;",
+        "method_name": "mymethodname",
+        "callees": [
+          {
+            "method_name": "onCreate",
+            "return_type": "V",
+            "argument_types": []
+          }
+        ]
+      }])")),
+      JsonValidationError);
 }
 
 } // namespace marianatrench

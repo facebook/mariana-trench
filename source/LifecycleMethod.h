@@ -115,7 +115,7 @@ class LifecycleMethod {
    */
   void create_methods(
       const ClassHierarchies& class_hierarchies,
-      Methods& methods);
+      Methods& methods) const;
 
   bool operator==(const LifecycleMethod& other) const;
 

@@ -82,7 +82,7 @@ LifecycleMethod LifecycleMethod::from_json(const Json::Value& value) {
 
 void LifecycleMethod::create_methods(
     const ClassHierarchies& class_hierarchies,
-    Methods& methods) {
+    Methods& methods) const {
   // All DexMethods created by `LifecycleMethod` have the same signature:
   //   void <method_name_>(<arguments>)
   // The arguments are determined by the callees' arguments. This creates the

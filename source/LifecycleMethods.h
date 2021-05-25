@@ -8,6 +8,7 @@
 #pragma once
 
 #include <mariana-trench/ClassHierarchies.h>
+#include <mariana-trench/LifecycleMethod.h>
 #include <mariana-trench/Methods.h>
 #include <mariana-trench/Options.h>
 
@@ -23,6 +24,23 @@ class LifecycleMethods final {
       const Options& options,
       const ClassHierarchies& class_hierarchies,
       Methods& methods);
+
+  LifecycleMethods() {}
+
+  LifecycleMethods(const LifecycleMethods&) = delete;
+  LifecycleMethods(LifecycleMethods&&) = delete;
+  LifecycleMethods& operator=(const LifecycleMethods&) = delete;
+  LifecycleMethods& operator=(LifecycleMethods&&) = delete;
+  ~LifecycleMethods() = default;
+
+  void add_methods_from_json(const Json::Value& lifecycle_definitions);
+
+  const auto& methods() const {
+    return lifecycle_methods_;
+  }
+
+ private:
+  std::unordered_map<std::string, LifecycleMethod> lifecycle_methods_;
 };
 
 } // namespace marianatrench
