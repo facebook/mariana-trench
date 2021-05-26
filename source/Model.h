@@ -131,6 +131,7 @@ class Model final {
       const std::vector<std::pair<AccessPath, Frame>>& sinks = {},
       const std::vector<std::pair<Propagation, AccessPath>>& propagations = {},
       const std::vector<Sanitizer>& global_sanitizers = {},
+      const std::vector<std::pair<Root, SanitizerSet>>& port_sanitizers = {},
       const std::vector<std::pair<Root, FeatureSet>>& attach_to_sources = {},
       const std::vector<std::pair<Root, FeatureSet>>& attach_to_sinks = {},
       const std::vector<std::pair<Root, FeatureSet>>& attach_to_propagations =
@@ -226,6 +227,8 @@ class Model final {
   Taint apply_source_sink_sanitizers(SanitizerKind kind, Taint taint);
   bool has_global_propagation_sanitizer();
 
+  void add_port_sanitizers(SanitizerSet sanitizers, Root root);
+
   void add_attach_to_sources(Root root, FeatureSet features);
   FeatureSet attach_to_sources(Root root) const;
 
@@ -282,6 +285,7 @@ class Model final {
   TaintAccessPathTree sinks_;
   PropagationAccessPathTree propagations_;
   SanitizerSet global_sanitizers_;
+  RootPatriciaTreeAbstractPartition<SanitizerSet> port_sanitizers_;
   RootPatriciaTreeAbstractPartition<FeatureSet> attach_to_sources_;
   RootPatriciaTreeAbstractPartition<FeatureSet> attach_to_sinks_;
   RootPatriciaTreeAbstractPartition<FeatureSet> attach_to_propagations_;

@@ -85,6 +85,7 @@ Model::Model(
     const std::vector<std::pair<AccessPath, Frame>>& sinks,
     const std::vector<std::pair<Propagation, AccessPath>>& propagations,
     const std::vector<Sanitizer>& global_sanitizers,
+    const std::vector<std::pair<Root, SanitizerSet>>& port_sanitizers,
     const std::vector<std::pair<Root, FeatureSet>>& attach_to_sources,
     const std::vector<std::pair<Root, FeatureSet>>& attach_to_sinks,
     const std::vector<std::pair<Root, FeatureSet>>& attach_to_propagations,
@@ -137,6 +138,10 @@ Model::Model(
     add_global_sanitizer(sanitizer);
   }
 
+  for (const auto& [root, sanitizers] : port_sanitizers) {
+    add_port_sanitizers(sanitizers, root);
+  }
+
   for (const auto& [root, features] : attach_to_sources) {
     add_attach_to_sources(root, features);
   }
@@ -165,6 +170,7 @@ bool Model::operator==(const Model& other) const {
       parameter_sources_ == other.parameter_sources_ &&
       sinks_ == other.sinks_ && propagations_ == other.propagations_ &&
       global_sanitizers_ == other.global_sanitizers_ &&
+      port_sanitizers_ == other.port_sanitizers_ &&
       attach_to_sources_ == other.attach_to_sources_ &&
       attach_to_sinks_ == other.attach_to_sinks_ &&
       attach_to_propagations_ == other.attach_to_propagations_ &&
@@ -212,6 +218,10 @@ Model Model::instantiate(const Method* method, Context& context) const {
 
   for (const auto& sanitizer : global_sanitizers_) {
     model.add_global_sanitizer(sanitizer);
+  }
+
+  for (const auto& [root, sanitizers] : port_sanitizers_) {
+    model.add_port_sanitizers(sanitizers, root);
   }
 
   for (const auto& [root, features] : attach_to_sources_) {
@@ -325,8 +335,8 @@ bool Model::empty() const {
   return modes_.empty() && generations_.is_bottom() &&
       parameter_sources_.is_bottom() && sinks_.is_bottom() &&
       propagations_.is_bottom() && global_sanitizers_.is_bottom() &&
-      attach_to_sources_.is_bottom() && attach_to_sinks_.is_bottom() &&
-      attach_to_propagations_.is_bottom() &&
+      port_sanitizers_.is_bottom() && attach_to_sources_.is_bottom() &&
+      attach_to_sinks_.is_bottom() && attach_to_propagations_.is_bottom() &&
       add_features_to_arguments_.is_bottom() && inline_as_.is_bottom() &&
       issues_.is_bottom();
 }
@@ -581,6 +591,12 @@ void Model::add_global_sanitizer(Sanitizer sanitizer) {
   global_sanitizers_.add(sanitizer);
 }
 
+void Model::add_port_sanitizers(SanitizerSet sanitizers, Root root) {
+  check_root_consistency(root);
+  port_sanitizers_.update(
+      root, [&](const SanitizerSet& set) { return set.join(sanitizers); });
+}
+
 Taint Model::apply_source_sink_sanitizers(SanitizerKind kind, Taint taint) {
   mt_assert(kind != SanitizerKind::Propagations);
   for (const auto& sanitizer : global_sanitizers_) {
@@ -701,6 +717,7 @@ bool Model::leq(const Model& other) const {
       parameter_sources_.leq(other.parameter_sources_) &&
       sinks_.leq(other.sinks_) && propagations_.leq(other.propagations_) &&
       global_sanitizers_.leq(other.global_sanitizers_) &&
+      port_sanitizers_.leq(other.port_sanitizers_) &&
       attach_to_sources_.leq(other.attach_to_sources_) &&
       attach_to_sinks_.leq(other.attach_to_sinks_) &&
       attach_to_propagations_.leq(other.attach_to_propagations_) &&
@@ -721,6 +738,7 @@ void Model::join_with(const Model& other) {
   sinks_.join_with(other.sinks_);
   propagations_.join_with(other.propagations_);
   global_sanitizers_.join_with(other.global_sanitizers_);
+  port_sanitizers_.join_with(other.port_sanitizers_);
   attach_to_sources_.join_with(other.attach_to_sources_);
   attach_to_sinks_.join_with(other.attach_to_sinks_);
   attach_to_propagations_.join_with(other.attach_to_propagations_);
@@ -809,7 +827,19 @@ Model Model::from_json(
 
   for (auto sanitizer_value :
        JsonValidation::null_or_array(value, /* field */ "sanitizers")) {
-    model.add_global_sanitizer(Sanitizer::from_json(sanitizer_value, context));
+    auto sanitizer = Sanitizer::from_json(sanitizer_value, context);
+    if (!sanitizer_value.isMember("port")) {
+      model.add_global_sanitizer(sanitizer);
+    } else {
+      auto port = AccessPath::from_json(sanitizer_value["port"]);
+      if (!port.path().empty()) {
+        throw JsonValidationError(
+            sanitizer_value,
+            /* field */ "port",
+            /* expected */ "an access path root without field");
+      }
+      model.add_port_sanitizers(SanitizerSet(sanitizer), port.root());
+    }
   }
 
   for (auto attach_to_sources_value :
@@ -970,16 +1000,24 @@ Json::Value Model::to_json() const {
     value["propagation"] = propagations_value;
   }
 
-  if (!global_sanitizers_.is_bottom()) {
-    auto sanitizers_value = Json::Value(Json::arrayValue);
-    for (const auto& sanitizer : global_sanitizers_) {
+  auto sanitizers_value = Json::Value(Json::arrayValue);
+  for (const auto& sanitizer : global_sanitizers_) {
+    if (!sanitizer.is_bottom()) {
+      sanitizers_value.append(sanitizer.to_json());
+    }
+  }
+  for (const auto& [root, sanitizers] : port_sanitizers_) {
+    auto root_value = AccessPath(root).to_json();
+    for (const auto& sanitizer : sanitizers) {
       if (!sanitizer.is_bottom()) {
-        sanitizers_value.append(sanitizer.to_json());
+        auto sanitizer_value = sanitizer.to_json();
+        sanitizer_value["port"] = root_value;
+        sanitizers_value.append(sanitizer_value);
       }
     }
-    if (!sanitizers_value.empty()) {
-      value["sanitizers"] = sanitizers_value;
-    }
+  }
+  if (!sanitizers_value.empty()) {
+    value["sanitizers"] = sanitizers_value;
   }
 
   if (!attach_to_sources_.is_bottom()) {
@@ -1110,7 +1148,14 @@ std::ostream& operator<<(std::ostream& out, const Model& model) {
     out << "  }";
   }
   if (!model.global_sanitizers_.is_bottom()) {
-    out << ",\n  sanitizers=" << model.global_sanitizers_;
+    out << ",\n  global_sanitizers=" << model.global_sanitizers_;
+  }
+  if (!model.port_sanitizers_.is_bottom()) {
+    out << ",\n  port_sanitizers={\n";
+    for (const auto& [root, sanitizers] : model.port_sanitizers_) {
+      out << "   " << root << " -> " << sanitizers << ",\n";
+    }
+    out << "  }";
   }
   if (!model.attach_to_sources_.is_bottom()) {
     out << ",\n attach_to_sources={\n";

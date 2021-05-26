@@ -1941,6 +1941,7 @@ TEST_F(JsonTest, Model) {
 
   const auto* kind1 = context.kinds->get("Kind1");
   const auto* kind2 = context.kinds->get_partial("Kind2", "a");
+  const auto* kind3 = context.kinds->get("Kind3");
   EXPECT_EQ(
       Model::from_json(
           method,
@@ -1972,7 +1973,7 @@ TEST_F(JsonTest, Model) {
                    /* user_features */ FeatureSet::bottom()),
                /* output */ AccessPath(Root(Root::Kind::Return))},
           },
-          /* sanitizers */
+          /* global_sanitizers */
           {Sanitizer(SanitizerKind::Sources, KindSetAbstractDomain({kind1})),
            Sanitizer(
                SanitizerKind::Propagations, KindSetAbstractDomain::top())}));
@@ -1986,7 +1987,7 @@ TEST_F(JsonTest, Model) {
               /* parameter_sources */ {},
               /* sinks */ {},
               /* propagations */ {},
-              /* sanitizers */
+              /* global_sanitizers */
               {Sanitizer(
                    SanitizerKind::Sources, KindSetAbstractDomain({kind1})),
                Sanitizer(
@@ -2000,6 +2001,78 @@ TEST_F(JsonTest, Model) {
           {"sanitize": "sinks", "kinds": [{"kind": "Kind1"}, {"kind": "Partial:Kind2:a"}]}
         ]
       })#")));
+  EXPECT_EQ(
+      Model::from_json(
+          method,
+          test::parse_json(R"#({
+          "propagation": [
+              {
+                "input": "Argument(1)",
+                "output": "Return"
+              }
+            ],
+          "sanitizers": [
+            {"sanitize": "sources", "port": "Return", "kinds": [{"kind": "Kind1"}]},
+            {"sanitize": "propagations"},
+            {"sanitize": "sinks", "port": "Argument(0)", "kinds": [{"kind": "Kind3"}]}
+          ]
+          })#"),
+          context),
+      Model(
+          method,
+          context,
+          Model::Mode::Normal,
+          /* generations */ {},
+          /* parameter_sources */ {},
+          /* sinks */ {},
+          /* propagations */
+          {
+              {Propagation(
+                   /* input */ AccessPath(Root(Root::Kind::Argument, 1)),
+                   /* inferred_features */ FeatureMayAlwaysSet::bottom(),
+                   /* user_features */ FeatureSet::bottom()),
+               /* output */ AccessPath(Root(Root::Kind::Return))},
+          },
+          /* global_sanitizers */
+          {Sanitizer(
+              SanitizerKind::Propagations, KindSetAbstractDomain::top())},
+          /* port_sanitizers */
+          {{Root(Root::Kind::Return),
+            SanitizerSet(Sanitizer(
+                SanitizerKind::Sources, KindSetAbstractDomain({kind1})))},
+           {Root(Root::Kind::Argument, 0),
+            SanitizerSet(Sanitizer(
+                SanitizerKind::Sinks, KindSetAbstractDomain({kind3})))}}));
+  EXPECT_EQ(
+      test::sorted_json(
+          Model(
+              method,
+              context,
+              Model::Mode::Normal,
+              /* generations */ {},
+              /* parameter_sources */ {},
+              /* sinks */ {},
+              /* propagations */ {},
+              /* global_sanitizers */
+              {Sanitizer(
+                  SanitizerKind::Sinks, KindSetAbstractDomain({kind1, kind2}))},
+              /* port_sanitizers */
+              {{Root(Root::Kind::Return),
+                SanitizerSet(Sanitizer(
+                    SanitizerKind::Sources, KindSetAbstractDomain::top()))},
+               {Root(Root::Kind::Argument, 2),
+                SanitizerSet(Sanitizer(
+                    SanitizerKind::Sinks,
+                    KindSetAbstractDomain({kind1, kind3})))}})
+              .to_json()),
+      test::sorted_json(test::parse_json(R"#({
+      "method": "LData;.method:(LData;LData;)V",
+      "sanitizers": [
+        {"sanitize": "sinks", "kinds": [{"kind": "Kind1"}, {"kind": "Partial:Kind2:a"}]},
+        {"sanitize": "sinks", "port": "Argument(2)", "kinds": [{"kind": "Kind1"}, {"kind": "Kind3"}]},
+        {"sanitize": "sources", "port": "Return"}
+      ]
+    })#")));
 
   EXPECT_THROW(
       Model::from_json(method, test::parse_json(R"({"sinks": 1})"), context),
@@ -2077,6 +2150,7 @@ TEST_F(JsonTest, Model) {
           /* sinks */ {},
           /* propagations */ {},
           /* global_sanitizers */ {},
+          /* port_sanitizers */ {},
           /* attach_to_sources */
           {{Root(Root::Kind::Argument, 1),
             FeatureSet{context.features->get("via-method")}}}));
@@ -2090,6 +2164,7 @@ TEST_F(JsonTest, Model) {
                             /* sinks */ {},
                             /* propagations */ {},
                             /* global_sanitizers */ {},
+                            /* port_sanitizers */ {},
                             /* attach_to_sources */
                             {{Root(Root::Kind::Argument, 1),
                               FeatureSet{context.features->get("via-method")}}})
@@ -2125,6 +2200,7 @@ TEST_F(JsonTest, Model) {
           /* sinks */ {},
           /* propagations */ {},
           /* global_sanitizers */ {},
+          /* port_sanitizers */ {},
           /* attach_to_sources */ {},
           /* attach_to_sinks */
           {{Root(Root::Kind::Argument, 1),
@@ -2139,6 +2215,7 @@ TEST_F(JsonTest, Model) {
                             /* sinks */ {},
                             /* propagations */ {},
                             /* global_sanitizers */ {},
+                            /* port_sanitizers */ {},
                             /* attach_to_sources */ {},
                             /* attach_to_sinks */
                             {{Root(Root::Kind::Argument, 1),
@@ -2175,6 +2252,7 @@ TEST_F(JsonTest, Model) {
           /* sinks */ {},
           /* propagations */ {},
           /* global_sanitizers */ {},
+          /* port_sanitizers */ {},
           /* attach_to_sources */ {},
           /* attach_to_sinks */ {},
           /* attach_to_propagations */
@@ -2190,6 +2268,7 @@ TEST_F(JsonTest, Model) {
                             /* sinks */ {},
                             /* propagations */ {},
                             /* global_sanitizers */ {},
+                            /* port_sanitizers */ {},
                             /* attach_to_sources */ {},
                             /* attach_to_sinks */ {},
                             /* attach_to_propagations */
@@ -2227,6 +2306,7 @@ TEST_F(JsonTest, Model) {
           /* sinks */ {},
           /* propagations */ {},
           /* global_sanitizers */ {},
+          /* port_sanitizers */ {},
           /* attach_to_sources */ {},
           /* attach_to_sinks */ {},
           /* attach_to_propagations */ {},
@@ -2243,6 +2323,7 @@ TEST_F(JsonTest, Model) {
                             /* sinks */ {},
                             /* propagations */ {},
                             /* global_sanitizers */ {},
+                            /* port_sanitizers */ {},
                             /* attach_to_sources */ {},
                             /* attach_to_sinks */ {},
                             /* attach_to_propagations */ {},
@@ -2294,6 +2375,7 @@ TEST_F(JsonTest, Model) {
           /* sinks */ {},
           /* propagations */ {},
           /* global_sanitizers */ {},
+          /* port_sanitizers */ {},
           /* attach_to_sources */ {},
           /* attach_to_sinks */ {},
           /* attach_to_propagations */ {},
@@ -2312,6 +2394,7 @@ TEST_F(JsonTest, Model) {
                             /* sinks */ {},
                             /* propagations */ {},
                             /* global_sanitizers */ {},
+                            /* port_sanitizers */ {},
                             /* attach_to_sources */ {},
                             /* attach_to_sinks */ {},
                             /* attach_to_propagations */ {},
@@ -2354,6 +2437,7 @@ TEST_F(JsonTest, Model) {
               /* sinks */ {},
               /* propagations */ {},
               /* global_sanitizers */ {},
+              /* port_sanitizers */ {},
               /* attach_to_sources */ {},
               /* attach_to_sinks */ {},
               /* attach_to_propagations */ {},
