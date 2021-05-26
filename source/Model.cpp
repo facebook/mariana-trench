@@ -838,83 +838,53 @@ Model Model::from_json(
     if (!sanitizer_value.isMember("port")) {
       model.add_global_sanitizer(sanitizer);
     } else {
-      auto port = AccessPath::from_json(sanitizer_value["port"]);
-      if (!port.path().empty()) {
-        throw JsonValidationError(
-            sanitizer_value,
-            /* field */ "port",
-            /* expected */ "an access path root without field");
-      }
-      model.add_port_sanitizers(SanitizerSet(sanitizer), port.root());
+      auto root = Root::from_json(sanitizer_value["port"]);
+      model.add_port_sanitizers(SanitizerSet(sanitizer), root);
     }
   }
 
   for (auto attach_to_sources_value :
        JsonValidation::null_or_array(value, /* field */ "attach_to_sources")) {
     JsonValidation::string(attach_to_sources_value, /* field */ "port");
-    auto port = AccessPath::from_json(attach_to_sources_value["port"]);
-    if (!port.path().empty()) {
-      throw JsonValidationError(
-          attach_to_sources_value,
-          /* field */ "port",
-          /* expected */ "an access path root without field");
-    }
+    auto root = Root::from_json(attach_to_sources_value["port"]);
     JsonValidation::null_or_array(
         attach_to_sources_value, /* field */ "features");
     auto features =
         FeatureSet::from_json(attach_to_sources_value["features"], context);
-    model.add_attach_to_sources(port.root(), features);
+    model.add_attach_to_sources(root, features);
   }
 
   for (auto attach_to_sinks_value :
        JsonValidation::null_or_array(value, /* field */ "attach_to_sinks")) {
     JsonValidation::string(attach_to_sinks_value, /* field */ "port");
-    auto port = AccessPath::from_json(attach_to_sinks_value["port"]);
-    if (!port.path().empty()) {
-      throw JsonValidationError(
-          attach_to_sinks_value,
-          /* field */ "port",
-          /* expected */ "an access path root without field");
-    }
+    auto root = Root::from_json(attach_to_sinks_value["port"]);
     JsonValidation::null_or_array(
         attach_to_sinks_value, /* field */ "features");
     auto features =
         FeatureSet::from_json(attach_to_sinks_value["features"], context);
-    model.add_attach_to_sinks(port.root(), features);
+    model.add_attach_to_sinks(root, features);
   }
 
   for (auto attach_to_propagations_value : JsonValidation::null_or_array(
            value, /* field */ "attach_to_propagations")) {
     JsonValidation::string(attach_to_propagations_value, /* field */ "port");
-    auto port = AccessPath::from_json(attach_to_propagations_value["port"]);
-    if (!port.path().empty()) {
-      throw JsonValidationError(
-          attach_to_propagations_value,
-          /* field */ "port",
-          /* expected */ "an access path root without field");
-    }
+    auto root = Root::from_json(attach_to_propagations_value["port"]);
     JsonValidation::null_or_array(
         attach_to_propagations_value, /* field */ "features");
     auto features = FeatureSet::from_json(
         attach_to_propagations_value["features"], context);
-    model.add_attach_to_propagations(port.root(), features);
+    model.add_attach_to_propagations(root, features);
   }
 
   for (auto add_features_to_arguments_value : JsonValidation::null_or_array(
            value, /* field */ "add_features_to_arguments")) {
     JsonValidation::string(add_features_to_arguments_value, /* field */ "port");
-    auto port = AccessPath::from_json(add_features_to_arguments_value["port"]);
-    if (!port.path().empty()) {
-      throw JsonValidationError(
-          add_features_to_arguments_value,
-          /* field */ "port",
-          /* expected */ "an access path root without field");
-    }
+    auto root = Root::from_json(add_features_to_arguments_value["port"]);
     JsonValidation::null_or_array(
         add_features_to_arguments_value, /* field */ "features");
     auto features = FeatureSet::from_json(
         add_features_to_arguments_value["features"], context);
-    model.add_add_features_to_arguments(port.root(), features);
+    model.add_add_features_to_arguments(root, features);
   }
 
   if (value.isMember("inline_as")) {
@@ -1014,7 +984,7 @@ Json::Value Model::to_json() const {
     }
   }
   for (const auto& [root, sanitizers] : port_sanitizers_) {
-    auto root_value = AccessPath(root).to_json();
+    auto root_value = root.to_json();
     for (const auto& sanitizer : sanitizers) {
       if (!sanitizer.is_bottom()) {
         auto sanitizer_value = sanitizer.to_json();
@@ -1031,7 +1001,7 @@ Json::Value Model::to_json() const {
     auto attach_to_sources_value = Json::Value(Json::arrayValue);
     for (const auto& [root, features] : attach_to_sources_) {
       auto attach_to_sources_root_value = Json::Value(Json::objectValue);
-      attach_to_sources_root_value["port"] = AccessPath(root).to_json();
+      attach_to_sources_root_value["port"] = root.to_json();
       attach_to_sources_root_value["features"] = features.to_json();
       attach_to_sources_value.append(attach_to_sources_root_value);
     }
@@ -1042,7 +1012,7 @@ Json::Value Model::to_json() const {
     auto attach_to_sinks_value = Json::Value(Json::arrayValue);
     for (const auto& [root, features] : attach_to_sinks_) {
       auto attach_to_sinks_root_value = Json::Value(Json::objectValue);
-      attach_to_sinks_root_value["port"] = AccessPath(root).to_json();
+      attach_to_sinks_root_value["port"] = root.to_json();
       attach_to_sinks_root_value["features"] = features.to_json();
       attach_to_sinks_value.append(attach_to_sinks_root_value);
     }
@@ -1053,7 +1023,7 @@ Json::Value Model::to_json() const {
     auto attach_to_propagations_value = Json::Value(Json::arrayValue);
     for (const auto& [root, features] : attach_to_propagations_) {
       auto attach_to_propagations_root_value = Json::Value(Json::objectValue);
-      attach_to_propagations_root_value["port"] = AccessPath(root).to_json();
+      attach_to_propagations_root_value["port"] = root.to_json();
       attach_to_propagations_root_value["features"] = features.to_json();
       attach_to_propagations_value.append(attach_to_propagations_root_value);
     }
@@ -1065,7 +1035,7 @@ Json::Value Model::to_json() const {
     for (const auto& [root, features] : add_features_to_arguments_) {
       auto add_features_to_arguments_root_value =
           Json::Value(Json::objectValue);
-      add_features_to_arguments_root_value["port"] = AccessPath(root).to_json();
+      add_features_to_arguments_root_value["port"] = root.to_json();
       add_features_to_arguments_root_value["features"] = features.to_json();
       add_features_to_arguments_value.append(
           add_features_to_arguments_root_value);

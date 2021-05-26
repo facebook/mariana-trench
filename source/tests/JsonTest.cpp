@@ -51,50 +51,46 @@ Json::Value to_json(const T* value) {
 
 class JsonTest : public test::Test {};
 
+TEST_F(JsonTest, Root) {
+  EXPECT_THROW(Root::from_json(test::parse_json("{}")), JsonValidationError);
+  EXPECT_THROW(Root::from_json(test::parse_json("1")), JsonValidationError);
+  EXPECT_THROW(
+      Root::from_json(test::parse_json("\"Foo\"")), JsonValidationError);
+  EXPECT_JSON_EQ(Root, "\"Return\"", Root(Root::Kind::Return));
+  EXPECT_JSON_EQ(Root, "\"Leaf\"", (Root(Root::Kind::Leaf)));
+  EXPECT_JSON_EQ(Root, "\"Anchor\"", Root(Root::Kind::Anchor));
+  EXPECT_JSON_EQ(Root, "\"Producer\"", Root(Root::Kind::Producer));
+  EXPECT_JSON_EQ(Root, "\"Argument(0)\"", Root(Root::Kind::Argument, 0));
+  EXPECT_JSON_EQ(Root, "\"Argument(1)\"", Root(Root::Kind::Argument, 1));
+  EXPECT_JSON_EQ(Root, "\"Argument(12)\"", Root(Root::Kind::Argument, 12));
+  EXPECT_THROW(
+      Root::from_json(test::parse_json("\"Argument(0\"")), JsonValidationError);
+  EXPECT_THROW(
+      Root::from_json(test::parse_json("\"Argument()\"")), JsonValidationError);
+  EXPECT_THROW(
+      Root::from_json(test::parse_json("\"Argument(x)\"")),
+      JsonValidationError);
+  EXPECT_THROW(
+      Root::from_json(test::parse_json("\"Argument(x0)\"")),
+      JsonValidationError);
+  EXPECT_THROW(
+      Root::from_json(test::parse_json("\"Argument(0x)\"")),
+      JsonValidationError);
+  EXPECT_THROW(
+      Root::from_json(test::parse_json("\"Argument(-1)\"")),
+      JsonValidationError);
+}
+
 TEST_F(JsonTest, AccessPath) {
   const auto* x = DexString::make_string("x");
   const auto* y = DexString::make_string("y");
   const auto* z = DexString::make_string("z");
 
-  EXPECT_THROW(
-      AccessPath::from_json(test::parse_json("{}")), JsonValidationError);
-  EXPECT_THROW(
-      AccessPath::from_json(test::parse_json("1")), JsonValidationError);
-  EXPECT_THROW(
-      AccessPath::from_json(test::parse_json("\"Foo\"")), JsonValidationError);
   EXPECT_JSON_EQ(
       AccessPath, "\"Return\"", AccessPath(Root(Root::Kind::Return)));
   EXPECT_JSON_EQ(AccessPath, "\"Leaf\"", AccessPath(Root(Root::Kind::Leaf)));
   EXPECT_JSON_EQ(
-      AccessPath, "\"Anchor\"", AccessPath(Root(Root::Kind::Anchor)));
-  EXPECT_JSON_EQ(
-      AccessPath, "\"Producer\"", AccessPath(Root(Root::Kind::Producer)));
-  EXPECT_JSON_EQ(
       AccessPath, "\"Argument(0)\"", AccessPath(Root(Root::Kind::Argument, 0)));
-  EXPECT_JSON_EQ(
-      AccessPath, "\"Argument(1)\"", AccessPath(Root(Root::Kind::Argument, 1)));
-  EXPECT_JSON_EQ(
-      AccessPath,
-      "\"Argument(12)\"",
-      AccessPath(Root(Root::Kind::Argument, 12)));
-  EXPECT_THROW(
-      AccessPath::from_json(test::parse_json("\"Argument(0\"")),
-      JsonValidationError);
-  EXPECT_THROW(
-      AccessPath::from_json(test::parse_json("\"Argument()\"")),
-      JsonValidationError);
-  EXPECT_THROW(
-      AccessPath::from_json(test::parse_json("\"Argument(x)\"")),
-      JsonValidationError);
-  EXPECT_THROW(
-      AccessPath::from_json(test::parse_json("\"Argument(x0)\"")),
-      JsonValidationError);
-  EXPECT_THROW(
-      AccessPath::from_json(test::parse_json("\"Argument(0x)\"")),
-      JsonValidationError);
-  EXPECT_THROW(
-      AccessPath::from_json(test::parse_json("\"Argument(-1)\"")),
-      JsonValidationError);
   EXPECT_JSON_EQ(
       AccessPath,
       "\"Return.x\"",

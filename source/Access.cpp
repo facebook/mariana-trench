@@ -118,6 +118,46 @@ std::string Root::to_string() const {
   }
 }
 
+Json::Value Root::to_json() const {
+  return to_string();
+}
+
+Root Root::from_json(const Json::Value& value) {
+  auto root_string = JsonValidation::string(value);
+  if (boost::starts_with(root_string, "Argument(") &&
+      boost::ends_with(root_string, ")") && root_string.size() >= 11) {
+    auto parameter_string = root_string.substr(9, root_string.size() - 10);
+    auto parameter = parse_parameter_position(parameter_string);
+    if (!parameter) {
+      throw JsonValidationError(
+          value,
+          /* field */ std::nullopt,
+          /* expected */
+          fmt::format(
+              "`Argument(<number>)` for access path root, got `{}`",
+              root_string));
+    }
+    // Note: `Root::Kind::CanonicalThis` (Argument(-1)) cannot be specified in
+    // JSON.
+    return Root(Root::Kind::Argument, *parameter);
+  } else if (root_string == "Return") {
+    return Root(Root::Kind::Return);
+  } else if (root_string == "Leaf") {
+    return Root(Root::Kind::Leaf);
+  } else if (root_string == "Anchor") {
+    return Root(Root::Kind::Anchor);
+  } else if (root_string == "Producer") {
+    return Root(Root::Kind::Producer);
+  } else {
+    throw JsonValidationError(
+        value,
+        /* field */ std::nullopt,
+        fmt::format(
+            "valid access path root (`Return`, `Argument(...)`, `Leaf`, `Anchor` or `Producer`), got `{}`",
+            root_string));
+  }
+}
+
 std::ostream& operator<<(std::ostream& out, const Root& root) {
   return out << root.to_string();
 }
@@ -188,41 +228,8 @@ AccessPath AccessPath::from_json(const Json::Value& value) {
   }
 
   // Parse the root.
-  auto root = Root(Root::Kind::Return);
   const auto& root_string = elements.front();
-
-  if (boost::starts_with(root_string, "Argument(") &&
-      boost::ends_with(root_string, ")") && root_string.size() >= 11) {
-    auto parameter_string = root_string.substr(9, root_string.size() - 10);
-    auto parameter = parse_parameter_position(parameter_string);
-    if (!parameter) {
-      throw JsonValidationError(
-          value,
-          /* field */ std::nullopt,
-          /* expected */
-          fmt::format(
-              "`Argument(<number>)` for access path root, got `{}`",
-              root_string));
-    }
-    // Note: `Root::Kind::CanonicalThis` (Argument(-1)) cannot be specified in
-    // JSON.
-    root = Root(Root::Kind::Argument, *parameter);
-  } else if (root_string == "Return") {
-    root = Root(Root::Kind::Return);
-  } else if (root_string == "Leaf") {
-    root = Root(Root::Kind::Leaf);
-  } else if (root_string == "Anchor") {
-    root = Root(Root::Kind::Anchor);
-  } else if (root_string == "Producer") {
-    root = Root(Root::Kind::Producer);
-  } else {
-    throw JsonValidationError(
-        value,
-        /* field */ std::nullopt,
-        fmt::format(
-            "valid access path root (`Return`, `Argument(...)`, `Leaf`, `Anchor` or `Producer`), got `{}`",
-            root_string));
-  }
+  auto root = Root::from_json(root_string);
 
   Path path;
   for (auto iterator = std::next(elements.begin()), end = elements.end();

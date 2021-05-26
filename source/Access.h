@@ -239,6 +239,9 @@ class Root final {
     return Root(value);
   }
 
+  static Root from_json(const Json::Value& value);
+  Json::Value to_json() const;
+
  private:
   friend std::ostream& operator<<(std::ostream& out, const Root& root);
 
@@ -333,7 +336,6 @@ class AccessPath final {
    * See `split_path` for examples of the syntax.
    */
   static AccessPath from_json(const Json::Value& value);
-
   Json::Value to_json() const;
 
  private:

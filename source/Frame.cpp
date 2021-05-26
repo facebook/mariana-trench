@@ -279,7 +279,7 @@ Frame Frame::from_json(const Json::Value& value, Context& context) {
   if (value.isMember("via_type_of")) {
     for (const auto& root :
          JsonValidation::null_or_array(value, /* field */ "via_type_of")) {
-      via_type_of_ports.add(AccessPath::from_json(root).root());
+      via_type_of_ports.add(Root::from_json(root));
     }
   }
 
@@ -398,8 +398,8 @@ Json::Value Frame::to_json() const {
 
   if (via_type_of_ports_.is_value() && !via_type_of_ports_.elements().empty()) {
     auto ports = Json::Value(Json::arrayValue);
-    for (const auto& port : via_type_of_ports_.elements()) {
-      ports.append(AccessPath(port).to_json());
+    for (const auto& root : via_type_of_ports_.elements()) {
+      ports.append(root.to_json());
     }
     value["via_type_of"] = ports;
   }
