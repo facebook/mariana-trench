@@ -264,10 +264,13 @@
   },
   "Lcom/facebook/marianatrench/integrationtests/GlobalSanitizers;.toSanitizedKindSink:(Ljava/lang/Object;)V" : 
   {
+    "static" : 
+    [
+      "Lcom/facebook/marianatrench/integrationtests/GlobalSanitizers;.toSinkB:(Ljava/lang/Object;)V"
+    ],
     "virtual" : 
     [
-      "Lcom/facebook/marianatrench/integrationtests/GlobalSanitizers;.toSink:(Ljava/lang/Object;)V",
-      "Lcom/facebook/marianatrench/integrationtests/GlobalSanitizers;.toSinkB:(Ljava/lang/Object;)V"
+      "Lcom/facebook/marianatrench/integrationtests/GlobalSanitizers;.toSink:(Ljava/lang/Object;)V"
     ]
   },
   "Lcom/facebook/marianatrench/integrationtests/GlobalSanitizers;.toSanitizedSink:(Ljava/lang/Object;)V" : 
@@ -296,6 +299,41 @@
     "static" : 
     [
       "Ljava/lang/Object;.<init>:()V"
+    ]
+  },
+  "Lcom/facebook/marianatrench/integrationtests/PortSanitizers;.<init>:()V" : 
+  {
+    "static" : 
+    [
+      "Ljava/lang/Object;.<init>:()V"
+    ]
+  },
+  "Lcom/facebook/marianatrench/integrationtests/PortSanitizers;.sanitizedFlows:()V" : 
+  {
+    "static" : 
+    [
+      "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
+      "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;"
+    ],
+    "virtual" : 
+    [
+      "Lcom/facebook/marianatrench/integrationtests/PortSanitizers;.sanitizedSinkPortAndKind:(Ljava/lang/Object;Ljava/lang/Object;)V",
+      "Lcom/facebook/marianatrench/integrationtests/PortSanitizers;.sanitizedSourcePort:()Ljava/lang/Object;"
+    ]
+  },
+  "Lcom/facebook/marianatrench/integrationtests/PortSanitizers;.sanitizedSinkPortAndKind:(Ljava/lang/Object;Ljava/lang/Object;)V" : 
+  {
+    "static" : 
+    [
+      "Lcom/facebook/marianatrench/integrationtests/GlobalSanitizers;.toSinkB:(Ljava/lang/Object;)V",
+      "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V"
+    ]
+  },
+  "Lcom/facebook/marianatrench/integrationtests/PortSanitizers;.sanitizedSourcePort:()Ljava/lang/Object;" : 
+  {
+    "static" : 
+    [
+      "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;"
     ]
   },
   "Lcom/facebook/secure/context/IntentLauncher;.<init>:()V" : 

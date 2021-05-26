@@ -25,7 +25,7 @@ public class GlobalSanitizers {
     Origin.sink(argument);
   }
 
-  public void toSinkB(Object argument) {}
+  public static void toSinkB(Object argument) {}
 
   public void toSanitizedSink(Object argument) {
     toSink(argument);

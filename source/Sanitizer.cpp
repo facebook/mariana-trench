@@ -69,6 +69,9 @@ void Sanitizer::narrow_with(const Sanitizer& other) {
 }
 
 std::ostream& operator<<(std::ostream& out, const Sanitizer& sanitizer) {
+  if (sanitizer.is_bottom()) {
+    return out << "Sanitizer()";
+  }
   out << "Sanitizer(";
   switch (sanitizer.sanitizer_kind_) {
     case SanitizerKind::Sources:

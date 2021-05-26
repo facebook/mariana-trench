@@ -22,7 +22,7 @@
     "sinks": [
       {
         "kind": "SinkB",
-        "port": "Argument(1)"
+        "port": "Argument(0)"
       }
     ]
   },
@@ -96,6 +96,29 @@
     "sanitizers": [
       {
         "sanitize": "propagations"
+      }
+    ]
+  },
+  {
+    "method": "Lcom/facebook/marianatrench/integrationtests/PortSanitizers;.sanitizedSinkPortAndKind:(Ljava/lang/Object;Ljava/lang/Object;)V",
+    "sanitizers": [
+      {
+        "sanitize": "sinks",
+        "port": "Argument(2)",
+        "kinds": [
+          {
+            "kind": "Sink"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "method": "Lcom/facebook/marianatrench/integrationtests/PortSanitizers;.sanitizedSourcePort:()Ljava/lang/Object;",
+    "sanitizers": [
+      {
+        "sanitize": "sources",
+        "port": "Return"
       }
     ]
   }

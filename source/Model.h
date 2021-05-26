@@ -224,7 +224,8 @@ class Model final {
   const SanitizerSet& global_sanitizers() const {
     return global_sanitizers_;
   }
-  Taint apply_source_sink_sanitizers(SanitizerKind kind, Taint taint);
+  Taint
+  apply_source_sink_sanitizers(SanitizerKind kind, Taint taint, Root root);
   bool has_global_propagation_sanitizer();
 
   void add_port_sanitizers(SanitizerSet sanitizers, Root root);

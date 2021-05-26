@@ -92,6 +92,247 @@
   "generations" : 
   [
     {
+      "call_position" : 
+      {
+        "end" : 25,
+        "line" : 21,
+        "path" : "PortSanitizers.java",
+        "start" : 20
+      },
+      "callee" : "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;",
+      "callee_port" : "Return",
+      "caller_port" : "Argument(0).mField",
+      "distance" : 1,
+      "kind" : "Source",
+      "local_positions" : 
+      [
+        {
+          "end" : 28,
+          "line" : 21,
+          "start" : 13
+        }
+      ],
+      "origins" : 
+      [
+        "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;"
+      ]
+    }
+  ],
+  "method" : "Lcom/facebook/marianatrench/integrationtests/PortSanitizers;.sanitizedSourcePort:()Ljava/lang/Object;",
+  "position" : 
+  {
+    "line" : 20,
+    "path" : "PortSanitizers.java"
+  },
+  "sanitizers" : 
+  [
+    {
+      "port" : "Return",
+      "sanitize" : "sources"
+    }
+  ]
+}
+{
+  "generations" : 
+  [
+    {
+      "call_position" : 
+      {
+        "end" : 34,
+        "line" : 28,
+        "path" : "PortSanitizers.java",
+        "start" : 16
+      },
+      "callee" : "Lcom/facebook/marianatrench/integrationtests/PortSanitizers;.sanitizedSourcePort:()Ljava/lang/Object;",
+      "callee_port" : "Argument(0).mField",
+      "caller_port" : "Argument(0).mField",
+      "distance" : 2,
+      "kind" : "Source",
+      "origins" : 
+      [
+        "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;"
+      ]
+    }
+  ],
+  "issues" : 
+  [
+    {
+      "position" : 
+      {
+        "line" : 26,
+        "path" : "PortSanitizers.java"
+      },
+      "rule" : 1,
+      "sinks" : 
+      [
+        {
+          "call_position" : 
+          {
+            "end" : 43,
+            "line" : 26,
+            "path" : "PortSanitizers.java",
+            "start" : 29
+          },
+          "callee" : "Lcom/facebook/marianatrench/integrationtests/PortSanitizers;.sanitizedSinkPortAndKind:(Ljava/lang/Object;Ljava/lang/Object;)V",
+          "callee_port" : "Argument(1)",
+          "distance" : 2,
+          "kind" : "Sink",
+          "origins" : 
+          [
+            "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V"
+          ]
+        }
+      ],
+      "sources" : 
+      [
+        {
+          "call_position" : 
+          {
+            "end" : 41,
+            "line" : 26,
+            "path" : "PortSanitizers.java",
+            "start" : 36
+          },
+          "callee" : "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;",
+          "callee_port" : "Return",
+          "distance" : 1,
+          "kind" : "Source",
+          "origins" : 
+          [
+            "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;"
+          ]
+        }
+      ]
+    },
+    {
+      "position" : 
+      {
+        "line" : 26,
+        "path" : "PortSanitizers.java"
+      },
+      "rule" : 2,
+      "sinks" : 
+      [
+        {
+          "call_position" : 
+          {
+            "end" : 60,
+            "line" : 26,
+            "path" : "PortSanitizers.java",
+            "start" : 46
+          },
+          "callee" : "Lcom/facebook/marianatrench/integrationtests/PortSanitizers;.sanitizedSinkPortAndKind:(Ljava/lang/Object;Ljava/lang/Object;)V",
+          "callee_port" : "Argument(2)",
+          "distance" : 2,
+          "kind" : "SinkB",
+          "origins" : 
+          [
+            "Lcom/facebook/marianatrench/integrationtests/GlobalSanitizers;.toSinkB:(Ljava/lang/Object;)V"
+          ]
+        }
+      ],
+      "sources" : 
+      [
+        {
+          "call_position" : 
+          {
+            "end" : 41,
+            "line" : 26,
+            "path" : "PortSanitizers.java",
+            "start" : 36
+          },
+          "callee" : "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;",
+          "callee_port" : "Return",
+          "distance" : 1,
+          "kind" : "Source",
+          "origins" : 
+          [
+            "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;"
+          ]
+        }
+      ]
+    },
+    {
+      "position" : 
+      {
+        "line" : 29,
+        "path" : "PortSanitizers.java"
+      },
+      "rule" : 1,
+      "sinks" : 
+      [
+        {
+          "call_position" : 
+          {
+            "end" : 19,
+            "line" : 29,
+            "path" : "PortSanitizers.java",
+            "start" : 16
+          },
+          "callee" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
+          "callee_port" : "Argument(0)",
+          "distance" : 1,
+          "kind" : "Sink",
+          "origins" : 
+          [
+            "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V"
+          ]
+        }
+      ],
+      "sources" : 
+      [
+        {
+          "call_position" : 
+          {
+            "end" : 34,
+            "line" : 28,
+            "path" : "PortSanitizers.java",
+            "start" : 16
+          },
+          "callee" : "Lcom/facebook/marianatrench/integrationtests/PortSanitizers;.sanitizedSourcePort:()Ljava/lang/Object;",
+          "callee_port" : "Argument(0).mField",
+          "distance" : 2,
+          "kind" : "Source",
+          "origins" : 
+          [
+            "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;"
+          ]
+        }
+      ]
+    }
+  ],
+  "method" : "Lcom/facebook/marianatrench/integrationtests/PortSanitizers;.sanitizedFlows:()V",
+  "position" : 
+  {
+    "line" : 25,
+    "path" : "PortSanitizers.java"
+  },
+  "sinks" : 
+  [
+    {
+      "call_position" : 
+      {
+        "end" : 19,
+        "line" : 29,
+        "path" : "PortSanitizers.java",
+        "start" : 16
+      },
+      "callee" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
+      "callee_port" : "Argument(0)",
+      "caller_port" : "Argument(0)",
+      "distance" : 1,
+      "kind" : "Sink",
+      "origins" : 
+      [
+        "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V"
+      ]
+    }
+  ]
+}
+{
+  "generations" : 
+  [
+    {
       "callee_port" : "Leaf",
       "caller_port" : "Return",
       "kind" : "Source",
@@ -1106,7 +1347,7 @@
   [
     {
       "callee_port" : "Leaf",
-      "caller_port" : "Argument(1)",
+      "caller_port" : "Argument(0)",
       "kind" : "SinkB",
       "origins" : 
       [
@@ -1137,6 +1378,74 @@
       "origins" : 
       [
         "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V"
+      ]
+    }
+  ]
+}
+{
+  "method" : "Lcom/facebook/marianatrench/integrationtests/PortSanitizers;.<init>:()V",
+  "position" : 
+  {
+    "line" : 9,
+    "path" : "PortSanitizers.java"
+  }
+}
+{
+  "method" : "Lcom/facebook/marianatrench/integrationtests/PortSanitizers;.sanitizedSinkPortAndKind:(Ljava/lang/Object;Ljava/lang/Object;)V",
+  "position" : 
+  {
+    "line" : 14,
+    "path" : "PortSanitizers.java"
+  },
+  "sanitizers" : 
+  [
+    {
+      "kinds" : 
+      [
+        {
+          "kind" : "Sink"
+        }
+      ],
+      "port" : "Argument(2)",
+      "sanitize" : "sinks"
+    }
+  ],
+  "sinks" : 
+  [
+    {
+      "call_position" : 
+      {
+        "end" : 24,
+        "line" : 15,
+        "path" : "PortSanitizers.java",
+        "start" : 16
+      },
+      "callee" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
+      "callee_port" : "Argument(0)",
+      "caller_port" : "Argument(1)",
+      "distance" : 1,
+      "kind" : "Sink",
+      "origins" : 
+      [
+        "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V"
+      ]
+    },
+    {
+      "call_position" : 
+      {
+        "end" : 42,
+        "line" : 17,
+        "path" : "PortSanitizers.java",
+        "start" : 29
+      },
+      "callee" : "Lcom/facebook/marianatrench/integrationtests/GlobalSanitizers;.toSinkB:(Ljava/lang/Object;)V",
+      "callee_port" : "Argument(0)",
+      "caller_port" : "Argument(2)",
+      "distance" : 1,
+      "kind" : "SinkB",
+      "origins" : 
+      [
+        "Lcom/facebook/marianatrench/integrationtests/GlobalSanitizers;.toSinkB:(Ljava/lang/Object;)V"
       ]
     }
   ]

@@ -79,16 +79,29 @@
   ],
   "Lcom/facebook/marianatrench/integrationtests/GlobalSanitizers;.toSinkB:(Ljava/lang/Object;)V" : 
   [
-    "Lcom/facebook/marianatrench/integrationtests/GlobalSanitizers;.toSanitizedKindSink:(Ljava/lang/Object;)V"
+    "Lcom/facebook/marianatrench/integrationtests/GlobalSanitizers;.toSanitizedKindSink:(Ljava/lang/Object;)V",
+    "Lcom/facebook/marianatrench/integrationtests/PortSanitizers;.sanitizedSinkPortAndKind:(Ljava/lang/Object;Ljava/lang/Object;)V"
   ],
   "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V" : 
   [
-    "Lcom/facebook/marianatrench/integrationtests/GlobalSanitizers;.toSink:(Ljava/lang/Object;)V"
+    "Lcom/facebook/marianatrench/integrationtests/GlobalSanitizers;.toSink:(Ljava/lang/Object;)V",
+    "Lcom/facebook/marianatrench/integrationtests/PortSanitizers;.sanitizedFlows:()V",
+    "Lcom/facebook/marianatrench/integrationtests/PortSanitizers;.sanitizedSinkPortAndKind:(Ljava/lang/Object;Ljava/lang/Object;)V"
   ],
   "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;" : 
   [
     "Lcom/facebook/marianatrench/integrationtests/GlobalSanitizers;.getSanitizedSource:()Ljava/lang/Object;",
-    "Lcom/facebook/marianatrench/integrationtests/GlobalSanitizers;.getSource:()Ljava/lang/Object;"
+    "Lcom/facebook/marianatrench/integrationtests/GlobalSanitizers;.getSource:()Ljava/lang/Object;",
+    "Lcom/facebook/marianatrench/integrationtests/PortSanitizers;.sanitizedFlows:()V",
+    "Lcom/facebook/marianatrench/integrationtests/PortSanitizers;.sanitizedSourcePort:()Ljava/lang/Object;"
+  ],
+  "Lcom/facebook/marianatrench/integrationtests/PortSanitizers;.sanitizedSinkPortAndKind:(Ljava/lang/Object;Ljava/lang/Object;)V" : 
+  [
+    "Lcom/facebook/marianatrench/integrationtests/PortSanitizers;.sanitizedFlows:()V"
+  ],
+  "Lcom/facebook/marianatrench/integrationtests/PortSanitizers;.sanitizedSourcePort:()Ljava/lang/Object;" : 
+  [
+    "Lcom/facebook/marianatrench/integrationtests/PortSanitizers;.sanitizedFlows:()V"
   ],
   "Lcom/facebook/secure/context/IntentLauncher;.<init>:()V" : 
   [
@@ -133,6 +146,7 @@
     "Lcom/facebook/marianatrench/integrationtests/GlobalSanitizers;.getSourceB:()Ljava/lang/Object;",
     "Lcom/facebook/marianatrench/integrationtests/Origin;.<init>:()V",
     "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;",
+    "Lcom/facebook/marianatrench/integrationtests/PortSanitizers;.<init>:()V",
     "Lcom/facebook/secure/context/IntentLauncher;.<init>:()V",
     "Lcom/facebook/secure/context/SecureContextHelperV2;.<init>:()V",
     "Lcom/facebook/user/model/User;.<init>:()V",
