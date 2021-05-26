@@ -22,10 +22,19 @@ public class PortSanitizers {
     return Origin.source();
   }
 
+  public Object[] sanitizedPropagationPort(Object argument1, Object argument2) {
+    Object[] array = new Object[2];
+    array[0] = argument1;
+    array[1] = argument2;
+    return array;
+  }
+
   public void sanitizedFlows() {
     sanitizedSinkPortAndKind(Origin.source(), Origin.source());
 
     Origin.sink(sanitizedSourcePort());
     Origin.sink(this);
+
+    sanitizedPropagationPort(Origin.source(), Origin.source());
   }
 }

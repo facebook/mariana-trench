@@ -139,7 +139,7 @@
       "call_position" : 
       {
         "end" : 34,
-        "line" : 28,
+        "line" : 35,
         "path" : "PortSanitizers.java",
         "start" : 16
       },
@@ -159,7 +159,7 @@
     {
       "position" : 
       {
-        "line" : 26,
+        "line" : 33,
         "path" : "PortSanitizers.java"
       },
       "rule" : 1,
@@ -169,7 +169,7 @@
           "call_position" : 
           {
             "end" : 43,
-            "line" : 26,
+            "line" : 33,
             "path" : "PortSanitizers.java",
             "start" : 29
           },
@@ -189,7 +189,7 @@
           "call_position" : 
           {
             "end" : 41,
-            "line" : 26,
+            "line" : 33,
             "path" : "PortSanitizers.java",
             "start" : 36
           },
@@ -207,7 +207,7 @@
     {
       "position" : 
       {
-        "line" : 26,
+        "line" : 33,
         "path" : "PortSanitizers.java"
       },
       "rule" : 2,
@@ -217,7 +217,7 @@
           "call_position" : 
           {
             "end" : 60,
-            "line" : 26,
+            "line" : 33,
             "path" : "PortSanitizers.java",
             "start" : 46
           },
@@ -237,7 +237,7 @@
           "call_position" : 
           {
             "end" : 41,
-            "line" : 26,
+            "line" : 33,
             "path" : "PortSanitizers.java",
             "start" : 36
           },
@@ -255,7 +255,7 @@
     {
       "position" : 
       {
-        "line" : 29,
+        "line" : 36,
         "path" : "PortSanitizers.java"
       },
       "rule" : 1,
@@ -265,7 +265,7 @@
           "call_position" : 
           {
             "end" : 19,
-            "line" : 29,
+            "line" : 36,
             "path" : "PortSanitizers.java",
             "start" : 16
           },
@@ -285,7 +285,7 @@
           "call_position" : 
           {
             "end" : 34,
-            "line" : 28,
+            "line" : 35,
             "path" : "PortSanitizers.java",
             "start" : 16
           },
@@ -304,7 +304,7 @@
   "method" : "Lcom/facebook/marianatrench/integrationtests/PortSanitizers;.sanitizedFlows:()V",
   "position" : 
   {
-    "line" : 25,
+    "line" : 32,
     "path" : "PortSanitizers.java"
   },
   "sinks" : 
@@ -313,7 +313,7 @@
       "call_position" : 
       {
         "end" : 19,
-        "line" : 29,
+        "line" : 36,
         "path" : "PortSanitizers.java",
         "start" : 16
       },
@@ -1389,6 +1389,32 @@
     "line" : 9,
     "path" : "PortSanitizers.java"
   }
+}
+{
+  "method" : "Lcom/facebook/marianatrench/integrationtests/PortSanitizers;.sanitizedPropagationPort:(Ljava/lang/Object;Ljava/lang/Object;)[Ljava/lang/Object;",
+  "position" : 
+  {
+    "line" : 25,
+    "path" : "PortSanitizers.java"
+  },
+  "propagation" : 
+  [
+    {
+      "always_features" : 
+      [
+        "via-array"
+      ],
+      "input" : "Argument(2)",
+      "output" : "Return"
+    }
+  ],
+  "sanitizers" : 
+  [
+    {
+      "port" : "Argument(1)",
+      "sanitize" : "propagations"
+    }
+  ]
 }
 {
   "method" : "Lcom/facebook/marianatrench/integrationtests/PortSanitizers;.sanitizedSinkPortAndKind:(Ljava/lang/Object;Ljava/lang/Object;)V",

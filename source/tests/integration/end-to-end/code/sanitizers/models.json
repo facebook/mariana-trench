@@ -121,5 +121,14 @@
         "port": "Return"
       }
     ]
+  },
+  {
+    "method": "Lcom/facebook/marianatrench/integrationtests/PortSanitizers;.sanitizedPropagationPort:(Ljava/lang/Object;Ljava/lang/Object;)[Ljava/lang/Object;",
+    "sanitizers": [
+      {
+        "sanitize": "propagations",
+        "port": "Argument(1)"
+      }
+    ]
   }
 ]

@@ -581,7 +581,8 @@ void Model::add_propagation(Propagation propagation, AccessPath output) {
 void Model::add_inferred_propagation(
     Propagation propagation,
     AccessPath output) {
-  if (has_global_propagation_sanitizer()) {
+  if (has_global_propagation_sanitizer() ||
+      !port_sanitizers_.get(propagation.input().root()).is_bottom()) {
     return;
   }
   add_propagation(propagation, output);

@@ -95,6 +95,10 @@
     "Lcom/facebook/marianatrench/integrationtests/PortSanitizers;.sanitizedFlows:()V",
     "Lcom/facebook/marianatrench/integrationtests/PortSanitizers;.sanitizedSourcePort:()Ljava/lang/Object;"
   ],
+  "Lcom/facebook/marianatrench/integrationtests/PortSanitizers;.sanitizedPropagationPort:(Ljava/lang/Object;Ljava/lang/Object;)[Ljava/lang/Object;" : 
+  [
+    "Lcom/facebook/marianatrench/integrationtests/PortSanitizers;.sanitizedFlows:()V"
+  ],
   "Lcom/facebook/marianatrench/integrationtests/PortSanitizers;.sanitizedSinkPortAndKind:(Ljava/lang/Object;Ljava/lang/Object;)V" : 
   [
     "Lcom/facebook/marianatrench/integrationtests/PortSanitizers;.sanitizedFlows:()V"
