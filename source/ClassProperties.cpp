@@ -171,8 +171,8 @@ ClassProperties::ClassProperties(
     const Features& features)
     : features_(features) {
   try {
-    const auto manifest_class_info = get_manifest_class_info(
-        options.apk_directory() + "/AndroidManifest.xml");
+    const auto manifest_class_info =
+        get_manifest_class_info(options.apk_directory());
 
     for (const auto& tag_info : manifest_class_info.component_tags) {
       std::unordered_set<std::string> parent_classes;
