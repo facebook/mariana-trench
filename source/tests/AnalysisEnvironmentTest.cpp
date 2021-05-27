@@ -40,20 +40,13 @@ TEST_F(EnvironmentTest, LessOrEqualSuperSet) {
       {nullptr,
        TaintTree{Taint{
            Frame::leaf(source_kind),
-           Frame(
+           test::make_frame(
                source_kind,
-               /* callee_port */ AccessPath(Root(Root::Kind::Return)),
-               /* callee */ method,
-               /* call_position */ context.positions->unknown(),
-               /* distance */ 1,
-               /* origins */ MethodSet{method},
-               /* inferred_features */ {},
-               /* locally_inferred_features */ {},
-               /* user_features */ {},
-               /* via_type_of_ports */ {},
-               /* local_positions */ {},
-               /* canonical_names */ {}),
-       }}}};
+               test::FrameProperties{
+                   .callee_port = AccessPath(Root(Root::Kind::Return)),
+                   .callee = method,
+                   .distance = 1,
+                   .origins = MethodSet{method}})}}}};
 
   EXPECT_TRUE(domain1.leq(domain2));
   EXPECT_FALSE(domain2.leq(domain1));
@@ -72,21 +65,14 @@ TEST_F(EnvironmentTest, LessOrEqualDifferentSources) {
 
   auto domain2 = TaintAbstractPartition{
       {nullptr,
-       TaintTree{Taint{
-           Frame(
-               source_kind,
-               /* callee_port */ AccessPath(Root(Root::Kind::Return)),
-               /* callee */ method,
-               /* call_position */ context.positions->unknown(),
-               /* distance */ 1,
-               /* origins */ MethodSet{method},
-               /* inferred_features */ {},
-               /* locally_inferred_features */ {},
-               /* user_features */ {},
-               /* via_type_of_ports */ {},
-               /* local_positions */ {},
-               /* canonical_names */ {}),
-       }}}};
+       TaintTree{Taint{test::make_frame(
+           source_kind,
+           test::FrameProperties{
+               .callee_port = AccessPath(Root(Root::Kind::Return)),
+               .callee = method,
+               .call_position = context.positions->unknown(),
+               .distance = 1,
+               .origins = MethodSet{method}})}}}};
 
   EXPECT_FALSE(domain1.leq(domain2));
   EXPECT_FALSE(domain2.leq(domain1));
@@ -106,20 +92,14 @@ TEST_F(EnvironmentTest, JoinSuperSet) {
       {nullptr,
        TaintTree{Taint{
            Frame::leaf(source_kind),
-           Frame(
+           test::make_frame(
                source_kind,
-               /* callee_port */ AccessPath(Root(Root::Kind::Return)),
-               /* callee */ method,
-               /* call_position */ context.positions->unknown(),
-               /* distance */ 1,
-               /* origins */ MethodSet{method},
-               /* inferred_features */ {},
-               /* locally_inferred_features */ {},
-               /* user_features */ {},
-               /* via_type_of_ports */ {},
-               /* local_positions */ {},
-               /* canonical_names */ {}),
-       }}}};
+               test::FrameProperties{
+                   .callee_port = AccessPath(Root(Root::Kind::Return)),
+                   .callee = method,
+                   .call_position = context.positions->unknown(),
+                   .distance = 1,
+                   .origins = MethodSet{method}})}}}};
   domain1.join_with(domain2);
   EXPECT_TRUE(domain1 == domain2);
 }
@@ -137,40 +117,27 @@ TEST_F(EnvironmentTest, JoinTwoDifferent) {
 
   auto domain2 = TaintAbstractPartition{
       {nullptr,
-       TaintTree{Taint{
-           Frame(
-               source_kind,
-               /* callee_port */ AccessPath(Root(Root::Kind::Return)),
-               /* callee */ method,
-               /* call_position */ context.positions->unknown(),
-               /* distance */ 1,
-               /* origins */ MethodSet{method},
-               /* inferred_features */ {},
-               /* locally_inferred_features */ {},
-               /* user_features */ {},
-               /* via_type_of_ports */ {},
-               /* local_positions */ {},
-               /* canonical_names */ {}),
-       }}}};
+       TaintTree{Taint{test::make_frame(
+           source_kind,
+           test::FrameProperties{
+               .callee_port = AccessPath(Root(Root::Kind::Return)),
+               .callee = method,
+               .call_position = context.positions->unknown(),
+               .distance = 1,
+               .origins = MethodSet{method}})}}}};
 
   auto domain3 = TaintAbstractPartition{
       {nullptr,
        TaintTree{Taint{
            Frame::leaf(source_kind),
-           Frame(
+           test::make_frame(
                source_kind,
-               /* callee_port */ AccessPath(Root(Root::Kind::Return)),
-               /* callee */ method,
-               /* call_position */ context.positions->unknown(),
-               /* distance */ 1,
-               /* origins */ MethodSet{method},
-               /* inferred_features */ {},
-               /* locally_inferred_features */ {},
-               /* user_features */ {},
-               /* via_type_of_ports */ {},
-               /* local_positions */ {},
-               /* canonical_names */ {}),
-       }}}};
+               test::FrameProperties{
+                   .callee_port = AccessPath(Root(Root::Kind::Return)),
+                   .callee = method,
+                   .call_position = context.positions->unknown(),
+                   .distance = 1,
+                   .origins = MethodSet{method}})}}}};
   domain1.join_with(domain2);
   EXPECT_TRUE(domain1 == domain3);
 }
@@ -200,21 +167,14 @@ TEST_F(EnvironmentTest, JoinTwoEnvironmentWithDifferentSources) {
       UpdateKind::Weak);
   environment2.write(
       parameter_2.get(),
-      TaintTree{Taint{
-          Frame(
-              source_kind,
-              /* callee_port */ AccessPath(Root(Root::Kind::Return)),
-              /* callee */ method,
-              /* call_position */ context.positions->unknown(),
-              /* distance */ 1,
-              /* origins */ MethodSet{method},
-              /* inferred_features */ {},
-              /* locally_inferred_features */ {},
-              /* user_features */ {},
-              /* via_type_of_ports */ {},
-              /* local_positions */ {},
-              /* canonical_names */ {}),
-      }},
+      TaintTree{Taint{test::make_frame(
+          source_kind,
+          test::FrameProperties{
+              .callee_port = AccessPath(Root(Root::Kind::Return)),
+              .callee = method,
+              .call_position = context.positions->unknown(),
+              .distance = 1,
+              .origins = MethodSet{method}})}},
       UpdateKind::Weak);
 
   environment1.join_with(environment2);
@@ -226,20 +186,14 @@ TEST_F(EnvironmentTest, JoinTwoEnvironmentWithDifferentSources) {
       environment1.read(parameter_2.get()),
       (TaintTree{Taint{
           Frame::leaf(source_kind),
-          Frame(
+          test::make_frame(
               source_kind,
-              /* callee_port */ AccessPath(Root(Root::Kind::Return)),
-              /* callee */ method,
-              /* call_position */ context.positions->unknown(),
-              /* distance */ 1,
-              /* origins */ MethodSet{method},
-              /* inferred_features */ {},
-              /* locally_inferred_features */ {},
-              /* user_features */ {},
-              /* via_type_of_ports */ {},
-              /* local_positions */ {},
-              /* canonical_names */ {}),
-      }}));
+              test::FrameProperties{
+                  .callee_port = AccessPath(Root(Root::Kind::Return)),
+                  .callee = method,
+                  .call_position = context.positions->unknown(),
+                  .distance = 1,
+                  .origins = MethodSet{method}})}}));
 }
 
 } // namespace marianatrench

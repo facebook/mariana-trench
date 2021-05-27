@@ -75,6 +75,22 @@ Context make_context(const DexStore& store) {
   return context;
 }
 
+Frame make_frame(const Kind* kind, const FrameProperties& properties) {
+  return Frame(
+      kind,
+      properties.callee_port,
+      properties.callee,
+      properties.call_position,
+      properties.distance,
+      properties.origins,
+      properties.inferred_features,
+      properties.locally_inferred_features,
+      properties.user_features,
+      properties.via_type_of_ports,
+      properties.local_positions,
+      properties.canonical_names);
+}
+
 #ifndef MARIANA_TRENCH_FACEBOOK_BUILD
 boost::filesystem::path find_repository_root() {
   auto path = boost::filesystem::current_path();

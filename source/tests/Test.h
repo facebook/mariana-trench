@@ -22,6 +22,7 @@
 #include <mariana-trench/Context.h>
 #include <mariana-trench/Dependencies.h>
 #include <mariana-trench/Features.h>
+#include <mariana-trench/Frame.h>
 #include <mariana-trench/Kinds.h>
 #include <mariana-trench/Methods.h>
 #include <mariana-trench/Options.h>
@@ -49,6 +50,22 @@ class ContextGuard {
 
 Context make_empty_context();
 Context make_context(const DexStore& store);
+
+struct FrameProperties {
+  AccessPath callee_port = AccessPath(Root(Root::Kind::Leaf));
+  const Method* MT_NULLABLE callee = nullptr;
+  const Position* MT_NULLABLE call_position = nullptr;
+  int distance = 0;
+  MethodSet origins = {};
+  FeatureMayAlwaysSet inferred_features = {};
+  FeatureMayAlwaysSet locally_inferred_features = {};
+  FeatureSet user_features = {};
+  RootSetAbstractDomain via_type_of_ports = {};
+  LocalPositionSet local_positions = {};
+  CanonicalNameSetAbstractDomain canonical_names = {};
+};
+
+Frame make_frame(const Kind* kind, const FrameProperties& properties);
 
 boost::filesystem::path find_repository_root();
 
