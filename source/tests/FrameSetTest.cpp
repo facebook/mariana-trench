@@ -1065,30 +1065,47 @@ TEST_F(FrameSetTest, Propagate) {
       test::make_frame(
           test_kind,
           test::FrameProperties{
+              .callee_port = AccessPath(Root(Root::Kind::Anchor)),
               .origins = MethodSet{one},
               .canonical_names = CanonicalNameSetAbstractDomain{CanonicalName(
                   CanonicalName::TemplateValue{"%programmatic_leaf_name%"})}}),
   };
 
-  // TODO: The crtex frame should result in a separate Frame in the set.
+  auto expected_instantiated_name =
+      CanonicalName(CanonicalName::InstantiatedValue{two->signature()});
   EXPECT_EQ(
       frames.propagate(
           /* caller */ one,
           /* callee */ two,
-          AccessPath(Root(Root::Kind::Argument, 0)),
+          /* callee_port */ AccessPath(Root(Root::Kind::Argument, 0)),
           call_position,
           /* maximum_source_sink_distance */ 100,
           context,
           /* source_register_types */ {}),
-      FrameSet{test::make_frame(
-          test_kind,
-          test::FrameProperties{
-              .callee_port = AccessPath(Root(Root::Kind::Argument, 0)),
-              .callee = two,
-              .call_position = call_position,
-              .distance = 1,
-              .origins = MethodSet{one, two},
-              .locally_inferred_features = FeatureMayAlwaysSet::bottom()})});
+      (FrameSet{
+          test::make_frame(
+              test_kind,
+              test::FrameProperties{
+                  .callee_port = AccessPath(Root(Root::Kind::Argument, 0)),
+                  .callee = two,
+                  .call_position = call_position,
+                  .distance = 1,
+                  .origins = MethodSet{one, two},
+                  .locally_inferred_features = FeatureMayAlwaysSet::bottom()}),
+          test::make_frame(
+              test_kind,
+              test::FrameProperties{
+                  .callee_port = AccessPath(
+                      Root(Root::Kind::Anchor),
+                      Path{DexString::make_string("Argument(-1)")}),
+                  .callee = two,
+                  .call_position = call_position,
+                  .origins = MethodSet{one},
+                  .locally_inferred_features = FeatureMayAlwaysSet::bottom(),
+                  .canonical_names =
+                      CanonicalNameSetAbstractDomain{
+                          expected_instantiated_name}}),
+      }));
 }
 
 TEST_F(FrameSetTest, WithKind) {
