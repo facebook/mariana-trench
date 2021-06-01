@@ -78,19 +78,14 @@ TEST_F(IssueSetTest, Insertion) {
       }));
 
   set.add(Issue(
-      /* source */ Taint{Frame(
+      /* source */ Taint{test::make_frame(
           /* kind */ other_source_kind,
-          /* callee_port */ AccessPath(Root(Root::Kind::Return)),
-          /* callee */ one,
-          /* call_position */ context.positions->unknown(),
-          /* distance */ 1,
-          /* origins */ MethodSet{one},
-          /* inferred_features */ {},
-          /* locally_inferred_features */ {},
-          /* user_features */ {},
-          /* via_type_of_ports */ {},
-          /* local_positions */ {},
-          /* canonical_names */ {})},
+          test::FrameProperties{
+              .callee_port = AccessPath(Root(Root::Kind::Return)),
+              .callee = one,
+              .call_position = context.positions->unknown(),
+              .distance = 1,
+              .origins = MethodSet{one}})},
       /* sink */ Taint{Frame::leaf(other_sink_kind)},
       &rule_2,
       position_1));
@@ -106,19 +101,14 @@ TEST_F(IssueSetTest, Insertion) {
               /* source */
               Taint{
                   Frame::leaf(other_source_kind),
-                  Frame(
+                  test::make_frame(
                       /* kind */ other_source_kind,
-                      /* callee_port */ AccessPath(Root(Root::Kind::Return)),
-                      /* callee */ one,
-                      /* call_position */ context.positions->unknown(),
-                      /* distance */ 1,
-                      /* origins */ MethodSet{one},
-                      /* inferred_features */ {},
-                      /* locally_inferred_features */ {},
-                      /* user_features */ {},
-                      /* via_type_of_ports */ {},
-                      /* local_positions */ {},
-                      /* canonical_names */ {}),
+                      test::FrameProperties{
+                          .callee_port = AccessPath(Root(Root::Kind::Return)),
+                          .callee = one,
+                          .call_position = context.positions->unknown(),
+                          .distance = 1,
+                          .origins = MethodSet{one}}),
               },
               /* sink */ Taint{Frame::leaf(other_sink_kind)},
               &rule_2,
@@ -128,19 +118,14 @@ TEST_F(IssueSetTest, Insertion) {
   set.add(Issue(
       /* source */ Taint{Frame::leaf(other_source_kind)},
       /* sink */
-      Taint{Frame(
+      Taint{test::make_frame(
           /* kind */ other_sink_kind,
-          /* callee_port */ AccessPath(Root(Root::Kind::Return)),
-          /* callee */ two,
-          /* call_position */ context.positions->unknown(),
-          /* distance */ 2,
-          /* origins */ MethodSet{two},
-          /* inferred_features */ {},
-          /* locally_inferred_features */ {},
-          /* user_features */ {},
-          /* via_type_of_ports */ {},
-          /* local_positions */ {},
-          /* canonical_names */ {})},
+          test::FrameProperties{
+              .callee_port = AccessPath(Root(Root::Kind::Return)),
+              .callee = two,
+              .call_position = context.positions->unknown(),
+              .distance = 2,
+              .origins = MethodSet{two}})},
       &rule_2,
       position_1));
   EXPECT_EQ(
@@ -155,55 +140,40 @@ TEST_F(IssueSetTest, Insertion) {
               /* source */
               Taint{
                   Frame::leaf(other_source_kind),
-                  Frame(
+                  test::make_frame(
                       /* kind */ other_source_kind,
-                      /* callee_port */ AccessPath(Root(Root::Kind::Return)),
-                      /* callee */ one,
-                      /* call_position */ context.positions->unknown(),
-                      /* distance */ 1,
-                      /* origins */ MethodSet{one},
-                      /* inferred_features */ {},
-                      /* locally_inferred_features */ {},
-                      /* user_features */ {},
-                      /* via_type_of_ports */ {},
-                      /* local_positions */ {},
-                      /* canonical_names */ {}),
+                      test::FrameProperties{
+                          .callee_port = AccessPath(Root(Root::Kind::Return)),
+                          .callee = one,
+                          .call_position = context.positions->unknown(),
+                          .distance = 1,
+                          .origins = MethodSet{one}}),
               },
               /* sink */
               Taint{
                   Frame::leaf(other_sink_kind),
-                  Frame(
+                  test::make_frame(
                       /* kind */ other_sink_kind,
-                      /* callee_port */ AccessPath(Root(Root::Kind::Return)),
-                      /* callee */ two,
-                      /* call_position */ context.positions->unknown(),
-                      /* distance */ 2,
-                      /* origins */ MethodSet{two},
-                      /* inferred_features */ {},
-                      /* locally_inferred_features */ {},
-                      /* user_features */ {},
-                      /* via_type_of_ports */ {},
-                      /* local_positions */ {},
-                      /* canonical_names */ {}),
+                      test::FrameProperties{
+                          .callee_port = AccessPath(Root(Root::Kind::Return)),
+                          .callee = two,
+                          .call_position = context.positions->unknown(),
+                          .distance = 2,
+                          .origins = MethodSet{two}}),
               },
               &rule_2,
               position_1),
       }));
 
   set.add(Issue(
-      /* source */ Taint{Frame(
+      /* source */ Taint{test::make_frame(
           /* kind */ other_source_kind,
-          /* callee_port */ AccessPath(Root(Root::Kind::Return)),
-          /* callee */ two,
-          /* call_position */ context.positions->unknown(),
-          /* distance */ 3,
-          /* origins */ MethodSet{two},
-          /* inferred_features */ {},
-          /* locally_inferred_features */ {},
-          /* user_features */ {},
-          /* via_type_of_ports */ {},
-          /* local_positions */ {},
-          /* canonical_names */ {})},
+          test::FrameProperties{
+              .callee_port = AccessPath(Root(Root::Kind::Return)),
+              .callee = two,
+              .call_position = context.positions->unknown(),
+              .distance = 3,
+              .origins = MethodSet{two}})},
       /* sink */ Taint{Frame::leaf(other_sink_kind)},
       &rule_2,
       position_1));
@@ -219,49 +189,34 @@ TEST_F(IssueSetTest, Insertion) {
               /* source */
               Taint{
                   Frame::leaf(other_source_kind),
-                  Frame(
+                  test::make_frame(
                       /* kind */ other_source_kind,
-                      /* callee_port */ AccessPath(Root(Root::Kind::Return)),
-                      /* callee */ one,
-                      /* call_position */ context.positions->unknown(),
-                      /* distance */ 1,
-                      /* origins */ MethodSet{one},
-                      /* inferred_features */ {},
-                      /* locally_inferred_features */ {},
-                      /* user_features */ {},
-                      /* via_type_of_ports */ {},
-                      /* local_positions */ {},
-                      /* canonical_names */ {}),
-                  Frame(
+                      test::FrameProperties{
+                          .callee_port = AccessPath(Root(Root::Kind::Return)),
+                          .callee = one,
+                          .call_position = context.positions->unknown(),
+                          .distance = 1,
+                          .origins = MethodSet{one}}),
+                  test::make_frame(
                       /* kind */ other_source_kind,
-                      /* callee_port */ AccessPath(Root(Root::Kind::Return)),
-                      /* callee */ two,
-                      /* call_position */ context.positions->unknown(),
-                      /* distance */ 3,
-                      /* origins */ MethodSet{two},
-                      /* inferred_features */ {},
-                      /* locally_inferred_features */ {},
-                      /* user_features */ {},
-                      /* via_type_of_ports */ {},
-                      /* local_positions */ {},
-                      /* canonical_names */ {}),
+                      test::FrameProperties{
+                          .callee_port = AccessPath(Root(Root::Kind::Return)),
+                          .callee = two,
+                          .call_position = context.positions->unknown(),
+                          .distance = 3,
+                          .origins = MethodSet{two}}),
               },
               /* sink */
               Taint{
                   Frame::leaf(other_sink_kind),
-                  Frame(
+                  test::make_frame(
                       /* kind */ other_sink_kind,
-                      /* callee_port */ AccessPath(Root(Root::Kind::Return)),
-                      /* callee */ two,
-                      /* call_position */ context.positions->unknown(),
-                      /* distance */ 2,
-                      /* origins */ MethodSet{two},
-                      /* inferred_features */ {},
-                      /* locally_inferred_features */ {},
-                      /* user_features */ {},
-                      /* via_type_of_ports */ {},
-                      /* local_positions */ {},
-                      /* canonical_names */ {}),
+                      test::FrameProperties{
+                          .callee_port = AccessPath(Root(Root::Kind::Return)),
+                          .callee = two,
+                          .call_position = context.positions->unknown(),
+                          .distance = 2,
+                          .origins = MethodSet{two}}),
               },
               &rule_2,
               position_1),
@@ -289,49 +244,34 @@ TEST_F(IssueSetTest, Insertion) {
               /* source */
               Taint{
                   Frame::leaf(other_source_kind),
-                  Frame(
+                  test::make_frame(
                       /* kind */ other_source_kind,
-                      /* callee_port */ AccessPath(Root(Root::Kind::Return)),
-                      /* callee */ one,
-                      /* call_position */ context.positions->unknown(),
-                      /* distance */ 1,
-                      /* origins */ MethodSet{one},
-                      /* inferred_features */ {},
-                      /* locally_inferred_features */ {},
-                      /* user_features */ {},
-                      /* via_type_of_ports */ {},
-                      /* local_positions */ {},
-                      /* canonical_names */ {}),
-                  Frame(
+                      test::FrameProperties{
+                          .callee_port = AccessPath(Root(Root::Kind::Return)),
+                          .callee = one,
+                          .call_position = context.positions->unknown(),
+                          .distance = 1,
+                          .origins = MethodSet{one}}),
+                  test::make_frame(
                       /* kind */ other_source_kind,
-                      /* callee_port */ AccessPath(Root(Root::Kind::Return)),
-                      /* callee */ two,
-                      /* call_position */ context.positions->unknown(),
-                      /* distance */ 3,
-                      /* origins */ MethodSet{two},
-                      /* inferred_features */ {},
-                      /* locally_inferred_features */ {},
-                      /* user_features */ {},
-                      /* via_type_of_ports */ {},
-                      /* local_positions */ {},
-                      /* canonical_names */ {}),
+                      test::FrameProperties{
+                          .callee_port = AccessPath(Root(Root::Kind::Return)),
+                          .callee = two,
+                          .call_position = context.positions->unknown(),
+                          .distance = 3,
+                          .origins = MethodSet{two}}),
               },
               /* sink */
               Taint{
                   Frame::leaf(other_sink_kind),
-                  Frame(
+                  test::make_frame(
                       /* kind */ other_sink_kind,
-                      /* callee_port */ AccessPath(Root(Root::Kind::Return)),
-                      /* callee */ two,
-                      /* call_position */ context.positions->unknown(),
-                      /* distance */ 2,
-                      /* origins */ MethodSet{two},
-                      /* inferred_features */ {},
-                      /* locally_inferred_features */ {},
-                      /* user_features */ {},
-                      /* via_type_of_ports */ {},
-                      /* local_positions */ {},
-                      /* canonical_names */ {}),
+                      test::FrameProperties{
+                          .callee_port = AccessPath(Root(Root::Kind::Return)),
+                          .callee = two,
+                          .call_position = context.positions->unknown(),
+                          .distance = 2,
+                          .origins = MethodSet{two}}),
               },
               &rule_2,
               position_1),
