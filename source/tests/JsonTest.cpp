@@ -675,19 +675,11 @@ TEST_F(JsonTest, Frame) {
                 "kind": "TestSource"
               })"),
           context),
-      Frame(
+      test::make_frame(
           /* kind */ context.kinds->get("TestSource"),
-          /* callee_port */ AccessPath(Root(Root::Kind::Leaf)),
-          /* callee */ nullptr,
-          /* call_position */ nullptr,
-          /* distance */ 0,
-          /* origins */ {},
-          /* inferred_features */ FeatureMayAlwaysSet::bottom(),
-          /* locally_inferred_features */ FeatureMayAlwaysSet::bottom(),
-          /* user_features */ {},
-          /* via_type_of_ports */ {},
-          /* local_positions */ {},
-          /* canonical_names */ {}));
+          test::FrameProperties{
+              .inferred_features = FeatureMayAlwaysSet::bottom(),
+              .locally_inferred_features = FeatureMayAlwaysSet::bottom()}));
 
   // Parse the kind for partial leaves.
   EXPECT_THROW(
@@ -704,19 +696,11 @@ TEST_F(JsonTest, Frame) {
       context);
   EXPECT_EQ(
       frame,
-      Frame(
+      test::make_frame(
           /* kind */ context.kinds->get_partial("TestSink", "X"),
-          /* callee_port */ AccessPath(Root(Root::Kind::Leaf)),
-          /* callee */ nullptr,
-          /* call_position */ nullptr,
-          /* distance */ 0,
-          /* origins */ {},
-          /* inferred_features */ FeatureMayAlwaysSet::bottom(),
-          /* locally_inferred_features */ FeatureMayAlwaysSet::bottom(),
-          /* user_features */ {},
-          /* via_type_of_ports */ {},
-          /* local_positions */ {},
-          /* canonical_names */ {}));
+          test::FrameProperties{
+              .inferred_features = FeatureMayAlwaysSet::bottom(),
+              .locally_inferred_features = FeatureMayAlwaysSet::bottom()}));
   const auto* frame_kind = frame.kind()->as<PartialKind>();
   EXPECT_NE(frame_kind, nullptr);
   EXPECT_EQ(frame_kind->name(), "TestSink");
@@ -738,19 +722,11 @@ TEST_F(JsonTest, Frame) {
         "kind": "TestSource",
         "callee_port": "Leaf"
       })",
-      Frame(
+      test::make_frame(
           /* kind */ context.kinds->get("TestSource"),
-          /* callee_port */ AccessPath(Root(Root::Kind::Leaf)),
-          /* callee */ nullptr,
-          /* call_position */ nullptr,
-          /* distance */ 0,
-          /* origins */ {},
-          /* inferred_features */ FeatureMayAlwaysSet::bottom(),
-          /* locally_inferred_features */ FeatureMayAlwaysSet::bottom(),
-          /* user_features */ {},
-          /* via_type_of_ports */ {},
-          /* local_positions */ {},
-          /* canonical_names */ {}),
+          test::FrameProperties{
+              .inferred_features = FeatureMayAlwaysSet::bottom(),
+              .locally_inferred_features = FeatureMayAlwaysSet::bottom()}),
       context);
 
   // Parse the callee, position and distance.
@@ -763,19 +739,15 @@ TEST_F(JsonTest, Frame) {
         "call_position": {},
         "distance": 1
       })",
-      Frame(
+      test::make_frame(
           /* kind */ context.kinds->get("TestSource"),
-          /* callee_port */ AccessPath(Root(Root::Kind::Return)),
-          /* callee */ source_one,
-          /* call_position */ context.positions->unknown(),
-          /* distance */ 1,
-          /* origins */ {},
-          /* inferred_features */ FeatureMayAlwaysSet::bottom(),
-          /* locally_inferred_features */ FeatureMayAlwaysSet::bottom(),
-          /* user_features */ {},
-          /* via_type_of_ports */ {},
-          /* local_positions */ {},
-          /* canonical_names */ {}),
+          test::FrameProperties{
+              .callee_port = AccessPath(Root(Root::Kind::Return)),
+              .callee = source_one,
+              .call_position = context.positions->unknown(),
+              .distance = 1,
+              .inferred_features = FeatureMayAlwaysSet::bottom(),
+              .locally_inferred_features = FeatureMayAlwaysSet::bottom()}),
       context);
   EXPECT_JSON_EQ(
       Frame,
@@ -786,19 +758,15 @@ TEST_F(JsonTest, Frame) {
         "call_position": {"line": 2, "path": "Object.java"},
         "distance": 2
       })",
-      Frame(
+      test::make_frame(
           /* kind */ context.kinds->get("TestSource"),
-          /* callee_port */ AccessPath(Root(Root::Kind::Return)),
-          /* callee */ source_one,
-          /* call_position */ context.positions->get("Object.java", 2),
-          /* distance */ 2,
-          /* origins */ {},
-          /* inferred_features */ FeatureMayAlwaysSet::bottom(),
-          /* locally_inferred_features */ FeatureMayAlwaysSet::bottom(),
-          /* user_features */ {},
-          /* via_type_of_ports */ {},
-          /* local_positions */ {},
-          /* canonical_names */ {}),
+          test::FrameProperties{
+              .callee_port = AccessPath(Root(Root::Kind::Return)),
+              .callee = source_one,
+              .call_position = context.positions->get("Object.java", 2),
+              .distance = 2,
+              .inferred_features = FeatureMayAlwaysSet::bottom(),
+              .locally_inferred_features = FeatureMayAlwaysSet::bottom()}),
       context);
 
   // Parse the origins.
@@ -817,19 +785,12 @@ TEST_F(JsonTest, Frame) {
         "callee_port": "Leaf",
         "origins": ["LClassOne;.source:()V"]
       })",
-      Frame(
+      test::make_frame(
           /* kind */ context.kinds->get("TestSource"),
-          /* callee_port */ AccessPath(Root(Root::Kind::Leaf)),
-          /* callee */ nullptr,
-          /* call_position */ nullptr,
-          /* distance */ 0,
-          /* origins */ MethodSet{source_one},
-          /* inferred_features */ FeatureMayAlwaysSet::bottom(),
-          /* locally_inferred_features */ FeatureMayAlwaysSet::bottom(),
-          /* user_features */ {},
-          /* via_type_of_ports */ {},
-          /* local_positions */ {},
-          /* canonical_names */ {}),
+          test::FrameProperties{
+              .origins = MethodSet{source_one},
+              .inferred_features = FeatureMayAlwaysSet::bottom(),
+              .locally_inferred_features = FeatureMayAlwaysSet::bottom()}),
       context);
   EXPECT_JSON_EQ(
       Frame,
@@ -838,19 +799,12 @@ TEST_F(JsonTest, Frame) {
         "callee_port": "Leaf",
         "origins": ["LClassOne;.source:()V", "LClassTwo;.source:()V"]
       })",
-      Frame(
+      test::make_frame(
           /* kind */ context.kinds->get("TestSource"),
-          /* callee_port */ AccessPath(Root(Root::Kind::Leaf)),
-          /* callee */ nullptr,
-          /* call_position */ nullptr,
-          /* distance */ 0,
-          /* origins */ MethodSet{source_one, source_two},
-          /* inferred_features */ FeatureMayAlwaysSet::bottom(),
-          /* locally_inferred_features */ FeatureMayAlwaysSet::bottom(),
-          /* user_features */ {},
-          /* via_type_of_ports */ {},
-          /* local_positions */ {},
-          /* canonical_names */ {}),
+          test::FrameProperties{
+              .origins = MethodSet{source_one, source_two},
+              .inferred_features = FeatureMayAlwaysSet::bottom(),
+              .locally_inferred_features = FeatureMayAlwaysSet::bottom()}),
       context);
 
   // Parse the features.
@@ -861,20 +815,12 @@ TEST_F(JsonTest, Frame) {
         "callee_port": "Leaf",
         "always_features": ["FeatureOne"]
       })",
-      Frame(
+      test::make_frame(
           /* kind */ context.kinds->get("TestSource"),
-          /* callee_port */ AccessPath(Root(Root::Kind::Leaf)),
-          /* callee */ nullptr,
-          /* call_position */ nullptr,
-          /* distance */ 0,
-          /* origins */ {},
-          /* inferred_features */
-          FeatureMayAlwaysSet{context.features->get("FeatureOne")},
-          /* locally_inferred_features */ FeatureMayAlwaysSet::bottom(),
-          /* user_features */ {},
-          /* via_type_of_ports */ {},
-          /* local_positions */ {},
-          /* canonical_names */ {}),
+          test::FrameProperties{
+              .inferred_features =
+                  FeatureMayAlwaysSet{context.features->get("FeatureOne")},
+              .locally_inferred_features = FeatureMayAlwaysSet::bottom()}),
       context);
   EXPECT_JSON_EQ(
       Frame,
@@ -883,22 +829,14 @@ TEST_F(JsonTest, Frame) {
         "callee_port": "Leaf",
         "always_features": ["FeatureOne", "FeatureTwo"]
       })",
-      Frame(
+      test::make_frame(
           /* kind */ context.kinds->get("TestSource"),
-          /* callee_port */ AccessPath(Root(Root::Kind::Leaf)),
-          /* callee */ nullptr,
-          /* call_position */ nullptr,
-          /* distance */ 0,
-          /* origins */ {},
-          /* inferred_features */
-          FeatureMayAlwaysSet{
-              context.features->get("FeatureOne"),
-              context.features->get("FeatureTwo")},
-          /* locally_inferred_features */ FeatureMayAlwaysSet::bottom(),
-          /* user_features */ {},
-          /* via_type_of_ports */ {},
-          /* local_positions */ {},
-          /* canonical_names */ {}),
+          test::FrameProperties{
+              .inferred_features =
+                  FeatureMayAlwaysSet{
+                      context.features->get("FeatureOne"),
+                      context.features->get("FeatureTwo")},
+              .locally_inferred_features = FeatureMayAlwaysSet::bottom()}),
       context);
   EXPECT_JSON_EQ(
       Frame,
@@ -908,22 +846,13 @@ TEST_F(JsonTest, Frame) {
         "may_features": ["FeatureOne"],
         "always_features": ["FeatureTwo"]
       })",
-      Frame(
+      test::make_frame(
           /* kind */ context.kinds->get("TestSource"),
-          /* callee_port */ AccessPath(Root(Root::Kind::Leaf)),
-          /* callee */ nullptr,
-          /* call_position */ nullptr,
-          /* distance */ 0,
-          /* origins */ {},
-          /* inferred_features */
-          FeatureMayAlwaysSet(
-              /* may */ FeatureSet{context.features->get("FeatureOne")},
-              /* always */ FeatureSet{context.features->get("FeatureTwo")}),
-          /* locally_inferred_features */ FeatureMayAlwaysSet::bottom(),
-          /* user_features */ {},
-          /* via_type_of_ports */ {},
-          /* local_positions */ {},
-          /* canonical_names */ {}),
+          test::FrameProperties{
+              .inferred_features = FeatureMayAlwaysSet(
+                  /* may */ FeatureSet{context.features->get("FeatureOne")},
+                  /* always */ FeatureSet{context.features->get("FeatureTwo")}),
+              .locally_inferred_features = FeatureMayAlwaysSet::bottom()}),
       context);
   EXPECT_JSON_EQ(
       Frame,
@@ -932,22 +861,13 @@ TEST_F(JsonTest, Frame) {
         "callee_port": "Leaf",
         "may_features": ["FeatureOne"]
       })",
-      Frame(
+      test::make_frame(
           /* kind */ context.kinds->get("TestSource"),
-          /* callee_port */ AccessPath(Root(Root::Kind::Leaf)),
-          /* callee */ nullptr,
-          /* call_position */ nullptr,
-          /* distance */ 0,
-          /* origins */ {},
-          /* inferred_features */
-          FeatureMayAlwaysSet(
-              /* may */ FeatureSet{context.features->get("FeatureOne")},
-              /* always */ FeatureSet{}),
-          /* locally_inferred_features */ FeatureMayAlwaysSet::bottom(),
-          /* user_features */ {},
-          /* via_type_of_ports */ {},
-          /* local_positions */ {},
-          /* canonical_names */ {}),
+          test::FrameProperties{
+              .inferred_features = FeatureMayAlwaysSet(
+                  /* may */ FeatureSet{context.features->get("FeatureOne")},
+                  /* always */ FeatureSet{}),
+              .locally_inferred_features = FeatureMayAlwaysSet::bottom()}),
       context);
   EXPECT_JSON_EQ(
       Frame,
@@ -956,25 +876,16 @@ TEST_F(JsonTest, Frame) {
         "callee_port": "Leaf",
         "may_features": ["FeatureOne", "FeatureTwo"]
       })",
-      Frame(
+      test::make_frame(
           /* kind */ context.kinds->get("TestSource"),
-          /* callee_port */ AccessPath(Root(Root::Kind::Leaf)),
-          /* callee */ nullptr,
-          /* call_position */ nullptr,
-          /* distance */ 0,
-          /* origins */ {},
-          /* inferred_features */
-          FeatureMayAlwaysSet(
-              /* may */
-              FeatureSet{
-                  context.features->get("FeatureOne"),
-                  context.features->get("FeatureTwo")},
-              /* always */ FeatureSet{}),
-          /* locally_inferred_features */ FeatureMayAlwaysSet::bottom(),
-          /* user_features */ {},
-          /* via_type_of_ports */ {},
-          /* local_positions */ {},
-          /* canonical_names */ {}),
+          test::FrameProperties{
+              .inferred_features = FeatureMayAlwaysSet(
+                  /* may */
+                  FeatureSet{
+                      context.features->get("FeatureOne"),
+                      context.features->get("FeatureTwo")},
+                  /* always */ FeatureSet{}),
+              .locally_inferred_features = FeatureMayAlwaysSet::bottom()}),
       context);
   EXPECT_EQ(
       Frame::from_json(
@@ -984,20 +895,13 @@ TEST_F(JsonTest, Frame) {
                 "features": ["FeatureOne"]
               })"),
           context),
-      Frame(
+      test::make_frame(
           /* kind */ context.kinds->get("TestSource"),
-          /* callee_port */ AccessPath(Root(Root::Kind::Leaf)),
-          /* callee */ nullptr,
-          /* call_position */ nullptr,
-          /* distance */ 0,
-          /* origins */ {},
-          /* inferred_features */ FeatureMayAlwaysSet::bottom(),
-          /* locally_inferred_features */ FeatureMayAlwaysSet::bottom(),
-          /* user_features */
-          FeatureSet{context.features->get("FeatureOne")},
-          /* via_type_of_ports */ {},
-          /* local_positions */ {},
-          /* canonical_names */ {}));
+          test::FrameProperties{
+              .inferred_features = FeatureMayAlwaysSet::bottom(),
+              .locally_inferred_features = FeatureMayAlwaysSet::bottom(),
+              .user_features =
+                  FeatureSet{context.features->get("FeatureOne")}}));
   EXPECT_EQ(
       Frame::from_json(
           test::parse_json(
@@ -1006,22 +910,14 @@ TEST_F(JsonTest, Frame) {
                 "features": ["FeatureOne", "FeatureTwo"]
               })"),
           context),
-      Frame(
+      test::make_frame(
           /* kind */ context.kinds->get("TestSource"),
-          /* callee_port */ AccessPath(Root(Root::Kind::Leaf)),
-          /* callee */ nullptr,
-          /* call_position */ nullptr,
-          /* distance */ 0,
-          /* origins */ {},
-          /* inferred_features */ FeatureMayAlwaysSet::bottom(),
-          /* locally_inferred_features */ FeatureMayAlwaysSet::bottom(),
-          /* user_features */
-          FeatureSet{
-              context.features->get("FeatureOne"),
-              context.features->get("FeatureTwo")},
-          /* via_type_of_ports */ {},
-          /* local_positions */ {},
-          /* canonical_names */ {}));
+          test::FrameProperties{
+              .inferred_features = FeatureMayAlwaysSet::bottom(),
+              .locally_inferred_features = FeatureMayAlwaysSet::bottom(),
+              .user_features = FeatureSet{
+                  context.features->get("FeatureOne"),
+                  context.features->get("FeatureTwo")}}));
   EXPECT_EQ(
       Frame::from_json(
           test::parse_json(
@@ -1031,22 +927,15 @@ TEST_F(JsonTest, Frame) {
                 "may_features": ["FeatureTwo"]
               })"),
           context),
-      Frame(
+      test::make_frame(
           /* kind */ context.kinds->get("TestSource"),
-          /* callee_port */ AccessPath(Root(Root::Kind::Leaf)),
-          /* callee */ nullptr,
-          /* call_position */ nullptr,
-          /* distance */ 0,
-          /* origins */ {},
-          /* inferred_features */
-          FeatureMayAlwaysSet(
-              /* may */ FeatureSet{context.features->get("FeatureTwo")},
-              /* always */ FeatureSet{}),
-          /* locally_inferred_features */ FeatureMayAlwaysSet::bottom(),
-          /* user_features */ FeatureSet{context.features->get("FeatureOne")},
-          /* via_type_of_ports */ {},
-          /* local_positions */ {},
-          /* canonical_names */ {}));
+          test::FrameProperties{
+              .inferred_features = FeatureMayAlwaysSet(
+                  /* may */ FeatureSet{context.features->get("FeatureTwo")},
+                  /* always */ FeatureSet{}),
+              .locally_inferred_features = FeatureMayAlwaysSet::bottom(),
+              .user_features =
+                  FeatureSet{context.features->get("FeatureOne")}}));
   EXPECT_EQ(
       Frame::from_json(
           test::parse_json(
@@ -1057,23 +946,16 @@ TEST_F(JsonTest, Frame) {
                 "always_features": ["FeatureThree"]
               })"),
           context),
-      Frame(
+      test::make_frame(
           /* kind */ context.kinds->get("TestSource"),
-          /* callee_port */ AccessPath(Root(Root::Kind::Leaf)),
-          /* callee */ nullptr,
-          /* call_position */ nullptr,
-          /* distance */ 0,
-          /* origins */ {},
-          /* inferred_features */
-          FeatureMayAlwaysSet(
-              /* may */ FeatureSet{context.features->get("FeatureTwo")},
-              /* always */
-              FeatureSet{context.features->get("FeatureThree")}),
-          /* locally_inferred_features */ FeatureMayAlwaysSet::bottom(),
-          /* user_features */ FeatureSet{context.features->get("FeatureOne")},
-          /* via_type_of_ports */ {},
-          /* local_positions */ {},
-          /* canonical_names */ {}));
+          test::FrameProperties{
+              .inferred_features = FeatureMayAlwaysSet(
+                  /* may */ FeatureSet{context.features->get("FeatureTwo")},
+                  /* always */
+                  FeatureSet{context.features->get("FeatureThree")}),
+              .locally_inferred_features = FeatureMayAlwaysSet::bottom(),
+              .user_features =
+                  FeatureSet{context.features->get("FeatureOne")}}));
   EXPECT_EQ(
       Frame::from_json(
           test::parse_json(
@@ -1084,20 +966,12 @@ TEST_F(JsonTest, Frame) {
                 "always_features": []
               })"),
           context),
-      Frame(
+      test::make_frame(
           /* kind */ context.kinds->get("TestSource"),
-          /* callee_port */ AccessPath(Root(Root::Kind::Leaf)),
-          /* callee */ nullptr,
-          /* call_position */ nullptr,
-          /* distance */ 0,
-          /* origins */ {},
-          /* inferred_features */ {},
-          /* locally_inferred_features */ FeatureMayAlwaysSet::bottom(),
-          /* user_features */
-          FeatureSet{context.features->get("FeatureOne")},
-          /* via_type_of_ports */ {},
-          /* local_positions */ {},
-          /* canonical_names */ {}));
+          test::FrameProperties{
+              .locally_inferred_features = FeatureMayAlwaysSet::bottom(),
+              .user_features =
+                  FeatureSet{context.features->get("FeatureOne")}}));
 
   // Parse via_type_of_ports
   EXPECT_JSON_EQ(
@@ -1107,21 +981,13 @@ TEST_F(JsonTest, Frame) {
         "callee_port": "Leaf",
         "via_type_of": ["Argument(1)", "Return"]
       })#",
-      Frame(
+      test::make_frame(
           /* kind */ context.kinds->get("TestSource"),
-          /* callee_port */ AccessPath(Root(Root::Kind::Leaf)),
-          /* callee */ nullptr,
-          /* call_position */ nullptr,
-          /* distance */ 0,
-          /* origins */ {},
-          /* inferred_features */ FeatureMayAlwaysSet::bottom(),
-          /* locally_inferred_features */ FeatureMayAlwaysSet::bottom(),
-          /* user_features */ {},
-          /* via_type_of_ports */
-          RootSetAbstractDomain(
-              {Root(Root::Kind::Return), Root(Root::Kind::Argument, 1)}),
-          /* local_positions */ {},
-          /* canonical_names */ {}),
+          test::FrameProperties{
+              .inferred_features = FeatureMayAlwaysSet::bottom(),
+              .locally_inferred_features = FeatureMayAlwaysSet::bottom(),
+              .via_type_of_ports = RootSetAbstractDomain(
+                  {Root(Root::Kind::Return), Root(Root::Kind::Argument, 1)})}),
       context);
 
   // Parse local positions.
@@ -1132,20 +998,13 @@ TEST_F(JsonTest, Frame) {
         "callee_port": "Leaf",
         "local_positions": [{"line": 1}]
       })",
-      Frame(
+      test::make_frame(
           /* kind */ context.kinds->get("TestSource"),
-          /* callee_port */ AccessPath(Root(Root::Kind::Leaf)),
-          /* callee */ nullptr,
-          /* call_position */ nullptr,
-          /* distance */ 0,
-          /* origins */ {},
-          /* inferred_features */ FeatureMayAlwaysSet::bottom(),
-          /* locally_inferred_features */ FeatureMayAlwaysSet::bottom(),
-          /* user_features */ {},
-          /* via_type_of_ports */ {},
-          /* local_positions */
-          LocalPositionSet{context.positions->get(std::nullopt, 1)},
-          /* canonical_names */ {}),
+          test::FrameProperties{
+              .inferred_features = FeatureMayAlwaysSet::bottom(),
+              .locally_inferred_features = FeatureMayAlwaysSet::bottom(),
+              .local_positions =
+                  LocalPositionSet{context.positions->get(std::nullopt, 1)}}),
       context);
   EXPECT_JSON_EQ(
       Frame,
@@ -1158,24 +1017,17 @@ TEST_F(JsonTest, Frame) {
           {"line": 30}
         ]
       })",
-      Frame(
+      test::make_frame(
           /* kind */ context.kinds->get("TestSource"),
-          /* callee_port */ AccessPath(Root(Root::Kind::Leaf)),
-          /* callee */ nullptr,
-          /* call_position */ nullptr,
-          /* distance */ 0,
-          /* origins */ {},
-          /* inferred_features */ FeatureMayAlwaysSet::bottom(),
-          /* locally_inferred_features */ FeatureMayAlwaysSet::bottom(),
-          /* user_features */ {},
-          /* via_type_of_ports */ {},
-          /* local_positions */
-          LocalPositionSet{
-              context.positions->get(std::nullopt, 10),
-              context.positions->get(std::nullopt, 20),
-              context.positions->get(std::nullopt, 30),
-          },
-          /* canonical_names */ {}),
+          test::FrameProperties{
+              .inferred_features = FeatureMayAlwaysSet::bottom(),
+              .locally_inferred_features = FeatureMayAlwaysSet::bottom(),
+              .local_positions =
+                  LocalPositionSet{
+                      context.positions->get(std::nullopt, 10),
+                      context.positions->get(std::nullopt, 20),
+                      context.positions->get(std::nullopt, 30),
+                  }}),
       context);
   EXPECT_EQ(
       Frame::from_json(
@@ -1190,23 +1042,15 @@ TEST_F(JsonTest, Frame) {
                 ]
               })"),
           context),
-      Frame(
+      test::make_frame(
           /* kind */ context.kinds->get("TestSource"),
-          /* callee_port */ AccessPath(Root(Root::Kind::Leaf)),
-          /* callee */ nullptr,
-          /* call_position */ nullptr,
-          /* distance */ 0,
-          /* origins */ {},
-          /* inferred_features */ FeatureMayAlwaysSet::bottom(),
-          /* locally_inferred_features */ FeatureMayAlwaysSet::bottom(),
-          /* user_features */ {},
-          /* via_type_of_ports */ {},
-          /* local_positions */
-          LocalPositionSet{
-              context.positions->get(std::nullopt, 1),
-              context.positions->get(std::nullopt, 2),
-          },
-          /* canonical_names */ {}));
+          test::FrameProperties{
+              .inferred_features = FeatureMayAlwaysSet::bottom(),
+              .locally_inferred_features = FeatureMayAlwaysSet::bottom(),
+              .local_positions = LocalPositionSet{
+                  context.positions->get(std::nullopt, 1),
+                  context.positions->get(std::nullopt, 2),
+              }}));
 
   // Verifies to_json behavior for local inferred features. These cannot be
   // covered by from_json tests as they are never specified in json. Note that
@@ -1214,24 +1058,14 @@ TEST_F(JsonTest, Frame) {
   // "local_features" key, another as "may/always_features" in the object
   // alongside any existing inferred features.
   EXPECT_EQ(
-      Frame(
+      test::make_frame(
           /* kind */ context.kinds->get("TestSource"),
-          /* callee_port */ AccessPath(Root(Root::Kind::Leaf)),
-          /* callee */ nullptr,
-          /* call_position */ nullptr,
-          /* distance */ 0,
-          /* origins */ {},
-          /* inferred_features */
-          FeatureMayAlwaysSet::make_always(
-              {context.features->get("FeatureTwo")}),
-          /* locally_inferred_features */
-          FeatureMayAlwaysSet(
-              /* may */ FeatureSet{context.features->get("FeatureOne")},
-              /* always */ {}),
-          /* user_features */ {},
-          /* via_type_of_ports */ {},
-          /* local_positions */ {},
-          /* canonical_names */ {})
+          test::FrameProperties{
+              .inferred_features = FeatureMayAlwaysSet::make_always(
+                  {context.features->get("FeatureTwo")}),
+              .locally_inferred_features = FeatureMayAlwaysSet(
+                  /* may */ FeatureSet{context.features->get("FeatureOne")},
+                  /* always */ {})})
           .to_json(),
       test::parse_json(R"({
         "kind": "TestSource",
