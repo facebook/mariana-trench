@@ -27,263 +27,116 @@ TEST_F(TaintTest, Insertion) {
   Taint taint;
   EXPECT_EQ(taint, Taint());
 
-  taint.add(Frame(
-      /* kind */ context.kinds->get("TestSource"),
-      /* callee_port */ AccessPath(Root(Root::Kind::Leaf)),
-      /* callee */ nullptr,
-      /* call_position */ nullptr,
-      /* distance */ 0,
-      /* origins */ {},
-      /* inferred_features */ {},
-      /* locally_inferred_features */ {},
-      /* user_features */ {},
-      /* via_type_of_ports */ {},
-      /* local_positions */ {},
-      /* canonical_names */ {}));
+  taint.add(test::make_frame(
+      /* kind */ context.kinds->get("TestSource"), test::FrameProperties{}));
   EXPECT_EQ(
       taint,
       (Taint{
-          Frame(
+          test::make_frame(
               /* kind */ context.kinds->get("TestSource"),
-              /* callee_port */ AccessPath(Root(Root::Kind::Leaf)),
-              /* callee */ nullptr,
-              /* call_position */ nullptr,
-              /* distance */ 0,
-              /* origins */ {},
-              /* inferred_features */ {},
-              /* locally_inferred_features */ {},
-              /* user_features */ {},
-              /* via_type_of_ports */ {},
-              /* local_positions */ {},
-              /* canonical_names */ {}),
+              test::FrameProperties{}),
       }));
 
-  taint.add(Frame(
-      /* kind */ context.kinds->get("OtherSource"),
-      /* callee_port */ AccessPath(Root(Root::Kind::Leaf)),
-      /* callee */ nullptr,
-      /* call_position */ nullptr,
-      /* distance */ 0,
-      /* origins */ {},
-      /* inferred_features */ {},
-      /* locally_inferred_features */ {},
-      /* user_features */ {},
-      /* via_type_of_ports */ {},
-      /* local_positions */ {},
-      /* canonical_names */ {}));
+  taint.add(test::make_frame(
+      /* kind */ context.kinds->get("OtherSource"), test::FrameProperties{}));
   EXPECT_EQ(
       taint,
       (Taint{
-          Frame(
+          test::make_frame(
               /* kind */ context.kinds->get("TestSource"),
-              /* callee_port */ AccessPath(Root(Root::Kind::Leaf)),
-              /* callee */ nullptr,
-              /* call_position */ nullptr,
-              /* distance */ 0,
-              /* origins */ {},
-              /* inferred_features */ {},
-              /* locally_inferred_features */ {},
-              /* user_features */ {},
-              /* via_type_of_ports */ {},
-              /* local_positions */ {},
-              /* canonical_names */ {}),
-          Frame(
+              test::FrameProperties{}),
+          test::make_frame(
               /* kind */ context.kinds->get("OtherSource"),
-              /* callee_port */ AccessPath(Root(Root::Kind::Leaf)),
-              /* callee */ nullptr,
-              /* call_position */ nullptr,
-              /* distance */ 0,
-              /* origins */ {},
-              /* inferred_features */ {},
-              /* locally_inferred_features */ {},
-              /* user_features */ {},
-              /* via_type_of_ports */ {},
-              /* local_positions */ {},
-              /* canonical_names */ {}),
+              test::FrameProperties{}),
       }));
 
-  taint.add(Frame(
+  taint.add(test::make_frame(
       /* kind */ context.kinds->get("IndirectSource"),
-      /* callee_port */ AccessPath(Root(Root::Kind::Return)),
-      /* callee */ one,
-      /* call_position */ context.positions->unknown(),
-      /* distance */ 2,
-      /* origins */ MethodSet{one},
-      /* inferred_features */ {},
-      /* locally_inferred_features */ {},
-      /* user_features */ {},
-      /* via_type_of_ports */ {},
-      /* local_positions */ {},
-      /* canonical_names */ {}));
+      test::FrameProperties{
+          .callee_port = AccessPath(Root(Root::Kind::Return)),
+          .callee = one,
+          .call_position = context.positions->unknown(),
+          .distance = 2,
+          .origins = MethodSet{one}}));
   EXPECT_EQ(
       taint,
       (Taint{
-          Frame(
+          test::make_frame(
               /* kind */ context.kinds->get("TestSource"),
-              /* callee_port */ AccessPath(Root(Root::Kind::Leaf)),
-              /* callee */ nullptr,
-              /* call_position */ nullptr,
-              /* distance */ 0,
-              /* origins */ {},
-              /* inferred_features */ {},
-              /* locally_inferred_features */ {},
-              /* user_features */ {},
-              /* via_type_of_ports */ {},
-              /* local_positions */ {},
-              /* canonical_names */ {}),
-          Frame(
+              test::FrameProperties{}),
+          test::make_frame(
               /* kind */ context.kinds->get("OtherSource"),
-              /* callee_port */ AccessPath(Root(Root::Kind::Leaf)),
-              /* callee */ nullptr,
-              /* call_position */ nullptr,
-              /* distance */ 0,
-              /* origins */ {},
-              /* inferred_features */ {},
-              /* locally_inferred_features */ {},
-              /* user_features */ {},
-              /* via_type_of_ports */ {},
-              /* local_positions */ {},
-              /* canonical_names */ {}),
-          Frame(
+              test::FrameProperties{}),
+          test::make_frame(
               /* kind */ context.kinds->get("IndirectSource"),
-              /* callee_port */ AccessPath(Root(Root::Kind::Return)),
-              /* callee */ one,
-              /* call_position */ context.positions->unknown(),
-              /* distance */ 2,
-              /* origins */ MethodSet{one},
-              /* inferred_features */ {},
-              /* locally_inferred_features */ {},
-              /* user_features */ {},
-              /* via_type_of_ports */ {},
-              /* local_positions */ {},
-              /* canonical_names */ {}),
+              test::FrameProperties{
+                  .callee_port = AccessPath(Root(Root::Kind::Return)),
+                  .callee = one,
+                  .call_position = context.positions->unknown(),
+                  .distance = 2,
+                  .origins = MethodSet{one}}),
       }));
 
-  taint.add(Frame(
+  taint.add(test::make_frame(
       /* kind */ context.kinds->get("IndirectSource"),
-      /* callee_port */ AccessPath(Root(Root::Kind::Return)),
-      /* callee */ one,
-      /* call_position */ context.positions->unknown(),
-      /* distance */ 3,
-      /* origins */ MethodSet{two},
-      /* inferred_features */ {},
-      /* locally_inferred_features */ {},
-      /* user_features */ {},
-      /* via_type_of_ports */ {},
-      /* local_positions */ {},
-      /* canonical_names */ {}));
+      test::FrameProperties{
+          .callee_port = AccessPath(Root(Root::Kind::Return)),
+          .callee = one,
+          .call_position = context.positions->unknown(),
+          .distance = 3,
+          .origins = MethodSet{two}}));
   EXPECT_EQ(
       taint,
       (Taint{
-          Frame(
+          test::make_frame(
               /* kind */ context.kinds->get("TestSource"),
-              /* callee_port */ AccessPath(Root(Root::Kind::Leaf)),
-              /* callee */ nullptr,
-              /* call_position */ nullptr,
-              /* distance */ 0,
-              /* origins */ {},
-              /* inferred_features */ {},
-              /* locally_inferred_features */ {},
-              /* user_features */ {},
-              /* via_type_of_ports */ {},
-              /* local_positions */ {},
-              /* canonical_names */ {}),
-          Frame(
+              test::FrameProperties{}),
+          test::make_frame(
               /* kind */ context.kinds->get("OtherSource"),
-              /* callee_port */ AccessPath(Root(Root::Kind::Leaf)),
-              /* callee */ nullptr,
-              /* call_position */ nullptr,
-              /* distance */ 0,
-              /* origins */ {},
-              /* inferred_features */ {},
-              /* locally_inferred_features */ {},
-              /* user_features */ {},
-              /* via_type_of_ports */ {},
-              /* local_positions */ {},
-              /* canonical_names */ {}),
-          Frame(
+              test::FrameProperties{}),
+          test::make_frame(
               /* kind */ context.kinds->get("IndirectSource"),
-              /* callee_port */ AccessPath(Root(Root::Kind::Return)),
-              /* callee */ one,
-              /* call_position */ context.positions->unknown(),
-              /* distance */ 2,
-              /* origins */ MethodSet{one, two},
-              /* inferred_features */ {},
-              /* locally_inferred_features */ {},
-              /* user_features */ {},
-              /* via_type_of_ports */ {},
-              /* local_positions */ {},
-              /* canonical_names */ {}),
+              test::FrameProperties{
+                  .callee_port = AccessPath(Root(Root::Kind::Return)),
+                  .callee = one,
+                  .call_position = context.positions->unknown(),
+                  .distance = 2,
+                  .origins = MethodSet{one, two}}),
       }));
 
-  taint.add(Frame(
+  taint.add(test::make_frame(
       /* kind */ context.kinds->get("IndirectSource"),
-      /* callee_port */ AccessPath(Root(Root::Kind::Return)),
-      /* callee */ two,
-      /* call_position */ context.positions->unknown(),
-      /* distance */ 3,
-      /* origins */ MethodSet{two},
-      /* inferred_features */ {},
-      /* locally_inferred_features */ {},
-      /* user_features */ {},
-      /* via_type_of_ports */ {},
-      /* local_positions */ {},
-      /* canonical_names */ {}));
+      test::FrameProperties{
+          .callee_port = AccessPath(Root(Root::Kind::Return)),
+          .callee = two,
+          .call_position = context.positions->unknown(),
+          .distance = 3,
+          .origins = MethodSet{two}}));
   EXPECT_EQ(
       taint,
       (Taint{
-          Frame(
+          test::make_frame(
               /* kind */ context.kinds->get("TestSource"),
-              /* callee_port */ AccessPath(Root(Root::Kind::Leaf)),
-              /* callee */ nullptr,
-              /* call_position */ nullptr,
-              /* distance */ 0,
-              /* origins */ {},
-              /* inferred_features */ {},
-              /* locally_inferred_features */ {},
-              /* user_features */ {},
-              /* via_type_of_ports */ {},
-              /* local_positions */ {},
-              /* canonical_names */ {}),
-          Frame(
+              test::FrameProperties{}),
+          test::make_frame(
               /* kind */ context.kinds->get("OtherSource"),
-              /* callee_port */ AccessPath(Root(Root::Kind::Leaf)),
-              /* callee */ nullptr,
-              /* call_position */ nullptr,
-              /* distance */ 0,
-              /* origins */ {},
-              /* inferred_features */ {},
-              /* locally_inferred_features */ {},
-              /* user_features */ {},
-              /* via_type_of_ports */ {},
-              /* local_positions */ {},
-              /* canonical_names */ {}),
-          Frame(
+              test::FrameProperties{}),
+          test::make_frame(
               /* kind */ context.kinds->get("IndirectSource"),
-              /* callee_port */ AccessPath(Root(Root::Kind::Return)),
-              /* callee */ one,
-              /* call_position */ context.positions->unknown(),
-              /* distance */ 2,
-              /* origins */ MethodSet{one, two},
-              /* inferred_features */ {},
-              /* locally_inferred_features */ {},
-              /* user_features */ {},
-              /* via_type_of_ports */ {},
-              /* local_positions */ {},
-              /* canonical_names */ {}),
-          Frame(
+              test::FrameProperties{
+                  .callee_port = AccessPath(Root(Root::Kind::Return)),
+                  .callee = one,
+                  .call_position = context.positions->unknown(),
+                  .distance = 2,
+                  .origins = MethodSet{one, two}}),
+          test::make_frame(
               /* kind */ context.kinds->get("IndirectSource"),
-              /* callee_port */ AccessPath(Root(Root::Kind::Return)),
-              /* callee */ two,
-              /* call_position */ context.positions->unknown(),
-              /* distance */ 3,
-              /* origins */ MethodSet{two},
-              /* inferred_features */ {},
-              /* locally_inferred_features */ {},
-              /* user_features */ {},
-              /* via_type_of_ports */ {},
-              /* local_positions */ {},
-              /* canonical_names */ {}),
+              test::FrameProperties{
+                  .callee_port = AccessPath(Root(Root::Kind::Return)),
+                  .callee = two,
+                  .call_position = context.positions->unknown(),
+                  .distance = 3,
+                  .origins = MethodSet{two}}),
       }));
 }
 
@@ -307,261 +160,181 @@ TEST_F(TaintTest, Difference) {
   auto* user_feature_three = context.features->get("UserFeatureThree");
 
   Taint taint = Taint{
-      Frame(
+      test::make_frame(
           /* kind */ context.kinds->get("TestSource"),
-          /* callee_port */ AccessPath(Root(Root::Kind::Argument, 0)),
-          /* callee */ one,
-          /* call_position */ test_position,
-          /* distance */ 1,
-          /* origins */ MethodSet{one},
-          /* inferred_features */ FeatureMayAlwaysSet{feature_one},
-          /* locally_inferred_features */ {},
-          /* user_features */ FeatureSet{user_feature_one},
-          /* via_type_of_ports */ {},
-          /* local_positions */ {},
-          /* canonical_names */ {}),
-      Frame(
+          test::FrameProperties{
+              .callee_port = AccessPath(Root(Root::Kind::Argument, 0)),
+              .callee = one,
+              .call_position = test_position,
+              .distance = 1,
+              .origins = MethodSet{one},
+              .inferred_features = FeatureMayAlwaysSet{feature_one},
+              .user_features = FeatureSet{user_feature_one}}),
+      test::make_frame(
           /* kind */ context.kinds->get("OtherSource"),
-          /* callee_port */ AccessPath(Root(Root::Kind::Argument, 0)),
-          /* callee */ two,
-          /* call_position */ test_position,
-          /* distance */ 1,
-          /* origins */ MethodSet{two},
-          /* inferred_features */ FeatureMayAlwaysSet{feature_two},
-          /* locally_inferred_features */ {},
-          /* user_features */ FeatureSet{user_feature_two},
-          /* via_type_of_ports */ {},
-          /* local_positions */ {},
-          /* canonical_names */ {}),
+          test::FrameProperties{
+              .callee_port = AccessPath(Root(Root::Kind::Argument, 0)),
+              .callee = two,
+              .call_position = test_position,
+              .distance = 1,
+              .origins = MethodSet{two},
+              .inferred_features = FeatureMayAlwaysSet{feature_two},
+              .user_features = FeatureSet{user_feature_two}}),
   };
   taint.difference_with(Taint{
-      Frame(
+      test::make_frame(
           /* kind */ context.kinds->get("TestSource"),
-          /* callee_port */ AccessPath(Root(Root::Kind::Argument, 0)),
-          /* callee */ one,
-          /* call_position */ test_position,
-          /* distance */ 1,
-          /* origins */ MethodSet{one},
-          /* inferred_features */ FeatureMayAlwaysSet{feature_one},
-          /* locally_inferred_features */ {},
-          /* user_features */ FeatureSet{user_feature_one},
-          /* via_type_of_ports */ {},
-          /* local_positions */ {},
-          /* canonical_names */ {}),
-      Frame(
+          test::FrameProperties{
+              .callee_port = AccessPath(Root(Root::Kind::Argument, 0)),
+              .callee = one,
+              .call_position = test_position,
+              .distance = 1,
+              .origins = MethodSet{one},
+              .inferred_features = FeatureMayAlwaysSet{feature_one},
+              .user_features = FeatureSet{user_feature_one}}),
+      test::make_frame(
           /* kind */ context.kinds->get("OtherSource"),
-          /* callee_port */ AccessPath(Root(Root::Kind::Argument, 0)),
-          /* callee */ two,
-          /* call_position */ test_position,
-          /* distance */ 1,
-          /* origins */ MethodSet{two},
-          /* inferred_features */ FeatureMayAlwaysSet{feature_two},
-          /* locally_inferred_features */ {},
-          /* user_features */ FeatureSet{user_feature_two},
-          /* via_type_of_ports */ {},
-          /* local_positions */ {},
-          /* canonical_names */ {}),
-      Frame(
+          test::FrameProperties{
+              .callee_port = AccessPath(Root(Root::Kind::Argument, 0)),
+              .callee = two,
+              .call_position = test_position,
+              .distance = 1,
+              .origins = MethodSet{two},
+              .inferred_features = FeatureMayAlwaysSet{feature_two},
+              .user_features = FeatureSet{user_feature_two}}),
+      test::make_frame(
           /* kind */ context.kinds->get("OtherSource"),
-          /* callee_port */ AccessPath(Root(Root::Kind::Argument, 0)),
-          /* callee */ three,
-          /* call_position */ test_position,
-          /* distance */ 1,
-          /* origins */ MethodSet{three},
-          /* inferred_features */ FeatureMayAlwaysSet{feature_three},
-          /* locally_inferred_features */ {},
-          /* user_features */ FeatureSet{user_feature_three},
-          /* via_type_of_ports */ {},
-          /* local_positions */ {},
-          /* canonical_names */ {}),
+          test::FrameProperties{
+              .callee_port = AccessPath(Root(Root::Kind::Argument, 0)),
+              .callee = three,
+              .call_position = test_position,
+              .distance = 1,
+              .origins = MethodSet{three},
+              .inferred_features = FeatureMayAlwaysSet{feature_three},
+              .user_features = FeatureSet{user_feature_three}}),
   });
   EXPECT_TRUE(taint.is_bottom());
 
   taint = Taint{
-      Frame(
+      test::make_frame(
           /* kind */ context.kinds->get("TestSource"),
-          /* callee_port */ AccessPath(Root(Root::Kind::Argument, 0)),
-          /* callee */ one,
-          /* call_position */ test_position,
-          /* distance */ 2,
-          /* origins */ MethodSet{one},
-          /* inferred_features */ {},
-          /* locally_inferred_features */ {},
-          /* user_features */ {},
-          /* via_type_of_ports */ {},
-          /* local_positions */ {},
-          /* canonical_names */ {}),
-      Frame(
+          test::FrameProperties{
+              .callee_port = AccessPath(Root(Root::Kind::Argument, 0)),
+              .callee = one,
+              .call_position = test_position,
+              .distance = 2,
+              .origins = MethodSet{one}}),
+      test::make_frame(
           /* kind */ context.kinds->get("OtherSource"),
-          /* callee_port */ AccessPath(Root(Root::Kind::Argument, 0)),
-          /* callee */ two,
-          /* call_position */ test_position,
-          /* distance */ 1,
-          /* origins */ MethodSet{two},
-          /* inferred_features */ {},
-          /* locally_inferred_features */ {},
-          /* user_features */ {},
-          /* via_type_of_ports */ {},
-          /* local_positions */ {},
-          /* canonical_names */ {}),
-      Frame(
+          test::FrameProperties{
+              .callee_port = AccessPath(Root(Root::Kind::Argument, 0)),
+              .callee = two,
+              .call_position = test_position,
+              .distance = 1,
+              .origins = MethodSet{two}}),
+      test::make_frame(
           /* kind */ context.kinds->get("TestSource"),
-          /* callee_port */ AccessPath(Root(Root::Kind::Argument, 0)),
-          /* callee */ three,
-          /* call_position */ test_position,
-          /* distance */ 1,
-          /* origins */ MethodSet{three},
-          /* inferred_features */ {},
-          /* locally_inferred_features */ {},
-          /* user_features */ {},
-          /* via_type_of_ports */ {},
-          /* local_positions */ {},
-          /* canonical_names */ {}),
+          test::FrameProperties{
+              .callee_port = AccessPath(Root(Root::Kind::Argument, 0)),
+              .callee = three,
+              .call_position = test_position,
+              .distance = 1,
+              .origins = MethodSet{three}}),
   };
   taint.difference_with(Taint{
-      Frame(
+      test::make_frame(
           /* kind */ context.kinds->get("TestSource"),
-          /* callee_port */ AccessPath(Root(Root::Kind::Argument, 0)),
-          /* callee */ one,
-          /* call_position */ test_position,
-          /* distance */ 1,
-          /* origins */ MethodSet{one},
-          /* inferred_features */ {},
-          /* locally_inferred_features */ {},
-          /* user_features */ {},
-          /* via_type_of_ports */ {},
-          /* local_positions */ {},
-          /* canonical_names */ {}),
-      Frame(
+          test::FrameProperties{
+              .callee_port = AccessPath(Root(Root::Kind::Argument, 0)),
+              .callee = one,
+              .call_position = test_position,
+              .distance = 1,
+              .origins = MethodSet{one}}),
+      test::make_frame(
           /* kind */ context.kinds->get("TestSource"),
-          /* callee_port */ AccessPath(Root(Root::Kind::Argument, 0)),
-          /* callee */ two,
-          /* call_position */ test_position,
-          /* distance */ 1,
-          /* origins */ MethodSet{two},
-          /* inferred_features */ {},
-          /* locally_inferred_features */ {},
-          /* user_features */ {},
-          /* via_type_of_ports */ {},
-          /* local_positions */ {},
-          /* canonical_names */ {}),
+          test::FrameProperties{
+              .callee_port = AccessPath(Root(Root::Kind::Argument, 0)),
+              .callee = two,
+              .call_position = test_position,
+              .distance = 1,
+              .origins = MethodSet{two}}),
   });
   EXPECT_EQ(
       taint,
       (Taint{
-          Frame(
+          test::make_frame(
               /* kind */ context.kinds->get("OtherSource"),
-              /* callee_port */ AccessPath(Root(Root::Kind::Argument, 0)),
-              /* callee */ two,
-              /* call_position */ test_position,
-              /* distance */ 1,
-              /* origins */ MethodSet{two},
-              /* inferred_features */ {},
-              /* locally_inferred_features */ {},
-              /* user_features */ {},
-              /* via_type_of_ports */ {},
-              /* local_positions */ {},
-              /* canonical_names */ {}),
-          Frame(
+              test::FrameProperties{
+                  .callee_port = AccessPath(Root(Root::Kind::Argument, 0)),
+                  .callee = two,
+                  .call_position = test_position,
+                  .distance = 1,
+                  .origins = MethodSet{two}}),
+          test::make_frame(
               /* kind */ context.kinds->get("TestSource"),
-              /* callee_port */ AccessPath(Root(Root::Kind::Argument, 0)),
-              /* callee */ three,
-              /* call_position */ test_position,
-              /* distance */ 1,
-              /* origins */ MethodSet{three},
-              /* inferred_features */ {},
-              /* locally_inferred_features */ {},
-              /* user_features */ {},
-              /* via_type_of_ports */ {},
-              /* local_positions */ {},
-              /* canonical_names */ {}),
+              test::FrameProperties{
+                  .callee_port = AccessPath(Root(Root::Kind::Argument, 0)),
+                  .callee = three,
+                  .call_position = test_position,
+                  .distance = 1,
+                  .origins = MethodSet{three}}),
       }));
 
   taint = Taint{
-      Frame(
+      test::make_frame(
           /* kind */ context.kinds->get("TestSource"),
-          /* callee_port */ AccessPath(Root(Root::Kind::Argument, 1)),
-          /* callee */ one,
-          /* call_position */ test_position,
-          /* distance */ 1,
-          /* origins */ MethodSet{one},
-          /* inferred_features */ {},
-          /* locally_inferred_features */ {},
-          /* user_features */ {},
-          /* via_type_of_ports */ {},
-          /* local_positions */ {},
-          /* canonical_names */ {}),
-      Frame(
+          test::FrameProperties{
+              .callee_port = AccessPath(Root(Root::Kind::Argument, 1)),
+              .callee = one,
+              .call_position = test_position,
+              .distance = 1,
+              .origins = MethodSet{one}}),
+      test::make_frame(
           /* kind */ context.kinds->get("SomeOtherSource"),
-          /* callee_port */ AccessPath(Root(Root::Kind::Argument, 0)),
-          /* callee */ two,
-          /* call_position */ test_position,
-          /* distance */ 1,
-          /* origins */ MethodSet{two},
-          /* inferred_features */ {},
-          /* locally_inferred_features */ {},
-          /* user_features */ {},
-          /* via_type_of_ports */ {},
-          /* local_positions */ {},
-          /* canonical_names */ {}),
+          test::FrameProperties{
+              .callee_port = AccessPath(Root(Root::Kind::Argument, 0)),
+              .callee = two,
+              .call_position = test_position,
+              .distance = 1,
+              .origins = MethodSet{two}}),
   };
   taint.difference_with(Taint{
-      Frame(
+      test::make_frame(
           /* kind */ context.kinds->get("TestSource"),
-          /* callee_port */ AccessPath(Root(Root::Kind::Argument, 1)),
-          /* callee */ one,
-          /* call_position */ test_position,
-          /* distance */ 1,
-          /* origins */ MethodSet{one},
-          /* inferred_features */ {},
-          /* locally_inferred_features */ {},
-          /* user_features */ {},
-          /* via_type_of_ports */ {},
-          /* local_positions */ {},
-          /* canonical_names */ {}),
-      Frame(
+          test::FrameProperties{
+              .callee_port = AccessPath(Root(Root::Kind::Argument, 1)),
+              .callee = one,
+              .call_position = test_position,
+              .distance = 1,
+              .origins = MethodSet{one}}),
+      test::make_frame(
           /* kind */ context.kinds->get("TestSource"),
-          /* callee_port */ AccessPath(Root(Root::Kind::Argument, 0)),
-          /* callee */ two,
-          /* call_position */ test_position,
-          /* distance */ 1,
-          /* origins */ MethodSet{two},
-          /* inferred_features */ {},
-          /* locally_inferred_features */ {},
-          /* user_features */ {},
-          /* via_type_of_ports */ {},
-          /* local_positions */ {},
-          /* canonical_names */ {}),
-      Frame(
+          test::FrameProperties{
+              .callee_port = AccessPath(Root(Root::Kind::Argument, 0)),
+              .callee = two,
+              .call_position = test_position,
+              .distance = 1,
+              .origins = MethodSet{two}}),
+      test::make_frame(
           /* kind */ context.kinds->get("TestSource"),
-          /* callee_port */ AccessPath(Root(Root::Kind::Argument, 0)),
-          /* callee */ three,
-          /* call_position */ test_position,
-          /* distance */ 1,
-          /* origins */ MethodSet{three},
-          /* inferred_features */ {},
-          /* locally_inferred_features */ {},
-          /* user_features */ {},
-          /* via_type_of_ports */ {},
-          /* local_positions */ {},
-          /* canonical_names */ {}),
+          test::FrameProperties{
+              .callee_port = AccessPath(Root(Root::Kind::Argument, 0)),
+              .callee = three,
+              .call_position = test_position,
+              .distance = 1,
+              .origins = MethodSet{three}}),
   });
   EXPECT_EQ(
       taint,
       (Taint{
-          Frame(
+          test::make_frame(
               /* kind */ context.kinds->get("SomeOtherSource"),
-              /* callee_port */ AccessPath(Root(Root::Kind::Argument, 0)),
-              /* callee */ two,
-              /* call_position */ test_position,
-              /* distance */ 1,
-              /* origins */ MethodSet{two},
-              /* inferred_features */ {},
-              /* locally_inferred_features */ {},
-              /* user_features */ {},
-              /* via_type_of_ports */ {},
-              /* local_positions */ {},
-              /* canonical_names */ {}),
+              test::FrameProperties{
+                  .callee_port = AccessPath(Root(Root::Kind::Argument, 0)),
+                  .callee = two,
+                  .call_position = test_position,
+                  .distance = 1,
+                  .origins = MethodSet{two}}),
       }));
 }
 
@@ -584,93 +357,74 @@ TEST_F(TaintTest, AddFeatures) {
   auto* user_feature_two = context.features->get("UserFeatureTwo");
 
   auto taint = Taint{
-      Frame(
+      test::make_frame(
           /* kind */ context.kinds->get("TestSource"),
-          /* callee_port */ AccessPath(Root(Root::Kind::Argument, 1)),
-          /* callee */ one,
-          /* call_position */ test_position,
-          /* distance */ 1,
-          /* origins */ MethodSet{one},
-          /* inferred_features */ FeatureMayAlwaysSet{feature_one},
-          /* locally_inferred_features */ {},
-          /* user_features */ FeatureSet{user_feature_one},
-          /* via_type_of_ports */ {},
-          /* local_positions */ {},
-          /* canonical_names */ {}),
-      Frame(
+          test::FrameProperties{
+              .callee_port = AccessPath(Root(Root::Kind::Argument, 1)),
+              .callee = one,
+              .call_position = test_position,
+              .distance = 1,
+              .origins = MethodSet{one},
+              .inferred_features = FeatureMayAlwaysSet{feature_one},
+              .user_features = FeatureSet{user_feature_one}}),
+      test::make_frame(
           /* kind */ context.kinds->get("TestSource"),
-          /* callee_port */ AccessPath(Root(Root::Kind::Argument, 0)),
-          /* callee */ two,
-          /* call_position */ test_position,
-          /* distance */ 1,
-          /* origins */ MethodSet{two},
-          /* inferred_features */ FeatureMayAlwaysSet{feature_two},
-          /* locally_inferred_features */ {},
-          /* user_features */ FeatureSet{user_feature_two},
-          /* via_type_of_ports */ {},
-          /* local_positions */ {},
-          /* canonical_names */ {}),
-      Frame(
+          test::FrameProperties{
+              .callee_port = AccessPath(Root(Root::Kind::Argument, 0)),
+              .callee = two,
+              .call_position = test_position,
+              .distance = 1,
+              .origins = MethodSet{two},
+              .inferred_features = FeatureMayAlwaysSet{feature_two},
+              .user_features = FeatureSet{user_feature_two}}),
+      test::make_frame(
           /* kind */ context.kinds->get("TestSource"),
-          /* callee_port */ AccessPath(Root(Root::Kind::Argument, 0)),
-          /* callee */ three,
-          /* call_position */ test_position,
-          /* distance */ 1,
-          /* origins */ MethodSet{three},
-          /* inferred_features */ {},
-          /* locally_inferred_features */ {},
-          /* user_features */ {},
-          /* via_type_of_ports */ {},
-          /* local_positions */ {},
-          /* canonical_names */ {}),
+          test::FrameProperties{
+              .callee_port = AccessPath(Root(Root::Kind::Argument, 0)),
+              .callee = three,
+              .call_position = test_position,
+              .distance = 1,
+              .origins = MethodSet{three}}),
   };
   taint.add_inferred_features(
       FeatureMayAlwaysSet::make_always({feature_three}));
   EXPECT_EQ(
       taint,
       (Taint{
-          Frame(
+          test::make_frame(
               /* kind */ context.kinds->get("TestSource"),
-              /* callee_port */ AccessPath(Root(Root::Kind::Argument, 1)),
-              /* callee */ one,
-              /* call_position */ test_position,
-              /* distance */ 1,
-              /* origins */ MethodSet{one},
-              /* inferred_features */ FeatureMayAlwaysSet{feature_one},
-              /* locally_inferred_features */
-              FeatureMayAlwaysSet{feature_three},
-              /* user_features */ FeatureSet{user_feature_one},
-              /* via_type_of_ports */ {},
-              /* local_positions */ {},
-              /* canonical_names */ {}),
-          Frame(
+              test::FrameProperties{
+                  .callee_port = AccessPath(Root(Root::Kind::Argument, 1)),
+                  .callee = one,
+                  .call_position = test_position,
+                  .distance = 1,
+                  .origins = MethodSet{one},
+                  .inferred_features = FeatureMayAlwaysSet{feature_one},
+                  .locally_inferred_features =
+                      FeatureMayAlwaysSet{feature_three},
+                  .user_features = FeatureSet{user_feature_one}}),
+          test::make_frame(
               /* kind */ context.kinds->get("TestSource"),
-              /* callee_port */ AccessPath(Root(Root::Kind::Argument, 0)),
-              /* callee */ two,
-              /* call_position */ test_position,
-              /* distance */ 1,
-              /* origins */ MethodSet{two},
-              /* inferred_features */ FeatureMayAlwaysSet{feature_two},
-              /* locally_inferred_features */
-              FeatureMayAlwaysSet{feature_three},
-              /* user_features */ FeatureSet{user_feature_two},
-              /* via_type_of_ports */ {},
-              /* local_positions */ {},
-              /* canonical_names */ {}),
-          Frame(
+              test::FrameProperties{
+                  .callee_port = AccessPath(Root(Root::Kind::Argument, 0)),
+                  .callee = two,
+                  .call_position = test_position,
+                  .distance = 1,
+                  .origins = MethodSet{two},
+                  .inferred_features = FeatureMayAlwaysSet{feature_two},
+                  .locally_inferred_features =
+                      FeatureMayAlwaysSet{feature_three},
+                  .user_features = FeatureSet{user_feature_two}}),
+          test::make_frame(
               /* kind */ context.kinds->get("TestSource"),
-              /* callee_port */ AccessPath(Root(Root::Kind::Argument, 0)),
-              /* callee */ three,
-              /* call_position */ test_position,
-              /* distance */ 1,
-              /* origins */ MethodSet{three},
-              /* inferred_features */ {},
-              /* locally_inferred_features */
-              FeatureMayAlwaysSet{feature_three},
-              /* user_features */ {},
-              /* via_type_of_ports */ {},
-              /* local_positions */ {},
-              /* canonical_names */ {}),
+              test::FrameProperties{
+                  .callee_port = AccessPath(Root(Root::Kind::Argument, 0)),
+                  .callee = three,
+                  .call_position = test_position,
+                  .distance = 1,
+                  .origins = MethodSet{three},
+                  .locally_inferred_features =
+                      FeatureMayAlwaysSet{feature_three}}),
       }));
 }
 
@@ -695,45 +449,32 @@ TEST_F(TaintTest, Propagate) {
   auto* user_feature_two = context.features->get("UserFeatureTwo");
 
   auto taint = Taint{
-      Frame(
+      test::make_frame(
           /* kind */ context.kinds->get("TestSource"),
-          /* callee_port */ AccessPath(Root(Root::Kind::Leaf)),
-          /* callee */ nullptr,
-          /* call_position */ nullptr,
-          /* distance */ 0,
-          /* origins */ MethodSet{one},
-          /* inferred_features */ {},
-          /* locally_inferred_features */ {},
-          /* user_features */ FeatureSet{user_feature_one},
-          /* via_type_of_ports */ {},
-          /* local_positions */ {},
-          /* canonical_names */ {}),
-      Frame(
+          test::FrameProperties{
+              .origins = MethodSet{one},
+              .user_features = FeatureSet{user_feature_one}}),
+      test::make_frame(
           /* kind */ context.kinds->get("OtherSource"),
-          /* callee_port */ AccessPath(Root(Root::Kind::Argument, 1)),
-          /* callee */ two,
-          /* call_position */ test_position,
-          /* distance */ 2,
-          /* origins */ MethodSet{two},
-          /* inferred_features */ FeatureMayAlwaysSet{feature_one},
-          /* locally_inferred_features */ {},
-          /* user_features */ FeatureSet{user_feature_one},
-          /* via_type_of_ports */ {},
-          /* local_positions */ {},
-          /* canonical_names */ {}),
-      Frame(
+          test::FrameProperties{
+              .callee_port = AccessPath(Root(Root::Kind::Argument, 1)),
+              .callee = two,
+              .call_position = test_position,
+              .distance = 2,
+              .origins = MethodSet{two},
+              .inferred_features = FeatureMayAlwaysSet{feature_one},
+              .user_features = FeatureSet{user_feature_one}}),
+      test::make_frame(
           /* kind */ context.kinds->get("OtherSource"),
-          /* callee_port */ AccessPath(Root(Root::Kind::Argument, 0)),
-          /* callee */ three,
-          /* call_position */ test_position,
-          /* distance */ 1,
-          /* origins */ MethodSet{three},
-          /* inferred_features */ FeatureMayAlwaysSet{feature_one},
-          /* locally_inferred_features */ FeatureMayAlwaysSet{feature_two},
-          /* user_features */ FeatureSet{user_feature_one, user_feature_two},
-          /* via_type_of_ports */ {},
-          /* local_positions */ {},
-          /* canonical_names */ {}),
+          test::FrameProperties{
+              .callee_port = AccessPath(Root(Root::Kind::Argument, 0)),
+              .callee = three,
+              .call_position = test_position,
+              .distance = 1,
+              .origins = MethodSet{three},
+              .inferred_features = FeatureMayAlwaysSet{feature_one},
+              .locally_inferred_features = FeatureMayAlwaysSet{feature_two},
+              .user_features = FeatureSet{user_feature_one, user_feature_two}}),
   };
 
   // When propagating, all user features become inferred features.
@@ -748,38 +489,31 @@ TEST_F(TaintTest, Propagate) {
           /* context */ context,
           /* source_register_types */ {}),
       (Taint{
-          Frame(
+          test::make_frame(
               /* kind */ context.kinds->get("TestSource"),
-              /* callee_port */ AccessPath(Root(Root::Kind::Argument, 2)),
-              /* callee */ four,
-              /* call_position */ context.positions->get("Test.java", 1),
-              /* distance */ 1,
-              /* origins */ MethodSet{one},
-              /* inferred_features */ FeatureMayAlwaysSet{user_feature_one},
-              /* locally_inferred_features */
-              FeatureMayAlwaysSet{feature_three},
-              /* user_features */ {},
-              /* via_type_of_ports */ {},
-              /* local_positions */ {},
-              /* canonical_names */ {}),
-          Frame(
+              test::FrameProperties{
+                  .callee_port = AccessPath(Root(Root::Kind::Argument, 2)),
+                  .callee = four,
+                  .call_position = context.positions->get("Test.java", 1),
+                  .distance = 1,
+                  .origins = MethodSet{one},
+                  .inferred_features = FeatureMayAlwaysSet{user_feature_one},
+                  .locally_inferred_features =
+                      FeatureMayAlwaysSet{feature_three}}),
+          test::make_frame(
               /* kind */ context.kinds->get("OtherSource"),
-              /* callee_port */ AccessPath(Root(Root::Kind::Argument, 2)),
-              /* callee */ four,
-              /* call_position */ context.positions->get("Test.java", 1),
-              /* distance */ 2,
-              /* origins */ MethodSet{two, three},
-              /* inferred_features */
-              FeatureMayAlwaysSet(
-                  /* may */ FeatureSet{user_feature_two, feature_two},
-                  /* always */
-                  FeatureSet{user_feature_one, feature_one}),
-              /* locally_inferred_features */
-              FeatureMayAlwaysSet{feature_three},
-              /* user_features */ {},
-              /* via_type_of_ports */ {},
-              /* local_positions */ {},
-              /* canonical_names */ {}),
+              test::FrameProperties{
+                  .callee_port = AccessPath(Root(Root::Kind::Argument, 2)),
+                  .callee = four,
+                  .call_position = context.positions->get("Test.java", 1),
+                  .distance = 2,
+                  .origins = MethodSet{two, three},
+                  .inferred_features = FeatureMayAlwaysSet(
+                      /* may */ FeatureSet{user_feature_two, feature_two},
+                      /* always */
+                      FeatureSet{user_feature_one, feature_one}),
+                  .locally_inferred_features =
+                      FeatureMayAlwaysSet{feature_three}}),
       }));
 }
 
@@ -805,45 +539,32 @@ TEST_F(TaintTest, TransformKind) {
   auto* transformed_test_source2 = context.kinds->get("TransformedTestSource2");
 
   auto taint = Taint{
-      Frame(
+      test::make_frame(
           /* kind */ test_source,
-          /* callee_port */ AccessPath(Root(Root::Kind::Leaf)),
-          /* callee */ nullptr,
-          /* call_position */ nullptr,
-          /* distance */ 0,
-          /* origins */ MethodSet{one},
-          /* inferred_features */ {},
-          /* locally_inferred_features */ {},
-          /* user_features */ FeatureSet{user_feature_one},
-          /* via_type_of_ports */ {},
-          /* local_positions */ {},
-          /* canonical_names */ {}),
-      Frame(
+          test::FrameProperties{
+              .origins = MethodSet{one},
+              .user_features = FeatureSet{user_feature_one}}),
+      test::make_frame(
           /* kind */ context.kinds->get("OtherSource"),
-          /* callee_port */ AccessPath(Root(Root::Kind::Argument, 1)),
-          /* callee */ two,
-          /* call_position */ test_position,
-          /* distance */ 2,
-          /* origins */ MethodSet{two},
-          /* inferred_features */ FeatureMayAlwaysSet{feature_one},
-          /* locally_inferred_features */ {},
-          /* user_features */ FeatureSet{user_feature_one},
-          /* via_type_of_ports */ {},
-          /* local_positions */ {},
-          /* canonical_names */ {}),
-      Frame(
+          test::FrameProperties{
+              .callee_port = AccessPath(Root(Root::Kind::Argument, 1)),
+              .callee = two,
+              .call_position = test_position,
+              .distance = 2,
+              .origins = MethodSet{two},
+              .inferred_features = FeatureMayAlwaysSet{feature_one},
+              .user_features = FeatureSet{user_feature_one}}),
+      test::make_frame(
           /* kind */ context.kinds->get("OtherSource"),
-          /* callee_port */ AccessPath(Root(Root::Kind::Argument, 0)),
-          /* callee */ three,
-          /* call_position */ test_position,
-          /* distance */ 1,
-          /* origins */ MethodSet{three},
-          /* inferred_features */ FeatureMayAlwaysSet{feature_one, feature_two},
-          /* locally_inferred_features */ {},
-          /* user_features */ FeatureSet{user_feature_one, user_feature_two},
-          /* via_type_of_ports */ {},
-          /* local_positions */ {},
-          /* canonical_names */ {}),
+          test::FrameProperties{
+              .callee_port = AccessPath(Root(Root::Kind::Argument, 0)),
+              .callee = three,
+              .call_position = test_position,
+              .distance = 1,
+              .origins = MethodSet{three},
+              .inferred_features =
+                  FeatureMayAlwaysSet{feature_one, feature_two},
+              .user_features = FeatureSet{user_feature_one, user_feature_two}}),
   };
 
   // This works the same way as filter.
@@ -865,47 +586,33 @@ TEST_F(TaintTest, TransformKind) {
   EXPECT_EQ(
       map_test_source_taint,
       (Taint{
-          Frame(
+          test::make_frame(
               /* kind */ transformed_test_source,
-              /* callee_port */ AccessPath(Root(Root::Kind::Leaf)),
-              /* callee */ nullptr,
-              /* call_position */ nullptr,
-              /* distance */ 0,
-              /* origins */ MethodSet{one},
-              /* inferred_features */ {},
-              /* locally_inferred_features */ {},
-              /* user_features */ FeatureSet{user_feature_one},
-              /* via_type_of_ports */ {},
-              /* local_positions */ {},
-              /* canonical_names */ {}),
-          Frame(
+              test::FrameProperties{
+                  .origins = MethodSet{one},
+                  .user_features = FeatureSet{user_feature_one}}),
+          test::make_frame(
               /* kind */ context.kinds->get("OtherSource"),
-              /* callee_port */ AccessPath(Root(Root::Kind::Argument, 1)),
-              /* callee */ two,
-              /* call_position */ test_position,
-              /* distance */ 2,
-              /* origins */ MethodSet{two},
-              /* inferred_features */ FeatureMayAlwaysSet{feature_one},
-              /* locally_inferred_features */ {},
-              /* user_features */ FeatureSet{user_feature_one},
-              /* via_type_of_ports */ {},
-              /* local_positions */ {},
-              /* canonical_names */ {}),
-          Frame(
+              test::FrameProperties{
+                  .callee_port = AccessPath(Root(Root::Kind::Argument, 1)),
+                  .callee = two,
+                  .call_position = test_position,
+                  .distance = 2,
+                  .origins = MethodSet{two},
+                  .inferred_features = FeatureMayAlwaysSet{feature_one},
+                  .user_features = FeatureSet{user_feature_one}}),
+          test::make_frame(
               /* kind */ context.kinds->get("OtherSource"),
-              /* callee_port */ AccessPath(Root(Root::Kind::Argument, 0)),
-              /* callee */ three,
-              /* call_position */ test_position,
-              /* distance */ 1,
-              /* origins */ MethodSet{three},
-              /* inferred_features */
-              FeatureMayAlwaysSet{feature_one, feature_two},
-              /* locally_inferred_features */ {},
-              /* user_features */
-              FeatureSet{user_feature_one, user_feature_two},
-              /* via_type_of_ports */ {},
-              /* local_positions */ {},
-              /* canonical_names */ {}),
+              test::FrameProperties{
+                  .callee_port = AccessPath(Root(Root::Kind::Argument, 0)),
+                  .callee = three,
+                  .call_position = test_position,
+                  .distance = 1,
+                  .origins = MethodSet{three},
+                  .inferred_features =
+                      FeatureMayAlwaysSet{feature_one, feature_two},
+                  .user_features =
+                      FeatureSet{user_feature_one, user_feature_two}}),
       }));
 
   // Another transformation. Covers mapping transformed frames.
@@ -922,47 +629,34 @@ TEST_F(TaintTest, TransformKind) {
   EXPECT_EQ(
       map_test_source_taint,
       (Taint{
-          Frame(
+          test::make_frame(
               /* kind */ transformed_test_source,
-              /* callee_port */ AccessPath(Root(Root::Kind::Leaf)),
-              /* callee */ nullptr,
-              /* call_position */ nullptr,
-              /* distance */ 0,
-              /* origins */ MethodSet{one},
-              /* inferred_features */ {},
-              /* locally_inferred_features */ FeatureMayAlwaysSet{feature_one},
-              /* user_features */ FeatureSet{user_feature_one},
-              /* via_type_of_ports */ {},
-              /* local_positions */ {},
-              /* canonical_names */ {}),
-          Frame(
+              test::FrameProperties{
+                  .origins = MethodSet{one},
+                  .locally_inferred_features = FeatureMayAlwaysSet{feature_one},
+                  .user_features = FeatureSet{user_feature_one}}),
+          test::make_frame(
               /* kind */ context.kinds->get("OtherSource"),
-              /* callee_port */ AccessPath(Root(Root::Kind::Argument, 1)),
-              /* callee */ two,
-              /* call_position */ test_position,
-              /* distance */ 2,
-              /* origins */ MethodSet{two},
-              /* inferred_features */ FeatureMayAlwaysSet{feature_one},
-              /* locally_inferred_features */ {},
-              /* user_features */ FeatureSet{user_feature_one},
-              /* via_type_of_ports */ {},
-              /* local_positions */ {},
-              /* canonical_names */ {}),
-          Frame(
+              test::FrameProperties{
+                  .callee_port = AccessPath(Root(Root::Kind::Argument, 1)),
+                  .callee = two,
+                  .call_position = test_position,
+                  .distance = 2,
+                  .origins = MethodSet{two},
+                  .inferred_features = FeatureMayAlwaysSet{feature_one},
+                  .user_features = FeatureSet{user_feature_one}}),
+          test::make_frame(
               /* kind */ context.kinds->get("OtherSource"),
-              /* callee_port */ AccessPath(Root(Root::Kind::Argument, 0)),
-              /* callee */ three,
-              /* call_position */ test_position,
-              /* distance */ 1,
-              /* origins */ MethodSet{three},
-              /* inferred_features */
-              FeatureMayAlwaysSet{feature_one, feature_two},
-              /* locally_inferred_features */ {},
-              /* user_features */
-              FeatureSet{user_feature_one, user_feature_two},
-              /* via_type_of_ports */ {},
-              /* local_positions */ {},
-              /* canonical_names */ {}),
+              test::FrameProperties{
+                  .callee_port = AccessPath(Root(Root::Kind::Argument, 0)),
+                  .callee = three,
+                  .call_position = test_position,
+                  .distance = 1,
+                  .origins = MethodSet{three},
+                  .inferred_features =
+                      FeatureMayAlwaysSet{feature_one, feature_two},
+                  .user_features =
+                      FeatureSet{user_feature_one, user_feature_two}}),
       }));
 
   // Tests one -> many transformations (with features).
@@ -981,45 +675,24 @@ TEST_F(TaintTest, TransformKind) {
   EXPECT_EQ(
       map_test_source_taint,
       (Taint{
-          Frame(
+          test::make_frame(
               /* kind */ test_source,
-              /* callee_port */ AccessPath(Root(Root::Kind::Leaf)),
-              /* callee */ nullptr,
-              /* call_position */ nullptr,
-              /* distance */ 0,
-              /* origins */ MethodSet{one},
-              /* inferred_features */ {},
-              /* locally_inferred_features */ FeatureMayAlwaysSet{feature_one},
-              /* user_features */ FeatureSet{user_feature_one},
-              /* via_type_of_ports */ {},
-              /* local_positions */ {},
-              /* canonical_names */ {}),
-          Frame(
+              test::FrameProperties{
+                  .origins = MethodSet{one},
+                  .locally_inferred_features = FeatureMayAlwaysSet{feature_one},
+                  .user_features = FeatureSet{user_feature_one}}),
+          test::make_frame(
               /* kind */ transformed_test_source,
-              /* callee_port */ AccessPath(Root(Root::Kind::Leaf)),
-              /* callee */ nullptr,
-              /* call_position */ nullptr,
-              /* distance */ 0,
-              /* origins */ MethodSet{one},
-              /* inferred_features */ {},
-              /* locally_inferred_features */ FeatureMayAlwaysSet{feature_one},
-              /* user_features */ FeatureSet{user_feature_one},
-              /* via_type_of_ports */ {},
-              /* local_positions */ {},
-              /* canonical_names */ {}),
-          Frame(
+              test::FrameProperties{
+                  .origins = MethodSet{one},
+                  .locally_inferred_features = FeatureMayAlwaysSet{feature_one},
+                  .user_features = FeatureSet{user_feature_one}}),
+          test::make_frame(
               /* kind */ transformed_test_source2,
-              /* callee_port */ AccessPath(Root(Root::Kind::Leaf)),
-              /* callee */ nullptr,
-              /* call_position */ nullptr,
-              /* distance */ 0,
-              /* origins */ MethodSet{one},
-              /* inferred_features */ {},
-              /* locally_inferred_features */ FeatureMayAlwaysSet{feature_one},
-              /* user_features */ FeatureSet{user_feature_one},
-              /* via_type_of_ports */ {},
-              /* local_positions */ {},
-              /* canonical_names */ {}),
+              test::FrameProperties{
+                  .origins = MethodSet{one},
+                  .locally_inferred_features = FeatureMayAlwaysSet{feature_one},
+                  .user_features = FeatureSet{user_feature_one}}),
       }));
 }
 
