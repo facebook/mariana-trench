@@ -65,30 +65,19 @@ TEST_F(FulfilledPartialKindStateTest, Basic) {
       /* partial_sink_kinds */
       MultiSourceMultiSinkRule::PartialKindSet{fulfilled, unfulfilled});
 
-  auto sink_frame = Frame(
-      /* kind */ fulfilled,
-      /* callee_port */ AccessPath(Root(Root::Kind::Leaf)),
-      /* callee */ nullptr,
-      /* call_position */ nullptr,
-      /* distance */ 0,
-      /* origins */ {},
-      /* inferred_features */ {},
-      /* locally_inferred_features */ {},
-      /* user_features */ {},
-      /* via_type_of_ports */ {},
-      /* local_positions */ {},
-      /* canonical_names */ {});
+  auto sink_frame = test::make_frame(
+      /* kind */ fulfilled, test::FrameProperties{});
 
   // Simulate kind fulfilled, i.e. source_1 -> fulfilled under rule_1 with
   // some features. Note: rule_2 not fulfilled.
   EXPECT_EQ(
       std::nullopt,
       state.fulfill_kind(
-          fulfilled,
-          rule_1.get(),
-          FeatureMayAlwaysSet{feature_1},
-          &method_context,
-          FrameSet{sink_frame}));
+          /* kind */ fulfilled,
+          /* rule */ rule_1.get(),
+          /* features */ FeatureMayAlwaysSet{feature_1},
+          /* context */ &method_context,
+          /* sink */ FrameSet{sink_frame}));
   EXPECT_EQ(
       FeatureMayAlwaysSet{feature_1},
       state.get_features(fulfilled, rule_1.get()));
@@ -107,11 +96,11 @@ TEST_F(FulfilledPartialKindStateTest, Basic) {
   EXPECT_EQ(
       std::nullopt,
       state.fulfill_kind(
-          fulfilled,
-          rule_2.get(),
-          FeatureMayAlwaysSet{},
-          &method_context,
-          FrameSet{sink_frame}));
+          /* kind */ fulfilled,
+          /* rule */ rule_2.get(),
+          /* features */ FeatureMayAlwaysSet{},
+          /* context */ &method_context,
+          /* sink */ FrameSet{sink_frame}));
   EXPECT_EQ(FeatureMayAlwaysSet{}, state.get_features(fulfilled, rule_2.get()));
   EXPECT_EQ(
       fulfilled, state.get_fulfilled_counterpart(unfulfilled, rule_2.get()));
@@ -124,39 +113,22 @@ TEST_F(FulfilledPartialKindStateTest, Basic) {
           context.kinds->get_triggered(unfulfilled, rule_2.get())));
 
   // Fulfill the other part of rule_1.
-  auto unfulfilled_sink_frame = Frame(
+  auto unfulfilled_sink_frame = test::make_frame(
       /* kind */ unfulfilled,
-      /* callee_port */ AccessPath(Root(Root::Kind::Leaf)),
-      /* callee */ nullptr,
-      /* call_position */ nullptr,
-      /* distance */ 0,
-      /* origins */ {},
-      /* inferred_features */ FeatureMayAlwaysSet{feature_2},
-      /* locally_inferred_features */ {},
-      /* user_features */ {},
-      /* via_type_of_ports */ {},
-      /* local_positions */ {},
-      /* canonical_names */ {});
+      test::FrameProperties{
+          .inferred_features = FeatureMayAlwaysSet{feature_2}});
   EXPECT_EQ(
       state.fulfill_kind(
-          unfulfilled,
-          rule_1.get(),
-          FeatureMayAlwaysSet{},
-          &method_context,
-          FrameSet{unfulfilled_sink_frame}),
-      FrameSet{Frame(
+          /* kind */ unfulfilled,
+          /* rule */ rule_1.get(),
+          /* features */ FeatureMayAlwaysSet{},
+          /* context */ &method_context,
+          /* sink */ FrameSet{unfulfilled_sink_frame}),
+      FrameSet{test::make_frame(
           /* kind */ context.kinds->get_triggered(unfulfilled, rule_1.get()),
-          /* callee_port */ AccessPath(Root(Root::Kind::Leaf)),
-          /* callee */ nullptr,
-          /* call_position */ nullptr,
-          /* distance */ 0,
-          /* origins */ {},
-          /* inferred_features */ FeatureMayAlwaysSet{feature_2},
-          /* locally_inferred_features */ FeatureMayAlwaysSet{feature_1},
-          /* user_features */ {},
-          /* via_type_of_ports */ {},
-          /* local_positions */ {},
-          /* canonical_names */ {})});
+          test::FrameProperties{
+              .inferred_features = FeatureMayAlwaysSet{feature_2},
+              .locally_inferred_features = FeatureMayAlwaysSet{feature_1}})});
 
   // Triggered counterparts now exclude rule_1 which was previously fulfilled.
   EXPECT_THAT(
