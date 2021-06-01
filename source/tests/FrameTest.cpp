@@ -30,640 +30,253 @@ TEST_F(FrameTest, FrameLeq) {
       redex::create_void_method(scope, "LOther;", "two"));
 
   EXPECT_TRUE(Frame::bottom().leq(Frame::bottom()));
-  EXPECT_TRUE(Frame::bottom().leq(Frame(
-      /* kind */ context.kinds->get("TestSource"),
-      /* callee_port */ AccessPath(Root(Root::Kind::Leaf)),
-      /* callee */ nullptr,
-      /* call_position */ nullptr,
-      /* distance */ 0,
-      /* origins */ {},
-      /* inferred_features */ {},
-      /* locally_inferred_features */ {},
-      /* user_features */ {},
-      /* via_type_of_ports */ {},
-      /* local_positions */ {},
-      /* canonical_names */ {})));
-  EXPECT_FALSE(Frame(
-                   /* kind */ context.kinds->get("TestSource"),
-                   /* callee_port */ AccessPath(Root(Root::Kind::Leaf)),
-                   /* callee */ nullptr,
-                   /* call_position */ nullptr,
-                   /* distance */ 0,
-                   /* origins */ {},
-                   /* inferred_features */ {},
-                   /* locally_inferred_features */ {},
-                   /* user_features */ {},
-                   /* via_type_of_ports */ {},
-                   /* local_positions */ {},
-                   /* canonical_names */ {})
-                   .leq(Frame::bottom()));
+  EXPECT_TRUE(Frame::bottom().leq(test::make_frame(
+      /* kind */ context.kinds->get("TestSource"), test::FrameProperties{})));
+  EXPECT_FALSE(
+      test::make_frame(
+          /* kind */ context.kinds->get("TestSource"), test::FrameProperties{})
+          .leq(Frame::bottom()));
 
   // Compare kind.
-  EXPECT_TRUE(Frame(
-                  /* kind */ context.kinds->get("TestSource"),
-                  /* callee_port */ AccessPath(Root(Root::Kind::Leaf)),
-                  /* callee */ nullptr,
-                  /* call_position */ nullptr,
-                  /* distance */ 0,
-                  /* origins */ {},
-                  /* inferred_features */ {},
-                  /* locally_inferred_features */ {},
-                  /* user_features */ {},
-                  /* via_type_of_ports */ {},
-                  /* local_positions */ {},
-                  /* canonical_names */ {})
-                  .leq(Frame(
-                      /* kind */ context.kinds->get("TestSource"),
-                      /* callee_port */ AccessPath(Root(Root::Kind::Leaf)),
-                      /* callee */ nullptr,
-                      /* call_position */ nullptr,
-                      /* distance */ 0,
-                      /* origins */ {},
-                      /* inferred_features */ {},
-                      /* locally_inferred_features */ {},
-                      /* user_features */ {},
-                      /* via_type_of_ports */ {},
-                      /* local_positions */ {},
-                      /* canonical_names */ {})));
-  EXPECT_FALSE(Frame(
-                   /* kind */ context.kinds->get("TestSource"),
-                   /* callee_port */ AccessPath(Root(Root::Kind::Leaf)),
-                   /* callee */ nullptr,
-                   /* call_position */ nullptr,
-                   /* distance */ 0,
-                   /* origins */ {},
-                   /* inferred_features */ {},
-                   /* locally_inferred_features */ {},
-                   /* user_features */ {},
-                   /* via_type_of_ports */ {},
-                   /* local_positions */ {},
-                   /* canonical_names */ {})
-                   .leq(Frame(
-                       /* kind */ context.kinds->get("TestSink"),
-                       /* callee_port */ AccessPath(Root(Root::Kind::Leaf)),
-                       /* callee */ nullptr,
-                       /* call_position */ nullptr,
-                       /* distance */ 0,
-                       /* origins */ {},
-                       /* inferred_features */ {},
-                       /* locally_inferred_features */ {},
-                       /* user_features */ {},
-                       /* via_type_of_ports */ {},
-                       /* local_positions */ {},
-                       /* canonical_names */ {})));
+  EXPECT_TRUE(
+      test::make_frame(
+          /* kind */ context.kinds->get("TestSource"), test::FrameProperties{})
+          .leq(test::make_frame(
+              /* kind */ context.kinds->get("TestSource"),
+              test::FrameProperties{})));
+  EXPECT_FALSE(
+      test::make_frame(
+          /* kind */ context.kinds->get("TestSource"), test::FrameProperties{})
+          .leq(test::make_frame(
+              /* kind */ context.kinds->get("TestSink"),
+              test::FrameProperties{})));
 
   // Compare distances.
-  EXPECT_TRUE(Frame(
+  EXPECT_TRUE(test::make_frame(
                   /* kind */ context.kinds->get("TestSource"),
-                  /* callee_port */ AccessPath(Root(Root::Kind::Leaf)),
-                  /* callee */ nullptr,
-                  /* call_position */ nullptr,
-                  /* distance */ 1,
-                  /* origins */ {},
-                  /* inferred_features */ {},
-                  /* locally_inferred_features */ {},
-                  /* user_features */ {},
-                  /* via_type_of_ports */ {},
-                  /* local_positions */ {},
-                  /* canonical_names */ {})
-                  .leq(Frame(
+                  test::FrameProperties{.distance = 1})
+                  .leq(test::make_frame(
                       /* kind */ context.kinds->get("TestSource"),
-                      /* callee_port */ AccessPath(Root(Root::Kind::Leaf)),
-                      /* callee */ nullptr,
-                      /* call_position */ nullptr,
-                      /* distance */ 0,
-                      /* origins */ {},
-                      /* inferred_features */ {},
-                      /* locally_inferred_features */ {},
-                      /* user_features */ {},
-                      /* via_type_of_ports */ {},
-                      /* local_positions */ {},
-                      /* canonical_names */ {})));
-  EXPECT_FALSE(Frame(
+                      test::FrameProperties{.distance = 0})));
+  EXPECT_FALSE(test::make_frame(
                    /* kind */ context.kinds->get("TestSource"),
-                   /* callee_port */ AccessPath(Root(Root::Kind::Leaf)),
-                   /* callee */ nullptr,
-                   /* call_position */ nullptr,
-                   /* distance */ 0,
-                   /* origins */ {},
-                   /* inferred_features */ {},
-                   /* locally_inferred_features */ {},
-                   /* user_features */ {},
-                   /* via_type_of_ports */ {},
-                   /* local_positions */ {},
-                   /* canonical_names */ {})
-                   .leq(Frame(
+                   test::FrameProperties{.distance = 0})
+                   .leq(test::make_frame(
                        /* kind */ context.kinds->get("TestSource"),
-                       /* callee_port */ AccessPath(Root(Root::Kind::Leaf)),
-                       /* callee */ nullptr,
-                       /* call_position */ nullptr,
-                       /* distance */ 1,
-                       /* origins */ {},
-                       /* inferred_features */ {},
-                       /* locally_inferred_features */ {},
-                       /* user_features */ {},
-                       /* via_type_of_ports */ {},
-                       /* local_positions */ {},
-                       /* canonical_names */ {})));
+                       test::FrameProperties{.distance = 1})));
 
   // Compare origins.
-  EXPECT_TRUE(Frame(
+  EXPECT_TRUE(test::make_frame(
                   /* kind */ context.kinds->get("TestSource"),
-                  /* callee_port */ AccessPath(Root(Root::Kind::Leaf)),
-                  /* callee */ nullptr,
-                  /* call_position */ nullptr,
-                  /* distance */ 0,
-                  /* origins */ MethodSet{one},
-                  /* inferred_features */ {},
-                  /* locally_inferred_features */ {},
-                  /* user_features */ {},
-                  /* via_type_of_ports */ {},
-                  /* local_positions */ {},
-                  /* canonical_names */ {})
-                  .leq(Frame(
+                  test::FrameProperties{.origins = MethodSet{one}})
+                  .leq(test::make_frame(
                       /* kind */ context.kinds->get("TestSource"),
-                      /* callee_port */ AccessPath(Root(Root::Kind::Leaf)),
-                      /* callee */ nullptr,
-                      /* call_position */ nullptr,
-                      /* distance */ 0,
-                      /* origins */ MethodSet{one, two},
-                      /* inferred_features */ {},
-                      /* locally_inferred_features */ {},
-                      /* user_features */ {},
-                      /* via_type_of_ports */ {},
-                      /* local_positions */ {},
-                      /* canonical_names */ {})));
-  EXPECT_FALSE(Frame(
+                      test::FrameProperties{.origins = MethodSet{one, two}})));
+  EXPECT_FALSE(test::make_frame(
                    /* kind */ context.kinds->get("TestSource"),
-                   /* callee_port */ AccessPath(Root(Root::Kind::Leaf)),
-                   /* callee */ nullptr,
-                   /* call_position */ nullptr,
-                   /* distance */ 0,
-                   /* origins */ MethodSet{one, two},
-                   /* inferred_features */ {},
-                   /* locally_inferred_features */ {},
-                   /* user_features */ {},
-                   /* via_type_of_ports */ {},
-                   /* local_positions */ {},
-                   /* canonical_names */ {})
-                   .leq(Frame(
+                   test::FrameProperties{.origins = MethodSet{one, two}})
+                   .leq(test::make_frame(
                        /* kind */ context.kinds->get("TestSource"),
-                       /* callee_port */ AccessPath(Root(Root::Kind::Leaf)),
-                       /* callee */ nullptr,
-                       /* call_position */ nullptr,
-                       /* distance */ 0,
-                       /* origins */ MethodSet{one},
-                       /* inferred_features */ {},
-                       /* locally_inferred_features */ {},
-                       /* user_features */ {},
-                       /* via_type_of_ports */ {},
-                       /* local_positions */ {},
-                       /* canonical_names */ {})));
+                       test::FrameProperties{.origins = MethodSet{one}})));
 
   // Compare inferred features.
-  EXPECT_TRUE(
-      Frame(
-          /* kind */ context.kinds->get("TestSource"),
-          /* callee_port */ AccessPath(Root(Root::Kind::Leaf)),
-          /* callee */ nullptr,
-          /* call_position */ nullptr,
-          /* distance */ 0,
-          /* origins */ {},
-          /* inferred_features */
-          FeatureMayAlwaysSet::make_may({context.features->get("FeatureOne")}),
-          /* locally_inferred_features */ {},
-          /* user_features */ {},
-          /* via_type_of_ports */ {},
-          /* local_positions */ {},
-          /* canonical_names */ {})
-          .leq(Frame(
-              /* kind */ context.kinds->get("TestSource"),
-              /* callee_port */ AccessPath(Root(Root::Kind::Leaf)),
-              /* callee */ nullptr,
-              /* call_position */ nullptr,
-              /* distance */ 0,
-              /* origins */ {},
-              /* inferred_features */
-              FeatureMayAlwaysSet::make_may(
-                  {context.features->get("FeatureOne"),
-                   context.features->get("FeatureTwo")}),
-              /* locally_inferred_features */ {},
-              /* user_features */ {},
-              /* via_type_of_ports */ {},
-              /* local_positions */ {},
-              /* canonical_names */ {})));
-  EXPECT_FALSE(Frame(
+  EXPECT_TRUE(test::make_frame(
+                  /* kind */ context.kinds->get("TestSource"),
+                  test::FrameProperties{
+                      .inferred_features = FeatureMayAlwaysSet::make_may(
+                          {context.features->get("FeatureOne")})})
+                  .leq(test::make_frame(
+                      /* kind */ context.kinds->get("TestSource"),
+                      test::FrameProperties{
+                          .inferred_features = FeatureMayAlwaysSet::make_may(
+                              {context.features->get("FeatureOne"),
+                               context.features->get("FeatureTwo")})})));
+  EXPECT_FALSE(test::make_frame(
                    /* kind */ context.kinds->get("TestSource"),
-                   /* callee_port */ AccessPath(Root(Root::Kind::Leaf)),
-                   /* callee */ nullptr,
-                   /* call_position */ nullptr,
-                   /* distance */ 0,
-                   /* origins */ {},
-                   /* inferred_features */
-                   FeatureMayAlwaysSet::make_may(
-                       {context.features->get("FeatureOne"),
-                        context.features->get("FeatureTwo")}),
-                   /* locally_inferred_features */ {},
-                   /* user_features */ {},
-                   /* via_type_of_ports */ {},
-                   /* local_positions */ {},
-                   /* canonical_names */ {})
-                   .leq(Frame(
+                   test::FrameProperties{
+                       .inferred_features = FeatureMayAlwaysSet::make_may(
+                           {context.features->get("FeatureOne"),
+                            context.features->get("FeatureTwo")})})
+                   .leq(test::make_frame(
                        /* kind */ context.kinds->get("TestSource"),
-                       /* callee_port */ AccessPath(Root(Root::Kind::Leaf)),
-                       /* callee */ nullptr,
-                       /* call_position */ nullptr,
-                       /* distance */ 0,
-                       /* origins */ {},
-                       /* inferred_features */
-                       FeatureMayAlwaysSet::make_may(
-                           {context.features->get("FeatureOne")}),
-                       /* locally_inferred_features */ {},
-                       /* user_features */ {},
-                       /* via_type_of_ports */ {},
-                       /* local_positions */ {},
-                       /* canonical_names */ {})));
+                       test::FrameProperties{
+                           .inferred_features = FeatureMayAlwaysSet::make_may(
+                               {context.features->get("FeatureOne")})})));
 
   // Compare user features.
   EXPECT_TRUE(
-      Frame(
+      test::make_frame(
           /* kind */ context.kinds->get("TestSource"),
-          /* callee_port */ AccessPath(Root(Root::Kind::Leaf)),
-          /* callee */ nullptr,
-          /* call_position */ nullptr,
-          /* distance */ 0,
-          /* origins */ {},
-          /* inferred_features */ {},
-          /* locally_inferred_features */ {},
-          /* user_features */ FeatureSet{context.features->get("FeatureOne")},
-          /* via_type_of_ports */ {},
-          /* local_positions */ {},
-          /* canonical_names */ {})
-          .leq(Frame(
+          test::FrameProperties{
+              .user_features = FeatureSet{context.features->get("FeatureOne")}})
+          .leq(test::make_frame(
               /* kind */ context.kinds->get("TestSource"),
-              /* callee_port */ AccessPath(Root(Root::Kind::Leaf)),
-              /* callee */ nullptr,
-              /* call_position */ nullptr,
-              /* distance */ 0,
-              /* origins */ {},
-              /* inferred_features */ {},
-              /* locally_inferred_features */ {},
-              FeatureSet{
-                  context.features->get("FeatureOne"),
-                  context.features->get("FeatureTwo")},
-              /* via_type_of_ports */ {},
-              /* local_positions */ {},
-              /* canonical_names */ {})));
-  EXPECT_FALSE(Frame(
+              test::FrameProperties{
+                  .locally_inferred_features = {},
+                  FeatureSet{
+                      context.features->get("FeatureOne"),
+                      context.features->get("FeatureTwo")}})));
+  EXPECT_FALSE(test::make_frame(
                    /* kind */ context.kinds->get("TestSource"),
-                   /* callee_port */ AccessPath(Root(Root::Kind::Leaf)),
-                   /* callee */ nullptr,
-                   /* call_position */ nullptr,
-                   /* distance */ 0,
-                   /* origins */ {},
-                   /* inferred_features */ {},
-                   /* locally_inferred_features */ {},
-                   /* user_features */
-                   FeatureSet{
-                       context.features->get("FeatureOne"),
-                       context.features->get("FeatureTwo")},
-                   /* via_type_of_ports */ {},
-                   /* local_positions */ {},
-                   /* canonical_names */ {})
-                   .leq(Frame(
+                   test::FrameProperties{
+                       .user_features =
+                           FeatureSet{
+                               context.features->get("FeatureOne"),
+                               context.features->get("FeatureTwo")}})
+                   .leq(test::make_frame(
                        /* kind */ context.kinds->get("TestSource"),
-                       /* callee_port */ AccessPath(Root(Root::Kind::Leaf)),
-                       /* callee */ nullptr,
-                       /* call_position */ nullptr,
-                       /* distance */ 0,
-                       /* origins */ {},
-                       /* inferred_features */ {},
-                       /* locally_inferred_features */ {},
-                       /* user_features */
-                       FeatureSet{context.features->get("FeatureOne")},
-                       /* via_type_of_ports */ {},
-                       /* local_positions */ {},
-                       /* canonical_names */ {})));
+                       test::FrameProperties{
+                           .user_features = FeatureSet{
+                               context.features->get("FeatureOne")}})));
+
   // Compare via_type_of_ports
-  EXPECT_TRUE(
-      Frame(
-          /* kind */ context.kinds->get("TestSource"),
-          /* callee_port */ AccessPath(Root(Root::Kind::Leaf)),
-          /* callee */ nullptr,
-          /* call_position */ nullptr,
-          /* distance */ 0,
-          /* origins */ {},
-          /* inferred_features */ {},
-          /* locally_inferred_features */ {},
-          /* user_features */ {},
-          /* via_type_of_ports */
-          RootSetAbstractDomain({Root(Root::Kind::Return)}),
-          /* local_positions */ {},
-          /* canonical_names */ {})
-          .leq(Frame(
-              /* kind */ context.kinds->get("TestSource"),
-              /* callee_port */ AccessPath(Root(Root::Kind::Leaf)),
-              /* callee */ nullptr,
-              /* call_position */ nullptr,
-              /* distance */ 0,
-              /* origins */ {},
-              /* inferred_features */ {},
-              /* locally_inferred_features */ {},
-              /* user_features */ {},
-              /* via_type_of_ports */
-              RootSetAbstractDomain(
-                  {Root(Root::Kind::Return), Root(Root::Kind::Argument, 1)}),
-              /* local_positions */ {},
-              /* canonical_names */ {})));
-  EXPECT_FALSE(Frame(
+  EXPECT_TRUE(test::make_frame(
+                  /* kind */ context.kinds->get("TestSource"),
+                  test::FrameProperties{
+                      .via_type_of_ports =
+                          RootSetAbstractDomain({Root(Root::Kind::Return)})})
+                  .leq(test::make_frame(
+                      /* kind */ context.kinds->get("TestSource"),
+                      test::FrameProperties{
+                          .via_type_of_ports = RootSetAbstractDomain(
+                              {Root(Root::Kind::Return),
+                               Root(Root::Kind::Argument, 1)})})));
+  EXPECT_FALSE(test::make_frame(
                    /* kind */ context.kinds->get("TestSource"),
-                   /* callee_port */ AccessPath(Root(Root::Kind::Leaf)),
-                   /* callee */ nullptr,
-                   /* call_position */ nullptr,
-                   /* distance */ 0,
-                   /* origins */ {},
-                   /* inferred_features */ {},
-                   /* locally_inferred_features */ {},
-                   /* user_features */ {},
-                   /* via_type_of_ports */
-                   RootSetAbstractDomain({Root(Root::Kind::Return)}),
-                   /* local_positions */ {},
-                   /* canonical_names */ {})
-                   .leq(Frame(
+                   test::FrameProperties{
+                       .via_type_of_ports =
+                           RootSetAbstractDomain({Root(Root::Kind::Return)})})
+                   .leq(test::make_frame(
                        /* kind */ context.kinds->get("TestSource"),
-                       /* callee_port */ AccessPath(Root(Root::Kind::Leaf)),
-                       /* callee */ nullptr,
-                       /* call_position */ nullptr,
-                       /* distance */ 0,
-                       /* origins */ {},
-                       /* inferred_features */ {},
-                       /* locally_inferred_features */ {},
-                       /* user_features */ {},
-                       /* via_type_of_ports */
-                       RootSetAbstractDomain({Root(Root::Kind::Argument, 1)}),
-                       /* local_positions */ {},
-                       /* canonical_names */ {})));
+                       test::FrameProperties{
+                           .via_type_of_ports = RootSetAbstractDomain(
+                               {Root(Root::Kind::Argument, 1)})})));
+
   // callee_port, callee and call_position must be equal for non-artificial
   // taint.
-  EXPECT_TRUE(Frame(
+  EXPECT_TRUE(test::make_frame(
                   /* kind */ context.kinds->get("TestSource"),
-                  /* callee_port */ AccessPath(Root(Root::Kind::Return)),
-                  /* callee */ one,
-                  /* call_position */ context.positions->unknown(),
-                  /* distance */ 1,
-                  /* origins */ MethodSet{one},
-                  /* inferred_features */ {},
-                  /* locally_inferred_features */ {},
-                  /* user_features */ {},
-                  /* via_type_of_ports */ {},
-                  /* local_positions */ {},
-                  /* canonical_names */ {})
-                  .leq(Frame(
+                  test::FrameProperties{
+                      .callee_port = AccessPath(Root(Root::Kind::Return)),
+                      .callee = one,
+                      .call_position = context.positions->unknown(),
+                      .distance = 1,
+                      .origins = MethodSet{one}})
+                  .leq(test::make_frame(
                       /* kind */ context.kinds->get("TestSource"),
-                      /* callee_port */ AccessPath(Root(Root::Kind::Return)),
-                      /* callee */ one,
-                      /* call_position */ context.positions->unknown(),
-                      /* distance */ 1,
-                      /* origins */ MethodSet{one},
-                      /* inferred_features */ {},
-                      /* locally_inferred_features */ {},
-                      /* user_features */ {},
-                      /* via_type_of_ports */ {},
-                      /* local_positions */ {},
-                      /* canonical_names */ {})));
+                      test::FrameProperties{
+                          .callee_port = AccessPath(Root(Root::Kind::Return)),
+                          .callee = one,
+                          .call_position = context.positions->unknown(),
+                          .distance = 1,
+                          .origins = MethodSet{one}})));
   EXPECT_FALSE(
-      Frame(
+      test::make_frame(
           /* kind */ context.kinds->get("TestSource"),
-          /* callee_port */ AccessPath(Root(Root::Kind::Return)),
-          /* callee */ one,
-          /* call_position */ context.positions->unknown(),
-          /* distance */ 1,
-          /* origins */ MethodSet{one},
-          /* inferred_features */ {},
-          /* locally_inferred_features */ {},
-          /* user_features */ {},
-          /* via_type_of_ports */ {},
-          /* local_positions */ {},
-          /* canonical_names */ {})
-          .leq(Frame(
+          test::FrameProperties{
+              .callee_port = AccessPath(Root(Root::Kind::Return)),
+              .callee = one,
+              .call_position = context.positions->unknown(),
+              .distance = 1,
+              .origins = MethodSet{one}})
+          .leq(test::make_frame(
               /* kind */ context.kinds->get("TestSource"),
-              /* callee_port */ AccessPath(Root(Root::Kind::Argument, 0)),
-              /* callee */ one,
-              /* call_position */ context.positions->unknown(),
-              /* distance */ 1,
-              /* origins */ MethodSet{one},
-              /* inferred_features */ {},
-              /* locally_inferred_features */ {},
-              /* user_features */ {},
-              /* via_type_of_ports */ {},
-              /* local_positions */ {},
-              /* canonical_names */ {})));
-  EXPECT_FALSE(Frame(
+              test::FrameProperties{
+                  .callee_port = AccessPath(Root(Root::Kind::Argument, 0)),
+                  .callee = one,
+                  .call_position = context.positions->unknown(),
+                  .distance = 1,
+                  .origins = MethodSet{one}})));
+  EXPECT_FALSE(test::make_frame(
                    /* kind */ context.kinds->get("TestSource"),
-                   /* callee_port */ AccessPath(Root(Root::Kind::Return)),
-                   /* callee */ one,
-                   /* call_position */ context.positions->unknown(),
-                   /* distance */ 1,
-                   /* origins */ MethodSet{one},
-                   /* inferred_features */ {},
-                   /* locally_inferred_features */ {},
-                   /* user_features */ {},
-                   /* via_type_of_ports */ {},
-                   /* local_positions */ {},
-                   /* canonical_names */ {})
-                   .leq(Frame(
+                   test::FrameProperties{
+                       .callee_port = AccessPath(Root(Root::Kind::Return)),
+                       .callee = one,
+                       .call_position = context.positions->unknown(),
+                       .distance = 1,
+                       .origins = MethodSet{one}})
+                   .leq(test::make_frame(
                        /* kind */ context.kinds->get("TestSource"),
-                       /* callee_port */ AccessPath(Root(Root::Kind::Return)),
-                       /* callee */ two,
-                       /* call_position */ context.positions->unknown(),
-                       /* distance */ 1,
-                       /* origins */ MethodSet{one},
-                       /* inferred_features */ {},
-                       /* locally_inferred_features */ {},
-                       /* user_features */ {},
-                       /* via_type_of_ports */ {},
-                       /* local_positions */ {},
-                       /* canonical_names */ {})));
+                       test::FrameProperties{
+                           .callee_port = AccessPath(Root(Root::Kind::Return)),
+                           .callee = two,
+                           .call_position = context.positions->unknown(),
+                           .distance = 1,
+                           .origins = MethodSet{one}})));
   EXPECT_FALSE(
-      Frame(
+      test::make_frame(
           /* kind */ context.kinds->get("TestSource"),
-          /* callee_port */ AccessPath(Root(Root::Kind::Return)),
-          /* callee */ one,
-          /* call_position */ context.positions->unknown(),
-          /* distance */ 1,
-          /* origins */ MethodSet{one},
-          /* inferred_features */ {},
-          /* locally_inferred_features */ {},
-          /* user_features */ {},
-          /* via_type_of_ports */ {},
-          /* local_positions */ {},
-          /* canonical_names */ {})
-          .leq(Frame(
+          test::FrameProperties{
+              .callee_port = AccessPath(Root(Root::Kind::Return)),
+              .callee = one,
+              .call_position = context.positions->unknown(),
+              .distance = 1,
+              .origins = MethodSet{one}})
+          .leq(test::make_frame(
               /* kind */ context.kinds->get("TestSource"),
-              /* callee_port */ AccessPath(Root(Root::Kind::Return)),
-              /* callee */ one,
-              /* call_position */ context.positions->get("Test.java", 1),
-              /* distance */ 1,
-              /* origins */ MethodSet{one},
-              /* inferred_features */ {},
-              /* locally_inferred_features */ {},
-              /* user_features */ {},
-              /* via_type_of_ports */ {},
-              /* local_positions */ {},
-              /* canonical_names */ {})));
+              test::FrameProperties{
+                  .callee_port = AccessPath(Root(Root::Kind::Return)),
+                  .callee = one,
+                  .call_position = context.positions->get("Test.java", 1),
+                  .distance = 1,
+                  .origins = MethodSet{one}})));
 
   // For artificial sources, compare the common prefix of callee ports.
   EXPECT_TRUE(
-      Frame(
+      test::make_frame(
           /* kind */ Kinds::artificial_source(),
-          /* callee_port */
-          AccessPath(
-              Root(Root::Kind::Argument, 0), Path{DexString::make_string("x")}),
-          /* callee */ nullptr,
-          /* call_position */ nullptr,
-          /* distance */ 0,
-          /* origins */ {},
-          /* inferred_features */ {},
-          /* locally_inferred_features */ {},
-          /* user_features */ {},
-          /* via_type_of_ports */ {},
-          /* local_positions */ {},
-          /* canonical_names */ {})
-          .leq(Frame(
+          test::FrameProperties{
+              .callee_port = AccessPath(
+                  Root(Root::Kind::Argument, 0),
+                  Path{DexString::make_string("x")})})
+          .leq(test::make_frame(
               /* kind */ Kinds::artificial_source(),
-              /* callee_port */ AccessPath(Root(Root::Kind::Argument, 0)),
-              /* callee */ nullptr,
-              /* call_position */ nullptr,
-              /* distance */ 0,
-              /* origins */ {},
-              /* inferred_features */ {},
-              /* locally_inferred_features */ {},
-              /* user_features */ {},
-              /* via_type_of_ports */ {},
-              /* local_positions */ {},
-              /* canonical_names */ {})));
-  EXPECT_FALSE(Frame(
-                   /* kind */ Kinds::artificial_source(),
-                   /* callee_port */ AccessPath(Root(Root::Kind::Argument, 0)),
-                   /* callee */ nullptr,
-                   /* call_position */ nullptr,
-                   /* distance */ 0,
-                   /* origins */ {},
-                   /* inferred_features */ {},
-                   /* locally_inferred_features */ {},
-                   /* user_features */ {},
-                   /* via_type_of_ports */ {},
-                   /* local_positions */ {},
-                   /* canonical_names */ {})
-                   .leq(Frame(
-                       /* kind */ Kinds::artificial_source(),
-                       /* callee_port */
-                       AccessPath(
-                           Root(Root::Kind::Argument, 0),
-                           Path{DexString::make_string("x")}),
-                       /* callee */ nullptr,
-                       /* call_position */ nullptr,
-                       /* distance */ 0,
-                       /* origins */ {},
-                       /* inferred_features */ {},
-                       /* locally_inferred_features */ {},
-                       /* user_features */ {},
-                       /* via_type_of_ports */ {},
-                       /* local_positions */ {},
-                       /* canonical_names */ {})));
+              test::FrameProperties{
+                  .callee_port = AccessPath(Root(Root::Kind::Argument, 0))})));
+  EXPECT_FALSE(
+      test::make_frame(
+          /* kind */ Kinds::artificial_source(),
+          test::FrameProperties{
+              .callee_port = AccessPath(Root(Root::Kind::Argument, 0))})
+          .leq(test::make_frame(
+              /* kind */ Kinds::artificial_source(),
+              test::FrameProperties{
+                  .callee_port = AccessPath(
+                      Root(Root::Kind::Argument, 0),
+                      Path{DexString::make_string("x")})})));
 
   // Compare canonical names.
   EXPECT_TRUE(
-      Frame(
-          /* kind */ context.kinds->get("TestSource"),
-          /* callee_port */ AccessPath(Root(Root::Kind::Leaf)),
-          /* callee */ nullptr,
-          /* call_position */ nullptr,
-          /* distance */ 0,
-          /* origins */ {},
-          /* inferred_features */ {},
-          /* locally_inferred_features */ {},
-          /* user_features */ {},
-          /* via_type_of_ports */ {},
-          /* local_positions */ {},
-          /* canonical_names */ {})
-          .leq(Frame(
+      test::make_frame(
+          /* kind */ context.kinds->get("TestSource"), test::FrameProperties{})
+          .leq(test::make_frame(
               /* kind */ context.kinds->get("TestSource"),
-              /* callee_port */ AccessPath(Root(Root::Kind::Leaf)),
-              /* callee */ nullptr,
-              /* call_position */ nullptr,
-              /* distance */ 0,
-              /* origins */ {},
-              /* inferred_features */ {},
-              /* locally_inferred_features */ {},
-              /* user_features */ {},
-              /* via_type_of_ports */ {},
-              /* local_positions */ {},
-              /* canonical_names */
-              CanonicalNameSetAbstractDomain{CanonicalName(
-                  CanonicalName::TemplateValue{"%programmatic_leaf_name%"})})));
+              test::FrameProperties{
+                  .canonical_names = CanonicalNameSetAbstractDomain{
+                      CanonicalName(CanonicalName::TemplateValue{
+                          "%programmatic_leaf_name%"})}})));
   EXPECT_FALSE(
-      Frame(
+      test::make_frame(
           /* kind */ context.kinds->get("TestSource"),
-          /* callee_port */ AccessPath(Root(Root::Kind::Leaf)),
-          /* callee */ nullptr,
-          /* call_position */ nullptr,
-          /* distance */ 0,
-          /* origins */ {},
-          /* inferred_features */ {},
-          /* locally_inferred_features */ {},
-          /* user_features */ {},
-          /* via_type_of_ports */ {},
-          /* local_positions */ {},
-          /* canonical_names */
-          CanonicalNameSetAbstractDomain{CanonicalName(
-              CanonicalName::TemplateValue{"%programmatic_leaf_name%"})})
-          .leq(Frame(
+          test::FrameProperties{
+              .canonical_names = CanonicalNameSetAbstractDomain{CanonicalName(
+                  CanonicalName::TemplateValue{"%programmatic_leaf_name%"})}})
+          .leq(test::make_frame(
               /* kind */ context.kinds->get("TestSource"),
-              /* callee_port */ AccessPath(Root(Root::Kind::Leaf)),
-              /* callee */ nullptr,
-              /* call_position */ nullptr,
-              /* distance */ 1,
-              /* origins */ {},
-              /* inferred_features */ {},
-              /* locally_inferred_features */ {},
-              /* user_features */ {},
-              /* via_type_of_ports */ {},
-              /* local_positions */ {},
-              /* canonical_names */ {})));
+              test::FrameProperties{})));
 }
 
 TEST_F(FrameTest, FrameEquals) {
   auto context = test::make_empty_context();
 
   EXPECT_TRUE(Frame::bottom().equals(Frame::bottom()));
-  EXPECT_FALSE(Frame::bottom().equals(Frame(
-      /* kind */ context.kinds->get("TestSource"),
-      /* callee_port */ AccessPath(Root(Root::Kind::Leaf)),
-      /* callee */ nullptr,
-      /* call_position */ nullptr,
-      /* distance */ 0,
-      /* origins */ {},
-      /* inferred_features */ {},
-      /* locally_inferred_features */ {},
-      /* user_features */ {},
-      /* via_type_of_ports */ {},
-      /* local_positions */ {},
-      /* canonical_names */ {})));
-  EXPECT_FALSE(Frame(
-                   /* kind */ context.kinds->get("TestSource"),
-                   /* callee_port */ AccessPath(Root(Root::Kind::Leaf)),
-                   /* callee */ nullptr,
-                   /* call_position */ nullptr,
-                   /* distance */ 0,
-                   /* origins */ {},
-                   /* inferred_features */ {},
-                   /* locally_inferred_features */ {},
-                   /* user_features */ {},
-                   /* via_type_of_ports */ {},
-                   /* local_positions */ {},
-                   /* canonical_names */ {})
-                   .equals(Frame::bottom()));
+  EXPECT_FALSE(Frame::bottom().equals(test::make_frame(
+      /* kind */ context.kinds->get("TestSource"), test::FrameProperties{})));
+
+  EXPECT_FALSE(
+      test::make_frame(
+          /* kind */ context.kinds->get("TestSource"), test::FrameProperties{})
+          .equals(Frame::bottom()));
 }
 
 TEST_F(FrameTest, FrameJoin) {
@@ -677,448 +290,238 @@ TEST_F(FrameTest, FrameJoin) {
 
   EXPECT_EQ(Frame::bottom().join(Frame::bottom()), Frame::bottom());
   EXPECT_EQ(
-      Frame::bottom().join(Frame(
+      Frame::bottom().join(test::make_frame(
           /* kind */ context.kinds->get("TestSource"),
-          /* callee_port */ AccessPath(Root(Root::Kind::Leaf)),
-          /* callee */ nullptr,
-          /* call_position */ nullptr,
-          /* distance */ 0,
-          /* origins */ {},
-          /* inferred_features */ {},
-          /* locally_inferred_features */ {},
-          /* user_features */ {},
-          /* via_type_of_ports */ {},
-          /* local_positions */ {},
-          /* canonical_names */ {})),
-      Frame(
+          test::FrameProperties{})),
+      test::make_frame(
           /* kind */ context.kinds->get("TestSource"),
-          /* callee_port */ AccessPath(Root(Root::Kind::Leaf)),
-          /* callee */ nullptr,
-          /* call_position */ nullptr,
-          /* distance */ 0,
-          /* origins */ {},
-          /* inferred_features */ {},
-          /* locally_inferred_features */ {},
-          /* user_features */ {},
-          /* via_type_of_ports */ {},
-          /* local_positions */ {},
-          /* canonical_names */ {}));
+          test::FrameProperties{}));
   EXPECT_EQ(
-      Frame(
-          /* kind */ context.kinds->get("TestSource"),
-          /* callee_port */ AccessPath(Root(Root::Kind::Leaf)),
-          /* callee */ nullptr,
-          /* call_position */ nullptr,
-          /* distance */ 0,
-          /* origins */ {},
-          /* inferred_features */ {},
-          /* locally_inferred_features */ {},
-          /* user_features */ {},
-          /* via_type_of_ports */ {},
-          /* local_positions */ {},
-          /* canonical_names */ {})
+      test::make_frame(
+          /* kind */ context.kinds->get("TestSource"), test::FrameProperties{})
           .join(Frame::bottom()),
-      Frame(
+      test::make_frame(
           /* kind */ context.kinds->get("TestSource"),
-          /* callee_port */ AccessPath(Root(Root::Kind::Leaf)),
-          /* callee */ nullptr,
-          /* call_position */ nullptr,
-          /* distance */ 0,
-          /* origins */ {},
-          /* inferred_features */ {},
-          /* locally_inferred_features */ {},
-          /* user_features */ {},
-          /* via_type_of_ports */ {},
-          /* local_positions */ {},
-          /* canonical_names */ {}));
+          test::FrameProperties{}));
 
   // Test incompatible joins.
   EXPECT_THROW(
-      Frame(
-          /* kind */ context.kinds->get("TestSource"),
-          /* callee_port */ AccessPath(Root(Root::Kind::Leaf)),
-          /* callee */ nullptr,
-          /* call_position */ nullptr,
-          /* distance */ 0,
-          /* origins */ {},
-          /* inferred_features */ {},
-          /* locally_inferred_features */ {},
-          /* user_features */ {},
-          /* via_type_of_ports */ {},
-          /* local_positions */ {},
-          /* canonical_names */ {})
-          .join_with(Frame(
+      test::make_frame(
+          /* kind */ context.kinds->get("TestSource"), test::FrameProperties{})
+          .join_with(test::make_frame(
               /* kind */ context.kinds->get("TestSink"),
-              /* callee_port */ AccessPath(Root(Root::Kind::Leaf)),
-              /* callee */ nullptr,
-              /* call_position */ nullptr,
-              /* distance */ 0,
-              /* origins */ {},
-              /* inferred_features */ {},
-              /* locally_inferred_features */ {},
-              /* user_features */ {},
-              /* via_type_of_ports */ {},
-              /* local_positions */ {},
-              /* canonical_names */ {})),
+              test::FrameProperties{})),
       std::exception);
   EXPECT_THROW(
-      Frame(
+      test::make_frame(
           /* kind */ context.kinds->get("TestSource"),
-          /* callee_port */ AccessPath(Root(Root::Kind::Leaf)),
-          /* callee */ nullptr,
-          /* call_position */ nullptr,
-          /* distance */ 0,
-          /* origins */ {},
-          /* inferred_features */ {},
-          /* locally_inferred_features */ {},
-          /* user_features */ {},
-          /* via_type_of_ports */ {},
-          /* local_positions */ {},
-          /* canonical_names */ {})
-          .join_with(Frame(
+          test::FrameProperties{
+              .callee_port = AccessPath(Root(Root::Kind::Leaf))})
+          .join_with(test::make_frame(
               /* kind */ context.kinds->get("TestSource"),
-              /* callee_port */ AccessPath(Root(Root::Kind::Anchor)),
-              /* callee */ nullptr,
-              /* call_position */ nullptr,
-              /* distance */ 0,
-              /* origins */ {},
-              /* inferred_features */ {},
-              /* locally_inferred_features */ {},
-              /* user_features */ {},
-              /* via_type_of_ports */ {},
-              /* local_positions */ {},
-              /* canonical_names */ {})),
+              test::FrameProperties{
+                  .callee_port = AccessPath(Root(Root::Kind::Anchor))})),
       std::exception);
   EXPECT_THROW(
-      Frame(
+      test::make_frame(
           /* kind */ context.kinds->get("TestSource"),
-          /* callee_port */ AccessPath(Root(Root::Kind::Return)),
-          /* callee */ one,
-          /* call_position */ context.positions->unknown(),
-          /* distance */ 1,
-          /* origins */ {},
-          /* inferred_features */ {},
-          /* locally_inferred_features */ {},
-          /* user_features */ {},
-          /* via_type_of_ports */ {},
-          /* local_positions */ {},
-          /* canonical_names */ {})
-          .join_with(Frame(
+          test::FrameProperties{
+              .callee_port = AccessPath(Root(Root::Kind::Return)),
+              .callee = one,
+              .call_position = context.positions->unknown(),
+              .distance = 1})
+          .join_with(test::make_frame(
               /* kind */ context.kinds->get("TestSource"),
-              /* callee_port */ AccessPath(Root(Root::Kind::Return)),
-              /* callee */ two,
-              /* call_position */ context.positions->unknown(),
-              /* distance */ 1,
-              /* origins */ {},
-              /* inferred_features */ {},
-              /* locally_inferred_features */ {},
-              /* user_features */ {},
-              /* via_type_of_ports */ {},
-              /* local_positions */ {},
-              /* canonical_names */ {})),
+              test::FrameProperties{
+                  .callee_port = AccessPath(Root(Root::Kind::Return)),
+                  .callee = two,
+                  .call_position = context.positions->unknown(),
+                  .distance = 1})),
       std::exception);
   EXPECT_THROW(
-      Frame(
+      test::make_frame(
           /* kind */ context.kinds->get("TestSource"),
-          /* callee_port */ AccessPath(Root(Root::Kind::Return)),
-          /* callee */ one,
-          /* call_position */ context.positions->unknown(),
-          /* distance */ 1,
-          /* origins */ {},
-          /* inferred_features */ {},
-          /* locally_inferred_features */ {},
-          /* user_features */ {},
-          /* via_type_of_ports */ {},
-          /* local_positions */ {},
-          /* canonical_names */ {})
-          .join_with(Frame(
+          test::FrameProperties{
+              .callee_port = AccessPath(Root(Root::Kind::Return)),
+              .callee = one,
+              .call_position = context.positions->unknown(),
+              .distance = 1})
+          .join_with(test::make_frame(
               /* kind */ context.kinds->get("TestSource"),
-              /* callee_port */ AccessPath(Root(Root::Kind::Return)),
-              /* callee */ one,
-              /* call_position */ context.positions->get("Test.java", 1),
-              /* distance */ 1,
-              /* origins */ {},
-              /* inferred_features */ {},
-              /* locally_inferred_features */ {},
-              /* user_features */ {},
-              /* via_type_of_ports */ {},
-              /* local_positions */ {},
-              /* canonical_names */ {})),
+              test::FrameProperties{
+                  .callee_port = AccessPath(Root(Root::Kind::Return)),
+                  .callee = one,
+                  .call_position = context.positions->get("Test.java", 1),
+                  .distance = 1})),
       std::exception);
 
   // Minimum distance.
   EXPECT_EQ(
-      Frame(
+      test::make_frame(
           /* kind */ context.kinds->get("TestSource"),
-          /* callee_port */ AccessPath(Root(Root::Kind::Return)),
-          /* callee */ one,
-          /* call_position */ context.positions->unknown(),
-          /* distance */ 2,
-          /* origins */ {},
-          /* inferred_features */ {},
-          /* locally_inferred_features */ {},
-          /* user_features */ {},
-          /* via_type_of_ports */ {},
-          /* local_positions */ {},
-          /* canonical_names */ {})
-          .join(Frame(
+          test::FrameProperties{
+              .callee_port = AccessPath(Root(Root::Kind::Return)),
+              .callee = one,
+              .call_position = context.positions->unknown(),
+              .distance = 2})
+          .join(test::make_frame(
               /* kind */ context.kinds->get("TestSource"),
-              /* callee_port */ AccessPath(Root(Root::Kind::Return)),
-              /* callee */ one,
-              /* call_position */ context.positions->unknown(),
-              /* distance */ 1,
-              /* origins */ {},
-              /* inferred_features */ {},
-              /* locally_inferred_features */ {},
-              /* user_features */ {},
-              /* via_type_of_ports */ {},
-              /* local_positions */ {},
-              /* canonical_names */ {})),
-      Frame(
+              test::FrameProperties{
+                  .callee_port = AccessPath(Root(Root::Kind::Return)),
+                  .callee = one,
+                  .call_position = context.positions->unknown(),
+                  .distance = 1})),
+      test::make_frame(
           /* kind */ context.kinds->get("TestSource"),
-          /* callee_port */ AccessPath(Root(Root::Kind::Return)),
-          /* callee */ one,
-          /* call_position */ context.positions->unknown(),
-          /* distance */ 1,
-          /* origins */ {},
-          /* inferred_features */ {},
-          /* locally_inferred_features */ {},
-          /* user_features */ {},
-          /* via_type_of_ports */ {},
-          /* local_positions */ {},
-          /* canonical_names */ {}));
+          test::FrameProperties{
+              .callee_port = AccessPath(Root(Root::Kind::Return)),
+              .callee = one,
+              .call_position = context.positions->unknown(),
+              .distance = 1}));
 
   // Join origins.
   EXPECT_EQ(
-      Frame(
+      test::make_frame(
           /* kind */ context.kinds->get("TestSource"),
-          /* callee_port */ AccessPath(Root(Root::Kind::Return)),
-          /* callee */ one,
-          /* call_position */ context.positions->unknown(),
-          /* distance */ 1,
-          /* origins */ MethodSet{one},
-          /* inferred_features */ {},
-          /* locally_inferred_features */ {},
-          /* user_features */ {},
-          /* via_type_of_ports */ {},
-          /* local_positions */ {},
-          /* canonical_names */ {})
-          .join(Frame(
+          test::FrameProperties{
+              .callee_port = AccessPath(Root(Root::Kind::Return)),
+              .callee = one,
+              .call_position = context.positions->unknown(),
+              .distance = 1,
+              .origins = MethodSet{one}})
+          .join(test::make_frame(
               /* kind */ context.kinds->get("TestSource"),
-              /* callee_port */ AccessPath(Root(Root::Kind::Return)),
-              /* callee */ one,
-              /* call_position */ context.positions->unknown(),
-              /* distance */ 1,
-              /* origins */ MethodSet{two},
-              /* inferred_features */ {},
-              /* locally_inferred_features */ {},
-              /* user_features */ {},
-              /* via_type_of_ports */ {},
-              /* local_positions */ {},
-              /* canonical_names */ {})),
-      Frame(
+              test::FrameProperties{
+                  .callee_port = AccessPath(Root(Root::Kind::Return)),
+                  .callee = one,
+                  .call_position = context.positions->unknown(),
+                  .distance = 1,
+                  .origins = MethodSet{two}})),
+      test::make_frame(
           /* kind */ context.kinds->get("TestSource"),
-          /* callee_port */ AccessPath(Root(Root::Kind::Return)),
-          /* callee */ one,
-          /* call_position */ context.positions->unknown(),
-          /* distance */ 1,
-          /* origins */ MethodSet{one, two},
-          /* inferred_features */ {},
-          /* locally_inferred_features */ {},
-          /* user_features */ {},
-          /* via_type_of_ports */ {},
-          /* local_positions */ {},
-          /* canonical_names */ {}));
+          test::FrameProperties{
+              .callee_port = AccessPath(Root(Root::Kind::Return)),
+              .callee = one,
+              .call_position = context.positions->unknown(),
+              .distance = 1,
+              .origins = MethodSet{one, two}}));
 
   // Join inferred features.
   EXPECT_EQ(
-      Frame(
+      test::make_frame(
           /* kind */ context.kinds->get("TestSource"),
-          /* callee_port */ AccessPath(Root(Root::Kind::Return)),
-          /* callee */ one,
-          /* call_position */ context.positions->unknown(),
-          /* distance */ 2,
-          /* origins */ {},
-          /* inferred_features */
-          FeatureMayAlwaysSet{context.features->get("FeatureOne")},
-          /* locally_inferred_features */ {},
-          /* user_features */ {},
-          /* via_type_of_ports */ {},
-          /* local_positions */ {},
-          /* canonical_names */ {})
-          .join(Frame(
+          test::FrameProperties{
+              .callee_port = AccessPath(Root(Root::Kind::Return)),
+              .callee = one,
+              .call_position = context.positions->unknown(),
+              .distance = 2,
+              .inferred_features =
+                  FeatureMayAlwaysSet{context.features->get("FeatureOne")}})
+          .join(test::make_frame(
               /* kind */ context.kinds->get("TestSource"),
-              /* callee_port */ AccessPath(Root(Root::Kind::Return)),
-              /* callee */ one,
-              /* call_position */ context.positions->unknown(),
-              /* distance */ 2,
-              /* origins */ {},
-              /* inferred_features */
-              FeatureMayAlwaysSet{context.features->get("FeatureTwo")},
-              /* locally_inferred_features */ {},
-              /* user_features */ {},
-              /* via_type_of_ports */ {},
-              /* local_positions */ {},
-              /* canonical_names */ {})),
-      Frame(
+              test::FrameProperties{
+                  .callee_port = AccessPath(Root(Root::Kind::Return)),
+                  .callee = one,
+                  .call_position = context.positions->unknown(),
+                  .distance = 2,
+                  .inferred_features =
+                      FeatureMayAlwaysSet{
+                          context.features->get("FeatureTwo")}})),
+      test::make_frame(
           /* kind */ context.kinds->get("TestSource"),
-          /* callee_port */ AccessPath(Root(Root::Kind::Return)),
-          /* callee */ one,
-          /* call_position */ context.positions->unknown(),
-          /* distance */ 2,
-          /* origins */ {},
-          /* inferred_features */
-          FeatureMayAlwaysSet::make_may(
-              {context.features->get("FeatureOne"),
-               context.features->get("FeatureTwo")}),
-          /* locally_inferred_features */ {},
-          /* user_features */ {},
-          /* via_type_of_ports */ {},
-          /* local_positions */ {},
-          /* canonical_names */ {}));
+          test::FrameProperties{
+              .callee_port = AccessPath(Root(Root::Kind::Return)),
+              .callee = one,
+              .call_position = context.positions->unknown(),
+              .distance = 2,
+              .inferred_features = FeatureMayAlwaysSet::make_may(
+                  {context.features->get("FeatureOne"),
+                   context.features->get("FeatureTwo")})}));
 
   // Join user features.
   EXPECT_EQ(
-      Frame(
+      test::make_frame(
           /* kind */ context.kinds->get("TestSource"),
-          /* callee_port */ AccessPath(Root(Root::Kind::Return)),
-          /* callee */ one,
-          /* call_position */ context.positions->unknown(),
-          /* distance */ 2,
-          /* origins */ {},
-          /* inferred_features */ {},
-          /* locally_inferred_features */ {},
-          /* user_features */
-          FeatureSet{context.features->get("FeatureOne")},
-          /* via_type_of_ports */ {},
-          /* local_positions */ {},
-          /* canonical_names */ {})
-          .join(Frame(
+          test::FrameProperties{
+              .callee_port = AccessPath(Root(Root::Kind::Return)),
+              .callee = one,
+              .call_position = context.positions->unknown(),
+              .distance = 2,
+              .user_features = FeatureSet{context.features->get("FeatureOne")}})
+          .join(test::make_frame(
               /* kind */ context.kinds->get("TestSource"),
-              /* callee_port */ AccessPath(Root(Root::Kind::Return)),
-              /* callee */ one,
-              /* call_position */ context.positions->unknown(),
-              /* distance */ 2,
-              /* origins */ {},
-              /* inferred_features */ {},
-              /* locally_inferred_features */ {},
-              /* user_features */
-              FeatureSet{context.features->get("FeatureTwo")},
-              /* via_type_of_ports */ {},
-              /* local_positions */ {},
-              /* canonical_names */ {})),
-      Frame(
+              test::FrameProperties{
+                  .callee_port = AccessPath(Root(Root::Kind::Return)),
+                  .callee = one,
+                  .call_position = context.positions->unknown(),
+                  .distance = 2,
+                  .user_features =
+                      FeatureSet{context.features->get("FeatureTwo")}})),
+      test::make_frame(
           /* kind */ context.kinds->get("TestSource"),
-          /* callee_port */ AccessPath(Root(Root::Kind::Return)),
-          /* callee */ one,
-          /* call_position */ context.positions->unknown(),
-          /* distance */ 2,
-          /* origins */ {},
-          /* inferred_features */ {},
-          /* locally_inferred_features */ {},
-          /* user_features */
-          FeatureSet{
-              context.features->get("FeatureOne"),
-              context.features->get("FeatureTwo")},
-          /* via_type_of_ports */ {},
-          /* local_positions */ {},
-          /* canonical_names */ {}));
+          test::FrameProperties{
+              .callee_port = AccessPath(Root(Root::Kind::Return)),
+              .callee = one,
+              .call_position = context.positions->unknown(),
+              .distance = 2,
+              .user_features = FeatureSet{
+                  context.features->get("FeatureOne"),
+                  context.features->get("FeatureTwo")}}));
 
   // Join via_type_of_ports
   EXPECT_EQ(
-      Frame(
+      test::make_frame(
           /* kind */ context.kinds->get("TestSource"),
-          /* callee_port */ AccessPath(Root(Root::Kind::Return)),
-          /* callee */ one,
-          /* call_position */ context.positions->unknown(),
-          /* distance */ 2,
-          /* origins */ {},
-          /* inferred_features */ {},
-          /* locally_inferred_features */ {},
-          /* user_features */ {},
-          /* via_type_of_ports */
-          RootSetAbstractDomain({Root(Root::Kind::Return)}),
-          /* local_positions */ {},
-          /* canonical_names */ {})
-          .join(Frame(
+          test::FrameProperties{
+              .callee_port = AccessPath(Root(Root::Kind::Return)),
+              .callee = one,
+              .call_position = context.positions->unknown(),
+              .distance = 2,
+              .via_type_of_ports =
+                  RootSetAbstractDomain({Root(Root::Kind::Return)})})
+          .join(test::make_frame(
               /* kind */ context.kinds->get("TestSource"),
-              /* callee_port */ AccessPath(Root(Root::Kind::Return)),
-              /* callee */ one,
-              /* call_position */ context.positions->unknown(),
-              /* distance */ 2,
-              /* origins */ {},
-              /* inferred_features */ {},
-              /* locally_inferred_features */ {},
-              /* user_features */ {},
-              /* via_type_of_ports */
-              RootSetAbstractDomain({Root(Root::Kind::Argument, 1)}),
-              /* local_positions */ {},
-              /* canonical_names */ {})),
-      Frame(
+              test::FrameProperties{
+                  .callee_port = AccessPath(Root(Root::Kind::Return)),
+                  .callee = one,
+                  .call_position = context.positions->unknown(),
+                  .distance = 2,
+                  .via_type_of_ports =
+                      RootSetAbstractDomain({Root(Root::Kind::Argument, 1)})})),
+      test::make_frame(
           /* kind */ context.kinds->get("TestSource"),
-          /* callee_port */ AccessPath(Root(Root::Kind::Return)),
-          /* callee */ one,
-          /* call_position */ context.positions->unknown(),
-          /* distance */ 2,
-          /* origins */ {},
-          /* inferred_features */ {},
-          /* locally_inferred_features */ {},
-          /* user_features */ {},
-          /* via_type_of_ports */
-          RootSetAbstractDomain(
-              {Root(Root::Kind::Return), Root(Root::Kind::Argument, 1)}),
-          /* local_positions */ {},
-          /* canonical_names */ {}));
+          test::FrameProperties{
+              .callee_port = AccessPath(Root(Root::Kind::Return)),
+              .callee = one,
+              .call_position = context.positions->unknown(),
+              .distance = 2,
+              .via_type_of_ports = RootSetAbstractDomain(
+                  {Root(Root::Kind::Return), Root(Root::Kind::Argument, 1)})}));
 
   // Join canonical names.
   EXPECT_EQ(
-      Frame(
+      test::make_frame(
           /* kind */ context.kinds->get("TestSource"),
-          /* callee_port */ AccessPath(Root(Root::Kind::Leaf)),
-          /* callee */ nullptr,
-          /* call_position */ context.positions->unknown(),
-          /* distance */ 0,
-          /* origins */ {},
-          /* inferred_features */ {},
-          /* locally_inferred_features */ {},
-          /* user_features */ {},
-          /* via_type_of_ports */ {},
-          /* local_positions */ {},
-          /* canonical_names */
-          CanonicalNameSetAbstractDomain{CanonicalName(
-              CanonicalName::TemplateValue{"%programmatic_leaf_name%"})})
-          .join(Frame(
+          test::FrameProperties{
+              .call_position = context.positions->unknown(),
+              .canonical_names = CanonicalNameSetAbstractDomain{CanonicalName(
+                  CanonicalName::TemplateValue{"%programmatic_leaf_name%"})}})
+          .join(test::make_frame(
               /* kind */ context.kinds->get("TestSource"),
-              /* callee_port */ AccessPath(Root(Root::Kind::Leaf)),
-              /* callee */ nullptr,
-              /* call_position */ context.positions->unknown(),
-              /* distance */ 0,
-              /* origins */ {},
-              /* inferred_features */ {},
-              /* locally_inferred_features */ {},
-              /* user_features */ {},
-              /* via_type_of_ports */ {},
-              /* local_positions */ {},
-              /* canonical_names */
-              CanonicalNameSetAbstractDomain{CanonicalName(
-                  CanonicalName::TemplateValue{"%via_type_of%"})})),
-      Frame(
+              test::FrameProperties{
+                  .call_position = context.positions->unknown(),
+                  .canonical_names =
+                      CanonicalNameSetAbstractDomain{CanonicalName(
+                          CanonicalName::TemplateValue{"%via_type_of%"})}})),
+      test::make_frame(
           /* kind */ context.kinds->get("TestSource"),
-          /* callee_port */ AccessPath(Root(Root::Kind::Leaf)),
-          /* callee */ nullptr,
-          /* call_position */ context.positions->unknown(),
-          /* distance */ 0,
-          /* origins */ {},
-          /* inferred_features */ {},
-          /* locally_inferred_features */ {},
-          /* user_features */ {},
-          /* via_type_of_ports */ {},
-          /* local_positions */ {},
-          /* canonical_names */
-          CanonicalNameSetAbstractDomain{
-              CanonicalName(
-                  CanonicalName::TemplateValue{"%programmatic_leaf_name%"}),
-              CanonicalName(CanonicalName::TemplateValue{"%via_type_of%"})}));
+          test::FrameProperties{
+              .call_position = context.positions->unknown(),
+              .canonical_names = CanonicalNameSetAbstractDomain{
+                  CanonicalName(
+                      CanonicalName::TemplateValue{"%programmatic_leaf_name%"}),
+                  CanonicalName(
+                      CanonicalName::TemplateValue{"%via_type_of%"})}}));
 }
 
 TEST_F(FrameTest, FrameWithKind) {
@@ -1133,22 +536,17 @@ TEST_F(FrameTest, FrameWithKind) {
   auto* two = context.methods->create(
       redex::create_void_method(scope, "LOther;", "two"));
 
-  Frame frame1(
+  auto frame1 = test::make_frame(
       /* kind */ kind_a,
-      /* callee_port */ AccessPath(Root(Root::Kind::Leaf)),
-      /* callee */ one,
-      /* call_position */ context.positions->unknown(),
-      /* distance */ 5,
-      /* origins */ MethodSet{two},
-      /* inferred_features */
-      FeatureMayAlwaysSet::make_may(
-          {context.features->get("FeatureOne"),
-           context.features->get("FeatureTwo")}),
-      /* locally_inferred_features */ {},
-      /* user_features */ {},
-      /* via_type_of_ports */ {},
-      /* local_positions */ {},
-      /* canonical_names */ {});
+      test::FrameProperties{
+          .callee_port = AccessPath(Root(Root::Kind::Leaf)),
+          .callee = one,
+          .call_position = context.positions->unknown(),
+          .distance = 5,
+          .origins = MethodSet{two},
+          .inferred_features = FeatureMayAlwaysSet::make_may(
+              {context.features->get("FeatureOne"),
+               context.features->get("FeatureTwo")})});
 
   auto frame2 = frame1.with_kind(kind_b);
   EXPECT_EQ(frame1.callee(), frame2.callee());
