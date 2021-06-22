@@ -26,23 +26,10 @@ namespace {
 
 // Various component sources are not matching the class names in the
 // manifest leading to features (like exported) not being added.
-std::string strip_subclass(std::string class_name) {
-  const static re2::RE2 anonymous_class_regex = re2::RE2("(\\$[0-9]+)+;");
-  const static re2::RE2 service_regex =
-      re2::RE2("Service[^;]*\\$[^;]*(Handler|Stub)");
-
-  re2::RE2::Replace(&class_name, anonymous_class_regex, ";");
-  if (boost::contains(class_name, "Provider$Impl")) {
-    auto position = class_name.find_first_of("$");
-    if (position != std::string::npos) {
-      return class_name.substr(0, position) + ";";
-    }
-  }
-  if (re2::RE2::PartialMatch(class_name, service_regex)) {
-    auto position = class_name.find_first_of("$");
-    if (position != std::string::npos) {
-      return class_name.substr(0, position) + ";";
-    }
+std::string strip_inner_class(std::string class_name) {
+  auto position = class_name.find_first_of("$");
+  if (position != std::string::npos) {
+    return class_name.substr(0, position) + ";";
   }
   return class_name;
 }
@@ -233,28 +220,41 @@ ClassProperties::ClassProperties(
 }
 
 bool ClassProperties::is_class_exported(const std::string& class_name) const {
-  return exported_classes_.count(class_name) > 0;
+  auto outer_class = strip_inner_class(class_name);
+  return exported_classes_.count(class_name) > 0 ||
+      exported_classes_.count(outer_class) > 0;
 }
 
 bool ClassProperties::is_child_exposed(const std::string& class_name) const {
-  return parent_exposed_classes_.count(class_name) > 0;
+  auto outer_class = strip_inner_class(class_name);
+  return parent_exposed_classes_.count(class_name) > 0 ||
+      parent_exposed_classes_.count(outer_class) > 0;
 }
 
 bool ClassProperties::is_class_unexported(const std::string& class_name) const {
-  return unexported_classes_.count(class_name) > 0;
+  auto outer_class = strip_inner_class(class_name);
+  return unexported_classes_.count(class_name) > 0 ||
+      unexported_classes_.count(outer_class) > 0;
 }
 
 bool ClassProperties::is_dfa_public(const std::string& class_name) const {
-  return dfa_public_scheme_classes_.count(class_name) > 0;
+  auto outer_class = strip_inner_class(class_name);
+  return dfa_public_scheme_classes_.count(class_name) > 0 ||
+      dfa_public_scheme_classes_.count(outer_class) > 0;
 }
 
 bool ClassProperties::has_protection_level(
     const std::string& class_name) const {
-  return protection_level_classes_.count(class_name) > 0;
+  auto outer_class = strip_inner_class(class_name);
+  return protection_level_classes_.count(class_name) > 0 ||
+      protection_level_classes_.count(outer_class) > 0;
 }
 
 bool ClassProperties::has_permission(const std::string& class_name) const {
-  return permission_classes_.count(class_name) > 0;
+  auto outer_class = strip_inner_class(class_name);
+  return permission_classes_.count(class_name) > 0 ||
+      permission_classes_.count(outer_class) > 0;
+  ;
 }
 
 std::optional<std::string>
@@ -305,24 +305,24 @@ FeatureMayAlwaysSet ClassProperties::propagate_features(
 FeatureMayAlwaysSet ClassProperties::issue_features(
     const Method* method) const {
   FeatureSet features;
-  auto base_class = strip_subclass(method->get_class()->str());
+  auto clazz = method->get_class()->str();
 
-  if (is_class_exported(base_class)) {
+  if (is_class_exported(clazz)) {
     features.add(features_.get("via-caller-exported"));
   }
-  if (is_child_exposed(base_class)) {
+  if (is_child_exposed(clazz)) {
     features.add(features_.get("via-child-exposed"));
   }
-  if (is_class_unexported(base_class)) {
+  if (is_class_unexported(clazz)) {
     features.add(features_.get("via-caller-unexported"));
   }
-  if (is_dfa_public(base_class)) {
+  if (is_dfa_public(clazz)) {
     features.add(features_.get("via-public-dfa-scheme"));
   }
-  if (has_permission(base_class)) {
+  if (has_permission(clazz)) {
     features.add(features_.get("via-caller-permission"));
   }
-  if (has_protection_level(base_class)) {
+  if (has_protection_level(clazz)) {
     features.add(features_.get("via-caller-protection-level"));
   }
 
