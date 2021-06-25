@@ -67,7 +67,7 @@ std::unordered_map<int, const DexType*> register_types_for_method(
 
 } // anonymous namespace
 
-TEST_F(TypesTest, LocalTypes) {
+TEST_F(TypesTest, LocalIputTypes) {
   Scope scope;
 
   auto* dex_method = redex::create_method(scope, "LClass;", R"(
@@ -92,4 +92,131 @@ TEST_F(TypesTest, LocalTypes) {
       register_types.at(0),
       DexType::make_type(DexString::make_string("Ljava/lang/Object;")));
   EXPECT_TRUE(register_types[1] == nullptr);
+}
+
+TEST_F(TypesTest, LocalInvokeDirectTypes) {
+  Scope scope;
+
+  redex::create_void_method(scope, "LCallee;", "callee");
+  auto* dex_caller = redex::create_method(
+      scope,
+      "LCaller;",
+      R"(
+          (method (public) "LCaller;.caller:()V"
+            (
+              (new-instance "LCallee;")
+              (move-result-object v0)
+              (invoke-direct (v0) "LCallee;.callee:()V")
+              (return-void)
+            )
+          )
+      )");
+
+  auto context = test_types(scope);
+  auto* method = context.methods->get(dex_caller);
+  auto register_types = register_types_for_method(context, method);
+
+  EXPECT_EQ(
+      register_types.at(0),
+      DexType::make_type(DexString::make_string("LCallee;")));
+  EXPECT_TRUE(register_types[1] == nullptr);
+}
+
+TEST_F(TypesTest, LocalInvokeVirtualTypes) {
+  Scope scope;
+
+  auto* dex_callee = redex::create_void_method(scope, "LCallee;", "callee");
+  redex::create_void_method(
+      scope,
+      /* class_name */ "LSubclass;",
+      /* method */ "callee",
+      /* parameter_types */ "",
+      /* return_type */ "V",
+      /* super */ dex_callee->get_class());
+  auto* dex_caller = redex::create_method(
+      scope,
+      "LCaller;",
+      R"(
+        (method (public) "LCaller;.caller:(LCallee;)V"
+        (
+          (load-param-object v0)
+          (load-param-object v1)
+
+          (invoke-virtual (v1) "LCallee;.callee:()V")
+          (return-void)
+        )
+        )
+      )");
+
+  auto context = test_types(scope);
+  auto* method = context.methods->get(dex_caller);
+  auto register_types = register_types_for_method(context, method);
+
+  EXPECT_EQ(
+      register_types.at(1),
+      DexType::make_type(DexString::make_string("LCallee;")));
+  EXPECT_TRUE(register_types[0] == nullptr);
+}
+
+TEST_F(TypesTest, GlobalInvokeVirtualTypes) {
+  Scope scope;
+
+  auto* dex_callee = redex::create_void_method(scope, "LCallee;", "callee");
+  redex::create_void_method(
+      scope,
+      /* class_name */ "LSubclass;",
+      /* method */ "callee",
+      /* parameter_types */ "",
+      /* return_type */ "V",
+      /* super */ dex_callee->get_class());
+  auto* dex_caller = redex::create_method(
+      scope,
+      "LCaller;",
+      R"(
+        (method (public) "LCaller;.caller:(LCallee;)V"
+          (
+            (load-param-object v0)
+            (load-param-object v1)
+
+            (invoke-virtual (v1) "LCallee;.callee:()V")
+            (return-void)
+          )
+        )
+      )");
+  auto* dex_entry_caller = redex::create_method(
+      scope,
+      "LEntryCaller;",
+      R"(
+          (method (public) "LEntryCaller;.caller:(LSubclass;)V"
+          (
+            (load-param-object v0)
+            (load-param-object v1)
+
+            (new-instance "LCaller;")
+            (move-result-object v2)
+
+            (invoke-virtual (v2 v1) "LCaller;.caller:(LCallee;)V")
+            (return-void)
+          )
+        )
+      )");
+
+  /* TODO(T68586777): Support interprocedural type analysis. */
+  auto context = test_types(scope);
+  auto* caller = context.methods->get(dex_caller);
+  auto caller_register_types = register_types_for_method(context, caller);
+
+  EXPECT_EQ(
+      caller_register_types.at(1),
+      DexType::make_type(DexString::make_string("LCallee;")));
+
+  auto* entry_method = context.methods->get(dex_entry_caller);
+  auto entry_register_types = register_types_for_method(context, entry_method);
+
+  EXPECT_EQ(
+      entry_register_types.at(1),
+      DexType::make_type(DexString::make_string("LSubclass;")));
+  EXPECT_EQ(
+      entry_register_types.at(2),
+      DexType::make_type(DexString::make_string("LCaller;")));
 }
