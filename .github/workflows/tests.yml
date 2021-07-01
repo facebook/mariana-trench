@@ -1,0 +1,32 @@
+on: [push, pull_request]
+
+jobs:
+  run-tests:
+    runs-on: macos-11
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Install dependencies
+        run: brew install python3 cmake zlib boost googletest jsoncpp fmt re2 git
+
+
+      - name: Install Redex
+        run: |
+          git clone https://github.com/facebook/redex.git
+          cd redex
+          mkdir build
+          cd build
+          cmake -DCMAKE_INSTALL_PREFIX="../install" ..
+          make -j$(sysctl -n hw.ncpu)
+          make install
+          cd ../..
+
+      - name: Build and Test Mariana Trench
+        run: |
+          mkdir build
+          cd build
+          cmake -DREDEX_ROOT="../redex/install" -DCMAKE_INSTALL_PREFIX="../install" ..
+          make -j$(sysctl -n hw.ncpu)
+          make install
+          make check -j$(sysctl -n hw.ncpu)
