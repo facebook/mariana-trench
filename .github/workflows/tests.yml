@@ -23,13 +23,11 @@ jobs:
           make install
           cd ../..
 
-      - name: Build Mariana Trench
+      - name: Build and Test Mariana Trench
         run: |
           mkdir build
           cd build
           cmake -DREDEX_ROOT="../redex/build/temp" -DCMAKE_INSTALL_PREFIX="temp-mt" ..
           make -j4
           make install
-
-      - name: Run Tests
-        run: make check
+          make check
