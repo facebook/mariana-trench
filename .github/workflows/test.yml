@@ -1,0 +1,9 @@
+on: [push]
+
+jobs:
+  run-integration-tests:
+    runs-on: macos-11
+
+    steps:
+      - name: Test
+        run: echo "hello"
