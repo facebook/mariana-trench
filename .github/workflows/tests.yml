@@ -9,9 +9,7 @@ jobs:
       - uses: actions/setup-python@v2
 
       - name: Install dependencies
-        run: |
-          xcode-select --install
-          brew install python3 cmake zlib boost googletest jsoncpp fmt re2 git
+        run: brew install python3 cmake zlib boost googletest jsoncpp fmt re2 git
 
 
       - name: Install Redex
