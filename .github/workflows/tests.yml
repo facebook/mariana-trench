@@ -2,13 +2,13 @@ on: [push, pull_request]
 
 jobs:
   run-tests:
-    runs-on: ubuntu-latest
+    runs-on: macos-11
 
     steps:
       - uses: actions/checkout@v2
 
       - name: Install dependencies
-        run: sudo apt-get install cmake libboost-all-dev zlib1g-dev libgtest-dev libjsoncpp-dev libfmt-dev libre2-dev git
+        run: brew install python3 cmake zlib boost googletest jsoncpp fmt re2 git
 
 
       - name: Install Redex
