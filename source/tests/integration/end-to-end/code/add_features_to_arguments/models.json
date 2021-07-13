@@ -1,0 +1,31 @@
+[
+  {
+    "method": "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;",
+    "generations": [
+      {
+        "kind": "Source",
+        "port": "Return"
+      }
+    ]
+  },
+  {
+    "method": "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
+    "sinks": [
+      {
+        "kind": "Sink",
+        "port": "Argument(0)"
+      }
+    ]
+  },
+  {
+    "method": "Lcom/facebook/marianatrench/integrationtests/Flow;.applyFeature:(Ljava/lang/Object;Ljava/lang/Object;)V",
+    "add_features_to_arguments": [
+      {
+        "features": [
+          "via-explicit-intent"
+        ],
+        "port": "Argument(1)"
+      }
+    ]
+  }
+]

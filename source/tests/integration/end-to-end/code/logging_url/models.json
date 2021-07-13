@@ -1,0 +1,47 @@
+[
+  {
+    "method": "Landroid/app/Activity;.getIntent:()Landroid/content/Intent;",
+    "generations": [
+      {
+        "kind": "ExternalUserInput",
+        "port": "Return"
+      }
+    ]
+  },
+  {
+    "method": "Landroid/content/Intent;.getDataString:()Ljava/lang/String;",
+    "propagation": [
+      {
+        "input": "Argument(0)",
+        "output": "Return"
+      }
+    ]
+  },
+  {
+    "method": "Landroid/content/Intent;.getStringExtra:(Ljava/lang/String;)Ljava/lang/String;",
+    "propagation": [
+      {
+        "input": "Argument(0)",
+        "output": "Return"
+      }
+    ]
+  },
+  {
+    "method": "Lcom/instagram/common/analytics/intf/AnalyticsEvent;.addExtra:(Ljava/lang/String;Ljava/lang/String;)Lcom/instagram/common/analytics/intf/AnalyticsEvent;",
+    "sinks": [
+      {
+        "kind": "Logging",
+        "port": "Argument(2)"
+      }
+    ]
+  },
+  {
+    "method": "Ljava/lang/Object;.toString:()Ljava/lang/String;",
+    "propagation": [
+      {
+        "input": "Argument(0)",
+        "output": "Return"
+      }
+    ]
+  }
+]

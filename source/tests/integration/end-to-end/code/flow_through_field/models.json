@@ -1,0 +1,65 @@
+[
+  {
+    "method": "Landroid/app/Activity;.getIntent:()Landroid/content/Intent;",
+    "generations": [
+      {
+        "kind": "ExternalUserInput",
+        "port": "Return"
+      }
+    ]
+  },
+  {
+    "method": "Lcom/facebook/secure/context/IntentLauncher;.launchActivity:(Landroid/content/Intent;Landroid/content/Context;)Z",
+    "sinks": [
+      {
+        "kind": "LaunchingComponent",
+        "port": "Argument(1)"
+      }
+    ]
+  },
+  {
+    "method": "Landroid/content/Intent;.setData:(Landroid/net/Uri;)V",
+    "propagation": [
+      {
+        "input": "Argument(1)",
+        "output": "Argument(0)"
+      }
+    ]
+  },
+  {
+    "method": "Landroid/content/Intent;.getExtras:()Landroid/os/Bundle;",
+    "propagation": [
+      {
+        "input": "Argument(0)",
+        "output": "Return"
+      }
+    ]
+  },
+  {
+    "method": "Landroid/net/Uri;.decode:(Ljava/lang/String;)Ljava/lang/String;",
+    "propagation": [
+      {
+        "input": "Argument(0)",
+        "output": "Return"
+      }
+    ]
+  },
+  {
+    "method": "Landroid/net/Uri;.parse:(Ljava/lang/String;)Landroid/net/Uri;",
+    "propagation": [
+      {
+        "input": "Argument(0)",
+        "output": "Return"
+      }
+    ]
+  },
+  {
+    "method": "Landroid/os/Bundle;.getString:(Ljava/lang/String;)Ljava/lang/String;",
+    "propagation": [
+      {
+        "input": "Argument(0)",
+        "output": "Return"
+      }
+    ]
+  }
+]

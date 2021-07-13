@@ -1,0 +1,41 @@
+// @generated
+{
+  "generations" : 
+  [
+    {
+      "callee_port" : "Leaf",
+      "caller_port" : "Return",
+      "kind" : "SensitiveData",
+      "origins" : 
+      [
+        "Lcom/facebook/marianatrench/integrationtests/HasAnnotation;.functionA:()V"
+      ]
+    }
+  ],
+  "method" : "Lcom/facebook/marianatrench/integrationtests/HasAnnotation;.functionA:()V",
+  "position" : 
+  {
+    "line" : 11,
+    "path" : "com/facebook/marianatrench/integrationtests/HasAnnotation.java"
+  }
+}
+{
+  "generations" : 
+  [
+    {
+      "callee_port" : "Leaf",
+      "caller_port" : "Return",
+      "kind" : "SensitiveData",
+      "origins" : 
+      [
+        "Lcom/facebook/marianatrench/integrationtests/HasAnnotation;.functionB:()Lcom/facebook/marianatrench/integrationtests/MyClass;"
+      ]
+    }
+  ],
+  "method" : "Lcom/facebook/marianatrench/integrationtests/HasAnnotation;.functionB:()Lcom/facebook/marianatrench/integrationtests/MyClass;",
+  "position" : 
+  {
+    "line" : 14,
+    "path" : "com/facebook/marianatrench/integrationtests/HasAnnotation.java"
+  }
+}

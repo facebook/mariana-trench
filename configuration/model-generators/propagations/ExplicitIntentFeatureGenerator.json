@@ -1,0 +1,43 @@
+{
+  "model_generators": [
+    {
+      "find": "methods",
+      "where": [
+        {
+          "constraint": "parent",
+          "inner": {
+            "constraint": "name",
+            "pattern": "Landroid/content/Intent;"
+          }
+        },
+        {
+          "constraint": "any_of",
+          "inners": [
+            {
+              "constraint": "name",
+              "pattern": "setClass.*"
+            },
+            {
+              "constraint": "name",
+              "pattern": "setComponent"
+            },
+            {
+              "constraint": "name",
+              "pattern": "setPackage"
+            }
+          ]
+        }
+      ],
+      "model": {
+        "add_features_to_arguments": [
+          {
+            "features": [
+              "via-explicit-intent"
+            ],
+            "port": "Argument(0)"
+          }
+        ]
+      }
+    }
+  ]
+}

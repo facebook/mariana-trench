@@ -1,0 +1,13 @@
+[
+  {
+    "name": "LoggingLocationData",
+    "code": 1,
+    "description": "",
+    "sources": [
+      "LocationData"
+    ],
+    "sinks": [
+      "Logging"
+    ]
+  }
+]

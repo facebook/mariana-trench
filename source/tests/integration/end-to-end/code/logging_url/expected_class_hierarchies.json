@@ -1,0 +1,27 @@
+// @generated
+{
+  "extends" : 
+  {
+    "Landroid/app/Activity;" : 
+    [
+      "Landroidx/fragment/app/FragmentActivity;",
+      "Lcom/instagram/url/UrlHandlerActivity;",
+      "Lsimple/logging/SimpleLogging;"
+    ],
+    "Landroid/content/Context;" : 
+    [
+      "Landroid/app/Activity;",
+      "Landroidx/fragment/app/FragmentActivity;",
+      "Lcom/instagram/url/UrlHandlerActivity;",
+      "Lsimple/logging/SimpleLogging;"
+    ],
+    "Ljava/lang/Runnable;" : 
+    [
+      "Ljava/lang/Thread;"
+    ],
+    "Ljava/util/Map;" : 
+    [
+      "Ljava/util/TreeMap;"
+    ]
+  }
+}

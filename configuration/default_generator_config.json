@@ -1,0 +1,26 @@
+[
+  {
+    "name": "ActivitySourceGenerator"
+  },
+  {
+    "name": "AndroidIntentLaunchSinkGenerator"
+  },
+  {
+    "name": "CodeExecutionSinkGenerator"
+  },
+  {
+    "name": "ContextFeature"
+  },
+  {
+    "name": "DataCastFeatureGenerator"
+  },
+  {
+    "name": "ExplicitIntentFeatureGenerator"
+  },
+  {
+    "name": "FileSinkGenerator"
+  },
+  {
+    "name": "ImplicitIntentSourceGenerator"
+  }
+]

@@ -1,0 +1,117 @@
+{
+  "metadata" :
+  {
+    "@generated" : true
+  },
+  "models" :
+  [
+    {
+      "issues" :
+      [
+        {
+          "position" :
+          {
+            "line" : 2,
+            "path" : "Flow.java"
+          },
+          "rule" : 1,
+          "sinks" :
+          [
+            {
+              "call_position" :
+              {
+                "line" : 2,
+                "path" : "Flow.java"
+              },
+              "callee" : "LImplementation;.sink:(LData;)V",
+              "callee_port" : "Argument(1)",
+              "distance" : 2,
+              "kind" : "TestSink",
+              "origins" :
+              [
+                "LSink;.sink:(LData;)V"
+              ]
+            }
+          ],
+          "sources" :
+          [
+            {
+              "call_position" :
+              {
+                "line" : 1,
+                "path" : "Flow.java"
+              },
+              "callee" : "LSource;.source:()LData;",
+              "callee_port" : "Return",
+              "distance" : 1,
+              "kind" : "TestSource",
+              "origins" :
+              [
+                "LSource;.source:()LData;"
+              ]
+            }
+          ]
+        }
+      ],
+      "method" : "LFlow;.flow:()V",
+      "position" :
+      {
+        "line" : 0,
+        "path" : "Flow.java"
+      }
+    },
+    {
+      "method" : "LImplementation;.sink:(LData;)V",
+      "position" :
+      {
+        "line" : 0,
+        "path" : "Implementation.java"
+      },
+      "sinks" :
+      [
+        {
+          "call_position" :
+          {
+            "line" : 1,
+            "path" : "Implementation.java"
+          },
+          "callee" : "LSink;.sink:(LData;)V",
+          "callee_port" : "Argument(1)",
+          "caller_port" : "Argument(1)",
+          "distance" : 1,
+          "kind" : "TestSink",
+          "origins" :
+          [
+            "LSink;.sink:(LData;)V"
+          ]
+        }
+      ]
+    },
+    {
+      "method" : "LInterface;.sink:(LData;)V",
+      "modes" :
+      [
+        "add-via-obscure-feature",
+        "skip-analysis",
+        "taint-in-taint-out",
+        "taint-in-taint-this"
+      ],
+      "position" :
+      {
+        "path" : "Interface.java"
+      },
+      "propagation" :
+      [
+        {
+          "always_features" :
+          [
+            "via-obscure",
+            "via-obscure-taint-in-taint-this"
+          ],
+          "input" : "Argument(1)",
+          "output" : "Argument(0)"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,35 @@
+{
+  "model_generators": [
+    {
+      "find": "methods",
+      "where": [
+        {
+          "constraint": "parent",
+          "inner": {
+            "constraint": "name",
+            "pattern": "Landroid/content/Intent;"
+          }
+        },
+        {
+          "constraint": "name",
+          "pattern": "\\<init\\>"
+        },
+        {
+          "constraint": "not",
+          "inner": {
+            "constraint": "signature",
+            "pattern": ".*Ljava/lang/Class;.*"
+          }
+        }
+      ],
+      "model": {
+        "generations": [
+          {
+            "kind": "IntentCreation",
+            "port": "Argument(0)"
+          }
+        ]
+      }
+    }
+  ]
+}

@@ -1,0 +1,65 @@
+[
+  {
+    "method": "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;",
+    "generations": [
+      {
+        "kind": "Source",
+        "port": "Return"
+      }
+    ]
+  },
+  {
+    "method": "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
+    "sinks": [
+      {
+        "kind": "Sink",
+        "port": "Argument(0)"
+      }
+    ]
+  },
+  {
+    "method": "Lcom/facebook/marianatrench/integrationtests/Flow;.return_sink:(Ljava/lang/Object;)Ljava/lang/Object;",
+    "sinks": [
+      {
+        "kind": "Sink",
+        "port": "Return"
+      }
+    ]
+  },
+  {
+    "method": "Lcom/facebook/marianatrench/integrationtests/Flow;.direct_issue:()Ljava/lang/Object;",
+    "sinks": [
+      {
+        "kind": "Sink",
+        "port": "Return"
+      }
+    ]
+  },
+  {
+    "method": "Lcom/facebook/marianatrench/integrationtests/Flow;.return_sink_foo:(Lcom/facebook/marianatrench/integrationtests/Flow$Tree;)Lcom/facebook/marianatrench/integrationtests/Flow$Tree;",
+    "sinks": [
+      {
+        "kind": "Sink",
+        "port": "Return.foo"
+      }
+    ]
+  },
+  {
+    "method": "Lcom/facebook/marianatrench/integrationtests/Flow;.direct_issue_foo:()Lcom/facebook/marianatrench/integrationtests/Flow$Tree;",
+    "sinks": [
+      {
+        "kind": "Sink",
+        "port": "Return.foo"
+      }
+    ]
+  },
+  {
+    "method": "Lcom/facebook/marianatrench/integrationtests/Flow;.direct_non_issue_foo:()Lcom/facebook/marianatrench/integrationtests/Flow$Tree;",
+    "sinks": [
+      {
+        "kind": "Sink",
+        "port": "Return.foo"
+      }
+    ]
+  }
+]
