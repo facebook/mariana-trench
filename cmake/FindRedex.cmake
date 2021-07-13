@@ -55,6 +55,7 @@ if (NOT Redex_FOUND)
     add_library(Redex::LibRedex UNKNOWN IMPORTED)
     set(libredex_includes
       "${REDEX_INCLUDE_DIR}/redex/libredex"
+      "${REDEX_INCLUDE_DIR}/redex/service/type-analysis"
       "${REDEX_INCLUDE_DIR}/redex/util"
       "${REDEX_INCLUDE_DIR}/redex/shared"
       "${REDEX_INCLUDE_DIR}/redex/sparta")
