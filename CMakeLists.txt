@@ -17,10 +17,21 @@ endif()
 set(LINK_TYPE "Shared" CACHE STRING "Choose the type of linkage")
 set_property(CACHE LINK_TYPE PROPERTY STRINGS "Shared" "Static")
 if (LINK_TYPE STREQUAL "Static")
+  # Force cmake to only find static libraries.
   set(CMAKE_FIND_LIBRARY_SUFFIXES ".a")
   set(BUILD_SHARED_LIBS OFF)
   if (NOT APPLE)
+    # On macOS, we need to link dynamicaly to libc, so we cannot use `-static`.
     set(CMAKE_EXE_LINKER_FLAGS "-static")
+  endif()
+  if (UNIX)
+    # Use `-pthread` instead of `-lpthread` in addition to `-static` on Linux, otherwise linking fails.
+    set(THREADS_PREFER_PTHREAD_FLAG TRUE)
+  endif()
+elseif (LINK_TYPE STREQUAL "Shared")
+  if (UNIX)
+    # On Linux with Linuxbrew, preserve the runtime path.
+    set(CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)
   endif()
 endif()
 
@@ -41,11 +52,6 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS TRUE)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
-
-if (UNIX AND (LINK_TYPE STREQUAL "Shared"))
-  # On Linux with Linuxbrew, preserve the runtime path.
-  set(CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)
-endif()
 
 # Dependencies
 find_package(Threads REQUIRED)

@@ -179,6 +179,8 @@ def _build_jsoncpp(
             "release",
             "--default-library",
             "static",
+            "--libdir",
+            "lib",
             ".",
             "build-static",
         ],
@@ -375,7 +377,7 @@ def _build_mariana_trench(
             f"-Dre2_DIR={re2}/lib/cmake/re2",
             f"-DBOOST_ROOT={boost}",
             f"-DREDEX_ROOT={redex}",
-            str(arguments.repository),
+            str(arguments.repository.resolve()),
         ],
         cwd=build_directory,
     )
@@ -388,7 +390,7 @@ def main() -> None:
     logging.basicConfig(level=logging.INFO, format="%(levelname)s %(message)s")
     arguments = _parse_arguments()
 
-    if os.uname().sysname != "Darwin":
+    if os.uname().sysname not in ("Darwin", "Linux"):
         raise AssertionError("This operating system is not currently supported.")
 
     with tempfile.TemporaryDirectory(prefix="mt-static-") as directory:
