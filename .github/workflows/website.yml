@@ -1,7 +1,7 @@
 on: [push]
 
 jobs:
-  build_docs_job:
+  build-docs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
