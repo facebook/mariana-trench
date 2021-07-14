@@ -52,7 +52,7 @@ def _run(
     command: List[str],
     cwd: Optional[Path] = None,
     env: Optional[Dict[str, str]] = None,
-) -> subprocess.CompletedProcess[str]:
+) -> "subprocess.CompletedProcess[str]":
     LOG.info(f"Running {' '.join(command)}")
     return subprocess.run(command, check=True, text=True, cwd=cwd, env=env)
 
