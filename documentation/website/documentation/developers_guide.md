@@ -8,9 +8,13 @@ This documentation aims to help you become an active contributor to Mariana Tren
 
 ## Building From Source
 
+### Support
+
+Mariana Trench is currently supported on **macOS** (tested on *Big Sur 11.4*) and **Linux** (tested on *Ubuntu 20.04 LTS*).
+
 ### Dependencies
 
-Below is a list of the required dependencies. Most of them can be installed with a package manager.
+Below is a list of the required dependencies. Most of them can be installed with **[Homebrew](https://brew.sh/)**.
 
 * A C++ compiler that supports C++17 (GCC >= 7 or Clang >= 5)
 * Python >= 3.6
@@ -25,35 +29,50 @@ Below is a list of the required dependencies. Most of them can be installed with
 * Android SDK (Optional)
 * Redex (master)
 
-#### MacOS
+### Install all dependencies with Homebrew
 
-Here are the steps to install Mariana Trench on **macOS** using **[Homebrew](https://brew.sh/)**.
+First, follow the instructions to install **[Homebrew](https://brew.sh/)** on your system.
 
-First, you will need to choose a temporary directory to store the C++ binaries and libraries. You can safely remove these after installation if you do not intend to update the C++ code. We will refer to this temporary directory as `<temporary-directory>` in the following instructions.
-
-You will need Xcode with command line tools installed. To get the command line tools, use:
-
+Then, make sure homebrew is up-to-date:
 ```shell
-$ xcode-select --install
+$ brew update
+$ brew upgrade
 ```
 
-Then, install all the required dependencies with [Homebrew](https://brew.sh/):
+Finally, install all the dependencies.
 
+On **macOS**, run:
 ```shell
-$ brew upgrade
 $ brew install python3 cmake zlib boost googletest jsoncpp fmt re2
 ```
 
-#### Redex
+On **Linux**, run:
+```shell
+$ brew install cmake zlib boost jsoncpp fmt re2
+$ brew install googletest --build-from-source # The package is currently broken.
+$ export CMAKE_PREFIX_PATH=/home/linuxbrew/.linuxbrew/opt/jsoncpp:/home/linuxbrew/.linuxbrew/opt/zlib
+```
 
-Now, let's build [Redex](https://fbredex.com/) from source:
+On **Linux**, you will need to install Java to run the tests. For instance, on **Ubuntu**, run:
+```shell
+$ sudo apt install default-jre default-jdk
+```
+
+### Building Redex
+
+You will need to choose a temporary directory to store the C++ binaries and libraries for Redex and Mariana Trench. You can safely remove these after installation if you do not intend to update the C++ code. Pick a directory and set the variable `MT_INSTALL_DIRECTORY` to its absolute path, for instance:
+```shell
+$ MT_INSTALL_DIRECTORY="$PWD/install"
+```
+
+To build [Redex](https://fbredex.com/) from source, run:
 ```shell
 $ brew install git
 $ git clone https://github.com/facebook/redex.git
 $ cd redex
 $ mkdir build
 $ cd build
-$ cmake -DCMAKE_INSTALL_PREFIX="<temporary-directory>" ..
+$ cmake -DCMAKE_INSTALL_PREFIX="$MT_INSTALL_DIRECTORY" ..
 $ make -j4
 $ make install
 ```
@@ -65,7 +84,7 @@ Now that we have our dependencies ready, let's build the Mariana Trench binary:
 $ cd ../..  # Go back to the root directory
 $ mkdir build
 $ cd build
-$ cmake -DREDEX_ROOT="<temporary-directory>" -DCMAKE_INSTALL_PREFIX="<temporary-directory>" ..
+$ cmake -DREDEX_ROOT="$MT_INSTALL_DIRECTORY" -DCMAKE_INSTALL_PREFIX="$MT_INSTALL_DIRECTORY" ..
 $ make -j4
 $ make install
 ```
@@ -75,8 +94,8 @@ We recommend to run this step inside a [virtual environment](https://packaging.p
 ```shell
 $ cd .. # Go back to the root directory
 $ python scripts/setup.py \
-  --binary "<temporary-directory>/bin/mariana-trench-binary" \
-  --pyredex "<temporary-directory>/bin/pyredex" \
+  --binary "$MT_INSTALL_DIRECTORY/bin/mariana-trench-binary" \
+  --pyredex "$MT_INSTALL_DIRECTORY/bin/pyredex" \
   install
 ```
 
@@ -88,7 +107,7 @@ $ cd build
 $ ./mariana-trench --help
 ```
 
-This way, you don't have to use `scripts/setup.py` between every changes.
+This way, you don't have to call `scripts/setup.py` between every changes.
 Python changes will be automatically picked up.
 C++ changes will be picked up after running `make`.
 

@@ -51,6 +51,7 @@ if (NOT Redex_FOUND)
     set_target_properties(Redex::LibResource PROPERTIES
       IMPORTED_LOCATION "${REDEX_LIBRESOURCE_LIB}"
       INTERFACE_INCLUDE_DIRECTORIES "${libresource_includes}")
+    target_link_libraries(Redex::LibResource INTERFACE ZLIB::ZLIB Boost::iostreams)
 
     add_library(Redex::LibRedex UNKNOWN IMPORTED)
     set(libredex_includes

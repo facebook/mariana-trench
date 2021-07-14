@@ -42,6 +42,11 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
+if (UNIX AND (LINK_TYPE STREQUAL "Shared"))
+  # On Linux with Linuxbrew, preserve the runtime path.
+  set(CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)
+endif()
+
 # Dependencies
 find_package(Threads REQUIRED)
 find_package(ZLIB REQUIRED)
@@ -62,6 +67,8 @@ file(CREATE_LINK "${CMAKE_CURRENT_SOURCE_DIR}/source" "${CMAKE_CURRENT_BINARY_DI
 # Enable/disable warnings.
 if (CMAKE_CXX_COMPILER_ID MATCHES "Clang")
   add_compile_options("-Wall" "-Wextra" "-Wno-nullability-completeness")
+elseif (CMAKE_CXX_COMPILER_ID MATCHES "GNU")
+  add_compile_options("-Wall" "-Wextra")
 else()
   message(WARNING "Compiler ${CMAKE_CXX_COMPILER_ID} is not currently supported.")
 endif()
