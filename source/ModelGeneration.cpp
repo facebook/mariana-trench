@@ -65,7 +65,7 @@ std::map<std::string, std::unique_ptr<ModelGenerator>> make_model_generators(
 
 #ifndef MARIANA_TRENCH_FACEBOOK_BUILD
 std::map<std::string, std::unique_ptr<ModelGenerator>>
-ModelGeneration::make_builtin_model_generators(Context& /*context*/) {
+ModelGeneration::make_builtin_model_generators(Context& context) {
   std::vector<std::unique_ptr<ModelGenerator>> builtin_generators;
   builtin_generators.push_back(
       std::make_unique<ContentProviderGenerator>(context));
