@@ -159,11 +159,8 @@ std::optional<std::string> get_class_name(const DexMethod* callee) {
       class_name[length - 2] == '/') {
     return std::nullopt;
   }
-  auto i = length - 2;
-  while (i >= 0 && class_name[i] != '/') {
-    i--;
-  }
-  if (i < 0) {
+  auto i = class_name.rfind('/', /* start */ length - 2);
+  if (i == std::string::npos) {
     return std::nullopt;
   }
   return class_name.substr(i + 1, length - i - 2);

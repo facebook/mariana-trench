@@ -102,9 +102,9 @@ DexType* MT_NULLABLE Method::parameter_type(ParameterPosition argument) const {
       argument--;
     }
   }
-  return (argument >= 0u && argument < dex_arguments->size())
-      ? dex_arguments->at(argument)
-      : nullptr;
+  static_assert(std::is_unsigned_v<ParameterPosition>);
+  return (argument < dex_arguments->size()) ? dex_arguments->at(argument)
+                                            : nullptr;
 }
 
 ParameterPosition Method::first_parameter_index() const {

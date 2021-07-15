@@ -133,7 +133,8 @@ MemoryFactory::MemoryFactory(const Method* method) {
 
 ParameterMemoryLocation* MemoryFactory::make_parameter(
     ParameterPosition parameter_position) {
-  if (parameter_position < 0u || parameter_position >= parameters_.size()) {
+  static_assert(std::is_unsigned_v<ParameterPosition>);
+  if (parameter_position >= parameters_.size()) {
     throw std::out_of_range(
         "Accessing out of bounds parameter in memory factory.");
   }

@@ -82,6 +82,8 @@ MethodHashedSet TypeNameConstraint::may_satisfy(
     case MaySatisfyMethodConstraintKind::Extends:
       return method_mappings.class_to_override_methods.get(
           *string_pattern, MethodHashedSet::bottom());
+    default:
+      mt_unreachable();
   }
 }
 

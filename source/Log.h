@@ -49,7 +49,7 @@ class Logger {
   } while (0)
 
 #define CONTEXT_LEVEL(context, level) \
-  context != nullptr && context->dump() ? 1 : level
+  (context != nullptr && context->dump()) ? 1 : level
 
 #define LOG_OR_DUMP(context, level, format, ...)               \
   do {                                                         \
