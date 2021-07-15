@@ -5,9 +5,16 @@
     <application
         android:allowBackup="true"
         android:label="My Application">
+        <provider
+            android:name=".Provider"
+            android:authorities="com.example.Provider"
+            android:enabled="true"
+            android:exported="true"></provider>
+
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
