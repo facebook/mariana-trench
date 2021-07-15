@@ -86,8 +86,35 @@ def _build_package(build_root: Path) -> None:
     _run_python(["-m", "build"], working_directory=build_root)
 
 
+def _distribution_platform() -> str:
+    if sys.platform == "linux":
+        return "manylinux1_x86_64"
+    elif sys.platform == "darwin":
+        return "macosx_10_11_x86_64"
+    else:
+        raise AssertionError("This operating system is not currently supported.")
+
+
 def _copy_package(build_root: Path, output_path: Path) -> None:
-    _rsync_files([], build_root / "dist", output_path, ["-avm"])
+    # Find the source distribution and wheel
+    dist_directory = build_root / "dist"
+    wheel = list(dist_directory.glob("**/*.whl"))
+    source_distribution = list(dist_directory.glob("**/*.tar.gz"))
+    if not len(wheel) == 1 and not len(source_distribution) == 1:
+        raise AssertionError(f"Unexpected files found in `{build_root}/dist`.")
+    source_distribution, wheel = source_distribution[0], wheel[0]
+
+    # Rename and move under the output path
+    output_path /= "dist"
+    output_path.mkdir(exist_ok=True)
+    shutil.move(
+        # pyre-fixme[6]: Expected `str` for 1st param but got `Path`.
+        wheel,
+        output_path
+        / wheel.name.replace("-any.whl", f"-{_distribution_platform()}.whl"),
+    )
+    # pyre-fixme[6]: Expected `str` for 1st param but got `Path`.
+    shutil.move(source_distribution, output_path / source_distribution.name)
 
 
 def _install_package(build_root: Path) -> None:
