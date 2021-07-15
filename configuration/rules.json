@@ -5,7 +5,8 @@
     "description": "Values from user-controlled source may eventually flow into code execution sink",
     "sources": [
       "ActivityUserInput",
-      "FragmentUserInput"
+      "FragmentUserInput",
+      "ProviderUserInput"
     ],
     "sinks": [
       "CodeExecution"
@@ -17,7 +18,8 @@
     "description": "Values from user-controlled source may eventually flow into sink file resolver",
     "sources": [
       "FragmentUserInput",
-      "ActivityUserInput"
+      "ActivityUserInput",
+      "ProviderUserInput"
     ],
     "sinks": [
       "FileResolver",
@@ -39,6 +41,19 @@
     },
     "partial_sinks": [
       "LaunchingComponent"
+    ]
+  },
+  {
+    "name": "User input flows into raw SQL statement",
+    "code": 4,
+    "description": "Values from user-controlled source may eventually flow into a raw SQL statement potentially causing SQL injection",
+    "sources": [
+      "FragmentUserInput",
+      "ActivityUserInput",
+      "ProviderUserInput"
+    ],
+    "sinks": [
+      "SQLQuery"
     ]
   }
 ]

@@ -19,6 +19,7 @@
 #include <mariana-trench/ModelGeneration.h>
 #include <mariana-trench/Options.h>
 #include <mariana-trench/Timer.h>
+#include <mariana-trench/model-generator/ContentProviderGenerator.h>
 #include <mariana-trench/model-generator/JsonModelGenerator.h>
 #include <mariana-trench/model-generator/ModelGeneratorConfiguration.h>
 
@@ -65,7 +66,16 @@ std::map<std::string, std::unique_ptr<ModelGenerator>> make_model_generators(
 #ifndef MARIANA_TRENCH_FACEBOOK_BUILD
 std::map<std::string, std::unique_ptr<ModelGenerator>>
 ModelGeneration::make_builtin_model_generators(Context& /*context*/) {
-  return {};
+  std::vector<std::unique_ptr<ModelGenerator>> builtin_generators;
+  builtin_generators.push_back(
+      std::make_unique<ContentProviderGenerator>(context));
+
+  std::map<std::string, std::unique_ptr<ModelGenerator>> builtin_generator_map;
+  for (auto& generator : builtin_generators) {
+    auto name = generator->name();
+    builtin_generator_map.emplace(name, std::move(generator));
+  }
+  return builtin_generator_map;
 }
 #endif
 

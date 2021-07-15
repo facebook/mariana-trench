@@ -9,6 +9,9 @@
     "name": "CodeExecutionSinkGenerator"
   },
   {
+    "name": "content_provider_generator"
+  },
+  {
     "name": "ContextFeature"
   },
   {
@@ -22,5 +25,8 @@
   },
   {
     "name": "ImplicitIntentSourceGenerator"
+  },
+  {
+    "name": "SQLiteDatabaseSinksGenerator"
   }
 ]
