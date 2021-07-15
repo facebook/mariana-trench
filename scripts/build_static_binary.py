@@ -10,6 +10,7 @@ import multiprocessing
 import os
 import shutil
 import subprocess
+import sys
 import tempfile
 from pathlib import Path
 from typing import Optional, List, Dict
@@ -390,7 +391,7 @@ def main() -> None:
     logging.basicConfig(level=logging.INFO, format="%(levelname)s %(message)s")
     arguments = _parse_arguments()
 
-    if os.uname().sysname not in ("Darwin", "Linux"):
+    if sys.platform not in ("darwin", "linux"):
         raise AssertionError("This operating system is not currently supported.")
 
     with tempfile.TemporaryDirectory(prefix="mt-static-") as directory:
