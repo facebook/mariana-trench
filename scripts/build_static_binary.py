@@ -237,6 +237,7 @@ def _build_boost(
             "install",
             "threading=multi",
             "link=static",
+            "runtime-link=static" if sys.platform != "darwin" else "",
             "-sNO_LZMA=1",
             "-sNO_ZSTD=1",
             "-sNO_BZIP2=1",

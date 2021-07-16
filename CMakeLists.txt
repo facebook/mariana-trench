@@ -20,9 +20,12 @@ if (LINK_TYPE STREQUAL "Static")
   # Force cmake to only find static libraries.
   set(CMAKE_FIND_LIBRARY_SUFFIXES ".a")
   set(BUILD_SHARED_LIBS OFF)
+  set(Boost_USE_STATIC_LIBS ON)
+  set(Boost_USE_MULTITHREADED ON)
   if (NOT APPLE)
-    # On macOS, we need to link dynamicaly to libc, so we cannot use `-static`.
+    # On macOS, we need to link dynamically to libc, so we cannot use `-static`.
     set(CMAKE_EXE_LINKER_FLAGS "-static")
+    set(Boost_USE_STATIC_RUNTIME ON)
   endif()
   if (UNIX)
     # Use `-pthread` instead of `-lpthread` in addition to `-static` on Linux, otherwise linking fails.
