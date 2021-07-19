@@ -99,6 +99,7 @@ module.exports = {
         docs: {
           path: 'documentation',
           sidebarPath: require.resolve('./sidebars.js'),
+          editUrl: 'https://www.internalfb.com/intern/diffusion/FBS/browse/master/fbandroid/native/mariana-trench/documentation/website/'
         },
         theme: {
           customCss: require.resolve('./src/css/custom.css'),
