@@ -1,0 +1,138 @@
+{
+  "model_generators": [
+    {
+      "find": "methods",
+      "where": [
+        {
+          "constraint": "is_static",
+          "value": false
+        },
+        {
+          "constraint": "any_of",
+          "inners": [
+            {
+              "constraint": "name",
+              "pattern": "loadDataWithBaseURL"
+            },
+            {
+              "constraint": "name",
+              "pattern": "loadData"
+            },
+            {
+              "constraint": "name",
+              "pattern": "postUrl"
+            },
+            {
+              "constraint": "name",
+              "pattern": "postWebMessage"
+            }
+          ]
+        },
+        {
+          "constraint": "number_parameters",
+          "inner": {
+            "constraint": ">=",
+            "value": 2
+          }
+        },
+        {
+          "constraint": "number_parameters",
+          "inner": {
+            "constraint": "<=",
+            "value": 6
+          }
+        },
+        {
+          "constraint": "parent",
+          "inner": {
+            "constraint": "any_of",
+            "inners": [
+              {
+                "constraint": "name",
+                "pattern": ".*WebView.*"
+              },
+              {
+                "constraint": "super",
+                "inner": {
+                  "constraint": "name",
+                  "pattern": ".*WebView.*"
+                }
+              }
+            ]
+          }
+        }
+      ],
+      "model": {
+        "for_all_parameters": [
+          {
+            "variable": "idx",
+            "where": [],
+            "sinks": [
+              {
+                "kind": "WebViewLoadContent",
+                "port": "Argument(idx)"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "find": "methods",
+      "where": [
+        {
+          "constraint": "is_static",
+          "value": false
+        },
+        {
+          "constraint": "name",
+          "pattern": "loadUrl"
+        },
+        {
+          "constraint": "parent",
+          "inner": {
+            "constraint": "any_of",
+            "inners": [
+              {
+                "constraint": "name",
+                "pattern": ".*WebView.*"
+              },
+              {
+                "constraint": "super",
+                "inner": {
+                  "constraint": "name",
+                  "pattern": ".*WebView.*"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "constraint": "number_parameters",
+          "inner": {
+            "constraint": ">=",
+            "value": 2
+          }
+        },
+        {
+          "constraint": "number_parameters",
+          "inner": {
+            "constraint": "<=",
+            "value": 3
+          }
+        }
+      ],
+      "model": {
+        "modes": [
+          "skip-analysis"
+        ],
+        "sinks": [
+          {
+            "kind": "WebViewLoadContent",
+            "port": "Argument(1)"
+          }
+        ]
+      }
+    }
+  ]
+}

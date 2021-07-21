@@ -55,5 +55,18 @@
     "sinks": [
       "SQLQuery"
     ]
+  },
+  {
+    "name": "User input flows into WebView load",
+    "code": 5,
+    "description": "Values from user-controlled source may eventually flow into a Webview load potentially causing XSS",
+    "sources": [
+      "FragmentUserInput",
+      "ActivityUserInput",
+      "ProviderUserInput"
+    ],
+    "sinks": [
+      "WebViewLoadContent"
+    ]
   }
 ]
