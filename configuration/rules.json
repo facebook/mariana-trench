@@ -6,7 +6,8 @@
     "sources": [
       "ActivityUserInput",
       "FragmentUserInput",
-      "ProviderUserInput"
+      "ProviderUserInput",
+      "ReceiverUserInput"
     ],
     "sinks": [
       "CodeExecution"
@@ -19,7 +20,8 @@
     "sources": [
       "FragmentUserInput",
       "ActivityUserInput",
-      "ProviderUserInput"
+      "ProviderUserInput",
+      "ReceiverUserInput"
     ],
     "sinks": [
       "FileResolver",
@@ -36,7 +38,8 @@
       ],
       "b": [
         "FragmentUserInput",
-        "ActivityUserInput"
+        "ActivityUserInput",
+        "ReceiverUserInput"
       ]
     },
     "partial_sinks": [
@@ -50,7 +53,8 @@
     "sources": [
       "FragmentUserInput",
       "ActivityUserInput",
-      "ProviderUserInput"
+      "ProviderUserInput",
+      "ReceiverUserInput"
     ],
     "sinks": [
       "SQLQuery"
@@ -63,7 +67,8 @@
     "sources": [
       "FragmentUserInput",
       "ActivityUserInput",
-      "ProviderUserInput"
+      "ProviderUserInput",
+      "ReceiverUserInput"
     ],
     "sinks": [
       "WebViewLoadContent"

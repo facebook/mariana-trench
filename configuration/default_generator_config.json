@@ -3,6 +3,9 @@
     "name": "ActivitySourceGenerator"
   },
   {
+    "name": "AndroidBroadcastSourceGenerator"
+  },
+  {
     "name": "AndroidIntentLaunchSinkGenerator"
   },
   {
