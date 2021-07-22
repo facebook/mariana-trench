@@ -22,6 +22,7 @@
 #include <mariana-trench/model-generator/ContentProviderGenerator.h>
 #include <mariana-trench/model-generator/JsonModelGenerator.h>
 #include <mariana-trench/model-generator/ModelGeneratorConfiguration.h>
+#include <mariana-trench/model-generator/ServiceSourceGenerator.h>
 
 namespace marianatrench {
 
@@ -69,6 +70,8 @@ ModelGeneration::make_builtin_model_generators(Context& context) {
   std::vector<std::unique_ptr<ModelGenerator>> builtin_generators;
   builtin_generators.push_back(
       std::make_unique<ContentProviderGenerator>(context));
+  builtin_generators.push_back(
+      std::make_unique<ServiceSourceGenerator>(context));
 
   std::map<std::string, std::unique_ptr<ModelGenerator>> builtin_generator_map;
   for (auto& generator : builtin_generators) {

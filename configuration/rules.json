@@ -7,7 +7,8 @@
       "ActivityUserInput",
       "FragmentUserInput",
       "ProviderUserInput",
-      "ReceiverUserInput"
+      "ReceiverUserInput",
+      "ServiceUserInput"
     ],
     "sinks": [
       "CodeExecution"
@@ -21,7 +22,8 @@
       "FragmentUserInput",
       "ActivityUserInput",
       "ProviderUserInput",
-      "ReceiverUserInput"
+      "ReceiverUserInput",
+      "ServiceUserInput"
     ],
     "sinks": [
       "FileResolver",
@@ -39,7 +41,8 @@
       "b": [
         "FragmentUserInput",
         "ActivityUserInput",
-        "ReceiverUserInput"
+        "ReceiverUserInput",
+        "ServiceUserInput"
       ]
     },
     "partial_sinks": [
@@ -54,7 +57,8 @@
       "FragmentUserInput",
       "ActivityUserInput",
       "ProviderUserInput",
-      "ReceiverUserInput"
+      "ReceiverUserInput",
+      "ServiceUserInput"
     ],
     "sinks": [
       "SQLQuery"
@@ -68,7 +72,8 @@
       "FragmentUserInput",
       "ActivityUserInput",
       "ProviderUserInput",
-      "ReceiverUserInput"
+      "ReceiverUserInput",
+      "ServiceUserInput"
     ],
     "sinks": [
       "WebViewLoadContent"
