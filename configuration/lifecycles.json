@@ -262,7 +262,7 @@
       },
       {
         "method_name": "onStartCommand",
-        "return_type": "V",
+        "return_type": "I",
         "argument_types": [
           "Landroid/content/Intent;",
           "I",
@@ -271,14 +271,14 @@
       },
       {
         "method_name": "onBind",
-        "return_type": "V",
+        "return_type": "Landroid/os/IBinder;",
         "argument_types": [
           "Landroid/content/Intent;"
         ]
       },
       {
-        "method_name": "onUnbind(",
-        "return_type": "V",
+        "method_name": "onUnbind",
+        "return_type": "Z",
         "argument_types": [
           "Landroid/content/Intent;"
         ]
