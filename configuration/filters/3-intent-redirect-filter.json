@@ -1,0 +1,39 @@
+{
+  "name": "Input in exported components flows into implicit intent launcher",
+  "description": "High signal filter for exported component input flowing into an implicit intent launcher, potentially causing intent redirection",
+  "features": [
+    {
+      "mode": "all of",
+      "features": [
+        "via-intent-data"
+      ]
+    },
+    {
+      "mode": "any of",
+      "features": [
+        "via-caller-exported",
+        "via-child-exposed"
+      ]
+    },
+    {
+      "mode": "none of",
+      "features": [
+        "always-via:context",
+        "always-via-inner-class-this",
+        "always-via-explicit-intent",
+        "always-via-caller-permission"
+      ]
+    }
+  ],
+  "codes": [
+    3
+  ],
+  "traceLengthFromSources": [
+    0,
+    3
+  ],
+  "traceLengthToSinks": [
+    0,
+    7
+  ]
+}
