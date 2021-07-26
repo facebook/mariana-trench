@@ -1,0 +1,36 @@
+{
+  "name": "Input in exported components flows into injection sink",
+  "description": "High signal filter for exported component input flowing into an injection sink",
+  "features": [
+    {
+      "mode": "any of",
+      "features": [
+        "via-caller-exported",
+        "via-child-exposed"
+      ]
+    },
+    {
+      "mode": "none of",
+      "features": [
+        "always-cast:numeric",
+        "always-type:boolean",
+        "always-via:context",
+        "always-via-caller-permission"
+      ]
+    }
+  ],
+  "codes": [
+    1,
+    2,
+    4,
+    5
+  ],
+  "traceLengthFromSources": [
+    0,
+    3
+  ],
+  "traceLengthToSinks": [
+    0,
+    7
+  ]
+}
