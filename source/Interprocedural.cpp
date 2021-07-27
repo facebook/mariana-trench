@@ -150,6 +150,19 @@ Model analyze(
   if (duration > 10.0) {
     WARNING(1, "Analyzing `{}` took {:.2f}s!", method->show(), duration);
   }
+  auto slow_method_bound =
+      global_context.options->maximum_method_analysis_time();
+  if (slow_method_bound && *slow_method_bound <= duration) {
+    LOG(1,
+        "Analyzing `{}` took {:.2f}s, setting default taint-in-taint-out.",
+        method->show(),
+        duration);
+    model.add_mode(Model::Mode::AddViaObscureFeature, global_context);
+    model.add_mode(Model::Mode::SkipAnalysis, global_context);
+    model.add_mode(Model::Mode::NoJoinVirtualOverrides, global_context);
+    model.add_mode(Model::Mode::TaintInTaintOut, global_context);
+    model.add_mode(Model::Mode::TaintInTaintThis, global_context);
+  }
 
   return model;
 }

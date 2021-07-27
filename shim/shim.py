@@ -402,6 +402,11 @@ def main() -> None:
             action="store_true",
             help="Run Redex global analysis for additional type information.",
         )
+        analysis_arguments.add_argument(
+            "--maximum-method-analysis-time",
+            type=int,
+            help="Specify number of seconds as a bound. If the analysis of a method takes longer than this then make the method obscure (default taint-in-taint-out).",
+        )
 
         debug_arguments = parser.add_argument_group("Debugging arguments")
         debug_arguments.add_argument(
@@ -541,6 +546,9 @@ def main() -> None:
             options.append("--disable-parameter-type-overrides")
         if arguments.enable_global_type_inference:
             options.append("--enable-global-type-inference")
+        if arguments.maximum_method_analysis_time is not None:
+            options.append("--maximum-method-analysis-time")
+            options.append(str(arguments.maximum_method_analysis_time))
 
         trace_settings = [f"MARIANA_TRENCH:{arguments.verbosity}"]
         if "TRACE" in os.environ:

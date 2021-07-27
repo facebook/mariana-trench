@@ -108,8 +108,9 @@ Options::Options(
       sequential_(sequential),
       skip_source_indexing_(skip_source_indexing),
       skip_model_generation_(skip_model_generation),
-      disable_parameter_type_overrides_(false),
       enable_global_type_inference_(enable_global_type_inference),
+      disable_parameter_type_overrides_(false),
+      maximum_method_analysis_time_(std::nullopt),
       maximum_source_sink_distance_(10),
       dump_class_hierarchies_(false),
       dump_overrides_(false),
@@ -185,6 +186,11 @@ Options::Options(const boost::program_options::variables_map& variables) {
   enable_global_type_inference_ =
       variables.count("enable-global-type-inference") > 0;
 
+  maximum_method_analysis_time_ =
+      variables.count("maximum-method-analysis-time") == 0
+      ? std::nullopt
+      : static_cast<std::optional<int>>(
+            variables["maximum-method-analysis-time"].as<int>());
   maximum_source_sink_distance_ =
       variables["maximum-source-sink-distance"].as<int>();
 
@@ -270,11 +276,15 @@ void Options::add_options(
   options.add_options()(
       "skip-model-generation", "Skip running model generation.");
   options.add_options()(
+      "disable-parameter-type-overrides",
+      "Disable analyzing methods with specific parameter type information.");
+  options.add_options()(
       "enable-global-type-inference",
       "Run Redex global analysis for additional type information.");
   options.add_options()(
-      "disable-parameter-type-overrides",
-      "Disable analyzing methods with specific parameter type information.");
+      "maximum-method-analysis-time",
+      program_options::value<int>(),
+      "Specify number of seconds as a bound. If the analysis of a method takes longer than this then make the method obscure (default taint-in-taint-out).");
 
   options.add_options()(
       "maximum-source-sink-distance",
@@ -387,6 +397,10 @@ bool Options::disable_parameter_type_overrides() const {
 
 bool Options::enable_global_type_inference() const {
   return enable_global_type_inference_;
+}
+
+std::optional<int> Options::maximum_method_analysis_time() const {
+  return maximum_method_analysis_time_;
 }
 
 int Options::maximum_source_sink_distance() const {
