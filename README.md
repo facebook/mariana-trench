@@ -94,10 +94,10 @@ The final part of the trace is the *sink trace*: This is where the data from the
 ![Trace Sink](https://github.com/facebook/mariana-trench/blob/master/documentation/website/static/img/trace_sink.png?raw=true)
 
 ## Configuring Mariana Trench
-You might be asking yourself, "how does the tool know what is user controlled data, and what is a sink?". This guide is meant to quickly get you started on a small app. We did not cover how to configure Mariana Trench. You can read more about that at our website under [Configuration]().
+You might be asking yourself, "how does the tool know what is user controlled data, and what is a sink?". This guide is meant to quickly get you started on a small app. We did not cover how to configure Mariana Trench. You can read more about that at our website under [Configuration](https://mariana-tren.ch/docs/configuration).
 
 ## Contributing
-For an in-depth guide on building from source and development on Mariana Trench, see the [Developer's Guide]() at our website.
+For an in-depth guide on building from source and development on Mariana Trench, see the [Developer's Guide](https://mariana-tren.ch/docs/developers-guide) at our website.
 
 ## License
 Mariana Trench is licensed under the MIT license.
