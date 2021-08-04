@@ -7,7 +7,7 @@
 
 Mariana Trench is a security focused static analysis platform targeting Android.
 
-This guide will walk you through setting up Mariana Trench on your machine and get you to find your first remote code execution vulnerability in a small sample app. These instructions are also available at our [website]().
+This guide will walk you through setting up Mariana Trench on your machine and get you to find your first remote code execution vulnerability in a small sample app. These instructions are also available at our [website](https://mariana-tren.ch/docs/getting-started).
 
 ## Prerequisites
 Mariana Trench requires a recent version of [Python](https://www.python.org/downloads/). On MacOS you can get a current version through [homebrew](https://brew.sh/):
