@@ -7,6 +7,8 @@
  * @format
  */
 
+const {fbContent} = require('internaldocs-fb-helpers');
+
 module.exports = {
   title: 'Mariana Trench',
   tagline: 'Security-Focused Static Analysis for Android and Java Applications',
@@ -99,7 +101,10 @@ module.exports = {
         docs: {
           path: 'documentation',
           sidebarPath: require.resolve('./sidebars.js'),
-          editUrl: 'https://www.internalfb.com/intern/diffusion/FBS/browse/master/fbandroid/native/mariana-trench/documentation/website/'
+          editUrl: fbContent({
+            internal: 'https://www.internalfb.com/intern/diffusion/FBS/browse/master/fbandroid/native/mariana-trench/documentation/website/',
+            external: 'https://github.com/facebook/mariana-trench/tree/main/documentation/website'
+          }),
         },
         theme: {
           customCss: require.resolve('./src/css/custom.css'),

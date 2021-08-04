@@ -106,7 +106,7 @@ Here is an example of a rule in JSON:
   ]
 }
 ```
-Rules used by Mariana Trench can be specified with the `--rules-paths` argument. The default set of rules that run can be found in [configuration/rules.json](https://github.com/facebook/mariana-trench/blob/master/configuration/rules.json).
+Rules used by Mariana Trench can be specified with the `--rules-paths` argument. The default set of rules that run can be found in [configuration/rules.json](https://github.com/facebook/mariana-trench/blob/main/configuration/rules.json).
 
 ### Sources
 
@@ -372,11 +372,11 @@ Otherwise, the default model is empty (no sources/sinks/propagations).
 
 Mariana Trench allows for dynamic model specifications. This allows a user to specify models of methods before running the analysis. This is used to specify sources, sinks, propagation and modes.
 
-Model generators are specified in a generator configuration file, specified by the `--generator-configuration-path` parameter. By default, we use [`default_generator_config.json`](https://github.com/facebook/mariana-trench/blob/master/configuration/default_generator_config.json).
+Model generators are specified in a generator configuration file, specified by the `--generator-configuration-path` parameter. By default, we use [`default_generator_config.json`](https://github.com/facebook/mariana-trench/blob/main/configuration/default_generator_config.json).
 
 ### Example
 
-Examples of model generators are located in the [`configuration/model-generators`](https://github.com/facebook/mariana-trench/tree/master/configuration/model-generators) directory.
+Examples of model generators are located in the [`configuration/model-generators`](https://github.com/facebook/mariana-trench/tree/main/configuration/model-generators) directory.
 
 Below is an example of a JSON model generator:
 ```json

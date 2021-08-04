@@ -50,13 +50,13 @@ The output of the analysis is a file containing metadata about the particular ru
 This path points to a json file containing a list of `.jar` files that the analysis should include in the analysis. It's important that this contains at least the `android.jar` on your system. This file is typically located in your android SDK distribution at `$ANDROID_SDK/platforms/android-30/android.jar`. Without the `android.jar`, Mariana Trench will not know about many methods from the standard library that might be important for your model generators.
 
 #### `--rules-paths RULES_PATHS`
-A `;` separated search path pointing to files and directories containing rules files. These files specify what taint flows Mariana Trench should look for. Check out the [`rules.json`](https://github.com/facebook/mariana-trench/blob/master/configuration/rules.json#L2-L13) that's provided by default. It specifies that we want to find flows from user controlled input (`ActivityUserInput`) into `CodeExecution` sinks and that this constitutes a remote code execution.
+A `;` separated search path pointing to files and directories containing rules files. These files specify what taint flows Mariana Trench should look for. Check out the [`rules.json`](https://github.com/facebook/mariana-trench/blob/main/configuration/rules.json#L2-L13) that's provided by default. It specifies that we want to find flows from user controlled input (`ActivityUserInput`) into `CodeExecution` sinks and that this constitutes a remote code execution.
 
 #### `--source-root-directory SOURCE_ROOT_DIRECTORY`
 Mariana Trench will do a source indexing path before the analysis. This is because Dalvik/Java bytecode does not contain complete location information, only filenames (not paths) and line numbers. The index is later used to emit precise locations.
 
 #### `--model-generator-configuration-paths MODEL_GENERATOR_CONFIGURATION_PATHS`
-A `;` separated set of files containing the names of model generators to run. See [`default_generator_config.json`](https://github.com/facebook/mariana-trench/blob/master/configuration/default_generator_config.json) for an example.
+A `;` separated set of files containing the names of model generators to run. See [`default_generator_config.json`](https://github.com/facebook/mariana-trench/blob/main/configuration/default_generator_config.json) for an example.
 
 #### `--model-generator-search-paths MODEL_GENERATOR_SEARCH_PATHS`
 A `;` separated search path where Mariana Trench will try to find the model generators specified in the generator configuration.
