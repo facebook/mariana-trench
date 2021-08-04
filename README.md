@@ -1,6 +1,6 @@
 # Mariana Trench
 
-![logo](https://github.com/facebookincubator/mariana-trench/blob/master/logo.png?raw=true)
+![logo](https://github.com/facebook/mariana-trench/blob/master/logo.png?raw=true)
 
 [![MIT License](https://img.shields.io/badge/license-MIT-blue.svg?style=flat)](http://choosealicense.com/licenses/mit/)
 [![.github/workflows/tests.yml](https://github.com/facebook/mariana-trench/actions/workflows/tests.yml/badge.svg)](https://github.com/facebook/mariana-trench/actions/workflows/tests.yml)
@@ -78,20 +78,20 @@ The last line of the output tells us that SAPP started a local webserver that le
 ## Exploring Results
 Let's focus on the remote code execution issue found in the sample app. You can identify it by its issue code `1` (for all remote code executions) and the callable `void MainActivit.onCreate(Bundle)`. With only 4 issues to see it's easy to identify the issue manually but once more rules run, the filter functionality at the top right of the page comes in handy.
 
-![Single Issue Display](https://github.com/facebookincubator/mariana-trench/blob/master/documentation/website/static/img/issue.png?raw=true)
+![Single Issue Display](https://github.com/facebook/mariana-trench/blob/master/documentation/website/static/img/issue.png?raw=true)
 
 The issue tells you that Mariana Trench found a remote code execution in `MainActivit.onCreate` where the data is coming from `Activity.getIntent` one call away, and flows into the constructor of `ProcessBuilder` 3 calls away. Click on "Traces" in the top right corner of the issue to see an example trace.
 
 The trace surfaced by Mariana Trench consists of three parts.
 
 The *source trace* represents where the data is coming from. In our example, the trace is very short: `Activity.getIntent` is called in `MainActivity.onCreate` directly.
-![Trace Source](https://github.com/facebookincubator/mariana-trench/blob/master/documentation/website/static/img/trace_source.png?raw=true)
+![Trace Source](https://github.com/facebook/mariana-trench/blob/master/documentation/website/static/img/trace_source.png?raw=true)
 
 The *trace root* represents where the source trace meets the sink trace. In our example this is the activitie's `onCreate` method.
-![Trace Root](https://github.com/facebookincubator/mariana-trench/blob/master/documentation/website/static/img/trace_root.png?raw=true)
+![Trace Root](https://github.com/facebook/mariana-trench/blob/master/documentation/website/static/img/trace_root.png?raw=true)
 
 The final part of the trace is the *sink trace*: This is where the data from the source flows down into a sink. In our example from `onCreate`, to `onClick`, to `execute`, and finally into the constructor of `ProcessBuilder`.
-![Trace Sink](https://github.com/facebookincubator/mariana-trench/blob/master/documentation/website/static/img/trace_sink.png?raw=true)
+![Trace Sink](https://github.com/facebook/mariana-trench/blob/master/documentation/website/static/img/trace_sink.png?raw=true)
 
 ## Configuring Mariana Trench
 You might be asking yourself, "how does the tool know what is user controlled data, and what is a sink?". This guide is meant to quickly get you started on a small app. We did not cover how to configure Mariana Trench. You can read more about that at our website under [Configuration]().
