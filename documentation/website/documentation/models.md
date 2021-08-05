@@ -25,13 +25,21 @@ A model essentialy consists of:
 Models can be specified in JSON. For example to mark the string parameter to our `Logger.log` function as a sink we can specify it as
 ```json
 {
-  "method" : "Lcom/example/Logger;.log:(Ljava/lang/String;)V",
-  "sinks" : [
+  "find": "methods",
+  "where": [
     {
-      "kind" : "Logging",
-      "port" : "Argument(1)"
+      "constraint": "signature",
+      "pattern": "Lcom/example/Logger;\\.log:\\(Ljava/lang/String;\\)V"
     }
-  ]
+  ],
+  "model": {
+    "sinks" : [
+      {
+        "kind" : "Logging",
+        "port" : "Argument(1)"
+      }
+    ]
+  }
 }
 ```
 
