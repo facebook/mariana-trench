@@ -19,6 +19,7 @@
 #include <mariana-trench/Dependencies.h>
 #include <mariana-trench/Highlights.h>
 #include <mariana-trench/Interprocedural.h>
+#include <mariana-trench/JsonValidation.h>
 #include <mariana-trench/Kind.h>
 #include <mariana-trench/LifecycleMethods.h>
 #include <mariana-trench/Log.h>
@@ -55,6 +56,13 @@ Registry MarianaTrench::analyze(Context& context) {
   context.artificial_methods =
       std::make_unique<ArtificialMethods>(*context.kinds, context.stores);
   context.methods = std::make_unique<Methods>(context.stores);
+  if (context.options->dump_methods()) {
+    auto method_list = Json::Value(Json::arrayValue);
+    for (const auto* method : *context.methods) {
+      method_list.append(method->signature());
+    }
+    JsonValidation::write_json_file("methods.json", method_list);
+  }
 
   Timer index_timer;
   LOG(1, "Building source index...");

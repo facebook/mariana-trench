@@ -448,6 +448,11 @@ def main() -> None:
             action="store_true",
             help="Dump the dependency graph in `dependencies.json`.",
         )
+        debug_arguments.add_argument(
+            "--dump-methods",
+            action="store_true",
+            help="Dump a list of the method signatures in `methods.json`.",
+        )
 
         arguments: argparse.Namespace = parser.parse_args()
 
@@ -566,6 +571,8 @@ def main() -> None:
             options.append("--dump-call-graph")
         if arguments.dump_dependencies:
             options.append("--dump-dependencies")
+        if arguments.dump_methods:
+            options.append("--dump-methods")
 
         command = [os.fspath(binary.resolve())] + options
         if arguments.gdb:

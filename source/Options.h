@@ -79,6 +79,7 @@ class Options final {
   bool dump_overrides() const;
   bool dump_call_graph() const;
   bool dump_dependencies() const;
+  bool dump_methods() const;
 
  private:
   std::vector<std::string> models_paths_;
@@ -117,6 +118,7 @@ class Options final {
   bool dump_overrides_;
   bool dump_call_graph_;
   bool dump_dependencies_;
+  bool dump_methods_;
 };
 
 } // namespace marianatrench

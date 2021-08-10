@@ -115,7 +115,8 @@ Options::Options(
       dump_class_hierarchies_(false),
       dump_overrides_(false),
       dump_call_graph_(false),
-      dump_dependencies_(false) {}
+      dump_dependencies_(false),
+      dump_methods_(false) {}
 
 Options::Options(const boost::program_options::variables_map& variables) {
   system_jar_paths_ = parse_paths_list(
@@ -201,6 +202,7 @@ Options::Options(const boost::program_options::variables_map& variables) {
   dump_overrides_ = variables.count("dump-overrides") > 0;
   dump_call_graph_ = variables.count("dump-call-graph") > 0;
   dump_dependencies_ = variables.count("dump-dependencies") > 0;
+  dump_methods_ = variables.count("dump-methods") > 0;
 }
 
 void Options::add_options(
@@ -304,6 +306,8 @@ void Options::add_options(
       "dump-call-graph", "Dump the call graph in `call_graph.json`.");
   options.add_options()(
       "dump-dependencies", "Dump the dependency graph in `dependencies.json`.");
+  options.add_options()(
+      "dump-methods", "Dump the list of method signatures in `methods.json`.");
 }
 
 const std::vector<std::string>& Options::models_paths() const {
@@ -425,6 +429,10 @@ bool Options::dump_call_graph() const {
 
 bool Options::dump_dependencies() const {
   return dump_dependencies_;
+}
+
+bool Options::dump_methods() const {
+  return dump_methods_;
 }
 
 } // namespace marianatrench
