@@ -166,8 +166,9 @@ std::unique_ptr<TypeEnvironments> Types::infer_types_for_method(
         auto found = environment_at_instruction.find(ir_register);
         if (found != environment_at_instruction.end()) {
           auto dex_type = found->second;
-          domain.join_with(DexTypeDomain(dex_type));
-          auto new_dex_type = domain.get_dex_type();
+          auto new_dex_type_domain =
+              domain.is_top() ? DexTypeDomain(dex_type) : domain;
+          auto new_dex_type = new_dex_type_domain.get_dex_type();
           environment_at_instruction[ir_register] =
               new_dex_type ? *new_dex_type : dex_type;
         } else {
