@@ -117,6 +117,7 @@ TEST_P(IntegrationTest, CompareFlows) {
       /* skip_source_indexing */ false,
       /* skip_model_generation */ true,
       /* enable_global_type_inference */ true,
+      /* remove_unreachable_code */ false,
       /* source_root_directory */ directory.string());
 
   // Load test Java classes

@@ -33,7 +33,8 @@ Context test_types(const Scope& scope) {
       /* sequential */ false,
       /* skip_source_indexing */ true,
       /* skip_model_generation */ true,
-      /* enable_global_type_inference */ true);
+      /* enable_global_type_inference */ true,
+      /* remove_unreachable_code */ false);
   DexStore store("test_store");
   store.add_classes(scope);
   context.stores = {store};

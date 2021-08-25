@@ -100,6 +100,7 @@ Options::Options(
     bool skip_source_indexing,
     bool skip_model_generation,
     bool enable_global_type_inference,
+    bool remove_unreachable_code,
     const std::string& source_root_directory)
     : models_paths_(models_paths),
       rules_paths_(rules_paths),
@@ -109,6 +110,7 @@ Options::Options(
       skip_source_indexing_(skip_source_indexing),
       skip_model_generation_(skip_model_generation),
       enable_global_type_inference_(enable_global_type_inference),
+      remove_unreachable_code_(remove_unreachable_code),
       disable_parameter_type_overrides_(false),
       maximum_method_analysis_time_(std::nullopt),
       maximum_source_sink_distance_(10),
@@ -186,6 +188,7 @@ Options::Options(const boost::program_options::variables_map& variables) {
       variables.count("disable-parameter-type-overrides") > 0;
   enable_global_type_inference_ =
       variables.count("enable-global-type-inference") > 0;
+  remove_unreachable_code_ = variables.count("remove-unreachable-code") > 0;
 
   maximum_method_analysis_time_ =
       variables.count("maximum-method-analysis-time") == 0
@@ -401,6 +404,10 @@ bool Options::disable_parameter_type_overrides() const {
 
 bool Options::enable_global_type_inference() const {
   return enable_global_type_inference_;
+}
+
+bool Options::remove_unreachable_code() const {
+  return remove_unreachable_code_;
 }
 
 std::optional<int> Options::maximum_method_analysis_time() const {

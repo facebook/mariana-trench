@@ -348,6 +348,11 @@ def main() -> None:
             help="If ProGuard configurations are provided, Mariana Trench will save time by ignoring unreachable objects.",
         )
         configuration_arguments.add_argument(
+            "--remove-unreachable-code",
+            action="store_true",
+            help="Prune unreachable code based on entry points specified in proguard configuration.",
+        )
+        configuration_arguments.add_argument(
             "--lifecycles-paths",
             type=_separated_paths_exist,
             default=None,
@@ -551,6 +556,8 @@ def main() -> None:
             options.append("--disable-parameter-type-overrides")
         if arguments.enable_global_type_inference:
             options.append("--enable-global-type-inference")
+        if arguments.remove_unreachable_code:
+            options.append("--remove-unreachable-code")
         if arguments.maximum_method_analysis_time is not None:
             options.append("--maximum-method-analysis-time")
             options.append(str(arguments.maximum_method_analysis_time))

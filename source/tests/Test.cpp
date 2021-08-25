@@ -52,7 +52,8 @@ Context make_context(const DexStore& store) {
       /* sequential */ false,
       /* skip_source_indexing */ true,
       /* skip_model_generation */ true,
-      /* enable_global_type_inference */ true);
+      /* enable_global_type_inference */ true,
+      /* remove_unreachable_code */ false);
   context.stores = {store};
   context.artificial_methods =
       std::make_unique<ArtificialMethods>(*context.kinds, context.stores);

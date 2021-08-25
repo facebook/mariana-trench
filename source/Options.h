@@ -29,6 +29,7 @@ class Options final {
       bool skip_source_indexing,
       bool skip_model_generation,
       bool enable_global_type_inference,
+      bool remove_unreachable_code,
       const std::string& source_root_directory = ".");
   explicit Options(const boost::program_options::variables_map& variables);
   Options(const Options&) = delete;
@@ -70,6 +71,7 @@ class Options final {
   bool skip_model_generation() const;
   bool disable_parameter_type_overrides() const;
   bool enable_global_type_inference() const;
+  bool remove_unreachable_code() const;
   std::optional<int> maximum_method_analysis_time() const;
 
   int maximum_source_sink_distance() const;
@@ -108,6 +110,7 @@ class Options final {
   bool skip_source_indexing_;
   bool skip_model_generation_;
   bool enable_global_type_inference_;
+  bool remove_unreachable_code_;
   bool disable_parameter_type_overrides_;
   std::optional<int> maximum_method_analysis_time_;
 
