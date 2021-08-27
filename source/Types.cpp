@@ -37,9 +37,11 @@ Types::Types(const Options& options, const DexStoresVector& stores) {
       code.build_cfg();
     }
   });
-  if (options.enable_global_type_inference()) {
-    const std::vector<std::string>& proguard_configuration_paths =
-        options.proguard_configuration_paths();
+  const std::vector<std::string>& proguard_configuration_paths =
+      options.proguard_configuration_paths();
+  if (proguard_configuration_paths.empty()) {
+    global_type_analyzer_ = nullptr;
+  } else {
     keep_rules::ProguardConfiguration proguard_configuration;
     for (const auto& proguard_configuration_path :
          proguard_configuration_paths) {
@@ -61,8 +63,6 @@ Types::Types(const Options& options, const DexStoresVector& stores) {
         false);
     type_analyzer::global::GlobalTypeAnalysis analysis;
     global_type_analyzer_ = analysis.analyze(scope);
-  } else {
-    global_type_analyzer_ = nullptr;
   }
 }
 

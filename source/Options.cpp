@@ -100,7 +100,6 @@ Options::Options(
     bool sequential,
     bool skip_source_indexing,
     bool skip_model_generation,
-    bool enable_global_type_inference,
     const std::vector<ModelGeneratorConfiguration>&
         model_generators_configuration,
     const std::vector<std::string>& model_generator_search_paths,
@@ -116,7 +115,6 @@ Options::Options(
       sequential_(sequential),
       skip_source_indexing_(skip_source_indexing),
       skip_model_generation_(skip_model_generation),
-      enable_global_type_inference_(enable_global_type_inference),
       remove_unreachable_code_(remove_unreachable_code),
       disable_parameter_type_overrides_(false),
       maximum_method_analysis_time_(std::nullopt),
@@ -193,8 +191,6 @@ Options::Options(const boost::program_options::variables_map& variables) {
   skip_model_generation_ = variables.count("skip-model-generation") > 0;
   disable_parameter_type_overrides_ =
       variables.count("disable-parameter-type-overrides") > 0;
-  enable_global_type_inference_ =
-      variables.count("enable-global-type-inference") > 0;
   remove_unreachable_code_ = variables.count("remove-unreachable-code") > 0;
 
   maximum_method_analysis_time_ =
@@ -290,9 +286,6 @@ void Options::add_options(
   options.add_options()(
       "disable-parameter-type-overrides",
       "Disable analyzing methods with specific parameter type information.");
-  options.add_options()(
-      "enable-global-type-inference",
-      "Run Redex global analysis for additional type information.");
   options.add_options()(
       "maximum-method-analysis-time",
       program_options::value<int>(),
@@ -407,10 +400,6 @@ bool Options::skip_model_generation() const {
 
 bool Options::disable_parameter_type_overrides() const {
   return disable_parameter_type_overrides_;
-}
-
-bool Options::enable_global_type_inference() const {
-  return enable_global_type_inference_;
 }
 
 bool Options::remove_unreachable_code() const {

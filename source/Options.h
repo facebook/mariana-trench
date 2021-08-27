@@ -29,7 +29,6 @@ class Options final {
       bool sequential,
       bool skip_source_indexing,
       bool skip_model_generation,
-      bool enable_global_type_inference,
       const std::vector<ModelGeneratorConfiguration>&
           model_generators_configuration,
       const std::vector<std::string>& model_generator_search_paths,
@@ -74,7 +73,6 @@ class Options final {
   bool skip_source_indexing() const;
   bool skip_model_generation() const;
   bool disable_parameter_type_overrides() const;
-  bool enable_global_type_inference() const;
   bool remove_unreachable_code() const;
   std::optional<int> maximum_method_analysis_time() const;
 
@@ -113,7 +111,6 @@ class Options final {
   bool sequential_;
   bool skip_source_indexing_;
   bool skip_model_generation_;
-  bool enable_global_type_inference_;
   bool remove_unreachable_code_;
   bool disable_parameter_type_overrides_;
   std::optional<int> maximum_method_analysis_time_;

@@ -53,7 +53,6 @@ Context make_context(const DexStore& store) {
       /* sequential */ false,
       /* skip_source_indexing */ true,
       /* skip_model_generation */ true,
-      /* enable_global_type_inference */ true,
       /* model_generators_configuration */
       std::vector<ModelGeneratorConfiguration>{},
       /* model_generators_search_path */ std::vector<std::string>{},

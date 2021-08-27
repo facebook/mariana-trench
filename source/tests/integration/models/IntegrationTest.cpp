@@ -428,7 +428,6 @@ TEST_P(IntegrationTest, ReturnsExpectedModel) {
       /* sequential */ true,
       /* skip_source_indexing */ true,
       /* skip_model_generation */ true,
-      /* enable_global_type_inference */ true,
       /* model_generators_configuration */
       std::vector<ModelGeneratorConfiguration>{},
       /* model_generator_search_paths */ std::vector<std::string>{},

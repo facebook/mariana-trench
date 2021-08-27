@@ -403,11 +403,6 @@ def main() -> None:
             help="Disable analyzing methods with specific parameter type information.",
         )
         analysis_arguments.add_argument(
-            "--enable-global-type-inference",
-            action="store_true",
-            help="Run Redex global analysis for additional type information.",
-        )
-        analysis_arguments.add_argument(
             "--maximum-method-analysis-time",
             type=int,
             help="Specify number of seconds as a bound. If the analysis of a method takes longer than this then make the method obscure (default taint-in-taint-out).",
@@ -554,8 +549,6 @@ def main() -> None:
             options.append("--skip-model-generation")
         if arguments.disable_parameter_type_overrides:
             options.append("--disable-parameter-type-overrides")
-        if arguments.enable_global_type_inference:
-            options.append("--enable-global-type-inference")
         if arguments.remove_unreachable_code:
             options.append("--remove-unreachable-code")
         if arguments.maximum_method_analysis_time is not None:
