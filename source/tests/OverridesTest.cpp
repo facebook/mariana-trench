@@ -23,6 +23,7 @@ Context test_overrides(const Scope& scope) {
       /* models_path */ std::vector<std::string>{},
       /* rules_path */ std::vector<std::string>{},
       /* lifecycles_path */ std::vector<std::string>{},
+      /* proguard_configuration_paths */ std::vector<std::string>{},
       /* sequential */ false,
       /* skip_source_indexing */ true,
       /* skip_model_generation */ true,

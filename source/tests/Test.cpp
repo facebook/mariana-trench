@@ -49,6 +49,7 @@ Context make_context(const DexStore& store) {
       /* models_paths */ std::vector<std::string>{},
       /* rules_paths */ std::vector<std::string>{},
       /* lifecycles_paths */ std::vector<std::string>{},
+      /* proguard_configuration_paths */ std::vector<std::string>{},
       /* sequential */ false,
       /* skip_source_indexing */ true,
       /* skip_model_generation */ true,

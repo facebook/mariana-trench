@@ -96,6 +96,7 @@ Options::Options(
     const std::vector<std::string>& models_paths,
     const std::vector<std::string>& rules_paths,
     const std::vector<std::string>& lifecycles_paths,
+    const std::vector<std::string>& proguard_configuration_paths,
     bool sequential,
     bool skip_source_indexing,
     bool skip_model_generation,
@@ -108,6 +109,7 @@ Options::Options(
     : models_paths_(models_paths),
       rules_paths_(rules_paths),
       lifecycles_paths_(lifecycles_paths),
+      proguard_configuration_paths_(proguard_configuration_paths),
       model_generators_configuration_(model_generators_configuration),
       model_generator_search_paths_(model_generator_search_paths),
       source_root_directory_(source_root_directory),
@@ -143,16 +145,16 @@ Options::Options(const boost::program_options::variables_map& variables) {
   rules_paths_ = parse_paths_list(
       variables["rules-paths"].as<std::string>(), /* extension */ ".json");
 
-  if (!variables["proguard-configuration-paths"].empty()) {
-    proguard_configuration_paths_ = parse_paths_list(
-        variables["proguard-configuration-paths"].as<std::string>(),
-        /* extension */ ".pro");
-  }
-
   if (!variables["lifecycles-paths"].empty()) {
     lifecycles_paths_ = parse_paths_list(
         variables["lifecycles-paths"].as<std::string>(),
         /* extension */ ".json");
+  }
+
+  if (!variables["proguard-configuration-paths"].empty()) {
+    proguard_configuration_paths_ = parse_paths_list(
+        variables["proguard-configuration-paths"].as<std::string>(),
+        /* extension */ ".pro");
   }
 
   if (!variables["generated-models-directory"].empty()) {
@@ -331,12 +333,12 @@ const std::vector<std::string>& Options::rules_paths() const {
   return rules_paths_;
 }
 
-const std::vector<std::string>& Options::proguard_configuration_paths() const {
-  return proguard_configuration_paths_;
-}
-
 const std::vector<std::string>& Options::lifecycles_paths() const {
   return lifecycles_paths_;
+}
+
+const std::vector<std::string>& Options::proguard_configuration_paths() const {
+  return proguard_configuration_paths_;
 }
 
 const std::optional<std::string>& Options::generated_models_directory() const {

@@ -123,6 +123,7 @@ TEST_P(IntegrationTest, CompareFlows) {
       std::vector<std::string>{(directory / "/rules.json").native()},
       /* lifecycles_paths */
       lifecycles_paths,
+      /* proguard_configuration_paths */ std::vector<std::string>{},
       /* sequential */ true,
       /* skip_source_indexing */ false,
       /* skip_model_generation */ model_generators_configurations.empty(),
