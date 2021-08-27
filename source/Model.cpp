@@ -502,6 +502,23 @@ void Model::add_taint_in_taint_this(Context& context) {
   }
 }
 
+namespace {
+
+void update_taint_tree(
+    const Model* model,
+    TaintAccessPathTree& tree,
+    AccessPath port,
+    std::size_t truncation_amount,
+    Taint new_taint,
+    UpdateKind update_kind) {
+  model->check_port_consistency(port);
+
+  port.truncate(truncation_amount);
+  tree.write(port, std::move(new_taint), update_kind);
+}
+
+} // namespace
+
 void Model::add_generation(AccessPath port, Frame source) {
   if (method_ && source.origins().empty() && source.is_leaf()) {
     source.set_origins(MethodSet{method_});
@@ -515,10 +532,13 @@ void Model::add_generation(AccessPath port, Frame source) {
 }
 
 void Model::add_generations(AccessPath port, Taint generations) {
-  check_port_consistency(port);
-
-  port.truncate(Heuristics::kGenerationMaxPortSize);
-  generations_.write(port, std::move(generations), UpdateKind::Weak);
+  update_taint_tree(
+      this,
+      generations_,
+      port,
+      Heuristics::kGenerationMaxPortSize,
+      generations,
+      UpdateKind::Weak);
 }
 
 void Model::add_inferred_generations(AccessPath port, Taint generations) {
@@ -555,10 +575,13 @@ void Model::add_sink(AccessPath port, Frame sink) {
 }
 
 void Model::add_sinks(AccessPath port, Taint sinks) {
-  check_port_consistency(port);
-
-  port.truncate(Heuristics::kSinkMaxPortSize);
-  sinks_.write(port, std::move(sinks), UpdateKind::Weak);
+  update_taint_tree(
+      this,
+      sinks_,
+      port,
+      Heuristics::kSinkMaxPortSize,
+      sinks,
+      UpdateKind::Weak);
 }
 
 void Model::add_inferred_sinks(AccessPath port, Taint sinks) {
