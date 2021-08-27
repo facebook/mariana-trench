@@ -259,11 +259,9 @@ void MarianaTrench::run(const program_options::variables_map& variables) {
       /* balloon */ true,
       /* support_dex_version */ 37);
 
+  redex::process_proguard_configurations(options, context.stores);
   if (context.options->remove_unreachable_code()) {
-    redex::remove_unreachable(
-        options.proguard_configuration_paths(),
-        context.stores,
-        options.removed_symbols_output_path());
+    redex::remove_unreachable(options, context.stores);
   }
 
   DexStore external_store("external classes");

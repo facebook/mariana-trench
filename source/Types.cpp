@@ -42,25 +42,6 @@ Types::Types(const Options& options, const DexStoresVector& stores) {
   if (proguard_configuration_paths.empty()) {
     global_type_analyzer_ = nullptr;
   } else {
-    keep_rules::ProguardConfiguration proguard_configuration;
-    for (const auto& proguard_configuration_path :
-         proguard_configuration_paths) {
-      keep_rules::proguard_parser::parse_file(
-          proguard_configuration_path, &proguard_configuration);
-    }
-
-    ProguardMap empty_map;
-
-    for (auto& store : stores) {
-      apply_deobfuscated_names(store.get_dexen(), empty_map);
-    }
-
-    keep_rules::process_proguard_rules(
-        empty_map,
-        build_class_scope(stores),
-        g_redex->external_classes(),
-        proguard_configuration,
-        false);
     type_analyzer::global::GlobalTypeAnalysis analysis;
     global_type_analyzer_ = analysis.analyze(scope);
   }

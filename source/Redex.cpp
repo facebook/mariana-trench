@@ -22,6 +22,7 @@
 #include <mariana-trench/Assert.h>
 #include <mariana-trench/JsonValidation.h>
 #include <mariana-trench/Log.h>
+#include <mariana-trench/Options.h>
 #include <mariana-trench/Redex.h>
 
 namespace marianatrench {
@@ -50,16 +51,19 @@ DexType* redex::get_type(const std::string& type) {
   return DexType::get_type(type);
 }
 
-void redex::remove_unreachable(
-    const std::vector<std::string>& proguard_configuration_paths,
-    DexStoresVector& stores,
-    const std::optional<boost::filesystem::path>& removed_symbols_path) {
-  keep_rules::ProguardConfiguration proguard_configuration;
+void redex::process_proguard_configurations(
+    const Options& options,
+    const DexStoresVector& stores) {
+  /* Parse and register proguard configuration contents to redex global state.
+  Used in global type analysis and removing unreachable paths. */
+  const std::vector<std::string>& proguard_configuration_paths =
+      options.proguard_configuration_paths();
 
-  if (proguard_configuration_paths.size() == 0) {
+  if (proguard_configuration_paths.empty()) {
     return;
   }
 
+  keep_rules::ProguardConfiguration proguard_configuration;
   for (const auto& proguard_configuration_path : proguard_configuration_paths) {
     keep_rules::proguard_parser::parse_file(
         proguard_configuration_path, &proguard_configuration);
@@ -77,6 +81,20 @@ void redex::remove_unreachable(
       g_redex->external_classes(),
       proguard_configuration,
       false);
+}
+
+void redex::remove_unreachable(
+    const Options& options,
+    DexStoresVector& stores) {
+  const std::vector<std::string>& proguard_configuration_paths =
+      options.proguard_configuration_paths();
+  const std::optional<boost::filesystem::path>& removed_symbols_path =
+      options.removed_symbols_output_path();
+  keep_rules::ProguardConfiguration proguard_configuration;
+
+  if (proguard_configuration_paths.empty()) {
+    return;
+  }
 
   auto reachables = reachability::compute_reachable_objects(
       stores,

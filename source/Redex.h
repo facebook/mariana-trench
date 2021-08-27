@@ -15,6 +15,7 @@
 #include <DexStore.h>
 
 #include <mariana-trench/Compiler.h>
+#include <mariana-trench/Options.h>
 
 namespace marianatrench {
 
@@ -34,11 +35,11 @@ DexFieldRef* MT_NULLABLE get_field(const std::string& field);
 
 DexType* MT_NULLABLE get_type(const std::string& type);
 
-void remove_unreachable(
-    const std::vector<std::string>& proguard_configuration_paths,
-    DexStoresVector& stores,
-    const std::optional<boost::filesystem::path>& removed_symbols_path =
-        std::nullopt);
+void process_proguard_configurations(
+    const Options& options,
+    const DexStoresVector& stores);
+
+void remove_unreachable(const Options& options, DexStoresVector& stores);
 
 std::vector<DexMethod*> create_methods(
     Scope& scope,
