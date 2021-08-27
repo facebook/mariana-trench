@@ -1,0 +1,28 @@
+{
+  "model_generators": [
+    {
+      "find": "methods",
+      "where": [
+        {
+          "constraint": "signature",
+          "pattern": ".*obscure_taint_this_taint_out_via_model_generator.*"
+        },
+        {
+          "constraint": "is_static",
+          "value": false
+        }
+      ],
+      "model": {
+        "propagation": [
+          {
+            "input": "Argument(0)",
+            "output": "Return",
+            "features": [
+              "via-IInterface-taint-this-taint-out"
+            ]
+          }
+        ]
+      }
+    }
+  ]
+}

@@ -1,0 +1,14 @@
+[
+  {
+    "method": "Lcom/facebook/marianatrench/integrationtests/Flow$IInterface;.obscure_taint_this_taint_out:()I",
+    "propagation": [
+      {
+        "input": "Argument(0)",
+        "output": "Return",
+        "features": [
+          "via-IInterface-taint-this-taint-out"
+        ]
+      }
+    ]
+  }
+]

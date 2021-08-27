@@ -29,6 +29,9 @@ class Options final {
       bool skip_source_indexing,
       bool skip_model_generation,
       bool enable_global_type_inference,
+      const std::vector<ModelGeneratorConfiguration>&
+          model_generators_configuration,
+      const std::vector<std::string>& model_generator_search_paths,
       bool remove_unreachable_code,
       const std::string& source_root_directory = ".");
   explicit Options(const boost::program_options::variables_map& variables);

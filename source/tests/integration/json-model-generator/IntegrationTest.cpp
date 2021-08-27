@@ -56,6 +56,9 @@ TEST_P(JsonModelGeneratorIntegrationTest, CompareModels) {
       /* skip_source_indexing */ true,
       /* skip_model_generation */ false,
       /* enable_global_type_inference */ true,
+      /* model_generators_configuration */
+      std::vector<ModelGeneratorConfiguration>{},
+      /* model_generator_search_paths */ std::vector<std::string>{},
       /* remove_unreachable_code */ false);
 
   // Read from the expected generated models

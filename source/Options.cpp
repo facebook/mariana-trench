@@ -100,11 +100,16 @@ Options::Options(
     bool skip_source_indexing,
     bool skip_model_generation,
     bool enable_global_type_inference,
+    const std::vector<ModelGeneratorConfiguration>&
+        model_generators_configuration,
+    const std::vector<std::string>& model_generator_search_paths,
     bool remove_unreachable_code,
     const std::string& source_root_directory)
     : models_paths_(models_paths),
       rules_paths_(rules_paths),
       lifecycles_paths_(lifecycles_paths),
+      model_generators_configuration_(model_generators_configuration),
+      model_generator_search_paths_(model_generator_search_paths),
       source_root_directory_(source_root_directory),
       sequential_(sequential),
       skip_source_indexing_(skip_source_indexing),

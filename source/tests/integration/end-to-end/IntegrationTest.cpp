@@ -105,6 +105,16 @@ TEST_P(IntegrationTest, CompareFlows) {
     lifecycles_paths.emplace_back(lifecycles_path.native());
   }
 
+  auto model_generators_file = directory / "/model_generators.json";
+  std::vector<ModelGeneratorConfiguration> model_generators_configurations;
+  std::vector<std::string> model_generator_search_paths;
+  if (boost::filesystem::exists(model_generators_file)) {
+    LOG(3, "Found model generator. Will run model generation.");
+    model_generator_search_paths.emplace_back(directory.native());
+    model_generators_configurations.emplace_back(
+        model_generators_file.stem().native());
+  }
+
   // Read the configuration for this test case.
   context.options = std::make_unique<Options>(
       /* models_paths */
@@ -115,8 +125,10 @@ TEST_P(IntegrationTest, CompareFlows) {
       lifecycles_paths,
       /* sequential */ true,
       /* skip_source_indexing */ false,
-      /* skip_model_generation */ true,
+      /* skip_model_generation */ model_generators_configurations.empty(),
       /* enable_global_type_inference */ true,
+      model_generators_configurations,
+      model_generator_search_paths,
       /* remove_unreachable_code */ false,
       /* source_root_directory */ directory.string());
 
