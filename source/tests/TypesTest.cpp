@@ -5,6 +5,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
+#include <boost/filesystem/operations.hpp>
 #include <optional>
 
 #include <gtest/gtest.h>
@@ -22,15 +23,45 @@ using namespace marianatrench;
 
 namespace {
 
-class TypesTest : public test::Test {};
+class TypesTest : public test::Test {
+ public:
+  std::string temporary_directory() {
+    return boost::filesystem::path(__FILE__).parent_path() / "temp";
+  }
 
-Context test_types(const Scope& scope) {
+ private:
+  void SetUp() override {
+    boost::filesystem::create_directory(this->temporary_directory());
+  }
+
+  void TearDown() override {
+    boost::filesystem::remove_all(this->temporary_directory());
+  }
+};
+
+std::string create_proguard_configuration_file(
+    const std::string& directory,
+    const std::string& file_name,
+    const std::string& contents) {
+  auto configuration_file = boost::filesystem::path(directory) / file_name;
+  boost::filesystem::save_string_file(configuration_file, contents);
+  return configuration_file.native();
+}
+
+Context test_types(
+    const Scope& scope,
+    std::optional<std::string> proguard_configuration_file = std::nullopt) {
   Context context;
+  auto proguard_configuration_paths = std::vector<std::string>{};
+  if (proguard_configuration_file) {
+    proguard_configuration_paths.push_back(*proguard_configuration_file);
+  }
   context.options = std::make_unique<Options>(
       /* models_path */ std::vector<std::string>{},
       /* rules_path */ std::vector<std::string>{},
       /* lifecycles_path */ std::vector<std::string>{},
-      /* proguard_configuration_paths */ std::vector<std::string>{},
+      /* proguard_configuration_paths */
+      proguard_configuration_paths,
       /* sequential */ false,
       /* skip_source_indexing */ true,
       /* skip_model_generation */ true,
@@ -206,6 +237,14 @@ TEST_F(TypesTest, GlobalInvokeVirtualTypes) {
           )
         )
       )");
+
+  auto proguard_configuration = R"(
+    -keep public class LEntryCaller {
+        public static void caller(LSubclass);
+    }
+  )";
+  auto proguard_configuration_file = create_proguard_configuration_file(
+      this->temporary_directory(), "proguard.pro", proguard_configuration);
 
   /* TODO(T68586777): Support interprocedural type analysis. */
   auto context = test_types(scope);
