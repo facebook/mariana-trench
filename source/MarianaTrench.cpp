@@ -61,7 +61,9 @@ Registry MarianaTrench::analyze(Context& context) {
     for (const auto* method : *context.methods) {
       method_list.append(method->signature());
     }
-    JsonValidation::write_json_file("methods.json", method_list);
+    auto methods_path = context.options->methods_output_path();
+    LOG(1, "Writing methods to `{}`.", methods_path.native());
+    JsonValidation::write_json_file(methods_path, method_list);
   }
 
   Timer index_timer;

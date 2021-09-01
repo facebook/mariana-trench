@@ -386,6 +386,10 @@ const boost::filesystem::path Options::models_output_path() const {
   return output_directory_;
 }
 
+const boost::filesystem::path Options::methods_output_path() const {
+  return output_directory_ / "methods.json";
+}
+
 bool Options::sequential() const {
   return sequential_;
 }
