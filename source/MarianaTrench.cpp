@@ -36,6 +36,7 @@
 #include <mariana-trench/Statistics.h>
 #include <mariana-trench/Timer.h>
 #include <mariana-trench/Types.h>
+#include <mariana-trench/UnusedKinds.h>
 
 namespace marianatrench {
 
@@ -168,6 +169,15 @@ Registry MarianaTrench::analyze(Context& context) {
       "Initialized {} rules in {:.2f}s.",
       context.rules->size(),
       rules_timer.duration_in_seconds());
+
+  Timer kind_pruning_timer;
+  LOG(1, "Removing unused Kinds");
+  int num_removed = UnusedKinds::remove_unused_kinds(context, registry).size();
+  context.statistics->log_time("prune_kinds", rules_timer);
+  LOG(1,
+      "Removed {} kinds in {:.2f}s.",
+      num_removed,
+      kind_pruning_timer.duration_in_seconds());
 
   Timer dependencies_timer;
   LOG(1, "Building dependency graph...");

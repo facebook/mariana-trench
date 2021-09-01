@@ -509,12 +509,11 @@ void update_taint_tree(
     TaintAccessPathTree& tree,
     AccessPath port,
     std::size_t truncation_amount,
-    Taint new_taint,
-    UpdateKind update_kind) {
+    Taint new_taint) {
   model->check_port_consistency(port);
 
   port.truncate(truncation_amount);
-  tree.write(port, std::move(new_taint), update_kind);
+  tree.write(port, std::move(new_taint), UpdateKind::Weak);
 }
 
 } // namespace
@@ -537,8 +536,7 @@ void Model::add_generations(AccessPath port, Taint generations) {
       generations_,
       port,
       Heuristics::kGenerationMaxPortSize,
-      generations,
-      UpdateKind::Weak);
+      generations);
 }
 
 void Model::add_inferred_generations(AccessPath port, Taint generations) {
@@ -575,13 +573,7 @@ void Model::add_sink(AccessPath port, Frame sink) {
 }
 
 void Model::add_sinks(AccessPath port, Taint sinks) {
-  update_taint_tree(
-      this,
-      sinks_,
-      port,
-      Heuristics::kSinkMaxPortSize,
-      sinks,
-      UpdateKind::Weak);
+  update_taint_tree(this, sinks_, port, Heuristics::kSinkMaxPortSize, sinks);
 }
 
 void Model::add_inferred_sinks(AccessPath port, Taint sinks) {
@@ -1198,4 +1190,20 @@ std::ostream& operator<<(std::ostream& out, const Model& model) {
   return out << ")";
 }
 
+void Model::remove_kinds(const std::unordered_set<const Kind*>& to_remove) {
+  auto drop_special_kinds =
+      [&to_remove](const Kind* kind) -> std::vector<const Kind*> {
+    if (to_remove.find(kind) != to_remove.end()) {
+      return std::vector<const Kind*>();
+    }
+    return std::vector<const Kind*>{kind};
+  };
+  auto map = [&drop_special_kinds](Taint& taint) -> void {
+    taint = taint.transform_map_kind(drop_special_kinds, nullptr);
+  };
+
+  generations_.map(map);
+  parameter_sources_.map(map);
+  sinks_.map(map);
+}
 } // namespace marianatrench

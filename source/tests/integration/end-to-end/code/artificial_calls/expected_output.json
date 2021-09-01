@@ -971,19 +971,7 @@
   [
     "skip-analysis"
   ],
-  "position" : {},
-  "sinks" : 
-  [
-    {
-      "callee_port" : "Leaf",
-      "caller_port" : "Argument(0)",
-      "kind" : "ArrayAllocation",
-      "origins" : 
-      [
-        "Lcom/mariana_trench/artificial/ArrayAllocation;.allocateArray:(I)V"
-      ]
-    }
-  ]
+  "position" : {}
 }
 {
   "method" : "Ljava/lang/Integer;.<init>:()V",

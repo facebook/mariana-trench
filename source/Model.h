@@ -254,6 +254,8 @@ class Model final {
     issues_ = std::move(issues);
   }
 
+  void remove_kinds(const std::unordered_set<const Kind*>& to_remove);
+
   bool override_default() const;
   bool skip_analysis() const;
   bool add_via_obscure_feature() const;

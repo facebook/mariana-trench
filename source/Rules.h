@@ -88,7 +88,8 @@ class Rules final {
       const Kind* source_kind,
       const PartialKind* sink_kind) const;
 
-  void warn_unused_kinds(const Kinds& kinds) const;
+  std::unordered_set<const Kind*> collect_unused_kinds(
+      const Kinds& kinds) const;
 
   std::size_t size() const {
     return rules_.size();

@@ -14,6 +14,7 @@
 #include <mariana-trench/Redex.h>
 #include <mariana-trench/Registry.h>
 #include <mariana-trench/Types.h>
+#include <mariana-trench/UnusedKinds.h>
 #include <mariana-trench/tests/Test.h>
 
 namespace marianatrench {
@@ -23,6 +24,37 @@ namespace {
 class RegistryTest : public test::Test {};
 
 } // namespace
+
+TEST_F(RegistryTest, remove_kinds) {
+  Scope scope;
+  DexStore store("stores");
+  store.add_classes(scope);
+  auto context = test::make_context(store);
+
+  auto registry = Registry::load(
+      context,
+      *context.options,
+      context.stores,
+      context.artificial_methods->models(
+          context)); // used to make sure we get ArrayAllocation
+  context.rules =
+      std::make_unique<Rules>(Rules::load(context, *context.options));
+  auto old_json = registry.models_to_json();
+  auto unused_kinds = context.rules->collect_unused_kinds(*context.kinds);
+  auto is_array_allocation = [](const Kind* kind) -> bool {
+    const auto* named_kind = kind->as<NamedKind>();
+    return named_kind != nullptr && named_kind->name() == "ArrayAllocation";
+  };
+  EXPECT_NE(
+      std::find_if(
+          unused_kinds.begin(), unused_kinds.end(), is_array_allocation),
+      unused_kinds.end());
+  EXPECT_TRUE(old_json[0].isMember("sinks"));
+  EXPECT_EQ(old_json[0]["sinks"][0]["kind"], "ArrayAllocation");
+  UnusedKinds::remove_unused_kinds(context, registry);
+  EXPECT_NE(registry.models_to_json(), old_json);
+  EXPECT_FALSE(registry.models_to_json()[0].isMember("sinks"));
+}
 
 TEST_F(RegistryTest, JoinWith) {
   Scope scope;

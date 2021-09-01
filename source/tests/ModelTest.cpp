@@ -21,6 +21,42 @@ namespace marianatrench {
 
 class ModelTest : public test::Test {};
 
+TEST_F(ModelTest, remove_kinds) {
+  Scope scope;
+  DexStore store("stores");
+  store.add_classes(scope);
+  auto context = test::make_context(store);
+  const auto* source_kind = context.kinds->get("TestSource");
+  const auto* sink_kind = context.kinds->get("TestSink");
+  const auto* removable_kind = context.kinds->get("RemoveMe");
+
+  Model model_with_removable_kind(
+      /* method */ nullptr,
+      context,
+      /* modes */ Model::Mode::Normal,
+      /* generations */
+      {{AccessPath(Root(Root::Kind::Producer, 0)), Frame::leaf(source_kind)}},
+      /* parameter_sources */ {},
+      /* sinks */
+      {{AccessPath(Root(Root::Kind::Argument, 1)), Frame::leaf(sink_kind)},
+       {AccessPath(Root(Root::Kind::Argument, 1)),
+        Frame::leaf(removable_kind)}});
+
+  model_with_removable_kind.remove_kinds({removable_kind});
+
+  Model model_without_removable_kind(
+      /* method */ nullptr,
+      context,
+      /* modes */ Model::Mode::Normal,
+      /* generations */
+      {{AccessPath(Root(Root::Kind::Producer, 0)), Frame::leaf(source_kind)}},
+      /* parameter_sources */ {},
+      /* sinks */
+      {{AccessPath(Root(Root::Kind::Argument, 1)), Frame::leaf(sink_kind)}});
+
+  EXPECT_EQ(model_with_removable_kind, model_without_removable_kind);
+}
+
 TEST_F(ModelTest, ModelConstructor) {
   Scope scope;
   DexStore store("stores");

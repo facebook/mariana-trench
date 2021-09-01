@@ -41,7 +41,6 @@ Rules Rules::load(Context& context, const Options& options) {
     }
   }
 
-  rules.warn_unused_kinds(*context.kinds);
   return rules;
 }
 
@@ -149,7 +148,9 @@ const std::vector<const MultiSourceMultiSinkRule*>& Rules::partial_rules(
   return rules->second;
 }
 
-void Rules::warn_unused_kinds(const Kinds& kinds) const {
+std::unordered_set<const Kind*> Rules::collect_unused_kinds(
+    const Kinds& kinds) const {
+  std::unordered_set<const Kind*> unused_kinds;
   for (const auto* kind : kinds.kinds()) {
     if (kind->as<TriggeredPartialKind>() != nullptr) {
       // Triggered kinds are never used in rules. No need to warn.
@@ -158,12 +159,14 @@ void Rules::warn_unused_kinds(const Kinds& kinds) const {
     if (std::all_of(begin(), end(), [kind](const Rule* rule) {
           return !rule->uses(kind);
         })) {
+      unused_kinds.insert(kind);
       WARNING(
           1,
           "Kind `{}` is not used in any rule! You may want to add one for it.",
           show(kind));
     }
   }
+  return unused_kinds;
 }
 
 } // namespace marianatrench
