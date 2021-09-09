@@ -343,9 +343,9 @@ def main() -> None:
         )
         configuration_arguments.add_argument(
             "--proguard-configuration-paths",
-            type=_path_exists,
+            type=_separated_paths_exist,
             default=None,
-            help="If ProGuard configurations are provided, Mariana Trench will save time by ignoring unreachable objects.",
+            help="A `;`-separated list of ProGuard configurations, which can be used for global inference and to ignore unreachable objects.",
         )
         configuration_arguments.add_argument(
             "--remove-unreachable-code",
