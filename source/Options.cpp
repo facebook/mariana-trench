@@ -287,6 +287,9 @@ void Options::add_options(
       "disable-parameter-type-overrides",
       "Disable analyzing methods with specific parameter type information.");
   options.add_options()(
+      "remove-unreachable-code",
+      "Prune unreachable code based on entry points specified in proguard configuration.");
+  options.add_options()(
       "maximum-method-analysis-time",
       program_options::value<int>(),
       "Specify number of seconds as a bound. If the analysis of a method takes longer than this then make the method obscure (default taint-in-taint-out).");
