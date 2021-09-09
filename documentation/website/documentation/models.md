@@ -5,6 +5,7 @@ sidebar_label: Models
 ---
 
 import FbModels from './fb/models.md';
+import MultiSourceSinkRule from './fb/multi_source_sink_rules.md';
 
 The main way to configure the analysis is through defining models for methods.
 
@@ -20,6 +21,7 @@ A model essentialy consists of:
 * [Attach to Sinks](#attach-to-sinks): a set of features/breadcrumbs to add on sinks of a given parameter;
 * [Attach to Propagations](#attach-to-propagations): a set of features/breadcrumbs to add on propagations for a given parameter or return value;
 * [Add Features to Arguments](#add-features-to-arguments): a set of features/breadcrumbs to add on any taint that might flow in a given parameter;
+* [Sanitizers](#sanitizers): specifications of taint flows to stop;
 * [Modes](#modes): a set of flags describing specific behaviors (see below).
 
 Models can be specified in JSON. For example to mark the string parameter to our `Logger.log` function as a sink we can specify it as
@@ -68,7 +70,7 @@ For the parameters and return types use the following table to pick the correct 
 
 Classes take the form `Lpackage/name/ClassName;` - where the leading `L` indicates that it is a class type, `package/name/` is the package that the class is in.
 
-Note, instance (i.e, non-static) method parameters are indexed starting from 1! The 0th parameter is the `this` parameter in dalvik byte-code. For static method parameter, indices start from 0.
+> **NOTE:** Instance (i.e, non-static) method parameters are indexed starting from 1! The 0th parameter is the `this` parameter in dalvik byte-code. For static method parameter, indices start from 0.
 
 ### Access path format
 
@@ -115,6 +117,8 @@ Here is an example of a rule in JSON:
 }
 ```
 Rules used by Mariana Trench can be specified with the `--rules-paths` argument. The default set of rules that run can be found in [configuration/rules.json](https://github.com/facebook/mariana-trench/blob/main/configuration/rules.json).
+
+<MultiSourceSinkRule />
 
 ### Sources
 
@@ -354,6 +358,67 @@ we could use the following JSON to specifiy a via-type feature that would materi
 }
 ```
 
+
+### Sanitizers
+
+Specifying sanitizers on a model allow us to stop taint flowing through that method. In Mariana Trench, they can be one of three types -
+* `sources`: prevent any taint sources from flowing out of the method
+* `sinks`: prevent taint from reaching any sinks within the method
+* `propagations`: prevent propagations from being inferred between any two ports of the method.
+
+These can be specified in model generators as follows -
+
+```
+"find": "methods",
+"where": ...,
+"model": {
+  "sanitizers": [
+    {"sanitize": "sources"},
+    {"sanitize": "sinks"},
+    {"sanitize": "propagations"},
+  ],
+  ...
+}
+```
+
+Note, if there are any user-specificed sources, sinks or propagations on the model, sanitizers will not affect them, but it will prevent them from being propagated outward to callsites.
+
+#### Kind-specific Sanitizers
+
+`sources` and `sinks` sanitizers may include a list of kinds (each with or without a partial_label) to restrict the sanitizer to only sanitizing taint of those kinds. (When unspecified, as in the example above, all taint is sanitized regardless of kind).
+
+```
+"sanitizers": [
+  {"sanitize": "sinks", "kinds": [{"kind": "SinkKindA"}, {"kind": "SinkKindB", "partial_label": "A"}]},
+]
+```
+
+#### Port-specific Sanitizers
+
+Sanitizers can also specify a specific port ([access path](models.md#access-path-format) root) they sanitize (ignoring all the rest). This field `port` has a slightly different meaning for each kind of sanitizer -
+* `sources`: represents the output port through which sources may not leave the method
+* `sinks`: represents the input port through which taint may not trigger any sinks within the model
+* `propagations`: represents the input port through which a propagation to any other port may not be inferred
+
+For example if the following method
+```
+public void someMethod(Object argument1, Object argument2) {
+  toSink(argument1);
+  toSink(argument2);
+}
+```
+had the following sanitizer in its model,
+
+```
+"sanitizers": [
+  {"sanitize": "sinks", "port": "Argument(1)"},
+]
+```
+
+Then a source flowing into `argument1` would be able to cause an issue, but not a source flowing into `argument2`.
+
+Kind and port specifications may be included in the same sanitizer.
+
 ### Modes
 
 Modes are used to describe specific behaviors of methods. Available modes are:
@@ -544,9 +609,26 @@ Note, the implicit `this` parameter for methods has the parameter number 0.
     INFO Method `...` satisfies all constraints in json model generator ...
     ```
 
-  2. Make sure that your model generator is actually running. You can use the `--verbosity 2` option to check that. Make sure your model generator is specified in `shim/resources/default_generator_config.json`.
+  2. Make sure that your model generator is actually running. You can use the `--verbosity 2` option to check that. Make sure your model generator is specified in `configuration/default_generator_config.json`.
   3. You can also check the output models.
       Use `grep SourceKind models@*` to see if your source or sink kind exists.
       Use `grep 'Lcom/example/<class-name>;.<method-name>:' models@*` to see if a given method exists in the app.
+
+### Override the default model
+
+Mariana trench generates a default model for each method ([see above](models.md#default-model)) using a set of heuristics.
+
+Users can use a [model generator](models.md#generators) to override the default behavior. This can be done to:
+* Stop a method from propagating the taint (e.g, `escape` functions);
+* Skip the analysis of a slow method;
+* Avoid considering all overrides when handling a virtual method call;
+* Etc..
+
+In order to do that, one needs to create a model using the `override-default` mode, with any additional modes:
+```
+auto model = Model(method, /* modes */ Model::Mode::OverrideDefault | Model::Mode::NoJoinVirtualOverrides);
+```
+
+NOTE: If you get the error `Attempting to analyze method <name> with no code!`, it probably means that you forgot to mark the method with `Model::Mode::SkipAnalysis`
 
 <FbModels />
