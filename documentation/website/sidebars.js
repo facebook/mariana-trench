@@ -7,14 +7,16 @@
  * @format
  */
 
-const {fbContent, fbInternalOnly} = require('internaldocs-fb-helpers');
+const {fbInternalOnly} = require('internaldocs-fb-helpers');
 
 module.exports = {
   someSidebar: [
     'getting-started',
+    fbInternalOnly('fb/running-tests'),
+    fbInternalOnly('fb/running-on-apps'),
+    fbInternalOnly('fb/running-on-3rd-party-apps'),
     'configuration',
     'models',
-    fbInternalOnly('fb/running-on-3rd-party-apps'),
     'developers-guide',
   ],
 };

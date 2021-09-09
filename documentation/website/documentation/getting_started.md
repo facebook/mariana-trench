@@ -3,8 +3,15 @@ id: getting-started
 title: Getting Started
 sidebar_label: Getting Started
 ---
-
+import {OssOnly, FbInternalOnly} from 'internaldocs-fb-helpers';
+import FbGettingStarted from './fb/getting_started.md';
 import useBaseUrl from '@docusaurus/useBaseUrl';
+
+<FBInternalOnly>
+<FbGettingStarted/>
+</FBInternalOnly>
+
+<OssOnly>
 
 This guide will walk you through setting up Mariana Trench on your machine and get you to find your first remote code execution vulnerability in a small sample app.
 
@@ -94,3 +101,4 @@ The final part of the trace is the *sink trace*: This is where the data from the
 
 ## Configuring Mariana Trench
 You might be asking yourself, "how does the tool know what is user controlled data, and what is a sink?". This guide is meant to quickly get you started on a small app. We did not cover how to configure Mariana Trench. You can read more about that in the [Configuration section](configuration).
+</OssOnly>
