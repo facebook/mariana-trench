@@ -522,28 +522,34 @@ Each JSON file is a JSON object with a key `model_generators` associated with a 
 Each "rule" defines a "filter" (which uses "constraints" to specify methods for which a "model" should be generated) and a "model". A rule has the following key/values:
 
 - `find`: The type of thing to find. We only support `methods`;
-- `where`: A list of "constraints". All constraints **must be satisfied** by a method in order to generate a model for such method. Constraints can have the following types (see below). Symbols in brackets define the type of the object matched against the constraint.
-  - `parent` [Method]: Expects an extra property `inner` [Type] which contains a nested constraint to apply to the class holding the method;
-  - `name` [Method|Type]: Expects an extra property `pattern` which is a regex to fully match the name of the item;
-  - `signature` [Method]: Expects an extra property `pattern` which is a regex to fully match the full signature (class, method, argument types) of a method;
-  - `parameter` [Method]: Expects an extra properties `idx` and `inner` [Type], matches when the idx-th parameter of the function or method matches the nested constraint inner;
-  - `extends` [Type]: Expects an extra property `inner` [Type] which contains a nested constraint that must apply to one of the base classes or itself. The optional property `includes_self` is a boolean that tells whether the constraint must be applied on the type itself or not;
-  - `super` [Type]: Expects an extra property `inner` [Type] which contains a nested constraint that must apply on the direct superclass;
-  - `return` [Method]: Expects an extra property `inner` [Type] which contains a nested constraint to apply to the return of the method;
-  - `visibility` [Method]: Expects an extra property `is` which is either `public`, `private` or `protected`;
-  - `is_class` [Type]: Accepts an extra property `value` which is either `true` or `false`. By default, `value` is considered `true`;
-  - `is_interface` [Type]: Accepts an extra property `value` which is either `true` or `false`. By default, `value` is considered `true`;
-  - `is_static` [Method]: Accepts an extra property `value` which is either `true` or `false`. By default, `value` is considered `true`;
-  - `is_constructor` [Method]: Accepts an extra property `value` which is either `true` or `false`. By default, `value` is considered `true`;
-  - `is_native` [Method]: Accepts an extra property `value` which is either `true` or `false`. By default, `value` is considered `true`;
-  - `has_code` [Method]: Accepts an extra property `value` which is either `true` or `false`. By default, `value` is considered `true`;
-  - `has_annotation` [Method|Type]: Expects an extra property `type` and an optional property `pattern`, respectively a string and a regex fully matching the value of the annotation.
-  - `number_parameters` [Method]: Expects an extra property `inner` [Integer] which contains a nested constraint to apply to the number of parameters (counting the implicit `this` parameter);
-  - `number_overrides` [Method]: Expects an extra property `inner` [Integer] which contains a nested constraint to apply on the number of method overrides.
-  - `< | <= | == | > | >= | !=` [Integer]: Expects an extra property `value` which contains an integer that the input integer is compared with. The input is the left hand side.
-  - `all_of` [Any]: Expects an extra property `inners` [Any] which is an array holding nested constraints which must all apply;
-  - `any_of` [Any]: Expects an extra property `inners` [Any] which is an array holding nested constraints where one of them must apply;
-  - `not` [Any]: Expects an extra property `inner` [Any] which contains a nested constraint that should not apply.
+- `where`: A list of "constraints". All constraints **must be satisfied** by a method in order to generate a model for such method. All the constraints are listed below, grouped by the type of object they are applied to:
+  - **Method**:
+    - `signature`: Expects an extra property `pattern` which is a regex to fully match the full signature (class, method, argument types) of a method;
+    - `parent`: Expects an extra property `inner` [Type] which contains a nested constraint to apply to the class holding the method;
+    - `parameter`: Expects an extra properties `idx` and `inner` [Type], matches when the idx-th parameter of the function or method matches the nested constraint inner;
+    - `return`: Expects an extra property `inner` [Type] which contains a nested constraint to apply to the return of the method;
+     - `is_static | is_constructor | is_native | has_code`: Accepts an extra property `value` which is either `true` or `false`. By default, `value` is considered `true`;
+     - `number_parameters`: Expects an extra property `inner` [Integer] which contains a nested constraint to apply to the number of parameters (counting the implicit `this` parameter);
+    - `number_overrides`: Expects an extra property `inner` [Integer] which contains a nested constraint to apply on the number of method overrides.
+
+  - **Type:**
+    - `extends`: Expects an extra property `inner` [Type] which contains a nested constraint that must apply to one of the base classes or itself. The optional property `includes_self` is a boolean that tells whether the constraint must be applied on the type itself or not;
+    - `super`: Expects an extra property `inner` [Type] which contains a nested constraint that must apply on the direct superclass;
+    - `is_class | is_interface`: Accepts an extra property `value` which is either `true` or `false`. By default, `value` is considered `true`;
+
+  - **Method or Type:**
+    - `name`: Expects an extra property `pattern` which is a regex to fully match the name of the item;
+    - `has_annotation`: Expects an extra property `type` and an optional property `pattern`, respectively a string and a regex fully matching the value of the annotation.
+    - `visibility`: Expects an extra property `is` which is either `public`, `private` or `protected`;
+
+  - **Integer:**
+    - `< | <= | == | > | >= | !=`: Expects an extra property `value` which contains an integer that the input integer is compared with. The input is the left hand side.
+
+  - **Any (Method, Type or Integer):**
+    - `all_of`: Expects an extra property `inners` [Any] which is an array holding nested constraints which must all apply;
+    - `any_of`: Expects an extra property `inners` [Any] which is an array holding nested constraints where one of them must apply;
+    - `not`: Expects an extra property `inner` [Any] which contains a nested constraint that should not apply.
+
 - `model`: A model, describing sources/sinks/propagations/etc.
   - `sources`*: A list of sources, i.e a source flowing out of the method via return value or flowing in via an argument. A source has the following key/values:
     - `kind`: The source name;
