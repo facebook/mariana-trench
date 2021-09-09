@@ -10,6 +10,8 @@
 
 #include <gtest/gtest.h>
 
+#include "ReachableClasses.h"
+
 #include <Creators.h>
 #include <DexStore.h>
 #include <IRAssembler.h>
@@ -183,6 +185,18 @@ TEST_F(TypesTest, LocalInvokeVirtualTypes) {
         )
         )
       )");
+  auto* dex_missing_invoke = redex::create_method(
+      scope,
+      "LNotACaller;",
+      R"(
+        (method (public) "LNotACaller;.caller:(LCallee;)V"
+        (
+          (load-param-object v0)
+          (load-param-object v1)
+          (return-void)
+        )
+        )
+      )");
 
   auto context = test_types(scope);
   auto* method = context.methods->get(dex_caller);
@@ -192,6 +206,12 @@ TEST_F(TypesTest, LocalInvokeVirtualTypes) {
       register_types.at(1),
       DexType::make_type(DexString::make_string("LCallee;")));
   EXPECT_TRUE(register_types[0] == nullptr);
+
+  auto* missing_invoke_method = context.methods->get(dex_missing_invoke);
+  auto missing_invoke_register_types =
+      register_types_for_method(context, missing_invoke_method);
+  assert(!root(dex_missing_invoke));
+  EXPECT_TRUE(missing_invoke_register_types[1] == nullptr);
 }
 
 TEST_F(TypesTest, GlobalInvokeVirtualTypes) {
@@ -200,7 +220,7 @@ TEST_F(TypesTest, GlobalInvokeVirtualTypes) {
   auto* dex_callee = redex::create_void_method(scope, "LCallee;", "callee");
   redex::create_void_method(
       scope,
-      /* class_name */ "LSubclass;",
+      /* class_name */ "LCalleeSubclass;",
       /* method */ "callee",
       /* parameter_types */ "",
       /* return_type */ "V",
@@ -209,58 +229,74 @@ TEST_F(TypesTest, GlobalInvokeVirtualTypes) {
       scope,
       "LCaller;",
       R"(
-        (method (public) "LCaller;.caller:(LCallee;)V"
-          (
-            (load-param-object v0)
-            (load-param-object v1)
+          (method (public) "LCaller;.caller:(LCallee;)V"
+            (
+              (load-param-object v0)
+              (load-param-object v1)
 
-            (invoke-virtual (v1) "LCallee;.callee:()V")
-            (return-void)
+              (new-instance "LCalleeSubclass;")
+              (move-result-object v2)
+              (invoke-virtual (v2) "LCallee;.callee:()V")
+
+              (invoke-virtual (v1) "LCallee;.callee:()V")
+
+              (return-void)
+            )
           )
-        )
       )");
   auto* dex_entry_caller = redex::create_method(
       scope,
       "LEntryCaller;",
       R"(
-          (method (public) "LEntryCaller;.caller:(LSubclass;)V"
+          (method (public) "LEntryCaller;.entrycaller:()V"
           (
-            (load-param-object v0)
-            (load-param-object v1)
+            (new-instance "LCalleeSubclass;")
+            (move-result-object v0)
+            (invoke-direct (v0) "LCalleeSubclass;.<init>:()V")
 
             (new-instance "LCaller;")
-            (move-result-object v2)
+            (move-result-object v1)
+            (invoke-direct (v1) "LCaller;.<init>:()V")
 
-            (invoke-virtual (v2 v1) "LCaller;.caller:(LCallee;)V")
+            (invoke-virtual (v1 v0) "LCaller;.caller:(LCallee;)V")
             (return-void)
           )
         )
       )");
 
   auto proguard_configuration = R"(
-    -keep public class LEntryCaller {
-        public static void caller(LSubclass);
+    -keep class EntryCaller {
+        public void entrycaller();
     }
   )";
   auto proguard_configuration_file = create_proguard_configuration_file(
       this->temporary_directory(), "proguard.pro", proguard_configuration);
 
-  /* TODO(T68586777): Support interprocedural type analysis. */
-  auto context = test_types(scope);
+  /* Proguard configuration should set this as root, but set manually for now. */
+  dex_entry_caller->rstate.set_root();
+
+  assert(!root(dex_callee));
+  assert(!root(dex_caller));
+  assert(root(dex_entry_caller));
+
+  auto context = test_types(scope, proguard_configuration_file);
   auto* caller = context.methods->get(dex_caller);
   auto caller_register_types = register_types_for_method(context, caller);
 
   EXPECT_EQ(
       caller_register_types.at(1),
-      DexType::make_type(DexString::make_string("LCallee;")));
+      DexType::make_type(DexString::make_string("LCalleeSubclass;")));
+  EXPECT_EQ(
+      caller_register_types.at(2),
+      DexType::make_type(DexString::make_string("LCalleeSubclass;")));
 
   auto* entry_method = context.methods->get(dex_entry_caller);
   auto entry_register_types = register_types_for_method(context, entry_method);
 
   EXPECT_EQ(
-      entry_register_types.at(1),
-      DexType::make_type(DexString::make_string("LSubclass;")));
+      entry_register_types.at(0),
+      DexType::make_type(DexString::make_string("LCalleeSubclass;")));
   EXPECT_EQ(
-      entry_register_types.at(2),
+      entry_register_types.at(1),
       DexType::make_type(DexString::make_string("LCaller;")));
 }

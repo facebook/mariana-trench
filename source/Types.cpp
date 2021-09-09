@@ -29,17 +29,14 @@ Types::Types(const Options& options, const DexStoresVector& stores) {
           scope.end(),
           [](DexClass* dex_class) { return dex_class->is_external(); }),
       scope.end());
-  walk::parallel::code(scope, [](DexMethod*, IRCode& code) {
-    if (!code.cfg_built()) {
-      // The global analysis `analyze` step also checks for unbuilt cfgs and
-      // builds one, then creates an exit node in all cases. We need to build
-      // the cfg beforehand to ensure the cfg is editable.
-      code.build_cfg();
-    }
-  });
   const std::vector<std::string>& proguard_configuration_paths =
       options.proguard_configuration_paths();
   if (proguard_configuration_paths.empty()) {
+    walk::parallel::code(scope, [](DexMethod*, IRCode& code) {
+      if (!code.cfg_built()) {
+        code.build_cfg();
+      }
+    });
     global_type_analyzer_ = nullptr;
   } else {
     type_analyzer::global::GlobalTypeAnalysis analysis;
@@ -156,11 +153,12 @@ std::unique_ptr<TypeEnvironments> Types::infer_types_for_method(
     auto current_state = local_type_analyzer->get_entry_state_at(block);
     for (auto& entry : InstructionIterable(block)) {
       auto* instruction = entry.insn;
+      local_type_analyzer->analyze_instruction(instruction, &current_state);
 
-      auto found = environments->find(instruction);
-      if (found == environments->end()) {
+      if (!is_interesting_opcode(instruction->opcode())) {
         continue;
       }
+      auto found = environments->find(instruction);
       auto& environment_at_instruction = found->second;
 
       auto register_type_environment = current_state.get_reg_environment();
