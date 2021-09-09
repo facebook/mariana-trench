@@ -272,7 +272,8 @@ TEST_F(TypesTest, GlobalInvokeVirtualTypes) {
   auto proguard_configuration_file = create_proguard_configuration_file(
       this->temporary_directory(), "proguard.pro", proguard_configuration);
 
-  /* Proguard configuration should set this as root, but set manually for now. */
+  /* Proguard configuration should set this as root, but set manually for now.
+   */
   dex_entry_caller->rstate.set_root();
 
   assert(!root(dex_callee));
