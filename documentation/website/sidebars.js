@@ -11,6 +11,7 @@ const {fbInternalOnly} = require('internaldocs-fb-helpers');
 
 module.exports = {
   someSidebar: [
+    'overview',
     'getting-started',
     fbInternalOnly('fb/running-tests'),
     fbInternalOnly('fb/running-on-apps'),
