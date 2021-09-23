@@ -13,11 +13,12 @@ module.exports = {
   someSidebar: [
     'overview',
     'getting-started',
+    'customize_sources_and_sinks',
+    'models',
     fbInternalOnly('fb/running-tests'),
     fbInternalOnly('fb/running-on-apps'),
     fbInternalOnly('fb/running-on-3rd-party-apps'),
     'configuration',
-    'models',
     'developers-guide',
   ],
 };

@@ -31,7 +31,7 @@ The usage of Mariana Trench can be summarized in three steps:
 
 <OssOnly>
 
-1. Specify customized "sources" and "sinks". (See [Models](./models.md))
+1. Specify customized "sources" and "sinks". (See [Customize Sources and Sinks](./customize_sources_and_sinks.md))
 2. Run Mariana Trench on an arbitrary Java repository (with the sources and sinks specified in Step 1), whether it be a repository for an Android application project or for a vanilla (or plain old) Java project.
 3. View the analysis results from a web browser. (For steps 2 and 3 see [Getting Started](./getting_started.md))
 
