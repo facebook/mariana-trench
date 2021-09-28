@@ -107,6 +107,10 @@ DexType* MT_NULLABLE Method::parameter_type(ParameterPosition argument) const {
                                             : nullptr;
 }
 
+DexType* Method::return_type() const {
+  return method_->get_proto()->get_rtype();
+}
+
 ParameterPosition Method::first_parameter_index() const {
   return is_static() ? 0u : 1u;
 }

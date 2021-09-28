@@ -166,6 +166,8 @@ class Model final {
       const std::vector<const DexType * MT_NULLABLE>& source_register_types)
       const;
 
+  void collapse_invalid_paths(Context& context);
+
   void approximate();
 
   bool empty() const;

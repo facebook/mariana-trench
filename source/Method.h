@@ -82,6 +82,8 @@ class Method final {
    */
   DexType* MT_NULLABLE parameter_type(ParameterPosition argument) const;
 
+  DexType* return_type() const;
+
   /* Return the index of the first parameter, excluding the implicit `this`
    * parameter. */
   ParameterPosition first_parameter_index() const;

@@ -8,8 +8,10 @@
 #include <fmt/format.h>
 
 #include <Show.h>
+#include <TypeUtil.h>
 
 #include <mariana-trench/Assert.h>
+#include <mariana-trench/ClassHierarchies.h>
 #include <mariana-trench/ClassProperties.h>
 #include <mariana-trench/Compiler.h>
 #include <mariana-trench/Features.h>
@@ -30,6 +32,65 @@ class ModelConsistencyError {
     ERROR(1, "Model Consistency Error: {}", what);
   }
 };
+
+/**
+ * Returns all known DexTypes in the hierarchy of `type` (ancestors and
+ * descendents).
+ */
+std::unordered_set<const DexType*> types_in_class_hierarchy(
+    const DexType* type,
+    const Context& context) {
+  mt_assert(type != type::java_lang_Object());
+
+  const auto* klass = type_class(type);
+  if (klass == nullptr) {
+    // Not an object type, or class does not exist in the APK (might be in
+    // the system jars). No class hierarchy.
+    return std::unordered_set<const DexType*>{};
+  }
+
+  // Include self + descendants.
+  auto types = context.class_hierarchies->extends(type);
+  types.insert(type);
+
+  // Include inherited types.
+  const auto* super_class_type = klass->get_super_class();
+  while (super_class_type) {
+    klass = type_class(super_class_type);
+    if (klass == nullptr) {
+      // This can happen if the class does not exist in the APK (e.g. exists in
+      // jar). Stop here. We do not have enough information about `klass`.
+      break;
+    }
+    types.insert(super_class_type);
+    super_class_type = klass->get_super_class();
+  }
+
+  return types;
+}
+
+/**
+ * Returns the type of `field` in `type` if the field exists, and `nullptr` if
+ * not. Only looks within `type`, and not its inherited fields.
+ */
+const DexType* MT_NULLABLE
+type_of_field(const DexType* type, Path::Element field) {
+  const auto* klass = type_class(type);
+  if (klass == nullptr) {
+    // type is not a class, it cannot have fields.
+    return nullptr;
+  }
+
+  auto fields = klass->get_all_fields();
+  auto class_field = std::find_if(
+      fields.begin(), fields.end(), [field](const auto* class_field) {
+        return class_field->get_name() == field;
+      });
+  if (class_field == fields.end()) {
+    return nullptr;
+  }
+  return (*class_field)->get_type();
+}
 
 } // namespace
 
@@ -322,6 +383,79 @@ Model Model::at_callsite(
   }
 
   return model;
+}
+
+void Model::collapse_invalid_paths(Context& context) {
+  if (!method_) {
+    return;
+  }
+
+  using FieldTypesAccumulator = std::unordered_set<const DexType*>;
+
+  auto is_valid = [this, &context](
+                      const FieldTypesAccumulator& previous_field_types,
+                      Path::Element field) {
+    FieldTypesAccumulator current_field_types;
+    for (const auto* previous_field_type : previous_field_types) {
+      if (previous_field_type == type::java_lang_Object()) {
+        // Object is too generic to determine the set of possible field names.
+        continue;
+      }
+
+      auto types = types_in_class_hierarchy(previous_field_type, context);
+      for (const auto* type : types) {
+        const auto* path_element_type = type_of_field(type, field);
+        if (path_element_type != nullptr) {
+          current_field_types.insert(path_element_type);
+        }
+      }
+    }
+
+    if (current_field_types.empty()) {
+      LOG(5,
+          "Model for method `{}` has invalid path element `{}`",
+          show(method_),
+          show(field));
+      return std::make_pair(false, current_field_types);
+    }
+
+    return std::make_pair(true, current_field_types);
+  };
+
+  auto initial_accumulator = [this](const Root& root) {
+    // Leaf ports appear in callee ports. This only applies to caller ports.
+    mt_assert(!root.is_leaf_port());
+
+    DexType* MT_NULLABLE root_type = nullptr;
+    if (root.is_argument()) {
+      root_type = method_->parameter_type(root.parameter_position());
+    } else if (root.is_return()) {
+      root_type = method_->return_type();
+    }
+
+    if (root_type == nullptr) {
+      // This can happen when there is an invalid model, e.g. model defined
+      // on an argument that does not exist, usually from a model-generator.
+      // Returning an empty list of types will collapse all paths.
+      ERROR(
+          1,
+          "Could not find root type for method `{}`, root: `{}`",
+          show(method_),
+          show(root));
+      return FieldTypesAccumulator{};
+    }
+
+    return FieldTypesAccumulator{root_type};
+  };
+
+  generations_.collapse_invalid_paths<FieldTypesAccumulator>(
+      is_valid, initial_accumulator);
+  parameter_sources_.collapse_invalid_paths<FieldTypesAccumulator>(
+      is_valid, initial_accumulator);
+  sinks_.collapse_invalid_paths<FieldTypesAccumulator>(
+      is_valid, initial_accumulator);
+  propagations_.collapse_invalid_paths<FieldTypesAccumulator>(
+      is_valid, initial_accumulator);
 }
 
 void Model::approximate() {

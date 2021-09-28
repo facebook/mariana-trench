@@ -165,7 +165,7 @@
       },
       "callee" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
       "callee_port" : "Argument(0)",
-      "caller_port" : "Argument(0).c",
+      "caller_port" : "Argument(0)",
       "distance" : 1,
       "kind" : "Sink",
       "local_features" : 

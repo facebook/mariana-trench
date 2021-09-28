@@ -140,6 +140,7 @@ Model analyze(
   auto fixpoint =
       FixpointIterator(code->cfg(), CombinedTransfer(method_context.get()));
   fixpoint.run(AnalysisEnvironment::initial());
+  model.collapse_invalid_paths(global_context);
   model.approximate();
 
   LOG_OR_DUMP(

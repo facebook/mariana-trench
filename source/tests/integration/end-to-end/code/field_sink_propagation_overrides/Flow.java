@@ -47,22 +47,24 @@ public class Flow {
     toSinkWithField(propagated);
   }
 
-  // Analysis will find that irrelevantField.field leads to sink, but this field
-  // does not exist.
-  public void toSinkUnreachablePort(IrrelevantField irrelevantField) {
+  // Analysis will find that irrelevantField.field leads to sink, but the field
+  // does not exist and will be collapsed to just arg1. However, it cannot be
+  // dropped unless there is a way to distinguish between this and
+  // `toSinkCollapsedPort2` below.
+  public void toSinkCollapsedPort(IrrelevantField irrelevantField) {
     WithField propagated = taintResult(irrelevantField);
     toSinkWithField(propagated);
   }
 
   // This false positive is a result of incorrectly inferred taint in
-  // toSinkUnreachablePort.
+  // `toSinkCollapsedPort`.
   public void falsePositive() {
-    toSinkUnreachablePort(source());
+    toSinkCollapsedPort(source());
   }
 
-  // Analysis will find that irrelevantField.field leads to sink, but it should
-  // be irrelevantField (arg1) that flows into the sink.
-  public void toSinkWrongCallerPort(IrrelevantField irrelevantField) {
+  // Like to `toSinkCollapsedPort` above, arg1.field is collapsed into arg1.
+  // Here, this behavior is desired.
+  public void toSinkCollapsedPort2(IrrelevantField irrelevantField) {
     // Initial: irrelevantField -> AbstractTree{`arg1` -> ArtificalSource}
     // taintResultField propagation model:
     //   arg1 -> return (defined in models) [*]
@@ -81,11 +83,9 @@ public class Flow {
     toSinkWithField(propagated);
   }
 
-  // This false negative is a result of incorrectly inferred taint in
-  // toSinkWrongCallerPort.
-  public void falseNegative() {
+  public void issue() {
     IrrelevantField irrelevantField = new IrrelevantField();
     irrelevantField.irrelevantField = Origin.source();
-    toSinkWrongCallerPort(irrelevantField);
+    toSinkCollapsedPort2(irrelevantField);
   }
 }

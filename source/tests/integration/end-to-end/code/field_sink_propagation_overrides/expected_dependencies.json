@@ -38,7 +38,7 @@
   ],
   "Lcom/facebook/marianatrench/integrationtests/Flow$IrrelevantField;.<init>:(Lcom/facebook/marianatrench/integrationtests/Flow;)V" : 
   [
-    "Lcom/facebook/marianatrench/integrationtests/Flow;.falseNegative:()V",
+    "Lcom/facebook/marianatrench/integrationtests/Flow;.issue:()V",
     "Lcom/facebook/marianatrench/integrationtests/Flow;.source:()Lcom/facebook/marianatrench/integrationtests/Flow$IrrelevantField;"
   ],
   "Lcom/facebook/marianatrench/integrationtests/Flow$WithField;.<init>:(Lcom/facebook/marianatrench/integrationtests/Flow;)V" : 
@@ -54,25 +54,25 @@
   "Lcom/facebook/marianatrench/integrationtests/Flow;.taintResult:(Lcom/facebook/marianatrench/integrationtests/Flow$Base;)Lcom/facebook/marianatrench/integrationtests/Flow$WithField;" : 
   [
     "Lcom/facebook/marianatrench/integrationtests/Flow;.toSink:(Lcom/facebook/marianatrench/integrationtests/Flow$WithField2;)V",
-    "Lcom/facebook/marianatrench/integrationtests/Flow;.toSinkUnreachablePort:(Lcom/facebook/marianatrench/integrationtests/Flow$IrrelevantField;)V"
+    "Lcom/facebook/marianatrench/integrationtests/Flow;.toSinkCollapsedPort:(Lcom/facebook/marianatrench/integrationtests/Flow$IrrelevantField;)V"
   ],
   "Lcom/facebook/marianatrench/integrationtests/Flow;.taintResultField:(Lcom/facebook/marianatrench/integrationtests/Flow$Base;)Lcom/facebook/marianatrench/integrationtests/Flow$WithField;" : 
   [
-    "Lcom/facebook/marianatrench/integrationtests/Flow;.toSinkWrongCallerPort:(Lcom/facebook/marianatrench/integrationtests/Flow$IrrelevantField;)V"
+    "Lcom/facebook/marianatrench/integrationtests/Flow;.toSinkCollapsedPort2:(Lcom/facebook/marianatrench/integrationtests/Flow$IrrelevantField;)V"
   ],
-  "Lcom/facebook/marianatrench/integrationtests/Flow;.toSinkUnreachablePort:(Lcom/facebook/marianatrench/integrationtests/Flow$IrrelevantField;)V" : 
+  "Lcom/facebook/marianatrench/integrationtests/Flow;.toSinkCollapsedPort2:(Lcom/facebook/marianatrench/integrationtests/Flow$IrrelevantField;)V" : 
+  [
+    "Lcom/facebook/marianatrench/integrationtests/Flow;.issue:()V"
+  ],
+  "Lcom/facebook/marianatrench/integrationtests/Flow;.toSinkCollapsedPort:(Lcom/facebook/marianatrench/integrationtests/Flow$IrrelevantField;)V" : 
   [
     "Lcom/facebook/marianatrench/integrationtests/Flow;.falsePositive:()V"
   ],
   "Lcom/facebook/marianatrench/integrationtests/Flow;.toSinkWithField:(Lcom/facebook/marianatrench/integrationtests/Flow$WithField;)V" : 
   [
     "Lcom/facebook/marianatrench/integrationtests/Flow;.toSink:(Lcom/facebook/marianatrench/integrationtests/Flow$WithField2;)V",
-    "Lcom/facebook/marianatrench/integrationtests/Flow;.toSinkUnreachablePort:(Lcom/facebook/marianatrench/integrationtests/Flow$IrrelevantField;)V",
-    "Lcom/facebook/marianatrench/integrationtests/Flow;.toSinkWrongCallerPort:(Lcom/facebook/marianatrench/integrationtests/Flow$IrrelevantField;)V"
-  ],
-  "Lcom/facebook/marianatrench/integrationtests/Flow;.toSinkWrongCallerPort:(Lcom/facebook/marianatrench/integrationtests/Flow$IrrelevantField;)V" : 
-  [
-    "Lcom/facebook/marianatrench/integrationtests/Flow;.falseNegative:()V"
+    "Lcom/facebook/marianatrench/integrationtests/Flow;.toSinkCollapsedPort2:(Lcom/facebook/marianatrench/integrationtests/Flow$IrrelevantField;)V",
+    "Lcom/facebook/marianatrench/integrationtests/Flow;.toSinkCollapsedPort:(Lcom/facebook/marianatrench/integrationtests/Flow$IrrelevantField;)V"
   ],
   "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V" : 
   [
@@ -80,7 +80,7 @@
   ],
   "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;" : 
   [
-    "Lcom/facebook/marianatrench/integrationtests/Flow;.falseNegative:()V"
+    "Lcom/facebook/marianatrench/integrationtests/Flow;.issue:()V"
   ],
   "Lcom/facebook/secure/context/IntentLauncher;.<init>:()V" : 
   [

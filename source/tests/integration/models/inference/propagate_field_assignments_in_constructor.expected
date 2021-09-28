@@ -16,7 +16,7 @@
       [
         {
           "input" : "Argument(1)",
-          "output" : "Argument(0).field"
+          "output" : "Argument(0)"
         }
       ]
     }
