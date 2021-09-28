@@ -228,6 +228,28 @@ class AccessPathTreeDomain final
     return map_.end();
   }
 
+  /**
+   * When a path is invalid, collapse its taint into its parent's.
+   * See AbstractTreeDomain::collapse_invalid_paths.
+   */
+  template <typename Accumulator>
+  void collapse_invalid_paths(
+      const std::function<
+          std::pair<bool, Accumulator>(const Accumulator&, Path::Element)>&
+          is_valid,
+      const std::function<Accumulator(const Root&)>& initial_accumulator) {
+    Map new_map;
+    for (const auto& [root, tree] : map_) {
+      auto copy = tree;
+      copy.collapse_invalid_paths(
+          is_valid,
+          /* accumulator */ initial_accumulator(root));
+      new_map.set(root, std::move(copy));
+    }
+
+    map_ = new_map;
+  }
+
   /* Collapse children that have more than `max_leaves` leaves. */
   void limit_leaves(std::size_t max_leaves) {
     map_.map([=](const AbstractTreeDomainT& tree) {

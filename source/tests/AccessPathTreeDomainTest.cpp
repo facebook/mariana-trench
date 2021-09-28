@@ -534,4 +534,49 @@ TEST_F(AccessPathTreeDomainTest, Map) {
       }));
 }
 
+TEST_F(AccessPathTreeDomainTest, CollapseInvalid) {
+  const auto* x = DexString::make_string("x");
+  const auto* y = DexString::make_string("y");
+  const auto* z = DexString::make_string("z");
+
+  auto tree = IntSetAccessPathTree{
+      {AccessPath(Root(Root::Kind::Return)), IntSet{1}},
+      {AccessPath(Root(Root::Kind::Argument, 0), Path{x}), IntSet{2}},
+      {AccessPath(Root(Root::Kind::Argument, 0), Path{x, y}), IntSet{3}},
+      {AccessPath(Root(Root::Kind::Argument, 0), Path{x, z}), IntSet{4}},
+      {AccessPath(Root(Root::Kind::Argument, 1)), IntSet{5}},
+      {AccessPath(Root(Root::Kind::Argument, 1), Path{x}), IntSet{6}},
+  };
+
+  using Accumulator = std::string;
+
+  // Invalid paths are all children of "x", but "x" itself is valid.
+  auto is_valid = [](const Accumulator& previous_field,
+                     Path::Element path_element) {
+    if (previous_field == "x") {
+      return std::make_pair(false, std::string(""));
+    }
+    return std::make_pair(true, path_element->str());
+  };
+
+  // Argument(1) will be an invalid root, return an accumulator that causes
+  // its children to be collapsed under `is_valid` above. The argument itself
+  // will still exist.
+  auto initial_accumulator = [](const Root& root) {
+    if (root.is_argument() && root.parameter_position() == 1) {
+      return std::string("x");
+    }
+    return root.to_string();
+  };
+
+  tree.collapse_invalid_paths<Accumulator>(is_valid, initial_accumulator);
+  EXPECT_EQ(
+      tree,
+      (IntSetAccessPathTree{
+          {AccessPath(Root(Root::Kind::Return)), IntSet{1}},
+          {AccessPath(Root(Root::Kind::Argument, 0), Path{x}), IntSet{2, 3, 4}},
+          {AccessPath(Root(Root::Kind::Argument, 1)), IntSet{5, 6}},
+      }));
+}
+
 } // namespace marianatrench

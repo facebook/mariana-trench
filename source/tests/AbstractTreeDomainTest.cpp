@@ -1220,4 +1220,42 @@ TEST_F(AbstractTreeDomainTest, Propagate) {
       }}));
 }
 
+TEST_F(AbstractTreeDomainTest, CollapseInvalid) {
+  const auto* x = DexString::make_string("x");
+  const auto* y = DexString::make_string("y");
+  const auto* z = DexString::make_string("z");
+
+  auto tree = IntSetTree{IntSet{1}};
+  tree.write(Path{x}, IntSet{2}, UpdateKind::Weak);
+  tree.write(Path{x, z}, IntSet{3}, UpdateKind::Weak);
+  tree.write(Path{x, y}, IntSet{4}, UpdateKind::Weak);
+  tree.write(Path{y}, IntSet{5}, UpdateKind::Weak);
+  tree.write(Path{z}, IntSet{6}, UpdateKind::Weak);
+
+  using Accumulator = Path;
+
+  // Invalid paths are z and x.y (x.z is valid)
+  auto is_valid =
+      [x, y, z](const Accumulator& previous_path, Path::Element path_element) {
+        if ((previous_path == Path() && path_element == z) ||
+            (previous_path == Path{x} && path_element == y)) {
+          return std::make_pair(false, Path());
+        }
+
+        auto current_path = previous_path;
+        current_path.append(path_element);
+        return std::make_pair(true, current_path);
+      };
+  tree.collapse_invalid_paths<Accumulator>(is_valid, Path());
+
+  EXPECT_EQ(
+      tree,
+      (IntSetTree{
+          {Path{}, IntSet{1, 6}}, // originally {} and z
+          {Path{x}, IntSet{2, 4}}, // originally x and x.y
+          {Path{x, z}, IntSet{3}},
+          {Path{y}, IntSet{5}},
+      }));
+}
+
 } // namespace marianatrench

@@ -409,6 +409,34 @@ class AbstractTreeDomain final
     });
   }
 
+  /**
+   * When a path is invalid, collapse its taint into its parent's.
+   *
+   * A path is invalid if `is_valid().first` is `false`. If valid, the
+   * Accumulator contains information about visited paths so far.
+   */
+  template <typename Accumulator>
+  void collapse_invalid_paths(
+      const std::function<
+          std::pair<bool, Accumulator>(const Accumulator&, PathElement)>&
+          is_valid,
+      const Accumulator& accumulator) {
+    Map new_children;
+    for (const auto& [path_element, subtree] : children_) {
+      const auto& [valid, accumulator_for_subtree] =
+          is_valid(accumulator, path_element);
+      if (!valid) {
+        // Invalid path, collapse subtree into current tree.
+        elements_.join_with(subtree.collapse());
+      } else {
+        auto subtree_copy = subtree;
+        subtree_copy.collapse_invalid_paths(is_valid, accumulator_for_subtree);
+        new_children.insert_or_assign(path_element, std::move(subtree_copy));
+      }
+    }
+    children_ = new_children;
+  }
+
   /* Collapse children that have more than `max_leaves` leaves. */
   void limit_leaves(std::size_t max_leaves) {
     auto depth = depth_exceeding_max_leaves(max_leaves);
