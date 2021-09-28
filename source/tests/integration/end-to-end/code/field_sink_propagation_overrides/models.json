@@ -1,0 +1,47 @@
+[
+  {
+    "method": "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;",
+    "sources": [
+      {
+        "kind": "Source",
+        "port": "Return"
+      }
+    ]
+  },
+  {
+    "method": "Lcom/facebook/marianatrench/integrationtests/Flow;.source:()Lcom/facebook/marianatrench/integrationtests/Flow$IrrelevantField;",
+    "sources": [
+      {
+        "kind": "Source",
+        "port": "Return"
+      }
+    ]
+  },
+  {
+    "method": "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
+    "sinks": [
+      {
+        "kind": "Sink",
+        "port": "Argument(0)"
+      }
+    ]
+  },
+  {
+    "method": "Lcom/facebook/marianatrench/integrationtests/Flow;.taintResult:(Lcom/facebook/marianatrench/integrationtests/Flow$Base;)Lcom/facebook/marianatrench/integrationtests/Flow$WithField;",
+    "propagation": [
+      {
+        "input": "Argument(1)",
+        "output": "Return"
+      }
+    ]
+  },
+  {
+    "method": "Lcom/facebook/marianatrench/integrationtests/Flow;.taintResultField:(Lcom/facebook/marianatrench/integrationtests/Flow$Base;)Lcom/facebook/marianatrench/integrationtests/Flow$WithField;",
+    "propagation": [
+      {
+        "input": "Argument(1)",
+        "output": "Return"
+      }
+    ]
+  }
+]
