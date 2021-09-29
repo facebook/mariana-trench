@@ -100,5 +100,5 @@ The final part of the trace is the *sink trace*: This is where the data from the
 <img alt="Trace Source" src={useBaseUrl('img/trace_sink.png')} />
 
 ## Configuring Mariana Trench
-You might be asking yourself, "how does the tool know what is user controlled data, and what is a sink?". This guide is meant to quickly get you started on a small app. We did not cover how to configure Mariana Trench. You can read more about that in the [Configuration section](configuration).
+You might be asking yourself, "how does the tool know what is user controlled data, and what is a sink?". This guide is meant to quickly get you started on a small app. We did not cover how to configure Mariana Trench. You can read more about that in the [Configuration section](./configuration.md).
 </OssOnly>
