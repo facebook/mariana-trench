@@ -28,7 +28,7 @@ namespace {
 class TypesTest : public test::Test {
  public:
   std::string temporary_directory() {
-    return boost::filesystem::path(__FILE__).parent_path() / "temp";
+    return (boost::filesystem::path(__FILE__).parent_path() / "temp").string();
   }
 
  private:
