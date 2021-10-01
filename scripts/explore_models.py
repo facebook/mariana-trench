@@ -129,6 +129,13 @@ def print_model(method: str) -> None:
     subprocess.run(["jq", "-C"], input=model, check=True)
 
 
+def dump_model(method: str, filename: str, indent: int = 2) -> None:
+    """Dump model for the given method to given filename."""
+    with open(filename, "w") as f:
+        model = json.loads(_get_model_bytes(method))
+        f.write(json.dumps(model, indent=indent))
+
+
 def print_help() -> None:
     print("# Mariana Trench Model Explorer")
     print("Available commands:")
@@ -138,6 +145,7 @@ def print_help() -> None:
         (method_matching, "method_matching('Foo.*')"),
         (get_model, "get_model('Foo;.bar')"),
         (print_model, "print_model('Foo;.bar')"),
+        (dump_model, "dump_model('Foo;.bar', 'bar.json', [indent=2])"),
     ]
     max_width = max(len(command[1]) for command in commands)
     for command, example in commands:
