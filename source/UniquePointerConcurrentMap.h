@@ -12,7 +12,9 @@
 namespace marianatrench {
 
 /**
- * A thread-safe map from `Key` to `std::unique_pointer<const Value>`
+ * A thread-safe map from `Key` to `std::unique_pointer<const Value>`.
+ * `ConcurrentMap` can only return by value. `UniquePointerConcurrentMap` can
+ * be used instead to avoid copying on lookup.
  */
 template <typename Key, typename Value>
 class UniquePointerConcurrentMap final {
