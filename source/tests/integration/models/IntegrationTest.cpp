@@ -22,6 +22,7 @@
 #include <mariana-trench/ClassHierarchies.h>
 #include <mariana-trench/ClassProperties.h>
 #include <mariana-trench/Dependencies.h>
+#include <mariana-trench/Fields.h>
 #include <mariana-trench/Interprocedural.h>
 #include <mariana-trench/JsonValidation.h>
 #include <mariana-trench/Log.h>
@@ -447,6 +448,7 @@ TEST_P(IntegrationTest, ReturnsExpectedModel) {
       options, context.stores, *context.features);
   context.class_hierarchies =
       std::make_unique<ClassHierarchies>(*context.options, context.stores);
+  context.fields = std::make_unique<Fields>(context.stores);
   context.overrides = std::make_unique<Overrides>(
       *context.options, *context.methods, context.stores);
   context.call_graph = std::make_unique<CallGraph>(

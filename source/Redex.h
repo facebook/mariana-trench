@@ -77,6 +77,12 @@ DexMethod* create_void_method(
 DexAnnotationSet* create_annotation_set(
     const std::vector<std::string>& annotations);
 
+std::vector<const DexField*> create_fields(
+    Scope& scope,
+    const std::string& class_name,
+    const std::vector<std::pair<std::string, const DexType*>>& fields,
+    const DexType* super = nullptr);
+
 } // namespace redex
 
 } // namespace marianatrench

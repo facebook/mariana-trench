@@ -262,4 +262,33 @@ DexAnnotationSet* redex::create_annotation_set(
   return dannoset;
 }
 
+std::vector<const DexField*> redex::create_fields(
+    Scope& scope,
+    const std::string& class_name,
+    const std::vector<std::pair<std::string, const DexType*>>& fields,
+    const DexType* super) {
+  std::vector<const DexField*> created_fields;
+  auto* klass = DexType::make_type(DexString::make_string(class_name));
+  ClassCreator creator(klass);
+
+  if (super) {
+    creator.set_super(const_cast<DexType*>(super));
+  } else {
+    creator.set_super(type::java_lang_Object());
+  }
+
+  for (const auto& [field_name, field_type] : fields) {
+    auto* field_ref = DexField::make_field(
+        /* container */ klass,
+        /* name */ DexString::make_string(field_name),
+        /* type */ field_type);
+    auto* field = field_ref->make_concrete(DexAccessFlags::ACC_PUBLIC, nullptr);
+    creator.add_field(field);
+    created_fields.push_back(field);
+  }
+
+  scope.push_back(creator.create());
+  return created_fields;
+}
+
 } // namespace marianatrench

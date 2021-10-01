@@ -15,6 +15,7 @@
 #include <mariana-trench/ClassProperties.h>
 #include <mariana-trench/Compiler.h>
 #include <mariana-trench/Features.h>
+#include <mariana-trench/Fields.h>
 #include <mariana-trench/Heuristics.h>
 #include <mariana-trench/JsonValidation.h>
 #include <mariana-trench/Log.h>
@@ -67,29 +68,6 @@ std::unordered_set<const DexType*> types_in_class_hierarchy(
   }
 
   return types;
-}
-
-/**
- * Returns the type of `field` in `type` if the field exists, and `nullptr` if
- * not. Only looks within `type`, and not its inherited fields.
- */
-const DexType* MT_NULLABLE
-type_of_field(const DexType* type, Path::Element field) {
-  const auto* klass = type_class(type);
-  if (klass == nullptr) {
-    // type is not a class, it cannot have fields.
-    return nullptr;
-  }
-
-  auto fields = klass->get_all_fields();
-  auto class_field = std::find_if(
-      fields.begin(), fields.end(), [field](const auto* class_field) {
-        return class_field->get_name() == field;
-      });
-  if (class_field == fields.end()) {
-    return nullptr;
-  }
-  return (*class_field)->get_type();
 }
 
 } // namespace
@@ -404,7 +382,7 @@ void Model::collapse_invalid_paths(Context& context) {
 
       auto types = types_in_class_hierarchy(previous_field_type, context);
       for (const auto* type : types) {
-        const auto* path_element_type = type_of_field(type, field);
+        const auto* path_element_type = context.fields->field_type(type, field);
         if (path_element_type != nullptr) {
           current_field_types.insert(path_element_type);
         }

@@ -17,6 +17,7 @@
 #include <mariana-trench/ClassProperties.h>
 #include <mariana-trench/Context.h>
 #include <mariana-trench/Dependencies.h>
+#include <mariana-trench/Fields.h>
 #include <mariana-trench/Highlights.h>
 #include <mariana-trench/Interprocedural.h>
 #include <mariana-trench/JsonValidation.h>
@@ -96,6 +97,12 @@ Registry MarianaTrench::analyze(Context& context) {
   LOG(1,
       "Built class hierarchies in {:.2f}s.",
       class_hierarchies_timer.duration_in_seconds());
+
+  Timer fields_timer;
+  LOG(1, "Building fields cache...");
+  context.fields = std::make_unique<Fields>(context.stores);
+  context.statistics->log_time("fields", fields_timer);
+  LOG(1, "Built fields cache in {:.2f}s.", fields_timer.duration_in_seconds());
 
   Timer lifecycle_methods_timer;
   LOG(1, "Creating life-cycle wrapper methods...");
