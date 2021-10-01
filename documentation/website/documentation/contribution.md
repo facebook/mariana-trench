@@ -1,7 +1,7 @@
 ---
-id: developers-guide
-title: Developer's Guide
-sidebar_label: Developer's Guide
+id: contribution
+title: Contribution
+sidebar_label: Contribution
 ---
 
 This documentation aims to help you become an active contributor to Mariana Trench.

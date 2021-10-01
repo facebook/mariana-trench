@@ -7,18 +7,27 @@
  * @format
  */
 
-const {fbInternalOnly} = require('internaldocs-fb-helpers');
+const {fbContent, fbInternalOnly} = require('internaldocs-fb-helpers');
 
 module.exports = {
-  someSidebar: [
+  docs: {
+  "User Guide": [
     'overview',
     'getting-started',
-    'customize_sources_and_sinks',
-    'models',
-    fbInternalOnly('fb/running-tests'),
     fbInternalOnly('fb/running-on-apps'),
     fbInternalOnly('fb/running-on-3rd-party-apps'),
-    'configuration',
-    'developers-guide',
-  ],
+    'customize_sources_and_sinks',
+    'models',
+    'configuration'],
+  "Developer Guide": [
+    fbContent({external: 'contribution'}),
+    fbInternalOnly('fb/running-tests'),
+    fbInternalOnly('fb/inspecting-an-apk'),
+    fbInternalOnly('fb/android-lifecycles'),
+    fbInternalOnly('fb/debugging-fp-fns'),
+    fbInternalOnly('fb/deployment'),
+    fbInternalOnly('fb/continuous-and-diff-runs'),
+    fbInternalOnly("fb/crtex"),
+    ]
+  },
 };
