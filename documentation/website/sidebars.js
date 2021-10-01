@@ -14,11 +14,15 @@ module.exports = {
   "User Guide": [
     'overview',
     'getting-started',
+    fbInternalOnly("fb/xfn-onboarding"),
+    fbInternalOnly("fb/using-mt-101"),
     fbInternalOnly('fb/running-on-apps'),
     fbInternalOnly('fb/running-on-3rd-party-apps'),
     'customize_sources_and_sinks',
     'models',
-    'configuration'],
+    'configuration',
+    fbInternalOnly("fb/known-false-negatives"),
+],
   "Developer Guide": [
     fbContent({external: 'contribution'}),
     fbInternalOnly('fb/running-tests'),
