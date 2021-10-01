@@ -1,5 +1,5 @@
 ---
-id: customize_sources_and_sinks
+id: customize-sources-and-sinks
 title: Customize Sources and Sinks
 sidebar_label: Customize Sources and Sinks
 ---

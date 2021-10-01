@@ -13,18 +13,19 @@ module.exports = {
   docs: {
   "User Guide": [
     'overview',
-    'getting-started',
-    fbInternalOnly("fb/xfn-onboarding"),
+    fbContent({external: 'getting-started'}),
     fbInternalOnly("fb/using-mt-101"),
+    fbInternalOnly("fb/xfn-onboarding"),
     fbInternalOnly('fb/running-on-apps'),
     fbInternalOnly('fb/running-on-3rd-party-apps'),
-    'customize_sources_and_sinks',
+    'customize-sources-and-sinks',
     'models',
     'configuration',
     fbInternalOnly("fb/known-false-negatives"),
 ],
   "Developer Guide": [
     fbContent({external: 'contribution'}),
+    fbInternalOnly('fb/developer-getting-started'),
     fbInternalOnly('fb/running-tests'),
     fbInternalOnly('fb/inspecting-an-apk'),
     fbInternalOnly('fb/android-lifecycles'),
