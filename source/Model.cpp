@@ -34,42 +34,6 @@ class ModelConsistencyError {
   }
 };
 
-/**
- * Returns all known DexTypes in the hierarchy of `type` (ancestors and
- * descendents).
- */
-std::unordered_set<const DexType*> types_in_class_hierarchy(
-    const DexType* type,
-    const Context& context) {
-  mt_assert(type != type::java_lang_Object());
-
-  const auto* klass = type_class(type);
-  if (klass == nullptr) {
-    // Not an object type, or class does not exist in the APK (might be in
-    // the system jars). No class hierarchy.
-    return std::unordered_set<const DexType*>{};
-  }
-
-  // Include self + descendants.
-  auto types = context.class_hierarchies->extends(type);
-  types.insert(type);
-
-  // Include inherited types.
-  const auto* super_class_type = klass->get_super_class();
-  while (super_class_type) {
-    klass = type_class(super_class_type);
-    if (klass == nullptr) {
-      // This can happen if the class does not exist in the APK (e.g. exists in
-      // jar). Stop here. We do not have enough information about `klass`.
-      break;
-    }
-    types.insert(super_class_type);
-    super_class_type = klass->get_super_class();
-  }
-
-  return types;
-}
-
 } // namespace
 
 std::string model_mode_to_string(Model::Mode mode) {
@@ -380,13 +344,9 @@ void Model::collapse_invalid_paths(Context& context) {
         continue;
       }
 
-      auto types = types_in_class_hierarchy(previous_field_type, context);
-      for (const auto* type : types) {
-        const auto* path_element_type = context.fields->field_type(type, field);
-        if (path_element_type != nullptr) {
-          current_field_types.insert(path_element_type);
-        }
-      }
+      const auto& cached_types =
+          context.fields->field_types(previous_field_type, field);
+      current_field_types.insert(cached_types.begin(), cached_types.end());
     }
 
     if (current_field_types.empty()) {

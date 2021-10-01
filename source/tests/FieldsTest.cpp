@@ -40,7 +40,8 @@ Context test_fields(const Scope& scope) {
   context.types = std::make_unique<Types>(*context.options, context.stores);
   context.class_hierarchies =
       std::make_unique<ClassHierarchies>(*context.options, context.stores);
-  context.fields = std::make_unique<Fields>(context.stores);
+  context.fields =
+      std::make_unique<Fields>(*context.class_hierarchies, context.stores);
   return context;
 }
 
@@ -69,26 +70,28 @@ TEST_F(FieldsTest, Fields) {
   auto context = test_fields(scope);
   const auto& fields = *context.fields;
 
-  EXPECT_EQ(
-      fields.field_type(
+  EXPECT_THAT(
+      fields.field_types(
           redex::get_type("LBase;"), DexString::make_string("mBase")),
-      type::java_lang_String());
-  EXPECT_EQ(
-      fields.field_type(
-          redex::get_type("LBase;"),
-          DexString::make_string("mFieldDoesNotExist")),
-      nullptr);
-  EXPECT_EQ(
-      fields.field_type(
+      testing::UnorderedElementsAre(
+          type::java_lang_String(), redex::get_type("LBase;")));
+  EXPECT_TRUE(fields
+                  .field_types(
+                      redex::get_type("LBase;"),
+                      DexString::make_string("mFieldDoesNotExist"))
+                  .empty());
+  EXPECT_THAT(
+      fields.field_types(
           redex::get_type("LDerived;"), DexString::make_string("mDerived")),
-      type::java_lang_String());
-  EXPECT_EQ(
-      fields.field_type(
+      testing::UnorderedElementsAre(type::java_lang_String()));
+  EXPECT_THAT(
+      fields.field_types(
           redex::get_type("LDerived;"), DexString::make_string("mBase")),
-      redex::get_type("LBase;"));
-  EXPECT_EQ(
-      fields.field_type(
-          redex::get_type("LClassDoesNotExist;"),
-          DexString::make_string("mSomething")),
-      nullptr);
+      testing::UnorderedElementsAre(
+          type::java_lang_String(), redex::get_type("LBase;")));
+  EXPECT_TRUE(fields
+                  .field_types(
+                      redex::get_type("LClassDoesNotExist;"),
+                      DexString::make_string("mSomething"))
+                  .empty());
 }

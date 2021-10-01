@@ -11,18 +11,23 @@
 
 #include <DexStore.h>
 
+#include <mariana-trench/ClassHierarchies.h>
 #include <mariana-trench/Compiler.h>
 #include <mariana-trench/UniquePointerConcurrentMap.h>
 
 namespace marianatrench {
 
 class Fields final {
+ public:
+  using Types = std::unordered_set<const DexType*>;
+
  private:
-  using FieldNameToTypeMap =
-      std::unordered_map<const DexString*, const DexType*>;
+  using FieldTypeMap = std::unordered_map<const DexString*, Types>;
 
  public:
-  explicit Fields(const DexStoresVector& stores);
+  explicit Fields(
+      const ClassHierarchies& class_hierarchies,
+      const DexStoresVector& stores);
 
   Fields(const Fields&) = delete;
   Fields(Fields&&) = delete;
@@ -31,13 +36,15 @@ class Fields final {
   ~Fields() = default;
 
   /**
-   * Return the type of field in `klass`, nullptr if field does not exist.
+   * Returns the possible types of `field` in `klass`.
+   * This includes fields that may be present in any class in the hierarchy of
+   * `klass` (ancestors and descendents).
    */
-  const DexType* MT_NULLABLE
-  field_type(const DexType* klass, const DexString* field) const;
+  const Types& field_types(const DexType* klass, const DexString* field) const;
 
  private:
-  UniquePointerConcurrentMap<const DexType*, FieldNameToTypeMap> fields_;
+  UniquePointerConcurrentMap<const DexType*, FieldTypeMap> fields_;
+  Types empty_types_;
 };
 
 } // namespace marianatrench
