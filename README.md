@@ -53,7 +53,7 @@ We are now ready to run the analysis
 
 ```shell
 (mariana-trench)$ mariana-trench \
-  --system-jar-configuration-path=$ANDROID_SDK/platforms/android-30/android.jar
+  --system-jar-configuration-path=$ANDROID_SDK/platforms/android-30/android.jar \
   --apk-path=sample-app-debug.apk \
   --source-root-directory=app/src/main/java
 # ...
