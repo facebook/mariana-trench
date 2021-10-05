@@ -61,7 +61,7 @@ INFO Analyzed 68886 models in 4.04s. Found 4 issues!
 # ...
 ```
 
-The analysis has found 4 issues in our sample app. The output of the analyis is a set of specifications for each method of the application.
+The analysis has found 4 issues in our sample app. The output of the analysis is a set of specifications for each method of the application.
 
 ## Post Processing
 The specifications themselves are not meant to be read by humans. We need an additional processing step in order to make the results more presentable. We do this with [SAPP](https://github.com/facebook/sapp) PyPi installed for us:
@@ -73,14 +73,14 @@ The specifications themselves are not meant to be read by humans. We need an add
 2021-05-12 12:27:22,867 [INFO]  * Running on http://localhost:5000/ (Press CTRL+C to quit)
 ```
 
-The last line of the output tells us that SAPP started a local webserver that lets us look at the results. Open the link and you will see the 4 issues found by the analyis.
+The last line of the output tells us that SAPP started a local webserver that lets us look at the results. Open the link and you will see the 4 issues found by the analysis.
 
 ## Exploring Results
-Let's focus on the remote code execution issue found in the sample app. You can identify it by its issue code `1` (for all remote code executions) and the callable `void MainActivit.onCreate(Bundle)`. With only 4 issues to see it's easy to identify the issue manually but once more rules run, the filter functionality at the top right of the page comes in handy.
+Let's focus on the remote code execution issue found in the sample app. You can identify it by its issue code `1` (for all remote code executions) and the callable `void MainActivity.onCreate(Bundle)`. With only 4 issues to see it's easy to identify the issue manually but once more rules run, the filter functionality at the top right of the page comes in handy.
 
 ![Single Issue Display](https://github.com/facebook/mariana-trench/blob/main/documentation/website/static/img/issue.png?raw=true)
 
-The issue tells you that Mariana Trench found a remote code execution in `MainActivit.onCreate` where the data is coming from `Activity.getIntent` one call away, and flows into the constructor of `ProcessBuilder` 3 calls away. Click on "Traces" in the top right corner of the issue to see an example trace.
+The issue tells you that Mariana Trench found a remote code execution in `MainActivity.onCreate` where the data is coming from `Activity.getIntent` one call away, and flows into the constructor of `ProcessBuilder` 3 calls away. Click on "Traces" in the top right corner of the issue to see an example trace.
 
 The trace surfaced by Mariana Trench consists of three parts.
 
