@@ -29,6 +29,33 @@
           }
         ]
       }
+    },
+    {
+      "find": "methods",
+      "where": [
+        {
+          "constraint": "parent",
+          "inner": {
+            "constraint": "name",
+            "pattern": "Landroid/content/Context;"
+          }
+        },
+        {
+          "constraint": "is_static",
+          "value": false
+        }
+      ],
+      "model": {
+        "propagation": [
+          {
+            "input": "Argument(0)",
+            "output": "Return",
+            "features": [
+              "via-context-taint-this-taint-out"
+            ]
+          }
+        ]
+      }
     }
   ]
 }
