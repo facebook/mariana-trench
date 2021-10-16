@@ -20,6 +20,7 @@ class Statistics;
 class Options;
 class ArtificialMethods;
 class Methods;
+class Fields;
 class Positions;
 class Types;
 class ClassProperties;
@@ -50,6 +51,7 @@ class Context final {
   std::vector<DexStore> stores;
   std::unique_ptr<ArtificialMethods> artificial_methods;
   std::unique_ptr<Methods> methods;
+  std::unique_ptr<Fields> fields;
   std::unique_ptr<Positions> positions;
   std::unique_ptr<Types> types;
   std::unique_ptr<ClassProperties> class_properties;

@@ -9,6 +9,8 @@
 
 #include <mariana-trench/Access.h>
 #include <mariana-trench/CanonicalName.h>
+#include <mariana-trench/Field.h>
+#include <mariana-trench/Fields.h>
 #include <mariana-trench/Frame.h>
 #include <mariana-trench/JsonValidation.h>
 #include <mariana-trench/LifecycleMethod.h>
@@ -259,6 +261,36 @@ TEST_F(JsonTest, Method) {
           {{0, redex::get_type("LString;")},
            {1, redex::get_type("LInteger;")}}),
       context);
+}
+
+TEST_F(JsonTest, Field) {
+  Scope scope;
+  auto dex_field = redex::create_fields(
+      scope,
+      /* class_name */ "LBase;",
+      /* fields */
+      {{"field1", type::java_lang_String()},
+       {"field2", type::java_lang_String()}})[0];
+
+  DexStore store("stores");
+  store.add_classes(scope);
+  auto context = test::make_context(store);
+  const auto* field = context.fields->get(dex_field);
+
+  EXPECT_THROW(
+      Field::from_json(test::parse_json(R"({})"), context),
+      JsonValidationError);
+  EXPECT_THROW(
+      Field::from_json(
+          test::parse_json(R"("LBase;.non_existing:Ljava/lang/String;")"),
+          context),
+      JsonValidationError);
+  EXPECT_THROW(
+      Field::from_json(
+          test::parse_json(R"("LBase;.field1:Ljava/lang/Object;")"), context),
+      JsonValidationError);
+  EXPECT_JSON_EQ(
+      Field, R"("LBase;.field1:Ljava/lang/String;")", field, context);
 }
 
 TEST_F(JsonTest, Position) {

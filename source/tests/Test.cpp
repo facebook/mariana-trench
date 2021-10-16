@@ -13,6 +13,7 @@
 
 #include <RedexContext.h>
 
+#include <mariana-trench/Fields.h>
 #include <mariana-trench/JsonValidation.h>
 #include <mariana-trench/SanitizersOptions.h>
 #include <mariana-trench/tests/Test.h>
@@ -61,6 +62,7 @@ Context make_context(const DexStore& store) {
   context.artificial_methods =
       std::make_unique<ArtificialMethods>(*context.kinds, context.stores);
   context.methods = std::make_unique<Methods>(context.stores);
+  context.fields = std::make_unique<Fields>(context.stores);
   context.positions =
       std::make_unique<Positions>(*context.options, context.stores);
   context.types = std::make_unique<Types>(*context.options, context.stores);

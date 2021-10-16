@@ -13,6 +13,7 @@
 #include <mariana-trench/Dependencies.h>
 #include <mariana-trench/Features.h>
 #include <mariana-trench/FieldCache.h>
+#include <mariana-trench/Fields.h>
 #include <mariana-trench/Kinds.h>
 #include <mariana-trench/Methods.h>
 #include <mariana-trench/Options.h>

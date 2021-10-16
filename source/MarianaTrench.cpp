@@ -18,6 +18,7 @@
 #include <mariana-trench/Context.h>
 #include <mariana-trench/Dependencies.h>
 #include <mariana-trench/FieldCache.h>
+#include <mariana-trench/Fields.h>
 #include <mariana-trench/Highlights.h>
 #include <mariana-trench/Interprocedural.h>
 #include <mariana-trench/JsonValidation.h>
@@ -57,6 +58,8 @@ void MarianaTrench::add_options(
 Registry MarianaTrench::analyze(Context& context) {
   context.artificial_methods =
       std::make_unique<ArtificialMethods>(*context.kinds, context.stores);
+  Timer methods_timer;
+  LOG(1, "Storing methods...");
   context.methods = std::make_unique<Methods>(context.stores);
   if (context.options->dump_methods()) {
     auto method_list = Json::Value(Json::arrayValue);
@@ -67,6 +70,12 @@ Registry MarianaTrench::analyze(Context& context) {
     LOG(1, "Writing methods to `{}`.", methods_path.native());
     JsonValidation::write_json_file(methods_path, method_list);
   }
+  LOG(1, "Stored all methods in {:.2f}s", methods_timer.duration_in_seconds());
+
+  Timer fields_timer;
+  LOG(1, "Storing fields...");
+  context.fields = std::make_unique<Fields>(context.stores);
+  LOG(1, "Stored all fields in {:.2f}s", fields_timer.duration_in_seconds());
 
   Timer index_timer;
   LOG(1, "Building source index...");
