@@ -50,7 +50,7 @@ LifecycleMethodCall::get_dex_method(DexType* klass) const {
 }
 
 const DexTypeList* MT_NULLABLE LifecycleMethodCall::get_argument_types() const {
-  std::deque<DexType*> argument_types;
+  DexTypeList::ContainerType argument_types;
   for (const auto& argument_type : argument_types_) {
     auto* type = DexType::get_type(argument_type);
     if (type == nullptr) {
@@ -97,7 +97,7 @@ void LifecycleMethod::create_methods(
       ERROR(1, "Callee `{}` has invalid argument types.", callee.to_string());
       continue;
     }
-    for (auto* type : type_list->get_type_list()) {
+    for (auto* type : *type_list) {
       type_index_map.emplace(type, type_index_map.size() + 1);
     }
   }
@@ -179,7 +179,7 @@ const DexMethod* MT_NULLABLE LifecycleMethod::create_dex_method(
     auto* type_list = callee.get_argument_types();
     // This should have been verified at the start of `create_methods`
     mt_assert(type_list != nullptr);
-    for (auto* type : type_list->get_type_list()) {
+    for (auto* type : *type_list) {
       auto argument_register = method.get_local(type_index_map.at(type));
       invoke_with_registers.push_back(argument_register);
     }
@@ -211,7 +211,7 @@ const DexTypeList* LifecycleMethod::get_argument_types(
   // While the register locations for the arguments start at 1, the actual
   // argument index for the method's prototype start at index 0.
   int num_args = type_index_map.size();
-  std::deque<DexType*> argument_types(num_args, nullptr);
+  DexTypeList::ContainerType argument_types(num_args, nullptr);
   for (const auto& [type, pos] : type_index_map) {
     mt_assert(pos > 0); // 0 is for "this", should not be in the map.
     mt_assert(static_cast<size_t>(pos) - 1 < argument_types.max_size());

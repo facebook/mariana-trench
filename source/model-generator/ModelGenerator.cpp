@@ -137,16 +137,15 @@ std::optional<std::string> generator::get_super_type(const Method* method) {
 std::unordered_set<std::string> generator::get_interfaces_from_class(
     DexClass* dex_class) {
   std::unordered_set<std::string> interfaces;
-  std::deque<DexType*> interface_types =
-      dex_class->get_interfaces()->get_type_list();
+  std::deque<DexType*> interface_types = std::deque<DexType*>(
+      dex_class->get_interfaces()->begin(), dex_class->get_interfaces()->end());
   while (!interface_types.empty()) {
     DexType* interface = interface_types.back();
     interface_types.pop_back();
     interfaces.emplace(interface->get_name()->str());
     DexClass* interface_class = type_class(interface);
     if (interface_class) {
-      const auto& super_interface_types =
-          interface_class->get_interfaces()->get_type_list();
+      const auto& super_interface_types = *interface_class->get_interfaces();
       interface_types.insert(
           interface_types.end(),
           super_interface_types.begin(),

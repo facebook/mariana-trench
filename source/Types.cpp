@@ -98,7 +98,7 @@ std::unique_ptr<TypeEnvironments> Types::infer_local_types_for_method(
   auto* parameter_type_list = method->get_proto()->get_args();
   const auto& parameter_type_overrides = method->parameter_type_overrides();
   if (!parameter_type_overrides.empty()) {
-    std::deque<DexType*> new_parameter_type_list;
+    DexTypeList::ContainerType new_parameter_type_list;
     for (std::size_t parameter_position = 0;
          parameter_position < parameter_type_list->size();
          parameter_position++) {
