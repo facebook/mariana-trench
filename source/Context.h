@@ -24,7 +24,7 @@ class Positions;
 class Types;
 class ClassProperties;
 class ClassHierarchies;
-class Fields;
+class FieldCache;
 class Overrides;
 class CallGraph;
 class Rules;
@@ -54,7 +54,7 @@ class Context final {
   std::unique_ptr<Types> types;
   std::unique_ptr<ClassProperties> class_properties;
   std::unique_ptr<ClassHierarchies> class_hierarchies;
-  std::unique_ptr<Fields> fields;
+  std::unique_ptr<FieldCache> field_cache;
   std::unique_ptr<Overrides> overrides;
   std::unique_ptr<CallGraph> call_graph;
   std::unique_ptr<Rules> rules;

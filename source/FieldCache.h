@@ -17,7 +17,7 @@
 
 namespace marianatrench {
 
-class Fields final {
+class FieldCache final {
  public:
   using Types = std::unordered_set<const DexType*>;
 
@@ -25,15 +25,15 @@ class Fields final {
   using FieldTypeMap = std::unordered_map<const DexString*, Types>;
 
  public:
-  explicit Fields(
+  explicit FieldCache(
       const ClassHierarchies& class_hierarchies,
       const DexStoresVector& stores);
 
-  Fields(const Fields&) = delete;
-  Fields(Fields&&) = delete;
-  Fields& operator=(const Fields&) = delete;
-  Fields& operator=(Fields&&) = delete;
-  ~Fields() = default;
+  FieldCache(const FieldCache&) = delete;
+  FieldCache(FieldCache&&) = delete;
+  FieldCache& operator=(const FieldCache&) = delete;
+  FieldCache& operator=(FieldCache&&) = delete;
+  ~FieldCache() = default;
 
   /**
    * Returns the possible types of `field` in `klass`.
@@ -43,7 +43,7 @@ class Fields final {
   const Types& field_types(const DexType* klass, const DexString* field) const;
 
  private:
-  UniquePointerConcurrentMap<const DexType*, FieldTypeMap> fields_;
+  UniquePointerConcurrentMap<const DexType*, FieldTypeMap> field_cache_;
   Types empty_types_;
 };
 

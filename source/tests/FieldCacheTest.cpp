@@ -7,7 +7,7 @@
 
 #include <gtest/gtest.h>
 
-#include <mariana-trench/Fields.h>
+#include <mariana-trench/FieldCache.h>
 #include <mariana-trench/Redex.h>
 #include <mariana-trench/tests/Test.h>
 
@@ -15,7 +15,7 @@ using namespace marianatrench;
 
 namespace {
 
-class FieldsTest : public test::Test {};
+class FieldCacheTest : public test::Test {};
 
 Context test_fields(const Scope& scope) {
   Context context;
@@ -40,14 +40,14 @@ Context test_fields(const Scope& scope) {
   context.types = std::make_unique<Types>(*context.options, context.stores);
   context.class_hierarchies =
       std::make_unique<ClassHierarchies>(*context.options, context.stores);
-  context.fields =
-      std::make_unique<Fields>(*context.class_hierarchies, context.stores);
+  context.field_cache =
+      std::make_unique<FieldCache>(*context.class_hierarchies, context.stores);
   return context;
 }
 
 } // anonymous namespace
 
-TEST_F(FieldsTest, Fields) {
+TEST_F(FieldCacheTest, FieldCache) {
   Scope scope;
 
   redex::create_fields(
@@ -68,28 +68,28 @@ TEST_F(FieldsTest, Fields) {
       /* super */ redex::get_type("LBase;"));
 
   auto context = test_fields(scope);
-  const auto& fields = *context.fields;
+  const auto& field_cache = *context.field_cache;
 
   EXPECT_THAT(
-      fields.field_types(
+      field_cache.field_types(
           redex::get_type("LBase;"), DexString::make_string("mBase")),
       testing::UnorderedElementsAre(
           type::java_lang_String(), redex::get_type("LBase;")));
-  EXPECT_TRUE(fields
+  EXPECT_TRUE(field_cache
                   .field_types(
                       redex::get_type("LBase;"),
                       DexString::make_string("mFieldDoesNotExist"))
                   .empty());
   EXPECT_THAT(
-      fields.field_types(
+      field_cache.field_types(
           redex::get_type("LDerived;"), DexString::make_string("mDerived")),
       testing::UnorderedElementsAre(type::java_lang_String()));
   EXPECT_THAT(
-      fields.field_types(
+      field_cache.field_types(
           redex::get_type("LDerived;"), DexString::make_string("mBase")),
       testing::UnorderedElementsAre(
           type::java_lang_String(), redex::get_type("LBase;")));
-  EXPECT_TRUE(fields
+  EXPECT_TRUE(field_cache
                   .field_types(
                       redex::get_type("LClassDoesNotExist;"),
                       DexString::make_string("mSomething"))

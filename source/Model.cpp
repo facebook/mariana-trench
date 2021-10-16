@@ -15,7 +15,7 @@
 #include <mariana-trench/ClassProperties.h>
 #include <mariana-trench/Compiler.h>
 #include <mariana-trench/Features.h>
-#include <mariana-trench/Fields.h>
+#include <mariana-trench/FieldCache.h>
 #include <mariana-trench/Heuristics.h>
 #include <mariana-trench/JsonValidation.h>
 #include <mariana-trench/Log.h>
@@ -345,7 +345,7 @@ void Model::collapse_invalid_paths(Context& context) {
       }
 
       const auto& cached_types =
-          context.fields->field_types(previous_field_type, field);
+          context.field_cache->field_types(previous_field_type, field);
       current_field_types.insert(cached_types.begin(), cached_types.end());
     }
 

@@ -8,7 +8,7 @@
 #include <Walkers.h>
 
 #include <mariana-trench/Assert.h>
-#include <mariana-trench/Fields.h>
+#include <mariana-trench/FieldCache.h>
 
 namespace {
 
@@ -52,7 +52,7 @@ std::unordered_set<const DexType*> types_in_class_hierarchy(
 
 namespace marianatrench {
 
-Fields::Fields(
+FieldCache::FieldCache(
     const ClassHierarchies& class_hierarchies,
     const DexStoresVector& stores) {
   using FieldNameToTypeMap =
@@ -95,17 +95,18 @@ Fields::Fields(
         }
       }
 
-      fields_.emplace(
+      field_cache_.emplace(
           klass->get_type(),
           std::make_unique<FieldTypeMap>(std::move(all_field_types)));
     });
   }
 }
 
-const Fields::Types& Fields::field_types(
+const FieldCache::Types& FieldCache::field_types(
     const DexType* klass,
     const DexString* field) const {
-  const auto* field_name_to_type = fields_.get(klass, /* default */ nullptr);
+  const auto* field_name_to_type =
+      field_cache_.get(klass, /* default */ nullptr);
 
   if (field_name_to_type != nullptr) {
     auto result = field_name_to_type->find(field);
