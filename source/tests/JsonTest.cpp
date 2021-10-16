@@ -10,6 +10,7 @@
 #include <mariana-trench/Access.h>
 #include <mariana-trench/CanonicalName.h>
 #include <mariana-trench/Field.h>
+#include <mariana-trench/FieldModel.h>
 #include <mariana-trench/Fields.h>
 #include <mariana-trench/Frame.h>
 #include <mariana-trench/JsonValidation.h>
@@ -2337,6 +2338,101 @@ TEST_F(JsonTest, Model) {
           }
         ]
       })"));
+}
+
+TEST_F(JsonTest, FieldModel) {
+  Scope scope;
+  auto dex_field = redex::create_fields(
+      scope,
+      /* class_name */ "LBase;",
+      /* fields */
+      {{"field1", type::java_lang_String()},
+       {"field2", type::java_lang_String()}})[0];
+
+  DexStore store("stores");
+  store.add_classes(scope);
+  auto context = test::make_context(store);
+  const auto* field = context.fields->get(dex_field);
+  const auto* source_kind = context.kinds->get("TestSource");
+  const auto* source_kind2 = context.kinds->get("TestSource2");
+  const auto* sink_kind = context.kinds->get("TestSink");
+  const auto* feature = context.features->get("test-feature");
+
+  EXPECT_THROW(
+      FieldModel::from_json(field, test::parse_json(R"(1)"), context),
+      JsonValidationError);
+  EXPECT_EQ(
+      FieldModel::from_json(field, test::parse_json(R"({})"), context),
+      FieldModel(field));
+
+  // Field taint frames must be leaf frames
+  EXPECT_THROW(
+      FieldModel::from_json(
+          field,
+          test::parse_json(R"("generations": [
+            {"kind": "TestSource", "callee_port": "Return"},
+          ]})"),
+          context),
+      JsonValidationError);
+  EXPECT_THROW(
+      FieldModel::from_json(
+          field,
+          test::parse_json(R"("sinks": [
+            {"kind": "TestSource", "callee": "LClass;.someMethod:()V"},
+          ]})"),
+          context),
+      JsonValidationError);
+
+  // Test from_json
+  EXPECT_EQ(
+      FieldModel::from_json(
+          field,
+          test::parse_json(R"({"generations": [
+            {"kind": "TestSource"},
+            {"kind": "TestSource2", "features": ["test-feature"]}
+          ]})"),
+          context),
+      FieldModel(
+          field,
+          /* generations */
+          {Frame::leaf(source_kind),
+           test::make_frame(
+               source_kind2,
+               test::FrameProperties{
+                   .inferred_features = FeatureMayAlwaysSet::bottom(),
+                   .locally_inferred_features = FeatureMayAlwaysSet::bottom(),
+                   .user_features = FeatureSet{feature}})}));
+  EXPECT_EQ(
+      FieldModel::from_json(
+          field,
+          test::parse_json(R"({"sinks": [
+            {"kind": "TestSink"},
+          ]})"),
+          context),
+      FieldModel(
+          field,
+          /* generations */ {},
+          /* sinks */
+          {Frame::leaf(sink_kind)}));
+
+  // Test to_json
+  EXPECT_EQ(
+      FieldModel(field).to_json(),
+      test::parse_json(R"({"field": "LBase;.field1:Ljava/lang/String;"})"));
+  EXPECT_EQ(
+      FieldModel(
+          field,
+          /* generations */ {},
+          /* sinks */
+          {test::make_frame(
+              sink_kind,
+              test::FrameProperties{
+                  .inferred_features = FeatureMayAlwaysSet::bottom(),
+                  .locally_inferred_features = FeatureMayAlwaysSet::bottom(),
+                  .user_features = FeatureSet{feature}})})
+          .to_json(),
+      test::parse_json(
+          R"({"field": "LBase;.field1:Ljava/lang/String;", "sinks": [{"kind": "TestSink", "always_features": ["test-feature"], "callee_port": "Leaf"}]})"));
 }
 
 TEST_F(JsonTest, LifecycleMethod) {
