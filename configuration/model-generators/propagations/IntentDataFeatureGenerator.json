@@ -16,6 +16,13 @@
             "features": [
               "via-intent-data"
             ]
+          },
+          {
+            "input": "Argument(1)",
+            "output": "Return",
+            "features": [
+              "via-intent-data"
+            ]
           }
         ]
       }
