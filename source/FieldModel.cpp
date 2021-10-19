@@ -99,7 +99,7 @@ void FieldModel::join_with(const FieldModel& other) {
 }
 
 FieldModel FieldModel::from_json(
-    const Field* _Nullable field,
+    const Field* MT_NULLABLE field,
     const Json::Value& value,
     Context& context) {
   JsonValidation::validate_object(value);
