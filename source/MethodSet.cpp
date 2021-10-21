@@ -106,7 +106,7 @@ Json::Value MethodSet::to_json() const {
 
 std::ostream& operator<<(std::ostream& out, const MethodSet& methods) {
   if (methods.is_top_) {
-    return out << "TOP";
+    return out << "T";
   }
   out << "{";
   for (auto iterator = methods.begin(), end = methods.end(); iterator != end;) {

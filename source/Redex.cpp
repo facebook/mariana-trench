@@ -5,6 +5,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
+#include "mariana-trench/Redex.h"
 #include <json/json.h>
 
 #include <Creators.h>
@@ -260,6 +261,14 @@ DexAnnotationSet* redex::create_annotation_set(
   }
 
   return dannoset;
+}
+
+const DexField* redex::create_field(
+    Scope& scope,
+    const std::string& class_name,
+    const std::pair<std::string, const DexType*>& field,
+    const DexType* super) {
+  return redex::create_fields(scope, class_name, {field}, super)[0];
 }
 
 std::vector<const DexField*> redex::create_fields(

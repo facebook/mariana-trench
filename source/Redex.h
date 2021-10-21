@@ -77,6 +77,12 @@ DexMethod* create_void_method(
 DexAnnotationSet* create_annotation_set(
     const std::vector<std::string>& annotations);
 
+const DexField* create_field(
+    Scope& scope,
+    const std::string& class_name,
+    const std::pair<std::string, const DexType*>& field,
+    const DexType* super = nullptr);
+
 std::vector<const DexField*> create_fields(
     Scope& scope,
     const std::string& class_name,

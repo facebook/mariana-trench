@@ -266,12 +266,11 @@ TEST_F(JsonTest, Method) {
 
 TEST_F(JsonTest, Field) {
   Scope scope;
-  auto dex_field = redex::create_fields(
+  const auto* dex_field = redex::create_field(
       scope,
       /* class_name */ "LBase;",
       /* fields */
-      {{"field1", type::java_lang_String()},
-       {"field2", type::java_lang_String()}})[0];
+      {"field1", type::java_lang_String()});
 
   DexStore store("stores");
   store.add_classes(scope);
@@ -2342,12 +2341,11 @@ TEST_F(JsonTest, Model) {
 
 TEST_F(JsonTest, FieldModel) {
   Scope scope;
-  auto dex_field = redex::create_fields(
+  const auto* dex_field = redex::create_field(
       scope,
       /* class_name */ "LBase;",
       /* fields */
-      {{"field1", type::java_lang_String()},
-       {"field2", type::java_lang_String()}})[0];
+      {"field1", type::java_lang_String()});
 
   DexStore store("stores");
   store.add_classes(scope);
