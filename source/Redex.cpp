@@ -5,7 +5,6 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-#include "mariana-trench/Redex.h"
 #include <json/json.h>
 
 #include <Creators.h>
