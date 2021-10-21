@@ -90,6 +90,7 @@ Frame make_frame(const Kind* kind, const FrameProperties& properties) {
       properties.call_position,
       properties.distance,
       properties.origins,
+      properties.field_origins,
       properties.inferred_features,
       properties.locally_inferred_features,
       properties.user_features,

@@ -19,6 +19,10 @@ void Frame::set_origins(const MethodSet& origins) {
   origins_ = origins;
 }
 
+void Frame::set_field_origins(const FieldSet& field_origins) {
+  field_origins_ = field_origins;
+}
+
 void Frame::add_inferred_features(const FeatureMayAlwaysSet& features) {
   locally_inferred_features_.add(features);
 }
@@ -56,6 +60,7 @@ bool Frame::leq(const Frame& other) const {
                                 : callee_port_ == other.callee_port_) &&
         callee_ == other.callee_ && call_position_ == other.call_position_ &&
         distance_ >= other.distance_ && origins_.leq(other.origins_) &&
+        field_origins_.leq(other.field_origins_) &&
         inferred_features_.leq(other.inferred_features_) &&
         locally_inferred_features_.leq(other.locally_inferred_features_) &&
         user_features_.leq(other.user_features_) &&
@@ -74,6 +79,7 @@ bool Frame::equals(const Frame& other) const {
     return kind_ == other.kind_ && callee_port_ == other.callee_port_ &&
         callee_ == other.callee_ && call_position_ == other.call_position_ &&
         distance_ == other.distance_ && origins_ == other.origins_ &&
+        field_origins_ == other.field_origins_ &&
         inferred_features_ == other.inferred_features_ &&
         locally_inferred_features_ == other.locally_inferred_features_ &&
         user_features_ == other.user_features_ &&
@@ -103,6 +109,7 @@ void Frame::join_with(const Frame& other) {
 
     distance_ = std::min(distance_, other.distance_);
     origins_.join_with(other.origins_);
+    field_origins_.join_with(other.field_origins_);
     inferred_features_.join_with(other.inferred_features_);
     locally_inferred_features_.join_with(other.locally_inferred_features_);
     user_features_.join_with(other.user_features_);
@@ -139,6 +146,7 @@ Frame Frame::artificial_source(AccessPath access_path) {
       /* call_position */ nullptr,
       /* distance */ 0,
       /* origins */ {},
+      /* field_origins */ {},
       /* inferred_features */ {},
       /* locally_inferred_features */ {},
       /* user_features */ {},
@@ -262,6 +270,9 @@ Frame Frame::from_json(const Json::Value& value, Context& context) {
   JsonValidation::null_or_array(value, /* field */ "origins");
   auto origins = MethodSet::from_json(value["origins"], context);
 
+  JsonValidation::null_or_array(value, /* field */ "field_origins");
+  auto field_origins = FieldSet::from_json(value["field_origins"], context);
+
   // Inferred may_features and always_features. Technically, user-specified
   // features should go under "user_features", but this gives a way to override
   // that behavior and specify "may/always" features. Note that local inferred
@@ -353,6 +364,7 @@ Frame Frame::from_json(const Json::Value& value, Context& context) {
       call_position,
       distance,
       std::move(origins),
+      std::move(field_origins),
       std::move(inferred_features),
       /* locally_inferred_features */ FeatureMayAlwaysSet::bottom(),
       std::move(user_features),
@@ -387,6 +399,10 @@ Json::Value Frame::to_json() const {
 
   if (!origins_.empty()) {
     value["origins"] = origins_.to_json();
+  }
+
+  if (!field_origins_.empty()) {
+    value["field_origins"] = field_origins_.to_json();
   }
 
   JsonValidation::update_object(value, features().to_json());
@@ -456,6 +472,9 @@ std::ostream& operator<<(std::ostream& out, const Frame& frame) {
   }
   if (!frame.origins_.empty()) {
     out << ", origins=" << frame.origins_;
+  }
+  if (!frame.field_origins_.empty()) {
+    out << ", field_origins=" << frame.field_origins_;
   }
   if (!frame.inferred_features_.empty()) {
     out << ", inferred_features=" << frame.inferred_features_;

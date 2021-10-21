@@ -246,6 +246,7 @@ FrameSet FrameSet::attach_position(const Position* position) const {
             /* call_position */ position,
             /* distance */ 0,
             frame.origins(),
+            frame.field_origins(),
             frame.features(),
             /* locally_inferred_features */ FeatureMayAlwaysSet::bottom(),
             /* user_features */ FeatureSet::bottom(),
@@ -341,6 +342,7 @@ Frame FrameSet::propagate_frames(
     std::vector<const Feature*>& via_type_of_features_added) const {
   int distance = std::numeric_limits<int>::max();
   auto origins = MethodSet::bottom();
+  auto field_origins = FieldSet::bottom();
   auto inferred_features = FeatureMayAlwaysSet::bottom();
 
   for (const Frame& frame : frames) {
@@ -350,6 +352,7 @@ Frame FrameSet::propagate_frames(
 
     distance = std::min(distance, frame.distance() + 1);
     origins.join_with(frame.origins());
+    field_origins.join_with(frame.field_origins());
 
     // Note: This merges user features with existing inferred features.
     inferred_features.join_with(frame.features());
@@ -388,6 +391,7 @@ Frame FrameSet::propagate_frames(
       call_position,
       distance,
       std::move(origins),
+      std::move(field_origins),
       std::move(inferred_features),
       /* locally_inferred_features */ FeatureMayAlwaysSet::bottom(),
       /* user_features */ FeatureSet::bottom(),
@@ -458,6 +462,7 @@ FrameSet FrameSet::propagate_crtex_frames(
           propagated.call_position(),
           /* distance (always leaves for crtex frames) */ 0,
           propagated.origins(),
+          propagated.field_origins(),
           propagated.inferred_features(),
           propagated.locally_inferred_features(),
           propagated.user_features(),

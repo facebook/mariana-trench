@@ -7,6 +7,8 @@
 
 #include <gmock/gmock.h>
 
+#include <mariana-trench/FieldSet.h>
+#include <mariana-trench/Fields.h>
 #include <mariana-trench/Frame.h>
 #include <mariana-trench/Redex.h>
 #include <mariana-trench/tests/Test.h>
@@ -21,13 +23,23 @@ TEST_F(FrameTest, FrameConstructor) {
 }
 
 TEST_F(FrameTest, FrameLeq) {
-  auto context = test::make_empty_context();
-
   Scope scope;
+  auto dex_fields = redex::create_fields(
+      scope,
+      /* class_name */ "LClassThree;",
+      /* fields */
+      {{"field1", type::java_lang_Boolean()},
+       {"field2", type::java_lang_String()}});
+  DexStore store("stores");
+  store.add_classes(scope);
+  auto context = test::make_context(store);
+
   auto* one = context.methods->create(
       redex::create_void_method(scope, "LClass;", "one"));
   auto* two = context.methods->create(
       redex::create_void_method(scope, "LOther;", "two"));
+  auto* field_one = context.fields->get(dex_fields[0]);
+  auto* field_two = context.fields->get(dex_fields[1]);
 
   EXPECT_TRUE(Frame::bottom().leq(Frame::bottom()));
   EXPECT_TRUE(Frame::bottom().leq(test::make_frame(
@@ -78,6 +90,23 @@ TEST_F(FrameTest, FrameLeq) {
                    .leq(test::make_frame(
                        /* kind */ context.kinds->get("TestSource"),
                        test::FrameProperties{.origins = MethodSet{one}})));
+
+  // Compare field origins.
+  EXPECT_TRUE(test::make_frame(
+                  /* kind */ context.kinds->get("TestSource"),
+                  test::FrameProperties{.field_origins = FieldSet{field_one}})
+                  .leq(test::make_frame(
+                      /* kind */ context.kinds->get("TestSource"),
+                      test::FrameProperties{
+                          .field_origins = FieldSet{field_one, field_two}})));
+  EXPECT_FALSE(
+      test::make_frame(
+          /* kind */ context.kinds->get("TestSource"),
+          test::FrameProperties{
+              .field_origins = FieldSet{field_one, field_two}})
+          .leq(test::make_frame(
+              /* kind */ context.kinds->get("TestSource"),
+              test::FrameProperties{.field_origins = FieldSet{field_one}})));
 
   // Compare inferred features.
   EXPECT_TRUE(test::make_frame(
@@ -280,13 +309,23 @@ TEST_F(FrameTest, FrameEquals) {
 }
 
 TEST_F(FrameTest, FrameJoin) {
-  auto context = test::make_empty_context();
-
   Scope scope;
+  auto dex_fields = redex::create_fields(
+      scope,
+      /* class_name */ "LClassThree;",
+      /* fields */
+      {{"field1", type::java_lang_Boolean()},
+       {"field2", type::java_lang_String()}});
+  DexStore store("stores");
+  store.add_classes(scope);
+  auto context = test::make_context(store);
+
   auto* one = context.methods->create(
       redex::create_void_method(scope, "LClass;", "one"));
   auto* two = context.methods->create(
       redex::create_void_method(scope, "LOther;", "two"));
+  auto* field_one = context.fields->get(dex_fields[0]);
+  auto* field_two = context.fields->get(dex_fields[1]);
 
   EXPECT_EQ(Frame::bottom().join(Frame::bottom()), Frame::bottom());
   EXPECT_EQ(
@@ -405,6 +444,33 @@ TEST_F(FrameTest, FrameJoin) {
               .call_position = context.positions->unknown(),
               .distance = 1,
               .origins = MethodSet{one, two}}));
+
+  // Join field origins
+  EXPECT_EQ(
+      test::make_frame(
+          /* kind */ context.kinds->get("TestSource"),
+          test::FrameProperties{
+              .callee_port = AccessPath(Root(Root::Kind::Return)),
+              .callee = one,
+              .call_position = context.positions->unknown(),
+              .distance = 1,
+              .field_origins = FieldSet{field_one}})
+          .join(test::make_frame(
+              /* kind */ context.kinds->get("TestSource"),
+              test::FrameProperties{
+                  .callee_port = AccessPath(Root(Root::Kind::Return)),
+                  .callee = one,
+                  .call_position = context.positions->unknown(),
+                  .distance = 1,
+                  .field_origins = FieldSet{field_two}})),
+      test::make_frame(
+          /* kind */ context.kinds->get("TestSource"),
+          test::FrameProperties{
+              .callee_port = AccessPath(Root(Root::Kind::Return)),
+              .callee = one,
+              .call_position = context.positions->unknown(),
+              .distance = 1,
+              .field_origins = FieldSet{field_one, field_two}}));
 
   // Join inferred features.
   EXPECT_EQ(
@@ -525,16 +591,23 @@ TEST_F(FrameTest, FrameJoin) {
 }
 
 TEST_F(FrameTest, FrameWithKind) {
-  auto context = test::make_empty_context();
-
-  auto kind_a = context.kinds->get("TestSourceA");
-  auto kind_b = context.kinds->get("TestSourceB");
-
   Scope scope;
+  auto dex_fields = redex::create_field(
+      scope,
+      /* class_name */ "LClassThree;",
+      /* fields */
+      {"field1", type::java_lang_Boolean()});
+  DexStore store("stores");
+  store.add_classes(scope);
+  auto context = test::make_context(store);
+
   auto* one = context.methods->create(
       redex::create_void_method(scope, "LClass;", "one"));
   auto* two = context.methods->create(
       redex::create_void_method(scope, "LOther;", "two"));
+  auto* field = context.fields->get(dex_fields);
+  auto kind_a = context.kinds->get("TestSourceA");
+  auto kind_b = context.kinds->get("TestSourceB");
 
   auto frame1 = test::make_frame(
       /* kind */ kind_a,
@@ -544,6 +617,7 @@ TEST_F(FrameTest, FrameWithKind) {
           .call_position = context.positions->unknown(),
           .distance = 5,
           .origins = MethodSet{two},
+          .field_origins = FieldSet{field},
           .inferred_features = FeatureMayAlwaysSet::make_may(
               {context.features->get("FeatureOne"),
                context.features->get("FeatureTwo")})});
@@ -554,6 +628,7 @@ TEST_F(FrameTest, FrameWithKind) {
   EXPECT_EQ(frame1.call_position(), frame2.call_position());
   EXPECT_EQ(frame1.distance(), frame2.distance());
   EXPECT_EQ(frame1.origins(), frame2.origins());
+  EXPECT_EQ(frame1.field_origins(), frame2.field_origins());
   EXPECT_EQ(frame1.inferred_features(), frame2.inferred_features());
   EXPECT_EQ(
       frame1.locally_inferred_features(), frame2.locally_inferred_features());

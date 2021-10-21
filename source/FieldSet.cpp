@@ -86,6 +86,22 @@ void FieldSet::difference_with(const FieldSet& other) {
   set_.difference_with(other.set_);
 }
 
+FieldSet FieldSet::from_json(const Json::Value& value, Context& context) {
+  FieldSet fields;
+  for (const auto& field_value : JsonValidation::null_or_array(value)) {
+    fields.add(Field::from_json(field_value, context));
+  }
+  return fields;
+}
+
+Json::Value FieldSet::to_json() const {
+  auto fields = Json::Value(Json::arrayValue);
+  for (const auto* field : set_) {
+    fields.append(field->to_json());
+  }
+  return fields;
+}
+
 std::ostream& operator<<(std::ostream& out, const FieldSet& fields) {
   if (fields.is_top_) {
     return out << "T";

@@ -683,12 +683,20 @@ TEST_F(JsonTest, Frame) {
       redex::create_void_method(scope, "LClassOne;", "source");
   auto* dex_source_two =
       redex::create_void_method(scope, "LClassTwo;", "source");
+  auto dex_fields = redex::create_fields(
+      scope,
+      /* class_name */ "LClassThree;",
+      /* fields */
+      {{"field1", type::java_lang_Boolean()},
+       {"field2", type::java_lang_String()}});
 
   DexStore store("stores");
   store.add_classes(scope);
   auto context = test::make_context(store);
   auto* source_one = context.methods->get(dex_source_one);
   auto* source_two = context.methods->get(dex_source_two);
+  auto* field_one = context.fields->get(dex_fields[0]);
+  auto* field_two = context.fields->get(dex_fields[1]);
 
   EXPECT_THROW(
       Frame::from_json(test::parse_json(R"(1)"), context), JsonValidationError);
@@ -835,6 +843,44 @@ TEST_F(JsonTest, Frame) {
           /* kind */ context.kinds->get("TestSource"),
           test::FrameProperties{
               .origins = MethodSet{source_one, source_two},
+              .inferred_features = FeatureMayAlwaysSet::bottom(),
+              .locally_inferred_features = FeatureMayAlwaysSet::bottom()}),
+      context);
+
+  // Parse the field origins
+  EXPECT_THROW(
+      Frame::from_json(
+          test::parse_json(R"({
+            "kind": "TestSource",
+            "field_origins": "LClassThree;.field1:Ljava/lang/Boolean;"
+          })"),
+          context),
+      JsonValidationError);
+  EXPECT_JSON_EQ(
+      Frame,
+      R"({
+        "kind": "TestSource",
+        "callee_port": "Leaf",
+        "field_origins": ["LClassThree;.field1:Ljava/lang/Boolean;"]
+      })",
+      test::make_frame(
+          /* kind */ context.kinds->get("TestSource"),
+          test::FrameProperties{
+              .field_origins = FieldSet{field_one},
+              .inferred_features = FeatureMayAlwaysSet::bottom(),
+              .locally_inferred_features = FeatureMayAlwaysSet::bottom()}),
+      context);
+  EXPECT_JSON_EQ(
+      Frame,
+      R"({
+        "kind": "TestSource",
+        "callee_port": "Leaf",
+        "field_origins": ["LClassThree;.field1:Ljava/lang/Boolean;", "LClassThree;.field2:Ljava/lang/String;"]
+      })",
+      test::make_frame(
+          /* kind */ context.kinds->get("TestSource"),
+          test::FrameProperties{
+              .field_origins = FieldSet{field_one, field_two},
               .inferred_features = FeatureMayAlwaysSet::bottom(),
               .locally_inferred_features = FeatureMayAlwaysSet::bottom()}),
       context);

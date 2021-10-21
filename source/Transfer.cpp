@@ -612,6 +612,7 @@ void check_flows_to_array_allocation(
       /* call_position */ position,
       /* distance */ 1,
       /* origins */ MethodSet{array_allocation_method},
+      /* field_origins */ {},
       /* inferred features */ {},
       /* locally_inferred_features */ {},
       /* user features */ {},

@@ -109,6 +109,9 @@ class FieldSet final : public sparta::AbstractDomain<FieldSet> {
 
   void difference_with(const FieldSet& other);
 
+  static FieldSet from_json(const Json::Value& value, Context& context);
+  Json::Value to_json() const;
+
   friend std::ostream& operator<<(std::ostream& out, const FieldSet& fields);
 
  private:

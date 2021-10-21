@@ -57,6 +57,7 @@ struct FrameProperties {
   const Position* MT_NULLABLE call_position = nullptr;
   int distance = 0;
   MethodSet origins = {};
+  FieldSet field_origins = {};
   FeatureMayAlwaysSet inferred_features = {};
   FeatureMayAlwaysSet locally_inferred_features = {};
   FeatureSet user_features = {};

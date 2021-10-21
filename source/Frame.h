@@ -23,6 +23,7 @@
 #include <mariana-trench/Feature.h>
 #include <mariana-trench/FeatureMayAlwaysSet.h>
 #include <mariana-trench/FeatureSet.h>
+#include <mariana-trench/FieldSet.h>
 #include <mariana-trench/Kind.h>
 #include <mariana-trench/Kinds.h>
 #include <mariana-trench/LocalPositionSet.h>
@@ -98,6 +99,7 @@ class Frame final : public sparta::AbstractDomain<Frame> {
       const Position* MT_NULLABLE call_position,
       int distance,
       MethodSet origins,
+      FieldSet field_origins,
       FeatureMayAlwaysSet inferred_features,
       FeatureMayAlwaysSet locally_inferred_features,
       FeatureSet user_features,
@@ -110,6 +112,7 @@ class Frame final : public sparta::AbstractDomain<Frame> {
         call_position_(call_position),
         distance_(distance),
         origins_(std::move(origins)),
+        field_origins_(std::move(field_origins)),
         inferred_features_(std::move(inferred_features)),
         locally_inferred_features_(std::move(locally_inferred_features)),
         user_features_(std::move(user_features)),
@@ -134,6 +137,7 @@ class Frame final : public sparta::AbstractDomain<Frame> {
         /* call_position */ nullptr,
         /* distance */ 0,
         origins,
+        /* field origins */ {},
         inferred_features,
         locally_inferred_features,
         user_features,
@@ -164,6 +168,7 @@ class Frame final : public sparta::AbstractDomain<Frame> {
         /* call_position */ nullptr,
         /* distance */ 0,
         /* origins */ {},
+        /* field_origins */ {},
         /* inferred_features */ FeatureMayAlwaysSet::bottom(),
         /* locally_inferred_features */ FeatureMayAlwaysSet::bottom(),
         /* user_features */ {},
@@ -209,9 +214,14 @@ class Frame final : public sparta::AbstractDomain<Frame> {
   }
 
   void set_origins(const MethodSet& origins);
+  void set_field_origins(const FieldSet& field_origins);
 
   const MethodSet& origins() const {
     return origins_;
+  }
+
+  const FieldSet& field_origins() const {
+    return field_origins_;
   }
 
   /**
@@ -332,6 +342,7 @@ class Frame final : public sparta::AbstractDomain<Frame> {
   const Position* MT_NULLABLE call_position_;
   int distance_;
   MethodSet origins_;
+  FieldSet field_origins_;
   FeatureMayAlwaysSet inferred_features_;
   FeatureMayAlwaysSet locally_inferred_features_;
   FeatureSet user_features_;

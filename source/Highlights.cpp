@@ -242,6 +242,7 @@ Frame augment_frame_position(
       context.positions->get(position, bounds.line, bounds.start, bounds.end),
       frame.distance(),
       frame.origins(),
+      frame.field_origins(),
       frame.inferred_features(),
       frame.locally_inferred_features(),
       frame.user_features(),
