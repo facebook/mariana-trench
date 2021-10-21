@@ -6,6 +6,7 @@
  */
 
 #include <mariana-trench/Access.h>
+#include <mariana-trench/Assert.h>
 #include <mariana-trench/FieldModel.h>
 #include <mariana-trench/Log.h>
 #include <mariana-trench/Model.h>
@@ -56,15 +57,15 @@ void FieldModel::check_frame_consistency(
     FieldModelConsistencyError::raise(fmt::format(
         "Model for field `{}` contains an artificial {}.", show(field_), kind));
   }
-  if (field_ && frame.origins().empty()) {
+  if (field_ && frame.field_origins().empty()) {
     FieldModelConsistencyError::raise(fmt::format(
-        "Model for field `{}` contains a {} without origins.",
+        "Model for field `{}` contains a {} without field origins.",
         show(field_),
         kind));
   }
-  if (!frame.callee_port().root().is_leaf() || frame.callee() != nullptr ||
+  if (!frame.callee_port().root().is_leaf() ||
       frame.call_position() != nullptr || frame.distance() != 0 ||
-      !frame.via_type_of_ports().is_bottom() ||
+      !frame.origins().is_bottom() || !frame.via_type_of_ports().is_bottom() ||
       !frame.local_positions().is_bottom() ||
       !frame.canonical_names().is_bottom()) {
     FieldModelConsistencyError::raise(fmt::format(
@@ -75,12 +76,20 @@ void FieldModel::check_frame_consistency(
   }
 }
 
-void FieldModel::add_generation(const Frame& source) {
+void FieldModel::add_generation(Frame source) {
+  mt_assert(source.is_leaf());
+  if (field_ && source.field_origins().empty()) {
+    source.set_field_origins(FieldSet{field_});
+  }
   check_frame_consistency(source, "source");
   generations_.add(source);
 }
 
-void FieldModel::add_sink(const Frame& sink) {
+void FieldModel::add_sink(Frame sink) {
+  mt_assert(sink.is_leaf());
+  if (field_ && sink.field_origins().empty()) {
+    sink.set_field_origins(FieldSet{field_});
+  }
   check_frame_consistency(sink, "sink");
   sinks_.add(sink);
 }

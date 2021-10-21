@@ -460,7 +460,7 @@ void Model::check_frame_consistency(const Frame& frame, std::string_view kind)
         show(method_),
         kind));
   }
-  if (method_ && frame.origins().empty()) {
+  if (method_ && (frame.origins().empty() && frame.field_origins().empty())) {
     ModelConsistencyError::raise(fmt::format(
         "Model for method `{}` contains a {} without origins.",
         show(method_),

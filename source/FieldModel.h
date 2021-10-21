@@ -48,8 +48,8 @@ class FieldModel final {
     return sinks_;
   }
 
-  void add_generation(const Frame& source);
-  void add_sink(const Frame& source);
+  void add_generation(Frame source);
+  void add_sink(Frame source);
 
   void join_with(const FieldModel& other);
 

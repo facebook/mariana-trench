@@ -2476,7 +2476,7 @@ TEST_F(JsonTest, FieldModel) {
                   .user_features = FeatureSet{feature}})})
           .to_json(),
       test::parse_json(
-          R"({"field": "LBase;.field1:Ljava/lang/String;", "sinks": [{"kind": "TestSink", "always_features": ["test-feature"], "callee_port": "Leaf"}]})"));
+          R"({"field": "LBase;.field1:Ljava/lang/String;", "sinks": [{"kind": "TestSink", "always_features": ["test-feature"], "field_origins": ["LBase;.field1:Ljava/lang/String;"], "callee_port": "Leaf"}]})"));
 }
 
 TEST_F(JsonTest, LifecycleMethod) {
