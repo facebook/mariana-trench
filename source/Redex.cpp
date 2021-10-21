@@ -252,7 +252,7 @@ DexAnnotationSet* redex::create_annotation_set(
   DexAnnotationSet* dannoset = new DexAnnotationSet();
 
   for (const std::string& anno : annotations) {
-    DexString* dstring = DexString::make_string(anno);
+    const DexString* dstring = DexString::make_string(anno);
     DexType* dtype = DexType::make_type(dstring);
     DexAnnotation* danno =
         new DexAnnotation(dtype, DexAnnotationVisibility::DAV_RUNTIME);
