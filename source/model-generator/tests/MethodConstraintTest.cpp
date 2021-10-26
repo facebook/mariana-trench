@@ -16,10 +16,10 @@
 using namespace marianatrench;
 
 namespace {
-class JsonModelGeneratorTest : public test::Test {};
+class MethodConstraintTest : public test::Test {};
 } // namespace
 
-TEST_F(JsonModelGeneratorTest, TypeNameConstraintSatisfy) {
+TEST_F(MethodConstraintTest, TypeNameConstraintSatisfy) {
   std::string class_name = "Landroid/util/Log;";
   auto type = DexType::make_type(DexString::make_string(class_name));
 
@@ -29,98 +29,7 @@ TEST_F(JsonModelGeneratorTest, TypeNameConstraintSatisfy) {
   EXPECT_FALSE(TypeNameConstraint("([A-Za-z/]*/)+;").satisfy(type));
 }
 
-TEST_F(JsonModelGeneratorTest, AllOfTypeConstraintSatisfy) {
-  std::string class_name = "Landroid/util/Log;";
-  auto type = DexType::make_type(DexString::make_string(class_name));
-
-  EXPECT_TRUE(AllOfTypeConstraint({}).satisfy(type));
-
-  {
-    std::vector<std::unique_ptr<TypeConstraint>> constraints;
-    constraints.push_back(std::make_unique<TypeNameConstraint>(class_name));
-
-    EXPECT_TRUE(AllOfTypeConstraint(std::move(constraints)).satisfy(type));
-  }
-
-  {
-    std::vector<std::unique_ptr<TypeConstraint>> constraints;
-    constraints.push_back(std::make_unique<TypeNameConstraint>(class_name));
-    constraints.push_back(std::make_unique<TypeNameConstraint>(".*"));
-
-    EXPECT_TRUE(AllOfTypeConstraint(std::move(constraints)).satisfy(type));
-  }
-
-  {
-    std::vector<std::unique_ptr<TypeConstraint>> constraints;
-    constraints.push_back(
-        std::make_unique<TypeNameConstraint>("Landroid/util/Log"));
-
-    EXPECT_FALSE(AllOfTypeConstraint(std::move(constraints)).satisfy(type));
-  }
-
-  {
-    std::vector<std::unique_ptr<TypeConstraint>> constraints;
-    constraints.push_back(std::make_unique<TypeNameConstraint>("Landroid"));
-    constraints.push_back(
-        std::make_unique<TypeNameConstraint>("Landroid/util/Log"));
-
-    EXPECT_FALSE(AllOfTypeConstraint(std::move(constraints)).satisfy(type));
-  }
-}
-
-TEST_F(JsonModelGeneratorTest, AnyOfTypeConstraintSatisfy) {
-  std::string class_name = "Landroid/util/Log;";
-  auto type = DexType::make_type(DexString::make_string(class_name));
-
-  EXPECT_TRUE(AnyOfTypeConstraint({}).satisfy(type));
-
-  {
-    std::vector<std::unique_ptr<TypeConstraint>> constraints;
-    constraints.push_back(std::make_unique<TypeNameConstraint>(class_name));
-
-    EXPECT_TRUE(AnyOfTypeConstraint(std::move(constraints)).satisfy(type));
-  }
-
-  {
-    std::vector<std::unique_ptr<TypeConstraint>> constraints;
-    constraints.push_back(std::make_unique<TypeNameConstraint>(class_name));
-    constraints.push_back(
-        std::make_unique<TypeNameConstraint>("Landroid/util/Log"));
-
-    EXPECT_TRUE(AnyOfTypeConstraint(std::move(constraints)).satisfy(type));
-  }
-
-  {
-    std::vector<std::unique_ptr<TypeConstraint>> constraints;
-    constraints.push_back(
-        std::make_unique<TypeNameConstraint>("Landroid/util/Log"));
-
-    EXPECT_FALSE(AnyOfTypeConstraint(std::move(constraints)).satisfy(type));
-  }
-
-  {
-    std::vector<std::unique_ptr<TypeConstraint>> constraints;
-    constraints.push_back(std::make_unique<TypeNameConstraint>("Landroid"));
-    constraints.push_back(
-        std::make_unique<TypeNameConstraint>("Landroid/util/Log"));
-
-    EXPECT_FALSE(AllOfTypeConstraint(std::move(constraints)).satisfy(type));
-  }
-}
-
-TEST_F(JsonModelGeneratorTest, NotTypeConstraintSatisfy) {
-  std::string class_name = "Landroid/util/Log;";
-  auto type = DexType::make_type(DexString::make_string(class_name));
-
-  EXPECT_FALSE(
-      NotTypeConstraint(std::make_unique<TypeNameConstraint>(class_name))
-          .satisfy(type));
-  EXPECT_TRUE(NotTypeConstraint(
-                  std::make_unique<TypeNameConstraint>("Landroid/util/Log"))
-                  .satisfy(type));
-}
-
-TEST_F(JsonModelGeneratorTest, MethodNameConstraintSatisfy) {
+TEST_F(MethodConstraintTest, MethodNameConstraintSatisfy) {
   Scope scope;
   std::string method_name = "println";
   auto context = test::make_empty_context();
@@ -134,31 +43,7 @@ TEST_F(JsonModelGeneratorTest, MethodNameConstraintSatisfy) {
   EXPECT_FALSE(MethodNameConstraint("[0-9]+").satisfy(method));
 }
 
-TEST_F(JsonModelGeneratorTest, IntegerConstraintSatisfy) {
-  EXPECT_TRUE(IntegerConstraint(1, IntegerConstraint::Operator::EQ).satisfy(1));
-  EXPECT_TRUE(IntegerConstraint(1, IntegerConstraint::Operator::NE).satisfy(0));
-  EXPECT_TRUE(IntegerConstraint(1, IntegerConstraint::Operator::LE).satisfy(1));
-  EXPECT_TRUE(IntegerConstraint(1, IntegerConstraint::Operator::LE).satisfy(0));
-  EXPECT_TRUE(IntegerConstraint(1, IntegerConstraint::Operator::LT).satisfy(0));
-  EXPECT_TRUE(IntegerConstraint(1, IntegerConstraint::Operator::GE).satisfy(1));
-  EXPECT_TRUE(IntegerConstraint(1, IntegerConstraint::Operator::GE).satisfy(2));
-  EXPECT_TRUE(IntegerConstraint(1, IntegerConstraint::Operator::GT).satisfy(2));
-
-  EXPECT_FALSE(
-      IntegerConstraint(1, IntegerConstraint::Operator::EQ).satisfy(2));
-  EXPECT_FALSE(
-      IntegerConstraint(1, IntegerConstraint::Operator::NE).satisfy(1));
-  EXPECT_FALSE(
-      IntegerConstraint(1, IntegerConstraint::Operator::LE).satisfy(2));
-  EXPECT_FALSE(
-      IntegerConstraint(1, IntegerConstraint::Operator::LT).satisfy(2));
-  EXPECT_FALSE(
-      IntegerConstraint(1, IntegerConstraint::Operator::GE).satisfy(0));
-  EXPECT_FALSE(
-      IntegerConstraint(1, IntegerConstraint::Operator::GT).satisfy(0));
-}
-
-TEST_F(JsonModelGeneratorTest, ParentConstraintSatisfy) {
+TEST_F(MethodConstraintTest, ParentConstraintSatisfy) {
   Scope scope;
   std::string class_name = "Landroid/util/Log;";
   auto context = test::make_empty_context();
@@ -173,7 +58,7 @@ TEST_F(JsonModelGeneratorTest, ParentConstraintSatisfy) {
                    .satisfy(method));
 }
 
-TEST_F(JsonModelGeneratorTest, AllOfMethodConstraintSatisfy) {
+TEST_F(MethodConstraintTest, AllOfMethodConstraintSatisfy) {
   Scope scope;
   auto context = test::make_empty_context();
 
@@ -217,7 +102,7 @@ TEST_F(JsonModelGeneratorTest, AllOfMethodConstraintSatisfy) {
   }
 }
 
-TEST_F(JsonModelGeneratorTest, AnyOfMethodConstraintSatisfy) {
+TEST_F(MethodConstraintTest, AnyOfMethodConstraintSatisfy) {
   Scope scope;
   auto context = test::make_empty_context();
 
@@ -261,7 +146,7 @@ TEST_F(JsonModelGeneratorTest, AnyOfMethodConstraintSatisfy) {
   }
 }
 
-TEST_F(JsonModelGeneratorTest, NotMethodConstraintSatisfy) {
+TEST_F(MethodConstraintTest, NotMethodConstraintSatisfy) {
   Scope scope;
   auto context = test::make_empty_context();
 
@@ -279,7 +164,7 @@ TEST_F(JsonModelGeneratorTest, NotMethodConstraintSatisfy) {
           .satisfy(method));
 }
 
-TEST_F(JsonModelGeneratorTest, NumberParametersConstraintSatisfy) {
+TEST_F(MethodConstraintTest, NumberParametersConstraintSatisfy) {
   Scope scope;
   auto context = test::make_empty_context();
   auto methods = redex::create_methods(
@@ -313,7 +198,7 @@ TEST_F(JsonModelGeneratorTest, NumberParametersConstraintSatisfy) {
   EXPECT_FALSE(constraint.satisfy(context.methods->create(methods[2])));
 }
 
-TEST_F(JsonModelGeneratorTest, NumberOverridesConstraintSatisfy) {
+TEST_F(MethodConstraintTest, NumberOverridesConstraintSatisfy) {
   Scope scope;
   auto* dex_base_method = redex::create_void_method(
       scope,
@@ -356,7 +241,7 @@ TEST_F(JsonModelGeneratorTest, NumberOverridesConstraintSatisfy) {
   EXPECT_FALSE(constraint_one.satisfy(base_method));
 }
 
-TEST_F(JsonModelGeneratorTest, IsStaticConstraintSatisfy) {
+TEST_F(MethodConstraintTest, IsStaticConstraintSatisfy) {
   Scope scope;
   auto context = test::make_empty_context();
   auto methods = redex::create_methods(
@@ -382,7 +267,7 @@ TEST_F(JsonModelGeneratorTest, IsStaticConstraintSatisfy) {
   EXPECT_TRUE(constraint.satisfy(context.methods->create(methods[1])));
 }
 
-TEST_F(JsonModelGeneratorTest, IsNativeConstraintSatisfy) {
+TEST_F(MethodConstraintTest, IsNativeConstraintSatisfy) {
   Scope scope;
   auto context = test::make_empty_context();
   auto methods = redex::create_methods(
@@ -414,7 +299,7 @@ TEST_F(JsonModelGeneratorTest, IsNativeConstraintSatisfy) {
       IsNativeConstraint(false).satisfy(context.methods->create(methods[1])));
 }
 
-TEST_F(JsonModelGeneratorTest, HasCodeConstraintSatisfy) {
+TEST_F(MethodConstraintTest, HasCodeConstraintSatisfy) {
   Scope scope;
   auto context = test::make_empty_context();
   auto methods = redex::create_methods(scope, "LClass;", {R"(
@@ -430,7 +315,7 @@ TEST_F(JsonModelGeneratorTest, HasCodeConstraintSatisfy) {
       HasCodeConstraint(false).satisfy(context.methods->create(methods[0])));
 }
 
-TEST_F(JsonModelGeneratorTest, ParameterConstraintSatisfy) {
+TEST_F(MethodConstraintTest, ParameterConstraintSatisfy) {
   Scope scope;
   auto context = test::make_empty_context();
   auto methods = redex::create_methods(
@@ -457,7 +342,7 @@ TEST_F(JsonModelGeneratorTest, ParameterConstraintSatisfy) {
   EXPECT_FALSE(constraint.satisfy(context.methods->create(methods[1])));
 }
 
-TEST_F(JsonModelGeneratorTest, SignatureConstraintSatisfy) {
+TEST_F(MethodConstraintTest, SignatureConstraintSatisfy) {
   Scope scope;
   auto context = test::make_empty_context();
   auto methods = redex::create_methods(
@@ -484,7 +369,7 @@ TEST_F(JsonModelGeneratorTest, SignatureConstraintSatisfy) {
   EXPECT_FALSE(constraint.satisfy(context.methods->create(methods[1])));
 }
 
-TEST_F(JsonModelGeneratorTest, ExtendsConstraintSatisfy) {
+TEST_F(MethodConstraintTest, ExtendsConstraintSatisfy) {
   std::string class_name = "Landroid/util/Log;";
   ClassCreator creator(DexType::make_type(DexString::make_string(class_name)));
   creator.set_super(type::java_lang_Object());
@@ -526,47 +411,7 @@ TEST_F(JsonModelGeneratorTest, ExtendsConstraintSatisfy) {
                    .satisfy(type::java_lang_Object()));
 }
 
-TEST_F(JsonModelGeneratorTest, IsClassTypeConstraintSatisfy) {
-  std::string class_name = "Landroid/util/Log;";
-  ClassCreator creator(DexType::make_type(DexString::make_string(class_name)));
-  creator.set_super(type::java_lang_Object());
-  auto test_class = creator.create();
-
-  EXPECT_TRUE(IsClassTypeConstraint(true).satisfy(test_class->get_type()));
-  EXPECT_TRUE(IsClassTypeConstraint().satisfy(test_class->get_type()));
-  EXPECT_TRUE(IsClassTypeConstraint(true).satisfy(type::java_lang_Void()));
-  EXPECT_FALSE(IsClassTypeConstraint(false).satisfy(type::java_lang_Object()));
-  EXPECT_TRUE(IsClassTypeConstraint(false).satisfy(type::_int()));
-  EXPECT_FALSE(IsClassTypeConstraint(true).satisfy(type::_boolean()));
-}
-
-TEST_F(JsonModelGeneratorTest, IsInterfaceTypeConstraint) {
-  std::string interface_name = "Landroid/util/LogInterface";
-  ClassCreator interface_creator(
-      DexType::make_type(DexString::make_string(interface_name)));
-  interface_creator.set_access(DexAccessFlags::ACC_INTERFACE);
-  interface_creator.set_super(type::java_lang_Object());
-  auto test_interface = interface_creator.create();
-
-  std::string class_name = "Landroid/util/Log;";
-  ClassCreator creator(DexType::make_type(DexString::make_string(class_name)));
-  creator.set_super(type::java_lang_Object());
-  creator.add_interface(
-      DexType::make_type(DexString::make_string(interface_name)));
-  auto test_class = creator.create();
-
-  EXPECT_TRUE(
-      IsInterfaceTypeConstraint(true).satisfy(test_interface->get_type()));
-  EXPECT_TRUE(IsInterfaceTypeConstraint().satisfy(test_interface->get_type()));
-  EXPECT_FALSE(IsInterfaceTypeConstraint(false).satisfy(
-      test_class->get_interfaces()->at(0)));
-  EXPECT_FALSE(IsInterfaceTypeConstraint().satisfy(test_class->get_type()));
-  EXPECT_TRUE(
-      IsInterfaceTypeConstraint(false).satisfy(type::java_lang_Object()));
-  EXPECT_FALSE(IsInterfaceTypeConstraint(true).satisfy(type::java_lang_Void()));
-}
-
-TEST_F(JsonModelGeneratorTest, SuperConstraintSatisfy) {
+TEST_F(MethodConstraintTest, SuperConstraintSatisfy) {
   std::string class_name = "Landroid/util/Log;";
   std::string super_class_name = "Landroid/util/LogBase;";
 
@@ -599,7 +444,7 @@ TEST_F(JsonModelGeneratorTest, SuperConstraintSatisfy) {
                    .satisfy(test_class->get_type()));
 }
 
-TEST_F(JsonModelGeneratorTest, ReturnConstraint) {
+TEST_F(MethodConstraintTest, ReturnConstraint) {
   Scope scope;
   auto context = test::make_empty_context();
   auto methods = redex::create_methods(
@@ -631,7 +476,7 @@ TEST_F(JsonModelGeneratorTest, ReturnConstraint) {
                    .satisfy(context.methods->create(methods[1])));
 }
 
-TEST_F(JsonModelGeneratorTest, VisibilityMethodConstraint) {
+TEST_F(MethodConstraintTest, VisibilityMethodConstraint) {
   Scope scope;
   auto context = test::make_empty_context();
   auto methods = redex::create_methods(
@@ -680,399 +525,7 @@ TEST_F(JsonModelGeneratorTest, VisibilityMethodConstraint) {
                   .satisfy(context.methods->create(methods[2])));
 }
 
-TEST_F(JsonModelGeneratorTest, IntegerConstraintFromJson) {
-  {
-    auto constraint = IntegerConstraint::from_json(test::parse_json(
-        R"({
-          "constraint": "==",
-          "value": 3
-        })"));
-    EXPECT_EQ(
-        IntegerConstraint(3, IntegerConstraint::Operator::EQ), constraint);
-  }
-
-  {
-    auto constraint = IntegerConstraint::from_json(test::parse_json(
-        R"({
-          "constraint": ">=",
-          "value": 3
-        })"));
-    EXPECT_EQ(
-        IntegerConstraint(3, IntegerConstraint::Operator::GE), constraint);
-  }
-
-  {
-    auto constraint = IntegerConstraint::from_json(test::parse_json(
-        R"({
-          "constraint": ">",
-          "value": 3
-        })"));
-    EXPECT_EQ(
-        IntegerConstraint(3, IntegerConstraint::Operator::GT), constraint);
-  }
-
-  {
-    auto constraint = IntegerConstraint::from_json(test::parse_json(
-        R"({
-          "constraint": "<=",
-          "value": 3
-        })"));
-    EXPECT_EQ(
-        IntegerConstraint(3, IntegerConstraint::Operator::LE), constraint);
-  }
-
-  {
-    auto constraint = IntegerConstraint::from_json(test::parse_json(
-        R"({
-          "constraint": "<",
-          "value": 3
-        })"));
-    EXPECT_EQ(
-        IntegerConstraint(3, IntegerConstraint::Operator::LT), constraint);
-  }
-
-  {
-    auto constraint = IntegerConstraint::from_json(test::parse_json(
-        R"({
-          "constraint": "!=",
-          "value": 3
-        })"));
-    EXPECT_EQ(
-        IntegerConstraint(3, IntegerConstraint::Operator::NE), constraint);
-  }
-
-  EXPECT_THROW(
-      IntegerConstraint::from_json(test::parse_json(
-          R"({
-            "cOnstraint": "==",
-            "value": 3
-          })")),
-      JsonValidationError);
-
-  EXPECT_THROW(
-      IntegerConstraint::from_json(test::parse_json(
-          R"({
-            "constraint": "!==",
-            "value": 3
-          })")),
-      JsonValidationError);
-
-  EXPECT_THROW(
-      IntegerConstraint::from_json(test::parse_json(
-          R"({
-            "constraint": "==",
-            "vAlue": 3
-          })")),
-      JsonValidationError);
-}
-
-TEST_F(JsonModelGeneratorTest, TypeConstraintFromJson) {
-  // TypeNameConstraint
-  auto constraint = TypeConstraint::from_json(test::parse_json(
-      R"({
-        "constraint": "name",
-        "pattern": "Landroid/util/Log;"
-      })"));
-  EXPECT_EQ(TypeNameConstraint("Landroid/util/Log;"), *constraint);
-
-  EXPECT_THROW(
-      TypeConstraint::from_json(test::parse_json(
-          R"({
-            "cOnstraint": "name",
-            "pattern": "Landroid/util/Log;"
-          })")),
-      JsonValidationError);
-
-  EXPECT_THROW(
-      TypeConstraint::from_json(test::parse_json(
-          R"({
-            "constraint": "nAme",
-            "pattern": "Landroid/util/Log;"
-          })")),
-      JsonValidationError);
-
-  EXPECT_THROW(
-      TypeConstraint::from_json(test::parse_json(
-          R"({
-            "constraint": "name",
-            "paTtern": "Landroid/util/Log;"
-          })")),
-      JsonValidationError);
-  // TypeNameConstraint
-
-  // ExtendsConstraint
-  {
-    auto constraint = TypeConstraint::from_json(test::parse_json(
-        R"({
-          "constraint": "extends",
-          "include_self": true,
-          "inner": {
-            "constraint": "name",
-            "pattern": "Landroid/util/Log;"
-          }
-        })"));
-    EXPECT_EQ(
-        ExtendsConstraint(
-            std::make_unique<TypeNameConstraint>("Landroid/util/Log;"),
-            /* includes_self */ true),
-        *constraint);
-  }
-
-  {
-    auto constraint = TypeConstraint::from_json(test::parse_json(
-        R"({
-          "constraint": "extends",
-          "inner": {
-            "constraint": "name",
-            "pattern": "Landroid/util/Log;"
-          }
-        })"));
-    EXPECT_EQ(
-        ExtendsConstraint(
-            std::make_unique<TypeNameConstraint>("Landroid/util/Log;"),
-            /* includes_self */ true),
-        *constraint);
-  }
-
-  {
-    auto constraint = TypeConstraint::from_json(test::parse_json(
-        R"({
-          "constraint": "extends",
-          "include_self": false,
-          "inner": {
-            "constraint": "name",
-            "pattern": "Landroid/util/Log;"
-          }
-        })"));
-    EXPECT_EQ(
-        ExtendsConstraint(
-            std::make_unique<TypeNameConstraint>("Landroid/util/Log;"),
-            /* includes_self */ false),
-        *constraint);
-  }
-
-  EXPECT_THROW(
-      TypeConstraint::from_json(test::parse_json(
-          R"({
-            "cOnstraint": "extends",
-            "include_self": true,
-            "inner": {
-              "constraint": "name",
-              "pattern": "Landroid/util/Log;"
-            }
-          })")),
-      JsonValidationError);
-
-  EXPECT_THROW(
-      TypeConstraint::from_json(test::parse_json(
-          R"({
-            "constraint": "Extends",
-            "include_self": true,
-            "inner": {
-              "constraint": "name",
-              "pattern": "Landroid/util/Log;"
-            }
-          })")),
-      JsonValidationError);
-
-  EXPECT_THROW(
-      TypeConstraint::from_json(test::parse_json(
-          R"({
-            "constraint": "extends",
-            "include_self": true,
-            "iNner": {
-              "constraint": "name",
-              "pattern": "Landroid/util/Log;"
-            }
-          })")),
-      JsonValidationError);
-  // ExtendsConstraint
-
-  // SuperConstraint
-  {
-    auto constraint = TypeConstraint::from_json(test::parse_json(
-        R"({
-          "constraint": "super",
-          "inner": {
-            "constraint": "name",
-            "pattern": "Landroid/util/Log;"
-          }
-        })"));
-    EXPECT_EQ(
-        SuperConstraint(
-            std::make_unique<TypeNameConstraint>("Landroid/util/Log;")),
-        *constraint);
-  }
-
-  EXPECT_THROW(
-      TypeConstraint::from_json(test::parse_json(
-          R"({
-            "cOnstraint": "super",
-            "inner": {
-              "constraint": "name",
-              "pattern": "Landroid/util/Log;"
-            }
-          })")),
-      JsonValidationError);
-
-  EXPECT_THROW(
-      TypeConstraint::from_json(test::parse_json(
-          R"({
-            "constraint": "Super",
-            "inner": {
-              "constraint": "name",
-              "pattern": "Landroid/util/Log;"
-            }
-          })")),
-      JsonValidationError);
-
-  EXPECT_THROW(
-      TypeConstraint::from_json(test::parse_json(
-          R"({
-            "constraint": "super",
-            "iNner": {
-              "constraint": "name",
-              "pattern": "Landroid/util/Log;"
-            }
-          })")),
-      JsonValidationError);
-  // SuperConstraint
-
-  // HasAnnotationTypeConstraint
-  {
-    auto constraint = TypeConstraint::from_json(test::parse_json(
-        R"({
-          "constraint": "has_annotation",
-          "type": "Lcom/facebook/Annotation;",
-          "pattern": "A"
-        })"));
-    EXPECT_EQ(
-        HasAnnotationTypeConstraint("Lcom/facebook/Annotation;", "A"),
-        *constraint);
-  }
-
-  {
-    auto constraint = TypeConstraint::from_json(test::parse_json(
-        R"({
-          "constraint": "has_annotation",
-          "type": "Lcom/facebook/Annotation;"
-        })"));
-    EXPECT_EQ(
-        HasAnnotationTypeConstraint("Lcom/facebook/Annotation;", std::nullopt),
-        *constraint);
-  }
-
-  EXPECT_THROW(
-      TypeConstraint::from_json(test::parse_json(
-          R"({
-            "Constraint": "has_annotation",
-            "type": "Lcom/facebook/Annotation;",
-            "pattern": "A"
-          })")),
-      JsonValidationError);
-
-  EXPECT_THROW(
-      TypeConstraint::from_json(test::parse_json(
-          R"({
-            "constraint": "Has_annotation",
-            "type": "Lcom/facebook/Annotation;",
-            "pattern": "A"
-          })")),
-      JsonValidationError);
-
-  EXPECT_THROW(
-      TypeConstraint::from_json(test::parse_json(
-          R"({
-            "constraint": "has_annotation",
-            "Type": "Lcom/facebook/Annotation;",
-            "pattern": "A"
-          })")),
-      JsonValidationError);
-
-  EXPECT_THROW(
-      TypeConstraint::from_json(test::parse_json(
-          R"({
-            "constraint": "Has_annotation",
-            "type": "Lcom/facebook/Annotation;",
-            "Pattern": "A"
-          })")),
-      JsonValidationError);
-  // HasAnnotationTypeConstraint
-
-  // IsClassTypeConstraint
-  {
-    auto constraint = TypeConstraint::from_json(test::parse_json(
-        R"({
-          "constraint": "is_class",
-          "value": true
-        })"));
-    EXPECT_EQ(IsClassTypeConstraint(true), *constraint);
-  }
-
-  {
-    auto constraint = TypeConstraint::from_json(test::parse_json(
-        R"({
-          "constraint": "is_class",
-          "value": false
-        })"));
-    EXPECT_EQ(IsClassTypeConstraint(false), *constraint);
-  }
-
-  {
-    auto constraint = TypeConstraint::from_json(test::parse_json(
-        R"({
-          "constraint": "is_class"
-        })"));
-    EXPECT_EQ(IsClassTypeConstraint(true), *constraint);
-  }
-
-  EXPECT_THROW(
-      TypeConstraint::from_json(test::parse_json(
-          R"({
-          "constraint": "is_class",
-          "value": "true"
-        })")),
-      JsonValidationError);
-  // IsClassTypeConstraint
-
-  // IsInterfaceTypeConstraint
-  {
-    auto constraint = TypeConstraint::from_json(test::parse_json(
-        R"({
-          "constraint": "is_interface",
-          "value": true
-        })"));
-    EXPECT_EQ(IsInterfaceTypeConstraint(true), *constraint);
-  }
-
-  {
-    auto constraint = TypeConstraint::from_json(test::parse_json(
-        R"({
-          "constraint": "is_interface",
-          "value": false
-        })"));
-    EXPECT_EQ(IsInterfaceTypeConstraint(false), *constraint);
-  }
-
-  {
-    auto constraint = TypeConstraint::from_json(test::parse_json(
-        R"({
-          "constraint": "is_interface"
-        })"));
-    EXPECT_EQ(IsInterfaceTypeConstraint(true), *constraint);
-  }
-
-  EXPECT_THROW(
-      TypeConstraint::from_json(test::parse_json(
-          R"({
-          "constraint": "is_interface",
-          "value": "true"
-        })")),
-      JsonValidationError);
-  // IsInterfaceTypeConstraint
-}
-
-TEST_F(JsonModelGeneratorTest, MethodConstraintFromJson) {
+TEST_F(MethodConstraintTest, MethodConstraintFromJson) {
   auto context = test::make_empty_context();
 
   // MethodNameConstraint
@@ -2098,7 +1551,7 @@ TEST_F(JsonModelGeneratorTest, MethodConstraintFromJson) {
   // NotMethodConstraint
 }
 
-TEST_F(JsonModelGeneratorTest, MethodNameConstraintMaySatisfy) {
+TEST_F(MethodConstraintTest, MethodNameConstraintMaySatisfy) {
   Scope scope;
   auto* method_a =
       redex::create_void_method(scope, "class_name", "method_name_a");
@@ -2123,7 +1576,7 @@ TEST_F(JsonModelGeneratorTest, MethodNameConstraintMaySatisfy) {
                   .is_top());
 }
 
-TEST_F(JsonModelGeneratorTest, ParentConstraintMaySatisfy) {
+TEST_F(MethodConstraintTest, ParentConstraintMaySatisfy) {
   Scope scope;
   auto* method_a =
       redex::create_void_method(scope, "LClass;", "method_name_a", "", "V");
@@ -2200,7 +1653,7 @@ TEST_F(JsonModelGeneratorTest, ParentConstraintMaySatisfy) {
                   .is_bottom());
 }
 
-TEST_F(JsonModelGeneratorTest, AllOfMethodConstraintMaySatisfy) {
+TEST_F(MethodConstraintTest, AllOfMethodConstraintMaySatisfy) {
   Scope scope;
   auto* method_a =
       redex::create_void_method(scope, "class_name", "method_name_a");
@@ -2260,7 +1713,7 @@ TEST_F(JsonModelGeneratorTest, AllOfMethodConstraintMaySatisfy) {
   }
 }
 
-TEST_F(JsonModelGeneratorTest, AnyOfMethodConstraintMaySatisfy) {
+TEST_F(MethodConstraintTest, AnyOfMethodConstraintMaySatisfy) {
   Scope scope;
   auto* method_a =
       redex::create_void_method(scope, "class_name", "method_name_a");
@@ -2321,7 +1774,7 @@ TEST_F(JsonModelGeneratorTest, AnyOfMethodConstraintMaySatisfy) {
   }
 }
 
-TEST_F(JsonModelGeneratorTest, NotMethodConstraintMaySatisfy) {
+TEST_F(MethodConstraintTest, NotMethodConstraintMaySatisfy) {
   Scope scope;
   redex::create_void_method(scope, "class_name", "method_name_a");
   auto* method_b =
@@ -2352,7 +1805,7 @@ TEST_F(JsonModelGeneratorTest, NotMethodConstraintMaySatisfy) {
                   .is_top());
 }
 
-TEST_F(JsonModelGeneratorTest, UniqueConstraints) {
+TEST_F(MethodConstraintTest, UniqueConstraints) {
   Scope scope;
   DexStore store("stores");
   store.add_classes(scope);
