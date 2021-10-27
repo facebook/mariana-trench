@@ -58,7 +58,8 @@ Model create_model(const Method* method, Context& context) {
 
 } // namespace
 
-std::vector<Model> ContentProviderGenerator::run(const Methods& methods) {
+std::vector<Model> ContentProviderGenerator::emit_method_models(
+    const Methods& methods) {
   std::unordered_set<std::string> manifest_providers = {};
   try {
     auto android_resources = create_resource_reader(options_.apk_directory());

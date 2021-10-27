@@ -46,7 +46,8 @@ Model source_first_argument(const Method* method, Context& context) {
 
 } // namespace
 
-std::vector<Model> ServiceSourceGenerator::run(const Methods& methods) {
+std::vector<Model> ServiceSourceGenerator::emit_method_models(
+    const Methods& methods) {
   std::vector<Model> models;
 
   std::unordered_set<std::string> manifest_services = {};

@@ -22,7 +22,7 @@ JsonModelGeneratorItem::JsonModelGeneratorItem(
       model_template_(std::move(model_template)),
       verbosity_(verbosity) {}
 
-std::vector<Model> JsonModelGeneratorItem::run_filtered(
+std::vector<Model> JsonModelGeneratorItem::emit_method_models_filtered(
     const MethodHashedSet& methods) {
   return this->run_impl(methods.elements().begin(), methods.elements().end());
 }
@@ -108,10 +108,11 @@ JsonModelGenerator::JsonModelGenerator(
   }
 }
 
-std::vector<Model> JsonModelGenerator::run(const Methods& methods) {
+std::vector<Model> JsonModelGenerator::emit_method_models(
+    const Methods& methods) {
   std::vector<Model> models;
   for (auto& item : items_) {
-    std::vector<Model> method_models = item.run(methods);
+    std::vector<Model> method_models = item.emit_method_models(methods);
     models.insert(
         models.end(),
         std::make_move_iterator(method_models.begin()),
@@ -120,7 +121,7 @@ std::vector<Model> JsonModelGenerator::run(const Methods& methods) {
   return models;
 }
 
-std::vector<Model> JsonModelGenerator::run_optimized(
+std::vector<Model> JsonModelGenerator::emit_method_models_optimized(
     const Methods& methods,
     const MethodMappings& method_mappings) {
   std::vector<Model> models;
@@ -131,9 +132,9 @@ std::vector<Model> JsonModelGenerator::run_optimized(
     }
     std::vector<Model> method_models;
     if (filtered_methods.is_top()) {
-      method_models = item.run(methods);
+      method_models = item.emit_method_models(methods);
     } else {
-      method_models = item.run_filtered(filtered_methods);
+      method_models = item.emit_method_models_filtered(filtered_methods);
     }
     models.insert(
         models.end(),

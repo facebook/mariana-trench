@@ -16,7 +16,7 @@ class ContentProviderGenerator : public ModelGenerator {
   explicit ContentProviderGenerator(Context& context)
       : ModelGenerator("content_provider_generator", context) {}
 
-  std::vector<Model> run(const Methods&) override;
+  std::vector<Model> emit_method_models(const Methods&) override;
 };
 
 } // namespace marianatrench

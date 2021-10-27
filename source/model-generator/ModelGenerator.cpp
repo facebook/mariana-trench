@@ -36,13 +36,31 @@ ModelGenerator::ModelGenerator(const std::string& name, Context& context)
   mt_assert_log(context.overrides != nullptr, "invalid context");
 }
 
-std::vector<Model> ModelGenerator::run_optimized(
+ModelGeneratorResult ModelGenerator::run(
     const Methods& methods,
-    const MethodMappings& /* method_mappings */) {
-  return this->run(methods);
+    const Fields& /* fields */) {
+  return {
+      /* method_models */ emit_method_models(methods), /* field_models */ {}};
 }
 
-std::vector<Model> MethodVisitorModelGenerator::run(const Methods& methods) {
+ModelGeneratorResult ModelGenerator::run_optimized(
+    const Methods& methods,
+    const MethodMappings& method_mappings,
+    const Fields& /* fields */) {
+  return {
+      /* method_models */ emit_method_models_optimized(
+          methods, method_mappings),
+      /* field_models */ {}};
+}
+
+std::vector<Model> ModelGenerator::emit_method_models_optimized(
+    const Methods& methods,
+    const MethodMappings& /* method_mappings */) {
+  return this->emit_method_models(methods);
+}
+
+std::vector<Model> MethodVisitorModelGenerator::emit_method_models(
+    const Methods& methods) {
   return this->run_impl(methods.begin(), methods.end());
 }
 

@@ -17,7 +17,7 @@ namespace marianatrench {
 
 class ModelGeneration {
  public:
-  static std::vector<Model> run(Context& context);
+  static ModelGeneratorResult run(Context& context);
 
   static std::map<std::string, std::unique_ptr<ModelGenerator>>
   make_builtin_model_generators(Context& context);

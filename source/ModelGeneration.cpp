@@ -82,7 +82,7 @@ ModelGeneration::make_builtin_model_generators(Context& context) {
 }
 #endif
 
-std::vector<Model> ModelGeneration::run(Context& context) {
+ModelGeneratorResult ModelGeneration::run(Context& context) {
   const auto& options = *context.options;
 
   const auto& generated_models_directory = options.generated_models_directory();
@@ -153,7 +153,10 @@ std::vector<Model> ModelGeneration::run(Context& context) {
         model_generators.size());
 
     std::vector<Model> models;
-    models = model_generator->run_optimized(*context.methods, *method_mappings);
+    models =
+        model_generator
+            ->run_optimized(*context.methods, *method_mappings, *context.fields)
+            .method_models;
 
     // Remove models for the `null` method
     models.erase(
@@ -192,7 +195,7 @@ std::vector<Model> ModelGeneration::run(Context& context) {
     }
   }
 
-  return generated_models;
+  return {/* method_models */ generated_models, /* field_models */ {}};
 }
 
 } // namespace marianatrench

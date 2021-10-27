@@ -24,7 +24,8 @@ class JsonModelGeneratorItem final : public MethodVisitorModelGenerator {
       std::unique_ptr<AllOfMethodConstraint> constraint,
       ModelTemplate model_template,
       int verbosity);
-  std::vector<Model> run_filtered(const MethodHashedSet& methods);
+  std::vector<Model> emit_method_models_filtered(
+      const MethodHashedSet& methods);
   std::unordered_set<const MethodConstraint*> constraint_leaves() const;
   /* Returns filtered method set to run full satisfy checks on. Returns Top if
    * filtered set cannot be determined. */
@@ -44,8 +45,8 @@ class JsonModelGenerator final : public ModelGenerator {
       Context& context,
       const boost::filesystem::path& json_configuration_file);
 
-  std::vector<Model> run(const Methods&) override;
-  std::vector<Model> run_optimized(
+  std::vector<Model> emit_method_models(const Methods&) override;
+  std::vector<Model> emit_method_models_optimized(
       const Methods&,
       const MethodMappings& method_mappings) override;
 

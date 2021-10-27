@@ -152,7 +152,7 @@ Registry MarianaTrench::analyze(Context& context) {
   if (!context.options->skip_model_generation()) {
     Timer generation_timer;
     LOG(1, "Generating models...");
-    generated_models = ModelGeneration::run(context);
+    generated_models = ModelGeneration::run(context).method_models;
     context.statistics->log_time("models_generation", generation_timer);
     LOG(1,
         "Generated {} models in {:.2f}s.",

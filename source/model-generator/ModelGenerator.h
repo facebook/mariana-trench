@@ -16,6 +16,7 @@
 #include <Walkers.h>
 
 #include <mariana-trench/Context.h>
+#include <mariana-trench/FieldModel.h>
 #include <mariana-trench/Frame.h>
 #include <mariana-trench/MethodSet.h>
 #include <mariana-trench/Methods.h>
@@ -36,6 +37,11 @@ struct MethodMappings {
   MethodHashedSet all_methods;
 };
 
+struct ModelGeneratorResult {
+  std::vector<Model> method_models;
+  std::vector<FieldModel> field_models;
+};
+
 class ModelGenerator {
  public:
   ModelGenerator(const std::string& name, Context& context);
@@ -49,11 +55,16 @@ class ModelGenerator {
   virtual const std::string& name() const {
     return name_;
   }
-
-  virtual std::vector<Model> run(const Methods&) = 0;
-  virtual std::vector<Model> run_optimized(
-      const Methods&,
+  virtual std::vector<Model> emit_method_models(const Methods& methods) = 0;
+  virtual std::vector<Model> emit_method_models_optimized(
+      const Methods& methods,
       const MethodMappings& method_mappings);
+
+  ModelGeneratorResult run(const Methods& methods, const Fields& fields);
+  ModelGeneratorResult run_optimized(
+      const Methods& methods,
+      const MethodMappings& method_mappings,
+      const Fields& fields);
 
  protected:
   std::string name_;
@@ -68,7 +79,7 @@ class MethodVisitorModelGenerator : public ModelGenerator {
   MethodVisitorModelGenerator(const std::string& name, Context& context)
       : ModelGenerator(name, context) {}
 
-  virtual std::vector<Model> run(const Methods&) override;
+  virtual std::vector<Model> emit_method_models(const Methods&) override;
 
   // This method has to be thread-safe.
   virtual std::vector<Model> visit_method(const Method* method) const = 0;
