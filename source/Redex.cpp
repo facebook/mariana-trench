@@ -265,7 +265,7 @@ DexAnnotationSet* redex::create_annotation_set(
 const DexField* redex::create_field(
     Scope& scope,
     const std::string& class_name,
-    const std::pair<std::string, const DexType*>& field,
+    const DexFieldSpecification& field,
     const DexType* super) {
   return redex::create_fields(scope, class_name, {field}, super)[0];
 }
@@ -273,7 +273,7 @@ const DexField* redex::create_field(
 std::vector<const DexField*> redex::create_fields(
     Scope& scope,
     const std::string& class_name,
-    const std::vector<std::pair<std::string, const DexType*>>& fields,
+    const std::vector<DexFieldSpecification>& fields,
     const DexType* super) {
   std::vector<const DexField*> created_fields;
   auto* klass = DexType::make_type(DexString::make_string(class_name));
@@ -285,14 +285,18 @@ std::vector<const DexField*> redex::create_fields(
     creator.set_super(type::java_lang_Object());
   }
 
-  for (const auto& [field_name, field_type] : fields) {
-    auto* field_ref = DexField::make_field(
+  for (const auto& [field_name, field_type, field_annotations] : fields) {
+    // Cast to DexField so that we can add annotations to it
+    auto* field = static_cast<DexField*>(DexField::make_field(
         /* container */ klass,
         /* name */ DexString::make_string(field_name),
-        /* type */ field_type);
-    auto* field = field_ref->make_concrete(DexAccessFlags::ACC_PUBLIC, nullptr);
-    creator.add_field(field);
-    created_fields.push_back(field);
+        /* type */ field_type));
+    field->attach_annotation_set(
+        redex::create_annotation_set(field_annotations));
+    auto* concrete_field =
+        field->make_concrete(DexAccessFlags::ACC_PUBLIC, nullptr);
+    creator.add_field(concrete_field);
+    created_fields.push_back(concrete_field);
   }
 
   scope.push_back(creator.create());

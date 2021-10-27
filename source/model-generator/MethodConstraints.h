@@ -45,7 +45,7 @@ class MethodConstraint {
 
 class MethodNameConstraint final : public MethodConstraint {
  public:
-  explicit MethodNameConstraint(std::string regex_string);
+  explicit MethodNameConstraint(const std::string& regex_string);
   MethodHashedSet may_satisfy(
       const MethodMappings& method_mappings) const override;
   bool satisfy(const Method* method) const override;
@@ -177,8 +177,8 @@ class HasCodeConstraint final : public MethodConstraint {
 class HasAnnotationMethodConstraint final : public MethodConstraint {
  public:
   explicit HasAnnotationMethodConstraint(
-      std::string type,
-      std::optional<std::string> annotation);
+      const std::string& type,
+      const std::optional<std::string>& annotation);
   bool satisfy(const Method* method) const override;
   bool operator==(const MethodConstraint& other) const override;
 
@@ -202,7 +202,7 @@ class ParameterConstraint final : public MethodConstraint {
 
 class SignatureConstraint final : public MethodConstraint {
  public:
-  explicit SignatureConstraint(std::string regex_string);
+  explicit SignatureConstraint(const std::string& regex_string);
   MethodHashedSet may_satisfy(
       const MethodMappings& method_mappings) const override;
   bool satisfy(const Method* method) const override;

@@ -47,7 +47,7 @@ bool has_annotation(
   return false;
 }
 
-MethodNameConstraint::MethodNameConstraint(std::string regex_string)
+MethodNameConstraint::MethodNameConstraint(const std::string& regex_string)
     : pattern_(regex_string) {}
 
 MethodHashedSet MethodNameConstraint::may_satisfy(
@@ -332,8 +332,8 @@ bool HasCodeConstraint::operator==(const MethodConstraint& other) const {
 }
 
 HasAnnotationMethodConstraint::HasAnnotationMethodConstraint(
-    std::string type,
-    std::optional<std::string> annotation)
+    const std::string& type,
+    const std::optional<std::string>& annotation)
     : type_(std::move(type)), annotation_(std::move(annotation)) {}
 
 bool HasAnnotationMethodConstraint::satisfy(const Method* method) const {
@@ -374,7 +374,7 @@ bool ParameterConstraint::operator==(const MethodConstraint& other) const {
   }
 }
 
-SignatureConstraint::SignatureConstraint(std::string regex_string)
+SignatureConstraint::SignatureConstraint(const std::string& regex_string)
     : pattern_(regex_string) {}
 
 MethodHashedSet SignatureConstraint::may_satisfy(

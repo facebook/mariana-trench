@@ -24,7 +24,13 @@ namespace redex {
 struct DexMethodSpecification {
   std::string body;
   bool abstract = false;
-  std::vector<std::string> annotations = std::vector<std::string>();
+  std::vector<std::string> annotations = {};
+};
+
+struct DexFieldSpecification {
+  std::string field_name;
+  const DexType* field_type;
+  std::vector<std::string> annotations = {};
 };
 
 DexClass* MT_NULLABLE get_class(const std::string& class_name);
@@ -80,13 +86,13 @@ DexAnnotationSet* create_annotation_set(
 const DexField* create_field(
     Scope& scope,
     const std::string& class_name,
-    const std::pair<std::string, const DexType*>& field,
+    const DexFieldSpecification& field,
     const DexType* super = nullptr);
 
 std::vector<const DexField*> create_fields(
     Scope& scope,
     const std::string& class_name,
-    const std::vector<std::pair<std::string, const DexType*>>& fields,
+    const std::vector<DexFieldSpecification>& fields,
     const DexType* super = nullptr);
 
 } // namespace redex

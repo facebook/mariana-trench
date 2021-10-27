@@ -42,7 +42,7 @@ class TypeConstraint {
 
 class TypeNameConstraint final : public TypeConstraint {
  public:
-  explicit TypeNameConstraint(std::string regex_string);
+  explicit TypeNameConstraint(const std::string& regex_string);
   MethodHashedSet may_satisfy(
       const MethodMappings& method_mappings,
       MaySatisfyMethodConstraintKind constraint_kind) const override;
@@ -56,8 +56,8 @@ class TypeNameConstraint final : public TypeConstraint {
 class HasAnnotationTypeConstraint final : public TypeConstraint {
  public:
   explicit HasAnnotationTypeConstraint(
-      std::string type,
-      std::optional<std::string> annotation);
+      const std::string& type,
+      const std::optional<std::string>& annotation);
   bool satisfy(const DexType* type) const override;
   bool operator==(const TypeConstraint& other) const override;
 

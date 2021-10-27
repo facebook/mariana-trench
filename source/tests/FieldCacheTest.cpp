@@ -54,17 +54,13 @@ TEST_F(FieldCacheTest, FieldCache) {
       scope,
       /* class_name */ "LBase;",
       /* fields */
-      std::vector{std::make_pair<std::string, const DexType*>(
-          "mBase", type::java_lang_String())});
+      {{"mBase", type::java_lang_String()}});
   redex::create_fields(
       scope,
       /* class_name */ "LDerived;",
       /* fields */
-      std::vector{
-          std::make_pair<std::string, const DexType*>(
-              "mDerived", type::java_lang_String()),
-          std::make_pair<std::string, const DexType*>(
-              "mBase", redex::get_type("LBase;"))},
+      {{"mDerived", type::java_lang_String()},
+       {"mBase", redex::get_type("LBase;")}},
       /* super */ redex::get_type("LBase;"));
 
   auto context = test_fields(scope);

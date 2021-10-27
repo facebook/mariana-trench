@@ -19,7 +19,7 @@ MethodHashedSet TypeConstraint::may_satisfy(
   return MethodHashedSet::top();
 }
 
-TypeNameConstraint::TypeNameConstraint(std::string regex_string)
+TypeNameConstraint::TypeNameConstraint(const std::string& regex_string)
     : pattern_(regex_string) {}
 
 MethodHashedSet TypeNameConstraint::may_satisfy(
@@ -55,8 +55,8 @@ bool TypeNameConstraint::operator==(const TypeConstraint& other) const {
 }
 
 HasAnnotationTypeConstraint::HasAnnotationTypeConstraint(
-    std::string type,
-    std::optional<std::string> annotation)
+    const std::string& type,
+    const std::optional<std::string>& annotation)
     : type_(std::move(type)), annotation_(std::move(annotation)) {}
 
 bool HasAnnotationTypeConstraint::satisfy(const DexType* type) const {
