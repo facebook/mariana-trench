@@ -40,6 +40,10 @@ class FieldModel final {
   bool operator==(const FieldModel& other) const;
   bool operator!=(const FieldModel& other) const;
 
+  const Field* MT_NULLABLE field() const {
+    return field_;
+  }
+
   const Taint& generations() const {
     return generations_;
   }

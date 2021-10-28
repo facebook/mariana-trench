@@ -55,10 +55,19 @@ class ModelGenerator {
   virtual const std::string& name() const {
     return name_;
   }
-  virtual std::vector<Model> emit_method_models(const Methods& methods) = 0;
+
+  virtual std::vector<Model> emit_method_models(const Methods& /* methods */) {
+    return {};
+  }
+
   virtual std::vector<Model> emit_method_models_optimized(
       const Methods& methods,
       const MethodMappings& method_mappings);
+
+  virtual std::vector<FieldModel> emit_field_models(
+      const Fields& /* fields */) {
+    return {};
+  }
 
   ModelGeneratorResult run(const Methods& methods, const Fields& fields);
   ModelGeneratorResult run_optimized(

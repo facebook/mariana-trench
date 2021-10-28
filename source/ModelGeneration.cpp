@@ -132,6 +132,7 @@ ModelGeneratorResult ModelGeneration::run(Context& context) {
   }
 
   std::vector<Model> generated_models;
+  std::vector<FieldModel> generated_field_models;
   std::size_t iteration = 0;
 
   LOG(1,
@@ -152,11 +153,8 @@ ModelGeneratorResult ModelGeneration::run(Context& context) {
         ++iteration,
         model_generators.size());
 
-    std::vector<Model> models;
-    models =
-        model_generator
-            ->run_optimized(*context.methods, *method_mappings, *context.fields)
-            .method_models;
+    auto [models, field_models] = model_generator->run_optimized(
+        *context.methods, *method_mappings, *context.fields);
 
     // Remove models for the `null` method
     models.erase(
@@ -165,9 +163,17 @@ ModelGeneratorResult ModelGeneration::run(Context& context) {
             models.end(),
             [](const Model& model) { return !model.method(); }),
         models.end());
+    field_models.erase(
+        std::remove_if(
+            field_models.begin(),
+            field_models.end(),
+            [](const FieldModel& field_model) { return !field_model.field(); }),
+        field_models.end());
 
     generated_models.insert(
         generated_models.end(), models.begin(), models.end());
+    generated_field_models.insert(
+        generated_field_models.end(), field_models.begin(), field_models.end());
 
     LOG(2,
         "Generated {} models in {:.2f}s.",
@@ -195,7 +201,9 @@ ModelGeneratorResult ModelGeneration::run(Context& context) {
     }
   }
 
-  return {/* method_models */ generated_models, /* field_models */ {}};
+  return {
+      /* method_models */ generated_models,
+      /* field_models */ generated_field_models};
 }
 
 } // namespace marianatrench

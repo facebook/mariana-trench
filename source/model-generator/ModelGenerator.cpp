@@ -38,19 +38,20 @@ ModelGenerator::ModelGenerator(const std::string& name, Context& context)
 
 ModelGeneratorResult ModelGenerator::run(
     const Methods& methods,
-    const Fields& /* fields */) {
+    const Fields& fields) {
   return {
-      /* method_models */ emit_method_models(methods), /* field_models */ {}};
+      /* method_models */ emit_method_models(methods),
+      /* field_models */ emit_field_models(fields)};
 }
 
 ModelGeneratorResult ModelGenerator::run_optimized(
     const Methods& methods,
     const MethodMappings& method_mappings,
-    const Fields& /* fields */) {
+    const Fields& fields) {
   return {
       /* method_models */ emit_method_models_optimized(
           methods, method_mappings),
-      /* field_models */ {}};
+      /* field_models */ emit_field_models(fields)};
 }
 
 std::vector<Model> ModelGenerator::emit_method_models_optimized(
