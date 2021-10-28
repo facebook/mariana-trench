@@ -23,8 +23,7 @@
 
 namespace marianatrench {
 
-Registry::Registry(Context& context, const DexStoresVector& /* stores */)
-    : context_(context) {
+Registry::Registry(Context& context) : context_(context) {
   auto queue = sparta::work_queue<const Method*>(
       [&](const Method* method) { set(Model(method, context)); },
       sparta::parallel::default_num_threads());
@@ -53,7 +52,6 @@ Registry::Registry(Context& context, const Json::Value& models_value)
 Registry Registry::load(
     Context& context,
     const Options& options,
-    const DexStoresVector& /*stores*/,
     const std::vector<Model>& generated_models) {
   // Create a registry with the generated models
   Registry registry(context, generated_models);

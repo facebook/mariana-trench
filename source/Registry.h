@@ -28,7 +28,7 @@ namespace marianatrench {
 class Registry final {
  public:
   /* Create a registry with default models for all methods. */
-  explicit Registry(Context& context, const DexStoresVector& stores);
+  explicit Registry(Context& context);
 
   /* Create a registry with the given models. */
   explicit Registry(Context& context, const std::vector<Model>& models);
@@ -51,7 +51,6 @@ class Registry final {
   static Registry load(
       Context& context,
       const Options& options,
-      const DexStoresVector& stores,
       const std::vector<Model>& generated_models);
 
   void add_default_models();

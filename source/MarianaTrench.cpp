@@ -171,8 +171,7 @@ Registry MarianaTrench::analyze(Context& context) {
 
   Timer registry_timer;
   LOG(1, "Initializing models...");
-  auto registry = Registry::load(
-      context, *context.options, context.stores, generated_models);
+  auto registry = Registry::load(context, *context.options, generated_models);
   context.statistics->log_time("registry_init", registry_timer);
   LOG(1,
       "Initialized {} models in {:.2f}s.",

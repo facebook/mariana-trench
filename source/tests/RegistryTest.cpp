@@ -34,7 +34,6 @@ TEST_F(RegistryTest, remove_kinds) {
   auto registry = Registry::load(
       context,
       *context.options,
-      context.stores,
       context.artificial_methods->models(
           context)); // used to make sure we get ArrayAllocation
   context.rules =
@@ -70,7 +69,7 @@ TEST_F(RegistryTest, JoinWith) {
   auto context = test::make_context(store);
   auto* method = context.methods->get(dex_method);
 
-  auto registry = Registry(context, context.stores);
+  auto registry = Registry(context);
   registry.join_with(Registry(context, test::parse_json(R"([
           {
             "method": "LClass;.method:(Ljava/lang/Object;)Ljava/lang/Object;",

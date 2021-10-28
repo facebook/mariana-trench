@@ -461,7 +461,7 @@ TEST_P(IntegrationTest, ReturnsExpectedModel) {
       *context.features);
   context.rules = std::make_unique<Rules>(context, rules);
 
-  Registry registry(context, context.stores);
+  Registry registry(context);
   registry.join_with(Registry(context, models));
 
   Model external_method(
