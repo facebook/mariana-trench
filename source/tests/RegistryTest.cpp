@@ -10,6 +10,8 @@
 #include <mariana-trench/ClassProperties.h>
 #include <mariana-trench/Context.h>
 #include <mariana-trench/Dependencies.h>
+#include <mariana-trench/FieldSet.h>
+#include <mariana-trench/Fields.h>
 #include <mariana-trench/Model.h>
 #include <mariana-trench/Redex.h>
 #include <mariana-trench/Registry.h>
@@ -34,8 +36,10 @@ TEST_F(RegistryTest, remove_kinds) {
   auto registry = Registry::load(
       context,
       *context.options,
+      /* generated_models */
       context.artificial_methods->models(
-          context)); // used to make sure we get ArrayAllocation
+          context), // used to make sure we get ArrayAllocation
+      /* generated_field_models */ {});
   context.rules =
       std::make_unique<Rules>(Rules::load(context, *context.options));
   auto old_json = registry.models_to_json();
@@ -63,11 +67,16 @@ TEST_F(RegistryTest, JoinWith) {
       /* method_name */ "method",
       /* parameter_types */ "Ljava/lang/Object;",
       /* return_type */ "Ljava/lang/Object;");
+  const auto* dex_field = redex::create_field(
+      scope, "LClassA;", {"field", type::java_lang_String()});
 
   DexStore store("store");
   store.add_classes(scope);
   auto context = test::make_context(store);
   auto* method = context.methods->get(dex_method);
+  auto field = context.fields->get(dex_field);
+  const auto* source_kind = context.kinds->get("TestSource");
+  const auto* source_kind_two = context.kinds->get("TestSourceTwo");
 
   auto registry = Registry(context);
   registry.join_with(Registry(context, test::parse_json(R"([
@@ -103,6 +112,38 @@ TEST_F(RegistryTest, JoinWith) {
   EXPECT_EQ(registry.get(method).generations().elements().size(), 1);
   EXPECT_EQ(
       registry.get(method).generations().elements().at(0).second.size(), 2);
+
+  registry.join_with(Registry(
+      context,
+      /* models */ {},
+      /* field_models */
+      {FieldModel(
+          field,
+          /* generations */
+          {test::make_frame(
+              source_kind,
+              test::FrameProperties{
+                  .inferred_features = FeatureMayAlwaysSet::bottom(),
+                  .locally_inferred_features = FeatureMayAlwaysSet::bottom(),
+                  .user_features = FeatureSet::bottom(),
+                  .field_origins = FieldSet{field}})})}));
+  EXPECT_EQ(registry.get(field).generations().size(), 1);
+
+  registry.join_with(Registry(
+      context,
+      /* models */ {},
+      /* field_models */
+      {FieldModel(
+          field,
+          /* generations */
+          {test::make_frame(
+              source_kind_two,
+              test::FrameProperties{
+                  .inferred_features = FeatureMayAlwaysSet::bottom(),
+                  .locally_inferred_features = FeatureMayAlwaysSet::bottom(),
+                  .user_features = FeatureSet::bottom(),
+                  .field_origins = FieldSet{field}})})}));
+  EXPECT_EQ(registry.get(field).generations().size(), 2);
 }
 
 TEST_F(RegistryTest, ConstructorUseJoin) {
@@ -115,12 +156,16 @@ TEST_F(RegistryTest, ConstructorUseJoin) {
       /* method_name */ "method",
       /* parameter_types */ "Ljava/lang/Object;Ljava/lang/Object;",
       /* return_type */ "Ljava/lang/Object;");
+  const auto* dex_field = redex::create_field(
+      scope, "LClassA;", {"field", type::java_lang_String()});
 
   DexStore store("store");
   store.add_classes(scope);
   auto context = test::make_context(store);
   auto* method = context.methods->get(dex_method);
+  auto field = context.fields->get(dex_field);
   const auto* source_kind = context.kinds->get("TestSource");
+  const auto* source_kind_two = context.kinds->get("TestSourceTwo");
 
   Model model_with_source(
       /* method */ method,
@@ -136,8 +181,18 @@ TEST_F(RegistryTest, ConstructorUseJoin) {
       /* generations */
       {{AccessPath(Root(Root::Kind::Argument, 2)), Frame::leaf(source_kind)}});
 
-  auto registry =
-      Registry(context, {model_with_source, model_with_other_source});
+  FieldModel field_with_source(
+      /* field */ field,
+      /* generations */ {Frame::leaf(source_kind)});
+
+  FieldModel field_with_other_source(
+      /* field */ field,
+      /* generations */ {Frame::leaf(source_kind_two)});
+
+  auto registry = Registry(
+      context,
+      /* models */ {model_with_source, model_with_other_source},
+      /* field_models */ {field_with_source, field_with_other_source});
   EXPECT_THAT(
       registry.get(method).generations().elements(),
       testing::UnorderedElementsAre(
@@ -146,7 +201,8 @@ TEST_F(RegistryTest, ConstructorUseJoin) {
               Taint{Frame::leaf(
                   source_kind,
                   /* inferred_features */ FeatureMayAlwaysSet::bottom(),
-                  /* locally_inferred_features */ FeatureMayAlwaysSet::bottom(),
+                  /* locally_inferred_features */
+                  FeatureMayAlwaysSet::bottom(),
                   /* user_features */ FeatureSet::bottom(),
                   /* origins */ MethodSet{method})}},
           PortTaint{
@@ -154,9 +210,28 @@ TEST_F(RegistryTest, ConstructorUseJoin) {
               Taint{Frame::leaf(
                   source_kind,
                   /* inferred_features */ FeatureMayAlwaysSet::bottom(),
-                  /* locally_inferred_features */ FeatureMayAlwaysSet::bottom(),
+                  /* locally_inferred_features */
+                  FeatureMayAlwaysSet::bottom(),
                   /* user_features */ FeatureSet::bottom(),
                   /* origins */ MethodSet{method})}}));
+
+  EXPECT_EQ(
+      registry.get(field).generations(),
+      Taint(
+          {test::make_frame(
+               source_kind,
+               test::FrameProperties{
+                   .inferred_features = FeatureMayAlwaysSet::bottom(),
+                   .locally_inferred_features = FeatureMayAlwaysSet::bottom(),
+                   .user_features = FeatureSet::bottom(),
+                   .field_origins = FieldSet{field}}),
+           test::make_frame(
+               source_kind_two,
+               test::FrameProperties{
+                   .inferred_features = FeatureMayAlwaysSet::bottom(),
+                   .locally_inferred_features = FeatureMayAlwaysSet::bottom(),
+                   .user_features = FeatureSet::bottom(),
+                   .field_origins = FieldSet{field}})}));
 }
 
 } // namespace marianatrench

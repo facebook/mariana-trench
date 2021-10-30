@@ -15,6 +15,7 @@
 #include <DexStore.h>
 
 #include <mariana-trench/Context.h>
+#include <mariana-trench/FieldModel.h>
 #include <mariana-trench/Model.h>
 
 namespace {
@@ -30,8 +31,11 @@ class Registry final {
   /* Create a registry with default models for all methods. */
   explicit Registry(Context& context);
 
-  /* Create a registry with the given models. */
-  explicit Registry(Context& context, const std::vector<Model>& models);
+  /* Create a registry with the given models for methods and fields. */
+  explicit Registry(
+      Context& context,
+      const std::vector<Model>& models,
+      const std::vector<FieldModel>& field_models);
 
   /* Create a registry with the given json models. */
   explicit Registry(Context& context, const Json::Value& models_value);
@@ -51,20 +55,24 @@ class Registry final {
   static Registry load(
       Context& context,
       const Options& options,
-      const std::vector<Model>& generated_models);
+      const std::vector<Model>& generated_models,
+      const std::vector<FieldModel>& generated_field_models);
 
   void add_default_models();
 
-  /* This is thread-safe. */
+  /* These are thread-safe. */
   Model get(const Method* method) const;
+  FieldModel get(const Field* field) const;
 
   /* This is thread-safe. */
   void set(const Model& model);
 
   std::size_t models_size() const;
+  std::size_t field_models_size() const;
   std::size_t issues_size() const;
 
   void join_with(const Model& model);
+  void join_with(const FieldModel& field_model);
   void join_with(const Registry& other);
 
   void dump_metadata(const boost::filesystem::path& path) const;
@@ -78,6 +86,7 @@ class Registry final {
   Context& context_;
 
   mutable ConcurrentMap<const Method*, Model> models_;
+  ConcurrentMap<const Field*, FieldModel> field_models_;
 };
 
 } // namespace marianatrench

@@ -33,10 +33,16 @@ Registry::Registry(Context& context) : context_(context) {
   queue.run_all();
 }
 
-Registry::Registry(Context& context, const std::vector<Model>& models)
+Registry::Registry(
+    Context& context,
+    const std::vector<Model>& models,
+    const std::vector<FieldModel>& field_models)
     : context_(context) {
   for (const auto& model : models) {
     join_with(model);
+  }
+  for (const auto& field_model : field_models) {
+    join_with(field_model);
   }
 }
 
@@ -52,9 +58,10 @@ Registry::Registry(Context& context, const Json::Value& models_value)
 Registry Registry::load(
     Context& context,
     const Options& options,
-    const std::vector<Model>& generated_models) {
+    const std::vector<Model>& generated_models,
+    const std::vector<FieldModel>& generated_field_models) {
   // Create a registry with the generated models
-  Registry registry(context, generated_models);
+  Registry registry(context, generated_models, generated_field_models);
 
   // Load models json input
   for (const auto& models_path : options.models_paths()) {
@@ -93,12 +100,28 @@ Model Registry::get(const Method* method) const {
   }
 }
 
+FieldModel Registry::get(const Field* field) const {
+  if (!field) {
+    throw std::runtime_error("Trying to get model for the `null` field");
+  }
+
+  try {
+    return field_models_.at(field);
+  } catch (const std::out_of_range&) {
+    return FieldModel(field);
+  }
+}
+
 void Registry::set(const Model& model) {
   models_.insert_or_assign(std::make_pair(model.method(), model));
 }
 
 std::size_t Registry::models_size() const {
   return models_.size();
+}
+
+std::size_t Registry::field_models_size() const {
+  return field_models_.size();
 }
 
 std::size_t Registry::issues_size() const {
@@ -110,7 +133,8 @@ std::size_t Registry::issues_size() const {
 }
 
 void Registry::join_with(const Model& model) {
-  auto* method = model.method();
+  const auto* method = model.method();
+  mt_assert(method);
   auto iterator = models_.find(method);
   if (iterator != models_.end()) {
     iterator->second.join_with(model);
@@ -119,9 +143,23 @@ void Registry::join_with(const Model& model) {
   }
 }
 
+void Registry::join_with(const FieldModel& field_model) {
+  const auto* field = field_model.field();
+  mt_assert(field);
+  auto iterator = field_models_.find(field);
+  if (iterator != field_models_.end()) {
+    iterator->second.join_with(field_model);
+  } else {
+    field_models_.insert(std::make_pair(field, field_model));
+  }
+}
+
 void Registry::join_with(const Registry& other) {
   for (const auto& other_model : other.models_) {
     join_with(other_model.second);
+  }
+  for (const auto& other_field_model : other.field_models_) {
+    join_with(other_field_model.second);
   }
 }
 
@@ -172,6 +210,10 @@ std::string Registry::dump_models() const {
   string << "generated\n";
   for (const auto& model : models_) {
     writer->write(model.second.to_json(context_), &string);
+    string << "\n";
+  }
+  for (const auto& field_model : field_models_) {
+    writer->write(field_model.second.to_json(), &string);
     string << "\n";
   }
   return string.str();

@@ -149,14 +149,18 @@ Registry MarianaTrench::analyze(Context& context) {
       call_graph_timer.duration_in_seconds());
 
   std::vector<Model> generated_models;
+  std::vector<FieldModel> generated_field_models;
   if (!context.options->skip_model_generation()) {
     Timer generation_timer;
     LOG(1, "Generating models...");
-    generated_models = ModelGeneration::run(context).method_models;
+    auto model_generator_result = ModelGeneration::run(context);
+    generated_models = model_generator_result.method_models;
+    generated_field_models = model_generator_result.field_models;
     context.statistics->log_time("models_generation", generation_timer);
     LOG(1,
-        "Generated {} models in {:.2f}s.",
+        "Generated {} models and {} field models in {:.2f}s.",
         generated_models.size(),
+        generated_field_models.size(),
         generation_timer.duration_in_seconds());
   } else {
     LOG(1, "Skipped model generation.");
@@ -171,11 +175,13 @@ Registry MarianaTrench::analyze(Context& context) {
 
   Timer registry_timer;
   LOG(1, "Initializing models...");
-  auto registry = Registry::load(context, *context.options, generated_models);
+  auto registry = Registry::load(
+      context, *context.options, generated_models, generated_field_models);
   context.statistics->log_time("registry_init", registry_timer);
   LOG(1,
-      "Initialized {} models in {:.2f}s.",
+      "Initialized {} models and {} field models in {:.2f}s.",
       registry.models_size(),
+      registry.field_models_size(),
       registry_timer.duration_in_seconds());
 
   Timer rules_timer;
