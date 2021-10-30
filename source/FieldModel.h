@@ -44,6 +44,10 @@ class FieldModel final {
     return field_;
   }
 
+  FieldModel instantiate(const Field* field) const;
+
+  bool empty() const;
+
   const Taint& generations() const {
     return generations_;
   }

@@ -5,11 +5,12 @@
  * LICENSE file in the root directory of this source tree.
  */
 
+#include <Show.h>
+
 #include <mariana-trench/Access.h>
 #include <mariana-trench/Assert.h>
 #include <mariana-trench/FieldModel.h>
 #include <mariana-trench/Log.h>
-#include <mariana-trench/Model.h>
 
 namespace marianatrench {
 
@@ -44,6 +45,27 @@ bool FieldModel::operator==(const FieldModel& other) const {
 
 bool FieldModel::operator!=(const FieldModel& other) const {
   return !(*this == other);
+}
+
+FieldModel FieldModel::instantiate(const Field* field) const {
+  FieldModel field_model(field);
+
+  for (const auto& generations_set : generations_) {
+    for (const auto& generation : generations_set) {
+      field_model.add_generation(generation);
+    }
+  }
+
+  for (const auto& sinks_set : sinks_) {
+    for (const auto& sink : sinks_set) {
+      field_model.add_sink(sink);
+    }
+  }
+  return field_model;
+}
+
+bool FieldModel::empty() const {
+  return generations_.is_bottom() && sinks_.is_bottom();
 }
 
 void FieldModel::check_frame_consistency(
