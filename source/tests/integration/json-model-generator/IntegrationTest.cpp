@@ -18,6 +18,7 @@
 #include <RedexContext.h>
 
 #include <mariana-trench/Context.h>
+#include <mariana-trench/Fields.h>
 #include <mariana-trench/JsonValidation.h>
 #include <mariana-trench/Log.h>
 #include <mariana-trench/MarianaTrench.h>
@@ -84,6 +85,7 @@ TEST_P(JsonModelGeneratorIntegrationTest, CompareModels) {
   context.artificial_methods =
       std::make_unique<ArtificialMethods>(*context.kinds, context.stores);
   context.methods = std::make_unique<Methods>(context.stores);
+  context.fields = std::make_unique<Fields>(context.stores);
   context.positions = std::make_unique<Positions>(options, context.stores);
   context.types = std::make_unique<Types>(*context.options, context.stores);
   context.class_properties = std::make_unique<ClassProperties>(
@@ -101,12 +103,11 @@ TEST_P(JsonModelGeneratorIntegrationTest, CompareModels) {
       *context.features);
 
   // Run a model generator and compare output
-  auto models =
+  auto [models, field_models] =
       JsonModelGenerator(
           "TestModelGenerator", context, (directory / "model_generator.json"))
-          .run(*context.methods, *context.fields)
-          .method_models;
-  auto registry = Registry(context, models, /* field_models */ {});
+          .run(*context.methods, *context.fields);
+  auto registry = Registry(context, models, field_models);
 
   std::string actual_output =
       test::normalize_json_lines(registry.dump_models());

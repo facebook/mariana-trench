@@ -1,0 +1,65 @@
+// @generated
+{
+  "field" : "Lcom/facebook/marianatrench/integrationtests/FieldModel;.field_one:Ljava/lang/String;",
+  "generations" : 
+  [
+    {
+      "callee_port" : "Leaf",
+      "field_origins" : 
+      [
+        "Lcom/facebook/marianatrench/integrationtests/FieldModel;.field_one:Ljava/lang/String;"
+      ],
+      "kind" : "TestGenerationA"
+    }
+  ],
+  "sinks" : 
+  [
+    {
+      "callee_port" : "Leaf",
+      "field_origins" : 
+      [
+        "Lcom/facebook/marianatrench/integrationtests/FieldModel;.field_one:Ljava/lang/String;"
+      ],
+      "kind" : "TestSinkA"
+    }
+  ]
+}
+{
+  "field" : "Lcom/facebook/marianatrench/integrationtests/FieldModel;.field_three:Ljava/lang/Integer;",
+  "generations" : 
+  [
+    {
+      "callee_port" : "Leaf",
+      "field_origins" : 
+      [
+        "Lcom/facebook/marianatrench/integrationtests/FieldModel;.field_three:Ljava/lang/Integer;"
+      ],
+      "kind" : "TestGenerationB"
+    }
+  ]
+}
+{
+  "field" : "Lcom/facebook/marianatrench/integrationtests/FieldModel;.field_two:Ljava/lang/Boolean;",
+  "generations" : 
+  [
+    {
+      "callee_port" : "Leaf",
+      "field_origins" : 
+      [
+        "Lcom/facebook/marianatrench/integrationtests/FieldModel;.field_two:Ljava/lang/Boolean;"
+      ],
+      "kind" : "TestGenerationB"
+    }
+  ],
+  "sinks" : 
+  [
+    {
+      "callee_port" : "Leaf",
+      "field_origins" : 
+      [
+        "Lcom/facebook/marianatrench/integrationtests/FieldModel;.field_two:Ljava/lang/Boolean;"
+      ],
+      "kind" : "TestSinkB"
+    }
+  ]
+}

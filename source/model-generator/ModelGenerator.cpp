@@ -16,6 +16,7 @@
 #include <Walkers.h>
 
 #include <mariana-trench/Features.h>
+#include <mariana-trench/Fields.h>
 #include <mariana-trench/JsonValidation.h>
 #include <mariana-trench/Log.h>
 #include <mariana-trench/MethodSet.h>
@@ -63,6 +64,11 @@ std::vector<Model> ModelGenerator::emit_method_models_optimized(
 std::vector<Model> MethodVisitorModelGenerator::emit_method_models(
     const Methods& methods) {
   return this->run_impl(methods.begin(), methods.end());
+}
+
+std::vector<FieldModel> FieldVisitorModelGenerator::emit_field_models(
+    const Fields& fields) {
+  return this->run_impl(fields.begin(), fields.end());
 }
 
 namespace {

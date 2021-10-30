@@ -9,6 +9,8 @@
 
 #include <mariana-trench/Context.h>
 #include <mariana-trench/Model.h>
+#include <mariana-trench/model-generator/FieldConstraints.h>
+#include <mariana-trench/model-generator/FieldModelTemplate.h>
 #include <mariana-trench/model-generator/MethodConstraints.h>
 #include <mariana-trench/model-generator/ModelGenerator.h>
 #include <mariana-trench/model-generator/ModelTemplates.h>
@@ -38,6 +40,22 @@ class JsonModelGeneratorItem final : public MethodVisitorModelGenerator {
   int verbosity_;
 };
 
+class JsonFieldModelGeneratorItem final : public FieldVisitorModelGenerator {
+ public:
+  explicit JsonFieldModelGeneratorItem(
+      const std::string& name,
+      Context& context,
+      std::unique_ptr<AllOfFieldConstraint> constraint,
+      FieldModelTemplate field_model_template,
+      int verbosity);
+  std::vector<FieldModel> visit_field(const Field* field) const override;
+
+ private:
+  std::unique_ptr<AllOfFieldConstraint> constraint_;
+  FieldModelTemplate field_model_template_;
+  int verbosity_;
+};
+
 class JsonModelGenerator final : public ModelGenerator {
  public:
   explicit JsonModelGenerator(
@@ -49,10 +67,12 @@ class JsonModelGenerator final : public ModelGenerator {
   std::vector<Model> emit_method_models_optimized(
       const Methods&,
       const MethodMappings& method_mappings) override;
+  std::vector<FieldModel> emit_field_models(const Fields&) override;
 
  private:
   boost::filesystem::path json_configuration_file_;
   std::vector<JsonModelGeneratorItem> items_;
+  std::vector<JsonFieldModelGeneratorItem> field_items_;
 };
 
 } // namespace marianatrench

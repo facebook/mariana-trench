@@ -1,0 +1,58 @@
+{
+  "model_generators": [
+    {
+      "find": "fields",
+      "where": [
+        {
+          "constraint": "name",
+          "pattern": "field_one"
+        }
+      ],
+      "model": {
+        "generations": [
+          {
+            "kind": "TestGenerationA"
+          }
+        ],
+        "sinks": [
+          {
+            "kind": "TestSinkA"
+          }
+        ]
+      }
+    },
+    {
+      "find": "fields",
+      "where": [
+        {
+          "constraint": "has_annotation",
+          "type": "Lcom/facebook/marianatrench/integrationtests/TestFieldAnnotation;",
+          "pattern": "Test.*"
+        }
+      ],
+      "model": {
+        "sinks": [
+          {
+            "kind": "TestSinkB"
+          }
+        ]
+      }
+    },
+    {
+      "find": "fields",
+      "where": [
+        {
+          "constraint": "has_annotation",
+          "type": "Lcom/facebook/marianatrench/integrationtests/TestFieldAnnotation;"
+        }
+      ],
+      "model": {
+        "generations": [
+          {
+            "kind": "TestGenerationB"
+          }
+        ]
+      }
+    }
+  ]
+}

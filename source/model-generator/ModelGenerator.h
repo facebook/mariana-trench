@@ -118,6 +118,41 @@ class MethodVisitorModelGenerator : public ModelGenerator {
   }
 };
 
+class FieldVisitorModelGenerator : public ModelGenerator {
+ public:
+  FieldVisitorModelGenerator(const std::string& name, Context& context)
+      : ModelGenerator(name, context) {}
+
+  virtual std::vector<FieldModel> emit_field_models(const Fields&) override;
+
+  // This method has to be thread-safe.
+  virtual std::vector<FieldModel> visit_field(const Field* field) const = 0;
+
+ protected:
+  template <typename InputIt>
+  std::vector<FieldModel> run_impl(InputIt begin, InputIt end) {
+    std::vector<FieldModel> models;
+    std::mutex mutex;
+
+    auto queue = sparta::work_queue<const Field*>([&](const Field* field) {
+      auto field_models = this->visit_field(field);
+
+      if (!field_models.empty()) {
+        std::lock_guard<std::mutex> lock(mutex);
+        models.insert(
+            models.end(),
+            std::make_move_iterator(field_models.begin()),
+            std::make_move_iterator(field_models.end()));
+      }
+    });
+    for (auto iterator = begin; iterator != end; ++iterator) {
+      queue.add_item(*iterator);
+    }
+    queue.run_all();
+    return models;
+  }
+};
+
 namespace generator {
 
 const std::string& get_class_name(const Method* method);

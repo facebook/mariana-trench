@@ -70,6 +70,34 @@ MethodHashedSet JsonModelGeneratorItem::may_satisfy(
   return constraint_->may_satisfy(method_mappings);
 }
 
+JsonFieldModelGeneratorItem::JsonFieldModelGeneratorItem(
+    const std::string& name,
+    Context& context,
+    std::unique_ptr<AllOfFieldConstraint> constraint,
+    FieldModelTemplate field_model_template,
+    int verbosity)
+    : FieldVisitorModelGenerator(name, context),
+      constraint_(std::move(constraint)),
+      field_model_template_(std::move(field_model_template)),
+      verbosity_(verbosity) {}
+
+std::vector<FieldModel> JsonFieldModelGeneratorItem::visit_field(
+    const Field* field) const {
+  std::vector<FieldModel> field_models;
+  if (constraint_->satisfy(field)) {
+    LOG(verbosity_,
+        "Field `{}` satisfies all constraints in json model generator {}",
+        field->show(),
+        name_);
+    auto field_model = field_model_template_.instantiate(field);
+    // If a field has an empty model, then don't add it
+    if (field_model) {
+      field_models.push_back(*field_model);
+    }
+  }
+  return field_models;
+}
+
 JsonModelGenerator::JsonModelGenerator(
     const std::string& name,
     Context& context,
@@ -82,29 +110,45 @@ JsonModelGenerator::JsonModelGenerator(
 
   for (auto model_generator :
        JsonValidation::null_or_array(value, /* field */ "model_generators")) {
-    std::vector<std::unique_ptr<MethodConstraint>> model_constraints;
     int verbosity = model_generator.isMember("verbosity")
         ? JsonValidation::integer(model_generator, "verbosity")
         : 5; // default verbosity
 
     std::string find_name = JsonValidation::string(model_generator, "find");
     if (find_name == "methods") {
+      std::vector<std::unique_ptr<MethodConstraint>> model_constraints;
       for (auto constraint : JsonValidation::null_or_array(
                model_generator, /* field */ "where")) {
         model_constraints.push_back(
             MethodConstraint::from_json(constraint, context));
       }
+      items_.push_back(JsonModelGeneratorItem(
+          name,
+          context,
+          std::make_unique<AllOfMethodConstraint>(std::move(model_constraints)),
+          ModelTemplate::from_json(
+              JsonValidation::object(model_generator, /* field */ "model"),
+              context),
+          verbosity));
+    } else if (find_name == "fields") {
+      std::vector<std::unique_ptr<FieldConstraint>> field_model_constraints;
+      for (auto constraint : JsonValidation::null_or_array(
+               model_generator, /* field */ "where")) {
+        field_model_constraints.push_back(
+            FieldConstraint::from_json(constraint));
+      }
+      field_items_.push_back(JsonFieldModelGeneratorItem(
+          name,
+          context,
+          std::make_unique<AllOfFieldConstraint>(
+              std::move(field_model_constraints)),
+          FieldModelTemplate::from_json(
+              JsonValidation::object(model_generator, /* field */ "model"),
+              context),
+          verbosity));
     } else {
       ERROR(1, "Models for `{}` are not supported.", find_name);
     }
-    items_.push_back(JsonModelGeneratorItem(
-        name,
-        context,
-        std::make_unique<AllOfMethodConstraint>(std::move(model_constraints)),
-        ModelTemplate::from_json(
-            JsonValidation::object(model_generator, /* field */ "model"),
-            context),
-        verbosity));
   }
 }
 
@@ -140,6 +184,19 @@ std::vector<Model> JsonModelGenerator::emit_method_models_optimized(
         models.end(),
         std::make_move_iterator(method_models.begin()),
         std::make_move_iterator(method_models.end()));
+  }
+  return models;
+}
+
+std::vector<FieldModel> JsonModelGenerator::emit_field_models(
+    const Fields& fields) {
+  std::vector<FieldModel> models;
+  for (auto& item : field_items_) {
+    std::vector<FieldModel> field_models = item.emit_field_models(fields);
+    models.insert(
+        models.end(),
+        std::make_move_iterator(field_models.begin()),
+        std::make_move_iterator(field_models.end()));
   }
   return models;
 }
