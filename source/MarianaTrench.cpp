@@ -293,6 +293,7 @@ void MarianaTrench::run(const program_options::variables_map& variables) {
       options.apk_directory(),
       options.dex_directory(),
       /* balloon */ true,
+      /* throw_on_balloon_error */ true,
       /* support_dex_version */ 37);
 
   redex::process_proguard_configurations(options, context.stores);
