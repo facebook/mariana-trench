@@ -93,25 +93,12 @@
       [
         "add-via-obscure-feature",
         "skip-analysis",
-        "taint-in-taint-out",
-        "taint-in-taint-this"
+        "taint-in-taint-out"
       ],
       "position" :
       {
         "path" : "Interface.java"
-      },
-      "propagation" :
-      [
-        {
-          "always_features" :
-          [
-            "via-obscure",
-            "via-obscure-taint-in-taint-this"
-          ],
-          "input" : "Argument(1)",
-          "output" : "Argument(0)"
-        }
-      ]
+      }
     }
   ]
 }

@@ -93,8 +93,7 @@
       [
         "add-via-obscure-feature",
         "skip-analysis",
-        "taint-in-taint-out",
-        "taint-in-taint-this"
+        "taint-in-taint-out"
       ],
       "position" :
       {

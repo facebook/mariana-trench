@@ -103,7 +103,6 @@ Model::Model(
     if (!code) {
       modes_ |= Model::Mode::SkipAnalysis;
       modes_ |= Model::Mode::TaintInTaintOut;
-      modes_ |= Model::Mode::TaintInTaintThis;
       modes_ |= Model::Mode::AddViaObscureFeature;
     }
 
