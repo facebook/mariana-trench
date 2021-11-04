@@ -557,7 +557,6 @@ void Model::add_taint_in_taint_this(Context& context) {
   auto user_features = FeatureSet::bottom();
   if (modes_.test(Model::Mode::AddViaObscureFeature)) {
     user_features.add(context.features->get("via-obscure"));
-    user_features.add(context.features->get("via-obscure-taint-in-taint-this"));
   }
 
   for (ParameterPosition parameter_position = 1;

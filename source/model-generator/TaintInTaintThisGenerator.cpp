@@ -19,17 +19,38 @@ std::vector<Model> TaintInTaintThisGenerator::visit_method(
   }
 
   const auto class_name = generator::get_class_name(method);
-  if (!boost::contains(class_name, "Activity;") &&
-      !boost::contains(class_name, "Service;") &&
-      !boost::contains(class_name, "WebView;") &&
-      !boost::contains(class_name, "Fragment;") &&
-      !boost::contains(class_name, "WebViewClient;") &&
-      !boost::contains(class_name, "ContentProvider;") &&
-      !boost::contains(class_name, "BroadcastReceiver;")) {
-    return {Model(method, context_, Model::Mode::TaintInTaintThis)};
+  if (boost::contains(class_name, "Activity;") ||
+      boost::contains(class_name, "Service;") ||
+      boost::contains(class_name, "WebView;") ||
+      boost::contains(class_name, "Fragment;") ||
+      boost::contains(class_name, "WebViewClient;") ||
+      boost::contains(class_name, "ContentProvider;") ||
+      boost::contains(class_name, "BroadcastReceiver;")) {
+    return {};
   }
 
-  return {};
+  const auto method_name = generator::get_method_name(method);
+  auto model = Model(method, context_, Model::Mode::TaintInTaintThis);
+  if (!boost::equals(method_name, "valueOf") &&
+      !boost::equals(method_name, "<init>") &&
+      !boost::starts_with(method_name, "add") &&
+      !boost::starts_with(method_name, "set") &&
+      !boost::starts_with(method_name, "put") &&
+      !boost::starts_with(method_name, "append") &&
+      !boost::starts_with(method_name, "unmarshall") &&
+      !boost::starts_with(method_name, "write")) {
+    for (ParameterPosition parameter_position = 1;
+         parameter_position < method->number_of_parameters();
+         parameter_position++) {
+      generator::add_propagation_to_self(
+          context_,
+          model,
+          parameter_position,
+          {"via-obscure-taint-in-taint-this"});
+    }
+  }
+
+  return {model};
 }
 
 } // namespace marianatrench

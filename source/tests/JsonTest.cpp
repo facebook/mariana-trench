@@ -1599,12 +1599,12 @@ TEST_F(JsonTest, Model) {
           {
             "input": "Argument(1)",
             "output": "Argument(0)",
-            "always_features": ["via-obscure", "via-obscure-taint-in-taint-this"]
+            "always_features": ["via-obscure"]
           },
           {
             "input": "Argument(2)",
             "output": "Argument(0)",
-            "always_features": ["via-obscure", "via-obscure-taint-in-taint-this"]
+            "always_features": ["via-obscure"]
           }
         ]
       })#"));
