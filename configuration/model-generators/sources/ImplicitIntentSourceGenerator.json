@@ -4,15 +4,30 @@
       "find": "methods",
       "where": [
         {
-          "constraint": "parent",
-          "inner": {
-            "constraint": "name",
-            "pattern": "Landroid/content/Intent;"
-          }
-        },
-        {
           "constraint": "name",
           "pattern": "\\<init\\>"
+        },
+        {
+          "constraint": "any_of",
+          "inners": [
+            {
+              "constraint": "parent",
+              "inner": {
+                "constraint": "name",
+                "pattern": "Landroid/content/Intent;"
+              }
+            },
+            {
+              "constraint": "parent",
+              "inner": {
+                "constraint": "extends",
+                "inner": {
+                  "constraint": "name",
+                  "pattern": "Landroid/content/Intent;"
+                }
+              }
+            }
+          ]
         },
         {
           "constraint": "not",
