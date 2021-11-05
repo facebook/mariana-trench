@@ -31,8 +31,7 @@ std::vector<Model> TaintInTaintThisGenerator::visit_method(
 
   const auto method_name = generator::get_method_name(method);
   auto model = Model(method, context_, Model::Mode::TaintInTaintThis);
-  if (!boost::equals(method_name, "valueOf") &&
-      !boost::equals(method_name, "<init>") &&
+  if (!boost::equals(method_name, "<init>") &&
       !boost::starts_with(method_name, "add") &&
       !boost::starts_with(method_name, "set") &&
       !boost::starts_with(method_name, "put") &&
