@@ -253,6 +253,16 @@ void apply_propagations(
       }
 
       auto input_parameter_position = input.parameter_position();
+      if (input_parameter_position >= instruction_sources.size()) {
+        WARNING(
+            2,
+            "Model for method `{}` contains a port on parameter {} but the method only has {} parameters. Skipping...",
+            input_parameter_position,
+            show(callee.method_reference),
+            instruction_sources.size());
+
+        continue;
+      }
       auto input_register_id = instruction_sources.at(input_parameter_position);
 
       // Collapsing the tree here is required for correctness and performance.

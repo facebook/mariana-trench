@@ -1,0 +1,21 @@
+{
+  "model_generators": [
+    {
+      "find": "methods",
+      "where": [
+        {
+          "constraint": "signature",
+          "pattern": ".*;\\.transferTaint.*"
+        }
+      ],
+      "model": {
+        "propagation": [
+          {
+            "input": "Argument(3)",
+            "output": "Argument(1)"
+          }
+        ]
+      }
+    }
+  ]
+}
