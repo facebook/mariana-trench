@@ -13,6 +13,7 @@
 
 #include <SpartaWorkQueue.h>
 
+#include <json/value.h>
 #include <mariana-trench/JsonValidation.h>
 #include <mariana-trench/Log.h>
 #include <mariana-trench/Methods.h>
@@ -46,12 +47,20 @@ Registry::Registry(
   }
 }
 
-Registry::Registry(Context& context, const Json::Value& models_value)
+Registry::Registry(
+    Context& context,
+    const Json::Value& models_value,
+    const Json::Value& field_models_value)
     : context_(context) {
   for (const auto& value : JsonValidation::null_or_array(models_value)) {
     const auto* method = Method::from_json(value["method"], context);
     mt_assert(method != nullptr);
     join_with(Model::from_json(method, value, context));
+  }
+  for (const auto& value : JsonValidation::null_or_array(field_models_value)) {
+    const auto* field = Field::from_json(value["field"], context);
+    mt_assert(field != nullptr);
+    join_with(FieldModel::from_json(field, value, context));
   }
 }
 
@@ -65,8 +74,17 @@ Registry Registry::load(
 
   // Load models json input
   for (const auto& models_path : options.models_paths()) {
-    registry.join_with(
-        Registry(context, JsonValidation::parse_json_file(models_path)));
+    registry.join_with(Registry(
+        context,
+        /* models_value */ JsonValidation::parse_json_file(models_path),
+        /* field_models_value */ Json::Value(Json::arrayValue)));
+  }
+  for (const auto& field_models_path : options.field_models_paths()) {
+    registry.join_with(Registry(
+        context,
+        /* models_value */ Json::Value(Json::arrayValue),
+        /* field_models_value */
+        JsonValidation::parse_json_file(field_models_path)));
   }
 
   // Add a default model for methods that don't have one

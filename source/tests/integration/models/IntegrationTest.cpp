@@ -463,7 +463,10 @@ TEST_P(IntegrationTest, ReturnsExpectedModel) {
   context.rules = std::make_unique<Rules>(context, rules);
 
   Registry registry(context);
-  registry.join_with(Registry(context, models));
+  registry.join_with(Registry(
+      context,
+      /* models_value */ models,
+      /* field_models_value */ test::parse_json(R"([])")));
 
   Model external_method(
       context.methods->get("LExternal;.external:(LData;)V"),

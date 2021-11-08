@@ -7,6 +7,7 @@
 
 #include <gmock/gmock.h>
 
+#include <json/value.h>
 #include <mariana-trench/ClassProperties.h>
 #include <mariana-trench/Context.h>
 #include <mariana-trench/Dependencies.h>
@@ -79,7 +80,9 @@ TEST_F(RegistryTest, JoinWith) {
   const auto* source_kind_two = context.kinds->get("TestSourceTwo");
 
   auto registry = Registry(context);
-  registry.join_with(Registry(context, test::parse_json(R"([
+  registry.join_with(Registry(
+      context,
+      /* models_value */ test::parse_json(R"([
           {
             "method": "LClass;.method:(Ljava/lang/Object;)Ljava/lang/Object;",
             "generations": [
@@ -89,7 +92,8 @@ TEST_F(RegistryTest, JoinWith) {
               }
             ]
           }
-        ])")));
+        ])"),
+      /* field_models_value */ test::parse_json(R"([])")));
 
   auto model = Model();
 
@@ -97,7 +101,9 @@ TEST_F(RegistryTest, JoinWith) {
   EXPECT_EQ(
       registry.get(method).generations().elements().at(0).second.size(), 1);
 
-  registry.join_with(Registry(context, test::parse_json(R"([
+  registry.join_with(Registry(
+      context,
+      /* models_value */ test::parse_json(R"([
           {
             "method": "LClass;.method:(Ljava/lang/Object;)Ljava/lang/Object;",
             "generations": [
@@ -107,7 +113,8 @@ TEST_F(RegistryTest, JoinWith) {
               }
             ]
           }
-        ])")));
+        ])"),
+      /* field_models_value */ test::parse_json(R"([])")));
 
   EXPECT_EQ(registry.get(method).generations().elements().size(), 1);
   EXPECT_EQ(

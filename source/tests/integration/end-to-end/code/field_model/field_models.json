@@ -1,0 +1,18 @@
+[
+  {
+    "field": "Lcom/facebook/marianatrench/integrationtests/TaintedFieldClass;.field:Ljava/lang/Object;",
+    "generations": [
+      {
+        "kind": "Source"
+      }
+    ]
+  },
+  {
+    "field": "Lcom/facebook/marianatrench/integrationtests/TaintedFieldClass;.staticField:Ljava/lang/Object;",
+    "generations": [
+      {
+        "kind": "Source"
+      }
+    ]
+  }
+]

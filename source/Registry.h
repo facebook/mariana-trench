@@ -38,7 +38,10 @@ class Registry final {
       const std::vector<FieldModel>& field_models);
 
   /* Create a registry with the given json models. */
-  explicit Registry(Context& context, const Json::Value& models_value);
+  explicit Registry(
+      Context& context,
+      const Json::Value& models_value,
+      const Json::Value& field_models_value);
 
   Registry(const Registry&) = delete;
   Registry(Registry&&) = default;
