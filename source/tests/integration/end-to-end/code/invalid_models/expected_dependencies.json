@@ -33,15 +33,25 @@
   ],
   "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V" : 
   [
-    "Lcom/facebook/marianatrench/integrationtests/Test;.flow:()V"
+    "Lcom/facebook/marianatrench/integrationtests/Test;.testInvalidParameterPosition:()V",
+    "Lcom/facebook/marianatrench/integrationtests/Test;.testInvalidViaTypeOfSource:()V"
   ],
   "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;" : 
   [
-    "Lcom/facebook/marianatrench/integrationtests/Test;.flow:()V"
+    "Lcom/facebook/marianatrench/integrationtests/Test;.testInvalidParameterPosition:()V",
+    "Lcom/facebook/marianatrench/integrationtests/Test;.testInvalidSink:()V"
+  ],
+  "Lcom/facebook/marianatrench/integrationtests/Test;.sinkNonExistent:(Ljava/lang/Object;)V" : 
+  [
+    "Lcom/facebook/marianatrench/integrationtests/Test;.testInvalidSink:()V"
+  ],
+  "Lcom/facebook/marianatrench/integrationtests/Test;.sourceViaType:()Ljava/lang/Object;" : 
+  [
+    "Lcom/facebook/marianatrench/integrationtests/Test;.testInvalidViaTypeOfSource:()V"
   ],
   "Lcom/facebook/marianatrench/integrationtests/Test;.transferTaint:(Ljava/lang/String;Ljava/lang/Object;)V" : 
   [
-    "Lcom/facebook/marianatrench/integrationtests/Test;.flow:()V"
+    "Lcom/facebook/marianatrench/integrationtests/Test;.testInvalidParameterPosition:()V"
   ],
   "Lcom/facebook/secure/context/IntentLauncher;.<init>:()V" : 
   [
@@ -85,6 +95,7 @@
     "Lcom/facebook/marianatrench/integrationtests/Origin;.<init>:()V",
     "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;",
     "Lcom/facebook/marianatrench/integrationtests/Test;.<init>:()V",
+    "Lcom/facebook/marianatrench/integrationtests/Test;.sourceViaType:()Ljava/lang/Object;",
     "Lcom/facebook/secure/context/IntentLauncher;.<init>:()V",
     "Lcom/facebook/secure/context/SecureContextHelperV2;.<init>:()V",
     "Lcom/facebook/user/model/User;.<init>:()V",

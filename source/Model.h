@@ -172,13 +172,13 @@ class Model final {
 
   bool empty() const;
 
-  void check_root_consistency(Root root) const;
-  void check_port_consistency(const AccessPath& access_path) const;
-  void check_parameter_source_port_consistency(
+  bool check_root_consistency(Root root) const;
+  bool check_port_consistency(const AccessPath& access_path) const;
+  bool check_parameter_source_port_consistency(
       const AccessPath& access_path) const;
-  void check_frame_consistency(const Frame& frame, std::string_view kind) const;
-  void check_propagation_consistency(const Propagation& propagation) const;
-  void check_inline_as_consistency(
+  bool check_frame_consistency(const Frame& frame, std::string_view kind) const;
+  bool check_propagation_consistency(const Propagation& propagation) const;
+  bool check_inline_as_consistency(
       const AccessPathConstantDomain& inline_as) const;
 
   void add_mode(Model::Mode mode, Context& context);

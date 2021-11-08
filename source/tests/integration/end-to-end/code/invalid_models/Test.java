@@ -10,12 +10,30 @@ package com.facebook.marianatrench.integrationtests;
 public class Test {
   public void transferTaint(String str, Object argument) {}
 
-  public void flow() {
+  public Object sourceViaType() {
+    return new Object();
+  }
+
+  public void sinkNonExistent(Object argument) {}
+
+  public void testInvalidParameterPosition() {
     Object source = Origin.source();
     String str = "";
     transferTaint(str, source);
     // Model for transferTaint() specifies an invalid parameter number and hence will not find an
     // issue here. The analysis however should not crash even with the invalid model.
     Origin.sink(str);
+  }
+
+  public void testInvalidViaTypeOfSource() {
+    // Model for sourceViaType() specifies an invalid parameter number as via_type_of feature.
+    // However, we still generate the model and the analysis reports the issue.
+    Origin.sink(sourceViaType());
+  }
+
+  public void testInvalidSink() {
+    // Model for sinkNonExistent() specifies an invalid parameter number as the sink and hence will
+    // not find an issue here.
+    sinkNonExistent(Origin.source());
   }
 }

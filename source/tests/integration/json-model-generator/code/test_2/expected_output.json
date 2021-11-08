@@ -82,7 +82,7 @@
       "kind" : "TestGeneration",
       "origins" : 
       [
-        "Lcom/facebook/marianatrench/integrationtests/JsonModelGeneratorIntegrationTest2;.function:(II)V"
+        "Lcom/facebook/marianatrench/integrationtests/JsonModelGeneratorIntegrationTest2;.function:(II)I"
       ]
     },
     {
@@ -91,7 +91,7 @@
       "kind" : "TestGeneration",
       "origins" : 
       [
-        "Lcom/facebook/marianatrench/integrationtests/JsonModelGeneratorIntegrationTest2;.function:(II)V"
+        "Lcom/facebook/marianatrench/integrationtests/JsonModelGeneratorIntegrationTest2;.function:(II)I"
       ]
     },
     {
@@ -100,7 +100,7 @@
       "kind" : "TestOtherGeneration",
       "origins" : 
       [
-        "Lcom/facebook/marianatrench/integrationtests/JsonModelGeneratorIntegrationTest2;.function:(II)V"
+        "Lcom/facebook/marianatrench/integrationtests/JsonModelGeneratorIntegrationTest2;.function:(II)I"
       ],
       "via_type_of" : 
       [
@@ -108,7 +108,7 @@
       ]
     }
   ],
-  "method" : "Lcom/facebook/marianatrench/integrationtests/JsonModelGeneratorIntegrationTest2;.function:(II)V",
+  "method" : "Lcom/facebook/marianatrench/integrationtests/JsonModelGeneratorIntegrationTest2;.function:(II)I",
   "modes" : 
   [
     "skip-analysis"
@@ -121,7 +121,7 @@
       "kind" : "TestOtherParameterSource",
       "origins" : 
       [
-        "Lcom/facebook/marianatrench/integrationtests/JsonModelGeneratorIntegrationTest2;.function:(II)V"
+        "Lcom/facebook/marianatrench/integrationtests/JsonModelGeneratorIntegrationTest2;.function:(II)I"
       ]
     },
     {
@@ -130,7 +130,7 @@
       "kind" : "TestParameterSource",
       "origins" : 
       [
-        "Lcom/facebook/marianatrench/integrationtests/JsonModelGeneratorIntegrationTest2;.function:(II)V"
+        "Lcom/facebook/marianatrench/integrationtests/JsonModelGeneratorIntegrationTest2;.function:(II)I"
       ]
     },
     {
@@ -139,7 +139,7 @@
       "kind" : "TestOtherParameterSource",
       "origins" : 
       [
-        "Lcom/facebook/marianatrench/integrationtests/JsonModelGeneratorIntegrationTest2;.function:(II)V"
+        "Lcom/facebook/marianatrench/integrationtests/JsonModelGeneratorIntegrationTest2;.function:(II)I"
       ]
     },
     {
@@ -148,13 +148,13 @@
       "kind" : "TestParameterSource",
       "origins" : 
       [
-        "Lcom/facebook/marianatrench/integrationtests/JsonModelGeneratorIntegrationTest2;.function:(II)V"
+        "Lcom/facebook/marianatrench/integrationtests/JsonModelGeneratorIntegrationTest2;.function:(II)I"
       ]
     }
   ],
   "position" : 
   {
-    "line" : 10,
+    "line" : 11,
     "path" : "com/facebook/marianatrench/integrationtests/JsonModelGeneratorIntegrationTest2.java"
   },
   "propagation" : 
@@ -176,7 +176,7 @@
       "kind" : "TestSink",
       "origins" : 
       [
-        "Lcom/facebook/marianatrench/integrationtests/JsonModelGeneratorIntegrationTest2;.function:(II)V"
+        "Lcom/facebook/marianatrench/integrationtests/JsonModelGeneratorIntegrationTest2;.function:(II)I"
       ],
       "via_type_of" : 
       [
@@ -189,7 +189,7 @@
       "kind" : "TestSink",
       "origins" : 
       [
-        "Lcom/facebook/marianatrench/integrationtests/JsonModelGeneratorIntegrationTest2;.function:(II)V"
+        "Lcom/facebook/marianatrench/integrationtests/JsonModelGeneratorIntegrationTest2;.function:(II)I"
       ],
       "via_type_of" : 
       [

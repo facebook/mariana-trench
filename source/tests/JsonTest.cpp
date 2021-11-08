@@ -1825,7 +1825,7 @@ TEST_F(JsonTest, Model) {
                        /* input */ AccessPath(Root(Root::Kind::Argument, 1)),
                        /* inferred_features */ FeatureMayAlwaysSet::bottom(),
                        /* user_features */ FeatureSet::bottom()),
-                   /* output */ AccessPath(Root(Root::Kind::Return))},
+                   /* output */ AccessPath(Root(Root::Kind::Argument, 0))},
                   {Propagation(
                        /* input */ AccessPath(Root(Root::Kind::Argument, 2)),
                        /* inferred_features */ FeatureMayAlwaysSet::bottom(),
@@ -1838,7 +1838,7 @@ TEST_F(JsonTest, Model) {
         "propagation": [
           {
             "input": "Argument(1)",
-            "output": "Return"
+            "output": "Argument(0)"
           },
           {
             "input": "Argument(2)",
@@ -1965,7 +1965,7 @@ TEST_F(JsonTest, Model) {
               {Sanitizer(
                   SanitizerKind::Sinks, KindSetAbstractDomain({kind1, kind2}))},
               /* port_sanitizers */
-              {{Root(Root::Kind::Return),
+              {{Root(Root::Kind::Argument, 1),
                 SanitizerSet(Sanitizer(
                     SanitizerKind::Sources, KindSetAbstractDomain::top()))},
                {Root(Root::Kind::Argument, 2),
@@ -1978,7 +1978,7 @@ TEST_F(JsonTest, Model) {
       "sanitizers": [
         {"sanitize": "sinks", "kinds": [{"kind": "Kind1"}, {"kind": "Partial:Kind2:a"}]},
         {"sanitize": "sinks", "port": "Argument(2)", "kinds": [{"kind": "Kind1"}, {"kind": "Kind3"}]},
-        {"sanitize": "sources", "port": "Return"}
+        {"sanitize": "sources", "port": "Argument(1)"}
       ]
     })#")));
 

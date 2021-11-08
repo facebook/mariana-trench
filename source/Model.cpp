@@ -412,15 +412,16 @@ bool Model::empty() const {
       issues_.is_bottom();
 }
 
-void Model::check_root_consistency(Root root) const {
+bool Model::check_root_consistency(Root root) const {
   switch (root.kind()) {
     case Root::Kind::Return: {
       if (method_ && method_->returns_void()) {
         ModelConsistencyError::raise(fmt::format(
             "Model for method `{}` contains a `Return` port but method returns void.",
             show(method_)));
+        return false;
       }
-      break;
+      return true;
     }
     case Root::Kind::Argument: {
       auto position = root.parameter_position();
@@ -430,78 +431,91 @@ void Model::check_root_consistency(Root root) const {
             show(method_),
             position,
             method_->number_of_parameters()));
+        return false;
       }
-      break;
+      return true;
     }
     default: {
       ModelConsistencyError::raise(fmt::format(
           "Model for method `{}` contains an invalid port: `{}`",
           show(method_),
           show(root)));
-      break;
+      return false;
     }
   }
 }
 
-void Model::check_port_consistency(const AccessPath& access_path) const {
-  check_root_consistency(access_path.root());
+bool Model::check_port_consistency(const AccessPath& access_path) const {
+  return check_root_consistency(access_path.root());
 }
 
-void Model::check_frame_consistency(const Frame& frame, std::string_view kind)
+bool Model::check_frame_consistency(const Frame& frame, std::string_view kind)
     const {
   if (frame.is_bottom()) {
     ModelConsistencyError::raise(fmt::format(
         "Model for method `{}` contains a bottom {}.", show(method_), kind));
+    return false;
   }
   if (frame.is_artificial_source()) {
     ModelConsistencyError::raise(fmt::format(
         "Model for method `{}` contains an artificial {}.",
         show(method_),
         kind));
+    return false;
   }
   if (method_ && (frame.origins().empty() && frame.field_origins().empty())) {
     ModelConsistencyError::raise(fmt::format(
         "Model for method `{}` contains a {} without origins.",
         show(method_),
         kind));
+    return false;
   }
   if (frame.via_type_of_ports().is_value()) {
     for (const auto& root : frame.via_type_of_ports().elements()) {
+      // Logs invalid ports specifed for via_type_of but does not prevent the
+      // model from being created.
       check_port_consistency(AccessPath(root));
     }
   }
+
+  return true;
 }
 
-void Model::check_parameter_source_port_consistency(
+bool Model::check_parameter_source_port_consistency(
     const AccessPath& access_path) const {
   if (access_path.root().is_return()) {
     ModelConsistencyError::raise(fmt::format(
         "Model for method `{}` contains a parameter source with a `Return` port."
         " Use a generation instead.",
         show(method_)));
+    return false;
   }
+
+  return true;
 }
 
-void Model::check_propagation_consistency(
+bool Model::check_propagation_consistency(
     const Propagation& propagation) const {
-  check_port_consistency(propagation.input());
+  return check_port_consistency(propagation.input());
 }
 
-void Model::check_inline_as_consistency(
+bool Model::check_inline_as_consistency(
     const AccessPathConstantDomain& inline_as) const {
   auto access_path = inline_as.get_constant();
 
   if (!access_path) {
-    return;
+    return true;
   }
 
   if (!access_path->root().is_argument()) {
     ModelConsistencyError::raise(fmt::format(
         "Model for method `{}` has an inline-as with a non-argument root.",
         show(method_)));
+
+    return false;
   }
 
-  check_port_consistency(*access_path);
+  return check_port_consistency(*access_path);
 }
 
 void Model::add_mode(Model::Mode mode, Context& context) {
@@ -580,7 +594,9 @@ void update_taint_tree(
     AccessPath port,
     std::size_t truncation_amount,
     Taint new_taint) {
-  model->check_port_consistency(port);
+  if (!model->check_port_consistency(port)) {
+    return;
+  }
 
   port.truncate(truncation_amount);
   tree.write(port, std::move(new_taint), UpdateKind::Weak);
@@ -593,8 +609,10 @@ void Model::add_generation(AccessPath port, Frame source) {
     source.set_origins(MethodSet{method_});
   }
 
-  check_port_consistency(port);
-  check_frame_consistency(source, "source");
+  if (!check_port_consistency(port) ||
+      !check_frame_consistency(source, "source")) {
+    return;
+  }
 
   port.truncate(Heuristics::kGenerationMaxPortSize);
   generations_.write(port, Taint{std::move(source)}, UpdateKind::Weak);
@@ -622,9 +640,11 @@ void Model::add_parameter_source(AccessPath port, Frame source) {
     source.set_origins(MethodSet{method_});
   }
 
-  check_port_consistency(port);
-  check_parameter_source_port_consistency(port);
-  check_frame_consistency(source, "source");
+  if (!check_port_consistency(port) ||
+      !check_parameter_source_port_consistency(port) ||
+      !check_frame_consistency(source, "source")) {
+    return;
+  }
 
   port.truncate(Heuristics::kParameterSourceMaxPortSize);
   parameter_sources_.write(port, Taint{std::move(source)}, UpdateKind::Weak);
@@ -635,8 +655,9 @@ void Model::add_sink(AccessPath port, Frame sink) {
     sink.set_origins(MethodSet{method_});
   }
 
-  check_port_consistency(port);
-  check_frame_consistency(sink, "sink");
+  if (!check_port_consistency(port) || !check_frame_consistency(sink, "sink")) {
+    return;
+  }
 
   port.truncate(Heuristics::kSinkMaxPortSize);
   sinks_.write(port, Taint{std::move(sink)}, UpdateKind::Weak);
@@ -655,7 +676,10 @@ void Model::add_inferred_sinks(AccessPath port, Taint sinks) {
 }
 
 void Model::add_propagation(Propagation propagation, AccessPath output) {
-  check_propagation_consistency(propagation);
+  if (!check_propagation_consistency(propagation) ||
+      !check_port_consistency(output)) {
+    return;
+  }
 
   output.truncate(Heuristics::kPropagationMaxPathSize);
   propagation.truncate(Heuristics::kPropagationMaxPathSize);
@@ -678,7 +702,10 @@ void Model::add_global_sanitizer(Sanitizer sanitizer) {
 }
 
 void Model::add_port_sanitizers(SanitizerSet sanitizers, Root root) {
-  check_root_consistency(root);
+  if (!check_root_consistency(root)) {
+    return;
+  }
+
   port_sanitizers_.update(
       root, [&](const SanitizerSet& set) { return set.join(sanitizers); });
 }
@@ -715,7 +742,9 @@ bool Model::has_global_propagation_sanitizer() {
 }
 
 void Model::add_attach_to_sources(Root root, FeatureSet features) {
-  check_root_consistency(root);
+  if (!check_root_consistency(root)) {
+    return;
+  }
 
   attach_to_sources_.update(
       root, [&](const FeatureSet& set) { return set.join(features); });
@@ -726,7 +755,9 @@ FeatureSet Model::attach_to_sources(Root root) const {
 }
 
 void Model::add_attach_to_sinks(Root root, FeatureSet features) {
-  check_root_consistency(root);
+  if (!check_root_consistency(root)) {
+    return;
+  }
 
   attach_to_sinks_.update(
       root, [&](const FeatureSet& set) { return set.join(features); });
@@ -737,7 +768,9 @@ FeatureSet Model::attach_to_sinks(Root root) const {
 }
 
 void Model::add_attach_to_propagations(Root root, FeatureSet features) {
-  check_root_consistency(root);
+  if (!check_root_consistency(root)) {
+    return;
+  }
 
   attach_to_propagations_.update(
       root, [&](const FeatureSet& set) { return set.join(features); });
@@ -748,7 +781,9 @@ FeatureSet Model::attach_to_propagations(Root root) const {
 }
 
 void Model::add_add_features_to_arguments(Root root, FeatureSet features) {
-  check_root_consistency(root);
+  if (!check_root_consistency(root)) {
+    return;
+  }
 
   add_attach_to_sources(root, features);
   add_attach_to_sinks(root, features);
@@ -770,7 +805,9 @@ const AccessPathConstantDomain& Model::inline_as() const {
 }
 
 void Model::set_inline_as(AccessPathConstantDomain inline_as) {
-  check_inline_as_consistency(inline_as);
+  if (!check_inline_as_consistency(inline_as)) {
+    return;
+  }
 
   inline_as_ = std::move(inline_as);
 }

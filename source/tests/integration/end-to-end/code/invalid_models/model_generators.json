@@ -16,6 +16,43 @@
           }
         ]
       }
+    },
+    {
+      "find": "methods",
+      "where": [
+        {
+          "constraint": "signature",
+          "pattern": ".*;\\.sourceViaType.*"
+        }
+      ],
+      "model": {
+        "generations": [
+          {
+            "kind": "Source",
+            "port": "Return",
+            "via_type_of": [
+              "Argument(1)"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "find": "methods",
+      "where": [
+        {
+          "constraint": "signature",
+          "pattern": ".*;\\.sinkNonExistent.*"
+        }
+      ],
+      "model": {
+        "sinks": [
+          {
+            "kind": "Sink",
+            "port": "Argument(2)"
+          }
+        ]
+      }
     }
   ]
 }

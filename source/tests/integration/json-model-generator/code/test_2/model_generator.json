@@ -19,13 +19,13 @@
         },
         {
           "constraint": "signature",
-          "pattern": "Lcom/facebook/marianatrench/integrationtests/JsonModelGeneratorIntegrationTest2;\\.function:\\(II\\)V"
+          "pattern": "Lcom/facebook/marianatrench/integrationtests/JsonModelGeneratorIntegrationTest2;\\.function:\\(II\\)I"
         },
         {
           "constraint": "return",
           "inner": {
             "constraint": "name",
-            "pattern": "V"
+            "pattern": "I"
           }
         },
         {

@@ -51,33 +51,25 @@
         "parameter_sources": [
           {
             "kind": "TestParameterSource",
-            "port": "Argument(1)"
-          }
-        ],
-        "generations": [
-          {
-            "kind": "TestGeneration"
+            "port": "Argument(0)"
           }
         ],
         "sources": [
           {
-            "kind": "TestOtherGeneration"
-          },
-          {
             "kind": "TestParameterSource",
-            "port": "Argument(2)"
+            "port": "Argument(1)"
           }
         ],
         "sinks": [
           {
             "kind": "TestSink",
-            "port": "Argument(2)"
+            "port": "Argument(1)"
           }
         ],
         "propagation": [
           {
-            "input": "Argument(1)",
-            "output": "Argument(2)"
+            "input": "Argument(0)",
+            "output": "Argument(1)"
           }
         ],
         "attach_to_sources": [
@@ -85,7 +77,7 @@
             "features": [
               "via-function-source"
             ],
-            "port": "Argument(1)"
+            "port": "Argument(0)"
           }
         ],
         "attach_to_sinks": [
@@ -93,7 +85,7 @@
             "features": [
               "via-function-sink"
             ],
-            "port": "Argument(1)"
+            "port": "Argument(0)"
           }
         ],
         "attach_to_propagations": [
@@ -101,7 +93,7 @@
             "features": [
               "via-function-propagation"
             ],
-            "port": "Argument(1)"
+            "port": "Argument(0)"
           }
         ],
         "add_features_to_arguments": [
@@ -109,7 +101,7 @@
             "features": [
               "via-features-to-arguments"
             ],
-            "port": "Argument(1)"
+            "port": "Argument(0)"
           }
         ]
       }

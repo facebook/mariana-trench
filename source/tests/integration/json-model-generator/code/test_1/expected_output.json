@@ -7,7 +7,7 @@
       [
         "via-features-to-arguments"
       ],
-      "port" : "Argument(1)"
+      "port" : "Argument(0)"
     }
   ],
   "attach_to_propagations" : 
@@ -18,7 +18,7 @@
         "via-features-to-arguments",
         "via-function-propagation"
       ],
-      "port" : "Argument(1)"
+      "port" : "Argument(0)"
     }
   ],
   "attach_to_sinks" : 
@@ -29,7 +29,7 @@
         "via-features-to-arguments",
         "via-function-sink"
       ],
-      "port" : "Argument(1)"
+      "port" : "Argument(0)"
     }
   ],
   "attach_to_sources" : 
@@ -40,28 +40,7 @@
         "via-features-to-arguments",
         "via-function-source"
       ],
-      "port" : "Argument(1)"
-    }
-  ],
-  "generations" : 
-  [
-    {
-      "callee_port" : "Leaf",
-      "caller_port" : "Return",
-      "kind" : "TestGeneration",
-      "origins" : 
-      [
-        "Lcom/facebook/marianatrench/integrationtests/JsonModelGeneratorIntegrationTest1;.function:(II)V"
-      ]
-    },
-    {
-      "callee_port" : "Leaf",
-      "caller_port" : "Return",
-      "kind" : "TestOtherGeneration",
-      "origins" : 
-      [
-        "Lcom/facebook/marianatrench/integrationtests/JsonModelGeneratorIntegrationTest1;.function:(II)V"
-      ]
+      "port" : "Argument(0)"
     }
   ],
   "method" : "Lcom/facebook/marianatrench/integrationtests/JsonModelGeneratorIntegrationTest1;.function:(II)V",
@@ -73,7 +52,7 @@
   [
     {
       "callee_port" : "Leaf",
-      "caller_port" : "Argument(1)",
+      "caller_port" : "Argument(0)",
       "kind" : "TestParameterSource",
       "origins" : 
       [
@@ -82,7 +61,7 @@
     },
     {
       "callee_port" : "Leaf",
-      "caller_port" : "Argument(2)",
+      "caller_port" : "Argument(1)",
       "kind" : "TestParameterSource",
       "origins" : 
       [
@@ -98,15 +77,15 @@
   "propagation" : 
   [
     {
-      "input" : "Argument(1)",
-      "output" : "Argument(2)"
+      "input" : "Argument(0)",
+      "output" : "Argument(1)"
     }
   ],
   "sinks" : 
   [
     {
       "callee_port" : "Leaf",
-      "caller_port" : "Argument(2)",
+      "caller_port" : "Argument(1)",
       "kind" : "TestSink",
       "origins" : 
       [
