@@ -51,6 +51,7 @@ TEST_P(JsonModelGeneratorIntegrationTest, CompareModels) {
   // Read the configuration for this test case.
   context.options = std::make_unique<Options>(
       /* models_path */ std::vector<std::string>{},
+      /* field_models_path */ std::vector<std::string>{},
       /* rules_path */ std::vector<std::string>{},
       /* lifecycles_path */ std::vector<std::string>{},
       /* proguard_configuration_paths */ std::vector<std::string>{},

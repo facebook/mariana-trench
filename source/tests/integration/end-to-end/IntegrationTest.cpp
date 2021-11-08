@@ -119,6 +119,7 @@ TEST_P(IntegrationTest, CompareFlows) {
   context.options = std::make_unique<Options>(
       /* models_paths */
       std::vector<std::string>{(directory / "/models.json").native()},
+      /* field_models_path */ std::vector<std::string>{},
       /* rules_paths */
       std::vector<std::string>{(directory / "/rules.json").native()},
       /* lifecycles_paths */

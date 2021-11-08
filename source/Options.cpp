@@ -94,6 +94,7 @@ namespace program_options = boost::program_options;
 
 Options::Options(
     const std::vector<std::string>& models_paths,
+    const std::vector<std::string>& field_models_paths,
     const std::vector<std::string>& rules_paths,
     const std::vector<std::string>& lifecycles_paths,
     const std::vector<std::string>& proguard_configuration_paths,
@@ -106,6 +107,7 @@ Options::Options(
     bool remove_unreachable_code,
     const std::string& source_root_directory)
     : models_paths_(models_paths),
+      field_models_paths_(field_models_paths),
       rules_paths_(rules_paths),
       lifecycles_paths_(lifecycles_paths),
       proguard_configuration_paths_(proguard_configuration_paths),
@@ -318,6 +320,10 @@ void Options::add_options(
 
 const std::vector<std::string>& Options::models_paths() const {
   return models_paths_;
+}
+
+const std::vector<std::string>& Options::field_models_paths() const {
+  return field_models_paths_;
 }
 
 const std::vector<ModelGeneratorConfiguration>&
