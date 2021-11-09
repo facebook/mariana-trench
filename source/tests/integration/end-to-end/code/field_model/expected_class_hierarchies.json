@@ -11,6 +11,10 @@
       "Landroid/app/Activity;",
       "Landroidx/fragment/app/FragmentActivity;"
     ],
+    "Lcom/facebook/marianatrench/integrationtests/TaintedFieldClass;" : 
+    [
+      "Lcom/facebook/marianatrench/integrationtests/ChildClass;"
+    ],
     "Ljava/lang/Runnable;" : 
     [
       "Ljava/lang/Thread;"

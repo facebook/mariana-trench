@@ -11,7 +11,6 @@ public class TestClass {
   public void flow(TaintedFieldClass argument) {
     // Field through function argument
     Origin.sink(argument.field);
-    Origin.sink(argument.staticField);
 
     // Field through locally constructed object
     TaintedFieldClass flow = new TaintedFieldClass();

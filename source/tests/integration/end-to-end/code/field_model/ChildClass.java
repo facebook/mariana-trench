@@ -7,13 +7,16 @@
 
 package com.facebook.marianatrench.integrationtests;
 
-public class TaintedFieldClass {
-  public Object field;
+public class ChildClass extends TaintedFieldClass {
   public Object shadowedField;
-  public static Object staticField;
 
   public void flow() {
+    TaintedFieldClass test = new ChildClass();
+    // No issue is expected here, java does not dynamically resolve fields
+    Origin.sink(test.shadowedField);
+
+    Origin.sink(shadowedField);
+    // Field defined in parent class should still carry taint
     Origin.sink(field);
-    Origin.sink(staticField);
   }
 }

@@ -14,5 +14,13 @@
         "kind": "Source"
       }
     ]
+  },
+  {
+    "field": "Lcom/facebook/marianatrench/integrationtests/ChildClass;.shadowedField:Ljava/lang/Object;",
+    "generations": [
+      {
+        "kind": "Source"
+      }
+    ]
   }
 ]

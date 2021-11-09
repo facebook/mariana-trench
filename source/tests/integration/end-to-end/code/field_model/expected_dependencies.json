@@ -31,13 +31,19 @@
     "Landroid/content/Intent;.getBundleExtra:(Ljava/lang/String;)Landroid/os/Bundle;",
     "Landroid/content/Intent;.getExtras:()Landroid/os/Bundle;"
   ],
+  "Lcom/facebook/marianatrench/integrationtests/ChildClass;.<init>:()V" : 
+  [
+    "Lcom/facebook/marianatrench/integrationtests/ChildClass;.flow:()V"
+  ],
   "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V" : 
   [
+    "Lcom/facebook/marianatrench/integrationtests/ChildClass;.flow:()V",
     "Lcom/facebook/marianatrench/integrationtests/TaintedFieldClass;.flow:()V",
     "Lcom/facebook/marianatrench/integrationtests/TestClass;.flow:(Lcom/facebook/marianatrench/integrationtests/TaintedFieldClass;)V"
   ],
   "Lcom/facebook/marianatrench/integrationtests/TaintedFieldClass;.<init>:()V" : 
   [
+    "Lcom/facebook/marianatrench/integrationtests/ChildClass;.<init>:()V",
     "Lcom/facebook/marianatrench/integrationtests/TestClass;.flow:(Lcom/facebook/marianatrench/integrationtests/TaintedFieldClass;)V"
   ],
   "Lcom/facebook/secure/context/IntentLauncher;.<init>:()V" : 

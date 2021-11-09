@@ -4,6 +4,10 @@
   [
     "Landroid/app/Activity;.startActivity:(Landroid/content/Intent;)V"
   ],
+  "Lcom/facebook/marianatrench/integrationtests/TaintedFieldClass;.flow:()V" : 
+  [
+    "Lcom/facebook/marianatrench/integrationtests/ChildClass;.flow:()V"
+  ],
   "Ljava/lang/Object;.toString:()Ljava/lang/String;" : 
   [
     "Landroid/location/Location;.toString:()Ljava/lang/String;",
