@@ -86,6 +86,18 @@ const DexMethod* MT_NULLABLE resolve_call(
   return method;
 }
 
+const DexField* MT_NULLABLE
+resolve_field_access(const Method* caller, const IRInstruction* instruction) {
+  mt_assert(caller != nullptr);
+  mt_assert(opcode::is_an_iget(instruction->opcode()));
+
+  DexFieldRef* dex_field_reference = instruction->get_field();
+  mt_assert_log(
+      dex_field_reference != nullptr,
+      "Iget instruction has no field reference");
+  return resolve_field(dex_field_reference, FieldSearch::Instance);
+}
+
 bool is_anonymous_class(const DexType* type) {
   static const re2::RE2 regex("^.*\\$\\d+;$");
   return re2::RE2::FullMatch(show(type), regex);
@@ -331,6 +343,7 @@ std::ostream& operator<<(std::ostream& out, const ArtificialCallee& callee) {
 CallGraph::CallGraph(
     const Options& options,
     Methods& method_factory,
+    Fields& field_factory,
     const Types& types,
     const ClassHierarchies& class_hierarchies,
     Overrides& override_factory,
@@ -368,6 +381,7 @@ CallGraph::CallGraph(
           std::unordered_map<const IRInstruction*, const Method*> callees;
           std::unordered_map<const IRInstruction*, ArtificialCallees>
               artificial_callees;
+          std::unordered_map<const IRInstruction*, const Field*> field_accesses;
 
           for (const auto* block : code->cfg().blocks()) {
             for (const auto& entry : *block) {
@@ -397,6 +411,14 @@ CallGraph::CallGraph(
                         instruction,
                         std::move(artificial_callees_for_instruction));
                   }
+                }
+                continue;
+              }
+
+              if (opcode::is_an_iget(instruction->opcode())) {
+                const auto* field = resolve_field_access(caller, instruction);
+                if (field != nullptr) {
+                  field_accesses.emplace(instruction, field_factory.get(field));
                 }
                 continue;
               }
@@ -490,6 +512,10 @@ CallGraph::CallGraph(
             artificial_callees_.insert_or_assign(
                 std::make_pair(caller, std::move(artificial_callees)));
           }
+          if (!field_accesses.empty()) {
+            resolved_fields_.insert_or_assign(
+                std::make_pair(caller, std::move(field_accesses)));
+          }
         },
         sparta::parallel::default_num_threads());
     for (const auto* method : worklist) {
@@ -581,6 +607,22 @@ const ArtificialCallees& CallGraph::artificial_callees(
   } else {
     return artificial_callees->second;
   }
+}
+
+const Field* MT_NULLABLE CallGraph::resolved_field_access(
+    const Method* caller,
+    const IRInstruction* instruction) const {
+  auto fields = resolved_fields_.find(caller);
+  if (fields == resolved_fields_.end()) {
+    return nullptr;
+  }
+
+  auto field = fields->second.find(instruction);
+  if (field == fields->second.end()) {
+    return nullptr;
+  }
+
+  return field->second;
 }
 
 Json::Value CallGraph::to_json(bool with_overrides) const {

@@ -48,6 +48,7 @@ Context test_components(const Scope& scope) {
   context.call_graph = std::make_unique<CallGraph>(
       *context.options,
       *context.methods,
+      *context.fields,
       *context.types,
       *context.class_hierarchies,
       *context.overrides,

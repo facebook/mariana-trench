@@ -49,6 +49,7 @@ class MethodContext final {
   const Options& options;
   const ArtificialMethods& artificial_methods;
   const Methods& methods;
+  const Fields& fields;
   const Positions& positions;
   const Types& types;
   const ClassProperties& class_properties;

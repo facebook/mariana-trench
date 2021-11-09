@@ -13,6 +13,7 @@
 #include <mariana-trench/CallGraph.h>
 #include <mariana-trench/ClassProperties.h>
 #include <mariana-trench/Features.h>
+#include <mariana-trench/Fields.h>
 #include <mariana-trench/FulfilledPartialKindState.h>
 #include <mariana-trench/Log.h>
 #include <mariana-trench/Methods.h>
@@ -91,12 +92,36 @@ bool Transfer::analyze_iget(
   mt_assert(instruction->srcs().size() == 1);
   mt_assert(instruction->has_field());
 
+  const auto* field =
+      context->call_graph.resolved_field_access(context->method(), instruction);
+  if (!field) {
+    WARNING_OR_DUMP(
+        context,
+        3,
+        "Unable to resolve access of field {}",
+        show(instruction->get_field()));
+  }
+  auto field_model = field ? context->registry.get(field) : FieldModel();
+
   // Create a memory location that represents the field.
   auto memory_locations = environment->memory_locations(
       /* register */ instruction->srcs()[0],
       /* field */ instruction->get_field()->get_name());
   LOG_OR_DUMP(context, 4, "Setting result register to {}", memory_locations);
   environment->assign(k_result_register, memory_locations);
+  if (!field_model.empty()) {
+    LOG_OR_DUMP(
+        context,
+        4,
+        "Tainting register {} with {}",
+        k_result_register,
+        field_model.generations());
+    environment->write(
+        k_result_register,
+        Path({}),
+        field_model.generations(),
+        UpdateKind::Strong);
+  }
 
   return false;
 }

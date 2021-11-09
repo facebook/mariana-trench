@@ -98,6 +98,7 @@ TEST_P(JsonModelGeneratorIntegrationTest, CompareModels) {
   context.call_graph = std::make_unique<CallGraph>(
       *context.options,
       *context.methods,
+      *context.fields,
       *context.types,
       *context.class_hierarchies,
       *context.overrides,

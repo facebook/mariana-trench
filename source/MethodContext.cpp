@@ -21,6 +21,7 @@ MethodContext::MethodContext(
     : options(*context.options),
       artificial_methods(*context.artificial_methods),
       methods(*context.methods),
+      fields(*context.fields),
       positions(*context.positions),
       types(*context.types),
       class_properties(*context.class_properties),

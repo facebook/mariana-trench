@@ -22,6 +22,8 @@
 #include <mariana-trench/Compiler.h>
 #include <mariana-trench/Feature.h>
 #include <mariana-trench/FeatureSet.h>
+#include <mariana-trench/Field.h>
+#include <mariana-trench/Fields.h>
 #include <mariana-trench/Method.h>
 #include <mariana-trench/Options.h>
 #include <mariana-trench/Overrides.h>
@@ -187,6 +189,7 @@ class CallGraph final {
   explicit CallGraph(
       const Options& options,
       Methods& methods,
+      Fields& fields,
       const Types& types,
       const ClassHierarchies& class_hierarchies,
       Overrides& overrides,
@@ -219,6 +222,11 @@ class CallGraph final {
       const Method* caller,
       const IRInstruction* instruction) const;
 
+  /* Return the field being accessed within the given method and instruction */
+  const Field* MT_NULLABLE resolved_field_access(
+      const Method* caller,
+      const IRInstruction* instruction) const;
+
   Json::Value to_json(bool with_overrides = true) const;
 
  private:
@@ -230,6 +238,10 @@ class CallGraph final {
       const Method*,
       std::unordered_map<const IRInstruction*, const Method*>>
       resolved_base_callees_;
+  ConcurrentMap<
+      const Method*,
+      std::unordered_map<const IRInstruction*, const Field*>>
+      resolved_fields_;
   ConcurrentMap<
       const Method*,
       std::unordered_map<const IRInstruction*, ArtificialCallees>>

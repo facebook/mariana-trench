@@ -139,6 +139,7 @@ Registry MarianaTrench::analyze(Context& context) {
   context.call_graph = std::make_unique<CallGraph>(
       *context.options,
       *context.methods,
+      *context.fields,
       *context.types,
       *context.class_hierarchies,
       *context.overrides,

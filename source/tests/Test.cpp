@@ -76,6 +76,7 @@ Context make_context(const DexStore& store) {
   context.call_graph = std::make_unique<CallGraph>(
       *context.options,
       *context.methods,
+      *context.fields,
       *context.types,
       *context.class_hierarchies,
       *context.overrides,
