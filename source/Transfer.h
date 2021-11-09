@@ -34,6 +34,11 @@ class Transfer final : public InstructionAnalyzerBase<
       const IRInstruction* instruction,
       AnalysisEnvironment* taint);
 
+  static bool analyze_sget(
+      MethodContext* context,
+      const IRInstruction* instruction,
+      AnalysisEnvironment* taint);
+
   static bool analyze_invoke(
       MethodContext* context,
       const IRInstruction* instruction,

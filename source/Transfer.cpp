@@ -98,7 +98,7 @@ bool Transfer::analyze_iget(
     WARNING_OR_DUMP(
         context,
         3,
-        "Unable to resolve access of field {}",
+        "Unable to resolve access of instance field {}",
         show(instruction->get_field()));
   }
   auto field_model = field ? context->registry.get(field) : FieldModel();
@@ -120,6 +120,43 @@ bool Transfer::analyze_iget(
         k_result_register,
         Path({}),
         field_model.generations(),
+        UpdateKind::Strong);
+  }
+
+  return false;
+}
+
+bool Transfer::analyze_sget(
+    MethodContext* context,
+    const IRInstruction* instruction,
+    AnalysisEnvironment* environment) {
+  log_instruction(context, instruction);
+  mt_assert(instruction->srcs().size() == 0);
+  mt_assert(instruction->has_field());
+
+  const auto* field =
+      context->call_graph.resolved_field_access(context->method(), instruction);
+  if (!field) {
+    WARNING_OR_DUMP(
+        context,
+        3,
+        "Unable to resolve access of static field {}",
+        show(instruction->get_field()));
+  }
+  auto field_model = field ? context->registry.get(field) : FieldModel();
+  auto memory_location = context->memory_factory.make_location(instruction);
+  LOG_OR_DUMP(context, 4, "Setting result register to {}", *memory_location);
+  environment->assign(k_result_register, memory_location);
+  if (!field_model.empty()) {
+    LOG_OR_DUMP(
+        context,
+        4,
+        "Tainting register {} with {}",
+        k_result_register,
+        field_model.generations());
+    environment->write(
+        k_result_register,
+        TaintTree(field_model.generations()),
         UpdateKind::Strong);
   }
 
