@@ -7,7 +7,7 @@
   (move-result-object v1)
 
   LINE(2)
-  (iput-object v1 v0 "FLow;.field:LData;")
+  (iput-object v1 v0 "LFlow;.field:LData;")
 
   (return-void)
  )

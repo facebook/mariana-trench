@@ -23,6 +23,7 @@
 #include <mariana-trench/ClassProperties.h>
 #include <mariana-trench/Dependencies.h>
 #include <mariana-trench/FieldCache.h>
+#include <mariana-trench/Fields.h>
 #include <mariana-trench/Interprocedural.h>
 #include <mariana-trench/JsonValidation.h>
 #include <mariana-trench/Log.h>
@@ -304,7 +305,7 @@ class Parser {
 Scope stubs() {
   Scope stubs;
 
-  stubs.push_back(assembler::class_with_methods(
+  auto* ldata_class = assembler::class_with_methods(
       /* class_name */ "LData;",
       /* methods */
       {
@@ -314,7 +315,19 @@ Scope stubs() {
               "(public) \"LData;.propagation:(LData;)LData;\""),
           empty_method_with_signature(
               "(public) \"LData;.propagation_this:()LData;\""),
-      }));
+      });
+  stubs.push_back(ldata_class);
+  // Add fields that are used in test cases
+  ldata_class->add_field(DexField::make_field(
+                             ldata_class->get_type(),
+                             DexString::make_string("field"),
+                             ldata_class->get_type())
+                             ->make_concrete(DexAccessFlags::ACC_PUBLIC));
+  ldata_class->add_field(DexField::make_field(
+                             ldata_class->get_type(),
+                             DexString::make_string("other_field"),
+                             ldata_class->get_type())
+                             ->make_concrete(DexAccessFlags::ACC_PUBLIC));
 
   stubs.push_back(assembler::class_with_methods(
       /* class_name */ "LSource;",
@@ -379,6 +392,35 @@ std::vector<std::string> sexp_paths() {
   return paths;
 }
 
+// Since the class Flow is created and populated with its methods during
+// parsing of the test cases, we can't create the fields for this class
+// beforehand within the stubs declaration above, as we can't add methods
+// to a fully instantiated DexClass.
+void add_flow_class_fields(DexStore& store) {
+  auto dex_classes = store.get_dexen();
+  for (const auto& classes : dex_classes) {
+    for (auto* klass : classes) {
+      if (klass->get_name()->str() == "LFlow;") {
+        for (auto name : {"successor", "left", "right"}) {
+          klass->add_field(DexField::make_field(
+                               klass->get_type(),
+                               DexString::make_string(name),
+                               klass->get_type())
+                               ->make_concrete(DexAccessFlags::ACC_PUBLIC));
+        }
+        const auto* data_type = DexType::get_type("LData;");
+        mt_assert(data_type != nullptr);
+        klass->add_field(
+            DexField::make_field(
+                klass->get_type(), DexString::make_string("field"), data_type)
+                ->make_concrete(DexAccessFlags::ACC_PUBLIC));
+
+        break;
+      }
+    }
+  }
+}
+
 } // namespace
 
 TEST_P(IntegrationTest, ReturnsExpectedModel) {
@@ -439,10 +481,12 @@ TEST_P(IntegrationTest, ReturnsExpectedModel) {
   DexStore store("test_store");
   store.add_classes(scope);
   context.stores = {store};
+  add_flow_class_fields(store);
 
   context.artificial_methods =
       std::make_unique<ArtificialMethods>(*context.kinds, context.stores);
   context.methods = std::make_unique<Methods>(context.stores);
+  context.fields = std::make_unique<Fields>(context.stores);
   context.positions = std::make_unique<Positions>(options, context.stores);
   context.types = std::make_unique<Types>(options, context.stores);
   context.class_properties = std::make_unique<ClassProperties>(

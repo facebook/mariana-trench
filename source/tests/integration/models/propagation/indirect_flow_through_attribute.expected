@@ -15,8 +15,8 @@
             "path" : "Flow.java"
           },
           "callee" : "LFlow;.into_attribute:()V",
-          "callee_port" : "Argument(0)",
-          "caller_port" : "Argument(0)",
+          "callee_port" : "Argument(0).field",
+          "caller_port" : "Argument(0).field",
           "distance" : 2,
           "kind" : "TestSource",
           "origins" :
@@ -61,7 +61,7 @@
                 "path" : "Flow.java"
               },
               "callee" : "LFlow;.into_attribute:()V",
-              "callee_port" : "Argument(0)",
+              "callee_port" : "Argument(0).field",
               "distance" : 2,
               "kind" : "TestSource",
               "origins" :
@@ -109,7 +109,7 @@
           },
           "callee" : "LSource;.source:()LData;",
           "callee_port" : "Return",
-          "caller_port" : "Argument(0)",
+          "caller_port" : "Argument(0).field",
           "distance" : 1,
           "kind" : "TestSource",
           "local_positions" :

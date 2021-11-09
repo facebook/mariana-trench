@@ -3,7 +3,7 @@
   (load-param v0)
 
   LINE(2)
-  (iget-object v0 "FLow;.field:LData;")
+  (iget-object v0 "LFlow;.field:LData;")
   (move-result-pseudo-object v1)
 
   LINE(1)
