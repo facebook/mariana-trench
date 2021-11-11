@@ -6,7 +6,6 @@
  */
 
 #include <boost/algorithm/string.hpp>
-#include "mariana-trench/model-generator/ModelGenerator.h"
 
 #include <boost/algorithm/string/predicate.hpp>
 #include <mariana-trench/model-generator/ModelGenerator.h>
