@@ -39,6 +39,9 @@
     "name": "SQLiteDatabaseSinksGenerator"
   },
   {
+    "name": "taint_in_taint_out"
+  },
+  {
     "name": "taint_in_taint_this"
   },
   {

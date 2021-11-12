@@ -795,8 +795,7 @@
   "modes" :
   [
     "add-via-obscure-feature",
-    "skip-analysis",
-    "taint-in-taint-out"
+    "skip-analysis"
   ],
   "position" : {}
 }
@@ -1455,8 +1454,7 @@
   "modes" :
   [
     "add-via-obscure-feature",
-    "skip-analysis",
-    "taint-in-taint-out"
+    "skip-analysis"
   ],
   "position" : {}
 }
@@ -1588,40 +1586,9 @@
   "modes" :
   [
     "add-via-obscure-feature",
-    "skip-analysis",
-    "taint-in-taint-out"
+    "skip-analysis"
   ],
-  "position" : {},
-  "propagation" :
-  [
-    {
-      "always_features" :
-      [
-        "via-obscure",
-        "via-obscure-taint-in-taint-out"
-      ],
-      "input" : "Argument(0)",
-      "output" : "Return"
-    },
-    {
-      "always_features" :
-      [
-        "via-obscure",
-        "via-obscure-taint-in-taint-out"
-      ],
-      "input" : "Argument(1)",
-      "output" : "Return"
-    },
-    {
-      "always_features" :
-      [
-        "via-obscure",
-        "via-obscure-taint-in-taint-out"
-      ],
-      "input" : "Argument(2)",
-      "output" : "Return"
-    }
-  ]
+  "position" : {}
 }
 {
   "method" : "Ljava/util/TreeMap;.<init>:()V",

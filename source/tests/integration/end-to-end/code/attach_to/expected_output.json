@@ -92,34 +92,12 @@
   "modes" :
   [
     "add-via-obscure-feature",
-    "skip-analysis",
-    "taint-in-taint-out"
+    "skip-analysis"
   ],
   "position" :
   {
     "path" : "Flow.java"
-  },
-  "propagation" :
-  [
-    {
-      "always_features" :
-      [
-        "via-obscure",
-        "via-obscure-taint-in-taint-out"
-      ],
-      "input" : "Argument(0)",
-      "output" : "Return"
-    },
-    {
-      "always_features" :
-      [
-        "via-obscure",
-        "via-obscure-taint-in-taint-out"
-      ],
-      "input" : "Argument(1)",
-      "output" : "Return"
-    }
-  ]
+  }
 }
 {
   "attach_to_propagations" :
@@ -236,10 +214,8 @@
       ],
       "call_position" :
       {
-        "end" : 16,
         "line" : 22,
-        "path" : "Flow.java",
-        "start" : 16
+        "path" : "Flow.java"
       },
       "callee" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
       "callee_port" : "Argument(0)",
@@ -280,10 +256,8 @@
       ],
       "call_position" :
       {
-        "end" : 23,
         "line" : 14,
-        "path" : "Flow.java",
-        "start" : 18
+        "path" : "Flow.java"
       },
       "callee" : "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;",
       "callee_port" : "Return",
@@ -440,160 +414,6 @@
     {
       "input" : "Argument(0).scheme",
       "output" : "Return"
-    }
-  ]
-}
-{
-  "issues" :
-  [
-    {
-      "always_features" :
-      [
-        "via-add-features-to-argument",
-        "via-add-features-to-argument-on-obscure",
-        "via-attach-propagations-return",
-        "via-attach-sinks",
-        "via-attach-sources-return",
-        "via-obscure",
-        "via-obscure-taint-in-taint-out"
-      ],
-      "position" :
-      {
-        "line" : 48,
-        "path" : "Flow.java"
-      },
-      "rule" : 1,
-      "sinks" :
-      [
-        {
-          "always_features" :
-          [
-            "via-attach-sinks"
-          ],
-          "call_position" :
-          {
-            "end" : 20,
-            "line" : 48,
-            "path" : "Flow.java",
-            "start" : 20
-          },
-          "callee" : "Lcom/facebook/marianatrench/integrationtests/Flow;.attach_to_sinks:(Ljava/lang/Object;)V",
-          "callee_port" : "Argument(1)",
-          "distance" : 2,
-          "kind" : "Sink",
-          "origins" :
-          [
-            "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V"
-          ]
-        }
-      ],
-      "sources" :
-      [
-        {
-          "always_features" :
-          [
-            "via-add-features-to-argument",
-            "via-add-features-to-argument-on-obscure",
-            "via-attach-propagations-return",
-            "via-attach-sources-return",
-            "via-obscure",
-            "via-obscure-taint-in-taint-out"
-          ],
-          "call_position" :
-          {
-            "end" : 38,
-            "line" : 44,
-            "path" : "Flow.java",
-            "start" : 15
-          },
-          "callee" : "Lcom/facebook/marianatrench/integrationtests/Flow;.attach_to_return_sources:()Ljava/lang/Object;",
-          "callee_port" : "Return",
-          "distance" : 2,
-          "kind" : "Source",
-          "local_features" :
-          {
-            "always_features" :
-            [
-              "via-add-features-to-argument",
-              "via-add-features-to-argument-on-obscure",
-              "via-attach-propagations-return",
-              "via-obscure",
-              "via-obscure-taint-in-taint-out"
-            ]
-          },
-          "local_positions" :
-          [
-            {
-              "end" : 30,
-              "line" : 46,
-              "start" : 30
-            },
-            {
-              "end" : 45,
-              "line" : 45,
-              "start" : 45
-            },
-            {
-              "end" : 60,
-              "line" : 47,
-              "start" : 60
-            }
-          ],
-          "origins" :
-          [
-            "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;"
-          ]
-        }
-      ]
-    }
-  ],
-  "method" : "Lcom/facebook/marianatrench/integrationtests/Flow;.issue:(Lcom/facebook/marianatrench/integrationtests/Flow$Obscure;)V",
-  "position" :
-  {
-    "line" : 43,
-    "path" : "Flow.java"
-  },
-  "sinks" :
-  [
-    {
-      "always_features" :
-      [
-        "via-attach-sinks",
-        "via-obscure",
-        "via-obscure-taint-in-taint-out"
-      ],
-      "call_position" :
-      {
-        "end" : 20,
-        "line" : 48,
-        "path" : "Flow.java",
-        "start" : 20
-      },
-      "callee" : "Lcom/facebook/marianatrench/integrationtests/Flow;.attach_to_sinks:(Ljava/lang/Object;)V",
-      "callee_port" : "Argument(1)",
-      "caller_port" : "Argument(1)",
-      "distance" : 2,
-      "kind" : "Sink",
-      "local_features" :
-      {
-        "always_features" :
-        [
-          "via-obscure",
-          "via-obscure-taint-in-taint-out"
-        ]
-      },
-      "local_positions" :
-      [
-        {
-          "end" : 21,
-          "line" : 47,
-          "start" : 15
-        }
-      ],
-      "origins" :
-      [
-        "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V"
-      ]
     }
   ]
 }
@@ -819,8 +639,7 @@
   "modes" :
   [
     "add-via-obscure-feature",
-    "skip-analysis",
-    "taint-in-taint-out"
+    "skip-analysis"
   ],
   "position" : {}
 }
@@ -1153,6 +972,14 @@
   }
 }
 {
+  "method" : "Lcom/facebook/marianatrench/integrationtests/Flow;.issue:(Lcom/facebook/marianatrench/integrationtests/Flow$Obscure;)V",
+  "position" :
+  {
+    "line" : 43,
+    "path" : "Flow.java"
+  }
+}
+{
   "method" : "Lcom/facebook/marianatrench/integrationtests/Origin;.<init>:()V",
   "position" :
   {
@@ -1324,8 +1151,7 @@
   "modes" :
   [
     "add-via-obscure-feature",
-    "skip-analysis",
-    "taint-in-taint-out"
+    "skip-analysis"
   ],
   "position" : {}
 }
@@ -1457,40 +1283,9 @@
   "modes" :
   [
     "add-via-obscure-feature",
-    "skip-analysis",
-    "taint-in-taint-out"
+    "skip-analysis"
   ],
-  "position" : {},
-  "propagation" :
-  [
-    {
-      "always_features" :
-      [
-        "via-obscure",
-        "via-obscure-taint-in-taint-out"
-      ],
-      "input" : "Argument(0)",
-      "output" : "Return"
-    },
-    {
-      "always_features" :
-      [
-        "via-obscure",
-        "via-obscure-taint-in-taint-out"
-      ],
-      "input" : "Argument(1)",
-      "output" : "Return"
-    },
-    {
-      "always_features" :
-      [
-        "via-obscure",
-        "via-obscure-taint-in-taint-out"
-      ],
-      "input" : "Argument(2)",
-      "output" : "Return"
-    }
-  ]
+  "position" : {}
 }
 {
   "method" : "Ljava/util/TreeMap;.<init>:()V",

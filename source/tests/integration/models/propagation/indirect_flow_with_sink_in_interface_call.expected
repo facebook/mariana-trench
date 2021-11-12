@@ -92,8 +92,7 @@
       "modes" :
       [
         "add-via-obscure-feature",
-        "skip-analysis",
-        "taint-in-taint-out"
+        "skip-analysis"
       ],
       "position" :
       {

@@ -102,7 +102,6 @@ Model::Model(
     auto* code = method_->get_code();
     if (!code) {
       modes_ |= Model::Mode::SkipAnalysis;
-      modes_ |= Model::Mode::TaintInTaintOut;
       modes_ |= Model::Mode::AddViaObscureFeature;
     }
 
