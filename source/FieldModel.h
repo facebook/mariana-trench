@@ -67,6 +67,12 @@ class FieldModel final {
       Context& context);
   Json::Value to_json() const;
 
+  /*
+   * Export the model to json and include the field position. For now, this is
+   * always unknown
+   */
+  Json::Value to_json(Context& context) const;
+
   friend std::ostream& operator<<(std::ostream& out, const FieldModel& model);
 
  private:

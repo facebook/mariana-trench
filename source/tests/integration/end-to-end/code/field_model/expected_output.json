@@ -11,7 +11,8 @@
       ],
       "kind" : "Source"
     }
-  ]
+  ],
+  "position" : {}
 }
 {
   "field" : "Lcom/facebook/marianatrench/integrationtests/TaintedFieldClass;.field:Ljava/lang/Object;",
@@ -25,7 +26,8 @@
       ],
       "kind" : "Source"
     }
-  ]
+  ],
+  "position" : {}
 }
 {
   "field" : "Lcom/facebook/marianatrench/integrationtests/TaintedFieldClass;.staticField:Ljava/lang/Object;",
@@ -39,7 +41,8 @@
       ],
       "kind" : "Source"
     }
-  ]
+  ],
+  "position" : {}
 }
 {
   "generations" :

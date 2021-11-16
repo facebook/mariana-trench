@@ -231,7 +231,7 @@ std::string Registry::dump_models() const {
     string << "\n";
   }
   for (const auto& field_model : field_models_) {
-    writer->write(field_model.second.to_json(), &string);
+    writer->write(field_model.second.to_json(context_), &string);
     string << "\n";
   }
   return string.str();
@@ -245,7 +245,7 @@ Json::Value Registry::models_to_json() const {
   }
   models_value["field_models"] = Json::Value(Json::arrayValue);
   for (auto field_model : field_models_) {
-    models_value["field_models"].append(field_model.second.to_json());
+    models_value["field_models"].append(field_model.second.to_json(context_));
   }
   return models_value;
 }
@@ -300,7 +300,8 @@ void Registry::dump_models(
             writer->write(models[i].to_json(context_), &batch_stream);
           } else {
             writer->write(
-                field_models[i - models.size()].to_json(), &batch_stream);
+                field_models[i - models.size()].to_json(context_),
+                &batch_stream);
           }
           batch_stream << "\n";
         }

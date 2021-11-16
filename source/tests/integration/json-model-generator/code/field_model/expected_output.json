@@ -12,6 +12,7 @@
       "kind" : "TestGenerationA"
     }
   ],
+  "position" : {},
   "sinks" : 
   [
     {
@@ -36,7 +37,8 @@
       ],
       "kind" : "TestGenerationB"
     }
-  ]
+  ],
+  "position" : {}
 }
 {
   "field" : "Lcom/facebook/marianatrench/integrationtests/FieldModel;.field_two:Ljava/lang/Boolean;",
@@ -51,6 +53,7 @@
       "kind" : "TestGenerationB"
     }
   ],
+  "position" : {},
   "sinks" : 
   [
     {

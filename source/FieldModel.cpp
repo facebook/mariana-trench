@@ -11,6 +11,7 @@
 #include <mariana-trench/Assert.h>
 #include <mariana-trench/FieldModel.h>
 #include <mariana-trench/Log.h>
+#include <mariana-trench/Positions.h>
 
 namespace marianatrench {
 
@@ -175,6 +176,12 @@ Json::Value FieldModel::to_json() const {
     value["sinks"] = sinks_value;
   }
 
+  return value;
+}
+
+Json::Value FieldModel::to_json(Context& context) const {
+  auto value = to_json();
+  value["position"] = context.positions->unknown()->to_json();
   return value;
 }
 
