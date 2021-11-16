@@ -238,9 +238,14 @@ std::string Registry::dump_models() const {
 }
 
 Json::Value Registry::models_to_json() const {
-  auto models_value = Json::Value(Json::arrayValue);
+  auto models_value = Json::Value(Json::objectValue);
+  models_value["models"] = Json::Value(Json::arrayValue);
   for (auto model : models_) {
-    models_value.append(model.second.to_json(context_));
+    models_value["models"].append(model.second.to_json(context_));
+  }
+  models_value["field_models"] = Json::Value(Json::arrayValue);
+  for (auto field_model : field_models_) {
+    models_value["field_models"].append(field_model.second.to_json());
   }
   return models_value;
 }
@@ -262,7 +267,13 @@ void Registry::dump_models(
     models.push_back(model.second);
   }
 
-  const auto total_batch = models_.size() / batch_size + 1;
+  std::vector<FieldModel> field_models;
+  for (const auto& field_model : field_models_) {
+    field_models.push_back(field_model.second);
+  }
+
+  const auto total_batch =
+      (models_.size() + field_models_.size()) / batch_size + 1;
   const auto padded_total_batch = fmt::format("{:0>5}", total_batch);
 
   auto queue = sparta::work_queue<std::size_t>(
@@ -282,10 +293,15 @@ void Registry::dump_models(
 
         // Write the current batch of models to file.
         auto writer = JsonValidation::compact_writer();
-        for (std::size_t i = batch_size * batch;
-             i < batch_size * (batch + 1) && i < models.size();
+        for (std::size_t i = batch_size * batch; i < batch_size * (batch + 1) &&
+             i < models.size() + field_models.size();
              i++) {
-          writer->write(models[i].to_json(context_), &batch_stream);
+          if (i < models.size()) {
+            writer->write(models[i].to_json(context_), &batch_stream);
+          } else {
+            writer->write(
+                field_models[i - models.size()].to_json(), &batch_stream);
+          }
           batch_stream << "\n";
         }
         batch_stream.close();

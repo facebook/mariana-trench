@@ -43,7 +43,8 @@ TEST_F(RegistryTest, remove_kinds) {
       /* generated_field_models */ {});
   context.rules =
       std::make_unique<Rules>(Rules::load(context, *context.options));
-  auto old_json = registry.models_to_json();
+  auto old_model_json = JsonValidation::null_or_array(
+      registry.models_to_json(), /* field */ "models");
   auto unused_kinds = context.rules->collect_unused_kinds(*context.kinds);
   auto is_array_allocation = [](const Kind* kind) -> bool {
     const auto* named_kind = kind->as<NamedKind>();
@@ -53,11 +54,13 @@ TEST_F(RegistryTest, remove_kinds) {
       std::find_if(
           unused_kinds.begin(), unused_kinds.end(), is_array_allocation),
       unused_kinds.end());
-  EXPECT_TRUE(old_json[0].isMember("sinks"));
-  EXPECT_EQ(old_json[0]["sinks"][0]["kind"], "ArrayAllocation");
+  EXPECT_TRUE(old_model_json[0].isMember("sinks"));
+  EXPECT_EQ(old_model_json[0]["sinks"][0]["kind"], "ArrayAllocation");
   UnusedKinds::remove_unused_kinds(context, registry);
-  EXPECT_NE(registry.models_to_json(), old_json);
-  EXPECT_FALSE(registry.models_to_json()[0].isMember("sinks"));
+  auto new_model_json = JsonValidation::null_or_array(
+      registry.models_to_json(), /* field */ "models");
+  EXPECT_NE(new_model_json, old_model_json);
+  EXPECT_FALSE(new_model_json[0].isMember("sinks"));
 }
 
 TEST_F(RegistryTest, JoinWith) {

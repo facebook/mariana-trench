@@ -87,9 +87,8 @@ void FieldModel::check_frame_consistency(
   }
   if (!frame.callee_port().root().is_leaf() ||
       frame.call_position() != nullptr || frame.distance() != 0 ||
-      !frame.origins().is_bottom() || !frame.via_type_of_ports().is_bottom() ||
-      !frame.local_positions().is_bottom() ||
-      !frame.canonical_names().is_bottom()) {
+      !frame.origins().is_bottom() || frame.via_type_of_ports().size() != 0 ||
+      !frame.local_positions().empty() || frame.canonical_names().size() != 0) {
     FieldModelConsistencyError::raise(fmt::format(
         "Frame {} in {}s for field `{}` contains an unexpected non-empty or non-bottom value for a field.",
         show(frame),
