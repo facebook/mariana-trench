@@ -12,6 +12,9 @@
     "name": "CodeExecutionSinkGenerator"
   },
   {
+    "name": "CommonSanitizers"
+  },
+  {
     "name": "content_provider_generator"
   },
   {
