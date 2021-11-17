@@ -133,10 +133,10 @@ TEST_F(RegistryTest, JoinWith) {
           {test::make_frame(
               source_kind,
               test::FrameProperties{
+                  .field_origins = FieldSet{field},
                   .inferred_features = FeatureMayAlwaysSet::bottom(),
                   .locally_inferred_features = FeatureMayAlwaysSet::bottom(),
-                  .user_features = FeatureSet::bottom(),
-                  .field_origins = FieldSet{field}})})}));
+                  .user_features = FeatureSet::bottom()})})}));
   EXPECT_EQ(registry.get(field).generations().size(), 1);
 
   registry.join_with(Registry(
@@ -149,10 +149,10 @@ TEST_F(RegistryTest, JoinWith) {
           {test::make_frame(
               source_kind_two,
               test::FrameProperties{
+                  .field_origins = FieldSet{field},
                   .inferred_features = FeatureMayAlwaysSet::bottom(),
                   .locally_inferred_features = FeatureMayAlwaysSet::bottom(),
-                  .user_features = FeatureSet::bottom(),
-                  .field_origins = FieldSet{field}})})}));
+                  .user_features = FeatureSet::bottom()})})}));
   EXPECT_EQ(registry.get(field).generations().size(), 2);
 }
 
@@ -231,17 +231,17 @@ TEST_F(RegistryTest, ConstructorUseJoin) {
           {test::make_frame(
                source_kind,
                test::FrameProperties{
+                   .field_origins = FieldSet{field},
                    .inferred_features = FeatureMayAlwaysSet::bottom(),
                    .locally_inferred_features = FeatureMayAlwaysSet::bottom(),
-                   .user_features = FeatureSet::bottom(),
-                   .field_origins = FieldSet{field}}),
+                   .user_features = FeatureSet::bottom()}),
            test::make_frame(
                source_kind_two,
                test::FrameProperties{
+                   .field_origins = FieldSet{field},
                    .inferred_features = FeatureMayAlwaysSet::bottom(),
                    .locally_inferred_features = FeatureMayAlwaysSet::bottom(),
-                   .user_features = FeatureSet::bottom(),
-                   .field_origins = FieldSet{field}})}));
+                   .user_features = FeatureSet::bottom()})}));
 }
 
 } // namespace marianatrench

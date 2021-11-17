@@ -122,7 +122,7 @@ TEST_P(IntegrationTest, CompareFlows) {
       std::vector<std::string>{(directory / "/models.json").native()},
       /* field_models_path */
       boost::filesystem::exists(field_models_file)
-          ? std::vector<std::string>{field_models_file}
+          ? std::vector<std::string>{field_models_file.string()}
           : std::vector<std::string>{},
       /* rules_paths */
       std::vector<std::string>{(directory / "/rules.json").native()},
