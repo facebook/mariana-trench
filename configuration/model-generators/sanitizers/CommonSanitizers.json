@@ -15,6 +15,32 @@
           }
         ]
       }
+    },
+    {
+      "find": "methods",
+      "where": [
+        {
+          "constraint": "name",
+          "pattern": "<init>"
+        },
+        {
+          "constraint": "parent",
+          "inner": {
+            "constraint": "extends",
+            "inner": {
+              "constraint": "name",
+              "pattern": "Lkotlin/jvm/internal/Lambda;"
+            }
+          }
+        }
+      ],
+      "model": {
+        "sanitizers": [
+          {
+            "sanitize": "propagations"
+          }
+        ]
+      }
     }
   ]
 }
