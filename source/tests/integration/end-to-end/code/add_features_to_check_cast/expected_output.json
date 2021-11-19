@@ -84,13 +84,184 @@
     {
       "always_features" : 
       [
-        "via-cast:Ljava/lang/String;",
-        "via-obscure"
+        "via-cast:Ljava/lang/Integer;",
+        "via-numerical-operator"
       ],
       "position" : 
       {
-        "line" : 20,
-        "path" : "Flow.java"
+        "line" : 27,
+        "path" : "AddFeatureToCheckCast.java"
+      },
+      "rule" : 2,
+      "sinks" : 
+      [
+        {
+          "call_position" : 
+          {
+            "end" : 0,
+            "line" : 27,
+            "path" : "AddFeatureToCheckCast.java",
+            "start" : 0
+          },
+          "callee" : "Lcom/mariana_trench/artificial/ArrayAllocation;.allocateArray:(I)V",
+          "callee_port" : "Argument(0)",
+          "distance" : 1,
+          "kind" : "ArrayAllocation",
+          "origins" : 
+          [
+            "Lcom/mariana_trench/artificial/ArrayAllocation;.allocateArray:(I)V"
+          ]
+        }
+      ],
+      "sources" : 
+      [
+        {
+          "always_features" : 
+          [
+            "via-cast:Ljava/lang/Integer;",
+            "via-numerical-operator"
+          ],
+          "call_position" : 
+          {
+            "end" : 41,
+            "line" : 26,
+            "path" : "AddFeatureToCheckCast.java",
+            "start" : 36
+          },
+          "callee" : "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;",
+          "callee_port" : "Return",
+          "distance" : 1,
+          "kind" : "Source",
+          "local_features" : 
+          {
+            "always_features" : 
+            [
+              "via-cast:Ljava/lang/Integer;",
+              "via-numerical-operator"
+            ]
+          },
+          "local_positions" : 
+          [
+            {
+              "end" : 0,
+              "line" : 27,
+              "start" : 0
+            }
+          ],
+          "origins" : 
+          [
+            "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;"
+          ]
+        }
+      ]
+    }
+  ],
+  "method" : "Lcom/facebook/marianatrench/integrationtests/AddFeatureToCheckCast;.testWithViaNumerical:()V",
+  "position" : 
+  {
+    "line" : 25,
+    "path" : "AddFeatureToCheckCast.java"
+  }
+}
+{
+  "issues" : 
+  [
+    {
+      "always_features" : 
+      [
+        "via-cast:Ljava/lang/Integer;",
+        "via-numerical-operator"
+      ],
+      "position" : 
+      {
+        "line" : 37,
+        "path" : "AddFeatureToCheckCast.java"
+      },
+      "rule" : 2,
+      "sinks" : 
+      [
+        {
+          "always_features" : 
+          [
+            "via-numerical-operator"
+          ],
+          "call_position" : 
+          {
+            "end" : 21,
+            "line" : 37,
+            "path" : "AddFeatureToCheckCast.java",
+            "start" : 18
+          },
+          "callee" : "Lcom/facebook/marianatrench/integrationtests/AddFeatureToCheckCast;.arrayAllocate:(I)V",
+          "callee_port" : "Argument(1)",
+          "distance" : 2,
+          "kind" : "ArrayAllocation",
+          "origins" : 
+          [
+            "Lcom/mariana_trench/artificial/ArrayAllocation;.allocateArray:(I)V"
+          ]
+        }
+      ],
+      "sources" : 
+      [
+        {
+          "always_features" : 
+          [
+            "via-cast:Ljava/lang/Integer;"
+          ],
+          "call_position" : 
+          {
+            "end" : 41,
+            "line" : 36,
+            "path" : "AddFeatureToCheckCast.java",
+            "start" : 36
+          },
+          "callee" : "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;",
+          "callee_port" : "Return",
+          "distance" : 1,
+          "kind" : "Source",
+          "local_features" : 
+          {
+            "always_features" : 
+            [
+              "via-cast:Ljava/lang/Integer;"
+            ]
+          },
+          "local_positions" : 
+          [
+            {
+              "end" : 0,
+              "line" : 37,
+              "start" : 0
+            }
+          ],
+          "origins" : 
+          [
+            "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;"
+          ]
+        }
+      ]
+    }
+  ],
+  "method" : "Lcom/facebook/marianatrench/integrationtests/AddFeatureToCheckCast;.testInterproceduralWithViaNumerical:()V",
+  "position" : 
+  {
+    "line" : 35,
+    "path" : "AddFeatureToCheckCast.java"
+  }
+}
+{
+  "issues" : 
+  [
+    {
+      "always_features" : 
+      [
+        "via-cast:Ljava/lang/String;"
+      ],
+      "position" : 
+      {
+        "line" : 16,
+        "path" : "AddFeatureToCheckCast.java"
       },
       "rule" : 1,
       "sinks" : 
@@ -98,9 +269,153 @@
         {
           "call_position" : 
           {
-            "end" : 16,
-            "line" : 20,
-            "path" : "Flow.java",
+            "end" : 18,
+            "line" : 16,
+            "path" : "AddFeatureToCheckCast.java",
+            "start" : 9
+          },
+          "callee" : "Lcom/facebook/marianatrench/integrationtests/AddFeatureToCheckCast;.sink:(Ljava/lang/String;)V",
+          "callee_port" : "Argument(1)",
+          "distance" : 1,
+          "kind" : "Sink",
+          "origins" : 
+          [
+            "Lcom/facebook/marianatrench/integrationtests/AddFeatureToCheckCast;.sink:(Ljava/lang/String;)V"
+          ]
+        }
+      ],
+      "sources" : 
+      [
+        {
+          "always_features" : 
+          [
+            "via-cast:Ljava/lang/String;"
+          ],
+          "call_position" : 
+          {
+            "end" : 32,
+            "line" : 14,
+            "path" : "AddFeatureToCheckCast.java",
+            "start" : 27
+          },
+          "callee" : "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;",
+          "callee_port" : "Return",
+          "distance" : 1,
+          "kind" : "Source",
+          "local_features" : 
+          {
+            "always_features" : 
+            [
+              "via-cast:Ljava/lang/String;"
+            ]
+          },
+          "origins" : 
+          [
+            "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;"
+          ]
+        }
+      ]
+    }
+  ],
+  "method" : "Lcom/facebook/marianatrench/integrationtests/AddFeatureToCheckCast;.testString:()V",
+  "position" : 
+  {
+    "line" : 13,
+    "path" : "AddFeatureToCheckCast.java"
+  }
+}
+{
+  "issues" : 
+  [
+    {
+      "always_features" : 
+      [
+        "via-cast:Ljava/lang/String;"
+      ],
+      "position" : 
+      {
+        "line" : 32,
+        "path" : "AddFeatureToCheckCast.java"
+      },
+      "rule" : 1,
+      "sinks" : 
+      [
+        {
+          "call_position" : 
+          {
+            "end" : 20,
+            "line" : 32,
+            "path" : "AddFeatureToCheckCast.java",
+            "start" : 11
+          },
+          "callee" : "Lcom/facebook/marianatrench/integrationtests/AddFeatureToCheckCast;.toSink:(Ljava/lang/String;)V",
+          "callee_port" : "Argument(1)",
+          "distance" : 2,
+          "kind" : "Sink",
+          "origins" : 
+          [
+            "Lcom/facebook/marianatrench/integrationtests/AddFeatureToCheckCast;.sink:(Ljava/lang/String;)V"
+          ]
+        }
+      ],
+      "sources" : 
+      [
+        {
+          "always_features" : 
+          [
+            "via-cast:Ljava/lang/String;"
+          ],
+          "call_position" : 
+          {
+            "end" : 45,
+            "line" : 31,
+            "path" : "AddFeatureToCheckCast.java",
+            "start" : 40
+          },
+          "callee" : "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;",
+          "callee_port" : "Return",
+          "distance" : 1,
+          "kind" : "Source",
+          "local_features" : 
+          {
+            "always_features" : 
+            [
+              "via-cast:Ljava/lang/String;"
+            ]
+          },
+          "origins" : 
+          [
+            "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;"
+          ]
+        }
+      ]
+    }
+  ],
+  "method" : "Lcom/facebook/marianatrench/integrationtests/AddFeatureToCheckCast;.testInterProcedural:()V",
+  "position" : 
+  {
+    "line" : 30,
+    "path" : "AddFeatureToCheckCast.java"
+  }
+}
+{
+  "issues" : 
+  [
+    {
+      "position" : 
+      {
+        "line" : 22,
+        "path" : "AddFeatureToCheckCast.java"
+      },
+      "rule" : 1,
+      "sinks" : 
+      [
+        {
+          "call_position" : 
+          {
+            "end" : 21,
+            "line" : 22,
+            "path" : "AddFeatureToCheckCast.java",
             "start" : 16
           },
           "callee" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
@@ -116,38 +431,17 @@
       "sources" : 
       [
         {
-          "always_features" : 
-          [
-            "via-cast:Ljava/lang/String;",
-            "via-obscure"
-          ],
           "call_position" : 
           {
-            "end" : 36,
-            "line" : 18,
-            "path" : "Flow.java",
-            "start" : 31
+            "end" : 32,
+            "line" : 20,
+            "path" : "AddFeatureToCheckCast.java",
+            "start" : 27
           },
           "callee" : "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;",
           "callee_port" : "Return",
           "distance" : 1,
           "kind" : "Source",
-          "local_features" : 
-          {
-            "always_features" : 
-            [
-              "via-cast:Ljava/lang/String;",
-              "via-obscure"
-            ]
-          },
-          "local_positions" : 
-          [
-            {
-              "end" : 23,
-              "line" : 19,
-              "start" : 23
-            }
-          ],
           "origins" : 
           [
             "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;"
@@ -156,11 +450,11 @@
       ]
     }
   ],
-  "method" : "Lcom/facebook/marianatrench/integrationtests/Flow;.issue:(Lcom/facebook/marianatrench/integrationtests/Flow$Appender;)V",
+  "method" : "Lcom/facebook/marianatrench/integrationtests/AddFeatureToCheckCast;.testStringNoViaCast:()V",
   "position" : 
   {
-    "line" : 16,
-    "path" : "Flow.java"
+    "line" : 19,
+    "path" : "AddFeatureToCheckCast.java"
   }
 }
 {
@@ -710,31 +1004,109 @@
   }
 }
 {
-  "method" : "Lcom/facebook/marianatrench/integrationtests/Flow$Appender;.append:(Ljava/lang/String;Ljava/lang/String;)V",
-  "modes" : 
-  [
-    "add-via-obscure-feature",
-    "skip-analysis"
-  ],
+  "method" : "Lcom/facebook/marianatrench/integrationtests/AddFeatureToCheckCast;.<init>:()V",
   "position" : 
   {
-    "path" : "Flow.java"
+    "line" : 9,
+    "path" : "AddFeatureToCheckCast.java"
+  }
+}
+{
+  "method" : "Lcom/facebook/marianatrench/integrationtests/AddFeatureToCheckCast;.arrayAllocate:(I)V",
+  "position" : 
+  {
+    "line" : 44,
+    "path" : "AddFeatureToCheckCast.java"
   },
-  "propagation" : 
+  "sinks" : 
   [
     {
-      "input" : "Argument(2)",
-      "output" : "Argument(1)"
+      "always_features" : 
+      [
+        "via-numerical-operator"
+      ],
+      "call_position" : 
+      {
+        "end" : 0,
+        "line" : 45,
+        "path" : "AddFeatureToCheckCast.java",
+        "start" : 0
+      },
+      "callee" : "Lcom/mariana_trench/artificial/ArrayAllocation;.allocateArray:(I)V",
+      "callee_port" : "Argument(0)",
+      "caller_port" : "Argument(1)",
+      "distance" : 1,
+      "kind" : "ArrayAllocation",
+      "local_features" : 
+      {
+        "always_features" : 
+        [
+          "via-numerical-operator"
+        ]
+      },
+      "local_positions" : 
+      [
+        {
+          "end" : 0,
+          "line" : 45,
+          "start" : 0
+        }
+      ],
+      "origins" : 
+      [
+        "Lcom/mariana_trench/artificial/ArrayAllocation;.allocateArray:(I)V"
+      ]
     }
   ]
 }
 {
-  "method" : "Lcom/facebook/marianatrench/integrationtests/Flow;.<init>:()V",
+  "method" : "Lcom/facebook/marianatrench/integrationtests/AddFeatureToCheckCast;.sink:(Ljava/lang/String;)V",
   "position" : 
   {
-    "line" : 9,
-    "path" : "Flow.java"
-  }
+    "line" : 10,
+    "path" : "AddFeatureToCheckCast.java"
+  },
+  "sinks" : 
+  [
+    {
+      "callee_port" : "Leaf",
+      "caller_port" : "Argument(1)",
+      "kind" : "Sink",
+      "origins" : 
+      [
+        "Lcom/facebook/marianatrench/integrationtests/AddFeatureToCheckCast;.sink:(Ljava/lang/String;)V"
+      ]
+    }
+  ]
+}
+{
+  "method" : "Lcom/facebook/marianatrench/integrationtests/AddFeatureToCheckCast;.toSink:(Ljava/lang/String;)V",
+  "position" : 
+  {
+    "line" : 40,
+    "path" : "AddFeatureToCheckCast.java"
+  },
+  "sinks" : 
+  [
+    {
+      "call_position" : 
+      {
+        "end" : 11,
+        "line" : 41,
+        "path" : "AddFeatureToCheckCast.java",
+        "start" : 9
+      },
+      "callee" : "Lcom/facebook/marianatrench/integrationtests/AddFeatureToCheckCast;.sink:(Ljava/lang/String;)V",
+      "callee_port" : "Argument(1)",
+      "caller_port" : "Argument(1)",
+      "distance" : 1,
+      "kind" : "Sink",
+      "origins" : 
+      [
+        "Lcom/facebook/marianatrench/integrationtests/AddFeatureToCheckCast;.sink:(Ljava/lang/String;)V"
+      ]
+    }
+  ]
 }
 {
   "method" : "Lcom/facebook/marianatrench/integrationtests/Origin;.<init>:()V",
@@ -859,7 +1231,19 @@
   [
     "skip-analysis"
   ],
-  "position" : {}
+  "position" : {},
+  "sinks" : 
+  [
+    {
+      "callee_port" : "Leaf",
+      "caller_port" : "Argument(0)",
+      "kind" : "ArrayAllocation",
+      "origins" : 
+      [
+        "Lcom/mariana_trench/artificial/ArrayAllocation;.allocateArray:(I)V"
+      ]
+    }
+  ]
 }
 {
   "method" : "Ljava/lang/Integer;.<init>:()V",
@@ -873,7 +1257,14 @@
   "position" : 
   {
     "line" : 11
-  }
+  },
+  "propagation" : 
+  [
+    {
+      "input" : "Argument(0)",
+      "output" : "Return"
+    }
+  ]
 }
 {
   "method" : "Ljava/lang/Object;.<init>:()V",

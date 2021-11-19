@@ -75,11 +75,24 @@ bool Transfer::analyze_check_cast(
   log_instruction(context, instruction);
   mt_assert(instruction->srcs().size() == 1);
 
-  // This is similar to a move from our point of view.
-  auto memory_locations =
-      environment->memory_locations(/* register */ instruction->srcs()[0]);
-  LOG_OR_DUMP(context, 4, "Setting result register to {}", memory_locations);
-  environment->assign(k_result_register, memory_locations);
+  // Add via-cast feature
+  auto taint = environment->read(instruction->srcs()[0]);
+  auto features = FeatureMayAlwaysSet::make_always(
+      {context->features.get_via_cast_feature(instruction->get_type())});
+  taint.map(
+      [&features](Taint& sources) { sources.add_inferred_features(features); });
+
+  // Create a new memory location as we do not want to alias the pre-cast
+  // location when attaching the via-cast feature.
+  auto memory_location = context->memory_factory.make_location(instruction);
+  environment->write(memory_location, taint, UpdateKind::Strong);
+
+  LOG_OR_DUMP(
+      context,
+      4,
+      "Setting result register to new memory location {}",
+      show(memory_location));
+  environment->assign(k_result_register, memory_location);
 
   return false;
 }

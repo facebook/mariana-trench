@@ -19,4 +19,10 @@ const Feature* Features::get_via_type_of_feature(
   return factory_.create("via-type:" + type_string);
 }
 
+const Feature* Features::get_via_cast_feature(
+    const DexType* MT_NULLABLE type) const {
+  const auto& type_string = type ? type->str() : "unknown";
+  return factory_.create("via-cast:" + type_string);
+}
+
 } // namespace marianatrench

@@ -26,6 +26,7 @@ class Features final {
   const Feature* get(const std::string& data) const;
 
   const Feature* get_via_type_of_feature(const DexType* MT_NULLABLE type) const;
+  const Feature* get_via_cast_feature(const DexType* MT_NULLABLE type) const;
 
  private:
   UniquePointerFactory<std::string, Feature> factory_;
