@@ -204,6 +204,151 @@ ArtificialCallees artificial_callees_from_arguments(
   return callees;
 }
 
+/*
+ * Given the DexMethod representing the callee of an instruction, get or create
+ * the Method corresponding to the call
+ */
+const Method* get_callee_from_resolved_call(
+    const DexMethod* dex_callee,
+    const IRInstruction* instruction,
+    const ParameterTypeOverrides& parameter_type_overrides,
+    const Options& options,
+    Methods& method_factory,
+    const Features& features,
+    ArtificialCallees& artificial_callees) {
+  const Method* callee = nullptr;
+  if (dex_callee->get_code() == nullptr) {
+    // When passing an anonymous class into a callee, add artificial
+    // calls to all methods of the anonymous class.
+    auto artificial_callees_for_instruction = artificial_callees_from_arguments(
+        method_factory,
+        features,
+        instruction,
+        dex_callee,
+        parameter_type_overrides);
+    if (!artificial_callees_for_instruction.empty()) {
+      artificial_callees = std::move(artificial_callees_for_instruction);
+    }
+
+    // No need to use type overrides since we don't have the code.
+    callee = method_factory.get(dex_callee);
+  } else if (options.disable_parameter_type_overrides()) {
+    callee = method_factory.get(dex_callee);
+  } else {
+    // Analyze the callee with these particular types.
+    callee = method_factory.create(dex_callee, parameter_type_overrides);
+  }
+  mt_assert(callee != nullptr);
+  return callee;
+}
+
+struct InstructionCallGraphInformation {
+  std::optional<const Method*> callee;
+  ArtificialCallees artificial_callees = {};
+  std::optional<const Field*> field_access;
+};
+
+InstructionCallGraphInformation process_instruction(
+    const Method* caller,
+    const IRInstruction* instruction,
+    ConcurrentSet<const Method*>& worklist,
+    ConcurrentSet<const Method*>& processed,
+    const Options& options,
+    Methods& method_factory,
+    Fields& field_factory,
+    const Types& types,
+    Overrides& override_factory,
+    const Features& features) {
+  InstructionCallGraphInformation instruction_information;
+
+  if (opcode::is_an_iput(instruction->opcode())) {
+    // Add artificial calls to all methods in an anonymous class.
+    const auto* iput_type =
+        types.source_type(caller, instruction, /* source_position */ 0);
+    if (iput_type && is_anonymous_class(iput_type)) {
+      auto artificial_callees_for_instruction =
+          anonymous_class_artificial_callees(
+              method_factory,
+              instruction,
+              iput_type,
+              /* register */ instruction->src(0),
+              /* features */
+              FeatureSet{features.get("via-anonymous-class-to-field")});
+
+      if (!artificial_callees_for_instruction.empty()) {
+        instruction_information.artificial_callees =
+            std::move(artificial_callees_for_instruction);
+      }
+    }
+    return instruction_information;
+  }
+
+  if (opcode::is_an_iget(instruction->opcode()) ||
+      opcode::is_an_sget(instruction->opcode())) {
+    const auto* field = resolve_field_access(caller, instruction);
+    if (field != nullptr) {
+      instruction_information.field_access = field_factory.get(field);
+    }
+    return instruction_information;
+  }
+
+  if (!opcode::is_an_invoke(instruction->opcode())) {
+    return instruction_information;
+  }
+
+  const DexMethod* dex_callee = resolve_call(types, caller, instruction);
+  if (!dex_callee) {
+    return instruction_information;
+  }
+
+  ParameterTypeOverrides parameter_type_overrides =
+      anonymous_class_arguments(types, caller, instruction, dex_callee);
+
+  const auto* callee = get_callee_from_resolved_call(
+      dex_callee,
+      instruction,
+      parameter_type_overrides,
+      options,
+      method_factory,
+      features,
+      instruction_information.artificial_callees);
+
+  instruction_information.callee = callee;
+
+  if (callee->parameter_type_overrides().empty() ||
+      processed.count(callee) != 0) {
+    return instruction_information;
+  }
+  // This is a newly introduced method with parameter type
+  // overrides. We need to generate it's method overrides,
+  // and compute callees for them.
+  const Method* original_callee = method_factory.get(callee->dex_method());
+  std::unordered_set<const Method*> original_methods =
+      override_factory.get(original_callee);
+  original_methods.insert(original_callee);
+
+  for (const Method* original_method : original_methods) {
+    const Method* method = method_factory.create(
+        original_method->dex_method(), callee->parameter_type_overrides());
+
+    std::unordered_set<const Method*> overrides;
+    for (const Method* original_override :
+         override_factory.get(original_method)) {
+      overrides.insert(method_factory.create(
+          original_override->dex_method(), callee->parameter_type_overrides()));
+    }
+
+    if (!overrides.empty()) {
+      override_factory.set(method, std::move(overrides));
+    }
+
+    if (processed.count(method) == 0) {
+      worklist.insert(method);
+    }
+  }
+  return instruction_information;
+}
+
 } // namespace
 
 CallTarget::CallTarget(
@@ -395,118 +540,28 @@ CallGraph::CallGraph(
                 continue;
               }
 
-              const IRInstruction* instruction = entry.insn;
-
-              if (opcode::is_an_iput(instruction->opcode())) {
-                // Add artificial calls to all methods in an anonymous class.
-                const auto* iput_type = types.source_type(
-                    caller, instruction, /* source_position */ 0);
-                if (iput_type && is_anonymous_class(iput_type)) {
-                  auto artificial_callees_for_instruction =
-                      anonymous_class_artificial_callees(
-                          method_factory,
-                          instruction,
-                          iput_type,
-                          /* register */ instruction->src(0),
-                          /* features */
-                          FeatureSet{
-                              features.get("via-anonymous-class-to-field")});
-
-                  if (!artificial_callees_for_instruction.empty()) {
-                    artificial_callees.emplace(
-                        instruction,
-                        std::move(artificial_callees_for_instruction));
-                  }
-                }
-                continue;
+              const auto* instruction = entry.insn;
+              auto instruction_information = process_instruction(
+                  caller,
+                  instruction,
+                  worklist,
+                  processed,
+                  options,
+                  method_factory,
+                  field_factory,
+                  types,
+                  override_factory,
+                  features);
+              if (instruction_information.callee) {
+                callees.emplace(instruction, *(instruction_information.callee));
               }
-
-              if (opcode::is_an_iget(instruction->opcode()) ||
-                  opcode::is_an_sget(instruction->opcode())) {
-                const auto* field = resolve_field_access(caller, instruction);
-                if (field != nullptr) {
-                  field_accesses.emplace(instruction, field_factory.get(field));
-                }
-                continue;
+              if (instruction_information.artificial_callees.size() > 0) {
+                artificial_callees.emplace(
+                    instruction, instruction_information.artificial_callees);
               }
-
-              if (!opcode::is_an_invoke(instruction->opcode())) {
-                continue;
-              }
-
-              const DexMethod* dex_callee =
-                  resolve_call(types, caller, instruction);
-
-              if (!dex_callee) {
-                continue;
-              }
-
-              ParameterTypeOverrides parameter_type_overrides =
-                  anonymous_class_arguments(
-                      types, caller, instruction, dex_callee);
-
-              const Method* callee = nullptr;
-              if (dex_callee->get_code() == nullptr) {
-                // When passing an anonymous class into a callee, add artificial
-                // calls to all methods of the anonymous class.
-                auto artificial_callees_for_instruction =
-                    artificial_callees_from_arguments(
-                        method_factory,
-                        features,
-                        instruction,
-                        dex_callee,
-                        parameter_type_overrides);
-                if (!artificial_callees_for_instruction.empty()) {
-                  artificial_callees.emplace(
-                      instruction,
-                      std::move(artificial_callees_for_instruction));
-                }
-
-                // No need to use type overrides since we don't have the code.
-                callee = method_factory.get(dex_callee);
-              } else if (options.disable_parameter_type_overrides()) {
-                callee = method_factory.get(dex_callee);
-              } else {
-                // Analyze the callee with these particular types.
-                callee =
-                    method_factory.create(dex_callee, parameter_type_overrides);
-              }
-              mt_assert(callee != nullptr);
-
-              callees.emplace(instruction, callee);
-
-              if (!callee->parameter_type_overrides().empty() &&
-                  processed.count(callee) == 0) {
-                // This is a newly introduced method with parameter type
-                // overrides. We need to generate it's method overrides,
-                // and compute callees for them.
-                const Method* original_callee =
-                    method_factory.get(callee->dex_method());
-                std::unordered_set<const Method*> original_methods =
-                    override_factory.get(original_callee);
-                original_methods.insert(original_callee);
-
-                for (const Method* original_method : original_methods) {
-                  const Method* method = method_factory.create(
-                      original_method->dex_method(),
-                      callee->parameter_type_overrides());
-
-                  std::unordered_set<const Method*> overrides;
-                  for (const Method* original_override :
-                       override_factory.get(original_method)) {
-                    overrides.insert(method_factory.create(
-                        original_override->dex_method(),
-                        callee->parameter_type_overrides()));
-                  }
-
-                  if (!overrides.empty()) {
-                    override_factory.set(method, std::move(overrides));
-                  }
-
-                  if (processed.count(method) == 0) {
-                    worklist.insert(method);
-                  }
-                }
+              if (instruction_information.field_access) {
+                field_accesses.emplace(
+                    instruction, *(instruction_information.field_access));
               }
             }
           }
