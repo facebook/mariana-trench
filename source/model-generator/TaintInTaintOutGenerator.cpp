@@ -15,8 +15,31 @@ namespace marianatrench {
 
 std::vector<Model> TaintInTaintOutGenerator::visit_method(
     const Method* method) const {
-  if (method->get_code()) {
+  if (method->get_code() || method->returns_void()) {
     return {};
+  }
+
+  const auto class_name = generator::get_class_name(method);
+  if (!method->is_static() &&
+      (boost::contains(class_name, "Context;") ||
+       boost::contains(class_name, "Activity;") ||
+       boost::contains(class_name, "Service;") ||
+       boost::contains(class_name, "WebView;") ||
+       boost::contains(class_name, "Fragment;") ||
+       boost::contains(class_name, "WebViewClient;") ||
+       boost::contains(class_name, "ContentProvider;") ||
+       boost::contains(class_name, "BroadcastReceiver;"))) {
+    auto model = Model(method, context_);
+    for (ParameterPosition parameter_position = 1;
+         parameter_position < method->number_of_parameters();
+         parameter_position++) {
+      generator::add_propagation_to_return(
+          context_,
+          model,
+          parameter_position,
+          {"via-obscure-taint-in-taint-out"});
+    }
+    return {model};
   }
 
   const auto method_signature = show(method);
