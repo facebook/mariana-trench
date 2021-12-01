@@ -694,6 +694,7 @@ void check_flows_to_array_allocation(
       /* kind */ context->artificial_methods.array_allocation_kind(),
       /* callee_port */ AccessPath(Root(Root::Kind::Argument, 0)),
       /* callee */ array_allocation_method,
+      /* field_callee */ nullptr,
       /* call_position */ position,
       /* distance */ 1,
       /* origins */ MethodSet{array_allocation_method},

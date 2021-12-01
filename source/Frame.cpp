@@ -143,6 +143,7 @@ Frame Frame::artificial_source(AccessPath access_path) {
       /* kind */ Kinds::artificial_source(),
       /* callee_port */ access_path,
       /* callee */ nullptr,
+      /* field_callee */ nullptr,
       /* call_position */ nullptr,
       /* distance */ 0,
       /* origins */ {},
@@ -361,6 +362,8 @@ Frame Frame::from_json(const Json::Value& value, Context& context) {
       kind,
       std::move(callee_port),
       callee,
+      /* field_callee */ nullptr, // A field callee can never be set from a json
+                                  // model generator
       call_position,
       distance,
       std::move(origins),
@@ -387,6 +390,8 @@ Json::Value Frame::to_json() const {
 
   if (callee_ != nullptr) {
     value["callee"] = callee_->to_json();
+  } else if (field_callee_ != nullptr) {
+    value["field_callee"] = field_callee_->to_json();
   }
 
   if (call_position_ != nullptr) {
@@ -463,6 +468,8 @@ std::ostream& operator<<(std::ostream& out, const Frame& frame) {
       << "`, callee_port=" << frame.callee_port_;
   if (frame.callee_ != nullptr) {
     out << ", callee=`" << show(frame.callee_) << "`";
+  } else if (frame.field_callee_ != nullptr) {
+    out << ", field_callee=`" << show(frame.field_callee_) << "`";
   }
   if (frame.call_position_ != nullptr) {
     out << ", call_position=" << show(frame.call_position_);

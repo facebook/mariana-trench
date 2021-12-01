@@ -89,6 +89,7 @@ Frame make_frame(const Kind* kind, const FrameProperties& properties) {
       kind,
       properties.callee_port,
       properties.callee,
+      properties.field_callee,
       properties.call_position,
       properties.distance,
       properties.origins,

@@ -243,6 +243,7 @@ FrameSet FrameSet::attach_position(const Position* position) const {
             frame.kind(),
             frame.callee_port(),
             /* callee */ nullptr,
+            /* field_callee */ nullptr,
             /* call_position */ position,
             /* distance */ 0,
             frame.origins(),
@@ -388,6 +389,8 @@ Frame FrameSet::propagate_frames(
       kind_,
       callee_port,
       callee,
+      /* field_callee */ nullptr, // Since propagate is only called at method
+                                  // callsites and not field accesses
       call_position,
       distance,
       std::move(origins),
@@ -459,6 +462,7 @@ FrameSet FrameSet::propagate_crtex_frames(
           kind_,
           canonical_callee_port,
           propagated.callee(),
+          propagated.field_callee(),
           propagated.call_position(),
           /* distance (always leaves for crtex frames) */ 0,
           propagated.origins(),

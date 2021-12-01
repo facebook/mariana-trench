@@ -239,6 +239,7 @@ Frame augment_frame_position(
       frame.kind(),
       frame.callee_port(),
       callee,
+      frame.field_callee(),
       context.positions->get(position, bounds.line, bounds.start, bounds.end),
       frame.distance(),
       frame.origins(),

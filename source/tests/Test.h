@@ -54,6 +54,7 @@ Context make_context(const DexStore& store);
 struct FrameProperties {
   AccessPath callee_port = AccessPath(Root(Root::Kind::Leaf));
   const Method* MT_NULLABLE callee = nullptr;
+  const Field* MT_NULLABLE field_callee = nullptr;
   const Position* MT_NULLABLE call_position = nullptr;
   int distance = 0;
   MethodSet origins = {};
