@@ -223,9 +223,9 @@ std::ostream& operator<<(std::ostream& out, const FieldModel& model) {
   }
   if (!model.sinks_.is_bottom()) {
     out << ",\n  sinks={\n";
-    for (const auto& generations : model.sinks_) {
-      for (const auto& generation : generations) {
-        out << "    " << generation << ",\n";
+    for (const auto& sinks : model.sinks_) {
+      for (const auto& sink : sinks) {
+        out << "    " << sink << ",\n";
       }
     }
     out << "  }";
