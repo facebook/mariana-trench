@@ -98,13 +98,38 @@ void FieldModel::check_frame_consistency(
   }
 }
 
+namespace {
+
+Frame add_field_callee(const Field* MT_NULLABLE field, const Frame& frame) {
+  if (field == nullptr) {
+    return frame;
+  }
+  return Frame(
+      frame.kind(),
+      frame.callee_port(),
+      frame.callee(),
+      field,
+      frame.call_position(),
+      frame.distance(),
+      frame.origins(),
+      frame.field_origins(),
+      frame.inferred_features(),
+      frame.locally_inferred_features(),
+      frame.user_features(),
+      frame.via_type_of_ports(),
+      frame.local_positions(),
+      frame.canonical_names());
+}
+
+} // namespace
+
 void FieldModel::add_generation(Frame source) {
   mt_assert(source.is_leaf());
   if (field_ && source.field_origins().empty()) {
     source.set_field_origins(FieldSet{field_});
   }
   check_frame_consistency(source, "source");
-  generations_.add(source);
+  generations_.add(add_field_callee(field_, source));
 }
 
 void FieldModel::add_sink(Frame sink) {
@@ -113,7 +138,7 @@ void FieldModel::add_sink(Frame sink) {
     sink.set_field_origins(FieldSet{field_});
   }
   check_frame_consistency(sink, "sink");
-  sinks_.add(sink);
+  sinks_.add(add_field_callee(field_, sink));
 }
 
 void FieldModel::join_with(const FieldModel& other) {

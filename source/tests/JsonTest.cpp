@@ -2475,8 +2475,18 @@ TEST_F(JsonTest, FieldModel) {
                   .locally_inferred_features = FeatureMayAlwaysSet::bottom(),
                   .user_features = FeatureSet{feature}})})
           .to_json(),
-      test::parse_json(
-          R"({"field": "LBase;.field1:Ljava/lang/String;", "sinks": [{"kind": "TestSink", "always_features": ["test-feature"], "field_origins": ["LBase;.field1:Ljava/lang/String;"], "callee_port": "Leaf"}]})"));
+      test::parse_json(R"({
+        "field": "LBase;.field1:Ljava/lang/String;",
+        "sinks": [
+          {
+            "kind": "TestSink",
+            "always_features": ["test-feature"],
+            "field_callee" : "LBase;.field1:Ljava/lang/String;",
+            "field_origins": ["LBase;.field1:Ljava/lang/String;"],
+            "callee_port": "Leaf"
+          }
+        ]
+      })"));
 }
 
 TEST_F(JsonTest, LifecycleMethod) {

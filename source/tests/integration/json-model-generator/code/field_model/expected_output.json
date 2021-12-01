@@ -5,6 +5,7 @@
   [
     {
       "callee_port" : "Leaf",
+      "field_callee" : "Lcom/facebook/marianatrench/integrationtests/FieldModel;.field_one:Ljava/lang/String;",
       "field_origins" : 
       [
         "Lcom/facebook/marianatrench/integrationtests/FieldModel;.field_one:Ljava/lang/String;"
@@ -17,6 +18,7 @@
   [
     {
       "callee_port" : "Leaf",
+      "field_callee" : "Lcom/facebook/marianatrench/integrationtests/FieldModel;.field_one:Ljava/lang/String;",
       "field_origins" : 
       [
         "Lcom/facebook/marianatrench/integrationtests/FieldModel;.field_one:Ljava/lang/String;"
@@ -31,6 +33,7 @@
   [
     {
       "callee_port" : "Leaf",
+      "field_callee" : "Lcom/facebook/marianatrench/integrationtests/FieldModel;.field_three:Ljava/lang/Integer;",
       "field_origins" : 
       [
         "Lcom/facebook/marianatrench/integrationtests/FieldModel;.field_three:Ljava/lang/Integer;"
@@ -46,6 +49,7 @@
   [
     {
       "callee_port" : "Leaf",
+      "field_callee" : "Lcom/facebook/marianatrench/integrationtests/FieldModel;.field_two:Ljava/lang/Boolean;",
       "field_origins" : 
       [
         "Lcom/facebook/marianatrench/integrationtests/FieldModel;.field_two:Ljava/lang/Boolean;"
@@ -58,6 +62,7 @@
   [
     {
       "callee_port" : "Leaf",
+      "field_callee" : "Lcom/facebook/marianatrench/integrationtests/FieldModel;.field_two:Ljava/lang/Boolean;",
       "field_origins" : 
       [
         "Lcom/facebook/marianatrench/integrationtests/FieldModel;.field_two:Ljava/lang/Boolean;"
