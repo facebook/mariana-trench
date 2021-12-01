@@ -129,7 +129,7 @@ TEST_F(RegistryTest, JoinWith) {
       /* field_models */
       {FieldModel(
           field,
-          /* generations */
+          /* sources */
           {test::make_frame(
               source_kind,
               test::FrameProperties{
@@ -137,7 +137,7 @@ TEST_F(RegistryTest, JoinWith) {
                   .inferred_features = FeatureMayAlwaysSet::bottom(),
                   .locally_inferred_features = FeatureMayAlwaysSet::bottom(),
                   .user_features = FeatureSet::bottom()})})}));
-  EXPECT_EQ(registry.get(field).generations().size(), 1);
+  EXPECT_EQ(registry.get(field).sources().size(), 1);
 
   registry.join_with(Registry(
       context,
@@ -145,7 +145,7 @@ TEST_F(RegistryTest, JoinWith) {
       /* field_models */
       {FieldModel(
           field,
-          /* generations */
+          /* sources */
           {test::make_frame(
               source_kind_two,
               test::FrameProperties{
@@ -153,7 +153,7 @@ TEST_F(RegistryTest, JoinWith) {
                   .inferred_features = FeatureMayAlwaysSet::bottom(),
                   .locally_inferred_features = FeatureMayAlwaysSet::bottom(),
                   .user_features = FeatureSet::bottom()})})}));
-  EXPECT_EQ(registry.get(field).generations().size(), 2);
+  EXPECT_EQ(registry.get(field).sources().size(), 2);
 }
 
 TEST_F(RegistryTest, ConstructorUseJoin) {
@@ -193,11 +193,11 @@ TEST_F(RegistryTest, ConstructorUseJoin) {
 
   FieldModel field_with_source(
       /* field */ field,
-      /* generations */ {Frame::leaf(source_kind)});
+      /* sources */ {Frame::leaf(source_kind)});
 
   FieldModel field_with_other_source(
       /* field */ field,
-      /* generations */ {Frame::leaf(source_kind_two)});
+      /* sources */ {Frame::leaf(source_kind_two)});
 
   auto registry = Registry(
       context,
@@ -226,7 +226,7 @@ TEST_F(RegistryTest, ConstructorUseJoin) {
                   /* origins */ MethodSet{method})}}));
 
   EXPECT_EQ(
-      registry.get(field).generations(),
+      registry.get(field).sources(),
       Taint(
           {test::make_frame(
                source_kind,

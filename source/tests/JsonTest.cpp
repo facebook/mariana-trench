@@ -2413,7 +2413,7 @@ TEST_F(JsonTest, FieldModel) {
   EXPECT_THROW(
       FieldModel::from_json(
           field,
-          test::parse_json(R"("generations": [
+          test::parse_json(R"("sources": [
             {"kind": "TestSource", "callee_port": "Return"},
           ]})"),
           context),
@@ -2431,14 +2431,14 @@ TEST_F(JsonTest, FieldModel) {
   EXPECT_EQ(
       FieldModel::from_json(
           field,
-          test::parse_json(R"({"generations": [
+          test::parse_json(R"({"sources": [
             {"kind": "TestSource"},
             {"kind": "TestSource2", "features": ["test-feature"]}
           ]})"),
           context),
       FieldModel(
           field,
-          /* generations */
+          /* sources */
           {Frame::leaf(source_kind),
            test::make_frame(
                source_kind2,
@@ -2455,7 +2455,7 @@ TEST_F(JsonTest, FieldModel) {
           context),
       FieldModel(
           field,
-          /* generations */ {},
+          /* sources */ {},
           /* sinks */
           {Frame::leaf(sink_kind)}));
 
@@ -2466,7 +2466,7 @@ TEST_F(JsonTest, FieldModel) {
   EXPECT_EQ(
       FieldModel(
           field,
-          /* generations */ {},
+          /* sources */ {},
           /* sinks */
           {test::make_frame(
               sink_kind,

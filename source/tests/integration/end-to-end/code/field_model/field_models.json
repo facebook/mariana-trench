@@ -1,7 +1,7 @@
 [
   {
     "field": "Lcom/facebook/marianatrench/integrationtests/TaintedFieldClass;.field:Ljava/lang/Object;",
-    "generations": [
+    "sources": [
       {
         "kind": "Source"
       }
@@ -9,7 +9,7 @@
   },
   {
     "field": "Lcom/facebook/marianatrench/integrationtests/TaintedFieldClass;.staticField:Ljava/lang/Object;",
-    "generations": [
+    "sources": [
       {
         "kind": "Source"
       }
@@ -17,7 +17,7 @@
   },
   {
     "field": "Lcom/facebook/marianatrench/integrationtests/ChildClass;.shadowedField:Ljava/lang/Object;",
-    "generations": [
+    "sources": [
       {
         "kind": "Source"
       }

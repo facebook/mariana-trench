@@ -1,7 +1,8 @@
 // @generated
 {
   "field" : "Lcom/facebook/marianatrench/integrationtests/ChildClass;.shadowedField:Ljava/lang/Object;",
-  "generations" : 
+  "position" : {},
+  "sources" : 
   [
     {
       "callee_port" : "Leaf",
@@ -12,12 +13,12 @@
       ],
       "kind" : "Source"
     }
-  ],
-  "position" : {}
+  ]
 }
 {
   "field" : "Lcom/facebook/marianatrench/integrationtests/TaintedFieldClass;.field:Ljava/lang/Object;",
-  "generations" : 
+  "position" : {},
+  "sources" : 
   [
     {
       "callee_port" : "Leaf",
@@ -28,12 +29,12 @@
       ],
       "kind" : "Source"
     }
-  ],
-  "position" : {}
+  ]
 }
 {
   "field" : "Lcom/facebook/marianatrench/integrationtests/TaintedFieldClass;.staticField:Ljava/lang/Object;",
-  "generations" : 
+  "position" : {},
+  "sources" : 
   [
     {
       "callee_port" : "Leaf",
@@ -44,8 +45,7 @@
       ],
       "kind" : "Source"
     }
-  ],
-  "position" : {}
+  ]
 }
 {
   "generations" : 

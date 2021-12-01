@@ -1,18 +1,6 @@
 // @generated
 {
   "field" : "Lcom/facebook/marianatrench/integrationtests/FieldModel;.field_one:Ljava/lang/String;",
-  "generations" : 
-  [
-    {
-      "callee_port" : "Leaf",
-      "field_callee" : "Lcom/facebook/marianatrench/integrationtests/FieldModel;.field_one:Ljava/lang/String;",
-      "field_origins" : 
-      [
-        "Lcom/facebook/marianatrench/integrationtests/FieldModel;.field_one:Ljava/lang/String;"
-      ],
-      "kind" : "TestGenerationA"
-    }
-  ],
   "position" : {},
   "sinks" : 
   [
@@ -25,11 +13,24 @@
       ],
       "kind" : "TestSinkA"
     }
+  ],
+  "sources" : 
+  [
+    {
+      "callee_port" : "Leaf",
+      "field_callee" : "Lcom/facebook/marianatrench/integrationtests/FieldModel;.field_one:Ljava/lang/String;",
+      "field_origins" : 
+      [
+        "Lcom/facebook/marianatrench/integrationtests/FieldModel;.field_one:Ljava/lang/String;"
+      ],
+      "kind" : "TestGenerationA"
+    }
   ]
 }
 {
   "field" : "Lcom/facebook/marianatrench/integrationtests/FieldModel;.field_three:Ljava/lang/Integer;",
-  "generations" : 
+  "position" : {},
+  "sources" : 
   [
     {
       "callee_port" : "Leaf",
@@ -40,23 +41,10 @@
       ],
       "kind" : "TestGenerationB"
     }
-  ],
-  "position" : {}
+  ]
 }
 {
   "field" : "Lcom/facebook/marianatrench/integrationtests/FieldModel;.field_two:Ljava/lang/Boolean;",
-  "generations" : 
-  [
-    {
-      "callee_port" : "Leaf",
-      "field_callee" : "Lcom/facebook/marianatrench/integrationtests/FieldModel;.field_two:Ljava/lang/Boolean;",
-      "field_origins" : 
-      [
-        "Lcom/facebook/marianatrench/integrationtests/FieldModel;.field_two:Ljava/lang/Boolean;"
-      ],
-      "kind" : "TestGenerationB"
-    }
-  ],
   "position" : {},
   "sinks" : 
   [
@@ -68,6 +56,18 @@
         "Lcom/facebook/marianatrench/integrationtests/FieldModel;.field_two:Ljava/lang/Boolean;"
       ],
       "kind" : "TestSinkB"
+    }
+  ],
+  "sources" : 
+  [
+    {
+      "callee_port" : "Leaf",
+      "field_callee" : "Lcom/facebook/marianatrench/integrationtests/FieldModel;.field_two:Ljava/lang/Boolean;",
+      "field_origins" : 
+      [
+        "Lcom/facebook/marianatrench/integrationtests/FieldModel;.field_two:Ljava/lang/Boolean;"
+      ],
+      "kind" : "TestGenerationB"
     }
   ]
 }

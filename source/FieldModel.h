@@ -17,7 +17,7 @@ namespace marianatrench {
  * summarizes this for a method. These models are not inferred during the
  * analysis and must be specified by users in model generators.
  *
- * *generations* and *sinks* describe source and sink taint on the field
+ * *sources* and *sinks* describe source and sink taint on the field
  * respectively. This taint is not affected by assignments to the field within
  * the analyzed source code.
  *
@@ -28,7 +28,7 @@ class FieldModel final {
 
   explicit FieldModel(
       const Field* field,
-      const std::vector<Frame>& generations = {},
+      const std::vector<Frame>& sources = {},
       const std::vector<Frame>& sinks = {});
 
   FieldModel(const FieldModel& other) = default;
@@ -48,15 +48,15 @@ class FieldModel final {
 
   bool empty() const;
 
-  const Taint& generations() const {
-    return generations_;
+  const Taint& sources() const {
+    return sources_;
   }
 
   const Taint& sinks() const {
     return sinks_;
   }
 
-  void add_generation(Frame source);
+  void add_source(Frame source);
   void add_sink(Frame source);
 
   void join_with(const FieldModel& other);
@@ -79,7 +79,7 @@ class FieldModel final {
   void check_frame_consistency(const Frame& frame, std::string_view kind) const;
 
   const Field* MT_NULLABLE field_;
-  Taint generations_;
+  Taint sources_;
   Taint sinks_;
 };
 

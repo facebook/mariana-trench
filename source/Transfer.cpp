@@ -128,12 +128,9 @@ bool Transfer::analyze_iget(
         4,
         "Tainting register {} with {}",
         k_result_register,
-        field_model.generations());
+        field_model.sources());
     environment->write(
-        k_result_register,
-        Path({}),
-        field_model.generations(),
-        UpdateKind::Strong);
+        k_result_register, Path({}), field_model.sources(), UpdateKind::Strong);
   }
 
   return false;
@@ -166,10 +163,10 @@ bool Transfer::analyze_sget(
         4,
         "Tainting register {} with {}",
         k_result_register,
-        field_model.generations());
+        field_model.sources());
     environment->write(
         k_result_register,
-        TaintTree(field_model.generations()),
+        TaintTree(field_model.sources()),
         UpdateKind::Strong);
   }
 

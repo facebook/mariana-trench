@@ -28,11 +28,11 @@ class FieldModelConsistencyError {
 
 FieldModel::FieldModel(
     const Field* field,
-    const std::vector<Frame>& generations,
+    const std::vector<Frame>& sources,
     const std::vector<Frame>& sinks)
     : field_(field) {
-  for (const auto& frame : generations) {
-    add_generation(frame);
+  for (const auto& frame : sources) {
+    add_source(frame);
   }
 
   for (const auto& frame : sinks) {
@@ -41,7 +41,7 @@ FieldModel::FieldModel(
 }
 
 bool FieldModel::operator==(const FieldModel& other) const {
-  return generations_ == other.generations_ && sinks_ == other.sinks_;
+  return sources_ == other.sources_ && sinks_ == other.sinks_;
 }
 
 bool FieldModel::operator!=(const FieldModel& other) const {
@@ -51,9 +51,9 @@ bool FieldModel::operator!=(const FieldModel& other) const {
 FieldModel FieldModel::instantiate(const Field* field) const {
   FieldModel field_model(field);
 
-  for (const auto& generations_set : generations_) {
-    for (const auto& generation : generations_set) {
-      field_model.add_generation(generation);
+  for (const auto& sources_set : sources_) {
+    for (const auto& source : sources_set) {
+      field_model.add_source(source);
     }
   }
 
@@ -66,7 +66,7 @@ FieldModel FieldModel::instantiate(const Field* field) const {
 }
 
 bool FieldModel::empty() const {
-  return generations_.is_bottom() && sinks_.is_bottom();
+  return sources_.is_bottom() && sinks_.is_bottom();
 }
 
 void FieldModel::check_frame_consistency(
@@ -123,13 +123,13 @@ Frame add_field_callee(const Field* MT_NULLABLE field, const Frame& frame) {
 
 } // namespace
 
-void FieldModel::add_generation(Frame source) {
+void FieldModel::add_source(Frame source) {
   mt_assert(source.is_leaf());
   if (field_ && source.field_origins().empty()) {
     source.set_field_origins(FieldSet{field_});
   }
   check_frame_consistency(source, "source");
-  generations_.add(add_field_callee(field_, source));
+  sources_.add(add_field_callee(field_, source));
 }
 
 void FieldModel::add_sink(Frame sink) {
@@ -148,7 +148,7 @@ void FieldModel::join_with(const FieldModel& other) {
 
   mt_if_expensive_assert(auto previous = *this);
 
-  generations_.join_with(other.generations_);
+  sources_.join_with(other.sources_);
   sinks_.join_with(other.sinks_);
 
   mt_expensive_assert(previous.leq(*this) && other.leq(*this));
@@ -161,9 +161,9 @@ FieldModel FieldModel::from_json(
   JsonValidation::validate_object(value);
   FieldModel model(field);
 
-  for (auto generation_value :
-       JsonValidation::null_or_array(value, /* field */ "generations")) {
-    model.add_generation(Frame::from_json(generation_value, context));
+  for (auto source_value :
+       JsonValidation::null_or_array(value, /* field */ "sources")) {
+    model.add_source(Frame::from_json(source_value, context));
   }
   for (auto sink_value :
        JsonValidation::null_or_array(value, /* field */ "sinks")) {
@@ -179,15 +179,15 @@ Json::Value FieldModel::to_json() const {
     value["field"] = field_->to_json();
   }
 
-  if (!generations_.is_bottom()) {
-    auto generations_value = Json::Value(Json::arrayValue);
-    for (const auto& generations : generations_) {
-      for (const auto& generation : generations) {
-        mt_assert(!generation.is_bottom());
-        generations_value.append(generation.to_json());
+  if (!sources_.is_bottom()) {
+    auto sources_value = Json::Value(Json::arrayValue);
+    for (const auto& sources : sources_) {
+      for (const auto& source : sources) {
+        mt_assert(!source.is_bottom());
+        sources_value.append(source.to_json());
       }
     }
-    value["generations"] = generations_value;
+    value["sources"] = sources_value;
   }
 
   if (!sinks_.is_bottom()) {
@@ -212,11 +212,11 @@ Json::Value FieldModel::to_json(Context& context) const {
 
 std::ostream& operator<<(std::ostream& out, const FieldModel& model) {
   out << "\nFieldModel(field=`" << show(model.field_) << "`";
-  if (!model.generations_.is_bottom()) {
-    out << ",\n  generations={\n";
-    for (const auto& generations : model.generations_) {
-      for (const auto& generation : generations) {
-        out << "    " << generation << ",\n";
+  if (!model.sources_.is_bottom()) {
+    out << ",\n  sources={\n";
+    for (const auto& sources : model.sources_) {
+      for (const auto& source : sources) {
+        out << "    " << source << ",\n";
       }
     }
     out << "  }";

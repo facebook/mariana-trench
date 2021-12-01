@@ -9,7 +9,7 @@
         }
       ],
       "model": {
-        "generations": [
+        "sources": [
           {
             "kind": "TestGenerationA"
           }
@@ -47,7 +47,7 @@
         }
       ],
       "model": {
-        "generations": [
+        "sources": [
           {
             "kind": "TestGenerationB"
           }

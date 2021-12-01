@@ -26,40 +26,40 @@ TEST_F(FieldModelTest, Join) {
   const auto* sink_kind = context.kinds->get("TestSink");
 
   FieldModel model;
-  EXPECT_TRUE(model.generations().is_bottom());
+  EXPECT_TRUE(model.sources().is_bottom());
   EXPECT_TRUE(model.sinks().is_bottom());
 
   // Sources are added.
   FieldModel model_with_source(
       /* field */ nullptr,
-      /* generations */
+      /* sources */
       {Frame::leaf(source_kind)});
   model.join_with(model_with_source);
-  EXPECT_EQ(model.generations(), Taint{Frame::leaf(source_kind)});
+  EXPECT_EQ(model.sources(), Taint{Frame::leaf(source_kind)});
   EXPECT_TRUE(model.sinks().is_bottom());
 
   // Repeated application is idempotent.
   model.join_with(model_with_source);
-  EXPECT_EQ(model.generations(), Taint{Frame::leaf(source_kind)});
+  EXPECT_EQ(model.sources(), Taint{Frame::leaf(source_kind)});
   EXPECT_TRUE(model.sinks().is_bottom());
 
   FieldModel model_with_other_source(
       /* field */ nullptr,
-      /* generations */ {Frame::leaf(source_kind2)});
+      /* sources */ {Frame::leaf(source_kind2)});
   model.join_with(model_with_other_source);
   auto source_taint =
       Taint{Frame::leaf(source_kind), Frame::leaf(source_kind2)};
-  EXPECT_EQ(model.generations(), source_taint);
+  EXPECT_EQ(model.sources(), source_taint);
   EXPECT_TRUE(model.sinks().is_bottom());
 
   // Sinks are added.
   FieldModel model_with_sink(
       /* field */ nullptr,
-      /* generations */ {},
+      /* sources */ {},
       /* sinks */
       {Frame::leaf(sink_kind)});
   model.join_with(model_with_sink);
-  EXPECT_EQ(model.generations(), source_taint);
+  EXPECT_EQ(model.sources(), source_taint);
   EXPECT_EQ(model.sinks(), Taint{Frame::leaf(sink_kind)});
 }
 
