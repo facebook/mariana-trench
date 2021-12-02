@@ -24,7 +24,5 @@ std::vector<std::string> get_private_uri_schemes();
 
 std::string_view get_privacy_decision_type();
 
-extern const std::string kViaValueOf;
-
 } // namespace constants
 } // namespace marianatrench

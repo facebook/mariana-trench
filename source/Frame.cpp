@@ -301,9 +301,9 @@ Frame Frame::from_json(const Json::Value& value, Context& context) {
   }
 
   RootSetAbstractDomain via_value_of_ports;
-  if (value.isMember(constants::kViaValueOf)) {
-    for (const auto& root : JsonValidation::null_or_array(
-             value, /* field */ constants::kViaValueOf)) {
+  if (value.isMember("via_value_of")) {
+    for (const auto& root :
+         JsonValidation::null_or_array(value, /* field */ "via_value_of")) {
       via_value_of_ports.add(Root::from_json(root));
     }
   }
@@ -445,7 +445,7 @@ Json::Value Frame::to_json() const {
     for (const auto& root : via_value_of_ports_.elements()) {
       ports.append(root.to_json());
     }
-    value[constants::kViaValueOf] = ports;
+    value["via_value_of"] = ports;
   }
 
   if (local_positions_.is_value() && !local_positions_.empty()) {
