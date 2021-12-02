@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<rss version="2.0">
+<rss version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/">
     <channel>
         <title>Mariana Trench Blog</title>
         <link>https://mariana-tren.ch/blog</link>
@@ -13,6 +13,7 @@
             <guid>welcome</guid>
             <pubDate>Mon, 27 Jan 2020 00:00:00 GMT</pubDate>
             <description><![CDATA[First post]]></description>
+            <content:encoded><![CDATA[<p>First post</p>]]></content:encoded>
         </item>
     </channel>
 </rss>
