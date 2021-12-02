@@ -358,6 +358,38 @@ we could use the following JSON to specifiy a via-type feature that would materi
 }
 ```
 
+#### Via-value Features
+
+*Via-value* feature captures the value of the specified callable's port seen at its callsites during taint flow analysis.  They are specified similar to `Via-type` features -- in model generators within the "sources" or "sinks" field of a model with the "via_value_of" field. It is mapped to a nonempty list of ports of the method for which we want to create via-value features.
+
+For example, if we were interested in the specific `mode` with which the method below was called:
+
+```java
+public void log (String mode, String message);
+
+class Constants {
+  public static final String MODE = "M1";
+}
+
+// At some callsite:
+log(Constants.MODE, "error message");
+
+```
+we could use the following JSON to specifiy a via-value feature that would materialize as `via-value:M1`:
+
+```json
+{
+ "sinks": [
+   {
+     "port": "Argument(1)",
+     "kind": "SinkKind",
+     "via_value_of": ["Argument(0)"]
+   }
+ ]
+}
+```
+
+Note that this only works for numeric and string literals. In cases where the argument is not a constant, the feature will appear as `via-value:unknown`.
 
 ### Sanitizers
 
