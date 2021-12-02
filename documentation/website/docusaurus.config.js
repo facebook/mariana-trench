@@ -16,6 +16,7 @@ module.exports = {
   baseUrl: '/',
   onBrokenLinks: 'throw',
   onBrokenMarkdownLinks: 'warn',
+  trailingSlash: true,
   favicon: 'img/favicon.ico',
   organizationName: 'facebook',
   projectName: 'mariana-trench',
