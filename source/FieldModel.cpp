@@ -117,6 +117,7 @@ Frame add_field_callee(const Field* MT_NULLABLE field, const Frame& frame) {
       frame.locally_inferred_features(),
       frame.user_features(),
       frame.via_type_of_ports(),
+      frame.via_value_of_ports(),
       frame.local_positions(),
       frame.canonical_names());
 }

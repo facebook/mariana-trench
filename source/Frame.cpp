@@ -6,6 +6,7 @@
  */
 
 #include <boost/functional/hash.hpp>
+#include "mariana-trench/Constants.h"
 
 #include <Show.h>
 
@@ -65,6 +66,7 @@ bool Frame::leq(const Frame& other) const {
         locally_inferred_features_.leq(other.locally_inferred_features_) &&
         user_features_.leq(other.user_features_) &&
         via_type_of_ports_.leq(other.via_type_of_ports_) &&
+        via_value_of_ports_.leq(other.via_value_of_ports_) &&
         local_positions_.leq(other.local_positions_) &&
         canonical_names_.leq(other.canonical_names_);
   }
@@ -84,6 +86,7 @@ bool Frame::equals(const Frame& other) const {
         locally_inferred_features_ == other.locally_inferred_features_ &&
         user_features_ == other.user_features_ &&
         via_type_of_ports_ == other.via_type_of_ports_ &&
+        via_value_of_ports_ == other.via_value_of_ports_ &&
         local_positions_ == other.local_positions_ &&
         canonical_names_ == other.canonical_names_;
   }
@@ -114,6 +117,7 @@ void Frame::join_with(const Frame& other) {
     locally_inferred_features_.join_with(other.locally_inferred_features_);
     user_features_.join_with(other.user_features_);
     via_type_of_ports_.join_with(other.via_type_of_ports_);
+    via_value_of_ports_.join_with(other.via_value_of_ports_);
     local_positions_.join_with(other.local_positions_);
     canonical_names_.join_with(other.canonical_names_);
   }
@@ -152,6 +156,7 @@ Frame Frame::artificial_source(AccessPath access_path) {
       /* locally_inferred_features */ {},
       /* user_features */ {},
       /* via_type_of_ports */ {},
+      /* via_value_of_ports */ {},
       /* local_positions */ {},
       /* canonical_names */ {});
 }
@@ -295,6 +300,14 @@ Frame Frame::from_json(const Json::Value& value, Context& context) {
     }
   }
 
+  RootSetAbstractDomain via_value_of_ports;
+  if (value.isMember(constants::kViaValueOf)) {
+    for (const auto& root : JsonValidation::null_or_array(
+             value, /* field */ constants::kViaValueOf)) {
+      via_value_of_ports.add(Root::from_json(root));
+    }
+  }
+
   LocalPositionSet local_positions;
   if (value.isMember("local_positions")) {
     JsonValidation::null_or_array(value, /* field */ "local_positions");
@@ -372,6 +385,7 @@ Frame Frame::from_json(const Json::Value& value, Context& context) {
       /* locally_inferred_features */ FeatureMayAlwaysSet::bottom(),
       std::move(user_features),
       std::move(via_type_of_ports),
+      std::move(via_value_of_ports),
       std::move(local_positions),
       std::move(canonical_names));
 }
@@ -423,6 +437,15 @@ Json::Value Frame::to_json() const {
       ports.append(root.to_json());
     }
     value["via_type_of"] = ports;
+  }
+
+  if (via_value_of_ports_.is_value() &&
+      !via_value_of_ports_.elements().empty()) {
+    auto ports = Json::Value(Json::arrayValue);
+    for (const auto& root : via_value_of_ports_.elements()) {
+      ports.append(root.to_json());
+    }
+    value[constants::kViaValueOf] = ports;
   }
 
   if (local_positions_.is_value() && !local_positions_.empty()) {
@@ -495,6 +518,10 @@ std::ostream& operator<<(std::ostream& out, const Frame& frame) {
   if (frame.via_type_of_ports_.is_value() &&
       !frame.via_type_of_ports_.elements().empty()) {
     out << ", via_type_of_ports=" << frame.via_type_of_ports_;
+  }
+  if (frame.via_value_of_ports_.is_value() &&
+      !frame.via_value_of_ports_.elements().empty()) {
+    out << ", via_value_of_ports=" << frame.via_value_of_ports_;
   }
   if (!frame.local_positions_.empty()) {
     out << ", local_positions=" << frame.local_positions_;

@@ -27,5 +27,8 @@ std::string_view get_privacy_decision_type() {
 }
 #endif
 
+// TODO: Move over all other constants.
+const std::string kViaValueOf{"via_value_of"};
+
 } // namespace constants
 } // namespace marianatrench

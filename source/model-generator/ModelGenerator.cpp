@@ -446,7 +446,8 @@ Frame generator::source(
     const std::string& kind,
     const std::vector<std::string>& features,
     Root::Kind callee_port,
-    RootSetAbstractDomain via_type_of_ports) {
+    RootSetAbstractDomain via_type_of_ports,
+    RootSetAbstractDomain via_value_of_ports) {
   // These ports must go with canonical names.
   mt_assert(
       callee_port != Root::Kind::Anchor && callee_port != Root::Kind::Producer);
@@ -468,6 +469,7 @@ Frame generator::source(
       /* locally_inferred_features */ FeatureMayAlwaysSet::bottom(),
       /* user features */ user_features,
       /* via_type_of_ports */ via_type_of_ports,
+      /* via_value_of_ports */ via_value_of_ports,
       /* local_positions */ {},
       /* canonical_names */ {});
 }
@@ -478,7 +480,8 @@ Frame generator::sink(
     const std::string& kind,
     const std::vector<std::string>& features,
     Root::Kind callee_port,
-    RootSetAbstractDomain via_type_of_ports) {
+    RootSetAbstractDomain via_type_of_ports,
+    RootSetAbstractDomain via_value_of_ports) {
   // These ports must go with canonical names.
   mt_assert(
       callee_port != Root::Kind::Anchor && callee_port != Root::Kind::Producer);
@@ -500,6 +503,7 @@ Frame generator::sink(
       /* locally_inferred_features */ FeatureMayAlwaysSet::bottom(),
       /* user features */ user_features,
       /* via_type_of_ports */ via_type_of_ports,
+      /* via_type_of_ports */ via_value_of_ports,
       /* local_positions */ {},
       /* canonical_names */ {});
 }
@@ -511,7 +515,8 @@ Frame generator::partial_sink(
     const std::string& label,
     const std::vector<std::string>& features,
     Root::Kind callee_port,
-    RootSetAbstractDomain via_type_of_ports) {
+    RootSetAbstractDomain via_type_of_ports,
+    RootSetAbstractDomain via_value_of_ports) {
   // These ports must go with canonical names.
   mt_assert(
       callee_port != Root::Kind::Anchor && callee_port != Root::Kind::Producer);
@@ -533,6 +538,7 @@ Frame generator::partial_sink(
       /* locally_inferred_features */ FeatureMayAlwaysSet::bottom(),
       /* user features */ user_features,
       /* via_type_of_ports */ via_type_of_ports,
+      /* via_value_of_ports */ via_value_of_ports,
       /* local_positions */ {},
       /* canonical_names */ {});
 }

@@ -76,6 +76,11 @@ using CanonicalNameSetAbstractDomain =
  * materialize a 'via-type-of' feature with the type of the port seen at a
  * callsite and include it in the inferred features of the taint at that
  * callsite
+
+ * `via_value_of_ports` is a set of ports for each of which we would like to
+ * materialize a 'via-value-of' feature with the value of the port seen at a
+ * callsite and include it in the inferred features of the taint at that
+ * callsite
  *
  * `local_positions` is the set of positions that the taint flowed through
  * within the current method.
@@ -109,6 +114,7 @@ class Frame final : public sparta::AbstractDomain<Frame> {
       FeatureMayAlwaysSet locally_inferred_features,
       FeatureSet user_features,
       RootSetAbstractDomain via_type_of_ports,
+      RootSetAbstractDomain via_value_of_ports,
       LocalPositionSet local_positions,
       CanonicalNameSetAbstractDomain canonical_names)
       : kind_(kind),
@@ -123,6 +129,7 @@ class Frame final : public sparta::AbstractDomain<Frame> {
         locally_inferred_features_(std::move(locally_inferred_features)),
         user_features_(std::move(user_features)),
         via_type_of_ports_(std::move(via_type_of_ports)),
+        via_value_of_ports_(std::move(via_value_of_ports)),
         local_positions_(std::move(local_positions)),
         canonical_names_(std::move(canonical_names)) {
     mt_assert(kind_ != nullptr);
@@ -150,6 +157,7 @@ class Frame final : public sparta::AbstractDomain<Frame> {
         locally_inferred_features,
         user_features,
         /* via_type_of_ports */ {},
+        /* via_value_of_ports */ {},
         /* local_positions */ {},
         /* canonical_names */ {});
   }
@@ -182,6 +190,7 @@ class Frame final : public sparta::AbstractDomain<Frame> {
         /* locally_inferred_features */ FeatureMayAlwaysSet::bottom(),
         /* user_features */ {},
         /* via_type_of_ports */ {},
+        /* via_value_of_ports */ {},
         /* local_positions */ {},
         canonical_names);
   }
@@ -222,6 +231,10 @@ class Frame final : public sparta::AbstractDomain<Frame> {
 
   const RootSetAbstractDomain& via_type_of_ports() const {
     return via_type_of_ports_;
+  }
+
+  const RootSetAbstractDomain& via_value_of_ports() const {
+    return via_value_of_ports_;
   }
 
   const CanonicalNameSetAbstractDomain& canonical_names() const {
@@ -363,6 +376,7 @@ class Frame final : public sparta::AbstractDomain<Frame> {
   FeatureMayAlwaysSet locally_inferred_features_;
   FeatureSet user_features_;
   RootSetAbstractDomain via_type_of_ports_;
+  RootSetAbstractDomain via_value_of_ports_;
   LocalPositionSet local_positions_;
   CanonicalNameSetAbstractDomain canonical_names_;
 };

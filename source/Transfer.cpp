@@ -700,6 +700,7 @@ void check_flows_to_array_allocation(
       /* locally_inferred_features */ {},
       /* user features */ {},
       /* via_type_of_ports */ {},
+      /* via_value_of_ports */ {},
       /* local_positions */ {},
       /* canonical_names */ {})};
   auto instruction_sources = instruction->srcs_vec();

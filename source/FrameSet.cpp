@@ -252,6 +252,7 @@ FrameSet FrameSet::attach_position(const Position* position) const {
             /* locally_inferred_features */ FeatureMayAlwaysSet::bottom(),
             /* user_features */ FeatureSet::bottom(),
             /* via_type_of_ports */ {},
+            /* via_value_of_ports */ {},
             frame.local_positions(),
             frame.canonical_names()));
       }
@@ -399,6 +400,7 @@ Frame FrameSet::propagate_frames(
       /* locally_inferred_features */ FeatureMayAlwaysSet::bottom(),
       /* user_features */ FeatureSet::bottom(),
       /* via_type_of_ports */ {},
+      /* via_value_of_ports */ {},
       /* local_positions */ {},
       /* canonical_names */ {});
 }
@@ -471,6 +473,7 @@ FrameSet FrameSet::propagate_crtex_frames(
           propagated.locally_inferred_features(),
           propagated.user_features(),
           propagated.via_type_of_ports(),
+          propagated.via_value_of_ports(),
           propagated.local_positions(),
           /* canonical_names */ instantiated_names));
     }

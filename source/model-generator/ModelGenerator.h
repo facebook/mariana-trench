@@ -216,14 +216,16 @@ Frame source(
     const std::string& kind,
     const std::vector<std::string>& features = {},
     Root::Kind callee_port = Root::Kind::Leaf,
-    RootSetAbstractDomain via_type_of_ports = {});
+    RootSetAbstractDomain via_type_of_ports = {},
+    RootSetAbstractDomain via_value_of_ports = {});
 Frame sink(
     Context& context,
     const Method* method,
     const std::string& kind,
     const std::vector<std::string>& features = {},
     Root::Kind callee_port = Root::Kind::Leaf,
-    RootSetAbstractDomain via_type_of_ports = {});
+    RootSetAbstractDomain via_type_of_ports = {},
+    RootSetAbstractDomain via_value_of_ports = {});
 Frame partial_sink(
     Context& context,
     const Method* method,
@@ -231,7 +233,8 @@ Frame partial_sink(
     const std::string& label,
     const std::vector<std::string>& features = {},
     Root::Kind callee_port = Root::Kind::Leaf,
-    RootSetAbstractDomain via_type_of_ports = {});
+    RootSetAbstractDomain via_type_of_ports = {},
+    RootSetAbstractDomain via_value_of_ports = {});
 
 } // namespace generator
 } // namespace marianatrench

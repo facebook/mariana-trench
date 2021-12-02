@@ -63,6 +63,7 @@ struct FrameProperties {
   FeatureMayAlwaysSet locally_inferred_features = {};
   FeatureSet user_features = {};
   RootSetAbstractDomain via_type_of_ports = {};
+  RootSetAbstractDomain via_value_of_ports = {};
   LocalPositionSet local_positions = {};
   CanonicalNameSetAbstractDomain canonical_names = {};
 };
