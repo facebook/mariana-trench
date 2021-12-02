@@ -25,4 +25,10 @@ const Feature* Features::get_via_cast_feature(
   return factory_.create("via-cast:" + type_string);
 }
 
+const Feature* Features::get_via_value_of_feature(
+    const std::optional<std::string>& value) const {
+  const auto& via_value = value.value_or("unknown");
+  return factory_.create("via-value:" + via_value);
+}
+
 } // namespace marianatrench

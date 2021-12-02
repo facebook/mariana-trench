@@ -43,7 +43,8 @@ class MethodContext final {
   Model model_at_callsite(
       const CallTarget& call_target,
       const Position* position,
-      const std::vector<const DexType * MT_NULLABLE>& source_register_types)
+      const std::vector<const DexType * MT_NULLABLE>& source_register_types,
+      const std::vector<std::optional<std::string>>& source_constant_arguments)
       const;
 
   const Options& options;

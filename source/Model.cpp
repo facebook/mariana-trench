@@ -250,7 +250,8 @@ Model Model::at_callsite(
     const Method* caller,
     const Position* call_position,
     Context& context,
-    const std::vector<const DexType * MT_NULLABLE>& source_register_types)
+    const std::vector<const DexType * MT_NULLABLE>& source_register_types,
+    const std::vector<std::optional<std::string>>& source_constant_arguments)
     const {
   const auto* callee = method_;
 
@@ -273,7 +274,8 @@ Model Model::at_callsite(
        maximum_source_sink_distance,
        &extra_features,
        &context,
-       &source_register_types](
+       &source_register_types,
+       &source_constant_arguments](
           const AccessPath& callee_port, const Taint& generations) {
         model.generations_.write(
             callee_port,
@@ -285,7 +287,8 @@ Model Model::at_callsite(
                 maximum_source_sink_distance,
                 extra_features,
                 context,
-                source_register_types),
+                source_register_types,
+                source_constant_arguments),
             UpdateKind::Weak);
       });
 
@@ -296,7 +299,8 @@ Model Model::at_callsite(
                 maximum_source_sink_distance,
                 &extra_features,
                 &context,
-                &source_register_types](
+                &source_register_types,
+                &source_constant_arguments](
                    const AccessPath& callee_port, const Taint& sinks) {
     model.sinks_.write(
         callee_port,
@@ -308,7 +312,8 @@ Model Model::at_callsite(
             maximum_source_sink_distance,
             extra_features,
             context,
-            source_register_types),
+            source_register_types,
+            source_constant_arguments),
         UpdateKind::Weak);
   });
 
@@ -472,6 +477,13 @@ bool Model::check_frame_consistency(const Frame& frame, std::string_view kind)
   if (frame.via_type_of_ports().is_value()) {
     for (const auto& root : frame.via_type_of_ports().elements()) {
       // Logs invalid ports specifed for via_type_of but does not prevent the
+      // model from being created.
+      check_port_consistency(AccessPath(root));
+    }
+  }
+  if (frame.via_value_of_ports().is_value()) {
+    for (const auto& root : frame.via_value_of_ports().elements()) {
+      // Logs invalid ports specifed for via_value_of but does not prevent the
       // model from being created.
       check_port_consistency(AccessPath(root));
     }

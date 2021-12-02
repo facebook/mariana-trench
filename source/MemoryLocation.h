@@ -143,6 +143,8 @@ class InstructionMemoryLocation final : public MemoryLocation {
     return instruction_;
   }
 
+  std::optional<std::string> get_constant() const;
+
  private:
   const IRInstruction* instruction_;
 };

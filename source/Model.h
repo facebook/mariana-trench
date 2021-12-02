@@ -163,7 +163,8 @@ class Model final {
       const Method* caller,
       const Position* position,
       Context& context,
-      const std::vector<const DexType * MT_NULLABLE>& source_register_types)
+      const std::vector<const DexType * MT_NULLABLE>& source_register_types,
+      const std::vector<std::optional<std::string>>& source_constant_arguments)
       const;
 
   void collapse_invalid_paths(Context& context);

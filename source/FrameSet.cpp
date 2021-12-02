@@ -189,7 +189,8 @@ FrameSet FrameSet::propagate(
     const Position* call_position,
     int maximum_source_sink_distance,
     Context& context,
-    const std::vector<const DexType * MT_NULLABLE>& source_register_types)
+    const std::vector<const DexType * MT_NULLABLE>& source_register_types,
+    const std::vector<std::optional<std::string>>& source_constant_arguments)
     const {
   if (is_bottom()) {
     return FrameSet::bottom();
@@ -216,6 +217,7 @@ FrameSet FrameSet::propagate(
       maximum_source_sink_distance,
       context,
       source_register_types,
+      source_constant_arguments,
       partitioned[false],
       via_type_of_features_added);
   if (!non_crtex_frame.is_bottom()) {
@@ -333,6 +335,72 @@ std::ostream& operator<<(std::ostream& out, const FrameSet& frames) {
   }
 }
 
+namespace {
+
+void materialize_via_type_of_ports(
+    const Method* callee,
+    Context& context,
+    const Frame& frame,
+    const std::vector<const DexType * MT_NULLABLE>& source_register_types,
+    std::vector<const Feature*>& via_type_of_features_added,
+    FeatureMayAlwaysSet& inferred_features) {
+  if (!frame.via_type_of_ports().is_value() ||
+      frame.via_type_of_ports().elements().empty()) {
+    return;
+  }
+
+  // Materialize via_type_of_ports into features and add them to the inferred
+  // features
+  for (const auto& port : frame.via_type_of_ports().elements()) {
+    if (!port.is_argument() ||
+        port.parameter_position() >= source_register_types.size()) {
+      ERROR(
+          1,
+          "Invalid port {} provided for via_type_of ports of method {}.{}",
+          port,
+          callee->get_class()->str(),
+          callee->get_name());
+      continue;
+    }
+    const auto* feature = context.features->get_via_type_of_feature(
+        source_register_types[port.parameter_position()]);
+    via_type_of_features_added.push_back(feature);
+    inferred_features.add_always(feature);
+  }
+}
+
+void materialize_via_value_of_ports(
+    const Method* callee,
+    Context& context,
+    const Frame& frame,
+    const std::vector<std::optional<std::string>>& source_constant_arguments,
+    FeatureMayAlwaysSet& inferred_features) {
+  if (!frame.via_value_of_ports().is_value() ||
+      frame.via_value_of_ports().elements().empty()) {
+    return;
+  }
+
+  // Materialize via_value_of_ports into features and add them to the inferred
+  // features
+  for (const auto& port : frame.via_value_of_ports().elements()) {
+    if (!port.is_argument() ||
+        port.parameter_position() >= source_constant_arguments.size()) {
+      ERROR(
+          1,
+          "Invalid port {} provided for via_value_of ports of method {}.{}",
+          port,
+          callee->get_class()->str(),
+          callee->get_name());
+      continue;
+    }
+    const auto* feature = context.features->get_via_value_of_feature(
+        source_constant_arguments[port.parameter_position()]);
+    inferred_features.add_always(feature);
+  }
+}
+
+} // namespace
+
 Frame FrameSet::propagate_frames(
     const Method* callee,
     const AccessPath& callee_port,
@@ -340,6 +408,7 @@ Frame FrameSet::propagate_frames(
     int maximum_source_sink_distance,
     Context& context,
     const std::vector<const DexType * MT_NULLABLE>& source_register_types,
+    const std::vector<std::optional<std::string>>& source_constant_arguments,
     std::vector<std::reference_wrapper<const Frame>> frames,
     std::vector<const Feature*>& via_type_of_features_added) const {
   int distance = std::numeric_limits<int>::max();
@@ -358,28 +427,17 @@ Frame FrameSet::propagate_frames(
 
     // Note: This merges user features with existing inferred features.
     inferred_features.join_with(frame.features());
-    // Materialize via_type_of_ports into features and add them to the
-    // inferred features
-    if (!frame.via_type_of_ports().is_value() ||
-        frame.via_type_of_ports().elements().empty()) {
-      continue;
-    }
-    for (const auto& port : frame.via_type_of_ports().elements()) {
-      if (!port.is_argument() ||
-          port.parameter_position() >= source_register_types.size()) {
-        ERROR(
-            1,
-            "Invalid port {} provided for via_type_of ports of method {}.{}",
-            port,
-            callee->get_class()->str(),
-            callee->get_name());
-        continue;
-      }
-      const auto* feature = context.features->get_via_type_of_feature(
-          source_register_types[port.parameter_position()]);
-      via_type_of_features_added.push_back(feature);
-      inferred_features.add_always(feature);
-    }
+
+    materialize_via_type_of_ports(
+        callee,
+        context,
+        frame,
+        source_register_types,
+        via_type_of_features_added,
+        inferred_features);
+
+    materialize_via_value_of_ports(
+        callee, context, frame, source_constant_arguments, inferred_features);
   }
 
   if (distance == std::numeric_limits<int>::max()) {
@@ -424,6 +482,7 @@ FrameSet FrameSet::propagate_crtex_frames(
         maximum_source_sink_distance,
         context,
         source_register_types,
+        {}, // TODO: Support via-value-of for crtex frames
         {std::cref(frame)},
         via_type_of_features_added);
 

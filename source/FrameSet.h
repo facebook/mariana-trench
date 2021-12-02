@@ -185,7 +185,8 @@ class FrameSet final : public sparta::AbstractDomain<FrameSet> {
       const Position* call_position,
       int maximum_source_sink_distance,
       Context& context,
-      const std::vector<const DexType * MT_NULLABLE>& source_register_types)
+      const std::vector<const DexType * MT_NULLABLE>& source_register_types,
+      const std::vector<std::optional<std::string>>& source_constant_arguments)
       const;
 
   /* Return the set of leaf frames with the given position. */
@@ -215,6 +216,7 @@ class FrameSet final : public sparta::AbstractDomain<FrameSet> {
       int maximum_source_sink_distance,
       Context& context,
       const std::vector<const DexType * MT_NULLABLE>& source_register_types,
+      const std::vector<std::optional<std::string>>& source_constant_arguments,
       std::vector<std::reference_wrapper<const Frame>> frames,
       std::vector<const Feature*>& via_type_of_features_added) const;
 

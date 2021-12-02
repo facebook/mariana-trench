@@ -106,7 +106,8 @@ Taint Taint::propagate(
     int maximum_source_sink_distance,
     const FeatureMayAlwaysSet& extra_features,
     Context& context,
-    const std::vector<const DexType * MT_NULLABLE>& source_register_types)
+    const std::vector<const DexType * MT_NULLABLE>& source_register_types,
+    const std::vector<std::optional<std::string>>& source_constant_arguments)
     const {
   Taint result;
   for (const auto& frames : set_) {
@@ -117,7 +118,8 @@ Taint Taint::propagate(
         call_position,
         maximum_source_sink_distance,
         context,
-        source_register_types);
+        source_register_types,
+        source_constant_arguments);
     if (propagated.is_bottom()) {
       continue;
     }

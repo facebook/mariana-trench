@@ -193,6 +193,28 @@ const std::vector<const DexType * MT_NULLABLE> get_source_register_types(
   return register_types;
 }
 
+const std::vector<std::optional<std::string>> get_source_constant_arguments(
+    AnalysisEnvironment* environment,
+    const IRInstruction* instruction) {
+  std::vector<std::optional<std::string>> constant_arguments = {};
+
+  for (const auto& register_id : instruction->srcs_vec()) {
+    for (auto* memory_location :
+         environment->memory_locations(register_id).elements()) {
+      std::optional<std::string> value;
+
+      if (const auto* instruction_memory_location =
+              memory_location->dyn_cast<InstructionMemoryLocation>();
+          instruction_memory_location != nullptr) {
+        value = instruction_memory_location->get_constant();
+      }
+      constant_arguments.push_back(value);
+    }
+  }
+
+  return constant_arguments;
+}
+
 Callee get_callee(
     MethodContext* context,
     AnalysisEnvironment* environment,
@@ -218,7 +240,10 @@ Callee get_callee(
       context->positions.get(context->method(), environment->last_position());
 
   auto model = context->model_at_callsite(
-      call_target, position, get_source_register_types(context, instruction));
+      call_target,
+      position,
+      get_source_register_types(context, instruction),
+      get_source_constant_arguments(environment, instruction));
   LOG_OR_DUMP(context, 4, "Callee model: {}", model);
 
   // Avoid copies using `std::move`.
@@ -244,7 +269,10 @@ Callee get_callee(
       context->positions.get(context->method(), environment->last_position());
 
   auto model = context->model_at_callsite(
-      callee.call_target, position, /* source_register_types */ {});
+      callee.call_target,
+      position,
+      /* source_register_types */ {},
+      /* source_constant_arguments */ {});
   LOG_OR_DUMP(context, 4, "Callee model: {}", model);
 
   return Callee{

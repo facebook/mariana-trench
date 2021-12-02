@@ -487,7 +487,8 @@ TEST_F(TaintTest, Propagate) {
           /* maximum_source_sink_distance */ 100,
           /* extra_features */ FeatureMayAlwaysSet{feature_three},
           /* context */ context,
-          /* source_register_types */ {}),
+          /* source_register_types */ {},
+          /* source_constant_arguments */ {}),
       (Taint{
           test::make_frame(
               /* kind */ context.kinds->get("TestSource"),

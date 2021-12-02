@@ -1081,7 +1081,8 @@ TEST_F(FrameSetTest, Propagate) {
           call_position,
           /* maximum_source_sink_distance */ 100,
           context,
-          /* source_register_types */ {}),
+          /* source_register_types */ {},
+          /* source_constant_arguments */ {}),
       (FrameSet{
           test::make_frame(
               test_kind,

@@ -47,7 +47,8 @@ MethodContext::MethodContext(
 Model MethodContext::model_at_callsite(
     const CallTarget& call_target,
     const Position* position,
-    const std::vector<const DexType * MT_NULLABLE>& source_register_types)
+    const std::vector<const DexType * MT_NULLABLE>& source_register_types,
+    const std::vector<std::optional<std::string>>& source_constant_arguments)
     const {
   auto* caller = method();
 
@@ -73,9 +74,13 @@ Model MethodContext::model_at_callsite(
     }
   }
 
-  auto model =
-      registry.get(call_target.resolved_base_callee())
-          .at_callsite(caller, position, context_, source_register_types);
+  auto model = registry.get(call_target.resolved_base_callee())
+                   .at_callsite(
+                       caller,
+                       position,
+                       context_,
+                       source_register_types,
+                       source_constant_arguments);
 
   if (!call_target.is_virtual()) {
     return model;
@@ -99,7 +104,11 @@ Model MethodContext::model_at_callsite(
 
   for (const auto* override : call_target.overrides()) {
     auto override_model = registry.get(override).at_callsite(
-        caller, position, context_, source_register_types);
+        caller,
+        position,
+        context_,
+        source_register_types,
+        source_constant_arguments);
     LOG_OR_DUMP(
         this,
         5,
