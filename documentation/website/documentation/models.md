@@ -473,6 +473,42 @@ If the method has more than 40 overrides, it is marked with the mode `no-join-vi
 
 Otherwise, the default model is empty (no sources/sinks/propagations).
 
+### Field Models
+
+These models represent user-defined taint on class fields (as opposed to methods, as described in all the previous sections on this page). They are specified in a similar way to method models as described below. Currently, you can specify only sources on a field model, although support may be added for sinks and other details later on.
+
+Example field model generator:
+```
+"find": "fields",
+"where": [
+  {
+    "constraint": "name",
+    "pattern": "EXAMPLE"
+  }
+],
+"model": {
+  "sources" : [
+    {
+      "kind": "FieldSourceA"
+    }
+  ]
+}
+```
+
+Example code:
+```java
+public class TestClass {
+  // Field that we know to be tainted
+  public final EXAMPLE = ...;
+}
+
+void flow() {
+  sink(EXAMPLE, ...);
+}
+```
+
+Note that the analysis does NOT keep track of inferred sources on the field, but rather only keeps track of user defined sources on these fields which can only be specified in model generators.
+
 ## Generators
 
 Mariana Trench allows for dynamic model specifications. This allows a user to specify models of methods before running the analysis. This is used to specify sources, sinks, propagation and modes.
@@ -553,8 +589,8 @@ Each JSON file is a JSON object with a key `model_generators` associated with a 
 
 Each "rule" defines a "filter" (which uses "constraints" to specify methods for which a "model" should be generated) and a "model". A rule has the following key/values:
 
-- `find`: The type of thing to find. We only support `methods`;
-- `where`: A list of "constraints". All constraints **must be satisfied** by a method in order to generate a model for such method. All the constraints are listed below, grouped by the type of object they are applied to:
+- `find`: The type of thing to find. We support `methods` and `fields`;
+- `where`: A list of "constraints". All constraints **must be satisfied** by a method or field in order to generate a model for it. All the constraints are listed below, grouped by the type of object they are applied to:
   - **Method**:
     - `signature`: Expects an extra property `pattern` which is a regex to fully match the full signature (class, method, argument types) of a method;
     - `parent`: Expects an extra property `inner` [Type] which contains a nested constraint to apply to the class holding the method;
@@ -569,52 +605,59 @@ Each "rule" defines a "filter" (which uses "constraints" to specify methods for 
     - `super`: Expects an extra property `inner` [Type] which contains a nested constraint that must apply on the direct superclass;
     - `is_class | is_interface`: Accepts an extra property `value` which is either `true` or `false`. By default, `value` is considered `true`;
 
-  - **Method or Type:**
+  - **Method, Type or Field:**
     - `name`: Expects an extra property `pattern` which is a regex to fully match the name of the item;
     - `has_annotation`: Expects an extra property `type` and an optional property `pattern`, respectively a string and a regex fully matching the value of the annotation.
-    - `visibility`: Expects an extra property `is` which is either `public`, `private` or `protected`;
+    - `visibility`: Expects an extra property `is` which is either `public`, `private` or `protected`; (Note this does not apply to `Field`)
 
   - **Integer:**
     - `< | <= | == | > | >= | !=`: Expects an extra property `value` which contains an integer that the input integer is compared with. The input is the left hand side.
 
   - **Any (Method, Type or Integer):**
-    - `all_of`: Expects an extra property `inners` [Any] which is an array holding nested constraints which must all apply;
+    - `all_of`: Expects an extra property `inners` [Any] which is an array holding nested constraints which must all apply; (Note this can also be used for `Field`s)
     - `any_of`: Expects an extra property `inners` [Any] which is an array holding nested constraints where one of them must apply;
     - `not`: Expects an extra property `inner` [Any] which contains a nested constraint that should not apply.
 
 - `model`: A model, describing sources/sinks/propagations/etc.
-  - `sources`*: A list of sources, i.e a source flowing out of the method via return value or flowing in via an argument. A source has the following key/values:
-    - `kind`: The source name;
-    - `port`**: The source access path (e.g, `"Return"` or `"Argument(1)"`);
-    - `features`*: A list of features/breadcrumbs names;
-    - `via_type_of`*: A list of ports;
-  - `sinks`*: A list of sinks, i.e describing that a parameter of the method flows into a sink. A sink has the following key/values:
-    - `kind`: The sink name;
-    - `port`: The sink access path (e.g, `"Return"` or `"Argument(1)"`);
-    - `features`*:  A list of features/breadcrumbs names;
-    - `via_type_of`*: A list of ports;
-  - `propagation`*: A list of propagations (also called passthrough) that describe whether a taint on a parameter should result in a taint on the return value or another parameter. A propagation has the following key/values:
-    - `input`: The input access path (e.g, `"Argument(1)"`);
-    - `output`: The output access path (e.g, `"Return"` or `"Argument(2)"`);
-    - `features`*: A list of features/breadcrumbs names;
-  - `attach_to_sources`*: A list of attach-to-sources that describe that all sources flowing out of the method on the given parameter or return value must have the given features. An attach-to-source has the following key/values:
-    - `port`: The access path root (e.g, `"Return"` or `"Argument(1)"`);
-    - `features`: A list of features/breadcrumb names;
-  - `attach_to_sinks`*: A list of attach-to-sinks that describe that all sources flowing in the method on the given parameter must have the given features. An attach-to-sink has the following key/values:
-    - `port`: The access path root (e.g, `"Argument(1)"`);
-    - `features`: A list of features/breadcrumb names;
-  - `attach_to_propagations`*: A list of attach-to-propagations that describe that inferred propagations of sources flowing in or out of a given parameter or return value  must have the given features. An attach-to-propagation has the following key/values:
-    - `port`: The access path root (e.g, `"Return"` or `"Argument(1)"`);
-    - `features`: A list of features/breadcrumb names;
-  - `add_features_to_parameters`*: A list of add-features-to-parameters that describe that flows that might flow on the given parameter must have the given features. An add-features-to-parameter has the following key/values:
-    - `port`: The access path root (e.g, `"Argument(1)"`);
-    - `features`: A list of features/breadcrumb names;
-  - `modes`*: A list of mode names that describe specific behaviors of a method;
-  - `for_all_parameters`: Generate sources/sinks/propagations/attach_to_* for all parameters of a method that satisfy some constraints. It accepts the following key/values:
-    - `variable`: A symbolic name for the parameter;
-    - `where`: An optional list of constraints on the type of the parameter;
-    - `sources | sinks | propagation`: Same as under "model", but we accept the variable name as a parameter number.
-- `verbosity`*: A logging level, to help debugging. 1 is the most verbose, 5 is the least. The default verbosity level is 5.
+  - **For method models**
+    - `sources`*: A list of sources, i.e a source flowing out of the method via return value or flowing in via an argument. A source has the following key/values:
+      - `kind`: The source name;
+      - `port`**: The source access path (e.g, `"Return"` or `"Argument(1)"`);
+      - `features`*: A list of features/breadcrumbs names;
+      - `via_type_of`*: A list of ports;
+    - `sinks`*: A list of sinks, i.e describing that a parameter of the method flows into a sink. A sink has the following key/values:
+      - `kind`: The sink name;
+      - `port`: The sink access path (e.g, `"Return"` or `"Argument(1)"`);
+      - `features`*:  A list of features/breadcrumbs names;
+      - `via_type_of`*: A list of ports;
+    - `propagation`*: A list of propagations (also called passthrough) that describe whether a taint on a parameter should result in a taint on the return value or another parameter. A propagation has the following key/values:
+      - `input`: The input access path (e.g, `"Argument(1)"`);
+      - `output`: The output access path (e.g, `"Return"` or `"Argument(2)"`);
+      - `features`*: A list of features/breadcrumbs names;
+    - `attach_to_sources`*: A list of attach-to-sources that describe that all sources flowing out of the method on the given parameter or return value must have the given features. An attach-to-source has the following key/values:
+      - `port`: The access path root (e.g, `"Return"` or `"Argument(1)"`);
+      - `features`: A list of features/breadcrumb names;
+    - `attach_to_sinks`*: A list of attach-to-sinks that describe that all sources flowing in the method on the given parameter must have the given features. An attach-to-sink has the following key/values:
+      - `port`: The access path root (e.g, `"Argument(1)"`);
+      - `features`: A list of features/breadcrumb names;
+    - `attach_to_propagations`*: A list of attach-to-propagations that describe that inferred propagations of sources flowing in or out of a given parameter or return value  must have the given features. An attach-to-propagation has the following key/values:
+      - `port`: The access path root (e.g, `"Return"` or `"Argument(1)"`);
+      - `features`: A list of features/breadcrumb names;
+    - `add_features_to_parameters`*: A list of add-features-to-parameters that describe that flows that might flow on the given parameter must have the given features. An add-features-to-parameter has the following key/values:
+      - `port`: The access path root (e.g, `"Argument(1)"`);
+      - `features`: A list of features/breadcrumb names;
+    - `modes`*: A list of mode names that describe specific behaviors of a method;
+    - `for_all_parameters`: Generate sources/sinks/propagations/attach_to_* for all parameters of a method that satisfy some constraints. It accepts the following key/values:
+      - `variable`: A symbolic name for the parameter;
+      - `where`: An optional list of constraints on the type of the parameter;
+      - `sources | sinks | propagation`: Same as under "model", but we accept the variable name as a parameter number.
+  - `verbosity`*: A logging level, to help debugging. 1 is the most verbose, 5 is the least. The default verbosity level is 5.
+
+
+  - **For Field models**
+    - `sources`*: A list of sources the field should hold
+      - `kind`: The source name;
+      - `features`*: A list of features/breadcrumbs names;
 
 In the above bullets,
 
