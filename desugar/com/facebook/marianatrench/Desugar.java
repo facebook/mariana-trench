@@ -19,16 +19,12 @@ import java.util.Enumeration;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 import java.util.stream.Stream;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.ClassWriter;
 
 public class Desugar {
-  private static final Logger LOGGER = LogManager.getFormatterLogger();
-
   public static void main(final String[] arguments) throws IOException, FileNotFoundException {
-    LOGGER.info("Desugaring file %s into file %s", arguments[0], arguments[1]);
+    System.out.printf("Desugaring file %s into file %s%n", arguments[0], arguments[1]);
 
     Path temporaryDirectory = Files.createTempDirectory("");
 

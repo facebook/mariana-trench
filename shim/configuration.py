@@ -19,7 +19,6 @@ BINARY_BUCK_BUILD_MODE: Optional[str] = None
 BINARY_PATH_COMMAND: Optional[str] = "mariana-trench-binary"
 
 DESUGAR_BUCK_TARGET: Optional[str] = None
-DESUGAR_LOG_CONFIGURATION_PATH: Optional[str] = None
 
 DEFAULT_MAXIMUM_SOURCE_SINK_DISTANCE: int = 7
 
