@@ -199,10 +199,9 @@ const std::vector<std::optional<std::string>> get_source_constant_arguments(
   std::vector<std::optional<std::string>> constant_arguments = {};
 
   for (const auto& register_id : instruction->srcs_vec()) {
-    for (auto* memory_location :
-         environment->memory_locations(register_id).elements()) {
+    auto memory_locations = environment->memory_locations(register_id);
+    for (auto* memory_location : memory_locations.elements()) {
       std::optional<std::string> value;
-
       if (const auto* instruction_memory_location =
               memory_location->dyn_cast<InstructionMemoryLocation>();
           instruction_memory_location != nullptr) {
