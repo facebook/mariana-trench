@@ -507,6 +507,8 @@ void flow() {
 }
 ```
 
+Field signature formats follow the Dalvik bytecode format similar to methods as discussed [above](#method-name-format). This is of the form `<className>.<fieldName>:<fieldType>`.
+
 Note that the analysis does NOT keep track of inferred sources on the field, but rather only keeps track of user defined sources on these fields which can only be specified in model generators.
 
 ## Generators
@@ -596,14 +598,18 @@ Each "rule" defines a "filter" (which uses "constraints" to specify methods for 
     - `parent`: Expects an extra property `inner` [Type] which contains a nested constraint to apply to the class holding the method;
     - `parameter`: Expects an extra properties `idx` and `inner` [Type], matches when the idx-th parameter of the function or method matches the nested constraint inner;
     - `return`: Expects an extra property `inner` [Type] which contains a nested constraint to apply to the return of the method;
-     - `is_static | is_constructor | is_native | has_code`: Accepts an extra property `value` which is either `true` or `false`. By default, `value` is considered `true`;
-     - `number_parameters`: Expects an extra property `inner` [Integer] which contains a nested constraint to apply to the number of parameters (counting the implicit `this` parameter);
+    - `is_static | is_constructor | is_native | has_code`: Accepts an extra property `value` which is either `true` or `false`. By default, `value` is considered `true`;
+    - `number_parameters`: Expects an extra property `inner` [Integer] which contains a nested constraint to apply to the number of parameters (counting the implicit `this` parameter);
     - `number_overrides`: Expects an extra property `inner` [Integer] which contains a nested constraint to apply on the number of method overrides.
 
   - **Type:**
     - `extends`: Expects an extra property `inner` [Type] which contains a nested constraint that must apply to one of the base classes or itself. The optional property `includes_self` is a boolean that tells whether the constraint must be applied on the type itself or not;
     - `super`: Expects an extra property `inner` [Type] which contains a nested constraint that must apply on the direct superclass;
     - `is_class | is_interface`: Accepts an extra property `value` which is either `true` or `false`. By default, `value` is considered `true`;
+
+  - **Field**:
+    - `signature`: Expects an extra property `pattern` which is a regex to fully match the full signature of the field. This is of the form `<className>.<fieldName>:<fieldType>`;
+    - `parent`: Expects an extra property `inner` [Type] which contains a nested constraint to apply to the class holding the field;
 
   - **Method, Type or Field:**
     - `name`: Expects an extra property `pattern` which is a regex to fully match the name of the item;
@@ -613,10 +619,10 @@ Each "rule" defines a "filter" (which uses "constraints" to specify methods for 
   - **Integer:**
     - `< | <= | == | > | >= | !=`: Expects an extra property `value` which contains an integer that the input integer is compared with. The input is the left hand side.
 
-  - **Any (Method, Type or Integer):**
-    - `all_of`: Expects an extra property `inners` [Any] which is an array holding nested constraints which must all apply; (Note this can also be used for `Field`s)
+  - **Any (Method, Type, Field or Integer):**
+    - `all_of`: Expects an extra property `inners` [Any] which is an array holding nested constraints which must all apply;
     - `any_of`: Expects an extra property `inners` [Any] which is an array holding nested constraints where one of them must apply;
-    - `not`: Expects an extra property `inner` [Any] which contains a nested constraint that should not apply.
+    - `not`: Expects an extra property `inner` [Any] which contains a nested constraint that should not apply. (Note this is not yet implemented for `Field`s)
 
 - `model`: A model, describing sources/sinks/propagations/etc.
   - **For method models**
