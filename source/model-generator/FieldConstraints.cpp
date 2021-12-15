@@ -26,6 +26,23 @@ bool FieldNameConstraint::operator==(const FieldConstraint& other) const {
   }
 }
 
+SignatureFieldConstraint::SignatureFieldConstraint(
+    const std::string& regex_string)
+    : pattern_(regex_string) {}
+
+bool SignatureFieldConstraint::satisfy(const Field* field) const {
+  return re2::RE2::FullMatch(field->show(), pattern_);
+}
+
+bool SignatureFieldConstraint::operator==(const FieldConstraint& other) const {
+  if (auto* other_constraint =
+          dynamic_cast<const SignatureFieldConstraint*>(&other)) {
+    return other_constraint->pattern_.pattern() == pattern_.pattern();
+  } else {
+    return false;
+  }
+}
+
 HasAnnotationFieldConstraint::HasAnnotationFieldConstraint(
     const std::string& type,
     const std::optional<std::string>& annotation)
@@ -43,6 +60,23 @@ bool HasAnnotationFieldConstraint::operator==(
         ((!other_constraint->annotation_ && !annotation_) ||
          (other_constraint->annotation_ && annotation_ &&
           other_constraint->annotation_->pattern() == annotation_->pattern()));
+  } else {
+    return false;
+  }
+}
+
+ParentFieldConstraint::ParentFieldConstraint(
+    std::unique_ptr<TypeConstraint> inner_constraint)
+    : inner_constraint_(std::move(inner_constraint)) {}
+
+bool ParentFieldConstraint::satisfy(const Field* field) const {
+  return inner_constraint_->satisfy(field->get_class());
+}
+
+bool ParentFieldConstraint::operator==(const FieldConstraint& other) const {
+  if (auto* other_constraint =
+          dynamic_cast<const ParentFieldConstraint*>(&other)) {
+    return *(other_constraint->inner_constraint_) == *inner_constraint_;
   } else {
     return false;
   }
@@ -73,6 +107,36 @@ bool AllOfFieldConstraint::operator==(const FieldConstraint& other) const {
   }
 }
 
+AnyOfFieldConstraint::AnyOfFieldConstraint(
+    std::vector<std::unique_ptr<FieldConstraint>> constraints)
+    : constraints_(std::move(constraints)) {}
+
+bool AnyOfFieldConstraint::satisfy(const Field* field) const {
+  // If there is no constraint, the field vacuously satisfies the constraint
+  // This is different from the semantic of std::any_of
+  if (constraints_.empty()) {
+    return true;
+  }
+  return std::any_of(
+      constraints_.begin(),
+      constraints_.end(),
+      [field](const auto& constraint) { return constraint->satisfy(field); });
+}
+
+bool AnyOfFieldConstraint::operator==(const FieldConstraint& other) const {
+  if (auto* other_constraint =
+          dynamic_cast<const AnyOfFieldConstraint*>(&other)) {
+    return std::is_permutation(
+        other_constraint->constraints_.begin(),
+        other_constraint->constraints_.end(),
+        constraints_.begin(),
+        constraints_.end(),
+        [](const auto& left, const auto& right) { return *left == *right; });
+  } else {
+    return false;
+  }
+}
+
 std::unique_ptr<FieldConstraint> FieldConstraint::from_json(
     const Json::Value& constraint) {
   JsonValidation::validate_object(constraint);
@@ -81,14 +145,21 @@ std::unique_ptr<FieldConstraint> FieldConstraint::from_json(
       JsonValidation::string(constraint, "constraint");
   if (constraint_name == "name") {
     return std::make_unique<FieldNameConstraint>(
-        JsonValidation::string(constraint, "pattern"));
-  } else if (constraint_name == "all_of") {
+        JsonValidation::string(constraint, /* field */ "pattern"));
+  } else if (constraint_name == "signature") {
+    return std::make_unique<SignatureFieldConstraint>(
+        JsonValidation::string(constraint, /* field */ "pattern"));
+  } else if (constraint_name == "any_of" || constraint_name == "all_of") {
     std::vector<std::unique_ptr<FieldConstraint>> constraints;
     for (const auto& inner :
          JsonValidation::null_or_array(constraint, /* field */ "inners")) {
       constraints.push_back(FieldConstraint::from_json(inner));
     }
-    return std::make_unique<AllOfFieldConstraint>(std::move(constraints));
+    if (constraint_name == "any_of") {
+      return std::make_unique<AnyOfFieldConstraint>(std::move(constraints));
+    } else {
+      return std::make_unique<AllOfFieldConstraint>(std::move(constraints));
+    }
   } else if (constraint_name == "has_annotation") {
     return std::make_unique<HasAnnotationFieldConstraint>(
         JsonValidation::string(constraint, "type"),
@@ -96,6 +167,9 @@ std::unique_ptr<FieldConstraint> FieldConstraint::from_json(
             ? std::optional<std::string>{JsonValidation::string(
                   constraint, "pattern")}
             : std::nullopt);
+  } else if (constraint_name == "parent") {
+    return std::make_unique<ParentFieldConstraint>(TypeConstraint::from_json(
+        JsonValidation::object(constraint, /* field */ "inner")));
   } else {
     throw JsonValidationError(
         constraint,

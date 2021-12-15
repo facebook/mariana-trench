@@ -10,6 +10,7 @@
 #include <re2/re2.h>
 
 #include <mariana-trench/Field.h>
+#include <mariana-trench/model-generator/TypeConstraints.h>
 
 namespace marianatrench {
 
@@ -38,6 +39,16 @@ class FieldNameConstraint final : public FieldConstraint {
   re2::RE2 pattern_;
 };
 
+class SignatureFieldConstraint final : public FieldConstraint {
+ public:
+  explicit SignatureFieldConstraint(const std::string& regex_string);
+  bool satisfy(const Field* field) const override;
+  bool operator==(const FieldConstraint& other) const override;
+
+ private:
+  re2::RE2 pattern_;
+};
+
 class HasAnnotationFieldConstraint final : public FieldConstraint {
  public:
   explicit HasAnnotationFieldConstraint(
@@ -51,9 +62,31 @@ class HasAnnotationFieldConstraint final : public FieldConstraint {
   std::optional<re2::RE2> annotation_;
 };
 
+class ParentFieldConstraint final : public FieldConstraint {
+ public:
+  explicit ParentFieldConstraint(
+      std::unique_ptr<TypeConstraint> inner_constraint);
+  bool satisfy(const Field* field) const override;
+  bool operator==(const FieldConstraint& other) const override;
+
+ private:
+  std::unique_ptr<TypeConstraint> inner_constraint_;
+};
+
 class AllOfFieldConstraint final : public FieldConstraint {
  public:
   explicit AllOfFieldConstraint(
+      std::vector<std::unique_ptr<FieldConstraint>> constraints);
+  bool satisfy(const Field* field) const override;
+  bool operator==(const FieldConstraint& other) const override;
+
+ private:
+  std::vector<std::unique_ptr<FieldConstraint>> constraints_;
+};
+
+class AnyOfFieldConstraint final : public FieldConstraint {
+ public:
+  explicit AnyOfFieldConstraint(
       std::vector<std::unique_ptr<FieldConstraint>> constraints);
   bool satisfy(const Field* field) const override;
   bool operator==(const FieldConstraint& other) const override;
