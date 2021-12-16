@@ -1,0 +1,29 @@
+[
+  {
+    "method": "Landroid/content/Intent;.getExtras:()Landroid/os/Bundle;",
+    "generations": [
+      {
+        "kind": "Source",
+        "port": "Return"
+      }
+    ]
+  },
+  {
+    "method": "Landroid/util/Log;.e:(Ljava/lang/String;Ljava/lang/String;)I",
+    "sinks": [
+      {
+        "kind": "Sink",
+        "port": "Argument(1)"
+      }
+    ]
+  },
+  {
+    "method": "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
+    "sinks": [
+      {
+        "kind": "Sink",
+        "port": "Argument(0)"
+      }
+    ]
+  }
+]
