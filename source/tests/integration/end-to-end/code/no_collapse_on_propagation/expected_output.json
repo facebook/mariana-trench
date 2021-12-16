@@ -84,123 +84,6 @@
     {
       "position" : 
       {
-        "line" : 27,
-        "path" : "MainActivity.java"
-      },
-      "rule" : 1,
-      "sinks" : 
-      [
-        {
-          "call_position" : 
-          {
-            "end" : 12,
-            "line" : 27,
-            "path" : "MainActivity.java",
-            "start" : 9
-          },
-          "callee" : "Lcom/facebook/marianatrench/integrationtests/MainActivity$ModalActivityLauncher;.open:()V",
-          "callee_port" : "Argument(0).mClickPoint",
-          "distance" : 2,
-          "kind" : "Sink",
-          "origins" : 
-          [
-            "Landroid/util/Log;.e:(Ljava/lang/String;Ljava/lang/String;)I"
-          ]
-        }
-      ],
-      "sources" : 
-      [
-        {
-          "call_position" : 
-          {
-            "end" : 40,
-            "line" : 20,
-            "path" : "MainActivity.java",
-            "start" : 32
-          },
-          "callee" : "Landroid/content/Intent;.getExtras:()Landroid/os/Bundle;",
-          "callee_port" : "Return",
-          "distance" : 1,
-          "kind" : "Source",
-          "local_positions" : 
-          [
-            {
-              "end" : 0,
-              "line" : 21,
-              "start" : 0
-            },
-            {
-              "end" : 24,
-              "line" : 26,
-              "start" : 9
-            }
-          ],
-          "origins" : 
-          [
-            "Landroid/content/Intent;.getExtras:()Landroid/os/Bundle;"
-          ]
-        }
-      ]
-    }
-  ],
-  "method" : "Lcom/facebook/marianatrench/integrationtests/MainActivity;.onCreate:(Landroid/os/Bundle;)V",
-  "position" : 
-  {
-    "line" : 17,
-    "path" : "MainActivity.java"
-  },
-  "sinks" : 
-  [
-    {
-      "always_features" : 
-      [
-        "via-inner-class-this"
-      ],
-      "call_position" : 
-      {
-        "end" : 12,
-        "line" : 27,
-        "path" : "MainActivity.java",
-        "start" : 9
-      },
-      "callee" : "Lcom/facebook/marianatrench/integrationtests/MainActivity$ModalActivityLauncher;.open:()V",
-      "callee_port" : "Argument(0).mClickPoint",
-      "caller_port" : "Argument(0)",
-      "distance" : 2,
-      "kind" : "Sink",
-      "local_features" : 
-      {
-        "always_features" : 
-        [
-          "via-inner-class-this"
-        ]
-      },
-      "local_positions" : 
-      [
-        {
-          "end" : 0,
-          "line" : 21,
-          "start" : 0
-        },
-        {
-          "end" : 24,
-          "line" : 26,
-          "start" : 9
-        }
-      ],
-      "origins" : 
-      [
-        "Landroid/util/Log;.e:(Ljava/lang/String;Ljava/lang/String;)I"
-      ]
-    }
-  ]
-}
-{
-  "issues" : 
-  [
-    {
-      "position" : 
-      {
         "line" : 34,
         "path" : "MainActivity.java"
       },
@@ -265,52 +148,7 @@
   {
     "line" : 30,
     "path" : "MainActivity.java"
-  },
-  "sinks" : 
-  [
-    {
-      "always_features" : 
-      [
-        "via-inner-class-this"
-      ],
-      "call_position" : 
-      {
-        "end" : 28,
-        "line" : 34,
-        "path" : "MainActivity.java",
-        "start" : 9
-      },
-      "callee" : "Lcom/facebook/marianatrench/integrationtests/MainActivity$ModalActivityLauncher;.mArgumentFlowsToSink:()V",
-      "callee_port" : "Argument(0).mArguments",
-      "caller_port" : "Argument(0)",
-      "distance" : 2,
-      "kind" : "Sink",
-      "local_features" : 
-      {
-        "always_features" : 
-        [
-          "via-inner-class-this"
-        ]
-      },
-      "local_positions" : 
-      [
-        {
-          "end" : 0,
-          "line" : 32,
-          "start" : 0
-        },
-        {
-          "end" : 24,
-          "line" : 33,
-          "start" : 9
-        }
-      ],
-      "origins" : 
-      [
-        "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V"
-      ]
-    }
-  ]
+  }
 }
 {
   "method" : "Landroid/app/Activity;.<init>:()V",
@@ -927,10 +765,8 @@
     {
       "call_position" : 
       {
-        "end" : 34,
         "line" : 53,
-        "path" : "MainActivity.java",
-        "start" : 19
+        "path" : "MainActivity.java"
       },
       "callee" : "Landroid/util/Log;.e:(Ljava/lang/String;Ljava/lang/String;)I",
       "callee_port" : "Argument(1)",
@@ -946,6 +782,10 @@
 }
 {
   "method" : "Lcom/facebook/marianatrench/integrationtests/MainActivity$ModalActivityLauncher;.willHideSystemUi:(Z)Lcom/facebook/marianatrench/integrationtests/MainActivity$ModalActivityLauncher;",
+  "modes" : 
+  [
+    "no-collapse-on-propagation"
+  ],
   "position" : 
   {
     "line" : 47,
@@ -972,6 +812,14 @@
   "position" : 
   {
     "line" : 13,
+    "path" : "MainActivity.java"
+  }
+}
+{
+  "method" : "Lcom/facebook/marianatrench/integrationtests/MainActivity;.onCreate:(Landroid/os/Bundle;)V",
+  "position" : 
+  {
+    "line" : 17,
     "path" : "MainActivity.java"
   }
 }

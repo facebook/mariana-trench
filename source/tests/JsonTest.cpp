@@ -1567,7 +1567,8 @@ TEST_F(JsonTest, Model) {
               "skip-analysis",
               "add-via-obscure-feature",
               "taint-in-taint-out",
-              "no-join-virtual-overrides"
+              "no-join-virtual-overrides",
+              "no-collapse-on-propagation"
             ]
           })"),
           context),
@@ -1576,7 +1577,8 @@ TEST_F(JsonTest, Model) {
           context,
           Model::Mode::SkipAnalysis | Model::Mode::AddViaObscureFeature |
               Model::Mode::TaintInTaintOut |
-              Model::Mode::NoJoinVirtualOverrides));
+              Model::Mode::NoJoinVirtualOverrides |
+              Model::Mode::NoCollapseOnPropagation));
   EXPECT_EQ(
       test::sorted_json(
           Model(
@@ -1584,12 +1586,14 @@ TEST_F(JsonTest, Model) {
               context,
               Model::Mode::SkipAnalysis | Model::Mode::AddViaObscureFeature |
                   Model::Mode::TaintInTaintOut | Model::Mode::TaintInTaintThis |
-                  Model::Mode::NoJoinVirtualOverrides)
+                  Model::Mode::NoJoinVirtualOverrides |
+                  Model::Mode::NoCollapseOnPropagation)
               .to_json()),
       test::parse_json(R"#({
         "method": "LData;.method:(LData;LData;)V",
         "modes": [
           "add-via-obscure-feature",
+          "no-collapse-on-propagation",
           "no-join-virtual-overrides",
           "skip-analysis",
           "taint-in-taint-out",

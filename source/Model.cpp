@@ -52,6 +52,8 @@ std::string model_mode_to_string(Model::Mode mode) {
       return "taint-in-taint-this";
     case Model::Mode::NoJoinVirtualOverrides:
       return "no-join-virtual-overrides";
+    case Model::Mode::NoCollapseOnPropagation:
+      return "no-collapse-on-propagation";
     default:
       mt_unreachable();
   }
@@ -72,6 +74,8 @@ std::optional<Model::Mode> string_to_model_mode(const std::string& mode) {
     return Model::Mode::TaintInTaintThis;
   } else if (mode == "no-join-virtual-overrides") {
     return Model::Mode::NoJoinVirtualOverrides;
+  } else if (mode == "no-collapse-on-propagation") {
+    return Model::Mode::NoCollapseOnPropagation;
   } else {
     return std::nullopt;
   }
@@ -849,6 +853,10 @@ bool Model::is_taint_in_taint_this() const {
 
 bool Model::no_join_virtual_overrides() const {
   return modes_.test(Model::Mode::NoJoinVirtualOverrides);
+}
+
+bool Model::no_collapse_on_propagation() const {
+  return modes_.test(Model::Mode::NoCollapseOnPropagation);
 }
 
 bool Model::leq(const Model& other) const {

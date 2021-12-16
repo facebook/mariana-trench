@@ -364,16 +364,34 @@ void apply_propagations(
       }
       auto input_register_id = instruction_sources.at(input_parameter_position);
 
+      auto taint_tree = previous_environment->read(
+          input_register_id, propagation.input().path());
       // Collapsing the tree here is required for correctness and performance.
       // Propagations can be collapsed, which results in taking the common
       // prefix of the input paths. Because of this, if we don't collapse here,
       // we might build invalid trees. See the end-to-end test
       // `propagation_collapse` for an example.
-      auto taint = previous_environment
-                       ->read(input_register_id, propagation.input().path())
-                       .collapse();
+      // However, collapsing leads to FP with the builder pattern.
+      // eg:
+      // class A {
+      //   private String s1;
+      //
+      //   public A setS1(String s) {
+      //     this.s1 = s;
+      //     return this;
+      //   }
+      // }
+      // In this case, collapsing propagations results in entire `this` being
+      // tainted. For chained calls, it can lead to FP.
+      // `no-collapse-on-propagation` mode is used to prevent such cases.
+      // See the end-to-end test `no_collapse_on_propagation` for example.
+      if (!callee.model.no_collapse_on_propagation()) {
+        LOG_OR_DUMP(context, 4, "Collapsing taint tree {}", taint_tree);
+        auto taint = taint_tree.collapse();
+        taint_tree.write(propagation.input().path(), taint, UpdateKind::Strong);
+      }
 
-      if (taint.is_bottom()) {
+      if (taint_tree.is_bottom()) {
         continue;
       }
 
@@ -381,9 +399,12 @@ void apply_propagations(
       features.add(propagation.features());
       features.add_always(callee.model.add_features_to_arguments(input));
 
-      taint.add_inferred_features_and_local_position(
-          features,
-          context->positions.get(callee.position, input, instruction));
+      auto position =
+          context->positions.get(callee.position, input, instruction);
+
+      taint_tree.map([&features, position](Taint& taints) {
+        taints.add_inferred_features_and_local_position(features, position);
+      });
 
       switch (output.root().kind()) {
         case Root::Kind::Return: {
@@ -392,8 +413,9 @@ void apply_propagations(
               4,
               "Tainting invoke result path {} with {}",
               output.path(),
-              taint);
-          result_taint.write(output.path(), std::move(taint), UpdateKind::Weak);
+              taint_tree);
+          result_taint.write(
+              output.path(), std::move(taint_tree), UpdateKind::Weak);
           break;
         }
         case Root::Kind::Argument: {
@@ -406,11 +428,11 @@ void apply_propagations(
               "Tainting register {} path {} with {}",
               output_register_id,
               output.path(),
-              taint);
+              taint_tree);
           new_environment->write(
               output_register_id,
               output.path(),
-              std::move(taint),
+              std::move(taint_tree),
               UpdateKind::Weak);
           break;
         }
