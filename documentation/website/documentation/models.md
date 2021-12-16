@@ -460,6 +460,8 @@ Modes are used to describe specific behaviors of methods. Available modes are:
 * `add-via-obscure-feature`: add a feature/breadcrumb called `via-obscure:<method>` to sources flowing through this method;
 * `taint-in-taint-out`: propagate the taint on arguments to the return value and into the `this` parameter.
 * `no-join-virtual-overrides`: do not consider all possible overrides when handling a virtual call to this method.
+* `no-collapse-on-propagation`: do not collapse input paths when applying propagations.
+
 
 ### Default model
 
@@ -598,6 +600,7 @@ Each "rule" defines a "filter" (which uses "constraints" to specify methods for 
     - `parent`: Expects an extra property `inner` [Type] which contains a nested constraint to apply to the class holding the method;
     - `parameter`: Expects an extra properties `idx` and `inner` [Type], matches when the idx-th parameter of the function or method matches the nested constraint inner;
     - `return`: Expects an extra property `inner` [Type] which contains a nested constraint to apply to the return of the method;
+    - `returns_this`: Checks if the method returns the parent class.
     - `is_static | is_constructor | is_native | has_code`: Accepts an extra property `value` which is either `true` or `false`. By default, `value` is considered `true`;
     - `number_parameters`: Expects an extra property `inner` [Integer] which contains a nested constraint to apply to the number of parameters (counting the implicit `this` parameter);
     - `number_overrides`: Expects an extra property `inner` [Integer] which contains a nested constraint to apply on the number of method overrides.

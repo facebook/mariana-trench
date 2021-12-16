@@ -476,6 +476,34 @@ TEST_F(MethodConstraintTest, ReturnConstraint) {
                    .satisfy(context.methods->create(methods[1])));
 }
 
+TEST_F(MethodConstraintTest, ReturnsThisConstraint) {
+  Scope scope;
+  auto context = test::make_empty_context();
+  auto methods = redex::create_methods(
+      scope,
+      "LClass;",
+      {
+          R"(
+            (method (public static) "LClass;.method_1:(Z)LClass;"
+            (
+              (return-void)
+            )
+            ))",
+          R"(
+            (method (public) "LClass;.method_2:(Z)Z;"
+            (
+              (return-void)
+            )
+            ))",
+      });
+
+  EXPECT_TRUE(
+      ReturnsThisConstraint().satisfy(context.methods->create(methods[0])));
+
+  EXPECT_FALSE(
+      ReturnsThisConstraint().satisfy(context.methods->create(methods[1])));
+}
+
 TEST_F(MethodConstraintTest, VisibilityMethodConstraint) {
   Scope scope;
   auto context = test::make_empty_context();

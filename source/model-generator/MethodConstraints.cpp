@@ -416,6 +416,16 @@ bool ReturnConstraint::operator==(const MethodConstraint& other) const {
   }
 }
 
+ReturnsThisConstraint::ReturnsThisConstraint() {}
+
+bool ReturnsThisConstraint::satisfy(const Method* method) const {
+  return method->get_proto()->get_rtype()->str() == method->get_class()->str();
+}
+
+bool ReturnsThisConstraint::operator==(const MethodConstraint& other) const {
+  return dynamic_cast<const ReturnsThisConstraint*>(&other) != nullptr;
+}
+
 VisibilityMethodConstraint::VisibilityMethodConstraint(
     DexAccessFlags visibility)
     : visibility_(visibility) {}
@@ -524,6 +534,8 @@ std::unique_ptr<MethodConstraint> MethodConstraint::from_json(
   } else if (constraint_name == "return") {
     return std::make_unique<ReturnConstraint>(TypeConstraint::from_json(
         JsonValidation::object(constraint, /* field */ "inner")));
+  } else if (constraint_name == "returns_this") {
+    return std::make_unique<ReturnsThisConstraint>();
   } else if (constraint_name == "visibility") {
     auto visibility_string =
         JsonValidation::string(constraint, /* field */ "is");
