@@ -133,7 +133,7 @@ ModelGeneratorResult ModelGeneration::run(Context& context) {
 
   if (!nonexistent_model_generators.empty()) {
     throw std::invalid_argument(fmt::format(
-        "Model generator(s) {} do not exist.",
+        "Model generator(s) {} either do not exist or couldn't be parsed.",
         boost::algorithm::join(nonexistent_model_generators, ", ")));
   }
 

@@ -109,7 +109,7 @@ JsonModelGenerator::JsonModelGenerator(
   JsonValidation::validate_object(value);
 
   for (auto model_generator :
-       JsonValidation::null_or_array(value, /* field */ "model_generators")) {
+       JsonValidation::nonempty_array(value, /* field */ "model_generators")) {
     int verbosity = model_generator.isMember("verbosity")
         ? JsonValidation::integer(model_generator, "verbosity")
         : 5; // default verbosity
