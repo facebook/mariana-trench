@@ -1,0 +1,63 @@
+{
+  "model_generators": [
+    {
+      "find": "methods",
+      "where": [
+        {
+          "constraint": "any_of",
+          "inners": [
+            {
+              "constraint": "signature",
+              "pattern": "Landroid/net/Uri;\\.parse:\\(Ljava/lang/String;\\)Landroid/net/Uri;"
+            },
+            {
+              "constraint": "signature",
+              "pattern": "Landroid/net/Uri;\\.fromFile:\\(Ljava/io/File;\\)Landroid/net/Uri;"
+            },
+            {
+              "constraint": "signature",
+              "pattern": "Landroid/content/Intent;\\.getData:\\(\\)Landroid/net/Uri;"
+            },
+            {
+              "constraint": "signature",
+              "pattern": "Landroid/content/Intent;\\.getDataString:\\(\\)Ljava/lang/String;"
+            },
+            {
+              "constraint": "signature",
+              "pattern": "Ljava/net/URI;\\.create:\\(Ljava/lang/String;\\)Ljava/net/URI;"
+            }
+          ]
+        }
+      ],
+      "model": {
+        "add_features_to_arguments": [
+          {
+            "features": [
+              "cast:uri"
+            ],
+            "port": "Return"
+          }
+        ]
+      }
+    },
+    {
+      "find": "methods",
+      "where": [
+        {
+          "constraint": "signature",
+          "pattern": "Ljava/net/URI;\\.<init>:\\(Ljava/lang/String;\\)V"
+        }
+      ],
+      "model": {
+        "add_features_to_arguments": [
+          {
+            "features": [
+              "cast:uri"
+            ],
+            "port": "Argument(0)"
+          }
+        ]
+      }
+    }
+  ]
+}
