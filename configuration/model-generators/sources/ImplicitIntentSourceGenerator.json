@@ -13,14 +13,8 @@
             {
               "constraint": "parent",
               "inner": {
-                "constraint": "name",
-                "pattern": "Landroid/content/Intent;"
-              }
-            },
-            {
-              "constraint": "parent",
-              "inner": {
                 "constraint": "extends",
+                "include_self": true,
                 "inner": {
                   "constraint": "name",
                   "pattern": "Landroid/content/Intent;"
@@ -42,6 +36,33 @@
           {
             "kind": "IntentCreation",
             "port": "Argument(0)"
+          }
+        ]
+      }
+    },
+    {
+      "find": "fields",
+      "where": [
+        {
+          "constraint": "name",
+          "pattern": "INSTANCE"
+        },
+        {
+          "constraint": "parent",
+          "inner": {
+            "constraint": "extends",
+            "include_self": true,
+            "inner": {
+              "constraint": "name",
+              "pattern": "Landroid/content/Intent;"
+            }
+          }
+        }
+      ],
+      "model": {
+        "sources": [
+          {
+            "kind": "IntentCreation"
           }
         ]
       }
