@@ -33,6 +33,16 @@
         {
           "constraint": "signature",
           "pattern": "Landroid/content/Intent;\\.<init>:.*android/net/Uri.*"
+        },
+        {
+          "constraint": "return",
+          "inner": {
+            "constraint": "not",
+            "inner": {
+              "constraint": "name",
+              "pattern": "V"
+            }
+          }
         }
       ],
       "model": {
