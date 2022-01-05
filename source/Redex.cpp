@@ -247,9 +247,9 @@ DexMethod* redex::create_void_method(
   return dex_method;
 }
 
-DexAnnotationSet* redex::create_annotation_set(
+std::unique_ptr<DexAnnotationSet> redex::create_annotation_set(
     const std::vector<std::string>& annotations) {
-  DexAnnotationSet* dannoset = new DexAnnotationSet();
+  auto dannoset = std::make_unique<DexAnnotationSet>();
 
   for (const std::string& anno : annotations) {
     const DexString* dstring = DexString::make_string(anno);

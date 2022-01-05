@@ -80,7 +80,7 @@ DexMethod* create_void_method(
     bool is_abstract = false,
     const std::vector<std::string>& annotations = std::vector<std::string>());
 
-DexAnnotationSet* create_annotation_set(
+std::unique_ptr<DexAnnotationSet> create_annotation_set(
     const std::vector<std::string>& annotations);
 
 const DexField* create_field(
