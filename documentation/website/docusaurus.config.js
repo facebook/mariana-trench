@@ -58,7 +58,7 @@ module.exports = {
           items: [
             {
               label: 'Twitter',
-              href: 'https://twitter.com/fbOpenSource',
+              href: 'https://twitter.com/metaOpenSource',
             },
           ],
         },
