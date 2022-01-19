@@ -10,7 +10,7 @@
       },
       "callee_port" : "Leaf",
       "caller_port" : "Argument(0).mLastKnownLoaction",
-      "kind" : "LocationData",
+      "kind" : "UserGeoLocation",
       "local_positions" :
       [
         {
@@ -65,7 +65,7 @@
           "callee" : "Landroid/location/Location;.toString:()Ljava/lang/String;",
           "callee_port" : "Return",
           "distance" : 1,
-          "kind" : "LocationData",
+          "kind" : "UserGeoLocation",
           "origins" :
           [
             "Landroid/location/Location;.toString:()Ljava/lang/String;"
@@ -80,7 +80,7 @@
     {
       "callee_port" : "Leaf",
       "caller_port" : "Argument(1)",
-      "kind" : "LocationData",
+      "kind" : "UserGeoLocation",
       "origins" :
       [
         "Landroid_location_api/ActivityUsingAndroidLocationManager;.onLocationChanged:(Landroid/location/Location;)V"
@@ -106,7 +106,7 @@
     {
       "callee_port" : "Leaf",
       "caller_port" : "Return",
-      "kind" : "LocationData",
+      "kind" : "UserGeoLocation",
       "origins" :
       [
         "Landroid/location/Location;.getLatitude:()D"
@@ -125,7 +125,7 @@
     {
       "callee_port" : "Leaf",
       "caller_port" : "Return",
-      "kind" : "LocationData",
+      "kind" : "UserGeoLocation",
       "origins" :
       [
         "Landroid/location/Location;.toString:()Ljava/lang/String;"
@@ -413,7 +413,7 @@
     {
       "callee_port" : "Leaf",
       "caller_port" : "Argument(1)",
-      "kind" : "LocationData",
+      "kind" : "UserGeoLocation",
       "origins" :
       [
         "Landroid/location/LocationListener;.onLocationChanged:(Landroid/location/Location;)V"

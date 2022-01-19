@@ -8,7 +8,7 @@
     "parameter_sources": [
       {
         "port": "Argument(1)",
-        "kind": "LocationData"
+        "kind": "UserGeoLocation"
       }
     ]
   },
@@ -17,14 +17,14 @@
     "parameter_sources": [
       {
         "port": "Argument(1)",
-        "kind": "LocationData"
+        "kind": "UserGeoLocation"
       }
     ]
   },
   {
     "generations": [
       {
-        "kind": "LocationData",
+        "kind": "UserGeoLocation",
         "port": "Return"
       }
     ],
@@ -33,7 +33,7 @@
   {
     "generations": [
       {
-        "kind": "LocationData",
+        "kind": "UserGeoLocation",
         "port": "Return"
       }
     ],
