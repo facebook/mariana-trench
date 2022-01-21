@@ -34,6 +34,8 @@ class CanonicalName final {
   static constexpr std::string_view k_leaf_name_marker =
       "%programmatic_leaf_name%";
 
+  static constexpr std::string_view k_graphql_root_marker = "%graphql_root%";
+
   // Via-type-of marker. Will be replaced by the feature(s) passed to
   // `instantiate`. Currently supports only one feature.
   static constexpr std::string_view k_via_type_of_marker = "%via_type_of%";

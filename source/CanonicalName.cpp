@@ -7,6 +7,7 @@
 
 #include <boost/algorithm/string/replace.hpp>
 #include <json/value.h>
+#include <re2/re2.h>
 
 #include <mariana-trench/Assert.h>
 #include <mariana-trench/CanonicalName.h>
@@ -14,6 +15,20 @@
 #include <mariana-trench/Log.h>
 
 namespace marianatrench {
+
+namespace {
+
+static const re2::RE2 add_underscore_regex("([a-z])([A-Z])");
+
+void convert_to_lower_underscore(std::string& input) {
+  RE2::GlobalReplace(&input, add_underscore_regex, "\\1_\\2");
+  std::transform(
+      input.begin(), input.end(), input.begin(), [](unsigned char c) {
+        return std::tolower(c);
+      });
+}
+
+} // namespace
 
 bool CanonicalName::is_via_type_of_template() const {
   auto value = template_value();
@@ -35,6 +50,26 @@ std::optional<CanonicalName> CanonicalName::instantiate(
     auto callee_name = method->signature();
     boost::algorithm::replace_all(
         canonical_name, k_leaf_name_marker, callee_name);
+  }
+
+  // Converts Lcom/SomeMutationData;.setPhoneField:.* to
+  // some_mutation:phone_field which follows the graphql notation
+  if (canonical_name.find(k_graphql_root_marker) != std::string::npos) {
+    auto class_signature = method->get_class()->get_name()->str();
+    auto pos = class_signature.find_last_of("/");
+    if (pos != std::string::npos && class_signature.size() > (pos + 2)) {
+      std::string class_name =
+          class_signature.substr(pos + 1, class_signature.size() - pos - 2);
+      boost::replace_last(class_name, "Data", "");
+      convert_to_lower_underscore(class_name);
+      std::string method_name = method->get_name();
+      boost::replace_first(method_name, "set", "");
+      convert_to_lower_underscore(method_name);
+      boost::algorithm::replace_all(
+          canonical_name,
+          k_graphql_root_marker,
+          class_name + ":" + method_name);
+    }
   }
 
   if (canonical_name.find(k_via_type_of_marker) != std::string::npos) {

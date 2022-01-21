@@ -21,6 +21,8 @@ TEST_F(CanonicalNameTest, Instantiate) {
   auto context = test::make_empty_context();
   const auto* method = context.methods->create(
       redex::create_void_method(scope, "LClass;", "one"));
+  const auto* method2 = context.methods->create(redex::create_void_method(
+      scope, "Lcom/facebook/graphql/calls/SomeMutationData;", "setSomeField"));
   const auto* feature1 = context.features->get("feature1");
   const auto* feature2 = context.features->get("feature2");
 
@@ -29,6 +31,13 @@ TEST_F(CanonicalNameTest, Instantiate) {
           .instantiate(method, /* via_type_ofs */ {})
           .value(),
       CanonicalName(CanonicalName::InstantiatedValue{"LClass;.one:()V"}));
+
+  EXPECT_EQ(
+      CanonicalName(CanonicalName::TemplateValue{"%graphql_root%"})
+          .instantiate(method2, /* via_type_ofs */ {})
+          .value(),
+      CanonicalName(
+          CanonicalName::InstantiatedValue{"some_mutation:some_field"}));
 
   EXPECT_EQ(
       CanonicalName(CanonicalName::TemplateValue{
