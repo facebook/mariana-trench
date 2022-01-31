@@ -225,7 +225,9 @@ Frame sink(
     const std::vector<std::string>& features = {},
     Root::Kind callee_port = Root::Kind::Leaf,
     RootSetAbstractDomain via_type_of_ports = {},
-    RootSetAbstractDomain via_value_of_ports = {});
+    RootSetAbstractDomain via_value_of_ports = {},
+    CanonicalNameSetAbstractDomain canonical_names =
+        CanonicalNameSetAbstractDomain{});
 Frame partial_sink(
     Context& context,
     const Method* method,

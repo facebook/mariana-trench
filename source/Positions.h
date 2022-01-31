@@ -74,6 +74,10 @@ class Positions final {
 
   const Position* unknown() const;
 
+  static std::string execute_and_catch_output(
+      const std::string& command,
+      int& return_code);
+
  private:
   mutable InsertOnlyConcurrentSet<std::string> paths_;
   mutable InsertOnlyConcurrentSet<Position> positions_;

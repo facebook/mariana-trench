@@ -32,31 +32,6 @@ namespace {
 
 constexpr int k_unknown_line = -1;
 
-std::string execute_and_catch_output(
-    const std::string& command,
-    int& return_code) {
-  auto pclose_wrapper = [&return_code](FILE* command) {
-    return_code = pclose(command);
-  };
-
-  std::string output;
-
-  std::unique_ptr<FILE, decltype(pclose_wrapper)> pipe(
-      popen(command.c_str(), "r"), pclose_wrapper);
-  if (!pipe) {
-    throw std::runtime_error(
-        fmt::format("Unable to open pipe to command `{}`.", command));
-  }
-  std::array<char, 128> buffer;
-  while (fgets(buffer.data(), buffer.size(), pipe.get()) != nullptr) {
-    output += buffer.data();
-  }
-
-  // Function scope ensures the unique pointer goes out of scope and
-  // thus ensures invoking the close wrapper
-  return output;
-}
-
 // Performance optimization to avoid calling more expensive regex matches on
 // every line.
 bool maybe_class(const std::string& line) {
@@ -269,6 +244,31 @@ Positions::Positions(const Options& options, const DexStoresVector& stores) {
       "Indexed {} method lines in {:.2f}s.",
       method_to_line_.size(),
       method_lines_timer.duration_in_seconds());
+}
+
+std::string Positions::execute_and_catch_output(
+    const std::string& command,
+    int& return_code) {
+  auto pclose_wrapper = [&return_code](FILE* command) {
+    return_code = pclose(command);
+  };
+
+  std::string output;
+
+  std::unique_ptr<FILE, decltype(pclose_wrapper)> pipe(
+      popen(command.c_str(), "r"), pclose_wrapper);
+  if (!pipe) {
+    throw std::runtime_error(
+        fmt::format("Unable to open pipe to command `{}`.", command));
+  }
+  std::array<char, 128> buffer;
+  while (fgets(buffer.data(), buffer.size(), pipe.get()) != nullptr) {
+    output += buffer.data();
+  }
+
+  // Function scope ensures the unique pointer goes out of scope and
+  // thus ensures invoking the close wrapper
+  return output;
 }
 
 const Position* Positions::get(

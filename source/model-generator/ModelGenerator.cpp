@@ -481,10 +481,13 @@ Frame generator::sink(
     const std::vector<std::string>& features,
     Root::Kind callee_port,
     RootSetAbstractDomain via_type_of_ports,
-    RootSetAbstractDomain via_value_of_ports) {
+    RootSetAbstractDomain via_value_of_ports,
+    CanonicalNameSetAbstractDomain canonical_names) {
   // These ports must go with canonical names.
   mt_assert(
-      callee_port != Root::Kind::Anchor && callee_port != Root::Kind::Producer);
+      canonical_names.size() != 0 ||
+      (callee_port != Root::Kind::Anchor &&
+       callee_port != Root::Kind::Producer));
 
   FeatureSet user_features;
   for (const auto& feature : features) {
@@ -505,7 +508,7 @@ Frame generator::sink(
       /* via_type_of_ports */ via_type_of_ports,
       /* via_type_of_ports */ via_value_of_ports,
       /* local_positions */ {},
-      /* canonical_names */ {});
+      /* canonical_names */ canonical_names);
 }
 
 Frame generator::partial_sink(
