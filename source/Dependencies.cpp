@@ -104,8 +104,9 @@ Dependencies::Dependencies(
   }
 
   if (options.dump_dependencies()) {
-    LOG(1, "Writing dependencies to `dependencies.json`");
-    JsonValidation::write_json_file("dependencies.json", to_json());
+    auto dependencies_path = options.dependencies_output_path();
+    LOG(1, "Writing dependencies to `{}`", dependencies_path.native());
+    JsonValidation::write_json_file(dependencies_path, to_json());
   }
 }
 

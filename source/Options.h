@@ -71,6 +71,10 @@ class Options final {
   const boost::filesystem::path removed_symbols_output_path() const;
   const boost::filesystem::path models_output_path() const;
   const boost::filesystem::path methods_output_path() const;
+  const boost::filesystem::path call_graph_output_path() const;
+  const boost::filesystem::path class_hierarchies_output_path() const;
+  const boost::filesystem::path overrides_output_path() const;
+  const boost::filesystem::path dependencies_output_path() const;
 
   bool sequential() const;
   bool skip_source_indexing() const;

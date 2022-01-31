@@ -399,6 +399,22 @@ const boost::filesystem::path Options::methods_output_path() const {
   return output_directory_ / "methods.json";
 }
 
+const boost::filesystem::path Options::call_graph_output_path() const {
+  return output_directory_ / "call_graph.json";
+}
+
+const boost::filesystem::path Options::class_hierarchies_output_path() const {
+  return output_directory_ / "class_hierarchies.json";
+}
+
+const boost::filesystem::path Options::overrides_output_path() const {
+  return output_directory_ / "overrides.json";
+}
+
+const boost::filesystem::path Options::dependencies_output_path() const {
+  return output_directory_ / "dependencies.json";
+}
+
 bool Options::sequential() const {
   return sequential_;
 }

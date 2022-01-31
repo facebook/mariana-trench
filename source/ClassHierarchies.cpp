@@ -89,8 +89,11 @@ ClassHierarchies::ClassHierarchies(
   }
 
   if (options.dump_class_hierarchies()) {
-    LOG(1, "Writing class hierarchies to `class_hierarchies.json`");
-    JsonValidation::write_json_file("class_hierarchies.json", to_json());
+    auto class_hierarchies_path = options.class_hierarchies_output_path();
+    LOG(1,
+        "Writing class hierarchies to `{}`",
+        class_hierarchies_path.native());
+    JsonValidation::write_json_file(class_hierarchies_path, to_json());
   }
 }
 

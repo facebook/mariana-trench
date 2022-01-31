@@ -590,9 +590,10 @@ CallGraph::CallGraph(
   }
 
   if (options.dump_call_graph()) {
-    LOG(1, "Writing call graph to `call_graph.json`");
+    auto call_graph_path = options.call_graph_output_path();
+    LOG(1, "Writing call graph to `{}`", call_graph_path.native());
     JsonValidation::write_json_file(
-        "call_graph.json", to_json(/* with_overrides */ false));
+        call_graph_path, to_json(/* with_overrides */ false));
   }
 }
 

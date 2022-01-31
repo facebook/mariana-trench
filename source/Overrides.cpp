@@ -48,8 +48,9 @@ Overrides::Overrides(
   }
 
   if (options.dump_overrides()) {
-    LOG(1, "Writing override graph to `overrides.json`");
-    JsonValidation::write_json_file("overrides.json", to_json());
+    auto overrides_path = options.overrides_output_path();
+    LOG(1, "Writing override graph to `{}`", overrides_path.native());
+    JsonValidation::write_json_file(overrides_path, to_json());
   }
 }
 
