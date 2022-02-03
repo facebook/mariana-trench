@@ -1,0 +1,18 @@
+{
+  "model_generators": [
+    {
+      "find": "methods",
+      "where": [
+        {
+          "constraint": "returns_this"
+        }
+      ],
+      "model": {
+        "modes": [
+          "no-collapse-on-propagation",
+          "alias-memory-location-on-invoke"
+        ]
+      }
+    }
+  ]
+}

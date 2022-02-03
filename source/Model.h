@@ -110,6 +110,9 @@ class Model final {
     // Do not collapse input paths when applying propagations.
     NoCollapseOnPropagation = 0x40,
 
+    // Alias existing memory location on method invokes.
+    AliasMemoryLocationOnInvoke = 0x80,
+
     Normal = 0,
   };
 
@@ -269,6 +272,7 @@ class Model final {
   bool is_taint_in_taint_this() const;
   bool no_join_virtual_overrides() const;
   bool no_collapse_on_propagation() const;
+  bool alias_memory_location_on_invoke() const;
   Modes modes() const {
     return modes_;
   }
@@ -311,13 +315,14 @@ inline Model::Modes operator|(Model::Mode left, Model::Mode right) {
 std::string model_mode_to_string(Model::Mode mode);
 std::optional<Model::Mode> string_to_model_mode(const std::string& mode);
 
-constexpr std::array<Model::Mode, 7> k_all_modes = {
+constexpr std::array<Model::Mode, 8> k_all_modes = {
     Model::Mode::OverrideDefault,
     Model::Mode::SkipAnalysis,
     Model::Mode::AddViaObscureFeature,
     Model::Mode::TaintInTaintOut,
     Model::Mode::TaintInTaintThis,
     Model::Mode::NoJoinVirtualOverrides,
-    Model::Mode::NoCollapseOnPropagation};
+    Model::Mode::NoCollapseOnPropagation,
+    Model::Mode::AliasMemoryLocationOnInvoke};
 
 } // namespace marianatrench

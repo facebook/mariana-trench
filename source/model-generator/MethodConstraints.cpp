@@ -10,6 +10,7 @@
 #include <mariana-trench/Overrides.h>
 #include <mariana-trench/RE2.h>
 #include <mariana-trench/model-generator/MethodConstraints.h>
+#include <mariana-trench/model-generator/ReturnsThisAnalyzer.h>
 #include <mariana-trench/model-generator/TypeConstraints.h>
 
 namespace marianatrench {
@@ -419,7 +420,7 @@ bool ReturnConstraint::operator==(const MethodConstraint& other) const {
 ReturnsThisConstraint::ReturnsThisConstraint() {}
 
 bool ReturnsThisConstraint::satisfy(const Method* method) const {
-  return method->get_proto()->get_rtype()->str() == method->get_class()->str();
+  return returns_this_analyzer::method_returns_this(method);
 }
 
 bool ReturnsThisConstraint::operator==(const MethodConstraint& other) const {

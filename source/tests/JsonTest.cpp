@@ -1568,7 +1568,8 @@ TEST_F(JsonTest, Model) {
               "add-via-obscure-feature",
               "taint-in-taint-out",
               "no-join-virtual-overrides",
-              "no-collapse-on-propagation"
+              "no-collapse-on-propagation",
+              "alias-memory-location-on-invoke"
             ]
           })"),
           context),
@@ -1578,7 +1579,8 @@ TEST_F(JsonTest, Model) {
           Model::Mode::SkipAnalysis | Model::Mode::AddViaObscureFeature |
               Model::Mode::TaintInTaintOut |
               Model::Mode::NoJoinVirtualOverrides |
-              Model::Mode::NoCollapseOnPropagation));
+              Model::Mode::NoCollapseOnPropagation |
+              Model::Mode::AliasMemoryLocationOnInvoke));
   EXPECT_EQ(
       test::sorted_json(
           Model(
@@ -1587,12 +1589,14 @@ TEST_F(JsonTest, Model) {
               Model::Mode::SkipAnalysis | Model::Mode::AddViaObscureFeature |
                   Model::Mode::TaintInTaintOut | Model::Mode::TaintInTaintThis |
                   Model::Mode::NoJoinVirtualOverrides |
-                  Model::Mode::NoCollapseOnPropagation)
+                  Model::Mode::NoCollapseOnPropagation |
+                  Model::Mode::AliasMemoryLocationOnInvoke)
               .to_json()),
       test::parse_json(R"#({
         "method": "LData;.method:(LData;LData;)V",
         "modes": [
           "add-via-obscure-feature",
+          "alias-memory-location-on-invoke",
           "no-collapse-on-propagation",
           "no-join-virtual-overrides",
           "skip-analysis",

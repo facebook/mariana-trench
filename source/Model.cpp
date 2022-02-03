@@ -54,6 +54,8 @@ std::string model_mode_to_string(Model::Mode mode) {
       return "no-join-virtual-overrides";
     case Model::Mode::NoCollapseOnPropagation:
       return "no-collapse-on-propagation";
+    case Model::Mode::AliasMemoryLocationOnInvoke:
+      return "alias-memory-location-on-invoke";
     default:
       mt_unreachable();
   }
@@ -76,6 +78,8 @@ std::optional<Model::Mode> string_to_model_mode(const std::string& mode) {
     return Model::Mode::NoJoinVirtualOverrides;
   } else if (mode == "no-collapse-on-propagation") {
     return Model::Mode::NoCollapseOnPropagation;
+  } else if (mode == "alias-memory-location-on-invoke") {
+    return Model::Mode::AliasMemoryLocationOnInvoke;
   } else {
     return std::nullopt;
   }
@@ -857,6 +861,10 @@ bool Model::no_join_virtual_overrides() const {
 
 bool Model::no_collapse_on_propagation() const {
   return modes_.test(Model::Mode::NoCollapseOnPropagation);
+}
+
+bool Model::alias_memory_location_on_invoke() const {
+  return modes_.test(Model::Mode::AliasMemoryLocationOnInvoke);
 }
 
 bool Model::leq(const Model& other) const {

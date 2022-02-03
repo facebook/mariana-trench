@@ -387,8 +387,7 @@ void apply_propagations(
       // See the end-to-end test `no_collapse_on_propagation` for example.
       if (!callee.model.no_collapse_on_propagation()) {
         LOG_OR_DUMP(context, 4, "Collapsing taint tree {}", taint_tree);
-        auto taint = taint_tree.collapse();
-        taint_tree.write(propagation.input().path(), taint, UpdateKind::Strong);
+        taint_tree.collapse_inplace();
       }
 
       if (taint_tree.is_bottom()) {
@@ -794,6 +793,35 @@ void analyze_artificial_calls(
   }
 }
 
+MemoryLocation* MT_NULLABLE try_alias_this_location(
+    MethodContext* context,
+    AnalysisEnvironment* environment,
+    const Callee& callee,
+    const IRInstruction* instruction) {
+  if (!callee.model.alias_memory_location_on_invoke()) {
+    return nullptr;
+  }
+
+  if (callee.resolved_base_method && callee.resolved_base_method->is_static()) {
+    return nullptr;
+  }
+
+  auto register_id = instruction->srcs_vec().at(0);
+  auto memory_locations = environment->memory_locations(register_id);
+  if (!memory_locations.is_value() || memory_locations.size() != 1) {
+    return nullptr;
+  }
+
+  auto* memory_location = *memory_locations.elements().begin();
+  LOG_OR_DUMP(
+      context,
+      4,
+      "Method invoke aliasing existing memory location {}",
+      show(memory_location));
+
+  return memory_location;
+}
+
 // If the method invoke can be safely inlined, return the result memory
 // location, otherwise return nullptr.
 MemoryLocation* MT_NULLABLE try_inline_invoke(
@@ -868,16 +896,23 @@ bool Transfer::analyze_invoke(
         context, 4, "Setting result register to {}", show(memory_location));
     environment->assign(k_result_register, memory_location);
   } else {
+    // Check if the method can alias existing memory location
+    memory_location =
+        try_alias_this_location(context, environment, callee, instruction);
+
     // Assume the method call returns a new memory location,
     // that does not alias with anything.
-    memory_location = context->memory_factory.make_location(instruction);
+    if (memory_location == nullptr) {
+      memory_location = context->memory_factory.make_location(instruction);
+    }
+
     LOG_OR_DUMP(
         context, 4, "Setting result register to {}", show(memory_location));
     environment->assign(k_result_register, memory_location);
 
     LOG_OR_DUMP(
         context, 4, "Tainting {} with {}", show(memory_location), result_taint);
-    environment->write(memory_location, result_taint, UpdateKind::Strong);
+    environment->write(memory_location, result_taint, UpdateKind::Weak);
   }
 
   analyze_artificial_calls(context, instruction, environment);

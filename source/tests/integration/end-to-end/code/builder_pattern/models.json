@@ -1,0 +1,49 @@
+[
+  {
+    "method": "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;",
+    "generations": [
+      {
+        "kind": "Source",
+        "port": "Return"
+      }
+    ]
+  },
+  {
+    "method": "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
+    "sinks": [
+      {
+        "kind": "Sink",
+        "port": "Argument(0)"
+      }
+    ]
+  },
+  {
+    "method": "Lcom/facebook/marianatrench/integrationtests/Test$Builder;.<init>:()V",
+    "generations": [
+      {
+        "kind": "Source",
+        "port": "Argument(0)"
+      }
+    ]
+  },
+  {
+    "method": "Lcom/facebook/marianatrench/integrationtests/Test$Builder;.build:()Lcom/facebook/marianatrench/integrationtests/Test;",
+    "sinks": [
+      {
+        "kind": "Sink",
+        "port": "Argument(0)"
+      }
+    ]
+  },
+  {
+    "method": "Lcom/facebook/marianatrench/integrationtests/Test$Builder;.certificatePinner:(Ljava/lang/String;)Lcom/facebook/marianatrench/integrationtests/Test$Builder;",
+    "add_features_to_arguments": [
+      {
+        "features": [
+          "via-certificate-pinner"
+        ],
+        "port": "Argument(0)"
+      }
+    ]
+  }
+]

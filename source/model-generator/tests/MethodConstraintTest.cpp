@@ -484,24 +484,44 @@ TEST_F(MethodConstraintTest, ReturnsThisConstraint) {
       "LClass;",
       {
           R"(
-            (method (public static) "LClass;.method_1:(Z)LClass;"
+            (method (public) "LClass;.method_1:()LClass;"
             (
-              (return-void)
+              (load-param-object v1)
+              (return-object v1)
             )
             ))",
           R"(
             (method (public) "LClass;.method_2:(Z)Z;"
             (
-              (return-void)
+              (load-param v1)
+              (return v1)
+            )
+            ))",
+          R"(
+            (method (public) "LClass;.method_3:(Z)LClass;"
+            (
+              (load-param-object v1)
+              (load-param v2)
+              (new-instance "LClass;")
+              (move-result-pseudo-object v0)
+              (return-object v0)
             )
             ))",
       });
+
+  // ReturnsThis requires the cfg to be built.
+  for (auto* method : methods) {
+    method->get_code()->build_cfg();
+  }
 
   EXPECT_TRUE(
       ReturnsThisConstraint().satisfy(context.methods->create(methods[0])));
 
   EXPECT_FALSE(
       ReturnsThisConstraint().satisfy(context.methods->create(methods[1])));
+
+  EXPECT_FALSE(
+      ReturnsThisConstraint().satisfy(context.methods->create(methods[2])));
 }
 
 TEST_F(MethodConstraintTest, VisibilityMethodConstraint) {
