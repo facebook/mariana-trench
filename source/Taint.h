@@ -182,6 +182,16 @@ class Taint final : public sparta::AbstractDomain<Taint> {
 
   friend std::ostream& operator<<(std::ostream& out, const Taint& taint);
 
+  // Taint transformation methods by scenario
+
+  /**
+   * Appends `path_element` to the callee ports of all kind that pass `filter`
+   * (returns true).
+   */
+  void append_callee_port(
+      Path::Element path_element,
+      const std::function<bool(const Kind*)>& filter);
+
  private:
   Set set_;
 };

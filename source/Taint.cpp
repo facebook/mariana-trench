@@ -183,4 +183,16 @@ std::ostream& operator<<(std::ostream& out, const Taint& taint) {
   return out << taint.set_;
 }
 
+void Taint::append_callee_port(
+    Path::Element path_element,
+    const std::function<bool(const Kind*)>& filter) {
+  map([&](FrameSet& frames) {
+    if (filter(frames.kind())) {
+      frames.map([path_element](Frame& frame) {
+        frame.callee_port_append(path_element);
+      });
+    }
+  });
+}
+
 } // namespace marianatrench

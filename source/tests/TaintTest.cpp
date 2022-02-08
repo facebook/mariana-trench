@@ -697,4 +697,37 @@ TEST_F(TaintTest, TransformKind) {
       }));
 }
 
+TEST_F(TaintTest, AppendCalleePort) {
+  auto context = test::make_empty_context();
+
+  const auto* path_element1 = DexString::make_string("field1");
+  const auto* path_element2 = DexString::make_string("field2");
+
+  auto taint = Taint{
+      test::make_frame(
+          /* kind */ context.kinds->get("TestSource"), test::FrameProperties{}),
+      test::make_frame(
+          Kinds::artificial_source(),
+          test::FrameProperties{
+              .callee_port = AccessPath(
+                  Root(Root::Kind::Argument), Path{path_element1})})};
+
+  taint.append_callee_port(path_element2, [](const Kind* kind) {
+    return kind == Kinds::artificial_source();
+  });
+
+  EXPECT_EQ(
+      taint,
+      (Taint{
+          test::make_frame(
+              /* kind */ context.kinds->get("TestSource"),
+              test::FrameProperties{}),
+          test::make_frame(
+              Kinds::artificial_source(),
+              test::FrameProperties{
+                  .callee_port = AccessPath(
+                      Root(Root::Kind::Argument),
+                      Path{path_element1, path_element2})})}));
+}
+
 } // namespace marianatrench
