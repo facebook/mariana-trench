@@ -55,7 +55,7 @@ bool is_class_exported_via_uri(const DexClass* clazz) {
       }
 
       auto* patterns =
-          dynamic_cast<DexEncodedValueArray*>(element.encoded_value);
+          dynamic_cast<DexEncodedValueArray*>(element.encoded_value.get());
       mt_assert(patterns != nullptr);
 
       for (DexEncodedValue* encoded_pattern : *patterns->evalues()) {
