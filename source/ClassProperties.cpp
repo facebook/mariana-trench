@@ -42,8 +42,7 @@ bool is_class_exported_via_uri(const DexClass* clazz) {
   auto dfa_annotation = marianatrench::constants::get_dfa_annotation();
   auto private_schemes = marianatrench::constants::get_private_uri_schemes();
 
-  for (const DexAnnotation* annotation :
-       clazz->get_anno_set()->get_annotations()) {
+  for (const auto& annotation : clazz->get_anno_set()->get_annotations()) {
     if (!annotation->type() ||
         annotation->type()->str() != dfa_annotation.type) {
       continue;
@@ -95,10 +94,10 @@ bool is_class_exported_via_uri(const DexClass* clazz) {
 }
 
 std::optional<std::string> get_privacy_decision_number_from_annotations(
-    const std::vector<DexAnnotation*>& annotations) {
+    const std::vector<std::unique_ptr<DexAnnotation>>& annotations) {
   auto privacy_decision_type =
       marianatrench::constants::get_privacy_decision_type();
-  for (const DexAnnotation* annotation : annotations) {
+  for (const auto& annotation : annotations) {
     if (!annotation->type() ||
         annotation->type()->str() != privacy_decision_type) {
       continue;

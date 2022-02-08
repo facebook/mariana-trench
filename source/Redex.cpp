@@ -254,9 +254,8 @@ std::unique_ptr<DexAnnotationSet> redex::create_annotation_set(
   for (const std::string& anno : annotations) {
     const DexString* dstring = DexString::make_string(anno);
     DexType* dtype = DexType::make_type(dstring);
-    DexAnnotation* danno =
-        new DexAnnotation(dtype, DexAnnotationVisibility::DAV_RUNTIME);
-    dannoset->add_annotation(danno);
+    dannoset->add_annotation(std::make_unique<DexAnnotation>(
+        dtype, DexAnnotationVisibility::DAV_RUNTIME));
   }
 
   return dannoset;
