@@ -221,49 +221,35 @@ LocalPositionSet augment_local_positions(
   return Highlights::filter_overlapping_highlights(new_local_positions);
 }
 
-Frame augment_frame_position(
-    const Frame& frame,
+const Position* augment_frame_position(
+    const Method* callee,
+    const AccessPath& callee_port,
+    const Position* position,
     const FileLines& lines,
     const Context& context) {
-  if (frame.is_leaf()) {
-    return frame;
-  }
-  const auto* position = frame.call_position();
   mt_assert(position != nullptr);
-
-  const auto* callee = frame.callee();
   mt_assert(callee != nullptr);
+
   auto bounds = Highlights::get_callee_highlight_bounds(
-      callee->dex_method(), lines, position->line(), frame.callee_port());
-  return Frame(
-      frame.kind(),
-      frame.callee_port(),
-      callee,
-      frame.field_callee(),
-      context.positions->get(position, bounds.line, bounds.start, bounds.end),
-      frame.distance(),
-      frame.origins(),
-      frame.field_origins(),
-      frame.inferred_features(),
-      frame.locally_inferred_features(),
-      frame.user_features(),
-      frame.via_type_of_ports(),
-      frame.via_value_of_ports(),
-      augment_local_positions(frame.local_positions(), lines, context),
-      frame.canonical_names());
+      callee->dex_method(), lines, position->line(), callee_port);
+  return context.positions->get(
+      position, bounds.line, bounds.start, bounds.end);
 }
 
 Taint augment_taint_positions(
     Taint taint,
     const FileLines& lines,
     const Context& context) {
-  taint.map([&](FrameSet& frames) {
-    auto new_frames = FrameSet::bottom();
-    for (const auto& frame : frames) {
-      new_frames.add(augment_frame_position(frame, lines, context));
-    }
-    frames = std::move(new_frames);
-  });
+  taint.update_non_leaf_positions(
+      [&](const Method* callee,
+          const AccessPath& callee_port,
+          const Position* position) {
+        return augment_frame_position(
+            callee, callee_port, position, lines, context);
+      },
+      [&](const LocalPositionSet& local_positions) {
+        return augment_local_positions(local_positions, lines, context);
+      });
   return taint;
 }
 

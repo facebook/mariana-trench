@@ -7,6 +7,7 @@
 
 #include <gmock/gmock.h>
 
+#include <mariana-trench/LocalPositionSet.h>
 #include <mariana-trench/Redex.h>
 #include <mariana-trench/Taint.h>
 #include <mariana-trench/tests/Test.h>
@@ -728,6 +729,100 @@ TEST_F(TaintTest, AppendCalleePort) {
                   .callee_port = AccessPath(
                       Root(Root::Kind::Argument),
                       Path{path_element1, path_element2})})}));
+}
+
+TEST_F(TaintTest, UpdateNonLeafPositions) {
+  auto context = test::make_empty_context();
+
+  Scope scope;
+  auto* method1 =
+      context.methods->create(redex::create_void_method(scope, "LOne;", "one"));
+  auto* method2 =
+      context.methods->create(redex::create_void_method(scope, "LTwo;", "two"));
+  auto* method3 = context.methods->create(
+      redex::create_void_method(scope, "LThree;", "three"));
+
+  auto dex_position1 = DexPosition(/* line */ 1);
+  auto dex_position2 = DexPosition(/* line */ 2);
+  auto dex_position3 = DexPosition(/* line */ 3);
+
+  auto position1 = context.positions->get(method1, &dex_position1);
+  auto position2 = context.positions->get(method2, &dex_position2);
+  auto position3 = context.positions->get(method2, &dex_position3);
+
+  auto taint = Taint{
+      test::make_frame(
+          /* kind */ context.kinds->get("LeafFrame"), test::FrameProperties{}),
+      test::make_frame(
+          /* kind */ context.kinds->get("NonLeafFrame1"),
+          test::FrameProperties{
+              .callee = method1,
+              .callee_port = AccessPath(Root(Root::Kind::Return)),
+              .call_position = position1}),
+      test::make_frame(
+          /* kind */ context.kinds->get("NonLeafFrame2"),
+          test::FrameProperties{
+              .callee = method2,
+              .callee_port = AccessPath(Root(Root::Kind::Argument)),
+              .call_position = position2}),
+      test::make_frame(
+          /* kind */ context.kinds->get("NonLeafFrame3"),
+          test::FrameProperties{
+              .callee = method3,
+              .callee_port = AccessPath(Root(Root::Kind::Argument, 1)),
+              .call_position = position3})};
+
+  taint.update_non_leaf_positions(
+      [&](const Method* callee,
+          const AccessPath& callee_port,
+          const Position* position) {
+        if (callee == method1) {
+          return context.positions->get(
+              position, /* line */ 10, /* start */ 11, /* end */ 12);
+        } else if (callee_port == AccessPath(Root(Root::Kind::Argument))) {
+          return context.positions->get(
+              position, /* line */ 20, /* start */ 21, /* end */ 22);
+        }
+        return position;
+      },
+      [&](const LocalPositionSet& local_positions) {
+        LocalPositionSet new_local_positions = local_positions;
+        new_local_positions.add(position1);
+        return new_local_positions;
+      });
+
+  LocalPositionSet expected_local_positions;
+  expected_local_positions.add(position1);
+
+  EXPECT_EQ(
+      taint,
+      (Taint{
+          test::make_frame(
+              /* kind */ context.kinds->get("LeafFrame"),
+              test::FrameProperties{}),
+          test::make_frame(
+              /* kind */ context.kinds->get("NonLeafFrame1"),
+              test::FrameProperties{
+                  .callee = method1,
+                  .callee_port = AccessPath(Root(Root::Kind::Return)),
+                  .call_position = context.positions->get(
+                      position1, /* line */ 10, /* start */ 11, /* end */ 12),
+                  .local_positions = expected_local_positions}),
+          test::make_frame(
+              /* kind */ context.kinds->get("NonLeafFrame2"),
+              test::FrameProperties{
+                  .callee = method2,
+                  .callee_port = AccessPath(Root(Root::Kind::Argument)),
+                  .call_position = context.positions->get(
+                      position2, /* line */ 20, /* start */ 21, /* end */ 22),
+                  .local_positions = expected_local_positions}),
+          test::make_frame(
+              /* kind */ context.kinds->get("NonLeafFrame3"),
+              test::FrameProperties{
+                  .callee = method3,
+                  .callee_port = AccessPath(Root(Root::Kind::Argument, 1)),
+                  .call_position = position3,
+                  .local_positions = expected_local_positions})}));
 }
 
 } // namespace marianatrench
