@@ -247,4 +247,22 @@ bool Taint::contains_kind(const Kind* kind) const {
   });
 }
 
+std::unordered_map<const Kind*, Taint> Taint::partition_by_kind() const {
+  std::unordered_map<const Kind*, Taint> result;
+  for (const auto& frame_set : *this) {
+    result.emplace(frame_set.kind(), Taint{frame_set});
+  }
+  return result;
+}
+
+FeatureMayAlwaysSet Taint::features_joined() const {
+  auto features = FeatureMayAlwaysSet::bottom();
+  for (const auto& frame_set : *this) {
+    for (const auto& frame : frame_set) {
+      features.join_with(frame.features());
+    }
+  }
+  return features;
+}
+
 } // namespace marianatrench

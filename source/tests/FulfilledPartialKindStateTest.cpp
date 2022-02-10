@@ -77,7 +77,7 @@ TEST_F(FulfilledPartialKindStateTest, Basic) {
           /* rule */ rule_1.get(),
           /* features */ FeatureMayAlwaysSet{feature_1},
           /* context */ &method_context,
-          /* sink */ FrameSet{sink_frame}));
+          /* sink */ Taint{sink_frame}));
   EXPECT_EQ(
       FeatureMayAlwaysSet{feature_1},
       state.get_features(fulfilled, rule_1.get()));
@@ -100,7 +100,7 @@ TEST_F(FulfilledPartialKindStateTest, Basic) {
           /* rule */ rule_2.get(),
           /* features */ FeatureMayAlwaysSet{},
           /* context */ &method_context,
-          /* sink */ FrameSet{sink_frame}));
+          /* sink */ Taint{sink_frame}));
   EXPECT_EQ(FeatureMayAlwaysSet{}, state.get_features(fulfilled, rule_2.get()));
   EXPECT_EQ(
       fulfilled, state.get_fulfilled_counterpart(unfulfilled, rule_2.get()));
@@ -118,13 +118,15 @@ TEST_F(FulfilledPartialKindStateTest, Basic) {
       test::FrameProperties{
           .inferred_features = FeatureMayAlwaysSet{feature_2}});
   EXPECT_EQ(
-      state.fulfill_kind(
-          /* kind */ unfulfilled,
-          /* rule */ rule_1.get(),
-          /* features */ FeatureMayAlwaysSet{},
-          /* context */ &method_context,
-          /* sink */ FrameSet{unfulfilled_sink_frame}),
-      FrameSet{test::make_frame(
+      state
+          .fulfill_kind(
+              /* kind */ unfulfilled,
+              /* rule */ rule_1.get(),
+              /* features */ FeatureMayAlwaysSet{},
+              /* context */ &method_context,
+              /* sink */ Taint{unfulfilled_sink_frame})
+          .value(),
+      Taint{test::make_frame(
           /* kind */ context.kinds->get_triggered(unfulfilled, rule_1.get()),
           test::FrameProperties{
               .inferred_features = FeatureMayAlwaysSet{feature_2},

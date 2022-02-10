@@ -218,6 +218,17 @@ class Taint final : public sparta::AbstractDomain<Taint> {
    */
   bool contains_kind(const Kind*) const;
 
+  /**
+   * Returns a map of `Kind` -> `Taint`, where each `Taint` value contains only
+   * the frames with the `Kind` in its key.
+   */
+  std::unordered_map<const Kind*, Taint> partition_by_kind() const;
+
+  /**
+   * Returns all features for this taint tree, joined as `FeatureMayAlwaysSet`.
+   */
+  FeatureMayAlwaysSet features_joined() const;
+
  private:
   Set set_;
 };

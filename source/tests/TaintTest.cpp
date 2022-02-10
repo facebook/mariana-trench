@@ -7,6 +7,7 @@
 
 #include <gmock/gmock.h>
 
+#include <mariana-trench/FeatureMayAlwaysSet.h>
 #include <mariana-trench/LocalPositionSet.h>
 #include <mariana-trench/Redex.h>
 #include <mariana-trench/Taint.h>
@@ -908,6 +909,92 @@ TEST_F(TaintTest, ContainsKind) {
   EXPECT_TRUE(taint.contains_kind(Kinds::artificial_source()));
   EXPECT_TRUE(taint.contains_kind(context.kinds->get("TestSource")));
   EXPECT_FALSE(taint.contains_kind(context.kinds->get("TestSink")));
+}
+
+TEST_F(TaintTest, PartitionByKind) {
+  auto context = test::make_empty_context();
+
+  Scope scope;
+  auto* method1 =
+      context.methods->create(redex::create_void_method(scope, "LOne;", "one"));
+  auto* method2 =
+      context.methods->create(redex::create_void_method(scope, "LTwo;", "two"));
+
+  auto taint = Taint{
+      test::make_frame(
+          /* kind */ context.kinds->get("TestSource1"),
+          test::FrameProperties{}),
+      test::make_frame(
+          /* kind */ context.kinds->get("TestSource2"),
+          test::FrameProperties{}),
+      test::make_frame(
+          /* kind */ context.kinds->get("TestSource3"),
+          test::FrameProperties{.callee = method1}),
+      test::make_frame(
+          /* kind */ context.kinds->get("TestSource3"),
+          test::FrameProperties{.callee = method2})};
+
+  auto taint_by_kind = taint.partition_by_kind();
+  EXPECT_TRUE(taint_by_kind.size() == 3);
+  EXPECT_EQ(
+      taint_by_kind[context.kinds->get("TestSource1")],
+      Taint{test::make_frame(
+          /* kind */ context.kinds->get("TestSource1"),
+          test::FrameProperties{})});
+  EXPECT_EQ(
+      taint_by_kind[context.kinds->get("TestSource2")],
+      Taint{test::make_frame(
+          /* kind */ context.kinds->get("TestSource2"),
+          test::FrameProperties{})});
+  EXPECT_EQ(
+      taint_by_kind[context.kinds->get("TestSource3")],
+      (Taint{
+          test::make_frame(
+              /* kind */ context.kinds->get("TestSource3"),
+              test::FrameProperties{.callee = method1}),
+          test::make_frame(
+              /* kind */ context.kinds->get("TestSource3"),
+              test::FrameProperties{.callee = method2})}));
+}
+
+TEST_F(TaintTest, FeaturesJoined) {
+  auto context = test::make_empty_context();
+
+  Scope scope;
+  auto* method1 =
+      context.methods->create(redex::create_void_method(scope, "LOne;", "one"));
+  auto* method2 =
+      context.methods->create(redex::create_void_method(scope, "LTwo;", "two"));
+
+  auto* feature1 = context.features->get("Feature1");
+  auto* feature2 = context.features->get("Feature2");
+  auto* feature3 = context.features->get("Feature3");
+
+  auto taint = Taint{
+      test::make_frame(
+          /* kind */ context.kinds->get("TestSource"),
+          test::FrameProperties{
+              .callee = method1,
+              .inferred_features = FeatureMayAlwaysSet{feature1}}),
+      test::make_frame(
+          /* kind */ context.kinds->get("TestSource"),
+          test::FrameProperties{
+              .callee = method2,
+              .inferred_features = FeatureMayAlwaysSet(
+                  /* may */ FeatureSet{feature2},
+                  /* always */ FeatureSet{feature3}),
+              .locally_inferred_features = FeatureMayAlwaysSet{feature1}})};
+
+  // In practice, features_joined() is called on `Taint` objects with only one
+  // underlying kind. The expected behavior is to first merge locally inferred
+  // features within each frame (this is an add() operation, not join()), then
+  // perform a join() across all frames that have different callees/positions.
+
+  EXPECT_EQ(
+      taint.features_joined(),
+      FeatureMayAlwaysSet(
+          /* may */ FeatureSet{feature2, feature3},
+          /* always */ FeatureSet{feature1}));
 }
 
 } // namespace marianatrench

@@ -10,21 +10,32 @@
 
 namespace marianatrench {
 
-std::optional<FrameSet> FulfilledPartialKindState::fulfill_kind(
+std::optional<Taint> FulfilledPartialKindState::fulfill_kind(
     const PartialKind* kind,
     const MultiSourceMultiSinkRule* rule,
     const FeatureMayAlwaysSet& features,
     MethodContext* context,
-    const FrameSet& sink) {
+    const Taint& sink) {
   const auto* counterpart = get_fulfilled_counterpart(kind, rule);
   if (counterpart) {
     // If both partial sinks for the callsite have been fulfilled, the rule
     // is satisfied. Make this a triggered sink and create the sink flow
-    // (FrameSet) for the issue. Include the features from both flows.
-    mt_assert(sink.kind() == kind);
-    auto issue_sink = sink.with_kind(context->kinds.get_triggered(kind, rule));
-    issue_sink.add_inferred_features(get_features(counterpart, rule));
-    issue_sink.add_inferred_features(features);
+    // (FrameSet) for the issue. Include the features from both flows (using
+    // .add, NOT .join).
+    const auto* triggered_kind = context->kinds.get_triggered(kind, rule);
+    auto sink_features = get_features(counterpart, rule);
+    sink_features.add(features);
+
+    auto issue_sink = sink.transform_map_kind(
+        [&](const Kind* sink_kind) {
+          // The given taint should only contain the given partial kind.
+          // Transform it into the triggered kind.
+          mt_assert(sink_kind == kind);
+          return std::vector<const Kind*>{triggered_kind};
+        },
+        [&](FrameSet& frame_set) {
+          frame_set.add_inferred_features(sink_features);
+        });
     erase(counterpart, rule);
     return issue_sink;
   }

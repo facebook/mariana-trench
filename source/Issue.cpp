@@ -127,16 +127,8 @@ void Issue::filter_sinks(
 }
 
 FeatureMayAlwaysSet Issue::features() const {
-  auto source_features = FeatureMayAlwaysSet::bottom();
-  for (const auto& frames : sources_) {
-    source_features.join_with(frames.features_joined());
-  }
-
-  auto sink_features = FeatureMayAlwaysSet::bottom();
-  for (const auto& frames : sinks_) {
-    sink_features.join_with(frames.features_joined());
-  }
-
+  auto source_features = sources_.features_joined();
+  auto sink_features = sinks_.features_joined();
   source_features.add(sink_features);
   return source_features;
 }

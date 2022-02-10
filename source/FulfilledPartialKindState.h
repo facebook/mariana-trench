@@ -41,18 +41,18 @@ class FulfilledPartialKindState final {
    * `features` is the combined set of features from the source and sink flow
    * of the fulfilled rule.
    * `context` MethodContext of the method where the kind was fulfilled.
-   * `sink` FrameSet of the sink portion of the fulfilled flow.
+   * `sink` Taint of the sink portion of the fulfilled flow.
    *
-   * Returns `std::nullopt` if rule is only half fulfilled, or a FrameSet
+   * Returns `std::nullopt` if rule is only half fulfilled, or a Taint
    * representing the sink flow of the issue if both parts of the rule is
    * fulfilled.
    */
-  std::optional<FrameSet> fulfill_kind(
+  std::optional<Taint> fulfill_kind(
       const PartialKind* kind,
       const MultiSourceMultiSinkRule* rule,
       const FeatureMayAlwaysSet& features,
       MethodContext* context,
-      const FrameSet& sink);
+      const Taint& sink);
 
   /**
    * Given an `unfufilled_kind`, check if its counterpart flow has been

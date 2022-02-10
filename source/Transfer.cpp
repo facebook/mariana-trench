@@ -491,8 +491,8 @@ void apply_propagations(
 
 void create_issue(
     MethodContext* context,
-    FrameSet source,
-    FrameSet sink,
+    Taint source,
+    Taint sink,
     const Rule* rule,
     const Position* position,
     const FeatureMayAlwaysSet& extra_features) {
@@ -510,13 +510,15 @@ void create_issue(
 // each argument at a callsite (an invoke operation).
 void check_multi_source_multi_sink_rules(
     MethodContext* context,
-    const FrameSet& source,
-    const FrameSet& sink,
+    const Kind* source_kind,
+    const Taint& source,
+    const Kind* sink_kind,
+    const Taint& sink,
     FulfilledPartialKindState& fulfilled_partial_sinks,
     const MultiSourceMultiSinkRule* rule,
     const Position* position,
     const FeatureMayAlwaysSet& extra_features) {
-  const auto* partial_sink = sink.kind()->as<PartialKind>();
+  const auto* partial_sink = sink_kind->as<PartialKind>();
   mt_assert(partial_sink != nullptr);
 
   // Features found by this branch of the multi-source-sink flow. Should be
@@ -535,7 +537,7 @@ void check_multi_source_multi_sink_rules(
         context,
         4,
         "Found source kind: {} flowing into partial sink: {}, rule code: {}",
-        *source.kind(),
+        *source_kind,
         *partial_sink,
         rule->code());
   }
@@ -631,29 +633,34 @@ void check_flows(
     return;
   }
 
-  for (const auto& source : sources) {
-    if (source.is_artificial_sources()) {
+  auto sources_by_kind = sources.partition_by_kind();
+  auto sinks_by_kind = sinks.partition_by_kind();
+  for (const auto& [source_kind, source_taint] : sources_by_kind) {
+    if (source_kind == Kinds::artificial_source()) {
       continue;
     }
 
-    for (const auto& sink : sinks) {
+    for (const auto& [sink_kind, sink_taint] : sinks_by_kind) {
       // Check if this satisfies any rule. If so, create the issue.
-      const auto& rules = context->rules.rules(source.kind(), sink.kind());
+      const auto& rules = context->rules.rules(source_kind, sink_kind);
       for (const auto* rule : rules) {
-        create_issue(context, source, sink, rule, position, extra_features);
+        create_issue(
+            context, source_taint, sink_taint, rule, position, extra_features);
       }
 
       // Check if this satisfies any partial (multi-source/sink) rule.
       if (fulfilled_partial_sinks) {
-        const auto* MT_NULLABLE partial_sink = sink.kind()->as<PartialKind>();
+        const auto* MT_NULLABLE partial_sink = sink_kind->as<PartialKind>();
         if (partial_sink) {
           const auto& partial_rules =
-              context->rules.partial_rules(source.kind(), partial_sink);
+              context->rules.partial_rules(source_kind, partial_sink);
           for (const auto* partial_rule : partial_rules) {
             check_multi_source_multi_sink_rules(
                 context,
-                source,
-                sink,
+                source_kind,
+                source_taint,
+                sink_kind,
+                sink_taint,
                 *fulfilled_partial_sinks,
                 partial_rule,
                 position,
