@@ -204,6 +204,20 @@ class Taint final : public sparta::AbstractDomain<Taint> {
       const std::function<LocalPositionSet(const LocalPositionSet&)>&
           new_local_positions);
 
+  /**
+   * Drops frames that are considered invalid.
+   * `is_valid` is given callee (nullptr for leaves), callee_port, kind.
+   */
+  void filter_invalid_frames(
+      const std::function<
+          bool(const Method* MT_NULLABLE, const AccessPath&, const Kind*)>&
+          is_valid);
+
+  /**
+   * Returns true if any frame contains the given kind.
+   */
+  bool contains_kind(const Kind*) const;
+
  private:
   Set set_;
 };

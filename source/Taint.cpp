@@ -231,4 +231,20 @@ void Taint::update_non_leaf_positions(
   });
 }
 
+void Taint::filter_invalid_frames(
+    const std::function<bool(const Method*, const AccessPath&, const Kind*)>&
+        is_valid) {
+  map([&](FrameSet& frames) {
+    frames.filter([&](const Frame& frame) {
+      return is_valid(frame.callee(), frame.callee_port(), frame.kind());
+    });
+  });
+}
+
+bool Taint::contains_kind(const Kind* kind) const {
+  return std::any_of(begin(), end(), [&](const FrameSet& frames) {
+    return frames.kind() == kind;
+  });
+}
+
 } // namespace marianatrench
