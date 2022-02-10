@@ -58,14 +58,6 @@ void Taint::difference_with(const Taint& other) {
   set_.difference_with(other.set_);
 }
 
-void Taint::map(const std::function<void(FrameSet&)>& f) {
-  set_.map(f);
-}
-
-void Taint::filter(const std::function<bool(const FrameSet&)>& predicate) {
-  set_.filter(predicate);
-}
-
 void Taint::add_inferred_features(const FeatureMayAlwaysSet& features) {
   if (features.empty()) {
     return;
@@ -263,6 +255,14 @@ FeatureMayAlwaysSet Taint::features_joined() const {
     }
   }
   return features;
+}
+
+void Taint::map(const std::function<void(FrameSet&)>& f) {
+  set_.map(f);
+}
+
+void Taint::filter(const std::function<bool(const FrameSet&)>& predicate) {
+  set_.filter(predicate);
 }
 
 } // namespace marianatrench

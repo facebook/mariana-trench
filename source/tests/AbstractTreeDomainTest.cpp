@@ -1118,12 +1118,8 @@ namespace {
 
 struct PropagateArtificialSources {
   Taint operator()(Taint taint, Path::Element path_element) const {
-    taint.map([path_element](FrameSet& frames) {
-      if (frames.is_artificial_sources()) {
-        frames.map([path_element](Frame& frame) {
-          frame.callee_port_append(path_element);
-        });
-      }
+    taint.append_callee_port(path_element, [&](const Kind* kind) {
+      return kind == Kinds::artificial_source();
     });
     return taint;
   }

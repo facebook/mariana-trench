@@ -132,10 +132,6 @@ class Taint final : public sparta::AbstractDomain<Taint> {
 
   void difference_with(const Taint& other);
 
-  void map(const std::function<void(FrameSet&)>& f);
-
-  void filter(const std::function<bool(const FrameSet&)>& predicate);
-
   void add_inferred_features(const FeatureMayAlwaysSet& features);
 
   void add_local_position(const Position* position);
@@ -228,6 +224,11 @@ class Taint final : public sparta::AbstractDomain<Taint> {
    * Returns all features for this taint tree, joined as `FeatureMayAlwaysSet`.
    */
   FeatureMayAlwaysSet features_joined() const;
+
+ private:
+  void map(const std::function<void(FrameSet&)>& f);
+
+  void filter(const std::function<bool(const FrameSet&)>& predicate);
 
  private:
   Set set_;
