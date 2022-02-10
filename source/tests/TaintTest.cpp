@@ -571,13 +571,15 @@ TEST_F(TaintTest, TransformKind) {
   };
 
   // This works the same way as filter.
-  auto empty_taint = taint.transform_map_kind(
+  auto empty_taint = taint.transform_kind_with_features(
       [](const auto* /* unused kind */) { return std::vector<const Kind*>(); },
-      [](FrameSet&) {});
+      [](const auto* /* unused kind */) {
+        return FeatureMayAlwaysSet::bottom();
+      });
   EXPECT_EQ(empty_taint, Taint::bottom());
 
   // This actually performs a transformation.
-  auto map_test_source_taint = taint.transform_map_kind(
+  auto map_test_source_taint = taint.transform_kind_with_features(
       [test_source,
        transformed_test_source](const auto* kind) -> std::vector<const Kind*> {
         if (kind == test_source) {
@@ -585,7 +587,9 @@ TEST_F(TaintTest, TransformKind) {
         }
         return {kind};
       },
-      [](FrameSet&) {});
+      [](const auto* /* unused kind */) {
+        return FeatureMayAlwaysSet::bottom();
+      });
   EXPECT_EQ(
       map_test_source_taint,
       (Taint{
@@ -619,15 +623,15 @@ TEST_F(TaintTest, TransformKind) {
       }));
 
   // Another transformation. Covers mapping transformed frames.
-  map_test_source_taint = taint.transform_map_kind(
+  map_test_source_taint = taint.transform_kind_with_features(
       [test_source, transformed_test_source](const auto* kind) {
         if (kind == test_source) {
           return std::vector<const Kind*>{transformed_test_source};
         }
         return std::vector<const Kind*>{kind};
       },
-      [feature_one](FrameSet& frames) {
-        frames.add_inferred_features(FeatureMayAlwaysSet{feature_one});
+      [feature_one](const auto* /* unused kind */) {
+        return FeatureMayAlwaysSet{feature_one};
       });
   EXPECT_EQ(
       map_test_source_taint,
@@ -663,7 +667,7 @@ TEST_F(TaintTest, TransformKind) {
       }));
 
   // Tests one -> many transformations (with features).
-  map_test_source_taint = taint.transform_map_kind(
+  map_test_source_taint = taint.transform_kind_with_features(
       [test_source, transformed_test_source, transformed_test_source2](
           const auto* kind) {
         if (kind == test_source) {
@@ -672,8 +676,8 @@ TEST_F(TaintTest, TransformKind) {
         }
         return std::vector<const Kind*>{};
       },
-      [feature_one](FrameSet& frames) {
-        frames.add_inferred_features(FeatureMayAlwaysSet{feature_one});
+      [feature_one](const auto* /* unused kind */) {
+        return FeatureMayAlwaysSet{feature_one};
       });
   EXPECT_EQ(
       map_test_source_taint,
@@ -695,6 +699,38 @@ TEST_F(TaintTest, TransformKind) {
               test::FrameProperties{
                   .origins = MethodSet{one},
                   .locally_inferred_features = FeatureMayAlwaysSet{feature_one},
+                  .user_features = FeatureSet{user_feature_one}}),
+      }));
+
+  // Tests transformations with features added to specific kinds.
+  map_test_source_taint = taint.transform_kind_with_features(
+      [test_source, transformed_test_source, transformed_test_source2](
+          const auto* kind) {
+        if (kind == test_source) {
+          return std::vector<const Kind*>{
+              transformed_test_source, transformed_test_source2};
+        }
+        return std::vector<const Kind*>{};
+      },
+      [&](const auto* transformed_kind) {
+        if (transformed_kind == transformed_test_source) {
+          return FeatureMayAlwaysSet{feature_one};
+        }
+        return FeatureMayAlwaysSet::bottom();
+      });
+  EXPECT_EQ(
+      map_test_source_taint,
+      (Taint{
+          test::make_frame(
+              /* kind */ transformed_test_source,
+              test::FrameProperties{
+                  .origins = MethodSet{one},
+                  .locally_inferred_features = FeatureMayAlwaysSet{feature_one},
+                  .user_features = FeatureSet{user_feature_one}}),
+          test::make_frame(
+              /* kind */ transformed_test_source2,
+              test::FrameProperties{
+                  .origins = MethodSet{one},
                   .user_features = FeatureSet{user_feature_one}}),
       }));
 }

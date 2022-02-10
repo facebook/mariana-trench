@@ -137,9 +137,9 @@ Taint Taint::attach_position(const Position* position) const {
   return result;
 }
 
-Taint Taint::transform_map_kind(
+Taint Taint::transform_kind_with_features(
     const std::function<std::vector<const Kind*>(const Kind*)>& transform_kind,
-    const std::function<void(FrameSet&)>& map_frame_set) const {
+    const std::function<FeatureMayAlwaysSet(const Kind*)>& add_features) const {
   Taint new_taint;
   for (const auto& frame_set : set_) {
     const auto* old_kind = frame_set.kind();
@@ -153,7 +153,7 @@ Taint Taint::transform_map_kind(
         // Even if new_kind == old_kind for some new_kind, perform map_frame_set
         // because a transformation occurred.
         auto new_frame_set = frame_set.with_kind(new_kind);
-        map_frame_set(new_frame_set);
+        new_frame_set.add_inferred_features(add_features(new_kind));
         new_taint.add(new_frame_set);
       }
     }

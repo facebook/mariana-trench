@@ -170,12 +170,12 @@ class Taint final : public sparta::AbstractDomain<Taint> {
    * Transforms kinds in the taint according to the function in the first arg.
    * Returning an empty vec will cause frames for the input kind to be dropped.
    * If a transformation occurs (returns more than a vector containing just the
-   * input kind), a map operation in the second arg will be called on the
-   * resulting FrameSets (of all returned kinds).
+   * input kind), locally inferred features can be added to the frames of the
+   * transformed kinds (return `bottom()` to add nothing).
    */
-  Taint transform_map_kind(
+  Taint transform_kind_with_features(
       const std::function<std::vector<const Kind*>(const Kind*)>&,
-      const std::function<void(FrameSet&)>&) const;
+      const std::function<FeatureMayAlwaysSet(const Kind*)>&) const;
 
   static Taint from_json(const Json::Value& value, Context& context);
   Json::Value to_json() const;

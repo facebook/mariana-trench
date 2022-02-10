@@ -741,14 +741,14 @@ Taint Model::apply_source_sink_sanitizers(
         if (sanitizer.kinds().is_top()) {
           return Taint::bottom();
         }
-        taint = taint.transform_map_kind(
+        taint = taint.transform_kind_with_features(
             [&sanitizer](const Kind* kind) -> std::vector<const Kind*> {
               if (sanitizer.kinds().contains(kind)) {
                 return {};
               }
               return {kind};
             },
-            /* map_frame_set */ nullptr);
+            /* add_features, never called */ nullptr);
       }
     }
   }
@@ -1333,7 +1333,8 @@ void Model::remove_kinds(const std::unordered_set<const Kind*>& to_remove) {
     return std::vector<const Kind*>{kind};
   };
   auto map = [&drop_special_kinds](Taint& taint) -> void {
-    taint = taint.transform_map_kind(drop_special_kinds, nullptr);
+    taint = taint.transform_kind_with_features(
+        drop_special_kinds, /* add_features, never called */ nullptr);
   };
 
   generations_.map(map);

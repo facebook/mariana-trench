@@ -543,13 +543,12 @@ void check_multi_source_multi_sink_rules(
   }
 }
 
-void add_fulfilled_sink_features(
+FeatureMayAlwaysSet get_fulfilled_sink_features(
     const FulfilledPartialKindState& fulfilled_partial_sinks,
-    FrameSet& new_frame_set) {
-  mt_assert(!new_frame_set.is_bottom());
-  const auto* new_kind = new_frame_set.kind()->as<TriggeredPartialKind>();
-  // Called only after transform_partial_sinks above creates a `new_frame_set`
-  // containing the triggered kind, so this must be a TriggeredPartialKind.
+    const Kind* transformed_sink_kind) {
+  const auto* new_kind = transformed_sink_kind->as<TriggeredPartialKind>();
+  // Called only after transform_kind_with_features creates a triggered kind,
+  // so this must be a TriggeredPartialKind.
   mt_assert(new_kind != nullptr);
   const auto* rule = new_kind->rule();
   const auto* counterpart = fulfilled_partial_sinks.get_fulfilled_counterpart(
@@ -557,8 +556,7 @@ void add_fulfilled_sink_features(
 
   // A triggered kind was created, so its counterpart must exist.
   mt_assert(counterpart != nullptr);
-  new_frame_set.add_inferred_features(
-      fulfilled_partial_sinks.get_features(counterpart, rule));
+  return fulfilled_partial_sinks.get_features(counterpart, rule);
 }
 
 void create_sinks(
@@ -581,7 +579,7 @@ void create_sinks(
           artificial_source.callee_port().root()));
       features.add(artificial_source.features());
 
-      auto new_sinks = sinks.transform_map_kind(
+      auto new_sinks = sinks.transform_kind_with_features(
           [context, &fulfilled_partial_sinks](
               const Kind* sink_kind) -> std::vector<const Kind*> {
             const auto* partial_sink = sink_kind->as<PartialKind>();
@@ -592,8 +590,9 @@ void create_sinks(
             return fulfilled_partial_sinks.make_triggered_counterparts(
                 context, /* unfulfilled_kind */ partial_sink);
           },
-          [&fulfilled_partial_sinks](FrameSet& new_frame_set) {
-            add_fulfilled_sink_features(fulfilled_partial_sinks, new_frame_set);
+          [&fulfilled_partial_sinks](const Kind* new_kind) {
+            return get_fulfilled_sink_features(
+                fulfilled_partial_sinks, new_kind);
           });
       new_sinks.add_inferred_features(features);
       new_sinks.set_local_positions(source.local_positions());
