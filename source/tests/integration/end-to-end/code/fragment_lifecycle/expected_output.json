@@ -386,12 +386,18 @@
       [
         "via-cast:Ljava/lang/String;"
       ],
-      "position" : {},
+      "position" : 
+      {
+        "line" : 0
+      },
       "rule" : 1,
       "sinks" : 
       [
         {
-          "call_position" : {},
+          "call_position" : 
+          {
+            "line" : 0
+          },
           "callee" : "Lcom/facebook/marianatrench/integrationtests/SimpleFragment;.onStart:()V",
           "callee_port" : "Argument(0).mTainted",
           "distance" : 2,
@@ -409,7 +415,10 @@
           [
             "via-cast:Ljava/lang/String;"
           ],
-          "call_position" : {},
+          "call_position" : 
+          {
+            "line" : 0
+          },
           "callee" : "Lcom/facebook/marianatrench/integrationtests/SimpleFragment;.onCreate:(Landroid/os/Bundle;)V",
           "callee_port" : "Argument(0).mTainted",
           "distance" : 2,
@@ -427,7 +436,10 @@
   "sinks" : 
   [
     {
-      "call_position" : {},
+      "call_position" : 
+      {
+        "line" : 0
+      },
       "callee" : "Lcom/facebook/marianatrench/integrationtests/SimpleFragment;.onStart:()V",
       "callee_port" : "Argument(0).mTainted",
       "caller_port" : "Argument(0).mTainted",
