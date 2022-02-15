@@ -7,6 +7,7 @@
 
 #pragma once
 
+#include <boost/iterator/transform_iterator.hpp>
 #include <initializer_list>
 #include <ostream>
 
@@ -15,6 +16,7 @@
 #include <AbstractDomain.h>
 #include <PatriciaTreeMapAbstractPartition.h>
 
+#include <mariana-trench/FlattenIterator.h>
 #include <mariana-trench/Frame.h>
 #include <mariana-trench/GroupHashedSetAbstractDomain.h>
 
@@ -32,6 +34,33 @@ class CallPositionFrames final
       GroupHashedSetAbstractDomain<Frame, Frame::GroupHash, Frame::GroupEqual>;
   using FramesByKind =
       sparta::PatriciaTreeMapAbstractPartition<const Kind*, Frames>;
+
+ private:
+  // Iterator based on `FlattenIterator`.
+
+  struct KindToFramesMapDereference {
+    static Frames::iterator begin(const std::pair<const Kind*, Frames>& pair) {
+      return pair.second.begin();
+    }
+    static Frames::iterator end(const std::pair<const Kind*, Frames>& pair) {
+      return pair.second.end();
+    }
+  };
+
+  using ConstIterator = FlattenIterator<
+      /* OuterIterator */ FramesByKind::MapType::iterator,
+      /* InnerIterator */ Frames::iterator,
+      KindToFramesMapDereference>;
+
+ public:
+  // C++ container concept member types
+  using iterator = ConstIterator;
+  using const_iterator = ConstIterator;
+  using value_type = Frame;
+  using difference_type = std::ptrdiff_t;
+  using size_type = std::size_t;
+  using const_reference = const Frame&;
+  using const_pointer = const Frame*;
 
  private:
   explicit CallPositionFrames(
@@ -101,6 +130,14 @@ class CallPositionFrames final
   void narrow_with(const CallPositionFrames& other) override;
 
   void difference_with(const CallPositionFrames& other);
+
+  ConstIterator begin() const {
+    return ConstIterator(frames_.bindings().begin(), frames_.bindings().end());
+  }
+
+  ConstIterator end() const {
+    return ConstIterator(frames_.bindings().end(), frames_.bindings().end());
+  }
 
  private:
   const Position* MT_NULLABLE position_;

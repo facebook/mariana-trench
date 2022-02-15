@@ -705,4 +705,53 @@ TEST_F(CallPositionFramesTest, Difference) {
       }));
 }
 
+TEST_F(CallPositionFramesTest, Iterator) {
+  auto context = test::make_empty_context();
+
+  auto* test_kind_one = context.kinds->get("TestSinkOne");
+  auto* test_kind_two = context.kinds->get("TestSinkTwo");
+
+  auto call_position_frames = CallPositionFrames{
+      test::make_frame(
+          test_kind_one,
+          test::FrameProperties{
+              .callee_port = AccessPath(Root(Root::Kind::Argument, 0))}),
+      test::make_frame(
+          test_kind_one,
+          test::FrameProperties{
+              .callee_port = AccessPath(Root(Root::Kind::Argument, 1))}),
+      test::make_frame(test_kind_two, test::FrameProperties{})};
+
+  std::vector<Frame> frames;
+  for (const auto& frame : call_position_frames) {
+    frames.push_back(frame);
+  }
+
+  EXPECT_EQ(frames.size(), 3);
+  EXPECT_NE(
+      std::find(
+          frames.begin(),
+          frames.end(),
+          test::make_frame(
+              test_kind_one,
+              test::FrameProperties{
+                  .callee_port = AccessPath(Root(Root::Kind::Argument, 0))})),
+      frames.end());
+  EXPECT_NE(
+      std::find(
+          frames.begin(),
+          frames.end(),
+          test::make_frame(
+              test_kind_one,
+              test::FrameProperties{
+                  .callee_port = AccessPath(Root(Root::Kind::Argument, 1))})),
+      frames.end());
+  EXPECT_NE(
+      std::find(
+          frames.begin(),
+          frames.end(),
+          test::make_frame(test_kind_two, test::FrameProperties{})),
+      frames.end());
+}
+
 } // namespace marianatrench
