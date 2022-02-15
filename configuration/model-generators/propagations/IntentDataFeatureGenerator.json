@@ -33,16 +33,6 @@
         {
           "constraint": "signature",
           "pattern": "Landroid/content/Intent;\\.<init>:.*android/net/Uri.*"
-        },
-        {
-          "constraint": "return",
-          "inner": {
-            "constraint": "not",
-            "inner": {
-              "constraint": "name",
-              "pattern": "V"
-            }
-          }
         }
       ],
       "model": {
@@ -58,7 +48,7 @@
             "propagation": [
               {
                 "input": "Argument(x)",
-                "output": "Return",
+                "output": "Argument(0)",
                 "features": [
                   "via-intent-data"
                 ]
