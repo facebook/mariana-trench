@@ -131,6 +131,8 @@ class CallPositionFrames final
 
   void difference_with(const CallPositionFrames& other);
 
+  void map(const std::function<void(Frame&)>& f);
+
   ConstIterator begin() const {
     return ConstIterator(frames_.bindings().begin(), frames_.bindings().end());
   }
@@ -138,6 +140,18 @@ class CallPositionFrames final
   ConstIterator end() const {
     return ConstIterator(frames_.bindings().end(), frames_.bindings().end());
   }
+
+  void add_inferred_features(const FeatureMayAlwaysSet& features);
+
+  LocalPositionSet local_positions() const;
+
+  void add_local_position(const Position* position);
+
+  void set_local_positions(const LocalPositionSet& positions);
+
+  void add_inferred_features_and_local_position(
+      const FeatureMayAlwaysSet& features,
+      const Position* MT_NULLABLE position);
 
  private:
   const Position* MT_NULLABLE position_;
