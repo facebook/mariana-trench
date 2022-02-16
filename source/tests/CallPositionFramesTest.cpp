@@ -107,6 +107,15 @@ TEST_F(CallPositionFramesTest, Leq) {
   auto* test_kind_two = context.kinds->get("TestSinkTwo");
   auto* test_position = context.positions->get(std::nullopt, 1);
 
+  // Comparison to bottom
+  EXPECT_TRUE(CallPositionFrames::bottom().leq(CallPositionFrames::bottom()));
+  EXPECT_TRUE(CallPositionFrames::bottom().leq(CallPositionFrames{
+      test::make_frame(test_kind_one, test::FrameProperties{})}));
+  EXPECT_FALSE((CallPositionFrames{test::make_frame(
+                    test_kind_one,
+                    test::FrameProperties{.call_position = test_position})})
+                   .leq(CallPositionFrames::bottom()));
+
   // Comparison to self
   EXPECT_TRUE(
       (CallPositionFrames{test::make_frame(
@@ -249,6 +258,19 @@ TEST_F(CallPositionFramesTest, Equals) {
   auto* test_kind_two = context.kinds->get("TestSinkTwo");
   auto* test_position = context.positions->get(std::nullopt, 1);
 
+  // Comparison to bottom
+  EXPECT_TRUE(
+      CallPositionFrames::bottom().equals(CallPositionFrames::bottom()));
+  EXPECT_FALSE(
+      CallPositionFrames::bottom().equals(CallPositionFrames{test::make_frame(
+          test_kind_one,
+          test::FrameProperties{.call_position = test_position})}));
+  EXPECT_FALSE((CallPositionFrames{test::make_frame(
+                    test_kind_one,
+                    test::FrameProperties{.call_position = test_position})})
+                   .equals(CallPositionFrames::bottom()));
+
+  // Comparison to self
   EXPECT_TRUE((CallPositionFrames{
                    test::make_frame(test_kind_one, test::FrameProperties{})})
                   .equals(CallPositionFrames{test::make_frame(
@@ -297,6 +319,14 @@ TEST_F(CallPositionFramesTest, JoinWith) {
           test::make_frame(test_kind_one, test::FrameProperties{})}),
       CallPositionFrames{
           test::make_frame(test_kind_one, test::FrameProperties{})});
+  EXPECT_EQ(
+      (CallPositionFrames{test::make_frame(
+           test_kind_one,
+           test::FrameProperties{.call_position = test_position})})
+          .join(CallPositionFrames::bottom()),
+      CallPositionFrames{test::make_frame(
+          test_kind_one,
+          test::FrameProperties{.call_position = test_position})});
 
   // Join different kinds
   auto frames = CallPositionFrames{

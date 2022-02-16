@@ -101,18 +101,18 @@ void CallPositionFrames::add(const Frame& frame) {
 }
 
 bool CallPositionFrames::leq(const CallPositionFrames& other) const {
-  mt_assert(position_ == other.position());
+  mt_assert(is_bottom() || other.is_bottom() || position_ == other.position());
   return frames_.leq(other.frames_);
 }
 
 bool CallPositionFrames::equals(const CallPositionFrames& other) const {
-  mt_assert(position_ == other.position());
+  mt_assert(is_bottom() || other.is_bottom() || position_ == other.position());
   return frames_.equals(other.frames_);
 }
 
 void CallPositionFrames::join_with(const CallPositionFrames& other) {
   mt_if_expensive_assert(auto previous = *this);
-  mt_assert(position_ == nullptr || position_ == other.position());
+  mt_assert(is_bottom() || other.is_bottom() || position_ == other.position());
 
   frames_.join_with(other.frames_);
 
@@ -121,7 +121,7 @@ void CallPositionFrames::join_with(const CallPositionFrames& other) {
 
 void CallPositionFrames::widen_with(const CallPositionFrames& other) {
   mt_if_expensive_assert(auto previous = *this);
-  mt_assert(position_ == other.position());
+  mt_assert(is_bottom() || other.is_bottom() || position_ == other.position());
 
   frames_.widen_with(other.frames_);
 
@@ -129,17 +129,17 @@ void CallPositionFrames::widen_with(const CallPositionFrames& other) {
 }
 
 void CallPositionFrames::meet_with(const CallPositionFrames& other) {
-  mt_assert(position_ == other.position());
+  mt_assert(is_bottom() || other.is_bottom() || position_ == other.position());
   frames_.meet_with(other.frames_);
 }
 
 void CallPositionFrames::narrow_with(const CallPositionFrames& other) {
-  mt_assert(position_ == other.position());
+  mt_assert(is_bottom() || other.is_bottom() || position_ == other.position());
   frames_.narrow_with(other.frames_);
 }
 
 void CallPositionFrames::difference_with(const CallPositionFrames& other) {
-  mt_assert(other.position_ == nullptr || position_ == other.position());
+  mt_assert(is_bottom() || other.is_bottom() || position_ == other.position());
 
   frames_.difference_like_operation(
       other.frames_, [](const Frames& frames_left, const Frames& frames_right) {
