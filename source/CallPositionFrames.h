@@ -153,6 +153,46 @@ class CallPositionFrames final
       const FeatureMayAlwaysSet& features,
       const Position* MT_NULLABLE position);
 
+  /**
+   * Propagate the taint from the callee to the caller.
+   *
+   * Return bottom if the taint should not be propagated.
+   */
+  CallPositionFrames propagate(
+      const Method* callee,
+      const AccessPath& callee_port,
+      const Position* call_position,
+      int maximum_source_sink_distance,
+      Context& context,
+      const std::vector<const DexType * MT_NULLABLE>& source_register_types,
+      const std::vector<std::optional<std::string>>& source_constant_arguments)
+      const;
+
+  template <class T>
+  std::unordered_map<T, std::vector<std::reference_wrapper<const Frame>>>
+  partition_map(const std::function<T(const Frame&)>& map) const;
+
+ private:
+  Frame propagate_frames(
+      const Method* callee,
+      const AccessPath& callee_port,
+      const Position* call_position,
+      int maximum_source_sink_distance,
+      Context& context,
+      const std::vector<const DexType * MT_NULLABLE>& source_register_types,
+      const std::vector<std::optional<std::string>>& source_constant_arguments,
+      std::vector<std::reference_wrapper<const Frame>> frames,
+      std::vector<const Feature*>& via_type_of_features_added) const;
+
+  CallPositionFrames propagate_crtex_frames(
+      const Method* callee,
+      const AccessPath& callee_port,
+      const Position* call_position,
+      int maximum_source_sink_distance,
+      Context& context,
+      const std::vector<const DexType * MT_NULLABLE>& source_register_types,
+      std::vector<std::reference_wrapper<const Frame>> frames) const;
+
  private:
   const Position* MT_NULLABLE position_;
   FramesByKind frames_;
