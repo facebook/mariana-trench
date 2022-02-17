@@ -12,6 +12,8 @@
 #include <boost/filesystem/operations.hpp>
 #include <boost/program_options.hpp>
 
+#include <RedexContext.h>
+
 #include <mariana-trench/ArtificialMethods.h>
 #include <mariana-trench/ClassHierarchies.h>
 #include <mariana-trench/ClassProperties.h>

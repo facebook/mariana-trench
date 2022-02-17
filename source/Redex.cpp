@@ -17,6 +17,7 @@
 #include <ProguardMatcher.h>
 #include <ProguardParser.h>
 #include <Reachability.h>
+#include <RedexContext.h>
 #include <Resolver.h>
 
 #include <mariana-trench/Assert.h>

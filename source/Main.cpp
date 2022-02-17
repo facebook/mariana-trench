@@ -15,6 +15,7 @@
 
 #include <AggregateException.h>
 #include <Debug.h>
+#include <RedexContext.h>
 
 #include <mariana-trench/MarianaTrench.h>
 #include <mariana-trench/SanitizersOptions.h>
