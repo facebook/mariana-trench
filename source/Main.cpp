@@ -13,6 +13,7 @@
 
 #include <boost/program_options.hpp>
 
+#include <AggregateException.h>
 #include <Debug.h>
 
 #include <mariana-trench/MarianaTrench.h>
