@@ -10,7 +10,6 @@
 #include <mariana-trench/Overrides.h>
 #include <mariana-trench/RE2.h>
 #include <mariana-trench/model-generator/MethodConstraints.h>
-#include <mariana-trench/model-generator/ReturnsThisAnalyzer.h>
 #include <mariana-trench/model-generator/TypeConstraints.h>
 
 namespace marianatrench {
@@ -417,16 +416,6 @@ bool ReturnConstraint::operator==(const MethodConstraint& other) const {
   }
 }
 
-ReturnsThisConstraint::ReturnsThisConstraint() {}
-
-bool ReturnsThisConstraint::satisfy(const Method* method) const {
-  return returns_this_analyzer::method_returns_this(method);
-}
-
-bool ReturnsThisConstraint::operator==(const MethodConstraint& other) const {
-  return dynamic_cast<const ReturnsThisConstraint*>(&other) != nullptr;
-}
-
 VisibilityMethodConstraint::VisibilityMethodConstraint(
     DexAccessFlags visibility)
     : visibility_(visibility) {}
@@ -535,8 +524,6 @@ std::unique_ptr<MethodConstraint> MethodConstraint::from_json(
   } else if (constraint_name == "return") {
     return std::make_unique<ReturnConstraint>(TypeConstraint::from_json(
         JsonValidation::object(constraint, /* field */ "inner")));
-  } else if (constraint_name == "returns_this") {
-    return std::make_unique<ReturnsThisConstraint>();
   } else if (constraint_name == "visibility") {
     auto visibility_string =
         JsonValidation::string(constraint, /* field */ "is");

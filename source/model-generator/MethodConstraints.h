@@ -222,13 +222,6 @@ class ReturnConstraint final : public MethodConstraint {
   std::unique_ptr<TypeConstraint> inner_constraint_;
 };
 
-class ReturnsThisConstraint final : public MethodConstraint {
- public:
-  explicit ReturnsThisConstraint();
-  bool satisfy(const Method* method) const override;
-  bool operator==(const MethodConstraint& other) const override;
-};
-
 class VisibilityMethodConstraint final : public MethodConstraint {
  public:
   explicit VisibilityMethodConstraint(DexAccessFlags visibility);

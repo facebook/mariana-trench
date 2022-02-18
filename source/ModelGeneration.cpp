@@ -19,6 +19,7 @@
 #include <mariana-trench/ModelGeneration.h>
 #include <mariana-trench/Options.h>
 #include <mariana-trench/Timer.h>
+#include <mariana-trench/model-generator/BuilderPatternGenerator.h>
 #include <mariana-trench/model-generator/ContentProviderGenerator.h>
 #include <mariana-trench/model-generator/JsonModelGenerator.h>
 #include <mariana-trench/model-generator/ModelGeneratorConfiguration.h>
@@ -78,6 +79,8 @@ ModelGeneration::make_builtin_model_generators(Context& context) {
       std::make_unique<TaintInTaintThisGenerator>(context));
   builtin_generators.push_back(
       std::make_unique<TaintInTaintOutGenerator>(context));
+  builtin_generators.push_back(
+      std::make_unique<BuilderPatternGenerator>(context));
 
   std::map<std::string, std::unique_ptr<ModelGenerator>> builtin_generator_map;
   for (auto& generator : builtin_generators) {

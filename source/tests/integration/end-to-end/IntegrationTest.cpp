@@ -105,8 +105,20 @@ TEST_P(IntegrationTest, CompareFlows) {
     lifecycles_paths.emplace_back(lifecycles_path.native());
   }
 
-  auto model_generators_file = directory / "/model_generators.json";
+  auto generator_configuration_file = directory / "/generator_config.json";
   std::vector<ModelGeneratorConfiguration> model_generators_configurations;
+  if (boost::filesystem::exists(generator_configuration_file)) {
+    LOG(3, "Found generator configuration.");
+
+    Json::Value json =
+        JsonValidation::parse_json_file(generator_configuration_file);
+    for (const auto& value : JsonValidation::null_or_array(json)) {
+      model_generators_configurations.emplace_back(
+          ModelGeneratorConfiguration::from_json(value));
+    }
+  }
+
+  auto model_generators_file = directory / "/model_generators.json";
   std::vector<std::string> model_generator_search_paths;
   if (boost::filesystem::exists(model_generators_file)) {
     LOG(3, "Found model generator. Will run model generation.");
