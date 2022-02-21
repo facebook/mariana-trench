@@ -105,7 +105,7 @@ Positions::Positions(const Options& options, const DexStoresVector& stores) {
     ConcurrentMap<std::string, std::string> class_to_path;
     re2::RE2 package_regex("^package\\s+([^;]+)(?:;|$)");
     re2::RE2 class_regex(
-        "^\\s*(?:/\\*.*\\*/)?\\s*(?:public|internal|private)?\\s*(?:abstract|final|open)?\\s*(?:class|enum|interface|object)\\s+([A-z0-9]+)");
+        "^\\s*(?:/\\*.*\\*/)?\\s*(?:public|internal|private)?\\s*(?:abstract|data|final|open)?\\s*(?:class|enum|interface|object)\\s+([A-z0-9]+)");
     std::unordered_set<std::string> skipped_package_prefixes = {
         "android/",
     };
