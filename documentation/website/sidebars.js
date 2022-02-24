@@ -22,6 +22,7 @@ module.exports = {
     'models',
     'configuration',
     fbInternalOnly("fb/known-false-negatives"),
+    fbInternalOnly("fb/testing-diffs"),
 ],
   "Developer Guide": [
     fbContent({external: 'contribution'}),
