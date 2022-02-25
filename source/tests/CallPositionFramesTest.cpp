@@ -319,17 +319,38 @@ TEST_F(CallPositionFramesTest, JoinWith) {
           test::make_frame(test_kind_one, test::FrameProperties{})}),
       CallPositionFrames{
           test::make_frame(test_kind_one, test::FrameProperties{})});
+
   EXPECT_EQ(
-      (CallPositionFrames{test::make_frame(
-           test_kind_one,
-           test::FrameProperties{.call_position = test_position})})
+      (CallPositionFrames{
+           test::make_frame(test_kind_one, test::FrameProperties{})})
           .join(CallPositionFrames::bottom()),
+      CallPositionFrames{
+          test::make_frame(test_kind_one, test::FrameProperties{})});
+
+  auto frames = (CallPositionFrames{test::make_frame(
+                     test_kind_one,
+                     test::FrameProperties{.call_position = test_position})})
+                    .join(CallPositionFrames::bottom());
+  EXPECT_EQ(
+      frames,
       CallPositionFrames{test::make_frame(
           test_kind_one,
           test::FrameProperties{.call_position = test_position})});
+  EXPECT_EQ(frames.position(), test_position);
+
+  frames =
+      CallPositionFrames::bottom().join(CallPositionFrames{test::make_frame(
+          test_kind_one,
+          test::FrameProperties{.call_position = test_position})});
+  EXPECT_EQ(
+      frames,
+      CallPositionFrames{test::make_frame(
+          test_kind_one,
+          test::FrameProperties{.call_position = test_position})});
+  EXPECT_EQ(frames.position(), test_position);
 
   // Join different kinds
-  auto frames = CallPositionFrames{
+  frames = CallPositionFrames{
       test::make_frame(test_kind_one, test::FrameProperties{})};
   frames.join_with(CallPositionFrames{
       test::make_frame(test_kind_two, test::FrameProperties{})});

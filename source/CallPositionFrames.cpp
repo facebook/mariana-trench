@@ -114,7 +114,12 @@ bool CallPositionFrames::equals(const CallPositionFrames& other) const {
 
 void CallPositionFrames::join_with(const CallPositionFrames& other) {
   mt_if_expensive_assert(auto previous = *this);
-  mt_assert(is_bottom() || other.is_bottom() || position_ == other.position());
+
+  if (is_bottom()) {
+    mt_assert(position_ == nullptr);
+    position_ = other.position();
+  }
+  mt_assert(other.is_bottom() || position_ == other.position());
 
   frames_.join_with(other.frames_);
 
@@ -123,7 +128,12 @@ void CallPositionFrames::join_with(const CallPositionFrames& other) {
 
 void CallPositionFrames::widen_with(const CallPositionFrames& other) {
   mt_if_expensive_assert(auto previous = *this);
-  mt_assert(is_bottom() || other.is_bottom() || position_ == other.position());
+
+  if (is_bottom()) {
+    mt_assert(position_ == nullptr);
+    position_ = other.position();
+  }
+  mt_assert(other.is_bottom() || position_ == other.position());
 
   frames_.widen_with(other.frames_);
 
@@ -131,17 +141,31 @@ void CallPositionFrames::widen_with(const CallPositionFrames& other) {
 }
 
 void CallPositionFrames::meet_with(const CallPositionFrames& other) {
-  mt_assert(is_bottom() || other.is_bottom() || position_ == other.position());
+  if (is_bottom()) {
+    mt_assert(position_ == nullptr);
+    position_ = other.position();
+  }
+  mt_assert(other.is_bottom() || position_ == other.position());
+
   frames_.meet_with(other.frames_);
 }
 
 void CallPositionFrames::narrow_with(const CallPositionFrames& other) {
-  mt_assert(is_bottom() || other.is_bottom() || position_ == other.position());
+  if (is_bottom()) {
+    mt_assert(position_ == nullptr);
+    position_ = other.position();
+  }
+  mt_assert(other.is_bottom() || position_ == other.position());
+
   frames_.narrow_with(other.frames_);
 }
 
 void CallPositionFrames::difference_with(const CallPositionFrames& other) {
-  mt_assert(is_bottom() || other.is_bottom() || position_ == other.position());
+  if (is_bottom()) {
+    mt_assert(position_ == nullptr);
+    position_ = other.position();
+  }
+  mt_assert(other.is_bottom() || position_ == other.position());
 
   frames_.difference_like_operation(
       other.frames_, [](const Frames& frames_left, const Frames& frames_right) {
