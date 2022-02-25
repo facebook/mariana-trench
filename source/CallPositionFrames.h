@@ -170,7 +170,18 @@ class CallPositionFrames final
 
   template <class T>
   std::unordered_map<T, std::vector<std::reference_wrapper<const Frame>>>
-  partition_map(const std::function<T(const Frame&)>& map) const;
+  partition_map(const std::function<T(const Frame&)>& map) const {
+    std::unordered_map<T, std::vector<std::reference_wrapper<const Frame>>>
+        result;
+    for (const auto& [_, frames] : frames_.bindings()) {
+      for (const auto& frame : frames) {
+        auto value = map(frame);
+        result[value].push_back(std::cref(frame));
+      }
+    }
+
+    return result;
+  }
 
  private:
   Frame propagate_frames(

@@ -1050,4 +1050,60 @@ TEST_F(CallPositionFramesTest, Propagate) {
       }));
 }
 
+TEST_F(CallPositionFramesTest, PartitionMap) {
+  auto context = test::make_empty_context();
+
+  Scope scope;
+  auto* one =
+      context.methods->create(redex::create_void_method(scope, "LOne;", "one"));
+  auto* test_kind = context.kinds->get("TestSink");
+
+  auto frames = CallPositionFrames{
+      test::make_frame(
+          test_kind,
+          test::FrameProperties{
+              .callee_port = AccessPath(Root(Root::Kind::Return)),
+              .origins = MethodSet{one}}),
+      test::make_frame(
+          test_kind,
+          test::FrameProperties{
+              .callee_port = AccessPath(Root(Root::Kind::Anchor)),
+              .origins = MethodSet{one},
+              .canonical_names = CanonicalNameSetAbstractDomain{CanonicalName(
+                  CanonicalName::TemplateValue{"%programmatic_leaf_name%"})}}),
+  };
+
+  auto partitions = frames.partition_map<bool>(
+      [](const Frame& frame) { return frame.is_crtex_producer_declaration(); });
+
+  CallPositionFrames crtex_partition;
+  for (auto frame : partitions[true]) {
+    crtex_partition.add(frame);
+  }
+  EXPECT_EQ(
+      crtex_partition,
+      CallPositionFrames{test::make_frame(
+          test_kind,
+          test::FrameProperties{
+              .callee_port = AccessPath(Root(Root::Kind::Anchor)),
+              .origins = MethodSet{one},
+              .canonical_names = CanonicalNameSetAbstractDomain{
+                  CanonicalName(CanonicalName::TemplateValue{
+                      "%programmatic_leaf_name%"})}})});
+
+  CallPositionFrames non_crtex_partition;
+  for (auto frame : partitions[false]) {
+    non_crtex_partition.add(frame);
+  }
+  EXPECT_EQ(
+      non_crtex_partition,
+      (CallPositionFrames{
+          test::make_frame(
+              test_kind,
+              test::FrameProperties{
+                  .callee_port = AccessPath(Root(Root::Kind::Return)),
+                  .origins = MethodSet{one}}),
+      }));
+}
+
 } // namespace marianatrench
