@@ -193,6 +193,10 @@ class CallPositionFrames final
     return result;
   }
 
+  friend std::ostream& operator<<(
+      std::ostream& out,
+      const CallPositionFrames& frames);
+
  private:
   Frame propagate_frames(
       const Method* callee,

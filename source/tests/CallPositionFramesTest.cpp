@@ -1200,4 +1200,23 @@ TEST_F(CallPositionFramesTest, WithKind) {
                   .origins = MethodSet{two}})}));
 }
 
+TEST_F(CallPositionFramesTest, Show) {
+  auto context = test::make_empty_context();
+
+  Scope scope;
+  auto* one =
+      context.methods->create(redex::create_void_method(scope, "LOne;", "one"));
+  auto* test_kind_one = context.kinds->get("TestSink1");
+  auto frame_one = test::make_frame(
+      test_kind_one, test::FrameProperties{.origins = MethodSet{one}});
+  auto frames = CallPositionFrames{frame_one};
+
+  EXPECT_EQ(
+      show(frames),
+      "[FrameByKind(kind=TestSink1, frames={Frame(kind=`TestSink1`, callee_port=AccessPath(Leaf), origins={`LOne;.one:()V`})}),]");
+
+  EXPECT_EQ(show(CallPositionFrames::bottom()), "[]");
+  EXPECT_EQ(show(CallPositionFrames::top()), "T");
+}
+
 } // namespace marianatrench

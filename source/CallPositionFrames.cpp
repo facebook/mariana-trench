@@ -5,6 +5,8 @@
  * LICENSE file in the root directory of this source tree.
  */
 
+#include <Show.h>
+
 #include <mariana-trench/Assert.h>
 #include <mariana-trench/CallPositionFrames.h>
 #include <mariana-trench/Features.h>
@@ -316,6 +318,18 @@ CallPositionFrames CallPositionFrames::with_kind(const Kind* new_kind) const {
 
   return CallPositionFrames(
       position_, FramesByKind{std::pair(new_kind, new_frames)});
+}
+
+std::ostream& operator<<(std::ostream& out, const CallPositionFrames& frames) {
+  if (frames.is_top()) {
+    return out << "T";
+  } else {
+    out << "[";
+    for (const auto& [kind, frames] : frames.frames_.bindings()) {
+      out << "FrameByKind(kind=" << show(kind) << ", frames=" << frames << "),";
+    }
+    return out << "]";
+  }
 }
 
 Frame CallPositionFrames::propagate_frames(
