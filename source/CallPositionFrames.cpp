@@ -261,6 +261,63 @@ CallPositionFrames CallPositionFrames::propagate(
   return result;
 }
 
+CallPositionFrames CallPositionFrames::attach_position(
+    const Position* position) const {
+  FramesByKind result;
+
+  // NOTE: This method does more than update the position in frames. It
+  // functions similarly to `propagate`. Frame features are propagated here.
+  for (const auto& [_, frames] : frames_.bindings()) {
+    for (const auto& frame : frames) {
+      if (!frame.is_leaf()) {
+        continue;
+      }
+
+      // Canonical names should theoretically be instantiated here the way
+      // they are instantiated in `propagate`, but there is currently no
+      // scenario that requires this. If a templated name does get configured,
+      // the name will be instantiated when this frame gets propagated.
+      result.update(frame.kind(), [&](const Frames& frames) {
+        auto new_frames = frames;
+        new_frames.add(Frame(
+            frame.kind(),
+            frame.callee_port(),
+            /* callee */ nullptr,
+            /* field_callee */ nullptr,
+            /* call_position */ position,
+            /* distance */ 0,
+            frame.origins(),
+            frame.field_origins(),
+            frame.features(),
+            /* locally_inferred_features */ FeatureMayAlwaysSet::bottom(),
+            /* user_features */ FeatureSet::bottom(),
+            /* via_type_of_ports */ {},
+            /* via_value_of_ports */ {},
+            frame.local_positions(),
+            frame.canonical_names()));
+        return new_frames;
+      });
+    }
+  }
+
+  return CallPositionFrames(position, result);
+}
+
+CallPositionFrames CallPositionFrames::with_kind(const Kind* new_kind) const {
+  Frames new_frames;
+
+  // TODO(T91357916): Remove "kind" from frames. Having to update the
+  // individual frames seem redundant. We should only need to update the key.
+  for (const auto& [kind, frames] : frames_.bindings()) {
+    for (const auto& frame : frames) {
+      new_frames.add(frame.with_kind(new_kind));
+    }
+  }
+
+  return CallPositionFrames(
+      position_, FramesByKind{std::pair(new_kind, new_frames)});
+}
+
 Frame CallPositionFrames::propagate_frames(
     const Method* callee,
     const AccessPath& callee_port,

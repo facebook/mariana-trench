@@ -168,6 +168,16 @@ class CallPositionFrames final
       const std::vector<std::optional<std::string>>& source_constant_arguments)
       const;
 
+  /* Return the set of leaf frames with the given position. */
+  CallPositionFrames attach_position(const Position* position) const;
+
+  /**
+   * Convert the kind of these frames into the given kind.
+   *
+   * Return A new CallPositionFrames, identical in everyway except in "kind".
+   */
+  CallPositionFrames with_kind(const Kind* kind) const;
+
   template <class T>
   std::unordered_map<T, std::vector<std::reference_wrapper<const Frame>>>
   partition_map(const std::function<T(const Frame&)>& map) const {
