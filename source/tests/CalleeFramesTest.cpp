@@ -470,6 +470,53 @@ TEST_F(CalleeFramesTest, Difference) {
   // NOTE: Access path coverage in CallPositionFramesTest.cpp.
 }
 
+TEST_F(CalleeFramesTest, Iterator) {
+  auto context = test::make_empty_context();
+
+  auto* test_kind_one = context.kinds->get("TestSinkOne");
+  auto* test_kind_two = context.kinds->get("TestSinkTwo");
+  auto* test_position_one = context.positions->get(std::nullopt, 1);
+  auto* test_position_two = context.positions->get(std::nullopt, 2);
+
+  auto call_position_frames = CalleeFrames{
+      test::make_frame(
+          test_kind_one,
+          test::FrameProperties{.call_position = test_position_one}),
+      test::make_frame(
+          test_kind_one,
+          test::FrameProperties{.call_position = test_position_two}),
+      test::make_frame(test_kind_two, test::FrameProperties{})};
+
+  std::vector<Frame> frames;
+  for (const auto& frame : call_position_frames) {
+    frames.push_back(frame);
+  }
+
+  EXPECT_EQ(frames.size(), 3);
+  EXPECT_NE(
+      std::find(
+          frames.begin(),
+          frames.end(),
+          test::make_frame(
+              test_kind_one,
+              test::FrameProperties{.call_position = test_position_one})),
+      frames.end());
+  EXPECT_NE(
+      std::find(
+          frames.begin(),
+          frames.end(),
+          test::make_frame(
+              test_kind_one,
+              test::FrameProperties{.call_position = test_position_two})),
+      frames.end());
+  EXPECT_NE(
+      std::find(
+          frames.begin(),
+          frames.end(),
+          test::make_frame(test_kind_two, test::FrameProperties{})),
+      frames.end());
+}
+
 TEST_F(CalleeFramesTest, Map) {
   auto context = test::make_empty_context();
 

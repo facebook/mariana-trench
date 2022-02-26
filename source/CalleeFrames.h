@@ -27,6 +27,35 @@ class CalleeFrames final : public sparta::AbstractDomain<CalleeFrames> {
       CallPositionFrames>;
 
  private:
+  // Iterator based on `FlattenIterator`.
+
+  struct CallPositionToFramesMapDereference {
+    static CallPositionFrames::iterator begin(
+        const std::pair<const Position*, CallPositionFrames>& pair) {
+      return pair.second.begin();
+    }
+    static CallPositionFrames::iterator end(
+        const std::pair<const Position*, CallPositionFrames>& pair) {
+      return pair.second.end();
+    }
+  };
+
+  using ConstIterator = FlattenIterator<
+      /* OuterIterator */ FramesByCallPosition::MapType::iterator,
+      /* InnerIterator */ CallPositionFrames::iterator,
+      CallPositionToFramesMapDereference>;
+
+ public:
+  // C++ container concept member types
+  using iterator = ConstIterator;
+  using const_iterator = ConstIterator;
+  using value_type = Frame;
+  using difference_type = std::ptrdiff_t;
+  using size_type = std::size_t;
+  using const_reference = const Frame&;
+  using const_pointer = const Frame*;
+
+ private:
   explicit CalleeFrames(
       const Method* MT_NULLABLE callee,
       FramesByCallPosition frames)
@@ -96,6 +125,14 @@ class CalleeFrames final : public sparta::AbstractDomain<CalleeFrames> {
   void difference_with(const CalleeFrames& other);
 
   void map(const std::function<void(Frame&)>& f);
+
+  ConstIterator begin() const {
+    return ConstIterator(frames_.bindings().begin(), frames_.bindings().end());
+  }
+
+  ConstIterator end() const {
+    return ConstIterator(frames_.bindings().end(), frames_.bindings().end());
+  }
 
   void add_inferred_features(const FeatureMayAlwaysSet& features);
 
