@@ -162,6 +162,36 @@ void CalleeFrames::add_inferred_features_and_local_position(
   });
 }
 
+CalleeFrames CalleeFrames::propagate(
+    const Method* callee,
+    const AccessPath& callee_port,
+    const Position* call_position,
+    int maximum_source_sink_distance,
+    Context& context,
+    const std::vector<const DexType * MT_NULLABLE>& source_register_types,
+    const std::vector<std::optional<std::string>>& source_constant_arguments)
+    const {
+  if (is_bottom()) {
+    return CalleeFrames::bottom();
+  }
+
+  CallPositionFrames result;
+  for (const auto& [_, call_position_frames] : frames_.bindings()) {
+    result.join_with(call_position_frames.propagate(
+        callee,
+        callee_port,
+        call_position,
+        maximum_source_sink_distance,
+        context,
+        source_register_types,
+        source_constant_arguments));
+  }
+
+  mt_assert(call_position == result.position());
+  return CalleeFrames(
+      callee, FramesByCallPosition{std::pair(call_position, result)});
+}
+
 std::ostream& operator<<(std::ostream& out, const CalleeFrames& frames) {
   if (frames.is_top()) {
     return out << "T";

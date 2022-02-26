@@ -109,6 +109,21 @@ class CalleeFrames final : public sparta::AbstractDomain<CalleeFrames> {
       const FeatureMayAlwaysSet& features,
       const Position* MT_NULLABLE position);
 
+  /**
+   * Propagate the taint from the callee to the caller.
+   *
+   * Return bottom if the taint should not be propagated.
+   */
+  CalleeFrames propagate(
+      const Method* callee,
+      const AccessPath& callee_port,
+      const Position* call_position,
+      int maximum_source_sink_distance,
+      Context& context,
+      const std::vector<const DexType * MT_NULLABLE>& source_register_types,
+      const std::vector<std::optional<std::string>>& source_constant_arguments)
+      const;
+
   friend std::ostream& operator<<(
       std::ostream& out,
       const CalleeFrames& frames);
