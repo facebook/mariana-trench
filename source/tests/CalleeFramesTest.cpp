@@ -781,4 +781,103 @@ TEST_F(CalleeFramesTest, Propagate) {
       }));
 }
 
+TEST_F(CalleeFramesTest, AttachPosition) {
+  auto context = test::make_empty_context();
+
+  auto* feature_one = context.features->get("FeatureOne");
+  auto* feature_two = context.features->get("FeatureTwo");
+  auto* test_kind_one = context.kinds->get("TestSinkOne");
+  auto* test_kind_two = context.kinds->get("TestSinkTwo");
+  auto* test_position_one = context.positions->get(std::nullopt, 1);
+  auto* test_position_two = context.positions->get(std::nullopt, 2);
+  auto* test_position_three = context.positions->get(std::nullopt, 3);
+
+  auto frames = CalleeFrames{
+      test::make_frame(
+          test_kind_one,
+          test::FrameProperties{
+              .call_position = test_position_one,
+              .locally_inferred_features = FeatureMayAlwaysSet{feature_one},
+              .user_features = FeatureSet{feature_two}}),
+      // Will be merged with the frame above after attach_position because they
+      // have the same kind. Features will be joined too.
+      test::make_frame(
+          test_kind_one,
+          test::FrameProperties{.call_position = test_position_two}),
+      test::make_frame(
+          test_kind_two,
+          test::FrameProperties{.call_position = test_position_two}),
+  };
+
+  auto frames_with_new_position = frames.attach_position(test_position_three);
+
+  EXPECT_EQ(
+      frames_with_new_position,
+      (CalleeFrames{
+          test::make_frame(
+              test_kind_one,
+              test::FrameProperties{
+                  .call_position = test_position_three,
+                  .inferred_features = FeatureMayAlwaysSet(
+                      /* may */ FeatureSet{feature_one, feature_two},
+                      /* always */ FeatureSet{}),
+                  .locally_inferred_features = FeatureMayAlwaysSet::bottom()}),
+          test::make_frame(
+              test_kind_two,
+              test::FrameProperties{
+                  .call_position = test_position_three,
+                  .locally_inferred_features = FeatureMayAlwaysSet::bottom()}),
+      }));
+}
+
+TEST_F(CalleeFramesTest, WithKind) {
+  auto context = test::make_empty_context();
+
+  Scope scope;
+  auto* one =
+      context.methods->create(redex::create_void_method(scope, "LOne;", "one"));
+  auto* two =
+      context.methods->create(redex::create_void_method(scope, "LTwo;", "two"));
+
+  auto* test_kind_one = context.kinds->get("TestSink1");
+  auto* test_kind_two = context.kinds->get("TestSink2");
+  auto* test_position_one = context.positions->get(std::nullopt, 1);
+  auto* test_position_two = context.positions->get(std::nullopt, 2);
+
+  auto frames = CalleeFrames{
+      test::make_frame(
+          test_kind_one,
+          test::FrameProperties{
+              .call_position = test_position_one, .origins = MethodSet{one}}),
+      test::make_frame(
+          test_kind_one,
+          test::FrameProperties{
+              .call_position = test_position_two, .origins = MethodSet{two}}),
+      // Will be merged with the first frame after with_kind() since they
+      // are in the same position.
+      test::make_frame(
+          test_kind_two,
+          test::FrameProperties{
+              .call_position = test_position_one, .origins = MethodSet{two}}),
+  };
+
+  auto new_kind = context.kinds->get("TestSink3");
+  auto frames_with_new_kind = frames.with_kind(new_kind);
+
+  EXPECT_EQ(
+      frames_with_new_kind,
+      (CalleeFrames{
+          test::make_frame(
+              new_kind,
+              test::FrameProperties{
+                  .call_position = test_position_one,
+                  .origins = MethodSet{one, two}}),
+          test::make_frame(
+              new_kind,
+              test::FrameProperties{
+                  .call_position = test_position_two,
+                  .origins = MethodSet{two}}),
+      }));
+}
+
 } // namespace marianatrench

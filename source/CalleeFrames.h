@@ -124,6 +124,16 @@ class CalleeFrames final : public sparta::AbstractDomain<CalleeFrames> {
       const std::vector<std::optional<std::string>>& source_constant_arguments)
       const;
 
+  /* Return the set of leaf frames with the given position. */
+  CalleeFrames attach_position(const Position* position) const;
+
+  /**
+   * Convert the kind of these frames into the given kind.
+   *
+   * Return A new CalleeFrames, identical in everyway except in "kind".
+   */
+  CalleeFrames with_kind(const Kind* kind) const;
+
   friend std::ostream& operator<<(
       std::ostream& out,
       const CalleeFrames& frames);

@@ -192,6 +192,30 @@ CalleeFrames CalleeFrames::propagate(
       callee, FramesByCallPosition{std::pair(call_position, result)});
 }
 
+CalleeFrames CalleeFrames::attach_position(const Position* position) const {
+  CallPositionFrames result;
+
+  // NOTE: It is not sufficient to simply update the key in the underlying
+  // frames_ map. This functions similarly to `propagate`. Frame features are
+  // propagated here, and we must call `CallPositionFrames::attach_position`
+  // to ensure that.
+  for (const auto& [_, call_position_frames] : frames_.bindings()) {
+    result.join_with(call_position_frames.attach_position(position));
+  }
+
+  return CalleeFrames(
+      callee_, FramesByCallPosition{std::pair(position, result)});
+}
+
+CalleeFrames CalleeFrames::with_kind(const Kind* new_kind) const {
+  FramesByCallPosition frames_by_position;
+  for (const auto& [position, frames] : frames_.bindings()) {
+    frames_by_position.set(position, frames.with_kind(new_kind));
+  }
+
+  return CalleeFrames{callee_, frames_by_position};
+}
+
 std::ostream& operator<<(std::ostream& out, const CalleeFrames& frames) {
   if (frames.is_top()) {
     return out << "T";
