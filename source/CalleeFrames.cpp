@@ -113,6 +113,55 @@ void CalleeFrames::difference_with(const CalleeFrames& other) {
       });
 }
 
+void CalleeFrames::map(const std::function<void(Frame&)>& f) {
+  frames_.map([&](const CallPositionFrames& frames) {
+    auto new_frames = frames;
+    new_frames.map(f);
+    return new_frames;
+  });
+}
+
+void CalleeFrames::add_inferred_features(const FeatureMayAlwaysSet& features) {
+  if (features.empty()) {
+    return;
+  }
+
+  map([&features](Frame& frame) { frame.add_inferred_features(features); });
+}
+
+LocalPositionSet CalleeFrames::local_positions() const {
+  auto result = LocalPositionSet::bottom();
+  for (const auto& [_, frames] : frames_.bindings()) {
+    result.join_with(frames.local_positions());
+  }
+  return result;
+}
+
+void CalleeFrames::add_local_position(const Position* position) {
+  map([position](Frame& frame) { frame.add_local_position(position); });
+}
+
+void CalleeFrames::set_local_positions(const LocalPositionSet& positions) {
+  map([&positions](Frame& frame) { frame.set_local_positions(positions); });
+}
+
+void CalleeFrames::add_inferred_features_and_local_position(
+    const FeatureMayAlwaysSet& features,
+    const Position* MT_NULLABLE position) {
+  if (features.empty() && position == nullptr) {
+    return;
+  }
+
+  map([&features, position](Frame& frame) {
+    if (!features.empty()) {
+      frame.add_inferred_features(features);
+    }
+    if (position != nullptr) {
+      frame.add_local_position(position);
+    }
+  });
+}
+
 std::ostream& operator<<(std::ostream& out, const CalleeFrames& frames) {
   if (frames.is_top()) {
     return out << "T";
@@ -125,4 +174,5 @@ std::ostream& operator<<(std::ostream& out, const CalleeFrames& frames) {
     return out << "]";
   }
 }
+
 } // namespace marianatrench

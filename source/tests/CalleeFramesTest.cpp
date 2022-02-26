@@ -470,4 +470,169 @@ TEST_F(CalleeFramesTest, Difference) {
   // NOTE: Access path coverage in CallPositionFramesTest.cpp.
 }
 
+TEST_F(CalleeFramesTest, Map) {
+  auto context = test::make_empty_context();
+
+  Scope scope;
+  auto* one =
+      context.methods->create(redex::create_void_method(scope, "LOne;", "one"));
+  auto* test_kind = context.kinds->get("TestSink");
+  auto* test_position_one = context.positions->get(std::nullopt, 1);
+  auto* test_position_two = context.positions->get(std::nullopt, 2);
+  auto* feature_one = context.features->get("FeatureOne");
+
+  auto frames = CalleeFrames{
+      test::make_frame(
+          test_kind,
+          test::FrameProperties{
+              .callee = one,
+              .call_position = test_position_one,
+          }),
+      test::make_frame(
+          test_kind,
+          test::FrameProperties{
+              .callee = one,
+              .call_position = test_position_two,
+          }),
+  };
+  frames.map([feature_one](Frame& frame) {
+    frame.add_inferred_features(FeatureMayAlwaysSet{feature_one});
+  });
+  EXPECT_EQ(
+      frames,
+      (CalleeFrames{
+          test::make_frame(
+              test_kind,
+              test::FrameProperties{
+                  .callee = one,
+                  .call_position = test_position_one,
+                  .locally_inferred_features =
+                      FeatureMayAlwaysSet{feature_one}}),
+          test::make_frame(
+              test_kind,
+              test::FrameProperties{
+                  .callee = one,
+                  .call_position = test_position_two,
+                  .locally_inferred_features =
+                      FeatureMayAlwaysSet{feature_one}}),
+      }));
+}
+
+TEST_F(CalleeFramesTest, FeaturesAndPositions) {
+  auto context = test::make_empty_context();
+
+  Scope scope;
+  auto* test_kind_one = context.kinds->get("TestSinkOne");
+  auto* test_kind_two = context.kinds->get("TestSinkTwo");
+  auto* test_position_one = context.positions->get(std::nullopt, 1);
+  auto* test_position_two = context.positions->get(std::nullopt, 2);
+  auto* feature_one = context.features->get("FeatureOne");
+  auto* feature_two = context.features->get("FeatureTwo");
+
+  // add_inferred_features should be an *add* operation on the features,
+  // not a join.
+  auto frames = CalleeFrames{
+      test::make_frame(
+          test_kind_one,
+          test::FrameProperties{
+              .locally_inferred_features = FeatureMayAlwaysSet(
+                  /* may */ FeatureSet{feature_one},
+                  /* always */ FeatureSet{})}),
+      test::make_frame(
+          test_kind_two,
+          test::FrameProperties{.call_position = test_position_one})};
+  frames.add_inferred_features(FeatureMayAlwaysSet{feature_two});
+  EXPECT_EQ(
+      frames,
+      (CalleeFrames{
+          test::make_frame(
+              test_kind_one,
+              test::FrameProperties{
+                  .locally_inferred_features = FeatureMayAlwaysSet(
+                      /* may */ FeatureSet{feature_one},
+                      /* always */ FeatureSet{feature_two})}),
+          test::make_frame(
+              test_kind_two,
+              test::FrameProperties{
+                  .call_position = test_position_one,
+                  .locally_inferred_features =
+                      FeatureMayAlwaysSet{feature_two}}),
+      }));
+
+  // Get local_positions()
+  frames = CalleeFrames{
+      test::make_frame(
+          test_kind_one,
+          test::FrameProperties{
+              .call_position = test_position_one,
+              .local_positions = LocalPositionSet{test_position_one}}),
+      test::make_frame(
+          test_kind_two,
+          test::FrameProperties{
+              .call_position = test_position_two,
+              .local_positions = LocalPositionSet{test_position_two}}),
+  };
+  EXPECT_EQ(
+      frames.local_positions(),
+      (LocalPositionSet{test_position_one, test_position_two}));
+
+  // add_local_position
+  frames.add_local_position(test_position_one);
+  EXPECT_EQ(
+      frames,
+      (CalleeFrames{
+          test::make_frame(
+              test_kind_one,
+              test::FrameProperties{
+                  .call_position = test_position_one,
+                  .local_positions = LocalPositionSet{test_position_one}}),
+          test::make_frame(
+              test_kind_two,
+              test::FrameProperties{
+                  .call_position = test_position_two,
+                  .local_positions =
+                      LocalPositionSet{test_position_one, test_position_two}}),
+      }));
+
+  // set_local_positions
+  frames.set_local_positions(LocalPositionSet{test_position_two});
+  EXPECT_EQ(
+      frames,
+      (CalleeFrames{
+          test::make_frame(
+              test_kind_one,
+              test::FrameProperties{
+                  .call_position = test_position_one,
+                  .local_positions = LocalPositionSet{test_position_two}}),
+          test::make_frame(
+              test_kind_two,
+              test::FrameProperties{
+                  .call_position = test_position_two,
+                  .local_positions = LocalPositionSet{test_position_two}}),
+      }));
+
+  // add_inferred_features_and_local_position
+  frames.add_inferred_features_and_local_position(
+      /* features */ FeatureMayAlwaysSet{feature_one},
+      /* position */ test_position_one);
+  EXPECT_EQ(
+      frames,
+      (CalleeFrames{
+          test::make_frame(
+              test_kind_one,
+              test::FrameProperties{
+                  .call_position = test_position_one,
+                  .locally_inferred_features = FeatureMayAlwaysSet{feature_one},
+                  .local_positions =
+                      LocalPositionSet{test_position_one, test_position_two}}),
+          test::make_frame(
+              test_kind_two,
+              test::FrameProperties{
+                  .call_position = test_position_two,
+                  .locally_inferred_features = FeatureMayAlwaysSet{feature_one},
+                  .local_positions =
+                      LocalPositionSet{test_position_one, test_position_two}}),
+      }));
+}
+
 } // namespace marianatrench

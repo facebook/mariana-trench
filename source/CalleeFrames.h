@@ -95,6 +95,20 @@ class CalleeFrames final : public sparta::AbstractDomain<CalleeFrames> {
 
   void difference_with(const CalleeFrames& other);
 
+  void map(const std::function<void(Frame&)>& f);
+
+  void add_inferred_features(const FeatureMayAlwaysSet& features);
+
+  LocalPositionSet local_positions() const;
+
+  void add_local_position(const Position* position);
+
+  void set_local_positions(const LocalPositionSet& positions);
+
+  void add_inferred_features_and_local_position(
+      const FeatureMayAlwaysSet& features,
+      const Position* MT_NULLABLE position);
+
   friend std::ostream& operator<<(
       std::ostream& out,
       const CalleeFrames& frames);
