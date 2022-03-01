@@ -92,14 +92,6 @@ Registry MarianaTrench::analyze(Context& context) {
   context.statistics->log_time("types", types_timer);
   LOG(1, "Inferred types in {:.2f}s.", types_timer.duration_in_seconds());
 
-  Timer class_properties_timer;
-  context.class_properties = std::make_unique<ClassProperties>(
-      *context.options, context.stores, *context.features);
-  context.statistics->log_time("class_properties", class_properties_timer);
-  LOG(1,
-      "Created class properties in {:.2f}s.",
-      class_properties_timer.duration_in_seconds());
-
   Timer class_hierarchies_timer;
   LOG(1, "Building class hierarchies...");
   context.class_hierarchies =
@@ -218,6 +210,17 @@ Registry MarianaTrench::analyze(Context& context) {
   LOG(1,
       "Built dependency graph in {:.2f}s.",
       dependencies_timer.duration_in_seconds());
+
+  Timer class_properties_timer;
+  context.class_properties = std::make_unique<ClassProperties>(
+      *context.options,
+      context.stores,
+      *context.features,
+      *context.dependencies);
+  context.statistics->log_time("class_properties", class_properties_timer);
+  LOG(1,
+      "Created class properties in {:.2f}s.",
+      class_properties_timer.duration_in_seconds());
 
   Timer scheduler_timer;
   LOG(1, "Building the analysis schedule...");

@@ -17,6 +17,7 @@
 #include <mariana-trench/ClassProperties.h>
 #include <mariana-trench/Constants.h>
 #include <mariana-trench/Features.h>
+#include <mariana-trench/Heuristics.h>
 #include <mariana-trench/Log.h>
 #include <mariana-trench/Options.h>
 #include <mariana-trench/Redex.h>
@@ -154,10 +155,14 @@ namespace marianatrench {
 ClassProperties::ClassProperties(
     const Options& options,
     const DexStoresVector& stores,
-    const Features& features)
-    : features_(features) {
+    const Features& features,
+    const Dependencies& dependencies,
+    std::unique_ptr<AndroidResources> android_resources)
+    : features_(features), dependencies_(dependencies) {
   try {
-    auto android_resources = create_resource_reader(options.apk_directory());
+    if (android_resources == nullptr) {
+      android_resources = create_resource_reader(options.apk_directory());
+    }
     const auto manifest_class_info =
         android_resources->get_manifest_class_info();
 
@@ -303,8 +308,20 @@ FeatureMayAlwaysSet ClassProperties::propagate_features(
 
 FeatureMayAlwaysSet ClassProperties::issue_features(
     const Method* method) const {
-  FeatureSet features;
   auto clazz = method->get_class()->str();
+  auto features = get_class_features(clazz, /* via_dependency */ false);
+  if (!has_user_exposed_properties(clazz) &&
+      !has_user_unexposed_properties(clazz)) {
+    features.join_with(compute_transitive_class_features(method));
+  }
+
+  return FeatureMayAlwaysSet::make_always(features);
+}
+
+FeatureSet ClassProperties::get_class_features(
+    const std::string& clazz,
+    bool via_dependency) const {
+  FeatureSet features;
 
   if (is_class_exported(clazz)) {
     features.add(features_.get("via-caller-exported"));
@@ -315,9 +332,6 @@ FeatureMayAlwaysSet ClassProperties::issue_features(
   if (is_class_unexported(clazz)) {
     features.add(features_.get("via-caller-unexported"));
   }
-  if (is_dfa_public(clazz)) {
-    features.add(features_.get("via-public-dfa-scheme"));
-  }
   if (has_permission(clazz)) {
     features.add(features_.get("via-caller-permission"));
   }
@@ -325,7 +339,97 @@ FeatureMayAlwaysSet ClassProperties::issue_features(
     features.add(features_.get("via-caller-protection-level"));
   }
 
-  return FeatureMayAlwaysSet::make_always(features);
+  // `via-public-dfa-scheme` feature only applies within the same class.
+  if (!via_dependency && is_dfa_public(clazz)) {
+    features.add(features_.get("via-public-dfa-scheme"));
+  }
+  if (via_dependency) {
+    features.add(features_.get("via-dependency-graph"));
+    features.add(features_.get(fmt::format("via-class:{}", clazz)));
+  }
+
+  return features;
+}
+
+bool ClassProperties::has_user_exposed_properties(
+    const std::string& class_name) const {
+  return is_class_exported(class_name) || is_child_exposed(class_name);
+};
+
+bool ClassProperties::has_user_unexposed_properties(
+    const std::string& class_name) const {
+  return is_class_unexported(class_name) || has_permission(class_name) ||
+      has_protection_level(class_name);
+};
+
+namespace {
+
+struct QueueItem {
+  const Method* method;
+  size_t depth;
+};
+
+} // namespace
+
+FeatureSet ClassProperties::compute_transitive_class_features(
+    const Method* callee) const {
+  // Check cache
+  if (const auto* target_method = via_dependencies_.get(callee, nullptr)) {
+    return get_class_features(
+        target_method->get_class()->str(), /* via_dependency */ true);
+  }
+
+  size_t depth = 0;
+  std::queue<QueueItem> queue;
+  queue.push(QueueItem{.method = callee, .depth = depth});
+  std::unordered_set<const Method*> processed;
+  QueueItem target{.method = nullptr, .depth = 0};
+
+  // Traverse the dependency graph till we find closest "exported" class.
+  // If no "exported" class is reachable, find the closest "unexported" class.
+  // "exported" class that is only reachable via an "unexported" class is
+  // ignored.
+  while (!queue.empty()) {
+    auto item = queue.front();
+    queue.pop();
+    processed.emplace(item.method);
+    depth = item.depth;
+    const auto& class_name = item.method->get_class()->str();
+
+    if (has_user_exposed_properties(class_name)) {
+      target = item;
+      break;
+    }
+
+    if (target.method == nullptr && has_user_unexposed_properties(class_name)) {
+      // Continue search for user exposed properties along other paths.
+      target = item;
+      continue;
+    }
+
+    if (depth == Heuristics::kMaxDepthClassProperties) {
+      continue;
+    }
+
+    for (const auto* dependency : dependencies_.dependencies(item.method)) {
+      if (processed.count(dependency) == 0) {
+        queue.push(QueueItem{.method = dependency, .depth = depth + 1});
+      }
+    }
+  }
+
+  if (target.method != nullptr) {
+    LOG(4,
+        "Class properties found for: `{}` via-dependency with `{}` at depth {}",
+        show(callee),
+        show(target.method),
+        target.depth);
+    via_dependencies_.insert({callee, target.method});
+    return get_class_features(
+        target.method->get_class()->str(), /* via_dependency */ true);
+  }
+
+  return FeatureSet();
 }
 
 } // namespace marianatrench

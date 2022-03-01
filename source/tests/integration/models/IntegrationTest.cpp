@@ -489,8 +489,6 @@ TEST_P(IntegrationTest, ReturnsExpectedModel) {
   context.fields = std::make_unique<Fields>(context.stores);
   context.positions = std::make_unique<Positions>(options, context.stores);
   context.types = std::make_unique<Types>(options, context.stores);
-  context.class_properties = std::make_unique<ClassProperties>(
-      options, context.stores, *context.features);
   context.class_hierarchies =
       std::make_unique<ClassHierarchies>(*context.options, context.stores);
   context.field_cache =
@@ -526,6 +524,8 @@ TEST_P(IntegrationTest, ReturnsExpectedModel) {
       *context.overrides,
       *context.call_graph,
       registry);
+  context.class_properties = std::make_unique<ClassProperties>(
+      options, context.stores, *context.features, *context.dependencies);
   context.scheduler =
       std::make_unique<Scheduler>(*context.methods, *context.dependencies);
 

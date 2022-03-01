@@ -71,6 +71,11 @@ class Heuristics {
    * Maximum number of local positions per frame.
    */
   constexpr static std::size_t kMaxNumberLocalPositions = 20;
+
+  /**
+   * Maximum depth of dependency graph traversal to find class properties.
+   */
+  constexpr static std::size_t kMaxDepthClassProperties = 10;
 };
 
 } // namespace marianatrench

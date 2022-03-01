@@ -67,8 +67,6 @@ Context make_context(const DexStore& store) {
   context.positions =
       std::make_unique<Positions>(*context.options, context.stores);
   context.types = std::make_unique<Types>(*context.options, context.stores);
-  context.class_properties = std::make_unique<ClassProperties>(
-      *context.options, context.stores, *context.features);
   context.class_hierarchies =
       std::make_unique<ClassHierarchies>(*context.options, context.stores);
   context.overrides = std::make_unique<Overrides>(
@@ -81,6 +79,13 @@ Context make_context(const DexStore& store) {
       *context.class_hierarchies,
       *context.overrides,
       *context.features);
+  auto registry = Registry(context);
+  context.dependencies = std::make_unique<Dependencies>(
+      *context.options,
+      *context.methods,
+      *context.overrides,
+      *context.call_graph,
+      registry);
   return context;
 }
 

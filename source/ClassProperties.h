@@ -8,7 +8,9 @@
 #pragma once
 
 #include <DexStore.h>
+#include <RedexResources.h>
 
+#include <mariana-trench/Dependencies.h>
 #include <mariana-trench/Feature.h>
 #include <mariana-trench/FeatureMayAlwaysSet.h>
 #include <mariana-trench/Method.h>
@@ -21,7 +23,9 @@ class ClassProperties final {
   explicit ClassProperties(
       const Options& options,
       const DexStoresVector& stores,
-      const Features& features);
+      const Features& features,
+      const Dependencies& dependencies,
+      std::unique_ptr<AndroidResources> android_resources = nullptr);
   ClassProperties(const ClassProperties&) = delete;
   ClassProperties(ClassProperties&&) = delete;
   ClassProperties& operator=(const ClassProperties&) = delete;
@@ -39,6 +43,12 @@ class ClassProperties final {
       const std::string& class_name) const;
   std::optional<std::string> get_privacy_decision_number_from_method(
       const Method* method) const;
+
+  bool has_user_exposed_properties(const std::string& class_name) const;
+  bool has_user_unexposed_properties(const std::string& class_name) const;
+  FeatureSet get_class_features(const std::string& clazz, bool via_dependency)
+      const;
+  FeatureSet compute_transitive_class_features(const Method* method) const;
 
  public:
   /* A set of features to add to sources propagated from callee to caller. */
@@ -60,6 +70,10 @@ class ClassProperties final {
   std::unordered_map<std::string, std::string> privacy_decision_classes_;
 
   const Features& features_;
+  const Dependencies& dependencies_;
+  // This is a cache and updating it does not change the internal state of the
+  // object and hence is safe to mark as mutable.
+  mutable ConcurrentMap<const Method*, const Method*> via_dependencies_;
 };
 
 } // namespace marianatrench
