@@ -613,6 +613,7 @@ Each "rule" defines a "filter" (which uses "constraints" to specify methods for 
   - **Field**:
     - `signature`: Expects an extra property `pattern` which is a regex to fully match the full signature of the field. This is of the form `<className>.<fieldName>:<fieldType>`;
     - `parent`: Expects an extra property `inner` [Type] which contains a nested constraint to apply to the class holding the field;
+    - `is_static`: Accepts an extra property `value` which is either `true` or `false`. By default, `value` is considered `true`;
 
   - **Method, Type or Field:**
     - `name`: Expects an extra property `pattern` which is a regex to fully match the name of the item;
