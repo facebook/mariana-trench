@@ -12,6 +12,30 @@
 
 namespace marianatrench {
 
+namespace {
+const std::vector<std::string> k_skip_setter_class_suffixes{
+    "Activity;",
+    "Service;",
+    "Context;",
+    "ContextWrapper;"
+    "Webview;",
+    "Fragment;",
+    "WebViewClient;",
+    "ContentProvider;",
+    "BroadcastReceiver;"};
+const std::vector<std::string> k_allowlist_setter_method_prefixes{
+    "<init>",
+    "add",
+    "update",
+    "push"
+    "replace",
+    "set",
+    "put",
+    "append",
+    "unmarshall",
+    "write"};
+} // namespace
+
 std::vector<Model> TaintInTaintThisGenerator::visit_method(
     const Method* method) const {
   if (method->get_code() || method->is_static()) {
@@ -19,25 +43,25 @@ std::vector<Model> TaintInTaintThisGenerator::visit_method(
   }
 
   const auto class_name = generator::get_class_name(method);
-  if (boost::contains(class_name, "Activity;") ||
-      boost::contains(class_name, "Service;") ||
-      boost::contains(class_name, "WebView;") ||
-      boost::contains(class_name, "Fragment;") ||
-      boost::contains(class_name, "WebViewClient;") ||
-      boost::contains(class_name, "ContentProvider;") ||
-      boost::contains(class_name, "BroadcastReceiver;")) {
+  if (boost::starts_with(class_name, "Landroid") &&
+      std::any_of(
+          k_skip_setter_class_suffixes.begin(),
+          k_skip_setter_class_suffixes.end(),
+          [class_name](const auto& denied_class) {
+            return boost::ends_with(class_name, denied_class);
+          })) {
     return {};
   }
 
   const auto method_name = generator::get_method_name(method);
-  auto model = Model(method, context_, Model::Mode::TaintInTaintThis);
-  if (!boost::equals(method_name, "<init>") &&
-      !boost::starts_with(method_name, "add") &&
-      !boost::starts_with(method_name, "set") &&
-      !boost::starts_with(method_name, "put") &&
-      !boost::starts_with(method_name, "append") &&
-      !boost::starts_with(method_name, "unmarshall") &&
-      !boost::starts_with(method_name, "write")) {
+  if (boost::ends_with(class_name, "$Builder;") ||
+      std::any_of(
+          k_allowlist_setter_method_prefixes.begin(),
+          k_allowlist_setter_method_prefixes.end(),
+          [method_name](const auto& prefix) {
+            return boost::starts_with(method_name, prefix);
+          })) {
+    auto model = Model(method, context_, Model::Mode::TaintInTaintThis);
     for (ParameterPosition parameter_position = 1;
          parameter_position < method->number_of_parameters();
          parameter_position++) {
@@ -47,9 +71,10 @@ std::vector<Model> TaintInTaintThisGenerator::visit_method(
           parameter_position,
           {"via-obscure-taint-in-taint-this"});
     }
+    return {model};
   }
 
-  return {model};
+  return {};
 }
 
 } // namespace marianatrench
