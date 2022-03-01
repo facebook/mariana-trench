@@ -1,0 +1,38 @@
+// @generated
+{
+  "Landroid/app/Activity;.onCreate:(Landroid/os/Bundle;)V" : 
+  [
+    "Lcom/facebook/marianatrench/integrationtests/BaseActivity;.onCreate:(Landroid/os/Bundle;)V"
+  ],
+  "Landroid/app/Activity;.onStart:()V" : 
+  [
+    "Lcom/facebook/marianatrench/integrationtests/BaseActivity;.onStart:()V"
+  ],
+  "Landroid/content/Context;.startActivity:(Landroid/content/Intent;)V" : 
+  [
+    "Landroid/app/Activity;.startActivity:(Landroid/content/Intent;)V"
+  ],
+  "Lcom/facebook/marianatrench/integrationtests/BaseActivity;.doCreate:(Landroid/os/Bundle;)V" : 
+  [
+    "Lcom/facebook/marianatrench/integrationtests/MainActivity2;.doCreate:(Landroid/os/Bundle;)V",
+    "Lcom/facebook/marianatrench/integrationtests/MainActivity;.doCreate:(Landroid/os/Bundle;)V"
+  ],
+  "Lcom/facebook/marianatrench/integrationtests/BaseActivity;.doStart:()V" : 
+  [
+    "Lcom/facebook/marianatrench/integrationtests/MainActivity2;.doStart:()V",
+    "Lcom/facebook/marianatrench/integrationtests/MainActivity;.doStart:()V"
+  ],
+  "Ljava/lang/Object;.toString:()Ljava/lang/String;" : 
+  [
+    "Landroid/location/Location;.toString:()Ljava/lang/String;",
+    "Landroid/net/Uri;.toString:()Ljava/lang/String;"
+  ],
+  "Ljava/lang/Runnable;.run:()V" : 
+  [
+    "Ljava/lang/Thread;.run:()V"
+  ],
+  "Ljava/util/Map;.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;" : 
+  [
+    "Ljava/util/TreeMap;.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;"
+  ]
+}

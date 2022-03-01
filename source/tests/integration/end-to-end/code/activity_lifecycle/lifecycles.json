@@ -1,0 +1,20 @@
+[
+  {
+    "base_class_name": "Landroid/app/Activity;",
+    "method_name": "activity_lifecycle_wrapper",
+    "callees": [
+      {
+        "method_name": "onCreate",
+        "return_type": "V",
+        "argument_types": [
+          "Landroid/os/Bundle;"
+        ]
+      },
+      {
+        "method_name": "onStart",
+        "return_type": "V",
+        "argument_types": []
+      }
+    ]
+  }
+]

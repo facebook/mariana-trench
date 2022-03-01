@@ -114,18 +114,10 @@ void LifecycleMethod::create_methods(
   std::atomic<int> methods_created_count = 0;
 
   const auto& children = class_hierarchies.extends(base_class_type);
-  std::unordered_set<const DexType*> final_children;
-  for (const auto* child : children) {
-    const auto& grandchildren = class_hierarchies.extends(child);
-    if (grandchildren.empty()) {
-      final_children.insert(child);
-    }
-  }
   LOG(3,
-      "Found {} child(ren) for type `{}`. Creating life-cycle methods for {} leaf child(ren)",
+      "Found {} child(ren) for type `{}`.",
       children.size(),
-      base_class_name_,
-      final_children.size());
+      base_class_name_);
 
   auto queue = sparta::work_queue<DexType*>([&](DexType* child) {
     const auto* method = create_dex_method(child, type_index_map);
@@ -134,8 +126,8 @@ void LifecycleMethod::create_methods(
       methods.create(method);
     }
   });
-  for (const auto* final_child : final_children) {
-    queue.add_item(const_cast<DexType*>(final_child));
+  for (const auto* child : children) {
+    queue.add_item(const_cast<DexType*>(child));
   }
   queue.run_all();
 
