@@ -39,6 +39,9 @@
     "name": "IntentDataFeatureGenerator"
   },
   {
+    "name": "join_override_generator"
+  },
+  {
     "name": "service_sources"
   },
   {

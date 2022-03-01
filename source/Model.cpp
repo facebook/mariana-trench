@@ -112,12 +112,6 @@ Model::Model(
       modes_ |= Model::Mode::SkipAnalysis;
       modes_ |= Model::Mode::AddViaObscureFeature;
     }
-
-    // Do not join models at call sites for methods with too many overrides.
-    const auto& overrides = context.overrides->get(method_);
-    if (overrides.size() >= Heuristics::kJoinOverrideThreshold) {
-      modes_ |= Model::Mode::NoJoinVirtualOverrides;
-    }
   }
 
   if (modes_.test(Model::Mode::TaintInTaintOut)) {
