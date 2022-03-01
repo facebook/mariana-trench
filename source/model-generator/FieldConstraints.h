@@ -39,6 +39,16 @@ class FieldNameConstraint final : public FieldConstraint {
   re2::RE2 pattern_;
 };
 
+class IsStaticFieldConstraint final : public FieldConstraint {
+ public:
+  explicit IsStaticFieldConstraint(bool expected);
+  bool satisfy(const Field* field) const override;
+  bool operator==(const FieldConstraint& other) const override;
+
+ private:
+  bool expected_;
+};
+
 class SignatureFieldConstraint final : public FieldConstraint {
  public:
   explicit SignatureFieldConstraint(const std::string& regex_string);

@@ -10,6 +10,23 @@
 
 namespace marianatrench {
 
+IsStaticFieldConstraint::IsStaticFieldConstraint(bool expected)
+    : expected_(expected) {}
+
+bool IsStaticFieldConstraint::satisfy(const Field* field) const {
+  return (field->dex_field()->get_access() & DexAccessFlags::ACC_STATIC) ==
+      expected_;
+}
+
+bool IsStaticFieldConstraint::operator==(const FieldConstraint& other) const {
+  if (auto* other_constraint =
+          dynamic_cast<const IsStaticFieldConstraint*>(&other)) {
+    return other_constraint->expected_ == expected_;
+  } else {
+    return false;
+  }
+}
+
 FieldNameConstraint::FieldNameConstraint(const std::string& regex_string)
     : pattern_(regex_string) {}
 
@@ -149,6 +166,11 @@ std::unique_ptr<FieldConstraint> FieldConstraint::from_json(
   } else if (constraint_name == "signature") {
     return std::make_unique<SignatureFieldConstraint>(
         JsonValidation::string(constraint, /* field */ "pattern"));
+  } else if (constraint_name == "is_static") {
+    bool expected = constraint.isMember("value")
+        ? JsonValidation::boolean(constraint, /* field */ "value")
+        : true;
+    return std::make_unique<IsStaticFieldConstraint>(expected);
   } else if (constraint_name == "any_of" || constraint_name == "all_of") {
     std::vector<std::unique_ptr<FieldConstraint>> constraints;
     for (const auto& inner :
