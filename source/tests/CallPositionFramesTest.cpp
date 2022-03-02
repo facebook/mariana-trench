@@ -1182,43 +1182,200 @@ TEST_F(CallPositionFramesTest, AttachPosition) {
       }));
 }
 
-TEST_F(CallPositionFramesTest, WithKind) {
+TEST_F(CallPositionFramesTest, TransformKindWithFeatures) {
   auto context = test::make_empty_context();
 
-  Scope scope;
-  auto* one =
-      context.methods->create(redex::create_void_method(scope, "LOne;", "one"));
-  auto* two =
-      context.methods->create(redex::create_void_method(scope, "LTwo;", "two"));
+  auto* test_position = context.positions->get(std::nullopt, 1);
+  auto* feature_one = context.features->get("FeatureOne");
+  auto* feature_two = context.features->get("FeatureTwo");
+  auto* user_feature_one = context.features->get("UserFeatureOne");
 
-  auto* test_kind_one = context.kinds->get("TestSink1");
-  auto* test_kind_two = context.kinds->get("TestSink2");
+  auto* test_kind_one = context.kinds->get("TestKindOne");
+  auto* test_kind_two = context.kinds->get("TestKindTwo");
+  auto* transformed_test_kind_one =
+      context.kinds->get("TransformedTestKindOne");
+  auto* transformed_test_kind_two =
+      context.kinds->get("TransformedTestKindTwo");
 
   auto frames = CallPositionFrames{
       test::make_frame(
-          test_kind_one, test::FrameProperties{.origins = MethodSet{one}}),
+          test_kind_one,
+          test::FrameProperties{
+              .call_position = test_position,
+              .user_features = FeatureSet{user_feature_one}}),
+      test::make_frame(
+          test_kind_two,
+          test::FrameProperties{
+              .call_position = test_position,
+              .inferred_features = FeatureMayAlwaysSet{feature_one},
+              .user_features = FeatureSet{user_feature_one}}),
+  };
+
+  // Drop all kinds.
+  auto empty_frames = frames.transform_kind_with_features(
+      [](const auto* /* unused kind */) { return std::vector<const Kind*>(); },
+      [](const auto* /* unused kind */) {
+        return FeatureMayAlwaysSet::bottom();
+      });
+  EXPECT_EQ(empty_frames, CallPositionFrames::bottom());
+
+  // Perform an actual transformation.
+  auto new_frames = frames.transform_kind_with_features(
+      [&](const auto* kind) -> std::vector<const Kind*> {
+        if (kind == test_kind_one) {
+          return {transformed_test_kind_one};
+        }
+        return {kind};
+      },
+      [](const auto* /* unused kind */) {
+        return FeatureMayAlwaysSet::bottom();
+      });
+  EXPECT_EQ(
+      new_frames,
+      (CallPositionFrames{
+          test::make_frame(
+              transformed_test_kind_one,
+              test::FrameProperties{
+                  .call_position = test_position,
+                  .user_features = FeatureSet{user_feature_one}}),
+          test::make_frame(
+              test_kind_two,
+              test::FrameProperties{
+                  .call_position = test_position,
+                  .inferred_features = FeatureMayAlwaysSet{feature_one},
+                  .user_features = FeatureSet{user_feature_one}}),
+      }));
+
+  // Another transformation, this time including a change to the features
+  new_frames = frames.transform_kind_with_features(
+      [&](const auto* kind) {
+        if (kind == test_kind_one) {
+          return std::vector<const Kind*>{transformed_test_kind_one};
+        }
+        return std::vector<const Kind*>{kind};
+      },
+      [feature_one](const auto* /* unused kind */) {
+        return FeatureMayAlwaysSet{feature_one};
+      });
+  EXPECT_EQ(
+      new_frames,
+      (CallPositionFrames{
+          test::make_frame(
+              transformed_test_kind_one,
+              test::FrameProperties{
+                  .call_position = test_position,
+                  .locally_inferred_features = FeatureMayAlwaysSet{feature_one},
+                  .user_features = FeatureSet{user_feature_one}}),
+          test::make_frame(
+              test_kind_two,
+              test::FrameProperties{
+                  .call_position = test_position,
+                  .inferred_features = FeatureMayAlwaysSet{feature_one},
+                  .user_features = FeatureSet{user_feature_one}}),
+      }));
+
+  // Tests one -> many transformations (with features).
+  new_frames = frames.transform_kind_with_features(
+      [&](const auto* kind) {
+        if (kind == test_kind_one) {
+          return std::vector<const Kind*>{
+              test_kind_one,
+              transformed_test_kind_one,
+              transformed_test_kind_two};
+        }
+        return std::vector<const Kind*>{};
+      },
+      [feature_one](const auto* /* unused kind */) {
+        return FeatureMayAlwaysSet{feature_one};
+      });
+  EXPECT_EQ(
+      new_frames,
+      (CallPositionFrames{
+          test::make_frame(
+              test_kind_one,
+              test::FrameProperties{
+                  .call_position = test_position,
+                  .locally_inferred_features = FeatureMayAlwaysSet{feature_one},
+                  .user_features = FeatureSet{user_feature_one}}),
+          test::make_frame(
+              transformed_test_kind_one,
+              test::FrameProperties{
+                  .call_position = test_position,
+                  .locally_inferred_features = FeatureMayAlwaysSet{feature_one},
+                  .user_features = FeatureSet{user_feature_one}}),
+          test::make_frame(
+              transformed_test_kind_two,
+              test::FrameProperties{
+                  .call_position = test_position,
+                  .locally_inferred_features = FeatureMayAlwaysSet{feature_one},
+                  .user_features = FeatureSet{user_feature_one}}),
+      }));
+
+  // Tests transformations with features added to specific kinds.
+  new_frames = frames.transform_kind_with_features(
+      [&](const auto* kind) {
+        if (kind == test_kind_one) {
+          return std::vector<const Kind*>{
+              transformed_test_kind_one, transformed_test_kind_two};
+        }
+        return std::vector<const Kind*>{};
+      },
+      [&](const auto* transformed_kind) {
+        if (transformed_kind == transformed_test_kind_one) {
+          return FeatureMayAlwaysSet{feature_one};
+        }
+        return FeatureMayAlwaysSet::bottom();
+      });
+  EXPECT_EQ(
+      new_frames,
+      (CallPositionFrames{
+          test::make_frame(
+              transformed_test_kind_one,
+              test::FrameProperties{
+                  .call_position = test_position,
+                  .locally_inferred_features = FeatureMayAlwaysSet{feature_one},
+                  .user_features = FeatureSet{user_feature_one}}),
+          test::make_frame(
+              transformed_test_kind_two,
+              test::FrameProperties{
+                  .call_position = test_position,
+                  .user_features = FeatureSet{user_feature_one}}),
+      }));
+
+  // Transformation where multiple old kinds map to the same new kind
+  frames = CallPositionFrames{
       test::make_frame(
           test_kind_one,
           test::FrameProperties{
-              .callee_port = AccessPath(Root(Root::Kind::Argument, 0)),
-              .origins = MethodSet{two}}),
+              .call_position = test_position,
+              .inferred_features = FeatureMayAlwaysSet{feature_two},
+              .user_features = FeatureSet{user_feature_one}}),
       test::make_frame(
-          test_kind_two, test::FrameProperties{.origins = MethodSet{two}}),
+          test_kind_two,
+          test::FrameProperties{
+              .call_position = test_position,
+              .inferred_features = FeatureMayAlwaysSet{feature_one},
+              .user_features = FeatureSet{user_feature_one}}),
   };
-
-  auto new_kind = context.kinds->get("TestSink3");
-  auto frames_with_new_kind = frames.with_kind(new_kind);
-
+  new_frames = frames.transform_kind_with_features(
+      [&](const auto* /* unused kind */) -> std::vector<const Kind*> {
+        return {transformed_test_kind_one};
+      },
+      [](const auto* /* unused kind */) {
+        return FeatureMayAlwaysSet::bottom();
+      });
   EXPECT_EQ(
-      frames_with_new_kind,
+      new_frames,
       (CallPositionFrames{
           test::make_frame(
-              new_kind, test::FrameProperties{.origins = MethodSet{one, two}}),
-          test::make_frame(
-              new_kind,
+              transformed_test_kind_one,
               test::FrameProperties{
-                  .callee_port = AccessPath(Root(Root::Kind::Argument, 0)),
-                  .origins = MethodSet{two}})}));
+                  .call_position = test_position,
+                  .inferred_features = FeatureMayAlwaysSet(
+                      /* may */ FeatureSet{feature_one, feature_two},
+                      /* always */ FeatureSet{}),
+                  .user_features = FeatureSet{user_feature_one}}),
+      }));
 }
 
 TEST_F(CallPositionFramesTest, Show) {

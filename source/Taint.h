@@ -168,6 +168,11 @@ class Taint final : public sparta::AbstractDomain<Taint> {
    * If a transformation occurs (returns more than a vector containing just the
    * input kind), locally inferred features can be added to the frames of the
    * transformed kinds (return `bottom()` to add nothing).
+   *
+   * If multiple kinds map to the same kind, their respective frames will be
+   * joined. This means "always" features could turn into "may" features. At
+   * time of writing, there should be no such use-case, but new callers should
+   * be mindful of this behavior.
    */
   Taint transform_kind_with_features(
       const std::function<std::vector<const Kind*>(const Kind*)>&,

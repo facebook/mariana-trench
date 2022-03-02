@@ -207,13 +207,16 @@ CalleeFrames CalleeFrames::attach_position(const Position* position) const {
       callee_, FramesByCallPosition{std::pair(position, result)});
 }
 
-CalleeFrames CalleeFrames::with_kind(const Kind* new_kind) const {
-  FramesByCallPosition frames_by_position;
+CalleeFrames CalleeFrames::transform_kind_with_features(
+    const std::function<std::vector<const Kind*>(const Kind*)>& transform_kind,
+    const std::function<FeatureMayAlwaysSet(const Kind*)>& add_features) const {
+  FramesByCallPosition new_frames;
   for (const auto& [position, frames] : frames_.bindings()) {
-    frames_by_position.set(position, frames.with_kind(new_kind));
+    new_frames.set(
+        position,
+        frames.transform_kind_with_features(transform_kind, add_features));
   }
-
-  return CalleeFrames{callee_, frames_by_position};
+  return CalleeFrames(callee_, new_frames);
 }
 
 std::ostream& operator<<(std::ostream& out, const CalleeFrames& frames) {

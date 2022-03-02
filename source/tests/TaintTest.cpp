@@ -733,6 +733,47 @@ TEST_F(TaintTest, TransformKind) {
                   .origins = MethodSet{one},
                   .user_features = FeatureSet{user_feature_one}}),
       }));
+
+  // Transformation where multiple old kinds map to the same new kind
+  taint = Taint{
+      test::make_frame(
+          /* kind */ context.kinds->get("OtherSource1"),
+          test::FrameProperties{
+              .callee = two,
+              .call_position = test_position,
+              .origins = MethodSet{two},
+              .inferred_features = FeatureMayAlwaysSet{feature_one},
+          }),
+      test::make_frame(
+          /* kind */ context.kinds->get("OtherSource2"),
+          test::FrameProperties{
+              .callee = two,
+              .call_position = test_position,
+              .origins = MethodSet{three},
+              .inferred_features = FeatureMayAlwaysSet{feature_two},
+          }),
+  };
+  map_test_source_taint = taint.transform_kind_with_features(
+      [&](const auto* /* unused kind */) -> std::vector<const Kind*> {
+        return {transformed_test_source};
+      },
+      [](const auto* /* unused kind */) {
+        return FeatureMayAlwaysSet::bottom();
+      });
+  EXPECT_EQ(
+      map_test_source_taint,
+      (Taint{
+          test::make_frame(
+              transformed_test_source,
+              test::FrameProperties{
+                  .callee = two,
+                  .call_position = test_position,
+                  .origins = MethodSet{two, three},
+                  .inferred_features = FeatureMayAlwaysSet(
+                      /* may */ FeatureSet{feature_one, feature_two},
+                      /* always */ FeatureSet{}),
+              }),
+      }));
 }
 
 TEST_F(TaintTest, AppendCalleePort) {

@@ -429,4 +429,260 @@ TEST_F(TaintV2Test, Propagate) {
       }));
 }
 
+TEST_F(TaintV2Test, TransformKind) {
+  auto context = test::make_empty_context();
+
+  Scope scope;
+  auto* one =
+      context.methods->create(redex::create_void_method(scope, "LOne;", "one"));
+  auto* two =
+      context.methods->create(redex::create_void_method(scope, "LTwo;", "two"));
+  auto* three = context.methods->create(
+      redex::create_void_method(scope, "LThree;", "three"));
+
+  auto* test_position = context.positions->get(std::nullopt, 1);
+  auto* feature_one = context.features->get("FeatureOne");
+  auto* feature_two = context.features->get("FeatureTwo");
+  auto* user_feature_one = context.features->get("UserFeatureOne");
+  auto* user_feature_two = context.features->get("UserFeatureTwo");
+
+  auto* test_source = context.kinds->get("TestSource");
+  auto* transformed_test_source = context.kinds->get("TransformedTestSource");
+  auto* transformed_test_source2 = context.kinds->get("TransformedTestSource2");
+
+  auto taint = TaintV2{
+      test::make_frame(
+          /* kind */ test_source,
+          test::FrameProperties{
+              .origins = MethodSet{one},
+              .user_features = FeatureSet{user_feature_one}}),
+      test::make_frame(
+          /* kind */ context.kinds->get("OtherSource"),
+          test::FrameProperties{
+              .callee_port = AccessPath(Root(Root::Kind::Argument, 1)),
+              .callee = two,
+              .call_position = test_position,
+              .distance = 2,
+              .origins = MethodSet{two},
+              .inferred_features = FeatureMayAlwaysSet{feature_one},
+              .user_features = FeatureSet{user_feature_one}}),
+      test::make_frame(
+          /* kind */ context.kinds->get("OtherSource"),
+          test::FrameProperties{
+              .callee_port = AccessPath(Root(Root::Kind::Argument, 0)),
+              .callee = three,
+              .call_position = test_position,
+              .distance = 1,
+              .origins = MethodSet{three},
+              .inferred_features =
+                  FeatureMayAlwaysSet{feature_one, feature_two},
+              .user_features = FeatureSet{user_feature_one, user_feature_two}}),
+  };
+
+  // This works the same way as filter.
+  auto empty_taint = taint.transform_kind_with_features(
+      [](const auto* /* unused kind */) { return std::vector<const Kind*>(); },
+      [](const auto* /* unused kind */) {
+        return FeatureMayAlwaysSet::bottom();
+      });
+  EXPECT_EQ(empty_taint, TaintV2::bottom());
+
+  // This actually performs a transformation.
+  auto map_test_source_taint = taint.transform_kind_with_features(
+      [test_source,
+       transformed_test_source](const auto* kind) -> std::vector<const Kind*> {
+        if (kind == test_source) {
+          return {transformed_test_source};
+        }
+        return {kind};
+      },
+      [](const auto* /* unused kind */) {
+        return FeatureMayAlwaysSet::bottom();
+      });
+  EXPECT_EQ(
+      map_test_source_taint,
+      (TaintV2{
+          test::make_frame(
+              /* kind */ transformed_test_source,
+              test::FrameProperties{
+                  .origins = MethodSet{one},
+                  .user_features = FeatureSet{user_feature_one}}),
+          test::make_frame(
+              /* kind */ context.kinds->get("OtherSource"),
+              test::FrameProperties{
+                  .callee_port = AccessPath(Root(Root::Kind::Argument, 1)),
+                  .callee = two,
+                  .call_position = test_position,
+                  .distance = 2,
+                  .origins = MethodSet{two},
+                  .inferred_features = FeatureMayAlwaysSet{feature_one},
+                  .user_features = FeatureSet{user_feature_one}}),
+          test::make_frame(
+              /* kind */ context.kinds->get("OtherSource"),
+              test::FrameProperties{
+                  .callee_port = AccessPath(Root(Root::Kind::Argument, 0)),
+                  .callee = three,
+                  .call_position = test_position,
+                  .distance = 1,
+                  .origins = MethodSet{three},
+                  .inferred_features =
+                      FeatureMayAlwaysSet{feature_one, feature_two},
+                  .user_features =
+                      FeatureSet{user_feature_one, user_feature_two}}),
+      }));
+
+  // Another transformation. Covers mapping transformed frames.
+  map_test_source_taint = taint.transform_kind_with_features(
+      [test_source, transformed_test_source](const auto* kind) {
+        if (kind == test_source) {
+          return std::vector<const Kind*>{transformed_test_source};
+        }
+        return std::vector<const Kind*>{kind};
+      },
+      [feature_one](const auto* /* unused kind */) {
+        return FeatureMayAlwaysSet{feature_one};
+      });
+  EXPECT_EQ(
+      map_test_source_taint,
+      (TaintV2{
+          test::make_frame(
+              /* kind */ transformed_test_source,
+              test::FrameProperties{
+                  .origins = MethodSet{one},
+                  .locally_inferred_features = FeatureMayAlwaysSet{feature_one},
+                  .user_features = FeatureSet{user_feature_one}}),
+          test::make_frame(
+              /* kind */ context.kinds->get("OtherSource"),
+              test::FrameProperties{
+                  .callee_port = AccessPath(Root(Root::Kind::Argument, 1)),
+                  .callee = two,
+                  .call_position = test_position,
+                  .distance = 2,
+                  .origins = MethodSet{two},
+                  .inferred_features = FeatureMayAlwaysSet{feature_one},
+                  .user_features = FeatureSet{user_feature_one}}),
+          test::make_frame(
+              /* kind */ context.kinds->get("OtherSource"),
+              test::FrameProperties{
+                  .callee_port = AccessPath(Root(Root::Kind::Argument, 0)),
+                  .callee = three,
+                  .call_position = test_position,
+                  .distance = 1,
+                  .origins = MethodSet{three},
+                  .inferred_features =
+                      FeatureMayAlwaysSet{feature_one, feature_two},
+                  .user_features =
+                      FeatureSet{user_feature_one, user_feature_two}}),
+      }));
+
+  // Tests one -> many transformations (with features).
+  map_test_source_taint = taint.transform_kind_with_features(
+      [test_source, transformed_test_source, transformed_test_source2](
+          const auto* kind) {
+        if (kind == test_source) {
+          return std::vector<const Kind*>{
+              test_source, transformed_test_source, transformed_test_source2};
+        }
+        return std::vector<const Kind*>{};
+      },
+      [feature_one](const auto* /* unused kind */) {
+        return FeatureMayAlwaysSet{feature_one};
+      });
+  EXPECT_EQ(
+      map_test_source_taint,
+      (TaintV2{
+          test::make_frame(
+              /* kind */ test_source,
+              test::FrameProperties{
+                  .origins = MethodSet{one},
+                  .locally_inferred_features = FeatureMayAlwaysSet{feature_one},
+                  .user_features = FeatureSet{user_feature_one}}),
+          test::make_frame(
+              /* kind */ transformed_test_source,
+              test::FrameProperties{
+                  .origins = MethodSet{one},
+                  .locally_inferred_features = FeatureMayAlwaysSet{feature_one},
+                  .user_features = FeatureSet{user_feature_one}}),
+          test::make_frame(
+              /* kind */ transformed_test_source2,
+              test::FrameProperties{
+                  .origins = MethodSet{one},
+                  .locally_inferred_features = FeatureMayAlwaysSet{feature_one},
+                  .user_features = FeatureSet{user_feature_one}}),
+      }));
+
+  // Tests transformations with features added to specific kinds.
+  map_test_source_taint = taint.transform_kind_with_features(
+      [test_source, transformed_test_source, transformed_test_source2](
+          const auto* kind) {
+        if (kind == test_source) {
+          return std::vector<const Kind*>{
+              transformed_test_source, transformed_test_source2};
+        }
+        return std::vector<const Kind*>{};
+      },
+      [&](const auto* transformed_kind) {
+        if (transformed_kind == transformed_test_source) {
+          return FeatureMayAlwaysSet{feature_one};
+        }
+        return FeatureMayAlwaysSet::bottom();
+      });
+  EXPECT_EQ(
+      map_test_source_taint,
+      (TaintV2{
+          test::make_frame(
+              /* kind */ transformed_test_source,
+              test::FrameProperties{
+                  .origins = MethodSet{one},
+                  .locally_inferred_features = FeatureMayAlwaysSet{feature_one},
+                  .user_features = FeatureSet{user_feature_one}}),
+          test::make_frame(
+              /* kind */ transformed_test_source2,
+              test::FrameProperties{
+                  .origins = MethodSet{one},
+                  .user_features = FeatureSet{user_feature_one}}),
+      }));
+
+  // Transformation where multiple old kinds map to the same new kind
+  taint = TaintV2{
+      test::make_frame(
+          /* kind */ context.kinds->get("OtherSource1"),
+          test::FrameProperties{
+              .callee = two,
+              .call_position = test_position,
+              .origins = MethodSet{two},
+              .inferred_features = FeatureMayAlwaysSet{feature_one},
+          }),
+      test::make_frame(
+          /* kind */ context.kinds->get("OtherSource2"),
+          test::FrameProperties{
+              .callee = two,
+              .call_position = test_position,
+              .origins = MethodSet{three},
+              .inferred_features = FeatureMayAlwaysSet{feature_two},
+          }),
+  };
+  map_test_source_taint = taint.transform_kind_with_features(
+      [&](const auto* /* unused kind */) -> std::vector<const Kind*> {
+        return {transformed_test_source};
+      },
+      [](const auto* /* unused kind */) {
+        return FeatureMayAlwaysSet::bottom();
+      });
+  EXPECT_EQ(
+      map_test_source_taint,
+      (TaintV2{
+          test::make_frame(
+              transformed_test_source,
+              test::FrameProperties{
+                  .callee = two,
+                  .call_position = test_position,
+                  .origins = MethodSet{two, three},
+                  .inferred_features = FeatureMayAlwaysSet(
+                      /* may */ FeatureSet{feature_one, feature_two},
+                      /* always */ FeatureSet{}),
+              }),
+      }));
+}
+
 } // namespace marianatrench

@@ -142,6 +142,22 @@ class TaintV2 final : public sparta::AbstractDomain<TaintV2> {
   /* Return the set of leaf frames with the given position. */
   TaintV2 attach_position(const Position* position) const;
 
+  /**
+   * Transforms kinds in the taint according to the function in the first arg.
+   * Returning an empty vec will cause frames for the input kind to be dropped.
+   * If a transformation occurs (returns more than a vector containing just the
+   * input kind), locally inferred features can be added to the frames of the
+   * transformed kinds (return `bottom()` to add nothing).
+   *
+   * If multiple kinds map to the same kind, their respective frames will be
+   * joined. This means "always" features could turn into "may" features. At
+   * time of writing, there should be no such use-case, but new callers should
+   * be mindful of this behavior.
+   */
+  TaintV2 transform_kind_with_features(
+      const std::function<std::vector<const Kind*>(const Kind*)>&,
+      const std::function<FeatureMayAlwaysSet(const Kind*)>&) const;
+
  private:
   void add(const CalleeFrames& frames);
 

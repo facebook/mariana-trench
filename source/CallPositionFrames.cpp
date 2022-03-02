@@ -329,19 +329,34 @@ CallPositionFrames CallPositionFrames::attach_position(
   return CallPositionFrames(position, result);
 }
 
-CallPositionFrames CallPositionFrames::with_kind(const Kind* new_kind) const {
-  Frames new_frames;
-
-  // TODO(T91357916): Remove "kind" from frames. Having to update the
-  // individual frames seem redundant. We should only need to update the key.
-  for (const auto& [kind, frames] : frames_.bindings()) {
-    for (const auto& frame : frames) {
-      new_frames.add(frame.with_kind(new_kind));
+CallPositionFrames CallPositionFrames::transform_kind_with_features(
+    const std::function<std::vector<const Kind*>(const Kind*)>& transform_kind,
+    const std::function<FeatureMayAlwaysSet(const Kind*)>& add_features) const {
+  FramesByKind new_frames_by_kind;
+  for (const auto& [old_kind, frames] : frames_.bindings()) {
+    auto new_kinds = transform_kind(old_kind);
+    if (new_kinds.empty()) {
+      continue;
+    } else if (new_kinds.size() == 1 && new_kinds.front() == old_kind) {
+      new_frames_by_kind.set(old_kind, frames); // no transformation
+    } else {
+      for (const auto* new_kind : new_kinds) {
+        // Even if new_kind == old_kind for some new_kind, perform map_frame_set
+        // because a transformation occurred.
+        Frames new_frames;
+        auto features_to_add = add_features(new_kind);
+        for (const auto& frame : frames) {
+          auto new_frame = frame.with_kind(new_kind);
+          new_frame.add_inferred_features(features_to_add);
+          new_frames.add(new_frame);
+        }
+        new_frames_by_kind.update(new_kind, [&](const Frames& existing) {
+          return existing.join(new_frames);
+        });
+      }
     }
   }
-
-  return CallPositionFrames(
-      position_, FramesByKind{std::pair(new_kind, new_frames)});
+  return CallPositionFrames(position_, new_frames_by_kind);
 }
 
 std::ostream& operator<<(std::ostream& out, const CallPositionFrames& frames) {

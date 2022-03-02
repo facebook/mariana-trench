@@ -171,12 +171,9 @@ class CallPositionFrames final
   /* Return the set of leaf frames with the given position. */
   CallPositionFrames attach_position(const Position* position) const;
 
-  /**
-   * Convert the kind of these frames into the given kind.
-   *
-   * Return A new CallPositionFrames, identical in everyway except in "kind".
-   */
-  CallPositionFrames with_kind(const Kind* kind) const;
+  CallPositionFrames transform_kind_with_features(
+      const std::function<std::vector<const Kind*>(const Kind*)>&,
+      const std::function<FeatureMayAlwaysSet(const Kind*)>&) const;
 
   template <class T>
   std::unordered_map<T, std::vector<std::reference_wrapper<const Frame>>>
