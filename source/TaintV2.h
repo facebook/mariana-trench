@@ -166,6 +166,18 @@ class TaintV2 final : public sparta::AbstractDomain<TaintV2> {
       Path::Element path_element,
       const std::function<bool(const Kind*)>& filter);
 
+  /**
+   * Update call and local positions of all non-leaf frames.
+   * `new_call_position` is given callee, callee_port and (existing) position.
+   * `new_local_positions` is given existing local positions.
+   */
+  void update_non_leaf_positions(
+      const std::function<
+          const Position*(const Method*, const AccessPath&, const Position*)>&
+          new_call_position,
+      const std::function<LocalPositionSet(const LocalPositionSet&)>&
+          new_local_positions);
+
  private:
   void add(const CalleeFrames& frames);
 

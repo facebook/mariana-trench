@@ -138,6 +138,42 @@ void TaintV2::append_callee_port(
   });
 }
 
+void TaintV2::update_non_leaf_positions(
+    const std::function<
+        const Position*(const Method*, const AccessPath&, const Position*)>&
+        new_call_position,
+    const std::function<LocalPositionSet(const LocalPositionSet&)>&
+        new_local_positions) {
+  map([&](CalleeFrames& frames) {
+    if (frames.callee() == nullptr) {
+      // This contains only leaf frames (no next hop/callee).
+      return;
+    }
+    auto new_frames = CalleeFrames::bottom();
+    for (const auto& frame : frames) {
+      auto new_frame = Frame(
+          frame.kind(),
+          frame.callee_port(),
+          frame.callee(),
+          frame.field_callee(),
+          new_call_position(
+              frame.callee(), frame.callee_port(), frame.call_position()),
+          frame.distance(),
+          frame.origins(),
+          frame.field_origins(),
+          frame.inferred_features(),
+          frame.locally_inferred_features(),
+          frame.user_features(),
+          frame.via_type_of_ports(),
+          frame.via_value_of_ports(),
+          new_local_positions(frame.local_positions()),
+          frame.canonical_names());
+      new_frames.add(new_frame);
+    }
+    frames = std::move(new_frames);
+  });
+}
+
 void TaintV2::add(const CalleeFrames& frames) {
   set_.add(frames);
 }
