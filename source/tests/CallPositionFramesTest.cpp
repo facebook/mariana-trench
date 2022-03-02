@@ -1378,6 +1378,37 @@ TEST_F(CallPositionFramesTest, TransformKindWithFeatures) {
       }));
 }
 
+TEST_F(CallPositionFramesTest, AppendCalleePort) {
+  auto context = test::make_empty_context();
+
+  auto* test_kind = context.kinds->get("TestKind");
+  const auto* path_element1 = DexString::make_string("field1");
+  const auto* path_element2 = DexString::make_string("field2");
+
+  auto frames = CallPositionFrames{
+      test::make_frame(test_kind, test::FrameProperties{}),
+      test::make_frame(
+          Kinds::artificial_source(),
+          test::FrameProperties{
+              .callee_port = AccessPath(
+                  Root(Root::Kind::Argument), Path{path_element1})})};
+
+  frames.append_callee_port(path_element2, [](const Kind* kind) {
+    return kind == Kinds::artificial_source();
+  });
+
+  EXPECT_EQ(
+      frames,
+      (CallPositionFrames{
+          test::make_frame(test_kind, test::FrameProperties{}),
+          test::make_frame(
+              Kinds::artificial_source(),
+              test::FrameProperties{
+                  .callee_port = AccessPath(
+                      Root(Root::Kind::Argument),
+                      Path{path_element1, path_element2})})}));
+}
+
 TEST_F(CallPositionFramesTest, Show) {
   auto context = test::make_empty_context();
 

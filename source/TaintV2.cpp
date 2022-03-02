@@ -130,6 +130,14 @@ TaintV2 TaintV2::transform_kind_with_features(
   return new_taint;
 }
 
+void TaintV2::append_callee_port(
+    Path::Element path_element,
+    const std::function<bool(const Kind*)>& filter) {
+  map([&](CalleeFrames& frames) {
+    frames.append_callee_port(path_element, filter);
+  });
+}
+
 void TaintV2::add(const CalleeFrames& frames) {
   set_.add(frames);
 }

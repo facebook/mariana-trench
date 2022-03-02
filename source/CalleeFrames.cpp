@@ -219,6 +219,19 @@ CalleeFrames CalleeFrames::transform_kind_with_features(
   return CalleeFrames(callee_, new_frames);
 }
 
+void CalleeFrames::append_callee_port(
+    Path::Element path_element,
+    const std::function<bool(const Kind*)>& filter) {
+  // TODO (T91357916): GroupHashedSetAbstractDomain could be more efficient.
+  // It supports in-place modifying of the elements as long as the key does
+  // not change.
+  frames_.map([&](const CallPositionFrames& frames) {
+    auto frames_copy = frames;
+    frames_copy.append_callee_port(path_element, filter);
+    return frames_copy;
+  });
+}
+
 std::ostream& operator<<(std::ostream& out, const CalleeFrames& frames) {
   if (frames.is_top()) {
     return out << "T";

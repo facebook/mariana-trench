@@ -359,6 +359,27 @@ CallPositionFrames CallPositionFrames::transform_kind_with_features(
   return CallPositionFrames(position_, new_frames_by_kind);
 }
 
+void CallPositionFrames::append_callee_port(
+    Path::Element path_element,
+    const std::function<bool(const Kind*)>& filter) {
+  // TODO (T91357916): GroupHashedSetAbstractDomain could be more efficient.
+  // It supports in-place modifying of the elements as long as the key does
+  // not change. Without that, we need to create a new `FramesByKind` object.
+  FramesByKind new_frames;
+  for (const auto& [kind, frames] : frames_.bindings()) {
+    if (filter(kind)) {
+      auto frames_copy = frames;
+      frames_copy.map(
+          [&](Frame& frame) { frame.callee_port_append(path_element); });
+      new_frames.set(kind, frames_copy);
+    } else {
+      new_frames.set(kind, frames); // no changes
+    }
+  }
+
+  frames_ = new_frames;
+}
+
 std::ostream& operator<<(std::ostream& out, const CallPositionFrames& frames) {
   if (frames.is_top()) {
     return out << "T";

@@ -175,6 +175,10 @@ class CallPositionFrames final
       const std::function<std::vector<const Kind*>(const Kind*)>&,
       const std::function<FeatureMayAlwaysSet(const Kind*)>&) const;
 
+  void append_callee_port(
+      Path::Element path_element,
+      const std::function<bool(const Kind*)>& filter);
+
   template <class T>
   std::unordered_map<T, std::vector<std::reference_wrapper<const Frame>>>
   partition_map(const std::function<T(const Frame&)>& map) const {

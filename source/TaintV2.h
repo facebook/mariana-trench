@@ -158,6 +158,14 @@ class TaintV2 final : public sparta::AbstractDomain<TaintV2> {
       const std::function<std::vector<const Kind*>(const Kind*)>&,
       const std::function<FeatureMayAlwaysSet(const Kind*)>&) const;
 
+  /**
+   * Appends `path_element` to the callee ports of all kind that pass `filter`
+   * (returns true).
+   */
+  void append_callee_port(
+      Path::Element path_element,
+      const std::function<bool(const Kind*)>& filter);
+
  private:
   void add(const CalleeFrames& frames);
 
