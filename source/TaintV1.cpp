@@ -6,59 +6,59 @@
  */
 
 #include <mariana-trench/JsonValidation.h>
-#include <mariana-trench/Taint.h>
+#include <mariana-trench/TaintV1.h>
 
 namespace marianatrench {
 
-Taint::Taint(std::initializer_list<Frame> frames) {
+TaintV1::TaintV1(std::initializer_list<Frame> frames) {
   for (const auto& frame : frames) {
     add(frame);
   }
 }
 
-Taint::Taint(std::initializer_list<FrameSet> frames_set) {
+TaintV1::TaintV1(std::initializer_list<FrameSet> frames_set) {
   for (const auto& frames : frames_set) {
     add(frames);
   }
 }
 
-void Taint::add(const Frame& frame) {
+void TaintV1::add(const Frame& frame) {
   set_.add(FrameSet{frame});
 }
 
-void Taint::add(const FrameSet& frames) {
+void TaintV1::add(const FrameSet& frames) {
   set_.add(frames);
 }
 
-bool Taint::leq(const Taint& other) const {
+bool TaintV1::leq(const TaintV1& other) const {
   return set_.leq(other.set_);
 }
 
-bool Taint::equals(const Taint& other) const {
+bool TaintV1::equals(const TaintV1& other) const {
   return set_.equals(other.set_);
 }
 
-void Taint::join_with(const Taint& other) {
+void TaintV1::join_with(const TaintV1& other) {
   set_.join_with(other.set_);
 }
 
-void Taint::widen_with(const Taint& other) {
+void TaintV1::widen_with(const TaintV1& other) {
   set_.widen_with(other.set_);
 }
 
-void Taint::meet_with(const Taint& other) {
+void TaintV1::meet_with(const TaintV1& other) {
   set_.meet_with(other.set_);
 }
 
-void Taint::narrow_with(const Taint& other) {
+void TaintV1::narrow_with(const TaintV1& other) {
   set_.narrow_with(other.set_);
 }
 
-void Taint::difference_with(const Taint& other) {
+void TaintV1::difference_with(const TaintV1& other) {
   set_.difference_with(other.set_);
 }
 
-void Taint::add_inferred_features(const FeatureMayAlwaysSet& features) {
+void TaintV1::add_inferred_features(const FeatureMayAlwaysSet& features) {
   if (features.empty()) {
     return;
   }
@@ -68,17 +68,17 @@ void Taint::add_inferred_features(const FeatureMayAlwaysSet& features) {
   });
 }
 
-void Taint::add_local_position(const Position* position) {
+void TaintV1::add_local_position(const Position* position) {
   map([position](FrameSet& frames) { frames.add_local_position(position); });
 }
 
-void Taint::set_local_positions(const LocalPositionSet& positions) {
+void TaintV1::set_local_positions(const LocalPositionSet& positions) {
   map([&positions](FrameSet& frames) {
     frames.set_local_positions(positions);
   });
 }
 
-void Taint::add_inferred_features_and_local_position(
+void TaintV1::add_inferred_features_and_local_position(
     const FeatureMayAlwaysSet& features,
     const Position* MT_NULLABLE position) {
   if (features.empty() && position == nullptr) {
@@ -90,7 +90,7 @@ void Taint::add_inferred_features_and_local_position(
   });
 }
 
-Taint Taint::propagate(
+TaintV1 TaintV1::propagate(
     const Method* caller,
     const Method* callee,
     const AccessPath& callee_port,
@@ -101,7 +101,7 @@ Taint Taint::propagate(
     const std::vector<const DexType * MT_NULLABLE>& source_register_types,
     const std::vector<std::optional<std::string>>& source_constant_arguments)
     const {
-  Taint result;
+  TaintV1 result;
   for (const auto& frames : set_) {
     auto propagated = frames.propagate(
         caller,
@@ -121,18 +121,18 @@ Taint Taint::propagate(
   return result;
 }
 
-Taint Taint::attach_position(const Position* position) const {
-  Taint result;
+TaintV1 TaintV1::attach_position(const Position* position) const {
+  TaintV1 result;
   for (const auto& frames : set_) {
     result.add(frames.attach_position(position));
   }
   return result;
 }
 
-Taint Taint::transform_kind_with_features(
+TaintV1 TaintV1::transform_kind_with_features(
     const std::function<std::vector<const Kind*>(const Kind*)>& transform_kind,
     const std::function<FeatureMayAlwaysSet(const Kind*)>& add_features) const {
-  Taint new_taint;
+  TaintV1 new_taint;
   for (const auto& frame_set : set_) {
     const auto* old_kind = frame_set.kind();
     auto new_kinds = transform_kind(old_kind);
@@ -153,15 +153,15 @@ Taint Taint::transform_kind_with_features(
   return new_taint;
 }
 
-Taint Taint::from_json(const Json::Value& value, Context& context) {
-  Taint taint;
+TaintV1 TaintV1::from_json(const Json::Value& value, Context& context) {
+  TaintV1 taint;
   for (const auto& frame_value : JsonValidation::null_or_array(value)) {
     taint.add(Frame::from_json(frame_value, context));
   }
   return taint;
 }
 
-Json::Value Taint::to_json() const {
+Json::Value TaintV1::to_json() const {
   auto taint = Json::Value(Json::arrayValue);
   for (const auto& frames : set_) {
     for (const auto& frame : frames) {
@@ -171,11 +171,11 @@ Json::Value Taint::to_json() const {
   return taint;
 }
 
-std::ostream& operator<<(std::ostream& out, const Taint& taint) {
+std::ostream& operator<<(std::ostream& out, const TaintV1& taint) {
   return out << taint.set_;
 }
 
-void Taint::append_callee_port(
+void TaintV1::append_callee_port(
     Path::Element path_element,
     const std::function<bool(const Kind*)>& filter) {
   map([&](FrameSet& frames) {
@@ -187,7 +187,7 @@ void Taint::append_callee_port(
   });
 }
 
-void Taint::update_non_leaf_positions(
+void TaintV1::update_non_leaf_positions(
     const std::function<
         const Position*(const Method*, const AccessPath&, const Position*)>&
         new_call_position,
@@ -223,7 +223,7 @@ void Taint::update_non_leaf_positions(
   });
 }
 
-void Taint::filter_invalid_frames(
+void TaintV1::filter_invalid_frames(
     const std::function<bool(const Method*, const AccessPath&, const Kind*)>&
         is_valid) {
   map([&](FrameSet& frames) {
@@ -233,21 +233,21 @@ void Taint::filter_invalid_frames(
   });
 }
 
-bool Taint::contains_kind(const Kind* kind) const {
+bool TaintV1::contains_kind(const Kind* kind) const {
   return std::any_of(begin(), end(), [&](const FrameSet& frames) {
     return frames.kind() == kind;
   });
 }
 
-std::unordered_map<const Kind*, Taint> Taint::partition_by_kind() const {
-  std::unordered_map<const Kind*, Taint> result;
+std::unordered_map<const Kind*, TaintV1> TaintV1::partition_by_kind() const {
+  std::unordered_map<const Kind*, TaintV1> result;
   for (const auto& frame_set : *this) {
-    result.emplace(frame_set.kind(), Taint{frame_set});
+    result.emplace(frame_set.kind(), TaintV1{frame_set});
   }
   return result;
 }
 
-FeatureMayAlwaysSet Taint::features_joined() const {
+FeatureMayAlwaysSet TaintV1::features_joined() const {
   auto features = FeatureMayAlwaysSet::bottom();
   for (const auto& frame_set : *this) {
     for (const auto& frame : frame_set) {
@@ -257,11 +257,11 @@ FeatureMayAlwaysSet Taint::features_joined() const {
   return features;
 }
 
-void Taint::map(const std::function<void(FrameSet&)>& f) {
+void TaintV1::map(const std::function<void(FrameSet&)>& f) {
   set_.map(f);
 }
 
-void Taint::filter(const std::function<bool(const FrameSet&)>& predicate) {
+void TaintV1::filter(const std::function<bool(const FrameSet&)>& predicate) {
   set_.filter(predicate);
 }
 
