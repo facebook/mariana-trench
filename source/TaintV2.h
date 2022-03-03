@@ -178,6 +178,15 @@ class TaintV2 final : public sparta::AbstractDomain<TaintV2> {
       const std::function<LocalPositionSet(const LocalPositionSet&)>&
           new_local_positions);
 
+  /**
+   * Drops frames that are considered invalid.
+   * `is_valid` is given callee (nullptr for leaves), callee_port, kind.
+   */
+  void filter_invalid_frames(
+      const std::function<
+          bool(const Method* MT_NULLABLE, const AccessPath&, const Kind*)>&
+          is_valid);
+
  private:
   void add(const CalleeFrames& frames);
 

@@ -1409,6 +1409,74 @@ TEST_F(CallPositionFramesTest, AppendCalleePort) {
                       Path{path_element1, path_element2})})}));
 }
 
+TEST_F(CallPositionFramesTest, FilterInvalidFrames) {
+  auto context = test::make_empty_context();
+
+  Scope scope;
+  auto* method1 =
+      context.methods->create(redex::create_void_method(scope, "LOne;", "one"));
+  auto* test_kind = context.kinds->get("TestSource");
+
+  // Filter by callee
+  auto frames = CallPositionFrames{
+      test::make_frame(test_kind, test::FrameProperties{}),
+      test::make_frame(
+          Kinds::artificial_source(),
+          test::FrameProperties{
+              .callee = method1,
+              .callee_port = AccessPath(Root(Root::Kind::Argument))})};
+  frames.filter_invalid_frames(
+      /* is_valid */
+      [&](const Method* MT_NULLABLE callee,
+          const AccessPath& /* callee_port */,
+          const Kind* /* kind */) { return callee == nullptr; });
+  EXPECT_EQ(
+      frames,
+      (CallPositionFrames{
+          test::make_frame(test_kind, test::FrameProperties{})}));
+
+  // Filter by callee port
+  frames = CallPositionFrames{
+      test::make_frame(test_kind, test::FrameProperties{}),
+      test::make_frame(
+          Kinds::artificial_source(),
+          test::FrameProperties{
+              .callee = method1,
+              .callee_port = AccessPath(Root(Root::Kind::Argument))})};
+  frames.filter_invalid_frames(
+      /* is_valid */
+      [&](const Method* MT_NULLABLE /* callee */,
+          const AccessPath& callee_port,
+          const Kind* /* kind */) {
+        return callee_port == AccessPath(Root(Root::Kind::Argument));
+      });
+  EXPECT_EQ(
+      frames,
+      (CallPositionFrames{test::make_frame(
+          Kinds::artificial_source(),
+          test::FrameProperties{
+              .callee = method1,
+              .callee_port = AccessPath(Root(Root::Kind::Argument))})}));
+
+  // Filter by kind
+  frames = CallPositionFrames{
+      test::make_frame(test_kind, test::FrameProperties{}),
+      test::make_frame(
+          Kinds::artificial_source(),
+          test::FrameProperties{
+              .callee = method1,
+              .callee_port = AccessPath(Root(Root::Kind::Argument))})};
+  frames.filter_invalid_frames(
+      /* is_valid */
+      [&](const Method* MT_NULLABLE /* callee */,
+          const AccessPath& /* callee_port */,
+          const Kind* kind) { return kind != Kinds::artificial_source(); });
+  EXPECT_EQ(
+      frames,
+      (CallPositionFrames{
+          test::make_frame(test_kind, test::FrameProperties{})}));
+}
+
 TEST_F(CallPositionFramesTest, Show) {
   auto context = test::make_empty_context();
 

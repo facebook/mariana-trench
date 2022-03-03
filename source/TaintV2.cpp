@@ -174,6 +174,12 @@ void TaintV2::update_non_leaf_positions(
   });
 }
 
+void TaintV2::filter_invalid_frames(
+    const std::function<bool(const Method*, const AccessPath&, const Kind*)>&
+        is_valid) {
+  map([&](CalleeFrames& frames) { frames.filter_invalid_frames(is_valid); });
+}
+
 void TaintV2::add(const CalleeFrames& frames) {
   set_.add(frames);
 }

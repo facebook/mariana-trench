@@ -380,6 +380,21 @@ void CallPositionFrames::append_callee_port(
   frames_ = new_frames;
 }
 
+void CallPositionFrames::filter_invalid_frames(
+    const std::function<bool(const Method*, const AccessPath&, const Kind*)>&
+        is_valid) {
+  FramesByKind new_frames;
+  for (const auto& [kind, frames] : frames_.bindings()) {
+    auto frames_copy = frames;
+    frames_copy.filter([&](const Frame& frame) {
+      return is_valid(frame.callee(), frame.callee_port(), frame.kind());
+    });
+    new_frames.set(kind, frames_copy);
+  }
+
+  frames_ = new_frames;
+}
+
 std::ostream& operator<<(std::ostream& out, const CallPositionFrames& frames) {
   if (frames.is_top()) {
     return out << "T";

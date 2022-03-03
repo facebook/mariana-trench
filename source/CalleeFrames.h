@@ -172,6 +172,11 @@ class CalleeFrames final : public sparta::AbstractDomain<CalleeFrames> {
       Path::Element path_element,
       const std::function<bool(const Kind*)>& filter);
 
+  void filter_invalid_frames(
+      const std::function<
+          bool(const Method* MT_NULLABLE, const AccessPath&, const Kind*)>&
+          is_valid);
+
   friend std::ostream& operator<<(
       std::ostream& out,
       const CalleeFrames& frames);

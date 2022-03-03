@@ -232,6 +232,16 @@ void CalleeFrames::append_callee_port(
   });
 }
 
+void CalleeFrames::filter_invalid_frames(
+    const std::function<bool(const Method*, const AccessPath&, const Kind*)>&
+        is_valid) {
+  frames_.map([&](const CallPositionFrames& frames) {
+    auto frames_copy = frames;
+    frames_copy.filter_invalid_frames(is_valid);
+    return frames_copy;
+  });
+}
+
 std::ostream& operator<<(std::ostream& out, const CalleeFrames& frames) {
   if (frames.is_top()) {
     return out << "T";

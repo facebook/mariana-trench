@@ -812,4 +812,76 @@ TEST_F(TaintV2Test, UpdateNonLeafPositions) {
                   .local_positions = expected_local_positions})}));
 }
 
+TEST_F(TaintV2Test, FilterInvalidFrames) {
+  auto context = test::make_empty_context();
+
+  Scope scope;
+  auto* method1 =
+      context.methods->create(redex::create_void_method(scope, "LOne;", "one"));
+
+  // Filter by callee
+  auto taint = TaintV2{
+      test::make_frame(
+          /* kind */ context.kinds->get("TestSource"), test::FrameProperties{}),
+      test::make_frame(
+          Kinds::artificial_source(),
+          test::FrameProperties{
+              .callee = method1,
+              .callee_port = AccessPath(Root(Root::Kind::Argument))})};
+  taint.filter_invalid_frames(
+      /* is_valid */
+      [&](const Method* MT_NULLABLE callee,
+          const AccessPath& /* callee_port */,
+          const Kind* /* kind */) { return callee == nullptr; });
+  EXPECT_EQ(
+      taint,
+      (TaintV2{test::make_frame(
+          /* kind */ context.kinds->get("TestSource"),
+          test::FrameProperties{})}));
+
+  // Filter by callee port
+  taint = TaintV2{
+      test::make_frame(
+          /* kind */ context.kinds->get("TestSource"), test::FrameProperties{}),
+      test::make_frame(
+          Kinds::artificial_source(),
+          test::FrameProperties{
+              .callee = method1,
+              .callee_port = AccessPath(Root(Root::Kind::Argument))})};
+  taint.filter_invalid_frames(
+      /* is_valid */
+      [&](const Method* MT_NULLABLE /* callee */,
+          const AccessPath& callee_port,
+          const Kind* /* kind */) {
+        return callee_port == AccessPath(Root(Root::Kind::Argument));
+      });
+  EXPECT_EQ(
+      taint,
+      (TaintV2{test::make_frame(
+          Kinds::artificial_source(),
+          test::FrameProperties{
+              .callee = method1,
+              .callee_port = AccessPath(Root(Root::Kind::Argument))})}));
+
+  // Filter by kind
+  taint = TaintV2{
+      test::make_frame(
+          /* kind */ context.kinds->get("TestSource"), test::FrameProperties{}),
+      test::make_frame(
+          Kinds::artificial_source(),
+          test::FrameProperties{
+              .callee = method1,
+              .callee_port = AccessPath(Root(Root::Kind::Argument))})};
+  taint.filter_invalid_frames(
+      /* is_valid */
+      [&](const Method* MT_NULLABLE /* callee */,
+          const AccessPath& /* callee_port */,
+          const Kind* kind) { return kind != Kinds::artificial_source(); });
+  EXPECT_EQ(
+      taint,
+      (TaintV2{test::make_frame(
+          /* kind */ context.kinds->get("TestSource"),
+          test::FrameProperties{})}));
+}
+
 } // namespace marianatrench

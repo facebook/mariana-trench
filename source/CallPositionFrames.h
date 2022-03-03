@@ -179,6 +179,11 @@ class CallPositionFrames final
       Path::Element path_element,
       const std::function<bool(const Kind*)>& filter);
 
+  void filter_invalid_frames(
+      const std::function<
+          bool(const Method* MT_NULLABLE, const AccessPath&, const Kind*)>&
+          is_valid);
+
   template <class T>
   std::unordered_map<T, std::vector<std::reference_wrapper<const Frame>>>
   partition_map(const std::function<T(const Frame&)>& map) const {
