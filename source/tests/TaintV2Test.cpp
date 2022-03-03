@@ -884,4 +884,17 @@ TEST_F(TaintV2Test, FilterInvalidFrames) {
           test::FrameProperties{})}));
 }
 
+TEST_F(TaintV2Test, ContainsKind) {
+  auto context = test::make_empty_context();
+
+  auto taint = TaintV2{
+      test::make_frame(
+          /* kind */ context.kinds->get("TestSource"), test::FrameProperties{}),
+      test::make_frame(Kinds::artificial_source(), test::FrameProperties{})};
+
+  EXPECT_TRUE(taint.contains_kind(Kinds::artificial_source()));
+  EXPECT_TRUE(taint.contains_kind(context.kinds->get("TestSource")));
+  EXPECT_FALSE(taint.contains_kind(context.kinds->get("TestSink")));
+}
+
 } // namespace marianatrench

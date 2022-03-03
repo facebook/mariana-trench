@@ -177,6 +177,8 @@ class CalleeFrames final : public sparta::AbstractDomain<CalleeFrames> {
           bool(const Method* MT_NULLABLE, const AccessPath&, const Kind*)>&
           is_valid);
 
+  bool contains_kind(const Kind*) const;
+
   friend std::ostream& operator<<(
       std::ostream& out,
       const CalleeFrames& frames);

@@ -242,6 +242,17 @@ void CalleeFrames::filter_invalid_frames(
   });
 }
 
+bool CalleeFrames::contains_kind(const Kind* kind) const {
+  auto frames_iterator = frames_.bindings();
+  return std::any_of(
+      frames_iterator.begin(),
+      frames_iterator.end(),
+      [&](const std::pair<const Position*, CallPositionFrames>&
+              callee_frames_pair) {
+        return callee_frames_pair.second.contains_kind(kind);
+      });
+}
+
 std::ostream& operator<<(std::ostream& out, const CalleeFrames& frames) {
   if (frames.is_top()) {
     return out << "T";

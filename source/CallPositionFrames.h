@@ -184,6 +184,8 @@ class CallPositionFrames final
           bool(const Method* MT_NULLABLE, const AccessPath&, const Kind*)>&
           is_valid);
 
+  bool contains_kind(const Kind*) const;
+
   template <class T>
   std::unordered_map<T, std::vector<std::reference_wrapper<const Frame>>>
   partition_map(const std::function<T(const Frame&)>& map) const {

@@ -180,6 +180,13 @@ void TaintV2::filter_invalid_frames(
   map([&](CalleeFrames& frames) { frames.filter_invalid_frames(is_valid); });
 }
 
+bool TaintV2::contains_kind(const Kind* kind) const {
+  return std::any_of(
+      set_.begin(), set_.end(), [&](const CalleeFrames& callee_frames) {
+        return callee_frames.contains_kind(kind);
+      });
+}
+
 void TaintV2::add(const CalleeFrames& frames) {
   set_.add(frames);
 }

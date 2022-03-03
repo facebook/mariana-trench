@@ -187,6 +187,11 @@ class TaintV2 final : public sparta::AbstractDomain<TaintV2> {
           bool(const Method* MT_NULLABLE, const AccessPath&, const Kind*)>&
           is_valid);
 
+  /**
+   * Returns true if any frame contains the given kind.
+   */
+  bool contains_kind(const Kind*) const;
+
  private:
   void add(const CalleeFrames& frames);
 

@@ -1496,4 +1496,17 @@ TEST_F(CallPositionFramesTest, Show) {
   EXPECT_EQ(show(CallPositionFrames::top()), "T");
 }
 
+TEST_F(CallPositionFramesTest, ContainsKind) {
+  auto context = test::make_empty_context();
+
+  auto frames = CallPositionFrames{
+      test::make_frame(
+          /* kind */ context.kinds->get("TestSource"), test::FrameProperties{}),
+      test::make_frame(Kinds::artificial_source(), test::FrameProperties{})};
+
+  EXPECT_TRUE(frames.contains_kind(Kinds::artificial_source()));
+  EXPECT_TRUE(frames.contains_kind(context.kinds->get("TestSource")));
+  EXPECT_FALSE(frames.contains_kind(context.kinds->get("TestSink")));
+}
+
 } // namespace marianatrench

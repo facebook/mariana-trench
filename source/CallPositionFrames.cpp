@@ -395,6 +395,15 @@ void CallPositionFrames::filter_invalid_frames(
   frames_ = new_frames;
 }
 
+bool CallPositionFrames::contains_kind(const Kind* kind) const {
+  for (const auto& [actual_kind, _] : frames_.bindings()) {
+    if (actual_kind == kind) {
+      return true;
+    }
+  }
+  return false;
+}
+
 std::ostream& operator<<(std::ostream& out, const CallPositionFrames& frames) {
   if (frames.is_top()) {
     return out << "T";
