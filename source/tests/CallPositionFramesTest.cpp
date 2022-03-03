@@ -1509,4 +1509,34 @@ TEST_F(CallPositionFramesTest, ContainsKind) {
   EXPECT_FALSE(frames.contains_kind(context.kinds->get("TestSink")));
 }
 
+TEST_F(CallPositionFramesTest, PartitionByKind) {
+  auto context = test::make_empty_context();
+
+  auto* test_position = context.positions->get(std::nullopt, 1);
+  auto* test_kind_one = context.kinds->get("TestSource1");
+  auto* test_kind_two = context.kinds->get("TestSource2");
+
+  auto frames = CallPositionFrames{
+      test::make_frame(
+          test_kind_one, test::FrameProperties{.call_position = test_position}),
+      test::make_frame(
+          test_kind_two, test::FrameProperties{.call_position = test_position}),
+  };
+
+  auto frames_by_kind = frames.partition_by_kind();
+  EXPECT_TRUE(frames_by_kind.size() == 2);
+  EXPECT_EQ(
+      frames_by_kind[test_kind_one],
+      CallPositionFrames{test::make_frame(
+          test_kind_one,
+          test::FrameProperties{.call_position = test_position})});
+  EXPECT_EQ(frames_by_kind[test_kind_one].position(), test_position);
+  EXPECT_EQ(
+      frames_by_kind[test_kind_two],
+      CallPositionFrames{test::make_frame(
+          test_kind_two,
+          test::FrameProperties{.call_position = test_position})});
+  EXPECT_EQ(frames_by_kind[test_kind_two].position(), test_position);
+}
+
 } // namespace marianatrench

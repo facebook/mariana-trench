@@ -897,4 +897,50 @@ TEST_F(TaintV2Test, ContainsKind) {
   EXPECT_FALSE(taint.contains_kind(context.kinds->get("TestSink")));
 }
 
+TEST_F(TaintV2Test, PartitionByKind) {
+  auto context = test::make_empty_context();
+
+  Scope scope;
+  auto* method1 =
+      context.methods->create(redex::create_void_method(scope, "LOne;", "one"));
+  auto* method2 =
+      context.methods->create(redex::create_void_method(scope, "LTwo;", "two"));
+
+  auto taint = TaintV2{
+      test::make_frame(
+          /* kind */ context.kinds->get("TestSource1"),
+          test::FrameProperties{}),
+      test::make_frame(
+          /* kind */ context.kinds->get("TestSource2"),
+          test::FrameProperties{}),
+      test::make_frame(
+          /* kind */ context.kinds->get("TestSource3"),
+          test::FrameProperties{.callee = method1}),
+      test::make_frame(
+          /* kind */ context.kinds->get("TestSource3"),
+          test::FrameProperties{.callee = method2})};
+
+  auto taint_by_kind = taint.partition_by_kind();
+  EXPECT_TRUE(taint_by_kind.size() == 3);
+  EXPECT_EQ(
+      taint_by_kind[context.kinds->get("TestSource1")],
+      TaintV2{test::make_frame(
+          /* kind */ context.kinds->get("TestSource1"),
+          test::FrameProperties{})});
+  EXPECT_EQ(
+      taint_by_kind[context.kinds->get("TestSource2")],
+      TaintV2{test::make_frame(
+          /* kind */ context.kinds->get("TestSource2"),
+          test::FrameProperties{})});
+  EXPECT_EQ(
+      taint_by_kind[context.kinds->get("TestSource3")],
+      (TaintV2{
+          test::make_frame(
+              /* kind */ context.kinds->get("TestSource3"),
+              test::FrameProperties{.callee = method1}),
+          test::make_frame(
+              /* kind */ context.kinds->get("TestSource3"),
+              test::FrameProperties{.callee = method2})}));
+}
+
 } // namespace marianatrench

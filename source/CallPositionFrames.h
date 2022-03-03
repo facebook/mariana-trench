@@ -186,6 +186,8 @@ class CallPositionFrames final
 
   bool contains_kind(const Kind*) const;
 
+  std::unordered_map<const Kind*, CallPositionFrames> partition_by_kind() const;
+
   template <class T>
   std::unordered_map<T, std::vector<std::reference_wrapper<const Frame>>>
   partition_map(const std::function<T(const Frame&)>& map) const {

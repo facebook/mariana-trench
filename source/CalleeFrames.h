@@ -179,6 +179,8 @@ class CalleeFrames final : public sparta::AbstractDomain<CalleeFrames> {
 
   bool contains_kind(const Kind*) const;
 
+  std::unordered_map<const Kind*, CalleeFrames> partition_by_kind() const;
+
   friend std::ostream& operator<<(
       std::ostream& out,
       const CalleeFrames& frames);

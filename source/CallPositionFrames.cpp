@@ -404,6 +404,18 @@ bool CallPositionFrames::contains_kind(const Kind* kind) const {
   return false;
 }
 
+std::unordered_map<const Kind*, CallPositionFrames>
+CallPositionFrames::partition_by_kind() const {
+  std::unordered_map<const Kind*, CallPositionFrames> result;
+  for (const auto& [kind, kind_frames] : frames_.bindings()) {
+    result.emplace(
+        kind,
+        CallPositionFrames(
+            position_, FramesByKind{std::pair(kind, kind_frames)}));
+  }
+  return result;
+}
+
 std::ostream& operator<<(std::ostream& out, const CallPositionFrames& frames) {
   if (frames.is_top()) {
     return out << "T";

@@ -192,6 +192,12 @@ class TaintV2 final : public sparta::AbstractDomain<TaintV2> {
    */
   bool contains_kind(const Kind*) const;
 
+  /**
+   * Returns a map of `Kind` -> `Taint`, where each `Taint` value contains only
+   * the frames with the `Kind` in its key.
+   */
+  std::unordered_map<const Kind*, TaintV2> partition_by_kind() const;
+
  private:
   void add(const CalleeFrames& frames);
 
