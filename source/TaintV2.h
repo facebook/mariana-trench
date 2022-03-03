@@ -198,6 +198,11 @@ class TaintV2 final : public sparta::AbstractDomain<TaintV2> {
    */
   std::unordered_map<const Kind*, TaintV2> partition_by_kind() const;
 
+  /**
+   * Returns all features for this taint tree, joined as `FeatureMayAlwaysSet`.
+   */
+  FeatureMayAlwaysSet features_joined() const;
+
  private:
   void add(const CalleeFrames& frames);
 

@@ -204,6 +204,16 @@ std::unordered_map<const Kind*, TaintV2> TaintV2::partition_by_kind() const {
   return result;
 }
 
+FeatureMayAlwaysSet TaintV2::features_joined() const {
+  auto features = FeatureMayAlwaysSet::bottom();
+  for (const auto& callee_frames : set_) {
+    for (const auto& frame : callee_frames) {
+      features.join_with(frame.features());
+    }
+  }
+  return features;
+}
+
 void TaintV2::add(const CalleeFrames& frames) {
   set_.add(frames);
 }
