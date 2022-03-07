@@ -1034,6 +1034,54 @@ TEST_F(TaintV1Test, PartitionByKind) {
               test::FrameProperties{.callee = method2})}));
 }
 
+TEST_F(TaintV1Test, PartitionByKindGeneric) {
+  auto context = test::make_empty_context();
+
+  Scope scope;
+  auto* method1 =
+      context.methods->create(redex::create_void_method(scope, "LOne;", "one"));
+  auto* method2 =
+      context.methods->create(redex::create_void_method(scope, "LTwo;", "two"));
+
+  auto taint = TaintV1{
+      test::make_frame(
+          /* kind */ context.kinds->artificial_source(),
+          test::FrameProperties{}),
+      test::make_frame(
+          /* kind */ context.kinds->artificial_source(),
+          test::FrameProperties{.callee = method1}),
+      test::make_frame(
+          /* kind */ context.kinds->get("TestSource1"),
+          test::FrameProperties{.callee = method1}),
+      test::make_frame(
+          /* kind */ context.kinds->get("TestSource2"),
+          test::FrameProperties{.callee = method2})};
+
+  auto taint_by_kind = taint.partition_by_kind<bool>(
+      [&](const Kind* kind) { return kind == Kinds::artificial_source(); });
+  EXPECT_TRUE(taint_by_kind.size() == 2);
+  EXPECT_EQ(
+      taint_by_kind[true],
+      (TaintV1{
+          test::make_frame(
+              /* kind */ context.kinds->artificial_source(),
+              test::FrameProperties{}),
+          test::make_frame(
+              /* kind */ context.kinds->artificial_source(),
+              test::FrameProperties{.callee = method1}),
+      }));
+  EXPECT_EQ(
+      taint_by_kind[false],
+      (TaintV1{
+          test::make_frame(
+              /* kind */ context.kinds->get("TestSource1"),
+              test::FrameProperties{.callee = method1}),
+          test::make_frame(
+              /* kind */ context.kinds->get("TestSource2"),
+              test::FrameProperties{.callee = method2}),
+      }));
+}
+
 TEST_F(TaintV1Test, FeaturesJoined) {
   auto context = test::make_empty_context();
 

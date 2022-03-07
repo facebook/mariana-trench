@@ -240,6 +240,10 @@ bool TaintV1::contains_kind(const Kind* kind) const {
 }
 
 std::unordered_map<const Kind*, TaintV1> TaintV1::partition_by_kind() const {
+  // This could also call the generic partition_by_kind<T>(map_kind).
+  // Sticking with a custom implementation because this is very slightly more
+  // optimal (does not need to check if kind already exists in the result),
+  // gets called rather frequently, and is quite simple.
   std::unordered_map<const Kind*, TaintV1> result;
   for (const auto& frame_set : *this) {
     result.emplace(frame_set.kind(), TaintV1{frame_set});

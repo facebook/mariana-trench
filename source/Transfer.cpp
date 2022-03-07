@@ -569,10 +569,16 @@ void create_sinks(
     return;
   }
 
-  for (const auto& source : sources) {
-    if (!source.is_artificial_sources()) {
-      continue;
-    }
+  auto partitioned_by_artificial_sources = sources.partition_by_kind<bool>(
+      [&](const Kind* kind) { return kind == Kinds::artificial_source(); });
+  auto artificial_sources = partitioned_by_artificial_sources.find(true);
+  if (artificial_sources == partitioned_by_artificial_sources.end()) {
+    // Sinks are created when artificial sources are found flowing into them.
+    // No artificial sources, therefore no sinks.
+    return;
+  }
+
+  for (const auto& source : artificial_sources->second) {
     for (const auto& artificial_source : source) {
       auto features = extra_features;
       features.add_always(context->model.attach_to_sinks(
@@ -1222,8 +1228,12 @@ void infer_output_taint(
     Root root,
     const TaintTree& taint) {
   for (const auto& [path, sources] : taint.elements()) {
-    for (const auto& source : sources) {
-      if (!source.is_artificial_sources()) {
+    auto partitioned_by_artificial_sources = sources.partition_by_kind<bool>(
+        [&](const Kind* kind) { return kind == Kinds::artificial_source(); });
+
+    auto real_sources = partitioned_by_artificial_sources.find(false);
+    if (real_sources != partitioned_by_artificial_sources.end()) {
+      for (const auto& source : real_sources->second) {
         auto generation = source;
         generation.add_inferred_features(FeatureMayAlwaysSet::make_always(
             context->model.attach_to_sources(root)));
@@ -1237,8 +1247,11 @@ void infer_output_taint(
         context->model.add_inferred_generations(
             std::move(port), Taint{std::move(generation)});
       }
+    }
 
-      if (source.is_artificial_sources()) {
+    auto artificial_sources = partitioned_by_artificial_sources.find(true);
+    if (artificial_sources != partitioned_by_artificial_sources.end()) {
+      for (const auto& source : artificial_sources->second) {
         for (const auto& artificial_source : source) {
           if (artificial_source.callee_port().root() != root) {
             const auto& input = artificial_source.callee_port();
