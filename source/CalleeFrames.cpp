@@ -253,28 +253,6 @@ bool CalleeFrames::contains_kind(const Kind* kind) const {
       });
 }
 
-std::unordered_map<const Kind*, CalleeFrames> CalleeFrames::partition_by_kind()
-    const {
-  std::unordered_map<const Kind*, CalleeFrames> result;
-  for (const auto& [position, position_frames] : frames_.bindings()) {
-    auto callee_frames_partitioned = position_frames.partition_by_kind();
-
-    for (const auto& [kind, call_position_frames] : callee_frames_partitioned) {
-      auto new_frames = CalleeFrames(
-          callee_,
-          FramesByCallPosition{std::pair(position, call_position_frames)});
-
-      auto existing = result.find(kind);
-      auto existing_or_bottom =
-          existing == result.end() ? CalleeFrames::bottom() : existing->second;
-      existing_or_bottom.join_with(new_frames);
-
-      result[kind] = existing_or_bottom;
-    }
-  }
-  return result;
-}
-
 std::ostream& operator<<(std::ostream& out, const CalleeFrames& frames) {
   if (frames.is_top()) {
     return out << "T";

@@ -1523,7 +1523,8 @@ TEST_F(CallPositionFramesTest, PartitionByKind) {
           test_kind_two, test::FrameProperties{.call_position = test_position}),
   };
 
-  auto frames_by_kind = frames.partition_by_kind();
+  auto frames_by_kind = frames.partition_by_kind<const Kind*>(
+      [](const Kind* kind) { return kind; });
   EXPECT_TRUE(frames_by_kind.size() == 2);
   EXPECT_EQ(
       frames_by_kind[test_kind_one],

@@ -186,7 +186,25 @@ class CallPositionFrames final
 
   bool contains_kind(const Kind*) const;
 
-  std::unordered_map<const Kind*, CallPositionFrames> partition_by_kind() const;
+  template <class T>
+  std::unordered_map<T, CallPositionFrames> partition_by_kind(
+      const std::function<T(const Kind*)>& map_kind) const {
+    std::unordered_map<T, CallPositionFrames> result;
+    for (const auto& [kind, kind_frames] : frames_.bindings()) {
+      T mapped_value = map_kind(kind);
+      auto new_frames = CallPositionFrames(
+          position_, FramesByKind{std::pair(kind, kind_frames)});
+
+      auto existing = result.find(mapped_value);
+      auto existing_or_bottom = existing == result.end()
+          ? CallPositionFrames::bottom()
+          : existing->second;
+      existing_or_bottom.join_with(new_frames);
+
+      result[mapped_value] = existing_or_bottom;
+    }
+    return result;
+  }
 
   template <class T>
   std::unordered_map<T, std::vector<std::reference_wrapper<const Frame>>>

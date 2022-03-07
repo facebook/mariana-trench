@@ -199,6 +199,31 @@ class TaintV2 final : public sparta::AbstractDomain<TaintV2> {
   std::unordered_map<const Kind*, TaintV2> partition_by_kind() const;
 
   /**
+   * Similar to `partition_by_kind()` but caller gets to decide what value of
+   * type `T` each kind maps to.
+   */
+  template <class T>
+  std::unordered_map<T, TaintV2> partition_by_kind(
+      const std::function<T(const Kind*)>& map_kind) const {
+    std::unordered_map<T, TaintV2> result;
+    for (const auto& callee_frames : set_) {
+      auto callee_frames_partitioned =
+          callee_frames.partition_by_kind(map_kind);
+
+      for (const auto& [mapped_value, callee_frames] :
+           callee_frames_partitioned) {
+        auto existing = result.find(mapped_value);
+        auto existing_or_bottom =
+            existing == result.end() ? TaintV2::bottom() : existing->second;
+        existing_or_bottom.add(callee_frames);
+
+        result[mapped_value] = existing_or_bottom;
+      }
+    }
+    return result;
+  }
+
+  /**
    * Returns all features for this taint tree, joined as `FeatureMayAlwaysSet`.
    */
   FeatureMayAlwaysSet features_joined() const;

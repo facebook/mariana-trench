@@ -179,7 +179,31 @@ class CalleeFrames final : public sparta::AbstractDomain<CalleeFrames> {
 
   bool contains_kind(const Kind*) const;
 
-  std::unordered_map<const Kind*, CalleeFrames> partition_by_kind() const;
+  template <class T>
+  std::unordered_map<T, CalleeFrames> partition_by_kind(
+      const std::function<T(const Kind*)>& map_kind) const {
+    std::unordered_map<T, CalleeFrames> result;
+    for (const auto& [position, position_frames] : frames_.bindings()) {
+      auto callee_frames_partitioned =
+          position_frames.partition_by_kind(map_kind);
+
+      for (const auto& [mapped_value, call_position_frames] :
+           callee_frames_partitioned) {
+        auto new_frames = CalleeFrames(
+            callee_,
+            FramesByCallPosition{std::pair(position, call_position_frames)});
+
+        auto existing = result.find(mapped_value);
+        auto existing_or_bottom = existing == result.end()
+            ? CalleeFrames::bottom()
+            : existing->second;
+        existing_or_bottom.join_with(new_frames);
+
+        result[mapped_value] = existing_or_bottom;
+      }
+    }
+    return result;
+  }
 
   friend std::ostream& operator<<(
       std::ostream& out,

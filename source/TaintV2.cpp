@@ -188,20 +188,7 @@ bool TaintV2::contains_kind(const Kind* kind) const {
 }
 
 std::unordered_map<const Kind*, TaintV2> TaintV2::partition_by_kind() const {
-  std::unordered_map<const Kind*, TaintV2> result;
-  for (const auto& callee_frames : set_) {
-    auto callee_frames_partitioned = callee_frames.partition_by_kind();
-
-    for (const auto& [kind, callee_frames] : callee_frames_partitioned) {
-      auto existing = result.find(kind);
-      auto existing_or_bottom =
-          existing == result.end() ? TaintV2::bottom() : existing->second;
-      existing_or_bottom.add(callee_frames);
-
-      result[kind] = existing_or_bottom;
-    }
-  }
-  return result;
+  return partition_by_kind<const Kind*>([](const Kind* kind) { return kind; });
 }
 
 FeatureMayAlwaysSet TaintV2::features_joined() const {
