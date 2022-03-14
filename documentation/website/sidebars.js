@@ -34,6 +34,7 @@ module.exports = {
     fbInternalOnly('fb/deployment'),
     fbInternalOnly('fb/continuous-and-diff-runs'),
     fbInternalOnly("fb/crtex"),
+    fbInternalOnly('fb/selecting-builds-targets'),
     ]
   },
 };
