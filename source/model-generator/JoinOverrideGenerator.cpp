@@ -19,6 +19,15 @@ std::vector<Model> JoinOverrideGenerator::visit_method(
   if (overrides.size() >= Heuristics::kJoinOverrideThreshold) {
     models.push_back(
         Model(method, context_, Model::Mode::NoJoinVirtualOverrides));
+  } else {
+    const auto class_name = generator::get_class_name(method);
+    if ((boost::starts_with(class_name, "Landroid") ||
+         boost::starts_with(class_name, "Lcom/google") ||
+         boost::starts_with(class_name, "Ljava")) &&
+        overrides.size() >= Heuristics::kAndroidJoinOverrideThreshold) {
+      models.push_back(
+          Model(method, context_, Model::Mode::NoJoinVirtualOverrides));
+    }
   }
 
   return models;

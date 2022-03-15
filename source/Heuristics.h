@@ -21,6 +21,12 @@ class Heuristics {
   constexpr static std::size_t kJoinOverrideThreshold = 40;
 
   /**
+   * When an android/java/google method has a set of overrides and greater than
+   * this threshold, we do not join all overrides at call sites.
+   */
+  constexpr static std::size_t kAndroidJoinOverrideThreshold = 10;
+
+  /**
    * When a method has a set of overrides greater than this threshold, is called
    * at least once and is not marked with `NoJoinVirtualOverrides`, we print a
    * warning.
