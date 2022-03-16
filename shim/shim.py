@@ -250,6 +250,310 @@ class VersionAction(argparse.Action):
         parser.exit()
 
 
+def _add_target_arguments(parser: argparse.ArgumentParser) -> None:
+    target_arguments = parser.add_argument_group("Target arguments")
+    target_arguments.add_argument(
+        "--apk-path",
+        type=_path_exists,
+        help="The APK to analyze.",
+    )
+    if configuration.FACEBOOK_SHIM:
+        target_arguments.add_argument(
+            "--java-target",
+            type=str,
+            help="The java buck target to analyze. If the target is `java_library`, append `-javaX` were X is the java version (e.g. 11).",
+        )
+        target_arguments.add_argument(
+            "--java-mode",
+            type=str,
+            help="The buck mode for building the java target.",
+        )
+
+
+def _add_output_arguments(parser: argparse.ArgumentParser) -> None:
+    output_arguments = parser.add_argument_group("Output arguments")
+    output_arguments.add_argument(
+        "--output-directory",
+        type=_directory_exists,
+        default=".",
+        help="The directory to store results in.",
+    )
+    output_arguments.add_argument(
+        "--generated-models-directory",
+        type=_directory_exists,
+        help="Save generated models to this directory.",
+    )
+
+
+def _add_binary_arguments(parser: argparse.ArgumentParser) -> None:
+    binary_arguments = parser.add_argument_group("Analysis binary arguments")
+    binary_arguments.add_argument(
+        "--binary", type=str, help="The Mariana Trench binary."
+    )
+    if configuration.FACEBOOK_SHIM:
+        binary_arguments.add_argument(
+            "--build",
+            type=str,
+            default=none_throws(configuration.BINARY_BUCK_BUILD_MODE),
+            metavar="BUILD_MODE",
+            help="The Mariana Trench binary buck build mode.",
+        )
+
+
+def _add_configuration_arguments(parser: argparse.ArgumentParser) -> None:
+    configuration_arguments = parser.add_argument_group("Configuration arguments")
+    configuration_arguments.add_argument(
+        "--system-jar-configuration-path",
+        type=_system_jar_configuration_path,
+        default=os.fspath(configuration.get_path("default_system_jar_paths.json")),
+        help="A JSON configuration file with a list of paths to the system jars "
+        + "or a `;` separated list of jars.",
+    )
+    configuration_arguments.add_argument(
+        "--rules-paths",
+        type=str,
+        default=os.fspath(configuration.get_path("rules.json")),
+        help="A `;`-separated list of rules files and directories containing rules files.",
+    )
+    configuration_arguments.add_argument(
+        "--repository-root-directory",
+        type=_directory_exists,
+        default=".",
+        help="The root of the repository. Resulting paths will be relative to this.",
+    )
+    configuration_arguments.add_argument(
+        "--source-root-directory",
+        type=_directory_exists,
+        default=".",
+        help="The root where source files for the APK can be found.",
+    )
+    configuration_arguments.add_argument(
+        "--source-exclude-directories",
+        type=str,
+        default=None,
+        help="A `;`-separated list of directories that should be excluded from indexed source files.",
+    )
+    configuration_arguments.add_argument(
+        "--proguard-configuration-paths",
+        type=_separated_paths_exist,
+        default=None,
+        help="A `;`-separated list of ProGuard configurations, which can be used for global inference and to ignore unreachable objects.",
+    )
+    configuration_arguments.add_argument(
+        "--remove-unreachable-code",
+        action="store_true",
+        help="Prune unreachable code based on entry points specified in proguard configuration.",
+    )
+    configuration_arguments.add_argument(
+        "--lifecycles-paths",
+        type=_separated_paths_exist,
+        default=None,
+        help="A `;`-separated list of files and directories containing lifecycle definitions.",
+    )
+    configuration_arguments.add_argument(
+        "--model-generator-configuration-paths",
+        type=_separated_paths_exist,
+        default=os.fspath(configuration.get_path("default_generator_config.json")),
+        help="""A `;`-separated list of paths specifying JSON configuration files. Each file is a list of paths
+        to JSON model generators relative to the configuration file or names of CPP model generators.""",
+    )
+    configuration_arguments.add_argument(
+        "--model-generator-search-paths",
+        type=_separated_paths_exist,
+        default=";".join(
+            os.fspath(path)
+            for path in configuration.get_default_generator_search_paths()
+        ),
+        help="A `;`-separated list of paths where we look up JSON model generators.",
+    )
+    configuration_arguments.add_argument(
+        "--maximum-source-sink-distance",
+        type=int,
+        default=configuration.DEFAULT_MAXIMUM_SOURCE_SINK_DISTANCE,
+        help="Limits the distance of sources and sinks from a trace entry point.",
+    )
+
+
+def _add_analysis_arguments(parser: argparse.ArgumentParser) -> None:
+    analysis_arguments = parser.add_argument_group("Analysis arguments")
+    analysis_arguments.add_argument(
+        "--sequential",
+        action="store_true",
+        help="Run the analysis sequentially, one a single thread.",
+    )
+    analysis_arguments.add_argument(
+        "--skip-source-indexing",
+        action="store_true",
+        help="Skip indexing source files.",
+    )
+    analysis_arguments.add_argument(
+        "--skip-model-generation",
+        action="store_true",
+        help="Skip model generation.",
+    )
+    analysis_arguments.add_argument(
+        "--disable-parameter-type-overrides",
+        action="store_true",
+        help="Disable analyzing methods with specific parameter type information.",
+    )
+    analysis_arguments.add_argument(
+        "--maximum-method-analysis-time",
+        type=int,
+        help="Specify number of seconds as a bound. If the analysis of a method takes longer than this then make the method obscure (default taint-in-taint-out).",
+    )
+
+
+def _add_metadata_arguments(parser: argparse.ArgumentParser) -> None:
+    metadata_arguments = parser.add_argument_group("Metadata arguments")
+    metadata_arguments.add_argument(
+        "--job-id",
+        type=str,
+        help="Specify identifier for the current analysis run.",
+    )
+    metadata_arguments.add_argument(
+        "--metarun-id",
+        type=str,
+        help="Specify identifier for a group of analysis runs.",
+    )
+
+
+def _add_debug_arguments(parser: argparse.ArgumentParser) -> None:
+    debug_arguments = parser.add_argument_group("Debugging arguments")
+    debug_arguments.add_argument(
+        "--verbosity",
+        type=int,
+        default=1,
+        metavar="[1-5]",
+        help="The logging verbosity.",
+    )
+    debug_arguments.add_argument(
+        "--gdb", action="store_true", help="Run the analyzer inside gdb."
+    )
+    debug_arguments.add_argument(
+        "--lldb", action="store_true", help="Run the analyzer inside lldb."
+    )
+    debug_arguments.add_argument(
+        "--log-method",
+        action="append",
+        metavar="PATTERN",
+        help="Enable logging for the given methods.",
+    )
+    debug_arguments.add_argument(
+        "--dump-class-hierarchies",
+        action="store_true",
+        help="Dump the class hierarchies in `class_hierarchies.json`.",
+    )
+    debug_arguments.add_argument(
+        "--dump-overrides",
+        action="store_true",
+        help="Dump the override graph in `overrides.json`.",
+    )
+    debug_arguments.add_argument(
+        "--dump-call-graph",
+        action="store_true",
+        help="Dump the call graph in `call_graph.json`.",
+    )
+    debug_arguments.add_argument(
+        "--dump-dependencies",
+        action="store_true",
+        help="Dump the dependency graph in `dependencies.json`.",
+    )
+    debug_arguments.add_argument(
+        "--dump-methods",
+        action="store_true",
+        help="Dump a list of the method signatures in `methods.json`.",
+    )
+
+
+def _get_command_options(
+    arguments: argparse.Namespace, apk_directory: str, dex_directory: str
+) -> List[str]:
+    options = [
+        "--system-jar-paths",
+        arguments.system_jar_configuration_path,
+        "--apk-directory",
+        apk_directory,
+        "--dex-directory",
+        dex_directory,
+        "--rules-paths",
+        arguments.rules_paths,
+        "--repository-root-directory",
+        arguments.repository_root_directory,
+        "--source-root-directory",
+        arguments.source_root_directory,
+        "--apk-path",
+        arguments.apk_path,
+        "--output-directory",
+        arguments.output_directory,
+        "--maximum-source-sink-distance",
+        str(arguments.maximum_source_sink_distance),
+        "--model-generator-configuration-paths",
+        arguments.model_generator_configuration_paths,
+    ]
+
+    if arguments.model_generator_search_paths is not None:
+        options.append("--model-generator-search-paths")
+        options.append(arguments.model_generator_search_paths)
+
+    if arguments.proguard_configuration_paths:
+        options.append("--proguard-configuration-paths")
+        options.append(arguments.proguard_configuration_paths)
+
+    if arguments.lifecycles_paths:
+        options.append("--lifecycles-paths")
+        options.append(arguments.lifecycles_paths)
+
+    if arguments.source_exclude_directories:
+        options.append("--source-exclude-directories")
+        options.append(arguments.source_exclude_directories)
+
+    if arguments.generated_models_directory:
+        options.append("--generated-models-directory")
+        options.append(arguments.generated_models_directory)
+
+    if arguments.sequential:
+        options.append("--sequential")
+    if arguments.skip_source_indexing:
+        options.append("--skip-source-indexing")
+    if arguments.skip_model_generation:
+        options.append("--skip-model-generation")
+    if arguments.disable_parameter_type_overrides:
+        options.append("--disable-parameter-type-overrides")
+    if arguments.remove_unreachable_code:
+        options.append("--remove-unreachable-code")
+    if arguments.maximum_method_analysis_time is not None:
+        options.append("--maximum-method-analysis-time")
+        options.append(str(arguments.maximum_method_analysis_time))
+
+    if arguments.job_id:
+        options.append("--job-id")
+        options.append(arguments.job_id)
+    if arguments.metarun_id:
+        options.append("--metarun-id")
+        options.append(arguments.metarun_id)
+
+    trace_settings = [f"MARIANA_TRENCH:{arguments.verbosity}"]
+    if "TRACE" in os.environ:
+        trace_settings.insert(0, os.environ["TRACE"])
+    os.environ["TRACE"] = ",".join(trace_settings)
+
+    if arguments.log_method:
+        for method in arguments.log_method:
+            options.append("--log-method=%s" % method.strip())
+    if arguments.dump_class_hierarchies:
+        options.append("--dump-class-hierarchies")
+    if arguments.dump_overrides:
+        options.append("--dump-overrides")
+    if arguments.dump_call_graph:
+        options.append("--dump-call-graph")
+    if arguments.dump_dependencies:
+        options.append("--dump-dependencies")
+    if arguments.dump_methods:
+        options.append("--dump-methods")
+
+    return options
+
+
 def main() -> None:
     logging.basicConfig(level=logging.INFO, format="%(levelname)s %(message)s")
     build_directory = Path(tempfile.mkdtemp())
@@ -263,195 +567,13 @@ def main() -> None:
             nargs=0,
             help="Print the version and exit",
         )
-
-        target_arguments = parser.add_argument_group("Target arguments")
-        target_arguments.add_argument(
-            "--apk-path",
-            type=_path_exists,
-            help="The APK to analyze.",
-        )
-        if configuration.FACEBOOK_SHIM:
-            target_arguments.add_argument(
-                "--java-target",
-                type=str,
-                help="The java buck target to analyze. If the target is `java_library`, append `-javaX` were X is the java version (e.g. 11).",
-            )
-            target_arguments.add_argument(
-                "--java-mode",
-                type=str,
-                help="The buck mode for building the java target.",
-            )
-
-        output_arguments = parser.add_argument_group("Output arguments")
-        output_arguments.add_argument(
-            "--output-directory",
-            type=_directory_exists,
-            default=".",
-            help="The directory to store results in.",
-        )
-        output_arguments.add_argument(
-            "--generated-models-directory",
-            type=_directory_exists,
-            help="Save generated models to this directory.",
-        )
-
-        binary_arguments = parser.add_argument_group("Analysis binary arguments")
-        binary_arguments.add_argument(
-            "--binary", type=str, help="The Mariana Trench binary."
-        )
-        if configuration.FACEBOOK_SHIM:
-            binary_arguments.add_argument(
-                "--build",
-                type=str,
-                default=none_throws(configuration.BINARY_BUCK_BUILD_MODE),
-                metavar="BUILD_MODE",
-                help="The Mariana Trench binary buck build mode.",
-            )
-
-        configuration_arguments = parser.add_argument_group("Configuration arguments")
-        configuration_arguments.add_argument(
-            "--system-jar-configuration-path",
-            type=_system_jar_configuration_path,
-            default=os.fspath(configuration.get_path("default_system_jar_paths.json")),
-            help="A JSON configuration file with a list of paths to the system jars "
-            + "or a `;` separated list of jars.",
-        )
-        configuration_arguments.add_argument(
-            "--rules-paths",
-            type=str,
-            default=os.fspath(configuration.get_path("rules.json")),
-            help="A `;`-separated list of rules files and directories containing rules files.",
-        )
-        configuration_arguments.add_argument(
-            "--repository-root-directory",
-            type=_directory_exists,
-            default=".",
-            help="The root of the repository. Resulting paths will be relative to this.",
-        )
-        configuration_arguments.add_argument(
-            "--source-root-directory",
-            type=_directory_exists,
-            default=".",
-            help="The root where source files for the APK can be found.",
-        )
-        configuration_arguments.add_argument(
-            "--source-exclude-directories",
-            type=str,
-            default=None,
-            help="A `;`-separated list of directories that should be excluded from indexed source files.",
-        )
-        configuration_arguments.add_argument(
-            "--proguard-configuration-paths",
-            type=_separated_paths_exist,
-            default=None,
-            help="A `;`-separated list of ProGuard configurations, which can be used for global inference and to ignore unreachable objects.",
-        )
-        configuration_arguments.add_argument(
-            "--remove-unreachable-code",
-            action="store_true",
-            help="Prune unreachable code based on entry points specified in proguard configuration.",
-        )
-        configuration_arguments.add_argument(
-            "--lifecycles-paths",
-            type=_separated_paths_exist,
-            default=None,
-            help="A `;`-separated list of files and directories containing lifecycle definitions.",
-        )
-        configuration_arguments.add_argument(
-            "--model-generator-configuration-paths",
-            type=_separated_paths_exist,
-            default=os.fspath(configuration.get_path("default_generator_config.json")),
-            help="""A `;`-separated list of paths specifying JSON configuration files. Each file is a list of paths
-            to JSON model generators relative to the configuration file or names of CPP model generators.""",
-        )
-        configuration_arguments.add_argument(
-            "--model-generator-search-paths",
-            type=_separated_paths_exist,
-            default=";".join(
-                os.fspath(path)
-                for path in configuration.get_default_generator_search_paths()
-            ),
-            help="A `;`-separated list of paths where we look up JSON model generators.",
-        )
-        configuration_arguments.add_argument(
-            "--maximum-source-sink-distance",
-            type=int,
-            default=configuration.DEFAULT_MAXIMUM_SOURCE_SINK_DISTANCE,
-            help="Limits the distance of sources and sinks from a trace entry point.",
-        )
-
-        analysis_arguments = parser.add_argument_group("Analysis arguments")
-        analysis_arguments.add_argument(
-            "--sequential",
-            action="store_true",
-            help="Run the analysis sequentially, one a single thread.",
-        )
-        analysis_arguments.add_argument(
-            "--skip-source-indexing",
-            action="store_true",
-            help="Skip indexing source files.",
-        )
-        analysis_arguments.add_argument(
-            "--skip-model-generation",
-            action="store_true",
-            help="Skip model generation.",
-        )
-        analysis_arguments.add_argument(
-            "--disable-parameter-type-overrides",
-            action="store_true",
-            help="Disable analyzing methods with specific parameter type information.",
-        )
-        analysis_arguments.add_argument(
-            "--maximum-method-analysis-time",
-            type=int,
-            help="Specify number of seconds as a bound. If the analysis of a method takes longer than this then make the method obscure (default taint-in-taint-out).",
-        )
-
-        debug_arguments = parser.add_argument_group("Debugging arguments")
-        debug_arguments.add_argument(
-            "--verbosity",
-            type=int,
-            default=1,
-            metavar="[1-5]",
-            help="The logging verbosity.",
-        )
-        debug_arguments.add_argument(
-            "--gdb", action="store_true", help="Run the analyzer inside gdb."
-        )
-        debug_arguments.add_argument(
-            "--lldb", action="store_true", help="Run the analyzer inside lldb."
-        )
-        debug_arguments.add_argument(
-            "--log-method",
-            action="append",
-            metavar="PATTERN",
-            help="Enable logging for the given methods.",
-        )
-        debug_arguments.add_argument(
-            "--dump-class-hierarchies",
-            action="store_true",
-            help="Dump the class hierarchies in `class_hierarchies.json`.",
-        )
-        debug_arguments.add_argument(
-            "--dump-overrides",
-            action="store_true",
-            help="Dump the override graph in `overrides.json`.",
-        )
-        debug_arguments.add_argument(
-            "--dump-call-graph",
-            action="store_true",
-            help="Dump the call graph in `call_graph.json`.",
-        )
-        debug_arguments.add_argument(
-            "--dump-dependencies",
-            action="store_true",
-            help="Dump the dependency graph in `dependencies.json`.",
-        )
-        debug_arguments.add_argument(
-            "--dump-methods",
-            action="store_true",
-            help="Dump a list of the method signatures in `methods.json`.",
-        )
+        _add_target_arguments(parser)
+        _add_output_arguments(parser)
+        _add_binary_arguments(parser)
+        _add_configuration_arguments(parser)
+        _add_analysis_arguments(parser)
+        _add_metadata_arguments(parser)
+        _add_debug_arguments(parser)
 
         arguments: argparse.Namespace = parser.parse_args()
 
@@ -497,82 +619,7 @@ def main() -> None:
         dex_mode.unpackage(apk_directory, dex_directory)
         LOG.info(f"Extracted APK into `{apk_directory}` and DEX into `{dex_directory}`")
 
-        options = [
-            "--system-jar-paths",
-            arguments.system_jar_configuration_path,
-            "--apk-directory",
-            apk_directory,
-            "--dex-directory",
-            dex_directory,
-            "--rules-paths",
-            arguments.rules_paths,
-            "--repository-root-directory",
-            arguments.repository_root_directory,
-            "--source-root-directory",
-            arguments.source_root_directory,
-            "--apk-path",
-            arguments.apk_path,
-            "--output-directory",
-            arguments.output_directory,
-            "--maximum-source-sink-distance",
-            str(arguments.maximum_source_sink_distance),
-            "--model-generator-configuration-paths",
-            arguments.model_generator_configuration_paths,
-        ]
-
-        if arguments.model_generator_search_paths is not None:
-            options.append("--model-generator-search-paths")
-            options.append(arguments.model_generator_search_paths)
-
-        if arguments.proguard_configuration_paths:
-            options.append("--proguard-configuration-paths")
-            options.append(arguments.proguard_configuration_paths)
-
-        if arguments.lifecycles_paths:
-            options.append("--lifecycles-paths")
-            options.append(arguments.lifecycles_paths)
-
-        if arguments.source_exclude_directories:
-            options.append("--source-exclude-directories")
-            options.append(arguments.source_exclude_directories)
-
-        if arguments.generated_models_directory:
-            options.append("--generated-models-directory")
-            options.append(arguments.generated_models_directory)
-
-        if arguments.sequential:
-            options.append("--sequential")
-        if arguments.skip_source_indexing:
-            options.append("--skip-source-indexing")
-        if arguments.skip_model_generation:
-            options.append("--skip-model-generation")
-        if arguments.disable_parameter_type_overrides:
-            options.append("--disable-parameter-type-overrides")
-        if arguments.remove_unreachable_code:
-            options.append("--remove-unreachable-code")
-        if arguments.maximum_method_analysis_time is not None:
-            options.append("--maximum-method-analysis-time")
-            options.append(str(arguments.maximum_method_analysis_time))
-
-        trace_settings = [f"MARIANA_TRENCH:{arguments.verbosity}"]
-        if "TRACE" in os.environ:
-            trace_settings.insert(0, os.environ["TRACE"])
-        os.environ["TRACE"] = ",".join(trace_settings)
-
-        if arguments.log_method:
-            for method in arguments.log_method:
-                options.append("--log-method=%s" % method.strip())
-        if arguments.dump_class_hierarchies:
-            options.append("--dump-class-hierarchies")
-        if arguments.dump_overrides:
-            options.append("--dump-overrides")
-        if arguments.dump_call_graph:
-            options.append("--dump-call-graph")
-        if arguments.dump_dependencies:
-            options.append("--dump-dependencies")
-        if arguments.dump_methods:
-            options.append("--dump-methods")
-
+        options = _get_command_options(arguments, apk_directory, dex_directory)
         command = [os.fspath(binary.resolve())] + options
         if arguments.gdb:
             command = ["gdb", "--args"] + command
