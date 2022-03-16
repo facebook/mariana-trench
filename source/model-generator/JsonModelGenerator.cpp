@@ -5,6 +5,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
+#include <mariana-trench/EventLogger.h>
 #include <mariana-trench/JsonValidation.h>
 #include <mariana-trench/Log.h>
 #include <mariana-trench/model-generator/JsonModelGenerator.h>
@@ -169,7 +170,8 @@ std::vector<Model> JsonModelGenerator::emit_method_models_optimized(
     const Methods& methods,
     const MethodMappings& method_mappings) {
   std::vector<Model> models;
-  for (auto& item : items_) {
+  for (size_t i = 0; i < items_.size(); ++i) {
+    auto& item = items_[i];
     MethodHashedSet filtered_methods = item.may_satisfy(method_mappings);
     if (filtered_methods.is_bottom()) {
       continue;
@@ -180,6 +182,12 @@ std::vector<Model> JsonModelGenerator::emit_method_models_optimized(
     } else {
       method_models = item.emit_method_models_filtered(filtered_methods);
     }
+
+    EventLogger::log_event(
+        "model_generator_match",
+        fmt::format("{}:{}", this->name(), i),
+        method_models.size());
+
     models.insert(
         models.end(),
         std::make_move_iterator(method_models.begin()),

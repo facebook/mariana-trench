@@ -211,6 +211,9 @@ Options::Options(const boost::program_options::variables_map& variables) {
   dump_call_graph_ = variables.count("dump-call-graph") > 0;
   dump_dependencies_ = variables.count("dump-dependencies") > 0;
   dump_methods_ = variables.count("dump-methods") > 0;
+
+  job_id_ = variables["job-id"].as<std::string>();
+  metarun_id_ = variables["metarun-id"].as<std::string>();
 }
 
 void Options::add_options(
@@ -316,6 +319,15 @@ void Options::add_options(
       "dump-dependencies", "Dump the dependency graph in `dependencies.json`.");
   options.add_options()(
       "dump-methods", "Dump the list of method signatures in `methods.json`.");
+
+  options.add_options()(
+      "job-id",
+      program_options::value<std::string>()->default_value(""),
+      "Identifier for the current analysis run.");
+  options.add_options()(
+      "metarun-id",
+      program_options::value<std::string>()->default_value(""),
+      "Identifier for a group of analysis runs.");
 }
 
 const std::vector<std::string>& Options::models_paths() const {
@@ -465,6 +477,14 @@ bool Options::dump_dependencies() const {
 
 bool Options::dump_methods() const {
   return dump_methods_;
+}
+
+const std::string& Options::job_id() const {
+  return job_id_;
+}
+
+const std::string& Options::metarun_id() const {
+  return metarun_id_;
 }
 
 } // namespace marianatrench

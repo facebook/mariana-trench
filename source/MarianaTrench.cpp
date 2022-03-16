@@ -19,6 +19,7 @@
 #include <mariana-trench/ClassProperties.h>
 #include <mariana-trench/Context.h>
 #include <mariana-trench/Dependencies.h>
+#include <mariana-trench/EventLogger.h>
 #include <mariana-trench/FieldCache.h>
 #include <mariana-trench/Fields.h>
 #include <mariana-trench/Highlights.h>
@@ -289,6 +290,8 @@ void MarianaTrench::run(const program_options::variables_map& variables) {
 
   context.options = std::make_unique<Options>(variables);
   const auto& options = *context.options;
+
+  EventLogger::init_event_logger(context.options.get());
 
   auto system_jar_paths = filter_existing_jars(options.system_jar_paths());
 
