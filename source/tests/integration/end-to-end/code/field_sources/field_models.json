@@ -22,5 +22,37 @@
         "kind": "Source"
       }
     ]
+  },
+  {
+    "field": "Lcom/facebook/marianatrench/integrationtests/TaintedFieldClass;.staticFinalField:Ljava/lang/Object;",
+    "sources": [
+      {
+        "kind": "Source"
+      }
+    ]
+  },
+  {
+    "field": "Lcom/facebook/marianatrench/integrationtests/TaintedFieldClass;.finalStringField:Ljava/lang/String;",
+    "sources": [
+      {
+        "kind": "Source"
+      }
+    ]
+  },
+  {
+    "field": "Lcom/facebook/marianatrench/integrationtests/TaintedFieldClass;.staticStringField:Ljava/lang/String;",
+    "sources": [
+      {
+        "kind": "Source"
+      }
+    ]
+  },
+  {
+    "field": "Lcom/facebook/marianatrench/integrationtests/TaintedFieldClass;.staticFinalStringField:Ljava/lang/String;",
+    "sources": [
+      {
+        "kind": "Source"
+      }
+    ]
   }
 ]

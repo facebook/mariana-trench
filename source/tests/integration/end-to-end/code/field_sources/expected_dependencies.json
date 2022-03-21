@@ -46,6 +46,10 @@
     "Lcom/facebook/marianatrench/integrationtests/ChildClass;.<init>:()V",
     "Lcom/facebook/marianatrench/integrationtests/TestClass;.flow:(Lcom/facebook/marianatrench/integrationtests/TaintedFieldClass;)V"
   ],
+  "Lcom/facebook/marianatrench/integrationtests/TaintedFieldClass;.stringSink:(Ljava/lang/String;)V" : 
+  [
+    "Lcom/facebook/marianatrench/integrationtests/TaintedFieldClass;.flow:()V"
+  ],
   "Lcom/facebook/secure/context/IntentLauncher;.<init>:()V" : 
   [
     "Lcom/facebook/secure/context/SecureContextHelperV2;.inAppBrowser:()Lcom/facebook/secure/context/IntentLauncher;",
@@ -87,6 +91,7 @@
     "Lcom/facebook/content/SecureContextHelper;.<init>:()V",
     "Lcom/facebook/marianatrench/integrationtests/Origin;.<init>:()V",
     "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;",
+    "Lcom/facebook/marianatrench/integrationtests/TaintedFieldClass;.<clinit>:()V",
     "Lcom/facebook/marianatrench/integrationtests/TaintedFieldClass;.<init>:()V",
     "Lcom/facebook/marianatrench/integrationtests/TestClass;.<init>:()V",
     "Lcom/facebook/secure/context/IntentLauncher;.<init>:()V",

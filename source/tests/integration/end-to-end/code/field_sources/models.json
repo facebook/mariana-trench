@@ -7,5 +7,14 @@
         "port": "Argument(0)"
       }
     ]
+  },
+  {
+    "method": "Lcom/facebook/marianatrench/integrationtests/TaintedFieldClass;.stringSink:(Ljava/lang/String;)V",
+    "sinks": [
+      {
+        "kind": "Sink",
+        "port": "Argument(1)"
+      }
+    ]
   }
 ]

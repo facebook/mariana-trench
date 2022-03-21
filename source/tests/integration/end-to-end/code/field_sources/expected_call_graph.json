@@ -225,6 +225,13 @@
       "Ljava/lang/Object;.<init>:()V"
     ]
   },
+  "Lcom/facebook/marianatrench/integrationtests/TaintedFieldClass;.<clinit>:()V" : 
+  {
+    "static" : 
+    [
+      "Ljava/lang/Object;.<init>:()V"
+    ]
+  },
   "Lcom/facebook/marianatrench/integrationtests/TaintedFieldClass;.<init>:()V" : 
   {
     "static" : 
@@ -237,6 +244,10 @@
     "static" : 
     [
       "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V"
+    ],
+    "virtual" : 
+    [
+      "Lcom/facebook/marianatrench/integrationtests/TaintedFieldClass;.stringSink:(Ljava/lang/String;)V"
     ]
   },
   "Lcom/facebook/marianatrench/integrationtests/TestClass;.<init>:()V" : 
