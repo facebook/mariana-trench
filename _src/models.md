@@ -480,6 +480,8 @@ Otherwise, the default model is empty (no sources/sinks/propagations).
 
 These models represent user-defined taint on class fields (as opposed to methods, as described in all the previous sections on this page). They are specified in a similar way to method models as described below. Currently, you can specify only sources on a field model, although support may be added for sinks and other details later on.
 
+> **NOTE:** Field sources should not be applied to fields that are both final and of a primitive type (`int`, `char`, `float`, etc as well as `java.lang.String`) as the Java compiler optimizes accesses of these fields in the bytecode into accesses of the constant value they hold. In this scenario, Mariana Trench has no way of recognizing that the constant was meant to carry a source.
+
 Example field model generator:
 ```
 "find": "fields",
