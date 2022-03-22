@@ -1,0 +1,50 @@
+[
+  {
+    "field": "Lcom/facebook/marianatrench/integrationtests/TaintedFieldClass;.field:Ljava/lang/Object;",
+    "sinks": [
+      {
+        "kind": "Sink"
+      }
+    ]
+  },
+  {
+    "field": "Lcom/facebook/marianatrench/integrationtests/TaintedFieldClass;.shadowedField:Ljava/lang/Object;",
+    "sinks": [
+      {
+        "kind": "Sink"
+      }
+    ]
+  },
+  {
+    "field": "Lcom/facebook/marianatrench/integrationtests/TaintedFieldClass;.staticField:Ljava/lang/Object;",
+    "sinks": [
+      {
+        "kind": "Sink"
+      }
+    ]
+  },
+  {
+    "field": "Lcom/facebook/marianatrench/integrationtests/TaintedFieldClass;.staticStringField:Ljava/lang/String;",
+    "sinks": [
+      {
+        "kind": "Sink"
+      }
+    ]
+  },
+  {
+    "field": "Lcom/facebook/marianatrench/integrationtests/TaintedFieldClass;.finalStringField:Ljava/lang/String;",
+    "sinks": [
+      {
+        "kind": "Sink"
+      }
+    ]
+  },
+  {
+    "field": "Lcom/facebook/marianatrench/integrationtests/TaintedFieldClass;.staticFinalStringField:Ljava/lang/String;",
+    "sinks": [
+      {
+        "kind": "Sink"
+      }
+    ]
+  }
+]
