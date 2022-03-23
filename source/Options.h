@@ -92,8 +92,8 @@ class Options final {
   bool dump_dependencies() const;
   bool dump_methods() const;
 
-  const std::string& job_id() const;
-  const std::string& metarun_id() const;
+  const std::optional<std::string>& job_id() const;
+  const std::optional<std::string>& metarun_id() const;
 
  private:
   std::vector<std::string> models_paths_;
@@ -135,8 +135,8 @@ class Options final {
   bool dump_dependencies_;
   bool dump_methods_;
 
-  std::string job_id_;
-  std::string metarun_id_;
+  std::optional<std::string> job_id_;
+  std::optional<std::string> metarun_id_;
 };
 
 } // namespace marianatrench

@@ -198,7 +198,7 @@ Options::Options(const boost::program_options::variables_map& variables) {
   maximum_method_analysis_time_ =
       variables.count("maximum-method-analysis-time") == 0
       ? std::nullopt
-      : static_cast<std::optional<int>>(
+      : std::make_optional<int>(
             variables["maximum-method-analysis-time"].as<int>());
   maximum_source_sink_distance_ =
       variables["maximum-source-sink-distance"].as<int>();
@@ -212,8 +212,13 @@ Options::Options(const boost::program_options::variables_map& variables) {
   dump_dependencies_ = variables.count("dump-dependencies") > 0;
   dump_methods_ = variables.count("dump-methods") > 0;
 
-  job_id_ = variables["job-id"].as<std::string>();
-  metarun_id_ = variables["metarun-id"].as<std::string>();
+  job_id_ = variables.count("job-id") == 0
+      ? std::nullopt
+      : std::make_optional<std::string>(variables["job-id"].as<std::string>());
+  metarun_id_ = variables.count("metarun-id") == 0
+      ? std::nullopt
+      : std::make_optional<std::string>(
+            variables["metarun-id"].as<std::string>());
 }
 
 void Options::add_options(
@@ -322,11 +327,11 @@ void Options::add_options(
 
   options.add_options()(
       "job-id",
-      program_options::value<std::string>()->default_value(""),
+      program_options::value<std::string>(),
       "Identifier for the current analysis run.");
   options.add_options()(
       "metarun-id",
-      program_options::value<std::string>()->default_value(""),
+      program_options::value<std::string>(),
       "Identifier for a group of analysis runs.");
 }
 
@@ -479,11 +484,11 @@ bool Options::dump_methods() const {
   return dump_methods_;
 }
 
-const std::string& Options::job_id() const {
+const std::optional<std::string>& Options::job_id() const {
   return job_id_;
 }
 
-const std::string& Options::metarun_id() const {
+const std::optional<std::string>& Options::metarun_id() const {
   return metarun_id_;
 }
 
