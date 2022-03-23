@@ -532,6 +532,65 @@
   ]
 }
 {
+  "issues" : 
+  [
+    {
+      "position" : 
+      {
+        "line" : 13,
+        "path" : "Flow.java"
+      },
+      "rule" : 1,
+      "sinks" : 
+      [
+        {
+          "call_position" : 
+          {
+            "end" : 32,
+            "line" : 13,
+            "path" : "Flow.java",
+            "start" : 18
+          },
+          "callee" : "Lcom/facebook/marianatrench/integrationtests/Flow;.flow_to_field:(Ljava/lang/Object;Ljava/lang/Object;)V",
+          "callee_port" : "Argument(1)",
+          "distance" : 1,
+          "field_origins" : 
+          [
+            "Lcom/facebook/marianatrench/integrationtests/TaintedFieldClass;.field:Ljava/lang/Object;"
+          ],
+          "kind" : "Sink"
+        }
+      ],
+      "sources" : 
+      [
+        {
+          "call_position" : 
+          {
+            "end" : 30,
+            "line" : 13,
+            "path" : "Flow.java",
+            "start" : 25
+          },
+          "callee" : "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;",
+          "callee_port" : "Return",
+          "distance" : 1,
+          "kind" : "Source",
+          "origins" : 
+          [
+            "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;"
+          ]
+        }
+      ]
+    }
+  ],
+  "method" : "Lcom/facebook/marianatrench/integrationtests/Flow;.flow:()V",
+  "position" : 
+  {
+    "line" : 12,
+    "path" : "Flow.java"
+  }
+}
+{
   "method" : "Landroid/app/Activity;.<init>:()V",
   "position" : 
   {
@@ -1076,6 +1135,41 @@
   {
     "line" : 22
   }
+}
+{
+  "method" : "Lcom/facebook/marianatrench/integrationtests/Flow;.<init>:()V",
+  "position" : 
+  {
+    "line" : 9,
+    "path" : "Flow.java"
+  }
+}
+{
+  "method" : "Lcom/facebook/marianatrench/integrationtests/Flow;.flow_to_field:(Ljava/lang/Object;Ljava/lang/Object;)V",
+  "position" : 
+  {
+    "line" : 18,
+    "path" : "Flow.java"
+  },
+  "sinks" : 
+  [
+    {
+      "callee_port" : "Leaf",
+      "caller_port" : "Argument(1)",
+      "field_callee" : "Lcom/facebook/marianatrench/integrationtests/TaintedFieldClass;.field:Ljava/lang/Object;",
+      "field_origins" : 
+      [
+        "Lcom/facebook/marianatrench/integrationtests/TaintedFieldClass;.field:Ljava/lang/Object;"
+      ],
+      "kind" : "Sink",
+      "local_positions" : 
+      [
+        {
+          "line" : 20
+        }
+      ]
+    }
+  ]
 }
 {
   "method" : "Lcom/facebook/marianatrench/integrationtests/Origin;.<init>:()V",

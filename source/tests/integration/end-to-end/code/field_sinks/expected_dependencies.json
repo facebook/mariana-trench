@@ -31,14 +31,20 @@
     "Landroid/content/Intent;.getBundleExtra:(Ljava/lang/String;)Landroid/os/Bundle;",
     "Landroid/content/Intent;.getExtras:()Landroid/os/Bundle;"
   ],
+  "Lcom/facebook/marianatrench/integrationtests/Flow;.flow_to_field:(Ljava/lang/Object;Ljava/lang/Object;)V" : 
+  [
+    "Lcom/facebook/marianatrench/integrationtests/Flow;.flow:()V"
+  ],
   "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;" : 
   [
     "Lcom/facebook/marianatrench/integrationtests/ChildClass;.flow:()V",
+    "Lcom/facebook/marianatrench/integrationtests/Flow;.flow:()V",
     "Lcom/facebook/marianatrench/integrationtests/TaintedFieldClass;.flow:()V"
   ],
   "Lcom/facebook/marianatrench/integrationtests/TaintedFieldClass;.<init>:()V" : 
   [
-    "Lcom/facebook/marianatrench/integrationtests/ChildClass;.<init>:()V"
+    "Lcom/facebook/marianatrench/integrationtests/ChildClass;.<init>:()V",
+    "Lcom/facebook/marianatrench/integrationtests/Flow;.flow_to_field:(Ljava/lang/Object;Ljava/lang/Object;)V"
   ],
   "Lcom/facebook/marianatrench/integrationtests/TaintedFieldClass;.source:()Ljava/lang/String;" : 
   [
@@ -88,6 +94,8 @@
     "Lcom/facebook/auth/datastore/LoggedInUserAuthDataStore;.<init>:()V",
     "Lcom/facebook/base/activity/FragmentBaseActivityUtil;.<init>:()V",
     "Lcom/facebook/content/SecureContextHelper;.<init>:()V",
+    "Lcom/facebook/marianatrench/integrationtests/Flow;.<init>:()V",
+    "Lcom/facebook/marianatrench/integrationtests/Flow;.flow:()V",
     "Lcom/facebook/marianatrench/integrationtests/Origin;.<init>:()V",
     "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;",
     "Lcom/facebook/marianatrench/integrationtests/TaintedFieldClass;.<init>:()V",
