@@ -968,13 +968,39 @@ bool Transfer::analyze_iput(
   taint.map(
       [position](Taint& sources) { sources.add_local_position(position); });
 
-  auto* field = instruction->get_field()->get_name();
+  // Check if the taint above flows into a field sink
+  const auto* field =
+      context->call_graph.resolved_field_access(context->method(), instruction);
+  if (!field) {
+    WARNING_OR_DUMP(
+        context,
+        3,
+        "Unable to resolve access of field for iput {}",
+        show(instruction->get_field()));
+  } else {
+    auto field_model = field ? context->registry.get(field) : FieldModel();
+    auto sinks = field_model.sinks();
+    if (!sinks.empty() && !taint.is_bottom()) {
+      for (const auto& [port, sources] : taint.elements()) {
+        check_flows(
+            context,
+            sources,
+            sinks,
+            position,
+            /* extra_features */ FeatureMayAlwaysSet(),
+            /* fulfilled_partial_sinks */ nullptr);
+      }
+    }
+  }
+
+  // Store the taint in the memory location(s) representing the field
+  auto* field_name = instruction->get_field()->get_name();
   auto target_memory_locations =
       environment->memory_locations(/* register */ instruction->srcs()[1]);
   bool is_singleton = target_memory_locations.elements().size() == 1;
 
   for (auto* memory_location : target_memory_locations.elements()) {
-    auto field_memory_location = memory_location->make_field(field);
+    auto field_memory_location = memory_location->make_field(field_name);
     auto taint_copy = taint;
     add_field_features(context, taint_copy, field_memory_location);
 
