@@ -49,6 +49,11 @@ class Transfer final : public InstructionAnalyzerBase<
       const IRInstruction* instruction,
       AnalysisEnvironment* taint);
 
+  static bool analyze_sput(
+      MethodContext* context,
+      const IRInstruction* instruction,
+      AnalysisEnvironment* taint);
+
   static bool analyze_load_param(
       MethodContext* context,
       const IRInstruction* instruction,

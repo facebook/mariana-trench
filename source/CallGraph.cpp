@@ -92,14 +92,16 @@ resolve_field_access(const Method* caller, const IRInstruction* instruction) {
   mt_assert(
       opcode::is_an_iget(instruction->opcode()) ||
       opcode::is_an_sget(instruction->opcode()) ||
-      opcode::is_an_iput(instruction->opcode()));
+      opcode::is_an_iput(instruction->opcode()) ||
+      opcode::is_an_sput(instruction->opcode()));
 
   DexFieldRef* dex_field_reference = instruction->get_field();
   mt_assert_log(
       dex_field_reference != nullptr,
       "Field access (iget, sget, iput) instruction has no field reference");
 
-  if (opcode::is_an_sget(instruction->opcode())) {
+  if (opcode::is_an_sget(instruction->opcode()) ||
+      opcode::is_an_sput(instruction->opcode())) {
     return resolve_field(dex_field_reference, FieldSearch::Static);
   }
   return resolve_field(dex_field_reference, FieldSearch::Instance);
@@ -290,7 +292,8 @@ InstructionCallGraphInformation process_instruction(
   }
 
   if (opcode::is_an_iget(instruction->opcode()) ||
-      opcode::is_an_sget(instruction->opcode())) {
+      opcode::is_an_sget(instruction->opcode()) ||
+      opcode::is_an_sput(instruction->opcode())) {
     const auto* field = resolve_field_access(caller, instruction);
     if (field != nullptr) {
       instruction_information.field_access = field_factory.get(field);

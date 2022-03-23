@@ -1021,6 +1021,53 @@ bool Transfer::analyze_iput(
   return false;
 }
 
+bool Transfer::analyze_sput(
+    MethodContext* context,
+    const IRInstruction* instruction,
+    AnalysisEnvironment* environment) {
+  log_instruction(context, instruction);
+  mt_assert(instruction->srcs().size() == 1);
+  mt_assert(instruction->has_field());
+
+  auto taint = environment->read(/* register */ instruction->srcs()[0]);
+  if (taint.is_bottom()) {
+    return false;
+  }
+  auto* position = context->positions.get(
+      context->method(),
+      environment->last_position(),
+      Root(Root::Kind::Return),
+      instruction);
+  taint.map(
+      [position](Taint& sources) { sources.add_local_position(position); });
+
+  const auto* field =
+      context->call_graph.resolved_field_access(context->method(), instruction);
+  if (!field) {
+    WARNING_OR_DUMP(
+        context,
+        3,
+        "Unable to resolve access of field for sput {}",
+        show(instruction->get_field()));
+    return false;
+  }
+  auto field_model = field ? context->registry.get(field) : FieldModel();
+  auto sinks = field_model.sinks();
+  if (sinks.empty()) {
+    return false;
+  }
+  for (const auto& [port, sources] : taint.elements()) {
+    check_flows(
+        context,
+        sources,
+        sinks,
+        position,
+        /* extra_features */ FeatureMayAlwaysSet(),
+        /* fulfilled_partial_sinks */ nullptr);
+  }
+  return false;
+}
+
 bool Transfer::analyze_load_param(
     MethodContext* context,
     const IRInstruction* instruction,
