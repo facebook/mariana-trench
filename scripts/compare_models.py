@@ -37,26 +37,46 @@ def _recursive_sort(data: object) -> object:
         return data
 
 
+def process_file(input_file: Path) -> None:
+    with open(input_file, "r") as file:
+        data: object = json.load(file)
+    data = _recursive_sort(data)
+    with open(input_file, "w") as file:
+        json.dump(data, file, indent=2, sort_keys=True)
+
+
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(
         description="Compare the given JSON model files and overwrite such files with sorted contents."
     )
-    parser.add_argument("first", type=str, help="The first model file to compare.")
-    parser.add_argument("second", type=str, help="The second model file to compare.")
+    parser.add_argument("first", type=str, help="The first model file path to compare.")
+    parser.add_argument(
+        "second", type=str, help="The second model file path to compare."
+    )
+    parser.add_argument(
+        "-d",
+        "--directories",
+        action="store_true",
+        help="If specified, indicates that the paths provided are directories containing (only) model json files.",
+    )
 
     arguments: argparse.Namespace = parser.parse_args()
 
-    file_1 = Path(arguments.first)
-    file_2 = Path(arguments.second)
+    path_1 = Path(arguments.first)
+    path_2 = Path(arguments.second)
+    directories: bool = arguments.directories
+    if directories:
+        assert (
+            path_1.is_dir() and path_2.is_dir()
+        ), "Both paths must be directories if --directories(-d) flag is specified"
 
-    data_1: object = json.loads(file_1.read_text())
-    data_2: object = json.loads(file_2.read_text())
-
-    data_1 = _recursive_sort(data_1)
-    data_2 = _recursive_sort(data_2)
-
-    file_1.write_text(json.dumps(data_1, indent=2, sort_keys=True))
-    file_2.write_text(json.dumps(data_2, indent=2, sort_keys=True))
+        for model_file in list(path_1.glob("*.json")):
+            process_file(model_file)
+        for model_file in list(path_2.glob("*.json")):
+            process_file(model_file)
+    else:
+        process_file(path_1)
+        process_file(path_2)
 
     try:
         subprocess.check_call(
@@ -67,8 +87,8 @@ if __name__ == "__main__":
                 "--ignore-blank-lines",
                 "--minimal",
                 "--unified",
-                file_1.resolve(),
-                file_2.resolve(),
+                path_1.resolve(),
+                path_2.resolve(),
             ]
         )
     except subprocess.CalledProcessError:
