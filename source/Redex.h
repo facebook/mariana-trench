@@ -87,13 +87,15 @@ const DexField* create_field(
     Scope& scope,
     const std::string& class_name,
     const DexFieldSpecification& field,
-    const DexType* super = nullptr);
+    const DexType* super = nullptr,
+    bool is_static = false);
 
 std::vector<const DexField*> create_fields(
     Scope& scope,
     const std::string& class_name,
     const std::vector<DexFieldSpecification>& fields,
-    const DexType* super = nullptr);
+    const DexType* super = nullptr,
+    bool is_static = false);
 
 } // namespace redex
 

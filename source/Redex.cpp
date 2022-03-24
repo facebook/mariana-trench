@@ -266,15 +266,17 @@ const DexField* redex::create_field(
     Scope& scope,
     const std::string& class_name,
     const DexFieldSpecification& field,
-    const DexType* super) {
-  return redex::create_fields(scope, class_name, {field}, super)[0];
+    const DexType* super,
+    bool is_static) {
+  return redex::create_fields(scope, class_name, {field}, super, is_static)[0];
 }
 
 std::vector<const DexField*> redex::create_fields(
     Scope& scope,
     const std::string& class_name,
     const std::vector<DexFieldSpecification>& fields,
-    const DexType* super) {
+    const DexType* super,
+    bool is_static) {
   std::vector<const DexField*> created_fields;
   auto* klass = DexType::make_type(DexString::make_string(class_name));
   ClassCreator creator(klass);
@@ -293,8 +295,9 @@ std::vector<const DexField*> redex::create_fields(
         /* type */ field_type));
     field->attach_annotation_set(
         redex::create_annotation_set(field_annotations));
-    auto* concrete_field =
-        field->make_concrete(DexAccessFlags::ACC_PUBLIC, nullptr);
+    auto* concrete_field = field->make_concrete(
+        is_static ? DexAccessFlags::ACC_STATIC : DexAccessFlags::ACC_PUBLIC,
+        nullptr);
     creator.add_field(concrete_field);
     created_fields.push_back(concrete_field);
   }

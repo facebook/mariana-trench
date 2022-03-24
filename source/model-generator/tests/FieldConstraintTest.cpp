@@ -87,11 +87,19 @@ TEST_F(FieldConstraintTest, IsStaticFieldConstraintSatisfy) {
   Scope scope;
   auto dex_field_public = redex::create_field(
       scope, "LClassB;", /* field */ {"field", type::java_lang_String()});
+  auto dex_field_static = redex::create_field(
+      scope,
+      "LClassA;",
+      /* field */ {"field", type::java_lang_String()},
+      nullptr,
+      true);
   DexStore store("stores");
   store.add_classes(scope);
   auto context = test::make_context(store);
   auto field_public = context.fields->get(dex_field_public);
+  auto field_static = context.fields->get(dex_field_static);
 
+  EXPECT_TRUE(IsStaticFieldConstraint(true).satisfy(field_static));
   EXPECT_TRUE(IsStaticFieldConstraint(false).satisfy(field_public));
 }
 
