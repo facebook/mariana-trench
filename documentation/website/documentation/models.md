@@ -478,23 +478,23 @@ Otherwise, the default model is empty (no sources/sinks/propagations).
 
 ### Field Models
 
-These models represent user-defined taint on class fields (as opposed to methods, as described in all the previous sections on this page). They are specified in a similar way to method models as described below. Currently, you can specify only sources on a field model, although support may be added for sinks and other details later on.
+These models represent user-defined taint on class fields (as opposed to methods, as described in all the previous sections on this page). They are specified in a similar way to method models as described below.
 
 > **NOTE:** Field sources should not be applied to fields that are both final and of a primitive type (`int`, `char`, `float`, etc as well as `java.lang.String`) as the Java compiler optimizes accesses of these fields in the bytecode into accesses of the constant value they hold. In this scenario, Mariana Trench has no way of recognizing that the constant was meant to carry a source.
 
-Example field model generator:
+Example field model generator for sources:
 ```
 "find": "fields",
 "where": [
   {
     "constraint": "name",
-    "pattern": "EXAMPLE"
+    "pattern": "SOURCE_EXAMPLE"
   }
 ],
 "model": {
   "sources" : [
     {
-      "kind": "FieldSourceA"
+      "kind": "FieldSource"
     }
   ]
 }
@@ -504,17 +504,44 @@ Example code:
 ```java
 public class TestClass {
   // Field that we know to be tainted
-  public final EXAMPLE = ...;
-}
+  public Object SOURCE_EXAMPLE = ...;
 
-void flow() {
-  sink(EXAMPLE, ...);
+  void flow() {
+    sink(EXAMPLE, ...);
+  }
+}
+```
+
+Example field model generator for sinks:
+```
+"find": "fields",
+"where": [
+  {
+    "constraint": "name",
+    "pattern": "SINK_EXAMPLE"
+  }
+],
+"model": {
+  "sinks" : [
+    {
+      "kind": "FieldSink"
+    }
+  ]
+}
+```
+
+Example code:
+```java
+public class TestClass {
+  public Object SINK_EXAMPLE = ...;
+
+  void flow() {
+    SINK_EXAMPLE = source();
+  }
 }
 ```
 
 Field signature formats follow the Dalvik bytecode format similar to methods as discussed [above](#method-name-format). This is of the form `<className>.<fieldName>:<fieldType>`.
-
-Note that the analysis does NOT keep track of inferred sources on the field, but rather only keeps track of user defined sources on these fields which can only be specified in model generators.
 
 ## Generators
 
@@ -667,9 +694,12 @@ Each "rule" defines a "filter" (which uses "constraints" to specify methods for 
 
 
   - **For Field models**
-    - `sources`*: A list of sources the field should hold
+    - `sources`*: A list of sources the field should hold. A source has the following key/values:
       - `kind`: The source name;
       - `features`*: A list of features/breadcrumbs names;
+    - `sinks`*: A list of sinks the field should hold. A sink has the following key/values:
+      - `kind`: The sink name;
+      - `features`*: A list of features/breadcrumds names;
 
 In the above bullets,
 
