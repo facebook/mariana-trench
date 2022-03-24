@@ -42,6 +42,9 @@
     "name": "join_override_generator"
   },
   {
+    "name": "SensitiveCookieDataGenerator"
+  },
+  {
     "name": "service_sources"
   },
   {
