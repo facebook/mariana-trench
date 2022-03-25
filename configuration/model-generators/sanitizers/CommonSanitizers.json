@@ -20,6 +20,20 @@
       "find": "methods",
       "where": [
         {
+          "constraint": "signature",
+          "pattern": "Lkotlin/reflect/.*"
+        }
+      ],
+      "model": {
+        "modes": [
+          "no-join-virtual-overrides"
+        ]
+      }
+    },
+    {
+      "find": "methods",
+      "where": [
+        {
           "constraint": "name",
           "pattern": "<init>"
         },
