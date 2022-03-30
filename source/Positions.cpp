@@ -163,8 +163,18 @@ Positions::Positions(const Options& options, const DexStoresVector& stores) {
                 auto pos = path->find_last_of("/");
                 if (pos != std::string::npos) {
                   auto filename = path->substr(pos + 1, path->size() - pos - 4);
-                  class_to_path.emplace(
-                      fmt::format("L{}/{}Kt;", *package, filename), *path);
+                  auto classname = fmt::format("L{}/{}Kt;", *package, filename);
+                  class_to_path.update(
+                      classname,
+                      [&path](
+                          const std::string& /* classname */,
+                          std::string& value,
+                          bool exists) {
+                        if (exists && value < *path) {
+                          return;
+                        }
+                        value = *path;
+                      });
                 }
               }
             }
@@ -173,8 +183,18 @@ Positions::Positions(const Options& options, const DexStoresVector& stores) {
             if (package && maybe_class(line) &&
                 re2::RE2::PartialMatch(line, class_regex) &&
                 re2::RE2::PartialMatch(line, class_regex, &class_match)) {
-              class_to_path.emplace(
-                  fmt::format("L{}/{};", *package, class_match), *path);
+              auto classname = fmt::format("L{}/{};", *package, class_match);
+              class_to_path.update(
+                  classname,
+                  [&path](
+                      const std::string& /* classname */,
+                      std::string& value,
+                      bool exists) {
+                    if (exists && value < *path) {
+                      return;
+                    }
+                    value = *path;
+                  });
             }
           }
         },
