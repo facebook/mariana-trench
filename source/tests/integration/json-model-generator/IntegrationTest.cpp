@@ -80,7 +80,8 @@ TEST_P(JsonModelGeneratorIntegrationTest, CompareModels) {
   DexMetadata dexmetadata;
   dexmetadata.set_id("classes");
   DexStore root_store(dexmetadata);
-  root_store.add_classes(load_classes_from_dex(dex_path.c_str()));
+  root_store.add_classes(load_classes_from_dex(
+      DexLocation::make_location("dex", dex_path.c_str())));
   context.stores.push_back(root_store);
   const auto& options = *context.options;
   context.artificial_methods =
