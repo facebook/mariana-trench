@@ -207,7 +207,7 @@ const std::vector<std::optional<std::string>> get_source_constant_arguments(
           instruction_memory_location != nullptr) {
         value = instruction_memory_location->get_constant();
       }
-      constant_arguments.push_back(value);
+      constant_arguments.push_back(std::move(value));
     }
   }
 

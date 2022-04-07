@@ -58,11 +58,11 @@ std::optional<CanonicalName> CanonicalName::instantiate(
     auto class_signature = method->get_class()->get_name()->str();
     auto pos = class_signature.find_last_of("/");
     if (pos != std::string::npos && class_signature.size() > (pos + 2)) {
-      std::string class_name =
-          class_signature.substr(pos + 1, class_signature.size() - pos - 2);
+      std::string class_name = str_copy(
+          class_signature.substr(pos + 1, class_signature.size() - pos - 2));
       boost::replace_last(class_name, "Data", "");
       convert_to_lower_underscore(class_name);
-      std::string method_name = method->get_name();
+      std::string method_name = str_copy(method->get_name());
       boost::replace_first(method_name, "set", "");
       convert_to_lower_underscore(method_name);
       boost::algorithm::replace_all(

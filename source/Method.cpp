@@ -44,7 +44,7 @@ DexProto* Method::get_proto() const {
   return method_->get_proto();
 }
 
-const std::string& Method::get_name() const {
+std::string_view Method::get_name() const {
   return method_->get_name()->str();
 }
 

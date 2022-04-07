@@ -152,7 +152,7 @@ Bounds get_callee_this_parameter_bounds(
   return callee_name_bounds;
 }
 
-std::optional<std::string> get_class_name(const DexMethod* callee) {
+std::optional<std::string_view> get_class_name(const DexMethod* callee) {
   const auto& class_name = callee->get_class()->get_name()->str();
   auto length = class_name.length();
   if (length <= 2 || class_name[length - 1] != ';' ||
@@ -168,7 +168,7 @@ std::optional<std::string> get_class_name(const DexMethod* callee) {
 
 Bounds get_iput_local_position_bounds(
     const FileLines& lines,
-    const std::string& field_name,
+    std::string_view field_name,
     int line_number) {
   auto line = lines.line(line_number);
   auto field_start = line.find(field_name);
@@ -429,7 +429,7 @@ Bounds Highlights::get_local_position_bounds(
   }
   mt_assert(local_position.instruction() != nullptr);
   if (opcode::is_an_iput(local_position.instruction()->opcode())) {
-    const auto& field_name =
+    const auto field_name =
         local_position.instruction()->get_field()->get_name()->str();
     return get_iput_local_position_bounds(lines, field_name, line_number);
   }
@@ -462,7 +462,7 @@ Bounds Highlights::get_callee_highlight_bounds(
     return {callee_line_number, 0, 0};
   }
   auto line = lines.line(callee_line_number);
-  auto callee_name = callee->get_name()->str();
+  auto callee_name = callee->get_name()->str_copy();
   if (method::is_init(callee)) {
     auto class_name = get_class_name(callee);
     if (!class_name) {

@@ -70,7 +70,7 @@ std::vector<Model> ContentProviderGenerator::emit_method_models(
       if (tag_info.tag == ComponentTag::Provider) {
         auto* dex_class = redex::get_class(tag_info.classname);
         if (dex_class) {
-          std::unordered_set<std::string> parent_classes =
+          std::unordered_set<std::string_view> parent_classes =
               generator::get_custom_parents_from_class(dex_class);
           for (const auto& parent_class : parent_classes) {
             manifest_providers.emplace(

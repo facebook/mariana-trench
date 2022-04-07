@@ -30,9 +30,9 @@ using MethodHashedSet = sparta::HashedSetAbstractDomain<const Method*>;
 
 struct MethodMappings {
   explicit MethodMappings(const Methods& methods);
-  ConcurrentMap<std::string, MethodHashedSet> name_to_methods;
-  ConcurrentMap<std::string, MethodHashedSet> class_to_methods;
-  ConcurrentMap<std::string, MethodHashedSet> class_to_override_methods;
+  ConcurrentMap<std::string_view, MethodHashedSet> name_to_methods;
+  ConcurrentMap<std::string_view, MethodHashedSet> class_to_methods;
+  ConcurrentMap<std::string_view, MethodHashedSet> class_to_override_methods;
   ConcurrentMap<std::string, MethodHashedSet> signature_to_methods;
   MethodHashedSet all_methods;
 };
@@ -155,18 +155,19 @@ class FieldVisitorModelGenerator : public ModelGenerator {
 
 namespace generator {
 
-const std::string& get_class_name(const Method* method);
-const std::string& get_method_name(const Method* method);
-std::optional<std::string> get_super_type(const Method* method);
+std::string_view get_class_name(const Method* method);
+std::string_view get_method_name(const Method* method);
+std::optional<std::string_view> get_super_type(const Method* method);
 std::optional<const DexType*> get_return_type(const Method* method);
-std::optional<std::string> get_return_type_string(const Method* method);
-std::unordered_set<std::string> get_interfaces_from_class(DexClass* dex_class);
-std::unordered_set<std::string> get_parents_from_class(
+std::optional<std::string_view> get_return_type_string(const Method* method);
+std::unordered_set<std::string_view> get_interfaces_from_class(
+    DexClass* dex_class);
+std::unordered_set<std::string_view> get_parents_from_class(
     DexClass* dex_class,
     bool include_interfaces);
-std::unordered_set<std::string> get_custom_parents_from_class(
+std::unordered_set<std::string_view> get_custom_parents_from_class(
     DexClass* dex_class);
-std::string get_outer_class(const std::string& classname);
+std::string get_outer_class(std::string_view classname);
 
 bool is_numeric_data_type(const DataType& type);
 
@@ -174,7 +175,7 @@ std::vector<std::pair<ParameterPosition, const DexType*>> get_argument_types(
     const DexMethod* dex_method);
 std::vector<std::pair<ParameterPosition, const DexType*>> get_argument_types(
     const Method* method);
-std::vector<std::pair<ParameterPosition, std::string>>
+std::vector<std::pair<ParameterPosition, std::string_view>>
 get_argument_types_string(const Method* method);
 
 void add_propagation_to_return(

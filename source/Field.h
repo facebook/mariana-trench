@@ -34,7 +34,7 @@ class Field final {
   }
 
   DexType* get_class() const;
-  const std::string& get_name() const;
+  std::string_view get_name() const;
   const std::string& show() const;
 
   static const Field* from_json(const Json::Value& value, Context& context);

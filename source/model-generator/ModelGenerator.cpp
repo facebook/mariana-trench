@@ -75,42 +75,42 @@ namespace {
 
 void create_name_to_method(
     const Method* method,
-    ConcurrentMap<std::string, MethodHashedSet>& method_mapping) {
-  const auto& method_name = method->get_name();
+    ConcurrentMap<std::string_view, MethodHashedSet>& method_mapping) {
+  auto method_name = method->get_name();
   method_mapping.update(
       method_name,
-      [&](const std::string& /* name */,
+      [&](std::string_view /* name */,
           MethodHashedSet& methods,
           bool /* exists */) { methods.add(method); });
 }
 
 void create_class_to_method(
     const Method* method,
-    ConcurrentMap<std::string, MethodHashedSet>& method_mapping) {
-  std::string parent_class = method->get_class()->get_name()->str();
+    ConcurrentMap<std::string_view, MethodHashedSet>& method_mapping) {
+  auto parent_class = method->get_class()->get_name()->str();
   method_mapping.update(
       parent_class,
-      [&](const std::string& /* parent_name */,
+      [&](std::string_view /* parent_name */,
           MethodHashedSet& methods,
           bool /* exists */) { methods.add(method); });
 }
 
 void create_class_to_override_method(
     const Method* method,
-    ConcurrentMap<std::string, MethodHashedSet>& method_mapping) {
-  std::string class_name = method->get_class()->get_name()->str();
+    ConcurrentMap<std::string_view, MethodHashedSet>& method_mapping) {
+  auto class_name = method->get_class()->get_name()->str();
   auto* dex_class = redex::get_class(class_name);
   if (!dex_class) {
     return;
   }
-  std::unordered_set<std::string> parent_classes =
+  std::unordered_set<std::string_view> parent_classes =
       generator::get_parents_from_class(
           dex_class, /* include_interfaces */ true);
   parent_classes.insert(class_name);
   for (const auto& parent_class : parent_classes) {
     method_mapping.update(
         parent_class,
-        [&](const std::string& /* parent_name */,
+        [&](std::string_view /* parent_name */,
             MethodHashedSet& methods,
             bool /* exists */) { methods.add(method); });
   }
@@ -142,15 +142,16 @@ MethodMappings::MethodMappings(const Methods& methods) {
   queue.run_all();
 }
 
-const std::string& generator::get_class_name(const Method* method) {
+std::string_view generator::get_class_name(const Method* method) {
   return method->get_class()->get_name()->str();
 }
 
-const std::string& generator::get_method_name(const Method* method) {
+std::string_view generator::get_method_name(const Method* method) {
   return method->get_name();
 }
 
-std::optional<std::string> generator::get_super_type(const Method* method) {
+std::optional<std::string_view> generator::get_super_type(
+    const Method* method) {
   const DexClass* current_class = type_class(method->get_class());
   const DexType* super_class = current_class->get_super_class();
   if (!super_class) {
@@ -159,9 +160,9 @@ std::optional<std::string> generator::get_super_type(const Method* method) {
   return super_class->get_name()->str();
 }
 
-std::unordered_set<std::string> generator::get_interfaces_from_class(
+std::unordered_set<std::string_view> generator::get_interfaces_from_class(
     DexClass* dex_class) {
-  std::unordered_set<std::string> interfaces;
+  std::unordered_set<std::string_view> interfaces;
   std::deque<DexType*> interface_types = std::deque<DexType*>(
       dex_class->get_interfaces()->begin(), dex_class->get_interfaces()->end());
   while (!interface_types.empty()) {
@@ -180,10 +181,10 @@ std::unordered_set<std::string> generator::get_interfaces_from_class(
   return interfaces;
 }
 
-std::unordered_set<std::string> generator::get_parents_from_class(
+std::unordered_set<std::string_view> generator::get_parents_from_class(
     DexClass* dex_class,
     bool include_interfaces = false) {
-  std::unordered_set<std::string> parent_classes;
+  std::unordered_set<std::string_view> parent_classes;
 
   while (dex_class != nullptr) {
     const DexType* super_type = dex_class->get_super_class();
@@ -201,9 +202,9 @@ std::unordered_set<std::string> generator::get_parents_from_class(
   return parent_classes;
 }
 
-std::unordered_set<std::string> generator::get_custom_parents_from_class(
+std::unordered_set<std::string_view> generator::get_custom_parents_from_class(
     DexClass* dex_class) {
-  std::unordered_set<std::string> parent_classes;
+  std::unordered_set<std::string_view> parent_classes;
 
   while (true) {
     const DexType* super_type = dex_class->get_super_class();
@@ -224,9 +225,9 @@ std::unordered_set<std::string> generator::get_custom_parents_from_class(
   return parent_classes;
 }
 
-std::string generator::get_outer_class(const std::string& classname) {
+std::string generator::get_outer_class(std::string_view classname) {
   auto class_start = classname.substr(0, classname.find(";", 0));
-  return class_start.substr(0, class_start.find("$", 0));
+  return str_copy(class_start.substr(0, class_start.find("$", 0)));
 }
 
 std::vector<std::pair<ParameterPosition, const DexType*>>
@@ -256,9 +257,9 @@ generator::get_argument_types(const Method* method) {
   return get_argument_types(method->dex_method());
 }
 
-std::vector<std::pair<ParameterPosition, std::string>>
+std::vector<std::pair<ParameterPosition, std::string_view>>
 generator::get_argument_types_string(const Method* method) {
-  std::vector<std::pair<ParameterPosition, std::string>> arguments;
+  std::vector<std::pair<ParameterPosition, std::string_view>> arguments;
   auto argument_types_dex = generator::get_argument_types(method);
 
   for (const auto& argument_type_dex : argument_types_dex) {
@@ -283,7 +284,7 @@ std::optional<const DexType*> generator::get_return_type(const Method* method) {
   return return_type;
 }
 
-std::optional<std::string> generator::get_return_type_string(
+std::optional<std::string_view> generator::get_return_type_string(
     const Method* method) {
   const auto& return_type = generator::get_return_type(method);
   if (!return_type) {

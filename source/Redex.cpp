@@ -28,7 +28,7 @@
 
 namespace marianatrench {
 
-DexClass* redex::get_class(const std::string& class_name) {
+DexClass* redex::get_class(std::string_view class_name) {
   auto* type = get_type(class_name);
   if (type) {
     return type_class(type);
@@ -36,7 +36,7 @@ DexClass* redex::get_class(const std::string& class_name) {
   return nullptr;
 }
 
-DexMethod* redex::get_method(const std::string& signature) {
+DexMethod* redex::get_method(std::string_view signature) {
   auto method_reference = DexMethod::get_method(signature);
   if (!method_reference) {
     return nullptr;
@@ -44,11 +44,11 @@ DexMethod* redex::get_method(const std::string& signature) {
   return method_reference->as_def();
 }
 
-DexFieldRef* redex::get_field(const std::string& field) {
+DexFieldRef* redex::get_field(std::string_view field) {
   return DexField::get_field(field);
 }
 
-DexType* redex::get_type(const std::string& type) {
+DexType* redex::get_type(std::string_view type) {
   return DexType::get_type(type);
 }
 

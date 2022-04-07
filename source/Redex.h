@@ -33,13 +33,13 @@ struct DexFieldSpecification {
   std::vector<std::string> annotations = {};
 };
 
-DexClass* MT_NULLABLE get_class(const std::string& class_name);
+DexClass* MT_NULLABLE get_class(std::string_view class_name);
 
-DexMethod* MT_NULLABLE get_method(const std::string& signature);
+DexMethod* MT_NULLABLE get_method(std::string_view signature);
 
-DexFieldRef* MT_NULLABLE get_field(const std::string& field);
+DexFieldRef* MT_NULLABLE get_field(std::string_view field);
 
-DexType* MT_NULLABLE get_type(const std::string& type);
+DexType* MT_NULLABLE get_type(std::string_view type);
 
 void process_proguard_configurations(
     const Options& options,

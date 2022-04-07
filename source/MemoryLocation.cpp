@@ -122,7 +122,7 @@ std::optional<std::string> InstructionMemoryLocation::get_constant() const {
   if (instruction_->has_literal()) {
     return std::to_string(instruction_->get_literal());
   } else if (instruction_->has_string()) {
-    return instruction_->get_string()->str();
+    return instruction_->get_string()->str_copy();
   }
 
   return std::nullopt;

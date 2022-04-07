@@ -27,7 +27,7 @@ namespace {
 
 // Various component sources are not matching the class names in the
 // manifest leading to features (like exported) not being added.
-std::string strip_inner_class(std::string class_name) {
+std::string_view strip_inner_class(std::string_view class_name) {
   auto position = class_name.find_first_of("$");
   if (position != std::string::npos) {
     return class_name.substr(0, position) + ";";
@@ -167,36 +167,37 @@ ClassProperties::ClassProperties(
         android_resources->get_manifest_class_info();
 
     for (const auto& tag_info : manifest_class_info.component_tags) {
-      std::unordered_set<std::string> parent_classes;
+      std::unordered_set<std::string_view> parent_classes;
       auto dex_class = redex::get_class(tag_info.classname);
       bool protection_level = false;
       bool permission = false;
 
       if (!tag_info.protection_level.empty() &&
           tag_info.protection_level != "normal") {
-        protection_level_classes_.emplace(tag_info.classname);
+        protection_level_classes_.emplace(strings_[tag_info.classname]);
         protection_level = true;
       }
       if (!tag_info.permission.empty()) {
-        permission_classes_.emplace(tag_info.classname);
+        permission_classes_.emplace(strings_[tag_info.classname]);
         permission = true;
       }
       if (tag_info.is_exported == BooleanXMLAttribute::True ||
           (tag_info.is_exported == BooleanXMLAttribute::Undefined &&
            tag_info.has_intent_filters)) {
-        exported_classes_.emplace(tag_info.classname);
+        exported_classes_.emplace(strings_[tag_info.classname]);
         if (!protection_level && !permission && dex_class) {
           if (tag_info.tag == ComponentTag::Activity) {
             const auto& exported_fragments = get_class_fragments(dex_class);
-            exported_classes_.insert(
-                exported_fragments.begin(), exported_fragments.end());
+            for (auto& str : exported_fragments) {
+              exported_classes_.emplace(strings_[str]);
+            }
           }
           parent_classes = generator::get_custom_parents_from_class(dex_class);
           parent_exposed_classes_.insert(
               parent_classes.begin(), parent_classes.end());
         }
       } else {
-        unexported_classes_.emplace(tag_info.classname);
+        unexported_classes_.emplace(strings_[tag_info.classname]);
       }
     }
   } catch (const std::exception& e) {
@@ -223,38 +224,37 @@ ClassProperties::ClassProperties(
   }
 }
 
-bool ClassProperties::is_class_exported(const std::string& class_name) const {
+bool ClassProperties::is_class_exported(std::string_view class_name) const {
   auto outer_class = strip_inner_class(class_name);
   return exported_classes_.count(class_name) > 0 ||
       exported_classes_.count(outer_class) > 0;
 }
 
-bool ClassProperties::is_child_exposed(const std::string& class_name) const {
+bool ClassProperties::is_child_exposed(std::string_view class_name) const {
   auto outer_class = strip_inner_class(class_name);
   return parent_exposed_classes_.count(class_name) > 0 ||
       parent_exposed_classes_.count(outer_class) > 0;
 }
 
-bool ClassProperties::is_class_unexported(const std::string& class_name) const {
+bool ClassProperties::is_class_unexported(std::string_view class_name) const {
   auto outer_class = strip_inner_class(class_name);
   return unexported_classes_.count(class_name) > 0 ||
       unexported_classes_.count(outer_class) > 0;
 }
 
-bool ClassProperties::is_dfa_public(const std::string& class_name) const {
+bool ClassProperties::is_dfa_public(std::string_view class_name) const {
   auto outer_class = strip_inner_class(class_name);
   return dfa_public_scheme_classes_.count(class_name) > 0 ||
       dfa_public_scheme_classes_.count(outer_class) > 0;
 }
 
-bool ClassProperties::has_protection_level(
-    const std::string& class_name) const {
+bool ClassProperties::has_protection_level(std::string_view class_name) const {
   auto outer_class = strip_inner_class(class_name);
   return protection_level_classes_.count(class_name) > 0 ||
       protection_level_classes_.count(outer_class) > 0;
 }
 
-bool ClassProperties::has_permission(const std::string& class_name) const {
+bool ClassProperties::has_permission(std::string_view class_name) const {
   auto outer_class = strip_inner_class(class_name);
   return permission_classes_.count(class_name) > 0 ||
       permission_classes_.count(outer_class) > 0;
@@ -263,7 +263,7 @@ bool ClassProperties::has_permission(const std::string& class_name) const {
 
 std::optional<std::string>
 ClassProperties::get_privacy_decision_number_from_class_name(
-    const std::string& class_name) const {
+    std::string_view class_name) const {
   auto it = privacy_decision_classes_.find(class_name);
   if (it != privacy_decision_classes_.end()) {
     return it->second;
@@ -319,7 +319,7 @@ FeatureMayAlwaysSet ClassProperties::issue_features(
 }
 
 FeatureSet ClassProperties::get_class_features(
-    const std::string& clazz,
+    std::string_view clazz,
     bool via_dependency) const {
   FeatureSet features;
 
@@ -352,12 +352,12 @@ FeatureSet ClassProperties::get_class_features(
 }
 
 bool ClassProperties::has_user_exposed_properties(
-    const std::string& class_name) const {
+    std::string_view class_name) const {
   return is_class_exported(class_name) || is_child_exposed(class_name);
 };
 
 bool ClassProperties::has_user_unexposed_properties(
-    const std::string& class_name) const {
+    std::string_view class_name) const {
   return is_class_unexported(class_name) || has_permission(class_name) ||
       has_protection_level(class_name);
 };
@@ -394,7 +394,7 @@ FeatureSet ClassProperties::compute_transitive_class_features(
     queue.pop();
     processed.emplace(item.method);
     depth = item.depth;
-    const auto& class_name = item.method->get_class()->str();
+    const auto class_name = item.method->get_class()->str();
 
     if (has_user_exposed_properties(class_name)) {
       target = item;

@@ -21,7 +21,7 @@ namespace marianatrench {
 
 namespace {
 
-std::unordered_set<std::string> service_methods = {
+std::unordered_set<std::string_view> service_methods = {
     "onBind",
     "onRebind",
     "onStart",
@@ -61,12 +61,12 @@ std::vector<Model> ServiceSourceGenerator::emit_method_models(
       if (tag_info.tag == ComponentTag::Service) {
         auto* dex_class = redex::get_class(tag_info.classname);
         if (dex_class) {
-          std::unordered_set<std::string> parent_classes =
+          std::unordered_set<std::string_view> parent_classes =
               generator::get_custom_parents_from_class(dex_class);
           for (const auto& parent_class : parent_classes) {
             auto manifest_class_start =
                 parent_class.substr(0, parent_class.find(";", 0));
-            manifest_services.emplace(manifest_class_start);
+            manifest_services.emplace(str_copy(manifest_class_start));
           }
         }
         auto manifest_class_start =
@@ -82,7 +82,7 @@ std::vector<Model> ServiceSourceGenerator::emit_method_models(
   std::mutex mutex;
   std::unordered_map<DexClass*, bool> permission_services = {};
   auto queue = sparta::work_queue<const Method*>([&](const Method* method) {
-    const auto method_name = generator::get_method_name(method);
+    auto method_name = generator::get_method_name(method);
     const auto argument_types = generator::get_argument_types(method);
     const auto class_name = generator::get_class_name(method);
 

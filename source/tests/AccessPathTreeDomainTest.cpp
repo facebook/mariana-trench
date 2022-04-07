@@ -556,7 +556,7 @@ TEST_F(AccessPathTreeDomainTest, CollapseInvalid) {
     if (previous_field == "x") {
       return std::make_pair(false, std::string(""));
     }
-    return std::make_pair(true, path_element->str());
+    return std::make_pair(true, path_element->str_copy());
   };
 
   // Argument(1) will be an invalid root, return an accumulator that causes

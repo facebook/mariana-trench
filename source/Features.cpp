@@ -26,7 +26,7 @@ const Feature* Features::get_via_cast_feature(
 }
 
 const Feature* Features::get_via_value_of_feature(
-    const std::optional<std::string>& value) const {
+    const std::optional<std::string_view>& value) const {
   const auto& via_value = value.value_or("unknown");
   return factory_.create("via-value:" + via_value);
 }

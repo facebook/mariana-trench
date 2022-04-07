@@ -24,7 +24,7 @@ DexType* Field::get_class() const {
   return field_->get_class();
 }
 
-const std::string& Field::get_name() const {
+std::string_view Field::get_name() const {
   return field_->get_name()->str();
 }
 

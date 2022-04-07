@@ -30,12 +30,13 @@ bool compare_methods(const Method* left, const Method* right) {
   return left->get_name() < right->get_name();
 };
 
-std::unordered_map<std::string, std::vector<const Method*>> sort_mapping(
-    const ConcurrentMap<std::string, marianatrench::MethodHashedSet>& mapping) {
+template <class StringType>
+std::unordered_map<StringType, std::vector<const Method*>> sort_mapping(
+    const ConcurrentMap<StringType, marianatrench::MethodHashedSet>& mapping) {
   auto unordered_mapping =
-      std::unordered_map<std::string, marianatrench::MethodHashedSet>(
+      std::unordered_map<StringType, marianatrench::MethodHashedSet>(
           mapping.begin(), mapping.end());
-  std::unordered_map<std::string, std::vector<const Method*>> result;
+  std::unordered_map<StringType, std::vector<const Method*>> result;
 
   for (const auto& [key, methods] : unordered_mapping) {
     std::vector<const Method*> new_methods(
@@ -104,7 +105,7 @@ TEST_F(ModelGeneratorTest, MappingGenerator) {
       dex_second_overriding_method, {{0, DexType::get_type("LString;")}});
 
   {
-    std::unordered_map<std::string, std::vector<const Method*>>
+    std::unordered_map<std::string_view, std::vector<const Method*>>
         expected_name_to_methods = {
             {"allocateArray", {array_allocation_method}},
             {"onReceive",
@@ -113,7 +114,7 @@ TEST_F(ModelGeneratorTest, MappingGenerator) {
               second_overriding_method,
               second_overriding_method_with_overrides}},
         };
-    std::unordered_map<std::string, std::vector<const Method*>>
+    std::unordered_map<std::string_view, std::vector<const Method*>>
         expected_class_to_methods = {
             {"Lcom/mariana_trench/artificial/ArrayAllocation;",
              {array_allocation_method}},
@@ -122,7 +123,7 @@ TEST_F(ModelGeneratorTest, MappingGenerator) {
             {"LSubSubclass;",
              {second_overriding_method,
               second_overriding_method_with_overrides}}};
-    std::unordered_map<std::string, std::vector<const Method*>>
+    std::unordered_map<std::string_view, std::vector<const Method*>>
         expected_class_to_override_methods = {
             {"Lcom/mariana_trench/artificial/ArrayAllocation;",
              {array_allocation_method}},
@@ -169,21 +170,21 @@ TEST_F(ModelGeneratorTest, MappingGenerator) {
         };
 
     const auto method_mappings = MethodMappings(*context.methods);
-    std::unordered_map<std::string, std::vector<const Method*>>
+    std::unordered_map<std::string_view, std::vector<const Method*>>
         name_to_methods_map = sort_mapping(method_mappings.name_to_methods);
     for (auto& pair : expected_name_to_methods) {
       std::sort(pair.second.begin(), pair.second.end(), compare_methods);
     }
     EXPECT_EQ(name_to_methods_map, expected_name_to_methods);
 
-    std::unordered_map<std::string, std::vector<const Method*>>
+    std::unordered_map<std::string_view, std::vector<const Method*>>
         class_to_methods_map = sort_mapping(method_mappings.class_to_methods);
     for (auto& pair : expected_class_to_methods) {
       std::sort(pair.second.begin(), pair.second.end(), compare_methods);
     }
     EXPECT_EQ(class_to_methods_map, expected_class_to_methods);
 
-    std::unordered_map<std::string, std::vector<const Method*>>
+    std::unordered_map<std::string_view, std::vector<const Method*>>
         class_to_override_methods_map =
             sort_mapping(method_mappings.class_to_override_methods);
     for (auto& pair : expected_class_to_override_methods) {
