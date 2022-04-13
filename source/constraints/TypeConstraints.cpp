@@ -8,8 +8,8 @@
 #include <mariana-trench/JsonValidation.h>
 #include <mariana-trench/Overrides.h>
 #include <mariana-trench/RE2.h>
-#include <mariana-trench/model-generator/MethodConstraints.h>
-#include <mariana-trench/model-generator/TypeConstraints.h>
+#include <mariana-trench/constraints/MethodConstraints.h>
+#include <mariana-trench/constraints/TypeConstraints.h>
 
 namespace marianatrench {
 
@@ -55,8 +55,8 @@ bool TypeNameConstraint::operator==(const TypeConstraint& other) const {
 }
 
 HasAnnotationTypeConstraint::HasAnnotationTypeConstraint(
-    const std::string& type,
-    const std::optional<std::string>& annotation)
+    std::string type,
+    std::optional<std::string> annotation)
     : type_(std::move(type)), annotation_(std::move(annotation)) {}
 
 bool HasAnnotationTypeConstraint::satisfy(const DexType* type) const {

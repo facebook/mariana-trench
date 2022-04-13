@@ -10,7 +10,7 @@
 #include <re2/re2.h>
 
 #include <mariana-trench/Field.h>
-#include <mariana-trench/model-generator/TypeConstraints.h>
+#include <mariana-trench/constraints/TypeConstraints.h>
 
 namespace marianatrench {
 

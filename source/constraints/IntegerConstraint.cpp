@@ -6,7 +6,7 @@
  */
 
 #include <mariana-trench/Assert.h>
-#include <mariana-trench/model-generator/IntegerConstraint.h>
+#include <mariana-trench/constraints/IntegerConstraint.h>
 
 namespace marianatrench {
 IntegerConstraint::IntegerConstraint(int rhs, Operator _operator)

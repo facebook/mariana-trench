@@ -9,7 +9,7 @@
 #include <gtest/gtest.h>
 
 #include <mariana-trench/JsonValidation.h>
-#include <mariana-trench/model-generator/TypeConstraints.h>
+#include <mariana-trench/constraints/TypeConstraints.h>
 #include <mariana-trench/tests/Test.h>
 
 using namespace marianatrench;

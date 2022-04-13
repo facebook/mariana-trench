@@ -10,7 +10,7 @@
 #include <mariana-trench/Fields.h>
 #include <mariana-trench/JsonValidation.h>
 #include <mariana-trench/Redex.h>
-#include <mariana-trench/model-generator/FieldConstraints.h>
+#include <mariana-trench/constraints/FieldConstraints.h>
 #include <mariana-trench/tests/Test.h>
 
 using namespace marianatrench;

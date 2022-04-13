@@ -9,9 +9,9 @@
 
 #include <mariana-trench/Context.h>
 #include <mariana-trench/Model.h>
-#include <mariana-trench/model-generator/FieldConstraints.h>
+#include <mariana-trench/constraints/FieldConstraints.h>
+#include <mariana-trench/constraints/MethodConstraints.h>
 #include <mariana-trench/model-generator/FieldModelTemplate.h>
-#include <mariana-trench/model-generator/MethodConstraints.h>
 #include <mariana-trench/model-generator/ModelGenerator.h>
 #include <mariana-trench/model-generator/ModelTemplates.h>
 

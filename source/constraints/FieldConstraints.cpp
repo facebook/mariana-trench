@@ -5,8 +5,8 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-#include <mariana-trench/model-generator/FieldConstraints.h>
-#include <mariana-trench/model-generator/MethodConstraints.h>
+#include <mariana-trench/constraints/FieldConstraints.h>
+#include <mariana-trench/constraints/MethodConstraints.h>
 
 namespace marianatrench {
 

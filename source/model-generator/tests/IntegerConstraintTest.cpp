@@ -8,7 +8,7 @@
 #include <gtest/gtest.h>
 
 #include <mariana-trench/JsonValidation.h>
-#include <mariana-trench/model-generator/IntegerConstraint.h>
+#include <mariana-trench/constraints/IntegerConstraint.h>
 #include <mariana-trench/tests/Test.h>
 
 using namespace marianatrench;

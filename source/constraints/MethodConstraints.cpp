@@ -9,8 +9,8 @@
 #include <mariana-trench/Log.h>
 #include <mariana-trench/Overrides.h>
 #include <mariana-trench/RE2.h>
-#include <mariana-trench/model-generator/MethodConstraints.h>
-#include <mariana-trench/model-generator/TypeConstraints.h>
+#include <mariana-trench/constraints/MethodConstraints.h>
+#include <mariana-trench/constraints/TypeConstraints.h>
 
 namespace marianatrench {
 
@@ -332,8 +332,8 @@ bool HasCodeConstraint::operator==(const MethodConstraint& other) const {
 }
 
 HasAnnotationMethodConstraint::HasAnnotationMethodConstraint(
-    const std::string& type,
-    const std::optional<std::string>& annotation)
+    std::string type,
+    std::optional<std::string> annotation)
     : type_(std::move(type)), annotation_(std::move(annotation)) {}
 
 bool HasAnnotationMethodConstraint::satisfy(const Method* method) const {

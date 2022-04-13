@@ -7,9 +7,9 @@
 
 #include <mariana-trench/JsonValidation.h>
 #include <mariana-trench/Log.h>
-#include <mariana-trench/model-generator/MethodConstraints.h>
+#include <mariana-trench/constraints/MethodConstraints.h>
+#include <mariana-trench/constraints/TypeConstraints.h>
 #include <mariana-trench/model-generator/ModelTemplates.h>
-#include <mariana-trench/model-generator/TypeConstraints.h>
 
 namespace marianatrench {
 

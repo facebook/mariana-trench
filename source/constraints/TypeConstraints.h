@@ -12,7 +12,7 @@
 #include <mariana-trench/Access.h>
 #include <mariana-trench/Context.h>
 #include <mariana-trench/Model.h>
-#include <mariana-trench/model-generator/IntegerConstraint.h>
+#include <mariana-trench/constraints/IntegerConstraint.h>
 #include <mariana-trench/model-generator/ModelGenerator.h>
 
 namespace marianatrench {
@@ -56,8 +56,8 @@ class TypeNameConstraint final : public TypeConstraint {
 class HasAnnotationTypeConstraint final : public TypeConstraint {
  public:
   explicit HasAnnotationTypeConstraint(
-      const std::string& type,
-      const std::optional<std::string>& annotation);
+      std::string type,
+      std::optional<std::string> annotation);
   bool satisfy(const DexType* type) const override;
   bool operator==(const TypeConstraint& other) const override;
 

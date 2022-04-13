@@ -12,9 +12,9 @@
 #include <mariana-trench/Access.h>
 #include <mariana-trench/Context.h>
 #include <mariana-trench/Model.h>
-#include <mariana-trench/model-generator/IntegerConstraint.h>
+#include <mariana-trench/constraints/IntegerConstraint.h>
+#include <mariana-trench/constraints/TypeConstraints.h>
 #include <mariana-trench/model-generator/ModelGenerator.h>
-#include <mariana-trench/model-generator/TypeConstraints.h>
 
 namespace marianatrench {
 
@@ -177,8 +177,8 @@ class HasCodeConstraint final : public MethodConstraint {
 class HasAnnotationMethodConstraint final : public MethodConstraint {
  public:
   explicit HasAnnotationMethodConstraint(
-      const std::string& type,
-      const std::optional<std::string>& annotation);
+      std::string type,
+      std::optional<std::string> annotation);
   bool satisfy(const Method* method) const override;
   bool operator==(const MethodConstraint& other) const override;
 
