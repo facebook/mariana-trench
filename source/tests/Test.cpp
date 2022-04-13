@@ -16,6 +16,7 @@
 #include <mariana-trench/Fields.h>
 #include <mariana-trench/JsonValidation.h>
 #include <mariana-trench/SanitizersOptions.h>
+#include <mariana-trench/shim-generator/ShimGenerator.h>
 #include <mariana-trench/tests/Test.h>
 
 namespace marianatrench {
@@ -78,7 +79,8 @@ Context make_context(const DexStore& store) {
       *context.types,
       *context.class_hierarchies,
       *context.overrides,
-      *context.features);
+      *context.features,
+      MethodToShimTargetsMap{});
   auto registry = Registry(context);
   context.dependencies = std::make_unique<Dependencies>(
       *context.options,

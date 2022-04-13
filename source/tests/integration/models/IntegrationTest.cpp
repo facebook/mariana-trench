@@ -502,7 +502,8 @@ TEST_P(IntegrationTest, ReturnsExpectedModel) {
       *context.types,
       *context.class_hierarchies,
       *context.overrides,
-      *context.features);
+      *context.features,
+      MethodToShimTargetsMap{});
   context.rules = std::make_unique<Rules>(context, rules);
 
   Registry registry(context);

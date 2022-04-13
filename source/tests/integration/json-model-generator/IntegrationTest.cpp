@@ -23,6 +23,7 @@
 #include <mariana-trench/Log.h>
 #include <mariana-trench/MarianaTrench.h>
 #include <mariana-trench/model-generator/JsonModelGenerator.h>
+#include <mariana-trench/shim-generator/ShimGenerator.h>
 #include <mariana-trench/tests/Test.h>
 
 using namespace marianatrench;
@@ -101,7 +102,8 @@ TEST_P(JsonModelGeneratorIntegrationTest, CompareModels) {
       *context.types,
       *context.class_hierarchies,
       *context.overrides,
-      *context.features);
+      *context.features,
+      MethodToShimTargetsMap{});
 
   // Run a model generator and compare output
   auto [models, field_models] =

@@ -16,6 +16,7 @@
 
 #include <mariana-trench/Dependencies.h>
 #include <mariana-trench/Redex.h>
+#include <mariana-trench/shim-generator/ShimGenerator.h>
 #include <mariana-trench/tests/Test.h>
 
 using namespace marianatrench;
@@ -57,7 +58,8 @@ Context test_dependencies(const Scope& scope) {
       *context.types,
       *context.class_hierarchies,
       *context.overrides,
-      *context.features);
+      *context.features,
+      MethodToShimTargetsMap{});
   context.rules = std::make_unique<Rules>();
   auto registry = Registry(context);
   context.dependencies = std::make_unique<Dependencies>(
