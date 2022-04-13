@@ -42,6 +42,7 @@
 #include <mariana-trench/Timer.h>
 #include <mariana-trench/Types.h>
 #include <mariana-trench/UnusedKinds.h>
+#include <mariana-trench/shim-generator/ShimGenerator.h>
 
 namespace marianatrench {
 
@@ -129,6 +130,13 @@ Registry MarianaTrench::analyze(Context& context) {
       "Built override graph in {:.2f}s.",
       overrides_timer.duration_in_seconds());
 
+  Timer shims_timer;
+  LOG(1, "Creating Shims...");
+  auto shim_generator =
+      std::make_unique<ShimGenerator>("handler_shim_generator");
+  auto shims = shim_generator->emit_artificial_callees(*context.methods);
+  LOG(1, "Created Shims in {:.2f}s.", shims_timer.duration_in_seconds());
+
   Timer call_graph_timer;
   LOG(1, "Building call graph...");
   context.call_graph = std::make_unique<CallGraph>(
@@ -138,7 +146,8 @@ Registry MarianaTrench::analyze(Context& context) {
       *context.types,
       *context.class_hierarchies,
       *context.overrides,
-      *context.features);
+      *context.features,
+      shims);
   context.statistics->log_time("call_graph", call_graph_timer);
   LOG(1,
       "Built call graph in {:.2f}s.",

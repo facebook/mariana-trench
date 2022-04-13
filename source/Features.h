@@ -10,6 +10,7 @@
 #include <string>
 
 #include <mariana-trench/Feature.h>
+#include <mariana-trench/Method.h>
 #include <mariana-trench/UniquePointerFactory.h>
 
 namespace marianatrench {
@@ -29,6 +30,7 @@ class Features final {
   const Feature* get_via_cast_feature(const DexType* MT_NULLABLE type) const;
   const Feature* get_via_value_of_feature(
       const std::optional<std::string_view>& value) const;
+  const Feature* get_via_shim_feature(const Method* MT_NULLABLE method) const;
 
  private:
   UniquePointerFactory<std::string, Feature> factory_;

@@ -1,0 +1,30 @@
+// @generated
+{
+  "extends" : 
+  {
+    "Landroid/app/Activity;" : 
+    [
+      "Landroidx/fragment/app/FragmentActivity;",
+      "Lcom/facebook/marianatrench/integrationtests/FragmentActivity;"
+    ],
+    "Landroid/content/Context;" : 
+    [
+      "Landroid/app/Activity;",
+      "Landroidx/fragment/app/FragmentActivity;",
+      "Lcom/facebook/marianatrench/integrationtests/FragmentActivity;"
+    ],
+    "Lcom/facebook/marianatrench/integrationtests/Handler;" : 
+    [
+      "Lcom/facebook/marianatrench/integrationtests/HandlerOne;",
+      "Lcom/facebook/marianatrench/integrationtests/HandlerTwo;"
+    ],
+    "Ljava/lang/Runnable;" : 
+    [
+      "Ljava/lang/Thread;"
+    ],
+    "Ljava/util/Map;" : 
+    [
+      "Ljava/util/TreeMap;"
+    ]
+  }
+}

@@ -31,4 +31,10 @@ const Feature* Features::get_via_value_of_feature(
   return factory_.create("via-value:" + via_value);
 }
 
+const Feature* Features::get_via_shim_feature(
+    const Method* MT_NULLABLE method) const {
+  const auto& method_string = method ? method->signature() : "unknown";
+  return factory_.create("via-shim:" + method_string);
+}
+
 } // namespace marianatrench

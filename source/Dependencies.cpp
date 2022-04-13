@@ -47,11 +47,9 @@ Dependencies::Dependencies(
               dependencies.insert(caller);
             };
 
-        auto callees = call_graph.callees(caller);
-
-        for (const auto& call_target : callees) {
+        auto add_dependency = [&](const CallTarget& call_target) {
           if (!call_target.resolved()) {
-            continue;
+            return;
           }
 
           dependencies_.update(
@@ -59,13 +57,13 @@ Dependencies::Dependencies(
 
           if (!call_target.is_virtual()) {
             // We don't add a dependency for overrides of direct invocations.
-            continue;
+            return;
           }
 
           auto model = registry.get(call_target.resolved_base_callee());
 
           if (model.no_join_virtual_overrides()) {
-            continue;
+            return;
           }
 
           if (Heuristics::kWarnOverrideThreshold &&
@@ -77,15 +75,19 @@ Dependencies::Dependencies(
           for (const auto* override : call_target.overrides()) {
             dependencies_.update(override, add_caller_as_dependency);
           }
+        };
+
+        auto callees = call_graph.callees(caller);
+
+        for (const auto& call_target : callees) {
+          add_dependency(call_target);
         }
 
         const auto& artificial_callees = call_graph.artificial_callees(caller);
 
         for (const auto& [instruction, callees] : artificial_callees) {
           for (const auto& artificial_callee : callees) {
-            dependencies_.update(
-                artificial_callee.call_target.resolved_base_callee(),
-                add_caller_as_dependency);
+            add_dependency(artificial_callee.call_target);
           }
         }
       },

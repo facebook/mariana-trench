@@ -28,6 +28,7 @@
 #include <mariana-trench/Options.h>
 #include <mariana-trench/Overrides.h>
 #include <mariana-trench/Types.h>
+#include <mariana-trench/shim-generator/ShimGenerator.h>
 
 namespace marianatrench {
 
@@ -193,7 +194,8 @@ class CallGraph final {
       const Types& types,
       const ClassHierarchies& class_hierarchies,
       Overrides& overrides,
-      const Features& features);
+      const Features& features,
+      const MethodToShimTargetsMap& shims = {});
 
   CallGraph(const CallGraph&) = delete;
   CallGraph(CallGraph&&) = delete;

@@ -6,6 +6,7 @@
  */
 
 #include <re2/re2.h>
+#include <unordered_map>
 
 #include <IRInstruction.h>
 #include <Resolver.h>
@@ -14,6 +15,7 @@
 
 #include <mariana-trench/Assert.h>
 #include <mariana-trench/CallGraph.h>
+#include <mariana-trench/FeatureSet.h>
 #include <mariana-trench/Features.h>
 #include <mariana-trench/JsonValidation.h>
 #include <mariana-trench/Log.h>
@@ -245,6 +247,92 @@ const Method* get_callee_from_resolved_call(
   return callee;
 }
 
+std::vector<ArtificialCallee> shim_artificial_callees(
+    const Method* caller,
+    const Method* callee,
+    const IRInstruction* instruction,
+    const Methods& method_factory,
+    const Types& types,
+    const Overrides& override_factory,
+    const ClassHierarchies& class_hierarchies,
+    const Features& features,
+    const std::vector<ShimTarget>& call_targets) {
+  std::vector<ArtificialCallee> artificial_callees;
+
+  for (const auto& artificial_callee : call_targets) {
+    const auto* method = artificial_callee.call_target;
+    mt_assert(method != nullptr);
+
+    std::optional<Register> receiver_register;
+
+    if (auto receiver_position = artificial_callee.receiver_position_in_shim) {
+      mt_assert(*receiver_position < instruction->srcs_size());
+      receiver_register = instruction->src(*receiver_position);
+    }
+
+    // Collect register parameters
+    std::vector<Register> register_parameters;
+    if (receiver_register) {
+      register_parameters.push_back(receiver_register.value());
+    }
+    for (auto parameter_position :
+         artificial_callee.parameter_positions_in_shim) {
+      mt_assert(parameter_position <= instruction->srcs_size());
+      register_parameters.push_back(instruction->src(parameter_position));
+    }
+
+    if (method->is_static()) {
+      artificial_callees.push_back(ArtificialCallee{
+          /* call_target */ CallTarget::static_call(instruction, method),
+          /* register_parameters */ register_parameters,
+          /* features */
+          FeatureSet{features.get_via_shim_feature(callee)},
+      });
+      continue;
+    }
+
+    const auto* receiver_type = method->get_class();
+    // Try to refine the virtual call using the runtime type.
+    if (receiver_register) {
+      auto register_type =
+          types.register_type(caller, instruction, receiver_register.value());
+      receiver_type = register_type ? register_type : receiver_type;
+    }
+
+    const DexClass* receiver_class = type_class(receiver_type);
+
+    auto dex_runtime_method = resolve_method(
+        receiver_class,
+        method->dex_method()->get_name(),
+        method->get_proto(),
+        MethodSearch::Virtual);
+
+    if (!dex_runtime_method) {
+      WARNING(
+          1,
+          "Could not resolve method for artificial call to: {}",
+          show(method));
+      continue;
+    }
+
+    method = method_factory.get(dex_runtime_method);
+
+    artificial_callees.push_back(ArtificialCallee{
+        /* call_target */ CallTarget::virtual_call(
+            instruction,
+            method,
+            receiver_type,
+            class_hierarchies,
+            override_factory),
+        /* register_parameters */ register_parameters,
+        /* features */
+        FeatureSet{features.get_via_shim_feature(callee)},
+    });
+  }
+
+  return artificial_callees;
+}
+
 struct InstructionCallGraphInformation {
   std::optional<const Method*> callee;
   ArtificialCallees artificial_callees = {};
@@ -261,7 +349,9 @@ InstructionCallGraphInformation process_instruction(
     Fields& field_factory,
     const Types& types,
     Overrides& override_factory,
-    const Features& features) {
+    const ClassHierarchies& class_hierarchies,
+    const Features& features,
+    const MethodToShimTargetsMap& shims) {
   InstructionCallGraphInformation instruction_information;
 
   if (opcode::is_an_iput(instruction->opcode())) {
@@ -323,6 +413,24 @@ InstructionCallGraphInformation process_instruction(
       instruction_information.artificial_callees);
 
   instruction_information.callee = callee;
+
+  auto shim = shims.find(callee);
+  if (shim != shims.end()) {
+    auto artificial_callees = shim_artificial_callees(
+        caller,
+        callee,
+        instruction,
+        method_factory,
+        types,
+        override_factory,
+        class_hierarchies,
+        features,
+        shim->second);
+    instruction_information.artificial_callees.insert(
+        instruction_information.artificial_callees.end(),
+        std::make_move_iterator(artificial_callees.begin()),
+        std::make_move_iterator(artificial_callees.end()));
+  }
 
   if (callee->parameter_type_overrides().empty() ||
       processed.count(callee) != 0) {
@@ -507,7 +615,8 @@ CallGraph::CallGraph(
     const Types& types,
     const ClassHierarchies& class_hierarchies,
     Overrides& override_factory,
-    const Features& features)
+    const Features& features,
+    const MethodToShimTargetsMap& shims)
     : types_(types),
       class_hierarchies_(class_hierarchies),
       overrides_(override_factory) {
@@ -560,7 +669,9 @@ CallGraph::CallGraph(
                   field_factory,
                   types,
                   override_factory,
-                  features);
+                  class_hierarchies,
+                  features,
+                  shims);
               if (instruction_information.callee) {
                 callees.emplace(instruction, *(instruction_information.callee));
               }
