@@ -85,6 +85,8 @@ endif()
 # Targets
 file(GLOB library_sources
      "source/*.cpp"
+     "source/constraints/*.cpp"
+     "source/shim-generator/*.cpp"
      "source/model-generator/*.cpp")
 list(FILTER library_sources EXCLUDE REGEX ".*/source/Main.cpp")
 add_library(mariana-trench-library STATIC ${library_sources})
