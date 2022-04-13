@@ -103,7 +103,6 @@ void TaintV1::add_inferred_features_and_local_position(
 }
 
 TaintV1 TaintV1::propagate(
-    const Method* caller,
     const Method* callee,
     const AccessPath& callee_port,
     const Position* call_position,
@@ -116,7 +115,6 @@ TaintV1 TaintV1::propagate(
   TaintV1 result;
   for (const auto& frames : set_) {
     auto propagated = frames.propagate(
-        caller,
         callee,
         callee_port,
         call_position,

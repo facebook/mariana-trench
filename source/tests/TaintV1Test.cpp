@@ -482,7 +482,6 @@ TEST_F(TaintV1Test, Propagate) {
   // When propagating, all user features become inferred features.
   EXPECT_EQ(
       taint.propagate(
-          /* caller */ one,
           /* callee */ four,
           /* callee_port */ AccessPath(Root(Root::Kind::Argument, 2)),
           /* call_position */ context.positions->get("Test.java", 1),

@@ -1075,7 +1075,6 @@ TEST_F(FrameSetTest, Propagate) {
       CanonicalName(CanonicalName::InstantiatedValue{two->signature()});
   EXPECT_EQ(
       frames.propagate(
-          /* caller */ one,
           /* callee */ two,
           /* callee_port */ AccessPath(Root(Root::Kind::Argument, 0)),
           call_position,

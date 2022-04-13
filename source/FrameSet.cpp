@@ -175,7 +175,6 @@ void FrameSet::add_inferred_features_and_local_position(
 }
 
 FrameSet FrameSet::propagate(
-    const Method* /*caller*/,
     const Method* callee,
     const AccessPath& callee_port,
     const Position* call_position,

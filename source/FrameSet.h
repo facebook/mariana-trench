@@ -177,7 +177,6 @@ class FrameSet final : public sparta::AbstractDomain<FrameSet> {
    * Return bottom if the taint should not be propagated.
    */
   FrameSet propagate(
-      const Method* caller,
       const Method* callee,
       const AccessPath& callee_port,
       const Position* call_position,

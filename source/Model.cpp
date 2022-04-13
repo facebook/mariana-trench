@@ -265,7 +265,6 @@ Model Model::at_callsite(
 
   generations_.visit(
       [&model,
-       caller,
        callee,
        call_position,
        maximum_source_sink_distance,
@@ -277,7 +276,6 @@ Model Model::at_callsite(
         model.generations_.write(
             callee_port,
             generations.propagate(
-                caller,
                 callee,
                 callee_port,
                 call_position,
@@ -290,7 +288,6 @@ Model Model::at_callsite(
       });
 
   sinks_.visit([&model,
-                caller,
                 callee,
                 call_position,
                 maximum_source_sink_distance,
@@ -302,7 +299,6 @@ Model Model::at_callsite(
     model.sinks_.write(
         callee_port,
         sinks.propagate(
-            caller,
             callee,
             callee_port,
             call_position,

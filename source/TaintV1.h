@@ -138,7 +138,6 @@ class TaintV1 final : public sparta::AbstractDomain<TaintV1> {
    * Return bottom if the taint should not be propagated.
    */
   TaintV1 propagate(
-      const Method* caller,
       const Method* callee,
       const AccessPath& callee_port,
       const Position* call_position,
