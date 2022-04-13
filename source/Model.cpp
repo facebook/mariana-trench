@@ -189,27 +189,22 @@ Model Model::instantiate(const Method* method, Context& context) const {
   Model model(method, context, modes_);
 
   for (const auto& [port, generation_taint] : generations_.elements()) {
-    for (const auto& generations : generation_taint) {
-      for (const auto& generation : generations) {
-        model.add_generation(port, generation);
-      }
+    for (const auto& generation : generation_taint.frames_iterator()) {
+      model.add_generation(port, generation);
     }
   }
 
   for (const auto& [port, parameter_source_taint] :
        parameter_sources_.elements()) {
-    for (const auto& parameter_sources : parameter_source_taint) {
-      for (const auto& parameter_source : parameter_sources) {
-        model.add_parameter_source(port, parameter_source);
-      }
+    for (const auto& parameter_source :
+         parameter_source_taint.frames_iterator()) {
+      model.add_parameter_source(port, parameter_source);
     }
   }
 
   for (const auto& [port, sink_taint] : sinks_.elements()) {
-    for (const auto& sinks : sink_taint) {
-      for (const auto& sink : sinks) {
-        model.add_sink(port, sink);
-      }
+    for (const auto& sink : sink_taint.frames_iterator()) {
+      model.add_sink(port, sink);
     }
   }
 
@@ -1065,13 +1060,11 @@ Json::Value Model::to_json() const {
   if (!generations_.is_bottom()) {
     auto generations_value = Json::Value(Json::arrayValue);
     for (const auto& [port, generation_taint] : generations_.elements()) {
-      for (const auto& generations : generation_taint) {
-        for (const auto& generation : generations) {
-          mt_assert(!generation.is_bottom());
-          auto generation_value = generation.to_json();
-          generation_value["caller_port"] = port.to_json();
-          generations_value.append(generation_value);
-        }
+      for (const auto& generation : generation_taint.frames_iterator()) {
+        mt_assert(!generation.is_bottom());
+        auto generation_value = generation.to_json();
+        generation_value["caller_port"] = port.to_json();
+        generations_value.append(generation_value);
       }
     }
     value["generations"] = generations_value;
@@ -1081,13 +1074,12 @@ Json::Value Model::to_json() const {
     auto parameter_sources_value = Json::Value(Json::arrayValue);
     for (const auto& [port, parameter_source_taint] :
          parameter_sources_.elements()) {
-      for (const auto& parameter_sources : parameter_source_taint) {
-        for (const auto& parameter_source : parameter_sources) {
-          mt_assert(!parameter_source.is_bottom());
-          auto parameter_source_value = parameter_source.to_json();
-          parameter_source_value["caller_port"] = port.to_json();
-          parameter_sources_value.append(parameter_source_value);
-        }
+      for (const auto& parameter_source :
+           parameter_source_taint.frames_iterator()) {
+        mt_assert(!parameter_source.is_bottom());
+        auto parameter_source_value = parameter_source.to_json();
+        parameter_source_value["caller_port"] = port.to_json();
+        parameter_sources_value.append(parameter_source_value);
       }
     }
     value["parameter_sources"] = parameter_sources_value;
@@ -1096,13 +1088,11 @@ Json::Value Model::to_json() const {
   if (!sinks_.is_bottom()) {
     auto sinks_value = Json::Value(Json::arrayValue);
     for (const auto& [port, sink_taint] : sinks_.elements()) {
-      for (const auto& sinks : sink_taint) {
-        for (const auto& sink : sinks) {
-          mt_assert(!sink.is_bottom());
-          auto sink_value = sink.to_json();
-          sink_value["caller_port"] = port.to_json();
-          sinks_value.append(sink_value);
-        }
+      for (const auto& sink : sink_taint.frames_iterator()) {
+        mt_assert(!sink.is_bottom());
+        auto sink_value = sink.to_json();
+        sink_value["caller_port"] = port.to_json();
+        sinks_value.append(sink_value);
       }
     }
     value["sinks"] = sinks_value;
@@ -1227,10 +1217,8 @@ std::ostream& operator<<(std::ostream& out, const Model& model) {
   if (!model.generations_.is_bottom()) {
     out << ",\n  generations={\n";
     for (const auto& [port, generation_taint] : model.generations_.elements()) {
-      for (const auto& generations : generation_taint) {
-        for (const auto& generation : generations) {
-          out << "    " << port << ": " << generation << ",\n";
-        }
+      for (const auto& generation : generation_taint.frames_iterator()) {
+        out << "    " << port << ": " << generation << ",\n";
       }
     }
     out << "  }";
@@ -1239,10 +1227,9 @@ std::ostream& operator<<(std::ostream& out, const Model& model) {
     out << ",\n  parameter_sources={\n";
     for (const auto& [port, parameter_source_taint] :
          model.parameter_sources_.elements()) {
-      for (const auto& parameter_sources : parameter_source_taint) {
-        for (const auto& parameter_source : parameter_sources) {
-          out << "    " << port << ": " << parameter_source << ",\n";
-        }
+      for (const auto& parameter_source :
+           parameter_source_taint.frames_iterator()) {
+        out << "    " << port << ": " << parameter_source << ",\n";
       }
     }
     out << "  }";
@@ -1250,10 +1237,8 @@ std::ostream& operator<<(std::ostream& out, const Model& model) {
   if (!model.sinks_.is_bottom()) {
     out << ",\n  sinks={\n";
     for (const auto& [port, sink_taint] : model.sinks_.elements()) {
-      for (const auto& sinks : sink_taint) {
-        for (const auto& sink : sinks) {
-          out << "    " << port << ": " << sink << ",\n";
-        }
+      for (const auto& sink : sink_taint.frames_iterator()) {
+        out << "    " << port << ": " << sink << ",\n";
       }
     }
     out << "  }";

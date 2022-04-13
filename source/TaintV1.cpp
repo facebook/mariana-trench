@@ -22,6 +22,10 @@ TaintV1::TaintV1(std::initializer_list<FrameSet> frames_set) {
   }
 }
 
+TaintV1FramesIterator TaintV1::frames_iterator() const {
+  return TaintV1FramesIterator(*this);
+}
+
 void TaintV1::add(const Frame& frame) {
   set_.add(FrameSet{frame});
 }
@@ -76,6 +80,14 @@ void TaintV1::set_local_positions(const LocalPositionSet& positions) {
   map([&positions](FrameSet& frames) {
     frames.set_local_positions(positions);
   });
+}
+
+LocalPositionSet TaintV1::local_positions() const {
+  auto result = LocalPositionSet::bottom();
+  for (const auto& frame_set : set_) {
+    result.join_with(frame_set.local_positions());
+  }
+  return result;
 }
 
 void TaintV1::add_inferred_features_and_local_position(
@@ -234,7 +246,7 @@ void TaintV1::filter_invalid_frames(
 }
 
 bool TaintV1::contains_kind(const Kind* kind) const {
-  return std::any_of(begin(), end(), [&](const FrameSet& frames) {
+  return std::any_of(set_.begin(), set_.end(), [&](const FrameSet& frames) {
     return frames.kind() == kind;
   });
 }
@@ -245,7 +257,7 @@ std::unordered_map<const Kind*, TaintV1> TaintV1::partition_by_kind() const {
   // optimal (does not need to check if kind already exists in the result),
   // gets called rather frequently, and is quite simple.
   std::unordered_map<const Kind*, TaintV1> result;
-  for (const auto& frame_set : *this) {
+  for (const auto& frame_set : set_) {
     result.emplace(frame_set.kind(), TaintV1{frame_set});
   }
   return result;
@@ -253,10 +265,8 @@ std::unordered_map<const Kind*, TaintV1> TaintV1::partition_by_kind() const {
 
 FeatureMayAlwaysSet TaintV1::features_joined() const {
   auto features = FeatureMayAlwaysSet::bottom();
-  for (const auto& frame_set : *this) {
-    for (const auto& frame : frame_set) {
-      features.join_with(frame.features());
-    }
+  for (const auto& frame : frames_iterator()) {
+    features.join_with(frame.features());
   }
   return features;
 }

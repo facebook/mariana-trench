@@ -318,13 +318,11 @@ void get_frames_files_to_methods(
       } else if (frame_type == FrameType::Sink) {
         taint = callee_model.sinks().raw_read(callee_port).root();
       }
-      for (const auto& frame_set : taint) {
-        for (const auto& callee_frame : frame_set) {
-          if (callee_frame.is_leaf() || !seen_frames->emplace(&callee_frame)) {
-            continue;
-          }
-          new_frames_to_check->emplace(&callee_frame);
+      for (const auto& callee_frame : taint.frames_iterator()) {
+        if (callee_frame.is_leaf() || !seen_frames->emplace(&callee_frame)) {
+          continue;
         }
+        new_frames_to_check->emplace(&callee_frame);
       }
     });
     for (const auto& frame : *frames_to_check) {
@@ -354,19 +352,17 @@ get_issue_files_to_methods(const Context& context, const Registry& registry) {
       return;
     }
     for (const auto& issue : model.issues()) {
-      for (const auto& sink_frame_set : issue.sinks()) {
-        for (const auto& sink : sink_frame_set) {
-          if (!sink.is_leaf()) {
-            sinks.emplace(&sink);
-          }
+      const auto& issue_sinks = issue.sinks();
+      for (const auto& sink : issue_sinks.frames_iterator()) {
+        if (!sink.is_leaf()) {
+          sinks.emplace(&sink);
         }
       }
 
-      for (const auto& source_frame_set : issue.sources()) {
-        for (const auto& source : source_frame_set) {
-          if (!source.is_leaf()) {
-            sources.emplace(&source);
-          }
+      const auto& issue_sources = issue.sources();
+      for (const auto& source : issue_sources.frames_iterator()) {
+        if (!source.is_leaf()) {
+          sources.emplace(&source);
         }
       }
     }

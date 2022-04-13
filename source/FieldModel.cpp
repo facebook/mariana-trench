@@ -51,16 +51,12 @@ bool FieldModel::operator!=(const FieldModel& other) const {
 FieldModel FieldModel::instantiate(const Field* field) const {
   FieldModel field_model(field);
 
-  for (const auto& sources_set : sources_) {
-    for (const auto& source : sources_set) {
-      field_model.add_source(source);
-    }
+  for (const auto& source : sources_.frames_iterator()) {
+    field_model.add_source(source);
   }
 
-  for (const auto& sinks_set : sinks_) {
-    for (const auto& sink : sinks_set) {
-      field_model.add_sink(sink);
-    }
+  for (const auto& sink : sinks_.frames_iterator()) {
+    field_model.add_sink(sink);
   }
   return field_model;
 }
@@ -182,22 +178,18 @@ Json::Value FieldModel::to_json() const {
 
   if (!sources_.is_bottom()) {
     auto sources_value = Json::Value(Json::arrayValue);
-    for (const auto& sources : sources_) {
-      for (const auto& source : sources) {
-        mt_assert(!source.is_bottom());
-        sources_value.append(source.to_json());
-      }
+    for (const auto& source : sources_.frames_iterator()) {
+      mt_assert(!source.is_bottom());
+      sources_value.append(source.to_json());
     }
     value["sources"] = sources_value;
   }
 
   if (!sinks_.is_bottom()) {
     auto sinks_value = Json::Value(Json::arrayValue);
-    for (const auto& sinks : sinks_) {
-      for (const auto& sink : sinks) {
-        mt_assert(!sink.is_bottom());
-        sinks_value.append(sink.to_json());
-      }
+    for (const auto& sink : sinks_.frames_iterator()) {
+      mt_assert(!sink.is_bottom());
+      sinks_value.append(sink.to_json());
     }
     value["sinks"] = sinks_value;
   }
@@ -215,19 +207,15 @@ std::ostream& operator<<(std::ostream& out, const FieldModel& model) {
   out << "\nFieldModel(field=`" << show(model.field_) << "`";
   if (!model.sources_.is_bottom()) {
     out << ",\n  sources={\n";
-    for (const auto& sources : model.sources_) {
-      for (const auto& source : sources) {
-        out << "    " << source << ",\n";
-      }
+    for (const auto& source : model.sources_.frames_iterator()) {
+      out << "    " << source << ",\n";
     }
     out << "  }";
   }
   if (!model.sinks_.is_bottom()) {
     out << ",\n  sinks={\n";
-    for (const auto& sinks : model.sinks_) {
-      for (const auto& sink : sinks) {
-        out << "    " << sink << ",\n";
-      }
+    for (const auto& sink : model.sinks_.frames_iterator()) {
+      out << "    " << sink << ",\n";
     }
     out << "  }";
   }

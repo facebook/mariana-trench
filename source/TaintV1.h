@@ -20,6 +20,8 @@
 
 namespace marianatrench {
 
+class TaintV1FramesIterator;
+
 /* Represents an abstract taint, as a map from taint kind to set of frames. */
 class TaintV1 final : public sparta::AbstractDomain<TaintV1> {
  private:
@@ -47,15 +49,7 @@ class TaintV1 final : public sparta::AbstractDomain<TaintV1> {
       GroupEqual,
       GroupDifference>;
 
- public:
-  // C++ container concept member types
-  using iterator = typename Set::iterator;
-  using const_iterator = typename Set::const_iterator;
-  using value_type = FrameSet;
-  using difference_type = std::ptrdiff_t;
-  using size_type = std::size_t;
-  using const_reference = const FrameSet&;
-  using const_pointer = const FrameSet*;
+  friend class TaintV1FramesIterator;
 
  public:
   /* Create the bottom (i.e, empty) taint. */
@@ -102,13 +96,7 @@ class TaintV1 final : public sparta::AbstractDomain<TaintV1> {
     return set_.empty();
   }
 
-  const_iterator begin() const {
-    return set_.begin();
-  }
-
-  const_iterator end() const {
-    return set_.end();
-  }
+  TaintV1FramesIterator frames_iterator() const;
 
   void add(const Frame& frame);
 
@@ -137,6 +125,8 @@ class TaintV1 final : public sparta::AbstractDomain<TaintV1> {
   void add_local_position(const Position* position);
 
   void set_local_positions(const LocalPositionSet& positions);
+
+  LocalPositionSet local_positions() const;
 
   void add_inferred_features_and_local_position(
       const FeatureMayAlwaysSet& features,
@@ -233,7 +223,7 @@ class TaintV1 final : public sparta::AbstractDomain<TaintV1> {
   std::unordered_map<T, TaintV1> partition_by_kind(
       const std::function<T(const Kind*)>& map_kind) const {
     std::unordered_map<T, TaintV1> result;
-    for (const auto& frame_set : *this) {
+    for (const auto& frame_set : set_) {
       T partitioned_value = map_kind(frame_set.kind());
       auto iterator = result.find(partitioned_value);
       auto existing_taint =
@@ -256,6 +246,37 @@ class TaintV1 final : public sparta::AbstractDomain<TaintV1> {
 
  private:
   Set set_;
+};
+
+class TaintV1FramesIterator {
+ private:
+  using ConstIterator = FlattenIterator<
+      /* OuterIterator */ TaintV1::Set::iterator,
+      /* InnerIterator */ FrameSet::iterator>;
+
+ public:
+  // C++ container concept member types
+  using iterator = ConstIterator;
+  using const_iterator = ConstIterator;
+  using value_type = Frame;
+  using difference_type = std::ptrdiff_t;
+  using size_type = std::size_t;
+  using const_reference = const Frame&;
+  using const_pointer = const Frame*;
+
+ public:
+  explicit TaintV1FramesIterator(const TaintV1& taint) : taint_(taint) {}
+
+  const_iterator begin() const {
+    return ConstIterator(taint_.set_.begin(), taint_.set_.end());
+  }
+
+  const_iterator end() const {
+    return ConstIterator(taint_.set_.end(), taint_.set_.end());
+  }
+
+ private:
+  const TaintV1& taint_;
 };
 
 } // namespace marianatrench
