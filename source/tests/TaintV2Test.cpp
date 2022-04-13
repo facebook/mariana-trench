@@ -5,6 +5,8 @@
  * LICENSE file in the root directory of this source tree.
  */
 
+#include <unordered_set>
+
 #include <gmock/gmock.h>
 
 #include <mariana-trench/FeatureMayAlwaysSet.h>
@@ -1029,6 +1031,27 @@ TEST_F(TaintV2Test, FeaturesJoined) {
       FeatureMayAlwaysSet(
           /* may */ FeatureSet{feature2, feature3},
           /* always */ FeatureSet{feature1}));
+}
+
+TEST_F(TaintV2Test, FramesIterator) {
+  auto context = test::make_empty_context();
+
+  auto taint = TaintV2{
+      test::make_frame(
+          /* kind */ context.kinds->get("TestSource1"),
+          test::FrameProperties{}),
+      test::make_frame(
+          /* kind */ context.kinds->get("TestSource2"),
+          test::FrameProperties{})};
+
+  std::unordered_set<const Kind*> kinds;
+  for (const auto& frame : taint.frames_iterator()) {
+    kinds.insert(frame.kind());
+  }
+
+  EXPECT_EQ(kinds.size(), 2);
+  EXPECT_NE(kinds.find(context.kinds->get("TestSource1")), kinds.end());
+  EXPECT_NE(kinds.find(context.kinds->get("TestSource2")), kinds.end());
 }
 
 } // namespace marianatrench

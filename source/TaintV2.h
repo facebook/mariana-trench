@@ -20,6 +20,8 @@
 
 namespace marianatrench {
 
+class TaintV2FramesIterator;
+
 /**
  * Represents an abstract taint, as a map from taint kind to set of frames.
  * Replacement of `Taint`.
@@ -49,6 +51,8 @@ class TaintV2 final : public sparta::AbstractDomain<TaintV2> {
       GroupHash,
       GroupEqual,
       GroupDifference>;
+
+  friend class TaintV2FramesIterator;
 
  public:
   /* Create the bottom (i.e, empty) taint. */
@@ -93,6 +97,8 @@ class TaintV2 final : public sparta::AbstractDomain<TaintV2> {
     return set_.empty();
   }
 
+  TaintV2FramesIterator frames_iterator() const;
+
   void add(const Frame& frame);
 
   void clear() {
@@ -118,6 +124,8 @@ class TaintV2 final : public sparta::AbstractDomain<TaintV2> {
   void add_local_position(const Position* position);
 
   void set_local_positions(const LocalPositionSet& positions);
+
+  LocalPositionSet local_positions() const;
 
   void add_inferred_features_and_local_position(
       const FeatureMayAlwaysSet& features,
@@ -235,6 +243,37 @@ class TaintV2 final : public sparta::AbstractDomain<TaintV2> {
 
  private:
   Set set_;
+};
+
+class TaintV2FramesIterator {
+ private:
+  using ConstIterator = FlattenIterator<
+      /* OuterIterator */ TaintV2::Set::iterator,
+      /* InnerIterator */ CalleeFrames::iterator>;
+
+ public:
+  // C++ container concept member types
+  using iterator = ConstIterator;
+  using const_iterator = ConstIterator;
+  using value_type = Frame;
+  using difference_type = std::ptrdiff_t;
+  using size_type = std::size_t;
+  using const_reference = const Frame&;
+  using const_pointer = const Frame*;
+
+ public:
+  explicit TaintV2FramesIterator(const TaintV2& taint) : taint_(taint) {}
+
+  const_iterator begin() const {
+    return ConstIterator(taint_.set_.begin(), taint_.set_.end());
+  }
+
+  const_iterator end() const {
+    return ConstIterator(taint_.set_.end(), taint_.set_.end());
+  }
+
+ private:
+  const TaintV2& taint_;
 };
 
 } // namespace marianatrench

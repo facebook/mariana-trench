@@ -16,6 +16,10 @@ TaintV2::TaintV2(std::initializer_list<Frame> frames) {
   }
 }
 
+TaintV2FramesIterator TaintV2::frames_iterator() const {
+  return TaintV2FramesIterator(*this);
+}
+
 void TaintV2::add(const Frame& frame) {
   set_.add(CalleeFrames{frame});
 }
@@ -68,6 +72,14 @@ void TaintV2::set_local_positions(const LocalPositionSet& positions) {
   map([&positions](CalleeFrames& frames) {
     frames.set_local_positions(positions);
   });
+}
+
+LocalPositionSet TaintV2::local_positions() const {
+  auto result = LocalPositionSet::bottom();
+  for (const auto& callee_frames : set_) {
+    result.join_with(callee_frames.local_positions());
+  }
+  return result;
 }
 
 void TaintV2::add_inferred_features_and_local_position(
