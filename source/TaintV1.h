@@ -168,7 +168,6 @@ class TaintV1 final : public sparta::AbstractDomain<TaintV1> {
       const std::function<std::vector<const Kind*>(const Kind*)>&,
       const std::function<FeatureMayAlwaysSet(const Kind*)>&) const;
 
-  static TaintV1 from_json(const Json::Value& value, Context& context);
   Json::Value to_json() const;
 
   friend std::ostream& operator<<(std::ostream& out, const TaintV1& taint);

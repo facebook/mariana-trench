@@ -165,14 +165,6 @@ TaintV1 TaintV1::transform_kind_with_features(
   return new_taint;
 }
 
-TaintV1 TaintV1::from_json(const Json::Value& value, Context& context) {
-  TaintV1 taint;
-  for (const auto& frame_value : JsonValidation::null_or_array(value)) {
-    taint.add(Frame::from_json(frame_value, context));
-  }
-  return taint;
-}
-
 Json::Value TaintV1::to_json() const {
   auto taint = Json::Value(Json::arrayValue);
   for (const auto& frames : set_) {

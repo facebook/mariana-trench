@@ -6,6 +6,7 @@
  */
 
 #include <mariana-trench/JsonValidation.h>
+#include <mariana-trench/TaintV1.h>
 #include <mariana-trench/TaintV2.h>
 
 namespace marianatrench {
@@ -140,6 +141,21 @@ TaintV2 TaintV2::transform_kind_with_features(
         transform_kind, add_features));
   }
   return new_taint;
+}
+
+Json::Value TaintV2::to_json() const {
+  // T91357916: For now, use TaintV1's json format. This format needs to be
+  // changed to reflect the internal structure once the downstream SAPP parser
+  // is ready.
+  TaintV1 taintV1;
+  for (const auto& frame : frames_iterator()) {
+    taintV1.add(frame);
+  }
+  return taintV1.to_json();
+}
+
+std::ostream& operator<<(std::ostream& out, const TaintV2& taint) {
+  return out << taint.set_;
 }
 
 void TaintV2::append_callee_port(

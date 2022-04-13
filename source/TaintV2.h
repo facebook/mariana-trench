@@ -166,6 +166,10 @@ class TaintV2 final : public sparta::AbstractDomain<TaintV2> {
       const std::function<std::vector<const Kind*>(const Kind*)>&,
       const std::function<FeatureMayAlwaysSet(const Kind*)>&) const;
 
+  Json::Value to_json() const;
+
+  friend std::ostream& operator<<(std::ostream& out, const TaintV2& taint);
+
   /**
    * Appends `path_element` to the callee ports of all kind that pass `filter`
    * (returns true).
