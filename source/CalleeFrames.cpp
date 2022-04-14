@@ -187,6 +187,10 @@ CalleeFrames CalleeFrames::propagate(
         source_constant_arguments));
   }
 
+  if (result.is_bottom()) {
+    return CalleeFrames::bottom();
+  }
+
   mt_assert(call_position == result.position());
   return CalleeFrames(
       callee, FramesByCallPosition{std::pair(call_position, result)});

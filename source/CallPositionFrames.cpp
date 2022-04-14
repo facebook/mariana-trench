@@ -463,6 +463,11 @@ Frame CallPositionFrames::propagate_frames(
         callee, context, frame, source_constant_arguments, inferred_features);
   }
 
+  if (distance == std::numeric_limits<int>::max()) {
+    return Frame::bottom();
+  }
+
+  mt_assert(distance <= maximum_source_sink_distance);
   return Frame(
       kind,
       callee_port,
