@@ -11,10 +11,10 @@ namespace marianatrench {
 
 #ifndef MARIANA_TRENCH_FACEBOOK_BUILD
 void EventLogger::log_event(
-    const std::string& event,
-    const std::string& message,
-    const int value) {}
+    const std::string& /* unused */,
+    const std::string& /* unused */,
+    const int /* unused */) {}
 
-void init_event_logger(const Options* options) {}
+void EventLogger::init_event_logger(const Options* /* unused */) {}
 #endif
 } // namespace marianatrench

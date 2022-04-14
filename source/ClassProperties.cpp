@@ -30,7 +30,9 @@ namespace {
 std::string_view strip_inner_class(std::string_view class_name) {
   auto position = class_name.find_first_of("$");
   if (position != std::string::npos) {
-    return class_name.substr(0, position) + ";";
+    return DexString::make_string(
+               fmt::format("{};", class_name.substr(0, position)))
+        ->str();
   }
   return class_name;
 }

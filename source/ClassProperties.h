@@ -69,6 +69,7 @@ class ClassProperties final {
   std::unordered_set<std::string_view> protection_level_classes_;
   std::unordered_map<std::string_view, std::string> privacy_decision_classes_;
 
+  // Note: This is not thread-safe.
   StringStorage strings_;
 
   const Features& features_;

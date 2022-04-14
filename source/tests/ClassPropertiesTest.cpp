@@ -395,3 +395,38 @@ TEST_F(ClassPropertiesTest, Cyclic) {
       FeatureMayAlwaysSet(
           {via_dependency_graph, via_caller_exported, via_class}));
 }
+
+TEST_F(ClassPropertiesTest, NestedClass) {
+  Scope scope;
+
+  // MainActivity[exported]
+  //   MainActivity$NestedClass::call() --> Util::call()
+  auto* dex_util = redex::create_void_method(scope, "LUtil;", "call");
+  auto* dex_activity =
+      redex::create_method(scope, "LMainActivity$NestedClass;", R"(
+    (method (public) "LMainActivity$NestedClass;.call:()V"
+     (
+      (load-param-object v0)
+      (invoke-direct (v0) "LUtil;.call:()V")
+      (return-void)
+     )
+    )
+  )");
+
+  auto context = make_context(scope);
+  auto& class_properties = *context.class_properties;
+  auto* util = context.methods->get(dex_util);
+  auto* activity = context.methods->get(dex_activity);
+
+  auto via_dependency_graph = context.features->get("via-dependency-graph");
+  auto via_caller_exported = context.features->get("via-caller-exported");
+  auto via_nested_class =
+      context.features->get("via-class:LMainActivity$NestedClass;");
+  EXPECT_EQ(
+      class_properties.issue_features(activity),
+      FeatureMayAlwaysSet({via_caller_exported}));
+  EXPECT_EQ(
+      class_properties.issue_features(util),
+      FeatureMayAlwaysSet(
+          {via_dependency_graph, via_caller_exported, via_nested_class}));
+}
