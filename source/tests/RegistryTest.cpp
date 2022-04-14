@@ -102,7 +102,8 @@ TEST_F(RegistryTest, JoinWith) {
 
   EXPECT_EQ(registry.get(method).generations().elements().size(), 1);
   EXPECT_EQ(
-      registry.get(method).generations().elements().at(0).second.size(), 1);
+      registry.get(method).generations().elements().at(0).second.num_frames(),
+      1);
 
   registry.join_with(Registry(
       context,
@@ -121,7 +122,8 @@ TEST_F(RegistryTest, JoinWith) {
 
   EXPECT_EQ(registry.get(method).generations().elements().size(), 1);
   EXPECT_EQ(
-      registry.get(method).generations().elements().at(0).second.size(), 2);
+      registry.get(method).generations().elements().at(0).second.num_frames(),
+      2);
 
   registry.join_with(Registry(
       context,
@@ -137,7 +139,7 @@ TEST_F(RegistryTest, JoinWith) {
                   .inferred_features = FeatureMayAlwaysSet::bottom(),
                   .locally_inferred_features = FeatureMayAlwaysSet::bottom(),
                   .user_features = FeatureSet::bottom()})})}));
-  EXPECT_EQ(registry.get(field).sources().size(), 1);
+  EXPECT_EQ(registry.get(field).sources().num_frames(), 1);
 
   registry.join_with(Registry(
       context,
@@ -153,7 +155,7 @@ TEST_F(RegistryTest, JoinWith) {
                   .inferred_features = FeatureMayAlwaysSet::bottom(),
                   .locally_inferred_features = FeatureMayAlwaysSet::bottom(),
                   .user_features = FeatureSet::bottom()})})}));
-  EXPECT_EQ(registry.get(field).sources().size(), 2);
+  EXPECT_EQ(registry.get(field).sources().num_frames(), 2);
 }
 
 TEST_F(RegistryTest, ConstructorUseJoin) {

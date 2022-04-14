@@ -21,6 +21,13 @@ TaintV2FramesIterator TaintV2::frames_iterator() const {
   return TaintV2FramesIterator(*this);
 }
 
+std::size_t TaintV2::num_frames() const {
+  std::size_t count = 0;
+  auto iterator = frames_iterator();
+  std::for_each(iterator.begin(), iterator.end(), [&count](auto) { ++count; });
+  return count;
+}
+
 void TaintV2::add(const Frame& frame) {
   set_.add(CalleeFrames{frame});
 }

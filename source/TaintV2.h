@@ -89,15 +89,17 @@ class TaintV2 final : public sparta::AbstractDomain<TaintV2> {
     set_.set_to_top();
   }
 
-  std::size_t size() const {
-    return set_.size();
-  }
-
   bool empty() const {
     return set_.empty();
   }
 
   TaintV2FramesIterator frames_iterator() const;
+
+  /**
+   * Uses `frames_iterator()` to compute number of frames. This iterates over
+   * every frame and can be expensive. Use for testing only.
+   */
+  std::size_t num_frames() const;
 
   void add(const Frame& frame);
 

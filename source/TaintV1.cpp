@@ -26,6 +26,13 @@ TaintV1FramesIterator TaintV1::frames_iterator() const {
   return TaintV1FramesIterator(*this);
 }
 
+std::size_t TaintV1::num_frames() const {
+  std::size_t count = 0;
+  auto iterator = frames_iterator();
+  std::for_each(iterator.begin(), iterator.end(), [&count](auto) { ++count; });
+  return count;
+}
+
 void TaintV1::add(const Frame& frame) {
   set_.add(FrameSet{frame});
 }
