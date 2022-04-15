@@ -190,13 +190,16 @@ ClassProperties::ClassProperties(
         if (!protection_level && !permission && dex_class) {
           if (tag_info.tag == ComponentTag::Activity) {
             const auto& exported_fragments = get_class_fragments(dex_class);
-            for (auto& str : exported_fragments) {
-              exported_classes_.emplace(strings_[str]);
+            for (const auto& klass : exported_fragments) {
+              exposed_fragments_.emplace(
+                  strings_[klass], strings_[tag_info.classname]);
             }
           }
           parent_classes = generator::get_custom_parents_from_class(dex_class);
-          parent_exposed_classes_.insert(
-              parent_classes.begin(), parent_classes.end());
+          for (const auto& klass : parent_classes) {
+            parent_exposed_classes_.emplace(
+                strings_[klass], strings_[tag_info.classname]);
+          }
         }
       } else {
         unexported_classes_.emplace(strings_[tag_info.classname]);
@@ -232,10 +235,32 @@ bool ClassProperties::is_class_exported(std::string_view class_name) const {
       exported_classes_.count(outer_class) > 0;
 }
 
-bool ClassProperties::is_child_exposed(std::string_view class_name) const {
-  auto outer_class = strip_inner_class(class_name);
-  return parent_exposed_classes_.count(class_name) > 0 ||
-      parent_exposed_classes_.count(outer_class) > 0;
+std::optional<std::string_view> ClassProperties::get_exposed_child(
+    std::string_view parent_activity) const {
+  auto lookup = parent_exposed_classes_.find(parent_activity);
+  if (lookup != parent_exposed_classes_.end()) {
+    return lookup->second;
+  }
+  auto outer_class_lookup =
+      parent_exposed_classes_.find(strip_inner_class(parent_activity));
+  if (outer_class_lookup != parent_exposed_classes_.end()) {
+    return outer_class_lookup->second;
+  }
+  return std::nullopt;
+}
+
+std::optional<std::string_view> ClassProperties::get_exposed_host_activity(
+    std::string_view fragment_name) const {
+  auto lookup = exposed_fragments_.find(fragment_name);
+  if (lookup != exposed_fragments_.end()) {
+    return lookup->second;
+  }
+  auto outer_class_lookup =
+      exposed_fragments_.find(strip_inner_class(fragment_name));
+  if (outer_class_lookup != exposed_fragments_.end()) {
+    return outer_class_lookup->second;
+  }
+  return std::nullopt;
 }
 
 bool ClassProperties::is_class_unexported(std::string_view class_name) const {
@@ -328,8 +353,15 @@ FeatureSet ClassProperties::get_class_features(
   if (is_class_exported(clazz)) {
     features.add(features_.get("via-caller-exported"));
   }
-  if (is_child_exposed(clazz)) {
+  auto exposed_child = get_exposed_child(clazz);
+  if (exposed_child) {
     features.add(features_.get("via-child-exposed"));
+    features.add(features_.get(fmt::format("via-class:{}", *exposed_child)));
+  }
+  auto exposed_host = get_exposed_host_activity(clazz);
+  if (exposed_host) {
+    features.add(features_.get("via-caller-exported"));
+    features.add(features_.get(fmt::format("via-class:{}", *exposed_host)));
   }
   if (is_class_unexported(clazz)) {
     features.add(features_.get("via-caller-unexported"));
@@ -355,7 +387,8 @@ FeatureSet ClassProperties::get_class_features(
 
 bool ClassProperties::has_user_exposed_properties(
     std::string_view class_name) const {
-  return is_class_exported(class_name) || is_child_exposed(class_name);
+  return is_class_exported(class_name) || get_exposed_child(class_name) ||
+      get_exposed_host_activity(class_name);
 };
 
 bool ClassProperties::has_user_unexposed_properties(

@@ -121,6 +121,48 @@ Context make_context(const Scope& scope) {
 
 } // anonymous namespace
 
+TEST_F(ClassPropertiesTest, IssueFeatures) {
+  Scope scope;
+  auto* parent_method =
+      redex::create_void_method(scope, "LParentActivity;", "call");
+  auto* fragment_method =
+      redex::create_void_method(scope, "LSomeActivityFragment;", "call");
+  redex::create_method(
+      scope,
+      "LMainActivity;",
+      R"(
+    (method (public) "LMainActivity;.onCreate:()V"
+     (
+      (load-param-object v0)
+      (invoke-direct (v0) "LSomeActivityFragment;.onCreate:()V")
+      (return-void)
+     )
+    )
+  )",
+      /* super */ parent_method->get_class());
+
+  auto context = make_context(scope);
+  auto& class_properties = *context.class_properties;
+  auto via_child_exposed = context.features->get("via-child-exposed");
+  auto via_child_exposed_with_class =
+      context.features->get("via-class:LMainActivity;");
+  auto via_caller_unexported = context.features->get("via-caller-unexported");
+  auto via_caller_exported = context.features->get("via-caller-exported");
+  auto via_caller_exported_with_class =
+      context.features->get("via-class:LMainActivity;");
+
+  EXPECT_EQ(
+      class_properties.issue_features(context.methods->get(parent_method)),
+      FeatureMayAlwaysSet(
+          {via_child_exposed,
+           via_child_exposed_with_class,
+           via_caller_unexported}));
+  EXPECT_EQ(
+      class_properties.issue_features(context.methods->get(fragment_method)),
+      FeatureMayAlwaysSet(
+          {via_caller_exported, via_caller_exported_with_class}));
+}
+
 TEST_F(ClassPropertiesTest, InvokeUtil) {
   Scope scope;
 
