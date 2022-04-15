@@ -12,9 +12,9 @@
 
 namespace marianatrench {
 
-using Taint = TaintV1;
+// Use this to revert to the old Taint implementation.
+// using Taint = TaintV1;
 
-// Use this to switch to TaintV2's implementation when it is ready.
-// using Taint = TaintV2;
+using Taint = TaintV2;
 
 } // namespace marianatrench
