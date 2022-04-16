@@ -449,23 +449,6 @@ void apply_propagations(
       auto parameter = Root(Root::Kind::Argument, parameter_position);
       auto features = FeatureMayAlwaysSet::make_always(
           callee.model.add_features_to_arguments(parameter));
-      auto register_id = instruction_sources[parameter_position];
-      auto memory_locations =
-          previous_environment->memory_locations(register_id);
-
-      // Check whether an argument of the caller is passed into a callee port
-      // with add_features_to_arguments on it. If so, infer an
-      // add_features_to_arguments on the caller argument port
-      if (!features.empty() && memory_locations.is_value() &&
-          memory_locations.size() == 1) {
-        auto* memory_location = *memory_locations.elements().begin();
-        auto access_path = memory_location->access_path();
-        if (access_path) {
-          context->model.add_add_features_to_arguments(
-              access_path->root(), features.always());
-        }
-      }
-
       const auto* position = !features.empty()
           ? context->positions.get(callee.position, parameter, instruction)
           : nullptr;
@@ -477,6 +460,9 @@ void apply_propagations(
         continue;
       }
 
+      auto register_id = instruction_sources[parameter_position];
+      auto memory_locations =
+          previous_environment->memory_locations(register_id);
       for (auto* memory_location : memory_locations.elements()) {
         auto taint = new_environment->read(memory_location);
         taint.map([&features, position](Taint& sources) {
