@@ -426,9 +426,10 @@ Json::Value Frame::to_json() const {
 
   JsonValidation::update_object(value, features().to_json());
 
-  if (!locally_inferred_features_.is_bottom() &&
-      !locally_inferred_features_.empty()) {
-    value["local_features"] = locally_inferred_features_.to_json();
+  auto all_local_features = locally_inferred_features();
+  all_local_features.add_always(user_features_);
+  if (!all_local_features.is_bottom() && !all_local_features.empty()) {
+    value["local_features"] = all_local_features.to_json();
   }
 
   if (via_type_of_ports_.is_value() && !via_type_of_ports_.elements().empty()) {

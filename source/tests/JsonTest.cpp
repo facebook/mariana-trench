@@ -1136,22 +1136,26 @@ TEST_F(JsonTest, Frame) {
   // "local_features" key, another as "may/always_features" in the object
   // alongside any existing inferred features.
   EXPECT_EQ(
-      test::make_frame(
-          /* kind */ context.kinds->get("TestSource"),
-          test::FrameProperties{
-              .inferred_features = FeatureMayAlwaysSet::make_always(
-                  {context.features->get("FeatureTwo")}),
-              .locally_inferred_features = FeatureMayAlwaysSet(
-                  /* may */ FeatureSet{context.features->get("FeatureOne")},
-                  /* always */ {})})
-          .to_json(),
+      test::sorted_json(
+          test::make_frame(
+              /* kind */ context.kinds->get("TestSource"),
+              test::FrameProperties{
+                  .inferred_features = FeatureMayAlwaysSet::make_always(
+                      {context.features->get("FeatureTwo")}),
+                  .user_features =
+                      FeatureSet({context.features->get("FeatureThree")}),
+                  .locally_inferred_features = FeatureMayAlwaysSet(
+                      /* may */ FeatureSet{context.features->get("FeatureOne")},
+                      /* always */ {})})
+              .to_json()),
       test::parse_json(R"({
         "kind": "TestSource",
         "callee_port": "Leaf",
         "may_features": ["FeatureOne"],
-        "always_features": ["FeatureTwo"],
+        "always_features": ["FeatureThree", "FeatureTwo"],
         "local_features": {
-          "may_features": ["FeatureOne"]
+          "may_features": ["FeatureOne"],
+          "always_features": ["FeatureThree"]
         }
       })"));
 
@@ -2491,7 +2495,10 @@ TEST_F(JsonTest, FieldModel) {
             "always_features": ["test-feature"],
             "field_callee" : "LBase;.field1:Ljava/lang/String;",
             "field_origins": ["LBase;.field1:Ljava/lang/String;"],
-            "callee_port": "Leaf"
+            "callee_port": "Leaf",
+            "local_features": {
+              "always_features": ["test-feature"]
+            }
           }
         ]
       })"));

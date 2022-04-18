@@ -10,6 +10,13 @@
       "callee_port" : "Leaf",
       "caller_port" : "Return",
       "kind" : "TestSourceA",
+      "local_features" : 
+      {
+        "always_features" : 
+        [
+          "source-a"
+        ]
+      },
       "origins" : 
       [
         "Lcom/facebook/marianatrench/integrationtests/MultiSources;.sourceA:()Ljava/lang/Object;"
@@ -34,6 +41,13 @@
       "callee_port" : "Leaf",
       "caller_port" : "Return",
       "kind" : "TestSourceA",
+      "local_features" : 
+      {
+        "always_features" : 
+        [
+          "source-a"
+        ]
+      },
       "origins" : 
       [
         "Lcom/facebook/marianatrench/integrationtests/MultiSourcesSingleArg;.sourceA:()Ljava/lang/Object;"
@@ -58,6 +72,13 @@
       "callee_port" : "Leaf",
       "caller_port" : "Argument(0)",
       "kind" : "TestSourceB",
+      "local_features" : 
+      {
+        "always_features" : 
+        [
+          "source-b"
+        ]
+      },
       "origins" : 
       [
         "Lcom/facebook/marianatrench/integrationtests/MockObjectWithThisPropagation;.<init>:()V"
@@ -82,6 +103,13 @@
       "callee_port" : "Leaf",
       "caller_port" : "Return",
       "kind" : "TestSourceB",
+      "local_features" : 
+      {
+        "always_features" : 
+        [
+          "source-b"
+        ]
+      },
       "origins" : 
       [
         "Lcom/facebook/marianatrench/integrationtests/MultiSources;.sourceB:()Ljava/lang/Object;"
@@ -1095,6 +1123,13 @@
       "callee_port" : "Leaf",
       "caller_port" : "Argument(0)",
       "kind" : "Partial:TestSink:a",
+      "local_features" : 
+      {
+        "always_features" : 
+        [
+          "sink-a"
+        ]
+      },
       "origins" : 
       [
         "Lcom/facebook/marianatrench/integrationtests/MultiSources;.sink:(Ljava/lang/Object;Ljava/lang/Object;)V"
@@ -1108,6 +1143,13 @@
       "callee_port" : "Leaf",
       "caller_port" : "Argument(1)",
       "kind" : "Partial:TestSink:b",
+      "local_features" : 
+      {
+        "always_features" : 
+        [
+          "sink-b"
+        ]
+      },
       "origins" : 
       [
         "Lcom/facebook/marianatrench/integrationtests/MultiSources;.sink:(Ljava/lang/Object;Ljava/lang/Object;)V"
@@ -1269,6 +1311,13 @@
       "callee_port" : "Leaf",
       "caller_port" : "Argument(0)",
       "kind" : "Partial:TestSinkSingleArg:a",
+      "local_features" : 
+      {
+        "always_features" : 
+        [
+          "sink-a"
+        ]
+      },
       "origins" : 
       [
         "Lcom/facebook/marianatrench/integrationtests/MultiSourcesSingleArg;.sink:(Lcom/facebook/marianatrench/integrationtests/MockObjectWithThisPropagation;)V"
@@ -1282,6 +1331,13 @@
       "callee_port" : "Leaf",
       "caller_port" : "Argument(0)",
       "kind" : "Partial:TestSinkSingleArg:b",
+      "local_features" : 
+      {
+        "always_features" : 
+        [
+          "sink-b"
+        ]
+      },
       "origins" : 
       [
         "Lcom/facebook/marianatrench/integrationtests/MultiSourcesSingleArg;.sink:(Lcom/facebook/marianatrench/integrationtests/MockObjectWithThisPropagation;)V"
