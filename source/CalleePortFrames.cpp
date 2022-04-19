@@ -328,6 +328,21 @@ CalleePortFrames CalleePortFrames::append_callee_port(
   return CalleePortFrames(new_callee_port, new_frames);
 }
 
+void CalleePortFrames::filter_invalid_frames(
+    const std::function<bool(const Method*, const AccessPath&, const Kind*)>&
+        is_valid) {
+  FramesByKind new_frames;
+  for (const auto& [kind, frames] : frames_.bindings()) {
+    auto frames_copy = frames;
+    frames_copy.filter([&](const Frame& frame) {
+      return is_valid(frame.callee(), frame.callee_port(), frame.kind());
+    });
+    new_frames.set(kind, frames_copy);
+  }
+
+  frames_ = new_frames;
+}
+
 bool CalleePortFrames::contains_kind(const Kind* kind) const {
   for (const auto& [actual_kind, _] : frames_.bindings()) {
     if (actual_kind == kind) {

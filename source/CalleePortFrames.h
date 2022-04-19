@@ -173,11 +173,6 @@ class CalleePortFrames final : public sparta::AbstractDomain<CalleePortFrames> {
       const std::vector<std::optional<std::string>>& source_constant_arguments)
       const;
 
-  /* Return the set of leaf frames with the given position. */
-  // Not applicable to callee frames. This operates on position, which should
-  // be done in CallPositionFrames.
-  // CalleePortFrames attach_position(const Position* position) const;
-
   CalleePortFrames transform_kind_with_features(
       const std::function<std::vector<const Kind*>(const Kind*)>&,
       const std::function<FeatureMayAlwaysSet(const Kind*)>&) const;
@@ -197,11 +192,10 @@ class CalleePortFrames final : public sparta::AbstractDomain<CalleePortFrames> {
    */
   CalleePortFrames append_callee_port(Path::Element path_element) const;
 
-  // TODO(T91357916): To be implemented.
-  // void filter_invalid_frames(
-  //     const std::function<
-  //         bool(const Method* MT_NULLABLE, const AccessPath&, const Kind*)>&
-  //         is_valid);
+  void filter_invalid_frames(
+      const std::function<
+          bool(const Method* MT_NULLABLE, const AccessPath&, const Kind*)>&
+          is_valid);
 
   bool contains_kind(const Kind*) const;
 

@@ -281,6 +281,7 @@ class AccessPath final {
   ~AccessPath() = default;
 
   bool operator==(const AccessPath& other) const;
+  bool operator!=(const AccessPath& other) const;
   bool leq(const AccessPath& other) const;
   void join_with(const AccessPath& other);
 

@@ -166,6 +166,10 @@ bool AccessPath::operator==(const AccessPath& other) const {
   return root_ == other.root_ && path_ == other.path_;
 }
 
+bool AccessPath::operator!=(const AccessPath& other) const {
+  return !(*this == other);
+}
+
 bool AccessPath::leq(const AccessPath& other) const {
   return root_ == other.root_ && other.path_.is_prefix_of(path_);
 }

@@ -1083,6 +1083,103 @@ TEST_F(CalleePortFramesTest, AppendCalleePort) {
                   Path{path_element1, path_element2})})}));
 }
 
+TEST_F(CalleePortFramesTest, FilterInvalidFrames) {
+  auto context = test::make_empty_context();
+
+  Scope scope;
+  auto* method1 =
+      context.methods->create(redex::create_void_method(scope, "LOne;", "one"));
+  auto* test_kind = context.kinds->get("TestSource");
+
+  // Filter by callee. In practice, this scenario where the frames each contain
+  // a different callee will not happen. These frames will be never show up in
+  // the same `CalleePortFrames` object.
+  //
+  // TODO(T91357916): Move callee, call_position and callee_port out of `Frame`
+  // and re-visit these tests. Signature of `filter_invalid_frames` will likely
+  // change.
+  auto frames = CalleePortFrames{
+      test::make_frame(
+          test_kind,
+          test::FrameProperties{
+              .callee_port = AccessPath(Root(Root::Kind::Argument))}),
+      test::make_frame(
+          Kinds::artificial_source(),
+          test::FrameProperties{
+              .callee = method1,
+              .callee_port = AccessPath(Root(Root::Kind::Argument))})};
+  frames.filter_invalid_frames(
+      /* is_valid */
+      [&](const Method* MT_NULLABLE callee,
+          const AccessPath& /* callee_port */,
+          const Kind* /* kind */) { return callee == nullptr; });
+  EXPECT_EQ(
+      frames,
+      (CalleePortFrames{test::make_frame(
+          test_kind,
+          test::FrameProperties{
+              .callee_port = AccessPath(Root(Root::Kind::Argument))})}));
+
+  // Filter by callee port (drops nothing)
+  frames = CalleePortFrames{test::make_frame(
+      Kinds::artificial_source(),
+      test::FrameProperties{
+          .callee = method1,
+          .callee_port = AccessPath(Root(Root::Kind::Argument))})};
+  frames.filter_invalid_frames(
+      /* is_valid */
+      [&](const Method* MT_NULLABLE /* callee */,
+          const AccessPath& callee_port,
+          const Kind* /* kind */) {
+        return callee_port == AccessPath(Root(Root::Kind::Argument));
+      });
+  EXPECT_EQ(
+      frames,
+      (CalleePortFrames{test::make_frame(
+          Kinds::artificial_source(),
+          test::FrameProperties{
+              .callee = method1,
+              .callee_port = AccessPath(Root(Root::Kind::Argument))})}));
+
+  // Filter by callee port (drops everything)
+  frames = CalleePortFrames{test::make_frame(
+      Kinds::artificial_source(),
+      test::FrameProperties{
+          .callee = method1,
+          .callee_port = AccessPath(Root(Root::Kind::Argument))})};
+  frames.filter_invalid_frames(
+      /* is_valid */
+      [&](const Method* MT_NULLABLE /* callee */,
+          const AccessPath& callee_port,
+          const Kind* /* kind */) {
+        return callee_port != AccessPath(Root(Root::Kind::Argument));
+      });
+  EXPECT_EQ(frames, CalleePortFrames::bottom());
+
+  // Filter by kind
+  frames = CalleePortFrames{
+      test::make_frame(
+          test_kind,
+          test::FrameProperties{
+              .callee_port = AccessPath(Root(Root::Kind::Argument))}),
+      test::make_frame(
+          Kinds::artificial_source(),
+          test::FrameProperties{
+              .callee = method1,
+              .callee_port = AccessPath(Root(Root::Kind::Argument))})};
+  frames.filter_invalid_frames(
+      /* is_valid */
+      [&](const Method* MT_NULLABLE /* callee */,
+          const AccessPath& /* callee_port */,
+          const Kind* kind) { return kind != Kinds::artificial_source(); });
+  EXPECT_EQ(
+      frames,
+      (CalleePortFrames{test::make_frame(
+          test_kind,
+          test::FrameProperties{
+              .callee_port = AccessPath(Root(Root::Kind::Argument))})}));
+}
+
 TEST_F(CalleePortFramesTest, Show) {
   auto context = test::make_empty_context();
 
