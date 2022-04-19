@@ -44,7 +44,7 @@
   },
   {
     "base_class_name": "Landroidx/fragment/app/Fragment;",
-    "method_name": "fragment_lifecycle_wrapper",
+    "method_name": "xfragment_lifecycle_wrapper",
     "callees": [
       {
         "method_name": "onCreate",
