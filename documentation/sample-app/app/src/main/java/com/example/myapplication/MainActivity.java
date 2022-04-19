@@ -7,13 +7,13 @@
 
 package com.example.myapplication;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
-import androidx.appcompat.app.AppCompatActivity;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends Activity {
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -29,9 +29,21 @@ public class MainActivity extends AppCompatActivity {
           }
         });
 
+    launchFallback(intent);
+  }
+
+  public void launchFallback(Intent intent) {
     if (intent.getBooleanExtra("redirect", false)) {
       Intent redirectIntent = new Intent();
       redirectIntent.setData(intent.getData());
+      if (intent.hasExtra("component")) {
+        try {
+          Class name = Class.forName("component");
+          redirectIntent.setClass(this, name);
+        } catch (Exception e) {
+
+        }
+      }
       startActivity(redirectIntent);
     }
   }
