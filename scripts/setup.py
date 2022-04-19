@@ -230,7 +230,7 @@ def _add_setup_cfg(
             configuration_directories[path.parent].append(path)
 
     configuration_files = ""
-    for directory, paths in configuration_directories.items():
+    for directory, paths in list(configuration_directories.items()):
         configuration_files += f"{directory} =\n"
         for path in paths:
             configuration_files += f"    {path}\n"

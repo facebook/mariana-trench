@@ -66,7 +66,7 @@ def _index_file(path: str) -> Tuple[Dict[str, FilePosition], Dict[str, FilePosit
 
             position = FilePosition(path=path, offset=offset, length=len(line))
             model = json.loads(line)
-            if "method" in model.keys():
+            if "method" in list(model.keys()):
                 method = _method_string(model["method"])
                 index[method] = position
             else:
@@ -103,7 +103,7 @@ def _assert_loaded() -> None:
 
 def _index_keys_containing(index: Dict[str, Any], string: str) -> List[str]:
     _assert_loaded()
-    return sorted(filter(lambda name: string in name, index.keys()))
+    return sorted([name for name in list(index.keys()) if string in name])
 
 
 def method_containing(string: str) -> List[str]:
@@ -119,7 +119,7 @@ def field_containing(string: str) -> List[str]:
 def _index_keys_matching(index: Dict[str, Any], pattern: str) -> List[str]:
     _assert_loaded()
     regex = re.compile(pattern)
-    return sorted(filter(lambda name: re.search(regex, name), index.keys()))
+    return sorted([name for name in list(index.keys()) if re.search(regex, name)])
 
 
 def method_matching(pattern: str) -> List[str]:

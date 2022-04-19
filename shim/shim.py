@@ -163,10 +163,10 @@ def _build_target(target: str, *, mode: Optional[str] = None) -> Path:
     except json.JSONDecodeError:
         response = {}
 
-    if len(response) != 1 or len(next(iter(response.values()))) == 0:
+    if len(response) != 1 or len(next(iter(list(response.values())))) == 0:
         raise ClientError(f"Unexpected buck output:\n{output.stdout.decode()}")
 
-    return working_directory / next(iter(response.values()))
+    return working_directory / next(iter(list(response.values())))
 
 
 def _build_executable_target(target: str, *, mode: Optional[str] = None) -> Path:
