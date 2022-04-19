@@ -15,6 +15,72 @@
 
 namespace marianatrench {
 
+namespace {
+
+void materialize_via_type_of_ports(
+    const Method* callee,
+    Context& context,
+    const Frame& frame,
+    const std::vector<const DexType * MT_NULLABLE>& source_register_types,
+    std::vector<const Feature*>& via_type_of_features_added,
+    FeatureMayAlwaysSet& inferred_features) {
+  if (!frame.via_type_of_ports().is_value() ||
+      frame.via_type_of_ports().elements().empty()) {
+    return;
+  }
+
+  // Materialize via_type_of_ports into features and add them to the inferred
+  // features
+  for (const auto& port : frame.via_type_of_ports().elements()) {
+    if (!port.is_argument() ||
+        port.parameter_position() >= source_register_types.size()) {
+      ERROR(
+          1,
+          "Invalid port {} provided for via_type_of ports of method {}.{}",
+          port,
+          callee->get_class()->str(),
+          callee->get_name());
+      continue;
+    }
+    const auto* feature = context.features->get_via_type_of_feature(
+        source_register_types[port.parameter_position()]);
+    via_type_of_features_added.push_back(feature);
+    inferred_features.add_always(feature);
+  }
+}
+
+void materialize_via_value_of_ports(
+    const Method* callee,
+    Context& context,
+    const Frame& frame,
+    const std::vector<std::optional<std::string>>& source_constant_arguments,
+    FeatureMayAlwaysSet& inferred_features) {
+  if (!frame.via_value_of_ports().is_value() ||
+      frame.via_value_of_ports().elements().empty()) {
+    return;
+  }
+
+  // Materialize via_value_of_ports into features and add them to the inferred
+  // features
+  for (const auto& port : frame.via_value_of_ports().elements()) {
+    if (!port.is_argument() ||
+        port.parameter_position() >= source_constant_arguments.size()) {
+      ERROR(
+          1,
+          "Invalid port {} provided for via_value_of ports of method {}.{}",
+          port,
+          callee->get_class()->str(),
+          callee->get_name());
+      continue;
+    }
+    const auto* feature = context.features->get_via_value_of_feature(
+        source_constant_arguments[port.parameter_position()]);
+    inferred_features.add_always(feature);
+  }
+}
+
+} // namespace
+
 CalleePortFrames::CalleePortFrames(std::initializer_list<Frame> frames)
     : callee_port_(Root(Root::Kind::Leaf)) {
   for (const auto& frame : frames) {
@@ -160,6 +226,56 @@ void CalleePortFrames::add_inferred_features_and_local_position(
   });
 }
 
+CalleePortFrames CalleePortFrames::propagate(
+    const Method* callee,
+    const AccessPath& callee_port,
+    const Position* call_position,
+    int maximum_source_sink_distance,
+    Context& context,
+    const std::vector<const DexType * MT_NULLABLE>& source_register_types,
+    const std::vector<std::optional<std::string>>& source_constant_arguments)
+    const {
+  if (is_bottom()) {
+    return CalleePortFrames::bottom();
+  }
+
+  CalleePortFrames result;
+  auto partitioned_by_kind = partition_map<const Kind*>(
+      [](const Frame& frame) { return frame.kind(); });
+
+  for (const auto& [kind, frames] : partitioned_by_kind) {
+    if (callee_port_.root().is_anchor()) {
+      // These are CRTEX frames.
+      result.join_with(propagate_crtex_frames(
+          callee,
+          callee_port,
+          call_position,
+          maximum_source_sink_distance,
+          context,
+          source_register_types,
+          frames));
+    } else {
+      // Non-CRTEX frames can be joined into the same callee
+      std::vector<const Feature*> via_type_of_features_added;
+      auto non_crtex_frame = propagate_frames(
+          callee,
+          callee_port,
+          call_position,
+          maximum_source_sink_distance,
+          context,
+          source_register_types,
+          source_constant_arguments,
+          frames,
+          via_type_of_features_added);
+      if (!non_crtex_frame.is_bottom()) {
+        result.add(non_crtex_frame);
+      }
+    }
+  }
+
+  return result;
+}
+
 CalleePortFrames CalleePortFrames::transform_kind_with_features(
     const std::function<std::vector<const Kind*>(const Kind*)>& transform_kind,
     const std::function<FeatureMayAlwaysSet(const Kind*)>& add_features) const {
@@ -231,6 +347,163 @@ std::ostream& operator<<(std::ostream& out, const CalleePortFrames& frames) {
     }
     return out << "]";
   }
+}
+
+Frame CalleePortFrames::propagate_frames(
+    const Method* callee,
+    const AccessPath& callee_port,
+    const Position* call_position,
+    int maximum_source_sink_distance,
+    Context& context,
+    const std::vector<const DexType * MT_NULLABLE>& source_register_types,
+    const std::vector<std::optional<std::string>>& source_constant_arguments,
+    std::vector<std::reference_wrapper<const Frame>> frames,
+    std::vector<const Feature*>& via_type_of_features_added) const {
+  if (frames.size() == 0) {
+    return Frame::bottom();
+  }
+
+  const auto* kind = frames.begin()->get().kind();
+  int distance = std::numeric_limits<int>::max();
+  auto origins = MethodSet::bottom();
+  auto field_origins = FieldSet::bottom();
+  auto inferred_features = FeatureMayAlwaysSet::bottom();
+
+  for (const Frame& frame : frames) {
+    // Only frames sharing the same kind can be propagated this way.
+    mt_assert(frame.kind() == kind);
+
+    if (frame.distance() >= maximum_source_sink_distance) {
+      continue;
+    }
+
+    distance = std::min(distance, frame.distance() + 1);
+    origins.join_with(frame.origins());
+    field_origins.join_with(frame.field_origins());
+
+    // Note: This merges user features with existing inferred features.
+    inferred_features.join_with(frame.features());
+
+    materialize_via_type_of_ports(
+        callee,
+        context,
+        frame,
+        source_register_types,
+        via_type_of_features_added,
+        inferred_features);
+
+    materialize_via_value_of_ports(
+        callee, context, frame, source_constant_arguments, inferred_features);
+  }
+
+  if (distance == std::numeric_limits<int>::max()) {
+    return Frame::bottom();
+  }
+
+  mt_assert(distance <= maximum_source_sink_distance);
+  return Frame(
+      kind,
+      callee_port,
+      callee,
+      /* field_callee */ nullptr, // Since propagate is only called at method
+                                  // callsites and not field accesses
+      call_position,
+      distance,
+      std::move(origins),
+      std::move(field_origins),
+      std::move(inferred_features),
+      /* locally_inferred_features */ FeatureMayAlwaysSet::bottom(),
+      /* user_features */ FeatureSet::bottom(),
+      /* via_type_of_ports */ {},
+      /* via_value_of_ports */ {},
+      /* local_positions */ {},
+      /* canonical_names */ {});
+}
+
+CalleePortFrames CalleePortFrames::propagate_crtex_frames(
+    const Method* callee,
+    const AccessPath& callee_port,
+    const Position* call_position,
+    int maximum_source_sink_distance,
+    Context& context,
+    const std::vector<const DexType * MT_NULLABLE>& source_register_types,
+    std::vector<std::reference_wrapper<const Frame>> frames) const {
+  if (frames.size() == 0) {
+    return CalleePortFrames::bottom();
+  }
+
+  CalleePortFrames result;
+  const auto* kind = frames.begin()->get().kind();
+
+  for (const Frame& frame : frames) {
+    // Only frames sharing the same kind can be propagated this way.
+    mt_assert(frame.kind() == kind);
+
+    std::vector<const Feature*> via_type_of_features_added;
+    auto propagated = propagate_frames(
+        callee,
+        callee_port,
+        call_position,
+        maximum_source_sink_distance,
+        context,
+        source_register_types,
+        {}, // TODO: Support via-value-of for crtex frames
+        {std::cref(frame)},
+        via_type_of_features_added);
+
+    if (propagated.is_bottom()) {
+      continue;
+    }
+
+    auto canonical_names = frame.canonical_names();
+    if (!canonical_names.is_value() || canonical_names.elements().empty()) {
+      WARNING(
+          2,
+          "Encountered crtex frame without canonical names. Frame: `{}`",
+          frame);
+      continue;
+    }
+
+    CanonicalNameSetAbstractDomain instantiated_names;
+    for (const auto& canonical_name : canonical_names.elements()) {
+      auto instantiated_name = canonical_name.instantiate(
+          propagated.callee(), via_type_of_features_added);
+      if (!instantiated_name) {
+        continue;
+      }
+      instantiated_names.add(*instantiated_name);
+    }
+
+    auto canonical_callee_port =
+        propagated.callee_port().canonicalize_for_method(propagated.callee());
+
+    // All fields should be propagated like other frames, except the crtex
+    // fields. Ideally, origins should contain the canonical names as well,
+    // but canonical names are strings and cannot be stored in MethodSet.
+    // Frame is not propagated if none of the canonical names instantiated
+    // successfully.
+    if (instantiated_names.is_value() &&
+        !instantiated_names.elements().empty()) {
+      result.add(Frame(
+          kind,
+          canonical_callee_port,
+          propagated.callee(),
+          propagated.field_callee(),
+          propagated.call_position(),
+          /* distance (always leaves for crtex frames) */ 0,
+          propagated.origins(),
+          propagated.field_origins(),
+          propagated.inferred_features(),
+          propagated.locally_inferred_features(),
+          propagated.user_features(),
+          propagated.via_type_of_ports(),
+          propagated.via_value_of_ports(),
+          propagated.local_positions(),
+          /* canonical_names */ instantiated_names));
+    }
+  }
+
+  return result;
 }
 
 } // namespace marianatrench

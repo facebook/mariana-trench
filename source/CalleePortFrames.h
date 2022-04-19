@@ -163,16 +163,15 @@ class CalleePortFrames final : public sparta::AbstractDomain<CalleePortFrames> {
    *
    * Return bottom if the taint should not be propagated.
    */
-  // TODO(T91357916): To be implemented.
-  // CalleePortFrames propagate(
-  //     const Method* callee,
-  //     const AccessPath& callee_port,
-  //     const Position* call_position,
-  //     int maximum_source_sink_distance,
-  //     Context& context,
-  //     const std::vector<const DexType * MT_NULLABLE>& source_register_types,
-  //     const std::vector<std::optional<std::string>>&
-  //     source_constant_arguments) const;
+  CalleePortFrames propagate(
+      const Method* callee,
+      const AccessPath& callee_port,
+      const Position* call_position,
+      int maximum_source_sink_distance,
+      Context& context,
+      const std::vector<const DexType * MT_NULLABLE>& source_register_types,
+      const std::vector<std::optional<std::string>>& source_constant_arguments)
+      const;
 
   /* Return the set of leaf frames with the given position. */
   // Not applicable to callee frames. This operates on position, which should
@@ -245,6 +244,27 @@ class CalleePortFrames final : public sparta::AbstractDomain<CalleePortFrames> {
   friend std::ostream& operator<<(
       std::ostream& out,
       const CalleePortFrames& frames);
+
+ private:
+  Frame propagate_frames(
+      const Method* callee,
+      const AccessPath& callee_port,
+      const Position* call_position,
+      int maximum_source_sink_distance,
+      Context& context,
+      const std::vector<const DexType * MT_NULLABLE>& source_register_types,
+      const std::vector<std::optional<std::string>>& source_constant_arguments,
+      std::vector<std::reference_wrapper<const Frame>> frames,
+      std::vector<const Feature*>& via_type_of_features_added) const;
+
+  CalleePortFrames propagate_crtex_frames(
+      const Method* callee,
+      const AccessPath& callee_port,
+      const Position* call_position,
+      int maximum_source_sink_distance,
+      Context& context,
+      const std::vector<const DexType * MT_NULLABLE>& source_register_types,
+      std::vector<std::reference_wrapper<const Frame>> frames) const;
 
  private:
   AccessPath callee_port_;
