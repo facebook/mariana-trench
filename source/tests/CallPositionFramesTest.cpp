@@ -1241,7 +1241,8 @@ TEST_F(CallPositionFramesTest, AttachPosition) {
                   .origins = MethodSet{one},
                   .inferred_features =
                       FeatureMayAlwaysSet{feature_one, feature_two},
-                  .locally_inferred_features = FeatureMayAlwaysSet::bottom()}),
+                  .locally_inferred_features =
+                      FeatureMayAlwaysSet{feature_two}}),
           test::make_frame(
               test_kind,
               test::FrameProperties{

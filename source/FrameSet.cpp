@@ -242,7 +242,14 @@ FrameSet FrameSet::attach_position(const Position* position) const {
             frame.origins(),
             frame.field_origins(),
             frame.features(),
-            /* locally_inferred_features */ FeatureMayAlwaysSet::bottom(),
+            // Since FrameSet::attach_position is used (only) for
+            // parameter_sinks and return sources which may be included in an
+            // issue as a leaf, we need to make sure that those leaf frames in
+            // issues contain the user_features as being locally inferred.
+            /* locally_inferred_features */
+            frame.user_features().is_bottom()
+                ? FeatureMayAlwaysSet::bottom()
+                : FeatureMayAlwaysSet::make_always(frame.user_features()),
             /* user_features */ FeatureSet::bottom(),
             /* via_type_of_ports */ {},
             /* via_value_of_ports */ {},

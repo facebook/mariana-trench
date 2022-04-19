@@ -868,7 +868,8 @@ TEST_F(CalleeFramesTest, AttachPosition) {
                   .inferred_features = FeatureMayAlwaysSet(
                       /* may */ FeatureSet{feature_one, feature_two},
                       /* always */ FeatureSet{}),
-                  .locally_inferred_features = FeatureMayAlwaysSet::bottom()}),
+                  .locally_inferred_features =
+                      FeatureMayAlwaysSet{feature_two}}),
           test::make_frame(
               test_kind_two,
               test::FrameProperties{

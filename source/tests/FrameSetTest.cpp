@@ -1151,6 +1151,61 @@ TEST_F(FrameSetTest, WithKind) {
                   .origins = MethodSet{two}})}));
 }
 
+TEST_F(FrameSetTest, AttachPosition) {
+  auto context = test::make_empty_context();
+
+  Scope scope;
+  auto* one =
+      context.methods->create(redex::create_void_method(scope, "LOne;", "one"));
+  auto* two =
+      context.methods->create(redex::create_void_method(scope, "LTwo;", "two"));
+
+  auto* feature_one = context.features->get("FeatureOne");
+  auto* feature_two = context.features->get("FeatureTwo");
+  auto* test_kind = context.kinds->get("TestSink");
+  auto* test_position = context.positions->get(std::nullopt, 1);
+
+  auto frames = FrameSet{
+      test::make_frame(
+          test_kind,
+          test::FrameProperties{
+              .call_position = test_position,
+              .origins = MethodSet{one},
+              .locally_inferred_features = FeatureMayAlwaysSet{feature_one},
+              .user_features = FeatureSet{feature_two}}),
+      test::make_frame(
+          test_kind,
+          test::FrameProperties{
+              .call_position = test_position,
+              .callee_port = AccessPath(Root(Root::Kind::Argument, 0)),
+              .origins = MethodSet{two}}),
+  };
+
+  auto* new_test_position = context.positions->get(std::nullopt, 2);
+  auto frames_with_new_position = frames.attach_position(new_test_position);
+
+  EXPECT_EQ(
+      frames_with_new_position,
+      (FrameSet{
+          test::make_frame(
+              test_kind,
+              test::FrameProperties{
+                  .call_position = new_test_position,
+                  .callee_port = AccessPath(Root(Root::Kind::Argument, 0)),
+                  .origins = MethodSet{two},
+                  .locally_inferred_features = FeatureMayAlwaysSet::bottom()}),
+          test::make_frame(
+              test_kind,
+              test::FrameProperties{
+                  .call_position = new_test_position,
+                  .origins = MethodSet{one},
+                  .inferred_features =
+                      FeatureMayAlwaysSet{feature_one, feature_two},
+                  .locally_inferred_features =
+                      FeatureMayAlwaysSet{feature_two}}),
+      }));
+}
+
 TEST_F(FrameSetTest, PartitionMap) {
   auto context = test::make_empty_context();
 
