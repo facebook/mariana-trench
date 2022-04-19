@@ -190,6 +190,28 @@ CalleePortFrames CalleePortFrames::transform_kind_with_features(
   return CalleePortFrames(callee_port_, new_frames_by_kind);
 }
 
+CalleePortFrames CalleePortFrames::append_callee_port(
+    Path::Element path_element) const {
+  // TODO (T91357916): Remove "callee_port" from `Frame` so we don't need
+  // to update the frames internally.
+  FramesByKind new_frames;
+  for (const auto& [kind, frames] : frames_.bindings()) {
+    // Due to `Frame::GroupHash`'s implementation, the in-place update of
+    // the callee port using `Frame::map` only works if the kind is an
+    // artificial source. In practice, this method is only called on artificial
+    // sources.
+    mt_assert(kind == Kinds::artificial_source());
+    auto frames_copy = frames;
+    frames_copy.map(
+        [&](Frame& frame) { frame.callee_port_append(path_element); });
+    new_frames.set(kind, frames_copy);
+  }
+
+  auto new_callee_port = callee_port_;
+  new_callee_port.append(path_element);
+  return CalleePortFrames(new_callee_port, new_frames);
+}
+
 bool CalleePortFrames::contains_kind(const Kind* kind) const {
   for (const auto& [actual_kind, _] : frames_.bindings()) {
     if (actual_kind == kind) {
