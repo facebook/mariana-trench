@@ -38,7 +38,7 @@ public class MainActivity extends Activity {
       redirectIntent.setData(intent.getData());
       if (intent.hasExtra("component")) {
         try {
-          Class name = Class.forName("component");
+          Class name = Class.forName(intent.getStringExtra("component"));
           redirectIntent.setClass(this, name);
         } catch (Exception e) {
 

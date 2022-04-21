@@ -48,29 +48,34 @@ We'll use a small app that is part of our documentation. You can get it by runni
 
 ```shell
 (mariana-trench)$ git clone https://github.com/facebook/mariana-trench
-(mariana-trench)$ cd mariana-trench/documentation/sample-app
+(mariana-trench)$ cd mariana-trench/
 ```
 
 We are now ready to run the analysis
 
 ```shell
 (mariana-trench)$ mariana-trench \
-  --system-jar-configuration-path=$ANDROID_SDK/platforms/android-30/android.jar \
-  --apk-path=sample-app-debug.apk \
-  --source-root-directory=app/src/main/java
+  --system-jar-configuration-path=$ANDROID_SDK/platforms/android-32/android.jar \
+  --model-generator-configuration-paths=configuration/default_generator_config.json \
+  --lifecycles-paths=configuration/lifecycles.json \
+  --rules-paths=configuration/rules.json \
+  --apk-path=documentation/sample-app/app/build/outputs/apk/debug/app-debug.apk \
+  --source-root-directory=documentation/sample-app/app/src/main/java \
+  --model-generator-search-paths=configuration/model-generators/
+
 # ...
-INFO Analyzed 68886 models in 4.04s. Found 4 issues!
+INFO Analyzed 68937 models in 7.47s. Found 9 issues!
 # ...
 ```
 
-The analysis has found 4 issues in our sample app. The output of the analysis is a set of specifications for each method of the application.
+The analysis has found 9 issues in our sample app. The output of the analysis is a set of specifications for each method of the application.
 
 ## Post Processing
 The specifications themselves are not meant to be read by humans. We need an additional processing step in order to make the results more presentable. We do this with [SAPP](https://github.com/facebook/sapp) PyPi installed for us:
 
 ```shell
 (mariana-trench)$ sapp --tool=mariana-trench analyze .
-(mariana-trench)$ sapp --database-name=sapp.db server --source-directory=app/src/main/java
+(mariana-trench)$ sapp --database-name=sapp.db server --source-directory=documentation/sample-app/app/src/main/java
 # ...
 2021-05-12 12:27:22,867 [INFO]  * Running on http://localhost:5000/ (Press CTRL+C to quit)
 ```
