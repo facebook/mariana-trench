@@ -1176,8 +1176,8 @@ TEST_F(FrameSetTest, AttachPosition) {
       test::make_frame(
           test_kind,
           test::FrameProperties{
-              .call_position = test_position,
               .callee_port = AccessPath(Root(Root::Kind::Argument, 0)),
+              .call_position = test_position,
               .origins = MethodSet{two}}),
   };
 
@@ -1190,8 +1190,8 @@ TEST_F(FrameSetTest, AttachPosition) {
           test::make_frame(
               test_kind,
               test::FrameProperties{
-                  .call_position = new_test_position,
                   .callee_port = AccessPath(Root(Root::Kind::Argument, 0)),
+                  .call_position = new_test_position,
                   .origins = MethodSet{two},
                   .locally_inferred_features = FeatureMayAlwaysSet::bottom()}),
           test::make_frame(

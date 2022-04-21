@@ -14,8 +14,8 @@ IsStaticFieldConstraint::IsStaticFieldConstraint(bool expected)
     : expected_(expected) {}
 
 bool IsStaticFieldConstraint::satisfy(const Field* field) const {
-  return (field->dex_field()->get_access() & DexAccessFlags::ACC_STATIC) > 0 ==
-      expected_;
+  return ((field->dex_field()->get_access() & DexAccessFlags::ACC_STATIC) >
+          0) == expected_;
 }
 
 bool IsStaticFieldConstraint::operator==(const FieldConstraint& other) const {

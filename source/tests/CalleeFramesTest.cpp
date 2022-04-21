@@ -329,9 +329,8 @@ TEST_F(CalleeFramesTest, Difference) {
           test::FrameProperties{
               .callee = one,
               .call_position = test_position_one,
-              .inferred_features = FeatureMayAlwaysSet{feature_one},
               .origins = MethodSet{one},
-          }),
+              .inferred_features = FeatureMayAlwaysSet{feature_one}}),
   });
   EXPECT_TRUE(frames.is_bottom());
 
@@ -714,16 +713,16 @@ TEST_F(CalleeFramesTest, Propagate) {
       test::make_frame(
           test_kind_one,
           test::FrameProperties{
-              .call_position = test_position_one,
               .callee_port = AccessPath(Root(Root::Kind::Argument, 0)),
-              .locally_inferred_features = FeatureMayAlwaysSet{feature_one},
+              .call_position = test_position_one,
               .distance = 1,
+              .locally_inferred_features = FeatureMayAlwaysSet{feature_one},
           }),
       test::make_frame(
           test_kind_one,
           test::FrameProperties{
-              .call_position = test_position_one,
               .callee_port = AccessPath(Root(Root::Kind::Anchor)),
+              .call_position = test_position_one,
               .canonical_names = CanonicalNameSetAbstractDomain{CanonicalName(
                   CanonicalName::TemplateValue{"%programmatic_leaf_name%"})}}),
       /* call_position == nullptr */
@@ -785,8 +784,8 @@ TEST_F(CalleeFramesTest, Propagate) {
           test::make_frame(
               test_kind_one,
               test::FrameProperties{
-                  .callee = one,
                   .callee_port = AccessPath(Root(Root::Kind::Argument, 1)),
+                  .callee = one,
                   .call_position = test_position_two,
                   .distance = 1,
                   .inferred_features = FeatureMayAlwaysSet(

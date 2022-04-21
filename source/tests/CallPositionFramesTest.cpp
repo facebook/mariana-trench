@@ -1132,8 +1132,8 @@ TEST_F(CallPositionFramesTest, PropagateDropFrames) {
           test::make_frame(
               test_kind_two,
               test::FrameProperties{
-                  .callee = two,
                   .callee_port = AccessPath(Root(Root::Kind::Argument, 0)),
+                  .callee = two,
                   .call_position = call_position,
                   .distance = 2,
                   .inferred_features = FeatureMayAlwaysSet{user_feature_two},
@@ -1222,8 +1222,8 @@ TEST_F(CallPositionFramesTest, AttachPosition) {
       test::make_frame(
           test_kind,
           test::FrameProperties{
-              .call_position = test_position,
               .callee_port = AccessPath(Root(Root::Kind::Argument, 0)),
+              .call_position = test_position,
               .origins = MethodSet{two}}),
   };
 
@@ -1246,8 +1246,8 @@ TEST_F(CallPositionFramesTest, AttachPosition) {
           test::make_frame(
               test_kind,
               test::FrameProperties{
-                  .call_position = new_test_position,
                   .callee_port = AccessPath(Root(Root::Kind::Argument, 0)),
+                  .call_position = new_test_position,
                   .origins = MethodSet{two},
                   .locally_inferred_features = FeatureMayAlwaysSet::bottom()}),
       }));
@@ -1494,8 +1494,8 @@ TEST_F(CallPositionFramesTest, FilterInvalidFrames) {
       test::make_frame(
           Kinds::artificial_source(),
           test::FrameProperties{
-              .callee = method1,
-              .callee_port = AccessPath(Root(Root::Kind::Argument))})};
+              .callee_port = AccessPath(Root(Root::Kind::Argument)),
+              .callee = method1})};
   frames.filter_invalid_frames(
       /* is_valid */
       [&](const Method* MT_NULLABLE callee,
@@ -1512,8 +1512,8 @@ TEST_F(CallPositionFramesTest, FilterInvalidFrames) {
       test::make_frame(
           Kinds::artificial_source(),
           test::FrameProperties{
-              .callee = method1,
-              .callee_port = AccessPath(Root(Root::Kind::Argument))})};
+              .callee_port = AccessPath(Root(Root::Kind::Argument)),
+              .callee = method1})};
   frames.filter_invalid_frames(
       /* is_valid */
       [&](const Method* MT_NULLABLE /* callee */,
@@ -1526,8 +1526,8 @@ TEST_F(CallPositionFramesTest, FilterInvalidFrames) {
       (CallPositionFrames{test::make_frame(
           Kinds::artificial_source(),
           test::FrameProperties{
-              .callee = method1,
-              .callee_port = AccessPath(Root(Root::Kind::Argument))})}));
+              .callee_port = AccessPath(Root(Root::Kind::Argument)),
+              .callee = method1})}));
 
   // Filter by kind
   frames = CallPositionFrames{
@@ -1535,8 +1535,8 @@ TEST_F(CallPositionFramesTest, FilterInvalidFrames) {
       test::make_frame(
           Kinds::artificial_source(),
           test::FrameProperties{
-              .callee = method1,
-              .callee_port = AccessPath(Root(Root::Kind::Argument))})};
+              .callee_port = AccessPath(Root(Root::Kind::Argument)),
+              .callee = method1})};
   frames.filter_invalid_frames(
       /* is_valid */
       [&](const Method* MT_NULLABLE /* callee */,

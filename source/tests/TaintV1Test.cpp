@@ -833,20 +833,20 @@ TEST_F(TaintV1Test, UpdateNonLeafPositions) {
       test::make_frame(
           /* kind */ context.kinds->get("NonLeafFrame1"),
           test::FrameProperties{
-              .callee = method1,
               .callee_port = AccessPath(Root(Root::Kind::Return)),
+              .callee = method1,
               .call_position = position1}),
       test::make_frame(
           /* kind */ context.kinds->get("NonLeafFrame2"),
           test::FrameProperties{
-              .callee = method2,
               .callee_port = AccessPath(Root(Root::Kind::Argument)),
+              .callee = method2,
               .call_position = position2}),
       test::make_frame(
           /* kind */ context.kinds->get("NonLeafFrame3"),
           test::FrameProperties{
-              .callee = method3,
               .callee_port = AccessPath(Root(Root::Kind::Argument, 1)),
+              .callee = method3,
               .call_position = position3})};
 
   taint.update_non_leaf_positions(
@@ -880,24 +880,24 @@ TEST_F(TaintV1Test, UpdateNonLeafPositions) {
           test::make_frame(
               /* kind */ context.kinds->get("NonLeafFrame1"),
               test::FrameProperties{
-                  .callee = method1,
                   .callee_port = AccessPath(Root(Root::Kind::Return)),
+                  .callee = method1,
                   .call_position = context.positions->get(
                       position1, /* line */ 10, /* start */ 11, /* end */ 12),
                   .local_positions = expected_local_positions}),
           test::make_frame(
               /* kind */ context.kinds->get("NonLeafFrame2"),
               test::FrameProperties{
-                  .callee = method2,
                   .callee_port = AccessPath(Root(Root::Kind::Argument)),
+                  .callee = method2,
                   .call_position = context.positions->get(
                       position2, /* line */ 20, /* start */ 21, /* end */ 22),
                   .local_positions = expected_local_positions}),
           test::make_frame(
               /* kind */ context.kinds->get("NonLeafFrame3"),
               test::FrameProperties{
-                  .callee = method3,
                   .callee_port = AccessPath(Root(Root::Kind::Argument, 1)),
+                  .callee = method3,
                   .call_position = position3,
                   .local_positions = expected_local_positions})}));
 }
@@ -916,8 +916,8 @@ TEST_F(TaintV1Test, FilterInvalidFrames) {
       test::make_frame(
           Kinds::artificial_source(),
           test::FrameProperties{
-              .callee = method1,
-              .callee_port = AccessPath(Root(Root::Kind::Argument))})};
+              .callee_port = AccessPath(Root(Root::Kind::Argument)),
+              .callee = method1})};
   taint.filter_invalid_frames(
       /* is_valid */
       [&](const Method* MT_NULLABLE callee,
@@ -936,8 +936,8 @@ TEST_F(TaintV1Test, FilterInvalidFrames) {
       test::make_frame(
           Kinds::artificial_source(),
           test::FrameProperties{
-              .callee = method1,
-              .callee_port = AccessPath(Root(Root::Kind::Argument))})};
+              .callee_port = AccessPath(Root(Root::Kind::Argument)),
+              .callee = method1})};
   taint.filter_invalid_frames(
       /* is_valid */
       [&](const Method* MT_NULLABLE /* callee */,
@@ -950,8 +950,8 @@ TEST_F(TaintV1Test, FilterInvalidFrames) {
       (TaintV1{test::make_frame(
           Kinds::artificial_source(),
           test::FrameProperties{
-              .callee = method1,
-              .callee_port = AccessPath(Root(Root::Kind::Argument))})}));
+              .callee_port = AccessPath(Root(Root::Kind::Argument)),
+              .callee = method1})}));
 
   // Filter by kind
   taint = TaintV1{
@@ -960,8 +960,8 @@ TEST_F(TaintV1Test, FilterInvalidFrames) {
       test::make_frame(
           Kinds::artificial_source(),
           test::FrameProperties{
-              .callee = method1,
-              .callee_port = AccessPath(Root(Root::Kind::Argument))})};
+              .callee_port = AccessPath(Root(Root::Kind::Argument)),
+              .callee = method1})};
   taint.filter_invalid_frames(
       /* is_valid */
       [&](const Method* MT_NULLABLE /* callee */,

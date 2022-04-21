@@ -1142,11 +1142,11 @@ TEST_F(JsonTest, Frame) {
               test::FrameProperties{
                   .inferred_features = FeatureMayAlwaysSet::make_always(
                       {context.features->get("FeatureTwo")}),
-                  .user_features =
-                      FeatureSet({context.features->get("FeatureThree")}),
                   .locally_inferred_features = FeatureMayAlwaysSet(
                       /* may */ FeatureSet{context.features->get("FeatureOne")},
-                      /* always */ {})})
+                      /* always */ {}),
+                  .user_features =
+                      FeatureSet({context.features->get("FeatureThree")})})
               .to_json()),
       test::parse_json(R"({
         "kind": "TestSource",
