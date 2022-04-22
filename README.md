@@ -77,7 +77,7 @@ The specifications themselves are not meant to be read by humans. We need an add
 (mariana-trench)$ sapp --tool=mariana-trench analyze .
 (mariana-trench)$ sapp --database-name=sapp.db server --source-directory=documentation/sample-app/app/src/main/java
 # ...
-2021-05-12 12:27:22,867 [INFO]  * Running on http://localhost:5000/ (Press CTRL+C to quit)
+2021-05-12 12:27:22,867 [INFO]  * Running on http://localhost:13337/ (Press CTRL+C to quit)
 ```
 
 The last line of the output tells us that SAPP started a local webserver that lets us look at the results. Open the link and you will see the 4 issues found by the analysis.
