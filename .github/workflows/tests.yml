@@ -8,7 +8,7 @@ jobs:
       - uses: actions/checkout@v2
 
       - name: Install dependencies
-        run: brew install cmake zlib boost googletest jsoncpp fmt re2 git
+        run: brew install cmake zlib boost googletest jsoncpp fmt re2
 
 
       - name: Install Redex
@@ -39,7 +39,7 @@ jobs:
 
       - name: Install dependencies
         run: |
-          brew install cmake zlib boost jsoncpp fmt re2
+          brew install cmake zlib boost jsoncpp fmt re2 git
           brew install googletest --build-from-source
           sudo apt install default-jre default-jdk
 
