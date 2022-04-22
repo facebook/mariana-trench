@@ -89,6 +89,36 @@ TEST_F(CallPositionFramesTest, Add) {
                   .origins = MethodSet{two},
                   .inferred_features = FeatureMayAlwaysSet{feature_two}})}));
 
+  // Add frame with a different callee port
+  frames.add(test::make_frame(
+      source_kind_two,
+      test::FrameProperties{
+          .callee_port = AccessPath(Root(Root::Kind::Return)),
+          .origins = MethodSet{two},
+          .inferred_features = FeatureMayAlwaysSet{feature_two}}));
+  EXPECT_EQ(
+      frames,
+      (CallPositionFrames{
+          test::make_frame(
+              source_kind_one,
+              test::FrameProperties{
+                  .origins = MethodSet{one, two},
+                  .inferred_features =
+                      FeatureMayAlwaysSet::make_may({feature_one, feature_two}),
+                  .user_features = FeatureSet{user_feature_one}}),
+          test::make_frame(
+              source_kind_two,
+              test::FrameProperties{
+                  .origins = MethodSet{two},
+                  .inferred_features = FeatureMayAlwaysSet{feature_two}}),
+          test::make_frame(
+              source_kind_two,
+              test::FrameProperties{
+                  .callee_port = AccessPath(Root(Root::Kind::Return)),
+                  .origins = MethodSet{two},
+                  .inferred_features = FeatureMayAlwaysSet{feature_two}})}));
+
+  // Verify frames with non-null position
   CallPositionFrames frames_with_position;
   frames_with_position.add(test::make_frame(
       source_kind_one,
@@ -245,6 +275,39 @@ TEST_F(CallPositionFramesTest, Leq) {
                   .call_position = test_position,
                   .distance = 1,
                   .origins = MethodSet{one}})}));
+
+  // Different callee ports
+  EXPECT_TRUE(
+      (CallPositionFrames{test::make_frame(
+           test_kind_one,
+           test::FrameProperties{
+               .callee_port = AccessPath(Root(Root::Kind::Argument, 0))})})
+          .leq(CallPositionFrames{
+              test::make_frame(
+                  test_kind_one,
+                  test::FrameProperties{
+                      .callee_port =
+                          AccessPath(Root(Root::Kind::Argument, 0))}),
+              test::make_frame(
+                  test_kind_one,
+                  test::FrameProperties{
+                      .callee_port =
+                          AccessPath(Root(Root::Kind::Argument, 1))}),
+          }));
+  EXPECT_FALSE(
+      (CallPositionFrames{
+           test::make_frame(
+               test_kind_one,
+               test::FrameProperties{
+                   .callee_port = AccessPath(Root(Root::Kind::Argument, 0))}),
+           test::make_frame(
+               test_kind_one,
+               test::FrameProperties{
+                   .callee_port = AccessPath(Root(Root::Kind::Argument, 1))})})
+          .leq(CallPositionFrames{test::make_frame(
+              test_kind_one,
+              test::FrameProperties{
+                  .callee_port = AccessPath(Root(Root::Kind::Argument, 0))})}));
 }
 
 TEST_F(CallPositionFramesTest, Equals) {
@@ -327,6 +390,7 @@ TEST_F(CallPositionFramesTest, JoinWith) {
       CallPositionFrames{
           test::make_frame(test_kind_one, test::FrameProperties{})});
 
+  // Join with bottom (non-null call position)
   auto frames = (CallPositionFrames{test::make_frame(
                      test_kind_one,
                      test::FrameProperties{.call_position = test_position})})
@@ -380,6 +444,50 @@ TEST_F(CallPositionFramesTest, JoinWith) {
   frames = CallPositionFrames{frame_one};
   frames.join_with(CallPositionFrames{frame_two});
   EXPECT_EQ(frames, (CallPositionFrames{frame_one}));
+
+  // Join different ports
+  frames = CallPositionFrames{test::make_frame(
+      test_kind_one,
+      test::FrameProperties{
+          .callee_port = AccessPath(Root(Root::Kind::Argument, 0))})};
+  frames.join_with(CallPositionFrames{test::make_frame(
+      test_kind_one,
+      test::FrameProperties{
+          .callee_port = AccessPath(Root(Root::Kind::Argument, 1))})});
+  EXPECT_EQ(
+      frames,
+      (CallPositionFrames{
+          test::make_frame(
+              test_kind_one,
+              test::FrameProperties{
+                  .callee_port = AccessPath(Root(Root::Kind::Argument, 0))}),
+          test::make_frame(
+              test_kind_one,
+              test::FrameProperties{
+                  .callee_port = AccessPath(Root(Root::Kind::Argument, 1))}),
+      }));
+
+  // Join same ports (different kinds)
+  frames = CallPositionFrames{test::make_frame(
+      test_kind_one,
+      test::FrameProperties{
+          .callee_port = AccessPath(Root(Root::Kind::Argument, 0))})};
+  frames.join_with(CallPositionFrames{test::make_frame(
+      test_kind_two,
+      test::FrameProperties{
+          .callee_port = AccessPath(Root(Root::Kind::Argument, 0))})});
+  EXPECT_EQ(
+      frames,
+      (CallPositionFrames{
+          test::make_frame(
+              test_kind_one,
+              test::FrameProperties{
+                  .callee_port = AccessPath(Root(Root::Kind::Argument, 0))}),
+          test::make_frame(
+              test_kind_two,
+              test::FrameProperties{
+                  .callee_port = AccessPath(Root(Root::Kind::Argument, 0))}),
+      }));
 }
 
 TEST_F(CallPositionFramesTest, Difference) {
@@ -1591,6 +1699,11 @@ TEST_F(CallPositionFramesTest, PartitionByKind) {
       test::make_frame(
           test_kind_one, test::FrameProperties{.call_position = test_position}),
       test::make_frame(
+          test_kind_one,
+          test::FrameProperties{
+              .callee_port = AccessPath(Root(Root::Kind::Argument, 0)),
+              .call_position = test_position}),
+      test::make_frame(
           test_kind_two, test::FrameProperties{.call_position = test_position}),
   };
 
@@ -1599,9 +1712,16 @@ TEST_F(CallPositionFramesTest, PartitionByKind) {
   EXPECT_TRUE(frames_by_kind.size() == 2);
   EXPECT_EQ(
       frames_by_kind[test_kind_one],
-      CallPositionFrames{test::make_frame(
-          test_kind_one,
-          test::FrameProperties{.call_position = test_position})});
+      (CallPositionFrames{
+          test::make_frame(
+              test_kind_one,
+              test::FrameProperties{.call_position = test_position}),
+          test::make_frame(
+              test_kind_one,
+              test::FrameProperties{
+                  .callee_port = AccessPath(Root(Root::Kind::Argument, 0)),
+                  .call_position = test_position}),
+      }));
   EXPECT_EQ(frames_by_kind[test_kind_one].position(), test_position);
   EXPECT_EQ(
       frames_by_kind[test_kind_two],
