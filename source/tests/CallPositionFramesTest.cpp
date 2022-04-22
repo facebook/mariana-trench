@@ -310,6 +310,81 @@ TEST_F(CallPositionFramesTest, Leq) {
                   .callee_port = AccessPath(Root(Root::Kind::Argument, 0))})}));
 }
 
+TEST_F(CallPositionFramesTest, ArtificialSourceLeq) {
+  auto context = test::make_empty_context();
+
+  Scope scope;
+  auto* test_kind_one = context.kinds->get("TestSink1");
+
+  // callee_port must be equal for non-artificial taint kinds.
+  EXPECT_TRUE(
+      CallPositionFrames{
+          test::make_frame(
+              test_kind_one,
+              test::FrameProperties{
+                  .callee_port = AccessPath(Root(Root::Kind::Return))})}
+          .leq(CallPositionFrames{test::make_frame(
+              test_kind_one,
+              test::FrameProperties{
+                  .callee_port = AccessPath(Root(Root::Kind::Return))})}));
+  EXPECT_FALSE(
+      CallPositionFrames{
+          test::make_frame(
+              test_kind_one,
+              test::FrameProperties{
+                  .callee_port = AccessPath(Root(Root::Kind::Return))})}
+          .leq(CallPositionFrames{test::make_frame(
+              test_kind_one,
+              test::FrameProperties{
+                  .callee_port = AccessPath(Root(Root::Kind::Argument, 0))})}));
+  EXPECT_FALSE(
+      CallPositionFrames{test::make_frame(
+                             test_kind_one,
+                             test::FrameProperties{
+                                 .callee_port = AccessPath(
+                                     Root(Root::Kind::Argument, 0),
+                                     Path{DexString::make_string("x")})})}
+          .leq(CallPositionFrames{test::make_frame(
+              test_kind_one,
+              test::FrameProperties{
+                  .callee_port = AccessPath(Root(Root::Kind::Argument, 0))})}));
+  EXPECT_FALSE(CallPositionFrames{
+      test::make_frame(
+          test_kind_one,
+          test::FrameProperties{
+              .callee_port = AccessPath(Root(Root::Kind::Argument, 0))})}
+                   .leq(CallPositionFrames{test::make_frame(
+                       test_kind_one,
+                       test::FrameProperties{
+                           .callee_port = AccessPath(
+                               Root(Root::Kind::Argument, 0),
+                               Path{DexString::make_string("x")})})}));
+
+  // For artificial sources, compare the common prefix of callee ports.
+  EXPECT_TRUE(
+      CallPositionFrames{test::make_frame(
+                             Kinds::artificial_source(),
+                             test::FrameProperties{
+                                 .callee_port = AccessPath(
+                                     Root(Root::Kind::Argument, 0),
+                                     Path{DexString::make_string("x")})})}
+          .leq(CallPositionFrames{test::make_frame(
+              Kinds::artificial_source(),
+              test::FrameProperties{
+                  .callee_port = AccessPath(Root(Root::Kind::Argument, 0))})}));
+  EXPECT_FALSE(CallPositionFrames{
+      test::make_frame(
+          Kinds::artificial_source(),
+          test::FrameProperties{
+              .callee_port = AccessPath(Root(Root::Kind::Argument, 0))})}
+                   .leq(CallPositionFrames{test::make_frame(
+                       Kinds::artificial_source(),
+                       test::FrameProperties{
+                           .callee_port = AccessPath(
+                               Root(Root::Kind::Argument, 0),
+                               Path{DexString::make_string("x")})})}));
+}
+
 TEST_F(CallPositionFramesTest, Equals) {
   auto context = test::make_empty_context();
 
@@ -485,6 +560,74 @@ TEST_F(CallPositionFramesTest, JoinWith) {
                   .callee_port = AccessPath(Root(Root::Kind::Argument, 0))}),
           test::make_frame(
               test_kind_two,
+              test::FrameProperties{
+                  .callee_port = AccessPath(Root(Root::Kind::Argument, 0))}),
+      }));
+}
+
+TEST_F(CallPositionFramesTest, ArtificialSourceJoinWith) {
+  auto context = test::make_empty_context();
+  auto* test_kind_one = context.kinds->get("TestSinkOne");
+
+  // Join different ports with same prefix for artificial kinds.
+  // Ports should be collapsed to the common prefix.
+  auto frames = CallPositionFrames{test::make_frame(
+      Kinds::artificial_source(),
+      test::FrameProperties{
+          .callee_port = AccessPath(
+              Root(Root::Kind::Argument, 0),
+              Path{DexString::make_string("x")})})};
+  frames.join_with(CallPositionFrames{test::make_frame(
+      Kinds::artificial_source(),
+      test::FrameProperties{
+          .callee_port = AccessPath(Root(Root::Kind::Argument, 0))})});
+  EXPECT_EQ(
+      frames,
+      CallPositionFrames{test::make_frame(
+          Kinds::artificial_source(),
+          test::FrameProperties{
+              .callee_port = AccessPath(Root(Root::Kind::Argument, 0))})});
+
+  // Join different ports with same prefix, for non-artificial kinds
+  frames = CallPositionFrames{test::make_frame(
+      test_kind_one,
+      test::FrameProperties{
+          .callee_port = AccessPath(
+              Root(Root::Kind::Argument, 0),
+              Path{DexString::make_string("x")})})};
+  frames.join_with(CallPositionFrames{test::make_frame(
+      test_kind_one,
+      test::FrameProperties{
+          .callee_port = AccessPath(Root(Root::Kind::Argument, 0))})});
+  EXPECT_EQ(
+      frames,
+      (CallPositionFrames{
+          test::make_frame(
+              test_kind_one,
+              test::FrameProperties{
+                  .callee_port = AccessPath(
+                      Root(Root::Kind::Argument, 0),
+                      Path{DexString::make_string("x")})}),
+          test::make_frame(
+              test_kind_one,
+              test::FrameProperties{
+                  .callee_port = AccessPath(Root(Root::Kind::Argument, 0))}),
+      }));
+  EXPECT_NE(
+      frames,
+      (CallPositionFrames{
+          test::make_frame(
+              test_kind_one,
+              test::FrameProperties{
+                  .callee_port = AccessPath(
+                      Root(Root::Kind::Argument, 0),
+                      Path{DexString::make_string("x")})}),
+      }));
+  EXPECT_NE(
+      frames,
+      (CallPositionFrames{
+          test::make_frame(
+              test_kind_one,
               test::FrameProperties{
                   .callee_port = AccessPath(Root(Root::Kind::Argument, 0))}),
       }));
