@@ -881,6 +881,76 @@ TEST_F(CalleePortFramesTest, Propagate) {
       }));
 }
 
+TEST_F(CalleePortFramesTest, PropagateDropFrames) {
+  auto context = test::make_empty_context();
+
+  Scope scope;
+  auto* one =
+      context.methods->create(redex::create_void_method(scope, "LOne;", "one"));
+  auto* two =
+      context.methods->create(redex::create_void_method(scope, "LTwo;", "two"));
+
+  auto* test_kind_one = context.kinds->get("TestSinkOne");
+  auto* test_kind_two = context.kinds->get("TestSinkTwo");
+  auto* call_position = context.positions->get("Test.java", 1);
+  auto* user_feature_one = context.features->get("UserFeatureOne");
+  auto* user_feature_two = context.features->get("UserFeatureTwo");
+
+  // Propagating this frame will give it a distance of 2. It is expected to be
+  // dropped as it exceeds the maximum distance allowed.
+  auto frames = CalleePortFrames{
+      test::make_frame(
+          test_kind_one, test::FrameProperties{.callee = one, .distance = 1}),
+  };
+  EXPECT_EQ(
+      frames.propagate(
+          /* callee */ two,
+          /* callee_port */ AccessPath(Root(Root::Kind::Argument, 0)),
+          call_position,
+          /* maximum_source_sink_distance */ 1,
+          context,
+          /* source_register_types */ {},
+          /* source_constant_arguments */ {}),
+      CalleePortFrames::bottom());
+
+  // One of the two frames will be ignored during propagation because its
+  // distance exceeds the maximum distance allowed.
+  frames = CalleePortFrames{
+      test::make_frame(
+          test_kind_one,
+          test::FrameProperties{
+              .callee = one,
+              .distance = 2,
+              .user_features = FeatureSet{user_feature_one}}),
+      test::make_frame(
+          test_kind_two,
+          test::FrameProperties{
+              .callee = one,
+              .distance = 1,
+              .user_features = FeatureSet{user_feature_two}}),
+  };
+  EXPECT_EQ(
+      frames.propagate(
+          /* callee */ two,
+          /* callee_port */ AccessPath(Root(Root::Kind::Argument, 0)),
+          call_position,
+          /* maximum_source_sink_distance */ 2,
+          context,
+          /* source_register_types */ {},
+          /* source_constant_arguments */ {}),
+      (CalleePortFrames{
+          test::make_frame(
+              test_kind_two,
+              test::FrameProperties{
+                  .callee_port = AccessPath(Root(Root::Kind::Argument, 0)),
+                  .callee = two,
+                  .call_position = call_position,
+                  .distance = 2,
+                  .inferred_features = FeatureMayAlwaysSet{user_feature_two},
+                  .locally_inferred_features = FeatureMayAlwaysSet::bottom()}),
+      }));
+}
+
 TEST_F(CalleePortFramesTest, TransformKindWithFeatures) {
   auto context = test::make_empty_context();
 
