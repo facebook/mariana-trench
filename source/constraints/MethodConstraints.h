@@ -222,6 +222,16 @@ class ReturnConstraint final : public MethodConstraint {
   std::unique_ptr<TypeConstraint> inner_constraint_;
 };
 
+class MethodHasStringConstraint final : public MethodConstraint {
+ public:
+  explicit MethodHasStringConstraint(const std::string& regex_string);
+  bool satisfy(const Method* method) const override;
+  bool operator==(const MethodConstraint& other) const override;
+
+ private:
+  re2::RE2 pattern_;
+};
+
 class VisibilityMethodConstraint final : public MethodConstraint {
  public:
   explicit VisibilityMethodConstraint(DexAccessFlags visibility);

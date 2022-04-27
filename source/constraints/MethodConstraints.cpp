@@ -416,6 +416,36 @@ bool ReturnConstraint::operator==(const MethodConstraint& other) const {
   }
 }
 
+MethodHasStringConstraint::MethodHasStringConstraint(
+    const std::string& regex_string)
+    : pattern_(regex_string) {}
+
+bool MethodHasStringConstraint::satisfy(const Method* method) const {
+  const auto& code = method->get_code();
+  if (!code) {
+    return false;
+  }
+  const auto& cfg = code->cfg();
+
+  for (const auto* block : cfg.blocks()) {
+    auto show_block = show(block);
+    if (re2::RE2::PartialMatch(show_block, pattern_)) {
+      return true;
+    }
+  }
+  return false;
+}
+
+bool MethodHasStringConstraint::operator==(
+    const MethodConstraint& other) const {
+  if (auto* other_constraint =
+          dynamic_cast<const MethodHasStringConstraint*>(&other)) {
+    return other_constraint->pattern_.pattern() == pattern_.pattern();
+  } else {
+    return false;
+  }
+}
+
 VisibilityMethodConstraint::VisibilityMethodConstraint(
     DexAccessFlags visibility)
     : visibility_(visibility) {}
@@ -509,6 +539,9 @@ std::unique_ptr<MethodConstraint> MethodConstraint::from_json(
             JsonValidation::object(constraint, /* field */ "inner")));
   } else if (constraint_name == "signature") {
     return std::make_unique<SignatureConstraint>(
+        JsonValidation::string(constraint, /* field */ "pattern"));
+  } else if (constraint_name == "bytecode") {
+    return std::make_unique<MethodHasStringConstraint>(
         JsonValidation::string(constraint, /* field */ "pattern"));
   } else if (constraint_name == "any_of" || constraint_name == "all_of") {
     std::vector<std::unique_ptr<MethodConstraint>> constraints;
