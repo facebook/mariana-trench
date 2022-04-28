@@ -63,6 +63,23 @@
       "where": [
         {
           "constraint": "signature",
+          "pattern": "Ljava/io/FileOutputStream;\\.<init>:.*"
+        }
+      ],
+      "model": {
+        "sinks": [
+          {
+            "kind": "FileResolver",
+            "port": "Argument(1)"
+          }
+        ]
+      }
+    },
+    {
+      "find": "methods",
+      "where": [
+        {
+          "constraint": "signature",
           "pattern": "Ljava/.*InputStream;\\.<init>:.*"
         },
         {
