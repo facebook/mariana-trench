@@ -194,6 +194,34 @@ TEST_F(CalleePortFramesTest, Leq) {
                   .origins = MethodSet{one}})}));
 }
 
+TEST_F(CalleePortFramesTest, ArtificialSourceLeq) {
+  auto context = test::make_empty_context();
+
+  // For artificial sources, compare the common prefix of callee ports.
+  EXPECT_TRUE(
+      CalleePortFrames{test::make_frame(
+                           Kinds::artificial_source(),
+                           test::FrameProperties{
+                               .callee_port = AccessPath(
+                                   Root(Root::Kind::Argument, 0),
+                                   Path{DexString::make_string("x")})})}
+          .leq(CalleePortFrames{test::make_frame(
+              Kinds::artificial_source(),
+              test::FrameProperties{
+                  .callee_port = AccessPath(Root(Root::Kind::Argument, 0))})}));
+  EXPECT_FALSE(CalleePortFrames{
+      test::make_frame(
+          Kinds::artificial_source(),
+          test::FrameProperties{
+              .callee_port = AccessPath(Root(Root::Kind::Argument, 0))})}
+                   .leq(CalleePortFrames{test::make_frame(
+                       Kinds::artificial_source(),
+                       test::FrameProperties{
+                           .callee_port = AccessPath(
+                               Root(Root::Kind::Argument, 0),
+                               Path{DexString::make_string("x")})})}));
+}
+
 TEST_F(CalleePortFramesTest, Equals) {
   auto context = test::make_empty_context();
 
@@ -301,6 +329,27 @@ TEST_F(CalleePortFramesTest, JoinWith) {
   frames = CalleePortFrames{frame_one};
   frames.join_with(CalleePortFrames{frame_two});
   EXPECT_EQ(frames, (CalleePortFrames{frame_one}));
+}
+
+TEST_F(CalleePortFramesTest, ArtificialSourceJoinWith) {
+  // Join different ports with same prefix for artificial kinds.
+  // Ports should be collapsed to the common prefix.
+  auto frames = CalleePortFrames{test::make_frame(
+      Kinds::artificial_source(),
+      test::FrameProperties{
+          .callee_port = AccessPath(
+              Root(Root::Kind::Argument, 0),
+              Path{DexString::make_string("x")})})};
+  frames.join_with(CalleePortFrames{test::make_frame(
+      Kinds::artificial_source(),
+      test::FrameProperties{
+          .callee_port = AccessPath(Root(Root::Kind::Argument, 0))})});
+  EXPECT_EQ(
+      frames,
+      CalleePortFrames{test::make_frame(
+          Kinds::artificial_source(),
+          test::FrameProperties{
+              .callee_port = AccessPath(Root(Root::Kind::Argument, 0))})});
 }
 
 TEST_F(CalleePortFramesTest, Difference) {

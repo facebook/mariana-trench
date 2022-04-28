@@ -107,8 +107,18 @@ void CalleePortFrames::add(const Frame& frame) {
 }
 
 bool CalleePortFrames::leq(const CalleePortFrames& other) const {
-  mt_assert(is_bottom() || other.is_bottom() || has_same_key(other));
-  return frames_.leq(other.frames_);
+  if (is_bottom()) {
+    return true;
+  } else if (other.is_bottom()) {
+    return false;
+  }
+  mt_assert(has_same_key(other));
+
+  if (is_artificial_source_frames()) {
+    return callee_port_.leq(other.callee_port()) && frames_.leq(other.frames_);
+  } else {
+    return frames_.leq(other.frames_);
+  }
 }
 
 bool CalleePortFrames::equals(const CalleePortFrames& other) const {
@@ -124,6 +134,10 @@ void CalleePortFrames::join_with(const CalleePortFrames& other) {
     is_artificial_source_frames_ = other.is_artificial_source_frames();
   }
   mt_assert(other.is_bottom() || has_same_key(other));
+
+  if (!other.is_bottom() && is_artificial_source_frames()) {
+    callee_port_.join_with(other.callee_port_);
+  }
 
   frames_.join_with(other.frames_);
 

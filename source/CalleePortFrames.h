@@ -284,6 +284,13 @@ class CalleePortFrames final : public sparta::AbstractDomain<CalleePortFrames> {
    * The only exception is if one of them `is_bottom()`.
    */
   bool has_same_key(const CalleePortFrames& other) const {
+    if (is_artificial_source_frames_) {
+      // For artificial sources, the callee port is considered equal if they
+      // share the same root.
+      return other.is_artificial_source_frames_ &&
+          callee_port_.root() == other.callee_port_.root();
+    }
+
     return callee_port_ == other.callee_port() &&
         is_artificial_source_frames_ == other.is_artificial_source_frames_;
   }
