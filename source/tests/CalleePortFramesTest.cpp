@@ -1159,7 +1159,8 @@ TEST_F(CalleePortFramesTest, FilterInvalidFrames) {
   Scope scope;
   auto* method1 =
       context.methods->create(redex::create_void_method(scope, "LOne;", "one"));
-  auto* test_kind = context.kinds->get("TestSource");
+  auto* test_kind_one = context.kinds->get("TestSourceOne");
+  auto* test_kind_two = context.kinds->get("TestSourceTwo");
 
   // Filter by callee. In practice, this scenario where the frames each contain
   // a different callee will not happen. These frames will be never show up in
@@ -1170,11 +1171,11 @@ TEST_F(CalleePortFramesTest, FilterInvalidFrames) {
   // change.
   auto frames = CalleePortFrames{
       test::make_frame(
-          test_kind,
+          test_kind_one,
           test::FrameProperties{
               .callee_port = AccessPath(Root(Root::Kind::Argument))}),
       test::make_frame(
-          Kinds::artificial_source(),
+          test_kind_two,
           test::FrameProperties{
               .callee_port = AccessPath(Root(Root::Kind::Argument)),
               .callee = method1})};
@@ -1186,7 +1187,7 @@ TEST_F(CalleePortFramesTest, FilterInvalidFrames) {
   EXPECT_EQ(
       frames,
       (CalleePortFrames{test::make_frame(
-          test_kind,
+          test_kind_one,
           test::FrameProperties{
               .callee_port = AccessPath(Root(Root::Kind::Argument))})}));
 
@@ -1229,11 +1230,11 @@ TEST_F(CalleePortFramesTest, FilterInvalidFrames) {
   // Filter by kind
   frames = CalleePortFrames{
       test::make_frame(
-          test_kind,
+          test_kind_one,
           test::FrameProperties{
               .callee_port = AccessPath(Root(Root::Kind::Argument))}),
       test::make_frame(
-          Kinds::artificial_source(),
+          test_kind_two,
           test::FrameProperties{
               .callee_port = AccessPath(Root(Root::Kind::Argument)),
               .callee = method1})};
@@ -1241,11 +1242,11 @@ TEST_F(CalleePortFramesTest, FilterInvalidFrames) {
       /* is_valid */
       [&](const Method* MT_NULLABLE /* callee */,
           const AccessPath& /* callee_port */,
-          const Kind* kind) { return kind != Kinds::artificial_source(); });
+          const Kind* kind) { return kind != test_kind_two; });
   EXPECT_EQ(
       frames,
       (CalleePortFrames{test::make_frame(
-          test_kind,
+          test_kind_one,
           test::FrameProperties{
               .callee_port = AccessPath(Root(Root::Kind::Argument))})}));
 }
@@ -1274,11 +1275,14 @@ TEST_F(CalleePortFramesTest, ContainsKind) {
 
   auto frames = CalleePortFrames{
       test::make_frame(
-          /* kind */ context.kinds->get("TestSource"), test::FrameProperties{}),
-      test::make_frame(Kinds::artificial_source(), test::FrameProperties{})};
+          /* kind */ context.kinds->get("TestSourceOne"),
+          test::FrameProperties{}),
+      test::make_frame(
+          /* kind */ context.kinds->get("TestSourceTwo"),
+          test::FrameProperties{})};
 
-  EXPECT_TRUE(frames.contains_kind(Kinds::artificial_source()));
-  EXPECT_TRUE(frames.contains_kind(context.kinds->get("TestSource")));
+  EXPECT_TRUE(frames.contains_kind(context.kinds->get("TestSourceOne")));
+  EXPECT_TRUE(frames.contains_kind(context.kinds->get("TestSourceTwo")));
   EXPECT_FALSE(frames.contains_kind(context.kinds->get("TestSink")));
 }
 

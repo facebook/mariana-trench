@@ -64,16 +64,24 @@ class CalleePortFrames final : public sparta::AbstractDomain<CalleePortFrames> {
   using const_pointer = const Frame*;
 
  private:
-  explicit CalleePortFrames(AccessPath callee_port, FramesByKind frames)
-      : callee_port_(std::move(callee_port)), frames_(std::move(frames)) {}
+  explicit CalleePortFrames(
+      AccessPath callee_port,
+      bool is_artificial_source_frames,
+      FramesByKind frames)
+      : callee_port_(std::move(callee_port)),
+        is_artificial_source_frames_(is_artificial_source_frames),
+        frames_(std::move(frames)) {}
 
  public:
   /**
-   * Create the bottom (i.e, empty) frame set. Value of callee_port_ doesn't
-   * matter, so we pick some default and Leaf seems like a decent choice.
+   * Create the bottom (i.e, empty) frame set. Value of callee_port_ and
+   * is_artificial_source_frames_ don't matter, so we pick some default. Leaf
+   * and false respectively seem like decent choices.
    */
   CalleePortFrames()
-      : callee_port_(Root(Root::Kind::Leaf)), frames_(FramesByKind::bottom()) {}
+      : callee_port_(Root(Root::Kind::Leaf)),
+        is_artificial_source_frames_(false),
+        frames_(FramesByKind::bottom()) {}
 
   explicit CalleePortFrames(std::initializer_list<Frame> frames);
 
@@ -85,12 +93,14 @@ class CalleePortFrames final : public sparta::AbstractDomain<CalleePortFrames> {
   static CalleePortFrames bottom() {
     return CalleePortFrames(
         /* callee_port */ AccessPath(Root(Root::Kind::Leaf)),
+        /* is_artificial_source_frames */ false,
         FramesByKind::bottom());
   }
 
   static CalleePortFrames top() {
     return CalleePortFrames(
         /* callee_port */ AccessPath(Root(Root::Kind::Leaf)),
+        /* is_artificial_source_frames */ false,
         FramesByKind::top());
   }
 
@@ -104,11 +114,13 @@ class CalleePortFrames final : public sparta::AbstractDomain<CalleePortFrames> {
 
   void set_to_bottom() override {
     callee_port_ = AccessPath(Root(Root::Kind::Leaf));
+    is_artificial_source_frames_ = false;
     frames_.set_to_bottom();
   }
 
   void set_to_top() override {
     callee_port_ = AccessPath(Root(Root::Kind::Leaf));
+    is_artificial_source_frames_ = false;
     frames_.set_to_top();
   }
 
@@ -118,6 +130,10 @@ class CalleePortFrames final : public sparta::AbstractDomain<CalleePortFrames> {
 
   const AccessPath& callee_port() const {
     return callee_port_;
+  }
+
+  bool is_artificial_source_frames() const {
+    return is_artificial_source_frames_;
   }
 
   void add(const Frame& frame);
@@ -207,7 +223,9 @@ class CalleePortFrames final : public sparta::AbstractDomain<CalleePortFrames> {
     for (const auto& [kind, kind_frames] : frames_.bindings()) {
       T mapped_value = map_kind(kind);
       auto new_frames = CalleePortFrames(
-          callee_port_, FramesByKind{std::pair(kind, kind_frames)});
+          callee_port_,
+          is_artificial_source_frames_,
+          FramesByKind{std::pair(kind, kind_frames)});
 
       auto existing = result.find(mapped_value);
       auto existing_or_bottom = existing == result.end()
@@ -260,8 +278,19 @@ class CalleePortFrames final : public sparta::AbstractDomain<CalleePortFrames> {
       const std::vector<const DexType * MT_NULLABLE>& source_register_types,
       std::vector<std::reference_wrapper<const Frame>> frames) const;
 
+  /**
+   * Checks that this object and `other` have the same key. Abstract domain
+   * operations here only operate on `CalleePortFrames` that have the same key.
+   * The only exception is if one of them `is_bottom()`.
+   */
+  bool has_same_key(const CalleePortFrames& other) const {
+    return callee_port_ == other.callee_port() &&
+        is_artificial_source_frames_ == other.is_artificial_source_frames_;
+  }
+
  private:
   AccessPath callee_port_;
+  bool is_artificial_source_frames_;
   FramesByKind frames_;
 
   // TODO(T91357916): Move local_positions and local_features here from `Frame`.

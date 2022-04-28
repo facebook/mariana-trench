@@ -82,7 +82,8 @@ void materialize_via_value_of_ports(
 } // namespace
 
 CalleePortFrames::CalleePortFrames(std::initializer_list<Frame> frames)
-    : callee_port_(Root(Root::Kind::Leaf)) {
+    : callee_port_(Root(Root::Kind::Leaf)),
+      is_artificial_source_frames_(false) {
   for (const auto& frame : frames) {
     add(frame);
   }
@@ -91,8 +92,11 @@ CalleePortFrames::CalleePortFrames(std::initializer_list<Frame> frames)
 void CalleePortFrames::add(const Frame& frame) {
   if (is_bottom()) {
     callee_port_ = frame.callee_port();
+    is_artificial_source_frames_ = frame.is_artificial_source();
   } else {
-    mt_assert(callee_port_ == frame.callee_port());
+    mt_assert(
+        callee_port_ == frame.callee_port() &&
+        is_artificial_source_frames_ == frame.is_artificial_source());
   }
 
   frames_.update(frame.kind(), [&](const Frames& old_frames) {
@@ -103,14 +107,12 @@ void CalleePortFrames::add(const Frame& frame) {
 }
 
 bool CalleePortFrames::leq(const CalleePortFrames& other) const {
-  mt_assert(
-      is_bottom() || other.is_bottom() || callee_port_ == other.callee_port());
+  mt_assert(is_bottom() || other.is_bottom() || has_same_key(other));
   return frames_.leq(other.frames_);
 }
 
 bool CalleePortFrames::equals(const CalleePortFrames& other) const {
-  mt_assert(
-      is_bottom() || other.is_bottom() || callee_port_ == other.callee_port());
+  mt_assert(is_bottom() || other.is_bottom() || has_same_key(other));
   return frames_.equals(other.frames_);
 }
 
@@ -119,8 +121,9 @@ void CalleePortFrames::join_with(const CalleePortFrames& other) {
 
   if (is_bottom()) {
     callee_port_ = other.callee_port();
+    is_artificial_source_frames_ = other.is_artificial_source_frames();
   }
-  mt_assert(other.is_bottom() || callee_port_ == other.callee_port());
+  mt_assert(other.is_bottom() || has_same_key(other));
 
   frames_.join_with(other.frames_);
 
@@ -132,8 +135,9 @@ void CalleePortFrames::widen_with(const CalleePortFrames& other) {
 
   if (is_bottom()) {
     callee_port_ = other.callee_port();
+    is_artificial_source_frames_ = other.is_artificial_source_frames();
   }
-  mt_assert(other.is_bottom() || callee_port_ == other.callee_port());
+  mt_assert(other.is_bottom() || has_same_key(other));
 
   frames_.widen_with(other.frames_);
 
@@ -143,8 +147,9 @@ void CalleePortFrames::widen_with(const CalleePortFrames& other) {
 void CalleePortFrames::meet_with(const CalleePortFrames& other) {
   if (is_bottom()) {
     callee_port_ = other.callee_port();
+    is_artificial_source_frames_ = other.is_artificial_source_frames();
   }
-  mt_assert(other.is_bottom() || callee_port_ == other.callee_port());
+  mt_assert(other.is_bottom() || has_same_key(other));
 
   frames_.meet_with(other.frames_);
 }
@@ -152,8 +157,9 @@ void CalleePortFrames::meet_with(const CalleePortFrames& other) {
 void CalleePortFrames::narrow_with(const CalleePortFrames& other) {
   if (is_bottom()) {
     callee_port_ = other.callee_port();
+    is_artificial_source_frames_ = other.is_artificial_source_frames();
   }
-  mt_assert(other.is_bottom() || callee_port_ == other.callee_port());
+  mt_assert(other.is_bottom() || has_same_key(other));
 
   frames_.narrow_with(other.frames_);
 }
@@ -161,8 +167,9 @@ void CalleePortFrames::narrow_with(const CalleePortFrames& other) {
 void CalleePortFrames::difference_with(const CalleePortFrames& other) {
   if (is_bottom()) {
     callee_port_ = other.callee_port();
+    is_artificial_source_frames_ = other.is_artificial_source_frames();
   }
-  mt_assert(other.is_bottom() || callee_port_ == other.callee_port());
+  mt_assert(other.is_bottom() || has_same_key(other));
 
   frames_.difference_like_operation(
       other.frames_, [](const Frames& frames_left, const Frames& frames_right) {
@@ -303,7 +310,8 @@ CalleePortFrames CalleePortFrames::transform_kind_with_features(
       }
     }
   }
-  return CalleePortFrames(callee_port_, new_frames_by_kind);
+  return CalleePortFrames(
+      callee_port_, is_artificial_source_frames_, new_frames_by_kind);
 }
 
 CalleePortFrames CalleePortFrames::append_callee_port(
@@ -325,7 +333,8 @@ CalleePortFrames CalleePortFrames::append_callee_port(
 
   auto new_callee_port = callee_port_;
   new_callee_port.append(path_element);
-  return CalleePortFrames(new_callee_port, new_frames);
+  return CalleePortFrames(
+      new_callee_port, is_artificial_source_frames_, new_frames);
 }
 
 void CalleePortFrames::filter_invalid_frames(
