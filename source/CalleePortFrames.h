@@ -269,7 +269,7 @@ class CalleePortFrames final : public sparta::AbstractDomain<CalleePortFrames> {
       std::vector<std::reference_wrapper<const Frame>> frames,
       std::vector<const Feature*>& via_type_of_features_added) const;
 
-  CalleePortFrames propagate_crtex_frames(
+  CalleePortFrames propagate_crtex_leaf_frames(
       const Method* callee,
       const AccessPath& callee_port,
       const Position* call_position,

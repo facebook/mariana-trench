@@ -891,15 +891,16 @@ TEST_F(CalleePortFramesTest, Propagate) {
 
   auto expected_instantiated_name =
       CanonicalName(CanonicalName::InstantiatedValue{two->signature()});
+  auto propagated_crtex_frames = crtex_frames.propagate(
+      /* callee */ two,
+      /* callee_port */ AccessPath(Root(Root::Kind::Argument, 0)),
+      call_position,
+      /* maximum_source_sink_distance */ 100,
+      context,
+      /* source_register_types */ {},
+      /* source_constant_arguments */ {});
   EXPECT_EQ(
-      crtex_frames.propagate(
-          /* callee */ two,
-          /* callee_port */ AccessPath(Root(Root::Kind::Argument, 0)),
-          call_position,
-          /* maximum_source_sink_distance */ 100,
-          context,
-          /* source_register_types */ {},
-          /* source_constant_arguments */ {}),
+      propagated_crtex_frames,
       (CalleePortFrames{
           test::make_frame(
               test_kind_one,
@@ -927,6 +928,41 @@ TEST_F(CalleePortFramesTest, Propagate) {
                   .canonical_names = CanonicalNameSetAbstractDomain(
                       CanonicalName(CanonicalName::InstantiatedValue{
                           "constant value"}))}),
+      }));
+
+  // Test propagating crtex-like frames (callee port == anchor.<path>),
+  // specifically, propagate the propagated frames above again. These frames
+  // originate from crtex leaves, but are not themselves the leaves.
+  EXPECT_EQ(
+      propagated_crtex_frames.propagate(
+          /* callee */ two,
+          /* callee_port */ AccessPath(Root(Root::Kind::Argument, 0)),
+          call_position,
+          /* maximum_source_sink_distance */ 100,
+          context,
+          /* source_register_types */ {},
+          /* source_constant_arguments */ {}),
+      (CalleePortFrames{
+          test::make_frame(
+              test_kind_one,
+              test::FrameProperties{
+                  .callee_port = AccessPath(Root(Root::Kind::Argument, 0)),
+                  .callee = two,
+                  .call_position = call_position,
+                  .distance = 1,
+                  .origins = MethodSet{one},
+                  .locally_inferred_features = FeatureMayAlwaysSet::bottom(),
+              }),
+          test::make_frame(
+              test_kind_two,
+              test::FrameProperties{
+                  .callee_port = AccessPath(Root(Root::Kind::Argument, 0)),
+                  .callee = two,
+                  .call_position = call_position,
+                  .distance = 1,
+                  .origins = MethodSet{one},
+                  .locally_inferred_features = FeatureMayAlwaysSet::bottom(),
+              }),
       }));
 }
 

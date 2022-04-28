@@ -265,9 +265,11 @@ CalleePortFrames CalleePortFrames::propagate(
       [](const Frame& frame) { return frame.kind(); });
 
   for (const auto& [kind, frames] : partitioned_by_kind) {
-    if (callee_port_.root().is_anchor()) {
-      // These are CRTEX frames.
-      result.join_with(propagate_crtex_frames(
+    if (callee_port_.root().is_anchor() && callee_port_.path().size() == 0) {
+      // These are CRTEX leaf frames. CRTEX is identified by the "anchor" port,
+      // leaf-ness is identified by the path() length. Once a CRTEX frame is
+      // propagated, it's path is never empty.
+      result.join_with(propagate_crtex_leaf_frames(
           callee,
           callee_port,
           call_position,
@@ -276,7 +278,6 @@ CalleePortFrames CalleePortFrames::propagate(
           source_register_types,
           frames));
     } else {
-      // Non-CRTEX frames can be joined into the same callee
       std::vector<const Feature*> via_type_of_features_added;
       auto non_crtex_frame = propagate_frames(
           callee,
@@ -458,7 +459,7 @@ Frame CalleePortFrames::propagate_frames(
       /* canonical_names */ {});
 }
 
-CalleePortFrames CalleePortFrames::propagate_crtex_frames(
+CalleePortFrames CalleePortFrames::propagate_crtex_leaf_frames(
     const Method* callee,
     const AccessPath& callee_port,
     const Position* call_position,
