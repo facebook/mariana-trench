@@ -105,6 +105,12 @@ TEST_P(IntegrationTest, CompareFlows) {
     lifecycles_paths.emplace_back(lifecycles_path.native());
   }
 
+  std::vector<std::string> shims_paths;
+  auto shims_path = directory / "shims.json";
+  if (boost::filesystem::exists(shims_path)) {
+    shims_paths.emplace_back(shims_path.native());
+  }
+
   auto generator_configuration_file = directory / "/generator_config.json";
   std::vector<ModelGeneratorConfiguration> model_generators_configurations;
   if (boost::filesystem::exists(generator_configuration_file)) {
@@ -140,6 +146,7 @@ TEST_P(IntegrationTest, CompareFlows) {
       std::vector<std::string>{(directory / "/rules.json").native()},
       /* lifecycles_paths */
       lifecycles_paths,
+      /* shims_path */ shims_paths,
       /* proguard_configuration_paths */ std::vector<std::string>{},
       /* sequential */ true,
       /* skip_source_indexing */ false,

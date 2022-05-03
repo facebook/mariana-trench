@@ -26,6 +26,7 @@ class Options final {
       const std::vector<std::string>& field_models_paths,
       const std::vector<std::string>& rules_paths,
       const std::vector<std::string>& lifecycles_paths,
+      const std::vector<std::string>& shims_paths,
       const std::vector<std::string>& proguard_configuration_paths,
       bool sequential,
       bool skip_source_indexing,
@@ -50,6 +51,7 @@ class Options final {
   model_generators_configuration() const;
   const std::vector<std::string>& rules_paths() const;
   const std::vector<std::string>& lifecycles_paths() const;
+  const std::vector<std::string>& shims_paths() const;
   const std::vector<std::string>& proguard_configuration_paths() const;
   const std::optional<std::string>& generated_models_directory() const;
 
@@ -100,6 +102,7 @@ class Options final {
   std::vector<std::string> field_models_paths_;
   std::vector<std::string> rules_paths_;
   std::vector<std::string> lifecycles_paths_;
+  std::vector<std::string> shims_paths_;
   std::vector<std::string> proguard_configuration_paths_;
 
   std::vector<std::string> generator_configuration_paths_;

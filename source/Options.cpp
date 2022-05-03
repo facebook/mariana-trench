@@ -97,6 +97,7 @@ Options::Options(
     const std::vector<std::string>& field_models_paths,
     const std::vector<std::string>& rules_paths,
     const std::vector<std::string>& lifecycles_paths,
+    const std::vector<std::string>& shims_paths,
     const std::vector<std::string>& proguard_configuration_paths,
     bool sequential,
     bool skip_source_indexing,
@@ -110,6 +111,7 @@ Options::Options(
       field_models_paths_(field_models_paths),
       rules_paths_(rules_paths),
       lifecycles_paths_(lifecycles_paths),
+      shims_paths_(shims_paths),
       proguard_configuration_paths_(proguard_configuration_paths),
       model_generators_configuration_(model_generators_configuration),
       model_generator_search_paths_(model_generator_search_paths),
@@ -148,6 +150,12 @@ Options::Options(const boost::program_options::variables_map& variables) {
   if (!variables["lifecycles-paths"].empty()) {
     lifecycles_paths_ = parse_paths_list(
         variables["lifecycles-paths"].as<std::string>(),
+        /* extension */ ".json");
+  }
+
+  if (!variables["shims-paths"].empty()) {
+    shims_paths_ = parse_paths_list(
+        variables["shims-paths"].as<std::string>(),
         /* extension */ ".json");
   }
 
@@ -253,6 +261,10 @@ void Options::add_options(
       program_options::value<std::string>(),
       "A `;` separated list of files and directories containing life-cycles files.");
   options.add_options()(
+      "shims-paths",
+      program_options::value<std::string>(),
+      "A `;` separated list of files and directories containing shims files.");
+  options.add_options()(
       "generated-models-directory",
       program_options::value<std::string>(),
       "Directory where generated models will be stored.");
@@ -354,6 +366,10 @@ const std::vector<std::string>& Options::rules_paths() const {
 
 const std::vector<std::string>& Options::lifecycles_paths() const {
   return lifecycles_paths_;
+}
+
+const std::vector<std::string>& Options::shims_paths() const {
+  return shims_paths_;
 }
 
 const std::vector<std::string>& Options::proguard_configuration_paths() const {
