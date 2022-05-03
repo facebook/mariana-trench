@@ -351,6 +351,12 @@ def _add_configuration_arguments(parser: argparse.ArgumentParser) -> None:
         help="A `;`-separated list of files and directories containing lifecycle definitions.",
     )
     configuration_arguments.add_argument(
+        "--shims-paths",
+        type=_separated_paths_exist,
+        default=None,
+        help="A `;`-separated list of files and directories containing shim definitions.",
+    )
+    configuration_arguments.add_argument(
         "--model-generator-configuration-paths",
         type=_separated_paths_exist,
         default=os.fspath(configuration.get_path("default_generator_config.json")),
@@ -502,6 +508,10 @@ def _get_command_options(
     if arguments.lifecycles_paths:
         options.append("--lifecycles-paths")
         options.append(arguments.lifecycles_paths)
+
+    if arguments.shims_paths:
+        options.append("--shims-paths")
+        options.append(arguments.shims_paths)
 
     if arguments.source_exclude_directories:
         options.append("--source-exclude-directories")
