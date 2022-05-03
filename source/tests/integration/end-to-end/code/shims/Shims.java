@@ -28,11 +28,17 @@ class HandlerTwo extends Handler {
 }
 
 class Messenger {
-  Messenger() {}
+  Messenger() {
+    // No artificial call
+  }
 
-  Messenger(Handler handle) {}
+  Messenger(Handler handle) {
+    // Expect artificial call: handle.handleMessage(<dropped>)
+  }
 
-  Messenger(Handler handle, Object o) {}
+  Messenger(Handler handle, Object o) {
+    // Expect artificial call: handler.handleMessage(o)
+  }
 }
 
 class FragmentActivity extends Activity {
@@ -46,61 +52,96 @@ class FragmentActivity extends Activity {
 
 class FragmentTest {
   public void add(Class<? extends FragmentActivity> fragmentClass) {
-    // Expect artificial call to: <fragmentClass instance>.onActivityCreate()
+    // Expect artificial call: <fragmentClass instance>.onActivityCreate()
   }
 
   public void add(Activity activity) {
-    // Expect artificial call to: activity.onCreate()
+    // Expect artificial call: activity.onCreate()
   }
 }
 
-class CallOnTest {
-  CallOnTest(Handler handlerOne, Handler handlerTwo, Object objectOne, Object objectTwo) {}
+class ShimTarget {
+  ShimTarget() {}
+
+  void multipleArguments(int i, String s, Object o) {
+    Origin.sink(o);
+  }
+}
+
+class ParameterMapping {
+  ParameterMapping() {}
+
+  ParameterMapping(Handler handlerOne, Handler handlerTwo, Object objectOne, Object objectTwo) {
+    // Expect artificial call: handlerTwo.handlerMessage(objectTwo)
+  }
+
+  void inferred(ShimTarget shimTarget, Object o) {
+    // Expect artificial call: shimTarget.multipleArguments(<dropped>, <dropped>, o)
+  }
+
+  void defined(ShimTarget shimTarget, Object o, String s) {
+    // Expect artificial call: shimTarget.multipleArguments(<dropped>, <dropped>, o)
+  }
 }
 
 public class Shims {
-  static Messenger getMessageHandler(boolean condition) {
-    if (condition) {
-      return new Messenger(new HandlerOne());
-    } else {
-      return new Messenger(new HandlerTwo());
-    }
+  static Messenger getMessenger(Handler handler) {
+    return new Messenger(handler);
   }
 
-  static Messenger messageHandlerOneNoIssue() {
+  static Messenger testMessengerNoShim() {
+    return new Messenger();
+  }
+
+  static Messenger testMessageHandlerOneNoIssue() {
     Handler handler = new HandlerOne();
     return new Messenger(handler);
   }
 
-  static Messenger messageHandlerOneIssue() {
+  static Messenger testMessageHandlerOneIssue() {
     Handler handler = new HandlerOne();
     return new Messenger(handler, Origin.source());
   }
 
-  static Messenger messageHandlerOneWithHop() {
-    return getMessageHandler(true);
+  static Messenger testMessageHandlerOneWithHop() {
+    return getMessenger(new HandlerOne());
   }
 
-  static Messenger messageHandlerTwoWithHop() {
-    return getMessageHandler(false);
+  static Messenger testMessageHandlerTwoWithHop() {
+    return getMessenger(new HandlerTwo());
   }
 
-  static void fragmentInstance() {
+  static void testFragmentInstance() {
     FragmentTest ft = new FragmentTest();
     ft.add(new FragmentActivity());
   }
 
-  static void fragmentReflection() {
+  static void testFragmentReflection() {
     FragmentTest ft = new FragmentTest();
     // FN: Type of CONST_CLASS is not stored in TypeEnvironment.
     ft.add(FragmentActivity.class);
   }
 
-  static CallOnTest callOnTestIssue() {
-    return new CallOnTest(new Handler(), new HandlerOne(), new Object(), Origin.source());
+  static ParameterMapping testParameterMappingIssue() {
+    return new ParameterMapping(new Handler(), new HandlerOne(), new Object(), Origin.source());
   }
 
-  static CallOnTest callOnTestNoIssue() {
-    return new CallOnTest(new Handler(), new HandlerOne(), Origin.source(), new Object());
+  static ParameterMapping testParameterMappingNoIssue() {
+    return new ParameterMapping(new Handler(), new HandlerOne(), Origin.source(), new Object());
+  }
+
+  static void testDirectShimTarget() {
+    ShimTarget st = new ShimTarget();
+    st.multipleArguments(1, "", Origin.source());
+  }
+
+  static void testDropArgumentInferred() {
+    ParameterMapping c = new ParameterMapping();
+    c.inferred(new ShimTarget(), Origin.source());
+  }
+
+  static void testDropArgumentDefined() {
+    ParameterMapping c = new ParameterMapping();
+    c.defined(new ShimTarget(), Origin.source(), "string");
   }
 }

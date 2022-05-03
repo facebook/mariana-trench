@@ -1,527 +1,600 @@
 // @generated
 {
-  "Landroid/app/Activity;.<init>:()V" : 
+  "Landroid/app/Activity;.<init>:()V" :
   {
-    "static" : 
+    "static" :
     [
       "Landroid/content/Context;.<init>:()V"
     ]
   },
-  "Landroid/app/Activity;.getIntent:()Landroid/content/Intent;" : 
+  "Landroid/app/Activity;.getIntent:()Landroid/content/Intent;" :
   {
-    "static" : 
+    "static" :
     [
       "Landroid/content/Intent;.<init>:()V"
     ]
   },
-  "Landroid/content/ContentProvider;.<init>:()V" : 
+  "Landroid/content/ContentProvider;.<init>:()V" :
   {
-    "static" : 
+    "static" :
     [
       "Ljava/lang/Object;.<init>:()V"
     ]
   },
-  "Landroid/content/ContentProvider;.query:(Landroid/net/Uri;[Ljava/lang/String;Ljava/lang/String;[Ljava/lang/String;Ljava/lang/String;)Landroid/database/Cursor;" : 
+  "Landroid/content/ContentProvider;.query:(Landroid/net/Uri;[Ljava/lang/String;Ljava/lang/String;[Ljava/lang/String;Ljava/lang/String;)Landroid/database/Cursor;" :
   {
-    "static" : 
+    "static" :
     [
       "Landroid/database/Cursor;.<init>:()V"
     ]
   },
-  "Landroid/content/Context;.<init>:()V" : 
+  "Landroid/content/Context;.<init>:()V" :
   {
-    "static" : 
+    "static" :
     [
       "Ljava/lang/Object;.<init>:()V"
     ]
   },
-  "Landroid/content/Intent;.<init>:()V" : 
+  "Landroid/content/Intent;.<init>:()V" :
   {
-    "static" : 
+    "static" :
     [
       "Ljava/lang/Object;.<init>:()V"
     ]
   },
-  "Landroid/content/Intent;.<init>:(Ljava/lang/String;Landroid/net/Uri;)V" : 
+  "Landroid/content/Intent;.<init>:(Ljava/lang/String;Landroid/net/Uri;)V" :
   {
-    "static" : 
+    "static" :
     [
       "Ljava/lang/Object;.<init>:()V"
     ]
   },
-  "Landroid/content/Intent;.getBundleExtra:(Ljava/lang/String;)Landroid/os/Bundle;" : 
+  "Landroid/content/Intent;.getBundleExtra:(Ljava/lang/String;)Landroid/os/Bundle;" :
   {
-    "static" : 
+    "static" :
     [
       "Landroid/os/Bundle;.<init>:()V"
     ]
   },
-  "Landroid/content/Intent;.getData:()Landroid/net/Uri;" : 
+  "Landroid/content/Intent;.getData:()Landroid/net/Uri;" :
   {
-    "static" : 
+    "static" :
     [
       "Landroid/net/Uri;.<init>:()V"
     ]
   },
-  "Landroid/content/Intent;.getExtras:()Landroid/os/Bundle;" : 
+  "Landroid/content/Intent;.getExtras:()Landroid/os/Bundle;" :
   {
-    "static" : 
+    "static" :
     [
       "Landroid/os/Bundle;.<init>:()V"
     ]
   },
-  "Landroid/database/Cursor;.<init>:()V" : 
+  "Landroid/database/Cursor;.<init>:()V" :
   {
-    "static" : 
+    "static" :
     [
       "Ljava/lang/Object;.<init>:()V"
     ]
   },
-  "Landroid/location/Location;.<init>:()V" : 
+  "Landroid/location/Location;.<init>:()V" :
   {
-    "static" : 
+    "static" :
     [
       "Ljava/lang/Object;.<init>:()V"
     ]
   },
-  "Landroid/net/Uri$Builder;.<init>:()V" : 
+  "Landroid/net/Uri$Builder;.<init>:()V" :
   {
-    "static" : 
+    "static" :
     [
       "Ljava/lang/Object;.<init>:()V"
     ]
   },
-  "Landroid/net/Uri$Builder;.build:()Landroid/net/Uri;" : 
+  "Landroid/net/Uri$Builder;.build:()Landroid/net/Uri;" :
   {
-    "static" : 
+    "static" :
     [
       "Landroid/net/Uri;.<init>:(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V"
     ]
   },
-  "Landroid/net/Uri;.<init>:()V" : 
+  "Landroid/net/Uri;.<init>:()V" :
   {
-    "static" : 
+    "static" :
     [
       "Ljava/lang/Object;.<init>:()V"
     ]
   },
-  "Landroid/net/Uri;.<init>:(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V" : 
+  "Landroid/net/Uri;.<init>:(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V" :
   {
-    "static" : 
+    "static" :
     [
       "Ljava/lang/Object;.<init>:()V"
     ]
   },
-  "Landroid/net/Uri;.parse:(Ljava/lang/String;)Landroid/net/Uri;" : 
+  "Landroid/net/Uri;.parse:(Ljava/lang/String;)Landroid/net/Uri;" :
   {
-    "static" : 
+    "static" :
     [
       "Landroid/net/Uri;.<init>:()V"
     ]
   },
-  "Landroid/net/Uri;.toString:()Ljava/lang/String;" : 
+  "Landroid/net/Uri;.toString:()Ljava/lang/String;" :
   {
-    "virtual" : 
+    "virtual" :
     [
       "Ljava/lang/String;.concat:(Ljava/lang/String;)Ljava/lang/String;"
     ]
   },
-  "Landroid/os/Bundle;.<init>:()V" : 
+  "Landroid/os/Bundle;.<init>:()V" :
   {
-    "static" : 
+    "static" :
     [
       "Ljava/lang/Object;.<init>:()V"
     ]
   },
-  "Landroid/text/TextUtils;.<init>:()V" : 
+  "Landroid/text/TextUtils;.<init>:()V" :
   {
-    "static" : 
+    "static" :
     [
       "Ljava/lang/Object;.<init>:()V"
     ]
   },
-  "Landroid/util/Log;.<init>:()V" : 
+  "Landroid/util/Log;.<init>:()V" :
   {
-    "static" : 
+    "static" :
     [
       "Ljava/lang/Object;.<init>:()V"
     ]
   },
-  "Landroid/webkit/WebViewClient;.<init>:()V" : 
+  "Landroid/webkit/WebViewClient;.<init>:()V" :
   {
-    "static" : 
+    "static" :
     [
       "Ljava/lang/Object;.<init>:()V"
     ]
   },
-  "Landroidx/fragment/app/FragmentActivity;.<init>:()V" : 
+  "Landroidx/fragment/app/FragmentActivity;.<init>:()V" :
   {
-    "static" : 
+    "static" :
     [
       "Landroid/app/Activity;.<init>:()V"
     ]
   },
-  "Lcom/facebook/auth/datastore/LoggedInUserAuthDataStore;.<init>:()V" : 
+  "Lcom/facebook/auth/datastore/LoggedInUserAuthDataStore;.<init>:()V" :
   {
-    "static" : 
+    "static" :
     [
       "Ljava/lang/Object;.<init>:()V"
     ]
   },
-  "Lcom/facebook/auth/datastore/LoggedInUserAuthDataStore;.getLoggedInUser:()Lcom/facebook/user/model/User;" : 
+  "Lcom/facebook/auth/datastore/LoggedInUserAuthDataStore;.getLoggedInUser:()Lcom/facebook/user/model/User;" :
   {
-    "static" : 
+    "static" :
     [
       "Lcom/facebook/user/model/User;.<init>:()V"
     ]
   },
-  "Lcom/facebook/base/activity/FragmentBaseActivityUtil;.<init>:()V" : 
+  "Lcom/facebook/base/activity/FragmentBaseActivityUtil;.<init>:()V" :
   {
-    "static" : 
+    "static" :
     [
       "Ljava/lang/Object;.<init>:()V"
     ]
   },
-  "Lcom/facebook/base/activity/FragmentBaseActivityUtil;.getDefaultActivityIntent:()Landroid/content/Intent;" : 
+  "Lcom/facebook/base/activity/FragmentBaseActivityUtil;.getDefaultActivityIntent:()Landroid/content/Intent;" :
   {
-    "static" : 
+    "static" :
     [
       "Landroid/content/Intent;.<init>:()V"
     ]
   },
-  "Lcom/facebook/content/SecureContextHelper;.<init>:()V" : 
+  "Lcom/facebook/content/SecureContextHelper;.<init>:()V" :
   {
-    "static" : 
+    "static" :
     [
       "Ljava/lang/Object;.<init>:()V"
     ]
   },
-  "Lcom/facebook/marianatrench/integrationtests/CallOnTest;.<init>:(Lcom/facebook/marianatrench/integrationtests/Handler;Lcom/facebook/marianatrench/integrationtests/Handler;Ljava/lang/Object;Ljava/lang/Object;)V" : 
+  "Lcom/facebook/marianatrench/integrationtests/FragmentActivity;.<init>:()V" :
   {
-    "static" : 
-    [
-      "Ljava/lang/Object;.<init>:()V"
-    ]
-  },
-  "Lcom/facebook/marianatrench/integrationtests/FragmentActivity;.<init>:()V" : 
-  {
-    "static" : 
+    "static" :
     [
       "Landroid/app/Activity;.<init>:()V"
     ]
   },
-  "Lcom/facebook/marianatrench/integrationtests/FragmentActivity;.onCreate:()V" : 
+  "Lcom/facebook/marianatrench/integrationtests/FragmentActivity;.onCreate:()V" :
   {
-    "static" : 
+    "static" :
     [
       "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
       "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;"
     ]
   },
-  "Lcom/facebook/marianatrench/integrationtests/FragmentTest;.<init>:()V" : 
+  "Lcom/facebook/marianatrench/integrationtests/FragmentTest;.<init>:()V" :
   {
-    "static" : 
+    "static" :
     [
       "Ljava/lang/Object;.<init>:()V"
     ]
   },
-  "Lcom/facebook/marianatrench/integrationtests/Handler;.<init>:()V" : 
+  "Lcom/facebook/marianatrench/integrationtests/Handler;.<init>:()V" :
   {
-    "static" : 
+    "static" :
     [
       "Ljava/lang/Object;.<init>:()V"
     ]
   },
-  "Lcom/facebook/marianatrench/integrationtests/HandlerOne;.<init>:()V" : 
+  "Lcom/facebook/marianatrench/integrationtests/HandlerOne;.<init>:()V" :
   {
-    "static" : 
+    "static" :
     [
       "Lcom/facebook/marianatrench/integrationtests/Handler;.<init>:()V"
     ]
   },
-  "Lcom/facebook/marianatrench/integrationtests/HandlerOne;.handleMessage:(Ljava/lang/Object;)V" : 
+  "Lcom/facebook/marianatrench/integrationtests/HandlerOne;.handleMessage:(Ljava/lang/Object;)V" :
   {
-    "static" : 
+    "static" :
     [
       "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V"
     ]
   },
-  "Lcom/facebook/marianatrench/integrationtests/HandlerTwo;.<init>:()V" : 
+  "Lcom/facebook/marianatrench/integrationtests/HandlerTwo;.<init>:()V" :
   {
-    "static" : 
+    "static" :
     [
       "Lcom/facebook/marianatrench/integrationtests/Handler;.<init>:()V"
     ]
   },
-  "Lcom/facebook/marianatrench/integrationtests/HandlerTwo;.handleMessage:(Ljava/lang/Object;)V" : 
+  "Lcom/facebook/marianatrench/integrationtests/HandlerTwo;.handleMessage:(Ljava/lang/Object;)V" :
   {
-    "static" : 
+    "static" :
     [
       "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
       "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;"
     ]
   },
-  "Lcom/facebook/marianatrench/integrationtests/Messenger;.<init>:()V" : 
+  "Lcom/facebook/marianatrench/integrationtests/Messenger;.<init>:()V" :
   {
-    "static" : 
+    "static" :
     [
       "Ljava/lang/Object;.<init>:()V"
     ]
   },
-  "Lcom/facebook/marianatrench/integrationtests/Messenger;.<init>:(Lcom/facebook/marianatrench/integrationtests/Handler;)V" : 
+  "Lcom/facebook/marianatrench/integrationtests/Messenger;.<init>:(Lcom/facebook/marianatrench/integrationtests/Handler;)V" :
   {
-    "static" : 
+    "static" :
     [
       "Ljava/lang/Object;.<init>:()V"
     ]
   },
-  "Lcom/facebook/marianatrench/integrationtests/Messenger;.<init>:(Lcom/facebook/marianatrench/integrationtests/Handler;Ljava/lang/Object;)V" : 
+  "Lcom/facebook/marianatrench/integrationtests/Messenger;.<init>:(Lcom/facebook/marianatrench/integrationtests/Handler;Ljava/lang/Object;)V" :
   {
-    "static" : 
+    "static" :
     [
       "Ljava/lang/Object;.<init>:()V"
     ]
   },
-  "Lcom/facebook/marianatrench/integrationtests/Origin;.<init>:()V" : 
+  "Lcom/facebook/marianatrench/integrationtests/Origin;.<init>:()V" :
   {
-    "static" : 
+    "static" :
     [
       "Ljava/lang/Object;.<init>:()V"
     ]
   },
-  "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;" : 
+  "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;" :
   {
-    "static" : 
+    "static" :
     [
       "Ljava/lang/Object;.<init>:()V"
     ]
   },
-  "Lcom/facebook/marianatrench/integrationtests/Shims;.<init>:()V" : 
+  "Lcom/facebook/marianatrench/integrationtests/ParameterMapping;.<init>:()V" :
   {
-    "static" : 
+    "static" :
     [
       "Ljava/lang/Object;.<init>:()V"
     ]
   },
-  "Lcom/facebook/marianatrench/integrationtests/Shims;.callOnTestIssue:()Lcom/facebook/marianatrench/integrationtests/CallOnTest;" : 
+  "Lcom/facebook/marianatrench/integrationtests/ParameterMapping;.<init>:(Lcom/facebook/marianatrench/integrationtests/Handler;Lcom/facebook/marianatrench/integrationtests/Handler;Ljava/lang/Object;Ljava/lang/Object;)V" :
   {
-    "artificial" : 
+    "static" :
+    [
+      "Ljava/lang/Object;.<init>:()V"
+    ]
+  },
+  "Lcom/facebook/marianatrench/integrationtests/ShimTarget;.<init>:()V" :
+  {
+    "static" :
+    [
+      "Ljava/lang/Object;.<init>:()V"
+    ]
+  },
+  "Lcom/facebook/marianatrench/integrationtests/ShimTarget;.multipleArguments:(ILjava/lang/String;Ljava/lang/Object;)V" :
+  {
+    "static" :
+    [
+      "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V"
+    ]
+  },
+  "Lcom/facebook/marianatrench/integrationtests/Shims;.<init>:()V" :
+  {
+    "static" :
+    [
+      "Ljava/lang/Object;.<init>:()V"
+    ]
+  },
+  "Lcom/facebook/marianatrench/integrationtests/Shims;.getMessenger:(Lcom/facebook/marianatrench/integrationtests/Handler;)Lcom/facebook/marianatrench/integrationtests/Messenger;" :
+  {
+    "artificial" :
     [
       "Lcom/facebook/marianatrench/integrationtests/Handler;.handleMessage:(Ljava/lang/Object;)V"
     ],
-    "static" : 
+    "static" :
     [
-      "Lcom/facebook/marianatrench/integrationtests/CallOnTest;.<init>:(Lcom/facebook/marianatrench/integrationtests/Handler;Lcom/facebook/marianatrench/integrationtests/Handler;Ljava/lang/Object;Ljava/lang/Object;)V",
-      "Lcom/facebook/marianatrench/integrationtests/Handler;.<init>:()V",
-      "Lcom/facebook/marianatrench/integrationtests/HandlerOne;.<init>:()V",
-      "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;",
-      "Ljava/lang/Object;.<init>:()V"
+      "Lcom/facebook/marianatrench/integrationtests/Messenger;.<init>:(Lcom/facebook/marianatrench/integrationtests/Handler;)V"
     ]
   },
-  "Lcom/facebook/marianatrench/integrationtests/Shims;.callOnTestNoIssue:()Lcom/facebook/marianatrench/integrationtests/CallOnTest;" : 
+  "Lcom/facebook/marianatrench/integrationtests/Shims;.testDirectShimTarget:()V" :
   {
-    "artificial" : 
+    "static" :
     [
-      "Lcom/facebook/marianatrench/integrationtests/Handler;.handleMessage:(Ljava/lang/Object;)V"
+      "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;",
+      "Lcom/facebook/marianatrench/integrationtests/ShimTarget;.<init>:()V"
     ],
-    "static" : 
+    "virtual" :
     [
-      "Lcom/facebook/marianatrench/integrationtests/CallOnTest;.<init>:(Lcom/facebook/marianatrench/integrationtests/Handler;Lcom/facebook/marianatrench/integrationtests/Handler;Ljava/lang/Object;Ljava/lang/Object;)V",
-      "Lcom/facebook/marianatrench/integrationtests/Handler;.<init>:()V",
-      "Lcom/facebook/marianatrench/integrationtests/HandlerOne;.<init>:()V",
-      "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;",
-      "Ljava/lang/Object;.<init>:()V"
+      "Lcom/facebook/marianatrench/integrationtests/ShimTarget;.multipleArguments:(ILjava/lang/String;Ljava/lang/Object;)V"
     ]
   },
-  "Lcom/facebook/marianatrench/integrationtests/Shims;.fragmentInstance:()V" : 
+  "Lcom/facebook/marianatrench/integrationtests/Shims;.testDropArgumentDefined:()V" :
   {
-    "artificial" : 
+    "artificial" :
+    [
+      "Lcom/facebook/marianatrench/integrationtests/ShimTarget;.multipleArguments:(ILjava/lang/String;Ljava/lang/Object;)V"
+    ],
+    "static" :
+    [
+      "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;",
+      "Lcom/facebook/marianatrench/integrationtests/ParameterMapping;.<init>:()V",
+      "Lcom/facebook/marianatrench/integrationtests/ShimTarget;.<init>:()V"
+    ],
+    "virtual" :
+    [
+      "Lcom/facebook/marianatrench/integrationtests/ParameterMapping;.defined:(Lcom/facebook/marianatrench/integrationtests/ShimTarget;Ljava/lang/Object;Ljava/lang/String;)V"
+    ]
+  },
+  "Lcom/facebook/marianatrench/integrationtests/Shims;.testDropArgumentInferred:()V" :
+  {
+    "artificial" :
+    [
+      "Lcom/facebook/marianatrench/integrationtests/ShimTarget;.multipleArguments:(ILjava/lang/String;Ljava/lang/Object;)V"
+    ],
+    "static" :
+    [
+      "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;",
+      "Lcom/facebook/marianatrench/integrationtests/ParameterMapping;.<init>:()V",
+      "Lcom/facebook/marianatrench/integrationtests/ShimTarget;.<init>:()V"
+    ],
+    "virtual" :
+    [
+      "Lcom/facebook/marianatrench/integrationtests/ParameterMapping;.inferred:(Lcom/facebook/marianatrench/integrationtests/ShimTarget;Ljava/lang/Object;)V"
+    ]
+  },
+  "Lcom/facebook/marianatrench/integrationtests/Shims;.testFragmentInstance:()V" :
+  {
+    "artificial" :
     [
       "Lcom/facebook/marianatrench/integrationtests/FragmentActivity;.onCreate:()V"
     ],
-    "static" : 
+    "static" :
     [
       "Lcom/facebook/marianatrench/integrationtests/FragmentActivity;.<init>:()V",
       "Lcom/facebook/marianatrench/integrationtests/FragmentTest;.<init>:()V"
     ],
-    "virtual" : 
+    "virtual" :
     [
       "Lcom/facebook/marianatrench/integrationtests/FragmentTest;.add:(Landroid/app/Activity;)V"
     ]
   },
-  "Lcom/facebook/marianatrench/integrationtests/Shims;.fragmentReflection:()V" : 
+  "Lcom/facebook/marianatrench/integrationtests/Shims;.testFragmentReflection:()V" :
   {
-    "static" : 
+    "static" :
     [
       "Lcom/facebook/marianatrench/integrationtests/FragmentTest;.<init>:()V"
     ],
-    "virtual" : 
+    "virtual" :
     [
       "Lcom/facebook/marianatrench/integrationtests/FragmentTest;.add:(Ljava/lang/Class;)V"
     ]
   },
-  "Lcom/facebook/marianatrench/integrationtests/Shims;.getMessageHandler:(Z)Lcom/facebook/marianatrench/integrationtests/Messenger;" : 
+  "Lcom/facebook/marianatrench/integrationtests/Shims;.testMessageHandlerOneIssue:()Lcom/facebook/marianatrench/integrationtests/Messenger;" :
   {
-    "artificial" : 
-    [
-      "Lcom/facebook/marianatrench/integrationtests/HandlerOne;.handleMessage:(Ljava/lang/Object;)V",
-      "Lcom/facebook/marianatrench/integrationtests/HandlerTwo;.handleMessage:(Ljava/lang/Object;)V"
-    ],
-    "static" : 
-    [
-      "Lcom/facebook/marianatrench/integrationtests/HandlerOne;.<init>:()V",
-      "Lcom/facebook/marianatrench/integrationtests/HandlerTwo;.<init>:()V",
-      "Lcom/facebook/marianatrench/integrationtests/Messenger;.<init>:(Lcom/facebook/marianatrench/integrationtests/Handler;)V"
-    ]
-  },
-  "Lcom/facebook/marianatrench/integrationtests/Shims;.messageHandlerOneIssue:()Lcom/facebook/marianatrench/integrationtests/Messenger;" : 
-  {
-    "artificial" : 
+    "artificial" :
     [
       "Lcom/facebook/marianatrench/integrationtests/HandlerOne;.handleMessage:(Ljava/lang/Object;)V"
     ],
-    "static" : 
+    "static" :
     [
       "Lcom/facebook/marianatrench/integrationtests/HandlerOne;.<init>:()V",
       "Lcom/facebook/marianatrench/integrationtests/Messenger;.<init>:(Lcom/facebook/marianatrench/integrationtests/Handler;Ljava/lang/Object;)V",
       "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;"
     ]
   },
-  "Lcom/facebook/marianatrench/integrationtests/Shims;.messageHandlerOneNoIssue:()Lcom/facebook/marianatrench/integrationtests/Messenger;" : 
+  "Lcom/facebook/marianatrench/integrationtests/Shims;.testMessageHandlerOneNoIssue:()Lcom/facebook/marianatrench/integrationtests/Messenger;" :
   {
-    "artificial" : 
+    "artificial" :
     [
       "Lcom/facebook/marianatrench/integrationtests/HandlerOne;.handleMessage:(Ljava/lang/Object;)V"
     ],
-    "static" : 
+    "static" :
     [
       "Lcom/facebook/marianatrench/integrationtests/HandlerOne;.<init>:()V",
       "Lcom/facebook/marianatrench/integrationtests/Messenger;.<init>:(Lcom/facebook/marianatrench/integrationtests/Handler;)V"
     ]
   },
-  "Lcom/facebook/marianatrench/integrationtests/Shims;.messageHandlerOneWithHop:()Lcom/facebook/marianatrench/integrationtests/Messenger;" : 
+  "Lcom/facebook/marianatrench/integrationtests/Shims;.testMessageHandlerOneWithHop:()Lcom/facebook/marianatrench/integrationtests/Messenger;" :
   {
-    "static" : 
+    "static" :
     [
-      "Lcom/facebook/marianatrench/integrationtests/Shims;.getMessageHandler:(Z)Lcom/facebook/marianatrench/integrationtests/Messenger;"
+      "Lcom/facebook/marianatrench/integrationtests/HandlerOne;.<init>:()V",
+      "Lcom/facebook/marianatrench/integrationtests/Shims;.getMessenger:(Lcom/facebook/marianatrench/integrationtests/Handler;)Lcom/facebook/marianatrench/integrationtests/Messenger;"
     ]
   },
-  "Lcom/facebook/marianatrench/integrationtests/Shims;.messageHandlerTwoWithHop:()Lcom/facebook/marianatrench/integrationtests/Messenger;" : 
+  "Lcom/facebook/marianatrench/integrationtests/Shims;.testMessageHandlerTwoWithHop:()Lcom/facebook/marianatrench/integrationtests/Messenger;" :
   {
-    "static" : 
+    "static" :
     [
-      "Lcom/facebook/marianatrench/integrationtests/Shims;.getMessageHandler:(Z)Lcom/facebook/marianatrench/integrationtests/Messenger;"
+      "Lcom/facebook/marianatrench/integrationtests/HandlerTwo;.<init>:()V",
+      "Lcom/facebook/marianatrench/integrationtests/Shims;.getMessenger:(Lcom/facebook/marianatrench/integrationtests/Handler;)Lcom/facebook/marianatrench/integrationtests/Messenger;"
     ]
   },
-  "Lcom/facebook/secure/context/IntentLauncher;.<init>:()V" : 
+  "Lcom/facebook/marianatrench/integrationtests/Shims;.testMessengerNoShim:()Lcom/facebook/marianatrench/integrationtests/Messenger;" :
   {
-    "static" : 
+    "static" :
+    [
+      "Lcom/facebook/marianatrench/integrationtests/Messenger;.<init>:()V"
+    ]
+  },
+  "Lcom/facebook/marianatrench/integrationtests/Shims;.testParameterMappingIssue:()Lcom/facebook/marianatrench/integrationtests/ParameterMapping;" :
+  {
+    "artificial" :
+    [
+      "Lcom/facebook/marianatrench/integrationtests/HandlerOne;.handleMessage:(Ljava/lang/Object;)V"
+    ],
+    "static" :
+    [
+      "Lcom/facebook/marianatrench/integrationtests/Handler;.<init>:()V",
+      "Lcom/facebook/marianatrench/integrationtests/HandlerOne;.<init>:()V",
+      "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;",
+      "Lcom/facebook/marianatrench/integrationtests/ParameterMapping;.<init>:(Lcom/facebook/marianatrench/integrationtests/Handler;Lcom/facebook/marianatrench/integrationtests/Handler;Ljava/lang/Object;Ljava/lang/Object;)V",
+      "Ljava/lang/Object;.<init>:()V"
+    ]
+  },
+  "Lcom/facebook/marianatrench/integrationtests/Shims;.testParameterMappingNoIssue:()Lcom/facebook/marianatrench/integrationtests/ParameterMapping;" :
+  {
+    "artificial" :
+    [
+      "Lcom/facebook/marianatrench/integrationtests/HandlerOne;.handleMessage:(Ljava/lang/Object;)V"
+    ],
+    "static" :
+    [
+      "Lcom/facebook/marianatrench/integrationtests/Handler;.<init>:()V",
+      "Lcom/facebook/marianatrench/integrationtests/HandlerOne;.<init>:()V",
+      "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;",
+      "Lcom/facebook/marianatrench/integrationtests/ParameterMapping;.<init>:(Lcom/facebook/marianatrench/integrationtests/Handler;Lcom/facebook/marianatrench/integrationtests/Handler;Ljava/lang/Object;Ljava/lang/Object;)V",
+      "Ljava/lang/Object;.<init>:()V"
+    ]
+  },
+  "Lcom/facebook/secure/context/IntentLauncher;.<init>:()V" :
+  {
+    "static" :
     [
       "Ljava/lang/Object;.<init>:()V"
     ]
   },
-  "Lcom/facebook/secure/context/SecureContextHelperV2;.<init>:()V" : 
+  "Lcom/facebook/secure/context/SecureContextHelperV2;.<init>:()V" :
   {
-    "static" : 
+    "static" :
     [
       "Ljava/lang/Object;.<init>:()V"
     ]
   },
-  "Lcom/facebook/secure/context/SecureContextHelperV2;.get:()Lcom/facebook/secure/context/SecureContextHelperV2;" : 
+  "Lcom/facebook/secure/context/SecureContextHelperV2;.get:()Lcom/facebook/secure/context/SecureContextHelperV2;" :
   {
-    "static" : 
+    "static" :
     [
       "Lcom/facebook/secure/context/SecureContextHelperV2;.<init>:()V"
     ]
   },
-  "Lcom/facebook/secure/context/SecureContextHelperV2;.inAppBrowser:()Lcom/facebook/secure/context/IntentLauncher;" : 
+  "Lcom/facebook/secure/context/SecureContextHelperV2;.inAppBrowser:()Lcom/facebook/secure/context/IntentLauncher;" :
   {
-    "static" : 
+    "static" :
     [
       "Lcom/facebook/secure/context/IntentLauncher;.<init>:()V"
     ]
   },
-  "Lcom/facebook/secure/context/SecureContextHelperV2;.internal:()Lcom/facebook/secure/context/IntentLauncher;" : 
+  "Lcom/facebook/secure/context/SecureContextHelperV2;.internal:()Lcom/facebook/secure/context/IntentLauncher;" :
   {
-    "static" : 
+    "static" :
     [
       "Lcom/facebook/secure/context/IntentLauncher;.<init>:()V"
     ]
   },
-  "Lcom/facebook/user/model/User;.<init>:()V" : 
+  "Lcom/facebook/user/model/User;.<init>:()V" :
   {
-    "static" : 
+    "static" :
     [
       "Ljava/lang/Object;.<init>:()V"
     ]
   },
-  "Lcom/instagram/common/analytics/IgAnalyticsLogger;.<init>:()V" : 
+  "Lcom/instagram/common/analytics/IgAnalyticsLogger;.<init>:()V" :
   {
-    "static" : 
+    "static" :
     [
       "Ljava/lang/Object;.<init>:()V"
     ]
   },
-  "Lcom/instagram/common/analytics/IgAnalyticsLogger;.getInstance:()Lcom/instagram/common/analytics/IgAnalyticsLogger;" : 
+  "Lcom/instagram/common/analytics/IgAnalyticsLogger;.getInstance:()Lcom/instagram/common/analytics/IgAnalyticsLogger;" :
   {
-    "static" : 
+    "static" :
     [
       "Lcom/instagram/common/analytics/IgAnalyticsLogger;.<init>:()V"
     ]
   },
-  "Lcom/instagram/common/analytics/intf/AnalyticsEvent;.<init>:()V" : 
+  "Lcom/instagram/common/analytics/intf/AnalyticsEvent;.<init>:()V" :
   {
-    "static" : 
+    "static" :
     [
       "Ljava/lang/Object;.<init>:()V"
     ]
   },
-  "Lcom/instagram/common/analytics/intf/AnalyticsEvent;.obtain:(Ljava/lang/String;)Lcom/instagram/common/analytics/intf/AnalyticsEvent;" : 
+  "Lcom/instagram/common/analytics/intf/AnalyticsEvent;.obtain:(Ljava/lang/String;)Lcom/instagram/common/analytics/intf/AnalyticsEvent;" :
   {
-    "static" : 
+    "static" :
     [
       "Lcom/instagram/common/analytics/intf/AnalyticsEvent;.<init>:()V"
     ]
   },
-  "Ljava/lang/Integer;.<init>:()V" : 
+  "Ljava/lang/Integer;.<init>:()V" :
   {
-    "static" : 
+    "static" :
     [
       "Ljava/lang/Object;.<init>:()V"
     ]
   },
-  "Ljava/lang/String;.<init>:()V" : 
+  "Ljava/lang/String;.<init>:()V" :
   {
-    "static" : 
+    "static" :
     [
       "Ljava/lang/Object;.<init>:()V"
     ]
   },
-  "Ljava/lang/String;.concat:(Ljava/lang/String;)Ljava/lang/String;" : 
+  "Ljava/lang/String;.concat:(Ljava/lang/String;)Ljava/lang/String;" :
   {
-    "virtual" : 
+    "virtual" :
     [
       "Ljava/lang/String;.isEmpty:()Z"
     ]
   },
-  "Ljava/lang/Thread;.<init>:(Ljava/lang/Runnable;)V" : 
+  "Ljava/lang/Thread;.<init>:(Ljava/lang/Runnable;)V" :
   {
-    "static" : 
+    "static" :
     [
       "Ljava/lang/Object;.<init>:()V"
     ]
   },
-  "Ljava/lang/Thread;.run:()V" : 
+  "Ljava/lang/Thread;.run:()V" :
   {
-    "virtual" : 
+    "virtual" :
     [
       "Ljava/lang/Runnable;.run:()V",
       "Ljava/lang/Thread;.run:()V"
     ]
   },
-  "Ljava/util/TreeMap;.<init>:()V" : 
+  "Ljava/util/TreeMap;.<init>:()V" :
   {
-    "static" : 
+    "static" :
     [
       "Ljava/lang/Object;.<init>:()V"
     ]
