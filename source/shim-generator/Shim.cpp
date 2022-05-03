@@ -5,8 +5,10 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-#include <boost/algorithm/string/predicate.hpp>
 #include <algorithm>
+#include <optional>
+
+#include <Show.h>
 
 #include <mariana-trench/Access.h>
 #include <mariana-trench/Log.h>
@@ -16,45 +18,25 @@
 namespace marianatrench {
 namespace {
 
-bool valid_receiver_position(
-    const Method* call_target,
-    std::optional<ShimParameterPosition> receiver_position_in_shim,
-    const ShimMethod& shim_method) {
-  if (receiver_position_in_shim &&
-      call_target->get_class() !=
-          shim_method.parameter_type(*receiver_position_in_shim)) {
-    ERROR(1, "Invalid call_on position specified for shim callee: {}");
-    return false;
+DexType* MT_NULLABLE
+get_parameter_type(const Method* method, ParameterPosition position) {
+  if (position >= method->number_of_parameters()) {
+    ERROR(
+        1,
+        "Parameter mapping for shim_target `{}` contains a port on parameter {} but the method only has {} parameters.",
+        method->show(),
+        position,
+        method->number_of_parameters());
+    return nullptr;
   }
 
-  return receiver_position_in_shim.has_value();
-}
-
-bool valid_parameter_positions(
-    const Method* call_target,
-    std::vector<ShimParameterPosition> parameter_positions_in_shim,
-    const ShimMethod& shim_method) {
-  if (parameter_positions_in_shim.empty()) {
-    return false;
+  if (!method->is_static() && position == 0) {
+    // Include "this" as argument 0
+    return method->get_class();
   }
 
-  const auto* call_target_arguments = call_target->get_proto()->get_args();
-
-  // Check that all of the forwarded parameters from the shim have corresponding
-  // parameters in the call_target.
-  return std::all_of(
-      parameter_positions_in_shim.begin(),
-      parameter_positions_in_shim.end(),
-      [&](ShimParameterPosition position) {
-        auto parameter_type = shim_method.parameter_type(position);
-        return parameter_type != nullptr &&
-            std::any_of(
-                   call_target_arguments->begin(),
-                   call_target_arguments->end(),
-                   [&](const DexType* dex_type) {
-                     return dex_type == parameter_type;
-                   });
-      });
+  return method->get_proto()->get_args()->at(
+      position - method->first_parameter_index());
 }
 
 } // namespace
@@ -67,19 +49,18 @@ ShimMethod::ShimMethod(const Method* method) : method_(method) {
     types_to_position_.emplace(method->get_class(), index++);
   }
 
-  const auto* method_prototype = method_->get_proto();
-  if (!method_prototype) {
-    return;
-  }
-
-  const auto* dex_arguments = method_prototype->get_args();
+  const auto* dex_arguments = method_->get_proto()->get_args();
   if (!dex_arguments) {
     return;
   }
 
-  for (const auto* dex_argument : *dex_arguments) {
-    types_to_position_.emplace(std::make_pair(dex_argument, index++));
+  for (auto* dex_argument : *dex_arguments) {
+    types_to_position_.emplace(dex_argument, index++);
   }
+}
+
+const Method* ShimMethod::method() const {
+  return method_;
 }
 
 DexType* MT_NULLABLE
@@ -102,36 +83,120 @@ std::optional<ShimParameterPosition> ShimMethod::type_position(
   return found->second;
 }
 
-std::vector<ShimParameterPosition> ShimMethod::method_parameter_positions(
-    const Method* method) const {
-  std::vector<ShimParameterPosition> parameters;
+ShimParameterMapping::ShimParameterMapping() {}
 
-  const auto* method_prototype = method->get_proto();
-  if (!method_prototype) {
-    return parameters;
+bool ShimParameterMapping::empty() const {
+  return map_.empty();
+}
+
+bool ShimParameterMapping::contains(ParameterPosition position) const {
+  return map_.count(position) > 0;
+}
+
+std::optional<ShimParameterPosition> ShimParameterMapping::at(
+    ParameterPosition parameter_position) const {
+  auto found = map_.find(parameter_position);
+  if (found == map_.end()) {
+    return std::nullopt;
   }
 
-  const auto* dex_arguments = method_prototype->get_args();
+  return found->second;
+}
+
+void ShimParameterMapping::insert(
+    ParameterPosition parameter_position,
+    ShimParameterPosition shim_parameter_position) {
+  map_.insert_or_assign(parameter_position, shim_parameter_position);
+}
+
+ShimParameterMapping ShimParameterMapping::from_json(const Json::Value& value) {
+  ShimParameterMapping parameter_mapping;
+  if (value.isNull()) {
+    return parameter_mapping;
+  }
+
+  JsonValidation::validate_object(value);
+
+  for (auto item = value.begin(); item != value.end(); ++item) {
+    auto parameter_argument = JsonValidation::string(item.key());
+    auto shim_argument = JsonValidation::string(*item);
+    parameter_mapping.insert(
+        Root::from_json(parameter_argument).parameter_position(),
+        Root::from_json(shim_argument).parameter_position());
+  }
+
+  return parameter_mapping;
+}
+
+ShimParameterMapping ShimParameterMapping::infer(
+    const Method* shim_target_callee,
+    const ShimMethod& shim_method) {
+  ShimParameterMapping parameter_mapping;
+
+  if (!shim_target_callee->is_static()) {
+    // Include "this" as argument 0
+    auto receiver_position =
+        shim_method.type_position(shim_target_callee->get_class());
+    if (!receiver_position) {
+      return parameter_mapping;
+    }
+    parameter_mapping.insert(0, *receiver_position);
+  }
+
+  const auto* dex_arguments = shim_target_callee->get_proto()->get_args();
   if (!dex_arguments) {
-    return parameters;
+    return parameter_mapping;
   }
 
-  for (const auto* dex_argument : *dex_arguments) {
-    if (auto position = type_position(dex_argument)) {
-      parameters.push_back(*position);
+  auto first_parameter_position = shim_target_callee->first_parameter_index();
+  for (std::size_t position = 0; position < dex_arguments->size(); position++) {
+    if (auto shim_position =
+            shim_method.type_position(dex_arguments->at(position))) {
+      parameter_mapping.insert(
+          static_cast<ParameterPosition>(position + first_parameter_position),
+          *shim_position);
     }
   }
 
-  return parameters;
+  return parameter_mapping;
+}
+
+ShimParameterMapping ShimParameterMapping::instantiate(
+    const Method* shim_target_callee,
+    const ShimMethod& shim_method) const {
+  if (map_.empty()) {
+    return infer(shim_target_callee, shim_method);
+  }
+
+  ShimParameterMapping parameter_mapping;
+  for (const auto& [position, shim_position] : map_) {
+    auto callee_type = get_parameter_type(shim_target_callee, position);
+    if (callee_type == nullptr) {
+      continue;
+    }
+
+    auto shim_type = shim_method.parameter_type(shim_position);
+    if (callee_type != shim_type) {
+      ERROR(
+          1,
+          "Parameter mapping type mismatch for shim_target `{}` for parameter {}. Expected: {} but got {}.",
+          shim_target_callee->show(),
+          position,
+          show(callee_type),
+          show(shim_type));
+      continue;
+    }
+
+    parameter_mapping.insert(position, shim_position);
+  }
+
+  return parameter_mapping;
 }
 
 ShimTarget::ShimTarget(
     const Method* method,
-    std::optional<ShimParameterPosition> receiver_position,
-    std::vector<ShimParameterPosition> parameter_positions)
-    : call_target_(method),
-      receiver_position_in_shim_(receiver_position),
-      parameter_positions_in_shim_(parameter_positions) {}
+    ShimParameterMapping parameter_mapping)
+    : call_target_(method), parameter_mapping_(std::move(parameter_mapping)) {}
 
 std::optional<ShimTarget> ShimTarget::from_json(
     const Json::Value& value,
@@ -149,68 +214,56 @@ std::optional<ShimTarget> ShimTarget::from_json(
     return std::nullopt;
   }
 
-  std::optional<ShimParameterPosition> receiver_position_in_shim;
-  if (value.isMember("call_on")) {
-    receiver_position_in_shim =
-        Root::from_json(JsonValidation::string(value, "call_on"))
-            .parameter_position();
-  }
+  auto parameters_map = ShimParameterMapping::from_json(
+      JsonValidation::null_or_object(value, "parameters_map"));
 
-  std::vector<ShimParameterPosition> forward_parameters;
-  for (const auto& parameter_value :
-       JsonValidation::null_or_array(value, "forward_parameters")) {
-    forward_parameters.push_back(
-        Root::from_json(JsonValidation::string(parameter_value))
-            .parameter_position());
-  }
-
-  return ShimTarget(call_target, receiver_position_in_shim, forward_parameters);
+  return ShimTarget(call_target, std::move(parameters_map));
 }
 
 std::optional<ShimTarget> ShimTarget::instantiate(
     const ShimMethod& shim_method) const {
-  std::optional<ShimParameterPosition> receiver_position;
+  auto parameter_mapping =
+      parameter_mapping_.instantiate(call_target_, shim_method);
 
-  if (valid_receiver_position(
-          call_target_, receiver_position_in_shim_, shim_method)) {
-    receiver_position = receiver_position_in_shim_;
-  } else {
-    receiver_position = shim_method.type_position(call_target_->get_class());
-  }
-
-  if (!receiver_position) {
+  // Require non-static methods to have a receiver.
+  if (!call_target_->is_static() && !parameter_mapping.at(0)) {
+    WARNING(
+        1,
+        "Shim method `{}` missing `this` argument required for non-static shim callee `{}`.",
+        shim_method.method()->show(),
+        show(call_target_));
     return std::nullopt;
   }
 
-  std::vector<ShimParameterPosition> parameter_positions;
-  if (valid_parameter_positions(
-          call_target_, parameter_positions_in_shim_, shim_method)) {
-    parameter_positions = parameter_positions_in_shim_;
-  } else {
-    parameter_positions = shim_method.method_parameter_positions(call_target_);
-  }
-
-  return ShimTarget(call_target_, receiver_position, parameter_positions);
+  return ShimTarget(call_target_, std::move(parameter_mapping));
 }
 
 std::optional<Register> ShimTarget::receiver_register(
     const IRInstruction* instruction) const {
-  if (!receiver_position_in_shim_) {
+  if (call_target_->is_static()) {
     return std::nullopt;
   }
-  mt_assert(*receiver_position_in_shim_ < instruction->srcs_size());
-  return instruction->src(*receiver_position_in_shim_);
+
+  auto receiver_position = parameter_mapping_.at(0);
+  if (!receiver_position) {
+    return std::nullopt;
+  }
+
+  mt_assert(*receiver_position < instruction->srcs_size());
+
+  return instruction->src(*receiver_position);
 }
 
-std::vector<Register> ShimTarget::parameter_registers(
+std::unordered_map<ParameterPosition, Register> ShimTarget::parameter_registers(
     const IRInstruction* instruction) const {
-  std::vector<Register> parameter_registers;
-  if (auto receiver = receiver_register(instruction)) {
-    parameter_registers.push_back(receiver.value());
-  }
-  for (auto parameter_position : parameter_positions_in_shim_) {
-    mt_assert(parameter_position <= instruction->srcs_size());
-    parameter_registers.push_back(instruction->src(parameter_position));
+  std::unordered_map<ParameterPosition, Register> parameter_registers;
+
+  for (ParameterPosition position = 0;
+       position < call_target_->number_of_parameters();
+       ++position) {
+    if (auto shim_position = parameter_mapping_.at(position)) {
+      parameter_registers.emplace(position, instruction->src(*shim_position));
+    }
   }
 
   return parameter_registers;
@@ -219,23 +272,22 @@ std::vector<Register> ShimTarget::parameter_registers(
 Shim::Shim(const Method* method, std::vector<ShimTarget> targets)
     : method_(method), targets_(std::move(targets)) {}
 
+std::ostream& operator<<(std::ostream& out, const ShimParameterMapping& map) {
+  out << "parameters_map={";
+  for (const auto& [parameter, shim_parameter] : map.map_) {
+    out << " Argument(" << parameter << "):";
+    out << " Argument(" << shim_parameter << "),";
+  }
+  return out << " }";
+}
+
 std::ostream& operator<<(std::ostream& out, const ShimTarget& shim_target) {
   out << "ShimTarget(method=`";
   if (shim_target.call_target_ != nullptr) {
     out << shim_target.call_target_->show();
   }
   out << "`";
-  if (shim_target.receiver_position_in_shim_) {
-    out << ", call_on=Argument(" << *shim_target.receiver_position_in_shim_
-        << ")";
-  }
-  if (!shim_target.parameter_positions_in_shim_.empty()) {
-    out << ", forward_parameters=[";
-    for (const auto& parameter : shim_target.parameter_positions_in_shim_) {
-      out << " Argument(" << parameter << "),";
-    }
-    out << " ]";
-  }
+  out << ", " << shim_target.parameter_mapping_;
   return out << ")";
 }
 

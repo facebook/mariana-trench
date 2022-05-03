@@ -146,6 +146,17 @@ const Json::Value& JsonValidation::nonempty_array(
   return nonempty_array;
 }
 
+const Json::Value& JsonValidation::null_or_object(
+    const Json::Value& value,
+    const std::string& field) {
+  validate_object(value);
+  if (!value.isMember(field)) {
+    return Json::Value::nullSingleton();
+  }
+
+  return object(value, field);
+}
+
 const Json::Value& JsonValidation::object_or_string(
     const Json::Value& value,
     const std::string& field) {

@@ -51,6 +51,10 @@ class JsonValidation final {
       const Json::Value& value,
       const std::string& field);
 
+  static const Json::Value& null_or_object(
+      const Json::Value& value,
+      const std::string& field);
+
   static const Json::Value& object_or_string(
       const Json::Value& value,
       const std::string& field);

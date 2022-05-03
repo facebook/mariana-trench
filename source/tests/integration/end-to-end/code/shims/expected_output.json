@@ -88,7 +88,7 @@
       ],
       "position" : 
       {
-        "line" : 100,
+        "line" : 104,
         "path" : "Shims.java"
       },
       "rule" : 1,
@@ -102,7 +102,7 @@
           "call_position" : 
           {
             "end" : 0,
-            "line" : 100,
+            "line" : 104,
             "path" : "Shims.java",
             "start" : 0
           },
@@ -128,10 +128,10 @@
         {
           "call_position" : 
           {
-            "end" : 85,
-            "line" : 100,
+            "end" : 71,
+            "line" : 104,
             "path" : "Shims.java",
-            "start" : 80
+            "start" : 66
           },
           "callee" : "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;",
           "callee_port" : "Return",
@@ -145,10 +145,10 @@
       ]
     }
   ],
-  "method" : "Lcom/facebook/marianatrench/integrationtests/Shims;.callOnTestIssue:()Lcom/facebook/marianatrench/integrationtests/CallOnTest;",
+  "method" : "Lcom/facebook/marianatrench/integrationtests/Shims;.callOnTestNoIssue:()Lcom/facebook/marianatrench/integrationtests/CallOnTest;",
   "position" : 
   {
-    "line" : 99,
+    "line" : 103,
     "path" : "Shims.java"
   }
 }
@@ -1050,10 +1050,10 @@
   }
 }
 {
-  "method" : "Lcom/facebook/marianatrench/integrationtests/Shims;.callOnTestNoIssue:()Lcom/facebook/marianatrench/integrationtests/CallOnTest;",
+  "method" : "Lcom/facebook/marianatrench/integrationtests/Shims;.callOnTestIssue:()Lcom/facebook/marianatrench/integrationtests/CallOnTest;",
   "position" : 
   {
-    "line" : 103,
+    "line" : 99,
     "path" : "Shims.java"
   }
 }

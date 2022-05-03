@@ -168,12 +168,12 @@ namespace marianatrench {
  * This is currently used to simulate calls to methods of anonymous classes
  * flowing through an external method.
  *
- * `register_parameters` is the list of register parameters for the artificial
- * invoke instruction.
+ * `parameter_registers` is the map of parameters from position to registers for
+ * the artificial invoke instruction.
  */
 struct ArtificialCallee {
   CallTarget call_target;
-  std::vector<Register> register_parameters;
+  std::unordered_map<ParameterPosition, Register> parameter_registers;
   FeatureSet features;
 
   bool operator==(const ArtificialCallee& other) const;

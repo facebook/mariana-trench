@@ -23,22 +23,51 @@ class ShimMethod {
  public:
   explicit ShimMethod(const Method* method);
 
+  const Method* method() const;
   DexType* MT_NULLABLE parameter_type(ShimParameterPosition argument) const;
   std::optional<ShimParameterPosition> type_position(const DexType* type) const;
-  std::vector<ShimParameterPosition> method_parameter_positions(
-      const Method* method) const;
 
  private:
   const Method* method_;
   std::unordered_map<const DexType*, ShimParameterPosition> types_to_position_;
 };
 
+class ShimParameterMapping {
+ public:
+  ShimParameterMapping();
+
+  static ShimParameterMapping from_json(const Json::Value& value);
+
+  ShimParameterMapping instantiate(
+      const Method* shim_target_callee,
+      const ShimMethod& shim_method) const;
+
+  bool empty() const;
+  bool contains(ParameterPosition position) const;
+  std::optional<ShimParameterPosition> at(
+      ParameterPosition parameter_position) const;
+  void insert(
+      ParameterPosition parameter_position,
+      ShimParameterPosition shim_parameter_position);
+
+  friend std::ostream& operator<<(
+      std::ostream& out,
+      const ShimParameterMapping& map);
+
+ private:
+  static ShimParameterMapping infer(
+      const Method* shim_target_callee,
+      const ShimMethod& shim_method);
+
+ private:
+  std::unordered_map<ParameterPosition, ShimParameterPosition> map_;
+};
+
 class ShimTarget {
  public:
   explicit ShimTarget(
       const Method* method,
-      std::optional<ShimParameterPosition> receiver_position = std::nullopt,
-      std::vector<ShimParameterPosition> parameter_positions = {});
+      ShimParameterMapping parameter_mapping);
 
   static std::optional<ShimTarget> from_json(
       const Json::Value& value,
@@ -53,7 +82,7 @@ class ShimTarget {
   std::optional<Register> receiver_register(
       const IRInstruction* instruction) const;
 
-  std::vector<Register> parameter_registers(
+  std::unordered_map<ParameterPosition, Register> parameter_registers(
       const IRInstruction* instruction) const;
 
   friend std::ostream& operator<<(
@@ -62,8 +91,7 @@ class ShimTarget {
 
  private:
   const Method* call_target_;
-  std::optional<ShimParameterPosition> receiver_position_in_shim_;
-  std::vector<ShimParameterPosition> parameter_positions_in_shim_;
+  ShimParameterMapping parameter_mapping_;
 };
 
 class Shim {

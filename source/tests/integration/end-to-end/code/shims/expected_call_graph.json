@@ -307,7 +307,7 @@
   {
     "artificial" : 
     [
-      "Lcom/facebook/marianatrench/integrationtests/HandlerOne;.handleMessage:(Ljava/lang/Object;)V"
+      "Lcom/facebook/marianatrench/integrationtests/Handler;.handleMessage:(Ljava/lang/Object;)V"
     ],
     "static" : 
     [
@@ -322,7 +322,7 @@
   {
     "artificial" : 
     [
-      "Lcom/facebook/marianatrench/integrationtests/HandlerOne;.handleMessage:(Ljava/lang/Object;)V"
+      "Lcom/facebook/marianatrench/integrationtests/Handler;.handleMessage:(Ljava/lang/Object;)V"
     ],
     "static" : 
     [

@@ -175,7 +175,8 @@ ArtificialCallees anonymous_class_artificial_callees(
 
     callees.push_back(ArtificialCallee{
         /* call_target */ CallTarget::static_call(instruction, method),
-        /* register_parameters */ {register_id},
+        /* parameter_registers */
+        {{0, register_id}},
         /* features */ features,
     });
   }
@@ -265,12 +266,12 @@ std::vector<ArtificialCallee> shim_artificial_callees(
     mt_assert(method != nullptr);
 
     auto receiver_register = shim_target.receiver_register(instruction);
-    auto register_parameters = shim_target.parameter_registers(instruction);
+    auto parameter_registers = shim_target.parameter_registers(instruction);
 
     if (method->is_static()) {
       artificial_callees.push_back(ArtificialCallee{
           /* call_target */ CallTarget::static_call(instruction, method),
-          /* register_parameters */ register_parameters,
+          /* parameter_registers */ parameter_registers,
           /* features */
           FeatureSet{features.get_via_shim_feature(callee)},
       });
@@ -310,7 +311,7 @@ std::vector<ArtificialCallee> shim_artificial_callees(
             receiver_type,
             class_hierarchies,
             override_factory),
-        /* register_parameters */ register_parameters,
+        /* parameter_registers */ parameter_registers,
         /* features */
         FeatureSet{features.get_via_shim_feature(callee)},
     });
@@ -581,17 +582,17 @@ std::ostream& operator<<(std::ostream& out, const CallTarget& call_target) {
 
 bool ArtificialCallee::operator==(const ArtificialCallee& other) const {
   return call_target == other.call_target &&
-      register_parameters == other.register_parameters &&
+      parameter_registers == other.parameter_registers &&
       features == other.features;
 }
 
 std::ostream& operator<<(std::ostream& out, const ArtificialCallee& callee) {
   out << "ArtificialCallee(call_target=" << callee.call_target
-      << ", register_parameters=[";
-  for (auto register_id : callee.register_parameters) {
-    out << register_id << ", ";
+      << ", parameter_registers={";
+  for (const auto& [position, register_id] : callee.parameter_registers) {
+    out << " " << position << ": v" << register_id << ",";
   }
-  return out << "], features=" << callee.features << ")";
+  return out << "}, features=" << callee.features << ")";
 }
 
 CallGraph::CallGraph(

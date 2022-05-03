@@ -673,7 +673,8 @@ void check_flows(
 void check_flows(
     MethodContext* context,
     const AnalysisEnvironment* environment,
-    const std::vector<Register>& instruction_sources,
+    const std::function<std::optional<Register>(ParameterPosition)>&
+        get_parameter_register,
     const Callee& callee,
     const FeatureMayAlwaysSet& extra_features = {}) {
   LOG_OR_DUMP(
@@ -690,13 +691,12 @@ void check_flows(
       continue;
     }
 
-    auto parameter_position = port.root().parameter_position();
-    if (parameter_position >= instruction_sources.size()) {
+    auto register_id = get_parameter_register(port.root().parameter_position());
+    if (!register_id) {
       continue;
     }
 
-    auto register_id = instruction_sources.at(parameter_position);
-    Taint sources = environment->read(register_id, port.path()).collapse();
+    Taint sources = environment->read(*register_id, port.path()).collapse();
     check_flows(
         context,
         sources,
@@ -726,6 +726,27 @@ void check_flows(
     create_sinks(
         context, sources, sinks, extra_features, fulfilled_partial_sinks);
   }
+}
+
+void check_flows(
+    MethodContext* context,
+    const AnalysisEnvironment* environment,
+    const std::vector<Register>& instruction_sources,
+    const Callee& callee,
+    const FeatureMayAlwaysSet& extra_features = {}) {
+  check_flows(
+      context,
+      environment,
+      [&instruction_sources](
+          ParameterPosition parameter_position) -> std::optional<Register> {
+        if (parameter_position >= instruction_sources.size()) {
+          return std::nullopt;
+        }
+
+        return instruction_sources.at(parameter_position);
+      },
+      callee,
+      extra_features);
 }
 
 void check_flows_to_array_allocation(
@@ -788,7 +809,16 @@ void analyze_artificial_calls(
     check_flows(
         context,
         environment,
-        artificial_callee.register_parameters,
+        [&artificial_callee](
+            ParameterPosition parameter_position) -> std::optional<Register> {
+          auto found =
+              artificial_callee.parameter_registers.find(parameter_position);
+          if (found == artificial_callee.parameter_registers.end()) {
+            return std::nullopt;
+          }
+
+          return found->second;
+        },
         get_callee(context, environment, artificial_callee),
         FeatureMayAlwaysSet::make_always(artificial_callee.features));
   }
