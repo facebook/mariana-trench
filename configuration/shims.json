@@ -1,0 +1,34 @@
+[
+  {
+    "find": "methods",
+    "where": [
+      {
+        "constraint": "signature",
+        "pattern": "Landroid/os/Messenger;\\.<init>:\\(Landroid/os/Handler;\\)V"
+      }
+    ],
+    "shim": {
+      "callees": [
+        {
+          "signature": "Landroid/os/Handler;.handleMessage:(Landroid/os/Message;)V"
+        }
+      ]
+    }
+  },
+  {
+    "find": "methods",
+    "where": [
+      {
+        "constraint": "signature",
+        "pattern": "Landroidx/fragment/app/FragmentTransaction;\\.(add|show|replace|attach|doAddOp):.*Landroidx/fragment/app/Fragment;.*"
+      }
+    ],
+    "shim": {
+      "callees": [
+        {
+          "signature": "Landroidx/fragment/app/Fragment;.onCreate:(Landroid/os/Bundle;)V"
+        }
+      ]
+    }
+  }
+]
