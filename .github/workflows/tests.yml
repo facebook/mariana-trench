@@ -41,6 +41,7 @@ jobs:
         run: |
           brew install cmake zlib boost jsoncpp fmt re2 git
           brew install googletest --build-from-source
+          sudo apt update
           sudo apt install default-jre default-jdk
 
       - name: Install Redex and build and test Mariana Trench
