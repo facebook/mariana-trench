@@ -54,6 +54,10 @@ class FragmentTest {
   }
 }
 
+class CallOnTest {
+  CallOnTest(Handler handlerOne, Handler handlerTwo, Object objectOne, Object objectTwo) {}
+}
+
 public class Shims {
   static Messenger getMessageHandler(boolean condition) {
     if (condition) {
@@ -90,5 +94,13 @@ public class Shims {
     FragmentTest ft = new FragmentTest();
     // FN: Type of CONST_CLASS is not stored in TypeEnvironment.
     ft.add(FragmentActivity.class);
+  }
+
+  static CallOnTest callOnTestIssue() {
+    return new CallOnTest(new Handler(), new HandlerOne(), new Object(), Origin.source());
+  }
+
+  static CallOnTest callOnTestNoIssue() {
+    return new CallOnTest(new Handler(), new HandlerOne(), Origin.source(), new Object());
   }
 }

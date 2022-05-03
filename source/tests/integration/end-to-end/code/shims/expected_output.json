@@ -88,7 +88,7 @@
       ],
       "position" : 
       {
-        "line" : 73,
+        "line" : 77,
         "path" : "Shims.java"
       },
       "rule" : 1,
@@ -102,7 +102,7 @@
           "call_position" : 
           {
             "end" : 0,
-            "line" : 73,
+            "line" : 77,
             "path" : "Shims.java",
             "start" : 0
           },
@@ -129,7 +129,7 @@
           "call_position" : 
           {
             "end" : 46,
-            "line" : 73,
+            "line" : 77,
             "path" : "Shims.java",
             "start" : 41
           },
@@ -148,7 +148,7 @@
   "method" : "Lcom/facebook/marianatrench/integrationtests/Shims;.messageHandlerOneIssue:()Lcom/facebook/marianatrench/integrationtests/Messenger;",
   "position" : 
   {
-    "line" : 71,
+    "line" : 75,
     "path" : "Shims.java"
   }
 }
@@ -817,6 +817,14 @@
   }
 }
 {
+  "method" : "Lcom/facebook/marianatrench/integrationtests/CallOnTest;.<init>:(Lcom/facebook/marianatrench/integrationtests/Handler;Lcom/facebook/marianatrench/integrationtests/Handler;Ljava/lang/Object;Ljava/lang/Object;)V",
+  "position" : 
+  {
+    "line" : 57,
+    "path" : "Shims.java"
+  }
+}
+{
   "method" : "Lcom/facebook/marianatrench/integrationtests/FragmentActivity;.<init>:()V",
   "position" : 
   {
@@ -963,7 +971,23 @@
   "method" : "Lcom/facebook/marianatrench/integrationtests/Shims;.<init>:()V",
   "position" : 
   {
-    "line" : 56,
+    "line" : 60,
+    "path" : "Shims.java"
+  }
+}
+{
+  "method" : "Lcom/facebook/marianatrench/integrationtests/Shims;.callOnTestIssue:()Lcom/facebook/marianatrench/integrationtests/CallOnTest;",
+  "position" : 
+  {
+    "line" : 99,
+    "path" : "Shims.java"
+  }
+}
+{
+  "method" : "Lcom/facebook/marianatrench/integrationtests/Shims;.callOnTestNoIssue:()Lcom/facebook/marianatrench/integrationtests/CallOnTest;",
+  "position" : 
+  {
+    "line" : 103,
     "path" : "Shims.java"
   }
 }
@@ -971,7 +995,7 @@
   "method" : "Lcom/facebook/marianatrench/integrationtests/Shims;.fragmentInstance:()V",
   "position" : 
   {
-    "line" : 84,
+    "line" : 88,
     "path" : "Shims.java"
   }
 }
@@ -979,7 +1003,7 @@
   "method" : "Lcom/facebook/marianatrench/integrationtests/Shims;.fragmentReflection:()V",
   "position" : 
   {
-    "line" : 89,
+    "line" : 93,
     "path" : "Shims.java"
   }
 }
@@ -987,7 +1011,7 @@
   "method" : "Lcom/facebook/marianatrench/integrationtests/Shims;.getMessageHandler:(Z)Lcom/facebook/marianatrench/integrationtests/Messenger;",
   "position" : 
   {
-    "line" : 58,
+    "line" : 62,
     "path" : "Shims.java"
   }
 }
@@ -995,7 +1019,7 @@
   "method" : "Lcom/facebook/marianatrench/integrationtests/Shims;.messageHandlerOneNoIssue:()Lcom/facebook/marianatrench/integrationtests/Messenger;",
   "position" : 
   {
-    "line" : 66,
+    "line" : 70,
     "path" : "Shims.java"
   }
 }
@@ -1003,7 +1027,7 @@
   "method" : "Lcom/facebook/marianatrench/integrationtests/Shims;.messageHandlerOneWithHop:()Lcom/facebook/marianatrench/integrationtests/Messenger;",
   "position" : 
   {
-    "line" : 76,
+    "line" : 80,
     "path" : "Shims.java"
   }
 }
@@ -1011,7 +1035,7 @@
   "method" : "Lcom/facebook/marianatrench/integrationtests/Shims;.messageHandlerTwoWithHop:()Lcom/facebook/marianatrench/integrationtests/Messenger;",
   "position" : 
   {
-    "line" : 80,
+    "line" : 84,
     "path" : "Shims.java"
   }
 }

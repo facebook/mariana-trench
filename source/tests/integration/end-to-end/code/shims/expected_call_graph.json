@@ -196,6 +196,13 @@
       "Ljava/lang/Object;.<init>:()V"
     ]
   },
+  "Lcom/facebook/marianatrench/integrationtests/CallOnTest;.<init>:(Lcom/facebook/marianatrench/integrationtests/Handler;Lcom/facebook/marianatrench/integrationtests/Handler;Ljava/lang/Object;Ljava/lang/Object;)V" : 
+  {
+    "static" : 
+    [
+      "Ljava/lang/Object;.<init>:()V"
+    ]
+  },
   "Lcom/facebook/marianatrench/integrationtests/FragmentActivity;.<init>:()V" : 
   {
     "static" : 
@@ -293,6 +300,28 @@
   {
     "static" : 
     [
+      "Ljava/lang/Object;.<init>:()V"
+    ]
+  },
+  "Lcom/facebook/marianatrench/integrationtests/Shims;.callOnTestIssue:()Lcom/facebook/marianatrench/integrationtests/CallOnTest;" : 
+  {
+    "static" : 
+    [
+      "Lcom/facebook/marianatrench/integrationtests/CallOnTest;.<init>:(Lcom/facebook/marianatrench/integrationtests/Handler;Lcom/facebook/marianatrench/integrationtests/Handler;Ljava/lang/Object;Ljava/lang/Object;)V",
+      "Lcom/facebook/marianatrench/integrationtests/Handler;.<init>:()V",
+      "Lcom/facebook/marianatrench/integrationtests/HandlerOne;.<init>:()V",
+      "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;",
+      "Ljava/lang/Object;.<init>:()V"
+    ]
+  },
+  "Lcom/facebook/marianatrench/integrationtests/Shims;.callOnTestNoIssue:()Lcom/facebook/marianatrench/integrationtests/CallOnTest;" : 
+  {
+    "static" : 
+    [
+      "Lcom/facebook/marianatrench/integrationtests/CallOnTest;.<init>:(Lcom/facebook/marianatrench/integrationtests/Handler;Lcom/facebook/marianatrench/integrationtests/Handler;Ljava/lang/Object;Ljava/lang/Object;)V",
+      "Lcom/facebook/marianatrench/integrationtests/Handler;.<init>:()V",
+      "Lcom/facebook/marianatrench/integrationtests/HandlerOne;.<init>:()V",
+      "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;",
       "Ljava/lang/Object;.<init>:()V"
     ]
   },

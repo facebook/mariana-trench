@@ -1,0 +1,54 @@
+[
+  {
+    "find": "methods",
+    "where": [
+      {
+        "constraint": "signature",
+        "pattern": "Lcom/facebook/marianatrench/integrationtests/Messenger;\\.<init>:.*"
+      }
+    ],
+    "shim": {
+      "callees": [
+        {
+          "signature": "Lcom/facebook/marianatrench/integrationtests/Handler;.handleMessage:(Ljava/lang/Object;)V"
+        }
+      ]
+    }
+  },
+  {
+    "find": "methods",
+    "where": [
+      {
+        "constraint": "signature",
+        "pattern": "Lcom/facebook/marianatrench/integrationtests/FragmentTest;\\.add:\\(Landroid/app/Activity;\\)V"
+      }
+    ],
+    "shim": {
+      "callees": [
+        {
+          "signature": "Landroid/app/Activity;.onCreate:()V"
+        }
+      ]
+    }
+  },
+  {
+    "find": "methods",
+    "where": [
+      {
+        "constraint": "signature",
+        "pattern": "Lcom/facebook/marianatrench/integrationtests/CallOnTest;\\.<init>:.*"
+      }
+    ],
+    "shim": {
+      "callees": [
+        {
+          "signature": "Lcom/facebook/marianatrench/integrationtests/Handler;.handleMessage:(Ljava/lang/Object;)V",
+          "call_on": "Argument(2)",
+          "forward_parameters": [
+            "Argument(4)"
+          ]
+        }
+      ]
+    }
+  }
+]

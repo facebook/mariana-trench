@@ -32,6 +32,11 @@
     "Landroid/content/Intent;.getBundleExtra:(Ljava/lang/String;)Landroid/os/Bundle;",
     "Landroid/content/Intent;.getExtras:()Landroid/os/Bundle;"
   ],
+  "Lcom/facebook/marianatrench/integrationtests/CallOnTest;.<init>:(Lcom/facebook/marianatrench/integrationtests/Handler;Lcom/facebook/marianatrench/integrationtests/Handler;Ljava/lang/Object;Ljava/lang/Object;)V" : 
+  [
+    "Lcom/facebook/marianatrench/integrationtests/Shims;.callOnTestIssue:()Lcom/facebook/marianatrench/integrationtests/CallOnTest;",
+    "Lcom/facebook/marianatrench/integrationtests/Shims;.callOnTestNoIssue:()Lcom/facebook/marianatrench/integrationtests/CallOnTest;"
+  ],
   "Lcom/facebook/marianatrench/integrationtests/FragmentActivity;.<init>:()V" : 
   [
     "Lcom/facebook/marianatrench/integrationtests/Shims;.fragmentInstance:()V"
@@ -56,10 +61,14 @@
   "Lcom/facebook/marianatrench/integrationtests/Handler;.<init>:()V" : 
   [
     "Lcom/facebook/marianatrench/integrationtests/HandlerOne;.<init>:()V",
-    "Lcom/facebook/marianatrench/integrationtests/HandlerTwo;.<init>:()V"
+    "Lcom/facebook/marianatrench/integrationtests/HandlerTwo;.<init>:()V",
+    "Lcom/facebook/marianatrench/integrationtests/Shims;.callOnTestIssue:()Lcom/facebook/marianatrench/integrationtests/CallOnTest;",
+    "Lcom/facebook/marianatrench/integrationtests/Shims;.callOnTestNoIssue:()Lcom/facebook/marianatrench/integrationtests/CallOnTest;"
   ],
   "Lcom/facebook/marianatrench/integrationtests/HandlerOne;.<init>:()V" : 
   [
+    "Lcom/facebook/marianatrench/integrationtests/Shims;.callOnTestIssue:()Lcom/facebook/marianatrench/integrationtests/CallOnTest;",
+    "Lcom/facebook/marianatrench/integrationtests/Shims;.callOnTestNoIssue:()Lcom/facebook/marianatrench/integrationtests/CallOnTest;",
     "Lcom/facebook/marianatrench/integrationtests/Shims;.getMessageHandler:(Z)Lcom/facebook/marianatrench/integrationtests/Messenger;",
     "Lcom/facebook/marianatrench/integrationtests/Shims;.messageHandlerOneIssue:()Lcom/facebook/marianatrench/integrationtests/Messenger;",
     "Lcom/facebook/marianatrench/integrationtests/Shims;.messageHandlerOneNoIssue:()Lcom/facebook/marianatrench/integrationtests/Messenger;"
@@ -97,6 +106,8 @@
   [
     "Lcom/facebook/marianatrench/integrationtests/FragmentActivity;.onCreate:()V",
     "Lcom/facebook/marianatrench/integrationtests/HandlerTwo;.handleMessage:(Ljava/lang/Object;)V",
+    "Lcom/facebook/marianatrench/integrationtests/Shims;.callOnTestIssue:()Lcom/facebook/marianatrench/integrationtests/CallOnTest;",
+    "Lcom/facebook/marianatrench/integrationtests/Shims;.callOnTestNoIssue:()Lcom/facebook/marianatrench/integrationtests/CallOnTest;",
     "Lcom/facebook/marianatrench/integrationtests/Shims;.messageHandlerOneIssue:()Lcom/facebook/marianatrench/integrationtests/Messenger;"
   ],
   "Lcom/facebook/marianatrench/integrationtests/Shims;.getMessageHandler:(Z)Lcom/facebook/marianatrench/integrationtests/Messenger;" : 
@@ -143,6 +154,7 @@
     "Lcom/facebook/auth/datastore/LoggedInUserAuthDataStore;.<init>:()V",
     "Lcom/facebook/base/activity/FragmentBaseActivityUtil;.<init>:()V",
     "Lcom/facebook/content/SecureContextHelper;.<init>:()V",
+    "Lcom/facebook/marianatrench/integrationtests/CallOnTest;.<init>:(Lcom/facebook/marianatrench/integrationtests/Handler;Lcom/facebook/marianatrench/integrationtests/Handler;Ljava/lang/Object;Ljava/lang/Object;)V",
     "Lcom/facebook/marianatrench/integrationtests/FragmentTest;.<init>:()V",
     "Lcom/facebook/marianatrench/integrationtests/Handler;.<init>:()V",
     "Lcom/facebook/marianatrench/integrationtests/Messenger;.<init>:()V",
@@ -151,6 +163,8 @@
     "Lcom/facebook/marianatrench/integrationtests/Origin;.<init>:()V",
     "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;",
     "Lcom/facebook/marianatrench/integrationtests/Shims;.<init>:()V",
+    "Lcom/facebook/marianatrench/integrationtests/Shims;.callOnTestIssue:()Lcom/facebook/marianatrench/integrationtests/CallOnTest;",
+    "Lcom/facebook/marianatrench/integrationtests/Shims;.callOnTestNoIssue:()Lcom/facebook/marianatrench/integrationtests/CallOnTest;",
     "Lcom/facebook/secure/context/IntentLauncher;.<init>:()V",
     "Lcom/facebook/secure/context/SecureContextHelperV2;.<init>:()V",
     "Lcom/facebook/user/model/User;.<init>:()V",
