@@ -42,7 +42,7 @@
 #include <mariana-trench/Timer.h>
 #include <mariana-trench/Types.h>
 #include <mariana-trench/UnusedKinds.h>
-#include <mariana-trench/shim-generator/ShimGenerator.h>
+#include <mariana-trench/shim-generator/ShimGeneration.h>
 
 namespace marianatrench {
 
@@ -132,9 +132,7 @@ Registry MarianaTrench::analyze(Context& context) {
 
   Timer shims_timer;
   LOG(1, "Creating Shims...");
-  auto shim_generator =
-      std::make_unique<ShimGenerator>("handler_shim_generator");
-  auto shims = shim_generator->emit_artificial_callees(*context.methods);
+  auto shims = ShimGeneration::run(context);
   LOG(1, "Created Shims in {:.2f}s.", shims_timer.duration_in_seconds());
 
   Timer call_graph_timer;

@@ -195,7 +195,7 @@ class CallGraph final {
       const ClassHierarchies& class_hierarchies,
       Overrides& overrides,
       const Features& features,
-      const MethodToShimTargetsMap& shims);
+      const MethodToShimMap& shims);
 
   CallGraph(const CallGraph&) = delete;
   CallGraph(CallGraph&&) = delete;

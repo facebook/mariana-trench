@@ -70,21 +70,4 @@ class JsonShimGenerator final {
   ShimTemplate shim_template_;
 };
 
-// TODO: Remove. This is used now for the hardcoded version.
-class ShimGenerator {
- public:
-  explicit ShimGenerator(const std::string& name);
-
-  ShimGenerator(const ShimGenerator&) = delete;
-  ShimGenerator(ShimGenerator&&) = default;
-  ShimGenerator& operator=(const ShimGenerator&) = delete;
-  ShimGenerator& operator=(ShimGenerator&&) = delete;
-  ~ShimGenerator() = default;
-
-  MethodToShimTargetsMap emit_artificial_callees(const Methods& methods) const;
-
- private:
-  std::string name_;
-};
-
 } // namespace marianatrench

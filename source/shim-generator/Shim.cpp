@@ -16,51 +16,6 @@
 namespace marianatrench {
 namespace {
 
-// TODO: Used for the hardcoded version. Remove and use
-// ShimMethod::type_position()
-std::optional<ShimParameterPosition> get_type_position(
-    const DexType* dex_type,
-    const std::unordered_map<const DexType*, ShimParameterPosition>&
-        parameter_types_to_position) {
-  auto found = parameter_types_to_position.find(dex_type);
-  if (found == parameter_types_to_position.end()) {
-    return std::nullopt;
-  }
-
-  LOG(5,
-      "Found dex type {} in shim parameter position: {}",
-      found->first->str(),
-      found->second);
-
-  return found->second;
-}
-
-std::vector<ShimParameterPosition> get_parameter_positions(
-    const Method* method,
-    const std::unordered_map<const DexType*, ShimParameterPosition>&
-        parameter_types_to_position) {
-  std::vector<ShimParameterPosition> parameters;
-
-  const auto* method_prototype = method->get_proto();
-  if (!method_prototype) {
-    return parameters;
-  }
-
-  const auto* dex_arguments = method_prototype->get_args();
-  if (!dex_arguments) {
-    return parameters;
-  }
-
-  for (const auto* dex_argument : *dex_arguments) {
-    if (auto position =
-            get_type_position(dex_argument, parameter_types_to_position)) {
-      parameters.push_back(*position);
-    }
-  }
-
-  return parameters;
-}
-
 bool valid_receiver_position(
     const Method* call_target,
     std::optional<ShimParameterPosition> receiver_position_in_shim,
@@ -174,9 +129,9 @@ ShimTarget::ShimTarget(
     const Method* method,
     std::optional<ShimParameterPosition> receiver_position,
     std::vector<ShimParameterPosition> parameter_positions)
-    : call_target(method),
-      receiver_position_in_shim(receiver_position),
-      parameter_positions_in_shim(parameter_positions) {}
+    : call_target_(method),
+      receiver_position_in_shim_(receiver_position),
+      parameter_positions_in_shim_(parameter_positions) {}
 
 std::optional<ShimTarget> ShimTarget::from_json(
     const Json::Value& value,
@@ -212,35 +167,15 @@ std::optional<ShimTarget> ShimTarget::from_json(
   return ShimTarget(call_target, receiver_position_in_shim, forward_parameters);
 }
 
-std::optional<ShimTarget> ShimTarget::try_create(
-    const Method* call_target,
-    const std::unordered_map<const DexType*, ShimParameterPosition>&
-        parameter_types_to_position) {
-  if (call_target == nullptr) {
-    return std::nullopt;
-  }
-
-  LOG(5, "Creating shim target: {}", call_target->signature());
-
-  auto receiver_position_in_shim =
-      get_type_position(call_target->get_class(), parameter_types_to_position);
-
-  auto parameter_positions_in_shim =
-      get_parameter_positions(call_target, parameter_types_to_position);
-
-  return ShimTarget{
-      call_target, receiver_position_in_shim, parameter_positions_in_shim};
-}
-
 std::optional<ShimTarget> ShimTarget::instantiate(
     const ShimMethod& shim_method) const {
   std::optional<ShimParameterPosition> receiver_position;
 
   if (valid_receiver_position(
-          call_target, receiver_position_in_shim, shim_method)) {
-    receiver_position = receiver_position_in_shim;
+          call_target_, receiver_position_in_shim_, shim_method)) {
+    receiver_position = receiver_position_in_shim_;
   } else {
-    receiver_position = shim_method.type_position(call_target->get_class());
+    receiver_position = shim_method.type_position(call_target_->get_class());
   }
 
   if (!receiver_position) {
@@ -249,13 +184,36 @@ std::optional<ShimTarget> ShimTarget::instantiate(
 
   std::vector<ShimParameterPosition> parameter_positions;
   if (valid_parameter_positions(
-          call_target, parameter_positions_in_shim, shim_method)) {
-    parameter_positions = parameter_positions_in_shim;
+          call_target_, parameter_positions_in_shim_, shim_method)) {
+    parameter_positions = parameter_positions_in_shim_;
   } else {
-    parameter_positions = shim_method.method_parameter_positions(call_target);
+    parameter_positions = shim_method.method_parameter_positions(call_target_);
   }
 
-  return ShimTarget(call_target, receiver_position, parameter_positions);
+  return ShimTarget(call_target_, receiver_position, parameter_positions);
+}
+
+std::optional<Register> ShimTarget::receiver_register(
+    const IRInstruction* instruction) const {
+  if (!receiver_position_in_shim_) {
+    return std::nullopt;
+  }
+  mt_assert(*receiver_position_in_shim_ < instruction->srcs_size());
+  return instruction->src(*receiver_position_in_shim_);
+}
+
+std::vector<Register> ShimTarget::parameter_registers(
+    const IRInstruction* instruction) const {
+  std::vector<Register> parameter_registers;
+  if (auto receiver = receiver_register(instruction)) {
+    parameter_registers.push_back(receiver.value());
+  }
+  for (auto parameter_position : parameter_positions_in_shim_) {
+    mt_assert(parameter_position <= instruction->srcs_size());
+    parameter_registers.push_back(instruction->src(parameter_position));
+  }
+
+  return parameter_registers;
 }
 
 Shim::Shim(const Method* method, std::vector<ShimTarget> targets)
@@ -263,17 +221,17 @@ Shim::Shim(const Method* method, std::vector<ShimTarget> targets)
 
 std::ostream& operator<<(std::ostream& out, const ShimTarget& shim_target) {
   out << "ShimTarget(method=`";
-  if (shim_target.call_target != nullptr) {
-    out << shim_target.call_target->show();
+  if (shim_target.call_target_ != nullptr) {
+    out << shim_target.call_target_->show();
   }
   out << "`";
-  if (shim_target.receiver_position_in_shim) {
-    out << ", call_on=Argument(" << *shim_target.receiver_position_in_shim
+  if (shim_target.receiver_position_in_shim_) {
+    out << ", call_on=Argument(" << *shim_target.receiver_position_in_shim_
         << ")";
   }
-  if (!shim_target.parameter_positions_in_shim.empty()) {
+  if (!shim_target.parameter_positions_in_shim_.empty()) {
     out << ", forward_parameters=[";
-    for (const auto& parameter : shim_target.parameter_positions_in_shim) {
+    for (const auto& parameter : shim_target.parameter_positions_in_shim_) {
       out << " Argument(" << parameter << "),";
     }
     out << " ]";

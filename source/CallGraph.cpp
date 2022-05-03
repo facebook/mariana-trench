@@ -20,6 +20,7 @@
 #include <mariana-trench/JsonValidation.h>
 #include <mariana-trench/Log.h>
 #include <mariana-trench/Methods.h>
+#include <mariana-trench/shim-generator/Shim.h>
 
 namespace marianatrench {
 
@@ -256,30 +257,15 @@ std::vector<ArtificialCallee> shim_artificial_callees(
     const Overrides& override_factory,
     const ClassHierarchies& class_hierarchies,
     const Features& features,
-    const std::vector<ShimTarget>& call_targets) {
+    const Shim& shim) {
   std::vector<ArtificialCallee> artificial_callees;
 
-  for (const auto& artificial_callee : call_targets) {
-    const auto* method = artificial_callee.call_target;
+  for (const auto& shim_target : shim.targets()) {
+    const auto* method = shim_target.method();
     mt_assert(method != nullptr);
 
-    std::optional<Register> receiver_register;
-
-    if (auto receiver_position = artificial_callee.receiver_position_in_shim) {
-      mt_assert(*receiver_position < instruction->srcs_size());
-      receiver_register = instruction->src(*receiver_position);
-    }
-
-    // Collect register parameters
-    std::vector<Register> register_parameters;
-    if (receiver_register) {
-      register_parameters.push_back(receiver_register.value());
-    }
-    for (auto parameter_position :
-         artificial_callee.parameter_positions_in_shim) {
-      mt_assert(parameter_position <= instruction->srcs_size());
-      register_parameters.push_back(instruction->src(parameter_position));
-    }
+    auto receiver_register = shim_target.receiver_register(instruction);
+    auto register_parameters = shim_target.parameter_registers(instruction);
 
     if (method->is_static()) {
       artificial_callees.push_back(ArtificialCallee{
@@ -295,7 +281,7 @@ std::vector<ArtificialCallee> shim_artificial_callees(
     // Try to refine the virtual call using the runtime type.
     if (receiver_register) {
       auto register_type =
-          types.register_type(caller, instruction, receiver_register.value());
+          types.register_type(caller, instruction, *receiver_register);
       receiver_type = register_type ? register_type : receiver_type;
     }
 
@@ -351,7 +337,7 @@ InstructionCallGraphInformation process_instruction(
     Overrides& override_factory,
     const ClassHierarchies& class_hierarchies,
     const Features& features,
-    const MethodToShimTargetsMap& shims) {
+    const MethodToShimMap& shims) {
   InstructionCallGraphInformation instruction_information;
 
   if (opcode::is_an_iput(instruction->opcode())) {
@@ -616,7 +602,7 @@ CallGraph::CallGraph(
     const ClassHierarchies& class_hierarchies,
     Overrides& override_factory,
     const Features& features,
-    const MethodToShimTargetsMap& shims)
+    const MethodToShimMap& shims)
     : types_(types),
       class_hierarchies_(class_hierarchies),
       overrides_(override_factory) {

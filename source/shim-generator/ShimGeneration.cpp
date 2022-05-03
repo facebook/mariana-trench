@@ -65,6 +65,13 @@ MethodToShimMap ShimGeneration::run(Context& context) {
   for (auto& item : all_shims) {
     auto shims = item.emit_method_shims(*context.methods, *method_mappings);
     method_shims.merge(shims);
+    for (const auto& shim : shims) {
+      WARNING(
+          1,
+          "Shim for {} already exist. Not adding: {}",
+          shim.first->show(),
+          shim.second);
+    }
   }
 
   return method_shims;

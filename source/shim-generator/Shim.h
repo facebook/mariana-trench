@@ -15,11 +15,8 @@
 
 namespace marianatrench {
 
-class ShimTarget;
 class Shim;
 using ShimParameterPosition = ParameterPosition;
-using MethodToShimTargetsMap =
-    std::unordered_map<const Method*, std::vector<ShimTarget>>;
 using MethodToShimMap = std::unordered_map<const Method*, Shim>;
 
 class ShimMethod {
@@ -47,22 +44,26 @@ class ShimTarget {
       const Json::Value& value,
       Context& context);
 
-  static std::optional<ShimTarget> try_create(
-      const Method* call_target,
-      const std::unordered_map<const DexType*, ParameterPosition>&
-          parameter_types_to_position);
-
   std::optional<ShimTarget> instantiate(const ShimMethod& shim_method) const;
+
+  const Method* method() const {
+    return call_target_;
+  }
+
+  std::optional<Register> receiver_register(
+      const IRInstruction* instruction) const;
+
+  std::vector<Register> parameter_registers(
+      const IRInstruction* instruction) const;
 
   friend std::ostream& operator<<(
       std::ostream& out,
       const ShimTarget& shim_target);
 
-  // TODO: public for now for the hardcoded version
- public:
-  const Method* call_target;
-  std::optional<ShimParameterPosition> receiver_position_in_shim;
-  std::vector<ShimParameterPosition> parameter_positions_in_shim;
+ private:
+  const Method* call_target_;
+  std::optional<ShimParameterPosition> receiver_position_in_shim_;
+  std::vector<ShimParameterPosition> parameter_positions_in_shim_;
 };
 
 class Shim {

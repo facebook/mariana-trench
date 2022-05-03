@@ -75,6 +75,8 @@
   ],
   "Lcom/facebook/marianatrench/integrationtests/HandlerOne;.handleMessage:(Ljava/lang/Object;)V" : 
   [
+    "Lcom/facebook/marianatrench/integrationtests/Shims;.callOnTestIssue:()Lcom/facebook/marianatrench/integrationtests/CallOnTest;",
+    "Lcom/facebook/marianatrench/integrationtests/Shims;.callOnTestNoIssue:()Lcom/facebook/marianatrench/integrationtests/CallOnTest;",
     "Lcom/facebook/marianatrench/integrationtests/Shims;.getMessageHandler:(Z)Lcom/facebook/marianatrench/integrationtests/Messenger;",
     "Lcom/facebook/marianatrench/integrationtests/Shims;.messageHandlerOneIssue:()Lcom/facebook/marianatrench/integrationtests/Messenger;",
     "Lcom/facebook/marianatrench/integrationtests/Shims;.messageHandlerOneNoIssue:()Lcom/facebook/marianatrench/integrationtests/Messenger;"

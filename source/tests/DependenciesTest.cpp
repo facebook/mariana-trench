@@ -60,7 +60,7 @@ Context test_dependencies(const Scope& scope) {
       *context.class_hierarchies,
       *context.overrides,
       *context.features,
-      MethodToShimTargetsMap{});
+      MethodToShimMap{});
   context.rules = std::make_unique<Rules>();
   auto registry = Registry(context);
   context.dependencies = std::make_unique<Dependencies>(
