@@ -210,11 +210,6 @@ class CallGraph final {
   CallTarget callee(const Method* caller, const IRInstruction* instruction)
       const;
 
-  /* Return the resolved base callee for the given method and instruction. */
-  const Method* MT_NULLABLE resolved_base_callee(
-      const Method* caller,
-      const IRInstruction* instruction) const;
-
   /* Return a mapping from invoke instruction to artificial callees. */
   const std::unordered_map<const IRInstruction*, ArtificialCallees>&
   artificial_callees(const Method* caller) const;
@@ -238,7 +233,7 @@ class CallGraph final {
 
   ConcurrentMap<
       const Method*,
-      std::unordered_map<const IRInstruction*, const Method*>>
+      std::unordered_map<const IRInstruction*, CallTarget>>
       resolved_base_callees_;
   ConcurrentMap<
       const Method*,

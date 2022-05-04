@@ -321,7 +321,7 @@ std::vector<ArtificialCallee> shim_artificial_callees(
 }
 
 struct InstructionCallGraphInformation {
-  std::optional<const Method*> callee;
+  std::optional<CallTarget> callee;
   ArtificialCallees artificial_callees = {};
   std::optional<const Field*> field_access;
 };
@@ -399,8 +399,6 @@ InstructionCallGraphInformation process_instruction(
       features,
       instruction_information.artificial_callees);
 
-  instruction_information.callee = callee;
-
   auto shim = shims.find(callee);
   if (shim != shims.end()) {
     auto artificial_callees = shim_artificial_callees(
@@ -421,6 +419,13 @@ InstructionCallGraphInformation process_instruction(
 
   if (callee->parameter_type_overrides().empty() ||
       processed.count(callee) != 0) {
+    instruction_information.callee = CallTarget::from_call_instruction(
+        caller,
+        instruction,
+        callee,
+        types,
+        class_hierarchies,
+        override_factory);
     return instruction_information;
   }
   // This is a newly introduced method with parameter type
@@ -450,6 +455,8 @@ InstructionCallGraphInformation process_instruction(
       worklist.insert(method);
     }
   }
+  instruction_information.callee = CallTarget::from_call_instruction(
+      caller, instruction, callee, types, class_hierarchies, override_factory);
   return instruction_information;
 }
 
@@ -634,7 +641,7 @@ CallGraph::CallGraph(
 
           mt_assert(code->cfg_built());
 
-          std::unordered_map<const IRInstruction*, const Method*> callees;
+          std::unordered_map<const IRInstruction*, CallTarget> callees;
           std::unordered_map<const IRInstruction*, ArtificialCallees>
               artificial_callees;
           std::unordered_map<const IRInstruction*, const Field*> field_accesses;
@@ -713,14 +720,8 @@ std::vector<CallTarget> CallGraph::callees(const Method* caller) const {
   }
 
   std::vector<CallTarget> call_targets;
-  for (auto [instruction, resolved_base_callee] : callees->second) {
-    call_targets.push_back(CallTarget::from_call_instruction(
-        caller,
-        instruction,
-        resolved_base_callee,
-        types_,
-        class_hierarchies_,
-        overrides_));
+  for (auto [instruction, call_target] : callees->second) {
+    call_targets.push_back(call_target);
   }
   return call_targets;
 }
@@ -728,28 +729,23 @@ std::vector<CallTarget> CallGraph::callees(const Method* caller) const {
 CallTarget CallGraph::callee(
     const Method* caller,
     const IRInstruction* instruction) const {
-  return CallTarget::from_call_instruction(
+  auto empty_resolved_callee = CallTarget::from_call_instruction(
       caller,
       instruction,
-      resolved_base_callee(caller, instruction),
+      /* resolved_base_callee */ nullptr,
       types_,
       class_hierarchies_,
       overrides_);
-}
-
-const Method* MT_NULLABLE CallGraph::resolved_base_callee(
-    const Method* caller,
-    const IRInstruction* instruction) const {
   // Note that `find` is not thread-safe, but this is fine because
   // `resolved_base_callees_` is read-only after the constructor completed.
   auto callees = resolved_base_callees_.find(caller);
   if (callees == resolved_base_callees_.end()) {
-    return nullptr;
+    return empty_resolved_callee;
   }
 
   auto callee = callees->second.find(instruction);
   if (callee == callees->second.end()) {
-    return nullptr;
+    return empty_resolved_callee;
   }
 
   return callee->second;
@@ -802,14 +798,7 @@ Json::Value CallGraph::to_json(bool with_overrides) const {
 
     std::unordered_set<const Method*> static_callees;
     std::unordered_set<const Method*> virtual_callees;
-    for (const auto& [instruction, resolved_base_callee] : callees) {
-      auto call_target = CallTarget::from_call_instruction(
-          method,
-          instruction,
-          resolved_base_callee,
-          types_,
-          class_hierarchies_,
-          overrides_);
+    for (const auto& [instruction, call_target] : callees) {
       if (!call_target.resolved()) {
         continue;
       } else if (call_target.is_virtual()) {
