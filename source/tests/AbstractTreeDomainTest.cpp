@@ -1118,9 +1118,7 @@ namespace {
 
 struct PropagateArtificialSources {
   Taint operator()(Taint taint, Path::Element path_element) const {
-    taint.append_callee_port(path_element, [&](const Kind* kind) {
-      return kind == Kinds::artificial_source();
-    });
+    taint.append_callee_port_to_artificial_sources(path_element);
     return taint;
   }
 };

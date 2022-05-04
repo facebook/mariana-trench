@@ -168,9 +168,7 @@ class CalleeFrames final : public sparta::AbstractDomain<CalleeFrames> {
       const std::function<std::vector<const Kind*>(const Kind*)>&,
       const std::function<FeatureMayAlwaysSet(const Kind*)>&) const;
 
-  void append_callee_port(
-      Path::Element path_element,
-      const std::function<bool(const Kind*)>& filter);
+  void append_callee_port_to_artificial_sources(Path::Element path_element);
 
   void filter_invalid_frames(
       const std::function<

@@ -212,18 +212,9 @@ class CalleePortFrames final : public sparta::AbstractDomain<CalleePortFrames> {
 
   /**
    * Returns a new instance of `CalleePortFrames` in which `path_element` is
-   * appended to the port.
-   *
-   * CAVEAT: When calling this, all underlying frames are expected to have
-   * kind == artificial_source(). Use `partition_by_kind` to achieve this.
-   *
-   * TODO(T91357916): `CallPositionFrames` has an `append_callee_port` which
-   * only appends the port if the Frame's kind passes a certain filter. This
-   * behavior is not supported here. `CallPositionFrames` should call
-   * `partition_by_kind` followed by `append_callee_port` to achieve the
-   * desired behavior when it switches over to using `CalleePortFrames`.
+   * appended to the port if these frames contain artificial sources.
    */
-  CalleePortFrames append_callee_port(Path::Element path_element) const;
+  void append_callee_port_to_artificial_sources(Path::Element path_element);
 
   void filter_invalid_frames(
       const std::function<

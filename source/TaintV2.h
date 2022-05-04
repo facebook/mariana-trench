@@ -176,9 +176,7 @@ class TaintV2 final : public sparta::AbstractDomain<TaintV2> {
    * Appends `path_element` to the callee ports of all kind that pass `filter`
    * (returns true).
    */
-  void append_callee_port(
-      Path::Element path_element,
-      const std::function<bool(const Kind*)>& filter);
+  void append_callee_port_to_artificial_sources(Path::Element path_element);
 
   /**
    * Update call and local positions of all non-leaf frames.

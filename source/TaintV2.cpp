@@ -165,11 +165,10 @@ std::ostream& operator<<(std::ostream& out, const TaintV2& taint) {
   return out << taint.set_;
 }
 
-void TaintV2::append_callee_port(
-    Path::Element path_element,
-    const std::function<bool(const Kind*)>& filter) {
+void TaintV2::append_callee_port_to_artificial_sources(
+    Path::Element path_element) {
   map([&](CalleeFrames& frames) {
-    frames.append_callee_port(path_element, filter);
+    frames.append_callee_port_to_artificial_sources(path_element);
   });
 }
 

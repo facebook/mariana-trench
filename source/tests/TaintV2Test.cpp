@@ -702,10 +702,7 @@ TEST_F(TaintV2Test, AppendCalleePort) {
               .callee_port = AccessPath(
                   Root(Root::Kind::Argument), Path{path_element1})})};
 
-  taint.append_callee_port(path_element2, [](const Kind* kind) {
-    return kind == Kinds::artificial_source();
-  });
-
+  taint.append_callee_port_to_artificial_sources(path_element2);
   EXPECT_EQ(
       taint,
       (TaintV2{

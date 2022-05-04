@@ -361,8 +361,12 @@ CalleePortFrames CalleePortFrames::transform_kind_with_features(
       callee_port_, is_artificial_source_frames_, new_frames_by_kind);
 }
 
-CalleePortFrames CalleePortFrames::append_callee_port(
-    Path::Element path_element) const {
+void CalleePortFrames::append_callee_port_to_artificial_sources(
+    Path::Element path_element) {
+  if (!is_artificial_source_frames()) {
+    return;
+  }
+
   // TODO (T91357916): Remove "callee_port" from `Frame` so we don't need
   // to update the frames internally.
   FramesByKind new_frames;
@@ -378,10 +382,8 @@ CalleePortFrames CalleePortFrames::append_callee_port(
     new_frames.set(kind, frames_copy);
   }
 
-  auto new_callee_port = callee_port_;
-  new_callee_port.append(path_element);
-  return CalleePortFrames(
-      new_callee_port, is_artificial_source_frames_, new_frames);
+  frames_ = new_frames;
+  callee_port_.append(path_element);
 }
 
 void CalleePortFrames::filter_invalid_frames(

@@ -172,16 +172,7 @@ class CallPositionFrames final
       const std::function<std::vector<const Kind*>(const Kind*)>&,
       const std::function<FeatureMayAlwaysSet(const Kind*)>&) const;
 
-  /**
-   * TODO (T91357916): Rename and update call-sites to remove unused `filter`
-   * argument. Callee port appending works exclusively on artificial sources.
-   * All non-artificial kinds are ignored (no `path_element` appended). The
-   * `filter` is unused. It always needs to be `return kind ==
-   * Kinds::artificial_source()` in order to work anyway.
-   */
-  void append_callee_port(
-      Path::Element path_element,
-      const std::function<bool(const Kind*)>& /* unused filter */);
+  void append_callee_port_to_artificial_sources(Path::Element path_element);
 
   void filter_invalid_frames(
       const std::function<

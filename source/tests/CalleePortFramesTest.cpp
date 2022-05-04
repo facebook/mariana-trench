@@ -1228,8 +1228,9 @@ TEST_F(CalleePortFramesTest, AppendCalleePort) {
           .callee_port =
               AccessPath(Root(Root::Kind::Argument), Path{path_element1})})};
 
+  frames.append_callee_port_to_artificial_sources(path_element2);
   EXPECT_EQ(
-      frames.append_callee_port(path_element2),
+      frames,
       (CalleePortFrames{test::make_frame(
           Kinds::artificial_source(),
           test::FrameProperties{

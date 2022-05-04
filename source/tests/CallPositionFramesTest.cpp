@@ -1715,10 +1715,7 @@ TEST_F(CallPositionFramesTest, AppendCalleePort) {
               .callee_port = AccessPath(
                   Root(Root::Kind::Argument), Path{path_element1})})};
 
-  frames.append_callee_port(path_element2, [](const Kind* kind) {
-    return kind == Kinds::artificial_source();
-  });
-
+  frames.append_callee_port_to_artificial_sources(path_element2);
   EXPECT_EQ(
       frames,
       (CallPositionFrames{

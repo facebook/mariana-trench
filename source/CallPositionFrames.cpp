@@ -233,23 +233,11 @@ CallPositionFrames CallPositionFrames::transform_kind_with_features(
   return CallPositionFrames(position_, new_frames);
 }
 
-void CallPositionFrames::append_callee_port(
-    Path::Element path_element,
-    const std::function<bool(const Kind*)>& /* unused */) {
-  // TODO (T91357916): Make CalleePortFrames::append_callee_port work in-place
-  // so we can use frames_.map() directly without having to make a copy.
-  FramesByCalleePort new_frames;
-  for (const auto& callee_port_frames : frames_) {
-    // Callee ports can only be updated for artificial sources (see
-    // `CalleePortFrames::GroupHash` key). Everything else must be kept as-is.
-    if (!callee_port_frames.is_artificial_source_frames()) {
-      new_frames.add(callee_port_frames);
-    } else {
-      new_frames.add(callee_port_frames.append_callee_port(path_element));
-    }
-  }
-
-  frames_ = new_frames;
+void CallPositionFrames::append_callee_port_to_artificial_sources(
+    Path::Element path_element) {
+  frames_.map([&](CalleePortFrames& callee_port_frames) {
+    callee_port_frames.append_callee_port_to_artificial_sources(path_element);
+  });
 }
 
 void CallPositionFrames::filter_invalid_frames(
