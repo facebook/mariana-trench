@@ -1812,10 +1812,9 @@ TEST_F(CallPositionFramesTest, Show) {
 
   EXPECT_EQ(
       show(frames),
-      "[FrameByKind(kind=TestSink1, frames={Frame(kind=`TestSink1`, callee_port=AccessPath(Leaf), origins={`LOne;.one:()V`})}),]");
+      "[FramesByCalleePort([FrameByKind(kind=TestSink1, frames={Frame(kind=`TestSink1`, callee_port=AccessPath(Leaf), origins={`LOne;.one:()V`})}),]),]");
 
   EXPECT_EQ(show(CallPositionFrames::bottom()), "[]");
-  EXPECT_EQ(show(CallPositionFrames::top()), "T");
 }
 
 TEST_F(CallPositionFramesTest, ContainsKind) {

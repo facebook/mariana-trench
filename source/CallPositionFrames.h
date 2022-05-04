@@ -16,6 +16,7 @@
 #include <AbstractDomain.h>
 #include <PatriciaTreeMapAbstractPartition.h>
 
+#include <mariana-trench/CalleePortFrames.h>
 #include <mariana-trench/FlattenIterator.h>
 #include <mariana-trench/Frame.h>
 #include <mariana-trench/GroupHashedSetAbstractDomain.h>
@@ -30,27 +31,16 @@ namespace marianatrench {
 class CallPositionFrames final
     : public sparta::AbstractDomain<CallPositionFrames> {
  private:
-  using Frames =
-      GroupHashedSetAbstractDomain<Frame, Frame::GroupHash, Frame::GroupEqual>;
-  using FramesByKind =
-      sparta::PatriciaTreeMapAbstractPartition<const Kind*, Frames>;
+  using FramesByCalleePort = GroupHashedSetAbstractDomain<
+      CalleePortFrames,
+      CalleePortFrames::GroupHash,
+      CalleePortFrames::GroupEqual,
+      CalleePortFrames::GroupDifference>;
 
  private:
-  // Iterator based on `FlattenIterator`.
-
-  struct KindToFramesMapDereference {
-    static Frames::iterator begin(const std::pair<const Kind*, Frames>& pair) {
-      return pair.second.begin();
-    }
-    static Frames::iterator end(const std::pair<const Kind*, Frames>& pair) {
-      return pair.second.end();
-    }
-  };
-
   using ConstIterator = FlattenIterator<
-      /* OuterIterator */ FramesByKind::MapType::iterator,
-      /* InnerIterator */ Frames::iterator,
-      KindToFramesMapDereference>;
+      /* OuterIterator */ FramesByCalleePort::iterator,
+      /* InnerIterator */ CalleePortFrames::iterator>;
 
  public:
   // C++ container concept member types
@@ -65,12 +55,13 @@ class CallPositionFrames final
  private:
   explicit CallPositionFrames(
       const Position* MT_NULLABLE position,
-      FramesByKind frames)
+      FramesByCalleePort frames)
       : position_(position), frames_(std::move(frames)) {}
 
  public:
   /* Create the bottom (i.e, empty) frame set. */
-  CallPositionFrames() : position_(nullptr), frames_(FramesByKind::bottom()) {}
+  CallPositionFrames()
+      : position_(nullptr), frames_(FramesByCalleePort::bottom()) {}
 
   explicit CallPositionFrames(std::initializer_list<Frame> frames);
 
@@ -81,12 +72,12 @@ class CallPositionFrames final
 
   static CallPositionFrames bottom() {
     return CallPositionFrames(
-        /* position */ nullptr, FramesByKind::bottom());
+        /* position */ nullptr, FramesByCalleePort::bottom());
   }
 
   static CallPositionFrames top() {
     return CallPositionFrames(
-        /* position */ nullptr, FramesByKind::top());
+        /* position */ nullptr, FramesByCalleePort::top());
   }
 
   bool is_bottom() const override {
@@ -134,11 +125,11 @@ class CallPositionFrames final
   void map(const std::function<void(Frame&)>& f);
 
   ConstIterator begin() const {
-    return ConstIterator(frames_.bindings().begin(), frames_.bindings().end());
+    return ConstIterator(frames_.begin(), frames_.end());
   }
 
   ConstIterator end() const {
-    return ConstIterator(frames_.bindings().end(), frames_.bindings().end());
+    return ConstIterator(frames_.end(), frames_.end());
   }
 
   void add_inferred_features(const FeatureMayAlwaysSet& features);
@@ -171,13 +162,26 @@ class CallPositionFrames final
   /* Return the set of leaf frames with the given position. */
   CallPositionFrames attach_position(const Position* position) const;
 
+  /**
+   * TODO (T91357916): This can have a more optimal in-place implementation
+   * rather than returning a new object. Kind and feature changes do not affect
+   * the keys of this object or the underlying `CalleePortFrames`. Requires
+   * dropping `const`-ness, return type and updating call-sites.
+   */
   CallPositionFrames transform_kind_with_features(
       const std::function<std::vector<const Kind*>(const Kind*)>&,
       const std::function<FeatureMayAlwaysSet(const Kind*)>&) const;
 
+  /**
+   * TODO (T91357916): Rename and update call-sites to remove unused `filter`
+   * argument. Callee port appending works exclusively on artificial sources.
+   * All non-artificial kinds are ignored (no `path_element` appended). The
+   * `filter` is unused. It always needs to be `return kind ==
+   * Kinds::artificial_source()` in order to work anyway.
+   */
   void append_callee_port(
       Path::Element path_element,
-      const std::function<bool(const Kind*)>& filter);
+      const std::function<bool(const Kind*)>& /* unused filter */);
 
   void filter_invalid_frames(
       const std::function<
@@ -190,18 +194,21 @@ class CallPositionFrames final
   std::unordered_map<T, CallPositionFrames> partition_by_kind(
       const std::function<T(const Kind*)>& map_kind) const {
     std::unordered_map<T, CallPositionFrames> result;
-    for (const auto& [kind, kind_frames] : frames_.bindings()) {
-      T mapped_value = map_kind(kind);
-      auto new_frames = CallPositionFrames(
-          position_, FramesByKind{std::pair(kind, kind_frames)});
+    for (const auto& callee_port_frames : frames_) {
+      auto partition = callee_port_frames.partition_by_kind(map_kind);
 
-      auto existing = result.find(mapped_value);
-      auto existing_or_bottom = existing == result.end()
-          ? CallPositionFrames::bottom()
-          : existing->second;
-      existing_or_bottom.join_with(new_frames);
+      for (const auto& [mapped_value, partitioned_frames] : partition) {
+        auto new_frames = CallPositionFrames(
+            position_, FramesByCalleePort{partitioned_frames});
 
-      result[mapped_value] = existing_or_bottom;
+        auto existing = result.find(mapped_value);
+        auto existing_or_bottom = existing == result.end()
+            ? CallPositionFrames::bottom()
+            : existing->second;
+        existing_or_bottom.join_with(new_frames);
+
+        result[mapped_value] = existing_or_bottom;
+      }
     }
     return result;
   }
@@ -211,10 +218,10 @@ class CallPositionFrames final
   partition_map(const std::function<T(const Frame&)>& map) const {
     std::unordered_map<T, std::vector<std::reference_wrapper<const Frame>>>
         result;
-    for (const auto& [_, frames] : frames_.bindings()) {
-      for (const auto& frame : frames) {
-        auto value = map(frame);
-        result[value].push_back(std::cref(frame));
+    for (const auto& callee_port_frames : frames_) {
+      for (const auto& callee_port_frame : callee_port_frames) {
+        auto value = map(callee_port_frame);
+        result[value].push_back(std::cref(callee_port_frame));
       }
     }
 
@@ -226,29 +233,8 @@ class CallPositionFrames final
       const CallPositionFrames& frames);
 
  private:
-  Frame propagate_frames(
-      const Method* callee,
-      const AccessPath& callee_port,
-      const Position* call_position,
-      int maximum_source_sink_distance,
-      Context& context,
-      const std::vector<const DexType * MT_NULLABLE>& source_register_types,
-      const std::vector<std::optional<std::string>>& source_constant_arguments,
-      std::vector<std::reference_wrapper<const Frame>> frames,
-      std::vector<const Feature*>& via_type_of_features_added) const;
-
-  CallPositionFrames propagate_crtex_frames(
-      const Method* callee,
-      const AccessPath& callee_port,
-      const Position* call_position,
-      int maximum_source_sink_distance,
-      Context& context,
-      const std::vector<const DexType * MT_NULLABLE>& source_register_types,
-      std::vector<std::reference_wrapper<const Frame>> frames) const;
-
- private:
   const Position* MT_NULLABLE position_;
-  FramesByKind frames_;
+  FramesByCalleePort frames_;
 
   // TODO(T91357916): Move local_positions and local_features here from `Frame`.
 };

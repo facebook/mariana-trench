@@ -89,6 +89,38 @@ CalleePortFrames::CalleePortFrames(std::initializer_list<Frame> frames)
   }
 }
 
+bool CalleePortFrames::GroupEqual::operator()(
+    const CalleePortFrames& left,
+    const CalleePortFrames& right) const {
+  // For artificial sources, only the root of the callee port needs to be
+  // common.
+  if (left.is_artificial_source_frames()) {
+    return right.is_artificial_source_frames() &&
+        left.callee_port().root() == right.callee_port().root();
+  } else {
+    return !right.is_artificial_source_frames() &&
+        left.callee_port() == right.callee_port();
+  }
+}
+
+std::size_t CalleePortFrames::GroupHash::operator()(
+    const CalleePortFrames& frame) const {
+  std::size_t seed = 0;
+  if (frame.is_artificial_source_frames()) {
+    boost::hash_combine(seed, frame.callee_port().root().encode());
+  } else {
+    boost::hash_combine(seed, std::hash<AccessPath>()(frame.callee_port()));
+  }
+  boost::hash_combine(seed, frame.is_artificial_source_frames());
+  return seed;
+}
+
+void CalleePortFrames::GroupDifference::operator()(
+    CalleePortFrames& left,
+    const CalleePortFrames& right) const {
+  left.difference_with(right);
+}
+
 void CalleePortFrames::add(const Frame& frame) {
   if (is_bottom()) {
     callee_port_ = frame.callee_port();
