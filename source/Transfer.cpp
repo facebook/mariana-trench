@@ -571,7 +571,8 @@ void create_sinks(
         context->model.attach_to_sinks(artificial_source.callee_port().root()));
     features.add(artificial_source.features());
 
-    auto new_sinks = sinks.transform_kind_with_features(
+    auto new_sinks = sinks;
+    new_sinks.transform_kind_with_features(
         [context, &fulfilled_partial_sinks](
             const Kind* sink_kind) -> std::vector<const Kind*> {
           const auto* partial_sink = sink_kind->as<PartialKind>();

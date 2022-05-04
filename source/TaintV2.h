@@ -164,9 +164,9 @@ class TaintV2 final : public sparta::AbstractDomain<TaintV2> {
    * time of writing, there should be no such use-case, but new callers should
    * be mindful of this behavior.
    */
-  TaintV2 transform_kind_with_features(
+  void transform_kind_with_features(
       const std::function<std::vector<const Kind*>(const Kind*)>&,
-      const std::function<FeatureMayAlwaysSet(const Kind*)>&) const;
+      const std::function<FeatureMayAlwaysSet(const Kind*)>&);
 
   Json::Value to_json() const;
 

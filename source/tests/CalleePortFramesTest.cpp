@@ -1050,7 +1050,7 @@ TEST_F(CalleePortFramesTest, TransformKindWithFeatures) {
   auto* transformed_test_kind_two =
       context.kinds->get("TransformedTestKindTwo");
 
-  auto frames = CalleePortFrames{
+  auto initial_frames = CalleePortFrames{
       test::make_frame(
           test_kind_one,
           test::FrameProperties{.user_features = FeatureSet{user_feature_one}}),
@@ -1062,15 +1062,17 @@ TEST_F(CalleePortFramesTest, TransformKindWithFeatures) {
   };
 
   // Drop all kinds.
-  auto empty_frames = frames.transform_kind_with_features(
+  auto frames = initial_frames;
+  frames.transform_kind_with_features(
       [](const auto* /* unused kind */) { return std::vector<const Kind*>(); },
       [](const auto* /* unused kind */) {
         return FeatureMayAlwaysSet::bottom();
       });
-  EXPECT_EQ(empty_frames, CalleePortFrames::bottom());
+  EXPECT_EQ(frames, CalleePortFrames::bottom());
 
   // Perform an actual transformation.
-  auto new_frames = frames.transform_kind_with_features(
+  frames = initial_frames;
+  frames.transform_kind_with_features(
       [&](const auto* kind) -> std::vector<const Kind*> {
         if (kind == test_kind_one) {
           return {transformed_test_kind_one};
@@ -1081,7 +1083,7 @@ TEST_F(CalleePortFramesTest, TransformKindWithFeatures) {
         return FeatureMayAlwaysSet::bottom();
       });
   EXPECT_EQ(
-      new_frames,
+      frames,
       (CalleePortFrames{
           test::make_frame(
               transformed_test_kind_one,
@@ -1095,7 +1097,8 @@ TEST_F(CalleePortFramesTest, TransformKindWithFeatures) {
       }));
 
   // Another transformation, this time including a change to the features
-  new_frames = frames.transform_kind_with_features(
+  frames = initial_frames;
+  frames.transform_kind_with_features(
       [&](const auto* kind) {
         if (kind == test_kind_one) {
           return std::vector<const Kind*>{transformed_test_kind_one};
@@ -1106,7 +1109,7 @@ TEST_F(CalleePortFramesTest, TransformKindWithFeatures) {
         return FeatureMayAlwaysSet{feature_one};
       });
   EXPECT_EQ(
-      new_frames,
+      frames,
       (CalleePortFrames{
           test::make_frame(
               transformed_test_kind_one,
@@ -1121,7 +1124,8 @@ TEST_F(CalleePortFramesTest, TransformKindWithFeatures) {
       }));
 
   // Tests one -> many transformations (with features).
-  new_frames = frames.transform_kind_with_features(
+  frames = initial_frames;
+  frames.transform_kind_with_features(
       [&](const auto* kind) {
         if (kind == test_kind_one) {
           return std::vector<const Kind*>{
@@ -1135,7 +1139,7 @@ TEST_F(CalleePortFramesTest, TransformKindWithFeatures) {
         return FeatureMayAlwaysSet{feature_one};
       });
   EXPECT_EQ(
-      new_frames,
+      frames,
       (CalleePortFrames{
           test::make_frame(
               test_kind_one,
@@ -1155,7 +1159,8 @@ TEST_F(CalleePortFramesTest, TransformKindWithFeatures) {
       }));
 
   // Tests transformations with features added to specific kinds.
-  new_frames = frames.transform_kind_with_features(
+  frames = initial_frames;
+  frames.transform_kind_with_features(
       [&](const auto* kind) {
         if (kind == test_kind_one) {
           return std::vector<const Kind*>{
@@ -1170,7 +1175,7 @@ TEST_F(CalleePortFramesTest, TransformKindWithFeatures) {
         return FeatureMayAlwaysSet::bottom();
       });
   EXPECT_EQ(
-      new_frames,
+      frames,
       (CalleePortFrames{
           test::make_frame(
               transformed_test_kind_one,
@@ -1196,7 +1201,7 @@ TEST_F(CalleePortFramesTest, TransformKindWithFeatures) {
               .inferred_features = FeatureMayAlwaysSet{feature_one},
               .user_features = FeatureSet{user_feature_one}}),
   };
-  new_frames = frames.transform_kind_with_features(
+  frames.transform_kind_with_features(
       [&](const auto* /* unused kind */) -> std::vector<const Kind*> {
         return {transformed_test_kind_one};
       },
@@ -1204,7 +1209,7 @@ TEST_F(CalleePortFramesTest, TransformKindWithFeatures) {
         return FeatureMayAlwaysSet::bottom();
       });
   EXPECT_EQ(
-      new_frames,
+      frames,
       (CalleePortFrames{
           test::make_frame(
               transformed_test_kind_one,

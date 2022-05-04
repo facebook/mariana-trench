@@ -1519,7 +1519,7 @@ TEST_F(CallPositionFramesTest, TransformKindWithFeatures) {
   auto* transformed_test_kind_two =
       context.kinds->get("TransformedTestKindTwo");
 
-  auto frames = CallPositionFrames{
+  auto initial_frames = CallPositionFrames{
       test::make_frame(
           test_kind_one,
           test::FrameProperties{
@@ -1534,7 +1534,8 @@ TEST_F(CallPositionFramesTest, TransformKindWithFeatures) {
   };
 
   // Drop all kinds.
-  auto empty_frames = frames.transform_kind_with_features(
+  auto empty_frames = initial_frames;
+  empty_frames.transform_kind_with_features(
       [](const auto* /* unused kind */) { return std::vector<const Kind*>(); },
       [](const auto* /* unused kind */) {
         return FeatureMayAlwaysSet::bottom();
@@ -1542,7 +1543,8 @@ TEST_F(CallPositionFramesTest, TransformKindWithFeatures) {
   EXPECT_EQ(empty_frames, CallPositionFrames::bottom());
 
   // Perform an actual transformation.
-  auto new_frames = frames.transform_kind_with_features(
+  auto new_frames = initial_frames;
+  new_frames.transform_kind_with_features(
       [&](const auto* kind) -> std::vector<const Kind*> {
         if (kind == test_kind_one) {
           return {transformed_test_kind_one};
@@ -1569,7 +1571,8 @@ TEST_F(CallPositionFramesTest, TransformKindWithFeatures) {
       }));
 
   // Another transformation, this time including a change to the features
-  new_frames = frames.transform_kind_with_features(
+  new_frames = initial_frames;
+  new_frames.transform_kind_with_features(
       [&](const auto* kind) {
         if (kind == test_kind_one) {
           return std::vector<const Kind*>{transformed_test_kind_one};
@@ -1597,7 +1600,8 @@ TEST_F(CallPositionFramesTest, TransformKindWithFeatures) {
       }));
 
   // Tests one -> many transformations (with features).
-  new_frames = frames.transform_kind_with_features(
+  new_frames = initial_frames;
+  new_frames.transform_kind_with_features(
       [&](const auto* kind) {
         if (kind == test_kind_one) {
           return std::vector<const Kind*>{
@@ -1634,7 +1638,8 @@ TEST_F(CallPositionFramesTest, TransformKindWithFeatures) {
       }));
 
   // Tests transformations with features added to specific kinds.
-  new_frames = frames.transform_kind_with_features(
+  new_frames = initial_frames;
+  new_frames.transform_kind_with_features(
       [&](const auto* kind) {
         if (kind == test_kind_one) {
           return std::vector<const Kind*>{
@@ -1665,7 +1670,7 @@ TEST_F(CallPositionFramesTest, TransformKindWithFeatures) {
       }));
 
   // Transformation where multiple old kinds map to the same new kind
-  frames = CallPositionFrames{
+  auto frames = CallPositionFrames{
       test::make_frame(
           test_kind_one,
           test::FrameProperties{
@@ -1679,7 +1684,7 @@ TEST_F(CallPositionFramesTest, TransformKindWithFeatures) {
               .inferred_features = FeatureMayAlwaysSet{feature_one},
               .user_features = FeatureSet{user_feature_one}}),
   };
-  new_frames = frames.transform_kind_with_features(
+  frames.transform_kind_with_features(
       [&](const auto* /* unused kind */) -> std::vector<const Kind*> {
         return {transformed_test_kind_one};
       },
@@ -1687,7 +1692,7 @@ TEST_F(CallPositionFramesTest, TransformKindWithFeatures) {
         return FeatureMayAlwaysSet::bottom();
       });
   EXPECT_EQ(
-      new_frames,
+      frames,
       (CallPositionFrames{
           test::make_frame(
               transformed_test_kind_one,

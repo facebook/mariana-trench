@@ -452,7 +452,7 @@ TEST_F(TaintV2Test, TransformKind) {
   auto* transformed_test_source = context.kinds->get("TransformedTestSource");
   auto* transformed_test_source2 = context.kinds->get("TransformedTestSource2");
 
-  auto taint = TaintV2{
+  auto initial_taint = TaintV2{
       test::make_frame(
           /* kind */ test_source,
           test::FrameProperties{
@@ -482,7 +482,8 @@ TEST_F(TaintV2Test, TransformKind) {
   };
 
   // This works the same way as filter.
-  auto empty_taint = taint.transform_kind_with_features(
+  auto empty_taint = initial_taint;
+  empty_taint.transform_kind_with_features(
       [](const auto* /* unused kind */) { return std::vector<const Kind*>(); },
       [](const auto* /* unused kind */) {
         return FeatureMayAlwaysSet::bottom();
@@ -490,7 +491,8 @@ TEST_F(TaintV2Test, TransformKind) {
   EXPECT_EQ(empty_taint, TaintV2::bottom());
 
   // This actually performs a transformation.
-  auto map_test_source_taint = taint.transform_kind_with_features(
+  auto map_test_source_taint = initial_taint;
+  map_test_source_taint.transform_kind_with_features(
       [test_source,
        transformed_test_source](const auto* kind) -> std::vector<const Kind*> {
         if (kind == test_source) {
@@ -534,7 +536,8 @@ TEST_F(TaintV2Test, TransformKind) {
       }));
 
   // Another transformation. Covers mapping transformed frames.
-  map_test_source_taint = taint.transform_kind_with_features(
+  map_test_source_taint = initial_taint;
+  map_test_source_taint.transform_kind_with_features(
       [test_source, transformed_test_source](const auto* kind) {
         if (kind == test_source) {
           return std::vector<const Kind*>{transformed_test_source};
@@ -578,7 +581,8 @@ TEST_F(TaintV2Test, TransformKind) {
       }));
 
   // Tests one -> many transformations (with features).
-  map_test_source_taint = taint.transform_kind_with_features(
+  map_test_source_taint = initial_taint;
+  map_test_source_taint.transform_kind_with_features(
       [test_source, transformed_test_source, transformed_test_source2](
           const auto* kind) {
         if (kind == test_source) {
@@ -614,7 +618,8 @@ TEST_F(TaintV2Test, TransformKind) {
       }));
 
   // Tests transformations with features added to specific kinds.
-  map_test_source_taint = taint.transform_kind_with_features(
+  map_test_source_taint = initial_taint;
+  map_test_source_taint.transform_kind_with_features(
       [test_source, transformed_test_source, transformed_test_source2](
           const auto* kind) {
         if (kind == test_source) {
@@ -646,7 +651,7 @@ TEST_F(TaintV2Test, TransformKind) {
       }));
 
   // Transformation where multiple old kinds map to the same new kind
-  taint = TaintV2{
+  auto taint = TaintV2{
       test::make_frame(
           /* kind */ context.kinds->get("OtherSource1"),
           test::FrameProperties{
@@ -664,7 +669,7 @@ TEST_F(TaintV2Test, TransformKind) {
               .inferred_features = FeatureMayAlwaysSet{feature_two},
           }),
   };
-  map_test_source_taint = taint.transform_kind_with_features(
+  taint.transform_kind_with_features(
       [&](const auto* /* unused kind */) -> std::vector<const Kind*> {
         return {transformed_test_source};
       },
@@ -672,7 +677,7 @@ TEST_F(TaintV2Test, TransformKind) {
         return FeatureMayAlwaysSet::bottom();
       });
   EXPECT_EQ(
-      map_test_source_taint,
+      taint,
       (TaintV2{
           test::make_frame(
               transformed_test_source,

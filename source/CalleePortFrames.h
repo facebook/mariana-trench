@@ -206,9 +206,9 @@ class CalleePortFrames final : public sparta::AbstractDomain<CalleePortFrames> {
       const std::vector<std::optional<std::string>>& source_constant_arguments)
       const;
 
-  CalleePortFrames transform_kind_with_features(
+  void transform_kind_with_features(
       const std::function<std::vector<const Kind*>(const Kind*)>&,
-      const std::function<FeatureMayAlwaysSet(const Kind*)>&) const;
+      const std::function<FeatureMayAlwaysSet(const Kind*)>&);
 
   /**
    * Returns a new instance of `CalleePortFrames` in which `path_element` is

@@ -139,15 +139,12 @@ TaintV2 TaintV2::attach_position(const Position* position) const {
   return result;
 }
 
-TaintV2 TaintV2::transform_kind_with_features(
+void TaintV2::transform_kind_with_features(
     const std::function<std::vector<const Kind*>(const Kind*)>& transform_kind,
-    const std::function<FeatureMayAlwaysSet(const Kind*)>& add_features) const {
-  TaintV2 new_taint;
-  for (const auto& callee_frames : set_) {
-    new_taint.add(callee_frames.transform_kind_with_features(
-        transform_kind, add_features));
-  }
-  return new_taint;
+    const std::function<FeatureMayAlwaysSet(const Kind*)>& add_features) {
+  map([&](CalleeFrames& frames) {
+    frames.transform_kind_with_features(transform_kind, add_features);
+  });
 }
 
 Json::Value TaintV2::to_json() const {

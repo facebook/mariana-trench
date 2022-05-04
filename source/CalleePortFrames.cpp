@@ -330,9 +330,9 @@ CalleePortFrames CalleePortFrames::propagate(
   return result;
 }
 
-CalleePortFrames CalleePortFrames::transform_kind_with_features(
+void CalleePortFrames::transform_kind_with_features(
     const std::function<std::vector<const Kind*>(const Kind*)>& transform_kind,
-    const std::function<FeatureMayAlwaysSet(const Kind*)>& add_features) const {
+    const std::function<FeatureMayAlwaysSet(const Kind*)>& add_features) {
   FramesByKind new_frames_by_kind;
   for (const auto& [old_kind, frames] : frames_.bindings()) {
     auto new_kinds = transform_kind(old_kind);
@@ -357,8 +357,8 @@ CalleePortFrames CalleePortFrames::transform_kind_with_features(
       }
     }
   }
-  return CalleePortFrames(
-      callee_port_, is_artificial_source_frames_, new_frames_by_kind);
+
+  frames_ = new_frames_by_kind;
 }
 
 void CalleePortFrames::append_callee_port_to_artificial_sources(

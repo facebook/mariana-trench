@@ -221,16 +221,13 @@ CallPositionFrames CallPositionFrames::attach_position(
   return CallPositionFrames(position, result);
 }
 
-CallPositionFrames CallPositionFrames::transform_kind_with_features(
+void CallPositionFrames::transform_kind_with_features(
     const std::function<std::vector<const Kind*>(const Kind*)>& transform_kind,
-    const std::function<FeatureMayAlwaysSet(const Kind*)>& add_features) const {
-  FramesByCalleePort new_frames;
-  for (const auto& callee_port_frames : frames_) {
-    new_frames.add(callee_port_frames.transform_kind_with_features(
-        transform_kind, add_features));
-  }
-
-  return CallPositionFrames(position_, new_frames);
+    const std::function<FeatureMayAlwaysSet(const Kind*)>& add_features) {
+  frames_.map([&](CalleePortFrames& callee_port_frames) {
+    callee_port_frames.transform_kind_with_features(
+        transform_kind, add_features);
+  });
 }
 
 void CallPositionFrames::append_callee_port_to_artificial_sources(

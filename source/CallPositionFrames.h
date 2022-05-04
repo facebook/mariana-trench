@@ -162,15 +162,9 @@ class CallPositionFrames final
   /* Return the set of leaf frames with the given position. */
   CallPositionFrames attach_position(const Position* position) const;
 
-  /**
-   * TODO (T91357916): This can have a more optimal in-place implementation
-   * rather than returning a new object. Kind and feature changes do not affect
-   * the keys of this object or the underlying `CalleePortFrames`. Requires
-   * dropping `const`-ness, return type and updating call-sites.
-   */
-  CallPositionFrames transform_kind_with_features(
+  void transform_kind_with_features(
       const std::function<std::vector<const Kind*>(const Kind*)>&,
-      const std::function<FeatureMayAlwaysSet(const Kind*)>&) const;
+      const std::function<FeatureMayAlwaysSet(const Kind*)>&);
 
   void append_callee_port_to_artificial_sources(Path::Element path_element);
 
