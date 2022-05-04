@@ -1,0 +1,21 @@
+[
+  {
+    "find": "methods",
+    "where": [
+      {
+        "constraint": "signature",
+        "pattern": "LExample;\\.methodToShim:\\(LShimmed1;\\)V"
+      }
+    ],
+    "shim": {
+      "callees": [
+        {
+          "signature": "LShimmed1;.method:()V"
+        },
+        {
+          "signature": "LShimmed2;.static_method:()V"
+        }
+      ]
+    }
+  }
+]

@@ -115,6 +115,28 @@ bool is_anonymous_class(const DexType* type) {
   return re2::RE2::FullMatch(show(type), regex);
 }
 
+using TextualOrderIndex = marianatrench::TextualOrderIndex;
+
+struct InstructionCallGraphInformation {
+  std::optional<CallTarget> callee;
+  ArtificialCallees artificial_callees = {};
+  std::optional<const Field*> field_access;
+};
+
+TextualOrderIndex update_index(
+    std::unordered_map<std::string, TextualOrderIndex>&
+        sink_textual_order_index,
+    const std::string& sink_signature) {
+  auto lookup = sink_textual_order_index.find(sink_signature);
+  if (lookup == sink_textual_order_index.end()) {
+    sink_textual_order_index.emplace(std::make_pair(sink_signature, 0));
+    return 0;
+  }
+  auto new_count = lookup->second + 1;
+  sink_textual_order_index.insert_or_assign(sink_signature, new_count);
+  return new_count;
+}
+
 // Return mapping of argument index to argument type for all anonymous class
 // arguments.
 ParameterTypeOverrides anonymous_class_arguments(
@@ -155,6 +177,8 @@ ArtificialCallees anonymous_class_artificial_callees(
     const IRInstruction* instruction,
     const DexType* anonymous_class_type,
     Register register_id,
+    std::unordered_map<std::string, TextualOrderIndex>&
+        sink_textual_order_index,
     const FeatureSet& features = {}) {
   if (!is_anonymous_class(anonymous_class_type)) {
     return {};
@@ -173,9 +197,11 @@ ArtificialCallees anonymous_class_artificial_callees(
     mt_assert(!method->is_constructor());
     mt_assert(!method->is_static());
 
+    auto call_index =
+        update_index(sink_textual_order_index, method->signature());
     callees.push_back(ArtificialCallee{
         /* call_target */ CallTarget::static_call(
-            instruction, method, /* call_index */ 0),
+            instruction, method, call_index),
         /* parameter_registers */
         {{0, register_id}},
         /* features */ features,
@@ -190,7 +216,9 @@ ArtificialCallees artificial_callees_from_arguments(
     const Features& features,
     const IRInstruction* instruction,
     const DexMethod* callee,
-    const ParameterTypeOverrides& parameter_type_overrides) {
+    const ParameterTypeOverrides& parameter_type_overrides,
+    std::unordered_map<std::string, TextualOrderIndex>&
+        sink_textual_order_index) {
   ArtificialCallees callees;
 
   // For each anonymous class parameter, simulate calls to all its methods.
@@ -201,6 +229,7 @@ ArtificialCallees artificial_callees_from_arguments(
         anonymous_class_type,
         /* register */
         instruction->src(parameter + (is_static(callee) ? 0 : 1)),
+        sink_textual_order_index,
         /* features */
         FeatureSet{features.get("via-anonymous-class-to-obscure")});
     callees.insert(
@@ -223,17 +252,20 @@ const Method* get_callee_from_resolved_call(
     const Options& options,
     Methods& method_factory,
     const Features& features,
-    ArtificialCallees& artificial_callees) {
+    ArtificialCallees& artificial_callees,
+    std::unordered_map<std::string, TextualOrderIndex>&
+        sink_textual_order_index) {
   const Method* callee = nullptr;
   if (dex_callee->get_code() == nullptr) {
-    // When passing an anonymous class into a callee, add artificial
-    // calls to all methods of the anonymous class.
+    // When passing an anonymous class into an external callee (no code), add
+    // artificial calls to all methods of the anonymous class.
     auto artificial_callees_for_instruction = artificial_callees_from_arguments(
         method_factory,
         features,
         instruction,
         dex_callee,
-        parameter_type_overrides);
+        parameter_type_overrides,
+        sink_textual_order_index);
     if (!artificial_callees_for_instruction.empty()) {
       artificial_callees = std::move(artificial_callees_for_instruction);
     }
@@ -259,7 +291,9 @@ std::vector<ArtificialCallee> shim_artificial_callees(
     const Overrides& override_factory,
     const ClassHierarchies& class_hierarchies,
     const Features& features,
-    const Shim& shim) {
+    const Shim& shim,
+    std::unordered_map<std::string, TextualOrderIndex>&
+        sink_textual_order_index) {
   std::vector<ArtificialCallee> artificial_callees;
 
   for (const auto& shim_target : shim.targets()) {
@@ -269,10 +303,12 @@ std::vector<ArtificialCallee> shim_artificial_callees(
     auto receiver_register = shim_target.receiver_register(instruction);
     auto parameter_registers = shim_target.parameter_registers(instruction);
 
+    auto call_index =
+        update_index(sink_textual_order_index, method->signature());
     if (method->is_static()) {
       artificial_callees.push_back(ArtificialCallee{
           /* call_target */ CallTarget::static_call(
-              instruction, method, /* call_index */ 0),
+              instruction, method, call_index),
           /* parameter_registers */ parameter_registers,
           /* features */
           FeatureSet{features.get_via_shim_feature(callee)},
@@ -310,7 +346,7 @@ std::vector<ArtificialCallee> shim_artificial_callees(
         /* call_target */ CallTarget::virtual_call(
             instruction,
             method,
-            /* call_index */ 0,
+            call_index,
             receiver_type,
             class_hierarchies,
             override_factory),
@@ -321,28 +357,6 @@ std::vector<ArtificialCallee> shim_artificial_callees(
   }
 
   return artificial_callees;
-}
-
-using TextualOrderIndex = marianatrench::TextualOrderIndex;
-
-struct InstructionCallGraphInformation {
-  std::optional<CallTarget> callee;
-  ArtificialCallees artificial_callees = {};
-  std::optional<const Field*> field_access;
-};
-
-TextualOrderIndex update_index(
-    std::unordered_map<std::string, TextualOrderIndex>&
-        sink_textual_order_index,
-    const std::string& sink_signature) {
-  auto lookup = sink_textual_order_index.find(sink_signature);
-  if (lookup == sink_textual_order_index.end()) {
-    sink_textual_order_index.emplace(std::make_pair(sink_signature, 0));
-    return 0;
-  }
-  auto new_count = lookup->second + 1;
-  sink_textual_order_index.insert_or_assign(sink_signature, new_count);
-  return new_count;
 }
 
 InstructionCallGraphInformation process_instruction(
@@ -373,6 +387,7 @@ InstructionCallGraphInformation process_instruction(
               instruction,
               iput_type,
               /* register */ instruction->src(0),
+              sink_textual_order_index,
               /* features */
               FeatureSet{features.get("via-anonymous-class-to-field")});
 
@@ -418,7 +433,8 @@ InstructionCallGraphInformation process_instruction(
       options,
       method_factory,
       features,
-      instruction_information.artificial_callees);
+      instruction_information.artificial_callees,
+      sink_textual_order_index);
 
   auto shim = shims.find(callee);
   if (shim != shims.end()) {
@@ -431,11 +447,9 @@ InstructionCallGraphInformation process_instruction(
         override_factory,
         class_hierarchies,
         features,
-        shim->second);
-    instruction_information.artificial_callees.insert(
-        instruction_information.artificial_callees.end(),
-        std::make_move_iterator(artificial_callees.begin()),
-        std::make_move_iterator(artificial_callees.end()));
+        shim->second,
+        sink_textual_order_index);
+    instruction_information.artificial_callees = std::move(artificial_callees);
   }
 
   auto call_index =

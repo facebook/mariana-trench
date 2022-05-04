@@ -16,7 +16,7 @@
 #include <mariana-trench/Fields.h>
 #include <mariana-trench/JsonValidation.h>
 #include <mariana-trench/SanitizersOptions.h>
-#include <mariana-trench/shim-generator/ShimGenerator.h>
+#include <mariana-trench/shim-generator/ShimGeneration.h>
 #include <mariana-trench/tests/Test.h>
 
 namespace marianatrench {
@@ -47,12 +47,14 @@ Context make_empty_context() {
 
 Context make_context(const DexStore& store) {
   Context context;
+  auto shims_path =
+      boost::filesystem::path(__FILE__).parent_path() / "shims.json";
   context.options = std::make_unique<Options>(
       /* models_paths */ std::vector<std::string>{},
       /* field_models_path */ std::vector<std::string>{},
       /* rules_paths */ std::vector<std::string>{},
       /* lifecycles_paths */ std::vector<std::string>{},
-      /* shims_path */ std::vector<std::string>{},
+      /* shims_path */ std::vector<std::string>{shims_path.native()},
       /* proguard_configuration_paths */ std::vector<std::string>{},
       /* sequential */ false,
       /* skip_source_indexing */ true,
@@ -73,6 +75,7 @@ Context make_context(const DexStore& store) {
       std::make_unique<ClassHierarchies>(*context.options, context.stores);
   context.overrides = std::make_unique<Overrides>(
       *context.options, *context.methods, context.stores);
+  auto shims = ShimGeneration::run(context);
   context.call_graph = std::make_unique<CallGraph>(
       *context.options,
       *context.methods,
@@ -81,7 +84,7 @@ Context make_context(const DexStore& store) {
       *context.class_hierarchies,
       *context.overrides,
       *context.features,
-      MethodToShimMap{});
+      shims);
   auto registry = Registry(context);
   context.dependencies = std::make_unique<Dependencies>(
       *context.options,
