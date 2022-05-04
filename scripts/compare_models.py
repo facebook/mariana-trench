@@ -87,6 +87,7 @@ if __name__ == "__main__":
                 "--ignore-blank-lines",
                 "--minimal",
                 "--unified",
+                "--new-file",
                 path_1.resolve(),
                 path_2.resolve(),
             ]
