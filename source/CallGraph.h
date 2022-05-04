@@ -32,6 +32,8 @@
 
 namespace marianatrench {
 
+using TextualOrderIndex = std::uint32_t;
+
 /**
  * Represents information about a specific call.
  */
@@ -51,11 +53,13 @@ class CallTarget final {
  public:
   static CallTarget static_call(
       const IRInstruction* instruction,
-      const Method* MT_NULLABLE callee);
+      const Method* MT_NULLABLE callee,
+      TextualOrderIndex call_index);
 
   static CallTarget virtual_call(
       const IRInstruction* instruction,
       const Method* MT_NULLABLE resolved_base_callee,
+      TextualOrderIndex call_index,
       const DexType* MT_NULLABLE receiver_type,
       const ClassHierarchies& class_hierarchies,
       const Overrides& override_factory);
@@ -64,6 +68,7 @@ class CallTarget final {
       const Method* caller,
       const IRInstruction* instruction,
       const Method* MT_NULLABLE resolved_base_callee,
+      TextualOrderIndex call_index,
       const Types& types,
       const ClassHierarchies& class_hierarchies,
       const Overrides& override_factory);
@@ -115,6 +120,10 @@ class CallTarget final {
     return receiver_type_;
   }
 
+  TextualOrderIndex call_index() const {
+    return call_index_;
+  }
+
   /**
    * For a virtual call, returns all overriding methods that could be called.
    * This does not include the resolved base callee.
@@ -133,6 +142,7 @@ class CallTarget final {
   CallTarget(
       const IRInstruction* instruction,
       const Method* MT_NULLABLE resolved_base_callee,
+      TextualOrderIndex call_index,
       const DexType* MT_NULLABLE receiver_type,
       const std::unordered_set<const Method*>* MT_NULLABLE overrides,
       const std::unordered_set<const DexType*>* MT_NULLABLE receiver_extends);
@@ -140,6 +150,7 @@ class CallTarget final {
  private:
   const IRInstruction* instruction_;
   const Method* MT_NULLABLE resolved_base_callee_;
+  TextualOrderIndex call_index_;
   const DexType* MT_NULLABLE receiver_type_;
   const std::unordered_set<const Method*>* MT_NULLABLE overrides_;
   const std::unordered_set<const DexType*>* MT_NULLABLE receiver_extends_;
@@ -153,6 +164,7 @@ struct std::hash<marianatrench::CallTarget> {
     std::size_t seed = 0;
     boost::hash_combine(seed, call_target.instruction_);
     boost::hash_combine(seed, call_target.resolved_base_callee_);
+    boost::hash_combine(seed, call_target.call_index_);
     boost::hash_combine(seed, call_target.receiver_type_);
     boost::hash_combine(seed, call_target.overrides_);
     boost::hash_combine(seed, call_target.receiver_extends_);

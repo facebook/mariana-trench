@@ -174,7 +174,8 @@ ArtificialCallees anonymous_class_artificial_callees(
     mt_assert(!method->is_static());
 
     callees.push_back(ArtificialCallee{
-        /* call_target */ CallTarget::static_call(instruction, method),
+        /* call_target */ CallTarget::static_call(
+            instruction, method, /* call_index */ 0),
         /* parameter_registers */
         {{0, register_id}},
         /* features */ features,
@@ -270,7 +271,8 @@ std::vector<ArtificialCallee> shim_artificial_callees(
 
     if (method->is_static()) {
       artificial_callees.push_back(ArtificialCallee{
-          /* call_target */ CallTarget::static_call(instruction, method),
+          /* call_target */ CallTarget::static_call(
+              instruction, method, /* call_index */ 0),
           /* parameter_registers */ parameter_registers,
           /* features */
           FeatureSet{features.get_via_shim_feature(callee)},
@@ -308,6 +310,7 @@ std::vector<ArtificialCallee> shim_artificial_callees(
         /* call_target */ CallTarget::virtual_call(
             instruction,
             method,
+            /* call_index */ 0,
             receiver_type,
             class_hierarchies,
             override_factory),
@@ -320,11 +323,27 @@ std::vector<ArtificialCallee> shim_artificial_callees(
   return artificial_callees;
 }
 
+using TextualOrderIndex = marianatrench::TextualOrderIndex;
+
 struct InstructionCallGraphInformation {
   std::optional<CallTarget> callee;
   ArtificialCallees artificial_callees = {};
   std::optional<const Field*> field_access;
 };
+
+TextualOrderIndex update_index(
+    std::unordered_map<std::string, TextualOrderIndex>&
+        sink_textual_order_index,
+    const std::string& sink_signature) {
+  auto lookup = sink_textual_order_index.find(sink_signature);
+  if (lookup == sink_textual_order_index.end()) {
+    sink_textual_order_index.emplace(std::make_pair(sink_signature, 0));
+    return 0;
+  }
+  auto new_count = lookup->second + 1;
+  sink_textual_order_index.insert_or_assign(sink_signature, new_count);
+  return new_count;
+}
 
 InstructionCallGraphInformation process_instruction(
     const Method* caller,
@@ -338,7 +357,9 @@ InstructionCallGraphInformation process_instruction(
     Overrides& override_factory,
     const ClassHierarchies& class_hierarchies,
     const Features& features,
-    const MethodToShimMap& shims) {
+    const MethodToShimMap& shims,
+    std::unordered_map<std::string, TextualOrderIndex>&
+        sink_textual_order_index) {
   InstructionCallGraphInformation instruction_information;
 
   if (opcode::is_an_iput(instruction->opcode())) {
@@ -417,12 +438,15 @@ InstructionCallGraphInformation process_instruction(
         std::make_move_iterator(artificial_callees.end()));
   }
 
+  auto call_index =
+      update_index(sink_textual_order_index, ::show(instruction->get_method()));
   if (callee->parameter_type_overrides().empty() ||
       processed.count(callee) != 0) {
     instruction_information.callee = CallTarget::from_call_instruction(
         caller,
         instruction,
         callee,
+        call_index,
         types,
         class_hierarchies,
         override_factory);
@@ -456,7 +480,13 @@ InstructionCallGraphInformation process_instruction(
     }
   }
   instruction_information.callee = CallTarget::from_call_instruction(
-      caller, instruction, callee, types, class_hierarchies, override_factory);
+      caller,
+      instruction,
+      callee,
+      call_index,
+      types,
+      class_hierarchies,
+      override_factory);
   return instruction_information;
 }
 
@@ -465,21 +495,25 @@ InstructionCallGraphInformation process_instruction(
 CallTarget::CallTarget(
     const IRInstruction* instruction,
     const Method* MT_NULLABLE resolved_base_callee,
+    TextualOrderIndex call_index,
     const DexType* MT_NULLABLE receiver_type,
     const std::unordered_set<const Method*>* MT_NULLABLE overrides,
     const std::unordered_set<const DexType*>* MT_NULLABLE receiver_extends)
     : instruction_(instruction),
       resolved_base_callee_(resolved_base_callee),
+      call_index_(call_index),
       receiver_type_(receiver_type),
       overrides_(overrides),
       receiver_extends_(receiver_extends) {}
 
 CallTarget CallTarget::static_call(
     const IRInstruction* instruction,
-    const Method* MT_NULLABLE callee) {
+    const Method* MT_NULLABLE callee,
+    TextualOrderIndex call_index) {
   return CallTarget(
       instruction,
       /* resolved_base_callee */ callee,
+      /* call_index */ call_index,
       /* receiver_type */ nullptr,
       /* overrides */ nullptr,
       /* receiver_extends */ nullptr);
@@ -488,6 +522,7 @@ CallTarget CallTarget::static_call(
 CallTarget CallTarget::virtual_call(
     const IRInstruction* instruction,
     const Method* MT_NULLABLE resolved_base_callee,
+    TextualOrderIndex call_index,
     const DexType* MT_NULLABLE receiver_type,
     const ClassHierarchies& class_hierarchies,
     const Overrides& override_factory) {
@@ -523,6 +558,7 @@ CallTarget CallTarget::virtual_call(
   return CallTarget(
       instruction,
       resolved_base_callee,
+      call_index,
       receiver_type,
       overrides,
       receiver_extends);
@@ -532,6 +568,7 @@ CallTarget CallTarget::from_call_instruction(
     const Method* caller,
     const IRInstruction* instruction,
     const Method* MT_NULLABLE resolved_base_callee,
+    TextualOrderIndex call_index,
     const Types& types,
     const ClassHierarchies& class_hierarchies,
     const Overrides& override_factory) {
@@ -541,11 +578,13 @@ CallTarget CallTarget::from_call_instruction(
     return CallTarget::virtual_call(
         instruction,
         resolved_base_callee,
+        call_index,
         types.receiver_type(caller, instruction),
         class_hierarchies,
         override_factory);
   } else {
-    return CallTarget::static_call(instruction, resolved_base_callee);
+    return CallTarget::static_call(
+        instruction, resolved_base_callee, call_index);
   }
 }
 
@@ -567,6 +606,7 @@ CallTarget::OverridesRange CallTarget::overrides() const {
 bool CallTarget::operator==(const CallTarget& other) const {
   return instruction_ == other.instruction_ &&
       resolved_base_callee_ == other.resolved_base_callee_ &&
+      call_index_ == other.call_index_ &&
       receiver_type_ == other.receiver_type_ &&
       overrides_ == other.overrides_ &&
       receiver_extends_ == other.receiver_extends_;
@@ -575,7 +615,7 @@ bool CallTarget::operator==(const CallTarget& other) const {
 std::ostream& operator<<(std::ostream& out, const CallTarget& call_target) {
   out << "CallTarget(instruction=`" << show(call_target.instruction())
       << "`, resolved_base_callee=`" << show(call_target.resolved_base_callee())
-      << "`";
+      << "`, call_index=`" << call_target.call_index_ << "`";
   if (call_target.is_virtual()) {
     out << ", receiver_type=`" << show(call_target.receiver_type())
         << "`, overrides={";
@@ -645,6 +685,8 @@ CallGraph::CallGraph(
           std::unordered_map<const IRInstruction*, ArtificialCallees>
               artificial_callees;
           std::unordered_map<const IRInstruction*, const Field*> field_accesses;
+          std::unordered_map<std::string, TextualOrderIndex>
+              sink_textual_order_index;
 
           for (const auto* block : code->cfg().blocks()) {
             for (const auto& entry : *block) {
@@ -665,7 +707,8 @@ CallGraph::CallGraph(
                   override_factory,
                   class_hierarchies,
                   features,
-                  shims);
+                  shims,
+                  sink_textual_order_index);
               if (instruction_information.callee) {
                 callees.emplace(instruction, *(instruction_information.callee));
               }
@@ -733,6 +776,7 @@ CallTarget CallGraph::callee(
       caller,
       instruction,
       /* resolved_base_callee */ nullptr,
+      /* call_index */ 0,
       types_,
       class_hierarchies_,
       overrides_);
