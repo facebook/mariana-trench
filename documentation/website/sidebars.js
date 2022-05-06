@@ -23,6 +23,7 @@ module.exports = {
     'configuration',
     fbInternalOnly("fb/known-false-negatives"),
     fbInternalOnly("fb/testing-diffs"),
+    fbInternalOnly("fb/running-on-new-apps"),
 ],
   "Developer Guide": [
     fbContent({external: 'contribution'}),
@@ -34,7 +35,6 @@ module.exports = {
     fbInternalOnly('fb/deployment'),
     fbInternalOnly('fb/continuous-and-diff-runs'),
     fbInternalOnly("fb/crtex"),
-    fbInternalOnly('fb/selecting-builds-targets'),
     ]
   },
 };
