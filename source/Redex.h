@@ -47,6 +47,11 @@ void process_proguard_configurations(
 
 void remove_unreachable(const Options& options, DexStoresVector& stores);
 
+DexClass* create_class(
+    Scope& scope,
+    const std::string& class_name,
+    const DexType* super = nullptr);
+
 std::vector<DexMethod*> create_methods(
     Scope& scope,
     const std::string& class_name,

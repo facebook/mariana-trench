@@ -120,7 +120,7 @@ using TextualOrderIndex = marianatrench::TextualOrderIndex;
 struct InstructionCallGraphInformation {
   std::optional<CallTarget> callee;
   ArtificialCallees artificial_callees = {};
-  std::optional<const Field*> field_access;
+  std::optional<FieldTarget> field_access;
 };
 
 TextualOrderIndex update_index(
@@ -359,6 +359,18 @@ std::vector<ArtificialCallee> shim_artificial_callees(
   return artificial_callees;
 }
 
+bool is_field_instruction(const IRInstruction* instruction) {
+  return opcode::is_an_iget(instruction->opcode()) ||
+      opcode::is_an_sget(instruction->opcode()) ||
+      opcode::is_an_iput(instruction->opcode()) ||
+      opcode::is_an_sput(instruction->opcode());
+}
+
+bool is_field_sink_instruction(const IRInstruction* instruction) {
+  return opcode::is_an_iput(instruction->opcode()) ||
+      opcode::is_an_sput(instruction->opcode());
+}
+
 InstructionCallGraphInformation process_instruction(
     const Method* caller,
     const IRInstruction* instruction,
@@ -376,8 +388,20 @@ InstructionCallGraphInformation process_instruction(
         sink_textual_order_index) {
   InstructionCallGraphInformation instruction_information;
 
-  if (opcode::is_an_iput(instruction->opcode())) {
-    // Add artificial calls to all methods in an anonymous class.
+  if (is_field_instruction(instruction)) {
+    const auto* field = resolve_field_access(caller, instruction);
+    if (field != nullptr) {
+      TextualOrderIndex index = 0;
+      if (is_field_sink_instruction(instruction)) {
+        index = update_index(
+            sink_textual_order_index, ::show(instruction->get_field()));
+      }
+      instruction_information.field_access = {field_factory.get(field), index};
+    }
+    if (!opcode::is_an_iput(instruction->opcode())) {
+      return instruction_information;
+    }
+
     const auto* iput_type =
         types.source_type(caller, instruction, /* source_position */ 0);
     if (iput_type && is_anonymous_class(iput_type)) {
@@ -395,21 +419,6 @@ InstructionCallGraphInformation process_instruction(
         instruction_information.artificial_callees =
             std::move(artificial_callees_for_instruction);
       }
-    }
-
-    const auto* field = resolve_field_access(caller, instruction);
-    if (field != nullptr) {
-      instruction_information.field_access = field_factory.get(field);
-    }
-    return instruction_information;
-  }
-
-  if (opcode::is_an_iget(instruction->opcode()) ||
-      opcode::is_an_sget(instruction->opcode()) ||
-      opcode::is_an_sput(instruction->opcode())) {
-    const auto* field = resolve_field_access(caller, instruction);
-    if (field != nullptr) {
-      instruction_information.field_access = field_factory.get(field);
     }
     return instruction_information;
   }
@@ -656,6 +665,15 @@ std::ostream& operator<<(std::ostream& out, const ArtificialCallee& callee) {
   return out << "}, features=" << callee.features << ")";
 }
 
+bool FieldTarget::operator==(const FieldTarget& other) const {
+  return field == other.field && field_sink_index == other.field_sink_index;
+}
+
+std::ostream& operator<<(std::ostream& out, const FieldTarget& field_target) {
+  out << "FieldTarget(field=" << field_target.field;
+  return out << ", field_sink_index=" << field_target.field_sink_index << ")";
+}
+
 CallGraph::CallGraph(
     const Options& options,
     Methods& method_factory,
@@ -698,7 +716,7 @@ CallGraph::CallGraph(
           std::unordered_map<const IRInstruction*, CallTarget> callees;
           std::unordered_map<const IRInstruction*, ArtificialCallees>
               artificial_callees;
-          std::unordered_map<const IRInstruction*, const Field*> field_accesses;
+          std::unordered_map<const IRInstruction*, FieldTarget> field_accesses;
           std::unordered_map<std::string, TextualOrderIndex>
               sink_textual_order_index;
 
@@ -833,20 +851,34 @@ const ArtificialCallees& CallGraph::artificial_callees(
   }
 }
 
-const Field* MT_NULLABLE CallGraph::resolved_field_access(
+const std::optional<FieldTarget> CallGraph::resolved_field_access(
     const Method* caller,
     const IRInstruction* instruction) const {
   auto fields = resolved_fields_.find(caller);
   if (fields == resolved_fields_.end()) {
-    return nullptr;
+    return std::nullopt;
   }
 
   auto field = fields->second.find(instruction);
   if (field == fields->second.end()) {
-    return nullptr;
+    return std::nullopt;
   }
 
   return field->second;
+}
+
+const std::vector<FieldTarget> CallGraph::resolved_field_accesses(
+    const Method* caller) const {
+  auto fields = resolved_fields_.find(caller);
+  if (fields == resolved_fields_.end()) {
+    return {};
+  }
+
+  std::vector<FieldTarget> field_targets;
+  for (const auto& [_, field_target] : fields->second) {
+    field_targets.push_back(field_target);
+  }
+  return field_targets;
 }
 
 Json::Value CallGraph::to_json(bool with_overrides) const {

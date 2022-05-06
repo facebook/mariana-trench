@@ -130,6 +130,25 @@ void redex::remove_unreachable(
       after.num_methods);
 }
 
+DexClass* redex::create_class(
+    Scope& scope,
+    const std::string& class_name,
+    const DexType* super) {
+  auto* type = DexType::make_type(DexString::make_string(class_name));
+  ClassCreator creator(type);
+
+  if (super) {
+    creator.set_super(const_cast<DexType*>(super));
+  } else {
+    creator.set_super(type::java_lang_Object());
+  }
+
+  auto* klass = creator.create();
+  scope.push_back(klass);
+
+  return klass;
+}
+
 std::vector<DexMethod*> redex::create_methods(
     Scope& scope,
     const std::string& class_name,

@@ -105,16 +105,17 @@ bool Transfer::analyze_iget(
   mt_assert(instruction->srcs().size() == 1);
   mt_assert(instruction->has_field());
 
-  const auto* field =
+  const auto field_target =
       context->call_graph.resolved_field_access(context->method(), instruction);
-  if (!field) {
+  if (!field_target) {
     WARNING_OR_DUMP(
         context,
         3,
         "Unable to resolve access of instance field {}",
         show(instruction->get_field()));
   }
-  auto field_model = field ? context->registry.get(field) : FieldModel();
+  auto field_model =
+      field_target ? context->registry.get(field_target->field) : FieldModel();
 
   // Create a memory location that represents the field.
   auto memory_locations = environment->memory_locations(
@@ -144,16 +145,17 @@ bool Transfer::analyze_sget(
   mt_assert(instruction->srcs().size() == 0);
   mt_assert(instruction->has_field());
 
-  const auto* field =
+  const auto field_target =
       context->call_graph.resolved_field_access(context->method(), instruction);
-  if (!field) {
+  if (!field_target) {
     WARNING_OR_DUMP(
         context,
         3,
         "Unable to resolve access of static field {}",
         show(instruction->get_field()));
   }
-  auto field_model = field ? context->registry.get(field) : FieldModel();
+  auto field_model =
+      field_target ? context->registry.get(field_target->field) : FieldModel();
   auto memory_location = context->memory_factory.make_location(instruction);
   LOG_OR_DUMP(context, 4, "Setting result register to {}", *memory_location);
   environment->assign(k_result_register, memory_location);
@@ -989,16 +991,17 @@ bool Transfer::analyze_iput(
       [position](Taint& sources) { sources.add_local_position(position); });
 
   // Check if the taint above flows into a field sink
-  const auto* field =
+  const auto field_target =
       context->call_graph.resolved_field_access(context->method(), instruction);
-  if (!field) {
+  if (!field_target) {
     WARNING_OR_DUMP(
         context,
         3,
         "Unable to resolve access of field for iput {}",
         show(instruction->get_field()));
   } else {
-    auto field_model = field ? context->registry.get(field) : FieldModel();
+    auto field_model = field_target ? context->registry.get(field_target->field)
+                                    : FieldModel();
     auto sinks = field_model.sinks();
     if (!sinks.empty() && !taint.is_bottom()) {
       for (const auto& [port, sources] : taint.elements()) {
@@ -1061,9 +1064,9 @@ bool Transfer::analyze_sput(
   taint.map(
       [position](Taint& sources) { sources.add_local_position(position); });
 
-  const auto* field =
+  const auto field_target =
       context->call_graph.resolved_field_access(context->method(), instruction);
-  if (!field) {
+  if (!field_target) {
     WARNING_OR_DUMP(
         context,
         3,
@@ -1071,7 +1074,8 @@ bool Transfer::analyze_sput(
         show(instruction->get_field()));
     return false;
   }
-  auto field_model = field ? context->registry.get(field) : FieldModel();
+  auto field_model =
+      field_target ? context->registry.get(field_target->field) : FieldModel();
   auto sinks = field_model.sinks();
   if (sinks.empty()) {
     return false;

@@ -197,6 +197,15 @@ struct ArtificialCallee {
 
 using ArtificialCallees = std::vector<ArtificialCallee>;
 
+struct FieldTarget {
+  const Field* field;
+  TextualOrderIndex field_sink_index;
+
+  bool operator==(const FieldTarget& other) const;
+
+  friend std::ostream& operator<<(std::ostream& out, const FieldTarget& callee);
+};
+
 class CallGraph final {
  public:
   explicit CallGraph(
@@ -232,9 +241,12 @@ class CallGraph final {
       const IRInstruction* instruction) const;
 
   /* Return the field being accessed within the given method and instruction */
-  const Field* MT_NULLABLE resolved_field_access(
+  const std::optional<FieldTarget> resolved_field_access(
       const Method* caller,
       const IRInstruction* instruction) const;
+
+  const std::vector<FieldTarget> resolved_field_accesses(
+      const Method* caller) const;
 
   Json::Value to_json(bool with_overrides = true) const;
 
@@ -249,7 +261,7 @@ class CallGraph final {
       resolved_base_callees_;
   ConcurrentMap<
       const Method*,
-      std::unordered_map<const IRInstruction*, const Field*>>
+      std::unordered_map<const IRInstruction*, FieldTarget>>
       resolved_fields_;
   ConcurrentMap<
       const Method*,

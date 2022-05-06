@@ -53,16 +53,14 @@ TEST_F(CallGraphTest, CallIndices) {
       /* return_type */ "V",
       /* super */ nullptr,
       /* is_static */ true);
-  redex::create_methods(
+  redex::create_class(
       scope,
       "LChild1;",
-      std::vector<std::string>{},
-      inherited_dex_method->get_class());
-  redex::create_methods(
+      /* super */ inherited_dex_method->get_class());
+  redex::create_class(
       scope,
       "LChild2;",
-      std::vector<std::string>{},
-      inherited_dex_method->get_class());
+      /* super */ inherited_dex_method->get_class());
   auto* dex_method = redex::create_method(scope, "LMainActivity;", R"(
     (method (public) "LMainActivity;.onCreate:()V"
      (
@@ -316,6 +314,65 @@ TEST_F(CallGraphTest, ShimCallIndices) {
               context.methods->get(shimmed_method2),
               /* call_index */ 1),
       }));
+}
+
+TEST_F(CallGraphTest, FieldIndices) {
+  Scope scope;
+  auto* dex_inherited_field = redex::create_field(
+      scope, "LParent;", {"mInherited", type::java_lang_Object()});
+  redex::create_class(
+      scope, "LChild1;", /* super */ dex_inherited_field->get_class());
+  redex::create_class(
+      scope, "LChild2;", /* super */ dex_inherited_field->get_class());
+  auto* dex_static_field = redex::create_field(
+      scope,
+      "LClass;",
+      {"mStatic", type::java_lang_Object()},
+      /* super */ nullptr,
+      /* is_static */ true);
+
+  auto* dex_method = redex::create_method(scope, "LMainActivity;", R"(
+    (method (public) "LMainActivity;.onCreate:()V"
+     (
+      (load-param-object v0)
+      (new-instance "Ljava/lang/Object;")
+      (move-result-pseudo-object v1)
+      (sput-object v1 "LClass;.mStatic:Ljava/lang/Object;")
+      (new-instance "LParent;")
+      (move-result-pseudo-object v2)
+      (iput-object v1 v2 "LParent;.mInherited:Ljava/lang/Object;")
+      (new-instance "LChild1;")
+      (move-result-pseudo-object v2)
+      (iput-object v1 v2 "LChild1;.mInherited:Ljava/lang/Object;")
+      (new-instance "LChild2;")
+      (move-result-pseudo-object v2)
+      (iput-object v1 v2 "LChild2;.mInherited:Ljava/lang/Object;")
+      (iput-object v1 v2 "LChild2;.mInherited:Ljava/lang/Object;")
+      (sput-object v1 "LClass;.mStatic:Ljava/lang/Object;")
+      (return-void)
+     )
+    )
+  )");
+  DexStore store("stores");
+  store.add_classes(scope);
+
+  auto context = test::make_context(store);
+  const auto* method = context.methods->get(dex_method);
+  const auto* inherited_field = context.fields->get(dex_inherited_field);
+  const auto* static_field = context.fields->get(dex_static_field);
+  auto field_targets = context.call_graph->resolved_field_accesses(method);
+  std::vector<FieldTarget> expected_targets = {
+      FieldTarget{static_field, 0},
+      FieldTarget{inherited_field, 0},
+      FieldTarget{inherited_field, 0},
+      FieldTarget{inherited_field, 0},
+      FieldTarget{inherited_field, 1},
+      FieldTarget{static_field, 1}};
+  EXPECT_TRUE(std::is_permutation(
+      field_targets.begin(),
+      field_targets.end(),
+      expected_targets.begin(),
+      expected_targets.end()));
 }
 
 } // namespace marianatrench
