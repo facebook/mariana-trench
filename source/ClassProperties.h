@@ -42,6 +42,7 @@ class ClassProperties final {
   bool is_dfa_public(std::string_view class_name) const;
   bool has_protection_level(std::string_view class_name) const;
   bool has_permission(std::string_view class_name) const;
+  bool has_inline_permissions(std::string_view class_name) const;
   std::optional<std::string> get_privacy_decision_number_from_class_name(
       std::string_view class_name) const;
   std::optional<std::string> get_privacy_decision_number_from_method(
@@ -75,6 +76,7 @@ class ClassProperties final {
 
   std::unordered_set<std::string_view> dfa_public_scheme_classes_;
   std::unordered_set<std::string_view> permission_classes_;
+  std::unordered_set<std::string_view> inline_permission_classes_;
   std::unordered_set<std::string_view> protection_level_classes_;
   std::unordered_map<std::string_view, std::string> privacy_decision_classes_;
 

@@ -150,6 +150,26 @@ std::unordered_set<std::string> get_class_fragments(const DexClass* clazz) {
   return exported_fragments;
 }
 
+bool has_permission_check(const DexClass* clazz) {
+  auto methods = clazz->get_all_methods();
+  for (DexMethod* method : methods) {
+    const auto& code = method->get_code();
+    if (!code) {
+      continue;
+    }
+    const cfg::ControlFlowGraph& cfg = code->cfg();
+    for (const auto* block : cfg.blocks()) {
+      auto show_block = show(block);
+      if (boost::contains(show_block, "TrustedCaller") ||
+          boost::contains(show_block, "TrustManager") ||
+          boost::contains(show_block, "CallingIpcPermissionManager")) {
+        return true;
+      }
+    }
+  }
+  return false;
+}
+
 } // namespace
 
 namespace marianatrench {
@@ -218,6 +238,11 @@ ClassProperties::ClassProperties(
         dfa_public_scheme_classes_.emplace(clazz->str());
       }
 
+      if (has_permission_check(clazz)) {
+        std::lock_guard<std::mutex> lock(mutex);
+        inline_permission_classes_.emplace(clazz->str());
+      }
+
       std::optional<std::string> privacy_decision_number =
           get_privacy_decision_number_from_class(clazz);
       if (privacy_decision_number) {
@@ -267,6 +292,13 @@ bool ClassProperties::is_class_unexported(std::string_view class_name) const {
   auto outer_class = strip_inner_class(class_name);
   return unexported_classes_.count(class_name) > 0 ||
       unexported_classes_.count(outer_class) > 0;
+}
+
+bool ClassProperties::has_inline_permissions(
+    std::string_view class_name) const {
+  auto outer_class = strip_inner_class(class_name);
+  return inline_permission_classes_.count(class_name) > 0 ||
+      inline_permission_classes_.count(outer_class) > 0;
 }
 
 bool ClassProperties::is_dfa_public(std::string_view class_name) const {
@@ -368,6 +400,9 @@ FeatureSet ClassProperties::get_class_features(
   }
   if (has_permission(clazz)) {
     features.add(features_.get("via-caller-permission"));
+  }
+  if (has_inline_permissions(clazz)) {
+    features.add(features_.get("via-permission-check-in-class"));
   }
   if (has_protection_level(clazz)) {
     features.add(features_.get("via-caller-protection-level"));
