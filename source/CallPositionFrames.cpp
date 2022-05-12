@@ -254,6 +254,16 @@ bool CallPositionFrames::contains_kind(const Kind* kind) const {
   return false;
 }
 
+Json::Value CallPositionFrames::to_json(
+    const Method* MT_NULLABLE callee) const {
+  auto taint = Json::Value(Json::arrayValue);
+  for (const auto& callee_port_frames : frames_) {
+    auto frames_json = callee_port_frames.to_json(callee, position_);
+    taint.append(frames_json);
+  }
+  return taint;
+}
+
 std::ostream& operator<<(std::ostream& out, const CallPositionFrames& frames) {
   // No representation for top() because FramesByCalleePort::top() is N/A.
   out << "[";

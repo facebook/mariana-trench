@@ -213,6 +213,8 @@ class CallPositionFrames final
     return result;
   }
 
+  Json::Value to_json(const Method* MT_NULLABLE callee) const;
+
   friend std::ostream& operator<<(
       std::ostream& out,
       const CallPositionFrames& frames);

@@ -1,0 +1,28 @@
+[
+  {
+    "method": "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;",
+    "generations": [
+      {
+        "kind": "Source1",
+        "port": "Return"
+      },
+      {
+        "kind": "Source2",
+        "port": "Return"
+      }
+    ]
+  },
+  {
+    "method": "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
+    "sinks": [
+      {
+        "kind": "Sink1",
+        "port": "Argument(0)"
+      },
+      {
+        "kind": "Sink2",
+        "port": "Argument(0)"
+      }
+    ]
+  }
+]

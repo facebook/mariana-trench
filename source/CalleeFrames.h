@@ -203,6 +203,8 @@ class CalleeFrames final : public sparta::AbstractDomain<CalleeFrames> {
     return result;
   }
 
+  Json::Value to_json() const;
+
   friend std::ostream& operator<<(
       std::ostream& out,
       const CalleeFrames& frames);

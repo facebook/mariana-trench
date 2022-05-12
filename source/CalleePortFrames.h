@@ -261,6 +261,10 @@ class CalleePortFrames final : public sparta::AbstractDomain<CalleePortFrames> {
     return result;
   }
 
+  Json::Value to_json(
+      const Method* MT_NULLABLE callee,
+      const Position* MT_NULLABLE position) const;
+
   friend std::ostream& operator<<(
       std::ostream& out,
       const CalleePortFrames& frames);

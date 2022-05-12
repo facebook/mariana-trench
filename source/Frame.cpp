@@ -400,15 +400,22 @@ Json::Value Frame::to_json() const {
     value[member] = kind_json[member];
   }
 
-  value["callee_port"] = callee_port_.to_json();
+  // Callee, callee_port and call_position are only emitted within the frame in
+  // the legacy JSON. Otherwise, these values should be stored/handled outside
+  // the `Frame`.
+  if (constants::k_is_legacy_output_version) {
+    value["callee_port"] = callee_port_.to_json();
+  }
 
   if (callee_ != nullptr) {
-    value["callee"] = callee_->to_json();
+    if (constants::k_is_legacy_output_version) {
+      value["callee"] = callee_->to_json();
+    }
   } else if (field_callee_ != nullptr) {
     value["field_callee"] = field_callee_->to_json();
   }
 
-  if (call_position_ != nullptr) {
+  if (call_position_ != nullptr && constants::k_is_legacy_output_version) {
     value["call_position"] = call_position_->to_json();
   }
 

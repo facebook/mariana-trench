@@ -579,4 +579,53 @@ CalleePortFrames CalleePortFrames::propagate_crtex_leaf_frames(
   return result;
 }
 
+Json::Value CalleePortFrames::to_json(
+    const Method* MT_NULLABLE callee,
+    const Position* MT_NULLABLE position) const {
+  auto taint = Json::Value(Json::objectValue);
+
+  auto kinds = Json::Value(Json::arrayValue);
+  for (const auto& [_, frames_by_kind] : frames_.bindings()) {
+    // TODO(T91357916): `Frame` no longer needs to be stored in a
+    // GroupHashedSet. The key to that hashed set is maintained outside of this
+    // class by the `Taint` structure.
+    mt_assert(frames_by_kind.size() == 1);
+    for (const auto& frame : frames_by_kind) {
+      kinds.append(frame.to_json());
+    }
+  }
+  taint["kinds"] = kinds;
+
+  if (callee != nullptr || position != nullptr ||
+      !callee_port_.root().is_leaf()) {
+    // In most cases, all 3 values (callee, position, port) are expected to be
+    // present. Some edge cases are:
+    //
+    // - Standard leaf/terminal frames: The "call" key will be absent because
+    //   there is no "next hop".
+    // - CRTEX leaf/terminal frames: The callee port will be "producer/anchor".
+    //   SAPP post-processing will transform it to something that other static
+    //   analysis tools in the family can understand.
+    // - Return sinks and parameter sources: There is no "callee", but the
+    //   position points to the return instruction/parameter.
+    auto call = Json::Value(Json::objectValue);
+
+    if (callee != nullptr) {
+      call["resolves_to"] = callee->to_json();
+    }
+
+    if (position != nullptr) {
+      call["position"] = position->to_json();
+    }
+
+    if (!callee_port_.root().is_leaf()) {
+      call["port"] = callee_port_.to_json();
+    }
+
+    taint["call"] = call;
+  }
+
+  return taint;
+}
+
 } // namespace marianatrench

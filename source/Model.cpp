@@ -14,6 +14,7 @@
 #include <mariana-trench/ClassHierarchies.h>
 #include <mariana-trench/ClassProperties.h>
 #include <mariana-trench/Compiler.h>
+#include <mariana-trench/Constants.h>
 #include <mariana-trench/Features.h>
 #include <mariana-trench/FieldCache.h>
 #include <mariana-trench/Heuristics.h>
@@ -1053,45 +1054,11 @@ Json::Value Model::to_json() const {
     value["modes"] = modes;
   }
 
-  if (!generations_.is_bottom()) {
-    auto generations_value = Json::Value(Json::arrayValue);
-    for (const auto& [port, generation_taint] : generations_.elements()) {
-      for (const auto& generation : generation_taint.frames_iterator()) {
-        mt_assert(!generation.is_bottom());
-        auto generation_value = generation.to_json();
-        generation_value["caller_port"] = port.to_json();
-        generations_value.append(generation_value);
-      }
-    }
-    value["generations"] = generations_value;
-  }
-
-  if (!parameter_sources_.is_bottom()) {
-    auto parameter_sources_value = Json::Value(Json::arrayValue);
-    for (const auto& [port, parameter_source_taint] :
-         parameter_sources_.elements()) {
-      for (const auto& parameter_source :
-           parameter_source_taint.frames_iterator()) {
-        mt_assert(!parameter_source.is_bottom());
-        auto parameter_source_value = parameter_source.to_json();
-        parameter_source_value["caller_port"] = port.to_json();
-        parameter_sources_value.append(parameter_source_value);
-      }
-    }
-    value["parameter_sources"] = parameter_sources_value;
-  }
-
-  if (!sinks_.is_bottom()) {
-    auto sinks_value = Json::Value(Json::arrayValue);
-    for (const auto& [port, sink_taint] : sinks_.elements()) {
-      for (const auto& sink : sink_taint.frames_iterator()) {
-        mt_assert(!sink.is_bottom());
-        auto sink_value = sink.to_json();
-        sink_value["caller_port"] = port.to_json();
-        sinks_value.append(sink_value);
-      }
-    }
-    value["sinks"] = sinks_value;
+  // Legacy vs non-legacy JSON output differs for specific keys (see impl).
+  if (constants::k_is_legacy_output_version) {
+    build_legacy_json(value);
+  } else {
+    build_non_legacy_json(value);
   }
 
   if (!propagations_.is_bottom()) {
@@ -1316,4 +1283,86 @@ void Model::remove_kinds(const std::unordered_set<const Kind*>& to_remove) {
   parameter_sources_.map(map);
   sinks_.map(map);
 }
+
+void Model::build_legacy_json(Json::Value& value) const {
+  mt_assert(value.isObject());
+  if (!generations_.is_bottom()) {
+    auto generations_value = Json::Value(Json::arrayValue);
+    for (const auto& [port, generation_taint] : generations_.elements()) {
+      for (const auto& generation : generation_taint.frames_iterator()) {
+        mt_assert(!generation.is_bottom());
+        auto generation_value = generation.to_json();
+        generation_value["caller_port"] = port.to_json();
+        generations_value.append(generation_value);
+      }
+    }
+    value["generations"] = generations_value;
+  }
+
+  if (!parameter_sources_.is_bottom()) {
+    auto parameter_sources_value = Json::Value(Json::arrayValue);
+    for (const auto& [port, parameter_source_taint] :
+         parameter_sources_.elements()) {
+      for (const auto& parameter_source :
+           parameter_source_taint.frames_iterator()) {
+        mt_assert(!parameter_source.is_bottom());
+        auto parameter_source_value = parameter_source.to_json();
+        parameter_source_value["caller_port"] = port.to_json();
+        parameter_sources_value.append(parameter_source_value);
+      }
+    }
+    value["parameter_sources"] = parameter_sources_value;
+  }
+
+  if (!sinks_.is_bottom()) {
+    auto sinks_value = Json::Value(Json::arrayValue);
+    for (const auto& [port, sink_taint] : sinks_.elements()) {
+      for (const auto& sink : sink_taint.frames_iterator()) {
+        mt_assert(!sink.is_bottom());
+        auto sink_value = sink.to_json();
+        sink_value["caller_port"] = port.to_json();
+        sinks_value.append(sink_value);
+      }
+    }
+    value["sinks"] = sinks_value;
+  }
+}
+
+void Model::build_non_legacy_json(Json::Value& value) const {
+  mt_assert(value.isObject());
+  if (!generations_.is_bottom()) {
+    auto generations_value = Json::Value(Json::arrayValue);
+    for (const auto& [port, generation_taint] : generations_.elements()) {
+      auto generation_value = Json::Value(Json::objectValue);
+      generation_value["port"] = port.to_json();
+      generation_value["taint"] = generation_taint.to_json();
+      generations_value.append(generation_value);
+    }
+    value["generations"] = generations_value;
+  }
+
+  if (!parameter_sources_.is_bottom()) {
+    auto parameter_sources_value = Json::Value(Json::arrayValue);
+    for (const auto& [port, parameter_source_taint] :
+         parameter_sources_.elements()) {
+      auto parameter_source_value = Json::Value(Json::objectValue);
+      parameter_source_value["port"] = port.to_json();
+      parameter_source_value["taint"] = parameter_source_taint.to_json();
+      parameter_sources_value.append(parameter_source_value);
+    }
+    value["parameter_sources"] = parameter_sources_value;
+  }
+
+  if (!sinks_.is_bottom()) {
+    auto sinks_value = Json::Value(Json::arrayValue);
+    for (const auto& [port, sink_taint] : sinks_.elements()) {
+      auto sink_value = Json::Value(Json::objectValue);
+      sink_value["port"] = port.to_json();
+      sink_value["taint"] = sink_taint.to_json();
+      sinks_value.append(sink_value);
+    }
+    value["sinks"] = sinks_value;
+  }
+}
+
 } // namespace marianatrench
