@@ -3,12 +3,21 @@
   "generations" : 
   [
     {
-      "callee_port" : "Leaf",
-      "caller_port" : "Return",
-      "kind" : "SensitiveData",
-      "origins" : 
+      "port" : "Return",
+      "taint" : 
       [
-        "Lcom/facebook/marianatrench/integrationtests/HasAnnotation;.functionB:()Lcom/facebook/marianatrench/integrationtests/MyClass;"
+        {
+          "kinds" : 
+          [
+            {
+              "kind" : "SensitiveData",
+              "origins" : 
+              [
+                "Lcom/facebook/marianatrench/integrationtests/HasAnnotation;.functionB:()Lcom/facebook/marianatrench/integrationtests/MyClass;"
+              ]
+            }
+          ]
+        }
       ]
     }
   ],

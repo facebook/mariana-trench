@@ -3,12 +3,21 @@
   "generations" : 
   [
     {
-      "callee_port" : "Leaf",
-      "caller_port" : "Return",
-      "kind" : "Source",
-      "origins" : 
+      "port" : "Return",
+      "taint" : 
       [
-        "Landroid/content/Intent;.getExtras:()Landroid/os/Bundle;"
+        {
+          "kinds" : 
+          [
+            {
+              "kind" : "Source",
+              "origins" : 
+              [
+                "Landroid/content/Intent;.getExtras:()Landroid/os/Bundle;"
+              ]
+            }
+          ]
+        }
       ]
     }
   ],
@@ -91,53 +100,69 @@
       "sinks" : 
       [
         {
-          "call_position" : 
+          "call" : 
           {
-            "end" : 28,
-            "line" : 34,
-            "path" : "MainActivity.java",
-            "start" : 9
+            "port" : "Argument(0).mArguments",
+            "position" : 
+            {
+              "end" : 28,
+              "line" : 34,
+              "path" : "MainActivity.java",
+              "start" : 9
+            },
+            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/MainActivity$ModalActivityLauncher;.mArgumentFlowsToSink:()V"
           },
-          "callee" : "Lcom/facebook/marianatrench/integrationtests/MainActivity$ModalActivityLauncher;.mArgumentFlowsToSink:()V",
-          "callee_port" : "Argument(0).mArguments",
-          "distance" : 2,
-          "kind" : "Sink",
-          "origins" : 
+          "kinds" : 
           [
-            "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V"
+            {
+              "distance" : 2,
+              "kind" : "Sink",
+              "origins" : 
+              [
+                "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V"
+              ]
+            }
           ]
         }
       ],
       "sources" : 
       [
         {
-          "call_position" : 
+          "call" : 
           {
-            "end" : 40,
-            "line" : 31,
-            "path" : "MainActivity.java",
-            "start" : 32
-          },
-          "callee" : "Landroid/content/Intent;.getExtras:()Landroid/os/Bundle;",
-          "callee_port" : "Return",
-          "distance" : 1,
-          "kind" : "Source",
-          "local_positions" : 
-          [
+            "port" : "Return",
+            "position" : 
             {
-              "end" : 0,
-              "line" : 32,
-              "start" : 0
+              "end" : 40,
+              "line" : 31,
+              "path" : "MainActivity.java",
+              "start" : 32
             },
-            {
-              "end" : 24,
-              "line" : 33,
-              "start" : 9
-            }
-          ],
-          "origins" : 
+            "resolves_to" : "Landroid/content/Intent;.getExtras:()Landroid/os/Bundle;"
+          },
+          "kinds" : 
           [
-            "Landroid/content/Intent;.getExtras:()Landroid/os/Bundle;"
+            {
+              "distance" : 1,
+              "kind" : "Source",
+              "local_positions" : 
+              [
+                {
+                  "end" : 0,
+                  "line" : 32,
+                  "start" : 0
+                },
+                {
+                  "end" : 24,
+                  "line" : 33,
+                  "start" : 9
+                }
+              ],
+              "origins" : 
+              [
+                "Landroid/content/Intent;.getExtras:()Landroid/os/Bundle;"
+              ]
+            }
           ]
         }
       ]
@@ -593,12 +618,21 @@
   "sinks" : 
   [
     {
-      "callee_port" : "Leaf",
-      "caller_port" : "Argument(1)",
-      "kind" : "Sink",
-      "origins" : 
+      "port" : "Argument(1)",
+      "taint" : 
       [
-        "Landroid/util/Log;.e:(Ljava/lang/String;Ljava/lang/String;)I"
+        {
+          "kinds" : 
+          [
+            {
+              "kind" : "Sink",
+              "origins" : 
+              [
+                "Landroid/util/Log;.e:(Ljava/lang/String;Ljava/lang/String;)I"
+              ]
+            }
+          ]
+        }
       ]
     }
   ]
@@ -734,21 +768,34 @@
   "sinks" : 
   [
     {
-      "call_position" : 
-      {
-        "end" : 32,
-        "line" : 57,
-        "path" : "MainActivity.java",
-        "start" : 18
-      },
-      "callee" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
-      "callee_port" : "Argument(0)",
-      "caller_port" : "Argument(0).mArguments",
-      "distance" : 1,
-      "kind" : "Sink",
-      "origins" : 
+      "port" : "Argument(0).mArguments",
+      "taint" : 
       [
-        "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V"
+        {
+          "call" : 
+          {
+            "port" : "Argument(0)",
+            "position" : 
+            {
+              "end" : 32,
+              "line" : 57,
+              "path" : "MainActivity.java",
+              "start" : 18
+            },
+            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V"
+          },
+          "kinds" : 
+          [
+            {
+              "distance" : 1,
+              "kind" : "Sink",
+              "origins" : 
+              [
+                "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V"
+              ]
+            }
+          ]
+        }
       ]
     }
   ]
@@ -763,19 +810,32 @@
   "sinks" : 
   [
     {
-      "call_position" : 
-      {
-        "line" : 53,
-        "path" : "MainActivity.java"
-      },
-      "callee" : "Landroid/util/Log;.e:(Ljava/lang/String;Ljava/lang/String;)I",
-      "callee_port" : "Argument(1)",
-      "caller_port" : "Argument(0).mClickPoint",
-      "distance" : 1,
-      "kind" : "Sink",
-      "origins" : 
+      "port" : "Argument(0).mClickPoint",
+      "taint" : 
       [
-        "Landroid/util/Log;.e:(Ljava/lang/String;Ljava/lang/String;)I"
+        {
+          "call" : 
+          {
+            "port" : "Argument(1)",
+            "position" : 
+            {
+              "line" : 53,
+              "path" : "MainActivity.java"
+            },
+            "resolves_to" : "Landroid/util/Log;.e:(Ljava/lang/String;Ljava/lang/String;)I"
+          },
+          "kinds" : 
+          [
+            {
+              "distance" : 1,
+              "kind" : "Sink",
+              "origins" : 
+              [
+                "Landroid/util/Log;.e:(Ljava/lang/String;Ljava/lang/String;)I"
+              ]
+            }
+          ]
+        }
       ]
     }
   ]
@@ -839,12 +899,21 @@
   "sinks" : 
   [
     {
-      "callee_port" : "Leaf",
-      "caller_port" : "Argument(0)",
-      "kind" : "Sink",
-      "origins" : 
+      "port" : "Argument(0)",
+      "taint" : 
       [
-        "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V"
+        {
+          "kinds" : 
+          [
+            {
+              "kind" : "Sink",
+              "origins" : 
+              [
+                "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V"
+              ]
+            }
+          ]
+        }
       ]
     }
   ]

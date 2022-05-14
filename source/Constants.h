@@ -29,7 +29,7 @@ std::string_view get_privacy_decision_type();
  * `true` for compatibility with the older sapp-cli (will be deprecated).
  * `false` for a newer, more compact format.
  */
-constexpr bool k_is_legacy_output_version = true;
+constexpr bool k_is_legacy_output_version = false;
 
 } // namespace constants
 } // namespace marianatrench

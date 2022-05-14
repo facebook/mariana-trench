@@ -18,36 +18,52 @@
           "sinks" :
           [
             {
-              "call_position" :
+              "call" :
               {
-                "line" : 2,
-                "path" : "Flow.java"
+                "port" : "Argument(1)",
+                "position" :
+                {
+                  "line" : 2,
+                  "path" : "Flow.java"
+                },
+                "resolves_to" : "LSink;.sink_with_two_kinds:(LData;)V"
               },
-              "callee" : "LSink;.sink_with_two_kinds:(LData;)V",
-              "callee_port" : "Argument(1)",
-              "distance" : 1,
-              "kind" : "AlternativeSink",
-              "origins" :
+              "kinds" :
               [
-                "LSink;.sink_with_two_kinds:(LData;)V"
+                {
+                  "distance" : 1,
+                  "kind" : "AlternativeSink",
+                  "origins" :
+                  [
+                    "LSink;.sink_with_two_kinds:(LData;)V"
+                  ]
+                }
               ]
             }
           ],
           "sources" :
           [
             {
-              "call_position" :
+              "call" :
               {
-                "line" : 1,
-                "path" : "Flow.java"
+                "port" : "Return",
+                "position" :
+                {
+                  "line" : 1,
+                  "path" : "Flow.java"
+                },
+                "resolves_to" : "LSource;.alternative_source:()LData;"
               },
-              "callee" : "LSource;.alternative_source:()LData;",
-              "callee_port" : "Return",
-              "distance" : 1,
-              "kind" : "AlternativeSource",
-              "origins" :
+              "kinds" :
               [
-                "LSource;.alternative_source:()LData;"
+                {
+                  "distance" : 1,
+                  "kind" : "AlternativeSource",
+                  "origins" :
+                  [
+                    "LSource;.alternative_source:()LData;"
+                  ]
+                }
               ]
             }
           ]

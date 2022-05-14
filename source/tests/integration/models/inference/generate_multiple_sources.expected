@@ -9,35 +9,55 @@
       "generations" :
       [
         {
-          "call_position" :
-          {
-            "line" : 2,
-            "path" : "Flow.java"
-          },
-          "callee" : "LSource;.source:()LData;",
-          "callee_port" : "Return",
-          "caller_port" : "Return",
-          "distance" : 1,
-          "kind" : "TestSource",
-          "origins" :
+          "port" : "Return",
+          "taint" :
           [
-            "LSource;.source:()LData;"
-          ]
-        },
-        {
-          "call_position" :
-          {
-            "line" : 4,
-            "path" : "Flow.java"
-          },
-          "callee" : "LSource;.source:()LData;",
-          "callee_port" : "Return",
-          "caller_port" : "Return",
-          "distance" : 1,
-          "kind" : "TestSource",
-          "origins" :
-          [
-            "LSource;.source:()LData;"
+            {
+              "call" :
+              {
+                "port" : "Return",
+                "position" :
+                {
+                  "line" : 2,
+                  "path" : "Flow.java"
+                },
+                "resolves_to" : "LSource;.source:()LData;"
+              },
+              "kinds" :
+              [
+                {
+                  "distance" : 1,
+                  "kind" : "TestSource",
+                  "origins" :
+                  [
+                    "LSource;.source:()LData;"
+                  ]
+                }
+              ]
+            },
+            {
+              "call" :
+              {
+                "port" : "Return",
+                "position" :
+                {
+                  "line" : 4,
+                  "path" : "Flow.java"
+                },
+                "resolves_to" : "LSource;.source:()LData;"
+              },
+              "kinds" :
+              [
+                {
+                  "distance" : 1,
+                  "kind" : "TestSource",
+                  "origins" :
+                  [
+                    "LSource;.source:()LData;"
+                  ]
+                }
+              ]
+            }
           ]
         }
       ],

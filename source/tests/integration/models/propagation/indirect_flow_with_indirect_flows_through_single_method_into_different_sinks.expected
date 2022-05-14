@@ -18,37 +18,53 @@
           "sinks" :
           [
             {
-              "call_position" :
+              "call" :
               {
-                "line" : 2,
-                "path" : "Flow.java"
+                "port" : "Argument(1)",
+                "position" :
+                {
+                  "line" : 2,
+                  "path" : "Flow.java"
+                },
+                "resolves_to" : "LFlow;.into_sink_or_alternative_sink:(LData;)V"
               },
-              "callee" : "LFlow;.into_sink_or_alternative_sink:(LData;)V",
-              "callee_port" : "Argument(1)",
-              "distance" : 2,
-              "kind" : "TestSink",
-              "origins" :
+              "kinds" :
               [
-                "LSink;.alternative_sink:(LData;)V",
-                "LSink;.sink:(LData;)V"
+                {
+                  "distance" : 2,
+                  "kind" : "TestSink",
+                  "origins" :
+                  [
+                    "LSink;.alternative_sink:(LData;)V",
+                    "LSink;.sink:(LData;)V"
+                  ]
+                }
               ]
             }
           ],
           "sources" :
           [
             {
-              "call_position" :
+              "call" :
               {
-                "line" : 1,
-                "path" : "Flow.java"
+                "port" : "Return",
+                "position" :
+                {
+                  "line" : 1,
+                  "path" : "Flow.java"
+                },
+                "resolves_to" : "LSource;.source:()LData;"
               },
-              "callee" : "LSource;.source:()LData;",
-              "callee_port" : "Return",
-              "distance" : 1,
-              "kind" : "TestSource",
-              "origins" :
+              "kinds" :
               [
-                "LSource;.source:()LData;"
+                {
+                  "distance" : 1,
+                  "kind" : "TestSource",
+                  "origins" :
+                  [
+                    "LSource;.source:()LData;"
+                  ]
+                }
               ]
             }
           ]
@@ -71,19 +87,32 @@
       "sinks" :
       [
         {
-          "call_position" :
-          {
-            "line" : 1,
-            "path" : "Flow.java"
-          },
-          "callee" : "LSink;.alternative_sink:(LData;)V",
-          "callee_port" : "Argument(1)",
-          "caller_port" : "Argument(1)",
-          "distance" : 1,
-          "kind" : "TestSink",
-          "origins" :
+          "port" : "Argument(1)",
+          "taint" :
           [
-            "LSink;.alternative_sink:(LData;)V"
+            {
+              "call" :
+              {
+                "port" : "Argument(1)",
+                "position" :
+                {
+                  "line" : 1,
+                  "path" : "Flow.java"
+                },
+                "resolves_to" : "LSink;.alternative_sink:(LData;)V"
+              },
+              "kinds" :
+              [
+                {
+                  "distance" : 1,
+                  "kind" : "TestSink",
+                  "origins" :
+                  [
+                    "LSink;.alternative_sink:(LData;)V"
+                  ]
+                }
+              ]
+            }
           ]
         }
       ]
@@ -98,35 +127,55 @@
       "sinks" :
       [
         {
-          "call_position" :
-          {
-            "line" : 1,
-            "path" : "Flow.java"
-          },
-          "callee" : "LSink;.sink:(LData;)V",
-          "callee_port" : "Argument(1)",
-          "caller_port" : "Argument(1)",
-          "distance" : 1,
-          "kind" : "TestSink",
-          "origins" :
+          "port" : "Argument(1)",
+          "taint" :
           [
-            "LSink;.sink:(LData;)V"
-          ]
-        },
-        {
-          "call_position" :
-          {
-            "line" : 2,
-            "path" : "Flow.java"
-          },
-          "callee" : "LFlow;.into_alternative_sink:(LData;)V",
-          "callee_port" : "Argument(1)",
-          "caller_port" : "Argument(1)",
-          "distance" : 2,
-          "kind" : "TestSink",
-          "origins" :
-          [
-            "LSink;.alternative_sink:(LData;)V"
+            {
+              "call" :
+              {
+                "port" : "Argument(1)",
+                "position" :
+                {
+                  "line" : 1,
+                  "path" : "Flow.java"
+                },
+                "resolves_to" : "LSink;.sink:(LData;)V"
+              },
+              "kinds" :
+              [
+                {
+                  "distance" : 1,
+                  "kind" : "TestSink",
+                  "origins" :
+                  [
+                    "LSink;.sink:(LData;)V"
+                  ]
+                }
+              ]
+            },
+            {
+              "call" :
+              {
+                "port" : "Argument(1)",
+                "position" :
+                {
+                  "line" : 2,
+                  "path" : "Flow.java"
+                },
+                "resolves_to" : "LFlow;.into_alternative_sink:(LData;)V"
+              },
+              "kinds" :
+              [
+                {
+                  "distance" : 2,
+                  "kind" : "TestSink",
+                  "origins" :
+                  [
+                    "LSink;.alternative_sink:(LData;)V"
+                  ]
+                }
+              ]
+            }
           ]
         }
       ]

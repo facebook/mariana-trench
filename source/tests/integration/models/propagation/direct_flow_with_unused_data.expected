@@ -18,36 +18,52 @@
           "sinks" :
           [
             {
-              "call_position" :
+              "call" :
               {
-                "line" : 3,
-                "path" : "Flow.java"
+                "port" : "Argument(1)",
+                "position" :
+                {
+                  "line" : 3,
+                  "path" : "Flow.java"
+                },
+                "resolves_to" : "LSink;.sink:(LData;)V"
               },
-              "callee" : "LSink;.sink:(LData;)V",
-              "callee_port" : "Argument(1)",
-              "distance" : 1,
-              "kind" : "TestSink",
-              "origins" :
+              "kinds" :
               [
-                "LSink;.sink:(LData;)V"
+                {
+                  "distance" : 1,
+                  "kind" : "TestSink",
+                  "origins" :
+                  [
+                    "LSink;.sink:(LData;)V"
+                  ]
+                }
               ]
             }
           ],
           "sources" :
           [
             {
-              "call_position" :
+              "call" :
               {
-                "line" : 1,
-                "path" : "Flow.java"
+                "port" : "Return",
+                "position" :
+                {
+                  "line" : 1,
+                  "path" : "Flow.java"
+                },
+                "resolves_to" : "LSource;.source:()LData;"
               },
-              "callee" : "LSource;.source:()LData;",
-              "callee_port" : "Return",
-              "distance" : 1,
-              "kind" : "TestSource",
-              "origins" :
+              "kinds" :
               [
-                "LSource;.source:()LData;"
+                {
+                  "distance" : 1,
+                  "kind" : "TestSource",
+                  "origins" :
+                  [
+                    "LSource;.source:()LData;"
+                  ]
+                }
               ]
             }
           ]

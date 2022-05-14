@@ -9,19 +9,32 @@
       "generations" :
       [
         {
-          "call_position" :
-          {
-            "line" : 1,
-            "path" : "Flow.java"
-          },
-          "callee" : "LFlow;.into_attribute:()V",
-          "callee_port" : "Argument(0).field",
-          "caller_port" : "Argument(0).field",
-          "distance" : 2,
-          "kind" : "TestSource",
-          "origins" :
+          "port" : "Argument(0).field",
+          "taint" :
           [
-            "LSource;.source:()LData;"
+            {
+              "call" :
+              {
+                "port" : "Argument(0).field",
+                "position" :
+                {
+                  "line" : 1,
+                  "path" : "Flow.java"
+                },
+                "resolves_to" : "LFlow;.into_attribute:()V"
+              },
+              "kinds" :
+              [
+                {
+                  "distance" : 2,
+                  "kind" : "TestSource",
+                  "origins" :
+                  [
+                    "LSource;.source:()LData;"
+                  ]
+                }
+              ]
+            }
           ]
         }
       ],
@@ -37,36 +50,52 @@
           "sinks" :
           [
             {
-              "call_position" :
+              "call" :
               {
-                "line" : 2,
-                "path" : "Flow.java"
+                "port" : "Argument(1)",
+                "position" :
+                {
+                  "line" : 2,
+                  "path" : "Flow.java"
+                },
+                "resolves_to" : "LSink;.sink:(LData;)V"
               },
-              "callee" : "LSink;.sink:(LData;)V",
-              "callee_port" : "Argument(1)",
-              "distance" : 1,
-              "kind" : "TestSink",
-              "origins" :
+              "kinds" :
               [
-                "LSink;.sink:(LData;)V"
+                {
+                  "distance" : 1,
+                  "kind" : "TestSink",
+                  "origins" :
+                  [
+                    "LSink;.sink:(LData;)V"
+                  ]
+                }
               ]
             }
           ],
           "sources" :
           [
             {
-              "call_position" :
+              "call" :
               {
-                "line" : 1,
-                "path" : "Flow.java"
+                "port" : "Argument(0).field",
+                "position" :
+                {
+                  "line" : 1,
+                  "path" : "Flow.java"
+                },
+                "resolves_to" : "LFlow;.into_attribute:()V"
               },
-              "callee" : "LFlow;.into_attribute:()V",
-              "callee_port" : "Argument(0).field",
-              "distance" : 2,
-              "kind" : "TestSource",
-              "origins" :
+              "kinds" :
               [
-                "LSource;.source:()LData;"
+                {
+                  "distance" : 2,
+                  "kind" : "TestSource",
+                  "origins" :
+                  [
+                    "LSource;.source:()LData;"
+                  ]
+                }
               ]
             }
           ]
@@ -81,19 +110,32 @@
       "sinks" :
       [
         {
-          "call_position" :
-          {
-            "line" : 2,
-            "path" : "Flow.java"
-          },
-          "callee" : "LSink;.sink:(LData;)V",
-          "callee_port" : "Argument(1)",
-          "caller_port" : "Argument(0)",
-          "distance" : 1,
-          "kind" : "TestSink",
-          "origins" :
+          "port" : "Argument(0)",
+          "taint" :
           [
-            "LSink;.sink:(LData;)V"
+            {
+              "call" :
+              {
+                "port" : "Argument(1)",
+                "position" :
+                {
+                  "line" : 2,
+                  "path" : "Flow.java"
+                },
+                "resolves_to" : "LSink;.sink:(LData;)V"
+              },
+              "kinds" :
+              [
+                {
+                  "distance" : 1,
+                  "kind" : "TestSink",
+                  "origins" :
+                  [
+                    "LSink;.sink:(LData;)V"
+                  ]
+                }
+              ]
+            }
           ]
         }
       ]
@@ -102,25 +144,38 @@
       "generations" :
       [
         {
-          "call_position" :
-          {
-            "line" : 1,
-            "path" : "Flow.java"
-          },
-          "callee" : "LSource;.source:()LData;",
-          "callee_port" : "Return",
-          "caller_port" : "Argument(0).field",
-          "distance" : 1,
-          "kind" : "TestSource",
-          "local_positions" :
+          "port" : "Argument(0).field",
+          "taint" :
           [
             {
-              "line" : 2
+              "call" :
+              {
+                "port" : "Return",
+                "position" :
+                {
+                  "line" : 1,
+                  "path" : "Flow.java"
+                },
+                "resolves_to" : "LSource;.source:()LData;"
+              },
+              "kinds" :
+              [
+                {
+                  "distance" : 1,
+                  "kind" : "TestSource",
+                  "local_positions" :
+                  [
+                    {
+                      "line" : 2
+                    }
+                  ],
+                  "origins" :
+                  [
+                    "LSource;.source:()LData;"
+                  ]
+                }
+              ]
             }
-          ],
-          "origins" :
-          [
-            "LSource;.source:()LData;"
           ]
         }
       ],

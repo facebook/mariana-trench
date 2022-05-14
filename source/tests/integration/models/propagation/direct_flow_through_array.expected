@@ -22,53 +22,69 @@
           "sinks" :
           [
             {
-              "call_position" :
+              "call" :
               {
-                "line" : 5,
-                "path" : "Flow.java"
+                "port" : "Argument(1)",
+                "position" :
+                {
+                  "line" : 5,
+                  "path" : "Flow.java"
+                },
+                "resolves_to" : "LSink;.sink:(LData;)V"
               },
-              "callee" : "LSink;.sink:(LData;)V",
-              "callee_port" : "Argument(1)",
-              "distance" : 1,
-              "kind" : "TestSink",
-              "origins" :
+              "kinds" :
               [
-                "LSink;.sink:(LData;)V"
+                {
+                  "distance" : 1,
+                  "kind" : "TestSink",
+                  "origins" :
+                  [
+                    "LSink;.sink:(LData;)V"
+                  ]
+                }
               ]
             }
           ],
           "sources" :
           [
             {
-              "always_features" :
-              [
-                "via-array"
-              ],
-              "call_position" :
+              "call" :
               {
-                "line" : 2,
-                "path" : "Flow.java"
+                "port" : "Return",
+                "position" :
+                {
+                  "line" : 2,
+                  "path" : "Flow.java"
+                },
+                "resolves_to" : "LSource;.source:()LData;"
               },
-              "callee" : "LSource;.source:()LData;",
-              "callee_port" : "Return",
-              "distance" : 1,
-              "kind" : "TestSource",
-              "local_features" :
-              {
-                "always_features" :
-                [
-                  "via-array"
-                ]
-              },
-              "local_positions" :
+              "kinds" :
               [
                 {
-                  "line" : 3
+                  "always_features" :
+                  [
+                    "via-array"
+                  ],
+                  "distance" : 1,
+                  "kind" : "TestSource",
+                  "local_features" :
+                  {
+                    "always_features" :
+                    [
+                      "via-array"
+                    ]
+                  },
+                  "local_positions" :
+                  [
+                    {
+                      "line" : 3
+                    }
+                  ],
+                  "origins" :
+                  [
+                    "LSource;.source:()LData;"
+                  ]
                 }
-              ],
-              "origins" :
-              [
-                "LSource;.source:()LData;"
               ]
             }
           ]

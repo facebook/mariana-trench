@@ -3,40 +3,53 @@
   "generations" : 
   [
     {
-      "always_features" : 
-      [
-        "via-cast:Landroid/net/Uri;"
-      ],
-      "call_position" : 
-      {
-        "end" : 32,
-        "line" : 17,
-        "path" : "ZeroRatingConnectionConfigOverrides.java",
-        "start" : 27
-      },
-      "callee" : "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;",
-      "callee_port" : "Return",
-      "caller_port" : "Argument(0).mUri",
-      "distance" : 1,
-      "kind" : "Source",
-      "local_features" : 
-      {
-        "always_features" : 
-        [
-          "via-cast:Landroid/net/Uri;"
-        ]
-      },
-      "local_positions" : 
+      "port" : "Argument(0).mUri",
+      "taint" : 
       [
         {
-          "end" : 14,
-          "line" : 18,
-          "start" : 11
+          "call" : 
+          {
+            "port" : "Return",
+            "position" : 
+            {
+              "end" : 32,
+              "line" : 17,
+              "path" : "ZeroRatingConnectionConfigOverrides.java",
+              "start" : 27
+            },
+            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;"
+          },
+          "kinds" : 
+          [
+            {
+              "always_features" : 
+              [
+                "via-cast:Landroid/net/Uri;"
+              ],
+              "distance" : 1,
+              "kind" : "Source",
+              "local_features" : 
+              {
+                "always_features" : 
+                [
+                  "via-cast:Landroid/net/Uri;"
+                ]
+              },
+              "local_positions" : 
+              [
+                {
+                  "end" : 14,
+                  "line" : 18,
+                  "start" : 11
+                }
+              ],
+              "origins" : 
+              [
+                "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;"
+              ]
+            }
+          ]
         }
-      ],
-      "origins" : 
-      [
-        "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;"
       ]
     }
   ],
@@ -51,12 +64,21 @@
   "generations" : 
   [
     {
-      "callee_port" : "Leaf",
-      "caller_port" : "Return",
-      "kind" : "Source",
-      "origins" : 
+      "port" : "Return",
+      "taint" : 
       [
-        "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;"
+        {
+          "kinds" : 
+          [
+            {
+              "kind" : "Source",
+              "origins" : 
+              [
+                "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;"
+              ]
+            }
+          ]
+        }
       ]
     }
   ],
@@ -159,69 +181,93 @@
       "sinks" : 
       [
         {
-          "call_position" : 
+          "call" : 
           {
-            "end" : 9,
-            "line" : 17,
-            "path" : "Instantiate.java",
-            "start" : 4
+            "port" : "Argument(0).mZeroRatingConnectionConfigOverrides",
+            "position" : 
+            {
+              "end" : 9,
+              "line" : 17,
+              "path" : "Instantiate.java",
+              "start" : 4
+            },
+            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/Configerator;.configure:()V"
           },
-          "callee" : "Lcom/facebook/marianatrench/integrationtests/Configerator;.configure:()V",
-          "callee_port" : "Argument(0).mZeroRatingConnectionConfigOverrides",
-          "distance" : 2,
-          "kind" : "Sink",
-          "origins" : 
+          "kinds" : 
           [
-            "Lcom/facebook/marianatrench/integrationtests/ZeroRatingConnectionConfigOverrides;.getUri:()Landroid/net/Uri;"
+            {
+              "distance" : 2,
+              "kind" : "Sink",
+              "origins" : 
+              [
+                "Lcom/facebook/marianatrench/integrationtests/ZeroRatingConnectionConfigOverrides;.getUri:()Landroid/net/Uri;"
+              ]
+            }
           ]
         },
         {
-          "call_position" : 
+          "call" : 
           {
-            "end" : 9,
-            "line" : 17,
-            "path" : "Instantiate.java",
-            "start" : 4
+            "port" : "Argument(0).mZeroRatingConnectionConfigOverrides.mUri",
+            "position" : 
+            {
+              "end" : 9,
+              "line" : 17,
+              "path" : "Instantiate.java",
+              "start" : 4
+            },
+            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/Configerator;.configure:()V"
           },
-          "callee" : "Lcom/facebook/marianatrench/integrationtests/Configerator;.configure:()V",
-          "callee_port" : "Argument(0).mZeroRatingConnectionConfigOverrides.mUri",
-          "distance" : 3,
-          "kind" : "Sink",
-          "origins" : 
+          "kinds" : 
           [
-            "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V"
+            {
+              "distance" : 3,
+              "kind" : "Sink",
+              "origins" : 
+              [
+                "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V"
+              ]
+            }
           ]
         }
       ],
       "sources" : 
       [
         {
-          "always_features" : 
-          [
-            "via-cast:Landroid/net/Uri;"
-          ],
-          "call_position" : 
+          "call" : 
           {
-            "end" : 11,
-            "line" : 15,
-            "path" : "Instantiate.java",
-            "start" : 4
+            "port" : "Argument(0).mUri",
+            "position" : 
+            {
+              "end" : 11,
+              "line" : 15,
+              "path" : "Instantiate.java",
+              "start" : 4
+            },
+            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/ZeroRatingConnectionConfigOverrides;.onCreate:()V"
           },
-          "callee" : "Lcom/facebook/marianatrench/integrationtests/ZeroRatingConnectionConfigOverrides;.onCreate:()V",
-          "callee_port" : "Argument(0).mUri",
-          "distance" : 2,
-          "kind" : "Source",
-          "local_positions" : 
+          "kinds" : 
           [
             {
-              "end" : 37,
-              "line" : 16,
-              "start" : 30
+              "always_features" : 
+              [
+                "via-cast:Landroid/net/Uri;"
+              ],
+              "distance" : 2,
+              "kind" : "Source",
+              "local_positions" : 
+              [
+                {
+                  "end" : 37,
+                  "line" : 16,
+                  "start" : 30
+                }
+              ],
+              "origins" : 
+              [
+                "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;"
+              ]
             }
-          ],
-          "origins" : 
-          [
-            "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;"
           ]
         }
       ]
@@ -813,39 +859,65 @@
   "sinks" : 
   [
     {
-      "call_position" : 
-      {
-        "end" : 52,
-        "line" : 24,
-        "path" : "Configerator.java",
-        "start" : 17
-      },
-      "callee" : "Lcom/facebook/marianatrench/integrationtests/ZeroRatingConnectionConfigOverrides;.getUri:()Landroid/net/Uri;",
-      "callee_port" : "Argument(0)",
-      "caller_port" : "Argument(0).mZeroRatingConnectionConfigOverrides",
-      "distance" : 1,
-      "kind" : "Sink",
-      "origins" : 
+      "port" : "Argument(0).mZeroRatingConnectionConfigOverrides",
+      "taint" : 
       [
-        "Lcom/facebook/marianatrench/integrationtests/ZeroRatingConnectionConfigOverrides;.getUri:()Landroid/net/Uri;"
+        {
+          "call" : 
+          {
+            "port" : "Argument(0)",
+            "position" : 
+            {
+              "end" : 52,
+              "line" : 24,
+              "path" : "Configerator.java",
+              "start" : 17
+            },
+            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/ZeroRatingConnectionConfigOverrides;.getUri:()Landroid/net/Uri;"
+          },
+          "kinds" : 
+          [
+            {
+              "distance" : 1,
+              "kind" : "Sink",
+              "origins" : 
+              [
+                "Lcom/facebook/marianatrench/integrationtests/ZeroRatingConnectionConfigOverrides;.getUri:()Landroid/net/Uri;"
+              ]
+            }
+          ]
+        }
       ]
     },
     {
-      "call_position" : 
-      {
-        "end" : 52,
-        "line" : 24,
-        "path" : "Configerator.java",
-        "start" : 17
-      },
-      "callee" : "Lcom/facebook/marianatrench/integrationtests/ZeroRatingConnectionConfigOverrides;.getUri:()Landroid/net/Uri;",
-      "callee_port" : "Argument(0).mUri",
-      "caller_port" : "Argument(0).mZeroRatingConnectionConfigOverrides.mUri",
-      "distance" : 2,
-      "kind" : "Sink",
-      "origins" : 
+      "port" : "Argument(0).mZeroRatingConnectionConfigOverrides.mUri",
+      "taint" : 
       [
-        "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V"
+        {
+          "call" : 
+          {
+            "port" : "Argument(0).mUri",
+            "position" : 
+            {
+              "end" : 52,
+              "line" : 24,
+              "path" : "Configerator.java",
+              "start" : 17
+            },
+            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/ZeroRatingConnectionConfigOverrides;.getUri:()Landroid/net/Uri;"
+          },
+          "kinds" : 
+          [
+            {
+              "distance" : 2,
+              "kind" : "Sink",
+              "origins" : 
+              [
+                "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V"
+              ]
+            }
+          ]
+        }
       ]
     }
   ]
@@ -874,12 +946,21 @@
   "sinks" : 
   [
     {
-      "callee_port" : "Leaf",
-      "caller_port" : "Argument(0)",
-      "kind" : "Sink",
-      "origins" : 
+      "port" : "Argument(0)",
+      "taint" : 
       [
-        "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V"
+        {
+          "kinds" : 
+          [
+            {
+              "kind" : "Sink",
+              "origins" : 
+              [
+                "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V"
+              ]
+            }
+          ]
+        }
       ]
     }
   ]
@@ -909,30 +990,52 @@
   "sinks" : 
   [
     {
-      "callee_port" : "Leaf",
-      "caller_port" : "Argument(0)",
-      "kind" : "Sink",
-      "origins" : 
+      "port" : "Argument(0)",
+      "taint" : 
       [
-        "Lcom/facebook/marianatrench/integrationtests/ZeroRatingConnectionConfigOverrides;.getUri:()Landroid/net/Uri;"
+        {
+          "kinds" : 
+          [
+            {
+              "kind" : "Sink",
+              "origins" : 
+              [
+                "Lcom/facebook/marianatrench/integrationtests/ZeroRatingConnectionConfigOverrides;.getUri:()Landroid/net/Uri;"
+              ]
+            }
+          ]
+        }
       ]
     },
     {
-      "call_position" : 
-      {
-        "end" : 19,
-        "line" : 22,
-        "path" : "ZeroRatingConnectionConfigOverrides.java",
-        "start" : 16
-      },
-      "callee" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
-      "callee_port" : "Argument(0)",
-      "caller_port" : "Argument(0).mUri",
-      "distance" : 1,
-      "kind" : "Sink",
-      "origins" : 
+      "port" : "Argument(0).mUri",
+      "taint" : 
       [
-        "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V"
+        {
+          "call" : 
+          {
+            "port" : "Argument(0)",
+            "position" : 
+            {
+              "end" : 19,
+              "line" : 22,
+              "path" : "ZeroRatingConnectionConfigOverrides.java",
+              "start" : 16
+            },
+            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V"
+          },
+          "kinds" : 
+          [
+            {
+              "distance" : 1,
+              "kind" : "Sink",
+              "origins" : 
+              [
+                "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V"
+              ]
+            }
+          ]
+        }
       ]
     }
   ]

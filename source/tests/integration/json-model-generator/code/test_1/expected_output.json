@@ -51,21 +51,39 @@
   "parameter_sources" : 
   [
     {
-      "callee_port" : "Leaf",
-      "caller_port" : "Argument(0)",
-      "kind" : "TestParameterSource",
-      "origins" : 
+      "port" : "Argument(0)",
+      "taint" : 
       [
-        "Lcom/facebook/marianatrench/integrationtests/JsonModelGeneratorIntegrationTest1;.function:(II)V"
+        {
+          "kinds" : 
+          [
+            {
+              "kind" : "TestParameterSource",
+              "origins" : 
+              [
+                "Lcom/facebook/marianatrench/integrationtests/JsonModelGeneratorIntegrationTest1;.function:(II)V"
+              ]
+            }
+          ]
+        }
       ]
     },
     {
-      "callee_port" : "Leaf",
-      "caller_port" : "Argument(1)",
-      "kind" : "TestParameterSource",
-      "origins" : 
+      "port" : "Argument(1)",
+      "taint" : 
       [
-        "Lcom/facebook/marianatrench/integrationtests/JsonModelGeneratorIntegrationTest1;.function:(II)V"
+        {
+          "kinds" : 
+          [
+            {
+              "kind" : "TestParameterSource",
+              "origins" : 
+              [
+                "Lcom/facebook/marianatrench/integrationtests/JsonModelGeneratorIntegrationTest1;.function:(II)V"
+              ]
+            }
+          ]
+        }
       ]
     }
   ],
@@ -84,12 +102,21 @@
   "sinks" : 
   [
     {
-      "callee_port" : "Leaf",
-      "caller_port" : "Argument(1)",
-      "kind" : "TestSink",
-      "origins" : 
+      "port" : "Argument(1)",
+      "taint" : 
       [
-        "Lcom/facebook/marianatrench/integrationtests/JsonModelGeneratorIntegrationTest1;.function:(II)V"
+        {
+          "kinds" : 
+          [
+            {
+              "kind" : "TestSink",
+              "origins" : 
+              [
+                "Lcom/facebook/marianatrench/integrationtests/JsonModelGeneratorIntegrationTest1;.function:(II)V"
+              ]
+            }
+          ]
+        }
       ]
     }
   ]
