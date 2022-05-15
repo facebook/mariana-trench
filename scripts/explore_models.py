@@ -10,7 +10,7 @@ import os
 import re
 import subprocess
 import sys
-from typing import Any, Union, Dict, Tuple, Iterable, NamedTuple, List
+from typing import Any, Dict, Iterable, List, NamedTuple, Tuple, Union
 
 """
 Set of functions that can be used to explore models.

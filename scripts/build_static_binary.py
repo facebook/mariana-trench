@@ -13,7 +13,7 @@ import subprocess
 import sys
 import tempfile
 from pathlib import Path
-from typing import Optional, List, Dict
+from typing import Dict, List, Optional
 
 LOG: logging.Logger = logging.getLogger(__name__)
 

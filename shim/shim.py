@@ -14,7 +14,7 @@ import sys
 import tempfile
 import traceback
 from pathlib import Path
-from typing import Optional, Any, List
+from typing import Any, List, Optional
 
 from pyre_extensions import none_throws, safe_json
 
