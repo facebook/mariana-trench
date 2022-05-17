@@ -11,7 +11,7 @@
         {
           "handles" :
           [
-            "return:0:Leaf"
+            "LSink;.private_sink:(LData;)V:0:Argument(1)"
           ],
           "position" :
           {

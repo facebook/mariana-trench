@@ -149,7 +149,7 @@
       ],
       "handles" : 
       [
-        "return:0:Leaf"
+        "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V:0:Argument(0)"
       ],
       "may_features" : 
       [

@@ -330,7 +330,7 @@
       ],
       "handles" : 
       [
-        "return:0:Leaf"
+        "Lcom/facebook/marianatrench/integrationtests/ArrayAllocation;.allocateArray:(I)V:0:Argument(1)"
       ],
       "position" : 
       {

@@ -93,7 +93,86 @@
     {
       "handles" : 
       [
-        "return:0:Leaf"
+        "Lcom/facebook/marianatrench/integrationtests/RunnableFlows;.runRunnable:(Lcom/facebook/marianatrench/integrationtests/RunnableWithArgument;Ljava/lang/Object;)V:0:Argument(1)"
+      ],
+      "position" : 
+      {
+        "line" : 42,
+        "path" : "RunnableFlows.java"
+      },
+      "rule" : 1,
+      "sinks" : 
+      [
+        {
+          "call" : 
+          {
+            "port" : "Argument(1)",
+            "position" : 
+            {
+              "end" : 29,
+              "line" : 42,
+              "path" : "RunnableFlows.java",
+              "start" : 26
+            },
+            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/RunnableFlows;.runRunnable:(Lcom/facebook/marianatrench/integrationtests/RunnableWithArgument;Ljava/lang/Object;)V"
+          },
+          "kinds" : 
+          [
+            {
+              "distance" : 3,
+              "kind" : "Sink",
+              "origins" : 
+              [
+                "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V"
+              ]
+            }
+          ]
+        }
+      ],
+      "sources" : 
+      [
+        {
+          "call" : 
+          {
+            "port" : "Return",
+            "position" : 
+            {
+              "end" : 30,
+              "line" : 41,
+              "path" : "RunnableFlows.java",
+              "start" : 25
+            },
+            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;"
+          },
+          "kinds" : 
+          [
+            {
+              "distance" : 1,
+              "kind" : "Source",
+              "origins" : 
+              [
+                "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;"
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "method" : "Lcom/facebook/marianatrench/integrationtests/RunnableFlows;.genericInvocation:(Lcom/facebook/marianatrench/integrationtests/RunnableWithArgument;)V",
+  "position" : 
+  {
+    "line" : 40,
+    "path" : "RunnableFlows.java"
+  }
+}
+{
+  "issues" : 
+  [
+    {
+      "handles" : 
+      [
+        "Lcom/facebook/marianatrench/integrationtests/RunnableFlows;.runRunnable:(Lcom/facebook/marianatrench/integrationtests/RunnableWithArgument;Ljava/lang/Object;)V[0: Lcom/facebook/marianatrench/integrationtests/RunnableFlows$2;]:0:Argument(1)"
       ],
       "position" : 
       {
@@ -173,85 +252,6 @@
   "position" : 
   {
     "line" : 28,
-    "path" : "RunnableFlows.java"
-  }
-}
-{
-  "issues" : 
-  [
-    {
-      "handles" : 
-      [
-        "return:0:Leaf"
-      ],
-      "position" : 
-      {
-        "line" : 42,
-        "path" : "RunnableFlows.java"
-      },
-      "rule" : 1,
-      "sinks" : 
-      [
-        {
-          "call" : 
-          {
-            "port" : "Argument(1)",
-            "position" : 
-            {
-              "end" : 29,
-              "line" : 42,
-              "path" : "RunnableFlows.java",
-              "start" : 26
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/RunnableFlows;.runRunnable:(Lcom/facebook/marianatrench/integrationtests/RunnableWithArgument;Ljava/lang/Object;)V"
-          },
-          "kinds" : 
-          [
-            {
-              "distance" : 3,
-              "kind" : "Sink",
-              "origins" : 
-              [
-                "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V"
-              ]
-            }
-          ]
-        }
-      ],
-      "sources" : 
-      [
-        {
-          "call" : 
-          {
-            "port" : "Return",
-            "position" : 
-            {
-              "end" : 30,
-              "line" : 41,
-              "path" : "RunnableFlows.java",
-              "start" : 25
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;"
-          },
-          "kinds" : 
-          [
-            {
-              "distance" : 1,
-              "kind" : "Source",
-              "origins" : 
-              [
-                "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;"
-              ]
-            }
-          ]
-        }
-      ]
-    }
-  ],
-  "method" : "Lcom/facebook/marianatrench/integrationtests/RunnableFlows;.genericInvocation:(Lcom/facebook/marianatrench/integrationtests/RunnableWithArgument;)V",
-  "position" : 
-  {
-    "line" : 40,
     "path" : "RunnableFlows.java"
   }
 }

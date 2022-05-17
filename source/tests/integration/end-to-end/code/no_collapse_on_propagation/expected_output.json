@@ -93,7 +93,7 @@
     {
       "handles" : 
       [
-        "return:0:Leaf"
+        "Lcom/facebook/marianatrench/integrationtests/MainActivity$ModalActivityLauncher;.mArgumentFlowsToSink:()V:0:Argument(0)"
       ],
       "position" : 
       {

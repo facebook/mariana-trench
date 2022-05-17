@@ -213,7 +213,7 @@
       ],
       "handles" : 
       [
-        "return:0:Leaf"
+        "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V:0:Argument(0)"
       ],
       "position" : 
       {
@@ -311,7 +311,7 @@
     {
       "handles" : 
       [
-        "return:0:Leaf"
+        "Landroid/app/Activity;.startActivity:(Landroid/content/Intent;)V:0:Argument(1)"
       ],
       "position" : 
       {
@@ -390,7 +390,7 @@
     {
       "handles" : 
       [
-        "return:0:Leaf"
+        "Landroid/app/Activity;.startActivity:(Landroid/content/Intent;)V:0:Argument(1)"
       ],
       "position" : 
       {
@@ -469,7 +469,7 @@
     {
       "handles" : 
       [
-        "return:0:Leaf"
+        "Landroid/app/Activity;.startActivity:(Landroid/content/Intent;)V:0:Argument(1)"
       ],
       "position" : 
       {
@@ -548,86 +548,7 @@
     {
       "handles" : 
       [
-        "return:0:Leaf"
-      ],
-      "position" : 
-      {
-        "line" : 29,
-        "path" : "FlowWithHops.java"
-      },
-      "rule" : 2,
-      "sinks" : 
-      [
-        {
-          "call" : 
-          {
-            "port" : "Argument(1)",
-            "position" : 
-            {
-              "end" : 45,
-              "line" : 29,
-              "path" : "FlowWithHops.java",
-              "start" : 23
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/FlowWithHops;.toSinkWithHop:(Ljava/lang/Object;)V"
-          },
-          "kinds" : 
-          [
-            {
-              "distance" : 3,
-              "kind" : "Sink",
-              "origins" : 
-              [
-                "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V"
-              ]
-            }
-          ]
-        }
-      ],
-      "sources" : 
-      [
-        {
-          "call" : 
-          {
-            "port" : "Return",
-            "position" : 
-            {
-              "end" : 43,
-              "line" : 29,
-              "path" : "FlowWithHops.java",
-              "start" : 28
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/FlowWithHops;.getSourceWithHop:()Ljava/lang/Object;"
-          },
-          "kinds" : 
-          [
-            {
-              "distance" : 3,
-              "kind" : "Source",
-              "origins" : 
-              [
-                "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;"
-              ]
-            }
-          ]
-        }
-      ]
-    }
-  ],
-  "method" : "Lcom/facebook/marianatrench/integrationtests/FlowWithHops;.issue:()V",
-  "position" : 
-  {
-    "line" : 28,
-    "path" : "FlowWithHops.java"
-  }
-}
-{
-  "issues" : 
-  [
-    {
-      "handles" : 
-      [
-        "return:0:Leaf"
+        "Lcom/facebook/content/SecureContextHelper;.startFacebookActivity:(Landroid/content/Intent;Landroid/content/Context;)V:0:Argument(1)"
       ],
       "position" : 
       {
@@ -716,6 +637,85 @@
   {
     "line" : 23,
     "path" : "DirectOpenRedirectFlow.java"
+  }
+}
+{
+  "issues" : 
+  [
+    {
+      "handles" : 
+      [
+        "Lcom/facebook/marianatrench/integrationtests/FlowWithHops;.toSinkWithHop:(Ljava/lang/Object;)V:0:Argument(1)"
+      ],
+      "position" : 
+      {
+        "line" : 29,
+        "path" : "FlowWithHops.java"
+      },
+      "rule" : 2,
+      "sinks" : 
+      [
+        {
+          "call" : 
+          {
+            "port" : "Argument(1)",
+            "position" : 
+            {
+              "end" : 45,
+              "line" : 29,
+              "path" : "FlowWithHops.java",
+              "start" : 23
+            },
+            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/FlowWithHops;.toSinkWithHop:(Ljava/lang/Object;)V"
+          },
+          "kinds" : 
+          [
+            {
+              "distance" : 3,
+              "kind" : "Sink",
+              "origins" : 
+              [
+                "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V"
+              ]
+            }
+          ]
+        }
+      ],
+      "sources" : 
+      [
+        {
+          "call" : 
+          {
+            "port" : "Return",
+            "position" : 
+            {
+              "end" : 43,
+              "line" : 29,
+              "path" : "FlowWithHops.java",
+              "start" : 28
+            },
+            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/FlowWithHops;.getSourceWithHop:()Ljava/lang/Object;"
+          },
+          "kinds" : 
+          [
+            {
+              "distance" : 3,
+              "kind" : "Source",
+              "origins" : 
+              [
+                "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;"
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "method" : "Lcom/facebook/marianatrench/integrationtests/FlowWithHops;.issue:()V",
+  "position" : 
+  {
+    "line" : 28,
+    "path" : "FlowWithHops.java"
   }
 }
 {

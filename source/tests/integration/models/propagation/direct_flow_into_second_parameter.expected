@@ -11,7 +11,7 @@
         {
           "handles" :
           [
-            "return:0:Leaf"
+            "LSink;.sink_in_second_parameter:(II)V:0:Argument(2)"
           ],
           "position" :
           {

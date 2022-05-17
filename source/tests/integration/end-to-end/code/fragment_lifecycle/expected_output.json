@@ -143,7 +143,7 @@
       ],
       "handles" : 
       [
-        "return:0:Leaf"
+        "Lcom/facebook/marianatrench/integrationtests/BaseFragment;.onAfterActivityCreate:()V:0:Argument(0)"
       ],
       "position" : 
       {
@@ -508,7 +508,7 @@
       ],
       "handles" : 
       [
-        "return:0:Leaf"
+        "Lcom/facebook/marianatrench/integrationtests/SimpleFragment;.onStart:()V:0:Argument(0)"
       ],
       "position" : 
       {

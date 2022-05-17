@@ -232,123 +232,7 @@
       ],
       "handles" : 
       [
-        "return:0:Leaf"
-      ],
-      "position" : 
-      {
-        "line" : 20,
-        "path" : "MultiSourcesSingleArg.java"
-      },
-      "rule" : 2,
-      "sinks" : 
-      [
-        {
-          "call" : 
-          {
-            "port" : "Argument(0)",
-            "position" : 
-            {
-              "end" : 36,
-              "line" : 20,
-              "path" : "MultiSourcesSingleArg.java",
-              "start" : 31
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/MultiSourcesSingleArg;.sink:(Lcom/facebook/marianatrench/integrationtests/MockObjectWithThisPropagation;)V"
-          },
-          "kinds" : 
-          [
-            {
-              "always_features" : 
-              [
-                "sink-a",
-                "sink-b",
-                "source-a",
-                "source-b"
-              ],
-              "distance" : 1,
-              "kind" : "Partial:TestSinkSingleArg:a",
-              "local_features" : 
-              {
-                "always_features" : 
-                [
-                  "sink-a",
-                  "sink-b",
-                  "source-a",
-                  "source-b"
-                ]
-              },
-              "origins" : 
-              [
-                "Lcom/facebook/marianatrench/integrationtests/MultiSourcesSingleArg;.sink:(Lcom/facebook/marianatrench/integrationtests/MockObjectWithThisPropagation;)V"
-              ],
-              "triggered_rule" : 2
-            }
-          ]
-        }
-      ],
-      "sources" : 
-      [
-        {
-          "call" : 
-          {
-            "port" : "Return",
-            "position" : 
-            {
-              "end" : 48,
-              "line" : 19,
-              "path" : "MultiSourcesSingleArg.java",
-              "start" : 42
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/MultiSourcesSingleArg;.sourceA:()Ljava/lang/Object;"
-          },
-          "kinds" : 
-          [
-            {
-              "always_features" : 
-              [
-                "source-a"
-              ],
-              "distance" : 1,
-              "kind" : "TestSourceA",
-              "local_positions" : 
-              [
-                {
-                  "end" : 50,
-                  "line" : 19,
-                  "start" : 20
-                }
-              ],
-              "origins" : 
-              [
-                "Lcom/facebook/marianatrench/integrationtests/MultiSourcesSingleArg;.sourceA:()Ljava/lang/Object;"
-              ]
-            }
-          ]
-        }
-      ]
-    }
-  ],
-  "method" : "Lcom/facebook/marianatrench/integrationtests/MultiSourcesSingleArg;.issue:()V",
-  "position" : 
-  {
-    "line" : 17,
-    "path" : "MultiSourcesSingleArg.java"
-  }
-}
-{
-  "issues" : 
-  [
-    {
-      "always_features" : 
-      [
-        "sink-a",
-        "sink-b",
-        "source-a",
-        "source-b"
-      ],
-      "handles" : 
-      [
-        "return:0:Leaf"
+        "Lcom/facebook/marianatrench/integrationtests/MultiSources;.sink:(Ljava/lang/Object;Ljava/lang/Object;)V:0:Argument(1)"
       ],
       "position" : 
       {
@@ -456,7 +340,104 @@
       ],
       "handles" : 
       [
-        "return:0:Leaf"
+        "Lcom/facebook/marianatrench/integrationtests/MultiSources;.triggeredSinkA:(Ljava/lang/Object;)V:0:Argument(1)"
+      ],
+      "position" : 
+      {
+        "line" : 37,
+        "path" : "MultiSources.java"
+      },
+      "rule" : 1,
+      "sinks" : 
+      [
+        {
+          "call" : 
+          {
+            "port" : "Argument(1)",
+            "position" : 
+            {
+              "end" : 40,
+              "line" : 37,
+              "path" : "MultiSources.java",
+              "start" : 19
+            },
+            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/MultiSources;.triggeredSinkA:(Ljava/lang/Object;)V"
+          },
+          "kinds" : 
+          [
+            {
+              "always_features" : 
+              [
+                "sink-a",
+                "sink-b",
+                "source-b"
+              ],
+              "distance" : 2,
+              "kind" : "Partial:TestSink:a",
+              "origins" : 
+              [
+                "Lcom/facebook/marianatrench/integrationtests/MultiSources;.sink:(Ljava/lang/Object;Ljava/lang/Object;)V"
+              ],
+              "triggered_rule" : 1
+            }
+          ]
+        }
+      ],
+      "sources" : 
+      [
+        {
+          "call" : 
+          {
+            "port" : "Return",
+            "position" : 
+            {
+              "end" : 38,
+              "line" : 37,
+              "path" : "MultiSources.java",
+              "start" : 32
+            },
+            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/MultiSources;.sourceA:()Ljava/lang/Object;"
+          },
+          "kinds" : 
+          [
+            {
+              "always_features" : 
+              [
+                "source-a"
+              ],
+              "distance" : 1,
+              "kind" : "TestSourceA",
+              "origins" : 
+              [
+                "Lcom/facebook/marianatrench/integrationtests/MultiSources;.sourceA:()Ljava/lang/Object;"
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "method" : "Lcom/facebook/marianatrench/integrationtests/MultiSources;.issueViaTriggeredSinkA:()V",
+  "position" : 
+  {
+    "line" : 36,
+    "path" : "MultiSources.java"
+  }
+}
+{
+  "issues" : 
+  [
+    {
+      "always_features" : 
+      [
+        "sink-a",
+        "sink-b",
+        "source-a",
+        "source-b"
+      ],
+      "handles" : 
+      [
+        "Lcom/facebook/marianatrench/integrationtests/MultiSources;.triggeredSinkB:(Ljava/lang/Object;)V:0:Argument(1)"
       ],
       "position" : 
       {
@@ -553,28 +534,28 @@
       ],
       "handles" : 
       [
-        "return:0:Leaf"
+        "Lcom/facebook/marianatrench/integrationtests/MultiSourcesSingleArg;.sink:(Lcom/facebook/marianatrench/integrationtests/MockObjectWithThisPropagation;)V:0:Argument(0)"
       ],
       "position" : 
       {
-        "line" : 37,
-        "path" : "MultiSources.java"
+        "line" : 20,
+        "path" : "MultiSourcesSingleArg.java"
       },
-      "rule" : 1,
+      "rule" : 2,
       "sinks" : 
       [
         {
           "call" : 
           {
-            "port" : "Argument(1)",
+            "port" : "Argument(0)",
             "position" : 
             {
-              "end" : 40,
-              "line" : 37,
-              "path" : "MultiSources.java",
-              "start" : 19
+              "end" : 36,
+              "line" : 20,
+              "path" : "MultiSourcesSingleArg.java",
+              "start" : 31
             },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/MultiSources;.triggeredSinkA:(Ljava/lang/Object;)V"
+            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/MultiSourcesSingleArg;.sink:(Lcom/facebook/marianatrench/integrationtests/MockObjectWithThisPropagation;)V"
           },
           "kinds" : 
           [
@@ -583,15 +564,26 @@
               [
                 "sink-a",
                 "sink-b",
+                "source-a",
                 "source-b"
               ],
-              "distance" : 2,
-              "kind" : "Partial:TestSink:a",
+              "distance" : 1,
+              "kind" : "Partial:TestSinkSingleArg:a",
+              "local_features" : 
+              {
+                "always_features" : 
+                [
+                  "sink-a",
+                  "sink-b",
+                  "source-a",
+                  "source-b"
+                ]
+              },
               "origins" : 
               [
-                "Lcom/facebook/marianatrench/integrationtests/MultiSources;.sink:(Ljava/lang/Object;Ljava/lang/Object;)V"
+                "Lcom/facebook/marianatrench/integrationtests/MultiSourcesSingleArg;.sink:(Lcom/facebook/marianatrench/integrationtests/MockObjectWithThisPropagation;)V"
               ],
-              "triggered_rule" : 1
+              "triggered_rule" : 2
             }
           ]
         }
@@ -604,12 +596,12 @@
             "port" : "Return",
             "position" : 
             {
-              "end" : 38,
-              "line" : 37,
-              "path" : "MultiSources.java",
-              "start" : 32
+              "end" : 48,
+              "line" : 19,
+              "path" : "MultiSourcesSingleArg.java",
+              "start" : 42
             },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/MultiSources;.sourceA:()Ljava/lang/Object;"
+            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/MultiSourcesSingleArg;.sourceA:()Ljava/lang/Object;"
           },
           "kinds" : 
           [
@@ -620,9 +612,17 @@
               ],
               "distance" : 1,
               "kind" : "TestSourceA",
+              "local_positions" : 
+              [
+                {
+                  "end" : 50,
+                  "line" : 19,
+                  "start" : 20
+                }
+              ],
               "origins" : 
               [
-                "Lcom/facebook/marianatrench/integrationtests/MultiSources;.sourceA:()Ljava/lang/Object;"
+                "Lcom/facebook/marianatrench/integrationtests/MultiSourcesSingleArg;.sourceA:()Ljava/lang/Object;"
               ]
             }
           ]
@@ -630,11 +630,11 @@
       ]
     }
   ],
-  "method" : "Lcom/facebook/marianatrench/integrationtests/MultiSources;.issueViaTriggeredSinkA:()V",
+  "method" : "Lcom/facebook/marianatrench/integrationtests/MultiSourcesSingleArg;.issue:()V",
   "position" : 
   {
-    "line" : 36,
-    "path" : "MultiSources.java"
+    "line" : 17,
+    "path" : "MultiSourcesSingleArg.java"
   }
 }
 {

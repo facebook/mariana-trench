@@ -97,7 +97,7 @@
     {
       "handles" : 
       [
-        "return:0:Leaf"
+        "Lcom/facebook/marianatrench/integrationtests/Flow;.toSinkWithFieldHop:(Lcom/facebook/marianatrench/integrationtests/Flow$Event;)V:0:Argument(1)"
       ],
       "position" : 
       {

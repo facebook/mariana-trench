@@ -185,7 +185,7 @@
     {
       "handles" : 
       [
-        "return:0:Leaf"
+        "Lcom/facebook/marianatrench/integrationtests/BaseActivity;.onStart:()V:0:Argument(0)"
       ],
       "position" : 
       {

@@ -98,7 +98,7 @@
       ],
       "handles" : 
       [
-        "return:0:Leaf"
+        "Ljava/lang/Thread;.<init>:(Ljava/lang/Runnable;)V[0: Lcom/facebook/marianatrench/integrationtests/RunnableActivity$1;]:0:Argument(1)"
       ],
       "position" : 
       {

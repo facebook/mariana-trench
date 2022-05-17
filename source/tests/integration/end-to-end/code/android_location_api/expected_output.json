@@ -40,7 +40,7 @@
     {
       "handles" : 
       [
-        "return:0:Leaf"
+        "Landroid/util/Log;.e:(Ljava/lang/String;Ljava/lang/String;)I:1:Argument(1)"
       ],
       "position" : 
       {

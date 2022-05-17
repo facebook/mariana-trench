@@ -43,7 +43,7 @@
         {
           "handles" :
           [
-            "return:0:Leaf"
+            "LSink;.sink:(LData;)V:0:Argument(1)"
           ],
           "position" :
           {
