@@ -95,6 +95,10 @@
       [
         "via-cast:Ljava/lang/String;"
       ],
+      "handles" : 
+      [
+        "return:0:Leaf"
+      ],
       "position" : 
       {
         "line" : 16,
@@ -198,6 +202,10 @@
       [
         "via-cast:Ljava/lang/String;"
       ],
+      "handles" : 
+      [
+        "return:0:Leaf"
+      ],
       "position" : 
       {
         "line" : 21,
@@ -300,6 +308,10 @@
       "always_features" : 
       [
         "via-cast:Ljava/lang/String;"
+      ],
+      "handles" : 
+      [
+        "return:0:Leaf"
       ],
       "position" : 
       {

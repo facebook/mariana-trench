@@ -96,6 +96,10 @@
         "via-anonymous-class-to-obscure",
         "via-obscure"
       ],
+      "handles" : 
+      [
+        "return:0:Leaf"
+      ],
       "position" : 
       {
         "line" : 35,

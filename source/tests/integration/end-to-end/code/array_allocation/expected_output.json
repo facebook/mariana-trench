@@ -124,6 +124,10 @@
       [
         "via-cast:Ljava/lang/Integer;"
       ],
+      "handles" : 
+      [
+        "return:0:Leaf"
+      ],
       "position" : 
       {
         "line" : 18,
@@ -221,6 +225,10 @@
       "always_features" : 
       [
         "via-cast:Ljava/lang/Integer;"
+      ],
+      "handles" : 
+      [
+        "return:0:Leaf"
       ],
       "position" : 
       {
@@ -320,6 +328,10 @@
       [
         "via-numerical-operator"
       ],
+      "handles" : 
+      [
+        "return:0:Leaf"
+      ],
       "position" : 
       {
         "line" : 58,
@@ -399,6 +411,10 @@
   "issues" : 
   [
     {
+      "handles" : 
+      [
+        "return:0:Leaf"
+      ],
       "position" : 
       {
         "line" : 13,
@@ -474,6 +490,10 @@
   "issues" : 
   [
     {
+      "handles" : 
+      [
+        "return:0:Leaf"
+      ],
       "position" : 
       {
         "line" : 28,
@@ -549,6 +569,10 @@
   "issues" : 
   [
     {
+      "handles" : 
+      [
+        "return:0:Leaf"
+      ],
       "position" : 
       {
         "line" : 34,
@@ -624,6 +648,10 @@
   "issues" : 
   [
     {
+      "handles" : 
+      [
+        "return:0:Leaf"
+      ],
       "position" : 
       {
         "line" : 40,
@@ -699,6 +727,10 @@
   "issues" : 
   [
     {
+      "handles" : 
+      [
+        "return:0:Leaf"
+      ],
       "position" : 
       {
         "line" : 47,
@@ -774,6 +806,10 @@
   "issues" : 
   [
     {
+      "handles" : 
+      [
+        "return:0:Leaf"
+      ],
       "position" : 
       {
         "line" : 53,

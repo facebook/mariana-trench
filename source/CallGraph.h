@@ -24,6 +24,7 @@
 #include <mariana-trench/FeatureSet.h>
 #include <mariana-trench/Field.h>
 #include <mariana-trench/Fields.h>
+#include <mariana-trench/Issue.h>
 #include <mariana-trench/Method.h>
 #include <mariana-trench/Options.h>
 #include <mariana-trench/Overrides.h>
@@ -31,8 +32,6 @@
 #include <mariana-trench/shim-generator/ShimGenerator.h>
 
 namespace marianatrench {
-
-using TextualOrderIndex = std::uint32_t;
 
 /**
  * Represents information about a specific call.

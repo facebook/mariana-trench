@@ -487,8 +487,14 @@ void create_issue(
   source.add_inferred_features(
       context->class_properties.issue_features(context->method()));
   sink.add_inferred_features(extra_features);
-  auto issue =
-      Issue(Taint{std::move(source)}, Taint{std::move(sink)}, rule, position);
+  auto issue = Issue(
+      Taint{std::move(source)},
+      Taint{std::move(sink)},
+      rule,
+      std::string(k_return_callee),
+      0,
+      Root(Root::Kind::Leaf),
+      position);
   LOG_OR_DUMP(context, 4, "Found issue: {}", issue);
   context->model.add_issue(std::move(issue));
 }

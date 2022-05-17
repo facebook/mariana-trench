@@ -55,6 +55,10 @@
         "via-obscure",
         "via-obscure-taint-in-taint-out"
       ],
+      "handles" : 
+      [
+        "return:0:Leaf"
+      ],
       "position" : 
       {
         "line" : 22,

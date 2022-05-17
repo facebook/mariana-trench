@@ -60,6 +60,10 @@
       [
         "via-cast:Lcom/facebook/marianatrench/integrationtests/Flow;"
       ],
+      "handles" : 
+      [
+        "return:0:Leaf"
+      ],
       "position" : 
       {
         "line" : 57,
@@ -334,6 +338,10 @@
       [
         "via-cast:Lcom/facebook/marianatrench/integrationtests/Flow;"
       ],
+      "handles" : 
+      [
+        "return:0:Leaf"
+      ],
       "position" : 
       {
         "line" : 36,
@@ -607,6 +615,10 @@
       "always_features" : 
       [
         "via-cast:Lcom/facebook/marianatrench/integrationtests/Flow;"
+      ],
+      "handles" : 
+      [
+        "return:0:Leaf"
       ],
       "position" : 
       {

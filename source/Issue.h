@@ -7,9 +7,11 @@
 
 #pragma once
 
+#include <fmt/format.h>
 #include <json/json.h>
 
 #include <AbstractDomain.h>
+#include <HashedSetAbstractDomain.h>
 
 #include <mariana-trench/Assert.h>
 #include <mariana-trench/Compiler.h>
@@ -18,23 +20,59 @@
 
 namespace marianatrench {
 
+using TextualOrderIndex = std::uint32_t;
+constexpr std::string_view k_return_callee = "return";
+
+namespace {
+std::string get_handle(
+    const std::string& callee,
+    TextualOrderIndex sink_index,
+    const Root& callee_port_root) {
+  return fmt::format(
+      "{}:{}:{}", callee, sink_index, callee_port_root.to_string());
+}
+} // namespace
+
 class Issue final : public sparta::AbstractDomain<Issue> {
  public:
+  using HandleSet = sparta::HashedSetAbstractDomain<std::string>;
+
   /* Create the bottom issue. */
   explicit Issue()
       : sources_(Taint::bottom()),
         sinks_(Taint::bottom()),
         rule_(nullptr),
+        new_handles_(HandleSet({get_handle(
+            std::string(k_return_callee),
+            0,
+            Root(Root::Kind::Leaf))})),
         position_(nullptr) {}
 
   explicit Issue(
       Taint sources,
       Taint sinks,
       const Rule* rule,
+      const std::string& callee,
+      TextualOrderIndex sink_index,
+      const Root& callee_port_root,
       const Position* position)
       : sources_(std::move(sources)),
         sinks_(std::move(sinks)),
         rule_(rule),
+        new_handles_(
+            HandleSet({get_handle(callee, sink_index, callee_port_root)})),
+        position_(position) {}
+
+  explicit Issue(
+      Taint sources,
+      Taint sinks,
+      const Rule* rule,
+      HandleSet handles,
+      const Position* position)
+      : sources_(std::move(sources)),
+        sinks_(std::move(sinks)),
+        rule_(rule),
+        new_handles_(handles),
         position_(position) {}
 
   Issue(const Issue&) = default;
@@ -52,6 +90,10 @@ class Issue final : public sparta::AbstractDomain<Issue> {
 
   const Rule* MT_NULLABLE rule() const {
     return rule_;
+  }
+
+  const HandleSet new_handles() const {
+    return new_handles_;
   }
 
   const Position* MT_NULLABLE position() const {
@@ -128,6 +170,7 @@ class Issue final : public sparta::AbstractDomain<Issue> {
   Taint sources_;
   Taint sinks_;
   const Rule* MT_NULLABLE rule_;
+  HandleSet new_handles_;
   const Position* MT_NULLABLE position_;
 };
 

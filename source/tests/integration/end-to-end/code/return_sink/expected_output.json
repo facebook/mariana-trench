@@ -60,6 +60,10 @@
       [
         "via-array"
       ],
+      "handles" : 
+      [
+        "return:0:Leaf"
+      ],
       "position" : 
       {
         "line" : 19,
@@ -333,6 +337,10 @@
       [
         "via-cast:Lcom/facebook/marianatrench/integrationtests/Flow$Tree;"
       ],
+      "handles" : 
+      [
+        "return:0:Leaf"
+      ],
       "position" : 
       {
         "line" : 46,
@@ -570,6 +578,10 @@
       [
         "via-array"
       ],
+      "handles" : 
+      [
+        "return:0:Leaf"
+      ],
       "position" : 
       {
         "line" : 25,
@@ -671,6 +683,10 @@
       "always_features" : 
       [
         "via-cast:Lcom/facebook/marianatrench/integrationtests/Flow$Tree;"
+      ],
+      "handles" : 
+      [
+        "return:0:Leaf"
       ],
       "position" : 
       {

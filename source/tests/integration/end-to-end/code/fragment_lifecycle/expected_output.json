@@ -141,6 +141,10 @@
       [
         "via-cast:Ljava/lang/String;"
       ],
+      "handles" : 
+      [
+        "return:0:Leaf"
+      ],
       "position" : 
       {
         "line" : 25,
@@ -501,6 +505,10 @@
       "always_features" : 
       [
         "via-cast:Ljava/lang/String;"
+      ],
+      "handles" : 
+      [
+        "return:0:Leaf"
       ],
       "position" : 
       {

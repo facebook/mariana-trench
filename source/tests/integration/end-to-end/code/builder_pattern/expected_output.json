@@ -299,6 +299,10 @@
       [
         "via-certificate-pinner"
       ],
+      "handles" : 
+      [
+        "return:0:Leaf"
+      ],
       "position" : 
       {
         "line" : 62,
@@ -396,6 +400,10 @@
       "always_features" : 
       [
         "via-certificate-pinner"
+      ],
+      "handles" : 
+      [
+        "return:0:Leaf"
       ],
       "position" : 
       {
@@ -535,6 +543,10 @@
   "issues" : 
   [
     {
+      "handles" : 
+      [
+        "return:0:Leaf"
+      ],
       "position" : 
       {
         "line" : 69,

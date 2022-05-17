@@ -123,6 +123,10 @@
       [
         "via-type:Lcom/facebook/marianatrench/integrationtests/Crtex;"
       ],
+      "handles" : 
+      [
+        "return:0:Leaf"
+      ],
       "position" : 
       {
         "line" : 25,

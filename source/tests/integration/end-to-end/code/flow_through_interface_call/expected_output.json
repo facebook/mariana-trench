@@ -91,6 +91,10 @@
   "issues" : 
   [
     {
+      "handles" : 
+      [
+        "return:0:Leaf"
+      ],
       "position" : 
       {
         "line" : 25,

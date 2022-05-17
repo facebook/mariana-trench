@@ -96,6 +96,10 @@
         "via-cast:Ljava/lang/String;",
         "via-obscure"
       ],
+      "handles" : 
+      [
+        "return:0:Leaf"
+      ],
       "position" : 
       {
         "line" : 20,

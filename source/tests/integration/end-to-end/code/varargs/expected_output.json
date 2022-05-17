@@ -96,6 +96,10 @@
         "via-array",
         "via-cast:Ljava/lang/String;"
       ],
+      "handles" : 
+      [
+        "return:0:Leaf"
+      ],
       "position" : 
       {
         "line" : 19,
@@ -196,6 +200,10 @@
       [
         "via-array",
         "via-cast:Ljava/lang/String;"
+      ],
+      "handles" : 
+      [
+        "return:0:Leaf"
       ],
       "position" : 
       {

@@ -96,6 +96,10 @@
         "via-cast:Ljava/lang/Integer;",
         "via-numerical-operator"
       ],
+      "handles" : 
+      [
+        "return:0:Leaf"
+      ],
       "position" : 
       {
         "line" : 27,
@@ -196,6 +200,10 @@
       [
         "via-cast:Ljava/lang/Integer;",
         "via-numerical-operator"
+      ],
+      "handles" : 
+      [
+        "return:0:Leaf"
       ],
       "position" : 
       {
@@ -299,6 +307,10 @@
       [
         "via-cast:Ljava/lang/String;"
       ],
+      "handles" : 
+      [
+        "return:0:Leaf"
+      ],
       "position" : 
       {
         "line" : 16,
@@ -389,6 +401,10 @@
       [
         "via-cast:Ljava/lang/String;"
       ],
+      "handles" : 
+      [
+        "return:0:Leaf"
+      ],
       "position" : 
       {
         "line" : 32,
@@ -475,6 +491,10 @@
   "issues" : 
   [
     {
+      "handles" : 
+      [
+        "return:0:Leaf"
+      ],
       "position" : 
       {
         "line" : 22,

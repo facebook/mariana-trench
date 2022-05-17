@@ -172,6 +172,10 @@
       [
         "via-cast:Landroid/net/Uri;"
       ],
+      "handles" : 
+      [
+        "return:0:Leaf"
+      ],
       "position" : 
       {
         "line" : 17,

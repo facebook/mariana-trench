@@ -9,6 +9,7 @@
 
 #include <Show.h>
 
+#include <json/value.h>
 #include <mariana-trench/Issue.h>
 #include <mariana-trench/JsonValidation.h>
 
@@ -47,6 +48,7 @@ void Issue::join_with(const Issue& other) {
     mt_assert(rule_ == other.rule_);
     mt_assert(position_ == other.position_);
 
+    new_handles_.join_with(other.new_handles_);
     sources_.join_with(other.sources_);
     sinks_.join_with(other.sinks_);
   }
@@ -65,6 +67,7 @@ void Issue::widen_with(const Issue& other) {
     mt_assert(rule_ == other.rule_);
     mt_assert(position_ == other.position_);
 
+    new_handles_.widen_with(other.new_handles_);
     sources_.widen_with(other.sources_);
     sinks_.widen_with(other.sinks_);
   }
@@ -81,6 +84,7 @@ void Issue::meet_with(const Issue& other) {
     mt_assert(rule_ == other.rule_);
     mt_assert(position_ == other.position_);
 
+    new_handles_.meet_with(other.new_handles_);
     sources_.meet_with(other.sources_);
     sinks_.meet_with(other.sinks_);
   }
@@ -95,6 +99,7 @@ void Issue::narrow_with(const Issue& other) {
     mt_assert(rule_ == other.rule_);
     mt_assert(position_ == other.position_);
 
+    new_handles_.narrow_with(other.new_handles_);
     sources_.narrow_with(other.sources_);
     sinks_.narrow_with(other.sinks_);
   }
@@ -141,6 +146,14 @@ Json::Value Issue::to_json() const {
   value["sinks"] = sinks_.to_json();
   value["rule"] = Json::Value(rule_->code());
   value["position"] = position_->to_json();
+  auto handles = Json::Value(Json::arrayValue);
+  if (new_handles_.is_value()) {
+    for (const auto& handle : new_handles_.elements()) {
+      handles.append(handle);
+    }
+  }
+  value["handles"] = handles;
+
   JsonValidation::update_object(value, features().to_json());
 
   return value;
@@ -154,7 +167,8 @@ std::ostream& operator<<(std::ostream& out, const Issue& issue) {
   } else {
     out << "null";
   }
-  return out << ", position=" << show(issue.position_) << ")";
+  return out << ", new_handles" << issue.new_handles_
+             << ", position=" << show(issue.position_) << ")";
 }
 
 } // namespace marianatrench

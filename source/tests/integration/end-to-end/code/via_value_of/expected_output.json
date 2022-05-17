@@ -226,6 +226,10 @@
       [
         "via-value:42"
       ],
+      "handles" : 
+      [
+        "return:0:Leaf"
+      ],
       "position" : 
       {
         "line" : 50,
@@ -308,6 +312,10 @@
       "always_features" : 
       [
         "via-value:42"
+      ],
+      "handles" : 
+      [
+        "return:0:Leaf"
       ],
       "position" : 
       {
@@ -392,6 +400,10 @@
       [
         "via-value:42"
       ],
+      "handles" : 
+      [
+        "return:0:Leaf"
+      ],
       "position" : 
       {
         "line" : 70,
@@ -474,6 +486,10 @@
       "always_features" : 
       [
         "via-value:42"
+      ],
+      "handles" : 
+      [
+        "return:0:Leaf"
       ],
       "position" : 
       {
@@ -558,6 +574,10 @@
       [
         "via-value:Bar"
       ],
+      "handles" : 
+      [
+        "return:0:Leaf"
+      ],
       "position" : 
       {
         "line" : 65,
@@ -640,6 +660,10 @@
       "always_features" : 
       [
         "via-value:Bar"
+      ],
+      "handles" : 
+      [
+        "return:0:Leaf"
       ],
       "position" : 
       {
@@ -724,6 +748,10 @@
       [
         "via-value:Bar",
         "via-value:Foo"
+      ],
+      "handles" : 
+      [
+        "return:0:Leaf"
       ],
       "position" : 
       {
@@ -812,6 +840,10 @@
       [
         "via-value:Foo"
       ],
+      "handles" : 
+      [
+        "return:0:Leaf"
+      ],
       "position" : 
       {
         "line" : 60,
@@ -894,6 +926,10 @@
       "always_features" : 
       [
         "via-value:Foo"
+      ],
+      "handles" : 
+      [
+        "return:0:Leaf"
       ],
       "position" : 
       {
@@ -978,6 +1014,10 @@
       [
         "via-value:tito",
         "via-value:unknown"
+      ],
+      "handles" : 
+      [
+        "return:0:Leaf"
       ],
       "position" : 
       {
@@ -1066,6 +1106,10 @@
       [
         "via-value:unknown"
       ],
+      "handles" : 
+      [
+        "return:0:Leaf"
+      ],
       "position" : 
       {
         "line" : 112,
@@ -1149,6 +1193,10 @@
   "issues" : 
   [
     {
+      "handles" : 
+      [
+        "return:0:Leaf"
+      ],
       "position" : 
       {
         "line" : 96,

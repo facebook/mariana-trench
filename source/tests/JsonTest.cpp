@@ -2507,9 +2507,12 @@ TEST_F(JsonTest, Model) {
                     /* sink */
                     Taint{Frame::leaf(context.kinds->get("first_sink"))},
                     rule.get(),
+                    "LClass;.someMethod:()V",
+                    1,
+                    Root(Root::Kind::Argument, 0),
                     context.positions->get("Data.java", 1))})
                 .to_json()),
-        test::parse_json(R"({
+        test::parse_json(R"#({
         "method": "LData;.method:(LData;LData;)V",
         "issues": [
           {
@@ -2518,6 +2521,9 @@ TEST_F(JsonTest, Model) {
               "path": "Data.java",
               "line": 1
             },
+            "handles": [
+              "LClass;.someMethod:()V:1:Argument(0)"
+            ],
             "sources": [
               {
                 "kind": "first_source",
@@ -2532,7 +2538,7 @@ TEST_F(JsonTest, Model) {
             ]
           }
         ]
-      })"));
+      })#"));
   } else {
     EXPECT_EQ(
         test::sorted_json(
@@ -2557,9 +2563,12 @@ TEST_F(JsonTest, Model) {
                     /* sink */
                     Taint{Frame::leaf(context.kinds->get("first_sink"))},
                     rule.get(),
+                    "LClass;.someMethod:()V",
+                    1,
+                    Root(Root::Kind::Argument, 0),
                     context.positions->get("Data.java", 1))})
                 .to_json()),
-        test::parse_json(R"({
+        test::parse_json(R"#({
         "method": "LData;.method:(LData;LData;)V",
         "issues": [
           {
@@ -2568,6 +2577,9 @@ TEST_F(JsonTest, Model) {
               "path": "Data.java",
               "line": 1
             },
+                        "handles": [
+              "LClass;.someMethod:()V:1:Argument(0)"
+            ],
             "sources": [
               {
                 "kinds": [ {"kind": "first_source"} ]
@@ -2580,7 +2592,7 @@ TEST_F(JsonTest, Model) {
             ]
           }
         ]
-      })"));
+      })#"));
   }
 }
 

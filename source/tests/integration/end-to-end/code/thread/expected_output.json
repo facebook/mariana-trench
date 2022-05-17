@@ -96,6 +96,10 @@
         "via-anonymous-class-to-field",
         "via-cast:Ljava/lang/String;"
       ],
+      "handles" : 
+      [
+        "return:0:Leaf"
+      ],
       "position" : 
       {
         "line" : 23,

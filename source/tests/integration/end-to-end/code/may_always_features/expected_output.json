@@ -147,6 +147,10 @@
         "via-one",
         "via-source"
       ],
+      "handles" : 
+      [
+        "return:0:Leaf"
+      ],
       "may_features" : 
       [
         "via-two"

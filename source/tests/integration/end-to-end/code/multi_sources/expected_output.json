@@ -230,6 +230,10 @@
         "source-a",
         "source-b"
       ],
+      "handles" : 
+      [
+        "return:0:Leaf"
+      ],
       "position" : 
       {
         "line" : 20,
@@ -342,6 +346,10 @@
         "source-a",
         "source-b"
       ],
+      "handles" : 
+      [
+        "return:0:Leaf"
+      ],
       "position" : 
       {
         "line" : 23,
@@ -446,6 +454,10 @@
         "source-a",
         "source-b"
       ],
+      "handles" : 
+      [
+        "return:0:Leaf"
+      ],
       "position" : 
       {
         "line" : 27,
@@ -538,6 +550,10 @@
         "sink-b",
         "source-a",
         "source-b"
+      ],
+      "handles" : 
+      [
+        "return:0:Leaf"
       ],
       "position" : 
       {

@@ -95,6 +95,10 @@
       [
         "via-cast:Lcom/facebook/marianatrench/integrationtests/Flow$Tree;"
       ],
+      "handles" : 
+      [
+        "return:0:Leaf"
+      ],
       "position" : 
       {
         "line" : 39,
