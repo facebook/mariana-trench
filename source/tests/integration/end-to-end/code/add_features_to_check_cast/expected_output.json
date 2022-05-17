@@ -205,7 +205,7 @@
       ],
       "handles" : 
       [
-        "return:0:Leaf"
+        "Lcom/mariana_trench/artificial/ArrayAllocation;.allocateArray:(I)V:0:Argument(0)"
       ],
       "position" : 
       {

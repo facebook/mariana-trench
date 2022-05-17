@@ -830,9 +830,11 @@ void check_flows_to_array_allocation(
         sources,
         array_allocation_sink,
         position,
+        // TODO (T120190935) calculate and fill in the call index of the array
+        // allocation method here
         /* sink_index */ 0,
-        /* callee */ std::string(k_return_callee),
-        /* callee_port_root */ Root(Root::Kind::Leaf),
+        /* callee */ array_allocation_method->show(),
+        /* callee_port_root */ Root(Root::Kind::Argument, 0),
         /* extra_features */ {},
         /* fulfilled_partial_sinks */ nullptr);
   }
@@ -1017,6 +1019,54 @@ void add_field_features(
       [&features](Taint& sources) { sources.add_inferred_features(features); });
 }
 
+namespace {
+
+void check_flows_to_field_sink(
+    MethodContext* context,
+    const IRInstruction* instruction,
+    const TaintTree& source_taint,
+    const Position* position) {
+  mt_assert(
+      opcode::is_an_sput(instruction->opcode()) ||
+      opcode::is_an_iput(instruction->opcode()));
+
+  if (source_taint.is_bottom()) {
+    return;
+  }
+
+  const auto field_target =
+      context->call_graph.resolved_field_access(context->method(), instruction);
+  if (!field_target) {
+    WARNING_OR_DUMP(
+        context,
+        3,
+        "Unable to resolve access of field {} for instruction opcode {}",
+        show(instruction->get_field()),
+        instruction->opcode());
+    return;
+  }
+  auto field_model =
+      field_target ? context->registry.get(field_target->field) : FieldModel();
+  auto sinks = field_model.sinks();
+  if (sinks.empty()) {
+    return;
+  }
+  for (const auto& [port, sources] : source_taint.elements()) {
+    check_flows(
+        context,
+        sources,
+        sinks,
+        position,
+        /* sink_index */ field_target->field_sink_index,
+        /* callee */ show(field_target->field),
+        /* callee_port_root */ Root(Root::Kind::Leaf),
+        /* extra_features */ FeatureMayAlwaysSet(),
+        /* fulfilled_partial_sinks */ nullptr);
+  }
+}
+
+} // namespace
+
 bool Transfer::analyze_iput(
     MethodContext* context,
     const IRInstruction* instruction,
@@ -1026,7 +1076,6 @@ bool Transfer::analyze_iput(
   mt_assert(instruction->has_field());
 
   auto taint = environment->read(/* register */ instruction->srcs()[0]);
-
   auto* position = context->positions.get(
       context->method(),
       environment->last_position(),
@@ -1035,34 +1084,7 @@ bool Transfer::analyze_iput(
   taint.map(
       [position](Taint& sources) { sources.add_local_position(position); });
 
-  // Check if the taint above flows into a field sink
-  const auto field_target =
-      context->call_graph.resolved_field_access(context->method(), instruction);
-  if (!field_target) {
-    WARNING_OR_DUMP(
-        context,
-        3,
-        "Unable to resolve access of field for iput {}",
-        show(instruction->get_field()));
-  } else {
-    auto field_model = field_target ? context->registry.get(field_target->field)
-                                    : FieldModel();
-    auto sinks = field_model.sinks();
-    if (!sinks.empty() && !taint.is_bottom()) {
-      for (const auto& [port, sources] : taint.elements()) {
-        check_flows(
-            context,
-            sources,
-            sinks,
-            position,
-            /* sink_index */ 0,
-            /* callee */ std::string(k_return_callee),
-            /* callee_port_root */ Root(Root::Kind::Leaf),
-            /* extra_features */ FeatureMayAlwaysSet(),
-            /* fulfilled_partial_sinks */ nullptr);
-      }
-    }
-  }
+  check_flows_to_field_sink(context, instruction, taint, position);
 
   // Store the taint in the memory location(s) representing the field
   auto* field_name = instruction->get_field()->get_name();
@@ -1111,35 +1133,7 @@ bool Transfer::analyze_sput(
       instruction);
   taint.map(
       [position](Taint& sources) { sources.add_local_position(position); });
-
-  const auto field_target =
-      context->call_graph.resolved_field_access(context->method(), instruction);
-  if (!field_target) {
-    WARNING_OR_DUMP(
-        context,
-        3,
-        "Unable to resolve access of field for sput {}",
-        show(instruction->get_field()));
-    return false;
-  }
-  auto field_model =
-      field_target ? context->registry.get(field_target->field) : FieldModel();
-  auto sinks = field_model.sinks();
-  if (sinks.empty()) {
-    return false;
-  }
-  for (const auto& [port, sources] : taint.elements()) {
-    check_flows(
-        context,
-        sources,
-        sinks,
-        position,
-        /* sink_index */ 0,
-        /* callee */ std::string(k_return_callee),
-        /* callee_port_root */ Root(Root::Kind::Leaf),
-        /* extra_features */ FeatureMayAlwaysSet(),
-        /* fulfilled_partial_sinks */ nullptr);
-  }
+  check_flows_to_field_sink(context, instruction, taint, position);
   return false;
 }
 
