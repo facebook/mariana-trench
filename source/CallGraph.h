@@ -244,7 +244,28 @@ class CallGraph final {
       const Method* caller,
       const IRInstruction* instruction) const;
 
+  /* Used only for tests */
   const std::vector<FieldTarget> resolved_field_accesses(
+      const Method* caller) const;
+
+  /* Gets the index of the return instruction in the cfg of the method. Used for
+   * issue handles */
+  TextualOrderIndex return_index(
+      const Method* caller,
+      const IRInstruction* instruction) const;
+
+  /* Used only for tests */
+  const std::vector<TextualOrderIndex> return_indices(
+      const Method* caller) const;
+
+  /* Gets the index of the array allocation instruction in the cfg of the
+   * method. Used for issue handles */
+  TextualOrderIndex array_allocation_index(
+      const Method* caller,
+      const IRInstruction* instruction) const;
+
+  /* Used only for tests */
+  const std::vector<TextualOrderIndex> array_allocation_indices(
       const Method* caller) const;
 
   Json::Value to_json(bool with_overrides = true) const;
@@ -269,6 +290,14 @@ class CallGraph final {
   std::unordered_map<const IRInstruction*, ArtificialCallees>
       empty_artificial_callees_map_;
   ArtificialCallees empty_artificial_callees_;
+  ConcurrentMap<
+      const Method*,
+      std::unordered_map<const IRInstruction*, TextualOrderIndex>>
+      indexed_returns_;
+  ConcurrentMap<
+      const Method*,
+      std::unordered_map<const IRInstruction*, TextualOrderIndex>>
+      indexed_array_allocations_;
 };
 
 } // namespace marianatrench

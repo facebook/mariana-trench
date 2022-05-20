@@ -47,8 +47,7 @@
   ],
   "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;" : 
   [
-    "Lcom/facebook/marianatrench/integrationtests/ArrayAllocation;.integerArrayThree:()V",
-    "Lcom/facebook/marianatrench/integrationtests/ArrayAllocation;.integerArrayTwo:()V"
+    "Lcom/facebook/marianatrench/integrationtests/ArrayAllocation;.integerArrayThroughPropagation:()V"
   ],
   "Lcom/facebook/secure/context/IntentLauncher;.<init>:()V" : 
   [
@@ -73,8 +72,7 @@
   ],
   "Ljava/lang/Integer;.intValue:()I" : 
   [
-    "Lcom/facebook/marianatrench/integrationtests/ArrayAllocation;.integerArrayThree:()V",
-    "Lcom/facebook/marianatrench/integrationtests/ArrayAllocation;.integerArrayTwo:()V"
+    "Lcom/facebook/marianatrench/integrationtests/ArrayAllocation;.integerArrayThroughPropagation:()V"
   ],
   "Ljava/lang/Object;.<init>:()V" : 
   [

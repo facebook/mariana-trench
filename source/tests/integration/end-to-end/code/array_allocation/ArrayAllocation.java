@@ -13,14 +13,16 @@ public class ArrayAllocation {
     int[] array = new int[size];
   }
 
-  public void integerArrayTwo() {
-    int size = (int) Origin.source();
-    int[] array = new int[size];
-  }
+  public void integerArrayThroughPropagation() {
+    int size1 = (int) Origin.source();
+    int[] array1 = new int[size1];
 
-  public void integerArrayThree() {
-    Integer size = (Integer) Origin.source();
-    int[] array = new int[size];
+    Integer size2 = (Integer) Origin.source();
+    if (size1 > 0) {
+      int[] array2 = new int[size2];
+    } else {
+      int[][] array3 = new int[size2][5];
+    }
   }
 
   public void objectArray() {

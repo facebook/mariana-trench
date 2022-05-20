@@ -218,18 +218,7 @@
       "Lcom/facebook/marianatrench/integrationtests/ArrayAllocation;.source:()I"
     ]
   },
-  "Lcom/facebook/marianatrench/integrationtests/ArrayAllocation;.integerArrayThree:()V" : 
-  {
-    "static" : 
-    [
-      "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;"
-    ],
-    "virtual" : 
-    [
-      "Ljava/lang/Integer;.intValue:()I"
-    ]
-  },
-  "Lcom/facebook/marianatrench/integrationtests/ArrayAllocation;.integerArrayTwo:()V" : 
+  "Lcom/facebook/marianatrench/integrationtests/ArrayAllocation;.integerArrayThroughPropagation:()V" : 
   {
     "static" : 
     [

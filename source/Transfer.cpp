@@ -819,6 +819,8 @@ void check_flows_to_array_allocation(
       /* local_positions */ {},
       /* canonical_names */ {})};
   auto instruction_sources = instruction->srcs_vec();
+  auto array_allocation_index = context->call_graph.array_allocation_index(
+      context->method(), instruction);
   for (std::size_t parameter_position = 0;
        parameter_position < instruction_sources.size();
        parameter_position++) {
@@ -830,9 +832,7 @@ void check_flows_to_array_allocation(
         sources,
         array_allocation_sink,
         position,
-        // TODO (T120190935) calculate and fill in the call index of the array
-        // allocation method here
-        /* sink_index */ 0,
+        /* sink_index */ array_allocation_index,
         /* callee */ array_allocation_method->show(),
         /* callee_port_root */ Root(Root::Kind::Argument, 0),
         /* extra_features */ {},
@@ -1515,6 +1515,8 @@ bool Transfer::analyze_return(
       context->positions.get(context->method(), environment->last_position());
   return_sinks.map(
       [position](Taint& sinks) { sinks = sinks.attach_position(position); });
+  auto return_index =
+      context->call_graph.return_index(context->method(), instruction);
 
   for (auto register_id : instruction->srcs()) {
     auto memory_locations = environment->memory_locations(register_id);
@@ -1531,7 +1533,7 @@ bool Transfer::analyze_return(
           sources,
           sinks,
           position,
-          /* sink_index */ 0,
+          /* sink_index */ return_index,
           /* callee */ std::string(k_return_callee),
           /* callee_port_root */ Root(Root::Kind::Leaf),
           /* extra_features */ {},

@@ -8,6 +8,7 @@
 #include <re2/re2.h>
 #include <unordered_map>
 
+#include <GraphUtil.h>
 #include <IRInstruction.h>
 #include <Resolver.h>
 #include <Show.h>
@@ -371,6 +372,11 @@ bool is_field_sink_instruction(const IRInstruction* instruction) {
       opcode::is_an_sput(instruction->opcode());
 }
 
+bool is_field_or_invoke_instruction(const IRInstruction* instruction) {
+  return is_field_instruction(instruction) ||
+      opcode::is_an_invoke(instruction->opcode());
+}
+
 InstructionCallGraphInformation process_instruction(
     const Method* caller,
     const IRInstruction* instruction,
@@ -717,16 +723,37 @@ CallGraph::CallGraph(
           std::unordered_map<const IRInstruction*, ArtificialCallees>
               artificial_callees;
           std::unordered_map<const IRInstruction*, FieldTarget> field_accesses;
+          std::unordered_map<const IRInstruction*, TextualOrderIndex>
+              indexed_returns;
+          std::unordered_map<const IRInstruction*, TextualOrderIndex>
+              indexed_array_allocations;
           std::unordered_map<std::string, TextualOrderIndex>
               sink_textual_order_index;
+          TextualOrderIndex next_return = 0;
+          TextualOrderIndex next_array_allocation = 0;
 
-          for (const auto* block : code->cfg().blocks()) {
+          auto reverse_postordered_blocks =
+              graph::postorder_sort<cfg::GraphInterface>(code->cfg());
+          std::reverse(
+              reverse_postordered_blocks.begin(),
+              reverse_postordered_blocks.end());
+          for (const auto* block : reverse_postordered_blocks) {
             for (const auto& entry : *block) {
               if (entry.type != MFLOW_OPCODE) {
                 continue;
               }
-
               const auto* instruction = entry.insn;
+              if (opcode::is_a_return(instruction->opcode())) {
+                indexed_returns.emplace(std::pair(instruction, next_return++));
+              } else if (
+                  opcode::is_filled_new_array(instruction->opcode()) ||
+                  opcode::is_new_array(instruction->opcode())) {
+                indexed_array_allocations.emplace(
+                    std::pair(instruction, next_array_allocation++));
+              } else if (!is_field_or_invoke_instruction(instruction)) {
+                continue;
+              }
+
               auto instruction_information = process_instruction(
                   caller,
                   instruction,
@@ -741,14 +768,13 @@ CallGraph::CallGraph(
                   features,
                   shims,
                   sink_textual_order_index);
-              if (instruction_information.callee) {
-                callees.emplace(instruction, *(instruction_information.callee));
-              }
               if (instruction_information.artificial_callees.size() > 0) {
                 artificial_callees.emplace(
                     instruction, instruction_information.artificial_callees);
               }
-              if (instruction_information.field_access) {
+              if (instruction_information.callee) {
+                callees.emplace(instruction, *(instruction_information.callee));
+              } else if (instruction_information.field_access) {
                 field_accesses.emplace(
                     instruction, *(instruction_information.field_access));
               }
@@ -766,6 +792,14 @@ CallGraph::CallGraph(
           if (!field_accesses.empty()) {
             resolved_fields_.insert_or_assign(
                 std::make_pair(caller, std::move(field_accesses)));
+          }
+          if (!indexed_array_allocations.empty()) {
+            indexed_array_allocations_.insert_or_assign(
+                std::make_pair(caller, std::move(indexed_array_allocations)));
+          }
+          if (!indexed_returns.empty()) {
+            indexed_returns_.insert_or_assign(
+                std::make_pair(caller, std::move(indexed_returns)));
           }
         },
         sparta::parallel::default_num_threads());
@@ -879,6 +913,56 @@ const std::vector<FieldTarget> CallGraph::resolved_field_accesses(
     field_targets.push_back(field_target);
   }
   return field_targets;
+}
+
+TextualOrderIndex CallGraph::return_index(
+    const Method* caller,
+    const IRInstruction* instruction) const {
+  auto returns = indexed_returns_.find(caller);
+  mt_assert(returns != indexed_returns_.end());
+
+  auto index = returns->second.find(instruction);
+  if (index == returns->second.end()) {
+    return 0;
+  }
+  return index->second;
+}
+
+const std::vector<TextualOrderIndex> CallGraph::return_indices(
+    const Method* caller) const {
+  auto returns = indexed_returns_.find(caller);
+  mt_assert(returns != indexed_returns_.end());
+
+  std::vector<TextualOrderIndex> return_indices;
+  for (const auto& [_, index] : returns->second) {
+    return_indices.push_back(index);
+  }
+  return return_indices;
+}
+
+TextualOrderIndex CallGraph::array_allocation_index(
+    const Method* caller,
+    const IRInstruction* instruction) const {
+  auto array_allocations = indexed_array_allocations_.find(caller);
+  mt_assert(array_allocations != indexed_returns_.end());
+
+  auto index = array_allocations->second.find(instruction);
+  if (index == array_allocations->second.end()) {
+    return 0;
+  }
+  return index->second;
+}
+
+const std::vector<TextualOrderIndex> CallGraph::array_allocation_indices(
+    const Method* caller) const {
+  auto array_allocations = indexed_array_allocations_.find(caller);
+  mt_assert(array_allocations != indexed_returns_.end());
+
+  std::vector<TextualOrderIndex> array_allocation_indices;
+  for (const auto& [_, index] : array_allocations->second) {
+    array_allocation_indices.push_back(index);
+  }
+  return array_allocation_indices;
 }
 
 Json::Value CallGraph::to_json(bool with_overrides) const {

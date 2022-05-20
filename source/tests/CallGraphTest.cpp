@@ -375,4 +375,88 @@ TEST_F(CallGraphTest, FieldIndices) {
       expected_targets.end()));
 }
 
+TEST_F(CallGraphTest, ReturnIndices) {
+  Scope scope;
+  redex::create_class(
+      scope, "LSomething;", /* super */ type::java_lang_Object());
+  auto* dex_method = redex::create_method(scope, "LMainActivity;", R"(
+    (method (public) "LMainActivity;.someMethod:(I)Ljava/lang/Object;"
+     (
+      (load-param v4)
+      (load-param v0)
+      (const-wide v1 0)
+      (cmp-long v2 v0 v1)
+      (if-lez v2 :true)
+      (new-instance "Ljava/lang/Object;")
+      (move-result-pseudo-object v3)
+      (return-object v3)
+      (:true)
+      (new-instance "LSomething;")
+      (move-result-pseudo-object v3)
+      (return-object v3)
+     )
+    )
+  )");
+
+  DexStore store("stores");
+  store.add_classes(scope);
+
+  auto context = test::make_context(store);
+  const auto* method = context.methods->get(dex_method);
+  auto return_indices = context.call_graph->return_indices(method);
+  std::vector<TextualOrderIndex> expected_return_indices = {0, 1};
+  EXPECT_TRUE(std::is_permutation(
+      return_indices.begin(),
+      return_indices.end(),
+      expected_return_indices.begin(),
+      expected_return_indices.end()));
+}
+
+TEST_F(CallGraphTest, ArrayAllocation) {
+  Scope scope;
+  redex::create_class(
+      scope, "LSomething;", /* super */ type::java_lang_Object());
+  auto* dex_method = redex::create_method(scope, "LMainActivity;", R"(
+    (method (public) "LMainActivity;.someMethod:()V"
+     (
+      (load-param v0)
+      (const v1 10)
+      (new-array v1 "[I")
+      (move-result-pseudo-object v2)
+
+      (const-string "hello")
+      (move-result-pseudo-object v3)
+      (check-cast v3 "Ljava/lang/String;")
+      (move-result-pseudo-object v4)
+      (filled-new-array (v5) "[Ljava/lang/String;")
+      (move-result-object v6)
+
+      (new-array v1 "[I")
+      (move-result-pseudo-object v7)
+
+      (const v8 2)
+      (filled-new-array (v8) "[Ljava/lang/String;")
+      (move-result-object v9)
+
+      (return-void)
+     )
+    )
+  )");
+
+  DexStore store("stores");
+  store.add_classes(scope);
+
+  auto context = test::make_context(store);
+  const auto* method = context.methods->get(dex_method);
+  auto array_allocation_indices =
+      context.call_graph->array_allocation_indices(method);
+  std::vector<TextualOrderIndex> expected_array_allocation_indices = {
+      0, 1, 2, 3};
+  EXPECT_TRUE(std::is_permutation(
+      array_allocation_indices.begin(),
+      array_allocation_indices.end(),
+      expected_array_allocation_indices.begin(),
+      expected_array_allocation_indices.end()));
+}
+
 } // namespace marianatrench

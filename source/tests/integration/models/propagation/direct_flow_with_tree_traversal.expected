@@ -53,7 +53,7 @@
           ],
           "position" :
           {
-            "line" : 5,
+            "line" : 6,
             "path" : "Flow.java"
           },
           "rule" : 1,
@@ -65,7 +65,7 @@
                 "port" : "Argument(1)",
                 "position" :
                 {
-                  "line" : 5,
+                  "line" : 6,
                   "path" : "Flow.java"
                 },
                 "resolves_to" : "LSink;.sink:(LData;)V"
@@ -123,7 +123,7 @@
           ],
           "position" :
           {
-            "line" : 6,
+            "line" : 5,
             "path" : "Flow.java"
           },
           "rule" : 1,
@@ -135,7 +135,7 @@
                 "port" : "Argument(1)",
                 "position" :
                 {
-                  "line" : 6,
+                  "line" : 5,
                   "path" : "Flow.java"
                 },
                 "resolves_to" : "LSink;.sink:(LData;)V"
