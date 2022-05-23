@@ -22,6 +22,7 @@ namespace marianatrench {
 
 using TextualOrderIndex = std::uint32_t;
 constexpr std::string_view k_return_callee = "return";
+constexpr std::string_view k_unresolved_callee = "unresolved";
 
 namespace {
 std::string get_handle(

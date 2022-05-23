@@ -745,7 +745,9 @@ void check_flows(
         sinks,
         callee.position,
         /* sink_index */ callee.call_index,
-        /* callee */ callee.resolved_base_method->show(),
+        /* callee */ callee.resolved_base_method
+            ? callee.resolved_base_method->show()
+            : std::string(k_unresolved_callee),
         /* callee_port_root */ port.root(),
         extra_features,
         &fulfilled_partial_sinks);
