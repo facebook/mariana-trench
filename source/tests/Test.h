@@ -87,15 +87,17 @@ std::vector<std::string> sub_directories(
  */
 std::string normalize_json_lines(const std::string& input);
 
-#define MT_INSTANTIATE_TEST_SUITE_P(                                          \
-    INSTANTIATION_NAME, TEST_SUITE_NAME, PARAM_GENERATOR)                     \
-  INSTANTIATE_TEST_SUITE_P(                                                   \
-      INSTANTIATION_NAME,                                                     \
-      TEST_SUITE_NAME,                                                        \
-      PARAM_GENERATOR,                                                        \
-      ([](const ::testing::TestParamInfo<TEST_SUITE_NAME::ParamType>& info) { \
-        boost::filesystem::path name = info.param;                            \
-        return name.stem();                                                   \
+#define MT_INSTANTIATE_TEST_SUITE_P(                                        \
+    INSTANTIATION_NAME, TEST_SUITE_NAME, PARAM_GENERATOR)                   \
+  INSTANTIATE_TEST_SUITE_P(                                                 \
+      INSTANTIATION_NAME,                                                   \
+      TEST_SUITE_NAME,                                                      \
+      PARAM_GENERATOR,                                                      \
+      ([](const ::testing::TestParamInfo<TEST_SUITE_NAME::ParamType>& info) \
+           -> std::string {                                                 \
+        boost::filesystem::path name = info.param;                          \
+        std::string test_name = name.stem().string();                       \
+        return test_name;                                                   \
       }));
 
 } // namespace test
