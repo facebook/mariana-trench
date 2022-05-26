@@ -91,8 +91,7 @@ std::vector<Model> ServiceSourceGenerator::emit_method_models(
       return;
     }
 
-    if (boost::equals(method_name, "handleMessage") &&
-        boost::contains(class_name, "ervice") && argument_types.size() == 1) {
+    if (boost::equals(method_name, "handleMessage")) {
       auto model = source_first_argument(method, context_);
       std::lock_guard<std::mutex> lock(mutex);
       models.push_back(model);
