@@ -50,8 +50,10 @@ class ClassProperties final {
 
   bool has_user_exposed_properties(std::string_view class_name) const;
   bool has_user_unexposed_properties(std::string_view class_name) const;
-  FeatureSet get_class_features(std::string_view clazz, bool via_dependency)
-      const;
+  FeatureSet get_class_features(
+      std::string_view clazz,
+      bool via_dependency,
+      size_t dependency_depth = 0) const;
   FeatureSet compute_transitive_class_features(const Method* method) const;
 
  public:

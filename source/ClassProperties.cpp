@@ -379,7 +379,8 @@ FeatureMayAlwaysSet ClassProperties::issue_features(
 
 FeatureSet ClassProperties::get_class_features(
     std::string_view clazz,
-    bool via_dependency) const {
+    bool via_dependency,
+    size_t dependency_depth) const {
   FeatureSet features;
 
   if (is_class_exported(clazz)) {
@@ -415,6 +416,9 @@ FeatureSet ClassProperties::get_class_features(
   if (via_dependency) {
     features.add(features_.get("via-dependency-graph"));
     features.add(features_.get(fmt::format("via-class:{}", clazz)));
+    if (dependency_depth > 5) {
+      features.add(features_.get("via-dependency-graph-depth-above-5"));
+    }
   }
 
   return features;
@@ -496,7 +500,9 @@ FeatureSet ClassProperties::compute_transitive_class_features(
         target.depth);
     via_dependencies_.insert({callee, target.method});
     return get_class_features(
-        target.method->get_class()->str(), /* via_dependency */ true);
+        target.method->get_class()->str(),
+        /* via_dependency */ true,
+        /* depedency_length */ depth);
   }
 
   return FeatureSet();
