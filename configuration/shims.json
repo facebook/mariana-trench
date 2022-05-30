@@ -27,6 +27,21 @@
       "callees": [
         {
           "signature": "Landroidx/fragment/app/Fragment;.onCreate:(Landroid/os/Bundle;)V"
+        },
+        {
+          "signature": "Landroidx/fragment/app/Fragment;.onStart:()V"
+        },
+        {
+          "signature": "Landroidx/fragment/app/Fragment;.onPause:()V"
+        },
+        {
+          "signature": "Landroidx/fragment/app/Fragment;.onResume:()V"
+        },
+        {
+          "signature": "Landroidx/fragment/app/Fragment;.onStop:()V"
+        },
+        {
+          "signature": "Landroidx/fragment/app/Fragment;.onDestroy:()V"
         }
       ]
     }
