@@ -13,6 +13,15 @@
           {
             "variable": "x",
             "where": [],
+            "propagation": [
+              {
+                "input": "Argument(x)",
+                "output": "Argument(0)",
+                "features": [
+                  "via-file"
+                ]
+              }
+            ],
             "sinks": [
               {
                 "kind": "FileResolver",
