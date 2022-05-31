@@ -40,7 +40,7 @@
     {
       "handles" : 
       [
-        "Landroid/util/Log;.e:(Ljava/lang/String;Ljava/lang/String;)I:1:Argument(1)"
+        "Landroid/util/Log;.e:(Ljava/lang/String;Ljava/lang/String;)I:1"
       ],
       "position" : 
       {

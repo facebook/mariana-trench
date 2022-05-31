@@ -93,7 +93,7 @@
     {
       "handles" : 
       [
-        "Lcom/facebook/marianatrench/integrationtests/IntentHandlerUtil;.launchNextActivity:(Landroid/content/Context;Landroid/content/Intent;)V:0:Argument(2)"
+        "Lcom/facebook/marianatrench/integrationtests/IntentHandlerUtil;.launchNextActivity:(Landroid/content/Context;Landroid/content/Intent;)V:0"
       ],
       "position" : 
       {

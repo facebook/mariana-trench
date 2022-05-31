@@ -11,7 +11,7 @@
         {
           "handles" :
           [
-            "LSink;.sink_with_two_kinds:(LData;)V:0:Argument(1)"
+            "LSink;.sink_with_two_kinds:(LData;)V:0"
           ],
           "position" :
           {

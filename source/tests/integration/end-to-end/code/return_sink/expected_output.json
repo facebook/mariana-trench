@@ -62,7 +62,7 @@
       ],
       "handles" : 
       [
-        "return:0:Leaf"
+        "return:0"
       ],
       "position" : 
       {
@@ -339,7 +339,7 @@
       ],
       "handles" : 
       [
-        "return:0:Leaf"
+        "return:0"
       ],
       "position" : 
       {
@@ -580,7 +580,7 @@
       ],
       "handles" : 
       [
-        "Lcom/facebook/marianatrench/integrationtests/Flow;.return_sink:(Ljava/lang/Object;)Ljava/lang/Object;:0:Argument(0)"
+        "Lcom/facebook/marianatrench/integrationtests/Flow;.return_sink:(Ljava/lang/Object;)Ljava/lang/Object;:0"
       ],
       "position" : 
       {
@@ -686,7 +686,7 @@
       ],
       "handles" : 
       [
-        "Lcom/facebook/marianatrench/integrationtests/Flow;.return_sink_foo:(Lcom/facebook/marianatrench/integrationtests/Flow$Tree;)Lcom/facebook/marianatrench/integrationtests/Flow$Tree;:0:Argument(0)"
+        "Lcom/facebook/marianatrench/integrationtests/Flow;.return_sink_foo:(Lcom/facebook/marianatrench/integrationtests/Flow$Tree;)Lcom/facebook/marianatrench/integrationtests/Flow$Tree;:0"
       ],
       "position" : 
       {

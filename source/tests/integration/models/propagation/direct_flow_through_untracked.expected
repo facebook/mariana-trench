@@ -15,7 +15,7 @@
           ],
           "handles" :
           [
-            "LSink;.interface_sink:(LData;)V:0:Argument(1)"
+            "LSink;.interface_sink:(LData;)V:0"
           ],
           "position" :
           {

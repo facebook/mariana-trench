@@ -11,7 +11,7 @@
         {
           "handles" :
           [
-            "LSink;.sink_in_second_parameter:(II)V:0:Argument(2)"
+            "LSink;.sink_in_second_parameter:(II)V:0"
           ],
           "position" :
           {

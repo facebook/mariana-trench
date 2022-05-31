@@ -93,7 +93,7 @@
     {
       "handles" : 
       [
-        "Lcom/facebook/marianatrench/integrationtests/MainActivity$ModalActivityLauncher;.mArgumentFlowsToSink:()V:0:Argument(0)"
+        "Lcom/facebook/marianatrench/integrationtests/MainActivity$ModalActivityLauncher;.mArgumentFlowsToSink:()V:0"
       ],
       "position" : 
       {

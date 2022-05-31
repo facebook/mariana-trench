@@ -2507,9 +2507,8 @@ TEST_F(JsonTest, Model) {
                     /* sink */
                     Taint{Frame::leaf(context.kinds->get("first_sink"))},
                     rule.get(),
-                    "LClass;.someMethod:()V",
-                    1,
-                    Root(Root::Kind::Argument, 0),
+                    /* callee */ "LClass;.someMethod:()V",
+                    /* sink_index */ 1,
                     context.positions->get("Data.java", 1))})
                 .to_json()),
         test::parse_json(R"#({
@@ -2522,7 +2521,7 @@ TEST_F(JsonTest, Model) {
               "line": 1
             },
             "handles": [
-              "LClass;.someMethod:()V:1:Argument(0)"
+              "LClass;.someMethod:()V:1"
             ],
             "sources": [
               {
@@ -2563,9 +2562,8 @@ TEST_F(JsonTest, Model) {
                     /* sink */
                     Taint{Frame::leaf(context.kinds->get("first_sink"))},
                     rule.get(),
-                    "LClass;.someMethod:()V",
-                    1,
-                    Root(Root::Kind::Argument, 0),
+                    /* callee */ "LClass;.someMethod:()V",
+                    /* sink_index */ 1,
                     context.positions->get("Data.java", 1))})
                 .to_json()),
         test::parse_json(R"#({
@@ -2577,8 +2575,8 @@ TEST_F(JsonTest, Model) {
               "path": "Data.java",
               "line": 1
             },
-                        "handles": [
-              "LClass;.someMethod:()V:1:Argument(0)"
+            "handles": [
+              "LClass;.someMethod:()V:1"
             ],
             "sources": [
               {

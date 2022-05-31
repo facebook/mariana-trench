@@ -93,7 +93,7 @@
     {
       "handles" : 
       [
-        "Lcom/facebook/marianatrench/integrationtests/Flow$A;.sink:(Ljava/lang/Object;)V:0:Argument(1)"
+        "Lcom/facebook/marianatrench/integrationtests/Flow$A;.sink:(Ljava/lang/Object;)V:0"
       ],
       "position" : 
       {

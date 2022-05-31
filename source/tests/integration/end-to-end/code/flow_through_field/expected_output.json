@@ -52,7 +52,7 @@
     {
       "handles" : 
       [
-        "Lcom/facebook/marianatrench/integrationtests/OfferRedirectToWebActivity;.navigateToBrowser:()V:0:Argument(0)"
+        "Lcom/facebook/marianatrench/integrationtests/OfferRedirectToWebActivity;.navigateToBrowser:()V:0"
       ],
       "position" : 
       {
@@ -133,7 +133,7 @@
     {
       "handles" : 
       [
-        "Lcom/facebook/marianatrench/integrationtests/OfferRenderingUtils;.navigateToStoreURL:(Landroid/content/Context;Ljava/lang/String;)V:0:Argument(2)"
+        "Lcom/facebook/marianatrench/integrationtests/OfferRenderingUtils;.navigateToStoreURL:(Landroid/content/Context;Ljava/lang/String;)V:0"
       ],
       "position" : 
       {

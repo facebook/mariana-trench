@@ -176,7 +176,7 @@
     {
       "handles" : 
       [
-        "Lcom/facebook/marianatrench/integrationtests/TaintedFieldClass;.field:Ljava/lang/Object;:0:Leaf"
+        "Lcom/facebook/marianatrench/integrationtests/TaintedFieldClass;.field:Ljava/lang/Object;:0"
       ],
       "position" : 
       {
@@ -293,7 +293,7 @@
     {
       "handles" : 
       [
-        "Lcom/facebook/marianatrench/integrationtests/TaintedFieldClass;.field:Ljava/lang/Object;:0:Leaf"
+        "Lcom/facebook/marianatrench/integrationtests/TaintedFieldClass;.field:Ljava/lang/Object;:0"
       ],
       "position" : 
       {
@@ -357,7 +357,7 @@
     {
       "handles" : 
       [
-        "Lcom/facebook/marianatrench/integrationtests/TaintedFieldClass;.staticField:Ljava/lang/Object;:0:Leaf"
+        "Lcom/facebook/marianatrench/integrationtests/TaintedFieldClass;.staticField:Ljava/lang/Object;:0"
       ],
       "position" : 
       {
@@ -421,7 +421,7 @@
     {
       "handles" : 
       [
-        "Lcom/facebook/marianatrench/integrationtests/TaintedFieldClass;.staticStringField:Ljava/lang/String;:0:Leaf"
+        "Lcom/facebook/marianatrench/integrationtests/TaintedFieldClass;.staticStringField:Ljava/lang/String;:0"
       ],
       "position" : 
       {
@@ -578,7 +578,7 @@
     {
       "handles" : 
       [
-        "Lcom/facebook/marianatrench/integrationtests/TaintedFieldClass;.finalStringField:Ljava/lang/String;:0:Leaf"
+        "Lcom/facebook/marianatrench/integrationtests/TaintedFieldClass;.finalStringField:Ljava/lang/String;:0"
       ],
       "position" : 
       {
@@ -799,7 +799,7 @@
     {
       "handles" : 
       [
-        "Lcom/facebook/marianatrench/integrationtests/Flow;.flow_to_field:(Ljava/lang/Object;Ljava/lang/Object;)V:0:Argument(1)"
+        "Lcom/facebook/marianatrench/integrationtests/Flow;.flow_to_field:(Ljava/lang/Object;Ljava/lang/Object;)V:0"
       ],
       "position" : 
       {
@@ -878,7 +878,7 @@
     {
       "handles" : 
       [
-        "Lcom/facebook/marianatrench/integrationtests/TaintedFieldClass;.staticFinalStringField:Ljava/lang/String;:0:Leaf"
+        "Lcom/facebook/marianatrench/integrationtests/TaintedFieldClass;.staticFinalStringField:Ljava/lang/String;:0"
       ],
       "position" : 
       {

@@ -213,7 +213,7 @@
       ],
       "handles" : 
       [
-        "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V:0:Argument(0)"
+        "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V:0"
       ],
       "position" : 
       {
@@ -311,7 +311,7 @@
     {
       "handles" : 
       [
-        "Landroid/app/Activity;.startActivity:(Landroid/content/Intent;)V:0:Argument(1)"
+        "Landroid/app/Activity;.startActivity:(Landroid/content/Intent;)V:0"
       ],
       "position" : 
       {
@@ -390,7 +390,7 @@
     {
       "handles" : 
       [
-        "Landroid/app/Activity;.startActivity:(Landroid/content/Intent;)V:0:Argument(1)"
+        "Landroid/app/Activity;.startActivity:(Landroid/content/Intent;)V:0"
       ],
       "position" : 
       {
@@ -469,7 +469,7 @@
     {
       "handles" : 
       [
-        "Landroid/app/Activity;.startActivity:(Landroid/content/Intent;)V:0:Argument(1)"
+        "Landroid/app/Activity;.startActivity:(Landroid/content/Intent;)V:0"
       ],
       "position" : 
       {
@@ -548,7 +548,7 @@
     {
       "handles" : 
       [
-        "Lcom/facebook/content/SecureContextHelper;.startFacebookActivity:(Landroid/content/Intent;Landroid/content/Context;)V:0:Argument(1)"
+        "Lcom/facebook/content/SecureContextHelper;.startFacebookActivity:(Landroid/content/Intent;Landroid/content/Context;)V:0"
       ],
       "position" : 
       {
@@ -645,7 +645,7 @@
     {
       "handles" : 
       [
-        "Lcom/facebook/marianatrench/integrationtests/FlowWithHops;.toSinkWithHop:(Ljava/lang/Object;)V:0:Argument(1)"
+        "Lcom/facebook/marianatrench/integrationtests/FlowWithHops;.toSinkWithHop:(Ljava/lang/Object;)V:0"
       ],
       "position" : 
       {

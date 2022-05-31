@@ -48,7 +48,6 @@ TEST_F(IssueSetTest, Insertion) {
       &rule_1,
       /* callee */ std::string(k_return_callee),
       /* sink_index */ 0,
-      /* callee_port_root */ Root(Root::Kind::Leaf),
       position_1));
   EXPECT_EQ(
       set,
@@ -59,7 +58,6 @@ TEST_F(IssueSetTest, Insertion) {
               &rule_1,
               /* callee */ std::string(k_return_callee),
               /* sink_index */ 0,
-              /* callee_port_root */ Root(Root::Kind::Leaf),
               position_1),
       }));
 
@@ -69,7 +67,6 @@ TEST_F(IssueSetTest, Insertion) {
       &rule_2,
       /* callee */ std::string(k_return_callee),
       /* sink_index */ 0,
-      /* callee_port_root */ Root(Root::Kind::Leaf),
       position_1));
   EXPECT_EQ(
       set,
@@ -80,7 +77,6 @@ TEST_F(IssueSetTest, Insertion) {
               &rule_1,
               /* callee */ std::string(k_return_callee),
               /* sink_index */ 0,
-              /* callee_port_root */ Root(Root::Kind::Leaf),
               position_1),
           Issue(
               /* source */ Taint{Frame::leaf(other_source_kind)},
@@ -88,7 +84,6 @@ TEST_F(IssueSetTest, Insertion) {
               &rule_2,
               /* callee */ std::string(k_return_callee),
               /* sink_index */ 0,
-              /* callee_port_root */ Root(Root::Kind::Leaf),
               position_1),
       }));
 
@@ -105,7 +100,6 @@ TEST_F(IssueSetTest, Insertion) {
       &rule_2,
       /* callee */ std::string(k_return_callee),
       /* sink_index */ 0,
-      /* callee_port_root */ Root(Root::Kind::Leaf),
       position_1));
   EXPECT_EQ(
       set,
@@ -116,7 +110,6 @@ TEST_F(IssueSetTest, Insertion) {
               &rule_1,
               /* callee */ std::string(k_return_callee),
               /* sink_index */ 0,
-              /* callee_port_root */ Root(Root::Kind::Leaf),
               position_1),
           Issue(
               /* source */
@@ -135,7 +128,6 @@ TEST_F(IssueSetTest, Insertion) {
               &rule_2,
               /* callee */ std::string(k_return_callee),
               /* sink_index */ 0,
-              /* callee_port_root */ Root(Root::Kind::Leaf),
               position_1),
       }));
 
@@ -153,7 +145,6 @@ TEST_F(IssueSetTest, Insertion) {
       &rule_2,
       /* callee */ std::string(k_return_callee),
       /* sink_index */ 0,
-      /* callee_port_root */ Root(Root::Kind::Return),
       position_1));
   EXPECT_EQ(
       set,
@@ -164,7 +155,6 @@ TEST_F(IssueSetTest, Insertion) {
               &rule_1,
               /* callee */ std::string(k_return_callee),
               /* sink_index */ 0,
-              /* callee_port_root */ Root(Root::Kind::Leaf),
               position_1),
           Issue(
               /* source */
@@ -186,7 +176,6 @@ TEST_F(IssueSetTest, Insertion) {
               &rule_2,
               /* callee */ std::string(k_return_callee),
               /* sink_index */ 0,
-              /* callee_port_root */ Root(Root::Kind::Leaf),
               position_1),
           Issue(
               /* source */ Taint{Frame::leaf(other_source_kind)},
@@ -202,7 +191,6 @@ TEST_F(IssueSetTest, Insertion) {
               &rule_2,
               /* callee */ std::string(k_return_callee),
               /* sink_index */ 0,
-              /* callee_port_root */ Root(Root::Kind::Return),
               position_1)}));
 
   set.add(Issue(
@@ -218,7 +206,6 @@ TEST_F(IssueSetTest, Insertion) {
       &rule_2,
       /* callee */ std::string(k_return_callee),
       /* sink_index */ 0,
-      /* callee_port_root */ Root(Root::Kind::Leaf),
       position_1));
   EXPECT_EQ(
       set,
@@ -229,7 +216,6 @@ TEST_F(IssueSetTest, Insertion) {
               &rule_1,
               /* callee */ std::string(k_return_callee),
               /* sink_index */ 0,
-              /* callee_port_root */ Root(Root::Kind::Leaf),
               position_1),
           Issue(
               /* source */
@@ -259,7 +245,6 @@ TEST_F(IssueSetTest, Insertion) {
               &rule_2,
               /* callee */ std::string(k_return_callee),
               /* sink_index */ 0,
-              /* callee_port_root */ Root(Root::Kind::Leaf),
               position_1),
           Issue(
               /* source */ Taint{Frame::leaf(other_source_kind)},
@@ -275,7 +260,6 @@ TEST_F(IssueSetTest, Insertion) {
               &rule_2,
               /* callee */ std::string(k_return_callee),
               /* sink_index */ 0,
-              /* callee_port_root */ Root(Root::Kind::Return),
               position_1)}));
 
   set.add(Issue(
@@ -284,7 +268,6 @@ TEST_F(IssueSetTest, Insertion) {
       &rule_1,
       /* callee */ std::string(k_return_callee),
       /* sink_index */ 1,
-      /* callee_port_root */ Root(Root::Kind::Leaf),
       position_1));
   EXPECT_EQ(
       set,
@@ -295,7 +278,6 @@ TEST_F(IssueSetTest, Insertion) {
               &rule_1,
               /* callee */ std::string(k_return_callee),
               /* sink_index */ 0,
-              /* callee_port_root */ Root(Root::Kind::Leaf),
               position_1),
           Issue(
               /* source */ Taint{Frame::leaf(source_kind)},
@@ -303,7 +285,6 @@ TEST_F(IssueSetTest, Insertion) {
               &rule_1,
               /* callee */ std::string(k_return_callee),
               /* sink_index */ 1,
-              /* callee_port_root */ Root(Root::Kind::Leaf),
               position_1),
           Issue(
               /* source */
@@ -333,7 +314,6 @@ TEST_F(IssueSetTest, Insertion) {
               &rule_2,
               /* callee */ std::string(k_return_callee),
               /* sink_index */ 0,
-              /* callee_port_root */ Root(Root::Kind::Leaf),
               position_1),
           Issue(
               /* source */ Taint{Frame::leaf(other_source_kind)},
@@ -349,7 +329,6 @@ TEST_F(IssueSetTest, Insertion) {
               &rule_2,
               /* callee */ std::string(k_return_callee),
               /* sink_index */ 0,
-              /* callee_port_root */ Root(Root::Kind::Return),
               position_1)}));
 
   set = {};
@@ -359,7 +338,6 @@ TEST_F(IssueSetTest, Insertion) {
       &rule_1,
       /* callee */ std::string(k_return_callee),
       /* sink_index */ 0,
-      /* callee_port_root */ Root(Root::Kind::Leaf),
       position_1));
   set.add(Issue(
       /* source */ Taint{Frame::leaf(source_kind)},
@@ -367,7 +345,6 @@ TEST_F(IssueSetTest, Insertion) {
       &rule_1,
       /* callee */ std::string(k_return_callee),
       /* sink_index */ 0,
-      /* callee_port_root */ Root(Root::Kind::Leaf),
       position_2));
   EXPECT_EQ(
       set,
@@ -378,7 +355,6 @@ TEST_F(IssueSetTest, Insertion) {
               &rule_1,
               /* callee */ std::string(k_return_callee),
               /* sink_index */ 0,
-              /* callee_port_root */ Root(Root::Kind::Leaf),
               position_1),
           Issue(
               /* source */ Taint{Frame::leaf(source_kind)},
@@ -386,10 +362,8 @@ TEST_F(IssueSetTest, Insertion) {
               &rule_1,
               /* callee */ std::string(k_return_callee),
               /* sink_index */ 0,
-              /* callee_port_root */ Root(Root::Kind::Leaf),
               position_2),
       }));
-
   // Merging with existing issues that have inferred_features == bottom()
   // should retain the "always"-ness property of the issue.
   set.add(Issue(
@@ -404,7 +378,6 @@ TEST_F(IssueSetTest, Insertion) {
       &rule_1,
       /* callee */ std::string(k_return_callee),
       /* sink_index */ 0,
-      /* callee_port_root */ Root(Root::Kind::Leaf),
       position_2));
   EXPECT_EQ(
       set,
@@ -415,7 +388,6 @@ TEST_F(IssueSetTest, Insertion) {
               &rule_1,
               /* callee */ std::string(k_return_callee),
               /* sink_index */ 0,
-              /* callee_port_root */ Root(Root::Kind::Leaf),
               position_1),
           Issue(
               /* source */ Taint{Frame::leaf(
@@ -430,10 +402,8 @@ TEST_F(IssueSetTest, Insertion) {
               &rule_1,
               /* callee */ std::string(k_return_callee),
               /* sink_index */ 0,
-              /* callee_port_root */ Root(Root::Kind::Leaf),
               position_2),
       }));
-
   // Merging with issues that have inferred_features != bottom() would convert
   // "always" to "may" only for features that are not shared across the issues.
   set.add(Issue(
@@ -450,7 +420,6 @@ TEST_F(IssueSetTest, Insertion) {
       &rule_1,
       /* callee */ std::string(k_return_callee),
       /* sink_index */ 0,
-      /* callee_port_root */ Root(Root::Kind::Leaf),
       position_2));
   EXPECT_EQ(
       set,
@@ -461,7 +430,6 @@ TEST_F(IssueSetTest, Insertion) {
               &rule_1,
               /* callee */ std::string(k_return_callee),
               /* sink_index */ 0,
-              /* callee_port_root */ Root(Root::Kind::Leaf),
               position_1),
           Issue(
               /* source */ Taint{Frame::leaf(
@@ -478,7 +446,6 @@ TEST_F(IssueSetTest, Insertion) {
               &rule_1,
               /* callee */ std::string(k_return_callee),
               /* sink_index */ 0,
-              /* callee_port_root */ Root(Root::Kind::Leaf),
               position_2),
       }));
 }

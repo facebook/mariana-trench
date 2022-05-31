@@ -43,7 +43,7 @@
         {
           "handles" :
           [
-            "LSink;.sink:(LData;)V:0:Argument(1)"
+            "LSink;.sink:(LData;)V:0"
           ],
           "position" :
           {

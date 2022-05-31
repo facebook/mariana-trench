@@ -150,7 +150,7 @@
     {
       "handles" : 
       [
-        "Lcom/facebook/marianatrench/integrationtests/Flow;.indirect_sink:(Ljava/lang/Object;)V:0:Argument(0)"
+        "Lcom/facebook/marianatrench/integrationtests/Flow;.indirect_sink:(Ljava/lang/Object;)V:0"
       ],
       "position" : 
       {

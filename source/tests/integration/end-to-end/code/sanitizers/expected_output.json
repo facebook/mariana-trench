@@ -39,7 +39,7 @@
     {
       "handles" : 
       [
-        "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V:1:Argument(0)"
+        "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V:1"
       ],
       "position" : 
       {
@@ -107,7 +107,7 @@
     {
       "handles" : 
       [
-        "Lcom/facebook/marianatrench/integrationtests/PortSanitizers;.sanitizedSinkPortAndKind:(Ljava/lang/Object;Ljava/lang/Object;)V:0:Argument(1)"
+        "Lcom/facebook/marianatrench/integrationtests/PortSanitizers;.sanitizedSinkPortAndKind:(Ljava/lang/Object;Ljava/lang/Object;)V:0"
       ],
       "position" : 
       {
@@ -175,7 +175,7 @@
     {
       "handles" : 
       [
-        "Lcom/facebook/marianatrench/integrationtests/PortSanitizers;.sanitizedSinkPortAndKind:(Ljava/lang/Object;Ljava/lang/Object;)V:0:Argument(2)"
+        "Lcom/facebook/marianatrench/integrationtests/PortSanitizers;.sanitizedSinkPortAndKind:(Ljava/lang/Object;Ljava/lang/Object;)V:0"
       ],
       "position" : 
       {
@@ -577,7 +577,7 @@
     {
       "handles" : 
       [
-        "Lcom/facebook/marianatrench/integrationtests/GlobalSanitizers;.toSanitizedKindSink:(Ljava/lang/Object;)V:0:Argument(1)"
+        "Lcom/facebook/marianatrench/integrationtests/GlobalSanitizers;.toSanitizedKindSink:(Ljava/lang/Object;)V:0"
       ],
       "position" : 
       {
@@ -649,7 +649,7 @@
       ],
       "handles" : 
       [
-        "Lcom/facebook/marianatrench/integrationtests/GlobalSanitizers;.toArraySink:([Ljava/lang/Object;)V:0:Argument(1)"
+        "Lcom/facebook/marianatrench/integrationtests/GlobalSanitizers;.toArraySink:([Ljava/lang/Object;)V:0"
       ],
       "position" : 
       {
@@ -732,7 +732,7 @@
     {
       "handles" : 
       [
-        "Lcom/facebook/marianatrench/integrationtests/GlobalSanitizers;.toSink:(Ljava/lang/Object;)V:1:Argument(1)"
+        "Lcom/facebook/marianatrench/integrationtests/GlobalSanitizers;.toSink:(Ljava/lang/Object;)V:1"
       ],
       "position" : 
       {

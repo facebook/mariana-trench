@@ -301,7 +301,7 @@
       ],
       "handles" : 
       [
-        "Lcom/facebook/marianatrench/integrationtests/Test$Builder;.build:()Lcom/facebook/marianatrench/integrationtests/Test;:0:Argument(0)"
+        "Lcom/facebook/marianatrench/integrationtests/Test$Builder;.build:()Lcom/facebook/marianatrench/integrationtests/Test;:0"
       ],
       "position" : 
       {
@@ -403,7 +403,7 @@
       ],
       "handles" : 
       [
-        "Lcom/facebook/marianatrench/integrationtests/Test$Builder;.build:()Lcom/facebook/marianatrench/integrationtests/Test;:0:Argument(0)"
+        "Lcom/facebook/marianatrench/integrationtests/Test$Builder;.build:()Lcom/facebook/marianatrench/integrationtests/Test;:0"
       ],
       "position" : 
       {
@@ -545,7 +545,7 @@
     {
       "handles" : 
       [
-        "Lcom/facebook/marianatrench/integrationtests/Test$Builder;.build:()Lcom/facebook/marianatrench/integrationtests/Test;:0:Argument(0)"
+        "Lcom/facebook/marianatrench/integrationtests/Test$Builder;.build:()Lcom/facebook/marianatrench/integrationtests/Test;:0"
       ],
       "position" : 
       {

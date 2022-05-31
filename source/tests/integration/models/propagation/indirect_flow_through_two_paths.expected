@@ -11,8 +11,8 @@
         {
           "handles" :
           [
-            "LFlow;.into_into_sink_one:(LData;)V:0:Argument(1)",
-            "LFlow;.into_into_sink_two:(LData;)V:0:Argument(1)"
+            "LFlow;.into_into_sink_one:(LData;)V:0",
+            "LFlow;.into_into_sink_two:(LData;)V:0"
           ],
           "position" :
           {

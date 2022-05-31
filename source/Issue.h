@@ -27,10 +27,8 @@ constexpr std::string_view k_unresolved_callee = "unresolved";
 namespace {
 std::string get_handle(
     const std::string& callee,
-    TextualOrderIndex sink_index,
-    const Root& callee_port_root) {
-  return fmt::format(
-      "{}:{}:{}", callee, sink_index, callee_port_root.to_string());
+    TextualOrderIndex sink_index) {
+  return fmt::format("{}:{}", callee, sink_index);
 }
 } // namespace
 
@@ -43,10 +41,7 @@ class Issue final : public sparta::AbstractDomain<Issue> {
       : sources_(Taint::bottom()),
         sinks_(Taint::bottom()),
         rule_(nullptr),
-        new_handles_(HandleSet({get_handle(
-            std::string(k_return_callee),
-            0,
-            Root(Root::Kind::Leaf))})),
+        new_handles_(HandleSet({get_handle(std::string(k_return_callee), 0)})),
         position_(nullptr) {}
 
   explicit Issue(
@@ -55,13 +50,11 @@ class Issue final : public sparta::AbstractDomain<Issue> {
       const Rule* rule,
       const std::string& callee,
       TextualOrderIndex sink_index,
-      const Root& callee_port_root,
       const Position* position)
       : sources_(std::move(sources)),
         sinks_(std::move(sinks)),
         rule_(rule),
-        new_handles_(
-            HandleSet({get_handle(callee, sink_index, callee_port_root)})),
+        new_handles_(HandleSet({get_handle(callee, sink_index)})),
         position_(position) {}
 
   explicit Issue(

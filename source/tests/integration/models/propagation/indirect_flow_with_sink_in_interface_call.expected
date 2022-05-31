@@ -11,7 +11,7 @@
         {
           "handles" :
           [
-            "LInterface;.sink:(LData;)V:0:Argument(1)"
+            "LInterface;.sink:(LData;)V:0"
           ],
           "position" :
           {

@@ -488,7 +488,6 @@ void create_issue(
     const Position* position,
     TextualOrderIndex sink_index,
     const std::string& callee,
-    const Root& callee_port_root,
     const FeatureMayAlwaysSet& extra_features) {
   source.add_inferred_features(
       context->class_properties.issue_features(context->method()));
@@ -499,7 +498,6 @@ void create_issue(
       rule,
       callee,
       sink_index,
-      callee_port_root,
       position);
   LOG_OR_DUMP(context, 4, "Found issue: {}", issue);
   context->model.add_issue(std::move(issue));
@@ -519,7 +517,6 @@ void check_multi_source_multi_sink_rules(
     const Position* position,
     TextualOrderIndex sink_index,
     const std::string& callee,
-    const Root& callee_port_root,
     const FeatureMayAlwaysSet& extra_features) {
   const auto* partial_sink = sink_kind->as<PartialKind>();
   mt_assert(partial_sink != nullptr);
@@ -541,7 +538,6 @@ void check_multi_source_multi_sink_rules(
         position,
         sink_index,
         callee,
-        callee_port_root,
         extra_features);
   } else {
     LOG_OR_DUMP(
@@ -649,7 +645,6 @@ void check_flows(
     const Position* position,
     TextualOrderIndex sink_index,
     const std::string& callee,
-    const Root& callee_port_root,
     const FeatureMayAlwaysSet& extra_features,
     FulfilledPartialKindState* MT_NULLABLE fulfilled_partial_sinks) {
   if (sources.is_bottom() || sinks.is_bottom()) {
@@ -675,7 +670,6 @@ void check_flows(
             position,
             sink_index,
             callee,
-            callee_port_root,
             extra_features);
       }
 
@@ -699,7 +693,6 @@ void check_flows(
                 // ports per issue handle for multi-source multi-sink rules.
                 sink_index,
                 callee,
-                callee_port_root,
                 extra_features);
           }
         }
@@ -748,7 +741,6 @@ void check_flows(
         /* callee */ callee.resolved_base_method
             ? callee.resolved_base_method->show()
             : std::string(k_unresolved_callee),
-        /* callee_port_root */ port.root(),
         extra_features,
         &fulfilled_partial_sinks);
 
@@ -836,7 +828,6 @@ void check_flows_to_array_allocation(
         position,
         /* sink_index */ array_allocation_index,
         /* callee */ array_allocation_method->show(),
-        /* callee_port_root */ Root(Root::Kind::Argument, 0),
         /* extra_features */ {},
         /* fulfilled_partial_sinks */ nullptr);
   }
@@ -1061,7 +1052,6 @@ void check_flows_to_field_sink(
         position,
         /* sink_index */ field_target->field_sink_index,
         /* callee */ show(field_target->field),
-        /* callee_port_root */ Root(Root::Kind::Leaf),
         /* extra_features */ FeatureMayAlwaysSet(),
         /* fulfilled_partial_sinks */ nullptr);
   }
@@ -1537,7 +1527,6 @@ bool Transfer::analyze_return(
           position,
           /* sink_index */ return_index,
           /* callee */ std::string(k_return_callee),
-          /* callee_port_root */ Root(Root::Kind::Leaf),
           /* extra_features */ {},
           /* fulfilled_partial_sinks */ nullptr);
     }

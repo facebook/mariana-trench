@@ -114,7 +114,7 @@
     {
       "handles" : 
       [
-        "Lcom/instagram/common/analytics/intf/AnalyticsEvent;.addExtra:(Ljava/lang/String;Ljava/lang/String;)Lcom/instagram/common/analytics/intf/AnalyticsEvent;:1:Argument(2)"
+        "Lcom/instagram/common/analytics/intf/AnalyticsEvent;.addExtra:(Ljava/lang/String;Ljava/lang/String;)Lcom/instagram/common/analytics/intf/AnalyticsEvent;:1"
       ],
       "position" : 
       {
@@ -206,7 +206,7 @@
     {
       "handles" : 
       [
-        "Lcom/instagram/url/UrlHandlerActivity;.handleIntent:(Landroid/content/Intent;)V:0:Argument(1)"
+        "Lcom/instagram/url/UrlHandlerActivity;.handleIntent:(Landroid/content/Intent;)V:0"
       ],
       "position" : 
       {

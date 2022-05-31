@@ -11,7 +11,7 @@
         {
           "handles" :
           [
-            "LSink;.static_sink:(LData;)V:0:Argument(0)"
+            "LSink;.static_sink:(LData;)V:0"
           ],
           "position" :
           {
