@@ -149,6 +149,20 @@ TEST_F(TypeConstraintTest, IsInterfaceTypeConstraint) {
   EXPECT_FALSE(IsInterfaceTypeConstraint(true).satisfy(type::java_lang_Void()));
 }
 
+TEST_F(TypeConstraintTest, IsEnumTypeConstraintSatisfy) {
+  std::string enum_name = "Landroid/util/TestEnum;";
+  ClassCreator enum_creator(
+      DexType::make_type(DexString::make_string(enum_name)));
+  enum_creator.set_access(DexAccessFlags::ACC_ENUM);
+  enum_creator.set_super(type::java_lang_Enum());
+  auto test_enum = enum_creator.create();
+
+  EXPECT_TRUE(IsEnumTypeConstraint(true).satisfy(test_enum->get_type()));
+  EXPECT_TRUE(IsEnumTypeConstraint().satisfy(test_enum->get_type()));
+  EXPECT_FALSE(IsInterfaceTypeConstraint(true).satisfy(type::java_lang_Void()));
+  EXPECT_FALSE(IsEnumTypeConstraint(true).satisfy(type::java_lang_Object()));
+}
+
 TEST_F(TypeConstraintTest, TypeConstraintFromJson) {
   // TypeNameConstraint
   auto constraint = TypeConstraint::from_json(test::parse_json(

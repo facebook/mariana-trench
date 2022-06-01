@@ -178,6 +178,24 @@ bool IsInterfaceTypeConstraint::operator==(const TypeConstraint& other) const {
   }
 }
 
+IsEnumTypeConstraint::IsEnumTypeConstraint(bool expected)
+    : expected_(expected) {}
+
+bool IsEnumTypeConstraint::satisfy(const DexType* type) const {
+  DexClass* klass = type_class(type);
+  bool is_enum_type = klass != nullptr && is_enum(klass);
+  return expected_ == is_enum_type;
+}
+
+bool IsEnumTypeConstraint::operator==(const TypeConstraint& other) const {
+  if (auto* other_constraint =
+          dynamic_cast<const IsEnumTypeConstraint*>(&other)) {
+    return other_constraint->expected_ == expected_;
+  } else {
+    return false;
+  }
+}
+
 AllOfTypeConstraint::AllOfTypeConstraint(
     std::vector<std::unique_ptr<TypeConstraint>> constraints)
     : inner_constraints_(std::move(constraints)) {}
@@ -328,14 +346,17 @@ std::unique_ptr<TypeConstraint> TypeConstraint::from_json(
                   constraint, "pattern")}
             : std::nullopt);
   } else if (
-      constraint_name == "is_class" || constraint_name == "is_interface") {
+      constraint_name == "is_class" || constraint_name == "is_interface" ||
+      constraint_name == "is_enum") {
     bool expected = constraint.isMember("value")
         ? JsonValidation::boolean(constraint, /* field */ "value")
         : true;
     if (constraint_name == "is_class") {
       return std::make_unique<IsClassTypeConstraint>(expected);
-    } else {
+    } else if (constraint_name == "is_interface") {
       return std::make_unique<IsInterfaceTypeConstraint>(expected);
+    } else {
+      return std::make_unique<IsEnumTypeConstraint>(expected);
     }
   } else {
     throw JsonValidationError(

@@ -116,6 +116,16 @@ class IsInterfaceTypeConstraint final : public TypeConstraint {
   bool expected_;
 };
 
+class IsEnumTypeConstraint final : public TypeConstraint {
+ public:
+  explicit IsEnumTypeConstraint(bool expected = true);
+  bool satisfy(const DexType* type) const override;
+  bool operator==(const TypeConstraint& other) const override;
+
+ private:
+  bool expected_;
+};
+
 class AllOfTypeConstraint final : public TypeConstraint {
  public:
   explicit AllOfTypeConstraint(
