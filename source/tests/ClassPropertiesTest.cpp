@@ -36,6 +36,10 @@ class MockAndroidResources : public AndroidResources {
     return boost::none;
   }
 
+  boost::optional<std::string> get_manifest_package_name() override {
+    return boost::none;
+  }
+
   ManifestClassInfo get_manifest_class_info() override {
     ManifestClassInfo info;
 
