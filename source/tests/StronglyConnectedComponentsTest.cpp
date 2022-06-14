@@ -47,6 +47,7 @@ Context test_components(const Scope& scope) {
       std::make_unique<ClassHierarchies>(*context.options, context.stores);
   context.overrides = std::make_unique<Overrides>(
       *context.options, *context.methods, context.stores);
+  context.fields = std::make_unique<Fields>();
   context.call_graph = std::make_unique<CallGraph>(
       *context.options,
       *context.methods,

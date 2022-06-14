@@ -13,6 +13,7 @@
 
 #include <RedexContext.h>
 
+#include <mariana-trench/ClassProperties.h>
 #include <mariana-trench/Fields.h>
 #include <mariana-trench/JsonValidation.h>
 #include <mariana-trench/SanitizersOptions.h>
@@ -92,6 +93,14 @@ Context make_context(const DexStore& store) {
       *context.overrides,
       *context.call_graph,
       registry);
+  context.class_properties = std::make_unique<ClassProperties>(
+      *context.options,
+      context.stores,
+      *context.features,
+      *context.dependencies);
+  context.rules = std::make_unique<Rules>();
+  context.scheduler =
+      std::make_unique<Scheduler>(*context.methods, *context.dependencies);
   return context;
 }
 

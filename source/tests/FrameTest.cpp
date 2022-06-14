@@ -142,7 +142,7 @@ TEST_F(FrameTest, FrameLeq) {
               /* kind */ context.kinds->get("TestSource"),
               test::FrameProperties{
                   .locally_inferred_features = {},
-                  FeatureSet{
+                  .user_features = FeatureSet{
                       context.features->get("FeatureOne"),
                       context.features->get("FeatureTwo")}})));
   EXPECT_FALSE(test::make_frame(
