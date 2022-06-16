@@ -5,12 +5,19 @@
       {
         "constraint": "signature",
         "pattern": "Lcom/facebook/marianatrench/integrationtests/Messenger;\\.<init>:.*"
+      },
+      {
+        "constraint": "number_parameters",
+        "inner": {
+          "constraint": ">=",
+          "value": 2
+        }
       }
     ],
     "shim": {
       "callees": [
         {
-          "signature": "Lcom/facebook/marianatrench/integrationtests/Handler;.handleMessage:(Ljava/lang/Object;)V"
+          "signature": "%type_of:Argument(1)%.handleMessage:(Ljava/lang/Object;)V"
         }
       ]
     }
@@ -26,7 +33,8 @@
     "shim": {
       "callees": [
         {
-          "signature": "Landroid/app/Activity;.onCreate:()V"
+          "lifecycle_of": "%type_of:Argument(1)%",
+          "method_name": "fragment_lifecycle_wrapper"
         }
       ]
     }
@@ -49,9 +57,8 @@
     "shim": {
       "callees": [
         {
-          "signature": "Lcom/facebook/marianatrench/integrationtests/Handler;.handleMessage:(Ljava/lang/Object;)V",
+          "signature": "%type_of:Argument(2)%.handleMessage:(Ljava/lang/Object;)V",
           "parameters_map": {
-            "Argument(0)": "Argument(2)",
             "Argument(1)": "Argument(4)"
           }
         }
@@ -69,7 +76,7 @@
     "shim": {
       "callees": [
         {
-          "signature": "Lcom/facebook/marianatrench/integrationtests/ShimTarget;.multipleArguments:(ILjava/lang/String;Ljava/lang/Object;)V"
+          "signature": "%type_of:Argument(1)%.multipleArguments:(ILjava/lang/String;Ljava/lang/Object;)V"
         }
       ]
     }
@@ -85,10 +92,28 @@
     "shim": {
       "callees": [
         {
-          "signature": "Lcom/facebook/marianatrench/integrationtests/ShimTarget;.multipleArguments:(ILjava/lang/String;Ljava/lang/Object;)V",
+          "signature": "%type_of:Argument(1)%.multipleArguments:(ILjava/lang/String;Ljava/lang/Object;)V",
           "parameters_map": {
-            "Argument(0)": "Argument(1)",
             "Argument(3)": "Argument(2)"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "find": "methods",
+    "where": [
+      {
+        "constraint": "signature",
+        "pattern": "Lcom/facebook/marianatrench/integrationtests/ParameterMapping;\\.callStatic:.*"
+      }
+    ],
+    "shim": {
+      "callees": [
+        {
+          "signature": "%static:Lcom/facebook/marianatrench/integrationtests/ShimTarget;%.staticMethod:(Ljava/lang/Object;)V",
+          "parameters_map": {
+            "Argument(0)": "Argument(1)"
           }
         }
       ]

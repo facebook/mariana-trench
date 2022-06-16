@@ -10,10 +10,10 @@
     "shim": {
       "callees": [
         {
-          "signature": "LShimmed1;.method:()V"
+          "signature": "%type_of:Argument(1)%.method:()V"
         },
         {
-          "signature": "LShimmed2;.static_method:()V"
+          "signature": "%static:LShimmed2;%.static_method:()V"
         }
       ]
     }

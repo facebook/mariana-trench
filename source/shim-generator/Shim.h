@@ -84,7 +84,7 @@ class ShimTarget {
 
   static std::optional<ShimTarget> from_json(
       const Json::Value& value,
-      Context& context);
+      const Methods* methods);
 
   std::optional<ShimTarget> instantiate(const ShimMethod& shim_method) const;
 

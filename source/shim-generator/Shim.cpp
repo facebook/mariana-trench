@@ -53,15 +53,6 @@ ShimParameterMapping infer_parameter_mapping(
     const ShimMethod& shim_method) {
   ShimParameterMapping parameter_mapping;
 
-  if (!shim_target_is_static) {
-    // Include "this" as argument 0
-    auto receiver_position = shim_method.type_position(shim_target_class);
-    if (!receiver_position) {
-      return parameter_mapping;
-    }
-    parameter_mapping.insert(0, *receiver_position);
-  }
-
   const auto* dex_arguments = shim_target_proto->get_args();
   if (!dex_arguments) {
     return parameter_mapping;
@@ -222,14 +213,14 @@ ShimTarget::ShimTarget(
 
 std::optional<ShimTarget> ShimTarget::from_json(
     const Json::Value& value,
-    Context& context) {
+    const Methods* methods) {
   if (!value.isMember("signature")) {
     ERROR(1, "Invalid shim definition. callee must have `signature`");
     return std::nullopt;
   }
 
   auto signature = JsonValidation::string(value, "signature");
-  auto* call_target = context.methods->get(signature);
+  auto* call_target = methods->get(signature);
 
   if (call_target == nullptr) {
     WARNING(1, "Provided method signature not found: `{}`", signature);

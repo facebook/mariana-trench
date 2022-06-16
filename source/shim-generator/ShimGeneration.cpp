@@ -31,7 +31,8 @@ std::vector<JsonShimGenerator> get_shim_generators(
       shims.push_back(JsonShimGenerator(
           std::make_unique<AllOfMethodConstraint>(std::move(shim_constraints)),
           ShimTemplate::from_json(
-              JsonValidation::object(shim_definition, "shim"), context)));
+              JsonValidation::object(shim_definition, "shim")),
+          context.methods.get()));
     }
   }
 
@@ -44,13 +45,21 @@ MethodToShimMap ShimGeneration::run(Context& context) {
   std::vector<JsonShimGenerator> all_shims;
   for (const auto& path : context.options->shims_paths()) {
     LOG(1, "Processing shim generator at: {}", path);
-    auto shim_generators =
-        get_shim_generators(context, JsonValidation::parse_json_file(path));
+    try {
+      auto shim_generators =
+          get_shim_generators(context, JsonValidation::parse_json_file(path));
 
-    all_shims.insert(
-        all_shims.end(),
-        std::make_move_iterator(shim_generators.begin()),
-        std::make_move_iterator(shim_generators.end()));
+      all_shims.insert(
+          all_shims.end(),
+          std::make_move_iterator(shim_generators.begin()),
+          std::make_move_iterator(shim_generators.end()));
+    } catch (const JsonValidationError& exception) {
+      WARNING(
+          3,
+          "Unable to parse shim generator at `{}`: {}",
+          path,
+          exception.what());
+    }
   }
 
   LOG(1, "Create method mappings");
@@ -63,7 +72,8 @@ MethodToShimMap ShimGeneration::run(Context& context) {
   LOG(1, "Running {} shim generators", all_shims.size());
   MethodToShimMap method_shims;
   for (auto& item : all_shims) {
-    auto shims = item.emit_method_shims(*context.methods, *method_mappings);
+    auto shims =
+        item.emit_method_shims(context.methods.get(), *method_mappings);
     method_shims.merge(shims);
     for (const auto& shim : shims) {
       WARNING(
