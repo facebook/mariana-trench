@@ -278,6 +278,14 @@ ShimReflectionTarget::parameter_registers(
   return parameter_registers;
 }
 
+ShimLifecycleTarget::ShimLifecycleTarget(
+    std::string method_name,
+    ShimParameterPosition receiver_position,
+    bool is_reflection)
+    : method_name_(std::move(method_name)),
+      receiver_position_(std::move(receiver_position)),
+      is_reflection_(is_reflection) {}
+
 Shim::Shim(const Method* method) : method_(method) {}
 
 void Shim::add_target(ShimTargetVariant target) {
@@ -285,6 +293,8 @@ void Shim::add_target(ShimTargetVariant target) {
     targets_.push_back(std::get<ShimTarget>(target));
   } else if (std::holds_alternative<ShimReflectionTarget>(target)) {
     reflections_.push_back(std::get<ShimReflectionTarget>(target));
+  } else if (std::holds_alternative<ShimLifecycleTarget>(target)) {
+    lifecycles_.push_back(std::get<ShimLifecycleTarget>(target));
   } else {
     mt_unreachable();
   }
@@ -320,6 +330,16 @@ std::ostream& operator<<(
   return out << ")";
 }
 
+std::ostream& operator<<(
+    std::ostream& out,
+    const ShimLifecycleTarget& shim_lifecycle_target) {
+  out << "ShimLifecycleTarget(method_name=`";
+  out << shim_lifecycle_target.method_name_;
+  out << "`, receiver_position=Argument("
+      << shim_lifecycle_target.receiver_position_ << ")";
+  return out << ")";
+}
+
 std::ostream& operator<<(std::ostream& out, const Shim& shim) {
   out << "ShimTarget(method=`";
   if (auto* method = shim.method()) {
@@ -338,6 +358,14 @@ std::ostream& operator<<(std::ostream& out, const Shim& shim) {
   if (!shim.reflections().empty()) {
     out << ",\n  reflections=[\n";
     for (const auto& target : shim.reflections()) {
+      out << "    " << target << ",\n";
+    }
+    out << "  ]";
+  }
+
+  if (!shim.lifecycles().empty()) {
+    out << ",\n  lifecycles=[\n";
+    for (const auto& target : shim.lifecycles()) {
       out << "    " << target << ",\n";
     }
     out << "  ]";

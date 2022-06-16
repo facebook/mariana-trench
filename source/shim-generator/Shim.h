@@ -131,7 +131,38 @@ class ShimReflectionTarget {
   ShimParameterMapping parameter_mapping_;
 };
 
-using ShimTargetVariant = std::variant<ShimTarget, ShimReflectionTarget>;
+/**
+ * Represents shim-targets which are the generated lifecycle wrappers.
+ * The target lifecycle wrapper method is resolved at the call-site only
+ * as each generated wrapper has a unique signature.
+ */
+class ShimLifecycleTarget {
+ public:
+  explicit ShimLifecycleTarget(
+      std::string method_name,
+      ShimParameterPosition receiver_position,
+      bool is_reflection);
+
+  std::string_view method_name() const {
+    return method_name_;
+  }
+
+  bool is_reflection() const {
+    return is_reflection_;
+  }
+
+  friend std::ostream& operator<<(
+      std::ostream& out,
+      const ShimLifecycleTarget& shim_lifecycle_target);
+
+ private:
+  std::string method_name_;
+  ShimParameterPosition receiver_position_;
+  bool is_reflection_;
+};
+
+using ShimTargetVariant =
+    std::variant<ShimTarget, ShimReflectionTarget, ShimLifecycleTarget>;
 
 /**
  * Represents an instantiated Shim for one `shimmed-method`.
@@ -147,7 +178,7 @@ class Shim {
   }
 
   bool empty() const {
-    return targets_.empty() && reflections_.empty();
+    return targets_.empty() && reflections_.empty() && lifecycles_.empty();
   }
 
   const std::vector<ShimTarget>& targets() const {
@@ -158,12 +189,17 @@ class Shim {
     return reflections_;
   }
 
+  const std::vector<ShimLifecycleTarget>& lifecycles() const {
+    return lifecycles_;
+  }
+
   friend std::ostream& operator<<(std::ostream& out, const Shim& shim);
 
  private:
   const Method* method_;
   std::vector<ShimTarget> targets_;
   std::vector<ShimReflectionTarget> reflections_;
+  std::vector<ShimLifecycleTarget> lifecycles_;
 };
 
 } // namespace marianatrench

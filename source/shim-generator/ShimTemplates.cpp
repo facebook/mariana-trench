@@ -150,6 +150,30 @@ std::optional<ShimReflectionTarget> try_make_shim_reflection_target(
       *method_spec, std::move(instantiated_parameter_map));
 }
 
+std::optional<ShimLifecycleTarget> try_make_shim_lifecycle_target(
+    const TargetTemplate& target_template,
+    const ShimMethod& shim_method) {
+  const auto& receiver_info = target_template.receiver_info();
+  mt_assert(
+      receiver_info.kind() == ReceiverInfo::Kind::INSTANCE ||
+      receiver_info.kind() == ReceiverInfo::Kind::REFLECTION);
+
+  const auto* receiver_type = receiver_info.receiver_dex_type(shim_method);
+  if (!receiver_type) {
+    WARNING(
+        1,
+        "Shim method `{}` missing the receiver required for all shim callees`{}`.",
+        shim_method.method()->show(),
+        target_template.target());
+    return std::nullopt;
+  }
+
+  return ShimLifecycleTarget(
+      std::string(target_template.target()),
+      std::get<ShimParameterPosition>(receiver_info.receiver()),
+      receiver_info.kind() == ReceiverInfo::Kind::REFLECTION);
+}
+
 } // namespace
 
 ReceiverInfo::ReceiverInfo(Kind kind, ShimParameterPosition position)
@@ -266,8 +290,7 @@ std::optional<ShimTargetVariant> TargetTemplate::instantiate(
       return try_make_shim_reflection_target(*this, shim_method);
 
     case Kind::LIFECYCLE:
-      LOG(1, "{} not handled.", *this);
-      return std::nullopt;
+      return try_make_shim_lifecycle_target(*this, shim_method);
   }
 }
 
