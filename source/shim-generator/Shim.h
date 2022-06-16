@@ -16,9 +16,15 @@
 namespace marianatrench {
 
 class Shim;
+/* Indicates the position of a parameter in the `shimmed-method`. */
 using ShimParameterPosition = ParameterPosition;
 using MethodToShimMap = std::unordered_map<const Method*, Shim>;
 
+/**
+ * Wrapper around the `shimmed-method` (i.e. the method matching the method
+ * constraints on the shim generator) with helper methods to query
+ * dex-types/positions parameters.
+ */
 class ShimMethod {
  public:
   explicit ShimMethod(const Method* method);
@@ -29,9 +35,15 @@ class ShimMethod {
 
  private:
   const Method* method_;
+  // Maps parameter type to position in method_
   std::unordered_map<const DexType*, ShimParameterPosition> types_to_position_;
 };
 
+/**
+ * Tracks the mapping of parameter positions from
+ * `shim-target` (`ParameterPosition`) to
+ * parameter positions in the `shimmed-method` (`ShimParameterPosition`)
+ */
 class ShimParameterMapping {
  public:
   ShimParameterMapping();
@@ -39,7 +51,10 @@ class ShimParameterMapping {
   static ShimParameterMapping from_json(const Json::Value& value);
 
   ShimParameterMapping instantiate(
-      const Method* shim_target_callee,
+      std::string_view shim_target_method,
+      const DexType* shim_target_class,
+      const DexProto* shim_target_proto,
+      bool shim_target_is_static,
       const ShimMethod& shim_method) const;
 
   bool empty() const;
@@ -55,14 +70,12 @@ class ShimParameterMapping {
       const ShimParameterMapping& map);
 
  private:
-  static ShimParameterMapping infer(
-      const Method* shim_target_callee,
-      const ShimMethod& shim_method);
-
- private:
   std::unordered_map<ParameterPosition, ShimParameterPosition> map_;
 };
 
+/**
+ * Represents shim-targets which are instance methods.
+ */
 class ShimTarget {
  public:
   explicit ShimTarget(
@@ -94,6 +107,9 @@ class ShimTarget {
   ShimParameterMapping parameter_mapping_;
 };
 
+/**
+ * Represents an instantiated Shim for one `shimmed-method`.
+ */
 class Shim {
  public:
   Shim(const Method* method, std::vector<ShimTarget> shim_targets);

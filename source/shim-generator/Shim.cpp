@@ -18,25 +18,66 @@
 namespace marianatrench {
 namespace {
 
-DexType* MT_NULLABLE
-get_parameter_type(const Method* method, ParameterPosition position) {
-  if (position >= method->number_of_parameters()) {
+const DexType* MT_NULLABLE get_parameter_type(
+    std::string_view method_name,
+    const DexType* dex_class,
+    const DexProto* dex_proto,
+    bool is_static,
+    ParameterPosition position) {
+  auto number_of_parameters =
+      dex_proto->get_args()->size() + (is_static ? 0u : 1u);
+  if (position >= number_of_parameters) {
     ERROR(
         1,
-        "Parameter mapping for shim_target `{}` contains a port on parameter {} but the method only has {} parameters.",
-        method->show(),
+        "Parameter mapping for shim_target `{}.{}{}` contains a port on parameter {} but the method only has {} parameters.",
+        show(dex_class),
+        method_name,
+        show(dex_proto),
         position,
-        method->number_of_parameters());
+        number_of_parameters);
     return nullptr;
   }
 
-  if (!method->is_static() && position == 0) {
+  if (!is_static && position == 0) {
     // Include "this" as argument 0
-    return method->get_class();
+    return dex_class;
   }
 
-  return method->get_proto()->get_args()->at(
-      position - method->first_parameter_index());
+  return dex_proto->get_args()->at(position - (is_static ? 0u : 1u));
+}
+
+ShimParameterMapping infer_parameter_mapping(
+    const DexType* shim_target_class,
+    const DexProto* shim_target_proto,
+    bool shim_target_is_static,
+    const ShimMethod& shim_method) {
+  ShimParameterMapping parameter_mapping;
+
+  if (!shim_target_is_static) {
+    // Include "this" as argument 0
+    auto receiver_position = shim_method.type_position(shim_target_class);
+    if (!receiver_position) {
+      return parameter_mapping;
+    }
+    parameter_mapping.insert(0, *receiver_position);
+  }
+
+  const auto* dex_arguments = shim_target_proto->get_args();
+  if (!dex_arguments) {
+    return parameter_mapping;
+  }
+
+  auto first_parameter_position = shim_target_is_static ? 0u : 1u;
+  for (std::size_t position = 0; position < dex_arguments->size(); position++) {
+    if (auto shim_position =
+            shim_method.type_position(dex_arguments->at(position))) {
+      parameter_mapping.insert(
+          static_cast<ParameterPosition>(position + first_parameter_position),
+          *shim_position);
+    }
+  }
+
+  return parameter_mapping;
 }
 
 } // namespace
@@ -128,49 +169,28 @@ ShimParameterMapping ShimParameterMapping::from_json(const Json::Value& value) {
   return parameter_mapping;
 }
 
-ShimParameterMapping ShimParameterMapping::infer(
-    const Method* shim_target_callee,
-    const ShimMethod& shim_method) {
-  ShimParameterMapping parameter_mapping;
-
-  if (!shim_target_callee->is_static()) {
-    // Include "this" as argument 0
-    auto receiver_position =
-        shim_method.type_position(shim_target_callee->get_class());
-    if (!receiver_position) {
-      return parameter_mapping;
-    }
-    parameter_mapping.insert(0, *receiver_position);
-  }
-
-  const auto* dex_arguments = shim_target_callee->get_proto()->get_args();
-  if (!dex_arguments) {
-    return parameter_mapping;
-  }
-
-  auto first_parameter_position = shim_target_callee->first_parameter_index();
-  for (std::size_t position = 0; position < dex_arguments->size(); position++) {
-    if (auto shim_position =
-            shim_method.type_position(dex_arguments->at(position))) {
-      parameter_mapping.insert(
-          static_cast<ParameterPosition>(position + first_parameter_position),
-          *shim_position);
-    }
-  }
-
-  return parameter_mapping;
-}
-
 ShimParameterMapping ShimParameterMapping::instantiate(
-    const Method* shim_target_callee,
+    std::string_view shim_target_method,
+    const DexType* shim_target_class,
+    const DexProto* shim_target_proto,
+    bool shim_target_is_static,
     const ShimMethod& shim_method) const {
   if (map_.empty()) {
-    return infer(shim_target_callee, shim_method);
+    return infer_parameter_mapping(
+        shim_target_class,
+        shim_target_proto,
+        shim_target_is_static,
+        shim_method);
   }
 
   ShimParameterMapping parameter_mapping;
-  for (const auto& [position, shim_position] : map_) {
-    auto callee_type = get_parameter_type(shim_target_callee, position);
+  for (const auto& [shim_target_position, shim_position] : map_) {
+    auto callee_type = get_parameter_type(
+        shim_target_method,
+        shim_target_class,
+        shim_target_proto,
+        shim_target_is_static,
+        shim_target_position);
     if (callee_type == nullptr) {
       continue;
     }
@@ -179,15 +199,17 @@ ShimParameterMapping ShimParameterMapping::instantiate(
     if (callee_type != shim_type) {
       ERROR(
           1,
-          "Parameter mapping type mismatch for shim_target `{}` for parameter {}. Expected: {} but got {}.",
-          shim_target_callee->show(),
-          position,
+          "Parameter mapping type mismatch for shim_target `{}.{}:{}` for parameter {}. Expected: {} but got {}.",
+          show(shim_target_class),
+          shim_target_method,
+          show(shim_target_proto),
+          shim_target_position,
           show(callee_type),
           show(shim_type));
       continue;
     }
 
-    parameter_mapping.insert(position, shim_position);
+    parameter_mapping.insert(shim_target_position, shim_position);
   }
 
   return parameter_mapping;
@@ -222,8 +244,12 @@ std::optional<ShimTarget> ShimTarget::from_json(
 
 std::optional<ShimTarget> ShimTarget::instantiate(
     const ShimMethod& shim_method) const {
-  auto parameter_mapping =
-      parameter_mapping_.instantiate(call_target_, shim_method);
+  auto parameter_mapping = parameter_mapping_.instantiate(
+      call_target_->get_name(),
+      call_target_->get_class(),
+      call_target_->get_proto(),
+      call_target_->is_static(),
+      shim_method);
 
   // Require non-static methods to have a receiver.
   if (!call_target_->is_static() && !parameter_mapping.at(0)) {
