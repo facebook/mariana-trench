@@ -234,6 +234,7 @@ std::unordered_map<ParameterPosition, Register> ShimTarget::parameter_registers(
        position < call_target_->number_of_parameters();
        ++position) {
     if (auto shim_position = parameter_mapping_.at(position)) {
+      mt_assert(*shim_position < instruction->srcs_size());
       parameter_registers.emplace(position, instruction->src(*shim_position));
     }
   }
@@ -246,6 +247,36 @@ ShimReflectionTarget::ShimReflectionTarget(
     ShimParameterMapping parameter_mapping)
     : method_spec_(method_spec),
       parameter_mapping_(std::move(parameter_mapping)) {}
+
+std::optional<Register> ShimReflectionTarget::receiver_register(
+    const IRInstruction* instruction) const {
+  auto receiver_position = parameter_mapping_.at(0);
+  if (!receiver_position) {
+    return std::nullopt;
+  }
+
+  mt_assert(*receiver_position < instruction->srcs_size());
+
+  return instruction->src(*receiver_position);
+}
+
+std::unordered_map<ParameterPosition, Register>
+ShimReflectionTarget::parameter_registers(
+    const Method* resolved_reflection,
+    const IRInstruction* instruction) const {
+  std::unordered_map<ParameterPosition, Register> parameter_registers;
+
+  for (ParameterPosition position = 0;
+       position < resolved_reflection->number_of_parameters();
+       ++position) {
+    if (auto shim_position = parameter_mapping_.at(position)) {
+      mt_assert(*shim_position < instruction->srcs_size());
+      parameter_registers.emplace(position, instruction->src(*shim_position));
+    }
+  }
+
+  return parameter_registers;
+}
 
 Shim::Shim(const Method* method) : method_(method) {}
 

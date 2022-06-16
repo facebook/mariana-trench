@@ -32,6 +32,16 @@
     "Landroid/content/Intent;.getBundleExtra:(Ljava/lang/String;)Landroid/os/Bundle;",
     "Landroid/content/Intent;.getExtras:()Landroid/os/Bundle;"
   ],
+  "Lcom/facebook/marianatrench/integrationtests/A;.api:(Ljava/lang/Object;)V" : 
+  [
+    "Lcom/facebook/marianatrench/integrationtests/ReflectionShims;.testMultipleCallsites:(Z)V",
+    "Lcom/facebook/marianatrench/integrationtests/ReflectionShims;.testSimple:()V"
+  ],
+  "Lcom/facebook/marianatrench/integrationtests/B;.api:(Ljava/lang/Object;)V" : 
+  [
+    "Lcom/facebook/marianatrench/integrationtests/ReflectionShims;.testMultipleCallsites:(Z)V",
+    "Lcom/facebook/marianatrench/integrationtests/ReflectionShims;.testSimpleIssue:()V"
+  ],
   "Lcom/facebook/marianatrench/integrationtests/FragmentActivity;.<init>:()V" : 
   [
     "Lcom/facebook/marianatrench/integrationtests/Shims;.testFragmentInstance:()V"

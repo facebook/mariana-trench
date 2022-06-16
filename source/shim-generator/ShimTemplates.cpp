@@ -110,6 +110,8 @@ std::optional<ShimReflectionTarget> try_make_shim_reflection_target(
     const TargetTemplate& target_template,
     const ShimMethod& shim_method) {
   const auto& receiver_info = target_template.receiver_info();
+  mt_assert(receiver_info.kind() == ReceiverInfo::Kind::REFLECTION);
+
   const auto* receiver_type = receiver_info.receiver_dex_type(shim_method);
   if (!receiver_type) {
     WARNING(
@@ -133,16 +135,19 @@ std::optional<ShimReflectionTarget> try_make_shim_reflection_target(
     return std::nullopt;
   }
 
-  auto instantiated_parameter_mapping =
-      target_template.parameter_map().instantiate(
-          method_spec->name->str(),
-          method_spec->cls,
-          method_spec->proto,
-          /* shim_target_is_static */ false,
-          shim_method);
+  auto instantiated_parameter_map = target_template.parameter_map().instantiate(
+      method_spec->name->str(),
+      method_spec->cls,
+      method_spec->proto,
+      /* shim_target_is_static */ false,
+      shim_method);
+
+  // Include "this" as argument 0
+  instantiated_parameter_map.insert(
+      /* this */ 0, std::get<ShimParameterPosition>(receiver_info.receiver()));
 
   return ShimReflectionTarget(
-      *method_spec, std::move(instantiated_parameter_mapping));
+      *method_spec, std::move(instantiated_parameter_map));
 }
 
 } // namespace

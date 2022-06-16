@@ -341,6 +341,11 @@
   },
   "Lcom/facebook/marianatrench/integrationtests/ReflectionShims;.testMultipleCallsites:(Z)V" : 
   {
+    "artificial" : 
+    [
+      "Lcom/facebook/marianatrench/integrationtests/A;.api:(Ljava/lang/Object;)V",
+      "Lcom/facebook/marianatrench/integrationtests/B;.api:(Ljava/lang/Object;)V"
+    ],
     "static" : 
     [
       "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;",
@@ -357,6 +362,10 @@
   },
   "Lcom/facebook/marianatrench/integrationtests/ReflectionShims;.testSimple:()V" : 
   {
+    "artificial" : 
+    [
+      "Lcom/facebook/marianatrench/integrationtests/A;.api:(Ljava/lang/Object;)V"
+    ],
     "static" : 
     [
       "Lcom/facebook/marianatrench/integrationtests/ReflectionShims;.reflect:(Ljava/lang/Class;)V"
@@ -364,6 +373,10 @@
   },
   "Lcom/facebook/marianatrench/integrationtests/ReflectionShims;.testSimpleIssue:()V" : 
   {
+    "artificial" : 
+    [
+      "Lcom/facebook/marianatrench/integrationtests/B;.api:(Ljava/lang/Object;)V"
+    ],
     "static" : 
     [
       "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;",

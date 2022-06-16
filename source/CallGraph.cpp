@@ -283,6 +283,148 @@ const Method* get_callee_from_resolved_call(
   return callee;
 }
 
+void process_shim_target(
+    const Method* caller,
+    const Method* callee,
+    const ShimTarget& shim_target,
+    const IRInstruction* instruction,
+    const Methods& method_factory,
+    const Types& types,
+    const Overrides& override_factory,
+    const ClassHierarchies& class_hierarchies,
+    const Features& features,
+    std::unordered_map<std::string, TextualOrderIndex>&
+        sink_textual_order_index,
+    std::vector<ArtificialCallee>& artificial_callees) {
+  const auto* method = shim_target.method();
+  mt_assert(method != nullptr);
+
+  auto receiver_register = shim_target.receiver_register(instruction);
+  auto parameter_registers = shim_target.parameter_registers(instruction);
+
+  auto call_index = update_index(sink_textual_order_index, method->signature());
+  if (method->is_static()) {
+    artificial_callees.push_back(ArtificialCallee{
+        /* call_target */ CallTarget::static_call(
+            instruction, method, call_index),
+        /* parameter_registers */ parameter_registers,
+        /* features */
+        FeatureSet{features.get_via_shim_feature(callee)},
+    });
+    return;
+  }
+
+  const auto* receiver_type = method->get_class();
+  // Try to refine the virtual call using the runtime type.
+  if (receiver_register) {
+    auto register_type =
+        types.register_type(caller, instruction, *receiver_register);
+    receiver_type = register_type ? register_type : receiver_type;
+  }
+
+  auto dex_runtime_method = resolve_method(
+      type_class(receiver_type),
+      method->dex_method()->get_name(),
+      method->get_proto(),
+      MethodSearch::Virtual);
+
+  if (!dex_runtime_method) {
+    WARNING(
+        1, "Could not resolve method for artificial call to: {}", show(method));
+    return;
+  }
+
+  method = method_factory.get(dex_runtime_method);
+
+  artificial_callees.push_back(ArtificialCallee{
+      /* call_target */ CallTarget::virtual_call(
+          instruction,
+          method,
+          call_index,
+          receiver_type,
+          class_hierarchies,
+          override_factory),
+      /* parameter_registers */ parameter_registers,
+      /* features */
+      FeatureSet{features.get_via_shim_feature(callee)},
+  });
+}
+
+void process_shim_reflection(
+    const Method* caller,
+    const Method* callee,
+    const ShimReflectionTarget& shim_reflection,
+    const IRInstruction* instruction,
+    const Methods& method_factory,
+    const Types& types,
+    const Overrides& override_factory,
+    const ClassHierarchies& class_hierarchies,
+    const Features& features,
+    std::unordered_map<std::string, TextualOrderIndex>&
+        sink_textual_order_index,
+    std::vector<ArtificialCallee>& artificial_callees) {
+  const auto& method_spec = shim_reflection.method_spec();
+  mt_assert(
+      method_spec.cls == type::java_lang_Class() &&
+      method_spec.name != nullptr && method_spec.proto != nullptr);
+
+  auto receiver_register = shim_reflection.receiver_register(instruction);
+  if (!receiver_register) {
+    ERROR(
+        1,
+        "Missing parameter mapping for receiver in shim: {} defined for method {}",
+        shim_reflection,
+        callee->show());
+    return;
+  }
+
+  const auto* reflection_type =
+      types.register_const_class_type(caller, instruction, *receiver_register);
+
+  if (reflection_type == nullptr) {
+    WARNING(
+        1,
+        "Could not resolve reflected type for shim: {} in caller: {}",
+        shim_reflection,
+        caller->show());
+    return;
+  }
+
+  auto dex_reflection_method = resolve_method(
+      type_class(reflection_type),
+      method_spec.name,
+      method_spec.proto,
+      MethodSearch::Virtual);
+
+  if (!dex_reflection_method) {
+    WARNING(
+        1,
+        "Could not resolve method for artificial call to: {} in caller: {}",
+        show(dex_reflection_method),
+        caller->show());
+    return;
+  }
+
+  const auto* reflection_method = method_factory.get(dex_reflection_method);
+  auto parameter_registers =
+      shim_reflection.parameter_registers(reflection_method, instruction);
+  auto call_index =
+      update_index(sink_textual_order_index, reflection_method->signature());
+
+  artificial_callees.push_back(ArtificialCallee{
+      /* call_target */ CallTarget::virtual_call(
+          instruction,
+          reflection_method,
+          call_index,
+          reflection_type,
+          class_hierarchies,
+          override_factory),
+      /* parameter_registers */ parameter_registers,
+      /* features */
+      FeatureSet{features.get_via_shim_feature(callee)},
+  });
+}
+
 std::vector<ArtificialCallee> shim_artificial_callees(
     const Method* caller,
     const Method* callee,
@@ -298,63 +440,33 @@ std::vector<ArtificialCallee> shim_artificial_callees(
   std::vector<ArtificialCallee> artificial_callees;
 
   for (const auto& shim_target : shim.targets()) {
-    const auto* method = shim_target.method();
-    mt_assert(method != nullptr);
+    process_shim_target(
+        caller,
+        callee,
+        shim_target,
+        instruction,
+        method_factory,
+        types,
+        override_factory,
+        class_hierarchies,
+        features,
+        sink_textual_order_index,
+        artificial_callees);
+  }
 
-    auto receiver_register = shim_target.receiver_register(instruction);
-    auto parameter_registers = shim_target.parameter_registers(instruction);
-
-    auto call_index =
-        update_index(sink_textual_order_index, method->signature());
-    if (method->is_static()) {
-      artificial_callees.push_back(ArtificialCallee{
-          /* call_target */ CallTarget::static_call(
-              instruction, method, call_index),
-          /* parameter_registers */ parameter_registers,
-          /* features */
-          FeatureSet{features.get_via_shim_feature(callee)},
-      });
-      continue;
-    }
-
-    const auto* receiver_type = method->get_class();
-    // Try to refine the virtual call using the runtime type.
-    if (receiver_register) {
-      auto register_type =
-          types.register_type(caller, instruction, *receiver_register);
-      receiver_type = register_type ? register_type : receiver_type;
-    }
-
-    const DexClass* receiver_class = type_class(receiver_type);
-
-    auto dex_runtime_method = resolve_method(
-        receiver_class,
-        method->dex_method()->get_name(),
-        method->get_proto(),
-        MethodSearch::Virtual);
-
-    if (!dex_runtime_method) {
-      WARNING(
-          1,
-          "Could not resolve method for artificial call to: {}",
-          show(method));
-      continue;
-    }
-
-    method = method_factory.get(dex_runtime_method);
-
-    artificial_callees.push_back(ArtificialCallee{
-        /* call_target */ CallTarget::virtual_call(
-            instruction,
-            method,
-            call_index,
-            receiver_type,
-            class_hierarchies,
-            override_factory),
-        /* parameter_registers */ parameter_registers,
-        /* features */
-        FeatureSet{features.get_via_shim_feature(callee)},
-    });
+  for (const auto& shim_reflection : shim.reflections()) {
+    process_shim_reflection(
+        caller,
+        callee,
+        shim_reflection,
+        instruction,
+        method_factory,
+        types,
+        override_factory,
+        class_hierarchies,
+        features,
+        sink_textual_order_index,
+        artificial_callees);
   }
 
   return artificial_callees;

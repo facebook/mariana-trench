@@ -111,6 +111,17 @@ class ShimReflectionTarget {
       DexMethodSpec method_spec,
       ShimParameterMapping parameter_mapping);
 
+  const DexMethodSpec& method_spec() const {
+    return method_spec_;
+  }
+
+  std::optional<Register> receiver_register(
+      const IRInstruction* instruction) const;
+
+  std::unordered_map<ParameterPosition, Register> parameter_registers(
+      const Method* resolved_reflection,
+      const IRInstruction* instruction) const;
+
   friend std::ostream& operator<<(
       std::ostream& out,
       const ShimReflectionTarget& shim_reflection_target);
