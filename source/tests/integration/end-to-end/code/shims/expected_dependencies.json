@@ -99,6 +99,7 @@
   ],
   "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V" : 
   [
+    "Lcom/facebook/marianatrench/integrationtests/B;.api:(Ljava/lang/Object;)V",
     "Lcom/facebook/marianatrench/integrationtests/FragmentActivity;.onCreate:()V",
     "Lcom/facebook/marianatrench/integrationtests/HandlerOne;.handleMessage:(Ljava/lang/Object;)V",
     "Lcom/facebook/marianatrench/integrationtests/HandlerTwo;.handleMessage:(Ljava/lang/Object;)V",
@@ -109,6 +110,9 @@
   [
     "Lcom/facebook/marianatrench/integrationtests/FragmentActivity;.onCreate:()V",
     "Lcom/facebook/marianatrench/integrationtests/HandlerTwo;.handleMessage:(Ljava/lang/Object;)V",
+    "Lcom/facebook/marianatrench/integrationtests/ReflectionShims;.testMultipleCallsites:(Z)V",
+    "Lcom/facebook/marianatrench/integrationtests/ReflectionShims;.testMultipleWithIssueFN:(Z)V",
+    "Lcom/facebook/marianatrench/integrationtests/ReflectionShims;.testSimpleIssue:()V",
     "Lcom/facebook/marianatrench/integrationtests/Shims;.testDirectShimTarget:()V",
     "Lcom/facebook/marianatrench/integrationtests/Shims;.testDropArgumentDefined:()V",
     "Lcom/facebook/marianatrench/integrationtests/Shims;.testDropArgumentInferred:()V",
@@ -139,6 +143,21 @@
   "Lcom/facebook/marianatrench/integrationtests/ParameterMapping;.inferred:(Lcom/facebook/marianatrench/integrationtests/ShimTarget;Ljava/lang/Object;)V" : 
   [
     "Lcom/facebook/marianatrench/integrationtests/Shims;.testDropArgumentInferred:()V"
+  ],
+  "Lcom/facebook/marianatrench/integrationtests/ReflectionShims;.getKlass:()Ljava/lang/Class;" : 
+  [
+    "Lcom/facebook/marianatrench/integrationtests/ReflectionShims;.testHop:()V"
+  ],
+  "Lcom/facebook/marianatrench/integrationtests/ReflectionShims;.reflect:(Ljava/lang/Class;)V" : 
+  [
+    "Lcom/facebook/marianatrench/integrationtests/ReflectionShims;.testHop:()V",
+    "Lcom/facebook/marianatrench/integrationtests/ReflectionShims;.testSimple:()V"
+  ],
+  "Lcom/facebook/marianatrench/integrationtests/ReflectionShims;.reflectWithArgument:(Ljava/lang/Class;Ljava/lang/Object;)V" : 
+  [
+    "Lcom/facebook/marianatrench/integrationtests/ReflectionShims;.testMultipleCallsites:(Z)V",
+    "Lcom/facebook/marianatrench/integrationtests/ReflectionShims;.testMultipleWithIssueFN:(Z)V",
+    "Lcom/facebook/marianatrench/integrationtests/ReflectionShims;.testSimpleIssue:()V"
   ],
   "Lcom/facebook/marianatrench/integrationtests/ShimTarget;.<init>:()V" : 
   [
@@ -200,6 +219,8 @@
     "Lcom/facebook/auth/datastore/LoggedInUserAuthDataStore;.<init>:()V",
     "Lcom/facebook/base/activity/FragmentBaseActivityUtil;.<init>:()V",
     "Lcom/facebook/content/SecureContextHelper;.<init>:()V",
+    "Lcom/facebook/marianatrench/integrationtests/A;.<init>:()V",
+    "Lcom/facebook/marianatrench/integrationtests/B;.<init>:()V",
     "Lcom/facebook/marianatrench/integrationtests/FragmentTest;.<init>:()V",
     "Lcom/facebook/marianatrench/integrationtests/Handler;.<init>:()V",
     "Lcom/facebook/marianatrench/integrationtests/Messenger;.<init>:()V",
@@ -209,6 +230,7 @@
     "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;",
     "Lcom/facebook/marianatrench/integrationtests/ParameterMapping;.<init>:()V",
     "Lcom/facebook/marianatrench/integrationtests/ParameterMapping;.<init>:(Lcom/facebook/marianatrench/integrationtests/Handler;Lcom/facebook/marianatrench/integrationtests/Handler;Ljava/lang/Object;Ljava/lang/Object;)V",
+    "Lcom/facebook/marianatrench/integrationtests/ReflectionShims;.<init>:()V",
     "Lcom/facebook/marianatrench/integrationtests/ShimTarget;.<init>:()V",
     "Lcom/facebook/marianatrench/integrationtests/Shims;.<init>:()V",
     "Lcom/facebook/marianatrench/integrationtests/Shims;.testParameterMappingIssue:()Lcom/facebook/marianatrench/integrationtests/ParameterMapping;",

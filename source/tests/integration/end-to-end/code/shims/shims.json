@@ -118,5 +118,48 @@
         }
       ]
     }
+  },
+  {
+    "find": "methods",
+    "where": [
+      {
+        "constraint": "is_static",
+        "value": true
+      },
+      {
+        "constraint": "signature",
+        "pattern": "Lcom/facebook/marianatrench/integrationtests/ReflectionShims;\\.reflect:\\(Ljava/lang/Class;\\)V"
+      }
+    ],
+    "shim": {
+      "callees": [
+        {
+          "signature": "%reflected_type_of:Argument(0)%.api:(Ljava/lang/Object;)V"
+        }
+      ]
+    }
+  },
+  {
+    "find": "methods",
+    "where": [
+      {
+        "constraint": "is_static",
+        "value": true
+      },
+      {
+        "constraint": "signature",
+        "pattern": "Lcom/facebook/marianatrench/integrationtests/ReflectionShims;\\.reflectWithArgument:\\(Ljava/lang/Class;Ljava/lang/Object;\\)V"
+      }
+    ],
+    "shim": {
+      "callees": [
+        {
+          "signature": "%reflected_type_of:Argument(0)%.api:(Ljava/lang/Object;)V",
+          "parameters_map": {
+            "Argument(1)": "Argument(1)"
+          }
+        }
+      ]
+    }
   }
 ]

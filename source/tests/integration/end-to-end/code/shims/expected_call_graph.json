@@ -196,6 +196,27 @@
       "Ljava/lang/Object;.<init>:()V"
     ]
   },
+  "Lcom/facebook/marianatrench/integrationtests/A;.<init>:()V" : 
+  {
+    "static" : 
+    [
+      "Ljava/lang/Object;.<init>:()V"
+    ]
+  },
+  "Lcom/facebook/marianatrench/integrationtests/B;.<init>:()V" : 
+  {
+    "static" : 
+    [
+      "Ljava/lang/Object;.<init>:()V"
+    ]
+  },
+  "Lcom/facebook/marianatrench/integrationtests/B;.api:(Ljava/lang/Object;)V" : 
+  {
+    "static" : 
+    [
+      "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V"
+    ]
+  },
   "Lcom/facebook/marianatrench/integrationtests/FragmentActivity;.<init>:()V" : 
   {
     "static" : 
@@ -301,6 +322,52 @@
     "static" : 
     [
       "Ljava/lang/Object;.<init>:()V"
+    ]
+  },
+  "Lcom/facebook/marianatrench/integrationtests/ReflectionShims;.<init>:()V" : 
+  {
+    "static" : 
+    [
+      "Ljava/lang/Object;.<init>:()V"
+    ]
+  },
+  "Lcom/facebook/marianatrench/integrationtests/ReflectionShims;.testHop:()V" : 
+  {
+    "static" : 
+    [
+      "Lcom/facebook/marianatrench/integrationtests/ReflectionShims;.getKlass:()Ljava/lang/Class;",
+      "Lcom/facebook/marianatrench/integrationtests/ReflectionShims;.reflect:(Ljava/lang/Class;)V"
+    ]
+  },
+  "Lcom/facebook/marianatrench/integrationtests/ReflectionShims;.testMultipleCallsites:(Z)V" : 
+  {
+    "static" : 
+    [
+      "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;",
+      "Lcom/facebook/marianatrench/integrationtests/ReflectionShims;.reflectWithArgument:(Ljava/lang/Class;Ljava/lang/Object;)V"
+    ]
+  },
+  "Lcom/facebook/marianatrench/integrationtests/ReflectionShims;.testMultipleWithIssueFN:(Z)V" : 
+  {
+    "static" : 
+    [
+      "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;",
+      "Lcom/facebook/marianatrench/integrationtests/ReflectionShims;.reflectWithArgument:(Ljava/lang/Class;Ljava/lang/Object;)V"
+    ]
+  },
+  "Lcom/facebook/marianatrench/integrationtests/ReflectionShims;.testSimple:()V" : 
+  {
+    "static" : 
+    [
+      "Lcom/facebook/marianatrench/integrationtests/ReflectionShims;.reflect:(Ljava/lang/Class;)V"
+    ]
+  },
+  "Lcom/facebook/marianatrench/integrationtests/ReflectionShims;.testSimpleIssue:()V" : 
+  {
+    "static" : 
+    [
+      "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;",
+      "Lcom/facebook/marianatrench/integrationtests/ReflectionShims;.reflectWithArgument:(Ljava/lang/Class;Ljava/lang/Object;)V"
     ]
   },
   "Lcom/facebook/marianatrench/integrationtests/ShimTarget;.<init>:()V" : 
