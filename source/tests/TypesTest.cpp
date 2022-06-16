@@ -10,12 +10,11 @@
 
 #include <gtest/gtest.h>
 
-#include "ReachableClasses.h"
-
 #include <Creators.h>
 #include <DexStore.h>
 #include <IRAssembler.h>
 #include <RedexContext.h>
+#include <TypeUtil.h>
 
 #include <mariana-trench/Dependencies.h>
 #include <mariana-trench/Redex.h>
@@ -85,7 +84,8 @@ Context test_types(
 
 std::unordered_map<int, const DexType*> register_types_for_method(
     const Context& context,
-    const Method* method) {
+    const Method* method,
+    bool resolve_reflection = false) {
   auto* code = method->get_code();
   mt_assert(code->cfg_built());
 
@@ -96,6 +96,12 @@ std::unordered_map<int, const DexType*> register_types_for_method(
       for (auto register_id : instruction->srcs()) {
         auto* dex_type =
             context.types->register_type(method, instruction, register_id);
+        if (resolve_reflection && dex_type == type::java_lang_Class()) {
+          auto* resolved_dex_type = context.types->register_const_class_type(
+              method, instruction, register_id);
+          dex_type =
+              resolved_dex_type != nullptr ? resolved_dex_type : dex_type;
+        }
         if (dex_type) {
           register_types[register_id] = dex_type;
         }
@@ -302,4 +308,102 @@ TEST_F(TypesTest, GlobalInvokeVirtualTypes) {
   EXPECT_EQ(
       entry_register_types.at(1),
       DexType::make_type(DexString::make_string("LCaller;")));
+}
+
+TEST_F(TypesTest, InvokeWithLocalReflectionArgument) {
+  Scope scope;
+
+  redex::create_class(scope, "LReflect;");
+  auto dex_methods = redex::create_methods(
+      scope,
+      "LCaller;",
+      {
+          R"(
+            (method (private) "LCaller;.reflect:(Ljava/lang/Class;)V"
+            (
+              (return-void)
+            )
+            ))",
+          R"(
+          (method (public) "LCaller;.caller:()V"
+            (
+              (load-param-object v0)
+
+              (const-class "LReflect;")
+              (move-result-pseudo-object v1)
+
+              (invoke-direct (v0 v1) "LCaller;.reflect:(Ljava/lang/Class;)V")
+              (return-void)
+            )
+          )
+      )"});
+
+  auto context = test_types(scope);
+  auto* method = context.methods->get(dex_methods[1]);
+  auto register_types =
+      register_types_for_method(context, method, /* resolve_reflection */ true);
+
+  EXPECT_EQ(
+      register_types.at(0),
+      DexType::make_type(DexString::make_string("LCaller;")));
+  EXPECT_EQ(
+      register_types.at(1),
+      DexType::make_type(DexString::make_string("LReflect;")));
+}
+
+TEST_F(TypesTest, InvokeWithHopReflectionArgument) {
+  Scope scope;
+
+  redex::create_class(scope, "LReflect;");
+  redex::create_method(
+      scope,
+      "LCallee;",
+      R"(
+            (method (public) "LCallee;.callee:()Ljava/lang/Class;"
+            (
+              (load-param-object v0)
+
+              (const-class "LReflect;")
+              (move-result-pseudo-object v1)
+              (return-object v1)
+            )
+            ))");
+
+  auto dex_caller = redex::create_method(
+      scope,
+      "LCaller;",
+      R"(
+          (method (public) "LCaller;.caller:()V"
+            (
+              (load-param-object v0)
+
+              (new-instance "LCallee;")
+              (move-result-object v1)
+
+              (invoke-virtual (v1) "LCallee;.callee:()Ljava/lang/Class;")
+              (move-result-pseudo-object v2)
+
+              (invoke-direct (v0 v2) "LCaller;.reflect:(Ljava/lang/Class;)V")
+              (return-void)
+            )
+          )
+      )");
+
+  auto context = test_types(scope);
+  auto register_types_caller = register_types_for_method(
+      context,
+      context.methods->get(dex_caller),
+      /* resolve_reflection */ true);
+  EXPECT_EQ(register_types_caller.size(), 3);
+  EXPECT_EQ(
+      register_types_caller.at(0),
+      DexType::make_type(DexString::make_string("LCaller;")));
+  EXPECT_EQ(
+      register_types_caller.at(1),
+      DexType::make_type(DexString::make_string("LCallee;")));
+  // Need interprocedural reflection analysis to resolve the type of `v2` to
+  // `LReflect;`
+  EXPECT_EQ(
+      register_types_caller.at(2),
+      DexType::make_type(DexString::make_string("Ljava/lang/Class;")));
 }

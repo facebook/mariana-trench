@@ -751,7 +751,7 @@ TEST_F(DependenciesTest, ArtificialCalleesInvoke) {
        )
       ))",
           R"(
-      (method (public) "LAnonymous$1;.anonymous_two:()V"
+      (method (public) "LAnonymous$1;.anonymous_two:(LData;)V"
        (
         (load-param-object v0)
         (load-param-object v1)
@@ -868,7 +868,7 @@ TEST_F(DependenciesTest, ArtificialCalleesIput) {
        )
       ))",
           R"(
-      (method (public) "LAnonymous$1;.anonymous_two:()V"
+      (method (public) "LAnonymous$1;.anonymous_two:(LData;)V"
        (
         (load-param-object v0)
         (load-param-object v1)

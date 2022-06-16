@@ -11,6 +11,7 @@
 
 #include <DexClass.h>
 #include <GlobalTypeAnalyzer.h>
+#include <ReflectionAnalysis.h>
 #include <TypeInference.h>
 
 #include <mariana-trench/Access.h>
@@ -37,6 +38,10 @@ class Types final {
   ~Types() = default;
 
   const TypeEnvironment& environment(
+      const Method* method,
+      const IRInstruction* instruction) const;
+
+  const TypeEnvironment& const_class_environment(
       const Method* method,
       const IRInstruction* instruction) const;
 
@@ -68,8 +73,21 @@ class Types final {
   const DexType* MT_NULLABLE
   receiver_type(const Method* method, const IRInstruction* instruction) const;
 
+  /**
+   * Get the resolved DexType for reflection arguments.
+   *
+   * Returns `nullptr` if we could not infer the type.
+   */
+  const DexType* MT_NULLABLE register_const_class_type(
+      const Method* method,
+      const IRInstruction* instruction,
+      Register register_id) const;
+
  private:
   const TypeEnvironments& environments(const Method* method) const;
+
+  const TypeEnvironments& const_class_environments(const Method* method) const;
+
   std::unique_ptr<TypeEnvironments> infer_local_types_for_method(
       const Method* method) const;
 
@@ -79,6 +97,8 @@ class Types final {
  private:
   mutable UniquePointerConcurrentMap<const Method*, TypeEnvironments>
       environments_;
+  mutable UniquePointerConcurrentMap<const DexMethod*, TypeEnvironments>
+      const_class_environments_;
   std::unique_ptr<type_analyzer::global::GlobalTypeAnalyzer>
       global_type_analyzer_;
 };
