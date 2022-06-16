@@ -211,50 +211,6 @@ ShimTarget::ShimTarget(
     ShimParameterMapping parameter_mapping)
     : call_target_(method), parameter_mapping_(std::move(parameter_mapping)) {}
 
-std::optional<ShimTarget> ShimTarget::from_json(
-    const Json::Value& value,
-    const Methods* methods) {
-  if (!value.isMember("signature")) {
-    ERROR(1, "Invalid shim definition. callee must have `signature`");
-    return std::nullopt;
-  }
-
-  auto signature = JsonValidation::string(value, "signature");
-  auto* call_target = methods->get(signature);
-
-  if (call_target == nullptr) {
-    WARNING(1, "Provided method signature not found: `{}`", signature);
-    return std::nullopt;
-  }
-
-  auto parameters_map = ShimParameterMapping::from_json(
-      JsonValidation::null_or_object(value, "parameters_map"));
-
-  return ShimTarget(call_target, std::move(parameters_map));
-}
-
-std::optional<ShimTarget> ShimTarget::instantiate(
-    const ShimMethod& shim_method) const {
-  auto parameter_mapping = parameter_mapping_.instantiate(
-      call_target_->get_name(),
-      call_target_->get_class(),
-      call_target_->get_proto(),
-      call_target_->is_static(),
-      shim_method);
-
-  // Require non-static methods to have a receiver.
-  if (!call_target_->is_static() && !parameter_mapping.at(0)) {
-    WARNING(
-        1,
-        "Shim method `{}` missing `this` argument required for non-static shim callee `{}`.",
-        shim_method.method()->show(),
-        show(call_target_));
-    return std::nullopt;
-  }
-
-  return ShimTarget(call_target_, std::move(parameter_mapping));
-}
-
 std::optional<Register> ShimTarget::receiver_register(
     const IRInstruction* instruction) const {
   if (call_target_->is_static()) {

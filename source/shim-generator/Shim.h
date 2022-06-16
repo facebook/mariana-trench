@@ -82,12 +82,6 @@ class ShimTarget {
       const Method* method,
       ShimParameterMapping parameter_mapping);
 
-  static std::optional<ShimTarget> from_json(
-      const Json::Value& value,
-      const Methods* methods);
-
-  std::optional<ShimTarget> instantiate(const ShimMethod& shim_method) const;
-
   const Method* method() const {
     return call_target_;
   }
