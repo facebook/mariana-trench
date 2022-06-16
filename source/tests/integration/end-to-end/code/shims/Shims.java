@@ -8,6 +8,7 @@
 package com.facebook.marianatrench.integrationtests;
 
 import android.app.Activity;
+import android.os.Bundle;
 
 class Handler {
   void handleMessage(Object o) {}
@@ -45,18 +46,23 @@ class FragmentActivity extends Activity {
   FragmentActivity() {}
 
   @Override
-  protected void onCreate() {
-    Origin.sink(Origin.source());
+  protected void onCreate(Bundle savedInstanceState) {}
+
+  @Override
+  public void onStart() {}
+
+  public void onTest(Object o) {
+    Origin.sink(o);
   }
 }
 
 class FragmentTest {
-  public void add(Class<? extends FragmentActivity> fragmentClass) {
-    // Expect artificial call: <fragmentClass instance>.onActivityCreate()
+  public void add(Class<? extends FragmentActivity> fragmentClass, Object o) {
+    // Expect artificial call: <fragmentClass instance>.activity_lifecycle_wrapper()
   }
 
-  public void add(Activity activity) {
-    // Expect artificial call: activity.onCreate()
+  public void add(Activity activity, Object o) {
+    // Expect artificial call: activity.activity_lifecycle_wrapper()
   }
 }
 
@@ -121,13 +127,12 @@ public class Shims {
 
   static void testFragmentInstance() {
     FragmentTest ft = new FragmentTest();
-    ft.add(new FragmentActivity());
+    ft.add(new FragmentActivity(), Origin.source());
   }
 
   static void testFragmentReflection() {
     FragmentTest ft = new FragmentTest();
-    // FN: Type of CONST_CLASS is not stored in TypeEnvironment.
-    ft.add(FragmentActivity.class);
+    ft.add(FragmentActivity.class, Origin.source());
   }
 
   static ParameterMapping testParameterMappingIssue() {

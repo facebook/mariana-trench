@@ -27,14 +27,31 @@
     "where": [
       {
         "constraint": "signature",
-        "pattern": "Lcom/facebook/marianatrench/integrationtests/FragmentTest;\\.add:\\(Landroid/app/Activity;\\)V"
+        "pattern": "Lcom/facebook/marianatrench/integrationtests/FragmentTest;\\.add:\\(Landroid/app/Activity;.*"
       }
     ],
     "shim": {
       "callees": [
         {
           "lifecycle_of": "%type_of:Argument(1)%",
-          "method_name": "fragment_lifecycle_wrapper"
+          "method_name": "activity_lifecycle_wrapper"
+        }
+      ]
+    }
+  },
+  {
+    "find": "methods",
+    "where": [
+      {
+        "constraint": "signature",
+        "pattern": "Lcom/facebook/marianatrench/integrationtests/FragmentTest;\\.add:\\(Ljava/lang/Class;.*"
+      }
+    ],
+    "shim": {
+      "callees": [
+        {
+          "lifecycle_of": "%reflected_type_of:Argument(1)%",
+          "method_name": "activity_lifecycle_wrapper"
         }
       ]
     }

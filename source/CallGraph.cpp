@@ -425,6 +425,73 @@ void process_shim_reflection(
   });
 }
 
+void process_shim_lifecycle(
+    const Method* caller,
+    const Method* callee,
+    const ShimLifecycleTarget& shim_lifecycle,
+    const IRInstruction* instruction,
+    const Methods& method_factory,
+    const Types& types,
+    const Overrides& override_factory,
+    const ClassHierarchies& class_hierarchies,
+    const Features& features,
+    std::unordered_map<std::string, TextualOrderIndex>&
+        sink_textual_order_index,
+    std::vector<ArtificialCallee>& artificial_callees) {
+  const auto& method_name = shim_lifecycle.method_name();
+  auto receiver_register = shim_lifecycle.receiver_register(instruction);
+
+  const auto* receiver_type = shim_lifecycle.is_reflection()
+      ? types.register_const_class_type(caller, instruction, receiver_register)
+      : types.register_type(caller, instruction, receiver_register);
+  if (receiver_type == nullptr) {
+    WARNING(
+        1,
+        "Could not resolve receiver type for shim: {} at instruction: {} in caller: {}",
+        shim_lifecycle,
+        show(instruction),
+        caller->show());
+    return;
+  }
+
+  auto result = std::find_if(
+      method_factory.begin(),
+      method_factory.end(),
+      [&method_name, receiver_type](const Method* method) {
+        return method->get_class()->str() == receiver_type->str() &&
+            method->get_name() == method_name;
+      });
+  if (result == method_factory.end()) {
+    WARNING(
+        1,
+        "Specified lifecycle method not found: `{}` for class: `{}` in caller: {}",
+        method_name,
+        receiver_type->str(),
+        caller->show());
+
+    return;
+  }
+  const Method* lifecycle_method = *result;
+
+  auto parameter_registers =
+      shim_lifecycle.parameter_registers(callee, lifecycle_method, instruction);
+  auto call_index =
+      update_index(sink_textual_order_index, lifecycle_method->signature());
+
+  artificial_callees.push_back(ArtificialCallee{
+      /* call_target */ CallTarget::virtual_call(
+          instruction,
+          lifecycle_method,
+          call_index,
+          receiver_type,
+          class_hierarchies,
+          override_factory),
+      /* parameter_registers */ parameter_registers,
+      /* features */
+      FeatureSet{features.get_via_shim_feature(callee)},
+  });
+}
+
 std::vector<ArtificialCallee> shim_artificial_callees(
     const Method* caller,
     const Method* callee,
@@ -459,6 +526,21 @@ std::vector<ArtificialCallee> shim_artificial_callees(
         caller,
         callee,
         shim_reflection,
+        instruction,
+        method_factory,
+        types,
+        override_factory,
+        class_hierarchies,
+        features,
+        sink_textual_order_index,
+        artificial_callees);
+  }
+
+  for (const auto& shim_lifecycle : shim.lifecycles()) {
+    process_shim_lifecycle(
+        caller,
+        callee,
+        shim_lifecycle,
         instruction,
         method_factory,
         types,

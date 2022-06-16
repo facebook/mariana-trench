@@ -286,6 +286,39 @@ ShimLifecycleTarget::ShimLifecycleTarget(
       receiver_position_(std::move(receiver_position)),
       is_reflection_(is_reflection) {}
 
+Register ShimLifecycleTarget::receiver_register(
+    const IRInstruction* instruction) const {
+  mt_assert(receiver_position_ < instruction->srcs_size());
+
+  return instruction->src(receiver_position_);
+}
+
+std::unordered_map<ParameterPosition, Register>
+ShimLifecycleTarget::parameter_registers(
+    const Method* callee,
+    const Method* lifecycle_method,
+    const IRInstruction* instruction) const {
+  std::unordered_map<ParameterPosition, Register> parameter_registers;
+
+  ShimMethod shim_method{callee};
+  auto parameter_mapping = infer_parameter_mapping(
+      lifecycle_method->get_class(),
+      lifecycle_method->get_proto(),
+      lifecycle_method->is_static(),
+      shim_method);
+
+  for (ParameterPosition position = 0;
+       position < lifecycle_method->number_of_parameters();
+       ++position) {
+    if (auto shim_position = parameter_mapping.at(position)) {
+      mt_assert(*shim_position < instruction->srcs_size());
+      parameter_registers.emplace(position, instruction->src(*shim_position));
+    }
+  }
+
+  return parameter_registers;
+}
+
 Shim::Shim(const Method* method) : method_(method) {}
 
 void Shim::add_target(ShimTargetVariant target) {

@@ -147,6 +147,13 @@ class ShimLifecycleTarget {
     return method_name_;
   }
 
+  Register receiver_register(const IRInstruction* instruction) const;
+
+  std::unordered_map<ParameterPosition, Register> parameter_registers(
+      const Method* callee,
+      const Method* lifecycle_method,
+      const IRInstruction* instruction) const;
+
   bool is_reflection() const {
     return is_reflection_;
   }
