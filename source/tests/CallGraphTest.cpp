@@ -261,6 +261,8 @@ TEST_F(CallGraphTest, ShimCallIndices) {
       /* return_type */ "V",
       /* super */ nullptr,
       /* is_static */ true);
+
+  // Note: shim is defined in file: tests/shims.json
   redex::create_void_method(
       scope, "LExample;", "methodToShim", /* parameter_types */ "LShimmed1;");
 

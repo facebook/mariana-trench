@@ -17,7 +17,8 @@
     "shim": {
       "callees": [
         {
-          "signature": "%type_of:Argument(1)%.handleMessage:(Ljava/lang/Object;)V"
+          "type_of": "Argument(1)",
+          "method_name": "handleMessage:(Ljava/lang/Object;)V"
         }
       ]
     }
@@ -33,8 +34,8 @@
     "shim": {
       "callees": [
         {
-          "lifecycle_of": "%type_of:Argument(1)%",
-          "method_name": "activity_lifecycle_wrapper"
+          "type_of": "Argument(1)",
+          "lifecycle_name": "activity_lifecycle_wrapper"
         }
       ]
     }
@@ -50,8 +51,8 @@
     "shim": {
       "callees": [
         {
-          "lifecycle_of": "%reflected_type_of:Argument(1)%",
-          "method_name": "activity_lifecycle_wrapper"
+          "reflected_type_of": "Argument(1)",
+          "lifecycle_name": "activity_lifecycle_wrapper"
         }
       ]
     }
@@ -74,7 +75,8 @@
     "shim": {
       "callees": [
         {
-          "signature": "%type_of:Argument(2)%.handleMessage:(Ljava/lang/Object;)V",
+          "type_of": "Argument(2)",
+          "method_name": "handleMessage:(Ljava/lang/Object;)V",
           "parameters_map": {
             "Argument(1)": "Argument(4)"
           }
@@ -93,7 +95,8 @@
     "shim": {
       "callees": [
         {
-          "signature": "%type_of:Argument(1)%.multipleArguments:(ILjava/lang/String;Ljava/lang/Object;)V"
+          "type_of": "Argument(1)",
+          "method_name": "multipleArguments:(ILjava/lang/String;Ljava/lang/Object;)V"
         }
       ]
     }
@@ -109,7 +112,8 @@
     "shim": {
       "callees": [
         {
-          "signature": "%type_of:Argument(1)%.multipleArguments:(ILjava/lang/String;Ljava/lang/Object;)V",
+          "type_of": "Argument(1)",
+          "method_name": "multipleArguments:(ILjava/lang/String;Ljava/lang/Object;)V",
           "parameters_map": {
             "Argument(3)": "Argument(2)"
           }
@@ -128,7 +132,8 @@
     "shim": {
       "callees": [
         {
-          "signature": "%static:Lcom/facebook/marianatrench/integrationtests/ShimTarget;%.staticMethod:(Ljava/lang/Object;)V",
+          "static": "Lcom/facebook/marianatrench/integrationtests/ShimTarget;",
+          "method_name": "staticMethod:(Ljava/lang/Object;)V",
           "parameters_map": {
             "Argument(0)": "Argument(1)"
           }
@@ -151,7 +156,8 @@
     "shim": {
       "callees": [
         {
-          "signature": "%reflected_type_of:Argument(0)%.api:(Ljava/lang/Object;)V"
+          "reflected_type_of": "Argument(0)",
+          "method_name": "api:(Ljava/lang/Object;)V"
         }
       ]
     }
@@ -171,7 +177,8 @@
     "shim": {
       "callees": [
         {
-          "signature": "%reflected_type_of:Argument(0)%.api:(Ljava/lang/Object;)V",
+          "reflected_type_of": "Argument(0)",
+          "method_name": "api:(Ljava/lang/Object;)V",
           "parameters_map": {
             "Argument(1)": "Argument(1)"
           }

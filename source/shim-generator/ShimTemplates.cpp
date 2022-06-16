@@ -26,28 +26,6 @@ namespace marianatrench {
 namespace shim {
 namespace {
 
-static const std::string k_shim_target_prefix = "type_of";
-static const std::string k_shim_reflection_target_prefix = "reflected_type_of";
-static const std::string k_shim_static_target_prefix = "static";
-
-static const re2::RE2 k_shim_target_placeholder(fmt::format(
-    "%({}|{}|{}):(.*)%\\.?",
-    k_shim_target_prefix,
-    k_shim_reflection_target_prefix,
-    k_shim_static_target_prefix));
-
-ReceiverInfo::Kind string_to_receiver_kind(const std::string& kind) {
-  if (kind == k_shim_target_prefix) {
-    return ReceiverInfo::Kind::INSTANCE;
-  } else if (kind == k_shim_static_target_prefix) {
-    return ReceiverInfo::Kind::STATIC;
-  } else if (kind == k_shim_reflection_target_prefix) {
-    return ReceiverInfo::Kind::REFLECTION;
-  } else {
-    mt_unreachable();
-  }
-}
-
 std::optional<ShimTarget> try_make_shim_target(
     const TargetTemplate& target_template,
     const Methods* methods,
@@ -182,32 +160,28 @@ ReceiverInfo::ReceiverInfo(Kind kind, ShimParameterPosition position)
 ReceiverInfo::ReceiverInfo(Kind kind, std::string type)
     : kind_(kind), receiver_(std::move(type)) {}
 
-ReceiverInfo ReceiverInfo::from_json(
-    const Json::Value& value,
-    const std::string& field) {
-  std::string signature = JsonValidation::string(value, field);
-
-  std::string kind_string;
-  std::string receiver;
-  if (!re2::RE2::PartialMatch(
-          signature, k_shim_target_placeholder, &kind_string, &receiver)) {
-    throw JsonValidationError(
-        value,
-        field,
-        fmt::format(
-            "receiver placeholder format {}",
-            k_shim_target_placeholder.pattern()));
+ReceiverInfo ReceiverInfo::from_json(const Json::Value& callee) {
+  if (callee.isMember("static")) {
+    return ReceiverInfo{Kind::STATIC, JsonValidation::string(callee, "static")};
+  } else if (callee.isMember("type_of")) {
+    return ReceiverInfo{
+        Kind::INSTANCE,
+        static_cast<ShimParameterPosition>(
+            Root::from_json(JsonValidation::string(callee, "type_of"))
+                .parameter_position())};
+  } else if (callee.isMember("reflected_type_of")) {
+    return ReceiverInfo{
+        Kind::REFLECTION,
+        static_cast<ShimParameterPosition>(
+            Root::from_json(JsonValidation::string(callee, "reflected_type_of"))
+                .parameter_position())};
   }
 
-  auto kind = string_to_receiver_kind(kind_string);
-  if (kind == Kind::STATIC) {
-    return ReceiverInfo{kind, std::move(receiver)};
-  }
-
-  return ReceiverInfo{
-      kind,
-      static_cast<ShimParameterPosition>(
-          Root::from_json(receiver).parameter_position())};
+  throw JsonValidationError(
+      callee,
+      /* field */ std::nullopt,
+      /* expected */
+      "one of the keys:  static | type_of | reflected_type_of");
 }
 
 const DexType* MT_NULLABLE
@@ -250,25 +224,21 @@ TargetTemplate::TargetTemplate(
 TargetTemplate TargetTemplate::from_json(const Json::Value& callee) {
   auto parameter_map = ShimParameterMapping::from_json(
       JsonValidation::null_or_object(callee, "parameters_map"));
+  auto receiver_info = ReceiverInfo::from_json(callee);
 
-  if (callee.isMember("signature")) {
-    auto receiver_info = ReceiverInfo::from_json(callee, "signature");
-    std::string target = JsonValidation::string(callee, "signature");
-    // Remove placeholder for receiver.
-    re2::RE2::Replace(&target, k_shim_target_placeholder, "");
-
+  if (callee.isMember("method_name")) {
     return TargetTemplate{
         receiver_info.kind() == ReceiverInfo::Kind::REFLECTION
             ? Kind::REFLECTION
             : Kind::DEFINED,
-        std::move(target),
+        JsonValidation::string(callee, "method_name"),
         std::move(receiver_info),
         std::move(parameter_map)};
-  } else if (callee.isMember("lifecycle_of")) {
+  } else if (callee.isMember("lifecycle_name")) {
     return TargetTemplate{
         Kind::LIFECYCLE,
-        JsonValidation::string(callee, "method_name"),
-        ReceiverInfo::from_json(callee, "lifecycle_of"),
+        JsonValidation::string(callee, "lifecycle_name"),
+        std::move(receiver_info),
         std::move(parameter_map)};
   }
 
@@ -276,7 +246,7 @@ TargetTemplate TargetTemplate::from_json(const Json::Value& callee) {
       callee,
       /* field */ "callees",
       /* expected */
-      "each `callees` object to specify either `signature` or `lifecycle_of`");
+      "each `callees` object to specify either `method_name` or `lifecycle_name`");
 }
 
 std::optional<ShimTargetVariant> TargetTemplate::instantiate(

@@ -29,9 +29,7 @@ class ReceiverInfo {
   explicit ReceiverInfo(Kind type, std::string position);
 
  public:
-  static ReceiverInfo from_json(
-      const Json::Value& value,
-      const std::string& field);
+  static ReceiverInfo from_json(const Json::Value& callee);
 
   /* Find this receiver's DexType corresponding to ShimMethod */
   const DexType* MT_NULLABLE
