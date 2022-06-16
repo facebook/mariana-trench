@@ -73,7 +73,7 @@ class TargetTemplate final {
  public:
   static TargetTemplate from_json(const Json::Value& callee);
 
-  std::optional<ShimTarget> instantiate(
+  std::optional<ShimTargetVariant> instantiate(
       const Methods* methods,
       const ShimMethod& shim_method) const;
 

@@ -102,6 +102,8 @@ std::vector<const DexField*> create_fields(
     const DexType* super = nullptr,
     bool is_static = false);
 
+std::optional<DexMethodSpec> get_method_spec(std::string_view signature);
+
 } // namespace redex
 
 } // namespace marianatrench

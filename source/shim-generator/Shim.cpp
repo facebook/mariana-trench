@@ -6,11 +6,10 @@
  */
 
 #include <algorithm>
-#include <optional>
 
 #include <Show.h>
 
-#include <mariana-trench/Access.h>
+#include <mariana-trench/Assert.h>
 #include <mariana-trench/Log.h>
 #include <mariana-trench/Methods.h>
 #include <mariana-trench/shim-generator/Shim.h>
@@ -242,8 +241,23 @@ std::unordered_map<ParameterPosition, Register> ShimTarget::parameter_registers(
   return parameter_registers;
 }
 
-Shim::Shim(const Method* method, std::vector<ShimTarget> targets)
-    : method_(method), targets_(std::move(targets)) {}
+ShimReflectionTarget::ShimReflectionTarget(
+    DexMethodSpec method_spec,
+    ShimParameterMapping parameter_mapping)
+    : method_spec_(method_spec),
+      parameter_mapping_(std::move(parameter_mapping)) {}
+
+Shim::Shim(const Method* method) : method_(method) {}
+
+void Shim::add_target(ShimTargetVariant target) {
+  if (std::holds_alternative<ShimTarget>(target)) {
+    targets_.push_back(std::get<ShimTarget>(target));
+  } else if (std::holds_alternative<ShimReflectionTarget>(target)) {
+    reflections_.push_back(std::get<ShimReflectionTarget>(target));
+  } else {
+    mt_unreachable();
+  }
+}
 
 std::ostream& operator<<(std::ostream& out, const ShimParameterMapping& map) {
   out << "parameters_map={";
@@ -264,19 +278,40 @@ std::ostream& operator<<(std::ostream& out, const ShimTarget& shim_target) {
   return out << ")";
 }
 
+std::ostream& operator<<(
+    std::ostream& out,
+    const ShimReflectionTarget& shim_reflection_target) {
+  out << "ShimReflectionTarget(method_name=`";
+  out << show(shim_reflection_target.method_spec_.name);
+  out << "`, proto=`";
+  out << show(shim_reflection_target.method_spec_.proto);
+  out << "`, " << shim_reflection_target.parameter_mapping_;
+  return out << ")";
+}
+
 std::ostream& operator<<(std::ostream& out, const Shim& shim) {
   out << "ShimTarget(method=`";
   if (auto* method = shim.method()) {
     out << method->show();
   }
   out << "`";
-  if (!shim.empty()) {
+
+  if (!shim.targets().empty()) {
     out << ",\n  targets=[\n";
     for (const auto& target : shim.targets()) {
       out << "    " << target << ",\n";
     }
     out << "  ]";
   }
+
+  if (!shim.reflections().empty()) {
+    out << ",\n  reflections=[\n";
+    for (const auto& target : shim.reflections()) {
+      out << "    " << target << ",\n";
+    }
+    out << "  ]";
+  }
+
   return out << ")";
 }
 

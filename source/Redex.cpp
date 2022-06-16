@@ -10,6 +10,7 @@
 #include <Creators.h>
 #include <DexAccess.h>
 #include <DexClass.h>
+#include <DexMemberRefs.h>
 #include <DexUtil.h>
 #include <IRAssembler.h>
 #include <ProguardConfiguration.h>
@@ -323,6 +324,44 @@ std::vector<const DexField*> redex::create_fields(
 
   scope.push_back(creator.create());
   return created_fields;
+}
+
+std::optional<DexMethodSpec> redex::get_method_spec(
+    std::string_view signature) {
+  auto tokens = dex_member_refs::parse_method(signature);
+  auto* cls = DexType::get_type(tokens.cls);
+  if (!cls) {
+    return std::nullopt;
+  }
+
+  auto* method_name = DexString::get_string(tokens.name);
+  if (!method_name) {
+    return std::nullopt;
+  }
+
+  DexTypeList::ContainerType arguments;
+  for (auto& argument : tokens.args) {
+    if (auto dex_argument = DexType::get_type(argument)) {
+      arguments.push_back(dex_argument);
+    }
+  }
+  auto* argument_types = DexTypeList::get_type_list(std::move(arguments));
+  if (tokens.args.size() != argument_types->size()) {
+    return std::nullopt;
+  }
+
+  auto* return_type = DexType::get_type(tokens.rtype);
+  if (!return_type) {
+    return std::nullopt;
+  }
+
+  auto* dex_proto = DexProto::get_proto(return_type, argument_types);
+
+  if (!dex_proto) {
+    return std::nullopt;
+  }
+
+  return DexMethodSpec(cls, method_name, dex_proto);
 }
 
 } // namespace marianatrench

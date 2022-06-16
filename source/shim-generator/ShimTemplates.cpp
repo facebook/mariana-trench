@@ -9,15 +9,17 @@
 #include <stdexcept>
 #include <string>
 
+#include <re2/re2.h>
+
 #include <DexClass.h>
 #include <TypeUtil.h>
-#include <re2/re2.h>
 
 #include <mariana-trench/Access.h>
 #include <mariana-trench/Assert.h>
 #include <mariana-trench/JsonValidation.h>
 #include <mariana-trench/Log.h>
 #include <mariana-trench/Methods.h>
+#include <mariana-trench/Redex.h>
 #include <mariana-trench/shim-generator/ShimTemplates.h>
 
 namespace marianatrench {
@@ -102,6 +104,45 @@ std::optional<ShimTarget> try_make_shim_target(
   }
 
   return ShimTarget(call_target, std::move(instantiated_parameter_map));
+}
+
+std::optional<ShimReflectionTarget> try_make_shim_reflection_target(
+    const TargetTemplate& target_template,
+    const ShimMethod& shim_method) {
+  const auto& receiver_info = target_template.receiver_info();
+  const auto* receiver_type = receiver_info.receiver_dex_type(shim_method);
+  if (!receiver_type) {
+    WARNING(
+        1,
+        "Shim method `{}` missing the receiver required for reflection shim callees`{}`.",
+        shim_method.method()->show(),
+        target_template.target());
+    return std::nullopt;
+  }
+
+  auto method_spec = redex::get_method_spec(
+      fmt::format("{}.{}", receiver_type->str(), target_template.target()));
+
+  if (!method_spec) {
+    WARNING(
+        1,
+        "Could not instantiate reflection shim target: `{}` specfied for method: `{}`",
+        target_template,
+        receiver_type->str(),
+        shim_method.method()->show());
+    return std::nullopt;
+  }
+
+  auto instantiated_parameter_mapping =
+      target_template.parameter_map().instantiate(
+          method_spec->name->str(),
+          method_spec->cls,
+          method_spec->proto,
+          /* shim_target_is_static */ false,
+          shim_method);
+
+  return ShimReflectionTarget(
+      *method_spec, std::move(instantiated_parameter_mapping));
 }
 
 } // namespace
@@ -209,7 +250,7 @@ TargetTemplate TargetTemplate::from_json(const Json::Value& callee) {
       "each `callees` object to specify either `signature` or `lifecycle_of`");
 }
 
-std::optional<ShimTarget> TargetTemplate::instantiate(
+std::optional<ShimTargetVariant> TargetTemplate::instantiate(
     const Methods* methods,
     const ShimMethod& shim_method) const {
   switch (kind_) {
@@ -217,6 +258,8 @@ std::optional<ShimTarget> TargetTemplate::instantiate(
       return try_make_shim_target(*this, methods, shim_method);
 
     case Kind::REFLECTION:
+      return try_make_shim_reflection_target(*this, shim_method);
+
     case Kind::LIFECYCLE:
       LOG(1, "{} not handled.", *this);
       return std::nullopt;
@@ -275,19 +318,19 @@ std::optional<Shim> ShimTemplate::instantiate(
   LOG(5, "Instantiating ShimTemplate for {}", method_to_shim->show());
 
   auto shim_method = ShimMethod(method_to_shim);
-  std::vector<ShimTarget> instantiated_shim_targets;
+  auto shim = Shim(method_to_shim);
 
   for (const auto& target_template : targets_) {
     if (auto shim_target = target_template.instantiate(methods, shim_method)) {
-      instantiated_shim_targets.push_back(*shim_target);
+      shim.add_target(*shim_target);
     }
   }
 
-  if (instantiated_shim_targets.empty()) {
+  if (shim.empty()) {
     return std::nullopt;
   }
 
-  return Shim(method_to_shim, std::move(instantiated_shim_targets));
+  return shim;
 }
 
 } // namespace marianatrench

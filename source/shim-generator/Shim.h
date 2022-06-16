@@ -8,6 +8,7 @@
 #pragma once
 
 #include <optional>
+#include <variant>
 
 #include <mariana-trench/Access.h>
 #include <mariana-trench/JsonValidation.h>
@@ -102,22 +103,48 @@ class ShimTarget {
 };
 
 /**
+ * Represents shim-targets which are resolved using reflection.
+ */
+class ShimReflectionTarget {
+ public:
+  explicit ShimReflectionTarget(
+      DexMethodSpec method_spec,
+      ShimParameterMapping parameter_mapping);
+
+  friend std::ostream& operator<<(
+      std::ostream& out,
+      const ShimReflectionTarget& shim_reflection_target);
+
+ private:
+  DexMethodSpec method_spec_;
+  ShimParameterMapping parameter_mapping_;
+};
+
+using ShimTargetVariant = std::variant<ShimTarget, ShimReflectionTarget>;
+
+/**
  * Represents an instantiated Shim for one `shimmed-method`.
  */
 class Shim {
  public:
-  Shim(const Method* method, std::vector<ShimTarget> shim_targets);
+  explicit Shim(const Method* method);
+
+  void add_target(ShimTargetVariant target);
 
   const Method* method() const {
     return method_;
   }
 
   bool empty() const {
-    return targets_.empty();
+    return targets_.empty() && reflections_.empty();
   }
 
   const std::vector<ShimTarget>& targets() const {
     return targets_;
+  }
+
+  const std::vector<ShimReflectionTarget>& reflections() const {
+    return reflections_;
   }
 
   friend std::ostream& operator<<(std::ostream& out, const Shim& shim);
@@ -125,6 +152,7 @@ class Shim {
  private:
   const Method* method_;
   std::vector<ShimTarget> targets_;
+  std::vector<ShimReflectionTarget> reflections_;
 };
 
 } // namespace marianatrench
