@@ -10,7 +10,8 @@
     "shim": {
       "callees": [
         {
-          "signature": "Landroid/os/Handler;.handleMessage:(Landroid/os/Message;)V"
+          "type_of": "Argument(1)",
+          "method_name": "handleMessage:(Landroid/os/Message;)V"
         }
       ]
     }
@@ -20,28 +21,65 @@
     "where": [
       {
         "constraint": "signature",
-        "pattern": "Landroidx/fragment/app/FragmentTransaction;\\.(add|show|replace|attach|doAddOp):.*Landroidx/fragment/app/Fragment;.*"
+        "pattern": "Landroidx/fragment/app/FragmentTransaction;\\.(add|show|replace|attach|doAddOp):\\(Ljava/lang/Class;.*"
       }
     ],
     "shim": {
       "callees": [
         {
-          "signature": "Landroidx/fragment/app/Fragment;.onCreate:(Landroid/os/Bundle;)V"
-        },
+          "reflected_type_of": "Argument(1)",
+          "lifecycle_name": "xfragment_lifecycle_wrapper"
+        }
+      ]
+    }
+  },
+  {
+    "find": "methods",
+    "where": [
+      {
+        "constraint": "signature",
+        "pattern": "Landroidx/fragment/app/FragmentTransaction;\\.(add|show|replace|attach|doAddOp):\\(ILjava/lang/Class;.*"
+      }
+    ],
+    "shim": {
+      "callees": [
         {
-          "signature": "Landroidx/fragment/app/Fragment;.onStart:()V"
-        },
+          "reflected_type_of": "Argument(2)",
+          "lifecycle_name": "xfragment_lifecycle_wrapper"
+        }
+      ]
+    }
+  },
+  {
+    "find": "methods",
+    "where": [
+      {
+        "constraint": "signature",
+        "pattern": "Landroidx/fragment/app/FragmentTransaction;\\.(add|show|replace|attach|doAddOp):\\(Landroidx/fragment/app/Fragment;.*"
+      }
+    ],
+    "shim": {
+      "callees": [
         {
-          "signature": "Landroidx/fragment/app/Fragment;.onPause:()V"
-        },
+          "type_of": "Argument(1)",
+          "lifecycle_name": "xfragment_lifecycle_wrapper"
+        }
+      ]
+    }
+  },
+  {
+    "find": "methods",
+    "where": [
+      {
+        "constraint": "signature",
+        "pattern": "Landroidx/fragment/app/FragmentTransaction;\\.(add|show|replace|attach|doAddOp):\\(ILandroidx/fragment/app/Fragment;.*"
+      }
+    ],
+    "shim": {
+      "callees": [
         {
-          "signature": "Landroidx/fragment/app/Fragment;.onResume:()V"
-        },
-        {
-          "signature": "Landroidx/fragment/app/Fragment;.onStop:()V"
-        },
-        {
-          "signature": "Landroidx/fragment/app/Fragment;.onDestroy:()V"
+          "type_of": "Argument(2)",
+          "lifecycle_name": "xfragment_lifecycle_wrapper"
         }
       ]
     }
