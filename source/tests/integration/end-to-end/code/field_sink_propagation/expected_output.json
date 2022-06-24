@@ -95,16 +95,14 @@
   "issues" : 
   [
     {
-      "handles" : 
-      [
-        "Lcom/facebook/marianatrench/integrationtests/Flow;.toSinkWithFieldHop:(Lcom/facebook/marianatrench/integrationtests/Flow$Event;)V:0"
-      ],
+      "callee" : "Lcom/facebook/marianatrench/integrationtests/Flow;.toSinkWithFieldHop:(Lcom/facebook/marianatrench/integrationtests/Flow$Event;)V",
       "position" : 
       {
         "line" : 26,
         "path" : "Flow.java"
       },
       "rule" : 1,
+      "sink_index" : "0",
       "sinks" : 
       [
         {

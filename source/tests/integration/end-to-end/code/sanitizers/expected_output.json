@@ -37,16 +37,14 @@
   "issues" : 
   [
     {
-      "handles" : 
-      [
-        "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V:1"
-      ],
+      "callee" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
       "position" : 
       {
         "line" : 36,
         "path" : "PortSanitizers.java"
       },
       "rule" : 1,
+      "sink_index" : "1",
       "sinks" : 
       [
         {
@@ -105,16 +103,14 @@
       ]
     },
     {
-      "handles" : 
-      [
-        "Lcom/facebook/marianatrench/integrationtests/PortSanitizers;.sanitizedSinkPortAndKind:(Ljava/lang/Object;Ljava/lang/Object;)V:0"
-      ],
+      "callee" : "Lcom/facebook/marianatrench/integrationtests/PortSanitizers;.sanitizedSinkPortAndKind:(Ljava/lang/Object;Ljava/lang/Object;)V",
       "position" : 
       {
         "line" : 33,
         "path" : "PortSanitizers.java"
       },
       "rule" : 1,
+      "sink_index" : "0",
       "sinks" : 
       [
         {
@@ -173,16 +169,14 @@
       ]
     },
     {
-      "handles" : 
-      [
-        "Lcom/facebook/marianatrench/integrationtests/PortSanitizers;.sanitizedSinkPortAndKind:(Ljava/lang/Object;Ljava/lang/Object;)V:0"
-      ],
+      "callee" : "Lcom/facebook/marianatrench/integrationtests/PortSanitizers;.sanitizedSinkPortAndKind:(Ljava/lang/Object;Ljava/lang/Object;)V",
       "position" : 
       {
         "line" : 33,
         "path" : "PortSanitizers.java"
       },
       "rule" : 2,
+      "sink_index" : "0",
       "sinks" : 
       [
         {
@@ -575,16 +569,14 @@
   "issues" : 
   [
     {
-      "handles" : 
-      [
-        "Lcom/facebook/marianatrench/integrationtests/GlobalSanitizers;.toSanitizedKindSink:(Ljava/lang/Object;)V:0"
-      ],
+      "callee" : "Lcom/facebook/marianatrench/integrationtests/GlobalSanitizers;.toSanitizedKindSink:(Ljava/lang/Object;)V",
       "position" : 
       {
         "line" : 61,
         "path" : "GlobalSanitizers.java"
       },
       "rule" : 1,
+      "sink_index" : "0",
       "sinks" : 
       [
         {
@@ -647,16 +639,14 @@
       [
         "via-array"
       ],
-      "handles" : 
-      [
-        "Lcom/facebook/marianatrench/integrationtests/GlobalSanitizers;.toArraySink:([Ljava/lang/Object;)V:0"
-      ],
+      "callee" : "Lcom/facebook/marianatrench/integrationtests/GlobalSanitizers;.toArraySink:([Ljava/lang/Object;)V",
       "position" : 
       {
         "line" : 62,
         "path" : "GlobalSanitizers.java"
       },
       "rule" : 3,
+      "sink_index" : "0",
       "sinks" : 
       [
         {
@@ -730,16 +720,14 @@
   "issues" : 
   [
     {
-      "handles" : 
-      [
-        "Lcom/facebook/marianatrench/integrationtests/GlobalSanitizers;.toSink:(Ljava/lang/Object;)V:1"
-      ],
+      "callee" : "Lcom/facebook/marianatrench/integrationtests/GlobalSanitizers;.toSink:(Ljava/lang/Object;)V",
       "position" : 
       {
         "line" : 73,
         "path" : "GlobalSanitizers.java"
       },
       "rule" : 1,
+      "sink_index" : "1",
       "sinks" : 
       [
         {

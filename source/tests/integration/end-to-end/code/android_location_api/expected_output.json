@@ -38,16 +38,14 @@
   "issues" : 
   [
     {
-      "handles" : 
-      [
-        "Landroid/util/Log;.e:(Ljava/lang/String;Ljava/lang/String;)I:1"
-      ],
+      "callee" : "Landroid/util/Log;.e:(Ljava/lang/String;Ljava/lang/String;)I",
       "position" : 
       {
         "line" : 29,
         "path" : "ActivityUsingAndroidLocationManager.java"
       },
       "rule" : 1,
+      "sink_index" : "1",
       "sinks" : 
       [
         {

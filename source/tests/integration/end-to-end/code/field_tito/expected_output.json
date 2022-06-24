@@ -95,16 +95,14 @@
       [
         "via-cast:Ljava/lang/String;"
       ],
-      "handles" : 
-      [
-        "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V:0"
-      ],
+      "callee" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
       "position" : 
       {
         "line" : 15,
         "path" : "MainActivity.java"
       },
       "rule" : 1,
+      "sink_index" : "0",
       "sinks" : 
       [
         {

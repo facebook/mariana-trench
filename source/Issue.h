@@ -24,14 +24,6 @@ using TextualOrderIndex = std::uint32_t;
 constexpr std::string_view k_return_callee = "return";
 constexpr std::string_view k_unresolved_callee = "unresolved";
 
-namespace {
-std::string get_handle(
-    const std::string& callee,
-    TextualOrderIndex sink_index) {
-  return fmt::format("{}:{}", callee, sink_index);
-}
-} // namespace
-
 class Issue final : public sparta::AbstractDomain<Issue> {
  public:
   using HandleSet = sparta::HashedSetAbstractDomain<std::string>;
@@ -41,7 +33,8 @@ class Issue final : public sparta::AbstractDomain<Issue> {
       : sources_(Taint::bottom()),
         sinks_(Taint::bottom()),
         rule_(nullptr),
-        new_handles_(HandleSet({get_handle(std::string(k_return_callee), 0)})),
+        callee_(std::string(k_return_callee)),
+        sink_index_(0),
         position_(nullptr) {}
 
   explicit Issue(
@@ -54,19 +47,8 @@ class Issue final : public sparta::AbstractDomain<Issue> {
       : sources_(std::move(sources)),
         sinks_(std::move(sinks)),
         rule_(rule),
-        new_handles_(HandleSet({get_handle(callee, sink_index)})),
-        position_(position) {}
-
-  explicit Issue(
-      Taint sources,
-      Taint sinks,
-      const Rule* rule,
-      HandleSet handles,
-      const Position* position)
-      : sources_(std::move(sources)),
-        sinks_(std::move(sinks)),
-        rule_(rule),
-        new_handles_(handles),
+        callee_(callee),
+        sink_index_(sink_index),
         position_(position) {}
 
   Issue(const Issue&) = default;
@@ -86,8 +68,12 @@ class Issue final : public sparta::AbstractDomain<Issue> {
     return rule_;
   }
 
-  const HandleSet new_handles() const {
-    return new_handles_;
+  const std::string& callee() const {
+    return callee_;
+  }
+
+  TextualOrderIndex sink_index() const {
+    return sink_index_;
   }
 
   const Position* MT_NULLABLE position() const {
@@ -164,7 +150,8 @@ class Issue final : public sparta::AbstractDomain<Issue> {
   Taint sources_;
   Taint sinks_;
   const Rule* MT_NULLABLE rule_;
-  HandleSet new_handles_;
+  std::string callee_;
+  TextualOrderIndex sink_index_;
   const Position* MT_NULLABLE position_;
 };
 

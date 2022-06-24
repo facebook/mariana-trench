@@ -60,16 +60,14 @@
       [
         "via-cast:Lcom/facebook/marianatrench/integrationtests/Flow;"
       ],
-      "handles" : 
-      [
-        "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V:0"
-      ],
+      "callee" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
       "position" : 
       {
         "line" : 57,
         "path" : "Flow.java"
       },
       "rule" : 1,
+      "sink_index" : "0",
       "sinks" : 
       [
         {
@@ -338,16 +336,14 @@
       [
         "via-cast:Lcom/facebook/marianatrench/integrationtests/Flow;"
       ],
-      "handles" : 
-      [
-        "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V:0"
-      ],
+      "callee" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
       "position" : 
       {
         "line" : 36,
         "path" : "Flow.java"
       },
       "rule" : 1,
+      "sink_index" : "0",
       "sinks" : 
       [
         {
@@ -616,16 +612,14 @@
       [
         "via-cast:Lcom/facebook/marianatrench/integrationtests/Flow;"
       ],
-      "handles" : 
-      [
-        "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V:0"
-      ],
+      "callee" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
       "position" : 
       {
         "line" : 46,
         "path" : "Flow.java"
       },
       "rule" : 1,
+      "sink_index" : "0",
       "sinks" : 
       [
         {

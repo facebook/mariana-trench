@@ -131,16 +131,14 @@
   "issues" : 
   [
     {
-      "handles" : 
-      [
-        "Lcom/facebook/marianatrench/integrationtests/Flow;.toSinkCollapsedPort2:(Lcom/facebook/marianatrench/integrationtests/Flow$IrrelevantField;)V:0"
-      ],
+      "callee" : "Lcom/facebook/marianatrench/integrationtests/Flow;.toSinkCollapsedPort2:(Lcom/facebook/marianatrench/integrationtests/Flow$IrrelevantField;)V",
       "position" : 
       {
         "line" : 89,
         "path" : "Flow.java"
       },
       "rule" : 1,
+      "sink_index" : "0",
       "sinks" : 
       [
         {
@@ -271,16 +269,14 @@
   "issues" : 
   [
     {
-      "handles" : 
-      [
-        "Lcom/facebook/marianatrench/integrationtests/Flow;.toSinkCollapsedPort:(Lcom/facebook/marianatrench/integrationtests/Flow$IrrelevantField;)V:0"
-      ],
+      "callee" : "Lcom/facebook/marianatrench/integrationtests/Flow;.toSinkCollapsedPort:(Lcom/facebook/marianatrench/integrationtests/Flow$IrrelevantField;)V",
       "position" : 
       {
         "line" : 62,
         "path" : "Flow.java"
       },
       "rule" : 1,
+      "sink_index" : "0",
       "sinks" : 
       [
         {

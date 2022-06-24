@@ -60,16 +60,14 @@
       [
         "via-array"
       ],
-      "handles" : 
-      [
-        "return:0"
-      ],
+      "callee" : "return",
       "position" : 
       {
         "line" : 19,
         "path" : "Flow.java"
       },
       "rule" : 1,
+      "sink_index" : "0",
       "sinks" : 
       [
         {
@@ -337,16 +335,14 @@
       [
         "via-cast:Lcom/facebook/marianatrench/integrationtests/Flow$Tree;"
       ],
-      "handles" : 
-      [
-        "return:0"
-      ],
+      "callee" : "return",
       "position" : 
       {
         "line" : 46,
         "path" : "Flow.java"
       },
       "rule" : 1,
+      "sink_index" : "0",
       "sinks" : 
       [
         {
@@ -578,16 +574,14 @@
       [
         "via-array"
       ],
-      "handles" : 
-      [
-        "Lcom/facebook/marianatrench/integrationtests/Flow;.return_sink:(Ljava/lang/Object;)Ljava/lang/Object;:0"
-      ],
+      "callee" : "Lcom/facebook/marianatrench/integrationtests/Flow;.return_sink:(Ljava/lang/Object;)Ljava/lang/Object;",
       "position" : 
       {
         "line" : 25,
         "path" : "Flow.java"
       },
       "rule" : 1,
+      "sink_index" : "0",
       "sinks" : 
       [
         {
@@ -684,16 +678,14 @@
       [
         "via-cast:Lcom/facebook/marianatrench/integrationtests/Flow$Tree;"
       ],
-      "handles" : 
-      [
-        "Lcom/facebook/marianatrench/integrationtests/Flow;.return_sink_foo:(Lcom/facebook/marianatrench/integrationtests/Flow$Tree;)Lcom/facebook/marianatrench/integrationtests/Flow$Tree;:0"
-      ],
+      "callee" : "Lcom/facebook/marianatrench/integrationtests/Flow;.return_sink_foo:(Lcom/facebook/marianatrench/integrationtests/Flow$Tree;)Lcom/facebook/marianatrench/integrationtests/Flow$Tree;",
       "position" : 
       {
         "line" : 58,
         "path" : "Flow.java"
       },
       "rule" : 1,
+      "sink_index" : "0",
       "sinks" : 
       [
         {

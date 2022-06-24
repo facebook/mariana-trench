@@ -148,16 +148,14 @@
   "issues" : 
   [
     {
-      "handles" : 
-      [
-        "Lcom/facebook/marianatrench/integrationtests/Flow;.indirect_sink:(Ljava/lang/Object;)V:0"
-      ],
+      "callee" : "Lcom/facebook/marianatrench/integrationtests/Flow;.indirect_sink:(Ljava/lang/Object;)V",
       "position" : 
       {
         "line" : 20,
         "path" : "Flow.java"
       },
       "rule" : 1,
+      "sink_index" : "0",
       "sinks" : 
       [
         {

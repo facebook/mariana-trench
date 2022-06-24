@@ -2520,9 +2520,8 @@ TEST_F(JsonTest, Model) {
               "path": "Data.java",
               "line": 1
             },
-            "handles": [
-              "LClass;.someMethod:()V:1"
-            ],
+            "callee": "LClass;.someMethod:()V",
+            "sink_index": 1,
             "sources": [
               {
                 "kind": "first_source",
@@ -2575,9 +2574,8 @@ TEST_F(JsonTest, Model) {
               "path": "Data.java",
               "line": 1
             },
-            "handles": [
-              "LClass;.someMethod:()V:1"
-            ],
+          "callee" : "LClass;.someMethod:()V",
+          "sink_index" : "1",
             "sources": [
               {
                 "kinds": [ {"kind": "first_source"} ]

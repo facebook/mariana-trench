@@ -344,6 +344,24 @@ TEST_F(IssueSetTest, Insertion) {
       /* sink */ Taint{Frame::leaf(sink_kind)},
       &rule_1,
       /* callee */ std::string(k_return_callee),
+      /* sink_index */ 1,
+      position_1));
+  // Issues shouldn't be joined since sink_indices are different
+  EXPECT_EQ(set.size(), 2);
+
+  set = {};
+  set.add(Issue(
+      /* source */ Taint{Frame::leaf(source_kind)},
+      /* sink */ Taint{Frame::leaf(sink_kind)},
+      &rule_1,
+      /* callee */ std::string(k_return_callee),
+      /* sink_index */ 0,
+      position_1));
+  set.add(Issue(
+      /* source */ Taint{Frame::leaf(source_kind)},
+      /* sink */ Taint{Frame::leaf(sink_kind)},
+      &rule_1,
+      /* callee */ std::string(k_return_callee),
       /* sink_index */ 0,
       position_2));
   EXPECT_EQ(

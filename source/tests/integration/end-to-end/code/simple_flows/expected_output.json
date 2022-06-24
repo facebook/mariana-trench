@@ -211,16 +211,14 @@
       [
         "sanitize"
       ],
-      "handles" : 
-      [
-        "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V:0"
-      ],
+      "callee" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
       "position" : 
       {
         "line" : 14,
         "path" : "DirectFlowWithSanitizer.java"
       },
       "rule" : 2,
+      "sink_index" : "0",
       "sinks" : 
       [
         {
@@ -309,16 +307,14 @@
   "issues" : 
   [
     {
-      "handles" : 
-      [
-        "Landroid/app/Activity;.startActivity:(Landroid/content/Intent;)V:0"
-      ],
+      "callee" : "Landroid/app/Activity;.startActivity:(Landroid/content/Intent;)V",
       "position" : 
       {
         "line" : 17,
         "path" : "ExternalDirectFlow.java"
       },
       "rule" : 1,
+      "sink_index" : "0",
       "sinks" : 
       [
         {
@@ -388,16 +384,14 @@
   "issues" : 
   [
     {
-      "handles" : 
-      [
-        "Landroid/app/Activity;.startActivity:(Landroid/content/Intent;)V:0"
-      ],
+      "callee" : "Landroid/app/Activity;.startActivity:(Landroid/content/Intent;)V",
       "position" : 
       {
         "line" : 19,
         "path" : "DirectFlow.java"
       },
       "rule" : 1,
+      "sink_index" : "0",
       "sinks" : 
       [
         {
@@ -467,16 +461,14 @@
   "issues" : 
   [
     {
-      "handles" : 
-      [
-        "Landroid/app/Activity;.startActivity:(Landroid/content/Intent;)V:0"
-      ],
+      "callee" : "Landroid/app/Activity;.startActivity:(Landroid/content/Intent;)V",
       "position" : 
       {
         "line" : 19,
         "path" : "InheritanceFlows.java"
       },
       "rule" : 1,
+      "sink_index" : "0",
       "sinks" : 
       [
         {
@@ -546,16 +538,14 @@
   "issues" : 
   [
     {
-      "handles" : 
-      [
-        "Lcom/facebook/content/SecureContextHelper;.startFacebookActivity:(Landroid/content/Intent;Landroid/content/Context;)V:0"
-      ],
+      "callee" : "Lcom/facebook/content/SecureContextHelper;.startFacebookActivity:(Landroid/content/Intent;Landroid/content/Context;)V",
       "position" : 
       {
         "line" : 58,
         "path" : "DirectOpenRedirectFlow.java"
       },
       "rule" : 1,
+      "sink_index" : "0",
       "sinks" : 
       [
         {
@@ -643,16 +633,14 @@
   "issues" : 
   [
     {
-      "handles" : 
-      [
-        "Lcom/facebook/marianatrench/integrationtests/FlowWithHops;.toSinkWithHop:(Ljava/lang/Object;)V:0"
-      ],
+      "callee" : "Lcom/facebook/marianatrench/integrationtests/FlowWithHops;.toSinkWithHop:(Ljava/lang/Object;)V",
       "position" : 
       {
         "line" : 29,
         "path" : "FlowWithHops.java"
       },
       "rule" : 2,
+      "sink_index" : "0",
       "sinks" : 
       [
         {

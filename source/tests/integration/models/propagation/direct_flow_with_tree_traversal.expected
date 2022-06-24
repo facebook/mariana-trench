@@ -47,16 +47,14 @@
       "issues" :
       [
         {
-          "handles" :
-          [
-            "LSink;.sink:(LData;)V:0"
-          ],
+          "callee" : "LSink;.sink:(LData;)V",
           "position" :
           {
-            "line" : 6,
+            "line" : 5,
             "path" : "Flow.java"
           },
           "rule" : 1,
+          "sink_index" : "1",
           "sinks" :
           [
             {
@@ -65,7 +63,7 @@
                 "port" : "Argument(1)",
                 "position" :
                 {
-                  "line" : 6,
+                  "line" : 5,
                   "path" : "Flow.java"
                 },
                 "resolves_to" : "LSink;.sink:(LData;)V"
@@ -117,16 +115,14 @@
           ]
         },
         {
-          "handles" :
-          [
-            "LSink;.sink:(LData;)V:1"
-          ],
+          "callee" : "LSink;.sink:(LData;)V",
           "position" :
           {
-            "line" : 5,
+            "line" : 6,
             "path" : "Flow.java"
           },
           "rule" : 1,
+          "sink_index" : "0",
           "sinks" :
           [
             {
@@ -135,7 +131,7 @@
                 "port" : "Argument(1)",
                 "position" :
                 {
-                  "line" : 5,
+                  "line" : 6,
                   "path" : "Flow.java"
                 },
                 "resolves_to" : "LSink;.sink:(LData;)V"

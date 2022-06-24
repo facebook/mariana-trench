@@ -21,7 +21,8 @@ bool Issue::leq(const Issue& other) const {
   } else if (other.is_bottom()) {
     return false;
   } else {
-    return rule_ == other.rule_ && position_ == other.position_ &&
+    return rule_ == other.rule_ && callee_ == other.callee_ &&
+        sink_index_ == other.sink_index_ && position_ == other.position_ &&
         sources_.leq(other.sources_) && sinks_.leq(other.sinks_);
   }
 }
@@ -32,7 +33,8 @@ bool Issue::equals(const Issue& other) const {
   } else if (other.is_bottom()) {
     return false;
   } else {
-    return rule_ == other.rule_ && position_ == other.position_ &&
+    return rule_ == other.rule_ && callee_ == other.callee_ &&
+        sink_index_ == other.sink_index_ && position_ == other.position_ &&
         sources_ == other.sources_ && sinks_ == other.sinks_;
   }
 }
@@ -46,9 +48,10 @@ void Issue::join_with(const Issue& other) {
     return;
   } else {
     mt_assert(rule_ == other.rule_);
+    mt_assert(callee_ == other.callee_);
+    mt_assert(sink_index_ == other.sink_index_);
     mt_assert(position_ == other.position_);
 
-    new_handles_.join_with(other.new_handles_);
     sources_.join_with(other.sources_);
     sinks_.join_with(other.sinks_);
   }
@@ -65,9 +68,10 @@ void Issue::widen_with(const Issue& other) {
     return;
   } else {
     mt_assert(rule_ == other.rule_);
+    mt_assert(callee_ == other.callee_);
+    mt_assert(sink_index_ == other.sink_index_);
     mt_assert(position_ == other.position_);
 
-    new_handles_.widen_with(other.new_handles_);
     sources_.widen_with(other.sources_);
     sinks_.widen_with(other.sinks_);
   }
@@ -82,9 +86,10 @@ void Issue::meet_with(const Issue& other) {
     set_to_bottom();
   } else {
     mt_assert(rule_ == other.rule_);
+    mt_assert(callee_ == other.callee_);
+    mt_assert(sink_index_ == other.sink_index_);
     mt_assert(position_ == other.position_);
 
-    new_handles_.meet_with(other.new_handles_);
     sources_.meet_with(other.sources_);
     sinks_.meet_with(other.sinks_);
   }
@@ -97,9 +102,10 @@ void Issue::narrow_with(const Issue& other) {
     set_to_bottom();
   } else {
     mt_assert(rule_ == other.rule_);
+    mt_assert(callee_ == other.callee_);
+    mt_assert(sink_index_ == other.sink_index_);
     mt_assert(position_ == other.position_);
 
-    new_handles_.narrow_with(other.new_handles_);
     sources_.narrow_with(other.sources_);
     sinks_.narrow_with(other.sinks_);
   }
@@ -107,13 +113,17 @@ void Issue::narrow_with(const Issue& other) {
 
 bool Issue::GroupEqual::operator()(const Issue& left, const Issue& right)
     const {
-  return left.rule_ == right.rule_ && left.position_ == right.position_;
+  return left.rule_ == right.rule_ && left.callee_ == right.callee_ &&
+      left.sink_index_ == right.sink_index_ &&
+      left.position_ == right.position_;
 }
 
 std::size_t Issue::GroupHash::operator()(const Issue& issue) const {
   std::size_t seed = 0;
   boost::hash_combine(seed, issue.rule_);
   boost::hash_combine(seed, issue.position_);
+  boost::hash_combine(seed, issue.sink_index_);
+  boost::hash_combine(seed, issue.callee_);
   return seed;
 }
 
@@ -146,13 +156,8 @@ Json::Value Issue::to_json() const {
   value["sinks"] = sinks_.to_json();
   value["rule"] = Json::Value(rule_->code());
   value["position"] = position_->to_json();
-  auto handles = Json::Value(Json::arrayValue);
-  if (new_handles_.is_value()) {
-    for (const auto& handle : new_handles_.elements()) {
-      handles.append(handle);
-    }
-  }
-  value["handles"] = handles;
+  value["sink_index"] = std::to_string(sink_index_);
+  value["callee"] = callee_;
 
   JsonValidation::update_object(value, features().to_json());
 
@@ -167,7 +172,8 @@ std::ostream& operator<<(std::ostream& out, const Issue& issue) {
   } else {
     out << "null";
   }
-  return out << ", new_handles" << issue.new_handles_
+  return out << ", callee=" << show(issue.callee_)
+             << ", sink_index=" << issue.sink_index_
              << ", position=" << show(issue.position_) << ")";
 }
 

@@ -273,7 +273,8 @@ IssueSet augment_issue_positions(
         augment_taint_positions(issue.sources(), lines, context),
         augment_taint_positions(issue.sinks(), lines, context),
         issue.rule(),
-        issue.new_handles(),
+        issue.callee(),
+        issue.sink_index(),
         issue.position());
     issue = std::move(augmented_issue);
   });

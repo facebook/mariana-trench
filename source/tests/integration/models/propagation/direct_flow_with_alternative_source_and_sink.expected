@@ -9,16 +9,14 @@
       "issues" :
       [
         {
-          "handles" :
-          [
-            "LSink;.sink_with_two_kinds:(LData;)V:0"
-          ],
+          "callee" : "LSink;.sink_with_two_kinds:(LData;)V",
           "position" :
           {
             "line" : 2,
             "path" : "Flow.java"
           },
           "rule" : 2,
+          "sink_index" : "0",
           "sinks" :
           [
             {

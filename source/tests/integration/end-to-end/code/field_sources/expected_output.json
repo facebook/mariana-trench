@@ -130,16 +130,14 @@
   "issues" : 
   [
     {
-      "handles" : 
-      [
-        "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V:0"
-      ],
+      "callee" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
       "position" : 
       {
         "line" : 21,
         "path" : "TaintedFieldClass.java"
       },
       "rule" : 1,
+      "sink_index" : "0",
       "sinks" : 
       [
         {
@@ -186,16 +184,14 @@
       ]
     },
     {
-      "handles" : 
-      [
-        "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V:1"
-      ],
+      "callee" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
       "position" : 
       {
         "line" : 22,
         "path" : "TaintedFieldClass.java"
       },
       "rule" : 1,
+      "sink_index" : "1",
       "sinks" : 
       [
         {
@@ -242,16 +238,14 @@
       ]
     },
     {
-      "handles" : 
-      [
-        "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V:2"
-      ],
+      "callee" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
       "position" : 
       {
         "line" : 23,
         "path" : "TaintedFieldClass.java"
       },
       "rule" : 1,
+      "sink_index" : "2",
       "sinks" : 
       [
         {
@@ -298,16 +292,14 @@
       ]
     },
     {
-      "handles" : 
-      [
-        "Lcom/facebook/marianatrench/integrationtests/TaintedFieldClass;.stringSink:(Ljava/lang/String;)V:0"
-      ],
+      "callee" : "Lcom/facebook/marianatrench/integrationtests/TaintedFieldClass;.stringSink:(Ljava/lang/String;)V",
       "position" : 
       {
         "line" : 25,
         "path" : "TaintedFieldClass.java"
       },
       "rule" : 1,
+      "sink_index" : "0",
       "sinks" : 
       [
         {
@@ -440,16 +432,14 @@
   "issues" : 
   [
     {
-      "handles" : 
-      [
-        "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V:1"
-      ],
+      "callee" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
       "position" : 
       {
         "line" : 18,
         "path" : "ChildClass.java"
       },
       "rule" : 1,
+      "sink_index" : "1",
       "sinks" : 
       [
         {
@@ -496,16 +486,14 @@
       ]
     },
     {
-      "handles" : 
-      [
-        "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V:2"
-      ],
+      "callee" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
       "position" : 
       {
         "line" : 20,
         "path" : "ChildClass.java"
       },
       "rule" : 1,
+      "sink_index" : "2",
       "sinks" : 
       [
         {
@@ -688,16 +676,14 @@
   "issues" : 
   [
     {
-      "handles" : 
-      [
-        "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V:0"
-      ],
+      "callee" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
       "position" : 
       {
         "line" : 13,
         "path" : "TestClass.java"
       },
       "rule" : 1,
+      "sink_index" : "0",
       "sinks" : 
       [
         {
@@ -744,16 +730,14 @@
       ]
     },
     {
-      "handles" : 
-      [
-        "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V:1"
-      ],
+      "callee" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
       "position" : 
       {
         "line" : 17,
         "path" : "TestClass.java"
       },
       "rule" : 1,
+      "sink_index" : "1",
       "sinks" : 
       [
         {
@@ -800,16 +784,14 @@
       ]
     },
     {
-      "handles" : 
-      [
-        "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V:2"
-      ],
+      "callee" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
       "position" : 
       {
         "line" : 19,
         "path" : "TestClass.java"
       },
       "rule" : 1,
+      "sink_index" : "2",
       "sinks" : 
       [
         {

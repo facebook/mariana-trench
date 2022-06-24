@@ -9,16 +9,14 @@
       "issues" :
       [
         {
-          "handles" :
-          [
-            "LSink;.static_sink:(LData;)V:0"
-          ],
+          "callee" : "LSink;.static_sink:(LData;)V",
           "position" :
           {
             "line" : 2,
             "path" : "Flow.java"
           },
           "rule" : 1,
+          "sink_index" : "0",
           "sinks" :
           [
             {

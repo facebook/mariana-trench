@@ -230,16 +230,14 @@
         "source-a",
         "source-b"
       ],
-      "handles" : 
-      [
-        "Lcom/facebook/marianatrench/integrationtests/MultiSources;.sink:(Ljava/lang/Object;Ljava/lang/Object;)V:0"
-      ],
+      "callee" : "Lcom/facebook/marianatrench/integrationtests/MultiSources;.sink:(Ljava/lang/Object;Ljava/lang/Object;)V",
       "position" : 
       {
         "line" : 23,
         "path" : "MultiSources.java"
       },
       "rule" : 1,
+      "sink_index" : "0",
       "sinks" : 
       [
         {
@@ -338,16 +336,14 @@
         "source-a",
         "source-b"
       ],
-      "handles" : 
-      [
-        "Lcom/facebook/marianatrench/integrationtests/MultiSources;.triggeredSinkA:(Ljava/lang/Object;)V:0"
-      ],
+      "callee" : "Lcom/facebook/marianatrench/integrationtests/MultiSources;.triggeredSinkA:(Ljava/lang/Object;)V",
       "position" : 
       {
         "line" : 37,
         "path" : "MultiSources.java"
       },
       "rule" : 1,
+      "sink_index" : "0",
       "sinks" : 
       [
         {
@@ -435,16 +431,14 @@
         "source-a",
         "source-b"
       ],
-      "handles" : 
-      [
-        "Lcom/facebook/marianatrench/integrationtests/MultiSources;.triggeredSinkB:(Ljava/lang/Object;)V:0"
-      ],
+      "callee" : "Lcom/facebook/marianatrench/integrationtests/MultiSources;.triggeredSinkB:(Ljava/lang/Object;)V",
       "position" : 
       {
         "line" : 27,
         "path" : "MultiSources.java"
       },
       "rule" : 1,
+      "sink_index" : "0",
       "sinks" : 
       [
         {
@@ -532,16 +526,14 @@
         "source-a",
         "source-b"
       ],
-      "handles" : 
-      [
-        "Lcom/facebook/marianatrench/integrationtests/MultiSourcesSingleArg;.sink:(Lcom/facebook/marianatrench/integrationtests/MockObjectWithThisPropagation;)V:0"
-      ],
+      "callee" : "Lcom/facebook/marianatrench/integrationtests/MultiSourcesSingleArg;.sink:(Lcom/facebook/marianatrench/integrationtests/MockObjectWithThisPropagation;)V",
       "position" : 
       {
         "line" : 20,
         "path" : "MultiSourcesSingleArg.java"
       },
       "rule" : 2,
+      "sink_index" : "0",
       "sinks" : 
       [
         {

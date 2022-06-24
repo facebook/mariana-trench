@@ -9,17 +9,14 @@
       "issues" :
       [
         {
-          "handles" :
-          [
-            "LFlow;.into_into_sink_one:(LData;)V:0",
-            "LFlow;.into_into_sink_two:(LData;)V:0"
-          ],
+          "callee" : "LFlow;.into_into_sink_one:(LData;)V",
           "position" :
           {
             "line" : 2,
             "path" : "Flow.java"
           },
           "rule" : 1,
+          "sink_index" : "0",
           "sinks" :
           [
             {
@@ -44,7 +41,46 @@
                   ]
                 }
               ]
-            },
+            }
+          ],
+          "sources" :
+          [
+            {
+              "call" :
+              {
+                "port" : "Return",
+                "position" :
+                {
+                  "line" : 1,
+                  "path" : "Flow.java"
+                },
+                "resolves_to" : "LSource;.source:()LData;"
+              },
+              "kinds" :
+              [
+                {
+                  "distance" : 1,
+                  "kind" : "TestSource",
+                  "origins" :
+                  [
+                    "LSource;.source:()LData;"
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "callee" : "LFlow;.into_into_sink_two:(LData;)V",
+          "position" :
+          {
+            "line" : 2,
+            "path" : "Flow.java"
+          },
+          "rule" : 1,
+          "sink_index" : "0",
+          "sinks" :
+          [
             {
               "call" :
               {

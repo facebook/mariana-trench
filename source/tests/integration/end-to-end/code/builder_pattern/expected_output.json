@@ -299,16 +299,14 @@
       [
         "via-certificate-pinner"
       ],
-      "handles" : 
-      [
-        "Lcom/facebook/marianatrench/integrationtests/Test$Builder;.build:()Lcom/facebook/marianatrench/integrationtests/Test;:0"
-      ],
+      "callee" : "Lcom/facebook/marianatrench/integrationtests/Test$Builder;.build:()Lcom/facebook/marianatrench/integrationtests/Test;",
       "position" : 
       {
         "line" : 62,
         "path" : "Test.java"
       },
       "rule" : 1,
+      "sink_index" : "0",
       "sinks" : 
       [
         {
@@ -401,16 +399,14 @@
       [
         "via-certificate-pinner"
       ],
-      "handles" : 
-      [
-        "Lcom/facebook/marianatrench/integrationtests/Test$Builder;.build:()Lcom/facebook/marianatrench/integrationtests/Test;:0"
-      ],
+      "callee" : "Lcom/facebook/marianatrench/integrationtests/Test$Builder;.build:()Lcom/facebook/marianatrench/integrationtests/Test;",
       "position" : 
       {
         "line" : 76,
         "path" : "Test.java"
       },
       "rule" : 1,
+      "sink_index" : "0",
       "sinks" : 
       [
         {
@@ -543,16 +539,14 @@
   "issues" : 
   [
     {
-      "handles" : 
-      [
-        "Lcom/facebook/marianatrench/integrationtests/Test$Builder;.build:()Lcom/facebook/marianatrench/integrationtests/Test;:0"
-      ],
+      "callee" : "Lcom/facebook/marianatrench/integrationtests/Test$Builder;.build:()Lcom/facebook/marianatrench/integrationtests/Test;",
       "position" : 
       {
         "line" : 69,
         "path" : "Test.java"
       },
       "rule" : 1,
+      "sink_index" : "0",
       "sinks" : 
       [
         {

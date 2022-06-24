@@ -96,16 +96,14 @@
         "via-array",
         "via-cast:Ljava/lang/String;"
       ],
-      "handles" : 
-      [
-        "Lcom/facebook/marianatrench/integrationtests/Test;.log:([Ljava/lang/String;)V:0"
-      ],
+      "callee" : "Lcom/facebook/marianatrench/integrationtests/Test;.log:([Ljava/lang/String;)V",
       "position" : 
       {
         "line" : 19,
         "path" : "Test.java"
       },
       "rule" : 1,
+      "sink_index" : "0",
       "sinks" : 
       [
         {
@@ -201,16 +199,14 @@
         "via-array",
         "via-cast:Ljava/lang/String;"
       ],
-      "handles" : 
-      [
-        "Lcom/facebook/marianatrench/integrationtests/Test;.log:([Ljava/lang/String;)V:0"
-      ],
+      "callee" : "Lcom/facebook/marianatrench/integrationtests/Test;.log:([Ljava/lang/String;)V",
       "position" : 
       {
         "line" : 26,
         "path" : "Test.java"
       },
       "rule" : 1,
+      "sink_index" : "0",
       "sinks" : 
       [
         {

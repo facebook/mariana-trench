@@ -123,16 +123,14 @@
       [
         "via-type:Lcom/facebook/marianatrench/integrationtests/Crtex;"
       ],
-      "handles" : 
-      [
-        "Lcom/facebook/marianatrench/integrationtests/Crtex;.startActivityHelper:(Landroid/content/Intent;Landroid/app/Activity;)V:0"
-      ],
+      "callee" : "Lcom/facebook/marianatrench/integrationtests/Crtex;.startActivityHelper:(Landroid/content/Intent;Landroid/app/Activity;)V",
       "position" : 
       {
         "line" : 25,
         "path" : "Crtex.java"
       },
       "rule" : 1,
+      "sink_index" : "0",
       "sinks" : 
       [
         {

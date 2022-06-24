@@ -13,16 +13,14 @@
           [
             "via-obscure"
           ],
-          "handles" :
-          [
-            "LSink;.interface_sink:(LData;)V:0"
-          ],
+          "callee" : "LSink;.interface_sink:(LData;)V",
           "position" :
           {
             "line" : 3,
             "path" : "Flow.java"
           },
           "rule" : 1,
+          "sink_index" : "0",
           "sinks" :
           [
             {

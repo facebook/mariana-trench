@@ -9,16 +9,14 @@
       "issues" :
       [
         {
-          "handles" :
-          [
-            "LSink;.sink_in_second_parameter:(II)V:0"
-          ],
+          "callee" : "LSink;.sink_in_second_parameter:(II)V",
           "position" :
           {
             "line" : 2,
             "path" : "Flow.java"
           },
           "rule" : 1,
+          "sink_index" : "0",
           "sinks" :
           [
             {

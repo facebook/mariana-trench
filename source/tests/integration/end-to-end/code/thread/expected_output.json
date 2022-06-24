@@ -96,16 +96,14 @@
         "via-anonymous-class-to-field",
         "via-cast:Ljava/lang/String;"
       ],
-      "handles" : 
-      [
-        "Ljava/lang/Thread;.<init>:(Ljava/lang/Runnable;)V[0: Lcom/facebook/marianatrench/integrationtests/RunnableActivity$1;]:0"
-      ],
+      "callee" : "Ljava/lang/Thread;.<init>:(Ljava/lang/Runnable;)V[0: Lcom/facebook/marianatrench/integrationtests/RunnableActivity$1;]",
       "position" : 
       {
         "line" : 23,
         "path" : "RunnableActivity.java"
       },
       "rule" : 1,
+      "sink_index" : "0",
       "sinks" : 
       [
         {

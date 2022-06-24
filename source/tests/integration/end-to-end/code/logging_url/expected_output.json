@@ -112,16 +112,14 @@
   "issues" : 
   [
     {
-      "handles" : 
-      [
-        "Lcom/instagram/common/analytics/intf/AnalyticsEvent;.addExtra:(Ljava/lang/String;Ljava/lang/String;)Lcom/instagram/common/analytics/intf/AnalyticsEvent;:1"
-      ],
+      "callee" : "Lcom/instagram/common/analytics/intf/AnalyticsEvent;.addExtra:(Ljava/lang/String;Ljava/lang/String;)Lcom/instagram/common/analytics/intf/AnalyticsEvent;",
       "position" : 
       {
         "line" : 23,
         "path" : "SimpleLogging.java"
       },
       "rule" : 1,
+      "sink_index" : "1",
       "sinks" : 
       [
         {
@@ -204,16 +202,14 @@
   "issues" : 
   [
     {
-      "handles" : 
-      [
-        "Lcom/instagram/url/UrlHandlerActivity;.handleIntent:(Landroid/content/Intent;)V:0"
-      ],
+      "callee" : "Lcom/instagram/url/UrlHandlerActivity;.handleIntent:(Landroid/content/Intent;)V",
       "position" : 
       {
         "line" : 23,
         "path" : "UrlHandlerActivity.java"
       },
       "rule" : 1,
+      "sink_index" : "0",
       "sinks" : 
       [
         {
