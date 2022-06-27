@@ -161,6 +161,9 @@ bool has_permission_check(const DexClass* clazz) {
     for (const auto* block : cfg.blocks()) {
       auto show_block = show(block);
       if (boost::contains(show_block, "TrustedCaller") ||
+          boost::contains(show_block, "AbilityIPCPermissionManager") ||
+          boost::contains(show_block, "CallerInfoHelper") ||
+          boost::contains(show_block, "AppUpdateRequestIntentVerifier") ||
           boost::contains(show_block, "TrustManager") ||
           boost::contains(show_block, "CallingIpcPermissionManager")) {
         return true;
