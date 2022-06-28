@@ -73,6 +73,22 @@
   ]
 }
 {
+  "inline_as" : "Argument(0).mArguments",
+  "method" : "Lcom/facebook/marianatrench/integrationtests/FragmentActivity;.getArguments:()Landroid/os/Bundle;",
+  "position" : 
+  {
+    "line" : 66,
+    "path" : "Shims.java"
+  },
+  "propagation" : 
+  [
+    {
+      "input" : "Argument(0).mArguments",
+      "output" : "Return"
+    }
+  ]
+}
+{
   "inline_as" : "Argument(0).scheme",
   "method" : "Landroid/net/Uri;.getScheme:()Ljava/lang/String;",
   "position" : 
@@ -93,12 +109,129 @@
     {
       "always_features" : 
       [
+        "via-cast:Ljava/lang/String;",
         "via-shim:Lcom/facebook/marianatrench/integrationtests/FragmentTest;.add:(Landroid/app/Activity;Ljava/lang/Object;)V"
       ],
       "callee" : "Lcom/facebook/marianatrench/integrationtests/FragmentActivity;.activity_lifecycle_wrapper:(Landroid/os/Bundle;Ljava/lang/Object;)V",
       "position" : 
       {
-        "line" : 130,
+        "line" : 185,
+        "path" : "Shims.java"
+      },
+      "rule" : 1,
+      "sink_index" : "0",
+      "sinks" : 
+      [
+        {
+          "call" : 
+          {
+            "port" : "Argument(0).mArguments",
+            "position" : 
+            {
+              "end" : 0,
+              "line" : 185,
+              "path" : "Shims.java",
+              "start" : 0
+            },
+            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/FragmentActivity;.activity_lifecycle_wrapper:(Landroid/os/Bundle;Ljava/lang/Object;)V"
+          },
+          "kinds" : 
+          [
+            {
+              "always_features" : 
+              [
+                "via-shim:Lcom/facebook/marianatrench/integrationtests/FragmentTest;.add:(Landroid/app/Activity;Ljava/lang/Object;)V"
+              ],
+              "distance" : 3,
+              "kind" : "Sink",
+              "local_features" : 
+              {
+                "always_features" : 
+                [
+                  "via-shim:Lcom/facebook/marianatrench/integrationtests/FragmentTest;.add:(Landroid/app/Activity;Ljava/lang/Object;)V"
+                ]
+              },
+              "origins" : 
+              [
+                "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V"
+              ]
+            }
+          ]
+        }
+      ],
+      "sources" : 
+      [
+        {
+          "call" : 
+          {
+            "port" : "Return",
+            "position" : 
+            {
+              "end" : 50,
+              "line" : 180,
+              "path" : "Shims.java",
+              "start" : 45
+            },
+            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;"
+          },
+          "kinds" : 
+          [
+            {
+              "always_features" : 
+              [
+                "via-cast:Ljava/lang/String;"
+              ],
+              "distance" : 1,
+              "kind" : "Source",
+              "local_features" : 
+              {
+                "always_features" : 
+                [
+                  "via-cast:Ljava/lang/String;"
+                ]
+              },
+              "local_positions" : 
+              [
+                {
+                  "end" : 19,
+                  "line" : 183,
+                  "start" : 19
+                },
+                {
+                  "end" : 52,
+                  "line" : 180,
+                  "start" : 29
+                }
+              ],
+              "origins" : 
+              [
+                "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;"
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "method" : "Lcom/facebook/marianatrench/integrationtests/Shims;.testSetArguments:()V",
+  "position" : 
+  {
+    "line" : 178,
+    "path" : "Shims.java"
+  }
+}
+{
+  "issues" : 
+  [
+    {
+      "always_features" : 
+      [
+        "via-shim:Lcom/facebook/marianatrench/integrationtests/FragmentTest;.add:(Landroid/app/Activity;Ljava/lang/Object;)V"
+      ],
+      "callee" : "Lcom/facebook/marianatrench/integrationtests/FragmentActivity;.activity_lifecycle_wrapper:(Landroid/os/Bundle;Ljava/lang/Object;)V",
+      "position" : 
+      {
+        "line" : 142,
         "path" : "Shims.java"
       },
       "rule" : 1,
@@ -112,7 +245,7 @@
             "position" : 
             {
               "end" : 0,
-              "line" : 130,
+              "line" : 142,
               "path" : "Shims.java",
               "start" : 0
             },
@@ -151,7 +284,7 @@
             "position" : 
             {
               "end" : 47,
-              "line" : 130,
+              "line" : 142,
               "path" : "Shims.java",
               "start" : 42
             },
@@ -175,7 +308,7 @@
   "method" : "Lcom/facebook/marianatrench/integrationtests/Shims;.testFragmentInstance:()V",
   "position" : 
   {
-    "line" : 128,
+    "line" : 140,
     "path" : "Shims.java"
   }
 }
@@ -190,7 +323,7 @@
       "callee" : "Lcom/facebook/marianatrench/integrationtests/FragmentActivity;.activity_lifecycle_wrapper:(Landroid/os/Bundle;Ljava/lang/Object;)V",
       "position" : 
       {
-        "line" : 135,
+        "line" : 147,
         "path" : "Shims.java"
       },
       "rule" : 1,
@@ -200,11 +333,47 @@
         {
           "call" : 
           {
+            "port" : "Argument(0).mArguments",
+            "position" : 
+            {
+              "end" : 0,
+              "line" : 147,
+              "path" : "Shims.java",
+              "start" : 0
+            },
+            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/FragmentActivity;.activity_lifecycle_wrapper:(Landroid/os/Bundle;Ljava/lang/Object;)V"
+          },
+          "kinds" : 
+          [
+            {
+              "always_features" : 
+              [
+                "via-shim:Lcom/facebook/marianatrench/integrationtests/FragmentTest;.add:(Ljava/lang/Class;Ljava/lang/Object;)V"
+              ],
+              "distance" : 3,
+              "kind" : "Sink",
+              "local_features" : 
+              {
+                "always_features" : 
+                [
+                  "via-shim:Lcom/facebook/marianatrench/integrationtests/FragmentTest;.add:(Ljava/lang/Class;Ljava/lang/Object;)V"
+                ]
+              },
+              "origins" : 
+              [
+                "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V"
+              ]
+            }
+          ]
+        },
+        {
+          "call" : 
+          {
             "port" : "Argument(2)",
             "position" : 
             {
               "end" : 0,
-              "line" : 135,
+              "line" : 147,
               "path" : "Shims.java",
               "start" : 0
             },
@@ -243,7 +412,7 @@
             "position" : 
             {
               "end" : 47,
-              "line" : 135,
+              "line" : 147,
               "path" : "Shims.java",
               "start" : 42
             },
@@ -267,7 +436,7 @@
   "method" : "Lcom/facebook/marianatrench/integrationtests/Shims;.testFragmentReflection:()V",
   "position" : 
   {
-    "line" : 133,
+    "line" : 145,
     "path" : "Shims.java"
   }
 }
@@ -282,7 +451,7 @@
       "callee" : "Lcom/facebook/marianatrench/integrationtests/HandlerOne;.handleMessage:(Ljava/lang/Object;)V",
       "position" : 
       {
-        "line" : 117,
+        "line" : 129,
         "path" : "Shims.java"
       },
       "rule" : 1,
@@ -296,7 +465,7 @@
             "position" : 
             {
               "end" : 0,
-              "line" : 117,
+              "line" : 129,
               "path" : "Shims.java",
               "start" : 0
             },
@@ -335,7 +504,7 @@
             "position" : 
             {
               "end" : 46,
-              "line" : 117,
+              "line" : 129,
               "path" : "Shims.java",
               "start" : 41
             },
@@ -359,7 +528,7 @@
   "method" : "Lcom/facebook/marianatrench/integrationtests/Shims;.testMessageHandlerOneIssue:()Lcom/facebook/marianatrench/integrationtests/Messenger;",
   "position" : 
   {
-    "line" : 115,
+    "line" : 127,
     "path" : "Shims.java"
   }
 }
@@ -374,7 +543,7 @@
       "callee" : "Lcom/facebook/marianatrench/integrationtests/HandlerOne;.handleMessage:(Ljava/lang/Object;)V",
       "position" : 
       {
-        "line" : 139,
+        "line" : 151,
         "path" : "Shims.java"
       },
       "rule" : 1,
@@ -388,7 +557,7 @@
             "position" : 
             {
               "end" : 0,
-              "line" : 139,
+              "line" : 151,
               "path" : "Shims.java",
               "start" : 0
             },
@@ -427,7 +596,7 @@
             "position" : 
             {
               "end" : 91,
-              "line" : 139,
+              "line" : 151,
               "path" : "Shims.java",
               "start" : 86
             },
@@ -451,7 +620,7 @@
   "method" : "Lcom/facebook/marianatrench/integrationtests/Shims;.testParameterMappingIssue:()Lcom/facebook/marianatrench/integrationtests/ParameterMapping;",
   "position" : 
   {
-    "line" : 138,
+    "line" : 150,
     "path" : "Shims.java"
   }
 }
@@ -466,7 +635,7 @@
       "callee" : "Lcom/facebook/marianatrench/integrationtests/ShimTarget;.staticMethod:(Ljava/lang/Object;)V",
       "position" : 
       {
-        "line" : 163,
+        "line" : 175,
         "path" : "Shims.java"
       },
       "rule" : 1,
@@ -480,7 +649,7 @@
             "position" : 
             {
               "end" : 0,
-              "line" : 163,
+              "line" : 175,
               "path" : "Shims.java",
               "start" : 0
             },
@@ -519,7 +688,7 @@
             "position" : 
             {
               "end" : 29,
-              "line" : 163,
+              "line" : 175,
               "path" : "Shims.java",
               "start" : 24
             },
@@ -543,7 +712,7 @@
   "method" : "Lcom/facebook/marianatrench/integrationtests/Shims;.testStaticShimTarget:()V",
   "position" : 
   {
-    "line" : 161,
+    "line" : 173,
     "path" : "Shims.java"
   }
 }
@@ -558,7 +727,7 @@
       "callee" : "Lcom/facebook/marianatrench/integrationtests/ShimTarget;.multipleArguments:(ILjava/lang/String;Ljava/lang/Object;)V",
       "position" : 
       {
-        "line" : 158,
+        "line" : 170,
         "path" : "Shims.java"
       },
       "rule" : 1,
@@ -572,7 +741,7 @@
             "position" : 
             {
               "end" : 0,
-              "line" : 158,
+              "line" : 170,
               "path" : "Shims.java",
               "start" : 0
             },
@@ -611,7 +780,7 @@
             "position" : 
             {
               "end" : 44,
-              "line" : 158,
+              "line" : 170,
               "path" : "Shims.java",
               "start" : 39
             },
@@ -635,7 +804,7 @@
   "method" : "Lcom/facebook/marianatrench/integrationtests/Shims;.testDropArgumentDefined:()V",
   "position" : 
   {
-    "line" : 156,
+    "line" : 168,
     "path" : "Shims.java"
   }
 }
@@ -650,7 +819,7 @@
       "callee" : "Lcom/facebook/marianatrench/integrationtests/ShimTarget;.multipleArguments:(ILjava/lang/String;Ljava/lang/Object;)V",
       "position" : 
       {
-        "line" : 153,
+        "line" : 165,
         "path" : "Shims.java"
       },
       "rule" : 1,
@@ -664,7 +833,7 @@
             "position" : 
             {
               "end" : 0,
-              "line" : 153,
+              "line" : 165,
               "path" : "Shims.java",
               "start" : 0
             },
@@ -703,7 +872,7 @@
             "position" : 
             {
               "end" : 45,
-              "line" : 153,
+              "line" : 165,
               "path" : "Shims.java",
               "start" : 40
             },
@@ -727,7 +896,7 @@
   "method" : "Lcom/facebook/marianatrench/integrationtests/Shims;.testDropArgumentInferred:()V",
   "position" : 
   {
-    "line" : 151,
+    "line" : 163,
     "path" : "Shims.java"
   }
 }
@@ -999,7 +1168,7 @@
       "callee" : "Lcom/facebook/marianatrench/integrationtests/ShimTarget;.multipleArguments:(ILjava/lang/String;Ljava/lang/Object;)V",
       "position" : 
       {
-        "line" : 148,
+        "line" : 160,
         "path" : "Shims.java"
       },
       "rule" : 1,
@@ -1013,7 +1182,7 @@
             "position" : 
             {
               "end" : 46,
-              "line" : 148,
+              "line" : 160,
               "path" : "Shims.java",
               "start" : 32
             },
@@ -1041,7 +1210,7 @@
             "position" : 
             {
               "end" : 44,
-              "line" : 148,
+              "line" : 160,
               "path" : "Shims.java",
               "start" : 39
             },
@@ -1065,7 +1234,7 @@
   "method" : "Lcom/facebook/marianatrench/integrationtests/Shims;.testDirectShimTarget:()V",
   "position" : 
   {
-    "line" : 146,
+    "line" : 158,
     "path" : "Shims.java"
   }
 }
@@ -1487,7 +1656,14 @@
   "position" : 
   {
     "line" : 15
-  }
+  },
+  "propagation" : 
+  [
+    {
+      "input" : "Argument(2)",
+      "output" : "Argument(0)"
+    }
+  ]
 }
 {
   "method" : "Landroid/text/TextUtils;.<init>:()V",
@@ -1685,7 +1861,7 @@
   "method" : "Lcom/facebook/marianatrench/integrationtests/FragmentActivity;.<init>:()V",
   "position" : 
   {
-    "line" : 45,
+    "line" : 47,
     "path" : "Shims.java"
   }
 }
@@ -1694,6 +1870,34 @@
   "position" : {},
   "sinks" : 
   [
+    {
+      "port" : "Argument(0).mArguments",
+      "taint" : 
+      [
+        {
+          "call" : 
+          {
+            "port" : "Argument(0).mArguments",
+            "position" : 
+            {
+              "line" : 0
+            },
+            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/FragmentActivity;.onStart:()V"
+          },
+          "kinds" : 
+          [
+            {
+              "distance" : 2,
+              "kind" : "Sink",
+              "origins" : 
+              [
+                "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V"
+              ]
+            }
+          ]
+        }
+      ]
+    },
     {
       "port" : "Argument(2)",
       "taint" : 
@@ -1728,20 +1932,12 @@
   "method" : "Lcom/facebook/marianatrench/integrationtests/FragmentActivity;.onCreate:(Landroid/os/Bundle;)V",
   "position" : 
   {
-    "line" : 48,
+    "line" : 50,
     "path" : "Shims.java"
   }
 }
 {
   "method" : "Lcom/facebook/marianatrench/integrationtests/FragmentActivity;.onStart:()V",
-  "position" : 
-  {
-    "line" : 51,
-    "path" : "Shims.java"
-  }
-}
-{
-  "method" : "Lcom/facebook/marianatrench/integrationtests/FragmentActivity;.onTest:(Ljava/lang/Object;)V",
   "position" : 
   {
     "line" : 54,
@@ -1750,7 +1946,7 @@
   "sinks" : 
   [
     {
-      "port" : "Argument(1)",
+      "port" : "Argument(0).mArguments",
       "taint" : 
       [
         {
@@ -1759,7 +1955,7 @@
             "port" : "Argument(0)",
             "position" : 
             {
-              "end" : 16,
+              "end" : 29,
               "line" : 55,
               "path" : "Shims.java",
               "start" : 16
@@ -1783,10 +1979,67 @@
   ]
 }
 {
-  "method" : "Lcom/facebook/marianatrench/integrationtests/FragmentTest;.<init>:()V",
+  "method" : "Lcom/facebook/marianatrench/integrationtests/FragmentActivity;.onTest:(Ljava/lang/Object;)V",
   "position" : 
   {
     "line" : 58,
+    "path" : "Shims.java"
+  },
+  "sinks" : 
+  [
+    {
+      "port" : "Argument(1)",
+      "taint" : 
+      [
+        {
+          "call" : 
+          {
+            "port" : "Argument(0)",
+            "position" : 
+            {
+              "end" : 16,
+              "line" : 59,
+              "path" : "Shims.java",
+              "start" : 16
+            },
+            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V"
+          },
+          "kinds" : 
+          [
+            {
+              "distance" : 1,
+              "kind" : "Sink",
+              "origins" : 
+              [
+                "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V"
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
+{
+  "method" : "Lcom/facebook/marianatrench/integrationtests/FragmentActivity;.setArguments:(Landroid/os/Bundle;)V",
+  "position" : 
+  {
+    "line" : 62,
+    "path" : "Shims.java"
+  },
+  "propagation" : 
+  [
+    {
+      "input" : "Argument(1)",
+      "output" : "Argument(0).mArguments"
+    }
+  ]
+}
+{
+  "method" : "Lcom/facebook/marianatrench/integrationtests/FragmentTest;.<init>:()V",
+  "position" : 
+  {
+    "line" : 70,
     "path" : "Shims.java"
   }
 }
@@ -1794,7 +2047,7 @@
   "method" : "Lcom/facebook/marianatrench/integrationtests/FragmentTest;.add:(Landroid/app/Activity;Ljava/lang/Object;)V",
   "position" : 
   {
-    "line" : 65,
+    "line" : 77,
     "path" : "Shims.java"
   }
 }
@@ -1802,7 +2055,7 @@
   "method" : "Lcom/facebook/marianatrench/integrationtests/FragmentTest;.add:(Ljava/lang/Class;Ljava/lang/Object;)V",
   "position" : 
   {
-    "line" : 61,
+    "line" : 73,
     "path" : "Shims.java"
   }
 }
@@ -1943,7 +2196,7 @@
   "method" : "Lcom/facebook/marianatrench/integrationtests/ParameterMapping;.<init>:()V",
   "position" : 
   {
-    "line" : 81,
+    "line" : 93,
     "path" : "Shims.java"
   }
 }
@@ -1951,7 +2204,7 @@
   "method" : "Lcom/facebook/marianatrench/integrationtests/ParameterMapping;.<init>:(Lcom/facebook/marianatrench/integrationtests/Handler;Lcom/facebook/marianatrench/integrationtests/Handler;Ljava/lang/Object;Ljava/lang/Object;)V",
   "position" : 
   {
-    "line" : 83,
+    "line" : 95,
     "path" : "Shims.java"
   }
 }
@@ -1959,7 +2212,7 @@
   "method" : "Lcom/facebook/marianatrench/integrationtests/ParameterMapping;.callStatic:(Ljava/lang/Object;)V",
   "position" : 
   {
-    "line" : 97,
+    "line" : 109,
     "path" : "Shims.java"
   }
 }
@@ -1967,7 +2220,7 @@
   "method" : "Lcom/facebook/marianatrench/integrationtests/ParameterMapping;.defined:(Lcom/facebook/marianatrench/integrationtests/ShimTarget;Ljava/lang/Object;Ljava/lang/String;)V",
   "position" : 
   {
-    "line" : 93,
+    "line" : 105,
     "path" : "Shims.java"
   }
 }
@@ -1975,7 +2228,7 @@
   "method" : "Lcom/facebook/marianatrench/integrationtests/ParameterMapping;.inferred:(Lcom/facebook/marianatrench/integrationtests/ShimTarget;Ljava/lang/Object;)V",
   "position" : 
   {
-    "line" : 89,
+    "line" : 101,
     "path" : "Shims.java"
   }
 }
@@ -2039,7 +2292,7 @@
   "method" : "Lcom/facebook/marianatrench/integrationtests/ShimTarget;.<init>:()V",
   "position" : 
   {
-    "line" : 69,
+    "line" : 81,
     "path" : "Shims.java"
   }
 }
@@ -2047,7 +2300,7 @@
   "method" : "Lcom/facebook/marianatrench/integrationtests/ShimTarget;.multipleArguments:(ILjava/lang/String;Ljava/lang/Object;)V",
   "position" : 
   {
-    "line" : 72,
+    "line" : 84,
     "path" : "Shims.java"
   },
   "sinks" : 
@@ -2063,7 +2316,7 @@
             "position" : 
             {
               "end" : 16,
-              "line" : 73,
+              "line" : 85,
               "path" : "Shims.java",
               "start" : 16
             },
@@ -2089,7 +2342,7 @@
   "method" : "Lcom/facebook/marianatrench/integrationtests/ShimTarget;.staticMethod:(Ljava/lang/Object;)V",
   "position" : 
   {
-    "line" : 76,
+    "line" : 88,
     "path" : "Shims.java"
   },
   "sinks" : 
@@ -2105,7 +2358,7 @@
             "position" : 
             {
               "end" : 16,
-              "line" : 77,
+              "line" : 89,
               "path" : "Shims.java",
               "start" : 16
             },
@@ -2131,7 +2384,7 @@
   "method" : "Lcom/facebook/marianatrench/integrationtests/Shims;.<init>:()V",
   "position" : 
   {
-    "line" : 100,
+    "line" : 112,
     "path" : "Shims.java"
   }
 }
@@ -2139,7 +2392,7 @@
   "method" : "Lcom/facebook/marianatrench/integrationtests/Shims;.getMessenger:(Lcom/facebook/marianatrench/integrationtests/Handler;)Lcom/facebook/marianatrench/integrationtests/Messenger;",
   "position" : 
   {
-    "line" : 102,
+    "line" : 114,
     "path" : "Shims.java"
   }
 }
@@ -2147,7 +2400,7 @@
   "method" : "Lcom/facebook/marianatrench/integrationtests/Shims;.testMessageHandlerOneNoIssue:()Lcom/facebook/marianatrench/integrationtests/Messenger;",
   "position" : 
   {
-    "line" : 110,
+    "line" : 122,
     "path" : "Shims.java"
   }
 }
@@ -2155,7 +2408,7 @@
   "method" : "Lcom/facebook/marianatrench/integrationtests/Shims;.testMessageHandlerOneWithHop:()Lcom/facebook/marianatrench/integrationtests/Messenger;",
   "position" : 
   {
-    "line" : 120,
+    "line" : 132,
     "path" : "Shims.java"
   }
 }
@@ -2163,7 +2416,7 @@
   "method" : "Lcom/facebook/marianatrench/integrationtests/Shims;.testMessageHandlerTwoWithHop:()Lcom/facebook/marianatrench/integrationtests/Messenger;",
   "position" : 
   {
-    "line" : 124,
+    "line" : 136,
     "path" : "Shims.java"
   }
 }
@@ -2171,7 +2424,7 @@
   "method" : "Lcom/facebook/marianatrench/integrationtests/Shims;.testMessengerNoShim:()Lcom/facebook/marianatrench/integrationtests/Messenger;",
   "position" : 
   {
-    "line" : 106,
+    "line" : 118,
     "path" : "Shims.java"
   }
 }
@@ -2179,7 +2432,7 @@
   "method" : "Lcom/facebook/marianatrench/integrationtests/Shims;.testParameterMappingNoIssue:()Lcom/facebook/marianatrench/integrationtests/ParameterMapping;",
   "position" : 
   {
-    "line" : 142,
+    "line" : 154,
     "path" : "Shims.java"
   }
 }

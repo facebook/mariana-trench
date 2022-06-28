@@ -43,16 +43,28 @@ class Messenger {
 }
 
 class FragmentActivity extends Activity {
+  private Bundle mArguments;
+
   FragmentActivity() {}
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {}
 
   @Override
-  public void onStart() {}
+  public void onStart() {
+    Origin.sink(getArguments());
+  }
 
   public void onTest(Object o) {
     Origin.sink(o);
+  }
+
+  void setArguments(Bundle b) {
+    this.mArguments = b;
+  }
+
+  Bundle getArguments() {
+    return this.mArguments;
   }
 }
 
@@ -161,5 +173,15 @@ public class Shims {
   static void testStaticShimTarget() {
     ParameterMapping c = new ParameterMapping();
     c.callStatic(Origin.source());
+  }
+
+  static void testSetArguments() {
+    Bundle b = new Bundle();
+    b.putString("something", (String) Origin.source());
+
+    FragmentActivity f = new FragmentActivity();
+    f.setArguments(b);
+
+    new FragmentTest().add(f, null);
   }
 }

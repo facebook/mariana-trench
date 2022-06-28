@@ -16,5 +16,14 @@
         "port": "Argument(0)"
       }
     ]
+  },
+  {
+    "method": "Landroid/os/Bundle;.putString:(Ljava/lang/String;Ljava/lang/String;)V",
+    "propagation": [
+      {
+        "input": "Argument(2)",
+        "output": "Argument(0)"
+      }
+    ]
   }
 ]
