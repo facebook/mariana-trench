@@ -45,6 +45,16 @@ const DexType* MT_NULLABLE get_parameter_type(
   return dex_proto->get_args()->at(position - (is_static ? 0u : 1u));
 }
 
+void add_receiver_mapping(
+    ShimParameterMapping& parameter_mapping,
+    const DexType* receiver_type,
+    const ShimMethod& shim_method) {
+  if (auto shim_position = shim_method.type_position(receiver_type)) {
+    // Include "this" as argument 0
+    parameter_mapping.insert(0, *shim_position);
+  }
+}
+
 ShimParameterMapping infer_parameter_mapping(
     const DexType* shim_target_class,
     const DexProto* shim_target_proto,
@@ -57,7 +67,13 @@ ShimParameterMapping infer_parameter_mapping(
     return parameter_mapping;
   }
 
-  auto first_parameter_position = shim_target_is_static ? 0u : 1u;
+  ParameterPosition first_parameter_position = 0;
+  // Include "this" as argument 0
+  if (!shim_target_is_static) {
+    first_parameter_position = 1;
+    add_receiver_mapping(parameter_mapping, shim_target_class, shim_method);
+  }
+
   for (std::size_t position = 0; position < dex_arguments->size(); position++) {
     if (auto shim_position =
             shim_method.type_position(dex_arguments->at(position))) {
@@ -202,6 +218,10 @@ ShimParameterMapping ShimParameterMapping::instantiate(
     parameter_mapping.insert(shim_target_position, shim_position);
   }
 
+  if (!shim_target_is_static) {
+    add_receiver_mapping(parameter_mapping, shim_target_class, shim_method);
+  }
+
   return parameter_mapping;
 }
 
@@ -301,11 +321,18 @@ ShimLifecycleTarget::parameter_registers(
   std::unordered_map<ParameterPosition, Register> parameter_registers;
 
   ShimMethod shim_method{callee};
+  auto klass = lifecycle_method->get_class();
   auto parameter_mapping = infer_parameter_mapping(
-      lifecycle_method->get_class(),
+      klass,
       lifecycle_method->get_proto(),
       lifecycle_method->is_static(),
       shim_method);
+
+  // If necessary, check super class types for "this" argument mapping.
+  while (klass && !parameter_mapping.contains(0)) {
+    klass = type_class(klass)->get_super_class();
+    add_receiver_mapping(parameter_mapping, klass, shim_method);
+  }
 
   for (ParameterPosition position = 0;
        position < lifecycle_method->number_of_parameters();
