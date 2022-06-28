@@ -13,6 +13,7 @@
 #include <PatriciaTreeSetAbstractDomain.h>
 
 #include <DexClass.h>
+#include <DexPosition.h>
 
 #include <mariana-trench/Access.h>
 #include <mariana-trench/Compiler.h>
