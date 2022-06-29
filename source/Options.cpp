@@ -123,6 +123,7 @@ Options::Options(
       disable_parameter_type_overrides_(false),
       maximum_method_analysis_time_(std::nullopt),
       maximum_source_sink_distance_(10),
+      disable_via_cast_feature_(false),
       dump_class_hierarchies_(false),
       dump_overrides_(false),
       dump_call_graph_(false),
@@ -210,6 +211,7 @@ Options::Options(const boost::program_options::variables_map& variables) {
             variables["maximum-method-analysis-time"].as<int>());
   maximum_source_sink_distance_ =
       variables["maximum-source-sink-distance"].as<int>();
+  disable_via_cast_feature_ = variables.count("disable-via-cast-feature") > 0;
 
   if (!variables["log-method"].empty()) {
     log_methods_ = variables["log-method"].as<std::vector<std::string>>();
@@ -320,6 +322,9 @@ void Options::add_options(
       "maximum-source-sink-distance",
       program_options::value<int>(),
       "Limits the distance of sources and sinks from a trace entry point.");
+  options.add_options()(
+      "disable-via-cast-feature",
+      "Do not add the via-cast feature. There can be many such features which slows down the analysis. Use this to disable computation of that feature if it is not needed.");
 
   options.add_options()(
       "log-method",
@@ -474,6 +479,10 @@ std::optional<int> Options::maximum_method_analysis_time() const {
 
 int Options::maximum_source_sink_distance() const {
   return maximum_source_sink_distance_;
+}
+
+bool Options::disable_via_cast_feature() const {
+  return disable_via_cast_feature_;
 }
 
 const std::vector<std::string>& Options::log_methods() const {

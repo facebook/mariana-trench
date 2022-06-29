@@ -86,6 +86,7 @@ class Options final {
   std::optional<int> maximum_method_analysis_time() const;
 
   int maximum_source_sink_distance() const;
+  bool disable_via_cast_feature() const;
 
   const std::vector<std::string>& log_methods() const;
   bool dump_class_hierarchies() const;
@@ -130,6 +131,7 @@ class Options final {
   std::optional<int> maximum_method_analysis_time_;
 
   int maximum_source_sink_distance_;
+  bool disable_via_cast_feature_;
 
   std::vector<std::string> log_methods_;
   bool dump_class_hierarchies_;

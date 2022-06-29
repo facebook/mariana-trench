@@ -75,12 +75,16 @@ bool Transfer::analyze_check_cast(
   log_instruction(context, instruction);
   mt_assert(instruction->srcs().size() == 1);
 
-  // Add via-cast feature
   auto taint = environment->read(instruction->srcs()[0]);
-  auto features = FeatureMayAlwaysSet::make_always(
-      {context->features.get_via_cast_feature(instruction->get_type())});
-  taint.map(
-      [&features](Taint& sources) { sources.add_inferred_features(features); });
+
+  if (!context->options.disable_via_cast_feature()) {
+    // Add via-cast feature
+    auto features = FeatureMayAlwaysSet::make_always(
+        {context->features.get_via_cast_feature(instruction->get_type())});
+    taint.map([&features](Taint& sources) {
+      sources.add_inferred_features(features);
+    });
+  }
 
   // Create a new memory location as we do not want to alias the pre-cast
   // location when attaching the via-cast feature.

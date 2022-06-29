@@ -378,6 +378,11 @@ def _add_configuration_arguments(parser: argparse.ArgumentParser) -> None:
         default=configuration.DEFAULT_MAXIMUM_SOURCE_SINK_DISTANCE,
         help="Limits the distance of sources and sinks from a trace entry point.",
     )
+    configuration_arguments.add_argument(
+        "--disable-via-cast-feature",
+        action="store_true",
+        help="Do not add the via-cast feature. There can be many such features which slows down the analysis. Use this to disable computation of that feature if it is not needed.",
+    )
 
 
 def _add_analysis_arguments(parser: argparse.ArgumentParser) -> None:
@@ -520,6 +525,9 @@ def _get_command_options(
     if arguments.generated_models_directory:
         options.append("--generated-models-directory")
         options.append(arguments.generated_models_directory)
+
+    if arguments.disable_via_cast_feature:
+        options.append("--disable-via-cast-feature")
 
     if arguments.sequential:
         options.append("--sequential")
