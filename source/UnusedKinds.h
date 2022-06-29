@@ -20,7 +20,10 @@ class UnusedKinds {
    * used in any rule. These can be removed to save memory/time.
    */
   static std::unordered_set<const Kind*> remove_unused_kinds(
-      Context& context,
+      const Rules& rules,
+      const Kinds& kinds,
+      const Methods& methods,
+      ArtificialMethods& artificial_methods,
       Registry& registry);
 };
 

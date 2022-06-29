@@ -35,16 +35,32 @@ class ArtificialMethods final {
 
   /* An artificial method called on array allocations with a size parameter. */
   DexMethod* array_allocation_method() const {
+    // If the kind is unused, attempting to access the method is likely
+    // unintentional. Check `array_allocation_kind_used()` first.
+    mt_assert(array_allocation_kind_used_);
     return array_allocation_method_;
   }
 
+  /* Underlying kind associated with the `array_allocation_method()`. */
   const Kind* array_allocation_kind() const {
+    // If the kind is unused, attempting to access the kind is likely
+    // unintentional. Check `array_allocation_kind_used()` first.
+    mt_assert(array_allocation_kind_used_);
     return array_allocation_kind_;
   }
+
+  bool array_allocation_kind_used() const {
+    return array_allocation_kind_used_;
+  }
+
+  /* Marks the given set of kinds as unused. Kinds that do not pertain to
+   * artificial methods are ignored. */
+  void set_unused_kinds(const std::unordered_set<const Kind*>& unused_kinds);
 
  private:
   DexMethod* array_allocation_method_;
   const Kind* array_allocation_kind_;
+  bool array_allocation_kind_used_;
 };
 
 } // namespace marianatrench

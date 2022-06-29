@@ -199,7 +199,13 @@ Registry MarianaTrench::analyze(Context& context) {
 
   Timer kind_pruning_timer;
   LOG(1, "Removing unused Kinds");
-  int num_removed = UnusedKinds::remove_unused_kinds(context, registry).size();
+  int num_removed = UnusedKinds::remove_unused_kinds(
+                        *context.rules,
+                        *context.kinds,
+                        *context.methods,
+                        *context.artificial_methods,
+                        registry)
+                        .size();
   context.statistics->log_time("prune_kinds", rules_timer);
   LOG(1,
       "Removed {} kinds in {:.2f}s.",

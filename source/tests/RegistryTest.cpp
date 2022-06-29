@@ -80,7 +80,12 @@ TEST_F(RegistryTest, remove_kinds) {
         old_model_json[0]["sinks"][0]["taint"][0]["kinds"][0]["kind"],
         "ArrayAllocation");
   }
-  UnusedKinds::remove_unused_kinds(context, registry);
+  UnusedKinds::remove_unused_kinds(
+      *context.rules,
+      *context.kinds,
+      *context.methods,
+      *context.artificial_methods,
+      registry);
   auto new_model_json = JsonValidation::null_or_array(
       registry.models_to_json(), /* field */ "models");
   EXPECT_NE(new_model_json, old_model_json);

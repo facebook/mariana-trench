@@ -7,6 +7,7 @@
 
 #include <SpartaWorkQueue.h>
 
+#include <mariana-trench/ArtificialMethods.h>
 #include <mariana-trench/Methods.h>
 #include <mariana-trench/Rules.h>
 #include <mariana-trench/UnusedKinds.h>
@@ -14,9 +15,12 @@
 namespace marianatrench {
 
 std::unordered_set<const Kind*> UnusedKinds::remove_unused_kinds(
-    Context& context,
+    const Rules& rules,
+    const Kinds& kinds,
+    const Methods& methods,
+    ArtificialMethods& artificial_methods,
     Registry& registry) {
-  auto unused_kinds = context.rules->collect_unused_kinds(*context.kinds);
+  auto unused_kinds = rules.collect_unused_kinds(kinds);
   auto queue = sparta::work_queue<const Method*>(
       [&](const Method* method) {
         auto model = registry.get(method);
@@ -24,10 +28,11 @@ std::unordered_set<const Kind*> UnusedKinds::remove_unused_kinds(
         registry.set(model);
       },
       sparta::parallel::default_num_threads());
-  for (const auto* method : *context.methods) {
+  for (const auto* method : methods) {
     queue.add_item(method);
   }
   queue.run_all();
+  artificial_methods.set_unused_kinds(unused_kinds);
   return unused_kinds;
 }
 } // namespace marianatrench

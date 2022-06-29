@@ -796,6 +796,10 @@ void check_flows_to_array_allocation(
     MethodContext* context,
     AnalysisEnvironment* environment,
     const IRInstruction* instruction) {
+  if (!context->artificial_methods.array_allocation_kind_used()) {
+    return;
+  }
+
   auto* array_allocation_method = context->methods.get(
       context->artificial_methods.array_allocation_method());
   auto* position =
