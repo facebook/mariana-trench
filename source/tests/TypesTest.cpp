@@ -119,11 +119,11 @@ TEST_F(TypesTest, LocalIputTypes) {
   auto* dex_method = redex::create_method(scope, "LClass;", R"(
     (method (public) "LClass;.foo:()V"
      (
+      (load-param-object v0)
       (new-instance "Ljava/lang/Object;")
-      (move-result-pseudo-object v0)
+      (move-result-pseudo-object v1)
 
-      (load-param v1)
-      (iput-object v1 v0 "LClass;.field:Ljava/lang/Object;")
+      (iput-object v0 v1 "LClass;.field:Ljava/lang/Object;")
 
       (return-void)
      )
@@ -134,10 +134,13 @@ TEST_F(TypesTest, LocalIputTypes) {
   auto* method = context.methods->get(dex_method);
   auto register_types = register_types_for_method(context, method);
 
+  EXPECT_EQ(register_types.size(), 2);
   EXPECT_EQ(
       register_types.at(0),
+      DexType::make_type(DexString::make_string("LClass;")));
+  EXPECT_EQ(
+      register_types.at(1),
       DexType::make_type(DexString::make_string("Ljava/lang/Object;")));
-  EXPECT_TRUE(register_types[1] == nullptr);
 }
 
 TEST_F(TypesTest, LocalInvokeDirectTypes) {
@@ -162,10 +165,10 @@ TEST_F(TypesTest, LocalInvokeDirectTypes) {
   auto* method = context.methods->get(dex_caller);
   auto register_types = register_types_for_method(context, method);
 
+  EXPECT_EQ(register_types.size(), 1);
   EXPECT_EQ(
       register_types.at(0),
       DexType::make_type(DexString::make_string("LCallee;")));
-  EXPECT_TRUE(register_types[1] == nullptr);
 }
 
 TEST_F(TypesTest, LocalInvokeVirtualTypes) {
