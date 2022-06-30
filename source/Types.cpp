@@ -129,29 +129,28 @@ Types::Types(const Options& options, const DexStoresVector& stores) {
       scope.end());
   const std::vector<std::string>& proguard_configuration_paths =
       options.proguard_configuration_paths();
+  reflection::MetadataCache reflection_metadata_cache;
+  walk::parallel::code(scope, [&](DexMethod* method, IRCode& code) {
+    if (!code.cfg_built()) {
+      code.build_cfg();
+    }
+
+    if (!has_reflection(code)) {
+      return;
+    }
+
+    reflection::ReflectionAnalysis analysis(
+        /* dex_method */ method,
+        /* context */ nullptr,
+        /* summary_query_fn */ nullptr,
+        /* metadata_cache */ &reflection_metadata_cache);
+
+    const_class_environments_.emplace(
+        method,
+        std::make_unique<TypeEnvironments>(make_environments(analysis)));
+  });
   if (proguard_configuration_paths.empty()) {
     global_type_analyzer_ = nullptr;
-
-    reflection::MetadataCache reflection_metadata_cache;
-    walk::parallel::code(scope, [&](DexMethod* method, IRCode& code) {
-      if (!code.cfg_built()) {
-        code.build_cfg();
-      }
-
-      if (!has_reflection(code)) {
-        return;
-      }
-
-      reflection::ReflectionAnalysis analysis(
-          /* dex_method */ method,
-          /* context */ nullptr,
-          /* summary_query_fn */ nullptr,
-          /* metadata_cache */ &reflection_metadata_cache);
-
-      const_class_environments_.emplace(
-          method,
-          std::make_unique<TypeEnvironments>(make_environments(analysis)));
-    });
   } else {
     type_analyzer::global::GlobalTypeAnalysis analysis;
     global_type_analyzer_ = analysis.analyze(scope);
