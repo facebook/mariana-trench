@@ -3,7 +3,7 @@ id: overview
 title: Overview
 sidebar_label: Overview
 ---
-import {OssOnly, FbInternalOnly} from 'internaldocs-fb-helpers';
+import {OssOnly, FbInternalOnly} from 'docusaurus-plugin-internaldocs-fb/internal';
 import FbOverview from './fb/overview.md';
 
 ## What is Mariana Trench
