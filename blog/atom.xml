@@ -18,5 +18,7 @@
             <name>Mariana Trench Team</name>
             <uri>https://github.com/facebook/mariana-trench</uri>
         </author>
+        <category label="facebook" term="facebook"/>
+        <category label="hello" term="hello"/>
     </entry>
 </feed>

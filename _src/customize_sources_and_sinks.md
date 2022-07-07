@@ -4,7 +4,7 @@ title: Customize Sources and Sinks
 sidebar_label: Customize Sources and Sinks
 ---
 
-import {OssOnly, FbInternalOnly} from 'internaldocs-fb-helpers';
+import {OssOnly, FbInternalOnly} from 'docusaurus-plugin-internaldocs-fb/internal';
 import FbCustomizeSourcesAndSinks from './fb/customize_sources_and_sinks.md';
 
 ## Overview

@@ -7,6 +7,7 @@
         <lastBuildDate>Mon, 27 Jan 2020 00:00:00 GMT</lastBuildDate>
         <docs>https://validator.w3.org/feed/docs/rss2.html</docs>
         <generator>https://github.com/jpmonette/feed</generator>
+        <language>en</language>
         <item>
             <title><![CDATA[Welcome]]></title>
             <link>https://mariana-tren.ch/blog/welcome</link>
@@ -14,6 +15,8 @@
             <pubDate>Mon, 27 Jan 2020 00:00:00 GMT</pubDate>
             <description><![CDATA[First post]]></description>
             <content:encoded><![CDATA[<p>First post</p>]]></content:encoded>
+            <category>facebook</category>
+            <category>hello</category>
         </item>
     </channel>
 </rss>
