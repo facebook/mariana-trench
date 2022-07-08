@@ -20,6 +20,7 @@ module.exports = {
     fbInternalOnly('fb/running-on-3rd-party-apps'),
     'customize-sources-and-sinks',
     'models',
+    'shims',
     'configuration',
     fbInternalOnly("fb/known-false-negatives"),
     fbInternalOnly("fb/testing-diffs"),
