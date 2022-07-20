@@ -107,6 +107,10 @@ class MockAndroidResources : public AndroidResources {
       size_t*) override {
     return false;
   }
+
+  void obfuscate_xml_files(
+      const std::unordered_set<std::string>& /* unused */,
+      const std::unordered_set<std::string>& /* unused */) override {}
 };
 
 Context make_context(const Scope& scope) {
