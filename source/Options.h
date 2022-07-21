@@ -87,6 +87,7 @@ class Options final {
 
   int maximum_source_sink_distance() const;
   bool disable_via_cast_feature() const;
+  const std::vector<std::string>& allow_via_cast_features() const;
 
   const std::vector<std::string>& log_methods() const;
   bool dump_class_hierarchies() const;
@@ -132,6 +133,7 @@ class Options final {
 
   int maximum_source_sink_distance_;
   bool disable_via_cast_feature_;
+  std::vector<std::string> allow_via_cast_features_;
 
   std::vector<std::string> log_methods_;
   bool dump_class_hierarchies_;

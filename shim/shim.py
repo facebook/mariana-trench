@@ -383,6 +383,17 @@ def _add_configuration_arguments(parser: argparse.ArgumentParser) -> None:
         action="store_true",
         help="Do not add the via-cast feature. There can be many such features which slows down the analysis. Use this to disable computation of that feature if it is not needed.",
     )
+    configuration_arguments.add_argument(
+        "--allow-via-cast-feature",
+        type=str,
+        action="append",
+        help=(
+            "Compute only these via-cast features. Specified as the full "
+            "type name, e.g. Ljava/lang/Object;. Multiple inputs allowed, "
+            "unspecified means compute everything, and "
+            "--disable-via-cast-feature takes precedence over this."
+        ),
+    )
 
 
 def _add_analysis_arguments(parser: argparse.ArgumentParser) -> None:
@@ -528,6 +539,9 @@ def _get_command_options(
 
     if arguments.disable_via_cast_feature:
         options.append("--disable-via-cast-feature")
+    if arguments.allow_via_cast_feature:
+        for feature in arguments.allow_via_cast_feature:
+            options.append("--allow-via-cast-feature=%s" % feature.strip())
 
     if arguments.sequential:
         options.append("--sequential")
