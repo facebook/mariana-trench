@@ -5,6 +5,8 @@
  * LICENSE file in the root directory of this source tree.
  */
 
+#include <fmt/format.h>
+
 #include <DexAccess.h>
 #include <DexUtil.h>
 #include <Show.h>
@@ -173,6 +175,36 @@ Json::Value Method::to_json() const {
   value["parameter_type_overrides"] = parameter_type_overrides;
 
   return value;
+}
+
+std::string Method::show_control_flow_graph(const cfg::ControlFlowGraph& cfg) {
+  std::string string;
+  for (const auto* block : cfg.blocks()) {
+    string.append(fmt::format("Block {}", block->id()));
+    if (block == cfg.entry_block()) {
+      string.append(" (entry)");
+    }
+    string.append(":\n");
+    for (const auto& instruction : *block) {
+      if (instruction.type == MFLOW_OPCODE) {
+        string.append(fmt::format("  {}\n", ::show(instruction.insn)));
+      }
+    }
+    const auto& successors = block->succs();
+    if (!successors.empty()) {
+      string.append("  Successors: {");
+      for (auto iterator = successors.begin(), end = successors.end();
+           iterator != end;) {
+        string.append(fmt::format("{}", (*iterator)->target()->id()));
+        ++iterator;
+        if (iterator != end) {
+          string.append(", ");
+        }
+      }
+      string.append("}\n");
+    }
+  }
+  return string;
 }
 
 std::ostream& operator<<(std::ostream& out, const Method& method) {

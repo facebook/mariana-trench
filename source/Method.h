@@ -10,6 +10,7 @@
 #include <boost/container/flat_map.hpp>
 #include <json/json.h>
 
+#include <ControlFlow.h>
 #include <DexClass.h>
 
 #include <mariana-trench/Access.h>
@@ -90,6 +91,9 @@ class Method final {
 
   static const Method* from_json(const Json::Value& value, Context& context);
   Json::Value to_json() const;
+
+  /* Used for debug logs in Type analysis and Interprocedural analysis */
+  static std::string show_control_flow_graph(const cfg::ControlFlowGraph& cfg);
 
  private:
   friend struct std::hash<Method>;

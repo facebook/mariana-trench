@@ -74,36 +74,6 @@ class FixpointIterator final
   InstructionAnalyzer<AnalysisEnvironment> instruction_analyzer_;
 };
 
-std::string show_control_flow_graph(const cfg::ControlFlowGraph& cfg) {
-  std::string string;
-  for (const auto* block : cfg.blocks()) {
-    string.append(fmt::format("Block {}", block->id()));
-    if (block == cfg.entry_block()) {
-      string.append(" (entry)");
-    }
-    string.append(":\n");
-    for (const auto& instruction : *block) {
-      if (instruction.type == MFLOW_OPCODE) {
-        string.append(fmt::format("  {}\n", show(instruction.insn)));
-      }
-    }
-    const auto& successors = block->succs();
-    if (!successors.empty()) {
-      string.append("  Successors: {");
-      for (auto iterator = successors.begin(), end = successors.end();
-           iterator != end;) {
-        string.append(fmt::format("{}", (*iterator)->target()->id()));
-        ++iterator;
-        if (iterator != end) {
-          string.append(", ");
-        }
-      }
-      string.append("}\n");
-    }
-  }
-  return string;
-}
-
 Model analyze(
     Context& global_context,
     const Registry& registry,
@@ -134,7 +104,10 @@ Model analyze(
         method->show()));
   } else {
     LOG_OR_DUMP(
-        method_context, 4, "Code:\n{}", show_control_flow_graph(code->cfg()));
+        method_context,
+        4,
+        "Code:\n{}",
+        Method::show_control_flow_graph(code->cfg()));
   }
 
   auto fixpoint =

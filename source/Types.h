@@ -101,6 +101,7 @@ class Types final {
       const_class_environments_;
   std::unique_ptr<type_analyzer::global::GlobalTypeAnalyzer>
       global_type_analyzer_;
+  std::vector<std::string> log_method_types_;
 };
 
 } // namespace marianatrench

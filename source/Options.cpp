@@ -221,6 +221,10 @@ Options::Options(const boost::program_options::variables_map& variables) {
   if (!variables["log-method"].empty()) {
     log_methods_ = variables["log-method"].as<std::vector<std::string>>();
   }
+  if (!variables["log-method-types"].empty()) {
+    log_method_types_ =
+        variables["log-method-types"].as<std::vector<std::string>>();
+  }
   dump_class_hierarchies_ = variables.count("dump-class-hierarchies") > 0;
   dump_overrides_ = variables.count("dump-overrides") > 0;
   dump_call_graph_ = variables.count("dump-call-graph") > 0;
@@ -339,6 +343,10 @@ void Options::add_options(
       "log-method",
       program_options::value<std::vector<std::string>>()->multitoken(),
       "Enable logging for the given methods.");
+  options.add_options()(
+      "log-method-types",
+      program_options::value<std::vector<std::string>>()->multitoken(),
+      "Enable logging of types for the given methods.");
   options.add_options()(
       "dump-class-hierarchies",
       "Dump the class hierarchies in `class_hierarchies.json`.");
@@ -500,6 +508,10 @@ const std::vector<std::string>& Options::allow_via_cast_features() const {
 
 const std::vector<std::string>& Options::log_methods() const {
   return log_methods_;
+}
+
+const std::vector<std::string>& Options::log_method_types() const {
+  return log_method_types_;
 }
 
 bool Options::dump_class_hierarchies() const {

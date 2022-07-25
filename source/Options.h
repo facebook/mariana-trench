@@ -90,6 +90,7 @@ class Options final {
   const std::vector<std::string>& allow_via_cast_features() const;
 
   const std::vector<std::string>& log_methods() const;
+  const std::vector<std::string>& log_method_types() const;
   bool dump_class_hierarchies() const;
   bool dump_overrides() const;
   bool dump_call_graph() const;
@@ -136,6 +137,7 @@ class Options final {
   std::vector<std::string> allow_via_cast_features_;
 
   std::vector<std::string> log_methods_;
+  std::vector<std::string> log_method_types_;
   bool dump_class_hierarchies_;
   bool dump_overrides_;
   bool dump_call_graph_;

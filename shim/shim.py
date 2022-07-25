@@ -461,6 +461,12 @@ def _add_debug_arguments(parser: argparse.ArgumentParser) -> None:
         help="Enable logging for the given methods.",
     )
     debug_arguments.add_argument(
+        "--log-method-types",
+        action="append",
+        metavar="PATTERN",
+        help="Enable logging of type inference (from local and global type analysis) for the given methods.",
+    )
+    debug_arguments.add_argument(
         "--dump-class-hierarchies",
         action="store_true",
         help="Dump the class hierarchies in `class_hierarchies.json`.",
@@ -572,6 +578,9 @@ def _get_command_options(
     if arguments.log_method:
         for method in arguments.log_method:
             options.append("--log-method=%s" % method.strip())
+    if arguments.log_method_types:
+        for method in arguments.log_method_types:
+            options.append("--log-method-types=%s" % method.strip())
     if arguments.dump_class_hierarchies:
         options.append("--dump-class-hierarchies")
     if arguments.dump_overrides:

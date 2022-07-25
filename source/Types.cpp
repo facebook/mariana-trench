@@ -5,6 +5,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
+#include <fmt/format.h>
 #include <algorithm>
 
 #include <Show.h>
@@ -117,10 +118,48 @@ TypeEnvironments make_environments(
   return result;
 }
 
+bool should_log_method(
+    const Method* method,
+    const std::vector<std::string>& log_method_types) {
+  for (const auto& substring : log_method_types) {
+    if (method->show().find(substring) != std::string::npos) {
+      return true;
+    }
+  }
+  return false;
+}
+
+std::string show_locally_inferred_types(const TypeEnvironment& environment) {
+  std::string types_string = "(";
+  for (const auto& [ir_register, type] : environment) {
+    types_string = types_string.append(fmt::format(
+        "{}: {}, ",
+        std::to_string(ir_register),
+        type ? type->str() : "unknown"));
+  }
+  types_string.append(")");
+  return types_string;
+}
+
+std::string show_globally_inferred_types(
+    const IRInstruction* instruction,
+    const RegTypeEnvironment& environment) {
+  std::string types_string = "(";
+  for (const auto& ir_register : instruction->srcs()) {
+    types_string.append(fmt::format(
+        "{}: {}, ",
+        std::to_string(ir_register),
+        show(environment.get(ir_register).get_single_domain())));
+  }
+  types_string.append(")");
+  return types_string;
+}
+
 } // namespace
 
 Types::Types(const Options& options, const DexStoresVector& stores) {
   Scope scope = build_class_scope(stores);
+  log_method_types_ = options.log_method_types();
   scope.erase(
       std::remove_if(
           scope.begin(),
@@ -199,14 +238,19 @@ std::unique_ptr<TypeEnvironments> Types::infer_local_types_for_method(
 
 std::unique_ptr<TypeEnvironments> Types::infer_types_for_method(
     const Method* method) const {
+  auto log_method = should_log_method(method, log_method_types_);
   auto* code = method->get_code();
   if (!code) {
     WARNING(
-        4,
+        log_method ? 0 : 4,
         "Trying to get types for `{}` which does not have code.",
         method->show());
     return std::make_unique<TypeEnvironments>();
   }
+  LOG(log_method ? 0 : 5,
+      "Inferring types for {}\nCode:\n{}",
+      method->show(),
+      Method::show_control_flow_graph(code->cfg()));
 
   // Call TypeInference first, then use GlobalTypeAnalyzer to refine results.
   auto environments = infer_local_types_for_method(method);
@@ -231,6 +275,11 @@ std::unique_ptr<TypeEnvironments> Types::infer_types_for_method(
       auto& environment_at_instruction = found->second;
 
       const auto& global_type_environment = current_state.get_reg_environment();
+      LOG(log_method ? 0 : 5,
+          "Instruction: {}\nLocally Inferred types: {}\nGlobally Inferred types: {}",
+          show(instruction),
+          show_locally_inferred_types(environment_at_instruction),
+          show_globally_inferred_types(instruction, global_type_environment));
       if (!global_type_environment.is_value()) {
         continue;
       }
