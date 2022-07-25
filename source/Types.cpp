@@ -213,14 +213,16 @@ std::unique_ptr<TypeEnvironments> Types::infer_types_for_method(
   if (global_type_analyzer_ == nullptr) {
     return environments;
   }
-  auto local_type_analyzer =
+  auto per_method_global_type_analyzer =
       global_type_analyzer_->get_local_analysis(method->dex_method());
 
-  for (cfg::Block* block : code->cfg().blocks()) {
-    auto current_state = local_type_analyzer->get_entry_state_at(block);
+  for (auto* block : code->cfg().blocks()) {
+    auto current_state =
+        per_method_global_type_analyzer->get_entry_state_at(block);
     for (auto& entry : InstructionIterable(block)) {
       auto* instruction = entry.insn;
-      local_type_analyzer->analyze_instruction(instruction, &current_state);
+      per_method_global_type_analyzer->analyze_instruction(
+          instruction, &current_state);
 
       if (!is_interesting_opcode(instruction->opcode())) {
         continue;
@@ -228,29 +230,18 @@ std::unique_ptr<TypeEnvironments> Types::infer_types_for_method(
       auto found = environments->find(instruction);
       auto& environment_at_instruction = found->second;
 
-      auto register_type_environment = current_state.get_reg_environment();
-      if (!register_type_environment.is_value()) {
+      const auto& global_type_environment = current_state.get_reg_environment();
+      if (!global_type_environment.is_value()) {
         continue;
       }
       for (auto& ir_register : instruction->srcs()) {
-        DexTypeDomain domain = register_type_environment.get(ir_register);
-        auto found = environment_at_instruction.find(ir_register);
-        if (found != environment_at_instruction.end()) {
-          auto dex_type = found->second;
-          auto new_dex_type_domain =
-              domain.is_top() ? DexTypeDomain(dex_type) : domain;
-          auto new_dex_type = new_dex_type_domain.get_dex_type();
-          environment_at_instruction[ir_register] =
-              new_dex_type ? *new_dex_type : dex_type;
-        } else {
-          auto new_dex_type = domain.get_dex_type();
-          if (new_dex_type) {
-            environment_at_instruction[ir_register] = *new_dex_type;
-          }
+        auto globally_inferred_type =
+            global_type_environment.get(ir_register).get_dex_type();
+        if (!globally_inferred_type) {
+          continue;
         }
+        environment_at_instruction[ir_register] = *globally_inferred_type;
       }
-
-      local_type_analyzer->analyze_instruction(entry.insn, &current_state);
     }
   }
 
