@@ -240,6 +240,12 @@ std::unique_ptr<TypeEnvironments> Types::infer_types_for_method(
         if (!globally_inferred_type) {
           continue;
         }
+
+        auto local_type = environment_at_instruction.find(ir_register);
+        if (local_type != environment_at_instruction.end() &&
+            type::check_cast(local_type->second, *globally_inferred_type)) {
+          continue;
+        }
         environment_at_instruction[ir_register] = *globally_inferred_type;
       }
     }
