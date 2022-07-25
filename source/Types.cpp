@@ -127,8 +127,6 @@ Types::Types(const Options& options, const DexStoresVector& stores) {
           scope.end(),
           [](DexClass* dex_class) { return dex_class->is_external(); }),
       scope.end());
-  const std::vector<std::string>& proguard_configuration_paths =
-      options.proguard_configuration_paths();
   reflection::MetadataCache reflection_metadata_cache;
   walk::parallel::code(scope, [&](DexMethod* method, IRCode& code) {
     if (!code.cfg_built()) {
@@ -149,12 +147,8 @@ Types::Types(const Options& options, const DexStoresVector& stores) {
         method,
         std::make_unique<TypeEnvironments>(make_environments(analysis)));
   });
-  if (proguard_configuration_paths.empty()) {
-    global_type_analyzer_ = nullptr;
-  } else {
-    type_analyzer::global::GlobalTypeAnalysis analysis;
-    global_type_analyzer_ = analysis.analyze(scope);
-  }
+  type_analyzer::global::GlobalTypeAnalysis analysis;
+  global_type_analyzer_ = analysis.analyze(scope);
 }
 
 std::unique_ptr<TypeEnvironments> Types::infer_local_types_for_method(

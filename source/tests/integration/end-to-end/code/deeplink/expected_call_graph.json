@@ -208,9 +208,7 @@
     "virtual" : 
     [
       "Landroid/content/Intent;.putExtra:(Ljava/lang/String;Ljava/lang/String;)V",
-      "Lcom/facebook/marianatrench/integrationtests/CustomUriIntentMapper;.getIntentForUri:(Landroid/content/Context;Ljava/lang/String;)Landroid/content/Intent;",
-      "Lcom/facebook/marianatrench/integrationtests/Fb4aUriIntentMapper;.getIntentForUri:(Landroid/content/Context;Ljava/lang/String;)Landroid/content/Intent;",
-      "Lcom/facebook/marianatrench/integrationtests/StaticUriIntentMapper;.getIntentForUri:(Landroid/content/Context;Ljava/lang/String;)Landroid/content/Intent;"
+      "Lcom/facebook/marianatrench/integrationtests/Fb4aUriIntentMapper;.getIntentForUri:(Landroid/content/Context;Ljava/lang/String;)Landroid/content/Intent;"
     ]
   },
   "Lcom/facebook/marianatrench/integrationtests/CustomUriIntentMapper;.<init>:()V" : 
@@ -317,9 +315,7 @@
     "virtual" : 
     [
       "Landroid/content/Intent;.putExtras:(Landroid/os/Bundle;)V",
-      "Lcom/facebook/marianatrench/integrationtests/CustomUriIntentMapper;.getIntentForUri:(Landroid/content/Context;Ljava/lang/String;)Landroid/content/Intent;",
-      "Lcom/facebook/marianatrench/integrationtests/Fb4aUriIntentMapper;.getIntentForUri:(Landroid/content/Context;Ljava/lang/String;)Landroid/content/Intent;",
-      "Lcom/facebook/marianatrench/integrationtests/StaticUriIntentMapper;.getIntentForUri:(Landroid/content/Context;Ljava/lang/String;)Landroid/content/Intent;"
+      "Lcom/facebook/marianatrench/integrationtests/Fb4aUriIntentMapper;.getIntentForUri:(Landroid/content/Context;Ljava/lang/String;)Landroid/content/Intent;"
     ]
   },
   "Lcom/facebook/marianatrench/integrationtests/IntentHandlerUtil;.launchNextActivity:(Landroid/content/Context;Landroid/content/Intent;)V" : 

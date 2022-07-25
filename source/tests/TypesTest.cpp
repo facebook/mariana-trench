@@ -75,6 +75,7 @@ Context test_types(
   DexStore store("test_store");
   store.add_classes(scope);
   context.stores = {store};
+  redex::process_proguard_configurations(*context.options, context.stores);
   context.artificial_methods =
       std::make_unique<ArtificialMethods>(*context.kinds, context.stores);
   context.methods = std::make_unique<Methods>(context.stores);
@@ -283,15 +284,11 @@ TEST_F(TypesTest, GlobalInvokeVirtualTypes) {
   auto proguard_configuration_file = create_proguard_configuration_file(
       this->temporary_directory(), "proguard.pro", proguard_configuration);
 
-  /* Proguard configuration should set this as root, but set manually for now.
-   */
-  dex_entry_caller->rstate.set_root();
-
+  auto context = test_types(scope, proguard_configuration_file);
   assert(!root(dex_callee));
   assert(!root(dex_caller));
   assert(root(dex_entry_caller));
 
-  auto context = test_types(scope, proguard_configuration_file);
   auto* caller = context.methods->get(dex_caller);
   auto caller_register_types = register_types_for_method(context, caller);
 
@@ -311,6 +308,76 @@ TEST_F(TypesTest, GlobalInvokeVirtualTypes) {
   EXPECT_EQ(
       entry_register_types.at(1),
       DexType::make_type(DexString::make_string("LCaller;")));
+}
+
+TEST_F(TypesTest, NoProguardNarrowedGlobalFieldTypes) {
+  Scope scope;
+  auto* dex_virtual_method1 =
+      redex::create_void_method(scope, "LSuper;", "virtual_method");
+  redex::create_void_method(
+      scope,
+      "LSubclass;",
+      "virtual_method",
+      /* parameter_types */ "",
+      /* return_type */ "V",
+      /* super */ dex_virtual_method1->get_class());
+
+  // This example shows how global type analysis can be useful even with an
+  // empty/absent proguard file. The benefits are limited, however, and show up
+  // only in virtual method bodies/clinit methods and their callees (which redex
+  // sets as entry points in addtion to the entry points specified in the
+  // proguard)
+  auto* dex_virtual_method2 = redex::create_methods_and_fields(
+      scope,
+      "LBase;",
+      {{
+          R"((
+          method (public) "LBase;.storeField:()V"
+          (
+            (return-void)
+          )
+        ))"}},
+      {{"field", dex_virtual_method1->get_class()}});
+  std::vector<std::string> method_bodies = {
+      {R"((
+          method (public) "LClass;.storeField:()V"
+          (
+            (load-param-object v1)
+            (new-instance "LSubclass;")
+            (move-result-object v0)
+            (invoke-direct (v0) "LSubclass;.<init>:()V")
+
+            (iput-object v0 v1 "LClass;.field:LSuper;")
+            (return-void)
+          )
+        ))"},
+      {R"((
+          method (public) "LClass;.readField:()LSuper;"
+          (
+            (load-param-object v1)
+            (iget-object v1 "LClass;.field:LSuper;")
+            (move-result-pseudo-object v0)
+
+            (invoke-virtual (v0) "LSuper;.virtual_method:()V")
+
+            (return-object v0)
+          )
+        ))"}};
+  auto klass = redex::create_methods(
+      scope, "LClass;", method_bodies, dex_virtual_method2->get_type());
+
+  auto* dex_method2 = klass.at(1);
+
+  DexStore store("test_store");
+  store.add_classes(scope);
+  auto context = test::make_context(store);
+
+  auto method2 = context.methods->get(dex_method2);
+  auto register_types2 = register_types_for_method(context, method2);
+  // The type is narrowed from LSuper
+  EXPECT_EQ(
+      register_types2.at(0),
+      DexType::make_type(DexString::make_string("LSubclass;")));
 }
 
 TEST_F(TypesTest, InvokeWithLocalReflectionArgument) {

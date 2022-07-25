@@ -52,6 +52,14 @@ DexClass* create_class(
     const std::string& class_name,
     const DexType* super = nullptr);
 
+DexClass* create_methods_and_fields(
+    Scope& scope,
+    const std::string& class_name,
+    const std::vector<DexMethodSpecification>& bodies,
+    const std::vector<DexFieldSpecification>& fields,
+    const DexType* super = nullptr,
+    bool fields_are_static = false);
+
 std::vector<DexMethod*> create_methods(
     Scope& scope,
     const std::string& class_name,

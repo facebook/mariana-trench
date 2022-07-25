@@ -29,6 +29,57 @@
 
 namespace marianatrench {
 
+namespace redex {
+namespace {
+
+std::vector<DexMethod*> create_methods(
+    ClassCreator& creator,
+    const std::vector<redex::DexMethodSpecification>& methods) {
+  std::vector<DexMethod*> dex_methods;
+  for (const auto& method : methods) {
+    auto* dex_method = assembler::method_from_string(method.body);
+    if (!method.annotations.empty()) {
+      dex_method->make_non_concrete();
+      dex_method->set_external();
+      dex_method->attach_annotation_set(
+          redex::create_annotation_set(method.annotations));
+    }
+    if (method.abstract) {
+      dex_method->set_code(nullptr);
+    }
+    dex_methods.push_back(dex_method);
+    creator.add_method(dex_method);
+  }
+  return dex_methods;
+}
+
+std::vector<const DexField*> create_fields(
+    ClassCreator& creator,
+    const DexType* klass,
+    const std::vector<redex::DexFieldSpecification>& fields,
+    bool is_static) {
+  std::vector<const DexField*> created_fields;
+
+  for (const auto& [field_name, field_type, field_annotations] : fields) {
+    // Cast to DexField so that we can add annotations to it
+    auto* field = static_cast<DexField*>(DexField::make_field(
+        /* container */ klass,
+        /* name */ DexString::make_string(field_name),
+        /* type */ field_type));
+    field->attach_annotation_set(
+        redex::create_annotation_set(field_annotations));
+    auto* concrete_field = field->make_concrete(
+        is_static ? DexAccessFlags::ACC_STATIC : DexAccessFlags::ACC_PUBLIC,
+        nullptr);
+    creator.add_field(concrete_field);
+    created_fields.push_back(concrete_field);
+  }
+  return created_fields;
+}
+
+} // namespace
+} // namespace redex
+
 DexClass* redex::get_class(std::string_view class_name) {
   auto* type = get_type(class_name);
   if (type) {
@@ -155,8 +206,6 @@ std::vector<DexMethod*> redex::create_methods(
     const std::string& class_name,
     const std::vector<DexMethodSpecification>& methods,
     const DexType* super) {
-  std::vector<DexMethod*> dex_methods;
-
   auto* type = DexType::make_type(DexString::make_string(class_name));
   ClassCreator creator(type);
 
@@ -166,24 +215,32 @@ std::vector<DexMethod*> redex::create_methods(
     creator.set_super(type::java_lang_Object());
   }
 
-  for (const auto& method : methods) {
-    auto* dex_method = assembler::method_from_string(method.body);
-    if (!method.annotations.empty()) {
-      dex_method->make_non_concrete();
-      dex_method->set_external();
-      dex_method->attach_annotation_set(
-          create_annotation_set(method.annotations));
-    }
-    if (method.abstract) {
-      dex_method->set_code(nullptr);
-    }
-    dex_methods.push_back(dex_method);
-    creator.add_method(dex_method);
-  }
+  auto dex_methods = create_methods(creator, methods);
   scope.push_back(creator.create());
-
   return dex_methods;
 }
+
+DexClass* redex::create_methods_and_fields(
+    Scope& scope,
+    const std::string& class_name,
+    const std::vector<DexMethodSpecification>& bodies,
+    const std::vector<DexFieldSpecification>& fields,
+    const DexType* super,
+    bool fields_are_static) {
+  auto* type = DexType::make_type(DexString::make_string(class_name));
+  ClassCreator creator(type);
+
+  if (super) {
+    creator.set_super(const_cast<DexType*>(super));
+  } else {
+    creator.set_super(type::java_lang_Object());
+  }
+  create_methods(creator, bodies);
+  create_fields(creator, type, fields, fields_are_static);
+  auto klass = creator.create();
+  scope.push_back(klass);
+  return klass;
+};
 
 std::vector<DexMethod*> redex::create_methods(
     Scope& scope,
@@ -297,7 +354,6 @@ std::vector<const DexField*> redex::create_fields(
     const std::vector<DexFieldSpecification>& fields,
     const DexType* super,
     bool is_static) {
-  std::vector<const DexField*> created_fields;
   auto* klass = DexType::make_type(DexString::make_string(class_name));
   ClassCreator creator(klass);
 
@@ -307,20 +363,7 @@ std::vector<const DexField*> redex::create_fields(
     creator.set_super(type::java_lang_Object());
   }
 
-  for (const auto& [field_name, field_type, field_annotations] : fields) {
-    // Cast to DexField so that we can add annotations to it
-    auto* field = static_cast<DexField*>(DexField::make_field(
-        /* container */ klass,
-        /* name */ DexString::make_string(field_name),
-        /* type */ field_type));
-    field->attach_annotation_set(
-        redex::create_annotation_set(field_annotations));
-    auto* concrete_field = field->make_concrete(
-        is_static ? DexAccessFlags::ACC_STATIC : DexAccessFlags::ACC_PUBLIC,
-        nullptr);
-    creator.add_field(concrete_field);
-    created_fields.push_back(concrete_field);
-  }
+  auto created_fields = create_fields(creator, klass, fields, is_static);
 
   scope.push_back(creator.create());
   return created_fields;
