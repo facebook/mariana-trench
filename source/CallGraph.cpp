@@ -5,7 +5,9 @@
  * LICENSE file in the root directory of this source tree.
  */
 
+#include <boost/algorithm/string/predicate.hpp>
 #include <re2/re2.h>
+#include <algorithm>
 #include <unordered_map>
 
 #include <GraphUtil.h>
@@ -281,6 +283,22 @@ const Method* get_callee_from_resolved_call(
   }
   mt_assert(callee != nullptr);
   return callee;
+}
+
+bool skip_shim_for_caller(const Method* caller) {
+  static const std::vector<std::string> k_exclude_caller_in_packages = {
+      "Landroid/",
+      "Landroidx/",
+      "Lcom/google/",
+  };
+
+  const auto caller_klass = caller->get_class()->str();
+  return std::any_of(
+      k_exclude_caller_in_packages.begin(),
+      k_exclude_caller_in_packages.end(),
+      [caller_klass](const auto& exclude_prefix) {
+        return boost::starts_with(caller_klass, exclude_prefix);
+      });
 }
 
 void process_shim_target(
@@ -645,8 +663,8 @@ InstructionCallGraphInformation process_instruction(
       instruction_information.artificial_callees,
       sink_textual_order_index);
 
-  auto shim = shims.find(callee);
-  if (shim != shims.end()) {
+  if (auto shim = shims.find(callee);
+      shim != shims.end() && !skip_shim_for_caller(caller)) {
     auto artificial_callees = shim_artificial_callees(
         caller,
         callee,
