@@ -35,6 +35,7 @@ class Options final {
           model_generators_configuration,
       const std::vector<std::string>& model_generator_search_paths,
       bool remove_unreachable_code,
+      bool emit_all_via_cast_features,
       const std::string& source_root_directory = ".");
   explicit Options(const boost::program_options::variables_map& variables);
   Options(const Options&) = delete;
@@ -86,7 +87,7 @@ class Options final {
   std::optional<int> maximum_method_analysis_time() const;
 
   int maximum_source_sink_distance() const;
-  bool disable_via_cast_feature() const;
+  bool emit_all_via_cast_features() const;
   const std::vector<std::string>& allow_via_cast_features() const;
 
   const std::vector<std::string>& log_methods() const;
@@ -133,7 +134,7 @@ class Options final {
   std::optional<int> maximum_method_analysis_time_;
 
   int maximum_source_sink_distance_;
-  bool disable_via_cast_feature_;
+  bool emit_all_via_cast_features_;
   std::vector<std::string> allow_via_cast_features_;
 
   std::vector<std::string> log_methods_;

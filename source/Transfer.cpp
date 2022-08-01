@@ -78,19 +78,17 @@ bool Transfer::analyze_check_cast(
   auto taint = environment->read(instruction->srcs()[0]);
 
   // Add via-cast feature as configured by the program options.
-  if (!context->options.disable_via_cast_feature()) {
-    auto allowed_features = context->options.allow_via_cast_features();
-    if (allowed_features.empty() ||
-        std::find(
-            allowed_features.begin(),
-            allowed_features.end(),
-            instruction->get_type()->str()) != allowed_features.end()) {
-      auto features = FeatureMayAlwaysSet::make_always(
-          {context->features.get_via_cast_feature(instruction->get_type())});
-      taint.map([&features](Taint& sources) {
-        sources.add_inferred_features(features);
-      });
-    }
+  auto allowed_features = context->options.allow_via_cast_features();
+  if (context->options.emit_all_via_cast_features() ||
+      std::find(
+          allowed_features.begin(),
+          allowed_features.end(),
+          instruction->get_type()->str()) != allowed_features.end()) {
+    auto features = FeatureMayAlwaysSet::make_always(
+        {context->features.get_via_cast_feature(instruction->get_type())});
+    taint.map([&features](Taint& sources) {
+      sources.add_inferred_features(features);
+    });
   }
 
   // Create a new memory location as we do not want to alias the pre-cast

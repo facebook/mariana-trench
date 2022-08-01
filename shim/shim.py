@@ -379,9 +379,13 @@ def _add_configuration_arguments(parser: argparse.ArgumentParser) -> None:
         help="Limits the distance of sources and sinks from a trace entry point.",
     )
     configuration_arguments.add_argument(
-        "--disable-via-cast-feature",
+        "--emit-all-via-cast-features",
         action="store_true",
-        help="Do not add the via-cast feature. There can be many such features which slows down the analysis. Use this to disable computation of that feature if it is not needed.",
+        help=(
+            "Compute and emit all via-cast features. There can be many such "
+            "features which slows down the analysis so it is disabled by "
+            "default. Use this to enable it."
+        ),
     )
     configuration_arguments.add_argument(
         "--allow-via-cast-feature",
@@ -389,9 +393,8 @@ def _add_configuration_arguments(parser: argparse.ArgumentParser) -> None:
         action="append",
         help=(
             "Compute only these via-cast features. Specified as the full "
-            "type name, e.g. Ljava/lang/Object;. Multiple inputs allowed, "
-            "unspecified means compute everything, and "
-            "--disable-via-cast-feature takes precedence over this."
+            "type name, e.g. Ljava/lang/Object;. Multiple inputs allowed. "
+            "Use --emit-all-via-cast-features to allow everything."
         ),
     )
 
@@ -543,8 +546,8 @@ def _get_command_options(
         options.append("--generated-models-directory")
         options.append(arguments.generated_models_directory)
 
-    if arguments.disable_via_cast_feature:
-        options.append("--disable-via-cast-feature")
+    if arguments.emit_all_via_cast_features:
+        options.append("--emit-all-via-cast-features")
     if arguments.allow_via_cast_feature:
         for feature in arguments.allow_via_cast_feature:
             options.append("--allow-via-cast-feature=%s" % feature.strip())

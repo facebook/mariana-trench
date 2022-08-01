@@ -476,6 +476,7 @@ TEST_P(IntegrationTest, ReturnsExpectedModel) {
       /* model_generators_configuration */
       std::vector<ModelGeneratorConfiguration>{},
       /* model_generator_search_paths */ std::vector<std::string>{},
+      /* emit_all_via_cast_features */ false,
       /* remove_unreachable_code */ false);
   const auto& options = *context.options;
 

@@ -106,6 +106,7 @@ Options::Options(
         model_generators_configuration,
     const std::vector<std::string>& model_generator_search_paths,
     bool remove_unreachable_code,
+    bool emit_all_via_cast_features,
     const std::string& source_root_directory)
     : models_paths_(models_paths),
       field_models_paths_(field_models_paths),
@@ -123,7 +124,7 @@ Options::Options(
       disable_parameter_type_overrides_(false),
       maximum_method_analysis_time_(std::nullopt),
       maximum_source_sink_distance_(10),
-      disable_via_cast_feature_(false),
+      emit_all_via_cast_features_(emit_all_via_cast_features),
       allow_via_cast_features_({}),
       dump_class_hierarchies_(false),
       dump_overrides_(false),
@@ -212,7 +213,8 @@ Options::Options(const boost::program_options::variables_map& variables) {
             variables["maximum-method-analysis-time"].as<int>());
   maximum_source_sink_distance_ =
       variables["maximum-source-sink-distance"].as<int>();
-  disable_via_cast_feature_ = variables.count("disable-via-cast-feature") > 0;
+  emit_all_via_cast_features_ =
+      variables.count("emit-all-via-cast-features") > 0;
   if (!variables["allow-via-cast-feature"].empty()) {
     allow_via_cast_features_ =
         variables["allow-via-cast-feature"].as<std::vector<std::string>>();
@@ -332,12 +334,12 @@ void Options::add_options(
       program_options::value<int>(),
       "Limits the distance of sources and sinks from a trace entry point.");
   options.add_options()(
-      "disable-via-cast-feature",
-      "Do not add the via-cast feature. There can be many such features which slows down the analysis. Use this to disable computation of that feature if it is not needed.");
+      "emit-all-via-cast-features",
+      "Compute and emit all via-cast features. There can be many such features which slows down the analysis so it is disabled by default. Use this to enable it.");
   options.add_options()(
       "allow-via-cast-feature",
       program_options::value<std::vector<std::string>>(),
-      "Compute only these via-cast features. Specified as the full type name, e.g. Ljava/lang/Object;. Multiple inputs allowed, unspecified means compute everything, and --disable-via-cast-feature takes precedence over this.");
+      "Compute only these via-cast features. Specified as the full type name, e.g. Ljava/lang/Object;. Multiple inputs allowed. Use --emit-all-via-cast-features to allow everything.");
 
   options.add_options()(
       "log-method",
@@ -498,8 +500,8 @@ int Options::maximum_source_sink_distance() const {
   return maximum_source_sink_distance_;
 }
 
-bool Options::disable_via_cast_feature() const {
-  return disable_via_cast_feature_;
+bool Options::emit_all_via_cast_features() const {
+  return emit_all_via_cast_features_;
 }
 
 const std::vector<std::string>& Options::allow_via_cast_features() const {

@@ -154,6 +154,7 @@ TEST_P(IntegrationTest, CompareFlows) {
       model_generators_configurations,
       model_generator_search_paths,
       /* remove_unreachable_code */ false,
+      /* emit_all_via_cast_features */ true,
       /* source_root_directory */ directory.string());
 
   // Load test Java classes

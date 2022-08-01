@@ -63,7 +63,8 @@ TEST_P(JsonModelGeneratorIntegrationTest, CompareModels) {
       /* model_generators_configuration */
       std::vector<ModelGeneratorConfiguration>{},
       /* model_generator_search_paths */ std::vector<std::string>{},
-      /* remove_unreachable_code */ false);
+      /* remove_unreachable_code */ false,
+      /* emit_all_via_cast_features */ false);
 
   // Read from the expected generated models
   std::string expected_output = "";

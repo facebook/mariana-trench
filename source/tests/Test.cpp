@@ -63,7 +63,8 @@ Context make_context(const DexStore& store) {
       /* model_generators_configuration */
       std::vector<ModelGeneratorConfiguration>{},
       /* model_generators_search_path */ std::vector<std::string>{},
-      /* remove_unreachable_code */ false);
+      /* remove_unreachable_code */ false,
+      /* emit_all_via_cast_features */ false);
   context.stores = {store};
   context.artificial_methods =
       std::make_unique<ArtificialMethods>(*context.kinds, context.stores);

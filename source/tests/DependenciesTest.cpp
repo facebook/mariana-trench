@@ -40,7 +40,8 @@ Context test_dependencies(const Scope& scope) {
       /* model_generators_configuration */
       std::vector<ModelGeneratorConfiguration>{},
       /* model_generator_search_paths */ std::vector<std::string>{},
-      /* remove_unreachable_code */ false);
+      /* remove_unreachable_code */ false,
+      /* emit_all_via_cast_features */ false);
   DexStore store("test_store");
   store.add_classes(scope);
   context.stores = {store};
