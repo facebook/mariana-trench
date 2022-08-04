@@ -690,7 +690,7 @@ Each "rule" defines a "filter" (which uses "constraints" to specify methods for 
       - `variable`: A symbolic name for the parameter;
       - `where`: An optional list of constraints on the type of the parameter;
       - `sources | sinks | propagation`: Same as under "model", but we accept the variable name as a parameter number.
-  - `verbosity`*: A logging level, to help debugging. 1 is the most verbose, 5 is the least. The default verbosity level is 5.
+      - `verbosity`*: A logging level, to help debugging. 1 is the most verbose, 5 is the least. The default verbosity level is 5.
 
 
   - **For Field models**
