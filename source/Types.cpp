@@ -186,6 +186,11 @@ Types::Types(const Options& options, const DexStoresVector& stores) {
         method,
         std::make_unique<TypeEnvironments>(make_environments(analysis)));
   });
+  if (options.disable_global_type_analysis()) {
+    LOG(1, "Disabled global type analysis.");
+    global_type_analyzer_ = nullptr;
+    return;
+  }
   type_analyzer::global::GlobalTypeAnalysis analysis;
   global_type_analyzer_ = analysis.analyze(scope);
 }

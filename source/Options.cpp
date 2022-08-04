@@ -122,6 +122,7 @@ Options::Options(
       skip_model_generation_(skip_model_generation),
       remove_unreachable_code_(remove_unreachable_code),
       disable_parameter_type_overrides_(false),
+      disable_global_type_analysis_(false),
       maximum_method_analysis_time_(std::nullopt),
       maximum_source_sink_distance_(10),
       emit_all_via_cast_features_(emit_all_via_cast_features),
@@ -204,6 +205,8 @@ Options::Options(const boost::program_options::variables_map& variables) {
   skip_model_generation_ = variables.count("skip-model-generation") > 0;
   disable_parameter_type_overrides_ =
       variables.count("disable-parameter-type-overrides") > 0;
+  disable_global_type_analysis_ =
+      variables.count("disable-global-type-analysis") > 0;
   remove_unreachable_code_ = variables.count("remove-unreachable-code") > 0;
 
   maximum_method_analysis_time_ =
@@ -321,6 +324,9 @@ void Options::add_options(
   options.add_options()(
       "disable-parameter-type-overrides",
       "Disable analyzing methods with specific parameter type information.");
+  options.add_options()(
+      "disable-global-type-analysis",
+      "Disable running Redex's global type analysis to infer types.");
   options.add_options()(
       "remove-unreachable-code",
       "Prune unreachable code based on entry points specified in proguard configuration.");
@@ -486,6 +492,10 @@ bool Options::skip_model_generation() const {
 
 bool Options::disable_parameter_type_overrides() const {
   return disable_parameter_type_overrides_;
+}
+
+bool Options::disable_global_type_analysis() const {
+  return disable_global_type_analysis_;
 }
 
 bool Options::remove_unreachable_code() const {

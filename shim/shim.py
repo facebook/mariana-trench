@@ -340,6 +340,11 @@ def _add_configuration_arguments(parser: argparse.ArgumentParser) -> None:
         help="A `;`-separated list of ProGuard configurations, which can be used for global inference and to ignore unreachable objects.",
     )
     configuration_arguments.add_argument(
+        "--disable-global-type-analysis",
+        action="store_true",
+        help="Disables global type analysis. If a proguard configuration path is passed in, it will be ignored.",
+    )
+    configuration_arguments.add_argument(
         "--remove-unreachable-code",
         action="store_true",
         help="Prune unreachable code based on entry points specified in proguard configuration.",
@@ -560,6 +565,8 @@ def _get_command_options(
         options.append("--skip-model-generation")
     if arguments.disable_parameter_type_overrides:
         options.append("--disable-parameter-type-overrides")
+    if arguments.disable_global_type_analysis:
+        options.append("--disable-global-type-analysis")
     if arguments.remove_unreachable_code:
         options.append("--remove-unreachable-code")
     if arguments.maximum_method_analysis_time is not None:

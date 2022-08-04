@@ -83,6 +83,7 @@ class Options final {
   bool skip_source_indexing() const;
   bool skip_model_generation() const;
   bool disable_parameter_type_overrides() const;
+  bool disable_global_type_analysis() const;
   bool remove_unreachable_code() const;
   std::optional<int> maximum_method_analysis_time() const;
 
@@ -131,6 +132,7 @@ class Options final {
   bool skip_model_generation_;
   bool remove_unreachable_code_;
   bool disable_parameter_type_overrides_;
+  bool disable_global_type_analysis_;
   std::optional<int> maximum_method_analysis_time_;
 
   int maximum_source_sink_distance_;
