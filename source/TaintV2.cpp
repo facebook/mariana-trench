@@ -7,7 +7,6 @@
 
 #include <mariana-trench/Constants.h>
 #include <mariana-trench/JsonValidation.h>
-#include <mariana-trench/TaintV1.h>
 #include <mariana-trench/TaintV2.h>
 
 namespace marianatrench {
@@ -149,11 +148,15 @@ void TaintV2::transform_kind_with_features(
 }
 
 Json::Value TaintV2::to_json() const {
-  if (constants::k_is_legacy_output_version) {
-    return to_legacy_json();
-  } else {
-    return to_non_legacy_json();
+  auto taint = Json::Value(Json::arrayValue);
+  for (const auto& frames : set_) {
+    auto frames_json = frames.to_json();
+    mt_assert(frames_json.isArray());
+    for (const auto& frame_json : frames_json) {
+      taint.append(frame_json);
+    }
   }
+  return taint;
 }
 
 std::ostream& operator<<(std::ostream& out, const TaintV2& taint) {
@@ -236,26 +239,6 @@ void TaintV2::add(const CalleeFrames& frames) {
 
 void TaintV2::map(const std::function<void(CalleeFrames&)>& f) {
   set_.map(f);
-}
-
-Json::Value TaintV2::to_legacy_json() const {
-  TaintV1 taintV1;
-  for (const auto& frame : frames_iterator()) {
-    taintV1.add(frame);
-  }
-  return taintV1.to_json();
-}
-
-Json::Value TaintV2::to_non_legacy_json() const {
-  auto taint = Json::Value(Json::arrayValue);
-  for (const auto& frames : set_) {
-    auto frames_json = frames.to_json();
-    mt_assert(frames_json.isArray());
-    for (const auto& frame_json : frames_json) {
-      taint.append(frame_json);
-    }
-  }
-  return taint;
 }
 
 } // namespace marianatrench

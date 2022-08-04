@@ -245,9 +245,6 @@ class TaintV2 final : public sparta::AbstractDomain<TaintV2> {
 
   void map(const std::function<void(CalleeFrames&)>& f);
 
-  Json::Value to_legacy_json() const;
-  Json::Value to_non_legacy_json() const;
-
  private:
   Set set_;
 };

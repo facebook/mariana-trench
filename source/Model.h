@@ -292,10 +292,6 @@ class Model final {
   friend std::ostream& operator<<(std::ostream& out, const Model& model);
 
  private:
-  void build_legacy_json(Json::Value&) const;
-  void build_non_legacy_json(Json::Value&) const;
-
- private:
   const Method* MT_NULLABLE method_;
   Modes modes_;
   TaintAccessPathTree generations_;

@@ -216,11 +216,7 @@ void Registry::dump_metadata(const boost::filesystem::path& path) const {
       Json::Value(context_.options->repository_root_directory());
   value["root"] = Json::Value(context_.options->source_root_directory());
   value["tool"] = Json::Value("mariana_trench");
-  if (constants::k_is_legacy_output_version) {
-    value["version"] = Json::Value("0.1");
-  } else {
-    value["version"] = Json::Value("0.2");
-  }
+  value["version"] = Json::Value("0.2");
 
   boost::filesystem::save_string_file(
       path, JsonValidation::to_styled_string(value));

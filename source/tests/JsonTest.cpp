@@ -60,20 +60,13 @@ Json::Value to_json(const T* value) {
   do {                                                                        \
     EXPECT_EQ(                                                                \
         Frame::from_json(test::parse_json(JSON), ##__VA_ARGS__), EXPRESSION); \
-    if (constants::k_is_legacy_output_version) {                              \
-      EXPECT_EQ(                                                              \
-          test::parse_json(JSON), test::sorted_json(to_json(EXPRESSION)));    \
-      EXPECT_EQ(                                                              \
-          Frame::from_json(to_json(EXPRESSION), ##__VA_ARGS__), EXPRESSION);  \
-    } else {                                                                  \
-      auto json = test::parse_json(JSON);                                     \
-      if (json.isObject()) {                                                  \
-        json.removeMember("callee");                                          \
-        json.removeMember("callee_port");                                     \
-        json.removeMember("call_position");                                   \
-      }                                                                       \
-      EXPECT_EQ(json, test::sorted_json(to_json(EXPRESSION)));                \
+    auto json = test::parse_json(JSON);                                       \
+    if (json.isObject()) {                                                    \
+      json.removeMember("callee");                                            \
+      json.removeMember("callee_port");                                       \
+      json.removeMember("call_position");                                     \
     }                                                                         \
+    EXPECT_EQ(json, test::sorted_json(to_json(EXPRESSION)));                  \
   } while (0)
 
 } // namespace
@@ -1146,49 +1139,20 @@ TEST_F(JsonTest, Frame) {
   // locally_inferred_features show up twice in the json, once within a
   // "local_features" key, another as "may/always_features" in the object
   // alongside any existing inferred features.
-  if (constants::k_is_legacy_output_version) {
-    EXPECT_EQ(
-        test::sorted_json(
-            test::make_frame(
-                /* kind */ context.kinds->get("TestSource"),
-                test::FrameProperties{
-                    .inferred_features = FeatureMayAlwaysSet::make_always(
-                        {context.features->get("FeatureTwo")}),
-                    .locally_inferred_features = FeatureMayAlwaysSet(
-                        /* may */ FeatureSet{context.features->get(
-                            "FeatureOne")},
-                        /* always */ {}),
-                    .user_features =
-                        FeatureSet({context.features->get("FeatureThree")})})
-                .to_json()),
-        test::parse_json(R"({
-          "kind": "TestSource",
-          "callee_port": "Leaf",
-          "may_features": ["FeatureOne"],
-          "always_features": ["FeatureThree", "FeatureTwo"],
-          "local_features": {
-            "may_features": ["FeatureOne"],
-            "always_features": ["FeatureThree"]
-          }
-        })"));
-  } else {
-    // For the non-legacy output version, the idea is the same, except that its
-    // output does not contain "callee_port".
-    EXPECT_EQ(
-        test::sorted_json(
-            test::make_frame(
-                /* kind */ context.kinds->get("TestSource"),
-                test::FrameProperties{
-                    .inferred_features = FeatureMayAlwaysSet::make_always(
-                        {context.features->get("FeatureTwo")}),
-                    .locally_inferred_features = FeatureMayAlwaysSet(
-                        /* may */ FeatureSet{context.features->get(
-                            "FeatureOne")},
-                        /* always */ {}),
-                    .user_features =
-                        FeatureSet({context.features->get("FeatureThree")})})
-                .to_json()),
-        test::parse_json(R"({
+  EXPECT_EQ(
+      test::sorted_json(
+          test::make_frame(
+              /* kind */ context.kinds->get("TestSource"),
+              test::FrameProperties{
+                  .inferred_features = FeatureMayAlwaysSet::make_always(
+                      {context.features->get("FeatureTwo")}),
+                  .locally_inferred_features = FeatureMayAlwaysSet(
+                      /* may */ FeatureSet{context.features->get("FeatureOne")},
+                      /* always */ {}),
+                  .user_features =
+                      FeatureSet({context.features->get("FeatureThree")})})
+              .to_json()),
+      test::parse_json(R"({
           "kind": "TestSource",
           "may_features": ["FeatureOne"],
           "always_features": ["FeatureThree", "FeatureTwo"],
@@ -1197,7 +1161,6 @@ TEST_F(JsonTest, Frame) {
             "always_features": ["FeatureThree"]
           }
         })"));
-  }
 
   // Consistency checks.
   EXPECT_THROW(
@@ -1689,56 +1652,33 @@ TEST_F(JsonTest, Model) {
           /* generations */
           {{AccessPath(Root(Root::Kind::Argument, 2)),
             Frame::leaf(context.kinds->get("source_kind"))}}));
-  if (constants::k_is_legacy_output_version) {
-    EXPECT_EQ(
-        Model(
-            method,
-            context,
-            Model::Mode::Normal,
-            /* generations */
-            {{AccessPath(Root(Root::Kind::Argument, 2)),
-              Frame::leaf(context.kinds->get("source_kind"))}})
-            .to_json(),
-        test::parse_json(R"#({
-        "method": "LData;.method:(LData;LData;)V",
-        "generations": [
-          {
-            "kind": "source_kind",
-            "caller_port": "Argument(2)",
-            "callee_port": "Leaf",
-            "origins": ["LData;.method:(LData;LData;)V"]
-          }
-        ]
-      })#"));
-  } else {
-    EXPECT_EQ(
-        Model(
-            method,
-            context,
-            Model::Mode::Normal,
-            /* generations */
-            {{AccessPath(Root(Root::Kind::Argument, 2)),
-              Frame::leaf(context.kinds->get("source_kind"))}})
-            .to_json(),
-        test::parse_json(R"#({
-        "method": "LData;.method:(LData;LData;)V",
-        "generations": [
-          {
-            "port": "Argument(2)",
-            "taint": [
-              {
-                "kinds": [
-                  {
-                    "kind": "source_kind",
-                    "origins": ["LData;.method:(LData;LData;)V"]
-                  }
-                ]
-              }
-            ]
-          }
-        ]
-      })#"));
-  }
+  EXPECT_EQ(
+      Model(
+          method,
+          context,
+          Model::Mode::Normal,
+          /* generations */
+          {{AccessPath(Root(Root::Kind::Argument, 2)),
+            Frame::leaf(context.kinds->get("source_kind"))}})
+          .to_json(),
+      test::parse_json(R"#({
+      "method": "LData;.method:(LData;LData;)V",
+      "generations": [
+        {
+          "port": "Argument(2)",
+          "taint": [
+            {
+              "kinds": [
+                {
+                  "kind": "source_kind",
+                  "origins": ["LData;.method:(LData;LData;)V"]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    })#"));
 
   EXPECT_THROW(
       Model::from_json(
@@ -1765,58 +1705,34 @@ TEST_F(JsonTest, Model) {
           /* parameter_sources */
           {{AccessPath(Root(Root::Kind::Argument, 1)),
             Frame::leaf(context.kinds->get("source_kind"))}}));
-  if (constants::k_is_legacy_output_version) {
-    EXPECT_EQ(
-        Model(
-            method,
-            context,
-            Model::Mode::Normal,
-            /* generations */ {},
-            /* parameter_sources */
-            {{AccessPath(Root(Root::Kind::Argument, 1)),
-              Frame::leaf(context.kinds->get("source_kind"))}})
-            .to_json(),
-        test::parse_json(R"#({
-        "method": "LData;.method:(LData;LData;)V",
-        "parameter_sources": [
-          {
-            "kind": "source_kind",
-            "caller_port": "Argument(1)",
-            "callee_port": "Leaf",
-            "origins": ["LData;.method:(LData;LData;)V"]
-          }
-        ]
-      })#"));
-  } else {
-    EXPECT_EQ(
-        Model(
-            method,
-            context,
-            Model::Mode::Normal,
-            /* generations */ {},
-            /* parameter_sources */
-            {{AccessPath(Root(Root::Kind::Argument, 1)),
-              Frame::leaf(context.kinds->get("source_kind"))}})
-            .to_json(),
-        test::parse_json(R"#({
-        "method": "LData;.method:(LData;LData;)V",
-        "parameter_sources": [
-          {
-            "port": "Argument(1)",
-            "taint": [
-              {
-                "kinds": [
-                  {
-                    "kind": "source_kind",
-                    "origins": ["LData;.method:(LData;LData;)V"]
-                  }
-                ]
-              }
-            ]
-          }
-        ]
-      })#"));
-  }
+  EXPECT_EQ(
+      Model(
+          method,
+          context,
+          Model::Mode::Normal,
+          /* generations */ {},
+          /* parameter_sources */
+          {{AccessPath(Root(Root::Kind::Argument, 1)),
+            Frame::leaf(context.kinds->get("source_kind"))}})
+          .to_json(),
+      test::parse_json(R"#({
+      "method": "LData;.method:(LData;LData;)V",
+      "parameter_sources": [
+        {
+          "port": "Argument(1)",
+          "taint": [
+            {
+              "kinds": [
+                {
+                  "kind": "source_kind",
+                  "origins": ["LData;.method:(LData;LData;)V"]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    })#"));
 
   EXPECT_EQ(
       Model::from_json(
@@ -2125,66 +2041,37 @@ TEST_F(JsonTest, Model) {
               {AccessPath(Root(Root::Kind::Argument, 2)),
                Frame::leaf(context.kinds->get("first_sink"))},
           }));
-  if (constants::k_is_legacy_output_version) {
-    EXPECT_EQ(
-        test::sorted_json(
-            Model(
-                method,
-                context,
-                Model::Mode::Normal,
-                /* generations */ {},
-                /* parameter_sources */ {},
-                /* sinks */
-                {
-                    {AccessPath(Root(Root::Kind::Argument, 2)),
-                     Frame::leaf(context.kinds->get("first_sink"))},
-                })
-                .to_json()),
-        test::parse_json(R"#({
-          "method": "LData;.method:(LData;LData;)V",
-          "sinks": [
-                {
-                  "kind": "first_sink",
-                  "caller_port": "Argument(2)",
-                  "callee_port": "Leaf",
-                  "origins": ["LData;.method:(LData;LData;)V"]
-                }
-          ]
-        })#"));
-  } else {
-    EXPECT_EQ(
-        test::sorted_json(
-            Model(
-                method,
-                context,
-                Model::Mode::Normal,
-                /* generations */ {},
-                /* parameter_sources */ {},
-                /* sinks */
-                {
-                    {AccessPath(Root(Root::Kind::Argument, 2)),
-                     Frame::leaf(context.kinds->get("first_sink"))},
-                })
-                .to_json()),
-        test::parse_json(R"#({
-          "method": "LData;.method:(LData;LData;)V",
-          "sinks": [
-            {
-              "port": "Argument(2)",
-              "taint": [
-                {
-                  "kinds": [
-                    {
-                      "kind": "first_sink",
-                      "origins": ["LData;.method:(LData;LData;)V"]
-                    }
-                  ]
-                }
-              ]
-            }
-          ]
-        })#"));
-  }
+  EXPECT_EQ(
+      test::sorted_json(Model(
+                            method,
+                            context,
+                            Model::Mode::Normal,
+                            /* generations */ {},
+                            /* parameter_sources */ {},
+                            /* sinks */
+                            {
+                                {AccessPath(Root(Root::Kind::Argument, 2)),
+                                 Frame::leaf(context.kinds->get("first_sink"))},
+                            })
+                            .to_json()),
+      test::parse_json(R"#({
+        "method": "LData;.method:(LData;LData;)V",
+        "sinks": [
+          {
+            "port": "Argument(2)",
+            "taint": [
+              {
+                "kinds": [
+                  {
+                    "kind": "first_sink",
+                    "origins": ["LData;.method:(LData;LData;)V"]
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      })#"));
 
   EXPECT_EQ(
       Model::from_json(
@@ -2483,113 +2370,57 @@ TEST_F(JsonTest, Model) {
       /* description */ "",
       Rule::KindSet{context.kinds->get("first_source")},
       Rule::KindSet{context.kinds->get("first_sink")});
-  if (constants::k_is_legacy_output_version) {
-    EXPECT_EQ(
-        test::sorted_json(
-            Model(
-                method,
-                context,
-                Model::Mode::Normal,
-                /* generations */ {},
-                /* parameter_sources */ {},
-                /* sinks */ {},
-                /* propagations */ {},
-                /* global_sanitizers */ {},
-                /* port_sanitizers */ {},
-                /* attach_to_sources */ {},
-                /* attach_to_sinks */ {},
-                /* attach_to_propagations */ {},
-                /* add_features_to_arguments */ {},
-                /* inline_as */ AccessPathConstantDomain::bottom(),
-                IssueSet{Issue(
-                    /* source */ Taint{Frame::leaf(
-                        context.kinds->get("first_source"))},
-                    /* sink */
-                    Taint{Frame::leaf(context.kinds->get("first_sink"))},
-                    rule.get(),
-                    /* callee */ "LClass;.someMethod:()V",
-                    /* sink_index */ 1,
-                    context.positions->get("Data.java", 1))})
-                .to_json()),
-        test::parse_json(R"#({
-        "method": "LData;.method:(LData;LData;)V",
-        "issues": [
-          {
-            "rule": 1,
-            "position": {
-              "path": "Data.java",
-              "line": 1
-            },
-            "callee": "LClass;.someMethod:()V",
-            "sink_index": 1,
-            "sources": [
-              {
-                "kind": "first_source",
-                "callee_port": "Leaf"
-              }
-            ],
-            "sinks": [
-              {
-                "kind": "first_sink",
-                "callee_port": "Leaf"
-              }
-            ]
-          }
-        ]
-      })#"));
-  } else {
-    EXPECT_EQ(
-        test::sorted_json(
-            Model(
-                method,
-                context,
-                Model::Mode::Normal,
-                /* generations */ {},
-                /* parameter_sources */ {},
-                /* sinks */ {},
-                /* propagations */ {},
-                /* global_sanitizers */ {},
-                /* port_sanitizers */ {},
-                /* attach_to_sources */ {},
-                /* attach_to_sinks */ {},
-                /* attach_to_propagations */ {},
-                /* add_features_to_arguments */ {},
-                /* inline_as */ AccessPathConstantDomain::bottom(),
-                IssueSet{Issue(
-                    /* source */ Taint{Frame::leaf(
-                        context.kinds->get("first_source"))},
-                    /* sink */
-                    Taint{Frame::leaf(context.kinds->get("first_sink"))},
-                    rule.get(),
-                    /* callee */ "LClass;.someMethod:()V",
-                    /* sink_index */ 1,
-                    context.positions->get("Data.java", 1))})
-                .to_json()),
-        test::parse_json(R"#({
-        "method": "LData;.method:(LData;LData;)V",
-        "issues": [
-          {
-            "rule": 1,
-            "position": {
-              "path": "Data.java",
-              "line": 1
-            },
-          "callee" : "LClass;.someMethod:()V",
-          "sink_index" : "1",
-            "sources": [
-              {
-                "kinds": [ {"kind": "first_source"} ]
-              }
-            ],
-            "sinks": [
-              {
-                "kinds": [ {"kind": "first_sink"} ]
-              }
-            ]
-          }
-        ]
-      })#"));
-  }
+  EXPECT_EQ(
+      test::sorted_json(
+          Model(
+              method,
+              context,
+              Model::Mode::Normal,
+              /* generations */ {},
+              /* parameter_sources */ {},
+              /* sinks */ {},
+              /* propagations */ {},
+              /* global_sanitizers */ {},
+              /* port_sanitizers */ {},
+              /* attach_to_sources */ {},
+              /* attach_to_sinks */ {},
+              /* attach_to_propagations */ {},
+              /* add_features_to_arguments */ {},
+              /* inline_as */ AccessPathConstantDomain::bottom(),
+              IssueSet{Issue(
+                  /* source */ Taint{Frame::leaf(
+                      context.kinds->get("first_source"))},
+                  /* sink */
+                  Taint{Frame::leaf(context.kinds->get("first_sink"))},
+                  rule.get(),
+                  /* callee */ "LClass;.someMethod:()V",
+                  /* sink_index */ 1,
+                  context.positions->get("Data.java", 1))})
+              .to_json()),
+      test::parse_json(R"#({
+      "method": "LData;.method:(LData;LData;)V",
+      "issues": [
+        {
+          "rule": 1,
+          "position": {
+            "path": "Data.java",
+            "line": 1
+          },
+        "callee" : "LClass;.someMethod:()V",
+        "sink_index" : "1",
+          "sources": [
+            {
+              "kinds": [ {"kind": "first_source"} ]
+            }
+          ],
+          "sinks": [
+            {
+              "kinds": [ {"kind": "first_sink"} ]
+            }
+          ]
+        }
+      ]
+    })#"));
 }
 
 TEST_F(JsonTest, FieldModel) {
@@ -2670,64 +2501,32 @@ TEST_F(JsonTest, FieldModel) {
   EXPECT_EQ(
       FieldModel(field).to_json(),
       test::parse_json(R"({"field": "LBase;.field1:Ljava/lang/String;"})"));
-  if (constants::k_is_legacy_output_version) {
-    EXPECT_EQ(
-        FieldModel(
-            field,
-            /* sources */ {},
-            /* sinks */
-            {test::make_frame(
-                sink_kind,
-                test::FrameProperties{
-                    .inferred_features = FeatureMayAlwaysSet::bottom(),
-                    .locally_inferred_features = FeatureMayAlwaysSet::bottom(),
-                    .user_features = FeatureSet{feature}})})
-            .to_json(),
-        test::parse_json(R"({
-          "field": "LBase;.field1:Ljava/lang/String;",
-          "sinks": [
-            {
-              "kind": "TestSink",
-              "always_features": ["test-feature"],
-              "field_callee" : "LBase;.field1:Ljava/lang/String;",
-              "field_origins": ["LBase;.field1:Ljava/lang/String;"],
-              "callee_port": "Leaf",
-              "local_features": {
-                "always_features": ["test-feature"]
-              }
+  EXPECT_EQ(
+      FieldModel(
+          field,
+          /* sources */ {},
+          /* sinks */
+          {test::make_frame(
+              sink_kind,
+              test::FrameProperties{
+                  .inferred_features = FeatureMayAlwaysSet::bottom(),
+                  .locally_inferred_features = FeatureMayAlwaysSet::bottom(),
+                  .user_features = FeatureSet{feature}})})
+          .to_json(),
+      test::parse_json(R"({
+        "field": "LBase;.field1:Ljava/lang/String;",
+        "sinks": [
+          {
+            "kind": "TestSink",
+            "always_features": ["test-feature"],
+            "field_callee" : "LBase;.field1:Ljava/lang/String;",
+            "field_origins": ["LBase;.field1:Ljava/lang/String;"],
+            "local_features": {
+              "always_features": ["test-feature"]
             }
-          ]
-        })"));
-  } else {
-    // For non-legacy JSON, "callee_port" should not show up in the `Frame`'s
-    // JSON. Everything else should.
-    EXPECT_EQ(
-        FieldModel(
-            field,
-            /* sources */ {},
-            /* sinks */
-            {test::make_frame(
-                sink_kind,
-                test::FrameProperties{
-                    .inferred_features = FeatureMayAlwaysSet::bottom(),
-                    .locally_inferred_features = FeatureMayAlwaysSet::bottom(),
-                    .user_features = FeatureSet{feature}})})
-            .to_json(),
-        test::parse_json(R"({
-          "field": "LBase;.field1:Ljava/lang/String;",
-          "sinks": [
-            {
-              "kind": "TestSink",
-              "always_features": ["test-feature"],
-              "field_callee" : "LBase;.field1:Ljava/lang/String;",
-              "field_origins": ["LBase;.field1:Ljava/lang/String;"],
-              "local_features": {
-                "always_features": ["test-feature"]
-              }
-            }
-          ]
-        })"));
-  }
+          }
+        ]
+      })"));
 }
 
 TEST_F(JsonTest, LifecycleMethod) {

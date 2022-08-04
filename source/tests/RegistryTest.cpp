@@ -56,30 +56,22 @@ TEST_F(RegistryTest, remove_kinds) {
           unused_kinds.begin(), unused_kinds.end(), is_array_allocation),
       unused_kinds.end());
   EXPECT_TRUE(old_model_json[0].isMember("sinks"));
-  if (constants::k_is_legacy_output_version) {
-    // Old model JSON:
-    // [ "sinks": [
-    //   { /* Frame */ "kind": "ArrayAllocation", "callee": ... }
-    // ] ]
-    EXPECT_EQ(old_model_json[0]["sinks"][0]["kind"], "ArrayAllocation");
-  } else {
-    // New model JSON:
-    // [ "sinks": [
-    //   { "caller_port": "Argument(0)",
-    //     "taint": [
-    //       {
-    //         "call" : { /* callee, port, position */ },
-    //         "kinds" : [
-    //           { /* Frame */ "kind": "ArrayAllocation", distance: 2, }
-    //         ]
-    //       } // end "taint[0]"
-    //     ] // end "taint"
-    //   }
-    // ] ]
-    EXPECT_EQ(
-        old_model_json[0]["sinks"][0]["taint"][0]["kinds"][0]["kind"],
-        "ArrayAllocation");
-  }
+  // JSON model:
+  // [ "sinks": [
+  //   { "caller_port": "Argument(0)",
+  //     "taint": [
+  //       {
+  //         "call" : { /* callee, port, position */ },
+  //         "kinds" : [
+  //           { /* Frame */ "kind": "ArrayAllocation", distance: 2, }
+  //         ]
+  //       } // end "taint[0]"
+  //     ] // end "taint"
+  //   }
+  // ] ]
+  EXPECT_EQ(
+      old_model_json[0]["sinks"][0]["taint"][0]["kinds"][0]["kind"],
+      "ArrayAllocation");
   UnusedKinds::remove_unused_kinds(
       *context.rules,
       *context.kinds,
