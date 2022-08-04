@@ -7,14 +7,11 @@
 
 #pragma once
 
-#include <mariana-trench/TaintV1.h>
 #include <mariana-trench/TaintV2.h>
 
 namespace marianatrench {
 
-// Use this to revert to the old Taint implementation.
-// using Taint = TaintV1;
-
+// TODO(T91357916): Rename TaintV2 to Taint. V1 no longer supported.
 using Taint = TaintV2;
 
 } // namespace marianatrench
