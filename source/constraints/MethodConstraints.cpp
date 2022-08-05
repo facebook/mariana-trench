@@ -56,7 +56,7 @@ MethodHashedSet MethodNameConstraint::may_satisfy(
   if (!string_pattern) {
     return MethodHashedSet::top();
   }
-  return method_mappings.name_to_methods.get(
+  return method_mappings.name_to_methods().get(
       *string_pattern, MethodHashedSet::bottom());
 }
 
@@ -216,7 +216,7 @@ MethodHashedSet NotMethodConstraint::may_satisfy(
   if (child_methods.is_top() || child_methods.is_bottom()) {
     return MethodHashedSet::top();
   }
-  MethodHashedSet all_methods = method_mappings.all_methods;
+  MethodHashedSet all_methods = method_mappings.all_methods();
   all_methods.difference_with(child_methods);
   return all_methods;
 }
@@ -383,7 +383,7 @@ MethodHashedSet SignatureConstraint::may_satisfy(
   if (!string_pattern) {
     return MethodHashedSet::top();
   }
-  return method_mappings.signature_to_methods.get(
+  return method_mappings.signature_to_methods().get(
       *string_pattern, MethodHashedSet::bottom());
 }
 
