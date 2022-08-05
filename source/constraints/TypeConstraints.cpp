@@ -31,10 +31,10 @@ MethodHashedSet TypeNameConstraint::may_satisfy(
   }
   switch (constraint_kind) {
     case MaySatisfyMethodConstraintKind::Parent:
-      return method_mappings.class_to_methods.get(
+      return method_mappings.class_to_methods().get(
           *string_pattern, MethodHashedSet::bottom());
     case MaySatisfyMethodConstraintKind::Extends:
-      return method_mappings.class_to_override_methods.get(
+      return method_mappings.class_to_override_methods().get(
           *string_pattern, MethodHashedSet::bottom());
     default:
       mt_unreachable();
@@ -287,7 +287,7 @@ MethodHashedSet NotTypeConstraint::may_satisfy(
   if (child_methods.is_top() || child_methods.is_bottom()) {
     return MethodHashedSet::top();
   }
-  MethodHashedSet all_methods = method_mappings.all_methods;
+  MethodHashedSet all_methods = method_mappings.all_methods();
   all_methods.difference_with(child_methods);
   return all_methods;
 }

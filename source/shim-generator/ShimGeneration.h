@@ -8,13 +8,16 @@
 #pragma once
 
 #include <mariana-trench/Context.h>
+#include <mariana-trench/MethodMappings.h>
 #include <mariana-trench/shim-generator/Shim.h>
 
 namespace marianatrench {
 
 class ShimGeneration {
  public:
-  static MethodToShimMap run(Context& context);
+  static MethodToShimMap run(
+      Context& context,
+      const MethodMappings& method_mappings);
 };
 
 } // namespace marianatrench

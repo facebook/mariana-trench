@@ -41,7 +41,9 @@ std::vector<JsonShimGenerator> get_shim_generators(
 
 } // namespace
 
-MethodToShimMap ShimGeneration::run(Context& context) {
+MethodToShimMap ShimGeneration::run(
+    Context& context,
+    const MethodMappings& method_mappings) {
   std::vector<JsonShimGenerator> all_shims;
   for (const auto& path : context.options->shims_paths()) {
     LOG(1, "Processing shim generator at: {}", path);
@@ -62,18 +64,14 @@ MethodToShimMap ShimGeneration::run(Context& context) {
     }
   }
 
-  LOG(1, "Create method mappings");
-  // TODO: This is duplicate from ModelGeneration::run_optimized()
-  // Consider sharing.
-  std::unique_ptr<MethodMappings> method_mappings =
-      std::make_unique<MethodMappings>(*context.methods);
-
   // Run the shim generator
-  LOG(1, "Running {} shim generators", all_shims.size());
-  MethodToShimMap method_shims;
+  MethodToShimMap method_shims(all_shims.size());
+  std::size_t iteration = 0;
+
   for (auto& item : all_shims) {
-    auto shims =
-        item.emit_method_shims(context.methods.get(), *method_mappings);
+    LOG(1, "Running shim generator ({}/{})", ++iteration, all_shims.size());
+
+    auto shims = item.emit_method_shims(context.methods.get(), method_mappings);
     method_shims.merge(shims);
     for (const auto& shim : shims) {
       WARNING(
