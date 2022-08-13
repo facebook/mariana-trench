@@ -37,7 +37,7 @@ public class ExtendedTests {
 
     taintedFieldClass.field = Origin.source();
 
-    // Expected to have two issues here. FN: Issue with only Source but not with OriginSource
+    // Expected to have two issues here.
     Origin.sink(taintedFieldClass.field);
   }
 
@@ -46,7 +46,7 @@ public class ExtendedTests {
 
     taintedFieldClass.put(Origin.source());
 
-    // Expected to have two issues here. FN: Issue with only Source but not with OriginSource
+    // Expected to have two issues here.
     Origin.sink(taintedFieldClass.field);
   }
 
@@ -56,7 +56,7 @@ public class ExtendedTests {
     // Obscure with propagation: Argument(1) --> Argument(0).field
     taintedFieldClass.putObscure(Origin.source());
 
-    // Expected to have two issues here. FN: Issue with only Source but not with OriginSource
+    // Expected to have two issues here.
     Origin.sink(taintedFieldClass.field);
   }
 

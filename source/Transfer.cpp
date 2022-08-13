@@ -123,24 +123,29 @@ bool Transfer::analyze_iget(
         "Unable to resolve access of instance field {}",
         show(instruction->get_field()));
   }
-  auto field_model =
+
+  // Read user defined field model.
+  auto declared_field_model =
       field_target ? context->registry.get(field_target->field) : FieldModel();
 
-  // Create a memory location that represents the field.
+  // Read source memory locations that represents the field.
   auto memory_locations = environment->memory_locations(
       /* register */ instruction->srcs()[0],
       /* field */ instruction->get_field()->get_name());
   LOG_OR_DUMP(context, 4, "Setting result register to {}", memory_locations);
   environment->assign(k_result_register, memory_locations);
-  if (!field_model.empty()) {
+  if (!declared_field_model.empty()) {
     LOG_OR_DUMP(
         context,
         4,
         "Tainting register {} with {}",
         k_result_register,
-        field_model.sources());
+        declared_field_model.sources());
     environment->write(
-        k_result_register, Path({}), field_model.sources(), UpdateKind::Strong);
+        k_result_register,
+        Path({}),
+        declared_field_model.sources(),
+        UpdateKind::Weak);
   }
 
   return false;
@@ -1105,9 +1110,10 @@ bool Transfer::analyze_iput(
     LOG_OR_DUMP(
         context,
         4,
-        "Tainting {} with {}",
+        "Tainting {} with {} update kind: {}",
         show(field_memory_location),
-        taint_copy);
+        taint_copy,
+        (is_singleton ? "Strong" : "Weak"));
     environment->write(
         field_memory_location,
         taint_copy,
