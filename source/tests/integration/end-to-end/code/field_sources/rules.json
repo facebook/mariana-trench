@@ -4,7 +4,18 @@
     "code": 1,
     "description": "",
     "sources": [
-      "Source"
+      "FieldSource"
+    ],
+    "sinks": [
+      "Sink"
+    ]
+  },
+  {
+    "name": "Origin Flow",
+    "code": 2,
+    "description": "",
+    "sources": [
+      "OriginSource"
     ],
     "sinks": [
       "Sink"

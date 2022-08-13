@@ -16,5 +16,35 @@
         "port": "Argument(1)"
       }
     ]
+  },
+  {
+    "method": "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;",
+    "generations": [
+      {
+        "kind": "OriginSource",
+        "port": "Return"
+      }
+    ]
+  },
+  {
+    "method": "Lcom/facebook/marianatrench/integrationtests/TaintedFieldClass;.putObscure:(Ljava/lang/Object;)V",
+    "propagation": [
+      {
+        "input": "Argument(1)",
+        "output": "Argument(0).field"
+      }
+    ]
+  },
+  {
+    "method": "Lcom/facebook/marianatrench/integrationtests/ExtendedTests;.tito:(Lcom/facebook/marianatrench/integrationtests/TaintedFieldClass;)Lcom/facebook/marianatrench/integrationtests/TaintedFieldClass;",
+    "propagation": [
+      {
+        "input": "Argument(1)",
+        "output": "Return"
+      }
+    ],
+    "modes": [
+      "skip-analysis"
+    ]
   }
 ]

@@ -17,6 +17,8 @@ public class TaintedFieldClass {
   public final String finalStringField = "final";
   public static final String staticFinalStringField = "Source";
 
+  public Object noTaint;
+
   public void flow() {
     Origin.sink(field);
     Origin.sink(staticField);
@@ -36,4 +38,14 @@ public class TaintedFieldClass {
   public void stringSink(String argument) {
     return;
   }
+
+  public Object get() {
+    return field;
+  }
+
+  public void put(Object o) {
+    field = o;
+  }
+
+  public void putObscure(Object o) {}
 }

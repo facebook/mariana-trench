@@ -35,16 +35,64 @@
   [
     "Lcom/facebook/marianatrench/integrationtests/ChildClass;.flow:()V"
   ],
+  "Lcom/facebook/marianatrench/integrationtests/ExtendedTests;.sinkOnField:(Lcom/facebook/marianatrench/integrationtests/TaintedFieldClass;)V" : 
+  [
+    "Lcom/facebook/marianatrench/integrationtests/ExtendedTests;.testSinkOnFieldSource:()V",
+    "Lcom/facebook/marianatrench/integrationtests/ExtendedTests;.testSinkOnFieldWithAdditionalSource:()V"
+  ],
+  "Lcom/facebook/marianatrench/integrationtests/ExtendedTests;.tito:(Lcom/facebook/marianatrench/integrationtests/TaintedFieldClass;)Lcom/facebook/marianatrench/integrationtests/TaintedFieldClass;" : 
+  [
+    "Lcom/facebook/marianatrench/integrationtests/ExtendedTests;.testAdditionalTaintViaTito:()V",
+    "Lcom/facebook/marianatrench/integrationtests/ExtendedTests;.testAdditionalTaintViaTitoAndSinkInstance:()V"
+  ],
   "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V" : 
   [
     "Lcom/facebook/marianatrench/integrationtests/ChildClass;.flow:()V",
+    "Lcom/facebook/marianatrench/integrationtests/ExtendedTests;.sinkOnField:(Lcom/facebook/marianatrench/integrationtests/TaintedFieldClass;)V",
+    "Lcom/facebook/marianatrench/integrationtests/ExtendedTests;.testAdditionalTaintViaFieldAssign:()V",
+    "Lcom/facebook/marianatrench/integrationtests/ExtendedTests;.testAdditionalTaintViaGetter:()V",
+    "Lcom/facebook/marianatrench/integrationtests/ExtendedTests;.testAdditionalTaintViaObscureSetter:()V",
+    "Lcom/facebook/marianatrench/integrationtests/ExtendedTests;.testAdditionalTaintViaSetter:()V",
+    "Lcom/facebook/marianatrench/integrationtests/ExtendedTests;.testAdditionalTaintViaTito:()V",
+    "Lcom/facebook/marianatrench/integrationtests/ExtendedTests;.testAdditionalTaintViaTitoAndSinkInstance:()V",
     "Lcom/facebook/marianatrench/integrationtests/TaintedFieldClass;.flow:()V",
     "Lcom/facebook/marianatrench/integrationtests/TestClass;.flow:(Lcom/facebook/marianatrench/integrationtests/TaintedFieldClass;)V"
+  ],
+  "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;" : 
+  [
+    "Lcom/facebook/marianatrench/integrationtests/ExtendedTests;.testAdditionalTaintViaFieldAssign:()V",
+    "Lcom/facebook/marianatrench/integrationtests/ExtendedTests;.testAdditionalTaintViaGetter:()V",
+    "Lcom/facebook/marianatrench/integrationtests/ExtendedTests;.testAdditionalTaintViaObscureSetter:()V",
+    "Lcom/facebook/marianatrench/integrationtests/ExtendedTests;.testAdditionalTaintViaSetter:()V",
+    "Lcom/facebook/marianatrench/integrationtests/ExtendedTests;.testAdditionalTaintViaTito:()V",
+    "Lcom/facebook/marianatrench/integrationtests/ExtendedTests;.testAdditionalTaintViaTitoAndSinkInstance:()V",
+    "Lcom/facebook/marianatrench/integrationtests/ExtendedTests;.testSinkOnFieldWithAdditionalSource:()V"
   ],
   "Lcom/facebook/marianatrench/integrationtests/TaintedFieldClass;.<init>:()V" : 
   [
     "Lcom/facebook/marianatrench/integrationtests/ChildClass;.<init>:()V",
+    "Lcom/facebook/marianatrench/integrationtests/ExtendedTests;.testAdditionalTaintViaFieldAssign:()V",
+    "Lcom/facebook/marianatrench/integrationtests/ExtendedTests;.testAdditionalTaintViaGetter:()V",
+    "Lcom/facebook/marianatrench/integrationtests/ExtendedTests;.testAdditionalTaintViaObscureSetter:()V",
+    "Lcom/facebook/marianatrench/integrationtests/ExtendedTests;.testAdditionalTaintViaSetter:()V",
+    "Lcom/facebook/marianatrench/integrationtests/ExtendedTests;.testAdditionalTaintViaTito:()V",
+    "Lcom/facebook/marianatrench/integrationtests/ExtendedTests;.testAdditionalTaintViaTitoAndSinkInstance:()V",
+    "Lcom/facebook/marianatrench/integrationtests/ExtendedTests;.testSinkOnFieldSource:()V",
+    "Lcom/facebook/marianatrench/integrationtests/ExtendedTests;.testSinkOnFieldWithAdditionalSource:()V",
     "Lcom/facebook/marianatrench/integrationtests/TestClass;.flow:(Lcom/facebook/marianatrench/integrationtests/TaintedFieldClass;)V"
+  ],
+  "Lcom/facebook/marianatrench/integrationtests/TaintedFieldClass;.get:()Ljava/lang/Object;" : 
+  [
+    "Lcom/facebook/marianatrench/integrationtests/ExtendedTests;.testAdditionalTaintViaGetter:()V"
+  ],
+  "Lcom/facebook/marianatrench/integrationtests/TaintedFieldClass;.put:(Ljava/lang/Object;)V" : 
+  [
+    "Lcom/facebook/marianatrench/integrationtests/ExtendedTests;.testAdditionalTaintViaSetter:()V",
+    "Lcom/facebook/marianatrench/integrationtests/ExtendedTests;.testAdditionalTaintViaTitoAndSinkInstance:()V"
+  ],
+  "Lcom/facebook/marianatrench/integrationtests/TaintedFieldClass;.putObscure:(Ljava/lang/Object;)V" : 
+  [
+    "Lcom/facebook/marianatrench/integrationtests/ExtendedTests;.testAdditionalTaintViaObscureSetter:()V"
   ],
   "Lcom/facebook/marianatrench/integrationtests/TaintedFieldClass;.stringSink:(Ljava/lang/String;)V" : 
   [
@@ -89,6 +137,7 @@
     "Lcom/facebook/auth/datastore/LoggedInUserAuthDataStore;.<init>:()V",
     "Lcom/facebook/base/activity/FragmentBaseActivityUtil;.<init>:()V",
     "Lcom/facebook/content/SecureContextHelper;.<init>:()V",
+    "Lcom/facebook/marianatrench/integrationtests/ExtendedTests;.<init>:()V",
     "Lcom/facebook/marianatrench/integrationtests/Origin;.<init>:()V",
     "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;",
     "Lcom/facebook/marianatrench/integrationtests/TaintedFieldClass;.<clinit>:()V",
