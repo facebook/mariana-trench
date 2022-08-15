@@ -6,6 +6,8 @@
  */
 
 #include <boost/filesystem/operations.hpp>
+#include <boost/filesystem/string_file.hpp>
+
 #include <optional>
 
 #include <gtest/gtest.h>

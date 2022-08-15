@@ -10,7 +10,7 @@
 #include <fmt/format.h>
 
 #include <boost/algorithm/string.hpp>
-#include <boost/filesystem.hpp>
+#include <boost/filesystem/string_file.hpp>
 
 #include <IRAssembler.h>
 #include <RedexContext.h>
