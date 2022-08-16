@@ -77,8 +77,7 @@ Context make_context(const DexStore& store) {
       std::make_unique<ClassHierarchies>(*context.options, context.stores);
   context.overrides = std::make_unique<Overrides>(
       *context.options, *context.methods, context.stores);
-  MethodMappings method_mappings{*context.methods};
-  auto shims = ShimGeneration::run(context, method_mappings);
+  auto shims = ShimGeneration::run(context);
   context.call_graph = std::make_unique<CallGraph>(
       *context.options,
       *context.methods,
@@ -87,7 +86,7 @@ Context make_context(const DexStore& store) {
       *context.class_hierarchies,
       *context.overrides,
       *context.features,
-      std::move(shims));
+      shims);
   auto registry = Registry(context);
   context.dependencies = std::make_unique<Dependencies>(
       *context.options,
