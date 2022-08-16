@@ -19,9 +19,9 @@ std::optional<Taint> FulfilledPartialKindState::fulfill_kind(
   const auto* counterpart = get_fulfilled_counterpart(kind, rule);
   if (counterpart) {
     // If both partial sinks for the callsite have been fulfilled, the rule
-    // is satisfied. Make this a triggered sink and create the sink flow
-    // (FrameSet) for the issue. Include the features from both flows (using
-    // .add, NOT .join).
+    // is satisfied. Make this a triggered sink and create the sink flow taint
+    // for the issue. Include the features from both flows (using .add, NOT
+    // .join).
     const auto* triggered_kind = context->kinds.get_triggered(kind, rule);
     auto sink_features = get_features(counterpart, rule);
     sink_features.add(features);

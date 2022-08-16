@@ -351,12 +351,12 @@ class Frame final : public sparta::AbstractDomain<Frame> {
   static Frame from_json(const Json::Value& value, Context& context);
   Json::Value to_json() const;
 
-  // Describe how to join frames together in `FrameSet`.
+  // Describe how to join frames together in `CalleePortFrames`.
   struct GroupEqual {
     bool operator()(const Frame& left, const Frame& right) const;
   };
 
-  // Describe how to join frames together in `FrameSet`.
+  // Describe how to join frames together in `CalleePortFrames`.
   struct GroupHash {
     std::size_t operator()(const Frame& frame) const;
   };
