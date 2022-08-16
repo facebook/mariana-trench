@@ -18,7 +18,6 @@
 #include <mariana-trench/Context.h>
 #include <mariana-trench/FieldModel.h>
 #include <mariana-trench/Frame.h>
-#include <mariana-trench/MethodMappings.h>
 #include <mariana-trench/MethodSet.h>
 #include <mariana-trench/Methods.h>
 #include <mariana-trench/Model.h>
@@ -26,6 +25,17 @@
 #include <mariana-trench/Overrides.h>
 
 namespace marianatrench {
+
+using MethodHashedSet = sparta::HashedSetAbstractDomain<const Method*>;
+
+struct MethodMappings {
+  explicit MethodMappings(const Methods& methods);
+  ConcurrentMap<std::string_view, MethodHashedSet> name_to_methods;
+  ConcurrentMap<std::string_view, MethodHashedSet> class_to_methods;
+  ConcurrentMap<std::string_view, MethodHashedSet> class_to_override_methods;
+  ConcurrentMap<std::string, MethodHashedSet> signature_to_methods;
+  MethodHashedSet all_methods;
+};
 
 struct ModelGeneratorResult {
   std::vector<Model> method_models;

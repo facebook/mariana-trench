@@ -169,16 +169,16 @@ TEST_F(ModelGeneratorTest, MappingGenerator) {
              {array_allocation_method}},
         };
 
-    MethodMappings method_mappings{*context.methods};
+    const auto method_mappings = MethodMappings(*context.methods);
     std::unordered_map<std::string_view, std::vector<const Method*>>
-        name_to_methods_map = sort_mapping(method_mappings.name_to_methods());
+        name_to_methods_map = sort_mapping(method_mappings.name_to_methods);
     for (auto& pair : expected_name_to_methods) {
       std::sort(pair.second.begin(), pair.second.end(), compare_methods);
     }
     EXPECT_EQ(name_to_methods_map, expected_name_to_methods);
 
     std::unordered_map<std::string_view, std::vector<const Method*>>
-        class_to_methods_map = sort_mapping(method_mappings.class_to_methods());
+        class_to_methods_map = sort_mapping(method_mappings.class_to_methods);
     for (auto& pair : expected_class_to_methods) {
       std::sort(pair.second.begin(), pair.second.end(), compare_methods);
     }
@@ -186,7 +186,7 @@ TEST_F(ModelGeneratorTest, MappingGenerator) {
 
     std::unordered_map<std::string_view, std::vector<const Method*>>
         class_to_override_methods_map =
-            sort_mapping(method_mappings.class_to_override_methods());
+            sort_mapping(method_mappings.class_to_override_methods);
     for (auto& pair : expected_class_to_override_methods) {
       std::sort(pair.second.begin(), pair.second.end(), compare_methods);
     }
@@ -195,7 +195,7 @@ TEST_F(ModelGeneratorTest, MappingGenerator) {
 
     std::unordered_map<std::string, std::vector<const Method*>>
         signature_to_methods_map =
-            sort_mapping(method_mappings.signature_to_methods());
+            sort_mapping(method_mappings.signature_to_methods);
     for (auto& pair : expected_signature_to_methods) {
       std::sort(pair.second.begin(), pair.second.end(), compare_methods);
     }

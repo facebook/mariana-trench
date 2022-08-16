@@ -94,9 +94,7 @@ ModelGeneration::make_builtin_model_generators(Context& context) {
 }
 #endif
 
-ModelGeneratorResult ModelGeneration::run(
-    Context& context,
-    const MethodMappings& method_mappings) {
+ModelGeneratorResult ModelGeneration::run(Context& context) {
   const auto& options = *context.options;
 
   const auto& generated_models_directory = options.generated_models_directory();
@@ -149,6 +147,16 @@ ModelGeneratorResult ModelGeneration::run(
   std::vector<FieldModel> generated_field_models;
   std::size_t iteration = 0;
 
+  LOG(1,
+      "Building method mappings for model generation over {} methods",
+      context.methods->size());
+  Timer method_mapping_timer;
+  std::unique_ptr<MethodMappings> method_mappings =
+      std::make_unique<MethodMappings>(*context.methods);
+  LOG(1,
+      "Generated method mappings in {:.2f}s",
+      method_mapping_timer.duration_in_seconds());
+
   for (const auto& model_generator : model_generators) {
     Timer generator_timer;
     LOG(1,
@@ -158,7 +166,7 @@ ModelGeneratorResult ModelGeneration::run(
         model_generators.size());
 
     auto [models, field_models] = model_generator->run_optimized(
-        *context.methods, method_mappings, *context.fields);
+        *context.methods, *method_mappings, *context.fields);
 
     // Remove models for the `null` method
     models.erase(
