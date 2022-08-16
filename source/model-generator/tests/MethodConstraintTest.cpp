@@ -1560,7 +1560,7 @@ TEST_F(MethodConstraintTest, MethodNameConstraintMaySatisfy) {
   DexStore store("test-stores");
   store.add_classes(scope);
   auto context = test::make_context(store);
-  MethodMappings method_mappings{*context.methods};
+  auto method_mappings = MethodMappings(*context.methods);
 
   EXPECT_EQ(
       MethodNameConstraint("method_name_a").may_satisfy(method_mappings),
@@ -1600,7 +1600,7 @@ TEST_F(MethodConstraintTest, ParentConstraintMaySatisfy) {
       DexTypeList::make_type_list({super_interface}));
   store.add_classes(scope);
   auto context = test::make_context(store);
-  MethodMappings method_mappings{*context.methods};
+  auto method_mappings = MethodMappings(*context.methods);
 
   EXPECT_EQ(
       ParentConstraint(std::make_unique<TypeNameConstraint>("LClass;"))
@@ -1661,7 +1661,7 @@ TEST_F(MethodConstraintTest, AllOfMethodConstraintMaySatisfy) {
   DexStore store("test-stores");
   store.add_classes(scope);
   auto context = test::make_context(store);
-  MethodMappings method_mappings{*context.methods};
+  auto method_mappings = MethodMappings(*context.methods);
 
   EXPECT_TRUE(AllOfMethodConstraint({}).may_satisfy(method_mappings).is_top());
 
@@ -1722,7 +1722,7 @@ TEST_F(MethodConstraintTest, AnyOfMethodConstraintMaySatisfy) {
   DexStore store("test-stores");
   store.add_classes(scope);
   auto context = test::make_context(store);
-  MethodMappings method_mappings{*context.methods};
+  auto method_mappings = MethodMappings(*context.methods);
 
   EXPECT_TRUE(AnyOfMethodConstraint({}).may_satisfy(method_mappings).is_top());
 
@@ -1784,7 +1784,7 @@ TEST_F(MethodConstraintTest, NotMethodConstraintMaySatisfy) {
   auto context = test::make_context(store);
   auto* array_allocation_method =
       context.artificial_methods->array_allocation_method();
-  MethodMappings method_mappings{*context.methods};
+  auto method_mappings = MethodMappings(*context.methods);
 
   EXPECT_EQ(
       NotMethodConstraint(

@@ -29,10 +29,8 @@
 #include <mariana-trench/LifecycleMethods.h>
 #include <mariana-trench/Log.h>
 #include <mariana-trench/MarianaTrench.h>
-#include <mariana-trench/MethodMappings.h>
 #include <mariana-trench/Methods.h>
 #include <mariana-trench/ModelGeneration.h>
-#include <mariana-trench/OperatingSystem.h>
 #include <mariana-trench/Options.h>
 #include <mariana-trench/Overrides.h>
 #include <mariana-trench/Positions.h>
@@ -76,37 +74,25 @@ Registry MarianaTrench::analyze(Context& context) {
     LOG(1, "Writing methods to `{}`.", methods_path.native());
     JsonValidation::write_json_file(methods_path, method_list);
   }
-  LOG(1,
-      "Stored all methods in {:.2f}s. Memory used, RSS: {:.2f}GB",
-      methods_timer.duration_in_seconds(),
-      resident_set_size_in_gb());
+  LOG(1, "Stored all methods in {:.2f}s", methods_timer.duration_in_seconds());
 
   Timer fields_timer;
   LOG(1, "Storing fields...");
   context.fields = std::make_unique<Fields>(context.stores);
-  LOG(1,
-      "Stored all fields in {:.2f}s. Memory used, RSS: {:.2f}GB",
-      fields_timer.duration_in_seconds(),
-      resident_set_size_in_gb());
+  LOG(1, "Stored all fields in {:.2f}s", fields_timer.duration_in_seconds());
 
   Timer index_timer;
   LOG(1, "Building source index...");
   context.positions =
       std::make_unique<Positions>(*context.options, context.stores);
   context.statistics->log_time("source_index", index_timer);
-  LOG(1,
-      "Built source index in {:.2f}s. Memory used, RSS: {:.2f}GB",
-      index_timer.duration_in_seconds(),
-      resident_set_size_in_gb());
+  LOG(1, "Built source index in {:.2f}s.", index_timer.duration_in_seconds());
 
   Timer types_timer;
   LOG(1, "Inferring types...");
   context.types = std::make_unique<Types>(*context.options, context.stores);
   context.statistics->log_time("types", types_timer);
-  LOG(1,
-      "Inferred types in {:.2f}s. Memory used, RSS: {:.2f}GB",
-      types_timer.duration_in_seconds(),
-      resident_set_size_in_gb());
+  LOG(1, "Inferred types in {:.2f}s.", types_timer.duration_in_seconds());
 
   Timer class_hierarchies_timer;
   LOG(1, "Building class hierarchies...");
@@ -114,9 +100,8 @@ Registry MarianaTrench::analyze(Context& context) {
       std::make_unique<ClassHierarchies>(*context.options, context.stores);
   context.statistics->log_time("class_hierarchies", class_hierarchies_timer);
   LOG(1,
-      "Built class hierarchies in {:.2f}s. Memory used, RSS: {:.2f}GB",
-      class_hierarchies_timer.duration_in_seconds(),
-      resident_set_size_in_gb());
+      "Built class hierarchies in {:.2f}s.",
+      class_hierarchies_timer.duration_in_seconds());
 
   Timer field_cache_timer;
   LOG(1, "Building fields cache...");
@@ -124,9 +109,8 @@ Registry MarianaTrench::analyze(Context& context) {
       std::make_unique<FieldCache>(*context.class_hierarchies, context.stores);
   context.statistics->log_time("fields", field_cache_timer);
   LOG(1,
-      "Built fields cache in {:.2f}s. Memory used, RSS: {:.2f}GB",
-      field_cache_timer.duration_in_seconds(),
-      resident_set_size_in_gb());
+      "Built fields cache in {:.2f}s.",
+      field_cache_timer.duration_in_seconds());
 
   Timer lifecycle_methods_timer;
   LOG(1, "Creating life-cycle wrapper methods...");
@@ -134,9 +118,8 @@ Registry MarianaTrench::analyze(Context& context) {
       *context.options, *context.class_hierarchies, *context.methods);
   context.statistics->log_time("lifecycle_methods", lifecycle_methods_timer);
   LOG(1,
-      "Created lifecycle methods in {:.2f}s. Memory used, RSS: {:.2f}GB",
-      lifecycle_methods_timer.duration_in_seconds(),
-      resident_set_size_in_gb());
+      "Created lifecycle methods in {:.2f}s.",
+      lifecycle_methods_timer.duration_in_seconds());
 
   Timer overrides_timer;
   LOG(1, "Building override graph...");
@@ -144,87 +127,47 @@ Registry MarianaTrench::analyze(Context& context) {
       *context.options, *context.methods, context.stores);
   context.statistics->log_time("overrides", overrides_timer);
   LOG(1,
-      "Built override graph in {:.2f}s. Memory used, RSS: {:.2f}GB",
-      overrides_timer.duration_in_seconds(),
-      resident_set_size_in_gb());
+      "Built override graph in {:.2f}s.",
+      overrides_timer.duration_in_seconds());
+
+  Timer shims_timer;
+  LOG(1, "Creating Shims...");
+  auto shims = ShimGeneration::run(context);
+  LOG(1, "Created Shims in {:.2f}s.", shims_timer.duration_in_seconds());
+
+  Timer call_graph_timer;
+  LOG(1, "Building call graph...");
+  context.call_graph = std::make_unique<CallGraph>(
+      *context.options,
+      *context.methods,
+      *context.fields,
+      *context.types,
+      *context.class_hierarchies,
+      *context.overrides,
+      *context.features,
+      shims);
+  context.statistics->log_time("call_graph", call_graph_timer);
+  LOG(1,
+      "Built call graph in {:.2f}s.",
+      call_graph_timer.duration_in_seconds());
 
   std::vector<Model> generated_models;
   std::vector<FieldModel> generated_field_models;
-
-  // Scope for MethodMappings and MethodToShimMap as they are only used for shim
-  // and model generation steps.
-  {
-    std::optional<MethodMappings> method_mappings;
-    std::optional<MethodToShimMap> shims;
-
-    if (!context.options->shims_paths().empty() ||
-        !context.options->skip_model_generation()) {
-      Timer method_mapping_timer;
-      LOG(1,
-          "Building method mappings for shim/model generation over {} methods",
-          context.methods->size());
-
-      method_mappings.emplace(*context.methods);
-
-      LOG(1,
-          "Generated method mappings in {:.2f}s. Memory used, RSS: {:.2f}GB",
-          method_mapping_timer.duration_in_seconds(),
-          resident_set_size_in_gb());
-    }
-
-    if (!context.options->shims_paths().empty()) {
-      mt_assert(method_mappings.has_value());
-
-      Timer shims_timer;
-      LOG(1, "Creating Shims...");
-      shims = ShimGeneration::run(context, *method_mappings);
-      LOG(1,
-          "Created Shims in {:.2f}s. Memory used, RSS: {:.2f}GB",
-          shims_timer.duration_in_seconds(),
-          resident_set_size_in_gb());
-    }
-
-    Timer call_graph_timer;
-    LOG(1, "Building call graph...");
-    context.call_graph = std::make_unique<CallGraph>(
-        *context.options,
-        *context.methods,
-        *context.fields,
-        *context.types,
-        *context.class_hierarchies,
-        *context.overrides,
-        *context.features,
-        shims.value_or(MethodToShimMap{}));
-    context.statistics->log_time("call_graph", call_graph_timer);
+  if (!context.options->skip_model_generation()) {
+    Timer generation_timer;
+    LOG(1, "Generating models...");
+    auto model_generator_result = ModelGeneration::run(context);
+    generated_models = model_generator_result.method_models;
+    generated_field_models = model_generator_result.field_models;
+    context.statistics->log_time("models_generation", generation_timer);
     LOG(1,
-        "Built call graph in {:.2f}s. Memory used, RSS: {:.2f}GB",
-        call_graph_timer.duration_in_seconds(),
-        resident_set_size_in_gb());
-
-    if (!context.options->skip_model_generation()) {
-      mt_assert(method_mappings.has_value());
-
-      Timer generation_timer;
-      LOG(1, "Generating models...");
-      auto model_generator_result =
-          ModelGeneration::run(context, *method_mappings);
-      generated_models = model_generator_result.method_models;
-      generated_field_models = model_generator_result.field_models;
-      context.statistics->log_time("models_generation", generation_timer);
-      LOG(1,
-          "Generated {} models and {} field models in {:.2f}s. Memory used, RSS: {:.2f}GB",
-          generated_models.size(),
-          generated_field_models.size(),
-          generation_timer.duration_in_seconds(),
-          resident_set_size_in_gb());
-    } else {
-      LOG(1, "Skipped model generation.");
-    }
-  } // end MethodMappings and MethodToShimMap
-
-  LOG(1,
-      "Reset MethodToShims and Method Mappings. Memory used, RSS: {:.2f}GB",
-      resident_set_size_in_gb());
+        "Generated {} models and {} field models in {:.2f}s.",
+        generated_models.size(),
+        generated_field_models.size(),
+        generation_timer.duration_in_seconds());
+  } else {
+    LOG(1, "Skipped model generation.");
+  }
 
   // Add models for artificial methods.
   {
@@ -239,11 +182,10 @@ Registry MarianaTrench::analyze(Context& context) {
       context, *context.options, generated_models, generated_field_models);
   context.statistics->log_time("registry_init", registry_timer);
   LOG(1,
-      "Initialized {} models and {} field models in {:.2f}s. Memory used, RSS: {:.2f}GB",
+      "Initialized {} models and {} field models in {:.2f}s.",
       registry.models_size(),
       registry.field_models_size(),
-      registry_timer.duration_in_seconds(),
-      resident_set_size_in_gb());
+      registry_timer.duration_in_seconds());
 
   Timer rules_timer;
   LOG(1, "Initializing rules...");
@@ -251,10 +193,9 @@ Registry MarianaTrench::analyze(Context& context) {
       std::make_unique<Rules>(Rules::load(context, *context.options));
   context.statistics->log_time("rules_init", rules_timer);
   LOG(1,
-      "Initialized {} rules in {:.2f}s. Memory used, RSS: {:.2f}GB",
+      "Initialized {} rules in {:.2f}s.",
       context.rules->size(),
-      rules_timer.duration_in_seconds(),
-      resident_set_size_in_gb());
+      rules_timer.duration_in_seconds());
 
   Timer kind_pruning_timer;
   LOG(1, "Removing unused Kinds");
@@ -281,9 +222,8 @@ Registry MarianaTrench::analyze(Context& context) {
       registry);
   context.statistics->log_time("dependencies", dependencies_timer);
   LOG(1,
-      "Built dependency graph in {:.2f}s. Memory used, RSS: {:.2f}GB",
-      dependencies_timer.duration_in_seconds(),
-      resident_set_size_in_gb());
+      "Built dependency graph in {:.2f}s.",
+      dependencies_timer.duration_in_seconds());
 
   Timer class_properties_timer;
   context.class_properties = std::make_unique<ClassProperties>(
@@ -293,9 +233,8 @@ Registry MarianaTrench::analyze(Context& context) {
       *context.dependencies);
   context.statistics->log_time("class_properties", class_properties_timer);
   LOG(1,
-      "Created class properties in {:.2f}s. Memory used, RSS: {:.2f}GB",
-      class_properties_timer.duration_in_seconds(),
-      resident_set_size_in_gb());
+      "Created class properties in {:.2f}s.",
+      class_properties_timer.duration_in_seconds());
 
   Timer scheduler_timer;
   LOG(1, "Building the analysis schedule...");
@@ -303,9 +242,8 @@ Registry MarianaTrench::analyze(Context& context) {
       std::make_unique<Scheduler>(*context.methods, *context.dependencies);
   context.statistics->log_time("scheduler", scheduler_timer);
   LOG(1,
-      "Built the analysis schedule in {:.2f}s. Memory used, RSS: {:.2f}GB",
-      scheduler_timer.duration_in_seconds(),
-      resident_set_size_in_gb());
+      "Built the analysis schedule in {:.2f}s.",
+      scheduler_timer.duration_in_seconds());
 
   Timer analysis_timer;
   LOG(1, "Analyzing...");

@@ -71,6 +71,77 @@ std::vector<FieldModel> FieldVisitorModelGenerator::emit_field_models(
   return this->run_impl(fields.begin(), fields.end());
 }
 
+namespace {
+
+void create_name_to_method(
+    const Method* method,
+    ConcurrentMap<std::string_view, MethodHashedSet>& method_mapping) {
+  auto method_name = method->get_name();
+  method_mapping.update(
+      method_name,
+      [&](std::string_view /* name */,
+          MethodHashedSet& methods,
+          bool /* exists */) { methods.add(method); });
+}
+
+void create_class_to_method(
+    const Method* method,
+    ConcurrentMap<std::string_view, MethodHashedSet>& method_mapping) {
+  auto parent_class = method->get_class()->get_name()->str();
+  method_mapping.update(
+      parent_class,
+      [&](std::string_view /* parent_name */,
+          MethodHashedSet& methods,
+          bool /* exists */) { methods.add(method); });
+}
+
+void create_class_to_override_method(
+    const Method* method,
+    ConcurrentMap<std::string_view, MethodHashedSet>& method_mapping) {
+  auto class_name = method->get_class()->get_name()->str();
+  auto* dex_class = redex::get_class(class_name);
+  if (!dex_class) {
+    return;
+  }
+  std::unordered_set<std::string_view> parent_classes =
+      generator::get_parents_from_class(
+          dex_class, /* include_interfaces */ true);
+  parent_classes.insert(class_name);
+  for (const auto& parent_class : parent_classes) {
+    method_mapping.update(
+        parent_class,
+        [&](std::string_view /* parent_name */,
+            MethodHashedSet& methods,
+            bool /* exists */) { methods.add(method); });
+  }
+}
+
+void create_signature_to_method(
+    const Method* method,
+    ConcurrentMap<std::string, MethodHashedSet>& method_mapping) {
+  std::string signature = method->signature();
+  method_mapping.update(
+      signature,
+      [&](const std::string& /* parent_name */,
+          MethodHashedSet& methods,
+          bool /* exists */) { methods.add(method); });
+}
+} // namespace
+
+MethodMappings::MethodMappings(const Methods& methods) {
+  auto queue = sparta::work_queue<const Method*>([&](const Method* method) {
+    create_name_to_method(method, name_to_methods);
+    create_class_to_method(method, class_to_methods);
+    create_class_to_override_method(method, class_to_override_methods);
+    create_signature_to_method(method, signature_to_methods);
+  });
+  for (const auto* method : methods) {
+    all_methods.add(method);
+    queue.add_item(method);
+  }
+  queue.run_all();
+}
+
 std::string_view generator::get_class_name(const Method* method) {
   return method->get_class()->get_name()->str();
 }
