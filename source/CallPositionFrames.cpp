@@ -105,6 +105,14 @@ void CallPositionFrames::map(const std::function<void(Frame&)>& f) {
       [&](CalleePortFrames& callee_port_frames) { callee_port_frames.map(f); });
 }
 
+FeatureMayAlwaysSet CallPositionFrames::inferred_features() const {
+  auto result = FeatureMayAlwaysSet::bottom();
+  for (const auto& callee_port_frames : frames_) {
+    result.join_with(callee_port_frames.inferred_features());
+  }
+  return result;
+}
+
 void CallPositionFrames::add_inferred_features(
     const FeatureMayAlwaysSet& features) {
   if (features.empty()) {

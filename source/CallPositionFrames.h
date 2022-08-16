@@ -132,6 +132,8 @@ class CallPositionFrames final
     return ConstIterator(frames_.end(), frames_.end());
   }
 
+  FeatureMayAlwaysSet inferred_features() const;
+
   void add_inferred_features(const FeatureMayAlwaysSet& features);
 
   LocalPositionSet local_positions() const;

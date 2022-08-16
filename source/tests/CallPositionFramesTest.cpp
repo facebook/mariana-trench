@@ -1125,7 +1125,6 @@ TEST_F(CallPositionFramesTest, FeaturesAndPositions) {
 
   Scope scope;
   auto* test_kind_one = context.kinds->get("TestSinkOne");
-  auto* test_kind_two = context.kinds->get("TestSinkTwo");
   auto* test_position_one = context.positions->get(std::nullopt, 1);
   auto* test_position_two = context.positions->get(std::nullopt, 2);
   auto* feature_one = context.features->get("FeatureOne");
@@ -1141,78 +1140,75 @@ TEST_F(CallPositionFramesTest, FeaturesAndPositions) {
               /* always */ FeatureSet{})})};
   frames.add_inferred_features(FeatureMayAlwaysSet{feature_two});
   EXPECT_EQ(
-      frames,
-      (CallPositionFrames{
-          test::make_frame(
-              test_kind_one,
-              test::FrameProperties{
-                  .locally_inferred_features = FeatureMayAlwaysSet(
-                      /* may */ FeatureSet{feature_one},
-                      /* always */ FeatureSet{feature_two})}),
-      }));
+      frames.inferred_features(),
+      FeatureMayAlwaysSet(
+          /* may */ FeatureSet{feature_one},
+          /* always */ FeatureSet{feature_two}));
 
-  frames = CallPositionFrames{
-      test::make_frame(
-          test_kind_one,
-          test::FrameProperties{
-              .local_positions = LocalPositionSet{test_position_one}}),
-      test::make_frame(
-          test_kind_two,
-          test::FrameProperties{
-              .local_positions = LocalPositionSet{test_position_two}}),
-  };
+  // Test add_local_position
+  frames = CallPositionFrames{test::make_frame(
+      test_kind_one,
+      test::FrameProperties{
+          .callee_port = AccessPath(Root(Root::Kind::Return))})};
+  EXPECT_EQ(frames.local_positions(), LocalPositionSet{});
+  frames.add_local_position(test_position_one);
+  EXPECT_EQ(frames.local_positions(), LocalPositionSet{test_position_one});
+
+  // Test local_positions() with two frames, each with different positions.
+  auto frames_with_different_port = CallPositionFrames{test::make_frame(
+      test_kind_one,
+      test::FrameProperties{
+          .callee_port = AccessPath(Root(Root::Kind::Argument, 0))})};
+  frames_with_different_port.add_local_position(test_position_two);
+  EXPECT_EQ(
+      frames_with_different_port.local_positions(),
+      LocalPositionSet{test_position_two});
+  frames.join_with(frames_with_different_port);
   EXPECT_EQ(
       frames.local_positions(),
       (LocalPositionSet{test_position_one, test_position_two}));
 
-  frames.add_local_position(test_position_one);
-  EXPECT_EQ(
-      frames,
-      (CallPositionFrames{
-          test::make_frame(
-              test_kind_one,
-              test::FrameProperties{
-                  .local_positions = LocalPositionSet{test_position_one}}),
-          test::make_frame(
-              test_kind_two,
-              test::FrameProperties{
-                  .local_positions =
-                      LocalPositionSet{test_position_one, test_position_two}}),
-      }));
+  // Remove a frame. Verify that local_position of the other frame,
+  // i.e. local positions were kept separately after a join_with.
+  frames.filter_invalid_frames(
+      /* is_valid */ [&](auto _callee, auto access_path, auto _kind) {
+        return access_path == AccessPath(Root(Root::Kind::Return));
+      });
+  EXPECT_EQ(frames.local_positions(), LocalPositionSet{test_position_one});
 
+  // Verify: add_local_position adds the position to all frames.
+  frames.join_with(CallPositionFrames{test::make_frame(
+      test_kind_one,
+      test::FrameProperties{
+          .callee_port = AccessPath(Root(Root::Kind::Argument, 0))})});
+  frames.add_local_position(test_position_two);
+  EXPECT_EQ(
+      frames.local_positions(),
+      (LocalPositionSet{test_position_one, test_position_two}));
+  frames.filter_invalid_frames(
+      /* is_valid */ [&](auto _callee, auto access_path, auto _kind) {
+        return access_path == AccessPath(Root(Root::Kind::Return));
+      });
+  EXPECT_EQ(
+      frames.local_positions(),
+      (LocalPositionSet{test_position_one, test_position_two}));
+
+  // Verify set_local_positions.
   frames.set_local_positions(LocalPositionSet{test_position_two});
-  EXPECT_EQ(
-      frames,
-      (CallPositionFrames{
-          test::make_frame(
-              test_kind_one,
-              test::FrameProperties{
-                  .local_positions = LocalPositionSet{test_position_two}}),
-          test::make_frame(
-              test_kind_two,
-              test::FrameProperties{
-                  .local_positions = LocalPositionSet{test_position_two}}),
-      }));
+  EXPECT_EQ(frames.local_positions(), LocalPositionSet{test_position_two});
 
+  // Verify add_inferred_features_and_local_position.
+  frames.join_with(CallPositionFrames{test::make_frame(
+      test_kind_one,
+      test::FrameProperties{
+          .callee_port = AccessPath(Root(Root::Kind::Argument, 0))})});
   frames.add_inferred_features_and_local_position(
       /* features */ FeatureMayAlwaysSet{feature_one},
       /* position */ test_position_one);
   EXPECT_EQ(
-      frames,
-      (CallPositionFrames{
-          test::make_frame(
-              test_kind_one,
-              test::FrameProperties{
-                  .locally_inferred_features = FeatureMayAlwaysSet{feature_one},
-                  .local_positions =
-                      LocalPositionSet{test_position_one, test_position_two}}),
-          test::make_frame(
-              test_kind_two,
-              test::FrameProperties{
-                  .locally_inferred_features = FeatureMayAlwaysSet{feature_one},
-                  .local_positions =
-                      LocalPositionSet{test_position_one, test_position_two}}),
-      }));
+      frames.local_positions(),
+      (LocalPositionSet{test_position_one, test_position_two}));
+  EXPECT_EQ(frames.inferred_features(), FeatureMayAlwaysSet{feature_one});
 }
 
 TEST_F(CallPositionFramesTest, Propagate) {
