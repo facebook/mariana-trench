@@ -308,13 +308,6 @@ Frame Frame::from_json(const Json::Value& value, Context& context) {
     }
   }
 
-  LocalPositionSet local_positions;
-  if (value.isMember("local_positions")) {
-    JsonValidation::null_or_array(value, /* field */ "local_positions");
-    local_positions =
-        LocalPositionSet::from_json(value["local_positions"], context);
-  }
-
   CanonicalNameSetAbstractDomain canonical_names;
   if (value.isMember("canonical_names")) {
     for (const auto& canonical_name :
@@ -386,7 +379,7 @@ Frame Frame::from_json(const Json::Value& value, Context& context) {
       std::move(user_features),
       std::move(via_type_of_ports),
       std::move(via_value_of_ports),
-      std::move(local_positions),
+      /* local_positions */ {},
       std::move(canonical_names));
 }
 

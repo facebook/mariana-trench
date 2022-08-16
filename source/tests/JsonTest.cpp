@@ -1074,66 +1074,6 @@ TEST_F(JsonTest, Frame) {
                   {Root(Root::Kind::Return), Root(Root::Kind::Argument, 1)})}),
       context);
 
-  // Parse local positions.
-  EXPECT_FRAME_JSON_EQ(
-      R"({
-        "kind": "TestSource",
-        "callee_port": "Leaf",
-        "local_positions": [{"line": 1}]
-      })",
-      test::make_frame(
-          /* kind */ context.kinds->get("TestSource"),
-          test::FrameProperties{
-              .inferred_features = FeatureMayAlwaysSet::bottom(),
-              .locally_inferred_features = FeatureMayAlwaysSet::bottom(),
-              .local_positions =
-                  LocalPositionSet{context.positions->get(std::nullopt, 1)}}),
-      context);
-  EXPECT_FRAME_JSON_EQ(
-      R"({
-        "kind": "TestSource",
-        "callee_port": "Leaf",
-        "local_positions": [
-          {"line": 10},
-          {"line": 20},
-          {"line": 30}
-        ]
-      })",
-      test::make_frame(
-          /* kind */ context.kinds->get("TestSource"),
-          test::FrameProperties{
-              .inferred_features = FeatureMayAlwaysSet::bottom(),
-              .locally_inferred_features = FeatureMayAlwaysSet::bottom(),
-              .local_positions =
-                  LocalPositionSet{
-                      context.positions->get(std::nullopt, 10),
-                      context.positions->get(std::nullopt, 20),
-                      context.positions->get(std::nullopt, 30),
-                  }}),
-      context);
-  EXPECT_EQ(
-      Frame::from_json(
-          test::parse_json(
-              R"({
-                "kind": "TestSource",
-                "local_positions": [
-                  {"line": 1},
-                  {"line": 2},
-                  {"line": 1},
-                  {"line": 2}
-                ]
-              })"),
-          context),
-      test::make_frame(
-          /* kind */ context.kinds->get("TestSource"),
-          test::FrameProperties{
-              .inferred_features = FeatureMayAlwaysSet::bottom(),
-              .locally_inferred_features = FeatureMayAlwaysSet::bottom(),
-              .local_positions = LocalPositionSet{
-                  context.positions->get(std::nullopt, 1),
-                  context.positions->get(std::nullopt, 2),
-              }}));
-
   // Verifies to_json behavior for local inferred features. These cannot be
   // covered by from_json tests as they are never specified in json. Note that
   // locally_inferred_features show up twice in the json, once within a
