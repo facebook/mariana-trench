@@ -744,15 +744,10 @@ TEST_F(CalleePortFramesTest, FeaturesAndPositions) {
               /* always */ FeatureSet{})})};
   frames.add_inferred_features(FeatureMayAlwaysSet{feature_two});
   EXPECT_EQ(
-      frames,
-      (CalleePortFrames{
-          test::make_frame(
-              test_kind_one,
-              test::FrameProperties{
-                  .locally_inferred_features = FeatureMayAlwaysSet(
-                      /* may */ FeatureSet{feature_one},
-                      /* always */ FeatureSet{feature_two})}),
-      }));
+      frames.inferred_features(),
+      FeatureMayAlwaysSet(
+          /* may */ FeatureSet{feature_one},
+          /* always */ FeatureSet{feature_two}));
 
   frames = CalleePortFrames{
       test::make_frame(
@@ -762,60 +757,25 @@ TEST_F(CalleePortFramesTest, FeaturesAndPositions) {
       test::make_frame(
           test_kind_two,
           test::FrameProperties{
-              .local_positions = LocalPositionSet{test_position_two}}),
+              .local_positions = LocalPositionSet{test_position_one}}),
   };
+  EXPECT_EQ(frames.local_positions(), (LocalPositionSet{test_position_one}));
+
+  frames.add_local_position(test_position_two);
   EXPECT_EQ(
       frames.local_positions(),
       (LocalPositionSet{test_position_one, test_position_two}));
 
-  frames.add_local_position(test_position_one);
-  EXPECT_EQ(
-      frames,
-      (CalleePortFrames{
-          test::make_frame(
-              test_kind_one,
-              test::FrameProperties{
-                  .local_positions = LocalPositionSet{test_position_one}}),
-          test::make_frame(
-              test_kind_two,
-              test::FrameProperties{
-                  .local_positions =
-                      LocalPositionSet{test_position_one, test_position_two}}),
-      }));
-
   frames.set_local_positions(LocalPositionSet{test_position_two});
-  EXPECT_EQ(
-      frames,
-      (CalleePortFrames{
-          test::make_frame(
-              test_kind_one,
-              test::FrameProperties{
-                  .local_positions = LocalPositionSet{test_position_two}}),
-          test::make_frame(
-              test_kind_two,
-              test::FrameProperties{
-                  .local_positions = LocalPositionSet{test_position_two}}),
-      }));
+  EXPECT_EQ(frames.local_positions(), (LocalPositionSet{test_position_two}));
 
   frames.add_inferred_features_and_local_position(
       /* features */ FeatureMayAlwaysSet{feature_one},
       /* position */ test_position_one);
+  EXPECT_EQ(frames.inferred_features(), FeatureMayAlwaysSet{feature_one});
   EXPECT_EQ(
-      frames,
-      (CalleePortFrames{
-          test::make_frame(
-              test_kind_one,
-              test::FrameProperties{
-                  .locally_inferred_features = FeatureMayAlwaysSet{feature_one},
-                  .local_positions =
-                      LocalPositionSet{test_position_one, test_position_two}}),
-          test::make_frame(
-              test_kind_two,
-              test::FrameProperties{
-                  .locally_inferred_features = FeatureMayAlwaysSet{feature_one},
-                  .local_positions =
-                      LocalPositionSet{test_position_one, test_position_two}}),
-      }));
+      frames.local_positions(),
+      (LocalPositionSet{test_position_one, test_position_two}));
 }
 
 TEST_F(CalleePortFramesTest, Propagate) {

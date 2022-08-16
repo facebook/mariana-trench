@@ -233,6 +233,20 @@ void CalleePortFrames::map(const std::function<void(Frame&)>& f) {
   });
 }
 
+FeatureMayAlwaysSet CalleePortFrames::inferred_features() const {
+  // TODO(T91357916): Store inferred features in CalleePortFrames rather than
+  // Frame.
+  auto result = FeatureMayAlwaysSet::bottom();
+  for (const auto& [_, frames] : frames_.bindings()) {
+    for (const auto& frame : frames) {
+      // Inferred features in this class are always locally (intraprocedurally)
+      // inferred.
+      result.join_with(frame.locally_inferred_features());
+    }
+  }
+  return result;
+}
+
 void CalleePortFrames::add_inferred_features(
     const FeatureMayAlwaysSet& features) {
   if (features.empty()) {
