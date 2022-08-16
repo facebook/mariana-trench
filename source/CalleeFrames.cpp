@@ -121,6 +121,14 @@ void CalleeFrames::map(const std::function<void(Frame&)>& f) {
   });
 }
 
+FeatureMayAlwaysSet CalleeFrames::inferred_features() const {
+  auto result = FeatureMayAlwaysSet::bottom();
+  for (const auto& [_, frames] : frames_.bindings()) {
+    result.join_with(frames.inferred_features());
+  }
+  return result;
+}
+
 void CalleeFrames::add_inferred_features(const FeatureMayAlwaysSet& features) {
   if (features.empty()) {
     return;

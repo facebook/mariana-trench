@@ -589,96 +589,40 @@ TEST_F(CalleeFramesTest, FeaturesAndPositions) {
           test::FrameProperties{.call_position = test_position_one})};
   frames.add_inferred_features(FeatureMayAlwaysSet{feature_two});
   EXPECT_EQ(
-      frames,
-      (CalleeFrames{
-          test::make_frame(
-              test_kind_one,
-              test::FrameProperties{
-                  .locally_inferred_features = FeatureMayAlwaysSet(
-                      /* may */ FeatureSet{feature_one},
-                      /* always */ FeatureSet{feature_two})}),
-          test::make_frame(
-              test_kind_two,
-              test::FrameProperties{
-                  .call_position = test_position_one,
-                  .locally_inferred_features =
-                      FeatureMayAlwaysSet{feature_two}}),
-      }));
+      frames.inferred_features(),
+      FeatureMayAlwaysSet(
+          /* may */ FeatureSet{feature_one},
+          /* always */ FeatureSet{feature_two}));
 
-  // Get local_positions()
+  // Test add_local_positions()
   frames = CalleeFrames{
       test::make_frame(
           test_kind_one,
           test::FrameProperties{
               .call_position = test_position_one,
-              .local_positions = LocalPositionSet{test_position_one}}),
+          }),
       test::make_frame(
           test_kind_two,
           test::FrameProperties{
               .call_position = test_position_two,
-              .local_positions = LocalPositionSet{test_position_two}}),
+          }),
   };
-  EXPECT_EQ(
-      frames.local_positions(),
-      (LocalPositionSet{test_position_one, test_position_two}));
-
-  // add_local_position
+  EXPECT_EQ(frames.local_positions(), LocalPositionSet{});
   frames.add_local_position(test_position_one);
-  EXPECT_EQ(
-      frames,
-      (CalleeFrames{
-          test::make_frame(
-              test_kind_one,
-              test::FrameProperties{
-                  .call_position = test_position_one,
-                  .local_positions = LocalPositionSet{test_position_one}}),
-          test::make_frame(
-              test_kind_two,
-              test::FrameProperties{
-                  .call_position = test_position_two,
-                  .local_positions =
-                      LocalPositionSet{test_position_one, test_position_two}}),
-      }));
+  EXPECT_EQ(frames.local_positions(), LocalPositionSet{test_position_one});
 
-  // set_local_positions
+  // Test set_local_positions()
   frames.set_local_positions(LocalPositionSet{test_position_two});
-  EXPECT_EQ(
-      frames,
-      (CalleeFrames{
-          test::make_frame(
-              test_kind_one,
-              test::FrameProperties{
-                  .call_position = test_position_one,
-                  .local_positions = LocalPositionSet{test_position_two}}),
-          test::make_frame(
-              test_kind_two,
-              test::FrameProperties{
-                  .call_position = test_position_two,
-                  .local_positions = LocalPositionSet{test_position_two}}),
-      }));
+  EXPECT_EQ(frames.local_positions(), LocalPositionSet{test_position_two});
 
-  // add_inferred_features_and_local_position
+  // Test add_inferred_features_and_local_position()
   frames.add_inferred_features_and_local_position(
       /* features */ FeatureMayAlwaysSet{feature_one},
       /* position */ test_position_one);
   EXPECT_EQ(
-      frames,
-      (CalleeFrames{
-          test::make_frame(
-              test_kind_one,
-              test::FrameProperties{
-                  .call_position = test_position_one,
-                  .locally_inferred_features = FeatureMayAlwaysSet{feature_one},
-                  .local_positions =
-                      LocalPositionSet{test_position_one, test_position_two}}),
-          test::make_frame(
-              test_kind_two,
-              test::FrameProperties{
-                  .call_position = test_position_two,
-                  .locally_inferred_features = FeatureMayAlwaysSet{feature_one},
-                  .local_positions =
-                      LocalPositionSet{test_position_one, test_position_two}}),
-      }));
+      frames.local_positions(),
+      (LocalPositionSet{test_position_one, test_position_two}));
+  EXPECT_EQ(frames.inferred_features(), FeatureMayAlwaysSet{feature_one});
 }
 
 TEST_F(CalleeFramesTest, Propagate) {

@@ -134,6 +134,8 @@ class CalleeFrames final : public sparta::AbstractDomain<CalleeFrames> {
     return ConstIterator(frames_.bindings().end(), frames_.bindings().end());
   }
 
+  FeatureMayAlwaysSet inferred_features() const;
+
   void add_inferred_features(const FeatureMayAlwaysSet& features);
 
   LocalPositionSet local_positions() const;
