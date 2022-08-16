@@ -781,39 +781,39 @@ TEST_F(TaintTest, UpdateNonLeafPositions) {
         new_local_positions.add(position1);
         return new_local_positions;
       });
+  EXPECT_EQ(taint.local_positions(), LocalPositionSet{position1});
 
-  LocalPositionSet expected_local_positions;
-  expected_local_positions.add(position1);
-
+  // Verify that local positions were updated only in non-leaf frames.
+  auto partitioned_is_leaf =
+      taint.partition_by_kind<bool>([&](const Kind* kind) {
+        return kind == context.kinds->get("LeafFrame");
+      });
+  EXPECT_EQ(partitioned_is_leaf[true].local_positions(), LocalPositionSet{});
   EXPECT_EQ(
-      taint,
-      (Taint{
-          test::make_frame(
-              /* kind */ context.kinds->get("LeafFrame"),
-              test::FrameProperties{}),
-          test::make_frame(
-              /* kind */ context.kinds->get("NonLeafFrame1"),
-              test::FrameProperties{
-                  .callee_port = AccessPath(Root(Root::Kind::Return)),
-                  .callee = method1,
-                  .call_position = context.positions->get(
-                      position1, /* line */ 10, /* start */ 11, /* end */ 12),
-                  .local_positions = expected_local_positions}),
-          test::make_frame(
-              /* kind */ context.kinds->get("NonLeafFrame2"),
-              test::FrameProperties{
-                  .callee_port = AccessPath(Root(Root::Kind::Argument)),
-                  .callee = method2,
-                  .call_position = context.positions->get(
-                      position2, /* line */ 20, /* start */ 21, /* end */ 22),
-                  .local_positions = expected_local_positions}),
-          test::make_frame(
-              /* kind */ context.kinds->get("NonLeafFrame3"),
-              test::FrameProperties{
-                  .callee_port = AccessPath(Root(Root::Kind::Argument, 1)),
-                  .callee = method3,
-                  .call_position = position3,
-                  .local_positions = expected_local_positions})}));
+      partitioned_is_leaf[false].local_positions(),
+      LocalPositionSet{position1});
+
+  // Verify that call positions were updated only in non-leaf frames.
+  for (const auto& frame : taint.frames_iterator()) {
+    if (frame.callee() == method1) {
+      EXPECT_EQ(
+          frame.call_position(),
+          context.positions->get(
+              position1, /* line */ 10, /* start */ 11, /* end */ 12));
+    } else if (frame.callee() == method2) {
+      EXPECT_EQ(
+          frame.call_position(),
+          context.positions->get(
+              position2, /* line */ 20, /* start */ 21, /* end */ 22));
+    } else if (frame.callee() == method3) {
+      EXPECT_EQ(frame.call_position(), position3);
+    } else if (frame.callee() == nullptr) {
+      EXPECT_EQ(frame.call_position(), nullptr);
+    } else {
+      // There should be no other frames.
+      EXPECT_TRUE(false);
+    }
+  }
 }
 
 TEST_F(TaintTest, FilterInvalidFrames) {
