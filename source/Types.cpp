@@ -18,9 +18,7 @@
 #include <ReflectionAnalysis.h>
 #include <mariana-trench/Assert.h>
 #include <mariana-trench/Log.h>
-#include <mariana-trench/OperatingSystem.h>
 #include <mariana-trench/Options.h>
-#include <mariana-trench/Timer.h>
 #include <mariana-trench/Types.h>
 
 namespace marianatrench {
@@ -168,8 +166,6 @@ Types::Types(const Options& options, const DexStoresVector& stores) {
           scope.end(),
           [](DexClass* dex_class) { return dex_class->is_external(); }),
       scope.end());
-
-  Timer reflection_timer;
   reflection::MetadataCache reflection_metadata_cache;
   walk::parallel::code(scope, [&](DexMethod* method, IRCode& code) {
     if (!code.cfg_built()) {
@@ -190,25 +186,13 @@ Types::Types(const Options& options, const DexStoresVector& stores) {
         method,
         std::make_unique<TypeEnvironments>(make_environments(analysis)));
   });
-  LOG(1,
-      "Reflection analysis {:.2f}s. Memory used, RSS: {:.2f}GB",
-      reflection_timer.duration_in_seconds(),
-      resident_set_size_in_gb());
-
   if (options.disable_global_type_analysis()) {
     LOG(1, "Disabled global type analysis.");
     global_type_analyzer_ = nullptr;
     return;
   }
-
-  Timer global_timer;
   type_analyzer::global::GlobalTypeAnalysis analysis;
   global_type_analyzer_ = analysis.analyze(scope);
-
-  LOG(1,
-      "Global analysis {:.2f}s. Memory used, RSS: {:.2f}GB",
-      global_timer.duration_in_seconds(),
-      resident_set_size_in_gb());
 }
 
 std::unique_ptr<TypeEnvironments> Types::infer_local_types_for_method(
