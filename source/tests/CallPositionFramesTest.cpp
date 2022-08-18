@@ -1729,6 +1729,141 @@ TEST_F(CallPositionFramesTest, AppendCalleePort) {
                       Path{path_element1, path_element2})})}));
 }
 
+TEST_F(CallPositionFramesTest, MapPositions) {
+  auto context = test::make_empty_context();
+
+  auto* test_kind_one = context.kinds->get("TestKind1");
+  auto* test_position_one = context.positions->get(std::nullopt, 1);
+  auto* test_position_two = context.positions->get(std::nullopt, 2);
+
+  // Verify bottom() maps to nothing (empty map).
+  auto frames = CallPositionFrames::bottom();
+  auto new_positions = frames.map_positions(
+      /* new_call_position */ [&](const auto& _access_path,
+                                  const auto* position) { return position; },
+      /* new_local_positions */
+      [&](const auto& local_positions) { return local_positions; });
+  EXPECT_EQ(new_positions.size(), 0);
+
+  // Verify call position mapping with possibly multiple frames mapping to
+  // the same output call position.
+  frames = CallPositionFrames{
+      test::make_frame(
+          test_kind_one,
+          test::FrameProperties{
+              .callee_port = AccessPath(Root(Root::Kind::Return)),
+              .call_position = test_position_one,
+          }),
+      test::make_frame(
+          test_kind_one,
+          test::FrameProperties{
+              .callee_port = AccessPath(Root(Root::Kind::Argument, 0)),
+              .call_position = test_position_one,
+          }),
+      test::make_frame(
+          test_kind_one,
+          test::FrameProperties{
+              .callee_port = AccessPath(Root(Root::Kind::Argument, 1)),
+              .call_position = test_position_one,
+          }),
+  };
+  new_positions = frames.map_positions(
+      /* new_call_position */
+      [&](const auto& access_path, const auto* position) {
+        if (access_path.root().is_return()) {
+          return context.positions->get(
+              position, position->line(), /* start */ 1, /* end */ 1);
+        } else {
+          return context.positions->get(
+              position, position->line(), /* start */ 2, /* end */ 2);
+        }
+      },
+      /* new_local_positions */
+      [&](const auto& local_positions) { return local_positions; });
+  const auto* expected_return_position = context.positions->get(
+      /* path */ std::nullopt,
+      /* line */ test_position_one->line(),
+      /* port */ {},
+      /* instruction */ nullptr,
+      /* start */ 1,
+      /* end */ 1);
+  const auto* expected_argument_position = context.positions->get(
+      /* path */ std::nullopt,
+      /* line */ test_position_one->line(),
+      /* port */ {},
+      /* instruction */ nullptr,
+      /* start */ 2,
+      /* end */ 2);
+  EXPECT_EQ(new_positions.size(), 2);
+  EXPECT_EQ(
+      new_positions[expected_return_position],
+      CallPositionFrames{test::make_frame(
+          test_kind_one,
+          test::FrameProperties{
+              .callee_port = AccessPath(Root(Root::Kind::Return)),
+              .call_position = expected_return_position,
+          })});
+  EXPECT_EQ(
+      new_positions[expected_argument_position],
+      (CallPositionFrames{
+          test::make_frame(
+              test_kind_one,
+              test::FrameProperties{
+                  .callee_port = AccessPath(Root(Root::Kind::Argument, 0)),
+                  .call_position = expected_argument_position,
+              }),
+          test::make_frame(
+              test_kind_one,
+              test::FrameProperties{
+                  .callee_port = AccessPath(Root(Root::Kind::Argument, 1)),
+                  .call_position = expected_argument_position,
+              })}));
+
+  // Verify local position mapping
+  frames = CallPositionFrames{
+      test::make_frame(
+          test_kind_one,
+          test::FrameProperties{
+              .callee_port = AccessPath(Root(Root::Kind::Return)),
+              .call_position = test_position_one,
+          }),
+      test::make_frame(
+          test_kind_one,
+          test::FrameProperties{
+              .callee_port = AccessPath(Root(Root::Kind::Argument, 0)),
+              .call_position = test_position_one,
+          }),
+  };
+  frames.set_local_positions(LocalPositionSet{test_position_two});
+  new_positions = frames.map_positions(
+      /* new_call_position */ [&](const auto& _access_path,
+                                  const auto* position) { return position; },
+      /* new_local_positiions */
+      [&](const auto& local_positions) {
+        auto new_local_positions = LocalPositionSet{};
+        for (const auto* position : local_positions.elements()) {
+          new_local_positions.add(context.positions->get(
+              position,
+              position->line(),
+              /* start */ 3,
+              /* end */ 3));
+        }
+        return new_local_positions;
+      });
+  const auto* expected_local_position = context.positions->get(
+      /* path */ std::nullopt,
+      /* line */ test_position_two->line(),
+      /* port */ {},
+      /* instruction */ nullptr,
+      /* start */ 3,
+      /* end */ 3);
+  auto expected_frames = frames;
+  expected_frames.set_local_positions(
+      LocalPositionSet{expected_local_position});
+  EXPECT_EQ(new_positions.size(), 1);
+  EXPECT_EQ(new_positions[test_position_one], expected_frames);
+}
+
 TEST_F(CallPositionFramesTest, FilterInvalidFrames) {
   auto context = test::make_empty_context();
 
