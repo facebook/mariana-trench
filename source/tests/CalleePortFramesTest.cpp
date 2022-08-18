@@ -733,6 +733,80 @@ TEST_F(CalleePortFramesTest, Difference) {
           })));
 }
 
+TEST_F(CalleePortFramesTest, DifferenceLocalPositions) {
+  auto context = test::make_empty_context();
+
+  auto* test_kind_one = context.kinds->get("TestSinkOne");
+  auto* test_kind_two = context.kinds->get("TestSinkTwo");
+  auto* test_position_one = context.positions->get(std::nullopt, 1);
+
+  // Empty left hand side.
+  auto frames = CalleePortFrames::bottom();
+  frames.difference_with(CalleePortFrames(
+      LocalPositionSet{test_position_one},
+      {
+          test::make_frame(test_kind_one, test::FrameProperties{}),
+      }));
+  EXPECT_TRUE(frames.is_bottom());
+
+  // lhs.local_positions <= rhs.local_positions
+  // lhs.frames <= rhs.frames
+  frames = CalleePortFrames(
+      /* local_positions */ {},
+      {test::make_frame(test_kind_one, test::FrameProperties{})});
+  frames.difference_with(CalleePortFrames(
+      LocalPositionSet{test_position_one},
+      {test::make_frame(test_kind_one, test::FrameProperties{}),
+       test::make_frame(test_kind_two, test::FrameProperties{})}));
+  EXPECT_TRUE(frames.is_bottom());
+
+  // lhs.local_positions <= rhs.local_positions
+  // lhs.frames > rhs.frames
+  frames = CalleePortFrames(
+      /* local_positions */ {},
+      {test::make_frame(test_kind_one, test::FrameProperties{}),
+       test::make_frame(test_kind_two, test::FrameProperties{})});
+  frames.difference_with(CalleePortFrames(
+      LocalPositionSet{test_position_one},
+      {test::make_frame(test_kind_one, test::FrameProperties{})}));
+  EXPECT_EQ(
+      frames,
+      CalleePortFrames(
+          /* local_positions */ {},
+          {test::make_frame(test_kind_two, test::FrameProperties{})}));
+
+  // lhs.local_positions > rhs.local_positions
+  // lhs.frames > rhs.frames
+  frames = CalleePortFrames(
+      LocalPositionSet{test_position_one},
+      {test::make_frame(test_kind_one, test::FrameProperties{}),
+       test::make_frame(test_kind_two, test::FrameProperties{})});
+  frames.difference_with(CalleePortFrames(
+      /* local_positions */ {},
+      {test::make_frame(test_kind_one, test::FrameProperties{})}));
+  EXPECT_EQ(
+      frames,
+      CalleePortFrames(
+          LocalPositionSet{test_position_one},
+          {test::make_frame(test_kind_one, test::FrameProperties{}),
+           test::make_frame(test_kind_two, test::FrameProperties{})}));
+
+  // lhs.local_positions > rhs.local_positions
+  // lhs.frames <= rhs.frames
+  frames = CalleePortFrames(
+      LocalPositionSet{test_position_one},
+      {test::make_frame(test_kind_one, test::FrameProperties{})});
+  frames.difference_with(CalleePortFrames(
+      /* local_positions */ {},
+      {test::make_frame(test_kind_one, test::FrameProperties{}),
+       test::make_frame(test_kind_two, test::FrameProperties{})}));
+  EXPECT_EQ(
+      frames,
+      CalleePortFrames(
+          LocalPositionSet{test_position_one},
+          {test::make_frame(test_kind_one, test::FrameProperties{})}));
+}
+
 TEST_F(CalleePortFramesTest, Iterator) {
   auto context = test::make_empty_context();
 
