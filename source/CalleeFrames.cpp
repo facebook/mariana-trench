@@ -146,11 +146,19 @@ LocalPositionSet CalleeFrames::local_positions() const {
 }
 
 void CalleeFrames::add_local_position(const Position* position) {
-  map([position](Frame& frame) { frame.add_local_position(position); });
+  frames_.map([&](const CallPositionFrames& frames) {
+    auto new_frames = frames;
+    new_frames.add_local_position(position);
+    return new_frames;
+  });
 }
 
 void CalleeFrames::set_local_positions(const LocalPositionSet& positions) {
-  map([&positions](Frame& frame) { frame.set_local_positions(positions); });
+  frames_.map([&](const CallPositionFrames& frames) {
+    auto new_frames = frames;
+    new_frames.set_local_positions(positions);
+    return new_frames;
+  });
 }
 
 void CalleeFrames::add_inferred_features_and_local_position(
@@ -160,14 +168,15 @@ void CalleeFrames::add_inferred_features_and_local_position(
     return;
   }
 
-  map([&features, position](Frame& frame) {
+  map([&features](Frame& frame) {
     if (!features.empty()) {
       frame.add_inferred_features(features);
     }
-    if (position != nullptr) {
-      frame.add_local_position(position);
-    }
   });
+
+  if (position != nullptr) {
+    add_local_position(position);
+  }
 }
 
 CalleeFrames CalleeFrames::propagate(
@@ -239,6 +248,39 @@ void CalleeFrames::append_callee_port_to_artificial_sources(
     frames_copy.append_callee_port_to_artificial_sources(path_element);
     return frames_copy;
   });
+}
+
+void CalleeFrames::update_non_leaf_positions(
+    const std::function<
+        const Position*(const Method*, const AccessPath&, const Position*)>&
+        new_call_position,
+    const std::function<LocalPositionSet(const LocalPositionSet&)>&
+        new_local_positions) {
+  if (callee_ == nullptr) {
+    // This is a leaf.
+    return;
+  }
+
+  FramesByCallPosition result;
+  for (const auto& [_, call_position_frames] : frames_.bindings()) {
+    auto new_positions = call_position_frames.map_positions(
+        [&](const auto& access_path, const auto* position) {
+          return new_call_position(callee_, access_path, position);
+        },
+        new_local_positions);
+
+    for (const auto& [position, new_frames] : new_positions) {
+      // Lambda below refuses to capture `new_frames` from a structured
+      // binding, so explicitly declare it here.
+      const auto& frames = new_frames;
+      result.update(
+          position, [&](const CallPositionFrames& call_position_frames) {
+            return call_position_frames.join(frames);
+          });
+    }
+  }
+
+  frames_ = std::move(result);
 }
 
 void CalleeFrames::filter_invalid_frames(

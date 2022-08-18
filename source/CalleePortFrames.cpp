@@ -81,9 +81,12 @@ void materialize_via_value_of_ports(
 
 } // namespace
 
-CalleePortFrames::CalleePortFrames(std::initializer_list<Frame> frames)
+CalleePortFrames::CalleePortFrames(
+    LocalPositionSet local_positions,
+    std::initializer_list<Frame> frames)
     : callee_port_(Root(Root::Kind::Leaf)),
-      is_artificial_source_frames_(false) {
+      is_artificial_source_frames_(false),
+      local_positions_(std::move(local_positions)) {
   for (const auto& frame : frames) {
     add(frame);
   }
@@ -147,15 +150,19 @@ bool CalleePortFrames::leq(const CalleePortFrames& other) const {
   mt_assert(has_same_key(other));
 
   if (is_artificial_source_frames()) {
-    return callee_port_.leq(other.callee_port()) && frames_.leq(other.frames_);
+    return callee_port_.leq(other.callee_port()) &&
+        frames_.leq(other.frames_) &&
+        local_positions_.leq(other.local_positions_);
   } else {
-    return frames_.leq(other.frames_);
+    return frames_.leq(other.frames_) &&
+        local_positions_.leq(other.local_positions_);
   }
 }
 
 bool CalleePortFrames::equals(const CalleePortFrames& other) const {
   mt_assert(is_bottom() || other.is_bottom() || has_same_key(other));
-  return frames_.equals(other.frames_);
+  return frames_.equals(other.frames_) &&
+      local_positions_.equals(other.local_positions_);
 }
 
 void CalleePortFrames::join_with(const CalleePortFrames& other) {
@@ -172,6 +179,7 @@ void CalleePortFrames::join_with(const CalleePortFrames& other) {
   }
 
   frames_.join_with(other.frames_);
+  local_positions_.join_with(other.local_positions_);
 
   mt_expensive_assert(previous.leq(*this) && other.leq(*this));
 }
@@ -186,6 +194,7 @@ void CalleePortFrames::widen_with(const CalleePortFrames& other) {
   mt_assert(other.is_bottom() || has_same_key(other));
 
   frames_.widen_with(other.frames_);
+  local_positions_.widen_with(other.local_positions_);
 
   mt_expensive_assert(previous.leq(*this) && other.leq(*this));
 }
@@ -198,6 +207,7 @@ void CalleePortFrames::meet_with(const CalleePortFrames& other) {
   mt_assert(other.is_bottom() || has_same_key(other));
 
   frames_.meet_with(other.frames_);
+  local_positions_.meet_with(other.local_positions_);
 }
 
 void CalleePortFrames::narrow_with(const CalleePortFrames& other) {
@@ -208,6 +218,7 @@ void CalleePortFrames::narrow_with(const CalleePortFrames& other) {
   mt_assert(other.is_bottom() || has_same_key(other));
 
   frames_.narrow_with(other.frames_);
+  local_positions_.narrow_with(other.local_positions_);
 }
 
 void CalleePortFrames::difference_with(const CalleePortFrames& other) {
@@ -217,12 +228,18 @@ void CalleePortFrames::difference_with(const CalleePortFrames& other) {
   }
   mt_assert(other.is_bottom() || has_same_key(other));
 
-  frames_.difference_like_operation(
-      other.frames_, [](const Frames& frames_left, const Frames& frames_right) {
-        auto frames_copy = frames_left;
-        frames_copy.difference_with(frames_right);
-        return frames_copy;
-      });
+  // Local positions apply to all frames. If RHS is not leq LHS, then do not
+  // apply the difference operator to the frames because every frame on RHS
+  // would not be considered leq its LHS frame.
+  if (local_positions_.leq(other.local_positions_)) {
+    frames_.difference_like_operation(
+        other.frames_,
+        [](const Frames& frames_left, const Frames& frames_right) {
+          auto frames_copy = frames_left;
+          frames_copy.difference_with(frames_right);
+          return frames_copy;
+        });
+  }
 }
 
 void CalleePortFrames::map(const std::function<void(Frame&)>& f) {
@@ -256,24 +273,12 @@ void CalleePortFrames::add_inferred_features(
   map([&features](Frame& frame) { frame.add_inferred_features(features); });
 }
 
-LocalPositionSet CalleePortFrames::local_positions() const {
-  // Ideally this can be stored within `CalleePortFrames` instead of `Frame`.
-  // Local positions should be the same for a given (callee, call_position).
-  auto result = LocalPositionSet::bottom();
-  for (const auto& [_, frames] : frames_.bindings()) {
-    for (const auto& frame : frames) {
-      result.join_with(frame.local_positions());
-    }
-  }
-  return result;
-}
-
 void CalleePortFrames::add_local_position(const Position* position) {
-  map([position](Frame& frame) { frame.add_local_position(position); });
+  local_positions_.add(position);
 }
 
-void CalleePortFrames::set_local_positions(const LocalPositionSet& positions) {
-  map([&positions](Frame& frame) { frame.set_local_positions(positions); });
+void CalleePortFrames::set_local_positions(LocalPositionSet positions) {
+  local_positions_ = std::move(positions);
 }
 
 void CalleePortFrames::add_inferred_features_and_local_position(
@@ -283,14 +288,15 @@ void CalleePortFrames::add_inferred_features_and_local_position(
     return;
   }
 
-  map([&features, position](Frame& frame) {
+  map([&features](Frame& frame) {
     if (!features.empty()) {
       frame.add_inferred_features(features);
     }
-    if (position != nullptr) {
-      frame.add_local_position(position);
-    }
   });
+
+  if (position != nullptr) {
+    add_local_position(position);
+  }
 }
 
 CalleePortFrames CalleePortFrames::propagate(
@@ -428,11 +434,21 @@ std::ostream& operator<<(std::ostream& out, const CalleePortFrames& frames) {
   if (frames.is_top()) {
     return out << "T";
   } else {
-    out << "[";
+    out << "CalleePortFrames("
+        << "callee_port=" << frames.callee_port()
+        << ", is_artificial_source_frames="
+        << frames.is_artificial_source_frames();
+
+    const auto& local_positions = frames.local_positions();
+    if (!local_positions.is_bottom() && !local_positions.empty()) {
+      out << ", local_positions=" << frames.local_positions();
+    }
+
+    out << ", frames=[";
     for (const auto& [kind, frames] : frames.frames_.bindings()) {
       out << "FrameByKind(kind=" << show(kind) << ", frames=" << frames << "),";
     }
-    return out << "]";
+    return out << "])";
   }
 }
 
@@ -503,7 +519,6 @@ Frame CalleePortFrames::propagate_frames(
       /* user_features */ FeatureSet::bottom(),
       /* via_type_of_ports */ {},
       /* via_value_of_ports */ {},
-      /* local_positions */ {},
       /* canonical_names */ {});
 }
 
@@ -585,7 +600,6 @@ CalleePortFrames CalleePortFrames::propagate_crtex_leaf_frames(
           propagated.user_features(),
           propagated.via_type_of_ports(),
           propagated.via_value_of_ports(),
-          propagated.local_positions(),
           /* canonical_names */ instantiated_names));
     }
   }
@@ -605,7 +619,7 @@ Json::Value CalleePortFrames::to_json(
     // class by the `Taint` structure.
     mt_assert(frames_by_kind.size() == 1);
     for (const auto& frame : frames_by_kind) {
-      kinds.append(frame.to_json());
+      kinds.append(frame.to_json(local_positions_));
     }
   }
   taint["kinds"] = kinds;

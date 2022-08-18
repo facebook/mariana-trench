@@ -400,7 +400,6 @@ Frame generator::source(
       /* user features */ user_features,
       /* via_type_of_ports */ via_type_of_ports,
       /* via_value_of_ports */ via_value_of_ports,
-      /* local_positions */ {},
       /* canonical_names */ {});
 }
 
@@ -437,7 +436,6 @@ Frame generator::sink(
       /* user features */ user_features,
       /* via_type_of_ports */ via_type_of_ports,
       /* via_type_of_ports */ via_value_of_ports,
-      /* local_positions */ {},
       /* canonical_names */ canonical_names);
 }
 
@@ -472,7 +470,6 @@ Frame generator::partial_sink(
       /* user features */ user_features,
       /* via_type_of_ports */ via_type_of_ports,
       /* via_value_of_ports */ via_value_of_ports,
-      /* local_positions */ {},
       /* canonical_names */ {});
 }
 

@@ -1810,7 +1810,10 @@ TEST_F(CallPositionFramesTest, Show) {
 
   EXPECT_EQ(
       show(frames),
-      "[FramesByCalleePort([FrameByKind(kind=TestSink1, frames={Frame(kind=`TestSink1`, callee_port=AccessPath(Leaf), origins={`LOne;.one:()V`})}),]),]");
+      "[FramesByCalleePort(CalleePortFrames(callee_port=AccessPath(Leaf), "
+      "is_artificial_source_frames=0, frames=[FrameByKind(kind=TestSink1, "
+      "frames={Frame(kind=`TestSink1`, callee_port=AccessPath(Leaf), "
+      "origins={`LOne;.one:()V`})}),])),]");
 
   EXPECT_EQ(show(CallPositionFrames::bottom()), "[]");
 }

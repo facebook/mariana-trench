@@ -29,7 +29,7 @@ void CallPositionFrames::add(const Frame& frame) {
     mt_assert(position_ == frame.call_position());
   }
 
-  frames_.add(CalleePortFrames({frame}));
+  frames_.add(CalleePortFrames(/* local_positions */ {}, {frame}));
 }
 
 bool CallPositionFrames::leq(const CallPositionFrames& other) const {
@@ -131,12 +131,16 @@ LocalPositionSet CallPositionFrames::local_positions() const {
 }
 
 void CallPositionFrames::add_local_position(const Position* position) {
-  map([position](Frame& frame) { frame.add_local_position(position); });
+  frames_.map([position](CalleePortFrames& callee_port_frames) {
+    callee_port_frames.add_local_position(position);
+  });
 }
 
 void CallPositionFrames::set_local_positions(
     const LocalPositionSet& positions) {
-  map([&positions](Frame& frame) { frame.set_local_positions(positions); });
+  frames_.map([positions](CalleePortFrames& callee_port_frames) {
+    callee_port_frames.set_local_positions(positions);
+  });
 }
 
 void CallPositionFrames::add_inferred_features_and_local_position(
@@ -146,14 +150,15 @@ void CallPositionFrames::add_inferred_features_and_local_position(
     return;
   }
 
-  map([&features, position](Frame& frame) {
+  map([&features](Frame& frame) {
     if (!features.empty()) {
       frame.add_inferred_features(features);
     }
-    if (position != nullptr) {
-      frame.add_local_position(position);
-    }
   });
+
+  if (position != nullptr) {
+    add_local_position(position);
+  }
 }
 
 CallPositionFrames CallPositionFrames::propagate(
@@ -200,29 +205,30 @@ CallPositionFrames CallPositionFrames::attach_position(
         continue;
       }
 
-      result.add(CalleePortFrames({Frame(
-          frame.kind(),
-          frame.callee_port(),
-          /* callee */ nullptr,
-          /* field_callee */ nullptr,
-          /* call_position */ position,
-          /* distance */ 0,
-          frame.origins(),
-          frame.field_origins(),
-          frame.features(),
-          // Since CallPositionFrames::attach_position is used (only) for
-          // parameter_sinks and return sources which may be included in an
-          // issue as a leaf, we need to make sure that those leaf frames in
-          // issues contain the user_features as being locally inferred.
-          /* locally_inferred_features */
-          frame.user_features().is_bottom()
-              ? FeatureMayAlwaysSet::bottom()
-              : FeatureMayAlwaysSet::make_always(frame.user_features()),
-          /* user_features */ FeatureSet::bottom(),
-          /* via_type_of_ports */ {},
-          /* via_value_of_ports */ {},
-          frame.local_positions(),
-          frame.canonical_names())}));
+      result.add(CalleePortFrames(
+          callee_port_frames.local_positions(),
+          {Frame(
+              frame.kind(),
+              frame.callee_port(),
+              /* callee */ nullptr,
+              /* field_callee */ nullptr,
+              /* call_position */ position,
+              /* distance */ 0,
+              frame.origins(),
+              frame.field_origins(),
+              frame.features(),
+              // Since CallPositionFrames::attach_position is used (only) for
+              // parameter_sinks and return sources which may be included in an
+              // issue as a leaf, we need to make sure that those leaf frames in
+              // issues contain the user_features as being locally inferred.
+              /* locally_inferred_features */
+              frame.user_features().is_bottom()
+                  ? FeatureMayAlwaysSet::bottom()
+                  : FeatureMayAlwaysSet::make_always(frame.user_features()),
+              /* user_features */ FeatureSet::bottom(),
+              /* via_type_of_ports */ {},
+              /* via_value_of_ports */ {},
+              frame.canonical_names())}));
     }
   }
 
@@ -243,6 +249,57 @@ void CallPositionFrames::append_callee_port_to_artificial_sources(
   frames_.map([&](CalleePortFrames& callee_port_frames) {
     callee_port_frames.append_callee_port_to_artificial_sources(path_element);
   });
+}
+
+std::unordered_map<const Position*, CallPositionFrames>
+CallPositionFrames::map_positions(
+    const std::function<const Position*(const AccessPath&, const Position*)>&
+        new_call_position,
+    const std::function<LocalPositionSet(const LocalPositionSet&)>&
+        new_local_positions) const {
+  std::unordered_map<const Position*, CallPositionFrames> result;
+  for (const auto& callee_port_frames : frames_) {
+    auto call_position =
+        new_call_position(callee_port_frames.callee_port(), position_);
+    auto local_positions =
+        new_local_positions(callee_port_frames.local_positions());
+
+    auto new_frames = CalleePortFrames::bottom();
+    for (const auto& frame : callee_port_frames) {
+      // TODO(T91357916): Move call_position out of Frame and store it only in
+      // `CallPositionFrames` so we do not need to update every frame.
+      auto new_frame = Frame(
+          frame.kind(),
+          frame.callee_port(),
+          frame.callee(),
+          frame.field_callee(),
+          call_position,
+          frame.distance(),
+          frame.origins(),
+          frame.field_origins(),
+          frame.inferred_features(),
+          frame.locally_inferred_features(),
+          frame.user_features(),
+          frame.via_type_of_ports(),
+          frame.via_value_of_ports(),
+          frame.canonical_names());
+      new_frames.add(new_frame);
+    }
+
+    if (!new_frames.is_bottom()) {
+      new_frames.set_local_positions(local_positions);
+    }
+
+    auto found = result.find(call_position);
+    auto frames =
+        CallPositionFrames(call_position, FramesByCalleePort(new_frames));
+    if (found != result.end()) {
+      found->second.join_with(frames);
+    } else {
+      result.emplace(call_position, frames);
+    }
+  }
+  return result;
 }
 
 void CallPositionFrames::filter_invalid_frames(

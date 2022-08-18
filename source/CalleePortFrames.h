@@ -67,23 +67,33 @@ class CalleePortFrames final : public sparta::AbstractDomain<CalleePortFrames> {
   explicit CalleePortFrames(
       AccessPath callee_port,
       bool is_artificial_source_frames,
-      FramesByKind frames)
+      FramesByKind frames,
+      LocalPositionSet local_positions)
       : callee_port_(std::move(callee_port)),
         is_artificial_source_frames_(is_artificial_source_frames),
-        frames_(std::move(frames)) {}
+        frames_(std::move(frames)),
+        local_positions_(std::move(local_positions)) {
+    mt_assert(!local_positions_.is_bottom());
+  }
 
  public:
   /**
    * Create the bottom (i.e, empty) frame set. Value of callee_port_ and
    * is_artificial_source_frames_ don't matter, so we pick some default. Leaf
    * and false respectively seem like decent choices.
+   * Also avoid using `bottom()` for local_positions_ because
+   * bottom().add(new_position) gives bottom() which is not the desired
+   * behavior for CalleePortFrames::add. Consider re-visiting LocalPositionSet.
    */
   CalleePortFrames()
       : callee_port_(Root(Root::Kind::Leaf)),
         is_artificial_source_frames_(false),
-        frames_(FramesByKind::bottom()) {}
+        frames_(FramesByKind::bottom()),
+        local_positions_({}) {}
 
-  explicit CalleePortFrames(std::initializer_list<Frame> frames);
+  explicit CalleePortFrames(
+      LocalPositionSet local_positions,
+      std::initializer_list<Frame> frames);
 
   CalleePortFrames(const CalleePortFrames&) = default;
   CalleePortFrames(CalleePortFrames&&) = default;
@@ -108,17 +118,15 @@ class CalleePortFrames final : public sparta::AbstractDomain<CalleePortFrames> {
   };
 
   static CalleePortFrames bottom() {
-    return CalleePortFrames(
-        /* callee_port */ AccessPath(Root(Root::Kind::Leaf)),
-        /* is_artificial_source_frames */ false,
-        FramesByKind::bottom());
+    return CalleePortFrames();
   }
 
   static CalleePortFrames top() {
     return CalleePortFrames(
         /* callee_port */ AccessPath(Root(Root::Kind::Leaf)),
         /* is_artificial_source_frames */ false,
-        FramesByKind::top());
+        FramesByKind::top(),
+        /* local_positions */ {});
   }
 
   bool is_bottom() const override {
@@ -133,12 +141,14 @@ class CalleePortFrames final : public sparta::AbstractDomain<CalleePortFrames> {
     callee_port_ = AccessPath(Root(Root::Kind::Leaf));
     is_artificial_source_frames_ = false;
     frames_.set_to_bottom();
+    local_positions_ = {};
   }
 
   void set_to_top() override {
     callee_port_ = AccessPath(Root(Root::Kind::Leaf));
     is_artificial_source_frames_ = false;
     frames_.set_to_top();
+    local_positions_.set_to_top();
   }
 
   bool empty() const {
@@ -151,6 +161,10 @@ class CalleePortFrames final : public sparta::AbstractDomain<CalleePortFrames> {
 
   bool is_artificial_source_frames() const {
     return is_artificial_source_frames_;
+  }
+
+  const LocalPositionSet& local_positions() const {
+    return local_positions_;
   }
 
   void add(const Frame& frame);
@@ -183,11 +197,9 @@ class CalleePortFrames final : public sparta::AbstractDomain<CalleePortFrames> {
 
   void add_inferred_features(const FeatureMayAlwaysSet& features);
 
-  LocalPositionSet local_positions() const;
-
   void add_local_position(const Position* position);
 
-  void set_local_positions(const LocalPositionSet& positions);
+  void set_local_positions(LocalPositionSet positions);
 
   void add_inferred_features_and_local_position(
       const FeatureMayAlwaysSet& features,
@@ -235,7 +247,8 @@ class CalleePortFrames final : public sparta::AbstractDomain<CalleePortFrames> {
       auto new_frames = CalleePortFrames(
           callee_port_,
           is_artificial_source_frames_,
-          FramesByKind{std::pair(kind, kind_frames)});
+          FramesByKind{std::pair(kind, kind_frames)},
+          local_positions_);
 
       auto existing = result.find(mapped_value);
       auto existing_or_bottom = existing == result.end()
@@ -314,7 +327,8 @@ class CalleePortFrames final : public sparta::AbstractDomain<CalleePortFrames> {
   bool is_artificial_source_frames_;
   FramesByKind frames_;
 
-  // TODO(T91357916): Move local_positions and local_features here from `Frame`.
+  // TODO(T91357916): Move local_features here from `Frame`.
+  LocalPositionSet local_positions_;
 };
 
 } // namespace marianatrench

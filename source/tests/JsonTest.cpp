@@ -42,6 +42,10 @@ Json::Value to_json(const T* value) {
   return value->to_json();
 }
 
+Json::Value to_json(const Frame& value) {
+  return value.to_json(/* local_positions */ {});
+}
+
 #define EXPECT_JSON_EQ(CLASS, JSON, EXPRESSION, ...)                           \
   do {                                                                         \
     EXPECT_EQ(                                                                 \
@@ -1091,7 +1095,7 @@ TEST_F(JsonTest, Frame) {
                       /* always */ {}),
                   .user_features =
                       FeatureSet({context.features->get("FeatureThree")})})
-              .to_json()),
+              .to_json(/* local_positions */ {})),
       test::parse_json(R"({
           "kind": "TestSource",
           "may_features": ["FeatureOne"],

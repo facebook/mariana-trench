@@ -121,7 +121,6 @@ Frame make_frame(const Kind* kind, const FrameProperties& properties) {
       properties.user_features,
       properties.via_type_of_ports,
       properties.via_value_of_ports,
-      properties.local_positions,
       properties.canonical_names);
 }
 

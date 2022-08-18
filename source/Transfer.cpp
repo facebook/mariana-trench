@@ -828,7 +828,6 @@ void check_flows_to_array_allocation(
       /* user features */ {},
       /* via_type_of_ports */ {},
       /* via_value_of_ports */ {},
-      /* local_positions */ {},
       /* canonical_names */ {})};
   auto instruction_sources = instruction->srcs_vec();
   auto array_allocation_index = context->call_graph.array_allocation_index(

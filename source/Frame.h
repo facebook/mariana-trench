@@ -82,9 +82,6 @@ using CanonicalNameSetAbstractDomain =
  * callsite and include it in the inferred features of the taint at that
  * callsite
  *
- * `local_positions` is the set of positions that the taint flowed through
- * within the current method.
- *
  * `canonical_names` is used for cross-repo taint exchange (crtex) which
  * requires that callee names at the leaves conform to a naming format. This
  * format is defined using placeholders. See `CanonicalName`.
@@ -115,7 +112,6 @@ class Frame final : public sparta::AbstractDomain<Frame> {
       FeatureSet user_features,
       RootSetAbstractDomain via_type_of_ports,
       RootSetAbstractDomain via_value_of_ports,
-      LocalPositionSet local_positions,
       CanonicalNameSetAbstractDomain canonical_names)
       : kind_(kind),
         callee_port_(std::move(callee_port)),
@@ -130,11 +126,9 @@ class Frame final : public sparta::AbstractDomain<Frame> {
         user_features_(std::move(user_features)),
         via_type_of_ports_(std::move(via_type_of_ports)),
         via_value_of_ports_(std::move(via_value_of_ports)),
-        local_positions_(std::move(local_positions)),
         canonical_names_(std::move(canonical_names)) {
     mt_assert(kind_ != nullptr);
     mt_assert(distance_ >= 0);
-    mt_assert(!local_positions_.is_bottom());
     mt_assert(!(callee && field_callee));
   }
 
@@ -158,7 +152,6 @@ class Frame final : public sparta::AbstractDomain<Frame> {
         user_features,
         /* via_type_of_ports */ {},
         /* via_value_of_ports */ {},
-        /* local_positions */ {},
         /* canonical_names */ {});
   }
 
@@ -191,7 +184,6 @@ class Frame final : public sparta::AbstractDomain<Frame> {
         /* user_features */ {},
         /* via_type_of_ports */ {},
         /* via_value_of_ports */ {},
-        /* local_positions */ {},
         canonical_names);
   }
 
@@ -272,14 +264,6 @@ class Frame final : public sparta::AbstractDomain<Frame> {
 
   FeatureMayAlwaysSet features() const;
 
-  void add_local_position(const Position* position);
-
-  void set_local_positions(LocalPositionSet positions);
-
-  const LocalPositionSet& local_positions() const {
-    return local_positions_;
-  }
-
   static Frame bottom() {
     return Frame();
   }
@@ -349,7 +333,7 @@ class Frame final : public sparta::AbstractDomain<Frame> {
   Frame with_kind(const Kind* kind) const;
 
   static Frame from_json(const Json::Value& value, Context& context);
-  Json::Value to_json() const;
+  Json::Value to_json(const LocalPositionSet& local_positions) const;
 
   // Describe how to join frames together in `CalleePortFrames`.
   struct GroupEqual {
@@ -377,7 +361,6 @@ class Frame final : public sparta::AbstractDomain<Frame> {
   FeatureSet user_features_;
   RootSetAbstractDomain via_type_of_ports_;
   RootSetAbstractDomain via_value_of_ports_;
-  LocalPositionSet local_positions_;
   CanonicalNameSetAbstractDomain canonical_names_;
 };
 

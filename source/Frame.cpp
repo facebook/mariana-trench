@@ -41,15 +41,6 @@ FeatureMayAlwaysSet Frame::features() const {
   return features;
 }
 
-void Frame::add_local_position(const Position* position) {
-  local_positions_.add(position);
-}
-
-void Frame::set_local_positions(LocalPositionSet positions) {
-  mt_assert(!positions.is_bottom());
-  local_positions_ = std::move(positions);
-}
-
 bool Frame::leq(const Frame& other) const {
   if (is_bottom()) {
     return true;
@@ -67,7 +58,6 @@ bool Frame::leq(const Frame& other) const {
         user_features_.leq(other.user_features_) &&
         via_type_of_ports_.leq(other.via_type_of_ports_) &&
         via_value_of_ports_.leq(other.via_value_of_ports_) &&
-        local_positions_.leq(other.local_positions_) &&
         canonical_names_.leq(other.canonical_names_);
   }
 }
@@ -87,7 +77,6 @@ bool Frame::equals(const Frame& other) const {
         user_features_ == other.user_features_ &&
         via_type_of_ports_ == other.via_type_of_ports_ &&
         via_value_of_ports_ == other.via_value_of_ports_ &&
-        local_positions_ == other.local_positions_ &&
         canonical_names_ == other.canonical_names_;
   }
 }
@@ -118,7 +107,6 @@ void Frame::join_with(const Frame& other) {
     user_features_.join_with(other.user_features_);
     via_type_of_ports_.join_with(other.via_type_of_ports_);
     via_value_of_ports_.join_with(other.via_value_of_ports_);
-    local_positions_.join_with(other.local_positions_);
     canonical_names_.join_with(other.canonical_names_);
   }
 
@@ -157,7 +145,6 @@ Frame Frame::artificial_source(AccessPath access_path) {
       /* user_features */ {},
       /* via_type_of_ports */ {},
       /* via_value_of_ports */ {},
-      /* local_positions */ {},
       /* canonical_names */ {});
 }
 
@@ -379,11 +366,10 @@ Frame Frame::from_json(const Json::Value& value, Context& context) {
       std::move(user_features),
       std::move(via_type_of_ports),
       std::move(via_value_of_ports),
-      /* local_positions */ {},
       std::move(canonical_names));
 }
 
-Json::Value Frame::to_json() const {
+Json::Value Frame::to_json(const LocalPositionSet& local_positions) const {
   auto value = Json::Value(Json::objectValue);
 
   mt_assert(kind_ != nullptr);
@@ -434,8 +420,10 @@ Json::Value Frame::to_json() const {
     value["via_value_of"] = ports;
   }
 
-  if (local_positions_.is_value() && !local_positions_.empty()) {
-    value["local_positions"] = local_positions_.to_json();
+  // TODO(T91357916): Emit local positions in Frame json until parser is updated
+  // to read from CalleePortFrames.
+  if (local_positions.is_value() && !local_positions.empty()) {
+    value["local_positions"] = local_positions.to_json();
   }
 
   if (canonical_names_.is_value() && !canonical_names_.elements().empty()) {
@@ -508,9 +496,6 @@ std::ostream& operator<<(std::ostream& out, const Frame& frame) {
   if (frame.via_value_of_ports_.is_value() &&
       !frame.via_value_of_ports_.elements().empty()) {
     out << ", via_value_of_ports=" << frame.via_value_of_ports_;
-  }
-  if (!frame.local_positions_.empty()) {
-    out << ", local_positions=" << frame.local_positions_;
   }
   if (frame.canonical_names_.is_value() &&
       !frame.canonical_names_.elements().empty()) {

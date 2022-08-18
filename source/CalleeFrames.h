@@ -172,6 +172,13 @@ class CalleeFrames final : public sparta::AbstractDomain<CalleeFrames> {
 
   void append_callee_port_to_artificial_sources(Path::Element path_element);
 
+  void update_non_leaf_positions(
+      const std::function<
+          const Position*(const Method*, const AccessPath&, const Position*)>&
+          new_call_position,
+      const std::function<LocalPositionSet(const LocalPositionSet&)>&
+          new_local_positions);
+
   void filter_invalid_frames(
       const std::function<
           bool(const Method* MT_NULLABLE, const AccessPath&, const Kind*)>&

@@ -170,6 +170,16 @@ class CallPositionFrames final
 
   void append_callee_port_to_artificial_sources(Path::Element path_element);
 
+  /**
+   * Returns new `CallPositionFrames` containing updated call and local
+   * positions computed by the input functions.
+   */
+  std::unordered_map<const Position*, CallPositionFrames> map_positions(
+      const std::function<const Position*(const AccessPath&, const Position*)>&
+          new_call_position,
+      const std::function<LocalPositionSet(const LocalPositionSet&)>&
+          new_local_positions) const;
+
   void filter_invalid_frames(
       const std::function<
           bool(const Method* MT_NULLABLE, const AccessPath&, const Kind*)>&
@@ -224,8 +234,6 @@ class CallPositionFrames final
  private:
   const Position* MT_NULLABLE position_;
   FramesByCalleePort frames_;
-
-  // TODO(T91357916): Move local_positions and local_features here from `Frame`.
 };
 
 } // namespace marianatrench

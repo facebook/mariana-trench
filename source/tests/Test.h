@@ -64,7 +64,6 @@ struct FrameProperties {
   FeatureSet user_features = {};
   RootSetAbstractDomain via_type_of_ports = {};
   RootSetAbstractDomain via_value_of_ports = {};
-  LocalPositionSet local_positions = {};
   CanonicalNameSetAbstractDomain canonical_names = {};
 };
 

@@ -85,7 +85,7 @@ void FieldModel::check_frame_consistency(
   if (!frame.callee_port().root().is_leaf() ||
       frame.call_position() != nullptr || frame.distance() != 0 ||
       !frame.origins().is_bottom() || frame.via_type_of_ports().size() != 0 ||
-      !frame.local_positions().empty() || frame.canonical_names().size() != 0) {
+      frame.canonical_names().size() != 0) {
     FieldModelConsistencyError::raise(fmt::format(
         "Frame {} in {}s for field `{}` contains an unexpected non-empty or non-bottom value for a field.",
         show(frame),
@@ -114,7 +114,6 @@ Frame add_field_callee(const Field* MT_NULLABLE field, const Frame& frame) {
       frame.user_features(),
       frame.via_type_of_ports(),
       frame.via_value_of_ports(),
-      frame.local_positions(),
       frame.canonical_names());
 }
 
@@ -180,7 +179,8 @@ Json::Value FieldModel::to_json() const {
     auto sources_value = Json::Value(Json::arrayValue);
     for (const auto& source : sources_.frames_iterator()) {
       mt_assert(!source.is_bottom());
-      sources_value.append(source.to_json());
+      // Field models do not have local positions
+      sources_value.append(source.to_json(/* local_positions */ {}));
     }
     value["sources"] = sources_value;
   }
@@ -189,7 +189,8 @@ Json::Value FieldModel::to_json() const {
     auto sinks_value = Json::Value(Json::arrayValue);
     for (const auto& sink : sinks_.frames_iterator()) {
       mt_assert(!sink.is_bottom());
-      sinks_value.append(sink.to_json());
+      // Field models do not have local positions
+      sinks_value.append(sink.to_json(/* local_positions */ {}));
     }
     value["sinks"] = sinks_value;
   }
