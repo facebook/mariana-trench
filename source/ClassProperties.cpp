@@ -194,14 +194,8 @@ ClassProperties::ClassProperties(
     for (const auto& tag_info : manifest_class_info.component_tags) {
       std::unordered_set<std::string_view> parent_classes;
       auto dex_class = redex::get_class(tag_info.classname);
-      bool protection_level = false;
       bool permission = false;
 
-      if (!tag_info.protection_level.empty() &&
-          tag_info.protection_level != "normal") {
-        protection_level_classes_.emplace(strings_[tag_info.classname]);
-        protection_level = true;
-      }
       if (!tag_info.permission.empty()) {
         permission_classes_.emplace(strings_[tag_info.classname]);
         permission = true;
@@ -210,7 +204,7 @@ ClassProperties::ClassProperties(
           (tag_info.is_exported == BooleanXMLAttribute::Undefined &&
            tag_info.has_intent_filters)) {
         exported_classes_.emplace(strings_[tag_info.classname]);
-        if (!protection_level && !permission && dex_class) {
+        if (!permission && dex_class) {
           if (tag_info.tag == ComponentTag::Activity) {
             const auto& exported_fragments = get_class_fragments(dex_class);
             for (const auto& klass : exported_fragments) {
@@ -310,12 +304,6 @@ bool ClassProperties::is_dfa_public(std::string_view class_name) const {
       dfa_public_scheme_classes_.count(outer_class) > 0;
 }
 
-bool ClassProperties::has_protection_level(std::string_view class_name) const {
-  auto outer_class = strip_inner_class(class_name);
-  return protection_level_classes_.count(class_name) > 0 ||
-      protection_level_classes_.count(outer_class) > 0;
-}
-
 bool ClassProperties::has_permission(std::string_view class_name) const {
   auto outer_class = strip_inner_class(class_name);
   return permission_classes_.count(class_name) > 0 ||
@@ -408,9 +396,6 @@ FeatureSet ClassProperties::get_class_features(
   if (has_inline_permissions(clazz)) {
     features.add(features_.get("via-permission-check-in-class"));
   }
-  if (has_protection_level(clazz)) {
-    features.add(features_.get("via-caller-protection-level"));
-  }
 
   // `via-public-dfa-scheme` feature only applies within the same class.
   if (!via_dependency && is_dfa_public(clazz)) {
@@ -435,8 +420,7 @@ bool ClassProperties::has_user_exposed_properties(
 
 bool ClassProperties::has_user_unexposed_properties(
     std::string_view class_name) const {
-  return is_class_unexported(class_name) || has_permission(class_name) ||
-      has_protection_level(class_name);
+  return is_class_unexported(class_name) || has_permission(class_name);
 };
 
 namespace {
