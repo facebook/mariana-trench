@@ -35,7 +35,7 @@ TEST_F(CallPositionFramesTest, Add) {
   EXPECT_TRUE(frames.empty());
   EXPECT_EQ(frames.position(), nullptr);
 
-  frames.add(test::make_frame(
+  frames.add(test::make_taint_config(
       source_kind_one,
       test::FrameProperties{
           .origins = MethodSet{one},
@@ -44,14 +44,14 @@ TEST_F(CallPositionFramesTest, Add) {
   EXPECT_EQ(frames.position(), nullptr);
   EXPECT_EQ(
       frames,
-      CallPositionFrames{test::make_frame(
+      CallPositionFrames{test::make_taint_config(
           source_kind_one,
           test::FrameProperties{
               .origins = MethodSet{one},
               .inferred_features = FeatureMayAlwaysSet{feature_one}})});
 
   // Add frame with the same kind
-  frames.add(test::make_frame(
+  frames.add(test::make_taint_config(
       source_kind_one,
       test::FrameProperties{
           .origins = MethodSet{two},
@@ -59,7 +59,7 @@ TEST_F(CallPositionFramesTest, Add) {
           .user_features = FeatureSet{user_feature_one}}));
   EXPECT_EQ(
       frames,
-      CallPositionFrames{test::make_frame(
+      CallPositionFrames{test::make_taint_config(
           source_kind_one,
           test::FrameProperties{
               .origins = MethodSet{one, two},
@@ -68,7 +68,7 @@ TEST_F(CallPositionFramesTest, Add) {
               .user_features = FeatureSet{user_feature_one}})});
 
   // Add frame with a different kind
-  frames.add(test::make_frame(
+  frames.add(test::make_taint_config(
       source_kind_two,
       test::FrameProperties{
           .origins = MethodSet{two},
@@ -76,21 +76,21 @@ TEST_F(CallPositionFramesTest, Add) {
   EXPECT_EQ(
       frames,
       (CallPositionFrames{
-          test::make_frame(
+          test::make_taint_config(
               source_kind_one,
               test::FrameProperties{
                   .origins = MethodSet{one, two},
                   .inferred_features =
                       FeatureMayAlwaysSet::make_may({feature_one, feature_two}),
                   .user_features = FeatureSet{user_feature_one}}),
-          test::make_frame(
+          test::make_taint_config(
               source_kind_two,
               test::FrameProperties{
                   .origins = MethodSet{two},
                   .inferred_features = FeatureMayAlwaysSet{feature_two}})}));
 
   // Add frame with a different callee port
-  frames.add(test::make_frame(
+  frames.add(test::make_taint_config(
       source_kind_two,
       test::FrameProperties{
           .callee_port = AccessPath(Root(Root::Kind::Return)),
@@ -99,19 +99,19 @@ TEST_F(CallPositionFramesTest, Add) {
   EXPECT_EQ(
       frames,
       (CallPositionFrames{
-          test::make_frame(
+          test::make_taint_config(
               source_kind_one,
               test::FrameProperties{
                   .origins = MethodSet{one, two},
                   .inferred_features =
                       FeatureMayAlwaysSet::make_may({feature_one, feature_two}),
                   .user_features = FeatureSet{user_feature_one}}),
-          test::make_frame(
+          test::make_taint_config(
               source_kind_two,
               test::FrameProperties{
                   .origins = MethodSet{two},
                   .inferred_features = FeatureMayAlwaysSet{feature_two}}),
-          test::make_frame(
+          test::make_taint_config(
               source_kind_two,
               test::FrameProperties{
                   .callee_port = AccessPath(Root(Root::Kind::Return)),
@@ -120,7 +120,7 @@ TEST_F(CallPositionFramesTest, Add) {
 
   // Verify frames with non-null position
   CallPositionFrames frames_with_position;
-  frames_with_position.add(test::make_frame(
+  frames_with_position.add(test::make_taint_config(
       source_kind_one,
       test::FrameProperties{.call_position = context.positions->unknown()}));
   EXPECT_EQ(frames_with_position.position(), context.positions->unknown());
@@ -140,15 +140,15 @@ TEST_F(CallPositionFramesTest, Leq) {
   // Comparison to bottom
   EXPECT_TRUE(CallPositionFrames::bottom().leq(CallPositionFrames::bottom()));
   EXPECT_TRUE(CallPositionFrames::bottom().leq(CallPositionFrames{
-      test::make_frame(test_kind_one, test::FrameProperties{})}));
-  EXPECT_FALSE((CallPositionFrames{test::make_frame(
+      test::make_taint_config(test_kind_one, test::FrameProperties{})}));
+  EXPECT_FALSE((CallPositionFrames{test::make_taint_config(
                     test_kind_one,
                     test::FrameProperties{.call_position = test_position})})
                    .leq(CallPositionFrames::bottom()));
 
   // Comparison to self
   EXPECT_TRUE(
-      (CallPositionFrames{test::make_frame(
+      (CallPositionFrames{test::make_taint_config(
            test_kind_one,
            test::FrameProperties{
                .callee_port = AccessPath(Root(Root::Kind::Argument, 0)),
@@ -156,7 +156,7 @@ TEST_F(CallPositionFramesTest, Leq) {
                .call_position = test_position,
                .distance = 1,
                .origins = MethodSet{one}})})
-          .leq(CallPositionFrames{test::make_frame(
+          .leq(CallPositionFrames{test::make_taint_config(
               test_kind_one,
               test::FrameProperties{
                   .callee_port = AccessPath(Root(Root::Kind::Argument, 0)),
@@ -167,7 +167,7 @@ TEST_F(CallPositionFramesTest, Leq) {
 
   // Same kind, different port
   EXPECT_TRUE(
-      (CallPositionFrames{test::make_frame(
+      (CallPositionFrames{test::make_taint_config(
            test_kind_one,
            test::FrameProperties{
                .callee_port = AccessPath(Root(Root::Kind::Argument, 0)),
@@ -176,7 +176,7 @@ TEST_F(CallPositionFramesTest, Leq) {
                .distance = 1,
                .origins = MethodSet{one}})})
           .leq(CallPositionFrames{
-              test::make_frame(
+              test::make_taint_config(
                   test_kind_one,
                   test::FrameProperties{
                       .callee_port = AccessPath(Root(Root::Kind::Argument, 0)),
@@ -184,7 +184,7 @@ TEST_F(CallPositionFramesTest, Leq) {
                       .call_position = test_position,
                       .distance = 1,
                       .origins = MethodSet{one}}),
-              test::make_frame(
+              test::make_taint_config(
                   test_kind_one,
                   test::FrameProperties{
                       .callee_port = AccessPath(Root(Root::Kind::Argument, 1)),
@@ -195,7 +195,7 @@ TEST_F(CallPositionFramesTest, Leq) {
           }));
   EXPECT_FALSE(
       (CallPositionFrames{
-           test::make_frame(
+           test::make_taint_config(
                test_kind_one,
                test::FrameProperties{
                    .callee_port = AccessPath(Root(Root::Kind::Argument, 0)),
@@ -203,7 +203,7 @@ TEST_F(CallPositionFramesTest, Leq) {
                    .call_position = test_position,
                    .distance = 1,
                    .origins = MethodSet{one}}),
-           test::make_frame(
+           test::make_taint_config(
                test_kind_one,
                test::FrameProperties{
                    .callee_port = AccessPath(Root(Root::Kind::Argument, 1)),
@@ -212,7 +212,7 @@ TEST_F(CallPositionFramesTest, Leq) {
                    .distance = 1,
                    .origins = MethodSet{one}}),
        })
-          .leq(CallPositionFrames{test::make_frame(
+          .leq(CallPositionFrames{test::make_taint_config(
               test_kind_one,
               test::FrameProperties{
                   .callee_port = AccessPath(Root(Root::Kind::Argument, 0)),
@@ -223,7 +223,7 @@ TEST_F(CallPositionFramesTest, Leq) {
 
   // Different kinds
   EXPECT_TRUE(
-      (CallPositionFrames{test::make_frame(
+      (CallPositionFrames{test::make_taint_config(
            test_kind_one,
            test::FrameProperties{
                .callee_port = AccessPath(Root(Root::Kind::Argument, 0)),
@@ -232,7 +232,7 @@ TEST_F(CallPositionFramesTest, Leq) {
                .distance = 1,
                .origins = MethodSet{one}})})
           .leq(CallPositionFrames{
-              test::make_frame(
+              test::make_taint_config(
                   test_kind_one,
                   test::FrameProperties{
                       .callee_port = AccessPath(Root(Root::Kind::Argument, 0)),
@@ -240,7 +240,7 @@ TEST_F(CallPositionFramesTest, Leq) {
                       .call_position = test_position,
                       .distance = 1,
                       .origins = MethodSet{one}}),
-              test::make_frame(
+              test::make_taint_config(
                   test_kind_two,
                   test::FrameProperties{
                       .callee_port = AccessPath(Root(Root::Kind::Argument, 0)),
@@ -251,7 +251,7 @@ TEST_F(CallPositionFramesTest, Leq) {
           }));
   EXPECT_FALSE(
       (CallPositionFrames{
-           test::make_frame(
+           test::make_taint_config(
                test_kind_one,
                test::FrameProperties{
                    .callee_port = AccessPath(Root(Root::Kind::Argument, 0)),
@@ -259,7 +259,7 @@ TEST_F(CallPositionFramesTest, Leq) {
                    .call_position = test_position,
                    .distance = 1,
                    .origins = MethodSet{one}}),
-           test::make_frame(
+           test::make_taint_config(
                test_kind_two,
                test::FrameProperties{
                    .callee_port = AccessPath(Root(Root::Kind::Argument, 0)),
@@ -267,7 +267,7 @@ TEST_F(CallPositionFramesTest, Leq) {
                    .call_position = test_position,
                    .distance = 1,
                    .origins = MethodSet{one}})})
-          .leq(CallPositionFrames{test::make_frame(
+          .leq(CallPositionFrames{test::make_taint_config(
               test_kind_one,
               test::FrameProperties{
                   .callee_port = AccessPath(Root(Root::Kind::Argument, 0)),
@@ -278,17 +278,17 @@ TEST_F(CallPositionFramesTest, Leq) {
 
   // Different callee ports
   EXPECT_TRUE(
-      (CallPositionFrames{test::make_frame(
+      (CallPositionFrames{test::make_taint_config(
            test_kind_one,
            test::FrameProperties{
                .callee_port = AccessPath(Root(Root::Kind::Argument, 0))})})
           .leq(CallPositionFrames{
-              test::make_frame(
+              test::make_taint_config(
                   test_kind_one,
                   test::FrameProperties{
                       .callee_port =
                           AccessPath(Root(Root::Kind::Argument, 0))}),
-              test::make_frame(
+              test::make_taint_config(
                   test_kind_one,
                   test::FrameProperties{
                       .callee_port =
@@ -296,15 +296,15 @@ TEST_F(CallPositionFramesTest, Leq) {
           }));
   EXPECT_FALSE(
       (CallPositionFrames{
-           test::make_frame(
+           test::make_taint_config(
                test_kind_one,
                test::FrameProperties{
                    .callee_port = AccessPath(Root(Root::Kind::Argument, 0))}),
-           test::make_frame(
+           test::make_taint_config(
                test_kind_one,
                test::FrameProperties{
                    .callee_port = AccessPath(Root(Root::Kind::Argument, 1))})})
-          .leq(CallPositionFrames{test::make_frame(
+          .leq(CallPositionFrames{test::make_taint_config(
               test_kind_one,
               test::FrameProperties{
                   .callee_port = AccessPath(Root(Root::Kind::Argument, 0))})}));
@@ -319,41 +319,41 @@ TEST_F(CallPositionFramesTest, ArtificialSourceLeq) {
   // callee_port must be equal for non-artificial taint kinds.
   EXPECT_TRUE(
       CallPositionFrames{
-          test::make_frame(
+          test::make_taint_config(
               test_kind_one,
               test::FrameProperties{
                   .callee_port = AccessPath(Root(Root::Kind::Return))})}
-          .leq(CallPositionFrames{test::make_frame(
+          .leq(CallPositionFrames{test::make_taint_config(
               test_kind_one,
               test::FrameProperties{
                   .callee_port = AccessPath(Root(Root::Kind::Return))})}));
   EXPECT_FALSE(
       CallPositionFrames{
-          test::make_frame(
+          test::make_taint_config(
               test_kind_one,
               test::FrameProperties{
                   .callee_port = AccessPath(Root(Root::Kind::Return))})}
-          .leq(CallPositionFrames{test::make_frame(
+          .leq(CallPositionFrames{test::make_taint_config(
               test_kind_one,
               test::FrameProperties{
                   .callee_port = AccessPath(Root(Root::Kind::Argument, 0))})}));
   EXPECT_FALSE(
-      CallPositionFrames{test::make_frame(
+      CallPositionFrames{test::make_taint_config(
                              test_kind_one,
                              test::FrameProperties{
                                  .callee_port = AccessPath(
                                      Root(Root::Kind::Argument, 0),
                                      Path{DexString::make_string("x")})})}
-          .leq(CallPositionFrames{test::make_frame(
+          .leq(CallPositionFrames{test::make_taint_config(
               test_kind_one,
               test::FrameProperties{
                   .callee_port = AccessPath(Root(Root::Kind::Argument, 0))})}));
   EXPECT_FALSE(CallPositionFrames{
-      test::make_frame(
+      test::make_taint_config(
           test_kind_one,
           test::FrameProperties{
               .callee_port = AccessPath(Root(Root::Kind::Argument, 0))})}
-                   .leq(CallPositionFrames{test::make_frame(
+                   .leq(CallPositionFrames{test::make_taint_config(
                        test_kind_one,
                        test::FrameProperties{
                            .callee_port = AccessPath(
@@ -362,22 +362,22 @@ TEST_F(CallPositionFramesTest, ArtificialSourceLeq) {
 
   // For artificial sources, compare the common prefix of callee ports.
   EXPECT_TRUE(
-      CallPositionFrames{test::make_frame(
+      CallPositionFrames{test::make_taint_config(
                              Kinds::artificial_source(),
                              test::FrameProperties{
                                  .callee_port = AccessPath(
                                      Root(Root::Kind::Argument, 0),
                                      Path{DexString::make_string("x")})})}
-          .leq(CallPositionFrames{test::make_frame(
+          .leq(CallPositionFrames{test::make_taint_config(
               Kinds::artificial_source(),
               test::FrameProperties{
                   .callee_port = AccessPath(Root(Root::Kind::Argument, 0))})}));
   EXPECT_FALSE(CallPositionFrames{
-      test::make_frame(
+      test::make_taint_config(
           Kinds::artificial_source(),
           test::FrameProperties{
               .callee_port = AccessPath(Root(Root::Kind::Argument, 0))})}
-                   .leq(CallPositionFrames{test::make_frame(
+                   .leq(CallPositionFrames{test::make_taint_config(
                        Kinds::artificial_source(),
                        test::FrameProperties{
                            .callee_port = AccessPath(
@@ -399,24 +399,24 @@ TEST_F(CallPositionFramesTest, Equals) {
   // Comparison to bottom
   EXPECT_TRUE(
       CallPositionFrames::bottom().equals(CallPositionFrames::bottom()));
-  EXPECT_FALSE(
-      CallPositionFrames::bottom().equals(CallPositionFrames{test::make_frame(
+  EXPECT_FALSE(CallPositionFrames::bottom().equals(
+      CallPositionFrames{test::make_taint_config(
           test_kind_one,
           test::FrameProperties{.call_position = test_position})}));
-  EXPECT_FALSE((CallPositionFrames{test::make_frame(
+  EXPECT_FALSE((CallPositionFrames{test::make_taint_config(
                     test_kind_one,
                     test::FrameProperties{.call_position = test_position})})
                    .equals(CallPositionFrames::bottom()));
 
   // Comparison to self
-  EXPECT_TRUE((CallPositionFrames{
-                   test::make_frame(test_kind_one, test::FrameProperties{})})
-                  .equals(CallPositionFrames{test::make_frame(
+  EXPECT_TRUE((CallPositionFrames{test::make_taint_config(
+                   test_kind_one, test::FrameProperties{})})
+                  .equals(CallPositionFrames{test::make_taint_config(
                       test_kind_one, test::FrameProperties{})}));
 
   // Different ports
   EXPECT_FALSE(
-      (CallPositionFrames{test::make_frame(
+      (CallPositionFrames{test::make_taint_config(
            test_kind_one,
            test::FrameProperties{
                .callee_port = AccessPath(Root(Root::Kind::Argument, 0)),
@@ -424,7 +424,7 @@ TEST_F(CallPositionFramesTest, Equals) {
                .call_position = test_position,
                .distance = 1,
                .origins = MethodSet{one}})})
-          .equals(CallPositionFrames{test::make_frame(
+          .equals(CallPositionFrames{test::make_taint_config(
               test_kind_one,
               test::FrameProperties{
                   .callee_port = AccessPath(Root(Root::Kind::Argument, 1)),
@@ -434,9 +434,9 @@ TEST_F(CallPositionFramesTest, Equals) {
                   .origins = MethodSet{one}})}));
 
   // Different kinds
-  EXPECT_FALSE((CallPositionFrames{
-                    test::make_frame(test_kind_one, test::FrameProperties{})})
-                   .equals(CallPositionFrames{test::make_frame(
+  EXPECT_FALSE((CallPositionFrames{test::make_taint_config(
+                    test_kind_one, test::FrameProperties{})})
+                   .equals(CallPositionFrames{test::make_taint_config(
                        test_kind_two, test::FrameProperties{})}));
 }
 
@@ -454,53 +454,53 @@ TEST_F(CallPositionFramesTest, JoinWith) {
   // Join with bottom
   EXPECT_EQ(
       CallPositionFrames::bottom().join(CallPositionFrames{
-          test::make_frame(test_kind_one, test::FrameProperties{})}),
+          test::make_taint_config(test_kind_one, test::FrameProperties{})}),
       CallPositionFrames{
-          test::make_frame(test_kind_one, test::FrameProperties{})});
+          test::make_taint_config(test_kind_one, test::FrameProperties{})});
 
   EXPECT_EQ(
       (CallPositionFrames{
-           test::make_frame(test_kind_one, test::FrameProperties{})})
+           test::make_taint_config(test_kind_one, test::FrameProperties{})})
           .join(CallPositionFrames::bottom()),
       CallPositionFrames{
-          test::make_frame(test_kind_one, test::FrameProperties{})});
+          test::make_taint_config(test_kind_one, test::FrameProperties{})});
 
   // Join with bottom (non-null call position)
-  auto frames = (CallPositionFrames{test::make_frame(
+  auto frames = (CallPositionFrames{test::make_taint_config(
                      test_kind_one,
                      test::FrameProperties{.call_position = test_position})})
                     .join(CallPositionFrames::bottom());
   EXPECT_EQ(
       frames,
-      CallPositionFrames{test::make_frame(
+      CallPositionFrames{test::make_taint_config(
           test_kind_one,
           test::FrameProperties{.call_position = test_position})});
   EXPECT_EQ(frames.position(), test_position);
 
-  frames =
-      CallPositionFrames::bottom().join(CallPositionFrames{test::make_frame(
+  frames = CallPositionFrames::bottom().join(
+      CallPositionFrames{test::make_taint_config(
           test_kind_one,
           test::FrameProperties{.call_position = test_position})});
   EXPECT_EQ(
       frames,
-      CallPositionFrames{test::make_frame(
+      CallPositionFrames{test::make_taint_config(
           test_kind_one,
           test::FrameProperties{.call_position = test_position})});
   EXPECT_EQ(frames.position(), test_position);
 
   // Join different kinds
   frames = CallPositionFrames{
-      test::make_frame(test_kind_one, test::FrameProperties{})};
+      test::make_taint_config(test_kind_one, test::FrameProperties{})};
   frames.join_with(CallPositionFrames{
-      test::make_frame(test_kind_two, test::FrameProperties{})});
+      test::make_taint_config(test_kind_two, test::FrameProperties{})});
   EXPECT_EQ(
       frames,
       (CallPositionFrames{
-          test::make_frame(test_kind_one, test::FrameProperties{}),
-          test::make_frame(test_kind_two, test::FrameProperties{})}));
+          test::make_taint_config(test_kind_one, test::FrameProperties{}),
+          test::make_taint_config(test_kind_two, test::FrameProperties{})}));
 
   // Join same kind
-  auto frame_one = test::make_frame(
+  auto frame_one = test::make_taint_config(
       test_kind_one,
       test::FrameProperties{
           .callee_port = AccessPath(Root(Root::Kind::Argument, 0)),
@@ -508,7 +508,7 @@ TEST_F(CallPositionFramesTest, JoinWith) {
           .call_position = test_position,
           .distance = 1,
           .origins = MethodSet{one}});
-  auto frame_two = test::make_frame(
+  auto frame_two = test::make_taint_config(
       test_kind_one,
       test::FrameProperties{
           .callee_port = AccessPath(Root(Root::Kind::Argument, 0)),
@@ -521,44 +521,44 @@ TEST_F(CallPositionFramesTest, JoinWith) {
   EXPECT_EQ(frames, (CallPositionFrames{frame_one}));
 
   // Join different ports
-  frames = CallPositionFrames{test::make_frame(
+  frames = CallPositionFrames{test::make_taint_config(
       test_kind_one,
       test::FrameProperties{
           .callee_port = AccessPath(Root(Root::Kind::Argument, 0))})};
-  frames.join_with(CallPositionFrames{test::make_frame(
+  frames.join_with(CallPositionFrames{test::make_taint_config(
       test_kind_one,
       test::FrameProperties{
           .callee_port = AccessPath(Root(Root::Kind::Argument, 1))})});
   EXPECT_EQ(
       frames,
       (CallPositionFrames{
-          test::make_frame(
+          test::make_taint_config(
               test_kind_one,
               test::FrameProperties{
                   .callee_port = AccessPath(Root(Root::Kind::Argument, 0))}),
-          test::make_frame(
+          test::make_taint_config(
               test_kind_one,
               test::FrameProperties{
                   .callee_port = AccessPath(Root(Root::Kind::Argument, 1))}),
       }));
 
   // Join same ports (different kinds)
-  frames = CallPositionFrames{test::make_frame(
+  frames = CallPositionFrames{test::make_taint_config(
       test_kind_one,
       test::FrameProperties{
           .callee_port = AccessPath(Root(Root::Kind::Argument, 0))})};
-  frames.join_with(CallPositionFrames{test::make_frame(
+  frames.join_with(CallPositionFrames{test::make_taint_config(
       test_kind_two,
       test::FrameProperties{
           .callee_port = AccessPath(Root(Root::Kind::Argument, 0))})});
   EXPECT_EQ(
       frames,
       (CallPositionFrames{
-          test::make_frame(
+          test::make_taint_config(
               test_kind_one,
               test::FrameProperties{
                   .callee_port = AccessPath(Root(Root::Kind::Argument, 0))}),
-          test::make_frame(
+          test::make_taint_config(
               test_kind_two,
               test::FrameProperties{
                   .callee_port = AccessPath(Root(Root::Kind::Argument, 0))}),
@@ -571,44 +571,44 @@ TEST_F(CallPositionFramesTest, ArtificialSourceJoinWith) {
 
   // Join different ports with same prefix for artificial kinds.
   // Ports should be collapsed to the common prefix.
-  auto frames = CallPositionFrames{test::make_frame(
+  auto frames = CallPositionFrames{test::make_taint_config(
       Kinds::artificial_source(),
       test::FrameProperties{
           .callee_port = AccessPath(
               Root(Root::Kind::Argument, 0),
               Path{DexString::make_string("x")})})};
-  frames.join_with(CallPositionFrames{test::make_frame(
+  frames.join_with(CallPositionFrames{test::make_taint_config(
       Kinds::artificial_source(),
       test::FrameProperties{
           .callee_port = AccessPath(Root(Root::Kind::Argument, 0))})});
   EXPECT_EQ(
       frames,
-      CallPositionFrames{test::make_frame(
+      CallPositionFrames{test::make_taint_config(
           Kinds::artificial_source(),
           test::FrameProperties{
               .callee_port = AccessPath(Root(Root::Kind::Argument, 0))})});
 
   // Join different ports with same prefix, for non-artificial kinds
-  frames = CallPositionFrames{test::make_frame(
+  frames = CallPositionFrames{test::make_taint_config(
       test_kind_one,
       test::FrameProperties{
           .callee_port = AccessPath(
               Root(Root::Kind::Argument, 0),
               Path{DexString::make_string("x")})})};
-  frames.join_with(CallPositionFrames{test::make_frame(
+  frames.join_with(CallPositionFrames{test::make_taint_config(
       test_kind_one,
       test::FrameProperties{
           .callee_port = AccessPath(Root(Root::Kind::Argument, 0))})});
   EXPECT_EQ(
       frames,
       (CallPositionFrames{
-          test::make_frame(
+          test::make_taint_config(
               test_kind_one,
               test::FrameProperties{
                   .callee_port = AccessPath(
                       Root(Root::Kind::Argument, 0),
                       Path{DexString::make_string("x")})}),
-          test::make_frame(
+          test::make_taint_config(
               test_kind_one,
               test::FrameProperties{
                   .callee_port = AccessPath(Root(Root::Kind::Argument, 0))}),
@@ -616,7 +616,7 @@ TEST_F(CallPositionFramesTest, ArtificialSourceJoinWith) {
   EXPECT_NE(
       frames,
       (CallPositionFrames{
-          test::make_frame(
+          test::make_taint_config(
               test_kind_one,
               test::FrameProperties{
                   .callee_port = AccessPath(
@@ -626,7 +626,7 @@ TEST_F(CallPositionFramesTest, ArtificialSourceJoinWith) {
   EXPECT_NE(
       frames,
       (CallPositionFrames{
-          test::make_frame(
+          test::make_taint_config(
               test_kind_one,
               test::FrameProperties{
                   .callee_port = AccessPath(Root(Root::Kind::Argument, 0))}),
@@ -662,12 +662,12 @@ TEST_F(CallPositionFramesTest, Difference) {
   EXPECT_TRUE(frames.is_bottom());
 
   frames.difference_with(CallPositionFrames{
-      test::make_frame(test_kind_one, test::FrameProperties{}),
+      test::make_taint_config(test_kind_one, test::FrameProperties{}),
   });
   EXPECT_TRUE(frames.is_bottom());
 
   initial_frames = CallPositionFrames{
-      test::make_frame(
+      test::make_taint_config(
           test_kind_one,
           test::FrameProperties{
               .callee_port = AccessPath(Root(Root::Kind::Argument, 0)),
@@ -685,7 +685,7 @@ TEST_F(CallPositionFramesTest, Difference) {
 
   frames = initial_frames;
   frames.difference_with(CallPositionFrames{
-      test::make_frame(
+      test::make_taint_config(
           test_kind_one,
           test::FrameProperties{
               .callee_port = AccessPath(Root(Root::Kind::Argument, 0)),
@@ -701,7 +701,7 @@ TEST_F(CallPositionFramesTest, Difference) {
   // Left hand side is bigger than right hand side.
   frames = initial_frames;
   frames.difference_with(CallPositionFrames{
-      test::make_frame(
+      test::make_taint_config(
           test_kind_one,
           test::FrameProperties{
               .callee_port = AccessPath(Root(Root::Kind::Argument, 0)),
@@ -715,7 +715,7 @@ TEST_F(CallPositionFramesTest, Difference) {
   // Left hand side and right hand side have different inferred features.
   frames = initial_frames;
   frames.difference_with(CallPositionFrames{
-      test::make_frame(
+      test::make_taint_config(
           test_kind_one,
           test::FrameProperties{
               .callee_port = AccessPath(Root(Root::Kind::Argument, 0)),
@@ -731,7 +731,7 @@ TEST_F(CallPositionFramesTest, Difference) {
   // Left hand side and right hand side have different user features.
   frames = initial_frames;
   frames.difference_with(CallPositionFrames{
-      test::make_frame(
+      test::make_taint_config(
           test_kind_one,
           test::FrameProperties{
               .callee_port = AccessPath(Root(Root::Kind::Argument, 0)),
@@ -747,7 +747,7 @@ TEST_F(CallPositionFramesTest, Difference) {
   // Left hand side and right hand side have different callee_ports.
   frames = initial_frames;
   frames.difference_with(CallPositionFrames{
-      test::make_frame(
+      test::make_taint_config(
           test_kind_one,
           test::FrameProperties{
               .callee_port = AccessPath(Root(Root::Kind::Argument, 1)),
@@ -762,7 +762,7 @@ TEST_F(CallPositionFramesTest, Difference) {
 
   // Left hand side is smaller than right hand side (with one kind).
   frames = CallPositionFrames{
-      test::make_frame(
+      test::make_taint_config(
           test_kind_one,
           test::FrameProperties{
               .callee_port = AccessPath(Root(Root::Kind::Argument, 0)),
@@ -774,7 +774,7 @@ TEST_F(CallPositionFramesTest, Difference) {
               .user_features = FeatureSet{user_feature_one}}),
   };
   frames.difference_with(CallPositionFrames{
-      test::make_frame(
+      test::make_taint_config(
           test_kind_one,
           test::FrameProperties{
               .callee_port = AccessPath(Root(Root::Kind::Argument, 0)),
@@ -784,7 +784,7 @@ TEST_F(CallPositionFramesTest, Difference) {
               .origins = MethodSet{one},
               .inferred_features = FeatureMayAlwaysSet{feature_one},
               .user_features = FeatureSet{user_feature_one}}),
-      test::make_frame(
+      test::make_taint_config(
           test_kind_one,
           test::FrameProperties{
               .callee_port = AccessPath(Root(Root::Kind::Argument, 0)),
@@ -799,7 +799,7 @@ TEST_F(CallPositionFramesTest, Difference) {
 
   // Left hand side has more kinds than right hand side.
   frames = CallPositionFrames{
-      test::make_frame(
+      test::make_taint_config(
           test_kind_one,
           test::FrameProperties{
               .callee_port = AccessPath(Root(Root::Kind::Argument, 0)),
@@ -807,7 +807,7 @@ TEST_F(CallPositionFramesTest, Difference) {
               .call_position = test_position,
               .distance = 1,
               .origins = MethodSet{one}}),
-      test::make_frame(
+      test::make_taint_config(
           test_kind_two,
           test::FrameProperties{
               .callee_port = AccessPath(Root(Root::Kind::Argument, 0)),
@@ -816,7 +816,7 @@ TEST_F(CallPositionFramesTest, Difference) {
               .distance = 1,
               .origins = MethodSet{one}}),
   };
-  frames.difference_with(CallPositionFrames{test::make_frame(
+  frames.difference_with(CallPositionFrames{test::make_taint_config(
       test_kind_one,
       test::FrameProperties{
           .callee_port = AccessPath(Root(Root::Kind::Argument, 0)),
@@ -827,7 +827,7 @@ TEST_F(CallPositionFramesTest, Difference) {
   EXPECT_EQ(
       frames,
       (CallPositionFrames{
-          test::make_frame(
+          test::make_taint_config(
               test_kind_two,
               test::FrameProperties{
                   .callee_port = AccessPath(Root(Root::Kind::Argument, 0)),
@@ -839,7 +839,7 @@ TEST_F(CallPositionFramesTest, Difference) {
 
   // Left hand side is smaller for one kind, and larger for another.
   frames = CallPositionFrames{
-      test::make_frame(
+      test::make_taint_config(
           test_kind_one,
           test::FrameProperties{
               .callee_port = AccessPath(Root(Root::Kind::Argument, 0)),
@@ -847,7 +847,7 @@ TEST_F(CallPositionFramesTest, Difference) {
               .call_position = test_position,
               .distance = 1,
               .origins = MethodSet{one}}),
-      test::make_frame(
+      test::make_taint_config(
           test_kind_two,
           test::FrameProperties{
               .callee_port = AccessPath(Root(Root::Kind::Argument, 0)),
@@ -855,7 +855,7 @@ TEST_F(CallPositionFramesTest, Difference) {
               .call_position = test_position,
               .distance = 1,
               .origins = MethodSet{two}}),
-      test::make_frame(
+      test::make_taint_config(
           test_kind_two,
           test::FrameProperties{
               .callee_port = AccessPath(Root(Root::Kind::Argument, 0)),
@@ -865,7 +865,7 @@ TEST_F(CallPositionFramesTest, Difference) {
               .origins = MethodSet{three}}),
   };
   frames.difference_with(CallPositionFrames{
-      test::make_frame(
+      test::make_taint_config(
           test_kind_one,
           test::FrameProperties{
               .callee_port = AccessPath(Root(Root::Kind::Argument, 0)),
@@ -873,7 +873,7 @@ TEST_F(CallPositionFramesTest, Difference) {
               .call_position = test_position,
               .distance = 1,
               .origins = MethodSet{one}}),
-      test::make_frame(
+      test::make_taint_config(
           test_kind_one,
           test::FrameProperties{
               .callee_port = AccessPath(Root(Root::Kind::Argument, 0)),
@@ -881,7 +881,7 @@ TEST_F(CallPositionFramesTest, Difference) {
               .call_position = test_position,
               .distance = 1,
               .origins = MethodSet{two}}),
-      test::make_frame(
+      test::make_taint_config(
           test_kind_two,
           test::FrameProperties{
               .callee_port = AccessPath(Root(Root::Kind::Argument, 0)),
@@ -891,7 +891,7 @@ TEST_F(CallPositionFramesTest, Difference) {
               .origins = MethodSet{two}})});
   EXPECT_EQ(
       frames,
-      (CallPositionFrames{test::make_frame(
+      (CallPositionFrames{test::make_taint_config(
           test_kind_two,
           test::FrameProperties{
               .callee_port = AccessPath(Root(Root::Kind::Argument, 0)),
@@ -902,7 +902,7 @@ TEST_F(CallPositionFramesTest, Difference) {
 
   // Both sides contain access paths
   frames = CallPositionFrames{
-      test::make_frame(
+      test::make_taint_config(
           test_kind_one,
           test::FrameProperties{
               .callee_port = AccessPath(Root(Root::Kind::Argument, 0), Path{x}),
@@ -910,7 +910,7 @@ TEST_F(CallPositionFramesTest, Difference) {
               .call_position = test_position,
               .distance = 1,
               .origins = MethodSet{one}}),
-      test::make_frame(
+      test::make_taint_config(
           test_kind_one,
           test::FrameProperties{
               .callee_port = AccessPath(Root(Root::Kind::Argument, 0), Path{y}),
@@ -920,7 +920,7 @@ TEST_F(CallPositionFramesTest, Difference) {
               .origins = MethodSet{two}}),
   };
   frames.difference_with(CallPositionFrames{
-      test::make_frame(
+      test::make_taint_config(
           test_kind_one,
           test::FrameProperties{
               .callee_port = AccessPath(Root(Root::Kind::Argument, 0), Path{x}),
@@ -928,7 +928,7 @@ TEST_F(CallPositionFramesTest, Difference) {
               .call_position = test_position,
               .distance = 1,
               .origins = MethodSet{one}}),
-      test::make_frame(
+      test::make_taint_config(
           test_kind_one,
           test::FrameProperties{
               .callee_port = AccessPath(Root(Root::Kind::Argument, 0), Path{y}),
@@ -936,7 +936,7 @@ TEST_F(CallPositionFramesTest, Difference) {
               .call_position = test_position,
               .distance = 1,
               .origins = MethodSet{two}}),
-      test::make_frame(
+      test::make_taint_config(
           test_kind_one,
           test::FrameProperties{
               .callee_port = AccessPath(Root(Root::Kind::Argument, 0)),
@@ -949,7 +949,7 @@ TEST_F(CallPositionFramesTest, Difference) {
 
   // Left hand side larger than right hand side for specific frames.
   frames = CallPositionFrames{
-      test::make_frame(
+      test::make_taint_config(
           test_kind_one,
           test::FrameProperties{
               .callee_port = AccessPath(Root(Root::Kind::Argument, 0)),
@@ -957,7 +957,7 @@ TEST_F(CallPositionFramesTest, Difference) {
               .call_position = test_position,
               .distance = 1,
               .origins = MethodSet{one, two}}),
-      test::make_frame(
+      test::make_taint_config(
           test_kind_one,
           test::FrameProperties{
               .callee_port = AccessPath(Root(Root::Kind::Argument, 0)),
@@ -965,7 +965,7 @@ TEST_F(CallPositionFramesTest, Difference) {
               .call_position = test_position,
               .distance = 1,
               .origins = MethodSet{two}}),
-      test::make_frame(
+      test::make_taint_config(
           test_kind_one,
           test::FrameProperties{
               .callee_port = AccessPath(Root(Root::Kind::Argument, 0)),
@@ -975,7 +975,7 @@ TEST_F(CallPositionFramesTest, Difference) {
               .origins = MethodSet{one, three}}),
   };
   frames.difference_with(CallPositionFrames{
-      test::make_frame(
+      test::make_taint_config(
           test_kind_one,
           test::FrameProperties{
               .callee_port = AccessPath(Root(Root::Kind::Argument, 0)),
@@ -983,7 +983,7 @@ TEST_F(CallPositionFramesTest, Difference) {
               .call_position = test_position,
               .distance = 1,
               .origins = MethodSet{one}}),
-      test::make_frame(
+      test::make_taint_config(
           test_kind_one,
           test::FrameProperties{
               .callee_port = AccessPath(Root(Root::Kind::Argument, 0)),
@@ -995,7 +995,7 @@ TEST_F(CallPositionFramesTest, Difference) {
   EXPECT_EQ(
       frames,
       (CallPositionFrames{
-          test::make_frame(
+          test::make_taint_config(
               test_kind_one,
               test::FrameProperties{
                   .callee_port = AccessPath(Root(Root::Kind::Argument, 0)),
@@ -1003,7 +1003,7 @@ TEST_F(CallPositionFramesTest, Difference) {
                   .call_position = test_position,
                   .distance = 1,
                   .origins = MethodSet{one, two}}),
-          test::make_frame(
+          test::make_taint_config(
               test_kind_one,
               test::FrameProperties{
                   .callee_port = AccessPath(Root(Root::Kind::Argument, 0)),
@@ -1021,15 +1021,15 @@ TEST_F(CallPositionFramesTest, Iterator) {
   auto* test_kind_two = context.kinds->get("TestSinkTwo");
 
   auto call_position_frames = CallPositionFrames{
-      test::make_frame(
+      test::make_taint_config(
           test_kind_one,
           test::FrameProperties{
               .callee_port = AccessPath(Root(Root::Kind::Argument, 0))}),
-      test::make_frame(
+      test::make_taint_config(
           test_kind_one,
           test::FrameProperties{
               .callee_port = AccessPath(Root(Root::Kind::Argument, 1))}),
-      test::make_frame(test_kind_two, test::FrameProperties{})};
+      test::make_taint_config(test_kind_two, test::FrameProperties{})};
 
   std::vector<Frame> frames;
   for (const auto& frame : call_position_frames) {
@@ -1074,7 +1074,7 @@ TEST_F(CallPositionFramesTest, Map) {
   auto* feature_one = context.features->get("FeatureOne");
 
   auto frames = CallPositionFrames{
-      test::make_frame(
+      test::make_taint_config(
           test_kind,
           test::FrameProperties{
               .callee_port = AccessPath(Root(Root::Kind::Argument, 0)),
@@ -1082,7 +1082,7 @@ TEST_F(CallPositionFramesTest, Map) {
               .call_position = test_position,
               .distance = 1,
               .origins = MethodSet{one}}),
-      test::make_frame(
+      test::make_taint_config(
           test_kind,
           test::FrameProperties{
               .callee_port = AccessPath(Root(Root::Kind::Argument, 1)),
@@ -1097,7 +1097,7 @@ TEST_F(CallPositionFramesTest, Map) {
   EXPECT_EQ(
       frames,
       (CallPositionFrames{
-          test::make_frame(
+          test::make_taint_config(
               test_kind,
               test::FrameProperties{
                   .callee_port = AccessPath(Root(Root::Kind::Argument, 0)),
@@ -1107,7 +1107,7 @@ TEST_F(CallPositionFramesTest, Map) {
                   .origins = MethodSet{one},
                   .locally_inferred_features =
                       FeatureMayAlwaysSet{feature_one}}),
-          test::make_frame(
+          test::make_taint_config(
               test_kind,
               test::FrameProperties{
                   .callee_port = AccessPath(Root(Root::Kind::Argument, 1)),
@@ -1132,7 +1132,7 @@ TEST_F(CallPositionFramesTest, FeaturesAndPositions) {
 
   // add_inferred_features should be an *add* operation on the features,
   // not a join.
-  auto frames = CallPositionFrames{test::make_frame(
+  auto frames = CallPositionFrames{test::make_taint_config(
       test_kind_one,
       test::FrameProperties{
           .locally_inferred_features = FeatureMayAlwaysSet(
@@ -1146,7 +1146,7 @@ TEST_F(CallPositionFramesTest, FeaturesAndPositions) {
           /* always */ FeatureSet{feature_two}));
 
   // Test add_local_position
-  frames = CallPositionFrames{test::make_frame(
+  frames = CallPositionFrames{test::make_taint_config(
       test_kind_one,
       test::FrameProperties{
           .callee_port = AccessPath(Root(Root::Kind::Return))})};
@@ -1155,7 +1155,7 @@ TEST_F(CallPositionFramesTest, FeaturesAndPositions) {
   EXPECT_EQ(frames.local_positions(), LocalPositionSet{test_position_one});
 
   // Test local_positions() with two frames, each with different positions.
-  auto frames_with_different_port = CallPositionFrames{test::make_frame(
+  auto frames_with_different_port = CallPositionFrames{test::make_taint_config(
       test_kind_one,
       test::FrameProperties{
           .callee_port = AccessPath(Root(Root::Kind::Argument, 0))})};
@@ -1177,7 +1177,7 @@ TEST_F(CallPositionFramesTest, FeaturesAndPositions) {
   EXPECT_EQ(frames.local_positions(), LocalPositionSet{test_position_one});
 
   // Verify: add_local_position adds the position to all frames.
-  frames.join_with(CallPositionFrames{test::make_frame(
+  frames.join_with(CallPositionFrames{test::make_taint_config(
       test_kind_one,
       test::FrameProperties{
           .callee_port = AccessPath(Root(Root::Kind::Argument, 0))})});
@@ -1198,7 +1198,7 @@ TEST_F(CallPositionFramesTest, FeaturesAndPositions) {
   EXPECT_EQ(frames.local_positions(), LocalPositionSet{test_position_two});
 
   // Verify add_inferred_features_and_local_position.
-  frames.join_with(CallPositionFrames{test::make_frame(
+  frames.join_with(CallPositionFrames{test::make_taint_config(
       test_kind_one,
       test::FrameProperties{
           .callee_port = AccessPath(Root(Root::Kind::Argument, 0))})});
@@ -1230,27 +1230,27 @@ TEST_F(CallPositionFramesTest, Propagate) {
   // share the same `Position`. However, for testing purposes, we use
   // different callees and callee ports.
   auto frames = CallPositionFrames{
-      test::make_frame(
+      test::make_taint_config(
           test_kind_one,
           test::FrameProperties{.callee = two, .origins = MethodSet{two}}),
-      test::make_frame(
+      test::make_taint_config(
           test_kind_one,
           test::FrameProperties{
               .callee_port = AccessPath(Root(Root::Kind::Argument, 0)),
               .callee = one,
               .distance = 1,
               .origins = MethodSet{one}}),
-      test::make_frame(
+      test::make_taint_config(
           test_kind_one,
           test::FrameProperties{
               .callee_port = AccessPath(Root(Root::Kind::Anchor)),
               .origins = MethodSet{one},
               .canonical_names = CanonicalNameSetAbstractDomain{CanonicalName(
                   CanonicalName::TemplateValue{"%programmatic_leaf_name%"})}}),
-      test::make_frame(
+      test::make_taint_config(
           test_kind_two,
           test::FrameProperties{.callee = one, .origins = MethodSet{one}}),
-      test::make_frame(
+      test::make_taint_config(
           test_kind_two,
           test::FrameProperties{
               .callee_port = AccessPath(Root(Root::Kind::Anchor)),
@@ -1271,7 +1271,7 @@ TEST_F(CallPositionFramesTest, Propagate) {
           /* source_register_types */ {},
           /* source_constant_arguments */ {}),
       (CallPositionFrames{
-          test::make_frame(
+          test::make_taint_config(
               test_kind_one,
               test::FrameProperties{
                   .callee_port = AccessPath(Root(Root::Kind::Argument, 0)),
@@ -1280,7 +1280,7 @@ TEST_F(CallPositionFramesTest, Propagate) {
                   .distance = 1,
                   .origins = MethodSet{one, two},
                   .locally_inferred_features = FeatureMayAlwaysSet::bottom()}),
-          test::make_frame(
+          test::make_taint_config(
               test_kind_one,
               test::FrameProperties{
                   .callee_port = AccessPath(
@@ -1293,7 +1293,7 @@ TEST_F(CallPositionFramesTest, Propagate) {
                   .canonical_names =
                       CanonicalNameSetAbstractDomain{
                           expected_instantiated_name}}),
-          test::make_frame(
+          test::make_taint_config(
               test_kind_two,
               test::FrameProperties{
                   .callee_port = AccessPath(Root(Root::Kind::Argument, 0)),
@@ -1302,7 +1302,7 @@ TEST_F(CallPositionFramesTest, Propagate) {
                   .distance = 1,
                   .origins = MethodSet{one},
                   .locally_inferred_features = FeatureMayAlwaysSet::bottom()}),
-          test::make_frame(
+          test::make_taint_config(
               test_kind_two,
               test::FrameProperties{
                   .callee_port = AccessPath(
@@ -1336,7 +1336,7 @@ TEST_F(CallPositionFramesTest, PropagateDropFrames) {
   // Propagating this frame will give it a distance of 2. It is expected to be
   // dropped as it exceeds the maximum distance allowed.
   auto frames = CallPositionFrames{
-      test::make_frame(
+      test::make_taint_config(
           test_kind_one, test::FrameProperties{.callee = one, .distance = 1}),
   };
   EXPECT_EQ(
@@ -1353,13 +1353,13 @@ TEST_F(CallPositionFramesTest, PropagateDropFrames) {
   // One of the two frames will be ignored during propagation because its
   // distance exceeds the maximum distance allowed.
   frames = CallPositionFrames{
-      test::make_frame(
+      test::make_taint_config(
           test_kind_one,
           test::FrameProperties{
               .callee = one,
               .distance = 2,
               .user_features = FeatureSet{user_feature_one}}),
-      test::make_frame(
+      test::make_taint_config(
           test_kind_two,
           test::FrameProperties{
               .callee = one,
@@ -1376,7 +1376,7 @@ TEST_F(CallPositionFramesTest, PropagateDropFrames) {
           /* source_register_types */ {},
           /* source_constant_arguments */ {}),
       (CallPositionFrames{
-          test::make_frame(
+          test::make_taint_config(
               test_kind_two,
               test::FrameProperties{
                   .callee_port = AccessPath(Root(Root::Kind::Argument, 0)),
@@ -1397,12 +1397,12 @@ TEST_F(CallPositionFramesTest, PartitionMap) {
   auto* test_kind = context.kinds->get("TestSink");
 
   auto frames = CallPositionFrames{
-      test::make_frame(
+      test::make_taint_config(
           test_kind,
           test::FrameProperties{
               .callee_port = AccessPath(Root(Root::Kind::Return)),
               .origins = MethodSet{one}}),
-      test::make_frame(
+      test::make_taint_config(
           test_kind,
           test::FrameProperties{
               .callee_port = AccessPath(Root(Root::Kind::Anchor)),
@@ -1450,14 +1450,14 @@ TEST_F(CallPositionFramesTest, AttachPosition) {
   auto* test_position = context.positions->get(std::nullopt, 1);
 
   auto frames = CallPositionFrames{
-      test::make_frame(
+      test::make_taint_config(
           test_kind,
           test::FrameProperties{
               .call_position = test_position,
               .origins = MethodSet{one},
               .locally_inferred_features = FeatureMayAlwaysSet{feature_one},
               .user_features = FeatureSet{feature_two}}),
-      test::make_frame(
+      test::make_taint_config(
           test_kind,
           test::FrameProperties{
               .callee_port = AccessPath(Root(Root::Kind::Argument, 0)),
@@ -1472,7 +1472,7 @@ TEST_F(CallPositionFramesTest, AttachPosition) {
   EXPECT_EQ(
       frames_with_new_position,
       (CallPositionFrames{
-          test::make_frame(
+          test::make_taint_config(
               test_kind,
               test::FrameProperties{
                   .call_position = new_test_position,
@@ -1481,7 +1481,7 @@ TEST_F(CallPositionFramesTest, AttachPosition) {
                       FeatureMayAlwaysSet{feature_one, feature_two},
                   .locally_inferred_features =
                       FeatureMayAlwaysSet{feature_two}}),
-          test::make_frame(
+          test::make_taint_config(
               test_kind,
               test::FrameProperties{
                   .callee_port = AccessPath(Root(Root::Kind::Argument, 0)),
@@ -1507,12 +1507,12 @@ TEST_F(CallPositionFramesTest, TransformKindWithFeatures) {
       context.kinds->get("TransformedTestKindTwo");
 
   auto initial_frames = CallPositionFrames{
-      test::make_frame(
+      test::make_taint_config(
           test_kind_one,
           test::FrameProperties{
               .call_position = test_position,
               .user_features = FeatureSet{user_feature_one}}),
-      test::make_frame(
+      test::make_taint_config(
           test_kind_two,
           test::FrameProperties{
               .call_position = test_position,
@@ -1544,12 +1544,12 @@ TEST_F(CallPositionFramesTest, TransformKindWithFeatures) {
   EXPECT_EQ(
       new_frames,
       (CallPositionFrames{
-          test::make_frame(
+          test::make_taint_config(
               transformed_test_kind_one,
               test::FrameProperties{
                   .call_position = test_position,
                   .user_features = FeatureSet{user_feature_one}}),
-          test::make_frame(
+          test::make_taint_config(
               test_kind_two,
               test::FrameProperties{
                   .call_position = test_position,
@@ -1572,13 +1572,13 @@ TEST_F(CallPositionFramesTest, TransformKindWithFeatures) {
   EXPECT_EQ(
       new_frames,
       (CallPositionFrames{
-          test::make_frame(
+          test::make_taint_config(
               transformed_test_kind_one,
               test::FrameProperties{
                   .call_position = test_position,
                   .locally_inferred_features = FeatureMayAlwaysSet{feature_one},
                   .user_features = FeatureSet{user_feature_one}}),
-          test::make_frame(
+          test::make_taint_config(
               test_kind_two,
               test::FrameProperties{
                   .call_position = test_position,
@@ -1604,19 +1604,19 @@ TEST_F(CallPositionFramesTest, TransformKindWithFeatures) {
   EXPECT_EQ(
       new_frames,
       (CallPositionFrames{
-          test::make_frame(
+          test::make_taint_config(
               test_kind_one,
               test::FrameProperties{
                   .call_position = test_position,
                   .locally_inferred_features = FeatureMayAlwaysSet{feature_one},
                   .user_features = FeatureSet{user_feature_one}}),
-          test::make_frame(
+          test::make_taint_config(
               transformed_test_kind_one,
               test::FrameProperties{
                   .call_position = test_position,
                   .locally_inferred_features = FeatureMayAlwaysSet{feature_one},
                   .user_features = FeatureSet{user_feature_one}}),
-          test::make_frame(
+          test::make_taint_config(
               transformed_test_kind_two,
               test::FrameProperties{
                   .call_position = test_position,
@@ -1643,13 +1643,13 @@ TEST_F(CallPositionFramesTest, TransformKindWithFeatures) {
   EXPECT_EQ(
       new_frames,
       (CallPositionFrames{
-          test::make_frame(
+          test::make_taint_config(
               transformed_test_kind_one,
               test::FrameProperties{
                   .call_position = test_position,
                   .locally_inferred_features = FeatureMayAlwaysSet{feature_one},
                   .user_features = FeatureSet{user_feature_one}}),
-          test::make_frame(
+          test::make_taint_config(
               transformed_test_kind_two,
               test::FrameProperties{
                   .call_position = test_position,
@@ -1658,13 +1658,13 @@ TEST_F(CallPositionFramesTest, TransformKindWithFeatures) {
 
   // Transformation where multiple old kinds map to the same new kind
   auto frames = CallPositionFrames{
-      test::make_frame(
+      test::make_taint_config(
           test_kind_one,
           test::FrameProperties{
               .call_position = test_position,
               .inferred_features = FeatureMayAlwaysSet{feature_two},
               .user_features = FeatureSet{user_feature_one}}),
-      test::make_frame(
+      test::make_taint_config(
           test_kind_two,
           test::FrameProperties{
               .call_position = test_position,
@@ -1681,7 +1681,7 @@ TEST_F(CallPositionFramesTest, TransformKindWithFeatures) {
   EXPECT_EQ(
       frames,
       (CallPositionFrames{
-          test::make_frame(
+          test::make_taint_config(
               transformed_test_kind_one,
               test::FrameProperties{
                   .call_position = test_position,
@@ -1700,8 +1700,8 @@ TEST_F(CallPositionFramesTest, AppendCalleePort) {
   const auto* path_element2 = DexString::make_string("field2");
 
   auto frames = CallPositionFrames{
-      test::make_frame(test_kind, test::FrameProperties{}),
-      test::make_frame(
+      test::make_taint_config(test_kind, test::FrameProperties{}),
+      test::make_taint_config(
           Kinds::artificial_source(),
           test::FrameProperties{
               .callee_port = AccessPath(
@@ -1711,8 +1711,8 @@ TEST_F(CallPositionFramesTest, AppendCalleePort) {
   EXPECT_EQ(
       frames,
       (CallPositionFrames{
-          test::make_frame(test_kind, test::FrameProperties{}),
-          test::make_frame(
+          test::make_taint_config(test_kind, test::FrameProperties{}),
+          test::make_taint_config(
               Kinds::artificial_source(),
               test::FrameProperties{
                   .callee_port = AccessPath(
@@ -1739,19 +1739,19 @@ TEST_F(CallPositionFramesTest, MapPositions) {
   // Verify call position mapping with possibly multiple frames mapping to
   // the same output call position.
   frames = CallPositionFrames{
-      test::make_frame(
+      test::make_taint_config(
           test_kind_one,
           test::FrameProperties{
               .callee_port = AccessPath(Root(Root::Kind::Return)),
               .call_position = test_position_one,
           }),
-      test::make_frame(
+      test::make_taint_config(
           test_kind_one,
           test::FrameProperties{
               .callee_port = AccessPath(Root(Root::Kind::Argument, 0)),
               .call_position = test_position_one,
           }),
-      test::make_frame(
+      test::make_taint_config(
           test_kind_one,
           test::FrameProperties{
               .callee_port = AccessPath(Root(Root::Kind::Argument, 1)),
@@ -1788,7 +1788,7 @@ TEST_F(CallPositionFramesTest, MapPositions) {
   EXPECT_EQ(new_positions.size(), 2);
   EXPECT_EQ(
       new_positions[expected_return_position],
-      CallPositionFrames{test::make_frame(
+      CallPositionFrames{test::make_taint_config(
           test_kind_one,
           test::FrameProperties{
               .callee_port = AccessPath(Root(Root::Kind::Return)),
@@ -1797,13 +1797,13 @@ TEST_F(CallPositionFramesTest, MapPositions) {
   EXPECT_EQ(
       new_positions[expected_argument_position],
       (CallPositionFrames{
-          test::make_frame(
+          test::make_taint_config(
               test_kind_one,
               test::FrameProperties{
                   .callee_port = AccessPath(Root(Root::Kind::Argument, 0)),
                   .call_position = expected_argument_position,
               }),
-          test::make_frame(
+          test::make_taint_config(
               test_kind_one,
               test::FrameProperties{
                   .callee_port = AccessPath(Root(Root::Kind::Argument, 1)),
@@ -1812,13 +1812,13 @@ TEST_F(CallPositionFramesTest, MapPositions) {
 
   // Verify local position mapping
   frames = CallPositionFrames{
-      test::make_frame(
+      test::make_taint_config(
           test_kind_one,
           test::FrameProperties{
               .callee_port = AccessPath(Root(Root::Kind::Return)),
               .call_position = test_position_one,
           }),
-      test::make_frame(
+      test::make_taint_config(
           test_kind_one,
           test::FrameProperties{
               .callee_port = AccessPath(Root(Root::Kind::Argument, 0)),
@@ -1865,8 +1865,8 @@ TEST_F(CallPositionFramesTest, FilterInvalidFrames) {
 
   // Filter by callee
   auto frames = CallPositionFrames{
-      test::make_frame(test_kind, test::FrameProperties{}),
-      test::make_frame(
+      test::make_taint_config(test_kind, test::FrameProperties{}),
+      test::make_taint_config(
           Kinds::artificial_source(),
           test::FrameProperties{
               .callee_port = AccessPath(Root(Root::Kind::Argument)),
@@ -1879,12 +1879,12 @@ TEST_F(CallPositionFramesTest, FilterInvalidFrames) {
   EXPECT_EQ(
       frames,
       (CallPositionFrames{
-          test::make_frame(test_kind, test::FrameProperties{})}));
+          test::make_taint_config(test_kind, test::FrameProperties{})}));
 
   // Filter by callee port
   frames = CallPositionFrames{
-      test::make_frame(test_kind, test::FrameProperties{}),
-      test::make_frame(
+      test::make_taint_config(test_kind, test::FrameProperties{}),
+      test::make_taint_config(
           Kinds::artificial_source(),
           test::FrameProperties{
               .callee_port = AccessPath(Root(Root::Kind::Argument)),
@@ -1898,7 +1898,7 @@ TEST_F(CallPositionFramesTest, FilterInvalidFrames) {
       });
   EXPECT_EQ(
       frames,
-      (CallPositionFrames{test::make_frame(
+      (CallPositionFrames{test::make_taint_config(
           Kinds::artificial_source(),
           test::FrameProperties{
               .callee_port = AccessPath(Root(Root::Kind::Argument)),
@@ -1906,8 +1906,8 @@ TEST_F(CallPositionFramesTest, FilterInvalidFrames) {
 
   // Filter by kind
   frames = CallPositionFrames{
-      test::make_frame(test_kind, test::FrameProperties{}),
-      test::make_frame(
+      test::make_taint_config(test_kind, test::FrameProperties{}),
+      test::make_taint_config(
           Kinds::artificial_source(),
           test::FrameProperties{
               .callee_port = AccessPath(Root(Root::Kind::Argument)),
@@ -1920,7 +1920,7 @@ TEST_F(CallPositionFramesTest, FilterInvalidFrames) {
   EXPECT_EQ(
       frames,
       (CallPositionFrames{
-          test::make_frame(test_kind, test::FrameProperties{})}));
+          test::make_taint_config(test_kind, test::FrameProperties{})}));
 }
 
 TEST_F(CallPositionFramesTest, Show) {
@@ -1930,7 +1930,7 @@ TEST_F(CallPositionFramesTest, Show) {
   auto* one =
       context.methods->create(redex::create_void_method(scope, "LOne;", "one"));
   auto* test_kind_one = context.kinds->get("TestSink1");
-  auto frame_one = test::make_frame(
+  auto frame_one = test::make_taint_config(
       test_kind_one, test::FrameProperties{.origins = MethodSet{one}});
   auto frames = CallPositionFrames{frame_one};
 
@@ -1948,9 +1948,10 @@ TEST_F(CallPositionFramesTest, ContainsKind) {
   auto context = test::make_empty_context();
 
   auto frames = CallPositionFrames{
-      test::make_frame(
+      test::make_taint_config(
           /* kind */ context.kinds->get("TestSource"), test::FrameProperties{}),
-      test::make_frame(Kinds::artificial_source(), test::FrameProperties{})};
+      test::make_taint_config(
+          Kinds::artificial_source(), test::FrameProperties{})};
 
   EXPECT_TRUE(frames.contains_kind(Kinds::artificial_source()));
   EXPECT_TRUE(frames.contains_kind(context.kinds->get("TestSource")));
@@ -1965,14 +1966,14 @@ TEST_F(CallPositionFramesTest, PartitionByKind) {
   auto* test_kind_two = context.kinds->get("TestSource2");
 
   auto frames = CallPositionFrames{
-      test::make_frame(
+      test::make_taint_config(
           test_kind_one, test::FrameProperties{.call_position = test_position}),
-      test::make_frame(
+      test::make_taint_config(
           test_kind_one,
           test::FrameProperties{
               .callee_port = AccessPath(Root(Root::Kind::Argument, 0)),
               .call_position = test_position}),
-      test::make_frame(
+      test::make_taint_config(
           test_kind_two, test::FrameProperties{.call_position = test_position}),
   };
 
@@ -1982,10 +1983,10 @@ TEST_F(CallPositionFramesTest, PartitionByKind) {
   EXPECT_EQ(
       frames_by_kind[test_kind_one],
       (CallPositionFrames{
-          test::make_frame(
+          test::make_taint_config(
               test_kind_one,
               test::FrameProperties{.call_position = test_position}),
-          test::make_frame(
+          test::make_taint_config(
               test_kind_one,
               test::FrameProperties{
                   .callee_port = AccessPath(Root(Root::Kind::Argument, 0)),
@@ -1994,7 +1995,7 @@ TEST_F(CallPositionFramesTest, PartitionByKind) {
   EXPECT_EQ(frames_by_kind[test_kind_one].position(), test_position);
   EXPECT_EQ(
       frames_by_kind[test_kind_two],
-      CallPositionFrames{test::make_frame(
+      CallPositionFrames{test::make_taint_config(
           test_kind_two,
           test::FrameProperties{.call_position = test_position})});
   EXPECT_EQ(frames_by_kind[test_kind_two].position(), test_position);

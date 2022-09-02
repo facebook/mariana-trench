@@ -70,15 +70,17 @@ struct FrameProperties {
 
 Frame make_taint_frame(const Kind* kind, const FrameProperties& properties);
 
-TaintConfig make_frame(const Kind* kind, const FrameProperties& properties);
-TaintConfig make_leaf_frame(const Kind* kind);
-TaintConfig make_leaf_frame(
+TaintConfig make_taint_config(
+    const Kind* kind,
+    const FrameProperties& properties);
+TaintConfig make_leaf_taint_config(const Kind* kind);
+TaintConfig make_leaf_taint_config(
     const Kind* kind,
     FeatureMayAlwaysSet inferred_features,
     FeatureMayAlwaysSet locally_inferred_features,
     FeatureSet user_features,
     MethodSet origins);
-TaintConfig make_crtex_leaf_frame(
+TaintConfig make_crtex_leaf_taint_config(
     const Kind* kind,
     AccessPath callee_port,
     CanonicalNameSetAbstractDomain canonical_names);

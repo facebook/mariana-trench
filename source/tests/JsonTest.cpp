@@ -717,7 +717,7 @@ TEST_F(JsonTest, TaintConfig) {
                 "kind": "TestSource"
               })"),
           context),
-      test::make_frame(
+      test::make_taint_config(
           /* kind */ context.kinds->get("TestSource"),
           test::FrameProperties{
               .inferred_features = FeatureMayAlwaysSet::bottom(),
@@ -738,7 +738,7 @@ TEST_F(JsonTest, TaintConfig) {
       context);
   EXPECT_EQ(
       frame,
-      test::make_frame(
+      test::make_taint_config(
           /* kind */ context.kinds->get_partial("TestSink", "X"),
           test::FrameProperties{
               .inferred_features = FeatureMayAlwaysSet::bottom(),
@@ -767,7 +767,7 @@ TEST_F(JsonTest, TaintConfig) {
             "callee_port": "Leaf"
           })"),
           context),
-      test::make_frame(
+      test::make_taint_config(
           /* kind */ context.kinds->get("TestSource"),
           test::FrameProperties{
               .inferred_features = FeatureMayAlwaysSet::bottom(),
@@ -782,7 +782,7 @@ TEST_F(JsonTest, TaintConfig) {
             "distance": 1
           })"),
           context),
-      test::make_frame(
+      test::make_taint_config(
           /* kind */ context.kinds->get("TestSource"),
           test::FrameProperties{
               .callee_port = AccessPath(Root(Root::Kind::Return)),
@@ -801,7 +801,7 @@ TEST_F(JsonTest, TaintConfig) {
             "distance": 2
           })"),
           context),
-      test::make_frame(
+      test::make_taint_config(
           /* kind */ context.kinds->get("TestSource"),
           test::FrameProperties{
               .callee_port = AccessPath(Root(Root::Kind::Return)),
@@ -828,7 +828,7 @@ TEST_F(JsonTest, TaintConfig) {
             "origins": ["LClassOne;.source:()V"]
           })"),
           context),
-      test::make_frame(
+      test::make_taint_config(
           /* kind */ context.kinds->get("TestSource"),
           test::FrameProperties{
               .origins = MethodSet{source_one},
@@ -842,7 +842,7 @@ TEST_F(JsonTest, TaintConfig) {
             "origins": ["LClassOne;.source:()V", "LClassTwo;.source:()V"]
           })"),
           context),
-      test::make_frame(
+      test::make_taint_config(
           /* kind */ context.kinds->get("TestSource"),
           test::FrameProperties{
               .origins = MethodSet{source_one, source_two},
@@ -866,7 +866,7 @@ TEST_F(JsonTest, TaintConfig) {
             "field_origins": ["LClassThree;.field1:Ljava/lang/Boolean;"]
           })"),
           context),
-      test::make_frame(
+      test::make_taint_config(
           /* kind */ context.kinds->get("TestSource"),
           test::FrameProperties{
               .field_origins = FieldSet{field_one},
@@ -880,7 +880,7 @@ TEST_F(JsonTest, TaintConfig) {
             "field_origins": ["LClassThree;.field1:Ljava/lang/Boolean;", "LClassThree;.field2:Ljava/lang/String;"]
           })"),
           context),
-      test::make_frame(
+      test::make_taint_config(
           /* kind */ context.kinds->get("TestSource"),
           test::FrameProperties{
               .field_origins = FieldSet{field_one, field_two},
@@ -896,7 +896,7 @@ TEST_F(JsonTest, TaintConfig) {
             "always_features": ["FeatureOne"]
           })"),
           context),
-      test::make_frame(
+      test::make_taint_config(
           /* kind */ context.kinds->get("TestSource"),
           test::FrameProperties{
               .inferred_features =
@@ -910,7 +910,7 @@ TEST_F(JsonTest, TaintConfig) {
             "always_features": ["FeatureOne", "FeatureTwo"]
           })"),
           context),
-      test::make_frame(
+      test::make_taint_config(
           /* kind */ context.kinds->get("TestSource"),
           test::FrameProperties{
               .inferred_features =
@@ -927,7 +927,7 @@ TEST_F(JsonTest, TaintConfig) {
             "always_features": ["FeatureTwo"]
           })"),
           context),
-      test::make_frame(
+      test::make_taint_config(
           /* kind */ context.kinds->get("TestSource"),
           test::FrameProperties{
               .inferred_features = FeatureMayAlwaysSet(
@@ -942,7 +942,7 @@ TEST_F(JsonTest, TaintConfig) {
             "may_features": ["FeatureOne"]
           })"),
           context),
-      test::make_frame(
+      test::make_taint_config(
           /* kind */ context.kinds->get("TestSource"),
           test::FrameProperties{
               .inferred_features = FeatureMayAlwaysSet(
@@ -957,7 +957,7 @@ TEST_F(JsonTest, TaintConfig) {
             "may_features": ["FeatureOne", "FeatureTwo"]
           })"),
           context),
-      test::make_frame(
+      test::make_taint_config(
           /* kind */ context.kinds->get("TestSource"),
           test::FrameProperties{
               .inferred_features = FeatureMayAlwaysSet(
@@ -975,7 +975,7 @@ TEST_F(JsonTest, TaintConfig) {
                 "features": ["FeatureOne"]
               })"),
           context),
-      test::make_frame(
+      test::make_taint_config(
           /* kind */ context.kinds->get("TestSource"),
           test::FrameProperties{
               .inferred_features = FeatureMayAlwaysSet::bottom(),
@@ -990,7 +990,7 @@ TEST_F(JsonTest, TaintConfig) {
                 "features": ["FeatureOne", "FeatureTwo"]
               })"),
           context),
-      test::make_frame(
+      test::make_taint_config(
           /* kind */ context.kinds->get("TestSource"),
           test::FrameProperties{
               .inferred_features = FeatureMayAlwaysSet::bottom(),
@@ -1007,7 +1007,7 @@ TEST_F(JsonTest, TaintConfig) {
                 "may_features": ["FeatureTwo"]
               })"),
           context),
-      test::make_frame(
+      test::make_taint_config(
           /* kind */ context.kinds->get("TestSource"),
           test::FrameProperties{
               .inferred_features = FeatureMayAlwaysSet(
@@ -1026,7 +1026,7 @@ TEST_F(JsonTest, TaintConfig) {
                 "always_features": ["FeatureThree"]
               })"),
           context),
-      test::make_frame(
+      test::make_taint_config(
           /* kind */ context.kinds->get("TestSource"),
           test::FrameProperties{
               .inferred_features = FeatureMayAlwaysSet(
@@ -1046,7 +1046,7 @@ TEST_F(JsonTest, TaintConfig) {
                 "always_features": []
               })"),
           context),
-      test::make_frame(
+      test::make_taint_config(
           /* kind */ context.kinds->get("TestSource"),
           test::FrameProperties{
               .locally_inferred_features = FeatureMayAlwaysSet::bottom(),
@@ -1062,7 +1062,7 @@ TEST_F(JsonTest, TaintConfig) {
             "via_type_of": ["Argument(1)", "Return"]
           })#"),
           context),
-      test::make_frame(
+      test::make_taint_config(
           /* kind */ context.kinds->get("TestSource"),
           test::FrameProperties{
               .inferred_features = FeatureMayAlwaysSet::bottom(),
@@ -1252,7 +1252,7 @@ TEST_F(JsonTest, Frame_Crtex) {
                 "canonical_names": [ {"template": "%programmatic_leaf_name%"} ]
               })"),
           context),
-      test::make_crtex_leaf_frame(
+      test::make_crtex_leaf_taint_config(
           context.kinds->get("TestSource"),
           /* callee_port */ AccessPath(Root(Root::Kind::Anchor)),
           /* canonical_names */
@@ -1267,7 +1267,7 @@ TEST_F(JsonTest, Frame_Crtex) {
                 "canonical_names": [ {"instantiated": "Lcom/android/MyClass;.MyMethod"} ]
               })#"),
           context),
-      test::make_crtex_leaf_frame(
+      test::make_crtex_leaf_taint_config(
           context.kinds->get("TestSource"),
           /* callee_port */
           AccessPath(
@@ -1595,7 +1595,7 @@ TEST_F(JsonTest, Model) {
           Model::Mode::Normal,
           /* generations */
           {{AccessPath(Root(Root::Kind::Argument, 2)),
-            test::make_leaf_frame(context.kinds->get("source_kind"))}}));
+            test::make_leaf_taint_config(context.kinds->get("source_kind"))}}));
   EXPECT_EQ(
       Model(
           method,
@@ -1603,7 +1603,7 @@ TEST_F(JsonTest, Model) {
           Model::Mode::Normal,
           /* generations */
           {{AccessPath(Root(Root::Kind::Argument, 2)),
-            test::make_leaf_frame(context.kinds->get("source_kind"))}})
+            test::make_leaf_taint_config(context.kinds->get("source_kind"))}})
           .to_json(),
       test::parse_json(R"#({
       "method": "LData;.method:(LData;LData;)V",
@@ -1648,7 +1648,7 @@ TEST_F(JsonTest, Model) {
           /* generations */ {},
           /* parameter_sources */
           {{AccessPath(Root(Root::Kind::Argument, 1)),
-            test::make_leaf_frame(context.kinds->get("source_kind"))}}));
+            test::make_leaf_taint_config(context.kinds->get("source_kind"))}}));
   EXPECT_EQ(
       Model(
           method,
@@ -1657,7 +1657,7 @@ TEST_F(JsonTest, Model) {
           /* generations */ {},
           /* parameter_sources */
           {{AccessPath(Root(Root::Kind::Argument, 1)),
-            test::make_leaf_frame(context.kinds->get("source_kind"))}})
+            test::make_leaf_taint_config(context.kinds->get("source_kind"))}})
           .to_json(),
       test::parse_json(R"#({
       "method": "LData;.method:(LData;LData;)V",
@@ -1695,7 +1695,7 @@ TEST_F(JsonTest, Model) {
           Model::Mode::Normal,
           /* generations */
           {{AccessPath(Root(Root::Kind::Return)),
-            test::make_leaf_frame(context.kinds->get("source_kind"))}},
+            test::make_leaf_taint_config(context.kinds->get("source_kind"))}},
           /* parameter_sources */ {}));
   EXPECT_EQ(
       Model::from_json(
@@ -1715,7 +1715,7 @@ TEST_F(JsonTest, Model) {
           Model::Mode::Normal,
           /* generations */
           {{AccessPath(Root(Root::Kind::Return)),
-            test::make_leaf_frame(context.kinds->get("source_kind"))}},
+            test::make_leaf_taint_config(context.kinds->get("source_kind"))}},
           /* parameter_sources */ {}));
   EXPECT_EQ(
       Model::from_json(
@@ -1736,7 +1736,7 @@ TEST_F(JsonTest, Model) {
           /* generations */ {},
           /* parameter_sources */
           {{AccessPath(Root(Root::Kind::Argument, 1)),
-            test::make_leaf_frame(context.kinds->get("source_kind"))}}));
+            test::make_leaf_taint_config(context.kinds->get("source_kind"))}}));
 
   EXPECT_THROW(
       Model::from_json(
@@ -1983,22 +1983,22 @@ TEST_F(JsonTest, Model) {
           /* sinks */
           {
               {AccessPath(Root(Root::Kind::Argument, 2)),
-               test::make_leaf_frame(context.kinds->get("first_sink"))},
+               test::make_leaf_taint_config(context.kinds->get("first_sink"))},
           }));
   EXPECT_EQ(
-      test::sorted_json(
-          Model(
-              method,
-              context,
-              Model::Mode::Normal,
-              /* generations */ {},
-              /* parameter_sources */ {},
-              /* sinks */
-              {
-                  {AccessPath(Root(Root::Kind::Argument, 2)),
-                   test::make_leaf_frame(context.kinds->get("first_sink"))},
-              })
-              .to_json()),
+      test::sorted_json(Model(
+                            method,
+                            context,
+                            Model::Mode::Normal,
+                            /* generations */ {},
+                            /* parameter_sources */ {},
+                            /* sinks */
+                            {
+                                {AccessPath(Root(Root::Kind::Argument, 2)),
+                                 test::make_leaf_taint_config(
+                                     context.kinds->get("first_sink"))},
+                            })
+                            .to_json()),
       test::parse_json(R"#({
         "method": "LData;.method:(LData;LData;)V",
         "sinks": [
@@ -2333,10 +2333,10 @@ TEST_F(JsonTest, Model) {
                             /* add_features_to_arguments */ {},
                             /* inline_as */ AccessPathConstantDomain::bottom(),
                             IssueSet{Issue(
-                                /* source */ Taint{test::make_leaf_frame(
+                                /* source */ Taint{test::make_leaf_taint_config(
                                     context.kinds->get("first_source"))},
                                 /* sink */
-                                Taint{test::make_leaf_frame(
+                                Taint{test::make_leaf_taint_config(
                                     context.kinds->get("first_sink"))},
                                 rule.get(),
                                 /* callee */ "LClass;.someMethod:()V",
@@ -2423,8 +2423,8 @@ TEST_F(JsonTest, FieldModel) {
       FieldModel(
           field,
           /* sources */
-          {test::make_leaf_frame(source_kind),
-           test::make_frame(
+          {test::make_leaf_taint_config(source_kind),
+           test::make_taint_config(
                source_kind2,
                test::FrameProperties{
                    .inferred_features = FeatureMayAlwaysSet::bottom(),
@@ -2442,7 +2442,7 @@ TEST_F(JsonTest, FieldModel) {
           field,
           /* sources */ {},
           /* sinks */
-          {test::make_leaf_frame(sink_kind)}));
+          {test::make_leaf_taint_config(sink_kind)}));
 
   // Test to_json
   EXPECT_EQ(
@@ -2453,7 +2453,7 @@ TEST_F(JsonTest, FieldModel) {
           field,
           /* sources */ {},
           /* sinks */
-          {test::make_frame(
+          {test::make_taint_config(
               sink_kind,
               test::FrameProperties{
                   .inferred_features = FeatureMayAlwaysSet::bottom(),

@@ -35,7 +35,7 @@ TEST_F(CalleePortFramesTest, Add) {
   EXPECT_TRUE(frames.is_bottom());
   EXPECT_TRUE(frames.empty());
 
-  frames.add(test::make_frame(
+  frames.add(test::make_taint_config(
       source_kind_one,
       test::FrameProperties{
           .callee_port = AccessPath(Root(Root::Kind::Return)),
@@ -47,7 +47,7 @@ TEST_F(CalleePortFramesTest, Add) {
       frames,
       CalleePortFrames(
           /* local_positions */ {},
-          {test::make_frame(
+          {test::make_taint_config(
               source_kind_one,
               test::FrameProperties{
                   .callee_port = AccessPath(Root(Root::Kind::Return)),
@@ -55,7 +55,7 @@ TEST_F(CalleePortFramesTest, Add) {
                   .inferred_features = FeatureMayAlwaysSet{feature_one}})}));
 
   // Add frame with the same kind
-  frames.add(test::make_frame(
+  frames.add(test::make_taint_config(
       source_kind_one,
       test::FrameProperties{
           .callee_port = AccessPath(Root(Root::Kind::Return)),
@@ -66,7 +66,7 @@ TEST_F(CalleePortFramesTest, Add) {
       frames,
       CalleePortFrames(
           /* local_positions */ {},
-          {test::make_frame(
+          {test::make_taint_config(
               source_kind_one,
               test::FrameProperties{
                   .callee_port = AccessPath(Root(Root::Kind::Return)),
@@ -76,7 +76,7 @@ TEST_F(CalleePortFramesTest, Add) {
                   .user_features = FeatureSet{user_feature_one}})}));
 
   // Add frame with a different kind
-  frames.add(test::make_frame(
+  frames.add(test::make_taint_config(
       source_kind_two,
       test::FrameProperties{
           .callee_port = AccessPath(Root(Root::Kind::Return)),
@@ -86,7 +86,7 @@ TEST_F(CalleePortFramesTest, Add) {
       frames,
       (CalleePortFrames(
           /* local_positions */ {},
-          {test::make_frame(
+          {test::make_taint_config(
                source_kind_one,
                test::FrameProperties{
                    .callee_port = AccessPath(Root(Root::Kind::Return)),
@@ -94,7 +94,7 @@ TEST_F(CalleePortFramesTest, Add) {
                    .inferred_features = FeatureMayAlwaysSet::make_may(
                        {feature_one, feature_two}),
                    .user_features = FeatureSet{user_feature_one}}),
-           test::make_frame(
+           test::make_taint_config(
                source_kind_two,
                test::FrameProperties{
                    .callee_port = AccessPath(Root(Root::Kind::Return)),
@@ -104,7 +104,7 @@ TEST_F(CalleePortFramesTest, Add) {
   // Additional test for when callee_port == default value selected by
   // constructor in the implementation.
   frames = CalleePortFrames();
-  frames.add(test::make_frame(source_kind_one, test::FrameProperties{}));
+  frames.add(test::make_taint_config(source_kind_one, test::FrameProperties{}));
   EXPECT_EQ(frames.callee_port(), AccessPath(Root(Root::Kind::Leaf)));
 }
 
@@ -122,15 +122,16 @@ TEST_F(CalleePortFramesTest, Leq) {
   EXPECT_TRUE(CalleePortFrames::bottom().leq(CalleePortFrames::bottom()));
   EXPECT_TRUE(CalleePortFrames::bottom().leq(CalleePortFrames(
       /* local_positions */ {},
-      {test::make_frame(test_kind_one, test::FrameProperties{})})));
-  EXPECT_FALSE((CalleePortFrames(
-                    /* local_positions */ {},
-                    {test::make_frame(test_kind_one, test::FrameProperties{})}))
-                   .leq(CalleePortFrames::bottom()));
+      {test::make_taint_config(test_kind_one, test::FrameProperties{})})));
   EXPECT_FALSE(
       (CalleePortFrames(
            /* local_positions */ {},
-           {test::make_frame(
+           {test::make_taint_config(test_kind_one, test::FrameProperties{})}))
+          .leq(CalleePortFrames::bottom()));
+  EXPECT_FALSE(
+      (CalleePortFrames(
+           /* local_positions */ {},
+           {test::make_taint_config(
                test_kind_one,
                test::FrameProperties{
                    .callee_port = AccessPath(Root(Root::Kind::Argument, 0))})}))
@@ -140,7 +141,7 @@ TEST_F(CalleePortFramesTest, Leq) {
   EXPECT_TRUE(
       (CalleePortFrames(
            /* local_positions */ {},
-           {test::make_frame(
+           {test::make_taint_config(
                test_kind_one,
                test::FrameProperties{
                    .callee_port = AccessPath(Root(Root::Kind::Argument, 0)),
@@ -149,7 +150,7 @@ TEST_F(CalleePortFramesTest, Leq) {
                    .origins = MethodSet{one}})}))
           .leq(CalleePortFrames(
               /* local_positions */ {},
-              {test::make_frame(
+              {test::make_taint_config(
                   test_kind_one,
                   test::FrameProperties{
                       .callee_port = AccessPath(Root(Root::Kind::Argument, 0)),
@@ -161,7 +162,7 @@ TEST_F(CalleePortFramesTest, Leq) {
   EXPECT_TRUE(
       (CalleePortFrames(
            /* local_positions */ {},
-           {test::make_frame(
+           {test::make_taint_config(
                test_kind_one,
                test::FrameProperties{
                    .callee_port = AccessPath(Root(Root::Kind::Argument, 0)),
@@ -171,7 +172,7 @@ TEST_F(CalleePortFramesTest, Leq) {
           .leq(CalleePortFrames(
               /* local_positions */ {},
               {
-                  test::make_frame(
+                  test::make_taint_config(
                       test_kind_one,
                       test::FrameProperties{
                           .callee_port =
@@ -179,7 +180,7 @@ TEST_F(CalleePortFramesTest, Leq) {
                           .callee = one,
                           .distance = 1,
                           .origins = MethodSet{one}}),
-                  test::make_frame(
+                  test::make_taint_config(
                       test_kind_two,
                       test::FrameProperties{
                           .callee_port =
@@ -191,14 +192,14 @@ TEST_F(CalleePortFramesTest, Leq) {
   EXPECT_FALSE(
       (CalleePortFrames(
            /* local_positions */ {},
-           {test::make_frame(
+           {test::make_taint_config(
                 test_kind_one,
                 test::FrameProperties{
                     .callee_port = AccessPath(Root(Root::Kind::Argument, 0)),
                     .callee = one,
                     .distance = 1,
                     .origins = MethodSet{one}}),
-            test::make_frame(
+            test::make_taint_config(
                 test_kind_two,
                 test::FrameProperties{
                     .callee_port = AccessPath(Root(Root::Kind::Argument, 0)),
@@ -207,7 +208,7 @@ TEST_F(CalleePortFramesTest, Leq) {
                     .origins = MethodSet{one}})}))
           .leq(CalleePortFrames(
               /* local_positions */ {},
-              {test::make_frame(
+              {test::make_taint_config(
                   test_kind_one,
                   test::FrameProperties{
                       .callee_port = AccessPath(Root(Root::Kind::Argument, 0)),
@@ -222,7 +223,7 @@ TEST_F(CalleePortFramesTest, ArtificialSourceLeq) {
   // For artificial sources, compare the common prefix of callee ports.
   EXPECT_TRUE(CalleePortFrames(
                   /* local_positions */ {},
-                  {test::make_frame(
+                  {test::make_taint_config(
                       Kinds::artificial_source(),
                       test::FrameProperties{
                           .callee_port = AccessPath(
@@ -230,7 +231,7 @@ TEST_F(CalleePortFramesTest, ArtificialSourceLeq) {
                               Path{DexString::make_string("x")})})})
                   .leq(CalleePortFrames(
                       /* local_positions */ {},
-                      {test::make_frame(
+                      {test::make_taint_config(
                           Kinds::artificial_source(),
                           test::FrameProperties{
                               .callee_port = AccessPath(
@@ -238,13 +239,13 @@ TEST_F(CalleePortFramesTest, ArtificialSourceLeq) {
   EXPECT_FALSE(
       CalleePortFrames(
           /* local_positions */ {},
-          {test::make_frame(
+          {test::make_taint_config(
               Kinds::artificial_source(),
               test::FrameProperties{
                   .callee_port = AccessPath(Root(Root::Kind::Argument, 0))})})
           .leq(CalleePortFrames(
               /* local_positions */ {},
-              {test::make_frame(
+              {test::make_taint_config(
                   Kinds::artificial_source(),
                   test::FrameProperties{
                       .callee_port = AccessPath(
@@ -262,29 +263,32 @@ TEST_F(CalleePortFramesTest, Equals) {
   EXPECT_TRUE(CalleePortFrames::bottom().equals(CalleePortFrames::bottom()));
   EXPECT_FALSE(CalleePortFrames::bottom().equals(CalleePortFrames(
       /* local_positions */ {},
-      {test::make_frame(test_kind_one, test::FrameProperties{})})));
-  EXPECT_FALSE((CalleePortFrames(
-                    /* local_positions */ {},
-                    {test::make_frame(test_kind_one, test::FrameProperties{})}))
-                   .equals(CalleePortFrames::bottom()));
+      {test::make_taint_config(test_kind_one, test::FrameProperties{})})));
+  EXPECT_FALSE(
+      (CalleePortFrames(
+           /* local_positions */ {},
+           {test::make_taint_config(test_kind_one, test::FrameProperties{})}))
+          .equals(CalleePortFrames::bottom()));
 
   // Comparison to self
   EXPECT_TRUE(
       (CalleePortFrames(
            /* local_positions */ {},
-           {test::make_frame(test_kind_one, test::FrameProperties{})}))
+           {test::make_taint_config(test_kind_one, test::FrameProperties{})}))
           .equals(CalleePortFrames(
               /* local_positions */ {},
-              {test::make_frame(test_kind_one, test::FrameProperties{})})));
+              {test::make_taint_config(
+                  test_kind_one, test::FrameProperties{})})));
 
   // Different kinds
   EXPECT_FALSE(
       (CalleePortFrames(
            /* local_positions */ {},
-           {test::make_frame(test_kind_one, test::FrameProperties{})}))
+           {test::make_taint_config(test_kind_one, test::FrameProperties{})}))
           .equals(CalleePortFrames(
               /* local_positions */ {},
-              {test::make_frame(test_kind_two, test::FrameProperties{})})));
+              {test::make_taint_config(
+                  test_kind_two, test::FrameProperties{})})));
 }
 
 TEST_F(CalleePortFramesTest, JoinWith) {
@@ -301,26 +305,26 @@ TEST_F(CalleePortFramesTest, JoinWith) {
   EXPECT_EQ(
       CalleePortFrames::bottom().join(CalleePortFrames(
           /* local_positions */ {},
-          {test::make_frame(test_kind_one, test::FrameProperties{})})),
+          {test::make_taint_config(test_kind_one, test::FrameProperties{})})),
       CalleePortFrames(
           /* local_positions */ {},
-          {test::make_frame(test_kind_one, test::FrameProperties{})}));
+          {test::make_taint_config(test_kind_one, test::FrameProperties{})}));
 
   EXPECT_EQ(
       (CalleePortFrames(
            /* local_positions */ {},
-           {test::make_frame(test_kind_one, test::FrameProperties{})}))
+           {test::make_taint_config(test_kind_one, test::FrameProperties{})}))
           .join(CalleePortFrames::bottom()),
       CalleePortFrames(
           /* local_positions */ {},
-          {test::make_frame(test_kind_one, test::FrameProperties{})}));
+          {test::make_taint_config(test_kind_one, test::FrameProperties{})}));
 
   // Additional test to verify that joining with bottom adopts the new port
   // and not the default "leaf" port.
   auto frames =
       (CalleePortFrames(
            /* local_positions */ {},
-           {test::make_frame(
+           {test::make_taint_config(
                test_kind_one,
                test::FrameProperties{
                    .callee_port = AccessPath(Root(Root::Kind::Return))})}))
@@ -329,7 +333,7 @@ TEST_F(CalleePortFramesTest, JoinWith) {
       frames,
       CalleePortFrames(
           /* local_positions */ {},
-          {test::make_frame(
+          {test::make_taint_config(
               test_kind_one,
               test::FrameProperties{
                   .callee_port = AccessPath(Root(Root::Kind::Return))})}));
@@ -337,7 +341,7 @@ TEST_F(CalleePortFramesTest, JoinWith) {
 
   frames = CalleePortFrames::bottom().join(CalleePortFrames(
       /* local_positions */ {},
-      {test::make_frame(
+      {test::make_taint_config(
           test_kind_one,
           test::FrameProperties{
               .callee_port = AccessPath(Root(Root::Kind::Return))})}));
@@ -345,7 +349,7 @@ TEST_F(CalleePortFramesTest, JoinWith) {
       frames,
       CalleePortFrames(
           /* local_positions */ {},
-          {test::make_frame(
+          {test::make_taint_config(
               test_kind_one,
               test::FrameProperties{
                   .callee_port = AccessPath(Root(Root::Kind::Return))})}));
@@ -354,26 +358,26 @@ TEST_F(CalleePortFramesTest, JoinWith) {
   // Join different kinds
   frames = CalleePortFrames(
       /* local_positions */ {},
-      {test::make_frame(test_kind_one, test::FrameProperties{})});
+      {test::make_taint_config(test_kind_one, test::FrameProperties{})});
   frames.join_with(CalleePortFrames(
       /* local_positions */ {},
-      {test::make_frame(test_kind_two, test::FrameProperties{})}));
+      {test::make_taint_config(test_kind_two, test::FrameProperties{})}));
   EXPECT_EQ(
       frames,
       (CalleePortFrames(
           /* local_positions */ {},
-          {test::make_frame(test_kind_one, test::FrameProperties{}),
-           test::make_frame(test_kind_two, test::FrameProperties{})})));
+          {test::make_taint_config(test_kind_one, test::FrameProperties{}),
+           test::make_taint_config(test_kind_two, test::FrameProperties{})})));
 
   // Join same kind
-  auto frame_one = test::make_frame(
+  auto frame_one = test::make_taint_config(
       test_kind_one,
       test::FrameProperties{
           .callee_port = AccessPath(Root(Root::Kind::Argument, 0)),
           .callee = one,
           .distance = 1,
           .origins = MethodSet{one}});
-  auto frame_two = test::make_frame(
+  auto frame_two = test::make_taint_config(
       test_kind_one,
       test::FrameProperties{
           .callee_port = AccessPath(Root(Root::Kind::Argument, 0)),
@@ -390,7 +394,7 @@ TEST_F(CalleePortFramesTest, ArtificialSourceJoinWith) {
   // Ports should be collapsed to the common prefix.
   auto frames = CalleePortFrames(
       /* local_positions */ {},
-      {test::make_frame(
+      {test::make_taint_config(
           Kinds::artificial_source(),
           test::FrameProperties{
               .callee_port = AccessPath(
@@ -398,7 +402,7 @@ TEST_F(CalleePortFramesTest, ArtificialSourceJoinWith) {
                   Path{DexString::make_string("x")})})});
   frames.join_with(CalleePortFrames(
       /* local_positions */ {},
-      {test::make_frame(
+      {test::make_taint_config(
           Kinds::artificial_source(),
           test::FrameProperties{
               .callee_port = AccessPath(Root(Root::Kind::Argument, 0))})}));
@@ -406,7 +410,7 @@ TEST_F(CalleePortFramesTest, ArtificialSourceJoinWith) {
       frames,
       CalleePortFrames(
           /* local_positions */ {},
-          {test::make_frame(
+          {test::make_taint_config(
               Kinds::artificial_source(),
               test::FrameProperties{
                   .callee_port = AccessPath(Root(Root::Kind::Argument, 0))})}));
@@ -439,14 +443,14 @@ TEST_F(CalleePortFramesTest, Difference) {
   frames.difference_with(CalleePortFrames(
       /* local_positions */ {},
       {
-          test::make_frame(test_kind_one, test::FrameProperties{}),
+          test::make_taint_config(test_kind_one, test::FrameProperties{}),
       }));
   EXPECT_TRUE(frames.is_bottom());
 
   initial_frames = CalleePortFrames(
       /* local_positions */ {},
       {
-          test::make_frame(
+          test::make_taint_config(
               test_kind_one,
               test::FrameProperties{
                   .callee_port = AccessPath(Root(Root::Kind::Argument, 0)),
@@ -465,7 +469,7 @@ TEST_F(CalleePortFramesTest, Difference) {
   frames.difference_with(CalleePortFrames(
       /* local_positions */ {},
       {
-          test::make_frame(
+          test::make_taint_config(
               test_kind_one,
               test::FrameProperties{
                   .callee_port = AccessPath(Root(Root::Kind::Argument, 0)),
@@ -482,7 +486,7 @@ TEST_F(CalleePortFramesTest, Difference) {
   frames.difference_with(CalleePortFrames(
       /* local_positions */ {},
       {
-          test::make_frame(
+          test::make_taint_config(
               test_kind_one,
               test::FrameProperties{
                   .callee_port = AccessPath(Root(Root::Kind::Argument, 0)),
@@ -497,7 +501,7 @@ TEST_F(CalleePortFramesTest, Difference) {
   frames.difference_with(CalleePortFrames(
       /* local_positions */ {},
       {
-          test::make_frame(
+          test::make_taint_config(
               test_kind_one,
               test::FrameProperties{
                   .callee_port = AccessPath(Root(Root::Kind::Argument, 0)),
@@ -514,7 +518,7 @@ TEST_F(CalleePortFramesTest, Difference) {
   frames.difference_with(CalleePortFrames(
       /* local_positions */ {},
       {
-          test::make_frame(
+          test::make_taint_config(
               test_kind_one,
               test::FrameProperties{
                   .callee_port = AccessPath(Root(Root::Kind::Argument, 0)),
@@ -530,7 +534,7 @@ TEST_F(CalleePortFramesTest, Difference) {
   frames = CalleePortFrames(
       /* local_positions */ {},
       {
-          test::make_frame(
+          test::make_taint_config(
               test_kind_one,
               test::FrameProperties{
                   .callee_port = AccessPath(Root(Root::Kind::Argument, 0)),
@@ -543,7 +547,7 @@ TEST_F(CalleePortFramesTest, Difference) {
   frames.difference_with(CalleePortFrames(
       /* local_positions */ {},
       {
-          test::make_frame(
+          test::make_taint_config(
               test_kind_one,
               test::FrameProperties{
                   .callee_port = AccessPath(Root(Root::Kind::Argument, 0)),
@@ -552,7 +556,7 @@ TEST_F(CalleePortFramesTest, Difference) {
                   .origins = MethodSet{one},
                   .inferred_features = FeatureMayAlwaysSet{feature_one},
                   .user_features = FeatureSet{user_feature_one}}),
-          test::make_frame(
+          test::make_taint_config(
               test_kind_one,
               test::FrameProperties{
                   .callee_port = AccessPath(Root(Root::Kind::Argument, 0)),
@@ -568,14 +572,14 @@ TEST_F(CalleePortFramesTest, Difference) {
   frames = CalleePortFrames(
       /* local_positions */ {},
       {
-          test::make_frame(
+          test::make_taint_config(
               test_kind_one,
               test::FrameProperties{
                   .callee_port = AccessPath(Root(Root::Kind::Argument, 0)),
                   .callee = one,
                   .distance = 1,
                   .origins = MethodSet{one}}),
-          test::make_frame(
+          test::make_taint_config(
               test_kind_two,
               test::FrameProperties{
                   .callee_port = AccessPath(Root(Root::Kind::Argument, 0)),
@@ -585,7 +589,7 @@ TEST_F(CalleePortFramesTest, Difference) {
       });
   frames.difference_with(CalleePortFrames(
       /* local_positions */ {},
-      {test::make_frame(
+      {test::make_taint_config(
           test_kind_one,
           test::FrameProperties{
               .callee_port = AccessPath(Root(Root::Kind::Argument, 0)),
@@ -597,7 +601,7 @@ TEST_F(CalleePortFramesTest, Difference) {
       (CalleePortFrames(
           /* local_positions */ {},
           {
-              test::make_frame(
+              test::make_taint_config(
                   test_kind_two,
                   test::FrameProperties{
                       .callee_port = AccessPath(Root(Root::Kind::Argument, 0)),
@@ -610,21 +614,21 @@ TEST_F(CalleePortFramesTest, Difference) {
   frames = CalleePortFrames(
       /* local_positions */ {},
       {
-          test::make_frame(
+          test::make_taint_config(
               test_kind_one,
               test::FrameProperties{
                   .callee_port = AccessPath(Root(Root::Kind::Argument, 0)),
                   .callee = one,
                   .distance = 1,
                   .origins = MethodSet{one}}),
-          test::make_frame(
+          test::make_taint_config(
               test_kind_two,
               test::FrameProperties{
                   .callee_port = AccessPath(Root(Root::Kind::Argument, 0)),
                   .callee = two,
                   .distance = 1,
                   .origins = MethodSet{two}}),
-          test::make_frame(
+          test::make_taint_config(
               test_kind_two,
               test::FrameProperties{
                   .callee_port = AccessPath(Root(Root::Kind::Argument, 0)),
@@ -634,21 +638,21 @@ TEST_F(CalleePortFramesTest, Difference) {
       });
   frames.difference_with(CalleePortFrames(
       /* local_positions */ {},
-      {test::make_frame(
+      {test::make_taint_config(
            test_kind_one,
            test::FrameProperties{
                .callee_port = AccessPath(Root(Root::Kind::Argument, 0)),
                .callee = one,
                .distance = 1,
                .origins = MethodSet{one}}),
-       test::make_frame(
+       test::make_taint_config(
            test_kind_one,
            test::FrameProperties{
                .callee_port = AccessPath(Root(Root::Kind::Argument, 0)),
                .callee = two,
                .distance = 1,
                .origins = MethodSet{two}}),
-       test::make_frame(
+       test::make_taint_config(
            test_kind_two,
            test::FrameProperties{
                .callee_port = AccessPath(Root(Root::Kind::Argument, 0)),
@@ -659,7 +663,7 @@ TEST_F(CalleePortFramesTest, Difference) {
       frames,
       (CalleePortFrames(
           /* local_positions */ {},
-          {test::make_frame(
+          {test::make_taint_config(
               test_kind_two,
               test::FrameProperties{
                   .callee_port = AccessPath(Root(Root::Kind::Argument, 0)),
@@ -671,21 +675,21 @@ TEST_F(CalleePortFramesTest, Difference) {
   frames = CalleePortFrames(
       /* local_positions */ {},
       {
-          test::make_frame(
+          test::make_taint_config(
               test_kind_one,
               test::FrameProperties{
                   .callee_port = AccessPath(Root(Root::Kind::Argument, 0)),
                   .callee = one,
                   .distance = 1,
                   .origins = MethodSet{one, two}}),
-          test::make_frame(
+          test::make_taint_config(
               test_kind_one,
               test::FrameProperties{
                   .callee_port = AccessPath(Root(Root::Kind::Argument, 0)),
                   .callee = two,
                   .distance = 1,
                   .origins = MethodSet{two}}),
-          test::make_frame(
+          test::make_taint_config(
               test_kind_one,
               test::FrameProperties{
                   .callee_port = AccessPath(Root(Root::Kind::Argument, 0)),
@@ -696,14 +700,14 @@ TEST_F(CalleePortFramesTest, Difference) {
   frames.difference_with(CalleePortFrames(
       /* local_positions */ {},
       {
-          test::make_frame(
+          test::make_taint_config(
               test_kind_one,
               test::FrameProperties{
                   .callee_port = AccessPath(Root(Root::Kind::Argument, 0)),
                   .callee = one,
                   .distance = 1,
                   .origins = MethodSet{one}}),
-          test::make_frame(
+          test::make_taint_config(
               test_kind_one,
               test::FrameProperties{
                   .callee_port = AccessPath(Root(Root::Kind::Argument, 0)),
@@ -716,14 +720,14 @@ TEST_F(CalleePortFramesTest, Difference) {
       (CalleePortFrames(
           /* local_positions */ {},
           {
-              test::make_frame(
+              test::make_taint_config(
                   test_kind_one,
                   test::FrameProperties{
                       .callee_port = AccessPath(Root(Root::Kind::Argument, 0)),
                       .callee = one,
                       .distance = 1,
                       .origins = MethodSet{one, two}}),
-              test::make_frame(
+              test::make_taint_config(
                   test_kind_one,
                   test::FrameProperties{
                       .callee_port = AccessPath(Root(Root::Kind::Argument, 0)),
@@ -745,7 +749,7 @@ TEST_F(CalleePortFramesTest, DifferenceLocalPositions) {
   frames.difference_with(CalleePortFrames(
       LocalPositionSet{test_position_one},
       {
-          test::make_frame(test_kind_one, test::FrameProperties{}),
+          test::make_taint_config(test_kind_one, test::FrameProperties{}),
       }));
   EXPECT_TRUE(frames.is_bottom());
 
@@ -753,58 +757,58 @@ TEST_F(CalleePortFramesTest, DifferenceLocalPositions) {
   // lhs.frames <= rhs.frames
   frames = CalleePortFrames(
       /* local_positions */ {},
-      {test::make_frame(test_kind_one, test::FrameProperties{})});
+      {test::make_taint_config(test_kind_one, test::FrameProperties{})});
   frames.difference_with(CalleePortFrames(
       LocalPositionSet{test_position_one},
-      {test::make_frame(test_kind_one, test::FrameProperties{}),
-       test::make_frame(test_kind_two, test::FrameProperties{})}));
+      {test::make_taint_config(test_kind_one, test::FrameProperties{}),
+       test::make_taint_config(test_kind_two, test::FrameProperties{})}));
   EXPECT_TRUE(frames.is_bottom());
 
   // lhs.local_positions <= rhs.local_positions
   // lhs.frames > rhs.frames
   frames = CalleePortFrames(
       /* local_positions */ {},
-      {test::make_frame(test_kind_one, test::FrameProperties{}),
-       test::make_frame(test_kind_two, test::FrameProperties{})});
+      {test::make_taint_config(test_kind_one, test::FrameProperties{}),
+       test::make_taint_config(test_kind_two, test::FrameProperties{})});
   frames.difference_with(CalleePortFrames(
       LocalPositionSet{test_position_one},
-      {test::make_frame(test_kind_one, test::FrameProperties{})}));
+      {test::make_taint_config(test_kind_one, test::FrameProperties{})}));
   EXPECT_EQ(
       frames,
       CalleePortFrames(
           /* local_positions */ {},
-          {test::make_frame(test_kind_two, test::FrameProperties{})}));
+          {test::make_taint_config(test_kind_two, test::FrameProperties{})}));
 
   // lhs.local_positions > rhs.local_positions
   // lhs.frames > rhs.frames
   frames = CalleePortFrames(
       LocalPositionSet{test_position_one},
-      {test::make_frame(test_kind_one, test::FrameProperties{}),
-       test::make_frame(test_kind_two, test::FrameProperties{})});
+      {test::make_taint_config(test_kind_one, test::FrameProperties{}),
+       test::make_taint_config(test_kind_two, test::FrameProperties{})});
   frames.difference_with(CalleePortFrames(
       /* local_positions */ {},
-      {test::make_frame(test_kind_one, test::FrameProperties{})}));
+      {test::make_taint_config(test_kind_one, test::FrameProperties{})}));
   EXPECT_EQ(
       frames,
       CalleePortFrames(
           LocalPositionSet{test_position_one},
-          {test::make_frame(test_kind_one, test::FrameProperties{}),
-           test::make_frame(test_kind_two, test::FrameProperties{})}));
+          {test::make_taint_config(test_kind_one, test::FrameProperties{}),
+           test::make_taint_config(test_kind_two, test::FrameProperties{})}));
 
   // lhs.local_positions > rhs.local_positions
   // lhs.frames <= rhs.frames
   frames = CalleePortFrames(
       LocalPositionSet{test_position_one},
-      {test::make_frame(test_kind_one, test::FrameProperties{})});
+      {test::make_taint_config(test_kind_one, test::FrameProperties{})});
   frames.difference_with(CalleePortFrames(
       /* local_positions */ {},
-      {test::make_frame(test_kind_one, test::FrameProperties{}),
-       test::make_frame(test_kind_two, test::FrameProperties{})}));
+      {test::make_taint_config(test_kind_one, test::FrameProperties{}),
+       test::make_taint_config(test_kind_two, test::FrameProperties{})}));
   EXPECT_EQ(
       frames,
       CalleePortFrames(
           LocalPositionSet{test_position_one},
-          {test::make_frame(test_kind_one, test::FrameProperties{})}));
+          {test::make_taint_config(test_kind_one, test::FrameProperties{})}));
 }
 
 TEST_F(CalleePortFramesTest, Iterator) {
@@ -815,8 +819,8 @@ TEST_F(CalleePortFramesTest, Iterator) {
 
   auto callee_port_frames = CalleePortFrames(
       /* local_positions */ {},
-      {test::make_frame(test_kind_one, test::FrameProperties{}),
-       test::make_frame(test_kind_two, test::FrameProperties{})});
+      {test::make_taint_config(test_kind_one, test::FrameProperties{}),
+       test::make_taint_config(test_kind_two, test::FrameProperties{})});
 
   std::vector<Frame> frames;
   for (const auto& frame : callee_port_frames) {
@@ -851,14 +855,14 @@ TEST_F(CalleePortFramesTest, Map) {
   auto frames = CalleePortFrames(
       /* local_positions */ {},
       {
-          test::make_frame(
+          test::make_taint_config(
               test_kind_one,
               test::FrameProperties{
                   .callee_port = AccessPath(Root(Root::Kind::Argument, 0)),
                   .callee = one,
                   .distance = 1,
                   .origins = MethodSet{one}}),
-          test::make_frame(
+          test::make_taint_config(
               test_kind_two,
               test::FrameProperties{
                   .callee_port = AccessPath(Root(Root::Kind::Argument, 0)),
@@ -874,7 +878,7 @@ TEST_F(CalleePortFramesTest, Map) {
       (CalleePortFrames(
           /* local_positions */ {},
           {
-              test::make_frame(
+              test::make_taint_config(
                   test_kind_one,
                   test::FrameProperties{
                       .callee_port = AccessPath(Root(Root::Kind::Argument, 0)),
@@ -883,7 +887,7 @@ TEST_F(CalleePortFramesTest, Map) {
                       .origins = MethodSet{one},
                       .locally_inferred_features =
                           FeatureMayAlwaysSet{feature_one}}),
-              test::make_frame(
+              test::make_taint_config(
                   test_kind_two,
                   test::FrameProperties{
                       .callee_port = AccessPath(Root(Root::Kind::Argument, 0)),
@@ -910,7 +914,7 @@ TEST_F(CalleePortFramesTest, FeaturesAndPositions) {
   // not a join.
   auto frames = CalleePortFrames(
       /* local_positions */ {},
-      {test::make_frame(
+      {test::make_taint_config(
           test_kind_one,
           test::FrameProperties{
               .locally_inferred_features = FeatureMayAlwaysSet(
@@ -926,8 +930,8 @@ TEST_F(CalleePortFramesTest, FeaturesAndPositions) {
   frames = CalleePortFrames(
       /* local_positions */ LocalPositionSet{test_position_one},
       {
-          test::make_frame(test_kind_one, test::FrameProperties{}),
-          test::make_frame(test_kind_two, test::FrameProperties{}),
+          test::make_taint_config(test_kind_one, test::FrameProperties{}),
+          test::make_taint_config(test_kind_two, test::FrameProperties{}),
       });
   EXPECT_EQ(frames.local_positions(), (LocalPositionSet{test_position_one}));
 
@@ -965,11 +969,11 @@ TEST_F(CalleePortFramesTest, Propagate) {
   auto non_crtex_frames = CalleePortFrames(
       /* local_positions */ {},
       {
-          test::make_frame(
+          test::make_taint_config(
               test_kind_one,
               test::FrameProperties{
                   .callee = one, .distance = 1, .origins = MethodSet{one}}),
-          test::make_frame(
+          test::make_taint_config(
               test_kind_two,
               test::FrameProperties{.callee = one, .origins = MethodSet{one}}),
       });
@@ -985,7 +989,7 @@ TEST_F(CalleePortFramesTest, Propagate) {
       (CalleePortFrames(
           /* local_positions */ {},
           {
-              test::make_frame(
+              test::make_taint_config(
                   test_kind_one,
                   test::FrameProperties{
                       .callee_port = AccessPath(Root(Root::Kind::Argument, 0)),
@@ -995,7 +999,7 @@ TEST_F(CalleePortFramesTest, Propagate) {
                       .origins = MethodSet{one},
                       .locally_inferred_features =
                           FeatureMayAlwaysSet::bottom()}),
-              test::make_frame(
+              test::make_taint_config(
                   test_kind_two,
                   test::FrameProperties{
                       .callee_port = AccessPath(Root(Root::Kind::Argument, 0)),
@@ -1011,7 +1015,7 @@ TEST_F(CalleePortFramesTest, Propagate) {
   auto crtex_frames = CalleePortFrames(
       /* local_positions */ {},
       {
-          test::make_frame(
+          test::make_taint_config(
               test_kind_one,
               test::FrameProperties{
                   .callee_port = AccessPath(Root(Root::Kind::Anchor)),
@@ -1020,7 +1024,7 @@ TEST_F(CalleePortFramesTest, Propagate) {
                       CanonicalNameSetAbstractDomain{
                           CanonicalName(CanonicalName::TemplateValue{
                               "%programmatic_leaf_name%"})}}),
-          test::make_frame(
+          test::make_taint_config(
               test_kind_two,
               test::FrameProperties{
                   .callee_port = AccessPath(Root(Root::Kind::Anchor)),
@@ -1045,7 +1049,7 @@ TEST_F(CalleePortFramesTest, Propagate) {
       (CalleePortFrames(
           /* local_positions */ {},
           {
-              test::make_frame(
+              test::make_taint_config(
                   test_kind_one,
                   test::FrameProperties{
                       .callee_port = AccessPath(
@@ -1059,7 +1063,7 @@ TEST_F(CalleePortFramesTest, Propagate) {
                       .canonical_names =
                           CanonicalNameSetAbstractDomain{
                               expected_instantiated_name}}),
-              test::make_frame(
+              test::make_taint_config(
                   test_kind_two,
                   test::FrameProperties{
                       .callee_port = AccessPath(
@@ -1090,7 +1094,7 @@ TEST_F(CalleePortFramesTest, Propagate) {
       (CalleePortFrames(
           /* local_positions */ {},
           {
-              test::make_frame(
+              test::make_taint_config(
                   test_kind_one,
                   test::FrameProperties{
                       .callee_port = AccessPath(Root(Root::Kind::Argument, 0)),
@@ -1101,7 +1105,7 @@ TEST_F(CalleePortFramesTest, Propagate) {
                       .locally_inferred_features =
                           FeatureMayAlwaysSet::bottom(),
                   }),
-              test::make_frame(
+              test::make_taint_config(
                   test_kind_two,
                   test::FrameProperties{
                       .callee_port = AccessPath(Root(Root::Kind::Argument, 0)),
@@ -1135,7 +1139,7 @@ TEST_F(CalleePortFramesTest, PropagateDropFrames) {
   auto frames = CalleePortFrames(
       /* local_positions */ {},
       {
-          test::make_frame(
+          test::make_taint_config(
               test_kind_one,
               test::FrameProperties{.callee = one, .distance = 1}),
       });
@@ -1155,13 +1159,13 @@ TEST_F(CalleePortFramesTest, PropagateDropFrames) {
   frames = CalleePortFrames(
       /* local_positions */ {},
       {
-          test::make_frame(
+          test::make_taint_config(
               test_kind_one,
               test::FrameProperties{
                   .callee = one,
                   .distance = 2,
                   .user_features = FeatureSet{user_feature_one}}),
-          test::make_frame(
+          test::make_taint_config(
               test_kind_two,
               test::FrameProperties{
                   .callee = one,
@@ -1180,7 +1184,7 @@ TEST_F(CalleePortFramesTest, PropagateDropFrames) {
       (CalleePortFrames(
           /* local_positions */ {},
           {
-              test::make_frame(
+              test::make_taint_config(
                   test_kind_two,
                   test::FrameProperties{
                       .callee_port = AccessPath(Root(Root::Kind::Argument, 0)),
@@ -1211,11 +1215,11 @@ TEST_F(CalleePortFramesTest, TransformKindWithFeatures) {
   auto initial_frames = CalleePortFrames(
       /* local_positions */ {},
       {
-          test::make_frame(
+          test::make_taint_config(
               test_kind_one,
               test::FrameProperties{
                   .user_features = FeatureSet{user_feature_one}}),
-          test::make_frame(
+          test::make_taint_config(
               test_kind_two,
               test::FrameProperties{
                   .inferred_features = FeatureMayAlwaysSet{feature_one},
@@ -1248,11 +1252,11 @@ TEST_F(CalleePortFramesTest, TransformKindWithFeatures) {
       (CalleePortFrames(
           /* local_positions */ {},
           {
-              test::make_frame(
+              test::make_taint_config(
                   transformed_test_kind_one,
                   test::FrameProperties{
                       .user_features = FeatureSet{user_feature_one}}),
-              test::make_frame(
+              test::make_taint_config(
                   test_kind_two,
                   test::FrameProperties{
                       .inferred_features = FeatureMayAlwaysSet{feature_one},
@@ -1276,13 +1280,13 @@ TEST_F(CalleePortFramesTest, TransformKindWithFeatures) {
       (CalleePortFrames(
           /* local_positions */ {},
           {
-              test::make_frame(
+              test::make_taint_config(
                   transformed_test_kind_one,
                   test::FrameProperties{
                       .locally_inferred_features =
                           FeatureMayAlwaysSet{feature_one},
                       .user_features = FeatureSet{user_feature_one}}),
-              test::make_frame(
+              test::make_taint_config(
                   test_kind_two,
                   test::FrameProperties{
                       .inferred_features = FeatureMayAlwaysSet{feature_one},
@@ -1309,19 +1313,19 @@ TEST_F(CalleePortFramesTest, TransformKindWithFeatures) {
       (CalleePortFrames(
           /* local_positions */ {},
           {
-              test::make_frame(
+              test::make_taint_config(
                   test_kind_one,
                   test::FrameProperties{
                       .locally_inferred_features =
                           FeatureMayAlwaysSet{feature_one},
                       .user_features = FeatureSet{user_feature_one}}),
-              test::make_frame(
+              test::make_taint_config(
                   transformed_test_kind_one,
                   test::FrameProperties{
                       .locally_inferred_features =
                           FeatureMayAlwaysSet{feature_one},
                       .user_features = FeatureSet{user_feature_one}}),
-              test::make_frame(
+              test::make_taint_config(
                   transformed_test_kind_two,
                   test::FrameProperties{
                       .locally_inferred_features =
@@ -1350,13 +1354,13 @@ TEST_F(CalleePortFramesTest, TransformKindWithFeatures) {
       (CalleePortFrames(
           /* local_positions */ {},
           {
-              test::make_frame(
+              test::make_taint_config(
                   transformed_test_kind_one,
                   test::FrameProperties{
                       .locally_inferred_features =
                           FeatureMayAlwaysSet{feature_one},
                       .user_features = FeatureSet{user_feature_one}}),
-              test::make_frame(
+              test::make_taint_config(
                   transformed_test_kind_two,
                   test::FrameProperties{
                       .user_features = FeatureSet{user_feature_one}}),
@@ -1366,12 +1370,12 @@ TEST_F(CalleePortFramesTest, TransformKindWithFeatures) {
   frames = CalleePortFrames(
       /* local_positions */ {},
       {
-          test::make_frame(
+          test::make_taint_config(
               test_kind_one,
               test::FrameProperties{
                   .inferred_features = FeatureMayAlwaysSet{feature_two},
                   .user_features = FeatureSet{user_feature_one}}),
-          test::make_frame(
+          test::make_taint_config(
               test_kind_two,
               test::FrameProperties{
                   .inferred_features = FeatureMayAlwaysSet{feature_one},
@@ -1389,7 +1393,7 @@ TEST_F(CalleePortFramesTest, TransformKindWithFeatures) {
       (CalleePortFrames(
           /* local_positions */ {},
           {
-              test::make_frame(
+              test::make_taint_config(
                   transformed_test_kind_one,
                   test::FrameProperties{
                       .inferred_features = FeatureMayAlwaysSet(
@@ -1407,7 +1411,7 @@ TEST_F(CalleePortFramesTest, AppendCalleePort) {
 
   auto frames = CalleePortFrames(
       /* local_positions */ {},
-      {test::make_frame(
+      {test::make_taint_config(
           Kinds::artificial_source(),
           test::FrameProperties{
               .callee_port = AccessPath(
@@ -1418,7 +1422,7 @@ TEST_F(CalleePortFramesTest, AppendCalleePort) {
       frames,
       (CalleePortFrames(
           /* local_positions */ {},
-          {test::make_frame(
+          {test::make_taint_config(
               Kinds::artificial_source(),
               test::FrameProperties{
                   .callee_port = AccessPath(
@@ -1444,11 +1448,11 @@ TEST_F(CalleePortFramesTest, FilterInvalidFrames) {
   // change.
   auto frames = CalleePortFrames(
       /* local_positions */ {},
-      {test::make_frame(
+      {test::make_taint_config(
            test_kind_one,
            test::FrameProperties{
                .callee_port = AccessPath(Root(Root::Kind::Argument))}),
-       test::make_frame(
+       test::make_taint_config(
            test_kind_two,
            test::FrameProperties{
                .callee_port = AccessPath(Root(Root::Kind::Argument)),
@@ -1462,7 +1466,7 @@ TEST_F(CalleePortFramesTest, FilterInvalidFrames) {
       frames,
       (CalleePortFrames(
           /* local_positions */ {},
-          {test::make_frame(
+          {test::make_taint_config(
               test_kind_one,
               test::FrameProperties{
                   .callee_port = AccessPath(Root(Root::Kind::Argument))})})));
@@ -1470,7 +1474,7 @@ TEST_F(CalleePortFramesTest, FilterInvalidFrames) {
   // Filter by callee port (drops nothing)
   frames = CalleePortFrames(
       /* local_positions */ {},
-      {test::make_frame(
+      {test::make_taint_config(
           Kinds::artificial_source(),
           test::FrameProperties{
               .callee_port = AccessPath(Root(Root::Kind::Argument)),
@@ -1486,7 +1490,7 @@ TEST_F(CalleePortFramesTest, FilterInvalidFrames) {
       frames,
       (CalleePortFrames(
           /* local_positions */ {},
-          {test::make_frame(
+          {test::make_taint_config(
               Kinds::artificial_source(),
               test::FrameProperties{
                   .callee_port = AccessPath(Root(Root::Kind::Argument)),
@@ -1495,7 +1499,7 @@ TEST_F(CalleePortFramesTest, FilterInvalidFrames) {
   // Filter by callee port (drops everything)
   frames = CalleePortFrames(
       /* local_positions */ {},
-      {test::make_frame(
+      {test::make_taint_config(
           Kinds::artificial_source(),
           test::FrameProperties{
               .callee_port = AccessPath(Root(Root::Kind::Argument)),
@@ -1512,11 +1516,11 @@ TEST_F(CalleePortFramesTest, FilterInvalidFrames) {
   // Filter by kind
   frames = CalleePortFrames(
       /* local_positions */ {},
-      {test::make_frame(
+      {test::make_taint_config(
            test_kind_one,
            test::FrameProperties{
                .callee_port = AccessPath(Root(Root::Kind::Argument))}),
-       test::make_frame(
+       test::make_taint_config(
            test_kind_two,
            test::FrameProperties{
                .callee_port = AccessPath(Root(Root::Kind::Argument)),
@@ -1530,7 +1534,7 @@ TEST_F(CalleePortFramesTest, FilterInvalidFrames) {
       frames,
       (CalleePortFrames(
           /* local_positions */ {},
-          {test::make_frame(
+          {test::make_taint_config(
               test_kind_one,
               test::FrameProperties{
                   .callee_port = AccessPath(Root(Root::Kind::Argument))})})));
@@ -1543,7 +1547,7 @@ TEST_F(CalleePortFramesTest, Show) {
   auto* one =
       context.methods->create(redex::create_void_method(scope, "LOne;", "one"));
   auto* test_kind_one = context.kinds->get("TestSink1");
-  auto frame_one = test::make_frame(
+  auto frame_one = test::make_taint_config(
       test_kind_one, test::FrameProperties{.origins = MethodSet{one}});
   auto frames = CalleePortFrames(/* local_positions */ {}, {frame_one});
 
@@ -1576,10 +1580,10 @@ TEST_F(CalleePortFramesTest, ContainsKind) {
 
   auto frames = CalleePortFrames(
       /* local_positions */ {},
-      {test::make_frame(
+      {test::make_taint_config(
            /* kind */ context.kinds->get("TestSourceOne"),
            test::FrameProperties{}),
-       test::make_frame(
+       test::make_taint_config(
            /* kind */ context.kinds->get("TestSourceTwo"),
            test::FrameProperties{})});
 
@@ -1597,11 +1601,11 @@ TEST_F(CalleePortFramesTest, PartitionByKind) {
   auto frames = CalleePortFrames(
       /* local_positions */ {},
       {
-          test::make_frame(
+          test::make_taint_config(
               test_kind_one,
               test::FrameProperties{
                   .callee_port = AccessPath(Root(Root::Kind::Return))}),
-          test::make_frame(
+          test::make_taint_config(
               test_kind_two,
               test::FrameProperties{
                   .callee_port = AccessPath(Root(Root::Kind::Return))}),
@@ -1614,7 +1618,7 @@ TEST_F(CalleePortFramesTest, PartitionByKind) {
       frames_by_kind[test_kind_one],
       CalleePortFrames(
           /* local_positions */ {},
-          {test::make_frame(
+          {test::make_taint_config(
               test_kind_one,
               test::FrameProperties{
                   .callee_port = AccessPath(Root(Root::Kind::Return))})}));
@@ -1625,7 +1629,7 @@ TEST_F(CalleePortFramesTest, PartitionByKind) {
       frames_by_kind[test_kind_two],
       CalleePortFrames(
           /* local_positions */ {},
-          {test::make_frame(
+          {test::make_taint_config(
               test_kind_two,
               test::FrameProperties{
                   .callee_port = AccessPath(Root(Root::Kind::Return))})}));

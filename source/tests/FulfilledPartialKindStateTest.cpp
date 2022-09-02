@@ -65,7 +65,7 @@ TEST_F(FulfilledPartialKindStateTest, Basic) {
       /* partial_sink_kinds */
       MultiSourceMultiSinkRule::PartialKindSet{fulfilled, unfulfilled});
 
-  auto sink_frame = test::make_frame(
+  auto sink_frame = test::make_taint_config(
       /* kind */ fulfilled, test::FrameProperties{});
 
   // Simulate kind fulfilled, i.e. source_1 -> fulfilled under rule_1 with
@@ -113,7 +113,7 @@ TEST_F(FulfilledPartialKindStateTest, Basic) {
           context.kinds->get_triggered(unfulfilled, rule_2.get())));
 
   // Fulfill the other part of rule_1.
-  auto unfulfilled_sink_frame = test::make_frame(
+  auto unfulfilled_sink_frame = test::make_taint_config(
       /* kind */ unfulfilled,
       test::FrameProperties{
           .inferred_features = FeatureMayAlwaysSet{feature_2}});
@@ -126,7 +126,7 @@ TEST_F(FulfilledPartialKindStateTest, Basic) {
               /* context */ &method_context,
               /* sink */ Taint{unfulfilled_sink_frame})
           .value(),
-      Taint{test::make_frame(
+      Taint{test::make_taint_config(
           /* kind */ context.kinds->get_triggered(unfulfilled, rule_1.get()),
           test::FrameProperties{
               .inferred_features = FeatureMayAlwaysSet{feature_2},

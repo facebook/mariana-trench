@@ -33,36 +33,37 @@ TEST_F(CalleeFramesTest, Add) {
   EXPECT_TRUE(frames.empty());
   EXPECT_EQ(frames.callee(), nullptr);
 
-  frames.add(test::make_frame(source_kind_one, test::FrameProperties{}));
+  frames.add(test::make_taint_config(source_kind_one, test::FrameProperties{}));
   EXPECT_FALSE(frames.is_bottom());
   EXPECT_EQ(frames.callee(), nullptr);
   EXPECT_EQ(
       frames,
-      CalleeFrames{test::make_frame(source_kind_one, test::FrameProperties{})});
+      CalleeFrames{
+          test::make_taint_config(source_kind_one, test::FrameProperties{})});
 
   // Add frame with the same position (nullptr), different kind
-  frames.add(test::make_frame(
+  frames.add(test::make_taint_config(
       source_kind_two, test::FrameProperties{.origins = MethodSet{one}}));
   EXPECT_EQ(
       frames,
       (CalleeFrames{
-          test::make_frame(source_kind_one, test::FrameProperties{}),
-          test::make_frame(
+          test::make_taint_config(source_kind_one, test::FrameProperties{}),
+          test::make_taint_config(
               source_kind_two,
               test::FrameProperties{.origins = MethodSet{one}}),
       }));
 
   // Add frame with a different position
-  frames.add(test::make_frame(
+  frames.add(test::make_taint_config(
       source_kind_two, test::FrameProperties{.call_position = position_one}));
   EXPECT_EQ(
       frames,
       (CalleeFrames{
-          test::make_frame(source_kind_one, test::FrameProperties{}),
-          test::make_frame(
+          test::make_taint_config(source_kind_one, test::FrameProperties{}),
+          test::make_taint_config(
               source_kind_two,
               test::FrameProperties{.origins = MethodSet{one}}),
-          test::make_frame(
+          test::make_taint_config(
               source_kind_two,
               test::FrameProperties{.call_position = position_one}),
       }));
@@ -78,67 +79,67 @@ TEST_F(CalleeFramesTest, Leq) {
 
   // Comparison to bottom
   EXPECT_TRUE(CalleeFrames::bottom().leq(CalleeFrames::bottom()));
-  EXPECT_TRUE(CalleeFrames::bottom().leq(
-      CalleeFrames{test::make_frame(test_kind_one, test::FrameProperties{})}));
-  EXPECT_FALSE((CalleeFrames{test::make_frame(
+  EXPECT_TRUE(CalleeFrames::bottom().leq(CalleeFrames{
+      test::make_taint_config(test_kind_one, test::FrameProperties{})}));
+  EXPECT_FALSE((CalleeFrames{test::make_taint_config(
                     test_kind_one,
                     test::FrameProperties{.call_position = test_position_one})})
                    .leq(CalleeFrames::bottom()));
 
   // Comparison to self
-  EXPECT_TRUE(
-      (CalleeFrames{test::make_frame(test_kind_one, test::FrameProperties{})})
-          .leq(CalleeFrames{
-              test::make_frame(test_kind_one, test::FrameProperties{})}));
+  EXPECT_TRUE((CalleeFrames{test::make_taint_config(
+                   test_kind_one, test::FrameProperties{})})
+                  .leq(CalleeFrames{test::make_taint_config(
+                      test_kind_one, test::FrameProperties{})}));
 
   // Same position, different kinds
   EXPECT_TRUE(
-      (CalleeFrames{test::make_frame(
+      (CalleeFrames{test::make_taint_config(
            test_kind_one,
            test::FrameProperties{.call_position = test_position_one})})
           .leq(CalleeFrames{
-              test::make_frame(
+              test::make_taint_config(
                   test_kind_one,
                   test::FrameProperties{.call_position = test_position_one}),
-              test::make_frame(
+              test::make_taint_config(
                   test_kind_two,
                   test::FrameProperties{.call_position = test_position_one}),
           }));
   EXPECT_FALSE(
       (CalleeFrames{
-           test::make_frame(
+           test::make_taint_config(
                test_kind_one,
                test::FrameProperties{.call_position = test_position_one}),
-           test::make_frame(
+           test::make_taint_config(
                test_kind_two,
                test::FrameProperties{.call_position = test_position_one}),
        })
-          .leq(CalleeFrames{test::make_frame(
+          .leq(CalleeFrames{test::make_taint_config(
               test_kind_one,
               test::FrameProperties{.call_position = test_position_one})}));
 
   // Different positions
   EXPECT_TRUE(
-      (CalleeFrames{test::make_frame(
+      (CalleeFrames{test::make_taint_config(
            test_kind_one,
            test::FrameProperties{.call_position = test_position_one})})
           .leq(CalleeFrames{
-              test::make_frame(
+              test::make_taint_config(
                   test_kind_one,
                   test::FrameProperties{.call_position = test_position_one}),
-              test::make_frame(
+              test::make_taint_config(
                   test_kind_one,
                   test::FrameProperties{.call_position = test_position_two}),
           }));
   EXPECT_FALSE(
       (CalleeFrames{
-           test::make_frame(
+           test::make_taint_config(
                test_kind_one,
                test::FrameProperties{.call_position = test_position_one}),
-           test::make_frame(
+           test::make_taint_config(
                test_kind_one,
                test::FrameProperties{.call_position = test_position_two})})
-          .leq(CalleeFrames{test::make_frame(
+          .leq(CalleeFrames{test::make_taint_config(
               test_kind_one,
               test::FrameProperties{.call_position = test_position_one})}));
 }
@@ -153,34 +154,35 @@ TEST_F(CalleeFramesTest, Equals) {
 
   // Comparison to bottom
   EXPECT_TRUE(CalleeFrames::bottom().equals(CalleeFrames::bottom()));
-  EXPECT_FALSE(CalleeFrames::bottom().equals(CalleeFrames{test::make_frame(
-      test_kind_one,
-      test::FrameProperties{.call_position = test_position_one})}));
-  EXPECT_FALSE((CalleeFrames{test::make_frame(
+  EXPECT_FALSE(
+      CalleeFrames::bottom().equals(CalleeFrames{test::make_taint_config(
+          test_kind_one,
+          test::FrameProperties{.call_position = test_position_one})}));
+  EXPECT_FALSE((CalleeFrames{test::make_taint_config(
                     test_kind_one,
                     test::FrameProperties{.call_position = test_position_one})})
                    .equals(CalleeFrames::bottom()));
 
   // Comparison to self
-  EXPECT_TRUE(
-      (CalleeFrames{test::make_frame(test_kind_one, test::FrameProperties{})})
-          .equals(CalleeFrames{
-              test::make_frame(test_kind_one, test::FrameProperties{})}));
+  EXPECT_TRUE((CalleeFrames{test::make_taint_config(
+                   test_kind_one, test::FrameProperties{})})
+                  .equals(CalleeFrames{test::make_taint_config(
+                      test_kind_one, test::FrameProperties{})}));
 
   // Different positions
   EXPECT_FALSE(
-      (CalleeFrames{test::make_frame(
+      (CalleeFrames{test::make_taint_config(
            test_kind_one,
            test::FrameProperties{.call_position = test_position_one})})
-          .equals(CalleeFrames{test::make_frame(
+          .equals(CalleeFrames{test::make_taint_config(
               test_kind_one,
               test::FrameProperties{.call_position = test_position_two})}));
 
   // Different kinds
-  EXPECT_FALSE(
-      (CalleeFrames{test::make_frame(test_kind_one, test::FrameProperties{})})
-          .equals(CalleeFrames{
-              test::make_frame(test_kind_two, test::FrameProperties{})}));
+  EXPECT_FALSE((CalleeFrames{test::make_taint_config(
+                    test_kind_one, test::FrameProperties{})})
+                   .equals(CalleeFrames{test::make_taint_config(
+                       test_kind_two, test::FrameProperties{})}));
 }
 
 TEST_F(CalleeFramesTest, JoinWith) {
@@ -199,62 +201,65 @@ TEST_F(CalleeFramesTest, JoinWith) {
   // Join with bottom
   EXPECT_EQ(
       CalleeFrames::bottom().join(CalleeFrames{
-          test::make_frame(test_kind_one, test::FrameProperties{})}),
-      CalleeFrames{test::make_frame(test_kind_one, test::FrameProperties{})});
+          test::make_taint_config(test_kind_one, test::FrameProperties{})}),
+      CalleeFrames{
+          test::make_taint_config(test_kind_one, test::FrameProperties{})});
 
   EXPECT_EQ(
-      (CalleeFrames{test::make_frame(test_kind_one, test::FrameProperties{})})
+      (CalleeFrames{
+           test::make_taint_config(test_kind_one, test::FrameProperties{})})
           .join(CalleeFrames::bottom()),
-      CalleeFrames{test::make_frame(test_kind_one, test::FrameProperties{})});
+      CalleeFrames{
+          test::make_taint_config(test_kind_one, test::FrameProperties{})});
 
-  auto frames = (CalleeFrames{test::make_frame(
+  auto frames = (CalleeFrames{test::make_taint_config(
                      test_kind_one, test::FrameProperties{.callee = one})})
                     .join(CalleeFrames::bottom());
   EXPECT_EQ(
       frames,
-      CalleeFrames{test::make_frame(
+      CalleeFrames{test::make_taint_config(
           test_kind_one, test::FrameProperties{.callee = one})});
   EXPECT_EQ(frames.callee(), one);
 
-  frames = CalleeFrames::bottom().join(CalleeFrames{
-      test::make_frame(test_kind_one, test::FrameProperties{.callee = one})});
+  frames = CalleeFrames::bottom().join(CalleeFrames{test::make_taint_config(
+      test_kind_one, test::FrameProperties{.callee = one})});
   EXPECT_EQ(
       frames,
-      CalleeFrames{test::make_frame(
+      CalleeFrames{test::make_taint_config(
           test_kind_one, test::FrameProperties{.callee = one})});
   EXPECT_EQ(frames.callee(), one);
 
   // Join different positions
-  frames = CalleeFrames{test::make_frame(
+  frames = CalleeFrames{test::make_taint_config(
       test_kind_one,
       test::FrameProperties{.call_position = test_position_one})};
-  frames.join_with(CalleeFrames{test::make_frame(
+  frames.join_with(CalleeFrames{test::make_taint_config(
       test_kind_one,
       test::FrameProperties{.call_position = test_position_two})});
   EXPECT_EQ(
       frames,
       (CalleeFrames{
-          test::make_frame(
+          test::make_taint_config(
               test_kind_one,
               test::FrameProperties{.call_position = test_position_one}),
-          test::make_frame(
+          test::make_taint_config(
               test_kind_one,
               test::FrameProperties{.call_position = test_position_two})}));
 
   // Join same position, same kind, different frame properties.
-  frames = CalleeFrames{test::make_frame(
+  frames = CalleeFrames{test::make_taint_config(
       test_kind_one,
       test::FrameProperties{
           .call_position = test_position_one,
           .inferred_features = FeatureMayAlwaysSet{feature_one}})};
-  frames.join_with(CalleeFrames{test::make_frame(
+  frames.join_with(CalleeFrames{test::make_taint_config(
       test_kind_one,
       test::FrameProperties{
           .call_position = test_position_one,
           .inferred_features = FeatureMayAlwaysSet{feature_two}})});
   EXPECT_EQ(
       frames,
-      (CalleeFrames{test::make_frame(
+      (CalleeFrames{test::make_taint_config(
           test_kind_one,
           test::FrameProperties{
               .call_position = test_position_one,
@@ -285,12 +290,12 @@ TEST_F(CalleeFramesTest, Difference) {
   EXPECT_TRUE(frames.is_bottom());
 
   frames.difference_with(CalleeFrames{
-      test::make_frame(test_kind_one, test::FrameProperties{}),
+      test::make_taint_config(test_kind_one, test::FrameProperties{}),
   });
   EXPECT_TRUE(frames.is_bottom());
 
   initial_frames = CalleeFrames{
-      test::make_frame(
+      test::make_taint_config(
           test_kind_one,
           test::FrameProperties{
               .callee = one,
@@ -311,7 +316,7 @@ TEST_F(CalleeFramesTest, Difference) {
   // operation.
   frames = initial_frames;
   frames.difference_with(CalleeFrames{
-      test::make_frame(
+      test::make_taint_config(
           test_kind_one,
           test::FrameProperties{
               .callee = one,
@@ -324,7 +329,7 @@ TEST_F(CalleeFramesTest, Difference) {
   // operation.
   frames = initial_frames;
   frames.difference_with(CalleeFrames{
-      test::make_frame(
+      test::make_taint_config(
           test_kind_one,
           test::FrameProperties{
               .callee = one,
@@ -338,7 +343,7 @@ TEST_F(CalleeFramesTest, Difference) {
   // `Frame` level (different features).
   frames = initial_frames;
   frames.difference_with(CalleeFrames{
-      test::make_frame(
+      test::make_taint_config(
           test_kind_one,
           test::FrameProperties{
               .callee = one,
@@ -351,7 +356,7 @@ TEST_F(CalleeFramesTest, Difference) {
   // Left hand side and right hand side have different positions.
   frames = initial_frames;
   frames.difference_with(CalleeFrames{
-      test::make_frame(
+      test::make_taint_config(
           test_kind_one,
           test::FrameProperties{
               .callee = one,
@@ -362,7 +367,7 @@ TEST_F(CalleeFramesTest, Difference) {
 
   // Left hand side is smaller than right hand side (by one position).
   frames = CalleeFrames{
-      test::make_frame(
+      test::make_taint_config(
           test_kind_one,
           test::FrameProperties{
               .callee = one,
@@ -370,13 +375,13 @@ TEST_F(CalleeFramesTest, Difference) {
           }),
   };
   frames.difference_with(CalleeFrames{
-      test::make_frame(
+      test::make_taint_config(
           test_kind_one,
           test::FrameProperties{
               .callee = one,
               .call_position = test_position_one,
           }),
-      test::make_frame(
+      test::make_taint_config(
           test_kind_one,
           test::FrameProperties{
               .callee = one,
@@ -387,20 +392,20 @@ TEST_F(CalleeFramesTest, Difference) {
 
   // Left hand side has more positions than right hand side.
   frames = CalleeFrames{
-      test::make_frame(
+      test::make_taint_config(
           test_kind_one,
           test::FrameProperties{
               .callee = one,
               .call_position = test_position_one,
           }),
-      test::make_frame(
+      test::make_taint_config(
           test_kind_one,
           test::FrameProperties{
               .callee = one,
               .call_position = test_position_two,
           }),
   };
-  frames.difference_with(CalleeFrames{test::make_frame(
+  frames.difference_with(CalleeFrames{test::make_taint_config(
       test_kind_one,
       test::FrameProperties{
           .callee = one,
@@ -409,7 +414,7 @@ TEST_F(CalleeFramesTest, Difference) {
   EXPECT_EQ(
       frames,
       (CalleeFrames{
-          test::make_frame(
+          test::make_taint_config(
               test_kind_one,
               test::FrameProperties{
                   .callee = one,
@@ -419,19 +424,19 @@ TEST_F(CalleeFramesTest, Difference) {
 
   // Left hand side is smaller for one position, and larger for another.
   frames = CalleeFrames{
-      test::make_frame(
+      test::make_taint_config(
           test_kind_one,
           test::FrameProperties{
               .callee = one,
               .call_position = test_position_one,
           }),
-      test::make_frame(
+      test::make_taint_config(
           test_kind_one,
           test::FrameProperties{
               .callee = one,
               .call_position = test_position_two,
           }),
-      test::make_frame(
+      test::make_taint_config(
           test_kind_two,
           test::FrameProperties{
               .callee = one,
@@ -439,19 +444,19 @@ TEST_F(CalleeFramesTest, Difference) {
           }),
   };
   frames.difference_with(CalleeFrames{
-      test::make_frame(
+      test::make_taint_config(
           test_kind_one,
           test::FrameProperties{
               .callee = one,
               .call_position = test_position_one,
           }),
-      test::make_frame(
+      test::make_taint_config(
           test_kind_two,
           test::FrameProperties{
               .callee = one,
               .call_position = test_position_one,
           }),
-      test::make_frame(
+      test::make_taint_config(
           test_kind_two,
           test::FrameProperties{
               .callee = one,
@@ -459,7 +464,7 @@ TEST_F(CalleeFramesTest, Difference) {
           })});
   EXPECT_EQ(
       frames,
-      (CalleeFrames{test::make_frame(
+      (CalleeFrames{test::make_taint_config(
           test_kind_one,
           test::FrameProperties{
               .callee = one,
@@ -478,13 +483,13 @@ TEST_F(CalleeFramesTest, Iterator) {
   auto* test_position_two = context.positions->get(std::nullopt, 2);
 
   auto call_position_frames = CalleeFrames{
-      test::make_frame(
+      test::make_taint_config(
           test_kind_one,
           test::FrameProperties{.call_position = test_position_one}),
-      test::make_frame(
+      test::make_taint_config(
           test_kind_one,
           test::FrameProperties{.call_position = test_position_two}),
-      test::make_frame(test_kind_two, test::FrameProperties{})};
+      test::make_taint_config(test_kind_two, test::FrameProperties{})};
 
   std::vector<Frame> frames;
   for (const auto& frame : call_position_frames) {
@@ -528,13 +533,13 @@ TEST_F(CalleeFramesTest, Map) {
   auto* feature_one = context.features->get("FeatureOne");
 
   auto frames = CalleeFrames{
-      test::make_frame(
+      test::make_taint_config(
           test_kind,
           test::FrameProperties{
               .callee = one,
               .call_position = test_position_one,
           }),
-      test::make_frame(
+      test::make_taint_config(
           test_kind,
           test::FrameProperties{
               .callee = one,
@@ -547,14 +552,14 @@ TEST_F(CalleeFramesTest, Map) {
   EXPECT_EQ(
       frames,
       (CalleeFrames{
-          test::make_frame(
+          test::make_taint_config(
               test_kind,
               test::FrameProperties{
                   .callee = one,
                   .call_position = test_position_one,
                   .locally_inferred_features =
                       FeatureMayAlwaysSet{feature_one}}),
-          test::make_frame(
+          test::make_taint_config(
               test_kind,
               test::FrameProperties{
                   .callee = one,
@@ -578,13 +583,13 @@ TEST_F(CalleeFramesTest, FeaturesAndPositions) {
   // add_inferred_features should be an *add* operation on the features,
   // not a join.
   auto frames = CalleeFrames{
-      test::make_frame(
+      test::make_taint_config(
           test_kind_one,
           test::FrameProperties{
               .locally_inferred_features = FeatureMayAlwaysSet(
                   /* may */ FeatureSet{feature_one},
                   /* always */ FeatureSet{})}),
-      test::make_frame(
+      test::make_taint_config(
           test_kind_two,
           test::FrameProperties{.call_position = test_position_one})};
   frames.add_inferred_features(FeatureMayAlwaysSet{feature_two});
@@ -596,12 +601,12 @@ TEST_F(CalleeFramesTest, FeaturesAndPositions) {
 
   // Test add_local_positions()
   frames = CalleeFrames{
-      test::make_frame(
+      test::make_taint_config(
           test_kind_one,
           test::FrameProperties{
               .call_position = test_position_one,
           }),
-      test::make_frame(
+      test::make_taint_config(
           test_kind_two,
           test::FrameProperties{
               .call_position = test_position_two,
@@ -654,7 +659,7 @@ TEST_F(CalleeFramesTest, Propagate) {
    */
   auto frames = CalleeFrames{
       /* call_position == test_position_one */
-      test::make_frame(
+      test::make_taint_config(
           test_kind_one,
           test::FrameProperties{
               .callee_port = AccessPath(Root(Root::Kind::Argument, 0)),
@@ -662,7 +667,7 @@ TEST_F(CalleeFramesTest, Propagate) {
               .distance = 1,
               .locally_inferred_features = FeatureMayAlwaysSet{feature_one},
           }),
-      test::make_frame(
+      test::make_taint_config(
           test_kind_one,
           test::FrameProperties{
               .callee_port = AccessPath(Root(Root::Kind::Anchor)),
@@ -670,14 +675,14 @@ TEST_F(CalleeFramesTest, Propagate) {
               .canonical_names = CanonicalNameSetAbstractDomain{CanonicalName(
                   CanonicalName::TemplateValue{"%programmatic_leaf_name%"})}}),
       /* call_position == nullptr */
-      test::make_frame(test_kind_one, test::FrameProperties{}),
-      test::make_frame(
+      test::make_taint_config(test_kind_one, test::FrameProperties{}),
+      test::make_taint_config(
           test_kind_two,
           test::FrameProperties{
               .callee_port = AccessPath(Root(Root::Kind::Argument, 0)),
               .distance = 1,
           }),
-      test::make_frame(
+      test::make_taint_config(
           test_kind_two,
           test::FrameProperties{
               .callee_port = AccessPath(Root(Root::Kind::Anchor)),
@@ -725,7 +730,7 @@ TEST_F(CalleeFramesTest, Propagate) {
           /* source_register_types */ {},
           /* source_constant_arguments */ {}),
       (CalleeFrames{
-          test::make_frame(
+          test::make_taint_config(
               test_kind_one,
               test::FrameProperties{
                   .callee_port = AccessPath(Root(Root::Kind::Argument, 1)),
@@ -736,7 +741,7 @@ TEST_F(CalleeFramesTest, Propagate) {
                       /* may */ FeatureSet{feature_one},
                       /* always */ FeatureSet{}),
                   .locally_inferred_features = FeatureMayAlwaysSet::bottom()}),
-          test::make_frame(
+          test::make_taint_config(
               test_kind_one,
               test::FrameProperties{
                   .callee_port = AccessPath(
@@ -748,7 +753,7 @@ TEST_F(CalleeFramesTest, Propagate) {
                   .canonical_names =
                       CanonicalNameSetAbstractDomain{
                           expected_instantiated_name}}),
-          test::make_frame(
+          test::make_taint_config(
               test_kind_two,
               test::FrameProperties{
                   .callee_port = AccessPath(Root(Root::Kind::Argument, 1)),
@@ -756,7 +761,7 @@ TEST_F(CalleeFramesTest, Propagate) {
                   .call_position = test_position_two,
                   .distance = 2,
                   .locally_inferred_features = FeatureMayAlwaysSet::bottom()}),
-          test::make_frame(
+          test::make_taint_config(
               test_kind_two,
               test::FrameProperties{
                   .callee_port = AccessPath(
@@ -783,7 +788,7 @@ TEST_F(CalleeFramesTest, AttachPosition) {
   auto* test_position_three = context.positions->get(std::nullopt, 3);
 
   auto frames = CalleeFrames{
-      test::make_frame(
+      test::make_taint_config(
           test_kind_one,
           test::FrameProperties{
               .call_position = test_position_one,
@@ -791,10 +796,10 @@ TEST_F(CalleeFramesTest, AttachPosition) {
               .user_features = FeatureSet{feature_two}}),
       // Will be merged with the frame above after attach_position because they
       // have the same kind. Features will be joined too.
-      test::make_frame(
+      test::make_taint_config(
           test_kind_one,
           test::FrameProperties{.call_position = test_position_two}),
-      test::make_frame(
+      test::make_taint_config(
           test_kind_two,
           test::FrameProperties{.call_position = test_position_two}),
   };
@@ -804,7 +809,7 @@ TEST_F(CalleeFramesTest, AttachPosition) {
   EXPECT_EQ(
       frames_with_new_position,
       (CalleeFrames{
-          test::make_frame(
+          test::make_taint_config(
               test_kind_one,
               test::FrameProperties{
                   .call_position = test_position_three,
@@ -813,7 +818,7 @@ TEST_F(CalleeFramesTest, AttachPosition) {
                       /* always */ FeatureSet{}),
                   .locally_inferred_features =
                       FeatureMayAlwaysSet{feature_two}}),
-          test::make_frame(
+          test::make_taint_config(
               test_kind_two,
               test::FrameProperties{
                   .call_position = test_position_three,

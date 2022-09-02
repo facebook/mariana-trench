@@ -36,13 +36,13 @@ TEST_F(ModelTest, remove_kinds) {
       /* modes */ Model::Mode::Normal,
       /* generations */
       {{AccessPath(Root(Root::Kind::Producer, 0)),
-        test::make_leaf_frame(source_kind)}},
+        test::make_leaf_taint_config(source_kind)}},
       /* parameter_sources */ {},
       /* sinks */
       {{AccessPath(Root(Root::Kind::Argument, 1)),
-        test::make_leaf_frame(sink_kind)},
+        test::make_leaf_taint_config(sink_kind)},
        {AccessPath(Root(Root::Kind::Argument, 1)),
-        test::make_leaf_frame(removable_kind)}});
+        test::make_leaf_taint_config(removable_kind)}});
 
   model_with_removable_kind.remove_kinds({removable_kind});
 
@@ -52,11 +52,11 @@ TEST_F(ModelTest, remove_kinds) {
       /* modes */ Model::Mode::Normal,
       /* generations */
       {{AccessPath(Root(Root::Kind::Producer, 0)),
-        test::make_leaf_frame(source_kind)}},
+        test::make_leaf_taint_config(source_kind)}},
       /* parameter_sources */ {},
       /* sinks */
       {{AccessPath(Root(Root::Kind::Argument, 1)),
-        test::make_leaf_frame(sink_kind)}});
+        test::make_leaf_taint_config(sink_kind)}});
 
   EXPECT_EQ(model_with_removable_kind, model_without_removable_kind);
 }
@@ -218,14 +218,14 @@ TEST_F(ModelTest, LessOrEqual) {
                   /* modes */ Model::Mode::Normal,
                   /* generations */
                   {{AccessPath(Root(Root::Kind::Return)),
-                    test::make_leaf_frame(source_kind)}})
+                    test::make_leaf_taint_config(source_kind)}})
                   .leq(Model(
                       /* method */ nullptr,
                       context,
                       /* modes */ Model::Mode::Normal,
                       /* generations */
                       {{AccessPath(Root(Root::Kind::Return)),
-                        test::make_leaf_frame(source_kind)}})));
+                        test::make_leaf_taint_config(source_kind)}})));
 
   const auto* other_source_kind = context.kinds->get("OtherTestSource");
   EXPECT_TRUE(Model(
@@ -234,7 +234,7 @@ TEST_F(ModelTest, LessOrEqual) {
                   /* modes */ Model::Mode::Normal,
                   /* generations */
                   {{AccessPath(Root(Root::Kind::Return)),
-                    test::make_leaf_frame(source_kind)}})
+                    test::make_leaf_taint_config(source_kind)}})
                   .leq(Model(
                       /* method */ nullptr,
                       context,
@@ -242,9 +242,9 @@ TEST_F(ModelTest, LessOrEqual) {
                       /* generations */
                       {
                           {AccessPath(Root(Root::Kind::Return)),
-                           test::make_leaf_frame(source_kind)},
+                           test::make_leaf_taint_config(source_kind)},
                           {AccessPath(Root(Root::Kind::Return)),
-                           test::make_leaf_frame(other_source_kind)},
+                           test::make_leaf_taint_config(other_source_kind)},
                       })));
   EXPECT_FALSE(Model(
                    /* method */ nullptr,
@@ -253,9 +253,9 @@ TEST_F(ModelTest, LessOrEqual) {
                    /* generations */
                    {
                        {AccessPath(Root(Root::Kind::Return)),
-                        test::make_leaf_frame(source_kind)},
+                        test::make_leaf_taint_config(source_kind)},
                        {AccessPath(Root(Root::Kind::Return)),
-                        test::make_leaf_frame(other_source_kind)},
+                        test::make_leaf_taint_config(other_source_kind)},
                    })
                    .leq(Model(
                        /* method */ nullptr,
@@ -263,7 +263,7 @@ TEST_F(ModelTest, LessOrEqual) {
                        /* modes */ Model::Mode::Normal,
                        /* generations */
                        {{AccessPath(Root(Root::Kind::Return)),
-                         test::make_leaf_frame(source_kind)}})));
+                         test::make_leaf_taint_config(source_kind)}})));
 
   EXPECT_TRUE(Model(
                   /* method */ nullptr,
@@ -272,7 +272,7 @@ TEST_F(ModelTest, LessOrEqual) {
                   /* generations */ {},
                   /* parameter_sources */
                   {{AccessPath(Root(Root::Kind::Argument, 1)),
-                    test::make_leaf_frame(source_kind)}})
+                    test::make_leaf_taint_config(source_kind)}})
                   .leq(Model(
                       /* method */ nullptr,
                       context,
@@ -280,9 +280,9 @@ TEST_F(ModelTest, LessOrEqual) {
                       /* generations */ {},
                       /* parameter_sources */
                       {{AccessPath(Root(Root::Kind::Argument, 1)),
-                        test::make_leaf_frame(source_kind)},
+                        test::make_leaf_taint_config(source_kind)},
                        {AccessPath(Root(Root::Kind::Argument, 2)),
-                        test::make_leaf_frame(source_kind)}})));
+                        test::make_leaf_taint_config(source_kind)}})));
   EXPECT_FALSE(Model(
                    /* method */ nullptr,
                    context,
@@ -290,7 +290,7 @@ TEST_F(ModelTest, LessOrEqual) {
                    /* generations */ {},
                    /* parameter_sources */
                    {{AccessPath(Root(Root::Kind::Argument, 1)),
-                     test::make_leaf_frame(source_kind)}})
+                     test::make_leaf_taint_config(source_kind)}})
                    .leq(Model(
                        /* method */ nullptr,
                        context,
@@ -298,27 +298,27 @@ TEST_F(ModelTest, LessOrEqual) {
                        /* generations */ {},
                        /* parameter_sources */
                        {{AccessPath(Root(Root::Kind::Argument, 2)),
-                         test::make_leaf_frame(source_kind)}})));
+                         test::make_leaf_taint_config(source_kind)}})));
   EXPECT_FALSE(Model(
                    /* method */ nullptr,
                    context,
                    /* modes */ Model::Mode::Normal,
                    /* generations */
                    {{AccessPath(Root(Root::Kind::Return)),
-                     test::make_leaf_frame(source_kind)}},
+                     test::make_leaf_taint_config(source_kind)}},
                    /* parameter_sources */
                    {{AccessPath(Root(Root::Kind::Argument, 1)),
-                     test::make_leaf_frame(source_kind)}})
+                     test::make_leaf_taint_config(source_kind)}})
                    .leq(Model(
                        /* method */ nullptr,
                        context,
                        /* modes */ Model::Mode::Normal,
                        /* generations */
                        {{AccessPath(Root(Root::Kind::Return)),
-                         test::make_leaf_frame(source_kind)}},
+                         test::make_leaf_taint_config(source_kind)}},
                        /* parameter_sources */
                        {{AccessPath(Root(Root::Kind::Argument, 2)),
-                         test::make_leaf_frame(source_kind)}})));
+                         test::make_leaf_taint_config(source_kind)}})));
 
   // Compare global_sanitizers
   EXPECT_FALSE(
@@ -462,8 +462,8 @@ TEST_F(ModelTest, Join) {
       /* inline_as */ AccessPathConstantDomain::bottom(),
       /* issues */
       IssueSet{Issue(
-          /* source */ Taint{test::make_leaf_frame(source_kind)},
-          /* sink */ Taint{test::make_leaf_frame(sink_kind)},
+          /* source */ Taint{test::make_leaf_taint_config(source_kind)},
+          /* sink */ Taint{test::make_leaf_taint_config(sink_kind)},
           rule.get(),
           /* callee */ std::string(k_return_callee),
           /* sink_index */ 0,
@@ -472,8 +472,8 @@ TEST_F(ModelTest, Join) {
   EXPECT_EQ(
       model.issues(),
       IssueSet{Issue(
-          /* source */ Taint{test::make_leaf_frame(source_kind)},
-          /* sink */ Taint{test::make_leaf_frame(sink_kind)},
+          /* source */ Taint{test::make_leaf_taint_config(source_kind)},
+          /* sink */ Taint{test::make_leaf_taint_config(sink_kind)},
           rule.get(),
           /* callee */ std::string(k_return_callee),
           /* sink_index */ 0,
@@ -488,13 +488,13 @@ TEST_F(ModelTest, Join) {
       /* modes */ Model::Mode::Normal,
       /* generations */
       {{AccessPath(Root(Root::Kind::Return)),
-        test::make_leaf_frame(source_kind)}});
+        test::make_leaf_taint_config(source_kind)}});
   model.join_with(model_with_source);
   EXPECT_THAT(
       model.generations().elements(),
       testing::UnorderedElementsAre(PortTaint{
           AccessPath(Root(Root::Kind::Return)),
-          Taint{test::make_leaf_frame(source_kind)}}));
+          Taint{test::make_leaf_taint_config(source_kind)}}));
   EXPECT_TRUE(model.sinks().is_bottom());
 
   // Repeated application is idempotent.
@@ -503,7 +503,7 @@ TEST_F(ModelTest, Join) {
       model.generations().elements(),
       testing::UnorderedElementsAre(PortTaint{
           AccessPath(Root(Root::Kind::Return)),
-          Taint{test::make_leaf_frame(source_kind)}}));
+          Taint{test::make_leaf_taint_config(source_kind)}}));
   EXPECT_TRUE(model.sinks().is_bottom());
 
   const auto* other_source_kind = context.kinds->get("OtherTestSource");
@@ -513,15 +513,15 @@ TEST_F(ModelTest, Join) {
       /* modes */ Model::Mode::Normal,
       /* generations */
       {{AccessPath(Root(Root::Kind::Return)),
-        test::make_leaf_frame(other_source_kind)}});
+        test::make_leaf_taint_config(other_source_kind)}});
   model.join_with(model_with_other_source);
   EXPECT_THAT(
       model.generations().elements(),
       testing::UnorderedElementsAre(PortTaint{
           AccessPath(Root(Root::Kind::Return)),
           Taint{
-              test::make_leaf_frame(source_kind),
-              test::make_leaf_frame(other_source_kind)}}));
+              test::make_leaf_taint_config(source_kind),
+              test::make_leaf_taint_config(other_source_kind)}}));
   EXPECT_TRUE(model.sinks().is_bottom());
 
   // Sinks are added.
@@ -533,20 +533,20 @@ TEST_F(ModelTest, Join) {
       /* parameter_sources */ {},
       /* sinks */
       {{AccessPath(Root(Root::Kind::Argument, 0)),
-        test::make_leaf_frame(sink_kind)}});
+        test::make_leaf_taint_config(sink_kind)}});
   model.join_with(model_with_sink);
   EXPECT_THAT(
       model.generations().elements(),
       testing::UnorderedElementsAre(PortTaint{
           AccessPath(Root(Root::Kind::Return)),
           Taint{
-              test::make_leaf_frame(source_kind),
-              test::make_leaf_frame(other_source_kind)}}));
+              test::make_leaf_taint_config(source_kind),
+              test::make_leaf_taint_config(other_source_kind)}}));
   EXPECT_THAT(
       model.sinks().elements(),
       testing::UnorderedElementsAre(PortTaint{
           AccessPath(Root(Root::Kind::Argument, 0)),
-          Taint{test::make_leaf_frame(sink_kind)}}));
+          Taint{test::make_leaf_taint_config(sink_kind)}}));
 
   // Taint-in-taint-out is added.
   Model model_with_propagation(
