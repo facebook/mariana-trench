@@ -761,20 +761,16 @@ void Model::add_generation(AccessPath port, TaintBuilder source) {
   generations_.write(port, Taint{std::move(source)}, UpdateKind::Weak);
 }
 
-void Model::add_generations(AccessPath port, Taint generations) {
-  update_taint_tree(
-      this,
-      generations_,
-      port,
-      Heuristics::kGenerationMaxPortSize,
-      generations);
-}
-
 void Model::add_inferred_generations(AccessPath port, Taint generations) {
   auto sanitized_generations = apply_source_sink_sanitizers(
       SanitizerKind::Sources, generations, port.root());
   if (!sanitized_generations.is_bottom()) {
-    add_generations(port, sanitized_generations);
+    update_taint_tree(
+        this,
+        generations_,
+        port,
+        Heuristics::kGenerationMaxPortSize,
+        sanitized_generations);
   }
 }
 
@@ -835,15 +831,12 @@ void Model::add_sink(AccessPath port, TaintBuilder sink) {
   sinks_.write(port, Taint{std::move(sink)}, UpdateKind::Weak);
 }
 
-void Model::add_sinks(AccessPath port, Taint sinks) {
-  update_taint_tree(this, sinks_, port, Heuristics::kSinkMaxPortSize, sinks);
-}
-
 void Model::add_inferred_sinks(AccessPath port, Taint sinks) {
   auto sanitized_sinks =
       apply_source_sink_sanitizers(SanitizerKind::Sinks, sinks, port.root());
   if (!sanitized_sinks.is_bottom()) {
-    add_sinks(port, sanitized_sinks);
+    update_taint_tree(
+        this, sinks_, port, Heuristics::kSinkMaxPortSize, sanitized_sinks);
   }
 }
 

@@ -215,7 +215,7 @@ class Model final {
 
   void add_generation(AccessPath port, Frame generation);
   void add_generation(AccessPath port, TaintBuilder generation);
-  void add_generations(AccessPath port, Taint generations);
+
   /* Add generations after applying sanitizers */
   void add_inferred_generations(AccessPath port, Taint generations);
   const TaintAccessPathTree& generations() const {
@@ -236,7 +236,7 @@ class Model final {
 
   void add_sink(AccessPath port, Frame sink);
   void add_sink(AccessPath port, TaintBuilder sink);
-  void add_sinks(AccessPath port, Taint sinks);
+
   /* Add sinks after applying sanitizers */
   void add_inferred_sinks(AccessPath port, Taint sinks);
   const TaintAccessPathTree& sinks() const {
