@@ -403,128 +403,6 @@ bool Model::empty() const {
       issues_.is_bottom();
 }
 
-bool Model::check_root_consistency(Root root) const {
-  switch (root.kind()) {
-    case Root::Kind::Return: {
-      if (method_ && method_->returns_void()) {
-        ModelConsistencyError::raise(fmt::format(
-            "Model for method `{}` contains a `Return` port but method returns void.",
-            show(method_)));
-        return false;
-      }
-      return true;
-    }
-    case Root::Kind::Argument: {
-      auto position = root.parameter_position();
-      if (method_ && position >= method_->number_of_parameters()) {
-        ModelConsistencyError::raise(fmt::format(
-            "Model for method `{}` contains a port on parameter {} but the method only has {} parameters.",
-            show(method_),
-            position,
-            method_->number_of_parameters()));
-        return false;
-      }
-      return true;
-    }
-    default: {
-      ModelConsistencyError::raise(fmt::format(
-          "Model for method `{}` contains an invalid port: `{}`",
-          show(method_),
-          show(root)));
-      return false;
-    }
-  }
-}
-
-bool Model::check_port_consistency(const AccessPath& access_path) const {
-  return check_root_consistency(access_path.root());
-}
-
-bool Model::check_taint_config_consistency(
-    const TaintConfig& config,
-    std::string_view kind) const {
-  if (config.kind() == nullptr) {
-    ModelConsistencyError::raise(fmt::format(
-        "Model for method `{}` contains a unknown kind for {}.",
-        show(method_),
-        kind));
-    return false;
-  }
-  if (config.is_artificial_source()) {
-    ModelConsistencyError::raise(fmt::format(
-        "Model for method `{}` contains an artificial {}.",
-        show(method_),
-        kind));
-    return false;
-  }
-  return true;
-}
-
-bool Model::check_taint_consistency(const Taint& taint, std::string_view kind)
-    const {
-  for (const auto& frame : taint.frames_iterator()) {
-    if (method_ && (frame.origins().empty() && frame.field_origins().empty())) {
-      ModelConsistencyError::raise(fmt::format(
-          "Model for method `{}` contains a {} without origins.",
-          show(method_),
-          kind));
-      return false;
-    }
-    if (frame.via_type_of_ports().is_value()) {
-      for (const auto& root : frame.via_type_of_ports().elements()) {
-        // Logs invalid ports specifed for via_type_of but does not prevent the
-        // model from being created.
-        check_port_consistency(AccessPath(root));
-      }
-    }
-    if (frame.via_value_of_ports().is_value()) {
-      for (const auto& root : frame.via_value_of_ports().elements()) {
-        // Logs invalid ports specifed for via_value_of but does not prevent the
-        // model from being created.
-        check_port_consistency(AccessPath(root));
-      }
-    }
-  }
-  return true;
-}
-
-bool Model::check_parameter_source_port_consistency(
-    const AccessPath& access_path) const {
-  if (access_path.root().is_return()) {
-    ModelConsistencyError::raise(fmt::format(
-        "Model for method `{}` contains a parameter source with a `Return` port."
-        " Use a generation instead.",
-        show(method_)));
-    return false;
-  }
-
-  return true;
-}
-
-bool Model::check_propagation_consistency(
-    const Propagation& propagation) const {
-  return check_port_consistency(propagation.input());
-}
-
-bool Model::check_inline_as_consistency(
-    const AccessPathConstantDomain& inline_as) const {
-  auto access_path = inline_as.get_constant();
-
-  if (!access_path) {
-    return true;
-  }
-
-  if (!access_path->root().is_argument()) {
-    ModelConsistencyError::raise(fmt::format(
-        "Model for method `{}` has an inline-as with a non-argument root.",
-        show(method_)));
-
-    return false;
-  }
-
-  return check_port_consistency(*access_path);
-}
-
 void Model::add_mode(Model::Mode mode, Context& context) {
   mt_assert(mode != Model::Mode::OverrideDefault);
 
@@ -593,38 +471,6 @@ void Model::add_taint_in_taint_this(Context& context) {
   }
 }
 
-namespace {
-
-void update_taint_tree(
-    const Model* model,
-    TaintAccessPathTree& tree,
-    AccessPath port,
-    std::size_t truncation_amount,
-    Taint new_taint) {
-  if (!model->check_port_consistency(port)) {
-    return;
-  }
-
-  port.truncate(truncation_amount);
-  tree.write(port, std::move(new_taint), UpdateKind::Weak);
-}
-
-} // namespace
-
-void Model::add_generation(AccessPath port, Taint source) {
-  if (method_) {
-    source.set_leaf_origins_if_empty(MethodSet{method_});
-  }
-
-  if (!check_port_consistency(port) ||
-      !check_taint_consistency(source, "source")) {
-    return;
-  }
-
-  port.truncate(Heuristics::kGenerationMaxPortSize);
-  generations_.write(port, std::move(source), UpdateKind::Weak);
-}
-
 void Model::add_generation(const AccessPath& port, TaintConfig source) {
   if (!check_taint_config_consistency(source, "source")) {
     return;
@@ -637,27 +483,11 @@ void Model::add_inferred_generations(AccessPath port, Taint generations) {
       SanitizerKind::Sources, generations, port.root());
   if (!sanitized_generations.is_bottom()) {
     update_taint_tree(
-        this,
         generations_,
         port,
         Heuristics::kGenerationMaxPortSize,
         sanitized_generations);
   }
-}
-
-void Model::add_parameter_source(AccessPath port, Taint source) {
-  if (method_) {
-    source.set_leaf_origins_if_empty(MethodSet{method_});
-  }
-
-  if (!check_port_consistency(port) ||
-      !check_parameter_source_port_consistency(port) ||
-      !check_taint_consistency(source, "source")) {
-    return;
-  }
-
-  port.truncate(Heuristics::kParameterSourceMaxPortSize);
-  parameter_sources_.write(port, Taint{std::move(source)}, UpdateKind::Weak);
 }
 
 void Model::add_parameter_source(const AccessPath& port, TaintConfig source) {
@@ -666,19 +496,6 @@ void Model::add_parameter_source(const AccessPath& port, TaintConfig source) {
   }
 
   add_parameter_source(port, Taint{std::move(source)});
-}
-
-void Model::add_sink(AccessPath port, Taint sink) {
-  if (method_) {
-    sink.set_leaf_origins_if_empty(MethodSet{method_});
-  }
-
-  if (!check_port_consistency(port) || !check_taint_consistency(sink, "sink")) {
-    return;
-  }
-
-  port.truncate(Heuristics::kSinkMaxPortSize);
-  sinks_.write(port, Taint{std::move(sink)}, UpdateKind::Weak);
 }
 
 void Model::add_sink(const AccessPath& port, TaintConfig sink) {
@@ -694,7 +511,7 @@ void Model::add_inferred_sinks(AccessPath port, Taint sinks) {
       apply_source_sink_sanitizers(SanitizerKind::Sinks, sinks, port.root());
   if (!sanitized_sinks.is_bottom()) {
     update_taint_tree(
-        this, sinks_, port, Heuristics::kSinkMaxPortSize, sanitized_sinks);
+        sinks_, port, Heuristics::kSinkMaxPortSize, sanitized_sinks);
   }
 }
 
@@ -1328,6 +1145,183 @@ void Model::remove_kinds(const std::unordered_set<const Kind*>& to_remove) {
   generations_.map(map);
   parameter_sources_.map(map);
   sinks_.map(map);
+}
+
+void Model::update_taint_tree(
+    TaintAccessPathTree& tree,
+    AccessPath port,
+    std::size_t truncation_amount,
+    Taint new_taint) {
+  if (!check_port_consistency(port)) {
+    return;
+  }
+
+  port.truncate(truncation_amount);
+  tree.write(port, std::move(new_taint), UpdateKind::Weak);
+}
+
+bool Model::check_root_consistency(Root root) const {
+  switch (root.kind()) {
+    case Root::Kind::Return: {
+      if (method_ && method_->returns_void()) {
+        ModelConsistencyError::raise(fmt::format(
+            "Model for method `{}` contains a `Return` port but method returns void.",
+            show(method_)));
+        return false;
+      }
+      return true;
+    }
+    case Root::Kind::Argument: {
+      auto position = root.parameter_position();
+      if (method_ && position >= method_->number_of_parameters()) {
+        ModelConsistencyError::raise(fmt::format(
+            "Model for method `{}` contains a port on parameter {} but the method only has {} parameters.",
+            show(method_),
+            position,
+            method_->number_of_parameters()));
+        return false;
+      }
+      return true;
+    }
+    default: {
+      ModelConsistencyError::raise(fmt::format(
+          "Model for method `{}` contains an invalid port: `{}`",
+          show(method_),
+          show(root)));
+      return false;
+    }
+  }
+}
+
+bool Model::check_port_consistency(const AccessPath& access_path) const {
+  return check_root_consistency(access_path.root());
+}
+
+bool Model::check_parameter_source_port_consistency(
+    const AccessPath& access_path) const {
+  if (access_path.root().is_return()) {
+    ModelConsistencyError::raise(fmt::format(
+        "Model for method `{}` contains a parameter source with a `Return` port."
+        " Use a generation instead.",
+        show(method_)));
+    return false;
+  }
+
+  return true;
+}
+
+bool Model::check_taint_config_consistency(
+    const TaintConfig& config,
+    std::string_view kind) const {
+  if (config.kind() == nullptr) {
+    ModelConsistencyError::raise(fmt::format(
+        "Model for method `{}` contains a unknown kind for {}.",
+        show(method_),
+        kind));
+    return false;
+  }
+  if (config.is_artificial_source()) {
+    ModelConsistencyError::raise(fmt::format(
+        "Model for method `{}` contains an artificial {}.",
+        show(method_),
+        kind));
+    return false;
+  }
+  return true;
+}
+
+bool Model::check_taint_consistency(const Taint& taint, std::string_view kind)
+    const {
+  for (const auto& frame : taint.frames_iterator()) {
+    if (method_ && (frame.origins().empty() && frame.field_origins().empty())) {
+      ModelConsistencyError::raise(fmt::format(
+          "Model for method `{}` contains a {} without origins.",
+          show(method_),
+          kind));
+      return false;
+    }
+    if (frame.via_type_of_ports().is_value()) {
+      for (const auto& root : frame.via_type_of_ports().elements()) {
+        // Logs invalid ports specifed for via_type_of but does not prevent the
+        // model from being created.
+        check_port_consistency(AccessPath(root));
+      }
+    }
+    if (frame.via_value_of_ports().is_value()) {
+      for (const auto& root : frame.via_value_of_ports().elements()) {
+        // Logs invalid ports specifed for via_value_of but does not prevent the
+        // model from being created.
+        check_port_consistency(AccessPath(root));
+      }
+    }
+  }
+  return true;
+}
+
+bool Model::check_propagation_consistency(
+    const Propagation& propagation) const {
+  return check_port_consistency(propagation.input());
+}
+
+bool Model::check_inline_as_consistency(
+    const AccessPathConstantDomain& inline_as) const {
+  auto access_path = inline_as.get_constant();
+
+  if (!access_path) {
+    return true;
+  }
+
+  if (!access_path->root().is_argument()) {
+    ModelConsistencyError::raise(fmt::format(
+        "Model for method `{}` has an inline-as with a non-argument root.",
+        show(method_)));
+
+    return false;
+  }
+
+  return check_port_consistency(*access_path);
+}
+
+void Model::add_generation(AccessPath port, Taint source) {
+  if (method_) {
+    source.set_leaf_origins_if_empty(MethodSet{method_});
+  }
+
+  if (!check_port_consistency(port) ||
+      !check_taint_consistency(source, "source")) {
+    return;
+  }
+
+  port.truncate(Heuristics::kGenerationMaxPortSize);
+  generations_.write(port, std::move(source), UpdateKind::Weak);
+}
+
+void Model::add_parameter_source(AccessPath port, Taint source) {
+  if (method_) {
+    source.set_leaf_origins_if_empty(MethodSet{method_});
+  }
+
+  if (!check_port_consistency(port) ||
+      !check_parameter_source_port_consistency(port) ||
+      !check_taint_consistency(source, "source")) {
+    return;
+  }
+
+  port.truncate(Heuristics::kParameterSourceMaxPortSize);
+  parameter_sources_.write(port, Taint{std::move(source)}, UpdateKind::Weak);
+}
+
+void Model::add_sink(AccessPath port, Taint sink) {
+  if (method_) {
+    sink.set_leaf_origins_if_empty(MethodSet{method_});
+  }
+
+  if (!check_port_consistency(port) || !check_taint_consistency(sink, "sink")) {
+    return;
+  }
+
+  port.truncate(Heuristics::kSinkMaxPortSize);
+  sinks_.write(port, Taint{std::move(sink)}, UpdateKind::Weak);
 }
 
 } // namespace marianatrench

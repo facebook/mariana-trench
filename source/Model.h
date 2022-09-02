@@ -180,23 +180,10 @@ class Model final {
 
   bool empty() const;
 
-  bool check_root_consistency(Root root) const;
-  bool check_port_consistency(const AccessPath& access_path) const;
-  bool check_parameter_source_port_consistency(
-      const AccessPath& access_path) const;
-  bool check_taint_config_consistency(
-      const TaintConfig& frame,
-      std::string_view kind) const;
-  bool check_taint_consistency(const Taint& frame, std::string_view kind) const;
-  bool check_propagation_consistency(const Propagation& propagation) const;
-  bool check_inline_as_consistency(
-      const AccessPathConstantDomain& inline_as) const;
-
   void add_mode(Model::Mode mode, Context& context);
   void add_taint_in_taint_out(Context& context);
   void add_taint_in_taint_this(Context& context);
 
-  void add_generation(AccessPath port, Taint generation);
   void add_generation(const AccessPath& port, TaintConfig generation);
 
   /* Add generations after applying sanitizers */
@@ -208,7 +195,6 @@ class Model final {
     generations_ = std::move(generations);
   }
 
-  void add_parameter_source(AccessPath port, Taint source);
   void add_parameter_source(const AccessPath& port, TaintConfig source);
   const TaintAccessPathTree& parameter_sources() const {
     return parameter_sources_;
@@ -217,7 +203,6 @@ class Model final {
     parameter_sources_ = std::move(parameter_sources);
   }
 
-  void add_sink(AccessPath port, Taint sink);
   void add_sink(const AccessPath& port, TaintConfig sink);
 
   /* Add sinks after applying sanitizers */
@@ -297,6 +282,33 @@ class Model final {
   Json::Value to_json(Context& context) const;
 
   friend std::ostream& operator<<(std::ostream& out, const Model& model);
+
+ private:
+  void update_taint_tree(
+      TaintAccessPathTree& tree,
+      AccessPath port,
+      std::size_t truncation_amount,
+      Taint new_taint);
+
+  bool check_root_consistency(Root root) const;
+  bool check_port_consistency(const AccessPath& access_path) const;
+  bool check_parameter_source_port_consistency(
+      const AccessPath& access_path) const;
+  bool check_taint_config_consistency(
+      const TaintConfig& frame,
+      std::string_view kind) const;
+  bool check_taint_consistency(const Taint& frame, std::string_view kind) const;
+  bool check_propagation_consistency(const Propagation& propagation) const;
+  bool check_inline_as_consistency(
+      const AccessPathConstantDomain& inline_as) const;
+
+  // In the following methods, the `Taint` object should originate from a
+  // `Model` object. This guarantees that it was constructed using a
+  // `TaintBuilder` in `Model`'s constructor, and has passed other verification
+  // checks in the `add_*(AccessPath, TaintBuilder)` methods.
+  void add_generation(AccessPath port, Taint generation);
+  void add_parameter_source(AccessPath port, Taint source);
+  void add_sink(AccessPath port, Taint sink);
 
  private:
   const Method* MT_NULLABLE method_;
