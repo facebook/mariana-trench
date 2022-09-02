@@ -50,7 +50,7 @@ TEST_F(DataCastFeatureGeneratorTest, CastToInt) {
           /* method */ method,
           context,
           /* modes */ Model::Mode::Normal,
-          /* generations */ std::vector<std::pair<AccessPath, Frame>>{},
+          /* generations */ std::vector<std::pair<AccessPath, TaintBuilder>>{},
           /* parameter_sources */ {},
           /* sinks */ {},
           /* propagations */
@@ -85,7 +85,7 @@ TEST_F(DataCastFeatureGeneratorTest, CastToBool) {
           /* method */ method,
           context,
           /* modes */ Model::Mode::Normal,
-          /* generations */ std::vector<std::pair<AccessPath, Frame>>{},
+          /* generations */ std::vector<std::pair<AccessPath, TaintBuilder>>{},
           /* parameter_sources */ {},
           /* sinks */ {},
           /* propagations */

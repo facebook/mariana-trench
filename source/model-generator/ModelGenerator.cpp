@@ -370,7 +370,7 @@ bool generator::has_annotation(
       dex_class->get_anno_set(), expected_type, expected_values);
 }
 
-Frame generator::source(
+TaintBuilder generator::source(
     Context& context,
     const Method* method,
     const std::string& kind,
@@ -386,7 +386,7 @@ Frame generator::source(
   for (const auto& feature : features) {
     user_features.add(context.features->get(feature));
   }
-  return Frame(
+  return TaintBuilder(
       /* kind */ context.kinds->get(kind),
       /* callee_port */ AccessPath(Root(callee_port)),
       /* callee */ nullptr,
@@ -400,10 +400,11 @@ Frame generator::source(
       /* user features */ user_features,
       /* via_type_of_ports */ via_type_of_ports,
       /* via_value_of_ports */ via_value_of_ports,
-      /* canonical_names */ {});
+      /* canonical_names */ {},
+      /* local_positions */ {});
 }
 
-Frame generator::sink(
+TaintBuilder generator::sink(
     Context& context,
     const Method* method,
     const std::string& kind,
@@ -422,7 +423,7 @@ Frame generator::sink(
   for (const auto& feature : features) {
     user_features.add(context.features->get(feature));
   }
-  return Frame(
+  return TaintBuilder(
       /* kind */ context.kinds->get(kind),
       /* callee_port */ AccessPath(Root(callee_port)),
       /* callee */ nullptr,
@@ -436,10 +437,11 @@ Frame generator::sink(
       /* user features */ user_features,
       /* via_type_of_ports */ via_type_of_ports,
       /* via_type_of_ports */ via_value_of_ports,
-      /* canonical_names */ canonical_names);
+      /* canonical_names */ canonical_names,
+      /* local_positions */ {});
 }
 
-Frame generator::partial_sink(
+TaintBuilder generator::partial_sink(
     Context& context,
     const Method* method,
     const std::string& kind,
@@ -456,7 +458,7 @@ Frame generator::partial_sink(
   for (const auto& feature : features) {
     user_features.add(context.features->get(feature));
   }
-  return Frame(
+  return TaintBuilder(
       /* kind */ context.kinds->get_partial(kind, label),
       /* callee_port */ AccessPath(Root(callee_port)),
       /* callee */ nullptr,
@@ -470,7 +472,8 @@ Frame generator::partial_sink(
       /* user features */ user_features,
       /* via_type_of_ports */ via_type_of_ports,
       /* via_value_of_ports */ via_value_of_ports,
-      /* canonical_names */ {});
+      /* canonical_names */ {},
+      /* local_positions */ {});
 }
 
 } // namespace marianatrench

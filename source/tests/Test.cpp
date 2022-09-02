@@ -106,7 +106,7 @@ Context make_context(const DexStore& store) {
   return context;
 }
 
-Frame make_frame(const Kind* kind, const FrameProperties& properties) {
+Frame make_taint_frame(const Kind* kind, const FrameProperties& properties) {
   return Frame(
       kind,
       properties.callee_port,
@@ -122,38 +122,6 @@ Frame make_frame(const Kind* kind, const FrameProperties& properties) {
       properties.via_type_of_ports,
       properties.via_value_of_ports,
       properties.canonical_names);
-}
-
-Frame make_leaf_frame(const Kind* kind) {
-  return make_leaf_frame(
-      kind,
-      /* inferred_features */ FeatureMayAlwaysSet::bottom(),
-      /* locally_inferred_features */ FeatureMayAlwaysSet::bottom(),
-      /* user_features */ FeatureSet::bottom(),
-      /* origins */ {});
-}
-
-Frame make_leaf_frame(
-    const Kind* kind,
-    FeatureMayAlwaysSet inferred_features,
-    FeatureMayAlwaysSet locally_inferred_features,
-    FeatureSet user_features,
-    MethodSet origins) {
-  return Frame(
-      kind,
-      /* callee_port */ AccessPath(Root(Root::Kind::Leaf)),
-      /* callee */ nullptr,
-      /* field_callee */ nullptr,
-      /* call_position */ nullptr,
-      /* distance */ 0,
-      origins,
-      /* field origins */ {},
-      inferred_features,
-      locally_inferred_features,
-      user_features,
-      /* via_type_of_ports */ {},
-      /* via_value_of_ports */ {},
-      /* canonical_names */ {});
 }
 
 Frame make_crtex_leaf_frame(
@@ -176,6 +144,58 @@ Frame make_crtex_leaf_frame(
       /* via_type_of_ports */ {},
       /* via_value_of_ports */ {},
       canonical_names);
+}
+
+TaintBuilder make_frame(const Kind* kind, const FrameProperties& properties) {
+  return TaintBuilder(
+      kind,
+      properties.callee_port,
+      properties.callee,
+      properties.field_callee,
+      properties.call_position,
+      properties.distance,
+      properties.origins,
+      properties.field_origins,
+      properties.inferred_features,
+      properties.locally_inferred_features,
+      properties.user_features,
+      properties.via_type_of_ports,
+      properties.via_value_of_ports,
+      properties.canonical_names,
+      /* local_positions */ {});
+}
+
+TaintBuilder make_leaf_frame(const Kind* kind) {
+  return make_leaf_frame(
+      kind,
+      /* inferred_features */ FeatureMayAlwaysSet::bottom(),
+      /* locally_inferred_features */ FeatureMayAlwaysSet::bottom(),
+      /* user_features */ FeatureSet::bottom(),
+      /* origins */ {});
+}
+
+TaintBuilder make_leaf_frame(
+    const Kind* kind,
+    FeatureMayAlwaysSet inferred_features,
+    FeatureMayAlwaysSet locally_inferred_features,
+    FeatureSet user_features,
+    MethodSet origins) {
+  return TaintBuilder(
+      kind,
+      /* callee_port */ AccessPath(Root(Root::Kind::Leaf)),
+      /* callee */ nullptr,
+      /* field_callee */ nullptr,
+      /* call_position */ nullptr,
+      /* distance */ 0,
+      origins,
+      /* field origins */ {},
+      inferred_features,
+      locally_inferred_features,
+      user_features,
+      /* via_type_of_ports */ {},
+      /* via_value_of_ports */ {},
+      /* canonical_names */ {},
+      /* local_positions */ {});
 }
 
 #ifndef MARIANA_TRENCH_FACEBOOK_BUILD

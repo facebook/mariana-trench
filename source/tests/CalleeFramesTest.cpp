@@ -496,7 +496,7 @@ TEST_F(CalleeFramesTest, Iterator) {
       std::find(
           frames.begin(),
           frames.end(),
-          test::make_frame(
+          test::make_taint_frame(
               test_kind_one,
               test::FrameProperties{.call_position = test_position_one})),
       frames.end());
@@ -504,7 +504,7 @@ TEST_F(CalleeFramesTest, Iterator) {
       std::find(
           frames.begin(),
           frames.end(),
-          test::make_frame(
+          test::make_taint_frame(
               test_kind_one,
               test::FrameProperties{.call_position = test_position_two})),
       frames.end());
@@ -512,7 +512,7 @@ TEST_F(CalleeFramesTest, Iterator) {
       std::find(
           frames.begin(),
           frames.end(),
-          test::make_frame(test_kind_two, test::FrameProperties{})),
+          test::make_taint_frame(test_kind_two, test::FrameProperties{})),
       frames.end());
 }
 

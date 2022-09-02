@@ -1041,7 +1041,7 @@ TEST_F(CallPositionFramesTest, Iterator) {
       std::find(
           frames.begin(),
           frames.end(),
-          test::make_frame(
+          test::make_taint_frame(
               test_kind_one,
               test::FrameProperties{
                   .callee_port = AccessPath(Root(Root::Kind::Argument, 0))})),
@@ -1050,7 +1050,7 @@ TEST_F(CallPositionFramesTest, Iterator) {
       std::find(
           frames.begin(),
           frames.end(),
-          test::make_frame(
+          test::make_taint_frame(
               test_kind_one,
               test::FrameProperties{
                   .callee_port = AccessPath(Root(Root::Kind::Argument, 1))})),
@@ -1059,7 +1059,7 @@ TEST_F(CallPositionFramesTest, Iterator) {
       std::find(
           frames.begin(),
           frames.end(),
-          test::make_frame(test_kind_two, test::FrameProperties{})),
+          test::make_taint_frame(test_kind_two, test::FrameProperties{})),
       frames.end());
 }
 

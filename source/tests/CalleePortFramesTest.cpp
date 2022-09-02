@@ -828,13 +828,13 @@ TEST_F(CalleePortFramesTest, Iterator) {
       std::find(
           frames.begin(),
           frames.end(),
-          test::make_frame(test_kind_one, test::FrameProperties{})),
+          test::make_taint_frame(test_kind_one, test::FrameProperties{})),
       frames.end());
   EXPECT_NE(
       std::find(
           frames.begin(),
           frames.end(),
-          test::make_frame(test_kind_two, test::FrameProperties{})),
+          test::make_taint_frame(test_kind_two, test::FrameProperties{})),
       frames.end());
 }
 

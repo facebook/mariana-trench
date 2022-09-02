@@ -131,10 +131,28 @@ class Model final {
   explicit Model(
       const Method* MT_NULLABLE method,
       Context& context,
+      Modes modes,
+      const std::vector<std::pair<AccessPath, Frame>>& generations,
+      const std::vector<std::pair<AccessPath, Frame>>& parameter_sources,
+      const std::vector<std::pair<AccessPath, Frame>>& sinks,
+      const std::vector<std::pair<Propagation, AccessPath>>& propagations,
+      const std::vector<Sanitizer>& global_sanitizers,
+      const std::vector<std::pair<Root, SanitizerSet>>& port_sanitizers,
+      const std::vector<std::pair<Root, FeatureSet>>& attach_to_sources,
+      const std::vector<std::pair<Root, FeatureSet>>& attach_to_sinks,
+      const std::vector<std::pair<Root, FeatureSet>>& attach_to_propagations,
+      const std::vector<std::pair<Root, FeatureSet>>& add_features_to_arguments,
+      const AccessPathConstantDomain& inline_as,
+      const IssueSet& issues);
+
+  explicit Model(
+      const Method* MT_NULLABLE method,
+      Context& context,
       Modes modes = Mode::Normal,
-      const std::vector<std::pair<AccessPath, Frame>>& generations = {},
-      const std::vector<std::pair<AccessPath, Frame>>& parameter_sources = {},
-      const std::vector<std::pair<AccessPath, Frame>>& sinks = {},
+      const std::vector<std::pair<AccessPath, TaintBuilder>>& generations = {},
+      const std::vector<std::pair<AccessPath, TaintBuilder>>&
+          parameter_sources = {},
+      const std::vector<std::pair<AccessPath, TaintBuilder>>& sinks = {},
       const std::vector<std::pair<Propagation, AccessPath>>& propagations = {},
       const std::vector<Sanitizer>& global_sanitizers = {},
       const std::vector<std::pair<Root, SanitizerSet>>& port_sanitizers = {},
@@ -147,23 +165,6 @@ class Model final {
       const AccessPathConstantDomain& inline_as =
           AccessPathConstantDomain::bottom(),
       const IssueSet& issues = {});
-
-  explicit Model(
-      const Method* MT_NULLABLE method,
-      Context& context,
-      Modes modes,
-      const std::vector<std::pair<AccessPath, TaintBuilder>>& generations,
-      const std::vector<std::pair<AccessPath, TaintBuilder>>& parameter_sources,
-      const std::vector<std::pair<AccessPath, TaintBuilder>>& sinks,
-      const std::vector<std::pair<Propagation, AccessPath>>& propagations,
-      const std::vector<Sanitizer>& global_sanitizers,
-      const std::vector<std::pair<Root, SanitizerSet>>& port_sanitizers,
-      const std::vector<std::pair<Root, FeatureSet>>& attach_to_sources,
-      const std::vector<std::pair<Root, FeatureSet>>& attach_to_sinks,
-      const std::vector<std::pair<Root, FeatureSet>>& attach_to_propagations,
-      const std::vector<std::pair<Root, FeatureSet>>& add_features_to_arguments,
-      const AccessPathConstantDomain& inline_as,
-      const IssueSet& issues);
 
   Model(const Model& other) = default;
   Model(Model&&) = default;

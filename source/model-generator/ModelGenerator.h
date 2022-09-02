@@ -201,7 +201,7 @@ bool has_annotation(
     const std::optional<std::unordered_set<std::string>>& expected_values =
         std::nullopt);
 
-Frame source(
+TaintBuilder source(
     Context& context,
     const Method* method,
     const std::string& kind,
@@ -209,7 +209,7 @@ Frame source(
     Root::Kind callee_port = Root::Kind::Leaf,
     RootSetAbstractDomain via_type_of_ports = {},
     RootSetAbstractDomain via_value_of_ports = {});
-Frame sink(
+TaintBuilder sink(
     Context& context,
     const Method* method,
     const std::string& kind,
@@ -219,7 +219,7 @@ Frame sink(
     RootSetAbstractDomain via_value_of_ports = {},
     CanonicalNameSetAbstractDomain canonical_names =
         CanonicalNameSetAbstractDomain{});
-Frame partial_sink(
+TaintBuilder partial_sink(
     Context& context,
     const Method* method,
     const std::string& kind,
