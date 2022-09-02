@@ -66,8 +66,6 @@ class CalleeFrames final : public sparta::AbstractDomain<CalleeFrames> {
   /* Create the bottom (i.e, empty) frame set. */
   CalleeFrames() : callee_(nullptr), frames_(FramesByCallPosition::bottom()) {}
 
-  explicit CalleeFrames(std::initializer_list<Frame> frames);
-
   explicit CalleeFrames(std::initializer_list<TaintBuilder> builders);
 
   CalleeFrames(const CalleeFrames&) = default;
@@ -110,8 +108,6 @@ class CalleeFrames final : public sparta::AbstractDomain<CalleeFrames> {
   const Method* MT_NULLABLE callee() const {
     return callee_;
   }
-
-  void add(const Frame& frame);
 
   void add(const TaintBuilder& builder);
 

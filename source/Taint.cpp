@@ -11,12 +11,6 @@
 
 namespace marianatrench {
 
-Taint::Taint(std::initializer_list<Frame> frames) {
-  for (const auto& frame : frames) {
-    add(frame);
-  }
-}
-
 Taint::Taint(std::initializer_list<TaintBuilder> builders) {
   for (const auto& builder : builders) {
     add(builder);
@@ -32,10 +26,6 @@ std::size_t Taint::num_frames() const {
   auto iterator = frames_iterator();
   std::for_each(iterator.begin(), iterator.end(), [&count](auto) { ++count; });
   return count;
-}
-
-void Taint::add(const Frame& frame) {
-  set_.add(CalleeFrames{frame});
 }
 
 void Taint::add(const TaintBuilder& builder) {

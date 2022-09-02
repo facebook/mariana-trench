@@ -15,29 +15,12 @@
 
 namespace marianatrench {
 
-CallPositionFrames::CallPositionFrames(std::initializer_list<Frame> frames)
-    : position_(nullptr) {
-  for (const auto& frame : frames) {
-    add(frame);
-  }
-}
-
 CallPositionFrames::CallPositionFrames(
     std::initializer_list<TaintBuilder> builders)
     : position_(nullptr) {
   for (const auto& builder : builders) {
     add(builder);
   }
-}
-
-void CallPositionFrames::add(const Frame& frame) {
-  if (position_ == nullptr) {
-    position_ = frame.call_position();
-  } else {
-    mt_assert(position_ == frame.call_position());
-  }
-
-  frames_.add(CalleePortFrames(/* local_positions */ {}, {frame}));
 }
 
 void CallPositionFrames::add(const TaintBuilder& builder) {
@@ -238,7 +221,7 @@ CallPositionFrames CallPositionFrames::attach_position(
 
       result.add(CalleePortFrames(
           callee_port_frames.local_positions(),
-          {Frame(
+          {TaintBuilder(
               frame.kind(),
               frame.callee_port(),
               /* callee */ nullptr,
@@ -259,7 +242,8 @@ CallPositionFrames CallPositionFrames::attach_position(
               /* user_features */ FeatureSet::bottom(),
               /* via_type_of_ports */ {},
               /* via_value_of_ports */ {},
-              frame.canonical_names())}));
+              frame.canonical_names(),
+              callee_port_frames.local_positions())}));
     }
   }
 
@@ -299,7 +283,7 @@ CallPositionFrames::map_positions(
     for (const auto& frame : callee_port_frames) {
       // TODO(T91357916): Move call_position out of Frame and store it only in
       // `CallPositionFrames` so we do not need to update every frame.
-      auto new_frame = Frame(
+      auto new_frame = TaintBuilder(
           frame.kind(),
           frame.callee_port(),
           frame.callee(),
@@ -313,7 +297,8 @@ CallPositionFrames::map_positions(
           frame.user_features(),
           frame.via_type_of_ports(),
           frame.via_value_of_ports(),
-          frame.canonical_names());
+          frame.canonical_names(),
+          /* local_positions */ {});
       new_frames.add(new_frame);
     }
 

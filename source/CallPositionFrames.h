@@ -64,8 +64,6 @@ class CallPositionFrames final
   CallPositionFrames()
       : position_(nullptr), frames_(FramesByCalleePort::bottom()) {}
 
-  explicit CallPositionFrames(std::initializer_list<Frame> frames);
-
   explicit CallPositionFrames(std::initializer_list<TaintBuilder> builders);
 
   CallPositionFrames(const CallPositionFrames&) = default;
@@ -108,8 +106,6 @@ class CallPositionFrames final
   const Position* MT_NULLABLE position() const {
     return position_;
   }
-
-  void add(const Frame& frame);
 
   void add(const TaintBuilder& builder);
 

@@ -814,7 +814,7 @@ void check_flows_to_array_allocation(
       context->artificial_methods.array_allocation_method());
   auto* position =
       context->positions.get(context->method(), environment->last_position());
-  auto array_allocation_sink = Taint{Frame(
+  auto array_allocation_sink = Taint{TaintBuilder(
       /* kind */ context->artificial_methods.array_allocation_kind(),
       /* callee_port */ AccessPath(Root(Root::Kind::Argument, 0)),
       /* callee */ array_allocation_method,
@@ -828,7 +828,8 @@ void check_flows_to_array_allocation(
       /* user features */ {},
       /* via_type_of_ports */ {},
       /* via_value_of_ports */ {},
-      /* canonical_names */ {})};
+      /* canonical_names */ {},
+      /* local_positions */ {})};
   auto instruction_sources = instruction->srcs_vec();
   auto array_allocation_index = context->call_graph.array_allocation_index(
       context->method(), instruction);

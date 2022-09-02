@@ -83,17 +83,6 @@ void materialize_via_value_of_ports(
 
 CalleePortFrames::CalleePortFrames(
     LocalPositionSet local_positions,
-    std::initializer_list<Frame> frames)
-    : callee_port_(Root(Root::Kind::Leaf)),
-      is_artificial_source_frames_(false),
-      local_positions_(std::move(local_positions)) {
-  for (const auto& frame : frames) {
-    add(frame);
-  }
-}
-
-CalleePortFrames::CalleePortFrames(
-    LocalPositionSet local_positions,
     std::initializer_list<TaintBuilder> builders)
     : callee_port_(Root(Root::Kind::Leaf)),
       is_artificial_source_frames_(false),
@@ -134,23 +123,6 @@ void CalleePortFrames::GroupDifference::operator()(
     CalleePortFrames& left,
     const CalleePortFrames& right) const {
   left.difference_with(right);
-}
-
-void CalleePortFrames::add(const Frame& frame) {
-  if (is_bottom()) {
-    callee_port_ = frame.callee_port();
-    is_artificial_source_frames_ = frame.is_artificial_source();
-  } else {
-    mt_assert(
-        callee_port_ == frame.callee_port() &&
-        is_artificial_source_frames_ == frame.is_artificial_source());
-  }
-
-  frames_.update(frame.kind(), [&](const Frames& old_frames) {
-    auto new_frames = old_frames;
-    new_frames.add(frame);
-    return new_frames;
-  });
 }
 
 void CalleePortFrames::add(const TaintBuilder& builder) {
@@ -512,6 +484,23 @@ std::ostream& operator<<(std::ostream& out, const CalleePortFrames& frames) {
     }
     return out << "])";
   }
+}
+
+void CalleePortFrames::add(const Frame& frame) {
+  if (is_bottom()) {
+    callee_port_ = frame.callee_port();
+    is_artificial_source_frames_ = frame.is_artificial_source();
+  } else {
+    mt_assert(
+        callee_port_ == frame.callee_port() &&
+        is_artificial_source_frames_ == frame.is_artificial_source());
+  }
+
+  frames_.update(frame.kind(), [&](const Frames& old_frames) {
+    auto new_frames = old_frames;
+    new_frames.add(frame);
+    return new_frames;
+  });
 }
 
 Frame CalleePortFrames::propagate_frames(

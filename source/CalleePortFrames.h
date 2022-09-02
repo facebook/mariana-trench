@@ -92,10 +92,6 @@ class CalleePortFrames final : public sparta::AbstractDomain<CalleePortFrames> {
         frames_(FramesByKind::bottom()),
         local_positions_({}) {}
 
-  explicit CalleePortFrames(
-      LocalPositionSet local_positions,
-      std::initializer_list<Frame> frames);
-
   /**
    * TODO(T91357916): Remove local_positions from argument. It should be
    * specified in `builders`. For now, leave it there to be consistent with
@@ -177,8 +173,6 @@ class CalleePortFrames final : public sparta::AbstractDomain<CalleePortFrames> {
   const LocalPositionSet& local_positions() const {
     return local_positions_;
   }
-
-  void add(const Frame& frame);
 
   void add(const TaintBuilder& builder);
 
@@ -302,6 +296,8 @@ class CalleePortFrames final : public sparta::AbstractDomain<CalleePortFrames> {
       const CalleePortFrames& frames);
 
  private:
+  void add(const Frame& frame);
+
   Frame propagate_frames(
       const Method* callee,
       const AccessPath& callee_port,

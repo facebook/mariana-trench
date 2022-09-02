@@ -59,8 +59,6 @@ class Taint final : public sparta::AbstractDomain<Taint> {
   /* Create the bottom (i.e, empty) taint. */
   Taint() = default;
 
-  explicit Taint(std::initializer_list<Frame> frames);
-
   explicit Taint(std::initializer_list<TaintBuilder> builders);
 
   Taint(const Taint&) = default;
@@ -103,8 +101,6 @@ class Taint final : public sparta::AbstractDomain<Taint> {
    * every frame and can be expensive. Use for testing only.
    */
   std::size_t num_frames() const;
-
-  void add(const Frame& frame);
 
   void add(const TaintBuilder& builder);
 

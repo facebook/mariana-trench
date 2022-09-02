@@ -1414,34 +1414,25 @@ TEST_F(CallPositionFramesTest, PartitionMap) {
   auto partitions = frames.partition_map<bool>(
       [](const Frame& frame) { return frame.is_crtex_producer_declaration(); });
 
-  CallPositionFrames crtex_partition;
-  for (auto frame : partitions[true]) {
-    crtex_partition.add(frame);
-  }
+  EXPECT_EQ(partitions[true].size(), 1);
   EXPECT_EQ(
-      crtex_partition,
-      CallPositionFrames{test::make_frame(
+      partitions[true][0],
+      test::make_taint_frame(
           test_kind,
           test::FrameProperties{
               .callee_port = AccessPath(Root(Root::Kind::Anchor)),
               .origins = MethodSet{one},
-              .canonical_names = CanonicalNameSetAbstractDomain{
-                  CanonicalName(CanonicalName::TemplateValue{
-                      "%programmatic_leaf_name%"})}})});
+              .canonical_names = CanonicalNameSetAbstractDomain{CanonicalName(
+                  CanonicalName::TemplateValue{"%programmatic_leaf_name%"})}}));
 
-  CallPositionFrames non_crtex_partition;
-  for (auto frame : partitions[false]) {
-    non_crtex_partition.add(frame);
-  }
+  EXPECT_EQ(partitions[false].size(), 1);
   EXPECT_EQ(
-      non_crtex_partition,
-      (CallPositionFrames{
-          test::make_frame(
-              test_kind,
-              test::FrameProperties{
-                  .callee_port = AccessPath(Root(Root::Kind::Return)),
-                  .origins = MethodSet{one}}),
-      }));
+      partitions[false][0],
+      test::make_taint_frame(
+          test_kind,
+          test::FrameProperties{
+              .callee_port = AccessPath(Root(Root::Kind::Return)),
+              .origins = MethodSet{one}}));
 }
 
 TEST_F(CallPositionFramesTest, AttachPosition) {
