@@ -294,6 +294,14 @@ void CalleePortFrames::map(const std::function<void(Frame&)>& f) {
   });
 }
 
+void CalleePortFrames::set_origins_if_empty(const MethodSet& origins) {
+  map([&](Frame& frame) {
+    if (frame.origins().empty()) {
+      frame.set_origins(origins);
+    }
+  });
+}
+
 FeatureMayAlwaysSet CalleePortFrames::inferred_features() const {
   // TODO(T91357916): Store inferred features in CalleePortFrames rather than
   // Frame.

@@ -137,6 +137,8 @@ class CallPositionFrames final
     return ConstIterator(frames_.end(), frames_.end());
   }
 
+  void set_origins_if_empty(const MethodSet& origins);
+
   FeatureMayAlwaysSet inferred_features() const;
 
   void add_inferred_features(const FeatureMayAlwaysSet& features);

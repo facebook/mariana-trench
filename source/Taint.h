@@ -126,6 +126,13 @@ class Taint final : public sparta::AbstractDomain<Taint> {
 
   void difference_with(const Taint& other);
 
+  /**
+   * Sets the origins for leaves that do not have one set yet.
+   * For use when instantiating the `Model` of a method, once the concrete
+   * method (i.e. the origin of the `Taint`) becomes known.
+   */
+  void set_leaf_origins_if_empty(const MethodSet& origins);
+
   void add_inferred_features(const FeatureMayAlwaysSet& features);
 
   void add_local_position(const Position* position);

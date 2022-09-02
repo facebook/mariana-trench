@@ -145,6 +145,14 @@ void CalleeFrames::map(const std::function<void(Frame&)>& f) {
   });
 }
 
+void CalleeFrames::set_origins_if_empty(const MethodSet& origins) {
+  frames_.map([&](const CallPositionFrames& frames) {
+    auto new_frames = frames;
+    new_frames.set_origins_if_empty(origins);
+    return new_frames;
+  });
+}
+
 FeatureMayAlwaysSet CalleeFrames::inferred_features() const {
   auto result = FeatureMayAlwaysSet::bottom();
   for (const auto& [_, frames] : frames_.bindings()) {

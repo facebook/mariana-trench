@@ -139,6 +139,8 @@ class CalleeFrames final : public sparta::AbstractDomain<CalleeFrames> {
     return ConstIterator(frames_.bindings().end(), frames_.bindings().end());
   }
 
+  void set_origins_if_empty(const MethodSet& origins);
+
   FeatureMayAlwaysSet inferred_features() const;
 
   void add_inferred_features(const FeatureMayAlwaysSet& features);

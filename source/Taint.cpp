@@ -70,6 +70,14 @@ void Taint::difference_with(const Taint& other) {
   set_.difference_with(other.set_);
 }
 
+void Taint::set_leaf_origins_if_empty(const MethodSet& origins) {
+  map([&](CalleeFrames& frames) {
+    if (frames.callee() == nullptr) {
+      frames.set_origins_if_empty(origins);
+    }
+  });
+}
+
 void Taint::add_inferred_features(const FeatureMayAlwaysSet& features) {
   if (features.empty()) {
     return;

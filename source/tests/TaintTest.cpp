@@ -342,6 +342,43 @@ TEST_F(TaintTest, Difference) {
       }));
 }
 
+TEST_F(TaintTest, SetLeafOriginsIfEmpty) {
+  auto context = test::make_empty_context();
+
+  Scope scope;
+  auto* one =
+      context.methods->create(redex::create_void_method(scope, "LOne;", "one"));
+  auto* two =
+      context.methods->create(redex::create_void_method(scope, "LTwo;", "two"));
+
+  auto taint = Taint{
+      // Only the "TestSource" frame should be affected (it is a leaf with empty
+      // origins)
+      test::make_frame(
+          /* kind */ context.kinds->get("TestSource"), test::FrameProperties{}),
+      test::make_frame(
+          /* kind */ context.kinds->get("TestSource2"),
+          test::FrameProperties{.origins = MethodSet{two}}),
+      test::make_frame(
+          /* kind */ context.kinds->get("TestSource3"),
+          test::FrameProperties{.callee = two}),
+  };
+  taint.set_leaf_origins_if_empty(MethodSet{one});
+  EXPECT_EQ(
+      taint,
+      (Taint{
+          test::make_frame(
+              /* kind */ context.kinds->get("TestSource"),
+              test::FrameProperties{.origins = MethodSet{one}}),
+          test::make_frame(
+              /* kind */ context.kinds->get("TestSource2"),
+              test::FrameProperties{.origins = MethodSet{two}}),
+          test::make_frame(
+              /* kind */ context.kinds->get("TestSource3"),
+              test::FrameProperties{.callee = two}),
+      }));
+}
+
 TEST_F(TaintTest, Propagate) {
   auto context = test::make_empty_context();
 
