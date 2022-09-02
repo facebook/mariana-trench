@@ -141,6 +141,8 @@ class CalleeFrames final : public sparta::AbstractDomain<CalleeFrames> {
 
   void set_origins_if_empty(const MethodSet& origins);
 
+  void set_field_origins_if_empty_with_field_callee(const Field* field);
+
   FeatureMayAlwaysSet inferred_features() const;
 
   void add_inferred_features(const FeatureMayAlwaysSet& features);

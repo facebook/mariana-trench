@@ -78,6 +78,14 @@ void Taint::set_leaf_origins_if_empty(const MethodSet& origins) {
   });
 }
 
+void Taint::set_field_origins_if_empty_with_field_callee(const Field* field) {
+  map([&](CalleeFrames& frames) {
+    // Setting a field callee must always be done on non-propagated leaves.
+    mt_assert(frames.callee() == nullptr);
+    frames.set_field_origins_if_empty_with_field_callee(field);
+  });
+}
+
 void Taint::add_inferred_features(const FeatureMayAlwaysSet& features) {
   if (features.empty()) {
     return;

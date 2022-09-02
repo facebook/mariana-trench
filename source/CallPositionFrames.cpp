@@ -129,6 +129,13 @@ void CallPositionFrames::set_origins_if_empty(const MethodSet& origins) {
   });
 }
 
+void CallPositionFrames::set_field_origins_if_empty_with_field_callee(
+    const Field* field) {
+  frames_.map([&](CalleePortFrames& callee_port_frames) {
+    callee_port_frames.set_field_origins_if_empty_with_field_callee(field);
+  });
+}
+
 FeatureMayAlwaysSet CallPositionFrames::inferred_features() const {
   auto result = FeatureMayAlwaysSet::bottom();
   for (const auto& callee_port_frames : frames_) {

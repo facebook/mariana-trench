@@ -153,6 +153,15 @@ void CalleeFrames::set_origins_if_empty(const MethodSet& origins) {
   });
 }
 
+void CalleeFrames::set_field_origins_if_empty_with_field_callee(
+    const Field* field) {
+  frames_.map([&](const CallPositionFrames& frames) {
+    auto new_frames = frames;
+    new_frames.set_field_origins_if_empty_with_field_callee(field);
+    return new_frames;
+  });
+}
+
 FeatureMayAlwaysSet CalleeFrames::inferred_features() const {
   auto result = FeatureMayAlwaysSet::bottom();
   for (const auto& [_, frames] : frames_.bindings()) {

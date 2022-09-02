@@ -133,6 +133,18 @@ class Taint final : public sparta::AbstractDomain<Taint> {
    */
   void set_leaf_origins_if_empty(const MethodSet& origins);
 
+  /**
+   * Similar to `set_leaf_origins_if_empty` but also sets the field callee.
+   * For use when instantiating `FieldModel` once the concrete field is known.
+   * Reason this sets an additional `field_callee` is because field callees
+   * are tracked separately from method callees.
+   *
+   * It is expected that this method is only ever called on leaves, i.e.
+   * [method]callee == nullptr, because `FieldModel`s are always leaves. There
+   * is no field-to-field taint propagation.
+   */
+  void set_field_origins_if_empty_with_field_callee(const Field* field);
+
   void add_inferred_features(const FeatureMayAlwaysSet& features);
 
   void add_local_position(const Position* position);

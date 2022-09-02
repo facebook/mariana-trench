@@ -24,6 +24,10 @@ void Frame::set_field_origins(const FieldSet& field_origins) {
   field_origins_ = field_origins;
 }
 
+void Frame::set_field_callee(const Field* field) {
+  field_callee_ = field;
+}
+
 void Frame::add_inferred_features(const FeatureMayAlwaysSet& features) {
   locally_inferred_features_.add(features);
 }

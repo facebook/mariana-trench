@@ -180,6 +180,7 @@ class Frame final : public sparta::AbstractDomain<Frame> {
 
   void set_origins(const MethodSet& origins);
   void set_field_origins(const FieldSet& field_origins);
+  void set_field_callee(const Field* field);
 
   const MethodSet& origins() const {
     return origins_;

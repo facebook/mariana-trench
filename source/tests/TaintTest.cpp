@@ -379,6 +379,43 @@ TEST_F(TaintTest, SetLeafOriginsIfEmpty) {
       }));
 }
 
+TEST_F(TaintTest, SetFieldOriginsIfEmptyWithFieldCallee) {
+  Scope scope;
+  const auto* field_one = redex::create_field(
+      scope, "LClassA", {"field_one", type::java_lang_String()});
+  const auto* field_two = redex::create_field(
+      scope, "LClassB", {"field_two", type::java_lang_String()});
+
+  DexStore store("stores");
+  store.add_classes(scope);
+  auto context = test::make_context(store);
+
+  auto* one = context.fields->get(field_one);
+  auto* two = context.fields->get(field_two);
+
+  auto taint = Taint{
+      test::make_frame(
+          /* kind */ context.kinds->get("TestSource"), test::FrameProperties{}),
+      test::make_frame(
+          /* kind */ context.kinds->get("TestSource2"),
+          test::FrameProperties{.field_origins = FieldSet{two}}),
+  };
+
+  taint.set_field_origins_if_empty_with_field_callee(one);
+  EXPECT_EQ(
+      taint,
+      (Taint{
+          test::make_frame(
+              /* kind */ context.kinds->get("TestSource"),
+              test::FrameProperties{
+                  .field_callee = one, .field_origins = FieldSet{one}}),
+          test::make_frame(
+              /* kind */ context.kinds->get("TestSource2"),
+              test::FrameProperties{
+                  .field_callee = one, .field_origins = FieldSet{two}}),
+      }));
+}
+
 TEST_F(TaintTest, Propagate) {
   auto context = test::make_empty_context();
 
