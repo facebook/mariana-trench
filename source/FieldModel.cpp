@@ -28,20 +28,6 @@ class FieldModelConsistencyError {
 
 FieldModel::FieldModel(
     const Field* field,
-    const std::vector<Frame>& sources,
-    const std::vector<Frame>& sinks)
-    : field_(field) {
-  for (const auto& frame : sources) {
-    add_source(frame);
-  }
-
-  for (const auto& frame : sinks) {
-    add_sink(frame);
-  }
-}
-
-FieldModel::FieldModel(
-    const Field* field,
     const std::vector<TaintBuilder>& sources,
     const std::vector<TaintBuilder>& sinks)
     : field_(field) {
@@ -65,13 +51,9 @@ bool FieldModel::operator!=(const FieldModel& other) const {
 FieldModel FieldModel::instantiate(const Field* field) const {
   FieldModel field_model(field);
 
-  for (const auto& source : sources_.frames_iterator()) {
-    field_model.add_source(source);
-  }
+  field_model.add_source(sources_);
+  field_model.add_sink(sinks_);
 
-  for (const auto& sink : sinks_.frames_iterator()) {
-    field_model.add_sink(sink);
-  }
   return field_model;
 }
 
@@ -79,36 +61,7 @@ bool FieldModel::empty() const {
   return sources_.is_bottom() && sinks_.is_bottom();
 }
 
-void FieldModel::check_frame_consistency(
-    const Frame& frame,
-    std::string_view kind) const {
-  if (frame.is_bottom()) {
-    FieldModelConsistencyError::raise(fmt::format(
-        "Model for field `{}` contains a bottom {}.", show(field_), kind));
-  }
-  if (frame.is_artificial_source()) {
-    FieldModelConsistencyError::raise(fmt::format(
-        "Model for field `{}` contains an artificial {}.", show(field_), kind));
-  }
-  if (field_ && frame.field_origins().empty()) {
-    FieldModelConsistencyError::raise(fmt::format(
-        "Model for field `{}` contains a {} without field origins.",
-        show(field_),
-        kind));
-  }
-  if (!frame.callee_port().root().is_leaf() ||
-      frame.call_position() != nullptr || frame.distance() != 0 ||
-      !frame.origins().is_bottom() || frame.via_type_of_ports().size() != 0 ||
-      frame.canonical_names().size() != 0) {
-    FieldModelConsistencyError::raise(fmt::format(
-        "Frame {} in {}s for field `{}` contains an unexpected non-empty or non-bottom value for a field.",
-        show(frame),
-        show(kind),
-        show(field_)));
-  }
-}
-
-void FieldModel::check_frame_consistency(
+void FieldModel::check_taint_builder_consistency(
     const TaintBuilder& frame,
     std::string_view kind) const {
   if (frame.kind() == nullptr) {
@@ -119,85 +72,40 @@ void FieldModel::check_frame_consistency(
     FieldModelConsistencyError::raise(fmt::format(
         "Model for field `{}` contains an artificial {}.", show(field_), kind));
   }
-  if (field_ && frame.field_origins().empty()) {
-    FieldModelConsistencyError::raise(fmt::format(
-        "Model for field `{}` contains a {} without field origins.",
-        show(field_),
-        kind));
-  }
   if (!frame.callee_port().root().is_leaf() ||
       frame.call_position() != nullptr || frame.distance() != 0 ||
       !frame.origins().is_bottom() || frame.via_type_of_ports().size() != 0 ||
       frame.canonical_names().size() != 0) {
     FieldModelConsistencyError::raise(fmt::format(
         "Frame in {}s for field `{}` contains an unexpected non-empty or non-bottom value for a field.",
-        // show(frame),
         show(kind),
         show(field_)));
   }
 }
 
-namespace {
-
-Frame add_field_callee(const Field* MT_NULLABLE field, const Frame& frame) {
-  if (field == nullptr) {
-    return frame;
+void FieldModel::check_taint_consistency(
+    const Taint& taint,
+    std::string_view kind) const {
+  for (const auto& frame : taint.frames_iterator()) {
+    if (field_ && frame.field_origins().empty()) {
+      FieldModelConsistencyError::raise(fmt::format(
+          "Model for field `{}` contains a {} without field origins.",
+          show(field_),
+          kind));
+    }
   }
-  return Frame(
-      frame.kind(),
-      frame.callee_port(),
-      frame.callee(),
-      field,
-      frame.call_position(),
-      frame.distance(),
-      frame.origins(),
-      frame.field_origins(),
-      frame.inferred_features(),
-      frame.locally_inferred_features(),
-      frame.user_features(),
-      frame.via_type_of_ports(),
-      frame.via_value_of_ports(),
-      frame.canonical_names());
-}
-
-} // namespace
-
-void FieldModel::add_source(Frame source) {
-  mt_assert(source.is_leaf());
-  if (field_ && source.field_origins().empty()) {
-    source.set_field_origins(FieldSet{field_});
-  }
-  check_frame_consistency(source, "source");
-  sources_.add(add_field_callee(field_, source));
-}
-
-void FieldModel::add_sink(Frame sink) {
-  mt_assert(sink.is_leaf());
-  if (field_ && sink.field_origins().empty()) {
-    sink.set_field_origins(FieldSet{field_});
-  }
-  check_frame_consistency(sink, "sink");
-  sinks_.add(add_field_callee(field_, sink));
 }
 
 void FieldModel::add_source(TaintBuilder source) {
   mt_assert(source.is_leaf());
-  if (field_ && source.field_origins().empty()) {
-    source.set_field_origins(FieldSet{field_});
-  }
-  check_frame_consistency(source, "source");
-  source.set_field_callee(field_);
-  sources_.add(source);
+  check_taint_builder_consistency(source, "source");
+  add_source(Taint{std::move(source)});
 }
 
 void FieldModel::add_sink(TaintBuilder sink) {
   mt_assert(sink.is_leaf());
-  if (field_ && sink.field_origins().empty()) {
-    sink.set_field_origins(FieldSet{field_});
-  }
-  check_frame_consistency(sink, "sink");
-  sink.set_field_callee(field_);
-  sinks_.add(sink);
+  check_taint_builder_consistency(sink, "sink");
+  add_sink(Taint{std::move(sink)});
 }
 
 void FieldModel::join_with(const FieldModel& other) {
@@ -218,10 +126,7 @@ FieldModel FieldModel::from_json(
     const Json::Value& value,
     Context& context) {
   JsonValidation::validate_object(value);
-  FieldModel model(
-      field,
-      /* sources */ std::vector<Frame>{},
-      /* sinks */ std::vector<Frame>{});
+  FieldModel model(field);
 
   for (auto source_value :
        JsonValidation::null_or_array(value, /* field */ "sources")) {
@@ -287,6 +192,22 @@ std::ostream& operator<<(std::ostream& out, const FieldModel& model) {
     out << "  }";
   }
   return out << ")";
+}
+
+void FieldModel::add_source(Taint source) {
+  if (field_) {
+    source.set_field_origins_if_empty_with_field_callee(field_);
+  }
+  check_taint_consistency(source, "source");
+  sources_.join_with(source);
+}
+
+void FieldModel::add_sink(Taint sink) {
+  if (field_) {
+    sink.set_field_origins_if_empty_with_field_callee(field_);
+  }
+  check_taint_consistency(sink, "sink");
+  sinks_.join_with(sink);
 }
 
 } // namespace marianatrench

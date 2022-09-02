@@ -31,11 +31,6 @@ class FieldModel final {
 
   explicit FieldModel(
       const Field* field,
-      const std::vector<Frame>& sources,
-      const std::vector<Frame>& sinks);
-
-  explicit FieldModel(
-      const Field* field,
       const std::vector<TaintBuilder>& sources,
       const std::vector<TaintBuilder>& sinks);
 
@@ -64,9 +59,6 @@ class FieldModel final {
     return sinks_;
   }
 
-  void add_source(Frame source);
-  void add_sink(Frame source);
-
   void add_source(TaintBuilder source);
   void add_sink(TaintBuilder source);
 
@@ -87,9 +79,14 @@ class FieldModel final {
   friend std::ostream& operator<<(std::ostream& out, const FieldModel& model);
 
  private:
-  void check_frame_consistency(const Frame& frame, std::string_view kind) const;
-  void check_frame_consistency(const TaintBuilder& frame, std::string_view kind)
-      const;
+  void check_taint_builder_consistency(
+      const TaintBuilder& frame,
+      std::string_view kind) const;
+
+  void check_taint_consistency(const Taint& frame, std::string_view kind) const;
+
+  void add_source(Taint source);
+  void add_sink(Taint source);
 
   const Field* MT_NULLABLE field_;
   Taint sources_;

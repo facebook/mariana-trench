@@ -127,10 +127,7 @@ FieldModel Registry::get(const Field* field) const {
   try {
     return field_models_.at(field);
   } catch (const std::out_of_range&) {
-    return FieldModel(
-        field,
-        /* sources */ std::vector<Frame>{},
-        /* sinks */ std::vector<Frame>{});
+    return FieldModel(field);
   }
 }
 
