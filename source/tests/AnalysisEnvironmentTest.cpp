@@ -32,14 +32,14 @@ TEST_F(EnvironmentTest, LessOrEqualSuperSet) {
       redex::create_void_method(scope, "LClass;", "method"));
 
   auto domain1 = TaintAbstractPartition{
-      {nullptr, TaintTree{Taint{Frame::leaf(source_kind)}}}};
+      {nullptr, TaintTree{Taint{test::make_leaf_frame(source_kind)}}}};
   EXPECT_TRUE(TaintAbstractPartition{}.leq(domain1));
   EXPECT_FALSE(domain1.leq(TaintAbstractPartition{}));
 
   auto domain2 = TaintAbstractPartition{
       {nullptr,
        TaintTree{Taint{
-           Frame::leaf(source_kind),
+           test::make_leaf_frame(source_kind),
            test::make_frame(
                source_kind,
                test::FrameProperties{
@@ -61,7 +61,7 @@ TEST_F(EnvironmentTest, LessOrEqualDifferentSources) {
       redex::create_void_method(scope, "LClass;", "method"));
 
   auto domain1 = TaintAbstractPartition{
-      {nullptr, TaintTree{Taint{Frame::leaf(source_kind)}}}};
+      {nullptr, TaintTree{Taint{test::make_leaf_frame(source_kind)}}}};
 
   auto domain2 = TaintAbstractPartition{
       {nullptr,
@@ -87,11 +87,11 @@ TEST_F(EnvironmentTest, JoinSuperSet) {
       redex::create_void_method(scope, "LClass;", "method"));
 
   auto domain1 = TaintAbstractPartition{
-      {nullptr, TaintTree{Taint{Frame::leaf(source_kind)}}}};
+      {nullptr, TaintTree{Taint{test::make_leaf_frame(source_kind)}}}};
   auto domain2 = TaintAbstractPartition{
       {nullptr,
        TaintTree{Taint{
-           Frame::leaf(source_kind),
+           test::make_leaf_frame(source_kind),
            test::make_frame(
                source_kind,
                test::FrameProperties{
@@ -113,7 +113,7 @@ TEST_F(EnvironmentTest, JoinTwoDifferent) {
       redex::create_void_method(scope, "LClass;", "method"));
 
   auto domain1 = TaintAbstractPartition{
-      {nullptr, TaintTree{Taint{Frame::leaf(source_kind)}}}};
+      {nullptr, TaintTree{Taint{test::make_leaf_frame(source_kind)}}}};
 
   auto domain2 = TaintAbstractPartition{
       {nullptr,
@@ -129,7 +129,7 @@ TEST_F(EnvironmentTest, JoinTwoDifferent) {
   auto domain3 = TaintAbstractPartition{
       {nullptr,
        TaintTree{Taint{
-           Frame::leaf(source_kind),
+           test::make_leaf_frame(source_kind),
            test::make_frame(
                source_kind,
                test::FrameProperties{
@@ -157,13 +157,13 @@ TEST_F(EnvironmentTest, JoinTwoEnvironmentWithDifferentSources) {
   environment1.write(parameter_1.get(), {}, UpdateKind::Weak);
   environment1.write(
       parameter_2.get(),
-      TaintTree{Taint{Frame::leaf(source_kind)}},
+      TaintTree{Taint{test::make_leaf_frame(source_kind)}},
       UpdateKind::Weak);
 
   auto environment2 = AnalysisEnvironment::initial();
   environment2.write(
       parameter_1.get(),
-      TaintTree{Taint{Frame::leaf(source_kind)}},
+      TaintTree{Taint{test::make_leaf_frame(source_kind)}},
       UpdateKind::Weak);
   environment2.write(
       parameter_2.get(),
@@ -181,11 +181,11 @@ TEST_F(EnvironmentTest, JoinTwoEnvironmentWithDifferentSources) {
 
   EXPECT_EQ(
       environment1.read(parameter_1.get()),
-      TaintTree{Taint{Frame::leaf(source_kind)}});
+      TaintTree{Taint{test::make_leaf_frame(source_kind)}});
   EXPECT_EQ(
       environment1.read(parameter_2.get()),
       (TaintTree{Taint{
-          Frame::leaf(source_kind),
+          test::make_leaf_frame(source_kind),
           test::make_frame(
               source_kind,
               test::FrameProperties{

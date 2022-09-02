@@ -124,6 +124,60 @@ Frame make_frame(const Kind* kind, const FrameProperties& properties) {
       properties.canonical_names);
 }
 
+Frame make_leaf_frame(const Kind* kind) {
+  return make_leaf_frame(
+      kind,
+      /* inferred_features */ FeatureMayAlwaysSet::bottom(),
+      /* locally_inferred_features */ FeatureMayAlwaysSet::bottom(),
+      /* user_features */ FeatureSet::bottom(),
+      /* origins */ {});
+}
+
+Frame make_leaf_frame(
+    const Kind* kind,
+    FeatureMayAlwaysSet inferred_features,
+    FeatureMayAlwaysSet locally_inferred_features,
+    FeatureSet user_features,
+    MethodSet origins) {
+  return Frame(
+      kind,
+      /* callee_port */ AccessPath(Root(Root::Kind::Leaf)),
+      /* callee */ nullptr,
+      /* field_callee */ nullptr,
+      /* call_position */ nullptr,
+      /* distance */ 0,
+      origins,
+      /* field origins */ {},
+      inferred_features,
+      locally_inferred_features,
+      user_features,
+      /* via_type_of_ports */ {},
+      /* via_value_of_ports */ {},
+      /* canonical_names */ {});
+}
+
+Frame make_crtex_leaf_frame(
+    const Kind* kind,
+    AccessPath callee_port,
+    CanonicalNameSetAbstractDomain canonical_names) {
+  mt_assert(callee_port.root().is_anchor() || callee_port.root().is_producer());
+  return Frame(
+      kind,
+      /* callee_port */ callee_port,
+      /* callee */ nullptr,
+      /* field_callee */ nullptr,
+      /* call_position */ nullptr,
+      /* distance */ 0,
+      /* origins */ {},
+      /* field_origins */ {},
+      /* inferred_features */ FeatureMayAlwaysSet::bottom(),
+      /* locally_inferred_features */ FeatureMayAlwaysSet::bottom(),
+      /* user_features */ {},
+      /* via_type_of_ports */ {},
+      /* via_value_of_ports */ {},
+      canonical_names);
+}
+
 #ifndef MARIANA_TRENCH_FACEBOOK_BUILD
 boost::filesystem::path find_repository_root() {
   auto path = boost::filesystem::current_path();

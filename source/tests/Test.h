@@ -68,6 +68,17 @@ struct FrameProperties {
 };
 
 Frame make_frame(const Kind* kind, const FrameProperties& properties);
+Frame make_leaf_frame(const Kind* kind);
+Frame make_leaf_frame(
+    const Kind* kind,
+    FeatureMayAlwaysSet inferred_features,
+    FeatureMayAlwaysSet locally_inferred_features,
+    FeatureSet user_features,
+    MethodSet origins);
+Frame make_crtex_leaf_frame(
+    const Kind* kind,
+    AccessPath callee_port,
+    CanonicalNameSetAbstractDomain canonical_names);
 
 boost::filesystem::path find_repository_root();
 

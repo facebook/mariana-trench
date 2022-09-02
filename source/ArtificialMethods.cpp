@@ -41,7 +41,21 @@ std::vector<Model> ArtificialMethods::models(Context& context) const {
   model.add_mode(Model::Mode::SkipAnalysis, context);
   model.add_sink(
       AccessPath(Root(Root::Kind::Argument, 0)),
-      Frame::leaf(array_allocation_kind_));
+      Frame(
+          array_allocation_kind_,
+          /* callee_port */ AccessPath(Root(Root::Kind::Leaf)),
+          /* callee */ nullptr,
+          /* field_callee */ nullptr,
+          /* call_position */ nullptr,
+          /* distance */ 0,
+          /* origins */ {},
+          /* field origins */ {},
+          /* inferred_features */ FeatureMayAlwaysSet::bottom(),
+          /* locally_inferred_features */ FeatureMayAlwaysSet::bottom(),
+          /* user_features */ FeatureSet::bottom(),
+          /* via_type_of_ports */ {},
+          /* via_value_of_ports */ {},
+          /* canonical_names */ {}));
   models.push_back(model);
 
   return models;

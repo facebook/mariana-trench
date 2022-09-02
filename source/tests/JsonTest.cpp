@@ -1287,7 +1287,7 @@ TEST_F(JsonTest, Frame_Crtex) {
                 "canonical_names": [ {"template": "%programmatic_leaf_name%"} ]
               })"),
           context),
-      Frame::crtex_leaf(
+      test::make_crtex_leaf_frame(
           context.kinds->get("TestSource"),
           /* callee_port */ AccessPath(Root(Root::Kind::Anchor)),
           /* canonical_names */
@@ -1302,7 +1302,7 @@ TEST_F(JsonTest, Frame_Crtex) {
                 "canonical_names": [ {"instantiated": "Lcom/android/MyClass;.MyMethod"} ]
               })#"),
           context),
-      Frame::crtex_leaf(
+      test::make_crtex_leaf_frame(
           context.kinds->get("TestSource"),
           /* callee_port */
           AccessPath(
@@ -1595,7 +1595,7 @@ TEST_F(JsonTest, Model) {
           Model::Mode::Normal,
           /* generations */
           {{AccessPath(Root(Root::Kind::Argument, 2)),
-            Frame::leaf(context.kinds->get("source_kind"))}}));
+            test::make_leaf_frame(context.kinds->get("source_kind"))}}));
   EXPECT_EQ(
       Model(
           method,
@@ -1603,7 +1603,7 @@ TEST_F(JsonTest, Model) {
           Model::Mode::Normal,
           /* generations */
           {{AccessPath(Root(Root::Kind::Argument, 2)),
-            Frame::leaf(context.kinds->get("source_kind"))}})
+            test::make_leaf_frame(context.kinds->get("source_kind"))}})
           .to_json(),
       test::parse_json(R"#({
       "method": "LData;.method:(LData;LData;)V",
@@ -1648,7 +1648,7 @@ TEST_F(JsonTest, Model) {
           /* generations */ {},
           /* parameter_sources */
           {{AccessPath(Root(Root::Kind::Argument, 1)),
-            Frame::leaf(context.kinds->get("source_kind"))}}));
+            test::make_leaf_frame(context.kinds->get("source_kind"))}}));
   EXPECT_EQ(
       Model(
           method,
@@ -1657,7 +1657,7 @@ TEST_F(JsonTest, Model) {
           /* generations */ {},
           /* parameter_sources */
           {{AccessPath(Root(Root::Kind::Argument, 1)),
-            Frame::leaf(context.kinds->get("source_kind"))}})
+            test::make_leaf_frame(context.kinds->get("source_kind"))}})
           .to_json(),
       test::parse_json(R"#({
       "method": "LData;.method:(LData;LData;)V",
@@ -1695,7 +1695,7 @@ TEST_F(JsonTest, Model) {
           Model::Mode::Normal,
           /* generations */
           {{AccessPath(Root(Root::Kind::Return)),
-            Frame::leaf(context.kinds->get("source_kind"))}},
+            test::make_leaf_frame(context.kinds->get("source_kind"))}},
           /* parameter_sources */ {}));
   EXPECT_EQ(
       Model::from_json(
@@ -1715,7 +1715,7 @@ TEST_F(JsonTest, Model) {
           Model::Mode::Normal,
           /* generations */
           {{AccessPath(Root(Root::Kind::Return)),
-            Frame::leaf(context.kinds->get("source_kind"))}},
+            test::make_leaf_frame(context.kinds->get("source_kind"))}},
           /* parameter_sources */ {}));
   EXPECT_EQ(
       Model::from_json(
@@ -1736,7 +1736,7 @@ TEST_F(JsonTest, Model) {
           /* generations */ {},
           /* parameter_sources */
           {{AccessPath(Root(Root::Kind::Argument, 1)),
-            Frame::leaf(context.kinds->get("source_kind"))}}));
+            test::make_leaf_frame(context.kinds->get("source_kind"))}}));
 
   EXPECT_THROW(
       Model::from_json(
@@ -1983,21 +1983,22 @@ TEST_F(JsonTest, Model) {
           /* sinks */
           {
               {AccessPath(Root(Root::Kind::Argument, 2)),
-               Frame::leaf(context.kinds->get("first_sink"))},
+               test::make_leaf_frame(context.kinds->get("first_sink"))},
           }));
   EXPECT_EQ(
-      test::sorted_json(Model(
-                            method,
-                            context,
-                            Model::Mode::Normal,
-                            /* generations */ {},
-                            /* parameter_sources */ {},
-                            /* sinks */
-                            {
-                                {AccessPath(Root(Root::Kind::Argument, 2)),
-                                 Frame::leaf(context.kinds->get("first_sink"))},
-                            })
-                            .to_json()),
+      test::sorted_json(
+          Model(
+              method,
+              context,
+              Model::Mode::Normal,
+              /* generations */ {},
+              /* parameter_sources */ {},
+              /* sinks */
+              {
+                  {AccessPath(Root(Root::Kind::Argument, 2)),
+                   test::make_leaf_frame(context.kinds->get("first_sink"))},
+              })
+              .to_json()),
       test::parse_json(R"#({
         "method": "LData;.method:(LData;LData;)V",
         "sinks": [
@@ -2332,10 +2333,11 @@ TEST_F(JsonTest, Model) {
               /* add_features_to_arguments */ {},
               /* inline_as */ AccessPathConstantDomain::bottom(),
               IssueSet{Issue(
-                  /* source */ Taint{Frame::leaf(
+                  /* source */ Taint{test::make_leaf_frame(
                       context.kinds->get("first_source"))},
                   /* sink */
-                  Taint{Frame::leaf(context.kinds->get("first_sink"))},
+                  Taint{
+                      test::make_leaf_frame(context.kinds->get("first_sink"))},
                   rule.get(),
                   /* callee */ "LClass;.someMethod:()V",
                   /* sink_index */ 1,
@@ -2421,7 +2423,7 @@ TEST_F(JsonTest, FieldModel) {
       FieldModel(
           field,
           /* sources */
-          {Frame::leaf(source_kind),
+          {test::make_leaf_frame(source_kind),
            test::make_frame(
                source_kind2,
                test::FrameProperties{
@@ -2440,7 +2442,7 @@ TEST_F(JsonTest, FieldModel) {
           field,
           /* sources */ {},
           /* sinks */
-          {Frame::leaf(sink_kind)}));
+          {test::make_leaf_frame(sink_kind)}));
 
   // Test to_json
   EXPECT_EQ(

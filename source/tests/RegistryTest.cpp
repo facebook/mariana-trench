@@ -207,23 +207,25 @@ TEST_F(RegistryTest, ConstructorUseJoin) {
       context,
       /* modes */ Model::Mode::Normal,
       /* generations */
-      {{AccessPath(Root(Root::Kind::Return)), Frame::leaf(source_kind)}});
+      {{AccessPath(Root(Root::Kind::Return)),
+        test::make_leaf_frame(source_kind)}});
 
   Model model_with_other_source(
       /* method */ method,
       context,
       /* modes */ Model::Mode::Normal,
       /* generations */
-      {{AccessPath(Root(Root::Kind::Argument, 2)), Frame::leaf(source_kind)}});
+      {{AccessPath(Root(Root::Kind::Argument, 2)),
+        test::make_leaf_frame(source_kind)}});
 
   FieldModel field_with_source(
       /* field */ field,
-      /* sources */ {Frame::leaf(source_kind)},
+      /* sources */ {test::make_leaf_frame(source_kind)},
       /* sinks */ {});
 
   FieldModel field_with_other_source(
       /* field */ field,
-      /* sources */ {Frame::leaf(source_kind_two)},
+      /* sources */ {test::make_leaf_frame(source_kind_two)},
       /* sinks */ {});
 
   auto registry = Registry(
@@ -235,7 +237,7 @@ TEST_F(RegistryTest, ConstructorUseJoin) {
       testing::UnorderedElementsAre(
           PortTaint{
               AccessPath(Root(Root::Kind::Return)),
-              Taint{Frame::leaf(
+              Taint{test::make_leaf_frame(
                   source_kind,
                   /* inferred_features */ FeatureMayAlwaysSet::bottom(),
                   /* locally_inferred_features */
@@ -244,7 +246,7 @@ TEST_F(RegistryTest, ConstructorUseJoin) {
                   /* origins */ MethodSet{method})}},
           PortTaint{
               AccessPath(Root(Root::Kind::Argument, 2)),
-              Taint{Frame::leaf(
+              Taint{test::make_leaf_frame(
                   source_kind,
                   /* inferred_features */ FeatureMayAlwaysSet::bottom(),
                   /* locally_inferred_features */

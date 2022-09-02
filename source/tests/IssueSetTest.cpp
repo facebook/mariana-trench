@@ -43,8 +43,8 @@ TEST_F(IssueSetTest, Insertion) {
   EXPECT_EQ(set, IssueSet{});
 
   set.add(Issue(
-      /* source */ Taint{Frame::leaf(source_kind)},
-      /* sink */ Taint{Frame::leaf(sink_kind)},
+      /* source */ Taint{test::make_leaf_frame(source_kind)},
+      /* sink */ Taint{test::make_leaf_frame(sink_kind)},
       &rule_1,
       /* callee */ std::string(k_return_callee),
       /* sink_index */ 0,
@@ -53,8 +53,8 @@ TEST_F(IssueSetTest, Insertion) {
       set,
       (IssueSet{
           Issue(
-              /* source */ Taint{Frame::leaf(source_kind)},
-              /* sink */ Taint{Frame::leaf(sink_kind)},
+              /* source */ Taint{test::make_leaf_frame(source_kind)},
+              /* sink */ Taint{test::make_leaf_frame(sink_kind)},
               &rule_1,
               /* callee */ std::string(k_return_callee),
               /* sink_index */ 0,
@@ -62,8 +62,8 @@ TEST_F(IssueSetTest, Insertion) {
       }));
 
   set.add(Issue(
-      /* source */ Taint{Frame::leaf(other_source_kind)},
-      /* sink */ Taint{Frame::leaf(other_sink_kind)},
+      /* source */ Taint{test::make_leaf_frame(other_source_kind)},
+      /* sink */ Taint{test::make_leaf_frame(other_sink_kind)},
       &rule_2,
       /* callee */ std::string(k_return_callee),
       /* sink_index */ 0,
@@ -72,15 +72,15 @@ TEST_F(IssueSetTest, Insertion) {
       set,
       (IssueSet{
           Issue(
-              /* source */ Taint{Frame::leaf(source_kind)},
-              /* sink */ Taint{Frame::leaf(sink_kind)},
+              /* source */ Taint{test::make_leaf_frame(source_kind)},
+              /* sink */ Taint{test::make_leaf_frame(sink_kind)},
               &rule_1,
               /* callee */ std::string(k_return_callee),
               /* sink_index */ 0,
               position_1),
           Issue(
-              /* source */ Taint{Frame::leaf(other_source_kind)},
-              /* sink */ Taint{Frame::leaf(other_sink_kind)},
+              /* source */ Taint{test::make_leaf_frame(other_source_kind)},
+              /* sink */ Taint{test::make_leaf_frame(other_sink_kind)},
               &rule_2,
               /* callee */ std::string(k_return_callee),
               /* sink_index */ 0,
@@ -96,7 +96,7 @@ TEST_F(IssueSetTest, Insertion) {
               .call_position = context.positions->unknown(),
               .distance = 1,
               .origins = MethodSet{one}})},
-      /* sink */ Taint{Frame::leaf(other_sink_kind)},
+      /* sink */ Taint{test::make_leaf_frame(other_sink_kind)},
       &rule_2,
       /* callee */ std::string(k_return_callee),
       /* sink_index */ 0,
@@ -105,8 +105,8 @@ TEST_F(IssueSetTest, Insertion) {
       set,
       (IssueSet{
           Issue(
-              /* source */ Taint{Frame::leaf(source_kind)},
-              /* sink */ Taint{Frame::leaf(sink_kind)},
+              /* source */ Taint{test::make_leaf_frame(source_kind)},
+              /* sink */ Taint{test::make_leaf_frame(sink_kind)},
               &rule_1,
               /* callee */ std::string(k_return_callee),
               /* sink_index */ 0,
@@ -114,7 +114,7 @@ TEST_F(IssueSetTest, Insertion) {
           Issue(
               /* source */
               Taint{
-                  Frame::leaf(other_source_kind),
+                  test::make_leaf_frame(other_source_kind),
                   test::make_frame(
                       /* kind */ other_source_kind,
                       test::FrameProperties{
@@ -124,7 +124,7 @@ TEST_F(IssueSetTest, Insertion) {
                           .distance = 1,
                           .origins = MethodSet{one}}),
               },
-              /* sink */ Taint{Frame::leaf(other_sink_kind)},
+              /* sink */ Taint{test::make_leaf_frame(other_sink_kind)},
               &rule_2,
               /* callee */ std::string(k_return_callee),
               /* sink_index */ 0,
@@ -132,7 +132,7 @@ TEST_F(IssueSetTest, Insertion) {
       }));
 
   set.add(Issue(
-      /* source */ Taint{Frame::leaf(other_source_kind)},
+      /* source */ Taint{test::make_leaf_frame(other_source_kind)},
       /* sink */
       Taint{test::make_frame(
           /* kind */ other_sink_kind,
@@ -150,8 +150,8 @@ TEST_F(IssueSetTest, Insertion) {
       set,
       (IssueSet{
           Issue(
-              /* source */ Taint{Frame::leaf(source_kind)},
-              /* sink */ Taint{Frame::leaf(sink_kind)},
+              /* source */ Taint{test::make_leaf_frame(source_kind)},
+              /* sink */ Taint{test::make_leaf_frame(sink_kind)},
               &rule_1,
               /* callee */ std::string(k_return_callee),
               /* sink_index */ 0,
@@ -159,7 +159,7 @@ TEST_F(IssueSetTest, Insertion) {
           Issue(
               /* source */
               Taint{
-                  Frame::leaf(other_source_kind),
+                  test::make_leaf_frame(other_source_kind),
                   test::make_frame(
                       /* kind */ other_source_kind,
                       test::FrameProperties{
@@ -171,14 +171,14 @@ TEST_F(IssueSetTest, Insertion) {
               },
               /* sink */
               Taint{
-                  Frame::leaf(other_sink_kind),
+                  test::make_leaf_frame(other_sink_kind),
               },
               &rule_2,
               /* callee */ std::string(k_return_callee),
               /* sink_index */ 0,
               position_1),
           Issue(
-              /* source */ Taint{Frame::leaf(other_source_kind)},
+              /* source */ Taint{test::make_leaf_frame(other_source_kind)},
               /* sink */
               Taint{test::make_frame(
                   /* kind */ other_sink_kind,
@@ -202,7 +202,7 @@ TEST_F(IssueSetTest, Insertion) {
               .call_position = context.positions->unknown(),
               .distance = 3,
               .origins = MethodSet{two}})},
-      /* sink */ Taint{Frame::leaf(other_sink_kind)},
+      /* sink */ Taint{test::make_leaf_frame(other_sink_kind)},
       &rule_2,
       /* callee */ std::string(k_return_callee),
       /* sink_index */ 0,
@@ -211,8 +211,8 @@ TEST_F(IssueSetTest, Insertion) {
       set,
       (IssueSet{
           Issue(
-              /* source */ Taint{Frame::leaf(source_kind)},
-              /* sink */ Taint{Frame::leaf(sink_kind)},
+              /* source */ Taint{test::make_leaf_frame(source_kind)},
+              /* sink */ Taint{test::make_leaf_frame(sink_kind)},
               &rule_1,
               /* callee */ std::string(k_return_callee),
               /* sink_index */ 0,
@@ -220,7 +220,7 @@ TEST_F(IssueSetTest, Insertion) {
           Issue(
               /* source */
               Taint{
-                  Frame::leaf(other_source_kind),
+                  test::make_leaf_frame(other_source_kind),
                   test::make_frame(
                       /* kind */ other_source_kind,
                       test::FrameProperties{
@@ -240,14 +240,14 @@ TEST_F(IssueSetTest, Insertion) {
               },
               /* sink */
               Taint{
-                  Frame::leaf(other_sink_kind),
+                  test::make_leaf_frame(other_sink_kind),
               },
               &rule_2,
               /* callee */ std::string(k_return_callee),
               /* sink_index */ 0,
               position_1),
           Issue(
-              /* source */ Taint{Frame::leaf(other_source_kind)},
+              /* source */ Taint{test::make_leaf_frame(other_source_kind)},
               /* sink */
               Taint{test::make_frame(
                   /* kind */ other_sink_kind,
@@ -263,8 +263,8 @@ TEST_F(IssueSetTest, Insertion) {
               position_1)}));
 
   set.add(Issue(
-      /* source */ Taint{Frame::leaf(source_kind)},
-      /* sink */ Taint{Frame::leaf(other_sink_kind)},
+      /* source */ Taint{test::make_leaf_frame(source_kind)},
+      /* sink */ Taint{test::make_leaf_frame(other_sink_kind)},
       &rule_1,
       /* callee */ std::string(k_return_callee),
       /* sink_index */ 1,
@@ -273,15 +273,15 @@ TEST_F(IssueSetTest, Insertion) {
       set,
       (IssueSet{
           Issue(
-              /* source */ Taint{Frame::leaf(source_kind)},
-              /* sink */ Taint{Frame::leaf(sink_kind)},
+              /* source */ Taint{test::make_leaf_frame(source_kind)},
+              /* sink */ Taint{test::make_leaf_frame(sink_kind)},
               &rule_1,
               /* callee */ std::string(k_return_callee),
               /* sink_index */ 0,
               position_1),
           Issue(
-              /* source */ Taint{Frame::leaf(source_kind)},
-              /* sink */ Taint{Frame::leaf(other_sink_kind)},
+              /* source */ Taint{test::make_leaf_frame(source_kind)},
+              /* sink */ Taint{test::make_leaf_frame(other_sink_kind)},
               &rule_1,
               /* callee */ std::string(k_return_callee),
               /* sink_index */ 1,
@@ -289,7 +289,7 @@ TEST_F(IssueSetTest, Insertion) {
           Issue(
               /* source */
               Taint{
-                  Frame::leaf(other_source_kind),
+                  test::make_leaf_frame(other_source_kind),
                   test::make_frame(
                       /* kind */ other_source_kind,
                       test::FrameProperties{
@@ -309,14 +309,14 @@ TEST_F(IssueSetTest, Insertion) {
               },
               /* sink */
               Taint{
-                  Frame::leaf(other_sink_kind),
+                  test::make_leaf_frame(other_sink_kind),
               },
               &rule_2,
               /* callee */ std::string(k_return_callee),
               /* sink_index */ 0,
               position_1),
           Issue(
-              /* source */ Taint{Frame::leaf(other_source_kind)},
+              /* source */ Taint{test::make_leaf_frame(other_source_kind)},
               /* sink */
               Taint{test::make_frame(
                   /* kind */ other_sink_kind,
@@ -333,15 +333,15 @@ TEST_F(IssueSetTest, Insertion) {
 
   set = {};
   set.add(Issue(
-      /* source */ Taint{Frame::leaf(source_kind)},
-      /* sink */ Taint{Frame::leaf(sink_kind)},
+      /* source */ Taint{test::make_leaf_frame(source_kind)},
+      /* sink */ Taint{test::make_leaf_frame(sink_kind)},
       &rule_1,
       /* callee */ std::string(k_return_callee),
       /* sink_index */ 0,
       position_1));
   set.add(Issue(
-      /* source */ Taint{Frame::leaf(source_kind)},
-      /* sink */ Taint{Frame::leaf(sink_kind)},
+      /* source */ Taint{test::make_leaf_frame(source_kind)},
+      /* sink */ Taint{test::make_leaf_frame(sink_kind)},
       &rule_1,
       /* callee */ std::string(k_return_callee),
       /* sink_index */ 1,
@@ -351,15 +351,15 @@ TEST_F(IssueSetTest, Insertion) {
 
   set = {};
   set.add(Issue(
-      /* source */ Taint{Frame::leaf(source_kind)},
-      /* sink */ Taint{Frame::leaf(sink_kind)},
+      /* source */ Taint{test::make_leaf_frame(source_kind)},
+      /* sink */ Taint{test::make_leaf_frame(sink_kind)},
       &rule_1,
       /* callee */ std::string(k_return_callee),
       /* sink_index */ 0,
       position_1));
   set.add(Issue(
-      /* source */ Taint{Frame::leaf(source_kind)},
-      /* sink */ Taint{Frame::leaf(sink_kind)},
+      /* source */ Taint{test::make_leaf_frame(source_kind)},
+      /* sink */ Taint{test::make_leaf_frame(sink_kind)},
       &rule_1,
       /* callee */ std::string(k_return_callee),
       /* sink_index */ 0,
@@ -368,15 +368,15 @@ TEST_F(IssueSetTest, Insertion) {
       set,
       (IssueSet{
           Issue(
-              /* source */ Taint{Frame::leaf(source_kind)},
-              /* sink */ Taint{Frame::leaf(sink_kind)},
+              /* source */ Taint{test::make_leaf_frame(source_kind)},
+              /* sink */ Taint{test::make_leaf_frame(sink_kind)},
               &rule_1,
               /* callee */ std::string(k_return_callee),
               /* sink_index */ 0,
               position_1),
           Issue(
-              /* source */ Taint{Frame::leaf(source_kind)},
-              /* sink */ Taint{Frame::leaf(sink_kind)},
+              /* source */ Taint{test::make_leaf_frame(source_kind)},
+              /* sink */ Taint{test::make_leaf_frame(sink_kind)},
               &rule_1,
               /* callee */ std::string(k_return_callee),
               /* sink_index */ 0,
@@ -385,14 +385,14 @@ TEST_F(IssueSetTest, Insertion) {
   // Merging with existing issues that have inferred_features == bottom()
   // should retain the "always"-ness property of the issue.
   set.add(Issue(
-      /* source */ Taint{Frame::leaf(
+      /* source */ Taint{test::make_leaf_frame(
           source_kind,
           /* inferred_features */
           FeatureMayAlwaysSet::make_always({context.features->get("Feature")}),
           /* locally_inferred_features */ FeatureMayAlwaysSet::bottom(),
           /* user_features */ FeatureSet::bottom(),
           /* origins */ {})},
-      /* sink */ Taint{Frame::leaf(sink_kind)},
+      /* sink */ Taint{test::make_leaf_frame(sink_kind)},
       &rule_1,
       /* callee */ std::string(k_return_callee),
       /* sink_index */ 0,
@@ -401,14 +401,14 @@ TEST_F(IssueSetTest, Insertion) {
       set,
       (IssueSet{
           Issue(
-              /* source */ Taint{Frame::leaf(source_kind)},
-              /* sink */ Taint{Frame::leaf(sink_kind)},
+              /* source */ Taint{test::make_leaf_frame(source_kind)},
+              /* sink */ Taint{test::make_leaf_frame(sink_kind)},
               &rule_1,
               /* callee */ std::string(k_return_callee),
               /* sink_index */ 0,
               position_1),
           Issue(
-              /* source */ Taint{Frame::leaf(
+              /* source */ Taint{test::make_leaf_frame(
                   source_kind,
                   /* inferred_features */
                   FeatureMayAlwaysSet::make_always(
@@ -416,7 +416,7 @@ TEST_F(IssueSetTest, Insertion) {
                   /* locally_inferred_features */ FeatureMayAlwaysSet::bottom(),
                   /* user_features */ FeatureSet::bottom(),
                   /* origins */ {})},
-              /* sink */ Taint{Frame::leaf(sink_kind)},
+              /* sink */ Taint{test::make_leaf_frame(sink_kind)},
               &rule_1,
               /* callee */ std::string(k_return_callee),
               /* sink_index */ 0,
@@ -425,7 +425,7 @@ TEST_F(IssueSetTest, Insertion) {
   // Merging with issues that have inferred_features != bottom() would convert
   // "always" to "may" only for features that are not shared across the issues.
   set.add(Issue(
-      /* source */ Taint{Frame::leaf(
+      /* source */ Taint{test::make_leaf_frame(
           source_kind,
           /* inferred_features */
           FeatureMayAlwaysSet::make_always(FeatureSet{
@@ -434,7 +434,7 @@ TEST_F(IssueSetTest, Insertion) {
           /* locally_inferred_features */ FeatureMayAlwaysSet::bottom(),
           /* user_features */ FeatureSet::bottom(),
           /* origins */ {})},
-      /* sink */ Taint{Frame::leaf(sink_kind)},
+      /* sink */ Taint{test::make_leaf_frame(sink_kind)},
       &rule_1,
       /* callee */ std::string(k_return_callee),
       /* sink_index */ 0,
@@ -443,14 +443,14 @@ TEST_F(IssueSetTest, Insertion) {
       set,
       (IssueSet{
           Issue(
-              /* source */ Taint{Frame::leaf(source_kind)},
-              /* sink */ Taint{Frame::leaf(sink_kind)},
+              /* source */ Taint{test::make_leaf_frame(source_kind)},
+              /* sink */ Taint{test::make_leaf_frame(sink_kind)},
               &rule_1,
               /* callee */ std::string(k_return_callee),
               /* sink_index */ 0,
               position_1),
           Issue(
-              /* source */ Taint{Frame::leaf(
+              /* source */ Taint{test::make_leaf_frame(
                   source_kind,
                   /* inferred_features */
                   FeatureMayAlwaysSet(
@@ -460,7 +460,7 @@ TEST_F(IssueSetTest, Insertion) {
                   /* locally_inferred_features */ FeatureMayAlwaysSet::bottom(),
                   /* user_features */ FeatureSet::bottom(),
                   /* origins */ {})},
-              /* sink */ Taint{Frame::leaf(sink_kind)},
+              /* sink */ Taint{test::make_leaf_frame(sink_kind)},
               &rule_1,
               /* callee */ std::string(k_return_callee),
               /* sink_index */ 0,

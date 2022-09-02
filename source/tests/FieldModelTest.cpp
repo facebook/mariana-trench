@@ -33,24 +33,24 @@ TEST_F(FieldModelTest, Join) {
   FieldModel model_with_source(
       /* field */ nullptr,
       /* sources */
-      {Frame::leaf(source_kind)},
+      {test::make_leaf_frame(source_kind)},
       /* sinks */ {});
   model.join_with(model_with_source);
-  EXPECT_EQ(model.sources(), Taint{Frame::leaf(source_kind)});
+  EXPECT_EQ(model.sources(), Taint{test::make_leaf_frame(source_kind)});
   EXPECT_TRUE(model.sinks().is_bottom());
 
   // Repeated application is idempotent.
   model.join_with(model_with_source);
-  EXPECT_EQ(model.sources(), Taint{Frame::leaf(source_kind)});
+  EXPECT_EQ(model.sources(), Taint{test::make_leaf_frame(source_kind)});
   EXPECT_TRUE(model.sinks().is_bottom());
 
   FieldModel model_with_other_source(
       /* field */ nullptr,
-      /* sources */ {Frame::leaf(source_kind2)},
+      /* sources */ {test::make_leaf_frame(source_kind2)},
       /* sinks */ {});
   model.join_with(model_with_other_source);
-  auto source_taint =
-      Taint{Frame::leaf(source_kind), Frame::leaf(source_kind2)};
+  auto source_taint = Taint{
+      test::make_leaf_frame(source_kind), test::make_leaf_frame(source_kind2)};
   EXPECT_EQ(model.sources(), source_taint);
   EXPECT_TRUE(model.sinks().is_bottom());
 
@@ -59,10 +59,10 @@ TEST_F(FieldModelTest, Join) {
       /* field */ nullptr,
       /* sources */ {},
       /* sinks */
-      {Frame::leaf(sink_kind)});
+      {test::make_leaf_frame(sink_kind)});
   model.join_with(model_with_sink);
   EXPECT_EQ(model.sources(), source_taint);
-  EXPECT_EQ(model.sinks(), Taint{Frame::leaf(sink_kind)});
+  EXPECT_EQ(model.sinks(), Taint{test::make_leaf_frame(sink_kind)});
 }
 
 } // namespace marianatrench
