@@ -33,7 +33,8 @@ TEST_F(FieldModelTest, Join) {
   FieldModel model_with_source(
       /* field */ nullptr,
       /* sources */
-      {Frame::leaf(source_kind)});
+      {Frame::leaf(source_kind)},
+      /* sinks */ {});
   model.join_with(model_with_source);
   EXPECT_EQ(model.sources(), Taint{Frame::leaf(source_kind)});
   EXPECT_TRUE(model.sinks().is_bottom());
@@ -45,7 +46,8 @@ TEST_F(FieldModelTest, Join) {
 
   FieldModel model_with_other_source(
       /* field */ nullptr,
-      /* sources */ {Frame::leaf(source_kind2)});
+      /* sources */ {Frame::leaf(source_kind2)},
+      /* sinks */ {});
   model.join_with(model_with_other_source);
   auto source_taint =
       Taint{Frame::leaf(source_kind), Frame::leaf(source_kind2)};

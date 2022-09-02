@@ -159,7 +159,8 @@ TEST_F(RegistryTest, JoinWith) {
                   .field_origins = FieldSet{field},
                   .inferred_features = FeatureMayAlwaysSet::bottom(),
                   .locally_inferred_features = FeatureMayAlwaysSet::bottom(),
-                  .user_features = FeatureSet::bottom()})})}));
+                  .user_features = FeatureSet::bottom()})},
+          /* sinks */ {})}));
   EXPECT_EQ(registry.get(field).sources().num_frames(), 1);
 
   registry.join_with(Registry(
@@ -175,7 +176,8 @@ TEST_F(RegistryTest, JoinWith) {
                   .field_origins = FieldSet{field},
                   .inferred_features = FeatureMayAlwaysSet::bottom(),
                   .locally_inferred_features = FeatureMayAlwaysSet::bottom(),
-                  .user_features = FeatureSet::bottom()})})}));
+                  .user_features = FeatureSet::bottom()})},
+          /* sinks */ {})}));
   EXPECT_EQ(registry.get(field).sources().num_frames(), 2);
 }
 
@@ -216,11 +218,13 @@ TEST_F(RegistryTest, ConstructorUseJoin) {
 
   FieldModel field_with_source(
       /* field */ field,
-      /* sources */ {Frame::leaf(source_kind)});
+      /* sources */ {Frame::leaf(source_kind)},
+      /* sinks */ {});
 
   FieldModel field_with_other_source(
       /* field */ field,
-      /* sources */ {Frame::leaf(source_kind_two)});
+      /* sources */ {Frame::leaf(source_kind_two)},
+      /* sinks */ {});
 
   auto registry = Registry(
       context,

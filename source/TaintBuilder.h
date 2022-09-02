@@ -148,6 +148,22 @@ class TaintBuilder final {
     return kind_ == Kinds::artificial_source();
   }
 
+  bool is_leaf() const {
+    return callee_ == nullptr;
+  }
+
+  void set_origins(const MethodSet& origins) {
+    origins_ = origins;
+  }
+
+  void set_field_origins(const FieldSet& field_origins) {
+    field_origins_ = field_origins;
+  }
+
+  void set_field_callee(const Field* MT_NULLABLE field_callee) {
+    field_callee_ = field_callee;
+  }
+
   static TaintBuilder from_json(const Json::Value& value, Context& context);
 
  private:

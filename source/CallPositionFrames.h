@@ -20,6 +20,7 @@
 #include <mariana-trench/FlattenIterator.h>
 #include <mariana-trench/Frame.h>
 #include <mariana-trench/GroupHashedSetAbstractDomain.h>
+#include <mariana-trench/TaintBuilder.h>
 
 namespace marianatrench {
 
@@ -65,6 +66,8 @@ class CallPositionFrames final
 
   explicit CallPositionFrames(std::initializer_list<Frame> frames);
 
+  explicit CallPositionFrames(std::initializer_list<TaintBuilder> builders);
+
   CallPositionFrames(const CallPositionFrames&) = default;
   CallPositionFrames(CallPositionFrames&&) = default;
   CallPositionFrames& operator=(const CallPositionFrames&) = default;
@@ -107,6 +110,8 @@ class CallPositionFrames final
   }
 
   void add(const Frame& frame);
+
+  void add(const TaintBuilder& builder);
 
   bool leq(const CallPositionFrames& other) const override;
 

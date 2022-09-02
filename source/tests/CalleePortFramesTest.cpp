@@ -458,7 +458,7 @@ TEST_F(CalleePortFramesTest, Difference) {
       });
 
   frames = initial_frames;
-  frames.difference_with(CalleePortFrames(/* local_positions */ {}, {}));
+  frames.difference_with(CalleePortFrames::bottom());
   EXPECT_EQ(frames, initial_frames);
 
   frames = initial_frames;

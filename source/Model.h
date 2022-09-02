@@ -148,6 +148,23 @@ class Model final {
           AccessPathConstantDomain::bottom(),
       const IssueSet& issues = {});
 
+  explicit Model(
+      const Method* MT_NULLABLE method,
+      Context& context,
+      Modes modes,
+      const std::vector<std::pair<AccessPath, TaintBuilder>>& generations,
+      const std::vector<std::pair<AccessPath, TaintBuilder>>& parameter_sources,
+      const std::vector<std::pair<AccessPath, TaintBuilder>>& sinks,
+      const std::vector<std::pair<Propagation, AccessPath>>& propagations,
+      const std::vector<Sanitizer>& global_sanitizers,
+      const std::vector<std::pair<Root, SanitizerSet>>& port_sanitizers,
+      const std::vector<std::pair<Root, FeatureSet>>& attach_to_sources,
+      const std::vector<std::pair<Root, FeatureSet>>& attach_to_sinks,
+      const std::vector<std::pair<Root, FeatureSet>>& attach_to_propagations,
+      const std::vector<std::pair<Root, FeatureSet>>& add_features_to_arguments,
+      const AccessPathConstantDomain& inline_as,
+      const IssueSet& issues);
+
   Model(const Model& other) = default;
   Model(Model&&) = default;
   Model& operator=(const Model& other) = default;
@@ -184,6 +201,9 @@ class Model final {
   bool check_parameter_source_port_consistency(
       const AccessPath& access_path) const;
   bool check_frame_consistency(const Frame& frame, std::string_view kind) const;
+  bool check_taint_builder_consistency(
+      const TaintBuilder& frame,
+      std::string_view kind) const;
   bool check_propagation_consistency(const Propagation& propagation) const;
   bool check_inline_as_consistency(
       const AccessPathConstantDomain& inline_as) const;
@@ -193,6 +213,7 @@ class Model final {
   void add_taint_in_taint_this(Context& context);
 
   void add_generation(AccessPath port, Frame generation);
+  void add_generation(AccessPath port, TaintBuilder generation);
   void add_generations(AccessPath port, Taint generations);
   /* Add generations after applying sanitizers */
   void add_inferred_generations(AccessPath port, Taint generations);
@@ -204,6 +225,7 @@ class Model final {
   }
 
   void add_parameter_source(AccessPath port, Frame source);
+  void add_parameter_source(AccessPath port, TaintBuilder source);
   const TaintAccessPathTree& parameter_sources() const {
     return parameter_sources_;
   }
@@ -212,6 +234,7 @@ class Model final {
   }
 
   void add_sink(AccessPath port, Frame sink);
+  void add_sink(AccessPath port, TaintBuilder sink);
   void add_sinks(AccessPath port, Taint sinks);
   /* Add sinks after applying sanitizers */
   void add_inferred_sinks(AccessPath port, Taint sinks);

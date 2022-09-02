@@ -12,6 +12,7 @@
 
 #include <mariana-trench/CallPositionFrames.h>
 #include <mariana-trench/Position.h>
+#include <mariana-trench/TaintBuilder.h>
 
 namespace marianatrench {
 
@@ -67,6 +68,8 @@ class CalleeFrames final : public sparta::AbstractDomain<CalleeFrames> {
 
   explicit CalleeFrames(std::initializer_list<Frame> frames);
 
+  explicit CalleeFrames(std::initializer_list<TaintBuilder> builders);
+
   CalleeFrames(const CalleeFrames&) = default;
   CalleeFrames(CalleeFrames&&) = default;
   CalleeFrames& operator=(const CalleeFrames&) = default;
@@ -109,6 +112,8 @@ class CalleeFrames final : public sparta::AbstractDomain<CalleeFrames> {
   }
 
   void add(const Frame& frame);
+
+  void add(const TaintBuilder& builder);
 
   bool leq(const CalleeFrames& other) const override;
 

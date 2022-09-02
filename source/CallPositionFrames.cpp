@@ -22,6 +22,14 @@ CallPositionFrames::CallPositionFrames(std::initializer_list<Frame> frames)
   }
 }
 
+CallPositionFrames::CallPositionFrames(
+    std::initializer_list<TaintBuilder> builders)
+    : position_(nullptr) {
+  for (const auto& builder : builders) {
+    add(builder);
+  }
+}
+
 void CallPositionFrames::add(const Frame& frame) {
   if (position_ == nullptr) {
     position_ = frame.call_position();
@@ -30,6 +38,16 @@ void CallPositionFrames::add(const Frame& frame) {
   }
 
   frames_.add(CalleePortFrames(/* local_positions */ {}, {frame}));
+}
+
+void CallPositionFrames::add(const TaintBuilder& builder) {
+  if (position_ == nullptr) {
+    position_ = builder.call_position();
+  } else {
+    mt_assert(position_ == builder.call_position());
+  }
+
+  frames_.add(CalleePortFrames(/* local_positions */ {}, {builder}));
 }
 
 bool CallPositionFrames::leq(const CallPositionFrames& other) const {

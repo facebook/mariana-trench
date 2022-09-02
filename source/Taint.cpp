@@ -17,6 +17,12 @@ Taint::Taint(std::initializer_list<Frame> frames) {
   }
 }
 
+Taint::Taint(std::initializer_list<TaintBuilder> builders) {
+  for (const auto& builder : builders) {
+    add(builder);
+  }
+}
+
 TaintFramesIterator Taint::frames_iterator() const {
   return TaintFramesIterator(*this);
 }
@@ -30,6 +36,10 @@ std::size_t Taint::num_frames() const {
 
 void Taint::add(const Frame& frame) {
   set_.add(CalleeFrames{frame});
+}
+
+void Taint::add(const TaintBuilder& builder) {
+  set_.add(CalleeFrames{builder});
 }
 
 bool Taint::leq(const Taint& other) const {

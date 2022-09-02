@@ -21,6 +21,13 @@ CalleeFrames::CalleeFrames(std::initializer_list<Frame> frames)
   }
 }
 
+CalleeFrames::CalleeFrames(std::initializer_list<TaintBuilder> builders)
+    : callee_(nullptr) {
+  for (const auto& builder : builders) {
+    add(builder);
+  }
+}
+
 void CalleeFrames::add(const Frame& frame) {
   if (callee_ == nullptr) {
     callee_ = frame.callee();
@@ -34,6 +41,23 @@ void CalleeFrames::add(const Frame& frame) {
       frame.call_position(), [&](const CallPositionFrames& old_frames) {
         auto new_frames = old_frames;
         new_frames.add(frame);
+        return new_frames;
+      });
+}
+
+void CalleeFrames::add(const TaintBuilder& builder) {
+  if (callee_ == nullptr) {
+    callee_ = builder.callee();
+  } else {
+    mt_assert(callee_ == builder.callee());
+  }
+
+  // TODO (T91357916): GroupHashedSetAbstractDomain could be more efficient.
+  // It supports an `add` operation that avoids making a copy.
+  frames_.update(
+      builder.call_position(), [&](const CallPositionFrames& old_frames) {
+        auto new_frames = old_frames;
+        new_frames.add(builder);
         return new_frames;
       });
 }

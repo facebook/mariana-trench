@@ -9,6 +9,7 @@
 
 #include <mariana-trench/Field.h>
 #include <mariana-trench/Taint.h>
+#include <mariana-trench/TaintBuilder.h>
 
 namespace marianatrench {
 
@@ -26,10 +27,17 @@ class FieldModel final {
  public:
   explicit FieldModel() : field_(nullptr) {}
 
+  explicit FieldModel(const Field* field) : field_(field) {}
+
   explicit FieldModel(
       const Field* field,
-      const std::vector<Frame>& sources = {},
-      const std::vector<Frame>& sinks = {});
+      const std::vector<Frame>& sources,
+      const std::vector<Frame>& sinks);
+
+  explicit FieldModel(
+      const Field* field,
+      const std::vector<TaintBuilder>& sources,
+      const std::vector<TaintBuilder>& sinks);
 
   FieldModel(const FieldModel& other) = default;
   FieldModel(FieldModel&&) = default;
@@ -59,6 +67,9 @@ class FieldModel final {
   void add_source(Frame source);
   void add_sink(Frame source);
 
+  void add_source(TaintBuilder source);
+  void add_sink(TaintBuilder source);
+
   void join_with(const FieldModel& other);
 
   static FieldModel from_json(
@@ -77,6 +88,8 @@ class FieldModel final {
 
  private:
   void check_frame_consistency(const Frame& frame, std::string_view kind) const;
+  void check_frame_consistency(const TaintBuilder& frame, std::string_view kind)
+      const;
 
   const Field* MT_NULLABLE field_;
   Taint sources_;

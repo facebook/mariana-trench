@@ -40,6 +40,20 @@ FieldModel::FieldModel(
   }
 }
 
+FieldModel::FieldModel(
+    const Field* field,
+    const std::vector<TaintBuilder>& sources,
+    const std::vector<TaintBuilder>& sinks)
+    : field_(field) {
+  for (const auto& builder : sources) {
+    add_source(builder);
+  }
+
+  for (const auto& builder : sinks) {
+    add_sink(builder);
+  }
+}
+
 bool FieldModel::operator==(const FieldModel& other) const {
   return sources_ == other.sources_ && sinks_ == other.sinks_;
 }
@@ -94,6 +108,35 @@ void FieldModel::check_frame_consistency(
   }
 }
 
+void FieldModel::check_frame_consistency(
+    const TaintBuilder& frame,
+    std::string_view kind) const {
+  if (frame.kind() == nullptr) {
+    FieldModelConsistencyError::raise(fmt::format(
+        "Model for field `{}` must have a kind {}.", show(field_), kind));
+  }
+  if (frame.is_artificial_source()) {
+    FieldModelConsistencyError::raise(fmt::format(
+        "Model for field `{}` contains an artificial {}.", show(field_), kind));
+  }
+  if (field_ && frame.field_origins().empty()) {
+    FieldModelConsistencyError::raise(fmt::format(
+        "Model for field `{}` contains a {} without field origins.",
+        show(field_),
+        kind));
+  }
+  if (!frame.callee_port().root().is_leaf() ||
+      frame.call_position() != nullptr || frame.distance() != 0 ||
+      !frame.origins().is_bottom() || frame.via_type_of_ports().size() != 0 ||
+      frame.canonical_names().size() != 0) {
+    FieldModelConsistencyError::raise(fmt::format(
+        "Frame in {}s for field `{}` contains an unexpected non-empty or non-bottom value for a field.",
+        // show(frame),
+        show(kind),
+        show(field_)));
+  }
+}
+
 namespace {
 
 Frame add_field_callee(const Field* MT_NULLABLE field, const Frame& frame) {
@@ -137,6 +180,26 @@ void FieldModel::add_sink(Frame sink) {
   sinks_.add(add_field_callee(field_, sink));
 }
 
+void FieldModel::add_source(TaintBuilder source) {
+  mt_assert(source.is_leaf());
+  if (field_ && source.field_origins().empty()) {
+    source.set_field_origins(FieldSet{field_});
+  }
+  check_frame_consistency(source, "source");
+  source.set_field_callee(field_);
+  sources_.add(source);
+}
+
+void FieldModel::add_sink(TaintBuilder sink) {
+  mt_assert(sink.is_leaf());
+  if (field_ && sink.field_origins().empty()) {
+    sink.set_field_origins(FieldSet{field_});
+  }
+  check_frame_consistency(sink, "sink");
+  sink.set_field_callee(field_);
+  sinks_.add(sink);
+}
+
 void FieldModel::join_with(const FieldModel& other) {
   if (this == &other) {
     return;
@@ -155,7 +218,10 @@ FieldModel FieldModel::from_json(
     const Json::Value& value,
     Context& context) {
   JsonValidation::validate_object(value);
-  FieldModel model(field);
+  FieldModel model(
+      field,
+      /* sources */ std::vector<Frame>{},
+      /* sinks */ std::vector<Frame>{});
 
   for (auto source_value :
        JsonValidation::null_or_array(value, /* field */ "sources")) {

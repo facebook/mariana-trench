@@ -17,6 +17,7 @@
 #include <mariana-trench/CalleeFrames.h>
 #include <mariana-trench/Frame.h>
 #include <mariana-trench/GroupHashedSetAbstractDomain.h>
+#include <mariana-trench/TaintBuilder.h>
 
 namespace marianatrench {
 
@@ -60,6 +61,8 @@ class Taint final : public sparta::AbstractDomain<Taint> {
 
   explicit Taint(std::initializer_list<Frame> frames);
 
+  explicit Taint(std::initializer_list<TaintBuilder> builders);
+
   Taint(const Taint&) = default;
   Taint(Taint&&) = default;
   Taint& operator=(const Taint&) = default;
@@ -102,6 +105,8 @@ class Taint final : public sparta::AbstractDomain<Taint> {
   std::size_t num_frames() const;
 
   void add(const Frame& frame);
+
+  void add(const TaintBuilder& builder);
 
   void clear() {
     set_.clear();

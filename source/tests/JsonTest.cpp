@@ -2320,7 +2320,7 @@ TEST_F(JsonTest, Model) {
               method,
               context,
               Model::Mode::Normal,
-              /* generations */ {},
+              /* generations */ std::vector<std::pair<AccessPath, Frame>>{},
               /* parameter_sources */ {},
               /* sinks */ {},
               /* propagations */ {},
@@ -2427,7 +2427,8 @@ TEST_F(JsonTest, FieldModel) {
                test::FrameProperties{
                    .inferred_features = FeatureMayAlwaysSet::bottom(),
                    .locally_inferred_features = FeatureMayAlwaysSet::bottom(),
-                   .user_features = FeatureSet{feature}})}));
+                   .user_features = FeatureSet{feature}})},
+          /* sinks */ {}));
   EXPECT_EQ(
       FieldModel::from_json(
           field,

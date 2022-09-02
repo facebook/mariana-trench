@@ -21,6 +21,7 @@
 #include <mariana-trench/FlattenIterator.h>
 #include <mariana-trench/Frame.h>
 #include <mariana-trench/GroupHashedSetAbstractDomain.h>
+#include <mariana-trench/TaintBuilder.h>
 
 namespace marianatrench {
 
@@ -95,6 +96,16 @@ class CalleePortFrames final : public sparta::AbstractDomain<CalleePortFrames> {
       LocalPositionSet local_positions,
       std::initializer_list<Frame> frames);
 
+  /**
+   * TODO(T91357916): Remove local_positions from argument. It should be
+   * specified in `builders`. For now, leave it there to be consistent with
+   * the constructor above (for ease of migrating from `Frame` to
+   * `TaintBuilder`).
+   */
+  explicit CalleePortFrames(
+      LocalPositionSet local_positions,
+      std::initializer_list<TaintBuilder> builders);
+
   CalleePortFrames(const CalleePortFrames&) = default;
   CalleePortFrames(CalleePortFrames&&) = default;
   CalleePortFrames& operator=(const CalleePortFrames&) = default;
@@ -168,6 +179,8 @@ class CalleePortFrames final : public sparta::AbstractDomain<CalleePortFrames> {
   }
 
   void add(const Frame& frame);
+
+  void add(const TaintBuilder& builder);
 
   bool leq(const CalleePortFrames& other) const override;
 
