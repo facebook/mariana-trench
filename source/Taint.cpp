@@ -218,6 +218,25 @@ FeatureMayAlwaysSet Taint::features_joined() const {
   return features;
 }
 
+Taint Taint::artificial_source(AccessPath access_path) {
+  return Taint{TaintBuilder(
+      /* kind */ Kinds::artificial_source(),
+      /* callee_port */ access_path,
+      /* callee */ nullptr,
+      /* field_callee */ nullptr,
+      /* call_position */ nullptr,
+      /* distance */ 0,
+      /* origins */ {},
+      /* field_origins */ {},
+      /* inferred_features */ {},
+      /* locally_inferred_features */ {},
+      /* user_features */ {},
+      /* via_type_of_ports */ {},
+      /* via_value_of_ports */ {},
+      /* canonical_names */ {},
+      /* local_positions */ {})};
+}
+
 void Taint::add(const CalleeFrames& frames) {
   set_.add(frames);
 }

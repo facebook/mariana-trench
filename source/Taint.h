@@ -245,6 +245,16 @@ class Taint final : public sparta::AbstractDomain<Taint> {
    */
   FeatureMayAlwaysSet features_joined() const;
 
+  /**
+   * Return an artificial source for the given access path.
+   *
+   * An artificial source is a source used to track the flow of a parameter,
+   * to infer sinks and propagations. Instead of relying on a backward analysis,
+   * we introduce these artificial sources in the forward analysis. This saves
+   * the maintenance cost of having a forward and backward transfer function.
+   */
+  static Taint artificial_source(AccessPath access_path);
+
  private:
   void add(const CalleeFrames& frames);
 

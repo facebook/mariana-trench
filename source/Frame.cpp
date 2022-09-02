@@ -125,29 +125,6 @@ void Frame::narrow_with(const Frame& other) {
   meet_with(other);
 }
 
-Frame Frame::artificial_source(ParameterPosition parameter_position) {
-  return Frame::artificial_source(
-      AccessPath(Root(Root::Kind::Argument, parameter_position)));
-}
-
-Frame Frame::artificial_source(AccessPath access_path) {
-  return Frame(
-      /* kind */ Kinds::artificial_source(),
-      /* callee_port */ access_path,
-      /* callee */ nullptr,
-      /* field_callee */ nullptr,
-      /* call_position */ nullptr,
-      /* distance */ 0,
-      /* origins */ {},
-      /* field_origins */ {},
-      /* inferred_features */ {},
-      /* locally_inferred_features */ {},
-      /* user_features */ {},
-      /* via_type_of_ports */ {},
-      /* via_value_of_ports */ {},
-      /* canonical_names */ {});
-}
-
 void Frame::callee_port_append(Path::Element path_element) {
   callee_port_.append(path_element);
 }

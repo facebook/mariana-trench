@@ -17,6 +17,15 @@
 
 namespace marianatrench {
 
+namespace {
+
+Taint make_artificial_source(ParameterPosition parameter_position) {
+  return Taint::artificial_source(
+      AccessPath(Root(Root::Kind::Argument, parameter_position)));
+}
+
+} // namespace
+
 class AbstractTreeDomainTest : public test::Test {};
 
 using IntSet = sparta::PatriciaTreeSetAbstractDomain<unsigned>;
@@ -1130,88 +1139,88 @@ TEST_F(AbstractTreeDomainTest, Propagate) {
   const auto* y = DexString::make_string("y");
   const auto* z = DexString::make_string("z");
 
-  auto tree = TaintTree{Taint{Frame::artificial_source(1)}};
-  EXPECT_EQ(
-      tree.read(Path{x, y}, PropagateArtificialSources()),
-      (TaintTree{Taint{
-          Frame::artificial_source(
-              AccessPath(Root(Root::Kind::Argument, 1), Path{x, y})),
-      }}));
-
-  tree.write(Path{x}, Taint{Frame::artificial_source(2)}, UpdateKind::Weak);
-  EXPECT_EQ(
-      tree.read(Path{x, y}, PropagateArtificialSources()),
-      (TaintTree{Taint{
-          Frame::artificial_source(
-              AccessPath(Root(Root::Kind::Argument, 1), Path{x, y})),
-          Frame::artificial_source(
-              AccessPath(Root(Root::Kind::Argument, 2), Path{y})),
-      }}));
-
-  tree.write(Path{x, y}, Taint{Frame::artificial_source(3)}, UpdateKind::Weak);
-  EXPECT_EQ(
-      tree.read(Path{x, y}, PropagateArtificialSources()),
-      (TaintTree{Taint{
-          Frame::artificial_source(
-              AccessPath(Root(Root::Kind::Argument, 1), Path{x, y})),
-          Frame::artificial_source(
-              AccessPath(Root(Root::Kind::Argument, 2), Path{y})),
-          Frame::artificial_source(AccessPath(Root(Root::Kind::Argument, 3))),
-      }}));
-
-  tree.write(
-      Path{x, y, z}, Taint{Frame::artificial_source(4)}, UpdateKind::Weak);
+  auto tree = TaintTree{make_artificial_source(1)};
   EXPECT_EQ(
       tree.read(Path{x, y}, PropagateArtificialSources()),
       (TaintTree{
-          {Path{},
-           Taint{
-               Frame::artificial_source(
-                   AccessPath(Root(Root::Kind::Argument, 1), Path{x, y})),
-           }},
-          {Path{},
-           Taint{
-               Frame::artificial_source(
-                   AccessPath(Root(Root::Kind::Argument, 2), Path{y})),
-           }},
-          {Path{},
-           Taint{
-               Frame::artificial_source(
-                   AccessPath(Root(Root::Kind::Argument, 3))),
-           }},
-          {Path{z},
-           Taint{
-               Frame::artificial_source(
-                   AccessPath(Root(Root::Kind::Argument, 4))),
-           }},
+          Taint::artificial_source(
+              AccessPath(Root(Root::Kind::Argument, 1), Path{x, y})),
       }));
 
-  tree = TaintTree{Taint{
-      Frame::artificial_source(
+  tree.write(Path{x}, make_artificial_source(2), UpdateKind::Weak);
+  EXPECT_EQ(
+      tree.read(Path{x, y}, PropagateArtificialSources()),
+      (TaintTree{
+          Taint::artificial_source(
+              AccessPath(Root(Root::Kind::Argument, 1), Path{x, y}))
+              .join(Taint::artificial_source(
+                  AccessPath(Root(Root::Kind::Argument, 2), Path{y}))),
+      }));
+
+  tree.write(Path{x, y}, make_artificial_source(3), UpdateKind::Weak);
+  EXPECT_EQ(
+      tree.read(Path{x, y}, PropagateArtificialSources()),
+      (TaintTree{
+          Taint::artificial_source(
+              AccessPath(Root(Root::Kind::Argument, 1), Path{x, y}))
+              .join(Taint::artificial_source(
+                  AccessPath(Root(Root::Kind::Argument, 2), Path{y})))
+              .join(Taint::artificial_source(
+                  AccessPath(Root(Root::Kind::Argument, 3)))),
+      }));
+
+  tree.write(Path{x, y, z}, make_artificial_source(4), UpdateKind::Weak);
+  EXPECT_EQ(
+      tree.read(Path{x, y}, PropagateArtificialSources()),
+      (TaintTree{
+          {
+              Path{},
+              Taint::artificial_source(
+                  AccessPath(Root(Root::Kind::Argument, 1), Path{x, y})),
+          },
+          {
+              Path{},
+              Taint::artificial_source(
+                  AccessPath(Root(Root::Kind::Argument, 2), Path{y})),
+          },
+          {
+              Path{},
+              Taint::artificial_source(
+                  AccessPath(Root(Root::Kind::Argument, 3))),
+          },
+          {
+              Path{z},
+              Taint::artificial_source(
+                  AccessPath(Root(Root::Kind::Argument, 4))),
+          },
+      }));
+
+  tree = TaintTree{
+      Taint::artificial_source(
           AccessPath(Root(Root::Kind::Argument, 0), Path{x})),
-  }};
+  };
   EXPECT_EQ(
       tree.read(Path{y}, PropagateArtificialSources()),
-      (TaintTree{Taint{
-          Frame::artificial_source(
+      (TaintTree{
+          Taint::artificial_source(
               AccessPath(Root(Root::Kind::Argument, 0), Path{x, y})),
-      }}));
+      }));
 
   tree.set_to_bottom();
-  tree.write(Path{x}, Taint{Frame::artificial_source(0)}, UpdateKind::Weak);
-  tree.write(Path{y}, Taint{Frame::artificial_source(1)}, UpdateKind::Weak);
-  tree.write(Path{z}, Taint{Frame::artificial_source(2)}, UpdateKind::Weak);
+  tree.write(Path{x}, make_artificial_source(0), UpdateKind::Weak);
+  tree.write(Path{y}, make_artificial_source(1), UpdateKind::Weak);
+  tree.write(Path{z}, make_artificial_source(2), UpdateKind::Weak);
   tree.write(
       Path{y, z},
-      Taint{Frame::artificial_source(
-          AccessPath(Root(Root::Kind::Argument, 1), Path{z}))},
+      Taint::artificial_source(
+          AccessPath(Root(Root::Kind::Argument, 1), Path{z})),
       UpdateKind::Weak);
   EXPECT_EQ(
       tree.read(Path{y, z}, PropagateArtificialSources()),
-      (TaintTree{Taint{
-          Frame::artificial_source(
+      (TaintTree{
+          Taint::artificial_source(
               AccessPath(Root(Root::Kind::Argument, 1), Path{z})),
-      }}));
+      }));
 }
 
 TEST_F(AbstractTreeDomainTest, CollapseInvalid) {

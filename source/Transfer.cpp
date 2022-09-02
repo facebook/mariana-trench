@@ -1185,9 +1185,7 @@ bool Transfer::analyze_load_param(
   // Introduce an artificial parameter source in order to infer sinks and
   // propagations.
   taint.write(
-      Path{},
-      Taint{Frame::artificial_source(AccessPath(root))},
-      UpdateKind::Weak);
+      Path{}, Taint::artificial_source(AccessPath(root)), UpdateKind::Weak);
 
   LOG_OR_DUMP(context, 4, "Tainting {} with {}", show(memory_location), taint);
   environment->write(memory_location, std::move(taint), UpdateKind::Strong);

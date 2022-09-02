@@ -256,17 +256,6 @@ class Frame final : public sparta::AbstractDomain<Frame> {
 
   void narrow_with(const Frame& other) override;
 
-  /**
-   * Return an artificial source for the given parameter.
-   *
-   * An artificial source is a source used to track the flow of a parameter,
-   * to infer sinks and propagations. Instead of relying on a backward analysis,
-   * we introduce these artificial sources in the forward analysis. This saves
-   * the maintenance cost of having a forward and backward transfer function.
-   */
-  static Frame artificial_source(ParameterPosition parameter_position);
-  static Frame artificial_source(AccessPath access_path);
-
   bool is_artificial_source() const {
     return kind_ == Kinds::artificial_source();
   }
