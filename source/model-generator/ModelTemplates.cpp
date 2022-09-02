@@ -206,7 +206,7 @@ void PropagationTemplate::instantiate(
       output_.instantiate(parameter_positions));
 }
 
-SinkTemplate::SinkTemplate(Frame sink, AccessPathTemplate port)
+SinkTemplate::SinkTemplate(TaintBuilder sink, AccessPathTemplate port)
     : sink_(std::move(sink)), port_(std::move(port)) {}
 
 SinkTemplate SinkTemplate::from_json(
@@ -216,7 +216,7 @@ SinkTemplate SinkTemplate::from_json(
 
   JsonValidation::string(value, /* field */ "port");
   return SinkTemplate(
-      Frame::from_json(value, context),
+      TaintBuilder::from_json(value, context),
       AccessPathTemplate::from_json(value["port"]));
 }
 
@@ -227,7 +227,7 @@ void SinkTemplate::instantiate(
 }
 
 ParameterSourceTemplate::ParameterSourceTemplate(
-    Frame source,
+    TaintBuilder source,
     AccessPathTemplate port)
     : source_(std::move(source)), port_(std::move(port)) {}
 
@@ -238,7 +238,7 @@ ParameterSourceTemplate ParameterSourceTemplate::from_json(
 
   JsonValidation::string(value, /* field */ "port");
   return ParameterSourceTemplate(
-      Frame::from_json(value, context),
+      TaintBuilder::from_json(value, context),
       AccessPathTemplate::from_json(value["port"]));
 }
 
@@ -248,7 +248,9 @@ void ParameterSourceTemplate::instantiate(
   model.add_parameter_source(port_.instantiate(parameter_positions), source_);
 }
 
-GenerationTemplate::GenerationTemplate(Frame source, AccessPathTemplate port)
+GenerationTemplate::GenerationTemplate(
+    TaintBuilder source,
+    AccessPathTemplate port)
     : source_(std::move(source)), port_(std::move(port)) {}
 
 GenerationTemplate GenerationTemplate::from_json(
@@ -258,7 +260,7 @@ GenerationTemplate GenerationTemplate::from_json(
 
   JsonValidation::string(value, /* field */ "port");
   return GenerationTemplate(
-      Frame::from_json(value, context),
+      TaintBuilder::from_json(value, context),
       AccessPathTemplate::from_json(value["port"]));
 }
 
@@ -268,7 +270,7 @@ void GenerationTemplate::instantiate(
   model.add_generation(port_.instantiate(parameter_positions), source_);
 }
 
-SourceTemplate::SourceTemplate(Frame source, AccessPathTemplate port)
+SourceTemplate::SourceTemplate(TaintBuilder source, AccessPathTemplate port)
     : source_(std::move(source)), port_(std::move(port)) {}
 
 SourceTemplate SourceTemplate::from_json(
@@ -278,7 +280,7 @@ SourceTemplate SourceTemplate::from_json(
 
   JsonValidation::string(value, /* field */ "port");
   return SourceTemplate(
-      Frame::from_json(value, context),
+      TaintBuilder::from_json(value, context),
       AccessPathTemplate::from_json(value["port"]));
 }
 

@@ -84,6 +84,27 @@ class TaintBuilder final {
   TaintBuilder& operator=(const TaintBuilder&) = default;
   TaintBuilder& operator=(TaintBuilder&&) = default;
 
+  friend bool operator==(const TaintBuilder& self, const TaintBuilder& other) {
+    return self.kind_ == other.kind_ &&
+        self.callee_port_ == other.callee_port_ &&
+        self.callee_ == other.callee_ &&
+        self.field_callee_ == other.field_callee_ &&
+        self.call_position_ == other.call_position_ &&
+        self.distance_ == other.distance_ && self.origins_ == other.origins_ &&
+        self.field_origins_ == other.field_origins_ &&
+        self.inferred_features_ == other.inferred_features_ &&
+        self.locally_inferred_features_ == other.locally_inferred_features_ &&
+        self.user_features_ == other.user_features_ &&
+        self.via_type_of_ports_ == other.via_type_of_ports_ &&
+        self.via_value_of_ports_ == other.via_value_of_ports_ &&
+        self.canonical_names_ == other.canonical_names_ &&
+        self.local_positions_ == other.local_positions_;
+  }
+
+  friend bool operator!=(const TaintBuilder& self, const TaintBuilder& other) {
+    return !(self == other);
+  }
+
   const Kind* MT_NULLABLE kind() const {
     return kind_;
   }

@@ -225,11 +225,11 @@ FieldModel FieldModel::from_json(
 
   for (auto source_value :
        JsonValidation::null_or_array(value, /* field */ "sources")) {
-    model.add_source(Frame::from_json(source_value, context));
+    model.add_source(TaintBuilder::from_json(source_value, context));
   }
   for (auto sink_value :
        JsonValidation::null_or_array(value, /* field */ "sinks")) {
-    model.add_sink(Frame::from_json(sink_value, context));
+    model.add_sink(TaintBuilder::from_json(sink_value, context));
   }
   return model;
 }

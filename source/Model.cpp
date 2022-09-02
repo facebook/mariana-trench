@@ -1086,7 +1086,8 @@ Model Model::from_json(
       JsonValidation::string(generation_value, /* field */ "caller_port");
       port = AccessPath::from_json(generation_value["caller_port"]);
     }
-    model.add_generation(port, Frame::from_json(generation_value, context));
+    model.add_generation(
+        port, TaintBuilder::from_json(generation_value, context));
   }
 
   for (auto parameter_source_value :
@@ -1096,7 +1097,7 @@ Model Model::from_json(
     JsonValidation::string(parameter_source_value, /* field */ port_field);
     auto port = AccessPath::from_json(parameter_source_value[port_field]);
     model.add_parameter_source(
-        port, Frame::from_json(parameter_source_value, context));
+        port, TaintBuilder::from_json(parameter_source_value, context));
   }
 
   for (auto source_value :
@@ -1109,7 +1110,7 @@ Model Model::from_json(
       JsonValidation::string(source_value, /* field */ "caller_port");
       port = AccessPath::from_json(source_value["caller_port"]);
     }
-    auto source = Frame::from_json(source_value, context);
+    auto source = TaintBuilder::from_json(source_value, context);
     if (port.root().is_argument()) {
       model.add_parameter_source(port, source);
     } else {
@@ -1123,7 +1124,7 @@ Model Model::from_json(
         sink_value.isMember("port") ? "port" : "caller_port";
     JsonValidation::string(sink_value, /* field */ port_field);
     auto port = AccessPath::from_json(sink_value[port_field]);
-    model.add_sink(port, Frame::from_json(sink_value, context));
+    model.add_sink(port, TaintBuilder::from_json(sink_value, context));
   }
 
   for (auto propagation_value :

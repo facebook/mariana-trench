@@ -42,10 +42,6 @@ Json::Value to_json(const T* value) {
   return value->to_json();
 }
 
-Json::Value to_json(const Frame& value) {
-  return value.to_json(/* local_positions */ {});
-}
-
 #define EXPECT_JSON_EQ(CLASS, JSON, EXPRESSION, ...)                           \
   do {                                                                         \
     EXPECT_EQ(                                                                 \
@@ -53,24 +49,6 @@ Json::Value to_json(const Frame& value) {
     EXPECT_EQ(test::parse_json(JSON), test::sorted_json(to_json(EXPRESSION))); \
     EXPECT_EQ(                                                                 \
         CLASS::from_json(to_json(EXPRESSION), ##__VA_ARGS__), EXPRESSION);     \
-  } while (0)
-
-// For non-legacy JSON, Frame::from_json and Frame::to_json are not symmetrical.
-// Frame::to_json drops the callee, port and position so there are differences
-// in verification logic.
-// TODO(T91357916): Make what we parse the same as what we output so `Frame`
-// JSON tests can simply use EXPECT_JSON_EQ defined above.
-#define EXPECT_FRAME_JSON_EQ(JSON, EXPRESSION, ...)                           \
-  do {                                                                        \
-    EXPECT_EQ(                                                                \
-        Frame::from_json(test::parse_json(JSON), ##__VA_ARGS__), EXPRESSION); \
-    auto json = test::parse_json(JSON);                                       \
-    if (json.isObject()) {                                                    \
-      json.removeMember("callee");                                            \
-      json.removeMember("callee_port");                                       \
-      json.removeMember("call_position");                                     \
-    }                                                                         \
-    EXPECT_EQ(json, test::sorted_json(to_json(EXPRESSION)));                  \
   } while (0)
 
 } // namespace
@@ -700,7 +678,7 @@ TEST_F(JsonTest, LocalPositionSet) {
       test::parse_json(R"#([{"line": 1}, {"line": 2}])#"));
 }
 
-TEST_F(JsonTest, Frame) {
+TEST_F(JsonTest, TaintBuilder) {
   Scope scope;
   auto* dex_source_one =
       redex::create_void_method(scope, "LClassOne;", "source");
@@ -722,23 +700,24 @@ TEST_F(JsonTest, Frame) {
   auto* field_two = context.fields->get(dex_fields[1]);
 
   EXPECT_THROW(
-      Frame::from_json(test::parse_json(R"(1)"), context), JsonValidationError);
+      TaintBuilder::from_json(test::parse_json(R"(1)"), context),
+      JsonValidationError);
   EXPECT_THROW(
-      Frame::from_json(test::parse_json(R"({})"), context),
+      TaintBuilder::from_json(test::parse_json(R"({})"), context),
       JsonValidationError);
 
   // Parse the kind.
   EXPECT_THROW(
-      Frame::from_json(test::parse_json(R"({"kind": 1})"), context),
+      TaintBuilder::from_json(test::parse_json(R"({"kind": 1})"), context),
       JsonValidationError);
   EXPECT_EQ(
-      Frame::from_json(
+      TaintBuilder::from_json(
           test::parse_json(
               R"({
                 "kind": "TestSource"
               })"),
           context),
-      test::make_taint_frame(
+      test::make_frame(
           /* kind */ context.kinds->get("TestSource"),
           test::FrameProperties{
               .inferred_features = FeatureMayAlwaysSet::bottom(),
@@ -746,11 +725,11 @@ TEST_F(JsonTest, Frame) {
 
   // Parse the kind for partial leaves.
   EXPECT_THROW(
-      Frame::from_json(
+      TaintBuilder::from_json(
           test::parse_json(R"({"kind": "TestSink", "partial_label": 1})"),
           context),
       JsonValidationError);
-  auto frame = Frame::from_json(
+  auto frame = TaintBuilder::from_json(
       test::parse_json(
           R"({
                 "kind": "TestSink",
@@ -759,7 +738,7 @@ TEST_F(JsonTest, Frame) {
       context);
   EXPECT_EQ(
       frame,
-      test::make_taint_frame(
+      test::make_frame(
           /* kind */ context.kinds->get_partial("TestSink", "X"),
           test::FrameProperties{
               .inferred_features = FeatureMayAlwaysSet::bottom(),
@@ -772,7 +751,7 @@ TEST_F(JsonTest, Frame) {
 
   // Parse the callee port.
   EXPECT_THROW(
-      Frame::from_json(
+      TaintBuilder::from_json(
           test::parse_json(R"({
             "kind": "TestSource",
             "callee_port": "InvalidPort"
@@ -781,26 +760,29 @@ TEST_F(JsonTest, Frame) {
       JsonValidationError);
 
   // Parse the callee, position and distance.
-  EXPECT_FRAME_JSON_EQ(
-      R"({
-        "kind": "TestSource",
-        "callee_port": "Leaf"
-      })",
-      test::make_taint_frame(
+  EXPECT_EQ(
+      TaintBuilder::from_json(
+          test::parse_json(R"({
+            "kind": "TestSource",
+            "callee_port": "Leaf"
+          })"),
+          context),
+      test::make_frame(
           /* kind */ context.kinds->get("TestSource"),
           test::FrameProperties{
               .inferred_features = FeatureMayAlwaysSet::bottom(),
-              .locally_inferred_features = FeatureMayAlwaysSet::bottom()}),
-      context);
-  EXPECT_FRAME_JSON_EQ(
-      R"({
-        "kind": "TestSource",
-        "callee_port": "Return",
-        "callee": "LClassOne;.source:()V",
-        "call_position": {},
-        "distance": 1
-      })",
-      test::make_taint_frame(
+              .locally_inferred_features = FeatureMayAlwaysSet::bottom()}));
+  EXPECT_EQ(
+      TaintBuilder::from_json(
+          test::parse_json(R"({
+            "kind": "TestSource",
+            "callee_port": "Return",
+            "callee": "LClassOne;.source:()V",
+            "call_position": {},
+            "distance": 1
+          })"),
+          context),
+      test::make_frame(
           /* kind */ context.kinds->get("TestSource"),
           test::FrameProperties{
               .callee_port = AccessPath(Root(Root::Kind::Return)),
@@ -808,17 +790,18 @@ TEST_F(JsonTest, Frame) {
               .call_position = context.positions->unknown(),
               .distance = 1,
               .inferred_features = FeatureMayAlwaysSet::bottom(),
-              .locally_inferred_features = FeatureMayAlwaysSet::bottom()}),
-      context);
-  EXPECT_FRAME_JSON_EQ(
-      R"({
-        "kind": "TestSource",
-        "callee_port": "Return",
-        "callee": "LClassOne;.source:()V",
-        "call_position": {"line": 2, "path": "Object.java"},
-        "distance": 2
-      })",
-      test::make_taint_frame(
+              .locally_inferred_features = FeatureMayAlwaysSet::bottom()}));
+  EXPECT_EQ(
+      TaintBuilder::from_json(
+          test::parse_json(R"({
+            "kind": "TestSource",
+            "callee_port": "Return",
+            "callee": "LClassOne;.source:()V",
+            "call_position": {"line": 2, "path": "Object.java"},
+            "distance": 2
+          })"),
+          context),
+      test::make_frame(
           /* kind */ context.kinds->get("TestSource"),
           test::FrameProperties{
               .callee_port = AccessPath(Root(Root::Kind::Return)),
@@ -826,146 +809,155 @@ TEST_F(JsonTest, Frame) {
               .call_position = context.positions->get("Object.java", 2),
               .distance = 2,
               .inferred_features = FeatureMayAlwaysSet::bottom(),
-              .locally_inferred_features = FeatureMayAlwaysSet::bottom()}),
-      context);
+              .locally_inferred_features = FeatureMayAlwaysSet::bottom()}));
 
   // Parse the origins.
   EXPECT_THROW(
-      Frame::from_json(
+      TaintBuilder::from_json(
           test::parse_json(R"({
             "kind": "TestSource",
             "origins": "LClassOne;.source:()V"
           })"),
           context),
       JsonValidationError);
-  EXPECT_FRAME_JSON_EQ(
-      R"({
-        "kind": "TestSource",
-        "callee_port": "Leaf",
-        "origins": ["LClassOne;.source:()V"]
-      })",
-      test::make_taint_frame(
+  EXPECT_EQ(
+      TaintBuilder::from_json(
+          test::parse_json(R"({
+            "kind": "TestSource",
+            "callee_port": "Leaf",
+            "origins": ["LClassOne;.source:()V"]
+          })"),
+          context),
+      test::make_frame(
           /* kind */ context.kinds->get("TestSource"),
           test::FrameProperties{
               .origins = MethodSet{source_one},
               .inferred_features = FeatureMayAlwaysSet::bottom(),
-              .locally_inferred_features = FeatureMayAlwaysSet::bottom()}),
-      context);
-  EXPECT_FRAME_JSON_EQ(
-      R"({
-        "kind": "TestSource",
-        "callee_port": "Leaf",
-        "origins": ["LClassOne;.source:()V", "LClassTwo;.source:()V"]
-      })",
-      test::make_taint_frame(
+              .locally_inferred_features = FeatureMayAlwaysSet::bottom()}));
+  EXPECT_EQ(
+      TaintBuilder::from_json(
+          test::parse_json(R"({
+            "kind": "TestSource",
+            "callee_port": "Leaf",
+            "origins": ["LClassOne;.source:()V", "LClassTwo;.source:()V"]
+          })"),
+          context),
+      test::make_frame(
           /* kind */ context.kinds->get("TestSource"),
           test::FrameProperties{
               .origins = MethodSet{source_one, source_two},
               .inferred_features = FeatureMayAlwaysSet::bottom(),
-              .locally_inferred_features = FeatureMayAlwaysSet::bottom()}),
-      context);
+              .locally_inferred_features = FeatureMayAlwaysSet::bottom()}));
 
   // Parse the field origins
   EXPECT_THROW(
-      Frame::from_json(
+      TaintBuilder::from_json(
           test::parse_json(R"({
             "kind": "TestSource",
             "field_origins": "LClassThree;.field1:Ljava/lang/Boolean;"
           })"),
           context),
       JsonValidationError);
-  EXPECT_FRAME_JSON_EQ(
-      R"({
-        "kind": "TestSource",
-        "callee_port": "Leaf",
-        "field_origins": ["LClassThree;.field1:Ljava/lang/Boolean;"]
-      })",
-      test::make_taint_frame(
+  EXPECT_EQ(
+      TaintBuilder::from_json(
+          test::parse_json(R"({
+            "kind": "TestSource",
+            "callee_port": "Leaf",
+            "field_origins": ["LClassThree;.field1:Ljava/lang/Boolean;"]
+          })"),
+          context),
+      test::make_frame(
           /* kind */ context.kinds->get("TestSource"),
           test::FrameProperties{
               .field_origins = FieldSet{field_one},
               .inferred_features = FeatureMayAlwaysSet::bottom(),
-              .locally_inferred_features = FeatureMayAlwaysSet::bottom()}),
-      context);
-  EXPECT_FRAME_JSON_EQ(
-      R"({
-        "kind": "TestSource",
-        "callee_port": "Leaf",
-        "field_origins": ["LClassThree;.field1:Ljava/lang/Boolean;", "LClassThree;.field2:Ljava/lang/String;"]
-      })",
-      test::make_taint_frame(
+              .locally_inferred_features = FeatureMayAlwaysSet::bottom()}));
+  EXPECT_EQ(
+      TaintBuilder::from_json(
+          test::parse_json(R"({
+            "kind": "TestSource",
+            "callee_port": "Leaf",
+            "field_origins": ["LClassThree;.field1:Ljava/lang/Boolean;", "LClassThree;.field2:Ljava/lang/String;"]
+          })"),
+          context),
+      test::make_frame(
           /* kind */ context.kinds->get("TestSource"),
           test::FrameProperties{
               .field_origins = FieldSet{field_one, field_two},
               .inferred_features = FeatureMayAlwaysSet::bottom(),
-              .locally_inferred_features = FeatureMayAlwaysSet::bottom()}),
-      context);
+              .locally_inferred_features = FeatureMayAlwaysSet::bottom()}));
 
   // Parse the features.
-  EXPECT_FRAME_JSON_EQ(
-      R"({
-        "kind": "TestSource",
-        "callee_port": "Leaf",
-        "always_features": ["FeatureOne"]
-      })",
-      test::make_taint_frame(
+  EXPECT_EQ(
+      TaintBuilder::from_json(
+          test::parse_json(R"({
+            "kind": "TestSource",
+            "callee_port": "Leaf",
+            "always_features": ["FeatureOne"]
+          })"),
+          context),
+      test::make_frame(
           /* kind */ context.kinds->get("TestSource"),
           test::FrameProperties{
               .inferred_features =
                   FeatureMayAlwaysSet{context.features->get("FeatureOne")},
-              .locally_inferred_features = FeatureMayAlwaysSet::bottom()}),
-      context);
-  EXPECT_FRAME_JSON_EQ(
-      R"({
-        "kind": "TestSource",
-        "callee_port": "Leaf",
-        "always_features": ["FeatureOne", "FeatureTwo"]
-      })",
-      test::make_taint_frame(
+              .locally_inferred_features = FeatureMayAlwaysSet::bottom()}));
+  EXPECT_EQ(
+      TaintBuilder::from_json(
+          test::parse_json(R"({
+            "kind": "TestSource",
+            "callee_port": "Leaf",
+            "always_features": ["FeatureOne", "FeatureTwo"]
+          })"),
+          context),
+      test::make_frame(
           /* kind */ context.kinds->get("TestSource"),
           test::FrameProperties{
               .inferred_features =
                   FeatureMayAlwaysSet{
                       context.features->get("FeatureOne"),
                       context.features->get("FeatureTwo")},
-              .locally_inferred_features = FeatureMayAlwaysSet::bottom()}),
-      context);
-  EXPECT_FRAME_JSON_EQ(
-      R"({
-        "kind": "TestSource",
-        "callee_port": "Leaf",
-        "may_features": ["FeatureOne"],
-        "always_features": ["FeatureTwo"]
-      })",
-      test::make_taint_frame(
+              .locally_inferred_features = FeatureMayAlwaysSet::bottom()}));
+  EXPECT_EQ(
+      TaintBuilder::from_json(
+          test::parse_json(R"({
+            "kind": "TestSource",
+            "callee_port": "Leaf",
+            "may_features": ["FeatureOne"],
+            "always_features": ["FeatureTwo"]
+          })"),
+          context),
+      test::make_frame(
           /* kind */ context.kinds->get("TestSource"),
           test::FrameProperties{
               .inferred_features = FeatureMayAlwaysSet(
                   /* may */ FeatureSet{context.features->get("FeatureOne")},
                   /* always */ FeatureSet{context.features->get("FeatureTwo")}),
-              .locally_inferred_features = FeatureMayAlwaysSet::bottom()}),
-      context);
-  EXPECT_FRAME_JSON_EQ(
-      R"({
-        "kind": "TestSource",
-        "callee_port": "Leaf",
-        "may_features": ["FeatureOne"]
-      })",
-      test::make_taint_frame(
+              .locally_inferred_features = FeatureMayAlwaysSet::bottom()}));
+  EXPECT_EQ(
+      TaintBuilder::from_json(
+          test::parse_json(R"({
+            "kind": "TestSource",
+            "callee_port": "Leaf",
+            "may_features": ["FeatureOne"]
+          })"),
+          context),
+      test::make_frame(
           /* kind */ context.kinds->get("TestSource"),
           test::FrameProperties{
               .inferred_features = FeatureMayAlwaysSet(
                   /* may */ FeatureSet{context.features->get("FeatureOne")},
                   /* always */ FeatureSet{}),
-              .locally_inferred_features = FeatureMayAlwaysSet::bottom()}),
-      context);
-  EXPECT_FRAME_JSON_EQ(
-      R"({
-        "kind": "TestSource",
-        "callee_port": "Leaf",
-        "may_features": ["FeatureOne", "FeatureTwo"]
-      })",
-      test::make_taint_frame(
+              .locally_inferred_features = FeatureMayAlwaysSet::bottom()}));
+  EXPECT_EQ(
+      TaintBuilder::from_json(
+          test::parse_json(R"({
+            "kind": "TestSource",
+            "callee_port": "Leaf",
+            "may_features": ["FeatureOne", "FeatureTwo"]
+          })"),
+          context),
+      test::make_frame(
           /* kind */ context.kinds->get("TestSource"),
           test::FrameProperties{
               .inferred_features = FeatureMayAlwaysSet(
@@ -974,17 +966,16 @@ TEST_F(JsonTest, Frame) {
                       context.features->get("FeatureOne"),
                       context.features->get("FeatureTwo")},
                   /* always */ FeatureSet{}),
-              .locally_inferred_features = FeatureMayAlwaysSet::bottom()}),
-      context);
+              .locally_inferred_features = FeatureMayAlwaysSet::bottom()}));
   EXPECT_EQ(
-      Frame::from_json(
+      TaintBuilder::from_json(
           test::parse_json(
               R"({
                 "kind": "TestSource",
                 "features": ["FeatureOne"]
               })"),
           context),
-      test::make_taint_frame(
+      test::make_frame(
           /* kind */ context.kinds->get("TestSource"),
           test::FrameProperties{
               .inferred_features = FeatureMayAlwaysSet::bottom(),
@@ -992,14 +983,14 @@ TEST_F(JsonTest, Frame) {
               .user_features =
                   FeatureSet{context.features->get("FeatureOne")}}));
   EXPECT_EQ(
-      Frame::from_json(
+      TaintBuilder::from_json(
           test::parse_json(
               R"({
                 "kind": "TestSource",
                 "features": ["FeatureOne", "FeatureTwo"]
               })"),
           context),
-      test::make_taint_frame(
+      test::make_frame(
           /* kind */ context.kinds->get("TestSource"),
           test::FrameProperties{
               .inferred_features = FeatureMayAlwaysSet::bottom(),
@@ -1008,7 +999,7 @@ TEST_F(JsonTest, Frame) {
                   context.features->get("FeatureOne"),
                   context.features->get("FeatureTwo")}}));
   EXPECT_EQ(
-      Frame::from_json(
+      TaintBuilder::from_json(
           test::parse_json(
               R"({
                 "kind": "TestSource",
@@ -1016,7 +1007,7 @@ TEST_F(JsonTest, Frame) {
                 "may_features": ["FeatureTwo"]
               })"),
           context),
-      test::make_taint_frame(
+      test::make_frame(
           /* kind */ context.kinds->get("TestSource"),
           test::FrameProperties{
               .inferred_features = FeatureMayAlwaysSet(
@@ -1026,7 +1017,7 @@ TEST_F(JsonTest, Frame) {
               .user_features =
                   FeatureSet{context.features->get("FeatureOne")}}));
   EXPECT_EQ(
-      Frame::from_json(
+      TaintBuilder::from_json(
           test::parse_json(
               R"({
                 "kind": "TestSource",
@@ -1035,7 +1026,7 @@ TEST_F(JsonTest, Frame) {
                 "always_features": ["FeatureThree"]
               })"),
           context),
-      test::make_taint_frame(
+      test::make_frame(
           /* kind */ context.kinds->get("TestSource"),
           test::FrameProperties{
               .inferred_features = FeatureMayAlwaysSet(
@@ -1046,7 +1037,7 @@ TEST_F(JsonTest, Frame) {
               .user_features =
                   FeatureSet{context.features->get("FeatureOne")}}));
   EXPECT_EQ(
-      Frame::from_json(
+      TaintBuilder::from_json(
           test::parse_json(
               R"({
                 "kind": "TestSource",
@@ -1055,7 +1046,7 @@ TEST_F(JsonTest, Frame) {
                 "always_features": []
               })"),
           context),
-      test::make_taint_frame(
+      test::make_frame(
           /* kind */ context.kinds->get("TestSource"),
           test::FrameProperties{
               .locally_inferred_features = FeatureMayAlwaysSet::bottom(),
@@ -1063,20 +1054,238 @@ TEST_F(JsonTest, Frame) {
                   FeatureSet{context.features->get("FeatureOne")}}));
 
   // Parse via_type_of_ports
-  EXPECT_FRAME_JSON_EQ(
-      R"#({
-        "kind": "TestSource",
-        "callee_port": "Leaf",
-        "via_type_of": ["Argument(1)", "Return"]
-      })#",
-      test::make_taint_frame(
+  EXPECT_EQ(
+      TaintBuilder::from_json(
+          test::parse_json(R"#({
+            "kind": "TestSource",
+            "callee_port": "Leaf",
+            "via_type_of": ["Argument(1)", "Return"]
+          })#"),
+          context),
+      test::make_frame(
           /* kind */ context.kinds->get("TestSource"),
           test::FrameProperties{
               .inferred_features = FeatureMayAlwaysSet::bottom(),
               .locally_inferred_features = FeatureMayAlwaysSet::bottom(),
               .via_type_of_ports = RootSetAbstractDomain(
-                  {Root(Root::Kind::Return), Root(Root::Kind::Argument, 1)})}),
-      context);
+                  {Root(Root::Kind::Return), Root(Root::Kind::Argument, 1)})}));
+
+  // Consistency checks.
+  EXPECT_THROW(
+      TaintBuilder::from_json(
+          test::parse_json(R"({
+            "kind": "TestSource",
+            "callee_port": "Return"
+          })"),
+          context),
+      JsonValidationError);
+  EXPECT_THROW(
+      TaintBuilder::from_json(
+          test::parse_json(R"({
+            "kind": "TestSource",
+            "call_position": {}
+          })"),
+          context),
+      JsonValidationError);
+  EXPECT_THROW(
+      TaintBuilder::from_json(
+          test::parse_json(R"({
+            "kind": "TestSource",
+            "distance": 1
+          })"),
+          context),
+      JsonValidationError);
+  EXPECT_THROW(
+      TaintBuilder::from_json(
+          test::parse_json(R"({
+            "kind": "TestSource",
+            "callee_port": "Leaf",
+            "callee": "LClassOne;.source:()V"
+          })"),
+          context),
+      JsonValidationError);
+  EXPECT_THROW(
+      TaintBuilder::from_json(
+          test::parse_json(R"({
+            "kind": "TestSource",
+            "callee_port": "Return",
+            "callee": "LClassOne;.source:()V"
+          })"),
+          context),
+      JsonValidationError);
+  EXPECT_THROW(
+      TaintBuilder::from_json(
+          test::parse_json(R"({
+            "kind": "TestSource",
+            "callee_port": "Return",
+            "callee": "LClassOne;.source:()V",
+            "call_position": {}
+          })"),
+          context),
+      JsonValidationError);
+}
+
+TEST_F(JsonTest, Frame_Crtex) {
+  Scope scope;
+  DexStore store("stores");
+  store.add_classes(scope);
+  auto context = test::make_context(store);
+
+  EXPECT_THROW(
+      TaintBuilder::from_json(test::parse_json(R"(1)"), context),
+      JsonValidationError);
+  EXPECT_THROW(
+      TaintBuilder::from_json(test::parse_json(R"({})"), context),
+      JsonValidationError);
+
+  EXPECT_THROW(
+      TaintBuilder::from_json(
+          test::parse_json(R"({"kind": "TestSource", "canonical_names": []})"),
+          context),
+      JsonValidationError);
+  EXPECT_THROW(
+      TaintBuilder::from_json(
+          test::parse_json(
+              R"({"kind": "TestSource", "callee_port": "Anchor", "canonical_names": []})"),
+          context),
+      JsonValidationError);
+  EXPECT_THROW(
+      TaintBuilder::from_json(
+          test::parse_json(
+              R"({"kind": "TestSource", "callee_port": "Producer"})"),
+          context),
+      JsonValidationError);
+  EXPECT_THROW(
+      TaintBuilder::from_json(
+          test::parse_json(
+              R"({"kind": "TestSource", "canonical_names": [ { "irrelevant": "field" } ]})"),
+          context),
+      JsonValidationError);
+  EXPECT_THROW(
+      TaintBuilder::from_json(
+          test::parse_json(
+              R"({
+                "kind": "TestSource",
+                "canonical_names": [ { "template": "%programmatic_leaf_name%", "instantiated": "MyMethod::MyClass" } ]
+              })"),
+          context),
+      JsonValidationError);
+  EXPECT_THROW(
+      TaintBuilder::from_json(
+          test::parse_json(
+              R"#({
+                "kind": "TestSource",
+                "callee_port": "Argument(0)",
+                "canonical_names": [ { "template": "%programmatic_leaf_name%" } ]
+              })#"),
+          context),
+      JsonValidationError);
+  EXPECT_THROW(
+      TaintBuilder::from_json(
+          test::parse_json(
+              R"({
+                "kind": "TestSource",
+                "callee_port": "Producer",
+                "canonical_names": [ { "template": "%programmatic_leaf_name%" } ]
+              })"),
+          context),
+      JsonValidationError);
+  EXPECT_THROW(
+      TaintBuilder::from_json(
+          test::parse_json(
+              R"({
+                "kind": "TestSource",
+                "callee_port": "Anchor",
+                "canonical_names": [ { "instantiated": "MyMethod::MyClass" } ]
+              })"),
+          context),
+      JsonValidationError);
+  EXPECT_THROW(
+      TaintBuilder::from_json(
+          test::parse_json(
+              R"({
+                "kind": "TestSource",
+                "canonical_names": [
+                  { "instantiated": "MyMethod::MyClass" },
+                  { "template": "%programmatic_leaf_name%" }
+                ]
+              })"),
+          context),
+      JsonValidationError);
+  EXPECT_THROW(
+      TaintBuilder::from_json(
+          test::parse_json(
+              R"({
+                "kind": "TestSource",
+                "canonical_names": [
+                  { "template": "%via_type_of%" }
+                ]
+              })"),
+          context),
+      JsonValidationError);
+  EXPECT_THROW(
+      TaintBuilder::from_json(
+          test::parse_json(
+              R"#({
+                "kind": "TestSource",
+                "via_type_of": [ "Argument(1)", "Return" ],
+                "canonical_names": [
+                  { "template": "%via_type_of%" }
+                ]
+              })#"),
+          context),
+      JsonValidationError);
+  EXPECT_THROW(
+      TaintBuilder::from_json(
+          test::parse_json(
+              R"({
+                "kind": "TestSource",
+                "canonical_names": [ {"instantiated": "Lcom/android/MyClass;.MyMethod"} ]
+              })"),
+          context),
+      JsonValidationError);
+  EXPECT_EQ(
+      TaintBuilder::from_json(
+          test::parse_json(
+              R"({
+                "kind": "TestSource",
+                "canonical_names": [ {"template": "%programmatic_leaf_name%"} ]
+              })"),
+          context),
+      test::make_crtex_leaf_frame(
+          context.kinds->get("TestSource"),
+          /* callee_port */ AccessPath(Root(Root::Kind::Anchor)),
+          /* canonical_names */
+          CanonicalNameSetAbstractDomain{CanonicalName(
+              CanonicalName::TemplateValue{"%programmatic_leaf_name%"})}));
+  EXPECT_EQ(
+      TaintBuilder::from_json(
+          test::parse_json(
+              R"#({
+                "kind": "TestSource",
+                "callee_port": "Producer.123.formal(0)",
+                "canonical_names": [ {"instantiated": "Lcom/android/MyClass;.MyMethod"} ]
+              })#"),
+          context),
+      test::make_crtex_leaf_frame(
+          context.kinds->get("TestSource"),
+          /* callee_port */
+          AccessPath(
+              Root(Root::Kind::Producer),
+              Path{
+                  DexString::make_string("123"),
+                  DexString::make_string("formal(0)")}),
+          /* canonical_names */
+          CanonicalNameSetAbstractDomain{
+              CanonicalName(CanonicalName::InstantiatedValue{
+                  "Lcom/android/MyClass;.MyMethod"})}));
+}
+
+TEST_F(JsonTest, Frame) {
+  Scope scope;
+  DexStore store("stores");
+  store.add_classes(scope);
+  auto context = test::make_context(store);
 
   // Verifies to_json behavior for local inferred features. These cannot be
   // covered by from_json tests as they are never specified in json. Note that
@@ -1105,215 +1314,6 @@ TEST_F(JsonTest, Frame) {
             "always_features": ["FeatureThree"]
           }
         })"));
-
-  // Consistency checks.
-  EXPECT_THROW(
-      Frame::from_json(
-          test::parse_json(R"({
-            "kind": "TestSource",
-            "callee_port": "Return"
-          })"),
-          context),
-      JsonValidationError);
-  EXPECT_THROW(
-      Frame::from_json(
-          test::parse_json(R"({
-            "kind": "TestSource",
-            "call_position": {}
-          })"),
-          context),
-      JsonValidationError);
-  EXPECT_THROW(
-      Frame::from_json(
-          test::parse_json(R"({
-            "kind": "TestSource",
-            "distance": 1
-          })"),
-          context),
-      JsonValidationError);
-  EXPECT_THROW(
-      Frame::from_json(
-          test::parse_json(R"({
-            "kind": "TestSource",
-            "callee_port": "Leaf",
-            "callee": "LClassOne;.source:()V"
-          })"),
-          context),
-      JsonValidationError);
-  EXPECT_THROW(
-      Frame::from_json(
-          test::parse_json(R"({
-            "kind": "TestSource",
-            "callee_port": "Return",
-            "callee": "LClassOne;.source:()V"
-          })"),
-          context),
-      JsonValidationError);
-  EXPECT_THROW(
-      Frame::from_json(
-          test::parse_json(R"({
-            "kind": "TestSource",
-            "callee_port": "Return",
-            "callee": "LClassOne;.source:()V",
-            "call_position": {}
-          })"),
-          context),
-      JsonValidationError);
-}
-
-TEST_F(JsonTest, Frame_Crtex) {
-  Scope scope;
-  DexStore store("stores");
-  store.add_classes(scope);
-  auto context = test::make_context(store);
-
-  EXPECT_THROW(
-      Frame::from_json(test::parse_json(R"(1)"), context), JsonValidationError);
-  EXPECT_THROW(
-      Frame::from_json(test::parse_json(R"({})"), context),
-      JsonValidationError);
-
-  EXPECT_THROW(
-      Frame::from_json(
-          test::parse_json(R"({"kind": "TestSource", "canonical_names": []})"),
-          context),
-      JsonValidationError);
-  EXPECT_THROW(
-      Frame::from_json(
-          test::parse_json(
-              R"({"kind": "TestSource", "callee_port": "Anchor", "canonical_names": []})"),
-          context),
-      JsonValidationError);
-  EXPECT_THROW(
-      Frame::from_json(
-          test::parse_json(
-              R"({"kind": "TestSource", "callee_port": "Producer"})"),
-          context),
-      JsonValidationError);
-  EXPECT_THROW(
-      Frame::from_json(
-          test::parse_json(
-              R"({"kind": "TestSource", "canonical_names": [ { "irrelevant": "field" } ]})"),
-          context),
-      JsonValidationError);
-  EXPECT_THROW(
-      Frame::from_json(
-          test::parse_json(
-              R"({
-                "kind": "TestSource",
-                "canonical_names": [ { "template": "%programmatic_leaf_name%", "instantiated": "MyMethod::MyClass" } ]
-              })"),
-          context),
-      JsonValidationError);
-  EXPECT_THROW(
-      Frame::from_json(
-          test::parse_json(
-              R"#({
-                "kind": "TestSource",
-                "callee_port": "Argument(0)",
-                "canonical_names": [ { "template": "%programmatic_leaf_name%" } ]
-              })#"),
-          context),
-      JsonValidationError);
-  EXPECT_THROW(
-      Frame::from_json(
-          test::parse_json(
-              R"({
-                "kind": "TestSource",
-                "callee_port": "Producer",
-                "canonical_names": [ { "template": "%programmatic_leaf_name%" } ]
-              })"),
-          context),
-      JsonValidationError);
-  EXPECT_THROW(
-      Frame::from_json(
-          test::parse_json(
-              R"({
-                "kind": "TestSource",
-                "callee_port": "Anchor",
-                "canonical_names": [ { "instantiated": "MyMethod::MyClass" } ]
-              })"),
-          context),
-      JsonValidationError);
-  EXPECT_THROW(
-      Frame::from_json(
-          test::parse_json(
-              R"({
-                "kind": "TestSource",
-                "canonical_names": [
-                  { "instantiated": "MyMethod::MyClass" },
-                  { "template": "%programmatic_leaf_name%" }
-                ]
-              })"),
-          context),
-      JsonValidationError);
-  EXPECT_THROW(
-      Frame::from_json(
-          test::parse_json(
-              R"({
-                "kind": "TestSource",
-                "canonical_names": [
-                  { "template": "%via_type_of%" }
-                ]
-              })"),
-          context),
-      JsonValidationError);
-  EXPECT_THROW(
-      Frame::from_json(
-          test::parse_json(
-              R"#({
-                "kind": "TestSource",
-                "via_type_of": [ "Argument(1)", "Return" ],
-                "canonical_names": [
-                  { "template": "%via_type_of%" }
-                ]
-              })#"),
-          context),
-      JsonValidationError);
-  EXPECT_THROW(
-      Frame::from_json(
-          test::parse_json(
-              R"({
-                "kind": "TestSource",
-                "canonical_names": [ {"instantiated": "Lcom/android/MyClass;.MyMethod"} ]
-              })"),
-          context),
-      JsonValidationError);
-  EXPECT_EQ(
-      Frame::from_json(
-          test::parse_json(
-              R"({
-                "kind": "TestSource",
-                "canonical_names": [ {"template": "%programmatic_leaf_name%"} ]
-              })"),
-          context),
-      test::make_crtex_leaf_frame(
-          context.kinds->get("TestSource"),
-          /* callee_port */ AccessPath(Root(Root::Kind::Anchor)),
-          /* canonical_names */
-          CanonicalNameSetAbstractDomain{CanonicalName(
-              CanonicalName::TemplateValue{"%programmatic_leaf_name%"})}));
-  EXPECT_EQ(
-      Frame::from_json(
-          test::parse_json(
-              R"#({
-                "kind": "TestSource",
-                "callee_port": "Producer.123.formal(0)",
-                "canonical_names": [ {"instantiated": "Lcom/android/MyClass;.MyMethod"} ]
-              })#"),
-          context),
-      test::make_crtex_leaf_frame(
-          context.kinds->get("TestSource"),
-          /* callee_port */
-          AccessPath(
-              Root(Root::Kind::Producer),
-              Path{
-                  DexString::make_string("123"),
-                  DexString::make_string("formal(0)")}),
-          /* canonical_names */
-          CanonicalNameSetAbstractDomain{
-              CanonicalName(CanonicalName::InstantiatedValue{
-                  "Lcom/android/MyClass;.MyMethod"})}));
 }
 
 TEST_F(JsonTest, Propagation) {

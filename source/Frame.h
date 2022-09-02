@@ -277,7 +277,6 @@ class Frame final : public sparta::AbstractDomain<Frame> {
   /* Return frame with the given kind (and every other field kept the same) */
   Frame with_kind(const Kind* kind) const;
 
-  static Frame from_json(const Json::Value& value, Context& context);
   Json::Value to_json(const LocalPositionSet& local_positions) const;
 
   // Describe how to join frames together in `CalleePortFrames`.
