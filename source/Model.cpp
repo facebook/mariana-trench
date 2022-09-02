@@ -92,87 +92,6 @@ Model::Model(
     const Method* method,
     Context& context,
     Modes modes,
-    const std::vector<std::pair<AccessPath, Frame>>& generations,
-    const std::vector<std::pair<AccessPath, Frame>>& parameter_sources,
-    const std::vector<std::pair<AccessPath, Frame>>& sinks,
-    const std::vector<std::pair<Propagation, AccessPath>>& propagations,
-    const std::vector<Sanitizer>& global_sanitizers,
-    const std::vector<std::pair<Root, SanitizerSet>>& port_sanitizers,
-    const std::vector<std::pair<Root, FeatureSet>>& attach_to_sources,
-    const std::vector<std::pair<Root, FeatureSet>>& attach_to_sinks,
-    const std::vector<std::pair<Root, FeatureSet>>& attach_to_propagations,
-    const std::vector<std::pair<Root, FeatureSet>>& add_features_to_arguments,
-    const AccessPathConstantDomain& inline_as,
-    const IssueSet& issues)
-    : method_(method), modes_(modes) {
-  if (method_ && !modes_.test(Model::Mode::OverrideDefault)) {
-    // Use a set of heuristics to infer the modes of this method.
-
-    auto* code = method_->get_code();
-    if (!code) {
-      modes_ |= Model::Mode::SkipAnalysis;
-      modes_ |= Model::Mode::AddViaObscureFeature;
-    }
-  }
-
-  if (modes_.test(Model::Mode::TaintInTaintOut)) {
-    add_taint_in_taint_out(context);
-  }
-  if (modes_.test(Model::Mode::TaintInTaintThis)) {
-    add_taint_in_taint_this(context);
-  }
-
-  for (const auto& [port, source] : generations) {
-    add_generation(port, source);
-  }
-
-  for (const auto& [port, source] : parameter_sources) {
-    add_parameter_source(port, source);
-  }
-
-  for (const auto& [port, sink] : sinks) {
-    add_sink(port, sink);
-  }
-
-  for (const auto& [propagation, output] : propagations) {
-    add_propagation(propagation, output);
-  }
-
-  for (const auto& sanitizer : global_sanitizers) {
-    add_global_sanitizer(sanitizer);
-  }
-
-  for (const auto& [root, sanitizers] : port_sanitizers) {
-    add_port_sanitizers(sanitizers, root);
-  }
-
-  for (const auto& [root, features] : attach_to_sources) {
-    add_attach_to_sources(root, features);
-  }
-
-  for (const auto& [root, features] : attach_to_sinks) {
-    add_attach_to_sinks(root, features);
-  }
-
-  for (const auto& [root, features] : attach_to_propagations) {
-    add_attach_to_propagations(root, features);
-  }
-
-  for (const auto& [root, features] : add_features_to_arguments) {
-    add_add_features_to_arguments(root, features);
-  }
-
-  set_inline_as(inline_as);
-
-  for (const auto& issue : issues) {
-    add_issue(issue);
-  }
-}
-
-Model::Model(
-    const Method* method,
-    Context& context,
-    Modes modes,
     const std::vector<std::pair<AccessPath, TaintBuilder>>& generations,
     const std::vector<std::pair<AccessPath, TaintBuilder>>& parameter_sources,
     const std::vector<std::pair<AccessPath, TaintBuilder>>& sinks,
@@ -271,23 +190,16 @@ Model Model::instantiate(const Method* method, Context& context) const {
   Model model(method, context, modes_);
 
   for (const auto& [port, generation_taint] : generations_.elements()) {
-    for (const auto& generation : generation_taint.frames_iterator()) {
-      model.add_generation(port, generation);
-    }
+    model.add_generation(port, generation_taint);
   }
 
   for (const auto& [port, parameter_source_taint] :
        parameter_sources_.elements()) {
-    for (const auto& parameter_source :
-         parameter_source_taint.frames_iterator()) {
-      model.add_parameter_source(port, parameter_source);
-    }
+    model.add_parameter_source(port, parameter_source_taint);
   }
 
   for (const auto& [port, sink_taint] : sinks_.elements()) {
-    for (const auto& sink : sink_taint.frames_iterator()) {
-      model.add_sink(port, sink);
-    }
+    model.add_sink(port, sink_taint);
   }
 
   for (const auto& [output, propagations] : propagations_.elements()) {
@@ -528,45 +440,6 @@ bool Model::check_port_consistency(const AccessPath& access_path) const {
   return check_root_consistency(access_path.root());
 }
 
-bool Model::check_frame_consistency(const Frame& frame, std::string_view kind)
-    const {
-  if (frame.is_bottom()) {
-    ModelConsistencyError::raise(fmt::format(
-        "Model for method `{}` contains a bottom {}.", show(method_), kind));
-    return false;
-  }
-  if (frame.is_artificial_source()) {
-    ModelConsistencyError::raise(fmt::format(
-        "Model for method `{}` contains an artificial {}.",
-        show(method_),
-        kind));
-    return false;
-  }
-  if (method_ && (frame.origins().empty() && frame.field_origins().empty())) {
-    ModelConsistencyError::raise(fmt::format(
-        "Model for method `{}` contains a {} without origins.",
-        show(method_),
-        kind));
-    return false;
-  }
-  if (frame.via_type_of_ports().is_value()) {
-    for (const auto& root : frame.via_type_of_ports().elements()) {
-      // Logs invalid ports specifed for via_type_of but does not prevent the
-      // model from being created.
-      check_port_consistency(AccessPath(root));
-    }
-  }
-  if (frame.via_value_of_ports().is_value()) {
-    for (const auto& root : frame.via_value_of_ports().elements()) {
-      // Logs invalid ports specifed for via_value_of but does not prevent the
-      // model from being created.
-      check_port_consistency(AccessPath(root));
-    }
-  }
-
-  return true;
-}
-
 bool Model::check_taint_builder_consistency(
     const TaintBuilder& builder,
     std::string_view kind) const {
@@ -584,29 +457,34 @@ bool Model::check_taint_builder_consistency(
         kind));
     return false;
   }
-  if (method_ &&
-      (builder.origins().empty() && builder.field_origins().empty())) {
-    ModelConsistencyError::raise(fmt::format(
-        "Model for method `{}` contains a {} without origins.",
-        show(method_),
-        kind));
-    return false;
-  }
-  if (builder.via_type_of_ports().is_value()) {
-    for (const auto& root : builder.via_type_of_ports().elements()) {
-      // Logs invalid ports specifed for via_type_of but does not prevent the
-      // model from being created.
-      check_port_consistency(AccessPath(root));
-    }
-  }
-  if (builder.via_value_of_ports().is_value()) {
-    for (const auto& root : builder.via_value_of_ports().elements()) {
-      // Logs invalid ports specifed for via_value_of but does not prevent the
-      // model from being created.
-      check_port_consistency(AccessPath(root));
-    }
-  }
+  return true;
+}
 
+bool Model::check_taint_consistency(const Taint& taint, std::string_view kind)
+    const {
+  for (const auto& frame : taint.frames_iterator()) {
+    if (method_ && (frame.origins().empty() && frame.field_origins().empty())) {
+      ModelConsistencyError::raise(fmt::format(
+          "Model for method `{}` contains a {} without origins.",
+          show(method_),
+          kind));
+      return false;
+    }
+    if (frame.via_type_of_ports().is_value()) {
+      for (const auto& root : frame.via_type_of_ports().elements()) {
+        // Logs invalid ports specifed for via_type_of but does not prevent the
+        // model from being created.
+        check_port_consistency(AccessPath(root));
+      }
+    }
+    if (frame.via_value_of_ports().is_value()) {
+      for (const auto& root : frame.via_value_of_ports().elements()) {
+        // Logs invalid ports specifed for via_value_of but does not prevent the
+        // model from being created.
+        check_port_consistency(AccessPath(root));
+      }
+    }
+  }
   return true;
 }
 
@@ -733,32 +611,25 @@ void update_taint_tree(
 
 } // namespace
 
-void Model::add_generation(AccessPath port, Frame source) {
-  if (method_ && source.origins().empty() && source.is_leaf()) {
-    source.set_origins(MethodSet{method_});
+void Model::add_generation(AccessPath port, Taint source) {
+  if (method_) {
+    source.set_leaf_origins_if_empty(MethodSet{method_});
   }
 
   if (!check_port_consistency(port) ||
-      !check_frame_consistency(source, "source")) {
+      !check_taint_consistency(source, "source")) {
     return;
   }
 
   port.truncate(Heuristics::kGenerationMaxPortSize);
-  generations_.write(port, Taint{std::move(source)}, UpdateKind::Weak);
+  generations_.write(port, std::move(source), UpdateKind::Weak);
 }
 
-void Model::add_generation(AccessPath port, TaintBuilder source) {
-  if (method_ && source.origins().empty() && source.is_leaf()) {
-    source.set_origins(MethodSet{method_});
-  }
-
-  if (!check_port_consistency(port) ||
-      !check_taint_builder_consistency(source, "source")) {
+void Model::add_generation(const AccessPath& port, TaintBuilder source) {
+  if (!check_taint_builder_consistency(source, "source")) {
     return;
   }
-
-  port.truncate(Heuristics::kGenerationMaxPortSize);
-  generations_.write(port, Taint{std::move(source)}, UpdateKind::Weak);
+  add_generation(port, Taint{std::move(source)});
 }
 
 void Model::add_inferred_generations(AccessPath port, Taint generations) {
@@ -774,14 +645,14 @@ void Model::add_inferred_generations(AccessPath port, Taint generations) {
   }
 }
 
-void Model::add_parameter_source(AccessPath port, Frame source) {
-  if (method_ && source.origins().empty() && source.is_leaf()) {
-    source.set_origins(MethodSet{method_});
+void Model::add_parameter_source(AccessPath port, Taint source) {
+  if (method_) {
+    source.set_leaf_origins_if_empty(MethodSet{method_});
   }
 
   if (!check_port_consistency(port) ||
       !check_parameter_source_port_consistency(port) ||
-      !check_frame_consistency(source, "source")) {
+      !check_taint_consistency(source, "source")) {
     return;
   }
 
@@ -789,27 +660,20 @@ void Model::add_parameter_source(AccessPath port, Frame source) {
   parameter_sources_.write(port, Taint{std::move(source)}, UpdateKind::Weak);
 }
 
-void Model::add_parameter_source(AccessPath port, TaintBuilder source) {
-  if (method_ && source.origins().empty() && source.is_leaf()) {
-    source.set_origins(MethodSet{method_});
-  }
-
-  if (!check_port_consistency(port) ||
-      !check_parameter_source_port_consistency(port) ||
-      !check_taint_builder_consistency(source, "source")) {
+void Model::add_parameter_source(const AccessPath& port, TaintBuilder source) {
+  if (!check_taint_builder_consistency(source, "source")) {
     return;
   }
 
-  port.truncate(Heuristics::kParameterSourceMaxPortSize);
-  parameter_sources_.write(port, Taint{std::move(source)}, UpdateKind::Weak);
+  add_parameter_source(port, Taint{std::move(source)});
 }
 
-void Model::add_sink(AccessPath port, Frame sink) {
-  if (method_ && sink.origins().empty() && sink.is_leaf()) {
-    sink.set_origins(MethodSet{method_});
+void Model::add_sink(AccessPath port, Taint sink) {
+  if (method_) {
+    sink.set_leaf_origins_if_empty(MethodSet{method_});
   }
 
-  if (!check_port_consistency(port) || !check_frame_consistency(sink, "sink")) {
+  if (!check_port_consistency(port) || !check_taint_consistency(sink, "sink")) {
     return;
   }
 
@@ -817,18 +681,12 @@ void Model::add_sink(AccessPath port, Frame sink) {
   sinks_.write(port, Taint{std::move(sink)}, UpdateKind::Weak);
 }
 
-void Model::add_sink(AccessPath port, TaintBuilder sink) {
-  if (method_ && sink.origins().empty() && sink.is_leaf()) {
-    sink.set_origins(MethodSet{method_});
-  }
-
-  if (!check_port_consistency(port) ||
-      !check_taint_builder_consistency(sink, "sink")) {
+void Model::add_sink(const AccessPath& port, TaintBuilder sink) {
+  if (!check_taint_builder_consistency(sink, "sink")) {
     return;
   }
 
-  port.truncate(Heuristics::kSinkMaxPortSize);
-  sinks_.write(port, Taint{std::move(sink)}, UpdateKind::Weak);
+  add_sink(port, Taint{std::move(sink)});
 }
 
 void Model::add_inferred_sinks(AccessPath port, Taint sinks) {

@@ -173,10 +173,6 @@ class TaintBuilder final {
     return callee_ == nullptr;
   }
 
-  void set_origins(const MethodSet& origins) {
-    origins_ = origins;
-  }
-
   void set_field_origins(const FieldSet& field_origins) {
     field_origins_ = field_origins;
   }

@@ -449,7 +449,7 @@ TEST_F(ModelTest, Join) {
       /* method */ nullptr,
       context,
       /* modes */ Model::Mode::Normal,
-      /* generations */ std::vector<std::pair<AccessPath, Frame>>{},
+      /* generations */ {},
       /* parameter_sources */ {},
       /* sinks */ {},
       /* propagations */ {},
