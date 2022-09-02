@@ -81,13 +81,10 @@ void materialize_via_value_of_ports(
 
 } // namespace
 
-CalleePortFrames::CalleePortFrames(
-    LocalPositionSet local_positions,
-    std::initializer_list<TaintConfig> configs)
+CalleePortFrames::CalleePortFrames(std::initializer_list<TaintConfig> configs)
     : callee_port_(Root(Root::Kind::Leaf)),
       is_artificial_source_frames_(false),
-      frames_(FramesByKind::bottom()),
-      local_positions_(std::move(local_positions)) {
+      frames_(FramesByKind::bottom()) {
   for (const auto& config : configs) {
     add(config);
   }

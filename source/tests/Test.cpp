@@ -107,6 +107,9 @@ Context make_context(const DexStore& store) {
 }
 
 Frame make_taint_frame(const Kind* kind, const FrameProperties& properties) {
+  // Local positions should not be specified when making a Frame because
+  // it is not stored in the Frame.
+  mt_assert(properties.local_positions == LocalPositionSet{});
   return Frame(
       kind,
       properties.callee_port,
@@ -142,7 +145,7 @@ TaintConfig make_taint_config(
       properties.via_type_of_ports,
       properties.via_value_of_ports,
       properties.canonical_names,
-      /* local_positions */ {});
+      properties.local_positions);
 }
 
 TaintConfig make_leaf_taint_config(const Kind* kind) {

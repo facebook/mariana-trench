@@ -92,15 +92,7 @@ class CalleePortFrames final : public sparta::AbstractDomain<CalleePortFrames> {
         frames_(FramesByKind::bottom()),
         local_positions_({}) {}
 
-  /**
-   * TODO(T91357916): Remove local_positions from argument. It should be
-   * specified in `configs`. For now, leave it there to be consistent with
-   * the constructor above (for ease of migrating from `Frame` to
-   * `TaintConfig`).
-   */
-  explicit CalleePortFrames(
-      LocalPositionSet local_positions,
-      std::initializer_list<TaintConfig> configs);
+  explicit CalleePortFrames(std::initializer_list<TaintConfig> configs);
 
   CalleePortFrames(const CalleePortFrames&) = default;
   CalleePortFrames(CalleePortFrames&&) = default;

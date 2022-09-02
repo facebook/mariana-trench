@@ -30,7 +30,7 @@ void CallPositionFrames::add(const TaintConfig& config) {
     mt_assert(position_ == config.call_position());
   }
 
-  frames_.add(CalleePortFrames(/* local_positions */ {}, {config}));
+  frames_.add(CalleePortFrames{config});
 }
 
 bool CallPositionFrames::leq(const CallPositionFrames& other) const {
@@ -219,31 +219,29 @@ CallPositionFrames CallPositionFrames::attach_position(
         continue;
       }
 
-      result.add(CalleePortFrames(
-          callee_port_frames.local_positions(),
-          {TaintConfig(
-              frame.kind(),
-              frame.callee_port(),
-              /* callee */ nullptr,
-              /* field_callee */ nullptr,
-              /* call_position */ position,
-              /* distance */ 0,
-              frame.origins(),
-              frame.field_origins(),
-              frame.features(),
-              // Since CallPositionFrames::attach_position is used (only) for
-              // parameter_sinks and return sources which may be included in an
-              // issue as a leaf, we need to make sure that those leaf frames in
-              // issues contain the user_features as being locally inferred.
-              /* locally_inferred_features */
-              frame.user_features().is_bottom()
-                  ? FeatureMayAlwaysSet::bottom()
-                  : FeatureMayAlwaysSet::make_always(frame.user_features()),
-              /* user_features */ FeatureSet::bottom(),
-              /* via_type_of_ports */ {},
-              /* via_value_of_ports */ {},
-              frame.canonical_names(),
-              callee_port_frames.local_positions())}));
+      result.add(CalleePortFrames{TaintConfig(
+          frame.kind(),
+          frame.callee_port(),
+          /* callee */ nullptr,
+          /* field_callee */ nullptr,
+          /* call_position */ position,
+          /* distance */ 0,
+          frame.origins(),
+          frame.field_origins(),
+          frame.features(),
+          // Since CallPositionFrames::attach_position is used (only) for
+          // parameter_sinks and return sources which may be included in an
+          // issue as a leaf, we need to make sure that those leaf frames in
+          // issues contain the user_features as being locally inferred.
+          /* locally_inferred_features */
+          frame.user_features().is_bottom()
+              ? FeatureMayAlwaysSet::bottom()
+              : FeatureMayAlwaysSet::make_always(frame.user_features()),
+          /* user_features */ FeatureSet::bottom(),
+          /* via_type_of_ports */ {},
+          /* via_value_of_ports */ {},
+          frame.canonical_names(),
+          callee_port_frames.local_positions())});
     }
   }
 
