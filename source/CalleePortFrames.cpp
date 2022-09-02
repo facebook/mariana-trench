@@ -83,13 +83,13 @@ void materialize_via_value_of_ports(
 
 CalleePortFrames::CalleePortFrames(
     LocalPositionSet local_positions,
-    std::initializer_list<TaintBuilder> builders)
+    std::initializer_list<TaintConfig> configs)
     : callee_port_(Root(Root::Kind::Leaf)),
       is_artificial_source_frames_(false),
       frames_(FramesByKind::bottom()),
       local_positions_(std::move(local_positions)) {
-  for (const auto& builder : builders) {
-    add(builder);
+  for (const auto& config : configs) {
+    add(config);
   }
 }
 
@@ -125,34 +125,34 @@ void CalleePortFrames::GroupDifference::operator()(
   left.difference_with(right);
 }
 
-void CalleePortFrames::add(const TaintBuilder& builder) {
+void CalleePortFrames::add(const TaintConfig& config) {
   if (is_bottom()) {
-    callee_port_ = builder.callee_port();
-    is_artificial_source_frames_ = builder.is_artificial_source();
+    callee_port_ = config.callee_port();
+    is_artificial_source_frames_ = config.is_artificial_source();
   } else {
     mt_assert(
-        callee_port_ == builder.callee_port() &&
-        is_artificial_source_frames_ == builder.is_artificial_source());
+        callee_port_ == config.callee_port() &&
+        is_artificial_source_frames_ == config.is_artificial_source());
   }
 
-  local_positions_.join_with(builder.local_positions());
-  frames_.update(builder.kind(), [&](const Frames& old_frames) {
+  local_positions_.join_with(config.local_positions());
+  frames_.update(config.kind(), [&](const Frames& old_frames) {
     auto new_frames = old_frames;
     new_frames.add(Frame(
-        builder.kind(),
-        builder.callee_port(),
-        builder.callee(),
-        builder.field_callee(),
-        builder.call_position(),
-        builder.distance(),
-        builder.origins(),
-        builder.field_origins(),
-        builder.inferred_features(),
-        builder.locally_inferred_features(),
-        builder.user_features(),
-        builder.via_type_of_ports(),
-        builder.via_value_of_ports(),
-        builder.canonical_names()));
+        config.kind(),
+        config.callee_port(),
+        config.callee(),
+        config.field_callee(),
+        config.call_position(),
+        config.distance(),
+        config.origins(),
+        config.field_origins(),
+        config.inferred_features(),
+        config.locally_inferred_features(),
+        config.user_features(),
+        config.via_type_of_ports(),
+        config.via_value_of_ports(),
+        config.canonical_names()));
     return new_frames;
   });
 }

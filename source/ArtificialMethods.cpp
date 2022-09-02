@@ -41,7 +41,7 @@ std::vector<Model> ArtificialMethods::models(Context& context) const {
   model.add_mode(Model::Mode::SkipAnalysis, context);
   model.add_sink(
       AccessPath(Root(Root::Kind::Argument, 0)),
-      TaintBuilder(
+      TaintConfig(
           array_allocation_kind_,
           /* callee_port */ AccessPath(Root(Root::Kind::Leaf)),
           /* callee */ nullptr,

@@ -124,8 +124,8 @@ Frame make_taint_frame(const Kind* kind, const FrameProperties& properties) {
       properties.canonical_names);
 }
 
-TaintBuilder make_frame(const Kind* kind, const FrameProperties& properties) {
-  return TaintBuilder(
+TaintConfig make_frame(const Kind* kind, const FrameProperties& properties) {
+  return TaintConfig(
       kind,
       properties.callee_port,
       properties.callee,
@@ -143,7 +143,7 @@ TaintBuilder make_frame(const Kind* kind, const FrameProperties& properties) {
       /* local_positions */ {});
 }
 
-TaintBuilder make_leaf_frame(const Kind* kind) {
+TaintConfig make_leaf_frame(const Kind* kind) {
   return make_leaf_frame(
       kind,
       /* inferred_features */ FeatureMayAlwaysSet::bottom(),
@@ -152,13 +152,13 @@ TaintBuilder make_leaf_frame(const Kind* kind) {
       /* origins */ {});
 }
 
-TaintBuilder make_leaf_frame(
+TaintConfig make_leaf_frame(
     const Kind* kind,
     FeatureMayAlwaysSet inferred_features,
     FeatureMayAlwaysSet locally_inferred_features,
     FeatureSet user_features,
     MethodSet origins) {
-  return TaintBuilder(
+  return TaintConfig(
       kind,
       /* callee_port */ AccessPath(Root(Root::Kind::Leaf)),
       /* callee */ nullptr,
@@ -176,12 +176,12 @@ TaintBuilder make_leaf_frame(
       /* local_positions */ {});
 }
 
-TaintBuilder make_crtex_leaf_frame(
+TaintConfig make_crtex_leaf_frame(
     const Kind* kind,
     AccessPath callee_port,
     CanonicalNameSetAbstractDomain canonical_names) {
   mt_assert(callee_port.root().is_anchor() || callee_port.root().is_producer());
-  return TaintBuilder(
+  return TaintConfig(
       kind,
       /* callee_port */ callee_port,
       /* callee */ nullptr,

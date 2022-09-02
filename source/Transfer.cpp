@@ -814,7 +814,7 @@ void check_flows_to_array_allocation(
       context->artificial_methods.array_allocation_method());
   auto* position =
       context->positions.get(context->method(), environment->last_position());
-  auto array_allocation_sink = Taint{TaintBuilder(
+  auto array_allocation_sink = Taint{TaintConfig(
       /* kind */ context->artificial_methods.array_allocation_kind(),
       /* callee_port */ AccessPath(Root(Root::Kind::Argument, 0)),
       /* callee */ array_allocation_method,

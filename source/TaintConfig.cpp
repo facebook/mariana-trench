@@ -7,7 +7,7 @@
 
 #include <mariana-trench/Context.h>
 #include <mariana-trench/JsonValidation.h>
-#include <mariana-trench/TaintBuilder.h>
+#include <mariana-trench/TaintConfig.h>
 
 namespace marianatrench {
 
@@ -89,9 +89,7 @@ AccessPath validate_and_infer_crtex_callee_port(
 
 } // namespace
 
-TaintBuilder TaintBuilder::from_json(
-    const Json::Value& value,
-    Context& context) {
+TaintConfig TaintConfig::from_json(const Json::Value& value, Context& context) {
   JsonValidation::validate_object(value);
 
   const Kind* kind = Kind::from_json(value, context);
@@ -210,7 +208,7 @@ TaintBuilder TaintBuilder::from_json(
     }
   }
 
-  return TaintBuilder(
+  return TaintConfig(
       kind,
       std::move(callee_port),
       callee,

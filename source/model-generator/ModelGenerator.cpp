@@ -370,7 +370,7 @@ bool generator::has_annotation(
       dex_class->get_anno_set(), expected_type, expected_values);
 }
 
-TaintBuilder generator::source(
+TaintConfig generator::source(
     Context& context,
     const Method* method,
     const std::string& kind,
@@ -386,7 +386,7 @@ TaintBuilder generator::source(
   for (const auto& feature : features) {
     user_features.add(context.features->get(feature));
   }
-  return TaintBuilder(
+  return TaintConfig(
       /* kind */ context.kinds->get(kind),
       /* callee_port */ AccessPath(Root(callee_port)),
       /* callee */ nullptr,
@@ -404,7 +404,7 @@ TaintBuilder generator::source(
       /* local_positions */ {});
 }
 
-TaintBuilder generator::sink(
+TaintConfig generator::sink(
     Context& context,
     const Method* method,
     const std::string& kind,
@@ -423,7 +423,7 @@ TaintBuilder generator::sink(
   for (const auto& feature : features) {
     user_features.add(context.features->get(feature));
   }
-  return TaintBuilder(
+  return TaintConfig(
       /* kind */ context.kinds->get(kind),
       /* callee_port */ AccessPath(Root(callee_port)),
       /* callee */ nullptr,
@@ -441,7 +441,7 @@ TaintBuilder generator::sink(
       /* local_positions */ {});
 }
 
-TaintBuilder generator::partial_sink(
+TaintConfig generator::partial_sink(
     Context& context,
     const Method* method,
     const std::string& kind,
@@ -458,7 +458,7 @@ TaintBuilder generator::partial_sink(
   for (const auto& feature : features) {
     user_features.add(context.features->get(feature));
   }
-  return TaintBuilder(
+  return TaintConfig(
       /* kind */ context.kinds->get_partial(kind, label),
       /* callee_port */ AccessPath(Root(callee_port)),
       /* callee */ nullptr,

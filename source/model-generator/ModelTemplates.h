@@ -10,7 +10,7 @@
 #include <mariana-trench/Access.h>
 #include <mariana-trench/Context.h>
 #include <mariana-trench/Model.h>
-#include <mariana-trench/TaintBuilder.h>
+#include <mariana-trench/TaintConfig.h>
 #include <mariana-trench/model-generator/ModelGenerator.h>
 
 namespace marianatrench {
@@ -130,7 +130,7 @@ class PropagationTemplate final {
 
 class SinkTemplate final {
  public:
-  explicit SinkTemplate(TaintBuilder sink, AccessPathTemplate port);
+  explicit SinkTemplate(TaintConfig sink, AccessPathTemplate port);
   SinkTemplate(const SinkTemplate&) = default;
   SinkTemplate(SinkTemplate&&) = default;
   SinkTemplate& operator=(const SinkTemplate&) = delete;
@@ -143,15 +143,13 @@ class SinkTemplate final {
       Model& model) const;
 
  private:
-  TaintBuilder sink_;
+  TaintConfig sink_;
   AccessPathTemplate port_;
 };
 
 class ParameterSourceTemplate final {
  public:
-  explicit ParameterSourceTemplate(
-      TaintBuilder source,
-      AccessPathTemplate port);
+  explicit ParameterSourceTemplate(TaintConfig source, AccessPathTemplate port);
   ParameterSourceTemplate(const ParameterSourceTemplate&) = default;
   ParameterSourceTemplate(ParameterSourceTemplate&&) = default;
   ParameterSourceTemplate& operator=(const ParameterSourceTemplate&) = delete;
@@ -166,13 +164,13 @@ class ParameterSourceTemplate final {
       Model& model) const;
 
  private:
-  TaintBuilder source_;
+  TaintConfig source_;
   AccessPathTemplate port_;
 };
 
 class GenerationTemplate final {
  public:
-  explicit GenerationTemplate(TaintBuilder source, AccessPathTemplate port);
+  explicit GenerationTemplate(TaintConfig source, AccessPathTemplate port);
   GenerationTemplate(const GenerationTemplate&) = default;
   GenerationTemplate(GenerationTemplate&&) = default;
   GenerationTemplate& operator=(const GenerationTemplate&) = delete;
@@ -187,13 +185,13 @@ class GenerationTemplate final {
       Model& model) const;
 
  private:
-  TaintBuilder source_;
+  TaintConfig source_;
   AccessPathTemplate port_;
 };
 
 class SourceTemplate final {
  public:
-  explicit SourceTemplate(TaintBuilder source, AccessPathTemplate port);
+  explicit SourceTemplate(TaintConfig source, AccessPathTemplate port);
   SourceTemplate(const SourceTemplate&) = default;
   SourceTemplate(SourceTemplate&&) = default;
   SourceTemplate& operator=(const SourceTemplate&) = delete;
@@ -206,7 +204,7 @@ class SourceTemplate final {
       Model& model) const;
 
  private:
-  TaintBuilder source_;
+  TaintConfig source_;
   AccessPathTemplate port_;
 };
 

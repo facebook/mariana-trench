@@ -14,26 +14,26 @@
 
 namespace marianatrench {
 
-CalleeFrames::CalleeFrames(std::initializer_list<TaintBuilder> builders)
+CalleeFrames::CalleeFrames(std::initializer_list<TaintConfig> configs)
     : callee_(nullptr) {
-  for (const auto& builder : builders) {
-    add(builder);
+  for (const auto& config : configs) {
+    add(config);
   }
 }
 
-void CalleeFrames::add(const TaintBuilder& builder) {
+void CalleeFrames::add(const TaintConfig& config) {
   if (callee_ == nullptr) {
-    callee_ = builder.callee();
+    callee_ = config.callee();
   } else {
-    mt_assert(callee_ == builder.callee());
+    mt_assert(callee_ == config.callee());
   }
 
   // TODO (T91357916): GroupHashedSetAbstractDomain could be more efficient.
   // It supports an `add` operation that avoids making a copy.
   frames_.update(
-      builder.call_position(), [&](const CallPositionFrames& old_frames) {
+      config.call_position(), [&](const CallPositionFrames& old_frames) {
         auto new_frames = old_frames;
-        new_frames.add(builder);
+        new_frames.add(config);
         return new_frames;
       });
 }

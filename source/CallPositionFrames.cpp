@@ -16,21 +16,21 @@
 namespace marianatrench {
 
 CallPositionFrames::CallPositionFrames(
-    std::initializer_list<TaintBuilder> builders)
+    std::initializer_list<TaintConfig> configs)
     : position_(nullptr) {
-  for (const auto& builder : builders) {
-    add(builder);
+  for (const auto& config : configs) {
+    add(config);
   }
 }
 
-void CallPositionFrames::add(const TaintBuilder& builder) {
+void CallPositionFrames::add(const TaintConfig& config) {
   if (position_ == nullptr) {
-    position_ = builder.call_position();
+    position_ = config.call_position();
   } else {
-    mt_assert(position_ == builder.call_position());
+    mt_assert(position_ == config.call_position());
   }
 
-  frames_.add(CalleePortFrames(/* local_positions */ {}, {builder}));
+  frames_.add(CalleePortFrames(/* local_positions */ {}, {config}));
 }
 
 bool CallPositionFrames::leq(const CallPositionFrames& other) const {
@@ -221,7 +221,7 @@ CallPositionFrames CallPositionFrames::attach_position(
 
       result.add(CalleePortFrames(
           callee_port_frames.local_positions(),
-          {TaintBuilder(
+          {TaintConfig(
               frame.kind(),
               frame.callee_port(),
               /* callee */ nullptr,
@@ -283,7 +283,7 @@ CallPositionFrames::map_positions(
     for (const auto& frame : callee_port_frames) {
       // TODO(T91357916): Move call_position out of Frame and store it only in
       // `CallPositionFrames` so we do not need to update every frame.
-      auto new_frame = TaintBuilder(
+      auto new_frame = TaintConfig(
           frame.kind(),
           frame.callee_port(),
           frame.callee(),

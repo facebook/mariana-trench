@@ -38,11 +38,13 @@ namespace marianatrench {
  * Class used to contain details for building a `Taint` object.
  * Currently looks very similar to `Frame` because most of the fields in
  * `Taint` are stored in `Frame`. However, it also contains fields that are
- * stored outside of `Frame` (but within `Taint`).
+ * stored outside of `Frame` (but within `Taint`). Multiple `TaintConfigs` can
+ * be used to create a `Taint` object. The `Taint` object is responsible for
+ * merging fields accordingly.
  */
-class TaintBuilder final {
+class TaintConfig final {
  public:
-  explicit TaintBuilder(
+  explicit TaintConfig(
       const Kind* kind,
       AccessPath callee_port,
       const Method* MT_NULLABLE callee,
@@ -79,12 +81,12 @@ class TaintBuilder final {
     mt_assert(!local_positions.is_bottom());
   }
 
-  TaintBuilder(const TaintBuilder&) = default;
-  TaintBuilder(TaintBuilder&&) = default;
-  TaintBuilder& operator=(const TaintBuilder&) = default;
-  TaintBuilder& operator=(TaintBuilder&&) = default;
+  TaintConfig(const TaintConfig&) = default;
+  TaintConfig(TaintConfig&&) = default;
+  TaintConfig& operator=(const TaintConfig&) = default;
+  TaintConfig& operator=(TaintConfig&&) = default;
 
-  friend bool operator==(const TaintBuilder& self, const TaintBuilder& other) {
+  friend bool operator==(const TaintConfig& self, const TaintConfig& other) {
     return self.kind_ == other.kind_ &&
         self.callee_port_ == other.callee_port_ &&
         self.callee_ == other.callee_ &&
@@ -101,7 +103,7 @@ class TaintBuilder final {
         self.local_positions_ == other.local_positions_;
   }
 
-  friend bool operator!=(const TaintBuilder& self, const TaintBuilder& other) {
+  friend bool operator!=(const TaintConfig& self, const TaintConfig& other) {
     return !(self == other);
   }
 
@@ -173,7 +175,7 @@ class TaintBuilder final {
     return callee_ == nullptr;
   }
 
-  static TaintBuilder from_json(const Json::Value& value, Context& context);
+  static TaintConfig from_json(const Json::Value& value, Context& context);
 
  private:
   /* Properties that are unique to a `Frame` within `Taint`. */
@@ -194,10 +196,10 @@ class TaintBuilder final {
 
   /**
    * Properties that are unique to `CalleePortFrames` within `Taint`. If a
-   * `Taint` object is constructed from multiple builders with different such
+   * `Taint` object is constructed from multiple configs with different such
    * values, they will be joined at the callee_port level, i.e. `Frame`s with
    * the same (kind, callee, call_position, callee_port) will share these values
-   * even if only some `TaintBuilder`s contain it.
+   * even if only some `TaintConfig`s contain it.
    */
   LocalPositionSet local_positions_;
 };

@@ -31,7 +31,7 @@
 #include <mariana-trench/Rules.h>
 #include <mariana-trench/Scheduler.h>
 #include <mariana-trench/Statistics.h>
-#include <mariana-trench/TaintBuilder.h>
+#include <mariana-trench/TaintConfig.h>
 #include <mariana-trench/Types.h>
 
 namespace marianatrench {
@@ -70,15 +70,15 @@ struct FrameProperties {
 
 Frame make_taint_frame(const Kind* kind, const FrameProperties& properties);
 
-TaintBuilder make_frame(const Kind* kind, const FrameProperties& properties);
-TaintBuilder make_leaf_frame(const Kind* kind);
-TaintBuilder make_leaf_frame(
+TaintConfig make_frame(const Kind* kind, const FrameProperties& properties);
+TaintConfig make_leaf_frame(const Kind* kind);
+TaintConfig make_leaf_frame(
     const Kind* kind,
     FeatureMayAlwaysSet inferred_features,
     FeatureMayAlwaysSet locally_inferred_features,
     FeatureSet user_features,
     MethodSet origins);
-TaintBuilder make_crtex_leaf_frame(
+TaintConfig make_crtex_leaf_frame(
     const Kind* kind,
     AccessPath callee_port,
     CanonicalNameSetAbstractDomain canonical_names);

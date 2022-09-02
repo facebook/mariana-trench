@@ -678,7 +678,7 @@ TEST_F(JsonTest, LocalPositionSet) {
       test::parse_json(R"#([{"line": 1}, {"line": 2}])#"));
 }
 
-TEST_F(JsonTest, TaintBuilder) {
+TEST_F(JsonTest, TaintConfig) {
   Scope scope;
   auto* dex_source_one =
       redex::create_void_method(scope, "LClassOne;", "source");
@@ -700,18 +700,18 @@ TEST_F(JsonTest, TaintBuilder) {
   auto* field_two = context.fields->get(dex_fields[1]);
 
   EXPECT_THROW(
-      TaintBuilder::from_json(test::parse_json(R"(1)"), context),
+      TaintConfig::from_json(test::parse_json(R"(1)"), context),
       JsonValidationError);
   EXPECT_THROW(
-      TaintBuilder::from_json(test::parse_json(R"({})"), context),
+      TaintConfig::from_json(test::parse_json(R"({})"), context),
       JsonValidationError);
 
   // Parse the kind.
   EXPECT_THROW(
-      TaintBuilder::from_json(test::parse_json(R"({"kind": 1})"), context),
+      TaintConfig::from_json(test::parse_json(R"({"kind": 1})"), context),
       JsonValidationError);
   EXPECT_EQ(
-      TaintBuilder::from_json(
+      TaintConfig::from_json(
           test::parse_json(
               R"({
                 "kind": "TestSource"
@@ -725,11 +725,11 @@ TEST_F(JsonTest, TaintBuilder) {
 
   // Parse the kind for partial leaves.
   EXPECT_THROW(
-      TaintBuilder::from_json(
+      TaintConfig::from_json(
           test::parse_json(R"({"kind": "TestSink", "partial_label": 1})"),
           context),
       JsonValidationError);
-  auto frame = TaintBuilder::from_json(
+  auto frame = TaintConfig::from_json(
       test::parse_json(
           R"({
                 "kind": "TestSink",
@@ -751,7 +751,7 @@ TEST_F(JsonTest, TaintBuilder) {
 
   // Parse the callee port.
   EXPECT_THROW(
-      TaintBuilder::from_json(
+      TaintConfig::from_json(
           test::parse_json(R"({
             "kind": "TestSource",
             "callee_port": "InvalidPort"
@@ -761,7 +761,7 @@ TEST_F(JsonTest, TaintBuilder) {
 
   // Parse the callee, position and distance.
   EXPECT_EQ(
-      TaintBuilder::from_json(
+      TaintConfig::from_json(
           test::parse_json(R"({
             "kind": "TestSource",
             "callee_port": "Leaf"
@@ -773,7 +773,7 @@ TEST_F(JsonTest, TaintBuilder) {
               .inferred_features = FeatureMayAlwaysSet::bottom(),
               .locally_inferred_features = FeatureMayAlwaysSet::bottom()}));
   EXPECT_EQ(
-      TaintBuilder::from_json(
+      TaintConfig::from_json(
           test::parse_json(R"({
             "kind": "TestSource",
             "callee_port": "Return",
@@ -792,7 +792,7 @@ TEST_F(JsonTest, TaintBuilder) {
               .inferred_features = FeatureMayAlwaysSet::bottom(),
               .locally_inferred_features = FeatureMayAlwaysSet::bottom()}));
   EXPECT_EQ(
-      TaintBuilder::from_json(
+      TaintConfig::from_json(
           test::parse_json(R"({
             "kind": "TestSource",
             "callee_port": "Return",
@@ -813,7 +813,7 @@ TEST_F(JsonTest, TaintBuilder) {
 
   // Parse the origins.
   EXPECT_THROW(
-      TaintBuilder::from_json(
+      TaintConfig::from_json(
           test::parse_json(R"({
             "kind": "TestSource",
             "origins": "LClassOne;.source:()V"
@@ -821,7 +821,7 @@ TEST_F(JsonTest, TaintBuilder) {
           context),
       JsonValidationError);
   EXPECT_EQ(
-      TaintBuilder::from_json(
+      TaintConfig::from_json(
           test::parse_json(R"({
             "kind": "TestSource",
             "callee_port": "Leaf",
@@ -835,7 +835,7 @@ TEST_F(JsonTest, TaintBuilder) {
               .inferred_features = FeatureMayAlwaysSet::bottom(),
               .locally_inferred_features = FeatureMayAlwaysSet::bottom()}));
   EXPECT_EQ(
-      TaintBuilder::from_json(
+      TaintConfig::from_json(
           test::parse_json(R"({
             "kind": "TestSource",
             "callee_port": "Leaf",
@@ -851,7 +851,7 @@ TEST_F(JsonTest, TaintBuilder) {
 
   // Parse the field origins
   EXPECT_THROW(
-      TaintBuilder::from_json(
+      TaintConfig::from_json(
           test::parse_json(R"({
             "kind": "TestSource",
             "field_origins": "LClassThree;.field1:Ljava/lang/Boolean;"
@@ -859,7 +859,7 @@ TEST_F(JsonTest, TaintBuilder) {
           context),
       JsonValidationError);
   EXPECT_EQ(
-      TaintBuilder::from_json(
+      TaintConfig::from_json(
           test::parse_json(R"({
             "kind": "TestSource",
             "callee_port": "Leaf",
@@ -873,7 +873,7 @@ TEST_F(JsonTest, TaintBuilder) {
               .inferred_features = FeatureMayAlwaysSet::bottom(),
               .locally_inferred_features = FeatureMayAlwaysSet::bottom()}));
   EXPECT_EQ(
-      TaintBuilder::from_json(
+      TaintConfig::from_json(
           test::parse_json(R"({
             "kind": "TestSource",
             "callee_port": "Leaf",
@@ -889,7 +889,7 @@ TEST_F(JsonTest, TaintBuilder) {
 
   // Parse the features.
   EXPECT_EQ(
-      TaintBuilder::from_json(
+      TaintConfig::from_json(
           test::parse_json(R"({
             "kind": "TestSource",
             "callee_port": "Leaf",
@@ -903,7 +903,7 @@ TEST_F(JsonTest, TaintBuilder) {
                   FeatureMayAlwaysSet{context.features->get("FeatureOne")},
               .locally_inferred_features = FeatureMayAlwaysSet::bottom()}));
   EXPECT_EQ(
-      TaintBuilder::from_json(
+      TaintConfig::from_json(
           test::parse_json(R"({
             "kind": "TestSource",
             "callee_port": "Leaf",
@@ -919,7 +919,7 @@ TEST_F(JsonTest, TaintBuilder) {
                       context.features->get("FeatureTwo")},
               .locally_inferred_features = FeatureMayAlwaysSet::bottom()}));
   EXPECT_EQ(
-      TaintBuilder::from_json(
+      TaintConfig::from_json(
           test::parse_json(R"({
             "kind": "TestSource",
             "callee_port": "Leaf",
@@ -935,7 +935,7 @@ TEST_F(JsonTest, TaintBuilder) {
                   /* always */ FeatureSet{context.features->get("FeatureTwo")}),
               .locally_inferred_features = FeatureMayAlwaysSet::bottom()}));
   EXPECT_EQ(
-      TaintBuilder::from_json(
+      TaintConfig::from_json(
           test::parse_json(R"({
             "kind": "TestSource",
             "callee_port": "Leaf",
@@ -950,7 +950,7 @@ TEST_F(JsonTest, TaintBuilder) {
                   /* always */ FeatureSet{}),
               .locally_inferred_features = FeatureMayAlwaysSet::bottom()}));
   EXPECT_EQ(
-      TaintBuilder::from_json(
+      TaintConfig::from_json(
           test::parse_json(R"({
             "kind": "TestSource",
             "callee_port": "Leaf",
@@ -968,7 +968,7 @@ TEST_F(JsonTest, TaintBuilder) {
                   /* always */ FeatureSet{}),
               .locally_inferred_features = FeatureMayAlwaysSet::bottom()}));
   EXPECT_EQ(
-      TaintBuilder::from_json(
+      TaintConfig::from_json(
           test::parse_json(
               R"({
                 "kind": "TestSource",
@@ -983,7 +983,7 @@ TEST_F(JsonTest, TaintBuilder) {
               .user_features =
                   FeatureSet{context.features->get("FeatureOne")}}));
   EXPECT_EQ(
-      TaintBuilder::from_json(
+      TaintConfig::from_json(
           test::parse_json(
               R"({
                 "kind": "TestSource",
@@ -999,7 +999,7 @@ TEST_F(JsonTest, TaintBuilder) {
                   context.features->get("FeatureOne"),
                   context.features->get("FeatureTwo")}}));
   EXPECT_EQ(
-      TaintBuilder::from_json(
+      TaintConfig::from_json(
           test::parse_json(
               R"({
                 "kind": "TestSource",
@@ -1017,7 +1017,7 @@ TEST_F(JsonTest, TaintBuilder) {
               .user_features =
                   FeatureSet{context.features->get("FeatureOne")}}));
   EXPECT_EQ(
-      TaintBuilder::from_json(
+      TaintConfig::from_json(
           test::parse_json(
               R"({
                 "kind": "TestSource",
@@ -1037,7 +1037,7 @@ TEST_F(JsonTest, TaintBuilder) {
               .user_features =
                   FeatureSet{context.features->get("FeatureOne")}}));
   EXPECT_EQ(
-      TaintBuilder::from_json(
+      TaintConfig::from_json(
           test::parse_json(
               R"({
                 "kind": "TestSource",
@@ -1055,7 +1055,7 @@ TEST_F(JsonTest, TaintBuilder) {
 
   // Parse via_type_of_ports
   EXPECT_EQ(
-      TaintBuilder::from_json(
+      TaintConfig::from_json(
           test::parse_json(R"#({
             "kind": "TestSource",
             "callee_port": "Leaf",
@@ -1072,7 +1072,7 @@ TEST_F(JsonTest, TaintBuilder) {
 
   // Consistency checks.
   EXPECT_THROW(
-      TaintBuilder::from_json(
+      TaintConfig::from_json(
           test::parse_json(R"({
             "kind": "TestSource",
             "callee_port": "Return"
@@ -1080,7 +1080,7 @@ TEST_F(JsonTest, TaintBuilder) {
           context),
       JsonValidationError);
   EXPECT_THROW(
-      TaintBuilder::from_json(
+      TaintConfig::from_json(
           test::parse_json(R"({
             "kind": "TestSource",
             "call_position": {}
@@ -1088,7 +1088,7 @@ TEST_F(JsonTest, TaintBuilder) {
           context),
       JsonValidationError);
   EXPECT_THROW(
-      TaintBuilder::from_json(
+      TaintConfig::from_json(
           test::parse_json(R"({
             "kind": "TestSource",
             "distance": 1
@@ -1096,7 +1096,7 @@ TEST_F(JsonTest, TaintBuilder) {
           context),
       JsonValidationError);
   EXPECT_THROW(
-      TaintBuilder::from_json(
+      TaintConfig::from_json(
           test::parse_json(R"({
             "kind": "TestSource",
             "callee_port": "Leaf",
@@ -1105,7 +1105,7 @@ TEST_F(JsonTest, TaintBuilder) {
           context),
       JsonValidationError);
   EXPECT_THROW(
-      TaintBuilder::from_json(
+      TaintConfig::from_json(
           test::parse_json(R"({
             "kind": "TestSource",
             "callee_port": "Return",
@@ -1114,7 +1114,7 @@ TEST_F(JsonTest, TaintBuilder) {
           context),
       JsonValidationError);
   EXPECT_THROW(
-      TaintBuilder::from_json(
+      TaintConfig::from_json(
           test::parse_json(R"({
             "kind": "TestSource",
             "callee_port": "Return",
@@ -1132,37 +1132,37 @@ TEST_F(JsonTest, Frame_Crtex) {
   auto context = test::make_context(store);
 
   EXPECT_THROW(
-      TaintBuilder::from_json(test::parse_json(R"(1)"), context),
+      TaintConfig::from_json(test::parse_json(R"(1)"), context),
       JsonValidationError);
   EXPECT_THROW(
-      TaintBuilder::from_json(test::parse_json(R"({})"), context),
+      TaintConfig::from_json(test::parse_json(R"({})"), context),
       JsonValidationError);
 
   EXPECT_THROW(
-      TaintBuilder::from_json(
+      TaintConfig::from_json(
           test::parse_json(R"({"kind": "TestSource", "canonical_names": []})"),
           context),
       JsonValidationError);
   EXPECT_THROW(
-      TaintBuilder::from_json(
+      TaintConfig::from_json(
           test::parse_json(
               R"({"kind": "TestSource", "callee_port": "Anchor", "canonical_names": []})"),
           context),
       JsonValidationError);
   EXPECT_THROW(
-      TaintBuilder::from_json(
+      TaintConfig::from_json(
           test::parse_json(
               R"({"kind": "TestSource", "callee_port": "Producer"})"),
           context),
       JsonValidationError);
   EXPECT_THROW(
-      TaintBuilder::from_json(
+      TaintConfig::from_json(
           test::parse_json(
               R"({"kind": "TestSource", "canonical_names": [ { "irrelevant": "field" } ]})"),
           context),
       JsonValidationError);
   EXPECT_THROW(
-      TaintBuilder::from_json(
+      TaintConfig::from_json(
           test::parse_json(
               R"({
                 "kind": "TestSource",
@@ -1171,7 +1171,7 @@ TEST_F(JsonTest, Frame_Crtex) {
           context),
       JsonValidationError);
   EXPECT_THROW(
-      TaintBuilder::from_json(
+      TaintConfig::from_json(
           test::parse_json(
               R"#({
                 "kind": "TestSource",
@@ -1181,7 +1181,7 @@ TEST_F(JsonTest, Frame_Crtex) {
           context),
       JsonValidationError);
   EXPECT_THROW(
-      TaintBuilder::from_json(
+      TaintConfig::from_json(
           test::parse_json(
               R"({
                 "kind": "TestSource",
@@ -1191,7 +1191,7 @@ TEST_F(JsonTest, Frame_Crtex) {
           context),
       JsonValidationError);
   EXPECT_THROW(
-      TaintBuilder::from_json(
+      TaintConfig::from_json(
           test::parse_json(
               R"({
                 "kind": "TestSource",
@@ -1201,7 +1201,7 @@ TEST_F(JsonTest, Frame_Crtex) {
           context),
       JsonValidationError);
   EXPECT_THROW(
-      TaintBuilder::from_json(
+      TaintConfig::from_json(
           test::parse_json(
               R"({
                 "kind": "TestSource",
@@ -1213,7 +1213,7 @@ TEST_F(JsonTest, Frame_Crtex) {
           context),
       JsonValidationError);
   EXPECT_THROW(
-      TaintBuilder::from_json(
+      TaintConfig::from_json(
           test::parse_json(
               R"({
                 "kind": "TestSource",
@@ -1224,7 +1224,7 @@ TEST_F(JsonTest, Frame_Crtex) {
           context),
       JsonValidationError);
   EXPECT_THROW(
-      TaintBuilder::from_json(
+      TaintConfig::from_json(
           test::parse_json(
               R"#({
                 "kind": "TestSource",
@@ -1236,7 +1236,7 @@ TEST_F(JsonTest, Frame_Crtex) {
           context),
       JsonValidationError);
   EXPECT_THROW(
-      TaintBuilder::from_json(
+      TaintConfig::from_json(
           test::parse_json(
               R"({
                 "kind": "TestSource",
@@ -1245,7 +1245,7 @@ TEST_F(JsonTest, Frame_Crtex) {
           context),
       JsonValidationError);
   EXPECT_EQ(
-      TaintBuilder::from_json(
+      TaintConfig::from_json(
           test::parse_json(
               R"({
                 "kind": "TestSource",
@@ -1259,7 +1259,7 @@ TEST_F(JsonTest, Frame_Crtex) {
           CanonicalNameSetAbstractDomain{CanonicalName(
               CanonicalName::TemplateValue{"%programmatic_leaf_name%"})}));
   EXPECT_EQ(
-      TaintBuilder::from_json(
+      TaintConfig::from_json(
           test::parse_json(
               R"#({
                 "kind": "TestSource",
@@ -2321,7 +2321,7 @@ TEST_F(JsonTest, Model) {
                             context,
                             Model::Mode::Normal,
                             /* generations */
-                            std::vector<std::pair<AccessPath, TaintBuilder>>{},
+                            std::vector<std::pair<AccessPath, TaintConfig>>{},
                             /* parameter_sources */ {},
                             /* sinks */ {},
                             /* propagations */ {},

@@ -201,7 +201,7 @@ bool has_annotation(
     const std::optional<std::unordered_set<std::string>>& expected_values =
         std::nullopt);
 
-TaintBuilder source(
+TaintConfig source(
     Context& context,
     const Method* method,
     const std::string& kind,
@@ -209,7 +209,7 @@ TaintBuilder source(
     Root::Kind callee_port = Root::Kind::Leaf,
     RootSetAbstractDomain via_type_of_ports = {},
     RootSetAbstractDomain via_value_of_ports = {});
-TaintBuilder sink(
+TaintConfig sink(
     Context& context,
     const Method* method,
     const std::string& kind,
@@ -219,7 +219,7 @@ TaintBuilder sink(
     RootSetAbstractDomain via_value_of_ports = {},
     CanonicalNameSetAbstractDomain canonical_names =
         CanonicalNameSetAbstractDomain{});
-TaintBuilder partial_sink(
+TaintConfig partial_sink(
     Context& context,
     const Method* method,
     const std::string& kind,

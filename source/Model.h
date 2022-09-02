@@ -132,10 +132,10 @@ class Model final {
       const Method* MT_NULLABLE method,
       Context& context,
       Modes modes = Mode::Normal,
-      const std::vector<std::pair<AccessPath, TaintBuilder>>& generations = {},
-      const std::vector<std::pair<AccessPath, TaintBuilder>>&
-          parameter_sources = {},
-      const std::vector<std::pair<AccessPath, TaintBuilder>>& sinks = {},
+      const std::vector<std::pair<AccessPath, TaintConfig>>& generations = {},
+      const std::vector<std::pair<AccessPath, TaintConfig>>& parameter_sources =
+          {},
+      const std::vector<std::pair<AccessPath, TaintConfig>>& sinks = {},
       const std::vector<std::pair<Propagation, AccessPath>>& propagations = {},
       const std::vector<Sanitizer>& global_sanitizers = {},
       const std::vector<std::pair<Root, SanitizerSet>>& port_sanitizers = {},
@@ -184,8 +184,8 @@ class Model final {
   bool check_port_consistency(const AccessPath& access_path) const;
   bool check_parameter_source_port_consistency(
       const AccessPath& access_path) const;
-  bool check_taint_builder_consistency(
-      const TaintBuilder& frame,
+  bool check_taint_config_consistency(
+      const TaintConfig& frame,
       std::string_view kind) const;
   bool check_taint_consistency(const Taint& frame, std::string_view kind) const;
   bool check_propagation_consistency(const Propagation& propagation) const;
@@ -197,7 +197,7 @@ class Model final {
   void add_taint_in_taint_this(Context& context);
 
   void add_generation(AccessPath port, Taint generation);
-  void add_generation(const AccessPath& port, TaintBuilder generation);
+  void add_generation(const AccessPath& port, TaintConfig generation);
 
   /* Add generations after applying sanitizers */
   void add_inferred_generations(AccessPath port, Taint generations);
@@ -209,7 +209,7 @@ class Model final {
   }
 
   void add_parameter_source(AccessPath port, Taint source);
-  void add_parameter_source(const AccessPath& port, TaintBuilder source);
+  void add_parameter_source(const AccessPath& port, TaintConfig source);
   const TaintAccessPathTree& parameter_sources() const {
     return parameter_sources_;
   }
@@ -218,7 +218,7 @@ class Model final {
   }
 
   void add_sink(AccessPath port, Taint sink);
-  void add_sink(const AccessPath& port, TaintBuilder sink);
+  void add_sink(const AccessPath& port, TaintConfig sink);
 
   /* Add sinks after applying sanitizers */
   void add_inferred_sinks(AccessPath port, Taint sinks);

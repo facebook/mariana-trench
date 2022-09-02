@@ -11,9 +11,9 @@
 
 namespace marianatrench {
 
-Taint::Taint(std::initializer_list<TaintBuilder> builders) {
-  for (const auto& builder : builders) {
-    add(builder);
+Taint::Taint(std::initializer_list<TaintConfig> configs) {
+  for (const auto& config : configs) {
+    add(config);
   }
 }
 
@@ -28,8 +28,8 @@ std::size_t Taint::num_frames() const {
   return count;
 }
 
-void Taint::add(const TaintBuilder& builder) {
-  set_.add(CalleeFrames{builder});
+void Taint::add(const TaintConfig& config) {
+  set_.add(CalleeFrames{config});
 }
 
 bool Taint::leq(const Taint& other) const {
@@ -225,7 +225,7 @@ FeatureMayAlwaysSet Taint::features_joined() const {
 }
 
 Taint Taint::artificial_source(AccessPath access_path) {
-  return Taint{TaintBuilder(
+  return Taint{TaintConfig(
       /* kind */ Kinds::artificial_source(),
       /* callee_port */ access_path,
       /* callee */ nullptr,

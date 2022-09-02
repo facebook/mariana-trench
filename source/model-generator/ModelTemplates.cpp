@@ -206,7 +206,7 @@ void PropagationTemplate::instantiate(
       output_.instantiate(parameter_positions));
 }
 
-SinkTemplate::SinkTemplate(TaintBuilder sink, AccessPathTemplate port)
+SinkTemplate::SinkTemplate(TaintConfig sink, AccessPathTemplate port)
     : sink_(std::move(sink)), port_(std::move(port)) {}
 
 SinkTemplate SinkTemplate::from_json(
@@ -216,7 +216,7 @@ SinkTemplate SinkTemplate::from_json(
 
   JsonValidation::string(value, /* field */ "port");
   return SinkTemplate(
-      TaintBuilder::from_json(value, context),
+      TaintConfig::from_json(value, context),
       AccessPathTemplate::from_json(value["port"]));
 }
 
@@ -227,7 +227,7 @@ void SinkTemplate::instantiate(
 }
 
 ParameterSourceTemplate::ParameterSourceTemplate(
-    TaintBuilder source,
+    TaintConfig source,
     AccessPathTemplate port)
     : source_(std::move(source)), port_(std::move(port)) {}
 
@@ -238,7 +238,7 @@ ParameterSourceTemplate ParameterSourceTemplate::from_json(
 
   JsonValidation::string(value, /* field */ "port");
   return ParameterSourceTemplate(
-      TaintBuilder::from_json(value, context),
+      TaintConfig::from_json(value, context),
       AccessPathTemplate::from_json(value["port"]));
 }
 
@@ -249,7 +249,7 @@ void ParameterSourceTemplate::instantiate(
 }
 
 GenerationTemplate::GenerationTemplate(
-    TaintBuilder source,
+    TaintConfig source,
     AccessPathTemplate port)
     : source_(std::move(source)), port_(std::move(port)) {}
 
@@ -260,7 +260,7 @@ GenerationTemplate GenerationTemplate::from_json(
 
   JsonValidation::string(value, /* field */ "port");
   return GenerationTemplate(
-      TaintBuilder::from_json(value, context),
+      TaintConfig::from_json(value, context),
       AccessPathTemplate::from_json(value["port"]));
 }
 
@@ -270,7 +270,7 @@ void GenerationTemplate::instantiate(
   model.add_generation(port_.instantiate(parameter_positions), source_);
 }
 
-SourceTemplate::SourceTemplate(TaintBuilder source, AccessPathTemplate port)
+SourceTemplate::SourceTemplate(TaintConfig source, AccessPathTemplate port)
     : source_(std::move(source)), port_(std::move(port)) {}
 
 SourceTemplate SourceTemplate::from_json(
@@ -280,7 +280,7 @@ SourceTemplate SourceTemplate::from_json(
 
   JsonValidation::string(value, /* field */ "port");
   return SourceTemplate(
-      TaintBuilder::from_json(value, context),
+      TaintConfig::from_json(value, context),
       AccessPathTemplate::from_json(value["port"]));
 }
 

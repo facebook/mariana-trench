@@ -9,7 +9,7 @@
 
 #include <mariana-trench/Field.h>
 #include <mariana-trench/Taint.h>
-#include <mariana-trench/TaintBuilder.h>
+#include <mariana-trench/TaintConfig.h>
 
 namespace marianatrench {
 
@@ -31,8 +31,8 @@ class FieldModel final {
 
   explicit FieldModel(
       const Field* field,
-      const std::vector<TaintBuilder>& sources,
-      const std::vector<TaintBuilder>& sinks);
+      const std::vector<TaintConfig>& sources,
+      const std::vector<TaintConfig>& sinks);
 
   FieldModel(const FieldModel& other) = default;
   FieldModel(FieldModel&&) = default;
@@ -59,8 +59,8 @@ class FieldModel final {
     return sinks_;
   }
 
-  void add_source(TaintBuilder source);
-  void add_sink(TaintBuilder source);
+  void add_source(TaintConfig source);
+  void add_sink(TaintConfig source);
 
   void join_with(const FieldModel& other);
 
@@ -79,8 +79,8 @@ class FieldModel final {
   friend std::ostream& operator<<(std::ostream& out, const FieldModel& model);
 
  private:
-  void check_taint_builder_consistency(
-      const TaintBuilder& frame,
+  void check_taint_config_consistency(
+      const TaintConfig& frame,
       std::string_view kind) const;
 
   void check_taint_consistency(const Taint& frame, std::string_view kind) const;

@@ -28,15 +28,15 @@ class FieldModelConsistencyError {
 
 FieldModel::FieldModel(
     const Field* field,
-    const std::vector<TaintBuilder>& sources,
-    const std::vector<TaintBuilder>& sinks)
+    const std::vector<TaintConfig>& sources,
+    const std::vector<TaintConfig>& sinks)
     : field_(field) {
-  for (const auto& builder : sources) {
-    add_source(builder);
+  for (const auto& config : sources) {
+    add_source(config);
   }
 
-  for (const auto& builder : sinks) {
-    add_sink(builder);
+  for (const auto& config : sinks) {
+    add_sink(config);
   }
 }
 
@@ -61,8 +61,8 @@ bool FieldModel::empty() const {
   return sources_.is_bottom() && sinks_.is_bottom();
 }
 
-void FieldModel::check_taint_builder_consistency(
-    const TaintBuilder& frame,
+void FieldModel::check_taint_config_consistency(
+    const TaintConfig& frame,
     std::string_view kind) const {
   if (frame.kind() == nullptr) {
     FieldModelConsistencyError::raise(fmt::format(
@@ -96,15 +96,15 @@ void FieldModel::check_taint_consistency(
   }
 }
 
-void FieldModel::add_source(TaintBuilder source) {
+void FieldModel::add_source(TaintConfig source) {
   mt_assert(source.is_leaf());
-  check_taint_builder_consistency(source, "source");
+  check_taint_config_consistency(source, "source");
   add_source(Taint{std::move(source)});
 }
 
-void FieldModel::add_sink(TaintBuilder sink) {
+void FieldModel::add_sink(TaintConfig sink) {
   mt_assert(sink.is_leaf());
-  check_taint_builder_consistency(sink, "sink");
+  check_taint_config_consistency(sink, "sink");
   add_sink(Taint{std::move(sink)});
 }
 
@@ -130,11 +130,11 @@ FieldModel FieldModel::from_json(
 
   for (auto source_value :
        JsonValidation::null_or_array(value, /* field */ "sources")) {
-    model.add_source(TaintBuilder::from_json(source_value, context));
+    model.add_source(TaintConfig::from_json(source_value, context));
   }
   for (auto sink_value :
        JsonValidation::null_or_array(value, /* field */ "sinks")) {
-    model.add_sink(TaintBuilder::from_json(sink_value, context));
+    model.add_sink(TaintConfig::from_json(sink_value, context));
   }
   return model;
 }

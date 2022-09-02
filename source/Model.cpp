@@ -92,9 +92,9 @@ Model::Model(
     const Method* method,
     Context& context,
     Modes modes,
-    const std::vector<std::pair<AccessPath, TaintBuilder>>& generations,
-    const std::vector<std::pair<AccessPath, TaintBuilder>>& parameter_sources,
-    const std::vector<std::pair<AccessPath, TaintBuilder>>& sinks,
+    const std::vector<std::pair<AccessPath, TaintConfig>>& generations,
+    const std::vector<std::pair<AccessPath, TaintConfig>>& parameter_sources,
+    const std::vector<std::pair<AccessPath, TaintConfig>>& sinks,
     const std::vector<std::pair<Propagation, AccessPath>>& propagations,
     const std::vector<Sanitizer>& global_sanitizers,
     const std::vector<std::pair<Root, SanitizerSet>>& port_sanitizers,
@@ -440,17 +440,17 @@ bool Model::check_port_consistency(const AccessPath& access_path) const {
   return check_root_consistency(access_path.root());
 }
 
-bool Model::check_taint_builder_consistency(
-    const TaintBuilder& builder,
+bool Model::check_taint_config_consistency(
+    const TaintConfig& config,
     std::string_view kind) const {
-  if (builder.kind() == nullptr) {
+  if (config.kind() == nullptr) {
     ModelConsistencyError::raise(fmt::format(
         "Model for method `{}` contains a unknown kind for {}.",
         show(method_),
         kind));
     return false;
   }
-  if (builder.is_artificial_source()) {
+  if (config.is_artificial_source()) {
     ModelConsistencyError::raise(fmt::format(
         "Model for method `{}` contains an artificial {}.",
         show(method_),
@@ -625,8 +625,8 @@ void Model::add_generation(AccessPath port, Taint source) {
   generations_.write(port, std::move(source), UpdateKind::Weak);
 }
 
-void Model::add_generation(const AccessPath& port, TaintBuilder source) {
-  if (!check_taint_builder_consistency(source, "source")) {
+void Model::add_generation(const AccessPath& port, TaintConfig source) {
+  if (!check_taint_config_consistency(source, "source")) {
     return;
   }
   add_generation(port, Taint{std::move(source)});
@@ -660,8 +660,8 @@ void Model::add_parameter_source(AccessPath port, Taint source) {
   parameter_sources_.write(port, Taint{std::move(source)}, UpdateKind::Weak);
 }
 
-void Model::add_parameter_source(const AccessPath& port, TaintBuilder source) {
-  if (!check_taint_builder_consistency(source, "source")) {
+void Model::add_parameter_source(const AccessPath& port, TaintConfig source) {
+  if (!check_taint_config_consistency(source, "source")) {
     return;
   }
 
@@ -681,8 +681,8 @@ void Model::add_sink(AccessPath port, Taint sink) {
   sinks_.write(port, Taint{std::move(sink)}, UpdateKind::Weak);
 }
 
-void Model::add_sink(const AccessPath& port, TaintBuilder sink) {
-  if (!check_taint_builder_consistency(sink, "sink")) {
+void Model::add_sink(const AccessPath& port, TaintConfig sink) {
+  if (!check_taint_config_consistency(sink, "sink")) {
     return;
   }
 
@@ -938,7 +938,7 @@ Model Model::from_json(
       port = AccessPath::from_json(generation_value["caller_port"]);
     }
     model.add_generation(
-        port, TaintBuilder::from_json(generation_value, context));
+        port, TaintConfig::from_json(generation_value, context));
   }
 
   for (auto parameter_source_value :
@@ -948,7 +948,7 @@ Model Model::from_json(
     JsonValidation::string(parameter_source_value, /* field */ port_field);
     auto port = AccessPath::from_json(parameter_source_value[port_field]);
     model.add_parameter_source(
-        port, TaintBuilder::from_json(parameter_source_value, context));
+        port, TaintConfig::from_json(parameter_source_value, context));
   }
 
   for (auto source_value :
@@ -961,7 +961,7 @@ Model Model::from_json(
       JsonValidation::string(source_value, /* field */ "caller_port");
       port = AccessPath::from_json(source_value["caller_port"]);
     }
-    auto source = TaintBuilder::from_json(source_value, context);
+    auto source = TaintConfig::from_json(source_value, context);
     if (port.root().is_argument()) {
       model.add_parameter_source(port, source);
     } else {
@@ -975,7 +975,7 @@ Model Model::from_json(
         sink_value.isMember("port") ? "port" : "caller_port";
     JsonValidation::string(sink_value, /* field */ port_field);
     auto port = AccessPath::from_json(sink_value[port_field]);
-    model.add_sink(port, TaintBuilder::from_json(sink_value, context));
+    model.add_sink(port, TaintConfig::from_json(sink_value, context));
   }
 
   for (auto propagation_value :
