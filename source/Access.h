@@ -152,7 +152,8 @@ class Root final {
      * `CanonicalThis` is not considered an argument.
      */
     CanonicalThis = std::numeric_limits<IntegerEncoding>::max() - 4,
-    MaxArgument = std::numeric_limits<IntegerEncoding>::max() - 5,
+    CallEffect = std::numeric_limits<IntegerEncoding>::max() - 5,
+    MaxArgument = std::numeric_limits<IntegerEncoding>::max() - 6,
   };
 
  private:
@@ -214,6 +215,10 @@ class Root final {
       default:
         return false;
     }
+  }
+
+  bool is_call_effect() const {
+    return value_ == static_cast<IntegerEncoding>(Kind::CallEffect);
   }
 
   Kind kind() const {

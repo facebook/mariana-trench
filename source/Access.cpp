@@ -113,6 +113,8 @@ std::string Root::to_string() const {
       return "Producer";
     case Root::Kind::CanonicalThis:
       return "Argument(-1)";
+    case Root::Kind::CallEffect:
+      return "CallEffect";
     default:
       mt_unreachable();
   }
@@ -148,12 +150,14 @@ Root Root::from_json(const Json::Value& value) {
     return Root(Root::Kind::Anchor);
   } else if (root_string == "Producer") {
     return Root(Root::Kind::Producer);
+  } else if (root_string == "CallEffect") {
+    return Root(Root::Kind::CallEffect);
   } else {
     throw JsonValidationError(
         value,
         /* field */ std::nullopt,
         fmt::format(
-            "valid access path root (`Return`, `Argument(...)`, `Leaf`, `Anchor` or `Producer`), got `{}`",
+            "valid access path root (`Return`, `Argument(...)`, `Leaf`, `Anchor`, `Producer` or `CallEffect`), got `{}`",
             root_string));
   }
 }
