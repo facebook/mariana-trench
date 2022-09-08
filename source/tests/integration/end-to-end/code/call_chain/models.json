@@ -1,1 +1,11 @@
-[]
+[
+  {
+    "method": "Lcom/facebook/marianatrench/integrationtests/SensitiveApi;.execute:()V",
+    "effect_sinks": [
+      {
+        "port": "CallEffect.call-chain",
+        "kind": "CallChainSink"
+      }
+    ]
+  }
+]

@@ -50,6 +50,8 @@ bool is_valid_sink(
     // leaves when it comes to traces (no next hop), even though the `Frame`
     // itself is not a leaf (has a callee).
     return true;
+  } else if (callee_port.root().is_call_effect()) {
+    return true;
   }
 
   auto model = registry.get(callee);

@@ -205,6 +205,14 @@ Model Model::instantiate(const Method* method, Context& context) const {
     model.add_sink(port, sink_taint);
   }
 
+  for (const auto& [effect, source_taint] : call_effect_sources_) {
+    model.add_call_effect_source(effect, source_taint);
+  }
+
+  for (const auto& [effect, sink_taint] : call_effect_sinks_) {
+    model.add_call_effect_sink(effect, sink_taint);
+  }
+
   for (const auto& [output, propagations] : propagations_.elements()) {
     for (const auto& propagation : propagations) {
       model.add_propagation(propagation, output);
@@ -845,6 +853,26 @@ Model Model::from_json(
     model.add_sink(port, TaintConfig::from_json(sink_value, context));
   }
 
+  for (auto effect_source_value :
+       JsonValidation::null_or_array(value, /* field */ "effect_sources")) {
+    std::string effect_type_port =
+        effect_source_value.isMember("port") ? "port" : "type";
+    JsonValidation::string(effect_source_value, /* field */ effect_type_port);
+    auto effect = CallEffect::from_json(effect_source_value[effect_type_port]);
+    model.add_call_effect_source(
+        effect, TaintConfig::from_json(effect_source_value, context));
+  }
+
+  for (auto effect_sink_value :
+       JsonValidation::null_or_array(value, /* field */ "effect_sinks")) {
+    std::string effect_type_port =
+        effect_sink_value.isMember("port") ? "port" : "type";
+    JsonValidation::string(effect_sink_value, /* field */ effect_type_port);
+    auto effect = CallEffect::from_json(effect_sink_value[effect_type_port]);
+    model.add_call_effect_sink(
+        effect, TaintConfig::from_json(effect_sink_value, context));
+  }
+
   for (auto propagation_value :
        JsonValidation::null_or_array(value, /* field */ "propagation")) {
     JsonValidation::string(propagation_value, /* field */ "output");
@@ -963,6 +991,17 @@ Json::Value Model::to_json() const {
     value["parameter_sources"] = parameter_sources_value;
   }
 
+  if (!call_effect_sources_.is_bottom()) {
+    auto effect_sources_value = Json::Value(Json::arrayValue);
+    for (const auto& [effect, source_taint] : call_effect_sources_) {
+      auto source_value = Json::Value(Json::objectValue);
+      source_value["port"] = effect.to_json();
+      source_value["taint"] = source_taint.to_json();
+      effect_sources_value.append(source_value);
+    }
+    value["effect_sources"] = effect_sources_value;
+  }
+
   if (!sinks_.is_bottom()) {
     auto sinks_value = Json::Value(Json::arrayValue);
     for (const auto& [port, sink_taint] : sinks_.elements()) {
@@ -972,6 +1011,17 @@ Json::Value Model::to_json() const {
       sinks_value.append(sink_value);
     }
     value["sinks"] = sinks_value;
+  }
+
+  if (!call_effect_sinks_.is_bottom()) {
+    auto effect_sinks_value = Json::Value(Json::arrayValue);
+    for (const auto& [effect, sink_taint] : call_effect_sinks_) {
+      auto sink_value = Json::Value(Json::objectValue);
+      sink_value["port"] = effect.to_json();
+      sink_value["taint"] = sink_taint.to_json();
+      effect_sinks_value.append(sink_value);
+    }
+    value["effect_sinks"] = effect_sinks_value;
   }
 
   if (!propagations_.is_bottom()) {

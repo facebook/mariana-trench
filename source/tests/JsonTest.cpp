@@ -8,6 +8,7 @@
 #include <gmock/gmock.h>
 
 #include <mariana-trench/Access.h>
+#include <mariana-trench/CallEffects.h>
 #include <mariana-trench/CanonicalName.h>
 #include <mariana-trench/Constants.h>
 #include <mariana-trench/Field.h>
@@ -64,6 +65,7 @@ TEST_F(JsonTest, Root) {
   EXPECT_JSON_EQ(Root, "\"Leaf\"", (Root(Root::Kind::Leaf)));
   EXPECT_JSON_EQ(Root, "\"Anchor\"", Root(Root::Kind::Anchor));
   EXPECT_JSON_EQ(Root, "\"Producer\"", Root(Root::Kind::Producer));
+  EXPECT_JSON_EQ(Root, "\"CallEffect\"", Root(Root::Kind::CallEffect));
   EXPECT_JSON_EQ(Root, "\"Argument(0)\"", Root(Root::Kind::Argument, 0));
   EXPECT_JSON_EQ(Root, "\"Argument(1)\"", Root(Root::Kind::Argument, 1));
   EXPECT_JSON_EQ(Root, "\"Argument(12)\"", Root(Root::Kind::Argument, 12));
@@ -2570,6 +2572,164 @@ TEST_F(JsonTest, LifecycleMethods) {
         ]
       }])")),
       JsonValidationError);
+}
+
+TEST_F(JsonTest, CallEffect) {
+  EXPECT_EQ(
+      CallEffect::from_json(test::parse_json(R"#("call-chain")#")),
+      CallEffect(CallEffect::Kind::CALL_CHAIN));
+
+  EXPECT_EQ(
+      CallEffect::from_json(test::parse_json(R"#("CallEffect.call-chain")#")),
+      CallEffect(CallEffect::Kind::CALL_CHAIN));
+
+  // Invalid root
+  EXPECT_THROW(
+      CallEffect::from_json(test::parse_json(R"#("Return.call-chain")#")),
+      JsonValidationError);
+
+  // Invalid effect
+  EXPECT_THROW(
+      CallEffect::from_json(test::parse_json(R"#("CallEffect.other")#")),
+      JsonValidationError);
+}
+
+TEST_F(JsonTest, CallEffectModel) {
+  Scope scope;
+  auto* dex_entry_method = redex::create_void_method(
+      scope,
+      /* class_name */ "LEntry;",
+      /* method_name */ "method");
+  auto* dex_exit_method = redex::create_void_method(
+      scope,
+      /* class_name */ "LExit;",
+      /* method_name */ "method");
+
+  DexStore store("stores");
+  store.add_classes(scope);
+  auto context = test::make_context(store);
+  auto* entry_method = context.methods->get(dex_entry_method);
+  auto* exit_method = context.methods->get(dex_exit_method);
+
+  CallEffect call_effect(CallEffect::Kind::CALL_CHAIN);
+  Model effect_source_model(entry_method, context);
+  effect_source_model.add_call_effect_source(
+      call_effect,
+      test::make_leaf_taint_config(context.kinds->get("CallChainOrigin")));
+
+  EXPECT_EQ(
+      test::sorted_json(effect_source_model.to_json()), test::parse_json(R"#({
+      "effect_sources": [
+        {
+          "port": "CallEffect.call-chain",
+          "taint": [
+            {
+              "kinds": [
+                {
+                  "kind": "CallChainOrigin",
+                  "origins": ["LEntry;.method:()V"]
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "method": "LEntry;.method:()V"
+    })#"));
+
+  Model effect_sink_model(exit_method, context);
+  effect_sink_model.add_call_effect_sink(
+      call_effect,
+      test::make_leaf_taint_config(context.kinds->get("CallChainSink")));
+  EXPECT_EQ(
+      test::sorted_json(effect_sink_model.to_json()), test::parse_json(R"#({
+      "effect_sinks": [
+        {
+          "port": "CallEffect.call-chain",
+          "taint": [
+            {
+              "kinds": [
+                {
+                  "kind": "CallChainSink",
+                  "origins": ["LExit;.method:()V"]
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "method": "LExit;.method:()V"
+    })#"));
+
+  auto rule = std::make_unique<SourceSinkRule>(
+      /* name */ "Rule",
+      /* code */ 1,
+      /* description */ "",
+      Rule::KindSet{context.kinds->get("CallChainOrigin")},
+      Rule::KindSet{context.kinds->get("CallChainSink")});
+
+  auto source = effect_source_model.call_effect_sources().read(call_effect);
+  auto sink = effect_sink_model.call_effect_sinks().read(call_effect);
+
+  EXPECT_EQ(
+      test::sorted_json(Model(
+                            entry_method,
+                            context,
+                            Model::Mode::Normal,
+                            /* generations */
+                            std::vector<std::pair<AccessPath, TaintConfig>>{},
+                            /* parameter_sources */ {},
+                            /* sinks */ {},
+                            /* propagations */ {},
+                            /* global_sanitizers */ {},
+                            /* port_sanitizers */ {},
+                            /* attach_to_sources */ {},
+                            /* attach_to_sinks */ {},
+                            /* attach_to_propagations */ {},
+                            /* add_features_to_arguments */ {},
+                            /* inline_as */ AccessPathConstantDomain::bottom(),
+                            IssueSet{Issue(
+                                std::move(source),
+                                std::move(sink),
+                                rule.get(),
+                                /* callee */ exit_method->signature(),
+                                /* sink_index */ 0,
+                                context.positions->get("CallEffect.java", 1))})
+                            .to_json()),
+      test::parse_json(R"#({
+      "issues": [
+        {
+          "callee" : "LExit;.method:()V",
+          "position": {
+            "path": "CallEffect.java",
+            "line": 1
+          },
+          "rule": 1,
+          "sink_index" : "0",
+          "sinks": [
+            {
+              "kinds": [
+                {
+                  "kind": "CallChainSink",
+                  "origins": ["LExit;.method:()V"]
+                }
+              ]
+            }
+          ],
+          "sources": [
+            {
+              "kinds": [
+                {
+                  "kind": "CallChainOrigin",
+                  "origins": ["LEntry;.method:()V"]
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "method": "LEntry;.method:()V"
+    })#"));
 }
 
 } // namespace marianatrench

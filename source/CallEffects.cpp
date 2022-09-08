@@ -14,6 +14,18 @@
 #include <mariana-trench/Log.h>
 
 namespace marianatrench {
+namespace {
+
+std::optional<CallEffect::Kind> string_to_call_effect_kind(
+    std::string_view effect) {
+  if (effect == "call-chain") {
+    return CallEffect::Kind::CALL_CHAIN;
+  } else {
+    return std::nullopt;
+  }
+}
+
+} // namespace
 
 std::string CallEffect::to_string() const {
   switch (kind()) {
@@ -37,6 +49,44 @@ AccessPath CallEffect::access_path() const {
     default:
       mt_unreachable();
   }
+}
+
+Json::Value CallEffect::to_json() const {
+  return access_path().to_json();
+}
+
+CallEffect CallEffect::from_json(const Json::Value& value) {
+  auto elements = AccessPath::split_path(value);
+
+  if (elements.empty() || elements.size() > 2) {
+    throw JsonValidationError(
+        value,
+        /* field */ std::nullopt,
+        "call effect to be specified as: `CallEffect.<type>` or `<type>`");
+  }
+
+  const auto& root_string =
+      elements.size() == 2 ? elements.front() : "CallEffect";
+  if (auto root = Root::from_json(root_string); !root.is_call_effect()) {
+    throw JsonValidationError(
+        value,
+        /* field */ std::nullopt,
+        "call effect root to be: `CallEffect`");
+  }
+
+  auto effect_kind = string_to_call_effect_kind(elements.back());
+  if (!effect_kind.has_value()) {
+    throw JsonValidationError(
+        value,
+        /* field */ std::nullopt,
+        "one of existing call effect types: `call-chain`");
+  }
+
+  return CallEffect{effect_kind.value()};
+}
+
+std::ostream& operator<<(std::ostream& out, const CallEffect& effect) {
+  return out << effect.to_string();
 }
 
 } // namespace marianatrench
@@ -106,7 +156,7 @@ std::ostream& operator<<(
     out << "{\n";
     for (const auto& [effect, taint] : effects) {
       out << "    "
-          << "CallEffects(" << effect.to_string() << "): " << taint << ",\n";
+          << "CallEffects(" << effect << "): " << taint << ",\n";
     }
     out << "  }";
   }

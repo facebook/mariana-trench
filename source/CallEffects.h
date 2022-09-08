@@ -34,6 +34,14 @@ class CallEffect final {
 
   explicit CallEffect(Kind kind) : value_(static_cast<IntegerEncoding>(kind)) {}
 
+  bool operator==(const CallEffect& other) const {
+    return value_ == other.value_;
+  }
+
+  bool operator!=(const CallEffect& other) const {
+    return value_ != other.value_;
+  }
+
   Kind kind() const {
     return static_cast<Kind>(value_);
   }
@@ -45,6 +53,9 @@ class CallEffect final {
   std::string to_string() const;
 
   AccessPath access_path() const;
+
+  static CallEffect from_json(const Json::Value& value);
+  Json::Value to_json() const;
 
   static CallEffect decode(IntegerEncoding value) {
     return CallEffect(value);

@@ -1,5 +1,279 @@
 // @generated
 {
+  "effect_sinks" : 
+  [
+    {
+      "port" : "CallEffect.call-chain",
+      "taint" : 
+      [
+        {
+          "call" : 
+          {
+            "port" : "CallEffect.call-chain",
+            "position" : 
+            {
+              "line" : 16,
+              "path" : "CallChain.java"
+            },
+            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/CallChainService;.hop2:()V"
+          },
+          "kinds" : 
+          [
+            {
+              "distance" : 2,
+              "kind" : "CallChainSink",
+              "origins" : 
+              [
+                "Lcom/facebook/marianatrench/integrationtests/SensitiveApi;.execute:()V"
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "method" : "Lcom/facebook/marianatrench/integrationtests/CallChainService;.hop1:()V",
+  "position" : 
+  {
+    "line" : 15,
+    "path" : "CallChain.java"
+  }
+}
+{
+  "effect_sinks" : 
+  [
+    {
+      "port" : "CallEffect.call-chain",
+      "taint" : 
+      [
+        {
+          "call" : 
+          {
+            "port" : "CallEffect.call-chain",
+            "position" : 
+            {
+              "line" : 20,
+              "path" : "CallChain.java"
+            },
+            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/SensitiveApi;.execute:()V"
+          },
+          "kinds" : 
+          [
+            {
+              "distance" : 1,
+              "kind" : "CallChainSink",
+              "origins" : 
+              [
+                "Lcom/facebook/marianatrench/integrationtests/SensitiveApi;.execute:()V"
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "method" : "Lcom/facebook/marianatrench/integrationtests/CallChainService;.hop2:()V",
+  "position" : 
+  {
+    "line" : 19,
+    "path" : "CallChain.java"
+  }
+}
+{
+  "effect_sinks" : 
+  [
+    {
+      "port" : "CallEffect.call-chain",
+      "taint" : 
+      [
+        {
+          "call" : 
+          {
+            "port" : "CallEffect.call-chain",
+            "position" : 
+            {
+              "line" : 26,
+              "path" : "CallChain.java"
+            },
+            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/CallChainService;.hop1:()V"
+          },
+          "kinds" : 
+          [
+            {
+              "distance" : 3,
+              "kind" : "CallChainSink",
+              "origins" : 
+              [
+                "Lcom/facebook/marianatrench/integrationtests/SensitiveApi;.execute:()V"
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "effect_sources" : 
+  [
+    {
+      "port" : "CallEffect.call-chain",
+      "taint" : 
+      [
+        {
+          "kinds" : 
+          [
+            {
+              "kind" : "CallChainOrigin",
+              "origins" : 
+              [
+                "Lcom/facebook/marianatrench/integrationtests/Exported;.entry:()V"
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "issues" : 
+  [
+    {
+      "callee" : "Lcom/facebook/marianatrench/integrationtests/CallChainService;.hop1:()V",
+      "position" : 
+      {
+        "line" : 26,
+        "path" : "CallChain.java"
+      },
+      "rule" : 1,
+      "sink_index" : "0",
+      "sinks" : 
+      [
+        {
+          "call" : 
+          {
+            "port" : "CallEffect.call-chain",
+            "position" : 
+            {
+              "end" : 30,
+              "line" : 26,
+              "path" : "CallChain.java",
+              "start" : 27
+            },
+            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/CallChainService;.hop1:()V"
+          },
+          "kinds" : 
+          [
+            {
+              "distance" : 3,
+              "kind" : "CallChainSink",
+              "origins" : 
+              [
+                "Lcom/facebook/marianatrench/integrationtests/SensitiveApi;.execute:()V"
+              ]
+            }
+          ]
+        }
+      ],
+      "sources" : 
+      [
+        {
+          "call" : 
+          {
+            "position" : 
+            {
+              "line" : 25,
+              "path" : "CallChain.java"
+            }
+          },
+          "kinds" : 
+          [
+            {
+              "kind" : "CallChainOrigin",
+              "origins" : 
+              [
+                "Lcom/facebook/marianatrench/integrationtests/Exported;.entry:()V"
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "method" : "Lcom/facebook/marianatrench/integrationtests/Exported;.entry:()V",
+  "position" : 
+  {
+    "line" : 25,
+    "path" : "CallChain.java"
+  }
+}
+{
+  "effect_sinks" : 
+  [
+    {
+      "port" : "CallEffect.call-chain",
+      "taint" : 
+      [
+        {
+          "call" : 
+          {
+            "port" : "CallEffect.call-chain",
+            "position" : 
+            {
+              "line" : 32,
+              "path" : "CallChain.java"
+            },
+            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/Exported;.entry:()V"
+          },
+          "kinds" : 
+          [
+            {
+              "distance" : 4,
+              "kind" : "CallChainSink",
+              "origins" : 
+              [
+                "Lcom/facebook/marianatrench/integrationtests/SensitiveApi;.execute:()V"
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "method" : "Lcom/facebook/marianatrench/integrationtests/CallChain;.callChainIssue:()V",
+  "position" : 
+  {
+    "line" : 31,
+    "path" : "CallChain.java"
+  }
+}
+{
+  "effect_sinks" : 
+  [
+    {
+      "port" : "CallEffect.call-chain",
+      "taint" : 
+      [
+        {
+          "kinds" : 
+          [
+            {
+              "kind" : "CallChainSink",
+              "origins" : 
+              [
+                "Lcom/facebook/marianatrench/integrationtests/SensitiveApi;.execute:()V"
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "method" : "Lcom/facebook/marianatrench/integrationtests/SensitiveApi;.execute:()V",
+  "position" : 
+  {
+    "line" : 10,
+    "path" : "CallChain.java"
+  }
+}
+{
   "inline_as" : "Argument(0)",
   "method" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sanitize:(Ljava/lang/Object;)Ljava/lang/Object;",
   "position" : 
@@ -614,14 +888,6 @@
   }
 }
 {
-  "method" : "Lcom/facebook/marianatrench/integrationtests/CallChain;.callChainIssue:()V",
-  "position" : 
-  {
-    "line" : 31,
-    "path" : "CallChain.java"
-  }
-}
-{
   "method" : "Lcom/facebook/marianatrench/integrationtests/CallChainService;.<init>:()V",
   "position" : 
   {
@@ -630,34 +896,10 @@
   }
 }
 {
-  "method" : "Lcom/facebook/marianatrench/integrationtests/CallChainService;.hop1:()V",
-  "position" : 
-  {
-    "line" : 15,
-    "path" : "CallChain.java"
-  }
-}
-{
-  "method" : "Lcom/facebook/marianatrench/integrationtests/CallChainService;.hop2:()V",
-  "position" : 
-  {
-    "line" : 19,
-    "path" : "CallChain.java"
-  }
-}
-{
   "method" : "Lcom/facebook/marianatrench/integrationtests/Exported;.<init>:()V",
   "position" : 
   {
     "line" : 23,
-    "path" : "CallChain.java"
-  }
-}
-{
-  "method" : "Lcom/facebook/marianatrench/integrationtests/Exported;.entry:()V",
-  "position" : 
-  {
-    "line" : 25,
     "path" : "CallChain.java"
   }
 }
@@ -687,14 +929,6 @@
   "position" : 
   {
     "line" : 9,
-    "path" : "CallChain.java"
-  }
-}
-{
-  "method" : "Lcom/facebook/marianatrench/integrationtests/SensitiveApi;.execute:()V",
-  "position" : 
-  {
-    "line" : 10,
     "path" : "CallChain.java"
   }
 }
