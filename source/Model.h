@@ -15,6 +15,7 @@
 #include <json/json.h>
 
 #include <mariana-trench/Access.h>
+#include <mariana-trench/CallEffects.h>
 #include <mariana-trench/Context.h>
 #include <mariana-trench/FeatureSet.h>
 #include <mariana-trench/Flags.h>
@@ -214,6 +215,17 @@ class Model final {
     sinks_ = std::move(sinks);
   }
 
+  const CallEffectsAbstractDomain& call_effect_sources() const {
+    return call_effect_sources_;
+  }
+  void add_call_effect_source(CallEffect effect, TaintConfig source);
+
+  const CallEffectsAbstractDomain& call_effect_sinks() const {
+    return call_effect_sinks_;
+  }
+  void add_call_effect_sink(CallEffect effect, TaintConfig sink);
+  void add_inferred_call_effect_sinks(CallEffect effect, Taint sink);
+
   void add_propagation(Propagation propagation, AccessPath output);
   /* Add a propagation after applying sanitizers */
   void add_inferred_propagation(Propagation propagation, AccessPath output);
@@ -309,6 +321,8 @@ class Model final {
   void add_generation(AccessPath port, Taint generation);
   void add_parameter_source(AccessPath port, Taint source);
   void add_sink(AccessPath port, Taint sink);
+  void add_call_effect_source(CallEffect effect, Taint source);
+  void add_call_effect_sink(CallEffect effect, Taint sink);
 
  private:
   const Method* MT_NULLABLE method_;
@@ -316,6 +330,8 @@ class Model final {
   TaintAccessPathTree generations_;
   TaintAccessPathTree parameter_sources_;
   TaintAccessPathTree sinks_;
+  CallEffectsAbstractDomain call_effect_sources_;
+  CallEffectsAbstractDomain call_effect_sinks_;
   PropagationAccessPathTree propagations_;
   SanitizerSet global_sanitizers_;
   RootPatriciaTreeAbstractPartition<SanitizerSet> port_sanitizers_;

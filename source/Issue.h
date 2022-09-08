@@ -41,13 +41,13 @@ class Issue final : public sparta::AbstractDomain<Issue> {
       Taint sources,
       Taint sinks,
       const Rule* rule,
-      const std::string& callee,
+      std::string_view callee,
       TextualOrderIndex sink_index,
       const Position* position)
       : sources_(std::move(sources)),
         sinks_(std::move(sinks)),
         rule_(rule),
-        callee_(callee),
+        callee_(std::string(callee)),
         sink_index_(sink_index),
         position_(position) {}
 

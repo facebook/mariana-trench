@@ -11,6 +11,7 @@
 #include <TypeUtil.h>
 
 #include <mariana-trench/Assert.h>
+#include <mariana-trench/CallEffects.h>
 #include <mariana-trench/ClassHierarchies.h>
 #include <mariana-trench/ClassProperties.h>
 #include <mariana-trench/Compiler.h>
@@ -172,6 +173,8 @@ Model::Model(
 bool Model::operator==(const Model& other) const {
   return modes_ == other.modes_ && generations_ == other.generations_ &&
       parameter_sources_ == other.parameter_sources_ &&
+      call_effect_sources_ == other.call_effect_sources_ &&
+      call_effect_sinks_ == other.call_effect_sinks_ &&
       sinks_ == other.sinks_ && propagations_ == other.propagations_ &&
       global_sanitizers_ == other.global_sanitizers_ &&
       port_sanitizers_ == other.port_sanitizers_ &&
@@ -304,6 +307,27 @@ Model Model::at_callsite(
         UpdateKind::Weak);
   });
 
+  call_effect_sinks_.visit([&](const CallEffect& effect, const Taint& sinks) {
+    switch (effect.kind()) {
+      case CallEffect::Kind::CALL_CHAIN: {
+        model.call_effect_sinks_.write(
+            effect,
+            sinks.propagate(
+                callee,
+                effect.access_path(),
+                call_position,
+                Heuristics::kMaxCallChainSourceSinkDistance,
+                /* extra features */ {},
+                context,
+                /* source register types */ {},
+                /* source constant arguments */ {}));
+      } break;
+
+      default:
+        mt_unreachable();
+    }
+  });
+
   model.propagations_ = propagations_;
   model.add_features_to_arguments_ = add_features_to_arguments_;
 
@@ -396,6 +420,7 @@ void Model::approximate() {
 bool Model::empty() const {
   return modes_.empty() && generations_.is_bottom() &&
       parameter_sources_.is_bottom() && sinks_.is_bottom() &&
+      call_effect_sources_.is_bottom() && call_effect_sinks_.is_bottom() &&
       propagations_.is_bottom() && global_sanitizers_.is_bottom() &&
       port_sanitizers_.is_bottom() && attach_to_sources_.is_bottom() &&
       attach_to_sinks_.is_bottom() && attach_to_propagations_.is_bottom() &&
@@ -513,6 +538,26 @@ void Model::add_inferred_sinks(AccessPath port, Taint sinks) {
     update_taint_tree(
         sinks_, port, Heuristics::kSinkMaxPortSize, sanitized_sinks);
   }
+}
+
+void Model::add_call_effect_source(CallEffect effect, TaintConfig source) {
+  if (!check_taint_config_consistency(source, "effect source")) {
+    return;
+  }
+
+  add_call_effect_source(effect, Taint{std::move(source)});
+}
+
+void Model::add_call_effect_sink(CallEffect effect, TaintConfig sink) {
+  if (!check_taint_config_consistency(sink, "effect sink")) {
+    return;
+  }
+
+  add_call_effect_sink(effect, Taint{std::move(sink)});
+}
+
+void Model::add_inferred_call_effect_sinks(CallEffect effect, Taint sinks) {
+  add_call_effect_sink(effect, sinks);
 }
 
 void Model::add_propagation(Propagation propagation, AccessPath output) {
@@ -692,7 +737,10 @@ bool Model::leq(const Model& other) const {
   return modes_.is_subset_of(other.modes_) &&
       generations_.leq(other.generations_) &&
       parameter_sources_.leq(other.parameter_sources_) &&
-      sinks_.leq(other.sinks_) && propagations_.leq(other.propagations_) &&
+      sinks_.leq(other.sinks_) &&
+      call_effect_sources_.leq(other.call_effect_sources_) &&
+      call_effect_sinks_.leq(other.call_effect_sinks_) &&
+      propagations_.leq(other.propagations_) &&
       global_sanitizers_.leq(other.global_sanitizers_) &&
       port_sanitizers_.leq(other.port_sanitizers_) &&
       attach_to_sources_.leq(other.attach_to_sources_) &&
@@ -713,6 +761,8 @@ void Model::join_with(const Model& other) {
   generations_.join_with(other.generations_);
   parameter_sources_.join_with(other.parameter_sources_);
   sinks_.join_with(other.sinks_);
+  call_effect_sources_.join_with(other.call_effect_sources_);
+  call_effect_sinks_.join_with(other.call_effect_sinks_);
   propagations_.join_with(other.propagations_);
   global_sanitizers_.join_with(other.global_sanitizers_);
   port_sanitizers_.join_with(other.port_sanitizers_);
@@ -1069,6 +1119,12 @@ std::ostream& operator<<(std::ostream& out, const Model& model) {
     }
     out << "  }";
   }
+  if (!model.call_effect_sources_.is_bottom()) {
+    out << ", \n call effect sources=" << model.call_effect_sources_;
+  }
+  if (!model.call_effect_sinks_.is_bottom()) {
+    out << ", \n call effect sinks=" << model.call_effect_sinks_;
+  }
   if (!model.propagations_.is_bottom()) {
     out << ",\n  propagation={\n";
     for (const auto& [output, propagations] : model.propagations_.elements()) {
@@ -1322,6 +1378,30 @@ void Model::add_sink(AccessPath port, Taint sink) {
 
   port.truncate(Heuristics::kSinkMaxPortSize);
   sinks_.write(port, Taint{std::move(sink)}, UpdateKind::Weak);
+}
+
+void Model::add_call_effect_source(CallEffect effect, Taint source) {
+  if (method_) {
+    source.set_leaf_origins_if_empty(MethodSet{method_});
+  }
+
+  if (!check_taint_consistency(source, "effect source")) {
+    return;
+  }
+
+  call_effect_sources_.write(effect, Taint{std::move(source)});
+}
+
+void Model::add_call_effect_sink(CallEffect effect, Taint sink) {
+  if (method_) {
+    sink.set_leaf_origins_if_empty(MethodSet{method_});
+  }
+
+  if (!check_taint_consistency(sink, "effect sink")) {
+    return;
+  }
+
+  call_effect_sinks_.write(effect, Taint{std::move(sink)});
 }
 
 } // namespace marianatrench

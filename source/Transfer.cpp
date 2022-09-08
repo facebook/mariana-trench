@@ -10,6 +10,7 @@
 #include <fmt/format.h>
 
 #include <mariana-trench/ArtificialMethods.h>
+#include <mariana-trench/CallEffects.h>
 #include <mariana-trench/CallGraph.h>
 #include <mariana-trench/ClassProperties.h>
 #include <mariana-trench/Features.h>
@@ -501,7 +502,7 @@ void create_issue(
     const Rule* rule,
     const Position* position,
     TextualOrderIndex sink_index,
-    const std::string& callee,
+    std::string_view callee,
     const FeatureMayAlwaysSet& extra_features) {
   source.add_inferred_features(
       context->class_properties.issue_features(context->method()));
@@ -530,7 +531,7 @@ void check_multi_source_multi_sink_rules(
     const MultiSourceMultiSinkRule* rule,
     const Position* position,
     TextualOrderIndex sink_index,
-    const std::string& callee,
+    std::string_view callee,
     const FeatureMayAlwaysSet& extra_features) {
   const auto* partial_sink = sink_kind->as<PartialKind>();
   mt_assert(partial_sink != nullptr);
@@ -658,7 +659,7 @@ void check_flows(
     const Taint& sinks,
     const Position* position,
     TextualOrderIndex sink_index,
-    const std::string& callee,
+    std::string_view callee,
     const FeatureMayAlwaysSet& extra_features,
     FulfilledPartialKindState* MT_NULLABLE fulfilled_partial_sinks) {
   if (sources.is_bottom() || sinks.is_bottom()) {
@@ -955,6 +956,63 @@ MemoryLocation* MT_NULLABLE try_inline_invoke(
   return memory_location;
 }
 
+void check_call_effect_flows(MethodContext* context, const Callee& callee) {
+  const auto& caller_call_effect_sources = context->model.call_effect_sources();
+  if (caller_call_effect_sources.is_bottom()) {
+    return;
+  }
+
+  const auto& callee_call_effect_sinks = callee.model.call_effect_sinks();
+  if (callee_call_effect_sinks.is_bottom()) {
+    return;
+  }
+
+  LOG(5,
+      "Checking call effect flow in method {} from sources: {} to sinks: {}",
+      show(callee.model.method()),
+      caller_call_effect_sources,
+      callee_call_effect_sinks);
+
+  auto* position = context->positions.get(context->method());
+  for (const auto& [effect, sources] : caller_call_effect_sources) {
+    const auto& sinks = callee_call_effect_sinks.read(effect);
+    check_flows(
+        context,
+        // Add the position of the caller to call effect sources.
+        sources.attach_position(position),
+        sinks,
+        callee.position,
+        callee.call_index,
+        /* sink_index */ callee.resolved_base_method
+            ? callee.resolved_base_method->show()
+            : std::string(k_unresolved_callee),
+        /* extra features */ {},
+        /* fulfilled partial sinks */ nullptr);
+  }
+}
+
+void apply_call_effects(MethodContext* context, const Callee& callee) {
+  const auto& callee_call_effect_sinks = callee.model.call_effect_sinks();
+  for (const auto& [effect, sinks] : callee_call_effect_sinks) {
+    switch (effect.kind()) {
+      case CallEffect::Kind::CALL_CHAIN: {
+        LOG(5,
+            "Add inferred call effect sinks {} for method: {}",
+            sinks,
+            show(context->method()));
+
+        auto sinks_copy = sinks;
+        context->model.add_inferred_call_effect_sinks(
+            effect, std::move(sinks_copy));
+
+      } break;
+
+      default:
+        mt_unreachable();
+    }
+  }
+}
+
 } // namespace
 
 bool Transfer::analyze_invoke(
@@ -968,6 +1026,8 @@ bool Transfer::analyze_invoke(
   const AnalysisEnvironment previous_environment = *environment;
   TaintTree result_taint;
   check_flows(context, &previous_environment, instruction, callee);
+  check_call_effect_flows(context, callee);
+  apply_call_effects(context, callee);
   apply_propagations(
       context,
       &previous_environment,

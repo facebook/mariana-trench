@@ -82,6 +82,11 @@ class Heuristics {
    * Maximum depth of dependency graph traversal to find class properties.
    */
   constexpr static std::size_t kMaxDepthClassProperties = 10;
+
+  /**
+   * Maximum number of hops that can be tracked for a call chain issue.
+   */
+  constexpr static std::size_t kMaxCallChainSourceSinkDistance = 10;
 };
 
 } // namespace marianatrench
