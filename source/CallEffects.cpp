@@ -144,6 +144,14 @@ void CallEffectsAbstractDomain::visit(
   }
 }
 
+void CallEffectsAbstractDomain::map(const std::function<void(Taint&)>& f) {
+  map_.map([&](const Taint& taint) {
+    auto copy = taint;
+    f(copy);
+    return copy;
+  });
+}
+
 void CallEffectsAbstractDomain::write(const CallEffect& effect, Taint value) {
   map_.update(
       effect.encode(), [&](const Taint& taint) { return taint.join(value); });

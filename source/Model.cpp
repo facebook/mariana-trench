@@ -1251,6 +1251,8 @@ void Model::remove_kinds(const std::unordered_set<const Kind*>& to_remove) {
   generations_.map(map);
   parameter_sources_.map(map);
   sinks_.map(map);
+  call_effect_sources_.map(map);
+  call_effect_sinks_.map(map);
 }
 
 void Model::update_taint_tree(

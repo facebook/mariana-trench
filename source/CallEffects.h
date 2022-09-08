@@ -168,6 +168,9 @@ class CallEffectsAbstractDomain final
   void visit(
       std::function<void(const CallEffect&, const Taint&)> visitor) const;
 
+  /* Apply the given function on all elements. */
+  void map(const std::function<void(Taint&)>& f);
+
   /* Performs a weak update. */
   void write(const CallEffect& effect, Taint taint);
 

@@ -11,6 +11,7 @@
 
 #include <Show.h>
 
+#include <mariana-trench/CallEffects.h>
 #include <mariana-trench/JsonValidation.h>
 #include <mariana-trench/Model.h>
 #include <mariana-trench/Redex.h>
@@ -57,6 +58,47 @@ TEST_F(ModelTest, remove_kinds) {
       /* sinks */
       {{AccessPath(Root(Root::Kind::Argument, 1)),
         test::make_leaf_taint_config(sink_kind)}});
+
+  EXPECT_EQ(model_with_removable_kind, model_without_removable_kind);
+}
+
+TEST_F(ModelTest, remove_kinds_call_effects) {
+  Scope scope;
+  DexStore store("stores");
+  store.add_classes(scope);
+  auto context = test::make_context(store);
+  const auto* source_kind = context.kinds->get("TestSource");
+  const auto* sink_kind = context.kinds->get("TestSink");
+  const auto* removable_source_kind = context.kinds->get("RemoveMeSource");
+  const auto* removable_sink_kind = context.kinds->get("RemoveMeSink");
+
+  CallEffect effect(CallEffect::Kind::CALL_CHAIN);
+  Model model_with_removable_kind(
+      /* method */ nullptr, context);
+
+  // Add call effect sources
+  model_with_removable_kind.add_call_effect_source(
+      effect, test::make_leaf_taint_config(source_kind));
+  model_with_removable_kind.add_call_effect_source(
+      effect, test::make_leaf_taint_config(removable_source_kind));
+
+  // Add call effect sinks
+  model_with_removable_kind.add_call_effect_sink(
+      effect, test::make_leaf_taint_config(sink_kind));
+  model_with_removable_kind.add_call_effect_sink(
+      effect, test::make_leaf_taint_config(removable_sink_kind));
+
+  model_with_removable_kind.remove_kinds(
+      {removable_source_kind, removable_sink_kind});
+
+  Model model_without_removable_kind(
+      /* method */ nullptr, context);
+  // Add expected call effect source
+  model_without_removable_kind.add_call_effect_source(
+      effect, test::make_leaf_taint_config(source_kind));
+  // Add expected call effect sink
+  model_without_removable_kind.add_call_effect_sink(
+      effect, test::make_leaf_taint_config(sink_kind));
 
   EXPECT_EQ(model_with_removable_kind, model_without_removable_kind);
 }
