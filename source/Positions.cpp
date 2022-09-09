@@ -73,7 +73,7 @@ Positions::Positions(const Options& options, const DexStoresVector& stores) {
     std::string hg_command =
         "hg files --include=**.java --include=**.kt --include=**.mustache --exclude=.ovrsource-rest";
     std::string find_command =
-        "find . -type f \\( -iname \\*.java -o -iname \\*.kt -iname \\*.mustache \\) -not -path ./.ovrsource-rest/\\*";
+        "find . -type f \\( -iname \\*.java -o -iname \\*.kt -o -iname \\*.mustache \\) -not -path ./.ovrsource-rest/\\*";
 
     int return_code = -1;
     std::string output;
