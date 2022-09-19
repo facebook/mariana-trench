@@ -12,9 +12,11 @@
 #include <Show.h>
 
 #include <mariana-trench/Assert.h>
+#include <mariana-trench/Heuristics.h>
 #include <mariana-trench/JsonValidation.h>
 #include <mariana-trench/Method.h>
 #include <mariana-trench/Methods.h>
+#include <mariana-trench/Overrides.h>
 #include <mariana-trench/Redex.h>
 
 namespace marianatrench {
@@ -68,6 +70,10 @@ bool Method::is_native() const {
 
 bool Method::is_interface() const {
   return ::is_interface(method_);
+}
+
+bool Method::is_abstract() const {
+  return ::is_abstract(method_);
 }
 
 bool Method::is_constructor() const {

@@ -42,6 +42,15 @@ std::vector<Model> TaintInTaintThisGenerator::visit_method(
     return {};
   }
 
+  if (method->is_abstract() || method->is_interface()) {
+    const auto& overrides = context_.overrides->get(method);
+    if (!overrides.empty() &&
+        overrides.size() < Heuristics::kJoinOverrideThreshold &&
+        !context_.overrides->has_obscure_override_for(method)) {
+      return {};
+    }
+  }
+
   const auto class_name = generator::get_class_name(method);
   if (boost::starts_with(class_name, "Landroid") &&
       std::any_of(

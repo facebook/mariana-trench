@@ -47,6 +47,8 @@ class Overrides final {
 
   const std::unordered_set<const Method*>& empty_method_set() const;
 
+  bool has_obscure_override_for(const Method* method) const;
+
   Json::Value to_json() const;
 
  private:

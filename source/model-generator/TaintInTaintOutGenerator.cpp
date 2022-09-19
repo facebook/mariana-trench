@@ -6,8 +6,8 @@
  */
 
 #include <boost/algorithm/string.hpp>
-
 #include <boost/algorithm/string/predicate.hpp>
+
 #include <mariana-trench/model-generator/ModelGenerator.h>
 #include <mariana-trench/model-generator/TaintInTaintOutGenerator.h>
 
@@ -17,6 +17,15 @@ std::vector<Model> TaintInTaintOutGenerator::visit_method(
     const Method* method) const {
   if (method->get_code() || method->returns_void()) {
     return {};
+  }
+
+  if (method->is_abstract() || method->is_interface()) {
+    const auto& overrides = context_.overrides->get(method);
+    if (!overrides.empty() &&
+        overrides.size() < Heuristics::kJoinOverrideThreshold &&
+        !context_.overrides->has_obscure_override_for(method)) {
+      return {};
+    }
   }
 
   const auto class_name = generator::get_class_name(method);

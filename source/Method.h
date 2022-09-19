@@ -62,6 +62,7 @@ class Method final {
   bool is_static() const;
   bool is_native() const;
   bool is_interface() const;
+  bool is_abstract() const;
 
   bool is_constructor() const;
   bool returns_void() const;

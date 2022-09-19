@@ -82,6 +82,16 @@ const std::unordered_set<const Method*>& Overrides::empty_method_set() const {
   return empty_method_set_;
 }
 
+bool Overrides::has_obscure_override_for(const Method* method) const {
+  const auto& overrides = get(method);
+  for (const auto* override : overrides) {
+    if (!override->get_code()) {
+      return true;
+    }
+  }
+  return false;
+}
+
 Json::Value Overrides::to_json() const {
   auto value = Json::Value(Json::objectValue);
   for (auto [method, overrides] : overrides_) {
