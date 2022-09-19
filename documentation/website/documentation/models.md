@@ -469,8 +469,7 @@ Modes are used to describe specific behaviors of methods. Available modes are:
 A default model is created for each method, except if it is provided by a model generator.
 The default model has a set of heuristics:
 
-If the method has no source code, the model is automatically marked with the following modes:
-`skip-analysis`, `add-via-obscure-feature`, `taint-in-taint-out`.
+If the method has no source code, the model is automatically marked with the modes `skip-analysis` and `add-via-obscure-feature`.
 
 If the method has more than 40 overrides, it is marked with the mode `no-join-virtual-overrides`.
 
