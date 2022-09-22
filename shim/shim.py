@@ -422,6 +422,11 @@ def _add_analysis_arguments(parser: argparse.ArgumentParser) -> None:
         help="Skip model generation.",
     )
     analysis_arguments.add_argument(
+        "--skip-analysis",
+        action="store_true",
+        help="Skip taint analysis.",
+    )
+    analysis_arguments.add_argument(
         "--disable-parameter-type-overrides",
         action="store_true",
         help="Disable analyzing methods with specific parameter type information.",
@@ -563,6 +568,8 @@ def _get_command_options(
         options.append("--skip-source-indexing")
     if arguments.skip_model_generation:
         options.append("--skip-model-generation")
+    if arguments.skip_analysis:
+        options.append("--skip-analysis")
     if arguments.disable_parameter_type_overrides:
         options.append("--disable-parameter-type-overrides")
     if arguments.disable_global_type_analysis:
