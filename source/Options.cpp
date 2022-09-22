@@ -102,6 +102,7 @@ Options::Options(
     bool sequential,
     bool skip_source_indexing,
     bool skip_model_generation,
+    bool skip_analysis,
     const std::vector<ModelGeneratorConfiguration>&
         model_generators_configuration,
     const std::vector<std::string>& model_generator_search_paths,
@@ -120,6 +121,7 @@ Options::Options(
       sequential_(sequential),
       skip_source_indexing_(skip_source_indexing),
       skip_model_generation_(skip_model_generation),
+      skip_analysis_(skip_analysis),
       remove_unreachable_code_(remove_unreachable_code),
       disable_parameter_type_overrides_(false),
       disable_global_type_analysis_(false),
@@ -203,6 +205,7 @@ Options::Options(const boost::program_options::variables_map& variables) {
   sequential_ = variables.count("sequential") > 0;
   skip_source_indexing_ = variables.count("skip-source-indexing") > 0;
   skip_model_generation_ = variables.count("skip-model-generation") > 0;
+  skip_analysis_ = variables.count("skip-analysis") > 0;
   disable_parameter_type_overrides_ =
       variables.count("disable-parameter-type-overrides") > 0;
   disable_global_type_analysis_ =
@@ -321,6 +324,7 @@ void Options::add_options(
       "skip-source-indexing", "Skip indexing java source files.");
   options.add_options()(
       "skip-model-generation", "Skip running model generation.");
+  options.add_options()("skip-analysis", "Skip taint analysis.");
   options.add_options()(
       "disable-parameter-type-overrides",
       "Disable analyzing methods with specific parameter type information.");
@@ -488,6 +492,10 @@ bool Options::skip_source_indexing() const {
 
 bool Options::skip_model_generation() const {
   return skip_model_generation_;
+}
+
+bool Options::skip_analysis() const {
+  return skip_analysis_;
 }
 
 bool Options::disable_parameter_type_overrides() const {

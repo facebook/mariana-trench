@@ -29,6 +29,7 @@ Context test_fields(const Scope& scope) {
       /* sequential */ false,
       /* skip_source_indexing */ true,
       /* skip_model_generation */ true,
+      /* skip_analysis */ true,
       /* model_generators_configuration */
       std::vector<ModelGeneratorConfiguration>{},
       /* model_generator_search_paths */ std::vector<std::string>{},

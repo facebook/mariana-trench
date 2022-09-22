@@ -151,6 +151,7 @@ TEST_P(IntegrationTest, CompareFlows) {
       /* sequential */ true,
       /* skip_source_indexing */ false,
       /* skip_model_generation */ model_generators_configurations.empty(),
+      /* skip_analysis */ false,
       model_generators_configurations,
       model_generator_search_paths,
       /* remove_unreachable_code */ false,

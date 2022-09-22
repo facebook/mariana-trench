@@ -31,6 +31,7 @@ class Options final {
       bool sequential,
       bool skip_source_indexing,
       bool skip_model_generation,
+      bool skip_analysis,
       const std::vector<ModelGeneratorConfiguration>&
           model_generators_configuration,
       const std::vector<std::string>& model_generator_search_paths,
@@ -82,6 +83,7 @@ class Options final {
   bool sequential() const;
   bool skip_source_indexing() const;
   bool skip_model_generation() const;
+  bool skip_analysis() const;
   bool disable_parameter_type_overrides() const;
   bool disable_global_type_analysis() const;
   bool remove_unreachable_code() const;
@@ -130,6 +132,7 @@ class Options final {
   bool sequential_;
   bool skip_source_indexing_;
   bool skip_model_generation_;
+  bool skip_analysis_;
   bool remove_unreachable_code_;
   bool disable_parameter_type_overrides_;
   bool disable_global_type_analysis_;

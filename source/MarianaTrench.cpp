@@ -285,46 +285,50 @@ Registry MarianaTrench::analyze(Context& context) {
       dependencies_timer.duration_in_seconds(),
       resident_set_size_in_gb());
 
-  Timer class_properties_timer;
-  context.class_properties = std::make_unique<ClassProperties>(
-      *context.options,
-      context.stores,
-      *context.features,
-      *context.dependencies);
-  context.statistics->log_time("class_properties", class_properties_timer);
-  LOG(1,
-      "Created class properties in {:.2f}s. Memory used, RSS: {:.2f}GB",
-      class_properties_timer.duration_in_seconds(),
-      resident_set_size_in_gb());
+  if (!context.options->skip_analysis()) {
+    Timer class_properties_timer;
+    context.class_properties = std::make_unique<ClassProperties>(
+        *context.options,
+        context.stores,
+        *context.features,
+        *context.dependencies);
+    context.statistics->log_time("class_properties", class_properties_timer);
+    LOG(1,
+        "Created class properties in {:.2f}s. Memory used, RSS: {:.2f}GB",
+        class_properties_timer.duration_in_seconds(),
+        resident_set_size_in_gb());
 
-  Timer scheduler_timer;
-  LOG(1, "Building the analysis schedule...");
-  context.scheduler =
-      std::make_unique<Scheduler>(*context.methods, *context.dependencies);
-  context.statistics->log_time("scheduler", scheduler_timer);
-  LOG(1,
-      "Built the analysis schedule in {:.2f}s. Memory used, RSS: {:.2f}GB",
-      scheduler_timer.duration_in_seconds(),
-      resident_set_size_in_gb());
+    Timer scheduler_timer;
+    LOG(1, "Building the analysis schedule...");
+    context.scheduler =
+        std::make_unique<Scheduler>(*context.methods, *context.dependencies);
+    context.statistics->log_time("scheduler", scheduler_timer);
+    LOG(1,
+        "Built the analysis schedule in {:.2f}s. Memory used, RSS: {:.2f}GB",
+        scheduler_timer.duration_in_seconds(),
+        resident_set_size_in_gb());
 
-  Timer analysis_timer;
-  LOG(1, "Analyzing...");
-  Interprocedural::run_analysis(context, registry);
-  context.statistics->log_time("fixpoint", analysis_timer);
-  LOG(1,
-      "Analyzed {} models in {:.2f}s. Found {} issues!",
-      registry.models_size(),
-      analysis_timer.duration_in_seconds(),
-      registry.issues_size());
+    Timer analysis_timer;
+    LOG(1, "Analyzing...");
+    Interprocedural::run_analysis(context, registry);
+    context.statistics->log_time("fixpoint", analysis_timer);
+    LOG(1,
+        "Analyzed {} models in {:.2f}s. Found {} issues!",
+        registry.models_size(),
+        analysis_timer.duration_in_seconds(),
+        registry.issues_size());
 
-  Timer remove_collapsed_traces_timer;
-  LOG(2, "Removing invalid traces due to collapsing...");
-  PostprocessTraces::remove_collapsed_traces(registry, context);
-  context.statistics->log_time(
-      "remove_collapsed_traces", remove_collapsed_traces_timer);
-  LOG(2,
-      "Removed invalid traces in {:.2f}s.",
-      remove_collapsed_traces_timer.duration_in_seconds());
+    Timer remove_collapsed_traces_timer;
+    LOG(2, "Removing invalid traces due to collapsing...");
+    PostprocessTraces::remove_collapsed_traces(registry, context);
+    context.statistics->log_time(
+        "remove_collapsed_traces", remove_collapsed_traces_timer);
+    LOG(2,
+        "Removed invalid traces in {:.2f}s.",
+        remove_collapsed_traces_timer.duration_in_seconds());
+  } else {
+    LOG(2, "Skipped taint analysis.");
+  }
 
   if (!context.options->skip_source_indexing()) {
     Timer augment_positions_timer;
