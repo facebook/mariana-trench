@@ -36,6 +36,11 @@ class Features final {
    * before checking for flows into sinks.
    */
   const Feature* get_issue_broadening_feature() const;
+  /**
+   * This feature is added to the input taint of a propagation that is collapsed
+   * before applying that propagation.
+   */
+  const Feature* get_propagation_broadening_feature() const;
 
  private:
   UniquePointerFactory<std::string, Feature> factory_;

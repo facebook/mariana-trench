@@ -42,4 +42,8 @@ const Feature* Features::get_issue_broadening_feature() const {
   return factory_.create("via-issue-broadening");
 }
 
+const Feature* Features::get_propagation_broadening_feature() const {
+  return factory_.create("via-propagation-broadening");
+}
+
 } // namespace marianatrench

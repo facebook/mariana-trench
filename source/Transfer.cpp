@@ -407,7 +407,10 @@ void apply_propagations(
       // See the end-to-end test `no_collapse_on_propagation` for example.
       if (!callee.model.no_collapse_on_propagation()) {
         LOG_OR_DUMP(context, 4, "Collapsing taint tree {}", taint_tree);
-        taint_tree.collapse_inplace();
+        taint_tree.collapse_inplace(/* transform */ [context](Taint& taint) {
+          taint.add_inferred_features(FeatureMayAlwaysSet{
+              context->features.get_propagation_broadening_feature()});
+        });
       }
 
       if (taint_tree.is_bottom()) {

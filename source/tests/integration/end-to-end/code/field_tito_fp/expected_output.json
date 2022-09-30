@@ -53,7 +53,8 @@
       [
         "via-cast:Ljava/lang/String;",
         "via-obscure",
-        "via-obscure-taint-in-taint-out"
+        "via-obscure-taint-in-taint-out",
+        "via-propagation-broadening"
       ],
       "callee" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
       "position" : 
@@ -113,7 +114,8 @@
               [
                 "via-cast:Ljava/lang/String;",
                 "via-obscure",
-                "via-obscure-taint-in-taint-out"
+                "via-obscure-taint-in-taint-out",
+                "via-propagation-broadening"
               ],
               "distance" : 2,
               "kind" : "Source",
@@ -122,7 +124,8 @@
                 "always_features" : 
                 [
                   "via-obscure",
-                  "via-obscure-taint-in-taint-out"
+                  "via-obscure-taint-in-taint-out",
+                  "via-propagation-broadening"
                 ]
               },
               "local_positions" : 

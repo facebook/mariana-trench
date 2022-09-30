@@ -93,7 +93,8 @@
     {
       "always_features" : 
       [
-        "via-cast:Ljava/lang/String;"
+        "via-cast:Ljava/lang/String;",
+        "via-propagation-broadening"
       ],
       "callee" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
       "position" : 
@@ -151,7 +152,8 @@
             {
               "always_features" : 
               [
-                "via-cast:Ljava/lang/String;"
+                "via-cast:Ljava/lang/String;",
+                "via-propagation-broadening"
               ],
               "distance" : 1,
               "kind" : "Source",
@@ -159,7 +161,8 @@
               {
                 "always_features" : 
                 [
-                  "via-cast:Ljava/lang/String;"
+                  "via-cast:Ljava/lang/String;",
+                  "via-propagation-broadening"
                 ]
               },
               "local_positions" : 
@@ -198,7 +201,8 @@
     {
       "always_features" : 
       [
-        "via-cast:Ljava/lang/String;"
+        "via-cast:Ljava/lang/String;",
+        "via-propagation-broadening"
       ],
       "callee" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
       "position" : 
@@ -256,7 +260,8 @@
             {
               "always_features" : 
               [
-                "via-cast:Ljava/lang/String;"
+                "via-cast:Ljava/lang/String;",
+                "via-propagation-broadening"
               ],
               "distance" : 1,
               "kind" : "Source",
@@ -264,7 +269,8 @@
               {
                 "always_features" : 
                 [
-                  "via-cast:Ljava/lang/String;"
+                  "via-cast:Ljava/lang/String;",
+                  "via-propagation-broadening"
                 ]
               },
               "local_positions" : 
@@ -303,7 +309,8 @@
     {
       "always_features" : 
       [
-        "via-cast:Ljava/lang/String;"
+        "via-cast:Ljava/lang/String;",
+        "via-propagation-broadening"
       ],
       "callee" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
       "position" : 
@@ -361,7 +368,8 @@
             {
               "always_features" : 
               [
-                "via-cast:Ljava/lang/String;"
+                "via-cast:Ljava/lang/String;",
+                "via-propagation-broadening"
               ],
               "distance" : 1,
               "kind" : "Source",
@@ -369,7 +377,8 @@
               {
                 "always_features" : 
                 [
-                  "via-cast:Ljava/lang/String;"
+                  "via-cast:Ljava/lang/String;",
+                  "via-propagation-broadening"
                 ]
               },
               "local_positions" : 

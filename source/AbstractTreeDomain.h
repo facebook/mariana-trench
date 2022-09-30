@@ -387,6 +387,20 @@ class AbstractTreeDomain final
     children_.clear();
   }
 
+  /*
+   * Collapse the tree into a singleton, in place.
+   *
+   * `transform` is a function that is called when collapsing `Element`s into
+   * the root. This is mainly used to attach broadening features to collapsed
+   * taint.
+   */
+  void collapse_inplace(const std::function<void(Elements&)>& transform) {
+    for (const auto& [path_element, subtree] : children_) {
+      subtree.collapse_into(elements_, transform);
+    }
+    children_.clear();
+  }
+
   /* Collapse the tree into the given set of elements. */
   void collapse_into(Elements& elements) const {
     elements.join_with(elements_);

@@ -1234,6 +1234,7 @@ TEST_F(AbstractTreeDomainTest, Transform) {
   const auto* x = DexString::make_string("x");
   const auto* y = DexString::make_string("y");
 
+  // Test collapse
   auto tree = TaintTree{make_artificial_source(1)};
   EXPECT_EQ(
       tree.collapse(transform),
@@ -1290,6 +1291,39 @@ TEST_F(AbstractTreeDomainTest, Transform) {
                test::FrameProperties{
                    .callee_port =
                        AccessPath(Root(Root::Kind::Argument, 3))})}));
+
+  // Test collapse_inplace
+  auto tree2 = TaintTree{make_artificial_source(1)};
+  tree2.collapse_inplace(transform);
+  EXPECT_EQ(tree2, TaintTree{make_artificial_source(1)});
+
+  tree2.write(Path{x}, make_artificial_source(2), UpdateKind::Weak);
+  tree2.write(Path{x, y}, make_artificial_source(3), UpdateKind::Weak);
+  tree2.collapse_inplace(transform);
+  EXPECT_EQ(
+      tree2,
+      (TaintTree{
+          {
+              Path{},
+              Taint::artificial_source(
+                  AccessPath(Root(Root::Kind::Argument, 1))),
+          },
+          {
+              Path{},
+              Taint{test::make_taint_config(
+                  Kinds::artificial_source(),
+                  test::FrameProperties{
+                      .callee_port = AccessPath(Root(Root::Kind::Argument, 2)),
+                      .locally_inferred_features = features})},
+          },
+          {
+              Path{},
+              Taint{test::make_taint_config(
+                  Kinds::artificial_source(),
+                  test::FrameProperties{
+                      .callee_port = AccessPath(Root(Root::Kind::Argument, 3)),
+                      .locally_inferred_features = features})},
+          }}));
 }
 
 TEST_F(AbstractTreeDomainTest, CollapseInvalid) {

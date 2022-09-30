@@ -25,5 +25,17 @@
         "port": "Return"
       }
     ]
+  },
+  {
+    "method": "Lcom/facebook/marianatrench/integrationtests/Flow;.propagate:(Lcom/facebook/marianatrench/integrationtests/Flow$Test;)Lcom/facebook/marianatrench/integrationtests/Flow$Test;",
+    "propagation": [
+      {
+        "input": "Argument(1)",
+        "output": "Return"
+      }
+    ],
+    "modes": [
+      "skip-analysis"
+    ]
   }
 ]
