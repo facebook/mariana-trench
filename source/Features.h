@@ -31,6 +31,11 @@ class Features final {
   const Feature* get_via_value_of_feature(
       const std::optional<std::string_view>& value) const;
   const Feature* get_via_shim_feature(const Method* MT_NULLABLE method) const;
+  /**
+   * This feature is added to (non-artificial) source taint that is collapsed
+   * before checking for flows into sinks.
+   */
+  const Feature* get_issue_broadening_feature() const;
 
  private:
   UniquePointerFactory<std::string, Feature> factory_;

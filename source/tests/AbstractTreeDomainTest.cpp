@@ -1223,6 +1223,75 @@ TEST_F(AbstractTreeDomainTest, Propagate) {
       }));
 }
 
+TEST_F(AbstractTreeDomainTest, Transform) {
+  const Feature broadening = Feature("via-broadening");
+  const FeatureMayAlwaysSet features = FeatureMayAlwaysSet({&broadening});
+  const auto& transform = [&features](Taint& taint) {
+    taint.add_inferred_features(features);
+    return taint;
+  };
+
+  const auto* x = DexString::make_string("x");
+  const auto* y = DexString::make_string("y");
+
+  auto tree = TaintTree{make_artificial_source(1)};
+  EXPECT_EQ(
+      tree.collapse(transform),
+      Taint::artificial_source(AccessPath(Root(Root::Kind::Argument, 1))));
+
+  tree.write(Path{x}, make_artificial_source(2), UpdateKind::Weak);
+  EXPECT_EQ(
+      tree.collapse(transform),
+      Taint(
+          {test::make_taint_config(
+               Kinds::artificial_source(),
+               test::FrameProperties{
+                   .callee_port = AccessPath(Root(Root::Kind::Argument, 1))}),
+           test::make_taint_config(
+               Kinds::artificial_source(),
+               test::FrameProperties{
+                   .callee_port = AccessPath(Root(Root::Kind::Argument, 2)),
+                   .locally_inferred_features = features})}));
+
+  tree.write(Path{x, y}, make_artificial_source(3), UpdateKind::Weak);
+  EXPECT_EQ(
+      tree.collapse(transform),
+      Taint(
+          {test::make_taint_config(
+               Kinds::artificial_source(),
+               test::FrameProperties{
+                   .callee_port = AccessPath(Root(Root::Kind::Argument, 1))}),
+           test::make_taint_config(
+               Kinds::artificial_source(),
+               test::FrameProperties{
+                   .callee_port = AccessPath(Root(Root::Kind::Argument, 2)),
+                   .locally_inferred_features = features}),
+           test::make_taint_config(
+               Kinds::artificial_source(),
+               test::FrameProperties{
+                   .callee_port = AccessPath(Root(Root::Kind::Argument, 3)),
+                   .locally_inferred_features = features})}));
+
+  tree.write(Path{}, make_artificial_source(3), UpdateKind::Weak);
+  EXPECT_EQ(
+      tree.collapse(transform),
+      Taint(
+          {test::make_taint_config(
+               Kinds::artificial_source(),
+               test::FrameProperties{
+                   .callee_port = AccessPath(Root(Root::Kind::Argument, 1))}),
+           test::make_taint_config(
+               Kinds::artificial_source(),
+               test::FrameProperties{
+                   .callee_port = AccessPath(Root(Root::Kind::Argument, 2)),
+                   .locally_inferred_features = features}),
+           test::make_taint_config(
+               Kinds::artificial_source(),
+               test::FrameProperties{
+                   .callee_port =
+                       AccessPath(Root(Root::Kind::Argument, 3))})}));
+}
+
 TEST_F(AbstractTreeDomainTest, CollapseInvalid) {
   const auto* x = DexString::make_string("x");
   const auto* y = DexString::make_string("y");

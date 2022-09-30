@@ -177,6 +177,9 @@ class CalleeFrames final : public sparta::AbstractDomain<CalleeFrames> {
 
   void append_callee_port_to_artificial_sources(Path::Element path_element);
 
+  void add_inferred_features_to_real_sources(
+      const FeatureMayAlwaysSet& features);
+
   void update_non_leaf_positions(
       const std::function<
           const Position*(const Method*, const AccessPath&, const Position*)>&

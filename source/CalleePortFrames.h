@@ -228,10 +228,17 @@ class CalleePortFrames final : public sparta::AbstractDomain<CalleePortFrames> {
       const std::function<FeatureMayAlwaysSet(const Kind*)>&);
 
   /**
-   * Returns a new instance of `CalleePortFrames` in which `path_element` is
-   * appended to the port if these frames contain artificial sources.
+   * Changes the contained frames so that `path_element` is appended to the port
+   * if this CalleePortFrames instance contain artificial sources.
    */
   void append_callee_port_to_artificial_sources(Path::Element path_element);
+
+  /**
+   * Adds `features` to inferred features of contained frames if this instance
+   * holds real (i.e not artificial) sources.
+   */
+  void add_inferred_features_to_real_sources(
+      const FeatureMayAlwaysSet& features);
 
   void filter_invalid_frames(
       const std::function<

@@ -437,6 +437,14 @@ void CalleePortFrames::append_callee_port_to_artificial_sources(
   callee_port_.append(path_element);
 }
 
+void CalleePortFrames::add_inferred_features_to_real_sources(
+    const FeatureMayAlwaysSet& features) {
+  if (is_artificial_source_frames_) {
+    return;
+  }
+  add_inferred_features(features);
+}
+
 void CalleePortFrames::filter_invalid_frames(
     const std::function<bool(const Method*, const AccessPath&, const Kind*)>&
         is_valid) {

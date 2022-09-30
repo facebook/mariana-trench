@@ -746,7 +746,13 @@ void check_flows(
       continue;
     }
 
-    Taint sources = environment->read(*register_id, port.path()).collapse();
+    Taint sources =
+        environment->read(*register_id, port.path())
+            .collapse(/* transform */ [context](Taint& taint) {
+              return taint.add_inferred_features_to_real_sources(
+                  FeatureMayAlwaysSet{
+                      context->features.get_issue_broadening_feature()});
+            });
     check_flows(
         context,
         sources,
@@ -1594,7 +1600,14 @@ bool Transfer::analyze_return(
         context, Root(Root::Kind::Return), environment->read(memory_locations));
 
     for (const auto& [path, sinks] : return_sinks.elements()) {
-      Taint sources = environment->read(register_id, path).collapse();
+      Taint sources =
+          environment->read(register_id, path)
+              .collapse(
+                  /* transform */ [context](Taint& taint) {
+                    return taint.add_inferred_features_to_real_sources(
+                        FeatureMayAlwaysSet{
+                            context->features.get_issue_broadening_feature()});
+                  });
       // Fulfilled partial sinks are not expected to be produced here. Return
       // sinks are never partial.
       check_flows(

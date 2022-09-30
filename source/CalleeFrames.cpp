@@ -257,12 +257,21 @@ void CalleeFrames::transform_kind_with_features(
 
 void CalleeFrames::append_callee_port_to_artificial_sources(
     Path::Element path_element) {
-  // TODO (T91357916): GroupHashedSetAbstractDomain could be more efficient.
-  // It supports in-place modifying of the elements as long as the key does
-  // not change.
+  // TODO (T91357916): GroupHashedSetAbstractDomain could be more efficient than
+  // PatriciaTreeMapAbstractPartition for holding frames_. It supports in-place
+  // modifying of the elements as long as the key does not change.
   frames_.map([&](const CallPositionFrames& frames) {
     auto frames_copy = frames;
     frames_copy.append_callee_port_to_artificial_sources(path_element);
+    return frames_copy;
+  });
+}
+
+void CalleeFrames::add_inferred_features_to_real_sources(
+    const FeatureMayAlwaysSet& features) {
+  frames_.map([&](const CallPositionFrames& frames) {
+    auto frames_copy = frames;
+    frames_copy.add_inferred_features_to_real_sources(features);
     return frames_copy;
   });
 }

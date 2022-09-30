@@ -355,11 +355,26 @@ class AbstractTreeDomain final
     meet_with(other);
   }
 
-  /* Return all elements in the tree. */
+  /* Return all elements in the tree. Elements are collapsed unchanged. */
   Elements collapse() const {
     Elements elements = elements_;
     for (const auto& [path_element, subtree] : children_) {
       subtree.collapse_into(elements);
+    }
+    return elements;
+  }
+
+  /**
+   * Return all elements in the tree.
+   *
+   * `transform` is a function that is called when collapsing `Element`s into
+   * the root. This is mainly used to attach broadening features to collapsed
+   * taint.
+   */
+  Elements collapse(const std::function<void(Elements&)>& transform) const {
+    Elements elements = elements_;
+    for (const auto& [path_element, subtree] : children_) {
+      subtree.collapse_into(elements, transform);
     }
     return elements;
   }
@@ -375,8 +390,20 @@ class AbstractTreeDomain final
   /* Collapse the tree into the given set of elements. */
   void collapse_into(Elements& elements) const {
     elements.join_with(elements_);
-    for (const auto& [path_eleemnt, subtree] : children_) {
+    for (const auto& [_, subtree] : children_) {
       subtree.collapse_into(elements);
+    }
+  }
+
+  /* Collapse the tree into the given set of elements. */
+  void collapse_into(
+      Elements& elements,
+      const std::function<void(Elements&)>& transform) const {
+    Elements elements_copy = elements_;
+    transform(elements_copy);
+    elements.join_with(elements_copy);
+    for (const auto& [_, subtree] : children_) {
+      subtree.collapse_into(elements, transform);
     }
   }
 

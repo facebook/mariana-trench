@@ -175,6 +175,9 @@ class CallPositionFrames final
 
   void append_callee_port_to_artificial_sources(Path::Element path_element);
 
+  void add_inferred_features_to_real_sources(
+      const FeatureMayAlwaysSet& features);
+
   /**
    * Returns new `CallPositionFrames` containing updated call and local
    * positions computed by the input functions.

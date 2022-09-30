@@ -5,6 +5,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
+#include <mariana-trench/FeatureMayAlwaysSet.h>
 #include <mariana-trench/Features.h>
 
 namespace marianatrench {
@@ -35,6 +36,10 @@ const Feature* Features::get_via_shim_feature(
     const Method* MT_NULLABLE method) const {
   const auto& method_string = method ? method->signature() : "unknown";
   return factory_.create("via-shim:" + method_string);
+}
+
+const Feature* Features::get_issue_broadening_feature() const {
+  return factory_.create("via-issue-broadening");
 }
 
 } // namespace marianatrench

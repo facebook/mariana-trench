@@ -264,6 +264,13 @@ void CallPositionFrames::append_callee_port_to_artificial_sources(
   });
 }
 
+void CallPositionFrames::add_inferred_features_to_real_sources(
+    const FeatureMayAlwaysSet& features) {
+  frames_.map([&](CalleePortFrames& callee_port_frames) {
+    callee_port_frames.add_inferred_features_to_real_sources(features);
+  });
+}
+
 std::unordered_map<const Position*, CallPositionFrames>
 CallPositionFrames::map_positions(
     const std::function<const Position*(const AccessPath&, const Position*)>&

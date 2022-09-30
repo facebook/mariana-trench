@@ -186,6 +186,13 @@ void Taint::append_callee_port_to_artificial_sources(
   });
 }
 
+void Taint::add_inferred_features_to_real_sources(
+    const FeatureMayAlwaysSet& features) {
+  map([&](CalleeFrames& frames) {
+    frames.add_inferred_features_to_real_sources(features);
+  });
+}
+
 void Taint::update_non_leaf_positions(
     const std::function<
         const Position*(const Method*, const AccessPath&, const Position*)>&

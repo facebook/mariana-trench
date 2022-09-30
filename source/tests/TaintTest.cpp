@@ -796,6 +796,31 @@ TEST_F(TaintTest, AppendCalleePort) {
                       Path{path_element1, path_element2})})}));
 }
 
+TEST_F(TaintTest, AddInferredFeaturesToRealSources) {
+  auto context = test::make_empty_context();
+  auto features = FeatureMayAlwaysSet{
+      context.features->get("feature1"), context.features->get("feature2")};
+
+  auto taint = Taint{
+      test::make_taint_config(
+          /* kind */ context.kinds->get("TestSource"), test::FrameProperties{}),
+      test::make_taint_config(
+          Kinds::artificial_source(),
+          test::FrameProperties{
+              .callee_port = AccessPath(Root(Root::Kind::Argument, 0))})};
+  taint.add_inferred_features_to_real_sources(features);
+  EXPECT_EQ(
+      taint,
+      (Taint{
+          test::make_taint_config(
+              /* kind */ context.kinds->get("TestSource"),
+              test::FrameProperties{.locally_inferred_features = features}),
+          test::make_taint_config(
+              Kinds::artificial_source(),
+              test::FrameProperties{
+                  .callee_port = AccessPath(Root(Root::Kind::Argument, 0))})}));
+}
+
 TEST_F(TaintTest, UpdateNonLeafPositions) {
   auto context = test::make_empty_context();
 

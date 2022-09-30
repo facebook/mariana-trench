@@ -47,6 +47,10 @@
       "issues" :
       [
         {
+          "always_features" :
+          [
+            "via-issue-broadening"
+          ],
           "callee" : "LSink;.sink:(LData;)V",
           "position" :
           {
@@ -97,8 +101,19 @@
               "kinds" :
               [
                 {
+                  "always_features" :
+                  [
+                    "via-issue-broadening"
+                  ],
                   "distance" : 1,
                   "kind" : "TestSource",
+                  "local_features" :
+                  {
+                    "always_features" :
+                    [
+                      "via-issue-broadening"
+                    ]
+                  },
                   "local_positions" :
                   [
                     {
