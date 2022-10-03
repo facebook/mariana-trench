@@ -20,6 +20,7 @@
 #include <mariana-trench/ClassProperties.h>
 #include <mariana-trench/Context.h>
 #include <mariana-trench/Dependencies.h>
+#include <mariana-trench/Features.h>
 #include <mariana-trench/Interprocedural.h>
 #include <mariana-trench/Log.h>
 #include <mariana-trench/Methods.h>
@@ -114,7 +115,9 @@ Model analyze(
       FixpointIterator(code->cfg(), CombinedTransfer(method_context.get()));
   fixpoint.run(AnalysisEnvironment::initial());
   model.collapse_invalid_paths(global_context);
-  model.approximate();
+  model.approximate(/* widening_features */
+                    FeatureMayAlwaysSet{global_context.features
+                                            ->get_widen_broadening_feature()});
 
   LOG_OR_DUMP(
       method_context, 4, "Computed model for `{}`: {}", method->show(), model);

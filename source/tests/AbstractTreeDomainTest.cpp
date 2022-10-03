@@ -1233,6 +1233,7 @@ TEST_F(AbstractTreeDomainTest, Transform) {
 
   const auto* x = DexString::make_string("x");
   const auto* y = DexString::make_string("y");
+  const auto* z = DexString::make_string("z");
 
   // Test collapse
   auto tree = TaintTree{make_artificial_source(1)};
@@ -1322,6 +1323,45 @@ TEST_F(AbstractTreeDomainTest, Transform) {
                   Kinds::artificial_source(),
                   test::FrameProperties{
                       .callee_port = AccessPath(Root(Root::Kind::Argument, 3)),
+                      .locally_inferred_features = features})},
+          }}));
+
+  // Test limit_leaves
+  auto tree3 = TaintTree{make_artificial_source(1)};
+  tree3.write(Path{x}, TaintTree{make_artificial_source(2)}, UpdateKind::Weak);
+  tree3.write(Path{y}, TaintTree{make_artificial_source(3)}, UpdateKind::Weak);
+  tree3.write(Path{z}, TaintTree{make_artificial_source(4)}, UpdateKind::Weak);
+  tree3.limit_leaves(2, transform);
+  EXPECT_EQ(
+      tree3,
+      (TaintTree{
+          {
+              Path{},
+              Taint::artificial_source(
+                  AccessPath(Root(Root::Kind::Argument, 1))),
+          },
+          {
+              Path{},
+              Taint{test::make_taint_config(
+                  Kinds::artificial_source(),
+                  test::FrameProperties{
+                      .callee_port = AccessPath(Root(Root::Kind::Argument, 2)),
+                      .locally_inferred_features = features})},
+          },
+          {
+              Path{},
+              Taint{test::make_taint_config(
+                  Kinds::artificial_source(),
+                  test::FrameProperties{
+                      .callee_port = AccessPath(Root(Root::Kind::Argument, 3)),
+                      .locally_inferred_features = features})},
+          },
+          {
+              Path{},
+              Taint{test::make_taint_config(
+                  Kinds::artificial_source(),
+                  test::FrameProperties{
+                      .callee_port = AccessPath(Root(Root::Kind::Argument, 4)),
                       .locally_inferred_features = features})},
           }}));
 }

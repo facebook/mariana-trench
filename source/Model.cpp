@@ -418,10 +418,14 @@ void Model::collapse_invalid_paths(Context& context) {
       is_valid, initial_accumulator);
 }
 
-void Model::approximate() {
-  generations_.limit_leaves(Heuristics::kModelTreeMaxLeaves);
-  parameter_sources_.limit_leaves(Heuristics::kModelTreeMaxLeaves);
-  sinks_.limit_leaves(Heuristics::kModelTreeMaxLeaves);
+void Model::approximate(const FeatureMayAlwaysSet& widening_features) {
+  const auto transform = [&widening_features](Taint& taint) {
+    taint.add_inferred_features(widening_features);
+    return taint;
+  };
+  generations_.limit_leaves(Heuristics::kModelTreeMaxLeaves, transform);
+  parameter_sources_.limit_leaves(Heuristics::kModelTreeMaxLeaves, transform);
+  sinks_.limit_leaves(Heuristics::kModelTreeMaxLeaves, transform);
   propagations_.limit_leaves(Heuristics::kModelTreeMaxLeaves);
 }
 
@@ -511,7 +515,10 @@ void Model::add_generation(const AccessPath& port, TaintConfig source) {
   add_generation(port, Taint{std::move(source)});
 }
 
-void Model::add_inferred_generations(AccessPath port, Taint generations) {
+void Model::add_inferred_generations(
+    AccessPath port,
+    Taint generations,
+    const FeatureMayAlwaysSet& widening_features) {
   auto sanitized_generations = apply_source_sink_sanitizers(
       SanitizerKind::Sources, generations, port.root());
   if (!sanitized_generations.is_bottom()) {
@@ -519,7 +526,8 @@ void Model::add_inferred_generations(AccessPath port, Taint generations) {
         generations_,
         port,
         Heuristics::kGenerationMaxPortSize,
-        sanitized_generations);
+        sanitized_generations,
+        widening_features);
   }
 }
 
@@ -539,12 +547,19 @@ void Model::add_sink(const AccessPath& port, TaintConfig sink) {
   add_sink(port, Taint{std::move(sink)});
 }
 
-void Model::add_inferred_sinks(AccessPath port, Taint sinks) {
+void Model::add_inferred_sinks(
+    AccessPath port,
+    Taint sinks,
+    const FeatureMayAlwaysSet& widening_features) {
   auto sanitized_sinks =
       apply_source_sink_sanitizers(SanitizerKind::Sinks, sinks, port.root());
   if (!sanitized_sinks.is_bottom()) {
     update_taint_tree(
-        sinks_, port, Heuristics::kSinkMaxPortSize, sanitized_sinks);
+        sinks_,
+        port,
+        Heuristics::kSinkMaxPortSize,
+        sanitized_sinks,
+        widening_features);
   }
 }
 
@@ -1259,11 +1274,15 @@ void Model::update_taint_tree(
     TaintAccessPathTree& tree,
     AccessPath port,
     std::size_t truncation_amount,
-    Taint new_taint) {
+    Taint new_taint,
+    const FeatureMayAlwaysSet& widening_features) {
   if (!check_port_consistency(port)) {
     return;
   }
 
+  if (port.path().size() > truncation_amount) {
+    new_taint.add_inferred_features(widening_features);
+  }
   port.truncate(truncation_amount);
   tree.write(port, std::move(new_taint), UpdateKind::Weak);
 }
@@ -1400,6 +1419,14 @@ void Model::add_generation(AccessPath port, Taint source) {
     return;
   }
 
+  if (port.path().size() > Heuristics::kGenerationMaxPortSize) {
+    WARNING(
+        1,
+        "Truncating user-defined generation {} down to path length {} for method {}",
+        port,
+        Heuristics::kGenerationMaxPortSize,
+        method_ ? method_->get_name() : "nullptr");
+  }
   port.truncate(Heuristics::kGenerationMaxPortSize);
   generations_.write(port, std::move(source), UpdateKind::Weak);
 }
@@ -1415,6 +1442,14 @@ void Model::add_parameter_source(AccessPath port, Taint source) {
     return;
   }
 
+  if (port.path().size() > Heuristics::kParameterSourceMaxPortSize) {
+    WARNING(
+        1,
+        "Truncating user-defined parameter source {} down to path length {} for method {}",
+        port,
+        Heuristics::kParameterSourceMaxPortSize,
+        method_ ? method_->get_name() : "nullptr");
+  }
   port.truncate(Heuristics::kParameterSourceMaxPortSize);
   parameter_sources_.write(port, Taint{std::move(source)}, UpdateKind::Weak);
 }
@@ -1428,6 +1463,14 @@ void Model::add_sink(AccessPath port, Taint sink) {
     return;
   }
 
+  if (port.path().size() > Heuristics::kSinkMaxPortSize) {
+    WARNING(
+        1,
+        "Truncating user-defined sink {} down to path length {} for method {}",
+        port,
+        Heuristics::kSinkMaxPortSize,
+        method_ ? method_->get_name() : "nullptr");
+  }
   port.truncate(Heuristics::kSinkMaxPortSize);
   sinks_.write(port, Taint{std::move(sink)}, UpdateKind::Weak);
 }

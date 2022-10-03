@@ -640,7 +640,10 @@ void create_sinks(
         artificial_source.callee_port(),
         new_sinks);
     context->model.add_inferred_sinks(
-        artificial_source.callee_port(), std::move(new_sinks));
+        artificial_source.callee_port(),
+        std::move(new_sinks),
+        /* widening_features */
+        FeatureMayAlwaysSet{context->features.get_widen_broadening_feature()});
   }
 }
 
@@ -1460,7 +1463,11 @@ void infer_output_taint(
       LOG_OR_DUMP(
           context, 4, "Inferred generation for port {}: {}", port, generation);
       context->model.add_inferred_generations(
-          std::move(port), std::move(generation));
+          std::move(port),
+          std::move(generation),
+          /* widening_features */
+          FeatureMayAlwaysSet{
+              context->features.get_widen_broadening_feature()});
     }
 
     auto artificial_sources = partitioned_by_artificial_sources.find(true);

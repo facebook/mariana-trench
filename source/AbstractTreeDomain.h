@@ -434,6 +434,21 @@ class AbstractTreeDomain final
     }
   }
 
+  /* Collapse the tree to the given maximum height. */
+  void collapse_deeper_than(
+      std::size_t height,
+      const std::function<void(Elements&)>& transform) {
+    if (height == 0) {
+      collapse_inplace(transform);
+    } else {
+      children_.map([height, &transform](const AbstractTreeDomain& subtree) {
+        auto copy = subtree;
+        copy.collapse_deeper_than(height - 1, transform);
+        return copy;
+      });
+    }
+  }
+
   /* Remove the given elements from the tree. */
   void prune(Elements accumulator) {
     elements_.difference_with(accumulator);
@@ -485,6 +500,22 @@ class AbstractTreeDomain final
       return;
     }
     collapse_deeper_than(*depth);
+  }
+
+  /*
+   * Collapse children that have more than `max_leaves` leaves.
+   *
+   * `transform` is a function applied to the `Element`s that are collapsed.
+   * Mainly used to add broadening features to collapsed taint
+   */
+  void limit_leaves(
+      std::size_t max_leaves,
+      const std::function<void(Elements&)>& transform) {
+    auto depth = depth_exceeding_max_leaves(max_leaves);
+    if (!depth) {
+      return;
+    }
+    collapse_deeper_than(*depth, transform);
   }
 
   /* Return the depth at which the tree exceeds the given number of leaves. */

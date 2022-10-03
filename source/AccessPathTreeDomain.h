@@ -259,6 +259,22 @@ class AccessPathTreeDomain final
     });
   }
 
+  /*
+   * Collapse children that have more than `max_leaves` leaves.
+   *
+   * `transform` is a function applied to the `Element`s that are collapsed.
+   * Mainly used to add broadening features to collapsed taint
+   */
+  void limit_leaves(
+      std::size_t max_leaves,
+      const std::function<void(Elements&)>& transform) {
+    map_.map([max_leaves, &transform](const AbstractTreeDomainT& tree) {
+      auto copy = tree;
+      copy.limit_leaves(max_leaves, transform);
+      return copy;
+    });
+  }
+
   friend std::ostream& operator<<(
       std::ostream& out,
       const AccessPathTreeDomain& tree) {

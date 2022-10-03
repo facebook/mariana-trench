@@ -41,6 +41,11 @@ class Features final {
    * before applying that propagation.
    */
   const Feature* get_propagation_broadening_feature() const;
+  /**
+   * This feature is added to source or sink taint that is collapsed when
+   * limiting the leaves or depth of stored taint.
+   */
+  const Feature* get_widen_broadening_feature() const;
 
  private:
   UniquePointerFactory<std::string, Feature> factory_;

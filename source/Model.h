@@ -177,7 +177,7 @@ class Model final {
 
   void collapse_invalid_paths(Context& context);
 
-  void approximate();
+  void approximate(const FeatureMayAlwaysSet& widening_features);
 
   bool empty() const;
 
@@ -188,7 +188,10 @@ class Model final {
   void add_generation(const AccessPath& port, TaintConfig generation);
 
   /* Add generations after applying sanitizers */
-  void add_inferred_generations(AccessPath port, Taint generations);
+  void add_inferred_generations(
+      AccessPath port,
+      Taint generations,
+      const FeatureMayAlwaysSet& widening_features);
   const TaintAccessPathTree& generations() const {
     return generations_;
   }
@@ -207,7 +210,10 @@ class Model final {
   void add_sink(const AccessPath& port, TaintConfig sink);
 
   /* Add sinks after applying sanitizers */
-  void add_inferred_sinks(AccessPath port, Taint sinks);
+  void add_inferred_sinks(
+      AccessPath port,
+      Taint sinks,
+      const FeatureMayAlwaysSet& widening_features);
   const TaintAccessPathTree& sinks() const {
     return sinks_;
   }
@@ -300,7 +306,8 @@ class Model final {
       TaintAccessPathTree& tree,
       AccessPath port,
       std::size_t truncation_amount,
-      Taint new_taint);
+      Taint new_taint,
+      const FeatureMayAlwaysSet& widening_features);
 
   bool check_root_consistency(Root root) const;
   bool check_port_consistency(const AccessPath& access_path) const;

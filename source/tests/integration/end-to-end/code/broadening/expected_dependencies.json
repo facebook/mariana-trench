@@ -41,6 +41,14 @@
     "Lcom/facebook/marianatrench/integrationtests/Flow;.broadened_issues:()Ljava/lang/Object;",
     "Lcom/facebook/marianatrench/integrationtests/Flow;.broadened_source:()Ljava/lang/Object;"
   ],
+  "Lcom/facebook/marianatrench/integrationtests/Flow$Tree;.<init>:(Lcom/facebook/marianatrench/integrationtests/Flow;)V" : 
+  [
+    "Lcom/facebook/marianatrench/integrationtests/Flow$Tree;.<init>:(Lcom/facebook/marianatrench/integrationtests/Flow;Lcom/facebook/marianatrench/integrationtests/Flow$1;)V"
+  ],
+  "Lcom/facebook/marianatrench/integrationtests/Flow$Tree;.<init>:(Lcom/facebook/marianatrench/integrationtests/Flow;Lcom/facebook/marianatrench/integrationtests/Flow$1;)V" : 
+  [
+    "Lcom/facebook/marianatrench/integrationtests/Flow;.widened_source_sink_depth:(Lcom/facebook/marianatrench/integrationtests/Flow$Tree;)Lcom/facebook/marianatrench/integrationtests/Flow$Tree;"
+  ],
   "Lcom/facebook/marianatrench/integrationtests/Flow;.propagate:(Lcom/facebook/marianatrench/integrationtests/Flow$Test;)Lcom/facebook/marianatrench/integrationtests/Flow$Test;" : 
   [
     "Lcom/facebook/marianatrench/integrationtests/Flow;.broadened_issue_propagation:()V",
@@ -49,13 +57,15 @@
   "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V" : 
   [
     "Lcom/facebook/marianatrench/integrationtests/Flow;.broadened_issue_propagation:()V",
-    "Lcom/facebook/marianatrench/integrationtests/Flow;.broadened_issues:()Ljava/lang/Object;"
+    "Lcom/facebook/marianatrench/integrationtests/Flow;.broadened_issues:()Ljava/lang/Object;",
+    "Lcom/facebook/marianatrench/integrationtests/Flow;.widened_source_sink_depth:(Lcom/facebook/marianatrench/integrationtests/Flow$Tree;)Lcom/facebook/marianatrench/integrationtests/Flow$Tree;"
   ],
   "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;" : 
   [
     "Lcom/facebook/marianatrench/integrationtests/Flow;.broadened_issue_propagation:()V",
     "Lcom/facebook/marianatrench/integrationtests/Flow;.broadened_issues:()Ljava/lang/Object;",
-    "Lcom/facebook/marianatrench/integrationtests/Flow;.broadened_source:()Ljava/lang/Object;"
+    "Lcom/facebook/marianatrench/integrationtests/Flow;.broadened_source:()Ljava/lang/Object;",
+    "Lcom/facebook/marianatrench/integrationtests/Flow;.widened_source_sink_depth:(Lcom/facebook/marianatrench/integrationtests/Flow$Tree;)Lcom/facebook/marianatrench/integrationtests/Flow$Tree;"
   ],
   "Lcom/facebook/secure/context/IntentLauncher;.<init>:()V" : 
   [
@@ -97,6 +107,7 @@
     "Lcom/facebook/base/activity/FragmentBaseActivityUtil;.<init>:()V",
     "Lcom/facebook/content/SecureContextHelper;.<init>:()V",
     "Lcom/facebook/marianatrench/integrationtests/Flow$Test;.<init>:(Lcom/facebook/marianatrench/integrationtests/Flow;)V",
+    "Lcom/facebook/marianatrench/integrationtests/Flow$Tree;.<init>:(Lcom/facebook/marianatrench/integrationtests/Flow;)V",
     "Lcom/facebook/marianatrench/integrationtests/Flow;.<init>:()V",
     "Lcom/facebook/marianatrench/integrationtests/Origin;.<init>:()V",
     "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;",

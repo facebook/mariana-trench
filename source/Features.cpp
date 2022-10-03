@@ -5,7 +5,6 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-#include <mariana-trench/FeatureMayAlwaysSet.h>
 #include <mariana-trench/Features.h>
 
 namespace marianatrench {
@@ -44,6 +43,10 @@ const Feature* Features::get_issue_broadening_feature() const {
 
 const Feature* Features::get_propagation_broadening_feature() const {
   return factory_.create("via-propagation-broadening");
+}
+
+const Feature* Features::get_widen_broadening_feature() const {
+  return factory_.create("via-widen-broadening");
 }
 
 } // namespace marianatrench

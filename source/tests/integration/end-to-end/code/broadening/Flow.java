@@ -39,4 +39,19 @@ public class Flow {
     test = propagate(test);
     Origin.sink(test.unrelated);
   }
+
+  private class Tree {
+    public Tree a;
+    public Tree b;
+    public Tree c;
+    public Tree d;
+    public Tree e;
+  };
+
+  public Tree widened_source_sink_depth(Tree argument) {
+    Origin.sink(argument.a.b.c.d.e);
+    Tree tree = new Tree();
+    tree.a.b.c.d.e = (Tree) Origin.source();
+    return tree;
+  }
 }

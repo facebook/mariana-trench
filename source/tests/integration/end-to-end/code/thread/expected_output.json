@@ -1206,8 +1206,19 @@
           "kinds" : 
           [
             {
+              "always_features" : 
+              [
+                "via-widen-broadening"
+              ],
               "distance" : 6,
               "kind" : "Sink",
+              "local_features" : 
+              {
+                "always_features" : 
+                [
+                  "via-widen-broadening"
+                ]
+              },
               "origins" : 
               [
                 "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V"
@@ -1228,8 +1239,19 @@
           "kinds" : 
           [
             {
+              "always_features" : 
+              [
+                "via-widen-broadening"
+              ],
               "distance" : 5,
               "kind" : "Sink",
+              "local_features" : 
+              {
+                "always_features" : 
+                [
+                  "via-widen-broadening"
+                ]
+              },
               "origins" : 
               [
                 "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V"
