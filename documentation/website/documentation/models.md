@@ -391,6 +391,56 @@ we could use the following JSON to specifiy a via-value feature that would mater
 
 Note that this only works for numeric and string literals. In cases where the argument is not a constant, the feature will appear as `via-value:unknown`.
 
+#### Broadening Features
+
+Broadening features are added automatically whenever Mariana Trench makes an approximation about a taint flow. This approximation is also called "collapsing" since taint is internally represented in a tree structure where edges are fields and approximation involves placing taint onto nodes higher up in the tree. There are three kinds of broadening features that based on the reason for approximating the taint flow. These are:
+
+##### Issue Broadening
+
+The `via-issue-broadening` feature is added to issues where the taint flowing into the sink was not held directly on the object passed in but on one of its fields. For example:
+
+```java
+Class input = new Class();
+input.field = source();
+sink(input); // input is not tainted, but input.field is tainted and creates an issue
+```
+
+##### Propagation Broadening
+
+The `via-propagation-broadening` feature is added when an object with tainted fields is propagated through a method. For correctness reasons, Mariana Trench makes the approximation that the whole object is tainted, i.e collapses all the taint from fields onto the object itself.
+
+```java
+public Class propagate(Class argument) {
+  return argument;
+}
+
+public void flow() {
+  Class input = new Class();
+  input.tainted_field = source();
+  Class output = propagate(input); // taint on input.tainted_field is collapsed onto input when applying propagation and it ends up on output. `via-propagation-broadening` feature is applied
+  sink(output);
+}
+```
+
+##### Widen Broadening
+
+For performance reasons, if a given taint tree becomes very large (either in depth or in number of nodes at a given level), Mariana Trench collapses the tree
+to a smaller size. In these cases, the `via-widen-broadening` feature is added to the collapsed taint
+
+```java
+Class input = new Class();
+if (\* condition *\) {
+  input.field1 = source();
+  input.field2 = source();
+  ...
+} else {
+  input.fieldA = source();
+  input.fieldB = source();
+  ...
+}
+sink(input); // Too many fields are sources so the whole input object becomes tainted
+```
+
 ### Sanitizers
 
 Specifying sanitizers on a model allow us to stop taint flowing through that method. In Mariana Trench, they can be one of three types -
