@@ -195,7 +195,8 @@ Options::Options(const boost::program_options::variables_map& variables) {
   if (!variables["source-exclude-directories"].empty()) {
     source_exclude_directories_ = parse_paths_list(
         variables["source-exclude-directories"].as<std::string>(),
-        /* extension */ std::nullopt);
+        /* extension */ std::nullopt,
+        /* check_exist */ false);
   }
 
   apk_path_ = check_path_exists(variables["apk-path"].as<std::string>());
