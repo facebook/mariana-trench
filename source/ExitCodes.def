@@ -1,0 +1,19 @@
+/*
+ * Copyright (c) Meta Platforms, Inc. and affiliates.
+ *
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
+
+#ifndef EXITCODE
+#error "Please define EXITCODE(NAME, VALUE)"
+#endif // EXITCODE
+
+EXITCODE(success, 0)
+EXITCODE(error, 1)
+EXITCODE(redex_error, 2)
+EXITCODE(mariana_trench_error, 3)
+EXITCODE(lifecycle_error, 4)
+EXITCODE(model_generator_error, 5)
+EXITCODE(shim_generator_error, 6)
+EXITCODE(io_error, 7)

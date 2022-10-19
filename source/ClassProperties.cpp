@@ -16,6 +16,7 @@
 #include <mariana-trench/Assert.h>
 #include <mariana-trench/ClassProperties.h>
 #include <mariana-trench/Constants.h>
+#include <mariana-trench/EventLogger.h>
 #include <mariana-trench/Features.h>
 #include <mariana-trench/Heuristics.h>
 #include <mariana-trench/Log.h>
@@ -224,7 +225,9 @@ ClassProperties::ClassProperties(
     }
   } catch (const std::exception& e) {
     // Redex may assert, or throw `std::runtime_error` if the file is missing.
-    ERROR(2, "Manifest could not be parsed: {}", e.what());
+    auto error = fmt::format("Manifest could not be parsed: {}", e.what());
+    ERROR(2, error);
+    EventLogger::log_event("manifest_error", error, 1);
   }
 
   std::mutex mutex;

@@ -84,6 +84,7 @@ endif()
 
 # Targets
 file(GLOB library_sources
+     "source/*.def"
      "source/*.cpp"
      "source/constraints/*.cpp"
      "source/shim-generator/*.cpp"

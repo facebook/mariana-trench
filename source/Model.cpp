@@ -16,6 +16,7 @@
 #include <mariana-trench/ClassProperties.h>
 #include <mariana-trench/Compiler.h>
 #include <mariana-trench/Constants.h>
+#include <mariana-trench/EventLogger.h>
 #include <mariana-trench/Features.h>
 #include <mariana-trench/FieldCache.h>
 #include <mariana-trench/Heuristics.h>
@@ -33,6 +34,7 @@ class ModelConsistencyError {
  public:
   static void raise(const std::string& what) {
     ERROR(1, "Model Consistency Error: {}", what);
+    EventLogger::log_event("model_consistency_error", what);
   }
 };
 

@@ -17,7 +17,10 @@
 #include <Debug.h>
 #include <RedexContext.h>
 
+#include <mariana-trench/ExitCode.h>
+#include <mariana-trench/LifecycleMethods.h>
 #include <mariana-trench/MarianaTrench.h>
+#include <mariana-trench/ModelGeneration.h>
 #include <mariana-trench/SanitizersOptions.h>
 
 int main(int argc, char* argv[]) {
@@ -56,12 +59,27 @@ int main(int argc, char* argv[]) {
       try {
         std::rethrow_exception(exception);
       } catch (const std::exception& rethrown_exception) {
+        marianatrench::EventLogger::log_event(
+            "redex_error", rethrown_exception.what());
         std::cerr << rethrown_exception.what() << std::endl;
       }
     }
-    return 1;
+    return ExitCode::redex_error(aggregate_exception.what());
+  } catch (const std::ifstream::failure& exception) {
+    return ExitCode::io_error(exception.what());
+  } catch (const marianatrench::ModelGeneratorError& exception) {
+    return ExitCode::model_generator_error(exception.what());
+  } catch (const marianatrench::LifecycleMethodsError& exception) {
+    return ExitCode::lifecycle_error(exception.what());
+  } catch (const std::logic_error& exception) {
+    return ExitCode::mariana_trench_error(exception.what());
+  } catch (const std::out_of_range& exception) {
+    return ExitCode::mariana_trench_error(exception.what());
+  } catch (const std::runtime_error& exception) {
+    return ExitCode::mariana_trench_error(exception.what());
   } catch (const std::exception& exception) {
-    std::cerr << "error: " << exception.what() << std::endl;
-    return 1;
+    return ExitCode::error(exception.what());
   }
+
+  return ExitCode::success();
 }

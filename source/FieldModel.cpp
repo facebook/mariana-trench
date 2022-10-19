@@ -9,6 +9,7 @@
 
 #include <mariana-trench/Access.h>
 #include <mariana-trench/Assert.h>
+#include <mariana-trench/EventLogger.h>
 #include <mariana-trench/FieldModel.h>
 #include <mariana-trench/Log.h>
 #include <mariana-trench/Positions.h>
@@ -21,6 +22,7 @@ class FieldModelConsistencyError {
  public:
   static void raise(const std::string& what) {
     ERROR(1, "Field Model Consistency Error: {}", what);
+    EventLogger::log_event("field_model_consistency_error", what);
   }
 };
 

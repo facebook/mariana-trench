@@ -5,11 +5,16 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-#include <mariana-trench/JsonValidation.h>
 #include <mariana-trench/LifecycleMethods.h>
 #include <mariana-trench/Options.h>
 
 namespace marianatrench {
+
+LifecycleMethodsError::LifecycleMethodsError(
+    const Json::Value& value,
+    const std::optional<std::string>& field,
+    const std::string& expected)
+    : JsonValidationError(value, field, expected) {}
 
 void LifecycleMethods::run(
     const Options& options,
@@ -38,7 +43,7 @@ void LifecycleMethods::add_methods_from_json(
       // as the current one. Method names must be unique across all
       // definitions because a `DexMethod` of the form
       // `ChildClass;.<method_name>` will be created per `method` defined.
-      throw JsonValidationError(
+      throw LifecycleMethodsError(
           lifecycle_definition,
           /* field */ "method_name",
           "unique values across all life-cycle definitions");

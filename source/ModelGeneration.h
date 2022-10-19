@@ -15,6 +15,11 @@
 
 namespace marianatrench {
 
+class ModelGeneratorError : public std::invalid_argument {
+ public:
+  explicit ModelGeneratorError(const std::string& message);
+};
+
 class ModelGeneration {
  public:
   static ModelGeneratorResult run(

@@ -8,11 +8,20 @@
 #pragma once
 
 #include <mariana-trench/ClassHierarchies.h>
+#include <mariana-trench/JsonValidation.h>
 #include <mariana-trench/LifecycleMethod.h>
 #include <mariana-trench/Methods.h>
 #include <mariana-trench/Options.h>
 
 namespace marianatrench {
+
+class LifecycleMethodsError : public JsonValidationError {
+ public:
+  LifecycleMethodsError(
+      const Json::Value& value,
+      const std::optional<std::string>& field,
+      const std::string& expected);
+};
 
 /**
  * This class adds artificial methods to simulate common framework behaviors

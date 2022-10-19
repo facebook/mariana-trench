@@ -17,6 +17,7 @@
 #include <ProguardParser.h>
 #include <ReflectionAnalysis.h>
 #include <mariana-trench/Assert.h>
+#include <mariana-trench/EventLogger.h>
 #include <mariana-trench/Log.h>
 #include <mariana-trench/OperatingSystem.h>
 #include <mariana-trench/Options.h>
@@ -248,11 +249,13 @@ std::unique_ptr<TypeEnvironments> Types::infer_local_types_for_method(
     return std::make_unique<TypeEnvironments>(
         make_environments(inference.get_type_environments()));
   } catch (const RedexException& rethrown_exception) {
-    ERROR(
-        1,
+    auto error = fmt::format(
         "Cannot infer types for method `{}`: {}.",
         method->show(),
         rethrown_exception.what());
+    ERROR(1, error);
+    EventLogger::log_event("type_inference", error);
+
     return std::make_unique<TypeEnvironments>();
   }
 }

@@ -14,6 +14,7 @@
 #include <mariana-trench/Assert.h>
 #include <mariana-trench/Context.h>
 #include <mariana-trench/Dependencies.h>
+#include <mariana-trench/EventLogger.h>
 #include <mariana-trench/JsonValidation.h>
 #include <mariana-trench/Log.h>
 #include <mariana-trench/ModelGeneration.h>
@@ -54,11 +55,12 @@ std::map<std::string, std::unique_ptr<ModelGenerator>> make_model_generators(
         if (!inserted) {
           auto error = fmt::format(
               "Duplicate model generator {} defined at {}", name, entry.path());
-          throw std::invalid_argument(error);
+          throw ModelGeneratorError(error);
         }
         LOG(3, "Found model generator `{}`", name);
-      } catch (const JsonValidationError&) {
+      } catch (const JsonValidationError& e) {
         LOG(3, "Unable to parse generator at `{}`", path);
+        EventLogger::log_event("model_generator_error", e.what(), 1);
       }
     }
   }
@@ -67,6 +69,9 @@ std::map<std::string, std::unique_ptr<ModelGenerator>> make_model_generators(
 }
 
 } // namespace
+
+ModelGeneratorError::ModelGeneratorError(const std::string& message)
+    : std::invalid_argument(message) {}
 
 #ifndef MARIANA_TRENCH_FACEBOOK_BUILD
 std::map<std::string, std::unique_ptr<ModelGenerator>>
