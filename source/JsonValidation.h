@@ -28,6 +28,9 @@ class JsonValidationError : public std::invalid_argument {
 class JsonValidation final {
  public:
   static void validate_object(const Json::Value& value);
+  static void validate_object(
+      const Json::Value& value,
+      const std::string& expected);
 
   static const Json::Value& object(
       const Json::Value& value,

@@ -107,7 +107,6 @@ JsonModelGenerator::JsonModelGenerator(
       json_configuration_file_(json_configuration_file) {
   const Json::Value& value =
       JsonValidation::parse_json_file(json_configuration_file);
-  JsonValidation::validate_object(value);
 
   for (auto model_generator :
        JsonValidation::nonempty_array(value, /* field */ "model_generators")) {
