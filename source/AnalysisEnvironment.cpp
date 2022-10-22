@@ -17,7 +17,7 @@ namespace {
 
 Taint propagate_artificial_sources(Taint taint, Path::Element path_element) {
   // This is called when propagating taint down in an abstract tree.
-  taint.append_callee_port_to_artificial_sources(path_element);
+  taint.append_to_artificial_source_input_paths(path_element);
   return taint;
 }
 

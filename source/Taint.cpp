@@ -179,10 +179,10 @@ std::ostream& operator<<(std::ostream& out, const Taint& taint) {
   return out << taint.set_;
 }
 
-void Taint::append_callee_port_to_artificial_sources(
+void Taint::append_to_artificial_source_input_paths(
     Path::Element path_element) {
   map([&](CalleeFrames& frames) {
-    frames.append_callee_port_to_artificial_sources(path_element);
+    frames.append_to_artificial_source_input_paths(path_element);
   });
 }
 

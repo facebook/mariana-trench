@@ -1705,7 +1705,7 @@ TEST_F(CallPositionFramesTest, TransformKindWithFeatures) {
       }));
 }
 
-TEST_F(CallPositionFramesTest, AppendCalleePort) {
+TEST_F(CallPositionFramesTest, AppendInputPaths) {
   auto context = test::make_empty_context();
 
   auto* test_kind = context.kinds->get("TestKind");
@@ -1721,7 +1721,7 @@ TEST_F(CallPositionFramesTest, AppendCalleePort) {
               .input_paths = PathTreeDomain{
                   {Path{path_element1}, SingletonAbstractDomain()}}})};
 
-  frames.append_callee_port_to_artificial_sources(path_element2);
+  frames.append_to_artificial_source_input_paths(path_element2);
   EXPECT_EQ(
       frames,
       (CallPositionFrames{

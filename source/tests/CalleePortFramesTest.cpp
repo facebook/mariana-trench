@@ -1478,7 +1478,7 @@ TEST_F(CalleePortFramesTest, TransformKindWithFeatures) {
       }));
 }
 
-TEST_F(CalleePortFramesTest, AppendCalleePort) {
+TEST_F(CalleePortFramesTest, AppendInputPaths) {
   auto context = test::make_empty_context();
 
   const auto* path_element1 = DexString::make_string("field1");
@@ -1491,7 +1491,7 @@ TEST_F(CalleePortFramesTest, AppendCalleePort) {
           .input_paths = PathTreeDomain{
               {Path{path_element1}, SingletonAbstractDomain()}}})};
 
-  frames.append_callee_port_to_artificial_sources(path_element2);
+  frames.append_to_artificial_source_input_paths(path_element2);
   EXPECT_EQ(
       frames,
       (CalleePortFrames{test::make_taint_config(

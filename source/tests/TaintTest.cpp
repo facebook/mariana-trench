@@ -766,7 +766,7 @@ TEST_F(TaintTest, TransformKind) {
       }));
 }
 
-TEST_F(TaintTest, AppendCalleePort) {
+TEST_F(TaintTest, AppendInputPaths) {
   auto context = test::make_empty_context();
 
   const auto* path_element1 = DexString::make_string("field1");
@@ -782,7 +782,7 @@ TEST_F(TaintTest, AppendCalleePort) {
               .input_paths = PathTreeDomain{
                   {Path{path_element1}, SingletonAbstractDomain()}}})};
 
-  taint.append_callee_port_to_artificial_sources(path_element2);
+  taint.append_to_artificial_source_input_paths(path_element2);
   EXPECT_EQ(
       taint,
       (Taint{

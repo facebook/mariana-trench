@@ -255,14 +255,14 @@ void CalleeFrames::transform_kind_with_features(
   });
 }
 
-void CalleeFrames::append_callee_port_to_artificial_sources(
+void CalleeFrames::append_to_artificial_source_input_paths(
     Path::Element path_element) {
   // TODO (T91357916): GroupHashedSetAbstractDomain could be more efficient than
   // PatriciaTreeMapAbstractPartition for holding frames_. It supports in-place
   // modifying of the elements as long as the key does not change.
   frames_.map([&](const CallPositionFrames& frames) {
     auto frames_copy = frames;
-    frames_copy.append_callee_port_to_artificial_sources(path_element);
+    frames_copy.append_to_artificial_source_input_paths(path_element);
     return frames_copy;
   });
 }

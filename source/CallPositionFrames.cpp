@@ -258,10 +258,10 @@ void CallPositionFrames::transform_kind_with_features(
   });
 }
 
-void CallPositionFrames::append_callee_port_to_artificial_sources(
+void CallPositionFrames::append_to_artificial_source_input_paths(
     Path::Element path_element) {
   frames_.map([&](CalleePortFrames& callee_port_frames) {
-    callee_port_frames.append_callee_port_to_artificial_sources(path_element);
+    callee_port_frames.append_to_artificial_source_input_paths(path_element);
   });
 }
 

@@ -414,7 +414,7 @@ void CalleePortFrames::transform_kind_with_features(
   frames_ = new_frames_by_kind;
 }
 
-void CalleePortFrames::append_callee_port_to_artificial_sources(
+void CalleePortFrames::append_to_artificial_source_input_paths(
     Path::Element path_element) {
   if (!is_artificial_source_frames()) {
     return;

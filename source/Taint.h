@@ -193,10 +193,10 @@ class Taint final : public sparta::AbstractDomain<Taint> {
   friend std::ostream& operator<<(std::ostream& out, const Taint& taint);
 
   /**
-   * Appends `path_element` to the callee ports of all artificial source frames
+   * Appends `path_element` to the input paths of all artificial source frames
    * held in this instance.
    */
-  void append_callee_port_to_artificial_sources(Path::Element path_element);
+  void append_to_artificial_source_input_paths(Path::Element path_element);
 
   /**
    * Adds `features` to the inferred features for all real (i.e not artificial)

@@ -174,7 +174,7 @@ class CallPositionFrames final
       const std::function<std::vector<const Kind*>(const Kind*)>&,
       const std::function<FeatureMayAlwaysSet(const Kind*)>&);
 
-  void append_callee_port_to_artificial_sources(Path::Element path_element);
+  void append_to_artificial_source_input_paths(Path::Element path_element);
 
   void add_inferred_features_to_real_sources(
       const FeatureMayAlwaysSet& features);
