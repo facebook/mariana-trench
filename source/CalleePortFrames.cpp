@@ -10,6 +10,7 @@
 #include <mariana-trench/Assert.h>
 #include <mariana-trench/CalleePortFrames.h>
 #include <mariana-trench/Features.h>
+#include <mariana-trench/Heuristics.h>
 #include <mariana-trench/JsonValidation.h>
 #include <mariana-trench/Log.h>
 
@@ -200,6 +201,13 @@ void CalleePortFrames::join_with(const CalleePortFrames& other) {
 
   frames_.join_with(other.frames_);
   input_paths_.join_with(other.input_paths_);
+  // Approximate the input paths here to avoid storing very large trees during
+  // the analysis of a method. These paths will not be read from during the
+  // analysis of a method and will be collapsed when the artificial source
+  // causes sink/propagation inference. So pre-emptively collapse here for
+  // better performance
+  input_paths_.collapse_deeper_than(Heuristics::kMaxInputPathDepth);
+  input_paths_.limit_leaves(Heuristics::kMaxInputPathLeaves);
   local_positions_.join_with(other.local_positions_);
 
   mt_expensive_assert(previous.leq(*this) && other.leq(*this));
@@ -443,6 +451,9 @@ void CalleePortFrames::append_callee_port_to_artificial_sources(
     new_input_paths.write(new_path, elements, UpdateKind::Weak);
   }
   input_paths_ = std::move(new_input_paths);
+
+  input_paths_.collapse_deeper_than(Heuristics::kMaxInputPathDepth);
+  input_paths_.limit_leaves(Heuristics::kMaxInputPathLeaves);
 
   // TODO (T134566179): Remove the following logic once propagation and sink
   // inference uses input_paths_ instead of callee_port_

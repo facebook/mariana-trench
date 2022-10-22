@@ -20,6 +20,7 @@
 #include <mariana-trench/FlattenIterator.h>
 #include <mariana-trench/Frame.h>
 #include <mariana-trench/GroupHashedSetAbstractDomain.h>
+#include <mariana-trench/RootPatriciaTreeAbstractPartition.h>
 #include <mariana-trench/TaintConfig.h>
 
 namespace marianatrench {
@@ -217,6 +218,8 @@ class CallPositionFrames final
     }
     return result;
   }
+
+  RootPatriciaTreeAbstractPartition<PathTreeDomain> input_paths() const;
 
   template <class T>
   std::unordered_map<T, std::vector<std::reference_wrapper<const Frame>>>

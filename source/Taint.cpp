@@ -221,6 +221,15 @@ std::unordered_map<const Kind*, Taint> Taint::partition_by_kind() const {
   return partition_by_kind<const Kind*>([](const Kind* kind) { return kind; });
 }
 
+RootPatriciaTreeAbstractPartition<PathTreeDomain> Taint::input_paths() const {
+  for (const auto& callee_frames : set_) {
+    if (!callee_frames.callee()) {
+      return callee_frames.input_paths();
+    }
+  }
+  return {};
+}
+
 FeatureMayAlwaysSet Taint::features_joined() const {
   auto features = FeatureMayAlwaysSet::bottom();
   for (const auto& callee_frames : set_) {

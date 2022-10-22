@@ -97,12 +97,12 @@ Json::Value Propagation::to_json() const {
 bool Propagation::GroupEqual::operator()(
     const Propagation& left,
     const Propagation& right) const {
-  return left.input_.root() == right.input_.root();
+  return left.input_ == right.input_;
 }
 
 std::size_t Propagation::GroupHash::operator()(
     const Propagation& propagation) const {
-  return propagation.input_.root().encode();
+  return std::hash<AccessPath>()(propagation.input_);
 }
 
 std::ostream& operator<<(std::ostream& out, const Propagation& propagation) {

@@ -340,6 +340,21 @@ bool CallPositionFrames::contains_kind(const Kind* kind) const {
   return false;
 }
 
+RootPatriciaTreeAbstractPartition<PathTreeDomain>
+CallPositionFrames::input_paths() const {
+  RootPatriciaTreeAbstractPartition<PathTreeDomain> input_paths;
+  for (const auto& callee_port_frames : frames_) {
+    if (callee_port_frames.is_artificial_source_frames()) {
+      input_paths.update(
+          callee_port_frames.callee_port().root(),
+          [&](const PathTreeDomain& existing) {
+            return existing.join(callee_port_frames.input_paths());
+          });
+    }
+  }
+  return input_paths;
+}
+
 Json::Value CallPositionFrames::to_json(
     const Method* MT_NULLABLE callee) const {
   auto taint = Json::Value(Json::arrayValue);

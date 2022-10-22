@@ -179,7 +179,46 @@
   "sinks" : 
   [
     {
-      "port" : "Argument(1)",
+      "port" : "Argument(1).b",
+      "taint" : 
+      [
+        {
+          "call" : 
+          {
+            "port" : "Argument(0)",
+            "position" : 
+            {
+              "end" : 22,
+              "line" : 40,
+              "path" : "Flow.java",
+              "start" : 16
+            },
+            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V"
+          },
+          "kinds" : 
+          [
+            {
+              "distance" : 1,
+              "kind" : "Sink",
+              "local_positions" : 
+              [
+                {
+                  "end" : 8,
+                  "line" : 39,
+                  "start" : 4
+                }
+              ],
+              "origins" : 
+              [
+                "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "port" : "Argument(1).c",
       "taint" : 
       [
         {
@@ -599,7 +638,15 @@
   "propagation" : 
   [
     {
-      "input" : "Argument(0)",
+      "input" : "Argument(0).host",
+      "output" : "Return"
+    },
+    {
+      "input" : "Argument(0).path",
+      "output" : "Return"
+    },
+    {
+      "input" : "Argument(0).scheme",
       "output" : "Return"
     }
   ]
@@ -931,7 +978,42 @@
   "sinks" : 
   [
     {
-      "port" : "Argument(1)",
+      "port" : "Argument(1).b",
+      "taint" : 
+      [
+        {
+          "call" : 
+          {
+            "port" : "Argument(0)",
+            "position" : 
+            {
+              "line" : 46,
+              "path" : "Flow.java"
+            },
+            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V"
+          },
+          "kinds" : 
+          [
+            {
+              "distance" : 1,
+              "kind" : "Sink",
+              "local_positions" : 
+              [
+                {
+                  "line" : 45
+                }
+              ],
+              "origins" : 
+              [
+                "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "port" : "Argument(1).c",
       "taint" : 
       [
         {

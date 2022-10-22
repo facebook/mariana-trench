@@ -220,6 +220,8 @@ class CalleeFrames final : public sparta::AbstractDomain<CalleeFrames> {
     return result;
   }
 
+  RootPatriciaTreeAbstractPartition<PathTreeDomain> input_paths() const;
+
   Json::Value to_json() const;
 
   friend std::ostream& operator<<(

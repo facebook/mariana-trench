@@ -207,7 +207,7 @@
       "sinks" :
       [
         {
-          "port" : "Argument(0)",
+          "port" : "Argument(0).left",
           "taint" :
           [
             {
@@ -232,7 +232,13 @@
                   ]
                 }
               ]
-            },
+            }
+          ]
+        },
+        {
+          "port" : "Argument(0).left.right",
+          "taint" :
+          [
             {
               "call" :
               {
@@ -240,6 +246,64 @@
                 "position" :
                 {
                   "line" : 6,
+                  "path" : "Flow.java"
+                },
+                "resolves_to" : "LSink;.sink:(LData;)V"
+              },
+              "kinds" :
+              [
+                {
+                  "distance" : 1,
+                  "kind" : "TestSink",
+                  "origins" :
+                  [
+                    "LSink;.sink:(LData;)V"
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "port" : "Argument(0).right",
+          "taint" :
+          [
+            {
+              "call" :
+              {
+                "port" : "Argument(1)",
+                "position" :
+                {
+                  "line" : 6,
+                  "path" : "Flow.java"
+                },
+                "resolves_to" : "LSink;.sink:(LData;)V"
+              },
+              "kinds" :
+              [
+                {
+                  "distance" : 1,
+                  "kind" : "TestSink",
+                  "origins" :
+                  [
+                    "LSink;.sink:(LData;)V"
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "port" : "Argument(0).right.left",
+          "taint" :
+          [
+            {
+              "call" :
+              {
+                "port" : "Argument(1)",
+                "position" :
+                {
+                  "line" : 5,
                   "path" : "Flow.java"
                 },
                 "resolves_to" : "LSink;.sink:(LData;)V"

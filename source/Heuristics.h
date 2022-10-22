@@ -87,6 +87,17 @@ class Heuristics {
    * Maximum number of hops that can be tracked for a call chain issue.
    */
   constexpr static std::size_t kMaxCallChainSourceSinkDistance = 10;
+
+  /**
+   * Maximum depth of input paths recorded by Artificial Sources.
+   */
+  constexpr static std::size_t kMaxInputPathDepth = 4;
+
+  /**
+   * Maximum number of leaves in the tree of input paths recorded by
+   * ArtificialSources.
+   */
+  constexpr static std::size_t kMaxInputPathLeaves = 4;
 };
 
 } // namespace marianatrench

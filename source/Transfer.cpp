@@ -603,11 +603,12 @@ void create_sinks(
     return;
   }
 
+  const auto input_paths_per_root = sources.input_paths();
   for (const auto& artificial_source :
        artificial_sources->second.frames_iterator()) {
     auto features = extra_features;
-    features.add_always(
-        context->model.attach_to_sinks(artificial_source.callee_port().root()));
+    const auto callee_port_root = artificial_source.callee_port().root();
+    features.add_always(context->model.attach_to_sinks(callee_port_root));
     features.add(artificial_source.features());
 
     auto new_sinks = sinks;
@@ -632,18 +633,22 @@ void create_sinks(
     // creates sinks and should always be called for the same call position
     // (where the sink is).
     new_sinks.set_local_positions(artificial_sources->second.local_positions());
-
-    LOG_OR_DUMP(
-        context,
-        4,
-        "Inferred sink for port {}: {}",
-        artificial_source.callee_port(),
-        new_sinks);
-    context->model.add_inferred_sinks(
-        artificial_source.callee_port(),
-        std::move(new_sinks),
-        /* widening_features */
-        FeatureMayAlwaysSet{context->features.get_widen_broadening_feature()});
+    const auto input_paths = input_paths_per_root.get(callee_port_root);
+    for (const auto& [input_path, _] : input_paths.elements()) {
+      auto sink_caller_port = AccessPath(callee_port_root, input_path);
+      LOG_OR_DUMP(
+          context,
+          4,
+          "Inferred sink for port {}: {}",
+          sink_caller_port,
+          new_sinks);
+      context->model.add_inferred_sinks(
+          sink_caller_port,
+          new_sinks,
+          /* widening_features */
+          FeatureMayAlwaysSet{
+              context->features.get_widen_broadening_feature()});
+    }
   }
 }
 
@@ -1471,25 +1476,32 @@ void infer_output_taint(
     }
 
     auto artificial_sources = partitioned_by_artificial_sources.find(true);
-    if (artificial_sources != partitioned_by_artificial_sources.end()) {
-      for (const auto& artificial_source :
-           artificial_sources->second.frames_iterator()) {
-        if (artificial_source.callee_port().root() != root) {
-          const auto& input = artificial_source.callee_port();
-          auto output = AccessPath(root, path);
-          auto features = artificial_source.features();
-          features.add_always(
-              context->model.attach_to_propagations(input.root()));
-          features.add_always(context->model.attach_to_propagations(root));
-          auto propagation = Propagation(
-              input,
-              /* inferred_features */ features,
-              /* user_features */ FeatureSet::bottom());
-          LOG_OR_DUMP(
-              context, 4, "Inferred propagation {} to {}", propagation, output);
-          context->model.add_inferred_propagation(
-              std::move(propagation), std::move(output));
-        }
+    if (artificial_sources == partitioned_by_artificial_sources.end()) {
+      continue;
+    }
+    const auto input_paths_per_root = sources.input_paths();
+    for (const auto& artificial_source :
+         artificial_sources->second.frames_iterator()) {
+      const auto input_root = artificial_source.callee_port().root();
+      if (input_root == root) {
+        continue;
+      }
+      auto input_paths = input_paths_per_root.get(input_root);
+      input_paths.limit_leaves(Heuristics::kMaxInputPathLeaves);
+      input_paths.collapse_deeper_than(Heuristics::kMaxInputPathDepth);
+      for (const auto& [input_path, _] : input_paths.elements()) {
+        auto output = AccessPath(root, path);
+        auto features = artificial_source.features();
+        features.add_always(context->model.attach_to_propagations(input_root));
+        features.add_always(context->model.attach_to_propagations(root));
+        auto propagation = Propagation(
+            AccessPath(input_root, input_path),
+            /* inferred_features */ features,
+            /* user_features */ FeatureSet::bottom());
+        LOG_OR_DUMP(
+            context, 4, "Inferred propagation {} to {}", propagation, output);
+        context->model.add_inferred_propagation(
+            std::move(propagation), std::move(output));
       }
     }
   }

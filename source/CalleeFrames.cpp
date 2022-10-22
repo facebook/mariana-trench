@@ -330,6 +330,11 @@ bool CalleeFrames::contains_kind(const Kind* kind) const {
       });
 }
 
+RootPatriciaTreeAbstractPartition<PathTreeDomain> CalleeFrames::input_paths()
+    const {
+  return frames_.get(nullptr).input_paths();
+}
+
 Json::Value CalleeFrames::to_json() const {
   auto taint = Json::Value(Json::arrayValue);
   for (const auto& [_, call_position_frames] : frames_.bindings()) {

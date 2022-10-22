@@ -533,19 +533,8 @@
           "kinds" : 
           [
             {
-              "always_features" : 
-              [
-                "via-widen-broadening"
-              ],
               "distance" : 1,
               "kind" : "Sink",
-              "local_features" : 
-              {
-                "always_features" : 
-                [
-                  "via-widen-broadening"
-                ]
-              },
               "origins" : 
               [
                 "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V"
@@ -1162,7 +1151,15 @@
   "propagation" : 
   [
     {
-      "input" : "Argument(0)",
+      "input" : "Argument(0).host",
+      "output" : "Return"
+    },
+    {
+      "input" : "Argument(0).path",
+      "output" : "Return"
+    },
+    {
+      "input" : "Argument(0).scheme",
       "output" : "Return"
     }
   ]

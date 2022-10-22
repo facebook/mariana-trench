@@ -93,8 +93,7 @@
     {
       "always_features" : 
       [
-        "via-cast:Lcom/facebook/marianatrench/integrationtests/Flow$Tree;",
-        "via-propagation-broadening"
+        "via-cast:Lcom/facebook/marianatrench/integrationtests/Flow$Tree;"
       ],
       "callee" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
       "position" : 
@@ -152,8 +151,7 @@
             {
               "always_features" : 
               [
-                "via-cast:Lcom/facebook/marianatrench/integrationtests/Flow$Tree;",
-                "via-propagation-broadening"
+                "via-cast:Lcom/facebook/marianatrench/integrationtests/Flow$Tree;"
               ],
               "distance" : 1,
               "kind" : "Source",
@@ -161,8 +159,7 @@
               {
                 "always_features" : 
                 [
-                  "via-cast:Lcom/facebook/marianatrench/integrationtests/Flow$Tree;",
-                  "via-propagation-broadening"
+                  "via-cast:Lcom/facebook/marianatrench/integrationtests/Flow$Tree;"
                 ]
               },
               "local_positions" : 
@@ -193,67 +190,7 @@
   {
     "line" : 29,
     "path" : "Flow.java"
-  },
-  "sinks" : 
-  [
-    {
-      "port" : "Argument(0)",
-      "taint" : 
-      [
-        {
-          "call" : 
-          {
-            "port" : "Argument(0)",
-            "position" : 
-            {
-              "end" : 25,
-              "line" : 39,
-              "path" : "Flow.java",
-              "start" : 16
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V"
-          },
-          "kinds" : 
-          [
-            {
-              "always_features" : 
-              [
-                "via-inner-class-this",
-                "via-propagation-broadening"
-              ],
-              "distance" : 1,
-              "kind" : "Sink",
-              "local_features" : 
-              {
-                "always_features" : 
-                [
-                  "via-inner-class-this",
-                  "via-propagation-broadening"
-                ]
-              },
-              "local_positions" : 
-              [
-                {
-                  "end" : 0,
-                  "line" : 30,
-                  "start" : 0
-                },
-                {
-                  "end" : 25,
-                  "line" : 35,
-                  "start" : 21
-                }
-              ],
-              "origins" : 
-              [
-                "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V"
-              ]
-            }
-          ]
-        }
-      ]
-    }
-  ]
+  }
 }
 {
   "method" : "Landroid/app/Activity;.<init>:()V",
@@ -635,7 +572,15 @@
   "propagation" : 
   [
     {
-      "input" : "Argument(0)",
+      "input" : "Argument(0).host",
+      "output" : "Return"
+    },
+    {
+      "input" : "Argument(0).path",
+      "output" : "Return"
+    },
+    {
+      "input" : "Argument(0).scheme",
       "output" : "Return"
     }
   ]
@@ -849,7 +794,11 @@
   "propagation" : 
   [
     {
-      "input" : "Argument(1)",
+      "input" : "Argument(1).b",
+      "output" : "Argument(0).a"
+    },
+    {
+      "input" : "Argument(1).c",
       "output" : "Argument(0).a"
     }
   ]

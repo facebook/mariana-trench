@@ -263,6 +263,12 @@ class Taint final : public sparta::AbstractDomain<Taint> {
   }
 
   /**
+   * Returns a map from root to collapsed input paths for all the artificial
+   * sources contained in this Taint instance.
+   */
+  RootPatriciaTreeAbstractPartition<PathTreeDomain> input_paths() const;
+
+  /**
    * Returns all features for this taint tree, joined as `FeatureMayAlwaysSet`.
    */
   FeatureMayAlwaysSet features_joined() const;
