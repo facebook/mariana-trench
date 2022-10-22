@@ -9,16 +9,14 @@
 
 #include <mariana-trench/AbstractTreeDomain.h>
 #include <mariana-trench/AccessPathTreeDomain.h>
-#include <mariana-trench/PropagationSet.h>
+#include <mariana-trench/PropagationPartition.h>
 
 namespace marianatrench {
-
-using PropagationTree = AbstractTreeDomain<PropagationSet>;
 
 /**
  * An access path tree of propagations, where the path in the tree represents
  * the output path of the propagations.
  */
-using PropagationAccessPathTree = AccessPathTreeDomain<PropagationSet>;
+using PropagationAccessPathTree = AccessPathTreeDomain<PropagationPartition>;
 
 } // namespace marianatrench

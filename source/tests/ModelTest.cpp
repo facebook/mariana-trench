@@ -126,15 +126,21 @@ TEST_F(ModelTest, ModelConstructor) {
       model_with_untracked_constructor.propagations(),
       (PropagationAccessPathTree{
           {/* output */ AccessPath(Root(Root::Kind::Argument, 0)),
-           PropagationSet{Propagation(
-               /* input */ AccessPath(Root(Root::Kind::Argument, 1)),
-               /* inferred_features */ FeatureMayAlwaysSet::bottom(),
-               /* user_features */ FeatureSet::bottom())}},
+           PropagationPartition{
+               {Root(Root::Kind::Argument, 1),
+                Propagation(
+                    /* input_paths */
+                    PathTreeDomain{{Path{}, SingletonAbstractDomain()}},
+                    /* inferred_features */ FeatureMayAlwaysSet::bottom(),
+                    /* user_features */ FeatureSet::bottom())}}},
           {/* output */ AccessPath(Root(Root::Kind::Argument, 0)),
-           PropagationSet{Propagation(
-               /* input */ AccessPath(Root(Root::Kind::Argument, 2)),
-               /* inferred_features */ FeatureMayAlwaysSet::bottom(),
-               /* user_features */ FeatureSet::bottom())}},
+           PropagationPartition{
+               {Root(Root::Kind::Argument, 2),
+                Propagation(
+                    /* input_paths */
+                    PathTreeDomain{{Path{}, SingletonAbstractDomain()}},
+                    /* inferred_features */ FeatureMayAlwaysSet::bottom(),
+                    /* user_features */ FeatureSet::bottom())}}},
       }));
 
   auto* dex_untracked_method_returning_void = redex::create_void_method(
@@ -154,15 +160,21 @@ TEST_F(ModelTest, ModelConstructor) {
       model_with_untracked_method_returning_void.propagations(),
       (PropagationAccessPathTree{
           {/* output */ AccessPath(Root(Root::Kind::Argument, 0)),
-           PropagationSet{Propagation(
-               /* input */ AccessPath(Root(Root::Kind::Argument, 1)),
-               /* inferred_features */ FeatureMayAlwaysSet::bottom(),
-               /* user_features */ FeatureSet::bottom())}},
+           PropagationPartition{
+               {Root(Root::Kind::Argument, 1),
+                Propagation(
+                    /* input_paths */
+                    PathTreeDomain{{Path{}, SingletonAbstractDomain()}},
+                    /* inferred_features */ FeatureMayAlwaysSet::bottom(),
+                    /* user_features */ FeatureSet::bottom())}}},
           {/* output */ AccessPath(Root(Root::Kind::Argument, 0)),
-           PropagationSet{Propagation(
-               /* input */ AccessPath(Root(Root::Kind::Argument, 2)),
-               /* inferred_features */ FeatureMayAlwaysSet::bottom(),
-               /* user_features */ FeatureSet::bottom())}},
+           PropagationPartition{
+               {Root(Root::Kind::Argument, 2),
+                Propagation(
+                    /* input_paths */
+                    PathTreeDomain{{Path{}, SingletonAbstractDomain()}},
+                    /* inferred_features */ FeatureMayAlwaysSet::bottom(),
+                    /* user_features */ FeatureSet::bottom())}}},
       }));
 
   auto* dex_untracked_method_returning_data = redex::create_void_method(
@@ -182,30 +194,45 @@ TEST_F(ModelTest, ModelConstructor) {
       model_with_untracked_method_returning_data.propagations(),
       (PropagationAccessPathTree{
           {/* output */ AccessPath(Root(Root::Kind::Return)),
-           PropagationSet{Propagation(
-               /* input */ AccessPath(Root(Root::Kind::Argument, 0)),
-               /* inferred_features */ FeatureMayAlwaysSet::bottom(),
-               /* user_features */ FeatureSet::bottom())}},
+           PropagationPartition{
+               {Root(Root::Kind::Argument, 0),
+                Propagation(
+                    /* input_paths */
+                    PathTreeDomain{{Path{}, SingletonAbstractDomain()}},
+                    /* inferred_features */ FeatureMayAlwaysSet::bottom(),
+                    /* user_features */ FeatureSet::bottom())}}},
           {/* output */ AccessPath(Root(Root::Kind::Return)),
-           PropagationSet{Propagation(
-               /* input */ AccessPath(Root(Root::Kind::Argument, 1)),
-               /* inferred_features */ FeatureMayAlwaysSet::bottom(),
-               /* user_features */ FeatureSet::bottom())}},
+           PropagationPartition{
+               {Root(Root::Kind::Argument, 1),
+                Propagation(
+                    /* input_paths */
+                    PathTreeDomain{{Path{}, SingletonAbstractDomain()}},
+                    /* inferred_features */ FeatureMayAlwaysSet::bottom(),
+                    /* user_features */ FeatureSet::bottom())}}},
           {/* output */ AccessPath(Root(Root::Kind::Argument, 0)),
-           PropagationSet{Propagation(
-               /* input */ AccessPath(Root(Root::Kind::Argument, 1)),
-               /* inferred_features */ FeatureMayAlwaysSet::bottom(),
-               /* user_features */ FeatureSet::bottom())}},
+           PropagationPartition{
+               {Root(Root::Kind::Argument, 1),
+                Propagation(
+                    /* input_paths */
+                    PathTreeDomain{{Path{}, SingletonAbstractDomain()}},
+                    /* inferred_features */ FeatureMayAlwaysSet::bottom(),
+                    /* user_features */ FeatureSet::bottom())}}},
           {/* output */ AccessPath(Root(Root::Kind::Return)),
-           PropagationSet{Propagation(
-               /* input */ AccessPath(Root(Root::Kind::Argument, 2)),
-               /* inferred_features */ FeatureMayAlwaysSet::bottom(),
-               /* user_features */ FeatureSet::bottom())}},
+           PropagationPartition{
+               {Root(Root::Kind::Argument, 2),
+                Propagation(
+                    /* input_paths */
+                    PathTreeDomain{{Path{}, SingletonAbstractDomain()}},
+                    /* inferred_features */ FeatureMayAlwaysSet::bottom(),
+                    /* user_features */ FeatureSet::bottom())}}},
           {/* output */ AccessPath(Root(Root::Kind::Argument, 0)),
-           PropagationSet{Propagation(
-               /* input */ AccessPath(Root(Root::Kind::Argument, 2)),
-               /* inferred_features */ FeatureMayAlwaysSet::bottom(),
-               /* user_features */ FeatureSet::bottom())}},
+           PropagationPartition{
+               {Root(Root::Kind::Argument, 2),
+                Propagation(
+                    /* input_paths */
+                    PathTreeDomain{{Path{}, SingletonAbstractDomain()}},
+                    /* inferred_features */ FeatureMayAlwaysSet::bottom(),
+                    /* user_features */ FeatureSet::bottom())}}},
       }));
 
   auto* dex_untracked_static_method = redex::create_void_method(
@@ -226,15 +253,21 @@ TEST_F(ModelTest, ModelConstructor) {
       model_with_untracked_static_method.propagations(),
       (PropagationAccessPathTree{
           {/* output */ AccessPath(Root(Root::Kind::Return)),
-           PropagationSet{Propagation(
-               /* input */ AccessPath(Root(Root::Kind::Argument, 0)),
-               /* inferred_features */ FeatureMayAlwaysSet::bottom(),
-               /* user_features */ FeatureSet::bottom())}},
+           PropagationPartition{
+               {Root(Root::Kind::Argument, 0),
+                Propagation(
+                    /* input_paths */
+                    PathTreeDomain{{Path{}, SingletonAbstractDomain()}},
+                    /* inferred_features */ FeatureMayAlwaysSet::bottom(),
+                    /* user_features */ FeatureSet::bottom())}}},
           {/* output */ AccessPath(Root(Root::Kind::Return)),
-           PropagationSet{Propagation(
-               /* input */ AccessPath(Root(Root::Kind::Argument, 1)),
-               /* inferred_features */ FeatureMayAlwaysSet::bottom(),
-               /* user_features */ FeatureSet::bottom())}},
+           PropagationPartition{
+               {Root(Root::Kind::Argument, 1),
+                Propagation(
+                    /* input_paths */
+                    PathTreeDomain{{Path{}, SingletonAbstractDomain()}},
+                    /* inferred_features */ FeatureMayAlwaysSet::bottom(),
+                    /* user_features */ FeatureSet::bottom())}}},
       }));
 }
 
@@ -361,6 +394,44 @@ TEST_F(ModelTest, LessOrEqual) {
                        /* parameter_sources */
                        {{AccessPath(Root(Root::Kind::Argument, 2)),
                          test::make_leaf_taint_config(source_kind)}})));
+
+  EXPECT_TRUE(
+      Model(
+          /* method */ nullptr,
+          context,
+          /* modes */ Model::Mode::Normal,
+          /* generations */ {},
+          /* parameter_sources */ {},
+          /* sinks */ {},
+          /* propagations */
+          {
+              {Propagation(
+                   /* input_paths */
+                   PathTreeDomain{
+                       {Path{DexString::make_string("x")},
+                        SingletonAbstractDomain()}},
+                   /* inferred_features */ {},
+                   /* user_features */ {}),
+               /* input */ Root(Root::Kind::Argument, 1),
+               /* output */ AccessPath(Root(Root::Kind::Return))},
+          })
+          .leq(Model(
+              /* method */ nullptr,
+              context,
+              /* modes */ Model::Mode::Normal,
+              /* generations */ {},
+              /* parameter_sources */ {},
+              /* sinks */ {},
+              /* propagations */
+              {
+                  {Propagation(
+                       /* input_paths */
+                       PathTreeDomain{{Path{}, SingletonAbstractDomain()}},
+                       /* inferred_features */ {},
+                       /* user_features */ {}),
+                   /* input */ Root(Root::Kind::Argument, 1),
+                   /* output */ AccessPath(Root(Root::Kind::Return))},
+              })));
 
   // Compare global_sanitizers
   EXPECT_FALSE(
@@ -601,14 +672,18 @@ TEST_F(ModelTest, Join) {
       /* propagations */
       {
           {Propagation(
-               /* input */ AccessPath(Root(Root::Kind::Argument, 1)),
+               /* input_paths */
+               PathTreeDomain{{Path{}, SingletonAbstractDomain()}},
                /* inferred_features */ {},
                /* user_features */ {}),
+           /* input */ Root(Root::Kind::Argument, 1),
            /* output */ AccessPath(Root(Root::Kind::Return))},
           {Propagation(
-               /* input */ AccessPath(Root(Root::Kind::Argument, 2)),
+               /* input_paths */
+               PathTreeDomain{{Path{}, SingletonAbstractDomain()}},
                /* inferred_features */ {},
                /* user_features */ {}),
+           /* input */ Root(Root::Kind::Argument, 2),
            /* output */ AccessPath(Root(Root::Kind::Return))},
       });
   model.join_with(model_with_propagation);
@@ -616,15 +691,21 @@ TEST_F(ModelTest, Join) {
       model.propagations(),
       (PropagationAccessPathTree{
           {/* output */ AccessPath(Root(Root::Kind::Return)),
-           PropagationSet{Propagation(
-               /* input */ AccessPath(Root(Root::Kind::Argument, 1)),
-               /* inferred_features */ {},
-               /* user_features */ {})}},
+           PropagationPartition{
+               {Root(Root::Kind::Argument, 1),
+                Propagation(
+                    /* input_paths */
+                    PathTreeDomain{{Path{}, SingletonAbstractDomain()}},
+                    /* inferred_features */ {},
+                    /* user_features */ {})}}},
           {/* output */ AccessPath(Root(Root::Kind::Return)),
-           PropagationSet{Propagation(
-               /* input */ AccessPath(Root(Root::Kind::Argument, 2)),
-               /* inferred_features */ {},
-               /* user_features */ {})}},
+           PropagationPartition{
+               {Root(Root::Kind::Argument, 2),
+                Propagation(
+                    /* input_paths */
+                    PathTreeDomain{{Path{}, SingletonAbstractDomain()}},
+                    /* inferred_features */ {},
+                    /* user_features */ {})}}},
       }));
   Model model_with_more_propagation(
       /* method */ nullptr,
@@ -636,14 +717,22 @@ TEST_F(ModelTest, Join) {
       /* propagations */
       {
           {Propagation(
-               /* input */ AccessPath(Root(Root::Kind::Argument, 1)),
+               /* input_paths */
+               PathTreeDomain{
+                   {Path{DexString::make_string("x")},
+                    SingletonAbstractDomain()}},
                /* inferred_features */ {},
                /* user_features */ {}),
+           /* input */ Root(Root::Kind::Argument, 1),
            /* output */ AccessPath(Root(Root::Kind::Return))},
           {Propagation(
-               /* input */ AccessPath(Root(Root::Kind::Argument, 3)),
+               /* input_paths */
+               PathTreeDomain{
+                   {Path{DexString::make_string("x")},
+                    SingletonAbstractDomain()}},
                /* inferred_features */ {},
                /* user_features */ {}),
+           /* input */ Root(Root::Kind::Argument, 3),
            /* output */ AccessPath(Root(Root::Kind::Return))},
       });
   model.join_with(model_with_more_propagation);
@@ -651,20 +740,31 @@ TEST_F(ModelTest, Join) {
       model.propagations(),
       (PropagationAccessPathTree{
           {/* output */ AccessPath(Root(Root::Kind::Return)),
-           PropagationSet{Propagation(
-               /* input */ AccessPath(Root(Root::Kind::Argument, 1)),
-               /* inferred_features */ {},
-               /* user_features */ {})}},
+           PropagationPartition{
+               {Root(Root::Kind::Argument, 1),
+                Propagation(
+                    /* input_paths */
+                    PathTreeDomain{{Path{}, SingletonAbstractDomain()}},
+                    /* inferred_features */ {},
+                    /* user_features */ {})}}},
           {/* output */ AccessPath(Root(Root::Kind::Return)),
-           PropagationSet{Propagation(
-               /* input */ AccessPath(Root(Root::Kind::Argument, 2)),
-               /* inferred_features */ {},
-               /* user_features */ {})}},
+           PropagationPartition{
+               {Root(Root::Kind::Argument, 2),
+                Propagation(
+                    /* input_paths */
+                    PathTreeDomain{{Path{}, SingletonAbstractDomain()}},
+                    /* inferred_features */ {},
+                    /* user_features */ {})}}},
           {/* output */ AccessPath(Root(Root::Kind::Return)),
-           PropagationSet{Propagation(
-               /* input */ AccessPath(Root(Root::Kind::Argument, 3)),
-               /* inferred_features */ {},
-               /* user_features */ {})}},
+           PropagationPartition{
+               {Root(Root::Kind::Argument, 3),
+                Propagation(
+                    /* input_paths */
+                    PathTreeDomain{
+                        {Path{DexString::make_string("x")},
+                         SingletonAbstractDomain()}},
+                    /* inferred_features */ {},
+                    /* user_features */ {})}}},
       }));
   Model model_with_conflicting_propagation(
       /* method */ nullptr,
@@ -675,34 +775,53 @@ TEST_F(ModelTest, Join) {
       /* sinks */ {},
       /* propagations */
       {{Propagation(
-            /* input */ AccessPath(Root(Root::Kind::Argument, 1)),
+            /* input_paths */
+            PathTreeDomain{
+                {Path{DexString::make_string("y")}, SingletonAbstractDomain()}},
             /* inferred_features */ {},
             /* user_features */ {}),
+        /* input */ Root(Root::Kind::Argument, 1),
         /* output */ AccessPath(Root(Root::Kind::Argument, 1))}});
   model.join_with(model_with_conflicting_propagation);
   EXPECT_EQ(
       model.propagations(),
       (PropagationAccessPathTree{
           {/* output */ AccessPath(Root(Root::Kind::Return)),
-           PropagationSet{Propagation(
-               /* input */ AccessPath(Root(Root::Kind::Argument, 1)),
-               /* inferred_features */ {},
-               /* user_features */ {})}},
+           PropagationPartition{
+               {Root(Root::Kind::Argument, 1),
+                Propagation(
+                    /* input_paths */
+                    PathTreeDomain{{Path{}, SingletonAbstractDomain()}},
+                    /* inferred_features */ {},
+                    /* user_features */ {})}}},
           {/* output */ AccessPath(Root(Root::Kind::Argument, 1)),
-           PropagationSet{Propagation(
-               /* input */ AccessPath(Root(Root::Kind::Argument, 1)),
-               /* inferred_features */ {},
-               /* user_features */ {})}},
+           PropagationPartition{
+               {Root(Root::Kind::Argument, 1),
+                Propagation(
+                    /* input_paths */
+                    PathTreeDomain{
+                        {Path{DexString::make_string("y")},
+                         SingletonAbstractDomain()}},
+                    /* inferred_features */ {},
+                    /* user_features */ {})}}},
           {/* output */ AccessPath(Root(Root::Kind::Return)),
-           PropagationSet{Propagation(
-               /* input */ AccessPath(Root(Root::Kind::Argument, 2)),
-               /* inferred_features */ {},
-               /* user_features */ {})}},
+           PropagationPartition{
+               {Root(Root::Kind::Argument, 2),
+                Propagation(
+                    /* input_paths */
+                    PathTreeDomain{{Path{}, SingletonAbstractDomain()}},
+                    /* inferred_features */ {},
+                    /* user_features */ {})}}},
           {/* output */ AccessPath(Root(Root::Kind::Return)),
-           PropagationSet{Propagation(
-               /* input */ AccessPath(Root(Root::Kind::Argument, 3)),
-               /* inferred_features */ {},
-               /* user_features */ {})}},
+           PropagationPartition{
+               {Root(Root::Kind::Argument, 3),
+                Propagation(
+                    /* input_paths */
+                    PathTreeDomain{
+                        {Path{DexString::make_string("x")},
+                         SingletonAbstractDomain()}},
+                    /* inferred_features */ {},
+                    /* user_features */ {})}}},
       }));
   Model model_with_propagation_with_features(
       /* method */ nullptr,
@@ -714,22 +833,28 @@ TEST_F(ModelTest, Join) {
       /* propagations */
       {
           {Propagation(
-               /* input */ AccessPath(Root(Root::Kind::Argument, 1)),
+               /* input_paths */
+               PathTreeDomain{{Path{}, SingletonAbstractDomain()}},
                /* inferred_features */
                FeatureMayAlwaysSet{context.features->get("int-cast")},
                /* user_features */ {}),
+           /* input */ Root(Root::Kind::Argument, 1),
            /* output */ AccessPath(Root(Root::Kind::Return))},
           {Propagation(
-               /* input */ AccessPath(Root(Root::Kind::Argument, 1)),
+               /* input_paths */
+               PathTreeDomain{{Path{}, SingletonAbstractDomain()}},
                /* inferred_features */
                FeatureMayAlwaysSet{context.features->get("sanitize")},
                /* user_features */ {}),
+           /* input */ Root(Root::Kind::Argument, 1),
            /* output */ AccessPath(Root(Root::Kind::Return))},
           {Propagation(
-               /* input */ AccessPath(Root(Root::Kind::Argument, 3)),
+               /* input_paths */
+               PathTreeDomain{{Path{}, SingletonAbstractDomain()}},
                /* inferred_features */
                FeatureMayAlwaysSet{context.features->get("escape")},
                /* user_features */ {}),
+           /* input */ Root(Root::Kind::Argument, 3),
            /* output */ AccessPath(Root(Root::Kind::Return))},
       });
   model.join_with(model_with_propagation_with_features);
@@ -737,29 +862,44 @@ TEST_F(ModelTest, Join) {
       model.propagations(),
       (PropagationAccessPathTree{
           {/* output */ AccessPath(Root(Root::Kind::Return)),
-           PropagationSet{Propagation(
-               /* input */ AccessPath(Root(Root::Kind::Argument, 1)),
-               /* inferred_features */
-               FeatureMayAlwaysSet::make_may(
-                   {context.features->get("int-cast"),
-                    context.features->get("sanitize")}),
-               /* user_features */ {})}},
+           PropagationPartition{
+               {Root(Root::Kind::Argument, 1),
+                Propagation(
+                    /* input_paths */
+                    PathTreeDomain{{Path{}, SingletonAbstractDomain()}},
+                    /* inferred_features */
+                    FeatureMayAlwaysSet::make_may(
+                        {context.features->get("int-cast"),
+                         context.features->get("sanitize")}),
+                    /* user_features */ {})}}},
           {/* output */ AccessPath(Root(Root::Kind::Argument, 1)),
-           PropagationSet{Propagation(
-               /* input */ AccessPath(Root(Root::Kind::Argument, 1)),
-               /* inferred_features */ {},
-               /* user_features */ {})}},
+           PropagationPartition{
+               {Root(Root::Kind::Argument, 1),
+                Propagation(
+                    /* input_paths */
+                    PathTreeDomain{
+                        {Path{DexString::make_string("y")},
+                         SingletonAbstractDomain()}},
+                    /* inferred_features */ {},
+                    /* user_features */ {})}}},
           {/* output */ AccessPath(Root(Root::Kind::Return)),
-           PropagationSet{Propagation(
-               /* input */ AccessPath(Root(Root::Kind::Argument, 2)),
-               /* inferred_features */ {},
-               /* user_features */ {})}},
+           PropagationPartition{
+               {Root(Root::Kind::Argument, 2),
+                Propagation(
+                    /* input_paths */
+                    PathTreeDomain{{Path{}, SingletonAbstractDomain()}},
+                    /* inferred_features */ {},
+                    /* user_features */ {})}}},
           {/* output */ AccessPath(Root(Root::Kind::Return)),
-           PropagationSet{Propagation(
-               /* input */ AccessPath(Root(Root::Kind::Argument, 3)),
-               /* inferred_features */
-               FeatureMayAlwaysSet::make_may({context.features->get("escape")}),
-               /* user_features */ {})}},
+           PropagationPartition{
+               {Root(Root::Kind::Argument, 3),
+                Propagation(
+                    /* input_paths */
+                    PathTreeDomain{{Path{}, SingletonAbstractDomain()}},
+                    /* inferred_features */
+                    FeatureMayAlwaysSet::make_may(
+                        {context.features->get("escape")}),
+                    /* user_features */ {})}}},
       }));
 
   // Join models with global sanitizers

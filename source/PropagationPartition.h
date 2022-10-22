@@ -7,18 +7,15 @@
 
 #pragma once
 
-#include <mariana-trench/GroupHashedSetAbstractDomain.h>
 #include <mariana-trench/Propagation.h>
+#include <mariana-trench/RootPatriciaTreeAbstractPartition.h>
 
 namespace marianatrench {
 
 /**
- * A set of propagations where propagations with the same input parameter
+ * A partition of propagations where propagations with the same input parameter
  * position are grouped together.
  */
-using PropagationSet = GroupHashedSetAbstractDomain<
-    Propagation,
-    Propagation::GroupHash,
-    Propagation::GroupEqual>;
+using PropagationPartition = RootPatriciaTreeAbstractPartition<Propagation>;
 
 } // namespace marianatrench

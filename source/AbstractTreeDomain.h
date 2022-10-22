@@ -14,6 +14,7 @@
 
 #include <AbstractDomain.h>
 #include <PatriciaTreeMap.h>
+#include <Show.h>
 
 #include <mariana-trench/Access.h>
 #include <mariana-trench/Assert.h>

@@ -198,11 +198,13 @@ PropagationTemplate PropagationTemplate::from_json(
 void PropagationTemplate::instantiate(
     const TemplateVariableMapping& parameter_positions,
     Model& model) const {
+  auto input_port = input_.instantiate(parameter_positions);
   model.add_propagation(
       Propagation(
-          input_.instantiate(parameter_positions),
+          PathTreeDomain{{input_port.path(), SingletonAbstractDomain()}},
           inferred_features_,
           user_features_),
+      input_port.root(),
       output_.instantiate(parameter_positions));
 }
 

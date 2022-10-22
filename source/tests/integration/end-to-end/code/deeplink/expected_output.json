@@ -605,18 +605,6 @@
     {
       "input" : "Argument(0)",
       "output" : "Return"
-    },
-    {
-      "input" : "Argument(0).host",
-      "output" : "Return"
-    },
-    {
-      "input" : "Argument(0).path",
-      "output" : "Return"
-    },
-    {
-      "input" : "Argument(0).scheme",
-      "output" : "Return"
     }
   ]
 }

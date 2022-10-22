@@ -257,17 +257,19 @@ void generator::add_propagation_to_return(
     const std::vector<std::string>& features) {
   verify_parameter_position(model.method(), parameter_position);
 
-  auto input = AccessPath(Root(Root::Kind::Argument, parameter_position));
   auto output = AccessPath(Root(Root::Kind::Return));
   FeatureSet user_features;
   for (const auto& feature : features) {
     user_features.add(context.features->get(feature));
   }
   auto propagation = Propagation(
-      input,
+      /* input_paths */ PathTreeDomain{{Path{}, SingletonAbstractDomain()}},
       /* inferred_features */ FeatureMayAlwaysSet::bottom(),
       /* user_features */ user_features);
-  model.add_propagation(propagation, output);
+  model.add_propagation(
+      propagation,
+      /* input_root */ Root(Root::Kind::Argument, parameter_position),
+      output);
 }
 
 void generator::add_propagation_to_parameter(
@@ -279,17 +281,17 @@ void generator::add_propagation_to_parameter(
   verify_parameter_position(model.method(), from);
   verify_parameter_position(model.method(), to);
 
-  auto input = AccessPath(Root(Root::Kind::Argument, from));
   auto output = AccessPath(Root(Root::Kind::Argument, to));
   FeatureSet user_features;
   for (const auto& feature : features) {
     user_features.add(context.features->get(feature));
   }
   auto propagation = Propagation(
-      input,
+      /* input_paths */ PathTreeDomain{{Path{}, SingletonAbstractDomain()}},
       /* inferred_features */ FeatureMayAlwaysSet::bottom(),
       /* user_features */ user_features);
-  model.add_propagation(propagation, output);
+  model.add_propagation(
+      propagation, /* input_root */ Root(Root::Kind::Argument, from), output);
 }
 
 void generator::add_propagation_to_self(

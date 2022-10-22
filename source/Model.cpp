@@ -98,7 +98,7 @@ Model::Model(
     const std::vector<std::pair<AccessPath, TaintConfig>>& generations,
     const std::vector<std::pair<AccessPath, TaintConfig>>& parameter_sources,
     const std::vector<std::pair<AccessPath, TaintConfig>>& sinks,
-    const std::vector<std::pair<Propagation, AccessPath>>& propagations,
+    const std::vector<std::tuple<Propagation, Root, AccessPath>>& propagations,
     const std::vector<Sanitizer>& global_sanitizers,
     const std::vector<std::pair<Root, SanitizerSet>>& port_sanitizers,
     const std::vector<std::pair<Root, FeatureSet>>& attach_to_sources,
@@ -137,8 +137,8 @@ Model::Model(
     add_sink(port, sink);
   }
 
-  for (const auto& [propagation, output] : propagations) {
-    add_propagation(propagation, output);
+  for (const auto& [propagation, input_root, output] : propagations) {
+    add_propagation(propagation, input_root, output);
   }
 
   for (const auto& sanitizer : global_sanitizers) {
@@ -216,8 +216,8 @@ Model Model::instantiate(const Method* method, Context& context) const {
   }
 
   for (const auto& [output, propagations] : propagations_.elements()) {
-    for (const auto& propagation : propagations) {
-      model.add_propagation(propagation, output);
+    for (const auto& [input_root, propagation] : propagations) {
+      model.add_propagation(propagation, input_root, output);
     }
   }
 
@@ -477,10 +477,11 @@ void Model::add_taint_in_taint_out(Context& context) {
        parameter_position++) {
     add_propagation(
         Propagation(
-            /* input */
-            AccessPath(Root(Root::Kind::Argument, parameter_position)),
+            /* input_paths */
+            PathTreeDomain{{Path{}, SingletonAbstractDomain()}},
             /* inferred_features */ FeatureMayAlwaysSet::bottom(),
             user_features),
+        /* input_root */ Root(Root::Kind::Argument, parameter_position),
         /* output */ AccessPath(Root(Root::Kind::Return)));
   }
 }
@@ -502,10 +503,11 @@ void Model::add_taint_in_taint_this(Context& context) {
        parameter_position++) {
     add_propagation(
         Propagation(
-            /* input */
-            AccessPath(Root(Root::Kind::Argument, parameter_position)),
+            /* input_paths */
+            PathTreeDomain{{Path{}, SingletonAbstractDomain()}},
             /* inferred_features */ FeatureMayAlwaysSet::bottom(),
             user_features),
+        /* input_root */ Root(Root::Kind::Argument, parameter_position),
         /* output */ AccessPath(Root(Root::Kind::Argument, 0)));
   }
 }
@@ -585,26 +587,32 @@ void Model::add_inferred_call_effect_sinks(CallEffect effect, Taint sinks) {
   add_call_effect_sink(effect, sinks);
 }
 
-void Model::add_propagation(Propagation propagation, AccessPath output) {
-  if (!check_propagation_consistency(propagation) ||
-      !check_port_consistency(output)) {
+void Model::add_propagation(
+    Propagation propagation,
+    Root input_root,
+    AccessPath output) {
+  if (!check_root_consistency(input_root) || !check_port_consistency(output)) {
     return;
   }
 
   output.truncate(Heuristics::kPropagationMaxPathSize);
   propagation.truncate(Heuristics::kPropagationMaxPathSize);
+  propagation.limit_input_path_leaves(Heuristics::kMaxInputPathLeaves);
   propagations_.write(
-      output, PropagationSet{std::move(propagation)}, UpdateKind::Weak);
+      output,
+      PropagationPartition{{input_root, std::move(propagation)}},
+      UpdateKind::Weak);
 }
 
 void Model::add_inferred_propagation(
     Propagation propagation,
+    Root input_root,
     AccessPath output) {
   if (has_global_propagation_sanitizer() ||
-      !port_sanitizers_.get(propagation.input().root()).is_bottom()) {
+      !port_sanitizers_.get(input_root).is_bottom()) {
     return;
   }
-  add_propagation(propagation, output);
+  add_propagation(propagation, input_root, output);
 }
 
 void Model::add_global_sanitizer(Sanitizer sanitizer) {
@@ -894,8 +902,15 @@ Model Model::from_json(
        JsonValidation::null_or_array(value, /* field */ "propagation")) {
     JsonValidation::string(propagation_value, /* field */ "output");
     auto output = AccessPath::from_json(propagation_value["output"]);
+    auto input_root = AccessPath::from_json(propagation_value["input"]).root();
+    if (!input_root.is_argument()) {
+      throw JsonValidationError(
+          propagation_value,
+          /* field */ "input",
+          "an access path to an argument");
+    }
     model.add_propagation(
-        Propagation::from_json(propagation_value, context), output);
+        Propagation::from_json(propagation_value, context), input_root, output);
   }
 
   for (auto sanitizer_value :
@@ -1044,10 +1059,13 @@ Json::Value Model::to_json() const {
   if (!propagations_.is_bottom()) {
     auto propagations_value = Json::Value(Json::arrayValue);
     for (const auto& [output, propagations] : propagations_.elements()) {
-      for (const auto& propagation : propagations) {
-        auto propagation_value = propagation.to_json();
-        propagation_value["output"] = output.to_json();
-        propagations_value.append(propagation_value);
+      for (const auto& [input_root, propagation] : propagations) {
+        auto propagations = propagation.to_json(input_root);
+        for (const auto& element : propagations) {
+          auto propagation_value = element;
+          propagation_value["output"] = output.to_json();
+          propagations_value.append(propagation_value);
+        }
       }
     }
     value["propagation"] = propagations_value;
@@ -1195,9 +1213,7 @@ std::ostream& operator<<(std::ostream& out, const Model& model) {
   if (!model.propagations_.is_bottom()) {
     out << ",\n  propagation={\n";
     for (const auto& [output, propagations] : model.propagations_.elements()) {
-      for (const auto& propagation : propagations) {
-        out << "    " << propagation << " -> " << output << ",\n";
-      }
+      out << "    " << propagations << " -> " << output << ",\n";
     }
     out << "  }";
   }
@@ -1373,23 +1389,18 @@ bool Model::check_taint_consistency(const Taint& taint, std::string_view kind)
       for (const auto& root : frame.via_type_of_ports().elements()) {
         // Logs invalid ports specifed for via_type_of but does not prevent the
         // model from being created.
-        check_port_consistency(AccessPath(root));
+        check_root_consistency(root);
       }
     }
     if (frame.via_value_of_ports().is_value()) {
       for (const auto& root : frame.via_value_of_ports().elements()) {
         // Logs invalid ports specifed for via_value_of but does not prevent the
         // model from being created.
-        check_port_consistency(AccessPath(root));
+        check_root_consistency(root);
       }
     }
   }
   return true;
-}
-
-bool Model::check_propagation_consistency(
-    const Propagation& propagation) const {
-  return check_port_consistency(propagation.input());
 }
 
 bool Model::check_inline_as_consistency(

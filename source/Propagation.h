@@ -17,6 +17,7 @@
 #include <mariana-trench/Feature.h>
 #include <mariana-trench/FeatureMayAlwaysSet.h>
 #include <mariana-trench/FeatureSet.h>
+#include <mariana-trench/PathTree.h>
 
 namespace marianatrench {
 
@@ -36,15 +37,15 @@ class Propagation final : public sparta::AbstractDomain<Propagation> {
  public:
   /* Create the bottom (i.e, invalid) propagation. */
   explicit Propagation()
-      : input_(Root(Root::Kind::Leaf)),
+      : input_paths_(PathTreeDomain::bottom()),
         inferred_features_(FeatureMayAlwaysSet::bottom()),
         user_features_(FeatureSet::bottom()) {}
 
   explicit Propagation(
-      AccessPath input,
+      PathTreeDomain input_paths,
       FeatureMayAlwaysSet inferred_features,
       FeatureSet user_features)
-      : input_(std::move(input)),
+      : input_paths_(std::move(input_paths)),
         inferred_features_(std::move(inferred_features)),
         user_features_(std::move(user_features)) {}
 
@@ -63,7 +64,7 @@ class Propagation final : public sparta::AbstractDomain<Propagation> {
   }
 
   bool is_bottom() const override {
-    return input_.root().is_leaf();
+    return input_paths_.is_bottom();
   }
 
   bool is_top() const override {
@@ -71,7 +72,7 @@ class Propagation final : public sparta::AbstractDomain<Propagation> {
   }
 
   void set_to_bottom() override {
-    input_ = AccessPath(Root(Root::Kind::Leaf));
+    input_paths_.set_to_bottom();
   }
 
   void set_to_top() override {
@@ -90,8 +91,8 @@ class Propagation final : public sparta::AbstractDomain<Propagation> {
 
   void narrow_with(const Propagation& other) override;
 
-  const AccessPath& input() const {
-    return input_;
+  const PathTreeDomain& input_paths() const {
+    return input_paths_;
   }
 
   const FeatureMayAlwaysSet& inferred_features() const {
@@ -105,28 +106,25 @@ class Propagation final : public sparta::AbstractDomain<Propagation> {
   FeatureMayAlwaysSet features() const;
 
   void truncate(std::size_t size) {
-    input_.truncate(size);
+    input_paths_.collapse_deeper_than(size);
   }
 
+  void limit_input_path_leaves(std::size_t max_leaves) {
+    input_paths_.limit_leaves(max_leaves);
+  }
+
+  // Note that `from_json` takes in a single propagation object per our
+  // dsl while `to_json` will return a list of json propagation objects (one for
+  // each input path).
   static Propagation from_json(const Json::Value& value, Context& context);
-  Json::Value to_json() const;
-
-  // Describe how to join propagations together in `PropagationSet`.
-  struct GroupEqual {
-    bool operator()(const Propagation& left, const Propagation& right) const;
-  };
-
-  // Describe how to join propagations together in `PropagationSet`.
-  struct GroupHash {
-    std::size_t operator()(const Propagation& propagation) const;
-  };
+  Json::Value to_json(Root input_root) const;
 
  private:
   friend std::ostream& operator<<(
       std::ostream& out,
       const Propagation& propagation);
 
-  AccessPath input_;
+  PathTreeDomain input_paths_;
   FeatureMayAlwaysSet inferred_features_;
   FeatureSet user_features_;
 };

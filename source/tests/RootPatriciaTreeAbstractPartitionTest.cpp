@@ -120,6 +120,42 @@ TEST_F(RootPatriciaTreeAbstractPartitionTest, Join) {
       }));
 }
 
+TEST_F(RootPatriciaTreeAbstractPartitionTest, Difference) {
+  auto map = RootToIntSetPartition{
+      {Root(Root::Kind::Return), IntSet{1}},
+      {Root(Root::Kind::Argument, 0), IntSet{2}},
+  };
+
+  map.difference_with(RootToIntSetPartition::bottom());
+  EXPECT_EQ(
+      map,
+      (RootToIntSetPartition{
+          {Root(Root::Kind::Return), IntSet{1}},
+          {Root(Root::Kind::Argument, 0), IntSet{2}},
+      }));
+
+  map.difference_with(
+      RootToIntSetPartition{{Root(Root::Kind::Return), IntSet{1}}});
+  EXPECT_EQ(
+      map, (RootToIntSetPartition{{Root(Root::Kind::Argument, 0), IntSet{2}}}));
+
+  // Current value is not leq value in object being 'subtracted'
+  map.difference_with(
+      RootToIntSetPartition{{Root(Root::Kind::Argument, 0), IntSet{3}}});
+  EXPECT_EQ(
+      map, (RootToIntSetPartition{{Root(Root::Kind::Argument, 0), IntSet{2}}}));
+
+  // Difference with a key that doesn't exist in the map
+  map.difference_with(
+      RootToIntSetPartition{{Root(Root::Kind::Argument, 1), IntSet{2}}});
+  EXPECT_EQ(
+      map, (RootToIntSetPartition{{Root(Root::Kind::Argument, 0), IntSet{2}}}));
+
+  map.difference_with(
+      RootToIntSetPartition{{Root(Root::Kind::Argument, 0), IntSet{2, 5}}});
+  EXPECT_EQ(map, RootToIntSetPartition::bottom());
+}
+
 TEST_F(RootPatriciaTreeAbstractPartitionTest, Update) {
   auto map = RootToIntSetPartition{
       {Root(Root::Kind::Return), IntSet{1}},

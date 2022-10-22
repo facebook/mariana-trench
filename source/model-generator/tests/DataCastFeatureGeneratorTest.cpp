@@ -55,10 +55,12 @@ TEST_F(DataCastFeatureGeneratorTest, CastToInt) {
           /* sinks */ {},
           /* propagations */
           {{Propagation(
-                /* input */ AccessPath(Root(Root::Kind::Argument, 0)),
+                /* input_paths */
+                PathTreeDomain{{Path{}, SingletonAbstractDomain()}},
                 /* inferred_features */ FeatureMayAlwaysSet::bottom(),
                 /* user_features */
                 FeatureSet{context.features->get("cast:numeric")}),
+            /* input */ Root(Root::Kind::Argument, 0),
             /* output */ AccessPath(Root(Root::Kind::Return))}})));
 }
 
@@ -90,9 +92,11 @@ TEST_F(DataCastFeatureGeneratorTest, CastToBool) {
           /* sinks */ {},
           /* propagations */
           {{Propagation(
-                /* input */ AccessPath(Root(Root::Kind::Argument, 0)),
+                /* input_paths */
+                PathTreeDomain{{Path{}, SingletonAbstractDomain()}},
                 /* inferred_features */ FeatureMayAlwaysSet::bottom(),
                 /* user_features */
                 FeatureSet{context.features->get("cast:boolean")}),
+            /* input */ Root(Root::Kind::Argument, 0),
             /* output */ AccessPath(Root(Root::Kind::Return))}})));
 }

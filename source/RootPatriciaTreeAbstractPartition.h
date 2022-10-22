@@ -153,6 +153,16 @@ class RootPatriciaTreeAbstractPartition final
     map_.narrow_with(other.map_);
   }
 
+  void difference_with(const RootPatriciaTreeAbstractPartition& other) {
+    map_.difference_like_operation(
+        other.map_, [](const Domain& left, const Domain& right) {
+          if (left.leq(right)) {
+            return Domain::bottom();
+          }
+          return left;
+        });
+  }
+
   const Domain& get(Root root) const {
     return map_.get(root.encode());
   }
@@ -167,6 +177,16 @@ class RootPatriciaTreeAbstractPartition final
 
   bool map(std::function<Domain(const Domain&)> f) {
     return map_.map(std::move(f));
+  }
+
+  friend std::ostream& operator<<(
+      std::ostream& out,
+      const RootPatriciaTreeAbstractPartition& value) {
+    out << "{";
+    for (const auto& [root, elements] : value) {
+      out << show(root) << " -> " << elements << ", ";
+    }
+    return out << "}";
   }
 
  private:

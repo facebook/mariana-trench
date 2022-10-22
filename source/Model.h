@@ -24,7 +24,7 @@
 #include <mariana-trench/Method.h>
 #include <mariana-trench/Position.h>
 #include <mariana-trench/Propagation.h>
-#include <mariana-trench/PropagationSet.h>
+#include <mariana-trench/PropagationPartition.h>
 #include <mariana-trench/PropagationTree.h>
 #include <mariana-trench/RootPatriciaTreeAbstractPartition.h>
 #include <mariana-trench/Sanitizer.h>
@@ -137,7 +137,8 @@ class Model final {
       const std::vector<std::pair<AccessPath, TaintConfig>>& parameter_sources =
           {},
       const std::vector<std::pair<AccessPath, TaintConfig>>& sinks = {},
-      const std::vector<std::pair<Propagation, AccessPath>>& propagations = {},
+      const std::vector<std::tuple<Propagation, Root, AccessPath>>&
+          propagations = {},
       const std::vector<Sanitizer>& global_sanitizers = {},
       const std::vector<std::pair<Root, SanitizerSet>>& port_sanitizers = {},
       const std::vector<std::pair<Root, FeatureSet>>& attach_to_sources = {},
@@ -232,9 +233,13 @@ class Model final {
   void add_call_effect_sink(CallEffect effect, TaintConfig sink);
   void add_inferred_call_effect_sinks(CallEffect effect, Taint sink);
 
-  void add_propagation(Propagation propagation, AccessPath output);
+  void
+  add_propagation(Propagation propagation, Root input_root, AccessPath output);
   /* Add a propagation after applying sanitizers */
-  void add_inferred_propagation(Propagation propagation, AccessPath output);
+  void add_inferred_propagation(
+      Propagation propagation,
+      Root input_root,
+      AccessPath output);
   const PropagationAccessPathTree& propagations() const {
     return propagations_;
   }
@@ -317,7 +322,6 @@ class Model final {
       const TaintConfig& frame,
       std::string_view kind) const;
   bool check_taint_consistency(const Taint& frame, std::string_view kind) const;
-  bool check_propagation_consistency(const Propagation& propagation) const;
   bool check_inline_as_consistency(
       const AccessPathConstantDomain& inline_as) const;
 
