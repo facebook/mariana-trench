@@ -128,10 +128,16 @@ void CalleePortFrames::add(const TaintConfig& config) {
     is_artificial_source_frames_ = config.is_artificial_source();
   } else {
     mt_assert(
-        callee_port_ == config.callee_port() &&
-        is_artificial_source_frames_ == config.is_artificial_source());
+        (is_artificial_source_frames_ == config.is_artificial_source()) &&
+        (is_artificial_source_frames_
+             ? config.callee_port().root() == callee_port_.root()
+             : callee_port_ == config.callee_port()));
   }
 
+  if (is_artificial_source_frames_) {
+    callee_port_.join_with(config.callee_port());
+    add_input_path(config.callee_port().path());
+  }
   local_positions_.join_with(config.local_positions());
   frames_.update(config.kind(), [&](const Frames& old_frames) {
     auto new_frames = old_frames;
@@ -164,7 +170,7 @@ bool CalleePortFrames::leq(const CalleePortFrames& other) const {
 
   if (is_artificial_source_frames()) {
     return callee_port_.leq(other.callee_port()) &&
-        frames_.leq(other.frames_) &&
+        frames_.leq(other.frames_) && input_paths_.leq(other.input_paths_) &&
         local_positions_.leq(other.local_positions_);
   } else {
     return frames_.leq(other.frames_) &&
@@ -175,6 +181,7 @@ bool CalleePortFrames::leq(const CalleePortFrames& other) const {
 bool CalleePortFrames::equals(const CalleePortFrames& other) const {
   mt_assert(is_bottom() || other.is_bottom() || has_same_key(other));
   return frames_.equals(other.frames_) &&
+      input_paths_.equals(other.input_paths_) &&
       local_positions_.equals(other.local_positions_);
 }
 
@@ -192,6 +199,7 @@ void CalleePortFrames::join_with(const CalleePortFrames& other) {
   }
 
   frames_.join_with(other.frames_);
+  input_paths_.join_with(other.input_paths_);
   local_positions_.join_with(other.local_positions_);
 
   mt_expensive_assert(previous.leq(*this) && other.leq(*this));
@@ -207,6 +215,7 @@ void CalleePortFrames::widen_with(const CalleePortFrames& other) {
   mt_assert(other.is_bottom() || has_same_key(other));
 
   frames_.widen_with(other.frames_);
+  input_paths_.widen_with(other.input_paths_);
   local_positions_.widen_with(other.local_positions_);
 
   mt_expensive_assert(previous.leq(*this) && other.leq(*this));
@@ -220,6 +229,7 @@ void CalleePortFrames::meet_with(const CalleePortFrames& other) {
   mt_assert(other.is_bottom() || has_same_key(other));
 
   frames_.meet_with(other.frames_);
+  input_paths_.meet_with(other.input_paths_);
   local_positions_.meet_with(other.local_positions_);
 }
 
@@ -231,6 +241,7 @@ void CalleePortFrames::narrow_with(const CalleePortFrames& other) {
   mt_assert(other.is_bottom() || has_same_key(other));
 
   frames_.narrow_with(other.frames_);
+  input_paths_.narrow_with(other.input_paths_);
   local_positions_.narrow_with(other.local_positions_);
 }
 
@@ -241,10 +252,11 @@ void CalleePortFrames::difference_with(const CalleePortFrames& other) {
   }
   mt_assert(other.is_bottom() || has_same_key(other));
 
-  // Local positions apply to all frames. If RHS is not leq LHS, then do not
-  // apply the difference operator to the frames because every frame on RHS
-  // would not be considered leq its LHS frame.
-  if (local_positions_.leq(other.local_positions_)) {
+  // Local positions and input paths apply to all frames. If LHS is not leq RHS,
+  // then do not apply the difference operator to the frames because every frame
+  // on LHS would not be considered leq its RHS frame.
+  if (local_positions_.leq(other.local_positions_) &&
+      input_paths_.leq(other.input_paths_)) {
     frames_.difference_like_operation(
         other.frames_,
         [](const Frames& frames_left, const Frames& frames_right) {
@@ -339,6 +351,7 @@ CalleePortFrames CalleePortFrames::propagate(
     const std::vector<const DexType * MT_NULLABLE>& source_register_types,
     const std::vector<std::optional<std::string>>& source_constant_arguments)
     const {
+  mt_assert(!is_artificial_source_frames_);
   if (is_bottom()) {
     return CalleePortFrames::bottom();
   }
@@ -384,6 +397,11 @@ CalleePortFrames CalleePortFrames::propagate(
 void CalleePortFrames::transform_kind_with_features(
     const std::function<std::vector<const Kind*>(const Kind*)>& transform_kind,
     const std::function<FeatureMayAlwaysSet(const Kind*)>& add_features) {
+  // In practice, this method is never used for artificial sources so we can
+  // avoid considering the case where input paths should be updated if an
+  // artificial source is transformed into a true source.
+  mt_assert(!is_artificial_source_frames_);
+
   FramesByKind new_frames_by_kind;
   for (const auto& [old_kind, frames] : frames_.bindings()) {
     auto new_kinds = transform_kind(old_kind);
@@ -418,8 +436,16 @@ void CalleePortFrames::append_callee_port_to_artificial_sources(
     return;
   }
 
-  // TODO (T91357916): Remove "callee_port" from `Frame` so we don't need
-  // to update the frames internally.
+  PathTreeDomain new_input_paths;
+  for (const auto& [path, elements] : input_paths_.elements()) {
+    auto new_path = path;
+    new_path.append(path_element);
+    new_input_paths.write(new_path, elements, UpdateKind::Weak);
+  }
+  input_paths_ = std::move(new_input_paths);
+
+  // TODO (T134566179): Remove the following logic once propagation and sink
+  // inference uses input_paths_ instead of callee_port_
   FramesByKind new_frames;
   for (const auto& [kind, frames] : frames_.bindings()) {
     // Due to `Frame::GroupHash`'s implementation, the in-place update of
@@ -448,6 +474,10 @@ void CalleePortFrames::add_inferred_features_to_real_sources(
 void CalleePortFrames::filter_invalid_frames(
     const std::function<bool(const Method*, const AccessPath&, const Kind*)>&
         is_valid) {
+  // This method is only used to post process inferred sources and sinks.
+  // Since we don't use it for artificial sources, we can avoid updating
+  // `input_paths_` when frames are removed.
+  mt_assert(!is_artificial_source_frames_);
   FramesByKind new_frames;
   for (const auto& [kind, frames] : frames_.bindings()) {
     auto frames_copy = frames;
@@ -481,6 +511,10 @@ std::ostream& operator<<(std::ostream& out, const CalleePortFrames& frames) {
     const auto& local_positions = frames.local_positions();
     if (!local_positions.is_bottom() && !local_positions.empty()) {
       out << ", local_positions=" << frames.local_positions();
+    }
+
+    if (!frames.input_paths_.is_bottom()) {
+      out << ", input_paths=" << frames.input_paths_;
     }
 
     out << ", frames=[";

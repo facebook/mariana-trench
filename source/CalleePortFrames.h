@@ -16,14 +16,18 @@
 #include <AbstractDomain.h>
 #include <PatriciaTreeMapAbstractPartition.h>
 
+#include <mariana-trench/AbstractTreeDomain.h>
 #include <mariana-trench/Access.h>
 #include <mariana-trench/Assert.h>
 #include <mariana-trench/FlattenIterator.h>
 #include <mariana-trench/Frame.h>
 #include <mariana-trench/GroupHashedSetAbstractDomain.h>
+#include <mariana-trench/SingletonAbstractDomain.h>
 #include <mariana-trench/TaintConfig.h>
 
 namespace marianatrench {
+
+using PathTreeDomain = AbstractTreeDomain<SingletonAbstractDomain>;
 
 /**
  * Represents a set of frames with the same call position.
@@ -73,8 +77,12 @@ class CalleePortFrames final : public sparta::AbstractDomain<CalleePortFrames> {
       : callee_port_(std::move(callee_port)),
         is_artificial_source_frames_(is_artificial_source_frames),
         frames_(std::move(frames)),
+        input_paths_(PathTreeDomain::bottom()),
         local_positions_(std::move(local_positions)) {
     mt_assert(!local_positions_.is_bottom());
+    if (is_artificial_source_frames) {
+      add_input_path(callee_port.path());
+    }
   }
 
  public:
@@ -90,6 +98,7 @@ class CalleePortFrames final : public sparta::AbstractDomain<CalleePortFrames> {
       : callee_port_(Root(Root::Kind::Leaf)),
         is_artificial_source_frames_(false),
         frames_(FramesByKind::bottom()),
+        input_paths_(PathTreeDomain::bottom()),
         local_positions_({}) {}
 
   explicit CalleePortFrames(std::initializer_list<TaintConfig> configs);
@@ -141,6 +150,7 @@ class CalleePortFrames final : public sparta::AbstractDomain<CalleePortFrames> {
     is_artificial_source_frames_ = false;
     frames_.set_to_bottom();
     local_positions_ = {};
+    input_paths_.set_to_bottom();
   }
 
   void set_to_top() override {
@@ -148,6 +158,7 @@ class CalleePortFrames final : public sparta::AbstractDomain<CalleePortFrames> {
     is_artificial_source_frames_ = false;
     frames_.set_to_top();
     local_positions_.set_to_top();
+    input_paths_.set_to_top();
   }
 
   bool empty() const {
@@ -164,6 +175,10 @@ class CalleePortFrames final : public sparta::AbstractDomain<CalleePortFrames> {
 
   const LocalPositionSet& local_positions() const {
     return local_positions_;
+  }
+
+  const PathTreeDomain& input_paths() const {
+    return input_paths_;
   }
 
   void add(const TaintConfig& config);
@@ -297,6 +312,11 @@ class CalleePortFrames final : public sparta::AbstractDomain<CalleePortFrames> {
  private:
   void add(const Frame& frame);
 
+  void add_input_path(const Path& path) {
+    mt_assert(is_artificial_source_frames_);
+    input_paths_.join_with(PathTreeDomain{{path, SingletonAbstractDomain()}});
+  }
+
   Frame propagate_frames(
       const Method* callee,
       const AccessPath& callee_port,
@@ -338,6 +358,11 @@ class CalleePortFrames final : public sparta::AbstractDomain<CalleePortFrames> {
   AccessPath callee_port_;
   bool is_artificial_source_frames_;
   FramesByKind frames_;
+  // input_paths are used only for artificial sources (should be bottom for all
+  // other frames). These keep track of the paths within the artificial
+  // source/argument that have been read from this taint. The paths are then
+  // used to infer sinks and propagations.
+  PathTreeDomain input_paths_;
 
   // TODO(T91357916): Move local_features here from `Frame`.
   LocalPositionSet local_positions_;

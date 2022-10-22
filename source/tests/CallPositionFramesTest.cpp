@@ -1861,13 +1861,14 @@ TEST_F(CallPositionFramesTest, FilterInvalidFrames) {
   Scope scope;
   auto* method1 =
       context.methods->create(redex::create_void_method(scope, "LOne;", "one"));
-  auto* test_kind = context.kinds->get("TestSource");
+  auto* test_kind_one = context.kinds->get("TestSourceOne");
+  auto* test_kind_two = context.kinds->get("TestSourceTwo");
 
   // Filter by callee
   auto frames = CallPositionFrames{
-      test::make_taint_config(test_kind, test::FrameProperties{}),
+      test::make_taint_config(test_kind_one, test::FrameProperties{}),
       test::make_taint_config(
-          Kinds::artificial_source(),
+          test_kind_two,
           test::FrameProperties{
               .callee_port = AccessPath(Root(Root::Kind::Argument)),
               .callee = method1})};
@@ -1879,13 +1880,13 @@ TEST_F(CallPositionFramesTest, FilterInvalidFrames) {
   EXPECT_EQ(
       frames,
       (CallPositionFrames{
-          test::make_taint_config(test_kind, test::FrameProperties{})}));
+          test::make_taint_config(test_kind_one, test::FrameProperties{})}));
 
   // Filter by callee port
   frames = CallPositionFrames{
-      test::make_taint_config(test_kind, test::FrameProperties{}),
+      test::make_taint_config(test_kind_one, test::FrameProperties{}),
       test::make_taint_config(
-          Kinds::artificial_source(),
+          test_kind_two,
           test::FrameProperties{
               .callee_port = AccessPath(Root(Root::Kind::Argument)),
               .callee = method1})};
@@ -1899,16 +1900,16 @@ TEST_F(CallPositionFramesTest, FilterInvalidFrames) {
   EXPECT_EQ(
       frames,
       (CallPositionFrames{test::make_taint_config(
-          Kinds::artificial_source(),
+          test_kind_two,
           test::FrameProperties{
               .callee_port = AccessPath(Root(Root::Kind::Argument)),
               .callee = method1})}));
 
   // Filter by kind
   frames = CallPositionFrames{
-      test::make_taint_config(test_kind, test::FrameProperties{}),
+      test::make_taint_config(test_kind_one, test::FrameProperties{}),
       test::make_taint_config(
-          Kinds::artificial_source(),
+          test_kind_two,
           test::FrameProperties{
               .callee_port = AccessPath(Root(Root::Kind::Argument)),
               .callee = method1})};
@@ -1916,11 +1917,11 @@ TEST_F(CallPositionFramesTest, FilterInvalidFrames) {
       /* is_valid */
       [&](const Method* MT_NULLABLE /* callee */,
           const AccessPath& /* callee_port */,
-          const Kind* kind) { return kind != Kinds::artificial_source(); });
+          const Kind* kind) { return kind != test_kind_two; });
   EXPECT_EQ(
       frames,
       (CallPositionFrames{
-          test::make_taint_config(test_kind, test::FrameProperties{})}));
+          test::make_taint_config(test_kind_one, test::FrameProperties{})}));
 }
 
 TEST_F(CallPositionFramesTest, Show) {
