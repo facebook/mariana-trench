@@ -16,18 +16,14 @@
 #include <AbstractDomain.h>
 #include <PatriciaTreeMapAbstractPartition.h>
 
-#include <mariana-trench/AbstractTreeDomain.h>
 #include <mariana-trench/Access.h>
 #include <mariana-trench/Assert.h>
 #include <mariana-trench/FlattenIterator.h>
 #include <mariana-trench/Frame.h>
 #include <mariana-trench/GroupHashedSetAbstractDomain.h>
-#include <mariana-trench/SingletonAbstractDomain.h>
 #include <mariana-trench/TaintConfig.h>
 
 namespace marianatrench {
-
-using PathTreeDomain = AbstractTreeDomain<SingletonAbstractDomain>;
 
 /**
  * Represents a set of frames with the same call position.
@@ -73,15 +69,18 @@ class CalleePortFrames final : public sparta::AbstractDomain<CalleePortFrames> {
       AccessPath callee_port,
       bool is_artificial_source_frames,
       FramesByKind frames,
+      PathTreeDomain input_paths,
       LocalPositionSet local_positions)
       : callee_port_(std::move(callee_port)),
         is_artificial_source_frames_(is_artificial_source_frames),
         frames_(std::move(frames)),
-        input_paths_(PathTreeDomain::bottom()),
+        input_paths_(std::move(input_paths)),
         local_positions_(std::move(local_positions)) {
     mt_assert(!local_positions_.is_bottom());
-    if (is_artificial_source_frames) {
-      add_input_path(callee_port.path());
+    if (is_artificial_source_frames_) {
+      mt_assert(callee_port.path().empty());
+    } else {
+      mt_assert(input_paths.is_bottom());
     }
   }
 
@@ -134,6 +133,7 @@ class CalleePortFrames final : public sparta::AbstractDomain<CalleePortFrames> {
         /* callee_port */ AccessPath(Root(Root::Kind::Leaf)),
         /* is_artificial_source_frames */ false,
         FramesByKind::top(),
+        /* input_paths */ {},
         /* local_positions */ {});
   }
 
@@ -273,6 +273,7 @@ class CalleePortFrames final : public sparta::AbstractDomain<CalleePortFrames> {
           callee_port_,
           is_artificial_source_frames_,
           FramesByKind{std::pair(kind, kind_frames)},
+          input_paths_,
           local_positions_);
 
       auto existing = result.find(mapped_value);
@@ -343,18 +344,12 @@ class CalleePortFrames final : public sparta::AbstractDomain<CalleePortFrames> {
    * The only exception is if one of them `is_bottom()`.
    */
   bool has_same_key(const CalleePortFrames& other) const {
-    if (is_artificial_source_frames_) {
-      // For artificial sources, the callee port is considered equal if they
-      // share the same root.
-      return other.is_artificial_source_frames_ &&
-          callee_port_.root() == other.callee_port_.root();
-    }
-
     return callee_port_ == other.callee_port() &&
         is_artificial_source_frames_ == other.is_artificial_source_frames_;
   }
 
  private:
+  // Note that for artificial sources, this Access Path will only contain a root
   AccessPath callee_port_;
   bool is_artificial_source_frames_;
   FramesByKind frames_;

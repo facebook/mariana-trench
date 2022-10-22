@@ -15,6 +15,7 @@
 #include <AbstractDomain.h>
 #include <HashedSetAbstractDomain.h>
 
+#include <mariana-trench/AbstractTreeDomain.h>
 #include <mariana-trench/Access.h>
 #include <mariana-trench/Assert.h>
 #include <mariana-trench/CanonicalName.h>
@@ -31,8 +32,11 @@
 #include <mariana-trench/Method.h>
 #include <mariana-trench/MethodSet.h>
 #include <mariana-trench/Position.h>
+#include <mariana-trench/SingletonAbstractDomain.h>
 
 namespace marianatrench {
+
+using PathTreeDomain = AbstractTreeDomain<SingletonAbstractDomain>;
 
 /**
  * Class used to contain details for building a `Taint` object.
@@ -59,6 +63,7 @@ class TaintConfig final {
       RootSetAbstractDomain via_type_of_ports,
       RootSetAbstractDomain via_value_of_ports,
       CanonicalNameSetAbstractDomain canonical_names,
+      PathTreeDomain input_paths,
       LocalPositionSet local_positions)
       : kind_(kind),
         callee_port_(std::move(callee_port)),
@@ -74,11 +79,17 @@ class TaintConfig final {
         via_type_of_ports_(std::move(via_type_of_ports)),
         via_value_of_ports_(std::move(via_value_of_ports)),
         canonical_names_(std::move(canonical_names)),
+        input_paths_(std::move(input_paths)),
         local_positions_(std::move(local_positions)) {
     mt_assert(kind_ != nullptr);
     mt_assert(distance_ >= 0);
     mt_assert(!(callee && field_callee));
     mt_assert(!local_positions.is_bottom());
+    if (!is_artificial_source()) {
+      mt_assert(input_paths_.is_bottom());
+    } else {
+      mt_assert(callee_port_.path().empty());
+    }
   }
 
   TaintConfig(const TaintConfig&) = default;
@@ -100,6 +111,7 @@ class TaintConfig final {
         self.via_type_of_ports_ == other.via_type_of_ports_ &&
         self.via_value_of_ports_ == other.via_value_of_ports_ &&
         self.canonical_names_ == other.canonical_names_ &&
+        self.input_paths_ == other.input_paths_ &&
         self.local_positions_ == other.local_positions_;
   }
 
@@ -163,6 +175,10 @@ class TaintConfig final {
     return canonical_names_;
   }
 
+  const PathTreeDomain& input_paths() const {
+    return input_paths_;
+  }
+
   const LocalPositionSet& local_positions() const {
     return local_positions_;
   }
@@ -193,6 +209,9 @@ class TaintConfig final {
   RootSetAbstractDomain via_type_of_ports_;
   RootSetAbstractDomain via_value_of_ports_;
   CanonicalNameSetAbstractDomain canonical_names_;
+  // These are used only for artificial sources (should be bottom in all other
+  // cases). They are used for propagation/sink inference.
+  PathTreeDomain input_paths_;
 
   /**
    * Properties that are unique to `CalleePortFrames` within `Taint`. If a

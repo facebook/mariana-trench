@@ -360,29 +360,38 @@ TEST_F(CallPositionFramesTest, ArtificialSourceLeq) {
                                Root(Root::Kind::Argument, 0),
                                Path{DexString::make_string("x")})})}));
 
-  // For artificial sources, compare the common prefix of callee ports.
+  // Artificial sources.
   EXPECT_TRUE(
-      CallPositionFrames{test::make_taint_config(
-                             Kinds::artificial_source(),
-                             test::FrameProperties{
-                                 .callee_port = AccessPath(
-                                     Root(Root::Kind::Argument, 0),
-                                     Path{DexString::make_string("x")})})}
+      CallPositionFrames{
+          test::make_taint_config(
+              Kinds::artificial_source(),
+              test::FrameProperties{
+                  .callee_port = AccessPath(Root(Root::Kind::Argument, 0)),
+                  .input_paths =
+                      PathTreeDomain{
+                          {Path{DexString::make_string("x")},
+                           SingletonAbstractDomain()}}})}
           .leq(CallPositionFrames{test::make_taint_config(
               Kinds::artificial_source(),
               test::FrameProperties{
-                  .callee_port = AccessPath(Root(Root::Kind::Argument, 0))})}));
-  EXPECT_FALSE(CallPositionFrames{
-      test::make_taint_config(
-          Kinds::artificial_source(),
-          test::FrameProperties{
-              .callee_port = AccessPath(Root(Root::Kind::Argument, 0))})}
-                   .leq(CallPositionFrames{test::make_taint_config(
-                       Kinds::artificial_source(),
-                       test::FrameProperties{
-                           .callee_port = AccessPath(
-                               Root(Root::Kind::Argument, 0),
-                               Path{DexString::make_string("x")})})}));
+                  .callee_port = AccessPath(Root(Root::Kind::Argument, 0)),
+                  .input_paths =
+                      PathTreeDomain{{Path{}, SingletonAbstractDomain()}}})}));
+  EXPECT_FALSE(
+      CallPositionFrames{
+          test::make_taint_config(
+              Kinds::artificial_source(),
+              test::FrameProperties{
+                  .callee_port = AccessPath(Root(Root::Kind::Argument, 0)),
+                  .input_paths =
+                      PathTreeDomain{{Path{}, SingletonAbstractDomain()}}})}
+          .leq(CallPositionFrames{test::make_taint_config(
+              Kinds::artificial_source(),
+              test::FrameProperties{
+                  .callee_port = AccessPath(Root(Root::Kind::Argument, 0)),
+                  .input_paths = PathTreeDomain{
+                      {Path{DexString::make_string("x")},
+                       SingletonAbstractDomain()}}})}));
 }
 
 TEST_F(CallPositionFramesTest, Equals) {
@@ -569,24 +578,28 @@ TEST_F(CallPositionFramesTest, ArtificialSourceJoinWith) {
   auto context = test::make_empty_context();
   auto* test_kind_one = context.kinds->get("TestSinkOne");
 
-  // Join different ports with same prefix for artificial kinds.
-  // Ports should be collapsed to the common prefix.
+  // Callee ports only consist of the root. Input paths trees are joined.
   auto frames = CallPositionFrames{test::make_taint_config(
       Kinds::artificial_source(),
       test::FrameProperties{
-          .callee_port = AccessPath(
-              Root(Root::Kind::Argument, 0),
-              Path{DexString::make_string("x")})})};
+          .callee_port = AccessPath(Root(Root::Kind::Argument, 0)),
+          .input_paths = PathTreeDomain{
+              {Path{DexString::make_string("x")},
+               SingletonAbstractDomain()}}})};
   frames.join_with(CallPositionFrames{test::make_taint_config(
       Kinds::artificial_source(),
       test::FrameProperties{
-          .callee_port = AccessPath(Root(Root::Kind::Argument, 0))})});
+          .callee_port = AccessPath(Root(Root::Kind::Argument, 0)),
+          .input_paths =
+              PathTreeDomain{{Path{}, SingletonAbstractDomain()}}})});
   EXPECT_EQ(
       frames,
       CallPositionFrames{test::make_taint_config(
           Kinds::artificial_source(),
           test::FrameProperties{
-              .callee_port = AccessPath(Root(Root::Kind::Argument, 0))})});
+              .callee_port = AccessPath(Root(Root::Kind::Argument, 0)),
+              .input_paths =
+                  PathTreeDomain{{Path{}, SingletonAbstractDomain()}}})});
 
   // Join different ports with same prefix, for non-artificial kinds
   frames = CallPositionFrames{test::make_taint_config(
@@ -1704,8 +1717,9 @@ TEST_F(CallPositionFramesTest, AppendCalleePort) {
       test::make_taint_config(
           Kinds::artificial_source(),
           test::FrameProperties{
-              .callee_port = AccessPath(
-                  Root(Root::Kind::Argument), Path{path_element1})})};
+              .callee_port = AccessPath(Root(Root::Kind::Argument)),
+              .input_paths = PathTreeDomain{
+                  {Path{path_element1}, SingletonAbstractDomain()}}})};
 
   frames.append_callee_port_to_artificial_sources(path_element2);
   EXPECT_EQ(
@@ -1715,9 +1729,10 @@ TEST_F(CallPositionFramesTest, AppendCalleePort) {
           test::make_taint_config(
               Kinds::artificial_source(),
               test::FrameProperties{
-                  .callee_port = AccessPath(
-                      Root(Root::Kind::Argument),
-                      Path{path_element1, path_element2})})}));
+                  .callee_port = AccessPath(Root(Root::Kind::Argument)),
+                  .input_paths = PathTreeDomain{
+                      {Path{path_element1, path_element2},
+                       SingletonAbstractDomain()}}})}));
 }
 
 TEST_F(CallPositionFramesTest, MapPositions) {

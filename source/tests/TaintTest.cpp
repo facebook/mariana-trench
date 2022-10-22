@@ -778,8 +778,9 @@ TEST_F(TaintTest, AppendCalleePort) {
       test::make_taint_config(
           Kinds::artificial_source(),
           test::FrameProperties{
-              .callee_port = AccessPath(
-                  Root(Root::Kind::Argument), Path{path_element1})})};
+              .callee_port = AccessPath(Root(Root::Kind::Argument)),
+              .input_paths = PathTreeDomain{
+                  {Path{path_element1}, SingletonAbstractDomain()}}})};
 
   taint.append_callee_port_to_artificial_sources(path_element2);
   EXPECT_EQ(
@@ -791,9 +792,10 @@ TEST_F(TaintTest, AppendCalleePort) {
           test::make_taint_config(
               Kinds::artificial_source(),
               test::FrameProperties{
-                  .callee_port = AccessPath(
-                      Root(Root::Kind::Argument),
-                      Path{path_element1, path_element2})})}));
+                  .callee_port = AccessPath(Root(Root::Kind::Argument)),
+                  .input_paths = PathTreeDomain{
+                      {Path{path_element1, path_element2},
+                       SingletonAbstractDomain()}}})}));
 }
 
 TEST_F(TaintTest, AddInferredFeaturesToRealSources) {

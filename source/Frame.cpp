@@ -51,9 +51,7 @@ bool Frame::leq(const Frame& other) const {
   } else if (other.is_bottom()) {
     return false;
   } else {
-    return kind_ == other.kind_ &&
-        (is_artificial_source() ? callee_port_.leq(other.callee_port_)
-                                : callee_port_ == other.callee_port_) &&
+    return kind_ == other.kind_ && callee_port_ == other.callee_port_ &&
         callee_ == other.callee_ && call_position_ == other.call_position_ &&
         distance_ >= other.distance_ && origins_.leq(other.origins_) &&
         field_origins_.leq(other.field_origins_) &&
@@ -96,12 +94,7 @@ void Frame::join_with(const Frame& other) {
     mt_assert(kind_ == other.kind_);
     mt_assert(callee_ == other.callee_);
     mt_assert(call_position_ == other.call_position_);
-
-    if (is_artificial_source()) {
-      callee_port_.join_with(other.callee_port_);
-    } else {
-      mt_assert(callee_port_ == other.callee_port_);
-    }
+    mt_assert(callee_port_ == other.callee_port_);
 
     distance_ = std::min(distance_, other.distance_);
     origins_.join_with(other.origins_);
@@ -127,10 +120,6 @@ void Frame::meet_with(const Frame& /*other*/) {
 
 void Frame::narrow_with(const Frame& other) {
   meet_with(other);
-}
-
-void Frame::callee_port_append(Path::Element path_element) {
-  callee_port_.append(path_element);
 }
 
 Frame Frame::with_kind(const Kind* kind) const {
@@ -210,9 +199,7 @@ Json::Value Frame::to_json(const LocalPositionSet& local_positions) const {
 bool Frame::GroupEqual::operator()(const Frame& left, const Frame& right)
     const {
   return left.kind() == right.kind() &&
-      (left.is_artificial_source()
-           ? left.callee_port().root() == right.callee_port().root()
-           : left.callee_port() == right.callee_port()) &&
+      left.callee_port() == right.callee_port() &&
       left.callee() == right.callee() &&
       left.call_position() == right.call_position();
 }
@@ -220,11 +207,7 @@ bool Frame::GroupEqual::operator()(const Frame& left, const Frame& right)
 std::size_t Frame::GroupHash::operator()(const Frame& frame) const {
   std::size_t seed = 0;
   boost::hash_combine(seed, frame.kind());
-  if (frame.is_artificial_source()) {
-    boost::hash_combine(seed, frame.callee_port().root().encode());
-  } else {
-    boost::hash_combine(seed, std::hash<AccessPath>()(frame.callee_port()));
-  }
+  boost::hash_combine(seed, std::hash<AccessPath>()(frame.callee_port()));
   boost::hash_combine(seed, frame.callee());
   boost::hash_combine(seed, frame.call_position());
   return seed;

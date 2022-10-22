@@ -56,6 +56,7 @@ std::vector<Model> ArtificialMethods::models(Context& context) const {
           /* via_type_of_ports */ {},
           /* via_value_of_ports */ {},
           /* canonical_names */ {},
+          /* input_paths */ {},
           /* local_positions */ {}));
   models.push_back(model);
 

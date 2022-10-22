@@ -261,9 +261,6 @@ class Frame final : public sparta::AbstractDomain<Frame> {
     return kind_ == Kinds::artificial_source();
   }
 
-  /* Append a field to the callee port. Only safe for artificial sources. */
-  void callee_port_append(Path::Element path_element);
-
   /* Return frame with the given kind (and every other field kept the same) */
   Frame with_kind(const Kind* kind) const;
 

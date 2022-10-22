@@ -1248,12 +1248,16 @@ TEST_F(AbstractTreeDomainTest, Transform) {
           {test::make_taint_config(
                Kinds::artificial_source(),
                test::FrameProperties{
-                   .callee_port = AccessPath(Root(Root::Kind::Argument, 1))}),
+                   .callee_port = AccessPath(Root(Root::Kind::Argument, 1)),
+                   .input_paths =
+                       PathTreeDomain{{Path{}, SingletonAbstractDomain()}}}),
            test::make_taint_config(
                Kinds::artificial_source(),
                test::FrameProperties{
                    .callee_port = AccessPath(Root(Root::Kind::Argument, 2)),
-                   .locally_inferred_features = features})}));
+                   .locally_inferred_features = features,
+                   .input_paths =
+                       PathTreeDomain{{Path{}, SingletonAbstractDomain()}}})}));
 
   tree.write(Path{x, y}, make_artificial_source(3), UpdateKind::Weak);
   EXPECT_EQ(
@@ -1262,17 +1266,23 @@ TEST_F(AbstractTreeDomainTest, Transform) {
           {test::make_taint_config(
                Kinds::artificial_source(),
                test::FrameProperties{
-                   .callee_port = AccessPath(Root(Root::Kind::Argument, 1))}),
+                   .callee_port = AccessPath(Root(Root::Kind::Argument, 1)),
+                   .input_paths =
+                       PathTreeDomain{{Path{}, SingletonAbstractDomain()}}}),
            test::make_taint_config(
                Kinds::artificial_source(),
                test::FrameProperties{
                    .callee_port = AccessPath(Root(Root::Kind::Argument, 2)),
-                   .locally_inferred_features = features}),
+                   .locally_inferred_features = features,
+                   .input_paths =
+                       PathTreeDomain{{Path{}, SingletonAbstractDomain()}}}),
            test::make_taint_config(
                Kinds::artificial_source(),
                test::FrameProperties{
                    .callee_port = AccessPath(Root(Root::Kind::Argument, 3)),
-                   .locally_inferred_features = features})}));
+                   .locally_inferred_features = features,
+                   .input_paths =
+                       PathTreeDomain{{Path{}, SingletonAbstractDomain()}}})}));
 
   tree.write(Path{}, make_artificial_source(3), UpdateKind::Weak);
   EXPECT_EQ(
@@ -1281,17 +1291,22 @@ TEST_F(AbstractTreeDomainTest, Transform) {
           {test::make_taint_config(
                Kinds::artificial_source(),
                test::FrameProperties{
-                   .callee_port = AccessPath(Root(Root::Kind::Argument, 1))}),
+                   .callee_port = AccessPath(Root(Root::Kind::Argument, 1)),
+                   .input_paths =
+                       PathTreeDomain{{Path{}, SingletonAbstractDomain()}}}),
            test::make_taint_config(
                Kinds::artificial_source(),
                test::FrameProperties{
                    .callee_port = AccessPath(Root(Root::Kind::Argument, 2)),
-                   .locally_inferred_features = features}),
+                   .locally_inferred_features = features,
+                   .input_paths =
+                       PathTreeDomain{{Path{}, SingletonAbstractDomain()}}}),
            test::make_taint_config(
                Kinds::artificial_source(),
                test::FrameProperties{
-                   .callee_port =
-                       AccessPath(Root(Root::Kind::Argument, 3))})}));
+                   .callee_port = AccessPath(Root(Root::Kind::Argument, 3)),
+                   .input_paths =
+                       PathTreeDomain{{Path{}, SingletonAbstractDomain()}}})}));
 
   // Test collapse_inplace
   auto tree2 = TaintTree{make_artificial_source(1)};
@@ -1315,7 +1330,10 @@ TEST_F(AbstractTreeDomainTest, Transform) {
                   Kinds::artificial_source(),
                   test::FrameProperties{
                       .callee_port = AccessPath(Root(Root::Kind::Argument, 2)),
-                      .locally_inferred_features = features})},
+                      .locally_inferred_features = features,
+                      .input_paths =
+                          PathTreeDomain{
+                              {Path{}, SingletonAbstractDomain()}}})},
           },
           {
               Path{},
@@ -1323,7 +1341,10 @@ TEST_F(AbstractTreeDomainTest, Transform) {
                   Kinds::artificial_source(),
                   test::FrameProperties{
                       .callee_port = AccessPath(Root(Root::Kind::Argument, 3)),
-                      .locally_inferred_features = features})},
+                      .locally_inferred_features = features,
+                      .input_paths =
+                          PathTreeDomain{
+                              {Path{}, SingletonAbstractDomain()}}})},
           }}));
 
   // Test limit_leaves
@@ -1346,7 +1367,10 @@ TEST_F(AbstractTreeDomainTest, Transform) {
                   Kinds::artificial_source(),
                   test::FrameProperties{
                       .callee_port = AccessPath(Root(Root::Kind::Argument, 2)),
-                      .locally_inferred_features = features})},
+                      .locally_inferred_features = features,
+                      .input_paths =
+                          PathTreeDomain{
+                              {Path{}, SingletonAbstractDomain()}}})},
           },
           {
               Path{},
@@ -1354,7 +1378,10 @@ TEST_F(AbstractTreeDomainTest, Transform) {
                   Kinds::artificial_source(),
                   test::FrameProperties{
                       .callee_port = AccessPath(Root(Root::Kind::Argument, 3)),
-                      .locally_inferred_features = features})},
+                      .locally_inferred_features = features,
+                      .input_paths =
+                          PathTreeDomain{
+                              {Path{}, SingletonAbstractDomain()}}})},
           },
           {
               Path{},
@@ -1362,7 +1389,10 @@ TEST_F(AbstractTreeDomainTest, Transform) {
                   Kinds::artificial_source(),
                   test::FrameProperties{
                       .callee_port = AccessPath(Root(Root::Kind::Argument, 4)),
-                      .locally_inferred_features = features})},
+                      .locally_inferred_features = features,
+                      .input_paths =
+                          PathTreeDomain{
+                              {Path{}, SingletonAbstractDomain()}}})},
           }}));
 }
 

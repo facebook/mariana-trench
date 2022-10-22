@@ -243,7 +243,7 @@ FeatureMayAlwaysSet Taint::features_joined() const {
 Taint Taint::artificial_source(AccessPath access_path) {
   return Taint{TaintConfig(
       /* kind */ Kinds::artificial_source(),
-      /* callee_port */ access_path,
+      /* callee_port */ AccessPath(access_path.root()),
       /* callee */ nullptr,
       /* field_callee */ nullptr,
       /* call_position */ nullptr,
@@ -256,6 +256,8 @@ Taint Taint::artificial_source(AccessPath access_path) {
       /* via_type_of_ports */ {},
       /* via_value_of_ports */ {},
       /* canonical_names */ {},
+      /* input_paths */
+      PathTreeDomain{{access_path.path(), SingletonAbstractDomain()}},
       /* local_positions */ {})};
 }
 

@@ -250,18 +250,7 @@ TEST_F(FrameTest, FrameLeq) {
                   .distance = 1,
                   .origins = MethodSet{one}})));
 
-  // For artificial sources, compare the common prefix of callee ports.
-  EXPECT_TRUE(
-      test::make_taint_frame(
-          /* kind */ Kinds::artificial_source(),
-          test::FrameProperties{
-              .callee_port = AccessPath(
-                  Root(Root::Kind::Argument, 0),
-                  Path{DexString::make_string("x")})})
-          .leq(test::make_taint_frame(
-              /* kind */ Kinds::artificial_source(),
-              test::FrameProperties{
-                  .callee_port = AccessPath(Root(Root::Kind::Argument, 0))})));
+  // For artificial sources callee ports can only contain roots.
   EXPECT_FALSE(
       test::make_taint_frame(
           /* kind */ Kinds::artificial_source(),
@@ -270,9 +259,7 @@ TEST_F(FrameTest, FrameLeq) {
           .leq(test::make_taint_frame(
               /* kind */ Kinds::artificial_source(),
               test::FrameProperties{
-                  .callee_port = AccessPath(
-                      Root(Root::Kind::Argument, 0),
-                      Path{DexString::make_string("x")})})));
+                  .callee_port = AccessPath(Root(Root::Kind::Argument, 1))})));
 
   // Compare canonical names.
   EXPECT_TRUE(
