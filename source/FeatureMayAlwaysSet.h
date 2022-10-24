@@ -85,11 +85,11 @@ class FeatureMayAlwaysSet final
   }
 
   void set_to_bottom() override {
-    set_.is_bottom();
+    mt_unreachable();
   }
 
   void set_to_top() override {
-    set_.is_top();
+    mt_unreachable();
   }
 
   FeatureSet may() const;
