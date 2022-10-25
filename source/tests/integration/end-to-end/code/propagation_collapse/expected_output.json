@@ -93,12 +93,13 @@
     {
       "always_features" : 
       [
-        "via-cast:Lcom/facebook/marianatrench/integrationtests/Flow$Tree;"
+        "via-cast:Lcom/facebook/marianatrench/integrationtests/Flow$Tree;",
+        "via-propagation-broadening"
       ],
       "callee" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
       "position" : 
       {
-        "line" : 39,
+        "line" : 49,
         "path" : "Flow.java"
       },
       "rule" : 1,
@@ -112,7 +113,7 @@
             "position" : 
             {
               "end" : 25,
-              "line" : 39,
+              "line" : 49,
               "path" : "Flow.java",
               "start" : 16
             },
@@ -140,7 +141,7 @@
             "position" : 
             {
               "end" : 33,
-              "line" : 31,
+              "line" : 41,
               "path" : "Flow.java",
               "start" : 28
             },
@@ -151,7 +152,8 @@
             {
               "always_features" : 
               [
-                "via-cast:Lcom/facebook/marianatrench/integrationtests/Flow$Tree;"
+                "via-cast:Lcom/facebook/marianatrench/integrationtests/Flow$Tree;",
+                "via-propagation-broadening"
               ],
               "distance" : 1,
               "kind" : "Source",
@@ -159,19 +161,20 @@
               {
                 "always_features" : 
                 [
-                  "via-cast:Lcom/facebook/marianatrench/integrationtests/Flow$Tree;"
+                  "via-cast:Lcom/facebook/marianatrench/integrationtests/Flow$Tree;",
+                  "via-propagation-broadening"
                 ]
               },
               "local_positions" : 
               [
                 {
                   "end" : 25,
-                  "line" : 35,
+                  "line" : 45,
                   "start" : 21
                 },
                 {
                   "end" : 36,
-                  "line" : 31,
+                  "line" : 41,
                   "start" : 14
                 }
               ],
@@ -188,9 +191,69 @@
   "method" : "Lcom/facebook/marianatrench/integrationtests/Flow;.issue:()V",
   "position" : 
   {
-    "line" : 29,
+    "line" : 39,
     "path" : "Flow.java"
-  }
+  },
+  "sinks" : 
+  [
+    {
+      "port" : "Argument(0)",
+      "taint" : 
+      [
+        {
+          "call" : 
+          {
+            "port" : "Argument(0)",
+            "position" : 
+            {
+              "end" : 25,
+              "line" : 49,
+              "path" : "Flow.java",
+              "start" : 16
+            },
+            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V"
+          },
+          "kinds" : 
+          [
+            {
+              "always_features" : 
+              [
+                "via-inner-class-this",
+                "via-propagation-broadening"
+              ],
+              "distance" : 1,
+              "kind" : "Sink",
+              "local_features" : 
+              {
+                "always_features" : 
+                [
+                  "via-inner-class-this",
+                  "via-propagation-broadening"
+                ]
+              },
+              "local_positions" : 
+              [
+                {
+                  "end" : 0,
+                  "line" : 40,
+                  "start" : 0
+                },
+                {
+                  "end" : 25,
+                  "line" : 45,
+                  "start" : 21
+                }
+              ],
+              "origins" : 
+              [
+                "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V"
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
 }
 {
   "method" : "Landroid/app/Activity;.<init>:()V",
@@ -788,17 +851,13 @@
   "method" : "Lcom/facebook/marianatrench/integrationtests/Flow$Tree;.propagate:(Lcom/facebook/marianatrench/integrationtests/Flow$Tree;)V",
   "position" : 
   {
-    "line" : 18,
+    "line" : 21,
     "path" : "Flow.java"
   },
   "propagation" : 
   [
     {
-      "input" : "Argument(1).b",
-      "output" : "Argument(0).a"
-    },
-    {
-      "input" : "Argument(1).c",
+      "input" : "Argument(1)",
       "output" : "Argument(0).a"
     }
   ]

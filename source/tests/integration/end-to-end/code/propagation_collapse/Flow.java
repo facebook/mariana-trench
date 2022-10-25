@@ -14,15 +14,25 @@ public class Flow {
     public Tree a;
     public Tree b;
     public Tree c;
+    public Tree d;
+    public Tree e;
+    public Tree f;
 
     public void propagate(Tree tree) {
       Random rand = new Random();
       if (rand.nextInt(2) == 0) {
         this.a = tree.b;
-      } else {
+      } else if (rand.nextInt(2) == 1) {
         this.a = tree.c;
+      } else if (rand.nextInt(2) == 2) {
+        this.a = tree.d;
+      } else if (rand.nextInt(2) == 3) {
+        this.a = tree.e;
+      } else if (rand.nextInt(2) == 4) {
+        this.a = tree.f;
       }
-      // Inferred propagation: Argument(1) -> Argument(0).a
+      // Inferred propagation: Argument(1) -> Argument(0).a as the input paths are collapsed when it
+      // exceeds Heuristics::kMaxInputPathLeaves.
     }
   }
 
