@@ -8,6 +8,7 @@
 #pragma once
 
 #include <AbstractDomain.h>
+#include <mariana-trench/Assert.h>
 
 namespace marianatrench {
 
@@ -29,11 +30,12 @@ class SingletonAbstractValue final
     return equals(other);
   }
 
-  bool equals(const SingletonAbstractValue& other) const override {
+  bool equals(const SingletonAbstractValue& /* unused */) const override {
     return true;
   }
 
-  AbstractValueKind join_with(const SingletonAbstractValue& other) override {
+  AbstractValueKind join_with(
+      const SingletonAbstractValue& /* unused */) override {
     return AbstractValueKind::Value;
   }
 
@@ -41,12 +43,13 @@ class SingletonAbstractValue final
     return join_with(other);
   }
 
-  AbstractValueKind meet_with(const SingletonAbstractValue& other) override {
-    return AbstractValueKind::Value;
+  AbstractValueKind meet_with(
+      const SingletonAbstractValue& /* unused */) override {
+    mt_unreachable();
   }
 
   AbstractValueKind narrow_with(const SingletonAbstractValue& other) override {
-    return meet_with(other);
+    mt_unreachable();
   }
 };
 
