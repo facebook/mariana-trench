@@ -71,11 +71,11 @@ int main(int argc, char* argv[]) {
     return ExitCode::model_generator_error(exception.what());
   } catch (const marianatrench::LifecycleMethodsError& exception) {
     return ExitCode::lifecycle_error(exception.what());
-  } catch (const std::logic_error& exception) {
-    return ExitCode::mariana_trench_error(exception.what());
   } catch (const std::out_of_range& exception) {
     return ExitCode::mariana_trench_error(exception.what());
   } catch (const std::runtime_error& exception) {
+    return ExitCode::mariana_trench_error(exception.what());
+  } catch (const std::logic_error& exception) {
     return ExitCode::mariana_trench_error(exception.what());
   } catch (const std::exception& exception) {
     return ExitCode::error(exception.what());
