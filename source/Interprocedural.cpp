@@ -20,6 +20,7 @@
 #include <mariana-trench/ClassProperties.h>
 #include <mariana-trench/Context.h>
 #include <mariana-trench/Dependencies.h>
+#include <mariana-trench/EventLogger.h>
 #include <mariana-trench/Features.h>
 #include <mariana-trench/Interprocedural.h>
 #include <mariana-trench/Log.h>
@@ -126,6 +127,10 @@ Model analyze(
   auto duration = timer.duration_in_seconds();
   if (duration > 10.0) {
     WARNING(1, "Analyzing `{}` took {:.2f}s!", method->show(), duration);
+    EventLogger::log_event(
+        "slow_method",
+        /* message */ method->show(),
+        /* value */ duration);
   }
   auto slow_method_bound =
       global_context.options->maximum_method_analysis_time();
