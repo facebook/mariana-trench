@@ -4,6 +4,46 @@
       "find": "methods",
       "where": [
         {
+          "constraint": "signature",
+          "pattern": "Ljava/lang/String;\\.valueOf:\\(Z\\)Ljava/lang/String;"
+        }
+      ],
+      "model": {
+        "propagation": [
+          {
+            "input": "Argument(0)",
+            "output": "Return",
+            "features": [
+              "cast:boolean"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "find": "methods",
+      "where": [
+        {
+          "constraint": "signature",
+          "pattern": "Ljava/lang/String;\\.valueOf:\\((I|J|F|D)\\)Ljava/lang/String;"
+        }
+      ],
+      "model": {
+        "propagation": [
+          {
+            "input": "Argument(0)",
+            "output": "Return",
+            "features": [
+              "cast:numeric"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "find": "methods",
+      "where": [
+        {
           "constraint": "name",
           "pattern": "parseInt|intValue|valueOf"
         },
