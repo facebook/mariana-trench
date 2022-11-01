@@ -18,6 +18,9 @@ from typing import Any, List, Optional
 
 from pyre_extensions import none_throws, safe_json
 
+from .exit_codes import ClientError, ConfigurationError, ExitCode
+
+
 try:
     from ..facebook.shim import configuration
 except Exception:
@@ -28,10 +31,6 @@ import pyredex
 
 
 LOG: logging.Logger = logging.getLogger(__name__)
-
-
-class ClientError(Exception):
-    pass
 
 
 def _path_exists(path: str) -> str:
@@ -61,7 +60,7 @@ def _separated_paths_exist(paths: Optional[str]) -> Optional[str]:
 
 def _check_executable(path: Path) -> Path:
     if not (path.exists() and os.access(path, os.X_OK)):
-        raise ClientError(f"Invalid binary `{path}`.")
+        raise ConfigurationError(message=f"Invalid binary `{path}`.")
     return path
 
 
@@ -112,8 +111,8 @@ def _extract_jex_file_if_exists(path: Path, target: str, build_directory: Path) 
         if jar_file_path.exists():
             return jar_file_path
         else:
-            raise ClientError(
-                f"Could not find jar file `{path}` in `{jex_extract_directory}`."
+            raise ConfigurationError(
+                message=f"Could not find jar file `{path}` in `{jex_extract_directory}`.",
             )
 
     # If the target is java_binary, then the output is a JEX file
@@ -154,9 +153,12 @@ def _build_target(target: str, *, mode: Optional[str] = None) -> Path:
         if is_fbcode_target
         else current_working_directory
     )
-    output = subprocess.run(command, stdout=subprocess.PIPE, cwd=working_directory)
+    output = subprocess.run(command, capture_output=True, cwd=working_directory)
     if output.returncode != 0:
-        raise ClientError(f"Error while building buck target `{target}`, aborting.")
+        raise ClientError(
+            message=f"Error while building buck target `{target}`, aborting.\nstderr:{output.stderr.decode()}",
+            exit_code=ExitCode.BUCK_ERROR,
+        )
 
     try:
         response = json.loads(output.stdout)
@@ -164,7 +166,10 @@ def _build_target(target: str, *, mode: Optional[str] = None) -> Path:
         response = {}
 
     if len(response) != 1 or len(next(iter(list(response.values())))) == 0:
-        raise ClientError(f"Unexpected buck output:\n{output.stdout.decode()}")
+        raise ClientError(
+            message=f"Unexpected buck output:\n{output.stdout.decode()}",
+            exit_code=ExitCode.BUCK_ERROR,
+        )
 
     return working_directory / next(iter(list(response.values())))
 
@@ -192,10 +197,14 @@ def _get_analysis_binary(arguments: argparse.Namespace) -> Path:
         # Find the mariana-trench binary in the path (open-source).
         command = shutil.which(path_command)
         if command is None:
-            raise ClientError(f"Could not find `{path_command}` in PATH.")
+            raise ConfigurationError(
+                message=f"Could not find `{path_command}` in PATH.",
+            )
         return Path(command)
 
-    raise ClientError("Could not find the analyzer binary.")
+    raise ConfigurationError(
+        message="Could not find the analyzer binary.",
+    )
 
 
 def _desugar_jar_file(jar_path: Path) -> Path:
@@ -209,10 +218,14 @@ def _desugar_jar_file(jar_path: Path) -> Path:
             desugar_tool,
             os.fspath(jar_path),
             os.fspath(desugared_jar_file),
-        ]
+        ],
+        stderr=subprocess.PIPE,
     )
     if output.returncode != 0:
-        raise ClientError("Error while desugaring jar file, aborting.")
+        raise ClientError(
+            message=f"Error while desugaring jar file, aborting.\nstderr: {output.stderr.decode()}",
+            exit_code=ExitCode.JAVA_TARGET_ERROR,
+        )
 
     LOG.info(f"Desugared jar file: `{desugared_jar_file}`.")
     return desugared_jar_file
@@ -233,10 +246,14 @@ def _build_apk_from_jar(jar_path: Path) -> Path:
             "/opt/android/sdk_D23134735/platforms/android-29/android.jar",
             "--min-api",
             "25",  # mininum api 25 corresponds to dex 37
-        ]
+        ],
+        stderr=subprocess.PIPE,
     )
     if output.returncode != 0:
-        raise ClientError("Error while running d8, aborting.")
+        raise ClientError(
+            message=f"Error while running d8, aborting.\nstderr:{output.stderr.decode()}",
+            exit_code=ExitCode.JAVA_TARGET_ERROR,
+        )
 
     return Path(dex_file)
 
@@ -688,12 +705,13 @@ def main() -> None:
         if output.returncode != 0:
             LOG.fatal(f"Analysis binary exited with exit code {output.returncode}.")
             sys.exit(output.returncode)
-    except (ClientError, configuration.Error) as error:
-        LOG.fatal(error.args[0])
-        sys.exit(1)
+    except (ClientError, ConfigurationError) as error:
+        LOG.fatal(f"{type(error).__name__}: {error.args[0]}")
+        LOG.fatal(error.exit_code)
+        sys.exit(error.exit_code)
     except Exception:
         LOG.fatal(f"Unexpected error:\n{traceback.format_exc()}")
-        sys.exit(1)
+        sys.exit(ExitCode.ERROR)
     finally:
         try:
             shutil.rmtree(build_directory)

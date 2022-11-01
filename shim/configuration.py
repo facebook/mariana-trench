@@ -7,9 +7,7 @@ import os
 from pathlib import Path
 from typing import List, Optional
 
-
-class Error(Exception):
-    pass
+from .exit_codes import ConfigurationError
 
 
 FACEBOOK_SHIM: bool = False
@@ -29,13 +27,15 @@ def _get_configuration_directory() -> Path:
         if path.is_dir():
             return path
 
-    raise Error("Could not find `share/mariana-trench/configuration` in PATH.")
+    raise ConfigurationError(
+        "Could not find `share/mariana-trench/configuration` in PATH."
+    )
 
 
 def get_path(filename: str) -> Path:
     path = _get_configuration_directory() / filename
     if not path.is_file():
-        raise Error(
+        raise ConfigurationError(
             f"Could not find `{filename}` in `{_get_configuration_directory()}`."
         )
     return path
