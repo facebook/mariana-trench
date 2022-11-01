@@ -22,6 +22,7 @@
 #include <mariana-trench/MarianaTrench.h>
 #include <mariana-trench/ModelGeneration.h>
 #include <mariana-trench/SanitizersOptions.h>
+#include <mariana-trench/shim-generator/ShimGeneration.h>
 
 int main(int argc, char* argv[]) {
   signal(SIGSEGV, crash_backtrace_handler);
@@ -65,14 +66,14 @@ int main(int argc, char* argv[]) {
       }
     }
     return ExitCode::redex_error(aggregate_exception.what());
-  } catch (const std::ifstream::failure& exception) {
-    return ExitCode::io_error(exception.what());
   } catch (const marianatrench::ModelGeneratorError& exception) {
     return ExitCode::model_generator_error(exception.what());
   } catch (const marianatrench::LifecycleMethodsError& exception) {
     return ExitCode::lifecycle_error(exception.what());
-  } catch (const std::out_of_range& exception) {
-    return ExitCode::mariana_trench_error(exception.what());
+  } catch (const marianatrench::ShimGeneratorError& exception) {
+    return ExitCode::shim_generator_error(exception.what());
+  } catch (const std::invalid_argument& exception) {
+    return ExitCode::invalid_argument_error(exception.what());
   } catch (const std::runtime_error& exception) {
     return ExitCode::mariana_trench_error(exception.what());
   } catch (const std::logic_error& exception) {

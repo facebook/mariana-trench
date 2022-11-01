@@ -5,6 +5,10 @@
  * LICENSE file in the root directory of this source tree.
  */
 
+#include <iterator>
+
+#include <boost/algorithm/string/join.hpp>
+
 #include <mariana-trench/EventLogger.h>
 #include <mariana-trench/Options.h>
 #include <mariana-trench/shim-generator/ShimGeneration.h>
@@ -47,6 +51,9 @@ std::vector<JsonShimGenerator> get_shim_generators(
 
 } // namespace
 
+ShimGeneratorError::ShimGeneratorError(const std::string& message)
+    : std::invalid_argument(message) {}
+
 MethodToShimMap ShimGeneration::run(
     Context& context,
     const MethodMappings& method_mappings) {
@@ -78,12 +85,17 @@ MethodToShimMap ShimGeneration::run(
 
     auto shims = item.emit_method_shims(context.methods.get(), method_mappings);
     method_shims.merge(shims);
-    for (const auto& shim : shims) {
-      WARNING(
-          1,
-          "Shim for {} already exist. Not adding: {}",
-          shim.first->show(),
-          shim.second);
+
+    if (!shims.empty()) {
+      std::vector<std::string> errors{};
+      std::transform(
+          shims.cbegin(),
+          shims.cend(),
+          std::back_inserter(errors),
+          [](const auto& shim) { return shim.first->show(); });
+
+      throw ShimGeneratorError(fmt::format(
+          "Duplicate shim defined for: {}", boost::join(errors, ", ")));
     }
   }
 

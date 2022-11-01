@@ -20,15 +20,15 @@ class ExitCode {
   };
 
  public:
-#define EXITCODE(NAME, VALUE)                              \
-  static int NAME() {                                      \
-    return static_cast<int>(Code::NAME);                   \
-  }                                                        \
-                                                           \
-  static int NAME(const std::string& message) {            \
-    std::cerr << "error: " << message << std::endl;        \
-    marianatrench::EventLogger::log_event(#NAME, message); \
-    return NAME();                                         \
+#define EXITCODE(NAME, VALUE)                                               \
+  static int NAME() {                                                       \
+    return static_cast<int>(Code::NAME);                                    \
+  }                                                                         \
+                                                                            \
+  static int NAME(const std::string& message) {                             \
+    std::cerr << "MarianaTrench " << #NAME << ": " << message << std::endl; \
+    marianatrench::EventLogger::log_event(#NAME, message);                  \
+    return NAME();                                                          \
   }
 #include "ExitCodes.def"
 #undef EXITCODE

@@ -13,6 +13,11 @@
 
 namespace marianatrench {
 
+class ShimGeneratorError : public std::invalid_argument {
+ public:
+  explicit ShimGeneratorError(const std::string& message);
+};
+
 class ShimGeneration {
  public:
   static MethodToShimMap run(
