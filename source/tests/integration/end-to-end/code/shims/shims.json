@@ -145,6 +145,27 @@
     "find": "methods",
     "where": [
       {
+        "constraint": "signature",
+        "pattern": "Lcom/facebook/marianatrench/integrationtests/ParameterMapping;\\.definedAndInferred:.*"
+      }
+    ],
+    "shim": {
+      "callees": [
+        {
+          "type_of": "Argument(1)",
+          "method_name": "multipleArguments:(ILjava/lang/String;Ljava/lang/Object;)V",
+          "infer_parameters_from_types": true,
+          "parameters_map": {
+            "Argument(3)": "Argument(2)"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "find": "methods",
+    "where": [
+      {
         "constraint": "is_static",
         "value": true
       },

@@ -442,6 +442,23 @@
       "Lcom/facebook/marianatrench/integrationtests/Messenger;.<init>:(Lcom/facebook/marianatrench/integrationtests/Handler;)V"
     ]
   },
+  "Lcom/facebook/marianatrench/integrationtests/Shims;.testDefinedAndInferredArgument:()V" : 
+  {
+    "artificial" : 
+    [
+      "Lcom/facebook/marianatrench/integrationtests/ShimTarget;.multipleArguments:(ILjava/lang/String;Ljava/lang/Object;)V"
+    ],
+    "static" : 
+    [
+      "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;",
+      "Lcom/facebook/marianatrench/integrationtests/ParameterMapping;.<init>:()V",
+      "Lcom/facebook/marianatrench/integrationtests/ShimTarget;.<init>:()V"
+    ],
+    "virtual" : 
+    [
+      "Lcom/facebook/marianatrench/integrationtests/ParameterMapping;.definedAndInferred:(Lcom/facebook/marianatrench/integrationtests/ShimTarget;Ljava/lang/Object;Ljava/lang/String;)V"
+    ]
+  },
   "Lcom/facebook/marianatrench/integrationtests/Shims;.testDirectShimTarget:()V" : 
   {
     "static" : 

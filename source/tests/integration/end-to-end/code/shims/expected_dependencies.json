@@ -158,6 +158,7 @@
     "Lcom/facebook/marianatrench/integrationtests/ReflectionShims;.testMultipleCallsites:(Z)V",
     "Lcom/facebook/marianatrench/integrationtests/ReflectionShims;.testMultipleWithIssueFN:(Z)V",
     "Lcom/facebook/marianatrench/integrationtests/ReflectionShims;.testSimpleIssue:()V",
+    "Lcom/facebook/marianatrench/integrationtests/Shims;.testDefinedAndInferredArgument:()V",
     "Lcom/facebook/marianatrench/integrationtests/Shims;.testDirectShimTarget:()V",
     "Lcom/facebook/marianatrench/integrationtests/Shims;.testDropArgumentDefined:()V",
     "Lcom/facebook/marianatrench/integrationtests/Shims;.testDropArgumentInferred:()V",
@@ -171,6 +172,7 @@
   ],
   "Lcom/facebook/marianatrench/integrationtests/ParameterMapping;.<init>:()V" : 
   [
+    "Lcom/facebook/marianatrench/integrationtests/Shims;.testDefinedAndInferredArgument:()V",
     "Lcom/facebook/marianatrench/integrationtests/Shims;.testDropArgumentDefined:()V",
     "Lcom/facebook/marianatrench/integrationtests/Shims;.testDropArgumentInferred:()V",
     "Lcom/facebook/marianatrench/integrationtests/Shims;.testStaticShimTarget:()V"
@@ -187,6 +189,10 @@
   "Lcom/facebook/marianatrench/integrationtests/ParameterMapping;.defined:(Lcom/facebook/marianatrench/integrationtests/ShimTarget;Ljava/lang/Object;Ljava/lang/String;)V" : 
   [
     "Lcom/facebook/marianatrench/integrationtests/Shims;.testDropArgumentDefined:()V"
+  ],
+  "Lcom/facebook/marianatrench/integrationtests/ParameterMapping;.definedAndInferred:(Lcom/facebook/marianatrench/integrationtests/ShimTarget;Ljava/lang/Object;Ljava/lang/String;)V" : 
+  [
+    "Lcom/facebook/marianatrench/integrationtests/Shims;.testDefinedAndInferredArgument:()V"
   ],
   "Lcom/facebook/marianatrench/integrationtests/ParameterMapping;.inferred:(Lcom/facebook/marianatrench/integrationtests/ShimTarget;Ljava/lang/Object;)V" : 
   [
@@ -209,12 +215,14 @@
   ],
   "Lcom/facebook/marianatrench/integrationtests/ShimTarget;.<init>:()V" : 
   [
+    "Lcom/facebook/marianatrench/integrationtests/Shims;.testDefinedAndInferredArgument:()V",
     "Lcom/facebook/marianatrench/integrationtests/Shims;.testDirectShimTarget:()V",
     "Lcom/facebook/marianatrench/integrationtests/Shims;.testDropArgumentDefined:()V",
     "Lcom/facebook/marianatrench/integrationtests/Shims;.testDropArgumentInferred:()V"
   ],
   "Lcom/facebook/marianatrench/integrationtests/ShimTarget;.multipleArguments:(ILjava/lang/String;Ljava/lang/Object;)V" : 
   [
+    "Lcom/facebook/marianatrench/integrationtests/Shims;.testDefinedAndInferredArgument:()V",
     "Lcom/facebook/marianatrench/integrationtests/Shims;.testDirectShimTarget:()V",
     "Lcom/facebook/marianatrench/integrationtests/Shims;.testDropArgumentDefined:()V",
     "Lcom/facebook/marianatrench/integrationtests/Shims;.testDropArgumentInferred:()V"

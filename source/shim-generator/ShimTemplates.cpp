@@ -66,18 +66,17 @@ std::optional<ShimTarget> try_make_shim_target(
     return std::nullopt;
   }
 
-  auto instantiated_parameter_map = target_template.parameter_map().instantiate(
-      call_target->get_name(),
-      call_target->get_class(),
-      call_target->get_proto(),
-      call_target->is_static(),
-      shim_method);
+  auto instantiated_parameter_map =
+      target_template.parameter_map().instantiate_parameters(
+          call_target->get_name(),
+          call_target->get_class(),
+          call_target->get_proto(),
+          call_target->is_static(),
+          shim_method);
 
   if (receiver_info.kind() == ReceiverInfo::Kind::INSTANCE ||
       receiver_info.kind() == ReceiverInfo::Kind::REFLECTION) {
-    // Include "this" as argument 0
-    instantiated_parameter_map.insert(
-        /* this */ 0,
+    instantiated_parameter_map.add_receiver(
         std::get<ShimParameterPosition>(receiver_info.receiver()));
   }
 
@@ -113,16 +112,16 @@ std::optional<ShimReflectionTarget> try_make_shim_reflection_target(
     return std::nullopt;
   }
 
-  auto instantiated_parameter_map = target_template.parameter_map().instantiate(
-      method_spec->name->str(),
-      method_spec->cls,
-      method_spec->proto,
-      /* shim_target_is_static */ false,
-      shim_method);
+  auto instantiated_parameter_map =
+      target_template.parameter_map().instantiate_parameters(
+          method_spec->name->str(),
+          method_spec->cls,
+          method_spec->proto,
+          /* shim_target_is_static */ false,
+          shim_method);
 
-  // Include "this" as argument 0
-  instantiated_parameter_map.insert(
-      /* this */ 0, std::get<ShimParameterPosition>(receiver_info.receiver()));
+  instantiated_parameter_map.add_receiver(
+      std::get<ShimParameterPosition>(receiver_info.receiver()));
 
   return ShimReflectionTarget(
       *method_spec, std::move(instantiated_parameter_map));
@@ -149,7 +148,8 @@ std::optional<ShimLifecycleTarget> try_make_shim_lifecycle_target(
   return ShimLifecycleTarget(
       std::string(target_template.target()),
       std::get<ShimParameterPosition>(receiver_info.receiver()),
-      receiver_info.kind() == ReceiverInfo::Kind::REFLECTION);
+      receiver_info.kind() == ReceiverInfo::Kind::REFLECTION,
+      target_template.parameter_map().infer_from_types());
 }
 
 } // namespace
@@ -222,8 +222,13 @@ TargetTemplate::TargetTemplate(
       parameter_map_(std::move(parameter_map)) {}
 
 TargetTemplate TargetTemplate::from_json(const Json::Value& callee) {
+  const auto& parameters_map =
+      JsonValidation::null_or_object(callee, "parameters_map");
   auto parameter_map = ShimParameterMapping::from_json(
-      JsonValidation::null_or_object(callee, "parameters_map"));
+      parameters_map,
+      callee.isMember("infer_parameters_from_types")
+          ? JsonValidation::boolean(callee, "infer_parameters_from_types")
+          : parameters_map.isNull());
   auto receiver_info = ReceiverInfo::from_json(callee);
 
   if (callee.isMember("method_name")) {

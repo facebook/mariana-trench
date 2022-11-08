@@ -49,14 +49,9 @@ class ShimParameterMapping {
  public:
   ShimParameterMapping();
 
-  static ShimParameterMapping from_json(const Json::Value& value);
-
-  ShimParameterMapping instantiate(
-      std::string_view shim_target_method,
-      const DexType* shim_target_class,
-      const DexProto* shim_target_proto,
-      bool shim_target_is_static,
-      const ShimMethod& shim_method) const;
+  static ShimParameterMapping from_json(
+      const Json::Value& value,
+      bool infer_from_types);
 
   bool empty() const;
   bool contains(ParameterPosition position) const;
@@ -66,12 +61,30 @@ class ShimParameterMapping {
       ParameterPosition parameter_position,
       ShimParameterPosition shim_parameter_position);
 
+  void set_infer_from_types(bool value);
+  bool infer_from_types() const;
+
+  void add_receiver(ShimParameterPosition shim_parameter_position);
+
+  ShimParameterMapping instantiate_parameters(
+      std::string_view shim_target_method,
+      const DexType* shim_target_class,
+      const DexProto* shim_target_proto,
+      bool shim_target_is_static,
+      const ShimMethod& shim_method) const;
+
+  void infer_parameters_from_types(
+      const DexProto* shim_target_proto,
+      bool shim_target_is_static,
+      const ShimMethod& shim_method);
+
   friend std::ostream& operator<<(
       std::ostream& out,
       const ShimParameterMapping& map);
 
  private:
   std::unordered_map<ParameterPosition, ShimParameterPosition> map_;
+  bool infer_from_types_;
 };
 
 /**
@@ -141,7 +154,8 @@ class ShimLifecycleTarget {
   explicit ShimLifecycleTarget(
       std::string method_name,
       ShimParameterPosition receiver_position,
-      bool is_reflection);
+      bool is_reflection,
+      bool infer_parameter_mapping);
 
   std::string_view method_name() const {
     return method_name_;
@@ -158,6 +172,10 @@ class ShimLifecycleTarget {
     return is_reflection_;
   }
 
+  bool infer_from_types() const {
+    return infer_from_types_;
+  }
+
   friend std::ostream& operator<<(
       std::ostream& out,
       const ShimLifecycleTarget& shim_lifecycle_target);
@@ -166,6 +184,7 @@ class ShimLifecycleTarget {
   std::string method_name_;
   ShimParameterPosition receiver_position_;
   bool is_reflection_;
+  bool infer_from_types_;
 };
 
 using ShimTargetVariant =

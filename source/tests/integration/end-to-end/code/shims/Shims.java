@@ -83,6 +83,7 @@ class ShimTarget {
 
   void multipleArguments(int i, String s, Object o) {
     Origin.sink(o);
+    Origin.sink(s);
   }
 
   static void staticMethod(Object o) {
@@ -103,6 +104,10 @@ class ParameterMapping {
 
   void defined(ShimTarget shimTarget, Object o, String s) {
     // Expect artificial call: shimTarget.multipleArguments(<dropped>, <dropped>, o)
+  }
+
+  void definedAndInferred(ShimTarget shimTarget, Object o, String s) {
+    // Expect artificial call: shimTarget.multipleArguments(<dropped>, s, o)
   }
 
   void callStatic(Object o) {
@@ -183,5 +188,10 @@ public class Shims {
     f.setArguments(b);
 
     new FragmentTest().add(f, null);
+  }
+
+  static void testDefinedAndInferredArgument() {
+    ParameterMapping c = new ParameterMapping();
+    c.definedAndInferred(new ShimTarget(), Origin.source(), (String) Origin.source());
   }
 }
