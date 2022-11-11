@@ -108,6 +108,24 @@ class CalleePortFramesV2 final
   CalleePortFramesV2& operator=(const CalleePortFramesV2&) = default;
   CalleePortFramesV2& operator=(CalleePortFramesV2&&) = default;
 
+  // Describe how to join frames together in `CallPositionFrames`.
+  struct GroupEqual {
+    bool operator()(
+        const CalleePortFramesV2& left,
+        const CalleePortFramesV2& right) const;
+  };
+
+  // Describe how to join frames together in `CallPositionFrames`.
+  struct GroupHash {
+    std::size_t operator()(const CalleePortFramesV2& frame) const;
+  };
+
+  // Describe how to diff frames together in `CallPositionFrames`.
+  struct GroupDifference {
+    void operator()(CalleePortFramesV2& left, const CalleePortFramesV2& right)
+        const;
+  };
+
   static CalleePortFramesV2 bottom() {
     return CalleePortFramesV2();
   }
@@ -187,6 +205,8 @@ class CalleePortFramesV2 final
 
   void narrow_with(const CalleePortFramesV2& other) override;
 
+  void difference_with(const CalleePortFramesV2& other);
+
   void map(const std::function<void(Frame&)>& f);
 
   ConstIterator begin() const {
@@ -231,6 +251,15 @@ class CalleePortFramesV2 final
   void transform_kind_with_features(
       const std::function<std::vector<const Kind*>(const Kind*)>&,
       const std::function<FeatureMayAlwaysSet(const Kind*)>&);
+
+  void append_to_artificial_source_input_paths(Path::Element path_element) {
+    mt_unreachable();
+  }
+
+  void add_inferred_features_to_real_sources(
+      const FeatureMayAlwaysSet& features) {
+    mt_unreachable();
+  }
 
   void filter_invalid_frames(
       const std::function<

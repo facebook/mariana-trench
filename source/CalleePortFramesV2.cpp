@@ -93,6 +93,28 @@ CalleePortFramesV2::CalleePortFramesV2(
   }
 }
 
+bool CalleePortFramesV2::GroupEqual::operator()(
+    const CalleePortFramesV2& left,
+    const CalleePortFramesV2& right) const {
+  return left.is_result_or_receiver_sinks_ ==
+      right.is_result_or_receiver_sinks_ &&
+      left.callee_port() == right.callee_port();
+}
+
+std::size_t CalleePortFramesV2::GroupHash::operator()(
+    const CalleePortFramesV2& frame) const {
+  std::size_t seed = 0;
+  boost::hash_combine(seed, std::hash<AccessPath>()(frame.callee_port()));
+  boost::hash_combine(seed, frame.is_result_or_receiver_sinks_);
+  return seed;
+}
+
+void CalleePortFramesV2::GroupDifference::operator()(
+    CalleePortFramesV2& left,
+    const CalleePortFramesV2& right) const {
+  left.difference_with(right);
+}
+
 void CalleePortFramesV2::add(const TaintConfig& config) {
   mt_assert(!config.is_artificial_source());
   if (is_bottom()) {
@@ -206,6 +228,28 @@ void CalleePortFramesV2::narrow_with(const CalleePortFramesV2& other) {
   frames_.narrow_with(other.frames_);
   output_paths_.narrow_with(other.output_paths_);
   local_positions_.narrow_with(other.local_positions_);
+}
+
+void CalleePortFramesV2::difference_with(const CalleePortFramesV2& other) {
+  if (is_bottom()) {
+    callee_port_ = other.callee_port();
+    is_result_or_receiver_sinks_ = other.is_result_or_receiver_sinks_;
+  }
+  mt_assert(other.is_bottom() || has_same_key(other));
+
+  // Local positions and output paths apply to all frames. If LHS is not leq
+  // RHS, then do not apply the difference operator to the frames because every
+  // frame on LHS would not be considered leq its RHS frame.
+  if (local_positions_.leq(other.local_positions_) &&
+      output_paths_.leq(other.output_paths_)) {
+    frames_.difference_like_operation(
+        other.frames_,
+        [](const Frames& frames_left, const Frames& frames_right) {
+          auto frames_copy = frames_left;
+          frames_copy.difference_with(frames_right);
+          return frames_copy;
+        });
+  }
 }
 
 void CalleePortFramesV2::map(const std::function<void(Frame&)>& f) {

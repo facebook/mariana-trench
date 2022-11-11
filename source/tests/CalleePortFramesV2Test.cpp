@@ -515,6 +515,469 @@ TEST_F(CalleePortFramesV2Test, ResultReceiverSinkJoinWith) {
       (PathTreeDomain{{Path{x}, SingletonAbstractDomain()}}));
 }
 
+TEST_F(CalleePortFramesV2Test, Difference) {
+  auto context = test::make_empty_context();
+
+  Scope scope;
+  auto* one =
+      context.methods->create(redex::create_void_method(scope, "LOne;", "one"));
+  auto* two =
+      context.methods->create(redex::create_void_method(scope, "LTwo;", "two"));
+  auto* three = context.methods->create(
+      redex::create_void_method(scope, "LThree;", "three"));
+
+  auto* test_kind_one = context.kinds->get("TestSinkOne");
+  auto* test_kind_two = context.kinds->get("TestSinkTwo");
+  auto* feature_one = context.features->get("FeatureOne");
+  auto* feature_two = context.features->get("FeatureTwo");
+  auto* user_feature_one = context.features->get("UserFeatureOne");
+  auto* user_feature_two = context.features->get("UserFeatureTwo");
+
+  CalleePortFramesV2 frames, initial_frames;
+
+  // Tests with empty left hand side.
+  frames.difference_with(CalleePortFramesV2{});
+  EXPECT_TRUE(frames.is_bottom());
+
+  frames.difference_with(CalleePortFramesV2{
+      test::make_taint_config(test_kind_one, test::FrameProperties{}),
+  });
+  EXPECT_TRUE(frames.is_bottom());
+
+  initial_frames = CalleePortFramesV2{
+      test::make_taint_config(
+          test_kind_one,
+          test::FrameProperties{
+              .callee_port = AccessPath(Root(Root::Kind::Argument, 0)),
+              .callee = one,
+              .distance = 1,
+              .origins = MethodSet{one},
+              .inferred_features = FeatureMayAlwaysSet{feature_one},
+              .user_features = FeatureSet{user_feature_one}}),
+  };
+
+  frames = initial_frames;
+  frames.difference_with(CalleePortFramesV2::bottom());
+  EXPECT_EQ(frames, initial_frames);
+
+  frames = initial_frames;
+  frames.difference_with(CalleePortFramesV2{
+      test::make_taint_config(
+          test_kind_one,
+          test::FrameProperties{
+              .callee_port = AccessPath(Root(Root::Kind::Argument, 0)),
+              .callee = one,
+              .distance = 1,
+              .origins = MethodSet{one},
+              .inferred_features = FeatureMayAlwaysSet{feature_one},
+              .user_features = FeatureSet{user_feature_one}}),
+  });
+  EXPECT_TRUE(frames.is_bottom());
+
+  // Left hand side is bigger than right hand side.
+  frames = initial_frames;
+  frames.difference_with(CalleePortFramesV2{
+      test::make_taint_config(
+          test_kind_one,
+          test::FrameProperties{
+              .callee_port = AccessPath(Root(Root::Kind::Argument, 0)),
+              .callee = one,
+              .distance = 1,
+              .origins = MethodSet{one}}),
+  });
+  EXPECT_EQ(frames, initial_frames);
+
+  // Left hand side and right hand side have different inferred features.
+  frames = initial_frames;
+  frames.difference_with(CalleePortFramesV2{
+      test::make_taint_config(
+          test_kind_one,
+          test::FrameProperties{
+              .callee_port = AccessPath(Root(Root::Kind::Argument, 0)),
+              .callee = one,
+              .distance = 1,
+              .origins = MethodSet{one},
+              .inferred_features = FeatureMayAlwaysSet{feature_two},
+              .user_features = FeatureSet{user_feature_one}}),
+  });
+  EXPECT_EQ(frames, initial_frames);
+
+  // Left hand side and right hand side have different user features.
+  frames = initial_frames;
+  frames.difference_with(CalleePortFramesV2{
+      test::make_taint_config(
+          test_kind_one,
+          test::FrameProperties{
+              .callee_port = AccessPath(Root(Root::Kind::Argument, 0)),
+              .callee = one,
+              .distance = 1,
+              .origins = MethodSet{one},
+              .inferred_features = FeatureMayAlwaysSet{feature_one},
+              .user_features = FeatureSet{user_feature_two}}),
+  });
+  EXPECT_EQ(frames, initial_frames);
+
+  // Left hand side is smaller than right hand side (with one kind).
+  frames = CalleePortFramesV2{
+      test::make_taint_config(
+          test_kind_one,
+          test::FrameProperties{
+              .callee_port = AccessPath(Root(Root::Kind::Argument, 0)),
+              .callee = one,
+              .distance = 1,
+              .origins = MethodSet{one},
+              .inferred_features = FeatureMayAlwaysSet{feature_one},
+              .user_features = FeatureSet{user_feature_one}}),
+  };
+  frames.difference_with(CalleePortFramesV2{
+      test::make_taint_config(
+          test_kind_one,
+          test::FrameProperties{
+              .callee_port = AccessPath(Root(Root::Kind::Argument, 0)),
+              .callee = one,
+              .distance = 1,
+              .origins = MethodSet{one},
+              .inferred_features = FeatureMayAlwaysSet{feature_one},
+              .user_features = FeatureSet{user_feature_one}}),
+      test::make_taint_config(
+          test_kind_one,
+          test::FrameProperties{
+              .callee_port = AccessPath(Root(Root::Kind::Argument, 0)),
+              .callee = two,
+              .distance = 1,
+              .origins = MethodSet{two},
+              .inferred_features = FeatureMayAlwaysSet{feature_two},
+              .user_features = FeatureSet{user_feature_two}}),
+  });
+  EXPECT_TRUE(frames.is_bottom());
+
+  // Left hand side has more kinds than right hand side.
+  frames = CalleePortFramesV2{
+      test::make_taint_config(
+          test_kind_one,
+          test::FrameProperties{
+              .callee_port = AccessPath(Root(Root::Kind::Argument, 0)),
+              .callee = one,
+              .distance = 1,
+              .origins = MethodSet{one}}),
+      test::make_taint_config(
+          test_kind_two,
+          test::FrameProperties{
+              .callee_port = AccessPath(Root(Root::Kind::Argument, 0)),
+              .callee = one,
+              .distance = 1,
+              .origins = MethodSet{one}}),
+  };
+  frames.difference_with(CalleePortFramesV2{test::make_taint_config(
+      test_kind_one,
+      test::FrameProperties{
+          .callee_port = AccessPath(Root(Root::Kind::Argument, 0)),
+          .callee = one,
+          .distance = 1,
+          .origins = MethodSet{one}})});
+  EXPECT_EQ(
+      frames,
+      (CalleePortFramesV2{
+          test::make_taint_config(
+              test_kind_two,
+              test::FrameProperties{
+                  .callee_port = AccessPath(Root(Root::Kind::Argument, 0)),
+                  .callee = one,
+                  .distance = 1,
+                  .origins = MethodSet{one}}),
+      }));
+
+  // Left hand side is smaller for one kind, and larger for another.
+  frames = CalleePortFramesV2{
+      test::make_taint_config(
+          test_kind_one,
+          test::FrameProperties{
+              .callee_port = AccessPath(Root(Root::Kind::Argument, 0)),
+              .callee = one,
+              .distance = 1,
+              .origins = MethodSet{one}}),
+      test::make_taint_config(
+          test_kind_two,
+          test::FrameProperties{
+              .callee_port = AccessPath(Root(Root::Kind::Argument, 0)),
+              .callee = two,
+              .distance = 1,
+              .origins = MethodSet{two}}),
+      test::make_taint_config(
+          test_kind_two,
+          test::FrameProperties{
+              .callee_port = AccessPath(Root(Root::Kind::Argument, 0)),
+              .callee = three,
+              .distance = 1,
+              .origins = MethodSet{three}}),
+  };
+  frames.difference_with(CalleePortFramesV2{
+      test::make_taint_config(
+          test_kind_one,
+          test::FrameProperties{
+              .callee_port = AccessPath(Root(Root::Kind::Argument, 0)),
+              .callee = one,
+              .distance = 1,
+              .origins = MethodSet{one}}),
+      test::make_taint_config(
+          test_kind_one,
+          test::FrameProperties{
+              .callee_port = AccessPath(Root(Root::Kind::Argument, 0)),
+              .callee = two,
+              .distance = 1,
+              .origins = MethodSet{two}}),
+      test::make_taint_config(
+          test_kind_two,
+          test::FrameProperties{
+              .callee_port = AccessPath(Root(Root::Kind::Argument, 0)),
+              .callee = two,
+              .distance = 1,
+              .origins = MethodSet{two}})});
+  EXPECT_EQ(
+      frames,
+      (CalleePortFramesV2{test::make_taint_config(
+          test_kind_two,
+          test::FrameProperties{
+              .callee_port = AccessPath(Root(Root::Kind::Argument, 0)),
+              .callee = three,
+              .distance = 1,
+              .origins = MethodSet{three}})}));
+
+  // Left hand side larger than right hand side for specific frames.
+  frames = CalleePortFramesV2{
+      test::make_taint_config(
+          test_kind_one,
+          test::FrameProperties{
+              .callee_port = AccessPath(Root(Root::Kind::Argument, 0)),
+              .callee = one,
+              .distance = 1,
+              .origins = MethodSet{one, two}}),
+      test::make_taint_config(
+          test_kind_one,
+          test::FrameProperties{
+              .callee_port = AccessPath(Root(Root::Kind::Argument, 0)),
+              .callee = two,
+              .distance = 1,
+              .origins = MethodSet{two}}),
+      test::make_taint_config(
+          test_kind_one,
+          test::FrameProperties{
+              .callee_port = AccessPath(Root(Root::Kind::Argument, 0)),
+              .callee = three,
+              .distance = 1,
+              .origins = MethodSet{one, three}}),
+  };
+  frames.difference_with(CalleePortFramesV2{
+      test::make_taint_config(
+          test_kind_one,
+          test::FrameProperties{
+              .callee_port = AccessPath(Root(Root::Kind::Argument, 0)),
+              .callee = one,
+              .distance = 1,
+              .origins = MethodSet{one}}),
+      test::make_taint_config(
+          test_kind_one,
+          test::FrameProperties{
+              .callee_port = AccessPath(Root(Root::Kind::Argument, 0)),
+              .callee = three,
+              .distance = 1,
+              .origins = MethodSet{one, two, three}}),
+  });
+  EXPECT_EQ(
+      frames,
+      (CalleePortFramesV2{
+          test::make_taint_config(
+              test_kind_one,
+              test::FrameProperties{
+                  .callee_port = AccessPath(Root(Root::Kind::Argument, 0)),
+                  .callee = one,
+                  .distance = 1,
+                  .origins = MethodSet{one, two}}),
+          test::make_taint_config(
+              test_kind_one,
+              test::FrameProperties{
+                  .callee_port = AccessPath(Root(Root::Kind::Argument, 0)),
+                  .callee = two,
+                  .distance = 1,
+                  .origins = MethodSet{two}}),
+      }));
+}
+
+TEST_F(CalleePortFramesV2Test, DifferenceLocalPositions) {
+  auto context = test::make_empty_context();
+
+  auto* test_kind_one = context.kinds->get("TestSinkOne");
+  auto* test_kind_two = context.kinds->get("TestSinkTwo");
+  auto* test_position_one = context.positions->get(std::nullopt, 1);
+
+  // Empty left hand side.
+  auto frames = CalleePortFramesV2::bottom();
+  frames.difference_with(CalleePortFramesV2{
+      test::make_taint_config(
+          test_kind_one,
+          test::FrameProperties{
+              .local_positions = LocalPositionSet{test_position_one}}),
+  });
+  EXPECT_TRUE(frames.is_bottom());
+
+  // lhs.local_positions <= rhs.local_positions
+  // lhs.frames <= rhs.frames
+  frames = CalleePortFramesV2{
+      test::make_taint_config(test_kind_one, test::FrameProperties{})};
+  frames.difference_with(CalleePortFramesV2{
+      test::make_taint_config(
+          test_kind_one,
+          test::FrameProperties{
+              .local_positions = LocalPositionSet{test_position_one}}),
+      test::make_taint_config(test_kind_two, test::FrameProperties{})});
+  EXPECT_TRUE(frames.is_bottom());
+
+  // lhs.local_positions <= rhs.local_positions
+  // lhs.frames > rhs.frames
+  frames = CalleePortFramesV2{
+      test::make_taint_config(test_kind_one, test::FrameProperties{}),
+      test::make_taint_config(test_kind_two, test::FrameProperties{})};
+  frames.difference_with(CalleePortFramesV2{test::make_taint_config(
+      test_kind_one,
+      test::FrameProperties{
+          .local_positions = LocalPositionSet{test_position_one}})});
+  EXPECT_EQ(
+      frames,
+      CalleePortFramesV2{
+          test::make_taint_config(test_kind_two, test::FrameProperties{})});
+
+  // lhs.local_positions > rhs.local_positions
+  // lhs.frames > rhs.frames
+  frames = CalleePortFramesV2{
+      test::make_taint_config(
+          test_kind_one,
+          test::FrameProperties{
+              .local_positions = LocalPositionSet{test_position_one}}),
+      test::make_taint_config(test_kind_two, test::FrameProperties{})};
+  frames.difference_with(CalleePortFramesV2{
+      test::make_taint_config(test_kind_one, test::FrameProperties{})});
+  EXPECT_EQ(
+      frames,
+      (CalleePortFramesV2{
+          test::make_taint_config(
+              test_kind_one,
+              test::FrameProperties{
+                  .local_positions = LocalPositionSet{test_position_one}}),
+          test::make_taint_config(test_kind_two, test::FrameProperties{})}));
+
+  // lhs.local_positions > rhs.local_positions
+  // lhs.frames <= rhs.frames
+  frames = CalleePortFramesV2{test::make_taint_config(
+      test_kind_one,
+      test::FrameProperties{
+          .local_positions = LocalPositionSet{test_position_one}})};
+  frames.difference_with(CalleePortFramesV2{
+      test::make_taint_config(test_kind_one, test::FrameProperties{}),
+      test::make_taint_config(test_kind_two, test::FrameProperties{})});
+  EXPECT_EQ(
+      frames,
+      CalleePortFramesV2{test::make_taint_config(
+          test_kind_one,
+          test::FrameProperties{
+              .local_positions = LocalPositionSet{test_position_one}})});
+}
+
+TEST_F(CalleePortFramesV2Test, DifferenceOutputPaths) {
+  auto context = test::make_empty_context();
+
+  const auto* x = DexString::make_string("x");
+  const auto* feature = context.features->get("featureone");
+
+  // lhs.output_paths <= rhs.output_paths
+  // lhs.frames <= rhs.frames
+  auto lhs_frames = CalleePortFramesV2{test::make_taint_config(
+      Kinds::receiver(),
+      test::FrameProperties{
+          .callee_port = AccessPath(Root(Root::Kind::Argument)),
+          .output_paths =
+              PathTreeDomain{{Path{x}, SingletonAbstractDomain()}}})};
+  lhs_frames.difference_with(CalleePortFramesV2{test::make_taint_config(
+      Kinds::receiver(),
+      test::FrameProperties{
+          .callee_port = AccessPath(Root(Root::Kind::Argument)),
+          .output_paths =
+              PathTreeDomain{{Path{}, SingletonAbstractDomain()}}})});
+  EXPECT_TRUE(lhs_frames.is_bottom());
+
+  // lhs.output_paths <= rhs.output_paths
+  // lhs.frames > rhs.frames
+  lhs_frames = CalleePortFramesV2{test::make_taint_config(
+      Kinds::receiver(),
+      test::FrameProperties{
+          .callee_port = AccessPath(Root(Root::Kind::Argument)),
+          .inferred_features = FeatureMayAlwaysSet{feature},
+          .output_paths =
+              PathTreeDomain{{Path{x}, SingletonAbstractDomain()}}})};
+  lhs_frames.difference_with(CalleePortFramesV2{test::make_taint_config(
+      Kinds::receiver(),
+      test::FrameProperties{
+          .callee_port = AccessPath(Root(Root::Kind::Argument)),
+          .output_paths =
+              PathTreeDomain{{Path{}, SingletonAbstractDomain()}}})});
+  EXPECT_EQ(
+      lhs_frames,
+      CalleePortFramesV2{test::make_taint_config(
+          Kinds::receiver(),
+          test::FrameProperties{
+              .callee_port = AccessPath(Root(Root::Kind::Argument)),
+              .inferred_features = FeatureMayAlwaysSet{feature},
+              .output_paths =
+                  PathTreeDomain{{Path{x}, SingletonAbstractDomain()}}})});
+
+  // lhs.output_paths > rhs.output_paths
+  // lhs.frames <= rhs.frames
+  lhs_frames = CalleePortFramesV2{test::make_taint_config(
+      Kinds::receiver(),
+      test::FrameProperties{
+          .callee_port = AccessPath(Root(Root::Kind::Argument)),
+          .output_paths =
+              PathTreeDomain{{Path{}, SingletonAbstractDomain()}}})};
+  lhs_frames.difference_with(CalleePortFramesV2{test::make_taint_config(
+      Kinds::receiver(),
+      test::FrameProperties{
+          .callee_port = AccessPath(Root(Root::Kind::Argument)),
+          .output_paths =
+              PathTreeDomain{{Path{x}, SingletonAbstractDomain()}}})});
+  EXPECT_EQ(
+      lhs_frames,
+      CalleePortFramesV2{test::make_taint_config(
+          Kinds::receiver(),
+          test::FrameProperties{
+              .callee_port = AccessPath(Root(Root::Kind::Argument)),
+              .output_paths =
+                  PathTreeDomain{{Path{}, SingletonAbstractDomain()}}})});
+
+  // lhs.output_paths > rhs.output_paths
+  // lhs.frames > rhs.frames
+  lhs_frames = CalleePortFramesV2{test::make_taint_config(
+      Kinds::receiver(),
+      test::FrameProperties{
+          .callee_port = AccessPath(Root(Root::Kind::Argument)),
+          .inferred_features = FeatureMayAlwaysSet{feature},
+          .output_paths =
+              PathTreeDomain{{Path{}, SingletonAbstractDomain()}}})};
+  lhs_frames.difference_with(CalleePortFramesV2{test::make_taint_config(
+      Kinds::receiver(),
+      test::FrameProperties{
+          .callee_port = AccessPath(Root(Root::Kind::Argument)),
+          .output_paths =
+              PathTreeDomain{{Path{x}, SingletonAbstractDomain()}}})});
+  EXPECT_EQ(
+      lhs_frames,
+      CalleePortFramesV2{test::make_taint_config(
+          Kinds::receiver(),
+          test::FrameProperties{
+              .callee_port = AccessPath(Root(Root::Kind::Argument)),
+              .inferred_features = FeatureMayAlwaysSet{feature},
+              .output_paths =
+                  PathTreeDomain{{Path{}, SingletonAbstractDomain()}}})});
+}
+
 TEST_F(CalleePortFramesV2Test, Iterator) {
   auto context = test::make_empty_context();
 
