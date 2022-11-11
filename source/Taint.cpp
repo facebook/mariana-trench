@@ -258,6 +258,7 @@ Taint Taint::artificial_source(AccessPath access_path) {
       /* canonical_names */ {},
       /* input_paths */
       PathTreeDomain{{access_path.path(), SingletonAbstractDomain()}},
+      /* output_paths */ {},
       /* local_positions */ {})};
 }
 

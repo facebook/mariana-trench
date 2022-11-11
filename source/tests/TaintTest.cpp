@@ -991,7 +991,9 @@ TEST_F(TaintTest, ContainsKind) {
       test::make_taint_config(
           /* kind */ context.kinds->get("TestSource"), test::FrameProperties{}),
       test::make_taint_config(
-          Kinds::artificial_source(), test::FrameProperties{})};
+          Kinds::artificial_source(),
+          test::FrameProperties{
+              .callee_port = AccessPath(Root(Root::Kind::Argument))})};
 
   EXPECT_TRUE(taint.contains_kind(Kinds::artificial_source()));
   EXPECT_TRUE(taint.contains_kind(context.kinds->get("TestSource")));
@@ -1056,10 +1058,13 @@ TEST_F(TaintTest, PartitionByKindGeneric) {
   auto taint = Taint{
       test::make_taint_config(
           /* kind */ context.kinds->artificial_source(),
-          test::FrameProperties{}),
+          test::FrameProperties{
+              .callee_port = AccessPath(Root(Root::Kind::Argument))}),
       test::make_taint_config(
           /* kind */ context.kinds->artificial_source(),
-          test::FrameProperties{.callee = method1}),
+          test::FrameProperties{
+              .callee_port = AccessPath(Root(Root::Kind::Argument)),
+              .callee = method1}),
       test::make_taint_config(
           /* kind */ context.kinds->get("TestSource1"),
           test::FrameProperties{.callee = method1}),
@@ -1075,10 +1080,13 @@ TEST_F(TaintTest, PartitionByKindGeneric) {
       (Taint{
           test::make_taint_config(
               /* kind */ context.kinds->artificial_source(),
-              test::FrameProperties{}),
+              test::FrameProperties{
+                  .callee_port = AccessPath(Root(Root::Kind::Argument))}),
           test::make_taint_config(
               /* kind */ context.kinds->artificial_source(),
-              test::FrameProperties{.callee = method1}),
+              test::FrameProperties{
+                  .callee_port = AccessPath(Root(Root::Kind::Argument)),
+                  .callee = method1}),
       }));
   EXPECT_EQ(
       taint_by_kind[false],

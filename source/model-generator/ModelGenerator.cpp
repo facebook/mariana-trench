@@ -404,6 +404,7 @@ TaintConfig generator::source(
       /* via_value_of_ports */ via_value_of_ports,
       /* canonical_names */ {},
       /* input_paths */ {},
+      /* output_paths */ {},
       /* local_positions */ {});
 }
 
@@ -442,6 +443,7 @@ TaintConfig generator::sink(
       /* via_type_of_ports */ via_value_of_ports,
       /* canonical_names */ canonical_names,
       /* input_paths */ {},
+      /* output_paths */ {},
       /* local_positions */ {});
 }
 
@@ -478,6 +480,7 @@ TaintConfig generator::partial_sink(
       /* via_value_of_ports */ via_value_of_ports,
       /* canonical_names */ {},
       /* input_paths */ {},
+      /* output_paths */ {},
       /* local_positions */ {});
 }
 

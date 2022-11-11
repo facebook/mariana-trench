@@ -67,6 +67,7 @@ struct FrameProperties {
   RootSetAbstractDomain via_value_of_ports = {};
   CanonicalNameSetAbstractDomain canonical_names = {};
   PathTreeDomain input_paths = {};
+  PathTreeDomain output_paths = {};
   LocalPositionSet local_positions = {};
 };
 

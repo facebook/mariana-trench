@@ -242,6 +242,7 @@ CallPositionFrames CallPositionFrames::attach_position(
           /* via_value_of_ports */ {},
           frame.canonical_names(),
           /* input_paths */ {},
+          /* output_paths */ {},
           callee_port_frames.local_positions())});
     }
   }
@@ -305,6 +306,7 @@ CallPositionFrames::map_positions(
           frame.via_value_of_ports(),
           frame.canonical_names(),
           /* input_paths */ {},
+          /* output_paths */ {},
           /* local_positions */ {});
       new_frames.add(new_frame);
     }

@@ -849,6 +849,7 @@ void check_flows_to_array_allocation(
       /* via_value_of_ports */ {},
       /* canonical_names */ {},
       /* input_paths */ {},
+      /* output_paths */ {},
       /* local_positions */ {})};
   auto instruction_sources = instruction->srcs_vec();
   auto array_allocation_index = context->call_graph.array_allocation_index(

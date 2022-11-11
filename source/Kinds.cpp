@@ -50,4 +50,14 @@ const Kind* Kinds::artificial_source() {
   return &kind;
 }
 
+const Kind* Kinds::local_result() {
+  static const NamedKind kind("<LocalResult>");
+  return &kind;
+}
+
+const Kind* Kinds::receiver() {
+  static const NamedKind kind("<Argument(0)>");
+  return &kind;
+}
+
 } // namespace marianatrench

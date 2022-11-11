@@ -147,6 +147,7 @@ TaintConfig make_taint_config(
       properties.via_value_of_ports,
       properties.canonical_names,
       properties.input_paths,
+      properties.output_paths,
       properties.local_positions);
 }
 
@@ -181,6 +182,7 @@ TaintConfig make_leaf_taint_config(
       /* via_value_of_ports */ {},
       /* canonical_names */ {},
       /* input_paths */ {},
+      /* output_paths */ {},
       /* local_positions */ {});
 }
 
@@ -205,6 +207,7 @@ TaintConfig make_crtex_leaf_taint_config(
       /* via_value_of_ports */ {},
       canonical_names,
       /* input_paths */ {},
+      /* output_paths */ {},
       /* local_positions */ {});
 }
 

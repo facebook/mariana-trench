@@ -1967,7 +1967,9 @@ TEST_F(CallPositionFramesTest, ContainsKind) {
       test::make_taint_config(
           /* kind */ context.kinds->get("TestSource"), test::FrameProperties{}),
       test::make_taint_config(
-          Kinds::artificial_source(), test::FrameProperties{})};
+          Kinds::artificial_source(),
+          test::FrameProperties{
+              .callee_port = AccessPath(Root(Root::Kind::Argument))})};
 
   EXPECT_TRUE(frames.contains_kind(Kinds::artificial_source()));
   EXPECT_TRUE(frames.contains_kind(context.kinds->get("TestSource")));

@@ -56,6 +56,8 @@ class Kinds final {
   std::vector<const Kind*> kinds() const;
 
   static const Kind* artificial_source();
+  static const Kind* local_result();
+  static const Kind* receiver();
 
  private:
   UniquePointerFactory<std::string, NamedKind> named_;

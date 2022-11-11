@@ -64,6 +64,7 @@ class TaintConfig final {
       RootSetAbstractDomain via_value_of_ports,
       CanonicalNameSetAbstractDomain canonical_names,
       PathTreeDomain input_paths,
+      PathTreeDomain output_paths,
       LocalPositionSet local_positions)
       : kind_(kind),
         callee_port_(std::move(callee_port)),
@@ -80,15 +81,27 @@ class TaintConfig final {
         via_value_of_ports_(std::move(via_value_of_ports)),
         canonical_names_(std::move(canonical_names)),
         input_paths_(std::move(input_paths)),
+        output_paths_(std::move(output_paths)),
         local_positions_(std::move(local_positions)) {
     mt_assert(kind_ != nullptr);
     mt_assert(distance_ >= 0);
     mt_assert(!(callee && field_callee));
     mt_assert(!local_positions.is_bottom());
+    mt_assert(!is_artificial_source() || !is_result_or_receiver_sink());
     if (!is_artificial_source()) {
       mt_assert(input_paths_.is_bottom());
     } else {
       mt_assert(callee_port_.path().empty());
+    }
+
+    if (!is_result_or_receiver_sink()) {
+      mt_assert(output_paths_.is_bottom());
+    } else {
+      if (kind_ == Kinds::local_result()) {
+        mt_assert(callee_port == AccessPath(Root(Root::Kind::Return)));
+      } else {
+        mt_assert(callee_port == AccessPath(Root(Root::Kind::Argument, 0)));
+      }
     }
   }
 
@@ -112,6 +125,7 @@ class TaintConfig final {
         self.via_value_of_ports_ == other.via_value_of_ports_ &&
         self.canonical_names_ == other.canonical_names_ &&
         self.input_paths_ == other.input_paths_ &&
+        self.output_paths_ == other.output_paths_ &&
         self.local_positions_ == other.local_positions_;
   }
 
@@ -179,12 +193,20 @@ class TaintConfig final {
     return input_paths_;
   }
 
+  const PathTreeDomain& output_paths() const {
+    return output_paths_;
+  }
+
   const LocalPositionSet& local_positions() const {
     return local_positions_;
   }
 
   bool is_artificial_source() const {
     return kind_ == Kinds::artificial_source();
+  }
+
+  bool is_result_or_receiver_sink() const {
+    return kind_ == Kinds::local_result() || kind_ == Kinds::receiver();
   }
 
   bool is_leaf() const {
@@ -209,9 +231,15 @@ class TaintConfig final {
   RootSetAbstractDomain via_type_of_ports_;
   RootSetAbstractDomain via_value_of_ports_;
   CanonicalNameSetAbstractDomain canonical_names_;
-  // These are used only for artificial sources (should be bottom in all other
-  // cases). They are used for propagation/sink inference.
+  // TODO (T135528735) this should be removed in favor of output_paths_ once
+  // backward analysis is added. These are used only for artificial sources
+  // (should be bottom in all other cases). They are used for propagation/sink
+  // inference in forward analysis.
   PathTreeDomain input_paths_;
+  // These are used only for result and receiver sinks (should be bottom in all
+  // other cases). They are used for propagation/sink inference in backward
+  // analysis.
+  PathTreeDomain output_paths_;
 
   /**
    * Properties that are unique to `CalleePortFrames` within `Taint`. If a

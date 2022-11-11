@@ -1518,12 +1518,16 @@ TEST_F(CalleePortFramesTest, AddInferredFeaturesToRealSources) {
           test::FrameProperties{.locally_inferred_features = features})}));
 
   auto frames2 = CalleePortFrames{test::make_taint_config(
-      /* kind */ Kinds::artificial_source(), test::FrameProperties{})};
+      /* kind */ Kinds::artificial_source(),
+      test::FrameProperties{
+          .callee_port = AccessPath(Root(Root::Kind::Argument))})};
   frames2.add_inferred_features_to_real_sources(features);
   EXPECT_EQ(
       frames2,
       (CalleePortFrames{test::make_taint_config(
-          /* kind */ Kinds::artificial_source(), test::FrameProperties{})}));
+          /* kind */ Kinds::artificial_source(),
+          test::FrameProperties{
+              .callee_port = AccessPath(Root(Root::Kind::Argument))})}));
 }
 
 TEST_F(CalleePortFramesTest, FilterInvalidFrames) {

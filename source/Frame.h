@@ -130,6 +130,15 @@ class Frame final : public sparta::AbstractDomain<Frame> {
     mt_assert(kind_ != nullptr);
     mt_assert(distance_ >= 0);
     mt_assert(!(callee && field_callee));
+    if (kind_ == Kinds::local_result()) {
+      mt_assert(callee_port == AccessPath(Root(Root::Kind::Return)));
+    } else if (kind_ == Kinds::receiver()) {
+      mt_assert(callee_port == AccessPath(Root(Root::Kind::Argument, 0)));
+    } else if (kind == Kinds::artificial_source()) {
+      mt_assert(
+          callee_port.root().kind() == Root::Kind::Argument &&
+          callee_port.path().empty());
+    }
   }
 
   Frame(const Frame&) = default;
@@ -259,6 +268,10 @@ class Frame final : public sparta::AbstractDomain<Frame> {
 
   bool is_artificial_source() const {
     return kind_ == Kinds::artificial_source();
+  }
+
+  bool is_result_or_receiver_sink() const {
+    return kind_ == Kinds::local_result() || kind_ == Kinds::receiver();
   }
 
   /* Return frame with the given kind (and every other field kept the same) */
