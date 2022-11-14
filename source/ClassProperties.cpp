@@ -128,29 +128,6 @@ std::optional<std::string> get_privacy_decision_number_from_class(
       clazz->get_anno_set()->get_annotations());
 }
 
-std::unordered_set<std::string> get_class_fragments(const DexClass* clazz) {
-  std::unordered_set<std::string> exported_fragments;
-  const static re2::RE2 fragment_regex = re2::RE2("(L[^a][^; ]*Fragment;)");
-  auto methods = clazz->get_all_methods();
-  for (DexMethod* method : methods) {
-    const auto& code = method->get_code();
-    if (!code) {
-      continue;
-    }
-    const cfg::ControlFlowGraph& cfg = code->cfg();
-    for (const auto* block : cfg.blocks()) {
-      std::string match;
-      // [0x7f5380273670] OPCODE: INVOKE_STATIC
-      // Lcom/example/myapplication/ui/main/MainFragment;.newIn[...]
-      // Here we match the class of any Fragment
-      if (re2::RE2::PartialMatch(show(block), fragment_regex, &match)) {
-        exported_fragments.emplace(match);
-      }
-    }
-  }
-  return exported_fragments;
-}
-
 bool has_permission_check(const DexClass* clazz) {
   auto methods = clazz->get_all_methods();
   for (DexMethod* method : methods) {
@@ -206,13 +183,6 @@ ClassProperties::ClassProperties(
            tag_info.has_intent_filters)) {
         exported_classes_.emplace(strings_[tag_info.classname]);
         if (!permission && dex_class) {
-          if (tag_info.tag == ComponentTag::Activity) {
-            const auto& exported_fragments = get_class_fragments(dex_class);
-            for (const auto& klass : exported_fragments) {
-              exposed_fragments_.emplace(
-                  strings_[klass], strings_[tag_info.classname]);
-            }
-          }
           parent_classes = generator::get_custom_parents_from_class(dex_class);
           for (const auto& klass : parent_classes) {
             parent_exposed_classes_.emplace(
@@ -269,20 +239,6 @@ std::optional<std::string_view> ClassProperties::get_exposed_child(
   auto outer_class_lookup =
       parent_exposed_classes_.find(strip_inner_class(parent_activity));
   if (outer_class_lookup != parent_exposed_classes_.end()) {
-    return outer_class_lookup->second;
-  }
-  return std::nullopt;
-}
-
-std::optional<std::string_view> ClassProperties::get_exposed_host_activity(
-    std::string_view fragment_name) const {
-  auto lookup = exposed_fragments_.find(fragment_name);
-  if (lookup != exposed_fragments_.end()) {
-    return lookup->second;
-  }
-  auto outer_class_lookup =
-      exposed_fragments_.find(strip_inner_class(fragment_name));
-  if (outer_class_lookup != exposed_fragments_.end()) {
     return outer_class_lookup->second;
   }
   return std::nullopt;
@@ -385,11 +341,6 @@ FeatureSet ClassProperties::get_class_features(
     features.add(features_.get("via-child-exposed"));
     features.add(features_.get(fmt::format("via-class:{}", *exposed_child)));
   }
-  auto exposed_host = get_exposed_host_activity(clazz);
-  if (exposed_host) {
-    features.add(features_.get("via-caller-exported"));
-    features.add(features_.get(fmt::format("via-class:{}", *exposed_host)));
-  }
   if (is_class_unexported(clazz)) {
     features.add(features_.get("via-caller-unexported"));
   }
@@ -417,8 +368,7 @@ FeatureSet ClassProperties::get_class_features(
 
 bool ClassProperties::has_user_exposed_properties(
     std::string_view class_name) const {
-  return is_class_exported(class_name) || get_exposed_child(class_name) ||
-      get_exposed_host_activity(class_name);
+  return is_class_exported(class_name) || get_exposed_child(class_name);
 };
 
 bool ClassProperties::has_user_unexposed_properties(

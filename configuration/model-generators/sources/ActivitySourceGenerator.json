@@ -32,11 +32,6 @@
           "skip-analysis",
           "no-join-virtual-overrides"
         ],
-        "sources": [
-          {
-            "kind": "FragmentUserInput"
-          }
-        ],
         "propagation": [
           {
             "input": "Argument(0).mArguments",

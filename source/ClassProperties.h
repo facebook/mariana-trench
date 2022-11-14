@@ -37,8 +37,6 @@ class ClassProperties final {
   bool is_class_exported(std::string_view class_name) const;
   std::optional<std::string_view> get_exposed_child(
       std::string_view parent_activity) const;
-  std::optional<std::string_view> get_exposed_host_activity(
-      std::string_view fragment_name) const;
   bool is_dfa_public(std::string_view class_name) const;
   bool has_permission(std::string_view class_name) const;
   bool has_inline_permissions(std::string_view class_name) const;
@@ -69,11 +67,10 @@ class ClassProperties final {
   std::unordered_set<std::string_view> exported_classes_;
   std::unordered_set<std::string_view> unexported_classes_;
 
-  // The following are maps from an activity or a fragment to the activity
-  // (child or hosting activity respectively) that is exported in the manifest
+  // The following are maps from an activity to the activity
+  // that is exported in the manifest
   std::unordered_map<std::string_view, std::string_view>
       parent_exposed_classes_;
-  std::unordered_map<std::string_view, std::string_view> exposed_fragments_;
 
   std::unordered_set<std::string_view> dfa_public_scheme_classes_;
   std::unordered_set<std::string_view> permission_classes_;
