@@ -92,7 +92,6 @@ bool Path::operator==(const Path& other) const {
 }
 
 void Path::append(Element element) {
-  mt_assert(element != nullptr);
   elements_.push_back(element);
 }
 
@@ -233,8 +232,7 @@ AccessPath AccessPath::canonicalize_for_method(const Method* method) const {
   // Mariana Trench have their arguments off-by-one and are shifted down.
   if (!root_.is_argument() || method->is_static()) {
     return AccessPath(
-        Root(Root::Kind::Anchor),
-        Path{DexString::make_string(root_.to_string())});
+        Root(Root::Kind::Anchor), Path{PathElement::field(root_.to_string())});
   }
 
   auto position = root_.parameter_position();
@@ -246,7 +244,7 @@ AccessPath AccessPath::canonicalize_for_method(const Method* method) const {
 
   return AccessPath(
       Root(Root::Kind::Anchor),
-      Path{DexString::make_string(
+      Path{PathElement::field(
           Root(Root::Kind::Argument, position).to_string())});
 }
 
@@ -287,7 +285,7 @@ AccessPath AccessPath::from_json(const Json::Value& value) {
   for (auto iterator = std::next(elements.begin()), end = elements.end();
        iterator != end;
        ++iterator) {
-    path.append(DexString::make_string(*iterator));
+    path.append(PathElement::field(*iterator));
   }
 
   return AccessPath(root, path);
@@ -299,8 +297,7 @@ Json::Value AccessPath::to_json() const {
 
   std::string value = root_.to_string();
 
-  for (auto* field : path_) {
-    value.append(".");
+  for (const auto& field : path_) {
     value.append(show(field));
   }
 

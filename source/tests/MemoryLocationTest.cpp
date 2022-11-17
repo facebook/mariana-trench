@@ -52,9 +52,9 @@ TEST_F(TraceTest, MemoryLocationMakeField) {
 }
 
 TEST_F(TraceTest, MemoryLocationPath) {
-  const auto* x = DexString::make_string("x");
-  const auto* y = DexString::make_string("y");
-  const auto* z = DexString::make_string("z");
+  const auto x = PathElement::field("x");
+  const auto y = PathElement::field("y");
+  const auto z = PathElement::field("z");
 
   auto parameter = std::make_unique<ParameterMemoryLocation>(1);
   EXPECT_EQ(parameter->root(), parameter.get());
@@ -64,20 +64,20 @@ TEST_F(TraceTest, MemoryLocationPath) {
   EXPECT_EQ(this_parameter->root(), this_parameter.get());
   EXPECT_EQ(this_parameter->path(), Path{});
 
-  auto* parameter_x = parameter->make_field(x);
+  auto* parameter_x = parameter->make_field(x.name());
   EXPECT_EQ(parameter_x->root(), parameter.get());
   EXPECT_EQ(parameter_x->path(), Path{x});
 
-  auto* parameter_x_y = parameter_x->make_field(y);
+  auto* parameter_x_y = parameter_x->make_field(y.name());
   EXPECT_EQ(parameter_x_y->root(), parameter.get());
   EXPECT_EQ(parameter_x_y->path(), (Path{x, y}));
 
-  auto* this_parameter_z = this_parameter->make_field(z);
+  auto* this_parameter_z = this_parameter->make_field(z.name());
   EXPECT_EQ(this_parameter_z->root(), this_parameter.get());
   EXPECT_EQ(this_parameter_z->path(), Path{z});
 
   // Collapse parameter.x.y.x into parametre.x
-  auto* parameter_x_y_x = parameter_x_y->make_field(x);
+  auto* parameter_x_y_x = parameter_x_y->make_field(x.name());
   EXPECT_EQ(parameter_x_y_x->root(), parameter.get());
   EXPECT_EQ(parameter_x_y_x->path(), Path{x});
 }

@@ -86,6 +86,14 @@ class PathElementMapIterator final {
         map_.end(), ExposeBinding<mapped_type>());
   }
 
+  size_t size() const {
+    return map_.size();
+  }
+
+  bool empty() const {
+    return map_.empty();
+  }
+
  private:
   Map& map_;
 };
@@ -133,8 +141,10 @@ class AbstractTreeDomain final
   };
 
  public:
-  using Map =
-      sparta::PatriciaTreeMap<PathElement, AbstractTreeDomain, ValueInterface>;
+  using Map = sparta::PatriciaTreeMap<
+      PathElement::ElementEncoding,
+      AbstractTreeDomain,
+      ValueInterface>;
 
  public:
   /* Return the bottom value (i.e, the empty tree). */
@@ -185,12 +195,12 @@ class AbstractTreeDomain final
     return elements_;
   }
 
-  const Map& successors() const {
-    return children_;
+  const PathElementMapIterator<const Map> successors() const {
+    return PathElementMapIterator(children_);
   }
 
   const AbstractTreeDomain& successor(PathElement path_element) const {
-    return children_.at(path_element);
+    return children_.at(path_element.encode());
   }
 
   bool leq(const AbstractTreeDomain& other) const override {
@@ -539,7 +549,8 @@ class AbstractTreeDomain final
           is_valid,
       const Accumulator& accumulator) {
     Map new_children;
-    for (const auto& [path_element, subtree] : children_) {
+    for (const auto& [path_element, subtree] :
+         PathElementMapIterator(children_)) {
       const auto& [valid, accumulator_for_subtree] =
           is_valid(accumulator, path_element);
       if (!valid) {
@@ -548,7 +559,8 @@ class AbstractTreeDomain final
       } else {
         auto subtree_copy = subtree;
         subtree_copy.collapse_invalid_paths(is_valid, accumulator_for_subtree);
-        new_children.insert_or_assign(path_element, std::move(subtree_copy));
+        new_children.insert_or_assign(
+            path_element.encode(), std::move(subtree_copy));
       }
     }
     children_ = new_children;
@@ -665,7 +677,7 @@ class AbstractTreeDomain final
               begin, end, std::move(elements), std::move(accumulator), kind);
           return new_subtree;
         },
-        path_head);
+        path_head.encode());
   }
 
  public:
@@ -709,7 +721,7 @@ class AbstractTreeDomain final
               begin, end, std::move(tree), std::move(accumulator), kind);
           return new_subtree;
         },
-        path_head);
+        path_head.encode());
   }
 
  public:
@@ -752,7 +764,7 @@ class AbstractTreeDomain final
     auto path_head = *begin;
     ++begin;
 
-    auto subtree = children_.at(path_head);
+    auto subtree = children_.at(path_head.encode());
     if (subtree.is_bottom()) {
       auto result = propagate(elements_, path_head);
       for (; begin != end; ++begin) {
@@ -783,7 +795,8 @@ class AbstractTreeDomain final
       return *this;
     }
 
-    return children_.at(*begin).raw_read_internal(std::next(begin), end);
+    return children_.at(begin->encode())
+        .raw_read_internal(std::next(begin), end);
   }
 
  public:
@@ -805,7 +818,8 @@ class AbstractTreeDomain final
       visitor(path, elements_);
     }
 
-    for (const auto& [path_element, subtree] : children_) {
+    for (const auto& [path_element, subtree] :
+         PathElementMapIterator(children_)) {
       path.append(path_element);
       subtree.visit_internal(path, visitor);
       path.pop_back();
@@ -868,7 +882,8 @@ class AbstractTreeDomain final
       if (!elements_.is_bottom()) {
         out << "\n" << new_indent << elements_;
       }
-      for (const auto& [path_element, subtree] : children_) {
+      for (const auto& [path_element, subtree] :
+           PathElementMapIterator(children_)) {
         out << "\n" << new_indent << "`" << show(path_element) << "` -> ";
         subtree.write(out, new_indent);
       }

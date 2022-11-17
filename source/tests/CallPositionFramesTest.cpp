@@ -343,7 +343,7 @@ TEST_F(CallPositionFramesTest, ArtificialSourceLeq) {
                              test::FrameProperties{
                                  .callee_port = AccessPath(
                                      Root(Root::Kind::Argument, 0),
-                                     Path{DexString::make_string("x")})})}
+                                     Path{PathElement::field("x")})})}
           .leq(CallPositionFrames{test::make_taint_config(
               test_kind_one,
               test::FrameProperties{
@@ -358,7 +358,7 @@ TEST_F(CallPositionFramesTest, ArtificialSourceLeq) {
                        test::FrameProperties{
                            .callee_port = AccessPath(
                                Root(Root::Kind::Argument, 0),
-                               Path{DexString::make_string("x")})})}));
+                               Path{PathElement::field("x")})})}));
 
   // Artificial sources.
   EXPECT_TRUE(
@@ -369,7 +369,7 @@ TEST_F(CallPositionFramesTest, ArtificialSourceLeq) {
                   .callee_port = AccessPath(Root(Root::Kind::Argument, 0)),
                   .input_paths =
                       PathTreeDomain{
-                          {Path{DexString::make_string("x")},
+                          {Path{PathElement::field("x")},
                            SingletonAbstractDomain()}}})}
           .leq(CallPositionFrames{test::make_taint_config(
               Kinds::artificial_source(),
@@ -390,7 +390,7 @@ TEST_F(CallPositionFramesTest, ArtificialSourceLeq) {
               test::FrameProperties{
                   .callee_port = AccessPath(Root(Root::Kind::Argument, 0)),
                   .input_paths = PathTreeDomain{
-                      {Path{DexString::make_string("x")},
+                      {Path{PathElement::field("x")},
                        SingletonAbstractDomain()}}})}));
 }
 
@@ -584,8 +584,7 @@ TEST_F(CallPositionFramesTest, ArtificialSourceJoinWith) {
       test::FrameProperties{
           .callee_port = AccessPath(Root(Root::Kind::Argument, 0)),
           .input_paths = PathTreeDomain{
-              {Path{DexString::make_string("x")},
-               SingletonAbstractDomain()}}})};
+              {Path{PathElement::field("x")}, SingletonAbstractDomain()}}})};
   frames.join_with(CallPositionFrames{test::make_taint_config(
       Kinds::artificial_source(),
       test::FrameProperties{
@@ -606,8 +605,7 @@ TEST_F(CallPositionFramesTest, ArtificialSourceJoinWith) {
       test_kind_one,
       test::FrameProperties{
           .callee_port = AccessPath(
-              Root(Root::Kind::Argument, 0),
-              Path{DexString::make_string("x")})})};
+              Root(Root::Kind::Argument, 0), Path{PathElement::field("x")})})};
   frames.join_with(CallPositionFrames{test::make_taint_config(
       test_kind_one,
       test::FrameProperties{
@@ -620,7 +618,7 @@ TEST_F(CallPositionFramesTest, ArtificialSourceJoinWith) {
               test::FrameProperties{
                   .callee_port = AccessPath(
                       Root(Root::Kind::Argument, 0),
-                      Path{DexString::make_string("x")})}),
+                      Path{PathElement::field("x")})}),
           test::make_taint_config(
               test_kind_one,
               test::FrameProperties{
@@ -634,7 +632,7 @@ TEST_F(CallPositionFramesTest, ArtificialSourceJoinWith) {
               test::FrameProperties{
                   .callee_port = AccessPath(
                       Root(Root::Kind::Argument, 0),
-                      Path{DexString::make_string("x")})}),
+                      Path{PathElement::field("x")})}),
       }));
   EXPECT_NE(
       frames,
@@ -657,8 +655,8 @@ TEST_F(CallPositionFramesTest, Difference) {
   auto* three = context.methods->create(
       redex::create_void_method(scope, "LThree;", "three"));
 
-  const auto* x = DexString::make_string("x");
-  const auto* y = DexString::make_string("y");
+  const auto x = PathElement::field("x");
+  const auto y = PathElement::field("y");
 
   auto* test_kind_one = context.kinds->get("TestSinkOne");
   auto* test_kind_two = context.kinds->get("TestSinkTwo");
@@ -1298,7 +1296,7 @@ TEST_F(CallPositionFramesTest, Propagate) {
               test::FrameProperties{
                   .callee_port = AccessPath(
                       Root(Root::Kind::Anchor),
-                      Path{DexString::make_string("Argument(-1)")}),
+                      Path{PathElement::field("Argument(-1)")}),
                   .callee = two,
                   .call_position = call_position,
                   .origins = MethodSet{one},
@@ -1320,7 +1318,7 @@ TEST_F(CallPositionFramesTest, Propagate) {
               test::FrameProperties{
                   .callee_port = AccessPath(
                       Root(Root::Kind::Anchor),
-                      Path{DexString::make_string("Argument(-1)")}),
+                      Path{PathElement::field("Argument(-1)")}),
                   .callee = two,
                   .call_position = call_position,
                   .origins = MethodSet{one},
@@ -1709,8 +1707,8 @@ TEST_F(CallPositionFramesTest, AppendInputPaths) {
   auto context = test::make_empty_context();
 
   auto* test_kind = context.kinds->get("TestKind");
-  const auto* path_element1 = DexString::make_string("field1");
-  const auto* path_element2 = DexString::make_string("field2");
+  const auto path_element1 = PathElement::field("field1");
+  const auto path_element2 = PathElement::field("field2");
 
   auto frames = CallPositionFrames{
       test::make_taint_config(test_kind, test::FrameProperties{}),

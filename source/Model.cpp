@@ -369,7 +369,7 @@ void Model::collapse_invalid_paths(Context& context) {
       }
 
       const auto& cached_types =
-          context.field_cache->field_types(previous_field_type, field);
+          context.field_cache->field_types(previous_field_type, field.name());
       current_field_types.insert(cached_types.begin(), cached_types.end());
     }
 

@@ -408,7 +408,7 @@ TEST_F(ModelTest, LessOrEqual) {
               {Propagation(
                    /* input_paths */
                    PathTreeDomain{
-                       {Path{DexString::make_string("x")},
+                       {Path{PathElement::field("x")},
                         SingletonAbstractDomain()}},
                    /* inferred_features */ {},
                    /* user_features */ {}),
@@ -719,8 +719,7 @@ TEST_F(ModelTest, Join) {
           {Propagation(
                /* input_paths */
                PathTreeDomain{
-                   {Path{DexString::make_string("x")},
-                    SingletonAbstractDomain()}},
+                   {Path{PathElement::field("x")}, SingletonAbstractDomain()}},
                /* inferred_features */ {},
                /* user_features */ {}),
            /* input */ Root(Root::Kind::Argument, 1),
@@ -728,8 +727,7 @@ TEST_F(ModelTest, Join) {
           {Propagation(
                /* input_paths */
                PathTreeDomain{
-                   {Path{DexString::make_string("x")},
-                    SingletonAbstractDomain()}},
+                   {Path{PathElement::field("x")}, SingletonAbstractDomain()}},
                /* inferred_features */ {},
                /* user_features */ {}),
            /* input */ Root(Root::Kind::Argument, 3),
@@ -761,7 +759,7 @@ TEST_F(ModelTest, Join) {
                 Propagation(
                     /* input_paths */
                     PathTreeDomain{
-                        {Path{DexString::make_string("x")},
+                        {Path{PathElement::field("x")},
                          SingletonAbstractDomain()}},
                     /* inferred_features */ {},
                     /* user_features */ {})}}},
@@ -777,7 +775,7 @@ TEST_F(ModelTest, Join) {
       {{Propagation(
             /* input_paths */
             PathTreeDomain{
-                {Path{DexString::make_string("y")}, SingletonAbstractDomain()}},
+                {Path{PathElement::field("y")}, SingletonAbstractDomain()}},
             /* inferred_features */ {},
             /* user_features */ {}),
         /* input */ Root(Root::Kind::Argument, 1),
@@ -800,7 +798,7 @@ TEST_F(ModelTest, Join) {
                 Propagation(
                     /* input_paths */
                     PathTreeDomain{
-                        {Path{DexString::make_string("y")},
+                        {Path{PathElement::field("y")},
                          SingletonAbstractDomain()}},
                     /* inferred_features */ {},
                     /* user_features */ {})}}},
@@ -818,7 +816,7 @@ TEST_F(ModelTest, Join) {
                 Propagation(
                     /* input_paths */
                     PathTreeDomain{
-                        {Path{DexString::make_string("x")},
+                        {Path{PathElement::field("x")},
                          SingletonAbstractDomain()}},
                     /* inferred_features */ {},
                     /* user_features */ {})}}},
@@ -878,7 +876,7 @@ TEST_F(ModelTest, Join) {
                 Propagation(
                     /* input_paths */
                     PathTreeDomain{
-                        {Path{DexString::make_string("y")},
+                        {Path{PathElement::field("y")},
                          SingletonAbstractDomain()}},
                     /* inferred_features */ {},
                     /* user_features */ {})}}},

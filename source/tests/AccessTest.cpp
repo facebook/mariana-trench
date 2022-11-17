@@ -16,9 +16,9 @@ namespace marianatrench {
 class AccessTest : public test::Test {};
 
 TEST_F(AccessTest, PathExtend) {
-  const auto* x = DexString::make_string("x");
-  const auto* y = DexString::make_string("y");
-  const auto* z = DexString::make_string("z");
+  const auto x = PathElement::field("x");
+  const auto y = PathElement::field("y");
+  const auto z = PathElement::field("z");
 
   auto path = Path{};
   path.extend(Path{});
@@ -35,9 +35,9 @@ TEST_F(AccessTest, PathExtend) {
 }
 
 TEST_F(AccessTest, PathTruncate) {
-  const auto* x = DexString::make_string("x");
-  const auto* y = DexString::make_string("y");
-  const auto* z = DexString::make_string("z");
+  const auto x = PathElement::field("x");
+  const auto y = PathElement::field("y");
+  const auto z = PathElement::field("z");
 
   auto path = Path{};
   path.truncate(2);
@@ -61,9 +61,9 @@ TEST_F(AccessTest, PathTruncate) {
 }
 
 TEST_F(AccessTest, PathIsPrefixOf) {
-  const auto* x = DexString::make_string("x");
-  const auto* y = DexString::make_string("y");
-  const auto* z = DexString::make_string("z");
+  const auto x = PathElement::field("x");
+  const auto y = PathElement::field("y");
+  const auto z = PathElement::field("z");
 
   EXPECT_TRUE(Path{}.is_prefix_of(Path{}));
   EXPECT_TRUE(Path{}.is_prefix_of(Path{x}));
@@ -84,9 +84,9 @@ TEST_F(AccessTest, PathIsPrefixOf) {
 }
 
 TEST_F(AccessTest, PathCommonPrefix) {
-  const auto* x = DexString::make_string("x");
-  const auto* y = DexString::make_string("y");
-  const auto* z = DexString::make_string("z");
+  const auto x = PathElement::field("x");
+  const auto y = PathElement::field("y");
+  const auto z = PathElement::field("z");
 
   auto path = Path{};
   path.reduce_to_common_prefix(Path{});
@@ -143,9 +143,9 @@ TEST_F(AccessTest, PathCommonPrefix) {
 
 TEST_F(AccessTest, AccessPathLessOrEqual) {
   auto root = Root(Root::Kind::Return);
-  const auto* x = DexString::make_string("x");
-  const auto* y = DexString::make_string("y");
-  const auto* z = DexString::make_string("z");
+  const auto x = PathElement::field("x");
+  const auto y = PathElement::field("y");
+  const auto z = PathElement::field("z");
 
   EXPECT_TRUE(AccessPath(root).leq(AccessPath(root)));
   EXPECT_FALSE(AccessPath(root).leq(AccessPath(root, Path{x})));
@@ -166,9 +166,10 @@ TEST_F(AccessTest, AccessPathLessOrEqual) {
 
 TEST_F(AccessTest, AccessPathJoin) {
   auto root = Root(Root::Kind::Return);
-  const auto* x = DexString::make_string("x");
-  const auto* y = DexString::make_string("y");
-  const auto* z = DexString::make_string("z");
+
+  const auto x = PathElement::field("x");
+  const auto y = PathElement::field("y");
+  const auto z = PathElement::field("z");
 
   auto access_path = AccessPath(root);
   access_path.join_with(AccessPath(root));
@@ -226,39 +227,36 @@ TEST_F(AccessTest, Canonicalize) {
       redex::create_void_method(scope, "class_b", "method_b"));
 
   auto return_root = Root(Root::Kind::Return);
-  auto return_path = AccessPath(return_root, Path{DexString::make_string("x")});
+  auto return_path = AccessPath(return_root, Path{PathElement::field("x")});
   EXPECT_EQ(
       return_path.canonicalize_for_method(static_method),
       AccessPath(
           Root(Root::Kind::Anchor),
-          Path{DexString::make_string(return_root.to_string())}));
+          Path{PathElement::field(return_root.to_string())}));
 
   auto argument_path = AccessPath(Root(Root::Kind::Argument, 1));
   EXPECT_EQ(
       argument_path.canonicalize_for_method(static_method),
       AccessPath(
           Root(Root::Kind::Anchor),
-          Path{DexString::make_string(
-              Root(Root::Kind::Argument, 1).to_string())}));
+          Path{PathElement::field(Root(Root::Kind::Argument, 1).to_string())}));
   EXPECT_EQ(
       argument_path.canonicalize_for_method(non_static_method),
       AccessPath(
           Root(Root::Kind::Anchor),
-          Path{DexString::make_string(
-              Root(Root::Kind::Argument, 0).to_string())}));
+          Path{PathElement::field(Root(Root::Kind::Argument, 0).to_string())}));
 
   auto this_argument = AccessPath(Root(Root::Kind::Argument, 0));
   EXPECT_EQ(
       this_argument.canonicalize_for_method(static_method),
       AccessPath(
           Root(Root::Kind::Anchor),
-          Path{DexString::make_string(
-              Root(Root::Kind::Argument, 0).to_string())}));
+          Path{PathElement::field(Root(Root::Kind::Argument, 0).to_string())}));
   EXPECT_EQ(
       this_argument.canonicalize_for_method(non_static_method),
       AccessPath(
           Root(Root::Kind::Anchor),
-          Path{DexString::make_string(
+          Path{PathElement::field(
               Root(Root::Kind::CanonicalThis).to_string())}));
 }
 

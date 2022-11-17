@@ -746,7 +746,7 @@ TEST_F(CalleeFramesTest, Propagate) {
               test::FrameProperties{
                   .callee_port = AccessPath(
                       Root(Root::Kind::Anchor),
-                      Path{DexString::make_string("Argument(0)")}),
+                      Path{PathElement::field("Argument(0)")}),
                   .callee = one,
                   .call_position = test_position_two,
                   .locally_inferred_features = FeatureMayAlwaysSet::bottom(),
@@ -766,7 +766,7 @@ TEST_F(CalleeFramesTest, Propagate) {
               test::FrameProperties{
                   .callee_port = AccessPath(
                       Root(Root::Kind::Anchor),
-                      Path{DexString::make_string("Argument(0)")}),
+                      Path{PathElement::field("Argument(0)")}),
                   .callee = one,
                   .call_position = test_position_two,
                   .locally_inferred_features = FeatureMayAlwaysSet::bottom(),

@@ -954,8 +954,9 @@ MemoryLocation* MT_NULLABLE try_inline_invoke(
   }
 
   auto memory_location = *memory_locations.elements().begin();
-  for (const auto* field : access_path->path()) {
-    memory_location = memory_location->make_field(field);
+  for (const auto& field : access_path->path()) {
+    mt_assert(field.is_field());
+    memory_location = memory_location->make_field(field.name());
   }
 
   // Only inline if the model does not generate or propagate extra taint.

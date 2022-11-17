@@ -769,8 +769,8 @@ TEST_F(TaintTest, TransformKind) {
 TEST_F(TaintTest, AppendInputPaths) {
   auto context = test::make_empty_context();
 
-  const auto* path_element1 = DexString::make_string("field1");
-  const auto* path_element2 = DexString::make_string("field2");
+  const auto path_element1 = PathElement::field("field1");
+  const auto path_element2 = PathElement::field("field2");
 
   auto taint = Taint{
       test::make_taint_config(

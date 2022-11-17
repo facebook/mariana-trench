@@ -88,9 +88,9 @@ TEST_F(JsonTest, Root) {
 }
 
 TEST_F(JsonTest, AccessPath) {
-  const auto* x = DexString::make_string("x");
-  const auto* y = DexString::make_string("y");
-  const auto* z = DexString::make_string("z");
+  const auto x = PathElement::field("x");
+  const auto y = PathElement::field("y");
+  const auto z = PathElement::field("z");
 
   EXPECT_JSON_EQ(
       AccessPath, "\"Return\"", AccessPath(Root(Root::Kind::Return)));
@@ -1274,9 +1274,7 @@ TEST_F(JsonTest, Frame_Crtex) {
           /* callee_port */
           AccessPath(
               Root(Root::Kind::Producer),
-              Path{
-                  DexString::make_string("123"),
-                  DexString::make_string("formal(0)")}),
+              Path{PathElement::field("123"), PathElement::field("formal(0)")}),
           /* canonical_names */
           CanonicalNameSetAbstractDomain{
               CanonicalName(CanonicalName::InstantiatedValue{
@@ -1348,7 +1346,7 @@ TEST_F(JsonTest, Propagation) {
       Propagation(
           /* input_paths */
           PathTreeDomain{
-              {Path{DexString::make_string("x")}, SingletonAbstractDomain()}},
+              {Path{PathElement::field("x")}, SingletonAbstractDomain()}},
           /* inferred_features */
           FeatureMayAlwaysSet{context.features->get("FeatureOne")},
           /* user_features */ {}));
@@ -1461,19 +1459,17 @@ TEST_F(JsonTest, Propagation) {
           FeatureSet{context.features->get("FeatureOne")}));
 
   EXPECT_EQ(
-      test::sorted_json(Propagation(
-                            /* input_paths */
-                            PathTreeDomain{
-                                {Path{DexString::make_string("x")},
-                                 SingletonAbstractDomain()},
-                                {Path{
-                                     DexString::make_string("y"),
-                                     DexString::make_string("z")},
-                                 SingletonAbstractDomain()}},
-                            /* inferred_features */ FeatureMayAlwaysSet(),
-                            /* user_features */
-                            FeatureSet{context.features->get("FeatureOne")})
-                            .to_json(Root(Root::Kind::Argument, 1))),
+      test::sorted_json(
+          Propagation(
+              /* input_paths */
+              PathTreeDomain{
+                  {Path{PathElement::field("x")}, SingletonAbstractDomain()},
+                  {Path{PathElement::field("y"), PathElement::field("z")},
+                   SingletonAbstractDomain()}},
+              /* inferred_features */ FeatureMayAlwaysSet(),
+              /* user_features */
+              FeatureSet{context.features->get("FeatureOne")})
+              .to_json(Root(Root::Kind::Argument, 1))),
       test::sorted_json(test::parse_json(R"#([{
                     "input": "Argument(1).x",
                     "always_features": ["FeatureOne"]
@@ -1811,9 +1807,9 @@ TEST_F(JsonTest, Model) {
                   {Propagation(
                        /* input_paths */
                        PathTreeDomain{
-                           {Path{DexString::make_string("x")},
+                           {Path{PathElement::field("x")},
                             SingletonAbstractDomain()},
-                           {Path{DexString::make_string("y")},
+                           {Path{PathElement::field("y")},
                             SingletonAbstractDomain()}},
                        /* inferred_features */ FeatureMayAlwaysSet::bottom(),
                        /* user_features */ FeatureSet::bottom()),
@@ -2295,7 +2291,7 @@ TEST_F(JsonTest, Model) {
           /* inline_as */
           AccessPathConstantDomain(AccessPath(
               Root(Root::Kind::Argument, 1),
-              Path{DexString::make_string("foo")}))));
+              Path{PathElement::field("foo")}))));
   EXPECT_EQ(
       test::sorted_json(Model(
                             method,
@@ -2314,7 +2310,7 @@ TEST_F(JsonTest, Model) {
                             /* inline_as */
                             AccessPathConstantDomain(AccessPath(
                                 Root(Root::Kind::Argument, 1),
-                                Path{DexString::make_string("foo")})))
+                                Path{PathElement::field("foo")})))
                             .to_json()),
       test::parse_json(R"#({
         "method": "LData;.method:(LData;LData;)V",

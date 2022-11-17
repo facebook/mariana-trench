@@ -26,8 +26,8 @@ TEST_F(AccessPathTreeDomainTest, DefaultConstructor) {
 }
 
 TEST_F(AccessPathTreeDomainTest, WriteWeak) {
-  const auto* x = DexString::make_string("x");
-  const auto* y = DexString::make_string("y");
+  const auto x = PathElement::field("x");
+  const auto y = PathElement::field("y");
 
   auto tree = IntSetAccessPathTree();
   EXPECT_TRUE(tree.is_bottom());
@@ -84,8 +84,8 @@ TEST_F(AccessPathTreeDomainTest, WriteWeak) {
 }
 
 TEST_F(AccessPathTreeDomainTest, WriteStrong) {
-  const auto* x = DexString::make_string("x");
-  const auto* y = DexString::make_string("y");
+  const auto x = PathElement::field("x");
+  const auto y = PathElement::field("y");
 
   auto tree = IntSetAccessPathTree();
   EXPECT_TRUE(tree.is_bottom());
@@ -143,8 +143,8 @@ TEST_F(AccessPathTreeDomainTest, WriteStrong) {
 }
 
 TEST_F(AccessPathTreeDomainTest, Read) {
-  const auto* x = DexString::make_string("x");
-  const auto* y = DexString::make_string("y");
+  const auto x = PathElement::field("x");
+  const auto y = PathElement::field("y");
 
   auto tree = IntSetAccessPathTree{
       {AccessPath(Root(Root::Kind::Return)), IntSet{1}},
@@ -181,8 +181,8 @@ TEST_F(AccessPathTreeDomainTest, Read) {
 }
 
 TEST_F(AccessPathTreeDomainTest, RawRead) {
-  const auto* x = DexString::make_string("x");
-  const auto* y = DexString::make_string("y");
+  const auto x = PathElement::field("x");
+  const auto y = PathElement::field("y");
 
   auto tree = IntSetAccessPathTree{
       {AccessPath(Root(Root::Kind::Return)), IntSet{1}},
@@ -219,7 +219,7 @@ TEST_F(AccessPathTreeDomainTest, RawRead) {
 }
 
 TEST_F(AccessPathTreeDomainTest, LessOrEqual) {
-  const auto* x = DexString::make_string("x");
+  const auto x = PathElement::field("x");
 
   EXPECT_TRUE(
       IntSetAccessPathTree::bottom().leq(IntSetAccessPathTree::bottom()));
@@ -309,7 +309,7 @@ TEST_F(AccessPathTreeDomainTest, LessOrEqual) {
 }
 
 TEST_F(AccessPathTreeDomainTest, Equal) {
-  const auto* x = DexString::make_string("x");
+  const auto x = PathElement::field("x");
 
   EXPECT_TRUE(
       IntSetAccessPathTree::bottom().equals(IntSetAccessPathTree::bottom()));
@@ -380,9 +380,9 @@ TEST_F(AccessPathTreeDomainTest, Equal) {
 }
 
 TEST_F(AccessPathTreeDomainTest, Join) {
-  const auto* x = DexString::make_string("x");
-  const auto* y = DexString::make_string("y");
-  const auto* z = DexString::make_string("z");
+  const auto x = PathElement::field("x");
+  const auto y = PathElement::field("y");
+  const auto z = PathElement::field("z");
 
   auto tree = IntSetAccessPathTree::bottom();
   tree.join_with(IntSetAccessPathTree{
@@ -444,9 +444,9 @@ TEST_F(AccessPathTreeDomainTest, Join) {
 TEST_F(AccessPathTreeDomainTest, Elements) {
   using Pair = std::pair<AccessPath, IntSet>;
 
-  const auto* x = DexString::make_string("x");
-  const auto* y = DexString::make_string("y");
-  const auto* z = DexString::make_string("z");
+  const auto x = PathElement::field("x");
+  const auto y = PathElement::field("y");
+  const auto z = PathElement::field("z");
 
   auto tree = IntSetAccessPathTree::bottom();
   EXPECT_TRUE(tree.elements().empty());
@@ -498,9 +498,9 @@ TEST_F(AccessPathTreeDomainTest, Elements) {
 }
 
 TEST_F(AccessPathTreeDomainTest, Map) {
-  const auto* x = DexString::make_string("x");
-  const auto* y = DexString::make_string("y");
-  const auto* z = DexString::make_string("z");
+  const auto x = PathElement::field("x");
+  const auto y = PathElement::field("y");
+  const auto z = PathElement::field("z");
 
   auto tree = IntSetAccessPathTree{
       {AccessPath(Root(Root::Kind::Return)), IntSet{1, 2}},
@@ -535,9 +535,9 @@ TEST_F(AccessPathTreeDomainTest, Map) {
 }
 
 TEST_F(AccessPathTreeDomainTest, CollapseInvalid) {
-  const auto* x = DexString::make_string("x");
-  const auto* y = DexString::make_string("y");
-  const auto* z = DexString::make_string("z");
+  const auto x = PathElement::field("x");
+  const auto y = PathElement::field("y");
+  const auto z = PathElement::field("z");
 
   auto tree = IntSetAccessPathTree{
       {AccessPath(Root(Root::Kind::Return)), IntSet{1}},
@@ -556,7 +556,7 @@ TEST_F(AccessPathTreeDomainTest, CollapseInvalid) {
     if (previous_field == "x") {
       return std::make_pair(false, std::string(""));
     }
-    return std::make_pair(true, path_element->str_copy());
+    return std::make_pair(true, path_element.name()->str_copy());
   };
 
   // Argument(1) will be an invalid root, return an accumulator that causes

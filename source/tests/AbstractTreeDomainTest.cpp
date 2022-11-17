@@ -73,9 +73,9 @@ TEST_F(AbstractTreeDomainTest, DefaultConstructor) {
 }
 
 TEST_F(AbstractTreeDomainTest, WriteElementsWeak) {
-  const auto* x = DexString::make_string("x");
-  const auto* y = DexString::make_string("y");
-  const auto* z = DexString::make_string("z");
+  const auto x = PathElement::field("x");
+  const auto y = PathElement::field("y");
+  const auto z = PathElement::field("z");
 
   auto tree = IntSetTree{IntSet{1}};
   EXPECT_FALSE(tree.is_bottom());
@@ -156,9 +156,9 @@ TEST_F(AbstractTreeDomainTest, WriteElementsWeak) {
 }
 
 TEST_F(AbstractTreeDomainTest, WriteElementsStrong) {
-  const auto* x = DexString::make_string("x");
-  const auto* y = DexString::make_string("y");
-  const auto* z = DexString::make_string("z");
+  const auto x = PathElement::field("x");
+  const auto y = PathElement::field("y");
+  const auto z = PathElement::field("z");
 
   auto tree = IntSetTree{IntSet{1}};
   tree.write(Path{}, IntSet{2}, UpdateKind::Strong);
@@ -224,9 +224,9 @@ TEST_F(AbstractTreeDomainTest, WriteElementsStrong) {
 }
 
 TEST_F(AbstractTreeDomainTest, WriteTreeWeak) {
-  const auto* x = DexString::make_string("x");
-  const auto* y = DexString::make_string("y");
-  const auto* z = DexString::make_string("z");
+  const auto x = PathElement::field("x");
+  const auto y = PathElement::field("y");
+  const auto z = PathElement::field("z");
 
   auto tree = IntSetTree{
       {Path{}, IntSet{1}},
@@ -304,9 +304,9 @@ TEST_F(AbstractTreeDomainTest, WriteTreeWeak) {
 }
 
 TEST_F(AbstractTreeDomainTest, WriteTreeStrong) {
-  const auto* x = DexString::make_string("x");
-  const auto* y = DexString::make_string("y");
-  const auto* z = DexString::make_string("z");
+  const auto x = PathElement::field("x");
+  const auto y = PathElement::field("y");
+  const auto z = PathElement::field("z");
 
   auto tree = IntSetTree{
       {Path{}, IntSet{1}},
@@ -369,8 +369,8 @@ TEST_F(AbstractTreeDomainTest, WriteTreeStrong) {
 }
 
 TEST_F(AbstractTreeDomainTest, LessOrEqual) {
-  const auto* x = DexString::make_string("x");
-  const auto* y = DexString::make_string("y");
+  const auto x = PathElement::field("x");
+  const auto y = PathElement::field("y");
 
   EXPECT_TRUE(IntSetTree::bottom().leq(IntSetTree::bottom()));
   EXPECT_TRUE(IntSetTree().leq(IntSetTree::bottom()));
@@ -472,8 +472,8 @@ TEST_F(AbstractTreeDomainTest, LessOrEqual) {
 }
 
 TEST_F(AbstractTreeDomainTest, Equal) {
-  const auto* x = DexString::make_string("x");
-  const auto* y = DexString::make_string("y");
+  const auto x = PathElement::field("x");
+  const auto y = PathElement::field("y");
 
   EXPECT_TRUE(IntSetTree::bottom().equals(IntSetTree::bottom()));
   EXPECT_TRUE(IntSetTree().equals(IntSetTree::bottom()));
@@ -560,9 +560,9 @@ TEST_F(AbstractTreeDomainTest, Equal) {
 }
 
 TEST_F(AbstractTreeDomainTest, Collapse) {
-  const auto* x = DexString::make_string("x");
-  const auto* y = DexString::make_string("y");
-  const auto* z = DexString::make_string("z");
+  const auto x = PathElement::field("x");
+  const auto y = PathElement::field("y");
+  const auto z = PathElement::field("z");
 
   auto tree1 = IntSetTree{IntSet{1}};
   EXPECT_EQ(tree1.collapse(), IntSet{1});
@@ -591,9 +591,9 @@ TEST_F(AbstractTreeDomainTest, Collapse) {
 }
 
 TEST_F(AbstractTreeDomainTest, CollapseDeeperThan) {
-  const auto* x = DexString::make_string("x");
-  const auto* y = DexString::make_string("y");
-  const auto* z = DexString::make_string("z");
+  const auto x = PathElement::field("x");
+  const auto y = PathElement::field("y");
+  const auto z = PathElement::field("z");
 
   auto tree = IntSetTree{IntSet{1}};
   tree.collapse_deeper_than(1);
@@ -650,9 +650,9 @@ TEST_F(AbstractTreeDomainTest, CollapseDeeperThan) {
 }
 
 TEST_F(AbstractTreeDomainTest, Prune) {
-  const auto* x = DexString::make_string("x");
-  const auto* y = DexString::make_string("y");
-  const auto* z = DexString::make_string("z");
+  const auto x = PathElement::field("x");
+  const auto y = PathElement::field("y");
+  const auto z = PathElement::field("z");
 
   auto tree1 = IntSetTree{IntSet{1}};
   tree1.prune(IntSet{1});
@@ -697,9 +697,9 @@ TEST_F(AbstractTreeDomainTest, Prune) {
 }
 
 TEST_F(AbstractTreeDomainTest, DepthExceedingMaxLeaves) {
-  const auto* x = DexString::make_string("x");
-  const auto* y = DexString::make_string("y");
-  const auto* z = DexString::make_string("z");
+  const auto x = PathElement::field("x");
+  const auto y = PathElement::field("y");
+  const auto z = PathElement::field("z");
 
   auto tree = IntSetTree{IntSet{1}};
   EXPECT_EQ(tree.depth_exceeding_max_leaves(2), std::nullopt);
@@ -769,9 +769,9 @@ TEST_F(AbstractTreeDomainTest, DepthExceedingMaxLeaves) {
 }
 
 TEST_F(AbstractTreeDomainTest, LimitLeaves) {
-  const auto* x = DexString::make_string("x");
-  const auto* y = DexString::make_string("y");
-  const auto* z = DexString::make_string("z");
+  const auto x = PathElement::field("x");
+  const auto y = PathElement::field("y");
+  const auto z = PathElement::field("z");
 
   auto tree = IntSetTree{IntSet{1}};
   tree.limit_leaves(2);
@@ -896,9 +896,9 @@ TEST_F(AbstractTreeDomainTest, LimitLeaves) {
 }
 
 TEST_F(AbstractTreeDomainTest, Join) {
-  const auto* x = DexString::make_string("x");
-  const auto* y = DexString::make_string("y");
-  const auto* z = DexString::make_string("z");
+  const auto x = PathElement::field("x");
+  const auto y = PathElement::field("y");
+  const auto z = PathElement::field("z");
 
   auto tree = IntSetTree::bottom();
   tree.join_with(IntSetTree{IntSet{1}});
@@ -963,9 +963,9 @@ TEST_F(AbstractTreeDomainTest, Join) {
 }
 
 TEST_F(AbstractTreeDomainTest, Widen) {
-  const auto* x = DexString::make_string("x");
-  const auto* y = DexString::make_string("y");
-  const auto* z = DexString::make_string("z");
+  const auto x = PathElement::field("x");
+  const auto y = PathElement::field("y");
+  const auto z = PathElement::field("z");
 
   auto tree = IntSetTree::bottom();
   tree.widen_with(IntSetTree{IntSet{1}});
@@ -1047,9 +1047,9 @@ TEST_F(AbstractTreeDomainTest, Widen) {
 }
 
 TEST_F(AbstractTreeDomainTest, Read) {
-  const auto* x = DexString::make_string("x");
-  const auto* y = DexString::make_string("y");
-  const auto* z = DexString::make_string("z");
+  const auto x = PathElement::field("x");
+  const auto y = PathElement::field("y");
+  const auto z = PathElement::field("z");
 
   auto tree = IntSetTree{
       {Path{}, IntSet{1}},
@@ -1076,9 +1076,9 @@ TEST_F(AbstractTreeDomainTest, Read) {
 }
 
 TEST_F(AbstractTreeDomainTest, RawRead) {
-  const auto* x = DexString::make_string("x");
-  const auto* y = DexString::make_string("y");
-  const auto* z = DexString::make_string("z");
+  const auto x = PathElement::field("x");
+  const auto y = PathElement::field("y");
+  const auto z = PathElement::field("z");
 
   auto tree = IntSetTree{
       {Path{}, IntSet{1}},
@@ -1108,9 +1108,9 @@ TEST_F(AbstractTreeDomainTest, RawRead) {
 TEST_F(AbstractTreeDomainTest, Elements) {
   using Pair = std::pair<Path, IntSet>;
 
-  const auto* x = DexString::make_string("x");
-  const auto* y = DexString::make_string("y");
-  const auto* z = DexString::make_string("z");
+  const auto x = PathElement::field("x");
+  const auto y = PathElement::field("y");
+  const auto z = PathElement::field("z");
 
   auto tree = IntSetTree{
       {Path{x}, IntSet{1, 2}},
@@ -1130,8 +1130,8 @@ TEST_F(AbstractTreeDomainTest, Elements) {
 }
 
 TEST_F(AbstractTreeDomainTest, Map) {
-  const auto* x = DexString::make_string("x");
-  const auto* y = DexString::make_string("y");
+  const auto x = PathElement::field("x");
+  const auto y = PathElement::field("y");
 
   auto tree = IntSetTree{
       {Path{}, IntSet{1, 2}},
@@ -1170,9 +1170,9 @@ struct PropagateArtificialSources {
 } // namespace
 
 TEST_F(AbstractTreeDomainTest, Propagate) {
-  const auto* x = DexString::make_string("x");
-  const auto* y = DexString::make_string("y");
-  const auto* z = DexString::make_string("z");
+  const auto x = PathElement::field("x");
+  const auto y = PathElement::field("y");
+  const auto z = PathElement::field("z");
 
   auto tree = TaintTree{make_artificial_source(1)};
   EXPECT_EQ(
@@ -1266,9 +1266,9 @@ TEST_F(AbstractTreeDomainTest, Transform) {
     return taint;
   };
 
-  const auto* x = DexString::make_string("x");
-  const auto* y = DexString::make_string("y");
-  const auto* z = DexString::make_string("z");
+  const auto x = PathElement::field("x");
+  const auto y = PathElement::field("y");
+  const auto z = PathElement::field("z");
 
   // Test collapse
   auto tree = TaintTree{make_artificial_source(1)};
@@ -1432,9 +1432,9 @@ TEST_F(AbstractTreeDomainTest, Transform) {
 }
 
 TEST_F(AbstractTreeDomainTest, CollapseInvalid) {
-  const auto* x = DexString::make_string("x");
-  const auto* y = DexString::make_string("y");
-  const auto* z = DexString::make_string("z");
+  const auto x = PathElement::field("x");
+  const auto y = PathElement::field("y");
+  const auto z = PathElement::field("z");
 
   auto tree = IntSetTree{IntSet{1}};
   tree.write(Path{x}, IntSet{2}, UpdateKind::Weak);

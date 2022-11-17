@@ -140,18 +140,16 @@ AccessPathTemplate AccessPathTemplate::from_json(const Json::Value& value) {
   for (auto iterator = std::next(elements.begin()), end = elements.end();
        iterator != end;
        ++iterator) {
-    path.append(DexString::make_string(*iterator));
+    path.append(PathElement::field(*iterator));
   }
 
   return AccessPathTemplate(root, path);
 }
 
 Json::Value AccessPathTemplate::to_json() const {
-  std::string value;
+  std::string value = root_.to_string();
 
-  value.append(root_.to_string());
-  for (auto* field : path_) {
-    value.append(".");
+  for (const auto& field : path_) {
     value.append(show(field));
   }
 

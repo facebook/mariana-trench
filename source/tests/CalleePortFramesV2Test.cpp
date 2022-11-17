@@ -23,9 +23,9 @@ TEST_F(CalleePortFramesV2Test, Constructor) {
   auto* test_kind_two = context.kinds->get("TestSinkTwo");
   auto* test_position_one = context.positions->get(std::nullopt, 1);
   auto* test_position_two = context.positions->get(std::nullopt, 2);
-  const auto* x = DexString::make_string("x");
-  const auto* y = DexString::make_string("y");
-  const auto* z = DexString::make_string("z");
+  const auto x = PathElement::field("x");
+  const auto y = PathElement::field("y");
+  const auto z = PathElement::field("z");
 
   // Verify local positions only need to be specified on one TaintBuilder in
   // order to apply to the whole object.
@@ -296,7 +296,7 @@ TEST_F(CalleePortFramesV2Test, Leq) {
                   .callee_port = AccessPath(Root(Root::Kind::Argument, 0)),
                   .output_paths =
                       PathTreeDomain{
-                          {Path{DexString::make_string("x")},
+                          {Path{PathElement::field("x")},
                            SingletonAbstractDomain()}}})}
           .leq(CalleePortFramesV2{test::make_taint_config(
               Kinds::receiver(),
@@ -317,7 +317,7 @@ TEST_F(CalleePortFramesV2Test, Leq) {
               test::FrameProperties{
                   .callee_port = AccessPath(Root(Root::Kind::Argument, 0)),
                   .output_paths = PathTreeDomain{
-                      {Path{DexString::make_string("x")},
+                      {Path{PathElement::field("x")},
                        SingletonAbstractDomain()}}})}));
 }
 
@@ -326,9 +326,9 @@ TEST_F(CalleePortFramesV2Test, Equals) {
 
   auto* test_kind_one = context.kinds->get("TestSinkOne");
   auto* test_kind_two = context.kinds->get("TestSinkTwo");
-  const auto* x = DexString::make_string("x");
-  const auto* y = DexString::make_string("y");
-  const auto* z = DexString::make_string("z");
+  const auto x = PathElement::field("x");
+  const auto y = PathElement::field("y");
+  const auto z = PathElement::field("z");
 
   // Comparison to bottom
   EXPECT_TRUE(
@@ -453,8 +453,9 @@ TEST_F(CalleePortFramesV2Test, JoinWith) {
 }
 
 TEST_F(CalleePortFramesV2Test, ResultReceiverSinkJoinWith) {
-  const auto* x = DexString::make_string("x");
-  const auto* y = DexString::make_string("y");
+  const auto x = PathElement::field("x");
+  const auto y = PathElement::field("y");
+
   // Join output path trees for receiver/result sinks.
   auto frames = CalleePortFramesV2{test::make_taint_config(
       Kinds::receiver(),
@@ -885,7 +886,8 @@ TEST_F(CalleePortFramesV2Test, DifferenceLocalPositions) {
 TEST_F(CalleePortFramesV2Test, DifferenceOutputPaths) {
   auto context = test::make_empty_context();
 
-  const auto* x = DexString::make_string("x");
+  const auto x = PathElement::field("x");
+
   const auto* feature = context.features->get("featureone");
 
   // lhs.output_paths <= rhs.output_paths
@@ -1202,7 +1204,7 @@ TEST_F(CalleePortFramesV2Test, Propagate) {
               test::FrameProperties{
                   .callee_port = AccessPath(
                       Root(Root::Kind::Anchor),
-                      Path{DexString::make_string("Argument(-1)")}),
+                      Path{PathElement::field("Argument(-1)")}),
                   .callee = two,
                   .call_position = call_position,
                   .origins = MethodSet{one},
@@ -1215,7 +1217,7 @@ TEST_F(CalleePortFramesV2Test, Propagate) {
               test::FrameProperties{
                   .callee_port = AccessPath(
                       Root(Root::Kind::Anchor),
-                      Path{DexString::make_string("Argument(-1)")}),
+                      Path{PathElement::field("Argument(-1)")}),
                   .callee = two,
                   .call_position = call_position,
                   .origins = MethodSet{one},
@@ -1666,13 +1668,12 @@ TEST_F(CalleePortFramesV2Test, Show) {
       test::FrameProperties{
           .callee_port = AccessPath(Root(Root::Kind::Return)),
           .output_paths = PathTreeDomain{
-              {Path{DexString::make_string("x")},
-               SingletonAbstractDomain()}}})};
+              {Path{PathElement::field("x")}, SingletonAbstractDomain()}}})};
   EXPECT_EQ(
       show(frames),
       "CalleePortFramesV2(callee_port=AccessPath(Return), "
       "is_result_or_receiver_sinks=1, "
-      "output_paths=AbstractTree{\n    `x` -> AbstractTree{Value}\n}, "
+      "output_paths=AbstractTree{\n    `.x` -> AbstractTree{Value}\n}, "
       "frames=[FrameByKind(kind=<LocalResult>, "
       "frames={Frame(kind=`<LocalResult>`, "
       "callee_port=AccessPath(Return))}),])");

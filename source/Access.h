@@ -136,7 +136,7 @@ namespace marianatrench {
  */
 class Path final {
  public:
-  using Element = const DexString*;
+  using Element = PathElement;
   using ConstIterator = std::vector<Element>::const_iterator;
 
  public:
@@ -204,8 +204,9 @@ template <>
 struct std::hash<marianatrench::Path> {
   std::size_t operator()(const marianatrench::Path& path) const {
     std::size_t seed = 0;
-    for (auto* path_element : path) {
-      boost::hash_combine(seed, path_element);
+    for (const auto& path_element : path) {
+      boost::hash_combine(
+          seed, std::hash<marianatrench::Path::Element>()(path_element));
     }
     return seed;
   }

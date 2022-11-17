@@ -23,9 +23,9 @@ TEST_F(CalleePortFramesTest, Constructor) {
   auto* test_kind_two = context.kinds->get("TestSinkTwo");
   auto* test_position_one = context.positions->get(std::nullopt, 1);
   auto* test_position_two = context.positions->get(std::nullopt, 2);
-  const auto* x = DexString::make_string("x");
-  const auto* y = DexString::make_string("y");
-  const auto* z = DexString::make_string("z");
+  const auto x = PathElement::field("x");
+  const auto y = PathElement::field("y");
+  const auto z = PathElement::field("z");
 
   // Verify local positions only need to be specified on one TaintBuilder in
   // order to apply to the whole object.
@@ -278,7 +278,7 @@ TEST_F(CalleePortFramesTest, Leq) {
                   .callee_port = AccessPath(Root(Root::Kind::Argument, 0)),
                   .input_paths =
                       PathTreeDomain{
-                          {Path{DexString::make_string("x")},
+                          {Path{PathElement::field("x")},
                            SingletonAbstractDomain()}}})}
           .leq(CalleePortFrames{test::make_taint_config(
               Kinds::artificial_source(),
@@ -299,7 +299,7 @@ TEST_F(CalleePortFramesTest, Leq) {
               test::FrameProperties{
                   .callee_port = AccessPath(Root(Root::Kind::Argument, 0)),
                   .input_paths = PathTreeDomain{
-                      {Path{DexString::make_string("x")},
+                      {Path{PathElement::field("x")},
                        SingletonAbstractDomain()}}})}));
 }
 
@@ -308,9 +308,9 @@ TEST_F(CalleePortFramesTest, Equals) {
 
   auto* test_kind_one = context.kinds->get("TestSinkOne");
   auto* test_kind_two = context.kinds->get("TestSinkTwo");
-  const auto* x = DexString::make_string("x");
-  const auto* y = DexString::make_string("y");
-  const auto* z = DexString::make_string("z");
+  const auto x = PathElement::field("x");
+  const auto y = PathElement::field("y");
+  const auto z = PathElement::field("z");
 
   // Comparison to bottom
   EXPECT_TRUE(CalleePortFrames::bottom().equals(CalleePortFrames::bottom()));
@@ -439,8 +439,9 @@ TEST_F(CalleePortFramesTest, JoinWith) {
 }
 
 TEST_F(CalleePortFramesTest, ArtificialSourceJoinWith) {
-  const auto* x = DexString::make_string("x");
-  const auto* y = DexString::make_string("y");
+  const auto x = PathElement::field("x");
+  const auto y = PathElement::field("y");
+
   // Join different ports with same root for artificial sources.
   // The `callee_port` should be collapsed to the common prefix, but the input
   // path tree can still hold multiple paths.
@@ -849,7 +850,7 @@ TEST_F(CalleePortFramesTest, DifferenceLocalPositions) {
 TEST_F(CalleePortFramesTest, DifferenceInputPaths) {
   auto context = test::make_empty_context();
 
-  const auto* x = DexString::make_string("x");
+  const auto x = PathElement::field("x");
   const auto* feature = context.features->get("featureone");
 
   // lhs.input_paths <= rhs.input_paths
@@ -1164,7 +1165,7 @@ TEST_F(CalleePortFramesTest, Propagate) {
               test::FrameProperties{
                   .callee_port = AccessPath(
                       Root(Root::Kind::Anchor),
-                      Path{DexString::make_string("Argument(-1)")}),
+                      Path{PathElement::field("Argument(-1)")}),
                   .callee = two,
                   .call_position = call_position,
                   .origins = MethodSet{one},
@@ -1177,7 +1178,7 @@ TEST_F(CalleePortFramesTest, Propagate) {
               test::FrameProperties{
                   .callee_port = AccessPath(
                       Root(Root::Kind::Anchor),
-                      Path{DexString::make_string("Argument(-1)")}),
+                      Path{PathElement::field("Argument(-1)")}),
                   .callee = two,
                   .call_position = call_position,
                   .origins = MethodSet{one},
@@ -1481,8 +1482,8 @@ TEST_F(CalleePortFramesTest, TransformKindWithFeatures) {
 TEST_F(CalleePortFramesTest, AppendInputPaths) {
   auto context = test::make_empty_context();
 
-  const auto* path_element1 = DexString::make_string("field1");
-  const auto* path_element2 = DexString::make_string("field2");
+  const auto path_element1 = PathElement::field("field1");
+  const auto path_element2 = PathElement::field("field2");
 
   auto frames = CalleePortFrames{test::make_taint_config(
       Kinds::artificial_source(),
@@ -1679,13 +1680,12 @@ TEST_F(CalleePortFramesTest, Show) {
       test::FrameProperties{
           .callee_port = AccessPath(Root(Root::Kind::Argument)),
           .input_paths = PathTreeDomain{
-              {Path{DexString::make_string("x")},
-               SingletonAbstractDomain()}}})};
+              {Path{PathElement::field("x")}, SingletonAbstractDomain()}}})};
   EXPECT_EQ(
       show(frames),
       "CalleePortFrames(callee_port=AccessPath(Argument(0)), "
       "is_artificial_source_frames=1, "
-      "input_paths=AbstractTree{\n    `x` -> AbstractTree{Value}\n}, "
+      "input_paths=AbstractTree{\n    `.x` -> AbstractTree{Value}\n}, "
       "frames=[FrameByKind(kind=<ArtificialSource>, "
       "frames={Frame(kind=`<ArtificialSource>`, "
       "callee_port=AccessPath(Argument(0)))}),])");

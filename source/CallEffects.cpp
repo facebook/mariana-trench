@@ -40,8 +40,7 @@ AccessPath CallEffect::access_path() const {
   switch (kind()) {
     case CallEffect::Kind::CALL_CHAIN: {
       static const auto call_chain_path = AccessPath{
-          Root{Root::Kind::CallEffect},
-          Path{DexString::make_string(to_string())}};
+          Root{Root::Kind::CallEffect}, Path{PathElement::field(to_string())}};
 
       return call_chain_path;
     }

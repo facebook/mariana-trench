@@ -92,7 +92,7 @@ FieldMemoryLocation::FieldMemoryLocation(
   mt_assert(parent != nullptr);
   mt_assert(field != nullptr);
 
-  path_.append(field);
+  path_.append(PathElement::field(field));
 }
 
 std::string FieldMemoryLocation::str() const {
