@@ -24,6 +24,24 @@
 
 namespace marianatrench {
 
+namespace {
+
+template <typename AbstractTreeDomain>
+const AbstractTreeDomain& get_element_or_star(
+    const typename AbstractTreeDomain::Map& children,
+    typename AbstractTreeDomain::PathElement path_element,
+    const AbstractTreeDomain& subtree_star) {
+  auto& subtree = children.at(path_element.encode());
+
+  if (path_element.is_index() && subtree.is_bottom()) {
+    return subtree_star;
+  }
+
+  return subtree;
+}
+
+} // namespace
+
 enum class UpdateKind {
   /* Perform a strong update, i.e previous elements are replaced. */
   Strong,
@@ -203,7 +221,22 @@ class AbstractTreeDomain final
     return children_.at(path_element.encode());
   }
 
+  /**
+   * Less or equal comparison is tricky because of the special meaning of [*]
+   * and [f]. We have to consider the three sets of indices:
+   *   L : indices [f] only in left_tree
+   *   R : indices [f] only in right_tree
+   *   C : indices [f] common in left_tree and right_tree.
+   *
+   * The result of leq is then:
+   *  left_tree.elements <= right.elements /\
+   *  left_tree[c] <= right_tree[c] for all c in C /\
+   *  left_tree[*] <= right_tree[*] /\
+   *  left_tree[*] <= right_tree[r] for all r in R /\
+   *  left_tree[l] <= right_tree[*] for all l in L.
+   */
   bool leq(const AbstractTreeDomain& other) const override {
+    // Case: left_tree.elements <= right_tree.elements
     if (!elements_.leq(other.elements_)) {
       return false;
     }
@@ -212,13 +245,50 @@ class AbstractTreeDomain final
       return true;
     }
 
-    for (const auto& [path_element, subtree] : children_) {
-      auto other_subtree = other.children_.at(path_element);
+    const auto& other_subtree_star =
+        other.children_.at(PathElement::any_index().encode());
+
+    // Cases:
+    //  left_tree[c] <= right_tree[c] for all c in C /\
+    //  left_tree[*] <= right_tree[*] if left_tree[*] present /\
+    //  left_tree[l] <= right_tree[*] for all l in L.
+    for (const auto& [path_element, subtree] :
+         PathElementMapIterator(children_)) {
+      // Default to right_tree[*] for set of indices L
+      auto other_subtree_copy = get_element_or_star(
+          other.children_, path_element, other_subtree_star);
 
       // Read semantics: we propagate the elements to the children.
-      other_subtree.elements_.join_with(other.elements_);
+      other_subtree_copy.elements_.join_with(other.elements_);
 
-      if (!subtree.leq(other_subtree)) {
+      if (!subtree.leq(other_subtree_copy)) {
+        return false;
+      }
+    }
+
+    const auto& subtree_star = children_.at(PathElement::any_index().encode());
+
+    // Cases:
+    //  left_tree[*] <= right_tree[r] for all r in R /\
+    //  left_tree[*] <= right_tree[*] if right_tree[*] present.
+    for (const auto& [path_element, other_subtree] :
+         PathElementMapIterator(other.children_)) {
+      if (path_element.is_field()) {
+        continue;
+      }
+
+      const auto& subtree = children_.at(path_element.encode());
+
+      if (!subtree.is_bottom()) {
+        continue; // Already handled.
+      }
+
+      // Read semantics: we propagate the elements to the children.
+      auto other_subtree_copy = other_subtree;
+      other_subtree_copy.elements_.join_with(other.elements_);
+
+      // Compare with left_tree[*]
+      if (!subtree_star.leq(other_subtree_copy)) {
         return false;
       }
     }
@@ -283,6 +353,21 @@ class AbstractTreeDomain final
   }
 
  private:
+  /**
+   * Merging is tricky because of the special meaning of [*] and [f].
+   * We have to consider the three sets of indices:
+   * L : indices [f] only in left_tree
+   * R : indices [f] only in right_tree
+   * C : indices [f] common in left_tree and right_tree.
+   *
+   * The merge result joined is then:
+   *   joined.element = pointwise merge of left_tree.element and
+   *     right_tree.element (if element is not an index)
+   *   joined[*] = left_tree[*] merge right_tree[*]
+   *   joined[c] = left_tree[c] merge right_tree[c] if c in C
+   *   joined[l] = left_tree[l] merge right_tree[*] if l in L
+   *   joined[r] = right_tree[r] merge left_tree[*] if r in R
+   */
   void join_with_internal(
       const AbstractTreeDomain& other,
       const Elements& accumulator) {
@@ -300,9 +385,21 @@ class AbstractTreeDomain final
     const auto new_accumulator_tree =
         AbstractTreeDomain{accumulator.join(elements_)};
     Map new_children;
+    const auto& subtree_star = children_.at(PathElement::any_index().encode());
+    const auto& other_subtree_star =
+        other.children_.at(PathElement::any_index().encode());
 
-    for (const auto& [path_element, subtree] : children_) {
-      const auto& other_subtree = other.children_.at(path_element);
+    // Cases:
+    //   joined.element = pointwise merge of left_tree.element and
+    //     right_tree.element (if element is not an index)
+    //   joined[*] = left_tree[*] merge right_tree[*]
+    //   joined[c] = left_tree[c] merge right_tree[c] if c in C
+    //   joined[l] = left_tree[l] merge right_tree[*] if l in L
+    for (const auto& [path_element, subtree] :
+         PathElementMapIterator(children_)) {
+      // Default to right_tree[*] for set of indices L
+      const auto& other_subtree = get_element_or_star(
+          other.children_, path_element, other_subtree_star);
 
       if (!other_subtree.is_bottom()) {
         auto subtree_copy = subtree;
@@ -310,24 +407,49 @@ class AbstractTreeDomain final
             other_subtree, new_accumulator_tree.elements_);
 
         if (!subtree_copy.is_bottom()) {
-          new_children.insert_or_assign(path_element, std::move(subtree_copy));
+          new_children.insert_or_assign(
+              path_element.encode(), std::move(subtree_copy));
         }
       } else {
         if (!subtree.leq(new_accumulator_tree)) {
-          new_children.insert_or_assign(path_element, subtree);
+          auto subtree_copy = subtree;
+          subtree_copy.elements_.difference_with(accumulator);
+          new_children.insert_or_assign(
+              path_element.encode(), std::move(subtree_copy));
         }
       }
     }
 
-    for (const auto& [path_element, other_subtree] : other.children_) {
-      const auto& subtree = children_.at(path_element);
+    // Cases:
+    //   joined.element = pointwise merge of right_tree.element and
+    //     left_tree.element (if element is not an index)
+    //   joined[r] = right_tree[r] merge left_tree[*] if r in R
+    for (const auto& [path_element, other_subtree] :
+         PathElementMapIterator(other.children_)) {
+      // Default to left_tree[*] for set of indices R
+      const auto& subtree =
+          get_element_or_star(children_, path_element, subtree_star);
 
-      if (!subtree.is_bottom()) {
+      if (path_element.is_field() && !subtree.is_bottom()) {
         continue; // Already handled.
       }
 
-      if (!other_subtree.leq(new_accumulator_tree)) {
-        new_children.insert_or_assign(path_element, other_subtree);
+      if (!subtree.is_bottom()) {
+        auto other_subtree_copy = other_subtree;
+        other_subtree_copy.join_with_internal(
+            subtree, new_accumulator_tree.elements_);
+
+        if (!other_subtree_copy.is_bottom()) {
+          new_children.insert_or_assign(
+              path_element.encode(), std::move(other_subtree_copy));
+        }
+      } else {
+        if (!other_subtree.leq(new_accumulator_tree)) {
+          auto other_subtree_copy = other_subtree;
+          other_subtree_copy.elements_.difference_with(accumulator);
+          new_children.insert_or_assign(
+              path_element.encode(), std::move(other_subtree_copy));
+        }
       }
     }
 
@@ -765,6 +887,10 @@ class AbstractTreeDomain final
     ++begin;
 
     auto subtree = children_.at(path_head.encode());
+    if (path_head.is_index() && subtree.is_bottom()) {
+      subtree = children_.at(PathElement::any_index().encode());
+    }
+
     if (subtree.is_bottom()) {
       auto result = propagate(elements_, path_head);
       for (; begin != end; ++begin) {
@@ -795,8 +921,11 @@ class AbstractTreeDomain final
       return *this;
     }
 
-    return children_.at(begin->encode())
-        .raw_read_internal(std::next(begin), end);
+    auto subtree = children_.at(begin->encode());
+    if (begin->is_index() && subtree.is_bottom()) {
+      subtree = children_.at(PathElement::any_index().encode());
+    }
+    return subtree.raw_read_internal(std::next(begin), end);
   }
 
  public:

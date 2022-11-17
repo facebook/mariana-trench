@@ -471,6 +471,58 @@ TEST_F(AbstractTreeDomainTest, LessOrEqual) {
   EXPECT_FALSE(tree8.leq(tree7));
 }
 
+TEST_F(AbstractTreeDomainTest, LessOrEqualWithIndex) {
+  const auto x = PathElement::field("x");
+  const auto xi = PathElement::index("x");
+  const auto yi = PathElement::index("y");
+  const auto ai = PathElement::any_index();
+
+  auto tree1 = IntSetTree{IntSet{1}};
+  tree1.write(Path{x}, IntSet{2}, UpdateKind::Weak);
+  EXPECT_FALSE(tree1.leq(IntSetTree::bottom()));
+  EXPECT_FALSE(tree1.leq(IntSetTree{}));
+  EXPECT_TRUE(IntSetTree::bottom().leq(tree1));
+  EXPECT_TRUE(IntSetTree().leq(tree1));
+  EXPECT_TRUE(tree1.leq(tree1));
+
+  auto tree2 = IntSetTree{IntSet{1}};
+  tree2.write(Path{x}, IntSet{2}, UpdateKind::Weak);
+  tree2.write(Path{xi}, IntSet{3}, UpdateKind::Weak);
+  EXPECT_TRUE(tree1.leq(tree2));
+  EXPECT_FALSE(tree2.leq(tree1));
+
+  auto tree3 = IntSetTree{IntSet{1}};
+  tree3.write(Path{x}, IntSet{2}, UpdateKind::Weak);
+  tree3.write(Path{ai}, IntSet{3}, UpdateKind::Weak);
+  EXPECT_TRUE(tree1.leq(tree3));
+  EXPECT_FALSE(tree3.leq(tree1));
+  EXPECT_TRUE(tree2.leq(tree3));
+  EXPECT_FALSE(tree3.leq(tree2));
+
+  auto tree4 = IntSetTree{IntSet{1, 2}};
+  tree4.write(Path{x}, IntSet{2}, UpdateKind::Weak);
+  tree4.write(Path{xi, ai}, IntSet{3}, UpdateKind::Weak);
+  tree4.write(Path{ai, yi}, IntSet{4}, UpdateKind::Weak);
+  EXPECT_TRUE(tree1.leq(tree4));
+  EXPECT_FALSE(tree4.leq(tree1));
+  EXPECT_FALSE(tree2.leq(tree4));
+  EXPECT_FALSE(tree4.leq(tree2));
+  EXPECT_FALSE(tree3.leq(tree4));
+  EXPECT_FALSE(tree4.leq(tree3));
+
+  auto tree5 = IntSetTree{IntSet{1, 2}};
+  tree5.write(Path{x}, IntSet{2}, UpdateKind::Weak);
+  tree5.write(Path{ai}, IntSet{3, 4}, UpdateKind::Weak);
+  EXPECT_TRUE(tree1.leq(tree5));
+  EXPECT_FALSE(tree5.leq(tree1));
+  EXPECT_TRUE(tree2.leq(tree5));
+  EXPECT_FALSE(tree5.leq(tree2));
+  EXPECT_TRUE(tree3.leq(tree5));
+  EXPECT_FALSE(tree5.leq(tree3));
+  EXPECT_TRUE(tree4.leq(tree5));
+  EXPECT_FALSE(tree5.leq(tree4));
+}
+
 TEST_F(AbstractTreeDomainTest, Equal) {
   const auto x = PathElement::field("x");
   const auto y = PathElement::field("y");
@@ -959,6 +1011,209 @@ TEST_F(AbstractTreeDomainTest, Join) {
           {Path{x}, IntSet{4, 5, 6, 7}},
           {Path{x, z}, IntSet{8}},
           {Path{y}, IntSet{9, 10, 11}},
+      }));
+}
+
+TEST_F(AbstractTreeDomainTest, JoinIndex) {
+  const auto x = PathElement::field("x");
+  const auto xi = PathElement::index("x");
+  const auto yi = PathElement::index("y");
+  const auto zi = PathElement::index("z");
+  const auto ai = PathElement::any_index();
+
+  // Expect tree: R: _|_
+  auto tree = IntSetTree::bottom();
+
+  // Expect tree: R: {1}
+  tree.join_with(IntSetTree{IntSet{1}});
+  EXPECT_EQ(tree, (IntSetTree{IntSet{1}}));
+
+  // Expect tree: R: {1}
+  tree.join_with(IntSetTree{{Path{x}, IntSet{1}}});
+  EXPECT_EQ(tree, (IntSetTree{IntSet{1}}));
+
+  // Expect tree: R: {1}
+  //              |- .x: {2}
+  tree.join_with(IntSetTree{{Path{x}, IntSet{2}}});
+  EXPECT_EQ(
+      tree,
+      (IntSetTree{
+          {Path{}, IntSet{1}},
+          {Path{x}, IntSet{2}},
+      }));
+
+  // Expect tree: R: {1}
+  //              |- .x: {2}
+  tree.join_with(IntSetTree{{Path{xi}, IntSet{1}}});
+  EXPECT_EQ(
+      tree,
+      (IntSetTree{
+          {Path{}, IntSet{1}},
+          {Path{x}, IntSet{2}},
+      }));
+
+  // Expect tree: R: {1}
+  //              |- .x: {2}
+  //              |- [x]: {2}
+  tree.join_with(IntSetTree{{Path{xi}, IntSet{2}}});
+  EXPECT_EQ(
+      tree,
+      (IntSetTree{
+          {Path{}, IntSet{1}},
+          {Path{x}, IntSet{2}},
+          {Path{xi}, IntSet{2}},
+      }));
+
+  // Expect tree: R: {1}
+  //              |- .x: {2, 3}
+  //              |- [x]: {2}
+  tree.join_with(IntSetTree{{Path{x}, IntSet{3}}});
+  EXPECT_EQ(
+      tree,
+      (IntSetTree{
+          {Path{}, IntSet{1}},
+          {Path{x}, IntSet{2, 3}},
+          {Path{xi}, IntSet{2}},
+      }));
+
+  // left[*] = _|_
+  // right[*] = {1} (existing in left R)
+  // Expect tree: R: {1}
+  //              |- .x: {2, 3}
+  //              |- [x]: {2}
+  tree.join_with(IntSetTree{{Path{ai}, IntSet{1}}});
+  EXPECT_EQ(
+      tree,
+      (IntSetTree{
+          {Path{}, IntSet{1}},
+          {Path{x}, IntSet{2, 3}},
+          {Path{xi}, IntSet{2}},
+      }));
+
+  // left[*] = _|_
+  // right[*] = {4}
+  // Expect tree: R: {1}
+  //              |- .x: {2, 3}
+  //              |- [x]: {2, 4}
+  //              |- [*]: {4}
+  tree.join_with(IntSetTree{{Path{ai}, IntSet{4}}});
+  EXPECT_EQ(
+      tree,
+      (IntSetTree{
+          {Path{}, IntSet{1}},
+          {Path{x}, IntSet{2, 3}},
+          {Path{xi}, IntSet{2, 4}},
+          {Path{ai}, IntSet{4}},
+      }));
+
+  // left[*] = {4}
+  // right[*] = {5}
+  // Expect tree: R: {1}
+  //              |- .x: {2, 3}
+  //              |- [x]: {2, 4, 5}
+  //              |- [*]: {4, 5}
+  tree.join_with(IntSetTree{{Path{ai}, IntSet{5}}});
+  EXPECT_EQ(
+      tree,
+      (IntSetTree{
+          {Path{}, IntSet{1}},
+          {Path{x}, IntSet{2, 3}},
+          {Path{xi}, IntSet{2, 4, 5}},
+          {Path{ai}, IntSet{4, 5}},
+      }));
+
+  // right[y] = {1} (existing in left R)
+  // Expect tree: R: {1}
+  //              |- .x: {2, 3}
+  //              |- [x]: {2, 4, 5}
+  //              |- [y]: left[*] /\ right[y] = {1, 4, 5}.
+  //                      {1} already in left R, so {4, 5}
+  //              |- [*]: {4, 5}
+  tree.join_with(IntSetTree{{Path{yi}, IntSet{1}}});
+  EXPECT_EQ(
+      tree,
+      (IntSetTree{
+          {Path{}, IntSet{1}},
+          {Path{x}, IntSet{2, 3}},
+          {Path{xi}, IntSet{2, 4, 5}},
+          {Path{yi}, IntSet{4, 5}},
+          {Path{ai}, IntSet{4, 5}},
+      }));
+
+  // left[y] = {4, 5}
+  // left[*] = {4, 5}
+  // right[y] = {6}
+  // right[z] = {7}
+  // right[*] = {8}
+  // Expect tree: R: {1}
+  //              |- .x: {2, 3}
+  //              |- [x]: {2, 4, 5, 8}
+  //              |- [y]: {4, 5, 6}
+  //              |- [z]: {4, 5, 7}
+  //              |- [*]: {4, 5, 8}
+  tree.join_with(IntSetTree{
+      {Path{yi}, IntSet{6}}, {Path{zi}, IntSet{7}}, {Path{ai}, IntSet{8}}});
+  EXPECT_EQ(
+      tree,
+      (IntSetTree{
+          {Path{}, IntSet{1}},
+          {Path{x}, IntSet{2, 3}},
+          {Path{xi}, IntSet{2, 4, 5, 8}},
+          {Path{yi}, IntSet{4, 5, 6}},
+          {Path{zi}, IntSet{4, 5, 7}},
+          {Path{ai}, IntSet{4, 5, 8}},
+      }));
+
+  // right R = {2, 3, 4, 5}
+  // right[x] = {9}
+  // Expect tree: R: {1, 2, 3, 4, 5}
+  //              |- [x]: {8, 9}
+  //              |- [y]: {6}
+  //              |- [z]: {7}
+  //              |- [*]: {8}
+  tree.join_with(
+      IntSetTree{{Path{}, IntSet{2, 3, 4, 5}}, {Path{xi}, IntSet{9}}});
+  EXPECT_EQ(
+      tree,
+      (IntSetTree{
+          {Path{}, IntSet{1, 2, 3, 4, 5}},
+          {Path{xi}, IntSet{8, 9}},
+          {Path{yi}, IntSet{6}},
+          {Path{zi}, IntSet{7}},
+          {Path{ai}, IntSet{8}},
+      }));
+
+  // right.x = {6}
+  // right.x[x] = {6, 7}
+  // right[y].x = {7}
+  // right[z][*] = {8}
+  // Expect tree: R: {1, 2, 3, 4, 5}
+  //              |- .x: {6}
+  //                  |- [x]: {7}
+  //              |- [x]: {8, 9}
+  //              |- [y]: {6}
+  //                  |- .x: {7}
+  //              |- [z]: {7}
+  //                  |- [*]: {8}
+  //              |- [*]: {8}
+  tree.join_with(IntSetTree{
+      {Path{x}, IntSet{6}},
+      {Path{x, xi}, IntSet{6, 7}},
+      {Path{yi, x}, IntSet{7}},
+      {Path{zi, ai}, IntSet{8}},
+  });
+  EXPECT_EQ(
+      tree,
+      (IntSetTree{
+          {Path{}, IntSet{1, 2, 3, 4, 5}},
+          {Path{x}, IntSet{6}},
+          {Path{x, xi}, IntSet{7}},
+          {Path{xi}, IntSet{8, 9}},
+          {Path{yi}, IntSet{6}},
+          {Path{yi, x}, IntSet{7}},
+          {Path{zi}, IntSet{7}},
+          {Path{zi, ai}, IntSet{8}},
+          {Path{ai}, IntSet{8}},
       }));
 }
 
