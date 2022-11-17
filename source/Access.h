@@ -10,6 +10,7 @@
 #include <initializer_list>
 #include <limits>
 #include <optional>
+#include <string_view>
 #include <vector>
 
 #include <boost/functional/hash.hpp>
@@ -21,6 +22,7 @@
 
 #include <mariana-trench/Assert.h>
 #include <mariana-trench/Compiler.h>
+#include <mariana-trench/PointerIntPair.h>
 
 namespace marianatrench {
 
@@ -37,6 +39,97 @@ using ParameterPosition = std::uint32_t;
 
 std::optional<ParameterPosition> parse_parameter_position(
     const std::string& string);
+
+class PathElement final {
+ private:
+  using KindEncoding = unsigned int;
+  using Element = PointerIntPair<const DexString*, 3, KindEncoding>;
+
+ public:
+  using ElementEncoding = uintptr_t;
+
+ public:
+  enum class Kind : KindEncoding {
+    Field = 1,
+    Index = 2,
+    AnyIndex = 3,
+  };
+
+ private:
+  explicit PathElement(Kind kind, const DexString* element);
+
+ public:
+  PathElement() = delete;
+  PathElement(const PathElement&) = default;
+  PathElement(PathElement&&) = default;
+  PathElement& operator=(const PathElement&) = default;
+  PathElement& operator=(PathElement&&) = default;
+  ~PathElement() = default;
+
+  bool operator==(const PathElement& other) const {
+    return value_ == other.value_;
+  }
+
+  bool operator!=(const PathElement& other) const {
+    return value_ != other.value_;
+  }
+
+ public:
+  ElementEncoding encode() const {
+    return value_.encode();
+  }
+
+  const DexString* MT_NULLABLE name() const {
+    return value_.get_pointer();
+  }
+
+  Kind kind() const {
+    return static_cast<Kind>(value_.get_int());
+  }
+
+  bool is_field() const {
+    return kind() == Kind::Field;
+  }
+
+  bool is_index() const {
+    return kind() == Kind::Index;
+  }
+
+  bool is_any_index() const {
+    return kind() == Kind::AnyIndex;
+  }
+
+  std::string str() const;
+
+ public:
+  static PathElement field(const DexString* name);
+  static PathElement field(std::string_view name);
+
+  static PathElement index(const DexString* name);
+  static PathElement index(std::string_view name);
+
+  static PathElement any_index();
+
+ private:
+  friend std::ostream& operator<<(
+      std::ostream& out,
+      const PathElement& path_element);
+
+ private:
+  Element value_;
+};
+
+} // namespace marianatrench
+
+template <>
+struct std::hash<marianatrench::PathElement> {
+  std::size_t operator()(const marianatrench::PathElement& path_element) const {
+    return std::hash<marianatrench::PathElement::ElementEncoding>()(
+        path_element.encode());
+  }
+};
+
+namespace marianatrench {
 
 /**
  * Represents the path of an access path, without the root, e.g. `x.y.z`

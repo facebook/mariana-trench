@@ -31,6 +31,41 @@ class AbstractTreeDomainTest : public test::Test {};
 using IntSet = sparta::PatriciaTreeSetAbstractDomain<unsigned>;
 using IntSetTree = AbstractTreeDomain<IntSet>;
 
+TEST_F(AbstractTreeDomainTest, PathElementMapIterator) {
+  using Map = sparta::PatriciaTreeMap<PathElement::ElementEncoding, IntSet>;
+
+  const auto field_element = PathElement::field("field");
+  const auto index_element = PathElement::index("index");
+  const auto any_index_element = PathElement::any_index();
+
+  auto map = Map();
+  // Insert using PathElement::ElementEncoding
+  map.insert_or_assign(field_element.encode(), IntSet{1});
+  map.insert_or_assign(index_element.encode(), IntSet{2});
+  map.insert_or_assign(any_index_element.encode(), IntSet{3});
+
+  // Iterate
+  for (const auto& [path_element, value] : PathElementMapIterator(map)) {
+    switch (path_element.kind()) {
+      case PathElement::Kind::Field:
+        EXPECT_TRUE(path_element.is_field());
+        EXPECT_EQ(path_element.str(), ".field");
+        EXPECT_EQ(value, IntSet{1});
+        break;
+      case PathElement::Kind::Index:
+        EXPECT_TRUE(path_element.is_index());
+        EXPECT_EQ(path_element.str(), "[index]");
+        EXPECT_EQ(value, IntSet{2});
+        break;
+      case PathElement::Kind::AnyIndex:
+        EXPECT_TRUE(path_element.is_any_index());
+        EXPECT_EQ(path_element.str(), "[*]");
+        EXPECT_EQ(value, IntSet{3});
+        break;
+    }
+  }
+}
+
 TEST_F(AbstractTreeDomainTest, DefaultConstructor) {
   EXPECT_TRUE(IntSetTree().is_bottom());
   EXPECT_TRUE(IntSetTree().root().is_bottom());

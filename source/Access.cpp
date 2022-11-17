@@ -13,6 +13,7 @@
 #include <Show.h>
 
 #include <mariana-trench/Access.h>
+#include <mariana-trench/Assert.h>
 #include <mariana-trench/JsonValidation.h>
 #include <mariana-trench/Method.h>
 #include <mariana-trench/Redex.h>
@@ -43,6 +44,49 @@ std::optional<ParameterPosition> parse_parameter_position(
   }
 }
 
+PathElement::PathElement(PathElement::Kind kind, const DexString* element)
+    : value_(Element{element, static_cast<KindEncoding>(kind)}) {}
+
+PathElement PathElement::field(const DexString* name) {
+  return PathElement(Kind::Field, name);
+}
+
+PathElement PathElement::field(std::string_view name) {
+  return field(DexString::make_string(name));
+}
+
+PathElement PathElement::index(const DexString* name) {
+  return PathElement(Kind::Index, name);
+}
+
+PathElement PathElement::index(std::string_view name) {
+  return index(DexString::make_string(name));
+}
+
+PathElement PathElement::any_index() {
+  return PathElement{Kind::AnyIndex, nullptr};
+}
+
+std::string PathElement::str() const {
+  switch (kind()) {
+    case PathElement::Kind::Field:
+      return fmt::format(".{}", show(name()));
+
+    case PathElement::Kind::Index:
+      return fmt::format("[{}]", show(name()));
+
+    case PathElement::Kind::AnyIndex:
+      return "[*]";
+
+    default:
+      mt_unreachable();
+  }
+}
+
+std::ostream& operator<<(std::ostream& out, const PathElement& path_element) {
+  return out << path_element.str();
+}
+
 bool Path::operator==(const Path& other) const {
   return elements_ == other.elements_;
 }
@@ -64,7 +108,7 @@ void Path::pop_back() {
 
 void Path::truncate(std::size_t max_size) {
   if (elements_.size() > max_size) {
-    elements_.resize(max_size);
+    elements_.erase(std::next(elements_.begin(), max_size), elements_.end());
   }
 }
 

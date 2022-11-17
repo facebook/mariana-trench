@@ -12,6 +12,8 @@
 #include <iterator>
 #include <vector>
 
+#include <boost/iterator/transform_iterator.hpp>
+
 #include <AbstractDomain.h>
 #include <PatriciaTreeMap.h>
 #include <Show.h>
@@ -28,6 +30,64 @@ enum class UpdateKind {
 
   /* Perform a weak update, i.e elements are joined. */
   Weak,
+};
+
+/**
+ * This implements an iterator over a map which transforms the key of type
+ * `PathElement::ElementEncoding` to a concrete `PathElement`.
+ */
+template <typename Map>
+class PathElementMapIterator final {
+  static_assert(
+      std::is_same_v<typename Map::key_type, PathElement::ElementEncoding>);
+
+  template <typename Value>
+  struct ExposeBinding {
+    const std::pair<PathElement, Value>& operator()(
+        const std::pair<typename PathElement::ElementEncoding, Value>& pair)
+        const {
+      // This is safe as `PathElement` stores `PathElement::ElementEncoding`
+      // internally.
+      return *reinterpret_cast<const std::pair<PathElement, Value>*>(&pair);
+    }
+  };
+
+ public:
+  // C++ container concept member types
+  using key_type = PathElement;
+  using mapped_type = typename Map::mapped_type;
+  using value_type = std::pair<key_type, mapped_type>;
+  using iterator = boost::
+      transform_iterator<ExposeBinding<mapped_type>, typename Map::iterator>;
+  using const_iterator = iterator;
+  using difference_type = std::ptrdiff_t;
+  using size_type = std::size_t;
+  using const_reference = const value_type&;
+  using const_pointer = const value_type*;
+
+ private:
+  // Safety checks of `boost::transform_iterator`.
+  static_assert(std::is_same_v<typename iterator::value_type, value_type>);
+  static_assert(
+      std::is_same_v<typename iterator::difference_type, difference_type>);
+  static_assert(std::is_same_v<typename iterator::reference, const_reference>);
+  static_assert(std::is_same_v<typename iterator::pointer, const_pointer>);
+
+ public:
+  explicit PathElementMapIterator(Map& map) : map_(map) {}
+
+  iterator begin() const {
+    return boost::make_transform_iterator(
+        map_.begin(), ExposeBinding<mapped_type>());
+  }
+
+  iterator end() const {
+    return boost::make_transform_iterator(
+        map_.end(), ExposeBinding<mapped_type>());
+  }
+
+ private:
+  Map& map_;
 };
 
 /**
