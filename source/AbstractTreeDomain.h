@@ -361,12 +361,12 @@ class AbstractTreeDomain final
    * C : indices [f] common in left_tree and right_tree.
    *
    * The merge result joined is then:
-   *   joined.element = pointwise merge of left_tree.element and
-   *     right_tree.element (if element is not an index)
-   *   joined[*] = left_tree[*] merge right_tree[*]
-   *   joined[c] = left_tree[c] merge right_tree[c] if c in C
-   *   joined[l] = left_tree[l] merge right_tree[*] if l in L
-   *   joined[r] = right_tree[r] merge left_tree[*] if r in R
+   * - joined.element = pointwise merge of left_tree.element and
+   *     right_tree.element (if element is a field)
+   * - joined[*] = left_tree[*] merge right_tree[*]
+   * - joined[c] = left_tree[c] merge right_tree[c] if c in C
+   * - joined[l] = left_tree[l] merge right_tree[*] if l in L
+   * - joined[r] = right_tree[r] merge left_tree[*] if r in R
    */
   void join_with_internal(
       const AbstractTreeDomain& other,
@@ -390,70 +390,86 @@ class AbstractTreeDomain final
         other.children_.at(PathElement::any_index().encode());
 
     // Cases:
-    //   joined.element = pointwise merge of left_tree.element and
-    //     right_tree.element (if element is not an index)
-    //   joined[*] = left_tree[*] merge right_tree[*]
-    //   joined[c] = left_tree[c] merge right_tree[c] if c in C
-    //   joined[l] = left_tree[l] merge right_tree[*] if l in L
+    // - joined.element = pointwise merge of left_tree.element and
+    //   right_tree.element (if element is a field in left_tree)
+    // - joined[*] = left_tree[*] merge right_tree[*] (if left_tree[*] exists)
+    // - joined[c] = left_tree[c] merge right_tree[c] for c in C
+    // - joined[l] = left_tree[l] merge right_tree[*] for l in L
     for (const auto& [path_element, subtree] :
          PathElementMapIterator(children_)) {
       // Default to right_tree[*] for set of indices L
       const auto& other_subtree = get_element_or_star(
           other.children_, path_element, other_subtree_star);
 
-      if (!other_subtree.is_bottom()) {
-        auto subtree_copy = subtree;
-        subtree_copy.join_with_internal(
-            other_subtree, new_accumulator_tree.elements_);
-
-        if (!subtree_copy.is_bottom()) {
-          new_children.insert_or_assign(
-              path_element.encode(), std::move(subtree_copy));
-        }
-      } else {
-        if (!subtree.leq(new_accumulator_tree)) {
-          auto subtree_copy = subtree;
-          subtree_copy.elements_.difference_with(accumulator);
-          new_children.insert_or_assign(
-              path_element.encode(), std::move(subtree_copy));
-        }
-      }
+      update_children_at_path_element(
+          new_children,
+          path_element,
+          new_accumulator_tree,
+          subtree,
+          other_subtree);
     }
 
-    // Cases:
-    //   joined.element = pointwise merge of right_tree.element and
-    //     left_tree.element (if element is not an index)
-    //   joined[r] = right_tree[r] merge left_tree[*] if r in R
     for (const auto& [path_element, other_subtree] :
          PathElementMapIterator(other.children_)) {
-      // Default to left_tree[*] for set of indices R
-      const auto& subtree =
-          get_element_or_star(children_, path_element, subtree_star);
-
-      if (path_element.is_field() && !subtree.is_bottom()) {
-        continue; // Already handled.
-      }
+      const auto& subtree = children_.at(path_element.encode());
 
       if (!subtree.is_bottom()) {
-        auto other_subtree_copy = other_subtree;
-        other_subtree_copy.join_with_internal(
-            subtree, new_accumulator_tree.elements_);
+        // Cases already handled:
+        // - joined.element = pointwise merge of left_tree.element and
+        //   right_tree.element (if element is a field in left_tree)
+        // - joined[c] = left_tree[c] merge right_tree[c] for c in C
+        continue;
+      }
 
-        if (!other_subtree_copy.is_bottom()) {
-          new_children.insert_or_assign(
-              path_element.encode(), std::move(other_subtree_copy));
-        }
+      if (path_element.is_index()) {
+        // Case: joined[r] = right_tree[r] merge left_tree[*] for r in R
+        update_children_at_path_element(
+            new_children,
+            path_element,
+            new_accumulator_tree,
+            subtree_star,
+            other_subtree);
       } else {
-        if (!other_subtree.leq(new_accumulator_tree)) {
-          auto other_subtree_copy = other_subtree;
-          other_subtree_copy.elements_.difference_with(accumulator);
-          new_children.insert_or_assign(
-              path_element.encode(), std::move(other_subtree_copy));
-        }
+        // Cases:
+        // - joined.element = pointwise merge of right_tree.element and
+        //   left_tree.element (if element is a field in right_tree only)
+        // - joined[*] = right_tree[*] merge left_tree[*] (if left_tree[*]
+        //   did not exists)
+        update_children_at_path_element(
+            new_children,
+            path_element,
+            new_accumulator_tree,
+            other_subtree,
+            subtree);
       }
     }
 
     children_ = new_children;
+  }
+
+  void update_children_at_path_element(
+      Map& children,
+      PathElement path_element,
+      const AbstractTreeDomain& accumulator_tree,
+      const AbstractTreeDomain& left_subtree,
+      const AbstractTreeDomain& right_subtree) {
+    if (!right_subtree.is_bottom()) {
+      auto left_subtree_copy = left_subtree;
+      left_subtree_copy.join_with_internal(
+          right_subtree, accumulator_tree.elements_);
+
+      if (!left_subtree_copy.is_bottom()) {
+        children.insert_or_assign(
+            path_element.encode(), std::move(left_subtree_copy));
+      }
+    } else {
+      if (!left_subtree.leq(accumulator_tree)) {
+        auto left_subtree_copy = left_subtree;
+        left_subtree_copy.elements_.difference_with(accumulator_tree.elements_);
+        children.insert_or_assign(
+            path_element.encode(), std::move(left_subtree_copy));
+      }
+    }
   }
 
  public:
