@@ -26,6 +26,20 @@
                 "constraint": "name",
                 "pattern": "Landroid/database/sqlite/SQLiteDatabase;"
               }
+            },
+            {
+              "constraint": "parent",
+              "inner": {
+                "constraint": "name",
+                "pattern": "Landroid/content/ContentResolver;"
+              }
+            },
+            {
+              "constraint": "parent",
+              "inner": {
+                "constraint": "name",
+                "pattern": "Landroidx/loader/content/CursorLoader;"
+              }
             }
           ]
         },
@@ -71,6 +85,10 @@
             {
               "constraint": "name",
               "pattern": "update.*"
+            },
+            {
+              "constraint": "name",
+              "pattern": "set(Selection|SortOrder)"
             }
           ]
         }
@@ -84,18 +102,8 @@
             "variable": "idx",
             "where": [
               {
-                "constraint": "not",
-                "inner": {
-                  "constraint": "name",
-                  "pattern": "\\[Ljava/lang/String;"
-                }
-              },
-              {
-                "constraint": "not",
-                "inner": {
-                  "constraint": "name",
-                  "pattern": "\\[?Landroid/content/ContentValues;"
-                }
+                "constraint": "name",
+                "pattern": "^Ljava/lang/.*"
               }
             ],
             "sinks": [
@@ -103,6 +111,26 @@
                 "kind": "SQLQuery",
                 "port": "Argument(idx)"
               }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "find": "methods",
+      "where": [
+        {
+          "constraint": "signature",
+          "pattern": "Landroid/database/DatabaseUtils;\\.sqlEscapeString.*"
+        }
+      ],
+      "model": {
+        "propagation": [
+          {
+            "input": "Argument(0)",
+            "output": "Return",
+            "features": [
+              "via-sql-escape"
             ]
           }
         ]
