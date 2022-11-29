@@ -1036,6 +1036,25 @@ TEST_F(AbstractTreeDomainTest, Collapse) {
   EXPECT_EQ(tree7.collapse(), (IntSet{1, 2, 3, 4}));
 }
 
+TEST_F(AbstractTreeDomainTest, CollapseWithIndex) {
+  const auto x = PathElement::field("x");
+  const auto xi = PathElement::index("x");
+  const auto ai = PathElement::any_index();
+
+  auto tree1 = IntSetTree{{Path{}, IntSet{1}}, {Path{xi}, IntSet{2}}};
+  EXPECT_EQ(tree1.collapse(), (IntSet{1, 2}));
+
+  auto tree2 = IntSetTree{{Path{}, IntSet{1}}, {Path{xi}, IntSet{2}}};
+  tree2.write(Path{ai}, IntSet{3}, UpdateKind::Weak);
+  tree2.write(Path{x}, IntSet{4}, UpdateKind::Weak);
+  EXPECT_EQ(tree2.collapse(), (IntSet{1, 2, 3, 4}));
+
+  auto tree5 = IntSetTree{IntSet{1}};
+  tree5.write(Path{xi, ai}, IntSet{2}, UpdateKind::Weak);
+  tree5.write(Path{ai, x, xi}, IntSet{3, 4}, UpdateKind::Weak);
+  EXPECT_EQ(tree5.collapse(), (IntSet{1, 2, 3, 4}));
+}
+
 TEST_F(AbstractTreeDomainTest, CollapseDeeperThan) {
   const auto x = PathElement::field("x");
   const auto y = PathElement::field("y");
@@ -1095,6 +1114,69 @@ TEST_F(AbstractTreeDomainTest, CollapseDeeperThan) {
   EXPECT_EQ(tree, (IntSetTree{IntSet{1, 2, 3, 4, 5, 10, 11, 12}}));
 }
 
+TEST_F(AbstractTreeDomainTest, CollapseDeeperThanWithIndex) {
+  const auto x = PathElement::field("x");
+  const auto xi = PathElement::index("x");
+  const auto yi = PathElement::index("y");
+  const auto ai = PathElement::any_index();
+
+  auto tree = IntSetTree{
+      {Path{}, IntSet{1}},
+      {Path{x}, IntSet{2}},
+      {Path{xi, xi}, IntSet{3}},
+      {Path{xi, yi}, IntSet{4}},
+      {Path{xi, ai}, IntSet{5}},
+      {Path{xi, yi, xi, yi}, IntSet{6}},
+      {Path{yi}, IntSet{7}},
+      {Path{yi, xi}, IntSet{8}},
+      {Path{x, xi, yi, ai}, IntSet{9}},
+  };
+
+  tree.collapse_deeper_than(3);
+  EXPECT_EQ(
+      tree,
+      (IntSetTree{
+          {Path{}, IntSet{1}},
+          {Path{x}, IntSet{2}},
+          {Path{xi, xi}, IntSet{3}},
+          {Path{xi, yi}, IntSet{4}},
+          {Path{xi, ai}, IntSet{5}},
+          {Path{xi, yi, xi}, IntSet{6}},
+          {Path{yi}, IntSet{7}},
+          {Path{yi, xi}, IntSet{8}},
+          {Path{x, xi, yi}, IntSet{9}},
+      }));
+
+  tree.collapse_deeper_than(2);
+  EXPECT_EQ(
+      tree,
+      (IntSetTree{
+          {Path{}, IntSet{1}},
+          {Path{x}, IntSet{2}},
+          {Path{xi, xi}, IntSet{3}},
+          {Path{xi, yi}, IntSet{4, 6}},
+          {Path{xi, ai}, IntSet{5}},
+          {Path{yi}, IntSet{7}},
+          {Path{yi, xi}, IntSet{8}},
+          {Path{x, xi}, IntSet{9}},
+
+      }));
+
+  tree.collapse_deeper_than(1);
+  EXPECT_EQ(
+      tree,
+      (IntSetTree{
+          {Path{}, IntSet{1}},
+          {Path{x}, IntSet{2}},
+          {Path{xi}, IntSet{3, 4, 5, 6}},
+          {Path{yi}, IntSet{7, 8}},
+          {Path{x}, IntSet{9}},
+      }));
+
+  tree.collapse_deeper_than(0);
+  EXPECT_EQ(tree, (IntSetTree{IntSet{1, 2, 3, 4, 5, 6, 7, 8, 9}}));
+}
+
 TEST_F(AbstractTreeDomainTest, Prune) {
   const auto x = PathElement::field("x");
   const auto y = PathElement::field("y");
@@ -1139,6 +1221,62 @@ TEST_F(AbstractTreeDomainTest, Prune) {
       (IntSetTree{
           {Path{}, IntSet{1}},
           {Path{x, y}, IntSet{3}},
+      }));
+}
+
+TEST_F(AbstractTreeDomainTest, PruneWithIndex) {
+  const auto x = PathElement::field("x");
+  const auto xi = PathElement::index("x");
+  const auto yi = PathElement::index("y");
+  const auto ai = PathElement::any_index();
+
+  auto tree = IntSetTree{
+      {Path{}, IntSet{1}},
+      {Path{x}, IntSet{2}},
+      {Path{xi, xi}, IntSet{3}},
+      {Path{xi, yi}, IntSet{4}},
+      {Path{xi, ai}, IntSet{5}},
+      {Path{xi, yi, xi, yi}, IntSet{6}},
+      {Path{yi}, IntSet{7}},
+      {Path{yi, xi}, IntSet{8}},
+      {Path{x, xi, yi, ai}, IntSet{9}},
+  };
+
+  // Prune leaves at different heights
+  tree.prune(IntSet{5, 9});
+  EXPECT_EQ(
+      tree,
+      (IntSetTree{
+          {Path{}, IntSet{1}},
+          {Path{x}, IntSet{2}},
+          {Path{xi, xi}, IntSet{3}},
+          {Path{xi, yi}, IntSet{4}},
+          {Path{xi, ai}, IntSet{}},
+          {Path{xi, yi, xi, yi}, IntSet{6}},
+          {Path{yi}, IntSet{7}},
+          {Path{yi, xi}, IntSet{8}},
+      }));
+
+  // prune intermediate nodes
+  tree.prune(IntSet{1, 7});
+  EXPECT_EQ(
+      tree,
+      (IntSetTree{
+          {Path{}, IntSet{}},
+          {Path{x}, IntSet{2}},
+          {Path{xi, xi}, IntSet{3}},
+          {Path{xi, yi}, IntSet{4}},
+          {Path{xi, yi, xi, yi}, IntSet{6}},
+          {Path{yi}, IntSet{}},
+          {Path{yi, xi}, IntSet{8}},
+      }));
+
+  tree.prune(IntSet{3, 4, 6, 8});
+  EXPECT_EQ(
+      tree,
+      (IntSetTree{
+          {Path{}, IntSet{}},
+          {Path{x}, IntSet{2}},
       }));
 }
 
@@ -1339,6 +1477,78 @@ TEST_F(AbstractTreeDomainTest, LimitLeaves) {
           {Path{y}, IntSet{5}},
           {Path{z, x}, IntSet{6}},
       }));
+}
+
+TEST_F(AbstractTreeDomainTest, LimitLeavesWithIndex) {
+  const auto x = PathElement::field("x");
+  const auto xi = PathElement::index("x");
+  const auto yi = PathElement::index("y");
+  const auto ai = PathElement::any_index();
+
+  // Has 6 leaves
+  auto tree = IntSetTree{
+      {Path{}, IntSet{1}},
+      {Path{x}, IntSet{2}}, // leaf
+      {Path{xi, yi, xi}, IntSet{3}},
+      {Path{xi, yi, xi, yi}, IntSet{4}}, // leaf
+      {Path{xi, yi, yi}, IntSet{5}}, // leaf
+      {Path{xi, yi, ai}, IntSet{6}}, // leaf
+      {Path{xi, xi, yi, ai}, IntSet{7}}, // leaf
+      {Path{yi}, IntSet{8}},
+      {Path{yi, xi}, IntSet{9}}, // leaf
+  };
+
+  tree.limit_leaves(6);
+  EXPECT_EQ(
+      tree,
+      (IntSetTree{
+          {Path{}, IntSet{1}},
+          {Path{x}, IntSet{2}}, // leaf
+          {Path{xi, yi, xi}, IntSet{3}},
+          {Path{xi, yi, xi, yi}, IntSet{4}}, // leaf
+          {Path{xi, yi, yi}, IntSet{5}}, // leaf
+          {Path{xi, yi, ai}, IntSet{6}}, // leaf
+          {Path{xi, xi, yi, ai}, IntSet{7}}, // leaf
+          {Path{yi}, IntSet{8}},
+          {Path{yi, xi}, IntSet{9}}, // leaf
+      }));
+
+  tree.limit_leaves(5);
+  EXPECT_EQ(
+      tree,
+      (IntSetTree{
+          {Path{}, IntSet{1}},
+          {Path{x}, IntSet{2}}, // leaf
+          {Path{xi, yi}, IntSet{3, 4, 5, 6}}, // leaf
+          {Path{xi, xi}, IntSet{7}}, // leaf
+          {Path{yi}, IntSet{8}},
+          {Path{yi, xi}, IntSet{9}}, // leaf
+      }));
+
+  tree.limit_leaves(4);
+  EXPECT_EQ(
+      tree,
+      (IntSetTree{
+          {Path{}, IntSet{1}},
+          {Path{x}, IntSet{2}}, // leaf
+          {Path{xi, yi}, IntSet{3, 4, 5, 6}}, // leaf
+          {Path{xi, xi}, IntSet{7}}, // leaf
+          {Path{yi}, IntSet{8}},
+          {Path{yi, xi}, IntSet{9}}, // leaf
+      }));
+
+  tree.limit_leaves(3);
+  EXPECT_EQ(
+      tree,
+      (IntSetTree{
+          {Path{}, IntSet{1}},
+          {Path{x}, IntSet{2}}, // leaf
+          {Path{xi}, IntSet{3, 4, 5, 6, 7}}, // leaf
+          {Path{yi}, IntSet{8, 9}}, // leaf
+      }));
+
+  tree.limit_leaves(2);
+  EXPECT_EQ(tree, (IntSetTree{IntSet{1, 2, 3, 4, 5, 6, 7, 8, 9}}));
 }
 
 TEST_F(AbstractTreeDomainTest, Join) {
