@@ -38,6 +38,13 @@ std::string_view strip_inner_class(std::string_view class_name) {
   return class_name;
 }
 
+bool is_user_input_kind(const std::string_view kind) {
+  return (
+      kind == "ActivityUserInput" || kind == "ReceiverUserInput" ||
+      kind == "ServiceUserInput" || kind == "ServiceAIDLUserInput" ||
+      kind == "ProviderUserInput");
+}
+
 bool is_class_exported_via_uri(const DexClass* clazz) {
   if (!clazz->get_anno_set()) {
     return false;
@@ -170,27 +177,20 @@ ClassProperties::ClassProperties(
         android_resources->get_manifest_class_info();
 
     for (const auto& tag_info : manifest_class_info.component_tags) {
-      std::unordered_set<std::string_view> parent_classes;
-      auto dex_class = redex::get_class(tag_info.classname);
-      bool permission = false;
-
-      if (!tag_info.permission.empty()) {
-        permission_classes_.emplace(strings_[tag_info.classname]);
-        permission = true;
-      }
-      if (tag_info.is_exported == BooleanXMLAttribute::True ||
-          (tag_info.is_exported == BooleanXMLAttribute::Undefined &&
-           tag_info.has_intent_filters)) {
-        exported_classes_.emplace(strings_[tag_info.classname]);
-        if (!permission && dex_class) {
-          parent_classes = generator::get_custom_parents_from_class(dex_class);
-          for (const auto& klass : parent_classes) {
-            parent_exposed_classes_.emplace(
-                strings_[klass], strings_[tag_info.classname]);
-          }
-        }
-      } else {
-        unexported_classes_.emplace(strings_[tag_info.classname]);
+      switch (tag_info.tag) {
+        case ComponentTag::Activity:
+        case ComponentTag::ActivityAlias:
+          emplace_classes(activities_, tag_info);
+          break;
+        case ComponentTag::Service:
+          emplace_classes(services_, tag_info);
+          break;
+        case ComponentTag::Receiver:
+          emplace_classes(receivers_, tag_info);
+          break;
+        case ComponentTag::Provider:
+          emplace_classes(providers_, tag_info);
+          break;
       }
     }
   } catch (const std::exception& e) {
@@ -224,30 +224,68 @@ ClassProperties::ClassProperties(
   }
 }
 
-bool ClassProperties::is_class_exported(std::string_view class_name) const {
-  auto outer_class = strip_inner_class(class_name);
-  return exported_classes_.count(class_name) > 0 ||
-      exported_classes_.count(outer_class) > 0;
+void ClassProperties::emplace_classes(
+    std::unordered_map<std::string_view, ExportedKind>& map,
+    const ComponentTagInfo& tag_info) {
+  auto dex_class = redex::get_class(strings_[tag_info.classname]);
+
+  if (tag_info.is_exported == BooleanXMLAttribute::True ||
+      (tag_info.is_exported == BooleanXMLAttribute::Undefined &&
+       tag_info.has_intent_filters)) {
+    if (tag_info.permission.empty()) {
+      map.emplace(strings_[tag_info.classname], ExportedKind::Exported);
+      if (dex_class) {
+        auto parent_classes =
+            generator::get_custom_parents_from_class(dex_class);
+        for (const auto& klass : parent_classes) {
+          map.emplace(klass, ExportedKind::Exported);
+        }
+      }
+    } else {
+      map.emplace(
+          strings_[tag_info.classname], ExportedKind::ExportedWithPermission);
+    }
+  } else {
+    map.emplace(strings_[tag_info.classname], ExportedKind::Unexported);
+  }
 }
 
-std::optional<std::string_view> ClassProperties::get_exposed_child(
-    std::string_view parent_activity) const {
-  auto lookup = parent_exposed_classes_.find(parent_activity);
-  if (lookup != parent_exposed_classes_.end()) {
-    return lookup->second;
+FeatureSet ClassProperties::get_manifest_features(
+    std::string_view class_name,
+    const std::unordered_map<std::string_view, ExportedKind>& component_set)
+    const {
+  FeatureSet features;
+  {
+    auto it = component_set.find(class_name);
+    if (it != component_set.end()) {
+      if (it->second == ExportedKind::Exported) {
+        features.add(features_.get("via-caller-exported"));
+      } else if (it->second == ExportedKind::ExportedWithPermission) {
+        features.add(features_.get("via-caller-exported"));
+        features.add(features_.get("via-caller-permission"));
+      } else if (it->second == ExportedKind::Unexported) {
+        features.add(features_.get("via-caller-unexported"));
+      }
+      return features;
+    }
   }
-  auto outer_class_lookup =
-      parent_exposed_classes_.find(strip_inner_class(parent_activity));
-  if (outer_class_lookup != parent_exposed_classes_.end()) {
-    return outer_class_lookup->second;
+  {
+    auto outer_class = strip_inner_class(class_name);
+    auto it = component_set.find(outer_class);
+    if (it != component_set.end()) {
+      if (it->second == ExportedKind::Exported) {
+        features.add(features_.get("via-caller-exported"));
+      } else if (it->second == ExportedKind::ExportedWithPermission) {
+        features.add(features_.get("via-caller-exported"));
+        features.add(features_.get("via-caller-permission"));
+      } else if (it->second == ExportedKind::Unexported) {
+        features.add(features_.get("via-caller-unexported"));
+      }
+      return features;
+    }
   }
-  return std::nullopt;
-}
 
-bool ClassProperties::is_class_unexported(std::string_view class_name) const {
-  auto outer_class = strip_inner_class(class_name);
-  return unexported_classes_.count(class_name) > 0 ||
-      unexported_classes_.count(outer_class) > 0;
+  return features;
 }
 
 bool ClassProperties::has_inline_permissions(
@@ -261,13 +299,6 @@ bool ClassProperties::is_dfa_public(std::string_view class_name) const {
   auto outer_class = strip_inner_class(class_name);
   return dfa_public_scheme_classes_.count(class_name) > 0 ||
       dfa_public_scheme_classes_.count(outer_class) > 0;
-}
-
-bool ClassProperties::has_permission(std::string_view class_name) const {
-  auto outer_class = strip_inner_class(class_name);
-  return permission_classes_.count(class_name) > 0 ||
-      permission_classes_.count(outer_class) > 0;
-  ;
 }
 
 std::optional<std::string>
@@ -316,12 +347,26 @@ FeatureMayAlwaysSet ClassProperties::propagate_features(
 }
 
 FeatureMayAlwaysSet ClassProperties::issue_features(
-    const Method* method) const {
+    const Method* method,
+    std::unordered_set<const Kind*> kinds) const {
+  FeatureSet features;
   auto clazz = method->get_class()->str();
-  auto features = get_class_features(clazz, /* via_dependency */ false);
-  if (!has_user_exposed_properties(clazz) &&
-      !has_user_unexposed_properties(clazz)) {
-    features.join_with(compute_transitive_class_features(method));
+
+  for (const auto* kind : kinds) {
+    const auto* named_kind = kind->as<NamedKind>();
+    if (named_kind == nullptr || !is_user_input_kind(named_kind->name())) {
+      continue;
+    }
+
+    auto kind_features =
+        get_class_features(clazz, named_kind, /* via_dependency */ false);
+
+    if (!kind_features.contains(features_.get("via-caller-exported")) &&
+        !kind_features.contains(features_.get("via-caller-unexported"))) {
+      kind_features.join_with(
+          compute_transitive_class_features(method, named_kind));
+    }
+    features.join_with(kind_features);
   }
 
   return FeatureMayAlwaysSet::make_always(features);
@@ -329,24 +374,28 @@ FeatureMayAlwaysSet ClassProperties::issue_features(
 
 FeatureSet ClassProperties::get_class_features(
     std::string_view clazz,
+    const NamedKind* kind,
     bool via_dependency,
     size_t dependency_depth) const {
   FeatureSet features;
 
-  if (is_class_exported(clazz)) {
-    features.add(features_.get("via-caller-exported"));
+  if (kind->name() == "ActivityUserInput") {
+    features.join_with(get_manifest_features(clazz, activities_));
   }
-  auto exposed_child = get_exposed_child(clazz);
-  if (exposed_child) {
-    features.add(features_.get("via-child-exposed"));
-    features.add(features_.get(fmt::format("via-class:{}", *exposed_child)));
+
+  if (kind->name() == "ReceiverUserInput") {
+    features.join_with(get_manifest_features(clazz, receivers_));
   }
-  if (is_class_unexported(clazz)) {
-    features.add(features_.get("via-caller-unexported"));
+
+  if (kind->name() == "ServiceUserInput" ||
+      kind->name() == "ServiceAIDLUserInput") {
+    features.join_with(get_manifest_features(clazz, services_));
   }
-  if (has_permission(clazz)) {
-    features.add(features_.get("via-caller-permission"));
+
+  if (kind->name() == "ProviderUserInput") {
+    features.join_with(get_manifest_features(clazz, providers_));
   }
+
   if (has_inline_permissions(clazz)) {
     features.add(features_.get("via-permission-check-in-class"));
   }
@@ -366,16 +415,6 @@ FeatureSet ClassProperties::get_class_features(
   return features;
 }
 
-bool ClassProperties::has_user_exposed_properties(
-    std::string_view class_name) const {
-  return is_class_exported(class_name) || get_exposed_child(class_name);
-};
-
-bool ClassProperties::has_user_unexposed_properties(
-    std::string_view class_name) const {
-  return is_class_unexported(class_name) || has_permission(class_name);
-};
-
 namespace {
 
 struct QueueItem {
@@ -386,11 +425,12 @@ struct QueueItem {
 } // namespace
 
 FeatureSet ClassProperties::compute_transitive_class_features(
-    const Method* callee) const {
+    const Method* callee,
+    const NamedKind* kind) const {
   // Check cache
   if (const auto* target_method = via_dependencies_.get(callee, nullptr)) {
     return get_class_features(
-        target_method->get_class()->str(), /* via_dependency */ true);
+        target_method->get_class()->str(), kind, /* via_dependency */ true);
   }
 
   size_t depth = 0;
@@ -410,12 +450,15 @@ FeatureSet ClassProperties::compute_transitive_class_features(
     depth = item.depth;
     const auto class_name = item.method->get_class()->str();
 
-    if (has_user_exposed_properties(class_name)) {
+    const auto& features = get_class_features(class_name, kind, false);
+
+    if (features.contains(features_.get("via-caller-exported"))) {
       target = item;
       break;
     }
 
-    if (target.method == nullptr && has_user_unexposed_properties(class_name)) {
+    if (target.method == nullptr &&
+        features.contains(features_.get("via-caller-unexported"))) {
       // Continue search for user exposed properties along other paths.
       target = item;
       continue;
@@ -441,6 +484,7 @@ FeatureSet ClassProperties::compute_transitive_class_features(
     via_dependencies_.insert({callee, target.method});
     return get_class_features(
         target.method->get_class()->str(),
+        kind,
         /* via_dependency */ true,
         /* depedency_length */ depth);
   }

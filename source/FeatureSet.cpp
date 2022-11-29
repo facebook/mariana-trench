@@ -15,6 +15,10 @@ namespace marianatrench {
 FeatureSet::FeatureSet(std::initializer_list<const Feature*> features)
     : set_(features) {}
 
+bool FeatureSet::contains(const Feature* feature) const {
+  return set_.contains(feature);
+}
+
 void FeatureSet::add(const Feature* feature) {
   set_.insert(feature);
 }

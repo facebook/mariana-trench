@@ -156,11 +156,13 @@ TEST_F(ClassPropertiesTest, InvokeUtil) {
   auto via_dependency_graph = context.features->get("via-dependency-graph");
   auto via_caller_exported = context.features->get("via-caller-exported");
   auto via_class = context.features->get("via-class:LMainActivity;");
+  std::unordered_set<const Kind*> kind_set = {
+      context.kinds->get("ActivityUserInput")};
   EXPECT_EQ(
-      class_properties.issue_features(activity),
+      class_properties.issue_features(activity, kind_set),
       FeatureMayAlwaysSet({via_caller_exported}));
   EXPECT_EQ(
-      class_properties.issue_features(util),
+      class_properties.issue_features(util, kind_set),
       FeatureMayAlwaysSet(
           {via_dependency_graph, via_caller_exported, via_class}));
 }
@@ -212,17 +214,21 @@ TEST_F(ClassPropertiesTest, MultipleCallers) {
   auto via_caller_exported = context.features->get("via-caller-exported");
   auto via_caller_unexported = context.features->get("via-caller-unexported");
   auto via_class = context.features->get("via-class:LMainActivity;");
+  std::unordered_set<const Kind*> kind_set = {
+      context.kinds->get("ActivityUserInput")};
   EXPECT_EQ(
-      class_properties.issue_features(main_activity),
+      class_properties.issue_features(main_activity, kind_set),
       FeatureMayAlwaysSet({via_caller_exported}));
   EXPECT_EQ(
-      class_properties.issue_features(parent_activity),
+      class_properties.issue_features(parent_activity, kind_set),
       FeatureMayAlwaysSet({via_caller_unexported}));
   EXPECT_EQ(
-      class_properties.issue_features(util),
+      class_properties.issue_features(util, kind_set),
       FeatureMayAlwaysSet(
           {via_dependency_graph, via_caller_exported, via_class}));
-  EXPECT_EQ(class_properties.issue_features(other), FeatureMayAlwaysSet({}));
+  EXPECT_EQ(
+      class_properties.issue_features(other, kind_set),
+      FeatureMayAlwaysSet({}));
 }
 
 TEST_F(ClassPropertiesTest, MultipleCallersMultipleHops) {
@@ -273,19 +279,21 @@ TEST_F(ClassPropertiesTest, MultipleCallersMultipleHops) {
   auto via_caller_exported = context.features->get("via-caller-exported");
   auto via_caller_unexported = context.features->get("via-caller-unexported");
   auto via_class = context.features->get("via-class:LMainActivity;");
+  std::unordered_set<const Kind*> kind_set = {
+      context.kinds->get("ActivityUserInput")};
   EXPECT_EQ(
-      class_properties.issue_features(main_activity),
+      class_properties.issue_features(main_activity, kind_set),
       FeatureMayAlwaysSet({via_caller_exported}));
   EXPECT_EQ(
-      class_properties.issue_features(util),
+      class_properties.issue_features(util, kind_set),
       FeatureMayAlwaysSet(
           {via_dependency_graph, via_caller_exported, via_class}));
   EXPECT_EQ(
-      class_properties.issue_features(util_inner),
+      class_properties.issue_features(util_inner, kind_set),
       FeatureMayAlwaysSet(
           {via_dependency_graph, via_caller_exported, via_class}));
   EXPECT_EQ(
-      class_properties.issue_features(parent_activity),
+      class_properties.issue_features(parent_activity, kind_set),
       FeatureMayAlwaysSet({via_caller_unexported}));
 }
 
@@ -326,15 +334,17 @@ TEST_F(ClassPropertiesTest, UnexportedHop) {
   auto via_caller_exported = context.features->get("via-caller-exported");
   auto via_caller_unexported = context.features->get("via-caller-unexported");
   auto via_class = context.features->get("via-class:LParentActivity;");
+  std::unordered_set<const Kind*> kind_set = {
+      context.kinds->get("ActivityUserInput")};
   EXPECT_EQ(
-      class_properties.issue_features(main_activity),
+      class_properties.issue_features(main_activity, kind_set),
       FeatureMayAlwaysSet({via_caller_exported}));
   EXPECT_EQ(
-      class_properties.issue_features(parent_activity),
+      class_properties.issue_features(parent_activity, kind_set),
       FeatureMayAlwaysSet({via_caller_unexported}));
   // Stop traversal at unexported as it may introduce FPs.
   EXPECT_EQ(
-      class_properties.issue_features(util),
+      class_properties.issue_features(util, kind_set),
       FeatureMayAlwaysSet(
           {via_dependency_graph, via_caller_unexported, via_class}));
 }
@@ -391,19 +401,21 @@ TEST_F(ClassPropertiesTest, Cyclic) {
   auto via_dependency_graph = context.features->get("via-dependency-graph");
   auto via_caller_exported = context.features->get("via-caller-exported");
   auto via_class = context.features->get("via-class:LMainActivity;");
+  std::unordered_set<const Kind*> kind_set = {
+      context.kinds->get("ActivityUserInput")};
   EXPECT_EQ(
-      class_properties.issue_features(main_activity),
+      class_properties.issue_features(main_activity, kind_set),
       FeatureMayAlwaysSet({via_caller_exported}));
   EXPECT_EQ(
-      class_properties.issue_features(activity1),
+      class_properties.issue_features(activity1, kind_set),
       FeatureMayAlwaysSet(
           {via_dependency_graph, via_caller_exported, via_class}));
   EXPECT_EQ(
-      class_properties.issue_features(activity2),
+      class_properties.issue_features(activity2, kind_set),
       FeatureMayAlwaysSet(
           {via_dependency_graph, via_caller_exported, via_class}));
   EXPECT_EQ(
-      class_properties.issue_features(util),
+      class_properties.issue_features(util, kind_set),
       FeatureMayAlwaysSet(
           {via_dependency_graph, via_caller_exported, via_class}));
 }
@@ -434,11 +446,13 @@ TEST_F(ClassPropertiesTest, NestedClass) {
   auto via_caller_exported = context.features->get("via-caller-exported");
   auto via_nested_class =
       context.features->get("via-class:LMainActivity$NestedClass;");
+  std::unordered_set<const Kind*> kind_set = {
+      context.kinds->get("ActivityUserInput")};
   EXPECT_EQ(
-      class_properties.issue_features(activity),
+      class_properties.issue_features(activity, kind_set),
       FeatureMayAlwaysSet({via_caller_exported}));
   EXPECT_EQ(
-      class_properties.issue_features(util),
+      class_properties.issue_features(util, kind_set),
       FeatureMayAlwaysSet(
           {via_dependency_graph, via_caller_exported, via_nested_class}));
 }

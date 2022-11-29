@@ -88,6 +88,8 @@ class FeatureSet final : public sparta::AbstractDomain<FeatureSet> {
 
   void remove(const Feature* feature);
 
+  bool contains(const Feature* feature) const;
+
   bool leq(const FeatureSet& other) const override;
 
   bool equals(const FeatureSet& other) const override;

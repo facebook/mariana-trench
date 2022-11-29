@@ -508,8 +508,14 @@ void create_issue(
     TextualOrderIndex sink_index,
     std::string_view callee,
     const FeatureMayAlwaysSet& extra_features) {
+  std::unordered_set<const Kind*> kinds;
+  for (const auto& frame : source.frames_iterator()) {
+    kinds.emplace(frame.kind());
+  }
+
   source.add_inferred_features(
-      context->class_properties.issue_features(context->method()));
+      context->class_properties.issue_features(context->method(), kinds));
+
   sink.add_inferred_features(extra_features);
   auto issue = Issue(
       Taint{std::move(source)},
