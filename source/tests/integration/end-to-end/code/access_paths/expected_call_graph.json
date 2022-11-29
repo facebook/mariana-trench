@@ -260,10 +260,10 @@
   {
     "static" : 
     [
+      "Lcom/facebook/marianatrench/integrationtests/AccessPaths;.getDifferentSource:()Ljava/lang/Object;",
       "Lcom/facebook/marianatrench/integrationtests/Dictionary;.<init>:()V",
       "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
-      "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;",
-      "Ljava/lang/Object;.<init>:()V"
+      "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;"
     ],
     "virtual" : 
     [

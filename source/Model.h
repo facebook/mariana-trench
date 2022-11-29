@@ -114,6 +114,9 @@ class Model final {
     // Alias existing memory location on method invokes.
     AliasMemoryLocationOnInvoke = 0x80,
 
+    // Perform a strong write on propagation
+    StrongWriteOnPropagation = 0x100,
+
     Normal = 0,
   };
 
@@ -288,6 +291,7 @@ class Model final {
   bool no_join_virtual_overrides() const;
   bool no_collapse_on_propagation() const;
   bool alias_memory_location_on_invoke() const;
+  bool strong_write_on_propagation() const;
   Modes modes() const {
     return modes_;
   }

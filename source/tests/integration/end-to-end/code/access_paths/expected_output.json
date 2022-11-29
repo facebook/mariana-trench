@@ -216,85 +216,6 @@
         "line" : 53,
         "path" : "AccessPaths.java"
       },
-      "rule" : 1,
-      "sink_index" : "0",
-      "sinks" : 
-      [
-        {
-          "call" : 
-          {
-            "port" : "Argument(0)",
-            "position" : 
-            {
-              "end" : 40,
-              "line" : 53,
-              "path" : "AccessPaths.java",
-              "start" : 16
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V"
-          },
-          "kinds" : 
-          [
-            {
-              "distance" : 1,
-              "kind" : "Sink",
-              "origins" : 
-              [
-                "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V"
-              ]
-            }
-          ]
-        }
-      ],
-      "sources" : 
-      [
-        {
-          "call" : 
-          {
-            "port" : "Return",
-            "position" : 
-            {
-              "end" : 42,
-              "line" : 50,
-              "path" : "AccessPaths.java",
-              "start" : 37
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;"
-          },
-          "kinds" : 
-          [
-            {
-              "distance" : 1,
-              "kind" : "Source",
-              "local_positions" : 
-              [
-                {
-                  "end" : 16,
-                  "line" : 53,
-                  "start" : 4
-                },
-                {
-                  "end" : 44,
-                  "line" : 50,
-                  "start" : 30
-                }
-              ],
-              "origins" : 
-              [
-                "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;"
-              ]
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "callee" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
-      "position" : 
-      {
-        "line" : 53,
-        "path" : "AccessPaths.java"
-      },
       "rule" : 2,
       "sink_index" : "0",
       "sinks" : 
@@ -456,26 +377,15 @@
           ]
         }
       ]
-    }
-  ],
-  "method" : "Lcom/facebook/marianatrench/integrationtests/AccessPaths;.testWeakUpdate:()V",
-  "position" : 
-  {
-    "line" : 56,
-    "path" : "AccessPaths.java"
-  }
-}
-{
-  "issues" : 
-  [
+    },
     {
       "callee" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
       "position" : 
       {
-        "line" : 75,
+        "line" : 66,
         "path" : "AccessPaths.java"
       },
-      "rule" : 1,
+      "rule" : 2,
       "sink_index" : "0",
       "sinks" : 
       [
@@ -486,7 +396,7 @@
             "position" : 
             {
               "end" : 40,
-              "line" : 75,
+              "line" : 66,
               "path" : "AccessPaths.java",
               "start" : 16
             },
@@ -513,40 +423,51 @@
             "port" : "Return",
             "position" : 
             {
-              "end" : 40,
-              "line" : 72,
+              "end" : 49,
+              "line" : 63,
               "path" : "AccessPaths.java",
-              "start" : 35
+              "start" : 32
             },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;"
+            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/AccessPaths;.getDifferentSource:()Ljava/lang/Object;"
           },
           "kinds" : 
           [
             {
               "distance" : 1,
-              "kind" : "Source",
+              "kind" : "DifferentSource",
               "local_positions" : 
               [
                 {
                   "end" : 16,
-                  "line" : 75,
+                  "line" : 66,
                   "start" : 4
                 },
                 {
-                  "end" : 42,
-                  "line" : 72,
-                  "start" : 28
+                  "end" : 51,
+                  "line" : 63,
+                  "start" : 32
                 }
               ],
               "origins" : 
               [
-                "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;"
+                "Lcom/facebook/marianatrench/integrationtests/AccessPaths;.getDifferentSource:()Ljava/lang/Object;"
               ]
             }
           ]
         }
       ]
-    },
+    }
+  ],
+  "method" : "Lcom/facebook/marianatrench/integrationtests/AccessPaths;.testWeakUpdate:()V",
+  "position" : 
+  {
+    "line" : 56,
+    "path" : "AccessPaths.java"
+  }
+}
+{
+  "issues" : 
+  [
     {
       "callee" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
       "position" : 

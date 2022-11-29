@@ -60,6 +60,8 @@ std::string model_mode_to_string(Model::Mode mode) {
       return "no-collapse-on-propagation";
     case Model::Mode::AliasMemoryLocationOnInvoke:
       return "alias-memory-location-on-invoke";
+    case Model::Mode::StrongWriteOnPropagation:
+      return "strong-write-on-propagation";
     default:
       mt_unreachable();
   }
@@ -84,6 +86,8 @@ std::optional<Model::Mode> string_to_model_mode(const std::string& mode) {
     return Model::Mode::NoCollapseOnPropagation;
   } else if (mode == "alias-memory-location-on-invoke") {
     return Model::Mode::AliasMemoryLocationOnInvoke;
+  } else if (mode == "strong-write-on-propagation") {
+    return Model::Mode::StrongWriteOnPropagation;
   } else {
     return std::nullopt;
   }
@@ -764,6 +768,10 @@ bool Model::no_collapse_on_propagation() const {
 
 bool Model::alias_memory_location_on_invoke() const {
   return modes_.test(Model::Mode::AliasMemoryLocationOnInvoke);
+}
+
+bool Model::strong_write_on_propagation() const {
+  return modes_.test(Model::Mode::StrongWriteOnPropagation);
 }
 
 bool Model::leq(const Model& other) const {

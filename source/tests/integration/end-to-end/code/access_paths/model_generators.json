@@ -11,7 +11,8 @@
       "model": {
         "modes": [
           "no-collapse-on-propagation",
-          "skip-analysis"
+          "skip-analysis",
+          "strong-write-on-propagation"
         ],
         "propagation": [
           {

@@ -34,7 +34,8 @@
   "Lcom/facebook/marianatrench/integrationtests/AccessPaths;.getDifferentSource:()Ljava/lang/Object;" : 
   [
     "Lcom/facebook/marianatrench/integrationtests/AccessPaths;.testStrongUpdate:()V",
-    "Lcom/facebook/marianatrench/integrationtests/AccessPaths;.testUnresolvedKey:()V"
+    "Lcom/facebook/marianatrench/integrationtests/AccessPaths;.testUnresolvedKey:()V",
+    "Lcom/facebook/marianatrench/integrationtests/AccessPaths;.testWeakUpdate:()V"
   ],
   "Lcom/facebook/marianatrench/integrationtests/AccessPaths;.getString:()Ljava/lang/String;" : 
   [
@@ -117,7 +118,6 @@
     "Lcom/facebook/marianatrench/integrationtests/AccessPaths;.<init>:()V",
     "Lcom/facebook/marianatrench/integrationtests/AccessPaths;.getDifferentSource:()Ljava/lang/Object;",
     "Lcom/facebook/marianatrench/integrationtests/AccessPaths;.testSimple:()V",
-    "Lcom/facebook/marianatrench/integrationtests/AccessPaths;.testWeakUpdate:()V",
     "Lcom/facebook/marianatrench/integrationtests/Constants;.<init>:()V",
     "Lcom/facebook/marianatrench/integrationtests/Dictionary;.<init>:()V",
     "Lcom/facebook/marianatrench/integrationtests/Origin;.<init>:()V",

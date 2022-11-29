@@ -460,7 +460,8 @@ void apply_propagations(
                 output_register_id,
                 output_paths_resolved,
                 std::move(taint_tree),
-                UpdateKind::Weak);
+                callee.model.strong_write_on_propagation() ? UpdateKind::Strong
+                                                           : UpdateKind::Weak);
             break;
           }
           default:
