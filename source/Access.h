@@ -260,6 +260,8 @@ class PathElement final {
       const std::vector<std::optional<std::string>>& source_constant_arguments)
       const;
 
+  static PathElement from_json(const Json::Value& value);
+
  public:
   static PathElement field(const DexString* name);
   static PathElement field(std::string_view name);

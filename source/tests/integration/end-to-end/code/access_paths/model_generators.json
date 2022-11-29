@@ -1,0 +1,46 @@
+{
+  "model_generators": [
+    {
+      "find": "methods",
+      "where": [
+        {
+          "constraint": "signature",
+          "pattern": "Lcom/facebook/marianatrench/integrationtests/Dictionary;\\.setIndex:\\(Ljava/lang/String;Ljava/lang/Object;\\)V"
+        }
+      ],
+      "model": {
+        "modes": [
+          "no-collapse-on-propagation",
+          "skip-analysis"
+        ],
+        "propagation": [
+          {
+            "input": "Argument(2)",
+            "output": "Argument(0)[<Argument(1)>]"
+          }
+        ]
+      }
+    },
+    {
+      "find": "methods",
+      "where": [
+        {
+          "constraint": "signature",
+          "pattern": "Lcom/facebook/marianatrench/integrationtests/Dictionary;\\.getIndex:\\(Ljava/lang/String;\\)Ljava/lang/Object;"
+        }
+      ],
+      "model": {
+        "modes": [
+          "no-collapse-on-propagation",
+          "skip-analysis"
+        ],
+        "propagation": [
+          {
+            "input": "Argument(0)[<Argument(1)>]",
+            "output": "Return"
+          }
+        ]
+      }
+    }
+  ]
+}

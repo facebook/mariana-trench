@@ -48,9 +48,9 @@ public class AccessPaths {
     Dictionary d = new Dictionary();
 
     d.setIndex(Constants.FOO, Origin.source());
-    d.setIndex(Constants.FOO, new Object());
+    d.setIndex(Constants.FOO, getDifferentSource());
 
-    Origin.sink(d.getIndex(Constants.FOO)); // expect no issue
+    Origin.sink(d.getIndex(Constants.FOO)); // FP: expect issue for DifferentSource only
   }
 
   public static void testWeakUpdate() {
@@ -72,7 +72,7 @@ public class AccessPaths {
     d.setIndex(getString(), Origin.source());
     d.setIndex(Constants.FOO, getDifferentSource());
 
-    Origin.sink(d.getIndex(Constants.FOO)); // expect issue for DifferentSource only
+    Origin.sink(d.getIndex(Constants.FOO)); // FP: expect issue for DifferentSource only
     Origin.sink(d.getIndex("unknown")); // expect issues for Source only
     Origin.sink(d.getIndex(getString())); // expect issues for both sources
   }

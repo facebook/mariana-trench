@@ -107,6 +107,48 @@ std::string PathElement::str() const {
   }
 }
 
+PathElement PathElement::from_json(const Json::Value& value) {
+  auto path_element = JsonValidation::string(value);
+
+  if (!boost::starts_with(path_element, "[") ||
+      !boost::ends_with(path_element, "]")) {
+    return PathElement::field(path_element);
+  }
+
+  // Trim outer []
+  path_element = path_element.substr(1, path_element.size() - 2);
+  if (path_element.empty()) {
+    throw JsonValidationError(
+        value,
+        /* field */ std::nullopt,
+        fmt::format(
+            "non-empty index for path element, got `{}`", path_element));
+  }
+
+  if (path_element == "*") {
+    return PathElement::any_index();
+  }
+
+  if (!boost::starts_with(path_element, "<") ||
+      !boost::ends_with(path_element, ">")) {
+    return PathElement::index(path_element);
+  }
+
+  // Trim outer <>
+  auto root = Root::from_json(path_element.substr(1, path_element.size() - 2));
+
+  if (!root.is_argument()) {
+    throw JsonValidationError(
+        value,
+        /* field */ std::nullopt,
+        fmt::format(
+            "`[<Argument(<number>)>]` for value_of path element, got `{}`",
+            path_element));
+  }
+
+  return PathElement::index_from_value_of(root);
+}
+
 PathElement PathElement::resolve_index_from_value_of(
     const std::vector<std::optional<std::string>>& source_constant_arguments)
     const {
@@ -310,18 +352,61 @@ AccessPath AccessPath::canonicalize_for_method(const Method* method) const {
 std::vector<std::string> AccessPath::split_path(const Json::Value& value) {
   auto string = JsonValidation::string(value);
 
-  // Split the string by ".".
-  std::vector<std::string> elements;
-  std::string_view current = string;
+  static constexpr std::string_view k_start_delimiters = ".[";
+  static constexpr std::string_view k_end_delimiters = "]";
 
-  while (!current.empty()) {
-    auto position = current.find('.');
+  // Split the string by delimiters.
+  std::vector<std::string> elements;
+  std::string_view current_string = string;
+  std::string_view current_delimiter = k_start_delimiters;
+  std::string_view current_element;
+
+  while (!current_string.empty()) {
+    auto position = current_string.find_first_of(current_delimiter);
     if (position == std::string::npos) {
-      elements.push_back(std::string(current));
+      elements.push_back(std::string(current_string));
       break;
-    } else {
-      elements.push_back(std::string(current.substr(0, position)));
-      current = current.substr(position + 1);
+    }
+
+    switch (current_string.at(position)) {
+      case '.': {
+        if (position == 0) {
+          throw JsonValidationError(
+              value,
+              /* field */ std::nullopt,
+              "non-empty field for path element");
+        }
+        current_element = current_string.substr(0, position);
+        current_string = current_string.substr(position + 1);
+        current_delimiter = k_start_delimiters;
+      } break;
+
+      case '[': {
+        current_element = current_string.substr(0, position);
+        // Include '[' in the next element
+        current_string = current_string.substr(position);
+        current_delimiter = k_end_delimiters;
+      } break;
+
+      case ']': {
+        // Include ']' in the current element
+        current_element = current_string.substr(0, position + 1);
+
+        current_string = current_string.substr(position + 1);
+        if (!current_string.empty() && current_string.at(0) == '.') {
+          // Lookahead and consume '.'
+          current_string = current_string.substr(1);
+        }
+
+        current_delimiter = k_start_delimiters;
+      } break;
+
+      default:
+        mt_unreachable();
+    }
+
+    if (!current_element.empty()) {
+      elements.push_back(std::string(current_element));
     }
   }
 
@@ -344,7 +429,7 @@ AccessPath AccessPath::from_json(const Json::Value& value) {
   for (auto iterator = std::next(elements.begin()), end = elements.end();
        iterator != end;
        ++iterator) {
-    path.append(PathElement::field(*iterator));
+    path.append(PathElement::from_json(*iterator));
   }
 
   return AccessPath(root, path);

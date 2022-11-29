@@ -87,6 +87,73 @@ TEST_F(JsonTest, Root) {
       JsonValidationError);
 }
 
+TEST_F(JsonTest, PathElementTest) {
+  const auto field = PathElement::field("field");
+  const auto invalid_field = PathElement::field("<field>");
+
+  const auto index = PathElement::index("index");
+  const auto index_with_dot = PathElement::index("a.b");
+
+  const auto value_of_argument_1 =
+      PathElement::index_from_value_of(Root(Root::Kind::Argument, 1));
+
+  const auto any_index = PathElement::any_index();
+
+  EXPECT_EQ(PathElement::from_json("field"), field);
+  EXPECT_EQ(PathElement::from_json("[index]"), index);
+  EXPECT_EQ(PathElement::from_json("[*]"), any_index);
+  EXPECT_EQ(PathElement::from_json("[<Argument(1)>]"), value_of_argument_1);
+
+  // index_from_value_of syntax is `[<` ... `>]`.
+  EXPECT_EQ(
+      AccessPath::from_json("Argument(0)[<Argument(1)>]"),
+      AccessPath(Root(Root::Kind::Argument, 0), Path{value_of_argument_1}));
+
+  // Angle braces `<`...`>` within a field does not have a special meaning.
+  EXPECT_EQ(
+      AccessPath::from_json("Argument(0).<field>"),
+      AccessPath(Root(Root::Kind::Argument, 0), Path{invalid_field}));
+
+  // Anything enclosed within `[]` is an index.
+  EXPECT_EQ(
+      AccessPath::from_json("Argument(0)[a.b]"),
+      AccessPath(Root(Root::Kind::Argument, 0), Path{index_with_dot}));
+
+  // All path elements together
+  auto access_path1 =
+      AccessPath::from_json("Argument(0).field[index][*].field[<Argument(1)>]");
+  EXPECT_EQ(access_path1.path().size(), 5);
+  EXPECT_EQ(
+      access_path1,
+      AccessPath(
+          Root(Root::Kind::Argument, 0),
+          Path{field, index, any_index, field, value_of_argument_1}));
+
+  // Angle braces `<`...`>` on its own is invalid.
+  EXPECT_THROW(
+      AccessPath::from_json("Argument(0)<field>"), JsonValidationError);
+
+  // Empty fields not allowed
+  EXPECT_THROW(AccessPath::from_json("Argument(0)..."), JsonValidationError);
+  EXPECT_THROW(
+      AccessPath::from_json("Argument(0)...field"), JsonValidationError);
+
+  // Empty index not allowed.
+  EXPECT_THROW(AccessPath::from_json("Argument(0)[]"), JsonValidationError);
+  EXPECT_THROW(AccessPath::from_json("Argument(0).[]"), JsonValidationError);
+
+  // Only allow Root::Kind::Argument
+  EXPECT_THROW(
+      AccessPath::from_json("Argument(0).field[index][*][<Return>]"),
+      JsonValidationError);
+
+  // Invalid syntax for PathElement
+  EXPECT_THROW(AccessPath::from_json("Argument(0)]"), JsonValidationError);
+
+  // Invalid syntax for PathElement
+  EXPECT_THROW(AccessPath::from_json("Argument(0)]["), JsonValidationError);
+}
+
 TEST_F(JsonTest, AccessPath) {
   const auto x = PathElement::field("x");
   const auto y = PathElement::field("y");

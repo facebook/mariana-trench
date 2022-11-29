@@ -8,6 +8,7 @@
 #include <gmock/gmock.h>
 
 #include <mariana-trench/Access.h>
+#include <mariana-trench/JsonValidation.h>
 #include <mariana-trench/Redex.h>
 #include <mariana-trench/tests/Test.h>
 
