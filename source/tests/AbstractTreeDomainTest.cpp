@@ -1724,6 +1724,49 @@ TEST_F(AbstractTreeDomainTest, Read) {
   EXPECT_EQ(tree.read(Path{x, z, y}), (IntSetTree{IntSet{1, 2, 3}}));
 }
 
+TEST_F(AbstractTreeDomainTest, ReadWithIndex) {
+  const auto x = PathElement::field("x");
+  const auto xi = PathElement::index("x");
+  const auto yi = PathElement::index("y");
+  const auto ai = PathElement::any_index();
+
+  auto tree = IntSetTree{
+      {Path{}, IntSet{1}},
+      {Path{x}, IntSet{2}},
+      {Path{xi}, IntSet{3}},
+      {Path{xi, yi}, IntSet{4}},
+      {Path{yi}, IntSet{5}},
+      {Path{ai}, IntSet{6}}, // This will be joined into all existing indices
+  };
+
+  EXPECT_EQ(tree.read(Path{}), tree);
+
+  EXPECT_EQ(
+      tree.read(Path{x}),
+      (IntSetTree{
+          {Path{}, IntSet{1, 2}},
+      }));
+
+  EXPECT_EQ(
+      tree.read(Path{xi}),
+      (IntSetTree{
+          {Path{}, IntSet{1, 3, 6}},
+          {Path{yi}, IntSet{4}},
+      }));
+
+  EXPECT_EQ(tree.read(Path{xi, yi}), (IntSetTree{IntSet{1, 3, 4, 6}}));
+
+  EXPECT_EQ(tree.read(Path{yi}), (IntSetTree{IntSet{1, 5, 6}}));
+
+  // Read on [*] includes reads from all sibling indices
+  EXPECT_EQ(
+      tree.read(Path{ai}),
+      (IntSetTree{
+          {Path{}, IntSet{1, 3, 5, 6}},
+          {Path{yi}, IntSet{4}},
+      }));
+}
+
 TEST_F(AbstractTreeDomainTest, RawRead) {
   const auto x = PathElement::field("x");
   const auto y = PathElement::field("y");

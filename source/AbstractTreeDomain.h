@@ -971,13 +971,23 @@ class AbstractTreeDomain final
     if (begin == end) {
       return *this;
     }
-
     auto path_head = *begin;
     ++begin;
 
     auto subtree = children_.at(path_head.encode());
     if (path_head.is_index() && subtree.is_bottom()) {
+      // Read from any_index [*] if the index is not in the tree.
       subtree = children_.at(PathElement::any_index().encode());
+    } else if (path_head.is_any_index()) {
+      // Read from [*] == read from every index
+      for (const auto& [path_element, index_subtree] :
+           PathElementMapIterator(children_)) {
+        if (!path_element.is_index()) {
+          continue;
+        }
+
+        subtree.join_with(index_subtree);
+      }
     }
 
     if (subtree.is_bottom()) {
@@ -1011,9 +1021,7 @@ class AbstractTreeDomain final
     }
 
     auto subtree = children_.at(begin->encode());
-    if (begin->is_index() && subtree.is_bottom()) {
-      subtree = children_.at(PathElement::any_index().encode());
-    }
+
     return subtree.raw_read_internal(std::next(begin), end);
   }
 
