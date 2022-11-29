@@ -465,9 +465,13 @@ class AbstractTreeDomain final
     } else {
       if (!left_subtree.leq(accumulator_tree)) {
         auto left_subtree_copy = left_subtree;
-        left_subtree_copy.elements_.difference_with(accumulator_tree.elements_);
-        children.insert_or_assign(
-            path_element.encode(), std::move(left_subtree_copy));
+        left_subtree_copy.join_with_internal(
+            right_subtree, accumulator_tree.elements_);
+
+        if (!left_subtree_copy.is_bottom()) {
+          children.insert_or_assign(
+              path_element.encode(), std::move(left_subtree_copy));
+        }
       }
     }
   }
@@ -808,6 +812,47 @@ class AbstractTreeDomain final
     auto path_head = *begin;
     ++begin;
 
+    if (path_head.is_index() && kind == UpdateKind::Weak) {
+      // Merge in existing [*] for weak write on new index:
+      // If we are weak assigning to a new index and the tree already consists
+      // of a path element [*], we need to merge [*] with the index as the
+      // existing [*] also covered this index.
+      if (children_.at(path_head.encode()).is_bottom()) {
+        auto new_subtree = children_.at(PathElement::any_index().encode());
+        if (!new_subtree.is_bottom()) {
+          children_.insert_or_assign(path_head.encode(), new_subtree);
+        }
+      }
+    } else if (path_head.is_any_index()) {
+      // Write on any_index [*] == write on every index:
+      // [*] has a different meaning for the write() api than the [*] node in
+      // the tree.
+      //   - node [*] in the tree represents any remaining index apart from the
+      //   index already present in the tree.
+      //   - write([*]) implies write to an unknown/unresolved index which could
+      //   be some index we know about or any other index. In this sense, it
+      //   represents _every_ index.
+      // Hence, we consider write() to [*] as weak write() to every index.
+      kind = UpdateKind::Weak;
+      Map new_children;
+
+      for (const auto& [path_element, subtree] :
+           PathElementMapIterator(children_)) {
+        auto new_subtree = subtree;
+
+        if (path_element.is_index()) {
+          new_subtree.write_internal(begin, end, elements, accumulator, kind);
+        }
+
+        if (!new_subtree.is_bottom()) {
+          new_children.insert_or_assign(
+              path_element.encode(), std::move(new_subtree));
+        }
+      }
+
+      children_ = new_children;
+    }
+
     children_.update(
         [begin, end, &elements, &accumulator, kind](const auto& subtree) {
           auto new_subtree = subtree;
@@ -851,6 +896,34 @@ class AbstractTreeDomain final
 
     auto path_head = *begin;
     ++begin;
+
+    // Merge in existing [*] for weak write on new index.
+    if (path_head.is_index() && kind == UpdateKind::Weak) {
+      if (children_.at(path_head.encode()).is_bottom()) {
+        tree.join_with(children_.at(PathElement::any_index().encode()));
+        tree.elements_.difference_with(accumulator);
+      }
+    } else if (path_head.is_any_index()) {
+      // Write on any_index [*] == write on every index.
+      kind = UpdateKind::Weak;
+      Map new_children;
+
+      for (const auto& [path_element, subtree] :
+           PathElementMapIterator(children_)) {
+        auto new_subtree = subtree;
+
+        if (path_element.is_index()) {
+          new_subtree.write_internal(begin, end, tree, accumulator, kind);
+        }
+
+        if (!new_subtree.is_bottom()) {
+          new_children.insert_or_assign(
+              path_element.encode(), std::move(new_subtree));
+        }
+      }
+
+      children_ = new_children;
+    }
 
     children_.update(
         [begin, end, &tree, &accumulator, kind](const auto& subtree) {

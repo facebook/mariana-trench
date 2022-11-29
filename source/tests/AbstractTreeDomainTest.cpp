@@ -155,6 +155,126 @@ TEST_F(AbstractTreeDomainTest, WriteElementsWeak) {
   EXPECT_EQ(tree.successor(x).successor(y), (IntSetTree{IntSet{1}}));
 }
 
+TEST_F(AbstractTreeDomainTest, WriteIndexElementsWeak) {
+  const auto x = PathElement::field("x");
+  const auto xi = PathElement::index("x");
+  const auto yi = PathElement::index("y");
+  const auto ai = PathElement::any_index();
+
+  auto tree = IntSetTree{IntSet{1}};
+  EXPECT_FALSE(tree.is_bottom());
+  EXPECT_EQ(tree.root(), IntSet{1});
+  EXPECT_TRUE(tree.successors().empty());
+  EXPECT_TRUE(tree.successor(x).is_bottom());
+
+  tree.write(Path{x}, IntSet{2}, UpdateKind::Weak);
+  EXPECT_FALSE(tree.is_bottom());
+  EXPECT_EQ(tree.root(), (IntSet{1}));
+  EXPECT_EQ(tree.successors().size(), 1);
+  EXPECT_EQ(tree.successor(x).root(), (IntSet{2}));
+  EXPECT_TRUE(tree.successor(x).successors().empty());
+
+  tree.write(Path{xi}, IntSet{3}, UpdateKind::Weak);
+  EXPECT_FALSE(tree.is_bottom());
+  EXPECT_EQ(tree.root(), (IntSet{1}));
+  EXPECT_EQ(tree.successors().size(), 2);
+  EXPECT_EQ(tree.successor(x).root(), (IntSet{2}));
+  EXPECT_EQ(tree.successor(xi).root(), (IntSet{3}));
+  EXPECT_TRUE(tree.successor(xi).successors().empty());
+
+  // Write to [*] implies writes to all existing indices
+  tree.write(Path{ai}, IntSet{4}, UpdateKind::Weak);
+  EXPECT_FALSE(tree.is_bottom());
+  EXPECT_EQ(tree.root(), (IntSet{1}));
+  EXPECT_EQ(tree.successors().size(), 3);
+  EXPECT_EQ(tree.successor(x).root(), (IntSet{2}));
+  EXPECT_EQ(tree.successor(xi).root(), (IntSet{3, 4}));
+  EXPECT_EQ(tree.successor(ai).root(), (IntSet{4}));
+  EXPECT_TRUE(tree.successor(xi).successors().empty());
+  EXPECT_TRUE(tree.successor(ai).successors().empty());
+
+  // Write to a new index [y] on a tree with existing [*] implies
+  // [y] inherits from exiting [*]
+  tree.write(Path{yi}, IntSet{5}, UpdateKind::Weak);
+  EXPECT_FALSE(tree.is_bottom());
+  EXPECT_EQ(tree.root(), (IntSet{1}));
+  EXPECT_EQ(tree.successors().size(), 4);
+  EXPECT_EQ(tree.successor(x).root(), (IntSet{2}));
+  EXPECT_EQ(tree.successor(xi).root(), (IntSet{3, 4}));
+  EXPECT_EQ(tree.successor(yi).root(), (IntSet{4, 5}));
+  EXPECT_EQ(tree.successor(ai).root(), (IntSet{4}));
+  EXPECT_TRUE(tree.successor(xi).successors().empty());
+  EXPECT_TRUE(tree.successor(yi).successors().empty());
+  EXPECT_TRUE(tree.successor(ai).successors().empty());
+
+  // Write to children of [*] implies writes to children
+  // of all existing indices
+  tree.write(Path{ai, xi}, IntSet{6}, UpdateKind::Weak);
+  EXPECT_FALSE(tree.is_bottom());
+  EXPECT_EQ(tree.root(), (IntSet{1}));
+  EXPECT_EQ(tree.successors().size(), 4);
+  EXPECT_EQ(tree.successor(x).root(), (IntSet{2}));
+  EXPECT_EQ(tree.successor(xi).root(), (IntSet{3, 4}));
+  EXPECT_EQ(tree.successor(yi).root(), (IntSet{4, 5}));
+  EXPECT_EQ(tree.successor(ai).root(), (IntSet{4}));
+  EXPECT_EQ(tree.successor(xi).successors().size(), 1);
+  EXPECT_EQ(tree.successor(yi).successors().size(), 1);
+  EXPECT_EQ(tree.successor(ai).successors().size(), 1);
+  EXPECT_EQ(tree.successor(xi).successor(xi).root(), (IntSet{6}));
+  EXPECT_EQ(tree.successor(yi).successor(xi).root(), (IntSet{6}));
+  EXPECT_EQ(tree.successor(ai).successor(xi).root(), (IntSet{6}));
+
+  // Ignore elements already present on the ancestor.
+  tree.write(Path{xi, xi}, IntSet{1}, UpdateKind::Weak);
+  tree.write(Path{yi, xi}, IntSet{4}, UpdateKind::Weak);
+  tree.write(Path{ai, xi}, IntSet{4}, UpdateKind::Weak);
+  EXPECT_FALSE(tree.is_bottom());
+  EXPECT_EQ(tree.root(), (IntSet{1}));
+  EXPECT_EQ(tree.successors().size(), 4);
+  EXPECT_EQ(tree.successor(x).root(), (IntSet{2}));
+  EXPECT_EQ(tree.successor(xi).root(), (IntSet{3, 4}));
+  EXPECT_EQ(tree.successor(yi).root(), (IntSet{4, 5}));
+  EXPECT_EQ(tree.successor(ai).root(), (IntSet{4}));
+  EXPECT_EQ(tree.successor(xi).successors().size(), 1);
+  EXPECT_EQ(tree.successor(yi).successors().size(), 1);
+  EXPECT_EQ(tree.successor(ai).successors().size(), 1);
+  EXPECT_EQ(tree.successor(xi).successor(xi).root(), (IntSet{6}));
+  EXPECT_EQ(tree.successor(yi).successor(xi).root(), (IntSet{6}));
+  EXPECT_EQ(tree.successor(ai).successor(xi).root(), (IntSet{6}));
+
+  // Children of index is pruned.
+  tree.write(Path{xi}, IntSet{6}, UpdateKind::Weak);
+  EXPECT_FALSE(tree.is_bottom());
+  EXPECT_EQ(tree.root(), (IntSet{1}));
+  EXPECT_EQ(tree.successors().size(), 4);
+  EXPECT_EQ(tree.successor(x).root(), (IntSet{2}));
+  EXPECT_EQ(tree.successor(xi).root(), (IntSet{3, 4, 6}));
+  EXPECT_EQ(tree.successor(yi).root(), (IntSet{4, 5}));
+  EXPECT_EQ(tree.successor(ai).root(), (IntSet{4}));
+  EXPECT_EQ(tree.successor(xi).successor(xi).root(), (IntSet{}));
+  EXPECT_EQ(tree.successor(yi).successor(xi).root(), (IntSet{6}));
+  EXPECT_EQ(tree.successor(ai).successor(xi).root(), (IntSet{6}));
+
+  // Write to [*] also prunes the children of sibling indices
+  tree.write(Path{ai}, IntSet{6}, UpdateKind::Weak);
+  EXPECT_FALSE(tree.is_bottom());
+  EXPECT_EQ(tree.root(), (IntSet{1}));
+  EXPECT_EQ(tree.successors().size(), 4);
+  EXPECT_EQ(tree.successor(x).root(), (IntSet{2}));
+  EXPECT_EQ(tree.successor(xi).root(), (IntSet{3, 4, 6}));
+  EXPECT_EQ(tree.successor(yi).root(), (IntSet{4, 5, 6}));
+  EXPECT_EQ(tree.successor(ai).root(), (IntSet{4, 6}));
+  EXPECT_EQ(tree.successor(xi).successor(xi).root(), (IntSet{}));
+  EXPECT_EQ(tree.successor(yi).successor(xi).root(), (IntSet{}));
+  EXPECT_EQ(tree.successor(ai).successor(xi).root(), (IntSet{}));
+
+  // Children are pruned including indices and [*]
+  tree.write(Path{}, IntSet{3, 4, 5, 6}, UpdateKind::Weak);
+  EXPECT_FALSE(tree.is_bottom());
+  EXPECT_EQ(tree.root(), (IntSet{1, 3, 4, 5, 6}));
+  EXPECT_EQ(tree.successor(x).root(), (IntSet{2}));
+}
+
 TEST_F(AbstractTreeDomainTest, WriteElementsStrong) {
   const auto x = PathElement::field("x");
   const auto y = PathElement::field("y");
@@ -221,6 +341,107 @@ TEST_F(AbstractTreeDomainTest, WriteElementsStrong) {
   EXPECT_EQ(tree.successor(x).root(), (IntSet{3}));
   EXPECT_EQ(tree.successor(x).successors().size(), 0);
   EXPECT_EQ(tree.successor(y), (IntSetTree{IntSet{}}));
+}
+
+TEST_F(AbstractTreeDomainTest, WriteIndexElementsStrong) {
+  const auto x = PathElement::field("x");
+  const auto xi = PathElement::index("x");
+  const auto yi = PathElement::index("y");
+  const auto ai = PathElement::any_index();
+
+  auto tree = IntSetTree{IntSet{1}};
+  EXPECT_FALSE(tree.is_bottom());
+  EXPECT_EQ(tree.root(), IntSet{1});
+  EXPECT_TRUE(tree.successors().empty());
+  EXPECT_TRUE(tree.successor(x).is_bottom());
+
+  tree.write(Path{x}, IntSet{2}, UpdateKind::Strong);
+  tree.write(Path{xi}, IntSet{2}, UpdateKind::Strong);
+  EXPECT_FALSE(tree.is_bottom());
+  EXPECT_EQ(tree.root(), (IntSet{1}));
+  EXPECT_EQ(tree.successors().size(), 2);
+  EXPECT_EQ(tree.successor(x).root(), (IntSet{2}));
+  EXPECT_EQ(tree.successor(xi).root(), (IntSet{2}));
+  EXPECT_TRUE(tree.successor(x).successors().empty());
+  EXPECT_TRUE(tree.successor(xi).successors().empty());
+
+  tree.write(Path{xi}, IntSet{3}, UpdateKind::Strong);
+  EXPECT_FALSE(tree.is_bottom());
+  EXPECT_EQ(tree.root(), (IntSet{1}));
+  EXPECT_EQ(tree.successors().size(), 2);
+  EXPECT_EQ(tree.successor(x).root(), (IntSet{2}));
+  EXPECT_EQ(tree.successor(xi).root(), (IntSet{3}));
+  EXPECT_TRUE(tree.successor(x).successors().empty());
+  EXPECT_TRUE(tree.successor(xi).successors().empty());
+
+  // There are not strong writes to [*].
+  // Write to [*] implies weak writes to all existing indices and [*]
+  tree.write(Path{ai}, IntSet{4}, UpdateKind::Strong);
+  EXPECT_FALSE(tree.is_bottom());
+  EXPECT_EQ(tree.root(), (IntSet{1}));
+  EXPECT_EQ(tree.successors().size(), 3);
+  EXPECT_EQ(tree.successor(x).root(), (IntSet{2}));
+  EXPECT_EQ(tree.successor(xi).root(), (IntSet{3, 4}));
+  EXPECT_EQ(tree.successor(ai).root(), (IntSet{4}));
+  EXPECT_TRUE(tree.successor(xi).successors().empty());
+  EXPECT_TRUE(tree.successor(ai).successors().empty());
+
+  // Write to index [yi] on a tree with existing [*] does not inherit from [*]
+  tree.write(Path{yi}, IntSet{5}, UpdateKind::Strong);
+  EXPECT_FALSE(tree.is_bottom());
+  EXPECT_EQ(tree.root(), (IntSet{1}));
+  EXPECT_EQ(tree.successors().size(), 4);
+  EXPECT_EQ(tree.successor(x).root(), (IntSet{2}));
+  EXPECT_EQ(tree.successor(xi).root(), (IntSet{3, 4}));
+  EXPECT_EQ(tree.successor(yi).root(), (IntSet{5}));
+  EXPECT_EQ(tree.successor(ai).root(), (IntSet{4}));
+
+  // Write to children of [*] implies writes to children
+  // of all existing indices
+  tree.write(Path{ai, yi}, IntSet{6}, UpdateKind::Strong);
+  EXPECT_FALSE(tree.is_bottom());
+  EXPECT_EQ(tree.root(), (IntSet{1}));
+  EXPECT_EQ(tree.successors().size(), 4);
+  EXPECT_EQ(tree.successor(x).root(), (IntSet{2}));
+  EXPECT_EQ(tree.successor(xi).root(), (IntSet{3, 4}));
+  EXPECT_EQ(tree.successor(yi).root(), (IntSet{5}));
+  EXPECT_EQ(tree.successor(ai).root(), (IntSet{4}));
+  EXPECT_EQ(tree.successor(xi).successors().size(), 1);
+  EXPECT_EQ(tree.successor(yi).successors().size(), 1);
+  EXPECT_EQ(tree.successor(ai).successors().size(), 1);
+  EXPECT_EQ(tree.successor(xi).successor(yi).root(), (IntSet{6}));
+  EXPECT_EQ(tree.successor(yi).successor(yi).root(), (IntSet{6}));
+  EXPECT_EQ(tree.successor(ai).successor(yi).root(), (IntSet{6}));
+
+  // Ignore elements already present on the ancestor.
+  tree.write(Path{xi, yi}, IntSet{1}, UpdateKind::Strong);
+  tree.write(Path{yi, yi}, IntSet{5}, UpdateKind::Strong);
+  EXPECT_FALSE(tree.is_bottom());
+  EXPECT_EQ(tree.root(), (IntSet{1}));
+  EXPECT_EQ(tree.successors().size(), 4);
+  EXPECT_EQ(tree.successor(x).root(), (IntSet{2}));
+  EXPECT_EQ(tree.successor(xi).root(), (IntSet{3, 4}));
+  EXPECT_EQ(tree.successor(yi).root(), (IntSet{5}));
+  EXPECT_EQ(tree.successor(ai).root(), (IntSet{4}));
+  EXPECT_EQ(tree.successor(xi).successors().size(), 1);
+  EXPECT_EQ(tree.successor(yi).successors().size(), 1);
+  EXPECT_EQ(tree.successor(ai).successors().size(), 1);
+  EXPECT_EQ(tree.successor(xi).successor(yi).root(), (IntSet{}));
+  EXPECT_EQ(tree.successor(yi).successor(yi).root(), (IntSet{}));
+  EXPECT_EQ(tree.successor(ai).successor(yi).root(), (IntSet{6}));
+
+  // Children of index are removed.
+  tree.write(Path{xi}, IntSet{6}, UpdateKind::Strong);
+  EXPECT_FALSE(tree.is_bottom());
+  EXPECT_EQ(tree.root(), (IntSet{1}));
+  EXPECT_EQ(tree.successors().size(), 4);
+  EXPECT_EQ(tree.successor(x).root(), (IntSet{2}));
+  EXPECT_EQ(tree.successor(xi).root(), (IntSet{6}));
+  EXPECT_EQ(tree.successor(yi).root(), (IntSet{5}));
+  EXPECT_EQ(tree.successor(ai).root(), (IntSet{4}));
+  EXPECT_EQ(tree.successor(xi).successors().size(), 0);
+  EXPECT_EQ(tree.successor(yi).successor(yi).root(), (IntSet{}));
+  EXPECT_EQ(tree.successor(ai).successor(yi).root(), (IntSet{6}));
 }
 
 TEST_F(AbstractTreeDomainTest, WriteTreeWeak) {
@@ -303,6 +524,74 @@ TEST_F(AbstractTreeDomainTest, WriteTreeWeak) {
       }));
 }
 
+TEST_F(AbstractTreeDomainTest, WriteTreeWithIndexWeak) {
+  const auto x = PathElement::field("x");
+  const auto xi = PathElement::index("x");
+  const auto yi = PathElement::index("y");
+  const auto ai = PathElement::any_index();
+
+  auto tree = IntSetTree{
+      {Path{}, IntSet{1}},
+      {Path{x}, IntSet{2}},
+      {Path{xi, xi}, IntSet{3}},
+      {Path{xi, yi}, IntSet{4}},
+      {Path{xi, ai}, IntSet{5}},
+      {Path{xi, yi, xi, yi}, IntSet{6}},
+      {Path{yi}, IntSet{7}},
+      {Path{yi, xi}, IntSet{8}},
+  };
+
+  // Write to [*] implies write to all existing indices
+  auto tree1 = tree;
+  tree1.write(Path{ai, xi}, IntSetTree{IntSet{9}}, UpdateKind::Weak);
+  EXPECT_EQ(
+      tree1,
+      (IntSetTree{
+          {Path{}, IntSet{1}},
+          {Path{x}, IntSet{2}},
+          {Path{xi, xi}, IntSet{3, 9}},
+          {Path{xi, yi}, IntSet{4}},
+          {Path{xi, ai}, IntSet{5}},
+          {Path{ai, xi}, IntSet{9}},
+          {Path{xi, yi, xi, yi}, IntSet{6}},
+          {Path{yi}, IntSet{7}},
+          {Path{yi, xi}, IntSet{8, 9}},
+      }));
+
+  // Write to ancestor prunes empty children
+  auto tree2 = tree;
+  tree2.write(Path{xi}, IntSetTree{IntSet{3, 5, 6}}, UpdateKind::Weak);
+  EXPECT_EQ(
+      tree2,
+      (IntSetTree{
+          {Path{}, IntSet{1}},
+          {Path{x}, IntSet{2}},
+          {Path{xi}, IntSet{3, 5, 6}},
+          {Path{xi, yi}, IntSet{4}},
+          {Path{yi}, IntSet{7}},
+          {Path{yi, xi}, IntSet{8}},
+      }));
+
+  // Write to [*] implies write to all existing indices.
+  // All subtrees are collapsed. But indices do not collapse into [*]
+  auto tree3 = tree;
+  tree3.write(
+      Path{},
+      IntSetTree{
+          {Path{}, IntSet{2}},
+          {Path{ai}, IntSet{3, 4, 5, 6, 7, 8}},
+      },
+      UpdateKind::Weak);
+  EXPECT_EQ(
+      tree3,
+      (IntSetTree{
+          {Path{}, IntSet{1, 2}},
+          {Path{xi}, IntSet{3, 4, 5, 6, 7, 8}},
+          {Path{yi}, IntSet{3, 4, 5, 6, 7, 8}},
+          {Path{ai}, IntSet{3, 4, 5, 6, 7, 8}},
+      }));
+}
+
 TEST_F(AbstractTreeDomainTest, WriteTreeStrong) {
   const auto x = PathElement::field("x");
   const auto y = PathElement::field("y");
@@ -365,6 +654,111 @@ TEST_F(AbstractTreeDomainTest, WriteTreeStrong) {
           {Path{x, z, x, x}, IntSet{3, 14}},
           {Path{y}, IntSet{20}},
           {Path{y, x}, IntSet{22}},
+      }));
+}
+
+TEST_F(AbstractTreeDomainTest, WriteTreeWithIndexStrong) {
+  const auto x = PathElement::field("x");
+  const auto xi = PathElement::index("x");
+  const auto yi = PathElement::index("y");
+  const auto ai = PathElement::any_index();
+
+  auto tree = IntSetTree{
+      {Path{}, IntSet{1}},
+      {Path{x}, IntSet{2}},
+      {Path{xi, xi}, IntSet{3}},
+      {Path{xi, yi}, IntSet{4}},
+      {Path{xi, ai}, IntSet{5}},
+      {Path{xi, yi, xi, yi}, IntSet{6}},
+      {Path{yi}, IntSet{7}},
+      {Path{yi, xi}, IntSet{8}},
+  };
+
+  // Test writes at the root.
+  auto tree1 = tree;
+  tree1.write(Path{}, IntSetTree{IntSet{99}}, UpdateKind::Strong);
+  EXPECT_EQ(tree1, IntSetTree{IntSet{99}});
+
+  auto tree2 = tree;
+  tree2.write(
+      Path{},
+      IntSetTree{
+          {Path{}, IntSet{2}},
+          {Path{xi}, IntSet{3}},
+          {Path{ai}, IntSet{4}},
+      },
+      UpdateKind::Strong);
+  EXPECT_EQ(
+      tree2,
+      (IntSetTree{
+          {Path{}, IntSet{2}},
+          {Path{xi}, IntSet{3}},
+          {Path{ai}, IntSet{4}},
+      }));
+
+  // Test write at height 1.
+  auto tree3 = tree;
+  tree3.write(
+      Path{xi},
+      IntSetTree{
+          {Path{}, IntSet{1, 2}},
+          {Path{xi}, IntSet{6}},
+          {Path{yi}, IntSet{10}},
+          {Path{yi, xi}, IntSet{11, 12}},
+          {Path{ai, xi}, IntSet{13}},
+      },
+      UpdateKind::Strong);
+  EXPECT_EQ(
+      tree3,
+      (IntSetTree{
+          {Path{}, IntSet{1}},
+          {Path{x}, IntSet{2}},
+          {Path{xi}, IntSet{2}},
+          {Path{xi, xi}, IntSet{6}},
+          {Path{xi, xi, xi}, IntSet{13}},
+          {Path{xi, yi}, IntSet{10}},
+          {Path{xi, yi, xi}, IntSet{11, 12, 13}},
+          {Path{xi, ai, xi}, IntSet{13}},
+          {Path{yi}, IntSet{7}},
+          {Path{yi, xi}, IntSet{8}},
+      }));
+
+  // Test write to [*]
+  auto tree4 = tree;
+  tree4.write(
+      Path{ai},
+      IntSetTree{
+          {Path{}, IntSet{1, 2}},
+          {Path{xi}, IntSet{6}},
+          {Path{yi}, IntSet{10}},
+          {Path{yi, xi}, IntSet{11, 12}},
+          {Path{ai, xi}, IntSet{13}},
+      },
+      UpdateKind::Strong);
+  EXPECT_EQ(
+      tree4,
+      (IntSetTree{
+          {Path{}, IntSet{1}},
+          {Path{x}, IntSet{2}},
+          {Path{xi}, IntSet{2}},
+          {Path{xi, xi}, IntSet{3, 6}},
+          {Path{xi, xi, xi}, IntSet{13}},
+          {Path{xi, yi}, IntSet{4, 10}},
+          {Path{xi, yi, xi}, IntSet{11, 12, 13}},
+          {Path{xi, ai}, IntSet{5}},
+          {Path{xi, ai, xi}, IntSet{13}},
+          {Path{xi, yi, xi}, IntSet{13}},
+          {Path{xi, yi, xi, yi}, IntSet{6}},
+          {Path{yi}, IntSet{2, 7}},
+          {Path{yi, xi}, IntSet{6, 8}},
+          {Path{yi, yi}, IntSet{10}},
+          {Path{yi, yi, xi}, IntSet{11, 12, 13}},
+          {Path{yi, ai, xi}, IntSet{13}},
+          {Path{ai}, IntSet{1, 2}},
+          {Path{ai, xi}, IntSet{6}},
+          {Path{ai, yi}, IntSet{10}},
+          {Path{ai, yi, xi}, IntSet{11, 12}},
+          {Path{ai, ai, xi}, IntSet{13}},
       }));
 }
 
