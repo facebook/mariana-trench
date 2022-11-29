@@ -104,34 +104,25 @@ bool is_class_exported_via_uri(const DexClass* clazz) {
   return false;
 }
 
-std::optional<std::string> get_privacy_decision_number_from_annotations(
+bool has_privacy_decision_annotation(
     const std::vector<std::unique_ptr<DexAnnotation>>& annotations) {
   auto privacy_decision_type =
       marianatrench::constants::get_privacy_decision_type();
   for (const auto& annotation : annotations) {
-    if (!annotation->type() ||
-        annotation->type()->str() != privacy_decision_type) {
-      continue;
-    }
-
-    for (const DexAnnotationElement& element : annotation->anno_elems()) {
-      if (element.string->str() != "value") {
-        continue;
-      } else {
-        return element.encoded_value->show();
-      }
+    if (annotation->type() &&
+        annotation->type()->str() == privacy_decision_type) {
+      return true;
     }
   }
-  return std::nullopt;
+  return false;
 }
 
-std::optional<std::string> get_privacy_decision_number_from_class(
-    const DexClass* clazz) {
+bool has_privacy_decision_in_class(const DexClass* clazz) {
   if (!clazz->get_anno_set()) {
-    return std::nullopt;
+    return false;
   }
 
-  return get_privacy_decision_number_from_annotations(
+  return has_privacy_decision_annotation(
       clazz->get_anno_set()->get_annotations());
 }
 
@@ -213,12 +204,9 @@ ClassProperties::ClassProperties(
         inline_permission_classes_.emplace(clazz->str());
       }
 
-      std::optional<std::string> privacy_decision_number =
-          get_privacy_decision_number_from_class(clazz);
-      if (privacy_decision_number) {
+      if (has_privacy_decision_in_class(clazz)) {
         std::lock_guard<std::mutex> lock(mutex);
-        privacy_decision_classes_.emplace(
-            clazz->str(), *privacy_decision_number);
+        privacy_decision_classes_.emplace(clazz->str());
       }
     });
   }
@@ -301,33 +289,11 @@ bool ClassProperties::is_dfa_public(std::string_view class_name) const {
       dfa_public_scheme_classes_.count(outer_class) > 0;
 }
 
-std::optional<std::string>
-ClassProperties::get_privacy_decision_number_from_class_name(
-    std::string_view class_name) const {
-  auto it = privacy_decision_classes_.find(class_name);
-  if (it != privacy_decision_classes_.end()) {
-    return it->second;
-  } else {
-    return std::nullopt;
-  }
-}
-
-std::optional<std::string>
-ClassProperties::get_privacy_decision_number_from_method(
-    const Method* method) const {
-  std::optional<std::string> privacy_decision_number = std::nullopt;
-  // add the annotation from the enclosing method by default
-  if (method->dex_method()->get_anno_set()) {
-    privacy_decision_number = get_privacy_decision_number_from_annotations(
-        method->dex_method()->get_anno_set()->get_annotations());
-  }
-
-  if (!privacy_decision_number) {
-    privacy_decision_number =
-        get_privacy_decision_number_from_class_name(method->get_class()->str());
-  }
-
-  return privacy_decision_number;
+bool ClassProperties::has_privacy_decision(const Method* method) const {
+  return (method->dex_method()->get_anno_set() &&
+          has_privacy_decision_annotation(
+              method->dex_method()->get_anno_set()->get_annotations())) ||
+      privacy_decision_classes_.count(method->get_class()->str()) > 0;
 }
 
 FeatureMayAlwaysSet ClassProperties::propagate_features(
@@ -336,11 +302,8 @@ FeatureMayAlwaysSet ClassProperties::propagate_features(
     const Features& feature_factory) const {
   FeatureSet features;
 
-  std::optional<std::string> privacy_decision_number =
-      get_privacy_decision_number_from_method(caller);
-
-  if (privacy_decision_number) {
-    features.add(feature_factory.get("pd-" + *privacy_decision_number));
+  if (has_privacy_decision(caller)) {
+    features.add(feature_factory.get("via-privacy-decision"));
   }
 
   return FeatureMayAlwaysSet::make_always(features);

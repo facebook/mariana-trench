@@ -48,10 +48,7 @@ class ClassProperties final {
       const;
   bool is_dfa_public(std::string_view class_name) const;
   bool has_inline_permissions(std::string_view class_name) const;
-  std::optional<std::string> get_privacy_decision_number_from_class_name(
-      std::string_view class_name) const;
-  std::optional<std::string> get_privacy_decision_number_from_method(
-      const Method* method) const;
+  bool has_privacy_decision(const Method* method) const;
 
   FeatureSet get_class_features(
       std::string_view clazz,
@@ -82,7 +79,7 @@ class ClassProperties final {
 
   std::unordered_set<std::string_view> dfa_public_scheme_classes_;
   std::unordered_set<std::string_view> inline_permission_classes_;
-  std::unordered_map<std::string_view, std::string> privacy_decision_classes_;
+  std::unordered_set<std::string_view> privacy_decision_classes_;
 
   // Note: This is not thread-safe.
   StringStorage strings_;
