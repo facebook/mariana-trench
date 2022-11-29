@@ -1,0 +1,29 @@
+[
+  {
+    "method": "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;",
+    "generations": [
+      {
+        "kind": "Source",
+        "port": "Return"
+      }
+    ]
+  },
+  {
+    "method": "Lcom/facebook/marianatrench/integrationtests/AccessPaths;.getDifferentSource:()Ljava/lang/Object;",
+    "generations": [
+      {
+        "kind": "DifferentSource",
+        "port": "Return"
+      }
+    ]
+  },
+  {
+    "method": "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
+    "sinks": [
+      {
+        "kind": "Sink",
+        "port": "Argument(0)"
+      }
+    ]
+  }
+]
