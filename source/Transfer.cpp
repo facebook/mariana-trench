@@ -235,7 +235,8 @@ const std::vector<std::optional<std::string>> get_source_constant_arguments(
 Callee get_callee(
     MethodContext* context,
     AnalysisEnvironment* environment,
-    const IRInstruction* instruction) {
+    const IRInstruction* instruction,
+    const std::vector<std::optional<std::string>>& source_constant_arguments) {
   mt_assert(opcode::is_an_invoke(instruction->opcode()));
 
   auto call_target = context->call_graph.callee(context->method(), instruction);
@@ -260,7 +261,7 @@ Callee get_callee(
       call_target,
       position,
       get_source_register_types(context, instruction),
-      get_source_constant_arguments(environment, instruction));
+      source_constant_arguments);
   LOG_OR_DUMP(context, 4, "Callee model: {}", model);
 
   // Avoid copies using `std::move`.
@@ -346,6 +347,7 @@ void apply_propagations(
     AnalysisEnvironment* new_environment,
     const IRInstruction* instruction,
     const Callee& callee,
+    const std::vector<std::optional<std::string>>& source_constant_arguments,
     TaintTree& result_taint) {
   const auto& instruction_sources = instruction->srcs_vec();
 
@@ -384,8 +386,8 @@ void apply_propagations(
       auto input_register_id = instruction_sources.at(input_parameter_position);
 
       for (const auto& [input_path, _] : propagation.input_paths().elements()) {
-        auto taint_tree =
-            previous_environment->read(input_register_id, input_path);
+        auto taint_tree = previous_environment->read(
+            input_register_id, input_path.resolve(source_constant_arguments));
         // Collapsing the tree here is required for correctness and performance.
         // Propagations can be collapsed, which results in taking the common
         // prefix of the input paths. Because of this, if we don't collapse
@@ -428,16 +430,19 @@ void apply_propagations(
           taints.add_inferred_features_and_local_position(features, position);
         });
 
+        auto output_paths_resolved =
+            output.path().resolve(source_constant_arguments);
+
         switch (output.root().kind()) {
           case Root::Kind::Return: {
             LOG_OR_DUMP(
                 context,
                 4,
                 "Tainting invoke result path {} with {}",
-                output.path(),
+                output_paths_resolved,
                 taint_tree);
             result_taint.write(
-                output.path(), std::move(taint_tree), UpdateKind::Weak);
+                output_paths_resolved, std::move(taint_tree), UpdateKind::Weak);
             break;
           }
           case Root::Kind::Argument: {
@@ -449,11 +454,11 @@ void apply_propagations(
                 4,
                 "Tainting register {} path {} with {}",
                 output_register_id,
-                output.path(),
+                output_paths_resolved,
                 taint_tree);
             new_environment->write(
                 output_register_id,
-                output.path(),
+                output_paths_resolved,
                 std::move(taint_tree),
                 UpdateKind::Weak);
             break;
@@ -1052,7 +1057,10 @@ bool Transfer::analyze_invoke(
     AnalysisEnvironment* environment) {
   log_instruction(context, instruction);
 
-  auto callee = get_callee(context, environment, instruction);
+  const auto& source_constant_arguments =
+      get_source_constant_arguments(environment, instruction);
+  auto callee =
+      get_callee(context, environment, instruction, source_constant_arguments);
 
   const AnalysisEnvironment previous_environment = *environment;
   TaintTree result_taint;
@@ -1065,6 +1073,7 @@ bool Transfer::analyze_invoke(
       environment,
       instruction,
       callee,
+      source_constant_arguments,
       result_taint);
   apply_generations(context, environment, instruction, callee, result_taint);
 

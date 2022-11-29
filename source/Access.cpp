@@ -15,6 +15,7 @@
 #include <mariana-trench/Access.h>
 #include <mariana-trench/Assert.h>
 #include <mariana-trench/JsonValidation.h>
+#include <mariana-trench/Log.h>
 #include <mariana-trench/Method.h>
 #include <mariana-trench/Redex.h>
 
@@ -67,6 +68,25 @@ PathElement PathElement::any_index() {
   return PathElement{Kind::AnyIndex, nullptr};
 }
 
+PathElement PathElement::index_from_value_of(Root root) {
+  mt_assert(root.is_argument());
+  return PathElement{
+      Kind::IndexFromValueOf,
+      DexString::make_string(std::to_string(root.parameter_position()))};
+}
+
+ParameterPosition PathElement::parameter_position() const {
+  mt_assert(is_index_from_value_of());
+
+  const auto* position_string = name();
+  mt_assert(position_string != nullptr);
+
+  auto position = parse_parameter_position(position_string->str_copy());
+  mt_assert(position.has_value());
+
+  return *position;
+}
+
 std::string PathElement::str() const {
   switch (kind()) {
     case PathElement::Kind::Field:
@@ -78,9 +98,36 @@ std::string PathElement::str() const {
     case PathElement::Kind::AnyIndex:
       return "[*]";
 
+    case PathElement::Kind::IndexFromValueOf:
+      return fmt::format(
+          "[<{}>]", Root(Root::Kind::Argument, parameter_position()));
+
     default:
       mt_unreachable();
   }
+}
+
+PathElement PathElement::resolve_index_from_value_of(
+    const std::vector<std::optional<std::string>>& source_constant_arguments)
+    const {
+  if (!is_index_from_value_of()) {
+    return *this;
+  }
+
+  auto position = parameter_position();
+  if (position < source_constant_arguments.size()) {
+    if (auto value = source_constant_arguments[position]) {
+      return PathElement::index(*value);
+    }
+  } else {
+    WARNING(
+        1,
+        fmt::format(
+            "Invalid argument index {} provided for index_from_value_of path element.",
+            position));
+  }
+
+  return PathElement::any_index();
 }
 
 std::ostream& operator<<(std::ostream& out, const PathElement& path_element) {
@@ -127,6 +174,18 @@ void Path::reduce_to_common_prefix(const Path& other) {
       other.elements_.begin(),
       other.elements_.end());
   elements_.erase(result.first, elements_.end());
+}
+
+Path Path::resolve(const std::vector<std::optional<std::string>>&
+                       source_constant_arguments) const {
+  Path path;
+  path.elements_.reserve(elements_.size());
+
+  for (auto element : elements_) {
+    path.append(element.resolve_index_from_value_of(source_constant_arguments));
+  }
+
+  return path;
 }
 
 std::ostream& operator<<(std::ostream& out, const Path& path) {

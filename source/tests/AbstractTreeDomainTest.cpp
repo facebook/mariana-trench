@@ -37,12 +37,15 @@ TEST_F(AbstractTreeDomainTest, PathElementMapIterator) {
   const auto field_element = PathElement::field("field");
   const auto index_element = PathElement::index("index");
   const auto any_index_element = PathElement::any_index();
+  const auto value_of_element =
+      PathElement::index_from_value_of(Root(Root::Kind::Argument, 0));
 
   auto map = Map();
   // Insert using PathElement::ElementEncoding
   map.insert_or_assign(field_element.encode(), IntSet{1});
   map.insert_or_assign(index_element.encode(), IntSet{2});
   map.insert_or_assign(any_index_element.encode(), IntSet{3});
+  map.insert_or_assign(value_of_element.encode(), IntSet{4});
 
   // Iterate
   for (const auto& [path_element, value] : PathElementMapIterator(map)) {
@@ -52,15 +55,23 @@ TEST_F(AbstractTreeDomainTest, PathElementMapIterator) {
         EXPECT_EQ(path_element.str(), ".field");
         EXPECT_EQ(value, IntSet{1});
         break;
+
       case PathElement::Kind::Index:
         EXPECT_TRUE(path_element.is_index());
         EXPECT_EQ(path_element.str(), "[index]");
         EXPECT_EQ(value, IntSet{2});
         break;
+
       case PathElement::Kind::AnyIndex:
         EXPECT_TRUE(path_element.is_any_index());
         EXPECT_EQ(path_element.str(), "[*]");
         EXPECT_EQ(value, IntSet{3});
+        break;
+
+      case PathElement::Kind::IndexFromValueOf:
+        EXPECT_TRUE(path_element.is_index_from_value_of());
+        EXPECT_EQ(path_element.str(), "[<Argument(0)>]");
+        EXPECT_EQ(value, IntSet{4});
         break;
     }
   }
