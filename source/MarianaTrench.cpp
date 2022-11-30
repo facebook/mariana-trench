@@ -382,7 +382,7 @@ void MarianaTrench::run(const program_options::variables_map& variables) {
       options.dex_directory(),
       /* balloon */ true,
       /* throw_on_balloon_error */ true,
-      /* support_dex_version */ 37);
+      /* support_dex_version */ 39);
 
   redex::process_proguard_configurations(options, context.stores);
   if (context.options->remove_unreachable_code()) {
