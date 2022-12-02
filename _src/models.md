@@ -82,14 +82,20 @@ The root is either:
 * `Return`, representing the returned value;
 * `Argument(x)` (where `x` is an integer), representing the parameter number `x`;
 
-The path is a (possibly empty) list of field names.
-
-Access paths are encoded as strings, where elements are separated by a dot: `<root>.<field1>.<field2>`
+The path is a (possibly empty) list of path elements. A path element can be any of the following kinds:
+* `field`: represents a field name. String encoding is a dot followed by the field name: `.field_name`;
+* `index`: represents a user defined index for dictionary like objects. String encoding uses square braces to enclose any user defined index: `[index_name]`;
+* `any index`: represents any or unresolved indices in dictionary like objects. String encoding is an asterisk enclosed in square braces: `[*]`;
+* `index from value of`: captures the value of the specified callable's port seen at its callsites during taint flow analysis as an `index` or `any index` (if the value cannot be resolved).
+String encoding uses *argument root* to specify the callable's port and encloses it in `[<`...`>]` to represent that its value is resolved at the callsite to create an index: `[<Argument(x)>]`;
 
 Examples:
-* `Argument(1).name` correspond to the field `name` of the second parameter;
-* `Return.x` correpsond to the field `x` of the returned value;
-* `Return` correspond to the returned value.
+* `Argument(1).name` corresponds to the *field* `name` of the second parameter;
+* `Argument(1)[name]` corresponds to the *index* `name` of the dictionary like second parameter;
+* `Argument(1)[*]` corresponds to *any index* of the dictionary like second parameter;
+* `Argument(1)[<Argument(2)>]` corresponds to an *index* of the dictionary like second parameter whose value is resolved from the third parameter;
+* `Return` corresponds to the returned value;
+* `Return.x` correpsonds to the field `x` of the returned value;
 
 ### Kinds
 
@@ -508,10 +514,11 @@ Modes are used to describe specific behaviors of methods. Available modes are:
 * `override-default`: do not infer modes of methods using heuristics;
 * `skip-analysis`: skip the analysis of the method;
 * `add-via-obscure-feature`: add a feature/breadcrumb called `via-obscure:<method>` to sources flowing through this method;
-* `taint-in-taint-out`: propagate the taint on arguments to the return value and into the `this` parameter.
-* `no-join-virtual-overrides`: do not consider all possible overrides when handling a virtual call to this method.
-* `no-collapse-on-propagation`: do not collapse input paths when applying propagations.
-* `alias-memory-location-on-invoke`: aliases existing memory location at the callsite instead of creating a new one.
+* `taint-in-taint-out`: propagate the taint on arguments to the return value and into the `this` parameter;
+* `no-join-virtual-overrides`: do not consider all possible overrides when handling a virtual call to this method;
+* `no-collapse-on-propagation`: do not collapse input paths when applying propagations;
+* `alias-memory-location-on-invoke`: aliases existing memory location at the callsite instead of creating a new one;
+* `strong-write-on-propagation`: performs a strong write from input path to the output path on propagation;
 
 
 ### Default model
