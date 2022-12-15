@@ -206,6 +206,7 @@ TEST_F(RegistryTest, ConstructorUseJoin) {
       /* method */ method,
       context,
       /* modes */ Model::Mode::Normal,
+      /* frozen */ Model::FreezeKind::None,
       /* generations */
       {{AccessPath(Root(Root::Kind::Return)),
         test::make_leaf_taint_config(source_kind)}});
@@ -214,6 +215,7 @@ TEST_F(RegistryTest, ConstructorUseJoin) {
       /* method */ method,
       context,
       /* modes */ Model::Mode::Normal,
+      /* frozen */ Model::FreezeKind::None,
       /* generations */
       {{AccessPath(Root(Root::Kind::Argument, 2)),
         test::make_leaf_taint_config(source_kind)}});

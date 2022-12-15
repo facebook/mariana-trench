@@ -122,6 +122,16 @@ class Model final {
 
   using Modes = Flags<Mode>;
 
+  enum class FreezeKind : unsigned {
+    None = 0,
+    Generations = 0x1,
+    ParameterSources = 0x2,
+    Sinks = 0x4,
+    Propagations = 0x8,
+  };
+
+  using Frozen = Flags<FreezeKind>;
+
  public:
   /* Create an empty model. */
   explicit Model();
@@ -136,6 +146,7 @@ class Model final {
       const Method* MT_NULLABLE method,
       Context& context,
       Modes modes = Mode::Normal,
+      Frozen frozen = FreezeKind::None,
       const std::vector<std::pair<AccessPath, TaintConfig>>& generations = {},
       const std::vector<std::pair<AccessPath, TaintConfig>>& parameter_sources =
           {},
@@ -296,6 +307,8 @@ class Model final {
     return modes_;
   }
 
+  bool is_frozen(FreezeKind freeze_kind) const;
+
   bool leq(const Model& other) const;
   void join_with(const Model& other);
 
@@ -342,6 +355,7 @@ class Model final {
  private:
   const Method* MT_NULLABLE method_;
   Modes modes_;
+  Frozen frozen_;
   TaintAccessPathTree generations_;
   TaintAccessPathTree parameter_sources_;
   TaintAccessPathTree sinks_;
@@ -362,6 +376,12 @@ inline Model::Modes operator|(Model::Mode left, Model::Mode right) {
   return Model::Modes(left) | right;
 }
 
+inline Model::Frozen operator|(
+    Model::FreezeKind left,
+    Model::FreezeKind right) {
+  return Model::Frozen(left) | right;
+}
+
 std::string model_mode_to_string(Model::Mode mode);
 std::optional<Model::Mode> string_to_model_mode(const std::string& mode);
 
@@ -374,5 +394,11 @@ constexpr std::array<Model::Mode, 8> k_all_modes = {
     Model::Mode::NoJoinVirtualOverrides,
     Model::Mode::NoCollapseOnPropagation,
     Model::Mode::AliasMemoryLocationOnInvoke};
+
+constexpr std::array<Model::FreezeKind, 4> k_all_freeze_kinds = {
+    Model::FreezeKind::Generations,
+    Model::FreezeKind::ParameterSources,
+    Model::FreezeKind::Sinks,
+    Model::FreezeKind::Propagations};
 
 } // namespace marianatrench

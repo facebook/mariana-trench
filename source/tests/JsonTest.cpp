@@ -1636,6 +1636,46 @@ TEST_F(JsonTest, Model) {
 
   EXPECT_THROW(
       Model::from_json(
+          method,
+          test::parse_json(R"({"freeze": ["invalid-freeze-kind"]})"),
+          context),
+      JsonValidationError);
+
+  EXPECT_EQ(
+      Model::from_json(
+          method,
+          test::parse_json(R"({
+            "freeze": [
+              "generations",
+              "parameter_sources",
+              "sinks",
+              "propagation"
+            ]
+          })"),
+          context),
+      Model(
+          method,
+          context,
+          Model::Mode::Normal,
+          Model::FreezeKind::Generations | Model::FreezeKind::ParameterSources |
+              Model::FreezeKind::Sinks | Model::FreezeKind::Propagations));
+  EXPECT_EQ(
+      test::sorted_json(Model(
+                            method,
+                            context,
+                            Model::Mode::Normal,
+                            Model::FreezeKind::Generations |
+                                Model::FreezeKind::ParameterSources |
+                                Model::FreezeKind::Sinks |
+                                Model::FreezeKind::Propagations)
+                            .to_json()),
+      test::parse_json(R"#({
+        "freeze": [ "generations", "parameter_sources", "propagation", "sinks" ],
+        "method": "LData;.method:(LData;LData;)V"
+      })#"));
+
+  EXPECT_THROW(
+      Model::from_json(
           method, test::parse_json(R"({"generations": {}})"), context),
       JsonValidationError);
   EXPECT_THROW(
@@ -1659,6 +1699,7 @@ TEST_F(JsonTest, Model) {
           method,
           context,
           Model::Mode::Normal,
+          /* frozen */ Model::FreezeKind::None,
           /* generations */
           {{AccessPath(Root(Root::Kind::Argument, 2)),
             test::make_leaf_taint_config(context.kinds->get("source_kind"))}}));
@@ -1667,6 +1708,7 @@ TEST_F(JsonTest, Model) {
           method,
           context,
           Model::Mode::Normal,
+          /* frozen */ Model::FreezeKind::None,
           /* generations */
           {{AccessPath(Root(Root::Kind::Argument, 2)),
             test::make_leaf_taint_config(context.kinds->get("source_kind"))}})
@@ -1711,6 +1753,7 @@ TEST_F(JsonTest, Model) {
           method,
           context,
           Model::Mode::Normal,
+          /* frozen */ Model::FreezeKind::None,
           /* generations */ {},
           /* parameter_sources */
           {{AccessPath(Root(Root::Kind::Argument, 1)),
@@ -1720,6 +1763,7 @@ TEST_F(JsonTest, Model) {
           method,
           context,
           Model::Mode::Normal,
+          /* frozen */ Model::FreezeKind::None,
           /* generations */ {},
           /* parameter_sources */
           {{AccessPath(Root(Root::Kind::Argument, 1)),
@@ -1759,6 +1803,7 @@ TEST_F(JsonTest, Model) {
           method,
           context,
           Model::Mode::Normal,
+          /* frozen */ Model::FreezeKind::None,
           /* generations */
           {{AccessPath(Root(Root::Kind::Return)),
             test::make_leaf_taint_config(context.kinds->get("source_kind"))}},
@@ -1779,6 +1824,7 @@ TEST_F(JsonTest, Model) {
           method,
           context,
           Model::Mode::Normal,
+          /* frozen */ Model::FreezeKind::None,
           /* generations */
           {{AccessPath(Root(Root::Kind::Return)),
             test::make_leaf_taint_config(context.kinds->get("source_kind"))}},
@@ -1799,6 +1845,7 @@ TEST_F(JsonTest, Model) {
           method,
           context,
           Model::Mode::Normal,
+          /* frozen */ Model::FreezeKind::None,
           /* generations */ {},
           /* parameter_sources */
           {{AccessPath(Root(Root::Kind::Argument, 1)),
@@ -1833,6 +1880,7 @@ TEST_F(JsonTest, Model) {
           method,
           context,
           Model::Mode::Normal,
+          /* frozen */ Model::FreezeKind::None,
           /* generations */ {},
           /* parameter_sources */ {},
           /* sinks */ {},
@@ -1859,6 +1907,7 @@ TEST_F(JsonTest, Model) {
               method,
               context,
               Model::Mode::Normal,
+              /* frozen */ Model::FreezeKind::None,
               /* generations */ {},
               /* parameter_sources */ {},
               /* sinks */ {},
@@ -1925,6 +1974,7 @@ TEST_F(JsonTest, Model) {
           method,
           context,
           Model::Mode::Normal,
+          /* frozen */ Model::FreezeKind::None,
           /* generations */ {},
           /* parameter_sources */ {},
           /* sinks */ {},
@@ -1948,6 +1998,7 @@ TEST_F(JsonTest, Model) {
               method,
               context,
               Model::Mode::Normal,
+              /* frozen */ Model::FreezeKind::None,
               /* generations */ {},
               /* parameter_sources */ {},
               /* sinks */ {},
@@ -1987,6 +2038,7 @@ TEST_F(JsonTest, Model) {
           method,
           context,
           Model::Mode::Normal,
+          /* frozen */ Model::FreezeKind::None,
           /* generations */ {},
           /* parameter_sources */ {},
           /* sinks */ {},
@@ -2016,6 +2068,7 @@ TEST_F(JsonTest, Model) {
               method,
               context,
               Model::Mode::Normal,
+              /* frozen */ Model::FreezeKind::None,
               /* generations */ {},
               /* parameter_sources */ {},
               /* sinks */ {},
@@ -2064,6 +2117,7 @@ TEST_F(JsonTest, Model) {
           method,
           context,
           Model::Mode::Normal,
+          /* frozen */ Model::FreezeKind::None,
           /* generations */ {},
           /* parameter_sources */ {},
           /* sinks */
@@ -2076,6 +2130,7 @@ TEST_F(JsonTest, Model) {
                             method,
                             context,
                             Model::Mode::Normal,
+                            /* frozen */ Model::FreezeKind::None,
                             /* generations */ {},
                             /* parameter_sources */ {},
                             /* sinks */
@@ -2120,6 +2175,7 @@ TEST_F(JsonTest, Model) {
           method,
           context,
           Model::Mode::Normal,
+          /* frozen */ Model::FreezeKind::None,
           /* generations */ {},
           /* parameter_sources */ {},
           /* sinks */ {},
@@ -2134,6 +2190,7 @@ TEST_F(JsonTest, Model) {
                             method,
                             context,
                             Model::Mode::Normal,
+                            /* frozen */ Model::FreezeKind::None,
                             /* generations */ {},
                             /* parameter_sources */ {},
                             /* sinks */ {},
@@ -2170,6 +2227,7 @@ TEST_F(JsonTest, Model) {
           method,
           context,
           Model::Mode::Normal,
+          /* frozen */ Model::FreezeKind::None,
           /* generations */ {},
           /* parameter_sources */ {},
           /* sinks */ {},
@@ -2185,6 +2243,7 @@ TEST_F(JsonTest, Model) {
                             method,
                             context,
                             Model::Mode::Normal,
+                            /* frozen */ Model::FreezeKind::None,
                             /* generations */ {},
                             /* parameter_sources */ {},
                             /* sinks */ {},
@@ -2222,6 +2281,7 @@ TEST_F(JsonTest, Model) {
           method,
           context,
           Model::Mode::Normal,
+          /* frozen */ Model::FreezeKind::None,
           /* generations */ {},
           /* parameter_sources */ {},
           /* sinks */ {},
@@ -2238,6 +2298,7 @@ TEST_F(JsonTest, Model) {
                             method,
                             context,
                             Model::Mode::Normal,
+                            /* frozen */ Model::FreezeKind::None,
                             /* generations */ {},
                             /* parameter_sources */ {},
                             /* sinks */ {},
@@ -2276,6 +2337,7 @@ TEST_F(JsonTest, Model) {
           method,
           context,
           Model::Mode::Normal,
+          /* frozen */ Model::FreezeKind::None,
           /* generations */ {},
           /* parameter_sources */ {},
           /* sinks */ {},
@@ -2293,6 +2355,7 @@ TEST_F(JsonTest, Model) {
                             method,
                             context,
                             Model::Mode::Normal,
+                            /* frozen */ Model::FreezeKind::None,
                             /* generations */ {},
                             /* parameter_sources */ {},
                             /* sinks */ {},
@@ -2345,6 +2408,7 @@ TEST_F(JsonTest, Model) {
           method,
           context,
           Model::Mode::Normal,
+          /* frozen */ Model::FreezeKind::None,
           /* generations */ {},
           /* parameter_sources */ {},
           /* sinks */ {},
@@ -2364,6 +2428,7 @@ TEST_F(JsonTest, Model) {
                             method,
                             context,
                             Model::Mode::Normal,
+                            /* frozen */ Model::FreezeKind::None,
                             /* generations */ {},
                             /* parameter_sources */ {},
                             /* sinks */ {},
@@ -2406,6 +2471,7 @@ TEST_F(JsonTest, Model) {
                             method,
                             context,
                             Model::Mode::Normal,
+                            /* frozen */ Model::FreezeKind::None,
                             /* generations */
                             std::vector<std::pair<AccessPath, TaintConfig>>{},
                             /* parameter_sources */ {},
@@ -2760,6 +2826,7 @@ TEST_F(JsonTest, CallEffectModel) {
                             entry_method,
                             context,
                             Model::Mode::Normal,
+                            /* frozen */ Model::FreezeKind::None,
                             /* generations */
                             std::vector<std::pair<AccessPath, TaintConfig>>{},
                             /* parameter_sources */ {},

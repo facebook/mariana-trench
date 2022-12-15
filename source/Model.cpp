@@ -38,6 +38,32 @@ class ModelConsistencyError {
   }
 };
 
+template <typename DomainType>
+bool leq_frozen(
+    const DomainType& left,
+    const DomainType& right,
+    bool left_is_frozen,
+    bool right_is_frozen) {
+  if (left_is_frozen == right_is_frozen) {
+    return left.leq(right);
+  }
+
+  return right_is_frozen;
+}
+
+template <typename DomainType>
+void join_with_frozen(
+    DomainType& left,
+    const DomainType& right,
+    bool left_is_frozen,
+    bool right_is_frozen) {
+  if (left_is_frozen == right_is_frozen) {
+    left.join_with(right);
+  } else if (right_is_frozen) {
+    left = right;
+  }
+}
+
 } // namespace
 
 std::string model_mode_to_string(Model::Mode mode) {
@@ -93,12 +119,45 @@ std::optional<Model::Mode> string_to_model_mode(const std::string& mode) {
   }
 }
 
+std::string model_freeze_kind_to_string(Model::FreezeKind freeze_kind) {
+  switch (freeze_kind) {
+    case Model::FreezeKind::None:
+      return "none";
+    case Model::FreezeKind::Generations:
+      return "generations";
+    case Model::FreezeKind::ParameterSources:
+      return "parameter_sources";
+    case Model::FreezeKind::Sinks:
+      return "sinks";
+    case Model::FreezeKind::Propagations:
+      return "propagation";
+  }
+}
+
+std::optional<Model::FreezeKind> string_to_freeze_kind(
+    const std::string& freeze_kind) {
+  if (freeze_kind == "none") {
+    return Model::FreezeKind::None;
+  } else if (freeze_kind == "generations") {
+    return Model::FreezeKind::Generations;
+  } else if (freeze_kind == "parameter_sources") {
+    return Model::FreezeKind::ParameterSources;
+  } else if (freeze_kind == "sinks") {
+    return Model::FreezeKind::Sinks;
+  } else if (freeze_kind == "propagation") {
+    return Model::FreezeKind::Propagations;
+  } else {
+    return std::nullopt;
+  }
+}
+
 Model::Model() : method_(nullptr) {}
 
 Model::Model(
     const Method* method,
     Context& context,
     Modes modes,
+    Frozen frozen,
     const std::vector<std::pair<AccessPath, TaintConfig>>& generations,
     const std::vector<std::pair<AccessPath, TaintConfig>>& parameter_sources,
     const std::vector<std::pair<AccessPath, TaintConfig>>& sinks,
@@ -111,7 +170,7 @@ Model::Model(
     const std::vector<std::pair<Root, FeatureSet>>& add_features_to_arguments,
     const AccessPathConstantDomain& inline_as,
     const IssueSet& issues)
-    : method_(method), modes_(modes) {
+    : method_(method), modes_(modes), frozen_(frozen) {
   if (method_ && !modes_.test(Model::Mode::OverrideDefault)) {
     // Use a set of heuristics to infer the modes of this method.
 
@@ -177,7 +236,8 @@ Model::Model(
 }
 
 bool Model::operator==(const Model& other) const {
-  return modes_ == other.modes_ && generations_ == other.generations_ &&
+  return modes_ == other.modes_ && frozen_ == other.frozen_ &&
+      generations_ == other.generations_ &&
       parameter_sources_ == other.parameter_sources_ &&
       call_effect_sources_ == other.call_effect_sources_ &&
       call_effect_sinks_ == other.call_effect_sinks_ &&
@@ -196,7 +256,7 @@ bool Model::operator!=(const Model& other) const {
 }
 
 Model Model::instantiate(const Method* method, Context& context) const {
-  Model model(method, context, modes_);
+  Model model(method, context, modes_, frozen_);
 
   for (const auto& [port, generation_taint] : generations_.elements()) {
     model.add_generation(port, generation_taint);
@@ -265,6 +325,7 @@ Model Model::at_callsite(
 
   Model model;
   model.modes_ = modes_;
+  model.frozen_ = frozen_;
 
   auto maximum_source_sink_distance =
       context.options->maximum_source_sink_distance();
@@ -439,7 +500,7 @@ void Model::approximate(const FeatureMayAlwaysSet& widening_features) {
 }
 
 bool Model::empty() const {
-  return modes_.empty() && generations_.is_bottom() &&
+  return modes_.empty() && frozen_.empty() && generations_.is_bottom() &&
       parameter_sources_.is_bottom() && sinks_.is_bottom() &&
       call_effect_sources_.is_bottom() && call_effect_sinks_.is_bottom() &&
       propagations_.is_bottom() && global_sanitizers_.is_bottom() &&
@@ -777,14 +838,35 @@ bool Model::strong_write_on_propagation() const {
   return modes_.test(Model::Mode::StrongWriteOnPropagation);
 }
 
+bool Model::is_frozen(Model::FreezeKind freeze_kind) const {
+  return frozen_.test(freeze_kind);
+}
+
 bool Model::leq(const Model& other) const {
   return modes_.is_subset_of(other.modes_) &&
-      generations_.leq(other.generations_) &&
-      parameter_sources_.leq(other.parameter_sources_) &&
-      sinks_.leq(other.sinks_) &&
+      frozen_.is_subset_of(other.frozen_) &&
+      leq_frozen(
+             generations_,
+             other.generations_,
+             is_frozen(Model::FreezeKind::Generations),
+             other.is_frozen(Model::FreezeKind::Generations)) &&
+      leq_frozen(
+             parameter_sources_,
+             other.parameter_sources_,
+             is_frozen(Model::FreezeKind::ParameterSources),
+             other.is_frozen(Model::FreezeKind::ParameterSources)) &&
+      leq_frozen(
+             sinks_,
+             other.sinks_,
+             is_frozen(Model::FreezeKind::Sinks),
+             other.is_frozen(Model::FreezeKind::Sinks)) &&
+      leq_frozen(
+             propagations_,
+             other.propagations_,
+             is_frozen(Model::FreezeKind::Propagations),
+             other.is_frozen(Model::FreezeKind::Propagations)) &&
       call_effect_sources_.leq(other.call_effect_sources_) &&
       call_effect_sinks_.leq(other.call_effect_sinks_) &&
-      propagations_.leq(other.propagations_) &&
       global_sanitizers_.leq(other.global_sanitizers_) &&
       port_sanitizers_.leq(other.port_sanitizers_) &&
       attach_to_sources_.leq(other.attach_to_sources_) &&
@@ -801,13 +883,31 @@ void Model::join_with(const Model& other) {
 
   mt_if_expensive_assert(auto previous = *this);
 
+  join_with_frozen(
+      generations_,
+      other.generations_,
+      is_frozen(Model::FreezeKind::Generations),
+      other.is_frozen(Model::FreezeKind::Generations));
+  join_with_frozen(
+      parameter_sources_,
+      other.parameter_sources_,
+      is_frozen(Model::FreezeKind::ParameterSources),
+      other.is_frozen(Model::FreezeKind::ParameterSources));
+  join_with_frozen(
+      sinks_,
+      other.sinks_,
+      is_frozen(Model::FreezeKind::Sinks),
+      other.is_frozen(Model::FreezeKind::Sinks));
+  join_with_frozen(
+      propagations_,
+      other.propagations_,
+      is_frozen(Model::FreezeKind::Propagations),
+      other.is_frozen(Model::FreezeKind::Propagations));
+
   modes_ |= other.modes_;
-  generations_.join_with(other.generations_);
-  parameter_sources_.join_with(other.parameter_sources_);
-  sinks_.join_with(other.sinks_);
+  frozen_ |= other.frozen_;
   call_effect_sources_.join_with(other.call_effect_sources_);
   call_effect_sinks_.join_with(other.call_effect_sinks_);
-  propagations_.join_with(other.propagations_);
   global_sanitizers_.join_with(other.global_sanitizers_);
   port_sanitizers_.join_with(other.port_sanitizers_);
   attach_to_sources_.join_with(other.attach_to_sources_);
@@ -836,7 +936,18 @@ Model Model::from_json(
     modes.set(*mode, true);
   }
 
-  Model model(method, context, modes);
+  Frozen frozen;
+  for (auto freeze :
+       JsonValidation::null_or_array(value, /* field */ "freeze")) {
+    auto freeze_kind = string_to_freeze_kind(JsonValidation::string(freeze));
+    if (!freeze_kind) {
+      throw JsonValidationError(
+          value, /* field */ "freeze", "valid freeze kind");
+    }
+    frozen.set(*freeze_kind, true);
+  }
+
+  Model model(method, context, modes, frozen);
 
   for (auto generation_value :
        JsonValidation::null_or_array(value, /* field */ "generations")) {
@@ -1011,6 +1122,16 @@ Json::Value Model::to_json() const {
     value["modes"] = modes;
   }
 
+  if (frozen_) {
+    auto freeze = Json::Value(Json::arrayValue);
+    for (auto freeze_kind : k_all_freeze_kinds) {
+      if (frozen_.test(freeze_kind)) {
+        freeze.append(Json::Value(model_freeze_kind_to_string(freeze_kind)));
+      }
+    }
+    value["freeze"] = freeze;
+  }
+
   if (!generations_.is_bottom()) {
     auto generations_value = Json::Value(Json::arrayValue);
     for (const auto& [port, generation_taint] : generations_.elements()) {
@@ -1182,6 +1303,15 @@ std::ostream& operator<<(std::ostream& out, const Model& model) {
     for (auto mode : k_all_modes) {
       if (model.modes_.test(mode)) {
         out << " " << model_mode_to_string(mode);
+      }
+    }
+    out << "}";
+  }
+  if (model.frozen_) {
+    out << ",\n  freeze={";
+    for (auto freeze_kind : k_all_freeze_kinds) {
+      if (model.frozen_.test(freeze_kind)) {
+        out << " " << model_freeze_kind_to_string(freeze_kind);
       }
     }
     out << "}";
