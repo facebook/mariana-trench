@@ -364,25 +364,28 @@ void Model::collapse_invalid_paths(Context& context) {
 
   auto is_valid = [this, &context](
                       const FieldTypesAccumulator& previous_field_types,
-                      Path::Element field) {
+                      Path::Element path_element) {
     FieldTypesAccumulator current_field_types;
-    for (const auto* previous_field_type : previous_field_types) {
-      if (previous_field_type == type::java_lang_Object()) {
-        // Object is too generic to determine the set of possible field names.
-        continue;
+
+    if (path_element.is_field()) {
+      for (const auto* previous_field_type : previous_field_types) {
+        if (previous_field_type == type::java_lang_Object()) {
+          // Object is too generic to determine the set of possible field names.
+          continue;
+        }
+
+        const auto& cached_types = context.field_cache->field_types(
+            previous_field_type, path_element.name());
+        current_field_types.insert(cached_types.begin(), cached_types.end());
       }
 
-      const auto& cached_types =
-          context.field_cache->field_types(previous_field_type, field.name());
-      current_field_types.insert(cached_types.begin(), cached_types.end());
-    }
-
-    if (current_field_types.empty()) {
-      LOG(5,
-          "Model for method `{}` has invalid path element `{}`",
-          show(method_),
-          show(field));
-      return std::make_pair(false, current_field_types);
+      if (current_field_types.empty()) {
+        LOG(5,
+            "Model for method `{}` has invalid path element `{}`",
+            show(method_),
+            show(path_element));
+        return std::make_pair(false, current_field_types);
+      }
     }
 
     return std::make_pair(true, current_field_types);

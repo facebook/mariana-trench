@@ -35,25 +35,49 @@
   [
     "Lcom/facebook/marianatrench/integrationtests/AccessPaths;.testStrongUpdate:()V",
     "Lcom/facebook/marianatrench/integrationtests/AccessPaths;.testUnresolvedKey:()V",
-    "Lcom/facebook/marianatrench/integrationtests/AccessPaths;.testWeakUpdate:()V"
+    "Lcom/facebook/marianatrench/integrationtests/AccessPaths;.testWeakUpdate:()V",
+    "Lcom/facebook/marianatrench/integrationtests/AccessPaths;.testWrappers:()V",
+    "Lcom/facebook/marianatrench/integrationtests/AccessPaths;.testWrappersToSink:()V",
+    "Lcom/facebook/marianatrench/integrationtests/AccessPaths;.testWrappersToSource:()V"
   ],
   "Lcom/facebook/marianatrench/integrationtests/AccessPaths;.getString:()Ljava/lang/String;" : 
   [
     "Lcom/facebook/marianatrench/integrationtests/AccessPaths;.testUnresolvedKey:()V"
+  ],
+  "Lcom/facebook/marianatrench/integrationtests/AccessPaths;.indexAccessToSink:(Lcom/facebook/marianatrench/integrationtests/Dictionary;)V" : 
+  [
+    "Lcom/facebook/marianatrench/integrationtests/AccessPaths;.testWrappers:()V",
+    "Lcom/facebook/marianatrench/integrationtests/AccessPaths;.testWrappersToSink:()V"
+  ],
+  "Lcom/facebook/marianatrench/integrationtests/AccessPaths;.indexAccessToSource:(Lcom/facebook/marianatrench/integrationtests/Dictionary;)Ljava/lang/Object;" : 
+  [
+    "Lcom/facebook/marianatrench/integrationtests/AccessPaths;.testWrappers:()V",
+    "Lcom/facebook/marianatrench/integrationtests/AccessPaths;.testWrappersToSource:()V"
   ],
   "Lcom/facebook/marianatrench/integrationtests/Dictionary;.<init>:()V" : 
   [
     "Lcom/facebook/marianatrench/integrationtests/AccessPaths;.testSimple:()V",
     "Lcom/facebook/marianatrench/integrationtests/AccessPaths;.testStrongUpdate:()V",
     "Lcom/facebook/marianatrench/integrationtests/AccessPaths;.testUnresolvedKey:()V",
-    "Lcom/facebook/marianatrench/integrationtests/AccessPaths;.testWeakUpdate:()V"
+    "Lcom/facebook/marianatrench/integrationtests/AccessPaths;.testWeakUpdate:()V",
+    "Lcom/facebook/marianatrench/integrationtests/AccessPaths;.testWrappers:()V",
+    "Lcom/facebook/marianatrench/integrationtests/AccessPaths;.testWrappersToSink:()V",
+    "Lcom/facebook/marianatrench/integrationtests/AccessPaths;.testWrappersToSource:()V"
   ],
   "Lcom/facebook/marianatrench/integrationtests/Dictionary;.getIndex:(Ljava/lang/String;)Ljava/lang/Object;" : 
   [
+    "Lcom/facebook/marianatrench/integrationtests/AccessPaths;.indexAccessToSink:(Lcom/facebook/marianatrench/integrationtests/Dictionary;)V",
+    "Lcom/facebook/marianatrench/integrationtests/AccessPaths;.indexAccessToSource:(Lcom/facebook/marianatrench/integrationtests/Dictionary;)Ljava/lang/Object;",
     "Lcom/facebook/marianatrench/integrationtests/AccessPaths;.testSimple:()V",
     "Lcom/facebook/marianatrench/integrationtests/AccessPaths;.testStrongUpdate:()V",
     "Lcom/facebook/marianatrench/integrationtests/AccessPaths;.testUnresolvedKey:()V",
     "Lcom/facebook/marianatrench/integrationtests/AccessPaths;.testWeakUpdate:()V"
+  ],
+  "Lcom/facebook/marianatrench/integrationtests/Dictionary;.putExtra:(Ljava/lang/String;Ljava/lang/Object;)Lcom/facebook/marianatrench/integrationtests/Dictionary;" : 
+  [
+    "Lcom/facebook/marianatrench/integrationtests/AccessPaths;.testWrappers:()V",
+    "Lcom/facebook/marianatrench/integrationtests/AccessPaths;.testWrappersToSink:()V",
+    "Lcom/facebook/marianatrench/integrationtests/AccessPaths;.testWrappersToSource:()V"
   ],
   "Lcom/facebook/marianatrench/integrationtests/Dictionary;.setIndex:(Ljava/lang/String;Ljava/lang/Object;)V" : 
   [
@@ -64,17 +88,22 @@
   ],
   "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V" : 
   [
+    "Lcom/facebook/marianatrench/integrationtests/AccessPaths;.indexAccessToSink:(Lcom/facebook/marianatrench/integrationtests/Dictionary;)V",
     "Lcom/facebook/marianatrench/integrationtests/AccessPaths;.testSimple:()V",
     "Lcom/facebook/marianatrench/integrationtests/AccessPaths;.testStrongUpdate:()V",
     "Lcom/facebook/marianatrench/integrationtests/AccessPaths;.testUnresolvedKey:()V",
-    "Lcom/facebook/marianatrench/integrationtests/AccessPaths;.testWeakUpdate:()V"
+    "Lcom/facebook/marianatrench/integrationtests/AccessPaths;.testWeakUpdate:()V",
+    "Lcom/facebook/marianatrench/integrationtests/AccessPaths;.testWrappersToSource:()V"
   ],
   "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;" : 
   [
     "Lcom/facebook/marianatrench/integrationtests/AccessPaths;.testSimple:()V",
     "Lcom/facebook/marianatrench/integrationtests/AccessPaths;.testStrongUpdate:()V",
     "Lcom/facebook/marianatrench/integrationtests/AccessPaths;.testUnresolvedKey:()V",
-    "Lcom/facebook/marianatrench/integrationtests/AccessPaths;.testWeakUpdate:()V"
+    "Lcom/facebook/marianatrench/integrationtests/AccessPaths;.testWeakUpdate:()V",
+    "Lcom/facebook/marianatrench/integrationtests/AccessPaths;.testWrappers:()V",
+    "Lcom/facebook/marianatrench/integrationtests/AccessPaths;.testWrappersToSink:()V",
+    "Lcom/facebook/marianatrench/integrationtests/AccessPaths;.testWrappersToSource:()V"
   ],
   "Lcom/facebook/secure/context/IntentLauncher;.<init>:()V" : 
   [
@@ -118,6 +147,8 @@
     "Lcom/facebook/marianatrench/integrationtests/AccessPaths;.<init>:()V",
     "Lcom/facebook/marianatrench/integrationtests/AccessPaths;.getDifferentSource:()Ljava/lang/Object;",
     "Lcom/facebook/marianatrench/integrationtests/AccessPaths;.testSimple:()V",
+    "Lcom/facebook/marianatrench/integrationtests/AccessPaths;.testWrappersToSink:()V",
+    "Lcom/facebook/marianatrench/integrationtests/AccessPaths;.testWrappersToSource:()V",
     "Lcom/facebook/marianatrench/integrationtests/Constants;.<init>:()V",
     "Lcom/facebook/marianatrench/integrationtests/Dictionary;.<init>:()V",
     "Lcom/facebook/marianatrench/integrationtests/Origin;.<init>:()V",

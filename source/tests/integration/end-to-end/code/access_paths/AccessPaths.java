@@ -15,6 +15,10 @@ class Dictionary {
   // Dictionary like stubs
   void setIndex(String key, Object value) {}
 
+  Dictionary putExtra(String key, Object value) {
+    return this;
+  }
+
   Object getIndex(String key) {
     return new Object();
   }
@@ -42,6 +46,14 @@ public class AccessPaths {
 
   private static Object getDifferentSource() {
     return new Object();
+  }
+
+  private static Object indexAccessToSource(Dictionary d) {
+    return d.getIndex("source");
+  }
+
+  private static void indexAccessToSink(Dictionary d) {
+    Origin.sink(d.getIndex("source"));
   }
 
   public static void testStrongUpdate() {
@@ -75,5 +87,33 @@ public class AccessPaths {
     Origin.sink(d.getIndex(Constants.FOO)); // expect issue for DifferentSource only
     Origin.sink(d.getIndex("unknown")); // expect issues for Source only
     Origin.sink(d.getIndex(getString())); // expect issues for both sources
+  }
+
+  public static void testWrappersToSource() {
+    Dictionary issue =
+        new Dictionary().putExtra("safe", new Object()).putExtra("source", Origin.source());
+    Origin.sink(indexAccessToSource(issue)); // expect issue for Source
+
+    Dictionary safe = new Dictionary().putExtra("unused_source", getDifferentSource());
+    Origin.sink(indexAccessToSource(safe)); // expect no issue
+  }
+
+  public static void testWrappersToSink() {
+    Dictionary issue =
+        new Dictionary().putExtra("safe", new Object()).putExtra("source", Origin.source());
+    indexAccessToSink(issue); // expect issue
+
+    Dictionary safe = new Dictionary().putExtra("safe", getDifferentSource());
+    indexAccessToSink(safe); // expect no issue
+  }
+
+  public static void testWrappers() {
+    Dictionary d = new Dictionary().putExtra("source", Origin.source());
+
+    Dictionary issueWithSourceOnly =
+        new Dictionary()
+            .putExtra("unused_source", getDifferentSource())
+            .putExtra("source", indexAccessToSource(d));
+    indexAccessToSink(issueWithSourceOnly); // expect issue for Source only
   }
 }

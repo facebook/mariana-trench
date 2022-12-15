@@ -27,6 +27,29 @@
       "where": [
         {
           "constraint": "signature",
+          "pattern": "Lcom/facebook/marianatrench/integrationtests/Dictionary;\\.putExtra:\\(Ljava/lang/String;Ljava/lang/Object;\\).*"
+        }
+      ],
+      "model": {
+        "modes": [
+          "no-collapse-on-propagation",
+          "skip-analysis",
+          "strong-write-on-propagation",
+          "alias-memory-location-on-invoke"
+        ],
+        "propagation": [
+          {
+            "input": "Argument(2)",
+            "output": "Argument(0)[<Argument(1)>]"
+          }
+        ]
+      }
+    },
+    {
+      "find": "methods",
+      "where": [
+        {
+          "constraint": "signature",
           "pattern": "Lcom/facebook/marianatrench/integrationtests/Dictionary;\\.getIndex:\\(Ljava/lang/String;\\)Ljava/lang/Object;"
         }
       ],
