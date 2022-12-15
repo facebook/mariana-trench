@@ -750,6 +750,7 @@ void check_flows(
     const std::function<std::optional<Register>(ParameterPosition)>&
         get_parameter_register,
     const Callee& callee,
+    const std::vector<std::optional<std::string>>& source_constant_arguments,
     const FeatureMayAlwaysSet& extra_features = {}) {
   LOG_OR_DUMP(
       context,
@@ -758,7 +759,7 @@ void check_flows(
       show(callee.method_reference));
 
   FulfilledPartialKindState fulfilled_partial_sinks;
-  std::vector<std::tuple<AccessPath, Taint, const Taint&>> port_sources_sinks;
+  std::vector<std::tuple<Taint, const Taint&>> sources_sinks;
 
   for (const auto& [port, sinks] : callee.model.sinks().elements()) {
     if (!port.root().is_argument()) {
@@ -771,7 +772,8 @@ void check_flows(
     }
 
     Taint sources =
-        environment->read(*register_id, port.path())
+        environment
+            ->read(*register_id, port.path().resolve(source_constant_arguments))
             .collapse(/* transform */ [context](Taint& taint) {
               return taint.add_inferred_features_to_real_sources(
                   FeatureMayAlwaysSet{
@@ -789,8 +791,8 @@ void check_flows(
         extra_features,
         &fulfilled_partial_sinks);
 
-    port_sources_sinks.push_back(
-        std::make_tuple(port, std::move(sources), std::cref(sinks)));
+    sources_sinks.push_back(
+        std::make_tuple(std::move(sources), std::cref(sinks)));
   }
 
   // Create the sinks, checking at each point, if any partial sinks should
@@ -806,7 +808,7 @@ void check_flows(
   //
   // Outside of multi-source rules, this also creates regular sinks for the
   // method if an artificial source is found flowing into a sink.
-  for (const auto& [port, sources, sinks] : port_sources_sinks) {
+  for (const auto& [sources, sinks] : sources_sinks) {
     create_sinks(
         context, sources, sinks, extra_features, fulfilled_partial_sinks);
   }
@@ -817,6 +819,7 @@ void check_flows(
     const AnalysisEnvironment* environment,
     const std::vector<Register>& instruction_sources,
     const Callee& callee,
+    const std::vector<std::optional<std::string>>& source_constant_arguments,
     const FeatureMayAlwaysSet& extra_features = {}) {
   check_flows(
       context,
@@ -830,6 +833,7 @@ void check_flows(
         return instruction_sources.at(parameter_position);
       },
       callee,
+      source_constant_arguments,
       extra_features);
 }
 
@@ -888,14 +892,22 @@ void check_flows(
     MethodContext* context,
     const AnalysisEnvironment* environment,
     const IRInstruction* instruction,
-    const Callee& callee) {
-  check_flows(context, environment, instruction->srcs_vec(), callee);
+    const Callee& callee,
+    const std::vector<std::optional<std::string>>& source_constant_arguments) {
+  check_flows(
+      context,
+      environment,
+      instruction->srcs_vec(),
+      callee,
+      source_constant_arguments);
 }
 
 void analyze_artificial_calls(
     MethodContext* context,
     const IRInstruction* instruction,
-    AnalysisEnvironment* environment) {
+    AnalysisEnvironment* environment,
+    const std::vector<std::optional<std::string>>& source_constant_arguments =
+        {}) {
   const auto& artificial_callees =
       context->call_graph.artificial_callees(context->method(), instruction);
 
@@ -914,6 +926,7 @@ void analyze_artificial_calls(
           return found->second;
         },
         get_callee(context, environment, artificial_callee),
+        source_constant_arguments,
         FeatureMayAlwaysSet::make_always(artificial_callee.features));
   }
 }
@@ -1065,7 +1078,12 @@ bool Transfer::analyze_invoke(
 
   const AnalysisEnvironment previous_environment = *environment;
   TaintTree result_taint;
-  check_flows(context, &previous_environment, instruction, callee);
+  check_flows(
+      context,
+      &previous_environment,
+      instruction,
+      callee,
+      source_constant_arguments);
   check_call_effect_flows(context, callee);
   apply_call_effects(context, callee);
   apply_propagations(
@@ -1108,7 +1126,8 @@ bool Transfer::analyze_invoke(
     environment->write(memory_location, result_taint, UpdateKind::Weak);
   }
 
-  analyze_artificial_calls(context, instruction, environment);
+  analyze_artificial_calls(
+      context, instruction, environment, source_constant_arguments);
 
   return false;
 }

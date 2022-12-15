@@ -228,6 +228,13 @@
       "Lcom/facebook/marianatrench/integrationtests/Dictionary;.getIndex:(Ljava/lang/String;)Ljava/lang/Object;"
     ]
   },
+  "Lcom/facebook/marianatrench/integrationtests/AccessPaths;.sinkIndexWrapper:(Lcom/facebook/marianatrench/integrationtests/Dictionary;)V" : 
+  {
+    "virtual" : 
+    [
+      "Lcom/facebook/marianatrench/integrationtests/Dictionary;.sinkIndex:(Ljava/lang/String;)V"
+    ]
+  },
   "Lcom/facebook/marianatrench/integrationtests/AccessPaths;.testSimple:()V" : 
   {
     "static" : 
@@ -241,6 +248,35 @@
     [
       "Lcom/facebook/marianatrench/integrationtests/Dictionary;.getIndex:(Ljava/lang/String;)Ljava/lang/Object;",
       "Lcom/facebook/marianatrench/integrationtests/Dictionary;.setIndex:(Ljava/lang/String;Ljava/lang/Object;)V"
+    ]
+  },
+  "Lcom/facebook/marianatrench/integrationtests/AccessPaths;.testSinkOnIndexFromValueOf:()V" : 
+  {
+    "static" : 
+    [
+      "Lcom/facebook/marianatrench/integrationtests/AccessPaths;.getDifferentSource:()Ljava/lang/Object;",
+      "Lcom/facebook/marianatrench/integrationtests/AccessPaths;.getString:()Ljava/lang/String;",
+      "Lcom/facebook/marianatrench/integrationtests/AccessPaths;.sinkIndex:(Lcom/facebook/marianatrench/integrationtests/Dictionary;Ljava/lang/String;)V",
+      "Lcom/facebook/marianatrench/integrationtests/Dictionary;.<init>:()V",
+      "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;"
+    ],
+    "virtual" : 
+    [
+      "Lcom/facebook/marianatrench/integrationtests/Dictionary;.putExtra:(Ljava/lang/String;Ljava/lang/Object;)Lcom/facebook/marianatrench/integrationtests/Dictionary;"
+    ]
+  },
+  "Lcom/facebook/marianatrench/integrationtests/AccessPaths;.testSinkOnIndexFromValueOfWrapper:()V" : 
+  {
+    "static" : 
+    [
+      "Lcom/facebook/marianatrench/integrationtests/AccessPaths;.getDifferentSource:()Ljava/lang/Object;",
+      "Lcom/facebook/marianatrench/integrationtests/AccessPaths;.sinkIndexWrapper:(Lcom/facebook/marianatrench/integrationtests/Dictionary;)V",
+      "Lcom/facebook/marianatrench/integrationtests/Dictionary;.<init>:()V",
+      "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;"
+    ],
+    "virtual" : 
+    [
+      "Lcom/facebook/marianatrench/integrationtests/Dictionary;.putExtra:(Ljava/lang/String;Ljava/lang/Object;)Lcom/facebook/marianatrench/integrationtests/Dictionary;"
     ]
   },
   "Lcom/facebook/marianatrench/integrationtests/AccessPaths;.testStrongUpdate:()V" : 

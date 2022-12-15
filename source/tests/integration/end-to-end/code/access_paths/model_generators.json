@@ -65,6 +65,29 @@
           }
         ]
       }
+    },
+    {
+      "find": "methods",
+      "where": [
+        {
+          "constraint": "signature",
+          "pattern": ".*\\.sinkIndex:.*"
+        }
+      ],
+      "model": {
+        "modes": [
+          "skip-analysis"
+        ],
+        "sinks": [
+          {
+            "kind": "Sink",
+            "port": "Argument(0)[<Argument(1)>]",
+            "via_value_of": [
+              "Argument(1)"
+            ]
+          }
+        ]
+      }
     }
   ]
 }

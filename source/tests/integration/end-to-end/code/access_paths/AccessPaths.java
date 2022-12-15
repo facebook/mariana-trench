@@ -22,6 +22,8 @@ class Dictionary {
   Object getIndex(String key) {
     return new Object();
   }
+
+  void sinkIndex(String key) {}
 }
 
 class Constants {
@@ -54,6 +56,12 @@ public class AccessPaths {
 
   private static void indexAccessToSink(Dictionary d) {
     Origin.sink(d.getIndex("source"));
+  }
+
+  private static void sinkIndex(Dictionary d, String index) {}
+
+  private static void sinkIndexWrapper(Dictionary d) {
+    d.sinkIndex("source");
   }
 
   public static void testStrongUpdate() {
@@ -115,5 +123,26 @@ public class AccessPaths {
             .putExtra("unused_source", getDifferentSource())
             .putExtra("source", indexAccessToSource(d));
     indexAccessToSink(issueWithSourceOnly); // expect issue for Source only
+  }
+
+  public static void testSinkOnIndexFromValueOf() {
+    Dictionary d =
+        new Dictionary()
+            .putExtra("source", Origin.source())
+            .putExtra("differentSource", getDifferentSource());
+
+    sinkIndex(d, "safe"); // expect no issue
+    sinkIndex(d, "source"); // expect issue for Source only
+    sinkIndex(d, "differentSource"); // expect issue for DifferentSource only
+    sinkIndex(d, getString()); // expect issue for both Source and DifferentSource
+  }
+
+  public static void testSinkOnIndexFromValueOfWrapper() {
+    Dictionary d = new Dictionary().putExtra("foo", Origin.source());
+
+    sinkIndexWrapper(d); // expect no issue
+
+    d.putExtra("source", getDifferentSource());
+    sinkIndexWrapper(d); // expect issue for DifferentSource only
   }
 }
