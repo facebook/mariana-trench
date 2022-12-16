@@ -20,11 +20,18 @@ public class HasAnnotation {
   Object functionC(MyClass arg1) {
     return null;
   }
+
+  Object functionD(
+      @TestParameterAnnotation("Annotate on the parameter") MyClassWithoutAnnotation arg1) {
+    return null;
+  }
 }
 
 @TestClassAnnotation("Annotate on the class type")
 class MyClass {
-  Object functionD() {
+  Object functionE() {
     return null;
   }
 }
+
+class MyClassWithoutAnnotation {}

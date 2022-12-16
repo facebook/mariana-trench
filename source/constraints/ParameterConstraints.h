@@ -29,6 +29,21 @@ class ParameterConstraint {
   virtual bool operator==(const ParameterConstraint& other) const = 0;
 };
 
+class HasAnnotationParameterConstraint final : public ParameterConstraint {
+ public:
+  explicit HasAnnotationParameterConstraint(
+      std::string type,
+      std::optional<std::string> annotation);
+  bool satisfy(
+      const DexAnnotationSet* MT_NULLABLE annotations_set,
+      const DexType* /* unused */) const override;
+  bool operator==(const ParameterConstraint& other) const override;
+
+ private:
+  std::string type_;
+  std::optional<re2::RE2> annotation_;
+};
+
 class TypeParameterConstraint final : public ParameterConstraint {
  public:
   explicit TypeParameterConstraint(

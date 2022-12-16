@@ -94,7 +94,8 @@ DexMethod* create_void_method(
     const std::vector<std::string>& annotations = std::vector<std::string>());
 
 std::unique_ptr<DexAnnotationSet> create_annotation_set(
-    const std::vector<std::string>& annotations);
+    const std::vector<std::string>& annotations,
+    std::optional<std::string> element = std::nullopt);
 
 const DexField* create_field(
     Scope& scope,

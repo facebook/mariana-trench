@@ -100,7 +100,7 @@
               "kind" : "SensitiveData",
               "origins" : 
               [
-                "Lcom/facebook/marianatrench/integrationtests/MyClass;.functionD:()Ljava/lang/Object;"
+                "Lcom/facebook/marianatrench/integrationtests/HasAnnotation;.functionD:(Lcom/facebook/marianatrench/integrationtests/MyClassWithoutAnnotation;)Ljava/lang/Object;"
               ]
             }
           ]
@@ -108,10 +108,39 @@
       ]
     }
   ],
-  "method" : "Lcom/facebook/marianatrench/integrationtests/MyClass;.functionD:()Ljava/lang/Object;",
+  "method" : "Lcom/facebook/marianatrench/integrationtests/HasAnnotation;.functionD:(Lcom/facebook/marianatrench/integrationtests/MyClassWithoutAnnotation;)Ljava/lang/Object;",
   "position" : 
   {
-    "line" : 27,
+    "line" : 25,
+    "path" : "com/facebook/marianatrench/integrationtests/HasAnnotation.java"
+  }
+}
+{
+  "generations" : 
+  [
+    {
+      "port" : "Return",
+      "taint" : 
+      [
+        {
+          "kinds" : 
+          [
+            {
+              "kind" : "SensitiveData",
+              "origins" : 
+              [
+                "Lcom/facebook/marianatrench/integrationtests/MyClass;.functionE:()Ljava/lang/Object;"
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "method" : "Lcom/facebook/marianatrench/integrationtests/MyClass;.functionE:()Ljava/lang/Object;",
+  "position" : 
+  {
+    "line" : 32,
     "path" : "com/facebook/marianatrench/integrationtests/MyClass.java"
   }
 }
@@ -119,7 +148,7 @@
   "method" : "Lcom/facebook/marianatrench/integrationtests/MyClass;.<init>:()V",
   "position" : 
   {
-    "line" : 25,
+    "line" : 30,
     "path" : "com/facebook/marianatrench/integrationtests/MyClass.java"
   }
 }

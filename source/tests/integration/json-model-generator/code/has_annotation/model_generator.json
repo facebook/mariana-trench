@@ -36,6 +36,15 @@
                 "type": "Lcom/facebook/marianatrench/integrationtests/TestClassAnnotation;",
                 "pattern": ".*"
               }
+            },
+            {
+              "constraint": "parameter",
+              "idx": 1,
+              "inner": {
+                "constraint": "parameter_has_annotation",
+                "type": "Lcom/facebook/marianatrench/integrationtests/TestParameterAnnotation;",
+                "pattern": ".*"
+              }
             }
           ]
         }

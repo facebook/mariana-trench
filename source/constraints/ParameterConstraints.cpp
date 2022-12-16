@@ -6,9 +6,35 @@
  */
 
 #include <mariana-trench/JsonValidation.h>
+#include <mariana-trench/constraints/MethodConstraints.h>
 #include <mariana-trench/constraints/ParameterConstraints.h>
 
 namespace marianatrench {
+
+HasAnnotationParameterConstraint::HasAnnotationParameterConstraint(
+    std::string type,
+    std::optional<std::string> annotation)
+    : type_(std::move(type)), annotation_(std::move(annotation)) {}
+
+bool HasAnnotationParameterConstraint::satisfy(
+    const DexAnnotationSet* MT_NULLABLE annotations_set,
+    const DexType* /* unused */) const {
+  return annotations_set ? has_annotation(annotations_set, type_, annotation_)
+                         : false;
+}
+
+bool HasAnnotationParameterConstraint::operator==(
+    const ParameterConstraint& other) const {
+  if (auto* other_constraint =
+          dynamic_cast<const HasAnnotationParameterConstraint*>(&other)) {
+    return other_constraint->type_ == type_ &&
+        ((!other_constraint->annotation_ && !annotation_) ||
+         (other_constraint->annotation_ && annotation_ &&
+          other_constraint->annotation_->pattern() == annotation_->pattern()));
+  } else {
+    return false;
+  }
+}
 
 TypeParameterConstraint::TypeParameterConstraint(
     std::unique_ptr<TypeConstraint> inner_constraint)
@@ -36,8 +62,17 @@ std::unique_ptr<ParameterConstraint> ParameterConstraint::from_json(
 
   std::string constraint_name =
       JsonValidation::string(constraint, "constraint");
-  return std::make_unique<TypeParameterConstraint>(
-      TypeConstraint::from_json(constraint));
+  if (constraint_name == "parameter_has_annotation") {
+    return std::make_unique<HasAnnotationParameterConstraint>(
+        JsonValidation::string(constraint, "type"),
+        constraint.isMember("pattern")
+            ? std::optional<std::string>{JsonValidation::string(
+                  constraint, "pattern")}
+            : std::nullopt);
+  } else {
+    return std::make_unique<TypeParameterConstraint>(
+        TypeConstraint::from_json(constraint));
+  }
 }
 
 } // namespace marianatrench

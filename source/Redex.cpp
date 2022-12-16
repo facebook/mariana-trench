@@ -326,14 +326,24 @@ DexMethod* redex::create_void_method(
 }
 
 std::unique_ptr<DexAnnotationSet> redex::create_annotation_set(
-    const std::vector<std::string>& annotations) {
+    const std::vector<std::string>& annotations,
+    std::optional<std::string> element) {
   auto dannoset = std::make_unique<DexAnnotationSet>();
 
   for (const std::string& anno : annotations) {
     const DexString* dstring = DexString::make_string(anno);
     DexType* dtype = DexType::make_type(dstring);
-    dannoset->add_annotation(std::make_unique<DexAnnotation>(
-        dtype, DexAnnotationVisibility::DAV_RUNTIME));
+    auto annotation = std::make_unique<DexAnnotation>(
+        dtype, DexAnnotationVisibility::DAV_RUNTIME);
+
+    if (element.has_value()) {
+      annotation->add_element(
+          "",
+          std::make_unique<DexEncodedValueString>(
+              DexString::make_string(element.value())));
+    }
+
+    dannoset->add_annotation(std::move(annotation));
   }
 
   return dannoset;
