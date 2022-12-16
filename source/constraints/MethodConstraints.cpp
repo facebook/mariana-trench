@@ -354,19 +354,19 @@ bool HasAnnotationMethodConstraint::operator==(
   }
 }
 
-ParameterConstraint::ParameterConstraint(
+NthParameterConstraint::NthParameterConstraint(
     ParameterPosition index,
     std::unique_ptr<TypeConstraint> inner_constraint)
     : index_(index), inner_constraint_(std::move(inner_constraint)) {}
 
-bool ParameterConstraint::satisfy(const Method* method) const {
+bool NthParameterConstraint::satisfy(const Method* method) const {
   const auto type = method->parameter_type(index_);
   return type ? inner_constraint_->satisfy(type) : false;
 }
 
-bool ParameterConstraint::operator==(const MethodConstraint& other) const {
+bool NthParameterConstraint::operator==(const MethodConstraint& other) const {
   if (auto* other_constraint =
-          dynamic_cast<const ParameterConstraint*>(&other)) {
+          dynamic_cast<const NthParameterConstraint*>(&other)) {
     return other_constraint->index_ == index_ &&
         *(other_constraint->inner_constraint_) == *inner_constraint_;
   } else {
@@ -533,7 +533,7 @@ std::unique_ptr<MethodConstraint> MethodConstraint::from_json(
     return std::make_unique<IsNativeConstraint>(expected);
   } else if (constraint_name == "parameter") {
     int index = JsonValidation::integer(constraint, /* field */ "idx");
-    return std::make_unique<ParameterConstraint>(
+    return std::make_unique<NthParameterConstraint>(
         index,
         TypeConstraint::from_json(
             JsonValidation::object(constraint, /* field */ "inner")));

@@ -315,7 +315,7 @@ TEST_F(MethodConstraintTest, HasCodeConstraintSatisfy) {
       HasCodeConstraint(false).satisfy(context.methods->create(methods[0])));
 }
 
-TEST_F(MethodConstraintTest, ParameterConstraintSatisfy) {
+TEST_F(MethodConstraintTest, NthParameterConstraintSatisfy) {
   Scope scope;
   auto context = test::make_empty_context();
   auto methods = redex::create_methods(
@@ -335,7 +335,7 @@ TEST_F(MethodConstraintTest, ParameterConstraintSatisfy) {
             )
             ))",
       });
-  auto constraint = ParameterConstraint(
+  auto constraint = NthParameterConstraint(
       0, std::make_unique<TypeNameConstraint>("Landroid/content/Intent;"));
 
   EXPECT_TRUE(constraint.satisfy(context.methods->create(methods[0])));
@@ -1035,7 +1035,7 @@ TEST_F(MethodConstraintTest, MethodConstraintFromJson) {
       JsonValidationError);
   // HasAnnotationMethodConstraint
 
-  // ParameterConstraint
+  // NthParameterConstraint
   {
     auto constraint = MethodConstraint::from_json(
         test::parse_json(
@@ -1049,7 +1049,7 @@ TEST_F(MethodConstraintTest, MethodConstraintFromJson) {
         })"),
         context);
     EXPECT_EQ(
-        ParameterConstraint(
+        NthParameterConstraint(
             0,
             std::make_unique<TypeNameConstraint>("Landroid/content/Intent;")),
         *constraint);
@@ -1110,7 +1110,7 @@ TEST_F(MethodConstraintTest, MethodConstraintFromJson) {
           })"),
           context),
       JsonValidationError);
-  // ParameterConstraint
+  // NthParameterConstraint
 
   // SignatureConstraint
   {

@@ -9,12 +9,22 @@ package com.facebook.marianatrench.integrationtests;
 
 public class HasAnnotation {
   @TestMethodAnnotation("Annotate on the method declaration")
-  void functionA() {}
+  Object functionA() {
+    return null;
+  }
 
   MyClass functionB() {
+    return null;
+  }
+
+  Object functionC(MyClass arg1) {
     return null;
   }
 }
 
 @TestClassAnnotation("Annotate on the class type")
-class MyClass {}
+class MyClass {
+  Object functionD() {
+    return null;
+  }
+}

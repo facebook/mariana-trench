@@ -186,9 +186,9 @@ class HasAnnotationMethodConstraint final : public MethodConstraint {
   std::optional<re2::RE2> annotation_;
 };
 
-class ParameterConstraint final : public MethodConstraint {
+class NthParameterConstraint final : public MethodConstraint {
  public:
-  ParameterConstraint(
+  NthParameterConstraint(
       ParameterPosition index,
       std::unique_ptr<TypeConstraint> inner_constraint);
   bool satisfy(const Method* method) const override;
