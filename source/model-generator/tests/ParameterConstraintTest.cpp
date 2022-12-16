@@ -19,6 +19,131 @@ namespace {
 class ParameterConstraintTest : public test::Test {};
 } // namespace
 
+TEST_F(ParameterConstraintTest, AllOfParameterConstraintSatisfy) {
+  std::string class_name = "Landroid/util/Log;";
+  auto type = DexType::make_type(DexString::make_string(class_name));
+  auto annotations_set =
+      redex::create_annotation_set({class_name}, "annotation test");
+
+  EXPECT_TRUE(
+      AllOfParameterConstraint({}).satisfy(annotations_set.get(), type));
+
+  {
+    std::vector<std::unique_ptr<ParameterConstraint>> constraints;
+    constraints.push_back(std::make_unique<HasAnnotationParameterConstraint>(
+        class_name, "[a-z ]*"));
+
+    EXPECT_TRUE(AllOfParameterConstraint(std::move(constraints))
+                    .satisfy(annotations_set.get(), type));
+  }
+
+  {
+    std::vector<std::unique_ptr<ParameterConstraint>> constraints;
+    constraints.push_back(std::make_unique<HasAnnotationParameterConstraint>(
+        class_name, "[a-z ]*"));
+    constraints.push_back(std::make_unique<HasAnnotationParameterConstraint>(
+        class_name, "annotation test"));
+
+    EXPECT_TRUE(AllOfParameterConstraint(std::move(constraints))
+                    .satisfy(annotations_set.get(), type));
+  }
+
+  {
+    std::vector<std::unique_ptr<ParameterConstraint>> constraints;
+    constraints.push_back(std::make_unique<HasAnnotationParameterConstraint>(
+        class_name, "[A-Z ]*"));
+
+    EXPECT_FALSE(AllOfParameterConstraint(std::move(constraints))
+                     .satisfy(annotations_set.get(), type));
+  }
+
+  {
+    std::vector<std::unique_ptr<ParameterConstraint>> constraints;
+    constraints.push_back(std::make_unique<HasAnnotationParameterConstraint>(
+        class_name, "[a-z ]*"));
+    constraints.push_back(std::make_unique<HasAnnotationParameterConstraint>(
+        class_name, "[A-Z ]*"));
+
+    EXPECT_FALSE(AllOfParameterConstraint(std::move(constraints))
+                     .satisfy(annotations_set.get(), type));
+  }
+}
+
+TEST_F(ParameterConstraintTest, AnyOfParameterConstraintSatisfy) {
+  std::string class_name = "Landroid/util/Log;";
+  auto type = DexType::make_type(DexString::make_string(class_name));
+  auto annotations_set =
+      redex::create_annotation_set({class_name}, "annotation test");
+
+  EXPECT_TRUE(
+      AnyOfParameterConstraint({}).satisfy(annotations_set.get(), type));
+
+  {
+    std::vector<std::unique_ptr<ParameterConstraint>> constraints;
+    constraints.push_back(std::make_unique<HasAnnotationParameterConstraint>(
+        class_name, "[a-z]*"));
+    constraints.push_back(std::make_unique<TypeParameterConstraint>(
+        std::make_unique<TypeNameConstraint>(class_name)));
+
+    EXPECT_TRUE(AnyOfParameterConstraint(std::move(constraints))
+                    .satisfy(annotations_set.get(), type));
+  }
+
+  {
+    std::vector<std::unique_ptr<ParameterConstraint>> constraints;
+    constraints.push_back(std::make_unique<HasAnnotationParameterConstraint>(
+        class_name, "[a-z ]*"));
+    constraints.push_back(std::make_unique<HasAnnotationParameterConstraint>(
+        class_name, "[A-Z]*"));
+
+    EXPECT_TRUE(AnyOfParameterConstraint(std::move(constraints))
+                    .satisfy(annotations_set.get(), type));
+  }
+
+  {
+    std::vector<std::unique_ptr<ParameterConstraint>> constraints;
+    constraints.push_back(std::make_unique<HasAnnotationParameterConstraint>(
+        class_name, "not matched"));
+    constraints.push_back(std::make_unique<HasAnnotationParameterConstraint>(
+        class_name, "[a-z ]*"));
+    constraints.push_back(std::make_unique<HasAnnotationParameterConstraint>(
+        class_name, "[A-Z]*"));
+
+    EXPECT_TRUE(AnyOfParameterConstraint(std::move(constraints))
+                    .satisfy(annotations_set.get(), type));
+  }
+
+  {
+    std::vector<std::unique_ptr<ParameterConstraint>> constraints;
+    constraints.push_back(std::make_unique<HasAnnotationParameterConstraint>(
+        class_name, "[A-Z ]*"));
+    constraints.push_back(std::make_unique<HasAnnotationParameterConstraint>(
+        class_name, "not matched"));
+    constraints.push_back(std::make_unique<TypeParameterConstraint>(
+        std::make_unique<TypeNameConstraint>("Landroid/content/Intent;")));
+
+    EXPECT_FALSE(AnyOfParameterConstraint(std::move(constraints))
+                     .satisfy(annotations_set.get(), type));
+  }
+}
+
+TEST_F(ParameterConstraintTest, NotParameterConstraintSatisfy) {
+  std::string class_name = "Landroid/util/Log;";
+  auto type = DexType::make_type(DexString::make_string(class_name));
+  auto annotations_set =
+      redex::create_annotation_set({class_name}, "annotation test");
+
+  EXPECT_TRUE(
+      NotParameterConstraint(std::make_unique<HasAnnotationParameterConstraint>(
+                                 class_name, "[A-Z ]*"))
+          .satisfy(annotations_set.get(), type));
+
+  EXPECT_FALSE(
+      NotParameterConstraint(std::make_unique<HasAnnotationParameterConstraint>(
+                                 class_name, "[a-z ]*"))
+          .satisfy(annotations_set.get(), type));
+}
+
 TEST_F(ParameterConstraintTest, HasAnnotationParameterConstraintSatisfy) {
   std::string class_name = "Landroid/util/Log;";
   auto type = DexType::make_type(DexString::make_string(class_name));
@@ -36,6 +161,249 @@ TEST_F(ParameterConstraintTest, HasAnnotationParameterConstraintSatisfy) {
 }
 
 TEST_F(ParameterConstraintTest, ParameterConstraintFromJson) {
+  // AnyOfParameterConstraint
+  {
+    auto constraint = ParameterConstraint::from_json(test::parse_json(
+        R"({
+          "constraint": "any_of",
+          "inners": [
+            {
+              "constraint": "name",
+              "pattern": "Landroid/content/Intent;"
+            },
+            {
+              "constraint": "parameter_has_annotation",
+              "type": "Lcom/facebook/Annotation;",
+              "pattern": "A"
+            }
+          ]
+        })"));
+    {
+      std::vector<std::unique_ptr<ParameterConstraint>> constraints;
+      constraints.push_back(std::make_unique<TypeParameterConstraint>(
+          std::make_unique<TypeNameConstraint>("Landroid/content/Intent;")));
+      constraints.push_back(std::make_unique<HasAnnotationParameterConstraint>(
+          "Lcom/facebook/Annotation;", "A"));
+
+      EXPECT_EQ(AnyOfParameterConstraint(std::move(constraints)), *constraint);
+    }
+    {
+      std::vector<std::unique_ptr<ParameterConstraint>> constraints;
+      constraints.push_back(std::make_unique<HasAnnotationParameterConstraint>(
+          "Lcom/facebook/Annotation;", "A"));
+      constraints.push_back(std::make_unique<TypeParameterConstraint>(
+          std::make_unique<TypeNameConstraint>("Landroid/content/Intent;")));
+
+      EXPECT_EQ(AnyOfParameterConstraint(std::move(constraints)), *constraint);
+    }
+  }
+
+  {
+    auto constraint = ParameterConstraint::from_json(test::parse_json(
+        R"({
+          "constraint": "any_of",
+          "inNers": [
+            {
+              "constraint": "name",
+              "pattern": "Landroid/content/Intent;"
+            },
+            {
+              "constraint": "parameter_has_annotation",
+              "type": "Lcom/facebook/Annotation;",
+              "pattern": "A"
+            }
+          ]
+        })"));
+    std::vector<std::unique_ptr<ParameterConstraint>> constraints;
+    EXPECT_EQ(AnyOfParameterConstraint(std::move(constraints)), *constraint);
+  }
+
+  EXPECT_THROW(
+      ParameterConstraint::from_json(test::parse_json(
+          R"({
+            "Constraint": "any_of",
+            "inners": [
+              {
+                "constraint": "name",
+                "pattern": "Landroid/content/Intent;"
+              },
+              {
+                "constraint": "parameter_has_annotation",
+                "type": "Lcom/facebook/Annotation;",
+                "pattern": "A"
+              }
+            ]
+          })")),
+      JsonValidationError);
+
+  EXPECT_THROW(
+      ParameterConstraint::from_json(test::parse_json(
+          R"({
+            "constraint": "Any_of",
+            "inners": [
+              {
+                "constraint": "name",
+                "pattern": "Landroid/content/Intent;"
+              },
+              {
+                "constraint": "parameter_has_annotation",
+                "type": "Lcom/facebook/Annotation;",
+                "pattern": "A"
+              }
+            ]
+          })")),
+      JsonValidationError);
+  // AnyOfParameterConstraint
+
+  // AllOfParameterConstraint
+  {
+    auto constraint = ParameterConstraint::from_json(test::parse_json(
+        R"({
+          "constraint": "all_of",
+          "inners": [
+            {
+              "constraint": "name",
+              "pattern": "Landroid/content/Intent;"
+            },
+            {
+              "constraint": "parameter_has_annotation",
+              "type": "Lcom/facebook/Annotation;",
+              "pattern": "A"
+            }
+          ]
+        })"));
+    {
+      std::vector<std::unique_ptr<ParameterConstraint>> constraints;
+      constraints.push_back(std::make_unique<TypeParameterConstraint>(
+          std::make_unique<TypeNameConstraint>("Landroid/content/Intent;")));
+      constraints.push_back(std::make_unique<HasAnnotationParameterConstraint>(
+          "Lcom/facebook/Annotation;", "A"));
+
+      EXPECT_EQ(AllOfParameterConstraint(std::move(constraints)), *constraint);
+    }
+    {
+      std::vector<std::unique_ptr<ParameterConstraint>> constraints;
+      constraints.push_back(std::make_unique<HasAnnotationParameterConstraint>(
+          "Lcom/facebook/Annotation;", "A"));
+      constraints.push_back(std::make_unique<TypeParameterConstraint>(
+          std::make_unique<TypeNameConstraint>("Landroid/content/Intent;")));
+
+      EXPECT_EQ(AllOfParameterConstraint(std::move(constraints)), *constraint);
+    }
+  }
+
+  {
+    auto constraint = ParameterConstraint::from_json(test::parse_json(
+        R"({
+          "constraint": "all_of",
+          "inNers": [
+            {
+              "constraint": "name",
+              "pattern": "Landroid/content/Intent;"
+            },
+            {
+              "constraint": "parameter_has_annotation",
+              "type": "Lcom/facebook/Annotation;",
+              "pattern": "A"
+            }
+          ]
+        })"));
+    std::vector<std::unique_ptr<ParameterConstraint>> constraints;
+    EXPECT_EQ(AllOfParameterConstraint(std::move(constraints)), *constraint);
+  }
+
+  EXPECT_THROW(
+      ParameterConstraint::from_json(test::parse_json(
+          R"({
+            "Constraint": "all_of",
+            "inners": [
+              {
+                "constraint": "name",
+                "pattern": "Landroid/content/Intent;"
+              },
+              {
+                "constraint": "parameter_has_annotation",
+                "type": "Lcom/facebook/Annotation;",
+                "pattern": "A"
+              }
+            ]
+          })")),
+      JsonValidationError);
+
+  EXPECT_THROW(
+      ParameterConstraint::from_json(test::parse_json(
+          R"({
+            "constraint": "All_of",
+            "inners": [
+              {
+                "constraint": "name",
+                "pattern": "Landroid/content/Intent;"
+              },
+              {
+                "constraint": "parameter_has_annotation",
+                "type": "Lcom/facebook/Annotation;",
+                "pattern": "A"
+              }
+            ]
+          })")),
+      JsonValidationError);
+  // AllOfParameterConstraint
+
+  // NotParameterConstraint
+  {
+    auto constraint = ParameterConstraint::from_json(test::parse_json(
+        R"({
+          "constraint": "not",
+          "inner": {
+                "constraint": "parameter_has_annotation",
+                "type": "Lcom/facebook/Annotation;",
+                "pattern": "A"
+              }
+        })"));
+    EXPECT_EQ(
+        NotParameterConstraint(
+            std::make_unique<HasAnnotationParameterConstraint>(
+                "Lcom/facebook/Annotation;", "A")),
+        *constraint);
+  }
+
+  EXPECT_THROW(
+      ParameterConstraint::from_json(test::parse_json(
+          R"({
+          "cOnstraint": "not",
+          "inner": {
+                "constraint": "parameter_has_annotation",
+                "type": "Lcom/facebook/Annotation;",
+                "pattern": "A"
+              }
+        })")),
+      JsonValidationError);
+
+  EXPECT_THROW(
+      ParameterConstraint::from_json(test::parse_json(
+          R"({
+          "constraint": "Not",
+          "inner": {
+                "constraint": "parameter_has_annotation",
+                "type": "Lcom/facebook/Annotation;",
+                "pattern": "A"
+              }
+        })")),
+      JsonValidationError);
+
+  EXPECT_THROW(
+      ParameterConstraint::from_json(test::parse_json(
+          R"({
+          "constraint": "not",
+          "iNner": {
+                "constraint": "parameter_has_annotation",
+                "type": "Lcom/facebook/Annotation;",
+                "pattern": "A"
+              }
+        })")),
+      JsonValidationError);
+  // NotParameterConstraint
+
   // TypeParameterConstraint
   {
     auto constraint = ParameterConstraint::from_json(test::parse_json(

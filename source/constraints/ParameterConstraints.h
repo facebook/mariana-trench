@@ -29,6 +29,45 @@ class ParameterConstraint {
   virtual bool operator==(const ParameterConstraint& other) const = 0;
 };
 
+class AllOfParameterConstraint final : public ParameterConstraint {
+ public:
+  explicit AllOfParameterConstraint(
+      std::vector<std::unique_ptr<ParameterConstraint>> constraints);
+  bool satisfy(
+      const DexAnnotationSet* MT_NULLABLE annotations_set,
+      const DexType* type) const override;
+  bool operator==(const ParameterConstraint& other) const override;
+
+ private:
+  std::vector<std::unique_ptr<ParameterConstraint>> constraints_;
+};
+
+class AnyOfParameterConstraint final : public ParameterConstraint {
+ public:
+  explicit AnyOfParameterConstraint(
+      std::vector<std::unique_ptr<ParameterConstraint>> constraints);
+  bool satisfy(
+      const DexAnnotationSet* MT_NULLABLE annotations_set,
+      const DexType* type) const override;
+  bool operator==(const ParameterConstraint& other) const override;
+
+ private:
+  std::vector<std::unique_ptr<ParameterConstraint>> constraints_;
+};
+
+class NotParameterConstraint final : public ParameterConstraint {
+ public:
+  explicit NotParameterConstraint(
+      std::unique_ptr<ParameterConstraint> constraint);
+  bool satisfy(
+      const DexAnnotationSet* MT_NULLABLE annotations_set,
+      const DexType* type) const override;
+  bool operator==(const ParameterConstraint& other) const override;
+
+ private:
+  std::unique_ptr<ParameterConstraint> constraint_;
+};
+
 class HasAnnotationParameterConstraint final : public ParameterConstraint {
  public:
   explicit HasAnnotationParameterConstraint(
