@@ -257,3 +257,115 @@
     }
   ]
 }
+{
+  "method" : "Lcom/facebook/marianatrench/integrationtests/JsonModelGeneratorIntegrationTest2;.functionB:(III)I",
+  "parameter_sources" : 
+  [
+    {
+      "port" : "Argument(1)",
+      "taint" : 
+      [
+        {
+          "kinds" : 
+          [
+            {
+              "kind" : "SensitiveData",
+              "origins" : 
+              [
+                "Lcom/facebook/marianatrench/integrationtests/JsonModelGeneratorIntegrationTest2;.functionB:(III)I"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "port" : "Argument(2)",
+      "taint" : 
+      [
+        {
+          "kinds" : 
+          [
+            {
+              "kind" : "SensitiveData",
+              "origins" : 
+              [
+                "Lcom/facebook/marianatrench/integrationtests/JsonModelGeneratorIntegrationTest2;.functionB:(III)I"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "port" : "Argument(3)",
+      "taint" : 
+      [
+        {
+          "kinds" : 
+          [
+            {
+              "kind" : "SensitiveData",
+              "origins" : 
+              [
+                "Lcom/facebook/marianatrench/integrationtests/JsonModelGeneratorIntegrationTest2;.functionB:(III)I"
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "position" : 
+  {
+    "line" : 18,
+    "path" : "com/facebook/marianatrench/integrationtests/JsonModelGeneratorIntegrationTest2.java"
+  }
+}
+{
+  "method" : "Lcom/facebook/marianatrench/integrationtests/JsonModelGeneratorIntegrationTest2;.functionC:(III)I",
+  "parameter_sources" : 
+  [
+    {
+      "port" : "Argument(0)",
+      "taint" : 
+      [
+        {
+          "kinds" : 
+          [
+            {
+              "kind" : "SensitiveData",
+              "origins" : 
+              [
+                "Lcom/facebook/marianatrench/integrationtests/JsonModelGeneratorIntegrationTest2;.functionC:(III)I"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "port" : "Argument(2)",
+      "taint" : 
+      [
+        {
+          "kinds" : 
+          [
+            {
+              "kind" : "SensitiveData",
+              "origins" : 
+              [
+                "Lcom/facebook/marianatrench/integrationtests/JsonModelGeneratorIntegrationTest2;.functionC:(III)I"
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "position" : 
+  {
+    "line" : 25,
+    "path" : "com/facebook/marianatrench/integrationtests/JsonModelGeneratorIntegrationTest2.java"
+  }
+}

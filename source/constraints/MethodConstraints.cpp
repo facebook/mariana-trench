@@ -361,18 +361,7 @@ NthParameterConstraint::NthParameterConstraint(
 
 bool NthParameterConstraint::satisfy(const Method* method) const {
   const auto* type = method->parameter_type(index_);
-
-  DexAnnotationSet* annotations_set = nullptr;
-  auto parameter_index = index_ - method->first_parameter_index();
-  // `this` parameter does not have annotations.
-  if (parameter_index >= 0) {
-    if (const auto param_annotations = method->dex_method()->get_param_anno()) {
-      const auto& result = param_annotations->find(parameter_index);
-      if (result != param_annotations->end()) {
-        annotations_set = result->second.get();
-      }
-    }
-  }
+  const auto* annotations_set = method->get_parameter_annotations(index_);
 
   return type ? inner_constraint_->satisfy(annotations_set, type) : false;
 }

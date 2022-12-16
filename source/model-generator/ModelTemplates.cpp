@@ -8,7 +8,7 @@
 #include <mariana-trench/JsonValidation.h>
 #include <mariana-trench/Log.h>
 #include <mariana-trench/constraints/MethodConstraints.h>
-#include <mariana-trench/constraints/TypeConstraints.h>
+#include <mariana-trench/constraints/ParameterConstraints.h>
 #include <mariana-trench/model-generator/ModelTemplates.h>
 
 namespace marianatrench {
@@ -426,7 +426,7 @@ void AddFeaturesToArgumentsTemplate::instantiate(
 }
 
 ForAllParameters::ForAllParameters(
-    std::unique_ptr<AllOfTypeConstraint> constraints,
+    std::unique_ptr<AllOfParameterConstraint> constraints,
     std::string variable,
     std::vector<SinkTemplate> sink_templates,
     std::vector<ParameterSourceTemplate> parameter_source_templates,
@@ -457,7 +457,7 @@ ForAllParameters ForAllParameters::from_json(
     Context& context) {
   JsonValidation::validate_object(value);
 
-  std::vector<std::unique_ptr<TypeConstraint>> constraints;
+  std::vector<std::unique_ptr<ParameterConstraint>> constraints;
   std::vector<SinkTemplate> sink_templates;
   std::vector<ParameterSourceTemplate> parameter_source_templates;
   std::vector<GenerationTemplate> generation_templates;
@@ -474,7 +474,7 @@ ForAllParameters ForAllParameters::from_json(
   for (auto constraint :
        JsonValidation::null_or_array(value, /* field */ "where")) {
     // We assume constraints on parameters are type constraints
-    constraints.push_back(TypeConstraint::from_json(constraint));
+    constraints.push_back(ParameterConstraint::from_json(constraint));
   }
 
   for (auto sink_value :
@@ -533,7 +533,7 @@ ForAllParameters ForAllParameters::from_json(
   }
 
   return ForAllParameters(
-      std::make_unique<AllOfTypeConstraint>(std::move(constraints)),
+      std::make_unique<AllOfParameterConstraint>(std::move(constraints)),
       variable,
       sink_templates,
       parameter_source_templates,
@@ -550,7 +550,9 @@ bool ForAllParameters::instantiate(Model& model, const Method* method) const {
   bool updated = false;
   ParameterPosition index = method->first_parameter_index();
   for (auto type : *method->get_proto()->get_args()) {
-    if (constraints_->satisfy(type)) {
+    const auto* annotations_set = method->get_parameter_annotations(index);
+
+    if (constraints_->satisfy(annotations_set, type)) {
       LOG(3, "Type {} satifies constraints in for_all_parameters", show(type));
       TemplateVariableMapping variable_mapping;
       variable_mapping.insert(variable_, index);

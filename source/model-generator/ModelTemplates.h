@@ -302,7 +302,7 @@ class AddFeaturesToArgumentsTemplate final {
 class ForAllParameters final {
  public:
   explicit ForAllParameters(
-      std::unique_ptr<AllOfTypeConstraint> constraints,
+      std::unique_ptr<AllOfParameterConstraint> constraints,
       std::string variable,
       std::vector<SinkTemplate> sink_templates = {},
       std::vector<ParameterSourceTemplate> parameter_source_templates = {},
@@ -327,7 +327,7 @@ class ForAllParameters final {
   bool instantiate(Model& model, const Method* method) const;
 
  private:
-  std::unique_ptr<AllOfTypeConstraint> constraints_;
+  std::unique_ptr<AllOfParameterConstraint> constraints_;
   std::string variable_;
   std::vector<SinkTemplate> sink_templates_;
   std::vector<ParameterSourceTemplate> parameter_source_templates_;

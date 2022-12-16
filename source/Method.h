@@ -55,6 +55,8 @@ class Method final {
   const IRCode* MT_NULLABLE get_code() const;
   DexType* get_class() const;
   DexProto* get_proto() const;
+  DexAnnotationSet* MT_NULLABLE
+  get_parameter_annotations(const ParameterPosition index) const;
   std::string_view get_name() const;
 
   DexAccessFlags get_access() const;

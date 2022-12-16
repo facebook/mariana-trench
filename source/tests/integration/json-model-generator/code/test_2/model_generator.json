@@ -127,6 +127,30 @@
           }
         ]
       }
+    },
+    {
+      "find": "methods",
+      "where": [],
+      "model": {
+        "for_all_parameters": [
+          {
+            "variable": "x",
+            "where": [
+              {
+                "constraint": "parameter_has_annotation",
+                "type": "Lcom/facebook/marianatrench/integrationtests/TestParameterAnnotation;",
+                "pattern": ".*"
+              }
+            ],
+            "sources": [
+              {
+                "kind": "SensitiveData",
+                "port": "Argument(x)"
+              }
+            ]
+          }
+        ]
+      }
     }
   ]
 }

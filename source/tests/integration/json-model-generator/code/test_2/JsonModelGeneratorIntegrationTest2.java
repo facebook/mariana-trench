@@ -11,4 +11,18 @@ public class JsonModelGeneratorIntegrationTest2 {
   int function(int a, int b) {
     return a;
   }
+
+  int functionB(
+      @TestParameterAnnotation("Annotate on the parameter") int a,
+      @TestParameterAnnotation("Annotate on the parameter") int b,
+      @TestParameterAnnotation("Annotate on the parameter") int c) {
+    return b;
+  }
+
+  static int functionC(
+      @TestParameterAnnotation("Annotate on the parameter") int a,
+      int b,
+      @TestParameterAnnotation("Annotate on the parameter") int c) {
+    return b;
+  }
 }

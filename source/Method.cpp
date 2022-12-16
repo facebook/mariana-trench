@@ -48,6 +48,22 @@ DexProto* Method::get_proto() const {
   return method_->get_proto();
 }
 
+DexAnnotationSet* MT_NULLABLE
+Method::get_parameter_annotations(const ParameterPosition index) const {
+  DexAnnotationSet* annotations_set = nullptr;
+  auto parameter_index = index - this->first_parameter_index();
+  // `this` parameter does not have annotations.
+  if (parameter_index >= 0) {
+    if (const auto param_annotations = this->dex_method()->get_param_anno()) {
+      const auto& result = param_annotations->find(parameter_index);
+      if (result != param_annotations->end()) {
+        annotations_set = result->second.get();
+      }
+    }
+  }
+  return annotations_set;
+}
+
 std::string_view Method::get_name() const {
   return method_->get_name()->str();
 }
