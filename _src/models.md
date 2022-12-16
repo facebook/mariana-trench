@@ -684,11 +684,14 @@ Each "rule" defines a "filter" (which uses "constraints" to specify methods for 
   - **Method**:
     - `signature`: Expects an extra property `pattern` which is a regex to fully match the full signature (class, method, argument types) of a method;
     - `parent`: Expects an extra property `inner` [Type] which contains a nested constraint to apply to the class holding the method;
-    - `parameter`: Expects an extra properties `idx` and `inner` [Type], matches when the idx-th parameter of the function or method matches the nested constraint inner;
+    - `parameter`: Expects an extra properties `idx` and `inner` [Parameter] or [Type], matches when the idx-th parameter of the function or method matches the nested constraint inner;
     - `return`: Expects an extra property `inner` [Type] which contains a nested constraint to apply to the return of the method;
     - `is_static | is_constructor | is_native | has_code`: Accepts an extra property `value` which is either `true` or `false`. By default, `value` is considered `true`;
     - `number_parameters`: Expects an extra property `inner` [Integer] which contains a nested constraint to apply to the number of parameters (counting the implicit `this` parameter);
     - `number_overrides`: Expects an extra property `inner` [Integer] which contains a nested constraint to apply on the number of method overrides.
+
+  - **Parameter:**
+    - `parameter_has_annotation`: Expects an extra property `type` and an optional property `pattern`, respectively a string and a regex fully matching the value of the parameter annotation.
 
   - **Type:**
     - `extends`: Expects an extra property `inner` [Type] which contains a nested constraint that must apply to one of the base classes or itself. The optional property `includes_self` is a boolean that tells whether the constraint must be applied on the type itself or not;
@@ -708,7 +711,7 @@ Each "rule" defines a "filter" (which uses "constraints" to specify methods for 
   - **Integer:**
     - `< | <= | == | > | >= | !=`: Expects an extra property `value` which contains an integer that the input integer is compared with. The input is the left hand side.
 
-  - **Any (Method, Type, Field or Integer):**
+  - **Any (Method, Parameter, Type, Field or Integer):**
     - `all_of`: Expects an extra property `inners` [Any] which is an array holding nested constraints which must all apply;
     - `any_of`: Expects an extra property `inners` [Any] which is an array holding nested constraints where one of them must apply;
     - `not`: Expects an extra property `inner` [Any] which contains a nested constraint that should not apply. (Note this is not yet implemented for `Field`s)
@@ -744,7 +747,7 @@ Each "rule" defines a "filter" (which uses "constraints" to specify methods for 
     - `modes`*: A list of mode names that describe specific behaviors of a method;
     - `for_all_parameters`: Generate sources/sinks/propagations/attach_to_* for all parameters of a method that satisfy some constraints. It accepts the following key/values:
       - `variable`: A symbolic name for the parameter;
-      - `where`: An optional list of constraints on the type of the parameter;
+      - `where`: An optional list of [Parameter] or [Type] constraints on the parameter;
       - `sources | sinks | propagation`: Same as under "model", but we accept the variable name as a parameter number.
   - `verbosity`*: A logging level, to help debugging. 1 is the most verbose, 5 is the least. The default verbosity level is 5.
 
