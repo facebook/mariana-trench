@@ -336,7 +336,9 @@ TEST_F(MethodConstraintTest, NthParameterConstraintSatisfy) {
             ))",
       });
   auto constraint = NthParameterConstraint(
-      0, std::make_unique<TypeNameConstraint>("Landroid/content/Intent;"));
+      0,
+      std::make_unique<TypeParameterConstraint>(
+          std::make_unique<TypeNameConstraint>("Landroid/content/Intent;")));
 
   EXPECT_TRUE(constraint.satisfy(context.methods->create(methods[0])));
   EXPECT_FALSE(constraint.satisfy(context.methods->create(methods[1])));
@@ -1051,7 +1053,30 @@ TEST_F(MethodConstraintTest, MethodConstraintFromJson) {
     EXPECT_EQ(
         NthParameterConstraint(
             0,
-            std::make_unique<TypeNameConstraint>("Landroid/content/Intent;")),
+            std::make_unique<TypeParameterConstraint>(
+                std::make_unique<TypeNameConstraint>(
+                    "Landroid/content/Intent;"))),
+        *constraint);
+  }
+
+  {
+    auto constraint = MethodConstraint::from_json(
+        test::parse_json(
+            R"({
+          "constraint": "parameter",
+          "idx": 0,
+          "inner": {
+              "constraint": "name",
+              "pattern": "Landroid/content/Intent;"
+            }
+        })"),
+        context);
+    EXPECT_EQ(
+        NthParameterConstraint(
+            0,
+            std::make_unique<TypeParameterConstraint>(
+                std::make_unique<TypeNameConstraint>(
+                    "Landroid/content/Intent;"))),
         *constraint);
   }
 

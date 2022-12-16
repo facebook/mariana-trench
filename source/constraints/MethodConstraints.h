@@ -12,6 +12,7 @@
 #include <mariana-trench/Access.h>
 #include <mariana-trench/Context.h>
 #include <mariana-trench/constraints/IntegerConstraint.h>
+#include <mariana-trench/constraints/ParameterConstraints.h>
 #include <mariana-trench/constraints/TypeConstraints.h>
 #include <mariana-trench/model-generator/ModelGenerator.h>
 
@@ -190,13 +191,13 @@ class NthParameterConstraint final : public MethodConstraint {
  public:
   NthParameterConstraint(
       ParameterPosition index,
-      std::unique_ptr<TypeConstraint> inner_constraint);
+      std::unique_ptr<ParameterConstraint> inner_constraint);
   bool satisfy(const Method* method) const override;
   bool operator==(const MethodConstraint& other) const override;
 
  private:
   ParameterPosition index_;
-  std::unique_ptr<TypeConstraint> inner_constraint_;
+  std::unique_ptr<ParameterConstraint> inner_constraint_;
 };
 
 class SignatureConstraint final : public MethodConstraint {

@@ -356,12 +356,25 @@ bool HasAnnotationMethodConstraint::operator==(
 
 NthParameterConstraint::NthParameterConstraint(
     ParameterPosition index,
-    std::unique_ptr<TypeConstraint> inner_constraint)
+    std::unique_ptr<ParameterConstraint> inner_constraint)
     : index_(index), inner_constraint_(std::move(inner_constraint)) {}
 
 bool NthParameterConstraint::satisfy(const Method* method) const {
-  const auto type = method->parameter_type(index_);
-  return type ? inner_constraint_->satisfy(type) : false;
+  const auto* type = method->parameter_type(index_);
+
+  DexAnnotationSet* annotations_set = nullptr;
+  auto parameter_index = index_ - method->first_parameter_index();
+  // `this` parameter does not have annotations.
+  if (parameter_index >= 0) {
+    if (const auto param_annotations = method->dex_method()->get_param_anno()) {
+      const auto& result = param_annotations->find(parameter_index);
+      if (result != param_annotations->end()) {
+        annotations_set = result->second.get();
+      }
+    }
+  }
+
+  return type ? inner_constraint_->satisfy(annotations_set, type) : false;
 }
 
 bool NthParameterConstraint::operator==(const MethodConstraint& other) const {
@@ -535,7 +548,7 @@ std::unique_ptr<MethodConstraint> MethodConstraint::from_json(
     int index = JsonValidation::integer(constraint, /* field */ "idx");
     return std::make_unique<NthParameterConstraint>(
         index,
-        TypeConstraint::from_json(
+        ParameterConstraint::from_json(
             JsonValidation::object(constraint, /* field */ "inner")));
   } else if (constraint_name == "signature") {
     return std::make_unique<SignatureConstraint>(
