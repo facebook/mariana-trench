@@ -38,11 +38,11 @@ std::string_view strip_inner_class(std::string_view class_name) {
   return class_name;
 }
 
-bool is_user_input_kind(const std::string_view kind) {
+bool is_manifest_relevant_kind(const std::string_view kind) {
   return (
-      kind == "ActivityUserInput" || kind == "ReceiverUserInput" ||
-      kind == "ServiceUserInput" || kind == "ServiceAIDLUserInput" ||
-      kind == "ProviderUserInput");
+      kind == "ActivityUserInput" || kind == "ActivityLifecycle" ||
+      kind == "ReceiverUserInput" || kind == "ServiceUserInput" ||
+      kind == "ServiceAIDLUserInput" || kind == "ProviderUserInput");
 }
 
 bool is_class_exported_via_uri(const DexClass* clazz) {
@@ -317,7 +317,8 @@ FeatureMayAlwaysSet ClassProperties::issue_features(
 
   for (const auto* kind : kinds) {
     const auto* named_kind = kind->as<NamedKind>();
-    if (named_kind == nullptr || !is_user_input_kind(named_kind->name())) {
+    if (named_kind == nullptr ||
+        !is_manifest_relevant_kind(named_kind->name())) {
       continue;
     }
 
@@ -342,7 +343,8 @@ FeatureSet ClassProperties::get_class_features(
     size_t dependency_depth) const {
   FeatureSet features;
 
-  if (kind->name() == "ActivityUserInput") {
+  if (kind->name() == "ActivityUserInput" ||
+      kind->name() == "ActivityLifecycle") {
     features.join_with(get_manifest_features(clazz, activities_));
   }
 
