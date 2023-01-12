@@ -18,6 +18,7 @@
 #include <RedexContext.h>
 
 #include <mariana-trench/ExitCode.h>
+#include <mariana-trench/GlobalRedexContext.h>
 #include <mariana-trench/LifecycleMethods.h>
 #include <mariana-trench/MarianaTrench.h>
 #include <mariana-trench/ModelGeneration.h>
@@ -51,9 +52,9 @@ int main(int argc, char* argv[]) {
 
     program_options::notify(variables);
 
-    g_redex = new RedexContext(/* allow_class_duplicates */ true);
+    marianatrench::GlobalRedexContext redex_context(
+        /* allow_class_duplicates */ true);
     tool.run(variables);
-    delete g_redex;
   } catch (const aggregate_exception& aggregate_exception) {
     std::cerr << "Caught multiple exceptions:" << std::endl;
     for (const auto& exception : aggregate_exception.m_exceptions) {

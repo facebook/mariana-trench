@@ -23,21 +23,10 @@
 namespace marianatrench {
 namespace test {
 
-Test::Test() {
-  g_redex = new RedexContext();
-}
+Test::Test() : global_redex_context_(/* allow_class_duplicates */ false){};
 
-Test::~Test() {
-  delete g_redex;
-}
-
-ContextGuard::ContextGuard() {
-  g_redex = new RedexContext();
-}
-
-ContextGuard::~ContextGuard() {
-  delete g_redex;
-}
+ContextGuard::ContextGuard()
+    : global_redex_context_(/* allow_class_duplicates */ false){};
 
 Context make_empty_context() {
   Context context;

@@ -23,6 +23,7 @@
 #include <mariana-trench/Dependencies.h>
 #include <mariana-trench/Features.h>
 #include <mariana-trench/Frame.h>
+#include <mariana-trench/GlobalRedexContext.h>
 #include <mariana-trench/Kinds.h>
 #include <mariana-trench/Methods.h>
 #include <mariana-trench/Options.h>
@@ -40,13 +41,19 @@ namespace test {
 class Test : public testing::Test {
  public:
   Test();
-  virtual ~Test();
+  virtual ~Test() = default;
+
+ private:
+  GlobalRedexContext global_redex_context_;
 };
 
 class ContextGuard {
  public:
   ContextGuard();
-  ~ContextGuard();
+  ~ContextGuard() = default;
+
+ private:
+  GlobalRedexContext global_redex_context_;
 };
 
 Context make_empty_context();
