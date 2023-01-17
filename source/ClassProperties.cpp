@@ -187,7 +187,7 @@ ClassProperties::ClassProperties(
   } catch (const std::exception& e) {
     // Redex may assert, or throw `std::runtime_error` if the file is missing.
     auto error = fmt::format("Manifest could not be parsed: {}", e.what());
-    ERROR(2, error);
+    ERROR(1, error);
     EventLogger::log_event("manifest_error", error, 1);
   }
 
