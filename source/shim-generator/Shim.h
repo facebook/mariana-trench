@@ -34,6 +34,10 @@ class ShimMethod {
   DexType* MT_NULLABLE parameter_type(ShimParameterPosition argument) const;
   std::optional<ShimParameterPosition> type_position(const DexType* type) const;
 
+  friend std::ostream& operator<<(
+      std::ostream& out,
+      const ShimMethod& shim_method);
+
  private:
   const Method* method_;
   // Maps parameter type to position in method_

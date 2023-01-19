@@ -354,6 +354,15 @@ void Shim::add_target(ShimTargetVariant target) {
   }
 }
 
+std::ostream& operator<<(std::ostream& out, const ShimMethod& shim_method) {
+  out << "ShimMethod(method=`";
+  if (shim_method.method_ != nullptr) {
+    out << shim_method.method_->show();
+  }
+  out << "`)";
+  return out;
+}
+
 std::ostream& operator<<(std::ostream& out, const ShimParameterMapping& map) {
   out << "infer_from_types=`";
   out << (map.infer_from_types() ? "true" : "false") << "`, ";
@@ -401,7 +410,7 @@ std::ostream& operator<<(
 }
 
 std::ostream& operator<<(std::ostream& out, const Shim& shim) {
-  out << "ShimTarget(method=`";
+  out << "Shim(method=`";
   if (auto* method = shim.method()) {
     out << method->show();
   }
