@@ -5,6 +5,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
+#include <unistd.h>
 #include <cstdio>
 #include <cstdlib>
 #include <mutex>
@@ -20,6 +21,7 @@ struct LoggerImplementation {
     if (env) {
       parse_environment(env);
     }
+    is_interactive_ = isatty(fileno(stderr));
   }
 
   LoggerImplementation(const LoggerImplementation&) = delete;
@@ -38,6 +40,10 @@ struct LoggerImplementation {
 
   bool enabled(int level) const {
     return level <= level_;
+  }
+
+  bool is_interactive() const {
+    return is_interactive_;
   }
 
   void log(std::string_view section, int level, std::string_view message) {
@@ -81,6 +87,7 @@ struct LoggerImplementation {
   int level_;
   FILE* file_;
   std::mutex mutex_;
+  bool is_interactive_;
 };
 
 static LoggerImplementation logger;
@@ -106,6 +113,10 @@ void Logger::log(
     int level,
     std::string_view message) {
   logger.log(section, level, message);
+}
+
+bool Logger::is_interactive_output() {
+  return logger.is_interactive();
 }
 
 } // namespace marianatrench

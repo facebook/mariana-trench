@@ -195,12 +195,14 @@ void Interprocedural::run_analysis(Context& context, Registry& registry) {
         [&](const Method* method) {
           method_iteration++;
           if (method_iteration % 10000 == 0) {
-            LOG(1,
+            LOG_IF_INTERACTIVE(
+                1,
                 "Processed {}/{} methods.",
                 method_iteration.load(),
                 methods_to_analyze->size());
           } else if (method_iteration % 100 == 0) {
-            LOG(4,
+            LOG_IF_INTERACTIVE(
+                4,
                 "Processed {}/{} methods.",
                 method_iteration.load(),
                 methods_to_analyze->size());

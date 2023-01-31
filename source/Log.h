@@ -30,6 +30,9 @@ class Logger {
     log(section, level, fmt::format(format, args...));
   }
 
+  /* Evaluates to whether the default output descriptor is interactive. */
+  static bool is_interactive_output();
+
   static void
   log(std::string_view section, int level, std::string_view message);
 };
@@ -46,6 +49,13 @@ class Logger {
 #define LOG(level, format, ...)                    \
   do {                                             \
     SECTION("INFO", level, format, ##__VA_ARGS__); \
+  } while (0)
+
+#define LOG_IF_INTERACTIVE(level, format, ...)            \
+  do {                                                    \
+    if (marianatrench::Logger::is_interactive_output()) { \
+      LOG(level, format, ##__VA_ARGS__);                  \
+    }                                                     \
   } while (0)
 
 #define CONTEXT_LEVEL(context, level) \

@@ -918,7 +918,8 @@ CallGraph::CallGraph(
         [&](const Method* caller) {
           method_iteration++;
           if (method_iteration % 10000 == 0) {
-            LOG(1,
+            LOG_IF_INTERACTIVE(
+                1,
                 "Processed {}/{} methods.",
                 method_iteration.load(),
                 number_methods);
