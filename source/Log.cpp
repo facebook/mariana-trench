@@ -10,6 +10,8 @@
 #include <cstdlib>
 #include <mutex>
 
+#include <fmt/chrono.h>
+
 #include <mariana-trench/Log.h>
 
 namespace {
@@ -51,7 +53,12 @@ struct LoggerImplementation {
       return;
     }
 
-    std::string line = fmt::format("{} {}\n", section, message);
+    std::time_t current_time = std::time(nullptr);
+    std::string line = fmt::format(
+        "{:%Y-%m-%d %H:%M:%S} {} {}\n",
+        fmt::localtime(current_time),
+        section,
+        message);
 
     std::lock_guard<std::mutex> guard(mutex_);
     fwrite(line.c_str(), line.size(), 1, file_);
