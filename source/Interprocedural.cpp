@@ -240,8 +240,9 @@ void Interprocedural::run_analysis(Context& context, Registry& registry) {
         threads);
     queue.run_all();
 
-    LOG(2,
-        "Global fixpoint iteration completed in {:.2f}s.",
+    LOG(1,
+        "Global iteration {} completed in {:.2f}s.",
+        iteration,
         iteration_timer.duration_in_seconds());
 
     methods_to_analyze = std::move(new_methods_to_analyze);
