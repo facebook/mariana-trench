@@ -10,6 +10,7 @@
           "kinds" : 
           [
             {
+              "call_info" : "Declaration",
               "kind" : "Source",
               "origins" : 
               [
@@ -136,7 +137,8 @@
               [
                 "via-anonymous-class-to-field"
               ],
-              "distance" : 3,
+              "call_info" : "CallSite",
+              "distance" : 2,
               "kind" : "Sink",
               "origins" : 
               [
@@ -168,7 +170,7 @@
               [
                 "via-cast:Ljava/lang/String;"
               ],
-              "distance" : 1,
+              "call_info" : "Origin",
               "kind" : "Source",
               "local_features" : 
               {
@@ -248,7 +250,8 @@
               [
                 "via-anonymous-class-to-field"
               ],
-              "distance" : 2,
+              "call_info" : "CallSite",
+              "distance" : 1,
               "kind" : "Sink",
               "local_features" : 
               {
@@ -845,6 +848,7 @@
           "kinds" : 
           [
             {
+              "call_info" : "Declaration",
               "kind" : "Sink",
               "origins" : 
               [
@@ -909,7 +913,7 @@
           "kinds" : 
           [
             {
-              "distance" : 1,
+              "call_info" : "Origin",
               "kind" : "Sink",
               "origins" : 
               [
@@ -1214,7 +1218,8 @@
           "kinds" : 
           [
             {
-              "distance" : 6,
+              "call_info" : "CallSite",
+              "distance" : 5,
               "kind" : "Sink",
               "origins" : 
               [
@@ -1236,7 +1241,8 @@
           "kinds" : 
           [
             {
-              "distance" : 5,
+              "call_info" : "CallSite",
+              "distance" : 4,
               "kind" : "Sink",
               "origins" : 
               [
@@ -1264,7 +1270,8 @@
           "kinds" : 
           [
             {
-              "distance" : 4,
+              "call_info" : "CallSite",
+              "distance" : 3,
               "kind" : "Sink",
               "origins" : 
               [
@@ -1292,7 +1299,8 @@
           "kinds" : 
           [
             {
-              "distance" : 3,
+              "call_info" : "CallSite",
+              "distance" : 2,
               "kind" : "Sink",
               "origins" : 
               [
@@ -1320,7 +1328,8 @@
           "kinds" : 
           [
             {
-              "distance" : 2,
+              "call_info" : "CallSite",
+              "distance" : 1,
               "kind" : "Sink",
               "origins" : 
               [

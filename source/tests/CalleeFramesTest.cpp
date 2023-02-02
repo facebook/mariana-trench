@@ -213,20 +213,27 @@ TEST_F(CalleeFramesTest, JoinWith) {
           test::make_taint_config(test_kind_one, test::FrameProperties{})});
 
   auto frames = (CalleeFrames{test::make_taint_config(
-                     test_kind_one, test::FrameProperties{.callee = one})})
+                     test_kind_one,
+                     test::FrameProperties{
+                         .callee = one, .call_info = CallInfo::CallSite})})
                     .join(CalleeFrames::bottom());
   EXPECT_EQ(
       frames,
       CalleeFrames{test::make_taint_config(
-          test_kind_one, test::FrameProperties{.callee = one})});
+          test_kind_one,
+          test::FrameProperties{
+              .callee = one, .call_info = CallInfo::CallSite})});
   EXPECT_EQ(frames.callee(), one);
 
   frames = CalleeFrames::bottom().join(CalleeFrames{test::make_taint_config(
-      test_kind_one, test::FrameProperties{.callee = one})});
+      test_kind_one,
+      test::FrameProperties{.callee = one, .call_info = CallInfo::CallSite})});
   EXPECT_EQ(
       frames,
       CalleeFrames{test::make_taint_config(
-          test_kind_one, test::FrameProperties{.callee = one})});
+          test_kind_one,
+          test::FrameProperties{
+              .callee = one, .call_info = CallInfo::CallSite})});
   EXPECT_EQ(frames.callee(), one);
 
   // Join different positions
@@ -301,6 +308,7 @@ TEST_F(CalleeFramesTest, Difference) {
               .callee = one,
               .call_position = test_position_one,
               .inferred_features = FeatureMayAlwaysSet{feature_one},
+              .call_info = CallInfo::CallSite,
           }),
   };
 
@@ -321,6 +329,7 @@ TEST_F(CalleeFramesTest, Difference) {
           test::FrameProperties{
               .callee = one,
               .call_position = test_position_one,
+              .call_info = CallInfo::CallSite,
           }),
   });
   EXPECT_EQ(frames, initial_frames);
@@ -335,7 +344,9 @@ TEST_F(CalleeFramesTest, Difference) {
               .callee = one,
               .call_position = test_position_one,
               .origins = MethodSet{one},
-              .inferred_features = FeatureMayAlwaysSet{feature_one}}),
+              .inferred_features = FeatureMayAlwaysSet{feature_one},
+              .call_info = CallInfo::CallSite,
+          }),
   });
   EXPECT_TRUE(frames.is_bottom());
 
@@ -349,6 +360,7 @@ TEST_F(CalleeFramesTest, Difference) {
               .callee = one,
               .call_position = test_position_one,
               .inferred_features = FeatureMayAlwaysSet{feature_two},
+              .call_info = CallInfo::CallSite,
           }),
   });
   EXPECT_EQ(frames, initial_frames);
@@ -361,6 +373,7 @@ TEST_F(CalleeFramesTest, Difference) {
           test::FrameProperties{
               .callee = one,
               .call_position = test_position_two,
+              .call_info = CallInfo::CallSite,
           }),
   });
   EXPECT_EQ(frames, initial_frames);
@@ -372,6 +385,7 @@ TEST_F(CalleeFramesTest, Difference) {
           test::FrameProperties{
               .callee = one,
               .call_position = test_position_one,
+              .call_info = CallInfo::CallSite,
           }),
   };
   frames.difference_with(CalleeFrames{
@@ -380,12 +394,14 @@ TEST_F(CalleeFramesTest, Difference) {
           test::FrameProperties{
               .callee = one,
               .call_position = test_position_one,
+              .call_info = CallInfo::CallSite,
           }),
       test::make_taint_config(
           test_kind_one,
           test::FrameProperties{
               .callee = one,
               .call_position = test_position_two,
+              .call_info = CallInfo::CallSite,
           }),
   });
   EXPECT_TRUE(frames.is_bottom());
@@ -397,12 +413,14 @@ TEST_F(CalleeFramesTest, Difference) {
           test::FrameProperties{
               .callee = one,
               .call_position = test_position_one,
+              .call_info = CallInfo::CallSite,
           }),
       test::make_taint_config(
           test_kind_one,
           test::FrameProperties{
               .callee = one,
               .call_position = test_position_two,
+              .call_info = CallInfo::CallSite,
           }),
   };
   frames.difference_with(CalleeFrames{test::make_taint_config(
@@ -410,6 +428,7 @@ TEST_F(CalleeFramesTest, Difference) {
       test::FrameProperties{
           .callee = one,
           .call_position = test_position_one,
+          .call_info = CallInfo::CallSite,
       })});
   EXPECT_EQ(
       frames,
@@ -419,6 +438,7 @@ TEST_F(CalleeFramesTest, Difference) {
               test::FrameProperties{
                   .callee = one,
                   .call_position = test_position_two,
+                  .call_info = CallInfo::CallSite,
               }),
       }));
 
@@ -429,18 +449,21 @@ TEST_F(CalleeFramesTest, Difference) {
           test::FrameProperties{
               .callee = one,
               .call_position = test_position_one,
+              .call_info = CallInfo::CallSite,
           }),
       test::make_taint_config(
           test_kind_one,
           test::FrameProperties{
               .callee = one,
               .call_position = test_position_two,
+              .call_info = CallInfo::CallSite,
           }),
       test::make_taint_config(
           test_kind_two,
           test::FrameProperties{
               .callee = one,
               .call_position = test_position_two,
+              .call_info = CallInfo::CallSite,
           }),
   };
   frames.difference_with(CalleeFrames{
@@ -449,18 +472,21 @@ TEST_F(CalleeFramesTest, Difference) {
           test::FrameProperties{
               .callee = one,
               .call_position = test_position_one,
+              .call_info = CallInfo::CallSite,
           }),
       test::make_taint_config(
           test_kind_two,
           test::FrameProperties{
               .callee = one,
               .call_position = test_position_one,
+              .call_info = CallInfo::CallSite,
           }),
       test::make_taint_config(
           test_kind_two,
           test::FrameProperties{
               .callee = one,
               .call_position = test_position_two,
+              .call_info = CallInfo::CallSite,
           })});
   EXPECT_EQ(
       frames,
@@ -469,6 +495,7 @@ TEST_F(CalleeFramesTest, Difference) {
           test::FrameProperties{
               .callee = one,
               .call_position = test_position_two,
+              .call_info = CallInfo::CallSite,
           })}));
 
   // NOTE: Access path coverage in CallPositionFramesTest.cpp.
@@ -538,12 +565,14 @@ TEST_F(CalleeFramesTest, Map) {
           test::FrameProperties{
               .callee = one,
               .call_position = test_position_one,
+              .call_info = CallInfo::CallSite,
           }),
       test::make_taint_config(
           test_kind,
           test::FrameProperties{
               .callee = one,
               .call_position = test_position_two,
+              .call_info = CallInfo::CallSite,
           }),
   };
   frames.map([feature_one](Frame& frame) {
@@ -557,15 +586,17 @@ TEST_F(CalleeFramesTest, Map) {
               test::FrameProperties{
                   .callee = one,
                   .call_position = test_position_one,
-                  .locally_inferred_features =
-                      FeatureMayAlwaysSet{feature_one}}),
+                  .locally_inferred_features = FeatureMayAlwaysSet{feature_one},
+                  .call_info = CallInfo::CallSite,
+              }),
           test::make_taint_config(
               test_kind,
               test::FrameProperties{
                   .callee = one,
                   .call_position = test_position_two,
-                  .locally_inferred_features =
-                      FeatureMayAlwaysSet{feature_one}}),
+                  .locally_inferred_features = FeatureMayAlwaysSet{feature_one},
+                  .call_info = CallInfo::CallSite,
+              }),
       }));
 }
 
@@ -648,16 +679,9 @@ TEST_F(CalleeFramesTest, Propagate) {
    *
    * position_one  -> kind_one -> Frame(port=arg(0), distance=1,
    *                                    local_features=Always(feature_one))
-   *                           -> Frame(port=anchor, distance=0)
-   * null position -> kind_one -> Frame(port=leaf, distance=0)
    *                  kind_two -> Frame(port=arg(0), distance=1)
-   *                           -> Frame(port=anchor, distance=0)
-   *
-   * NOTE: Realistically, we wouldn't normally have frames with distance > 0 if
-   * callee == nullptr. However, we need callee == nullptr to test the "Anchor"
-   * port scenarios (otherwise they are ignored and treated as regular ports).
    */
-  auto frames = CalleeFrames{
+  auto non_crtex_frames = CalleeFrames{
       /* call_position == test_position_one */
       test::make_taint_config(
           test_kind_one,
@@ -666,40 +690,23 @@ TEST_F(CalleeFramesTest, Propagate) {
               .call_position = test_position_one,
               .distance = 1,
               .locally_inferred_features = FeatureMayAlwaysSet{feature_one},
-          }),
-      test::make_taint_config(
-          test_kind_one,
-          test::FrameProperties{
-              .callee_port = AccessPath(Root(Root::Kind::Anchor)),
-              .call_position = test_position_one,
-              .canonical_names = CanonicalNameSetAbstractDomain{CanonicalName(
-                  CanonicalName::TemplateValue{"%programmatic_leaf_name%"})}}),
+              .call_info = CallInfo::CallSite}),
       /* call_position == nullptr */
-      test::make_taint_config(test_kind_one, test::FrameProperties{}),
       test::make_taint_config(
           test_kind_two,
           test::FrameProperties{
               .callee_port = AccessPath(Root(Root::Kind::Argument, 0)),
               .distance = 1,
-          }),
-      test::make_taint_config(
-          test_kind_two,
-          test::FrameProperties{
-              .callee_port = AccessPath(Root(Root::Kind::Anchor)),
-              .canonical_names = CanonicalNameSetAbstractDomain{CanonicalName(
-                  CanonicalName::TemplateValue{"%programmatic_leaf_name%"})}}),
+              .call_info = CallInfo::CallSite}),
   };
-
   /**
    * After propagating with
    *   (callee=two, callee_port=arg(1), call_position=test_position_two):
    *
    * CalleeFrames: (callee == one)
-   * position_two -> kind_one -> Frame(port=arg(1), distance=1)
+   * position_two -> kind_one -> Frame(port=arg(1), distance=2)
    *                                   inferred_feature=May(feature_one))
-   *                          -> Frame(port=anchor:arg(0), distance=0)
    *                 kind_two -> Frame(port=arg(1), distance=2)
-   *                          -> Frame(port=anchor:arg(0), distance=0)
    *
    * Intuition:
    * `frames.propagate(one, arg(1), test_position_two)` is called when we see a
@@ -707,9 +714,7 @@ TEST_F(CalleeFramesTest, Propagate) {
    * that callsite (which is at test_position_two).
    *
    * The callee, position, and ports after `propagate` should be what is passed
-   * to propagate. "Anchor" frames behave slightly differently, in that the port
-   * is "canonicalized" such that the `this` parameter has index arg(-1) for
-   * non-static methods, and the first parameter starts at index arg(0).
+   * to propagate.
    *
    * For each kind in the original `frames`, the propagated frame should have
    * distance = min(all_distances_for_that_kind) + 1, with the exception of
@@ -721,7 +726,7 @@ TEST_F(CalleeFramesTest, Propagate) {
   auto expected_instantiated_name =
       CanonicalName(CanonicalName::InstantiatedValue{one->signature()});
   EXPECT_EQ(
-      frames.propagate(
+      non_crtex_frames.propagate(
           /* callee */ one,
           /* callee_port */ AccessPath(Root(Root::Kind::Argument, 1)),
           /* call_position */ test_position_two,
@@ -736,11 +741,87 @@ TEST_F(CalleeFramesTest, Propagate) {
                   .callee_port = AccessPath(Root(Root::Kind::Argument, 1)),
                   .callee = one,
                   .call_position = test_position_two,
-                  .distance = 1,
+                  .distance = 2,
                   .inferred_features = FeatureMayAlwaysSet(
                       /* may */ FeatureSet{feature_one},
-                      /* always */ FeatureSet{}),
-                  .locally_inferred_features = FeatureMayAlwaysSet::bottom()}),
+                      /* always */ FeatureSet{feature_one}),
+                  .locally_inferred_features = FeatureMayAlwaysSet::bottom(),
+                  .call_info = CallInfo::CallSite}),
+          test::make_taint_config(
+              test_kind_two,
+              test::FrameProperties{
+                  .callee_port = AccessPath(Root(Root::Kind::Argument, 1)),
+                  .callee = one,
+                  .call_position = test_position_two,
+                  .distance = 2,
+                  .locally_inferred_features = FeatureMayAlwaysSet::bottom(),
+                  .call_info = CallInfo::CallSite}),
+      }));
+  /**
+   * The following `CalleeFrames` looks like (callee == nullptr):
+   *
+   * position_one  -> kind_one -> Frame(port=anchor, distance=0)
+   * null position -> Frame(port=anchor, distance=0)
+   *
+   * NOTE: Realistically, we wouldn't normally have frames with distance > 0 if
+   * callee == nullptr. However, we need callee == nullptr to test the "Anchor"
+   * port scenarios (otherwise they are ignored and treated as regular ports).
+   */
+  auto crtex_frames = CalleeFrames{
+      /* call_position == test_position_one */
+      test::make_taint_config(
+          test_kind_one,
+          test::FrameProperties{
+              .callee_port = AccessPath(Root(Root::Kind::Anchor)),
+              .call_position = test_position_one,
+              .canonical_names = CanonicalNameSetAbstractDomain{CanonicalName(
+                  CanonicalName::TemplateValue{"%programmatic_leaf_name%"})},
+              .call_info = CallInfo::Origin}),
+      /* call_position == nullptr */
+      test::make_taint_config(
+          test_kind_two,
+          test::FrameProperties{
+              .callee_port = AccessPath(Root(Root::Kind::Anchor)),
+              .canonical_names = CanonicalNameSetAbstractDomain{CanonicalName(
+                  CanonicalName::TemplateValue{"%programmatic_leaf_name%"})},
+
+              .call_info = CallInfo::Origin}),
+  };
+
+  /**
+   * After propagating with
+   *   (callee=two, callee_port=arg(1), call_position=test_position_two):
+   *
+   * CalleeFrames: (callee == one)
+   * position_two -> kind_one -> Frame(port=anchor:arg(0), distance=0)
+   *                 kind_two -> Frame(port=anchor:arg(0), distance=0)
+   *
+   * Intuition:
+   * `frames.propagate(one, arg(1), test_position_two)` is called when we see a
+   * callsite like `one(arg0, arg1)`, and are processing the models for arg1 at
+   * that callsite (which is at test_position_two).
+   *
+   * "Anchor" frames behave slightly differently, in that the port
+   * is "canonicalized" such that the `this` parameter has index arg(-1) for
+   * non-static methods, and the first parameter starts at index arg(0).
+   *
+   * For each kind in the original `frames`, the propagated frame should have
+   * distance = min(all_distances_for_that_kind) + 1, with the exception of
+   * "Anchor" frames which always have distance = 0.
+   *
+   * Locally inferred features are explicitly set to `bottom()` because these
+   * should be propagated into inferred features (joined across each kind).
+   */
+  EXPECT_EQ(
+      crtex_frames.propagate(
+          /* callee */ one,
+          /* callee_port */ AccessPath(Root(Root::Kind::Argument, 1)),
+          /* call_position */ test_position_two,
+          /* maximum_source_sink_distance */ 100,
+          context,
+          /* source_register_types */ {},
+          /* source_constant_arguments */ {}),
+      (CalleeFrames{
           test::make_taint_config(
               test_kind_one,
               test::FrameProperties{
@@ -752,15 +833,8 @@ TEST_F(CalleeFramesTest, Propagate) {
                   .locally_inferred_features = FeatureMayAlwaysSet::bottom(),
                   .canonical_names =
                       CanonicalNameSetAbstractDomain{
-                          expected_instantiated_name}}),
-          test::make_taint_config(
-              test_kind_two,
-              test::FrameProperties{
-                  .callee_port = AccessPath(Root(Root::Kind::Argument, 1)),
-                  .callee = one,
-                  .call_position = test_position_two,
-                  .distance = 2,
-                  .locally_inferred_features = FeatureMayAlwaysSet::bottom()}),
+                          expected_instantiated_name},
+                  .call_info = CallInfo::CallSite}),
           test::make_taint_config(
               test_kind_two,
               test::FrameProperties{
@@ -772,7 +846,8 @@ TEST_F(CalleeFramesTest, Propagate) {
                   .locally_inferred_features = FeatureMayAlwaysSet::bottom(),
                   .canonical_names =
                       CanonicalNameSetAbstractDomain{
-                          expected_instantiated_name}}),
+                          expected_instantiated_name},
+                  .call_info = CallInfo::CallSite}),
       }));
 }
 
@@ -816,13 +891,16 @@ TEST_F(CalleeFramesTest, AttachPosition) {
                   .inferred_features = FeatureMayAlwaysSet(
                       /* may */ FeatureSet{feature_one, feature_two},
                       /* always */ FeatureSet{}),
-                  .locally_inferred_features =
-                      FeatureMayAlwaysSet{feature_two}}),
+                  .locally_inferred_features = FeatureMayAlwaysSet{feature_two},
+                  .call_info = CallInfo::Origin,
+              }),
           test::make_taint_config(
               test_kind_two,
               test::FrameProperties{
                   .call_position = test_position_three,
-                  .locally_inferred_features = FeatureMayAlwaysSet::bottom()}),
+                  .locally_inferred_features = FeatureMayAlwaysSet::bottom(),
+                  .call_info = CallInfo::Origin,
+              }),
       }));
 }
 

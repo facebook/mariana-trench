@@ -10,6 +10,7 @@
           "kinds" : 
           [
             {
+              "call_info" : "Declaration",
               "kind" : "Source",
               "origins" : 
               [
@@ -117,7 +118,8 @@
           "kinds" : 
           [
             {
-              "distance" : 2,
+              "call_info" : "CallSite",
+              "distance" : 1,
               "kind" : "Sink",
               "origins" : 
               [
@@ -145,7 +147,7 @@
           "kinds" : 
           [
             {
-              "distance" : 1,
+              "call_info" : "Origin",
               "kind" : "Source",
               "local_positions" : 
               [
@@ -635,6 +637,7 @@
           "kinds" : 
           [
             {
+              "call_info" : "Declaration",
               "kind" : "Sink",
               "origins" : 
               [
@@ -797,7 +800,7 @@
           "kinds" : 
           [
             {
-              "distance" : 1,
+              "call_info" : "Origin",
               "kind" : "Sink",
               "origins" : 
               [
@@ -837,7 +840,7 @@
           "kinds" : 
           [
             {
-              "distance" : 1,
+              "call_info" : "Origin",
               "kind" : "Sink",
               "origins" : 
               [
@@ -916,6 +919,7 @@
           "kinds" : 
           [
             {
+              "call_info" : "Declaration",
               "kind" : "Sink",
               "origins" : 
               [

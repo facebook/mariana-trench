@@ -84,6 +84,7 @@
           "kinds" : 
           [
             {
+              "call_info" : "Declaration",
               "kind" : "TestGeneration",
               "origins" : 
               [
@@ -102,6 +103,7 @@
           "kinds" : 
           [
             {
+              "call_info" : "Declaration",
               "kind" : "TestGeneration",
               "origins" : 
               [
@@ -120,6 +122,7 @@
           "kinds" : 
           [
             {
+              "call_info" : "Declaration",
               "kind" : "TestOtherGeneration",
               "origins" : 
               [
@@ -150,6 +153,7 @@
           "kinds" : 
           [
             {
+              "call_info" : "Declaration",
               "kind" : "TestOtherParameterSource",
               "origins" : 
               [
@@ -157,6 +161,7 @@
               ]
             },
             {
+              "call_info" : "Declaration",
               "kind" : "TestParameterSource",
               "origins" : 
               [
@@ -175,6 +180,7 @@
           "kinds" : 
           [
             {
+              "call_info" : "Declaration",
               "kind" : "TestOtherParameterSource",
               "origins" : 
               [
@@ -182,6 +188,7 @@
               ]
             },
             {
+              "call_info" : "Declaration",
               "kind" : "TestParameterSource",
               "origins" : 
               [
@@ -219,6 +226,7 @@
           "kinds" : 
           [
             {
+              "call_info" : "Declaration",
               "kind" : "TestSink",
               "origins" : 
               [
@@ -241,6 +249,7 @@
           "kinds" : 
           [
             {
+              "call_info" : "Declaration",
               "kind" : "TestSink",
               "origins" : 
               [
@@ -269,6 +278,7 @@
           "kinds" : 
           [
             {
+              "call_info" : "Declaration",
               "kind" : "SensitiveData",
               "origins" : 
               [
@@ -287,6 +297,7 @@
           "kinds" : 
           [
             {
+              "call_info" : "Declaration",
               "kind" : "SensitiveData",
               "origins" : 
               [
@@ -305,6 +316,7 @@
           "kinds" : 
           [
             {
+              "call_info" : "Declaration",
               "kind" : "SensitiveData",
               "origins" : 
               [
@@ -334,6 +346,7 @@
           "kinds" : 
           [
             {
+              "call_info" : "Declaration",
               "kind" : "SensitiveData",
               "origins" : 
               [
@@ -352,6 +365,7 @@
           "kinds" : 
           [
             {
+              "call_info" : "Declaration",
               "kind" : "SensitiveData",
               "origins" : 
               [

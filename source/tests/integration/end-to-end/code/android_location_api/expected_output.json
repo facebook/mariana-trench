@@ -18,6 +18,7 @@
           "kinds" : 
           [
             {
+              "call_info" : "Origin",
               "kind" : "UserGeoLocation",
               "local_positions" : 
               [
@@ -64,7 +65,7 @@
           "kinds" : 
           [
             {
-              "distance" : 1,
+              "call_info" : "Origin",
               "kind" : "Logging",
               "origins" : 
               [
@@ -92,7 +93,7 @@
           "kinds" : 
           [
             {
-              "distance" : 1,
+              "call_info" : "Origin",
               "kind" : "UserGeoLocation",
               "origins" : 
               [
@@ -115,6 +116,7 @@
           "kinds" : 
           [
             {
+              "call_info" : "Declaration",
               "kind" : "UserGeoLocation",
               "origins" : 
               [
@@ -150,6 +152,7 @@
           "kinds" : 
           [
             {
+              "call_info" : "Declaration",
               "kind" : "UserGeoLocation",
               "origins" : 
               [
@@ -178,6 +181,7 @@
           "kinds" : 
           [
             {
+              "call_info" : "Declaration",
               "kind" : "UserGeoLocation",
               "origins" : 
               [
@@ -475,6 +479,7 @@
           "kinds" : 
           [
             {
+              "call_info" : "Declaration",
               "kind" : "UserGeoLocation",
               "origins" : 
               [
@@ -727,6 +732,7 @@
           "kinds" : 
           [
             {
+              "call_info" : "Declaration",
               "kind" : "Logging",
               "origins" : 
               [

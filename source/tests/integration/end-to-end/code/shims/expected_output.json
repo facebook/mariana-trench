@@ -10,6 +10,7 @@
           "kinds" : 
           [
             {
+              "call_info" : "Declaration",
               "kind" : "Source",
               "origins" : 
               [
@@ -142,7 +143,8 @@
               [
                 "via-shim:Lcom/facebook/marianatrench/integrationtests/FragmentTest;.add:(Landroid/app/Activity;Ljava/lang/Object;)V"
               ],
-              "distance" : 3,
+              "call_info" : "CallSite",
+              "distance" : 2,
               "kind" : "Sink",
               "local_features" : 
               {
@@ -181,7 +183,7 @@
               [
                 "via-cast:Ljava/lang/String;"
               ],
-              "distance" : 1,
+              "call_info" : "Origin",
               "kind" : "Source",
               "local_features" : 
               {
@@ -259,7 +261,8 @@
               [
                 "via-shim:Lcom/facebook/marianatrench/integrationtests/ParameterMapping;.definedAndInferred:(Lcom/facebook/marianatrench/integrationtests/ShimTarget;Ljava/lang/Object;Ljava/lang/String;)V"
               ],
-              "distance" : 2,
+              "call_info" : "CallSite",
+              "distance" : 1,
               "kind" : "Sink",
               "local_features" : 
               {
@@ -295,7 +298,8 @@
               [
                 "via-shim:Lcom/facebook/marianatrench/integrationtests/ParameterMapping;.definedAndInferred:(Lcom/facebook/marianatrench/integrationtests/ShimTarget;Ljava/lang/Object;Ljava/lang/String;)V"
               ],
-              "distance" : 2,
+              "call_info" : "CallSite",
+              "distance" : 1,
               "kind" : "Sink",
               "local_features" : 
               {
@@ -334,7 +338,7 @@
               [
                 "via-cast:Ljava/lang/String;"
               ],
-              "distance" : 1,
+              "call_info" : "Origin",
               "kind" : "Source",
               "local_features" : 
               {
@@ -398,7 +402,8 @@
               [
                 "via-shim:Lcom/facebook/marianatrench/integrationtests/FragmentTest;.add:(Landroid/app/Activity;Ljava/lang/Object;)V"
               ],
-              "distance" : 3,
+              "call_info" : "CallSite",
+              "distance" : 2,
               "kind" : "Sink",
               "local_features" : 
               {
@@ -433,7 +438,7 @@
           "kinds" : 
           [
             {
-              "distance" : 1,
+              "call_info" : "Origin",
               "kind" : "Source",
               "origins" : 
               [
@@ -490,7 +495,8 @@
               [
                 "via-shim:Lcom/facebook/marianatrench/integrationtests/FragmentTest;.add:(Ljava/lang/Class;Ljava/lang/Object;)V"
               ],
-              "distance" : 3,
+              "call_info" : "CallSite",
+              "distance" : 2,
               "kind" : "Sink",
               "local_features" : 
               {
@@ -525,7 +531,7 @@
           "kinds" : 
           [
             {
-              "distance" : 1,
+              "call_info" : "Origin",
               "kind" : "Source",
               "origins" : 
               [
@@ -582,7 +588,8 @@
               [
                 "via-shim:Lcom/facebook/marianatrench/integrationtests/Messenger;.<init>:(Lcom/facebook/marianatrench/integrationtests/Handler;Ljava/lang/Object;)V"
               ],
-              "distance" : 2,
+              "call_info" : "CallSite",
+              "distance" : 1,
               "kind" : "Sink",
               "local_features" : 
               {
@@ -617,7 +624,7 @@
           "kinds" : 
           [
             {
-              "distance" : 1,
+              "call_info" : "Origin",
               "kind" : "Source",
               "origins" : 
               [
@@ -674,7 +681,8 @@
               [
                 "via-shim:Lcom/facebook/marianatrench/integrationtests/ParameterMapping;.<init>:(Lcom/facebook/marianatrench/integrationtests/Handler;Lcom/facebook/marianatrench/integrationtests/Handler;Ljava/lang/Object;Ljava/lang/Object;)V"
               ],
-              "distance" : 2,
+              "call_info" : "CallSite",
+              "distance" : 1,
               "kind" : "Sink",
               "local_features" : 
               {
@@ -709,7 +717,7 @@
           "kinds" : 
           [
             {
-              "distance" : 1,
+              "call_info" : "Origin",
               "kind" : "Source",
               "origins" : 
               [
@@ -766,7 +774,8 @@
               [
                 "via-shim:Lcom/facebook/marianatrench/integrationtests/ParameterMapping;.callStatic:(Ljava/lang/Object;)V"
               ],
-              "distance" : 2,
+              "call_info" : "CallSite",
+              "distance" : 1,
               "kind" : "Sink",
               "local_features" : 
               {
@@ -801,7 +810,7 @@
           "kinds" : 
           [
             {
-              "distance" : 1,
+              "call_info" : "Origin",
               "kind" : "Source",
               "origins" : 
               [
@@ -858,7 +867,8 @@
               [
                 "via-shim:Lcom/facebook/marianatrench/integrationtests/ParameterMapping;.defined:(Lcom/facebook/marianatrench/integrationtests/ShimTarget;Ljava/lang/Object;Ljava/lang/String;)V"
               ],
-              "distance" : 2,
+              "call_info" : "CallSite",
+              "distance" : 1,
               "kind" : "Sink",
               "local_features" : 
               {
@@ -893,7 +903,7 @@
           "kinds" : 
           [
             {
-              "distance" : 1,
+              "call_info" : "Origin",
               "kind" : "Source",
               "origins" : 
               [
@@ -950,7 +960,8 @@
               [
                 "via-shim:Lcom/facebook/marianatrench/integrationtests/ParameterMapping;.inferred:(Lcom/facebook/marianatrench/integrationtests/ShimTarget;Ljava/lang/Object;)V"
               ],
-              "distance" : 2,
+              "call_info" : "CallSite",
+              "distance" : 1,
               "kind" : "Sink",
               "local_features" : 
               {
@@ -985,7 +996,7 @@
           "kinds" : 
           [
             {
-              "distance" : 1,
+              "call_info" : "Origin",
               "kind" : "Source",
               "origins" : 
               [
@@ -1042,7 +1053,8 @@
               [
                 "via-shim:Lcom/facebook/marianatrench/integrationtests/ReflectionShims;.reflectWithArgument:(Ljava/lang/Class;Ljava/lang/Object;)V"
               ],
-              "distance" : 2,
+              "call_info" : "CallSite",
+              "distance" : 1,
               "kind" : "Sink",
               "local_features" : 
               {
@@ -1077,7 +1089,7 @@
           "kinds" : 
           [
             {
-              "distance" : 1,
+              "call_info" : "Origin",
               "kind" : "Source",
               "origins" : 
               [
@@ -1134,7 +1146,8 @@
               [
                 "via-shim:Lcom/facebook/marianatrench/integrationtests/ReflectionShims;.reflectWithArgument:(Ljava/lang/Class;Ljava/lang/Object;)V"
               ],
-              "distance" : 2,
+              "call_info" : "CallSite",
+              "distance" : 1,
               "kind" : "Sink",
               "local_features" : 
               {
@@ -1169,7 +1182,7 @@
           "kinds" : 
           [
             {
-              "distance" : 1,
+              "call_info" : "Origin",
               "kind" : "Source",
               "origins" : 
               [
@@ -1218,7 +1231,7 @@
           "kinds" : 
           [
             {
-              "distance" : 1,
+              "call_info" : "Origin",
               "kind" : "Sink",
               "origins" : 
               [
@@ -1246,7 +1259,7 @@
           "kinds" : 
           [
             {
-              "distance" : 1,
+              "call_info" : "Origin",
               "kind" : "Source",
               "origins" : 
               [
@@ -1295,7 +1308,8 @@
           "kinds" : 
           [
             {
-              "distance" : 2,
+              "call_info" : "CallSite",
+              "distance" : 1,
               "kind" : "Sink",
               "origins" : 
               [
@@ -1323,7 +1337,7 @@
           "kinds" : 
           [
             {
-              "distance" : 1,
+              "call_info" : "Origin",
               "kind" : "Source",
               "origins" : 
               [
@@ -1956,7 +1970,7 @@
           "kinds" : 
           [
             {
-              "distance" : 1,
+              "call_info" : "Origin",
               "kind" : "Sink",
               "origins" : 
               [
@@ -1999,7 +2013,8 @@
           "kinds" : 
           [
             {
-              "distance" : 2,
+              "call_info" : "CallSite",
+              "distance" : 1,
               "kind" : "Sink",
               "origins" : 
               [
@@ -2027,7 +2042,8 @@
           "kinds" : 
           [
             {
-              "distance" : 2,
+              "call_info" : "CallSite",
+              "distance" : 1,
               "kind" : "Sink",
               "origins" : 
               [
@@ -2077,7 +2093,7 @@
           "kinds" : 
           [
             {
-              "distance" : 1,
+              "call_info" : "Origin",
               "kind" : "Sink",
               "origins" : 
               [
@@ -2119,7 +2135,7 @@
           "kinds" : 
           [
             {
-              "distance" : 1,
+              "call_info" : "Origin",
               "kind" : "Sink",
               "origins" : 
               [
@@ -2224,7 +2240,7 @@
           "kinds" : 
           [
             {
-              "distance" : 1,
+              "call_info" : "Origin",
               "kind" : "Sink",
               "origins" : 
               [
@@ -2292,6 +2308,7 @@
           "kinds" : 
           [
             {
+              "call_info" : "Declaration",
               "kind" : "Sink",
               "origins" : 
               [
@@ -2445,7 +2462,7 @@
           "kinds" : 
           [
             {
-              "distance" : 1,
+              "call_info" : "Origin",
               "kind" : "Sink",
               "origins" : 
               [
@@ -2476,7 +2493,7 @@
           "kinds" : 
           [
             {
-              "distance" : 1,
+              "call_info" : "Origin",
               "kind" : "Sink",
               "origins" : 
               [
@@ -2518,7 +2535,7 @@
           "kinds" : 
           [
             {
-              "distance" : 1,
+              "call_info" : "Origin",
               "kind" : "Sink",
               "origins" : 
               [

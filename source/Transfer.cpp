@@ -852,7 +852,7 @@ void check_flows_to_array_allocation(
   auto array_allocation_sink = Taint{TaintConfig(
       /* kind */ context->artificial_methods.array_allocation_kind(),
       /* callee_port */ AccessPath(Root(Root::Kind::Argument, 0)),
-      /* callee */ array_allocation_method,
+      /* callee */ nullptr,
       /* field_callee */ nullptr,
       /* call_position */ position,
       /* distance */ 1,
@@ -866,7 +866,8 @@ void check_flows_to_array_allocation(
       /* canonical_names */ {},
       /* input_paths */ {},
       /* output_paths */ {},
-      /* local_positions */ {})};
+      /* local_positions */ {},
+      /* call_info */ CallInfo::Origin)};
   auto instruction_sources = instruction->srcs_vec();
   auto array_allocation_index = context->call_graph.array_allocation_index(
       context->method(), instruction);

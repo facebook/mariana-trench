@@ -10,6 +10,7 @@
           "kinds" : 
           [
             {
+              "call_info" : "Declaration",
               "kind" : "Source",
               "origins" : 
               [
@@ -39,6 +40,7 @@
           "kinds" : 
           [
             {
+              "call_info" : "Declaration",
               "kind" : "Source",
               "origins" : 
               [
@@ -140,16 +142,14 @@
             "port" : "Argument(0)",
             "position" : 
             {
-              "end" : 0,
               "line" : 18,
-              "path" : "ArrayAllocation.java",
-              "start" : 0
-            },
-            "resolves_to" : "Lcom/mariana_trench/artificial/ArrayAllocation;.allocateArray:(I)V"
+              "path" : "ArrayAllocation.java"
+            }
           },
           "kinds" : 
           [
             {
+              "call_info" : "Origin",
               "distance" : 1,
               "kind" : "ArrayAllocation",
               "origins" : 
@@ -182,7 +182,7 @@
               [
                 "via-cast:Ljava/lang/Integer;"
               ],
-              "distance" : 1,
+              "call_info" : "Origin",
               "kind" : "Source",
               "local_features" : 
               {
@@ -229,16 +229,14 @@
             "port" : "Argument(0)",
             "position" : 
             {
-              "end" : 0,
               "line" : 22,
-              "path" : "ArrayAllocation.java",
-              "start" : 0
-            },
-            "resolves_to" : "Lcom/mariana_trench/artificial/ArrayAllocation;.allocateArray:(I)V"
+              "path" : "ArrayAllocation.java"
+            }
           },
           "kinds" : 
           [
             {
+              "call_info" : "Origin",
               "distance" : 1,
               "kind" : "ArrayAllocation",
               "origins" : 
@@ -271,7 +269,7 @@
               [
                 "via-cast:Ljava/lang/Integer;"
               ],
-              "distance" : 1,
+              "call_info" : "Origin",
               "kind" : "Source",
               "local_features" : 
               {
@@ -318,16 +316,14 @@
             "port" : "Argument(0)",
             "position" : 
             {
-              "end" : 0,
               "line" : 24,
-              "path" : "ArrayAllocation.java",
-              "start" : 0
-            },
-            "resolves_to" : "Lcom/mariana_trench/artificial/ArrayAllocation;.allocateArray:(I)V"
+              "path" : "ArrayAllocation.java"
+            }
           },
           "kinds" : 
           [
             {
+              "call_info" : "Origin",
               "distance" : 1,
               "kind" : "ArrayAllocation",
               "origins" : 
@@ -360,7 +356,7 @@
               [
                 "via-cast:Ljava/lang/Integer;"
               ],
-              "distance" : 1,
+              "call_info" : "Origin",
               "kind" : "Source",
               "local_features" : 
               {
@@ -432,6 +428,7 @@
               [
                 "via-numerical-operator"
               ],
+              "call_info" : "CallSite",
               "distance" : 2,
               "kind" : "ArrayAllocation",
               "origins" : 
@@ -460,7 +457,7 @@
           "kinds" : 
           [
             {
-              "distance" : 1,
+              "call_info" : "Origin",
               "kind" : "Source",
               "origins" : 
               [
@@ -499,16 +496,14 @@
             "port" : "Argument(0)",
             "position" : 
             {
-              "end" : 0,
               "line" : 13,
-              "path" : "ArrayAllocation.java",
-              "start" : 0
-            },
-            "resolves_to" : "Lcom/mariana_trench/artificial/ArrayAllocation;.allocateArray:(I)V"
+              "path" : "ArrayAllocation.java"
+            }
           },
           "kinds" : 
           [
             {
+              "call_info" : "Origin",
               "distance" : 1,
               "kind" : "ArrayAllocation",
               "origins" : 
@@ -537,7 +532,7 @@
           "kinds" : 
           [
             {
-              "distance" : 1,
+              "call_info" : "Origin",
               "kind" : "Source",
               "origins" : 
               [
@@ -576,16 +571,14 @@
             "port" : "Argument(0)",
             "position" : 
             {
-              "end" : 0,
               "line" : 30,
-              "path" : "ArrayAllocation.java",
-              "start" : 0
-            },
-            "resolves_to" : "Lcom/mariana_trench/artificial/ArrayAllocation;.allocateArray:(I)V"
+              "path" : "ArrayAllocation.java"
+            }
           },
           "kinds" : 
           [
             {
+              "call_info" : "Origin",
               "distance" : 1,
               "kind" : "ArrayAllocation",
               "origins" : 
@@ -614,7 +607,7 @@
           "kinds" : 
           [
             {
-              "distance" : 1,
+              "call_info" : "Origin",
               "kind" : "Source",
               "origins" : 
               [
@@ -653,16 +646,14 @@
             "port" : "Argument(0)",
             "position" : 
             {
-              "end" : 0,
               "line" : 36,
-              "path" : "ArrayAllocation.java",
-              "start" : 0
-            },
-            "resolves_to" : "Lcom/mariana_trench/artificial/ArrayAllocation;.allocateArray:(I)V"
+              "path" : "ArrayAllocation.java"
+            }
           },
           "kinds" : 
           [
             {
+              "call_info" : "Origin",
               "distance" : 1,
               "kind" : "ArrayAllocation",
               "origins" : 
@@ -691,7 +682,7 @@
           "kinds" : 
           [
             {
-              "distance" : 1,
+              "call_info" : "Origin",
               "kind" : "Source",
               "origins" : 
               [
@@ -730,16 +721,14 @@
             "port" : "Argument(0)",
             "position" : 
             {
-              "end" : 0,
               "line" : 42,
-              "path" : "ArrayAllocation.java",
-              "start" : 0
-            },
-            "resolves_to" : "Lcom/mariana_trench/artificial/ArrayAllocation;.allocateArray:(I)V"
+              "path" : "ArrayAllocation.java"
+            }
           },
           "kinds" : 
           [
             {
+              "call_info" : "Origin",
               "distance" : 1,
               "kind" : "ArrayAllocation",
               "origins" : 
@@ -768,7 +757,7 @@
           "kinds" : 
           [
             {
-              "distance" : 1,
+              "call_info" : "Origin",
               "kind" : "Source",
               "origins" : 
               [
@@ -807,16 +796,14 @@
             "port" : "Argument(0)",
             "position" : 
             {
-              "end" : 0,
               "line" : 49,
-              "path" : "ArrayAllocation.java",
-              "start" : 0
-            },
-            "resolves_to" : "Lcom/mariana_trench/artificial/ArrayAllocation;.allocateArray:(I)V"
+              "path" : "ArrayAllocation.java"
+            }
           },
           "kinds" : 
           [
             {
+              "call_info" : "Origin",
               "distance" : 1,
               "kind" : "ArrayAllocation",
               "origins" : 
@@ -845,7 +832,7 @@
           "kinds" : 
           [
             {
-              "distance" : 1,
+              "call_info" : "Origin",
               "kind" : "Source",
               "origins" : 
               [
@@ -884,16 +871,14 @@
             "port" : "Argument(0)",
             "position" : 
             {
-              "end" : 0,
               "line" : 55,
-              "path" : "ArrayAllocation.java",
-              "start" : 0
-            },
-            "resolves_to" : "Lcom/mariana_trench/artificial/ArrayAllocation;.allocateArray:(I)V"
+              "path" : "ArrayAllocation.java"
+            }
           },
           "kinds" : 
           [
             {
+              "call_info" : "Origin",
               "distance" : 1,
               "kind" : "ArrayAllocation",
               "origins" : 
@@ -922,7 +907,7 @@
           "kinds" : 
           [
             {
-              "distance" : 1,
+              "call_info" : "Origin",
               "kind" : "Source",
               "origins" : 
               [
@@ -1522,12 +1507,9 @@
             "port" : "Argument(0)",
             "position" : 
             {
-              "end" : 0,
               "line" : 64,
-              "path" : "ArrayAllocation.java",
-              "start" : 0
-            },
-            "resolves_to" : "Lcom/mariana_trench/artificial/ArrayAllocation;.allocateArray:(I)V"
+              "path" : "ArrayAllocation.java"
+            }
           },
           "kinds" : 
           [
@@ -1536,6 +1518,7 @@
               [
                 "via-numerical-operator"
               ],
+              "call_info" : "Origin",
               "distance" : 1,
               "kind" : "ArrayAllocation",
               "local_features" : 
@@ -1548,9 +1531,7 @@
               "local_positions" : 
               [
                 {
-                  "end" : 0,
-                  "line" : 64,
-                  "start" : 0
+                  "line" : 64
                 }
               ],
               "origins" : 
@@ -1686,6 +1667,7 @@
           "kinds" : 
           [
             {
+              "call_info" : "Declaration",
               "kind" : "ArrayAllocation",
               "origins" : 
               [

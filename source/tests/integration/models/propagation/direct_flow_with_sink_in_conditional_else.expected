@@ -33,7 +33,7 @@
               "kinds" :
               [
                 {
-                  "distance" : 1,
+                  "call_info" : "Origin",
                   "kind" : "TestSink",
                   "origins" :
                   [
@@ -59,7 +59,7 @@
               "kinds" :
               [
                 {
-                  "distance" : 1,
+                  "call_info" : "Origin",
                   "kind" : "TestSource",
                   "origins" :
                   [

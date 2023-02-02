@@ -14,6 +14,7 @@
           "kinds" : 
           [
             {
+              "call_info" : "Origin",
               "canonical_names" : 
               [
                 {
@@ -59,6 +60,7 @@
           "kinds" : 
           [
             {
+              "call_info" : "CallSite",
               "distance" : 1,
               "kind" : "Source",
               "origins" : 
@@ -168,7 +170,7 @@
           "kinds" : 
           [
             {
-              "distance" : 1,
+              "call_info" : "Origin",
               "kind" : "Sink",
               "origins" : 
               [
@@ -193,6 +195,7 @@
           "kinds" : 
           [
             {
+              "call_info" : "Origin",
               "canonical_names" : 
               [
                 {
@@ -225,6 +228,7 @@
           "kinds" : 
           [
             {
+              "call_info" : "Origin",
               "canonical_names" : 
               [
                 {
@@ -269,7 +273,7 @@
           "kinds" : 
           [
             {
-              "distance" : 1,
+              "call_info" : "Origin",
               "kind" : "Sink",
               "origins" : 
               [
@@ -867,6 +871,7 @@
           "kinds" : 
           [
             {
+              "call_info" : "Declaration",
               "kind" : "Sink",
               "origins" : 
               [

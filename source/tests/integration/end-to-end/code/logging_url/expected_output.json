@@ -10,6 +10,7 @@
           "kinds" : 
           [
             {
+              "call_info" : "Declaration",
               "kind" : "ExternalUserInput",
               "origins" : 
               [
@@ -66,6 +67,7 @@
           "kinds" : 
           [
             {
+              "call_info" : "Declaration",
               "kind" : "Logging",
               "origins" : 
               [
@@ -138,7 +140,7 @@
           "kinds" : 
           [
             {
-              "distance" : 1,
+              "call_info" : "Origin",
               "kind" : "Logging",
               "origins" : 
               [
@@ -166,7 +168,7 @@
           "kinds" : 
           [
             {
-              "distance" : 1,
+              "call_info" : "Origin",
               "kind" : "ExternalUserInput",
               "local_positions" : 
               [
@@ -228,7 +230,8 @@
           "kinds" : 
           [
             {
-              "distance" : 3,
+              "call_info" : "CallSite",
+              "distance" : 2,
               "kind" : "Logging",
               "origins" : 
               [
@@ -256,7 +259,7 @@
           "kinds" : 
           [
             {
-              "distance" : 1,
+              "call_info" : "Origin",
               "kind" : "ExternalUserInput",
               "origins" : 
               [
@@ -985,7 +988,8 @@
           "kinds" : 
           [
             {
-              "distance" : 2,
+              "call_info" : "CallSite",
+              "distance" : 1,
               "kind" : "Logging",
               "local_positions" : 
               [
@@ -1018,7 +1022,8 @@
           "kinds" : 
           [
             {
-              "distance" : 2,
+              "call_info" : "CallSite",
+              "distance" : 1,
               "kind" : "Logging",
               "local_positions" : 
               [
@@ -1068,7 +1073,7 @@
           "kinds" : 
           [
             {
-              "distance" : 1,
+              "call_info" : "Origin",
               "kind" : "Logging",
               "origins" : 
               [
@@ -1099,7 +1104,7 @@
           "kinds" : 
           [
             {
-              "distance" : 1,
+              "call_info" : "Origin",
               "kind" : "Logging",
               "origins" : 
               [

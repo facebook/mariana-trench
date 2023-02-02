@@ -10,6 +10,7 @@
           "kinds" : 
           [
             {
+              "call_info" : "Declaration",
               "kind" : "ExternalUserInput",
               "origins" : 
               [
@@ -117,7 +118,8 @@
           "kinds" : 
           [
             {
-              "distance" : 5,
+              "call_info" : "CallSite",
+              "distance" : 4,
               "kind" : "LaunchingComponent",
               "origins" : 
               [
@@ -148,7 +150,7 @@
           "kinds" : 
           [
             {
-              "distance" : 1,
+              "call_info" : "Origin",
               "kind" : "ExternalUserInput",
               "origins" : 
               [
@@ -211,6 +213,7 @@
           "kinds" : 
           [
             {
+              "call_info" : "Declaration",
               "kind" : "LaunchingComponent",
               "origins" : 
               [
@@ -764,6 +767,7 @@
           "kinds" : 
           [
             {
+              "call_info" : "Declaration",
               "kind" : "LaunchingComponent",
               "origins" : 
               [
@@ -792,6 +796,7 @@
           "kinds" : 
           [
             {
+              "call_info" : "Declaration",
               "kind" : "LaunchingComponent",
               "origins" : 
               [
@@ -820,6 +825,7 @@
           "kinds" : 
           [
             {
+              "call_info" : "Declaration",
               "kind" : "LaunchingComponent",
               "origins" : 
               [
@@ -848,6 +854,7 @@
           "kinds" : 
           [
             {
+              "call_info" : "Declaration",
               "kind" : "LaunchingComponent",
               "origins" : 
               [
@@ -1005,7 +1012,8 @@
           "kinds" : 
           [
             {
-              "distance" : 3,
+              "call_info" : "CallSite",
+              "distance" : 2,
               "kind" : "LaunchingComponent",
               "origins" : 
               [
@@ -1033,7 +1041,8 @@
           "kinds" : 
           [
             {
-              "distance" : 3,
+              "call_info" : "CallSite",
+              "distance" : 2,
               "kind" : "LaunchingComponent",
               "origins" : 
               [
@@ -1076,7 +1085,8 @@
           "kinds" : 
           [
             {
-              "distance" : 5,
+              "call_info" : "CallSite",
+              "distance" : 4,
               "kind" : "LaunchingComponent",
               "origins" : 
               [
@@ -1121,7 +1131,8 @@
           "kinds" : 
           [
             {
-              "distance" : 5,
+              "call_info" : "CallSite",
+              "distance" : 4,
               "kind" : "LaunchingComponent",
               "origins" : 
               [
@@ -1166,7 +1177,8 @@
           "kinds" : 
           [
             {
-              "distance" : 4,
+              "call_info" : "CallSite",
+              "distance" : 3,
               "kind" : "LaunchingComponent",
               "local_positions" : 
               [
@@ -1208,7 +1220,8 @@
           "kinds" : 
           [
             {
-              "distance" : 4,
+              "call_info" : "CallSite",
+              "distance" : 3,
               "kind" : "LaunchingComponent",
               "local_positions" : 
               [
@@ -1269,7 +1282,8 @@
           "kinds" : 
           [
             {
-              "distance" : 6,
+              "call_info" : "CallSite",
+              "distance" : 5,
               "kind" : "LaunchingComponent",
               "local_positions" : 
               [
@@ -1310,7 +1324,8 @@
           "kinds" : 
           [
             {
-              "distance" : 4,
+              "call_info" : "CallSite",
+              "distance" : 3,
               "kind" : "LaunchingComponent",
               "local_positions" : 
               [
@@ -1373,7 +1388,8 @@
           "kinds" : 
           [
             {
-              "distance" : 2,
+              "call_info" : "CallSite",
+              "distance" : 1,
               "kind" : "LaunchingComponent",
               "origins" : 
               [
@@ -1399,7 +1415,8 @@
           "kinds" : 
           [
             {
-              "distance" : 2,
+              "call_info" : "CallSite",
+              "distance" : 1,
               "kind" : "LaunchingComponent",
               "origins" : 
               [
@@ -1442,7 +1459,7 @@
           "kinds" : 
           [
             {
-              "distance" : 1,
+              "call_info" : "Origin",
               "kind" : "LaunchingComponent",
               "origins" : 
               [
@@ -1467,7 +1484,7 @@
           "kinds" : 
           [
             {
-              "distance" : 1,
+              "call_info" : "Origin",
               "kind" : "LaunchingComponent",
               "origins" : 
               [
@@ -1509,7 +1526,7 @@
           "kinds" : 
           [
             {
-              "distance" : 1,
+              "call_info" : "Origin",
               "kind" : "LaunchingComponent",
               "origins" : 
               [
@@ -1534,7 +1551,7 @@
           "kinds" : 
           [
             {
-              "distance" : 1,
+              "call_info" : "Origin",
               "kind" : "LaunchingComponent",
               "origins" : 
               [

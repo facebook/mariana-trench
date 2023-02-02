@@ -20,7 +20,8 @@
           "kinds" : 
           [
             {
-              "distance" : 2,
+              "call_info" : "CallSite",
+              "distance" : 1,
               "kind" : "CallChainSink",
               "origins" : 
               [
@@ -60,7 +61,7 @@
           "kinds" : 
           [
             {
-              "distance" : 1,
+              "call_info" : "Origin",
               "kind" : "CallChainSink",
               "origins" : 
               [
@@ -100,7 +101,8 @@
           "kinds" : 
           [
             {
-              "distance" : 3,
+              "call_info" : "CallSite",
+              "distance" : 2,
               "kind" : "CallChainSink",
               "origins" : 
               [
@@ -122,6 +124,7 @@
           "kinds" : 
           [
             {
+              "call_info" : "Declaration",
               "kind" : "CallChainOrigin",
               "origins" : 
               [
@@ -162,7 +165,8 @@
           "kinds" : 
           [
             {
-              "distance" : 3,
+              "call_info" : "CallSite",
+              "distance" : 2,
               "kind" : "CallChainSink",
               "origins" : 
               [
@@ -186,6 +190,7 @@
           "kinds" : 
           [
             {
+              "call_info" : "Origin",
               "kind" : "CallChainOrigin",
               "origins" : 
               [
@@ -225,7 +230,8 @@
           "kinds" : 
           [
             {
-              "distance" : 4,
+              "call_info" : "CallSite",
+              "distance" : 3,
               "kind" : "CallChainSink",
               "origins" : 
               [
@@ -255,6 +261,7 @@
           "kinds" : 
           [
             {
+              "call_info" : "Declaration",
               "kind" : "CallChainSink",
               "origins" : 
               [

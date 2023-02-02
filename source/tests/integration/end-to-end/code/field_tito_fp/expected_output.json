@@ -27,7 +27,8 @@
                 "via-cast:Ljava/lang/String;",
                 "via-obscure"
               ],
-              "distance" : 2,
+              "call_info" : "CallSite",
+              "distance" : 1,
               "kind" : "Source",
               "local_features" : 
               {
@@ -82,7 +83,7 @@
           "kinds" : 
           [
             {
-              "distance" : 1,
+              "call_info" : "Origin",
               "kind" : "Sink",
               "origins" : 
               [
@@ -117,7 +118,8 @@
                 "via-obscure-taint-in-taint-out",
                 "via-propagation-broadening"
               ],
-              "distance" : 2,
+              "call_info" : "CallSite",
+              "distance" : 1,
               "kind" : "Source",
               "local_features" : 
               {
@@ -179,7 +181,7 @@
                 "via-obscure",
                 "via-obscure-taint-in-taint-out"
               ],
-              "distance" : 1,
+              "call_info" : "Origin",
               "kind" : "Sink",
               "local_features" : 
               {
@@ -235,7 +237,7 @@
               [
                 "via-cast:Ljava/lang/String;"
               ],
-              "distance" : 1,
+              "call_info" : "Origin",
               "kind" : "Source",
               "local_features" : 
               {
@@ -280,6 +282,7 @@
           "kinds" : 
           [
             {
+              "call_info" : "Declaration",
               "kind" : "Source",
               "origins" : 
               [
@@ -1006,6 +1009,7 @@
           "kinds" : 
           [
             {
+              "call_info" : "Declaration",
               "kind" : "Sink",
               "origins" : 
               [

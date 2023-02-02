@@ -65,7 +65,8 @@ class TaintConfig final {
       CanonicalNameSetAbstractDomain canonical_names,
       PathTreeDomain input_paths,
       PathTreeDomain output_paths,
-      LocalPositionSet local_positions)
+      LocalPositionSet local_positions,
+      CallInfo call_info)
       : kind_(kind),
         callee_port_(std::move(callee_port)),
         callee_(callee),
@@ -82,7 +83,8 @@ class TaintConfig final {
         canonical_names_(std::move(canonical_names)),
         input_paths_(std::move(input_paths)),
         output_paths_(std::move(output_paths)),
-        local_positions_(std::move(local_positions)) {
+        local_positions_(std::move(local_positions)),
+        call_info_(call_info) {
     mt_assert(kind_ != nullptr);
     mt_assert(distance_ >= 0);
     mt_assert(!(callee && field_callee));
@@ -126,7 +128,8 @@ class TaintConfig final {
         self.canonical_names_ == other.canonical_names_ &&
         self.input_paths_ == other.input_paths_ &&
         self.output_paths_ == other.output_paths_ &&
-        self.local_positions_ == other.local_positions_;
+        self.local_positions_ == other.local_positions_ &&
+        self.call_info_ == other.call_info_;
   }
 
   friend bool operator!=(const TaintConfig& self, const TaintConfig& other) {
@@ -201,6 +204,10 @@ class TaintConfig final {
     return local_positions_;
   }
 
+  CallInfo call_info() const {
+    return call_info_;
+  }
+
   bool is_artificial_source() const {
     return kind_ == Kinds::artificial_source();
   }
@@ -249,6 +256,7 @@ class TaintConfig final {
    * even if only some `TaintConfig`s contain it.
    */
   LocalPositionSet local_positions_;
+  CallInfo call_info_;
 };
 
 } // namespace marianatrench

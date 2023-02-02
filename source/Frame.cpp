@@ -53,7 +53,8 @@ bool Frame::leq(const Frame& other) const {
   } else {
     return kind_ == other.kind_ && callee_port_ == other.callee_port_ &&
         callee_ == other.callee_ && call_position_ == other.call_position_ &&
-        distance_ >= other.distance_ && origins_.leq(other.origins_) &&
+        call_info_ == other.call_info_ && distance_ >= other.distance_ &&
+        origins_.leq(other.origins_) &&
         field_origins_.leq(other.field_origins_) &&
         inferred_features_.leq(other.inferred_features_) &&
         locally_inferred_features_.leq(other.locally_inferred_features_) &&
@@ -72,8 +73,8 @@ bool Frame::equals(const Frame& other) const {
   } else {
     return kind_ == other.kind_ && callee_port_ == other.callee_port_ &&
         callee_ == other.callee_ && call_position_ == other.call_position_ &&
-        distance_ == other.distance_ && origins_ == other.origins_ &&
-        field_origins_ == other.field_origins_ &&
+        call_info_ == other.call_info_ && distance_ == other.distance_ &&
+        origins_ == other.origins_ && field_origins_ == other.field_origins_ &&
         inferred_features_ == other.inferred_features_ &&
         locally_inferred_features_ == other.locally_inferred_features_ &&
         user_features_ == other.user_features_ &&
@@ -95,6 +96,7 @@ void Frame::join_with(const Frame& other) {
     mt_assert(callee_ == other.callee_);
     mt_assert(call_position_ == other.call_position_);
     mt_assert(callee_port_ == other.callee_port_);
+    mt_assert(call_info_ == other.call_info_);
 
     distance_ = std::min(distance_, other.distance_);
     origins_.join_with(other.origins_);
@@ -193,6 +195,8 @@ Json::Value Frame::to_json(const LocalPositionSet& local_positions) const {
     value["canonical_names"] = canonical_names;
   }
 
+  value["call_info"] = Json::Value(show_call_info(call_info_));
+
   return value;
 }
 
@@ -213,6 +217,32 @@ std::size_t Frame::GroupHash::operator()(const Frame& frame) const {
   return seed;
 }
 
+const std::string show_call_info(CallInfo call_info) {
+  switch (call_info) {
+    case CallInfo::Declaration:
+      return "Declaration";
+    case CallInfo::Origin:
+      return "Origin";
+    case CallInfo::CallSite:
+      return "CallSite";
+    default:
+      mt_unreachable();
+  }
+}
+
+CallInfo propagate_call_info(CallInfo call_info) {
+  switch (call_info) {
+    case CallInfo::Declaration:
+      return CallInfo::Origin;
+    case CallInfo::Origin:
+      return CallInfo::CallSite;
+    case CallInfo::CallSite:
+      return CallInfo::CallSite;
+    default:
+      mt_unreachable();
+  }
+}
+
 std::ostream& operator<<(std::ostream& out, const Frame& frame) {
   out << "Frame(kind=`" << show(frame.kind_)
       << "`, callee_port=" << frame.callee_port_;
@@ -224,6 +254,7 @@ std::ostream& operator<<(std::ostream& out, const Frame& frame) {
   if (frame.call_position_ != nullptr) {
     out << ", call_position=" << show(frame.call_position_);
   }
+  out << ", call_info=" << show_call_info(frame.call_info_);
   if (frame.distance_ != 0) {
     out << ", distance=" << frame.distance_;
   }

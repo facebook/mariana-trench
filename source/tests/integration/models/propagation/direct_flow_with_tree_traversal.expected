@@ -26,7 +26,7 @@
               "kinds" :
               [
                 {
-                  "distance" : 1,
+                  "call_info" : "Origin",
                   "kind" : "TestSource",
                   "local_positions" :
                   [
@@ -71,7 +71,7 @@
               "kinds" :
               [
                 {
-                  "distance" : 1,
+                  "call_info" : "Origin",
                   "kind" : "TestSink",
                   "origins" :
                   [
@@ -97,7 +97,7 @@
               "kinds" :
               [
                 {
-                  "distance" : 1,
+                  "call_info" : "Origin",
                   "kind" : "TestSource",
                   "local_positions" :
                   [
@@ -143,7 +143,7 @@
               "kinds" :
               [
                 {
-                  "distance" : 1,
+                  "call_info" : "Origin",
                   "kind" : "TestSink",
                   "origins" :
                   [
@@ -173,7 +173,7 @@
                   [
                     "via-issue-broadening"
                   ],
-                  "distance" : 1,
+                  "call_info" : "Origin",
                   "kind" : "TestSource",
                   "local_features" :
                   {
@@ -224,7 +224,7 @@
               "kinds" :
               [
                 {
-                  "distance" : 1,
+                  "call_info" : "Origin",
                   "kind" : "TestSink",
                   "origins" :
                   [
@@ -253,7 +253,7 @@
               "kinds" :
               [
                 {
-                  "distance" : 1,
+                  "call_info" : "Origin",
                   "kind" : "TestSink",
                   "origins" :
                   [
@@ -282,7 +282,7 @@
               "kinds" :
               [
                 {
-                  "distance" : 1,
+                  "call_info" : "Origin",
                   "kind" : "TestSink",
                   "origins" :
                   [
@@ -311,7 +311,7 @@
               "kinds" :
               [
                 {
-                  "distance" : 1,
+                  "call_info" : "Origin",
                   "kind" : "TestSink",
                   "origins" :
                   [

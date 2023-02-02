@@ -10,6 +10,7 @@
           "kinds" : 
           [
             {
+              "call_info" : "Declaration",
               "kind" : "Source",
               "origins" : 
               [
@@ -121,7 +122,7 @@
           "kinds" : 
           [
             {
-              "distance" : 1,
+              "call_info" : "Origin",
               "kind" : "Sink",
               "origins" : 
               [
@@ -153,7 +154,7 @@
               [
                 "via-cast:Ljava/lang/String;"
               ],
-              "distance" : 1,
+              "call_info" : "Origin",
               "kind" : "Source",
               "local_features" : 
               {
@@ -202,7 +203,7 @@
           "kinds" : 
           [
             {
-              "distance" : 1,
+              "call_info" : "Origin",
               "kind" : "Sink",
               "origins" : 
               [
@@ -234,7 +235,7 @@
               [
                 "via-cast:Ljava/lang/String;"
               ],
-              "distance" : 1,
+              "call_info" : "Origin",
               "kind" : "Source",
               "local_features" : 
               {
@@ -839,6 +840,7 @@
           "kinds" : 
           [
             {
+              "call_info" : "Declaration",
               "kind" : "Sink",
               "origins" : 
               [
@@ -874,6 +876,7 @@
           "kinds" : 
           [
             {
+              "call_info" : "Declaration",
               "kind" : "Sink",
               "origins" : 
               [

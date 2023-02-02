@@ -229,7 +229,7 @@
               [
                 "via-attach-sinks"
               ],
-              "distance" : 1,
+              "call_info" : "Origin",
               "kind" : "Sink",
               "local_features" : 
               {
@@ -284,7 +284,7 @@
               [
                 "via-attach-sources-return"
               ],
-              "distance" : 1,
+              "call_info" : "Origin",
               "kind" : "Source",
               "local_features" : 
               {
@@ -345,7 +345,7 @@
               [
                 "via-attach-sources-this"
               ],
-              "distance" : 1,
+              "call_info" : "Origin",
               "kind" : "Source",
               "local_features" : 
               {
@@ -388,6 +388,7 @@
           "kinds" : 
           [
             {
+              "call_info" : "Declaration",
               "kind" : "Source",
               "origins" : 
               [
@@ -1058,6 +1059,7 @@
           "kinds" : 
           [
             {
+              "call_info" : "Declaration",
               "kind" : "Sink",
               "origins" : 
               [

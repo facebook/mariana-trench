@@ -76,6 +76,7 @@ struct FrameProperties {
   PathTreeDomain input_paths = {};
   PathTreeDomain output_paths = {};
   LocalPositionSet local_positions = {};
+  CallInfo call_info = CallInfo::Declaration;
 };
 
 Frame make_taint_frame(const Kind* kind, const FrameProperties& properties);

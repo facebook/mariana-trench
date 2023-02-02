@@ -10,6 +10,7 @@
           "kinds" : 
           [
             {
+              "call_info" : "Declaration",
               "kind" : "Source",
               "origins" : 
               [
@@ -38,6 +39,7 @@
           "kinds" : 
           [
             {
+              "call_info" : "Declaration",
               "kind" : "Source",
               "origins" : 
               [
@@ -71,6 +73,7 @@
           "kinds" : 
           [
             {
+              "call_info" : "Declaration",
               "kind" : "Source",
               "origins" : 
               [
@@ -104,6 +107,7 @@
           "kinds" : 
           [
             {
+              "call_info" : "Declaration",
               "kind" : "Source",
               "origins" : 
               [
@@ -252,7 +256,7 @@
           "kinds" : 
           [
             {
-              "distance" : 1,
+              "call_info" : "Origin",
               "kind" : "Sink",
               "origins" : 
               [
@@ -284,7 +288,7 @@
               [
                 "via-value:42"
               ],
-              "distance" : 1,
+              "call_info" : "Origin",
               "kind" : "Source",
               "origins" : 
               [
@@ -337,7 +341,7 @@
           "kinds" : 
           [
             {
-              "distance" : 1,
+              "call_info" : "Origin",
               "kind" : "Sink",
               "origins" : 
               [
@@ -369,7 +373,7 @@
               [
                 "via-value:42"
               ],
-              "distance" : 1,
+              "call_info" : "Origin",
               "kind" : "Source",
               "origins" : 
               [
@@ -426,7 +430,7 @@
               [
                 "via-value:42"
               ],
-              "distance" : 1,
+              "call_info" : "Origin",
               "kind" : "Sink",
               "origins" : 
               [
@@ -454,7 +458,7 @@
           "kinds" : 
           [
             {
-              "distance" : 1,
+              "call_info" : "Origin",
               "kind" : "Source",
               "origins" : 
               [
@@ -511,7 +515,7 @@
               [
                 "via-value:42"
               ],
-              "distance" : 1,
+              "call_info" : "Origin",
               "kind" : "Sink",
               "origins" : 
               [
@@ -539,7 +543,7 @@
           "kinds" : 
           [
             {
-              "distance" : 1,
+              "call_info" : "Origin",
               "kind" : "Source",
               "origins" : 
               [
@@ -592,7 +596,7 @@
           "kinds" : 
           [
             {
-              "distance" : 1,
+              "call_info" : "Origin",
               "kind" : "Sink",
               "origins" : 
               [
@@ -624,7 +628,7 @@
               [
                 "via-value:Bar"
               ],
-              "distance" : 1,
+              "call_info" : "Origin",
               "kind" : "Source",
               "origins" : 
               [
@@ -681,7 +685,7 @@
               [
                 "via-value:Bar"
               ],
-              "distance" : 1,
+              "call_info" : "Origin",
               "kind" : "Sink",
               "origins" : 
               [
@@ -709,7 +713,7 @@
           "kinds" : 
           [
             {
-              "distance" : 1,
+              "call_info" : "Origin",
               "kind" : "Source",
               "origins" : 
               [
@@ -767,7 +771,7 @@
               [
                 "via-value:Foo"
               ],
-              "distance" : 1,
+              "call_info" : "Origin",
               "kind" : "Sink",
               "origins" : 
               [
@@ -799,7 +803,7 @@
               [
                 "via-value:Bar"
               ],
-              "distance" : 1,
+              "call_info" : "Origin",
               "kind" : "Source",
               "origins" : 
               [
@@ -852,7 +856,7 @@
           "kinds" : 
           [
             {
-              "distance" : 1,
+              "call_info" : "Origin",
               "kind" : "Sink",
               "origins" : 
               [
@@ -884,7 +888,7 @@
               [
                 "via-value:Foo"
               ],
-              "distance" : 1,
+              "call_info" : "Origin",
               "kind" : "Source",
               "origins" : 
               [
@@ -941,7 +945,7 @@
               [
                 "via-value:Foo"
               ],
-              "distance" : 1,
+              "call_info" : "Origin",
               "kind" : "Sink",
               "origins" : 
               [
@@ -969,7 +973,7 @@
           "kinds" : 
           [
             {
-              "distance" : 1,
+              "call_info" : "Origin",
               "kind" : "Source",
               "origins" : 
               [
@@ -1027,7 +1031,7 @@
               [
                 "via-value:tito"
               ],
-              "distance" : 1,
+              "call_info" : "Origin",
               "kind" : "Sink",
               "origins" : 
               [
@@ -1059,7 +1063,7 @@
               [
                 "via-value:unknown"
               ],
-              "distance" : 1,
+              "call_info" : "Origin",
               "kind" : "Source",
               "origins" : 
               [
@@ -1116,7 +1120,7 @@
               [
                 "via-value:unknown"
               ],
-              "distance" : 1,
+              "call_info" : "Origin",
               "kind" : "Sink",
               "origins" : 
               [
@@ -1148,7 +1152,7 @@
               [
                 "via-value:unknown"
               ],
-              "distance" : 1,
+              "call_info" : "Origin",
               "kind" : "Source",
               "origins" : 
               [
@@ -1197,7 +1201,7 @@
           "kinds" : 
           [
             {
-              "distance" : 1,
+              "call_info" : "Origin",
               "kind" : "Sink",
               "origins" : 
               [
@@ -1225,7 +1229,7 @@
           "kinds" : 
           [
             {
-              "distance" : 1,
+              "call_info" : "Origin",
               "kind" : "Source",
               "origins" : 
               [
@@ -1829,6 +1833,7 @@
           "kinds" : 
           [
             {
+              "call_info" : "Declaration",
               "kind" : "Sink",
               "origins" : 
               [
@@ -1874,6 +1879,7 @@
           "kinds" : 
           [
             {
+              "call_info" : "Declaration",
               "kind" : "Sink",
               "origins" : 
               [
@@ -1907,6 +1913,7 @@
           "kinds" : 
           [
             {
+              "call_info" : "Declaration",
               "kind" : "Sink",
               "origins" : 
               [
@@ -1940,6 +1947,7 @@
           "kinds" : 
           [
             {
+              "call_info" : "Declaration",
               "kind" : "Sink",
               "origins" : 
               [

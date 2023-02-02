@@ -190,7 +190,8 @@ TEST_F(FrameTest, FrameLeq) {
                       .callee = one,
                       .call_position = context.positions->unknown(),
                       .distance = 1,
-                      .origins = MethodSet{one}})
+                      .origins = MethodSet{one},
+                      .call_info = CallInfo::CallSite})
                   .leq(test::make_taint_frame(
                       /* kind */ context.kinds->get("TestSource"),
                       test::FrameProperties{
@@ -198,7 +199,8 @@ TEST_F(FrameTest, FrameLeq) {
                           .callee = one,
                           .call_position = context.positions->unknown(),
                           .distance = 1,
-                          .origins = MethodSet{one}})));
+                          .origins = MethodSet{one},
+                          .call_info = CallInfo::CallSite})));
   EXPECT_FALSE(
       test::make_taint_frame(
           /* kind */ context.kinds->get("TestSource"),
@@ -207,7 +209,8 @@ TEST_F(FrameTest, FrameLeq) {
               .callee = one,
               .call_position = context.positions->unknown(),
               .distance = 1,
-              .origins = MethodSet{one}})
+              .origins = MethodSet{one},
+              .call_info = CallInfo::CallSite})
           .leq(test::make_taint_frame(
               /* kind */ context.kinds->get("TestSource"),
               test::FrameProperties{
@@ -215,7 +218,8 @@ TEST_F(FrameTest, FrameLeq) {
                   .callee = one,
                   .call_position = context.positions->unknown(),
                   .distance = 1,
-                  .origins = MethodSet{one}})));
+                  .origins = MethodSet{one},
+                  .call_info = CallInfo::CallSite})));
   EXPECT_FALSE(test::make_taint_frame(
                    /* kind */ context.kinds->get("TestSource"),
                    test::FrameProperties{
@@ -223,7 +227,8 @@ TEST_F(FrameTest, FrameLeq) {
                        .callee = one,
                        .call_position = context.positions->unknown(),
                        .distance = 1,
-                       .origins = MethodSet{one}})
+                       .origins = MethodSet{one},
+                       .call_info = CallInfo::CallSite})
                    .leq(test::make_taint_frame(
                        /* kind */ context.kinds->get("TestSource"),
                        test::FrameProperties{
@@ -231,7 +236,8 @@ TEST_F(FrameTest, FrameLeq) {
                            .callee = two,
                            .call_position = context.positions->unknown(),
                            .distance = 1,
-                           .origins = MethodSet{one}})));
+                           .origins = MethodSet{one},
+                           .call_info = CallInfo::CallSite})));
   EXPECT_FALSE(
       test::make_taint_frame(
           /* kind */ context.kinds->get("TestSource"),
@@ -240,7 +246,8 @@ TEST_F(FrameTest, FrameLeq) {
               .callee = one,
               .call_position = context.positions->unknown(),
               .distance = 1,
-              .origins = MethodSet{one}})
+              .origins = MethodSet{one},
+              .call_info = CallInfo::CallSite})
           .leq(test::make_taint_frame(
               /* kind */ context.kinds->get("TestSource"),
               test::FrameProperties{
@@ -248,7 +255,8 @@ TEST_F(FrameTest, FrameLeq) {
                   .callee = one,
                   .call_position = context.positions->get("Test.java", 1),
                   .distance = 1,
-                  .origins = MethodSet{one}})));
+                  .origins = MethodSet{one},
+                  .call_info = CallInfo::CallSite})));
 
   // For artificial sources callee ports can only contain roots.
   EXPECT_FALSE(
@@ -355,14 +363,18 @@ TEST_F(FrameTest, FrameJoin) {
               .callee_port = AccessPath(Root(Root::Kind::Return)),
               .callee = one,
               .call_position = context.positions->unknown(),
-              .distance = 1})
+              .distance = 1,
+              .call_info = CallInfo::CallSite,
+          })
           .join_with(test::make_taint_frame(
               /* kind */ context.kinds->get("TestSource"),
               test::FrameProperties{
                   .callee_port = AccessPath(Root(Root::Kind::Return)),
                   .callee = two,
                   .call_position = context.positions->unknown(),
-                  .distance = 1})),
+                  .distance = 1,
+                  .call_info = CallInfo::CallSite,
+              })),
       std::exception);
   EXPECT_THROW(
       test::make_taint_frame(
@@ -371,14 +383,18 @@ TEST_F(FrameTest, FrameJoin) {
               .callee_port = AccessPath(Root(Root::Kind::Return)),
               .callee = one,
               .call_position = context.positions->unknown(),
-              .distance = 1})
+              .distance = 1,
+              .call_info = CallInfo::CallSite,
+          })
           .join_with(test::make_taint_frame(
               /* kind */ context.kinds->get("TestSource"),
               test::FrameProperties{
                   .callee_port = AccessPath(Root(Root::Kind::Return)),
                   .callee = one,
                   .call_position = context.positions->get("Test.java", 1),
-                  .distance = 1})),
+                  .distance = 1,
+                  .call_info = CallInfo::CallSite,
+              })),
       std::exception);
 
   // Minimum distance.
@@ -389,21 +405,27 @@ TEST_F(FrameTest, FrameJoin) {
               .callee_port = AccessPath(Root(Root::Kind::Return)),
               .callee = one,
               .call_position = context.positions->unknown(),
-              .distance = 2})
+              .distance = 2,
+              .call_info = CallInfo::CallSite,
+          })
           .join(test::make_taint_frame(
               /* kind */ context.kinds->get("TestSource"),
               test::FrameProperties{
                   .callee_port = AccessPath(Root(Root::Kind::Return)),
                   .callee = one,
                   .call_position = context.positions->unknown(),
-                  .distance = 1})),
+                  .distance = 1,
+                  .call_info = CallInfo::CallSite,
+              })),
       test::make_taint_frame(
           /* kind */ context.kinds->get("TestSource"),
           test::FrameProperties{
               .callee_port = AccessPath(Root(Root::Kind::Return)),
               .callee = one,
               .call_position = context.positions->unknown(),
-              .distance = 1}));
+              .distance = 1,
+              .call_info = CallInfo::CallSite,
+          }));
 
   // Join origins.
   EXPECT_EQ(
@@ -414,7 +436,8 @@ TEST_F(FrameTest, FrameJoin) {
               .callee = one,
               .call_position = context.positions->unknown(),
               .distance = 1,
-              .origins = MethodSet{one}})
+              .origins = MethodSet{one},
+              .call_info = CallInfo::CallSite})
           .join(test::make_taint_frame(
               /* kind */ context.kinds->get("TestSource"),
               test::FrameProperties{
@@ -422,7 +445,8 @@ TEST_F(FrameTest, FrameJoin) {
                   .callee = one,
                   .call_position = context.positions->unknown(),
                   .distance = 1,
-                  .origins = MethodSet{two}})),
+                  .origins = MethodSet{two},
+                  .call_info = CallInfo::CallSite})),
       test::make_taint_frame(
           /* kind */ context.kinds->get("TestSource"),
           test::FrameProperties{
@@ -430,7 +454,8 @@ TEST_F(FrameTest, FrameJoin) {
               .callee = one,
               .call_position = context.positions->unknown(),
               .distance = 1,
-              .origins = MethodSet{one, two}}));
+              .origins = MethodSet{one, two},
+              .call_info = CallInfo::CallSite}));
 
   // Join field origins
   EXPECT_EQ(
@@ -441,7 +466,8 @@ TEST_F(FrameTest, FrameJoin) {
               .callee = one,
               .call_position = context.positions->unknown(),
               .distance = 1,
-              .field_origins = FieldSet{field_one}})
+              .field_origins = FieldSet{field_one},
+              .call_info = CallInfo::CallSite})
           .join(test::make_taint_frame(
               /* kind */ context.kinds->get("TestSource"),
               test::FrameProperties{
@@ -449,7 +475,8 @@ TEST_F(FrameTest, FrameJoin) {
                   .callee = one,
                   .call_position = context.positions->unknown(),
                   .distance = 1,
-                  .field_origins = FieldSet{field_two}})),
+                  .field_origins = FieldSet{field_two},
+                  .call_info = CallInfo::CallSite})),
       test::make_taint_frame(
           /* kind */ context.kinds->get("TestSource"),
           test::FrameProperties{
@@ -457,7 +484,8 @@ TEST_F(FrameTest, FrameJoin) {
               .callee = one,
               .call_position = context.positions->unknown(),
               .distance = 1,
-              .field_origins = FieldSet{field_one, field_two}}));
+              .field_origins = FieldSet{field_one, field_two},
+              .call_info = CallInfo::CallSite}));
 
   // Join inferred features.
   EXPECT_EQ(
@@ -469,7 +497,8 @@ TEST_F(FrameTest, FrameJoin) {
               .call_position = context.positions->unknown(),
               .distance = 2,
               .inferred_features =
-                  FeatureMayAlwaysSet{context.features->get("FeatureOne")}})
+                  FeatureMayAlwaysSet{context.features->get("FeatureOne")},
+              .call_info = CallInfo::CallSite})
           .join(test::make_taint_frame(
               /* kind */ context.kinds->get("TestSource"),
               test::FrameProperties{
@@ -478,8 +507,8 @@ TEST_F(FrameTest, FrameJoin) {
                   .call_position = context.positions->unknown(),
                   .distance = 2,
                   .inferred_features =
-                      FeatureMayAlwaysSet{
-                          context.features->get("FeatureTwo")}})),
+                      FeatureMayAlwaysSet{context.features->get("FeatureTwo")},
+                  .call_info = CallInfo::CallSite})),
       test::make_taint_frame(
           /* kind */ context.kinds->get("TestSource"),
           test::FrameProperties{
@@ -489,7 +518,9 @@ TEST_F(FrameTest, FrameJoin) {
               .distance = 2,
               .inferred_features = FeatureMayAlwaysSet::make_may(
                   {context.features->get("FeatureOne"),
-                   context.features->get("FeatureTwo")})}));
+                   context.features->get("FeatureTwo")}),
+              .call_info = CallInfo::CallSite,
+          }));
 
   // Join user features.
   EXPECT_EQ(
@@ -500,7 +531,8 @@ TEST_F(FrameTest, FrameJoin) {
               .callee = one,
               .call_position = context.positions->unknown(),
               .distance = 2,
-              .user_features = FeatureSet{context.features->get("FeatureOne")}})
+              .user_features = FeatureSet{context.features->get("FeatureOne")},
+              .call_info = CallInfo::CallSite})
           .join(test::make_taint_frame(
               /* kind */ context.kinds->get("TestSource"),
               test::FrameProperties{
@@ -509,7 +541,8 @@ TEST_F(FrameTest, FrameJoin) {
                   .call_position = context.positions->unknown(),
                   .distance = 2,
                   .user_features =
-                      FeatureSet{context.features->get("FeatureTwo")}})),
+                      FeatureSet{context.features->get("FeatureTwo")},
+                  .call_info = CallInfo::CallSite})),
       test::make_taint_frame(
           /* kind */ context.kinds->get("TestSource"),
           test::FrameProperties{
@@ -517,9 +550,11 @@ TEST_F(FrameTest, FrameJoin) {
               .callee = one,
               .call_position = context.positions->unknown(),
               .distance = 2,
-              .user_features = FeatureSet{
-                  context.features->get("FeatureOne"),
-                  context.features->get("FeatureTwo")}}));
+              .user_features =
+                  FeatureSet{
+                      context.features->get("FeatureOne"),
+                      context.features->get("FeatureTwo")},
+              .call_info = CallInfo::CallSite}));
 
   // Join via_type_of_ports
   EXPECT_EQ(
@@ -531,7 +566,9 @@ TEST_F(FrameTest, FrameJoin) {
               .call_position = context.positions->unknown(),
               .distance = 2,
               .via_type_of_ports =
-                  RootSetAbstractDomain({Root(Root::Kind::Return)})})
+                  RootSetAbstractDomain({Root(Root::Kind::Return)}),
+              .call_info = CallInfo::CallSite,
+          })
           .join(test::make_taint_frame(
               /* kind */ context.kinds->get("TestSource"),
               test::FrameProperties{
@@ -540,7 +577,9 @@ TEST_F(FrameTest, FrameJoin) {
                   .call_position = context.positions->unknown(),
                   .distance = 2,
                   .via_type_of_ports =
-                      RootSetAbstractDomain({Root(Root::Kind::Argument, 1)})})),
+                      RootSetAbstractDomain({Root(Root::Kind::Argument, 1)}),
+                  .call_info = CallInfo::CallSite,
+              })),
       test::make_taint_frame(
           /* kind */ context.kinds->get("TestSource"),
           test::FrameProperties{
@@ -549,7 +588,9 @@ TEST_F(FrameTest, FrameJoin) {
               .call_position = context.positions->unknown(),
               .distance = 2,
               .via_type_of_ports = RootSetAbstractDomain(
-                  {Root(Root::Kind::Return), Root(Root::Kind::Argument, 1)})}));
+                  {Root(Root::Kind::Return), Root(Root::Kind::Argument, 1)}),
+              .call_info = CallInfo::CallSite,
+          }));
 
   // Join canonical names.
   EXPECT_EQ(
@@ -607,7 +648,9 @@ TEST_F(FrameTest, FrameWithKind) {
           .field_origins = FieldSet{field},
           .inferred_features = FeatureMayAlwaysSet::make_may(
               {context.features->get("FeatureOne"),
-               context.features->get("FeatureTwo")})});
+               context.features->get("FeatureTwo")}),
+          .call_info = CallInfo::CallSite,
+      });
 
   auto frame2 = frame1.with_kind(kind_b);
   EXPECT_EQ(frame1.callee(), frame2.callee());

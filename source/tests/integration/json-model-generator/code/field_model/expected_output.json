@@ -5,6 +5,7 @@
   "sinks" : 
   [
     {
+      "call_info" : "Declaration",
       "field_callee" : "Lcom/facebook/marianatrench/integrationtests/FieldModel;.field_one:Ljava/lang/String;",
       "field_origins" : 
       [
@@ -16,6 +17,7 @@
   "sources" : 
   [
     {
+      "call_info" : "Declaration",
       "field_callee" : "Lcom/facebook/marianatrench/integrationtests/FieldModel;.field_one:Ljava/lang/String;",
       "field_origins" : 
       [
@@ -31,6 +33,7 @@
   "sources" : 
   [
     {
+      "call_info" : "Declaration",
       "field_callee" : "Lcom/facebook/marianatrench/integrationtests/FieldModel;.field_three:Ljava/lang/Integer;",
       "field_origins" : 
       [
@@ -46,6 +49,7 @@
   "sinks" : 
   [
     {
+      "call_info" : "Declaration",
       "field_callee" : "Lcom/facebook/marianatrench/integrationtests/FieldModel;.field_two:Ljava/lang/Boolean;",
       "field_origins" : 
       [
@@ -57,6 +61,7 @@
   "sources" : 
   [
     {
+      "call_info" : "Declaration",
       "field_callee" : "Lcom/facebook/marianatrench/integrationtests/FieldModel;.field_two:Ljava/lang/Boolean;",
       "field_origins" : 
       [

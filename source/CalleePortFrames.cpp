@@ -143,7 +143,8 @@ void CalleePortFrames::add(const TaintConfig& config) {
         config.user_features(),
         config.via_type_of_ports(),
         config.via_value_of_ports(),
-        config.canonical_names()));
+        config.canonical_names(),
+        config.call_info()));
     return new_frames;
   });
 }
@@ -532,19 +533,33 @@ Frame CalleePortFrames::propagate_frames(
   auto origins = MethodSet::bottom();
   auto field_origins = FieldSet::bottom();
   auto inferred_features = FeatureMayAlwaysSet::bottom();
+  std::optional<CallInfo> call_info = std::nullopt;
 
   for (const Frame& frame : frames) {
     // Only frames sharing the same kind can be propagated this way.
     mt_assert(frame.kind() == kind);
+    if (call_info == std::nullopt) {
+      call_info = frame.call_info();
+    } else {
+      mt_assert(frame.call_info() == call_info);
+    }
 
     if (frame.distance() >= maximum_source_sink_distance) {
       continue;
     }
 
-    distance = std::min(distance, frame.distance() + 1);
+    if (call_info == CallInfo::Declaration) {
+      // If we're propagating a declaration, there are no origins, and we should
+      // keep the set as bottom, and set the callee to nullptr explicitly to
+      // avoid emitting an invalid frame.
+      distance = 0;
+      callee = nullptr;
+    } else {
+      distance = std::min(distance, frame.distance() + 1);
+    }
+
     origins.join_with(frame.origins());
     field_origins.join_with(frame.field_origins());
-
     // Note: This merges user features with existing inferred features.
     inferred_features.join_with(frame.features());
 
@@ -565,6 +580,14 @@ Frame CalleePortFrames::propagate_frames(
   }
 
   mt_assert(distance <= maximum_source_sink_distance);
+  mt_assert(call_info != std::nullopt);
+  CallInfo propagated = propagate_call_info(*call_info);
+  if (distance > 0) {
+    mt_assert(
+        propagated != CallInfo::Declaration && propagated != CallInfo::Origin);
+  } else {
+    mt_assert(propagated == CallInfo::Origin);
+  }
   return Frame(
       kind,
       callee_port,
@@ -580,7 +603,8 @@ Frame CalleePortFrames::propagate_frames(
       /* user_features */ FeatureSet::bottom(),
       /* via_type_of_ports */ {},
       /* via_value_of_ports */ {},
-      /* canonical_names */ {});
+      /* canonical_names */ {},
+      propagate_call_info(*call_info));
 }
 
 CalleePortFrames CalleePortFrames::propagate_crtex_leaf_frames(
@@ -661,7 +685,8 @@ CalleePortFrames CalleePortFrames::propagate_crtex_leaf_frames(
           propagated.user_features(),
           propagated.via_type_of_ports(),
           propagated.via_value_of_ports(),
-          /* canonical_names */ instantiated_names));
+          /* canonical_names */ instantiated_names,
+          CallInfo::CallSite));
     }
   }
 

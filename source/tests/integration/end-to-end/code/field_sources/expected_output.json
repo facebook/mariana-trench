@@ -5,6 +5,7 @@
   "sources" : 
   [
     {
+      "call_info" : "Declaration",
       "field_callee" : "Lcom/facebook/marianatrench/integrationtests/ChildClass;.shadowedField:Ljava/lang/Object;",
       "field_origins" : 
       [
@@ -20,6 +21,7 @@
   "sources" : 
   [
     {
+      "call_info" : "Declaration",
       "field_callee" : "Lcom/facebook/marianatrench/integrationtests/TaintedFieldClass;.field:Ljava/lang/Object;",
       "field_origins" : 
       [
@@ -35,6 +37,7 @@
   "sources" : 
   [
     {
+      "call_info" : "Declaration",
       "field_callee" : "Lcom/facebook/marianatrench/integrationtests/TaintedFieldClass;.finalStringField:Ljava/lang/String;",
       "field_origins" : 
       [
@@ -50,6 +53,7 @@
   "sources" : 
   [
     {
+      "call_info" : "Declaration",
       "field_callee" : "Lcom/facebook/marianatrench/integrationtests/TaintedFieldClass;.staticField:Ljava/lang/Object;",
       "field_origins" : 
       [
@@ -65,6 +69,7 @@
   "sources" : 
   [
     {
+      "call_info" : "Declaration",
       "field_callee" : "Lcom/facebook/marianatrench/integrationtests/TaintedFieldClass;.staticFinalField:Ljava/lang/Object;",
       "field_origins" : 
       [
@@ -80,6 +85,7 @@
   "sources" : 
   [
     {
+      "call_info" : "Declaration",
       "field_callee" : "Lcom/facebook/marianatrench/integrationtests/TaintedFieldClass;.staticFinalStringField:Ljava/lang/String;",
       "field_origins" : 
       [
@@ -95,6 +101,7 @@
   "sources" : 
   [
     {
+      "call_info" : "Declaration",
       "field_callee" : "Lcom/facebook/marianatrench/integrationtests/TaintedFieldClass;.staticStringField:Ljava/lang/String;",
       "field_origins" : 
       [
@@ -115,6 +122,7 @@
           "kinds" : 
           [
             {
+              "call_info" : "Declaration",
               "field_callee" : "Lcom/facebook/marianatrench/integrationtests/TaintedFieldClass;.field:Ljava/lang/Object;",
               "field_origins" : 
               [
@@ -156,7 +164,7 @@
           "kinds" : 
           [
             {
-              "distance" : 1,
+              "call_info" : "Origin",
               "kind" : "Sink",
               "origins" : 
               [
@@ -172,6 +180,7 @@
           "kinds" : 
           [
             {
+              "call_info" : "Declaration",
               "field_callee" : "Lcom/facebook/marianatrench/integrationtests/TaintedFieldClass;.field:Ljava/lang/Object;",
               "field_origins" : 
               [
@@ -210,7 +219,7 @@
           "kinds" : 
           [
             {
-              "distance" : 1,
+              "call_info" : "Origin",
               "kind" : "Sink",
               "origins" : 
               [
@@ -226,6 +235,7 @@
           "kinds" : 
           [
             {
+              "call_info" : "Declaration",
               "field_callee" : "Lcom/facebook/marianatrench/integrationtests/TaintedFieldClass;.staticField:Ljava/lang/Object;",
               "field_origins" : 
               [
@@ -264,7 +274,7 @@
           "kinds" : 
           [
             {
-              "distance" : 1,
+              "call_info" : "Origin",
               "kind" : "Sink",
               "origins" : 
               [
@@ -280,6 +290,7 @@
           "kinds" : 
           [
             {
+              "call_info" : "Declaration",
               "field_callee" : "Lcom/facebook/marianatrench/integrationtests/TaintedFieldClass;.staticFinalField:Ljava/lang/Object;",
               "field_origins" : 
               [
@@ -318,7 +329,7 @@
           "kinds" : 
           [
             {
-              "distance" : 1,
+              "call_info" : "Origin",
               "kind" : "Sink",
               "origins" : 
               [
@@ -334,6 +345,7 @@
           "kinds" : 
           [
             {
+              "call_info" : "Declaration",
               "field_callee" : "Lcom/facebook/marianatrench/integrationtests/TaintedFieldClass;.staticStringField:Ljava/lang/String;",
               "field_origins" : 
               [
@@ -374,7 +386,7 @@
           "kinds" : 
           [
             {
-              "distance" : 1,
+              "call_info" : "Origin",
               "kind" : "Sink",
               "origins" : 
               [
@@ -398,6 +410,7 @@
           "kinds" : 
           [
             {
+              "call_info" : "Declaration",
               "field_callee" : "Lcom/facebook/marianatrench/integrationtests/TaintedFieldClass;.field:Ljava/lang/Object;",
               "field_origins" : 
               [
@@ -417,6 +430,7 @@
           "kinds" : 
           [
             {
+              "call_info" : "Declaration",
               "field_callee" : "Lcom/facebook/marianatrench/integrationtests/ChildClass;.shadowedField:Ljava/lang/Object;",
               "field_origins" : 
               [
@@ -458,7 +472,7 @@
           "kinds" : 
           [
             {
-              "distance" : 1,
+              "call_info" : "Origin",
               "kind" : "Sink",
               "origins" : 
               [
@@ -474,6 +488,7 @@
           "kinds" : 
           [
             {
+              "call_info" : "Declaration",
               "field_callee" : "Lcom/facebook/marianatrench/integrationtests/ChildClass;.shadowedField:Ljava/lang/Object;",
               "field_origins" : 
               [
@@ -512,7 +527,7 @@
           "kinds" : 
           [
             {
-              "distance" : 1,
+              "call_info" : "Origin",
               "kind" : "Sink",
               "origins" : 
               [
@@ -528,6 +543,7 @@
           "kinds" : 
           [
             {
+              "call_info" : "Declaration",
               "field_callee" : "Lcom/facebook/marianatrench/integrationtests/TaintedFieldClass;.field:Ljava/lang/Object;",
               "field_origins" : 
               [
@@ -568,7 +584,7 @@
           "kinds" : 
           [
             {
-              "distance" : 1,
+              "call_info" : "Origin",
               "kind" : "Sink",
               "origins" : 
               [
@@ -599,7 +615,7 @@
           "kinds" : 
           [
             {
-              "distance" : 1,
+              "call_info" : "Origin",
               "kind" : "Sink",
               "origins" : 
               [
@@ -623,6 +639,7 @@
           "kinds" : 
           [
             {
+              "call_info" : "Declaration",
               "field_callee" : "Lcom/facebook/marianatrench/integrationtests/TaintedFieldClass;.field:Ljava/lang/Object;",
               "field_origins" : 
               [
@@ -642,6 +659,7 @@
           "kinds" : 
           [
             {
+              "call_info" : "Declaration",
               "field_callee" : "Lcom/facebook/marianatrench/integrationtests/TaintedFieldClass;.field:Ljava/lang/Object;",
               "field_origins" : 
               [
@@ -680,6 +698,7 @@
           "kinds" : 
           [
             {
+              "call_info" : "Declaration",
               "kind" : "OriginSource",
               "origins" : 
               [
@@ -791,7 +810,7 @@
           "kinds" : 
           [
             {
-              "distance" : 1,
+              "call_info" : "Origin",
               "kind" : "Sink",
               "origins" : 
               [
@@ -823,7 +842,7 @@
               [
                 "via-issue-broadening"
               ],
-              "distance" : 1,
+              "call_info" : "Origin",
               "kind" : "OriginSource",
               "local_features" : 
               {
@@ -880,7 +899,7 @@
           "kinds" : 
           [
             {
-              "distance" : 1,
+              "call_info" : "Origin",
               "kind" : "Sink",
               "origins" : 
               [
@@ -912,7 +931,7 @@
               [
                 "via-propagation-broadening"
               ],
-              "distance" : 1,
+              "call_info" : "Origin",
               "kind" : "OriginSource",
               "local_features" : 
               {
@@ -981,7 +1000,8 @@
           "kinds" : 
           [
             {
-              "distance" : 2,
+              "call_info" : "CallSite",
+              "distance" : 1,
               "kind" : "Sink",
               "origins" : 
               [
@@ -1009,7 +1029,7 @@
           "kinds" : 
           [
             {
-              "distance" : 1,
+              "call_info" : "Origin",
               "kind" : "OriginSource",
               "local_positions" : 
               [
@@ -1066,7 +1086,7 @@
           "kinds" : 
           [
             {
-              "distance" : 1,
+              "call_info" : "Origin",
               "kind" : "Sink",
               "origins" : 
               [
@@ -1082,6 +1102,7 @@
           "kinds" : 
           [
             {
+              "call_info" : "Declaration",
               "field_callee" : "Lcom/facebook/marianatrench/integrationtests/TaintedFieldClass;.field:Ljava/lang/Object;",
               "field_origins" : 
               [
@@ -1120,7 +1141,7 @@
           "kinds" : 
           [
             {
-              "distance" : 1,
+              "call_info" : "Origin",
               "kind" : "Sink",
               "origins" : 
               [
@@ -1136,6 +1157,7 @@
           "kinds" : 
           [
             {
+              "call_info" : "Declaration",
               "field_callee" : "Lcom/facebook/marianatrench/integrationtests/TaintedFieldClass;.field:Ljava/lang/Object;",
               "field_origins" : 
               [
@@ -1174,7 +1196,7 @@
           "kinds" : 
           [
             {
-              "distance" : 1,
+              "call_info" : "Origin",
               "kind" : "Sink",
               "origins" : 
               [
@@ -1190,6 +1212,7 @@
           "kinds" : 
           [
             {
+              "call_info" : "Declaration",
               "field_callee" : "Lcom/facebook/marianatrench/integrationtests/TaintedFieldClass;.staticField:Ljava/lang/Object;",
               "field_origins" : 
               [
@@ -1230,7 +1253,7 @@
           "kinds" : 
           [
             {
-              "distance" : 1,
+              "call_info" : "Origin",
               "kind" : "Sink",
               "origins" : 
               [
@@ -1273,7 +1296,7 @@
           "kinds" : 
           [
             {
-              "distance" : 1,
+              "call_info" : "Origin",
               "kind" : "Sink",
               "origins" : 
               [
@@ -1289,6 +1312,7 @@
           "kinds" : 
           [
             {
+              "call_info" : "Declaration",
               "field_callee" : "Lcom/facebook/marianatrench/integrationtests/TaintedFieldClass;.field:Ljava/lang/Object;",
               "field_origins" : 
               [
@@ -1329,7 +1353,7 @@
           "kinds" : 
           [
             {
-              "distance" : 1,
+              "call_info" : "Origin",
               "kind" : "Sink",
               "origins" : 
               [
@@ -1372,7 +1396,7 @@
           "kinds" : 
           [
             {
-              "distance" : 1,
+              "call_info" : "Origin",
               "kind" : "Sink",
               "origins" : 
               [
@@ -1400,7 +1424,7 @@
           "kinds" : 
           [
             {
-              "distance" : 1,
+              "call_info" : "Origin",
               "field_origins" : 
               [
                 "Lcom/facebook/marianatrench/integrationtests/TaintedFieldClass;.field:Ljava/lang/Object;"
@@ -1438,7 +1462,7 @@
           "kinds" : 
           [
             {
-              "distance" : 1,
+              "call_info" : "Origin",
               "kind" : "Sink",
               "origins" : 
               [
@@ -1466,7 +1490,7 @@
           "kinds" : 
           [
             {
-              "distance" : 1,
+              "call_info" : "Origin",
               "kind" : "OriginSource",
               "local_positions" : 
               [
@@ -1528,7 +1552,7 @@
           "kinds" : 
           [
             {
-              "distance" : 1,
+              "call_info" : "Origin",
               "kind" : "Sink",
               "origins" : 
               [
@@ -1544,6 +1568,7 @@
           "kinds" : 
           [
             {
+              "call_info" : "Declaration",
               "field_callee" : "Lcom/facebook/marianatrench/integrationtests/TaintedFieldClass;.field:Ljava/lang/Object;",
               "field_origins" : 
               [
@@ -1582,7 +1607,7 @@
           "kinds" : 
           [
             {
-              "distance" : 1,
+              "call_info" : "Origin",
               "kind" : "Sink",
               "origins" : 
               [
@@ -1610,7 +1635,7 @@
           "kinds" : 
           [
             {
-              "distance" : 1,
+              "call_info" : "Origin",
               "kind" : "OriginSource",
               "local_positions" : 
               [
@@ -1667,7 +1692,7 @@
           "kinds" : 
           [
             {
-              "distance" : 1,
+              "call_info" : "Origin",
               "kind" : "Sink",
               "origins" : 
               [
@@ -1683,6 +1708,7 @@
           "kinds" : 
           [
             {
+              "call_info" : "Declaration",
               "field_callee" : "Lcom/facebook/marianatrench/integrationtests/TaintedFieldClass;.field:Ljava/lang/Object;",
               "field_origins" : 
               [
@@ -1721,7 +1747,7 @@
           "kinds" : 
           [
             {
-              "distance" : 1,
+              "call_info" : "Origin",
               "kind" : "Sink",
               "origins" : 
               [
@@ -1749,7 +1775,7 @@
           "kinds" : 
           [
             {
-              "distance" : 1,
+              "call_info" : "Origin",
               "kind" : "OriginSource",
               "local_positions" : 
               [
@@ -1806,7 +1832,7 @@
           "kinds" : 
           [
             {
-              "distance" : 1,
+              "call_info" : "Origin",
               "kind" : "Sink",
               "origins" : 
               [
@@ -1822,6 +1848,7 @@
           "kinds" : 
           [
             {
+              "call_info" : "Declaration",
               "field_callee" : "Lcom/facebook/marianatrench/integrationtests/TaintedFieldClass;.field:Ljava/lang/Object;",
               "field_origins" : 
               [
@@ -1860,7 +1887,7 @@
           "kinds" : 
           [
             {
-              "distance" : 1,
+              "call_info" : "Origin",
               "kind" : "Sink",
               "origins" : 
               [
@@ -1888,7 +1915,7 @@
           "kinds" : 
           [
             {
-              "distance" : 1,
+              "call_info" : "Origin",
               "kind" : "OriginSource",
               "local_positions" : 
               [
@@ -1945,7 +1972,7 @@
           "kinds" : 
           [
             {
-              "distance" : 1,
+              "call_info" : "Origin",
               "kind" : "Sink",
               "origins" : 
               [
@@ -1961,6 +1988,7 @@
           "kinds" : 
           [
             {
+              "call_info" : "Declaration",
               "field_callee" : "Lcom/facebook/marianatrench/integrationtests/TaintedFieldClass;.field:Ljava/lang/Object;",
               "field_origins" : 
               [
@@ -2003,7 +2031,7 @@
           "kinds" : 
           [
             {
-              "distance" : 1,
+              "call_info" : "Origin",
               "kind" : "Sink",
               "origins" : 
               [
@@ -2035,7 +2063,7 @@
               [
                 "via-propagation-broadening"
               ],
-              "distance" : 1,
+              "call_info" : "Origin",
               "kind" : "OriginSource",
               "local_features" : 
               {
@@ -2097,7 +2125,7 @@
           "kinds" : 
           [
             {
-              "distance" : 1,
+              "call_info" : "Origin",
               "kind" : "Sink",
               "origins" : 
               [
@@ -2129,7 +2157,7 @@
               [
                 "via-propagation-broadening"
               ],
-              "distance" : 1,
+              "call_info" : "Origin",
               "kind" : "OriginSource",
               "local_features" : 
               {
@@ -2788,6 +2816,7 @@
           "kinds" : 
           [
             {
+              "call_info" : "Declaration",
               "kind" : "Sink",
               "origins" : 
               [
@@ -2863,6 +2892,7 @@
           "kinds" : 
           [
             {
+              "call_info" : "Declaration",
               "kind" : "Sink",
               "origins" : 
               [

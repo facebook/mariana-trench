@@ -37,6 +37,21 @@ using RootSetAbstractDomain = sparta::HashedSetAbstractDomain<Root>;
 using CanonicalNameSetAbstractDomain =
     sparta::HashedSetAbstractDomain<CanonicalName>;
 
+using KindEncoding = unsigned int;
+
+enum class CallInfo : KindEncoding {
+  // A declaration of taint from a model - should not be included in the final
+  // trace.
+  Declaration = 1,
+  // The origin frame for taint that indicates a leaf.
+  Origin = 2,
+  // A call site where taint is propagated from some origin.
+  CallSite = 3,
+};
+
+const std::string show_call_info(CallInfo call_info);
+CallInfo propagate_call_info(CallInfo call_info);
+
 /**
  * Represents a frame of a trace, i.e a single hop between methods.
  *
@@ -96,7 +111,8 @@ class Frame final : public sparta::AbstractDomain<Frame> {
         callee_port_(Root(Root::Kind::Leaf)),
         callee_(nullptr),
         call_position_(nullptr),
-        distance_(0) {}
+        distance_(0),
+        call_info_(CallInfo::Declaration) {}
 
   explicit Frame(
       const Kind* kind,
@@ -112,7 +128,8 @@ class Frame final : public sparta::AbstractDomain<Frame> {
       FeatureSet user_features,
       RootSetAbstractDomain via_type_of_ports,
       RootSetAbstractDomain via_value_of_ports,
-      CanonicalNameSetAbstractDomain canonical_names)
+      CanonicalNameSetAbstractDomain canonical_names,
+      CallInfo call_info)
       : kind_(kind),
         callee_port_(std::move(callee_port)),
         callee_(callee),
@@ -126,7 +143,8 @@ class Frame final : public sparta::AbstractDomain<Frame> {
         user_features_(std::move(user_features)),
         via_type_of_ports_(std::move(via_type_of_ports)),
         via_value_of_ports_(std::move(via_value_of_ports)),
-        canonical_names_(std::move(canonical_names)) {
+        canonical_names_(std::move(canonical_names)),
+        call_info_(call_info) {
     mt_assert(kind_ != nullptr);
     mt_assert(distance_ >= 0);
     mt_assert(!(callee && field_callee));
@@ -138,6 +156,9 @@ class Frame final : public sparta::AbstractDomain<Frame> {
       mt_assert(
           callee_port.root().kind() == Root::Kind::Argument &&
           callee_port.path().empty());
+    }
+    if (callee != nullptr && !callee_port_.root().is_anchor()) {
+      mt_assert(call_info == CallInfo::CallSite);
     }
   }
 
@@ -197,6 +218,10 @@ class Frame final : public sparta::AbstractDomain<Frame> {
 
   const FieldSet& field_origins() const {
     return field_origins_;
+  }
+
+  CallInfo call_info() const {
+    return call_info_;
   }
 
   /**
@@ -306,6 +331,7 @@ class Frame final : public sparta::AbstractDomain<Frame> {
   RootSetAbstractDomain via_type_of_ports_;
   RootSetAbstractDomain via_value_of_ports_;
   CanonicalNameSetAbstractDomain canonical_names_;
+  CallInfo call_info_;
 };
 
 } // namespace marianatrench

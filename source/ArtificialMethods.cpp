@@ -58,7 +58,8 @@ std::vector<Model> ArtificialMethods::models(Context& context) const {
           /* canonical_names */ {},
           /* input_paths */ {},
           /* output_paths */ {},
-          /* local_positions */ {}));
+          /* local_positions */ {},
+          /* call_info */ CallInfo::Declaration));
   models.push_back(model);
 
   return models;

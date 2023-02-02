@@ -22,7 +22,7 @@
           "kinds" : 
           [
             {
-              "distance" : 1,
+              "call_info" : "Origin",
               "kind" : "ExternalUserInput",
               "local_positions" : 
               [
@@ -76,7 +76,8 @@
           "kinds" : 
           [
             {
-              "distance" : 3,
+              "call_info" : "CallSite",
+              "distance" : 2,
               "kind" : "LaunchingComponent",
               "origins" : 
               [
@@ -104,7 +105,7 @@
           "kinds" : 
           [
             {
-              "distance" : 1,
+              "call_info" : "Origin",
               "kind" : "ExternalUserInput",
               "local_positions" : 
               [
@@ -155,7 +156,8 @@
           "kinds" : 
           [
             {
-              "distance" : 2,
+              "call_info" : "CallSite",
+              "distance" : 1,
               "kind" : "LaunchingComponent",
               "origins" : 
               [
@@ -183,7 +185,7 @@
           "kinds" : 
           [
             {
-              "distance" : 1,
+              "call_info" : "Origin",
               "kind" : "ExternalUserInput",
               "local_positions" : 
               [
@@ -236,7 +238,8 @@
           "kinds" : 
           [
             {
-              "distance" : 3,
+              "call_info" : "CallSite",
+              "distance" : 2,
               "kind" : "LaunchingComponent",
               "origins" : 
               [
@@ -261,7 +264,8 @@
           "kinds" : 
           [
             {
-              "distance" : 2,
+              "call_info" : "CallSite",
+              "distance" : 1,
               "kind" : "LaunchingComponent",
               "origins" : 
               [
@@ -285,6 +289,7 @@
           "kinds" : 
           [
             {
+              "call_info" : "Declaration",
               "kind" : "ExternalUserInput",
               "origins" : 
               [
@@ -981,7 +986,8 @@
           "kinds" : 
           [
             {
-              "distance" : 2,
+              "call_info" : "CallSite",
+              "distance" : 1,
               "kind" : "LaunchingComponent",
               "origins" : 
               [
@@ -1031,7 +1037,7 @@
           "kinds" : 
           [
             {
-              "distance" : 1,
+              "call_info" : "Origin",
               "kind" : "LaunchingComponent",
               "local_positions" : 
               [
@@ -1096,6 +1102,7 @@
           "kinds" : 
           [
             {
+              "call_info" : "Declaration",
               "kind" : "LaunchingComponent",
               "origins" : 
               [

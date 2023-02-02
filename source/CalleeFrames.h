@@ -59,12 +59,16 @@ class CalleeFrames final : public sparta::AbstractDomain<CalleeFrames> {
  private:
   explicit CalleeFrames(
       const Method* MT_NULLABLE callee,
+      CallInfo call_info,
       FramesByCallPosition frames)
-      : callee_(callee), frames_(std::move(frames)) {}
+      : callee_(callee), call_info_(call_info), frames_(std::move(frames)) {}
 
  public:
   /* Create the bottom (i.e, empty) frame set. */
-  CalleeFrames() : callee_(nullptr), frames_(FramesByCallPosition::bottom()) {}
+  CalleeFrames()
+      : callee_(nullptr),
+        call_info_(CallInfo::Declaration),
+        frames_(FramesByCallPosition::bottom()) {}
 
   explicit CalleeFrames(std::initializer_list<TaintConfig> configs);
 
@@ -75,12 +79,16 @@ class CalleeFrames final : public sparta::AbstractDomain<CalleeFrames> {
 
   static CalleeFrames bottom() {
     return CalleeFrames(
-        /* callee */ nullptr, FramesByCallPosition::bottom());
+        /* callee */ nullptr,
+        CallInfo::Declaration,
+        FramesByCallPosition::bottom());
   }
 
   static CalleeFrames top() {
     return CalleeFrames(
-        /* callee */ nullptr, FramesByCallPosition::top());
+        /* callee */ nullptr,
+        CallInfo::Declaration,
+        FramesByCallPosition::top());
   }
 
   bool is_bottom() const override {
@@ -93,11 +101,13 @@ class CalleeFrames final : public sparta::AbstractDomain<CalleeFrames> {
 
   void set_to_bottom() override {
     callee_ = nullptr;
+    call_info_ = CallInfo::Declaration;
     frames_.set_to_bottom();
   }
 
   void set_to_top() override {
     callee_ = nullptr;
+    call_info_ = CallInfo::Declaration;
     frames_.set_to_top();
   }
 
@@ -107,6 +117,10 @@ class CalleeFrames final : public sparta::AbstractDomain<CalleeFrames> {
 
   const Method* MT_NULLABLE callee() const {
     return callee_;
+  }
+
+  CallInfo call_info() const {
+    return call_info_;
   }
 
   void add(const TaintConfig& config);
@@ -206,6 +220,7 @@ class CalleeFrames final : public sparta::AbstractDomain<CalleeFrames> {
            callee_frames_partitioned) {
         auto new_frames = CalleeFrames(
             callee_,
+            call_info_,
             FramesByCallPosition{std::pair(position, call_position_frames)});
 
         auto existing = result.find(mapped_value);
@@ -230,6 +245,7 @@ class CalleeFrames final : public sparta::AbstractDomain<CalleeFrames> {
 
  private:
   const Method* MT_NULLABLE callee_;
+  CallInfo call_info_;
   FramesByCallPosition frames_;
 };
 

@@ -15,7 +15,7 @@
 namespace marianatrench {
 
 CalleeFrames::CalleeFrames(std::initializer_list<TaintConfig> configs)
-    : callee_(nullptr) {
+    : callee_(nullptr), call_info_(CallInfo::Declaration) {
   for (const auto& config : configs) {
     add(config);
   }
@@ -24,8 +24,9 @@ CalleeFrames::CalleeFrames(std::initializer_list<TaintConfig> configs)
 void CalleeFrames::add(const TaintConfig& config) {
   if (callee_ == nullptr) {
     callee_ = config.callee();
+    call_info_ = config.call_info();
   } else {
-    mt_assert(callee_ == config.callee());
+    mt_assert(callee_ == config.callee() && call_info_ == config.call_info());
   }
 
   // TODO (T91357916): GroupHashedSetAbstractDomain could be more efficient.
@@ -39,12 +40,16 @@ void CalleeFrames::add(const TaintConfig& config) {
 }
 
 bool CalleeFrames::leq(const CalleeFrames& other) const {
-  mt_assert(is_bottom() || other.is_bottom() || callee_ == other.callee());
+  mt_assert(
+      is_bottom() || other.is_bottom() ||
+      (callee_ == other.callee() && call_info_ == other.call_info()));
   return frames_.leq(other.frames_);
 }
 
 bool CalleeFrames::equals(const CalleeFrames& other) const {
-  mt_assert(is_bottom() || other.is_bottom() || callee_ == other.callee());
+  mt_assert(
+      is_bottom() || other.is_bottom() ||
+      (callee_ == other.callee() && call_info_ == other.call_info()));
   return frames_.equals(other.frames_);
 }
 
@@ -54,6 +59,7 @@ void CalleeFrames::join_with(const CalleeFrames& other) {
   if (is_bottom()) {
     mt_assert(callee_ == nullptr);
     callee_ = other.callee();
+    call_info_ = other.call_info();
   }
   mt_assert(other.is_bottom() || callee_ == other.callee());
 
@@ -68,6 +74,7 @@ void CalleeFrames::widen_with(const CalleeFrames& other) {
   if (is_bottom()) {
     mt_assert(callee_ == nullptr);
     callee_ = other.callee();
+    call_info_ = other.call_info();
   }
   mt_assert(other.is_bottom() || callee_ == other.callee());
 
@@ -80,6 +87,7 @@ void CalleeFrames::meet_with(const CalleeFrames& other) {
   if (is_bottom()) {
     mt_assert(callee_ == nullptr);
     callee_ = other.callee();
+    call_info_ = other.call_info();
   }
   mt_assert(other.is_bottom() || callee_ == other.callee());
 
@@ -90,6 +98,7 @@ void CalleeFrames::narrow_with(const CalleeFrames& other) {
   if (is_bottom()) {
     mt_assert(callee_ == nullptr);
     callee_ = other.callee();
+    call_info_ = other.call_info();
   }
   mt_assert(other.is_bottom() || callee_ == other.callee());
 
@@ -227,7 +236,9 @@ CalleeFrames CalleeFrames::propagate(
 
   mt_assert(call_position == result.position());
   return CalleeFrames(
-      callee, FramesByCallPosition{std::pair(call_position, result)});
+      callee,
+      propagate_call_info(call_info_),
+      FramesByCallPosition{std::pair(call_position, result)});
 }
 
 CalleeFrames CalleeFrames::attach_position(const Position* position) const {
@@ -242,7 +253,11 @@ CalleeFrames CalleeFrames::attach_position(const Position* position) const {
   }
 
   return CalleeFrames(
-      callee_, FramesByCallPosition{std::pair(position, result)});
+      // Since attaching the position creates a new leaf of the trace, we don't
+      // respect the previous call info and instead default to origin.
+      callee_,
+      CallInfo::Origin,
+      FramesByCallPosition{std::pair(position, result)});
 }
 
 void CalleeFrames::transform_kind_with_features(

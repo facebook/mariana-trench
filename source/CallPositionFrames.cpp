@@ -243,7 +243,8 @@ CallPositionFrames CallPositionFrames::attach_position(
           frame.canonical_names(),
           /* input_paths */ {},
           /* output_paths */ {},
-          callee_port_frames.local_positions())});
+          callee_port_frames.local_positions(),
+          CallInfo::Origin)});
     }
   }
 
@@ -307,7 +308,8 @@ CallPositionFrames::map_positions(
           frame.canonical_names(),
           /* input_paths */ {},
           /* output_paths */ {},
-          /* local_positions */ {});
+          /* local_positions */ {},
+          /* call_info */ frame.call_info());
       new_frames.add(new_frame);
     }
 

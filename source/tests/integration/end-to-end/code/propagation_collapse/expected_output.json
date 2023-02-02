@@ -10,6 +10,7 @@
           "kinds" : 
           [
             {
+              "call_info" : "Declaration",
               "kind" : "Source",
               "origins" : 
               [
@@ -122,7 +123,7 @@
           "kinds" : 
           [
             {
-              "distance" : 1,
+              "call_info" : "Origin",
               "kind" : "Sink",
               "origins" : 
               [
@@ -155,7 +156,7 @@
                 "via-cast:Lcom/facebook/marianatrench/integrationtests/Flow$Tree;",
                 "via-propagation-broadening"
               ],
-              "distance" : 1,
+              "call_info" : "Origin",
               "kind" : "Source",
               "local_features" : 
               {
@@ -221,7 +222,7 @@
                 "via-inner-class-this",
                 "via-propagation-broadening"
               ],
-              "distance" : 1,
+              "call_info" : "Origin",
               "kind" : "Sink",
               "local_features" : 
               {
@@ -893,6 +894,7 @@
           "kinds" : 
           [
             {
+              "call_info" : "Declaration",
               "kind" : "Sink",
               "origins" : 
               [

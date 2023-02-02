@@ -405,7 +405,8 @@ TaintConfig generator::source(
       /* canonical_names */ {},
       /* input_paths */ {},
       /* output_paths */ {},
-      /* local_positions */ {});
+      /* local_positions */ {},
+      /* call_info */ CallInfo::Declaration);
 }
 
 TaintConfig generator::sink(
@@ -423,6 +424,9 @@ TaintConfig generator::sink(
       (callee_port != Root::Kind::Anchor &&
        callee_port != Root::Kind::Producer));
 
+  // CRTEX leaves are origins.
+  CallInfo call_info =
+      canonical_names.size() > 0 ? CallInfo::Origin : CallInfo::Declaration;
   FeatureSet user_features;
   for (const auto& feature : features) {
     user_features.add(context.features->get(feature));
@@ -444,7 +448,8 @@ TaintConfig generator::sink(
       /* canonical_names */ canonical_names,
       /* input_paths */ {},
       /* output_paths */ {},
-      /* local_positions */ {});
+      /* local_positions */ {},
+      /* call_info */ call_info);
 }
 
 TaintConfig generator::partial_sink(
@@ -481,7 +486,8 @@ TaintConfig generator::partial_sink(
       /* canonical_names */ {},
       /* input_paths */ {},
       /* output_paths */ {},
-      /* local_positions */ {});
+      /* local_positions */ {},
+      /* call_info */ CallInfo::Declaration);
 }
 
 } // namespace marianatrench

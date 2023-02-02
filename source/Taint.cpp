@@ -259,7 +259,8 @@ Taint Taint::artificial_source(AccessPath access_path) {
       /* input_paths */
       PathTreeDomain{{access_path.path(), SingletonAbstractDomain()}},
       /* output_paths */ {},
-      /* local_positions */ {})};
+      /* local_positions */ {},
+      /* call_info */ CallInfo::Declaration)};
 }
 
 void Taint::add(const CalleeFrames& frames) {

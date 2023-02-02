@@ -33,7 +33,8 @@
               "kinds" :
               [
                 {
-                  "distance" : 3,
+                  "call_info" : "CallSite",
+                  "distance" : 2,
                   "kind" : "TestSink",
                   "origins" :
                   [
@@ -59,7 +60,7 @@
               "kinds" :
               [
                 {
-                  "distance" : 1,
+                  "call_info" : "Origin",
                   "kind" : "TestSource",
                   "origins" :
                   [
@@ -95,7 +96,8 @@
               "kinds" :
               [
                 {
-                  "distance" : 3,
+                  "call_info" : "CallSite",
+                  "distance" : 2,
                   "kind" : "TestSink",
                   "origins" :
                   [
@@ -121,7 +123,7 @@
               "kinds" :
               [
                 {
-                  "distance" : 1,
+                  "call_info" : "Origin",
                   "kind" : "TestSource",
                   "origins" :
                   [
@@ -167,7 +169,8 @@
               "kinds" :
               [
                 {
-                  "distance" : 2,
+                  "call_info" : "CallSite",
+                  "distance" : 1,
                   "kind" : "TestSink",
                   "origins" :
                   [
@@ -207,7 +210,8 @@
               "kinds" :
               [
                 {
-                  "distance" : 2,
+                  "call_info" : "CallSite",
+                  "distance" : 1,
                   "kind" : "TestSink",
                   "origins" :
                   [
@@ -247,7 +251,7 @@
               "kinds" :
               [
                 {
-                  "distance" : 1,
+                  "call_info" : "Origin",
                   "kind" : "TestSink",
                   "origins" :
                   [

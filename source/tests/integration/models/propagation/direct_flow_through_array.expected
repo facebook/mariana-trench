@@ -37,7 +37,7 @@
               "kinds" :
               [
                 {
-                  "distance" : 1,
+                  "call_info" : "Origin",
                   "kind" : "TestSink",
                   "origins" :
                   [
@@ -67,7 +67,7 @@
                   [
                     "via-array"
                   ],
-                  "distance" : 1,
+                  "call_info" : "Origin",
                   "kind" : "TestSource",
                   "local_features" :
                   {

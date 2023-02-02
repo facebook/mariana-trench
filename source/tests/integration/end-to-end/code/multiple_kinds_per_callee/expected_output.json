@@ -22,7 +22,7 @@
           "kinds" : 
           [
             {
-              "distance" : 1,
+              "call_info" : "Origin",
               "kind" : "Source1",
               "origins" : 
               [
@@ -30,7 +30,7 @@
               ]
             },
             {
-              "distance" : 1,
+              "call_info" : "Origin",
               "kind" : "Source2",
               "origins" : 
               [
@@ -60,6 +60,7 @@
           "kinds" : 
           [
             {
+              "call_info" : "Declaration",
               "kind" : "Source1",
               "origins" : 
               [
@@ -67,6 +68,7 @@
               ]
             },
             {
+              "call_info" : "Declaration",
               "kind" : "Source2",
               "origins" : 
               [
@@ -174,7 +176,8 @@
           "kinds" : 
           [
             {
-              "distance" : 2,
+              "call_info" : "CallSite",
+              "distance" : 1,
               "kind" : "Sink1",
               "origins" : 
               [
@@ -182,7 +185,8 @@
               ]
             },
             {
-              "distance" : 2,
+              "call_info" : "CallSite",
+              "distance" : 1,
               "kind" : "Sink2",
               "origins" : 
               [
@@ -210,7 +214,8 @@
           "kinds" : 
           [
             {
-              "distance" : 2,
+              "call_info" : "CallSite",
+              "distance" : 1,
               "kind" : "Source1",
               "origins" : 
               [
@@ -218,7 +223,8 @@
               ]
             },
             {
-              "distance" : 2,
+              "call_info" : "CallSite",
+              "distance" : 1,
               "kind" : "Source2",
               "origins" : 
               [
@@ -828,7 +834,7 @@
           "kinds" : 
           [
             {
-              "distance" : 1,
+              "call_info" : "Origin",
               "kind" : "Sink1",
               "origins" : 
               [
@@ -836,7 +842,7 @@
               ]
             },
             {
-              "distance" : 1,
+              "call_info" : "Origin",
               "kind" : "Sink2",
               "origins" : 
               [
@@ -872,6 +878,7 @@
           "kinds" : 
           [
             {
+              "call_info" : "Declaration",
               "kind" : "Sink1",
               "origins" : 
               [
@@ -879,6 +886,7 @@
               ]
             },
             {
+              "call_info" : "Declaration",
               "kind" : "Sink2",
               "origins" : 
               [

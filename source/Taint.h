@@ -10,6 +10,7 @@
 #include <initializer_list>
 #include <ostream>
 
+#include <boost/functional/hash.hpp>
 #include <json/json.h>
 
 #include <AbstractDomain.h>
@@ -17,6 +18,7 @@
 #include <mariana-trench/CalleeFrames.h>
 #include <mariana-trench/Frame.h>
 #include <mariana-trench/GroupHashedSetAbstractDomain.h>
+#include <mariana-trench/Log.h>
 #include <mariana-trench/TaintConfig.h>
 
 namespace marianatrench {
@@ -31,13 +33,17 @@ class Taint final : public sparta::AbstractDomain<Taint> {
  private:
   struct GroupEqual {
     bool operator()(const CalleeFrames& left, const CalleeFrames& right) const {
-      return left.callee() == right.callee();
+      return left.callee() == right.callee() &&
+          left.call_info() == right.call_info();
     }
   };
 
   struct GroupHash {
     std::size_t operator()(const CalleeFrames& frame) const {
-      return std::hash<const Method*>()(frame.callee());
+      std::size_t seed = 0;
+      boost::hash_combine(seed, frame.callee());
+      boost::hash_combine(seed, frame.call_info());
+      return seed;
     }
   };
 
