@@ -15,15 +15,15 @@
 
 namespace marianatrench {
 
-class EnvironmentTest : public test::Test {};
+class AnalysisEnvironmentTest : public test::Test {};
 
-TEST_F(EnvironmentTest, LessOrEqual) {
+TEST_F(AnalysisEnvironmentTest, LessOrEqual) {
   EXPECT_TRUE(MemoryLocationsPartition().leq(MemoryLocationsPartition()));
   EXPECT_TRUE(TaintAbstractPartition().leq(TaintAbstractPartition()));
   EXPECT_TRUE(AnalysisEnvironment().leq(AnalysisEnvironment()));
 }
 
-TEST_F(EnvironmentTest, LessOrEqualSuperSet) {
+TEST_F(AnalysisEnvironmentTest, LessOrEqualSuperSet) {
   auto context = test::make_empty_context();
   const auto* source_kind = context.kinds->get("TestSource");
 
@@ -53,7 +53,7 @@ TEST_F(EnvironmentTest, LessOrEqualSuperSet) {
   EXPECT_FALSE(domain2.leq(domain1));
 }
 
-TEST_F(EnvironmentTest, LessOrEqualDifferentSources) {
+TEST_F(AnalysisEnvironmentTest, LessOrEqualDifferentSources) {
   auto context = test::make_empty_context();
   const auto* source_kind = context.kinds->get("TestSource");
 
@@ -80,7 +80,7 @@ TEST_F(EnvironmentTest, LessOrEqualDifferentSources) {
   EXPECT_FALSE(domain2.leq(domain1));
 }
 
-TEST_F(EnvironmentTest, JoinSuperSet) {
+TEST_F(AnalysisEnvironmentTest, JoinSuperSet) {
   auto context = test::make_empty_context();
   const auto* source_kind = context.kinds->get("TestSource");
 
@@ -107,7 +107,7 @@ TEST_F(EnvironmentTest, JoinSuperSet) {
   EXPECT_TRUE(domain1 == domain2);
 }
 
-TEST_F(EnvironmentTest, JoinTwoDifferent) {
+TEST_F(AnalysisEnvironmentTest, JoinTwoDifferent) {
   auto context = test::make_empty_context();
   const auto* source_kind = context.kinds->get("TestSource");
 
@@ -147,7 +147,7 @@ TEST_F(EnvironmentTest, JoinTwoDifferent) {
   EXPECT_TRUE(domain1 == domain3);
 }
 
-TEST_F(EnvironmentTest, JoinTwoEnvironmentWithDifferentSources) {
+TEST_F(AnalysisEnvironmentTest, JoinTwoEnvironmentWithDifferentSources) {
   auto context = test::make_empty_context();
   const auto* source_kind = context.kinds->get("TestSource");
 
