@@ -50,18 +50,6 @@
       "taint" : 
       [
         {
-          "call" : 
-          {
-            "port" : "Return",
-            "position" : 
-            {
-              "end" : 26,
-              "line" : 17,
-              "path" : "MainActivity.java",
-              "start" : 21
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;"
-          },
           "kinds" : 
           [
             {
@@ -80,7 +68,17 @@
                 "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;"
               ]
             }
-          ]
+          ],
+          "origin" : 
+          {
+            "position" : 
+            {
+              "end" : 26,
+              "line" : 17,
+              "path" : "MainActivity.java",
+              "start" : 21
+            }
+          }
         }
       ]
     }
@@ -940,18 +938,6 @@
       "taint" : 
       [
         {
-          "call" : 
-          {
-            "port" : "Argument(0)",
-            "position" : 
-            {
-              "end" : 22,
-              "line" : 23,
-              "path" : "MainActivity2.java",
-              "start" : 16
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V"
-          },
           "kinds" : 
           [
             {
@@ -962,7 +948,17 @@
                 "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V"
               ]
             }
-          ]
+          ],
+          "origin" : 
+          {
+            "position" : 
+            {
+              "end" : 22,
+              "line" : 23,
+              "path" : "MainActivity2.java",
+              "start" : 16
+            }
+          }
         }
       ]
     }

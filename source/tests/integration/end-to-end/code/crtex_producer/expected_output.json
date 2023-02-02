@@ -174,18 +174,6 @@
       "sources" : 
       [
         {
-          "call" : 
-          {
-            "port" : "Argument(0)",
-            "position" : 
-            {
-              "end" : 29,
-              "line" : 24,
-              "path" : "Crtex.java",
-              "start" : 20
-            },
-            "resolves_to" : "Landroid/content/Intent;.<init>:(Ljava/lang/String;Landroid/net/Uri;)V"
-          },
           "kinds" : 
           [
             {
@@ -196,7 +184,17 @@
                 "Landroid/content/Intent;.<init>:(Ljava/lang/String;Landroid/net/Uri;)V"
               ]
             }
-          ]
+          ],
+          "origin" : 
+          {
+            "position" : 
+            {
+              "end" : 29,
+              "line" : 24,
+              "path" : "Crtex.java",
+              "start" : 20
+            }
+          }
         }
       ]
     }
@@ -909,16 +907,6 @@
           ]
         },
         {
-          "call" : 
-          {
-            "port" : "Argument(0)",
-            "position" : 
-            {
-              "line" : 52,
-              "path" : "Crtex.java"
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/Crtex;.crtex_with_regular_sink:(Landroid/content/Intent;)V"
-          },
           "kinds" : 
           [
             {
@@ -929,7 +917,15 @@
                 "Lcom/facebook/marianatrench/integrationtests/Crtex;.crtex_with_regular_sink:(Landroid/content/Intent;)V"
               ]
             }
-          ]
+          ],
+          "origin" : 
+          {
+            "position" : 
+            {
+              "line" : 52,
+              "path" : "Crtex.java"
+            }
+          }
         }
       ]
     }

@@ -7,18 +7,6 @@
       "taint" : 
       [
         {
-          "call" : 
-          {
-            "port" : "Return",
-            "position" : 
-            {
-              "end" : 32,
-              "line" : 17,
-              "path" : "ZeroRatingConnectionConfigOverrides.java",
-              "start" : 27
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;"
-          },
           "kinds" : 
           [
             {
@@ -48,7 +36,17 @@
                 "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;"
               ]
             }
-          ]
+          ],
+          "origin" : 
+          {
+            "position" : 
+            {
+              "end" : 32,
+              "line" : 17,
+              "path" : "ZeroRatingConnectionConfigOverrides.java",
+              "start" : 27
+            }
+          }
         }
       ]
     }
@@ -886,18 +884,6 @@
       "taint" : 
       [
         {
-          "call" : 
-          {
-            "port" : "Argument(0)",
-            "position" : 
-            {
-              "end" : 52,
-              "line" : 24,
-              "path" : "Configerator.java",
-              "start" : 17
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/ZeroRatingConnectionConfigOverrides;.getUri:()Landroid/net/Uri;"
-          },
           "kinds" : 
           [
             {
@@ -908,7 +894,17 @@
                 "Lcom/facebook/marianatrench/integrationtests/ZeroRatingConnectionConfigOverrides;.getUri:()Landroid/net/Uri;"
               ]
             }
-          ]
+          ],
+          "origin" : 
+          {
+            "position" : 
+            {
+              "end" : 52,
+              "line" : 24,
+              "path" : "Configerator.java",
+              "start" : 17
+            }
+          }
         }
       ]
     },
@@ -1038,18 +1034,6 @@
       "taint" : 
       [
         {
-          "call" : 
-          {
-            "port" : "Argument(0)",
-            "position" : 
-            {
-              "end" : 19,
-              "line" : 22,
-              "path" : "ZeroRatingConnectionConfigOverrides.java",
-              "start" : 16
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V"
-          },
           "kinds" : 
           [
             {
@@ -1060,7 +1044,17 @@
                 "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V"
               ]
             }
-          ]
+          ],
+          "origin" : 
+          {
+            "position" : 
+            {
+              "end" : 19,
+              "line" : 22,
+              "path" : "ZeroRatingConnectionConfigOverrides.java",
+              "start" : 16
+            }
+          }
         }
       ]
     }

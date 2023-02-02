@@ -13,16 +13,27 @@
           "taint" :
           [
             {
-              "call" :
+              "kinds" :
+              [
+                {
+                  "call_info" : "Origin",
+                  "kind" : "TestSource",
+                  "origins" :
+                  [
+                    "LSource;.source:()LData;"
+                  ]
+                }
+              ],
+              "origin" :
               {
-                "port" : "Return",
                 "position" :
                 {
                   "line" : 2,
                   "path" : "Flow.java"
-                },
-                "resolves_to" : "LSource;.source:()LData;"
-              },
+                }
+              }
+            },
+            {
               "kinds" :
               [
                 {
@@ -33,30 +44,15 @@
                     "LSource;.source:()LData;"
                   ]
                 }
-              ]
-            },
-            {
-              "call" :
+              ],
+              "origin" :
               {
-                "port" : "Return",
                 "position" :
                 {
                   "line" : 4,
                   "path" : "Flow.java"
-                },
-                "resolves_to" : "LSource;.source:()LData;"
-              },
-              "kinds" :
-              [
-                {
-                  "call_info" : "Origin",
-                  "kind" : "TestSource",
-                  "origins" :
-                  [
-                    "LSource;.source:()LData;"
-                  ]
                 }
-              ]
+              }
             }
           ]
         }

@@ -13,16 +13,6 @@
           "taint" :
           [
             {
-              "call" :
-              {
-                "port" : "Return",
-                "position" :
-                {
-                  "line" : 3,
-                  "path" : "Flow.java"
-                },
-                "resolves_to" : "LSource;.source:()LData;"
-              },
               "kinds" :
               [
                 {
@@ -39,7 +29,15 @@
                     "LSource;.source:()LData;"
                   ]
                 }
-              ]
+              ],
+              "origin" :
+              {
+                "position" :
+                {
+                  "line" : 3,
+                  "path" : "Flow.java"
+                }
+              }
             }
           ]
         }
@@ -58,16 +56,6 @@
           "sinks" :
           [
             {
-              "call" :
-              {
-                "port" : "Argument(1)",
-                "position" :
-                {
-                  "line" : 5,
-                  "path" : "Flow.java"
-                },
-                "resolves_to" : "LSink;.sink:(LData;)V"
-              },
               "kinds" :
               [
                 {
@@ -78,22 +66,20 @@
                     "LSink;.sink:(LData;)V"
                   ]
                 }
-              ]
+              ],
+              "origin" :
+              {
+                "position" :
+                {
+                  "line" : 5,
+                  "path" : "Flow.java"
+                }
+              }
             }
           ],
           "sources" :
           [
             {
-              "call" :
-              {
-                "port" : "Return",
-                "position" :
-                {
-                  "line" : 3,
-                  "path" : "Flow.java"
-                },
-                "resolves_to" : "LSource;.source:()LData;"
-              },
               "kinds" :
               [
                 {
@@ -110,7 +96,15 @@
                     "LSource;.source:()LData;"
                   ]
                 }
-              ]
+              ],
+              "origin" :
+              {
+                "position" :
+                {
+                  "line" : 3,
+                  "path" : "Flow.java"
+                }
+              }
             }
           ]
         }
@@ -128,16 +122,6 @@
           "taint" :
           [
             {
-              "call" :
-              {
-                "port" : "Argument(1)",
-                "position" :
-                {
-                  "line" : 5,
-                  "path" : "Flow.java"
-                },
-                "resolves_to" : "LSink;.sink:(LData;)V"
-              },
               "kinds" :
               [
                 {
@@ -148,7 +132,15 @@
                     "LSink;.sink:(LData;)V"
                   ]
                 }
-              ]
+              ],
+              "origin" :
+              {
+                "position" :
+                {
+                  "line" : 5,
+                  "path" : "Flow.java"
+                }
+              }
             }
           ]
         }

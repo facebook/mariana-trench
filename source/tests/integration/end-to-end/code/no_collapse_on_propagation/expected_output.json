@@ -132,18 +132,6 @@
       "sources" : 
       [
         {
-          "call" : 
-          {
-            "port" : "Return",
-            "position" : 
-            {
-              "end" : 40,
-              "line" : 31,
-              "path" : "MainActivity.java",
-              "start" : 32
-            },
-            "resolves_to" : "Landroid/content/Intent;.getExtras:()Landroid/os/Bundle;"
-          },
           "kinds" : 
           [
             {
@@ -167,7 +155,17 @@
                 "Landroid/content/Intent;.getExtras:()Landroid/os/Bundle;"
               ]
             }
-          ]
+          ],
+          "origin" : 
+          {
+            "position" : 
+            {
+              "end" : 40,
+              "line" : 31,
+              "path" : "MainActivity.java",
+              "start" : 32
+            }
+          }
         }
       ]
     }
@@ -785,18 +783,6 @@
       "taint" : 
       [
         {
-          "call" : 
-          {
-            "port" : "Argument(0)",
-            "position" : 
-            {
-              "end" : 32,
-              "line" : 57,
-              "path" : "MainActivity.java",
-              "start" : 18
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V"
-          },
           "kinds" : 
           [
             {
@@ -807,7 +793,17 @@
                 "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V"
               ]
             }
-          ]
+          ],
+          "origin" : 
+          {
+            "position" : 
+            {
+              "end" : 32,
+              "line" : 57,
+              "path" : "MainActivity.java",
+              "start" : 18
+            }
+          }
         }
       ]
     }
@@ -827,16 +823,6 @@
       "taint" : 
       [
         {
-          "call" : 
-          {
-            "port" : "Argument(1)",
-            "position" : 
-            {
-              "line" : 53,
-              "path" : "MainActivity.java"
-            },
-            "resolves_to" : "Landroid/util/Log;.e:(Ljava/lang/String;Ljava/lang/String;)I"
-          },
           "kinds" : 
           [
             {
@@ -847,7 +833,15 @@
                 "Landroid/util/Log;.e:(Ljava/lang/String;Ljava/lang/String;)I"
               ]
             }
-          ]
+          ],
+          "origin" : 
+          {
+            "position" : 
+            {
+              "line" : 53,
+              "path" : "MainActivity.java"
+            }
+          }
         }
       ]
     }

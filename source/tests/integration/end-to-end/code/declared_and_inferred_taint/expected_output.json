@@ -13,48 +13,6 @@
             "position" : 
             {
               "end" : 29,
-              "line" : 21,
-              "path" : "DeclaredAndInferredTaint.java",
-              "start" : 16
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/DeclaredAndInferredTaint;.declaredSource:()Ljava/lang/Object;"
-          },
-          "kinds" : 
-          [
-            {
-              "call_info" : "Origin",
-              "kind" : "Source",
-              "origins" : 
-              [
-                "Lcom/facebook/marianatrench/integrationtests/DeclaredAndInferredTaint;.declaredSource:()Ljava/lang/Object;"
-              ]
-            }
-          ]
-        }
-      ]
-    }
-  ],
-  "method" : "Lcom/facebook/marianatrench/integrationtests/DeclaredAndInferredTaint;.inferredSource:()Ljava/lang/Object;",
-  "position" : 
-  {
-    "line" : 20,
-    "path" : "DeclaredAndInferredTaint.java"
-  }
-}
-{
-  "generations" : 
-  [
-    {
-      "port" : "Return",
-      "taint" : 
-      [
-        {
-          "call" : 
-          {
-            "port" : "Return",
-            "position" : 
-            {
-              "end" : 29,
               "line" : 33,
               "path" : "DeclaredAndInferredTaint.java",
               "start" : 16
@@ -75,18 +33,6 @@
           ]
         },
         {
-          "call" : 
-          {
-            "port" : "Return",
-            "position" : 
-            {
-              "end" : 31,
-              "line" : 31,
-              "path" : "DeclaredAndInferredTaint.java",
-              "start" : 18
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/DeclaredAndInferredTaint;.declaredSource:()Ljava/lang/Object;"
-          },
           "kinds" : 
           [
             {
@@ -97,7 +43,17 @@
                 "Lcom/facebook/marianatrench/integrationtests/DeclaredAndInferredTaint;.declaredSource:()Ljava/lang/Object;"
               ]
             }
-          ]
+          ],
+          "origin" : 
+          {
+            "position" : 
+            {
+              "end" : 31,
+              "line" : 31,
+              "path" : "DeclaredAndInferredTaint.java",
+              "start" : 18
+            }
+          }
         }
       ]
     }
@@ -166,6 +122,46 @@
   "position" : 
   {
     "line" : 11
+  }
+}
+{
+  "generations" : 
+  [
+    {
+      "port" : "Return",
+      "taint" : 
+      [
+        {
+          "kinds" : 
+          [
+            {
+              "call_info" : "Origin",
+              "kind" : "Source",
+              "origins" : 
+              [
+                "Lcom/facebook/marianatrench/integrationtests/DeclaredAndInferredTaint;.declaredSource:()Ljava/lang/Object;"
+              ]
+            }
+          ],
+          "origin" : 
+          {
+            "position" : 
+            {
+              "end" : 29,
+              "line" : 21,
+              "path" : "DeclaredAndInferredTaint.java",
+              "start" : 16
+            }
+          }
+        }
+      ]
+    }
+  ],
+  "method" : "Lcom/facebook/marianatrench/integrationtests/DeclaredAndInferredTaint;.inferredSource:()Ljava/lang/Object;",
+  "position" : 
+  {
+    "line" : 20,
+    "path" : "DeclaredAndInferredTaint.java"
   }
 }
 {
@@ -243,18 +239,6 @@
       "sinks" : 
       [
         {
-          "call" : 
-          {
-            "port" : "Argument(0)",
-            "position" : 
-            {
-              "end" : 21,
-              "line" : 17,
-              "path" : "DeclaredAndInferredTaint.java",
-              "start" : 16
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V"
-          },
           "kinds" : 
           [
             {
@@ -265,24 +249,22 @@
                 "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V"
               ]
             }
-          ]
+          ],
+          "origin" : 
+          {
+            "position" : 
+            {
+              "end" : 21,
+              "line" : 17,
+              "path" : "DeclaredAndInferredTaint.java",
+              "start" : 16
+            }
+          }
         }
       ],
       "sources" : 
       [
         {
-          "call" : 
-          {
-            "port" : "Return",
-            "position" : 
-            {
-              "end" : 38,
-              "line" : 16,
-              "path" : "DeclaredAndInferredTaint.java",
-              "start" : 25
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/DeclaredAndInferredTaint;.declaredSource:()Ljava/lang/Object;"
-          },
           "kinds" : 
           [
             {
@@ -293,7 +275,17 @@
                 "Lcom/facebook/marianatrench/integrationtests/DeclaredAndInferredTaint;.declaredSource:()Ljava/lang/Object;"
               ]
             }
-          ]
+          ],
+          "origin" : 
+          {
+            "position" : 
+            {
+              "end" : 38,
+              "line" : 16,
+              "path" : "DeclaredAndInferredTaint.java",
+              "start" : 25
+            }
+          }
         }
       ]
     }
@@ -320,18 +312,6 @@
       "sinks" : 
       [
         {
-          "call" : 
-          {
-            "port" : "Argument(0)",
-            "position" : 
-            {
-              "end" : 21,
-              "line" : 26,
-              "path" : "DeclaredAndInferredTaint.java",
-              "start" : 16
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V"
-          },
           "kinds" : 
           [
             {
@@ -342,7 +322,17 @@
                 "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V"
               ]
             }
-          ]
+          ],
+          "origin" : 
+          {
+            "position" : 
+            {
+              "end" : 21,
+              "line" : 26,
+              "path" : "DeclaredAndInferredTaint.java",
+              "start" : 16
+            }
+          }
         }
       ],
       "sources" : 
@@ -398,18 +388,6 @@
       "sinks" : 
       [
         {
-          "call" : 
-          {
-            "port" : "Argument(0)",
-            "position" : 
-            {
-              "end" : 21,
-              "line" : 38,
-              "path" : "DeclaredAndInferredTaint.java",
-              "start" : 16
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V"
-          },
           "kinds" : 
           [
             {
@@ -420,7 +398,17 @@
                 "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V"
               ]
             }
-          ]
+          ],
+          "origin" : 
+          {
+            "position" : 
+            {
+              "end" : 21,
+              "line" : 38,
+              "path" : "DeclaredAndInferredTaint.java",
+              "start" : 16
+            }
+          }
         }
       ],
       "sources" : 

@@ -12,48 +12,6 @@
             "port" : "Return",
             "position" : 
             {
-              "end" : 23,
-              "line" : 13,
-              "path" : "FlowWithHops.java",
-              "start" : 18
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;"
-          },
-          "kinds" : 
-          [
-            {
-              "call_info" : "Origin",
-              "kind" : "Source",
-              "origins" : 
-              [
-                "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;"
-              ]
-            }
-          ]
-        }
-      ]
-    }
-  ],
-  "method" : "Lcom/facebook/marianatrench/integrationtests/FlowWithHops;.getSource:()Ljava/lang/Object;",
-  "position" : 
-  {
-    "line" : 12,
-    "path" : "FlowWithHops.java"
-  }
-}
-{
-  "generations" : 
-  [
-    {
-      "port" : "Return",
-      "taint" : 
-      [
-        {
-          "call" : 
-          {
-            "port" : "Return",
-            "position" : 
-            {
               "end" : 24,
               "line" : 17,
               "path" : "FlowWithHops.java",
@@ -143,6 +101,46 @@
   }
 }
 {
+  "generations" : 
+  [
+    {
+      "port" : "Return",
+      "taint" : 
+      [
+        {
+          "kinds" : 
+          [
+            {
+              "call_info" : "Origin",
+              "kind" : "Source",
+              "origins" : 
+              [
+                "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;"
+              ]
+            }
+          ],
+          "origin" : 
+          {
+            "position" : 
+            {
+              "end" : 23,
+              "line" : 13,
+              "path" : "FlowWithHops.java",
+              "start" : 18
+            }
+          }
+        }
+      ]
+    }
+  ],
+  "method" : "Lcom/facebook/marianatrench/integrationtests/FlowWithHops;.getSource:()Ljava/lang/Object;",
+  "position" : 
+  {
+    "line" : 12,
+    "path" : "FlowWithHops.java"
+  }
+}
+{
   "inline_as" : "Argument(0)",
   "method" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sanitize:(Ljava/lang/Object;)Ljava/lang/Object;",
   "position" : 
@@ -225,18 +223,6 @@
       "sinks" : 
       [
         {
-          "call" : 
-          {
-            "port" : "Argument(0)",
-            "position" : 
-            {
-              "end" : 16,
-              "line" : 14,
-              "path" : "DirectFlowWithSanitizer.java",
-              "start" : 16
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V"
-          },
           "kinds" : 
           [
             {
@@ -247,24 +233,22 @@
                 "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V"
               ]
             }
-          ]
+          ],
+          "origin" : 
+          {
+            "position" : 
+            {
+              "end" : 16,
+              "line" : 14,
+              "path" : "DirectFlowWithSanitizer.java",
+              "start" : 16
+            }
+          }
         }
       ],
       "sources" : 
       [
         {
-          "call" : 
-          {
-            "port" : "Return",
-            "position" : 
-            {
-              "end" : 27,
-              "line" : 12,
-              "path" : "DirectFlowWithSanitizer.java",
-              "start" : 22
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;"
-          },
           "kinds" : 
           [
             {
@@ -294,7 +278,17 @@
                 "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;"
               ]
             }
-          ]
+          ],
+          "origin" : 
+          {
+            "position" : 
+            {
+              "end" : 27,
+              "line" : 12,
+              "path" : "DirectFlowWithSanitizer.java",
+              "start" : 22
+            }
+          }
         }
       ]
     }
@@ -321,18 +315,6 @@
       "sinks" : 
       [
         {
-          "call" : 
-          {
-            "port" : "Argument(1)",
-            "position" : 
-            {
-              "end" : 32,
-              "line" : 17,
-              "path" : "ExternalDirectFlow.java",
-              "start" : 27
-            },
-            "resolves_to" : "Landroid/app/Activity;.startActivity:(Landroid/content/Intent;)V"
-          },
           "kinds" : 
           [
             {
@@ -343,24 +325,22 @@
                 "Landroid/app/Activity;.startActivity:(Landroid/content/Intent;)V"
               ]
             }
-          ]
+          ],
+          "origin" : 
+          {
+            "position" : 
+            {
+              "end" : 32,
+              "line" : 17,
+              "path" : "ExternalDirectFlow.java",
+              "start" : 27
+            }
+          }
         }
       ],
       "sources" : 
       [
         {
-          "call" : 
-          {
-            "port" : "Return",
-            "position" : 
-            {
-              "end" : 37,
-              "line" : 16,
-              "path" : "ExternalDirectFlow.java",
-              "start" : 29
-            },
-            "resolves_to" : "Landroid/app/Activity;.getIntent:()Landroid/content/Intent;"
-          },
           "kinds" : 
           [
             {
@@ -371,7 +351,17 @@
                 "Landroid/app/Activity;.getIntent:()Landroid/content/Intent;"
               ]
             }
-          ]
+          ],
+          "origin" : 
+          {
+            "position" : 
+            {
+              "end" : 37,
+              "line" : 16,
+              "path" : "ExternalDirectFlow.java",
+              "start" : 29
+            }
+          }
         }
       ]
     }
@@ -398,18 +388,6 @@
       "sinks" : 
       [
         {
-          "call" : 
-          {
-            "port" : "Argument(1)",
-            "position" : 
-            {
-              "end" : 23,
-              "line" : 19,
-              "path" : "DirectFlow.java",
-              "start" : 18
-            },
-            "resolves_to" : "Landroid/app/Activity;.startActivity:(Landroid/content/Intent;)V"
-          },
           "kinds" : 
           [
             {
@@ -420,24 +398,22 @@
                 "Landroid/app/Activity;.startActivity:(Landroid/content/Intent;)V"
               ]
             }
-          ]
+          ],
+          "origin" : 
+          {
+            "position" : 
+            {
+              "end" : 23,
+              "line" : 19,
+              "path" : "DirectFlow.java",
+              "start" : 18
+            }
+          }
         }
       ],
       "sources" : 
       [
         {
-          "call" : 
-          {
-            "port" : "Return",
-            "position" : 
-            {
-              "end" : 28,
-              "line" : 18,
-              "path" : "DirectFlow.java",
-              "start" : 20
-            },
-            "resolves_to" : "Landroid/app/Activity;.getIntent:()Landroid/content/Intent;"
-          },
           "kinds" : 
           [
             {
@@ -448,7 +424,17 @@
                 "Landroid/app/Activity;.getIntent:()Landroid/content/Intent;"
               ]
             }
-          ]
+          ],
+          "origin" : 
+          {
+            "position" : 
+            {
+              "end" : 28,
+              "line" : 18,
+              "path" : "DirectFlow.java",
+              "start" : 20
+            }
+          }
         }
       ]
     }
@@ -475,18 +461,6 @@
       "sinks" : 
       [
         {
-          "call" : 
-          {
-            "port" : "Argument(1)",
-            "position" : 
-            {
-              "end" : 32,
-              "line" : 19,
-              "path" : "InheritanceFlows.java",
-              "start" : 27
-            },
-            "resolves_to" : "Landroid/app/Activity;.startActivity:(Landroid/content/Intent;)V"
-          },
           "kinds" : 
           [
             {
@@ -497,24 +471,22 @@
                 "Landroid/app/Activity;.startActivity:(Landroid/content/Intent;)V"
               ]
             }
-          ]
+          ],
+          "origin" : 
+          {
+            "position" : 
+            {
+              "end" : 32,
+              "line" : 19,
+              "path" : "InheritanceFlows.java",
+              "start" : 27
+            }
+          }
         }
       ],
       "sources" : 
       [
         {
-          "call" : 
-          {
-            "port" : "Return",
-            "position" : 
-            {
-              "end" : 37,
-              "line" : 18,
-              "path" : "InheritanceFlows.java",
-              "start" : 29
-            },
-            "resolves_to" : "Landroid/app/Activity;.getIntent:()Landroid/content/Intent;"
-          },
           "kinds" : 
           [
             {
@@ -525,7 +497,17 @@
                 "Landroid/app/Activity;.getIntent:()Landroid/content/Intent;"
               ]
             }
-          ]
+          ],
+          "origin" : 
+          {
+            "position" : 
+            {
+              "end" : 37,
+              "line" : 18,
+              "path" : "InheritanceFlows.java",
+              "start" : 29
+            }
+          }
         }
       ]
     }
@@ -552,18 +534,6 @@
       "sinks" : 
       [
         {
-          "call" : 
-          {
-            "port" : "Argument(1)",
-            "position" : 
-            {
-              "end" : 64,
-              "line" : 58,
-              "path" : "DirectOpenRedirectFlow.java",
-              "start" : 50
-            },
-            "resolves_to" : "Lcom/facebook/content/SecureContextHelper;.startFacebookActivity:(Landroid/content/Intent;Landroid/content/Context;)V"
-          },
           "kinds" : 
           [
             {
@@ -574,24 +544,22 @@
                 "Lcom/facebook/content/SecureContextHelper;.startFacebookActivity:(Landroid/content/Intent;Landroid/content/Context;)V"
               ]
             }
-          ]
+          ],
+          "origin" : 
+          {
+            "position" : 
+            {
+              "end" : 64,
+              "line" : 58,
+              "path" : "DirectOpenRedirectFlow.java",
+              "start" : 50
+            }
+          }
         }
       ],
       "sources" : 
       [
         {
-          "call" : 
-          {
-            "port" : "Return",
-            "position" : 
-            {
-              "end" : 36,
-              "line" : 26,
-              "path" : "DirectOpenRedirectFlow.java",
-              "start" : 28
-            },
-            "resolves_to" : "Landroid/app/Activity;.getIntent:()Landroid/content/Intent;"
-          },
           "kinds" : 
           [
             {
@@ -620,7 +588,17 @@
                 "Landroid/app/Activity;.getIntent:()Landroid/content/Intent;"
               ]
             }
-          ]
+          ],
+          "origin" : 
+          {
+            "position" : 
+            {
+              "end" : 36,
+              "line" : 26,
+              "path" : "DirectOpenRedirectFlow.java",
+              "start" : 28
+            }
+          }
         }
       ]
     }
@@ -1406,18 +1384,6 @@
       "taint" : 
       [
         {
-          "call" : 
-          {
-            "port" : "Argument(0)",
-            "position" : 
-            {
-              "end" : 23,
-              "line" : 21,
-              "path" : "FlowWithHops.java",
-              "start" : 16
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V"
-          },
           "kinds" : 
           [
             {
@@ -1428,7 +1394,17 @@
                 "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V"
               ]
             }
-          ]
+          ],
+          "origin" : 
+          {
+            "position" : 
+            {
+              "end" : 23,
+              "line" : 21,
+              "path" : "FlowWithHops.java",
+              "start" : 16
+            }
+          }
         }
       ]
     }

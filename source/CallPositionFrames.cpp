@@ -362,10 +362,11 @@ CallPositionFrames::input_paths() const {
 }
 
 Json::Value CallPositionFrames::to_json(
-    const Method* MT_NULLABLE callee) const {
+    const Method* MT_NULLABLE callee,
+    CallInfo call_info) const {
   auto taint = Json::Value(Json::arrayValue);
   for (const auto& callee_port_frames : frames_) {
-    auto frames_json = callee_port_frames.to_json(callee, position_);
+    auto frames_json = callee_port_frames.to_json(callee, position_, call_info);
     taint.append(frames_json);
   }
   return taint;

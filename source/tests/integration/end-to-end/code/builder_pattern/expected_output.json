@@ -113,18 +113,35 @@
       "taint" : 
       [
         {
-          "call" : 
-          {
-            "port" : "Argument(0)",
-            "position" : 
+          "kinds" : 
+          [
             {
-              "end" : 0,
-              "line" : 43,
-              "path" : "Test.java",
-              "start" : 0
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/Test$Builder;.<init>:()V"
-          },
+              "call_info" : "Declaration",
+              "kind" : "Source",
+              "origins" : 
+              [
+                "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;"
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "method" : "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;",
+  "position" : 
+  {
+    "line" : 11
+  }
+}
+{
+  "generations" : 
+  [
+    {
+      "port" : "Return",
+      "taint" : 
+      [
+        {
           "kinds" : 
           [
             {
@@ -135,7 +152,17 @@
                 "Lcom/facebook/marianatrench/integrationtests/Test$Builder;.<init>:()V"
               ]
             }
-          ]
+          ],
+          "origin" : 
+          {
+            "position" : 
+            {
+              "end" : 0,
+              "line" : 43,
+              "path" : "Test.java",
+              "start" : 0
+            }
+          }
         }
       ]
     }
@@ -167,16 +194,6 @@
       "taint" : 
       [
         {
-          "call" : 
-          {
-            "port" : "Argument(0)",
-            "position" : 
-            {
-              "line" : 37,
-              "path" : "Test.java"
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/Test$Builder;.<init>:()V"
-          },
           "kinds" : 
           [
             {
@@ -187,7 +204,15 @@
                 "Lcom/facebook/marianatrench/integrationtests/Test$Builder;.<init>:()V"
               ]
             }
-          ]
+          ],
+          "origin" : 
+          {
+            "position" : 
+            {
+              "line" : 37,
+              "path" : "Test.java"
+            }
+          }
         }
       ]
     }
@@ -197,35 +222,6 @@
   {
     "line" : 36,
     "path" : "Test.java"
-  }
-}
-{
-  "generations" : 
-  [
-    {
-      "port" : "Return",
-      "taint" : 
-      [
-        {
-          "kinds" : 
-          [
-            {
-              "call_info" : "Declaration",
-              "kind" : "Source",
-              "origins" : 
-              [
-                "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;"
-              ]
-            }
-          ]
-        }
-      ]
-    }
-  ],
-  "method" : "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;",
-  "position" : 
-  {
-    "line" : 11
   }
 }
 {
@@ -312,18 +308,6 @@
       "sinks" : 
       [
         {
-          "call" : 
-          {
-            "port" : "Argument(0)",
-            "position" : 
-            {
-              "end" : 17,
-              "line" : 62,
-              "path" : "Test.java",
-              "start" : 11
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/Test$Builder;.build:()Lcom/facebook/marianatrench/integrationtests/Test;"
-          },
           "kinds" : 
           [
             {
@@ -334,24 +318,22 @@
                 "Lcom/facebook/marianatrench/integrationtests/Test$Builder;.build:()Lcom/facebook/marianatrench/integrationtests/Test;"
               ]
             }
-          ]
+          ],
+          "origin" : 
+          {
+            "position" : 
+            {
+              "end" : 17,
+              "line" : 62,
+              "path" : "Test.java",
+              "start" : 11
+            }
+          }
         }
       ],
       "sources" : 
       [
         {
-          "call" : 
-          {
-            "port" : "Argument(0)",
-            "position" : 
-            {
-              "end" : 0,
-              "line" : 55,
-              "path" : "Test.java",
-              "start" : 0
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/Test$Builder;.<init>:()V"
-          },
           "kinds" : 
           [
             {
@@ -381,7 +363,17 @@
                 "Lcom/facebook/marianatrench/integrationtests/Test$Builder;.<init>:()V"
               ]
             }
-          ]
+          ],
+          "origin" : 
+          {
+            "position" : 
+            {
+              "end" : 0,
+              "line" : 55,
+              "path" : "Test.java",
+              "start" : 0
+            }
+          }
         }
       ]
     }
@@ -412,18 +404,6 @@
       "sinks" : 
       [
         {
-          "call" : 
-          {
-            "port" : "Argument(0)",
-            "position" : 
-            {
-              "end" : 17,
-              "line" : 76,
-              "path" : "Test.java",
-              "start" : 11
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/Test$Builder;.build:()Lcom/facebook/marianatrench/integrationtests/Test;"
-          },
           "kinds" : 
           [
             {
@@ -434,55 +414,21 @@
                 "Lcom/facebook/marianatrench/integrationtests/Test$Builder;.build:()Lcom/facebook/marianatrench/integrationtests/Test;"
               ]
             }
-          ]
+          ],
+          "origin" : 
+          {
+            "position" : 
+            {
+              "end" : 17,
+              "line" : 76,
+              "path" : "Test.java",
+              "start" : 11
+            }
+          }
         }
       ],
       "sources" : 
       [
-        {
-          "call" : 
-          {
-            "port" : "Argument(0)",
-            "position" : 
-            {
-              "end" : 0,
-              "line" : 73,
-              "path" : "Test.java",
-              "start" : 0
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/Test$Builder;.<init>:()V"
-          },
-          "kinds" : 
-          [
-            {
-              "always_features" : 
-              [
-                "via-certificate-pinner"
-              ],
-              "call_info" : "Origin",
-              "kind" : "Source",
-              "local_features" : 
-              {
-                "always_features" : 
-                [
-                  "via-certificate-pinner"
-                ]
-              },
-              "local_positions" : 
-              [
-                {
-                  "end" : 10,
-                  "line" : 74,
-                  "start" : 4
-                }
-              ],
-              "origins" : 
-              [
-                "Lcom/facebook/marianatrench/integrationtests/Test$Builder;.<init>:()V"
-              ]
-            }
-          ]
-        },
         {
           "call" : 
           {
@@ -527,6 +473,48 @@
               ]
             }
           ]
+        },
+        {
+          "kinds" : 
+          [
+            {
+              "always_features" : 
+              [
+                "via-certificate-pinner"
+              ],
+              "call_info" : "Origin",
+              "kind" : "Source",
+              "local_features" : 
+              {
+                "always_features" : 
+                [
+                  "via-certificate-pinner"
+                ]
+              },
+              "local_positions" : 
+              [
+                {
+                  "end" : 10,
+                  "line" : 74,
+                  "start" : 4
+                }
+              ],
+              "origins" : 
+              [
+                "Lcom/facebook/marianatrench/integrationtests/Test$Builder;.<init>:()V"
+              ]
+            }
+          ],
+          "origin" : 
+          {
+            "position" : 
+            {
+              "end" : 0,
+              "line" : 73,
+              "path" : "Test.java",
+              "start" : 0
+            }
+          }
         }
       ]
     }
@@ -553,18 +541,6 @@
       "sinks" : 
       [
         {
-          "call" : 
-          {
-            "port" : "Argument(0)",
-            "position" : 
-            {
-              "end" : 17,
-              "line" : 69,
-              "path" : "Test.java",
-              "start" : 11
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/Test$Builder;.build:()Lcom/facebook/marianatrench/integrationtests/Test;"
-          },
           "kinds" : 
           [
             {
@@ -575,24 +551,22 @@
                 "Lcom/facebook/marianatrench/integrationtests/Test$Builder;.build:()Lcom/facebook/marianatrench/integrationtests/Test;"
               ]
             }
-          ]
+          ],
+          "origin" : 
+          {
+            "position" : 
+            {
+              "end" : 17,
+              "line" : 69,
+              "path" : "Test.java",
+              "start" : 11
+            }
+          }
         }
       ],
       "sources" : 
       [
         {
-          "call" : 
-          {
-            "port" : "Argument(0)",
-            "position" : 
-            {
-              "end" : 0,
-              "line" : 66,
-              "path" : "Test.java",
-              "start" : 0
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/Test$Builder;.<init>:()V"
-          },
           "kinds" : 
           [
             {
@@ -611,7 +585,17 @@
                 "Lcom/facebook/marianatrench/integrationtests/Test$Builder;.<init>:()V"
               ]
             }
-          ]
+          ],
+          "origin" : 
+          {
+            "position" : 
+            {
+              "end" : 0,
+              "line" : 66,
+              "path" : "Test.java",
+              "start" : 0
+            }
+          }
         }
       ]
     }

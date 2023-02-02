@@ -353,7 +353,7 @@ RootPatriciaTreeAbstractPartition<PathTreeDomain> CalleeFrames::input_paths()
 Json::Value CalleeFrames::to_json() const {
   auto taint = Json::Value(Json::arrayValue);
   for (const auto& [_, call_position_frames] : frames_.bindings()) {
-    auto frames_json = call_position_frames.to_json(callee_);
+    auto frames_json = call_position_frames.to_json(callee_, call_info_);
     mt_assert(frames_json.isArray());
     for (const auto& frame_json : frames_json) {
       taint.append(frame_json);

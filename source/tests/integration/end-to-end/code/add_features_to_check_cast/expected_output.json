@@ -141,18 +141,6 @@
       "sources" : 
       [
         {
-          "call" : 
-          {
-            "port" : "Return",
-            "position" : 
-            {
-              "end" : 41,
-              "line" : 36,
-              "path" : "AddFeatureToCheckCast.java",
-              "start" : 36
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;"
-          },
           "kinds" : 
           [
             {
@@ -182,7 +170,17 @@
                 "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;"
               ]
             }
-          ]
+          ],
+          "origin" : 
+          {
+            "position" : 
+            {
+              "end" : 41,
+              "line" : 36,
+              "path" : "AddFeatureToCheckCast.java",
+              "start" : 36
+            }
+          }
         }
       ]
     }
@@ -214,15 +212,6 @@
       "sinks" : 
       [
         {
-          "call" : 
-          {
-            "port" : "Argument(0)",
-            "position" : 
-            {
-              "line" : 27,
-              "path" : "AddFeatureToCheckCast.java"
-            }
-          },
           "kinds" : 
           [
             {
@@ -234,24 +223,20 @@
                 "Lcom/mariana_trench/artificial/ArrayAllocation;.allocateArray:(I)V"
               ]
             }
-          ]
+          ],
+          "origin" : 
+          {
+            "position" : 
+            {
+              "line" : 27,
+              "path" : "AddFeatureToCheckCast.java"
+            }
+          }
         }
       ],
       "sources" : 
       [
         {
-          "call" : 
-          {
-            "port" : "Return",
-            "position" : 
-            {
-              "end" : 41,
-              "line" : 26,
-              "path" : "AddFeatureToCheckCast.java",
-              "start" : 36
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;"
-          },
           "kinds" : 
           [
             {
@@ -283,7 +268,17 @@
                 "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;"
               ]
             }
-          ]
+          ],
+          "origin" : 
+          {
+            "position" : 
+            {
+              "end" : 41,
+              "line" : 26,
+              "path" : "AddFeatureToCheckCast.java",
+              "start" : 36
+            }
+          }
         }
       ]
     }
@@ -314,18 +309,6 @@
       "sinks" : 
       [
         {
-          "call" : 
-          {
-            "port" : "Argument(1)",
-            "position" : 
-            {
-              "end" : 18,
-              "line" : 16,
-              "path" : "AddFeatureToCheckCast.java",
-              "start" : 9
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/AddFeatureToCheckCast;.sink:(Ljava/lang/String;)V"
-          },
           "kinds" : 
           [
             {
@@ -336,24 +319,22 @@
                 "Lcom/facebook/marianatrench/integrationtests/AddFeatureToCheckCast;.sink:(Ljava/lang/String;)V"
               ]
             }
-          ]
+          ],
+          "origin" : 
+          {
+            "position" : 
+            {
+              "end" : 18,
+              "line" : 16,
+              "path" : "AddFeatureToCheckCast.java",
+              "start" : 9
+            }
+          }
         }
       ],
       "sources" : 
       [
         {
-          "call" : 
-          {
-            "port" : "Return",
-            "position" : 
-            {
-              "end" : 32,
-              "line" : 14,
-              "path" : "AddFeatureToCheckCast.java",
-              "start" : 27
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;"
-          },
           "kinds" : 
           [
             {
@@ -375,7 +356,17 @@
                 "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;"
               ]
             }
-          ]
+          ],
+          "origin" : 
+          {
+            "position" : 
+            {
+              "end" : 32,
+              "line" : 14,
+              "path" : "AddFeatureToCheckCast.java",
+              "start" : 27
+            }
+          }
         }
       ]
     }
@@ -435,18 +426,6 @@
       "sources" : 
       [
         {
-          "call" : 
-          {
-            "port" : "Return",
-            "position" : 
-            {
-              "end" : 45,
-              "line" : 31,
-              "path" : "AddFeatureToCheckCast.java",
-              "start" : 40
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;"
-          },
           "kinds" : 
           [
             {
@@ -468,7 +447,17 @@
                 "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;"
               ]
             }
-          ]
+          ],
+          "origin" : 
+          {
+            "position" : 
+            {
+              "end" : 45,
+              "line" : 31,
+              "path" : "AddFeatureToCheckCast.java",
+              "start" : 40
+            }
+          }
         }
       ]
     }
@@ -495,18 +484,6 @@
       "sinks" : 
       [
         {
-          "call" : 
-          {
-            "port" : "Argument(0)",
-            "position" : 
-            {
-              "end" : 21,
-              "line" : 22,
-              "path" : "AddFeatureToCheckCast.java",
-              "start" : 16
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V"
-          },
           "kinds" : 
           [
             {
@@ -517,24 +494,22 @@
                 "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V"
               ]
             }
-          ]
+          ],
+          "origin" : 
+          {
+            "position" : 
+            {
+              "end" : 21,
+              "line" : 22,
+              "path" : "AddFeatureToCheckCast.java",
+              "start" : 16
+            }
+          }
         }
       ],
       "sources" : 
       [
         {
-          "call" : 
-          {
-            "port" : "Return",
-            "position" : 
-            {
-              "end" : 32,
-              "line" : 20,
-              "path" : "AddFeatureToCheckCast.java",
-              "start" : 27
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;"
-          },
           "kinds" : 
           [
             {
@@ -545,7 +520,17 @@
                 "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;"
               ]
             }
-          ]
+          ],
+          "origin" : 
+          {
+            "position" : 
+            {
+              "end" : 32,
+              "line" : 20,
+              "path" : "AddFeatureToCheckCast.java",
+              "start" : 27
+            }
+          }
         }
       ]
     }
@@ -1133,15 +1118,6 @@
       "taint" : 
       [
         {
-          "call" : 
-          {
-            "port" : "Argument(0)",
-            "position" : 
-            {
-              "line" : 45,
-              "path" : "AddFeatureToCheckCast.java"
-            }
-          },
           "kinds" : 
           [
             {
@@ -1170,7 +1146,15 @@
                 "Lcom/mariana_trench/artificial/ArrayAllocation;.allocateArray:(I)V"
               ]
             }
-          ]
+          ],
+          "origin" : 
+          {
+            "position" : 
+            {
+              "line" : 45,
+              "path" : "AddFeatureToCheckCast.java"
+            }
+          }
         }
       ]
     }
@@ -1220,18 +1204,6 @@
       "taint" : 
       [
         {
-          "call" : 
-          {
-            "port" : "Argument(1)",
-            "position" : 
-            {
-              "end" : 11,
-              "line" : 41,
-              "path" : "AddFeatureToCheckCast.java",
-              "start" : 9
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/AddFeatureToCheckCast;.sink:(Ljava/lang/String;)V"
-          },
           "kinds" : 
           [
             {
@@ -1242,7 +1214,17 @@
                 "Lcom/facebook/marianatrench/integrationtests/AddFeatureToCheckCast;.sink:(Ljava/lang/String;)V"
               ]
             }
-          ]
+          ],
+          "origin" : 
+          {
+            "position" : 
+            {
+              "end" : 11,
+              "line" : 41,
+              "path" : "AddFeatureToCheckCast.java",
+              "start" : 9
+            }
+          }
         }
       ]
     }

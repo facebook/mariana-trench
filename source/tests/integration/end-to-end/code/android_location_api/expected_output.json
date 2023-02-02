@@ -50,18 +50,6 @@
       "sinks" : 
       [
         {
-          "call" : 
-          {
-            "port" : "Argument(1)",
-            "position" : 
-            {
-              "end" : 50,
-              "line" : 29,
-              "path" : "ActivityUsingAndroidLocationManager.java",
-              "start" : 22
-            },
-            "resolves_to" : "Landroid/util/Log;.e:(Ljava/lang/String;Ljava/lang/String;)I"
-          },
           "kinds" : 
           [
             {
@@ -72,24 +60,22 @@
                 "Landroid/util/Log;.e:(Ljava/lang/String;Ljava/lang/String;)I"
               ]
             }
-          ]
+          ],
+          "origin" : 
+          {
+            "position" : 
+            {
+              "end" : 50,
+              "line" : 29,
+              "path" : "ActivityUsingAndroidLocationManager.java",
+              "start" : 22
+            }
+          }
         }
       ],
       "sources" : 
       [
         {
-          "call" : 
-          {
-            "port" : "Return",
-            "position" : 
-            {
-              "end" : 48,
-              "line" : 29,
-              "path" : "ActivityUsingAndroidLocationManager.java",
-              "start" : 41
-            },
-            "resolves_to" : "Landroid/location/Location;.toString:()Ljava/lang/String;"
-          },
           "kinds" : 
           [
             {
@@ -100,7 +86,17 @@
                 "Landroid/location/Location;.toString:()Ljava/lang/String;"
               ]
             }
-          ]
+          ],
+          "origin" : 
+          {
+            "position" : 
+            {
+              "end" : 48,
+              "line" : 29,
+              "path" : "ActivityUsingAndroidLocationManager.java",
+              "start" : 41
+            }
+          }
         }
       ]
     }

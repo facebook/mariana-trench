@@ -695,7 +695,8 @@ CalleePortFrames CalleePortFrames::propagate_crtex_leaf_frames(
 
 Json::Value CalleePortFrames::to_json(
     const Method* MT_NULLABLE callee,
-    const Position* MT_NULLABLE position) const {
+    const Position* MT_NULLABLE position,
+    CallInfo call_info) const {
   auto taint = Json::Value(Json::objectValue);
 
   auto kinds = Json::Value(Json::arrayValue);
@@ -710,35 +711,49 @@ Json::Value CalleePortFrames::to_json(
   }
   taint["kinds"] = kinds;
 
-  if (callee != nullptr || position != nullptr ||
-      !callee_port_.root().is_leaf()) {
-    // In most cases, all 3 values (callee, position, port) are expected to be
-    // present. Some edge cases are:
-    //
-    // - Standard leaf/terminal frames: The "call" key will be absent because
-    //   there is no "next hop".
-    // - CRTEX leaf/terminal frames: The callee port will be "producer/anchor".
-    //   SAPP post-processing will transform it to something that other static
-    //   analysis tools in the family can understand.
-    // - Return sinks and parameter sources: There is no "callee", but the
-    //   position points to the return instruction/parameter.
-    auto call = Json::Value(Json::objectValue);
+  // In most cases, all 3 values (callee, position, port) are expected to be
+  // present. Some edge cases are:
+  //
+  // - Standard leaf/terminal frames: The "call" key will be absent because
+  //   there is no "next hop".
+  // - CRTEX leaf/terminal frames: The callee port will be "producer/anchor".
+  //   SAPP post-processing will transform it to something that other static
+  //   analysis tools in the family can understand.
+  // - Return sinks and parameter sources: There is no "callee", but the
+  //   position points to the return instruction/parameter.
 
-    if (callee != nullptr) {
-      call["resolves_to"] = callee->to_json();
-    }
-
+  // We don't want to emit calls in origin frames in the non-CRTEX case.
+  if (!callee_port_.root().is_leaf_port() && call_info == CallInfo::Origin) {
+    // Since we don't emit calls for origins, we need to provide the origin
+    // location for proper visualisation.
     if (position != nullptr) {
-      call["position"] = position->to_json();
+      auto origin = Json::Value(Json::objectValue);
+      origin["position"] = position->to_json();
+      taint["origin"] = origin;
     }
-
-    if (!callee_port_.root().is_leaf()) {
-      call["port"] = callee_port_.to_json();
-    }
-
-    taint["call"] = call;
+    return taint;
   }
 
+  // Never emit calls for declarations.
+  if (call_info == CallInfo::Declaration) {
+    return taint;
+  }
+
+  auto call = Json::Value(Json::objectValue);
+
+  if (callee != nullptr) {
+    call["resolves_to"] = callee->to_json();
+  }
+
+  if (position != nullptr) {
+    call["position"] = position->to_json();
+  }
+
+  if (!callee_port_.root().is_leaf()) {
+    call["port"] = callee_port_.to_json();
+  }
+
+  taint["call"] = call;
   return taint;
 }
 

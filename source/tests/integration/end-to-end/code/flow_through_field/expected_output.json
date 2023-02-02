@@ -7,18 +7,6 @@
       "taint" : 
       [
         {
-          "call" : 
-          {
-            "port" : "Return",
-            "position" : 
-            {
-              "end" : 28,
-              "line" : 27,
-              "path" : "OfferRedirectToWebActivity.java",
-              "start" : 20
-            },
-            "resolves_to" : "Landroid/app/Activity;.getIntent:()Landroid/content/Intent;"
-          },
           "kinds" : 
           [
             {
@@ -42,7 +30,17 @@
                 "Landroid/app/Activity;.getIntent:()Landroid/content/Intent;"
               ]
             }
-          ]
+          ],
+          "origin" : 
+          {
+            "position" : 
+            {
+              "end" : 28,
+              "line" : 27,
+              "path" : "OfferRedirectToWebActivity.java",
+              "start" : 20
+            }
+          }
         }
       ]
     }
@@ -90,18 +88,6 @@
       "sources" : 
       [
         {
-          "call" : 
-          {
-            "port" : "Return",
-            "position" : 
-            {
-              "end" : 28,
-              "line" : 27,
-              "path" : "OfferRedirectToWebActivity.java",
-              "start" : 20
-            },
-            "resolves_to" : "Landroid/app/Activity;.getIntent:()Landroid/content/Intent;"
-          },
           "kinds" : 
           [
             {
@@ -125,7 +111,17 @@
                 "Landroid/app/Activity;.getIntent:()Landroid/content/Intent;"
               ]
             }
-          ]
+          ],
+          "origin" : 
+          {
+            "position" : 
+            {
+              "end" : 28,
+              "line" : 27,
+              "path" : "OfferRedirectToWebActivity.java",
+              "start" : 20
+            }
+          }
         }
       ]
     },
@@ -170,18 +166,6 @@
       "sources" : 
       [
         {
-          "call" : 
-          {
-            "port" : "Return",
-            "position" : 
-            {
-              "end" : 28,
-              "line" : 27,
-              "path" : "OfferRedirectToWebActivity.java",
-              "start" : 20
-            },
-            "resolves_to" : "Landroid/app/Activity;.getIntent:()Landroid/content/Intent;"
-          },
           "kinds" : 
           [
             {
@@ -205,7 +189,17 @@
                 "Landroid/app/Activity;.getIntent:()Landroid/content/Intent;"
               ]
             }
-          ]
+          ],
+          "origin" : 
+          {
+            "position" : 
+            {
+              "end" : 28,
+              "line" : 27,
+              "path" : "OfferRedirectToWebActivity.java",
+              "start" : 20
+            }
+          }
         }
       ]
     }
@@ -1022,18 +1016,6 @@
       "taint" : 
       [
         {
-          "call" : 
-          {
-            "port" : "Argument(1)",
-            "position" : 
-            {
-              "end" : 60,
-              "line" : 26,
-              "path" : "OfferRenderingUtils.java",
-              "start" : 55
-            },
-            "resolves_to" : "Lcom/facebook/secure/context/IntentLauncher;.launchActivity:(Landroid/content/Intent;Landroid/content/Context;)Z"
-          },
           "kinds" : 
           [
             {
@@ -1052,7 +1034,17 @@
                 "Lcom/facebook/secure/context/IntentLauncher;.launchActivity:(Landroid/content/Intent;Landroid/content/Context;)Z"
               ]
             }
-          ]
+          ],
+          "origin" : 
+          {
+            "position" : 
+            {
+              "end" : 60,
+              "line" : 26,
+              "path" : "OfferRenderingUtils.java",
+              "start" : 55
+            }
+          }
         }
       ]
     }
