@@ -28,9 +28,12 @@ std::vector<Model> TaintInTaintOutGenerator::visit_method(
     }
   }
 
+  // This logic sanitizes Argument(0) -> Return on specifc classes
   const auto class_name = generator::get_class_name(method);
   if (!method->is_static() &&
       (boost::contains(class_name, "Context;") ||
+       boost::contains(class_name, "ContextThemeWrapper;") ||
+       boost::contains(class_name, "ContextWrapper;") ||
        boost::contains(class_name, "Activity;") ||
        boost::contains(class_name, "Service;") ||
        boost::contains(class_name, "WebView;") ||
