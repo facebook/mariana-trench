@@ -225,6 +225,8 @@ const std::string show_call_info(CallInfo call_info) {
       return "Origin";
     case CallInfo::CallSite:
       return "CallSite";
+    case CallInfo::Propagation:
+      return "Propagation";
     default:
       mt_unreachable();
   }
@@ -238,6 +240,8 @@ CallInfo propagate_call_info(CallInfo call_info) {
       return CallInfo::CallSite;
     case CallInfo::CallSite:
       return CallInfo::CallSite;
+    case CallInfo::Propagation:
+      mt_unreachable();
     default:
       mt_unreachable();
   }

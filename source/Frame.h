@@ -42,11 +42,13 @@ using KindEncoding = unsigned int;
 enum class CallInfo : KindEncoding {
   // A declaration of taint from a model - should not be included in the final
   // trace.
-  Declaration = 1,
+  Declaration = 0,
   // The origin frame for taint that indicates a leaf.
-  Origin = 2,
+  Origin = 1,
   // A call site where taint is propagated from some origin.
-  CallSite = 3,
+  CallSite = 2,
+  // Special taint used to infer propagations.
+  Propagation = 3,
 };
 
 const std::string show_call_info(CallInfo call_info);
