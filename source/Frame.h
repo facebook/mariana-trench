@@ -51,7 +51,7 @@ enum class CallInfo : KindEncoding {
   Propagation = 3,
 };
 
-const std::string show_call_info(CallInfo call_info);
+const std::string_view show_call_info(CallInfo call_info);
 CallInfo propagate_call_info(CallInfo call_info);
 
 /**

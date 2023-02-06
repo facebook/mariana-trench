@@ -195,7 +195,7 @@ Json::Value Frame::to_json(const LocalPositionSet& local_positions) const {
     value["canonical_names"] = canonical_names;
   }
 
-  value["call_info"] = Json::Value(show_call_info(call_info_));
+  value["call_info"] = Json::Value(std::string(show_call_info(call_info_)));
 
   return value;
 }
@@ -217,7 +217,7 @@ std::size_t Frame::GroupHash::operator()(const Frame& frame) const {
   return seed;
 }
 
-const std::string show_call_info(CallInfo call_info) {
+const std::string_view show_call_info(CallInfo call_info) {
   switch (call_info) {
     case CallInfo::Declaration:
       return "Declaration";
