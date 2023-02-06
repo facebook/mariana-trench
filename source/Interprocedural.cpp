@@ -62,13 +62,18 @@ Model analyze(
     throw std::runtime_error(fmt::format(
         "Attempting to analyze method `{}` with no control flow graph!",
         method->show()));
-  } else {
-    LOG_OR_DUMP(
-        method_context,
-        4,
-        "Code:\n{}",
-        Method::show_control_flow_graph(code->cfg()));
   }
+  if (code->cfg().exit_block() == nullptr) {
+    throw std::runtime_error(fmt::format(
+        "Attempting to analyze control flow graph for `{}` with no exit block!",
+        method->show()));
+  }
+
+  LOG_OR_DUMP(
+      method_context,
+      4,
+      "Code:\n{}",
+      Method::show_control_flow_graph(code->cfg()));
 
   auto fixpoint = ForwardFixpoint(
       code->cfg(),

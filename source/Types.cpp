@@ -175,6 +175,7 @@ Types::Types(const Options& options, const DexStoresVector& stores) {
   walk::parallel::code(scope, [&](DexMethod* method, IRCode& code) {
     if (!code.cfg_built()) {
       code.build_cfg();
+      code.cfg().calculate_exit_block();
     }
 
     if (!has_reflection(code)) {

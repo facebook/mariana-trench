@@ -192,7 +192,9 @@ const DexMethod* MT_NULLABLE LifecycleMethod::create_dex_method(
   // The CFG needs to be built for the call graph to be constructed later.
   auto* new_method = method.create();
   mt_assert(new_method != nullptr && new_method->get_code() != nullptr);
-  new_method->get_code()->build_cfg();
+  IRCode* code = new_method->get_code();
+  code->build_cfg();
+  code->cfg().calculate_exit_block();
   LOG(5, "Created life-cycle method `{}`", new_method->str());
 
   return new_method;
