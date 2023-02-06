@@ -7,21 +7,20 @@
 
 #include <fmt/format.h>
 
-#include <AbstractDomain.h>
 #include <ControlFlow.h>
-#include <InstructionAnalyzer.h>
-#include <MonotonicFixpointIterator.h>
 #include <Show.h>
 #include <SpartaWorkQueue.h>
 #include <TypeInference.h>
 #include <Walkers.h>
 
-#include <mariana-trench/AnalysisEnvironment.h>
 #include <mariana-trench/ClassProperties.h>
 #include <mariana-trench/Context.h>
 #include <mariana-trench/Dependencies.h>
 #include <mariana-trench/EventLogger.h>
 #include <mariana-trench/Features.h>
+#include <mariana-trench/ForwardAnalysisEnvironment.h>
+#include <mariana-trench/ForwardFixpoint.h>
+#include <mariana-trench/ForwardTransfer.h>
 #include <mariana-trench/Interprocedural.h>
 #include <mariana-trench/Log.h>
 #include <mariana-trench/Methods.h>
@@ -30,51 +29,10 @@
 #include <mariana-trench/Scheduler.h>
 #include <mariana-trench/Statistics.h>
 #include <mariana-trench/Timer.h>
-#include <mariana-trench/Transfer.h>
 
 namespace marianatrench {
 
 namespace {
-
-using CombinedTransfer = InstructionAnalyzerCombiner<Transfer>;
-
-class FixpointIterator final
-    : public sparta::
-          MonotonicFixpointIterator<cfg::GraphInterface, AnalysisEnvironment> {
- public:
-  FixpointIterator(
-      const cfg::ControlFlowGraph& cfg,
-      InstructionAnalyzer<AnalysisEnvironment> instruction_analyzer)
-      : MonotonicFixpointIterator(cfg),
-        instruction_analyzer_(instruction_analyzer) {}
-  virtual ~FixpointIterator() {}
-
-  void analyze_node(const NodeId& block, AnalysisEnvironment* taint)
-      const override {
-    LOG(4, "Analyzing block {}\n{}", block->id(), *taint);
-    for (auto& instruction : *block) {
-      switch (instruction.type) {
-        case MFLOW_OPCODE:
-          instruction_analyzer_(instruction.insn, taint);
-          break;
-        case MFLOW_POSITION:
-          taint->set_last_position(instruction.pos.get());
-          break;
-        default:
-          break;
-      }
-    }
-  }
-
-  AnalysisEnvironment analyze_edge(
-      const EdgeId& /*edge*/,
-      const AnalysisEnvironment& taint) const override {
-    return taint;
-  }
-
- private:
-  InstructionAnalyzer<AnalysisEnvironment> instruction_analyzer_;
-};
 
 Model analyze(
     Context& global_context,
@@ -112,9 +70,11 @@ Model analyze(
         Method::show_control_flow_graph(code->cfg()));
   }
 
-  auto fixpoint =
-      FixpointIterator(code->cfg(), CombinedTransfer(method_context.get()));
-  fixpoint.run(AnalysisEnvironment::initial());
+  auto fixpoint = ForwardFixpoint(
+      code->cfg(),
+      InstructionAnalyzerCombiner<ForwardTransfer>(method_context.get()));
+  fixpoint.run(ForwardAnalysisEnvironment::initial());
+
   model.collapse_invalid_paths(global_context);
   model.approximate(/* widening_features */
                     FeatureMayAlwaysSet{global_context.features

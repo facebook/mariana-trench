@@ -39,40 +39,40 @@ using LastParameterLoadDomain =
 // We cannot use `sparta::ReducedProductAbstractDomain` because it sets
 // everything to bottom if a subdomain is bottom. Since the empty partition is
 // considered bottom, this would always be bottom.
-class AnalysisEnvironment final
-    : public sparta::AbstractDomain<AnalysisEnvironment> {
+class ForwardAnalysisEnvironment final
+    : public sparta::AbstractDomain<ForwardAnalysisEnvironment> {
  public:
   /* Create the bottom environment. */
-  AnalysisEnvironment();
+  ForwardAnalysisEnvironment();
 
-  AnalysisEnvironment(
+  ForwardAnalysisEnvironment(
       MemoryLocationsPartition memory_locations,
       TaintAbstractPartition taint,
       DexPositionDomain position,
       LastParameterLoadDomain last_parameter_load);
 
   /* Return the initial environment. */
-  static AnalysisEnvironment initial();
+  static ForwardAnalysisEnvironment initial();
 
   bool is_bottom() const override;
 
   bool is_top() const override;
 
-  bool leq(const AnalysisEnvironment& other) const override;
+  bool leq(const ForwardAnalysisEnvironment& other) const override;
 
-  bool equals(const AnalysisEnvironment& other) const override;
+  bool equals(const ForwardAnalysisEnvironment& other) const override;
 
   void set_to_bottom() override;
 
   void set_to_top() override;
 
-  void join_with(const AnalysisEnvironment& other) override;
+  void join_with(const ForwardAnalysisEnvironment& other) override;
 
-  void widen_with(const AnalysisEnvironment& other) override;
+  void widen_with(const ForwardAnalysisEnvironment& other) override;
 
-  void meet_with(const AnalysisEnvironment& other) override;
+  void meet_with(const ForwardAnalysisEnvironment& other) override;
 
-  void narrow_with(const AnalysisEnvironment& other) override;
+  void narrow_with(const ForwardAnalysisEnvironment& other) override;
 
   /* Set the memory location where the register points to. */
   void assign(Register register_id, MemoryLocation* memory_location);
@@ -133,7 +133,7 @@ class AnalysisEnvironment final
 
   friend std::ostream& operator<<(
       std::ostream& out,
-      const AnalysisEnvironment& environment);
+      const ForwardAnalysisEnvironment& environment);
 
  private:
   MemoryLocationsPartition memory_locations_;

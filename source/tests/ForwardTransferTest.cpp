@@ -7,6 +7,6 @@
 
 #include <gmock/gmock.h>
 
-TEST(TransferTest, DummyTest) {
+TEST(ForwardTransferTest, DummyTest) {
   EXPECT_EQ(1, 1);
 }

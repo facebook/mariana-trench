@@ -15,6 +15,7 @@
 #include <mariana-trench/ClassProperties.h>
 #include <mariana-trench/Features.h>
 #include <mariana-trench/Fields.h>
+#include <mariana-trench/ForwardTransfer.h>
 #include <mariana-trench/FulfilledPartialKindState.h>
 #include <mariana-trench/Log.h>
 #include <mariana-trench/Methods.h>
@@ -22,7 +23,6 @@
 #include <mariana-trench/PartialKind.h>
 #include <mariana-trench/Positions.h>
 #include <mariana-trench/Rules.h>
-#include <mariana-trench/Transfer.h>
 #include <mariana-trench/TriggeredPartialKind.h>
 
 namespace marianatrench {
@@ -39,10 +39,10 @@ inline void log_instruction(
 
 } // namespace
 
-bool Transfer::analyze_default(
+bool ForwardTransfer::analyze_default(
     MethodContext* context,
     const IRInstruction* instruction,
-    AnalysisEnvironment* environment) {
+    ForwardAnalysisEnvironment* environment) {
   log_instruction(context, instruction);
 
   // Assign the result register to a new memory location.
@@ -69,10 +69,10 @@ bool Transfer::analyze_default(
   return false;
 }
 
-bool Transfer::analyze_check_cast(
+bool ForwardTransfer::analyze_check_cast(
     MethodContext* context,
     const IRInstruction* instruction,
-    AnalysisEnvironment* environment) {
+    ForwardAnalysisEnvironment* environment) {
   log_instruction(context, instruction);
   mt_assert(instruction->srcs().size() == 1);
 
@@ -107,10 +107,10 @@ bool Transfer::analyze_check_cast(
   return false;
 }
 
-bool Transfer::analyze_iget(
+bool ForwardTransfer::analyze_iget(
     MethodContext* context,
     const IRInstruction* instruction,
-    AnalysisEnvironment* environment) {
+    ForwardAnalysisEnvironment* environment) {
   log_instruction(context, instruction);
   mt_assert(instruction->srcs().size() == 1);
   mt_assert(instruction->has_field());
@@ -152,10 +152,10 @@ bool Transfer::analyze_iget(
   return false;
 }
 
-bool Transfer::analyze_sget(
+bool ForwardTransfer::analyze_sget(
     MethodContext* context,
     const IRInstruction* instruction,
-    AnalysisEnvironment* environment) {
+    ForwardAnalysisEnvironment* environment) {
   log_instruction(context, instruction);
   mt_assert(instruction->srcs().size() == 0);
   mt_assert(instruction->has_field());
@@ -212,7 +212,7 @@ const std::vector<const DexType * MT_NULLABLE> get_source_register_types(
 }
 
 const std::vector<std::optional<std::string>> get_source_constant_arguments(
-    AnalysisEnvironment* environment,
+    ForwardAnalysisEnvironment* environment,
     const IRInstruction* instruction) {
   std::vector<std::optional<std::string>> constant_arguments = {};
 
@@ -234,7 +234,7 @@ const std::vector<std::optional<std::string>> get_source_constant_arguments(
 
 Callee get_callee(
     MethodContext* context,
-    AnalysisEnvironment* environment,
+    ForwardAnalysisEnvironment* environment,
     const IRInstruction* instruction,
     const std::vector<std::optional<std::string>>& source_constant_arguments) {
   mt_assert(opcode::is_an_invoke(instruction->opcode()));
@@ -276,7 +276,7 @@ Callee get_callee(
 
 Callee get_callee(
     MethodContext* context,
-    AnalysisEnvironment* environment,
+    ForwardAnalysisEnvironment* environment,
     const ArtificialCallee& callee) {
   const auto* resolved_base_callee = callee.call_target.resolved_base_callee();
   mt_assert(resolved_base_callee != nullptr);
@@ -304,7 +304,7 @@ Callee get_callee(
 
 void apply_generations(
     MethodContext* context,
-    AnalysisEnvironment* environment,
+    ForwardAnalysisEnvironment* environment,
     const IRInstruction* instruction,
     const Callee& callee,
     TaintTree& result_taint) {
@@ -343,8 +343,8 @@ void apply_generations(
 
 void apply_propagations(
     MethodContext* context,
-    const AnalysisEnvironment* previous_environment,
-    AnalysisEnvironment* new_environment,
+    const ForwardAnalysisEnvironment* previous_environment,
+    ForwardAnalysisEnvironment* new_environment,
     const IRInstruction* instruction,
     const Callee& callee,
     const std::vector<std::optional<std::string>>& source_constant_arguments,
@@ -746,7 +746,7 @@ void check_flows(
 
 void check_flows(
     MethodContext* context,
-    const AnalysisEnvironment* environment,
+    const ForwardAnalysisEnvironment* environment,
     const std::function<std::optional<Register>(ParameterPosition)>&
         get_parameter_register,
     const Callee& callee,
@@ -816,7 +816,7 @@ void check_flows(
 
 void check_flows(
     MethodContext* context,
-    const AnalysisEnvironment* environment,
+    const ForwardAnalysisEnvironment* environment,
     const std::vector<Register>& instruction_sources,
     const Callee& callee,
     const std::vector<std::optional<std::string>>& source_constant_arguments,
@@ -839,7 +839,7 @@ void check_flows(
 
 void check_flows_to_array_allocation(
     MethodContext* context,
-    AnalysisEnvironment* environment,
+    ForwardAnalysisEnvironment* environment,
     const IRInstruction* instruction) {
   if (!context->artificial_methods.array_allocation_kind_used()) {
     return;
@@ -891,7 +891,7 @@ void check_flows_to_array_allocation(
 
 void check_flows(
     MethodContext* context,
-    const AnalysisEnvironment* environment,
+    const ForwardAnalysisEnvironment* environment,
     const IRInstruction* instruction,
     const Callee& callee,
     const std::vector<std::optional<std::string>>& source_constant_arguments) {
@@ -906,7 +906,7 @@ void check_flows(
 void analyze_artificial_calls(
     MethodContext* context,
     const IRInstruction* instruction,
-    AnalysisEnvironment* environment,
+    ForwardAnalysisEnvironment* environment,
     const std::vector<std::optional<std::string>>& source_constant_arguments =
         {}) {
   const auto& artificial_callees =
@@ -934,7 +934,7 @@ void analyze_artificial_calls(
 
 MemoryLocation* MT_NULLABLE try_alias_this_location(
     MethodContext* context,
-    AnalysisEnvironment* environment,
+    ForwardAnalysisEnvironment* environment,
     const Callee& callee,
     const IRInstruction* instruction) {
   if (!callee.model.alias_memory_location_on_invoke()) {
@@ -965,7 +965,7 @@ MemoryLocation* MT_NULLABLE try_alias_this_location(
 // location, otherwise return nullptr.
 MemoryLocation* MT_NULLABLE try_inline_invoke(
     MethodContext* context,
-    const AnalysisEnvironment* environment,
+    const ForwardAnalysisEnvironment* environment,
     const IRInstruction* instruction,
     const Callee& callee) {
   auto access_path = callee.model.inline_as().get_constant();
@@ -1066,10 +1066,10 @@ void apply_call_effects(MethodContext* context, const Callee& callee) {
 
 } // namespace
 
-bool Transfer::analyze_invoke(
+bool ForwardTransfer::analyze_invoke(
     MethodContext* context,
     const IRInstruction* instruction,
-    AnalysisEnvironment* environment) {
+    ForwardAnalysisEnvironment* environment) {
   log_instruction(context, instruction);
 
   const auto& source_constant_arguments =
@@ -1077,7 +1077,7 @@ bool Transfer::analyze_invoke(
   auto callee =
       get_callee(context, environment, instruction, source_constant_arguments);
 
-  const AnalysisEnvironment previous_environment = *environment;
+  const ForwardAnalysisEnvironment previous_environment = *environment;
   TaintTree result_taint;
   check_flows(
       context,
@@ -1198,10 +1198,10 @@ void check_flows_to_field_sink(
 
 } // namespace
 
-bool Transfer::analyze_iput(
+bool ForwardTransfer::analyze_iput(
     MethodContext* context,
     const IRInstruction* instruction,
-    AnalysisEnvironment* environment) {
+    ForwardAnalysisEnvironment* environment) {
   log_instruction(context, instruction);
   mt_assert(instruction->srcs().size() == 2);
   mt_assert(instruction->has_field());
@@ -1246,10 +1246,10 @@ bool Transfer::analyze_iput(
   return false;
 }
 
-bool Transfer::analyze_sput(
+bool ForwardTransfer::analyze_sput(
     MethodContext* context,
     const IRInstruction* instruction,
-    AnalysisEnvironment* environment) {
+    ForwardAnalysisEnvironment* environment) {
   log_instruction(context, instruction);
   mt_assert(instruction->srcs().size() == 1);
   mt_assert(instruction->has_field());
@@ -1269,10 +1269,10 @@ bool Transfer::analyze_sput(
   return false;
 }
 
-bool Transfer::analyze_load_param(
+bool ForwardTransfer::analyze_load_param(
     MethodContext* context,
     const IRInstruction* instruction,
-    AnalysisEnvironment* environment) {
+    ForwardAnalysisEnvironment* environment) {
   log_instruction(context, instruction);
 
   auto abstract_parameter = environment->last_parameter_loaded();
@@ -1315,10 +1315,10 @@ bool Transfer::analyze_load_param(
   return false;
 }
 
-bool Transfer::analyze_move(
+bool ForwardTransfer::analyze_move(
     MethodContext* context,
     const IRInstruction* instruction,
-    AnalysisEnvironment* environment) {
+    ForwardAnalysisEnvironment* environment) {
   log_instruction(context, instruction);
   mt_assert(instruction->srcs().size() == 1);
 
@@ -1335,10 +1335,10 @@ bool Transfer::analyze_move(
   return false;
 }
 
-bool Transfer::analyze_move_result(
+bool ForwardTransfer::analyze_move_result(
     MethodContext* context,
     const IRInstruction* instruction,
-    AnalysisEnvironment* environment) {
+    ForwardAnalysisEnvironment* environment) {
   log_instruction(context, instruction);
 
   auto memory_locations = environment->memory_locations(k_result_register);
@@ -1356,10 +1356,10 @@ bool Transfer::analyze_move_result(
   return false;
 }
 
-bool Transfer::analyze_aget(
+bool ForwardTransfer::analyze_aget(
     MethodContext* context,
     const IRInstruction* instruction,
-    AnalysisEnvironment* environment) {
+    ForwardAnalysisEnvironment* environment) {
   log_instruction(context, instruction);
   mt_assert(instruction->srcs().size() == 2);
 
@@ -1372,10 +1372,10 @@ bool Transfer::analyze_aget(
   return false;
 }
 
-bool Transfer::analyze_aput(
+bool ForwardTransfer::analyze_aput(
     MethodContext* context,
     const IRInstruction* instruction,
-    AnalysisEnvironment* environment) {
+    ForwardAnalysisEnvironment* environment) {
   log_instruction(context, instruction);
   mt_assert(instruction->srcs().size() == 3);
 
@@ -1405,18 +1405,18 @@ bool Transfer::analyze_aput(
   return false;
 }
 
-bool Transfer::analyze_new_array(
+bool ForwardTransfer::analyze_new_array(
     MethodContext* context,
     const IRInstruction* instruction,
-    AnalysisEnvironment* environment) {
+    ForwardAnalysisEnvironment* environment) {
   check_flows_to_array_allocation(context, environment, instruction);
   return analyze_default(context, instruction, environment);
 }
 
-bool Transfer::analyze_filled_new_array(
+bool ForwardTransfer::analyze_filled_new_array(
     MethodContext* context,
     const IRInstruction* instruction,
-    AnalysisEnvironment* environment) {
+    ForwardAnalysisEnvironment* environment) {
   check_flows_to_array_allocation(context, environment, instruction);
   return analyze_default(context, instruction, environment);
 }
@@ -1426,7 +1426,7 @@ namespace {
 static bool analyze_numerical_operator(
     MethodContext* context,
     const IRInstruction* instruction,
-    AnalysisEnvironment* environment) {
+    ForwardAnalysisEnvironment* environment) {
   log_instruction(context, instruction);
 
   TaintTree taint;
@@ -1471,24 +1471,24 @@ static bool analyze_numerical_operator(
 
 } // namespace
 
-bool Transfer::analyze_unop(
+bool ForwardTransfer::analyze_unop(
     MethodContext* context,
     const IRInstruction* instruction,
-    AnalysisEnvironment* environment) {
+    ForwardAnalysisEnvironment* environment) {
   return analyze_numerical_operator(context, instruction, environment);
 }
 
-bool Transfer::analyze_binop(
+bool ForwardTransfer::analyze_binop(
     MethodContext* context,
     const IRInstruction* instruction,
-    AnalysisEnvironment* environment) {
+    ForwardAnalysisEnvironment* environment) {
   return analyze_numerical_operator(context, instruction, environment);
 }
 
-bool Transfer::analyze_binop_lit(
+bool ForwardTransfer::analyze_binop_lit(
     MethodContext* context,
     const IRInstruction* instruction,
-    AnalysisEnvironment* environment) {
+    ForwardAnalysisEnvironment* environment) {
   return analyze_numerical_operator(context, instruction, environment);
 }
 
@@ -1643,10 +1643,10 @@ AccessPathConstantDomain infer_inline_as(
 
 } // namespace
 
-bool Transfer::analyze_return(
+bool ForwardTransfer::analyze_return(
     MethodContext* context,
     const IRInstruction* instruction,
-    AnalysisEnvironment* environment) {
+    ForwardAnalysisEnvironment* environment) {
   log_instruction(context, instruction);
 
   auto return_sinks = context->model.sinks().read(Root(Root::Kind::Return));
