@@ -145,7 +145,8 @@ void CalleePortFramesV2::add(const TaintConfig& config) {
         config.via_type_of_ports(),
         config.via_value_of_ports(),
         config.canonical_names(),
-        config.call_info()));
+        config.call_info(),
+        config.output_paths()));
     return new_frames;
   });
 }
@@ -575,7 +576,8 @@ Frame CalleePortFramesV2::propagate_frames(
       /* via_type_of_ports */ {},
       /* via_value_of_ports */ {},
       /* canonical_names */ {},
-      propagate_call_info(*call_info));
+      propagate_call_info(*call_info),
+      /* output_paths */ PathTreeDomain::bottom());
 }
 
 CalleePortFramesV2 CalleePortFramesV2::propagate_crtex_leaf_frames(
@@ -658,7 +660,8 @@ CalleePortFramesV2 CalleePortFramesV2::propagate_crtex_leaf_frames(
           propagated.via_value_of_ports(),
           /* canonical_names */ instantiated_names,
           // Always leaves for crtex frames, but should be kept in trace.
-          CallInfo::Origin));
+          CallInfo::Origin,
+          /* output paths */ PathTreeDomain::bottom()));
     }
   }
 

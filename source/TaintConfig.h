@@ -15,7 +15,6 @@
 #include <AbstractDomain.h>
 #include <HashedSetAbstractDomain.h>
 
-#include <mariana-trench/AbstractTreeDomain.h>
 #include <mariana-trench/Access.h>
 #include <mariana-trench/Assert.h>
 #include <mariana-trench/CanonicalName.h>
@@ -32,11 +31,8 @@
 #include <mariana-trench/Method.h>
 #include <mariana-trench/MethodSet.h>
 #include <mariana-trench/Position.h>
-#include <mariana-trench/SingletonAbstractDomain.h>
 
 namespace marianatrench {
-
-using PathTreeDomain = AbstractTreeDomain<SingletonAbstractDomain>;
 
 /**
  * Class used to contain details for building a `Taint` object.
@@ -99,6 +95,7 @@ class TaintConfig final {
     if (!is_result_or_receiver_sink()) {
       mt_assert(output_paths_.is_bottom());
     } else {
+      mt_assert(!output_paths_.is_bottom());
       if (kind_ == Kinds::local_result()) {
         mt_assert(callee_port == AccessPath(Root(Root::Kind::Return)));
       } else {

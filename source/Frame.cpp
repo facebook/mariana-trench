@@ -61,7 +61,8 @@ bool Frame::leq(const Frame& other) const {
         user_features_.leq(other.user_features_) &&
         via_type_of_ports_.leq(other.via_type_of_ports_) &&
         via_value_of_ports_.leq(other.via_value_of_ports_) &&
-        canonical_names_.leq(other.canonical_names_);
+        canonical_names_.leq(other.canonical_names_) &&
+        output_paths_.leq(other.output_paths_);
   }
 }
 
@@ -80,7 +81,8 @@ bool Frame::equals(const Frame& other) const {
         user_features_ == other.user_features_ &&
         via_type_of_ports_ == other.via_type_of_ports_ &&
         via_value_of_ports_ == other.via_value_of_ports_ &&
-        canonical_names_ == other.canonical_names_;
+        canonical_names_ == other.canonical_names_ &&
+        output_paths_ == other.output_paths_;
   }
 }
 
@@ -107,6 +109,7 @@ void Frame::join_with(const Frame& other) {
     via_type_of_ports_.join_with(other.via_type_of_ports_);
     via_value_of_ports_.join_with(other.via_value_of_ports_);
     canonical_names_.join_with(other.canonical_names_);
+    output_paths_.join_with(other.output_paths_);
   }
 
   mt_expensive_assert(previous.leq(*this) && other.leq(*this));
@@ -288,6 +291,9 @@ std::ostream& operator<<(std::ostream& out, const Frame& frame) {
   if (frame.canonical_names_.is_value() &&
       !frame.canonical_names_.elements().empty()) {
     out << ", canonical_names=" << frame.canonical_names_;
+  }
+  if (!frame.output_paths_.is_bottom()) {
+    out << ", output_paths=" << frame.output_paths_;
   }
   return out << ")";
 }

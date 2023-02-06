@@ -288,6 +288,33 @@ TEST_F(FrameTest, FrameLeq) {
           .leq(test::make_taint_frame(
               /* kind */ context.kinds->get("TestSource"),
               test::FrameProperties{})));
+
+  // Compare output paths.
+  auto x = PathElement::field("x");
+  EXPECT_TRUE(test::make_taint_frame(
+                  Kinds::local_result(),
+                  test::FrameProperties{
+                      .callee_port = AccessPath(Root(Root::Kind::Return)),
+                      .output_paths =
+                          PathTreeDomain{{Path{x}, SingletonAbstractDomain{}}}})
+                  .leq(test::make_taint_frame(
+                      Kinds::local_result(),
+                      test::FrameProperties{test::FrameProperties{
+                          .callee_port = AccessPath(Root(Root::Kind::Return)),
+                          .output_paths = PathTreeDomain{
+                              {Path{}, SingletonAbstractDomain{}}}}})));
+  EXPECT_FALSE(test::make_taint_frame(
+                   Kinds::local_result(),
+                   test::FrameProperties{
+                       .callee_port = AccessPath(Root(Root::Kind::Return)),
+                       .output_paths =
+                           PathTreeDomain{{Path{}, SingletonAbstractDomain{}}}})
+                   .leq(test::make_taint_frame(
+                       Kinds::local_result(),
+                       test::FrameProperties{test::FrameProperties{
+                           .callee_port = AccessPath(Root(Root::Kind::Return)),
+                           .output_paths = PathTreeDomain{
+                               {Path{x}, SingletonAbstractDomain{}}}}})));
 }
 
 TEST_F(FrameTest, FrameEquals) {
@@ -616,6 +643,34 @@ TEST_F(FrameTest, FrameJoin) {
                       CanonicalName::TemplateValue{"%programmatic_leaf_name%"}),
                   CanonicalName(
                       CanonicalName::TemplateValue{"%via_type_of%"})}}));
+
+  // Join output paths.
+  auto x = PathElement::field("x");
+  auto y = PathElement::field("y");
+  EXPECT_EQ(
+      test::make_taint_frame(
+          Kinds::local_result(),
+          test::FrameProperties{
+              .callee_port = AccessPath(Root(Root::Kind::Return)),
+              .output_paths =
+                  PathTreeDomain{{Path{x}, SingletonAbstractDomain{}}}})
+          .join(test::make_taint_frame(
+              Kinds::local_result(),
+              test::FrameProperties{test::FrameProperties{
+                  .callee_port = AccessPath(Root(Root::Kind::Return)),
+                  .output_paths =
+                      PathTreeDomain{{Path{y}, SingletonAbstractDomain{}}}}})),
+      test::make_taint_frame(
+          Kinds::local_result(),
+          test::FrameProperties{test::FrameProperties{
+              .callee_port = AccessPath(Root(Root::Kind::Return)),
+              .output_paths =
+                  PathTreeDomain{
+                      {Path{x}, SingletonAbstractDomain{}},
+                      {Path{y}, SingletonAbstractDomain{}},
+                  }}})
+
+  );
 }
 
 TEST_F(FrameTest, FrameWithKind) {

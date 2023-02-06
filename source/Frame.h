@@ -15,6 +15,7 @@
 #include <AbstractDomain.h>
 #include <HashedSetAbstractDomain.h>
 
+#include <mariana-trench/AbstractTreeDomain.h>
 #include <mariana-trench/Access.h>
 #include <mariana-trench/Assert.h>
 #include <mariana-trench/CanonicalName.h>
@@ -30,10 +31,12 @@
 #include <mariana-trench/Method.h>
 #include <mariana-trench/MethodSet.h>
 #include <mariana-trench/Position.h>
+#include <mariana-trench/SingletonAbstractDomain.h>
 
 namespace marianatrench {
 
 using RootSetAbstractDomain = sparta::HashedSetAbstractDomain<Root>;
+using PathTreeDomain = AbstractTreeDomain<SingletonAbstractDomain>;
 using CanonicalNameSetAbstractDomain =
     sparta::HashedSetAbstractDomain<CanonicalName>;
 
@@ -103,6 +106,9 @@ CallInfo propagate_call_info(CallInfo call_info);
  * requires that callee names at the leaves conform to a naming format. This
  * format is defined using placeholders. See `CanonicalName`.
  *
+ * `output_paths` is used to infer propagations with the `local_result` and
+ * `receiver` kinds in the backward analysis.
+ *
  * For artificial sources, the callee port is used as the origin of the source.
  */
 class Frame final : public sparta::AbstractDomain<Frame> {
@@ -131,7 +137,8 @@ class Frame final : public sparta::AbstractDomain<Frame> {
       RootSetAbstractDomain via_type_of_ports,
       RootSetAbstractDomain via_value_of_ports,
       CanonicalNameSetAbstractDomain canonical_names,
-      CallInfo call_info)
+      CallInfo call_info,
+      PathTreeDomain output_paths)
       : kind_(kind),
         callee_port_(std::move(callee_port)),
         callee_(callee),
@@ -146,18 +153,23 @@ class Frame final : public sparta::AbstractDomain<Frame> {
         via_type_of_ports_(std::move(via_type_of_ports)),
         via_value_of_ports_(std::move(via_value_of_ports)),
         canonical_names_(std::move(canonical_names)),
-        call_info_(call_info) {
+        call_info_(call_info),
+        output_paths_(std::move(output_paths)) {
     mt_assert(kind_ != nullptr);
     mt_assert(distance_ >= 0);
     mt_assert(!(callee && field_callee));
     if (kind_ == Kinds::local_result()) {
-      mt_assert(callee_port == AccessPath(Root(Root::Kind::Return)));
+      mt_assert(
+          callee_port == AccessPath(Root(Root::Kind::Return)) &&
+          !output_paths_.is_bottom());
     } else if (kind_ == Kinds::receiver()) {
-      mt_assert(callee_port == AccessPath(Root(Root::Kind::Argument, 0)));
+      mt_assert(
+          callee_port == AccessPath(Root(Root::Kind::Argument, 0)) &&
+          !output_paths_.is_bottom());
     } else if (kind == Kinds::artificial_source()) {
       mt_assert(
           callee_port.root().kind() == Root::Kind::Argument &&
-          callee_port.path().empty());
+          callee_port.path().empty() && output_paths_.is_bottom());
     }
     if (callee != nullptr && !callee_port_.root().is_anchor()) {
       mt_assert(call_info == CallInfo::CallSite);
@@ -224,6 +236,10 @@ class Frame final : public sparta::AbstractDomain<Frame> {
 
   CallInfo call_info() const {
     return call_info_;
+  }
+
+  const PathTreeDomain& output_paths() const {
+    return output_paths_;
   }
 
   /**
@@ -334,6 +350,7 @@ class Frame final : public sparta::AbstractDomain<Frame> {
   RootSetAbstractDomain via_value_of_ports_;
   CanonicalNameSetAbstractDomain canonical_names_;
   CallInfo call_info_;
+  PathTreeDomain output_paths_;
 };
 
 } // namespace marianatrench

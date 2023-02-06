@@ -1750,7 +1750,8 @@ TEST_F(CalleePortFramesV2Test, Show) {
       "output_paths=AbstractTree{Value}, "
       "frames=[FrameByKind(kind=<Argument(0)>, "
       "frames={Frame(kind=`<Argument(0)>`, "
-      "callee_port=AccessPath(Argument(0)), call_info=Declaration)}),])");
+      "callee_port=AccessPath(Argument(0)), call_info=Declaration, "
+      "output_paths=AbstractTree{Value})}),])");
 
   frames = CalleePortFramesV2{test::make_taint_config(
       Kinds::local_result(),
@@ -1765,7 +1766,8 @@ TEST_F(CalleePortFramesV2Test, Show) {
       "output_paths=AbstractTree{\n    `.x` -> AbstractTree{Value}\n}, "
       "frames=[FrameByKind(kind=<LocalResult>, "
       "frames={Frame(kind=`<LocalResult>`, "
-      "callee_port=AccessPath(Return), call_info=Declaration)}),])");
+      "callee_port=AccessPath(Return), call_info=Declaration, "
+      "output_paths=AbstractTree{\n    `.x` -> AbstractTree{Value}\n})}),])");
 
   EXPECT_EQ(
       show(CalleePortFramesV2::bottom()),

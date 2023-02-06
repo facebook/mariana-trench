@@ -115,7 +115,8 @@ Frame make_taint_frame(const Kind* kind, const FrameProperties& properties) {
       properties.via_type_of_ports,
       properties.via_value_of_ports,
       properties.canonical_names,
-      properties.call_info);
+      properties.call_info,
+      properties.output_paths);
 }
 
 TaintConfig make_taint_config(
