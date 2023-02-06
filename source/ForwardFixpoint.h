@@ -23,7 +23,7 @@ class ForwardFixpoint final : public sparta::MonotonicFixpointIterator<
   ForwardFixpoint(
       const cfg::ControlFlowGraph& cfg,
       InstructionAnalyzer<ForwardAnalysisEnvironment> instruction_analyzer)
-      : MonotonicFixpointIterator(cfg),
+      : MonotonicFixpointIterator(cfg, cfg.num_blocks()),
         instruction_analyzer_(instruction_analyzer) {}
 
   virtual ~ForwardFixpoint() {}
