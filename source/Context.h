@@ -22,6 +22,7 @@ class ArtificialMethods;
 class Methods;
 class Fields;
 class Positions;
+class ControlFlowGraphs;
 class Types;
 class ClassProperties;
 class ClassHierarchies;
@@ -53,6 +54,7 @@ class Context final {
   std::unique_ptr<Methods> methods;
   std::unique_ptr<Fields> fields;
   std::unique_ptr<Positions> positions;
+  std::unique_ptr<ControlFlowGraphs> control_flow_graphs;
   std::unique_ptr<Types> types;
   std::unique_ptr<ClassProperties> class_properties;
   std::unique_ptr<ClassHierarchies> class_hierarchies;

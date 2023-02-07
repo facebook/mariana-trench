@@ -18,6 +18,7 @@
 #include <mariana-trench/ClassHierarchies.h>
 #include <mariana-trench/ClassProperties.h>
 #include <mariana-trench/Context.h>
+#include <mariana-trench/ControlFlowGraphs.h>
 #include <mariana-trench/Dependencies.h>
 #include <mariana-trench/EventLogger.h>
 #include <mariana-trench/FieldCache.h>
@@ -97,6 +98,17 @@ Registry MarianaTrench::analyze(Context& context) {
   LOG(1,
       "Built source index in {:.2f}s. Memory used, RSS: {:.2f}GB",
       index_timer.duration_in_seconds(),
+      resident_set_size_in_gb());
+
+  Timer control_flow_graphs_timer;
+  LOG(1, "Building control flow graphs...");
+  context.control_flow_graphs =
+      std::make_unique<ControlFlowGraphs>(context.stores);
+  context.statistics->log_time(
+      "control_flow_graphs", control_flow_graphs_timer);
+  LOG(1,
+      "Built control flow graphs in {:.2f}s. Memory used, RSS: {:.2f}GB",
+      control_flow_graphs_timer.duration_in_seconds(),
       resident_set_size_in_gb());
 
   Timer types_timer;

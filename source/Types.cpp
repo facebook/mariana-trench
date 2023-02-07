@@ -8,14 +8,14 @@
 #include <fmt/format.h>
 #include <algorithm>
 
-#include <Show.h>
-#include <Walkers.h>
-
 #include <ProguardConfiguration.h>
 #include <ProguardMap.h>
 #include <ProguardMatcher.h>
 #include <ProguardParser.h>
 #include <ReflectionAnalysis.h>
+#include <Show.h>
+#include <Walkers.h>
+
 #include <mariana-trench/Assert.h>
 #include <mariana-trench/EventLogger.h>
 #include <mariana-trench/Log.h>
@@ -173,10 +173,7 @@ Types::Types(const Options& options, const DexStoresVector& stores) {
   Timer reflection_timer;
   reflection::MetadataCache reflection_metadata_cache;
   walk::parallel::code(scope, [&](DexMethod* method, IRCode& code) {
-    if (!code.cfg_built()) {
-      code.build_cfg();
-      code.cfg().calculate_exit_block();
-    }
+    mt_assert(code.cfg_built());
 
     if (!has_reflection(code)) {
       return;

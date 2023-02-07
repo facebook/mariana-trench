@@ -93,6 +93,8 @@ TEST_P(JsonModelGeneratorIntegrationTest, CompareModels) {
   context.methods = std::make_unique<Methods>(context.stores);
   context.fields = std::make_unique<Fields>(context.stores);
   context.positions = std::make_unique<Positions>(options, context.stores);
+  context.control_flow_graphs =
+      std::make_unique<ControlFlowGraphs>(context.stores);
   context.types = std::make_unique<Types>(*context.options, context.stores);
   context.class_hierarchies =
       std::make_unique<ClassHierarchies>(*context.options, context.stores);

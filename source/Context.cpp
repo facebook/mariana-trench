@@ -10,6 +10,7 @@
 #include <mariana-trench/ClassHierarchies.h>
 #include <mariana-trench/ClassProperties.h>
 #include <mariana-trench/Context.h>
+#include <mariana-trench/ControlFlowGraphs.h>
 #include <mariana-trench/Dependencies.h>
 #include <mariana-trench/Features.h>
 #include <mariana-trench/FieldCache.h>

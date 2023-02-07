@@ -83,6 +83,8 @@ Context test_types(
   context.artificial_methods =
       std::make_unique<ArtificialMethods>(*context.kinds, context.stores);
   context.methods = std::make_unique<Methods>(context.stores);
+  context.control_flow_graphs =
+      std::make_unique<ControlFlowGraphs>(context.stores);
   context.types = std::make_unique<Types>(*context.options, context.stores);
   return context;
 }

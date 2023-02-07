@@ -41,6 +41,8 @@ Context test_fields(const Scope& scope) {
   context.artificial_methods =
       std::make_unique<ArtificialMethods>(*context.kinds, context.stores);
   context.methods = std::make_unique<Methods>(context.stores);
+  context.control_flow_graphs =
+      std::make_unique<ControlFlowGraphs>(context.stores);
   context.types = std::make_unique<Types>(*context.options, context.stores);
   context.class_hierarchies =
       std::make_unique<ClassHierarchies>(*context.options, context.stores);
