@@ -7,11 +7,17 @@
 
 #include <mariana-trench/Assert.h>
 #include <mariana-trench/Kinds.h>
+#include <mariana-trench/LocalArgumentKind.h>
+#include <mariana-trench/LocalReturnKind.h>
 #include <mariana-trench/NamedKind.h>
 #include <mariana-trench/PartialKind.h>
 #include <mariana-trench/TriggeredPartialKind.h>
 
 namespace marianatrench {
+
+Kinds::Kinds()
+    : local_return_(std::make_unique<LocalReturnKind>()),
+      local_receiver_(std::make_unique<LocalArgumentKind>(0)) {}
 
 const NamedKind* Kinds::get(const std::string& name) const {
   return named_.create(name);
@@ -30,8 +36,18 @@ const TriggeredPartialKind* Kinds::get_triggered(
       std::make_pair(partial, rule), partial, rule);
 }
 
+const LocalReturnKind* Kinds::local_return() const {
+  return local_return_.get();
+}
+
+const LocalArgumentKind* Kinds::local_receiver() const {
+  return local_receiver_.get();
+}
+
 std::vector<const Kind*> Kinds::kinds() const {
   std::vector<const Kind*> result;
+  result.push_back(local_return_.get());
+  result.push_back(local_receiver_.get());
   for (const auto& [_key, kind] : named_) {
     result.push_back(kind);
   }
@@ -47,16 +63,6 @@ std::vector<const Kind*> Kinds::kinds() const {
 
 const Kind* Kinds::artificial_source() {
   static const NamedKind kind("<ArtificialSource>");
-  return &kind;
-}
-
-const Kind* Kinds::local_result() {
-  static const NamedKind kind("<LocalResult>");
-  return &kind;
-}
-
-const Kind* Kinds::receiver() {
-  static const NamedKind kind("<Argument(0)>");
   return &kind;
 }
 

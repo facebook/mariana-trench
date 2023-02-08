@@ -41,6 +41,11 @@ class Kind {
     return dynamic_cast<T*>(this);
   }
 
+  template <typename T>
+  bool is() const {
+    return dynamic_cast<const T*>(this) != nullptr;
+  }
+
   virtual Json::Value to_json() const;
   /**
    * Constructs a NamedKind or a PartialKind based on whether the json value has

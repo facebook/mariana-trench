@@ -292,25 +292,25 @@ TEST_F(FrameTest, FrameLeq) {
   // Compare output paths.
   auto x = PathElement::field("x");
   EXPECT_TRUE(test::make_taint_frame(
-                  Kinds::local_result(),
+                  context.kinds->local_return(),
                   test::FrameProperties{
                       .callee_port = AccessPath(Root(Root::Kind::Return)),
                       .output_paths =
                           PathTreeDomain{{Path{x}, SingletonAbstractDomain{}}}})
                   .leq(test::make_taint_frame(
-                      Kinds::local_result(),
+                      context.kinds->local_return(),
                       test::FrameProperties{test::FrameProperties{
                           .callee_port = AccessPath(Root(Root::Kind::Return)),
                           .output_paths = PathTreeDomain{
                               {Path{}, SingletonAbstractDomain{}}}}})));
   EXPECT_FALSE(test::make_taint_frame(
-                   Kinds::local_result(),
+                   context.kinds->local_return(),
                    test::FrameProperties{
                        .callee_port = AccessPath(Root(Root::Kind::Return)),
                        .output_paths =
                            PathTreeDomain{{Path{}, SingletonAbstractDomain{}}}})
                    .leq(test::make_taint_frame(
-                       Kinds::local_result(),
+                       context.kinds->local_return(),
                        test::FrameProperties{test::FrameProperties{
                            .callee_port = AccessPath(Root(Root::Kind::Return)),
                            .output_paths = PathTreeDomain{
@@ -649,19 +649,19 @@ TEST_F(FrameTest, FrameJoin) {
   auto y = PathElement::field("y");
   EXPECT_EQ(
       test::make_taint_frame(
-          Kinds::local_result(),
+          context.kinds->local_return(),
           test::FrameProperties{
               .callee_port = AccessPath(Root(Root::Kind::Return)),
               .output_paths =
                   PathTreeDomain{{Path{x}, SingletonAbstractDomain{}}}})
           .join(test::make_taint_frame(
-              Kinds::local_result(),
+              context.kinds->local_return(),
               test::FrameProperties{test::FrameProperties{
                   .callee_port = AccessPath(Root(Root::Kind::Return)),
                   .output_paths =
                       PathTreeDomain{{Path{y}, SingletonAbstractDomain{}}}}})),
       test::make_taint_frame(
-          Kinds::local_result(),
+          context.kinds->local_return(),
           test::FrameProperties{test::FrameProperties{
               .callee_port = AccessPath(Root(Root::Kind::Return)),
               .output_paths =

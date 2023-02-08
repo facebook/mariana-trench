@@ -152,8 +152,8 @@ std::unordered_set<const Kind*> Rules::collect_unused_kinds(
     const Kinds& kinds) const {
   std::unordered_set<const Kind*> unused_kinds;
   for (const auto* kind : kinds.kinds()) {
-    if (kind->as<TriggeredPartialKind>() != nullptr) {
-      // Triggered kinds are never used in rules. No need to warn.
+    if (kind->is<TriggeredPartialKind>() || kind->is<PropagationKind>()) {
+      // These kinds are never used in rules.
       continue;
     }
     if (std::all_of(begin(), end(), [kind](const Rule* rule) {

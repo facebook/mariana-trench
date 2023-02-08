@@ -12,6 +12,8 @@
 #include <boost/iterator/transform_iterator.hpp>
 
 #include <mariana-trench/Kind.h>
+#include <mariana-trench/LocalArgumentKind.h>
+#include <mariana-trench/LocalReturnKind.h>
 #include <mariana-trench/MultiSourceMultiSinkRule.h>
 #include <mariana-trench/NamedKind.h>
 #include <mariana-trench/PartialKind.h>
@@ -36,7 +38,7 @@ class Kinds final {
   };
 
  public:
-  Kinds() = default;
+  Kinds();
   Kinds(const Kinds&) = delete;
   Kinds(Kinds&&) = delete;
   Kinds& operator=(const Kinds&) = delete;
@@ -53,14 +55,18 @@ class Kinds final {
       const PartialKind* partial_kind,
       const MultiSourceMultiSinkRule* rule) const;
 
+  const LocalReturnKind* local_return() const;
+
+  const LocalArgumentKind* local_receiver() const;
+
   std::vector<const Kind*> kinds() const;
 
   static const Kind* artificial_source();
-  static const Kind* local_result();
-  static const Kind* receiver();
 
  private:
   UniquePointerFactory<std::string, NamedKind> named_;
+  std::unique_ptr<LocalReturnKind> local_return_;
+  std::unique_ptr<LocalArgumentKind> local_receiver_;
   UniquePointerFactory<
       std::pair<std::string, std::string>,
       PartialKind,

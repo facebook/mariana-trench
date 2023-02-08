@@ -85,22 +85,17 @@ class TaintConfig final {
     mt_assert(distance_ >= 0);
     mt_assert(!(callee && field_callee));
     mt_assert(!local_positions.is_bottom());
-    mt_assert(!is_artificial_source() || !is_result_or_receiver_sink());
-    if (!is_artificial_source()) {
-      mt_assert(input_paths_.is_bottom());
-    } else {
-      mt_assert(callee_port_.path().empty());
-    }
 
-    if (!is_result_or_receiver_sink()) {
-      mt_assert(output_paths_.is_bottom());
-    } else {
+    if (auto* propagation_kind = kind_->as<PropagationKind>()) {
+      mt_assert(input_paths_.is_bottom());
       mt_assert(!output_paths_.is_bottom());
-      if (kind_ == Kinds::local_result()) {
-        mt_assert(callee_port == AccessPath(Root(Root::Kind::Return)));
-      } else {
-        mt_assert(callee_port == AccessPath(Root(Root::Kind::Argument, 0)));
-      }
+      mt_assert(callee_port == AccessPath(propagation_kind->root()));
+    } else if (is_artificial_source()) {
+      mt_assert(output_paths_.is_bottom());
+      mt_assert(callee_port_.path().empty());
+    } else {
+      mt_assert(input_paths_.is_bottom());
+      mt_assert(output_paths_.is_bottom());
     }
   }
 
@@ -207,10 +202,6 @@ class TaintConfig final {
 
   bool is_artificial_source() const {
     return kind_ == Kinds::artificial_source();
-  }
-
-  bool is_result_or_receiver_sink() const {
-    return kind_ == Kinds::local_result() || kind_ == Kinds::receiver();
   }
 
   bool is_leaf() const {
