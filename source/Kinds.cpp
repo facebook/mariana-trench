@@ -15,9 +15,9 @@
 
 namespace marianatrench {
 
-Kinds::Kinds()
-    : local_return_(std::make_unique<LocalReturnKind>()),
-      local_receiver_(std::make_unique<LocalArgumentKind>(0)) {}
+Kinds::Kinds() : local_return_(std::make_unique<LocalReturnKind>()) {
+  local_receiver_ = local_argument_.create(0);
+}
 
 const NamedKind* Kinds::get(const std::string& name) const {
   return named_.create(name);
@@ -41,13 +41,18 @@ const LocalReturnKind* Kinds::local_return() const {
 }
 
 const LocalArgumentKind* Kinds::local_receiver() const {
-  return local_receiver_.get();
+  return local_receiver_;
+}
+
+const LocalArgumentKind* Kinds::local_argument(
+    ParameterPosition parameter) const {
+  return local_argument_.create(parameter);
 }
 
 std::vector<const Kind*> Kinds::kinds() const {
   std::vector<const Kind*> result;
   result.push_back(local_return_.get());
-  result.push_back(local_receiver_.get());
+  result.push_back(local_receiver_);
   for (const auto& [_key, kind] : named_) {
     result.push_back(kind);
   }

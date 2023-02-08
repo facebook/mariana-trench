@@ -59,6 +59,8 @@ class Kinds final {
 
   const LocalArgumentKind* local_receiver() const;
 
+  const LocalArgumentKind* local_argument(ParameterPosition parameter) const;
+
   std::vector<const Kind*> kinds() const;
 
   static const Kind* artificial_source();
@@ -66,7 +68,8 @@ class Kinds final {
  private:
   UniquePointerFactory<std::string, NamedKind> named_;
   std::unique_ptr<LocalReturnKind> local_return_;
-  std::unique_ptr<LocalArgumentKind> local_receiver_;
+  UniquePointerFactory<ParameterPosition, LocalArgumentKind> local_argument_;
+  const LocalArgumentKind* local_receiver_;
   UniquePointerFactory<
       std::pair<std::string, std::string>,
       PartialKind,
