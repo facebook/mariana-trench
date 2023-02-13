@@ -23,7 +23,7 @@ Below is a list of the required dependencies. Most of them can be installed with
 * Boost >= 1.75.0
 * GoogleTest >= 1.10.0
 * JsonCpp >= 1.9.4
-* fmt >= 7.1.2
+* fmt >= 7.1.2, <= 8.1.1
 * RE2
 * Java (Optional)
 * Android SDK (Optional)
@@ -43,12 +43,12 @@ Finally, install all the dependencies.
 
 On **macOS**, run:
 ```shell
-$ brew install python3 cmake zlib boost googletest jsoncpp fmt re2
+$ brew install python3 cmake zlib boost googletest jsoncpp re2
 ```
 
 On **Linux**, run:
 ```shell
-$ brew install cmake zlib boost jsoncpp fmt re2
+$ brew install cmake zlib boost jsoncpp re2
 $ brew install googletest --build-from-source # The package is currently broken.
 $ export CMAKE_PREFIX_PATH=/home/linuxbrew/.linuxbrew/opt/jsoncpp:/home/linuxbrew/.linuxbrew/opt/zlib
 ```
@@ -56,6 +56,20 @@ $ export CMAKE_PREFIX_PATH=/home/linuxbrew/.linuxbrew/opt/jsoncpp:/home/linuxbre
 On **Linux**, you will need to install Java to run the tests. For instance, on **Ubuntu**, run:
 ```shell
 $ sudo apt install default-jre default-jdk
+```
+
+### Building fmt
+
+The 9.0 release of `fmt` has breaking changes that Mariana Trench is not yet compatible with, so for now, you need to build the library from source. You will need to do the following:
+
+```shell
+$ git clone https://github.com/fmtlib/fmt.git
+$ git checkout 8.1.1
+$ mkdir fmt/build
+$ cd fmt/build
+$ cmake ..
+$ make
+$ make install
 ```
 
 ### Building Redex
