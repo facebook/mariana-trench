@@ -2404,24 +2404,6 @@ TEST_F(JsonTest, Model) {
                             .to_json()),
       test::parse_json(R"#({
         "method": "LData;.method:(LData;LData;)V",
-        "attach_to_sources": [
-          {
-            "port": "Argument(1)",
-            "features": ["via-method"]
-          }
-        ],
-        "attach_to_sinks": [
-          {
-            "port": "Argument(1)",
-            "features": ["via-method"]
-          }
-        ],
-        "attach_to_propagations": [
-          {
-            "port": "Argument(1)",
-            "features": ["via-method"]
-          }
-        ],
         "add_features_to_arguments": [
           {
             "port": "Argument(1)",

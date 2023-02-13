@@ -22,7 +22,6 @@
     {
       "features" : 
       [
-        "via-features-to-arguments",
         "via-function-propagation"
       ],
       "port" : "Argument(1)"
@@ -30,7 +29,6 @@
     {
       "features" : 
       [
-        "via-features-to-arguments",
         "via-function-propagation"
       ],
       "port" : "Argument(2)"
@@ -41,7 +39,6 @@
     {
       "features" : 
       [
-        "via-features-to-arguments",
         "via-function-sink"
       ],
       "port" : "Argument(1)"
@@ -49,7 +46,6 @@
     {
       "features" : 
       [
-        "via-features-to-arguments",
         "via-function-sink"
       ],
       "port" : "Argument(2)"
@@ -60,7 +56,6 @@
     {
       "features" : 
       [
-        "via-features-to-arguments",
         "via-function-source"
       ],
       "port" : "Argument(1)"
@@ -68,7 +63,6 @@
     {
       "features" : 
       [
-        "via-features-to-arguments",
         "via-function-source"
       ],
       "port" : "Argument(2)"

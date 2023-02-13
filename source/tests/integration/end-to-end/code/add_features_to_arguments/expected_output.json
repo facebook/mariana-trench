@@ -10,36 +10,6 @@
       "port" : "Argument(1)"
     }
   ],
-  "attach_to_propagations" : 
-  [
-    {
-      "features" : 
-      [
-        "via-explicit-intent"
-      ],
-      "port" : "Argument(1)"
-    }
-  ],
-  "attach_to_sinks" : 
-  [
-    {
-      "features" : 
-      [
-        "via-explicit-intent"
-      ],
-      "port" : "Argument(1)"
-    }
-  ],
-  "attach_to_sources" : 
-  [
-    {
-      "features" : 
-      [
-        "via-explicit-intent"
-      ],
-      "port" : "Argument(1)"
-    }
-  ],
   "method" : "Lcom/facebook/marianatrench/integrationtests/Flow;.applyFeature:(Ljava/lang/Object;Ljava/lang/Object;)V",
   "position" : 
   {

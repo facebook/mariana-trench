@@ -29,6 +29,30 @@
         }
       ],
       "model": {
+        "attach_to_sources": [
+          {
+            "features": [
+              "via-explicit-intent"
+            ],
+            "port": "Argument(0)"
+          }
+        ],
+        "attach_to_sinks": [
+          {
+            "features": [
+              "via-explicit-intent"
+            ],
+            "port": "Argument(0)"
+          }
+        ],
+        "attach_to_propagations": [
+          {
+            "features": [
+              "via-explicit-intent"
+            ],
+            "port": "Argument(0)"
+          }
+        ],
         "add_features_to_arguments": [
           {
             "features": [

@@ -10,36 +10,6 @@
       "port" : "Argument(0)"
     }
   ],
-  "attach_to_propagations" : 
-  [
-    {
-      "features" : 
-      [
-        "via-certificate-pinner"
-      ],
-      "port" : "Argument(0)"
-    }
-  ],
-  "attach_to_sinks" : 
-  [
-    {
-      "features" : 
-      [
-        "via-certificate-pinner"
-      ],
-      "port" : "Argument(0)"
-    }
-  ],
-  "attach_to_sources" : 
-  [
-    {
-      "features" : 
-      [
-        "via-certificate-pinner"
-      ],
-      "port" : "Argument(0)"
-    }
-  ],
   "method" : "Lcom/facebook/marianatrench/integrationtests/Test$Builder;.certificatePinner:(Ljava/lang/String;)Lcom/facebook/marianatrench/integrationtests/Test$Builder;",
   "modes" : 
   [
@@ -54,24 +24,16 @@
   "propagation" : 
   [
     {
-      "input" : "Argument(1)",
-      "output" : "Return.mCertificatePinner"
-    },
-    {
-      "always_features" : 
-      [
-        "via-certificate-pinner"
-      ],
       "input" : "Argument(0)",
       "output" : "Return"
     },
     {
-      "always_features" : 
-      [
-        "via-certificate-pinner"
-      ],
       "input" : "Argument(1)",
       "output" : "Argument(0).mCertificatePinner"
+    },
+    {
+      "input" : "Argument(1)",
+      "output" : "Return.mCertificatePinner"
     }
   ]
 }

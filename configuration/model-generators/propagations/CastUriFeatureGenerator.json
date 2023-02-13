@@ -30,6 +30,30 @@
         }
       ],
       "model": {
+        "attach_to_sources": [
+          {
+            "features": [
+              "cast:uri"
+            ],
+            "port": "Return"
+          }
+        ],
+        "attach_to_sinks": [
+          {
+            "features": [
+              "cast:uri"
+            ],
+            "port": "Return"
+          }
+        ],
+        "attach_to_propagations": [
+          {
+            "features": [
+              "cast:uri"
+            ],
+            "port": "Return"
+          }
+        ],
         "add_features_to_arguments": [
           {
             "features": [
@@ -49,6 +73,30 @@
         }
       ],
       "model": {
+        "attach_to_sources": [
+          {
+            "features": [
+              "cast:uri"
+            ],
+            "port": "Argument(0)"
+          }
+        ],
+        "attach_to_sinks": [
+          {
+            "features": [
+              "cast:uri"
+            ],
+            "port": "Argument(0)"
+          }
+        ],
+        "attach_to_propagations": [
+          {
+            "features": [
+              "cast:uri"
+            ],
+            "port": "Argument(0)"
+          }
+        ],
         "add_features_to_arguments": [
           {
             "features": [

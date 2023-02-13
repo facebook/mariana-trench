@@ -15,7 +15,6 @@
     {
       "features" : 
       [
-        "via-features-to-arguments",
         "via-function-propagation"
       ],
       "port" : "Argument(0)"
@@ -26,7 +25,6 @@
     {
       "features" : 
       [
-        "via-features-to-arguments",
         "via-function-sink"
       ],
       "port" : "Argument(0)"
@@ -37,7 +35,6 @@
     {
       "features" : 
       [
-        "via-features-to-arguments",
         "via-function-source"
       ],
       "port" : "Argument(0)"

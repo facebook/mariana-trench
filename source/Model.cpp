@@ -771,9 +771,6 @@ void Model::add_add_features_to_arguments(Root root, FeatureSet features) {
     return;
   }
 
-  add_attach_to_sources(root, features);
-  add_attach_to_sinks(root, features);
-  add_attach_to_propagations(root, features);
   add_features_to_arguments_.update(
       root, [&](const FeatureSet& set) { return set.join(features); });
 }

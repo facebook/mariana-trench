@@ -18,6 +18,30 @@
                 "pattern": "Landroid/content/Context;"
               }
             ],
+            "attach_to_sources": [
+              {
+                "features": [
+                  "via:context"
+                ],
+                "port": "Argument(x)"
+              }
+            ],
+            "attach_to_sinks": [
+              {
+                "features": [
+                  "via:context"
+                ],
+                "port": "Argument(x)"
+              }
+            ],
+            "attach_to_propagations": [
+              {
+                "features": [
+                  "via:context"
+                ],
+                "port": "Argument(x)"
+              }
+            ],
             "add_features_to_arguments": [
               {
                 "features": [

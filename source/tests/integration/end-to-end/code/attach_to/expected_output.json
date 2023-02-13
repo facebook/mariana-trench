@@ -10,36 +10,6 @@
       "port" : "Argument(1)"
     }
   ],
-  "attach_to_propagations" : 
-  [
-    {
-      "features" : 
-      [
-        "via-add-features-to-argument"
-      ],
-      "port" : "Argument(1)"
-    }
-  ],
-  "attach_to_sinks" : 
-  [
-    {
-      "features" : 
-      [
-        "via-add-features-to-argument"
-      ],
-      "port" : "Argument(1)"
-    }
-  ],
-  "attach_to_sources" : 
-  [
-    {
-      "features" : 
-      [
-        "via-add-features-to-argument"
-      ],
-      "port" : "Argument(1)"
-    }
-  ],
   "method" : "Lcom/facebook/marianatrench/integrationtests/Flow;.add_features_to_arguments:(Ljava/lang/Object;)V",
   "position" : 
   {
@@ -49,36 +19,6 @@
 }
 {
   "add_features_to_arguments" : 
-  [
-    {
-      "features" : 
-      [
-        "via-add-features-to-argument-on-obscure"
-      ],
-      "port" : "Argument(1)"
-    }
-  ],
-  "attach_to_propagations" : 
-  [
-    {
-      "features" : 
-      [
-        "via-add-features-to-argument-on-obscure"
-      ],
-      "port" : "Argument(1)"
-    }
-  ],
-  "attach_to_sinks" : 
-  [
-    {
-      "features" : 
-      [
-        "via-add-features-to-argument-on-obscure"
-      ],
-      "port" : "Argument(1)"
-    }
-  ],
-  "attach_to_sources" : 
   [
     {
       "features" : 
