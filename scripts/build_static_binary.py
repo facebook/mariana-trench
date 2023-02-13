@@ -25,10 +25,8 @@ JSONCPP_URL: str = (
     f"https://github.com/open-source-parsers/jsoncpp/archive/{JSONCPP_VERSION}.tar.gz"
 )
 
-GTEST_VERSION: str = "1.10.0"
-GTEST_URL: str = (
-    f"https://github.com/google/googletest/archive/release-{GTEST_VERSION}.tar.gz"
-)
+GTEST_VERSION: str = "1.13.0"
+GTEST_URL: str = f"https://github.com/google/googletest/archive/v{GTEST_VERSION}.tar.gz"
 
 FMT_VERSION: str = "7.1.3"
 FMT_URL: str = f"https://github.com/fmtlib/fmt/archive/{FMT_VERSION}.tar.gz"
@@ -258,7 +256,7 @@ def _build_gtest(arguments: argparse.Namespace, work_directory: Path) -> Path:
         work_directory,
         gtest_build_directory,
     )
-    gtest_build_directory /= f"googletest-release-{GTEST_VERSION}"
+    gtest_build_directory /= f"googletest-{GTEST_VERSION}"
     _run(
         ["cmake", f"-DCMAKE_INSTALL_PREFIX={gtest_install_directory}", "."],
         cwd=gtest_build_directory,
