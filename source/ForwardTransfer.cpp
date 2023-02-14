@@ -174,18 +174,14 @@ bool ForwardTransfer::analyze_sget(
   auto memory_location = context->memory_factory.make_location(instruction);
   LOG_OR_DUMP(context, 4, "Setting result register to {}", *memory_location);
   environment->assign(k_result_register, memory_location);
-  if (!field_model.empty()) {
-    LOG_OR_DUMP(
-        context,
-        4,
-        "Tainting register {} with {}",
-        k_result_register,
-        field_model.sources());
-    environment->write(
-        k_result_register,
-        TaintTree(field_model.sources()),
-        UpdateKind::Strong);
-  }
+  LOG_OR_DUMP(
+      context,
+      4,
+      "Tainting register {} with {}",
+      k_result_register,
+      field_model.sources());
+  environment->write(
+      k_result_register, TaintTree(field_model.sources()), UpdateKind::Strong);
 
   return false;
 }
