@@ -11,24 +11,24 @@
 #include <InstructionAnalyzer.h>
 #include <MonotonicFixpointIterator.h>
 
-#include <mariana-trench/ForwardAnalysisEnvironment.h>
+#include <mariana-trench/ForwardTaintEnvironment.h>
 #include <mariana-trench/Log.h>
 
 namespace marianatrench {
 
-class ForwardFixpoint final : public sparta::MonotonicFixpointIterator<
-                                  cfg::GraphInterface,
-                                  ForwardAnalysisEnvironment> {
+class ForwardTaintFixpoint final : public sparta::MonotonicFixpointIterator<
+                                       cfg::GraphInterface,
+                                       ForwardTaintEnvironment> {
  public:
-  ForwardFixpoint(
+  ForwardTaintFixpoint(
       const cfg::ControlFlowGraph& cfg,
-      InstructionAnalyzer<ForwardAnalysisEnvironment> instruction_analyzer)
+      InstructionAnalyzer<ForwardTaintEnvironment> instruction_analyzer)
       : MonotonicFixpointIterator(cfg, cfg.num_blocks()),
         instruction_analyzer_(instruction_analyzer) {}
 
-  virtual ~ForwardFixpoint() {}
+  virtual ~ForwardTaintFixpoint() {}
 
-  void analyze_node(const NodeId& block, ForwardAnalysisEnvironment* taint)
+  void analyze_node(const NodeId& block, ForwardTaintEnvironment* taint)
       const override {
     LOG(4, "Analyzing block {}\n{}", block->id(), *taint);
     for (auto& instruction : *block) {
@@ -45,14 +45,14 @@ class ForwardFixpoint final : public sparta::MonotonicFixpointIterator<
     }
   }
 
-  ForwardAnalysisEnvironment analyze_edge(
+  ForwardTaintEnvironment analyze_edge(
       const EdgeId& /*edge*/,
-      const ForwardAnalysisEnvironment& taint) const override {
+      const ForwardTaintEnvironment& taint) const override {
     return taint;
   }
 
  private:
-  InstructionAnalyzer<ForwardAnalysisEnvironment> instruction_analyzer_;
+  InstructionAnalyzer<ForwardTaintEnvironment> instruction_analyzer_;
 };
 
 } // namespace marianatrench

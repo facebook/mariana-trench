@@ -8,7 +8,7 @@
 #include <Show.h>
 
 #include <mariana-trench/Assert.h>
-#include <mariana-trench/ForwardAnalysisEnvironment.h>
+#include <mariana-trench/ForwardTaintEnvironment.h>
 
 namespace marianatrench {
 
@@ -24,13 +24,13 @@ Taint propagate_artificial_sources(Taint taint, Path::Element path_element) {
 
 } // namespace
 
-ForwardAnalysisEnvironment::ForwardAnalysisEnvironment()
+ForwardTaintEnvironment::ForwardTaintEnvironment()
     : memory_locations_(MemoryLocationEnvironment::bottom()),
       taint_(TaintEnvironment::bottom()),
       position_(DexPositionDomain::bottom()),
       last_parameter_load_(LastParameterLoadDomain::bottom()) {}
 
-ForwardAnalysisEnvironment::ForwardAnalysisEnvironment(
+ForwardTaintEnvironment::ForwardTaintEnvironment(
     MemoryLocationEnvironment memory_locations,
     TaintEnvironment taint,
     DexPositionDomain position,
@@ -40,54 +40,52 @@ ForwardAnalysisEnvironment::ForwardAnalysisEnvironment(
       position_(std::move(position)),
       last_parameter_load_(std::move(last_parameter_load)) {}
 
-ForwardAnalysisEnvironment ForwardAnalysisEnvironment::initial() {
-  return ForwardAnalysisEnvironment(
+ForwardTaintEnvironment ForwardTaintEnvironment::initial() {
+  return ForwardTaintEnvironment(
       MemoryLocationEnvironment::bottom(),
       TaintEnvironment::bottom(),
       DexPositionDomain::top(),
       LastParameterLoadDomain(0));
 }
 
-bool ForwardAnalysisEnvironment::is_bottom() const {
+bool ForwardTaintEnvironment::is_bottom() const {
   return memory_locations_.is_bottom() && taint_.is_bottom() &&
       position_.is_bottom() && last_parameter_load_.is_bottom();
 }
 
-bool ForwardAnalysisEnvironment::is_top() const {
+bool ForwardTaintEnvironment::is_top() const {
   return memory_locations_.is_top() && taint_.is_top() && position_.is_top() &&
       last_parameter_load_.is_top();
 }
 
-bool ForwardAnalysisEnvironment::leq(
-    const ForwardAnalysisEnvironment& other) const {
+bool ForwardTaintEnvironment::leq(const ForwardTaintEnvironment& other) const {
   return memory_locations_.leq(other.memory_locations_) &&
       taint_.leq(other.taint_) && position_.leq(other.position_) &&
       last_parameter_load_.leq(other.last_parameter_load_);
 }
 
-bool ForwardAnalysisEnvironment::equals(
-    const ForwardAnalysisEnvironment& other) const {
+bool ForwardTaintEnvironment::equals(
+    const ForwardTaintEnvironment& other) const {
   return memory_locations_.equals(other.memory_locations_) &&
       taint_.equals(other.taint_) && position_.equals(other.position_) &&
       last_parameter_load_.equals(other.last_parameter_load_);
 }
 
-void ForwardAnalysisEnvironment::set_to_bottom() {
+void ForwardTaintEnvironment::set_to_bottom() {
   memory_locations_.set_to_bottom();
   taint_.set_to_bottom();
   position_.set_to_bottom();
   last_parameter_load_.set_to_bottom();
 }
 
-void ForwardAnalysisEnvironment::set_to_top() {
+void ForwardTaintEnvironment::set_to_top() {
   memory_locations_.set_to_top();
   taint_.set_to_top();
   position_.set_to_top();
   last_parameter_load_.set_to_top();
 }
 
-void ForwardAnalysisEnvironment::join_with(
-    const ForwardAnalysisEnvironment& other) {
+void ForwardTaintEnvironment::join_with(const ForwardTaintEnvironment& other) {
   mt_if_expensive_assert(auto previous = *this);
 
   memory_locations_.join_with(other.memory_locations_);
@@ -98,8 +96,7 @@ void ForwardAnalysisEnvironment::join_with(
   mt_expensive_assert(previous.leq(*this) && other.leq(*this));
 }
 
-void ForwardAnalysisEnvironment::widen_with(
-    const ForwardAnalysisEnvironment& other) {
+void ForwardTaintEnvironment::widen_with(const ForwardTaintEnvironment& other) {
   mt_if_expensive_assert(auto previous = *this);
 
   memory_locations_.widen_with(other.memory_locations_);
@@ -110,29 +107,28 @@ void ForwardAnalysisEnvironment::widen_with(
   mt_expensive_assert(previous.leq(*this) && other.leq(*this));
 }
 
-void ForwardAnalysisEnvironment::meet_with(
-    const ForwardAnalysisEnvironment& other) {
+void ForwardTaintEnvironment::meet_with(const ForwardTaintEnvironment& other) {
   memory_locations_.meet_with(other.memory_locations_);
   taint_.meet_with(other.taint_);
   position_.meet_with(other.position_);
   last_parameter_load_.meet_with(other.last_parameter_load_);
 }
 
-void ForwardAnalysisEnvironment::narrow_with(
-    const ForwardAnalysisEnvironment& other) {
+void ForwardTaintEnvironment::narrow_with(
+    const ForwardTaintEnvironment& other) {
   memory_locations_.narrow_with(other.memory_locations_);
   taint_.narrow_with(other.taint_);
   position_.narrow_with(other.position_);
   last_parameter_load_.narrow_with(other.last_parameter_load_);
 }
 
-void ForwardAnalysisEnvironment::assign(
+void ForwardTaintEnvironment::assign(
     Register register_id,
     MemoryLocation* memory_location) {
   memory_locations_.set(register_id, MemoryLocationsDomain{memory_location});
 }
 
-void ForwardAnalysisEnvironment::assign(
+void ForwardTaintEnvironment::assign(
     Register register_id,
     MemoryLocationsDomain memory_locations) {
   mt_assert(!memory_locations.is_top());
@@ -140,7 +136,7 @@ void ForwardAnalysisEnvironment::assign(
   memory_locations_.set(register_id, memory_locations);
 }
 
-MemoryLocationsDomain ForwardAnalysisEnvironment::memory_locations(
+MemoryLocationsDomain ForwardTaintEnvironment::memory_locations(
     Register register_id) const {
   MemoryLocationsDomain memory_locations = memory_locations_.get(register_id);
 
@@ -152,7 +148,7 @@ MemoryLocationsDomain ForwardAnalysisEnvironment::memory_locations(
   return memory_locations;
 }
 
-MemoryLocationsDomain ForwardAnalysisEnvironment::memory_locations(
+MemoryLocationsDomain ForwardTaintEnvironment::memory_locations(
     Register register_id,
     const DexString* field) const {
   MemoryLocationsDomain memory_locations = memory_locations_.get(register_id);
@@ -168,13 +164,12 @@ MemoryLocationsDomain ForwardAnalysisEnvironment::memory_locations(
   return fields;
 }
 
-TaintTree ForwardAnalysisEnvironment::read(
-    MemoryLocation* memory_location) const {
+TaintTree ForwardTaintEnvironment::read(MemoryLocation* memory_location) const {
   return taint_.get(memory_location->root())
       .read(memory_location->path(), propagate_artificial_sources);
 }
 
-TaintTree ForwardAnalysisEnvironment::read(
+TaintTree ForwardTaintEnvironment::read(
     MemoryLocation* memory_location,
     const Path& path) const {
   Path full_path = memory_location->path();
@@ -184,7 +179,7 @@ TaintTree ForwardAnalysisEnvironment::read(
       .read(full_path, propagate_artificial_sources);
 }
 
-TaintTree ForwardAnalysisEnvironment::read(
+TaintTree ForwardTaintEnvironment::read(
     const MemoryLocationsDomain& memory_locations) const {
   if (!memory_locations.is_value()) {
     return TaintTree::bottom();
@@ -197,13 +192,12 @@ TaintTree ForwardAnalysisEnvironment::read(
   return taint;
 }
 
-TaintTree ForwardAnalysisEnvironment::read(Register register_id) const {
+TaintTree ForwardTaintEnvironment::read(Register register_id) const {
   return read(memory_locations_.get(register_id));
 }
 
-TaintTree ForwardAnalysisEnvironment::read(
-    Register register_id,
-    const Path& path) const {
+TaintTree ForwardTaintEnvironment::read(Register register_id, const Path& path)
+    const {
   MemoryLocationsDomain memory_locations = memory_locations_.get(register_id);
 
   if (!memory_locations.is_value()) {
@@ -218,7 +212,7 @@ TaintTree ForwardAnalysisEnvironment::read(
   return taint;
 }
 
-void ForwardAnalysisEnvironment::write(
+void ForwardTaintEnvironment::write(
     MemoryLocation* memory_location,
     TaintTree taint,
     UpdateKind kind) {
@@ -229,7 +223,7 @@ void ForwardAnalysisEnvironment::write(
   });
 }
 
-void ForwardAnalysisEnvironment::write(
+void ForwardTaintEnvironment::write(
     MemoryLocation* memory_location,
     const Path& path,
     TaintTree taint,
@@ -244,7 +238,7 @@ void ForwardAnalysisEnvironment::write(
   });
 }
 
-void ForwardAnalysisEnvironment::write(
+void ForwardTaintEnvironment::write(
     MemoryLocation* memory_location,
     const Path& path,
     Taint taint,
@@ -259,7 +253,7 @@ void ForwardAnalysisEnvironment::write(
   });
 }
 
-void ForwardAnalysisEnvironment::write(
+void ForwardTaintEnvironment::write(
     Register register_id,
     TaintTree taint,
     UpdateKind kind) {
@@ -280,7 +274,7 @@ void ForwardAnalysisEnvironment::write(
   }
 }
 
-void ForwardAnalysisEnvironment::write(
+void ForwardTaintEnvironment::write(
     Register register_id,
     const Path& path,
     TaintTree taint,
@@ -302,7 +296,7 @@ void ForwardAnalysisEnvironment::write(
   }
 }
 
-void ForwardAnalysisEnvironment::write(
+void ForwardTaintEnvironment::write(
     Register register_id,
     const Path& path,
     Taint taint,
@@ -324,20 +318,20 @@ void ForwardAnalysisEnvironment::write(
   }
 }
 
-DexPosition* ForwardAnalysisEnvironment::last_position() const {
+DexPosition* ForwardTaintEnvironment::last_position() const {
   return get_optional_value_or(position_.get_constant(), nullptr);
 }
 
-void ForwardAnalysisEnvironment::set_last_position(DexPosition* position) {
+void ForwardTaintEnvironment::set_last_position(DexPosition* position) {
   position_ = DexPositionDomain(position);
 }
 
-const LastParameterLoadDomain&
-ForwardAnalysisEnvironment::last_parameter_loaded() const {
+const LastParameterLoadDomain& ForwardTaintEnvironment::last_parameter_loaded()
+    const {
   return last_parameter_load_;
 }
 
-void ForwardAnalysisEnvironment::increment_last_parameter_loaded() {
+void ForwardTaintEnvironment::increment_last_parameter_loaded() {
   if (last_parameter_load_.is_value()) {
     last_parameter_load_ =
         LastParameterLoadDomain(*last_parameter_load_.get_constant() + 1);
@@ -346,7 +340,7 @@ void ForwardAnalysisEnvironment::increment_last_parameter_loaded() {
 
 std::ostream& operator<<(
     std::ostream& out,
-    const ForwardAnalysisEnvironment& environment) {
+    const ForwardTaintEnvironment& environment) {
   return out << "(memory_locations=" << environment.memory_locations_
              << ", taint=" << environment.taint_
              << ", position=" << environment.position_

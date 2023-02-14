@@ -33,40 +33,40 @@ using LastParameterLoadDomain =
 // We cannot use `sparta::ReducedProductAbstractDomain` because it sets
 // everything to bottom if a subdomain is bottom. Since the empty partition is
 // considered bottom, this would always be bottom.
-class ForwardAnalysisEnvironment final
-    : public sparta::AbstractDomain<ForwardAnalysisEnvironment> {
+class ForwardTaintEnvironment final
+    : public sparta::AbstractDomain<ForwardTaintEnvironment> {
  public:
   /* Create the bottom environment. */
-  ForwardAnalysisEnvironment();
+  ForwardTaintEnvironment();
 
-  ForwardAnalysisEnvironment(
+  ForwardTaintEnvironment(
       MemoryLocationEnvironment memory_locations,
       TaintEnvironment taint,
       DexPositionDomain position,
       LastParameterLoadDomain last_parameter_load);
 
   /* Return the initial environment. */
-  static ForwardAnalysisEnvironment initial();
+  static ForwardTaintEnvironment initial();
 
   bool is_bottom() const override;
 
   bool is_top() const override;
 
-  bool leq(const ForwardAnalysisEnvironment& other) const override;
+  bool leq(const ForwardTaintEnvironment& other) const override;
 
-  bool equals(const ForwardAnalysisEnvironment& other) const override;
+  bool equals(const ForwardTaintEnvironment& other) const override;
 
   void set_to_bottom() override;
 
   void set_to_top() override;
 
-  void join_with(const ForwardAnalysisEnvironment& other) override;
+  void join_with(const ForwardTaintEnvironment& other) override;
 
-  void widen_with(const ForwardAnalysisEnvironment& other) override;
+  void widen_with(const ForwardTaintEnvironment& other) override;
 
-  void meet_with(const ForwardAnalysisEnvironment& other) override;
+  void meet_with(const ForwardTaintEnvironment& other) override;
 
-  void narrow_with(const ForwardAnalysisEnvironment& other) override;
+  void narrow_with(const ForwardTaintEnvironment& other) override;
 
   /* Set the memory location where the register points to. */
   void assign(Register register_id, MemoryLocation* memory_location);
@@ -127,7 +127,7 @@ class ForwardAnalysisEnvironment final
 
   friend std::ostream& operator<<(
       std::ostream& out,
-      const ForwardAnalysisEnvironment& environment);
+      const ForwardTaintEnvironment& environment);
 
  private:
   MemoryLocationEnvironment memory_locations_;

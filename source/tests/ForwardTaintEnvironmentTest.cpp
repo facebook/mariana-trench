@@ -7,7 +7,7 @@
 
 #include <gtest/gtest.h>
 
-#include <mariana-trench/ForwardAnalysisEnvironment.h>
+#include <mariana-trench/ForwardTaintEnvironment.h>
 #include <mariana-trench/Redex.h>
 #include <mariana-trench/tests/Test.h>
 
@@ -15,15 +15,15 @@
 
 namespace marianatrench {
 
-class ForwardAnalysisEnvironmentTest : public test::Test {};
+class ForwardTaintEnvironmentTest : public test::Test {};
 
-TEST_F(ForwardAnalysisEnvironmentTest, LessOrEqual) {
+TEST_F(ForwardTaintEnvironmentTest, LessOrEqual) {
   EXPECT_TRUE(MemoryLocationEnvironment().leq(MemoryLocationEnvironment()));
   EXPECT_TRUE(TaintEnvironment().leq(TaintEnvironment()));
-  EXPECT_TRUE(ForwardAnalysisEnvironment().leq(ForwardAnalysisEnvironment()));
+  EXPECT_TRUE(ForwardTaintEnvironment().leq(ForwardTaintEnvironment()));
 }
 
-TEST_F(ForwardAnalysisEnvironmentTest, LessOrEqualSuperSet) {
+TEST_F(ForwardTaintEnvironmentTest, LessOrEqualSuperSet) {
   auto context = test::make_empty_context();
   const auto* source_kind = context.kinds->get("TestSource");
 
@@ -53,7 +53,7 @@ TEST_F(ForwardAnalysisEnvironmentTest, LessOrEqualSuperSet) {
   EXPECT_FALSE(domain2.leq(domain1));
 }
 
-TEST_F(ForwardAnalysisEnvironmentTest, LessOrEqualDifferentSources) {
+TEST_F(ForwardTaintEnvironmentTest, LessOrEqualDifferentSources) {
   auto context = test::make_empty_context();
   const auto* source_kind = context.kinds->get("TestSource");
 
@@ -80,7 +80,7 @@ TEST_F(ForwardAnalysisEnvironmentTest, LessOrEqualDifferentSources) {
   EXPECT_FALSE(domain2.leq(domain1));
 }
 
-TEST_F(ForwardAnalysisEnvironmentTest, JoinSuperSet) {
+TEST_F(ForwardTaintEnvironmentTest, JoinSuperSet) {
   auto context = test::make_empty_context();
   const auto* source_kind = context.kinds->get("TestSource");
 
@@ -107,7 +107,7 @@ TEST_F(ForwardAnalysisEnvironmentTest, JoinSuperSet) {
   EXPECT_TRUE(domain1 == domain2);
 }
 
-TEST_F(ForwardAnalysisEnvironmentTest, JoinTwoDifferent) {
+TEST_F(ForwardTaintEnvironmentTest, JoinTwoDifferent) {
   auto context = test::make_empty_context();
   const auto* source_kind = context.kinds->get("TestSource");
 
@@ -147,7 +147,7 @@ TEST_F(ForwardAnalysisEnvironmentTest, JoinTwoDifferent) {
   EXPECT_TRUE(domain1 == domain3);
 }
 
-TEST_F(ForwardAnalysisEnvironmentTest, JoinTwoEnvironmentWithDifferentSources) {
+TEST_F(ForwardTaintEnvironmentTest, JoinTwoEnvironmentWithDifferentSources) {
   auto context = test::make_empty_context();
   const auto* source_kind = context.kinds->get("TestSource");
 
@@ -158,14 +158,14 @@ TEST_F(ForwardAnalysisEnvironmentTest, JoinTwoEnvironmentWithDifferentSources) {
   auto parameter_1 = std::make_unique<ParameterMemoryLocation>(1);
   auto parameter_2 = std::make_unique<ParameterMemoryLocation>(2);
 
-  auto environment1 = ForwardAnalysisEnvironment::initial();
+  auto environment1 = ForwardTaintEnvironment::initial();
   environment1.write(parameter_1.get(), {}, UpdateKind::Weak);
   environment1.write(
       parameter_2.get(),
       TaintTree{Taint{test::make_leaf_taint_config(source_kind)}},
       UpdateKind::Weak);
 
-  auto environment2 = ForwardAnalysisEnvironment::initial();
+  auto environment2 = ForwardTaintEnvironment::initial();
   environment2.write(
       parameter_1.get(),
       TaintTree{Taint{test::make_leaf_taint_config(source_kind)}},

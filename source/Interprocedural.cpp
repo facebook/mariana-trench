@@ -18,9 +18,9 @@
 #include <mariana-trench/Dependencies.h>
 #include <mariana-trench/EventLogger.h>
 #include <mariana-trench/Features.h>
-#include <mariana-trench/ForwardAnalysisEnvironment.h>
-#include <mariana-trench/ForwardFixpoint.h>
-#include <mariana-trench/ForwardTransfer.h>
+#include <mariana-trench/ForwardTaintEnvironment.h>
+#include <mariana-trench/ForwardTaintFixpoint.h>
+#include <mariana-trench/ForwardTaintTransfer.h>
 #include <mariana-trench/Interprocedural.h>
 #include <mariana-trench/Log.h>
 #include <mariana-trench/Methods.h>
@@ -75,10 +75,10 @@ Model analyze(
       "Code:\n{}",
       Method::show_control_flow_graph(code->cfg()));
 
-  auto fixpoint = ForwardFixpoint(
+  auto fixpoint = ForwardTaintFixpoint(
       code->cfg(),
-      InstructionAnalyzerCombiner<ForwardTransfer>(method_context.get()));
-  fixpoint.run(ForwardAnalysisEnvironment::initial());
+      InstructionAnalyzerCombiner<ForwardTaintTransfer>(method_context.get()));
+  fixpoint.run(ForwardTaintEnvironment::initial());
 
   model.collapse_invalid_paths(global_context);
   model.approximate(/* widening_features */
