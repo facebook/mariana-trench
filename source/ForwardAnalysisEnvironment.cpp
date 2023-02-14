@@ -26,13 +26,13 @@ Taint propagate_artificial_sources(Taint taint, Path::Element path_element) {
 
 ForwardAnalysisEnvironment::ForwardAnalysisEnvironment()
     : memory_locations_(MemoryLocationEnvironment::bottom()),
-      taint_(TaintAbstractPartition::bottom()),
+      taint_(TaintEnvironment::bottom()),
       position_(DexPositionDomain::bottom()),
       last_parameter_load_(LastParameterLoadDomain::bottom()) {}
 
 ForwardAnalysisEnvironment::ForwardAnalysisEnvironment(
     MemoryLocationEnvironment memory_locations,
-    TaintAbstractPartition taint,
+    TaintEnvironment taint,
     DexPositionDomain position,
     LastParameterLoadDomain last_parameter_load)
     : memory_locations_(std::move(memory_locations)),
@@ -43,7 +43,7 @@ ForwardAnalysisEnvironment::ForwardAnalysisEnvironment(
 ForwardAnalysisEnvironment ForwardAnalysisEnvironment::initial() {
   return ForwardAnalysisEnvironment(
       MemoryLocationEnvironment::bottom(),
-      TaintAbstractPartition::bottom(),
+      TaintEnvironment::bottom(),
       DexPositionDomain::top(),
       LastParameterLoadDomain(0));
 }
@@ -352,22 +352,6 @@ std::ostream& operator<<(
              << ", position=" << environment.position_
              << ", last_parameter_load=" << environment.last_parameter_load_
              << ")";
-}
-
-std::ostream& operator<<(
-    std::ostream& out,
-    const TaintAbstractPartition& taint) {
-  if (taint.is_bottom()) {
-    return out << "_|_";
-  } else if (taint.is_top()) {
-    return out << "T";
-  } else {
-    out << "TaintAbstractPartition(";
-    for (const auto& entry : taint.bindings()) {
-      out << "\n  " << show(entry.first) << " -> " << entry.second;
-    }
-    return out << "\n)";
-  }
 }
 
 } // namespace marianatrench

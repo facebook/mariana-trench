@@ -19,7 +19,7 @@ class ForwardAnalysisEnvironmentTest : public test::Test {};
 
 TEST_F(ForwardAnalysisEnvironmentTest, LessOrEqual) {
   EXPECT_TRUE(MemoryLocationEnvironment().leq(MemoryLocationEnvironment()));
-  EXPECT_TRUE(TaintAbstractPartition().leq(TaintAbstractPartition()));
+  EXPECT_TRUE(TaintEnvironment().leq(TaintEnvironment()));
   EXPECT_TRUE(ForwardAnalysisEnvironment().leq(ForwardAnalysisEnvironment()));
 }
 
@@ -31,12 +31,12 @@ TEST_F(ForwardAnalysisEnvironmentTest, LessOrEqualSuperSet) {
   auto* method = context.methods->create(
       redex::create_void_method(scope, "LClass;", "method"));
 
-  auto domain1 = TaintAbstractPartition{
+  auto domain1 = TaintEnvironment{
       {nullptr, TaintTree{Taint{test::make_leaf_taint_config(source_kind)}}}};
-  EXPECT_TRUE(TaintAbstractPartition{}.leq(domain1));
-  EXPECT_FALSE(domain1.leq(TaintAbstractPartition{}));
+  EXPECT_TRUE(TaintEnvironment{}.leq(domain1));
+  EXPECT_FALSE(domain1.leq(TaintEnvironment{}));
 
-  auto domain2 = TaintAbstractPartition{
+  auto domain2 = TaintEnvironment{
       {nullptr,
        TaintTree{Taint{
            test::make_leaf_taint_config(source_kind),
@@ -61,10 +61,10 @@ TEST_F(ForwardAnalysisEnvironmentTest, LessOrEqualDifferentSources) {
   auto* method = context.methods->create(
       redex::create_void_method(scope, "LClass;", "method"));
 
-  auto domain1 = TaintAbstractPartition{
+  auto domain1 = TaintEnvironment{
       {nullptr, TaintTree{Taint{test::make_leaf_taint_config(source_kind)}}}};
 
-  auto domain2 = TaintAbstractPartition{
+  auto domain2 = TaintEnvironment{
       {nullptr,
        TaintTree{Taint{test::make_taint_config(
            source_kind,
@@ -88,9 +88,9 @@ TEST_F(ForwardAnalysisEnvironmentTest, JoinSuperSet) {
   auto* method = context.methods->create(
       redex::create_void_method(scope, "LClass;", "method"));
 
-  auto domain1 = TaintAbstractPartition{
+  auto domain1 = TaintEnvironment{
       {nullptr, TaintTree{Taint{test::make_leaf_taint_config(source_kind)}}}};
-  auto domain2 = TaintAbstractPartition{
+  auto domain2 = TaintEnvironment{
       {nullptr,
        TaintTree{Taint{
            test::make_leaf_taint_config(source_kind),
@@ -115,10 +115,10 @@ TEST_F(ForwardAnalysisEnvironmentTest, JoinTwoDifferent) {
   auto* method = context.methods->create(
       redex::create_void_method(scope, "LClass;", "method"));
 
-  auto domain1 = TaintAbstractPartition{
+  auto domain1 = TaintEnvironment{
       {nullptr, TaintTree{Taint{test::make_leaf_taint_config(source_kind)}}}};
 
-  auto domain2 = TaintAbstractPartition{
+  auto domain2 = TaintEnvironment{
       {nullptr,
        TaintTree{Taint{test::make_taint_config(
            source_kind,
@@ -130,7 +130,7 @@ TEST_F(ForwardAnalysisEnvironmentTest, JoinTwoDifferent) {
                .origins = MethodSet{method},
                .call_info = CallInfo::CallSite})}}}};
 
-  auto domain3 = TaintAbstractPartition{
+  auto domain3 = TaintEnvironment{
       {nullptr,
        TaintTree{Taint{
            test::make_leaf_taint_config(source_kind),
