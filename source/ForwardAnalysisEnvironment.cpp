@@ -5,11 +5,10 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-#include <mariana-trench/ForwardAnalysisEnvironment.h>
-
 #include <Show.h>
 
 #include <mariana-trench/Assert.h>
+#include <mariana-trench/ForwardAnalysisEnvironment.h>
 
 namespace marianatrench {
 
@@ -26,13 +25,13 @@ Taint propagate_artificial_sources(Taint taint, Path::Element path_element) {
 } // namespace
 
 ForwardAnalysisEnvironment::ForwardAnalysisEnvironment()
-    : memory_locations_(MemoryLocationsPartition::bottom()),
+    : memory_locations_(MemoryLocationEnvironment::bottom()),
       taint_(TaintAbstractPartition::bottom()),
       position_(DexPositionDomain::bottom()),
       last_parameter_load_(LastParameterLoadDomain::bottom()) {}
 
 ForwardAnalysisEnvironment::ForwardAnalysisEnvironment(
-    MemoryLocationsPartition memory_locations,
+    MemoryLocationEnvironment memory_locations,
     TaintAbstractPartition taint,
     DexPositionDomain position,
     LastParameterLoadDomain last_parameter_load)
@@ -43,7 +42,7 @@ ForwardAnalysisEnvironment::ForwardAnalysisEnvironment(
 
 ForwardAnalysisEnvironment ForwardAnalysisEnvironment::initial() {
   return ForwardAnalysisEnvironment(
-      MemoryLocationsPartition::bottom(),
+      MemoryLocationEnvironment::bottom(),
       TaintAbstractPartition::bottom(),
       DexPositionDomain::top(),
       LastParameterLoadDomain(0));
@@ -353,22 +352,6 @@ std::ostream& operator<<(
              << ", position=" << environment.position_
              << ", last_parameter_load=" << environment.last_parameter_load_
              << ")";
-}
-
-std::ostream& operator<<(
-    std::ostream& out,
-    const MemoryLocationsPartition& memory_locations) {
-  if (memory_locations.is_bottom()) {
-    return out << "_|_";
-  } else if (memory_locations.is_top()) {
-    return out << "T";
-  } else {
-    out << "MemoryLocationsPartition(";
-    for (const auto& entry : memory_locations.bindings()) {
-      out << "\n  Register(" << entry.first << ") -> " << entry.second;
-    }
-    return out << "\n)";
-  }
 }
 
 std::ostream& operator<<(

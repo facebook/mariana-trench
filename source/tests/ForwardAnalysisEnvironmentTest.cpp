@@ -18,7 +18,7 @@ namespace marianatrench {
 class ForwardAnalysisEnvironmentTest : public test::Test {};
 
 TEST_F(ForwardAnalysisEnvironmentTest, LessOrEqual) {
-  EXPECT_TRUE(MemoryLocationsPartition().leq(MemoryLocationsPartition()));
+  EXPECT_TRUE(MemoryLocationEnvironment().leq(MemoryLocationEnvironment()));
   EXPECT_TRUE(TaintAbstractPartition().leq(TaintAbstractPartition()));
   EXPECT_TRUE(ForwardAnalysisEnvironment().leq(ForwardAnalysisEnvironment()));
 }

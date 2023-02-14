@@ -18,15 +18,11 @@
 #include <mariana-trench/Access.h>
 #include <mariana-trench/Compiler.h>
 #include <mariana-trench/MemoryLocation.h>
+#include <mariana-trench/MemoryLocationEnvironment.h>
 #include <mariana-trench/Taint.h>
 #include <mariana-trench/TaintTree.h>
 
 namespace marianatrench {
-
-using MemoryLocationsDomain =
-    sparta::PatriciaTreeSetAbstractDomain<MemoryLocation*>;
-using MemoryLocationsPartition =
-    sparta::PatriciaTreeMapAbstractPartition<Register, MemoryLocationsDomain>;
 
 using TaintAbstractPartition =
     sparta::PatriciaTreeMapAbstractPartition<MemoryLocation*, TaintTree>;
@@ -46,7 +42,7 @@ class ForwardAnalysisEnvironment final
   ForwardAnalysisEnvironment();
 
   ForwardAnalysisEnvironment(
-      MemoryLocationsPartition memory_locations,
+      MemoryLocationEnvironment memory_locations,
       TaintAbstractPartition taint,
       DexPositionDomain position,
       LastParameterLoadDomain last_parameter_load);
@@ -136,15 +132,11 @@ class ForwardAnalysisEnvironment final
       const ForwardAnalysisEnvironment& environment);
 
  private:
-  MemoryLocationsPartition memory_locations_;
+  MemoryLocationEnvironment memory_locations_;
   TaintAbstractPartition taint_;
   DexPositionDomain position_;
   LastParameterLoadDomain last_parameter_load_;
 };
-
-std::ostream& operator<<(
-    std::ostream& out,
-    const marianatrench::MemoryLocationsPartition& memory_locations);
 
 std::ostream& operator<<(
     std::ostream& out,
