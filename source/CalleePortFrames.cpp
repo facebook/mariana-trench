@@ -184,8 +184,8 @@ void CalleePortFrames::join_with(const CalleePortFrames& other) {
   // analysis of a method and will be collapsed when the artificial source
   // causes sink/propagation inference. So pre-emptively collapse here for
   // better performance
-  input_paths_.collapse_deeper_than(Heuristics::kMaxInputPathDepth);
-  input_paths_.limit_leaves(Heuristics::kMaxInputPathLeaves);
+  input_paths_.collapse_deeper_than(Heuristics::kPropagationMaxInputPathSize);
+  input_paths_.limit_leaves(Heuristics::kPropagationMaxInputPathLeaves);
   local_positions_.join_with(other.local_positions_);
 
   mt_expensive_assert(previous.leq(*this) && other.leq(*this));
@@ -430,8 +430,8 @@ void CalleePortFrames::append_to_artificial_source_input_paths(
   }
   input_paths_ = std::move(new_input_paths);
 
-  input_paths_.collapse_deeper_than(Heuristics::kMaxInputPathDepth);
-  input_paths_.limit_leaves(Heuristics::kMaxInputPathLeaves);
+  input_paths_.collapse_deeper_than(Heuristics::kPropagationMaxInputPathSize);
+  input_paths_.limit_leaves(Heuristics::kPropagationMaxInputPathLeaves);
 }
 
 void CalleePortFrames::add_inferred_features_to_real_sources(
@@ -737,8 +737,9 @@ Json::Value CalleePortFrames::to_json(
     return taint;
   }
 
-  // Never emit calls for declarations.
-  if (call_info == CallInfo::Declaration) {
+  // Never emit calls for declarations and propagations.
+  if (call_info == CallInfo::Declaration ||
+      call_info == CallInfo::Propagation) {
     return taint;
   }
 

@@ -109,7 +109,13 @@ void Frame::join_with(const Frame& other) {
     via_type_of_ports_.join_with(other.via_type_of_ports_);
     via_value_of_ports_.join_with(other.via_value_of_ports_);
     canonical_names_.join_with(other.canonical_names_);
+
     output_paths_.join_with(other.output_paths_);
+    // Approximate the output paths here to avoid storing very large trees
+    // during the analysis of a method.
+    output_paths_.collapse_deeper_than(
+        Heuristics::kPropagationMaxOutputPathSize);
+    output_paths_.limit_leaves(Heuristics::kPropagationMaxOutputPathLeaves);
   }
 
   mt_expensive_assert(previous.leq(*this) && other.leq(*this));
@@ -200,6 +206,13 @@ Json::Value Frame::to_json(const LocalPositionSet& local_positions) const {
 
   value["call_info"] = Json::Value(std::string(show_call_info(call_info_)));
 
+  if (!output_paths_.is_bottom()) {
+    auto output_paths_value = Json::Value(Json::arrayValue);
+    for (const auto& [output_path, _] : output_paths_.elements()) {
+      output_paths_value.append(output_path.to_json());
+    }
+    value["output_paths"] = output_paths_value;
+  }
   return value;
 }
 

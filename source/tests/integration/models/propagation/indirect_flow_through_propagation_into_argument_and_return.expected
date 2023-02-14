@@ -178,15 +178,54 @@
       [
         {
           "input" : "Argument(0)",
-          "output" : "Return"
+          "output" :
+          [
+            {
+              "kinds" :
+              [
+                {
+                  "call_info" : "Propagation",
+                  "kind" : "LocalReturn",
+                  "output_paths" :
+                  [
+                    ""
+                  ]
+                }
+              ]
+            }
+          ]
         },
         {
           "input" : "Argument(1)",
-          "output" : "Argument(0).field"
-        },
-        {
-          "input" : "Argument(1)",
-          "output" : "Return.field"
+          "output" :
+          [
+            {
+              "kinds" :
+              [
+                {
+                  "call_info" : "Propagation",
+                  "kind" : "LocalArgument(0)",
+                  "output_paths" :
+                  [
+                    ".field"
+                  ]
+                }
+              ]
+            },
+            {
+              "kinds" :
+              [
+                {
+                  "call_info" : "Propagation",
+                  "kind" : "LocalReturn",
+                  "output_paths" :
+                  [
+                    ".field"
+                  ]
+                }
+              ]
+            }
+          ]
         }
       ]
     }

@@ -126,23 +126,13 @@ TEST_F(ModelTest, ModelConstructor) {
       /* modes */ Model::Mode::TaintInTaintOut | Model::Mode::TaintInTaintThis);
   EXPECT_EQ(
       model_with_untracked_constructor.propagations(),
-      (PropagationAccessPathTree{
-          {/* output */ AccessPath(Root(Root::Kind::Argument, 0)),
-           PropagationPartition{
-               {Root(Root::Kind::Argument, 1),
-                Propagation(
-                    /* input_paths */
-                    PathTreeDomain{{Path{}, SingletonAbstractDomain()}},
-                    /* inferred_features */ FeatureMayAlwaysSet::bottom(),
-                    /* user_features */ FeatureSet::bottom())}}},
-          {/* output */ AccessPath(Root(Root::Kind::Argument, 0)),
-           PropagationPartition{
-               {Root(Root::Kind::Argument, 2),
-                Propagation(
-                    /* input_paths */
-                    PathTreeDomain{{Path{}, SingletonAbstractDomain()}},
-                    /* inferred_features */ FeatureMayAlwaysSet::bottom(),
-                    /* user_features */ FeatureSet::bottom())}}},
+      (TaintAccessPathTree{
+          {/* input */ AccessPath(Root(Root::Kind::Argument, 1)),
+           Taint{test::make_propagation_taint_config(
+               context.kinds->local_argument(0))}},
+          {/* input */ AccessPath(Root(Root::Kind::Argument, 2)),
+           Taint{test::make_propagation_taint_config(
+               context.kinds->local_argument(0))}},
       }));
 
   auto* dex_untracked_method_returning_void = redex::create_void_method(
@@ -160,23 +150,13 @@ TEST_F(ModelTest, ModelConstructor) {
       /* modes */ Model::Mode::TaintInTaintOut | Model::Mode::TaintInTaintThis);
   EXPECT_EQ(
       model_with_untracked_method_returning_void.propagations(),
-      (PropagationAccessPathTree{
-          {/* output */ AccessPath(Root(Root::Kind::Argument, 0)),
-           PropagationPartition{
-               {Root(Root::Kind::Argument, 1),
-                Propagation(
-                    /* input_paths */
-                    PathTreeDomain{{Path{}, SingletonAbstractDomain()}},
-                    /* inferred_features */ FeatureMayAlwaysSet::bottom(),
-                    /* user_features */ FeatureSet::bottom())}}},
-          {/* output */ AccessPath(Root(Root::Kind::Argument, 0)),
-           PropagationPartition{
-               {Root(Root::Kind::Argument, 2),
-                Propagation(
-                    /* input_paths */
-                    PathTreeDomain{{Path{}, SingletonAbstractDomain()}},
-                    /* inferred_features */ FeatureMayAlwaysSet::bottom(),
-                    /* user_features */ FeatureSet::bottom())}}},
+      (TaintAccessPathTree{
+          {/* input */ AccessPath(Root(Root::Kind::Argument, 1)),
+           Taint{test::make_propagation_taint_config(
+               context.kinds->local_argument(0))}},
+          {/* input */ AccessPath(Root(Root::Kind::Argument, 2)),
+           Taint{test::make_propagation_taint_config(
+               context.kinds->local_argument(0))}},
       }));
 
   auto* dex_untracked_method_returning_data = redex::create_void_method(
@@ -194,47 +174,22 @@ TEST_F(ModelTest, ModelConstructor) {
       /* modes */ Model::Mode::TaintInTaintOut | Model::Mode::TaintInTaintThis);
   EXPECT_EQ(
       model_with_untracked_method_returning_data.propagations(),
-      (PropagationAccessPathTree{
-          {/* output */ AccessPath(Root(Root::Kind::Return)),
-           PropagationPartition{
-               {Root(Root::Kind::Argument, 0),
-                Propagation(
-                    /* input_paths */
-                    PathTreeDomain{{Path{}, SingletonAbstractDomain()}},
-                    /* inferred_features */ FeatureMayAlwaysSet::bottom(),
-                    /* user_features */ FeatureSet::bottom())}}},
-          {/* output */ AccessPath(Root(Root::Kind::Return)),
-           PropagationPartition{
-               {Root(Root::Kind::Argument, 1),
-                Propagation(
-                    /* input_paths */
-                    PathTreeDomain{{Path{}, SingletonAbstractDomain()}},
-                    /* inferred_features */ FeatureMayAlwaysSet::bottom(),
-                    /* user_features */ FeatureSet::bottom())}}},
-          {/* output */ AccessPath(Root(Root::Kind::Argument, 0)),
-           PropagationPartition{
-               {Root(Root::Kind::Argument, 1),
-                Propagation(
-                    /* input_paths */
-                    PathTreeDomain{{Path{}, SingletonAbstractDomain()}},
-                    /* inferred_features */ FeatureMayAlwaysSet::bottom(),
-                    /* user_features */ FeatureSet::bottom())}}},
-          {/* output */ AccessPath(Root(Root::Kind::Return)),
-           PropagationPartition{
-               {Root(Root::Kind::Argument, 2),
-                Propagation(
-                    /* input_paths */
-                    PathTreeDomain{{Path{}, SingletonAbstractDomain()}},
-                    /* inferred_features */ FeatureMayAlwaysSet::bottom(),
-                    /* user_features */ FeatureSet::bottom())}}},
-          {/* output */ AccessPath(Root(Root::Kind::Argument, 0)),
-           PropagationPartition{
-               {Root(Root::Kind::Argument, 2),
-                Propagation(
-                    /* input_paths */
-                    PathTreeDomain{{Path{}, SingletonAbstractDomain()}},
-                    /* inferred_features */ FeatureMayAlwaysSet::bottom(),
-                    /* user_features */ FeatureSet::bottom())}}},
+      (TaintAccessPathTree{
+          {/* input */ AccessPath(Root(Root::Kind::Argument, 0)),
+           Taint{test::make_propagation_taint_config(
+               context.kinds->local_return())}},
+          {/* input */ AccessPath(Root(Root::Kind::Argument, 1)),
+           Taint{test::make_propagation_taint_config(
+               context.kinds->local_return())}},
+          {/* input */ AccessPath(Root(Root::Kind::Argument, 1)),
+           Taint{test::make_propagation_taint_config(
+               context.kinds->local_argument(0))}},
+          {/* input */ AccessPath(Root(Root::Kind::Argument, 2)),
+           Taint{test::make_propagation_taint_config(
+               context.kinds->local_return())}},
+          {/* input */ AccessPath(Root(Root::Kind::Argument, 2)),
+           Taint{test::make_propagation_taint_config(
+               context.kinds->local_argument(0))}},
       }));
 
   auto* dex_untracked_static_method = redex::create_void_method(
@@ -253,23 +208,13 @@ TEST_F(ModelTest, ModelConstructor) {
       /* modes */ Model::Mode::TaintInTaintOut | Model::Mode::TaintInTaintThis);
   EXPECT_EQ(
       model_with_untracked_static_method.propagations(),
-      (PropagationAccessPathTree{
-          {/* output */ AccessPath(Root(Root::Kind::Return)),
-           PropagationPartition{
-               {Root(Root::Kind::Argument, 0),
-                Propagation(
-                    /* input_paths */
-                    PathTreeDomain{{Path{}, SingletonAbstractDomain()}},
-                    /* inferred_features */ FeatureMayAlwaysSet::bottom(),
-                    /* user_features */ FeatureSet::bottom())}}},
-          {/* output */ AccessPath(Root(Root::Kind::Return)),
-           PropagationPartition{
-               {Root(Root::Kind::Argument, 1),
-                Propagation(
-                    /* input_paths */
-                    PathTreeDomain{{Path{}, SingletonAbstractDomain()}},
-                    /* inferred_features */ FeatureMayAlwaysSet::bottom(),
-                    /* user_features */ FeatureSet::bottom())}}},
+      (TaintAccessPathTree{
+          {/* input */ AccessPath(Root(Root::Kind::Argument, 0)),
+           Taint{test::make_propagation_taint_config(
+               context.kinds->local_return())}},
+          {/* input */ AccessPath(Root(Root::Kind::Argument, 1)),
+           Taint{test::make_propagation_taint_config(
+               context.kinds->local_return())}},
       }));
 }
 
@@ -421,15 +366,15 @@ TEST_F(ModelTest, LessOrEqual) {
           /* sinks */ {},
           /* propagations */
           {
-              {Propagation(
-                   /* input_paths */
-                   PathTreeDomain{
-                       {Path{PathElement::field("x")},
-                        SingletonAbstractDomain()}},
-                   /* inferred_features */ {},
-                   /* user_features */ {}),
-               /* input */ Root(Root::Kind::Argument, 1),
-               /* output */ AccessPath(Root(Root::Kind::Return))},
+              PropagationConfig(
+                  /* input_path */ AccessPath(Root(Root::Kind::Argument, 1)),
+                  /* kind */ context.kinds->local_return(),
+                  /* output_paths */
+                  PathTreeDomain{
+                      {Path{PathElement::field("x")},
+                       SingletonAbstractDomain()}},
+                  /* inferred_features */ FeatureMayAlwaysSet::bottom(),
+                  /* user_features */ {}),
           })
           .leq(Model(
               /* method */ nullptr,
@@ -441,13 +386,14 @@ TEST_F(ModelTest, LessOrEqual) {
               /* sinks */ {},
               /* propagations */
               {
-                  {Propagation(
-                       /* input_paths */
-                       PathTreeDomain{{Path{}, SingletonAbstractDomain()}},
-                       /* inferred_features */ {},
-                       /* user_features */ {}),
-                   /* input */ Root(Root::Kind::Argument, 1),
-                   /* output */ AccessPath(Root(Root::Kind::Return))},
+                  PropagationConfig(
+                      /* input_path */ AccessPath(
+                          Root(Root::Kind::Argument, 1)),
+                      /* kind */ context.kinds->local_return(),
+                      /* output_paths */
+                      PathTreeDomain{{Path{}, SingletonAbstractDomain()}},
+                      /* inferred_features */ FeatureMayAlwaysSet::bottom(),
+                      /* user_features */ {}),
               })));
 
   // Compare global_sanitizers
@@ -752,41 +698,31 @@ TEST_F(ModelTest, Join) {
       /* sinks */ {},
       /* propagations */
       {
-          {Propagation(
-               /* input_paths */
-               PathTreeDomain{{Path{}, SingletonAbstractDomain()}},
-               /* inferred_features */ {},
-               /* user_features */ {}),
-           /* input */ Root(Root::Kind::Argument, 1),
-           /* output */ AccessPath(Root(Root::Kind::Return))},
-          {Propagation(
-               /* input_paths */
-               PathTreeDomain{{Path{}, SingletonAbstractDomain()}},
-               /* inferred_features */ {},
-               /* user_features */ {}),
-           /* input */ Root(Root::Kind::Argument, 2),
-           /* output */ AccessPath(Root(Root::Kind::Return))},
+          PropagationConfig(
+              /* input_path */ AccessPath(Root(Root::Kind::Argument, 1)),
+              /* kind */ context.kinds->local_return(),
+              /* output_paths */
+              PathTreeDomain{{Path{}, SingletonAbstractDomain()}},
+              /* inferred_features */ FeatureMayAlwaysSet::bottom(),
+              /* user_features */ {}),
+          PropagationConfig(
+              /* input_path */ AccessPath(Root(Root::Kind::Argument, 2)),
+              /* kind */ context.kinds->local_return(),
+              /* output_paths */
+              PathTreeDomain{{Path{}, SingletonAbstractDomain()}},
+              /* inferred_features */ FeatureMayAlwaysSet::bottom(),
+              /* user_features */ {}),
       });
   model.join_with(model_with_propagation);
   EXPECT_EQ(
       model.propagations(),
-      (PropagationAccessPathTree{
-          {/* output */ AccessPath(Root(Root::Kind::Return)),
-           PropagationPartition{
-               {Root(Root::Kind::Argument, 1),
-                Propagation(
-                    /* input_paths */
-                    PathTreeDomain{{Path{}, SingletonAbstractDomain()}},
-                    /* inferred_features */ {},
-                    /* user_features */ {})}}},
-          {/* output */ AccessPath(Root(Root::Kind::Return)),
-           PropagationPartition{
-               {Root(Root::Kind::Argument, 2),
-                Propagation(
-                    /* input_paths */
-                    PathTreeDomain{{Path{}, SingletonAbstractDomain()}},
-                    /* inferred_features */ {},
-                    /* user_features */ {})}}},
+      (TaintAccessPathTree{
+          {/* input */ AccessPath(Root(Root::Kind::Argument, 1)),
+           Taint{test::make_propagation_taint_config(
+               context.kinds->local_return())}},
+          {/* input */ AccessPath(Root(Root::Kind::Argument, 2)),
+           Taint{test::make_propagation_taint_config(
+               context.kinds->local_return())}},
       }));
   Model model_with_more_propagation(
       /* method */ nullptr,
@@ -798,53 +734,41 @@ TEST_F(ModelTest, Join) {
       /* sinks */ {},
       /* propagations */
       {
-          {Propagation(
-               /* input_paths */
-               PathTreeDomain{
-                   {Path{PathElement::field("x")}, SingletonAbstractDomain()}},
-               /* inferred_features */ {},
-               /* user_features */ {}),
-           /* input */ Root(Root::Kind::Argument, 1),
-           /* output */ AccessPath(Root(Root::Kind::Return))},
-          {Propagation(
-               /* input_paths */
-               PathTreeDomain{
-                   {Path{PathElement::field("x")}, SingletonAbstractDomain()}},
-               /* inferred_features */ {},
-               /* user_features */ {}),
-           /* input */ Root(Root::Kind::Argument, 3),
-           /* output */ AccessPath(Root(Root::Kind::Return))},
+          PropagationConfig(
+              /* input_path */ AccessPath(Root(Root::Kind::Argument, 1)),
+              /* kind */ context.kinds->local_return(),
+              /* output_paths */
+              PathTreeDomain{
+                  {Path{PathElement::field("x")}, SingletonAbstractDomain()}},
+              /* inferred_features */ FeatureMayAlwaysSet::bottom(),
+              /* user_features */ {}),
+          PropagationConfig(
+              /* input_path */ AccessPath(Root(Root::Kind::Argument, 3)),
+              /* kind */ context.kinds->local_return(),
+              /* output_paths */
+              PathTreeDomain{
+                  {Path{PathElement::field("x")}, SingletonAbstractDomain()}},
+              /* inferred_features */ FeatureMayAlwaysSet::bottom(),
+              /* user_features */ {}),
       });
   model.join_with(model_with_more_propagation);
   EXPECT_EQ(
       model.propagations(),
-      (PropagationAccessPathTree{
-          {/* output */ AccessPath(Root(Root::Kind::Return)),
-           PropagationPartition{
-               {Root(Root::Kind::Argument, 1),
-                Propagation(
-                    /* input_paths */
-                    PathTreeDomain{{Path{}, SingletonAbstractDomain()}},
-                    /* inferred_features */ {},
-                    /* user_features */ {})}}},
-          {/* output */ AccessPath(Root(Root::Kind::Return)),
-           PropagationPartition{
-               {Root(Root::Kind::Argument, 2),
-                Propagation(
-                    /* input_paths */
-                    PathTreeDomain{{Path{}, SingletonAbstractDomain()}},
-                    /* inferred_features */ {},
-                    /* user_features */ {})}}},
-          {/* output */ AccessPath(Root(Root::Kind::Return)),
-           PropagationPartition{
-               {Root(Root::Kind::Argument, 3),
-                Propagation(
-                    /* input_paths */
-                    PathTreeDomain{
-                        {Path{PathElement::field("x")},
-                         SingletonAbstractDomain()}},
-                    /* inferred_features */ {},
-                    /* user_features */ {})}}},
+      (TaintAccessPathTree{
+          {/* input */ AccessPath(Root(Root::Kind::Argument, 1)),
+           Taint{test::make_propagation_taint_config(
+               context.kinds->local_return())}},
+          {/* input */ AccessPath(Root(Root::Kind::Argument, 2)),
+           Taint{test::make_propagation_taint_config(
+               context.kinds->local_return())}},
+          {/* input */ AccessPath(Root(Root::Kind::Argument, 3)),
+           Taint{test::make_propagation_taint_config(
+               context.kinds->local_return(),
+               /* input_paths */
+               PathTreeDomain{
+                   {Path{PathElement::field("x")}, SingletonAbstractDomain()}},
+               /* inferred_features */ FeatureMayAlwaysSet::bottom(),
+               /* user_features */ {})}},
       }));
   Model model_with_conflicting_propagation(
       /* method */ nullptr,
@@ -855,54 +779,32 @@ TEST_F(ModelTest, Join) {
       /* parameter_sources */ {},
       /* sinks */ {},
       /* propagations */
-      {{Propagation(
-            /* input_paths */
-            PathTreeDomain{
-                {Path{PathElement::field("y")}, SingletonAbstractDomain()}},
-            /* inferred_features */ {},
-            /* user_features */ {}),
-        /* input */ Root(Root::Kind::Argument, 1),
-        /* output */ AccessPath(Root(Root::Kind::Argument, 1))}});
+      {{PropagationConfig(
+          /* input_path */ AccessPath(Root(Root::Kind::Argument, 1)),
+          /* kind */ context.kinds->local_return(),
+          /* output_paths */
+          PathTreeDomain{
+              {Path{PathElement::field("y")}, SingletonAbstractDomain()}},
+          /* inferred_features */ FeatureMayAlwaysSet::bottom(),
+          /* user_features */ {})}});
   model.join_with(model_with_conflicting_propagation);
   EXPECT_EQ(
       model.propagations(),
-      (PropagationAccessPathTree{
-          {/* output */ AccessPath(Root(Root::Kind::Return)),
-           PropagationPartition{
-               {Root(Root::Kind::Argument, 1),
-                Propagation(
-                    /* input_paths */
-                    PathTreeDomain{{Path{}, SingletonAbstractDomain()}},
-                    /* inferred_features */ {},
-                    /* user_features */ {})}}},
-          {/* output */ AccessPath(Root(Root::Kind::Argument, 1)),
-           PropagationPartition{
-               {Root(Root::Kind::Argument, 1),
-                Propagation(
-                    /* input_paths */
-                    PathTreeDomain{
-                        {Path{PathElement::field("y")},
-                         SingletonAbstractDomain()}},
-                    /* inferred_features */ {},
-                    /* user_features */ {})}}},
-          {/* output */ AccessPath(Root(Root::Kind::Return)),
-           PropagationPartition{
-               {Root(Root::Kind::Argument, 2),
-                Propagation(
-                    /* input_paths */
-                    PathTreeDomain{{Path{}, SingletonAbstractDomain()}},
-                    /* inferred_features */ {},
-                    /* user_features */ {})}}},
-          {/* output */ AccessPath(Root(Root::Kind::Return)),
-           PropagationPartition{
-               {Root(Root::Kind::Argument, 3),
-                Propagation(
-                    /* input_paths */
-                    PathTreeDomain{
-                        {Path{PathElement::field("x")},
-                         SingletonAbstractDomain()}},
-                    /* inferred_features */ {},
-                    /* user_features */ {})}}},
+      (TaintAccessPathTree{
+          {/* input */ AccessPath(Root(Root::Kind::Argument, 1)),
+           Taint{test::make_propagation_taint_config(
+               context.kinds->local_return())}},
+          {/* input */ AccessPath(Root(Root::Kind::Argument, 2)),
+           Taint{test::make_propagation_taint_config(
+               context.kinds->local_return())}},
+          {/* input */ AccessPath(Root(Root::Kind::Argument, 3)),
+           Taint{test::make_propagation_taint_config(
+               context.kinds->local_return(),
+               /* input_paths */
+               PathTreeDomain{
+                   {Path{PathElement::field("x")}, SingletonAbstractDomain()}},
+               /* inferred_features */ FeatureMayAlwaysSet::bottom(),
+               /* user_features */ {})}},
       }));
   Model model_with_propagation_with_features(
       /* method */ nullptr,
@@ -914,74 +816,56 @@ TEST_F(ModelTest, Join) {
       /* sinks */ {},
       /* propagations */
       {
-          {Propagation(
-               /* input_paths */
-               PathTreeDomain{{Path{}, SingletonAbstractDomain()}},
-               /* inferred_features */
-               FeatureMayAlwaysSet{context.features->get("int-cast")},
-               /* user_features */ {}),
-           /* input */ Root(Root::Kind::Argument, 1),
-           /* output */ AccessPath(Root(Root::Kind::Return))},
-          {Propagation(
-               /* input_paths */
-               PathTreeDomain{{Path{}, SingletonAbstractDomain()}},
-               /* inferred_features */
-               FeatureMayAlwaysSet{context.features->get("sanitize")},
-               /* user_features */ {}),
-           /* input */ Root(Root::Kind::Argument, 1),
-           /* output */ AccessPath(Root(Root::Kind::Return))},
-          {Propagation(
-               /* input_paths */
-               PathTreeDomain{{Path{}, SingletonAbstractDomain()}},
-               /* inferred_features */
-               FeatureMayAlwaysSet{context.features->get("escape")},
-               /* user_features */ {}),
-           /* input */ Root(Root::Kind::Argument, 3),
-           /* output */ AccessPath(Root(Root::Kind::Return))},
+          PropagationConfig(
+              /* input_path */ AccessPath(Root(Root::Kind::Argument, 1)),
+              /* kind */ context.kinds->local_return(),
+              /* output_paths */
+              PathTreeDomain{{Path{}, SingletonAbstractDomain()}},
+              /* inferred_features */
+              FeatureMayAlwaysSet{context.features->get("int-cast")},
+              /* user_features */ {}),
+          PropagationConfig(
+              /* input_path */ AccessPath(Root(Root::Kind::Argument, 1)),
+              /* kind */ context.kinds->local_return(),
+              /* output_paths */
+              PathTreeDomain{{Path{}, SingletonAbstractDomain()}},
+              /* inferred_features */
+              FeatureMayAlwaysSet{context.features->get("sanitize")},
+              /* user_features */ {}),
+          PropagationConfig(
+              /* input_path */ AccessPath(Root(Root::Kind::Argument, 3)),
+              /* kind */ context.kinds->local_return(),
+              /* output_paths */
+              PathTreeDomain{{Path{}, SingletonAbstractDomain()}},
+              /* inferred_features */
+              FeatureMayAlwaysSet{context.features->get("escape")},
+              /* user_features */ {}),
       });
   model.join_with(model_with_propagation_with_features);
   EXPECT_EQ(
       model.propagations(),
-      (PropagationAccessPathTree{
-          {/* output */ AccessPath(Root(Root::Kind::Return)),
-           PropagationPartition{
-               {Root(Root::Kind::Argument, 1),
-                Propagation(
-                    /* input_paths */
-                    PathTreeDomain{{Path{}, SingletonAbstractDomain()}},
-                    /* inferred_features */
-                    FeatureMayAlwaysSet::make_may(
-                        {context.features->get("int-cast"),
-                         context.features->get("sanitize")}),
-                    /* user_features */ {})}}},
-          {/* output */ AccessPath(Root(Root::Kind::Argument, 1)),
-           PropagationPartition{
-               {Root(Root::Kind::Argument, 1),
-                Propagation(
-                    /* input_paths */
-                    PathTreeDomain{
-                        {Path{PathElement::field("y")},
-                         SingletonAbstractDomain()}},
-                    /* inferred_features */ {},
-                    /* user_features */ {})}}},
-          {/* output */ AccessPath(Root(Root::Kind::Return)),
-           PropagationPartition{
-               {Root(Root::Kind::Argument, 2),
-                Propagation(
-                    /* input_paths */
-                    PathTreeDomain{{Path{}, SingletonAbstractDomain()}},
-                    /* inferred_features */ {},
-                    /* user_features */ {})}}},
-          {/* output */ AccessPath(Root(Root::Kind::Return)),
-           PropagationPartition{
-               {Root(Root::Kind::Argument, 3),
-                Propagation(
-                    /* input_paths */
-                    PathTreeDomain{{Path{}, SingletonAbstractDomain()}},
-                    /* inferred_features */
-                    FeatureMayAlwaysSet::make_may(
-                        {context.features->get("escape")}),
-                    /* user_features */ {})}}},
+      (TaintAccessPathTree{
+          {/* input */ AccessPath(Root(Root::Kind::Argument, 1)),
+           Taint{test::make_propagation_taint_config(
+               context.kinds->local_return(),
+               /* input_paths */
+               PathTreeDomain{{Path{}, SingletonAbstractDomain()}},
+               /* inferred_features */
+               FeatureMayAlwaysSet::make_may(
+                   {context.features->get("int-cast"),
+                    context.features->get("sanitize")}),
+               /* user_features */ {})}},
+          {/* input */ AccessPath(Root(Root::Kind::Argument, 2)),
+           Taint{test::make_propagation_taint_config(
+               context.kinds->local_return())}},
+          {/* input */ AccessPath(Root(Root::Kind::Argument, 3)),
+           Taint{test::make_propagation_taint_config(
+               context.kinds->local_return(),
+               /* input_paths */
+               PathTreeDomain{{Path{}, SingletonAbstractDomain()}},
+               /* inferred_features */
+               FeatureMayAlwaysSet{context.features->get("escape")},
+               /* user_features */ {})}},
       }));
 
   // Join models with global sanitizers

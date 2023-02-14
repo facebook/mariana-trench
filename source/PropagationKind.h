@@ -14,7 +14,10 @@ namespace marianatrench {
 
 /**
  * Represents either the return value or argument of a method.
- * This is used in the backward analysis to infer propagations.
+ *
+ * This is used to represent a propagation within the `Taint` representation.
+ * In that context, the kind is the output root (parameter or return value).
+ * This is also used to infer propagations in the backward analysis.
  */
 class PropagationKind : public Kind {
  public:

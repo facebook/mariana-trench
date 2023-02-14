@@ -19,6 +19,7 @@
 #include <mariana-trench/Frame.h>
 #include <mariana-trench/GroupHashedSetAbstractDomain.h>
 #include <mariana-trench/Log.h>
+#include <mariana-trench/PropagationConfig.h>
 #include <mariana-trench/TaintConfig.h>
 
 namespace marianatrench {
@@ -288,6 +289,11 @@ class Taint final : public sparta::AbstractDomain<Taint> {
    * the maintenance cost of having a forward and backward transfer function.
    */
   static Taint artificial_source(AccessPath access_path);
+
+  /**
+   * Return the taint representing the given propagation.
+   */
+  static Taint propagation(PropagationConfig propagation);
 
  private:
   void add(const CalleeFrames& frames);

@@ -23,9 +23,7 @@
 #include <mariana-trench/IssueSet.h>
 #include <mariana-trench/Method.h>
 #include <mariana-trench/Position.h>
-#include <mariana-trench/Propagation.h>
-#include <mariana-trench/PropagationPartition.h>
-#include <mariana-trench/PropagationTree.h>
+#include <mariana-trench/PropagationConfig.h>
 #include <mariana-trench/RootPatriciaTreeAbstractPartition.h>
 #include <mariana-trench/Sanitizer.h>
 #include <mariana-trench/Taint.h>
@@ -55,7 +53,7 @@ using SanitizerSet = GroupHashedSetAbstractDomain<
  * A *propagation* describes how taint may flow through a method. More
  * specifically, how taint may flow from a parameter to the method's return
  * value or another parameters. A *propagation* will only propagate the taint
- * if the parameter is tainted. See `Propagation`.
+ * if the parameter is tainted.
  *
  * A *global sanitizer* sanitizes all sources, sinks or propagations flowing
  * through the method that have a kind dictated by its kinds field
@@ -151,8 +149,7 @@ class Model final {
       const std::vector<std::pair<AccessPath, TaintConfig>>& parameter_sources =
           {},
       const std::vector<std::pair<AccessPath, TaintConfig>>& sinks = {},
-      const std::vector<std::tuple<Propagation, Root, AccessPath>>&
-          propagations = {},
+      const std::vector<PropagationConfig>& propagations = {},
       const std::vector<Sanitizer>& global_sanitizers = {},
       const std::vector<std::pair<Root, SanitizerSet>>& port_sanitizers = {},
       const std::vector<std::pair<Root, FeatureSet>>& attach_to_sources = {},
@@ -247,14 +244,12 @@ class Model final {
   void add_call_effect_sink(CallEffect effect, TaintConfig sink);
   void add_inferred_call_effect_sinks(CallEffect effect, Taint sink);
 
-  void
-  add_propagation(Propagation propagation, Root input_root, AccessPath output);
+  void add_propagation(PropagationConfig propagation);
   /* Add a propagation after applying sanitizers */
   void add_inferred_propagation(
-      Propagation propagation,
-      Root input_root,
-      AccessPath output);
-  const PropagationAccessPathTree& propagations() const {
+      PropagationConfig propagation,
+      const FeatureMayAlwaysSet& widening_features);
+  const TaintAccessPathTree& propagations() const {
     return propagations_;
   }
 
@@ -344,13 +339,14 @@ class Model final {
 
   // In the following methods, the `Taint` object should originate from a
   // `Model` object. This guarantees that it was constructed using a
-  // `TaintBuilder` in `Model`'s constructor, and has passed other verification
-  // checks in the `add_*(AccessPath, TaintBuilder)` methods.
+  // `TaintConfig` in `Model`'s constructor, and has passed other verification
+  // checks in the `add_*(AccessPath, TaintConfig)` methods.
   void add_generation(AccessPath port, Taint generation);
   void add_parameter_source(AccessPath port, Taint source);
   void add_sink(AccessPath port, Taint sink);
   void add_call_effect_source(CallEffect effect, Taint source);
   void add_call_effect_sink(CallEffect effect, Taint sink);
+  void add_propagation(AccessPath input_path, Taint output);
 
  private:
   const Method* MT_NULLABLE method_;
@@ -361,7 +357,7 @@ class Model final {
   TaintAccessPathTree sinks_;
   CallEffectsAbstractDomain call_effect_sources_;
   CallEffectsAbstractDomain call_effect_sinks_;
-  PropagationAccessPathTree propagations_;
+  TaintAccessPathTree propagations_;
   SanitizerSet global_sanitizers_;
   RootPatriciaTreeAbstractPartition<SanitizerSet> port_sanitizers_;
   RootPatriciaTreeAbstractPartition<FeatureSet> attach_to_sources_;

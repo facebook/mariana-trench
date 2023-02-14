@@ -357,96 +357,107 @@ void apply_propagations(
       "Processing propagations for call to `{}`",
       show(callee.method_reference));
 
-  for (const auto& [output, propagations] :
+  for (const auto& [input, propagations] :
        callee.model.propagations().elements()) {
-    auto output_features = FeatureMayAlwaysSet::make_always(
-        callee.model.add_features_to_arguments(output.root()));
+    LOG_OR_DUMP(context, 4, "Processing propagations from {}", input);
+    if (!input.root().is_argument()) {
+      WARNING_OR_DUMP(
+          context, 2, "Ignoring propagation with a return input: {}", input);
+      continue;
+    }
 
-    for (const auto& [input, propagation] : propagations) {
-      LOG_OR_DUMP(
-          context, 4, "Processing propagation {} to {}", propagation, output);
+    auto input_parameter_position = input.root().parameter_position();
+    if (input_parameter_position >= instruction_sources.size()) {
+      WARNING(
+          2,
+          "Model for method `{}` contains a port on parameter {} but the method only has {} parameters. Skipping...",
+          input_parameter_position,
+          show(callee.method_reference),
+          instruction_sources.size());
+      continue;
+    }
 
-      if (!input.is_argument()) {
-        WARNING_OR_DUMP(
-            context, 2, "Ignoring propagation with a return input: {}", input);
-        continue;
-      }
+    auto input_register_id = instruction_sources.at(input_parameter_position);
+    auto input_taint_tree = previous_environment->read(
+        input_register_id, input.path().resolve(source_constant_arguments));
 
-      auto input_parameter_position = input.parameter_position();
-      if (input_parameter_position >= instruction_sources.size()) {
-        WARNING(
-            2,
-            "Model for method `{}` contains a port on parameter {} but the method only has {} parameters. Skipping...",
-            input_parameter_position,
-            show(callee.method_reference),
-            instruction_sources.size());
-
-        continue;
-      }
-      auto input_register_id = instruction_sources.at(input_parameter_position);
-
-      for (const auto& [input_path, _] : propagation.input_paths().elements()) {
-        auto taint_tree = previous_environment->read(
-            input_register_id, input_path.resolve(source_constant_arguments));
-        // Collapsing the tree here is required for correctness and performance.
-        // Propagations can be collapsed, which results in taking the common
-        // prefix of the input paths. Because of this, if we don't collapse
-        // here, we might build invalid trees. See the end-to-end test
-        // `propagation_collapse` for an example.
-        // However, collapsing leads to FP with the builder pattern.
-        // eg:
-        // class A {
-        //   private String s1;
-        //
-        //   public A setS1(String s) {
-        //     this.s1 = s;
-        //     return this;
-        //   }
-        // }
-        // In this case, collapsing propagations results in entire `this` being
-        // tainted. For chained calls, it can lead to FP.
-        // `no-collapse-on-propagation` mode is used to prevent such cases.
-        // See the end-to-end test `no_collapse_on_propagation` for example.
-        if (!callee.model.no_collapse_on_propagation()) {
-          LOG_OR_DUMP(context, 4, "Collapsing taint tree {}", taint_tree);
-          taint_tree.collapse_inplace(/* transform */ [context](Taint& taint) {
+    // Collapsing the tree here is required for correctness and performance.
+    // Propagations can be collapsed, which results in taking the common
+    // prefix of the input paths. Because of this, if we don't collapse
+    // here, we might build invalid trees. See the end-to-end test
+    // `propagation_collapse` for an example.
+    // However, collapsing leads to FP with the builder pattern.
+    // eg:
+    // class A {
+    //   private String s1;
+    //
+    //   public A setS1(String s) {
+    //     this.s1 = s;
+    //     return this;
+    //   }
+    // }
+    // In this case, collapsing propagations results in entire `this` being
+    // tainted. For chained calls, it can lead to FP.
+    // `no-collapse-on-propagation` mode is used to prevent such cases.
+    // See the end-to-end test `no_collapse_on_propagation` for example.
+    if (!callee.model.no_collapse_on_propagation()) {
+      LOG_OR_DUMP(context, 4, "Collapsing taint tree {}", input_taint_tree);
+      input_taint_tree.collapse_inplace(
+          /* transform */ [context](Taint& taint) {
             taint.add_inferred_features(FeatureMayAlwaysSet{
                 context->features.get_propagation_broadening_feature()});
           });
-        }
+    }
 
-        if (taint_tree.is_bottom()) {
-          continue;
-        }
+    if (input_taint_tree.is_bottom()) {
+      continue;
+    }
 
-        FeatureMayAlwaysSet features = output_features;
-        features.add(propagation.features());
-        features.add_always(callee.model.add_features_to_arguments(input));
+    auto position =
+        context->positions.get(callee.position, input.root(), instruction);
 
-        auto position =
-            context->positions.get(callee.position, input, instruction);
+    for (const auto& propagation : propagations.frames_iterator()) {
+      LOG_OR_DUMP(
+          context,
+          4,
+          "Processing propagation from {} to {}",
+          input,
+          propagation);
 
-        taint_tree.map([&features, position](Taint& taints) {
-          taints.add_inferred_features_and_local_position(features, position);
-        });
+      const auto* kind = propagation.kind();
+      mt_assert(kind != nullptr);
+      const auto* propagation_kind = kind->as<PropagationKind>();
+      mt_assert(propagation_kind != nullptr);
+      auto output_root = propagation_kind->root();
+      FeatureMayAlwaysSet features = FeatureMayAlwaysSet::make_always(
+          callee.model.add_features_to_arguments(output_root));
+      features.add(propagation.features());
+      features.add_always(callee.model.add_features_to_arguments(input.root()));
 
+      auto output_taint_tree = input_taint_tree;
+      output_taint_tree.map([&features, position](Taint& taints) {
+        taints.add_inferred_features_and_local_position(features, position);
+      });
+
+      for (const auto& [output_path, _] :
+           propagation.output_paths().elements()) {
         auto output_paths_resolved =
-            output.path().resolve(source_constant_arguments);
+            output_path.resolve(source_constant_arguments);
 
-        switch (output.root().kind()) {
+        switch (output_root.kind()) {
           case Root::Kind::Return: {
             LOG_OR_DUMP(
                 context,
                 4,
                 "Tainting invoke result path {} with {}",
                 output_paths_resolved,
-                taint_tree);
+                output_taint_tree);
             result_taint.write(
-                output_paths_resolved, std::move(taint_tree), UpdateKind::Weak);
+                output_paths_resolved, output_taint_tree, UpdateKind::Weak);
             break;
           }
           case Root::Kind::Argument: {
-            auto output_parameter_position = output.root().parameter_position();
+            auto output_parameter_position = output_root.parameter_position();
             auto output_register_id =
                 instruction_sources.at(output_parameter_position);
             LOG_OR_DUMP(
@@ -455,11 +466,11 @@ void apply_propagations(
                 "Tainting register {} path {} with {}",
                 output_register_id,
                 output_paths_resolved,
-                taint_tree);
+                output_taint_tree);
             new_environment->write(
                 output_register_id,
                 output_paths_resolved,
-                std::move(taint_tree),
+                output_taint_tree,
                 callee.model.strong_write_on_propagation() ? UpdateKind::Strong
                                                            : UpdateKind::Weak);
             break;
@@ -987,17 +998,15 @@ MemoryLocation* MT_NULLABLE try_inline_invoke(
 
   // Only inline if the model does not generate or propagate extra taint.
   if (!callee.model.generations().is_bottom() ||
-      !callee.model.propagations().leq(PropagationAccessPathTree({
-          {AccessPath(Root(Root::Kind::Return)),
-           PropagationPartition{
-               {access_path->root(),
-                Propagation(
-                    /* input_paths */
-                    PathTreeDomain{
-                        {access_path->path(), SingletonAbstractDomain()}},
-                    /* inferred_features */ FeatureMayAlwaysSet(),
-                    /* user_features */ FeatureSet::bottom())}}},
-      })) ||
+      !callee.model.propagations().leq(TaintAccessPathTree(
+          {{/* input */ *access_path,
+            Taint::propagation(PropagationConfig(
+                /* input_path */ *access_path,
+                /* kind */ context->kinds.local_return(),
+                /* output_paths */
+                PathTreeDomain{{Path{}, SingletonAbstractDomain()}},
+                /* inferred_features */ FeatureMayAlwaysSet(),
+                /* user_features */ FeatureSet::bottom()))}})) ||
       callee.model.add_via_obscure_feature() ||
       callee.model.has_add_features_to_arguments()) {
     return nullptr;
@@ -1497,9 +1506,10 @@ namespace {
 // Infer propagations and generations for the output `taint` on port `root`.
 void infer_output_taint(
     MethodContext* context,
-    Root root,
+    Root output_root,
+    const PropagationKind* output_kind,
     const TaintTree& taint) {
-  for (const auto& [path, sources] : taint.elements()) {
+  for (const auto& [output_path, sources] : taint.elements()) {
     auto partitioned_by_artificial_sources = sources.partition_by_kind<bool>(
         [&](const Kind* kind) { return kind == Kinds::artificial_source(); });
 
@@ -1507,8 +1517,8 @@ void infer_output_taint(
     if (real_sources != partitioned_by_artificial_sources.end()) {
       auto generation = real_sources->second;
       generation.add_inferred_features(FeatureMayAlwaysSet::make_always(
-          context->model.attach_to_sources(root)));
-      auto port = AccessPath(root, path);
+          context->model.attach_to_sources(output_root)));
+      auto port = AccessPath(output_root, output_path);
       LOG_OR_DUMP(
           context, 4, "Inferred generation for port {}: {}", port, generation);
       context->model.add_inferred_generations(
@@ -1527,26 +1537,28 @@ void infer_output_taint(
     for (const auto& artificial_source :
          artificial_sources->second.frames_iterator()) {
       const auto input_root = artificial_source.callee_port().root();
-      if (input_root == root) {
+      if (input_root == output_root) {
         continue;
       }
-      auto output = AccessPath(root, path);
       auto features = artificial_source.features();
       features.add_always(context->model.attach_to_propagations(input_root));
-      features.add_always(context->model.attach_to_propagations(root));
-      auto propagation = Propagation(
-          /* input_paths */ input_paths_per_root.get(input_root),
-          /* inferred_features */ features,
-          /* user_features */ FeatureSet::bottom());
-      LOG_OR_DUMP(
-          context,
-          4,
-          "Inferred propagation {}, from {} to {}",
-          propagation,
-          input_root,
-          output);
-      context->model.add_inferred_propagation(
-          std::move(propagation), input_root, std::move(output));
+      features.add_always(context->model.attach_to_propagations(output_root));
+      for (const auto& [input_path, _] :
+           input_paths_per_root.get(input_root).elements()) {
+        auto propagation = PropagationConfig(
+            /* input_path */ AccessPath(input_root, input_path),
+            /* kind */ output_kind,
+            /* output_paths */
+            PathTreeDomain{{output_path, SingletonAbstractDomain()}},
+            /* inferred_features */ features,
+            /* user_features */ FeatureSet::bottom());
+        LOG_OR_DUMP(context, 4, "Inferred propagation {}", propagation);
+        context->model.add_inferred_propagation(
+            std::move(propagation),
+            /* widening_features */
+            FeatureMayAlwaysSet{
+                context->features.get_widen_broadening_feature()});
+      }
     }
   }
 }
@@ -1663,7 +1675,10 @@ bool ForwardTransfer::analyze_return(
     auto memory_locations = environment->memory_locations(register_id);
     context->model.set_inline_as(infer_inline_as(context, memory_locations));
     infer_output_taint(
-        context, Root(Root::Kind::Return), environment->read(memory_locations));
+        context,
+        Root(Root::Kind::Return),
+        context->kinds.local_return(),
+        environment->read(memory_locations));
 
     for (const auto& [path, sinks] : return_sinks.elements()) {
       Taint sources =
@@ -1692,6 +1707,7 @@ bool ForwardTransfer::analyze_return(
     infer_output_taint(
         context,
         Root(Root::Kind::Argument, 0),
+        context->kinds.local_receiver(),
         environment->read(context->memory_factory.make_parameter(0)));
   }
 

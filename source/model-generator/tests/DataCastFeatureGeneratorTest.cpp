@@ -55,14 +55,14 @@ TEST_F(DataCastFeatureGeneratorTest, CastToInt) {
           /* parameter_sources */ {},
           /* sinks */ {},
           /* propagations */
-          {{Propagation(
-                /* input_paths */
-                PathTreeDomain{{Path{}, SingletonAbstractDomain()}},
-                /* inferred_features */ FeatureMayAlwaysSet::bottom(),
-                /* user_features */
-                FeatureSet{context.features->get("cast:numeric")}),
-            /* input */ Root(Root::Kind::Argument, 0),
-            /* output */ AccessPath(Root(Root::Kind::Return))}})));
+          {PropagationConfig(
+              /* input_path */ AccessPath(Root(Root::Kind::Argument, 0)),
+              /* kind */ context.kinds->local_return(),
+              /* output_paths */
+              PathTreeDomain{{Path{}, SingletonAbstractDomain()}},
+              /* inferred_features */ FeatureMayAlwaysSet::bottom(),
+              /* user_features */
+              FeatureSet{context.features->get("cast:numeric")})})));
 }
 
 TEST_F(DataCastFeatureGeneratorTest, CastToBool) {
@@ -93,12 +93,12 @@ TEST_F(DataCastFeatureGeneratorTest, CastToBool) {
           /* parameter_sources */ {},
           /* sinks */ {},
           /* propagations */
-          {{Propagation(
-                /* input_paths */
-                PathTreeDomain{{Path{}, SingletonAbstractDomain()}},
-                /* inferred_features */ FeatureMayAlwaysSet::bottom(),
-                /* user_features */
-                FeatureSet{context.features->get("cast:boolean")}),
-            /* input */ Root(Root::Kind::Argument, 0),
-            /* output */ AccessPath(Root(Root::Kind::Return))}})));
+          {PropagationConfig(
+              /* input_path */ AccessPath(Root(Root::Kind::Argument, 0)),
+              /* kind */ context.kinds->local_return(),
+              /* output_paths */
+              PathTreeDomain{{Path{}, SingletonAbstractDomain()}},
+              /* inferred_features */ FeatureMayAlwaysSet::bottom(),
+              /* user_features */
+              FeatureSet{context.features->get("cast:boolean")})})));
 }

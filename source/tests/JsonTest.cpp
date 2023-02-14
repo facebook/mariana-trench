@@ -1418,30 +1418,63 @@ TEST_F(JsonTest, Propagation) {
   auto empty_input_paths = PathTreeDomain{{Path{}, SingletonAbstractDomain()}};
 
   EXPECT_THROW(
-      Propagation::from_json(test::parse_json(R"({})"), context),
+      PropagationConfig::from_json(test::parse_json(R"({})"), context),
       JsonValidationError);
   EXPECT_THROW(
-      Propagation::from_json(test::parse_json(R"#({"input": 1})#"), context),
+      PropagationConfig::from_json(
+          test::parse_json(R"#({"input": 1, "output": "Return"})#"), context),
       JsonValidationError);
   EXPECT_THROW(
-      Propagation::from_json(test::parse_json(R"#({"input": "x"})#"), context),
+      PropagationConfig::from_json(
+          test::parse_json(R"#({"input": "x", "output": "Return"})#"), context),
+      JsonValidationError);
+  EXPECT_THROW(
+      PropagationConfig::from_json(
+          test::parse_json(R"#({"input": "Argument(0)", "output": 1})#"),
+          context),
+      JsonValidationError);
+  EXPECT_THROW(
+      PropagationConfig::from_json(
+          test::parse_json(R"#({"input": "Argument(0)", "output": "x"})#"),
+          context),
       JsonValidationError);
 
   EXPECT_EQ(
-      Propagation::from_json(
-          test::parse_json(R"#({"input": "Argument(1)"})#"), context),
-      Propagation(
-          /* input_paths */ empty_input_paths,
+      PropagationConfig::from_json(
+          test::parse_json(R"#({"input": "Argument(1)", "output": "Return"})#"),
+          context),
+      PropagationConfig(
+          /* input_path */ AccessPath(Root(Root::Kind::Argument, 1)),
+          /* kind */ context.kinds->local_return(),
+          /* output_paths */
+          PathTreeDomain{{Path{}, SingletonAbstractDomain()}},
           /* inferred_features */ FeatureMayAlwaysSet::bottom(),
           /* user_features */ {}));
 
   EXPECT_EQ(
-      Propagation::from_json(
+      PropagationConfig::from_json(
           test::parse_json(
-              R"#({"input": "Argument(1).x", "always_features": ["FeatureOne"]})#"),
+              R"#({"input": "Argument(1).x", "output": "Return", "always_features": ["FeatureOne"]})#"),
           context),
-      Propagation(
-          /* input_paths */
+      PropagationConfig(
+          /* input_path */ AccessPath(
+              Root(Root::Kind::Argument, 1), Path{PathElement::field("x")}),
+          /* kind */ context.kinds->local_return(),
+          /* output_paths */
+          PathTreeDomain{{Path{}, SingletonAbstractDomain()}},
+          /* inferred_features */
+          FeatureMayAlwaysSet{context.features->get("FeatureOne")},
+          /* user_features */ {}));
+
+  EXPECT_EQ(
+      PropagationConfig::from_json(
+          test::parse_json(
+              R"#({"input": "Argument(0)", "output": "Argument(1).x", "always_features": ["FeatureOne"]})#"),
+          context),
+      PropagationConfig(
+          /* input_path */ AccessPath(Root(Root::Kind::Argument, 0)),
+          /* kind */ context.kinds->local_argument(1),
+          /* output_paths */
           PathTreeDomain{
               {Path{PathElement::field("x")}, SingletonAbstractDomain()}},
           /* inferred_features */
@@ -1449,89 +1482,113 @@ TEST_F(JsonTest, Propagation) {
           /* user_features */ {}));
 
   EXPECT_EQ(
-      Propagation::from_json(
+      PropagationConfig::from_json(
           test::parse_json(R"#({
         "input": "Argument(1)",
+        "output": "Return",
         "may_features": ["FeatureOne"],
         "always_features": ["FeatureTwo"]
       })#"),
           context),
-      Propagation(
-          /* input_paths */ empty_input_paths,
+      PropagationConfig(
+          /* input_path */ AccessPath(Root(Root::Kind::Argument, 1)),
+          /* kind */ context.kinds->local_return(),
+          /* output_paths */
+          PathTreeDomain{{Path{}, SingletonAbstractDomain()}},
           /* inferred_features */
           FeatureMayAlwaysSet(
               /* may */ FeatureSet{context.features->get("FeatureOne")},
               /* always */ FeatureSet{context.features->get("FeatureTwo")}),
           /* user_features */ {}));
   EXPECT_EQ(
-      Propagation::from_json(
+      PropagationConfig::from_json(
           test::parse_json(R"#({
         "input": "Argument(1)",
+        "output": "Return",
         "may_features": ["FeatureOne"],
       })#"),
           context),
-      Propagation(
-          /* input_paths */ empty_input_paths,
+      PropagationConfig(
+          /* input_path */ AccessPath(Root(Root::Kind::Argument, 1)),
+          /* kind */ context.kinds->local_return(),
+          /* output_paths */
+          PathTreeDomain{{Path{}, SingletonAbstractDomain()}},
           /* inferred_features */
           FeatureMayAlwaysSet(
               /* may */ FeatureSet{context.features->get("FeatureOne")},
               /* always */ FeatureSet{}),
           /* user_features */ {}));
   EXPECT_EQ(
-      Propagation::from_json(
+      PropagationConfig::from_json(
           test::parse_json(
               R"#({
                 "input": "Argument(1)",
+                "output": "Return",
                 "features": ["FeatureOne"]
               })#"),
           context),
-      Propagation(
-          /* input_paths */ empty_input_paths,
+      PropagationConfig(
+          /* input_path */ AccessPath(Root(Root::Kind::Argument, 1)),
+          /* kind */ context.kinds->local_return(),
+          /* output_paths */
+          PathTreeDomain{{Path{}, SingletonAbstractDomain()}},
           /* inferred_features */ FeatureMayAlwaysSet::bottom(),
           /* user_features */
           FeatureSet{context.features->get("FeatureOne")}));
   EXPECT_EQ(
-      Propagation::from_json(
+      PropagationConfig::from_json(
           test::parse_json(
               R"#({
                 "input": "Argument(1)",
+                "output": "Return",
                 "features": ["FeatureOne", "FeatureTwo"]
               })#"),
           context),
-      Propagation(
-          /* input_paths */ empty_input_paths,
+      PropagationConfig(
+          /* input_path */ AccessPath(Root(Root::Kind::Argument, 1)),
+          /* kind */ context.kinds->local_return(),
+          /* output_paths */
+          PathTreeDomain{{Path{}, SingletonAbstractDomain()}},
           /* inferred_features */ FeatureMayAlwaysSet::bottom(),
           /* user_features */
           FeatureSet{
               context.features->get("FeatureOne"),
               context.features->get("FeatureTwo")}));
   EXPECT_EQ(
-      Propagation::from_json(
+      PropagationConfig::from_json(
           test::parse_json(
               R"#({
                 "input": "Argument(1)",
+                "output": "Return",
                 "features": ["FeatureOne"],
                 "may_features": ["FeatureTwo"]
               })#"),
           context),
-      Propagation(
-          /* input_paths */ empty_input_paths,
+      PropagationConfig(
+          /* input_path */ AccessPath(Root(Root::Kind::Argument, 1)),
+          /* kind */ context.kinds->local_return(),
+          /* output_paths */
+          PathTreeDomain{{Path{}, SingletonAbstractDomain()}},
           /* inferred_features */
           FeatureMayAlwaysSet::make_may({context.features->get("FeatureTwo")}),
           /* user_features */
           FeatureSet{context.features->get("FeatureOne")}));
   EXPECT_EQ(
-      Propagation::from_json(
+      PropagationConfig::from_json(
           test::parse_json(
               R"#({
                 "input": "Argument(1)",
+                "output": "Return",
                 "features": ["FeatureOne"],
                 "may_features": ["FeatureTwo"],
                 "always_features": ["FeatureThree"]
               })#"),
           context),
-      Propagation(
-          /* input_paths */ empty_input_paths,
+      PropagationConfig(
+          /* input_path */ AccessPath(Root(Root::Kind::Argument, 1)),
+          /* kind */ context.kinds->local_return(),
+          /* output_paths */
+          PathTreeDomain{{Path{}, SingletonAbstractDomain()}},
           /* inferred_features */
           FeatureMayAlwaysSet(
               /* may */ FeatureSet{context.features->get("FeatureTwo")},
@@ -1540,40 +1597,24 @@ TEST_F(JsonTest, Propagation) {
           /* user_features */
           FeatureSet{context.features->get("FeatureOne")}));
   EXPECT_EQ(
-      Propagation::from_json(
+      PropagationConfig::from_json(
           test::parse_json(
               R"#({
                 "input": "Argument(1)",
+                "output": "Return",
                 "features": ["FeatureOne"],
                 "may_features": [],
                 "always_features": []
               })#"),
           context),
-      Propagation(
-          /* input_paths */ empty_input_paths,
+      PropagationConfig(
+          /* input_path */ AccessPath(Root(Root::Kind::Argument, 1)),
+          /* kind */ context.kinds->local_return(),
+          /* output_paths */
+          PathTreeDomain{{Path{}, SingletonAbstractDomain()}},
           /* inferred_features */ FeatureMayAlwaysSet(),
           /* user_features */
           FeatureSet{context.features->get("FeatureOne")}));
-
-  EXPECT_EQ(
-      test::sorted_json(
-          Propagation(
-              /* input_paths */
-              PathTreeDomain{
-                  {Path{PathElement::field("x")}, SingletonAbstractDomain()},
-                  {Path{PathElement::field("y"), PathElement::field("z")},
-                   SingletonAbstractDomain()}},
-              /* inferred_features */ FeatureMayAlwaysSet(),
-              /* user_features */
-              FeatureSet{context.features->get("FeatureOne")})
-              .to_json(Root(Root::Kind::Argument, 1))),
-      test::sorted_json(test::parse_json(R"#([{
-                    "input": "Argument(1).x",
-                    "always_features": ["FeatureOne"]
-                  }, {
-                    "input": "Argument(1).y.z",
-                    "always_features": ["FeatureOne"]
-                  }])#")));
 }
 
 TEST_F(JsonTest, Model) {
@@ -1653,13 +1694,43 @@ TEST_F(JsonTest, Model) {
         "propagation": [
           {
             "input": "Argument(1)",
-            "output": "Argument(0)",
-            "always_features": ["via-obscure"]
+            "output":
+            [
+              {
+                "kinds": [
+                  {
+                    "always_features": [ "via-obscure" ],
+                    "call_info": "Propagation",
+                    "kind": "LocalArgument(0)",
+                    "local_features":
+                    {
+                      "always_features": [ "via-obscure" ]
+                    },
+                    "output_paths": [ "" ]
+                  }
+                ]
+              }
+            ]
           },
           {
             "input": "Argument(2)",
-            "output": "Argument(0)",
-            "always_features": ["via-obscure"]
+            "output":
+            [
+              {
+                "kinds": [
+                  {
+                    "always_features": [ "via-obscure" ],
+                    "call_info": "Propagation",
+                    "kind": "LocalArgument(0)",
+                    "local_features":
+                    {
+                      "always_features": [ "via-obscure" ]
+                    },
+                    "output_paths": [ "" ]
+                  }
+                ]
+              }
+            ]
           }
         ]
       })#"));
@@ -1918,20 +1989,20 @@ TEST_F(JsonTest, Model) {
           /* sinks */ {},
           /* propagations */
           {
-              {Propagation(
-                   /* input_paths */
-                   PathTreeDomain{{Path{}, SingletonAbstractDomain()}},
-                   /* inferred_features */ FeatureMayAlwaysSet::bottom(),
-                   /* user_features */ FeatureSet::bottom()),
-               /* input */ Root(Root::Kind::Argument, 1),
-               /* output */ AccessPath(Root(Root::Kind::Return))},
-              {Propagation(
-                   /* input_paths */
-                   PathTreeDomain{{Path{}, SingletonAbstractDomain()}},
-                   /* inferred_features */ FeatureMayAlwaysSet::bottom(),
-                   /* user_features */ FeatureSet::bottom()),
-               /* input */ Root(Root::Kind::Argument, 2),
-               /* output */ AccessPath(Root(Root::Kind::Argument, 0))},
+              PropagationConfig(
+                  /* input_path */ AccessPath(Root(Root::Kind::Argument, 1)),
+                  /* kind */ context.kinds->local_return(),
+                  /* output_paths */
+                  PathTreeDomain{{Path{}, SingletonAbstractDomain()}},
+                  /* inferred_features */ FeatureMayAlwaysSet::bottom(),
+                  /* user_features */ FeatureSet::bottom()),
+              PropagationConfig(
+                  /* input_path */ AccessPath(Root(Root::Kind::Argument, 2)),
+                  /* kind */ context.kinds->local_argument(0),
+                  /* output_paths */
+                  PathTreeDomain{{Path{}, SingletonAbstractDomain()}},
+                  /* inferred_features */ FeatureMayAlwaysSet::bottom(),
+                  /* user_features */ FeatureSet::bottom()),
           }));
   EXPECT_EQ(
       test::sorted_json(
@@ -1945,24 +2016,26 @@ TEST_F(JsonTest, Model) {
               /* sinks */ {},
               /* propagations */
               {
-                  {Propagation(
-                       /* input_paths */
-                       PathTreeDomain{{Path{}, SingletonAbstractDomain()}},
-                       /* inferred_features */ FeatureMayAlwaysSet::bottom(),
-                       /* user_features */ FeatureSet::bottom()),
-                   /* input */ Root(Root::Kind::Argument, 1),
-                   /* output */ AccessPath(Root(Root::Kind::Argument, 0))},
-                  {Propagation(
-                       /* input_paths */
-                       PathTreeDomain{
-                           {Path{PathElement::field("x")},
-                            SingletonAbstractDomain()},
-                           {Path{PathElement::field("y")},
-                            SingletonAbstractDomain()}},
-                       /* inferred_features */ FeatureMayAlwaysSet::bottom(),
-                       /* user_features */ FeatureSet::bottom()),
-                   /* input */ Root(Root::Kind::Argument, 2),
-                   /* output */ AccessPath(Root(Root::Kind::Argument, 0))},
+                  PropagationConfig(
+                      /* input_path */ AccessPath(
+                          Root(Root::Kind::Argument, 1)),
+                      /* kind */ context.kinds->local_argument(0),
+                      /* output_paths */
+                      PathTreeDomain{{Path{}, SingletonAbstractDomain()}},
+                      /* inferred_features */ FeatureMayAlwaysSet::bottom(),
+                      /* user_features */ FeatureSet::bottom()),
+                  PropagationConfig(
+                      /* input_path */ AccessPath(
+                          Root(Root::Kind::Argument, 2)),
+                      /* kind */ context.kinds->local_argument(0),
+                      /* output_paths */
+                      PathTreeDomain{
+                          {Path{PathElement::field("x")},
+                           SingletonAbstractDomain()},
+                          {Path{PathElement::field("y")},
+                           SingletonAbstractDomain()}},
+                      /* inferred_features */ FeatureMayAlwaysSet::bottom(),
+                      /* user_features */ FeatureSet::bottom()),
               })
               .to_json()),
       test::parse_json(R"#({
@@ -1970,16 +2043,32 @@ TEST_F(JsonTest, Model) {
         "propagation": [
           {
             "input": "Argument(1)",
-            "output": "Argument(0)"
+            "output": [
+              {
+                "kinds": [
+                  {
+                    "call_info": "Propagation",
+                    "kind": "LocalArgument(0)",
+                    "output_paths": [ "" ]
+                  }
+                ]
+              }
+            ]
           },
           {
-            "input": "Argument(2).x",
-            "output": "Argument(0)"
-          },
-          {
-            "input": "Argument(2).y",
-            "output": "Argument(0)"
-          },
+            "input": "Argument(2)",
+            "output": [
+              {
+                "kinds": [
+                  {
+                    "call_info": "Propagation",
+                    "kind": "LocalArgument(0)",
+                    "output_paths": [ ".x", ".y" ]
+                  }
+                ]
+              }
+            ]
+          }
         ]
       })#"));
 
@@ -2012,13 +2101,13 @@ TEST_F(JsonTest, Model) {
           /* sinks */ {},
           /* propagations */
           {
-              {Propagation(
-                   /* input_paths */
-                   PathTreeDomain{{Path{}, SingletonAbstractDomain()}},
-                   /* inferred_features */ FeatureMayAlwaysSet::bottom(),
-                   /* user_features */ FeatureSet::bottom()),
-               /* input */ Root(Root::Kind::Argument, 1),
-               /* output */ AccessPath(Root(Root::Kind::Return))},
+              PropagationConfig(
+                  /* input_path */ AccessPath(Root(Root::Kind::Argument, 1)),
+                  /* kind */ context.kinds->local_return(),
+                  /* output_paths */
+                  PathTreeDomain{{Path{}, SingletonAbstractDomain()}},
+                  /* inferred_features */ FeatureMayAlwaysSet::bottom(),
+                  /* user_features */ FeatureSet::bottom()),
           },
           /* global_sanitizers */
           {Sanitizer(SanitizerKind::Sources, KindSetAbstractDomain({kind1})),
@@ -2076,13 +2165,13 @@ TEST_F(JsonTest, Model) {
           /* sinks */ {},
           /* propagations */
           {
-              {Propagation(
-                   /* input_paths */
-                   PathTreeDomain{{Path{}, SingletonAbstractDomain()}},
-                   /* inferred_features */ FeatureMayAlwaysSet::bottom(),
-                   /* user_features */ FeatureSet::bottom()),
-               /* input */ Root(Root::Kind::Argument, 1),
-               /* output */ AccessPath(Root(Root::Kind::Return))},
+              PropagationConfig(
+                  /* input_path */ AccessPath(Root(Root::Kind::Argument, 1)),
+                  /* kind */ context.kinds->local_return(),
+                  /* output_paths */
+                  PathTreeDomain{{Path{}, SingletonAbstractDomain()}},
+                  /* inferred_features */ FeatureMayAlwaysSet::bottom(),
+                  /* user_features */ FeatureSet::bottom()),
           },
           /* global_sanitizers */
           {Sanitizer(

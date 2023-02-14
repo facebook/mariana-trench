@@ -95,7 +95,22 @@
   [
     {
       "input" : "Argument(0)",
-      "output" : "Argument(1)"
+      "output" : 
+      [
+        {
+          "kinds" : 
+          [
+            {
+              "call_info" : "Propagation",
+              "kind" : "LocalArgument(1)",
+              "output_paths" : 
+              [
+                ""
+              ]
+            }
+          ]
+        }
+      ]
     }
   ],
   "sinks" : 

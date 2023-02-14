@@ -64,11 +64,6 @@ class Heuristics {
   constexpr static std::size_t kSinkMaxPortSize = 4;
 
   /**
-   * Maximum size of the input or output access path of a propagation.
-   */
-  constexpr static std::size_t kPropagationMaxPathSize = 2;
-
-  /**
    * Maximum number of global iterations before we abort.
    */
   constexpr static std::size_t kMaxNumberIterations = 150;
@@ -89,15 +84,24 @@ class Heuristics {
   constexpr static std::size_t kMaxCallChainSourceSinkDistance = 10;
 
   /**
-   * Maximum depth of input paths recorded by Artificial Sources.
+   * Maximum size of the input access path of a propagation.
    */
-  constexpr static std::size_t kMaxInputPathDepth = 4;
+  constexpr static std::size_t kPropagationMaxInputPathSize = 4;
 
   /**
-   * Maximum number of leaves in the tree of input paths recorded by
-   * ArtificialSources.
+   * Maximum size of the output access path of a propagation.
    */
-  constexpr static std::size_t kMaxInputPathLeaves = 4;
+  constexpr static std::size_t kPropagationMaxOutputPathSize = 4;
+
+  /**
+   * Maximum number of leaves in the tree of input paths of propagations.
+   */
+  constexpr static std::size_t kPropagationMaxInputPathLeaves = 4;
+
+  /**
+   * Maximum number of leaves in the tree of output paths of propagations.
+   */
+  constexpr static std::size_t kPropagationMaxOutputPathLeaves = 4;
 };
 
 } // namespace marianatrench

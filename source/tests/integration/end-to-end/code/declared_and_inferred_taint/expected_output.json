@@ -175,7 +175,22 @@
   [
     {
       "input" : "Argument(0)",
-      "output" : "Return"
+      "output" : 
+      [
+        {
+          "kinds" : 
+          [
+            {
+              "call_info" : "Propagation",
+              "kind" : "LocalReturn",
+              "output_paths" : 
+              [
+                ""
+              ]
+            }
+          ]
+        }
+      ]
     }
   ]
 }
@@ -190,7 +205,22 @@
   [
     {
       "input" : "Argument(0)",
-      "output" : "Return"
+      "output" : 
+      [
+        {
+          "kinds" : 
+          [
+            {
+              "call_info" : "Propagation",
+              "kind" : "LocalReturn",
+              "output_paths" : 
+              [
+                ""
+              ]
+            }
+          ]
+        }
+      ]
     }
   ]
 }
@@ -205,7 +235,22 @@
   [
     {
       "input" : "Argument(0).host",
-      "output" : "Return"
+      "output" : 
+      [
+        {
+          "kinds" : 
+          [
+            {
+              "call_info" : "Propagation",
+              "kind" : "LocalReturn",
+              "output_paths" : 
+              [
+                ""
+              ]
+            }
+          ]
+        }
+      ]
     }
   ]
 }
@@ -220,7 +265,22 @@
   [
     {
       "input" : "Argument(0).scheme",
-      "output" : "Return"
+      "output" : 
+      [
+        {
+          "kinds" : 
+          [
+            {
+              "call_info" : "Propagation",
+              "kind" : "LocalReturn",
+              "output_paths" : 
+              [
+                ""
+              ]
+            }
+          ]
+        }
+      ]
     }
   ]
 }
@@ -692,15 +752,60 @@
   [
     {
       "input" : "Argument(0).host",
-      "output" : "Return.host"
+      "output" : 
+      [
+        {
+          "kinds" : 
+          [
+            {
+              "call_info" : "Propagation",
+              "kind" : "LocalReturn",
+              "output_paths" : 
+              [
+                ".host"
+              ]
+            }
+          ]
+        }
+      ]
     },
     {
       "input" : "Argument(0).path",
-      "output" : "Return.path"
+      "output" : 
+      [
+        {
+          "kinds" : 
+          [
+            {
+              "call_info" : "Propagation",
+              "kind" : "LocalReturn",
+              "output_paths" : 
+              [
+                ".path"
+              ]
+            }
+          ]
+        }
+      ]
     },
     {
       "input" : "Argument(0).scheme",
-      "output" : "Return.scheme"
+      "output" : 
+      [
+        {
+          "kinds" : 
+          [
+            {
+              "call_info" : "Propagation",
+              "kind" : "LocalReturn",
+              "output_paths" : 
+              [
+                ".scheme"
+              ]
+            }
+          ]
+        }
+      ]
     }
   ]
 }
@@ -714,15 +819,54 @@
   [
     {
       "input" : "Argument(0)",
-      "output" : "Return"
+      "output" : 
+      [
+        {
+          "kinds" : 
+          [
+            {
+              "call_info" : "Propagation",
+              "kind" : "LocalReturn",
+              "output_paths" : 
+              [
+                ""
+              ]
+            }
+          ]
+        }
+      ]
     },
     {
       "input" : "Argument(1)",
-      "output" : "Argument(0).host"
-    },
-    {
-      "input" : "Argument(1)",
-      "output" : "Return.host"
+      "output" : 
+      [
+        {
+          "kinds" : 
+          [
+            {
+              "call_info" : "Propagation",
+              "kind" : "LocalArgument(0)",
+              "output_paths" : 
+              [
+                ".host"
+              ]
+            }
+          ]
+        },
+        {
+          "kinds" : 
+          [
+            {
+              "call_info" : "Propagation",
+              "kind" : "LocalReturn",
+              "output_paths" : 
+              [
+                ".host"
+              ]
+            }
+          ]
+        }
+      ]
     }
   ]
 }
@@ -736,15 +880,54 @@
   [
     {
       "input" : "Argument(0)",
-      "output" : "Return"
+      "output" : 
+      [
+        {
+          "kinds" : 
+          [
+            {
+              "call_info" : "Propagation",
+              "kind" : "LocalReturn",
+              "output_paths" : 
+              [
+                ""
+              ]
+            }
+          ]
+        }
+      ]
     },
     {
       "input" : "Argument(1)",
-      "output" : "Argument(0).path"
-    },
-    {
-      "input" : "Argument(1)",
-      "output" : "Return.path"
+      "output" : 
+      [
+        {
+          "kinds" : 
+          [
+            {
+              "call_info" : "Propagation",
+              "kind" : "LocalArgument(0)",
+              "output_paths" : 
+              [
+                ".path"
+              ]
+            }
+          ]
+        },
+        {
+          "kinds" : 
+          [
+            {
+              "call_info" : "Propagation",
+              "kind" : "LocalReturn",
+              "output_paths" : 
+              [
+                ".path"
+              ]
+            }
+          ]
+        }
+      ]
     }
   ]
 }
@@ -758,15 +941,54 @@
   [
     {
       "input" : "Argument(0)",
-      "output" : "Return"
+      "output" : 
+      [
+        {
+          "kinds" : 
+          [
+            {
+              "call_info" : "Propagation",
+              "kind" : "LocalReturn",
+              "output_paths" : 
+              [
+                ""
+              ]
+            }
+          ]
+        }
+      ]
     },
     {
       "input" : "Argument(1)",
-      "output" : "Argument(0).scheme"
-    },
-    {
-      "input" : "Argument(1)",
-      "output" : "Return.scheme"
+      "output" : 
+      [
+        {
+          "kinds" : 
+          [
+            {
+              "call_info" : "Propagation",
+              "kind" : "LocalArgument(0)",
+              "output_paths" : 
+              [
+                ".scheme"
+              ]
+            }
+          ]
+        },
+        {
+          "kinds" : 
+          [
+            {
+              "call_info" : "Propagation",
+              "kind" : "LocalReturn",
+              "output_paths" : 
+              [
+                ".scheme"
+              ]
+            }
+          ]
+        }
+      ]
     }
   ]
 }
@@ -787,15 +1009,60 @@
   [
     {
       "input" : "Argument(1)",
-      "output" : "Argument(0).scheme"
+      "output" : 
+      [
+        {
+          "kinds" : 
+          [
+            {
+              "call_info" : "Propagation",
+              "kind" : "LocalArgument(0)",
+              "output_paths" : 
+              [
+                ".scheme"
+              ]
+            }
+          ]
+        }
+      ]
     },
     {
       "input" : "Argument(2)",
-      "output" : "Argument(0).host"
+      "output" : 
+      [
+        {
+          "kinds" : 
+          [
+            {
+              "call_info" : "Propagation",
+              "kind" : "LocalArgument(0)",
+              "output_paths" : 
+              [
+                ".host"
+              ]
+            }
+          ]
+        }
+      ]
     },
     {
       "input" : "Argument(3)",
-      "output" : "Argument(0).path"
+      "output" : 
+      [
+        {
+          "kinds" : 
+          [
+            {
+              "call_info" : "Propagation",
+              "kind" : "LocalArgument(0)",
+              "output_paths" : 
+              [
+                ".path"
+              ]
+            }
+          ]
+        }
+      ]
     }
   ]
 }
@@ -830,15 +1097,60 @@
   [
     {
       "input" : "Argument(0).host",
-      "output" : "Return"
+      "output" : 
+      [
+        {
+          "kinds" : 
+          [
+            {
+              "call_info" : "Propagation",
+              "kind" : "LocalReturn",
+              "output_paths" : 
+              [
+                ""
+              ]
+            }
+          ]
+        }
+      ]
     },
     {
       "input" : "Argument(0).path",
-      "output" : "Return"
+      "output" : 
+      [
+        {
+          "kinds" : 
+          [
+            {
+              "call_info" : "Propagation",
+              "kind" : "LocalReturn",
+              "output_paths" : 
+              [
+                ""
+              ]
+            }
+          ]
+        }
+      ]
     },
     {
       "input" : "Argument(0).scheme",
-      "output" : "Return"
+      "output" : 
+      [
+        {
+          "kinds" : 
+          [
+            {
+              "call_info" : "Propagation",
+              "kind" : "LocalReturn",
+              "output_paths" : 
+              [
+                ""
+              ]
+            }
+          ]
+        }
+      ]
     }
   ]
 }
@@ -1221,11 +1533,41 @@
   [
     {
       "input" : "Argument(0)",
-      "output" : "Return"
+      "output" : 
+      [
+        {
+          "kinds" : 
+          [
+            {
+              "call_info" : "Propagation",
+              "kind" : "LocalReturn",
+              "output_paths" : 
+              [
+                ""
+              ]
+            }
+          ]
+        }
+      ]
     },
     {
       "input" : "Argument(1)",
-      "output" : "Return"
+      "output" : 
+      [
+        {
+          "kinds" : 
+          [
+            {
+              "call_info" : "Propagation",
+              "kind" : "LocalReturn",
+              "output_paths" : 
+              [
+                ""
+              ]
+            }
+          ]
+        }
+      ]
     }
   ]
 }
@@ -1302,7 +1644,22 @@
   [
     {
       "input" : "Argument(1)",
-      "output" : "Argument(0).target"
+      "output" : 
+      [
+        {
+          "kinds" : 
+          [
+            {
+              "call_info" : "Propagation",
+              "kind" : "LocalArgument(0)",
+              "output_paths" : 
+              [
+                ".target"
+              ]
+            }
+          ]
+        }
+      ]
     }
   ]
 }

@@ -207,6 +207,40 @@ TaintConfig make_crtex_leaf_taint_config(
       /* call_info */ CallInfo::Origin);
 }
 
+TaintConfig make_propagation_taint_config(const PropagationKind* kind) {
+  return make_propagation_taint_config(
+      kind,
+      /* output_paths */ PathTreeDomain{{Path{}, SingletonAbstractDomain{}}},
+      /* inferred_features */ FeatureMayAlwaysSet::bottom(),
+      /* user_features */ FeatureSet::bottom());
+}
+
+TaintConfig make_propagation_taint_config(
+    const PropagationKind* kind,
+    PathTreeDomain output_paths,
+    FeatureMayAlwaysSet inferred_features,
+    FeatureSet user_features) {
+  return TaintConfig(
+      kind,
+      /* callee_port */ AccessPath(kind->root()),
+      /* callee */ nullptr,
+      /* field_callee */ nullptr,
+      /* call_position */ nullptr,
+      /* distance */ 0,
+      /* origins */ {},
+      /* field_origins */ {},
+      /* inferred_features */ inferred_features,
+      /* locally_inferred_features */ FeatureMayAlwaysSet::bottom(),
+      /* user_features */ user_features,
+      /* via_type_of_ports */ {},
+      /* via_value_of_ports */ {},
+      /* canonical_names */ {},
+      /* input_paths */ {},
+      output_paths,
+      /* local_positions */ {},
+      /* call_info */ CallInfo::Propagation);
+}
+
 #ifndef MARIANA_TRENCH_FACEBOOK_BUILD
 boost::filesystem::path find_repository_root() {
   auto path = boost::filesystem::current_path();

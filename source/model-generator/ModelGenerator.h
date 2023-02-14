@@ -24,6 +24,7 @@
 #include <mariana-trench/Model.h>
 #include <mariana-trench/Options.h>
 #include <mariana-trench/Overrides.h>
+#include <mariana-trench/TaintConfig.h>
 
 namespace marianatrench {
 

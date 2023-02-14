@@ -195,15 +195,29 @@ PropagationTemplate PropagationTemplate::from_json(
 
 void PropagationTemplate::instantiate(
     const TemplateVariableMapping& parameter_positions,
-    Model& model) const {
+    Model& model,
+    Context& context) const {
   auto input_port = input_.instantiate(parameter_positions);
-  model.add_propagation(
-      Propagation(
-          PathTreeDomain{{input_port.path(), SingletonAbstractDomain()}},
-          inferred_features_,
-          user_features_),
-      input_port.root(),
-      output_.instantiate(parameter_positions));
+  auto output_port = output_.instantiate(parameter_positions);
+  const PropagationKind* kind = nullptr;
+  if (output_port.root().is_return()) {
+    kind = context.kinds->local_return();
+  } else if (output_port.root().is_argument()) {
+    kind =
+        context.kinds->local_argument(output_port.root().parameter_position());
+  } else {
+    throw JsonValidationError(
+        output_port.to_json(),
+        /* field */ "output",
+        "an access path with a `Return` or `Argument(x)` root");
+  }
+
+  model.add_propagation(PropagationConfig(
+      input_port,
+      kind,
+      PathTreeDomain{{output_port.path(), SingletonAbstractDomain()}},
+      inferred_features_,
+      user_features_));
 }
 
 SinkTemplate::SinkTemplate(TaintConfig sink, AccessPathTemplate port)
@@ -546,7 +560,10 @@ ForAllParameters ForAllParameters::from_json(
       add_features_to_arguments_templates);
 }
 
-bool ForAllParameters::instantiate(Model& model, const Method* method) const {
+bool ForAllParameters::instantiate(
+    Model& model,
+    const Method* method,
+    Context& context) const {
   bool updated = false;
   ParameterPosition index = method->first_parameter_index();
   for (auto type : *method->get_proto()->get_args()) {
@@ -575,7 +592,7 @@ bool ForAllParameters::instantiate(Model& model, const Method* method) const {
         updated = true;
       }
       for (const auto& propagation_template : propagation_templates_) {
-        propagation_template.instantiate(variable_mapping, model);
+        propagation_template.instantiate(variable_mapping, model, context);
         updated = true;
       }
       for (const auto& attach_to_sources_template :
@@ -611,13 +628,13 @@ ModelTemplate::ModelTemplate(
 }
 
 std::optional<Model> ModelTemplate::instantiate(
-    Context& context,
-    const Method* method) const {
+    const Method* method,
+    Context& context) const {
   Model model = model_.instantiate(method, context);
 
   bool updated = false;
   for (const auto& for_all_parameters : for_all_parameters_) {
-    bool result = for_all_parameters.instantiate(model, method);
+    bool result = for_all_parameters.instantiate(model, method, context);
     updated = updated || result;
   }
 

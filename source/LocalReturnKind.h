@@ -14,7 +14,9 @@ namespace marianatrench {
 
 /**
  * Represents the return value of a method.
- * This is used in the backward analysis to infer propagations.
+ *
+ * This is used to represent a propagation within the `Taint` representation.
+ * This is also used to infer propagations in the backward analysis.
  */
 class LocalReturnKind final : public PropagationKind {
  public:

@@ -357,6 +357,8 @@ class Path final {
   Path resolve(const std::vector<std::optional<std::string>>&
                    source_constant_arguments) const;
 
+  Json::Value to_json() const;
+
  private:
   friend std::ostream& operator<<(std::ostream& out, const Path& path);
 

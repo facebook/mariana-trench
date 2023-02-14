@@ -161,7 +161,7 @@ Model::Model(
     const std::vector<std::pair<AccessPath, TaintConfig>>& generations,
     const std::vector<std::pair<AccessPath, TaintConfig>>& parameter_sources,
     const std::vector<std::pair<AccessPath, TaintConfig>>& sinks,
-    const std::vector<std::tuple<Propagation, Root, AccessPath>>& propagations,
+    const std::vector<PropagationConfig>& propagations,
     const std::vector<Sanitizer>& global_sanitizers,
     const std::vector<std::pair<Root, SanitizerSet>>& port_sanitizers,
     const std::vector<std::pair<Root, FeatureSet>>& attach_to_sources,
@@ -200,8 +200,8 @@ Model::Model(
     add_sink(port, sink);
   }
 
-  for (const auto& [propagation, input_root, output] : propagations) {
-    add_propagation(propagation, input_root, output);
+  for (const auto& propagation : propagations) {
+    add_propagation(propagation);
   }
 
   for (const auto& sanitizer : global_sanitizers) {
@@ -279,10 +279,8 @@ Model Model::instantiate(const Method* method, Context& context) const {
     model.add_call_effect_sink(effect, sink_taint);
   }
 
-  for (const auto& [output, propagations] : propagations_.elements()) {
-    for (const auto& [input_root, propagation] : propagations) {
-      model.add_propagation(propagation, input_root, output);
-    }
+  for (const auto& [input_path, output] : propagations_.elements()) {
+    model.add_propagation(input_path, output);
   }
 
   for (const auto& sanitizer : global_sanitizers_) {
@@ -543,14 +541,14 @@ void Model::add_taint_in_taint_out(Context& context) {
   for (ParameterPosition parameter_position = 0;
        parameter_position < method_->number_of_parameters();
        parameter_position++) {
-    add_propagation(
-        Propagation(
-            /* input_paths */
-            PathTreeDomain{{Path{}, SingletonAbstractDomain()}},
-            /* inferred_features */ FeatureMayAlwaysSet::bottom(),
-            user_features),
-        /* input_root */ Root(Root::Kind::Argument, parameter_position),
-        /* output */ AccessPath(Root(Root::Kind::Return)));
+    add_propagation(PropagationConfig(
+        /* input_path */ AccessPath(
+            Root(Root::Kind::Argument, parameter_position)),
+        /* kind */ context.kinds->local_return(),
+        /* output_paths */
+        PathTreeDomain{{Path{}, SingletonAbstractDomain()}},
+        /* inferred_features */ FeatureMayAlwaysSet::bottom(),
+        user_features));
   }
 }
 
@@ -569,14 +567,14 @@ void Model::add_taint_in_taint_this(Context& context) {
   for (ParameterPosition parameter_position = 1;
        parameter_position < method_->number_of_parameters();
        parameter_position++) {
-    add_propagation(
-        Propagation(
-            /* input_paths */
-            PathTreeDomain{{Path{}, SingletonAbstractDomain()}},
-            /* inferred_features */ FeatureMayAlwaysSet::bottom(),
-            user_features),
-        /* input_root */ Root(Root::Kind::Argument, parameter_position),
-        /* output */ AccessPath(Root(Root::Kind::Argument, 0)));
+    add_propagation(PropagationConfig(
+        /* input_path */ AccessPath(
+            Root(Root::Kind::Argument, parameter_position)),
+        /* kind */ context.kinds->local_receiver(),
+        /* output_paths */
+        PathTreeDomain{{Path{}, SingletonAbstractDomain()}},
+        /* inferred_features */ FeatureMayAlwaysSet::bottom(),
+        user_features));
   }
 }
 
@@ -655,32 +653,29 @@ void Model::add_inferred_call_effect_sinks(CallEffect effect, Taint sinks) {
   add_call_effect_sink(effect, sinks);
 }
 
-void Model::add_propagation(
-    Propagation propagation,
-    Root input_root,
-    AccessPath output) {
-  if (!check_root_consistency(input_root) || !check_port_consistency(output)) {
+void Model::add_propagation(PropagationConfig propagation) {
+  if (!check_port_consistency(propagation.input_path()) ||
+      !check_root_consistency(propagation.kind()->root())) {
     return;
   }
 
-  output.truncate(Heuristics::kPropagationMaxPathSize);
-  propagation.truncate(Heuristics::kPropagationMaxPathSize);
-  propagation.limit_input_path_leaves(Heuristics::kMaxInputPathLeaves);
-  propagations_.write(
-      output,
-      PropagationPartition{{input_root, std::move(propagation)}},
-      UpdateKind::Weak);
+  add_propagation(propagation.input_path(), Taint::propagation(propagation));
 }
 
 void Model::add_inferred_propagation(
-    Propagation propagation,
-    Root input_root,
-    AccessPath output) {
+    PropagationConfig propagation,
+    const FeatureMayAlwaysSet& widening_features) {
   if (has_global_propagation_sanitizer() ||
-      !port_sanitizers_.get(input_root).is_bottom()) {
+      !port_sanitizers_.get(propagation.input_path().root()).is_bottom()) {
     return;
   }
-  add_propagation(propagation, input_root, output);
+
+  update_taint_tree(
+      propagations_,
+      propagation.input_path(),
+      Heuristics::kPropagationMaxInputPathSize,
+      Taint::propagation(propagation),
+      widening_features);
 }
 
 void Model::add_global_sanitizer(Sanitizer sanitizer) {
@@ -1019,17 +1014,8 @@ Model Model::from_json(
 
   for (auto propagation_value :
        JsonValidation::null_or_array(value, /* field */ "propagation")) {
-    JsonValidation::string(propagation_value, /* field */ "output");
-    auto output = AccessPath::from_json(propagation_value["output"]);
-    auto input_root = AccessPath::from_json(propagation_value["input"]).root();
-    if (!input_root.is_argument()) {
-      throw JsonValidationError(
-          propagation_value,
-          /* field */ "input",
-          "an access path to an argument");
-    }
     model.add_propagation(
-        Propagation::from_json(propagation_value, context), input_root, output);
+        PropagationConfig::from_json(propagation_value, context));
   }
 
   for (auto sanitizer_value :
@@ -1187,15 +1173,12 @@ Json::Value Model::to_json() const {
 
   if (!propagations_.is_bottom()) {
     auto propagations_value = Json::Value(Json::arrayValue);
-    for (const auto& [output, propagations] : propagations_.elements()) {
-      for (const auto& [input_root, propagation] : propagations) {
-        auto propagations = propagation.to_json(input_root);
-        for (const auto& element : propagations) {
-          auto propagation_value = element;
-          propagation_value["output"] = output.to_json();
-          propagations_value.append(propagation_value);
-        }
-      }
+    for (const auto& [input_path, propagation_taint] :
+         propagations_.elements()) {
+      auto propagation_value = Json::Value(Json::objectValue);
+      propagation_value["input"] = input_path.to_json();
+      propagation_value["output"] = propagation_taint.to_json();
+      propagations_value.append(propagation_value);
     }
     value["propagation"] = propagations_value;
   }
@@ -1350,8 +1333,11 @@ std::ostream& operator<<(std::ostream& out, const Model& model) {
   }
   if (!model.propagations_.is_bottom()) {
     out << ",\n  propagation={\n";
-    for (const auto& [output, propagations] : model.propagations_.elements()) {
-      out << "    " << propagations << " -> " << output << ",\n";
+    for (const auto& [input_path, propagation_taint] :
+         model.propagations_.elements()) {
+      for (const auto& output : propagation_taint.frames_iterator()) {
+        out << "    " << input_path << ": " << output << ",\n";
+      }
     }
     out << "  }";
   }
@@ -1648,6 +1634,23 @@ void Model::add_call_effect_sink(CallEffect effect, Taint sink) {
   }
 
   call_effect_sinks_.write(effect, Taint{std::move(sink)});
+}
+
+void Model::add_propagation(AccessPath input_path, Taint output) {
+  if (!check_root_consistency(input_path.root())) {
+    return;
+  }
+
+  if (input_path.path().size() > Heuristics::kPropagationMaxInputPathSize) {
+    WARNING(
+        1,
+        "Truncating user-defined propagation {} down to path length {} for method {}",
+        input_path.path(),
+        Heuristics::kPropagationMaxInputPathSize,
+        method_ ? method_->get_name() : "nullptr");
+  }
+  input_path.truncate(Heuristics::kPropagationMaxInputPathSize);
+  propagations_.write(input_path, output, UpdateKind::Weak);
 }
 
 } // namespace marianatrench

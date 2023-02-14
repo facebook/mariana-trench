@@ -230,6 +230,16 @@ Path Path::resolve(const std::vector<std::optional<std::string>>&
   return path;
 }
 
+Json::Value Path::to_json() const {
+  std::string value;
+
+  for (const auto& field : elements_) {
+    value.append(show(field));
+  }
+
+  return value;
+}
+
 std::ostream& operator<<(std::ostream& out, const Path& path) {
   out << "Path[";
   for (auto iterator = path.elements_.begin(), end = path.elements_.end();

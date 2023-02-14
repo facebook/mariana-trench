@@ -17,7 +17,22 @@
       [
         {
           "input" : "Argument(1)",
-          "output" : "Return"
+          "output" :
+          [
+            {
+              "kinds" :
+              [
+                {
+                  "call_info" : "Propagation",
+                  "kind" : "LocalReturn",
+                  "output_paths" :
+                  [
+                    ""
+                  ]
+                }
+              ]
+            }
+          ]
         }
       ]
     }

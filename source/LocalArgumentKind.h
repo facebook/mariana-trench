@@ -15,7 +15,9 @@ namespace marianatrench {
 
 /**
  * Represents the argument of a method.
- * This is used in the backward analysis to infer propagations.
+ *
+ * This is used to represent a propagation within the `Taint` representation.
+ * This is also used to infer propagations in the backward analysis.
  */
 class LocalArgumentKind final : public PropagationKind {
  public:

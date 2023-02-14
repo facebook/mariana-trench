@@ -263,6 +263,28 @@ Taint Taint::artificial_source(AccessPath access_path) {
       /* call_info */ CallInfo::Declaration)};
 }
 
+Taint Taint::propagation(PropagationConfig propagation) {
+  return Taint{TaintConfig(
+      /* kind */ propagation.kind(),
+      /* callee_port */ AccessPath(propagation.kind()->root()),
+      /* callee */ nullptr,
+      /* field_callee */ nullptr,
+      /* call_position */ nullptr,
+      /* distance */ 0,
+      /* origins */ {},
+      /* field_origins */ {},
+      /* inferred_features */ propagation.inferred_features(),
+      /* locally_inferred_features */ FeatureMayAlwaysSet::bottom(),
+      /* user_features */ propagation.user_features(),
+      /* via_type_of_ports */ {},
+      /* via_value_of_ports */ {},
+      /* canonical_names */ {},
+      /* input_paths */ {},
+      /* output_paths */ propagation.output_paths(),
+      /* local_positions */ {},
+      /* call_info */ CallInfo::Propagation)};
+}
+
 void Taint::add(const CalleeFrames& frames) {
   set_.add(frames);
 }

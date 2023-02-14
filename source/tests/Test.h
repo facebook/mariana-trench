@@ -96,6 +96,12 @@ TaintConfig make_crtex_leaf_taint_config(
     const Kind* kind,
     AccessPath callee_port,
     CanonicalNameSetAbstractDomain canonical_names);
+TaintConfig make_propagation_taint_config(const PropagationKind* kind);
+TaintConfig make_propagation_taint_config(
+    const PropagationKind* kind,
+    PathTreeDomain output_paths,
+    FeatureMayAlwaysSet inferred_features,
+    FeatureSet user_features);
 
 boost::filesystem::path find_repository_root();
 
