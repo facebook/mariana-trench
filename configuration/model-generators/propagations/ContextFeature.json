@@ -41,14 +41,6 @@
                 ],
                 "port": "Argument(x)"
               }
-            ],
-            "add_features_to_arguments": [
-              {
-                "features": [
-                  "via:context"
-                ],
-                "port": "Argument(x)"
-              }
             ]
           }
         ]
