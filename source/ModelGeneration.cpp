@@ -188,7 +188,8 @@ ModelGeneratorResult ModelGeneration::run(
         generated_field_models.end(), field_models.begin(), field_models.end());
 
     LOG(2,
-        "Generated {} models in {:.2f}s.",
+        "Model generator `{}` generated {} models in {:.2f}s.",
+        model_generator->name(),
         models.size(),
         generator_timer.duration_in_seconds());
 
