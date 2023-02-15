@@ -1,336 +1,5 @@
 // @generated
 {
-  "generations" : 
-  [
-    {
-      "port" : "Argument(0).mLastKnownLoaction",
-      "taint" : 
-      [
-        {
-          "call" : 
-          {
-            "position" : 
-            {
-              "line" : 25,
-              "path" : "ActivityUsingAndroidLocationManager.java"
-            }
-          },
-          "kinds" : 
-          [
-            {
-              "call_info" : "Origin",
-              "kind" : "UserGeoLocation",
-              "local_positions" : 
-              [
-                {
-                  "line" : 28
-                }
-              ],
-              "origins" : 
-              [
-                "Landroid_location_api/ActivityUsingAndroidLocationManager;.onLocationChanged:(Landroid/location/Location;)V"
-              ]
-            }
-          ]
-        }
-      ]
-    }
-  ],
-  "issues" : 
-  [
-    {
-      "callee" : "Landroid/util/Log;.e:(Ljava/lang/String;Ljava/lang/String;)I",
-      "position" : 
-      {
-        "line" : 29,
-        "path" : "ActivityUsingAndroidLocationManager.java"
-      },
-      "rule" : 1,
-      "sink_index" : "1",
-      "sinks" : 
-      [
-        {
-          "kinds" : 
-          [
-            {
-              "call_info" : "Origin",
-              "kind" : "Logging",
-              "origins" : 
-              [
-                "Landroid/util/Log;.e:(Ljava/lang/String;Ljava/lang/String;)I"
-              ]
-            }
-          ],
-          "origin" : 
-          {
-            "position" : 
-            {
-              "end" : 50,
-              "line" : 29,
-              "path" : "ActivityUsingAndroidLocationManager.java",
-              "start" : 22
-            }
-          }
-        }
-      ],
-      "sources" : 
-      [
-        {
-          "kinds" : 
-          [
-            {
-              "call_info" : "Origin",
-              "kind" : "UserGeoLocation",
-              "origins" : 
-              [
-                "Landroid/location/Location;.toString:()Ljava/lang/String;"
-              ]
-            }
-          ],
-          "origin" : 
-          {
-            "position" : 
-            {
-              "end" : 48,
-              "line" : 29,
-              "path" : "ActivityUsingAndroidLocationManager.java",
-              "start" : 41
-            }
-          }
-        }
-      ]
-    }
-  ],
-  "method" : "Landroid_location_api/ActivityUsingAndroidLocationManager;.onLocationChanged:(Landroid/location/Location;)V",
-  "parameter_sources" : 
-  [
-    {
-      "port" : "Argument(1)",
-      "taint" : 
-      [
-        {
-          "kinds" : 
-          [
-            {
-              "call_info" : "Declaration",
-              "kind" : "UserGeoLocation",
-              "origins" : 
-              [
-                "Landroid_location_api/ActivityUsingAndroidLocationManager;.onLocationChanged:(Landroid/location/Location;)V"
-              ]
-            }
-          ]
-        }
-      ]
-    }
-  ],
-  "position" : 
-  {
-    "line" : 25,
-    "path" : "ActivityUsingAndroidLocationManager.java"
-  },
-  "propagation" : 
-  [
-    {
-      "input" : "Argument(1)",
-      "output" : 
-      [
-        {
-          "kinds" : 
-          [
-            {
-              "call_info" : "Propagation",
-              "kind" : "LocalArgument(0)",
-              "output_paths" : 
-              [
-                ".mLastKnownLoaction"
-              ]
-            }
-          ]
-        }
-      ]
-    }
-  ]
-}
-{
-  "generations" : 
-  [
-    {
-      "port" : "Return",
-      "taint" : 
-      [
-        {
-          "kinds" : 
-          [
-            {
-              "call_info" : "Declaration",
-              "kind" : "UserGeoLocation",
-              "origins" : 
-              [
-                "Landroid/location/Location;.getLatitude:()D"
-              ]
-            }
-          ]
-        }
-      ]
-    }
-  ],
-  "method" : "Landroid/location/Location;.getLatitude:()D",
-  "position" : 
-  {
-    "line" : 12
-  }
-}
-{
-  "generations" : 
-  [
-    {
-      "port" : "Return",
-      "taint" : 
-      [
-        {
-          "kinds" : 
-          [
-            {
-              "call_info" : "Declaration",
-              "kind" : "UserGeoLocation",
-              "origins" : 
-              [
-                "Landroid/location/Location;.toString:()Ljava/lang/String;"
-              ]
-            }
-          ]
-        }
-      ]
-    }
-  ],
-  "method" : "Landroid/location/Location;.toString:()Ljava/lang/String;",
-  "position" : 
-  {
-    "line" : 20
-  }
-}
-{
-  "inline_as" : "Argument(0)",
-  "method" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sanitize:(Ljava/lang/Object;)Ljava/lang/Object;",
-  "position" : 
-  {
-    "line" : 17
-  },
-  "propagation" : 
-  [
-    {
-      "input" : "Argument(0)",
-      "output" : 
-      [
-        {
-          "kinds" : 
-          [
-            {
-              "call_info" : "Propagation",
-              "kind" : "LocalReturn",
-              "output_paths" : 
-              [
-                ""
-              ]
-            }
-          ]
-        }
-      ]
-    }
-  ]
-}
-{
-  "inline_as" : "Argument(0)",
-  "method" : "Lcom/instagram/common/analytics/intf/AnalyticsEvent;.addExtra:(Ljava/lang/String;Ljava/lang/String;)Lcom/instagram/common/analytics/intf/AnalyticsEvent;",
-  "position" : 
-  {
-    "line" : 16
-  },
-  "propagation" : 
-  [
-    {
-      "input" : "Argument(0)",
-      "output" : 
-      [
-        {
-          "kinds" : 
-          [
-            {
-              "call_info" : "Propagation",
-              "kind" : "LocalReturn",
-              "output_paths" : 
-              [
-                ""
-              ]
-            }
-          ]
-        }
-      ]
-    }
-  ]
-}
-{
-  "inline_as" : "Argument(0).host",
-  "method" : "Landroid/net/Uri;.getHost:()Ljava/lang/String;",
-  "position" : 
-  {
-    "line" : 35
-  },
-  "propagation" : 
-  [
-    {
-      "input" : "Argument(0).host",
-      "output" : 
-      [
-        {
-          "kinds" : 
-          [
-            {
-              "call_info" : "Propagation",
-              "kind" : "LocalReturn",
-              "output_paths" : 
-              [
-                ""
-              ]
-            }
-          ]
-        }
-      ]
-    }
-  ]
-}
-{
-  "inline_as" : "Argument(0).scheme",
-  "method" : "Landroid/net/Uri;.getScheme:()Ljava/lang/String;",
-  "position" : 
-  {
-    "line" : 31
-  },
-  "propagation" : 
-  [
-    {
-      "input" : "Argument(0).scheme",
-      "output" : 
-      [
-        {
-          "kinds" : 
-          [
-            {
-              "call_info" : "Propagation",
-              "kind" : "LocalReturn",
-              "output_paths" : 
-              [
-                ""
-              ]
-            }
-          ]
-        }
-      ]
-    }
-  ]
-}
-{
   "method" : "Landroid/app/Activity;.<init>:()V",
   "position" : 
   {
@@ -527,10 +196,68 @@
   }
 }
 {
+  "generations" : 
+  [
+    {
+      "port" : "Return",
+      "taint" : 
+      [
+        {
+          "kinds" : 
+          [
+            {
+              "call_info" : "Declaration",
+              "kind" : "UserGeoLocation",
+              "origins" : 
+              [
+                "Landroid/location/Location;.getLatitude:()D"
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "method" : "Landroid/location/Location;.getLatitude:()D",
+  "position" : 
+  {
+    "line" : 12
+  }
+}
+{
   "method" : "Landroid/location/Location;.getLongitude:()D",
   "position" : 
   {
     "line" : 16
+  }
+}
+{
+  "generations" : 
+  [
+    {
+      "port" : "Return",
+      "taint" : 
+      [
+        {
+          "kinds" : 
+          [
+            {
+              "call_info" : "Declaration",
+              "kind" : "UserGeoLocation",
+              "origins" : 
+              [
+                "Landroid/location/Location;.toString:()Ljava/lang/String;"
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "method" : "Landroid/location/Location;.toString:()Ljava/lang/String;",
+  "position" : 
+  {
+    "line" : 20
   }
 }
 {
@@ -903,11 +630,71 @@
   }
 }
 {
+  "inline_as" : "Argument(0).host",
+  "method" : "Landroid/net/Uri;.getHost:()Ljava/lang/String;",
+  "position" : 
+  {
+    "line" : 35
+  },
+  "propagation" : 
+  [
+    {
+      "input" : "Argument(0).host",
+      "output" : 
+      [
+        {
+          "kinds" : 
+          [
+            {
+              "call_info" : "Propagation",
+              "kind" : "LocalReturn",
+              "output_paths" : 
+              [
+                ""
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
+{
   "method" : "Landroid/net/Uri;.getQueryParameter:(Ljava/lang/String;)Ljava/lang/String;",
   "position" : 
   {
     "line" : 39
   }
+}
+{
+  "inline_as" : "Argument(0).scheme",
+  "method" : "Landroid/net/Uri;.getScheme:()Ljava/lang/String;",
+  "position" : 
+  {
+    "line" : 31
+  },
+  "propagation" : 
+  [
+    {
+      "input" : "Argument(0).scheme",
+      "output" : 
+      [
+        {
+          "kinds" : 
+          [
+            {
+              "call_info" : "Propagation",
+              "kind" : "LocalReturn",
+              "output_paths" : 
+              [
+                ""
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
 }
 {
   "method" : "Landroid/net/Uri;.parse:(Ljava/lang/String;)Landroid/net/Uri;",
@@ -1099,6 +886,159 @@
   }
 }
 {
+  "generations" : 
+  [
+    {
+      "port" : "Argument(0).mLastKnownLoaction",
+      "taint" : 
+      [
+        {
+          "call" : 
+          {
+            "position" : 
+            {
+              "line" : 25,
+              "path" : "ActivityUsingAndroidLocationManager.java"
+            }
+          },
+          "kinds" : 
+          [
+            {
+              "call_info" : "Origin",
+              "kind" : "UserGeoLocation",
+              "local_positions" : 
+              [
+                {
+                  "line" : 28
+                }
+              ],
+              "origins" : 
+              [
+                "Landroid_location_api/ActivityUsingAndroidLocationManager;.onLocationChanged:(Landroid/location/Location;)V"
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "issues" : 
+  [
+    {
+      "callee" : "Landroid/util/Log;.e:(Ljava/lang/String;Ljava/lang/String;)I",
+      "position" : 
+      {
+        "line" : 29,
+        "path" : "ActivityUsingAndroidLocationManager.java"
+      },
+      "rule" : 1,
+      "sink_index" : "1",
+      "sinks" : 
+      [
+        {
+          "kinds" : 
+          [
+            {
+              "call_info" : "Origin",
+              "kind" : "Logging",
+              "origins" : 
+              [
+                "Landroid/util/Log;.e:(Ljava/lang/String;Ljava/lang/String;)I"
+              ]
+            }
+          ],
+          "origin" : 
+          {
+            "position" : 
+            {
+              "end" : 50,
+              "line" : 29,
+              "path" : "ActivityUsingAndroidLocationManager.java",
+              "start" : 22
+            }
+          }
+        }
+      ],
+      "sources" : 
+      [
+        {
+          "kinds" : 
+          [
+            {
+              "call_info" : "Origin",
+              "kind" : "UserGeoLocation",
+              "origins" : 
+              [
+                "Landroid/location/Location;.toString:()Ljava/lang/String;"
+              ]
+            }
+          ],
+          "origin" : 
+          {
+            "position" : 
+            {
+              "end" : 48,
+              "line" : 29,
+              "path" : "ActivityUsingAndroidLocationManager.java",
+              "start" : 41
+            }
+          }
+        }
+      ]
+    }
+  ],
+  "method" : "Landroid_location_api/ActivityUsingAndroidLocationManager;.onLocationChanged:(Landroid/location/Location;)V",
+  "parameter_sources" : 
+  [
+    {
+      "port" : "Argument(1)",
+      "taint" : 
+      [
+        {
+          "kinds" : 
+          [
+            {
+              "call_info" : "Declaration",
+              "kind" : "UserGeoLocation",
+              "origins" : 
+              [
+                "Landroid_location_api/ActivityUsingAndroidLocationManager;.onLocationChanged:(Landroid/location/Location;)V"
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "position" : 
+  {
+    "line" : 25,
+    "path" : "ActivityUsingAndroidLocationManager.java"
+  },
+  "propagation" : 
+  [
+    {
+      "input" : "Argument(1)",
+      "output" : 
+      [
+        {
+          "kinds" : 
+          [
+            {
+              "call_info" : "Propagation",
+              "kind" : "LocalArgument(0)",
+              "output_paths" : 
+              [
+                ".mLastKnownLoaction"
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
+{
   "method" : "Landroidx/fragment/app/FragmentActivity;.<init>:()V",
   "position" : 
   {
@@ -1188,6 +1128,36 @@
   {
     "line" : 9
   }
+}
+{
+  "inline_as" : "Argument(0)",
+  "method" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sanitize:(Ljava/lang/Object;)Ljava/lang/Object;",
+  "position" : 
+  {
+    "line" : 17
+  },
+  "propagation" : 
+  [
+    {
+      "input" : "Argument(0)",
+      "output" : 
+      [
+        {
+          "kinds" : 
+          [
+            {
+              "call_info" : "Propagation",
+              "kind" : "LocalReturn",
+              "output_paths" : 
+              [
+                ""
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
 }
 {
   "method" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
@@ -1286,6 +1256,36 @@
   {
     "line" : 9
   }
+}
+{
+  "inline_as" : "Argument(0)",
+  "method" : "Lcom/instagram/common/analytics/intf/AnalyticsEvent;.addExtra:(Ljava/lang/String;Ljava/lang/String;)Lcom/instagram/common/analytics/intf/AnalyticsEvent;",
+  "position" : 
+  {
+    "line" : 16
+  },
+  "propagation" : 
+  [
+    {
+      "input" : "Argument(0)",
+      "output" : 
+      [
+        {
+          "kinds" : 
+          [
+            {
+              "call_info" : "Propagation",
+              "kind" : "LocalReturn",
+              "output_paths" : 
+              [
+                ""
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
 }
 {
   "method" : "Lcom/instagram/common/analytics/intf/AnalyticsEvent;.obtain:(Ljava/lang/String;)Lcom/instagram/common/analytics/intf/AnalyticsEvent;",

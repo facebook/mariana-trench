@@ -1,991 +1,5 @@
 // @generated
 {
-  "field" : "Lcom/facebook/marianatrench/integrationtests/TaintedFieldClass;.field:Ljava/lang/Object;",
-  "position" : {},
-  "sinks" : 
-  [
-    {
-      "call_info" : "Declaration",
-      "field_callee" : "Lcom/facebook/marianatrench/integrationtests/TaintedFieldClass;.field:Ljava/lang/Object;",
-      "field_origins" : 
-      [
-        "Lcom/facebook/marianatrench/integrationtests/TaintedFieldClass;.field:Ljava/lang/Object;"
-      ],
-      "kind" : "Sink"
-    }
-  ]
-}
-{
-  "field" : "Lcom/facebook/marianatrench/integrationtests/TaintedFieldClass;.finalStringField:Ljava/lang/String;",
-  "position" : {},
-  "sinks" : 
-  [
-    {
-      "call_info" : "Declaration",
-      "field_callee" : "Lcom/facebook/marianatrench/integrationtests/TaintedFieldClass;.finalStringField:Ljava/lang/String;",
-      "field_origins" : 
-      [
-        "Lcom/facebook/marianatrench/integrationtests/TaintedFieldClass;.finalStringField:Ljava/lang/String;"
-      ],
-      "kind" : "Sink"
-    }
-  ]
-}
-{
-  "field" : "Lcom/facebook/marianatrench/integrationtests/TaintedFieldClass;.shadowedField:Ljava/lang/Object;",
-  "position" : {},
-  "sinks" : 
-  [
-    {
-      "call_info" : "Declaration",
-      "field_callee" : "Lcom/facebook/marianatrench/integrationtests/TaintedFieldClass;.shadowedField:Ljava/lang/Object;",
-      "field_origins" : 
-      [
-        "Lcom/facebook/marianatrench/integrationtests/TaintedFieldClass;.shadowedField:Ljava/lang/Object;"
-      ],
-      "kind" : "Sink"
-    }
-  ]
-}
-{
-  "field" : "Lcom/facebook/marianatrench/integrationtests/TaintedFieldClass;.staticField:Ljava/lang/Object;",
-  "position" : {},
-  "sinks" : 
-  [
-    {
-      "call_info" : "Declaration",
-      "field_callee" : "Lcom/facebook/marianatrench/integrationtests/TaintedFieldClass;.staticField:Ljava/lang/Object;",
-      "field_origins" : 
-      [
-        "Lcom/facebook/marianatrench/integrationtests/TaintedFieldClass;.staticField:Ljava/lang/Object;"
-      ],
-      "kind" : "Sink"
-    }
-  ]
-}
-{
-  "field" : "Lcom/facebook/marianatrench/integrationtests/TaintedFieldClass;.staticFinalStringField:Ljava/lang/String;",
-  "position" : {},
-  "sinks" : 
-  [
-    {
-      "call_info" : "Declaration",
-      "field_callee" : "Lcom/facebook/marianatrench/integrationtests/TaintedFieldClass;.staticFinalStringField:Ljava/lang/String;",
-      "field_origins" : 
-      [
-        "Lcom/facebook/marianatrench/integrationtests/TaintedFieldClass;.staticFinalStringField:Ljava/lang/String;"
-      ],
-      "kind" : "Sink"
-    }
-  ]
-}
-{
-  "field" : "Lcom/facebook/marianatrench/integrationtests/TaintedFieldClass;.staticStringField:Ljava/lang/String;",
-  "position" : {},
-  "sinks" : 
-  [
-    {
-      "call_info" : "Declaration",
-      "field_callee" : "Lcom/facebook/marianatrench/integrationtests/TaintedFieldClass;.staticStringField:Ljava/lang/String;",
-      "field_origins" : 
-      [
-        "Lcom/facebook/marianatrench/integrationtests/TaintedFieldClass;.staticStringField:Ljava/lang/String;"
-      ],
-      "kind" : "Sink"
-    }
-  ]
-}
-{
-  "generations" : 
-  [
-    {
-      "port" : "Argument(0).field",
-      "taint" : 
-      [
-        {
-          "kinds" : 
-          [
-            {
-              "call_info" : "Origin",
-              "kind" : "Source",
-              "local_positions" : 
-              [
-                {
-                  "end" : 27,
-                  "line" : 17,
-                  "start" : 12
-                }
-              ],
-              "origins" : 
-              [
-                "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;"
-              ]
-            }
-          ],
-          "origin" : 
-          {
-            "position" : 
-            {
-              "end" : 24,
-              "line" : 17,
-              "path" : "ChildClass.java",
-              "start" : 19
-            }
-          }
-        }
-      ]
-    },
-    {
-      "port" : "Argument(0).shadowedField",
-      "taint" : 
-      [
-        {
-          "kinds" : 
-          [
-            {
-              "call_info" : "Origin",
-              "kind" : "Source",
-              "local_positions" : 
-              [
-                {
-                  "end" : 35,
-                  "line" : 18,
-                  "start" : 20
-                }
-              ],
-              "origins" : 
-              [
-                "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;"
-              ]
-            }
-          ],
-          "origin" : 
-          {
-            "position" : 
-            {
-              "end" : 32,
-              "line" : 18,
-              "path" : "ChildClass.java",
-              "start" : 27
-            }
-          }
-        }
-      ]
-    }
-  ],
-  "issues" : 
-  [
-    {
-      "callee" : "Lcom/facebook/marianatrench/integrationtests/TaintedFieldClass;.field:Ljava/lang/Object;",
-      "position" : 
-      {
-        "line" : 17,
-        "path" : "ChildClass.java"
-      },
-      "rule" : 1,
-      "sink_index" : "0",
-      "sinks" : 
-      [
-        {
-          "kinds" : 
-          [
-            {
-              "call_info" : "Declaration",
-              "field_callee" : "Lcom/facebook/marianatrench/integrationtests/TaintedFieldClass;.field:Ljava/lang/Object;",
-              "field_origins" : 
-              [
-                "Lcom/facebook/marianatrench/integrationtests/TaintedFieldClass;.field:Ljava/lang/Object;"
-              ],
-              "kind" : "Sink"
-            }
-          ]
-        }
-      ],
-      "sources" : 
-      [
-        {
-          "kinds" : 
-          [
-            {
-              "call_info" : "Origin",
-              "kind" : "Source",
-              "local_positions" : 
-              [
-                {
-                  "end" : 27,
-                  "line" : 17,
-                  "start" : 12
-                }
-              ],
-              "origins" : 
-              [
-                "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;"
-              ]
-            }
-          ],
-          "origin" : 
-          {
-            "position" : 
-            {
-              "end" : 24,
-              "line" : 17,
-              "path" : "ChildClass.java",
-              "start" : 19
-            }
-          }
-        }
-      ]
-    }
-  ],
-  "method" : "Lcom/facebook/marianatrench/integrationtests/ChildClass;.flow:()V",
-  "position" : 
-  {
-    "line" : 16,
-    "path" : "ChildClass.java"
-  }
-}
-{
-  "generations" : 
-  [
-    {
-      "port" : "Argument(0).field",
-      "taint" : 
-      [
-        {
-          "kinds" : 
-          [
-            {
-              "call_info" : "Origin",
-              "kind" : "Source",
-              "local_positions" : 
-              [
-                {
-                  "end" : 27,
-                  "line" : 20,
-                  "start" : 12
-                }
-              ],
-              "origins" : 
-              [
-                "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;"
-              ]
-            }
-          ],
-          "origin" : 
-          {
-            "position" : 
-            {
-              "end" : 24,
-              "line" : 20,
-              "path" : "TaintedFieldClass.java",
-              "start" : 19
-            }
-          }
-        }
-      ]
-    }
-  ],
-  "issues" : 
-  [
-    {
-      "callee" : "Lcom/facebook/marianatrench/integrationtests/TaintedFieldClass;.field:Ljava/lang/Object;",
-      "position" : 
-      {
-        "line" : 20,
-        "path" : "TaintedFieldClass.java"
-      },
-      "rule" : 1,
-      "sink_index" : "0",
-      "sinks" : 
-      [
-        {
-          "kinds" : 
-          [
-            {
-              "call_info" : "Declaration",
-              "field_callee" : "Lcom/facebook/marianatrench/integrationtests/TaintedFieldClass;.field:Ljava/lang/Object;",
-              "field_origins" : 
-              [
-                "Lcom/facebook/marianatrench/integrationtests/TaintedFieldClass;.field:Ljava/lang/Object;"
-              ],
-              "kind" : "Sink"
-            }
-          ]
-        }
-      ],
-      "sources" : 
-      [
-        {
-          "kinds" : 
-          [
-            {
-              "call_info" : "Origin",
-              "kind" : "Source",
-              "local_positions" : 
-              [
-                {
-                  "end" : 27,
-                  "line" : 20,
-                  "start" : 12
-                }
-              ],
-              "origins" : 
-              [
-                "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;"
-              ]
-            }
-          ],
-          "origin" : 
-          {
-            "position" : 
-            {
-              "end" : 24,
-              "line" : 20,
-              "path" : "TaintedFieldClass.java",
-              "start" : 19
-            }
-          }
-        }
-      ]
-    },
-    {
-      "callee" : "Lcom/facebook/marianatrench/integrationtests/TaintedFieldClass;.staticField:Ljava/lang/Object;",
-      "position" : 
-      {
-        "line" : 21,
-        "path" : "TaintedFieldClass.java"
-      },
-      "rule" : 1,
-      "sink_index" : "0",
-      "sinks" : 
-      [
-        {
-          "kinds" : 
-          [
-            {
-              "call_info" : "Declaration",
-              "field_callee" : "Lcom/facebook/marianatrench/integrationtests/TaintedFieldClass;.staticField:Ljava/lang/Object;",
-              "field_origins" : 
-              [
-                "Lcom/facebook/marianatrench/integrationtests/TaintedFieldClass;.staticField:Ljava/lang/Object;"
-              ],
-              "kind" : "Sink"
-            }
-          ]
-        }
-      ],
-      "sources" : 
-      [
-        {
-          "kinds" : 
-          [
-            {
-              "call_info" : "Origin",
-              "kind" : "Source",
-              "local_positions" : 
-              [
-                {
-                  "end" : 0,
-                  "line" : 21,
-                  "start" : 0
-                }
-              ],
-              "origins" : 
-              [
-                "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;"
-              ]
-            }
-          ],
-          "origin" : 
-          {
-            "position" : 
-            {
-              "end" : 30,
-              "line" : 21,
-              "path" : "TaintedFieldClass.java",
-              "start" : 25
-            }
-          }
-        }
-      ]
-    },
-    {
-      "callee" : "Lcom/facebook/marianatrench/integrationtests/TaintedFieldClass;.staticStringField:Ljava/lang/String;",
-      "position" : 
-      {
-        "line" : 23,
-        "path" : "TaintedFieldClass.java"
-      },
-      "rule" : 1,
-      "sink_index" : "0",
-      "sinks" : 
-      [
-        {
-          "kinds" : 
-          [
-            {
-              "call_info" : "Declaration",
-              "field_callee" : "Lcom/facebook/marianatrench/integrationtests/TaintedFieldClass;.staticStringField:Ljava/lang/String;",
-              "field_origins" : 
-              [
-                "Lcom/facebook/marianatrench/integrationtests/TaintedFieldClass;.staticStringField:Ljava/lang/String;"
-              ],
-              "kind" : "Sink"
-            }
-          ]
-        }
-      ],
-      "sources" : 
-      [
-        {
-          "kinds" : 
-          [
-            {
-              "call_info" : "Origin",
-              "kind" : "Source",
-              "local_positions" : 
-              [
-                {
-                  "end" : 0,
-                  "line" : 23,
-                  "start" : 0
-                }
-              ],
-              "origins" : 
-              [
-                "Lcom/facebook/marianatrench/integrationtests/TaintedFieldClass;.source:()Ljava/lang/String;"
-              ]
-            }
-          ],
-          "origin" : 
-          {
-            "position" : 
-            {
-              "end" : 29,
-              "line" : 23,
-              "path" : "TaintedFieldClass.java",
-              "start" : 24
-            }
-          }
-        }
-      ]
-    }
-  ],
-  "method" : "Lcom/facebook/marianatrench/integrationtests/TaintedFieldClass;.flow:()V",
-  "position" : 
-  {
-    "line" : 19,
-    "path" : "TaintedFieldClass.java"
-  }
-}
-{
-  "generations" : 
-  [
-    {
-      "port" : "Argument(0).finalStringField",
-      "taint" : 
-      [
-        {
-          "call" : 
-          {
-            "port" : "Argument(0).finalStringField",
-            "position" : 
-            {
-              "line" : 10,
-              "path" : "ChildClass.java"
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/TaintedFieldClass;.<init>:()V"
-          },
-          "kinds" : 
-          [
-            {
-              "call_info" : "CallSite",
-              "distance" : 1,
-              "kind" : "Source",
-              "origins" : 
-              [
-                "Lcom/facebook/marianatrench/integrationtests/TaintedFieldClass;.source:()Ljava/lang/String;"
-              ]
-            }
-          ]
-        }
-      ]
-    }
-  ],
-  "method" : "Lcom/facebook/marianatrench/integrationtests/ChildClass;.<init>:()V",
-  "position" : 
-  {
-    "line" : 9,
-    "path" : "ChildClass.java"
-  }
-}
-{
-  "generations" : 
-  [
-    {
-      "port" : "Argument(0).finalStringField",
-      "taint" : 
-      [
-        {
-          "kinds" : 
-          [
-            {
-              "call_info" : "Origin",
-              "kind" : "Source",
-              "local_positions" : 
-              [
-                {
-                  "end" : 49,
-                  "line" : 16,
-                  "start" : 41
-                }
-              ],
-              "origins" : 
-              [
-                "Lcom/facebook/marianatrench/integrationtests/TaintedFieldClass;.source:()Ljava/lang/String;"
-              ]
-            }
-          ],
-          "origin" : 
-          {
-            "position" : 
-            {
-              "end" : 46,
-              "line" : 16,
-              "path" : "TaintedFieldClass.java",
-              "start" : 41
-            }
-          }
-        }
-      ]
-    }
-  ],
-  "issues" : 
-  [
-    {
-      "callee" : "Lcom/facebook/marianatrench/integrationtests/TaintedFieldClass;.finalStringField:Ljava/lang/String;",
-      "position" : 
-      {
-        "line" : 16,
-        "path" : "TaintedFieldClass.java"
-      },
-      "rule" : 1,
-      "sink_index" : "0",
-      "sinks" : 
-      [
-        {
-          "kinds" : 
-          [
-            {
-              "call_info" : "Declaration",
-              "field_callee" : "Lcom/facebook/marianatrench/integrationtests/TaintedFieldClass;.finalStringField:Ljava/lang/String;",
-              "field_origins" : 
-              [
-                "Lcom/facebook/marianatrench/integrationtests/TaintedFieldClass;.finalStringField:Ljava/lang/String;"
-              ],
-              "kind" : "Sink"
-            }
-          ]
-        }
-      ],
-      "sources" : 
-      [
-        {
-          "kinds" : 
-          [
-            {
-              "call_info" : "Origin",
-              "kind" : "Source",
-              "local_positions" : 
-              [
-                {
-                  "end" : 49,
-                  "line" : 16,
-                  "start" : 41
-                }
-              ],
-              "origins" : 
-              [
-                "Lcom/facebook/marianatrench/integrationtests/TaintedFieldClass;.source:()Ljava/lang/String;"
-              ]
-            }
-          ],
-          "origin" : 
-          {
-            "position" : 
-            {
-              "end" : 46,
-              "line" : 16,
-              "path" : "TaintedFieldClass.java",
-              "start" : 41
-            }
-          }
-        }
-      ]
-    }
-  ],
-  "method" : "Lcom/facebook/marianatrench/integrationtests/TaintedFieldClass;.<init>:()V",
-  "position" : 
-  {
-    "line" : 9,
-    "path" : "TaintedFieldClass.java"
-  }
-}
-{
-  "generations" : 
-  [
-    {
-      "port" : "Return",
-      "taint" : 
-      [
-        {
-          "kinds" : 
-          [
-            {
-              "call_info" : "Declaration",
-              "kind" : "Source",
-              "origins" : 
-              [
-                "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;"
-              ]
-            }
-          ]
-        }
-      ]
-    }
-  ],
-  "method" : "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;",
-  "position" : 
-  {
-    "line" : 11
-  }
-}
-{
-  "generations" : 
-  [
-    {
-      "port" : "Return",
-      "taint" : 
-      [
-        {
-          "kinds" : 
-          [
-            {
-              "call_info" : "Declaration",
-              "kind" : "Source",
-              "origins" : 
-              [
-                "Lcom/facebook/marianatrench/integrationtests/TaintedFieldClass;.source:()Ljava/lang/String;"
-              ]
-            }
-          ]
-        }
-      ]
-    }
-  ],
-  "method" : "Lcom/facebook/marianatrench/integrationtests/TaintedFieldClass;.source:()Ljava/lang/String;",
-  "position" : 
-  {
-    "line" : 26,
-    "path" : "TaintedFieldClass.java"
-  }
-}
-{
-  "generations" : 
-  [
-    {
-      "port" : "Return",
-      "taint" : 
-      [
-        {
-          "kinds" : 
-          [
-            {
-              "call_info" : "Declaration",
-              "kind" : "Source",
-              "origins" : 
-              [
-                "Lcom/facebook/marianatrench/integrationtests/TaintedFieldClass;.staticSource:()Ljava/lang/String;"
-              ]
-            }
-          ]
-        }
-      ]
-    }
-  ],
-  "method" : "Lcom/facebook/marianatrench/integrationtests/TaintedFieldClass;.staticSource:()Ljava/lang/String;",
-  "position" : 
-  {
-    "line" : 30,
-    "path" : "TaintedFieldClass.java"
-  }
-}
-{
-  "inline_as" : "Argument(0)",
-  "method" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sanitize:(Ljava/lang/Object;)Ljava/lang/Object;",
-  "position" : 
-  {
-    "line" : 17
-  },
-  "propagation" : 
-  [
-    {
-      "input" : "Argument(0)",
-      "output" : 
-      [
-        {
-          "kinds" : 
-          [
-            {
-              "call_info" : "Propagation",
-              "kind" : "LocalReturn",
-              "output_paths" : 
-              [
-                ""
-              ]
-            }
-          ]
-        }
-      ]
-    }
-  ]
-}
-{
-  "inline_as" : "Argument(0)",
-  "method" : "Lcom/instagram/common/analytics/intf/AnalyticsEvent;.addExtra:(Ljava/lang/String;Ljava/lang/String;)Lcom/instagram/common/analytics/intf/AnalyticsEvent;",
-  "position" : 
-  {
-    "line" : 16
-  },
-  "propagation" : 
-  [
-    {
-      "input" : "Argument(0)",
-      "output" : 
-      [
-        {
-          "kinds" : 
-          [
-            {
-              "call_info" : "Propagation",
-              "kind" : "LocalReturn",
-              "output_paths" : 
-              [
-                ""
-              ]
-            }
-          ]
-        }
-      ]
-    }
-  ]
-}
-{
-  "inline_as" : "Argument(0).host",
-  "method" : "Landroid/net/Uri;.getHost:()Ljava/lang/String;",
-  "position" : 
-  {
-    "line" : 35
-  },
-  "propagation" : 
-  [
-    {
-      "input" : "Argument(0).host",
-      "output" : 
-      [
-        {
-          "kinds" : 
-          [
-            {
-              "call_info" : "Propagation",
-              "kind" : "LocalReturn",
-              "output_paths" : 
-              [
-                ""
-              ]
-            }
-          ]
-        }
-      ]
-    }
-  ]
-}
-{
-  "inline_as" : "Argument(0).scheme",
-  "method" : "Landroid/net/Uri;.getScheme:()Ljava/lang/String;",
-  "position" : 
-  {
-    "line" : 31
-  },
-  "propagation" : 
-  [
-    {
-      "input" : "Argument(0).scheme",
-      "output" : 
-      [
-        {
-          "kinds" : 
-          [
-            {
-              "call_info" : "Propagation",
-              "kind" : "LocalReturn",
-              "output_paths" : 
-              [
-                ""
-              ]
-            }
-          ]
-        }
-      ]
-    }
-  ]
-}
-{
-  "issues" : 
-  [
-    {
-      "callee" : "Lcom/facebook/marianatrench/integrationtests/Flow;.flow_to_field:(Ljava/lang/Object;Ljava/lang/Object;)V",
-      "position" : 
-      {
-        "line" : 13,
-        "path" : "Flow.java"
-      },
-      "rule" : 1,
-      "sink_index" : "0",
-      "sinks" : 
-      [
-        {
-          "kinds" : 
-          [
-            {
-              "call_info" : "Origin",
-              "field_origins" : 
-              [
-                "Lcom/facebook/marianatrench/integrationtests/TaintedFieldClass;.field:Ljava/lang/Object;"
-              ],
-              "kind" : "Sink"
-            }
-          ],
-          "origin" : 
-          {
-            "position" : 
-            {
-              "end" : 32,
-              "line" : 13,
-              "path" : "Flow.java",
-              "start" : 18
-            }
-          }
-        }
-      ],
-      "sources" : 
-      [
-        {
-          "kinds" : 
-          [
-            {
-              "call_info" : "Origin",
-              "kind" : "Source",
-              "origins" : 
-              [
-                "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;"
-              ]
-            }
-          ],
-          "origin" : 
-          {
-            "position" : 
-            {
-              "end" : 30,
-              "line" : 13,
-              "path" : "Flow.java",
-              "start" : 25
-            }
-          }
-        }
-      ]
-    }
-  ],
-  "method" : "Lcom/facebook/marianatrench/integrationtests/Flow;.flow:()V",
-  "position" : 
-  {
-    "line" : 12,
-    "path" : "Flow.java"
-  }
-}
-{
-  "issues" : 
-  [
-    {
-      "callee" : "Lcom/facebook/marianatrench/integrationtests/TaintedFieldClass;.staticFinalStringField:Ljava/lang/String;",
-      "position" : 
-      {
-        "line" : 17,
-        "path" : "TaintedFieldClass.java"
-      },
-      "rule" : 1,
-      "sink_index" : "0",
-      "sinks" : 
-      [
-        {
-          "kinds" : 
-          [
-            {
-              "call_info" : "Declaration",
-              "field_callee" : "Lcom/facebook/marianatrench/integrationtests/TaintedFieldClass;.staticFinalStringField:Ljava/lang/String;",
-              "field_origins" : 
-              [
-                "Lcom/facebook/marianatrench/integrationtests/TaintedFieldClass;.staticFinalStringField:Ljava/lang/String;"
-              ],
-              "kind" : "Sink"
-            }
-          ]
-        }
-      ],
-      "sources" : 
-      [
-        {
-          "kinds" : 
-          [
-            {
-              "call_info" : "Origin",
-              "kind" : "Source",
-              "local_positions" : 
-              [
-                {
-                  "end" : 0,
-                  "line" : 17,
-                  "start" : 0
-                }
-              ],
-              "origins" : 
-              [
-                "Lcom/facebook/marianatrench/integrationtests/TaintedFieldClass;.staticSource:()Ljava/lang/String;"
-              ]
-            }
-          ],
-          "origin" : 
-          {
-            "position" : 
-            {
-              "end" : 65,
-              "line" : 17,
-              "path" : "TaintedFieldClass.java",
-              "start" : 54
-            }
-          }
-        }
-      ]
-    }
-  ],
-  "method" : "Lcom/facebook/marianatrench/integrationtests/TaintedFieldClass;.<clinit>:()V",
-  "position" : 
-  {
-    "line" : 16,
-    "path" : "TaintedFieldClass.java"
-  }
-}
-{
   "method" : "Landroid/app/Activity;.<init>:()V",
   "position" : 
   {
@@ -1550,11 +564,71 @@
   }
 }
 {
+  "inline_as" : "Argument(0).host",
+  "method" : "Landroid/net/Uri;.getHost:()Ljava/lang/String;",
+  "position" : 
+  {
+    "line" : 35
+  },
+  "propagation" : 
+  [
+    {
+      "input" : "Argument(0).host",
+      "output" : 
+      [
+        {
+          "kinds" : 
+          [
+            {
+              "call_info" : "Propagation",
+              "kind" : "LocalReturn",
+              "output_paths" : 
+              [
+                ""
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
+{
   "method" : "Landroid/net/Uri;.getQueryParameter:(Ljava/lang/String;)Ljava/lang/String;",
   "position" : 
   {
     "line" : 39
   }
+}
+{
+  "inline_as" : "Argument(0).scheme",
+  "method" : "Landroid/net/Uri;.getScheme:()Ljava/lang/String;",
+  "position" : 
+  {
+    "line" : 31
+  },
+  "propagation" : 
+  [
+    {
+      "input" : "Argument(0).scheme",
+      "output" : 
+      [
+        {
+          "kinds" : 
+          [
+            {
+              "call_info" : "Propagation",
+              "kind" : "LocalReturn",
+              "output_paths" : 
+              [
+                ""
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
 }
 {
   "method" : "Landroid/net/Uri;.parse:(Ljava/lang/String;)Landroid/net/Uri;",
@@ -1792,10 +866,273 @@
   }
 }
 {
+  "generations" : 
+  [
+    {
+      "port" : "Argument(0).finalStringField",
+      "taint" : 
+      [
+        {
+          "call" : 
+          {
+            "port" : "Argument(0).finalStringField",
+            "position" : 
+            {
+              "line" : 10,
+              "path" : "ChildClass.java"
+            },
+            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/TaintedFieldClass;.<init>:()V"
+          },
+          "kinds" : 
+          [
+            {
+              "call_info" : "CallSite",
+              "distance" : 1,
+              "kind" : "Source",
+              "origins" : 
+              [
+                "Lcom/facebook/marianatrench/integrationtests/TaintedFieldClass;.source:()Ljava/lang/String;"
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "method" : "Lcom/facebook/marianatrench/integrationtests/ChildClass;.<init>:()V",
+  "position" : 
+  {
+    "line" : 9,
+    "path" : "ChildClass.java"
+  }
+}
+{
+  "generations" : 
+  [
+    {
+      "port" : "Argument(0).field",
+      "taint" : 
+      [
+        {
+          "kinds" : 
+          [
+            {
+              "call_info" : "Origin",
+              "kind" : "Source",
+              "local_positions" : 
+              [
+                {
+                  "end" : 27,
+                  "line" : 17,
+                  "start" : 12
+                }
+              ],
+              "origins" : 
+              [
+                "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;"
+              ]
+            }
+          ],
+          "origin" : 
+          {
+            "position" : 
+            {
+              "end" : 24,
+              "line" : 17,
+              "path" : "ChildClass.java",
+              "start" : 19
+            }
+          }
+        }
+      ]
+    },
+    {
+      "port" : "Argument(0).shadowedField",
+      "taint" : 
+      [
+        {
+          "kinds" : 
+          [
+            {
+              "call_info" : "Origin",
+              "kind" : "Source",
+              "local_positions" : 
+              [
+                {
+                  "end" : 35,
+                  "line" : 18,
+                  "start" : 20
+                }
+              ],
+              "origins" : 
+              [
+                "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;"
+              ]
+            }
+          ],
+          "origin" : 
+          {
+            "position" : 
+            {
+              "end" : 32,
+              "line" : 18,
+              "path" : "ChildClass.java",
+              "start" : 27
+            }
+          }
+        }
+      ]
+    }
+  ],
+  "issues" : 
+  [
+    {
+      "callee" : "Lcom/facebook/marianatrench/integrationtests/TaintedFieldClass;.field:Ljava/lang/Object;",
+      "position" : 
+      {
+        "line" : 17,
+        "path" : "ChildClass.java"
+      },
+      "rule" : 1,
+      "sink_index" : "0",
+      "sinks" : 
+      [
+        {
+          "kinds" : 
+          [
+            {
+              "call_info" : "Declaration",
+              "field_callee" : "Lcom/facebook/marianatrench/integrationtests/TaintedFieldClass;.field:Ljava/lang/Object;",
+              "field_origins" : 
+              [
+                "Lcom/facebook/marianatrench/integrationtests/TaintedFieldClass;.field:Ljava/lang/Object;"
+              ],
+              "kind" : "Sink"
+            }
+          ]
+        }
+      ],
+      "sources" : 
+      [
+        {
+          "kinds" : 
+          [
+            {
+              "call_info" : "Origin",
+              "kind" : "Source",
+              "local_positions" : 
+              [
+                {
+                  "end" : 27,
+                  "line" : 17,
+                  "start" : 12
+                }
+              ],
+              "origins" : 
+              [
+                "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;"
+              ]
+            }
+          ],
+          "origin" : 
+          {
+            "position" : 
+            {
+              "end" : 24,
+              "line" : 17,
+              "path" : "ChildClass.java",
+              "start" : 19
+            }
+          }
+        }
+      ]
+    }
+  ],
+  "method" : "Lcom/facebook/marianatrench/integrationtests/ChildClass;.flow:()V",
+  "position" : 
+  {
+    "line" : 16,
+    "path" : "ChildClass.java"
+  }
+}
+{
   "method" : "Lcom/facebook/marianatrench/integrationtests/Flow;.<init>:()V",
   "position" : 
   {
     "line" : 9,
+    "path" : "Flow.java"
+  }
+}
+{
+  "issues" : 
+  [
+    {
+      "callee" : "Lcom/facebook/marianatrench/integrationtests/Flow;.flow_to_field:(Ljava/lang/Object;Ljava/lang/Object;)V",
+      "position" : 
+      {
+        "line" : 13,
+        "path" : "Flow.java"
+      },
+      "rule" : 1,
+      "sink_index" : "0",
+      "sinks" : 
+      [
+        {
+          "kinds" : 
+          [
+            {
+              "call_info" : "Origin",
+              "field_origins" : 
+              [
+                "Lcom/facebook/marianatrench/integrationtests/TaintedFieldClass;.field:Ljava/lang/Object;"
+              ],
+              "kind" : "Sink"
+            }
+          ],
+          "origin" : 
+          {
+            "position" : 
+            {
+              "end" : 32,
+              "line" : 13,
+              "path" : "Flow.java",
+              "start" : 18
+            }
+          }
+        }
+      ],
+      "sources" : 
+      [
+        {
+          "kinds" : 
+          [
+            {
+              "call_info" : "Origin",
+              "kind" : "Source",
+              "origins" : 
+              [
+                "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;"
+              ]
+            }
+          ],
+          "origin" : 
+          {
+            "position" : 
+            {
+              "end" : 30,
+              "line" : 13,
+              "path" : "Flow.java",
+              "start" : 25
+            }
+          }
+        }
+      ]
+    }
+  ],
+  "method" : "Lcom/facebook/marianatrench/integrationtests/Flow;.flow:()V",
+  "position" : 
+  {
+    "line" : 12,
     "path" : "Flow.java"
   }
 }
@@ -1844,10 +1181,547 @@
   }
 }
 {
+  "inline_as" : "Argument(0)",
+  "method" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sanitize:(Ljava/lang/Object;)Ljava/lang/Object;",
+  "position" : 
+  {
+    "line" : 17
+  },
+  "propagation" : 
+  [
+    {
+      "input" : "Argument(0)",
+      "output" : 
+      [
+        {
+          "kinds" : 
+          [
+            {
+              "call_info" : "Propagation",
+              "kind" : "LocalReturn",
+              "output_paths" : 
+              [
+                ""
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
+{
   "method" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
   "position" : 
   {
     "line" : 14
+  }
+}
+{
+  "generations" : 
+  [
+    {
+      "port" : "Return",
+      "taint" : 
+      [
+        {
+          "kinds" : 
+          [
+            {
+              "call_info" : "Declaration",
+              "kind" : "Source",
+              "origins" : 
+              [
+                "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;"
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "method" : "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;",
+  "position" : 
+  {
+    "line" : 11
+  }
+}
+{
+  "issues" : 
+  [
+    {
+      "callee" : "Lcom/facebook/marianatrench/integrationtests/TaintedFieldClass;.staticFinalStringField:Ljava/lang/String;",
+      "position" : 
+      {
+        "line" : 17,
+        "path" : "TaintedFieldClass.java"
+      },
+      "rule" : 1,
+      "sink_index" : "0",
+      "sinks" : 
+      [
+        {
+          "kinds" : 
+          [
+            {
+              "call_info" : "Declaration",
+              "field_callee" : "Lcom/facebook/marianatrench/integrationtests/TaintedFieldClass;.staticFinalStringField:Ljava/lang/String;",
+              "field_origins" : 
+              [
+                "Lcom/facebook/marianatrench/integrationtests/TaintedFieldClass;.staticFinalStringField:Ljava/lang/String;"
+              ],
+              "kind" : "Sink"
+            }
+          ]
+        }
+      ],
+      "sources" : 
+      [
+        {
+          "kinds" : 
+          [
+            {
+              "call_info" : "Origin",
+              "kind" : "Source",
+              "local_positions" : 
+              [
+                {
+                  "end" : 0,
+                  "line" : 17,
+                  "start" : 0
+                }
+              ],
+              "origins" : 
+              [
+                "Lcom/facebook/marianatrench/integrationtests/TaintedFieldClass;.staticSource:()Ljava/lang/String;"
+              ]
+            }
+          ],
+          "origin" : 
+          {
+            "position" : 
+            {
+              "end" : 65,
+              "line" : 17,
+              "path" : "TaintedFieldClass.java",
+              "start" : 54
+            }
+          }
+        }
+      ]
+    }
+  ],
+  "method" : "Lcom/facebook/marianatrench/integrationtests/TaintedFieldClass;.<clinit>:()V",
+  "position" : 
+  {
+    "line" : 16,
+    "path" : "TaintedFieldClass.java"
+  }
+}
+{
+  "generations" : 
+  [
+    {
+      "port" : "Argument(0).finalStringField",
+      "taint" : 
+      [
+        {
+          "kinds" : 
+          [
+            {
+              "call_info" : "Origin",
+              "kind" : "Source",
+              "local_positions" : 
+              [
+                {
+                  "end" : 49,
+                  "line" : 16,
+                  "start" : 41
+                }
+              ],
+              "origins" : 
+              [
+                "Lcom/facebook/marianatrench/integrationtests/TaintedFieldClass;.source:()Ljava/lang/String;"
+              ]
+            }
+          ],
+          "origin" : 
+          {
+            "position" : 
+            {
+              "end" : 46,
+              "line" : 16,
+              "path" : "TaintedFieldClass.java",
+              "start" : 41
+            }
+          }
+        }
+      ]
+    }
+  ],
+  "issues" : 
+  [
+    {
+      "callee" : "Lcom/facebook/marianatrench/integrationtests/TaintedFieldClass;.finalStringField:Ljava/lang/String;",
+      "position" : 
+      {
+        "line" : 16,
+        "path" : "TaintedFieldClass.java"
+      },
+      "rule" : 1,
+      "sink_index" : "0",
+      "sinks" : 
+      [
+        {
+          "kinds" : 
+          [
+            {
+              "call_info" : "Declaration",
+              "field_callee" : "Lcom/facebook/marianatrench/integrationtests/TaintedFieldClass;.finalStringField:Ljava/lang/String;",
+              "field_origins" : 
+              [
+                "Lcom/facebook/marianatrench/integrationtests/TaintedFieldClass;.finalStringField:Ljava/lang/String;"
+              ],
+              "kind" : "Sink"
+            }
+          ]
+        }
+      ],
+      "sources" : 
+      [
+        {
+          "kinds" : 
+          [
+            {
+              "call_info" : "Origin",
+              "kind" : "Source",
+              "local_positions" : 
+              [
+                {
+                  "end" : 49,
+                  "line" : 16,
+                  "start" : 41
+                }
+              ],
+              "origins" : 
+              [
+                "Lcom/facebook/marianatrench/integrationtests/TaintedFieldClass;.source:()Ljava/lang/String;"
+              ]
+            }
+          ],
+          "origin" : 
+          {
+            "position" : 
+            {
+              "end" : 46,
+              "line" : 16,
+              "path" : "TaintedFieldClass.java",
+              "start" : 41
+            }
+          }
+        }
+      ]
+    }
+  ],
+  "method" : "Lcom/facebook/marianatrench/integrationtests/TaintedFieldClass;.<init>:()V",
+  "position" : 
+  {
+    "line" : 9,
+    "path" : "TaintedFieldClass.java"
+  }
+}
+{
+  "generations" : 
+  [
+    {
+      "port" : "Argument(0).field",
+      "taint" : 
+      [
+        {
+          "kinds" : 
+          [
+            {
+              "call_info" : "Origin",
+              "kind" : "Source",
+              "local_positions" : 
+              [
+                {
+                  "end" : 27,
+                  "line" : 20,
+                  "start" : 12
+                }
+              ],
+              "origins" : 
+              [
+                "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;"
+              ]
+            }
+          ],
+          "origin" : 
+          {
+            "position" : 
+            {
+              "end" : 24,
+              "line" : 20,
+              "path" : "TaintedFieldClass.java",
+              "start" : 19
+            }
+          }
+        }
+      ]
+    }
+  ],
+  "issues" : 
+  [
+    {
+      "callee" : "Lcom/facebook/marianatrench/integrationtests/TaintedFieldClass;.field:Ljava/lang/Object;",
+      "position" : 
+      {
+        "line" : 20,
+        "path" : "TaintedFieldClass.java"
+      },
+      "rule" : 1,
+      "sink_index" : "0",
+      "sinks" : 
+      [
+        {
+          "kinds" : 
+          [
+            {
+              "call_info" : "Declaration",
+              "field_callee" : "Lcom/facebook/marianatrench/integrationtests/TaintedFieldClass;.field:Ljava/lang/Object;",
+              "field_origins" : 
+              [
+                "Lcom/facebook/marianatrench/integrationtests/TaintedFieldClass;.field:Ljava/lang/Object;"
+              ],
+              "kind" : "Sink"
+            }
+          ]
+        }
+      ],
+      "sources" : 
+      [
+        {
+          "kinds" : 
+          [
+            {
+              "call_info" : "Origin",
+              "kind" : "Source",
+              "local_positions" : 
+              [
+                {
+                  "end" : 27,
+                  "line" : 20,
+                  "start" : 12
+                }
+              ],
+              "origins" : 
+              [
+                "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;"
+              ]
+            }
+          ],
+          "origin" : 
+          {
+            "position" : 
+            {
+              "end" : 24,
+              "line" : 20,
+              "path" : "TaintedFieldClass.java",
+              "start" : 19
+            }
+          }
+        }
+      ]
+    },
+    {
+      "callee" : "Lcom/facebook/marianatrench/integrationtests/TaintedFieldClass;.staticField:Ljava/lang/Object;",
+      "position" : 
+      {
+        "line" : 21,
+        "path" : "TaintedFieldClass.java"
+      },
+      "rule" : 1,
+      "sink_index" : "0",
+      "sinks" : 
+      [
+        {
+          "kinds" : 
+          [
+            {
+              "call_info" : "Declaration",
+              "field_callee" : "Lcom/facebook/marianatrench/integrationtests/TaintedFieldClass;.staticField:Ljava/lang/Object;",
+              "field_origins" : 
+              [
+                "Lcom/facebook/marianatrench/integrationtests/TaintedFieldClass;.staticField:Ljava/lang/Object;"
+              ],
+              "kind" : "Sink"
+            }
+          ]
+        }
+      ],
+      "sources" : 
+      [
+        {
+          "kinds" : 
+          [
+            {
+              "call_info" : "Origin",
+              "kind" : "Source",
+              "local_positions" : 
+              [
+                {
+                  "end" : 0,
+                  "line" : 21,
+                  "start" : 0
+                }
+              ],
+              "origins" : 
+              [
+                "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;"
+              ]
+            }
+          ],
+          "origin" : 
+          {
+            "position" : 
+            {
+              "end" : 30,
+              "line" : 21,
+              "path" : "TaintedFieldClass.java",
+              "start" : 25
+            }
+          }
+        }
+      ]
+    },
+    {
+      "callee" : "Lcom/facebook/marianatrench/integrationtests/TaintedFieldClass;.staticStringField:Ljava/lang/String;",
+      "position" : 
+      {
+        "line" : 23,
+        "path" : "TaintedFieldClass.java"
+      },
+      "rule" : 1,
+      "sink_index" : "0",
+      "sinks" : 
+      [
+        {
+          "kinds" : 
+          [
+            {
+              "call_info" : "Declaration",
+              "field_callee" : "Lcom/facebook/marianatrench/integrationtests/TaintedFieldClass;.staticStringField:Ljava/lang/String;",
+              "field_origins" : 
+              [
+                "Lcom/facebook/marianatrench/integrationtests/TaintedFieldClass;.staticStringField:Ljava/lang/String;"
+              ],
+              "kind" : "Sink"
+            }
+          ]
+        }
+      ],
+      "sources" : 
+      [
+        {
+          "kinds" : 
+          [
+            {
+              "call_info" : "Origin",
+              "kind" : "Source",
+              "local_positions" : 
+              [
+                {
+                  "end" : 0,
+                  "line" : 23,
+                  "start" : 0
+                }
+              ],
+              "origins" : 
+              [
+                "Lcom/facebook/marianatrench/integrationtests/TaintedFieldClass;.source:()Ljava/lang/String;"
+              ]
+            }
+          ],
+          "origin" : 
+          {
+            "position" : 
+            {
+              "end" : 29,
+              "line" : 23,
+              "path" : "TaintedFieldClass.java",
+              "start" : 24
+            }
+          }
+        }
+      ]
+    }
+  ],
+  "method" : "Lcom/facebook/marianatrench/integrationtests/TaintedFieldClass;.flow:()V",
+  "position" : 
+  {
+    "line" : 19,
+    "path" : "TaintedFieldClass.java"
+  }
+}
+{
+  "generations" : 
+  [
+    {
+      "port" : "Return",
+      "taint" : 
+      [
+        {
+          "kinds" : 
+          [
+            {
+              "call_info" : "Declaration",
+              "kind" : "Source",
+              "origins" : 
+              [
+                "Lcom/facebook/marianatrench/integrationtests/TaintedFieldClass;.source:()Ljava/lang/String;"
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "method" : "Lcom/facebook/marianatrench/integrationtests/TaintedFieldClass;.source:()Ljava/lang/String;",
+  "position" : 
+  {
+    "line" : 26,
+    "path" : "TaintedFieldClass.java"
+  }
+}
+{
+  "generations" : 
+  [
+    {
+      "port" : "Return",
+      "taint" : 
+      [
+        {
+          "kinds" : 
+          [
+            {
+              "call_info" : "Declaration",
+              "kind" : "Source",
+              "origins" : 
+              [
+                "Lcom/facebook/marianatrench/integrationtests/TaintedFieldClass;.staticSource:()Ljava/lang/String;"
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "method" : "Lcom/facebook/marianatrench/integrationtests/TaintedFieldClass;.staticSource:()Ljava/lang/String;",
+  "position" : 
+  {
+    "line" : 30,
+    "path" : "TaintedFieldClass.java"
   }
 }
 {
@@ -1933,6 +1807,36 @@
   {
     "line" : 9
   }
+}
+{
+  "inline_as" : "Argument(0)",
+  "method" : "Lcom/instagram/common/analytics/intf/AnalyticsEvent;.addExtra:(Ljava/lang/String;Ljava/lang/String;)Lcom/instagram/common/analytics/intf/AnalyticsEvent;",
+  "position" : 
+  {
+    "line" : 16
+  },
+  "propagation" : 
+  [
+    {
+      "input" : "Argument(0)",
+      "output" : 
+      [
+        {
+          "kinds" : 
+          [
+            {
+              "call_info" : "Propagation",
+              "kind" : "LocalReturn",
+              "output_paths" : 
+              [
+                ""
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
 }
 {
   "method" : "Lcom/instagram/common/analytics/intf/AnalyticsEvent;.obtain:(Ljava/lang/String;)Lcom/instagram/common/analytics/intf/AnalyticsEvent;",
@@ -2190,4 +2094,100 @@
   {
     "line" : 14
   }
+}
+{
+  "field" : "Lcom/facebook/marianatrench/integrationtests/TaintedFieldClass;.field:Ljava/lang/Object;",
+  "position" : {},
+  "sinks" : 
+  [
+    {
+      "call_info" : "Declaration",
+      "field_callee" : "Lcom/facebook/marianatrench/integrationtests/TaintedFieldClass;.field:Ljava/lang/Object;",
+      "field_origins" : 
+      [
+        "Lcom/facebook/marianatrench/integrationtests/TaintedFieldClass;.field:Ljava/lang/Object;"
+      ],
+      "kind" : "Sink"
+    }
+  ]
+}
+{
+  "field" : "Lcom/facebook/marianatrench/integrationtests/TaintedFieldClass;.finalStringField:Ljava/lang/String;",
+  "position" : {},
+  "sinks" : 
+  [
+    {
+      "call_info" : "Declaration",
+      "field_callee" : "Lcom/facebook/marianatrench/integrationtests/TaintedFieldClass;.finalStringField:Ljava/lang/String;",
+      "field_origins" : 
+      [
+        "Lcom/facebook/marianatrench/integrationtests/TaintedFieldClass;.finalStringField:Ljava/lang/String;"
+      ],
+      "kind" : "Sink"
+    }
+  ]
+}
+{
+  "field" : "Lcom/facebook/marianatrench/integrationtests/TaintedFieldClass;.shadowedField:Ljava/lang/Object;",
+  "position" : {},
+  "sinks" : 
+  [
+    {
+      "call_info" : "Declaration",
+      "field_callee" : "Lcom/facebook/marianatrench/integrationtests/TaintedFieldClass;.shadowedField:Ljava/lang/Object;",
+      "field_origins" : 
+      [
+        "Lcom/facebook/marianatrench/integrationtests/TaintedFieldClass;.shadowedField:Ljava/lang/Object;"
+      ],
+      "kind" : "Sink"
+    }
+  ]
+}
+{
+  "field" : "Lcom/facebook/marianatrench/integrationtests/TaintedFieldClass;.staticField:Ljava/lang/Object;",
+  "position" : {},
+  "sinks" : 
+  [
+    {
+      "call_info" : "Declaration",
+      "field_callee" : "Lcom/facebook/marianatrench/integrationtests/TaintedFieldClass;.staticField:Ljava/lang/Object;",
+      "field_origins" : 
+      [
+        "Lcom/facebook/marianatrench/integrationtests/TaintedFieldClass;.staticField:Ljava/lang/Object;"
+      ],
+      "kind" : "Sink"
+    }
+  ]
+}
+{
+  "field" : "Lcom/facebook/marianatrench/integrationtests/TaintedFieldClass;.staticFinalStringField:Ljava/lang/String;",
+  "position" : {},
+  "sinks" : 
+  [
+    {
+      "call_info" : "Declaration",
+      "field_callee" : "Lcom/facebook/marianatrench/integrationtests/TaintedFieldClass;.staticFinalStringField:Ljava/lang/String;",
+      "field_origins" : 
+      [
+        "Lcom/facebook/marianatrench/integrationtests/TaintedFieldClass;.staticFinalStringField:Ljava/lang/String;"
+      ],
+      "kind" : "Sink"
+    }
+  ]
+}
+{
+  "field" : "Lcom/facebook/marianatrench/integrationtests/TaintedFieldClass;.staticStringField:Ljava/lang/String;",
+  "position" : {},
+  "sinks" : 
+  [
+    {
+      "call_info" : "Declaration",
+      "field_callee" : "Lcom/facebook/marianatrench/integrationtests/TaintedFieldClass;.staticStringField:Ljava/lang/String;",
+      "field_origins" : 
+      [
+        "Lcom/facebook/marianatrench/integrationtests/TaintedFieldClass;.staticStringField:Ljava/lang/String;"
+      ],
+      "kind" : "Sink"
+    }
+  ]
 }

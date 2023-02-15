@@ -1,922 +1,5 @@
 // @generated
 {
-  "generations" : 
-  [
-    {
-      "port" : "Argument(0).mField",
-      "taint" : 
-      [
-        {
-          "call" : 
-          {
-            "port" : "Argument(0).mField",
-            "position" : 
-            {
-              "end" : 34,
-              "line" : 35,
-              "path" : "PortSanitizers.java",
-              "start" : 16
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/PortSanitizers;.sanitizedSourcePort:()Ljava/lang/Object;"
-          },
-          "kinds" : 
-          [
-            {
-              "call_info" : "CallSite",
-              "distance" : 1,
-              "kind" : "Source",
-              "origins" : 
-              [
-                "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;"
-              ]
-            }
-          ]
-        }
-      ]
-    }
-  ],
-  "issues" : 
-  [
-    {
-      "callee" : "Lcom/facebook/marianatrench/integrationtests/PortSanitizers;.sanitizedSinkPortAndKind:(Ljava/lang/Object;Ljava/lang/Object;)V",
-      "position" : 
-      {
-        "line" : 33,
-        "path" : "PortSanitizers.java"
-      },
-      "rule" : 1,
-      "sink_index" : "0",
-      "sinks" : 
-      [
-        {
-          "call" : 
-          {
-            "port" : "Argument(1)",
-            "position" : 
-            {
-              "end" : 43,
-              "line" : 33,
-              "path" : "PortSanitizers.java",
-              "start" : 29
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/PortSanitizers;.sanitizedSinkPortAndKind:(Ljava/lang/Object;Ljava/lang/Object;)V"
-          },
-          "kinds" : 
-          [
-            {
-              "call_info" : "CallSite",
-              "distance" : 1,
-              "kind" : "Sink",
-              "origins" : 
-              [
-                "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V"
-              ]
-            }
-          ]
-        }
-      ],
-      "sources" : 
-      [
-        {
-          "kinds" : 
-          [
-            {
-              "call_info" : "Origin",
-              "kind" : "Source",
-              "origins" : 
-              [
-                "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;"
-              ]
-            }
-          ],
-          "origin" : 
-          {
-            "position" : 
-            {
-              "end" : 41,
-              "line" : 33,
-              "path" : "PortSanitizers.java",
-              "start" : 36
-            }
-          }
-        }
-      ]
-    },
-    {
-      "callee" : "Lcom/facebook/marianatrench/integrationtests/PortSanitizers;.sanitizedSinkPortAndKind:(Ljava/lang/Object;Ljava/lang/Object;)V",
-      "position" : 
-      {
-        "line" : 33,
-        "path" : "PortSanitizers.java"
-      },
-      "rule" : 2,
-      "sink_index" : "0",
-      "sinks" : 
-      [
-        {
-          "call" : 
-          {
-            "port" : "Argument(2)",
-            "position" : 
-            {
-              "end" : 60,
-              "line" : 33,
-              "path" : "PortSanitizers.java",
-              "start" : 46
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/PortSanitizers;.sanitizedSinkPortAndKind:(Ljava/lang/Object;Ljava/lang/Object;)V"
-          },
-          "kinds" : 
-          [
-            {
-              "call_info" : "CallSite",
-              "distance" : 1,
-              "kind" : "SinkB",
-              "origins" : 
-              [
-                "Lcom/facebook/marianatrench/integrationtests/GlobalSanitizers;.toSinkB:(Ljava/lang/Object;)V"
-              ]
-            }
-          ]
-        }
-      ],
-      "sources" : 
-      [
-        {
-          "kinds" : 
-          [
-            {
-              "call_info" : "Origin",
-              "kind" : "Source",
-              "origins" : 
-              [
-                "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;"
-              ]
-            }
-          ],
-          "origin" : 
-          {
-            "position" : 
-            {
-              "end" : 41,
-              "line" : 33,
-              "path" : "PortSanitizers.java",
-              "start" : 36
-            }
-          }
-        }
-      ]
-    },
-    {
-      "always_features" : 
-      [
-        "via-issue-broadening"
-      ],
-      "callee" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
-      "position" : 
-      {
-        "line" : 36,
-        "path" : "PortSanitizers.java"
-      },
-      "rule" : 1,
-      "sink_index" : "1",
-      "sinks" : 
-      [
-        {
-          "kinds" : 
-          [
-            {
-              "call_info" : "Origin",
-              "kind" : "Sink",
-              "origins" : 
-              [
-                "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V"
-              ]
-            }
-          ],
-          "origin" : 
-          {
-            "position" : 
-            {
-              "end" : 19,
-              "line" : 36,
-              "path" : "PortSanitizers.java",
-              "start" : 16
-            }
-          }
-        }
-      ],
-      "sources" : 
-      [
-        {
-          "call" : 
-          {
-            "port" : "Argument(0).mField",
-            "position" : 
-            {
-              "end" : 34,
-              "line" : 35,
-              "path" : "PortSanitizers.java",
-              "start" : 16
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/PortSanitizers;.sanitizedSourcePort:()Ljava/lang/Object;"
-          },
-          "kinds" : 
-          [
-            {
-              "always_features" : 
-              [
-                "via-issue-broadening"
-              ],
-              "call_info" : "CallSite",
-              "distance" : 1,
-              "kind" : "Source",
-              "local_features" : 
-              {
-                "always_features" : 
-                [
-                  "via-issue-broadening"
-                ]
-              },
-              "origins" : 
-              [
-                "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;"
-              ]
-            }
-          ]
-        }
-      ]
-    }
-  ],
-  "method" : "Lcom/facebook/marianatrench/integrationtests/PortSanitizers;.sanitizedFlows:()V",
-  "position" : 
-  {
-    "line" : 32,
-    "path" : "PortSanitizers.java"
-  },
-  "sinks" : 
-  [
-    {
-      "port" : "Argument(0)",
-      "taint" : 
-      [
-        {
-          "kinds" : 
-          [
-            {
-              "call_info" : "Origin",
-              "kind" : "Sink",
-              "origins" : 
-              [
-                "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V"
-              ]
-            }
-          ],
-          "origin" : 
-          {
-            "position" : 
-            {
-              "end" : 19,
-              "line" : 36,
-              "path" : "PortSanitizers.java",
-              "start" : 16
-            }
-          }
-        }
-      ]
-    }
-  ]
-}
-{
-  "generations" : 
-  [
-    {
-      "port" : "Argument(0).mField",
-      "taint" : 
-      [
-        {
-          "kinds" : 
-          [
-            {
-              "call_info" : "Origin",
-              "kind" : "Source",
-              "local_positions" : 
-              [
-                {
-                  "end" : 28,
-                  "line" : 21,
-                  "start" : 13
-                }
-              ],
-              "origins" : 
-              [
-                "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;"
-              ]
-            }
-          ],
-          "origin" : 
-          {
-            "position" : 
-            {
-              "end" : 25,
-              "line" : 21,
-              "path" : "PortSanitizers.java",
-              "start" : 20
-            }
-          }
-        }
-      ]
-    }
-  ],
-  "method" : "Lcom/facebook/marianatrench/integrationtests/PortSanitizers;.sanitizedSourcePort:()Ljava/lang/Object;",
-  "position" : 
-  {
-    "line" : 20,
-    "path" : "PortSanitizers.java"
-  },
-  "sanitizers" : 
-  [
-    {
-      "port" : "Return",
-      "sanitize" : "sources"
-    }
-  ]
-}
-{
-  "generations" : 
-  [
-    {
-      "port" : "Return",
-      "taint" : 
-      [
-        {
-          "kinds" : 
-          [
-            {
-              "always_features" : 
-              [
-                "via-array"
-              ],
-              "call_info" : "Origin",
-              "kind" : "SourceB",
-              "local_features" : 
-              {
-                "always_features" : 
-                [
-                  "via-array"
-                ]
-              },
-              "local_positions" : 
-              [
-                {
-                  "end" : 0,
-                  "line" : 41,
-                  "start" : 0
-                }
-              ],
-              "origins" : 
-              [
-                "Lcom/facebook/marianatrench/integrationtests/GlobalSanitizers;.getSourceB:()Ljava/lang/Object;"
-              ]
-            }
-          ],
-          "origin" : 
-          {
-            "position" : 
-            {
-              "end" : 24,
-              "line" : 41,
-              "path" : "GlobalSanitizers.java",
-              "start" : 15
-            }
-          }
-        }
-      ]
-    }
-  ],
-  "method" : "Lcom/facebook/marianatrench/integrationtests/GlobalSanitizers;.getSanitizedKindSource:()[Ljava/lang/Object;",
-  "position" : 
-  {
-    "line" : 39,
-    "path" : "GlobalSanitizers.java"
-  },
-  "sanitizers" : 
-  [
-    {
-      "kinds" : 
-      [
-        {
-          "kind" : "Source"
-        }
-      ],
-      "sanitize" : "sources"
-    }
-  ]
-}
-{
-  "generations" : 
-  [
-    {
-      "port" : "Return",
-      "taint" : 
-      [
-        {
-          "kinds" : 
-          [
-            {
-              "call_info" : "Declaration",
-              "kind" : "Source",
-              "origins" : 
-              [
-                "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;"
-              ]
-            }
-          ]
-        }
-      ]
-    }
-  ],
-  "method" : "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;",
-  "position" : 
-  {
-    "line" : 11
-  }
-}
-{
-  "generations" : 
-  [
-    {
-      "port" : "Return",
-      "taint" : 
-      [
-        {
-          "kinds" : 
-          [
-            {
-              "call_info" : "Declaration",
-              "kind" : "SourceB",
-              "origins" : 
-              [
-                "Lcom/facebook/marianatrench/integrationtests/GlobalSanitizers;.getSourceB:()Ljava/lang/Object;"
-              ]
-            }
-          ]
-        }
-      ]
-    }
-  ],
-  "method" : "Lcom/facebook/marianatrench/integrationtests/GlobalSanitizers;.getSourceB:()Ljava/lang/Object;",
-  "position" : 
-  {
-    "line" : 16,
-    "path" : "GlobalSanitizers.java"
-  }
-}
-{
-  "generations" : 
-  [
-    {
-      "port" : "Return",
-      "taint" : 
-      [
-        {
-          "kinds" : 
-          [
-            {
-              "call_info" : "Origin",
-              "kind" : "Source",
-              "origins" : 
-              [
-                "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;"
-              ]
-            }
-          ],
-          "origin" : 
-          {
-            "position" : 
-            {
-              "end" : 23,
-              "line" : 13,
-              "path" : "GlobalSanitizers.java",
-              "start" : 18
-            }
-          }
-        }
-      ]
-    }
-  ],
-  "method" : "Lcom/facebook/marianatrench/integrationtests/GlobalSanitizers;.getSource:()Ljava/lang/Object;",
-  "position" : 
-  {
-    "line" : 12,
-    "path" : "GlobalSanitizers.java"
-  }
-}
-{
-  "inline_as" : "Argument(0)",
-  "method" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sanitize:(Ljava/lang/Object;)Ljava/lang/Object;",
-  "position" : 
-  {
-    "line" : 17
-  },
-  "propagation" : 
-  [
-    {
-      "input" : "Argument(0)",
-      "output" : 
-      [
-        {
-          "kinds" : 
-          [
-            {
-              "call_info" : "Propagation",
-              "kind" : "LocalReturn",
-              "output_paths" : 
-              [
-                ""
-              ]
-            }
-          ]
-        }
-      ]
-    }
-  ]
-}
-{
-  "inline_as" : "Argument(0)",
-  "method" : "Lcom/instagram/common/analytics/intf/AnalyticsEvent;.addExtra:(Ljava/lang/String;Ljava/lang/String;)Lcom/instagram/common/analytics/intf/AnalyticsEvent;",
-  "position" : 
-  {
-    "line" : 16
-  },
-  "propagation" : 
-  [
-    {
-      "input" : "Argument(0)",
-      "output" : 
-      [
-        {
-          "kinds" : 
-          [
-            {
-              "call_info" : "Propagation",
-              "kind" : "LocalReturn",
-              "output_paths" : 
-              [
-                ""
-              ]
-            }
-          ]
-        }
-      ]
-    }
-  ]
-}
-{
-  "inline_as" : "Argument(0).host",
-  "method" : "Landroid/net/Uri;.getHost:()Ljava/lang/String;",
-  "position" : 
-  {
-    "line" : 35
-  },
-  "propagation" : 
-  [
-    {
-      "input" : "Argument(0).host",
-      "output" : 
-      [
-        {
-          "kinds" : 
-          [
-            {
-              "call_info" : "Propagation",
-              "kind" : "LocalReturn",
-              "output_paths" : 
-              [
-                ""
-              ]
-            }
-          ]
-        }
-      ]
-    }
-  ]
-}
-{
-  "inline_as" : "Argument(0).scheme",
-  "method" : "Landroid/net/Uri;.getScheme:()Ljava/lang/String;",
-  "position" : 
-  {
-    "line" : 31
-  },
-  "propagation" : 
-  [
-    {
-      "input" : "Argument(0).scheme",
-      "output" : 
-      [
-        {
-          "kinds" : 
-          [
-            {
-              "call_info" : "Propagation",
-              "kind" : "LocalReturn",
-              "output_paths" : 
-              [
-                ""
-              ]
-            }
-          ]
-        }
-      ]
-    }
-  ]
-}
-{
-  "issues" : 
-  [
-    {
-      "callee" : "Lcom/facebook/marianatrench/integrationtests/GlobalSanitizers;.toSanitizedKindSink:(Ljava/lang/Object;)V",
-      "position" : 
-      {
-        "line" : 61,
-        "path" : "GlobalSanitizers.java"
-      },
-      "rule" : 1,
-      "sink_index" : "0",
-      "sinks" : 
-      [
-        {
-          "call" : 
-          {
-            "port" : "Argument(1)",
-            "position" : 
-            {
-              "end" : 34,
-              "line" : 61,
-              "path" : "GlobalSanitizers.java",
-              "start" : 24
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/GlobalSanitizers;.toSanitizedKindSink:(Ljava/lang/Object;)V"
-          },
-          "kinds" : 
-          [
-            {
-              "call_info" : "CallSite",
-              "distance" : 2,
-              "kind" : "Sink",
-              "origins" : 
-              [
-                "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V"
-              ]
-            }
-          ]
-        }
-      ],
-      "sources" : 
-      [
-        {
-          "call" : 
-          {
-            "port" : "Return",
-            "position" : 
-            {
-              "end" : 32,
-              "line" : 61,
-              "path" : "GlobalSanitizers.java",
-              "start" : 24
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/GlobalSanitizers;.getSource:()Ljava/lang/Object;"
-          },
-          "kinds" : 
-          [
-            {
-              "call_info" : "CallSite",
-              "distance" : 1,
-              "kind" : "Source",
-              "origins" : 
-              [
-                "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;"
-              ]
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "always_features" : 
-      [
-        "via-array"
-      ],
-      "callee" : "Lcom/facebook/marianatrench/integrationtests/GlobalSanitizers;.toArraySink:([Ljava/lang/Object;)V",
-      "position" : 
-      {
-        "line" : 62,
-        "path" : "GlobalSanitizers.java"
-      },
-      "rule" : 3,
-      "sink_index" : "0",
-      "sinks" : 
-      [
-        {
-          "call" : 
-          {
-            "port" : "Argument(1)",
-            "position" : 
-            {
-              "end" : 39,
-              "line" : 62,
-              "path" : "GlobalSanitizers.java",
-              "start" : 16
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/GlobalSanitizers;.toArraySink:([Ljava/lang/Object;)V"
-          },
-          "kinds" : 
-          [
-            {
-              "call_info" : "CallSite",
-              "distance" : 2,
-              "kind" : "Sink",
-              "origins" : 
-              [
-                "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V"
-              ]
-            }
-          ]
-        }
-      ],
-      "sources" : 
-      [
-        {
-          "call" : 
-          {
-            "port" : "Return",
-            "position" : 
-            {
-              "end" : 37,
-              "line" : 62,
-              "path" : "GlobalSanitizers.java",
-              "start" : 16
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/GlobalSanitizers;.getSanitizedKindSource:()[Ljava/lang/Object;"
-          },
-          "kinds" : 
-          [
-            {
-              "always_features" : 
-              [
-                "via-array"
-              ],
-              "call_info" : "CallSite",
-              "distance" : 1,
-              "kind" : "SourceB",
-              "origins" : 
-              [
-                "Lcom/facebook/marianatrench/integrationtests/GlobalSanitizers;.getSourceB:()Ljava/lang/Object;"
-              ]
-            }
-          ]
-        }
-      ]
-    }
-  ],
-  "method" : "Lcom/facebook/marianatrench/integrationtests/GlobalSanitizers;.sanitizedFlows:()V",
-  "position" : 
-  {
-    "line" : 56,
-    "path" : "GlobalSanitizers.java"
-  }
-}
-{
-  "issues" : 
-  [
-    {
-      "callee" : "Lcom/facebook/marianatrench/integrationtests/GlobalSanitizers;.toSink:(Ljava/lang/Object;)V",
-      "position" : 
-      {
-        "line" : 73,
-        "path" : "GlobalSanitizers.java"
-      },
-      "rule" : 1,
-      "sink_index" : "1",
-      "sinks" : 
-      [
-        {
-          "call" : 
-          {
-            "port" : "Argument(1)",
-            "position" : 
-            {
-              "end" : 21,
-              "line" : 73,
-              "path" : "GlobalSanitizers.java",
-              "start" : 11
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/GlobalSanitizers;.toSink:(Ljava/lang/Object;)V"
-          },
-          "kinds" : 
-          [
-            {
-              "call_info" : "CallSite",
-              "distance" : 1,
-              "kind" : "Sink",
-              "origins" : 
-              [
-                "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V"
-              ]
-            }
-          ]
-        }
-      ],
-      "sources" : 
-      [
-        {
-          "call" : 
-          {
-            "port" : "Return",
-            "position" : 
-            {
-              "end" : 19,
-              "line" : 73,
-              "path" : "GlobalSanitizers.java",
-              "start" : 11
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/GlobalSanitizers;.getSource:()Ljava/lang/Object;"
-          },
-          "kinds" : 
-          [
-            {
-              "call_info" : "CallSite",
-              "distance" : 1,
-              "kind" : "Source",
-              "origins" : 
-              [
-                "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;"
-              ]
-            }
-          ]
-        }
-      ]
-    }
-  ],
-  "method" : "Lcom/facebook/marianatrench/integrationtests/GlobalSanitizers;.sanitizedSinkWithReturn:(Ljava/lang/Object;)Ljava/lang/Object;",
-  "position" : 
-  {
-    "line" : 70,
-    "path" : "GlobalSanitizers.java"
-  },
-  "propagation" : 
-  [
-    {
-      "input" : "Argument(1)",
-      "output" : 
-      [
-        {
-          "kinds" : 
-          [
-            {
-              "call_info" : "Propagation",
-              "kind" : "LocalReturn",
-              "output_paths" : 
-              [
-                ""
-              ]
-            }
-          ]
-        }
-      ]
-    }
-  ],
-  "sanitizers" : 
-  [
-    {
-      "sanitize" : "sinks"
-    }
-  ],
-  "sinks" : 
-  [
-    {
-      "port" : "Return",
-      "taint" : 
-      [
-        {
-          "kinds" : 
-          [
-            {
-              "call_info" : "Declaration",
-              "kind" : "Sink",
-              "origins" : 
-              [
-                "Lcom/facebook/marianatrench/integrationtests/GlobalSanitizers;.sanitizedSinkWithReturn:(Ljava/lang/Object;)Ljava/lang/Object;"
-              ]
-            }
-          ]
-        }
-      ]
-    }
-  ]
-}
-{
   "method" : "Landroid/app/Activity;.<init>:()V",
   "position" : 
   {
@@ -1481,11 +564,71 @@
   }
 }
 {
+  "inline_as" : "Argument(0).host",
+  "method" : "Landroid/net/Uri;.getHost:()Ljava/lang/String;",
+  "position" : 
+  {
+    "line" : 35
+  },
+  "propagation" : 
+  [
+    {
+      "input" : "Argument(0).host",
+      "output" : 
+      [
+        {
+          "kinds" : 
+          [
+            {
+              "call_info" : "Propagation",
+              "kind" : "LocalReturn",
+              "output_paths" : 
+              [
+                ""
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
+{
   "method" : "Landroid/net/Uri;.getQueryParameter:(Ljava/lang/String;)Ljava/lang/String;",
   "position" : 
   {
     "line" : 39
   }
+}
+{
+  "inline_as" : "Argument(0).scheme",
+  "method" : "Landroid/net/Uri;.getScheme:()Ljava/lang/String;",
+  "position" : 
+  {
+    "line" : 31
+  },
+  "propagation" : 
+  [
+    {
+      "input" : "Argument(0).scheme",
+      "output" : 
+      [
+        {
+          "kinds" : 
+          [
+            {
+              "call_info" : "Propagation",
+              "kind" : "LocalReturn",
+              "output_paths" : 
+              [
+                ""
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
 }
 {
   "method" : "Landroid/net/Uri;.parse:(Ljava/lang/String;)Landroid/net/Uri;",
@@ -1731,6 +874,77 @@
   }
 }
 {
+  "generations" : 
+  [
+    {
+      "port" : "Return",
+      "taint" : 
+      [
+        {
+          "kinds" : 
+          [
+            {
+              "always_features" : 
+              [
+                "via-array"
+              ],
+              "call_info" : "Origin",
+              "kind" : "SourceB",
+              "local_features" : 
+              {
+                "always_features" : 
+                [
+                  "via-array"
+                ]
+              },
+              "local_positions" : 
+              [
+                {
+                  "end" : 0,
+                  "line" : 41,
+                  "start" : 0
+                }
+              ],
+              "origins" : 
+              [
+                "Lcom/facebook/marianatrench/integrationtests/GlobalSanitizers;.getSourceB:()Ljava/lang/Object;"
+              ]
+            }
+          ],
+          "origin" : 
+          {
+            "position" : 
+            {
+              "end" : 24,
+              "line" : 41,
+              "path" : "GlobalSanitizers.java",
+              "start" : 15
+            }
+          }
+        }
+      ]
+    }
+  ],
+  "method" : "Lcom/facebook/marianatrench/integrationtests/GlobalSanitizers;.getSanitizedKindSource:()[Ljava/lang/Object;",
+  "position" : 
+  {
+    "line" : 39,
+    "path" : "GlobalSanitizers.java"
+  },
+  "sanitizers" : 
+  [
+    {
+      "kinds" : 
+      [
+        {
+          "kind" : "Source"
+        }
+      ],
+      "sanitize" : "sources"
+    }
+  ]
+}
+{
   "method" : "Lcom/facebook/marianatrench/integrationtests/GlobalSanitizers;.getSanitizedSource:()Ljava/lang/Object;",
   "position" : 
   {
@@ -1745,6 +959,231 @@
   ]
 }
 {
+  "generations" : 
+  [
+    {
+      "port" : "Return",
+      "taint" : 
+      [
+        {
+          "kinds" : 
+          [
+            {
+              "call_info" : "Origin",
+              "kind" : "Source",
+              "origins" : 
+              [
+                "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;"
+              ]
+            }
+          ],
+          "origin" : 
+          {
+            "position" : 
+            {
+              "end" : 23,
+              "line" : 13,
+              "path" : "GlobalSanitizers.java",
+              "start" : 18
+            }
+          }
+        }
+      ]
+    }
+  ],
+  "method" : "Lcom/facebook/marianatrench/integrationtests/GlobalSanitizers;.getSource:()Ljava/lang/Object;",
+  "position" : 
+  {
+    "line" : 12,
+    "path" : "GlobalSanitizers.java"
+  }
+}
+{
+  "generations" : 
+  [
+    {
+      "port" : "Return",
+      "taint" : 
+      [
+        {
+          "kinds" : 
+          [
+            {
+              "call_info" : "Declaration",
+              "kind" : "SourceB",
+              "origins" : 
+              [
+                "Lcom/facebook/marianatrench/integrationtests/GlobalSanitizers;.getSourceB:()Ljava/lang/Object;"
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "method" : "Lcom/facebook/marianatrench/integrationtests/GlobalSanitizers;.getSourceB:()Ljava/lang/Object;",
+  "position" : 
+  {
+    "line" : 16,
+    "path" : "GlobalSanitizers.java"
+  }
+}
+{
+  "issues" : 
+  [
+    {
+      "callee" : "Lcom/facebook/marianatrench/integrationtests/GlobalSanitizers;.toSanitizedKindSink:(Ljava/lang/Object;)V",
+      "position" : 
+      {
+        "line" : 61,
+        "path" : "GlobalSanitizers.java"
+      },
+      "rule" : 1,
+      "sink_index" : "0",
+      "sinks" : 
+      [
+        {
+          "call" : 
+          {
+            "port" : "Argument(1)",
+            "position" : 
+            {
+              "end" : 34,
+              "line" : 61,
+              "path" : "GlobalSanitizers.java",
+              "start" : 24
+            },
+            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/GlobalSanitizers;.toSanitizedKindSink:(Ljava/lang/Object;)V"
+          },
+          "kinds" : 
+          [
+            {
+              "call_info" : "CallSite",
+              "distance" : 2,
+              "kind" : "Sink",
+              "origins" : 
+              [
+                "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V"
+              ]
+            }
+          ]
+        }
+      ],
+      "sources" : 
+      [
+        {
+          "call" : 
+          {
+            "port" : "Return",
+            "position" : 
+            {
+              "end" : 32,
+              "line" : 61,
+              "path" : "GlobalSanitizers.java",
+              "start" : 24
+            },
+            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/GlobalSanitizers;.getSource:()Ljava/lang/Object;"
+          },
+          "kinds" : 
+          [
+            {
+              "call_info" : "CallSite",
+              "distance" : 1,
+              "kind" : "Source",
+              "origins" : 
+              [
+                "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "always_features" : 
+      [
+        "via-array"
+      ],
+      "callee" : "Lcom/facebook/marianatrench/integrationtests/GlobalSanitizers;.toArraySink:([Ljava/lang/Object;)V",
+      "position" : 
+      {
+        "line" : 62,
+        "path" : "GlobalSanitizers.java"
+      },
+      "rule" : 3,
+      "sink_index" : "0",
+      "sinks" : 
+      [
+        {
+          "call" : 
+          {
+            "port" : "Argument(1)",
+            "position" : 
+            {
+              "end" : 39,
+              "line" : 62,
+              "path" : "GlobalSanitizers.java",
+              "start" : 16
+            },
+            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/GlobalSanitizers;.toArraySink:([Ljava/lang/Object;)V"
+          },
+          "kinds" : 
+          [
+            {
+              "call_info" : "CallSite",
+              "distance" : 2,
+              "kind" : "Sink",
+              "origins" : 
+              [
+                "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V"
+              ]
+            }
+          ]
+        }
+      ],
+      "sources" : 
+      [
+        {
+          "call" : 
+          {
+            "port" : "Return",
+            "position" : 
+            {
+              "end" : 37,
+              "line" : 62,
+              "path" : "GlobalSanitizers.java",
+              "start" : 16
+            },
+            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/GlobalSanitizers;.getSanitizedKindSource:()[Ljava/lang/Object;"
+          },
+          "kinds" : 
+          [
+            {
+              "always_features" : 
+              [
+                "via-array"
+              ],
+              "call_info" : "CallSite",
+              "distance" : 1,
+              "kind" : "SourceB",
+              "origins" : 
+              [
+                "Lcom/facebook/marianatrench/integrationtests/GlobalSanitizers;.getSourceB:()Ljava/lang/Object;"
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "method" : "Lcom/facebook/marianatrench/integrationtests/GlobalSanitizers;.sanitizedFlows:()V",
+  "position" : 
+  {
+    "line" : 56,
+    "path" : "GlobalSanitizers.java"
+  }
+}
+{
   "method" : "Lcom/facebook/marianatrench/integrationtests/GlobalSanitizers;.sanitizedPropagation:(Ljava/lang/Object;)Ljava/lang/Object;",
   "position" : 
   {
@@ -1755,6 +1194,135 @@
   [
     {
       "sanitize" : "propagations"
+    }
+  ]
+}
+{
+  "issues" : 
+  [
+    {
+      "callee" : "Lcom/facebook/marianatrench/integrationtests/GlobalSanitizers;.toSink:(Ljava/lang/Object;)V",
+      "position" : 
+      {
+        "line" : 73,
+        "path" : "GlobalSanitizers.java"
+      },
+      "rule" : 1,
+      "sink_index" : "1",
+      "sinks" : 
+      [
+        {
+          "call" : 
+          {
+            "port" : "Argument(1)",
+            "position" : 
+            {
+              "end" : 21,
+              "line" : 73,
+              "path" : "GlobalSanitizers.java",
+              "start" : 11
+            },
+            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/GlobalSanitizers;.toSink:(Ljava/lang/Object;)V"
+          },
+          "kinds" : 
+          [
+            {
+              "call_info" : "CallSite",
+              "distance" : 1,
+              "kind" : "Sink",
+              "origins" : 
+              [
+                "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V"
+              ]
+            }
+          ]
+        }
+      ],
+      "sources" : 
+      [
+        {
+          "call" : 
+          {
+            "port" : "Return",
+            "position" : 
+            {
+              "end" : 19,
+              "line" : 73,
+              "path" : "GlobalSanitizers.java",
+              "start" : 11
+            },
+            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/GlobalSanitizers;.getSource:()Ljava/lang/Object;"
+          },
+          "kinds" : 
+          [
+            {
+              "call_info" : "CallSite",
+              "distance" : 1,
+              "kind" : "Source",
+              "origins" : 
+              [
+                "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;"
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "method" : "Lcom/facebook/marianatrench/integrationtests/GlobalSanitizers;.sanitizedSinkWithReturn:(Ljava/lang/Object;)Ljava/lang/Object;",
+  "position" : 
+  {
+    "line" : 70,
+    "path" : "GlobalSanitizers.java"
+  },
+  "propagation" : 
+  [
+    {
+      "input" : "Argument(1)",
+      "output" : 
+      [
+        {
+          "kinds" : 
+          [
+            {
+              "call_info" : "Propagation",
+              "kind" : "LocalReturn",
+              "output_paths" : 
+              [
+                ""
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "sanitizers" : 
+  [
+    {
+      "sanitize" : "sinks"
+    }
+  ],
+  "sinks" : 
+  [
+    {
+      "port" : "Return",
+      "taint" : 
+      [
+        {
+          "kinds" : 
+          [
+            {
+              "call_info" : "Declaration",
+              "kind" : "Sink",
+              "origins" : 
+              [
+                "Lcom/facebook/marianatrench/integrationtests/GlobalSanitizers;.sanitizedSinkWithReturn:(Ljava/lang/Object;)Ljava/lang/Object;"
+              ]
+            }
+          ]
+        }
+      ]
     }
   ]
 }
@@ -1948,6 +1516,36 @@
   }
 }
 {
+  "inline_as" : "Argument(0)",
+  "method" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sanitize:(Ljava/lang/Object;)Ljava/lang/Object;",
+  "position" : 
+  {
+    "line" : 17
+  },
+  "propagation" : 
+  [
+    {
+      "input" : "Argument(0)",
+      "output" : 
+      [
+        {
+          "kinds" : 
+          [
+            {
+              "call_info" : "Propagation",
+              "kind" : "LocalReturn",
+              "output_paths" : 
+              [
+                ""
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
+{
   "method" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
   "position" : 
   {
@@ -1977,12 +1575,329 @@
   ]
 }
 {
+  "generations" : 
+  [
+    {
+      "port" : "Return",
+      "taint" : 
+      [
+        {
+          "kinds" : 
+          [
+            {
+              "call_info" : "Declaration",
+              "kind" : "Source",
+              "origins" : 
+              [
+                "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;"
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "method" : "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;",
+  "position" : 
+  {
+    "line" : 11
+  }
+}
+{
   "method" : "Lcom/facebook/marianatrench/integrationtests/PortSanitizers;.<init>:()V",
   "position" : 
   {
     "line" : 9,
     "path" : "PortSanitizers.java"
   }
+}
+{
+  "generations" : 
+  [
+    {
+      "port" : "Argument(0).mField",
+      "taint" : 
+      [
+        {
+          "call" : 
+          {
+            "port" : "Argument(0).mField",
+            "position" : 
+            {
+              "end" : 34,
+              "line" : 35,
+              "path" : "PortSanitizers.java",
+              "start" : 16
+            },
+            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/PortSanitizers;.sanitizedSourcePort:()Ljava/lang/Object;"
+          },
+          "kinds" : 
+          [
+            {
+              "call_info" : "CallSite",
+              "distance" : 1,
+              "kind" : "Source",
+              "origins" : 
+              [
+                "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;"
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "issues" : 
+  [
+    {
+      "callee" : "Lcom/facebook/marianatrench/integrationtests/PortSanitizers;.sanitizedSinkPortAndKind:(Ljava/lang/Object;Ljava/lang/Object;)V",
+      "position" : 
+      {
+        "line" : 33,
+        "path" : "PortSanitizers.java"
+      },
+      "rule" : 1,
+      "sink_index" : "0",
+      "sinks" : 
+      [
+        {
+          "call" : 
+          {
+            "port" : "Argument(1)",
+            "position" : 
+            {
+              "end" : 43,
+              "line" : 33,
+              "path" : "PortSanitizers.java",
+              "start" : 29
+            },
+            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/PortSanitizers;.sanitizedSinkPortAndKind:(Ljava/lang/Object;Ljava/lang/Object;)V"
+          },
+          "kinds" : 
+          [
+            {
+              "call_info" : "CallSite",
+              "distance" : 1,
+              "kind" : "Sink",
+              "origins" : 
+              [
+                "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V"
+              ]
+            }
+          ]
+        }
+      ],
+      "sources" : 
+      [
+        {
+          "kinds" : 
+          [
+            {
+              "call_info" : "Origin",
+              "kind" : "Source",
+              "origins" : 
+              [
+                "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;"
+              ]
+            }
+          ],
+          "origin" : 
+          {
+            "position" : 
+            {
+              "end" : 41,
+              "line" : 33,
+              "path" : "PortSanitizers.java",
+              "start" : 36
+            }
+          }
+        }
+      ]
+    },
+    {
+      "callee" : "Lcom/facebook/marianatrench/integrationtests/PortSanitizers;.sanitizedSinkPortAndKind:(Ljava/lang/Object;Ljava/lang/Object;)V",
+      "position" : 
+      {
+        "line" : 33,
+        "path" : "PortSanitizers.java"
+      },
+      "rule" : 2,
+      "sink_index" : "0",
+      "sinks" : 
+      [
+        {
+          "call" : 
+          {
+            "port" : "Argument(2)",
+            "position" : 
+            {
+              "end" : 60,
+              "line" : 33,
+              "path" : "PortSanitizers.java",
+              "start" : 46
+            },
+            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/PortSanitizers;.sanitizedSinkPortAndKind:(Ljava/lang/Object;Ljava/lang/Object;)V"
+          },
+          "kinds" : 
+          [
+            {
+              "call_info" : "CallSite",
+              "distance" : 1,
+              "kind" : "SinkB",
+              "origins" : 
+              [
+                "Lcom/facebook/marianatrench/integrationtests/GlobalSanitizers;.toSinkB:(Ljava/lang/Object;)V"
+              ]
+            }
+          ]
+        }
+      ],
+      "sources" : 
+      [
+        {
+          "kinds" : 
+          [
+            {
+              "call_info" : "Origin",
+              "kind" : "Source",
+              "origins" : 
+              [
+                "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;"
+              ]
+            }
+          ],
+          "origin" : 
+          {
+            "position" : 
+            {
+              "end" : 41,
+              "line" : 33,
+              "path" : "PortSanitizers.java",
+              "start" : 36
+            }
+          }
+        }
+      ]
+    },
+    {
+      "always_features" : 
+      [
+        "via-issue-broadening"
+      ],
+      "callee" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
+      "position" : 
+      {
+        "line" : 36,
+        "path" : "PortSanitizers.java"
+      },
+      "rule" : 1,
+      "sink_index" : "1",
+      "sinks" : 
+      [
+        {
+          "kinds" : 
+          [
+            {
+              "call_info" : "Origin",
+              "kind" : "Sink",
+              "origins" : 
+              [
+                "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V"
+              ]
+            }
+          ],
+          "origin" : 
+          {
+            "position" : 
+            {
+              "end" : 19,
+              "line" : 36,
+              "path" : "PortSanitizers.java",
+              "start" : 16
+            }
+          }
+        }
+      ],
+      "sources" : 
+      [
+        {
+          "call" : 
+          {
+            "port" : "Argument(0).mField",
+            "position" : 
+            {
+              "end" : 34,
+              "line" : 35,
+              "path" : "PortSanitizers.java",
+              "start" : 16
+            },
+            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/PortSanitizers;.sanitizedSourcePort:()Ljava/lang/Object;"
+          },
+          "kinds" : 
+          [
+            {
+              "always_features" : 
+              [
+                "via-issue-broadening"
+              ],
+              "call_info" : "CallSite",
+              "distance" : 1,
+              "kind" : "Source",
+              "local_features" : 
+              {
+                "always_features" : 
+                [
+                  "via-issue-broadening"
+                ]
+              },
+              "origins" : 
+              [
+                "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;"
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "method" : "Lcom/facebook/marianatrench/integrationtests/PortSanitizers;.sanitizedFlows:()V",
+  "position" : 
+  {
+    "line" : 32,
+    "path" : "PortSanitizers.java"
+  },
+  "sinks" : 
+  [
+    {
+      "port" : "Argument(0)",
+      "taint" : 
+      [
+        {
+          "kinds" : 
+          [
+            {
+              "call_info" : "Origin",
+              "kind" : "Sink",
+              "origins" : 
+              [
+                "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V"
+              ]
+            }
+          ],
+          "origin" : 
+          {
+            "position" : 
+            {
+              "end" : 19,
+              "line" : 36,
+              "path" : "PortSanitizers.java",
+              "start" : 16
+            }
+          }
+        }
+      ]
+    }
+  ]
 }
 {
   "method" : "Lcom/facebook/marianatrench/integrationtests/PortSanitizers;.sanitizedPropagationPort:(Ljava/lang/Object;Ljava/lang/Object;)[Ljava/lang/Object;",
@@ -2108,6 +2023,61 @@
   ]
 }
 {
+  "generations" : 
+  [
+    {
+      "port" : "Argument(0).mField",
+      "taint" : 
+      [
+        {
+          "kinds" : 
+          [
+            {
+              "call_info" : "Origin",
+              "kind" : "Source",
+              "local_positions" : 
+              [
+                {
+                  "end" : 28,
+                  "line" : 21,
+                  "start" : 13
+                }
+              ],
+              "origins" : 
+              [
+                "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;"
+              ]
+            }
+          ],
+          "origin" : 
+          {
+            "position" : 
+            {
+              "end" : 25,
+              "line" : 21,
+              "path" : "PortSanitizers.java",
+              "start" : 20
+            }
+          }
+        }
+      ]
+    }
+  ],
+  "method" : "Lcom/facebook/marianatrench/integrationtests/PortSanitizers;.sanitizedSourcePort:()Ljava/lang/Object;",
+  "position" : 
+  {
+    "line" : 20,
+    "path" : "PortSanitizers.java"
+  },
+  "sanitizers" : 
+  [
+    {
+      "port" : "Return",
+      "sanitize" : "sources"
+    }
+  ]
+}
+{
   "method" : "Lcom/facebook/secure/context/IntentLauncher;.<init>:()V",
   "position" : 
   {
@@ -2190,6 +2160,36 @@
   {
     "line" : 9
   }
+}
+{
+  "inline_as" : "Argument(0)",
+  "method" : "Lcom/instagram/common/analytics/intf/AnalyticsEvent;.addExtra:(Ljava/lang/String;Ljava/lang/String;)Lcom/instagram/common/analytics/intf/AnalyticsEvent;",
+  "position" : 
+  {
+    "line" : 16
+  },
+  "propagation" : 
+  [
+    {
+      "input" : "Argument(0)",
+      "output" : 
+      [
+        {
+          "kinds" : 
+          [
+            {
+              "call_info" : "Propagation",
+              "kind" : "LocalReturn",
+              "output_paths" : 
+              [
+                ""
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
 }
 {
   "method" : "Lcom/instagram/common/analytics/intf/AnalyticsEvent;.obtain:(Ljava/lang/String;)Lcom/instagram/common/analytics/intf/AnalyticsEvent;",

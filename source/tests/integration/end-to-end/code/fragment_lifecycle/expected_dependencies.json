@@ -1,130 +1,130 @@
 // @generated
 {
-  "Landroid/app/Activity;.<init>:()V" :
+  "Landroid/app/Activity;.<init>:()V" : 
   [
     "Landroidx/fragment/app/FragmentActivity;.<init>:()V"
   ],
-  "Landroid/app/Activity;.onCreate:(Landroid/os/Bundle;)V" :
+  "Landroid/app/Activity;.onCreate:(Landroid/os/Bundle;)V" : 
   [
     "Lcom/facebook/marianatrench/integrationtests/BaseFragment;.onCreate:(Landroid/os/Bundle;)V",
     "Lcom/facebook/marianatrench/integrationtests/SimpleFragment;.onCreate:(Landroid/os/Bundle;)V"
   ],
-  "Landroid/app/Activity;.onStart:()V" :
+  "Landroid/app/Activity;.onStart:()V" : 
   [
     "Lcom/facebook/marianatrench/integrationtests/BaseFragment;.onStart:()V",
     "Lcom/facebook/marianatrench/integrationtests/SimpleFragment;.onStart:()V"
   ],
-  "Landroid/content/Context;.<init>:()V" :
+  "Landroid/content/Context;.<init>:()V" : 
   [
     "Landroid/app/Activity;.<init>:()V"
   ],
-  "Landroid/content/Intent;.<init>:()V" :
+  "Landroid/content/Intent;.<init>:()V" : 
   [
     "Landroid/app/Activity;.getIntent:()Landroid/content/Intent;",
     "Lcom/facebook/base/activity/FragmentBaseActivityUtil;.getDefaultActivityIntent:()Landroid/content/Intent;"
   ],
-  "Landroid/database/Cursor;.<init>:()V" :
+  "Landroid/database/Cursor;.<init>:()V" : 
   [
     "Landroid/content/ContentProvider;.query:(Landroid/net/Uri;[Ljava/lang/String;Ljava/lang/String;[Ljava/lang/String;Ljava/lang/String;)Landroid/database/Cursor;"
   ],
-  "Landroid/net/Uri;.<init>:()V" :
+  "Landroid/net/Uri;.<init>:()V" : 
   [
     "Landroid/content/Intent;.getData:()Landroid/net/Uri;",
     "Landroid/net/Uri;.parse:(Ljava/lang/String;)Landroid/net/Uri;"
   ],
-  "Landroid/net/Uri;.<init>:(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V" :
+  "Landroid/net/Uri;.<init>:(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V" : 
   [
     "Landroid/net/Uri$Builder;.build:()Landroid/net/Uri;"
   ],
-  "Landroid/os/Bundle;.<init>:()V" :
+  "Landroid/os/Bundle;.<init>:()V" : 
   [
     "Landroid/content/Intent;.getBundleExtra:(Ljava/lang/String;)Landroid/os/Bundle;",
     "Landroid/content/Intent;.getExtras:()Landroid/os/Bundle;"
   ],
-  "Landroidx/fragment/app/FragmentActivity;.<init>:()V" :
+  "Landroidx/fragment/app/FragmentActivity;.<init>:()V" : 
   [
     "Lcom/facebook/marianatrench/integrationtests/BaseFragment;.<init>:()V",
     "Lcom/facebook/marianatrench/integrationtests/SimpleFragment;.<init>:()V"
   ],
-  "Lcom/facebook/marianatrench/integrationtests/BaseFragment;.<init>:()V" :
+  "Lcom/facebook/marianatrench/integrationtests/BaseFragment;.<init>:()V" : 
   [
     "Lcom/facebook/marianatrench/integrationtests/ChildFragment;.<init>:()V"
   ],
-  "Lcom/facebook/marianatrench/integrationtests/BaseFragment;.onActivityCreate:()V" :
+  "Lcom/facebook/marianatrench/integrationtests/BaseFragment;.onActivityCreate:()V" : 
   [
     "Lcom/facebook/marianatrench/integrationtests/BaseFragment;.onCreate:(Landroid/os/Bundle;)V"
   ],
-  "Lcom/facebook/marianatrench/integrationtests/BaseFragment;.onAfterActivityCreate:()V" :
+  "Lcom/facebook/marianatrench/integrationtests/BaseFragment;.onAfterActivityCreate:()V" : 
   [
     "Lcom/facebook/marianatrench/integrationtests/BaseFragment;.onCreate:(Landroid/os/Bundle;)V"
   ],
-  "Lcom/facebook/marianatrench/integrationtests/BaseFragment;.onBeforeActivityCreate:()V" :
+  "Lcom/facebook/marianatrench/integrationtests/BaseFragment;.onBeforeActivityCreate:()V" : 
   [
     "Lcom/facebook/marianatrench/integrationtests/BaseFragment;.onCreate:(Landroid/os/Bundle;)V"
   ],
-  "Lcom/facebook/marianatrench/integrationtests/BaseFragment;.onCreate:(Landroid/os/Bundle;)V" :
+  "Lcom/facebook/marianatrench/integrationtests/BaseFragment;.onCreate:(Landroid/os/Bundle;)V" : 
   [
     "Lcom/facebook/marianatrench/integrationtests/BaseFragment;.activity_lifecycle_wrapper:(Landroid/os/Bundle;)V"
   ],
-  "Lcom/facebook/marianatrench/integrationtests/BaseFragment;.onStart:()V" :
+  "Lcom/facebook/marianatrench/integrationtests/BaseFragment;.onStart:()V" : 
   [
     "Lcom/facebook/marianatrench/integrationtests/BaseFragment;.activity_lifecycle_wrapper:(Landroid/os/Bundle;)V",
     "Lcom/facebook/marianatrench/integrationtests/ChildFragment;.onStart:()V"
   ],
-  "Lcom/facebook/marianatrench/integrationtests/ChildFragment;.onActivityCreate:()V" :
+  "Lcom/facebook/marianatrench/integrationtests/ChildFragment;.onActivityCreate:()V" : 
   [
     "Lcom/facebook/marianatrench/integrationtests/BaseFragment;.onCreate:(Landroid/os/Bundle;)V"
   ],
-  "Lcom/facebook/marianatrench/integrationtests/ChildFragment;.onAfterActivityCreate:()V" :
+  "Lcom/facebook/marianatrench/integrationtests/ChildFragment;.onAfterActivityCreate:()V" : 
   [
     "Lcom/facebook/marianatrench/integrationtests/BaseFragment;.onCreate:(Landroid/os/Bundle;)V"
   ],
-  "Lcom/facebook/marianatrench/integrationtests/ChildFragment;.onBeforeActivityCreate:()V" :
+  "Lcom/facebook/marianatrench/integrationtests/ChildFragment;.onBeforeActivityCreate:()V" : 
   [
     "Lcom/facebook/marianatrench/integrationtests/BaseFragment;.onCreate:(Landroid/os/Bundle;)V"
   ],
-  "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V" :
+  "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V" : 
   [
     "Lcom/facebook/marianatrench/integrationtests/ChildFragment;.onAfterActivityCreate:()V",
     "Lcom/facebook/marianatrench/integrationtests/ChildFragment;.onStart:()V",
     "Lcom/facebook/marianatrench/integrationtests/SimpleFragment;.onStart:()V"
   ],
-  "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;" :
+  "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;" : 
   [
     "Lcom/facebook/marianatrench/integrationtests/ChildFragment;.onAfterActivityCreate:()V",
     "Lcom/facebook/marianatrench/integrationtests/ChildFragment;.onBeforeActivityCreate:()V",
     "Lcom/facebook/marianatrench/integrationtests/SimpleFragment;.onCreate:(Landroid/os/Bundle;)V"
   ],
-  "Lcom/facebook/marianatrench/integrationtests/SimpleFragment;.onCreate:(Landroid/os/Bundle;)V" :
+  "Lcom/facebook/marianatrench/integrationtests/SimpleFragment;.onCreate:(Landroid/os/Bundle;)V" : 
   [
     "Lcom/facebook/marianatrench/integrationtests/SimpleFragment;.activity_lifecycle_wrapper:(Landroid/os/Bundle;)V"
   ],
-  "Lcom/facebook/marianatrench/integrationtests/SimpleFragment;.onStart:()V" :
+  "Lcom/facebook/marianatrench/integrationtests/SimpleFragment;.onStart:()V" : 
   [
     "Lcom/facebook/marianatrench/integrationtests/SimpleFragment;.activity_lifecycle_wrapper:(Landroid/os/Bundle;)V"
   ],
-  "Lcom/facebook/secure/context/IntentLauncher;.<init>:()V" :
+  "Lcom/facebook/secure/context/IntentLauncher;.<init>:()V" : 
   [
     "Lcom/facebook/secure/context/SecureContextHelperV2;.inAppBrowser:()Lcom/facebook/secure/context/IntentLauncher;",
     "Lcom/facebook/secure/context/SecureContextHelperV2;.internal:()Lcom/facebook/secure/context/IntentLauncher;"
   ],
-  "Lcom/facebook/secure/context/SecureContextHelperV2;.<init>:()V" :
+  "Lcom/facebook/secure/context/SecureContextHelperV2;.<init>:()V" : 
   [
     "Lcom/facebook/secure/context/SecureContextHelperV2;.get:()Lcom/facebook/secure/context/SecureContextHelperV2;"
   ],
-  "Lcom/facebook/user/model/User;.<init>:()V" :
+  "Lcom/facebook/user/model/User;.<init>:()V" : 
   [
     "Lcom/facebook/auth/datastore/LoggedInUserAuthDataStore;.getLoggedInUser:()Lcom/facebook/user/model/User;"
   ],
-  "Lcom/instagram/common/analytics/IgAnalyticsLogger;.<init>:()V" :
+  "Lcom/instagram/common/analytics/IgAnalyticsLogger;.<init>:()V" : 
   [
     "Lcom/instagram/common/analytics/IgAnalyticsLogger;.getInstance:()Lcom/instagram/common/analytics/IgAnalyticsLogger;"
   ],
-  "Lcom/instagram/common/analytics/intf/AnalyticsEvent;.<init>:()V" :
+  "Lcom/instagram/common/analytics/intf/AnalyticsEvent;.<init>:()V" : 
   [
     "Lcom/instagram/common/analytics/intf/AnalyticsEvent;.obtain:(Ljava/lang/String;)Lcom/instagram/common/analytics/intf/AnalyticsEvent;"
   ],
-  "Ljava/lang/Object;.<init>:()V" :
+  "Ljava/lang/Object;.<init>:()V" : 
   [
     "Landroid/content/ContentProvider;.<init>:()V",
     "Landroid/content/Context;.<init>:()V",
@@ -154,19 +154,19 @@
     "Ljava/lang/Thread;.<init>:(Ljava/lang/Runnable;)V",
     "Ljava/util/TreeMap;.<init>:()V"
   ],
-  "Ljava/lang/Runnable;.run:()V" :
+  "Ljava/lang/Runnable;.run:()V" : 
   [
     "Ljava/lang/Thread;.run:()V"
   ],
-  "Ljava/lang/String;.concat:(Ljava/lang/String;)Ljava/lang/String;" :
+  "Ljava/lang/String;.concat:(Ljava/lang/String;)Ljava/lang/String;" : 
   [
     "Landroid/net/Uri;.toString:()Ljava/lang/String;"
   ],
-  "Ljava/lang/String;.isEmpty:()Z" :
+  "Ljava/lang/String;.isEmpty:()Z" : 
   [
     "Ljava/lang/String;.concat:(Ljava/lang/String;)Ljava/lang/String;"
   ],
-  "Ljava/lang/Thread;.run:()V" :
+  "Ljava/lang/Thread;.run:()V" : 
   [
     "Ljava/lang/Thread;.run:()V"
   ]

@@ -1,5 +1,21 @@
 // @generated
 {
+  "field" : "Lcom/facebook/marianatrench/integrationtests/FieldModel;.field_three:Ljava/lang/Integer;",
+  "position" : {},
+  "sources" : 
+  [
+    {
+      "call_info" : "Declaration",
+      "field_callee" : "Lcom/facebook/marianatrench/integrationtests/FieldModel;.field_three:Ljava/lang/Integer;",
+      "field_origins" : 
+      [
+        "Lcom/facebook/marianatrench/integrationtests/FieldModel;.field_three:Ljava/lang/Integer;"
+      ],
+      "kind" : "TestGenerationB"
+    }
+  ]
+}
+{
   "field" : "Lcom/facebook/marianatrench/integrationtests/FieldModel;.field_one:Ljava/lang/String;",
   "position" : {},
   "sinks" : 
@@ -24,22 +40,6 @@
         "Lcom/facebook/marianatrench/integrationtests/FieldModel;.field_one:Ljava/lang/String;"
       ],
       "kind" : "TestGenerationA"
-    }
-  ]
-}
-{
-  "field" : "Lcom/facebook/marianatrench/integrationtests/FieldModel;.field_three:Ljava/lang/Integer;",
-  "position" : {},
-  "sources" : 
-  [
-    {
-      "call_info" : "Declaration",
-      "field_callee" : "Lcom/facebook/marianatrench/integrationtests/FieldModel;.field_three:Ljava/lang/Integer;",
-      "field_origins" : 
-      [
-        "Lcom/facebook/marianatrench/integrationtests/FieldModel;.field_three:Ljava/lang/Integer;"
-      ],
-      "kind" : "TestGenerationB"
     }
   ]
 }

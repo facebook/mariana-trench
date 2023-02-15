@@ -335,13 +335,17 @@ std::string normalize_json_lines(const std::string& input) {
   std::vector<std::string> lines;
   boost::split(lines, input, boost::is_any_of("\n"));
 
-  std::vector<std::string> normalized_elements;
+  std::vector<std::string> normalized_lines;
+  std::vector<Json::Value> jsons;
   std::optional<std::string> buffer = std::nullopt;
 
   for (std::size_t index = 0; index < lines.size(); index++) {
-    auto& line = lines[index];
-    if (boost::starts_with(line, "//") || line.size() == 0) {
-      normalized_elements.push_back(line);
+    const auto& line = lines[index];
+    if (line.empty()) {
+      continue;
+    }
+    if (boost::starts_with(line, "//")) {
+      normalized_lines.push_back(line);
       continue;
     }
 
@@ -355,20 +359,38 @@ std::string normalize_json_lines(const std::string& input) {
       }
       *buffer += line;
 
-      auto value = test::parse_json(*buffer);
-      auto normalized = JsonValidation::to_styled_string(sorted_json(value));
-      boost::trim(normalized);
-      normalized_elements.push_back(normalized);
-
+      jsons.push_back(sorted_json(test::parse_json(*buffer)));
       buffer = std::nullopt;
     } else {
       *buffer += "\n" + line;
       continue;
     }
   }
+  mt_assert(buffer == std::nullopt);
 
-  std::sort(normalized_elements.begin(), normalized_elements.end());
-  return boost::join(normalized_elements, "\n").substr(1) + "\n";
+  std::sort(
+      jsons.begin(),
+      jsons.end(),
+      [](const Json::Value& left, const Json::Value& right) {
+        if (left.isObject() && right.isObject() && left.isMember("method") &&
+            right.isMember("method") && left["method"].isString() &&
+            right["method"].isString() &&
+            left["method"].asString() != right["method"].asString()) {
+          return left["method"].asString() < right["method"].asString();
+        }
+        // Note that we cannot use Json::Value::operator< because it's not
+        // consistent between runs.
+        return JsonValidation::to_styled_string(left) <
+            JsonValidation::to_styled_string(right);
+      });
+
+  for (const auto& json : jsons) {
+    auto normalized = JsonValidation::to_styled_string(json);
+    boost::trim(normalized);
+    normalized_lines.push_back(normalized);
+  }
+
+  return boost::join(normalized_lines, "\n") + "\n";
 }
 
 } // namespace test

@@ -72,6 +72,7 @@ TEST_P(JsonModelGeneratorIntegrationTest, CompareModels) {
   try {
     boost::filesystem::load_string_file(
         directory / "/expected_output.json", expected_output);
+    expected_output = test::normalize_json_lines(expected_output);
   } catch (std::exception& error) {
     LOG(1, "Unable to load expected models: {}", error.what());
   }

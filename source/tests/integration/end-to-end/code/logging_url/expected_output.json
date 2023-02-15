@@ -1,5 +1,12 @@
 // @generated
 {
+  "method" : "Landroid/app/Activity;.<init>:()V",
+  "position" : 
+  {
+    "line" : 13
+  }
+}
+{
   "generations" : 
   [
     {
@@ -26,317 +33,6 @@
   "position" : 
   {
     "line" : 22
-  }
-}
-{
-  "inline_as" : "Argument(0)",
-  "method" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sanitize:(Ljava/lang/Object;)Ljava/lang/Object;",
-  "position" : 
-  {
-    "line" : 17
-  },
-  "propagation" : 
-  [
-    {
-      "input" : "Argument(0)",
-      "output" : 
-      [
-        {
-          "kinds" : 
-          [
-            {
-              "call_info" : "Propagation",
-              "kind" : "LocalReturn",
-              "output_paths" : 
-              [
-                ""
-              ]
-            }
-          ]
-        }
-      ]
-    }
-  ]
-}
-{
-  "inline_as" : "Argument(0)",
-  "method" : "Lcom/instagram/common/analytics/intf/AnalyticsEvent;.addExtra:(Ljava/lang/String;Ljava/lang/String;)Lcom/instagram/common/analytics/intf/AnalyticsEvent;",
-  "position" : 
-  {
-    "line" : 16
-  },
-  "propagation" : 
-  [
-    {
-      "input" : "Argument(0)",
-      "output" : 
-      [
-        {
-          "kinds" : 
-          [
-            {
-              "call_info" : "Propagation",
-              "kind" : "LocalReturn",
-              "output_paths" : 
-              [
-                ""
-              ]
-            }
-          ]
-        }
-      ]
-    }
-  ],
-  "sinks" : 
-  [
-    {
-      "port" : "Argument(2)",
-      "taint" : 
-      [
-        {
-          "kinds" : 
-          [
-            {
-              "call_info" : "Declaration",
-              "kind" : "Logging",
-              "origins" : 
-              [
-                "Lcom/instagram/common/analytics/intf/AnalyticsEvent;.addExtra:(Ljava/lang/String;Ljava/lang/String;)Lcom/instagram/common/analytics/intf/AnalyticsEvent;"
-              ]
-            }
-          ]
-        }
-      ]
-    }
-  ]
-}
-{
-  "inline_as" : "Argument(0).host",
-  "method" : "Landroid/net/Uri;.getHost:()Ljava/lang/String;",
-  "position" : 
-  {
-    "line" : 35
-  },
-  "propagation" : 
-  [
-    {
-      "input" : "Argument(0).host",
-      "output" : 
-      [
-        {
-          "kinds" : 
-          [
-            {
-              "call_info" : "Propagation",
-              "kind" : "LocalReturn",
-              "output_paths" : 
-              [
-                ""
-              ]
-            }
-          ]
-        }
-      ]
-    }
-  ]
-}
-{
-  "inline_as" : "Argument(0).scheme",
-  "method" : "Landroid/net/Uri;.getScheme:()Ljava/lang/String;",
-  "position" : 
-  {
-    "line" : 31
-  },
-  "propagation" : 
-  [
-    {
-      "input" : "Argument(0).scheme",
-      "output" : 
-      [
-        {
-          "kinds" : 
-          [
-            {
-              "call_info" : "Propagation",
-              "kind" : "LocalReturn",
-              "output_paths" : 
-              [
-                ""
-              ]
-            }
-          ]
-        }
-      ]
-    }
-  ]
-}
-{
-  "issues" : 
-  [
-    {
-      "callee" : "Lcom/instagram/common/analytics/intf/AnalyticsEvent;.addExtra:(Ljava/lang/String;Ljava/lang/String;)Lcom/instagram/common/analytics/intf/AnalyticsEvent;",
-      "position" : 
-      {
-        "line" : 23,
-        "path" : "SimpleLogging.java"
-      },
-      "rule" : 1,
-      "sink_index" : "1",
-      "sinks" : 
-      [
-        {
-          "kinds" : 
-          [
-            {
-              "call_info" : "Origin",
-              "kind" : "Logging",
-              "origins" : 
-              [
-                "Lcom/instagram/common/analytics/intf/AnalyticsEvent;.addExtra:(Ljava/lang/String;Ljava/lang/String;)Lcom/instagram/common/analytics/intf/AnalyticsEvent;"
-              ]
-            }
-          ],
-          "origin" : 
-          {
-            "position" : 
-            {
-              "end" : 51,
-              "line" : 23,
-              "path" : "SimpleLogging.java",
-              "start" : 32
-            }
-          }
-        }
-      ],
-      "sources" : 
-      [
-        {
-          "kinds" : 
-          [
-            {
-              "call_info" : "Origin",
-              "kind" : "ExternalUserInput",
-              "local_positions" : 
-              [
-                {
-                  "end" : 28,
-                  "line" : 20,
-                  "start" : 23
-                },
-                {
-                  "end" : 40,
-                  "line" : 23,
-                  "start" : 32
-                }
-              ],
-              "origins" : 
-              [
-                "Landroid/app/Activity;.getIntent:()Landroid/content/Intent;"
-              ]
-            }
-          ],
-          "origin" : 
-          {
-            "position" : 
-            {
-              "end" : 28,
-              "line" : 19,
-              "path" : "SimpleLogging.java",
-              "start" : 20
-            }
-          }
-        }
-      ]
-    }
-  ],
-  "method" : "Lsimple/logging/SimpleLogging;.onCreate:()V",
-  "position" : 
-  {
-    "line" : 17,
-    "path" : "SimpleLogging.java"
-  }
-}
-{
-  "issues" : 
-  [
-    {
-      "callee" : "Lcom/instagram/url/UrlHandlerActivity;.handleIntent:(Landroid/content/Intent;)V",
-      "position" : 
-      {
-        "line" : 23,
-        "path" : "UrlHandlerActivity.java"
-      },
-      "rule" : 1,
-      "sink_index" : "0",
-      "sinks" : 
-      [
-        {
-          "call" : 
-          {
-            "port" : "Argument(1)",
-            "position" : 
-            {
-              "end" : 27,
-              "line" : 23,
-              "path" : "UrlHandlerActivity.java",
-              "start" : 17
-            },
-            "resolves_to" : "Lcom/instagram/url/UrlHandlerActivity;.handleIntent:(Landroid/content/Intent;)V"
-          },
-          "kinds" : 
-          [
-            {
-              "call_info" : "CallSite",
-              "distance" : 2,
-              "kind" : "Logging",
-              "origins" : 
-              [
-                "Lcom/instagram/common/analytics/intf/AnalyticsEvent;.addExtra:(Ljava/lang/String;Ljava/lang/String;)Lcom/instagram/common/analytics/intf/AnalyticsEvent;"
-              ]
-            }
-          ]
-        }
-      ],
-      "sources" : 
-      [
-        {
-          "kinds" : 
-          [
-            {
-              "call_info" : "Origin",
-              "kind" : "ExternalUserInput",
-              "origins" : 
-              [
-                "Landroid/app/Activity;.getIntent:()Landroid/content/Intent;"
-              ]
-            }
-          ],
-          "origin" : 
-          {
-            "position" : 
-            {
-              "end" : 25,
-              "line" : 23,
-              "path" : "UrlHandlerActivity.java",
-              "start" : 17
-            }
-          }
-        }
-      ]
-    }
-  ],
-  "method" : "Lcom/instagram/url/UrlHandlerActivity;.onCreate:()V",
-  "position" : 
-  {
-    "line" : 21,
-    "path" : "UrlHandlerActivity.java"
-  }
-}
-{
-  "method" : "Landroid/app/Activity;.<init>:()V",
-  "position" : 
-  {
-    "line" : 13
   }
 }
 {
@@ -934,11 +630,71 @@
   }
 }
 {
+  "inline_as" : "Argument(0).host",
+  "method" : "Landroid/net/Uri;.getHost:()Ljava/lang/String;",
+  "position" : 
+  {
+    "line" : 35
+  },
+  "propagation" : 
+  [
+    {
+      "input" : "Argument(0).host",
+      "output" : 
+      [
+        {
+          "kinds" : 
+          [
+            {
+              "call_info" : "Propagation",
+              "kind" : "LocalReturn",
+              "output_paths" : 
+              [
+                ""
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
+{
   "method" : "Landroid/net/Uri;.getQueryParameter:(Ljava/lang/String;)Ljava/lang/String;",
   "position" : 
   {
     "line" : 39
   }
+}
+{
+  "inline_as" : "Argument(0).scheme",
+  "method" : "Landroid/net/Uri;.getScheme:()Ljava/lang/String;",
+  "position" : 
+  {
+    "line" : 31
+  },
+  "propagation" : 
+  [
+    {
+      "input" : "Argument(0).scheme",
+      "output" : 
+      [
+        {
+          "kinds" : 
+          [
+            {
+              "call_info" : "Propagation",
+              "kind" : "LocalReturn",
+              "output_paths" : 
+              [
+                ""
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
 }
 {
   "method" : "Landroid/net/Uri;.parse:(Ljava/lang/String;)Landroid/net/Uri;",
@@ -1183,6 +939,36 @@
   }
 }
 {
+  "inline_as" : "Argument(0)",
+  "method" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sanitize:(Ljava/lang/Object;)Ljava/lang/Object;",
+  "position" : 
+  {
+    "line" : 17
+  },
+  "propagation" : 
+  [
+    {
+      "input" : "Argument(0)",
+      "output" : 
+      [
+        {
+          "kinds" : 
+          [
+            {
+              "call_info" : "Propagation",
+              "kind" : "LocalReturn",
+              "output_paths" : 
+              [
+                ""
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
+{
   "method" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
   "position" : 
   {
@@ -1279,6 +1065,58 @@
   {
     "line" : 9
   }
+}
+{
+  "inline_as" : "Argument(0)",
+  "method" : "Lcom/instagram/common/analytics/intf/AnalyticsEvent;.addExtra:(Ljava/lang/String;Ljava/lang/String;)Lcom/instagram/common/analytics/intf/AnalyticsEvent;",
+  "position" : 
+  {
+    "line" : 16
+  },
+  "propagation" : 
+  [
+    {
+      "input" : "Argument(0)",
+      "output" : 
+      [
+        {
+          "kinds" : 
+          [
+            {
+              "call_info" : "Propagation",
+              "kind" : "LocalReturn",
+              "output_paths" : 
+              [
+                ""
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "sinks" : 
+  [
+    {
+      "port" : "Argument(2)",
+      "taint" : 
+      [
+        {
+          "kinds" : 
+          [
+            {
+              "call_info" : "Declaration",
+              "kind" : "Logging",
+              "origins" : 
+              [
+                "Lcom/instagram/common/analytics/intf/AnalyticsEvent;.addExtra:(Ljava/lang/String;Ljava/lang/String;)Lcom/instagram/common/analytics/intf/AnalyticsEvent;"
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
 }
 {
   "method" : "Lcom/instagram/common/analytics/intf/AnalyticsEvent;.obtain:(Ljava/lang/String;)Lcom/instagram/common/analytics/intf/AnalyticsEvent;",
@@ -1379,6 +1217,82 @@
       ]
     }
   ]
+}
+{
+  "issues" : 
+  [
+    {
+      "callee" : "Lcom/instagram/url/UrlHandlerActivity;.handleIntent:(Landroid/content/Intent;)V",
+      "position" : 
+      {
+        "line" : 23,
+        "path" : "UrlHandlerActivity.java"
+      },
+      "rule" : 1,
+      "sink_index" : "0",
+      "sinks" : 
+      [
+        {
+          "call" : 
+          {
+            "port" : "Argument(1)",
+            "position" : 
+            {
+              "end" : 27,
+              "line" : 23,
+              "path" : "UrlHandlerActivity.java",
+              "start" : 17
+            },
+            "resolves_to" : "Lcom/instagram/url/UrlHandlerActivity;.handleIntent:(Landroid/content/Intent;)V"
+          },
+          "kinds" : 
+          [
+            {
+              "call_info" : "CallSite",
+              "distance" : 2,
+              "kind" : "Logging",
+              "origins" : 
+              [
+                "Lcom/instagram/common/analytics/intf/AnalyticsEvent;.addExtra:(Ljava/lang/String;Ljava/lang/String;)Lcom/instagram/common/analytics/intf/AnalyticsEvent;"
+              ]
+            }
+          ]
+        }
+      ],
+      "sources" : 
+      [
+        {
+          "kinds" : 
+          [
+            {
+              "call_info" : "Origin",
+              "kind" : "ExternalUserInput",
+              "origins" : 
+              [
+                "Landroid/app/Activity;.getIntent:()Landroid/content/Intent;"
+              ]
+            }
+          ],
+          "origin" : 
+          {
+            "position" : 
+            {
+              "end" : 25,
+              "line" : 23,
+              "path" : "UrlHandlerActivity.java",
+              "start" : 17
+            }
+          }
+        }
+      ]
+    }
+  ],
+  "method" : "Lcom/instagram/url/UrlHandlerActivity;.onCreate:()V",
+  "position" : 
+  {
+    "line" : 21,
+    "path" : "UrlHandlerActivity.java"
+  }
 }
 {
   "method" : "Lcom/instagram/url/UrlHandlerActivity;.reportUrlEvent:(Ljava/lang/String;Ljava/lang/String;)V",
@@ -1726,6 +1640,92 @@
   "position" : 
   {
     "line" : 13,
+    "path" : "SimpleLogging.java"
+  }
+}
+{
+  "issues" : 
+  [
+    {
+      "callee" : "Lcom/instagram/common/analytics/intf/AnalyticsEvent;.addExtra:(Ljava/lang/String;Ljava/lang/String;)Lcom/instagram/common/analytics/intf/AnalyticsEvent;",
+      "position" : 
+      {
+        "line" : 23,
+        "path" : "SimpleLogging.java"
+      },
+      "rule" : 1,
+      "sink_index" : "1",
+      "sinks" : 
+      [
+        {
+          "kinds" : 
+          [
+            {
+              "call_info" : "Origin",
+              "kind" : "Logging",
+              "origins" : 
+              [
+                "Lcom/instagram/common/analytics/intf/AnalyticsEvent;.addExtra:(Ljava/lang/String;Ljava/lang/String;)Lcom/instagram/common/analytics/intf/AnalyticsEvent;"
+              ]
+            }
+          ],
+          "origin" : 
+          {
+            "position" : 
+            {
+              "end" : 51,
+              "line" : 23,
+              "path" : "SimpleLogging.java",
+              "start" : 32
+            }
+          }
+        }
+      ],
+      "sources" : 
+      [
+        {
+          "kinds" : 
+          [
+            {
+              "call_info" : "Origin",
+              "kind" : "ExternalUserInput",
+              "local_positions" : 
+              [
+                {
+                  "end" : 28,
+                  "line" : 20,
+                  "start" : 23
+                },
+                {
+                  "end" : 40,
+                  "line" : 23,
+                  "start" : 32
+                }
+              ],
+              "origins" : 
+              [
+                "Landroid/app/Activity;.getIntent:()Landroid/content/Intent;"
+              ]
+            }
+          ],
+          "origin" : 
+          {
+            "position" : 
+            {
+              "end" : 28,
+              "line" : 19,
+              "path" : "SimpleLogging.java",
+              "start" : 20
+            }
+          }
+        }
+      ]
+    }
+  ],
+  "method" : "Lsimple/logging/SimpleLogging;.onCreate:()V",
+  "position" : 
+  {
+    "line" : 17,
     "path" : "SimpleLogging.java"
   }
 }

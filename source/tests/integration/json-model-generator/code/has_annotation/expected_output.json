@@ -120,6 +120,14 @@
   }
 }
 {
+  "method" : "Lcom/facebook/marianatrench/integrationtests/MyClass;.<init>:()V",
+  "position" : 
+  {
+    "line" : 30,
+    "path" : "com/facebook/marianatrench/integrationtests/MyClass.java"
+  }
+}
+{
   "generations" : 
   [
     {
@@ -146,14 +154,6 @@
   "position" : 
   {
     "line" : 32,
-    "path" : "com/facebook/marianatrench/integrationtests/MyClass.java"
-  }
-}
-{
-  "method" : "Lcom/facebook/marianatrench/integrationtests/MyClass;.<init>:()V",
-  "position" : 
-  {
-    "line" : 30,
     "path" : "com/facebook/marianatrench/integrationtests/MyClass.java"
   }
 }

@@ -1,276 +1,10 @@
 // @generated
 {
-  "generations" : 
-  [
-    {
-      "port" : "Argument(0).mOfferURL",
-      "taint" : 
-      [
-        {
-          "kinds" : 
-          [
-            {
-              "call_info" : "Origin",
-              "kind" : "ExternalUserInput",
-              "local_positions" : 
-              [
-                {
-                  "end" : 30,
-                  "line" : 27,
-                  "start" : 20
-                },
-                {
-                  "end" : 32,
-                  "line" : 28,
-                  "start" : 16
-                }
-              ],
-              "origins" : 
-              [
-                "Landroid/app/Activity;.getIntent:()Landroid/content/Intent;"
-              ]
-            }
-          ],
-          "origin" : 
-          {
-            "position" : 
-            {
-              "end" : 28,
-              "line" : 27,
-              "path" : "OfferRedirectToWebActivity.java",
-              "start" : 20
-            }
-          }
-        }
-      ]
-    }
-  ],
-  "issues" : 
-  [
-    {
-      "callee" : "Lcom/facebook/marianatrench/integrationtests/OfferRedirectToWebActivity;.navigateToBrowser:()V",
-      "position" : 
-      {
-        "line" : 32,
-        "path" : "OfferRedirectToWebActivity.java"
-      },
-      "rule" : 1,
-      "sink_index" : "0",
-      "sinks" : 
-      [
-        {
-          "call" : 
-          {
-            "port" : "Argument(0).mOfferURL",
-            "position" : 
-            {
-              "end" : 20,
-              "line" : 32,
-              "path" : "OfferRedirectToWebActivity.java",
-              "start" : 4
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/OfferRedirectToWebActivity;.navigateToBrowser:()V"
-          },
-          "kinds" : 
-          [
-            {
-              "call_info" : "CallSite",
-              "distance" : 2,
-              "kind" : "LaunchingComponent",
-              "origins" : 
-              [
-                "Lcom/facebook/secure/context/IntentLauncher;.launchActivity:(Landroid/content/Intent;Landroid/content/Context;)Z"
-              ]
-            }
-          ]
-        }
-      ],
-      "sources" : 
-      [
-        {
-          "kinds" : 
-          [
-            {
-              "call_info" : "Origin",
-              "kind" : "ExternalUserInput",
-              "local_positions" : 
-              [
-                {
-                  "end" : 30,
-                  "line" : 27,
-                  "start" : 20
-                },
-                {
-                  "end" : 32,
-                  "line" : 28,
-                  "start" : 16
-                }
-              ],
-              "origins" : 
-              [
-                "Landroid/app/Activity;.getIntent:()Landroid/content/Intent;"
-              ]
-            }
-          ],
-          "origin" : 
-          {
-            "position" : 
-            {
-              "end" : 28,
-              "line" : 27,
-              "path" : "OfferRedirectToWebActivity.java",
-              "start" : 20
-            }
-          }
-        }
-      ]
-    },
-    {
-      "callee" : "Lcom/facebook/marianatrench/integrationtests/OfferRenderingUtils;.navigateToStoreURL:(Landroid/content/Context;Ljava/lang/String;)V",
-      "position" : 
-      {
-        "line" : 30,
-        "path" : "OfferRedirectToWebActivity.java"
-      },
-      "rule" : 1,
-      "sink_index" : "0",
-      "sinks" : 
-      [
-        {
-          "call" : 
-          {
-            "port" : "Argument(2)",
-            "position" : 
-            {
-              "end" : 58,
-              "line" : 30,
-              "path" : "OfferRedirectToWebActivity.java",
-              "start" : 50
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/OfferRenderingUtils;.navigateToStoreURL:(Landroid/content/Context;Ljava/lang/String;)V"
-          },
-          "kinds" : 
-          [
-            {
-              "call_info" : "CallSite",
-              "distance" : 1,
-              "kind" : "LaunchingComponent",
-              "origins" : 
-              [
-                "Lcom/facebook/secure/context/IntentLauncher;.launchActivity:(Landroid/content/Intent;Landroid/content/Context;)Z"
-              ]
-            }
-          ]
-        }
-      ],
-      "sources" : 
-      [
-        {
-          "kinds" : 
-          [
-            {
-              "call_info" : "Origin",
-              "kind" : "ExternalUserInput",
-              "local_positions" : 
-              [
-                {
-                  "end" : 30,
-                  "line" : 27,
-                  "start" : 20
-                },
-                {
-                  "end" : 32,
-                  "line" : 28,
-                  "start" : 16
-                }
-              ],
-              "origins" : 
-              [
-                "Landroid/app/Activity;.getIntent:()Landroid/content/Intent;"
-              ]
-            }
-          ],
-          "origin" : 
-          {
-            "position" : 
-            {
-              "end" : 28,
-              "line" : 27,
-              "path" : "OfferRedirectToWebActivity.java",
-              "start" : 20
-            }
-          }
-        }
-      ]
-    }
-  ],
-  "method" : "Lcom/facebook/marianatrench/integrationtests/OfferRedirectToWebActivity;.onActivityCreate:()V",
+  "method" : "Landroid/app/Activity;.<init>:()V",
   "position" : 
   {
-    "line" : 22,
-    "path" : "OfferRedirectToWebActivity.java"
-  },
-  "sinks" : 
-  [
-    {
-      "port" : "Argument(0).mOfferURL",
-      "taint" : 
-      [
-        {
-          "call" : 
-          {
-            "port" : "Argument(0).mOfferURL",
-            "position" : 
-            {
-              "end" : 20,
-              "line" : 32,
-              "path" : "OfferRedirectToWebActivity.java",
-              "start" : 4
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/OfferRedirectToWebActivity;.navigateToBrowser:()V"
-          },
-          "kinds" : 
-          [
-            {
-              "call_info" : "CallSite",
-              "distance" : 2,
-              "kind" : "LaunchingComponent",
-              "origins" : 
-              [
-                "Lcom/facebook/secure/context/IntentLauncher;.launchActivity:(Landroid/content/Intent;Landroid/content/Context;)Z"
-              ]
-            }
-          ]
-        },
-        {
-          "call" : 
-          {
-            "port" : "Argument(2)",
-            "position" : 
-            {
-              "end" : 58,
-              "line" : 30,
-              "path" : "OfferRedirectToWebActivity.java",
-              "start" : 50
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/OfferRenderingUtils;.navigateToStoreURL:(Landroid/content/Context;Ljava/lang/String;)V"
-          },
-          "kinds" : 
-          [
-            {
-              "call_info" : "CallSite",
-              "distance" : 1,
-              "kind" : "LaunchingComponent",
-              "origins" : 
-              [
-                "Lcom/facebook/secure/context/IntentLauncher;.launchActivity:(Landroid/content/Intent;Landroid/content/Context;)Z"
-              ]
-            }
-          ]
-        }
-      ]
-    }
-  ]
+    "line" : 13
+  }
 }
 {
   "generations" : 
@@ -299,133 +33,6 @@
   "position" : 
   {
     "line" : 22
-  }
-}
-{
-  "inline_as" : "Argument(0)",
-  "method" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sanitize:(Ljava/lang/Object;)Ljava/lang/Object;",
-  "position" : 
-  {
-    "line" : 17
-  },
-  "propagation" : 
-  [
-    {
-      "input" : "Argument(0)",
-      "output" : 
-      [
-        {
-          "kinds" : 
-          [
-            {
-              "call_info" : "Propagation",
-              "kind" : "LocalReturn",
-              "output_paths" : 
-              [
-                ""
-              ]
-            }
-          ]
-        }
-      ]
-    }
-  ]
-}
-{
-  "inline_as" : "Argument(0)",
-  "method" : "Lcom/instagram/common/analytics/intf/AnalyticsEvent;.addExtra:(Ljava/lang/String;Ljava/lang/String;)Lcom/instagram/common/analytics/intf/AnalyticsEvent;",
-  "position" : 
-  {
-    "line" : 16
-  },
-  "propagation" : 
-  [
-    {
-      "input" : "Argument(0)",
-      "output" : 
-      [
-        {
-          "kinds" : 
-          [
-            {
-              "call_info" : "Propagation",
-              "kind" : "LocalReturn",
-              "output_paths" : 
-              [
-                ""
-              ]
-            }
-          ]
-        }
-      ]
-    }
-  ]
-}
-{
-  "inline_as" : "Argument(0).host",
-  "method" : "Landroid/net/Uri;.getHost:()Ljava/lang/String;",
-  "position" : 
-  {
-    "line" : 35
-  },
-  "propagation" : 
-  [
-    {
-      "input" : "Argument(0).host",
-      "output" : 
-      [
-        {
-          "kinds" : 
-          [
-            {
-              "call_info" : "Propagation",
-              "kind" : "LocalReturn",
-              "output_paths" : 
-              [
-                ""
-              ]
-            }
-          ]
-        }
-      ]
-    }
-  ]
-}
-{
-  "inline_as" : "Argument(0).scheme",
-  "method" : "Landroid/net/Uri;.getScheme:()Ljava/lang/String;",
-  "position" : 
-  {
-    "line" : 31
-  },
-  "propagation" : 
-  [
-    {
-      "input" : "Argument(0).scheme",
-      "output" : 
-      [
-        {
-          "kinds" : 
-          [
-            {
-              "call_info" : "Propagation",
-              "kind" : "LocalReturn",
-              "output_paths" : 
-              [
-                ""
-              ]
-            }
-          ]
-        }
-      ]
-    }
-  ]
-}
-{
-  "method" : "Landroid/app/Activity;.<init>:()V",
-  "position" : 
-  {
-    "line" : 13
   }
 }
 {
@@ -1045,11 +652,71 @@
   ]
 }
 {
+  "inline_as" : "Argument(0).host",
+  "method" : "Landroid/net/Uri;.getHost:()Ljava/lang/String;",
+  "position" : 
+  {
+    "line" : 35
+  },
+  "propagation" : 
+  [
+    {
+      "input" : "Argument(0).host",
+      "output" : 
+      [
+        {
+          "kinds" : 
+          [
+            {
+              "call_info" : "Propagation",
+              "kind" : "LocalReturn",
+              "output_paths" : 
+              [
+                ""
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
+{
   "method" : "Landroid/net/Uri;.getQueryParameter:(Ljava/lang/String;)Ljava/lang/String;",
   "position" : 
   {
     "line" : 39
   }
+}
+{
+  "inline_as" : "Argument(0).scheme",
+  "method" : "Landroid/net/Uri;.getScheme:()Ljava/lang/String;",
+  "position" : 
+  {
+    "line" : 31
+  },
+  "propagation" : 
+  [
+    {
+      "input" : "Argument(0).scheme",
+      "output" : 
+      [
+        {
+          "kinds" : 
+          [
+            {
+              "call_info" : "Propagation",
+              "kind" : "LocalReturn",
+              "output_paths" : 
+              [
+                ""
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
 }
 {
   "method" : "Landroid/net/Uri;.parse:(Ljava/lang/String;)Landroid/net/Uri;",
@@ -1382,6 +1049,279 @@
   ]
 }
 {
+  "generations" : 
+  [
+    {
+      "port" : "Argument(0).mOfferURL",
+      "taint" : 
+      [
+        {
+          "kinds" : 
+          [
+            {
+              "call_info" : "Origin",
+              "kind" : "ExternalUserInput",
+              "local_positions" : 
+              [
+                {
+                  "end" : 30,
+                  "line" : 27,
+                  "start" : 20
+                },
+                {
+                  "end" : 32,
+                  "line" : 28,
+                  "start" : 16
+                }
+              ],
+              "origins" : 
+              [
+                "Landroid/app/Activity;.getIntent:()Landroid/content/Intent;"
+              ]
+            }
+          ],
+          "origin" : 
+          {
+            "position" : 
+            {
+              "end" : 28,
+              "line" : 27,
+              "path" : "OfferRedirectToWebActivity.java",
+              "start" : 20
+            }
+          }
+        }
+      ]
+    }
+  ],
+  "issues" : 
+  [
+    {
+      "callee" : "Lcom/facebook/marianatrench/integrationtests/OfferRedirectToWebActivity;.navigateToBrowser:()V",
+      "position" : 
+      {
+        "line" : 32,
+        "path" : "OfferRedirectToWebActivity.java"
+      },
+      "rule" : 1,
+      "sink_index" : "0",
+      "sinks" : 
+      [
+        {
+          "call" : 
+          {
+            "port" : "Argument(0).mOfferURL",
+            "position" : 
+            {
+              "end" : 20,
+              "line" : 32,
+              "path" : "OfferRedirectToWebActivity.java",
+              "start" : 4
+            },
+            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/OfferRedirectToWebActivity;.navigateToBrowser:()V"
+          },
+          "kinds" : 
+          [
+            {
+              "call_info" : "CallSite",
+              "distance" : 2,
+              "kind" : "LaunchingComponent",
+              "origins" : 
+              [
+                "Lcom/facebook/secure/context/IntentLauncher;.launchActivity:(Landroid/content/Intent;Landroid/content/Context;)Z"
+              ]
+            }
+          ]
+        }
+      ],
+      "sources" : 
+      [
+        {
+          "kinds" : 
+          [
+            {
+              "call_info" : "Origin",
+              "kind" : "ExternalUserInput",
+              "local_positions" : 
+              [
+                {
+                  "end" : 30,
+                  "line" : 27,
+                  "start" : 20
+                },
+                {
+                  "end" : 32,
+                  "line" : 28,
+                  "start" : 16
+                }
+              ],
+              "origins" : 
+              [
+                "Landroid/app/Activity;.getIntent:()Landroid/content/Intent;"
+              ]
+            }
+          ],
+          "origin" : 
+          {
+            "position" : 
+            {
+              "end" : 28,
+              "line" : 27,
+              "path" : "OfferRedirectToWebActivity.java",
+              "start" : 20
+            }
+          }
+        }
+      ]
+    },
+    {
+      "callee" : "Lcom/facebook/marianatrench/integrationtests/OfferRenderingUtils;.navigateToStoreURL:(Landroid/content/Context;Ljava/lang/String;)V",
+      "position" : 
+      {
+        "line" : 30,
+        "path" : "OfferRedirectToWebActivity.java"
+      },
+      "rule" : 1,
+      "sink_index" : "0",
+      "sinks" : 
+      [
+        {
+          "call" : 
+          {
+            "port" : "Argument(2)",
+            "position" : 
+            {
+              "end" : 58,
+              "line" : 30,
+              "path" : "OfferRedirectToWebActivity.java",
+              "start" : 50
+            },
+            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/OfferRenderingUtils;.navigateToStoreURL:(Landroid/content/Context;Ljava/lang/String;)V"
+          },
+          "kinds" : 
+          [
+            {
+              "call_info" : "CallSite",
+              "distance" : 1,
+              "kind" : "LaunchingComponent",
+              "origins" : 
+              [
+                "Lcom/facebook/secure/context/IntentLauncher;.launchActivity:(Landroid/content/Intent;Landroid/content/Context;)Z"
+              ]
+            }
+          ]
+        }
+      ],
+      "sources" : 
+      [
+        {
+          "kinds" : 
+          [
+            {
+              "call_info" : "Origin",
+              "kind" : "ExternalUserInput",
+              "local_positions" : 
+              [
+                {
+                  "end" : 30,
+                  "line" : 27,
+                  "start" : 20
+                },
+                {
+                  "end" : 32,
+                  "line" : 28,
+                  "start" : 16
+                }
+              ],
+              "origins" : 
+              [
+                "Landroid/app/Activity;.getIntent:()Landroid/content/Intent;"
+              ]
+            }
+          ],
+          "origin" : 
+          {
+            "position" : 
+            {
+              "end" : 28,
+              "line" : 27,
+              "path" : "OfferRedirectToWebActivity.java",
+              "start" : 20
+            }
+          }
+        }
+      ]
+    }
+  ],
+  "method" : "Lcom/facebook/marianatrench/integrationtests/OfferRedirectToWebActivity;.onActivityCreate:()V",
+  "position" : 
+  {
+    "line" : 22,
+    "path" : "OfferRedirectToWebActivity.java"
+  },
+  "sinks" : 
+  [
+    {
+      "port" : "Argument(0).mOfferURL",
+      "taint" : 
+      [
+        {
+          "call" : 
+          {
+            "port" : "Argument(0).mOfferURL",
+            "position" : 
+            {
+              "end" : 20,
+              "line" : 32,
+              "path" : "OfferRedirectToWebActivity.java",
+              "start" : 4
+            },
+            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/OfferRedirectToWebActivity;.navigateToBrowser:()V"
+          },
+          "kinds" : 
+          [
+            {
+              "call_info" : "CallSite",
+              "distance" : 2,
+              "kind" : "LaunchingComponent",
+              "origins" : 
+              [
+                "Lcom/facebook/secure/context/IntentLauncher;.launchActivity:(Landroid/content/Intent;Landroid/content/Context;)Z"
+              ]
+            }
+          ]
+        },
+        {
+          "call" : 
+          {
+            "port" : "Argument(2)",
+            "position" : 
+            {
+              "end" : 58,
+              "line" : 30,
+              "path" : "OfferRedirectToWebActivity.java",
+              "start" : 50
+            },
+            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/OfferRenderingUtils;.navigateToStoreURL:(Landroid/content/Context;Ljava/lang/String;)V"
+          },
+          "kinds" : 
+          [
+            {
+              "call_info" : "CallSite",
+              "distance" : 1,
+              "kind" : "LaunchingComponent",
+              "origins" : 
+              [
+                "Lcom/facebook/secure/context/IntentLauncher;.launchActivity:(Landroid/content/Intent;Landroid/content/Context;)Z"
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
+{
   "method" : "Lcom/facebook/marianatrench/integrationtests/OfferRenderingUtils;.<init>:()V",
   "position" : 
   {
@@ -1443,6 +1383,36 @@
   {
     "line" : 9
   }
+}
+{
+  "inline_as" : "Argument(0)",
+  "method" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sanitize:(Ljava/lang/Object;)Ljava/lang/Object;",
+  "position" : 
+  {
+    "line" : 17
+  },
+  "propagation" : 
+  [
+    {
+      "input" : "Argument(0)",
+      "output" : 
+      [
+        {
+          "kinds" : 
+          [
+            {
+              "call_info" : "Propagation",
+              "kind" : "LocalReturn",
+              "output_paths" : 
+              [
+                ""
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
 }
 {
   "method" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
@@ -1563,6 +1533,36 @@
   {
     "line" : 9
   }
+}
+{
+  "inline_as" : "Argument(0)",
+  "method" : "Lcom/instagram/common/analytics/intf/AnalyticsEvent;.addExtra:(Ljava/lang/String;Ljava/lang/String;)Lcom/instagram/common/analytics/intf/AnalyticsEvent;",
+  "position" : 
+  {
+    "line" : 16
+  },
+  "propagation" : 
+  [
+    {
+      "input" : "Argument(0)",
+      "output" : 
+      [
+        {
+          "kinds" : 
+          [
+            {
+              "call_info" : "Propagation",
+              "kind" : "LocalReturn",
+              "output_paths" : 
+              [
+                ""
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
 }
 {
   "method" : "Lcom/instagram/common/analytics/intf/AnalyticsEvent;.obtain:(Ljava/lang/String;)Lcom/instagram/common/analytics/intf/AnalyticsEvent;",
