@@ -6,6 +6,7 @@
  */
 
 #include <optional>
+#include <tuple>
 
 #include <boost/algorithm/string.hpp>
 #include <fmt/format.h>
@@ -331,6 +332,46 @@ std::vector<std::string> sub_directories(
   return directories;
 }
 
+namespace {
+
+Json::Value json_model_full_name(const Json::Value& object) {
+  if (!object.isObject()) {
+    return Json::Value(Json::nullValue);
+  }
+
+  if (object.isMember("method")) {
+    return object["method"];
+  }
+
+  if (object.isMember("field")) {
+    return object["field"];
+  }
+
+  return Json::Value(Json::nullValue);
+}
+
+Json::Value json_model_short_name(const Json::Value& object) {
+  Json::Value full_name = json_model_full_name(object);
+
+  // Parameter type overrides.
+  if (full_name.isObject() && full_name.isMember("name")) {
+    return full_name["name"];
+  }
+
+  return full_name;
+}
+
+// Custom operator< on json values which sorts models per method or field name.
+// This makes it easier to compare changes in models.
+bool stable_json_compare(const Json::Value& left, const Json::Value& right) {
+  return std::make_tuple(
+             json_model_short_name(left), json_model_full_name(left), left) <
+      std::make_tuple(
+             json_model_short_name(right), json_model_full_name(right), right);
+}
+
+} // namespace
+
 std::string normalize_json_lines(const std::string& input) {
   std::vector<std::string> lines;
   boost::split(lines, input, boost::is_any_of("\n"));
@@ -368,21 +409,7 @@ std::string normalize_json_lines(const std::string& input) {
   }
   mt_assert(buffer == std::nullopt);
 
-  std::sort(
-      jsons.begin(),
-      jsons.end(),
-      [](const Json::Value& left, const Json::Value& right) {
-        if (left.isObject() && right.isObject() && left.isMember("method") &&
-            right.isMember("method") && left["method"].isString() &&
-            right["method"].isString() &&
-            left["method"].asString() != right["method"].asString()) {
-          return left["method"].asString() < right["method"].asString();
-        }
-        // Note that we cannot use Json::Value::operator< because it's not
-        // consistent between runs.
-        return JsonValidation::to_styled_string(left) <
-            JsonValidation::to_styled_string(right);
-      });
+  std::sort(jsons.begin(), jsons.end(), stable_json_compare);
 
   for (const auto& json : jsons) {
     auto normalized = JsonValidation::to_styled_string(json);
