@@ -36,7 +36,7 @@ TEST_F(FieldConstraintTest, FieldNameConstraintSatisfy) {
   EXPECT_FALSE(FieldNameConstraint("([A-Za-z/]*_)+").satisfy(field));
 }
 
-TEST_F(FieldConstraintTest, SignatureFieldConstraintSatisfy) {
+TEST_F(FieldConstraintTest, SignaturePatternFieldConstraintSatisfy) {
   Scope scope;
   auto dex_field = redex::create_field(
       scope, "LClass;", /* field */ {"field_name", type::java_lang_String()});
@@ -45,12 +45,13 @@ TEST_F(FieldConstraintTest, SignatureFieldConstraintSatisfy) {
   auto context = test::make_context(store);
   auto field = context.fields->get(dex_field);
 
-  EXPECT_TRUE(
-      SignatureFieldConstraint("LClass;\\.field_name\\:Ljava/lang/String;")
-          .satisfy(field));
-  EXPECT_TRUE(SignatureFieldConstraint(".*field_name.*").satisfy(field));
-  EXPECT_FALSE(SignatureFieldConstraint("LClass.field_name").satisfy(field));
-  EXPECT_FALSE(SignatureFieldConstraint("field_name").satisfy(field));
+  EXPECT_TRUE(SignaturePatternFieldConstraint(
+                  "LClass;\\.field_name\\:Ljava/lang/String;")
+                  .satisfy(field));
+  EXPECT_TRUE(SignaturePatternFieldConstraint(".*field_name.*").satisfy(field));
+  EXPECT_FALSE(
+      SignaturePatternFieldConstraint("LClass.field_name").satisfy(field));
+  EXPECT_FALSE(SignaturePatternFieldConstraint("field_name").satisfy(field));
 }
 
 TEST_F(FieldConstraintTest, HasAnnotationFieldConstraintSatisfy) {
@@ -248,7 +249,7 @@ TEST_F(FieldConstraintTest, FieldNameConstraintFromJson) {
       JsonValidationError);
 }
 
-TEST_F(FieldConstraintTest, SignatureFieldConstraintFromJson) {
+TEST_F(FieldConstraintTest, SignaturePatternFieldConstraintFromJson) {
   auto context = test::make_empty_context();
 
   {
@@ -257,7 +258,16 @@ TEST_F(FieldConstraintTest, SignatureFieldConstraintFromJson) {
           "constraint": "signature",
           "pattern": "LClass;.mfield:Ltype;"
         })"));
-    EXPECT_EQ(SignatureFieldConstraint("LClass;.mfield:Ltype;"), *constraint);
+    EXPECT_EQ(
+        SignaturePatternFieldConstraint("LClass;.mfield:Ltype;"), *constraint);
+
+    constraint = FieldConstraint::from_json(test::parse_json(
+        R"({
+          "constraint": "signature_pattern",
+          "pattern": "LClass;.mfield:Ltype;"
+        })"));
+    EXPECT_EQ(
+        SignaturePatternFieldConstraint("LClass;.mfield:Ltype;"), *constraint);
   }
 
   EXPECT_THROW(

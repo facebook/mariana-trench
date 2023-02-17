@@ -43,17 +43,18 @@ bool FieldNameConstraint::operator==(const FieldConstraint& other) const {
   }
 }
 
-SignatureFieldConstraint::SignatureFieldConstraint(
+SignaturePatternFieldConstraint::SignaturePatternFieldConstraint(
     const std::string& regex_string)
     : pattern_(regex_string) {}
 
-bool SignatureFieldConstraint::satisfy(const Field* field) const {
+bool SignaturePatternFieldConstraint::satisfy(const Field* field) const {
   return re2::RE2::FullMatch(field->show(), pattern_);
 }
 
-bool SignatureFieldConstraint::operator==(const FieldConstraint& other) const {
+bool SignaturePatternFieldConstraint::operator==(
+    const FieldConstraint& other) const {
   if (auto* other_constraint =
-          dynamic_cast<const SignatureFieldConstraint*>(&other)) {
+          dynamic_cast<const SignaturePatternFieldConstraint*>(&other)) {
     return other_constraint->pattern_.pattern() == pattern_.pattern();
   } else {
     return false;
@@ -164,7 +165,10 @@ std::unique_ptr<FieldConstraint> FieldConstraint::from_json(
     return std::make_unique<FieldNameConstraint>(
         JsonValidation::string(constraint, /* field */ "pattern"));
   } else if (constraint_name == "signature") {
-    return std::make_unique<SignatureFieldConstraint>(
+    return std::make_unique<SignaturePatternFieldConstraint>(
+        JsonValidation::string(constraint, /* field */ "pattern"));
+  } else if (constraint_name == "signature_pattern") {
+    return std::make_unique<SignaturePatternFieldConstraint>(
         JsonValidation::string(constraint, /* field */ "pattern"));
   } else if (constraint_name == "is_static") {
     bool expected = constraint.isMember("value")

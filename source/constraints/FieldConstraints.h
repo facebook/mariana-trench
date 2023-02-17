@@ -49,9 +49,9 @@ class IsStaticFieldConstraint final : public FieldConstraint {
   bool expected_;
 };
 
-class SignatureFieldConstraint final : public FieldConstraint {
+class SignaturePatternFieldConstraint final : public FieldConstraint {
  public:
-  explicit SignatureFieldConstraint(const std::string& regex_string);
+  explicit SignaturePatternFieldConstraint(const std::string& regex_string);
   bool satisfy(const Field* field) const override;
   bool operator==(const FieldConstraint& other) const override;
 
