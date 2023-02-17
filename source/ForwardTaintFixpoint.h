@@ -12,7 +12,6 @@
 #include <MonotonicFixpointIterator.h>
 
 #include <mariana-trench/ForwardTaintEnvironment.h>
-#include <mariana-trench/Log.h>
 
 namespace marianatrench {
 
@@ -22,34 +21,16 @@ class ForwardTaintFixpoint final : public sparta::MonotonicFixpointIterator<
  public:
   ForwardTaintFixpoint(
       const cfg::ControlFlowGraph& cfg,
-      InstructionAnalyzer<ForwardTaintEnvironment> instruction_analyzer)
-      : MonotonicFixpointIterator(cfg, cfg.num_blocks()),
-        instruction_analyzer_(instruction_analyzer) {}
+      InstructionAnalyzer<ForwardTaintEnvironment> instruction_analyzer);
 
-  virtual ~ForwardTaintFixpoint() {}
+  ~ForwardTaintFixpoint();
 
   void analyze_node(const NodeId& block, ForwardTaintEnvironment* taint)
-      const override {
-    LOG(4, "Analyzing block {}\n{}", block->id(), *taint);
-    for (auto& instruction : *block) {
-      switch (instruction.type) {
-        case MFLOW_OPCODE:
-          instruction_analyzer_(instruction.insn, taint);
-          break;
-        case MFLOW_POSITION:
-          taint->set_last_position(instruction.pos.get());
-          break;
-        default:
-          break;
-      }
-    }
-  }
+      const override;
 
   ForwardTaintEnvironment analyze_edge(
-      const EdgeId& /*edge*/,
-      const ForwardTaintEnvironment& taint) const override {
-    return taint;
-  }
+      const EdgeId& edge,
+      const ForwardTaintEnvironment& taint) const override;
 
  private:
   InstructionAnalyzer<ForwardTaintEnvironment> instruction_analyzer_;
