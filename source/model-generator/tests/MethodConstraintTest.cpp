@@ -344,7 +344,7 @@ TEST_F(MethodConstraintTest, NthParameterConstraintSatisfy) {
   EXPECT_FALSE(constraint.satisfy(context.methods->create(methods[1])));
 }
 
-TEST_F(MethodConstraintTest, SignatureConstraintSatisfy) {
+TEST_F(MethodConstraintTest, SignaturePatternConstraintSatisfy) {
   Scope scope;
   auto context = test::make_empty_context();
   auto methods = redex::create_methods(
@@ -364,8 +364,8 @@ TEST_F(MethodConstraintTest, SignatureConstraintSatisfy) {
             )
             ))",
       });
-  auto constraint =
-      SignatureConstraint("Landroid/app/Fragment;\\.getArguments:\\(\\)V");
+  auto constraint = SignaturePatternConstraint(
+      "Landroid/app/Fragment;\\.getArguments:\\(\\)V");
 
   EXPECT_TRUE(constraint.satisfy(context.methods->create(methods[0])));
   EXPECT_FALSE(constraint.satisfy(context.methods->create(methods[1])));
@@ -1137,7 +1137,7 @@ TEST_F(MethodConstraintTest, MethodConstraintFromJson) {
       JsonValidationError);
   // NthParameterConstraint
 
-  // SignatureConstraint
+  // SignaturePatternConstraint
   {
     auto constraint = MethodConstraint::from_json(
         test::parse_json(
@@ -1147,7 +1147,20 @@ TEST_F(MethodConstraintTest, MethodConstraintFromJson) {
         })"),
         context);
     EXPECT_EQ(
-        SignatureConstraint(
+        SignaturePatternConstraint(
+            "Landroid/app/Activity;\\.getIntent:\\(\\)Landroid/content/Intent;"),
+        *constraint);
+  }
+  {
+    auto constraint = MethodConstraint::from_json(
+        test::parse_json(
+            R"({
+          "constraint": "signature_pattern",
+          "pattern": "Landroid/app/Activity;\\.getIntent:\\(\\)Landroid/content/Intent;"
+        })"),
+        context);
+    EXPECT_EQ(
+        SignaturePatternConstraint(
             "Landroid/app/Activity;\\.getIntent:\\(\\)Landroid/content/Intent;"),
         *constraint);
   }
@@ -1181,7 +1194,7 @@ TEST_F(MethodConstraintTest, MethodConstraintFromJson) {
           })"),
           context),
       JsonValidationError);
-  // SignatureConstraint
+  // SignaturePatternConstraint
 
   // AnyOfMethodConstraint
   {
@@ -1204,9 +1217,9 @@ TEST_F(MethodConstraintTest, MethodConstraintFromJson) {
 
     {
       std::vector<std::unique_ptr<MethodConstraint>> constraints;
-      constraints.push_back(std::make_unique<SignatureConstraint>(
+      constraints.push_back(std::make_unique<SignaturePatternConstraint>(
           "Landroidx/fragment/app/Fragment;\\.getArguments:\\(\\)Landroid/os/Bundle;"));
-      constraints.push_back(std::make_unique<SignatureConstraint>(
+      constraints.push_back(std::make_unique<SignaturePatternConstraint>(
           "Landroid/app/Fragment;\\.getArguments:\\(\\)Landroid/os/Bundle;"));
 
       EXPECT_EQ(AnyOfMethodConstraint(std::move(constraints)), *constraint);
@@ -1214,9 +1227,9 @@ TEST_F(MethodConstraintTest, MethodConstraintFromJson) {
 
     {
       std::vector<std::unique_ptr<MethodConstraint>> constraints;
-      constraints.push_back(std::make_unique<SignatureConstraint>(
+      constraints.push_back(std::make_unique<SignaturePatternConstraint>(
           "Landroid/app/Fragment;\\.getArguments:\\(\\)Landroid/os/Bundle;"));
-      constraints.push_back(std::make_unique<SignatureConstraint>(
+      constraints.push_back(std::make_unique<SignaturePatternConstraint>(
           "Landroidx/fragment/app/Fragment;\\.getArguments:\\(\\)Landroid/os/Bundle;"));
 
       EXPECT_EQ(AnyOfMethodConstraint(std::move(constraints)), *constraint);

@@ -200,9 +200,9 @@ class NthParameterConstraint final : public MethodConstraint {
   std::unique_ptr<ParameterConstraint> inner_constraint_;
 };
 
-class SignatureConstraint final : public MethodConstraint {
+class SignaturePatternConstraint final : public MethodConstraint {
  public:
-  explicit SignatureConstraint(const std::string& regex_string);
+  explicit SignaturePatternConstraint(const std::string& regex_string);
   MethodHashedSet may_satisfy(
       const MethodMappings& method_mappings) const override;
   bool satisfy(const Method* method) const override;
