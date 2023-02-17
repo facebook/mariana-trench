@@ -21,7 +21,7 @@ class ForwardAliasFixpoint final : public sparta::MonotonicFixpointIterator<
                                        ForwardAliasEnvironment> {
  public:
   ForwardAliasFixpoint(
-      MethodContext* context,
+      MethodContext& context,
       const cfg::ControlFlowGraph& cfg,
       InstructionAnalyzer<ForwardAliasEnvironment> instruction_analyzer);
 
@@ -35,7 +35,7 @@ class ForwardAliasFixpoint final : public sparta::MonotonicFixpointIterator<
       const ForwardAliasEnvironment& environment) const override;
 
  private:
-  MethodContext* context_;
+  MethodContext& context_;
   InstructionAnalyzer<ForwardAliasEnvironment> instruction_analyzer_;
 };
 

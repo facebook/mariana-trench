@@ -12,7 +12,7 @@
 namespace marianatrench {
 
 ForwardAliasFixpoint::ForwardAliasFixpoint(
-    MethodContext* context,
+    MethodContext& context,
     const cfg::ControlFlowGraph& cfg,
     InstructionAnalyzer<ForwardAliasEnvironment> instruction_analyzer)
     : MonotonicFixpointIterator(cfg, cfg.num_blocks()),
@@ -24,7 +24,7 @@ ForwardAliasFixpoint::~ForwardAliasFixpoint() {}
 namespace {
 
 void analyze_instruction(
-    MethodContext* context,
+    MethodContext& context,
     const InstructionAnalyzer<ForwardAliasEnvironment>& instruction_analyzer,
     const IRInstruction* instruction,
     ForwardAliasEnvironment* environment) {
@@ -42,7 +42,7 @@ void analyze_instruction(
     result_memory_locations = environment->memory_locations(k_result_register);
   }
 
-  context->aliasing.store(
+  context.aliasing.store(
       instruction,
       InstructionAliasResults{
           memory_location_environment,
