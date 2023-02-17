@@ -34,26 +34,12 @@ bool ForwardTaintTransfer::analyze_default(
     ForwardTaintEnvironment* environment) {
   log_instruction(context, instruction);
 
-  // Assign the result register to a new memory location.
-  auto* memory_location = context->memory_factory.make_location(instruction);
-  if (instruction->has_dest()) {
-    LOG_OR_DUMP(
-        context,
-        4,
-        "Setting register {} to {}",
-        instruction->dest(),
-        show(memory_location));
-    environment->assign(instruction->dest(), memory_location);
-  } else if (instruction->has_move_result_any()) {
-    LOG_OR_DUMP(
-        context, 4, "Setting result register to {}", show(memory_location));
-    environment->assign(k_result_register, memory_location);
-  } else {
-    return false;
+  if (instruction->has_dest() || instruction->has_move_result_any()) {
+    auto* memory_location = context->memory_factory.make_location(instruction);
+    LOG_OR_DUMP(context, 4, "Tainting {} with {{}}", show(memory_location));
+    environment->write(
+        memory_location, TaintTree::bottom(), UpdateKind::Strong);
   }
-
-  LOG_OR_DUMP(context, 4, "Tainting {} with {{}}", show(memory_location));
-  environment->write(memory_location, TaintTree::bottom(), UpdateKind::Strong);
 
   return false;
 }
@@ -63,9 +49,10 @@ bool ForwardTaintTransfer::analyze_check_cast(
     const IRInstruction* instruction,
     ForwardTaintEnvironment* environment) {
   log_instruction(context, instruction);
-  mt_assert(instruction->srcs().size() == 1);
+  const auto& aliasing = context->aliasing.get(instruction);
 
-  auto taint = environment->read(instruction->srcs()[0]);
+  auto taint = environment->read(
+      aliasing.register_memory_locations(instruction->src(0)));
 
   // Add via-cast feature as configured by the program options.
   auto allowed_features = context->options.allow_via_cast_features();
@@ -81,17 +68,8 @@ bool ForwardTaintTransfer::analyze_check_cast(
     });
   }
 
-  // Create a new memory location as we do not want to alias the pre-cast
-  // location when attaching the via-cast feature.
-  auto memory_location = context->memory_factory.make_location(instruction);
-  environment->write(memory_location, taint, UpdateKind::Strong);
-
-  LOG_OR_DUMP(
-      context,
-      4,
-      "Setting result register to new memory location {}",
-      show(memory_location));
-  environment->assign(k_result_register, memory_location);
+  environment->write(
+      aliasing.result_memory_location(), taint, UpdateKind::Strong);
 
   return false;
 }
@@ -101,8 +79,6 @@ bool ForwardTaintTransfer::analyze_iget(
     const IRInstruction* instruction,
     ForwardTaintEnvironment* environment) {
   log_instruction(context, instruction);
-  mt_assert(instruction->srcs().size() == 1);
-  mt_assert(instruction->has_field());
 
   const auto field_target =
       context->call_graph.resolved_field_access(context->method(), instruction);
@@ -118,13 +94,8 @@ bool ForwardTaintTransfer::analyze_iget(
   auto declared_field_model =
       field_target ? context->registry.get(field_target->field) : FieldModel();
 
-  // Read source memory locations that represents the field.
-  auto memory_locations = environment->memory_locations(
-      /* register */ instruction->srcs()[0],
-      /* field */ instruction->get_field()->get_name());
-  LOG_OR_DUMP(context, 4, "Setting result register to {}", memory_locations);
-  environment->assign(k_result_register, memory_locations);
   if (!declared_field_model.empty()) {
+    const auto& aliasing = context->aliasing.get(instruction);
     LOG_OR_DUMP(
         context,
         4,
@@ -132,8 +103,7 @@ bool ForwardTaintTransfer::analyze_iget(
         k_result_register,
         declared_field_model.sources());
     environment->write(
-        k_result_register,
-        Path({}),
+        aliasing.result_memory_locations(),
         declared_field_model.sources(),
         UpdateKind::Weak);
   }
@@ -146,8 +116,7 @@ bool ForwardTaintTransfer::analyze_sget(
     const IRInstruction* instruction,
     ForwardTaintEnvironment* environment) {
   log_instruction(context, instruction);
-  mt_assert(instruction->srcs().size() == 0);
-  mt_assert(instruction->has_field());
+  const auto& aliasing = context->aliasing.get(instruction);
 
   const auto field_target =
       context->call_graph.resolved_field_access(context->method(), instruction);
@@ -160,9 +129,6 @@ bool ForwardTaintTransfer::analyze_sget(
   }
   auto field_model =
       field_target ? context->registry.get(field_target->field) : FieldModel();
-  auto memory_location = context->memory_factory.make_location(instruction);
-  LOG_OR_DUMP(context, 4, "Setting result register to {}", *memory_location);
-  environment->assign(k_result_register, memory_location);
   LOG_OR_DUMP(
       context,
       4,
@@ -170,7 +136,9 @@ bool ForwardTaintTransfer::analyze_sget(
       k_result_register,
       field_model.sources());
   environment->write(
-      k_result_register, TaintTree(field_model.sources()), UpdateKind::Strong);
+      aliasing.result_memory_location(),
+      TaintTree(field_model.sources()),
+      UpdateKind::Strong);
 
   return false;
 }
@@ -179,6 +147,7 @@ namespace {
 
 void apply_generations(
     MethodContext* context,
+    const InstructionAliasResults& aliasing,
     ForwardTaintEnvironment* environment,
     const IRInstruction* instruction,
     const CalleeModel& callee,
@@ -207,7 +176,10 @@ void apply_generations(
             "Tainting register {} with {}",
             register_id,
             generations);
-        environment->write(register_id, generations, UpdateKind::Weak);
+        environment->write(
+            aliasing.register_memory_locations(register_id),
+            generations,
+            UpdateKind::Weak);
         break;
       }
       default:
@@ -218,6 +190,7 @@ void apply_generations(
 
 void apply_propagations(
     MethodContext* context,
+    const InstructionAliasResults& aliasing,
     const ForwardTaintEnvironment* previous_environment,
     ForwardTaintEnvironment* new_environment,
     const IRInstruction* instruction,
@@ -254,7 +227,8 @@ void apply_propagations(
 
     auto input_register_id = instruction_sources.at(input_parameter_position);
     auto input_taint_tree = previous_environment->read(
-        input_register_id, input.path().resolve(source_constant_arguments));
+        aliasing.register_memory_locations(input_register_id),
+        input.path().resolve(source_constant_arguments));
 
     // Collapsing the tree here is required for correctness and performance.
     // Propagations can be collapsed, which results in taking the common
@@ -343,7 +317,7 @@ void apply_propagations(
                 output_paths_resolved,
                 output_taint_tree);
             new_environment->write(
-                output_register_id,
+                aliasing.register_memory_locations(output_register_id),
                 output_paths_resolved,
                 output_taint_tree,
                 callee.model.strong_write_on_propagation() ? UpdateKind::Strong
@@ -377,8 +351,7 @@ void apply_propagations(
       }
 
       auto register_id = instruction_sources[parameter_position];
-      auto memory_locations =
-          previous_environment->memory_locations(register_id);
+      auto memory_locations = aliasing.register_memory_locations(register_id);
       for (auto* memory_location : memory_locations.elements()) {
         auto taint = new_environment->read(memory_location);
         taint.map([&features, position](Taint& sources) {
@@ -632,6 +605,7 @@ void check_flows(
 
 void check_flows(
     MethodContext* context,
+    const InstructionAliasResults& aliasing,
     const ForwardTaintEnvironment* environment,
     const std::function<std::optional<Register>(ParameterPosition)>&
         get_parameter_register,
@@ -659,7 +633,9 @@ void check_flows(
 
     Taint sources =
         environment
-            ->read(*register_id, port.path().resolve(source_constant_arguments))
+            ->read(
+                aliasing.register_memory_locations(*register_id),
+                port.path().resolve(source_constant_arguments))
             .collapse(/* transform */ [context](Taint& taint) {
               return taint.add_inferred_features_to_real_sources(
                   FeatureMayAlwaysSet{
@@ -702,6 +678,7 @@ void check_flows(
 
 void check_flows(
     MethodContext* context,
+    const InstructionAliasResults& aliasing,
     const ForwardTaintEnvironment* environment,
     const std::vector<Register>& instruction_sources,
     const CalleeModel& callee,
@@ -709,6 +686,7 @@ void check_flows(
     const FeatureMayAlwaysSet& extra_features = {}) {
   check_flows(
       context,
+      aliasing,
       environment,
       [&instruction_sources](
           ParameterPosition parameter_position) -> std::optional<Register> {
@@ -725,6 +703,7 @@ void check_flows(
 
 void check_flows_to_array_allocation(
     MethodContext* context,
+    const InstructionAliasResults& aliasing,
     ForwardTaintEnvironment* environment,
     const IRInstruction* instruction) {
   if (!context->artificial_methods.array_allocation_kind_used()) {
@@ -734,7 +713,7 @@ void check_flows_to_array_allocation(
   auto* array_allocation_method = context->methods.get(
       context->artificial_methods.array_allocation_method());
   auto* position =
-      context->positions.get(context->method(), environment->last_position());
+      context->positions.get(context->method(), aliasing.position());
   auto array_allocation_sink = Taint{TaintConfig(
       /* kind */ context->artificial_methods.array_allocation_kind(),
       /* callee_port */ AccessPath(Root(Root::Kind::Argument, 0)),
@@ -761,7 +740,9 @@ void check_flows_to_array_allocation(
        parameter_position < instruction_sources.size();
        parameter_position++) {
     auto register_id = instruction_sources.at(parameter_position);
-    Taint sources = environment->read(register_id).collapse();
+    Taint sources =
+        environment->read(aliasing.register_memory_locations(register_id))
+            .collapse();
     // Fulfilled partial sinks ignored. No partial sinks for array allocation.
     check_flows(
         context,
@@ -777,12 +758,14 @@ void check_flows_to_array_allocation(
 
 void check_flows(
     MethodContext* context,
+    const InstructionAliasResults& aliasing,
     const ForwardTaintEnvironment* environment,
     const IRInstruction* instruction,
     const CalleeModel& callee,
     const std::vector<std::optional<std::string>>& source_constant_arguments) {
   check_flows(
       context,
+      aliasing,
       environment,
       instruction->srcs_vec(),
       callee,
@@ -791,6 +774,7 @@ void check_flows(
 
 void analyze_artificial_calls(
     MethodContext* context,
+    const InstructionAliasResults& aliasing,
     const IRInstruction* instruction,
     ForwardTaintEnvironment* environment,
     const std::vector<std::optional<std::string>>& source_constant_arguments =
@@ -801,6 +785,7 @@ void analyze_artificial_calls(
   for (const auto& artificial_callee : artificial_callees) {
     check_flows(
         context,
+        aliasing,
         environment,
         [&artificial_callee](
             ParameterPosition parameter_position) -> std::optional<Register> {
@@ -812,39 +797,10 @@ void analyze_artificial_calls(
 
           return found->second;
         },
-        get_callee(context, artificial_callee, environment->last_position()),
+        get_callee(context, artificial_callee, aliasing.position()),
         source_constant_arguments,
         FeatureMayAlwaysSet::make_always(artificial_callee.features));
   }
-}
-
-MemoryLocation* MT_NULLABLE try_alias_this_location(
-    MethodContext* context,
-    ForwardTaintEnvironment* environment,
-    const CalleeModel& callee,
-    const IRInstruction* instruction) {
-  if (!callee.model.alias_memory_location_on_invoke()) {
-    return nullptr;
-  }
-
-  if (callee.resolved_base_method && callee.resolved_base_method->is_static()) {
-    return nullptr;
-  }
-
-  auto register_id = instruction->srcs_vec().at(0);
-  auto memory_locations = environment->memory_locations(register_id);
-  if (!memory_locations.is_value() || memory_locations.size() != 1) {
-    return nullptr;
-  }
-
-  auto* memory_location = *memory_locations.elements().begin();
-  LOG_OR_DUMP(
-      context,
-      4,
-      "Method invoke aliasing existing memory location {}",
-      show(memory_location));
-
-  return memory_location;
 }
 
 void check_call_effect_flows(
@@ -913,13 +869,14 @@ bool ForwardTaintTransfer::analyze_invoke(
     const IRInstruction* instruction,
     ForwardTaintEnvironment* environment) {
   log_instruction(context, instruction);
+  const auto& aliasing = context->aliasing.get(instruction);
 
   auto source_constant_arguments = get_source_constant_arguments(
-      environment->memory_location_environment(), instruction);
+      aliasing.memory_location_environment(), instruction);
   auto callee = get_callee(
       context,
       instruction,
-      environment->last_position(),
+      aliasing.position(),
       get_source_register_types(context, instruction),
       source_constant_arguments);
 
@@ -927,6 +884,7 @@ bool ForwardTaintTransfer::analyze_invoke(
   TaintTree result_taint;
   check_flows(
       context,
+      aliasing,
       &previous_environment,
       instruction,
       callee,
@@ -935,49 +893,36 @@ bool ForwardTaintTransfer::analyze_invoke(
   apply_call_effects(context, callee);
   apply_propagations(
       context,
+      aliasing,
       &previous_environment,
       environment,
       instruction,
       callee,
       source_constant_arguments,
       result_taint);
-  apply_generations(context, environment, instruction, callee, result_taint);
+  apply_generations(
+      context, aliasing, environment, instruction, callee, result_taint);
 
   if (callee.resolved_base_method &&
       callee.resolved_base_method->returns_void()) {
-    LOG_OR_DUMP(context, 4, "Resetting the result register");
-    environment->assign(k_result_register, MemoryLocationsDomain::bottom());
+    // No result.
   } else if (
-      auto* memory_location = try_inline_invoke(
+      try_inline_invoke(
           context,
-          environment->memory_location_environment(),
+          aliasing.memory_location_environment(),
           instruction,
-          callee)) {
-    LOG_OR_DUMP(
-        context, 4, "Setting result register to {}", show(memory_location));
-    environment->assign(k_result_register, memory_location);
+          callee) != nullptr) {
+    // Since we are inlining the call, we should NOT write any taint.
+    LOG_OR_DUMP(context, 4, "Inlining method call");
   } else {
-    // Check if the method can alias existing memory location
-    memory_location =
-        try_alias_this_location(context, environment, callee, instruction);
-
-    // Assume the method call returns a new memory location,
-    // that does not alias with anything.
-    if (memory_location == nullptr) {
-      memory_location = context->memory_factory.make_location(instruction);
-    }
-
-    LOG_OR_DUMP(
-        context, 4, "Setting result register to {}", show(memory_location));
-    environment->assign(k_result_register, memory_location);
-
+    auto* memory_location = aliasing.result_memory_location();
     LOG_OR_DUMP(
         context, 4, "Tainting {} with {}", show(memory_location), result_taint);
     environment->write(memory_location, result_taint, UpdateKind::Weak);
   }
 
   analyze_artificial_calls(
-      context, instruction, environment, source_constant_arguments);
+      context, aliasing, instruction, environment, source_constant_arguments);
 
   return false;
 }
@@ -1052,13 +997,13 @@ bool ForwardTaintTransfer::analyze_iput(
     const IRInstruction* instruction,
     ForwardTaintEnvironment* environment) {
   log_instruction(context, instruction);
-  mt_assert(instruction->srcs().size() == 2);
-  mt_assert(instruction->has_field());
+  const auto& aliasing = context->aliasing.get(instruction);
 
-  auto taint = environment->read(/* register */ instruction->srcs()[0]);
+  auto taint = environment->read(
+      aliasing.register_memory_locations(instruction->src(0)));
   auto* position = context->positions.get(
       context->method(),
-      environment->last_position(),
+      aliasing.position(),
       Root(Root::Kind::Return),
       instruction);
   taint.map(
@@ -1069,7 +1014,7 @@ bool ForwardTaintTransfer::analyze_iput(
   // Store the taint in the memory location(s) representing the field
   auto* field_name = instruction->get_field()->get_name();
   auto target_memory_locations =
-      environment->memory_locations(/* register */ instruction->srcs()[1]);
+      aliasing.register_memory_locations(instruction->src(1));
   bool is_singleton = target_memory_locations.elements().size() == 1;
 
   for (auto* memory_location : target_memory_locations.elements()) {
@@ -1090,7 +1035,7 @@ bool ForwardTaintTransfer::analyze_iput(
         is_singleton ? UpdateKind::Strong : UpdateKind::Weak);
   }
 
-  analyze_artificial_calls(context, instruction, environment);
+  analyze_artificial_calls(context, aliasing, instruction, environment);
 
   return false;
 }
@@ -1100,16 +1045,16 @@ bool ForwardTaintTransfer::analyze_sput(
     const IRInstruction* instruction,
     ForwardTaintEnvironment* environment) {
   log_instruction(context, instruction);
-  mt_assert(instruction->srcs().size() == 1);
-  mt_assert(instruction->has_field());
+  const auto& aliasing = context->aliasing.get(instruction);
 
-  auto taint = environment->read(/* register */ instruction->srcs()[0]);
+  auto taint = environment->read(
+      aliasing.register_memory_locations(instruction->src(0)));
   if (taint.is_bottom()) {
     return false;
   }
   auto* position = context->positions.get(
       context->method(),
-      environment->last_position(),
+      aliasing.position(),
       Root(Root::Kind::Return),
       instruction);
   taint.map(
@@ -1123,28 +1068,23 @@ bool ForwardTaintTransfer::analyze_load_param(
     const IRInstruction* instruction,
     ForwardTaintEnvironment* environment) {
   log_instruction(context, instruction);
+  const auto& aliasing = context->aliasing.get(instruction);
 
-  auto abstract_parameter = environment->last_parameter_loaded();
-  if (!abstract_parameter.is_value()) {
+  auto* memory_location = aliasing.result_memory_location_or_null();
+  if (memory_location == nullptr) {
     ERROR_OR_DUMP(context, 1, "Failed to deduce the parameter of a load");
     return false;
   }
-  auto parameter_position = *abstract_parameter.get_constant();
-  environment->increment_last_parameter_loaded();
 
-  // Create a memory location that represents the argument.
-  auto memory_location =
-      context->memory_factory.make_parameter(parameter_position);
-  LOG_OR_DUMP(
-      context,
-      4,
-      "Setting register {} to {}",
-      instruction->dest(),
-      show(memory_location));
-  environment->assign(instruction->dest(), memory_location);
+  auto* parameter_memory_location =
+      memory_location->dyn_cast<ParameterMemoryLocation>();
+  if (parameter_memory_location == nullptr) {
+    ERROR_OR_DUMP(context, 1, "Failed to deduce the parameter of a load");
+    return false;
+  }
 
   // Add parameter sources specified in model generators.
-  auto root = Root(Root::Kind::Argument, parameter_position);
+  auto root = Root(Root::Kind::Argument, parameter_memory_location->position());
   auto taint = context->model.parameter_sources().read(root);
 
   // Add the position of the instruction to the parameter sources.
@@ -1169,18 +1109,8 @@ bool ForwardTaintTransfer::analyze_move(
     const IRInstruction* instruction,
     ForwardTaintEnvironment* environment) {
   log_instruction(context, instruction);
-  mt_assert(instruction->srcs().size() == 1);
 
-  auto memory_locations =
-      environment->memory_locations(/* register */ instruction->srcs()[0]);
-  LOG_OR_DUMP(
-      context,
-      4,
-      "Setting register {} to {}",
-      instruction->dest(),
-      memory_locations);
-  environment->assign(instruction->dest(), memory_locations);
-
+  // This is a no-op for taint.
   return false;
 }
 
@@ -1190,18 +1120,7 @@ bool ForwardTaintTransfer::analyze_move_result(
     ForwardTaintEnvironment* environment) {
   log_instruction(context, instruction);
 
-  auto memory_locations = environment->memory_locations(k_result_register);
-  LOG_OR_DUMP(
-      context,
-      4,
-      "Setting register {} to {}",
-      instruction->dest(),
-      memory_locations);
-  environment->assign(instruction->dest(), memory_locations);
-
-  LOG_OR_DUMP(context, 4, "Resetting the result register");
-  environment->assign(k_result_register, MemoryLocationsDomain::bottom());
-
+  // This is a no-op for taint.
   return false;
 }
 
@@ -1210,14 +1129,8 @@ bool ForwardTaintTransfer::analyze_aget(
     const IRInstruction* instruction,
     ForwardTaintEnvironment* environment) {
   log_instruction(context, instruction);
-  mt_assert(instruction->srcs().size() == 2);
 
-  // We use a single memory location for the array and its elements.
-  auto memory_locations =
-      environment->memory_locations(/* register */ instruction->srcs()[0]);
-  LOG_OR_DUMP(context, 4, "Setting result register to {}", memory_locations);
-  environment->assign(k_result_register, memory_locations);
-
+  // This is a no-op for taint.
   return false;
 }
 
@@ -1226,16 +1139,16 @@ bool ForwardTaintTransfer::analyze_aput(
     const IRInstruction* instruction,
     ForwardTaintEnvironment* environment) {
   log_instruction(context, instruction);
-  mt_assert(instruction->srcs().size() == 3);
+  const auto& aliasing = context->aliasing.get(instruction);
 
   auto taint = environment->read(
-      /* register */ instruction->srcs()[0]);
+      aliasing.register_memory_locations(instruction->src(0)));
 
   auto features =
       FeatureMayAlwaysSet::make_always({context->features.get("via-array")});
   auto* position = context->positions.get(
       context->method(),
-      environment->last_position(),
+      aliasing.position(),
       Root(Root::Kind::Return),
       instruction);
   taint.map([&features, position](Taint& sources) {
@@ -1244,7 +1157,7 @@ bool ForwardTaintTransfer::analyze_aput(
 
   // We use a single memory location for the array and its elements.
   auto target_memory_locations =
-      environment->memory_locations(/* register */ instruction->srcs()[1]);
+      aliasing.register_memory_locations(instruction->src(1));
   for (auto* memory_location : target_memory_locations.elements()) {
     LOG_OR_DUMP(
         context, 4, "Tainting {} with {}", show(memory_location), taint);
@@ -1258,7 +1171,8 @@ bool ForwardTaintTransfer::analyze_new_array(
     MethodContext* context,
     const IRInstruction* instruction,
     ForwardTaintEnvironment* environment) {
-  check_flows_to_array_allocation(context, environment, instruction);
+  check_flows_to_array_allocation(
+      context, context->aliasing.get(instruction), environment, instruction);
   return analyze_default(context, instruction, environment);
 }
 
@@ -1266,7 +1180,8 @@ bool ForwardTaintTransfer::analyze_filled_new_array(
     MethodContext* context,
     const IRInstruction* instruction,
     ForwardTaintEnvironment* environment) {
-  check_flows_to_array_allocation(context, environment, instruction);
+  check_flows_to_array_allocation(
+      context, context->aliasing.get(instruction), environment, instruction);
   return analyze_default(context, instruction, environment);
 }
 
@@ -1277,41 +1192,26 @@ static bool analyze_numerical_operator(
     const IRInstruction* instruction,
     ForwardTaintEnvironment* environment) {
   log_instruction(context, instruction);
+  const auto& aliasing = context->aliasing.get(instruction);
 
   TaintTree taint;
   for (auto register_id : instruction->srcs()) {
-    taint.join_with(environment->read(register_id));
+    taint.join_with(
+        environment->read(aliasing.register_memory_locations(register_id)));
   }
 
   auto features = FeatureMayAlwaysSet::make_always(
       {context->features.get("via-numerical-operator")});
   auto* position = context->positions.get(
       context->method(),
-      environment->last_position(),
+      aliasing.position(),
       Root(Root::Kind::Return),
       instruction);
   taint.map([&features, position](Taint& sources) {
     sources.add_inferred_features_and_local_position(features, position);
   });
 
-  // Assume the instruction creates a new memory location.
-  auto memory_location = context->memory_factory.make_location(instruction);
-  if (instruction->has_dest()) {
-    LOG_OR_DUMP(
-        context,
-        4,
-        "Setting register {} to {}",
-        instruction->dest(),
-        show(memory_location));
-    environment->assign(instruction->dest(), memory_location);
-  } else if (instruction->has_move_result_any()) {
-    LOG_OR_DUMP(
-        context, 4, "Setting result register to {}", show(memory_location));
-    environment->assign(k_result_register, memory_location);
-  } else {
-    return false;
-  }
-
+  auto* memory_location = aliasing.result_memory_location();
   LOG_OR_DUMP(context, 4, "Tainting {} with {}", show(memory_location), taint);
   environment->write(memory_location, taint, UpdateKind::Strong);
 
@@ -1403,96 +1303,6 @@ void infer_output_taint(
   }
 }
 
-bool has_side_effect(const MethodItemEntry& instruction) {
-  switch (instruction.type) {
-    case MFLOW_OPCODE:
-      switch (instruction.insn->opcode()) {
-        case IOPCODE_LOAD_PARAM:
-        case IOPCODE_LOAD_PARAM_OBJECT:
-        case IOPCODE_LOAD_PARAM_WIDE:
-        case OPCODE_NOP:
-        case OPCODE_MOVE:
-        case OPCODE_MOVE_WIDE:
-        case OPCODE_MOVE_OBJECT:
-        case OPCODE_MOVE_RESULT:
-        case OPCODE_MOVE_RESULT_WIDE:
-        case OPCODE_MOVE_RESULT_OBJECT:
-        case IOPCODE_MOVE_RESULT_PSEUDO:
-        case IOPCODE_MOVE_RESULT_PSEUDO_OBJECT:
-        case IOPCODE_MOVE_RESULT_PSEUDO_WIDE:
-        case OPCODE_RETURN_VOID:
-        case OPCODE_RETURN:
-        case OPCODE_RETURN_WIDE:
-        case OPCODE_RETURN_OBJECT:
-        case OPCODE_CONST:
-        case OPCODE_CONST_WIDE:
-        case OPCODE_IGET:
-        case OPCODE_IGET_WIDE:
-        case OPCODE_IGET_OBJECT:
-        case OPCODE_IGET_BOOLEAN:
-        case OPCODE_IGET_BYTE:
-        case OPCODE_IGET_CHAR:
-        case OPCODE_IGET_SHORT:
-          return false;
-        default:
-          return true;
-      }
-      break;
-    case MFLOW_DEBUG:
-    case MFLOW_POSITION:
-    case MFLOW_FALLTHROUGH:
-      return false;
-    default:
-      return true;
-  }
-}
-
-// Infer whether the method could be inlined.
-AccessPathConstantDomain infer_inline_as(
-    MethodContext* context,
-    const MemoryLocationsDomain& memory_locations) {
-  // Check if we are returning an argument access path.
-  if (!memory_locations.is_value() || memory_locations.size() != 1 ||
-      context->model.has_global_propagation_sanitizer()) {
-    return AccessPathConstantDomain::top();
-  }
-
-  auto* memory_location = *memory_locations.elements().begin();
-  auto access_path = memory_location->access_path();
-  if (!access_path) {
-    return AccessPathConstantDomain::top();
-  }
-
-  LOG_OR_DUMP(
-      context, 4, "Instruction returns the access path: {}", *access_path);
-
-  // Check if the method has any side effect.
-  const auto* code = context->method()->get_code();
-  mt_assert(code != nullptr);
-  const auto& cfg = code->cfg();
-  if (cfg.blocks().size() != 1) {
-    // There could be multiple return statements.
-    LOG_OR_DUMP(
-        context, 4, "Method has multiple basic blocks, it cannot be inlined.");
-    return AccessPathConstantDomain::top();
-  }
-
-  auto* entry_block = cfg.entry_block();
-  auto found =
-      std::find_if(entry_block->begin(), entry_block->end(), has_side_effect);
-  if (found != entry_block->end()) {
-    LOG_OR_DUMP(
-        context,
-        4,
-        "Method has an instruction with possible side effects: {}, it cannot be inlined.",
-        show(*found));
-    return AccessPathConstantDomain::top();
-  }
-
-  LOG_OR_DUMP(context, 4, "Method can be inlined as {}", *access_path);
-  return AccessPathConstantDomain(*access_path);
-}
-
 } // namespace
 
 bool ForwardTaintTransfer::analyze_return(
@@ -1500,20 +1310,20 @@ bool ForwardTaintTransfer::analyze_return(
     const IRInstruction* instruction,
     ForwardTaintEnvironment* environment) {
   log_instruction(context, instruction);
+  const auto& aliasing = context->aliasing.get(instruction);
 
   auto return_sinks = context->model.sinks().read(Root(Root::Kind::Return));
 
   // Add the position of the instruction to the return sinks.
   auto* position =
-      context->positions.get(context->method(), environment->last_position());
+      context->positions.get(context->method(), aliasing.position());
   return_sinks.map(
       [position](Taint& sinks) { sinks = sinks.attach_position(position); });
   auto return_index =
       context->call_graph.return_index(context->method(), instruction);
 
   for (auto register_id : instruction->srcs()) {
-    auto memory_locations = environment->memory_locations(register_id);
-    context->model.set_inline_as(infer_inline_as(context, memory_locations));
+    auto memory_locations = aliasing.register_memory_locations(register_id);
     infer_output_taint(
         context,
         Root(Root::Kind::Return),
@@ -1522,7 +1332,7 @@ bool ForwardTaintTransfer::analyze_return(
 
     for (const auto& [path, sinks] : return_sinks.elements()) {
       Taint sources =
-          environment->read(register_id, path)
+          environment->read(memory_locations, path)
               .collapse(
                   /* transform */ [context](Taint& taint) {
                     return taint.add_inferred_features_to_real_sources(

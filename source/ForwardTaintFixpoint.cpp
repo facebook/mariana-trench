@@ -27,9 +27,6 @@ void ForwardTaintFixpoint::analyze_node(
       case MFLOW_OPCODE:
         instruction_analyzer_(instruction.insn, taint);
         break;
-      case MFLOW_POSITION:
-        taint->set_last_position(instruction.pos.get());
-        break;
       default:
         break;
     }
