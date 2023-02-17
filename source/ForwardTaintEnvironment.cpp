@@ -122,6 +122,11 @@ void ForwardTaintEnvironment::narrow_with(
   last_parameter_load_.narrow_with(other.last_parameter_load_);
 }
 
+const MemoryLocationEnvironment&
+ForwardTaintEnvironment::memory_location_environment() const {
+  return memory_locations_;
+}
+
 void ForwardTaintEnvironment::assign(
     Register register_id,
     MemoryLocation* memory_location) {

@@ -15,6 +15,7 @@
 
 #include <ConcurrentContainers.h>
 
+#include <mariana-trench/Compiler.h>
 #include <mariana-trench/Method.h>
 #include <mariana-trench/Options.h>
 #include <mariana-trench/Position.h>
@@ -38,21 +39,21 @@ class Positions final {
    */
   const Position* get(
       const DexMethod* method,
-      const DexPosition* position = nullptr,
+      const DexPosition* MT_NULLABLE position = nullptr,
       std::optional<Root> port = {},
-      const IRInstruction* instruction = nullptr) const;
+      const IRInstruction* MT_NULLABLE instruction = nullptr) const;
 
   const Position* get(
       const Method* method,
-      const DexPosition* position = nullptr,
+      const DexPosition* MT_NULLABLE position = nullptr,
       std::optional<Root> port = {},
-      const IRInstruction* instruction = nullptr) const;
+      const IRInstruction* MT_NULLABLE instruction = nullptr) const;
 
   const Position* get(
       const DexMethod* method,
       int line,
       std::optional<Root> port = {},
-      const IRInstruction* instruction = nullptr,
+      const IRInstruction* MT_NULLABLE instruction = nullptr,
       int start = k_unknown_start,
       int end = k_unknown_end) const;
 
@@ -60,7 +61,7 @@ class Positions final {
       const std::optional<std::string>& path,
       int line,
       std::optional<Root> port = {},
-      const IRInstruction* instruction = nullptr,
+      const IRInstruction* MT_NULLABLE instruction = nullptr,
       int start = k_unknown_start,
       int end = k_unknown_end) const;
 

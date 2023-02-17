@@ -68,6 +68,8 @@ class ForwardTaintEnvironment final
 
   void narrow_with(const ForwardTaintEnvironment& other) override;
 
+  const MemoryLocationEnvironment& memory_location_environment() const;
+
   /* Set the memory location where the register points to. */
   void assign(Register register_id, MemoryLocation* memory_location);
 

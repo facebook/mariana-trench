@@ -23,21 +23,10 @@
 #include <mariana-trench/PartialKind.h>
 #include <mariana-trench/Positions.h>
 #include <mariana-trench/Rules.h>
+#include <mariana-trench/TransferCall.h>
 #include <mariana-trench/TriggeredPartialKind.h>
 
 namespace marianatrench {
-
-namespace {
-
-constexpr Register k_result_register = std::numeric_limits<Register>::max();
-
-inline void log_instruction(
-    const MethodContext* context,
-    const IRInstruction* instruction) {
-  LOG_OR_DUMP(context, 4, "Instruction: \033[33m{}\033[0m", show(instruction));
-}
-
-} // namespace
 
 bool ForwardTaintTransfer::analyze_default(
     MethodContext* context,
@@ -188,121 +177,11 @@ bool ForwardTaintTransfer::analyze_sget(
 
 namespace {
 
-struct Callee {
-  const DexMethodRef* method_reference;
-  const Method* MT_NULLABLE resolved_base_method;
-  const Position* position;
-  TextualOrderIndex call_index;
-  Model model;
-};
-
-const std::vector<const DexType * MT_NULLABLE> get_source_register_types(
-    const MethodContext* context,
-    const IRInstruction* instruction) {
-  std::vector<const DexType* MT_NULLABLE> register_types = {};
-  for (const auto& source_register : instruction->srcs_vec()) {
-    register_types.push_back(context->types.register_type(
-        context->method(), instruction, source_register));
-  }
-  return register_types;
-}
-
-const std::vector<std::optional<std::string>> get_source_constant_arguments(
-    ForwardTaintEnvironment* environment,
-    const IRInstruction* instruction) {
-  std::vector<std::optional<std::string>> constant_arguments = {};
-
-  for (const auto& register_id : instruction->srcs_vec()) {
-    auto memory_locations = environment->memory_locations(register_id);
-    for (auto* memory_location : memory_locations.elements()) {
-      std::optional<std::string> value;
-      if (const auto* instruction_memory_location =
-              memory_location->dyn_cast<InstructionMemoryLocation>();
-          instruction_memory_location != nullptr) {
-        value = instruction_memory_location->get_constant();
-      }
-      constant_arguments.push_back(std::move(value));
-    }
-  }
-
-  return constant_arguments;
-}
-
-Callee get_callee(
-    MethodContext* context,
-    ForwardTaintEnvironment* environment,
-    const IRInstruction* instruction,
-    const std::vector<std::optional<std::string>>& source_constant_arguments) {
-  mt_assert(opcode::is_an_invoke(instruction->opcode()));
-
-  auto call_target = context->call_graph.callee(context->method(), instruction);
-  if (!call_target.resolved()) {
-    WARNING_OR_DUMP(
-        context,
-        3,
-        "Unable to resolve call to `{}`",
-        show(instruction->get_method()));
-  } else {
-    LOG_OR_DUMP(
-        context,
-        4,
-        "Call resolved to `{}`",
-        show(call_target.resolved_base_callee()));
-  }
-
-  auto* position =
-      context->positions.get(context->method(), environment->last_position());
-
-  auto model = context->model_at_callsite(
-      call_target,
-      position,
-      get_source_register_types(context, instruction),
-      source_constant_arguments);
-  LOG_OR_DUMP(context, 4, "Callee model: {}", model);
-
-  // Avoid copies using `std::move`.
-  // https://fb.workplace.com/groups/2292641227666517/permalink/2478196942444277/
-  return Callee{
-      instruction->get_method(),
-      call_target.resolved_base_callee(),
-      position,
-      call_target.call_index(),
-      std::move(model)};
-}
-
-Callee get_callee(
-    MethodContext* context,
-    ForwardTaintEnvironment* environment,
-    const ArtificialCallee& callee) {
-  const auto* resolved_base_callee = callee.call_target.resolved_base_callee();
-  mt_assert(resolved_base_callee != nullptr);
-
-  LOG_OR_DUMP(
-      context, 4, "Artificial call to `{}`", show(resolved_base_callee));
-
-  auto* position =
-      context->positions.get(context->method(), environment->last_position());
-
-  auto model = context->model_at_callsite(
-      callee.call_target,
-      position,
-      /* source_register_types */ {},
-      /* source_constant_arguments */ {});
-  LOG_OR_DUMP(context, 4, "Callee model: {}", model);
-
-  return Callee{
-      resolved_base_callee->dex_method(),
-      resolved_base_callee,
-      position,
-      callee.call_target.call_index(),
-      std::move(model)};
-}
-
 void apply_generations(
     MethodContext* context,
     ForwardTaintEnvironment* environment,
     const IRInstruction* instruction,
-    const Callee& callee,
+    const CalleeModel& callee,
     TaintTree& result_taint) {
   const auto& instruction_sources = instruction->srcs_vec();
 
@@ -342,7 +221,7 @@ void apply_propagations(
     const ForwardTaintEnvironment* previous_environment,
     ForwardTaintEnvironment* new_environment,
     const IRInstruction* instruction,
-    const Callee& callee,
+    const CalleeModel& callee,
     const std::vector<std::optional<std::string>>& source_constant_arguments,
     TaintTree& result_taint) {
   const auto& instruction_sources = instruction->srcs_vec();
@@ -756,7 +635,7 @@ void check_flows(
     const ForwardTaintEnvironment* environment,
     const std::function<std::optional<Register>(ParameterPosition)>&
         get_parameter_register,
-    const Callee& callee,
+    const CalleeModel& callee,
     const std::vector<std::optional<std::string>>& source_constant_arguments,
     const FeatureMayAlwaysSet& extra_features = {}) {
   LOG_OR_DUMP(
@@ -825,7 +704,7 @@ void check_flows(
     MethodContext* context,
     const ForwardTaintEnvironment* environment,
     const std::vector<Register>& instruction_sources,
-    const Callee& callee,
+    const CalleeModel& callee,
     const std::vector<std::optional<std::string>>& source_constant_arguments,
     const FeatureMayAlwaysSet& extra_features = {}) {
   check_flows(
@@ -900,7 +779,7 @@ void check_flows(
     MethodContext* context,
     const ForwardTaintEnvironment* environment,
     const IRInstruction* instruction,
-    const Callee& callee,
+    const CalleeModel& callee,
     const std::vector<std::optional<std::string>>& source_constant_arguments) {
   check_flows(
       context,
@@ -933,7 +812,7 @@ void analyze_artificial_calls(
 
           return found->second;
         },
-        get_callee(context, environment, artificial_callee),
+        get_callee(context, artificial_callee, environment->last_position()),
         source_constant_arguments,
         FeatureMayAlwaysSet::make_always(artificial_callee.features));
   }
@@ -942,7 +821,7 @@ void analyze_artificial_calls(
 MemoryLocation* MT_NULLABLE try_alias_this_location(
     MethodContext* context,
     ForwardTaintEnvironment* environment,
-    const Callee& callee,
+    const CalleeModel& callee,
     const IRInstruction* instruction) {
   if (!callee.model.alias_memory_location_on_invoke()) {
     return nullptr;
@@ -968,51 +847,9 @@ MemoryLocation* MT_NULLABLE try_alias_this_location(
   return memory_location;
 }
 
-// If the method invoke can be safely inlined, return the result memory
-// location, otherwise return nullptr.
-MemoryLocation* MT_NULLABLE try_inline_invoke(
+void check_call_effect_flows(
     MethodContext* context,
-    const ForwardTaintEnvironment* environment,
-    const IRInstruction* instruction,
-    const Callee& callee) {
-  auto access_path = callee.model.inline_as().get_constant();
-  if (!access_path) {
-    return nullptr;
-  }
-
-  auto register_id = instruction->src(access_path->root().parameter_position());
-  auto memory_locations = environment->memory_locations(register_id);
-  if (!memory_locations.is_value() || memory_locations.size() != 1) {
-    return nullptr;
-  }
-
-  auto memory_location = *memory_locations.elements().begin();
-  for (const auto& field : access_path->path()) {
-    mt_assert(field.is_field());
-    memory_location = memory_location->make_field(field.name());
-  }
-
-  // Only inline if the model does not generate or propagate extra taint.
-  if (!callee.model.generations().is_bottom() ||
-      !callee.model.propagations().leq(TaintAccessPathTree(
-          {{/* input */ *access_path,
-            Taint::propagation(PropagationConfig(
-                /* input_path */ *access_path,
-                /* kind */ context->kinds.local_return(),
-                /* output_paths */
-                PathTreeDomain{{Path{}, SingletonAbstractDomain()}},
-                /* inferred_features */ FeatureMayAlwaysSet(),
-                /* user_features */ FeatureSet::bottom()))}})) ||
-      callee.model.add_via_obscure_feature() ||
-      callee.model.has_add_features_to_arguments()) {
-    return nullptr;
-  }
-
-  LOG_OR_DUMP(context, 4, "Inlining method call");
-  return memory_location;
-}
-
-void check_call_effect_flows(MethodContext* context, const Callee& callee) {
+    const CalleeModel& callee) {
   const auto& caller_call_effect_sources = context->model.call_effect_sources();
   if (caller_call_effect_sources.is_bottom()) {
     return;
@@ -1047,7 +884,7 @@ void check_call_effect_flows(MethodContext* context, const Callee& callee) {
   }
 }
 
-void apply_call_effects(MethodContext* context, const Callee& callee) {
+void apply_call_effects(MethodContext* context, const CalleeModel& callee) {
   const auto& callee_call_effect_sinks = callee.model.call_effect_sinks();
   for (const auto& [effect, sinks] : callee_call_effect_sinks) {
     switch (effect.kind()) {
@@ -1077,10 +914,14 @@ bool ForwardTaintTransfer::analyze_invoke(
     ForwardTaintEnvironment* environment) {
   log_instruction(context, instruction);
 
-  const auto& source_constant_arguments =
-      get_source_constant_arguments(environment, instruction);
-  auto callee =
-      get_callee(context, environment, instruction, source_constant_arguments);
+  auto source_constant_arguments = get_source_constant_arguments(
+      environment->memory_location_environment(), instruction);
+  auto callee = get_callee(
+      context,
+      instruction,
+      environment->last_position(),
+      get_source_register_types(context, instruction),
+      source_constant_arguments);
 
   const ForwardTaintEnvironment previous_environment = *environment;
   TaintTree result_taint;
@@ -1107,8 +948,11 @@ bool ForwardTaintTransfer::analyze_invoke(
     LOG_OR_DUMP(context, 4, "Resetting the result register");
     environment->assign(k_result_register, MemoryLocationsDomain::bottom());
   } else if (
-      auto* memory_location =
-          try_inline_invoke(context, environment, instruction, callee)) {
+      auto* memory_location = try_inline_invoke(
+          context,
+          environment->memory_location_environment(),
+          instruction,
+          callee)) {
     LOG_OR_DUMP(
         context, 4, "Setting result register to {}", show(memory_location));
     environment->assign(k_result_register, memory_location);
