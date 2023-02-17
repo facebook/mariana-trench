@@ -102,9 +102,9 @@ class Transfer final : public InstructionAnalyzerBase<
 
       current_state->set(instruction->dest(), Domain(location));
     } else if (opcode::is_a_return_value(instruction->opcode())) {
-      mt_assert(instruction->srcs().size() == 1);
+      mt_assert(instruction->srcs_size() == 1);
 
-      auto reg = instruction->srcs()[0];
+      auto reg = instruction->src(0);
       auto return_locations = current_state->get(reg);
       LOG(4, "Return register {} points to {}", reg, return_locations);
       context->join_return_location(return_locations);

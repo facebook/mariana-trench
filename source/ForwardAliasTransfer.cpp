@@ -44,7 +44,7 @@ bool ForwardAliasTransfer::analyze_check_cast(
     const IRInstruction* instruction,
     ForwardAliasEnvironment* environment) {
   log_instruction(context, instruction);
-  mt_assert(instruction->srcs().size() == 1);
+  mt_assert(instruction->srcs_size() == 1);
 
   // We want to consider the cast as creating a different memory location,
   // so it can have a different taint.
@@ -61,12 +61,12 @@ bool ForwardAliasTransfer::analyze_iget(
     const IRInstruction* instruction,
     ForwardAliasEnvironment* environment) {
   log_instruction(context, instruction);
-  mt_assert(instruction->srcs().size() == 1);
+  mt_assert(instruction->srcs_size() == 1);
   mt_assert(instruction->has_field());
 
   // Read source memory locations that represents the field.
   auto memory_locations = environment->memory_locations(
-      /* register */ instruction->srcs()[0],
+      /* register */ instruction->src(0),
       /* field */ instruction->get_field()->get_name());
   LOG_OR_DUMP(context, 4, "Setting result register to {}", memory_locations);
   environment->assign(k_result_register, memory_locations);
@@ -79,7 +79,7 @@ bool ForwardAliasTransfer::analyze_sget(
     const IRInstruction* instruction,
     ForwardAliasEnvironment* environment) {
   log_instruction(context, instruction);
-  mt_assert(instruction->srcs().size() == 0);
+  mt_assert(instruction->srcs_size() == 0);
   mt_assert(instruction->has_field());
 
   auto memory_location = context->memory_factory.make_location(instruction);
@@ -104,7 +104,7 @@ MemoryLocation* MT_NULLABLE try_alias_this_location(
     return nullptr;
   }
 
-  auto register_id = instruction->srcs_vec().at(0);
+  auto register_id = instruction->src(0);
   auto memory_locations = environment->memory_locations(register_id);
   if (!memory_locations.is_value() || memory_locations.size() != 1) {
     return nullptr;
@@ -184,7 +184,7 @@ bool ForwardAliasTransfer::analyze_sput(
     const IRInstruction* instruction,
     ForwardAliasEnvironment* environment) {
   log_instruction(context, instruction);
-  mt_assert(instruction->srcs().size() == 1);
+  mt_assert(instruction->srcs_size() == 1);
   mt_assert(instruction->has_field());
 
   // This is a no-op.
@@ -224,10 +224,10 @@ bool ForwardAliasTransfer::analyze_move(
     const IRInstruction* instruction,
     ForwardAliasEnvironment* environment) {
   log_instruction(context, instruction);
-  mt_assert(instruction->srcs().size() == 1);
+  mt_assert(instruction->srcs_size() == 1);
 
   auto memory_locations =
-      environment->memory_locations(/* register */ instruction->srcs()[0]);
+      environment->memory_locations(/* register */ instruction->src(0));
   LOG_OR_DUMP(
       context,
       4,
@@ -265,11 +265,11 @@ bool ForwardAliasTransfer::analyze_aget(
     const IRInstruction* instruction,
     ForwardAliasEnvironment* environment) {
   log_instruction(context, instruction);
-  mt_assert(instruction->srcs().size() == 2);
+  mt_assert(instruction->srcs_size() == 2);
 
   // We use a single memory location for the array and its elements.
   auto memory_locations =
-      environment->memory_locations(/* register */ instruction->srcs()[0]);
+      environment->memory_locations(/* register */ instruction->src(0));
   LOG_OR_DUMP(context, 4, "Setting result register to {}", memory_locations);
   environment->assign(k_result_register, memory_locations);
 

@@ -23,7 +23,7 @@ std::vector<const DexType * MT_NULLABLE> get_source_register_types(
     const MethodContext* context,
     const IRInstruction* instruction) {
   std::vector<const DexType* MT_NULLABLE> register_types = {};
-  for (const auto& source_register : instruction->srcs_vec()) {
+  for (auto source_register : instruction->srcs()) {
     register_types.push_back(context->types.register_type(
         context->method(), instruction, source_register));
   }
@@ -64,7 +64,7 @@ std::vector<std::optional<std::string>> get_source_constant_arguments(
   std::vector<std::optional<std::string>> constant_arguments = {};
   constant_arguments.reserve(instruction->srcs_size());
 
-  for (const auto& register_id : instruction->srcs_vec()) {
+  for (auto register_id : instruction->srcs()) {
     constant_arguments.push_back(
         register_constant_argument(memory_location_environment, register_id));
   }

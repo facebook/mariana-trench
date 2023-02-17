@@ -152,8 +152,6 @@ void apply_generations(
     const IRInstruction* instruction,
     const CalleeModel& callee,
     TaintTree& result_taint) {
-  const auto& instruction_sources = instruction->srcs_vec();
-
   LOG_OR_DUMP(
       context,
       4,
@@ -169,7 +167,7 @@ void apply_generations(
       }
       case Root::Kind::Argument: {
         auto parameter_position = root.parameter_position();
-        auto register_id = instruction_sources.at(parameter_position);
+        auto register_id = instruction->src(parameter_position);
         LOG_OR_DUMP(
             context,
             4,
@@ -197,8 +195,6 @@ void apply_propagations(
     const CalleeModel& callee,
     const std::vector<std::optional<std::string>>& source_constant_arguments,
     TaintTree& result_taint) {
-  const auto& instruction_sources = instruction->srcs_vec();
-
   LOG_OR_DUMP(
       context,
       4,
@@ -215,17 +211,17 @@ void apply_propagations(
     }
 
     auto input_parameter_position = input.root().parameter_position();
-    if (input_parameter_position >= instruction_sources.size()) {
+    if (input_parameter_position >= instruction->srcs_size()) {
       WARNING(
           2,
           "Model for method `{}` contains a port on parameter {} but the method only has {} parameters. Skipping...",
           input_parameter_position,
           show(callee.method_reference),
-          instruction_sources.size());
+          instruction->srcs_size());
       continue;
     }
 
-    auto input_register_id = instruction_sources.at(input_parameter_position);
+    auto input_register_id = instruction->src(input_parameter_position);
     auto input_taint_tree = previous_environment->read(
         aliasing.register_memory_locations(input_register_id),
         input.path().resolve(source_constant_arguments));
@@ -308,7 +304,7 @@ void apply_propagations(
           case Root::Kind::Argument: {
             auto output_parameter_position = output_root.parameter_position();
             auto output_register_id =
-                instruction_sources.at(output_parameter_position);
+                instruction->src(output_parameter_position);
             LOG_OR_DUMP(
                 context,
                 4,
@@ -333,8 +329,9 @@ void apply_propagations(
 
   if (callee.model.add_via_obscure_feature() ||
       callee.model.has_add_features_to_arguments()) {
-    for (std::size_t parameter_position = 0;
-         parameter_position < instruction_sources.size();
+    for (std::size_t parameter_position = 0,
+                     number_parameters = instruction->srcs_size();
+         parameter_position < number_parameters;
          parameter_position++) {
       auto parameter = Root(Root::Kind::Argument, parameter_position);
       auto features = FeatureMayAlwaysSet::make_always(
@@ -350,7 +347,7 @@ void apply_propagations(
         continue;
       }
 
-      auto register_id = instruction_sources[parameter_position];
+      auto register_id = instruction->src(parameter_position);
       auto memory_locations = aliasing.register_memory_locations(register_id);
       for (auto* memory_location : memory_locations.elements()) {
         auto taint = new_environment->read(memory_location);
@@ -733,13 +730,13 @@ void check_flows_to_array_allocation(
       /* output_paths */ {},
       /* local_positions */ {},
       /* call_info */ CallInfo::Origin)};
-  auto instruction_sources = instruction->srcs_vec();
   auto array_allocation_index = context->call_graph.array_allocation_index(
       context->method(), instruction);
-  for (std::size_t parameter_position = 0;
-       parameter_position < instruction_sources.size();
+  for (std::size_t parameter_position = 0,
+                   number_parameters = instruction->srcs_size();
+       parameter_position < number_parameters;
        parameter_position++) {
-    auto register_id = instruction_sources.at(parameter_position);
+    auto register_id = instruction->src(parameter_position);
     Taint sources =
         environment->read(aliasing.register_memory_locations(register_id))
             .collapse();

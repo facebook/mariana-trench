@@ -150,8 +150,8 @@ ParameterTypeOverrides anonymous_class_arguments(
   mt_assert(callee != nullptr);
   ParameterTypeOverrides parameters;
   const auto& environment = types.environment(caller, instruction);
-  auto sources = instruction->srcs_vec();
-  for (std::size_t source_position = 0; source_position < sources.size();
+  for (std::size_t source_position = 0, sources_size = instruction->srcs_size();
+       source_position < sources_size;
        source_position++) {
     auto parameter_position = source_position;
     if (!is_static(callee)) {
@@ -163,7 +163,7 @@ ParameterTypeOverrides anonymous_class_arguments(
         parameter_position--;
       }
     }
-    auto found = environment.find(sources[source_position]);
+    auto found = environment.find(instruction->src(source_position));
     if (found == environment.end()) {
       continue;
     }
