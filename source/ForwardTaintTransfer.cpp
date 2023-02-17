@@ -927,6 +927,8 @@ bool ForwardTaintTransfer::analyze_invoke(
   return false;
 }
 
+namespace {
+
 bool is_inner_class_this(const FieldMemoryLocation* location) {
   return location->parent()->is<ThisParameterMemoryLocation>() &&
       location->field()->str() == "this$0";
@@ -944,8 +946,6 @@ void add_field_features(
   taint.map(
       [&features](Taint& sources) { sources.add_inferred_features(features); });
 }
-
-namespace {
 
 void check_flows_to_field_sink(
     MethodContext* context,
