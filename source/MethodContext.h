@@ -9,6 +9,7 @@
 
 #include <unordered_map>
 
+#include <mariana-trench/AliasAnalysisResults.h>
 #include <mariana-trench/CallGraph.h>
 #include <mariana-trench/Compiler.h>
 #include <mariana-trench/Context.h>
@@ -63,6 +64,7 @@ class MethodContext final {
   const Features& features;
   const Registry& registry;
   MemoryFactory memory_factory;
+  AliasAnalysisResults aliasing;
   Model& model;
 
  private:

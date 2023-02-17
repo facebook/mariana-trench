@@ -164,8 +164,11 @@ class MemoryFactory final {
   MemoryFactory& operator=(MemoryFactory&&) = delete;
   ~MemoryFactory() = default;
 
+  /* Return the memory location representing the given parameter. */
   ParameterMemoryLocation* make_parameter(ParameterPosition parameter_position);
 
+  /* Return a memory location representing the result of the given instruction.
+   */
   InstructionMemoryLocation* make_location(const IRInstruction* instruction);
 
  private:
