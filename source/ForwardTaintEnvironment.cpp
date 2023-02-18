@@ -97,10 +97,6 @@ TaintTree ForwardTaintEnvironment::read(
 
 TaintTree ForwardTaintEnvironment::read(
     const MemoryLocationsDomain& memory_locations) const {
-  if (!memory_locations.is_value()) {
-    return TaintTree::bottom();
-  }
-
   TaintTree taint;
   for (auto* memory_location : memory_locations.elements()) {
     taint.join_with(read(memory_location));
@@ -111,10 +107,6 @@ TaintTree ForwardTaintEnvironment::read(
 TaintTree ForwardTaintEnvironment::read(
     const MemoryLocationsDomain& memory_locations,
     const Path& path) const {
-  if (!memory_locations.is_value()) {
-    return TaintTree::bottom();
-  }
-
   TaintTree taint;
   for (auto* memory_location : memory_locations.elements()) {
     taint.join_with(read(memory_location, path));
@@ -168,10 +160,6 @@ void ForwardTaintEnvironment::write(
     const MemoryLocationsDomain& memory_locations,
     TaintTree taint,
     UpdateKind kind) {
-  if (!memory_locations.is_value()) {
-    return;
-  }
-
   if (memory_locations.size() > 1) {
     // In practice, only one of the memory location is affected, so we must
     // treat this as a weak update, even if a strong update was requested.
@@ -195,10 +183,6 @@ void ForwardTaintEnvironment::write(
     const Path& path,
     TaintTree taint,
     UpdateKind kind) {
-  if (!memory_locations.is_value()) {
-    return;
-  }
-
   if (memory_locations.size() > 1) {
     // In practice, only one of the memory location is affected, so we must
     // treat this as a weak update, even if a strong update was requested.
@@ -215,10 +199,6 @@ void ForwardTaintEnvironment::write(
     const Path& path,
     Taint taint,
     UpdateKind kind) {
-  if (!memory_locations.is_value()) {
-    return;
-  }
-
   if (memory_locations.size() > 1) {
     // In practice, only one of the memory location is affected, so we must
     // treat this as a weak update, even if a strong update was requested.

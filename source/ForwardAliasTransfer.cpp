@@ -106,7 +106,7 @@ MemoryLocation* MT_NULLABLE try_alias_this_location(
 
   auto register_id = instruction->src(0);
   auto memory_locations = environment->memory_locations(register_id);
-  if (!memory_locations.is_value() || memory_locations.size() != 1) {
+  if (memory_locations.size() != 1) {
     return nullptr;
   }
 
@@ -327,7 +327,7 @@ AccessPathConstantDomain infer_inline_as(
     MethodContext* context,
     const MemoryLocationsDomain& memory_locations) {
   // Check if we are returning an argument access path.
-  if (!memory_locations.is_value() || memory_locations.size() != 1 ||
+  if (memory_locations.size() != 1 ||
       context->model.has_global_propagation_sanitizer()) {
     return AccessPathConstantDomain::top();
   }

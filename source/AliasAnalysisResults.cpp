@@ -29,14 +29,7 @@ InstructionAliasResults::memory_location_environment() const {
 
 MemoryLocationsDomain InstructionAliasResults::register_memory_locations(
     Register register_id) const {
-  const auto& memory_locations = memory_location_environment_.get(register_id);
-
-  if (!memory_locations.is_value()) {
-    // Return an empty set instead of top or bottom.
-    return {};
-  }
-
-  return memory_locations;
+  return memory_location_environment_.get(register_id);
 }
 
 MemoryLocationsDomain InstructionAliasResults::result_memory_locations() const {
@@ -47,7 +40,7 @@ MemoryLocationsDomain InstructionAliasResults::result_memory_locations() const {
 MemoryLocation* InstructionAliasResults::result_memory_location() const {
   mt_assert(result_memory_locations_.has_value());
   const auto& memory_locations = *result_memory_locations_;
-  mt_assert(memory_locations.is_value() && memory_locations.size() == 1);
+  mt_assert(memory_locations.size() == 1);
   return *memory_locations.elements().begin();
 }
 
@@ -58,7 +51,7 @@ InstructionAliasResults::result_memory_location_or_null() const {
   }
 
   const auto& memory_locations = *result_memory_locations_;
-  if (!memory_locations.is_value() || memory_locations.size() != 1) {
+  if (memory_locations.size() != 1) {
     return nullptr;
   }
 

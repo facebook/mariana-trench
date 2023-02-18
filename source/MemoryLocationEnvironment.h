@@ -8,16 +8,22 @@
 #pragma once
 
 #include <PatriciaTreeMapAbstractPartition.h>
-#include <PatriciaTreeSetAbstractDomain.h>
 
 #include <mariana-trench/MemoryLocation.h>
+#include <mariana-trench/PatriciaTreeSetAbstractDomain.h>
 
 namespace marianatrench {
 
-using MemoryLocationsDomain =
-    sparta::PatriciaTreeSetAbstractDomain<MemoryLocation*>;
+using MemoryLocationsDomain = PatriciaTreeSetAbstractDomain<
+    MemoryLocation*,
+    /* bottom_is_empty */ true,
+    /* with_top */ false>;
 using MemoryLocationEnvironment =
     sparta::PatriciaTreeMapAbstractPartition<Register, MemoryLocationsDomain>;
+
+std::ostream& operator<<(
+    std::ostream& out,
+    const marianatrench::MemoryLocationsDomain& memory_locations);
 
 std::ostream& operator<<(
     std::ostream& out,

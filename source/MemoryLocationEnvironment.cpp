@@ -5,9 +5,26 @@
  * LICENSE file in the root directory of this source tree.
  */
 
+#include <Show.h>
+
 #include <mariana-trench/MemoryLocationEnvironment.h>
 
 namespace marianatrench {
+
+std::ostream& operator<<(
+    std::ostream& out,
+    const MemoryLocationsDomain& memory_locations) {
+  out << "{";
+  for (auto iterator = memory_locations.begin(), end = memory_locations.end();
+       iterator != end;) {
+    out << "`" << show(*iterator) << "`";
+    ++iterator;
+    if (iterator != end) {
+      out << ", ";
+    }
+  }
+  return out << "}";
+}
 
 std::ostream& operator<<(
     std::ostream& out,

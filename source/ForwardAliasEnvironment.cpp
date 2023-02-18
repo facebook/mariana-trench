@@ -116,24 +116,13 @@ void ForwardAliasEnvironment::assign(
 
 MemoryLocationsDomain ForwardAliasEnvironment::memory_locations(
     Register register_id) const {
-  MemoryLocationsDomain memory_locations = memory_locations_.get(register_id);
-
-  if (!memory_locations.is_value()) {
-    // Return an empty set instead of top or bottom.
-    memory_locations = {};
-  }
-
-  return memory_locations;
+  return memory_locations_.get(register_id);
 }
 
 MemoryLocationsDomain ForwardAliasEnvironment::memory_locations(
     Register register_id,
     const DexString* field) const {
   MemoryLocationsDomain memory_locations = memory_locations_.get(register_id);
-
-  if (!memory_locations.is_value()) {
-    memory_locations = {};
-  }
 
   MemoryLocationsDomain fields;
   for (auto* memory_location : memory_locations.elements()) {

@@ -38,10 +38,6 @@ std::optional<std::string> register_constant_argument(
   MemoryLocationsDomain memory_locations =
       memory_location_environment.get(register_id);
 
-  if (!memory_locations.is_value()) {
-    return std::nullopt;
-  }
-
   if (memory_locations.size() != 1) {
     return std::nullopt;
   }
@@ -150,7 +146,7 @@ MemoryLocation* MT_NULLABLE try_inline_invoke(
 
   auto register_id = instruction->src(access_path->root().parameter_position());
   auto memory_locations = memory_location_environment.get(register_id);
-  if (!memory_locations.is_value() || memory_locations.size() != 1) {
+  if (memory_locations.size() != 1) {
     return nullptr;
   }
 
