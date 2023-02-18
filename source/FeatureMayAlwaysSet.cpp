@@ -18,7 +18,7 @@ FeatureMayAlwaysSet::FeatureMayAlwaysSet(
 FeatureMayAlwaysSet::FeatureMayAlwaysSet(
     const FeatureSet& may,
     const FeatureSet& always)
-    : set_(/* over */ may.set_, /* under */ always.set_) {}
+    : set_(/* over */ may.elements(), /* under */ always.elements()) {}
 
 FeatureMayAlwaysSet FeatureMayAlwaysSet::make_may(
     std::initializer_list<const Feature*> features) {
@@ -28,7 +28,7 @@ FeatureMayAlwaysSet FeatureMayAlwaysSet::make_may(
 
 FeatureMayAlwaysSet FeatureMayAlwaysSet::make_may(const FeatureSet& features) {
   return FeatureMayAlwaysSet(
-      OverUnderSet(/* over */ features.set_, /* under */ {}));
+      OverUnderSet(/* over */ features.elements(), /* under */ {}));
 }
 
 FeatureMayAlwaysSet FeatureMayAlwaysSet::make_always(
@@ -39,8 +39,8 @@ FeatureMayAlwaysSet FeatureMayAlwaysSet::make_always(
 
 FeatureMayAlwaysSet FeatureMayAlwaysSet::make_always(
     const FeatureSet& features) {
-  return FeatureMayAlwaysSet(
-      OverUnderSet(/* over */ features.set_, /* under */ features.set_));
+  return FeatureMayAlwaysSet(OverUnderSet(
+      /* over */ features.elements(), /* under */ features.elements()));
 }
 
 FeatureSet FeatureMayAlwaysSet::may() const {
@@ -58,7 +58,7 @@ void FeatureMayAlwaysSet::add_may(const Feature* feature) {
 }
 
 void FeatureMayAlwaysSet::add_may(const FeatureSet& features) {
-  set_.add_over(features.set_);
+  set_.add_over(features.elements());
 }
 
 void FeatureMayAlwaysSet::add_always(const Feature* feature) {
@@ -66,7 +66,7 @@ void FeatureMayAlwaysSet::add_always(const Feature* feature) {
 }
 
 void FeatureMayAlwaysSet::add_always(const FeatureSet& features) {
-  set_.add_under(features.set_);
+  set_.add_under(features.elements());
 }
 
 void FeatureMayAlwaysSet::add(const FeatureMayAlwaysSet& other) {

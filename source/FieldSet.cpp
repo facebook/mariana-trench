@@ -13,78 +13,7 @@
 
 namespace marianatrench {
 
-FieldSet::FieldSet(std::initializer_list<const Field*> fields) : set_(fields) {}
-
 FieldSet::FieldSet(const Fields& fields) : set_(fields.begin(), fields.end()) {}
-
-void FieldSet::add(const Field* field) {
-  if (is_top_) {
-    return;
-  }
-  set_.insert(field);
-}
-
-void FieldSet::remove(const Field* field) {
-  if (is_top_) {
-    return;
-  }
-  set_.remove(field);
-}
-
-bool FieldSet::leq(const FieldSet& other) const {
-  if (is_top_) {
-    return other.is_top_;
-  }
-  if (other.is_top_) {
-    return true;
-  }
-  return set_.is_subset_of(other.set_);
-}
-
-bool FieldSet::equals(const FieldSet& other) const {
-  return is_top_ == other.is_top_ && set_.equals(other.set_);
-}
-
-void FieldSet::join_with(const FieldSet& other) {
-  if (is_top_) {
-    return;
-  }
-  if (other.is_top_) {
-    set_to_top();
-    return;
-  }
-  set_.union_with(other.set_);
-}
-
-void FieldSet::widen_with(const FieldSet& other) {
-  join_with(other);
-}
-
-void FieldSet::meet_with(const FieldSet& other) {
-  if (is_top_) {
-    *this = other;
-    return;
-  }
-  if (other.is_top_) {
-    return;
-  }
-  set_.intersection_with(other.set_);
-}
-
-void FieldSet::narrow_with(const FieldSet& other) {
-  meet_with(other);
-}
-
-void FieldSet::difference_with(const FieldSet& other) {
-  if (other.is_top_) {
-    set_to_bottom();
-    return;
-  }
-  if (is_top_) {
-    return;
-  }
-  set_.difference_with(other.set_);
-}
 
 FieldSet FieldSet::from_json(const Json::Value& value, Context& context) {
   FieldSet fields;
@@ -103,7 +32,7 @@ Json::Value FieldSet::to_json() const {
 }
 
 std::ostream& operator<<(std::ostream& out, const FieldSet& fields) {
-  if (fields.is_top_) {
+  if (fields.is_top()) {
     return out << "T";
   }
   out << "{";

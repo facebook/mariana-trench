@@ -12,49 +12,6 @@
 
 namespace marianatrench {
 
-FeatureSet::FeatureSet(std::initializer_list<const Feature*> features)
-    : set_(features) {}
-
-bool FeatureSet::contains(const Feature* feature) const {
-  return set_.contains(feature);
-}
-
-void FeatureSet::add(const Feature* feature) {
-  set_.insert(feature);
-}
-
-void FeatureSet::remove(const Feature* feature) {
-  set_.remove(feature);
-}
-
-bool FeatureSet::leq(const FeatureSet& other) const {
-  return set_.is_subset_of(other.set_);
-}
-
-bool FeatureSet::equals(const FeatureSet& other) const {
-  return set_.equals(other.set_);
-}
-
-void FeatureSet::join_with(const FeatureSet& other) {
-  set_.union_with(other.set_);
-}
-
-void FeatureSet::widen_with(const FeatureSet& other) {
-  join_with(other);
-}
-
-void FeatureSet::meet_with(const FeatureSet& other) {
-  set_.intersection_with(other.set_);
-}
-
-void FeatureSet::narrow_with(const FeatureSet& other) {
-  meet_with(other);
-}
-
-void FeatureSet::difference_with(const FeatureSet& other) {
-  set_.difference_with(other.set_);
-}
-
 FeatureSet FeatureSet::from_json(const Json::Value& value, Context& context) {
   FeatureSet features;
   for (const auto& feature_value : JsonValidation::null_or_array(value)) {
