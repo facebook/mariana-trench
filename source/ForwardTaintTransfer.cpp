@@ -1012,7 +1012,7 @@ bool ForwardTaintTransfer::analyze_iput(
   auto* field_name = instruction->get_field()->get_name();
   auto target_memory_locations =
       aliasing.register_memory_locations(instruction->src(1));
-  bool is_singleton = target_memory_locations.elements().size() == 1;
+  bool is_singleton = target_memory_locations.singleton() != nullptr;
 
   for (auto* memory_location : target_memory_locations.elements()) {
     auto field_memory_location = memory_location->make_field(field_name);

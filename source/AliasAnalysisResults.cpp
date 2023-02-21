@@ -40,8 +40,9 @@ MemoryLocationsDomain InstructionAliasResults::result_memory_locations() const {
 MemoryLocation* InstructionAliasResults::result_memory_location() const {
   mt_assert(result_memory_locations_.has_value());
   const auto& memory_locations = *result_memory_locations_;
-  mt_assert(memory_locations.size() == 1);
-  return *memory_locations.elements().begin();
+  auto* singleton = memory_locations.singleton();
+  mt_assert(singleton != nullptr);
+  return *singleton;
 }
 
 MemoryLocation* MT_NULLABLE
@@ -51,11 +52,12 @@ InstructionAliasResults::result_memory_location_or_null() const {
   }
 
   const auto& memory_locations = *result_memory_locations_;
-  if (memory_locations.size() != 1) {
+  auto* singleton = memory_locations.singleton();
+  if (singleton == nullptr) {
     return nullptr;
   }
 
-  return *memory_locations.elements().begin();
+  return *singleton;
 }
 
 DexPosition* MT_NULLABLE InstructionAliasResults::position() const {

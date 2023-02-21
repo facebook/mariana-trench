@@ -160,7 +160,11 @@ void ForwardTaintEnvironment::write(
     const MemoryLocationsDomain& memory_locations,
     TaintTree taint,
     UpdateKind kind) {
-  if (memory_locations.size() > 1) {
+  if (memory_locations.empty()) {
+    return;
+  }
+
+  if (memory_locations.singleton() == nullptr) {
     // In practice, only one of the memory location is affected, so we must
     // treat this as a weak update, even if a strong update was requested.
     kind = UpdateKind::Weak;
@@ -183,7 +187,11 @@ void ForwardTaintEnvironment::write(
     const Path& path,
     TaintTree taint,
     UpdateKind kind) {
-  if (memory_locations.size() > 1) {
+  if (memory_locations.empty()) {
+    return;
+  }
+
+  if (memory_locations.singleton() == nullptr) {
     // In practice, only one of the memory location is affected, so we must
     // treat this as a weak update, even if a strong update was requested.
     kind = UpdateKind::Weak;
@@ -199,7 +207,11 @@ void ForwardTaintEnvironment::write(
     const Path& path,
     Taint taint,
     UpdateKind kind) {
-  if (memory_locations.size() > 1) {
+  if (memory_locations.empty()) {
+    return;
+  }
+
+  if (memory_locations.singleton() == nullptr) {
     // In practice, only one of the memory location is affected, so we must
     // treat this as a weak update, even if a strong update was requested.
     kind = UpdateKind::Weak;

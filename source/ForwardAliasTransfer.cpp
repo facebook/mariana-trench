@@ -106,11 +106,13 @@ MemoryLocation* MT_NULLABLE try_alias_this_location(
 
   auto register_id = instruction->src(0);
   auto memory_locations = environment->memory_locations(register_id);
-  if (memory_locations.size() != 1) {
+
+  auto* memory_location_singleton = memory_locations.singleton();
+  if (memory_location_singleton == nullptr) {
     return nullptr;
   }
 
-  auto* memory_location = *memory_locations.elements().begin();
+  auto* memory_location = *memory_location_singleton;
   LOG_OR_DUMP(
       context,
       4,
@@ -329,13 +331,16 @@ bool has_side_effect(const MethodItemEntry& instruction) {
 AccessPathConstantDomain infer_inline_as(
     MethodContext* context,
     const MemoryLocationsDomain& memory_locations) {
+  if (context->model.has_global_propagation_sanitizer()) {
+    return AccessPathConstantDomain::top();
+  }
   // Check if we are returning an argument access path.
-  if (memory_locations.size() != 1 ||
-      context->model.has_global_propagation_sanitizer()) {
+  auto* memory_location_singleton = memory_locations.singleton();
+  if (memory_location_singleton == nullptr) {
     return AccessPathConstantDomain::top();
   }
 
-  auto* memory_location = *memory_locations.elements().begin();
+  MemoryLocation* memory_location = *memory_location_singleton;
   auto access_path = memory_location->access_path();
   if (!access_path) {
     return AccessPathConstantDomain::top();

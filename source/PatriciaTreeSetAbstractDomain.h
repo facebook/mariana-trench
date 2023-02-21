@@ -10,6 +10,7 @@
 #include <PatriciaTreeSetAbstractDomain.h>
 
 #include <mariana-trench/Assert.h>
+#include <mariana-trench/Compiler.h>
 
 namespace marianatrench {
 
@@ -121,6 +122,14 @@ class PatriciaTreeSetAbstractDomain<
   size_t size() const {
     mt_assert(!is_top_);
     return set_.size();
+  }
+
+  const Element* MT_NULLABLE singleton() const {
+    if (is_top_) {
+      return nullptr;
+    } else {
+      return set_.singleton();
+    }
   }
 
   void add(Element element) {
@@ -299,6 +308,10 @@ class PatriciaTreeSetAbstractDomain<
 
   size_t size() const {
     return set_.size();
+  }
+
+  const Element* MT_NULLABLE singleton() const {
+    return set_.singleton();
   }
 
   void add(Element element) {

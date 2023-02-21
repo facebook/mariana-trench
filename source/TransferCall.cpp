@@ -35,14 +35,14 @@ namespace {
 std::optional<std::string> register_constant_argument(
     const RegisterMemoryLocationsMap& register_memory_locations_map,
     Register register_id) {
-  MemoryLocationsDomain memory_locations =
-      register_memory_locations_map.at(register_id);
+  const auto& memory_locations = register_memory_locations_map.at(register_id);
 
-  if (memory_locations.size() != 1) {
+  auto* memory_location_singleton = memory_locations.singleton();
+  if (memory_location_singleton == nullptr) {
     return std::nullopt;
   }
 
-  MemoryLocation* memory_location = *memory_locations.elements().begin();
+  MemoryLocation* memory_location = *memory_location_singleton;
   auto* instruction_memory_location =
       memory_location->dyn_cast<InstructionMemoryLocation>();
   if (instruction_memory_location == nullptr) {
@@ -146,11 +146,13 @@ MemoryLocation* MT_NULLABLE try_inline_invoke(
 
   auto register_id = instruction->src(access_path->root().parameter_position());
   auto memory_locations = register_memory_locations_map.at(register_id);
-  if (memory_locations.size() != 1) {
+
+  auto* memory_location_singleton = memory_locations.singleton();
+  if (memory_location_singleton == nullptr) {
     return nullptr;
   }
 
-  auto memory_location = *memory_locations.elements().begin();
+  MemoryLocation* memory_location = *memory_location_singleton;
   for (const auto& field : access_path->path()) {
     mt_assert(field.is_field());
     memory_location = memory_location->make_field(field.name());
