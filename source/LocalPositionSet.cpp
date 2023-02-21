@@ -12,38 +12,6 @@
 
 namespace marianatrench {
 
-LocalPositionSet::LocalPositionSet(
-    std::initializer_list<const Position*> positions)
-    : set_(positions) {}
-
-void LocalPositionSet::add(const Position* position) {
-  set_.add(position);
-}
-
-bool LocalPositionSet::leq(const LocalPositionSet& other) const {
-  return set_.leq(other.set_);
-}
-
-bool LocalPositionSet::equals(const LocalPositionSet& other) const {
-  return set_.equals(other.set_);
-}
-
-void LocalPositionSet::join_with(const LocalPositionSet& other) {
-  set_.join_with(other.set_);
-}
-
-void LocalPositionSet::widen_with(const LocalPositionSet& other) {
-  set_.widen_with(other.set_);
-}
-
-void LocalPositionSet::meet_with(const LocalPositionSet& other) {
-  set_.meet_with(other.set_);
-}
-
-void LocalPositionSet::narrow_with(const LocalPositionSet& other) {
-  set_.narrowing(other.set_);
-}
-
 LocalPositionSet LocalPositionSet::from_json(
     const Json::Value& value,
     Context& context) {

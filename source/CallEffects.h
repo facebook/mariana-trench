@@ -8,6 +8,8 @@
 #pragma once
 
 #include <PatriciaTreeMapAbstractPartition.h>
+
+#include <mariana-trench/IncludeMacros.h>
 #include <mariana-trench/TaintTree.h>
 
 namespace marianatrench {
@@ -121,7 +123,19 @@ class CallEffectsAbstractDomain final
   static_assert(std::is_same_v<typename iterator::reference, const_reference>);
   static_assert(std::is_same_v<typename iterator::pointer, const_pointer>);
 
+ private:
+  explicit CallEffectsAbstractDomain(Map map) : map_(std::move(map)) {}
+
  public:
+  CallEffectsAbstractDomain() = default;
+
+  CallEffectsAbstractDomain(const CallEffectsAbstractDomain&) = default;
+  CallEffectsAbstractDomain(CallEffectsAbstractDomain&&) = default;
+  CallEffectsAbstractDomain& operator=(const CallEffectsAbstractDomain&) =
+      default;
+  CallEffectsAbstractDomain& operator=(CallEffectsAbstractDomain&&) = default;
+  ~CallEffectsAbstractDomain() = default;
+
   // Map interface
   std::size_t size() const {
     return map_.size();
@@ -137,32 +151,8 @@ class CallEffectsAbstractDomain final
         map_.bindings().end(), ExposeBinding());
   }
 
- public:
-  bool is_bottom() const override {
-    return map_.is_bottom();
-  }
+  INCLUDE_ABSTRACT_DOMAIN_METHODS(CallEffectsAbstractDomain, Map, map_)
 
-  bool is_top() const override {
-    return map_.is_top();
-  }
-
-  bool leq(const CallEffectsAbstractDomain& other) const override;
-
-  bool equals(const CallEffectsAbstractDomain& other) const override;
-
-  void set_to_bottom() override;
-
-  void set_to_top() override;
-
-  void join_with(const CallEffectsAbstractDomain& other) override;
-
-  void widen_with(const CallEffectsAbstractDomain& other) override;
-
-  void meet_with(const CallEffectsAbstractDomain& other) override;
-
-  void narrow_with(const CallEffectsAbstractDomain& other) override;
-
- public:
   const Taint& read(CallEffect effect) const;
 
   void visit(

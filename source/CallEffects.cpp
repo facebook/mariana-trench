@@ -92,44 +92,6 @@ std::ostream& operator<<(std::ostream& out, const CallEffect& effect) {
 
 namespace marianatrench {
 
-bool CallEffectsAbstractDomain::leq(
-    const CallEffectsAbstractDomain& other) const {
-  return map_.leq(other.map_);
-}
-
-bool CallEffectsAbstractDomain::equals(
-    const CallEffectsAbstractDomain& other) const {
-  return map_.equals(other.map_);
-}
-
-void CallEffectsAbstractDomain::set_to_bottom() {
-  map_.set_to_bottom();
-}
-
-void CallEffectsAbstractDomain::set_to_top() {
-  map_.set_to_top();
-}
-
-void CallEffectsAbstractDomain::join_with(
-    const CallEffectsAbstractDomain& other) {
-  map_.join_with(other.map_);
-}
-
-void CallEffectsAbstractDomain::widen_with(
-    const CallEffectsAbstractDomain& other) {
-  map_.widen_with(other.map_);
-}
-
-void CallEffectsAbstractDomain::meet_with(
-    const CallEffectsAbstractDomain& other) {
-  map_.meet_with(other.map_);
-}
-
-void CallEffectsAbstractDomain::narrow_with(
-    const CallEffectsAbstractDomain& other) {
-  map_.narrow_with(other.map_);
-}
-
 const Taint& CallEffectsAbstractDomain::read(CallEffect effect) const {
   return map_.get(effect.encode());
 }

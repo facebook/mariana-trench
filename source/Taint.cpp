@@ -32,30 +32,6 @@ void Taint::add(const TaintConfig& config) {
   set_.add(CalleeFrames{config});
 }
 
-bool Taint::leq(const Taint& other) const {
-  return set_.leq(other.set_);
-}
-
-bool Taint::equals(const Taint& other) const {
-  return set_.equals(other.set_);
-}
-
-void Taint::join_with(const Taint& other) {
-  set_.join_with(other.set_);
-}
-
-void Taint::widen_with(const Taint& other) {
-  set_.widen_with(other.set_);
-}
-
-void Taint::meet_with(const Taint& other) {
-  set_.meet_with(other.set_);
-}
-
-void Taint::narrow_with(const Taint& other) {
-  set_.narrow_with(other.set_);
-}
-
 void Taint::difference_with(const Taint& other) {
   set_.difference_with(other.set_);
 }

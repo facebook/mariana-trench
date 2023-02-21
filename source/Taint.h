@@ -18,6 +18,7 @@
 #include <mariana-trench/CalleeFrames.h>
 #include <mariana-trench/Frame.h>
 #include <mariana-trench/GroupHashedSetAbstractDomain.h>
+#include <mariana-trench/IncludeMacros.h>
 #include <mariana-trench/Log.h>
 #include <mariana-trench/PropagationConfig.h>
 #include <mariana-trench/TaintConfig.h>
@@ -60,6 +61,8 @@ class Taint final : public sparta::AbstractDomain<Taint> {
       GroupEqual,
       GroupDifference>;
 
+  explicit Taint(Set set) : set_(std::move(set)) {}
+
   friend class TaintFramesIterator;
 
  public:
@@ -73,29 +76,7 @@ class Taint final : public sparta::AbstractDomain<Taint> {
   Taint& operator=(const Taint&) = default;
   Taint& operator=(Taint&&) = default;
 
-  static Taint bottom() {
-    return Taint();
-  }
-
-  static Taint top() {
-    mt_unreachable(); // Not implemented.
-  }
-
-  bool is_bottom() const override {
-    return set_.is_bottom();
-  }
-
-  bool is_top() const override {
-    return set_.is_top();
-  }
-
-  void set_to_bottom() override {
-    set_.set_to_bottom();
-  }
-
-  void set_to_top() override {
-    set_.set_to_top();
-  }
+  INCLUDE_ABSTRACT_DOMAIN_METHODS(Taint, Set, set_)
 
   bool empty() const {
     return set_.empty();
@@ -114,18 +95,6 @@ class Taint final : public sparta::AbstractDomain<Taint> {
   void clear() {
     set_.clear();
   }
-
-  bool leq(const Taint& other) const override;
-
-  bool equals(const Taint& other) const override;
-
-  void join_with(const Taint& other) override;
-
-  void widen_with(const Taint& other) override;
-
-  void meet_with(const Taint& other) override;
-
-  void narrow_with(const Taint& other) override;
 
   void difference_with(const Taint& other);
 

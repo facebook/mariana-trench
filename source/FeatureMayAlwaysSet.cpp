@@ -73,30 +73,6 @@ void FeatureMayAlwaysSet::add(const FeatureMayAlwaysSet& other) {
   set_.add(other.set_);
 }
 
-bool FeatureMayAlwaysSet::leq(const FeatureMayAlwaysSet& other) const {
-  return set_.leq(other.set_);
-}
-
-bool FeatureMayAlwaysSet::equals(const FeatureMayAlwaysSet& other) const {
-  return set_.equals(other.set_);
-}
-
-void FeatureMayAlwaysSet::join_with(const FeatureMayAlwaysSet& other) {
-  set_.join_with(other.set_);
-}
-
-void FeatureMayAlwaysSet::widen_with(const FeatureMayAlwaysSet& other) {
-  set_.widen_with(other.set_);
-}
-
-void FeatureMayAlwaysSet::meet_with(const FeatureMayAlwaysSet& other) {
-  set_.meet_with(other.set_);
-}
-
-void FeatureMayAlwaysSet::narrow_with(const FeatureMayAlwaysSet& other) {
-  set_.narrow_with(other.set_);
-}
-
 FeatureMayAlwaysSet FeatureMayAlwaysSet::from_json(
     const Json::Value& value,
     Context& context) {

@@ -17,6 +17,7 @@
 
 #include <mariana-trench/Context.h>
 #include <mariana-trench/Heuristics.h>
+#include <mariana-trench/IncludeMacros.h>
 #include <mariana-trench/Position.h>
 
 namespace marianatrench {
@@ -38,28 +39,16 @@ class LocalPositionSet final : public sparta::AbstractDomain<LocalPositionSet> {
   /* Create the empty position set. */
   LocalPositionSet() = default;
 
-  explicit LocalPositionSet(std::initializer_list<const Position*> positions);
+  explicit LocalPositionSet(std::initializer_list<const Position*> positions)
+      : set_(positions) {}
 
   LocalPositionSet(const LocalPositionSet&) = default;
   LocalPositionSet(LocalPositionSet&&) = default;
   LocalPositionSet& operator=(const LocalPositionSet&) = default;
   LocalPositionSet& operator=(LocalPositionSet&&) = default;
+  ~LocalPositionSet() = default;
 
-  static LocalPositionSet bottom() {
-    return LocalPositionSet(Set::bottom());
-  }
-
-  static LocalPositionSet top() {
-    return LocalPositionSet(Set::top());
-  }
-
-  bool is_bottom() const override {
-    return set_.is_bottom();
-  }
-
-  bool is_top() const override {
-    return set_.is_top();
-  }
+  INCLUDE_ABSTRACT_DOMAIN_METHODS(LocalPositionSet, Set, set_)
 
   /* Return true if this is neither top nor bottom. */
   bool is_value() const {
@@ -70,31 +59,13 @@ class LocalPositionSet final : public sparta::AbstractDomain<LocalPositionSet> {
     return set_.empty();
   }
 
-  void set_to_bottom() override {
-    set_.is_bottom();
-  }
-
-  void set_to_top() override {
-    set_.is_top();
-  }
-
   const sparta::FlatSet<const Position*>& elements() const {
     return set_.elements();
   }
 
-  void add(const Position* position);
-
-  bool leq(const LocalPositionSet& other) const override;
-
-  bool equals(const LocalPositionSet& other) const override;
-
-  void join_with(const LocalPositionSet& other) override;
-
-  void widen_with(const LocalPositionSet& other) override;
-
-  void meet_with(const LocalPositionSet& other) override;
-
-  void narrow_with(const LocalPositionSet& other) override;
+  void add(const Position* position) {
+    set_.add(position);
+  }
 
   static LocalPositionSet from_json(const Json::Value& value, Context& context);
   Json::Value to_json() const;

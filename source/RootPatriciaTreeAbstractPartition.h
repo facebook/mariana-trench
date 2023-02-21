@@ -16,6 +16,7 @@
 #include <PatriciaTreeMapAbstractPartition.h>
 
 #include <mariana-trench/Access.h>
+#include <mariana-trench/IncludeMacros.h>
 
 namespace marianatrench {
 
@@ -90,29 +91,7 @@ class RootPatriciaTreeAbstractPartition final
   RootPatriciaTreeAbstractPartition& operator=(
       RootPatriciaTreeAbstractPartition&&) = default;
 
-  static RootPatriciaTreeAbstractPartition bottom() {
-    return RootPatriciaTreeAbstractPartition(Map::bottom());
-  }
-
-  static RootPatriciaTreeAbstractPartition top() {
-    return RootPatriciaTreeAbstractPartition(Map::top());
-  }
-
-  bool is_bottom() const override {
-    return map_.is_bottom();
-  }
-
-  bool is_top() const override {
-    return map_.is_top();
-  }
-
-  void set_to_bottom() override {
-    map_.set_to_bottom();
-  }
-
-  void set_to_top() override {
-    map_.set_to_top();
-  }
+  INCLUDE_ABSTRACT_DOMAIN_METHODS(RootPatriciaTreeAbstractPartition, Map, map_)
 
   /* Return the number of bindings not set to bottom. */
   std::size_t size() const {
@@ -127,30 +106,6 @@ class RootPatriciaTreeAbstractPartition final
   iterator end() const {
     return boost::make_transform_iterator(
         map_.bindings().end(), ExposeBinding());
-  }
-
-  bool leq(const RootPatriciaTreeAbstractPartition& other) const override {
-    return map_.leq(other.map_);
-  }
-
-  bool equals(const RootPatriciaTreeAbstractPartition& other) const override {
-    return map_.equals(other.map_);
-  }
-
-  void join_with(const RootPatriciaTreeAbstractPartition& other) override {
-    map_.join_with(other.map_);
-  }
-
-  void widen_with(const RootPatriciaTreeAbstractPartition& other) override {
-    map_.widen_with(other.map_);
-  }
-
-  void meet_with(const RootPatriciaTreeAbstractPartition& other) override {
-    map_.meet_with(other.map_);
-  }
-
-  void narrow_with(const RootPatriciaTreeAbstractPartition& other) override {
-    map_.narrow_with(other.map_);
   }
 
   void difference_with(const RootPatriciaTreeAbstractPartition& other) {

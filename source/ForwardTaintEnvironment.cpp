@@ -24,60 +24,8 @@ Taint propagate_artificial_sources(Taint taint, Path::Element path_element) {
 
 } // namespace
 
-ForwardTaintEnvironment::ForwardTaintEnvironment()
-    : taint_(TaintEnvironment::bottom()) {}
-
-ForwardTaintEnvironment::ForwardTaintEnvironment(TaintEnvironment taint)
-    : taint_(std::move(taint)) {}
-
 ForwardTaintEnvironment ForwardTaintEnvironment::initial() {
-  return ForwardTaintEnvironment();
-}
-
-bool ForwardTaintEnvironment::is_bottom() const {
-  return taint_.is_bottom();
-}
-
-bool ForwardTaintEnvironment::is_top() const {
-  return taint_.is_top();
-}
-
-bool ForwardTaintEnvironment::leq(const ForwardTaintEnvironment& other) const {
-  return taint_.leq(other.taint_);
-}
-
-bool ForwardTaintEnvironment::equals(
-    const ForwardTaintEnvironment& other) const {
-  return taint_.equals(other.taint_);
-}
-
-void ForwardTaintEnvironment::set_to_bottom() {
-  taint_.set_to_bottom();
-}
-
-void ForwardTaintEnvironment::set_to_top() {
-  taint_.set_to_top();
-}
-
-void ForwardTaintEnvironment::join_with(const ForwardTaintEnvironment& other) {
-  mt_if_expensive_assert(auto previous = *this);
-  taint_.join_with(other.taint_);
-  mt_expensive_assert(previous.leq(*this) && other.leq(*this));
-}
-
-void ForwardTaintEnvironment::widen_with(const ForwardTaintEnvironment& other) {
-  mt_if_expensive_assert(auto previous = *this);
-  taint_.widen_with(other.taint_);
-  mt_expensive_assert(previous.leq(*this) && other.leq(*this));
-}
-
-void ForwardTaintEnvironment::meet_with(const ForwardTaintEnvironment& other) {
-  taint_.meet_with(other.taint_);
-}
-
-void ForwardTaintEnvironment::narrow_with(
-    const ForwardTaintEnvironment& other) {
-  taint_.narrow_with(other.taint_);
+  return ForwardTaintEnvironment::bottom();
 }
 
 TaintTree ForwardTaintEnvironment::read(MemoryLocation* memory_location) const {

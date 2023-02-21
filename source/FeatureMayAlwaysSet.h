@@ -18,6 +18,7 @@
 
 #include <mariana-trench/Feature.h>
 #include <mariana-trench/FeatureSet.h>
+#include <mariana-trench/IncludeMacros.h>
 
 namespace marianatrench {
 
@@ -59,21 +60,7 @@ class FeatureMayAlwaysSet final
   FeatureMayAlwaysSet& operator=(const FeatureMayAlwaysSet&) = default;
   FeatureMayAlwaysSet& operator=(FeatureMayAlwaysSet&&) = default;
 
-  static FeatureMayAlwaysSet bottom() {
-    return FeatureMayAlwaysSet(OverUnderSet::bottom());
-  }
-
-  static FeatureMayAlwaysSet top() {
-    return FeatureMayAlwaysSet(OverUnderSet::top());
-  }
-
-  bool is_bottom() const override {
-    return set_.is_bottom();
-  }
-
-  bool is_top() const override {
-    return set_.is_top();
-  }
+  INCLUDE_ABSTRACT_DOMAIN_METHODS(FeatureMayAlwaysSet, OverUnderSet, set_)
 
   /* Return true if this is neither top nor bottom. */
   bool is_value() const {
@@ -82,14 +69,6 @@ class FeatureMayAlwaysSet final
 
   bool empty() const {
     return set_.empty();
-  }
-
-  void set_to_bottom() override {
-    mt_unreachable();
-  }
-
-  void set_to_top() override {
-    mt_unreachable();
   }
 
   FeatureSet may() const;
@@ -105,18 +84,6 @@ class FeatureMayAlwaysSet final
   void add_always(const FeatureSet& feature);
 
   void add(const FeatureMayAlwaysSet& other);
-
-  bool leq(const FeatureMayAlwaysSet& other) const override;
-
-  bool equals(const FeatureMayAlwaysSet& other) const override;
-
-  void join_with(const FeatureMayAlwaysSet& other) override;
-
-  void widen_with(const FeatureMayAlwaysSet& other) override;
-
-  void meet_with(const FeatureMayAlwaysSet& other) override;
-
-  void narrow_with(const FeatureMayAlwaysSet& other) override;
 
   static FeatureMayAlwaysSet from_json(
       const Json::Value& value,

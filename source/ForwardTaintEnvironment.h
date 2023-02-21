@@ -7,6 +7,7 @@
 
 #pragma once
 
+#include <mariana-trench/IncludeMacros.h>
 #include <mariana-trench/MemoryLocation.h>
 #include <mariana-trench/MemoryLocationEnvironment.h>
 #include <mariana-trench/Taint.h>
@@ -19,32 +20,18 @@ class ForwardTaintEnvironment final
     : public sparta::AbstractDomain<ForwardTaintEnvironment> {
  public:
   /* Create the bottom environment. */
-  ForwardTaintEnvironment();
+  ForwardTaintEnvironment() : taint_(TaintEnvironment::bottom()) {}
 
-  explicit ForwardTaintEnvironment(TaintEnvironment taint);
+  explicit ForwardTaintEnvironment(TaintEnvironment taint)
+      : taint_(std::move(taint)) {}
 
   /* Return the initial environment. */
   static ForwardTaintEnvironment initial();
 
-  bool is_bottom() const override;
-
-  bool is_top() const override;
-
-  bool leq(const ForwardTaintEnvironment& other) const override;
-
-  bool equals(const ForwardTaintEnvironment& other) const override;
-
-  void set_to_bottom() override;
-
-  void set_to_top() override;
-
-  void join_with(const ForwardTaintEnvironment& other) override;
-
-  void widen_with(const ForwardTaintEnvironment& other) override;
-
-  void meet_with(const ForwardTaintEnvironment& other) override;
-
-  void narrow_with(const ForwardTaintEnvironment& other) override;
+  INCLUDE_ABSTRACT_DOMAIN_METHODS(
+      ForwardTaintEnvironment,
+      TaintEnvironment,
+      taint_)
 
   TaintTree read(MemoryLocation* memory_location) const;
 
