@@ -23,31 +23,165 @@ ForwardAliasFixpoint::~ForwardAliasFixpoint() {}
 
 namespace {
 
-void analyze_instruction(
+// We could just use a switch on the opcode, but we use `InstructionAnalyzer`
+// since it's also used in the forward and backward transfer function, hence we
+// know for sure that we are consistent.
+class ShouldStoreAliasResults final
+    : public InstructionAnalyzerBase<ShouldStoreAliasResults, bool> {
+ public:
+  static bool analyze_default(
+      const IRInstruction* /* instruction */,
+      bool* should_store_alias_results) {
+    *should_store_alias_results = false;
+    return false;
+  }
+
+  static bool analyze_check_cast(
+      const IRInstruction* /* instruction */,
+      bool* should_store_alias_results) {
+    *should_store_alias_results = true;
+    return false;
+  }
+
+  static bool analyze_iget(
+      const IRInstruction* /* instruction */,
+      bool* should_store_alias_results) {
+    *should_store_alias_results = true;
+    return false;
+  }
+
+  static bool analyze_sget(
+      const IRInstruction* /* instruction */,
+      bool* should_store_alias_results) {
+    *should_store_alias_results = true;
+    return false;
+  }
+
+  static bool analyze_invoke(
+      const IRInstruction* /* instruction */,
+      bool* should_store_alias_results) {
+    *should_store_alias_results = true;
+    return false;
+  }
+
+  static bool analyze_iput(
+      const IRInstruction* /* instruction */,
+      bool* should_store_alias_results) {
+    *should_store_alias_results = true;
+    return false;
+  }
+
+  static bool analyze_sput(
+      const IRInstruction* /* instruction */,
+      bool* should_store_alias_results) {
+    *should_store_alias_results = true;
+    return false;
+  }
+
+  static bool analyze_load_param(
+      const IRInstruction* /* instruction */,
+      bool* should_store_alias_results) {
+    *should_store_alias_results = true;
+    return false;
+  }
+
+  static bool analyze_aput(
+      const IRInstruction* /* instruction */,
+      bool* should_store_alias_results) {
+    *should_store_alias_results = true;
+    return false;
+  }
+
+  static bool analyze_new_array(
+      const IRInstruction* /* instruction */,
+      bool* should_store_alias_results) {
+    *should_store_alias_results = true;
+    return false;
+  }
+
+  static bool analyze_filled_new_array(
+      const IRInstruction* /* instruction */,
+      bool* should_store_alias_results) {
+    *should_store_alias_results = true;
+    return false;
+  }
+
+  static bool analyze_unop(
+      const IRInstruction* /* instruction */,
+      bool* should_store_alias_results) {
+    *should_store_alias_results = true;
+    return false;
+  }
+
+  static bool analyze_binop(
+      const IRInstruction* /* instruction */,
+      bool* should_store_alias_results) {
+    *should_store_alias_results = true;
+    return false;
+  }
+
+  static bool analyze_binop_lit(
+      const IRInstruction* /* instruction */,
+      bool* should_store_alias_results) {
+    *should_store_alias_results = true;
+    return false;
+  }
+
+  static bool analyze_return(
+      const IRInstruction* /* instruction */,
+      bool* should_store_alias_results) {
+    *should_store_alias_results = true;
+    return false;
+  }
+};
+
+bool should_store_alias_results(const IRInstruction* instruction) {
+  InstructionAnalyzerCombiner<ShouldStoreAliasResults> instruction_analyzer;
+  bool should_store_alias_results = false;
+  instruction_analyzer(instruction, &should_store_alias_results);
+  return should_store_alias_results;
+}
+
+void store_alias_results(
     MethodContext& context,
-    const InstructionAnalyzer<ForwardAliasEnvironment>& instruction_analyzer,
-    const IRInstruction* instruction,
-    ForwardAliasEnvironment* environment) {
-  MemoryLocationEnvironment memory_location_environment =
-      environment->memory_location_environment();
-
-  // Calls into ForwardAliasTransfer::analyze_xxx
-  instruction_analyzer(instruction, environment);
-
+    const MemoryLocationEnvironment& pre_memory_location_environment,
+    const ForwardAliasEnvironment& post_alias_environment,
+    const IRInstruction* instruction) {
   std::optional<MemoryLocationsDomain> result_memory_locations = std::nullopt;
   if (instruction->has_dest()) {
     result_memory_locations =
-        environment->memory_locations(instruction->dest());
+        post_alias_environment.memory_locations(instruction->dest());
   } else if (instruction->has_move_result_any()) {
-    result_memory_locations = environment->memory_locations(k_result_register);
+    result_memory_locations =
+        post_alias_environment.memory_locations(k_result_register);
   }
 
   context.aliasing.store(
       instruction,
       InstructionAliasResults{
-          memory_location_environment,
+          pre_memory_location_environment,
           result_memory_locations,
-          environment->last_position()});
+          post_alias_environment.last_position()});
+}
+
+void analyze_instruction(
+    MethodContext& context,
+    const InstructionAnalyzer<ForwardAliasEnvironment>& instruction_analyzer,
+    const IRInstruction* instruction,
+    ForwardAliasEnvironment* alias_environment) {
+  MemoryLocationEnvironment pre_memory_location_environment =
+      alias_environment->memory_location_environment();
+
+  // Calls into ForwardAliasTransfer::analyze_xxx
+  instruction_analyzer(instruction, alias_environment);
+
+  if (should_store_alias_results(instruction)) {
+    store_alias_results(
+        context,
+        pre_memory_location_environment,
+        *alias_environment,
+        instruction);
+  }
 }
 
 } // namespace
