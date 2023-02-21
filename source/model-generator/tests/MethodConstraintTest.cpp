@@ -29,7 +29,7 @@ TEST_F(MethodConstraintTest, TypePatternConstraintSatisfy) {
   EXPECT_FALSE(TypePatternConstraint("([A-Za-z/]*/)+;").satisfy(type));
 }
 
-TEST_F(MethodConstraintTest, MethodNameConstraintSatisfy) {
+TEST_F(MethodConstraintTest, MethodPatternConstraintSatisfy) {
   Scope scope;
   std::string method_name = "println";
   auto context = test::make_empty_context();
@@ -37,10 +37,10 @@ TEST_F(MethodConstraintTest, MethodNameConstraintSatisfy) {
   auto* method = context.methods->create(
       redex::create_void_method(scope, "method", method_name));
 
-  EXPECT_TRUE(MethodNameConstraint(method_name).satisfy(method));
-  EXPECT_TRUE(MethodNameConstraint("[A-Za-z]+").satisfy(method));
-  EXPECT_FALSE(MethodNameConstraint("printLn").satisfy(method));
-  EXPECT_FALSE(MethodNameConstraint("[0-9]+").satisfy(method));
+  EXPECT_TRUE(MethodPatternConstraint(method_name).satisfy(method));
+  EXPECT_TRUE(MethodPatternConstraint("[A-Za-z]+").satisfy(method));
+  EXPECT_FALSE(MethodPatternConstraint("printLn").satisfy(method));
+  EXPECT_FALSE(MethodPatternConstraint("[0-9]+").satisfy(method));
 }
 
 TEST_F(MethodConstraintTest, ParentConstraintSatisfy) {
@@ -72,14 +72,16 @@ TEST_F(MethodConstraintTest, AllOfMethodConstraintSatisfy) {
 
   {
     std::vector<std::unique_ptr<MethodConstraint>> constraints;
-    constraints.push_back(std::make_unique<MethodNameConstraint>(method_name));
+    constraints.push_back(
+        std::make_unique<MethodPatternConstraint>(method_name));
 
     EXPECT_TRUE(AllOfMethodConstraint(std::move(constraints)).satisfy(method));
   }
 
   {
     std::vector<std::unique_ptr<MethodConstraint>> constraints;
-    constraints.push_back(std::make_unique<MethodNameConstraint>(method_name));
+    constraints.push_back(
+        std::make_unique<MethodPatternConstraint>(method_name));
     constraints.push_back(std::make_unique<ParentConstraint>(
         std::make_unique<TypePatternConstraint>(class_name)));
 
@@ -88,14 +90,15 @@ TEST_F(MethodConstraintTest, AllOfMethodConstraintSatisfy) {
 
   {
     std::vector<std::unique_ptr<MethodConstraint>> constraints;
-    constraints.push_back(std::make_unique<MethodNameConstraint>("printLn"));
+    constraints.push_back(std::make_unique<MethodPatternConstraint>("printLn"));
 
     EXPECT_FALSE(AllOfMethodConstraint(std::move(constraints)).satisfy(method));
   }
 
   {
     std::vector<std::unique_ptr<MethodConstraint>> constraints;
-    constraints.push_back(std::make_unique<MethodNameConstraint>(method_name));
+    constraints.push_back(
+        std::make_unique<MethodPatternConstraint>(method_name));
     constraints.push_back(std::make_unique<ParentConstraint>(
         std::make_unique<TypePatternConstraint>("Landroid/util/Log")));
 
@@ -116,14 +119,16 @@ TEST_F(MethodConstraintTest, AnyOfMethodConstraintSatisfy) {
 
   {
     std::vector<std::unique_ptr<MethodConstraint>> constraints;
-    constraints.push_back(std::make_unique<MethodNameConstraint>(method_name));
+    constraints.push_back(
+        std::make_unique<MethodPatternConstraint>(method_name));
 
     EXPECT_TRUE(AnyOfMethodConstraint(std::move(constraints)).satisfy(method));
   }
 
   {
     std::vector<std::unique_ptr<MethodConstraint>> constraints;
-    constraints.push_back(std::make_unique<MethodNameConstraint>(method_name));
+    constraints.push_back(
+        std::make_unique<MethodPatternConstraint>(method_name));
     constraints.push_back(std::make_unique<ParentConstraint>(
         std::make_unique<TypePatternConstraint>(class_name)));
 
@@ -132,14 +137,15 @@ TEST_F(MethodConstraintTest, AnyOfMethodConstraintSatisfy) {
 
   {
     std::vector<std::unique_ptr<MethodConstraint>> constraints;
-    constraints.push_back(std::make_unique<MethodNameConstraint>(method_name));
+    constraints.push_back(
+        std::make_unique<MethodPatternConstraint>(method_name));
 
     EXPECT_TRUE(AnyOfMethodConstraint(std::move(constraints)).satisfy(method));
   }
 
   {
     std::vector<std::unique_ptr<MethodConstraint>> constraints;
-    constraints.push_back(std::make_unique<MethodNameConstraint>("printLn"));
+    constraints.push_back(std::make_unique<MethodPatternConstraint>("printLn"));
     constraints.push_back(std::make_unique<ParentConstraint>(
         std::make_unique<TypePatternConstraint>("Landroid/util/Log")));
 
@@ -157,12 +163,12 @@ TEST_F(MethodConstraintTest, NotMethodConstraintSatisfy) {
       redex::create_void_method(scope, class_name, method_name));
 
   EXPECT_TRUE(
-      NotMethodConstraint(std::make_unique<MethodNameConstraint>("printLn"))
+      NotMethodConstraint(std::make_unique<MethodPatternConstraint>("printLn"))
           .satisfy(method));
 
-  EXPECT_FALSE(
-      NotMethodConstraint(std::make_unique<MethodNameConstraint>(method_name))
-          .satisfy(method));
+  EXPECT_FALSE(NotMethodConstraint(
+                   std::make_unique<MethodPatternConstraint>(method_name))
+                   .satisfy(method));
 }
 
 TEST_F(MethodConstraintTest, NumberParametersConstraintSatisfy) {
@@ -534,7 +540,7 @@ TEST_F(MethodConstraintTest, VisibilityMethodConstraint) {
 TEST_F(MethodConstraintTest, MethodConstraintFromJson) {
   auto context = test::make_empty_context();
 
-  // MethodNameConstraint
+  // MethodPatternConstraint
   {
     auto constraint = MethodConstraint::from_json(
         test::parse_json(
@@ -543,7 +549,7 @@ TEST_F(MethodConstraintTest, MethodConstraintFromJson) {
           "pattern": "println"
         })"),
         context);
-    EXPECT_EQ(MethodNameConstraint("println"), *constraint);
+    EXPECT_EQ(MethodPatternConstraint("println"), *constraint);
   }
 
   EXPECT_THROW(
@@ -575,7 +581,7 @@ TEST_F(MethodConstraintTest, MethodConstraintFromJson) {
           })"),
           context),
       JsonValidationError);
-  // MethodNameConstraint
+  // MethodPatternConstraint
 
   // ParentConstraint
   {
@@ -1324,7 +1330,8 @@ TEST_F(MethodConstraintTest, MethodConstraintFromJson) {
 
     {
       std::vector<std::unique_ptr<MethodConstraint>> constraints;
-      constraints.push_back(std::make_unique<MethodNameConstraint>("println"));
+      constraints.push_back(
+          std::make_unique<MethodPatternConstraint>("println"));
       constraints.push_back(std::make_unique<ParentConstraint>(
           std::make_unique<TypePatternConstraint>("Landroid/util/Log;")));
 
@@ -1335,7 +1342,8 @@ TEST_F(MethodConstraintTest, MethodConstraintFromJson) {
       std::vector<std::unique_ptr<MethodConstraint>> constraints;
       constraints.push_back(std::make_unique<ParentConstraint>(
           std::make_unique<TypePatternConstraint>("Landroid/util/Log;")));
-      constraints.push_back(std::make_unique<MethodNameConstraint>("println"));
+      constraints.push_back(
+          std::make_unique<MethodPatternConstraint>("println"));
 
       EXPECT_EQ(AllOfMethodConstraint(std::move(constraints)), *constraint);
     }
@@ -1547,7 +1555,7 @@ TEST_F(MethodConstraintTest, MethodConstraintFromJson) {
         })"),
         context);
     EXPECT_EQ(
-        NotMethodConstraint(std::make_unique<MethodNameConstraint>(
+        NotMethodConstraint(std::make_unique<MethodPatternConstraint>(
             "Landroid/widget/EditText;")),
         *constraint);
   }
@@ -1593,7 +1601,7 @@ TEST_F(MethodConstraintTest, MethodConstraintFromJson) {
   // NotMethodConstraint
 }
 
-TEST_F(MethodConstraintTest, MethodNameConstraintMaySatisfy) {
+TEST_F(MethodConstraintTest, MethodPatternConstraintMaySatisfy) {
   Scope scope;
   auto* method_a =
       redex::create_void_method(scope, "class_name", "method_name_a");
@@ -1605,15 +1613,15 @@ TEST_F(MethodConstraintTest, MethodNameConstraintMaySatisfy) {
   MethodMappings method_mappings{*context.methods};
 
   EXPECT_EQ(
-      MethodNameConstraint("method_name_a").may_satisfy(method_mappings),
+      MethodPatternConstraint("method_name_a").may_satisfy(method_mappings),
       marianatrench::MethodHashedSet({context.methods->get(method_a)}));
   EXPECT_EQ(
-      MethodNameConstraint("method_name_b").may_satisfy(method_mappings),
+      MethodPatternConstraint("method_name_b").may_satisfy(method_mappings),
       marianatrench::MethodHashedSet({context.methods->get(method_b)}));
-  EXPECT_TRUE(MethodNameConstraint("method_name_nonexistent")
+  EXPECT_TRUE(MethodPatternConstraint("method_name_nonexistent")
                   .may_satisfy(method_mappings)
                   .is_bottom());
-  EXPECT_TRUE(MethodNameConstraint("method_name_*")
+  EXPECT_TRUE(MethodPatternConstraint("method_name_*")
                   .may_satisfy(method_mappings)
                   .is_top());
 }
@@ -1712,7 +1720,7 @@ TEST_F(MethodConstraintTest, AllOfMethodConstraintMaySatisfy) {
   {
     std::vector<std::unique_ptr<MethodConstraint>> constraints;
     constraints.push_back(
-        std::make_unique<MethodNameConstraint>("method_name_a"));
+        std::make_unique<MethodPatternConstraint>("method_name_a"));
 
     EXPECT_EQ(
         AllOfMethodConstraint(std::move(constraints))
@@ -1723,9 +1731,9 @@ TEST_F(MethodConstraintTest, AllOfMethodConstraintMaySatisfy) {
   {
     std::vector<std::unique_ptr<MethodConstraint>> constraints;
     constraints.push_back(
-        std::make_unique<MethodNameConstraint>("method_name_a"));
+        std::make_unique<MethodPatternConstraint>("method_name_a"));
     constraints.push_back(
-        std::make_unique<MethodNameConstraint>("method_name_b"));
+        std::make_unique<MethodPatternConstraint>("method_name_b"));
 
     EXPECT_EQ(
         AllOfMethodConstraint(std::move(constraints))
@@ -1736,7 +1744,7 @@ TEST_F(MethodConstraintTest, AllOfMethodConstraintMaySatisfy) {
   {
     std::vector<std::unique_ptr<MethodConstraint>> constraints;
     constraints.push_back(
-        std::make_unique<MethodNameConstraint>("method_name_nonexistant"));
+        std::make_unique<MethodPatternConstraint>("method_name_nonexistant"));
 
     EXPECT_TRUE(AllOfMethodConstraint(std::move(constraints))
                     .may_satisfy(method_mappings)
@@ -1746,9 +1754,9 @@ TEST_F(MethodConstraintTest, AllOfMethodConstraintMaySatisfy) {
   {
     std::vector<std::unique_ptr<MethodConstraint>> constraints;
     constraints.push_back(
-        std::make_unique<MethodNameConstraint>("method_name_a"));
+        std::make_unique<MethodPatternConstraint>("method_name_a"));
     constraints.push_back(
-        std::make_unique<MethodNameConstraint>("method_name_*"));
+        std::make_unique<MethodPatternConstraint>("method_name_*"));
 
     EXPECT_EQ(
         AllOfMethodConstraint(std::move(constraints))
@@ -1773,7 +1781,7 @@ TEST_F(MethodConstraintTest, AnyOfMethodConstraintMaySatisfy) {
   {
     std::vector<std::unique_ptr<MethodConstraint>> constraints;
     constraints.push_back(
-        std::make_unique<MethodNameConstraint>("method_name_a"));
+        std::make_unique<MethodPatternConstraint>("method_name_a"));
 
     EXPECT_EQ(
         AnyOfMethodConstraint(std::move(constraints))
@@ -1784,9 +1792,9 @@ TEST_F(MethodConstraintTest, AnyOfMethodConstraintMaySatisfy) {
   {
     std::vector<std::unique_ptr<MethodConstraint>> constraints;
     constraints.push_back(
-        std::make_unique<MethodNameConstraint>("method_name_a"));
+        std::make_unique<MethodPatternConstraint>("method_name_a"));
     constraints.push_back(
-        std::make_unique<MethodNameConstraint>("method_name_b"));
+        std::make_unique<MethodPatternConstraint>("method_name_b"));
 
     EXPECT_EQ(
         AnyOfMethodConstraint(std::move(constraints))
@@ -1798,7 +1806,7 @@ TEST_F(MethodConstraintTest, AnyOfMethodConstraintMaySatisfy) {
   {
     std::vector<std::unique_ptr<MethodConstraint>> constraints;
     constraints.push_back(
-        std::make_unique<MethodNameConstraint>("method_name_nonexistant"));
+        std::make_unique<MethodPatternConstraint>("method_name_nonexistant"));
 
     EXPECT_TRUE(AnyOfMethodConstraint(std::move(constraints))
                     .may_satisfy(method_mappings)
@@ -1808,9 +1816,9 @@ TEST_F(MethodConstraintTest, AnyOfMethodConstraintMaySatisfy) {
   {
     std::vector<std::unique_ptr<MethodConstraint>> constraints;
     constraints.push_back(
-        std::make_unique<MethodNameConstraint>("method_name_a"));
+        std::make_unique<MethodPatternConstraint>("method_name_a"));
     constraints.push_back(
-        std::make_unique<MethodNameConstraint>("method_name_*"));
+        std::make_unique<MethodPatternConstraint>("method_name_*"));
 
     EXPECT_TRUE(AnyOfMethodConstraint(std::move(constraints))
                     .may_satisfy(method_mappings)
@@ -1832,19 +1840,19 @@ TEST_F(MethodConstraintTest, NotMethodConstraintMaySatisfy) {
 
   EXPECT_EQ(
       NotMethodConstraint(
-          std::make_unique<MethodNameConstraint>("method_name_a"))
+          std::make_unique<MethodPatternConstraint>("method_name_a"))
           .may_satisfy(method_mappings),
       marianatrench::MethodHashedSet(
           {context.methods->get(array_allocation_method),
            context.methods->get(method_b)}));
 
-  EXPECT_TRUE(NotMethodConstraint(std::make_unique<MethodNameConstraint>(
+  EXPECT_TRUE(NotMethodConstraint(std::make_unique<MethodPatternConstraint>(
                                       "method_name_nonexistant"))
                   .may_satisfy(method_mappings)
                   .is_top());
 
   EXPECT_TRUE(NotMethodConstraint(
-                  std::make_unique<MethodNameConstraint>("method_name*"))
+                  std::make_unique<MethodPatternConstraint>("method_name*"))
                   .may_satisfy(method_mappings)
                   .is_top());
 }
@@ -1858,7 +1866,7 @@ TEST_F(MethodConstraintTest, UniqueConstraints) {
   auto model_template = test::parse_json(R"({"sources": [{"kind": "Test"}]})");
   {
     std::vector<std::unique_ptr<MethodConstraint>> constraints;
-    constraints.push_back(std::make_unique<MethodNameConstraint>("test"));
+    constraints.push_back(std::make_unique<MethodPatternConstraint>("test"));
 
     std::unordered_set<const MethodConstraint*> expected_constraints;
     for (const auto& constraint : constraints) {
@@ -1876,9 +1884,9 @@ TEST_F(MethodConstraintTest, UniqueConstraints) {
 
   {
     // Constraint components
-    auto constraint_a = std::make_unique<MethodNameConstraint>("test_a");
-    auto constraint_b = std::make_unique<MethodNameConstraint>("test_b");
-    auto constraint_c = std::make_unique<MethodNameConstraint>("test_c");
+    auto constraint_a = std::make_unique<MethodPatternConstraint>("test_a");
+    auto constraint_b = std::make_unique<MethodPatternConstraint>("test_b");
+    auto constraint_c = std::make_unique<MethodPatternConstraint>("test_c");
     auto constraint_d = std::make_unique<ParentConstraint>(
         std::make_unique<TypePatternConstraint>("test_d"));
 

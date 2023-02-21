@@ -43,9 +43,9 @@ class MethodConstraint {
   virtual bool operator==(const MethodConstraint& other) const = 0;
 };
 
-class MethodNameConstraint final : public MethodConstraint {
+class MethodPatternConstraint final : public MethodConstraint {
  public:
-  explicit MethodNameConstraint(const std::string& regex_string);
+  explicit MethodPatternConstraint(const std::string& regex_string);
   MethodHashedSet may_satisfy(
       const MethodMappings& method_mappings) const override;
   bool satisfy(const Method* method) const override;

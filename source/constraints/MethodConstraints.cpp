@@ -47,10 +47,11 @@ bool has_annotation(
   return false;
 }
 
-MethodNameConstraint::MethodNameConstraint(const std::string& regex_string)
+MethodPatternConstraint::MethodPatternConstraint(
+    const std::string& regex_string)
     : pattern_(regex_string) {}
 
-MethodHashedSet MethodNameConstraint::may_satisfy(
+MethodHashedSet MethodPatternConstraint::may_satisfy(
     const MethodMappings& method_mappings) const {
   auto string_pattern = as_string_literal(pattern_);
   if (!string_pattern) {
@@ -60,13 +61,13 @@ MethodHashedSet MethodNameConstraint::may_satisfy(
       *string_pattern, MethodHashedSet::bottom());
 }
 
-bool MethodNameConstraint::satisfy(const Method* method) const {
+bool MethodPatternConstraint::satisfy(const Method* method) const {
   return re2::RE2::FullMatch(method->get_name(), pattern_);
 }
 
-bool MethodNameConstraint::operator==(const MethodConstraint& other) const {
+bool MethodPatternConstraint::operator==(const MethodConstraint& other) const {
   if (auto* other_constraint =
-          dynamic_cast<const MethodNameConstraint*>(&other)) {
+          dynamic_cast<const MethodPatternConstraint*>(&other)) {
     return other_constraint->pattern_.pattern() == pattern_.pattern();
   } else {
     return false;
@@ -506,7 +507,7 @@ std::unique_ptr<MethodConstraint> MethodConstraint::from_json(
   std::string constraint_name =
       JsonValidation::string(constraint, "constraint");
   if (constraint_name == "name") {
-    return std::make_unique<MethodNameConstraint>(
+    return std::make_unique<MethodPatternConstraint>(
         JsonValidation::string(constraint, "pattern"));
   } else if (constraint_name == "parent") {
     return std::make_unique<ParentConstraint>(TypeConstraint::from_json(
