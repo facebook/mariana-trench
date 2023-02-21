@@ -529,6 +529,24 @@ std::unique_ptr<MethodConstraint> signature_match_constraint(
   return std::make_unique<AllOfMethodConstraint>(std::move(constraints));
 }
 
+std::unique_ptr<MethodConstraint> signature_match_constraint_multiple_names(
+    std::string parent,
+    const Json::Value& names) {
+  mt_assert(names.isArray());
+  std::vector<std::unique_ptr<MethodConstraint>> constraints;
+  constraints.push_back(std::make_unique<ParentConstraint>(
+      std::make_unique<TypeNameConstraint>(parent)));
+
+  std::vector<std::unique_ptr<MethodConstraint>> method_name_constraints;
+  for (const auto& name : names) {
+    method_name_constraints.push_back(
+        std::make_unique<MethodNameConstraint>(JsonValidation::string(name)));
+  }
+  constraints.push_back(std::make_unique<AnyOfMethodConstraint>(
+      std::move(method_name_constraints)));
+  return std::make_unique<AllOfMethodConstraint>(std::move(constraints));
+}
+
 } // namespace
 
 std::unique_ptr<MethodConstraint> MethodConstraint::from_json(
@@ -581,9 +599,15 @@ std::unique_ptr<MethodConstraint> MethodConstraint::from_json(
     return std::make_unique<SignaturePatternConstraint>(
         JsonValidation::string(constraint, /* field */ "pattern"));
   } else if (constraint_name == "signature_match") {
-    return signature_match_constraint(
-        JsonValidation::string(constraint, /* field */ "parent"),
-        JsonValidation::string(constraint, /* field */ "name"));
+    if (constraint.isMember("name")) {
+      return signature_match_constraint(
+          JsonValidation::string(constraint, /* field */ "parent"),
+          JsonValidation::string(constraint, /* field */ "name"));
+    } else {
+      return signature_match_constraint_multiple_names(
+          JsonValidation::string(constraint, /* field */ "parent"),
+          JsonValidation::nonempty_array(constraint, /* field */ "names"));
+    }
   } else if (constraint_name == "bytecode") {
     return std::make_unique<MethodHasStringConstraint>(
         JsonValidation::string(constraint, /* field */ "pattern"));

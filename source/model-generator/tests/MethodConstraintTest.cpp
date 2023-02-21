@@ -410,6 +410,74 @@ TEST_F(MethodConstraintTest, SignatureMatchConstraintSatisfy) {
   EXPECT_FALSE(constraint->satisfy(context.methods->create(methods[1])));
 }
 
+TEST_F(MethodConstraintTest, SignatureMultipleMethodMatchConstraintSatisfy) {
+  Scope scope;
+  auto context = test::make_empty_context();
+  auto class_methods = redex::create_methods(
+      scope,
+      "LClass;",
+      {
+          R"(
+            (method (public) "LClass;.methodA:()V"
+            (
+              (return-void)
+            )
+            ))",
+          R"(
+            (method (public) "LClass;.methodB:(I)V"
+            (
+              (return-void)
+            )
+            ))",
+          R"(
+            (method (public) "LClass;.methodC:(I)V"
+            (
+              (return-void)
+            )
+            ))",
+      });
+  auto constraint = MethodConstraint::from_json(
+      test::parse_json(
+          R"({
+          "constraint": "signature_match",
+          "parent": "LClass;",
+          "names": ["methodA", "methodB"]
+        })"),
+      context);
+  EXPECT_TRUE(constraint->satisfy(context.methods->create(class_methods[0])));
+  EXPECT_TRUE(constraint->satisfy(context.methods->create(class_methods[1])));
+  EXPECT_FALSE(constraint->satisfy(context.methods->create(class_methods[2])));
+  auto other_class_methods = redex::create_methods(
+      scope,
+      "LOtherClass;",
+      {
+          R"(
+            (method (public) "LOtherClass;.methodA:()V"
+            (
+              (return-void)
+            )
+            ))",
+          R"(
+            (method (public) "LOtherClass;.methodB:(I)V"
+            (
+              (return-void)
+            )
+            ))",
+          R"(
+            (method (public) "LOtherClass;.methodC:(I)V"
+            (
+              (return-void)
+            )
+            ))",
+      });
+  EXPECT_FALSE(
+      constraint->satisfy(context.methods->create(other_class_methods[0])));
+  EXPECT_FALSE(
+      constraint->satisfy(context.methods->create(other_class_methods[1])));
+  EXPECT_FALSE(
+      constraint->satisfy(context.methods->create(other_class_methods[2])));
+}
+
 TEST_F(MethodConstraintTest, ExtendsConstraintSatisfy) {
   std::string class_name = "Landroid/util/Log;";
   ClassCreator creator(DexType::make_type(DexString::make_string(class_name)));
@@ -1276,18 +1344,33 @@ TEST_F(MethodConstraintTest, MethodConstraintFromJson) {
         })"),
           context),
       JsonValidationError);
-
-  // Any-of names not yet supported.
-  EXPECT_THROW(
-      MethodConstraint::from_json(
-          test::parse_json(
-              R"({
-          "constraint": "signature_match",
-          "name": ["getIntent", "setIntent"]
-        })"),
-          context),
-      JsonValidationError);
   // SignatureMatchConstraint
+
+  // SignatureMultipleMethodMatchConstraint
+  {
+    auto constraint = MethodConstraint::from_json(
+        test::parse_json(
+            R"({
+          "constraint": "signature_match",
+          "parent": "Landroid/app/Activity;",
+          "names": ["getIntent", "setIntent"]
+        })"),
+        context);
+
+    std::vector<std::unique_ptr<MethodConstraint>> expected_constraints;
+    expected_constraints.push_back(std::make_unique<ParentConstraint>(
+        std::make_unique<TypeNameConstraint>("Landroid/app/Activity;")));
+    std::vector<std::unique_ptr<MethodConstraint>> name_constraints;
+    name_constraints.push_back(
+        std::make_unique<MethodNameConstraint>("getIntent"));
+    name_constraints.push_back(
+        std::make_unique<MethodNameConstraint>("setIntent"));
+    expected_constraints.push_back(
+        std::make_unique<AnyOfMethodConstraint>(std::move(name_constraints)));
+    EXPECT_EQ(
+        AllOfMethodConstraint(std::move(expected_constraints)), *constraint);
+  }
+  // SignatureMultipleMethodMatchConstraint
 
   // AnyOfMethodConstraint
   {
