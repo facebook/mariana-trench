@@ -40,9 +40,9 @@ class TypeConstraint {
   virtual bool operator==(const TypeConstraint& other) const = 0;
 };
 
-class TypeNameConstraint final : public TypeConstraint {
+class TypePatternConstraint final : public TypeConstraint {
  public:
-  explicit TypeNameConstraint(const std::string& regex_string);
+  explicit TypePatternConstraint(const std::string& regex_string);
   MethodHashedSet may_satisfy(
       const MethodMappings& method_mappings,
       MaySatisfyMethodConstraintKind constraint_kind) const override;

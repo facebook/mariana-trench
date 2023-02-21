@@ -83,7 +83,7 @@ TEST_F(ParameterConstraintTest, AnyOfParameterConstraintSatisfy) {
     constraints.push_back(std::make_unique<HasAnnotationParameterConstraint>(
         class_name, "[a-z]*"));
     constraints.push_back(std::make_unique<TypeParameterConstraint>(
-        std::make_unique<TypeNameConstraint>(class_name)));
+        std::make_unique<TypePatternConstraint>(class_name)));
 
     EXPECT_TRUE(AnyOfParameterConstraint(std::move(constraints))
                     .satisfy(annotations_set.get(), type));
@@ -120,7 +120,7 @@ TEST_F(ParameterConstraintTest, AnyOfParameterConstraintSatisfy) {
     constraints.push_back(std::make_unique<HasAnnotationParameterConstraint>(
         class_name, "not matched"));
     constraints.push_back(std::make_unique<TypeParameterConstraint>(
-        std::make_unique<TypeNameConstraint>("Landroid/content/Intent;")));
+        std::make_unique<TypePatternConstraint>("Landroid/content/Intent;")));
 
     EXPECT_FALSE(AnyOfParameterConstraint(std::move(constraints))
                      .satisfy(annotations_set.get(), type));
@@ -181,7 +181,7 @@ TEST_F(ParameterConstraintTest, ParameterConstraintFromJson) {
     {
       std::vector<std::unique_ptr<ParameterConstraint>> constraints;
       constraints.push_back(std::make_unique<TypeParameterConstraint>(
-          std::make_unique<TypeNameConstraint>("Landroid/content/Intent;")));
+          std::make_unique<TypePatternConstraint>("Landroid/content/Intent;")));
       constraints.push_back(std::make_unique<HasAnnotationParameterConstraint>(
           "Lcom/facebook/Annotation;", "A"));
 
@@ -192,7 +192,7 @@ TEST_F(ParameterConstraintTest, ParameterConstraintFromJson) {
       constraints.push_back(std::make_unique<HasAnnotationParameterConstraint>(
           "Lcom/facebook/Annotation;", "A"));
       constraints.push_back(std::make_unique<TypeParameterConstraint>(
-          std::make_unique<TypeNameConstraint>("Landroid/content/Intent;")));
+          std::make_unique<TypePatternConstraint>("Landroid/content/Intent;")));
 
       EXPECT_EQ(AnyOfParameterConstraint(std::move(constraints)), *constraint);
     }
@@ -275,7 +275,7 @@ TEST_F(ParameterConstraintTest, ParameterConstraintFromJson) {
     {
       std::vector<std::unique_ptr<ParameterConstraint>> constraints;
       constraints.push_back(std::make_unique<TypeParameterConstraint>(
-          std::make_unique<TypeNameConstraint>("Landroid/content/Intent;")));
+          std::make_unique<TypePatternConstraint>("Landroid/content/Intent;")));
       constraints.push_back(std::make_unique<HasAnnotationParameterConstraint>(
           "Lcom/facebook/Annotation;", "A"));
 
@@ -286,7 +286,7 @@ TEST_F(ParameterConstraintTest, ParameterConstraintFromJson) {
       constraints.push_back(std::make_unique<HasAnnotationParameterConstraint>(
           "Lcom/facebook/Annotation;", "A"));
       constraints.push_back(std::make_unique<TypeParameterConstraint>(
-          std::make_unique<TypeNameConstraint>("Landroid/content/Intent;")));
+          std::make_unique<TypePatternConstraint>("Landroid/content/Intent;")));
 
       EXPECT_EQ(AllOfParameterConstraint(std::move(constraints)), *constraint);
     }
@@ -412,8 +412,8 @@ TEST_F(ParameterConstraintTest, ParameterConstraintFromJson) {
             "pattern": "Landroid/content/Intent;"
            })"));
     EXPECT_EQ(
-        TypeParameterConstraint(
-            std::make_unique<TypeNameConstraint>("Landroid/content/Intent;")),
+        TypeParameterConstraint(std::make_unique<TypePatternConstraint>(
+            "Landroid/content/Intent;")),
         *constraint);
   }
 

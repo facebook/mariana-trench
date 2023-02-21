@@ -26,15 +26,15 @@ TEST_F(TypeConstraintTest, AllOfTypeConstraintSatisfy) {
 
   {
     std::vector<std::unique_ptr<TypeConstraint>> constraints;
-    constraints.push_back(std::make_unique<TypeNameConstraint>(class_name));
+    constraints.push_back(std::make_unique<TypePatternConstraint>(class_name));
 
     EXPECT_TRUE(AllOfTypeConstraint(std::move(constraints)).satisfy(type));
   }
 
   {
     std::vector<std::unique_ptr<TypeConstraint>> constraints;
-    constraints.push_back(std::make_unique<TypeNameConstraint>(class_name));
-    constraints.push_back(std::make_unique<TypeNameConstraint>(".*"));
+    constraints.push_back(std::make_unique<TypePatternConstraint>(class_name));
+    constraints.push_back(std::make_unique<TypePatternConstraint>(".*"));
 
     EXPECT_TRUE(AllOfTypeConstraint(std::move(constraints)).satisfy(type));
   }
@@ -42,16 +42,16 @@ TEST_F(TypeConstraintTest, AllOfTypeConstraintSatisfy) {
   {
     std::vector<std::unique_ptr<TypeConstraint>> constraints;
     constraints.push_back(
-        std::make_unique<TypeNameConstraint>("Landroid/util/Log"));
+        std::make_unique<TypePatternConstraint>("Landroid/util/Log"));
 
     EXPECT_FALSE(AllOfTypeConstraint(std::move(constraints)).satisfy(type));
   }
 
   {
     std::vector<std::unique_ptr<TypeConstraint>> constraints;
-    constraints.push_back(std::make_unique<TypeNameConstraint>("Landroid"));
+    constraints.push_back(std::make_unique<TypePatternConstraint>("Landroid"));
     constraints.push_back(
-        std::make_unique<TypeNameConstraint>("Landroid/util/Log"));
+        std::make_unique<TypePatternConstraint>("Landroid/util/Log"));
 
     EXPECT_FALSE(AllOfTypeConstraint(std::move(constraints)).satisfy(type));
   }
@@ -65,16 +65,16 @@ TEST_F(TypeConstraintTest, AnyOfTypeConstraintSatisfy) {
 
   {
     std::vector<std::unique_ptr<TypeConstraint>> constraints;
-    constraints.push_back(std::make_unique<TypeNameConstraint>(class_name));
+    constraints.push_back(std::make_unique<TypePatternConstraint>(class_name));
 
     EXPECT_TRUE(AnyOfTypeConstraint(std::move(constraints)).satisfy(type));
   }
 
   {
     std::vector<std::unique_ptr<TypeConstraint>> constraints;
-    constraints.push_back(std::make_unique<TypeNameConstraint>(class_name));
+    constraints.push_back(std::make_unique<TypePatternConstraint>(class_name));
     constraints.push_back(
-        std::make_unique<TypeNameConstraint>("Landroid/util/Log"));
+        std::make_unique<TypePatternConstraint>("Landroid/util/Log"));
 
     EXPECT_TRUE(AnyOfTypeConstraint(std::move(constraints)).satisfy(type));
   }
@@ -82,16 +82,16 @@ TEST_F(TypeConstraintTest, AnyOfTypeConstraintSatisfy) {
   {
     std::vector<std::unique_ptr<TypeConstraint>> constraints;
     constraints.push_back(
-        std::make_unique<TypeNameConstraint>("Landroid/util/Log"));
+        std::make_unique<TypePatternConstraint>("Landroid/util/Log"));
 
     EXPECT_FALSE(AnyOfTypeConstraint(std::move(constraints)).satisfy(type));
   }
 
   {
     std::vector<std::unique_ptr<TypeConstraint>> constraints;
-    constraints.push_back(std::make_unique<TypeNameConstraint>("Landroid"));
+    constraints.push_back(std::make_unique<TypePatternConstraint>("Landroid"));
     constraints.push_back(
-        std::make_unique<TypeNameConstraint>("Landroid/util/Log"));
+        std::make_unique<TypePatternConstraint>("Landroid/util/Log"));
 
     EXPECT_FALSE(AllOfTypeConstraint(std::move(constraints)).satisfy(type));
   }
@@ -102,10 +102,10 @@ TEST_F(TypeConstraintTest, NotTypeConstraintSatisfy) {
   auto type = DexType::make_type(DexString::make_string(class_name));
 
   EXPECT_FALSE(
-      NotTypeConstraint(std::make_unique<TypeNameConstraint>(class_name))
+      NotTypeConstraint(std::make_unique<TypePatternConstraint>(class_name))
           .satisfy(type));
   EXPECT_TRUE(NotTypeConstraint(
-                  std::make_unique<TypeNameConstraint>("Landroid/util/Log"))
+                  std::make_unique<TypePatternConstraint>("Landroid/util/Log"))
                   .satisfy(type));
 }
 
@@ -164,13 +164,13 @@ TEST_F(TypeConstraintTest, IsEnumTypeConstraintSatisfy) {
 }
 
 TEST_F(TypeConstraintTest, TypeConstraintFromJson) {
-  // TypeNameConstraint
+  // TypePatternConstraint
   auto constraint = TypeConstraint::from_json(test::parse_json(
       R"({
         "constraint": "name",
         "pattern": "Landroid/util/Log;"
       })"));
-  EXPECT_EQ(TypeNameConstraint("Landroid/util/Log;"), *constraint);
+  EXPECT_EQ(TypePatternConstraint("Landroid/util/Log;"), *constraint);
 
   EXPECT_THROW(
       TypeConstraint::from_json(test::parse_json(
@@ -195,7 +195,7 @@ TEST_F(TypeConstraintTest, TypeConstraintFromJson) {
             "paTtern": "Landroid/util/Log;"
           })")),
       JsonValidationError);
-  // TypeNameConstraint
+  // TypePatternConstraint
 
   // ExtendsConstraint
   {
@@ -210,7 +210,7 @@ TEST_F(TypeConstraintTest, TypeConstraintFromJson) {
         })"));
     EXPECT_EQ(
         ExtendsConstraint(
-            std::make_unique<TypeNameConstraint>("Landroid/util/Log;"),
+            std::make_unique<TypePatternConstraint>("Landroid/util/Log;"),
             /* includes_self */ true),
         *constraint);
   }
@@ -226,7 +226,7 @@ TEST_F(TypeConstraintTest, TypeConstraintFromJson) {
         })"));
     EXPECT_EQ(
         ExtendsConstraint(
-            std::make_unique<TypeNameConstraint>("Landroid/util/Log;"),
+            std::make_unique<TypePatternConstraint>("Landroid/util/Log;"),
             /* includes_self */ true),
         *constraint);
   }
@@ -243,7 +243,7 @@ TEST_F(TypeConstraintTest, TypeConstraintFromJson) {
         })"));
     EXPECT_EQ(
         ExtendsConstraint(
-            std::make_unique<TypeNameConstraint>("Landroid/util/Log;"),
+            std::make_unique<TypePatternConstraint>("Landroid/util/Log;"),
             /* includes_self */ false),
         *constraint);
   }
@@ -297,7 +297,7 @@ TEST_F(TypeConstraintTest, TypeConstraintFromJson) {
         })"));
     EXPECT_EQ(
         SuperConstraint(
-            std::make_unique<TypeNameConstraint>("Landroid/util/Log;")),
+            std::make_unique<TypePatternConstraint>("Landroid/util/Log;")),
         *constraint);
   }
 

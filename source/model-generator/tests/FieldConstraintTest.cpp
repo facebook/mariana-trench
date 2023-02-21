@@ -114,11 +114,11 @@ TEST_F(FieldConstraintTest, ParentFieldConstraintSatisfy) {
   auto field = context.fields->get(dex_field);
 
   EXPECT_TRUE(
-      ParentFieldConstraint(std::make_unique<TypeNameConstraint>("LClass;"))
+      ParentFieldConstraint(std::make_unique<TypePatternConstraint>("LClass;"))
           .satisfy(field));
 
   EXPECT_FALSE(ParentFieldConstraint(
-                   std::make_unique<TypeNameConstraint>("LDifferentClass;"))
+                   std::make_unique<TypePatternConstraint>("LDifferentClass;"))
                    .satisfy(field));
 }
 
@@ -328,7 +328,8 @@ TEST_F(FieldConstraintTest, ParentFieldConstraintFromJson) {
           }
         })"));
     EXPECT_EQ(
-        ParentFieldConstraint(std::make_unique<TypeNameConstraint>("LClass;")),
+        ParentFieldConstraint(
+            std::make_unique<TypePatternConstraint>("LClass;")),
         *constraint);
   }
 

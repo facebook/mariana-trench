@@ -19,10 +19,10 @@ MethodHashedSet TypeConstraint::may_satisfy(
   return MethodHashedSet::top();
 }
 
-TypeNameConstraint::TypeNameConstraint(const std::string& regex_string)
+TypePatternConstraint::TypePatternConstraint(const std::string& regex_string)
     : pattern_(regex_string) {}
 
-MethodHashedSet TypeNameConstraint::may_satisfy(
+MethodHashedSet TypePatternConstraint::may_satisfy(
     const MethodMappings& method_mappings,
     MaySatisfyMethodConstraintKind constraint_kind) const {
   auto string_pattern = as_string_literal(pattern_);
@@ -41,13 +41,13 @@ MethodHashedSet TypeNameConstraint::may_satisfy(
   }
 }
 
-bool TypeNameConstraint::satisfy(const DexType* type) const {
+bool TypePatternConstraint::satisfy(const DexType* type) const {
   return re2::RE2::FullMatch(type->str(), pattern_);
 }
 
-bool TypeNameConstraint::operator==(const TypeConstraint& other) const {
+bool TypePatternConstraint::operator==(const TypeConstraint& other) const {
   if (auto* other_constraint =
-          dynamic_cast<const TypeNameConstraint*>(&other)) {
+          dynamic_cast<const TypePatternConstraint*>(&other)) {
     return other_constraint->pattern_.pattern() == pattern_.pattern();
   } else {
     return false;
@@ -311,7 +311,7 @@ std::unique_ptr<TypeConstraint> TypeConstraint::from_json(
   std::string constraint_name =
       JsonValidation::string(constraint, "constraint");
   if (constraint_name == "name") {
-    return std::make_unique<TypeNameConstraint>(
+    return std::make_unique<TypePatternConstraint>(
         JsonValidation::string(constraint, "pattern"));
   } else if (constraint_name == "extends") {
     bool includes_self = constraint.isMember("include_self")
