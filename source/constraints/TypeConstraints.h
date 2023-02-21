@@ -53,6 +53,19 @@ class TypePatternConstraint final : public TypeConstraint {
   re2::RE2 pattern_;
 };
 
+class TypeNameConstraint final : public TypeConstraint {
+ public:
+  explicit TypeNameConstraint(std::string name);
+  MethodHashedSet may_satisfy(
+      const MethodMappings& method_mappings,
+      MaySatisfyMethodConstraintKind constraint_kind) const override;
+  bool satisfy(const DexType* type) const override;
+  bool operator==(const TypeConstraint& other) const override;
+
+ private:
+  std::string name_;
+};
+
 class HasAnnotationTypeConstraint final : public TypeConstraint {
  public:
   explicit HasAnnotationTypeConstraint(

@@ -55,6 +55,18 @@ class MethodPatternConstraint final : public MethodConstraint {
   re2::RE2 pattern_;
 };
 
+class MethodNameConstraint final : public MethodConstraint {
+ public:
+  explicit MethodNameConstraint(std::string name);
+  MethodHashedSet may_satisfy(
+      const MethodMappings& method_mappings) const override;
+  bool satisfy(const Method* method) const override;
+  bool operator==(const MethodConstraint& other) const override;
+
+ private:
+  std::string name_;
+};
+
 class ParentConstraint final : public MethodConstraint {
  public:
   explicit ParentConstraint(std::unique_ptr<TypeConstraint> inner_constraint);

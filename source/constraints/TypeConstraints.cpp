@@ -54,6 +54,37 @@ bool TypePatternConstraint::operator==(const TypeConstraint& other) const {
   }
 }
 
+TypeNameConstraint::TypeNameConstraint(std::string name)
+    : name_(std::move(name)) {}
+
+MethodHashedSet TypeNameConstraint::may_satisfy(
+    const MethodMappings& method_mappings,
+    MaySatisfyMethodConstraintKind constraint_kind) const {
+  switch (constraint_kind) {
+    case MaySatisfyMethodConstraintKind::Parent:
+      return method_mappings.class_to_methods().get(
+          name_, MethodHashedSet::bottom());
+    case MaySatisfyMethodConstraintKind::Extends:
+      return method_mappings.class_to_override_methods().get(
+          name_, MethodHashedSet::bottom());
+    default:
+      mt_unreachable();
+  }
+}
+
+bool TypeNameConstraint::satisfy(const DexType* type) const {
+  return type->str() == name_;
+}
+
+bool TypeNameConstraint::operator==(const TypeConstraint& other) const {
+  if (auto* other_constraint =
+          dynamic_cast<const TypeNameConstraint*>(&other)) {
+    return other_constraint->name_ == name_;
+  } else {
+    return false;
+  }
+}
+
 HasAnnotationTypeConstraint::HasAnnotationTypeConstraint(
     std::string type,
     std::optional<std::string> annotation)

@@ -378,6 +378,38 @@ TEST_F(MethodConstraintTest, SignaturePatternConstraintSatisfy) {
   EXPECT_FALSE(constraint.satisfy(context.methods->create(methods[1])));
 }
 
+TEST_F(MethodConstraintTest, SignatureMatchConstraintSatisfy) {
+  Scope scope;
+  auto context = test::make_empty_context();
+  auto methods = redex::create_methods(
+      scope,
+      "LClass;",
+      {
+          R"(
+            (method (public) "LClass;.methodA:()V"
+            (
+              (return-void)
+            )
+            ))",
+          R"(
+            (method (public) "LClass;.methodB:(I)V"
+            (
+              (return-void)
+            )
+            ))",
+      });
+  auto constraint = MethodConstraint::from_json(
+      test::parse_json(
+          R"({
+          "constraint": "signature_match",
+          "parent": "LClass;",
+          "name": "methodA"
+        })"),
+      context);
+  EXPECT_TRUE(constraint->satisfy(context.methods->create(methods[0])));
+  EXPECT_FALSE(constraint->satisfy(context.methods->create(methods[1])));
+}
+
 TEST_F(MethodConstraintTest, ExtendsConstraintSatisfy) {
   std::string class_name = "Landroid/util/Log;";
   ClassCreator creator(DexType::make_type(DexString::make_string(class_name)));
@@ -1205,6 +1237,57 @@ TEST_F(MethodConstraintTest, MethodConstraintFromJson) {
           context),
       JsonValidationError);
   // SignaturePatternConstraint
+
+  // SignatureMatchConstraint
+  {
+    auto constraint = MethodConstraint::from_json(
+        test::parse_json(
+            R"({
+          "constraint": "signature_match",
+          "parent": "Landroid/app/Activity;",
+          "name": "getIntent"
+        })"),
+        context);
+    std::vector<std::unique_ptr<MethodConstraint>> expected_constraints;
+    expected_constraints.push_back(std::make_unique<ParentConstraint>(
+        std::make_unique<TypeNameConstraint>("Landroid/app/Activity;")));
+    expected_constraints.push_back(
+        std::make_unique<MethodNameConstraint>("getIntent"));
+    EXPECT_EQ(
+        AllOfMethodConstraint(std::move(expected_constraints)), *constraint);
+  }
+
+  EXPECT_THROW(
+      MethodConstraint::from_json(
+          test::parse_json(
+              R"({
+          "constraint": "signature_match",
+          "parent": "Landroid/app/Activity;"
+        })"),
+          context),
+      JsonValidationError);
+
+  EXPECT_THROW(
+      MethodConstraint::from_json(
+          test::parse_json(
+              R"({
+          "constraint": "signature_match",
+          "name": "getIntent"
+        })"),
+          context),
+      JsonValidationError);
+
+  // Any-of names not yet supported.
+  EXPECT_THROW(
+      MethodConstraint::from_json(
+          test::parse_json(
+              R"({
+          "constraint": "signature_match",
+          "name": ["getIntent", "setIntent"]
+        })"),
+          context),
+      JsonValidationError);
+  // SignatureMatchConstraint
 
   // AnyOfMethodConstraint
   {

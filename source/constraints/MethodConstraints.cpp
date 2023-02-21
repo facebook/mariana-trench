@@ -74,6 +74,28 @@ bool MethodPatternConstraint::operator==(const MethodConstraint& other) const {
   }
 }
 
+MethodNameConstraint::MethodNameConstraint(std::string name)
+    : name_(std::move(name)) {}
+
+MethodHashedSet MethodNameConstraint::may_satisfy(
+    const MethodMappings& method_mappings) const {
+  return method_mappings.name_to_methods().get(
+      name_, MethodHashedSet::bottom());
+}
+
+bool MethodNameConstraint::satisfy(const Method* method) const {
+  return method->get_name() == name_;
+}
+
+bool MethodNameConstraint::operator==(const MethodConstraint& other) const {
+  if (auto* other_constraint =
+          dynamic_cast<const MethodNameConstraint*>(&other)) {
+    return other_constraint->name_ == name_;
+  } else {
+    return false;
+  }
+}
+
 ParentConstraint::ParentConstraint(
     std::unique_ptr<TypeConstraint> inner_constraint)
     : inner_constraint_(std::move(inner_constraint)) {}
@@ -497,6 +519,16 @@ std::optional<DexAccessFlags> string_to_visibility(
   }
 }
 
+std::unique_ptr<MethodConstraint> signature_match_constraint(
+    std::string parent,
+    std::string name) {
+  std::vector<std::unique_ptr<MethodConstraint>> constraints;
+  constraints.push_back(std::make_unique<ParentConstraint>(
+      std::make_unique<TypeNameConstraint>(parent)));
+  constraints.push_back(std::make_unique<MethodNameConstraint>(name));
+  return std::make_unique<AllOfMethodConstraint>(std::move(constraints));
+}
+
 } // namespace
 
 std::unique_ptr<MethodConstraint> MethodConstraint::from_json(
@@ -548,6 +580,10 @@ std::unique_ptr<MethodConstraint> MethodConstraint::from_json(
   } else if (constraint_name == "signature_pattern") {
     return std::make_unique<SignaturePatternConstraint>(
         JsonValidation::string(constraint, /* field */ "pattern"));
+  } else if (constraint_name == "signature_match") {
+    return signature_match_constraint(
+        JsonValidation::string(constraint, /* field */ "parent"),
+        JsonValidation::string(constraint, /* field */ "name"));
   } else if (constraint_name == "bytecode") {
     return std::make_unique<MethodHasStringConstraint>(
         JsonValidation::string(constraint, /* field */ "pattern"));
