@@ -58,7 +58,7 @@ android's lifecycle management to catch this flow.
     "find": "methods",
     "where": [
         {
-            "constraint": "signature",
+            "constraint": "signature_pattern",
             "pattern": "Landroidx/fragment/app/FragmentTransaction;\\.add:\\(ILandroidx/fragment/app/Fragment;.*"
         }
     ],
@@ -164,7 +164,7 @@ Shim definitions:
     "find": "methods",
     "where": [
         {
-            "constraint": "signature",
+            "constraint": "signature_pattern",
             "pattern": "LShimmed;\\.shimMe:\\(LTargetA;Ljava/lang/Class;Ljava/lang/Object;\\)V"
         }
     ],
