@@ -30,7 +30,7 @@ Models can be specified in JSON. For example to mark the string parameter to our
   "find": "methods",
   "where": [
     {
-      "constraint": "signature",
+      "constraint": "signature_pattern",
       "pattern": "Lcom/example/Logger;\\.log:\\(Ljava/lang/String;\\)V"
     }
   ],

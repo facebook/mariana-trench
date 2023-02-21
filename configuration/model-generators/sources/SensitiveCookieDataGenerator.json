@@ -4,7 +4,7 @@
       "find": "methods",
       "where": [
         {
-          "constraint": "signature",
+          "constraint": "signature_pattern",
           "pattern": "Landroid/webkit/CookieManager;\\.getCookie:\\(Ljava/lang/String;\\)Ljava/lang/String;"
         }
       ],

@@ -18,7 +18,7 @@
           "pattern": "function"
         },
         {
-          "constraint": "signature",
+          "constraint": "signature_pattern",
           "pattern": "Lcom/facebook/marianatrench/integrationtests/JsonModelGeneratorIntegrationTest1;\\.function:\\(II\\)V"
         },
         {

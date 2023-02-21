@@ -4,7 +4,7 @@
       "find": "methods",
       "where": [
         {
-          "constraint": "signature",
+          "constraint": "signature_pattern",
           "pattern": "Lkotlin/Result;.*Ljava/lang/Throwable;"
         }
       ],
@@ -20,7 +20,7 @@
       "find": "methods",
       "where": [
         {
-          "constraint": "signature",
+          "constraint": "signature_pattern",
           "pattern": "Lkotlin/reflect/.*"
         }
       ],

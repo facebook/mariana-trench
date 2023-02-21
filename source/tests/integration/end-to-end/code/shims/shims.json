@@ -3,7 +3,7 @@
     "find": "methods",
     "where": [
       {
-        "constraint": "signature",
+        "constraint": "signature_pattern",
         "pattern": "Lcom/facebook/marianatrench/integrationtests/Messenger;\\.<init>:.*"
       },
       {
@@ -27,7 +27,7 @@
     "find": "methods",
     "where": [
       {
-        "constraint": "signature",
+        "constraint": "signature_pattern",
         "pattern": "Lcom/facebook/marianatrench/integrationtests/FragmentTest;\\.add:\\(Landroid/app/Activity;.*"
       }
     ],
@@ -44,7 +44,7 @@
     "find": "methods",
     "where": [
       {
-        "constraint": "signature",
+        "constraint": "signature_pattern",
         "pattern": "Lcom/facebook/marianatrench/integrationtests/FragmentTest;\\.add:\\(Ljava/lang/Class;.*"
       }
     ],
@@ -61,7 +61,7 @@
     "find": "methods",
     "where": [
       {
-        "constraint": "signature",
+        "constraint": "signature_pattern",
         "pattern": "Lcom/facebook/marianatrench/integrationtests/ParameterMapping;\\.<init>:.*"
       },
       {
@@ -88,7 +88,7 @@
     "find": "methods",
     "where": [
       {
-        "constraint": "signature",
+        "constraint": "signature_pattern",
         "pattern": "Lcom/facebook/marianatrench/integrationtests/ParameterMapping;\\.inferred:.*"
       }
     ],
@@ -105,7 +105,7 @@
     "find": "methods",
     "where": [
       {
-        "constraint": "signature",
+        "constraint": "signature_pattern",
         "pattern": "Lcom/facebook/marianatrench/integrationtests/ParameterMapping;\\.defined:.*"
       }
     ],
@@ -125,7 +125,7 @@
     "find": "methods",
     "where": [
       {
-        "constraint": "signature",
+        "constraint": "signature_pattern",
         "pattern": "Lcom/facebook/marianatrench/integrationtests/ParameterMapping;\\.callStatic:.*"
       }
     ],
@@ -145,7 +145,7 @@
     "find": "methods",
     "where": [
       {
-        "constraint": "signature",
+        "constraint": "signature_pattern",
         "pattern": "Lcom/facebook/marianatrench/integrationtests/ParameterMapping;\\.definedAndInferred:.*"
       }
     ],
@@ -170,7 +170,7 @@
         "value": true
       },
       {
-        "constraint": "signature",
+        "constraint": "signature_pattern",
         "pattern": "Lcom/facebook/marianatrench/integrationtests/ReflectionShims;\\.reflect:\\(Ljava/lang/Class;\\)V"
       }
     ],
@@ -191,7 +191,7 @@
         "value": true
       },
       {
-        "constraint": "signature",
+        "constraint": "signature_pattern",
         "pattern": "Lcom/facebook/marianatrench/integrationtests/ReflectionShims;\\.reflectWithArgument:\\(Ljava/lang/Class;Ljava/lang/Object;\\)V"
       }
     ],

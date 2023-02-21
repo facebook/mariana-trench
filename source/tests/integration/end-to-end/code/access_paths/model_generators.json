@@ -4,7 +4,7 @@
       "find": "methods",
       "where": [
         {
-          "constraint": "signature",
+          "constraint": "signature_pattern",
           "pattern": "Lcom/facebook/marianatrench/integrationtests/Dictionary;\\.setIndex:\\(Ljava/lang/String;Ljava/lang/Object;\\)V"
         }
       ],
@@ -26,7 +26,7 @@
       "find": "methods",
       "where": [
         {
-          "constraint": "signature",
+          "constraint": "signature_pattern",
           "pattern": "Lcom/facebook/marianatrench/integrationtests/Dictionary;\\.putExtra:\\(Ljava/lang/String;Ljava/lang/Object;\\).*"
         }
       ],
@@ -49,7 +49,7 @@
       "find": "methods",
       "where": [
         {
-          "constraint": "signature",
+          "constraint": "signature_pattern",
           "pattern": "Lcom/facebook/marianatrench/integrationtests/Dictionary;\\.getIndex:\\(Ljava/lang/String;\\)Ljava/lang/Object;"
         }
       ],
@@ -70,7 +70,7 @@
       "find": "methods",
       "where": [
         {
-          "constraint": "signature",
+          "constraint": "signature_pattern",
           "pattern": ".*\\.sinkIndex:.*"
         }
       ],

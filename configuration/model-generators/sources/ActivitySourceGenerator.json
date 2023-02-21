@@ -4,7 +4,7 @@
       "find": "methods",
       "where": [
         {
-          "constraint": "signature",
+          "constraint": "signature_pattern",
           "pattern": "Landroid/app/Activity;\\.getIntent:\\(\\)Landroid/content/Intent;"
         }
       ],
@@ -23,7 +23,7 @@
       "find": "methods",
       "where": [
         {
-          "constraint": "signature",
+          "constraint": "signature_pattern",
           "pattern": "Landroid.*Fragment;\\.(get|require)Arguments:\\(\\)Landroid/os/Bundle;"
         }
       ],

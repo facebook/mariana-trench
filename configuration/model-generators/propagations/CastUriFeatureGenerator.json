@@ -7,23 +7,23 @@
           "constraint": "any_of",
           "inners": [
             {
-              "constraint": "signature",
+              "constraint": "signature_pattern",
               "pattern": "Landroid/net/Uri;\\.parse:\\(Ljava/lang/String;\\)Landroid/net/Uri;"
             },
             {
-              "constraint": "signature",
+              "constraint": "signature_pattern",
               "pattern": "Landroid/net/Uri;\\.fromFile:\\(Ljava/io/File;\\)Landroid/net/Uri;"
             },
             {
-              "constraint": "signature",
+              "constraint": "signature_pattern",
               "pattern": "Landroid/content/Intent;\\.getData:\\(\\)Landroid/net/Uri;"
             },
             {
-              "constraint": "signature",
+              "constraint": "signature_pattern",
               "pattern": "Landroid/content/Intent;\\.getDataString:\\(\\)Ljava/lang/String;"
             },
             {
-              "constraint": "signature",
+              "constraint": "signature_pattern",
               "pattern": "Ljava/net/URI;\\.create:\\(Ljava/lang/String;\\)Ljava/net/URI;"
             }
           ]
@@ -68,7 +68,7 @@
       "find": "methods",
       "where": [
         {
-          "constraint": "signature",
+          "constraint": "signature_pattern",
           "pattern": "Ljava/net/URI;\\.<init>:\\(Ljava/lang/String;\\)V"
         }
       ],

@@ -4,7 +4,7 @@
       "find": "methods",
       "where": [
         {
-          "constraint": "signature",
+          "constraint": "signature_pattern",
           "pattern": "Ljava/lang/String;\\.valueOf:\\(Z\\)Ljava/lang/String;"
         }
       ],
@@ -24,7 +24,7 @@
       "find": "methods",
       "where": [
         {
-          "constraint": "signature",
+          "constraint": "signature_pattern",
           "pattern": "Ljava/lang/String;\\.valueOf:\\((I|J|F|D)\\)Ljava/lang/String;"
         }
       ],

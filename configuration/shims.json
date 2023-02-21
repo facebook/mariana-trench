@@ -3,7 +3,7 @@
     "find": "methods",
     "where": [
       {
-        "constraint": "signature",
+        "constraint": "signature_pattern",
         "pattern": "Landroid/os/Messenger;\\.<init>:\\(Landroid/os/Handler;\\)V"
       }
     ],
@@ -20,7 +20,7 @@
     "find": "methods",
     "where": [
       {
-        "constraint": "signature",
+        "constraint": "signature_pattern",
         "pattern": "Landroidx/fragment/app/FragmentTransaction;\\.(add|show|replace|attach|doAddOp):\\(Ljava/lang/Class;.*"
       }
     ],
@@ -37,7 +37,7 @@
     "find": "methods",
     "where": [
       {
-        "constraint": "signature",
+        "constraint": "signature_pattern",
         "pattern": "Landroidx/fragment/app/FragmentTransaction;\\.(add|show|replace|attach|doAddOp):\\(ILjava/lang/Class;.*"
       }
     ],
@@ -54,7 +54,7 @@
     "find": "methods",
     "where": [
       {
-        "constraint": "signature",
+        "constraint": "signature_pattern",
         "pattern": "Landroidx/fragment/app/FragmentTransaction;\\.(add|show|replace|attach|doAddOp):\\(Landroidx/fragment/app/Fragment;.*"
       }
     ],
@@ -71,7 +71,7 @@
     "find": "methods",
     "where": [
       {
-        "constraint": "signature",
+        "constraint": "signature_pattern",
         "pattern": "Landroidx/fragment/app/FragmentTransaction;\\.(add|show|replace|attach|doAddOp):\\(ILandroidx/fragment/app/Fragment;.*"
       }
     ],

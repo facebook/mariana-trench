@@ -120,7 +120,7 @@
       "find": "methods",
       "where": [
         {
-          "constraint": "signature",
+          "constraint": "signature_pattern",
           "pattern": "Landroid/database/DatabaseUtils;\\.sqlEscapeString.*"
         }
       ],

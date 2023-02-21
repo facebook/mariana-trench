@@ -4,7 +4,7 @@
       "find": "methods",
       "where": [
         {
-          "constraint": "signature",
+          "constraint": "signature_pattern",
           "pattern": "Landroid/content/Intent;\\.setData.*"
         }
       ],
@@ -31,7 +31,7 @@
       "find": "methods",
       "where": [
         {
-          "constraint": "signature",
+          "constraint": "signature_pattern",
           "pattern": "Landroid/content/Intent;\\.<init>:.*android/net/Uri.*"
         }
       ],

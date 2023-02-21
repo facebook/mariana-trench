@@ -4,7 +4,7 @@
       "find": "methods",
       "where": [
         {
-          "constraint": "signature",
+          "constraint": "signature_pattern",
           "pattern": "Ljava/io/File;\\.<init>.*"
         }
       ],
@@ -71,7 +71,7 @@
       "find": "methods",
       "where": [
         {
-          "constraint": "signature",
+          "constraint": "signature_pattern",
           "pattern": "Ljava/io/FileOutputStream;\\.<init>:.*"
         }
       ],
@@ -88,7 +88,7 @@
       "find": "methods",
       "where": [
         {
-          "constraint": "signature",
+          "constraint": "signature_pattern",
           "pattern": "Ljava/.*InputStream;\\.<init>:.*"
         },
         {
