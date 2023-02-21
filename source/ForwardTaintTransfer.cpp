@@ -869,7 +869,7 @@ bool ForwardTaintTransfer::analyze_invoke(
   const auto& aliasing = context->aliasing.get(instruction);
 
   auto source_constant_arguments = get_source_constant_arguments(
-      aliasing.memory_location_environment(), instruction);
+      aliasing.register_memory_locations_map(), instruction);
   auto callee = get_callee(
       context,
       instruction,
@@ -906,7 +906,7 @@ bool ForwardTaintTransfer::analyze_invoke(
   } else if (
       try_inline_invoke(
           context,
-          aliasing.memory_location_environment(),
+          aliasing.register_memory_locations_map(),
           instruction,
           callee) != nullptr) {
     // Since we are inlining the call, we should NOT write any taint.

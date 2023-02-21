@@ -11,6 +11,18 @@
 
 namespace marianatrench {
 
+RegisterMemoryLocationsMap memory_location_map_from_environment(
+    const MemoryLocationEnvironment& memory_location_environment,
+    const IRInstruction* instruction) {
+  RegisterMemoryLocationsMap map;
+  map.reserve(instruction->srcs_size());
+  for (Register register_id : instruction->srcs()) {
+    map.insert_or_assign(
+        register_id, memory_location_environment.get(register_id));
+  }
+  return map;
+}
+
 std::ostream& operator<<(
     std::ostream& out,
     const MemoryLocationsDomain& memory_locations) {

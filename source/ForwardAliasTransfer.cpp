@@ -124,13 +124,16 @@ MemoryLocationsDomain invoke_result_memory_location(
     MethodContext* context,
     const IRInstruction* instruction,
     ForwardAliasEnvironment* environment) {
+  auto register_memory_locations_map = memory_location_map_from_environment(
+      environment->memory_location_environment(), instruction);
+
   auto callee = get_callee(
       context,
       instruction,
       environment->last_position(),
       get_source_register_types(context, instruction),
       get_source_constant_arguments(
-          environment->memory_location_environment(), instruction));
+          register_memory_locations_map, instruction));
 
   if (callee.resolved_base_method &&
       callee.resolved_base_method->returns_void()) {
@@ -138,7 +141,7 @@ MemoryLocationsDomain invoke_result_memory_location(
   }
 
   auto* memory_location = try_inline_invoke(
-      context, environment->memory_location_environment(), instruction, callee);
+      context, register_memory_locations_map, instruction, callee);
   if (memory_location != nullptr) {
     LOG_OR_DUMP(context, 4, "Inlining method call");
     return MemoryLocationsDomain{memory_location};

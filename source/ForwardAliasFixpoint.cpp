@@ -147,6 +147,10 @@ void store_alias_results(
     const MemoryLocationEnvironment& pre_memory_location_environment,
     const ForwardAliasEnvironment& post_alias_environment,
     const IRInstruction* instruction) {
+  RegisterMemoryLocationsMap register_memory_locations_map =
+      memory_location_map_from_environment(
+          pre_memory_location_environment, instruction);
+
   std::optional<MemoryLocationsDomain> result_memory_locations = std::nullopt;
   if (instruction->has_dest()) {
     result_memory_locations =
@@ -159,7 +163,7 @@ void store_alias_results(
   context.aliasing.store(
       instruction,
       InstructionAliasResults{
-          pre_memory_location_environment,
+          std::move(register_memory_locations_map),
           result_memory_locations,
           post_alias_environment.last_position()});
 }

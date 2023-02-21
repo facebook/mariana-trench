@@ -23,7 +23,7 @@ namespace marianatrench {
 class InstructionAliasResults final {
  public:
   InstructionAliasResults(
-      MemoryLocationEnvironment memory_location_environment,
+      RegisterMemoryLocationsMap register_memory_locations_map,
       std::optional<MemoryLocationsDomain> result_memory_locations,
       DexPosition* MT_NULLABLE position);
 
@@ -33,8 +33,9 @@ class InstructionAliasResults final {
   InstructionAliasResults& operator=(InstructionAliasResults&&) = default;
   ~InstructionAliasResults() = default;
 
-  /* Memory location environment *before* the instruction (precondition). */
-  const MemoryLocationEnvironment& memory_location_environment() const;
+  /* Mapping from registers to their memory locations *before* the instruction
+   * (precondition). */
+  const RegisterMemoryLocationsMap& register_memory_locations_map() const;
 
   /* Memory locations pointed by the given register *before* the instruction. */
   MemoryLocationsDomain register_memory_locations(Register register_id) const;
@@ -54,7 +55,7 @@ class InstructionAliasResults final {
   DexPosition* MT_NULLABLE position() const;
 
  private:
-  MemoryLocationEnvironment memory_location_environment_;
+  RegisterMemoryLocationsMap register_memory_locations_map_;
   std::optional<MemoryLocationsDomain> result_memory_locations_;
   DexPosition* MT_NULLABLE position_;
 };

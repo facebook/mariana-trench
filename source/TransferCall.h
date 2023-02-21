@@ -40,7 +40,7 @@ std::vector<const DexType * MT_NULLABLE> get_source_register_types(
     const IRInstruction* instruction);
 
 std::vector<std::optional<std::string>> get_source_constant_arguments(
-    const MemoryLocationEnvironment& memory_location_environment,
+    const RegisterMemoryLocationsMap& register_memory_locations_map,
     const IRInstruction* instruction);
 
 CalleeModel get_callee(
@@ -59,7 +59,7 @@ CalleeModel get_callee(
  * location, otherwise return nullptr. */
 MemoryLocation* MT_NULLABLE try_inline_invoke(
     const MethodContext* context,
-    const MemoryLocationEnvironment& memory_location_environment,
+    const RegisterMemoryLocationsMap& register_memory_locations_map,
     const IRInstruction* instruction,
     const CalleeModel& callee);
 

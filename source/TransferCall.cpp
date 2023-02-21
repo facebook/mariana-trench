@@ -33,10 +33,10 @@ std::vector<const DexType * MT_NULLABLE> get_source_register_types(
 namespace {
 
 std::optional<std::string> register_constant_argument(
-    const MemoryLocationEnvironment& memory_location_environment,
+    const RegisterMemoryLocationsMap& register_memory_locations_map,
     Register register_id) {
   MemoryLocationsDomain memory_locations =
-      memory_location_environment.get(register_id);
+      register_memory_locations_map.at(register_id);
 
   if (memory_locations.size() != 1) {
     return std::nullopt;
@@ -55,14 +55,14 @@ std::optional<std::string> register_constant_argument(
 } // namespace
 
 std::vector<std::optional<std::string>> get_source_constant_arguments(
-    const MemoryLocationEnvironment& memory_location_environment,
+    const RegisterMemoryLocationsMap& register_memory_locations_map,
     const IRInstruction* instruction) {
   std::vector<std::optional<std::string>> constant_arguments = {};
   constant_arguments.reserve(instruction->srcs_size());
 
   for (auto register_id : instruction->srcs()) {
     constant_arguments.push_back(
-        register_constant_argument(memory_location_environment, register_id));
+        register_constant_argument(register_memory_locations_map, register_id));
   }
 
   return constant_arguments;
@@ -136,7 +136,7 @@ CalleeModel get_callee(
 
 MemoryLocation* MT_NULLABLE try_inline_invoke(
     const MethodContext* context,
-    const MemoryLocationEnvironment& memory_location_environment,
+    const RegisterMemoryLocationsMap& register_memory_locations_map,
     const IRInstruction* instruction,
     const CalleeModel& callee) {
   auto access_path = callee.model.inline_as().get_constant();
@@ -145,7 +145,7 @@ MemoryLocation* MT_NULLABLE try_inline_invoke(
   }
 
   auto register_id = instruction->src(access_path->root().parameter_position());
-  auto memory_locations = memory_location_environment.get(register_id);
+  auto memory_locations = register_memory_locations_map.at(register_id);
   if (memory_locations.size() != 1) {
     return nullptr;
   }

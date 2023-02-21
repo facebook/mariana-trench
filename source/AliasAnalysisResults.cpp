@@ -15,21 +15,21 @@
 namespace marianatrench {
 
 InstructionAliasResults::InstructionAliasResults(
-    MemoryLocationEnvironment memory_location_environment,
+    RegisterMemoryLocationsMap register_memory_locations_map,
     std::optional<MemoryLocationsDomain> result_memory_locations,
     DexPosition* MT_NULLABLE position)
-    : memory_location_environment_(std::move(memory_location_environment)),
+    : register_memory_locations_map_(std::move(register_memory_locations_map)),
       result_memory_locations_(std::move(result_memory_locations)),
       position_(position) {}
 
-const MemoryLocationEnvironment&
-InstructionAliasResults::memory_location_environment() const {
-  return memory_location_environment_;
+const RegisterMemoryLocationsMap&
+InstructionAliasResults::register_memory_locations_map() const {
+  return register_memory_locations_map_;
 }
 
 MemoryLocationsDomain InstructionAliasResults::register_memory_locations(
     Register register_id) const {
-  return memory_location_environment_.get(register_id);
+  return register_memory_locations_map_.at(register_id);
 }
 
 MemoryLocationsDomain InstructionAliasResults::result_memory_locations() const {
