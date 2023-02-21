@@ -9,6 +9,7 @@
 
 #include <vector>
 
+#include <mariana-trench/ArtificialMethods.h>
 #include <mariana-trench/Context.h>
 #include <mariana-trench/Kind.h>
 #include <mariana-trench/Method.h>
@@ -24,11 +25,7 @@ class ArtificialMethods final {
  public:
   explicit ArtificialMethods(Kinds& kinds, DexStoresVector& stores);
 
-  ArtificialMethods(const ArtificialMethods&) = delete;
-  ArtificialMethods(ArtificialMethods&&) = delete;
-  ArtificialMethods& operator=(const ArtificialMethods&) = delete;
-  ArtificialMethods& operator=(ArtificialMethods&&) = delete;
-  ~ArtificialMethods() = default;
+  DELETE_COPY_CONSTRUCTORS_AND_ASSIGNMENTS(ArtificialMethods)
 
   /* Models for artificial methods. */
   std::vector<Model> models(Context& context) const;

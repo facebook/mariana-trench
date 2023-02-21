@@ -16,6 +16,7 @@
 #include <ConcurrentContainers.h>
 
 #include <mariana-trench/Compiler.h>
+#include <mariana-trench/IncludeMacros.h>
 #include <mariana-trench/Method.h>
 #include <mariana-trench/Options.h>
 #include <mariana-trench/Position.h>
@@ -24,14 +25,11 @@ namespace marianatrench {
 
 class Positions final {
  public:
-  Positions();
+  Positions() = default;
+
   Positions(const Options& options, const DexStoresVector& stores);
 
-  Positions(const Positions&) = delete;
-  Positions(Positions&&) = delete;
-  Positions& operator=(const Positions&) = delete;
-  Positions& operator=(Positions&&) = delete;
-  ~Positions() = default;
+  DELETE_COPY_CONSTRUCTORS_AND_ASSIGNMENTS(Positions)
 
   /**
    * If the `position` parameter is a `nullptr` we will try to find the first

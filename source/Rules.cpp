@@ -17,8 +17,6 @@
 
 namespace marianatrench {
 
-Rules::Rules() = default;
-
 Rules::Rules(Context& context, std::vector<std::unique_ptr<Rule>> rules) {
   for (auto& rule : rules) {
     add(context, std::move(rule));

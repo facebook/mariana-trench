@@ -21,6 +21,7 @@
 #include <mariana-trench/Access.h>
 #include <mariana-trench/Assert.h>
 #include <mariana-trench/Heuristics.h>
+#include <mariana-trench/IncludeMacros.h>
 
 namespace marianatrench {
 
@@ -93,6 +94,8 @@ class PathElementMapIterator final {
 
  public:
   explicit PathElementMapIterator(Map& map) : map_(map) {}
+
+  DELETE_COPY_CONSTRUCTORS_AND_ASSIGNMENTS(PathElementMapIterator)
 
   iterator begin() const {
     return boost::make_transform_iterator(
@@ -179,10 +182,7 @@ class AbstractTreeDomain final
     }
   }
 
-  AbstractTreeDomain(const AbstractTreeDomain&) = default;
-  AbstractTreeDomain(AbstractTreeDomain&&) = default;
-  AbstractTreeDomain& operator=(const AbstractTreeDomain&) = default;
-  AbstractTreeDomain& operator=(AbstractTreeDomain&&) = default;
+  INCLUDE_DEFAULT_COPY_CONSTRUCTORS_AND_ASSIGNMENTS(AbstractTreeDomain)
 
   static AbstractTreeDomain bottom() {
     return AbstractTreeDomain();

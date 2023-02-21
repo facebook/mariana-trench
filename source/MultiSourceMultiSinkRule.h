@@ -14,6 +14,7 @@
 #include <json/json.h>
 
 #include <mariana-trench/Context.h>
+#include <mariana-trench/IncludeMacros.h>
 #include <mariana-trench/Kind.h>
 #include <mariana-trench/PartialKind.h>
 #include <mariana-trench/Rule.h>
@@ -45,11 +46,8 @@ class MultiSourceMultiSinkRule final : public Rule {
     mt_assert(multi_source_kinds.size() == 2);
     mt_assert(partial_sink_kinds.size() % 2 == 0);
   }
-  MultiSourceMultiSinkRule(const MultiSourceMultiSinkRule&) = delete;
-  MultiSourceMultiSinkRule(MultiSourceMultiSinkRule&&) = delete;
-  MultiSourceMultiSinkRule& operator=(const MultiSourceMultiSinkRule&) = delete;
-  MultiSourceMultiSinkRule& operator=(MultiSourceMultiSinkRule&&) = delete;
-  ~MultiSourceMultiSinkRule() override = default;
+
+  DELETE_COPY_CONSTRUCTORS_AND_ASSIGNMENTS(MultiSourceMultiSinkRule)
 
   const MultiSourceKindsByLabel& multi_source_kinds() const {
     return multi_source_kinds_;

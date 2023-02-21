@@ -10,6 +10,7 @@
 #include <DexClass.h>
 
 #include <mariana-trench/Context.h>
+#include <mariana-trench/IncludeMacros.h>
 #include <mariana-trench/JsonValidation.h>
 
 namespace marianatrench {
@@ -21,11 +22,7 @@ class Field final {
  public:
   explicit Field(const DexField* field);
 
-  Field(const Field&) = default;
-  Field(Field&&) = default;
-  Field& operator=(const Field&) = default;
-  Field& operator=(Field&&) = default;
-  ~Field() = default;
+  INCLUDE_DEFAULT_COPY_CONSTRUCTORS_AND_ASSIGNMENTS(Field)
 
   bool operator==(const Field& other) const;
 

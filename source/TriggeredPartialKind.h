@@ -13,6 +13,7 @@
 #include <json/json.h>
 
 #include <mariana-trench/Context.h>
+#include <mariana-trench/IncludeMacros.h>
 #include <mariana-trench/MultiSourceMultiSinkRule.h>
 #include <mariana-trench/PartialKind.h>
 
@@ -36,11 +37,8 @@ class TriggeredPartialKind final : public Kind {
       const PartialKind* partial_kind,
       const MultiSourceMultiSinkRule* rule)
       : partial_kind_(partial_kind), rule_(rule) {}
-  TriggeredPartialKind(const TriggeredPartialKind&) = delete;
-  TriggeredPartialKind(TriggeredPartialKind&&) = delete;
-  TriggeredPartialKind& operator=(const TriggeredPartialKind&) = delete;
-  TriggeredPartialKind& operator=(TriggeredPartialKind&&) = delete;
-  ~TriggeredPartialKind() override = default;
+
+  DELETE_COPY_CONSTRUCTORS_AND_ASSIGNMENTS(TriggeredPartialKind)
 
   void show(std::ostream&) const override;
 

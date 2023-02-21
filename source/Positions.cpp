@@ -43,8 +43,6 @@ bool maybe_class(const std::string& line) {
 
 } // namespace
 
-Positions::Positions() {}
-
 Positions::Positions(const Options& options, const DexStoresVector& stores) {
   if (options.skip_source_indexing()) {
     // Create a dummy path for all methods.

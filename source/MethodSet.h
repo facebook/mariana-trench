@@ -40,12 +40,7 @@ class MethodSet final : public sparta::AbstractDomain<MethodSet> {
 
   explicit MethodSet(const Methods& methods);
 
-  MethodSet(const MethodSet&) = default;
-  MethodSet(MethodSet&&) = default;
-  MethodSet& operator=(const MethodSet&) = default;
-  MethodSet& operator=(MethodSet&&) = default;
-  ~MethodSet() = default;
-
+  INCLUDE_DEFAULT_COPY_CONSTRUCTORS_AND_ASSIGNMENTS(MethodSet)
   INCLUDE_ABSTRACT_DOMAIN_METHODS(MethodSet, Set, set_)
   INCLUDE_SET_METHODS(MethodSet, Set, set_, const Method*, iterator)
 

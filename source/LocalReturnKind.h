@@ -8,6 +8,7 @@
 #pragma once
 
 #include <mariana-trench/Context.h>
+#include <mariana-trench/IncludeMacros.h>
 #include <mariana-trench/PropagationKind.h>
 
 namespace marianatrench {
@@ -20,12 +21,9 @@ namespace marianatrench {
  */
 class LocalReturnKind final : public PropagationKind {
  public:
-  explicit LocalReturnKind() {}
-  LocalReturnKind(const LocalReturnKind&) = delete;
-  LocalReturnKind(LocalReturnKind&&) = delete;
-  LocalReturnKind& operator=(const LocalReturnKind&) = delete;
-  LocalReturnKind& operator=(LocalReturnKind&&) = delete;
-  ~LocalReturnKind() override = default;
+  explicit LocalReturnKind() = default;
+
+  DELETE_COPY_CONSTRUCTORS_AND_ASSIGNMENTS(LocalReturnKind)
 
   void show(std::ostream&) const override;
 

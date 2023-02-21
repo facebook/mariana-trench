@@ -13,6 +13,7 @@
 
 #include <DexStore.h>
 
+#include <mariana-trench/IncludeMacros.h>
 #include <mariana-trench/Options.h>
 #include <mariana-trench/UniquePointerConcurrentMap.h>
 
@@ -24,11 +25,7 @@ class ClassHierarchies final {
       const Options& options,
       const DexStoresVector& stores);
 
-  ClassHierarchies(const ClassHierarchies&) = delete;
-  ClassHierarchies(ClassHierarchies&&) = delete;
-  ClassHierarchies& operator=(const ClassHierarchies&) = delete;
-  ClassHierarchies& operator=(ClassHierarchies&&) = delete;
-  ~ClassHierarchies() = default;
+  DELETE_COPY_CONSTRUCTORS_AND_ASSIGNMENTS(ClassHierarchies)
 
   /* Return the set of classes that extend the given class. */
   const std::unordered_set<const DexType*>& extends(const DexType* klass) const;

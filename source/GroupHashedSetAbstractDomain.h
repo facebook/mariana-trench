@@ -17,6 +17,7 @@
 #include <AbstractDomain.h>
 
 #include <mariana-trench/Assert.h>
+#include <mariana-trench/IncludeMacros.h>
 
 namespace marianatrench {
 
@@ -32,11 +33,8 @@ template <typename Value>
 class MutableValue {
  public:
   explicit MutableValue(Value value) : value_(std::move(value)) {}
-  MutableValue(const MutableValue&) = default;
-  MutableValue(MutableValue&&) = default;
-  MutableValue& operator=(const MutableValue&) = default;
-  MutableValue& operator=(MutableValue&&) = default;
-  ~MutableValue() = default;
+
+  INCLUDE_DEFAULT_COPY_CONSTRUCTORS_AND_ASSIGNMENTS(MutableValue)
 
   Value& get() {
     return value_;
@@ -151,12 +149,8 @@ class GroupHashedSetAbstractDomain final
     }
   }
 
-  GroupHashedSetAbstractDomain(const GroupHashedSetAbstractDomain&) = default;
-  GroupHashedSetAbstractDomain(GroupHashedSetAbstractDomain&&) = default;
-  GroupHashedSetAbstractDomain& operator=(const GroupHashedSetAbstractDomain&) =
-      default;
-  GroupHashedSetAbstractDomain& operator=(GroupHashedSetAbstractDomain&&) =
-      default;
+  INCLUDE_DEFAULT_COPY_CONSTRUCTORS_AND_ASSIGNMENTS(
+      GroupHashedSetAbstractDomain)
 
   static GroupHashedSetAbstractDomain bottom() {
     return GroupHashedSetAbstractDomain();

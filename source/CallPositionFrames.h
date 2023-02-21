@@ -20,6 +20,7 @@
 #include <mariana-trench/FlattenIterator.h>
 #include <mariana-trench/Frame.h>
 #include <mariana-trench/GroupHashedSetAbstractDomain.h>
+#include <mariana-trench/IncludeMacros.h>
 #include <mariana-trench/RootPatriciaTreeAbstractPartition.h>
 #include <mariana-trench/TaintConfig.h>
 
@@ -67,10 +68,7 @@ class CallPositionFrames final
 
   explicit CallPositionFrames(std::initializer_list<TaintConfig> configs);
 
-  CallPositionFrames(const CallPositionFrames&) = default;
-  CallPositionFrames(CallPositionFrames&&) = default;
-  CallPositionFrames& operator=(const CallPositionFrames&) = default;
-  CallPositionFrames& operator=(CallPositionFrames&&) = default;
+  INCLUDE_DEFAULT_COPY_CONSTRUCTORS_AND_ASSIGNMENTS(CallPositionFrames)
 
   static CallPositionFrames bottom() {
     return CallPositionFrames(

@@ -8,7 +8,9 @@
 #pragma once
 
 #include <AbstractDomain.h>
+
 #include <mariana-trench/Assert.h>
+#include <mariana-trench/IncludeMacros.h>
 
 namespace marianatrench {
 
@@ -19,6 +21,8 @@ class SingletonAbstractValue final
 
  public:
   SingletonAbstractValue() = default;
+
+  INCLUDE_DEFAULT_COPY_CONSTRUCTORS_AND_ASSIGNMENTS(SingletonAbstractValue)
 
   void clear() override {}
 
@@ -65,6 +69,8 @@ class SingletonAbstractDomain final : public sparta::AbstractDomainScaffolding<
   // Return a `SingletonAbstractDomain` of holding a value which is of kind
   // `AbstractValueKind::Value`.
   SingletonAbstractDomain() = default;
+
+  INCLUDE_DEFAULT_COPY_CONSTRUCTORS_AND_ASSIGNMENTS(SingletonAbstractDomain)
 
   static SingletonAbstractDomain bottom() {
     auto domain = SingletonAbstractDomain();

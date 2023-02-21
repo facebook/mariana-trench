@@ -16,6 +16,7 @@
 
 #include <mariana-trench/Access.h>
 #include <mariana-trench/Compiler.h>
+#include <mariana-trench/IncludeMacros.h>
 #include <mariana-trench/Method.h>
 #include <mariana-trench/Options.h>
 #include <mariana-trench/UniquePointerConcurrentMap.h>
@@ -31,11 +32,8 @@ class Types final {
  public:
   Types() = default;
   explicit Types(const Options& options, const DexStoresVector& stores);
-  Types(const Types&) = delete;
-  Types(Types&&) = delete;
-  Types& operator=(const Types&) = delete;
-  Types& operator=(Types&&) = delete;
-  ~Types() = default;
+
+  DELETE_COPY_CONSTRUCTORS_AND_ASSIGNMENTS(Types)
 
   const TypeEnvironment& environment(
       const Method* method,

@@ -16,6 +16,7 @@
 #include <mariana-trench/Access.h>
 #include <mariana-trench/Compiler.h>
 #include <mariana-trench/Context.h>
+#include <mariana-trench/IncludeMacros.h>
 
 namespace marianatrench {
 
@@ -36,11 +37,7 @@ class Method final {
       const DexMethod* method,
       ParameterTypeOverrides parameter_type_overrides);
 
-  Method(const Method&) = default;
-  Method(Method&&) = default;
-  Method& operator=(const Method&) = default;
-  Method& operator=(Method&&) = default;
-  ~Method() = default;
+  INCLUDE_DEFAULT_COPY_CONSTRUCTORS_AND_ASSIGNMENTS(Method)
 
   bool operator==(const Method& other) const;
 

@@ -16,10 +16,12 @@ class FieldModelTemplate final {
  public:
   /* The given `field_model` must not be associated with a field. */
   explicit FieldModelTemplate(const FieldModel& field_model);
+
   FieldModelTemplate(const FieldModelTemplate& other) = delete;
   FieldModelTemplate(FieldModelTemplate&& other) = default;
   FieldModelTemplate& operator=(const FieldModelTemplate& other) = delete;
   FieldModelTemplate& operator=(FieldModelTemplate&& other) = delete;
+  ~FieldModelTemplate() = default;
 
   /* Create a FieldModel with information that is associated with a field. */
   std::optional<FieldModel> instantiate(const Field* field) const;

@@ -14,6 +14,7 @@
 
 #include <mariana-trench/Assert.h>
 #include <mariana-trench/Compiler.h>
+#include <mariana-trench/IncludeMacros.h>
 #include <mariana-trench/MemoryLocation.h>
 #include <mariana-trench/MemoryLocationEnvironment.h>
 
@@ -27,11 +28,7 @@ class InstructionAliasResults final {
       std::optional<MemoryLocationsDomain> result_memory_locations,
       DexPosition* MT_NULLABLE position);
 
-  InstructionAliasResults(const InstructionAliasResults&) = default;
-  InstructionAliasResults(InstructionAliasResults&&) = default;
-  InstructionAliasResults& operator=(const InstructionAliasResults&) = default;
-  InstructionAliasResults& operator=(InstructionAliasResults&&) = default;
-  ~InstructionAliasResults() = default;
+  INCLUDE_DEFAULT_COPY_CONSTRUCTORS_AND_ASSIGNMENTS(InstructionAliasResults)
 
   /* Mapping from registers to their memory locations *before* the instruction
    * (precondition). */
@@ -67,11 +64,8 @@ class InstructionAliasResults final {
 class AliasAnalysisResults final {
  public:
   AliasAnalysisResults() = default;
-  AliasAnalysisResults(const AliasAnalysisResults&) = delete;
-  AliasAnalysisResults(AliasAnalysisResults&&) = delete;
-  AliasAnalysisResults& operator=(const AliasAnalysisResults&) = delete;
-  AliasAnalysisResults& operator=(AliasAnalysisResults&&) = delete;
-  ~AliasAnalysisResults() = default;
+
+  DELETE_COPY_CONSTRUCTORS_AND_ASSIGNMENTS(AliasAnalysisResults)
 
   const InstructionAliasResults& get(const IRInstruction* instruction) const;
 

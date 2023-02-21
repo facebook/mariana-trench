@@ -12,6 +12,7 @@
 
 #include <mariana-trench/Assert.h>
 #include <mariana-trench/Context.h>
+#include <mariana-trench/IncludeMacros.h>
 #include <mariana-trench/Kind.h>
 
 namespace marianatrench {
@@ -44,10 +45,7 @@ class Sanitizer final : public sparta::AbstractDomain<Sanitizer> {
       const SanitizerKind& sanitizer_kind,
       const KindSetAbstractDomain& kinds);
 
-  Sanitizer(const Sanitizer&) = default;
-  Sanitizer(Sanitizer&&) = default;
-  Sanitizer& operator=(const Sanitizer&) = default;
-  Sanitizer& operator=(Sanitizer&&) = default;
+  INCLUDE_DEFAULT_COPY_CONSTRUCTORS_AND_ASSIGNMENTS(Sanitizer)
 
   static Sanitizer bottom() {
     return Sanitizer();

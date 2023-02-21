@@ -11,6 +11,8 @@
 #include <optional>
 #include <type_traits>
 
+#include <mariana-trench/IncludeMacros.h>
+
 namespace marianatrench {
 
 template <typename OuterIterator>
@@ -85,11 +87,7 @@ class FlattenIterator {
     advance_empty();
   }
 
-  FlattenIterator(const FlattenIterator&) = default;
-  FlattenIterator(FlattenIterator&&) = default;
-  FlattenIterator& operator=(const FlattenIterator&) = default;
-  FlattenIterator& operator=(FlattenIterator&&) = default;
-  ~FlattenIterator() = default;
+  INCLUDE_DEFAULT_COPY_CONSTRUCTORS_AND_ASSIGNMENTS(FlattenIterator)
 
   FlattenIterator& operator++() {
     ++inner_->begin;

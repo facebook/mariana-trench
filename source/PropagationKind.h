@@ -8,6 +8,7 @@
 #pragma once
 
 #include <mariana-trench/Access.h>
+#include <mariana-trench/IncludeMacros.h>
 #include <mariana-trench/Kind.h>
 
 namespace marianatrench {
@@ -22,11 +23,8 @@ namespace marianatrench {
 class PropagationKind : public Kind {
  public:
   PropagationKind() = default;
-  PropagationKind(const PropagationKind&) = delete;
-  PropagationKind(PropagationKind&&) = delete;
-  PropagationKind& operator=(const PropagationKind&) = delete;
-  PropagationKind& operator=(PropagationKind&&) = delete;
-  ~PropagationKind() override = default;
+
+  DELETE_COPY_CONSTRUCTORS_AND_ASSIGNMENTS(PropagationKind)
 
   virtual Root root() const = 0;
 };

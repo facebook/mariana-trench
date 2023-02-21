@@ -15,6 +15,7 @@
 #include <boost/program_options.hpp>
 #include <json/json.h>
 
+#include <mariana-trench/IncludeMacros.h>
 #include <mariana-trench/model-generator/ModelGeneratorConfiguration.h>
 
 namespace marianatrench {
@@ -38,12 +39,10 @@ class Options final {
       bool remove_unreachable_code,
       bool emit_all_via_cast_features,
       const std::string& source_root_directory = ".");
+
   explicit Options(const boost::program_options::variables_map& variables);
-  Options(const Options&) = delete;
-  Options(Options&&) = delete;
-  Options& operator=(const Options& other) = delete;
-  Options& operator=(Options&& other) = delete;
-  ~Options() = default;
+
+  DELETE_COPY_CONSTRUCTORS_AND_ASSIGNMENTS(Options)
 
   static void add_options(boost::program_options::options_description& options);
 

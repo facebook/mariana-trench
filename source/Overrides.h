@@ -13,6 +13,7 @@
 
 #include <DexStore.h>
 
+#include <mariana-trench/IncludeMacros.h>
 #include <mariana-trench/Method.h>
 #include <mariana-trench/Options.h>
 #include <mariana-trench/UniquePointerConcurrentMap.h>
@@ -26,11 +27,7 @@ class Overrides final {
       const Methods& methods,
       const DexStoresVector& stores);
 
-  Overrides(const Overrides&) = delete;
-  Overrides(Overrides&&) = delete;
-  Overrides& operator=(const Overrides&) = delete;
-  Overrides& operator=(Overrides&&) = delete;
-  ~Overrides() = default;
+  DELETE_COPY_CONSTRUCTORS_AND_ASSIGNMENTS(Overrides)
 
   /**
    * Return the set of methods overriding the given method.

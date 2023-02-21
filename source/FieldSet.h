@@ -40,12 +40,7 @@ class FieldSet final : public sparta::AbstractDomain<FieldSet> {
 
   explicit FieldSet(const Fields& fields);
 
-  FieldSet(const FieldSet&) = default;
-  FieldSet(FieldSet&&) = default;
-  FieldSet& operator=(const FieldSet&) = default;
-  FieldSet& operator=(FieldSet&&) = default;
-  ~FieldSet() = default;
-
+  INCLUDE_DEFAULT_COPY_CONSTRUCTORS_AND_ASSIGNMENTS(FieldSet)
   INCLUDE_ABSTRACT_DOMAIN_METHODS(FieldSet, Set, set_)
   INCLUDE_SET_METHODS(FieldSet, Set, set_, const Field*, iterator)
 

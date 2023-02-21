@@ -24,6 +24,7 @@
 #include <mariana-trench/FeatureSet.h>
 #include <mariana-trench/Field.h>
 #include <mariana-trench/Fields.h>
+#include <mariana-trench/IncludeMacros.h>
 #include <mariana-trench/Issue.h>
 #include <mariana-trench/Method.h>
 #include <mariana-trench/Options.h>
@@ -72,11 +73,7 @@ class CallTarget final {
       const ClassHierarchies& class_hierarchies,
       const Overrides& override_factory);
 
-  CallTarget(const CallTarget&) = default;
-  CallTarget(CallTarget&&) = default;
-  CallTarget& operator=(const CallTarget&) = default;
-  CallTarget& operator=(CallTarget&&) = default;
-  ~CallTarget() = default;
+  INCLUDE_DEFAULT_COPY_CONSTRUCTORS_AND_ASSIGNMENTS(CallTarget)
 
   /*
    * The instruction that triggered the call.
@@ -217,11 +214,7 @@ class CallGraph final {
       const Features& features,
       const MethodToShimMap& shims);
 
-  CallGraph(const CallGraph&) = delete;
-  CallGraph(CallGraph&&) = delete;
-  CallGraph& operator=(const CallGraph&) = delete;
-  CallGraph& operator=(CallGraph&&) = delete;
-  ~CallGraph() = default;
+  DELETE_COPY_CONSTRUCTORS_AND_ASSIGNMENTS(CallGraph)
 
   /* Return all call targets for the given method. */
   std::vector<CallTarget> callees(const Method* caller) const;

@@ -11,6 +11,7 @@
 #include <json/json.h>
 
 #include <mariana-trench/Context.h>
+#include <mariana-trench/IncludeMacros.h>
 #include <mariana-trench/Redex.h>
 
 namespace marianatrench {
@@ -30,11 +31,7 @@ class LifecycleMethodCall {
         return_type_(std::move(return_type)),
         argument_types_(std::move(argument_types)) {}
 
-  LifecycleMethodCall(const LifecycleMethodCall&) = default;
-  LifecycleMethodCall(LifecycleMethodCall&&) = default;
-  LifecycleMethodCall& operator=(const LifecycleMethodCall&) = default;
-  LifecycleMethodCall& operator=(LifecycleMethodCall&&) = delete;
-  ~LifecycleMethodCall() = default;
+  INCLUDE_DEFAULT_COPY_CONSTRUCTORS_AND_ASSIGNMENTS(LifecycleMethodCall)
 
   static LifecycleMethodCall from_json(const Json::Value& value);
 
@@ -98,11 +95,7 @@ class LifecycleMethod {
         method_name_(std::move(method_name)),
         callees_(std::move(callees)) {}
 
-  LifecycleMethod(const LifecycleMethod&) = default;
-  LifecycleMethod(LifecycleMethod&&) = default;
-  LifecycleMethod& operator=(const LifecycleMethod&) = default;
-  LifecycleMethod& operator=(LifecycleMethod&&) = delete;
-  ~LifecycleMethod() = default;
+  INCLUDE_DEFAULT_COPY_CONSTRUCTORS_AND_ASSIGNMENTS(LifecycleMethod)
 
   const std::string& method_name() const {
     return method_name_;

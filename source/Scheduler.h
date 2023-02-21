@@ -12,6 +12,7 @@
 #include <ConcurrentContainers.h>
 
 #include <mariana-trench/Dependencies.h>
+#include <mariana-trench/IncludeMacros.h>
 #include <mariana-trench/Method.h>
 #include <mariana-trench/StronglyConnectedComponents.h>
 
@@ -21,11 +22,7 @@ class Scheduler final {
  public:
   explicit Scheduler(const Methods& methods, const Dependencies& dependencies);
 
-  Scheduler(const Scheduler&) = delete;
-  Scheduler(Scheduler&&) = delete;
-  Scheduler& operator=(const Scheduler&) = delete;
-  Scheduler& operator=(Scheduler&&) = delete;
-  ~Scheduler() = default;
+  DELETE_COPY_CONSTRUCTORS_AND_ASSIGNMENTS(Scheduler)
 
   /* Add methods to analyze in the work queue, in a specific order. */
   void schedule(

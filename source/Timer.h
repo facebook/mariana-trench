@@ -9,16 +9,15 @@
 
 #include <chrono>
 
+#include <mariana-trench/IncludeMacros.h>
+
 namespace marianatrench {
 
 class Timer final {
  public:
   Timer() : start_(std::chrono::steady_clock::now()) {}
-  Timer(const Timer&) = default;
-  Timer(Timer&&) = default;
-  Timer& operator=(const Timer&) = default;
-  Timer& operator=(Timer&&) = default;
-  ~Timer() = default;
+
+  INCLUDE_DEFAULT_COPY_CONSTRUCTORS_AND_ASSIGNMENTS(Timer)
 
   double duration_in_seconds() const {
     double duration_in_milliseconds =

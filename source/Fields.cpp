@@ -17,7 +17,6 @@
 
 namespace marianatrench {
 
-Fields::Fields() = default;
 Fields::Fields(const DexStoresVector& stores) {
   for (auto& scope : DexStoreClassesIterator(stores)) {
     walk::parallel::fields(

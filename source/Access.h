@@ -22,6 +22,7 @@
 
 #include <mariana-trench/Assert.h>
 #include <mariana-trench/Compiler.h>
+#include <mariana-trench/IncludeMacros.h>
 #include <mariana-trench/PointerIntPair.h>
 
 namespace marianatrench {
@@ -91,11 +92,7 @@ class Root final {
     }
   }
 
-  Root(const Root&) = default;
-  Root(Root&&) = default;
-  Root& operator=(const Root&) = default;
-  Root& operator=(Root&&) = default;
-  ~Root() = default;
+  INCLUDE_DEFAULT_COPY_CONSTRUCTORS_AND_ASSIGNMENTS(Root)
 
   bool operator==(const Root& other) const {
     return value_ == other.value_;
@@ -209,11 +206,8 @@ class PathElement final {
 
  public:
   PathElement() = delete;
-  PathElement(const PathElement&) = default;
-  PathElement(PathElement&&) = default;
-  PathElement& operator=(const PathElement&) = default;
-  PathElement& operator=(PathElement&&) = default;
-  ~PathElement() = default;
+
+  INCLUDE_DEFAULT_COPY_CONSTRUCTORS_AND_ASSIGNMENTS(PathElement)
 
   bool operator==(const PathElement& other) const {
     return value_ == other.value_;
@@ -318,11 +312,7 @@ class Path final {
   explicit Path(std::initializer_list<Element> elements)
       : elements_(elements) {}
 
-  Path(const Path&) = default;
-  Path(Path&&) = default;
-  Path& operator=(const Path&) = default;
-  Path& operator=(Path&&) = default;
-  ~Path() = default;
+  INCLUDE_DEFAULT_COPY_CONSTRUCTORS_AND_ASSIGNMENTS(Path)
 
   bool operator==(const Path& other) const;
 
@@ -393,11 +383,7 @@ class AccessPath final {
   explicit AccessPath(Root root, Path path = {})
       : root_(root), path_(std::move(path)) {}
 
-  AccessPath(const AccessPath&) = default;
-  AccessPath(AccessPath&&) = default;
-  AccessPath& operator=(const AccessPath&) = default;
-  AccessPath& operator=(AccessPath&&) = default;
-  ~AccessPath() = default;
+  INCLUDE_DEFAULT_COPY_CONSTRUCTORS_AND_ASSIGNMENTS(AccessPath)
 
   bool operator==(const AccessPath& other) const;
   bool operator!=(const AccessPath& other) const;

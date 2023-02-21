@@ -15,6 +15,7 @@
 
 #include <mariana-trench/Assert.h>
 #include <mariana-trench/Context.h>
+#include <mariana-trench/IncludeMacros.h>
 #include <mariana-trench/Kind.h>
 #include <mariana-trench/Rule.h>
 
@@ -35,11 +36,8 @@ class SourceSinkRule final : public Rule {
       : Rule(name, code, description),
         source_kinds_(source_kinds),
         sink_kinds_(sink_kinds) {}
-  SourceSinkRule(const SourceSinkRule&) = delete;
-  SourceSinkRule(SourceSinkRule&&) = delete;
-  SourceSinkRule& operator=(const SourceSinkRule&) = delete;
-  SourceSinkRule& operator=(SourceSinkRule&&) = delete;
-  ~SourceSinkRule() override = default;
+
+  DELETE_COPY_CONSTRUCTORS_AND_ASSIGNMENTS(SourceSinkRule)
 
   const KindSet& source_kinds() const {
     return source_kinds_;

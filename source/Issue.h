@@ -15,6 +15,7 @@
 
 #include <mariana-trench/Assert.h>
 #include <mariana-trench/Compiler.h>
+#include <mariana-trench/IncludeMacros.h>
 #include <mariana-trench/Rule.h>
 #include <mariana-trench/Taint.h>
 
@@ -51,10 +52,7 @@ class Issue final : public sparta::AbstractDomain<Issue> {
         sink_index_(sink_index),
         position_(position) {}
 
-  Issue(const Issue&) = default;
-  Issue(Issue&&) = default;
-  Issue& operator=(const Issue&) = default;
-  Issue& operator=(Issue&&) = default;
+  INCLUDE_DEFAULT_COPY_CONSTRUCTORS_AND_ASSIGNMENTS(Issue)
 
   const Taint& sources() const {
     return sources_;

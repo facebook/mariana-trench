@@ -10,6 +10,7 @@
 #include <string>
 
 #include <mariana-trench/Feature.h>
+#include <mariana-trench/IncludeMacros.h>
 #include <mariana-trench/Method.h>
 #include <mariana-trench/UniquePointerFactory.h>
 
@@ -18,11 +19,8 @@ namespace marianatrench {
 class Features final {
  public:
   Features() = default;
-  Features(const Features&) = delete;
-  Features(Features&&) = delete;
-  Features& operator=(const Features&) = delete;
-  Features& operator=(Features&&) = delete;
-  ~Features() = default;
+
+  DELETE_COPY_CONSTRUCTORS_AND_ASSIGNMENTS(Features)
 
   const Feature* get(const std::string& data) const;
 

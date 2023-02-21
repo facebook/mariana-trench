@@ -16,6 +16,7 @@
 
 #include <mariana-trench/AbstractTreeDomain.h>
 #include <mariana-trench/Access.h>
+#include <mariana-trench/AccessPathTreeDomain.h>
 #include <mariana-trench/RootPatriciaTreeAbstractPartition.h>
 
 namespace marianatrench {
@@ -69,58 +70,9 @@ class AccessPathTreeDomain final
     }
   }
 
-  AccessPathTreeDomain(const AccessPathTreeDomain&) = default;
-  AccessPathTreeDomain(AccessPathTreeDomain&&) = default;
-  AccessPathTreeDomain& operator=(const AccessPathTreeDomain&) = default;
-  AccessPathTreeDomain& operator=(AccessPathTreeDomain&&) = default;
+  INCLUDE_DEFAULT_COPY_CONSTRUCTORS_AND_ASSIGNMENTS(AccessPathTreeDomain)
 
-  static AccessPathTreeDomain bottom() {
-    return AccessPathTreeDomain(Map::bottom());
-  }
-
-  static AccessPathTreeDomain top() {
-    return AccessPathTreeDomain(Map::top());
-  }
-
-  bool is_bottom() const override {
-    return map_.is_bottom();
-  }
-
-  bool is_top() const override {
-    return map_.is_top();
-  }
-
-  void set_to_bottom() override {
-    map_.set_to_bottom();
-  }
-
-  void set_to_top() override {
-    map_.set_to_top();
-  }
-
-  bool leq(const AccessPathTreeDomain& other) const override {
-    return map_.leq(other.map_);
-  }
-
-  bool equals(const AccessPathTreeDomain& other) const override {
-    return map_.equals(other.map_);
-  }
-
-  void join_with(const AccessPathTreeDomain& other) override {
-    map_.join_with(other.map_);
-  }
-
-  void widen_with(const AccessPathTreeDomain& other) override {
-    join_with(other);
-  }
-
-  void meet_with(const AccessPathTreeDomain& /*other*/) override {
-    mt_unreachable(); // Not implemented.
-  }
-
-  void narrow_with(const AccessPathTreeDomain& other) override {
-    meet_with(other);
-  }
+  INCLUDE_ABSTRACT_DOMAIN_METHODS(AccessPathTreeDomain, Map, map_)
 
   /* Write elements at the given access path. */
   void

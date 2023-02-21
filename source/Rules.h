@@ -51,7 +51,7 @@ class Rules final {
   static_assert(std::is_same_v<typename iterator::reference, const_reference>);
 
  public:
-  explicit Rules();
+  Rules() = default;
 
   explicit Rules(Context& context, std::vector<std::unique_ptr<Rule>> rules);
 

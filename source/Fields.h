@@ -14,6 +14,7 @@
 #include <DexStore.h>
 
 #include <mariana-trench/Field.h>
+#include <mariana-trench/IncludeMacros.h>
 
 namespace marianatrench {
 
@@ -35,15 +36,11 @@ class Fields final {
       boost::transform_iterator<GetPointer, typename Set::const_iterator>;
 
  public:
-  Fields();
+  Fields() = default;
 
   explicit Fields(const DexStoresVector& stores);
 
-  Fields(const Fields&) = delete;
-  Fields(Fields&&) = delete;
-  Fields& operator=(const Fields&) = delete;
-  Fields& operator=(Fields&&) = delete;
-  ~Fields() = default;
+  DELETE_COPY_CONSTRUCTORS_AND_ASSIGNMENTS(Fields)
 
   const Field* get(const DexField* field) const;
 

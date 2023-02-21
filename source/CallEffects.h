@@ -36,6 +36,8 @@ class CallEffect final {
 
   explicit CallEffect(Kind kind) : value_(static_cast<IntegerEncoding>(kind)) {}
 
+  INCLUDE_DEFAULT_COPY_CONSTRUCTORS_AND_ASSIGNMENTS(CallEffect)
+
   bool operator==(const CallEffect& other) const {
     return value_ == other.value_;
   }
@@ -129,12 +131,7 @@ class CallEffectsAbstractDomain final
  public:
   CallEffectsAbstractDomain() = default;
 
-  CallEffectsAbstractDomain(const CallEffectsAbstractDomain&) = default;
-  CallEffectsAbstractDomain(CallEffectsAbstractDomain&&) = default;
-  CallEffectsAbstractDomain& operator=(const CallEffectsAbstractDomain&) =
-      default;
-  CallEffectsAbstractDomain& operator=(CallEffectsAbstractDomain&&) = default;
-  ~CallEffectsAbstractDomain() = default;
+  INCLUDE_DEFAULT_COPY_CONSTRUCTORS_AND_ASSIGNMENTS(CallEffectsAbstractDomain)
 
   // Map interface
   std::size_t size() const {

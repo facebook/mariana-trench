@@ -25,6 +25,7 @@
 #include <mariana-trench/FeatureMayAlwaysSet.h>
 #include <mariana-trench/FeatureSet.h>
 #include <mariana-trench/FieldSet.h>
+#include <mariana-trench/IncludeMacros.h>
 #include <mariana-trench/Kind.h>
 #include <mariana-trench/Kinds.h>
 #include <mariana-trench/LocalPositionSet.h>
@@ -172,10 +173,7 @@ class Frame final : public sparta::AbstractDomain<Frame> {
     }
   }
 
-  Frame(const Frame&) = default;
-  Frame(Frame&&) = default;
-  Frame& operator=(const Frame&) = default;
-  Frame& operator=(Frame&&) = default;
+  INCLUDE_DEFAULT_COPY_CONSTRUCTORS_AND_ASSIGNMENTS(Frame)
 
   /* Return the kind, or `nullptr` for bottom. */
   const Kind* MT_NULLABLE kind() const {

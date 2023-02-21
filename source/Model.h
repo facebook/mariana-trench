@@ -19,6 +19,7 @@
 #include <mariana-trench/Context.h>
 #include <mariana-trench/FeatureSet.h>
 #include <mariana-trench/Flags.h>
+#include <mariana-trench/IncludeMacros.h>
 #include <mariana-trench/Issue.h>
 #include <mariana-trench/IssueSet.h>
 #include <mariana-trench/Method.h>
@@ -162,11 +163,7 @@ class Model final {
           AccessPathConstantDomain::bottom(),
       const IssueSet& issues = {});
 
-  Model(const Model& other) = default;
-  Model(Model&&) = default;
-  Model& operator=(const Model& other) = default;
-  Model& operator=(Model&&) = default;
-  ~Model() = default;
+  INCLUDE_DEFAULT_COPY_CONSTRUCTORS_AND_ASSIGNMENTS(Model)
 
   bool operator==(const Model& other) const;
   bool operator!=(const Model& other) const;

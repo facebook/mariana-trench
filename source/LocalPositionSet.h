@@ -42,11 +42,7 @@ class LocalPositionSet final : public sparta::AbstractDomain<LocalPositionSet> {
   explicit LocalPositionSet(std::initializer_list<const Position*> positions)
       : set_(positions) {}
 
-  LocalPositionSet(const LocalPositionSet&) = default;
-  LocalPositionSet(LocalPositionSet&&) = default;
-  LocalPositionSet& operator=(const LocalPositionSet&) = default;
-  LocalPositionSet& operator=(LocalPositionSet&&) = default;
-  ~LocalPositionSet() = default;
+  INCLUDE_DEFAULT_COPY_CONSTRUCTORS_AND_ASSIGNMENTS(LocalPositionSet)
 
   INCLUDE_ABSTRACT_DOMAIN_METHODS(LocalPositionSet, Set, set_)
 

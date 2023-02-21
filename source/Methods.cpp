@@ -18,8 +18,6 @@
 
 namespace marianatrench {
 
-Methods::Methods() = default;
-
 Methods::Methods(const DexStoresVector& stores) {
   // Create all methods with no type overrides.
   for (auto& scope : DexStoreClassesIterator(stores)) {

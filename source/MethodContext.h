@@ -13,6 +13,7 @@
 #include <mariana-trench/CallGraph.h>
 #include <mariana-trench/Compiler.h>
 #include <mariana-trench/Context.h>
+#include <mariana-trench/IncludeMacros.h>
 #include <mariana-trench/MemoryLocation.h>
 #include <mariana-trench/Method.h>
 #include <mariana-trench/Model.h>
@@ -27,11 +28,8 @@ namespace marianatrench {
 class MethodContext final {
  public:
   MethodContext(Context& context, const Registry& registry, Model& model);
-  MethodContext(const MethodContext&) = delete;
-  MethodContext(MethodContext&&) = delete;
-  MethodContext& operator=(const MethodContext&) = delete;
-  MethodContext& operator=(MethodContext&&) = delete;
-  ~MethodContext() = default;
+
+  DELETE_COPY_CONSTRUCTORS_AND_ASSIGNMENTS(MethodContext)
 
   const Method* method() const {
     return model.method();

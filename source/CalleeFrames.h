@@ -11,6 +11,7 @@
 #include <PatriciaTreeMapAbstractPartition.h>
 
 #include <mariana-trench/CallPositionFrames.h>
+#include <mariana-trench/IncludeMacros.h>
 #include <mariana-trench/Position.h>
 #include <mariana-trench/TaintConfig.h>
 
@@ -72,10 +73,7 @@ class CalleeFrames final : public sparta::AbstractDomain<CalleeFrames> {
 
   explicit CalleeFrames(std::initializer_list<TaintConfig> configs);
 
-  CalleeFrames(const CalleeFrames&) = default;
-  CalleeFrames(CalleeFrames&&) = default;
-  CalleeFrames& operator=(const CalleeFrames&) = default;
-  CalleeFrames& operator=(CalleeFrames&&) = default;
+  INCLUDE_DEFAULT_COPY_CONSTRUCTORS_AND_ASSIGNMENTS(CalleeFrames)
 
   static CalleeFrames bottom() {
     return CalleeFrames(

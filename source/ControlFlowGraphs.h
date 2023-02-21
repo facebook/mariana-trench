@@ -9,16 +9,15 @@
 
 #include <DexClass.h>
 
+#include <mariana-trench/IncludeMacros.h>
+
 namespace marianatrench {
 
 class ControlFlowGraphs final {
  public:
   explicit ControlFlowGraphs(const DexStoresVector& stores);
-  ControlFlowGraphs(const ControlFlowGraphs&) = delete;
-  ControlFlowGraphs(ControlFlowGraphs&&) = delete;
-  ControlFlowGraphs& operator=(const ControlFlowGraphs&) = delete;
-  ControlFlowGraphs& operator=(ControlFlowGraphs&&) = delete;
-  ~ControlFlowGraphs() = default;
+
+  DELETE_COPY_CONSTRUCTORS_AND_ASSIGNMENTS(ControlFlowGraphs)
 
   /*
    * Control flow graphs are stored by Redex and can be retrieved with

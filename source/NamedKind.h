@@ -13,6 +13,7 @@
 #include <json/json.h>
 
 #include <mariana-trench/Context.h>
+#include <mariana-trench/IncludeMacros.h>
 #include <mariana-trench/Kind.h>
 
 namespace marianatrench {
@@ -24,11 +25,8 @@ namespace marianatrench {
 class NamedKind final : public Kind {
  public:
   explicit NamedKind(std::string name) : name_(std::move(name)) {}
-  NamedKind(const NamedKind&) = delete;
-  NamedKind(NamedKind&&) = delete;
-  NamedKind& operator=(const NamedKind&) = delete;
-  NamedKind& operator=(NamedKind&&) = delete;
-  ~NamedKind() override = default;
+
+  DELETE_COPY_CONSTRUCTORS_AND_ASSIGNMENTS(NamedKind)
 
   void show(std::ostream&) const override;
 

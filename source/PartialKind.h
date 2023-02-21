@@ -13,6 +13,7 @@
 #include <json/json.h>
 
 #include <mariana-trench/Context.h>
+#include <mariana-trench/IncludeMacros.h>
 #include <mariana-trench/Kind.h>
 
 namespace marianatrench {
@@ -32,11 +33,8 @@ class PartialKind final : public Kind {
  public:
   explicit PartialKind(std::string name, std::string label)
       : name_(std::move(name)), label_(std::move(label)) {}
-  PartialKind(const PartialKind&) = delete;
-  PartialKind(PartialKind&&) = delete;
-  PartialKind& operator=(const PartialKind&) = delete;
-  PartialKind& operator=(PartialKind&&) = delete;
-  ~PartialKind() override = default;
+
+  DELETE_COPY_CONSTRUCTORS_AND_ASSIGNMENTS(PartialKind)
 
   void show(std::ostream&) const override;
 

@@ -13,6 +13,7 @@
 
 #include <json/json.h>
 
+#include <mariana-trench/IncludeMacros.h>
 #include <mariana-trench/Method.h>
 #include <mariana-trench/Timer.h>
 
@@ -25,11 +26,7 @@ class Statistics final {
  public:
   Statistics() = default;
 
-  Statistics(const Statistics&) = delete;
-  Statistics(Statistics&&) = delete;
-  Statistics& operator=(const Statistics& other) = delete;
-  Statistics& operator=(Statistics&& other) = delete;
-  ~Statistics() = default;
+  DELETE_COPY_CONSTRUCTORS_AND_ASSIGNMENTS(Statistics)
 
   void log_number_iterations(std::size_t number_iterations);
   void log_resident_set_size(double resident_set_size);

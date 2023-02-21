@@ -82,14 +82,8 @@ class RootPatriciaTreeAbstractPartition final
     }
   }
 
-  RootPatriciaTreeAbstractPartition(const RootPatriciaTreeAbstractPartition&) =
-      default;
-  RootPatriciaTreeAbstractPartition(RootPatriciaTreeAbstractPartition&&) =
-      default;
-  RootPatriciaTreeAbstractPartition& operator=(
-      const RootPatriciaTreeAbstractPartition&) = default;
-  RootPatriciaTreeAbstractPartition& operator=(
-      RootPatriciaTreeAbstractPartition&&) = default;
+  INCLUDE_DEFAULT_COPY_CONSTRUCTORS_AND_ASSIGNMENTS(
+      RootPatriciaTreeAbstractPartition)
 
   INCLUDE_ABSTRACT_DOMAIN_METHODS(RootPatriciaTreeAbstractPartition, Map, map_)
 

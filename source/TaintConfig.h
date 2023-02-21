@@ -25,6 +25,7 @@
 #include <mariana-trench/FeatureSet.h>
 #include <mariana-trench/FieldSet.h>
 #include <mariana-trench/Frame.h>
+#include <mariana-trench/IncludeMacros.h>
 #include <mariana-trench/Kind.h>
 #include <mariana-trench/Kinds.h>
 #include <mariana-trench/LocalPositionSet.h>
@@ -99,10 +100,7 @@ class TaintConfig final {
     }
   }
 
-  TaintConfig(const TaintConfig&) = default;
-  TaintConfig(TaintConfig&&) = default;
-  TaintConfig& operator=(const TaintConfig&) = default;
-  TaintConfig& operator=(TaintConfig&&) = default;
+  INCLUDE_DEFAULT_COPY_CONSTRUCTORS_AND_ASSIGNMENTS(TaintConfig)
 
   friend bool operator==(const TaintConfig& self, const TaintConfig& other) {
     return self.kind_ == other.kind_ &&

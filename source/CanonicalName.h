@@ -15,6 +15,7 @@
 #include <json/json.h>
 
 #include <mariana-trench/Feature.h>
+#include <mariana-trench/IncludeMacros.h>
 #include <mariana-trench/Method.h>
 
 namespace marianatrench {
@@ -72,11 +73,7 @@ class CanonicalName final {
   explicit CanonicalName(const InstantiatedValue& instantiated_value)
       : value_(instantiated_value) {}
 
-  CanonicalName(const CanonicalName&) = default;
-  CanonicalName(CanonicalName&&) = default;
-  CanonicalName& operator=(const CanonicalName&) = default;
-  CanonicalName& operator=(CanonicalName&&) = default;
-  ~CanonicalName() = default;
+  INCLUDE_DEFAULT_COPY_CONSTRUCTORS_AND_ASSIGNMENTS(CanonicalName)
 
   bool operator==(const CanonicalName& other) const {
     return value_ == other.value_;

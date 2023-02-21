@@ -14,6 +14,7 @@
 #include <ConcurrentContainers.h>
 
 #include <mariana-trench/CallGraph.h>
+#include <mariana-trench/IncludeMacros.h>
 #include <mariana-trench/Method.h>
 #include <mariana-trench/Options.h>
 #include <mariana-trench/Overrides.h>
@@ -30,11 +31,7 @@ class Dependencies final {
       const CallGraph& call_graph,
       const Registry& registry);
 
-  Dependencies(const Dependencies&) = delete;
-  Dependencies(Dependencies&&) = delete;
-  Dependencies& operator=(const Dependencies&) = delete;
-  Dependencies& operator=(Dependencies&&) = delete;
-  ~Dependencies() = default;
+  DELETE_COPY_CONSTRUCTORS_AND_ASSIGNMENTS(Dependencies)
 
   /**
    * Return the set of dependencies for the given method, i.e the set of

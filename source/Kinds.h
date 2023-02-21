@@ -11,6 +11,7 @@
 
 #include <boost/iterator/transform_iterator.hpp>
 
+#include <mariana-trench/IncludeMacros.h>
 #include <mariana-trench/Kind.h>
 #include <mariana-trench/LocalArgumentKind.h>
 #include <mariana-trench/LocalReturnKind.h>
@@ -39,11 +40,8 @@ class Kinds final {
 
  public:
   Kinds();
-  Kinds(const Kinds&) = delete;
-  Kinds(Kinds&&) = delete;
-  Kinds& operator=(const Kinds&) = delete;
-  Kinds& operator=(Kinds&&) = delete;
-  ~Kinds() = default;
+
+  DELETE_COPY_CONSTRUCTORS_AND_ASSIGNMENTS(Kinds)
 
   const NamedKind* get(const std::string& name) const;
 

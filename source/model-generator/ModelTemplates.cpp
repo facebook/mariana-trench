@@ -13,8 +13,6 @@
 
 namespace marianatrench {
 
-TemplateVariableMapping::TemplateVariableMapping() {}
-
 void TemplateVariableMapping::insert(
     const std::string& name,
     ParameterPosition index) {
@@ -664,7 +662,8 @@ ModelTemplate ModelTemplate::from_json(
   std::vector<ForAllParameters> for_all_parameters;
   for (auto const& value :
        JsonValidation::null_or_array(model, /* field */ "for_all_parameters")) {
-    for_all_parameters.push_back(ForAllParameters::from_json(value, context));
+    for_all_parameters.emplace_back(
+        ForAllParameters::from_json(value, context));
   }
 
   return ModelTemplate(

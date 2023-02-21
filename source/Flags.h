@@ -10,6 +10,8 @@
 #include <initializer_list>
 #include <type_traits>
 
+#include <mariana-trench/IncludeMacros.h>
+
 namespace marianatrench {
 
 /**
@@ -42,15 +44,7 @@ class Flags final {
     }
   }
 
-  Flags(const Flags&) = default;
-
-  Flags(Flags&&) = default;
-
-  Flags& operator=(const Flags&) = default;
-
-  Flags& operator=(Flags&&) = default;
-
-  ~Flags() = default;
+  INCLUDE_DEFAULT_COPY_CONSTRUCTORS_AND_ASSIGNMENTS(Flags)
 
   Flags& operator&=(Enum flag) {
     value_ &= static_cast<IntT>(flag);

@@ -8,6 +8,7 @@
 #pragma once
 
 #include <mariana-trench/ClassHierarchies.h>
+#include <mariana-trench/IncludeMacros.h>
 #include <mariana-trench/JsonValidation.h>
 #include <mariana-trench/LifecycleMethod.h>
 #include <mariana-trench/Methods.h>
@@ -34,13 +35,9 @@ class LifecycleMethods final {
       const ClassHierarchies& class_hierarchies,
       Methods& methods);
 
-  LifecycleMethods() {}
+  LifecycleMethods() = default;
 
-  LifecycleMethods(const LifecycleMethods&) = delete;
-  LifecycleMethods(LifecycleMethods&&) = delete;
-  LifecycleMethods& operator=(const LifecycleMethods&) = delete;
-  LifecycleMethods& operator=(LifecycleMethods&&) = delete;
-  ~LifecycleMethods() = default;
+  DELETE_COPY_CONSTRUCTORS_AND_ASSIGNMENTS(LifecycleMethods)
 
   void add_methods_from_json(const Json::Value& lifecycle_definitions);
 

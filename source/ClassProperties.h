@@ -13,6 +13,7 @@
 #include <mariana-trench/Dependencies.h>
 #include <mariana-trench/Feature.h>
 #include <mariana-trench/FeatureMayAlwaysSet.h>
+#include <mariana-trench/IncludeMacros.h>
 #include <mariana-trench/Method.h>
 #include <mariana-trench/Options.h>
 
@@ -32,11 +33,8 @@ class ClassProperties final {
       const Features& features,
       const Dependencies& dependencies,
       std::unique_ptr<AndroidResources> android_resources = nullptr);
-  ClassProperties(const ClassProperties&) = delete;
-  ClassProperties(ClassProperties&&) = delete;
-  ClassProperties& operator=(const ClassProperties&) = delete;
-  ClassProperties& operator=(ClassProperties&&) = delete;
-  ~ClassProperties() = default;
+
+  DELETE_COPY_CONSTRUCTORS_AND_ASSIGNMENTS(ClassProperties)
 
  private:
   void emplace_classes(

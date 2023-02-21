@@ -13,6 +13,7 @@
 #include <Show.h>
 
 #include <mariana-trench/Assert.h>
+#include <mariana-trench/IncludeMacros.h>
 #include <mariana-trench/Log.h>
 #include <mariana-trench/model-generator/ReturnsThisAnalyzer.h>
 
@@ -51,11 +52,7 @@ class ReturnsThisContext final {
  public:
   ReturnsThisContext() : last_parameter_load_(0), return_locations_({}) {}
 
-  ReturnsThisContext(const ReturnsThisContext&) = delete;
-  ReturnsThisContext(ReturnsThisContext&&) = delete;
-  ReturnsThisContext& operator=(const ReturnsThisContext&) = delete;
-  ReturnsThisContext& operator=(ReturnsThisContext&&) = delete;
-  ~ReturnsThisContext() = default;
+  DELETE_COPY_CONSTRUCTORS_AND_ASSIGNMENTS(ReturnsThisContext)
 
   ParameterPosition last_parameter_loaded() const {
     return last_parameter_load_;

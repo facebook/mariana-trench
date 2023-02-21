@@ -10,6 +10,7 @@
 #include <unordered_map>
 
 #include <mariana-trench/FeatureMayAlwaysSet.h>
+#include <mariana-trench/IncludeMacros.h>
 #include <mariana-trench/MethodContext.h>
 #include <mariana-trench/MultiSourceMultiSinkRule.h>
 #include <mariana-trench/TriggeredPartialKind.h>
@@ -28,11 +29,8 @@ class FulfilledPartialKindState final {
 
  public:
   FulfilledPartialKindState() = default;
-  FulfilledPartialKindState(const FulfilledPartialKindState&) = delete;
-  FulfilledPartialKindState(FulfilledPartialKindState&&) = delete;
-  FulfilledPartialKindState& operator=(const FulfilledPartialKindState&) =
-      delete;
-  FulfilledPartialKindState& operator=(FulfilledPartialKindState&&) = delete;
+
+  DELETE_COPY_CONSTRUCTORS_AND_ASSIGNMENTS(FulfilledPartialKindState)
 
   /**
    * Called when sink `kind` is fulfilled under `rule`, i.e. has a matching

@@ -71,10 +71,7 @@ class Taint final : public sparta::AbstractDomain<Taint> {
 
   explicit Taint(std::initializer_list<TaintConfig> configs);
 
-  Taint(const Taint&) = default;
-  Taint(Taint&&) = default;
-  Taint& operator=(const Taint&) = default;
-  Taint& operator=(Taint&&) = default;
+  INCLUDE_DEFAULT_COPY_CONSTRUCTORS_AND_ASSIGNMENTS(Taint)
 
   INCLUDE_ABSTRACT_DOMAIN_METHODS(Taint, Set, set_)
 
@@ -291,6 +288,8 @@ class TaintFramesIterator {
 
  public:
   explicit TaintFramesIterator(const Taint& taint) : taint_(taint) {}
+
+  DELETE_COPY_CONSTRUCTORS_AND_ASSIGNMENTS(TaintFramesIterator)
 
   const_iterator begin() const {
     return ConstIterator(taint_.set_.begin(), taint_.set_.end());

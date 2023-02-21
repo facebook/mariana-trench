@@ -55,10 +55,7 @@ class FeatureMayAlwaysSet final
 
   static FeatureMayAlwaysSet make_always(const FeatureSet& features);
 
-  FeatureMayAlwaysSet(const FeatureMayAlwaysSet&) = default;
-  FeatureMayAlwaysSet(FeatureMayAlwaysSet&&) = default;
-  FeatureMayAlwaysSet& operator=(const FeatureMayAlwaysSet&) = default;
-  FeatureMayAlwaysSet& operator=(FeatureMayAlwaysSet&&) = default;
+  INCLUDE_DEFAULT_COPY_CONSTRUCTORS_AND_ASSIGNMENTS(FeatureMayAlwaysSet)
 
   INCLUDE_ABSTRACT_DOMAIN_METHODS(FeatureMayAlwaysSet, OverUnderSet, set_)
 

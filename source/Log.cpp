@@ -12,6 +12,7 @@
 
 #include <fmt/chrono.h>
 
+#include <mariana-trench/IncludeMacros.h>
 #include <mariana-trench/Log.h>
 
 namespace {
@@ -26,11 +27,7 @@ struct LoggerImplementation {
     is_interactive_ = isatty(fileno(stderr));
   }
 
-  LoggerImplementation(const LoggerImplementation&) = delete;
-  LoggerImplementation(LoggerImplementation&&) = delete;
-  LoggerImplementation& operator=(const LoggerImplementation&) = delete;
-  LoggerImplementation& operator=(LoggerImplementation&&) = delete;
-  ~LoggerImplementation() = default;
+  DELETE_COPY_CONSTRUCTORS_AND_ASSIGNMENTS(LoggerImplementation)
 
   void set_level(int level) {
     level_ = level;

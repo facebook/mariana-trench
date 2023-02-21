@@ -13,6 +13,7 @@
 
 #include <mariana-trench/ClassHierarchies.h>
 #include <mariana-trench/Compiler.h>
+#include <mariana-trench/IncludeMacros.h>
 #include <mariana-trench/UniquePointerConcurrentMap.h>
 
 namespace marianatrench {
@@ -29,11 +30,7 @@ class FieldCache final {
       const ClassHierarchies& class_hierarchies,
       const DexStoresVector& stores);
 
-  FieldCache(const FieldCache&) = delete;
-  FieldCache(FieldCache&&) = delete;
-  FieldCache& operator=(const FieldCache&) = delete;
-  FieldCache& operator=(FieldCache&&) = delete;
-  ~FieldCache() = default;
+  DELETE_COPY_CONSTRUCTORS_AND_ASSIGNMENTS(FieldCache)
 
   /**
    * Returns the possible types of `field` in `klass`.

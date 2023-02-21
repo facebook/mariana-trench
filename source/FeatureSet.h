@@ -38,12 +38,7 @@ class FeatureSet final : public sparta::AbstractDomain<FeatureSet> {
   /* Create the bottom (i.e, empty) feature set. */
   FeatureSet() = default;
 
-  FeatureSet(const FeatureSet&) = default;
-  FeatureSet(FeatureSet&&) = default;
-  FeatureSet& operator=(const FeatureSet&) = default;
-  FeatureSet& operator=(FeatureSet&&) = default;
-  ~FeatureSet() = default;
-
+  INCLUDE_DEFAULT_COPY_CONSTRUCTORS_AND_ASSIGNMENTS(FeatureSet)
   INCLUDE_ABSTRACT_DOMAIN_METHODS(FeatureSet, Set, set_)
   INCLUDE_SET_METHODS(FeatureSet, Set, set_, const Feature*, iterator)
 

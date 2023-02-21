@@ -13,6 +13,7 @@
 
 #include <mariana-trench/Assert.h>
 #include <mariana-trench/Compiler.h>
+#include <mariana-trench/IncludeMacros.h>
 
 namespace marianatrench {
 
@@ -104,7 +105,7 @@ class BitOperations {
  *      `NumberOfLowBitsAvailable` (typically upto 3 bits).
  */
 template <typename PointerType, unsigned IntBits, typename IntType = unsigned>
-class PointerIntPair {
+class PointerIntPair final {
   static_assert(
       std::is_pointer_v<PointerType>,
       "The PointerType must be a pointer type");
@@ -117,6 +118,8 @@ class PointerIntPair {
 
  public:
   constexpr PointerIntPair() = default;
+
+  INCLUDE_DEFAULT_COPY_CONSTRUCTORS_AND_ASSIGNMENTS(PointerIntPair)
 
   /**
    * Fill `value_` with just the `pointer_value`. The last `IntBits` bits will

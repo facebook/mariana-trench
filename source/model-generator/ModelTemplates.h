@@ -9,6 +9,7 @@
 
 #include <mariana-trench/Access.h>
 #include <mariana-trench/Context.h>
+#include <mariana-trench/IncludeMacros.h>
 #include <mariana-trench/Model.h>
 #include <mariana-trench/TaintConfig.h>
 #include <mariana-trench/model-generator/ModelGenerator.h>
@@ -16,12 +17,9 @@
 namespace marianatrench {
 class TemplateVariableMapping final {
  public:
-  TemplateVariableMapping();
-  TemplateVariableMapping(const TemplateVariableMapping&) = default;
-  TemplateVariableMapping(TemplateVariableMapping&&) = default;
-  TemplateVariableMapping& operator=(const TemplateVariableMapping&) = default;
-  TemplateVariableMapping& operator=(TemplateVariableMapping&&) = default;
-  ~TemplateVariableMapping() = default;
+  TemplateVariableMapping() = default;
+
+  INCLUDE_DEFAULT_COPY_CONSTRUCTORS_AND_ASSIGNMENTS(TemplateVariableMapping)
 
   void insert(const std::string& name, ParameterPosition index);
   std::optional<ParameterPosition> at(const std::string& name) const;
@@ -37,12 +35,8 @@ class ParameterPositionTemplate final {
  public:
   explicit ParameterPositionTemplate(ParameterPosition parameter_position);
   explicit ParameterPositionTemplate(std::string parameter_position);
-  ParameterPositionTemplate(const ParameterPositionTemplate&) = default;
-  ParameterPositionTemplate(ParameterPositionTemplate&&) = default;
-  ParameterPositionTemplate& operator=(const ParameterPositionTemplate&) =
-      default;
-  ParameterPositionTemplate& operator=(ParameterPositionTemplate&&) = default;
-  ~ParameterPositionTemplate() = default;
+
+  INCLUDE_DEFAULT_COPY_CONSTRUCTORS_AND_ASSIGNMENTS(ParameterPositionTemplate)
 
   ParameterPosition instantiate(
       const TemplateVariableMapping& parameter_positions) const;
@@ -58,11 +52,8 @@ class RootTemplate final {
       Root::Kind kind,
       std::optional<ParameterPositionTemplate> parameter_position =
           std::nullopt);
-  RootTemplate(const RootTemplate&) = default;
-  RootTemplate(RootTemplate&&) = default;
-  RootTemplate& operator=(const RootTemplate&) = default;
-  RootTemplate& operator=(RootTemplate&&) = default;
-  ~RootTemplate() = default;
+
+  INCLUDE_DEFAULT_COPY_CONSTRUCTORS_AND_ASSIGNMENTS(RootTemplate)
 
   bool is_argument() const;
 
@@ -77,11 +68,8 @@ class RootTemplate final {
 class AccessPathTemplate final {
  public:
   explicit AccessPathTemplate(RootTemplate root, Path path = {});
-  AccessPathTemplate(const AccessPathTemplate&) = default;
-  AccessPathTemplate(AccessPathTemplate&&) = default;
-  AccessPathTemplate& operator=(const AccessPathTemplate&) = delete;
-  AccessPathTemplate& operator=(AccessPathTemplate&&) = delete;
-  ~AccessPathTemplate() = default;
+
+  INCLUDE_DEFAULT_COPY_CONSTRUCTORS_AND_ASSIGNMENTS(AccessPathTemplate)
 
   const RootTemplate& root() const {
     return root_;
@@ -108,11 +96,8 @@ class PropagationTemplate final {
       AccessPathTemplate output,
       FeatureMayAlwaysSet inferred_features,
       FeatureSet user_features);
-  PropagationTemplate(const PropagationTemplate&) = default;
-  PropagationTemplate(PropagationTemplate&&) = default;
-  PropagationTemplate& operator=(const PropagationTemplate&) = delete;
-  PropagationTemplate& operator=(PropagationTemplate&&) = delete;
-  ~PropagationTemplate() = default;
+
+  INCLUDE_DEFAULT_COPY_CONSTRUCTORS_AND_ASSIGNMENTS(PropagationTemplate)
 
   static PropagationTemplate from_json(
       const Json::Value& value,
@@ -132,11 +117,8 @@ class PropagationTemplate final {
 class SinkTemplate final {
  public:
   explicit SinkTemplate(TaintConfig sink, AccessPathTemplate port);
-  SinkTemplate(const SinkTemplate&) = default;
-  SinkTemplate(SinkTemplate&&) = default;
-  SinkTemplate& operator=(const SinkTemplate&) = delete;
-  SinkTemplate& operator=(SinkTemplate&&) = delete;
-  ~SinkTemplate() = default;
+
+  INCLUDE_DEFAULT_COPY_CONSTRUCTORS_AND_ASSIGNMENTS(SinkTemplate)
 
   static SinkTemplate from_json(const Json::Value& value, Context& context);
   void instantiate(
@@ -151,11 +133,8 @@ class SinkTemplate final {
 class ParameterSourceTemplate final {
  public:
   explicit ParameterSourceTemplate(TaintConfig source, AccessPathTemplate port);
-  ParameterSourceTemplate(const ParameterSourceTemplate&) = default;
-  ParameterSourceTemplate(ParameterSourceTemplate&&) = default;
-  ParameterSourceTemplate& operator=(const ParameterSourceTemplate&) = delete;
-  ParameterSourceTemplate& operator=(ParameterSourceTemplate&&) = delete;
-  ~ParameterSourceTemplate() = default;
+
+  INCLUDE_DEFAULT_COPY_CONSTRUCTORS_AND_ASSIGNMENTS(ParameterSourceTemplate)
 
   static ParameterSourceTemplate from_json(
       const Json::Value& value,
@@ -172,11 +151,8 @@ class ParameterSourceTemplate final {
 class GenerationTemplate final {
  public:
   explicit GenerationTemplate(TaintConfig source, AccessPathTemplate port);
-  GenerationTemplate(const GenerationTemplate&) = default;
-  GenerationTemplate(GenerationTemplate&&) = default;
-  GenerationTemplate& operator=(const GenerationTemplate&) = delete;
-  GenerationTemplate& operator=(GenerationTemplate&&) = delete;
-  ~GenerationTemplate() = default;
+
+  INCLUDE_DEFAULT_COPY_CONSTRUCTORS_AND_ASSIGNMENTS(GenerationTemplate)
 
   static GenerationTemplate from_json(
       const Json::Value& value,
@@ -193,11 +169,8 @@ class GenerationTemplate final {
 class SourceTemplate final {
  public:
   explicit SourceTemplate(TaintConfig source, AccessPathTemplate port);
-  SourceTemplate(const SourceTemplate&) = default;
-  SourceTemplate(SourceTemplate&&) = default;
-  SourceTemplate& operator=(const SourceTemplate&) = delete;
-  SourceTemplate& operator=(SourceTemplate&&) = delete;
-  ~SourceTemplate() = default;
+
+  INCLUDE_DEFAULT_COPY_CONSTRUCTORS_AND_ASSIGNMENTS(SourceTemplate)
 
   static SourceTemplate from_json(const Json::Value& value, Context& context);
   void instantiate(
@@ -212,11 +185,8 @@ class SourceTemplate final {
 class AttachToSourcesTemplate final {
  public:
   explicit AttachToSourcesTemplate(FeatureSet features, RootTemplate port);
-  AttachToSourcesTemplate(const AttachToSourcesTemplate&) = default;
-  AttachToSourcesTemplate(AttachToSourcesTemplate&&) = default;
-  AttachToSourcesTemplate& operator=(const AttachToSourcesTemplate&) = delete;
-  AttachToSourcesTemplate& operator=(AttachToSourcesTemplate&&) = delete;
-  ~AttachToSourcesTemplate() = default;
+
+  INCLUDE_DEFAULT_COPY_CONSTRUCTORS_AND_ASSIGNMENTS(AttachToSourcesTemplate)
 
   static AttachToSourcesTemplate from_json(
       const Json::Value& value,
@@ -233,11 +203,8 @@ class AttachToSourcesTemplate final {
 class AttachToSinksTemplate final {
  public:
   explicit AttachToSinksTemplate(FeatureSet features, RootTemplate port);
-  AttachToSinksTemplate(const AttachToSinksTemplate&) = default;
-  AttachToSinksTemplate(AttachToSinksTemplate&&) = default;
-  AttachToSinksTemplate& operator=(const AttachToSinksTemplate&) = delete;
-  AttachToSinksTemplate& operator=(AttachToSinksTemplate&&) = delete;
-  ~AttachToSinksTemplate() = default;
+
+  INCLUDE_DEFAULT_COPY_CONSTRUCTORS_AND_ASSIGNMENTS(AttachToSinksTemplate)
 
   static AttachToSinksTemplate from_json(
       const Json::Value& value,
@@ -254,13 +221,9 @@ class AttachToSinksTemplate final {
 class AttachToPropagationsTemplate final {
  public:
   explicit AttachToPropagationsTemplate(FeatureSet features, RootTemplate port);
-  AttachToPropagationsTemplate(const AttachToPropagationsTemplate&) = default;
-  AttachToPropagationsTemplate(AttachToPropagationsTemplate&&) = default;
-  AttachToPropagationsTemplate& operator=(const AttachToPropagationsTemplate&) =
-      delete;
-  AttachToPropagationsTemplate& operator=(AttachToPropagationsTemplate&&) =
-      delete;
-  ~AttachToPropagationsTemplate() = default;
+
+  INCLUDE_DEFAULT_COPY_CONSTRUCTORS_AND_ASSIGNMENTS(
+      AttachToPropagationsTemplate)
 
   static AttachToPropagationsTemplate from_json(
       const Json::Value& value,
@@ -279,14 +242,9 @@ class AddFeaturesToArgumentsTemplate final {
   explicit AddFeaturesToArgumentsTemplate(
       FeatureSet features,
       RootTemplate port);
-  AddFeaturesToArgumentsTemplate(const AddFeaturesToArgumentsTemplate&) =
-      default;
-  AddFeaturesToArgumentsTemplate(AddFeaturesToArgumentsTemplate&&) = default;
-  AddFeaturesToArgumentsTemplate& operator=(
-      const AddFeaturesToArgumentsTemplate&) = delete;
-  AddFeaturesToArgumentsTemplate& operator=(AddFeaturesToArgumentsTemplate&&) =
-      delete;
-  ~AddFeaturesToArgumentsTemplate() = default;
+
+  INCLUDE_DEFAULT_COPY_CONSTRUCTORS_AND_ASSIGNMENTS(
+      AddFeaturesToArgumentsTemplate)
 
   static AddFeaturesToArgumentsTemplate from_json(
       const Json::Value& value,
@@ -316,10 +274,12 @@ class ForAllParameters final {
           attach_to_propagations_templates = {},
       std::vector<AddFeaturesToArgumentsTemplate>
           add_features_to_arguments_templates = {});
+
   ForAllParameters(const ForAllParameters& other) = delete;
   ForAllParameters(ForAllParameters&& other) = default;
   ForAllParameters& operator=(const ForAllParameters& other) = delete;
   ForAllParameters& operator=(ForAllParameters&& other) = delete;
+  ~ForAllParameters() = default;
 
   static ForAllParameters from_json(const Json::Value&, Context& context);
 
@@ -348,10 +308,12 @@ class ModelTemplate final {
   ModelTemplate(
       const Model& model,
       std::vector<ForAllParameters> for_all_parameters);
+
   ModelTemplate(const ModelTemplate& other) = delete;
   ModelTemplate(ModelTemplate&& other) = default;
   ModelTemplate& operator=(const ModelTemplate& other) = delete;
   ModelTemplate& operator=(ModelTemplate&& other) = delete;
+  ~ModelTemplate() = default;
 
   /* Create a model with information that is associated with a method (e.g. new
    * sinks/generations/...). */

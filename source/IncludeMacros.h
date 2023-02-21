@@ -121,4 +121,18 @@
   using difference_type = std::ptrdiff_t;                   \
   using size_type = size_t;                                 \
   using const_reference = ElementType&;                     \
-  using const_pointer = ElementType*;\
+  using const_pointer = ElementType*;
+
+#define INCLUDE_DEFAULT_COPY_CONSTRUCTORS_AND_ASSIGNMENTS(Class) \
+  Class(const Class&) = default;                                 \
+  Class(Class&&) = default;                                      \
+  Class& operator=(const Class&) = default;                      \
+  Class& operator=(Class&&) = default;                           \
+  ~Class() = default;
+
+#define DELETE_COPY_CONSTRUCTORS_AND_ASSIGNMENTS(Class) \
+  Class(const Class&) = delete;                         \
+  Class(Class&&) = delete;                              \
+  Class& operator=(const Class&) = delete;              \
+  Class& operator=(Class&&) = delete;                   \
+  ~Class() = default;

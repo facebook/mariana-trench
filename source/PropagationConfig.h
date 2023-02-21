@@ -16,6 +16,7 @@
 #include <mariana-trench/FeatureMayAlwaysSet.h>
 #include <mariana-trench/FeatureSet.h>
 #include <mariana-trench/Frame.h>
+#include <mariana-trench/IncludeMacros.h>
 #include <mariana-trench/PropagationKind.h>
 
 namespace marianatrench {
@@ -44,10 +45,7 @@ class PropagationConfig final {
     mt_assert(!output_paths_.is_bottom());
   }
 
-  PropagationConfig(const PropagationConfig&) = default;
-  PropagationConfig(PropagationConfig&&) = default;
-  PropagationConfig& operator=(const PropagationConfig&) = default;
-  PropagationConfig& operator=(PropagationConfig&&) = default;
+  INCLUDE_DEFAULT_COPY_CONSTRUCTORS_AND_ASSIGNMENTS(PropagationConfig)
 
   friend bool operator==(
       const PropagationConfig& self,

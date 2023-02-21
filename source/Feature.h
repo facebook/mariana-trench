@@ -13,17 +13,15 @@
 #include <json/json.h>
 
 #include <mariana-trench/Context.h>
+#include <mariana-trench/IncludeMacros.h>
 
 namespace marianatrench {
 
 class Feature final {
  public:
   explicit Feature(std::string name) : name_(std::move(name)) {}
-  Feature(const Feature&) = delete;
-  Feature(Feature&&) = delete;
-  Feature& operator=(const Feature&) = delete;
-  Feature& operator=(Feature&&) = delete;
-  ~Feature() = default;
+
+  DELETE_COPY_CONSTRUCTORS_AND_ASSIGNMENTS(Feature)
 
   static const Feature* from_json(const Json::Value& value, Context& context);
   Json::Value to_json() const;

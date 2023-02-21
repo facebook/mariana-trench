@@ -10,6 +10,7 @@
 #include <vector>
 
 #include <mariana-trench/Dependencies.h>
+#include <mariana-trench/IncludeMacros.h>
 #include <mariana-trench/Method.h>
 
 namespace marianatrench {
@@ -26,13 +27,7 @@ class StronglyConnectedComponents final {
       const Methods& methods,
       const Dependencies& dependencies);
 
-  StronglyConnectedComponents(const StronglyConnectedComponents&) = default;
-  StronglyConnectedComponents(StronglyConnectedComponents&&) = default;
-  StronglyConnectedComponents& operator=(const StronglyConnectedComponents&) =
-      default;
-  StronglyConnectedComponents& operator=(StronglyConnectedComponents&&) =
-      default;
-  ~StronglyConnectedComponents() = default;
+  INCLUDE_DEFAULT_COPY_CONSTRUCTORS_AND_ASSIGNMENTS(StronglyConnectedComponents)
 
   const std::vector<std::vector<const Method*>>& components() const {
     return components_;

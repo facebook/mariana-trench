@@ -9,6 +9,7 @@
 
 #include <mariana-trench/Access.h>
 #include <mariana-trench/Context.h>
+#include <mariana-trench/IncludeMacros.h>
 #include <mariana-trench/PropagationKind.h>
 
 namespace marianatrench {
@@ -23,11 +24,8 @@ class LocalArgumentKind final : public PropagationKind {
  public:
   explicit LocalArgumentKind(ParameterPosition parameter)
       : parameter_(parameter) {}
-  LocalArgumentKind(const LocalArgumentKind&) = delete;
-  LocalArgumentKind(LocalArgumentKind&&) = delete;
-  LocalArgumentKind& operator=(const LocalArgumentKind&) = delete;
-  LocalArgumentKind& operator=(LocalArgumentKind&&) = delete;
-  ~LocalArgumentKind() override = default;
+
+  DELETE_COPY_CONSTRUCTORS_AND_ASSIGNMENTS(LocalArgumentKind)
 
   void show(std::ostream&) const override;
 

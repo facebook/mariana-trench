@@ -21,6 +21,7 @@
 #include <mariana-trench/FlattenIterator.h>
 #include <mariana-trench/Frame.h>
 #include <mariana-trench/GroupHashedSetAbstractDomain.h>
+#include <mariana-trench/IncludeMacros.h>
 #include <mariana-trench/TaintConfig.h>
 
 namespace marianatrench {
@@ -102,10 +103,7 @@ class CalleePortFrames final : public sparta::AbstractDomain<CalleePortFrames> {
 
   explicit CalleePortFrames(std::initializer_list<TaintConfig> configs);
 
-  CalleePortFrames(const CalleePortFrames&) = default;
-  CalleePortFrames(CalleePortFrames&&) = default;
-  CalleePortFrames& operator=(const CalleePortFrames&) = default;
-  CalleePortFrames& operator=(CalleePortFrames&&) = default;
+  INCLUDE_DEFAULT_COPY_CONSTRUCTORS_AND_ASSIGNMENTS(CalleePortFrames)
 
   // Describe how to join frames together in `CallPositionFrames`.
   struct GroupEqual {

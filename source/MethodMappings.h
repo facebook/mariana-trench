@@ -9,6 +9,7 @@
 
 #include <HashedSetAbstractDomain.h>
 
+#include <mariana-trench/IncludeMacros.h>
 #include <mariana-trench/Methods.h>
 
 namespace marianatrench {
@@ -19,11 +20,7 @@ class MethodMappings {
  public:
   explicit MethodMappings(const Methods& methods);
 
-  MethodMappings(const MethodMappings&) = delete;
-  MethodMappings(MethodMappings&&) = delete;
-  MethodMappings& operator=(MethodMappings&&) = delete;
-  MethodMappings& operator=(const MethodMappings&) = delete;
-  ~MethodMappings() = default;
+  DELETE_COPY_CONSTRUCTORS_AND_ASSIGNMENTS(MethodMappings)
 
  public:
   const ConcurrentMap<std::string_view, MethodHashedSet>& name_to_methods()

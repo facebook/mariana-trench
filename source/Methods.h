@@ -13,6 +13,7 @@
 #include <DexClass.h>
 
 #include <mariana-trench/Compiler.h>
+#include <mariana-trench/IncludeMacros.h>
 #include <mariana-trench/Method.h>
 
 namespace marianatrench {
@@ -35,15 +36,11 @@ class Methods final {
       boost::transform_iterator<GetPointer, typename Set::const_iterator>;
 
  public:
-  Methods();
+  Methods() = default;
 
   explicit Methods(const DexStoresVector& stores);
 
-  Methods(const Methods&) = delete;
-  Methods(Methods&&) = delete;
-  Methods& operator=(const Methods&) = delete;
-  Methods& operator=(Methods&&) = delete;
-  ~Methods() = default;
+  DELETE_COPY_CONSTRUCTORS_AND_ASSIGNMENTS(Methods)
 
   /* Get or create a method with the given parameter type overrides */
   const Method* create(

@@ -11,6 +11,7 @@
 
 #include <mariana-trench/Assert.h>
 #include <mariana-trench/Compiler.h>
+#include <mariana-trench/IncludeMacros.h>
 
 namespace marianatrench {
 
@@ -66,13 +67,8 @@ class PatriciaTreeSetAbstractDomain<
   PatriciaTreeSetAbstractDomain(InputIterator first, InputIterator last)
       : set_(first, last) {}
 
-  PatriciaTreeSetAbstractDomain(const PatriciaTreeSetAbstractDomain&) = default;
-  PatriciaTreeSetAbstractDomain(PatriciaTreeSetAbstractDomain&&) = default;
-  PatriciaTreeSetAbstractDomain& operator=(
-      const PatriciaTreeSetAbstractDomain&) = default;
-  PatriciaTreeSetAbstractDomain& operator=(PatriciaTreeSetAbstractDomain&&) =
-      default;
-  ~PatriciaTreeSetAbstractDomain() = default;
+  INCLUDE_DEFAULT_COPY_CONSTRUCTORS_AND_ASSIGNMENTS(
+      PatriciaTreeSetAbstractDomain)
 
   static PatriciaTreeSetAbstractDomain bottom() {
     return PatriciaTreeSetAbstractDomain(/* is_top */ false);
@@ -258,13 +254,8 @@ class PatriciaTreeSetAbstractDomain<
   PatriciaTreeSetAbstractDomain(InputIterator first, InputIterator last)
       : set_(first, last) {}
 
-  PatriciaTreeSetAbstractDomain(const PatriciaTreeSetAbstractDomain&) = default;
-  PatriciaTreeSetAbstractDomain(PatriciaTreeSetAbstractDomain&&) = default;
-  PatriciaTreeSetAbstractDomain& operator=(
-      const PatriciaTreeSetAbstractDomain&) = default;
-  PatriciaTreeSetAbstractDomain& operator=(PatriciaTreeSetAbstractDomain&&) =
-      default;
-  ~PatriciaTreeSetAbstractDomain() = default;
+  INCLUDE_DEFAULT_COPY_CONSTRUCTORS_AND_ASSIGNMENTS(
+      PatriciaTreeSetAbstractDomain)
 
   static PatriciaTreeSetAbstractDomain bottom() {
     return PatriciaTreeSetAbstractDomain();

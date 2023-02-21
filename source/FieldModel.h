@@ -8,6 +8,7 @@
 #pragma once
 
 #include <mariana-trench/Field.h>
+#include <mariana-trench/IncludeMacros.h>
 #include <mariana-trench/Taint.h>
 #include <mariana-trench/TaintConfig.h>
 
@@ -34,11 +35,7 @@ class FieldModel final {
       const std::vector<TaintConfig>& sources,
       const std::vector<TaintConfig>& sinks);
 
-  FieldModel(const FieldModel& other) = default;
-  FieldModel(FieldModel&&) = default;
-  FieldModel& operator=(const FieldModel& other) = default;
-  FieldModel& operator=(FieldModel&&) = default;
-  ~FieldModel() = default;
+  INCLUDE_DEFAULT_COPY_CONSTRUCTORS_AND_ASSIGNMENTS(FieldModel)
 
   bool operator==(const FieldModel& other) const;
   bool operator!=(const FieldModel& other) const;

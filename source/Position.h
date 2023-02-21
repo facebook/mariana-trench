@@ -17,6 +17,7 @@
 #include <mariana-trench/Access.h>
 #include <mariana-trench/Compiler.h>
 #include <mariana-trench/Context.h>
+#include <mariana-trench/IncludeMacros.h>
 
 namespace {
 
@@ -38,11 +39,7 @@ class Position final {
       int start = k_unknown_start,
       int end = k_unknown_end);
 
-  Position(const Position&) = default;
-  Position(Position&&) = default;
-  Position& operator=(const Position&) = default;
-  Position& operator=(Position&&) = default;
-  ~Position() = default;
+  INCLUDE_DEFAULT_COPY_CONSTRUCTORS_AND_ASSIGNMENTS(Position)
 
   bool operator==(const Position& other) const;
   bool operator!=(const Position& other) const;
