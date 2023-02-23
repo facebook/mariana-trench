@@ -12,6 +12,19 @@
   [
     "Landroid/app/Activity;.startActivity:(Landroid/content/Intent;)V"
   ],
+  "Lcom/facebook/marianatrench/integrationtests/ActionReceiver;.onReceive:(Lcom/facebook/marianatrench/integrationtests/ActionReceiverLike;Ljava/lang/Object;)V" : 
+  [
+    "Lcom/facebook/marianatrench/integrationtests/BroadcastReceiver;.onReceive:(Lcom/facebook/marianatrench/integrationtests/ActionReceiverLike;Ljava/lang/Object;)V",
+    "Lcom/facebook/marianatrench/integrationtests/WithParameterOverrides$1;.onReceive:(Lcom/facebook/marianatrench/integrationtests/ActionReceiverLike;Ljava/lang/Object;)V"
+  ],
+  "Lcom/facebook/marianatrench/integrationtests/ActionReceiverLike;.onReceive:(Ljava/lang/Object;)V" : 
+  [
+    "Lcom/facebook/marianatrench/integrationtests/WithParameterOverrides$2;.onReceive:(Ljava/lang/Object;)V"
+  ],
+  "Lcom/facebook/marianatrench/integrationtests/BroadcastReceiver;.onReceive:(Lcom/facebook/marianatrench/integrationtests/ActionReceiverLike;Ljava/lang/Object;)V" : 
+  [
+    "Lcom/facebook/marianatrench/integrationtests/WithParameterOverrides$1;.onReceive:(Lcom/facebook/marianatrench/integrationtests/ActionReceiverLike;Ljava/lang/Object;)V"
+  ],
   "Lcom/facebook/marianatrench/integrationtests/Handler;.handleMessage:(Ljava/lang/Object;)V" : 
   [
     "Lcom/facebook/marianatrench/integrationtests/HandlerOne;.handleMessage:(Ljava/lang/Object;)V",

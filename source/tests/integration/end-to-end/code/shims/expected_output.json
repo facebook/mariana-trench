@@ -904,6 +904,30 @@
   }
 }
 {
+  "method" : "Lcom/facebook/marianatrench/integrationtests/ActionReceiver;.onReceive:(Lcom/facebook/marianatrench/integrationtests/ActionReceiverLike;Ljava/lang/Object;)V",
+  "modes" : 
+  [
+    "add-via-obscure-feature",
+    "skip-analysis"
+  ],
+  "position" : 
+  {
+    "path" : "WithParameterOverrides.java"
+  }
+}
+{
+  "method" : "Lcom/facebook/marianatrench/integrationtests/ActionReceiverLike;.onReceive:(Ljava/lang/Object;)V",
+  "modes" : 
+  [
+    "add-via-obscure-feature",
+    "skip-analysis"
+  ],
+  "position" : 
+  {
+    "path" : "WithParameterOverrides.java"
+  }
+}
+{
   "method" : "Lcom/facebook/marianatrench/integrationtests/B;.<init>:()V",
   "position" : 
   {
@@ -950,6 +974,117 @@
       ]
     }
   ]
+}
+{
+  "method" : "Lcom/facebook/marianatrench/integrationtests/BroadcastReceiver;.<init>:()V",
+  "position" : 
+  {
+    "line" : 17,
+    "path" : "WithParameterOverrides.java"
+  }
+}
+{
+  "method" : "Lcom/facebook/marianatrench/integrationtests/BroadcastReceiver;.onReceive:(Lcom/facebook/marianatrench/integrationtests/ActionReceiverLike;Ljava/lang/Object;)V",
+  "position" : 
+  {
+    "line" : 20,
+    "path" : "WithParameterOverrides.java"
+  },
+  "sinks" : 
+  [
+    {
+      "port" : "Argument(2)",
+      "taint" : 
+      [
+        {
+          "call" : 
+          {
+            "port" : "Argument(1)",
+            "position" : 
+            {
+              "end" : 28,
+              "line" : 21,
+              "path" : "WithParameterOverrides.java",
+              "start" : 23
+            },
+            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/WithParameterOverrides$2;.onReceive:(Ljava/lang/Object;)V"
+          },
+          "kinds" : 
+          [
+            {
+              "call_info" : "CallSite",
+              "distance" : 1,
+              "kind" : "Sink",
+              "origins" : 
+              [
+                "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V"
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
+{
+  "method" : "Lcom/facebook/marianatrench/integrationtests/BroadcastReceiverBuilder;.<init>:()V",
+  "position" : 
+  {
+    "line" : 24,
+    "path" : "WithParameterOverrides.java"
+  }
+}
+{
+  "method" : "Lcom/facebook/marianatrench/integrationtests/BroadcastReceiverBuilder;.addActionReceiver:(Lcom/facebook/marianatrench/integrationtests/ActionReceiver;Lcom/facebook/marianatrench/integrationtests/ActionReceiverLike;Ljava/lang/Object;)V",
+  "position" : 
+  {
+    "line" : 27,
+    "path" : "WithParameterOverrides.java"
+  }
+}
+{
+  "method" : 
+  {
+    "name" : "Lcom/facebook/marianatrench/integrationtests/BroadcastReceiverBuilder;.addActionReceiver:(Lcom/facebook/marianatrench/integrationtests/ActionReceiver;Lcom/facebook/marianatrench/integrationtests/ActionReceiverLike;Ljava/lang/Object;)V",
+    "parameter_type_overrides" : 
+    [
+      {
+        "parameter" : 1,
+        "type" : "Lcom/facebook/marianatrench/integrationtests/WithParameterOverrides$2;"
+      }
+    ]
+  },
+  "position" : 
+  {
+    "line" : 27,
+    "path" : "WithParameterOverrides.java"
+  }
+}
+{
+  "method" : "Lcom/facebook/marianatrench/integrationtests/BroadcastReceiverBuilder;.addActionReceiver:(Lcom/facebook/marianatrench/integrationtests/ActionReceiver;Ljava/lang/Object;)V",
+  "position" : 
+  {
+    "line" : 25,
+    "path" : "WithParameterOverrides.java"
+  }
+}
+{
+  "method" : 
+  {
+    "name" : "Lcom/facebook/marianatrench/integrationtests/BroadcastReceiverBuilder;.addActionReceiver:(Lcom/facebook/marianatrench/integrationtests/ActionReceiver;Ljava/lang/Object;)V",
+    "parameter_type_overrides" : 
+    [
+      {
+        "parameter" : 0,
+        "type" : "Lcom/facebook/marianatrench/integrationtests/WithParameterOverrides$1;"
+      }
+    ]
+  },
+  "position" : 
+  {
+    "line" : 25,
+    "path" : "WithParameterOverrides.java"
+  }
 }
 {
   "method" : "Lcom/facebook/marianatrench/integrationtests/FragmentActivity;.<init>:()V",
@@ -2887,6 +3022,355 @@
   {
     "line" : 178,
     "path" : "Shims.java"
+  }
+}
+{
+  "method" : "Lcom/facebook/marianatrench/integrationtests/WithParameterOverrides$1;.<init>:()V",
+  "position" : 
+  {
+    "line" : 34,
+    "path" : "WithParameterOverrides.java"
+  }
+}
+{
+  "method" : "Lcom/facebook/marianatrench/integrationtests/WithParameterOverrides$1;.onReceive:(Lcom/facebook/marianatrench/integrationtests/ActionReceiverLike;Ljava/lang/Object;)V",
+  "position" : 
+  {
+    "line" : 37,
+    "path" : "WithParameterOverrides.java"
+  },
+  "sinks" : 
+  [
+    {
+      "port" : "Argument(2)",
+      "taint" : 
+      [
+        {
+          "call" : 
+          {
+            "port" : "Argument(2)",
+            "position" : 
+            {
+              "end" : 43,
+              "line" : 38,
+              "path" : "WithParameterOverrides.java",
+              "start" : 38
+            },
+            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/BroadcastReceiver;.onReceive:(Lcom/facebook/marianatrench/integrationtests/ActionReceiverLike;Ljava/lang/Object;)V"
+          },
+          "kinds" : 
+          [
+            {
+              "call_info" : "CallSite",
+              "distance" : 2,
+              "kind" : "Sink",
+              "origins" : 
+              [
+                "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V"
+              ]
+            }
+          ]
+        },
+        {
+          "kinds" : 
+          [
+            {
+              "call_info" : "Origin",
+              "kind" : "Sink",
+              "origins" : 
+              [
+                "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V"
+              ]
+            }
+          ],
+          "origin" : 
+          {
+            "position" : 
+            {
+              "end" : 29,
+              "line" : 39,
+              "path" : "WithParameterOverrides.java",
+              "start" : 24
+            }
+          }
+        }
+      ]
+    }
+  ]
+}
+{
+  "method" : "Lcom/facebook/marianatrench/integrationtests/WithParameterOverrides$2;.<init>:()V",
+  "position" : 
+  {
+    "line" : 48,
+    "path" : "WithParameterOverrides.java"
+  }
+}
+{
+  "method" : "Lcom/facebook/marianatrench/integrationtests/WithParameterOverrides$2;.onReceive:(Ljava/lang/Object;)V",
+  "position" : 
+  {
+    "line" : 51,
+    "path" : "WithParameterOverrides.java"
+  },
+  "sinks" : 
+  [
+    {
+      "port" : "Argument(1)",
+      "taint" : 
+      [
+        {
+          "kinds" : 
+          [
+            {
+              "call_info" : "Origin",
+              "kind" : "Sink",
+              "origins" : 
+              [
+                "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V"
+              ]
+            }
+          ],
+          "origin" : 
+          {
+            "position" : 
+            {
+              "end" : 29,
+              "line" : 52,
+              "path" : "WithParameterOverrides.java",
+              "start" : 24
+            }
+          }
+        }
+      ]
+    }
+  ]
+}
+{
+  "method" : "Lcom/facebook/marianatrench/integrationtests/WithParameterOverrides;.<init>:()V",
+  "position" : 
+  {
+    "line" : 30,
+    "path" : "WithParameterOverrides.java"
+  }
+}
+{
+  "issues" : 
+  [
+    {
+      "always_features" : 
+      [
+        "via-shim:Lcom/facebook/marianatrench/integrationtests/BroadcastReceiverBuilder;.addActionReceiver:(Lcom/facebook/marianatrench/integrationtests/ActionReceiver;Ljava/lang/Object;)V"
+      ],
+      "callee" : "Lcom/facebook/marianatrench/integrationtests/WithParameterOverrides$1;.onReceive:(Lcom/facebook/marianatrench/integrationtests/ActionReceiverLike;Ljava/lang/Object;)V",
+      "position" : 
+      {
+        "line" : 34,
+        "path" : "WithParameterOverrides.java"
+      },
+      "rule" : 1,
+      "sink_index" : "0",
+      "sinks" : 
+      [
+        {
+          "call" : 
+          {
+            "port" : "Argument(2)",
+            "position" : 
+            {
+              "end" : 0,
+              "line" : 34,
+              "path" : "WithParameterOverrides.java",
+              "start" : 0
+            },
+            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/WithParameterOverrides$1;.onReceive:(Lcom/facebook/marianatrench/integrationtests/ActionReceiverLike;Ljava/lang/Object;)V"
+          },
+          "kinds" : 
+          [
+            {
+              "always_features" : 
+              [
+                "via-shim:Lcom/facebook/marianatrench/integrationtests/BroadcastReceiverBuilder;.addActionReceiver:(Lcom/facebook/marianatrench/integrationtests/ActionReceiver;Ljava/lang/Object;)V"
+              ],
+              "call_info" : "CallSite",
+              "distance" : 1,
+              "kind" : "Sink",
+              "local_features" : 
+              {
+                "always_features" : 
+                [
+                  "via-shim:Lcom/facebook/marianatrench/integrationtests/BroadcastReceiverBuilder;.addActionReceiver:(Lcom/facebook/marianatrench/integrationtests/ActionReceiver;Ljava/lang/Object;)V"
+                ]
+              },
+              "origins" : 
+              [
+                "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V"
+              ]
+            }
+          ]
+        }
+      ],
+      "sources" : 
+      [
+        {
+          "kinds" : 
+          [
+            {
+              "call_info" : "Origin",
+              "kind" : "Source",
+              "origins" : 
+              [
+                "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;"
+              ]
+            }
+          ],
+          "origin" : 
+          {
+            "position" : 
+            {
+              "end" : 20,
+              "line" : 42,
+              "path" : "WithParameterOverrides.java",
+              "start" : 15
+            }
+          }
+        }
+      ]
+    }
+  ],
+  "method" : "Lcom/facebook/marianatrench/integrationtests/WithParameterOverrides;.testShimOnAnonymousClass:()V",
+  "position" : 
+  {
+    "line" : 32,
+    "path" : "WithParameterOverrides.java"
+  }
+}
+{
+  "issues" : 
+  [
+    {
+      "always_features" : 
+      [
+        "via-shim:Lcom/facebook/marianatrench/integrationtests/BroadcastReceiverBuilder;.addActionReceiver:(Lcom/facebook/marianatrench/integrationtests/ActionReceiver;Lcom/facebook/marianatrench/integrationtests/ActionReceiverLike;Ljava/lang/Object;)V"
+      ],
+      "callee" : "Lcom/facebook/marianatrench/integrationtests/BroadcastReceiver;.onReceive:(Lcom/facebook/marianatrench/integrationtests/ActionReceiverLike;Ljava/lang/Object;)V",
+      "position" : 
+      {
+        "line" : 47,
+        "path" : "WithParameterOverrides.java"
+      },
+      "rule" : 1,
+      "sink_index" : "0",
+      "sinks" : 
+      [
+        {
+          "call" : 
+          {
+            "port" : "Argument(2)",
+            "position" : 
+            {
+              "end" : 0,
+              "line" : 47,
+              "path" : "WithParameterOverrides.java",
+              "start" : 0
+            },
+            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/BroadcastReceiver;.onReceive:(Lcom/facebook/marianatrench/integrationtests/ActionReceiverLike;Ljava/lang/Object;)V"
+          },
+          "kinds" : 
+          [
+            {
+              "always_features" : 
+              [
+                "via-shim:Lcom/facebook/marianatrench/integrationtests/BroadcastReceiverBuilder;.addActionReceiver:(Lcom/facebook/marianatrench/integrationtests/ActionReceiver;Lcom/facebook/marianatrench/integrationtests/ActionReceiverLike;Ljava/lang/Object;)V"
+              ],
+              "call_info" : "CallSite",
+              "distance" : 2,
+              "kind" : "Sink",
+              "local_features" : 
+              {
+                "always_features" : 
+                [
+                  "via-shim:Lcom/facebook/marianatrench/integrationtests/BroadcastReceiverBuilder;.addActionReceiver:(Lcom/facebook/marianatrench/integrationtests/ActionReceiver;Lcom/facebook/marianatrench/integrationtests/ActionReceiverLike;Ljava/lang/Object;)V"
+                ]
+              },
+              "origins" : 
+              [
+                "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V"
+              ]
+            }
+          ]
+        },
+        {
+          "call" : 
+          {
+            "port" : "Argument(2)",
+            "position" : 
+            {
+              "end" : 0,
+              "line" : 47,
+              "path" : "WithParameterOverrides.java",
+              "start" : 0
+            },
+            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/WithParameterOverrides$1;.onReceive:(Lcom/facebook/marianatrench/integrationtests/ActionReceiverLike;Ljava/lang/Object;)V"
+          },
+          "kinds" : 
+          [
+            {
+              "always_features" : 
+              [
+                "via-shim:Lcom/facebook/marianatrench/integrationtests/BroadcastReceiverBuilder;.addActionReceiver:(Lcom/facebook/marianatrench/integrationtests/ActionReceiver;Lcom/facebook/marianatrench/integrationtests/ActionReceiverLike;Ljava/lang/Object;)V"
+              ],
+              "call_info" : "CallSite",
+              "distance" : 1,
+              "kind" : "Sink",
+              "local_features" : 
+              {
+                "always_features" : 
+                [
+                  "via-shim:Lcom/facebook/marianatrench/integrationtests/BroadcastReceiverBuilder;.addActionReceiver:(Lcom/facebook/marianatrench/integrationtests/ActionReceiver;Lcom/facebook/marianatrench/integrationtests/ActionReceiverLike;Ljava/lang/Object;)V"
+                ]
+              },
+              "origins" : 
+              [
+                "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V"
+              ]
+            }
+          ]
+        }
+      ],
+      "sources" : 
+      [
+        {
+          "kinds" : 
+          [
+            {
+              "call_info" : "Origin",
+              "kind" : "Source",
+              "origins" : 
+              [
+                "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;"
+              ]
+            }
+          ],
+          "origin" : 
+          {
+            "position" : 
+            {
+              "end" : 20,
+              "line" : 55,
+              "path" : "WithParameterOverrides.java",
+              "start" : 15
+            }
+          }
+        }
+      ]
+    }
+  ],
+  "method" : "Lcom/facebook/marianatrench/integrationtests/WithParameterOverrides;.testShimWithAnonymousClassArgument:()V",
+  "position" : 
+  {
+    "line" : 45,
+    "path" : "WithParameterOverrides.java"
   }
 }
 {

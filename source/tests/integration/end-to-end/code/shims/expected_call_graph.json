@@ -217,6 +217,28 @@
       "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V"
     ]
   },
+  "Lcom/facebook/marianatrench/integrationtests/BroadcastReceiver;.<init>:()V" : 
+  {
+    "static" : 
+    [
+      "Ljava/lang/Object;.<init>:()V"
+    ]
+  },
+  "Lcom/facebook/marianatrench/integrationtests/BroadcastReceiver;.onReceive:(Lcom/facebook/marianatrench/integrationtests/ActionReceiverLike;Ljava/lang/Object;)V" : 
+  {
+    "virtual" : 
+    [
+      "Lcom/facebook/marianatrench/integrationtests/ActionReceiverLike;.onReceive:(Ljava/lang/Object;)V",
+      "Lcom/facebook/marianatrench/integrationtests/WithParameterOverrides$2;.onReceive:(Ljava/lang/Object;)V"
+    ]
+  },
+  "Lcom/facebook/marianatrench/integrationtests/BroadcastReceiverBuilder;.<init>:()V" : 
+  {
+    "static" : 
+    [
+      "Ljava/lang/Object;.<init>:()V"
+    ]
+  },
   "Lcom/facebook/marianatrench/integrationtests/FragmentActivity;.<init>:()V" : 
   {
     "static" : 
@@ -650,6 +672,77 @@
     "virtual" : 
     [
       "Lcom/facebook/marianatrench/integrationtests/ParameterMapping;.callStatic:(Ljava/lang/Object;)V"
+    ]
+  },
+  "Lcom/facebook/marianatrench/integrationtests/WithParameterOverrides$1;.<init>:()V" : 
+  {
+    "static" : 
+    [
+      "Lcom/facebook/marianatrench/integrationtests/BroadcastReceiver;.<init>:()V"
+    ]
+  },
+  "Lcom/facebook/marianatrench/integrationtests/WithParameterOverrides$1;.onReceive:(Lcom/facebook/marianatrench/integrationtests/ActionReceiverLike;Ljava/lang/Object;)V" : 
+  {
+    "static" : 
+    [
+      "Lcom/facebook/marianatrench/integrationtests/BroadcastReceiver;.onReceive:(Lcom/facebook/marianatrench/integrationtests/ActionReceiverLike;Ljava/lang/Object;)V",
+      "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V"
+    ]
+  },
+  "Lcom/facebook/marianatrench/integrationtests/WithParameterOverrides$2;.<init>:()V" : 
+  {
+    "static" : 
+    [
+      "Ljava/lang/Object;.<init>:()V"
+    ]
+  },
+  "Lcom/facebook/marianatrench/integrationtests/WithParameterOverrides$2;.onReceive:(Ljava/lang/Object;)V" : 
+  {
+    "static" : 
+    [
+      "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V"
+    ]
+  },
+  "Lcom/facebook/marianatrench/integrationtests/WithParameterOverrides;.<init>:()V" : 
+  {
+    "static" : 
+    [
+      "Ljava/lang/Object;.<init>:()V"
+    ]
+  },
+  "Lcom/facebook/marianatrench/integrationtests/WithParameterOverrides;.testShimOnAnonymousClass:()V" : 
+  {
+    "artificial" : 
+    [
+      "Lcom/facebook/marianatrench/integrationtests/WithParameterOverrides$1;.onReceive:(Lcom/facebook/marianatrench/integrationtests/ActionReceiverLike;Ljava/lang/Object;)V"
+    ],
+    "static" : 
+    [
+      "Lcom/facebook/marianatrench/integrationtests/BroadcastReceiverBuilder;.<init>:()V",
+      "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;",
+      "Lcom/facebook/marianatrench/integrationtests/WithParameterOverrides$1;.<init>:()V"
+    ],
+    "virtual" : 
+    [
+      "Lcom/facebook/marianatrench/integrationtests/BroadcastReceiverBuilder;.addActionReceiver:(Lcom/facebook/marianatrench/integrationtests/ActionReceiver;Ljava/lang/Object;)V[0: Lcom/facebook/marianatrench/integrationtests/WithParameterOverrides$1;]"
+    ]
+  },
+  "Lcom/facebook/marianatrench/integrationtests/WithParameterOverrides;.testShimWithAnonymousClassArgument:()V" : 
+  {
+    "artificial" : 
+    [
+      "Lcom/facebook/marianatrench/integrationtests/BroadcastReceiver;.onReceive:(Lcom/facebook/marianatrench/integrationtests/ActionReceiverLike;Ljava/lang/Object;)V"
+    ],
+    "static" : 
+    [
+      "Lcom/facebook/marianatrench/integrationtests/BroadcastReceiver;.<init>:()V",
+      "Lcom/facebook/marianatrench/integrationtests/BroadcastReceiverBuilder;.<init>:()V",
+      "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;",
+      "Lcom/facebook/marianatrench/integrationtests/WithParameterOverrides$2;.<init>:()V"
+    ],
+    "virtual" : 
+    [
+      "Lcom/facebook/marianatrench/integrationtests/BroadcastReceiverBuilder;.addActionReceiver:(Lcom/facebook/marianatrench/integrationtests/ActionReceiver;Lcom/facebook/marianatrench/integrationtests/ActionReceiverLike;Ljava/lang/Object;)V[1: Lcom/facebook/marianatrench/integrationtests/WithParameterOverrides$2;]"
     ]
   },
   "Lcom/facebook/secure/context/IntentLauncher;.<init>:()V" : 

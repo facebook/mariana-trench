@@ -650,10 +650,11 @@ InstructionCallGraphInformation process_instruction(
     return instruction_information;
   }
 
+  const Method* original_callee = method_factory.get(dex_callee);
   ParameterTypeOverrides parameter_type_overrides =
       anonymous_class_arguments(types, caller, instruction, dex_callee);
 
-  const auto* callee = get_callee_from_resolved_call(
+  const auto* resolved_callee = get_callee_from_resolved_call(
       dex_callee,
       instruction,
       parameter_type_overrides,
@@ -663,11 +664,11 @@ InstructionCallGraphInformation process_instruction(
       instruction_information.artificial_callees,
       sink_textual_order_index);
 
-  if (auto shim = shims.find(callee);
+  if (auto shim = shims.find(original_callee);
       shim != shims.end() && !skip_shim_for_caller(caller)) {
     auto artificial_callees = shim_artificial_callees(
         caller,
-        callee,
+        resolved_callee,
         instruction,
         method_factory,
         types,
@@ -681,12 +682,12 @@ InstructionCallGraphInformation process_instruction(
 
   auto call_index =
       update_index(sink_textual_order_index, ::show(instruction->get_method()));
-  if (callee->parameter_type_overrides().empty() ||
-      processed.count(callee) != 0) {
+  if (resolved_callee->parameter_type_overrides().empty() ||
+      processed.count(resolved_callee) != 0) {
     instruction_information.callee = CallTarget::from_call_instruction(
         caller,
         instruction,
-        callee,
+        resolved_callee,
         call_index,
         types,
         class_hierarchies,
@@ -696,20 +697,21 @@ InstructionCallGraphInformation process_instruction(
   // This is a newly introduced method with parameter type
   // overrides. We need to generate it's method overrides,
   // and compute callees for them.
-  const Method* original_callee = method_factory.get(callee->dex_method());
   std::unordered_set<const Method*> original_methods =
       override_factory.get(original_callee);
   original_methods.insert(original_callee);
 
   for (const Method* original_method : original_methods) {
     const Method* method = method_factory.create(
-        original_method->dex_method(), callee->parameter_type_overrides());
+        original_method->dex_method(),
+        resolved_callee->parameter_type_overrides());
 
     std::unordered_set<const Method*> overrides;
     for (const Method* original_override :
          override_factory.get(original_method)) {
       overrides.insert(method_factory.create(
-          original_override->dex_method(), callee->parameter_type_overrides()));
+          original_override->dex_method(),
+          resolved_callee->parameter_type_overrides()));
     }
 
     if (!overrides.empty()) {
@@ -723,7 +725,7 @@ InstructionCallGraphInformation process_instruction(
   instruction_information.callee = CallTarget::from_call_instruction(
       caller,
       instruction,
-      callee,
+      resolved_callee,
       call_index,
       types,
       class_hierarchies,

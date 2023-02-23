@@ -3,8 +3,27 @@
     "find": "methods",
     "where": [
       {
-        "constraint": "signature_pattern",
-        "pattern": "Lcom/facebook/marianatrench/integrationtests/Messenger;\\.<init>:.*"
+        "constraint": "signature_match",
+        "parent": "Lcom/facebook/marianatrench/integrationtests/BroadcastReceiverBuilder;",
+        "name": "addActionReceiver"
+      }
+    ],
+    "shim": {
+      "callees": [
+        {
+          "type_of": "Argument(1)",
+          "method_name": "onReceive:(Lcom/facebook/marianatrench/integrationtests/ActionReceiverLike;Ljava/lang/Object;)V"
+        }
+      ]
+    }
+  },
+  {
+    "find": "methods",
+    "where": [
+      {
+        "constraint": "signature_match",
+        "parent": "Lcom/facebook/marianatrench/integrationtests/Messenger;",
+        "name": "<init>"
       },
       {
         "constraint": "number_parameters",
