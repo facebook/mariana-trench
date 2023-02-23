@@ -59,8 +59,8 @@ std::map<std::string, std::unique_ptr<ModelGenerator>> make_model_generators(
         }
         LOG(3, "Found model generator `{}`", name);
       } catch (const JsonValidationError& e) {
-        auto error =
-            fmt::format("Unable to parse generator at `{}`", entry.path());
+        auto error = fmt::format(
+            "Unable to parse generator at `{}`: {}", entry.path(), e.what());
         LOG(3, error);
         EventLogger::log_event(
             "model_generator_error", fmt::format("{}\n{}", error, e.what()));
