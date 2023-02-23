@@ -397,7 +397,7 @@ void check_multi_source_multi_sink_rules(
     MethodContext* context,
     const Kind* source_kind,
     const Taint& source,
-    const Kind* sink_kind,
+    const PartialKind* sink_kind,
     const Taint& sink,
     FulfilledPartialKindState& fulfilled_partial_sinks,
     const MultiSourceMultiSinkRule* rule,
@@ -405,16 +405,13 @@ void check_multi_source_multi_sink_rules(
     TextualOrderIndex sink_index,
     std::string_view callee,
     const FeatureMayAlwaysSet& extra_features) {
-  const auto* partial_sink = sink_kind->as<PartialKind>();
-  mt_assert(partial_sink != nullptr);
-
   // Features found by this branch of the multi-source-sink flow. Should be
   // reported as part of the final issue discovered.
   auto features = source.features_joined();
   features.add(sink.features_joined());
 
   auto issue_sink_frame = fulfilled_partial_sinks.fulfill_kind(
-      partial_sink, rule, features, context, sink);
+      sink_kind, rule, features, context, sink);
 
   if (issue_sink_frame) {
     create_issue(
@@ -432,7 +429,7 @@ void check_multi_source_multi_sink_rules(
         4,
         "Found source kind: {} flowing into partial sink: {}, rule code: {}",
         *source_kind,
-        *partial_sink,
+        *sink_kind,
         rule->code());
   }
 }
@@ -457,8 +454,8 @@ void create_sinks(
     MethodContext* context,
     const Taint& sources,
     const Taint& sinks,
-    const FeatureMayAlwaysSet& extra_features = {},
-    const FulfilledPartialKindState& fulfilled_partial_sinks = {}) {
+    const FeatureMayAlwaysSet& extra_features,
+    const FulfilledPartialKindState& fulfilled_partial_sinks) {
   if (sources.is_bottom() || sinks.is_bottom()) {
     return;
   }
@@ -533,7 +530,7 @@ void create_sinks(
 //
 // If fulfilled_partial_sinks is null, regular sinks will be created if an
 // artificial source is found to be flowing into a sink.
-void check_flows(
+void check_sources_sinks_flows(
     MethodContext* context,
     const Taint& sources,
     const Taint& sinks,
@@ -569,9 +566,9 @@ void check_flows(
       }
 
       // Check if this satisfies any partial (multi-source/sink) rule.
-      if (fulfilled_partial_sinks) {
+      if (fulfilled_partial_sinks != nullptr) {
         const auto* MT_NULLABLE partial_sink = sink_kind->as<PartialKind>();
-        if (partial_sink) {
+        if (partial_sink != nullptr) {
           const auto& partial_rules =
               context->rules.partial_rules(source_kind, partial_sink);
           for (const auto* partial_rule : partial_rules) {
@@ -579,7 +576,7 @@ void check_flows(
                 context,
                 source_kind,
                 source_taint,
-                sink_kind,
+                partial_sink,
                 sink_taint,
                 *fulfilled_partial_sinks,
                 partial_rule,
@@ -595,12 +592,17 @@ void check_flows(
     }
   }
 
-  if (!fulfilled_partial_sinks) {
-    create_sinks(context, sources, sinks, extra_features);
+  if (fulfilled_partial_sinks == nullptr) {
+    create_sinks(
+        context,
+        sources,
+        sinks,
+        extra_features,
+        /* fulfilled_partial_sinks */ {});
   }
 }
 
-void check_flows(
+void check_call_flows(
     MethodContext* context,
     const InstructionAliasResults& aliasing,
     const ForwardTaintEnvironment* environment,
@@ -608,7 +610,7 @@ void check_flows(
         get_parameter_register,
     const CalleeModel& callee,
     const std::vector<std::optional<std::string>>& source_constant_arguments,
-    const FeatureMayAlwaysSet& extra_features = {}) {
+    const FeatureMayAlwaysSet& extra_features) {
   LOG_OR_DUMP(
       context,
       4,
@@ -638,7 +640,7 @@ void check_flows(
                   FeatureMayAlwaysSet{
                       context->features.get_issue_broadening_feature()});
             });
-    check_flows(
+    check_sources_sinks_flows(
         context,
         sources,
         sinks,
@@ -659,8 +661,8 @@ void check_flows(
   // the full set of triggered sinks at all positions/port of the callsite.
   //
   // Example: callsite(partial_sink_A, triggered_sink_B).
-  // Scenario: triggered_sink_B discovered in check_flows above when a source
-  // flows into the argument.
+  // Scenario: triggered_sink_B discovered in check_sources_sinks_flows above
+  // when a source flows into the argument.
   //
   // This next loop needs that information to convert partial_sink_A into a
   // triggered sink to be propagated if it is reachable via artifical sources.
@@ -673,15 +675,15 @@ void check_flows(
   }
 }
 
-void check_flows(
+void check_call_flows(
     MethodContext* context,
     const InstructionAliasResults& aliasing,
     const ForwardTaintEnvironment* environment,
     const std::vector<Register>& instruction_sources,
     const CalleeModel& callee,
     const std::vector<std::optional<std::string>>& source_constant_arguments,
-    const FeatureMayAlwaysSet& extra_features = {}) {
-  check_flows(
+    const FeatureMayAlwaysSet& extra_features) {
+  check_call_flows(
       context,
       aliasing,
       environment,
@@ -741,7 +743,7 @@ void check_flows_to_array_allocation(
         environment->read(aliasing.register_memory_locations(register_id))
             .collapse();
     // Fulfilled partial sinks ignored. No partial sinks for array allocation.
-    check_flows(
+    check_sources_sinks_flows(
         context,
         sources,
         array_allocation_sink,
@@ -753,23 +755,7 @@ void check_flows_to_array_allocation(
   }
 }
 
-void check_flows(
-    MethodContext* context,
-    const InstructionAliasResults& aliasing,
-    const ForwardTaintEnvironment* environment,
-    const IRInstruction* instruction,
-    const CalleeModel& callee,
-    const std::vector<std::optional<std::string>>& source_constant_arguments) {
-  check_flows(
-      context,
-      aliasing,
-      environment,
-      instruction->srcs_vec(),
-      callee,
-      source_constant_arguments);
-}
-
-void analyze_artificial_calls(
+void check_artificial_calls_flows(
     MethodContext* context,
     const InstructionAliasResults& aliasing,
     const IRInstruction* instruction,
@@ -780,7 +766,7 @@ void analyze_artificial_calls(
       context->call_graph.artificial_callees(context->method(), instruction);
 
   for (const auto& artificial_callee : artificial_callees) {
-    check_flows(
+    check_call_flows(
         context,
         aliasing,
         environment,
@@ -822,7 +808,7 @@ void check_call_effect_flows(
   auto* position = context->positions.get(context->method());
   for (const auto& [effect, sources] : caller_call_effect_sources) {
     const auto& sinks = callee_call_effect_sinks.read(effect);
-    check_flows(
+    check_sources_sinks_flows(
         context,
         // Add the position of the caller to call effect sources.
         sources.attach_position(position),
@@ -879,13 +865,14 @@ bool ForwardTaintTransfer::analyze_invoke(
 
   const ForwardTaintEnvironment previous_environment = *environment;
   TaintTree result_taint;
-  check_flows(
+  check_call_flows(
       context,
       aliasing,
       &previous_environment,
-      instruction,
+      instruction->srcs_vec(),
       callee,
-      source_constant_arguments);
+      source_constant_arguments,
+      /* extra_features */ {});
   check_call_effect_flows(context, callee);
   apply_call_effects(context, callee);
   apply_propagations(
@@ -918,7 +905,7 @@ bool ForwardTaintTransfer::analyze_invoke(
     environment->write(memory_location, result_taint, UpdateKind::Weak);
   }
 
-  analyze_artificial_calls(
+  check_artificial_calls_flows(
       context, aliasing, instruction, environment, source_constant_arguments);
 
   return false;
@@ -975,7 +962,7 @@ void check_flows_to_field_sink(
     return;
   }
   for (const auto& [port, sources] : source_taint.elements()) {
-    check_flows(
+    check_sources_sinks_flows(
         context,
         sources,
         sinks,
@@ -1032,7 +1019,7 @@ bool ForwardTaintTransfer::analyze_iput(
         is_singleton ? UpdateKind::Strong : UpdateKind::Weak);
   }
 
-  analyze_artificial_calls(context, aliasing, instruction, environment);
+  check_artificial_calls_flows(context, aliasing, instruction, environment);
 
   return false;
 }
@@ -1338,7 +1325,7 @@ bool ForwardTaintTransfer::analyze_return(
                   });
       // Fulfilled partial sinks are not expected to be produced here. Return
       // sinks are never partial.
-      check_flows(
+      check_sources_sinks_flows(
           context,
           sources,
           sinks,
