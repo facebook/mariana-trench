@@ -4,8 +4,17 @@
       "find": "methods",
       "where": [
         {
-          "constraint": "signature_pattern",
-          "pattern": "Ljava/lang/String;\\.valueOf:\\(Z\\)Ljava/lang/String;"
+          "constraint": "signature_match",
+          "parent": "Ljava/lang/String;",
+          "name": "valueOf"
+        },
+        {
+          "constraint": "parameter",
+          "idx": 0,
+          "inner": {
+            "constraint": "name",
+            "pattern": "Z"
+          }
         }
       ],
       "model": {
@@ -24,8 +33,17 @@
       "find": "methods",
       "where": [
         {
-          "constraint": "signature_pattern",
-          "pattern": "Ljava/lang/String;\\.valueOf:\\((I|J|F|D)\\)Ljava/lang/String;"
+          "constraint": "signature_match",
+          "parent": "Ljava/lang/String;",
+          "name": "valueOf"
+        },
+        {
+          "constraint": "parameter",
+          "idx": 0,
+          "inner": {
+            "constraint": "name",
+            "pattern": "(I|J|F|D)"
+          }
         }
       ],
       "model": {
