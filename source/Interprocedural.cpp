@@ -77,37 +77,41 @@ Model analyze(
       "Code:\n{}",
       Method::show_control_flow_graph(code->cfg()));
 
-  // TODO(T144485000): This could potentially be done once as a pre-analysis
-  // step and cached. The handling of inlining (`inline_as`) might make this
-  // impossible unfortunately.
-  LOG_OR_DUMP(
-      &method_context, 4, "Forward alias analysis of `{}`", method->show());
-  Timer forward_alias_timer;
-  auto forward_alias_fixpoint = ForwardAliasFixpoint(
-      method_context,
-      code->cfg(),
-      InstructionAnalyzerCombiner<ForwardAliasTransfer>(&method_context));
-  forward_alias_fixpoint.run(ForwardAliasEnvironment::initial());
-  LOG_OR_DUMP(
-      &method_context,
-      4,
-      "Forward alias analysis of `{}` took {:.2f}s",
-      method->show(),
-      forward_alias_timer.duration_in_seconds());
+  {
+    // TODO(T144485000): This could potentially be done once as a pre-analysis
+    // step and cached. The handling of inlining (`inline_as`) might make this
+    // impossible unfortunately.
+    LOG_OR_DUMP(
+        &method_context, 4, "Forward alias analysis of `{}`", method->show());
+    Timer forward_alias_timer;
+    auto forward_alias_fixpoint = ForwardAliasFixpoint(
+        method_context,
+        code->cfg(),
+        InstructionAnalyzerCombiner<ForwardAliasTransfer>(&method_context));
+    forward_alias_fixpoint.run(ForwardAliasEnvironment::initial());
+    LOG_OR_DUMP(
+        &method_context,
+        4,
+        "Forward alias analysis of `{}` took {:.2f}s",
+        method->show(),
+        forward_alias_timer.duration_in_seconds());
+  }
 
-  LOG_OR_DUMP(
-      &method_context, 4, "Forward taint analysis of `{}`", method->show());
-  Timer forward_taint_timer;
-  auto forward_taint_fixpoint = ForwardTaintFixpoint(
-      code->cfg(),
-      InstructionAnalyzerCombiner<ForwardTaintTransfer>(&method_context));
-  forward_taint_fixpoint.run(ForwardTaintEnvironment::initial());
-  LOG_OR_DUMP(
-      &method_context,
-      4,
-      "Forward taint analysis of `{}` took {:.2f}s",
-      method->show(),
-      forward_taint_timer.duration_in_seconds());
+  {
+    LOG_OR_DUMP(
+        &method_context, 4, "Forward taint analysis of `{}`", method->show());
+    Timer forward_taint_timer;
+    auto forward_taint_fixpoint = ForwardTaintFixpoint(
+        code->cfg(),
+        InstructionAnalyzerCombiner<ForwardTaintTransfer>(&method_context));
+    forward_taint_fixpoint.run(ForwardTaintEnvironment::initial());
+    LOG_OR_DUMP(
+        &method_context,
+        4,
+        "Forward taint analysis of `{}` took {:.2f}s",
+        method->show(),
+        forward_taint_timer.duration_in_seconds());
+  }
 
   model.collapse_invalid_paths(global_context);
   model.approximate(/* widening_features */
