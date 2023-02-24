@@ -33,6 +33,10 @@ class LocalArgumentKind final : public PropagationKind {
 
   Root root() const override;
 
+  ParameterPosition parameter_position() const {
+    return parameter_;
+  }
+
  private:
   ParameterPosition parameter_;
 };

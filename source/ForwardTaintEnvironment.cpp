@@ -112,7 +112,7 @@ void ForwardTaintEnvironment::write(
     return;
   }
 
-  if (memory_locations.singleton() == nullptr) {
+  if (kind == UpdateKind::Strong && memory_locations.singleton() == nullptr) {
     // In practice, only one of the memory location is affected, so we must
     // treat this as a weak update, even if a strong update was requested.
     kind = UpdateKind::Weak;
@@ -139,7 +139,7 @@ void ForwardTaintEnvironment::write(
     return;
   }
 
-  if (memory_locations.singleton() == nullptr) {
+  if (kind == UpdateKind::Strong && memory_locations.singleton() == nullptr) {
     // In practice, only one of the memory location is affected, so we must
     // treat this as a weak update, even if a strong update was requested.
     kind = UpdateKind::Weak;
@@ -159,7 +159,7 @@ void ForwardTaintEnvironment::write(
     return;
   }
 
-  if (memory_locations.singleton() == nullptr) {
+  if (kind == UpdateKind::Strong && memory_locations.singleton() == nullptr) {
     // In practice, only one of the memory location is affected, so we must
     // treat this as a weak update, even if a strong update was requested.
     kind = UpdateKind::Weak;

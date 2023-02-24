@@ -194,7 +194,7 @@ void ForwardAliasFixpoint::analyze_node(
     const NodeId& block,
     ForwardAliasEnvironment* environment) const {
   LOG(4, "Analyzing block {}\n{}", block->id(), *environment);
-  for (auto& instruction : *block) {
+  for (const auto& instruction : *block) {
     switch (instruction.type) {
       case MFLOW_OPCODE:
         analyze_instruction(

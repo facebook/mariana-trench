@@ -7,6 +7,8 @@
 
 #pragma once
 
+#include <AbstractDomain.h>
+
 #include <mariana-trench/IncludeMacros.h>
 #include <mariana-trench/MemoryLocation.h>
 #include <mariana-trench/MemoryLocationEnvironment.h>
@@ -25,7 +27,6 @@ class ForwardTaintEnvironment final
   explicit ForwardTaintEnvironment(TaintEnvironment taint)
       : taint_(std::move(taint)) {}
 
-  /* Return the initial environment. */
   static ForwardTaintEnvironment initial();
 
   INCLUDE_ABSTRACT_DOMAIN_METHODS(

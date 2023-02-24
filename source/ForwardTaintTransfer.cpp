@@ -5,10 +5,6 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-#include <limits>
-
-#include <fmt/format.h>
-
 #include <mariana-trench/ArtificialMethods.h>
 #include <mariana-trench/CallEffects.h>
 #include <mariana-trench/CallGraph.h>
@@ -68,6 +64,7 @@ bool ForwardTaintTransfer::analyze_check_cast(
     });
   }
 
+  LOG_OR_DUMP(context, 4, "Tainting result register with {}", taint);
   environment->write(
       aliasing.result_memory_location(), taint, UpdateKind::Strong);
 
@@ -226,6 +223,10 @@ void apply_propagations(
         aliasing.register_memory_locations(input_register_id),
         input.path().resolve(source_constant_arguments));
 
+    if (input_taint_tree.is_bottom()) {
+      continue;
+    }
+
     // Collapsing the tree here is required for correctness and performance.
     // Propagations can be collapsed, which results in taking the common
     // prefix of the input paths. Because of this, if we don't collapse
@@ -252,10 +253,6 @@ void apply_propagations(
             taint.add_inferred_features(FeatureMayAlwaysSet{
                 context->features.get_propagation_broadening_feature()});
           });
-    }
-
-    if (input_taint_tree.is_bottom()) {
-      continue;
     }
 
     auto position =
@@ -286,7 +283,7 @@ void apply_propagations(
 
       for (const auto& [output_path, _] :
            propagation.output_paths().elements()) {
-        auto output_paths_resolved =
+        auto output_path_resolved =
             output_path.resolve(source_constant_arguments);
 
         switch (output_root.kind()) {
@@ -295,10 +292,10 @@ void apply_propagations(
                 context,
                 4,
                 "Tainting invoke result path {} with {}",
-                output_paths_resolved,
+                output_path_resolved,
                 output_taint_tree);
             result_taint.write(
-                output_paths_resolved, output_taint_tree, UpdateKind::Weak);
+                output_path_resolved, output_taint_tree, UpdateKind::Weak);
             break;
           }
           case Root::Kind::Argument: {
@@ -310,11 +307,11 @@ void apply_propagations(
                 4,
                 "Tainting register {} path {} with {}",
                 output_register_id,
-                output_paths_resolved,
+                output_path_resolved,
                 output_taint_tree);
             new_environment->write(
                 aliasing.register_memory_locations(output_register_id),
-                output_paths_resolved,
+                output_path_resolved,
                 output_taint_tree,
                 callee.model.strong_write_on_propagation() ? UpdateKind::Strong
                                                            : UpdateKind::Weak);
@@ -392,7 +389,7 @@ void create_issue(
 
 // Called when a source is detected to be flowing into a partial sink for a
 // multi source rule. The set of fulfilled sinks should be accumulated for
-// each argument at a callsite (an invoke operation).
+// each argument at a callsite (an invoke instruction).
 void check_multi_source_multi_sink_rules(
     MethodContext* context,
     const Kind* source_kind,
@@ -864,7 +861,6 @@ bool ForwardTaintTransfer::analyze_invoke(
       source_constant_arguments);
 
   const ForwardTaintEnvironment previous_environment = *environment;
-  TaintTree result_taint;
   check_call_flows(
       context,
       aliasing,
@@ -875,6 +871,8 @@ bool ForwardTaintTransfer::analyze_invoke(
       /* extra_features */ {});
   check_call_effect_flows(context, callee);
   apply_call_effects(context, callee);
+
+  TaintTree result_taint;
   apply_propagations(
       context,
       aliasing,
@@ -984,7 +982,7 @@ bool ForwardTaintTransfer::analyze_iput(
   bool is_singleton = target_memory_locations.singleton() != nullptr;
 
   for (auto* memory_location : target_memory_locations.elements()) {
-    auto field_memory_location = memory_location->make_field(field_name);
+    auto* field_memory_location = memory_location->make_field(field_name);
     auto taint_copy = taint;
     add_field_features(context, taint_copy, field_memory_location);
 
@@ -1122,13 +1120,17 @@ bool ForwardTaintTransfer::analyze_aput(
   });
 
   // We use a single memory location for the array and its elements.
-  auto target_memory_locations =
-      aliasing.register_memory_locations(instruction->src(1));
-  for (auto* memory_location : target_memory_locations.elements()) {
-    LOG_OR_DUMP(
-        context, 4, "Tainting {} with {}", show(memory_location), taint);
-    environment->write(memory_location, taint, UpdateKind::Weak);
-  }
+  LOG_OR_DUMP(
+      context,
+      4,
+      "Tainting register {} with {}",
+      instruction->src(1),
+      taint,
+      UpdateKind::Weak);
+  environment->write(
+      aliasing.register_memory_locations(instruction->src(1)),
+      taint,
+      UpdateKind::Weak);
 
   return false;
 }

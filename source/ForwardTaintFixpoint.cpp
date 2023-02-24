@@ -22,7 +22,7 @@ void ForwardTaintFixpoint::analyze_node(
     const NodeId& block,
     ForwardTaintEnvironment* taint) const {
   LOG(4, "Analyzing block {}\n{}", block->id(), *taint);
-  for (auto& instruction : *block) {
+  for (const auto& instruction : *block) {
     switch (instruction.type) {
       case MFLOW_OPCODE:
         instruction_analyzer_(instruction.insn, taint);
