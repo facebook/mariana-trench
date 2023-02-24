@@ -139,6 +139,8 @@ class CalleeFrames final : public sparta::AbstractDomain<CalleeFrames> {
 
   void map(const std::function<void(Frame&)>& f);
 
+  void filter(const std::function<bool(const Frame&)>& predicate);
+
   ConstIterator begin() const {
     return ConstIterator(frames_.bindings().begin(), frames_.bindings().end());
   }

@@ -130,6 +130,14 @@ void CalleeFrames::map(const std::function<void(Frame&)>& f) {
   });
 }
 
+void CalleeFrames::filter(const std::function<bool(const Frame&)>& predicate) {
+  frames_.map([&](const CallPositionFrames& frames) {
+    auto new_frames = frames;
+    new_frames.filter(predicate);
+    return new_frames;
+  });
+}
+
 void CalleeFrames::set_origins_if_empty(const MethodSet& origins) {
   frames_.map([&](const CallPositionFrames& frames) {
     auto new_frames = frames;

@@ -124,6 +124,8 @@ class CallPositionFrames final
 
   void map(const std::function<void(Frame&)>& f);
 
+  void filter(const std::function<bool(const Frame&)>& predicate);
+
   ConstIterator begin() const {
     return ConstIterator(frames_.begin(), frames_.end());
   }

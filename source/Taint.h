@@ -95,6 +95,10 @@ class Taint final : public sparta::AbstractDomain<Taint> {
 
   void difference_with(const Taint& other);
 
+  void map(const std::function<void(Frame&)>& f);
+
+  void filter(const std::function<bool(const Frame&)>& predicate);
+
   /**
    * Sets the origins for leaves that do not have one set yet.
    * For use when instantiating the `Model` of a method, once the concrete

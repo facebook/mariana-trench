@@ -106,6 +106,13 @@ void CallPositionFrames::map(const std::function<void(Frame&)>& f) {
       [&](CalleePortFrames& callee_port_frames) { callee_port_frames.map(f); });
 }
 
+void CallPositionFrames::filter(
+    const std::function<bool(const Frame&)>& predicate) {
+  frames_.map([&](CalleePortFrames& callee_port_frames) {
+    callee_port_frames.filter(predicate);
+  });
+}
+
 void CallPositionFrames::set_origins_if_empty(const MethodSet& origins) {
   frames_.map([&](CalleePortFrames& callee_port_frames) {
     callee_port_frames.set_origins_if_empty(origins);

@@ -261,6 +261,15 @@ void CalleePortFrames::map(const std::function<void(Frame&)>& f) {
   });
 }
 
+void CalleePortFrames::filter(
+    const std::function<bool(const Frame&)>& predicate) {
+  frames_.map([&](const Frames& frames) {
+    auto new_frames = frames;
+    new_frames.filter(predicate);
+    return new_frames;
+  });
+}
+
 void CalleePortFrames::set_origins_if_empty(const MethodSet& origins) {
   map([&](Frame& frame) {
     if (frame.origins().empty()) {
