@@ -184,6 +184,11 @@ std::vector<Model> JsonModelGenerator::emit_method_models_optimized(
       method_models = item.emit_method_models_filtered(filtered_methods);
     }
 
+    LOG(4,
+        "Model generator `{}`'s item {} emitted {} models.",
+        this->name(),
+        i,
+        method_models.size());
     EventLogger::log_event(
         "model_generator_match",
         fmt::format("{}:{}", this->name(), i),
