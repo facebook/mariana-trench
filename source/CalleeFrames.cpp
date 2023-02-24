@@ -290,6 +290,19 @@ void CalleeFrames::append_to_artificial_source_input_paths(
   });
 }
 
+void CalleeFrames::append_to_propagation_output_paths(
+    Path::Element path_element) {
+  if (call_info_ != CallInfo::Propagation) {
+    return;
+  }
+
+  map([path_element](Frame& frame) {
+    if (frame.kind()->is<PropagationKind>()) {
+      frame.append_to_propagation_output_paths(path_element);
+    }
+  });
+}
+
 void CalleeFrames::add_inferred_features_to_real_sources(
     const FeatureMayAlwaysSet& features) {
   frames_.map([&](const CallPositionFrames& frames) {

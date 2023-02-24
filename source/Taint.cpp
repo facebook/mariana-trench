@@ -171,6 +171,12 @@ void Taint::append_to_artificial_source_input_paths(
   });
 }
 
+void Taint::append_to_propagation_output_paths(Path::Element path_element) {
+  set_.map([path_element](CalleeFrames& frames) {
+    frames.append_to_propagation_output_paths(path_element);
+  });
+}
+
 void Taint::add_inferred_features_to_real_sources(
     const FeatureMayAlwaysSet& features) {
   set_.map([&features](CalleeFrames& frames) {

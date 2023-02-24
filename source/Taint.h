@@ -176,6 +176,11 @@ class Taint final : public sparta::AbstractDomain<Taint> {
   void append_to_artificial_source_input_paths(Path::Element path_element);
 
   /**
+   * Appends `path_element` to the output paths of all propagation frames.
+   */
+  void append_to_propagation_output_paths(Path::Element path_element);
+
+  /**
    * Adds `features` to the inferred features for all real (i.e not artificial)
    * sources held in this instance.
    */

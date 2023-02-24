@@ -6,11 +6,11 @@
  */
 
 #include <boost/functional/hash.hpp>
-#include "mariana-trench/Constants.h"
 
 #include <Show.h>
 
 #include <mariana-trench/Access.h>
+#include <mariana-trench/Constants.h>
 #include <mariana-trench/Frame.h>
 #include <mariana-trench/JsonValidation.h>
 
@@ -137,6 +137,18 @@ Frame Frame::with_kind(const Kind* kind) const {
   Frame new_frame(*this);
   new_frame.kind_ = kind;
   return new_frame;
+}
+
+void Frame::append_to_propagation_output_paths(Path::Element path_element) {
+  PathTreeDomain new_output_paths;
+  for (const auto& [path, elements] : output_paths_.elements()) {
+    auto new_path = path;
+    new_path.append(path_element);
+    new_output_paths.write(new_path, elements, UpdateKind::Weak);
+  }
+  output_paths_ = std::move(new_output_paths);
+  output_paths_.collapse_deeper_than(Heuristics::kPropagationMaxOutputPathSize);
+  output_paths_.limit_leaves(Heuristics::kPropagationMaxOutputPathLeaves);
 }
 
 Json::Value Frame::to_json(const LocalPositionSet& local_positions) const {

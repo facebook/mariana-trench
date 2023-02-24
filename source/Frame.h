@@ -232,6 +232,8 @@ class Frame final : public sparta::AbstractDomain<Frame> {
     return call_info_;
   }
 
+  void append_to_propagation_output_paths(Path::Element path_element);
+
   const PathTreeDomain& output_paths() const {
     return output_paths_;
   }
