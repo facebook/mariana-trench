@@ -4,8 +4,18 @@
       "find": "methods",
       "where": [
         {
-          "constraint": "signature_pattern",
-          "pattern": "Lkotlin/Result;.*Ljava/lang/Throwable;"
+          "constraint": "parent",
+          "inner": {
+            "constraint": "name",
+            "pattern": "Lkotlin/Result;"
+          }
+        },
+        {
+          "constraint": "return",
+          "inner": {
+            "constraint": "name",
+            "pattern": "Ljava/lang/Throwable;"
+          }
         }
       ],
       "model": {
@@ -20,8 +30,11 @@
       "find": "methods",
       "where": [
         {
-          "constraint": "signature_pattern",
-          "pattern": "Lkotlin/reflect/.*"
+          "constraint": "parent",
+          "inner": {
+            "constraint": "name",
+            "pattern": "Lkotlin/reflect/.*"
+          }
         }
       ],
       "model": {
