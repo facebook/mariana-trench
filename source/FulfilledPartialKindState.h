@@ -11,8 +11,9 @@
 
 #include <mariana-trench/FeatureMayAlwaysSet.h>
 #include <mariana-trench/IncludeMacros.h>
-#include <mariana-trench/MethodContext.h>
+#include <mariana-trench/Kinds.h>
 #include <mariana-trench/MultiSourceMultiSinkRule.h>
+#include <mariana-trench/Taint.h>
 #include <mariana-trench/TriggeredPartialKind.h>
 
 namespace marianatrench {
@@ -30,7 +31,9 @@ class FulfilledPartialKindState final {
  public:
   FulfilledPartialKindState() = default;
 
-  DELETE_COPY_CONSTRUCTORS_AND_ASSIGNMENTS(FulfilledPartialKindState)
+  INCLUDE_DEFAULT_COPY_CONSTRUCTORS_AND_ASSIGNMENTS(FulfilledPartialKindState)
+
+  bool empty() const;
 
   /**
    * Called when sink `kind` is fulfilled under `rule`, i.e. has a matching
@@ -49,8 +52,8 @@ class FulfilledPartialKindState final {
       const PartialKind* kind,
       const MultiSourceMultiSinkRule* rule,
       const FeatureMayAlwaysSet& features,
-      MethodContext* context,
-      const Taint& sink);
+      const Taint& sink,
+      const Kinds& kinds_factory);
 
   /**
    * Given an `unfufilled_kind`, check if its counterpart flow has been
@@ -74,8 +77,8 @@ class FulfilledPartialKindState final {
    * kind because it may have fulfilled counterparts in more than one rule.
    */
   std::vector<const Kind*> make_triggered_counterparts(
-      MethodContext* context,
-      const PartialKind* unfulfilled_kind) const;
+      const PartialKind* unfulfilled_kind,
+      const Kinds& kinds_factory) const;
 
  private:
   void add_fulfilled_kind(

@@ -411,7 +411,7 @@ void check_multi_source_multi_sink_rules(
   features.add(sink.features_joined());
 
   auto issue_sink_frame = fulfilled_partial_sinks.fulfill_kind(
-      sink_kind, rule, features, context, sink);
+      sink_kind, rule, features, sink, context->kinds);
 
   if (issue_sink_frame) {
     create_issue(
@@ -487,7 +487,7 @@ void create_sinks(
             return {sink_kind};
           }
           return fulfilled_partial_sinks.make_triggered_counterparts(
-              context, /* unfulfilled_kind */ partial_sink);
+              /* unfulfilled_kind */ partial_sink, context->kinds);
         },
         [&fulfilled_partial_sinks](const Kind* new_kind) {
           return get_fulfilled_sink_features(fulfilled_partial_sinks, new_kind);

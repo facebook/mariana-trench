@@ -13,6 +13,7 @@
 #include <mariana-trench/CallGraph.h>
 #include <mariana-trench/Compiler.h>
 #include <mariana-trench/Context.h>
+#include <mariana-trench/FulfilledPartialKindResults.h>
 #include <mariana-trench/IncludeMacros.h>
 #include <mariana-trench/MemoryLocation.h>
 #include <mariana-trench/Method.h>
@@ -63,6 +64,7 @@ class MethodContext final {
   const Registry& registry;
   MemoryFactory memory_factory;
   AliasAnalysisResults aliasing;
+  FulfilledPartialKindResults fulfilled_partial_sinks;
   Model& model;
 
  private:
