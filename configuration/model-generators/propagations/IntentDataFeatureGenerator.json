@@ -4,8 +4,15 @@
       "find": "methods",
       "where": [
         {
-          "constraint": "signature_pattern",
-          "pattern": "Landroid/content/Intent;\\.setData.*"
+          "constraint": "parent",
+          "inner": {
+            "constraint": "name",
+            "pattern": "Landroid/content/Intent;"
+          }
+        },
+        {
+          "constraint": "name",
+          "pattern": "setData.*"
         }
       ],
       "model": {
@@ -31,8 +38,9 @@
       "find": "methods",
       "where": [
         {
-          "constraint": "signature_pattern",
-          "pattern": "Landroid/content/Intent;\\.<init>:.*android/net/Uri.*"
+          "constraint": "signature_match",
+          "parent": "Landroid/content/Intent;",
+          "name": "<init>"
         }
       ],
       "model": {
