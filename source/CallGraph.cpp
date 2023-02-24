@@ -257,7 +257,8 @@ const Method* get_callee_from_resolved_call(
     const Features& features,
     ArtificialCallees& artificial_callees,
     std::unordered_map<std::string, TextualOrderIndex>&
-        sink_textual_order_index) {
+        sink_textual_order_index,
+    MethodMappings& method_mappings) {
   const Method* callee = nullptr;
   if (dex_callee->get_code() == nullptr) {
     // When passing an anonymous class into an external callee (no code), add
@@ -280,6 +281,7 @@ const Method* get_callee_from_resolved_call(
   } else {
     // Analyze the callee with these particular types.
     callee = method_factory.create(dex_callee, parameter_type_overrides);
+    method_mappings.create_mappings_for_method(callee);
   }
   mt_assert(callee != nullptr);
   return callee;
@@ -603,7 +605,8 @@ InstructionCallGraphInformation process_instruction(
     const Features& features,
     const MethodToShimMap& shims,
     std::unordered_map<std::string, TextualOrderIndex>&
-        sink_textual_order_index) {
+        sink_textual_order_index,
+    MethodMappings& method_mappings) {
   InstructionCallGraphInformation instruction_information;
 
   if (is_field_instruction(instruction)) {
@@ -662,7 +665,8 @@ InstructionCallGraphInformation process_instruction(
       method_factory,
       features,
       instruction_information.artificial_callees,
-      sink_textual_order_index);
+      sink_textual_order_index,
+      method_mappings);
 
   if (auto shim = shims.find(original_callee);
       shim != shims.end() && !skip_shim_for_caller(caller)) {
@@ -705,13 +709,16 @@ InstructionCallGraphInformation process_instruction(
     const Method* method = method_factory.create(
         original_method->dex_method(),
         resolved_callee->parameter_type_overrides());
+    method_mappings.create_mappings_for_method(method);
 
     std::unordered_set<const Method*> overrides;
     for (const Method* original_override :
          override_factory.get(original_method)) {
-      overrides.insert(method_factory.create(
+      const Method* override_method = method_factory.create(
           original_override->dex_method(),
-          resolved_callee->parameter_type_overrides()));
+          resolved_callee->parameter_type_overrides());
+      method_mappings.create_mappings_for_method(override_method);
+      overrides.insert(override_method);
     }
 
     if (!overrides.empty()) {
@@ -902,7 +909,8 @@ CallGraph::CallGraph(
     const ClassHierarchies& class_hierarchies,
     Overrides& override_factory,
     const Features& features,
-    const MethodToShimMap& shims)
+    const MethodToShimMap& shims,
+    MethodMappings& method_mappings)
     : types_(types),
       class_hierarchies_(class_hierarchies),
       overrides_(override_factory) {
@@ -982,7 +990,8 @@ CallGraph::CallGraph(
                   class_hierarchies,
                   features,
                   shims,
-                  sink_textual_order_index);
+                  sink_textual_order_index,
+                  method_mappings);
               if (instruction_information.artificial_callees.size() > 0) {
                 artificial_callees.emplace(
                     instruction, instruction_information.artificial_callees);

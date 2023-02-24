@@ -79,7 +79,8 @@ Context make_context(const DexStore& store) {
       *context.class_hierarchies,
       *context.overrides,
       *context.features,
-      std::move(shims));
+      shims,
+      method_mappings);
   auto registry = Registry(context);
   context.dependencies = std::make_unique<Dependencies>(
       *context.options,

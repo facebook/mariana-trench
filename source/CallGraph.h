@@ -212,7 +212,8 @@ class CallGraph final {
       const ClassHierarchies& class_hierarchies,
       Overrides& overrides,
       const Features& features,
-      const MethodToShimMap& shims);
+      const MethodToShimMap& shims,
+      MethodMappings& method_mappings);
 
   DELETE_COPY_CONSTRUCTORS_AND_ASSIGNMENTS(CallGraph)
 

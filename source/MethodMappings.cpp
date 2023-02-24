@@ -70,13 +70,16 @@ void create_signature_to_method(
 
 } // namespace
 
+void MethodMappings::create_mappings_for_method(const Method* method) {
+  create_name_to_method(method, name_to_methods_);
+  create_class_to_method(method, class_to_methods_);
+  create_class_to_override_method(method, class_to_override_methods_);
+  create_signature_to_method(method, signature_to_methods_);
+}
+
 MethodMappings::MethodMappings(const Methods& methods) {
-  auto queue = sparta::work_queue<const Method*>([&](const Method* method) {
-    create_name_to_method(method, name_to_methods_);
-    create_class_to_method(method, class_to_methods_);
-    create_class_to_override_method(method, class_to_override_methods_);
-    create_signature_to_method(method, signature_to_methods_);
-  });
+  auto queue = sparta::work_queue<const Method*>(
+      [&](const Method* method) { create_mappings_for_method(method); });
   for (const auto* method : methods) {
     all_methods_.add(method);
     queue.add_item(method);

@@ -488,6 +488,7 @@ TEST_P(IntegrationTest, ReturnsExpectedModel) {
   context.artificial_methods =
       std::make_unique<ArtificialMethods>(*context.kinds, context.stores);
   context.methods = std::make_unique<Methods>(context.stores);
+  MethodMappings method_mappings{*context.methods};
   context.fields = std::make_unique<Fields>(context.stores);
   context.positions = std::make_unique<Positions>(options, context.stores);
   context.control_flow_graphs =
@@ -507,7 +508,8 @@ TEST_P(IntegrationTest, ReturnsExpectedModel) {
       *context.class_hierarchies,
       *context.overrides,
       *context.features,
-      MethodToShimMap{});
+      MethodToShimMap{},
+      method_mappings);
   context.rules = std::make_unique<Rules>(context, rules);
 
   Registry registry(context);

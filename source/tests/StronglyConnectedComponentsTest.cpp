@@ -43,6 +43,7 @@ Context test_components(const Scope& scope) {
   context.artificial_methods =
       std::make_unique<ArtificialMethods>(*context.kinds, context.stores);
   context.methods = std::make_unique<Methods>(context.stores);
+  MethodMappings method_mappings{*context.methods};
   context.control_flow_graphs =
       std::make_unique<ControlFlowGraphs>(context.stores);
   context.types = std::make_unique<Types>(*context.options, context.stores);
@@ -59,7 +60,8 @@ Context test_components(const Scope& scope) {
       *context.class_hierarchies,
       *context.overrides,
       *context.features,
-      MethodToShimMap{});
+      MethodToShimMap{},
+      method_mappings);
   context.rules = std::make_unique<Rules>();
   auto registry = Registry(context);
   context.dependencies = std::make_unique<Dependencies>(

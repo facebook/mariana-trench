@@ -47,6 +47,8 @@ class MethodMappings {
     return all_methods_;
   }
 
+  void create_mappings_for_method(const Method* method);
+
  private:
   ConcurrentMap<std::string_view, MethodHashedSet> name_to_methods_;
   ConcurrentMap<std::string_view, MethodHashedSet> class_to_methods_;

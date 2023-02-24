@@ -198,7 +198,8 @@ Registry MarianaTrench::analyze(Context& context) {
         *context.class_hierarchies,
         *context.overrides,
         *context.features,
-        shims);
+        shims,
+        method_mappings);
     context.statistics->log_time("call_graph", call_graph_timer);
     LOG(1,
         "Built call graph in {:.2f}s. Memory used, RSS: {:.2f}GB",
