@@ -4,8 +4,9 @@
       "find": "methods",
       "where": [
         {
-          "constraint": "signature_pattern",
-          "pattern": "Landroid/app/Activity;\\.getIntent:\\(\\)Landroid/content/Intent;"
+          "constraint": "signature_match",
+          "parent": "Landroid/app/Activity;",
+          "name": "getIntent"
         }
       ],
       "model": {
@@ -23,8 +24,25 @@
       "find": "methods",
       "where": [
         {
-          "constraint": "signature_pattern",
-          "pattern": "Landroid.*Fragment;\\.(get|require)Arguments:\\(\\)Landroid/os/Bundle;"
+          "constraint": "any_of",
+          "inners": [
+            {
+              "constraint": "signature_match",
+              "parent": "Landroid/app/Fragment;",
+              "names": [
+                "getArguments",
+                "requireArguments"
+              ]
+            },
+            {
+              "constraint": "signature_match",
+              "parent": "Landroidx/fragment/app/Fragment;",
+              "names": [
+                "getArguments",
+                "requireArguments"
+              ]
+            }
+          ]
         }
       ],
       "model": {
