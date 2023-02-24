@@ -212,12 +212,12 @@ class Taint final : public sparta::AbstractDomain<Taint> {
 
   /**
    * Similar to `partition_by_kind()` but caller gets to decide what value of
-   * type `T` each kind maps to.
+   * type `Key` each kind maps to.
    */
-  template <class T>
-  std::unordered_map<T, Taint> partition_by_kind(
-      const std::function<T(const Kind*)>& map_kind) const {
-    std::unordered_map<T, Taint> result;
+  template <typename Key>
+  std::unordered_map<Key, Taint> partition_by_kind(
+      const std::function<Key(const Kind*)>& map_kind) const {
+    std::unordered_map<Key, Taint> result;
     for (const auto& callee_frames : set_) {
       auto callee_frames_partitioned =
           callee_frames.partition_by_kind(map_kind);
@@ -227,7 +227,7 @@ class Taint final : public sparta::AbstractDomain<Taint> {
         auto existing = result.find(mapped_value);
         auto existing_or_bottom =
             existing == result.end() ? Taint::bottom() : existing->second;
-        existing_or_bottom.add(callee_frames);
+        existing_or_bottom.set_.add(callee_frames);
 
         result[mapped_value] = existing_or_bottom;
       }
@@ -260,11 +260,6 @@ class Taint final : public sparta::AbstractDomain<Taint> {
    * Return the taint representing the given propagation.
    */
   static Taint propagation(PropagationConfig propagation);
-
- private:
-  void add(const CalleeFrames& frames);
-
-  void map(const std::function<void(CalleeFrames&)>& f);
 
  private:
   Set set_;
