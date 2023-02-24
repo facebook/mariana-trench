@@ -7,6 +7,7 @@
 
 #include <Show.h>
 
+#include <mariana-trench/Features.h>
 #include <mariana-trench/Log.h>
 #include <mariana-trench/Positions.h>
 #include <mariana-trench/TransferCall.h>
@@ -175,6 +176,28 @@ MemoryLocation* MT_NULLABLE try_inline_invoke(
   }
 
   return memory_location;
+}
+
+namespace {
+
+bool is_inner_class_this(const FieldMemoryLocation* location) {
+  return location->parent()->is<ThisParameterMemoryLocation>() &&
+      location->field()->str() == "this$0";
+}
+
+} // namespace
+
+void add_field_features(
+    MethodContext* context,
+    TaintTree& taint_tree,
+    const FieldMemoryLocation* field_memory_location) {
+  if (!is_inner_class_this(field_memory_location)) {
+    return;
+  }
+  auto features = FeatureMayAlwaysSet::make_always(
+      {context->features.get("via-inner-class-this")});
+  taint_tree.map(
+      [&features](Taint& taint) { taint.add_inferred_features(features); });
 }
 
 } // namespace marianatrench

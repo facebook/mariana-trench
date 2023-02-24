@@ -913,24 +913,6 @@ bool ForwardTaintTransfer::analyze_invoke(
 
 namespace {
 
-bool is_inner_class_this(const FieldMemoryLocation* location) {
-  return location->parent()->is<ThisParameterMemoryLocation>() &&
-      location->field()->str() == "this$0";
-}
-
-void add_field_features(
-    MethodContext* context,
-    AbstractTreeDomain<Taint>& taint,
-    const FieldMemoryLocation* field_memory_location) {
-  if (!is_inner_class_this(field_memory_location)) {
-    return;
-  }
-  auto features = FeatureMayAlwaysSet::make_always(
-      {context->features.get("via-inner-class-this")});
-  taint.map(
-      [&features](Taint& sources) { sources.add_inferred_features(features); });
-}
-
 void check_flows_to_field_sink(
     MethodContext* context,
     const IRInstruction* instruction,

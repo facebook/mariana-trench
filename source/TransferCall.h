@@ -11,11 +11,13 @@
 
 #include <mariana-trench/Access.h>
 #include <mariana-trench/CallGraph.h>
+#include <mariana-trench/MemoryLocation.h>
 #include <mariana-trench/MemoryLocationEnvironment.h>
 #include <mariana-trench/Method.h>
 #include <mariana-trench/MethodContext.h>
 #include <mariana-trench/Model.h>
 #include <mariana-trench/Position.h>
+#include <mariana-trench/TaintTree.h>
 
 namespace marianatrench {
 
@@ -62,5 +64,11 @@ MemoryLocation* MT_NULLABLE try_inline_invoke(
     const RegisterMemoryLocationsMap& register_memory_locations_map,
     const IRInstruction* instruction,
     const CalleeModel& callee);
+
+/* Add a set of hardcoded features on field access. */
+void add_field_features(
+    MethodContext* context,
+    TaintTree& taint_tree,
+    const FieldMemoryLocation* field_memory_location);
 
 } // namespace marianatrench
