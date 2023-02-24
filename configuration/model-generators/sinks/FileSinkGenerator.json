@@ -4,8 +4,9 @@
       "find": "methods",
       "where": [
         {
-          "constraint": "signature_pattern",
-          "pattern": "Ljava/io/File;\\.<init>.*"
+          "constraint": "signature_match",
+          "parent": "Ljava/io/File;",
+          "name": "<init>"
         }
       ],
       "model": {
@@ -71,8 +72,9 @@
       "find": "methods",
       "where": [
         {
-          "constraint": "signature_pattern",
-          "pattern": "Ljava/io/FileOutputStream;\\.<init>:.*"
+          "constraint": "signature_match",
+          "parent": "Ljava/io/FileOutputStream;",
+          "name": "<init>"
         }
       ],
       "model": {
@@ -88,8 +90,15 @@
       "find": "methods",
       "where": [
         {
-          "constraint": "signature_pattern",
-          "pattern": "Ljava/.*InputStream;\\.<init>:.*"
+          "constraint": "name",
+          "pattern": "<init>"
+        },
+        {
+          "constraint": "parent",
+          "inner": {
+            "constraint": "name",
+            "pattern": "Ljava/.*InputStream;"
+          }
         },
         {
           "constraint": "number_parameters",
