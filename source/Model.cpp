@@ -590,13 +590,13 @@ void Model::add_inferred_generations(
     Taint generations,
     const FeatureMayAlwaysSet& widening_features) {
   auto sanitized_generations = apply_source_sink_sanitizers(
-      SanitizerKind::Sources, generations, port.root());
+      SanitizerKind::Sources, std::move(generations), port.root());
   if (!sanitized_generations.is_bottom()) {
     update_taint_tree(
         generations_,
-        port,
+        std::move(port),
         Heuristics::kGenerationMaxPortSize,
-        sanitized_generations,
+        std::move(sanitized_generations),
         widening_features);
   }
 }
@@ -621,14 +621,14 @@ void Model::add_inferred_sinks(
     AccessPath port,
     Taint sinks,
     const FeatureMayAlwaysSet& widening_features) {
-  auto sanitized_sinks =
-      apply_source_sink_sanitizers(SanitizerKind::Sinks, sinks, port.root());
+  auto sanitized_sinks = apply_source_sink_sanitizers(
+      SanitizerKind::Sinks, std::move(sinks), port.root());
   if (!sanitized_sinks.is_bottom()) {
     update_taint_tree(
         sinks_,
-        port,
+        std::move(port),
         Heuristics::kSinkMaxPortSize,
-        sanitized_sinks,
+        std::move(sanitized_sinks),
         widening_features);
   }
 }
