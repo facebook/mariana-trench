@@ -150,7 +150,6 @@ TEST_P(IntegrationTest, CompareFlows) {
       /* proguard_configuration_paths */ std::vector<std::string>{},
       /* sequential */ true,
       /* skip_source_indexing */ false,
-      /* skip_model_generation */ model_generators_configurations.empty(),
       /* skip_analysis */ false,
       model_generators_configurations,
       model_generator_search_paths,

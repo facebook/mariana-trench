@@ -101,7 +101,6 @@ Options::Options(
     const std::vector<std::string>& proguard_configuration_paths,
     bool sequential,
     bool skip_source_indexing,
-    bool skip_model_generation,
     bool skip_analysis,
     const std::vector<ModelGeneratorConfiguration>&
         model_generators_configuration,
@@ -120,7 +119,6 @@ Options::Options(
       source_root_directory_(source_root_directory),
       sequential_(sequential),
       skip_source_indexing_(skip_source_indexing),
-      skip_model_generation_(skip_model_generation),
       skip_analysis_(skip_analysis),
       remove_unreachable_code_(remove_unreachable_code),
       disable_parameter_type_overrides_(false),
@@ -205,7 +203,6 @@ Options::Options(const boost::program_options::variables_map& variables) {
 
   sequential_ = variables.count("sequential") > 0;
   skip_source_indexing_ = variables.count("skip-source-indexing") > 0;
-  skip_model_generation_ = variables.count("skip-model-generation") > 0;
   skip_analysis_ = variables.count("skip-analysis") > 0;
   disable_parameter_type_overrides_ =
       variables.count("disable-parameter-type-overrides") > 0;
@@ -323,8 +320,6 @@ void Options::add_options(
       "sequential", "Run the global fixpoint without parallelization.");
   options.add_options()(
       "skip-source-indexing", "Skip indexing java source files.");
-  options.add_options()(
-      "skip-model-generation", "Skip running model generation.");
   options.add_options()("skip-analysis", "Skip taint analysis.");
   options.add_options()(
       "disable-parameter-type-overrides",
@@ -489,10 +484,6 @@ bool Options::sequential() const {
 
 bool Options::skip_source_indexing() const {
   return skip_source_indexing_;
-}
-
-bool Options::skip_model_generation() const {
-  return skip_model_generation_;
 }
 
 bool Options::skip_analysis() const {

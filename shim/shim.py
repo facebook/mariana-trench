@@ -434,11 +434,6 @@ def _add_analysis_arguments(parser: argparse.ArgumentParser) -> None:
         help="Skip indexing source files.",
     )
     analysis_arguments.add_argument(
-        "--skip-model-generation",
-        action="store_true",
-        help="Skip model generation.",
-    )
-    analysis_arguments.add_argument(
         "--skip-analysis",
         action="store_true",
         help="Skip taint analysis.",
@@ -583,8 +578,6 @@ def _get_command_options(
         options.append("--sequential")
     if arguments.skip_source_indexing:
         options.append("--skip-source-indexing")
-    if arguments.skip_model_generation:
-        options.append("--skip-model-generation")
     if arguments.skip_analysis:
         options.append("--skip-analysis")
     if arguments.disable_parameter_type_overrides:

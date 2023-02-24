@@ -36,7 +36,6 @@ Context test_dependencies(const Scope& scope) {
       /* proguard_configuration_paths */ std::vector<std::string>{},
       /* sequential */ false,
       /* skip_source_indexing */ true,
-      /* skip_model_generation */ true,
       /* skip_analysis */ true,
       /* model_generators_configuration */
       std::vector<ModelGeneratorConfiguration>{},

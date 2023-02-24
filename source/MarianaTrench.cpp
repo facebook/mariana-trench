@@ -166,30 +166,22 @@ Registry MarianaTrench::analyze(Context& context) {
   // Scope for MethodMappings and MethodToShimMap as they are only used for shim
   // and model generation steps.
   {
-    std::optional<MethodMappings> method_mappings;
-    std::optional<MethodToShimMap> shims;
+    Timer method_mapping_timer;
+    LOG(1,
+        "Building method mappings for shim/model generation over {} methods",
+        context.methods->size());
+    MethodMappings method_mappings{*context.methods};
+    MethodToShimMap shims{};
 
-    if (!context.options->shims_paths().empty() ||
-        !context.options->skip_model_generation()) {
-      Timer method_mapping_timer;
-      LOG(1,
-          "Building method mappings for shim/model generation over {} methods",
-          context.methods->size());
-
-      method_mappings.emplace(*context.methods);
-
-      LOG(1,
-          "Generated method mappings in {:.2f}s. Memory used, RSS: {:.2f}GB",
-          method_mapping_timer.duration_in_seconds(),
-          resident_set_size_in_gb());
-    }
+    LOG(1,
+        "Generated method mappings in {:.2f}s. Memory used, RSS: {:.2f}GB",
+        method_mapping_timer.duration_in_seconds(),
+        resident_set_size_in_gb());
 
     if (!context.options->shims_paths().empty()) {
-      mt_assert(method_mappings.has_value());
-
       Timer shims_timer;
       LOG(1, "Creating Shims...");
-      shims = ShimGeneration::run(context, *method_mappings);
+      shims = ShimGeneration::run(context, method_mappings);
       LOG(1,
           "Created Shims in {:.2f}s. Memory used, RSS: {:.2f}GB",
           shims_timer.duration_in_seconds(),
@@ -206,32 +198,26 @@ Registry MarianaTrench::analyze(Context& context) {
         *context.class_hierarchies,
         *context.overrides,
         *context.features,
-        shims.value_or(MethodToShimMap{}));
+        shims);
     context.statistics->log_time("call_graph", call_graph_timer);
     LOG(1,
         "Built call graph in {:.2f}s. Memory used, RSS: {:.2f}GB",
         call_graph_timer.duration_in_seconds(),
         resident_set_size_in_gb());
 
-    if (!context.options->skip_model_generation()) {
-      mt_assert(method_mappings.has_value());
-
-      Timer generation_timer;
-      LOG(1, "Generating models...");
-      auto model_generator_result =
-          ModelGeneration::run(context, *method_mappings);
-      generated_models = model_generator_result.method_models;
-      generated_field_models = model_generator_result.field_models;
-      context.statistics->log_time("models_generation", generation_timer);
-      LOG(1,
-          "Generated {} models and {} field models in {:.2f}s. Memory used, RSS: {:.2f}GB",
-          generated_models.size(),
-          generated_field_models.size(),
-          generation_timer.duration_in_seconds(),
-          resident_set_size_in_gb());
-    } else {
-      LOG(1, "Skipped model generation.");
-    }
+    Timer generation_timer;
+    LOG(1, "Generating models...");
+    auto model_generator_result =
+        ModelGeneration::run(context, method_mappings);
+    generated_models = model_generator_result.method_models;
+    generated_field_models = model_generator_result.field_models;
+    context.statistics->log_time("models_generation", generation_timer);
+    LOG(1,
+        "Generated {} models and {} field models in {:.2f}s. Memory used, RSS: {:.2f}GB",
+        generated_models.size(),
+        generated_field_models.size(),
+        generation_timer.duration_in_seconds(),
+        resident_set_size_in_gb());
   } // end MethodMappings and MethodToShimMap
 
   LOG(1,

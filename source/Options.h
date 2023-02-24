@@ -31,7 +31,6 @@ class Options final {
       const std::vector<std::string>& proguard_configuration_paths,
       bool sequential,
       bool skip_source_indexing,
-      bool skip_model_generation,
       bool skip_analysis,
       const std::vector<ModelGeneratorConfiguration>&
           model_generators_configuration,
@@ -81,7 +80,6 @@ class Options final {
 
   bool sequential() const;
   bool skip_source_indexing() const;
-  bool skip_model_generation() const;
   bool skip_analysis() const;
   bool disable_parameter_type_overrides() const;
   bool disable_global_type_analysis() const;
@@ -130,7 +128,6 @@ class Options final {
 
   bool sequential_;
   bool skip_source_indexing_;
-  bool skip_model_generation_;
   bool skip_analysis_;
   bool remove_unreachable_code_;
   bool disable_parameter_type_overrides_;

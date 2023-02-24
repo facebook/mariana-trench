@@ -59,7 +59,6 @@ TEST_P(JsonModelGeneratorIntegrationTest, CompareModels) {
       /* proguard_configuration_paths */ std::vector<std::string>{},
       /* sequential */ true,
       /* skip_source_indexing */ true,
-      /* skip_model_generation */ false,
       /* skip_analysis */ true,
       /* model_generators_configuration */
       std::vector<ModelGeneratorConfiguration>{},
