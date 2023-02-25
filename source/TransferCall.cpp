@@ -150,6 +150,11 @@ MemoryLocation* MT_NULLABLE try_inline_invoke(
 
   auto* memory_location_singleton = memory_locations.singleton();
   if (memory_location_singleton == nullptr) {
+    LOG_OR_DUMP(
+        context,
+        4,
+        "Could not inline call because register {} points to multiple memory locations",
+        register_id);
     return nullptr;
   }
 
@@ -160,8 +165,14 @@ MemoryLocation* MT_NULLABLE try_inline_invoke(
   }
 
   // Only inline if the model does not generate or propagate extra taint.
-  if (!callee.model.generations().is_bottom() ||
-      !callee.model.propagations().leq(TaintAccessPathTree(
+  if (!callee.model.generations().is_bottom()) {
+    LOG_OR_DUMP(
+        context,
+        4,
+        "Could not inline call because callee model has generations");
+    return nullptr;
+  }
+  if (!callee.model.propagations().leq(TaintAccessPathTree(
           {{/* input */ *access_path,
             Taint::propagation(PropagationConfig(
                 /* input_path */ *access_path,
@@ -169,9 +180,19 @@ MemoryLocation* MT_NULLABLE try_inline_invoke(
                 /* output_paths */
                 PathTreeDomain{{Path{}, SingletonAbstractDomain()}},
                 /* inferred_features */ FeatureMayAlwaysSet(),
-                /* user_features */ FeatureSet::bottom()))}})) ||
-      callee.model.add_via_obscure_feature() ||
+                /* user_features */ FeatureSet::bottom()))}}))) {
+    LOG_OR_DUMP(
+        context,
+        4,
+        "Could not inline call because callee model has extra propagations");
+    return nullptr;
+  }
+  if (callee.model.add_via_obscure_feature() ||
       callee.model.has_add_features_to_arguments()) {
+    LOG_OR_DUMP(
+        context,
+        4,
+        "Could not inline call because callee model has add-via-obscure or add-features-to-arguments");
     return nullptr;
   }
 
