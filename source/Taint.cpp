@@ -267,7 +267,7 @@ Taint Taint::propagation(PropagationConfig propagation) {
       /* origins */ {},
       /* field_origins */ {},
       /* inferred_features */ propagation.inferred_features(),
-      /* locally_inferred_features */ FeatureMayAlwaysSet::bottom(),
+      /* locally_inferred_features */ propagation.locally_inferred_features(),
       /* user_features */ propagation.user_features(),
       /* via_type_of_ports */ {},
       /* via_value_of_ports */ {},

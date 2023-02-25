@@ -268,6 +268,7 @@ void generator::add_propagation_to_return(
       /* kind */ context.kinds->local_return(),
       /* output_paths */ PathTreeDomain{{Path{}, SingletonAbstractDomain()}},
       /* inferred_features */ FeatureMayAlwaysSet::bottom(),
+      /* locally_inferred_features */ FeatureMayAlwaysSet::bottom(),
       /* user_features */ user_features));
 }
 
@@ -289,6 +290,7 @@ void generator::add_propagation_to_parameter(
       /* kind */ context.kinds->local_argument(to),
       /* output_paths */ PathTreeDomain{{Path{}, SingletonAbstractDomain()}},
       /* inferred_features */ FeatureMayAlwaysSet::bottom(),
+      /* locally_inferred_features */ FeatureMayAlwaysSet::bottom(),
       /* user_features */ user_features));
 }
 

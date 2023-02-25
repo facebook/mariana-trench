@@ -548,6 +548,7 @@ void Model::add_taint_in_taint_out(Context& context) {
         /* output_paths */
         PathTreeDomain{{Path{}, SingletonAbstractDomain()}},
         /* inferred_features */ FeatureMayAlwaysSet::bottom(),
+        /* locally_inferred_features */ FeatureMayAlwaysSet::bottom(),
         user_features));
   }
 }
@@ -574,6 +575,7 @@ void Model::add_taint_in_taint_this(Context& context) {
         /* output_paths */
         PathTreeDomain{{Path{}, SingletonAbstractDomain()}},
         /* inferred_features */ FeatureMayAlwaysSet::bottom(),
+        /* locally_inferred_features */ FeatureMayAlwaysSet::bottom(),
         user_features));
   }
 }

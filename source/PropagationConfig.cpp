@@ -47,6 +47,7 @@ PropagationConfig PropagationConfig::from_json(
       kind,
       PathTreeDomain{{output.path(), SingletonAbstractDomain{}}},
       inferred_features,
+      /* locally_inferred_features */ FeatureMayAlwaysSet::bottom(),
       user_features);
 }
 
@@ -58,6 +59,10 @@ std::ostream& operator<<(
       << ", output_paths=" << propagation.output_paths_;
   if (!propagation.inferred_features_.empty()) {
     out << ", inferred_features=" << propagation.inferred_features_;
+  }
+  if (!propagation.locally_inferred_features_.empty()) {
+    out << ", locally_inferred_features="
+        << propagation.locally_inferred_features_;
   }
   if (!propagation.user_features_.empty()) {
     out << ", user_features=" << propagation.user_features_;

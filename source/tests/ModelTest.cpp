@@ -374,6 +374,7 @@ TEST_F(ModelTest, LessOrEqual) {
                       {Path{PathElement::field("x")},
                        SingletonAbstractDomain()}},
                   /* inferred_features */ FeatureMayAlwaysSet::bottom(),
+                  /* locally_inferred_features */ FeatureMayAlwaysSet::bottom(),
                   /* user_features */ {}),
           })
           .leq(Model(
@@ -393,6 +394,8 @@ TEST_F(ModelTest, LessOrEqual) {
                       /* output_paths */
                       PathTreeDomain{{Path{}, SingletonAbstractDomain()}},
                       /* inferred_features */ FeatureMayAlwaysSet::bottom(),
+                      /* locally_inferred_features */
+                      FeatureMayAlwaysSet::bottom(),
                       /* user_features */ {}),
               })));
 
@@ -704,6 +707,7 @@ TEST_F(ModelTest, Join) {
               /* output_paths */
               PathTreeDomain{{Path{}, SingletonAbstractDomain()}},
               /* inferred_features */ FeatureMayAlwaysSet::bottom(),
+              /* locally_inferred_features */ FeatureMayAlwaysSet::bottom(),
               /* user_features */ {}),
           PropagationConfig(
               /* input_path */ AccessPath(Root(Root::Kind::Argument, 2)),
@@ -711,6 +715,7 @@ TEST_F(ModelTest, Join) {
               /* output_paths */
               PathTreeDomain{{Path{}, SingletonAbstractDomain()}},
               /* inferred_features */ FeatureMayAlwaysSet::bottom(),
+              /* locally_inferred_features */ FeatureMayAlwaysSet::bottom(),
               /* user_features */ {}),
       });
   model.join_with(model_with_propagation);
@@ -741,6 +746,7 @@ TEST_F(ModelTest, Join) {
               PathTreeDomain{
                   {Path{PathElement::field("x")}, SingletonAbstractDomain()}},
               /* inferred_features */ FeatureMayAlwaysSet::bottom(),
+              /* locally_inferred_features */ FeatureMayAlwaysSet::bottom(),
               /* user_features */ {}),
           PropagationConfig(
               /* input_path */ AccessPath(Root(Root::Kind::Argument, 3)),
@@ -749,6 +755,7 @@ TEST_F(ModelTest, Join) {
               PathTreeDomain{
                   {Path{PathElement::field("x")}, SingletonAbstractDomain()}},
               /* inferred_features */ FeatureMayAlwaysSet::bottom(),
+              /* locally_inferred_features */ FeatureMayAlwaysSet::bottom(),
               /* user_features */ {}),
       });
   model.join_with(model_with_more_propagation);
@@ -786,6 +793,7 @@ TEST_F(ModelTest, Join) {
           PathTreeDomain{
               {Path{PathElement::field("y")}, SingletonAbstractDomain()}},
           /* inferred_features */ FeatureMayAlwaysSet::bottom(),
+          /* locally_inferred_features */ FeatureMayAlwaysSet::bottom(),
           /* user_features */ {})}});
   model.join_with(model_with_conflicting_propagation);
   EXPECT_EQ(
@@ -823,6 +831,7 @@ TEST_F(ModelTest, Join) {
               PathTreeDomain{{Path{}, SingletonAbstractDomain()}},
               /* inferred_features */
               FeatureMayAlwaysSet{context.features->get("int-cast")},
+              /* locally_inferred_features */ FeatureMayAlwaysSet::bottom(),
               /* user_features */ {}),
           PropagationConfig(
               /* input_path */ AccessPath(Root(Root::Kind::Argument, 1)),
@@ -831,6 +840,7 @@ TEST_F(ModelTest, Join) {
               PathTreeDomain{{Path{}, SingletonAbstractDomain()}},
               /* inferred_features */
               FeatureMayAlwaysSet{context.features->get("sanitize")},
+              /* locally_inferred_features */ FeatureMayAlwaysSet::bottom(),
               /* user_features */ {}),
           PropagationConfig(
               /* input_path */ AccessPath(Root(Root::Kind::Argument, 3)),
@@ -839,6 +849,7 @@ TEST_F(ModelTest, Join) {
               PathTreeDomain{{Path{}, SingletonAbstractDomain()}},
               /* inferred_features */
               FeatureMayAlwaysSet{context.features->get("escape")},
+              /* locally_inferred_features */ FeatureMayAlwaysSet::bottom(),
               /* user_features */ {}),
       });
   model.join_with(model_with_propagation_with_features);

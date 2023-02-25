@@ -1449,6 +1449,7 @@ TEST_F(JsonTest, Propagation) {
           /* output_paths */
           PathTreeDomain{{Path{}, SingletonAbstractDomain()}},
           /* inferred_features */ FeatureMayAlwaysSet::bottom(),
+          /* locally_inferred_features */ FeatureMayAlwaysSet::bottom(),
           /* user_features */ {}));
 
   EXPECT_EQ(
@@ -1464,6 +1465,7 @@ TEST_F(JsonTest, Propagation) {
           PathTreeDomain{{Path{}, SingletonAbstractDomain()}},
           /* inferred_features */
           FeatureMayAlwaysSet{context.features->get("FeatureOne")},
+          /* locally_inferred_features */ FeatureMayAlwaysSet::bottom(),
           /* user_features */ {}));
 
   EXPECT_EQ(
@@ -1479,6 +1481,7 @@ TEST_F(JsonTest, Propagation) {
               {Path{PathElement::field("x")}, SingletonAbstractDomain()}},
           /* inferred_features */
           FeatureMayAlwaysSet{context.features->get("FeatureOne")},
+          /* locally_inferred_features */ FeatureMayAlwaysSet::bottom(),
           /* user_features */ {}));
 
   EXPECT_EQ(
@@ -1499,6 +1502,7 @@ TEST_F(JsonTest, Propagation) {
           FeatureMayAlwaysSet(
               /* may */ FeatureSet{context.features->get("FeatureOne")},
               /* always */ FeatureSet{context.features->get("FeatureTwo")}),
+          /* locally_inferred_features */ FeatureMayAlwaysSet::bottom(),
           /* user_features */ {}));
   EXPECT_EQ(
       PropagationConfig::from_json(
@@ -1517,6 +1521,7 @@ TEST_F(JsonTest, Propagation) {
           FeatureMayAlwaysSet(
               /* may */ FeatureSet{context.features->get("FeatureOne")},
               /* always */ FeatureSet{}),
+          /* locally_inferred_features */ FeatureMayAlwaysSet::bottom(),
           /* user_features */ {}));
   EXPECT_EQ(
       PropagationConfig::from_json(
@@ -1533,6 +1538,7 @@ TEST_F(JsonTest, Propagation) {
           /* output_paths */
           PathTreeDomain{{Path{}, SingletonAbstractDomain()}},
           /* inferred_features */ FeatureMayAlwaysSet::bottom(),
+          /* locally_inferred_features */ FeatureMayAlwaysSet::bottom(),
           /* user_features */
           FeatureSet{context.features->get("FeatureOne")}));
   EXPECT_EQ(
@@ -1550,6 +1556,7 @@ TEST_F(JsonTest, Propagation) {
           /* output_paths */
           PathTreeDomain{{Path{}, SingletonAbstractDomain()}},
           /* inferred_features */ FeatureMayAlwaysSet::bottom(),
+          /* locally_inferred_features */ FeatureMayAlwaysSet::bottom(),
           /* user_features */
           FeatureSet{
               context.features->get("FeatureOne"),
@@ -1571,6 +1578,7 @@ TEST_F(JsonTest, Propagation) {
           PathTreeDomain{{Path{}, SingletonAbstractDomain()}},
           /* inferred_features */
           FeatureMayAlwaysSet::make_may({context.features->get("FeatureTwo")}),
+          /* locally_inferred_features */ FeatureMayAlwaysSet::bottom(),
           /* user_features */
           FeatureSet{context.features->get("FeatureOne")}));
   EXPECT_EQ(
@@ -1594,6 +1602,7 @@ TEST_F(JsonTest, Propagation) {
               /* may */ FeatureSet{context.features->get("FeatureTwo")},
               /* always */
               FeatureSet{context.features->get("FeatureThree")}),
+          /* locally_inferred_features */ FeatureMayAlwaysSet::bottom(),
           /* user_features */
           FeatureSet{context.features->get("FeatureOne")}));
   EXPECT_EQ(
@@ -1613,6 +1622,7 @@ TEST_F(JsonTest, Propagation) {
           /* output_paths */
           PathTreeDomain{{Path{}, SingletonAbstractDomain()}},
           /* inferred_features */ FeatureMayAlwaysSet(),
+          /* locally_inferred_features */ FeatureMayAlwaysSet::bottom(),
           /* user_features */
           FeatureSet{context.features->get("FeatureOne")}));
 }
@@ -1995,6 +2005,7 @@ TEST_F(JsonTest, Model) {
                   /* output_paths */
                   PathTreeDomain{{Path{}, SingletonAbstractDomain()}},
                   /* inferred_features */ FeatureMayAlwaysSet::bottom(),
+                  /* locally_inferred_features */ FeatureMayAlwaysSet::bottom(),
                   /* user_features */ FeatureSet::bottom()),
               PropagationConfig(
                   /* input_path */ AccessPath(Root(Root::Kind::Argument, 2)),
@@ -2002,6 +2013,7 @@ TEST_F(JsonTest, Model) {
                   /* output_paths */
                   PathTreeDomain{{Path{}, SingletonAbstractDomain()}},
                   /* inferred_features */ FeatureMayAlwaysSet::bottom(),
+                  /* locally_inferred_features */ FeatureMayAlwaysSet::bottom(),
                   /* user_features */ FeatureSet::bottom()),
           }));
   EXPECT_EQ(
@@ -2023,6 +2035,8 @@ TEST_F(JsonTest, Model) {
                       /* output_paths */
                       PathTreeDomain{{Path{}, SingletonAbstractDomain()}},
                       /* inferred_features */ FeatureMayAlwaysSet::bottom(),
+                      /* locally_inferred_features */
+                      FeatureMayAlwaysSet::bottom(),
                       /* user_features */ FeatureSet::bottom()),
                   PropagationConfig(
                       /* input_path */ AccessPath(
@@ -2035,6 +2049,8 @@ TEST_F(JsonTest, Model) {
                           {Path{PathElement::field("y")},
                            SingletonAbstractDomain()}},
                       /* inferred_features */ FeatureMayAlwaysSet::bottom(),
+                      /* locally_inferred_features */
+                      FeatureMayAlwaysSet::bottom(),
                       /* user_features */ FeatureSet::bottom()),
               })
               .to_json()),
@@ -2107,6 +2123,7 @@ TEST_F(JsonTest, Model) {
                   /* output_paths */
                   PathTreeDomain{{Path{}, SingletonAbstractDomain()}},
                   /* inferred_features */ FeatureMayAlwaysSet::bottom(),
+                  /* locally_inferred_features */ FeatureMayAlwaysSet::bottom(),
                   /* user_features */ FeatureSet::bottom()),
           },
           /* global_sanitizers */
@@ -2171,6 +2188,7 @@ TEST_F(JsonTest, Model) {
                   /* output_paths */
                   PathTreeDomain{{Path{}, SingletonAbstractDomain()}},
                   /* inferred_features */ FeatureMayAlwaysSet::bottom(),
+                  /* locally_inferred_features */ FeatureMayAlwaysSet::bottom(),
                   /* user_features */ FeatureSet::bottom()),
           },
           /* global_sanitizers */

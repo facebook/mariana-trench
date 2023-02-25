@@ -215,6 +215,7 @@ void PropagationTemplate::instantiate(
       kind,
       PathTreeDomain{{output_port.path(), SingletonAbstractDomain()}},
       inferred_features_,
+      /* locally_inferred_features */ FeatureMayAlwaysSet::bottom(),
       user_features_));
 }
 

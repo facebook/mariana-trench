@@ -61,6 +61,7 @@ TEST_F(DataCastFeatureGeneratorTest, CastToInt) {
               /* output_paths */
               PathTreeDomain{{Path{}, SingletonAbstractDomain()}},
               /* inferred_features */ FeatureMayAlwaysSet::bottom(),
+              /* locally_inferred_features */ FeatureMayAlwaysSet::bottom(),
               /* user_features */
               FeatureSet{context.features->get("cast:numeric")})})));
 }
@@ -99,6 +100,7 @@ TEST_F(DataCastFeatureGeneratorTest, CastToBool) {
               /* output_paths */
               PathTreeDomain{{Path{}, SingletonAbstractDomain()}},
               /* inferred_features */ FeatureMayAlwaysSet::bottom(),
+              /* locally_inferred_features */ FeatureMayAlwaysSet::bottom(),
               /* user_features */
               FeatureSet{context.features->get("cast:boolean")})})));
 }

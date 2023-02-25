@@ -1278,6 +1278,7 @@ void infer_output_taint(
             /* output_paths */
             PathTreeDomain{{output_path, SingletonAbstractDomain()}},
             /* inferred_features */ features,
+            /* locally_inferred_features */ FeatureMayAlwaysSet::bottom(),
             /* user_features */ FeatureSet::bottom());
         LOG_OR_DUMP(context, 4, "Inferred propagation {}", propagation);
         context->model.add_inferred_propagation(

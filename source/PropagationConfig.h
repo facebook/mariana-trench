@@ -35,11 +35,13 @@ class PropagationConfig final {
       const PropagationKind* kind,
       PathTreeDomain output_paths,
       FeatureMayAlwaysSet inferred_features,
+      FeatureMayAlwaysSet locally_inferred_features,
       FeatureSet user_features)
       : input_path_(std::move(input_path)),
         kind_(kind),
         output_paths_(std::move(output_paths)),
         inferred_features_(std::move(inferred_features)),
+        locally_inferred_features_(std::move(locally_inferred_features)),
         user_features_(std::move(user_features)) {
     mt_assert(kind_ != nullptr);
     mt_assert(!output_paths_.is_bottom());
@@ -53,6 +55,7 @@ class PropagationConfig final {
     return self.input_path_ == other.input_path_ && self.kind_ == other.kind_ &&
         self.output_paths_ == other.output_paths_ &&
         self.inferred_features_ == other.inferred_features_ &&
+        self.locally_inferred_features_ == other.locally_inferred_features_ &&
         self.user_features_ == other.user_features_;
   }
 
@@ -78,6 +81,10 @@ class PropagationConfig final {
     return inferred_features_;
   }
 
+  const FeatureMayAlwaysSet& locally_inferred_features() const {
+    return locally_inferred_features_;
+  }
+
   const FeatureSet& user_features() const {
     return user_features_;
   }
@@ -95,6 +102,7 @@ class PropagationConfig final {
   const PropagationKind* kind_;
   PathTreeDomain output_paths_;
   FeatureMayAlwaysSet inferred_features_;
+  FeatureMayAlwaysSet locally_inferred_features_;
   FeatureSet user_features_;
 };
 

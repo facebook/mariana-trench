@@ -179,7 +179,8 @@ MemoryLocation* MT_NULLABLE try_inline_invoke(
                 /* kind */ context->kinds.local_return(),
                 /* output_paths */
                 PathTreeDomain{{Path{}, SingletonAbstractDomain()}},
-                /* inferred_features */ FeatureMayAlwaysSet(),
+                /* inferred_features */ {},
+                /* locally_inferred_features */ {},
                 /* user_features */ FeatureSet::bottom()))}}))) {
     LOG_OR_DUMP(
         context,
