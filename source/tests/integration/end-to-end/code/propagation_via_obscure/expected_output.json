@@ -913,8 +913,7 @@
     {
       "always_features" : 
       [
-        "via-cast:Ljava/lang/String;",
-        "via-obscure"
+        "via-cast:Ljava/lang/String;"
       ],
       "callee" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
       "position" : 
@@ -958,8 +957,7 @@
             {
               "always_features" : 
               [
-                "via-cast:Ljava/lang/String;",
-                "via-obscure"
+                "via-cast:Ljava/lang/String;"
               ],
               "call_info" : "Origin",
               "kind" : "Source",
@@ -967,8 +965,7 @@
               {
                 "always_features" : 
                 [
-                  "via-cast:Ljava/lang/String;",
-                  "via-obscure"
+                  "via-cast:Ljava/lang/String;"
                 ]
               },
               "local_positions" : 

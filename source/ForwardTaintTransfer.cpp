@@ -183,6 +183,51 @@ void apply_generations(
   }
 }
 
+void apply_add_features_to_arguments(
+    MethodContext* context,
+    const InstructionAliasResults& aliasing,
+    const ForwardTaintEnvironment* previous_environment,
+    ForwardTaintEnvironment* new_environment,
+    const IRInstruction* instruction,
+    const CalleeModel& callee) {
+  if (!callee.model.add_via_obscure_feature() &&
+      !callee.model.has_add_features_to_arguments()) {
+    return;
+  }
+
+  for (std::size_t parameter_position = 0,
+                   number_parameters = instruction->srcs_size();
+       parameter_position < number_parameters;
+       parameter_position++) {
+    auto parameter = Root(Root::Kind::Argument, parameter_position);
+    auto features = FeatureMayAlwaysSet::make_always(
+        callee.model.add_features_to_arguments(parameter));
+    const auto* position = !features.empty()
+        ? context->positions.get(callee.position, parameter, instruction)
+        : nullptr;
+    if (callee.model.add_via_obscure_feature()) {
+      features.add_always(context->features.get("via-obscure"));
+    }
+
+    if (features.empty()) {
+      continue;
+    }
+
+    auto register_id = instruction->src(parameter_position);
+    auto memory_locations = aliasing.register_memory_locations(register_id);
+    for (auto* memory_location : memory_locations.elements()) {
+      auto taint = previous_environment->read(memory_location);
+      taint.map([&features, position](Taint& sources) {
+        sources.add_inferred_features_and_local_position(features, position);
+      });
+      // This is using a strong update, since a weak update would turn
+      // the always-features we want to add into may-features.
+      new_environment->write(
+          memory_location, std::move(taint), UpdateKind::Strong);
+    }
+  }
+}
+
 void apply_propagations(
     MethodContext* context,
     const InstructionAliasResults& aliasing,
@@ -320,39 +365,6 @@ void apply_propagations(
           default:
             mt_unreachable();
         }
-      }
-    }
-  }
-
-  if (callee.model.add_via_obscure_feature() ||
-      callee.model.has_add_features_to_arguments()) {
-    for (std::size_t parameter_position = 0,
-                     number_parameters = instruction->srcs_size();
-         parameter_position < number_parameters;
-         parameter_position++) {
-      auto parameter = Root(Root::Kind::Argument, parameter_position);
-      auto features = FeatureMayAlwaysSet::make_always(
-          callee.model.add_features_to_arguments(parameter));
-      const auto* position = !features.empty()
-          ? context->positions.get(callee.position, parameter, instruction)
-          : nullptr;
-      if (callee.model.add_via_obscure_feature()) {
-        features.add_always(context->features.get("via-obscure"));
-      }
-
-      if (features.empty()) {
-        continue;
-      }
-
-      auto register_id = instruction->src(parameter_position);
-      auto memory_locations = aliasing.register_memory_locations(register_id);
-      for (auto* memory_location : memory_locations.elements()) {
-        auto taint = new_environment->read(memory_location);
-        taint.map([&features, position](Taint& sources) {
-          sources.add_inferred_features_and_local_position(features, position);
-        });
-        new_environment->write(
-            memory_location, std::move(taint), UpdateKind::Strong);
       }
     }
   }
@@ -873,6 +885,13 @@ bool ForwardTaintTransfer::analyze_invoke(
   apply_call_effects(context, callee);
 
   TaintTree result_taint;
+  apply_add_features_to_arguments(
+      context,
+      aliasing,
+      &previous_environment,
+      environment,
+      instruction,
+      callee);
   apply_propagations(
       context,
       aliasing,
