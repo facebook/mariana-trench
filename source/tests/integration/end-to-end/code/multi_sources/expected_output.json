@@ -1005,6 +1005,7 @@
           ],
           "origin" : 
           {
+            "method" : "Lcom/facebook/marianatrench/integrationtests/MultiSources;.sink:(Ljava/lang/Object;Ljava/lang/Object;)V",
             "position" : 
             {
               "end" : 67,
@@ -1035,6 +1036,7 @@
           ],
           "origin" : 
           {
+            "method" : "Lcom/facebook/marianatrench/integrationtests/MultiSources;.sourceB:()Ljava/lang/Object;",
             "position" : 
             {
               "end" : 65,
@@ -1129,6 +1131,7 @@
           ],
           "origin" : 
           {
+            "method" : "Lcom/facebook/marianatrench/integrationtests/MultiSources;.sourceA:()Ljava/lang/Object;",
             "position" : 
             {
               "end" : 38,
@@ -1223,6 +1226,7 @@
           ],
           "origin" : 
           {
+            "method" : "Lcom/facebook/marianatrench/integrationtests/MultiSources;.sourceB:()Ljava/lang/Object;",
             "position" : 
             {
               "end" : 38,
@@ -1468,6 +1472,7 @@
           ],
           "origin" : 
           {
+            "method" : "Lcom/facebook/marianatrench/integrationtests/MultiSources;.sink:(Ljava/lang/Object;Ljava/lang/Object;)V",
             "position" : 
             {
               "end" : 27,
@@ -1523,6 +1528,7 @@
           ],
           "origin" : 
           {
+            "method" : "Lcom/facebook/marianatrench/integrationtests/MultiSources;.sink:(Ljava/lang/Object;Ljava/lang/Object;)V",
             "position" : 
             {
               "end" : 51,
@@ -1608,6 +1614,7 @@
           ],
           "origin" : 
           {
+            "method" : "Lcom/facebook/marianatrench/integrationtests/MultiSourcesSingleArg;.sink:(Lcom/facebook/marianatrench/integrationtests/MockObjectWithThisPropagation;)V",
             "position" : 
             {
               "end" : 36,
@@ -1654,6 +1661,7 @@
           ],
           "origin" : 
           {
+            "method" : "Lcom/facebook/marianatrench/integrationtests/MultiSourcesSingleArg;.sourceA:()Ljava/lang/Object;",
             "position" : 
             {
               "end" : 48,
@@ -1822,6 +1830,7 @@
           ],
           "origin" : 
           {
+            "method" : "Lcom/facebook/marianatrench/integrationtests/MultiSourcesSingleArg;.sink:(Lcom/facebook/marianatrench/integrationtests/MockObjectWithThisPropagation;)V",
             "position" : 
             {
               "line" : 32,
@@ -1877,6 +1886,7 @@
           ],
           "origin" : 
           {
+            "method" : "Lcom/facebook/marianatrench/integrationtests/MultiSourcesSingleArg;.sink:(Lcom/facebook/marianatrench/integrationtests/MockObjectWithThisPropagation;)V",
             "position" : 
             {
               "line" : 25,

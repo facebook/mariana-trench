@@ -1054,6 +1054,7 @@
           ],
           "origin" : 
           {
+            "method" : "Lcom/facebook/marianatrench/integrationtests/Crtex;.crtex_with_regular_sink:(Landroid/content/Intent;)V",
             "position" : 
             {
               "line" : 52,
@@ -1344,6 +1345,7 @@
           ],
           "origin" : 
           {
+            "method" : "Landroid/content/Intent;.<init>:(Ljava/lang/String;Landroid/net/Uri;)V",
             "position" : 
             {
               "end" : 29,

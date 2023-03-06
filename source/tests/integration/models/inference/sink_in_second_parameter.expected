@@ -32,6 +32,7 @@
               ],
               "origin" :
               {
+                "method" : "LSink;.sink:(LData;)V",
                 "position" :
                 {
                   "line" : 1,

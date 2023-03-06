@@ -901,6 +901,7 @@
           ],
           "origin" : 
           {
+            "method" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
             "position" : 
             {
               "end" : 21,
@@ -927,6 +928,7 @@
           ],
           "origin" : 
           {
+            "method" : "Lcom/facebook/marianatrench/integrationtests/DeclaredAndInferredTaint;.declaredSource:()Ljava/lang/Object;",
             "position" : 
             {
               "end" : 38,
@@ -1004,6 +1006,7 @@
           ],
           "origin" : 
           {
+            "method" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
             "position" : 
             {
               "end" : 21,
@@ -1080,6 +1083,7 @@
           ],
           "origin" : 
           {
+            "method" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
             "position" : 
             {
               "end" : 21,
@@ -1175,6 +1179,7 @@
           ],
           "origin" : 
           {
+            "method" : "Lcom/facebook/marianatrench/integrationtests/DeclaredAndInferredTaint;.declaredSource:()Ljava/lang/Object;",
             "position" : 
             {
               "end" : 31,
@@ -1215,6 +1220,7 @@
           ],
           "origin" : 
           {
+            "method" : "Lcom/facebook/marianatrench/integrationtests/DeclaredAndInferredTaint;.declaredSource:()Ljava/lang/Object;",
             "position" : 
             {
               "end" : 29,

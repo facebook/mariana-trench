@@ -741,6 +741,9 @@ Json::Value CalleePortFrames::to_json(
     if (position != nullptr) {
       auto origin = Json::Value(Json::objectValue);
       origin["position"] = position->to_json();
+      if (callee != nullptr) {
+        origin["method"] = callee->to_json();
+      }
       taint["origin"] = origin;
     }
     return taint;

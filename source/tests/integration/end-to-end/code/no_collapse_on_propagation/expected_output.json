@@ -989,6 +989,7 @@
           ],
           "origin" : 
           {
+            "method" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
             "position" : 
             {
               "end" : 32,
@@ -1029,6 +1030,7 @@
           ],
           "origin" : 
           {
+            "method" : "Landroid/util/Log;.e:(Ljava/lang/String;Ljava/lang/String;)I",
             "position" : 
             {
               "line" : 53,
@@ -1184,6 +1186,7 @@
           ],
           "origin" : 
           {
+            "method" : "Landroid/content/Intent;.getExtras:()Landroid/os/Bundle;",
             "position" : 
             {
               "end" : 40,

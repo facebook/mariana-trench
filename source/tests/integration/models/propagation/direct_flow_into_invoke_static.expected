@@ -33,6 +33,7 @@
               ],
               "origin" :
               {
+                "method" : "LSink;.static_sink:(LData;)V",
                 "position" :
                 {
                   "line" : 2,
@@ -57,6 +58,7 @@
               ],
               "origin" :
               {
+                "method" : "LSource;.source:()LData;",
                 "position" :
                 {
                   "line" : 1,

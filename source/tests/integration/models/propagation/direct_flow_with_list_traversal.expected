@@ -32,6 +32,7 @@
               ],
               "origin" :
               {
+                "method" : "LSource;.source:()LData;",
                 "position" :
                 {
                   "line" : 3,
@@ -69,6 +70,7 @@
               ],
               "origin" :
               {
+                "method" : "LSink;.sink:(LData;)V",
                 "position" :
                 {
                   "line" : 5,
@@ -99,6 +101,7 @@
               ],
               "origin" :
               {
+                "method" : "LSource;.source:()LData;",
                 "position" :
                 {
                   "line" : 3,
@@ -135,6 +138,7 @@
               ],
               "origin" :
               {
+                "method" : "LSink;.sink:(LData;)V",
                 "position" :
                 {
                   "line" : 5,

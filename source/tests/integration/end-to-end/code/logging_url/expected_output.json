@@ -1275,6 +1275,7 @@
           ],
           "origin" : 
           {
+            "method" : "Landroid/app/Activity;.getIntent:()Landroid/content/Intent;",
             "position" : 
             {
               "end" : 25,
@@ -1321,6 +1322,7 @@
           ],
           "origin" : 
           {
+            "method" : "Lcom/instagram/common/analytics/intf/AnalyticsEvent;.addExtra:(Ljava/lang/String;Ljava/lang/String;)Lcom/instagram/common/analytics/intf/AnalyticsEvent;",
             "position" : 
             {
               "end" : 84,
@@ -1350,6 +1352,7 @@
           ],
           "origin" : 
           {
+            "method" : "Lcom/instagram/common/analytics/intf/AnalyticsEvent;.addExtra:(Ljava/lang/String;Ljava/lang/String;)Lcom/instagram/common/analytics/intf/AnalyticsEvent;",
             "position" : 
             {
               "end" : 41,
@@ -1671,6 +1674,7 @@
           ],
           "origin" : 
           {
+            "method" : "Lcom/instagram/common/analytics/intf/AnalyticsEvent;.addExtra:(Ljava/lang/String;Ljava/lang/String;)Lcom/instagram/common/analytics/intf/AnalyticsEvent;",
             "position" : 
             {
               "end" : 51,
@@ -1710,6 +1714,7 @@
           ],
           "origin" : 
           {
+            "method" : "Landroid/app/Activity;.getIntent:()Landroid/content/Intent;",
             "position" : 
             {
               "end" : 28,

@@ -1052,6 +1052,7 @@
           ],
           "origin" : 
           {
+            "method" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
             "position" : 
             {
               "end" : 30,
@@ -1078,6 +1079,7 @@
           ],
           "origin" : 
           {
+            "method" : "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;",
             "position" : 
             {
               "end" : 28,
@@ -1134,6 +1136,7 @@
           ],
           "origin" : 
           {
+            "method" : "Lcom/facebook/content/SecureContextHelper;.startFacebookActivityForResult:(Landroid/content/Intent;ILandroid/app/Activity;)V",
             "position" : 
             {
               "end" : 61,
@@ -1164,6 +1167,7 @@
           ],
           "origin" : 
           {
+            "method" : "Landroid/content/Intent;.<init>:(Ljava/lang/String;Landroid/net/Uri;)V",
             "position" : 
             {
               "end" : 29,

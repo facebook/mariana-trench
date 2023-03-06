@@ -1082,6 +1082,7 @@
           ],
           "origin" : 
           {
+            "method" : "Landroid/app/Activity;.getIntent:()Landroid/content/Intent;",
             "position" : 
             {
               "end" : 28,
@@ -1163,6 +1164,7 @@
           ],
           "origin" : 
           {
+            "method" : "Landroid/app/Activity;.getIntent:()Landroid/content/Intent;",
             "position" : 
             {
               "end" : 28,
@@ -1241,6 +1243,7 @@
           ],
           "origin" : 
           {
+            "method" : "Landroid/app/Activity;.getIntent:()Landroid/content/Intent;",
             "position" : 
             {
               "end" : 28,
@@ -1364,6 +1367,7 @@
           ],
           "origin" : 
           {
+            "method" : "Lcom/facebook/secure/context/IntentLauncher;.launchActivity:(Landroid/content/Intent;Landroid/content/Context;)Z",
             "position" : 
             {
               "end" : 60,

@@ -949,6 +949,7 @@
           ],
           "origin" : 
           {
+            "method" : "Landroid/util/Log;.e:(Ljava/lang/String;Ljava/lang/String;)I",
             "position" : 
             {
               "end" : 50,
@@ -975,6 +976,7 @@
           ],
           "origin" : 
           {
+            "method" : "Landroid/location/Location;.toString:()Ljava/lang/String;",
             "position" : 
             {
               "end" : 48,

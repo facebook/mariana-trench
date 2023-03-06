@@ -1133,6 +1133,7 @@
           ],
           "origin" : 
           {
+            "method" : "Lcom/facebook/marianatrench/integrationtests/Test$Builder;.<init>:()V",
             "position" : 
             {
               "end" : 0,
@@ -1235,6 +1236,7 @@
           ],
           "origin" : 
           {
+            "method" : "Lcom/facebook/marianatrench/integrationtests/Test$Builder;.<init>:()V",
             "position" : 
             {
               "line" : 37,
@@ -1292,6 +1294,7 @@
           ],
           "origin" : 
           {
+            "method" : "Lcom/facebook/marianatrench/integrationtests/Test$Builder;.build:()Lcom/facebook/marianatrench/integrationtests/Test;",
             "position" : 
             {
               "end" : 17,
@@ -1337,6 +1340,7 @@
           ],
           "origin" : 
           {
+            "method" : "Lcom/facebook/marianatrench/integrationtests/Test$Builder;.<init>:()V",
             "position" : 
             {
               "end" : 0,
@@ -1388,6 +1392,7 @@
           ],
           "origin" : 
           {
+            "method" : "Lcom/facebook/marianatrench/integrationtests/Test$Builder;.build:()Lcom/facebook/marianatrench/integrationtests/Test;",
             "position" : 
             {
               "end" : 17,
@@ -1478,6 +1483,7 @@
           ],
           "origin" : 
           {
+            "method" : "Lcom/facebook/marianatrench/integrationtests/Test$Builder;.<init>:()V",
             "position" : 
             {
               "end" : 0,
@@ -1525,6 +1531,7 @@
           ],
           "origin" : 
           {
+            "method" : "Lcom/facebook/marianatrench/integrationtests/Test$Builder;.build:()Lcom/facebook/marianatrench/integrationtests/Test;",
             "position" : 
             {
               "end" : 17,
@@ -1559,6 +1566,7 @@
           ],
           "origin" : 
           {
+            "method" : "Lcom/facebook/marianatrench/integrationtests/Test$Builder;.<init>:()V",
             "position" : 
             {
               "end" : 0,

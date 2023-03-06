@@ -984,6 +984,7 @@
           ],
           "origin" : 
           {
+            "method" : "Lcom/facebook/marianatrench/integrationtests/SensitiveApi;.execute:()V",
             "position" : 
             {
               "line" : 20,
