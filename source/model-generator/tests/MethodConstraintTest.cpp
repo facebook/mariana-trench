@@ -2067,6 +2067,74 @@ TEST_F(MethodConstraintTest, NotMethodConstraintMaySatisfy) {
                   .is_top());
 }
 
+TEST_F(MethodConstraintTest, HasAnnotationConstraintMaySatisfy) {
+  Scope scope;
+  std::vector<std::string> a_annotations = {"Ljava/annotation/A;"};
+  auto* method_a = redex::create_void_method(
+      scope,
+      "class_name",
+      "method_name_a",
+      /* parameter_types */ "",
+      /* return_type */ "V",
+      /* super */ nullptr,
+      /* is_static */ false,
+      /* is_private */ false,
+      /* is_native */ false,
+      /* is_abstract */ false,
+      /* annotations */ a_annotations);
+
+  std::vector<std::string> b_annotations = {"Ljava/annotation/B;"};
+  auto* method_b = redex::create_void_method(
+      scope,
+      "class_name_b",
+      "method_name_b",
+      /* parameter_types */ "",
+      /* return_type */ "V",
+      /* super */ nullptr,
+      /* is_static */ false,
+      /* is_private */ false,
+      /* is_native */ false,
+      /* is_abstract */ false,
+      /* annotations */ b_annotations);
+  std::vector<std::string> a_and_b_annotations = {
+      "Ljava/annotation/A;", "Ljava/annotation/B;"};
+
+  auto* method_a_and_b = redex::create_void_method(
+      scope,
+      "class_name_a_and_b",
+      "method_name_a_and_b",
+      /* parameter_types */ "",
+      /* return_type */ "V",
+      /* super */ nullptr,
+      /* is_static */ false,
+      /* is_private */ false,
+      /* is_native */ false,
+      /* is_abstract */ false,
+      /* annotations */ a_and_b_annotations);
+  DexStore store("test-stores");
+
+  store.add_classes(scope);
+  auto context = test::make_context(store);
+  MethodMappings method_mappings{*context.methods};
+
+  EXPECT_EQ(
+      HasAnnotationMethodConstraint("Ljava/annotation/A;", "A")
+          .may_satisfy(method_mappings),
+      marianatrench::MethodHashedSet(
+          {context.methods->get(method_a),
+           context.methods->get(method_a_and_b)}));
+
+  EXPECT_EQ(
+      HasAnnotationMethodConstraint("Ljava/annotation/B;", "A")
+          .may_satisfy(method_mappings),
+      marianatrench::MethodHashedSet(
+          {context.methods->get(method_b),
+           context.methods->get(method_a_and_b)}));
+  EXPECT_TRUE(HasAnnotationMethodConstraint("Ljava/annotation/C;", "A")
+                  .may_satisfy(method_mappings)
+                  .is_bottom());
+}
+
 TEST_F(MethodConstraintTest, UniqueConstraints) {
   Scope scope;
   DexStore store("stores");

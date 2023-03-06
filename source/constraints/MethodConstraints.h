@@ -193,6 +193,8 @@ class HasAnnotationMethodConstraint final : public MethodConstraint {
       std::optional<std::string> annotation);
   bool satisfy(const Method* method) const override;
   bool operator==(const MethodConstraint& other) const override;
+  MethodHashedSet may_satisfy(
+      const MethodMappings& method_mappings) const override;
 
  private:
   std::string type_;

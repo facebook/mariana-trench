@@ -43,6 +43,11 @@ class MethodMappings {
     return signature_to_methods_;
   }
 
+  const ConcurrentMap<std::string_view, MethodHashedSet>&
+  annotation_type_to_methods() const {
+    return annotation_type_to_methods_;
+  }
+
   const MethodHashedSet& all_methods() const {
     return all_methods_;
   }
@@ -54,6 +59,7 @@ class MethodMappings {
   ConcurrentMap<std::string_view, MethodHashedSet> class_to_methods_;
   ConcurrentMap<std::string_view, MethodHashedSet> class_to_override_methods_;
   ConcurrentMap<std::string, MethodHashedSet> signature_to_methods_;
+  ConcurrentMap<std::string_view, MethodHashedSet> annotation_type_to_methods_;
   MethodHashedSet all_methods_;
 };
 

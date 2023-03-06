@@ -377,6 +377,12 @@ bool HasAnnotationMethodConstraint::operator==(
   }
 }
 
+MethodHashedSet HasAnnotationMethodConstraint::may_satisfy(
+    const MethodMappings& method_mappings) const {
+  return method_mappings.annotation_type_to_methods().get(
+      type_, MethodHashedSet::bottom());
+}
+
 NthParameterConstraint::NthParameterConstraint(
     ParameterPosition index,
     std::unique_ptr<ParameterConstraint> inner_constraint)
