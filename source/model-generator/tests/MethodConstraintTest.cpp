@@ -700,6 +700,19 @@ TEST_F(MethodConstraintTest, MethodConstraintFromJson) {
             std::make_unique<TypePatternConstraint>("Landroid/util/Log;")),
         *constraint);
   }
+  {
+    auto constraint = MethodConstraint::from_json(
+        test::parse_json(
+            R"({
+          "constraint": "parent",
+          "pattern": "Landroid/util/Log;"
+        })"),
+        context);
+    EXPECT_EQ(
+        ParentConstraint(
+            std::make_unique<TypePatternConstraint>("Landroid/util/Log;")),
+        *constraint);
+  }
 
   EXPECT_THROW(
       MethodConstraint::from_json(
@@ -737,6 +750,37 @@ TEST_F(MethodConstraintTest, MethodConstraintFromJson) {
               "pattern": "Landroid/util/Log;"
             }
           })"),
+          context),
+      JsonValidationError);
+  EXPECT_THROW(
+      MethodConstraint::from_json(
+          test::parse_json(
+              R"({
+          "constraint": "parent",
+          "name": "Landroid/util/Log;"
+        })"),
+          context),
+      JsonValidationError);
+  EXPECT_THROW(
+      MethodConstraint::from_json(
+          test::parse_json(
+              R"({
+          "constraint": "parent",
+          "pattern": "Landroid/util/Log;",
+          "inner": {
+             "constraint": "name",
+             "pattern": "Landroid/util/Log;"
+          }
+        })"),
+          context),
+      JsonValidationError);
+  EXPECT_THROW(
+      MethodConstraint::from_json(
+          test::parse_json(
+              R"({
+          "constraint": "parent",
+          "patern": "Landroid/util/Log;"
+        })"),
           context),
       JsonValidationError);
   // ParentConstraint

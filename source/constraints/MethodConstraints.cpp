@@ -560,8 +560,26 @@ std::unique_ptr<MethodConstraint> MethodConstraint::from_json(
     return std::make_unique<MethodPatternConstraint>(
         JsonValidation::string(constraint, "pattern"));
   } else if (constraint_name == "parent") {
-    return std::make_unique<ParentConstraint>(TypeConstraint::from_json(
-        JsonValidation::object(constraint, /* field */ "inner")));
+    if (constraint.isMember("inner") && constraint.isMember("pattern")) {
+      throw JsonValidationError(
+          constraint,
+          std::nullopt,
+          "parent constraints may only have one of `inner` and `pattern`.");
+    }
+    if (constraint.isMember("inner")) {
+      return std::make_unique<ParentConstraint>(TypeConstraint::from_json(
+          JsonValidation::object(constraint, /* field */ "inner")));
+    } else {
+      if (!constraint.isMember("pattern")) {
+        throw JsonValidationError(
+            constraint,
+            std::nullopt,
+            "parent constraints must have one of `inner` and `pattern` as a field.");
+      }
+      return std::make_unique<ParentConstraint>(
+          std::make_unique<TypePatternConstraint>(
+              JsonValidation::string(constraint, /* field */ "pattern")));
+    }
   } else if (constraint_name == "number_parameters") {
     return std::make_unique<NumberParametersConstraint>(
         IntegerConstraint::from_json(
