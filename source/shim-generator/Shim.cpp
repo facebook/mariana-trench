@@ -188,20 +188,6 @@ ShimParameterMapping ShimParameterMapping::instantiate_parameters(
       continue;
     }
 
-    auto shim_type = shim_method.parameter_type(shim_position);
-    if (callee_type != shim_type) {
-      ERROR(
-          1,
-          "Parameter mapping type mismatch for shim_target `{}.{}:{}` for parameter {}. Expected: {} but got {}.",
-          show(shim_target_class),
-          shim_target_method,
-          show(shim_target_proto),
-          shim_target_position,
-          show(callee_type),
-          show(shim_type));
-      continue;
-    }
-
     parameter_mapping.insert(shim_target_position, shim_position);
   }
 
