@@ -20,9 +20,9 @@ from pyre_extensions import none_throws, safe_json
 
 from .exit_codes import ClientError, ConfigurationError, ExitCode
 
-
 try:
     from ..facebook.shim import configuration
+    from ..facebook.shim.third_party_utils import start_third_party_analysis
 except Exception:
     # pyre-ignore
     from . import configuration
@@ -635,6 +635,11 @@ def main() -> None:
         _add_analysis_arguments(parser)
         _add_metadata_arguments(parser)
         _add_debug_arguments(parser)
+        parser.add_argument(
+            "--analyze-third-party",
+            action="store_true",
+            help="Analyzing third party apps",
+        )
 
         arguments: argparse.Namespace = parser.parse_args()
 
@@ -698,14 +703,19 @@ def main() -> None:
         dex_mode.unpackage(apk_directory, dex_directory)
         LOG.info(f"Extracted APK into `{apk_directory}` and DEX into `{dex_directory}`")
 
-        options = _get_command_options(arguments, apk_directory, dex_directory)
-        command = [os.fspath(binary.resolve())] + options
-        if arguments.gdb:
-            command = ["gdb", "--args"] + command
-        elif arguments.lldb:
-            command = ["lldb", "--"] + command
-        LOG.info(f"Running Mariana Trench: {' '.join(command)}")
-        output = subprocess.run(command)
+        if configuration.FACEBOOK_SHIM and arguments.analyze_third_party:
+            output = start_third_party_analysis(
+                binary, arguments, apk_directory, dex_directory
+            )
+        else:
+            options = _get_command_options(arguments, apk_directory, dex_directory)
+            command = [os.fspath(binary.resolve())] + options
+            if arguments.gdb:
+                command = ["gdb", "--args"] + command
+            elif arguments.lldb:
+                command = ["lldb", "--"] + command
+            LOG.info(f"Running Mariana Trench: {' '.join(command)}")
+            output = subprocess.run(command)
         if output.returncode != 0:
             LOG.fatal(f"Analysis binary exited with exit code {output.returncode}.")
             sys.exit(output.returncode)
