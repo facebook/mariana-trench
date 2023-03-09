@@ -322,14 +322,12 @@ def _add_configuration_arguments(parser: argparse.ArgumentParser) -> None:
     configuration_arguments.add_argument(
         "--system-jar-configuration-path",
         type=_system_jar_configuration_path,
-        default=os.fspath(configuration.get_path("default_system_jar_paths.json")),
         help="A JSON configuration file with a list of paths to the system jars "
         + "or a `;` separated list of jars.",
     )
     configuration_arguments.add_argument(
         "--rules-paths",
         type=str,
-        default=os.fspath(configuration.get_path("rules.json")),
         help="A `;`-separated list of rules files and directories containing rules files.",
     )
     configuration_arguments.add_argument(
@@ -381,17 +379,12 @@ def _add_configuration_arguments(parser: argparse.ArgumentParser) -> None:
     configuration_arguments.add_argument(
         "--model-generator-configuration-paths",
         type=_separated_paths_exist,
-        default=os.fspath(configuration.get_path("default_generator_config.json")),
         help="""A `;`-separated list of paths specifying JSON configuration files. Each file is a list of paths
         to JSON model generators relative to the configuration file or names of CPP model generators.""",
     )
     configuration_arguments.add_argument(
         "--model-generator-search-paths",
         type=_separated_paths_exist,
-        default=";".join(
-            os.fspath(path)
-            for path in configuration.get_default_generator_search_paths()
-        ),
         help="A `;`-separated list of paths where we look up JSON model generators.",
     )
     configuration_arguments.add_argument(
@@ -645,6 +638,24 @@ def main() -> None:
 
         arguments: argparse.Namespace = parser.parse_args()
 
+        # TODO T147423951
+        if arguments.system_jar_configuration_path is None:
+            arguments.system_jar_configuration_path = _system_jar_configuration_path(
+                os.fspath(configuration.get_path("default_system_jar_paths.json"))
+            )
+        if arguments.rules_paths is None:
+            arguments.rules_paths = str(os.fspath(configuration.get_path("rules.json")))
+        if arguments.model_generator_configuration_paths is None:
+            arguments.model_generator_configuration_paths = _separated_paths_exist(
+                os.fspath(configuration.get_path("default_generator_config.json"))
+            )
+        if arguments.model_generator_search_paths is None:
+            arguments.model_generator_search_paths = _separated_paths_exist(
+                ";".join(
+                    os.fspath(path)
+                    for path in configuration.get_default_generator_search_paths()
+                )
+            )
         if (
             configuration.FACEBOOK_SHIM
             and arguments.java_target is not None
