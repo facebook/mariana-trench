@@ -93,7 +93,7 @@ std::optional<ShimReflectionTarget> try_make_shim_reflection_target(
   if (!receiver_type) {
     WARNING(
         1,
-        "Shim method `{}` missing the receiver required for reflection shim callees`{}`.",
+        "Shim method `{}` missing the receiver required for reflection shim callees `{}`.",
         shim_method.method()->show(),
         target_template.target());
     return std::nullopt;
@@ -139,7 +139,7 @@ std::optional<ShimLifecycleTarget> try_make_shim_lifecycle_target(
   if (!receiver_type) {
     WARNING(
         1,
-        "Shim method `{}` missing the receiver required for all shim callees`{}`.",
+        "Shim method `{}` missing the receiver required for all shim callees `{}`.",
         shim_method.method()->show(),
         target_template.target());
     return std::nullopt;
