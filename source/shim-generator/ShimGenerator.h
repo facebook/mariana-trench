@@ -17,9 +17,9 @@
 
 namespace marianatrench {
 
-class JsonShimGenerator final {
+class ShimGenerator final {
  public:
-  JsonShimGenerator(
+  ShimGenerator(
       std::unique_ptr<AllOfMethodConstraint> constraint,
       ShimTemplate shim_template,
       const Methods* methods);

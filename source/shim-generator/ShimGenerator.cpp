@@ -14,7 +14,7 @@
 
 namespace marianatrench {
 
-JsonShimGenerator::JsonShimGenerator(
+ShimGenerator::ShimGenerator(
     std::unique_ptr<AllOfMethodConstraint> constraint,
     ShimTemplate shim_template,
     const Methods* methods)
@@ -22,8 +22,7 @@ JsonShimGenerator::JsonShimGenerator(
       shim_template_(std::move(shim_template)),
       methods_(methods) {}
 
-std::optional<Shim> JsonShimGenerator::visit_method(
-    const Method* method) const {
+std::optional<Shim> ShimGenerator::visit_method(const Method* method) const {
   if (constraint_->satisfy(method)) {
     LOG(5,
         "Method `{}{}` satisfies all constraints in shim model generator",
@@ -35,7 +34,7 @@ std::optional<Shim> JsonShimGenerator::visit_method(
   return std::nullopt;
 }
 
-MethodToShimMap JsonShimGenerator::emit_method_shims(
+MethodToShimMap ShimGenerator::emit_method_shims(
     const Methods* methods,
     const MethodMappings& method_mappings) {
   MethodToShimMap method_shims;

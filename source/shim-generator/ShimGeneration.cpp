@@ -17,10 +17,10 @@
 namespace marianatrench {
 namespace {
 
-std::vector<JsonShimGenerator> get_shim_generators(
+std::vector<ShimGenerator> get_shim_generators(
     Context& context,
     const Json::Value& shim_definitions) {
-  std::vector<JsonShimGenerator> shims;
+  std::vector<ShimGenerator> shims;
 
   for (const auto& shim_definition :
        JsonValidation::null_or_array(shim_definitions)) {
@@ -33,7 +33,7 @@ std::vector<JsonShimGenerator> get_shim_generators(
             MethodConstraint::from_json(constraint, context));
       }
 
-      shims.push_back(JsonShimGenerator(
+      shims.push_back(ShimGenerator(
           std::make_unique<AllOfMethodConstraint>(std::move(shim_constraints)),
           ShimTemplate::from_json(
               JsonValidation::object(shim_definition, "shim")),
@@ -57,7 +57,7 @@ ShimGeneratorError::ShimGeneratorError(const std::string& message)
 MethodToShimMap ShimGeneration::run(
     Context& context,
     const MethodMappings& method_mappings) {
-  std::vector<JsonShimGenerator> all_shims;
+  std::vector<ShimGenerator> all_shims;
   for (const auto& path : context.options->shims_paths()) {
     LOG(1, "Processing shim generator at: {}", path);
     try {
