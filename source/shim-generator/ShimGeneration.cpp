@@ -13,6 +13,7 @@
 #include <mariana-trench/Options.h>
 #include <mariana-trench/shim-generator/ShimGeneration.h>
 #include <mariana-trench/shim-generator/ShimGenerator.h>
+#include <mariana-trench/shim-generator/Shims.h>
 
 namespace marianatrench {
 namespace {
@@ -54,7 +55,7 @@ std::vector<ShimGenerator> get_shim_generators(
 ShimGeneratorError::ShimGeneratorError(const std::string& message)
     : std::invalid_argument(message) {}
 
-MethodToShimMap ShimGeneration::run(
+Shims ShimGeneration::run(
     Context& context,
     const MethodMappings& method_mappings) {
   std::vector<ShimGenerator> all_shims;
@@ -99,7 +100,7 @@ MethodToShimMap ShimGeneration::run(
     }
   }
 
-  return method_shims;
+  return Shims{method_shims};
 }
 
 } // namespace marianatrench

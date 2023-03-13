@@ -14,6 +14,7 @@
 #include <mariana-trench/constraints/MethodConstraints.h>
 #include <mariana-trench/model-generator/ModelGenerator.h>
 #include <mariana-trench/shim-generator/ShimTemplates.h>
+#include <mariana-trench/shim-generator/Shims.h>
 
 namespace marianatrench {
 

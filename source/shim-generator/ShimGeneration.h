@@ -9,7 +9,7 @@
 
 #include <mariana-trench/Context.h>
 #include <mariana-trench/MethodMappings.h>
-#include <mariana-trench/shim-generator/Shim.h>
+#include <mariana-trench/shim-generator/Shims.h>
 
 namespace marianatrench {
 
@@ -20,9 +20,7 @@ class ShimGeneratorError : public std::invalid_argument {
 
 class ShimGeneration {
  public:
-  static MethodToShimMap run(
-      Context& context,
-      const MethodMappings& method_mappings);
+  static Shims run(Context& context, const MethodMappings& method_mappings);
 };
 
 } // namespace marianatrench

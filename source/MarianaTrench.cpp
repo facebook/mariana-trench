@@ -46,6 +46,7 @@
 #include <mariana-trench/Types.h>
 #include <mariana-trench/UnusedKinds.h>
 #include <mariana-trench/shim-generator/ShimGeneration.h>
+#include <mariana-trench/shim-generator/Shims.h>
 
 namespace marianatrench {
 
@@ -171,22 +172,19 @@ Registry MarianaTrench::analyze(Context& context) {
         "Building method mappings for shim/model generation over {} methods",
         context.methods->size());
     MethodMappings method_mappings{*context.methods};
-    MethodToShimMap shims{};
 
     LOG(1,
         "Generated method mappings in {:.2f}s. Memory used, RSS: {:.2f}GB",
         method_mapping_timer.duration_in_seconds(),
         resident_set_size_in_gb());
 
-    if (!context.options->shims_paths().empty()) {
-      Timer shims_timer;
-      LOG(1, "Creating Shims...");
-      shims = ShimGeneration::run(context, method_mappings);
-      LOG(1,
-          "Created Shims in {:.2f}s. Memory used, RSS: {:.2f}GB",
-          shims_timer.duration_in_seconds(),
-          resident_set_size_in_gb());
-    }
+    Timer shims_timer;
+    LOG(1, "Creating Shims...");
+    Shims shims = ShimGeneration::run(context, method_mappings);
+    LOG(1,
+        "Created Shims in {:.2f}s. Memory used, RSS: {:.2f}GB",
+        shims_timer.duration_in_seconds(),
+        resident_set_size_in_gb());
 
     Timer call_graph_timer;
     LOG(1, "Building call graph...");

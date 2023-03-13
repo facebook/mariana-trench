@@ -60,7 +60,7 @@ Context test_components(const Scope& scope) {
       *context.class_hierarchies,
       *context.overrides,
       *context.features,
-      MethodToShimMap{},
+      Shims{},
       method_mappings);
   context.rules = std::make_unique<Rules>();
   auto registry = Registry(context);

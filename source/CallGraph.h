@@ -31,6 +31,7 @@
 #include <mariana-trench/Overrides.h>
 #include <mariana-trench/Types.h>
 #include <mariana-trench/shim-generator/ShimGenerator.h>
+#include <mariana-trench/shim-generator/Shims.h>
 
 namespace marianatrench {
 
@@ -212,7 +213,7 @@ class CallGraph final {
       const ClassHierarchies& class_hierarchies,
       Overrides& overrides,
       const Features& features,
-      const MethodToShimMap& shims,
+      const Shims& shims,
       MethodMappings& method_mappings);
 
   DELETE_COPY_CONSTRUCTORS_AND_ASSIGNMENTS(CallGraph)

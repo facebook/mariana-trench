@@ -109,7 +109,7 @@ TEST_P(JsonModelGeneratorIntegrationTest, CompareModels) {
       *context.class_hierarchies,
       *context.overrides,
       *context.features,
-      MethodToShimMap{},
+      Shims{},
       method_mappings);
 
   // Run a model generator and compare output

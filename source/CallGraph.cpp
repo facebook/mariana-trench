@@ -287,22 +287,6 @@ const Method* get_callee_from_resolved_call(
   return callee;
 }
 
-bool skip_shim_for_caller(const Method* caller) {
-  static const std::vector<std::string> k_exclude_caller_in_packages = {
-      "Landroid/",
-      "Landroidx/",
-      "Lcom/google/",
-  };
-
-  const auto caller_klass = caller->get_class()->str();
-  return std::any_of(
-      k_exclude_caller_in_packages.begin(),
-      k_exclude_caller_in_packages.end(),
-      [caller_klass](const auto& exclude_prefix) {
-        return boost::starts_with(caller_klass, exclude_prefix);
-      });
-}
-
 void process_shim_target(
     const Method* caller,
     const Method* callee,
@@ -603,7 +587,7 @@ InstructionCallGraphInformation process_instruction(
     Overrides& override_factory,
     const ClassHierarchies& class_hierarchies,
     const Features& features,
-    const MethodToShimMap& shims,
+    const Shims& shims,
     std::unordered_map<std::string, TextualOrderIndex>&
         sink_textual_order_index,
     MethodMappings& method_mappings) {
@@ -668,8 +652,7 @@ InstructionCallGraphInformation process_instruction(
       sink_textual_order_index,
       method_mappings);
 
-  if (auto shim = shims.find(original_callee);
-      shim != shims.end() && !skip_shim_for_caller(caller)) {
+  if (auto shim = shims.get_shim_for_caller(original_callee, caller)) {
     auto artificial_callees = shim_artificial_callees(
         caller,
         resolved_callee,
@@ -679,7 +662,7 @@ InstructionCallGraphInformation process_instruction(
         override_factory,
         class_hierarchies,
         features,
-        shim->second,
+        *shim,
         sink_textual_order_index);
     instruction_information.artificial_callees = std::move(artificial_callees);
   }
@@ -909,7 +892,7 @@ CallGraph::CallGraph(
     const ClassHierarchies& class_hierarchies,
     Overrides& override_factory,
     const Features& features,
-    const MethodToShimMap& shims,
+    const Shims& shims,
     MethodMappings& method_mappings)
     : types_(types),
       class_hierarchies_(class_hierarchies),

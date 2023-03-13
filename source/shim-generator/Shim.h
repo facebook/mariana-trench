@@ -19,7 +19,6 @@ namespace marianatrench {
 class Shim;
 /* Indicates the position of a parameter in the `shimmed-method`. */
 using ShimParameterPosition = ParameterPosition;
-using MethodToShimMap = std::unordered_map<const Method*, Shim>;
 
 /**
  * Wrapper around the `shimmed-method` (i.e. the method matching the method
