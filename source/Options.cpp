@@ -131,7 +131,8 @@ Options::Options(
       dump_overrides_(false),
       dump_call_graph_(false),
       dump_dependencies_(false),
-      dump_methods_(false) {}
+      dump_methods_(false),
+      enable_cross_component_analysis_(false) {}
 
 Options::Options(const boost::program_options::variables_map& variables) {
   system_jar_paths_ = parse_paths_list(
@@ -244,6 +245,9 @@ Options::Options(const boost::program_options::variables_map& variables) {
       ? std::nullopt
       : std::make_optional<std::string>(
             variables["metarun-id"].as<std::string>());
+
+  enable_cross_component_analysis_ =
+      variables.count("enable-cross-component-analysis") > 0;
 }
 
 void Options::add_options(
@@ -375,6 +379,9 @@ void Options::add_options(
       "metarun-id",
       program_options::value<std::string>(),
       "Identifier for a group of analysis runs.");
+  options.add_options()(
+      "enable-cross-component-analysis",
+      "Compute taint flows across Android components.");
 }
 
 const std::vector<std::string>& Options::models_paths() const {
@@ -552,6 +559,10 @@ const std::optional<std::string>& Options::job_id() const {
 
 const std::optional<std::string>& Options::metarun_id() const {
   return metarun_id_;
+}
+
+bool Options::enable_cross_component_analysis() const {
+  return enable_cross_component_analysis_;
 }
 
 } // namespace marianatrench

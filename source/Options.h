@@ -101,6 +101,8 @@ class Options final {
   const std::optional<std::string>& job_id() const;
   const std::optional<std::string>& metarun_id() const;
 
+  bool enable_cross_component_analysis() const;
+
  private:
   std::vector<std::string> models_paths_;
   std::vector<std::string> field_models_paths_;
@@ -148,6 +150,8 @@ class Options final {
 
   std::optional<std::string> job_id_;
   std::optional<std::string> metarun_id_;
+
+  bool enable_cross_component_analysis_;
 };
 
 } // namespace marianatrench

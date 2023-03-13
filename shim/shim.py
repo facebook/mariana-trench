@@ -441,6 +441,11 @@ def _add_analysis_arguments(parser: argparse.ArgumentParser) -> None:
         type=int,
         help="Specify number of seconds as a bound. If the analysis of a method takes longer than this then make the method obscure (default taint-in-taint-out).",
     )
+    analysis_arguments.add_argument(
+        "--enable-cross-component-analysis",
+        action="store_true",
+        help="Compute taint flows across Android components.",
+    )
 
 
 def _add_metadata_arguments(parser: argparse.ArgumentParser) -> None:
@@ -582,6 +587,8 @@ def _get_command_options(
     if arguments.maximum_method_analysis_time is not None:
         options.append("--maximum-method-analysis-time")
         options.append(str(arguments.maximum_method_analysis_time))
+    if arguments.enable_cross_component_analysis:
+        options.append("--enable-cross-component-analysis")
 
     if arguments.job_id:
         options.append("--job-id")
