@@ -69,6 +69,8 @@ class ClassProperties final {
       const Method* method,
       std::unordered_set<const Kind*> kinds) const;
 
+  static DexClass* MT_NULLABLE get_service_from_stub(const DexClass* clazz);
+
  private:
   std::unordered_map<std::string_view, ExportedKind> activities_;
   std::unordered_map<std::string_view, ExportedKind> services_;

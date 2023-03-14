@@ -352,9 +352,20 @@ FeatureSet ClassProperties::get_class_features(
     features.join_with(get_manifest_features(clazz, receivers_));
   }
 
-  if (kind->name() == "ServiceUserInput" ||
-      kind->name() == "ServiceAIDLUserInput") {
+  if (kind->name() == "ServiceUserInput") {
     features.join_with(get_manifest_features(clazz, services_));
+  }
+
+  if (kind->name() == "ServiceAIDLUserInput") {
+    if (const auto* dex_class = redex::get_class(clazz)) {
+      const auto* service_class = get_service_from_stub(dex_class);
+      if (service_class != nullptr) {
+        features.join_with(
+            get_manifest_features(service_class->str(), services_));
+      } else {
+        features.join_with(get_manifest_features(clazz, services_));
+      }
+    }
   }
 
   if (kind->name() == "ProviderUserInput") {
@@ -388,6 +399,29 @@ struct QueueItem {
 };
 
 } // namespace
+
+DexClass* MT_NULLABLE
+ClassProperties::get_service_from_stub(const DexClass* clazz) {
+  auto constructors = clazz->get_ctors();
+  if (constructors.size() != 1) {
+    return nullptr;
+  }
+  const auto* method_prototype = constructors[0]->get_proto();
+  const auto* method_arguments = method_prototype->get_args();
+
+  if (method_arguments->size() == 0) {
+    return nullptr;
+  }
+
+  auto* first_argument = type_class(method_arguments->at(0));
+  auto argument_parents = generator::get_parents_from_class(
+      first_argument, /* include_interfaces */ true);
+  if (argument_parents.find("Landroid/app/Service;") ==
+      argument_parents.end()) {
+    return nullptr;
+  }
+  return first_argument;
+}
 
 FeatureSet ClassProperties::compute_transitive_class_features(
     const Method* callee,
