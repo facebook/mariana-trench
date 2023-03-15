@@ -31,6 +31,10 @@ bool skip_shim_for_caller(const Method* caller) {
 
 } // namespace
 
+bool Shims::add_global_method_shim(const Shim& shim) {
+  return global_shims_.emplace(shim.method(), shim).second;
+}
+
 std::optional<Shim> Shims::get_shim_for_caller(
     const Method* original_callee,
     const Method* caller) const {

@@ -34,22 +34,23 @@ std::optional<Shim> ShimGenerator::visit_method(const Method* method) const {
   return std::nullopt;
 }
 
-MethodToShimMap ShimGenerator::emit_method_shims(
+std::vector<Shim> ShimGenerator::emit_method_shims(
+    Shims& method_shims,
     const Methods* methods,
     const MethodMappings& method_mappings) {
-  MethodToShimMap method_shims;
-
   MethodHashedSet filtered_methods = constraint_->may_satisfy(method_mappings);
   if (filtered_methods.is_bottom()) {
-    return method_shims;
+    return {};
   }
 
   if (!filtered_methods.is_top()) {
     return visit_methods(
-        filtered_methods.elements().begin(), filtered_methods.elements().end());
+        method_shims,
+        filtered_methods.elements().begin(),
+        filtered_methods.elements().end());
   }
 
-  return visit_methods(methods->begin(), methods->end());
+  return visit_methods(method_shims, methods->begin(), methods->end());
 }
 
 } // namespace marianatrench

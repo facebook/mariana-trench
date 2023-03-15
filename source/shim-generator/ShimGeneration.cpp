@@ -78,29 +78,29 @@ Shims ShimGeneration::run(
   }
 
   // Run the shim generator
-  MethodToShimMap method_shims(all_shims.size());
+  Shims method_shims(all_shims.size());
   std::size_t iteration = 0;
 
   for (auto& item : all_shims) {
     LOG(1, "Running shim generator ({}/{})", ++iteration, all_shims.size());
 
-    auto shims = item.emit_method_shims(context.methods.get(), method_mappings);
-    method_shims.merge(shims);
+    auto duplicate_shims = item.emit_method_shims(
+        method_shims, context.methods.get(), method_mappings);
 
-    if (!shims.empty()) {
+    if (!duplicate_shims.empty()) {
       std::vector<std::string> errors{};
       std::transform(
-          shims.cbegin(),
-          shims.cend(),
+          duplicate_shims.cbegin(),
+          duplicate_shims.cend(),
           std::back_inserter(errors),
-          [](const auto& shim) { return shim.first->show(); });
+          [](const auto& shim) { return shim.method()->show(); });
 
       throw ShimGeneratorError(fmt::format(
           "Duplicate shim defined for: {}", boost::join(errors, ", ")));
     }
   }
 
-  return Shims{method_shims};
+  return method_shims;
 }
 
 } // namespace marianatrench

@@ -13,21 +13,23 @@
 
 namespace marianatrench {
 
-using MethodToShimMap = std::unordered_map<const Method*, Shim>;
-
 class Shims final {
+ private:
+  using MethodToShimMap = std::unordered_map<const Method*, Shim>;
+
  public:
-  explicit Shims(MethodToShimMap global_shims)
-      : global_shims_(std::move(global_shims)) {}
+  explicit Shims(std::size_t global_shims_size)
+      : global_shims_(global_shims_size) {}
 
-  explicit Shims() {
-    global_shims_ = MethodToShimMap{};
-  }
+  explicit Shims() = default;
 
-  DELETE_COPY_CONSTRUCTORS_AND_ASSIGNMENTS(Shims)
+  INCLUDE_DEFAULT_COPY_CONSTRUCTORS_AND_ASSIGNMENTS(Shims)
+
   std::optional<Shim> get_shim_for_caller(
       const Method* original_callee,
       const Method* caller) const;
+
+  bool add_global_method_shim(const Shim& shim);
 
  private:
   MethodToShimMap global_shims_;
