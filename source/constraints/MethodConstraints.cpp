@@ -525,32 +525,37 @@ std::optional<DexAccessFlags> string_to_visibility(
   }
 }
 
-std::unique_ptr<MethodConstraint> signature_match_constraint(
-    std::string parent,
+std::unique_ptr<MethodConstraint> signature_match_name_constraint(
     std::string name) {
-  std::vector<std::unique_ptr<MethodConstraint>> constraints;
-  constraints.push_back(std::make_unique<ParentConstraint>(
-      std::make_unique<TypeNameConstraint>(parent)));
-  constraints.push_back(std::make_unique<MethodNameConstraint>(name));
-  return std::make_unique<AllOfMethodConstraint>(std::move(constraints));
+  return std::make_unique<MethodNameConstraint>(name);
 }
 
-std::unique_ptr<MethodConstraint> signature_match_constraint_multiple_names(
-    std::string parent,
+std::unique_ptr<MethodConstraint> signature_match_name_constraint(
     const Json::Value& names) {
-  mt_assert(names.isArray());
-  std::vector<std::unique_ptr<MethodConstraint>> constraints;
-  constraints.push_back(std::make_unique<ParentConstraint>(
-      std::make_unique<TypeNameConstraint>(parent)));
-
   std::vector<std::unique_ptr<MethodConstraint>> method_name_constraints;
   for (const auto& name : names) {
     method_name_constraints.push_back(
-        std::make_unique<MethodNameConstraint>(JsonValidation::string(name)));
+        signature_match_name_constraint(JsonValidation::string(name)));
   }
-  constraints.push_back(std::make_unique<AnyOfMethodConstraint>(
-      std::move(method_name_constraints)));
-  return std::make_unique<AllOfMethodConstraint>(std::move(constraints));
+  return std::make_unique<AnyOfMethodConstraint>(
+      std::move(method_name_constraints));
+}
+
+std::unique_ptr<MethodConstraint> signature_match_parent_constraint(
+    std::string parent) {
+  return std::make_unique<ParentConstraint>(
+      std::make_unique<TypeNameConstraint>(parent));
+}
+
+std::unique_ptr<MethodConstraint> signature_match_parent_constraint(
+    const Json::Value& parents) {
+  std::vector<std::unique_ptr<MethodConstraint>> parent_name_constraints;
+  for (const auto& parent : parents) {
+    parent_name_constraints.push_back(
+        signature_match_parent_constraint(JsonValidation::string(parent)));
+  }
+  return std::make_unique<AnyOfMethodConstraint>(
+      std::move(parent_name_constraints));
 }
 
 } // namespace
@@ -623,15 +628,37 @@ std::unique_ptr<MethodConstraint> MethodConstraint::from_json(
     return std::make_unique<SignaturePatternConstraint>(
         JsonValidation::string(constraint, /* field */ "pattern"));
   } else if (constraint_name == "signature_match") {
+    std::vector<std::unique_ptr<MethodConstraint>> constraints;
     if (constraint.isMember("name")) {
-      return signature_match_constraint(
-          JsonValidation::string(constraint, /* field */ "parent"),
-          JsonValidation::string(constraint, /* field */ "name"));
+      if (constraint.isMember("names")) {
+        throw JsonValidationError(
+            constraint,
+            /* field */ "names",
+            /* expected */
+            "Only one of \"name\" and \"names\" should be present.");
+      }
+      constraints.push_back(signature_match_name_constraint(
+          JsonValidation::string(constraint, /* field */ "name")));
     } else {
-      return signature_match_constraint_multiple_names(
-          JsonValidation::string(constraint, /* field */ "parent"),
-          JsonValidation::nonempty_array(constraint, /* field */ "names"));
+      constraints.push_back(signature_match_name_constraint(
+          JsonValidation::nonempty_array(constraint, /* field */ "names")));
     }
+    if (constraint.isMember("parent")) {
+      if (constraint.isMember("parents")) {
+        throw JsonValidationError(
+            constraint,
+            /* field */ "parents",
+            /* expected */
+            "Only one of \"parent\" and \"parents\" should be present.");
+      }
+      constraints.push_back(signature_match_parent_constraint(
+          JsonValidation::string(constraint, /* field */ "parent")));
+    } else {
+      constraints.push_back(signature_match_parent_constraint(
+          JsonValidation::nonempty_array(constraint, /* field */ "parents")));
+    }
+
+    return std::make_unique<AllOfMethodConstraint>(std::move(constraints));
   } else if (constraint_name == "bytecode") {
     return std::make_unique<MethodHasStringConstraint>(
         JsonValidation::string(constraint, /* field */ "pattern"));
