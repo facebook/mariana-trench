@@ -27,8 +27,6 @@ constexpr std::string_view k_unresolved_callee = "unresolved";
 
 class Issue final : public sparta::AbstractDomain<Issue> {
  public:
-  using HandleSet = sparta::HashedSetAbstractDomain<std::string>;
-
   /* Create the bottom issue. */
   explicit Issue()
       : sources_(Taint::bottom()),
