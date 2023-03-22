@@ -1,0 +1,24 @@
+[
+  {
+    "name": "IntentOpenRedirect",
+    "code": 1,
+    "description": "Launching an intent that is based on external user input",
+    "sources": [
+      "ExternalUserInput"
+    ],
+    "sinks": [
+      "LaunchingComponent"
+    ]
+  },
+  {
+    "name": "Flow",
+    "code": 2,
+    "description": "",
+    "sources": [
+      "Source"
+    ],
+    "sinks": [
+      "Sink"
+    ]
+  }
+]

@@ -1,0 +1,19 @@
+[
+  {
+    "find": "methods",
+    "where": [
+      {
+        "constraint": "signature_pattern",
+        "pattern": "Lcom/facebook/marianatrench/integrationtests/.*;\\.shimmed.*"
+      }
+    ],
+    "shim": {
+      "callees": [
+        {
+          "type_of": "Argument(1)",
+          "method_name": "run:(Ljava/lang/Object;)V"
+        }
+      ]
+    }
+  }
+]

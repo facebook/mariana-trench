@@ -1,0 +1,30 @@
+// @generated
+{
+  "Landroid/content/Context;.startActivity:(Landroid/content/Intent;)V" : 
+  [
+    "Landroid/app/Activity;.startActivity:(Landroid/content/Intent;)V"
+  ],
+  "Lcom/facebook/marianatrench/integrationtests/JavaCheckCast$Base;.run:(Ljava/lang/Object;)V" : 
+  [
+    "Lcom/facebook/marianatrench/integrationtests/JavaCheckCast$DerivedNoSink;.run:(Ljava/lang/Object;)V",
+    "Lcom/facebook/marianatrench/integrationtests/JavaCheckCast$DerivedWithSink;.run:(Ljava/lang/Object;)V"
+  ],
+  "Lcom/facebook/marianatrench/integrationtests/KotlinCheckCast$Base;.run:(Ljava/lang/Object;)V" : 
+  [
+    "Lcom/facebook/marianatrench/integrationtests/KotlinCheckCast$DerivedNoSink;.run:(Ljava/lang/Object;)V",
+    "Lcom/facebook/marianatrench/integrationtests/KotlinCheckCast$DerivedWithSink;.run:(Ljava/lang/Object;)V"
+  ],
+  "Ljava/lang/Object;.toString:()Ljava/lang/String;" : 
+  [
+    "Landroid/location/Location;.toString:()Ljava/lang/String;",
+    "Landroid/net/Uri;.toString:()Ljava/lang/String;"
+  ],
+  "Ljava/lang/Runnable;.run:()V" : 
+  [
+    "Ljava/lang/Thread;.run:()V"
+  ],
+  "Ljava/util/Map;.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;" : 
+  [
+    "Ljava/util/TreeMap;.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;"
+  ]
+}

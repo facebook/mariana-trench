@@ -1,0 +1,104 @@
+[
+  {
+    "method": "Landroid/app/Activity;.getIntent:()Landroid/content/Intent;",
+    "generations": [
+      {
+        "kind": "ExternalUserInput",
+        "port": "Return"
+      }
+    ]
+  },
+  {
+    "method": "Landroid/app/Activity;.startActivity:(Landroid/content/Intent;)V",
+    "sinks": [
+      {
+        "kind": "LaunchingComponent",
+        "port": "Argument(1)"
+      }
+    ]
+  },
+  {
+    "method": "Lcom/facebook/content/SecureContextHelper;.startFacebookActivity:(Landroid/content/Intent;Landroid/content/Context;)V",
+    "sinks": [
+      {
+        "kind": "LaunchingComponent",
+        "port": "Argument(1)"
+      }
+    ]
+  },
+  {
+    "method": "Lcom/facebook/content/SecureContextHelper;.startNonFacebookActivity:(Landroid/content/Intent;Landroid/content/Context;)V",
+    "sinks": [
+      {
+        "kind": "LaunchingComponent",
+        "port": "Argument(1)"
+      }
+    ]
+  },
+  {
+    "method": "Landroid/content/Intent;.getData:()Landroid/net/Uri;",
+    "propagation": [
+      {
+        "input": "Argument(0)",
+        "output": "Return"
+      }
+    ]
+  },
+  {
+    "method": "Landroid/content/Intent;.<init>:(Ljava/lang/String;Landroid/net/Uri;)V",
+    "propagation": [
+      {
+        "input": "Argument(2)",
+        "output": "Argument(0)"
+      }
+    ]
+  },
+  {
+    "method": "Landroid/net/Uri;.getQueryParameter:(Ljava/lang/String;)Ljava/lang/String;",
+    "propagation": [
+      {
+        "input": "Argument(0)",
+        "output": "Return"
+      }
+    ]
+  },
+  {
+    "method": "Landroid/net/Uri;.parse:(Ljava/lang/String;)Landroid/net/Uri;",
+    "propagation": [
+      {
+        "input": "Argument(0)",
+        "output": "Return"
+      }
+    ]
+  },
+  {
+    "method": "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;",
+    "generations": [
+      {
+        "kind": "Source",
+        "port": "Return"
+      }
+    ]
+  },
+  {
+    "method": "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
+    "sinks": [
+      {
+        "kind": "Sink",
+        "port": "Argument(0)"
+      }
+    ]
+  },
+  {
+    "method": "Lcom/facebook/marianatrench/integrationtests/Origin;.sanitize:(Ljava/lang/Object;)Ljava/lang/Object;",
+    "propagation": [
+      {
+        "input": "Argument(0)",
+        "output": "Return",
+        "features": [
+          "sanitize"
+        ]
+      }
+    ]
+  }
+]
