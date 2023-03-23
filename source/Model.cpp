@@ -414,6 +414,15 @@ Model Model::at_callsite(
   return model;
 }
 
+Model Model::initial_model_for_iteration() const {
+  Model model;
+  model.method_ = method_;
+  model.modes_ = modes_;
+  model.global_sanitizers_ = global_sanitizers_;
+  model.port_sanitizers_ = port_sanitizers_;
+  return model;
+}
+
 void Model::collapse_invalid_paths(Context& context) {
   if (!method_) {
     return;
@@ -719,7 +728,7 @@ Taint Model::apply_source_sink_sanitizers(
   return taint;
 }
 
-bool Model::has_global_propagation_sanitizer() {
+bool Model::has_global_propagation_sanitizer() const {
   return global_sanitizers_.contains(
       Sanitizer(SanitizerKind::Propagations, KindSetAbstractDomain::top()));
 }

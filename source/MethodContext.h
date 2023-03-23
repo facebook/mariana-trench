@@ -28,12 +28,16 @@ namespace marianatrench {
  */
 class MethodContext final {
  public:
-  MethodContext(Context& context, const Registry& registry, Model& model);
+  MethodContext(
+      Context& context,
+      const Registry& registry,
+      const Model& previous_model,
+      Model& new_model);
 
   DELETE_COPY_CONSTRUCTORS_AND_ASSIGNMENTS(MethodContext)
 
   const Method* method() const {
-    return model.method();
+    return previous_model.method();
   }
 
   bool dump() const {
@@ -65,7 +69,8 @@ class MethodContext final {
   MemoryFactory memory_factory;
   AliasAnalysisResults aliasing;
   FulfilledPartialKindResults fulfilled_partial_sinks;
-  Model& model;
+  const Model& previous_model;
+  Model& new_model;
 
  private:
   struct CacheKey {

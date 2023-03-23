@@ -396,7 +396,7 @@ void create_issue(
       sink_index,
       position);
   LOG_OR_DUMP(context, 4, "Found issue: {}", issue);
-  context->model.add_issue(std::move(issue));
+  context->new_model.add_issue(std::move(issue));
 }
 
 // Called when a source is detected to be flowing into a partial sink for a
@@ -483,7 +483,8 @@ void create_sinks(
        artificial_sources->second.frames_iterator()) {
     auto features = extra_features;
     const auto callee_port_root = artificial_source.callee_port().root();
-    features.add_always(context->model.attach_to_sinks(callee_port_root));
+    features.add_always(
+        context->previous_model.attach_to_sinks(callee_port_root));
     features.add(artificial_source.features());
 
     auto new_sinks = sinks;
@@ -517,7 +518,7 @@ void create_sinks(
           "Inferred sink for port {}: {}",
           sink_caller_port,
           new_sinks);
-      context->model.add_inferred_sinks(
+      context->new_model.add_inferred_sinks(
           sink_caller_port,
           new_sinks,
           /* widening_features */
@@ -798,7 +799,8 @@ void check_artificial_calls_flows(
 void check_call_effect_flows(
     MethodContext* context,
     const CalleeModel& callee) {
-  const auto& caller_call_effect_sources = context->model.call_effect_sources();
+  const auto& caller_call_effect_sources =
+      context->previous_model.call_effect_sources();
   if (caller_call_effect_sources.is_bottom()) {
     return;
   }
@@ -843,7 +845,7 @@ void apply_call_effects(MethodContext* context, const CalleeModel& callee) {
             show(context->method()));
 
         auto sinks_copy = sinks;
-        context->model.add_inferred_call_effect_sinks(
+        context->new_model.add_inferred_call_effect_sinks(
             effect, std::move(sinks_copy));
 
       } break;
@@ -1068,7 +1070,7 @@ bool ForwardTaintTransfer::analyze_load_param(
 
   // Add parameter sources specified in model generators.
   auto root = Root(Root::Kind::Argument, parameter_memory_location->position());
-  auto taint = context->model.parameter_sources().read(root);
+  auto taint = context->previous_model.parameter_sources().read(root);
 
   // Add the position of the instruction to the parameter sources.
   auto* position = context->positions.get(context->method());
@@ -1244,11 +1246,11 @@ void infer_output_taint(
     if (real_sources != partitioned_by_artificial_sources.end()) {
       auto generation = real_sources->second;
       generation.add_inferred_features(FeatureMayAlwaysSet::make_always(
-          context->model.attach_to_sources(output_root)));
+          context->previous_model.attach_to_sources(output_root)));
       auto port = AccessPath(output_root, output_path);
       LOG_OR_DUMP(
           context, 4, "Inferred generation for port {}: {}", port, generation);
-      context->model.add_inferred_generations(
+      context->new_model.add_inferred_generations(
           std::move(port),
           std::move(generation),
           /* widening_features */
@@ -1268,8 +1270,10 @@ void infer_output_taint(
         continue;
       }
       auto features = artificial_source.features();
-      features.add_always(context->model.attach_to_propagations(input_root));
-      features.add_always(context->model.attach_to_propagations(output_root));
+      features.add_always(
+          context->previous_model.attach_to_propagations(input_root));
+      features.add_always(
+          context->previous_model.attach_to_propagations(output_root));
       for (const auto& [input_path, _] :
            input_paths_per_root.get(input_root).elements()) {
         auto propagation = PropagationConfig(
@@ -1281,7 +1285,7 @@ void infer_output_taint(
             /* locally_inferred_features */ FeatureMayAlwaysSet::bottom(),
             /* user_features */ FeatureSet::bottom());
         LOG_OR_DUMP(context, 4, "Inferred propagation {}", propagation);
-        context->model.add_inferred_propagation(
+        context->new_model.add_inferred_propagation(
             std::move(propagation),
             /* widening_features */
             FeatureMayAlwaysSet{
@@ -1300,7 +1304,8 @@ bool ForwardTaintTransfer::analyze_return(
   log_instruction(context, instruction);
   const auto& aliasing = context->aliasing.get(instruction);
 
-  auto return_sinks = context->model.sinks().read(Root(Root::Kind::Return));
+  auto return_sinks =
+      context->previous_model.sinks().read(Root(Root::Kind::Return));
 
   // Add the position of the instruction to the return sinks.
   auto* position =

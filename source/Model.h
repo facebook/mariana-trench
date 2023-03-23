@@ -184,6 +184,10 @@ class Model final {
       const std::vector<std::optional<std::string>>& source_constant_arguments)
       const;
 
+  /* Create a new fresh model without sources/sinks/propagations based on the
+   * structure of the current model. */
+  Model initial_model_for_iteration() const;
+
   void collapse_invalid_paths(Context& context);
 
   void approximate(const FeatureMayAlwaysSet& widening_features);
@@ -256,7 +260,7 @@ class Model final {
   }
   Taint
   apply_source_sink_sanitizers(SanitizerKind kind, Taint taint, Root root);
-  bool has_global_propagation_sanitizer();
+  bool has_global_propagation_sanitizer() const;
 
   void add_port_sanitizers(SanitizerSet sanitizers, Root root);
 

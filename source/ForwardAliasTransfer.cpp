@@ -331,7 +331,7 @@ bool has_side_effect(const MethodItemEntry& instruction) {
 AccessPathConstantDomain infer_inline_as(
     MethodContext* context,
     const MemoryLocationsDomain& memory_locations) {
-  if (context->model.has_global_propagation_sanitizer()) {
+  if (context->previous_model.has_global_propagation_sanitizer()) {
     return AccessPathConstantDomain::top();
   }
   // Check if we are returning an argument access path.
@@ -386,7 +386,8 @@ bool ForwardAliasTransfer::analyze_return(
 
   for (auto register_id : instruction->srcs()) {
     auto memory_locations = environment->memory_locations(register_id);
-    context->model.set_inline_as(infer_inline_as(context, memory_locations));
+    context->new_model.set_inline_as(
+        infer_inline_as(context, memory_locations));
   }
 
   return false;

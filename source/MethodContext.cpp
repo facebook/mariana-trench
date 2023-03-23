@@ -17,7 +17,8 @@ namespace marianatrench {
 MethodContext::MethodContext(
     Context& context,
     const Registry& registry,
-    Model& model)
+    const Model& previous_model,
+    Model& new_model)
     : options(*context.options),
       artificial_methods(*context.artificial_methods),
       methods(*context.methods),
@@ -33,10 +34,11 @@ MethodContext::MethodContext(
       kinds(*context.kinds),
       features(*context.features),
       registry(registry),
-      memory_factory(model.method()),
-      model(model),
+      memory_factory(previous_model.method()),
+      previous_model(previous_model),
+      new_model(new_model),
       context_(context) {
-  std::string method_name = show(model.method());
+  std::string method_name = show(previous_model.method());
   const auto& log_methods = options.log_methods();
   dump_ = std::any_of(
       log_methods.begin(), log_methods.end(), [&](const auto& pattern) {

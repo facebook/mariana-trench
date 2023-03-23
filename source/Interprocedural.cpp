@@ -40,17 +40,18 @@ namespace {
 Model analyze(
     Context& global_context,
     const Registry& registry,
-    const Model& old_model) {
+    const Model& previous_model) {
   Timer timer;
 
-  Model model = old_model;
-
-  auto* method = model.method();
+  auto* method = previous_model.method();
   if (!method) {
-    return model;
+    return previous_model;
   }
 
-  MethodContext method_context(global_context, registry, model);
+  auto new_model = previous_model.initial_model_for_iteration();
+
+  MethodContext method_context(
+      global_context, registry, previous_model, new_model);
 
   LOG_OR_DUMP(
       &method_context, 3, "Analyzing `\033[33m{}\033[0m`...", method->show());
@@ -113,13 +114,18 @@ Model analyze(
         forward_taint_timer.duration_in_seconds());
   }
 
-  model.collapse_invalid_paths(global_context);
-  model.approximate(/* widening_features */
-                    FeatureMayAlwaysSet{global_context.features
-                                            ->get_widen_broadening_feature()});
+  new_model.collapse_invalid_paths(global_context);
+  new_model.approximate(/* widening_features */
+                        FeatureMayAlwaysSet{
+                            global_context.features
+                                ->get_widen_broadening_feature()});
 
   LOG_OR_DUMP(
-      &method_context, 4, "Computed model for `{}`: {}", method->show(), model);
+      &method_context,
+      4,
+      "Computed model for `{}`: {}",
+      method->show(),
+      new_model);
 
   global_context.statistics->log_time(method, timer);
   auto duration = timer.duration_in_seconds();
@@ -137,14 +143,14 @@ Model analyze(
         "Analyzing `{}` took {:.2f}s, setting default taint-in-taint-out.",
         method->show(),
         duration);
-    model.add_mode(Model::Mode::AddViaObscureFeature, global_context);
-    model.add_mode(Model::Mode::SkipAnalysis, global_context);
-    model.add_mode(Model::Mode::NoJoinVirtualOverrides, global_context);
-    model.add_mode(Model::Mode::TaintInTaintOut, global_context);
-    model.add_mode(Model::Mode::TaintInTaintThis, global_context);
+    new_model.add_mode(Model::Mode::AddViaObscureFeature, global_context);
+    new_model.add_mode(Model::Mode::SkipAnalysis, global_context);
+    new_model.add_mode(Model::Mode::NoJoinVirtualOverrides, global_context);
+    new_model.add_mode(Model::Mode::TaintInTaintOut, global_context);
+    new_model.add_mode(Model::Mode::TaintInTaintThis, global_context);
   }
 
-  return model;
+  return new_model;
 }
 
 } // namespace
@@ -206,17 +212,17 @@ void Interprocedural::run_analysis(Context& context, Registry& registry) {
                 methods_to_analyze->size());
           }
 
-          const auto old_model = registry.get(method);
-          if (old_model.skip_analysis()) {
+          const auto previous_model = registry.get(method);
+          if (previous_model.skip_analysis()) {
             LOG(3, "Skipping `{}`...", method->show());
             return;
           }
 
-          auto new_model = analyze(context, registry, old_model);
+          auto new_model = analyze(context, registry, previous_model);
 
-          new_model.join_with(old_model);
+          new_model.join_with(previous_model);
 
-          if (!new_model.leq(old_model)) {
+          if (!new_model.leq(previous_model)) {
             if (!context.call_graph->callees(method).empty() ||
                 !context.call_graph->artificial_callees(method).empty()) {
               new_methods_to_analyze->insert(method);
