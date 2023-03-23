@@ -500,10 +500,12 @@ void Model::approximate(const FeatureMayAlwaysSet& widening_features) {
     taint.add_inferred_features(widening_features);
     return taint;
   };
-  generations_.limit_leaves(Heuristics::kModelTreeMaxLeaves, transform);
-  parameter_sources_.limit_leaves(Heuristics::kModelTreeMaxLeaves, transform);
-  sinks_.limit_leaves(Heuristics::kModelTreeMaxLeaves, transform);
-  propagations_.limit_leaves(Heuristics::kModelTreeMaxLeaves);
+  generations_.limit_leaves(
+      Heuristics::kGenerationMaxOutputPathLeaves, transform);
+  parameter_sources_.limit_leaves(
+      Heuristics::kParameterSourceMaxOutputPathLeaves, transform);
+  sinks_.limit_leaves(Heuristics::kSinkMaxInputPathLeaves, transform);
+  propagations_.limit_leaves(Heuristics::kPropagationMaxInputPathLeaves);
 }
 
 bool Model::empty() const {

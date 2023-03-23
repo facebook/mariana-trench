@@ -42,16 +42,16 @@ class Heuristics {
   constexpr static std::size_t kAbstractTreeWideningHeight = 4;
 
   /**
-   * Maximum number of leaves in a model source or sink tree.
-   *
-   * When reaching the maximum, we collapse all the subtrees into a single node.
-   */
-  constexpr static std::size_t kModelTreeMaxLeaves = 20;
-
-  /**
    * Maximum size of the port of a generation.
    */
   constexpr static std::size_t kGenerationMaxPortSize = 4;
+
+  /**
+   * Maximum number of leaves in the tree of output paths of generations.
+   *
+   * When reaching the maximum, we collapse all the subtrees into a single node.
+   */
+  constexpr static std::size_t kGenerationMaxOutputPathLeaves = 20;
 
   /**
    * Maximum size of the port of a parameter source.
@@ -59,9 +59,23 @@ class Heuristics {
   constexpr static std::size_t kParameterSourceMaxPortSize = 4;
 
   /**
+   * Maximum number of leaves in the tree of output paths of parameter sources.
+   *
+   * When reaching the maximum, we collapse all the subtrees into a single node.
+   */
+  constexpr static std::size_t kParameterSourceMaxOutputPathLeaves = 20;
+
+  /**
    * Maximum size of the port of a sink.
    */
   constexpr static std::size_t kSinkMaxPortSize = 4;
+
+  /**
+   * Maximum number of leaves in the tree of input paths of sinks.
+   *
+   * When reaching the maximum, we collapse all the subtrees into a single node.
+   */
+  constexpr static std::size_t kSinkMaxInputPathLeaves = 20;
 
   /**
    * Maximum number of global iterations before we abort.
