@@ -50,6 +50,7 @@ class JsonValidation final {
       const Json::Value& value,
       const std::string& field);
 
+  static const Json::Value& nonempty_array(const Json::Value& value);
   static const Json::Value& nonempty_array(
       const Json::Value& value,
       const std::string& field);

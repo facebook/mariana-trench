@@ -32,6 +32,7 @@ class CallGraph;
 class Rules;
 class Dependencies;
 class Scheduler;
+class Transforms;
 
 /**
  * Mariana Trench global context.
@@ -65,6 +66,7 @@ class Context final {
   std::unique_ptr<Rules> rules;
   std::unique_ptr<Dependencies> dependencies;
   std::unique_ptr<Scheduler> scheduler;
+  std::unique_ptr<Transforms> transforms;
 };
 
 } // namespace marianatrench

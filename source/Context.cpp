@@ -23,6 +23,7 @@
 #include <mariana-trench/Rules.h>
 #include <mariana-trench/Scheduler.h>
 #include <mariana-trench/Statistics.h>
+#include <mariana-trench/Transforms.h>
 #include <mariana-trench/Types.h>
 
 namespace marianatrench {
@@ -30,7 +31,8 @@ namespace marianatrench {
 Context::Context()
     : kinds(std::make_unique<Kinds>()),
       features(std::make_unique<Features>()),
-      statistics(std::make_unique<Statistics>()) {}
+      statistics(std::make_unique<Statistics>()),
+      transforms(std::make_unique<Transforms>()) {}
 
 Context::Context(Context&&) noexcept = default;
 

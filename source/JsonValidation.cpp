@@ -145,6 +145,14 @@ const Json::Value& JsonValidation::null_or_array(
   return null_or_array;
 }
 
+const Json::Value& JsonValidation::nonempty_array(const Json::Value& value) {
+  if (value.isNull() || !value.isArray() || value.empty()) {
+    throw JsonValidationError(
+        value, /* field */ std::nullopt, /* expected */ "non-empty array");
+  }
+  return value;
+}
+
 const Json::Value& JsonValidation::nonempty_array(
     const Json::Value& value,
     const std::string& field) {
