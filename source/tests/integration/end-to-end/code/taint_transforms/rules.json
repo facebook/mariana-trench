@@ -1,0 +1,14 @@
+[
+  {
+    "name": "Flow",
+    "code": 1,
+    "description": "Simple flow",
+    "sources": [
+      "Source",
+      "NewSource"
+    ],
+    "sinks": [
+      "Sink"
+    ]
+  }
+]
