@@ -129,3 +129,50 @@ TEST_F(IntentRoutingAnalyzerTest, IntentRoutingConstraint) {
       method_routes_intents_to(methods[1], *(context.types));
   EXPECT_EQ(routed_intents_without_hit.size(), 0);
 }
+
+TEST_F(IntentRoutingAnalyzerTest, IntentRoutingSetClass) {
+  Scope scope;
+  auto intent_methods = redex::create_methods(
+      scope,
+      "Landroid/content/Intent;",
+      {
+          R"(
+            (method (public) "Landroid/content/Intent;.<init>:()V"
+            (
+              (return-void)
+            )
+            ))",
+          R"(
+            (method (public) "Landroid/content/Intent;.setClass:(Landroid/content/Context;Ljava/lang/Class;)V"
+            (
+              (return-void)
+            )
+            ))",
+      });
+  auto dex_methods = redex::create_methods(
+      scope,
+      "LClass;",
+      {
+          R"(
+            (method (public) "LClass;.method_1:()V"
+            (
+              (new-instance "Landroid/content/Intent;")
+              (move-result-pseudo-object v0)
+              (invoke-direct (v0) "Landroid/content/Intent;.<init>:()V")
+              (new-instance "Landroid/content/Context;")
+              (move-result-pseudo-object v1)
+              (const-class "LRouteTo;")
+              (move-result-pseudo-object v2)
+              (invoke-direct (v0 v1 v2) "Landroid/content/Intent;.setClass:(Landroid/content/Context;Ljava/lang/Class;)V")
+              (return-void)
+            )
+            ))",
+      });
+
+  auto context = test_types(scope);
+  auto methods = get_methods(context, dex_methods);
+
+  auto routed_intents = method_routes_intents_to(methods[0], *(context.types));
+  EXPECT_EQ(routed_intents.size(), 1);
+  EXPECT_EQ(routed_intents[0]->str(), "LRouteTo;");
+}

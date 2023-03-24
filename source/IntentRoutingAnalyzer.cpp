@@ -89,9 +89,11 @@ class Transfer final : public InstructionAnalyzerBase<
         dex_method_reference,
         opcode_to_search(instruction->opcode()),
         context->method()->dex_method());
-    // Handle new Intent(context, C.class).
+    // Handle new Intent(context, C.class) and intent.setClass(context,
+    // C.class).
     if (method->get_class()->get_name()->str() == ANDROID_INTENT_CLASS &&
-        (method->get_name()->str() == "<init>")) {
+        (method->get_name()->str() == "<init>" ||
+         method->get_name()->str() == "setClass")) {
       const auto dex_arguments = method->get_proto()->get_args();
       if (dex_arguments->size() != 2) {
         return false;
