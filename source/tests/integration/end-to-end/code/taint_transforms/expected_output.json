@@ -1012,9 +1012,117 @@
   {
     "line" : 135,
     "path" : "TaintTransforms.java"
-  }
+  },
+  "sinks" : 
+  [
+    {
+      "port" : "Argument(0)",
+      "taint" : 
+      [
+        {
+          "call" : 
+          {
+            "port" : "Argument(0)",
+            "position" : 
+            {
+              "line" : 137,
+              "path" : "TaintTransforms.java"
+            },
+            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/TaintTransforms;.sinkWithTransformT2:(Ljava/lang/Object;)V"
+          },
+          "kinds" : 
+          [
+            {
+              "call_info" : "CallSite",
+              "distance" : 1,
+              "kind" : "T1@T2:Sink",
+              "local_positions" : 
+              [
+                {
+                  "line" : 136
+                }
+              ],
+              "origins" : 
+              [
+                "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V"
+              ]
+            },
+            {
+              "call_info" : "CallSite",
+              "distance" : 1,
+              "kind" : "T2:Sink",
+              "local_positions" : 
+              [
+                {
+                  "line" : 136
+                }
+              ],
+              "origins" : 
+              [
+                "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V"
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
 }
 {
+  "generations" : 
+  [
+    {
+      "port" : "Return",
+      "taint" : 
+      [
+        {
+          "call" : 
+          {
+            "port" : "Return",
+            "position" : 
+            {
+              "line" : 104,
+              "path" : "TaintTransforms.java"
+            },
+            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/TaintTransforms;.sourceWithTransformT1:()Ljava/lang/Object;"
+          },
+          "kinds" : 
+          [
+            {
+              "call_info" : "CallSite",
+              "distance" : 1,
+              "kind" : "T2@Source",
+              "local_positions" : 
+              [
+                {
+                  "line" : 105
+                }
+              ],
+              "origins" : 
+              [
+                "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;"
+              ]
+            },
+            {
+              "call_info" : "CallSite",
+              "distance" : 1,
+              "kind" : "T2@T1:Source",
+              "local_positions" : 
+              [
+                {
+                  "line" : 105
+                }
+              ],
+              "origins" : 
+              [
+                "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;"
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ],
   "method" : "Lcom/facebook/marianatrench/integrationtests/TaintTransforms;.hopSourceWithTransformsT1T2:()Ljava/lang/Object;",
   "position" : 
   {
