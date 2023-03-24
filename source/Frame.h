@@ -33,6 +33,8 @@
 #include <mariana-trench/MethodSet.h>
 #include <mariana-trench/Position.h>
 #include <mariana-trench/SingletonAbstractDomain.h>
+#include <mariana-trench/TransformKind.h>
+#include <mariana-trench/Transforms.h>
 
 namespace marianatrench {
 
@@ -159,14 +161,27 @@ class Frame final : public sparta::AbstractDomain<Frame> {
     mt_assert(kind_ != nullptr);
     mt_assert(distance_ >= 0);
     mt_assert(!(callee && field_callee));
-    if (auto* propagation_kind = kind_->as<PropagationKind>()) {
+
+    const auto* base_kind = kind_;
+    bool is_transform_kind = false;
+    if (const auto* transform_kind = kind_->as<TransformKind>()) {
+      is_transform_kind = true;
+      base_kind = transform_kind->base_kind();
+      mt_assert(base_kind != nullptr);
+      mt_assert(
+          transform_kind->local_transforms() != nullptr ||
+          transform_kind->global_transforms() != nullptr);
+    }
+
+    if (auto* propagation_kind = base_kind->as<PropagationKind>()) {
       mt_assert(
           callee_port == AccessPath(propagation_kind->root()) &&
           !output_paths_.is_bottom());
-    } else if (kind_ == Kinds::artificial_source()) {
+    } else if (base_kind == Kinds::artificial_source()) {
       mt_assert(
           callee_port.root().kind() == Root::Kind::Argument &&
-          callee_port.path().empty() && output_paths_.is_bottom());
+          output_paths_.is_bottom() &&
+          (is_transform_kind || callee_port.path().empty()));
     }
     if (callee != nullptr && !callee_port_.root().is_anchor()) {
       mt_assert(call_info == CallInfo::CallSite);
@@ -306,11 +321,17 @@ class Frame final : public sparta::AbstractDomain<Frame> {
   void narrow_with(const Frame& other) override;
 
   bool is_artificial_source() const {
-    return kind_ == Kinds::artificial_source();
+    return kind_->discard_transforms() == Kinds::artificial_source();
   }
 
   /* Return frame with the given kind (and every other field kept the same) */
   Frame with_kind(const Kind* kind) const;
+
+  Frame apply_transform(
+      const Kinds& kinds,
+      const Transforms& transforms,
+      AccessPath callee_port,
+      const TransformList* local_transforms) const;
 
   Json::Value to_json(const LocalPositionSet& local_positions) const;
 

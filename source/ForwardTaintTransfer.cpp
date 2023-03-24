@@ -20,6 +20,7 @@
 #include <mariana-trench/Positions.h>
 #include <mariana-trench/Rules.h>
 #include <mariana-trench/TransferCall.h>
+#include <mariana-trench/TransformOperations.h>
 #include <mariana-trench/TriggeredPartialKind.h>
 
 namespace marianatrench {
@@ -243,16 +244,19 @@ void apply_propagations(
       "Processing propagations for call to `{}`",
       show(callee.method_reference));
 
-  for (const auto& [input, propagations] :
+  for (const auto& [input_path, propagations] :
        callee.model.propagations().elements()) {
-    LOG_OR_DUMP(context, 4, "Processing propagations from {}", input);
-    if (!input.root().is_argument()) {
+    LOG_OR_DUMP(context, 4, "Processing propagations from {}", input_path);
+    if (!input_path.root().is_argument()) {
       WARNING_OR_DUMP(
-          context, 2, "Ignoring propagation with a return input: {}", input);
+          context,
+          2,
+          "Ignoring propagation with a return input: {}",
+          input_path);
       continue;
     }
 
-    auto input_parameter_position = input.root().parameter_position();
+    auto input_parameter_position = input_path.root().parameter_position();
     if (input_parameter_position >= instruction->srcs_size()) {
       WARNING(
           2,
@@ -266,7 +270,7 @@ void apply_propagations(
     auto input_register_id = instruction->src(input_parameter_position);
     auto input_taint_tree = previous_environment->read(
         aliasing.register_memory_locations(input_register_id),
-        input.path().resolve(source_constant_arguments));
+        input_path.path().resolve(source_constant_arguments));
 
     if (input_taint_tree.is_bottom()) {
       continue;
@@ -301,33 +305,30 @@ void apply_propagations(
     }
 
     auto position =
-        context->positions.get(callee.position, input.root(), instruction);
+        context->positions.get(callee.position, input_path.root(), instruction);
 
     for (const auto& propagation : propagations.frames_iterator()) {
       LOG_OR_DUMP(
           context,
           4,
           "Processing propagation from {} to {}",
-          input,
+          input_path,
           propagation);
 
-      const auto* kind = propagation.kind();
-      mt_assert(kind != nullptr);
+      auto propagation_info =
+          transforms::apply_propagation(context, propagation, input_taint_tree);
 
-      const PropagationKind* propagation_kind =
-          kind->discard_transforms()->as<PropagationKind>();
-      mt_assert(propagation_kind != nullptr);
-
-      auto output_root = propagation_kind->root();
+      auto output_root = propagation_info.propagation_kind->root();
       FeatureMayAlwaysSet features = FeatureMayAlwaysSet::make_always(
           callee.model.add_features_to_arguments(output_root));
       features.add(propagation.features());
-      features.add_always(callee.model.add_features_to_arguments(input.root()));
+      features.add_always(
+          callee.model.add_features_to_arguments(input_path.root()));
 
-      auto output_taint_tree = input_taint_tree;
-      output_taint_tree.map([&features, position](Taint& taints) {
-        taints.add_inferred_features_and_local_position(features, position);
-      });
+      propagation_info.output_taint_tree.map(
+          [&features, position](Taint& taints) {
+            taints.add_inferred_features_and_local_position(features, position);
+          });
 
       for (const auto& [output_path, _] :
            propagation.output_paths().elements()) {
@@ -341,9 +342,11 @@ void apply_propagations(
                 4,
                 "Tainting invoke result path {} with {}",
                 output_path_resolved,
-                output_taint_tree);
+                propagation_info.output_taint_tree);
             result_taint.write(
-                output_path_resolved, output_taint_tree, UpdateKind::Weak);
+                output_path_resolved,
+                propagation_info.output_taint_tree,
+                UpdateKind::Weak);
             break;
           }
           case Root::Kind::Argument: {
@@ -356,11 +359,11 @@ void apply_propagations(
                 "Tainting register {} path {} with {}",
                 output_register_id,
                 output_path_resolved,
-                output_taint_tree);
+                propagation_info.output_taint_tree);
             new_environment->write(
                 aliasing.register_memory_locations(output_register_id),
                 output_path_resolved,
-                output_taint_tree,
+                propagation_info.output_taint_tree,
                 callee.model.strong_write_on_propagation() ? UpdateKind::Strong
                                                            : UpdateKind::Weak);
             break;
@@ -472,8 +475,10 @@ void create_sinks(
     return;
   }
 
-  auto partitioned_by_artificial_sources = sources.partition_by_kind<bool>(
-      [&](const Kind* kind) { return kind == Kinds::artificial_source(); });
+  auto partitioned_by_artificial_sources =
+      sources.partition_by_kind<bool>([&](const Kind* kind) {
+        return kind->discard_transforms() == Kinds::artificial_source();
+      });
   auto artificial_sources = partitioned_by_artificial_sources.find(true);
   if (artificial_sources == partitioned_by_artificial_sources.end()) {
     // Sinks are created when artificial sources are found flowing into them.
@@ -559,7 +564,7 @@ void check_sources_sinks_flows(
   auto sources_by_kind = sources.partition_by_kind();
   auto sinks_by_kind = sinks.partition_by_kind();
   for (const auto& [source_kind, source_taint] : sources_by_kind) {
-    if (source_kind == Kinds::artificial_source()) {
+    if (source_kind->discard_transforms() == Kinds::artificial_source()) {
       continue;
     }
 
@@ -1242,8 +1247,10 @@ void infer_output_taint(
     const PropagationKind* output_kind,
     const TaintTree& taint) {
   for (const auto& [output_path, sources] : taint.elements()) {
-    auto partitioned_by_artificial_sources = sources.partition_by_kind<bool>(
-        [&](const Kind* kind) { return kind == Kinds::artificial_source(); });
+    auto partitioned_by_artificial_sources =
+        sources.partition_by_kind<bool>([&](const Kind* kind) {
+          return kind->discard_transforms() == Kinds::artificial_source();
+        });
 
     auto real_sources = partitioned_by_artificial_sources.find(false);
     if (real_sources != partitioned_by_artificial_sources.end()) {

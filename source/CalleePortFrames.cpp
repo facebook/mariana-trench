@@ -91,6 +91,12 @@ CalleePortFrames::CalleePortFrames(std::initializer_list<TaintConfig> configs)
   }
 }
 
+CalleePortFrames::CalleePortFrames(Frame frame) : CalleePortFrames() {
+  if (!frame.is_bottom()) {
+    add(frame);
+  }
+}
+
 bool CalleePortFrames::GroupEqual::operator()(
     const CalleePortFrames& left,
     const CalleePortFrames& right) const {
@@ -506,8 +512,12 @@ std::ostream& operator<<(std::ostream& out, const CalleePortFrames& frames) {
 }
 
 void CalleePortFrames::add(const Frame& frame) {
-  mt_assert(
-      !frame.is_artificial_source() || frame.callee_port().path().empty());
+  if (frame.is_artificial_source()) {
+    mt_assert(
+        frame.callee_port().path().empty() ||
+        frame.kind()->is<TransformKind>());
+  }
+
   if (is_bottom()) {
     callee_port_ = frame.callee_port();
     is_artificial_source_frames_ = frame.is_artificial_source();
@@ -539,6 +549,7 @@ Frame CalleePortFrames::propagate_frames(
   }
 
   const auto* kind = frames.begin()->get().kind();
+  mt_assert(kind != nullptr);
   int distance = std::numeric_limits<int>::max();
   auto origins = MethodSet::bottom();
   auto field_origins = FieldSet::bottom();
@@ -583,6 +594,23 @@ Frame CalleePortFrames::propagate_frames(
 
     materialize_via_value_of_ports(
         callee, context, frame, source_constant_arguments, inferred_features);
+  }
+
+  // For `TransformKind`, all local_transforms of the callee become
+  // global_transforms for the caller.
+  if (const auto* transform_kind = kind->as<TransformKind>()) {
+    kind = context.kinds->transform_kind(
+        /* base_kind */ transform_kind->base_kind(),
+        /* local_transforms */ nullptr,
+        /* global_transforms */
+        context.transforms->concat(
+            transform_kind->local_transforms(),
+            transform_kind->global_transforms()));
+  }
+
+  if (kind == nullptr) {
+    // Invalid sequence of transforms.
+    return Frame::bottom();
   }
 
   if (distance == std::numeric_limits<int>::max()) {

@@ -1177,8 +1177,9 @@ TEST_F(TaintTest, PartitionByKindGeneric) {
               .call_info = CallInfo::CallSite,
           })};
 
-  auto taint_by_kind = taint.partition_by_kind<bool>(
-      [&](const Kind* kind) { return kind == Kinds::artificial_source(); });
+  auto taint_by_kind = taint.partition_by_kind<bool>([&](const Kind* kind) {
+    return kind->discard_transforms() == Kinds::artificial_source();
+  });
   EXPECT_TRUE(taint_by_kind.size() == 2);
   EXPECT_EQ(
       taint_by_kind[true],

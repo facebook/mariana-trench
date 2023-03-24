@@ -267,6 +267,36 @@ void CallPositionFrames::transform_kind_with_features(
   });
 }
 
+CallPositionFrames CallPositionFrames::apply_transform(
+    const Kinds& kinds,
+    const Transforms& transforms,
+    const TransformList* local_transforms) const {
+  FramesByCalleePort frames_by_callee_port;
+
+  for (const auto& callee_port_frames : frames_) {
+    for (const auto& frame : callee_port_frames) {
+      if (!callee_port_frames.is_artificial_source_frames()) {
+        frames_by_callee_port.add(CalleePortFrames{frame.apply_transform(
+            kinds, transforms, frame.callee_port(), local_transforms)});
+        continue;
+      }
+
+      // To apply transform on artificial sources, create a new
+      // callee_port_frame with the callee_port set to each of the input_paths.
+      for (const auto& [inner_path, _] :
+           callee_port_frames.input_paths().elements()) {
+        frames_by_callee_port.add(CalleePortFrames{frame.apply_transform(
+            kinds,
+            transforms,
+            AccessPath(frame.callee_port().root(), inner_path),
+            local_transforms)});
+      }
+    }
+  }
+
+  return CallPositionFrames{position_, frames_by_callee_port};
+}
+
 void CallPositionFrames::append_to_artificial_source_input_paths(
     Path::Element path_element) {
   frames_.map([&](CalleePortFrames& callee_port_frames) {

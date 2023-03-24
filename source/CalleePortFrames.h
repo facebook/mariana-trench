@@ -103,6 +103,8 @@ class CalleePortFrames final : public sparta::AbstractDomain<CalleePortFrames> {
 
   explicit CalleePortFrames(std::initializer_list<TaintConfig> configs);
 
+  explicit CalleePortFrames(Frame frame);
+
   INCLUDE_DEFAULT_COPY_CONSTRUCTORS_AND_ASSIGNMENTS(CalleePortFrames)
 
   // Describe how to join frames together in `CallPositionFrames`.
@@ -180,6 +182,8 @@ class CalleePortFrames final : public sparta::AbstractDomain<CalleePortFrames> {
   }
 
   void add(const TaintConfig& config);
+
+  void add(const Frame& frame);
 
   bool leq(const CalleePortFrames& other) const override;
 
@@ -311,8 +315,6 @@ class CalleePortFrames final : public sparta::AbstractDomain<CalleePortFrames> {
       const CalleePortFrames& frames);
 
  private:
-  void add(const Frame& frame);
-
   void add_input_path(const Path& path) {
     mt_assert(is_artificial_source_frames_);
     input_paths_.join_with(PathTreeDomain{{path, SingletonAbstractDomain()}});

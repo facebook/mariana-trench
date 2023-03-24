@@ -139,6 +139,39 @@ Frame Frame::with_kind(const Kind* kind) const {
   return new_frame;
 }
 
+Frame Frame::apply_transform(
+    const Kinds& kinds,
+    const Transforms& transforms,
+    AccessPath callee_port,
+    const TransformList* local_transforms) const {
+  const Kind* base_kind = kind_;
+  const TransformList* global_transforms = nullptr;
+
+  if (const auto* transform_kind = kind_->as<TransformKind>()) {
+    // If the current kind is already a TransformKind, append existing
+    // local_transforms.
+    local_transforms =
+        transforms.concat(local_transforms, transform_kind->local_transforms());
+    global_transforms = transform_kind->global_transforms();
+    base_kind = transform_kind->base_kind();
+  }
+
+  mt_assert(base_kind != nullptr);
+  const auto* new_kind =
+      kinds.transform_kind(base_kind, local_transforms, global_transforms);
+
+  if (new_kind == nullptr) {
+    // new_kind is nullptr for invalid transforms.
+    return Frame::bottom();
+  }
+
+  Frame new_frame{*this};
+  new_frame.kind_ = new_kind;
+  new_frame.callee_port_ = callee_port;
+
+  return new_frame;
+}
+
 void Frame::append_to_propagation_output_paths(Path::Element path_element) {
   PathTreeDomain new_output_paths;
   for (const auto& [path, elements] : output_paths_.elements()) {

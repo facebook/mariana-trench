@@ -23,6 +23,7 @@
 #include <mariana-trench/IncludeMacros.h>
 #include <mariana-trench/RootPatriciaTreeAbstractPartition.h>
 #include <mariana-trench/TaintConfig.h>
+#include <mariana-trench/Transforms.h>
 
 namespace marianatrench {
 
@@ -173,6 +174,11 @@ class CallPositionFrames final
   void transform_kind_with_features(
       const std::function<std::vector<const Kind*>(const Kind*)>&,
       const std::function<FeatureMayAlwaysSet(const Kind*)>&);
+
+  CallPositionFrames apply_transform(
+      const Kinds& kinds,
+      const Transforms& transforms,
+      const TransformList* local_transforms) const;
 
   void append_to_artificial_source_input_paths(Path::Element path_element);
 

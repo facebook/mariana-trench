@@ -206,7 +206,7 @@ class TaintConfig final {
   }
 
   bool is_artificial_source() const {
-    return kind_ == Kinds::artificial_source();
+    return kind_->discard_transforms() == Kinds::artificial_source();
   }
 
   bool is_leaf() const {

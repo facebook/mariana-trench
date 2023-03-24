@@ -148,6 +148,25 @@ void Taint::transform_kind_with_features(
   });
 }
 
+Taint Taint::apply_transform(
+    const Kinds& kinds,
+    const Transforms& transforms,
+    const TransformList* local_transforms) const {
+  Taint result{};
+
+  for (const auto& callee_frames : set_) {
+    auto new_callee_frames =
+        callee_frames.apply_transform(kinds, transforms, local_transforms);
+    if (new_callee_frames.is_bottom()) {
+      continue;
+    }
+
+    result.set_.add(new_callee_frames);
+  }
+
+  return result;
+}
+
 Json::Value Taint::to_json() const {
   auto taint = Json::Value(Json::arrayValue);
   for (const auto& frames : set_) {

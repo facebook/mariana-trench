@@ -278,6 +278,22 @@ void CalleeFrames::transform_kind_with_features(
   });
 }
 
+CalleeFrames CalleeFrames::apply_transform(
+    const Kinds& kinds,
+    const Transforms& transforms,
+    const TransformList* local_transforms) const {
+  FramesByCallPosition frames_by_call_position;
+
+  for (const auto& [position, call_position_frames] : frames_.bindings()) {
+    frames_by_call_position.set(
+        position,
+        call_position_frames.apply_transform(
+            kinds, transforms, local_transforms));
+  }
+
+  return CalleeFrames{callee_, call_info_, frames_by_call_position};
+}
+
 void CalleeFrames::append_to_artificial_source_input_paths(
     Path::Element path_element) {
   // TODO (T91357916): GroupHashedSetAbstractDomain could be more efficient than

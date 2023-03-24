@@ -34,6 +34,7 @@ MethodContext::MethodContext(
       kinds(*context.kinds),
       features(*context.features),
       registry(registry),
+      transforms(*context.transforms),
       memory_factory(previous_model.method()),
       previous_model(previous_model),
       new_model(new_model),
