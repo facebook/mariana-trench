@@ -668,7 +668,7 @@ void Model::add_inferred_call_effect_sinks(CallEffect effect, Taint sinks) {
 
 void Model::add_propagation(PropagationConfig propagation) {
   if (!check_port_consistency(propagation.input_path()) ||
-      !check_root_consistency(propagation.kind()->root())) {
+      !check_root_consistency(propagation.propagation_kind()->root())) {
     return;
   }
 

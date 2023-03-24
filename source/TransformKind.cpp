@@ -42,4 +42,8 @@ std::string TransformKind::to_trace_string() const {
   return value;
 }
 
+const Kind* TransformKind::discard_transforms() const {
+  return base_kind_;
+}
+
 } // namespace marianatrench

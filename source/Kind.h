@@ -46,6 +46,10 @@ class Kind {
     return dynamic_cast<const T*>(this) != nullptr;
   }
 
+  virtual const Kind* discard_transforms() const {
+    return this;
+  }
+
   virtual Json::Value to_json() const;
   /**
    * Constructs a NamedKind or a PartialKind based on whether the json value has

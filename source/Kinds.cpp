@@ -26,14 +26,14 @@ const NamedKind* Kinds::get(const std::string& name) const {
 const PartialKind* Kinds::get_partial(
     const std::string& name,
     const std::string& label) const {
-  return partial_.create(std::make_pair(name, label), name, label);
+  return partial_.create(std::make_tuple(name, label), name, label);
 }
 
 const TriggeredPartialKind* Kinds::get_triggered(
     const PartialKind* partial,
     const MultiSourceMultiSinkRule* rule) const {
   return triggered_partial_.create(
-      std::make_pair(partial, rule), partial, rule);
+      std::make_tuple(partial, rule), partial, rule);
 }
 
 const LocalReturnKind* Kinds::local_return() const {
@@ -47,6 +47,21 @@ const LocalArgumentKind* Kinds::local_receiver() const {
 const LocalArgumentKind* Kinds::local_argument(
     ParameterPosition parameter) const {
   return local_argument_.create(parameter);
+}
+
+const TransformKind* Kinds::transform_kind(
+    const Kind* base_kind,
+    const TransformList* MT_NULLABLE local_transforms,
+    const TransformList* MT_NULLABLE global_transforms) const {
+  mt_assert(base_kind != nullptr);
+  mt_assert(base_kind->as<TransformKind>() == nullptr);
+  mt_assert(local_transforms != nullptr || global_transforms != nullptr);
+
+  return transforms_.create(
+      std::make_tuple(base_kind, local_transforms, global_transforms),
+      base_kind,
+      local_transforms,
+      global_transforms);
 }
 
 std::vector<const Kind*> Kinds::kinds() const {

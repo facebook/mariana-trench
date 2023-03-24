@@ -58,6 +58,8 @@ class TransformKind final : public Kind {
     return global_transforms_;
   }
 
+  const Kind* discard_transforms() const override;
+
  private:
   const Kind* base_kind_;
   const TransformList* MT_NULLABLE local_transforms_;

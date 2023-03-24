@@ -35,6 +35,11 @@ public class TaintTransforms {
     return o;
   }
 
+  static Object transformT1T2(Object o) {
+    // Declared frozen propagation: Argument(0) -> `T1:T2@LocalReturn`
+    return o;
+  }
+
   static Data transformT3WithSource(Data d) {
     // Declared frozen propagation: Argument(0) -> `T3@LocalReturn`
     // Expect inferred generation: Return.baz -> `NewSource`

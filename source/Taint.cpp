@@ -259,7 +259,7 @@ Taint Taint::artificial_source(AccessPath access_path) {
 Taint Taint::propagation(PropagationConfig propagation) {
   return Taint{TaintConfig(
       /* kind */ propagation.kind(),
-      /* callee_port */ AccessPath(propagation.kind()->root()),
+      /* callee_port */ AccessPath(propagation.propagation_kind()->root()),
       /* callee */ nullptr,
       /* field_callee */ nullptr,
       /* call_position */ nullptr,

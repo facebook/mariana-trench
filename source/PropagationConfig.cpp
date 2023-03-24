@@ -7,6 +7,7 @@
 
 #include <mariana-trench/JsonValidation.h>
 #include <mariana-trench/PropagationConfig.h>
+#include <mariana-trench/Transforms.h>
 
 namespace marianatrench {
 
@@ -17,11 +18,12 @@ PropagationConfig PropagationConfig::from_json(
 
   JsonValidation::string(value, /* field */ "output");
   auto output = AccessPath::from_json(value["output"]);
-  const PropagationKind* kind = nullptr;
+  const PropagationKind* propagation_kind = nullptr;
   if (output.root().is_return()) {
-    kind = context.kinds->local_return();
+    propagation_kind = context.kinds->local_return();
   } else if (output.root().is_argument()) {
-    kind = context.kinds->local_argument(output.root().parameter_position());
+    propagation_kind =
+        context.kinds->local_argument(output.root().parameter_position());
   } else {
     throw JsonValidationError(
         value,
@@ -41,6 +43,17 @@ PropagationConfig PropagationConfig::from_json(
 
   auto inferred_features = FeatureMayAlwaysSet::from_json(value, context);
   FeatureSet user_features = FeatureSet::from_json(value["features"], context);
+
+  const Kind* kind = nullptr;
+  if (value.isMember("transforms")) {
+    kind = context.kinds->transform_kind(
+        /* base_kind */ propagation_kind,
+        /* local_transforms */
+        context.transforms->create(value["transforms"], context),
+        /* global_transforms */ nullptr);
+  } else {
+    kind = propagation_kind;
+  }
 
   return PropagationConfig(
       std::move(input),

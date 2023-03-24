@@ -313,8 +313,11 @@ void apply_propagations(
 
       const auto* kind = propagation.kind();
       mt_assert(kind != nullptr);
-      const auto* propagation_kind = kind->as<PropagationKind>();
+
+      const PropagationKind* propagation_kind =
+          kind->discard_transforms()->as<PropagationKind>();
       mt_assert(propagation_kind != nullptr);
+
       auto output_root = propagation_kind->root();
       FeatureMayAlwaysSet features = FeatureMayAlwaysSet::make_always(
           callee.model.add_features_to_arguments(output_root));

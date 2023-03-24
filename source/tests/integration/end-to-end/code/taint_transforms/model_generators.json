@@ -13,7 +13,35 @@
         "propagation": [
           {
             "input": "Argument(0)",
-            "output": "Return"
+            "output": "Return",
+            "transforms": [
+              "T1"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "find": "methods",
+      "where": [
+        {
+          "constraint": "signature_match",
+          "parent": "Lcom/facebook/marianatrench/integrationtests/TaintTransforms;",
+          "name": "transformT1T2"
+        }
+      ],
+      "model": {
+        "freeze": [
+          "propagation"
+        ],
+        "propagation": [
+          {
+            "input": "Argument(0)",
+            "output": "Return",
+            "transforms": [
+              "T1",
+              "T2"
+            ]
           }
         ]
       }
@@ -34,7 +62,10 @@
         "propagation": [
           {
             "input": "Argument(0)",
-            "output": "Return"
+            "output": "Return",
+            "transforms": [
+              "T2"
+            ]
           }
         ]
       }
@@ -55,7 +86,10 @@
         "propagation": [
           {
             "input": "Argument(0)",
-            "output": "Return"
+            "output": "Return",
+            "transforms": [
+              "T3"
+            ]
           }
         ]
       }

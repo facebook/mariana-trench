@@ -18,6 +18,7 @@
 #include <mariana-trench/Frame.h>
 #include <mariana-trench/IncludeMacros.h>
 #include <mariana-trench/PropagationKind.h>
+#include <mariana-trench/TransformKind.h>
 
 namespace marianatrench {
 
@@ -32,7 +33,7 @@ class PropagationConfig final {
  public:
   explicit PropagationConfig(
       AccessPath input_path,
-      const PropagationKind* kind,
+      const Kind* kind,
       PathTreeDomain output_paths,
       FeatureMayAlwaysSet inferred_features,
       FeatureMayAlwaysSet locally_inferred_features,
@@ -44,6 +45,7 @@ class PropagationConfig final {
         locally_inferred_features_(std::move(locally_inferred_features)),
         user_features_(std::move(user_features)) {
     mt_assert(kind_ != nullptr);
+    mt_assert(kind_->discard_transforms()->is<PropagationKind>());
     mt_assert(!output_paths_.is_bottom());
   }
 
@@ -69,8 +71,15 @@ class PropagationConfig final {
     return input_path_;
   }
 
-  const PropagationKind* kind() const {
+  const Kind* kind() const {
     return kind_;
+  }
+
+  const PropagationKind* propagation_kind() const {
+    const auto* propagation_kind =
+        kind_->discard_transforms()->as<PropagationKind>();
+    mt_assert(propagation_kind != nullptr);
+    return propagation_kind;
   }
 
   const PathTreeDomain& output_paths() const {
@@ -99,7 +108,7 @@ class PropagationConfig final {
 
  private:
   AccessPath input_path_;
-  const PropagationKind* kind_;
+  const Kind* kind_;
   PathTreeDomain output_paths_;
   FeatureMayAlwaysSet inferred_features_;
   FeatureMayAlwaysSet locally_inferred_features_;
