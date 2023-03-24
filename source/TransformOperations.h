@@ -25,5 +25,10 @@ PropagationInfo apply_propagation(
     const Frame& propagation,
     const TaintTree& input_taint_tree);
 
+const Kind* MT_NULLABLE get_propagation_for_artificial_source(
+    MethodContext* context,
+    const PropagationKind* propagation_kind,
+    const Kind* artificial_source);
+
 } // namespace transforms
 } // namespace marianatrench

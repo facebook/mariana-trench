@@ -167,10 +167,6 @@ class Frame final : public sparta::AbstractDomain<Frame> {
     if (const auto* transform_kind = kind_->as<TransformKind>()) {
       is_transform_kind = true;
       base_kind = transform_kind->base_kind();
-      mt_assert(base_kind != nullptr);
-      mt_assert(
-          transform_kind->local_transforms() != nullptr ||
-          transform_kind->global_transforms() != nullptr);
     }
 
     if (auto* propagation_kind = base_kind->as<PropagationKind>()) {

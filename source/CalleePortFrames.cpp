@@ -91,7 +91,7 @@ CalleePortFrames::CalleePortFrames(std::initializer_list<TaintConfig> configs)
   }
 }
 
-CalleePortFrames::CalleePortFrames(Frame frame) : CalleePortFrames() {
+CalleePortFrames::CalleePortFrames(const Frame& frame) : CalleePortFrames() {
   if (!frame.is_bottom()) {
     add(frame);
   }

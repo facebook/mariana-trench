@@ -103,7 +103,7 @@ class CalleePortFrames final : public sparta::AbstractDomain<CalleePortFrames> {
 
   explicit CalleePortFrames(std::initializer_list<TaintConfig> configs);
 
-  explicit CalleePortFrames(Frame frame);
+  explicit CalleePortFrames(const Frame& frame);
 
   INCLUDE_DEFAULT_COPY_CONSTRUCTORS_AND_ASSIGNMENTS(CalleePortFrames)
 

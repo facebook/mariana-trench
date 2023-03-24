@@ -46,5 +46,23 @@ PropagationInfo apply_propagation(
   return PropagationInfo{propagation_kind, std::move(output_taint_tree)};
 }
 
+const Kind* MT_NULLABLE get_propagation_for_artificial_source(
+    MethodContext* context,
+    const PropagationKind* propagation_kind,
+    const Kind* artificial_source) {
+  if (artificial_source == Kinds::artificial_source()) {
+    return propagation_kind;
+  }
+
+  const auto* transform_kind = artificial_source->as<TransformKind>();
+  mt_assert(transform_kind != nullptr);
+  mt_assert(transform_kind->base_kind() == Kinds::artificial_source());
+
+  return context->kinds.transform_kind(
+      propagation_kind,
+      context->transforms.reverse(transform_kind->local_transforms()),
+      context->transforms.reverse(transform_kind->global_transforms()));
+}
+
 } // namespace transforms
 } // namespace marianatrench

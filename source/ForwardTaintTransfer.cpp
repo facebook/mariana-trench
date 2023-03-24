@@ -1240,11 +1240,32 @@ bool ForwardTaintTransfer::analyze_binop_lit(
 
 namespace {
 
+void add_inferred_propagation(
+    MethodContext* context,
+    AccessPath input_path,
+    const Kind* output_kind,
+    PathTreeDomain output_paths,
+    FeatureMayAlwaysSet features) {
+  auto propagation = PropagationConfig(
+      /* input_path */ input_path,
+      /* kind */ output_kind,
+      /* output_paths */ output_paths,
+      /* inferred_features */ features,
+      /* locally_inferred_features */ FeatureMayAlwaysSet::bottom(),
+      /* user_features */ FeatureSet::bottom());
+
+  LOG_OR_DUMP(context, 4, "Inferred propagation {}", propagation);
+  context->new_model.add_inferred_propagation(
+      std::move(propagation),
+      /* widening_features */
+      FeatureMayAlwaysSet{context->features.get_widen_broadening_feature()});
+}
+
 // Infer propagations and generations for the output `taint` on port `root`.
 void infer_output_taint(
     MethodContext* context,
     Root output_root,
-    const PropagationKind* output_kind,
+    const PropagationKind* propagation_kind,
     const TaintTree& taint) {
   for (const auto& [output_path, sources] : taint.elements()) {
     auto partitioned_by_artificial_sources =
@@ -1272,34 +1293,52 @@ void infer_output_taint(
     if (artificial_sources == partitioned_by_artificial_sources.end()) {
       continue;
     }
-    const auto input_paths_per_root = sources.input_paths();
+
     for (const auto& artificial_source :
          artificial_sources->second.frames_iterator()) {
-      const auto input_root = artificial_source.callee_port().root();
-      if (input_root == output_root) {
+      const auto& input_access_path = artificial_source.callee_port();
+      if (input_access_path.root() == output_root) {
         continue;
       }
+
+      const auto* kind_to_propagate =
+          transforms::get_propagation_for_artificial_source(
+              context, propagation_kind, artificial_source.kind());
+      if (kind_to_propagate == nullptr) {
+        continue;
+      }
+
       auto features = artificial_source.features();
-      features.add_always(
-          context->previous_model.attach_to_propagations(input_root));
+      features.add_always(context->previous_model.attach_to_propagations(
+          input_access_path.root()));
       features.add_always(
           context->previous_model.attach_to_propagations(output_root));
-      for (const auto& [input_path, _] :
-           input_paths_per_root.get(input_root).elements()) {
-        auto propagation = PropagationConfig(
-            /* input_path */ AccessPath(input_root, input_path),
-            /* kind */ output_kind,
-            /* output_paths */
+
+      if (kind_to_propagate->is<TransformKind>()) {
+        // `callee_port` for transformed artificial source includes the `path`
+        add_inferred_propagation(
+            context,
+            /* input_path */ input_access_path,
+            /* output_kind */ kind_to_propagate,
+            /* output_path */
             PathTreeDomain{{output_path, SingletonAbstractDomain()}},
-            /* inferred_features */ features,
-            /* locally_inferred_features */ FeatureMayAlwaysSet::bottom(),
-            /* user_features */ FeatureSet::bottom());
-        LOG_OR_DUMP(context, 4, "Inferred propagation {}", propagation);
-        context->new_model.add_inferred_propagation(
-            std::move(propagation),
-            /* widening_features */
-            FeatureMayAlwaysSet{
-                context->features.get_widen_broadening_feature()});
+            /* inferred features */ features);
+
+        continue;
+      }
+
+      const auto input_paths_per_root =
+          artificial_sources->second.input_paths();
+
+      for (const auto& [input_path, _] :
+           input_paths_per_root.get(input_access_path.root()).elements()) {
+        add_inferred_propagation(
+            context,
+            /* input_path */ AccessPath{input_access_path.root(), input_path},
+            /* output_kind */ kind_to_propagate,
+            /* output_path */
+            PathTreeDomain{{output_path, SingletonAbstractDomain()}},
+            /* inferred features */ features);
       }
     }
   }
