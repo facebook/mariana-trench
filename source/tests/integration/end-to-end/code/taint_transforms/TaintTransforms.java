@@ -93,6 +93,14 @@ public class TaintTransforms {
     // Expect inferred generations:
     //   Return -> `T2@T1:Source`
     //          -> `T2@Source`
+    Object sourceT1 = transformT1(Origin.source());
+    return transformT2(sourceT1);
+  }
+
+  static Object hopSourceWithTransformsT1T2() {
+    // Expect inferred generations:
+    //   Return -> `T2@T1:Source`
+    //          -> `T2@Source`
     Object sourceT1 = sourceWithTransformT1();
     return transformT2(sourceT1);
   }
@@ -105,6 +113,13 @@ public class TaintTransforms {
     Origin.sink(t1);
   }
 
+  static void sinkWithTransformT2(Object o) {
+    // Expect inferred sinks:
+    //   Argument(0) -> `T2@Sink`
+    Object t2 = transformT2(o);
+    Origin.sink(t2);
+  }
+
   static void sinkWithTransformsT1T2(Object o) {
     // Expect inferred sinks:
     //   Argument(0) -> `T1:T2@Sink`
@@ -112,6 +127,14 @@ public class TaintTransforms {
     Object sourceT1 = transformT1(o);
     Object sourceT2 = transformT2(sourceT1);
     Origin.sink(sourceT2);
+  }
+
+  static void hopSinkWithTransformsT1T2(Object o) {
+    // Expect inferred generations:
+    //   Argument(0) -> `T1@T2:Sink`
+    //               -> `T2@Sink`
+    Object t = transformT1(o);
+    sinkWithTransformT2(t);
   }
 
   // -------------------------------------------------------
@@ -160,19 +183,35 @@ public class TaintTransforms {
     Origin.sink(data);
   }
 
-  public static void testMultihopSource() {
+  public static void testMultihopSource1() {
     // Expect issue for rules:
     //   Source -> T2 -> Sink
-    //   Source -> T2 -> T1 -> Sink
+    //   Source -> T1 -> T2 -> Sink
     Object source = sourceWithTransformsT1T2();
     Origin.sink(source);
   }
 
-  public static void testMultihopSink() {
+  public static void testMultihopSource2() {
     // Expect issue for rules:
     //   Source -> T2 -> Sink
-    //   Source -> T2 -> T1 -> Sink
+    //   Source -> T1 -> T2 -> Sink
+    Object source = hopSourceWithTransformsT1T2();
+    Origin.sink(source);
+  }
+
+  public static void testMultihopSink1() {
+    // Expect issue for rules:
+    //   Source -> T2 -> Sink
+    //   Source -> T1 -> T2 -> Sink
     Object source = Origin.source();
     sinkWithTransformsT1T2(source);
+  }
+
+  public static void testMultihopSink2() {
+    // Expect issue for rules:
+    //   Source -> T2 -> Sink
+    //   Source -> T1 -> T2 -> Sink
+    Object source = Origin.source();
+    hopSinkWithTransformsT1T2(source);
   }
 }

@@ -449,20 +449,15 @@ void check_multi_source_multi_sink_rules(
   }
 }
 
-FeatureMayAlwaysSet get_fulfilled_sink_features(
-    const FulfilledPartialKindState& fulfilled_partial_sinks,
-    const Kind* transformed_sink_kind) {
-  const auto* new_kind = transformed_sink_kind->as<TriggeredPartialKind>();
-  // Called only after transform_kind_with_features creates a triggered kind,
-  // so this must be a TriggeredPartialKind.
-  mt_assert(new_kind != nullptr);
-  const auto* rule = new_kind->rule();
-  const auto* counterpart = fulfilled_partial_sinks.get_fulfilled_counterpart(
-      /* unfulfilled_kind */ new_kind->partial_kind(), rule);
-
-  // A triggered kind was created, so its counterpart must exist.
-  mt_assert(counterpart != nullptr);
-  return fulfilled_partial_sinks.get_features(counterpart, rule);
+void add_inferred_sink(
+    MethodContext* context,
+    AccessPath sink_caller_port,
+    Taint new_sinks,
+    FeatureMayAlwaysSet widen_broadening_features) {
+  LOG_OR_DUMP(
+      context, 4, "Inferred sink for port {}: {}", sink_caller_port, new_sinks);
+  context->new_model.add_inferred_sinks(
+      sink_caller_port, new_sinks, widen_broadening_features);
 }
 
 void create_sinks(
@@ -479,6 +474,7 @@ void create_sinks(
       sources.partition_by_kind<bool>([&](const Kind* kind) {
         return kind->discard_transforms() == Kinds::artificial_source();
       });
+
   auto artificial_sources = partitioned_by_artificial_sources.find(true);
   if (artificial_sources == partitioned_by_artificial_sources.end()) {
     // Sinks are created when artificial sources are found flowing into them.
@@ -486,30 +482,20 @@ void create_sinks(
     return;
   }
 
-  const auto input_paths_per_root = sources.input_paths();
   for (const auto& artificial_source :
        artificial_sources->second.frames_iterator()) {
+    const auto* artificial_kind = artificial_source.kind();
+    mt_assert(artificial_kind != nullptr);
+
+    auto new_sinks = transforms::get_sink_for_artificial_source(
+        context, sinks, artificial_kind, fulfilled_partial_sinks);
+
+    const auto callee_port = artificial_source.callee_port();
     auto features = extra_features;
-    const auto callee_port_root = artificial_source.callee_port().root();
     features.add_always(
-        context->previous_model.attach_to_sinks(callee_port_root));
+        context->previous_model.attach_to_sinks(callee_port.root()));
     features.add(artificial_source.features());
 
-    auto new_sinks = sinks;
-    new_sinks.transform_kind_with_features(
-        [context, &fulfilled_partial_sinks](
-            const Kind* sink_kind) -> std::vector<const Kind*> {
-          const auto* partial_sink = sink_kind->as<PartialKind>();
-          if (!partial_sink) {
-            // No transformation. Keep sink as it is.
-            return {sink_kind};
-          }
-          return fulfilled_partial_sinks.make_triggered_counterparts(
-              /* unfulfilled_kind */ partial_sink, context->kinds);
-        },
-        [&fulfilled_partial_sinks](const Kind* new_kind) {
-          return get_fulfilled_sink_features(fulfilled_partial_sinks, new_kind);
-        });
     new_sinks.add_inferred_features(features);
 
     // local_positions() are specific to the callee position. Normally,
@@ -517,21 +503,25 @@ void create_sinks(
     // creates sinks and should always be called for the same call position
     // (where the sink is).
     new_sinks.set_local_positions(artificial_sources->second.local_positions());
-    const auto input_paths = input_paths_per_root.get(callee_port_root);
-    for (const auto& [input_path, _] : input_paths.elements()) {
-      auto sink_caller_port = AccessPath(callee_port_root, input_path);
-      LOG_OR_DUMP(
+
+    FeatureMayAlwaysSet widen_broadening_features{
+        context->features.get_widen_broadening_feature()};
+    if (artificial_kind->is<TransformKind>()) {
+      // `callee_port` for transformed artificial source includes the `path`
+      add_inferred_sink(
+          context, callee_port, new_sinks, widen_broadening_features);
+
+      continue;
+    }
+
+    const auto input_paths_per_root = artificial_sources->second.input_paths();
+    for (const auto& [input_path, _] :
+         input_paths_per_root.get(callee_port.root()).elements()) {
+      add_inferred_sink(
           context,
-          4,
-          "Inferred sink for port {}: {}",
-          sink_caller_port,
-          new_sinks);
-      context->new_model.add_inferred_sinks(
-          sink_caller_port,
+          AccessPath(callee_port.root(), input_path),
           new_sinks,
-          /* widening_features */
-          FeatureMayAlwaysSet{
-              context->features.get_widen_broadening_feature()});
+          widen_broadening_features);
     }
   }
 }

@@ -30,5 +30,11 @@ const Kind* MT_NULLABLE get_propagation_for_artificial_source(
     const PropagationKind* propagation_kind,
     const Kind* artificial_source);
 
+Taint get_sink_for_artificial_source(
+    MethodContext* context,
+    Taint sinks,
+    const Kind* artificial_source,
+    const FulfilledPartialKindState& fulfilled_partial_sinks);
+
 } // namespace transforms
 } // namespace marianatrench
