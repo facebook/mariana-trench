@@ -122,12 +122,14 @@ TEST_F(IntentRoutingAnalyzerTest, IntentRoutingConstraint) {
 
   auto routed_intents_with_hit =
       method_routes_intents_to(methods[0], *(context.types));
-  EXPECT_EQ(routed_intents_with_hit.size(), 1);
-  EXPECT_EQ(routed_intents_with_hit[0]->str(), "LRouteTo;");
+  EXPECT_EQ(routed_intents_with_hit.routed_intents.size(), 1);
+  EXPECT_EQ(routed_intents_with_hit.routed_intents[0]->str(), "LRouteTo;");
+  EXPECT_EQ(routed_intents_with_hit.calls_get_intent, false);
 
   auto routed_intents_without_hit =
       method_routes_intents_to(methods[1], *(context.types));
-  EXPECT_EQ(routed_intents_without_hit.size(), 0);
+  EXPECT_EQ(routed_intents_without_hit.routed_intents.size(), 0);
+  EXPECT_EQ(routed_intents_without_hit.calls_get_intent, false);
 }
 
 TEST_F(IntentRoutingAnalyzerTest, IntentRoutingSetClass) {
@@ -173,6 +175,40 @@ TEST_F(IntentRoutingAnalyzerTest, IntentRoutingSetClass) {
   auto methods = get_methods(context, dex_methods);
 
   auto routed_intents = method_routes_intents_to(methods[0], *(context.types));
-  EXPECT_EQ(routed_intents.size(), 1);
-  EXPECT_EQ(routed_intents[0]->str(), "LRouteTo;");
+  EXPECT_EQ(routed_intents.routed_intents.size(), 1);
+  EXPECT_EQ(routed_intents.routed_intents[0]->str(), "LRouteTo;");
+  EXPECT_EQ(routed_intents.calls_get_intent, false);
+}
+
+TEST_F(IntentRoutingAnalyzerTest, IntentRoutingGetIntent) {
+  Scope scope;
+  auto dex_methods = redex::create_methods(
+      scope,
+      "LClass;",
+      {
+          R"(
+            (method (public) "LClass;.getIntent:()Landroid/content/Intent;"
+            (
+              (new-instance "Landroid/content/Intent;")
+              (move-result-pseudo-object v0)
+              (return-object v0)
+            )
+            ))",
+          R"(
+            (method (public) "LClass;.method_1:()V"
+            (
+              (new-instance "Landroid/content/Intent;")
+              (move-result-pseudo-object v0)
+              (invoke-direct (v0) "LClass;.getIntent:()Landroid/content/Intent;")
+              (return-void)
+            )
+            ))",
+      });
+
+  auto context = test_types(scope);
+  auto methods = get_methods(context, dex_methods);
+
+  auto routed_intents = method_routes_intents_to(methods[1], *(context.types));
+  EXPECT_EQ(routed_intents.routed_intents.size(), 0);
+  EXPECT_EQ(routed_intents.calls_get_intent, true);
 }

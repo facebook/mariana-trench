@@ -12,8 +12,14 @@
 
 namespace marianatrench {
 
-std::vector<const DexType*> method_routes_intents_to(
+struct IntentRoutingData {
+ public:
+  bool calls_get_intent;
+  std::vector<const DexType*> routed_intents;
+};
+
+IntentRoutingData method_routes_intents_to(
     const Method* method,
     const Types& types);
 
-}
+} // namespace marianatrench

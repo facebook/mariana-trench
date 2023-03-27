@@ -33,7 +33,10 @@ using InstructionsToRoutedIntents = sparta::
 class IntentRoutingContext final {
  public:
   IntentRoutingContext(const Method* method, const Types& types)
-      : routed_intents_({}), method_(method), types_(types) {}
+      : routed_intents_({}),
+        method_(method),
+        types_(types),
+        gets_routed_intent_(false) {}
 
   DELETE_COPY_CONSTRUCTORS_AND_ASSIGNMENTS(IntentRoutingContext)
 
@@ -43,6 +46,14 @@ class IntentRoutingContext final {
     auto routed_intents = routed_intents_.get(instruction);
     routed_intents.add(type);
     routed_intents_.set(instruction, routed_intents);
+  }
+
+  void mark_as_getting_routed_intent() {
+    gets_routed_intent_ = true;
+  }
+
+  bool method_gets_routed_intent() {
+    return gets_routed_intent_;
   }
 
   const InstructionsToRoutedIntents& instructions_to_routed_intents() {
@@ -61,6 +72,7 @@ class IntentRoutingContext final {
   InstructionsToRoutedIntents routed_intents_;
   const Method* method_;
   const Types& types_;
+  bool gets_routed_intent_;
 };
 
 class Transfer final : public InstructionAnalyzerBase<
@@ -81,9 +93,6 @@ class Transfer final : public InstructionAnalyzerBase<
       const IRInstruction* instruction,
       InstructionsToRoutedIntents* current_state) {
     LOG(4, "Analyzing instruction: {}", show(instruction));
-    if (instruction->opcode() != OPCODE_INVOKE_DIRECT) {
-      return false;
-    }
     DexMethodRef* dex_method_reference = instruction->get_method();
     DexMethod* method = resolve_method(
         dex_method_reference,
@@ -110,6 +119,10 @@ class Transfer final : public InstructionAnalyzerBase<
       }
       const auto* type = found->second;
       context->add_routed_intent(instruction, type);
+    } else if (
+        method->get_name()->str() == "getIntent" &&
+        method->get_proto()->get_rtype()->str() == "Landroid/content/Intent;") {
+      context->mark_as_getting_routed_intent();
     }
     return false;
   }
@@ -153,19 +166,19 @@ class IntentRoutingFixpointIterator final
 
 } // namespace
 
-std::vector<const DexType*> method_routes_intents_to(
+IntentRoutingData method_routes_intents_to(
     const Method* method,
     const Types& types) {
   auto* code = method->get_code();
   if (code == nullptr) {
-    return {};
+    return {/* calls_get_intent */ false, /* routed_intents */ {}};
   }
 
   if (!code->cfg_built()) {
     LOG(1,
         "CFG not built for method: {}. Cannot evaluate routed intents.",
         method->show());
-    return {};
+    return {/* calls_get_intent */ false, /* routed_intents */ {}};
   }
 
   auto context = std::make_unique<IntentRoutingContext>(method, types);
@@ -180,7 +193,9 @@ std::vector<const DexType*> method_routes_intents_to(
       routed_intents.push_back(intent);
     }
   }
-  return routed_intents;
+  return {
+      /* calls_get_intent */ context->method_gets_routed_intent(),
+      routed_intents};
 }
 
 } // namespace marianatrench
