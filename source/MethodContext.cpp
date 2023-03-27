@@ -9,6 +9,7 @@
 
 #include <Show.h>
 
+#include <mariana-trench/Features.h>
 #include <mariana-trench/Log.h>
 #include <mariana-trench/Overrides.h>
 
@@ -120,6 +121,9 @@ Model MethodContext::model_at_callsite(
         override_model);
     model.join_with(override_model);
   }
+
+  model.approximate(
+      FeatureMayAlwaysSet{context_.features->get_widen_broadening_feature()});
 
   callsite_model_cache_.emplace(CacheKey{call_target, position}, model);
   return model;
