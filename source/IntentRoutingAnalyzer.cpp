@@ -94,10 +94,14 @@ class Transfer final : public InstructionAnalyzerBase<
       InstructionsToRoutedIntents* current_state) {
     LOG(4, "Analyzing instruction: {}", show(instruction));
     DexMethodRef* dex_method_reference = instruction->get_method();
-    DexMethod* method = resolve_method(
+    auto method = resolve_method(
         dex_method_reference,
         opcode_to_search(instruction->opcode()),
         context->method()->dex_method());
+
+    if (method == nullptr || method->get_class() == nullptr) {
+      return false;
+    }
     // Handle new Intent(context, C.class) and intent.setClass(context,
     // C.class).
     if (method->get_class()->get_name()->str() == ANDROID_INTENT_CLASS &&
