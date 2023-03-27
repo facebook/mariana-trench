@@ -345,38 +345,7 @@
       "Ljava/lang/Object;.<init>:()V"
     ]
   },
-  "Lcom/facebook/marianatrench/integrationtests/KotlinCheckCast;.falsePositiveFromCheckCastType2:(Lcom/facebook/marianatrench/integrationtests/KotlinCheckCast$Base;)V" : 
-  {
-    "artificial" : 
-    [
-      "Lcom/facebook/marianatrench/integrationtests/KotlinCheckCast$DerivedNoSink;.run:(Ljava/lang/Object;)V"
-    ],
-    "static" : 
-    [
-      "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;"
-    ],
-    "virtual" : 
-    [
-      "Lcom/facebook/marianatrench/integrationtests/KotlinCheckCast;.shimmed:(Lcom/facebook/marianatrench/integrationtests/KotlinCheckCast$Base;Ljava/lang/Object;)V"
-    ]
-  },
-  "Lcom/facebook/marianatrench/integrationtests/KotlinCheckCast;.falsePositiveFromCheckCastType:()V" : 
-  {
-    "artificial" : 
-    [
-      "Lcom/facebook/marianatrench/integrationtests/KotlinCheckCast$DerivedNoSink;.run:(Ljava/lang/Object;)V"
-    ],
-    "static" : 
-    [
-      "Lcom/facebook/marianatrench/integrationtests/KotlinCheckCast$DerivedNoSink;.<init>:()V",
-      "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;"
-    ],
-    "virtual" : 
-    [
-      "Lcom/facebook/marianatrench/integrationtests/KotlinCheckCast;.shimmed:(Lcom/facebook/marianatrench/integrationtests/KotlinCheckCast$Base;Ljava/lang/Object;)V"
-    ]
-  },
-  "Lcom/facebook/marianatrench/integrationtests/KotlinCheckCast;.issueFromCheckCastType2:(Lcom/facebook/marianatrench/integrationtests/KotlinCheckCast$Base;)V" : 
+  "Lcom/facebook/marianatrench/integrationtests/KotlinCheckCast;.issueFromCastedType:(Lcom/facebook/marianatrench/integrationtests/KotlinCheckCast$Base;)V" : 
   {
     "artificial" : 
     [
@@ -391,7 +360,7 @@
       "Lcom/facebook/marianatrench/integrationtests/KotlinCheckCast;.shimmed:(Lcom/facebook/marianatrench/integrationtests/KotlinCheckCast$Base;Ljava/lang/Object;)V"
     ]
   },
-  "Lcom/facebook/marianatrench/integrationtests/KotlinCheckCast;.issueFromCheckCastType:()V" : 
+  "Lcom/facebook/marianatrench/integrationtests/KotlinCheckCast;.issueFromDerivedType:()V" : 
   {
     "artificial" : 
     [
@@ -417,6 +386,37 @@
     [
       "Lcom/facebook/marianatrench/integrationtests/KotlinCheckCast$DerivedNoSink;.<init>:()V",
       "Lcom/facebook/marianatrench/integrationtests/KotlinCheckCast$DerivedWithSink;.<init>:()V",
+      "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;"
+    ],
+    "virtual" : 
+    [
+      "Lcom/facebook/marianatrench/integrationtests/KotlinCheckCast;.shimmed:(Lcom/facebook/marianatrench/integrationtests/KotlinCheckCast$Base;Ljava/lang/Object;)V"
+    ]
+  },
+  "Lcom/facebook/marianatrench/integrationtests/KotlinCheckCast;.noIssueFromCastedType:(Lcom/facebook/marianatrench/integrationtests/KotlinCheckCast$Base;)V" : 
+  {
+    "artificial" : 
+    [
+      "Lcom/facebook/marianatrench/integrationtests/KotlinCheckCast$DerivedNoSink;.run:(Ljava/lang/Object;)V"
+    ],
+    "static" : 
+    [
+      "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;"
+    ],
+    "virtual" : 
+    [
+      "Lcom/facebook/marianatrench/integrationtests/KotlinCheckCast;.shimmed:(Lcom/facebook/marianatrench/integrationtests/KotlinCheckCast$Base;Ljava/lang/Object;)V"
+    ]
+  },
+  "Lcom/facebook/marianatrench/integrationtests/KotlinCheckCast;.noIssueFromDerivedType:()V" : 
+  {
+    "artificial" : 
+    [
+      "Lcom/facebook/marianatrench/integrationtests/KotlinCheckCast$DerivedNoSink;.run:(Ljava/lang/Object;)V"
+    ],
+    "static" : 
+    [
+      "Lcom/facebook/marianatrench/integrationtests/KotlinCheckCast$DerivedNoSink;.<init>:()V",
       "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;"
     ],
     "virtual" : 

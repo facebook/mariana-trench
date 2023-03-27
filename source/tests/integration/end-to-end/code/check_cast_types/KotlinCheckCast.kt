@@ -31,14 +31,14 @@ public class KotlinCheckCast {
   // User-defined shim to call klass.run(argument)
   public fun shimmed(klass: Base, argument: Object) = Unit
 
-  public fun issueFromCheckCastType() {
+  public fun issueFromDerivedType() {
     // There is a check-cast instruction (DerivedWithSink to Base) in the byte
     // code. The corresponding register type is Base. Analysis will consider
     // all derived classes, hence this source is seen to flow into a sink.
     shimmed(DerivedWithSink(), Origin.source() as Object)
   }
 
-  public fun falsePositiveFromCheckCastType() {
+  public fun noIssueFromDerivedType() {
     // False positive because of check-cast instruction (see
     // `issueFromCheckCastType`).
     shimmed(DerivedNoSink(), Origin.source() as Object)
@@ -58,12 +58,12 @@ public class KotlinCheckCast {
     shimmed(base, Origin.source() as Object)
   }
 
-  public fun issueFromCheckCastType2(base: Base) {
+  public fun issueFromCastedType(base: Base) {
     val derived = base as DerivedWithSink
     shimmed(derived, Origin.source() as Object)
   }
 
-  public fun falsePositiveFromCheckCastType2(base: Base) {
+  public fun noIssueFromCastedType(base: Base) {
     // Ideally, the type should be handled as DerivedNoSink. There is a
     // check-cast instruction for it. However, another check-cast (to Base)
     // instruction is introduced when calling shimmed(derived, ...).

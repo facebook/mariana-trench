@@ -1609,22 +1609,6 @@
   }
 }
 {
-  "method" : "Lcom/facebook/marianatrench/integrationtests/KotlinCheckCast;.falsePositiveFromCheckCastType2:(Lcom/facebook/marianatrench/integrationtests/KotlinCheckCast$Base;)V",
-  "position" : 
-  {
-    "line" : 69,
-    "path" : "KotlinCheckCast.kt"
-  }
-}
-{
-  "method" : "Lcom/facebook/marianatrench/integrationtests/KotlinCheckCast;.falsePositiveFromCheckCastType:()V",
-  "position" : 
-  {
-    "line" : 43,
-    "path" : "KotlinCheckCast.kt"
-  }
-}
-{
   "issues" : 
   [
     {
@@ -1722,7 +1706,7 @@
       ]
     }
   ],
-  "method" : "Lcom/facebook/marianatrench/integrationtests/KotlinCheckCast;.issueFromCheckCastType2:(Lcom/facebook/marianatrench/integrationtests/KotlinCheckCast$Base;)V",
+  "method" : "Lcom/facebook/marianatrench/integrationtests/KotlinCheckCast;.issueFromCastedType:(Lcom/facebook/marianatrench/integrationtests/KotlinCheckCast$Base;)V",
   "position" : 
   {
     "line" : 61,
@@ -1827,7 +1811,7 @@
       ]
     }
   ],
-  "method" : "Lcom/facebook/marianatrench/integrationtests/KotlinCheckCast;.issueFromCheckCastType:()V",
+  "method" : "Lcom/facebook/marianatrench/integrationtests/KotlinCheckCast;.issueFromDerivedType:()V",
   "position" : 
   {
     "line" : 37,
@@ -1936,6 +1920,22 @@
   "position" : 
   {
     "line" : 47,
+    "path" : "KotlinCheckCast.kt"
+  }
+}
+{
+  "method" : "Lcom/facebook/marianatrench/integrationtests/KotlinCheckCast;.noIssueFromCastedType:(Lcom/facebook/marianatrench/integrationtests/KotlinCheckCast$Base;)V",
+  "position" : 
+  {
+    "line" : 69,
+    "path" : "KotlinCheckCast.kt"
+  }
+}
+{
+  "method" : "Lcom/facebook/marianatrench/integrationtests/KotlinCheckCast;.noIssueFromDerivedType:()V",
+  "position" : 
+  {
+    "line" : 43,
     "path" : "KotlinCheckCast.kt"
   }
 }
