@@ -349,7 +349,7 @@
   {
     "artificial" : 
     [
-      "Lcom/facebook/marianatrench/integrationtests/KotlinCheckCast$Base;.run:(Ljava/lang/Object;)V"
+      "Lcom/facebook/marianatrench/integrationtests/KotlinCheckCast$DerivedNoSink;.run:(Ljava/lang/Object;)V"
     ],
     "static" : 
     [
@@ -364,7 +364,7 @@
   {
     "artificial" : 
     [
-      "Lcom/facebook/marianatrench/integrationtests/KotlinCheckCast$Base;.run:(Ljava/lang/Object;)V"
+      "Lcom/facebook/marianatrench/integrationtests/KotlinCheckCast$DerivedNoSink;.run:(Ljava/lang/Object;)V"
     ],
     "static" : 
     [
@@ -380,7 +380,7 @@
   {
     "artificial" : 
     [
-      "Lcom/facebook/marianatrench/integrationtests/KotlinCheckCast$Base;.run:(Ljava/lang/Object;)V"
+      "Lcom/facebook/marianatrench/integrationtests/KotlinCheckCast$DerivedWithSink;.run:(Ljava/lang/Object;)V"
     ],
     "static" : 
     [
@@ -395,7 +395,7 @@
   {
     "artificial" : 
     [
-      "Lcom/facebook/marianatrench/integrationtests/KotlinCheckCast$Base;.run:(Ljava/lang/Object;)V"
+      "Lcom/facebook/marianatrench/integrationtests/KotlinCheckCast$DerivedWithSink;.run:(Ljava/lang/Object;)V"
     ],
     "static" : 
     [

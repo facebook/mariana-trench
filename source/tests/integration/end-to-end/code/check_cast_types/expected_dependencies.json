@@ -77,10 +77,6 @@
   ],
   "Lcom/facebook/marianatrench/integrationtests/KotlinCheckCast$Base;.run:(Ljava/lang/Object;)V" : 
   [
-    "Lcom/facebook/marianatrench/integrationtests/KotlinCheckCast;.falsePositiveFromCheckCastType2:(Lcom/facebook/marianatrench/integrationtests/KotlinCheckCast$Base;)V",
-    "Lcom/facebook/marianatrench/integrationtests/KotlinCheckCast;.falsePositiveFromCheckCastType:()V",
-    "Lcom/facebook/marianatrench/integrationtests/KotlinCheckCast;.issueFromCheckCastType2:(Lcom/facebook/marianatrench/integrationtests/KotlinCheckCast$Base;)V",
-    "Lcom/facebook/marianatrench/integrationtests/KotlinCheckCast;.issueFromCheckCastType:()V",
     "Lcom/facebook/marianatrench/integrationtests/KotlinCheckCast;.issueFromVirtualBaseType:()V"
   ],
   "Lcom/facebook/marianatrench/integrationtests/KotlinCheckCast$DerivedNoSink;.<init>:()V" : 
@@ -92,8 +88,6 @@
   [
     "Lcom/facebook/marianatrench/integrationtests/KotlinCheckCast;.falsePositiveFromCheckCastType2:(Lcom/facebook/marianatrench/integrationtests/KotlinCheckCast$Base;)V",
     "Lcom/facebook/marianatrench/integrationtests/KotlinCheckCast;.falsePositiveFromCheckCastType:()V",
-    "Lcom/facebook/marianatrench/integrationtests/KotlinCheckCast;.issueFromCheckCastType2:(Lcom/facebook/marianatrench/integrationtests/KotlinCheckCast$Base;)V",
-    "Lcom/facebook/marianatrench/integrationtests/KotlinCheckCast;.issueFromCheckCastType:()V",
     "Lcom/facebook/marianatrench/integrationtests/KotlinCheckCast;.issueFromVirtualBaseType:()V"
   ],
   "Lcom/facebook/marianatrench/integrationtests/KotlinCheckCast$DerivedWithSink;.<init>:()V" : 
@@ -103,8 +97,6 @@
   ],
   "Lcom/facebook/marianatrench/integrationtests/KotlinCheckCast$DerivedWithSink;.run:(Ljava/lang/Object;)V" : 
   [
-    "Lcom/facebook/marianatrench/integrationtests/KotlinCheckCast;.falsePositiveFromCheckCastType2:(Lcom/facebook/marianatrench/integrationtests/KotlinCheckCast$Base;)V",
-    "Lcom/facebook/marianatrench/integrationtests/KotlinCheckCast;.falsePositiveFromCheckCastType:()V",
     "Lcom/facebook/marianatrench/integrationtests/KotlinCheckCast;.issueFromCheckCastType2:(Lcom/facebook/marianatrench/integrationtests/KotlinCheckCast$Base;)V",
     "Lcom/facebook/marianatrench/integrationtests/KotlinCheckCast;.issueFromCheckCastType:()V",
     "Lcom/facebook/marianatrench/integrationtests/KotlinCheckCast;.issueFromVirtualBaseType:()V"

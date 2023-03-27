@@ -241,7 +241,9 @@ std::unique_ptr<TypeEnvironments> Types::infer_local_types_for_method(
   }
 
   try {
-    type_inference::TypeInference inference(code->cfg());
+    type_inference::TypeInference inference(
+        code->cfg(),
+        /* skip_check_cast_upcasting */ true);
     inference.run(
         method->is_static(), method->get_class(), parameter_type_list);
     return std::make_unique<TypeEnvironments>(
