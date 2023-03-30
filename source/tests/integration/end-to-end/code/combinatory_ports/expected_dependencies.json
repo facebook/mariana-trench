@@ -55,9 +55,19 @@
     "Lcom/facebook/marianatrench/integrationtests/Flow$B;.method:()V",
     "Lcom/facebook/marianatrench/integrationtests/Flow$C;.method:()V"
   ],
+  "Lcom/facebook/marianatrench/integrationtests/Flow$Node;.recursive_parent:()V" : 
+  [
+    "Lcom/facebook/marianatrench/integrationtests/Flow$Node;.recursive_parent:()V"
+  ],
+  "Lcom/facebook/marianatrench/integrationtests/Flow$Node;.recursive_parent_x:()V" : 
+  [
+    "Lcom/facebook/marianatrench/integrationtests/Flow$Node;.recursive_parent_x:()V"
+  ],
   "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V" : 
   [
-    "Lcom/facebook/marianatrench/integrationtests/Flow$C;.method:()V"
+    "Lcom/facebook/marianatrench/integrationtests/Flow$C;.method:()V",
+    "Lcom/facebook/marianatrench/integrationtests/Flow$Node;.recursive_parent:()V",
+    "Lcom/facebook/marianatrench/integrationtests/Flow$Node;.recursive_parent_x:()V"
   ],
   "Lcom/facebook/secure/context/IntentLauncher;.<init>:()V" : 
   [
@@ -101,6 +111,7 @@
     "Lcom/facebook/marianatrench/integrationtests/Flow$A;.<init>:(Lcom/facebook/marianatrench/integrationtests/Flow;)V",
     "Lcom/facebook/marianatrench/integrationtests/Flow$B;.<init>:(Lcom/facebook/marianatrench/integrationtests/Flow;)V",
     "Lcom/facebook/marianatrench/integrationtests/Flow$C;.<init>:(Lcom/facebook/marianatrench/integrationtests/Flow;)V",
+    "Lcom/facebook/marianatrench/integrationtests/Flow$Node;.<init>:(Lcom/facebook/marianatrench/integrationtests/Flow;)V",
     "Lcom/facebook/marianatrench/integrationtests/Flow;.<init>:()V",
     "Lcom/facebook/marianatrench/integrationtests/Origin;.<init>:()V",
     "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;",
