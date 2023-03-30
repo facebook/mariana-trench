@@ -227,6 +227,36 @@ class AccessPathTreeDomain final
     });
   }
 
+  /**
+   * Transforms the tree to shape it according to a mold.
+   *
+   * `make_mold` is a function applied on elements to create a mold tree.
+   *
+   * `transform_on_collapse` is called on elements that are collapsed. This is
+   * mainly used to attach broadening features to collapsed taint.
+   *
+   * In practice, this is used to prune the taint tree of duplicate taint, for
+   * better performance at the cost of precision. `make_mold` creates a new
+   * taint without any non-essential information (i.e, removing features). Since
+   * the tree domain automatically removes elements on children if it is present
+   * at the root (closure), this will collapse unnecessary branches.
+   * `AbstractTreeDomain::shape_with` will then collapse branches in the
+   * original taint tree if it was collapsed in the mold.
+   */
+  void shape_with(
+      const std::function<void(Elements&)>& make_mold,
+      const std::function<void(Elements&)>& transform_on_collapse) {
+    map_.map(
+        [&make_mold, &transform_on_collapse](const AbstractTreeDomainT& tree) {
+          auto mold = tree;
+          mold.map(make_mold);
+
+          auto copy = tree;
+          copy.shape_with(mold, transform_on_collapse);
+          return copy;
+        });
+  }
+
   friend std::ostream& operator<<(
       std::ostream& out,
       const AccessPathTreeDomain& tree) {

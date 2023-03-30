@@ -297,4 +297,38 @@ Taint Taint::propagation(PropagationConfig propagation) {
       /* call_info */ CallInfo::Propagation)};
 }
 
+Taint Taint::essential() const {
+  Taint result;
+  for (const auto& frame : frames_iterator()) {
+    auto callee_port = AccessPath(Root(Root::Kind::Return));
+
+    // This is required by structure invariants.
+    if (auto* propagation_kind =
+            frame.kind()->discard_transforms()->as<PropagationKind>()) {
+      callee_port = AccessPath(propagation_kind->root());
+    }
+
+    result.add(TaintConfig(
+        /* kind */ frame.kind(),
+        /* callee_port */ callee_port,
+        /* callee */ nullptr,
+        /* field_callee */ nullptr,
+        /* call_position */ nullptr,
+        /* distance */ 0,
+        /* origins */ {},
+        /* field_origins */ {},
+        /* inferred_features */ FeatureMayAlwaysSet::bottom(),
+        /* locally_inferred_features */ FeatureMayAlwaysSet::bottom(),
+        /* user_features */ FeatureSet::bottom(),
+        /* via_type_of_ports */ {},
+        /* via_value_of_ports */ {},
+        /* canonical_names */ {},
+        /* input_paths */ {},
+        /* output_paths */ frame.output_paths(),
+        /* local_positions */ {},
+        /* call_info */ CallInfo::Declaration));
+  }
+  return result;
+}
+
 } // namespace marianatrench

@@ -498,13 +498,21 @@ void Model::collapse_invalid_paths(Context& context) {
 void Model::approximate(const FeatureMayAlwaysSet& widening_features) {
   const auto transform = [&widening_features](Taint& taint) {
     taint.add_inferred_features(widening_features);
-    return taint;
   };
+  const auto make_mold = [](Taint& taint) { taint = taint.essential(); };
+
+  generations_.shape_with(make_mold, transform);
   generations_.limit_leaves(
       Heuristics::kGenerationMaxOutputPathLeaves, transform);
+
+  parameter_sources_.shape_with(make_mold, transform);
   parameter_sources_.limit_leaves(
       Heuristics::kParameterSourceMaxOutputPathLeaves, transform);
+
+  sinks_.shape_with(make_mold, transform);
   sinks_.limit_leaves(Heuristics::kSinkMaxInputPathLeaves, transform);
+
+  propagations_.shape_with(make_mold, transform);
   propagations_.limit_leaves(Heuristics::kPropagationMaxInputPathLeaves);
 }
 

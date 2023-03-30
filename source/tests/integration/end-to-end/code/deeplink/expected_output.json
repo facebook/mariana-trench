@@ -1645,9 +1645,20 @@
           "kinds" : 
           [
             {
+              "always_features" : 
+              [
+                "via-widen-broadening"
+              ],
               "call_info" : "CallSite",
               "distance" : 5,
               "kind" : "LaunchingComponent",
+              "local_features" : 
+              {
+                "always_features" : 
+                [
+                  "via-widen-broadening"
+                ]
+              },
               "local_positions" : 
               [
                 {
@@ -1960,6 +1971,10 @@
   [
     {
       "callee" : "Lcom/facebook/marianatrench/integrationtests/IntentHandlerUtil;.launchNextActivity:(Landroid/content/Context;Landroid/content/Intent;)V",
+      "may_features" : 
+      [
+        "via-widen-broadening"
+      ],
       "position" : 
       {
         "line" : 23,
@@ -1988,6 +2003,10 @@
               "call_info" : "CallSite",
               "distance" : 4,
               "kind" : "LaunchingComponent",
+              "may_features" : 
+              [
+                "via-widen-broadening"
+              ],
               "origins" : 
               [
                 "Lcom/facebook/content/SecureContextHelper;.startFacebookActivity:(Landroid/content/Intent;Landroid/content/Context;)V",
