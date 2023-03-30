@@ -2382,4 +2382,189 @@ TEST_F(AbstractTreeDomainTest, CollapseInvalid) {
       }));
 }
 
+TEST_F(AbstractTreeDomainTest, Shape) {
+  const auto x = PathElement::field("x");
+  const auto y = PathElement::field("y");
+  const auto z = PathElement::field("z");
+  const auto xi = PathElement::index("x");
+  const auto yi = PathElement::index("y");
+  const auto zi = PathElement::index("z");
+  const auto ai = PathElement::any_index();
+
+  auto identity = [](IntSet& /* set */) {};
+
+  // Branches are properly collapsed.
+  auto tree = IntSetTree{
+      {Path{}, IntSet{1}},
+      {Path{x}, IntSet{2}},
+      {Path{y}, IntSet{3}},
+      {Path{z}, IntSet{4}},
+  };
+  tree.shape_with(
+      IntSetTree{
+          {Path{x}, IntSet{1001}},
+          {Path{z}, IntSet{1002}},
+      },
+      identity);
+  EXPECT_EQ(
+      tree,
+      (IntSetTree{
+          {Path{}, IntSet{1, 3}},
+          {Path{x}, IntSet{2}},
+          {Path{z}, IntSet{4}},
+      }));
+
+  // Collapsed branches can lead to pruning other branches.
+  tree = IntSetTree{
+      {Path{}, IntSet{1}},
+      {Path{x}, IntSet{2}},
+      {Path{y}, IntSet{2}},
+  };
+  tree.shape_with(
+      IntSetTree{
+          {Path{y}, IntSet{1001}},
+      },
+      identity);
+  EXPECT_EQ(tree, (IntSetTree{IntSet{1, 2}}));
+
+  // Shaping is recursive.
+  tree = IntSetTree{
+      {Path{}, IntSet{1}},
+      {Path{x, x}, IntSet{2}},
+      {Path{x, y}, IntSet{3}},
+      {Path{x, z}, IntSet{4}},
+  };
+  tree.shape_with(
+      IntSetTree{
+          {Path{x, x}, IntSet{1001}},
+          {Path{x, z}, IntSet{1002}},
+      },
+      identity);
+  EXPECT_EQ(
+      tree,
+      (IntSetTree{
+          {Path{}, IntSet{1}},
+          {Path{x}, IntSet{3}},
+          {Path{x, x}, IntSet{2}},
+          {Path{x, z}, IntSet{4}},
+      }));
+
+  tree = IntSetTree{
+      {Path{x, y, z}, IntSet{1}},
+      {Path{y, z}, IntSet{2}},
+  };
+  tree.shape_with(
+      IntSetTree{
+          {Path{y}, IntSet{1001}},
+      },
+      identity);
+  EXPECT_EQ(
+      tree,
+      (IntSetTree{
+          {Path{}, IntSet{1}},
+          {Path{y}, IntSet{2}},
+      }));
+
+  // Transform is applied to collapsed elements.
+  auto add_thousand = [](IntSet& set) {
+    IntSet new_set;
+    for (int value : set.elements()) {
+      new_set.add(value + 1000);
+    }
+    std::swap(set, new_set);
+  };
+  tree = IntSetTree{
+      {Path{}, IntSet{1}},
+      {Path{x}, IntSet{2}},
+      {Path{y}, IntSet{3}},
+      {Path{y, x}, IntSet{4}},
+      {Path{z}, IntSet{5}},
+  };
+  tree.shape_with(
+      IntSetTree{
+          {Path{x}, IntSet{1001}},
+          {Path{z}, IntSet{1002}},
+      },
+      add_thousand);
+  EXPECT_EQ(
+      tree,
+      (IntSetTree{
+          {Path{}, IntSet{1, 1003, 1004}},
+          {Path{x}, IntSet{2}},
+          {Path{z}, IntSet{5}},
+      }));
+
+  // Behavior is similar on indexes.
+  tree = IntSetTree{
+      {Path{}, IntSet{1}},
+      {Path{xi}, IntSet{2}},
+      {Path{xi, xi}, IntSet{3}},
+      {Path{xi, yi}, IntSet{4}},
+      {Path{xi, zi}, IntSet{5}},
+      {Path{yi}, IntSet{6}},
+      {Path{yi, xi}, IntSet{7}},
+      {Path{zi}, IntSet{8}},
+      {Path{zi, xi}, IntSet{9}},
+  };
+  tree.shape_with(
+      IntSetTree{
+          {Path{xi, yi}, IntSet{1001}},
+          {Path{zi}, IntSet{1002}},
+      },
+      identity);
+  EXPECT_EQ(
+      tree,
+      (IntSetTree{
+          {Path{}, IntSet{1, 6, 7}},
+          {Path{xi}, IntSet{2, 3, 5}},
+          {Path{xi, yi}, IntSet{4}},
+          {Path{zi}, IntSet{8, 9}},
+      }));
+
+  // `Index` branches are shaped with `AnyIndex` if there is no corresponding
+  // branch.
+  tree = IntSetTree{
+      {Path{}, IntSet{1}},
+      {Path{xi}, IntSet{2}},
+      {Path{xi, xi}, IntSet{3}},
+      {Path{xi, yi}, IntSet{4}},
+      {Path{xi, zi}, IntSet{5}},
+      {Path{yi}, IntSet{6}},
+      {Path{yi, xi}, IntSet{7}},
+      {Path{zi}, IntSet{8}},
+      {Path{zi, xi}, IntSet{9}},
+  };
+  tree.shape_with(
+      IntSetTree{
+          {Path{ai, yi}, IntSet{1001}},
+          {Path{zi, xi}, IntSet{1002}},
+      },
+      identity);
+  EXPECT_EQ(
+      tree,
+      (IntSetTree{
+          {Path{}, IntSet{1}},
+          {Path{xi}, IntSet{2, 3, 5}},
+          {Path{xi, yi}, IntSet{4}},
+          {Path{yi}, IntSet{6, 7}},
+          {Path{zi}, IntSet{8}},
+          {Path{zi, xi}, IntSet{9}},
+      }));
+
+  tree = IntSetTree{
+      {Path{}, IntSet{1}},
+      {Path{ai}, IntSet{2}},
+      {Path{ai, xi}, IntSet{3}},
+      {Path{ai, yi}, IntSet{4}},
+      {Path{ai, zi}, IntSet{5}}};
+  tree.shape_with(
+      IntSetTree{
+          {Path{xi, xi}, IntSet{1001}},
+          {Path{xi, yi}, IntSet{1002}},
+          {Path{xi, zi}, IntSet{1002}},
+      },
+      identity);
+  EXPECT_EQ(tree, (IntSetTree{IntSet{1, 2, 3, 4, 5}}));
+}
+
 } // namespace marianatrench

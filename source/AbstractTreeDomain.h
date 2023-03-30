@@ -1027,6 +1027,79 @@ class AbstractTreeDomain final
 
  public:
   /**
+   * Transforms the tree so it only contains branches present in `mold`.
+   *
+   * When a branch is not present in `mold`, it is collapsed in its parent.
+   * `transform` is a function called when collapsing. This is mainly used to
+   * attach broadening features to collapsed taint.
+   */
+  void shape_with(
+      const AbstractTreeDomain& mold,
+      const std::function<void(Elements&)>& transform) {
+    shape_with_internal(mold, transform, Elements::bottom());
+  }
+
+ private:
+  void shape_with_internal(
+      const AbstractTreeDomain& mold,
+      const std::function<void(Elements&)>& transform,
+      const Elements& accumulator) {
+    const auto& mold_any_index_subtree =
+        mold.children_.at(PathElement::any_index().encode());
+    bool mold_has_any_index = !mold_any_index_subtree.is_bottom();
+
+    // First pass: collapse branches, so we can build a new accumulator.
+    Map new_children;
+    for (const auto& [path_element, subtree] :
+         PathElementMapIterator(children_)) {
+      const auto& mold_subtree = mold.children_.at(path_element.encode());
+
+      if (!mold_subtree.is_bottom()) {
+        new_children.insert_or_assign(path_element.encode(), subtree);
+      } else if (
+          mold_has_any_index &&
+          path_element.kind() == PathElement::Kind::Index) {
+        // Keep `Index` branches when the mold has an `AnyIndex` branch.
+        new_children.insert_or_assign(path_element.encode(), subtree);
+      } else {
+        subtree.collapse_into(elements_, transform);
+      }
+    }
+
+    elements_.difference_with(accumulator);
+    auto new_accumulator = accumulator.join(elements_);
+
+    // Second pass: apply shape_with on children.
+    children_.clear();
+    for (const auto& [path_element, subtree] :
+         PathElementMapIterator(new_children)) {
+      const auto& mold_subtree = mold.children_.at(path_element.encode());
+
+      auto new_subtree = subtree;
+      if (!mold_subtree.is_bottom()) {
+        new_subtree.shape_with_internal(
+            mold_subtree, transform, new_accumulator);
+      } else if (
+          mold_has_any_index &&
+          path_element.kind() == PathElement::Kind::Index) {
+        // The tree may contain extra `Index` branches when the mold has an
+        // `AnyIndex` branch.
+        new_subtree.shape_with_internal(
+            mold_any_index_subtree, transform, new_accumulator);
+      } else {
+        mt_unreachable_log("invariant broken in shape_with");
+      }
+
+      children_.update(
+          [&new_subtree](const auto& subtree) {
+            return subtree.join(new_subtree);
+          },
+          path_element.encode());
+    }
+  }
+
+ public:
+  /**
    * Iterate on all non-empty elements in the tree.
    *
    * When visiting the tree, elements do not include their ancestors.
