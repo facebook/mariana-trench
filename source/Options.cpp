@@ -107,7 +107,8 @@ Options::Options(
     const std::vector<std::string>& model_generator_search_paths,
     bool remove_unreachable_code,
     bool emit_all_via_cast_features,
-    const std::string& source_root_directory)
+    const std::string& source_root_directory,
+    bool enable_cross_component_analysis)
     : models_paths_(models_paths),
       field_models_paths_(field_models_paths),
       rules_paths_(rules_paths),
@@ -132,7 +133,7 @@ Options::Options(
       dump_call_graph_(false),
       dump_dependencies_(false),
       dump_methods_(false),
-      enable_cross_component_analysis_(false) {}
+      enable_cross_component_analysis_(enable_cross_component_analysis) {}
 
 Options::Options(const boost::program_options::variables_map& variables) {
   system_jar_paths_ = parse_paths_list(

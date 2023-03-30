@@ -7,11 +7,18 @@
 
 #pragma once
 
+#include <ConcurrentContainers.h>
 #include <mariana-trench/IncludeMacros.h>
+#include <mariana-trench/IntentRoutingAnalyzer.h>
 #include <mariana-trench/Method.h>
 #include <mariana-trench/shim-generator/Shim.h>
 
 namespace marianatrench {
+
+using MethodToRoutedIntentClassesMap =
+    ConcurrentMap<const Method*, std::vector<const DexType*>>;
+using ClassesToIntentGettersMap =
+    ConcurrentMap<const DexType*, std::vector<const Method*>>;
 
 class Shims final {
  private:
@@ -19,7 +26,9 @@ class Shims final {
 
  public:
   explicit Shims(std::size_t global_shims_size)
-      : global_shims_(global_shims_size) {}
+      : global_shims_(global_shims_size),
+        methods_to_routed_intents_({}),
+        classes_to_intent_getters_({}) {}
 
   explicit Shims() = default;
 
@@ -31,8 +40,17 @@ class Shims final {
 
   bool add_global_method_shim(const Shim& shim);
 
+  void add_intent_routing_data(
+      const Method* method,
+      IntentRoutingData&& intent_routing_data);
+
+  const MethodToRoutedIntentClassesMap& methods_to_routed_intents() const;
+  const ClassesToIntentGettersMap& classes_to_intent_getters() const;
+
  private:
   MethodToShimMap global_shims_;
+  MethodToRoutedIntentClassesMap methods_to_routed_intents_;
+  ClassesToIntentGettersMap classes_to_intent_getters_;
 };
 
 } // namespace marianatrench

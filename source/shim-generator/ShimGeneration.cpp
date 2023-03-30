@@ -10,6 +10,7 @@
 #include <boost/algorithm/string/join.hpp>
 
 #include <mariana-trench/EventLogger.h>
+#include <mariana-trench/IntentRoutingAnalyzer.h>
 #include <mariana-trench/Options.h>
 #include <mariana-trench/shim-generator/ShimGeneration.h>
 #include <mariana-trench/shim-generator/ShimGenerator.h>
@@ -48,6 +49,26 @@ std::vector<ShimGenerator> get_shim_generators(
   }
 
   return shims;
+}
+
+void build_cross_component_analysis_shims(
+    const Context& context,
+    Shims& shims) {
+  if (!context.options->enable_cross_component_analysis()) {
+    return;
+  }
+
+  auto queue = sparta::work_queue<const Method*>([&](const Method* method) {
+    shims.add_intent_routing_data(
+        method, method_routes_intents_to(method, *context.types));
+  });
+
+  auto* methods = context.methods.get();
+  for (auto iterator = methods->begin(); iterator != methods->end();
+       ++iterator) {
+    queue.add_item(*iterator);
+  }
+  queue.run_all();
 }
 
 } // namespace
@@ -100,6 +121,7 @@ Shims ShimGeneration::run(
     }
   }
 
+  build_cross_component_analysis_shims(context, method_shims);
   return method_shims;
 }
 

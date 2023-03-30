@@ -37,7 +37,8 @@ class Options final {
       const std::vector<std::string>& model_generator_search_paths,
       bool remove_unreachable_code,
       bool emit_all_via_cast_features,
-      const std::string& source_root_directory = ".");
+      const std::string& source_root_directory = ".",
+      bool enable_cross_component_analysis = false);
 
   explicit Options(const boost::program_options::variables_map& variables);
 
