@@ -11,6 +11,8 @@
 
 #include <mariana-trench/MultiSourceMultiSinkRule.h>
 #include <mariana-trench/SourceSinkRule.h>
+#include <mariana-trench/TransformList.h>
+#include <mariana-trench/Transforms.h>
 #include <mariana-trench/tests/Test.h>
 
 namespace marianatrench {
@@ -50,25 +52,29 @@ TEST_F(RuleTest, Rules) {
       /* code */ 1,
       /* description */ "Test rule 1",
       /* source_kinds */ Rule::KindSet{source_a},
-      /* sink_kinds */ Rule::KindSet{sink_x}));
+      /* sink_kinds */ Rule::KindSet{sink_x},
+      /* transforms */ nullptr));
   rule_list.push_back(std::make_unique<SourceSinkRule>(
       /* name */ "Rule2",
       /* code */ 2,
       /* description */ "Test rule 2",
       /* source_kinds */ Rule::KindSet{source_a},
-      /* sink_kinds */ Rule::KindSet{sink_y}));
+      /* sink_kinds */ Rule::KindSet{sink_y},
+      /* transforms */ nullptr));
   rule_list.push_back(std::make_unique<SourceSinkRule>(
       /* name */ "Rule3",
       /* code */ 3,
       /* description */ "Test rule 3",
       /* source_kinds */ Rule::KindSet{source_b},
-      /* sink_kinds */ Rule::KindSet{sink_y}));
+      /* sink_kinds */ Rule::KindSet{sink_y},
+      /* transforms */ nullptr));
   rule_list.push_back(std::make_unique<SourceSinkRule>(
       /* name */ "Rule4",
       /* code */ 4,
       /* description */ "Test rule 4",
       /* source_kinds */ Rule::KindSet{source_b},
-      /* sink_kinds */ Rule::KindSet{sink_x, sink_y}));
+      /* sink_kinds */ Rule::KindSet{sink_x, sink_y},
+      /* transforms */ nullptr));
 
   auto multi_source_rule = std::make_unique<MultiSourceMultiSinkRule>(
       /* name */ "Rule5",
@@ -147,6 +153,203 @@ TEST_F(RuleTest, Rules) {
   EXPECT_TRUE(rules.partial_rules(source_b, partial_sink_lbl_b).empty());
 }
 
+TEST_F(RuleTest, TransformRules) {
+  auto context = test::make_empty_context();
+  auto* source_a = context.kinds->get("A");
+  auto* source_b = context.kinds->get("B");
+  auto* sink_x = context.kinds->get("X");
+  auto* sink_y = context.kinds->get("Y");
+
+  auto* t1 = context.transforms->create({"T1"}, context);
+  auto* t2 = context.transforms->create({"T2"}, context);
+  auto* t12 = context.transforms->create({"T1", "T2"}, context);
+  auto* t21 = context.transforms->create({"T2", "T1"}, context);
+
+  EXPECT_EQ(t1->size(), 1);
+  EXPECT_EQ(t2->size(), 1);
+  EXPECT_EQ(t12->size(), 2);
+  EXPECT_EQ(t21->size(), 2);
+
+  std::vector<std::unique_ptr<Rule>> rule_list;
+  rule_list.push_back(std::make_unique<SourceSinkRule>(
+      /* name */ "Rule1",
+      /* code */ 1,
+      /* description */ "Test rule 1",
+      /* source_kinds */ Rule::KindSet{source_a},
+      /* sink_kinds */ Rule::KindSet{sink_x},
+      /* transforms */ t1));
+  rule_list.push_back(std::make_unique<SourceSinkRule>(
+      /* name */ "Rule2",
+      /* code */ 2,
+      /* description */ "Test rule 2",
+      /* source_kinds */ Rule::KindSet{source_a},
+      /* sink_kinds */ Rule::KindSet{sink_x},
+      /* transforms */ t12));
+  rule_list.push_back(std::make_unique<SourceSinkRule>(
+      /* name */ "Rule3",
+      /* code */ 3,
+      /* description */ "Test rule 3",
+      /* source_kinds */ Rule::KindSet{source_b},
+      /* sink_kinds */ Rule::KindSet{sink_y},
+      /* transforms */ t12));
+
+  auto rules = Rules(context, std::move(rule_list));
+
+  EXPECT_EQ(rules.size(), 3);
+
+  // Rule 1 checks
+  EXPECT_THAT(
+      to_codes(rules.rules(
+          context.kinds->transform_kind(
+              /* base_kind */ source_a,
+              /* local_transforms */ t1,
+              /* global_transforms */ nullptr),
+          sink_x)),
+      testing::UnorderedElementsAre(1));
+  EXPECT_THAT(
+      to_codes(rules.rules(
+          context.kinds->transform_kind(
+              /* base_kind */ source_a,
+              /* local_transforms */ nullptr,
+              /* global_transforms */ t1),
+          sink_x)),
+      testing::UnorderedElementsAre(1));
+  EXPECT_TRUE(to_codes(rules.rules(
+                           context.kinds->transform_kind(
+                               /* base_kind */ source_a,
+                               /* local_transforms */ t1,
+                               /* global_transforms */ t1),
+                           sink_x))
+                  .empty());
+  EXPECT_TRUE(to_codes(rules.rules(
+                           context.kinds->transform_kind(
+                               /* base_kind */ source_a,
+                               /* local_transforms */ t2,
+                               /* global_transforms */ nullptr),
+                           sink_x))
+                  .empty());
+  EXPECT_THAT(
+      to_codes(rules.rules(
+          source_a,
+          context.kinds->transform_kind(
+              /* base_kind */ sink_x,
+              /* local_transforms */ t1,
+              /* global_transforms */ nullptr))),
+      testing::UnorderedElementsAre(1));
+  EXPECT_THAT(
+      to_codes(rules.rules(
+          source_a,
+          context.kinds->transform_kind(
+              /* base_kind */ sink_x,
+              /* local_transforms */ nullptr,
+              /* global_transforms */ t1))),
+      testing::UnorderedElementsAre(1));
+  EXPECT_TRUE(to_codes(rules.rules(
+                           source_a,
+                           context.kinds->transform_kind(
+                               /* base_kind */ sink_x,
+                               /* local_transforms */ t1,
+                               /* global_transforms */ t1)))
+                  .empty());
+
+  // Rule 2 checks
+  EXPECT_THAT(
+      to_codes(rules.rules(
+          context.kinds->transform_kind(
+              /* base_kind */ source_a,
+              /* local_transforms */ t21,
+              /* global_transforms */ nullptr),
+          sink_x)),
+      testing::UnorderedElementsAre(2));
+  EXPECT_THAT(
+      to_codes(rules.rules(
+          context.kinds->transform_kind(
+              /* base_kind */ source_a,
+              /* local_transforms */ nullptr,
+              /* global_transforms */ t21),
+          sink_x)),
+      testing::UnorderedElementsAre(2));
+  EXPECT_THAT(
+      to_codes(rules.rules(
+          context.kinds->transform_kind(
+              /* base_kind */ source_a,
+              /* local_transforms */ t2,
+              /* global_transforms */ t1),
+          sink_x)),
+      testing::UnorderedElementsAre(2));
+
+  EXPECT_TRUE(to_codes(rules.rules(
+                           context.kinds->transform_kind(
+                               /* base_kind */ source_a,
+                               /* local_transforms */ t12,
+                               /* global_transforms */ nullptr),
+                           sink_x))
+                  .empty());
+  EXPECT_TRUE(to_codes(rules.rules(
+                           context.kinds->transform_kind(
+                               /* base_kind */ source_a,
+                               /* local_transforms */ nullptr,
+                               /* global_transforms */ t12),
+                           sink_x))
+                  .empty());
+
+  EXPECT_THAT(
+      to_codes(rules.rules(
+          context.kinds->transform_kind(
+              /* base_kind */ source_a,
+              /* local_transforms */ t1,
+              /* global_transforms */ nullptr),
+          context.kinds->transform_kind(
+              /* base_kind */ sink_x,
+              /* local_transforms */ t2,
+              /* global_transforms */ nullptr))),
+      testing::UnorderedElementsAre(2));
+
+  EXPECT_THAT(
+      to_codes(rules.rules(
+          source_a,
+          context.kinds->transform_kind(
+              /* base_kind */ sink_x,
+              /* local_transforms */ t12,
+              /* global_transforms */ nullptr))),
+      testing::UnorderedElementsAre(2));
+  EXPECT_THAT(
+      to_codes(rules.rules(
+          source_a,
+          context.kinds->transform_kind(
+              /* base_kind */ sink_x,
+              /* local_transforms */ nullptr,
+              /* global_transforms */ t12))),
+      testing::UnorderedElementsAre(2));
+  EXPECT_THAT(
+      to_codes(rules.rules(
+          source_a,
+          context.kinds->transform_kind(
+              /* base_kind */ sink_x,
+              /* local_transforms */ t1,
+              /* global_transforms */ t2))),
+      testing::UnorderedElementsAre(2));
+  EXPECT_TRUE(to_codes(rules.rules(
+                           source_a,
+                           context.kinds->transform_kind(
+                               /* base_kind */ sink_x,
+                               /* local_transforms */ t1,
+                               /* global_transforms */ t1)))
+                  .empty());
+  // Rule 3 checks
+  EXPECT_THAT(
+      to_codes(rules.rules(
+          context.kinds->transform_kind(
+              /* base_kind */ source_b,
+              /* local_transforms */ t1,
+              /* global_transforms */ nullptr),
+          context.kinds->transform_kind(
+              /* base_kind */ sink_y,
+              /* local_transforms */ t2,
+              /* global_transforms */ nullptr))),
+      testing::UnorderedElementsAre(3));
+}
+
 TEST_F(RuleTest, Uses) {
   auto context = test::make_empty_context();
   auto* source_a = context.kinds->get("A");
@@ -160,7 +363,8 @@ TEST_F(RuleTest, Uses) {
       /* code */ 1,
       /* description */ "Test rule 1",
       /* source_kinds */ Rule::KindSet{source_a},
-      /* sink_kinds */ Rule::KindSet{sink_x});
+      /* sink_kinds */ Rule::KindSet{sink_x},
+      /* transforms */ nullptr);
   EXPECT_TRUE(rule1->uses(source_a));
   EXPECT_FALSE(rule1->uses(source_b));
   EXPECT_TRUE(rule1->uses(sink_x));

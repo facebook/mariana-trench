@@ -67,7 +67,7 @@ Context test_dependencies(const Scope& scope) {
       *context.features,
       Shims{},
       method_mappings);
-  context.rules = std::make_unique<Rules>();
+  context.rules = std::make_unique<Rules>(context);
   auto registry = Registry(context);
   context.dependencies = std::make_unique<Dependencies>(
       *context.options,

@@ -2587,7 +2587,8 @@ TEST_F(JsonTest, Model) {
       /* code */ 1,
       /* description */ "",
       Rule::KindSet{context.kinds->get("first_source")},
-      Rule::KindSet{context.kinds->get("first_sink")});
+      Rule::KindSet{context.kinds->get("first_sink")},
+      /* transforms */ nullptr);
   EXPECT_EQ(
       test::sorted_json(Model(
                             method,
@@ -2941,7 +2942,8 @@ TEST_F(JsonTest, CallEffectModel) {
       /* code */ 1,
       /* description */ "",
       Rule::KindSet{context.kinds->get("CallChainOrigin")},
-      Rule::KindSet{context.kinds->get("CallChainSink")});
+      Rule::KindSet{context.kinds->get("CallChainSink")},
+      /* transforms */ nullptr);
 
   auto source = effect_source_model.call_effect_sources().read(call_effect);
   auto sink = effect_sink_model.call_effect_sinks().read(call_effect);

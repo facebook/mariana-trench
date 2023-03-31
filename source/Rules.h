@@ -19,6 +19,7 @@
 #include <mariana-trench/MultiSourceMultiSinkRule.h>
 #include <mariana-trench/PartialKind.h>
 #include <mariana-trench/Rule.h>
+#include <mariana-trench/Transforms.h>
 
 namespace marianatrench {
 
@@ -51,7 +52,9 @@ class Rules final {
   static_assert(std::is_same_v<typename iterator::reference, const_reference>);
 
  public:
-  Rules() = default;
+  explicit Rules(Context& context)
+      : transforms_factory(*context.transforms),
+        kinds_factory(*context.kinds) {}
 
   explicit Rules(Context& context, std::vector<std::unique_ptr<Rule>> rules);
 
@@ -104,7 +107,12 @@ class Rules final {
   }
 
  private:
+  const Transforms& transforms_factory;
+  const Kinds& kinds_factory;
   std::unordered_map<int, std::unique_ptr<Rule>> rules_;
+  // For Rules with "transforms":
+  //   Outer source kind = Kind without any Transforms
+  //   Inner sink kind = Kind with all Transforms
   std::unordered_map<
       const Kind*,
       std::unordered_map<const Kind*, std::vector<const Rule*>>>

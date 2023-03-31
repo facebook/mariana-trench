@@ -576,7 +576,12 @@ TEST_F(ModelTest, Join) {
   const auto* source_kind = context.kinds->get("TestSource");
   const auto* sink_kind = context.kinds->get("TestSink");
   auto rule = std::make_unique<SourceSinkRule>(
-      "rule", 1, "", Rule::KindSet{source_kind}, Rule::KindSet{sink_kind});
+      "rule",
+      1,
+      "",
+      Rule::KindSet{source_kind},
+      Rule::KindSet{sink_kind},
+      /* transforms */ nullptr);
 
   Model model;
   EXPECT_EQ(model.issues().size(), 0);

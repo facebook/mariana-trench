@@ -10,5 +10,64 @@
     "sinks": [
       "Sink"
     ]
+  },
+  {
+    "name": "Flow with T1",
+    "code": 2,
+    "description": "T1 flow",
+    "sources": [
+      "Source",
+      "NewSource"
+    ],
+    "transforms": [
+      "T1"
+    ],
+    "sinks": [
+      "Sink"
+    ]
+  },
+  {
+    "name": "Flow with T2",
+    "code": 3,
+    "description": "T2 flow",
+    "sources": [
+      "Source"
+    ],
+    "transforms": [
+      "T2"
+    ],
+    "sinks": [
+      "Sink"
+    ]
+  },
+  {
+    "name": "Flow with T3",
+    "code": 4,
+    "description": "T3 flow",
+    "sources": [
+      "Source",
+      "NewSource"
+    ],
+    "transforms": [
+      "T3"
+    ],
+    "sinks": [
+      "Sink"
+    ]
+  },
+  {
+    "name": "Flow with T1 and T2",
+    "code": 5,
+    "description": "T1 and T2 flows",
+    "sources": [
+      "Source"
+    ],
+    "transforms": [
+      "T1",
+      "T2"
+    ],
+    "sinks": [
+      "Sink"
+    ]
   }
 ]

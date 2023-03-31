@@ -12,10 +12,9 @@
 namespace marianatrench {
 
 const TransformList* Transforms::create(
-    const Json::Value& transforms,
+    std::vector<std::string> transforms,
     Context& context) const {
-  return transform_lists_.insert(TransformList::from_json(transforms, context))
-      .first;
+  return transform_lists_.insert(TransformList(transforms, context)).first;
 }
 
 const TransformList* MT_NULLABLE Transforms::create(
@@ -32,22 +31,14 @@ const TransformList* Transforms::create(TransformList transforms) const {
   return transform_lists_.insert(transforms).first;
 }
 
-const TransformList* MT_NULLABLE Transforms::get(
-    TransformList::ConstIterator begin,
-    TransformList::ConstIterator end) const {
-  if (begin == end) {
-    return nullptr;
-  }
-
-  return transform_lists_.get(TransformList(begin, end));
-}
-
-const TransformList* MT_NULLABLE Transforms::concat(
+const TransformList* Transforms::concat(
     const TransformList* MT_NULLABLE left,
     const TransformList* MT_NULLABLE right) const {
   if (left == nullptr) {
+    mt_assert(right != nullptr);
     return right;
   } else if (right == nullptr) {
+    mt_assert(left != nullptr);
     return left;
   }
 
@@ -59,8 +50,8 @@ const TransformList* MT_NULLABLE Transforms::concat(
   return create(TransformList(transforms));
 }
 
-const TransformList* Transforms::reverse(
-    const TransformList* transforms) const {
+const TransformList* MT_NULLABLE
+Transforms::reverse(const TransformList* MT_NULLABLE transforms) const {
   if (transforms == nullptr) {
     return transforms;
   }

@@ -17,20 +17,22 @@
 
 namespace marianatrench {
 
-Rules::Rules(Context& context, std::vector<std::unique_ptr<Rule>> rules) {
+Rules::Rules(Context& context, std::vector<std::unique_ptr<Rule>> rules)
+    : transforms_factory(*context.transforms), kinds_factory(*context.kinds) {
   for (auto& rule : rules) {
     add(context, std::move(rule));
   }
 }
 
-Rules::Rules(Context& context, const Json::Value& rules_value) {
+Rules::Rules(Context& context, const Json::Value& rules_value)
+    : transforms_factory(*context.transforms), kinds_factory(*context.kinds) {
   for (const auto& rule_value : JsonValidation::null_or_array(rules_value)) {
     add(context, Rule::from_json(rule_value, context));
   }
 }
 
 Rules Rules::load(Context& context, const Options& options) {
-  Rules rules;
+  Rules rules(context);
 
   for (const auto& rules_path : options.rules_paths()) {
     auto rules_value = JsonValidation::parse_json_file(rules_path);
@@ -61,7 +63,19 @@ void Rules::add(Context& context, std::unique_ptr<Rule> rule) {
   if (auto* source_sink_rule = rule_pointer->as<SourceSinkRule>()) {
     for (const auto* source_kind : source_sink_rule->source_kinds()) {
       for (const auto* sink_kind : source_sink_rule->sink_kinds()) {
-        source_to_sink_to_rules_[source_kind][sink_kind].push_back(
+        const auto* transforms = source_sink_rule->transform_kinds();
+        if (transforms == nullptr) {
+          source_to_sink_to_rules_[source_kind][sink_kind].push_back(
+              rule_pointer);
+          continue;
+        }
+
+        const auto* sink_transform_kind = context.kinds->transform_kind(
+            sink_kind,
+            /* local transforms */ transforms,
+            /* global transforms */ nullptr);
+
+        source_to_sink_to_rules_[source_kind][sink_transform_kind].push_back(
             rule_pointer);
       }
     }
@@ -117,7 +131,37 @@ void Rules::add(Context& context, std::unique_ptr<Rule> rule) {
 const std::vector<const Rule*>& Rules::rules(
     const Kind* source_kind,
     const Kind* sink_kind) const {
-  auto sink_to_rules = source_to_sink_to_rules_.find(source_kind);
+  LOG(4,
+      "Searching for transform rules matching source: {} -> sink: {}",
+      source_kind->to_trace_string(),
+      sink_kind->to_trace_string());
+
+  // Get a list of all transforms (if any)
+  const TransformList* all_transforms = nullptr;
+  if (const auto* source_transform_kind = source_kind->as<TransformKind>()) {
+    all_transforms = transforms_factory.concat(
+        source_transform_kind->local_transforms(),
+        source_transform_kind->global_transforms());
+    all_transforms = transforms_factory.reverse(all_transforms);
+  }
+
+  if (const auto* sink_transform_kind = sink_kind->as<TransformKind>()) {
+    const auto* all_sink_transforms = transforms_factory.concat(
+        sink_transform_kind->local_transforms(),
+        sink_transform_kind->global_transforms());
+    all_transforms =
+        transforms_factory.concat(all_transforms, all_sink_transforms);
+  }
+
+  if (all_transforms != nullptr) {
+    sink_kind = kinds_factory.transform_kind(
+        sink_kind->discard_transforms(),
+        /* local transforms */ all_transforms,
+        /* global transforms */ nullptr);
+  }
+
+  auto sink_to_rules =
+      source_to_sink_to_rules_.find(source_kind->discard_transforms());
   if (sink_to_rules == source_to_sink_to_rules_.end()) {
     return empty_rule_set_;
   }
@@ -126,6 +170,11 @@ const std::vector<const Rule*>& Rules::rules(
   if (rules == sink_to_rules->second.end()) {
     return empty_rule_set_;
   }
+
+  LOG(4,
+      "Found rule match for: {} -> {} ",
+      source_kind->to_trace_string(),
+      sink_kind->to_trace_string());
 
   return rules->second;
 }

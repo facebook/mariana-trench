@@ -9,11 +9,13 @@
 #include <mariana-trench/NamedKind.h>
 #include <mariana-trench/Rule.h>
 #include <mariana-trench/SourceSinkRule.h>
+#include <mariana-trench/Transforms.h>
 
 namespace marianatrench {
 
 bool SourceSinkRule::uses(const Kind* kind) const {
-  return source_kinds_.count(kind) != 0 || sink_kinds_.count(kind) != 0;
+  return source_kinds_.count(kind->discard_transforms()) != 0 ||
+      sink_kinds_.count(kind->discard_transforms()) != 0;
 }
 
 std::unique_ptr<Rule> SourceSinkRule::from_json(
@@ -34,8 +36,14 @@ std::unique_ptr<Rule> SourceSinkRule::from_json(
     sink_kinds.insert(NamedKind::from_json(sink_kind, context));
   }
 
+  const TransformList* transforms = nullptr;
+  if (value.isMember("transforms")) {
+    transforms = context.transforms->create(
+        TransformList::from_json(value["transforms"], context));
+  }
+
   return std::make_unique<SourceSinkRule>(
-      name, code, description, source_kinds, sink_kinds);
+      name, code, description, source_kinds, sink_kinds, transforms);
 }
 
 Json::Value SourceSinkRule::to_json() const {
@@ -52,6 +60,18 @@ Json::Value SourceSinkRule::to_json() const {
 
   value["sources"] = source_kinds_value;
   value["sinks"] = sink_kinds_value;
+
+  if (transforms_ == nullptr) {
+    return value;
+  }
+
+  auto transforms_value = Json::Value(Json::arrayValue);
+  for (const auto* transform : *transforms_) {
+    transforms_value.append(transform->to_trace_string());
+  }
+
+  value["transforms"] = transforms_value;
+
   return value;
 }
 

@@ -25,25 +25,22 @@ class Transforms final {
     return transform_lists_.size();
   }
 
-  const TransformList* create(const Json::Value& transforms, Context& context)
-      const;
+  const TransformList* create(
+      std::vector<std::string> transforms,
+      Context& context) const;
 
-  const TransformList* get(
-      TransformList::ConstIterator begin,
-      TransformList::ConstIterator end) const;
+  const TransformList* create(TransformList transforms) const;
 
-  const TransformList* MT_NULLABLE concat(
-      const TransformList* MT_NULLABLE local_transforms,
-      const TransformList* MT_NULLABLE global_transforms) const;
-
-  const TransformList* reverse(const TransformList* transforms) const;
-
- private:
   const TransformList* create(
       TransformList::ConstIterator begin,
       TransformList::ConstIterator end) const;
 
-  const TransformList* create(TransformList transforms) const;
+  const TransformList* concat(
+      const TransformList* MT_NULLABLE local_transforms,
+      const TransformList* MT_NULLABLE global_transforms) const;
+
+  const TransformList* MT_NULLABLE
+  reverse(const TransformList* MT_NULLABLE transforms) const;
 
  private:
   mutable InsertOnlyConcurrentSet<TransformList> transform_lists_;

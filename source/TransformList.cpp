@@ -11,6 +11,17 @@
 
 namespace marianatrench {
 
+TransformList::TransformList(
+    const std::vector<std::string>& transforms,
+    Context& context) {
+  mt_assert(transforms.size() != 0);
+  transforms_.reserve(transforms.size());
+
+  for (const auto& transform : transforms) {
+    transforms_.push_back(context.kinds->get(transform));
+  }
+}
+
 TransformList TransformList::reverse_of(const TransformList* transforms) {
   return TransformList(
       List(transforms->transforms_.rbegin(), transforms->transforms_.rend()));
@@ -23,7 +34,7 @@ std::string TransformList::to_trace_string() const {
        iterator != end;) {
     value.append((*iterator)->to_trace_string());
 
-    std::advance(iterator, 1);
+    ++iterator;
     if (iterator != end) {
       value.append(":");
     }

@@ -18,6 +18,7 @@
 #include <mariana-trench/IncludeMacros.h>
 #include <mariana-trench/Kind.h>
 #include <mariana-trench/Rule.h>
+#include <mariana-trench/TransformList.h>
 
 namespace marianatrench {
 
@@ -32,10 +33,12 @@ class SourceSinkRule final : public Rule {
       int code,
       const std::string& description,
       const KindSet& source_kinds,
-      const KindSet& sink_kinds)
+      const KindSet& sink_kinds,
+      const TransformList* transforms)
       : Rule(name, code, description),
         source_kinds_(source_kinds),
-        sink_kinds_(sink_kinds) {}
+        sink_kinds_(sink_kinds),
+        transforms_(transforms) {}
 
   DELETE_COPY_CONSTRUCTORS_AND_ASSIGNMENTS(SourceSinkRule)
 
@@ -45,6 +48,10 @@ class SourceSinkRule final : public Rule {
 
   const KindSet& sink_kinds() const {
     return sink_kinds_;
+  }
+
+  const TransformList* MT_NULLABLE transform_kinds() const {
+    return transforms_;
   }
 
   bool uses(const Kind*) const override;
@@ -60,6 +67,7 @@ class SourceSinkRule final : public Rule {
  private:
   KindSet source_kinds_;
   KindSet sink_kinds_;
+  const TransformList* MT_NULLABLE transforms_;
 };
 
 } // namespace marianatrench

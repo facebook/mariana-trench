@@ -49,7 +49,8 @@ PropagationConfig PropagationConfig::from_json(
     kind = context.kinds->transform_kind(
         /* base_kind */ propagation_kind,
         /* local_transforms */
-        context.transforms->create(value["transforms"], context),
+        context.transforms->create(
+            TransformList::from_json(value["transforms"], context)),
         /* global_transforms */ nullptr);
   } else {
     kind = propagation_kind;

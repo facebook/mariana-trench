@@ -33,6 +33,10 @@ class TransformList final {
   explicit TransformList(ConstIterator begin, ConstIterator end)
       : transforms_(List{begin, end}) {}
 
+  explicit TransformList(
+      const std::vector<std::string>& transforms,
+      Context& context);
+
   static TransformList reverse_of(const TransformList* transforms);
 
  public:

@@ -58,7 +58,7 @@ class Kinds final {
 
   const LocalArgumentKind* local_argument(ParameterPosition parameter) const;
 
-  const TransformKind* MT_NULLABLE transform_kind(
+  const TransformKind* transform_kind(
       const Kind* base_kind,
       const TransformList* MT_NULLABLE local_transforms,
       const TransformList* MT_NULLABLE global_transforms) const;
