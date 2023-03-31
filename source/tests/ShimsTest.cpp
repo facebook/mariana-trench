@@ -61,6 +61,7 @@ SerializedMultimap serialize_classes_to_intent_getters(
     for (const auto& method : methods) {
       serialized_methods.push_back(method->show());
     }
+    sort(serialized_methods.begin(), serialized_methods.end());
     serialized.emplace_back(dex_type->str(), std::move(serialized_methods));
   }
   sort(serialized.begin(), serialized.end());
@@ -75,6 +76,7 @@ SerializedMultimap serialize_methods_to_routed_intents(
     for (const auto& dex_type : dex_types) {
       serialized_types.emplace_back(dex_type->str());
     }
+    sort(serialized_types.begin(), serialized_types.end());
     serialized.emplace_back(method->show(), serialized_types);
   }
   sort(serialized.begin(), serialized.end());
