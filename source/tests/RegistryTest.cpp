@@ -18,7 +18,7 @@
 #include <mariana-trench/Redex.h>
 #include <mariana-trench/Registry.h>
 #include <mariana-trench/Types.h>
-#include <mariana-trench/UnusedKinds.h>
+#include <mariana-trench/UsedKinds.h>
 #include <mariana-trench/tests/Test.h>
 
 namespace marianatrench {
@@ -72,7 +72,7 @@ TEST_F(RegistryTest, remove_kinds) {
   EXPECT_EQ(
       old_model_json[0]["sinks"][0]["taint"][0]["kinds"][0]["kind"],
       "ArrayAllocation");
-  UnusedKinds::remove_unused_kinds(
+  UsedKinds::remove_unused_kinds(
       *context.rules,
       *context.kinds,
       *context.methods,

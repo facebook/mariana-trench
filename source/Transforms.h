@@ -14,6 +14,15 @@
 
 namespace marianatrench {
 
+struct TransformCombinations {
+  const TransformList* transform;
+  std::unordered_set<
+      std::pair<const TransformList*, const TransformList*>,
+      boost::hash<std::pair<const TransformList*, const TransformList*>>>
+      partitions;
+  std::unordered_set<const TransformList*> subsequences;
+};
+
 class Transforms final {
  public:
   Transforms() = default;
@@ -41,6 +50,8 @@ class Transforms final {
 
   const TransformList* MT_NULLABLE
   reverse(const TransformList* MT_NULLABLE transforms) const;
+
+  TransformCombinations all_combinations(const TransformList* transforms) const;
 
  private:
   mutable InsertOnlyConcurrentSet<TransformList> transform_lists_;

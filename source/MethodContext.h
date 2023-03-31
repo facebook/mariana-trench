@@ -67,6 +67,7 @@ class MethodContext final {
   const Features& features;
   const Registry& registry;
   const Transforms& transforms;
+  const UsedKinds& used_kinds;
   MemoryFactory memory_factory;
   AliasAnalysisResults aliasing;
   FulfilledPartialKindResults fulfilled_partial_sinks;

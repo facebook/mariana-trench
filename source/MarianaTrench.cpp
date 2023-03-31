@@ -44,7 +44,7 @@
 #include <mariana-trench/Statistics.h>
 #include <mariana-trench/Timer.h>
 #include <mariana-trench/Types.h>
-#include <mariana-trench/UnusedKinds.h>
+#include <mariana-trench/UsedKinds.h>
 #include <mariana-trench/shim-generator/ShimGeneration.h>
 #include <mariana-trench/shim-generator/Shims.h>
 
@@ -253,9 +253,21 @@ Registry MarianaTrench::analyze(Context& context) {
       rules_timer.duration_in_seconds(),
       resident_set_size_in_gb());
 
+  Timer transforms_timer;
+  LOG(1, "Initializing used transform kinds...");
+  context.used_kinds = std::make_unique<UsedKinds>(
+      UsedKinds::from_rules(*context.rules, *context.transforms));
+  LOG(1,
+      "Initialized {} source/sink transform kinds and {} propagation transform kinds in {:.2f}s."
+      "Memory used, RSS: {:.2f}GB",
+      context.used_kinds->source_sink_size(),
+      context.used_kinds->propagation_size(),
+      transforms_timer.duration_in_seconds(),
+      resident_set_size_in_gb());
+
   Timer kind_pruning_timer;
-  LOG(1, "Removing unused Kinds");
-  int num_removed = UnusedKinds::remove_unused_kinds(
+  LOG(1, "Removing unused Kinds...");
+  int num_removed = UsedKinds::remove_unused_kinds(
                         *context.rules,
                         *context.kinds,
                         *context.methods,

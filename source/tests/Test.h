@@ -35,6 +35,7 @@
 #include <mariana-trench/Statistics.h>
 #include <mariana-trench/TaintConfig.h>
 #include <mariana-trench/Types.h>
+#include <mariana-trench/UsedKinds.h>
 
 namespace marianatrench {
 namespace test {

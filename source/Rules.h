@@ -19,11 +19,22 @@
 #include <mariana-trench/MultiSourceMultiSinkRule.h>
 #include <mariana-trench/PartialKind.h>
 #include <mariana-trench/Rule.h>
+#include <mariana-trench/TransformKind.h>
 #include <mariana-trench/Transforms.h>
 
 namespace marianatrench {
 
 class Rules final {
+ public:
+  using SourceSinkRulesMap = std::unordered_map<
+      const Kind*,
+      std::unordered_map<const Kind*, std::vector<const Rule*>>>;
+  using SourcePartialSinkRulesMap = std::unordered_map<
+      const Kind*,
+      std::unordered_map<
+          const PartialKind*,
+          std::vector<const MultiSourceMultiSinkRule*>>>;
+
  private:
   struct ExposeRulePointer {
     const Rule* operator()(
@@ -94,6 +105,10 @@ class Rules final {
   std::unordered_set<const Kind*> collect_unused_kinds(
       const Kinds& kinds) const;
 
+  const SourceSinkRulesMap& source_to_sink_rules() const {
+    return source_to_sink_to_rules_;
+  }
+
   std::size_t size() const {
     return rules_.size();
   }
@@ -113,16 +128,8 @@ class Rules final {
   // For Rules with "transforms":
   //   Outer source kind = Kind without any Transforms
   //   Inner sink kind = Kind with all Transforms
-  std::unordered_map<
-      const Kind*,
-      std::unordered_map<const Kind*, std::vector<const Rule*>>>
-      source_to_sink_to_rules_;
-  std::unordered_map<
-      const Kind*,
-      std::unordered_map<
-          const PartialKind*,
-          std::vector<const MultiSourceMultiSinkRule*>>>
-      source_to_partial_sink_to_rules_;
+  SourceSinkRulesMap source_to_sink_to_rules_;
+  SourcePartialSinkRulesMap source_to_partial_sink_to_rules_;
   std::vector<const Rule*> empty_rule_set_;
   std::vector<const MultiSourceMultiSinkRule*> empty_multi_source_rule_set_;
 };

@@ -25,6 +25,7 @@
 #include <mariana-trench/Statistics.h>
 #include <mariana-trench/Transforms.h>
 #include <mariana-trench/Types.h>
+#include <mariana-trench/UsedKinds.h>
 
 namespace marianatrench {
 

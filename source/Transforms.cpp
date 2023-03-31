@@ -59,4 +59,24 @@ Transforms::reverse(const TransformList* MT_NULLABLE transforms) const {
   return create(TransformList::reverse_of(transforms));
 }
 
+TransformCombinations Transforms::all_combinations(
+    const TransformList* transforms) const {
+  TransformCombinations combinations{};
+  combinations.transform = transforms;
+
+  auto begin = transforms->begin();
+  auto end = transforms->end();
+  for (auto partition = std::next(begin); partition != end;) {
+    combinations.partitions.insert(
+        std::make_pair(create(begin, partition), create(partition, end)));
+    for (auto inner_end = std::next(partition); inner_end != end;) {
+      combinations.subsequences.insert(create(partition, inner_end));
+      ++inner_end;
+    }
+    ++partition;
+  }
+
+  return combinations;
+}
+
 } // namespace marianatrench

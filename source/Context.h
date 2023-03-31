@@ -33,6 +33,7 @@ class Rules;
 class Dependencies;
 class Scheduler;
 class Transforms;
+class UsedKinds;
 
 /**
  * Mariana Trench global context.
@@ -67,6 +68,7 @@ class Context final {
   std::unique_ptr<Dependencies> dependencies;
   std::unique_ptr<Scheduler> scheduler;
   std::unique_ptr<Transforms> transforms;
+  std::unique_ptr<UsedKinds> used_kinds;
 };
 
 } // namespace marianatrench

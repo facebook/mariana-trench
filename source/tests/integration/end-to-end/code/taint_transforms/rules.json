@@ -69,5 +69,22 @@
     "sinks": [
       "Sink"
     ]
+  },
+  {
+    "name": "Flow with T1, T2, T3, T4",
+    "code": 6,
+    "description": "T1, T2, T1, T2 flows",
+    "sources": [
+      "Source"
+    ],
+    "transforms": [
+      "T1",
+      "T2",
+      "T1",
+      "T2"
+    ],
+    "sinks": [
+      "Sink"
+    ]
   }
 ]

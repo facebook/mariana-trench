@@ -47,6 +47,11 @@ public class TaintTransforms {
     return d;
   }
 
+  static Object transformUnused(Object o) {
+    // Declared frozen propagation: Argument(0) -> `Unused@LocalReturn`
+    return o;
+  }
+
   static Object propagateWithTransformT1(Object o) {
     // Expect inferred propagations:
     //   Argument(0) -> `T1@LocalReturn`
@@ -80,6 +85,12 @@ public class TaintTransforms {
     return transformT3WithSource(d);
   }
 
+  static Object propagateWithTransformsT1Unused(Object o) {
+    // Expect inferred propagation: Argument(0) -> `T1@LocalReturn`
+    Object t1 = transformT1(o);
+    return transformUnused(t1);
+  }
+
   static Object sourceWithTransformT1() {
     // Expect inferred generations:
     //   Return -> `T1@Source`
@@ -103,6 +114,12 @@ public class TaintTransforms {
     //          -> `T2@Source`
     Object sourceT1 = sourceWithTransformT1();
     return transformT2(sourceT1);
+  }
+
+  static Object noSourceWithTransformUnused() {
+    // Expect inferred generation:
+    //   Return -> Source
+    return transformUnused(Origin.source());
   }
 
   static void sinkWithTransformT1(Object o) {
@@ -135,6 +152,12 @@ public class TaintTransforms {
     //               -> `T2@Sink`
     Object t = transformT1(o);
     sinkWithTransformT2(t);
+  }
+
+  static void noSinkWithTransformUnused(Object o) {
+    // Expect inferred sinks:
+    //   Argument(0) -> `Sink`
+    Origin.sink(transformUnused(o));
   }
 
   // -------------------------------------------------------
@@ -212,6 +235,21 @@ public class TaintTransforms {
     //   Source -> T2 -> Sink
     //   Source -> T1 -> T2 -> Sink
     Object source = Origin.source();
+    hopSinkWithTransformsT1T2(source);
+  }
+
+  public static void testMultihopSourceSink() {
+    // Expect issue for rules:
+    //   Source -> T2 -> Sink
+    //   Source -> T1 -> T2 -> Sink
+    Object source = sourceWithTransformT1();
+    sinkWithTransformT2(source);
+  }
+
+  public static void testTransformsT1T2T1T2Issue() {
+    // Expect issue for rules:
+    //   Source -> T1 -> T2 -> T1 -> T2 -> Sink
+    Object source = hopSourceWithTransformsT1T2();
     hopSinkWithTransformsT1T2(source);
   }
 }
