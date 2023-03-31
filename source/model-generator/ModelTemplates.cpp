@@ -6,6 +6,7 @@
  */
 
 #include <mariana-trench/JsonValidation.h>
+#include <mariana-trench/Kinds.h>
 #include <mariana-trench/Log.h>
 #include <mariana-trench/constraints/MethodConstraints.h>
 #include <mariana-trench/constraints/ParameterConstraints.h>
@@ -163,11 +164,13 @@ PropagationTemplate::PropagationTemplate(
     AccessPathTemplate input,
     AccessPathTemplate output,
     FeatureMayAlwaysSet inferred_features,
-    FeatureSet user_features)
+    FeatureSet user_features,
+    const TransformList* transforms)
     : input_(std::move(input)),
       output_(std::move(output)),
       inferred_features_(std::move(inferred_features)),
-      user_features_(std::move(user_features)) {}
+      user_features_(std::move(user_features)),
+      transforms_(transforms) {}
 
 PropagationTemplate PropagationTemplate::from_json(
     const Json::Value& value,
@@ -188,7 +191,14 @@ PropagationTemplate PropagationTemplate::from_json(
   auto inferred_features = FeatureMayAlwaysSet::from_json(value, context);
   auto user_features = FeatureSet::from_json(value["features"], context);
 
-  return PropagationTemplate(input, output, inferred_features, user_features);
+  const TransformList* transforms = nullptr;
+  if (value.isMember("transforms")) {
+    transforms = context.transforms->create(
+        TransformList::from_json(value["transforms"], context));
+  }
+
+  return PropagationTemplate(
+      input, output, inferred_features, user_features, transforms);
 }
 
 void PropagationTemplate::instantiate(
@@ -197,17 +207,26 @@ void PropagationTemplate::instantiate(
     Context& context) const {
   auto input_port = input_.instantiate(parameter_positions);
   auto output_port = output_.instantiate(parameter_positions);
-  const PropagationKind* kind = nullptr;
+  const PropagationKind* propagation_kind = nullptr;
   if (output_port.root().is_return()) {
-    kind = context.kinds->local_return();
+    propagation_kind = context.kinds->local_return();
   } else if (output_port.root().is_argument()) {
-    kind =
+    propagation_kind =
         context.kinds->local_argument(output_port.root().parameter_position());
   } else {
     throw JsonValidationError(
         output_port.to_json(),
         /* field */ "output",
         "an access path with a `Return` or `Argument(x)` root");
+  }
+
+  const Kind* kind = propagation_kind;
+  if (transforms_ != nullptr) {
+    kind = context.kinds->transform_kind(
+        /* base_kind */ propagation_kind,
+        /* local_transforms */
+        transforms_,
+        /* global_transforms */ nullptr);
   }
 
   model.add_propagation(PropagationConfig(

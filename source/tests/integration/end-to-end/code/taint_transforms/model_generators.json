@@ -117,6 +117,41 @@
           }
         ]
       }
+    },
+    {
+      "find": "methods",
+      "where": [
+        {
+          "constraint": "signature_match",
+          "parent": "Lcom/facebook/marianatrench/integrationtests/TaintTransforms;",
+          "name": "transformForAllParameters"
+        }
+      ],
+      "model": {
+        "freeze": [
+          "propagation"
+        ],
+        "for_all_parameters": [
+          {
+            "variable": "x",
+            "where": [
+              {
+                "constraint": "name",
+                "pattern": "Ljava/lang/Object;"
+              }
+            ],
+            "propagation": [
+              {
+                "input": "Argument(x)",
+                "output": "Return",
+                "transforms": [
+                  "T1"
+                ]
+              }
+            ]
+          }
+        ]
+      }
     }
   ]
 }

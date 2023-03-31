@@ -12,6 +12,7 @@
 #include <mariana-trench/IncludeMacros.h>
 #include <mariana-trench/Model.h>
 #include <mariana-trench/TaintConfig.h>
+#include <mariana-trench/TransformList.h>
 #include <mariana-trench/model-generator/ModelGenerator.h>
 
 namespace marianatrench {
@@ -95,7 +96,8 @@ class PropagationTemplate final {
       AccessPathTemplate input,
       AccessPathTemplate output,
       FeatureMayAlwaysSet inferred_features,
-      FeatureSet user_features);
+      FeatureSet user_features,
+      const TransformList* transforms_);
 
   INCLUDE_DEFAULT_COPY_CONSTRUCTORS_AND_ASSIGNMENTS(PropagationTemplate)
 
@@ -112,6 +114,7 @@ class PropagationTemplate final {
   AccessPathTemplate output_;
   FeatureMayAlwaysSet inferred_features_;
   FeatureSet user_features_;
+  const TransformList* transforms_;
 };
 
 class SinkTemplate final {
