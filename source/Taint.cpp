@@ -151,12 +151,13 @@ void Taint::transform_kind_with_features(
 Taint Taint::apply_transform(
     const Kinds& kinds,
     const Transforms& transforms,
+    const UsedKinds& used_kinds,
     const TransformList* local_transforms) const {
   Taint result{};
 
   for (const auto& callee_frames : set_) {
-    auto new_callee_frames =
-        callee_frames.apply_transform(kinds, transforms, local_transforms);
+    auto new_callee_frames = callee_frames.apply_transform(
+        kinds, transforms, used_kinds, local_transforms);
     if (new_callee_frames.is_bottom()) {
       continue;
     }

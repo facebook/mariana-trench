@@ -193,6 +193,7 @@ class CalleeFrames final : public sparta::AbstractDomain<CalleeFrames> {
   CalleeFrames apply_transform(
       const Kinds& kinds,
       const Transforms& transforms,
+      const UsedKinds& used_kinds,
       const TransformList* local_transforms) const;
 
   void append_to_artificial_source_input_paths(Path::Element path_element);

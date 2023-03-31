@@ -39,6 +39,7 @@ PropagationInfo apply_propagation(
         taint.apply_transform(
             context->kinds,
             context->transforms,
+            context->used_kinds,
             transform_kind->local_transforms()),
         UpdateKind::Weak);
   }
@@ -128,6 +129,7 @@ Taint get_sink_for_artificial_source(
   return new_sinks.apply_transform(
       context->kinds,
       context->transforms,
+      context->used_kinds,
       context->transforms.reverse(transform_kind->local_transforms()));
 }
 

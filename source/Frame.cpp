@@ -13,6 +13,7 @@
 #include <mariana-trench/Constants.h>
 #include <mariana-trench/Frame.h>
 #include <mariana-trench/JsonValidation.h>
+#include <mariana-trench/UsedKinds.h>
 
 namespace marianatrench {
 
@@ -142,6 +143,7 @@ Frame Frame::with_kind(const Kind* kind) const {
 Frame Frame::apply_transform(
     const Kinds& kinds,
     const Transforms& transforms,
+    const UsedKinds& used_kinds,
     AccessPath callee_port,
     const TransformList* local_transforms) const {
   const Kind* base_kind = kind_;
@@ -160,8 +162,7 @@ Frame Frame::apply_transform(
   const auto* new_kind =
       kinds.transform_kind(base_kind, local_transforms, global_transforms);
 
-  if (new_kind == nullptr) {
-    // new_kind is nullptr for invalid transforms.
+  if (!used_kinds.should_keep(new_kind)) {
     return Frame::bottom();
   }
 

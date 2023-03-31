@@ -1148,83 +1148,9 @@
   {
     "line" : 159,
     "path" : "TaintTransforms.java"
-  },
-  "sinks" : 
-  [
-    {
-      "port" : "Argument(0)",
-      "taint" : 
-      [
-        {
-          "kinds" : 
-          [
-            {
-              "call_info" : "Origin",
-              "kind" : "Unused@Sink",
-              "local_positions" : 
-              [
-                {
-                  "line" : 160
-                }
-              ],
-              "origins" : 
-              [
-                "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V"
-              ]
-            }
-          ],
-          "origin" : 
-          {
-            "method" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
-            "position" : 
-            {
-              "line" : 160,
-              "path" : "TaintTransforms.java"
-            }
-          }
-        }
-      ]
-    }
-  ]
+  }
 }
 {
-  "generations" : 
-  [
-    {
-      "port" : "Return",
-      "taint" : 
-      [
-        {
-          "kinds" : 
-          [
-            {
-              "call_info" : "Origin",
-              "kind" : "Unused@Source",
-              "local_positions" : 
-              [
-                {
-                  "line" : 122
-                }
-              ],
-              "origins" : 
-              [
-                "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;"
-              ]
-            }
-          ],
-          "origin" : 
-          {
-            "method" : "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;",
-            "position" : 
-            {
-              "line" : 122,
-              "path" : "TaintTransforms.java"
-            }
-          }
-        }
-      ]
-    }
-  ],
   "method" : "Lcom/facebook/marianatrench/integrationtests/TaintTransforms;.noSourceWithTransformUnused:()Ljava/lang/Object;",
   "position" : 
   {
@@ -1448,37 +1374,7 @@
   {
     "line" : 89,
     "path" : "TaintTransforms.java"
-  },
-  "propagation" : 
-  [
-    {
-      "input" : "Argument(0)",
-      "output" : 
-      [
-        {
-          "kinds" : 
-          [
-            {
-              "call_info" : "Propagation",
-              "kind" : "T1:Unused@LocalReturn",
-              "output_paths" : 
-              [
-                ""
-              ]
-            },
-            {
-              "call_info" : "Propagation",
-              "kind" : "Unused@LocalReturn",
-              "output_paths" : 
-              [
-                ""
-              ]
-            }
-          ]
-        }
-      ]
-    }
-  ]
+  }
 }
 {
   "method" : "Lcom/facebook/marianatrench/integrationtests/TaintTransforms;.sinkWithTransformT1:(Ljava/lang/Object;)V",

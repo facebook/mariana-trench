@@ -270,6 +270,7 @@ void CallPositionFrames::transform_kind_with_features(
 CallPositionFrames CallPositionFrames::apply_transform(
     const Kinds& kinds,
     const Transforms& transforms,
+    const UsedKinds& used_kinds,
     const TransformList* local_transforms) const {
   FramesByCalleePort frames_by_callee_port;
 
@@ -277,7 +278,11 @@ CallPositionFrames CallPositionFrames::apply_transform(
     for (const auto& frame : callee_port_frames) {
       if (!callee_port_frames.is_artificial_source_frames()) {
         frames_by_callee_port.add(CalleePortFrames{frame.apply_transform(
-            kinds, transforms, frame.callee_port(), local_transforms)});
+            kinds,
+            transforms,
+            used_kinds,
+            frame.callee_port(),
+            local_transforms)});
         continue;
       }
 
@@ -288,6 +293,7 @@ CallPositionFrames CallPositionFrames::apply_transform(
         frames_by_callee_port.add(CalleePortFrames{frame.apply_transform(
             kinds,
             transforms,
+            used_kinds,
             AccessPath(frame.callee_port().root(), inner_path),
             local_transforms)});
       }

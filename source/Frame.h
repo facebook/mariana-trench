@@ -326,6 +326,7 @@ class Frame final : public sparta::AbstractDomain<Frame> {
   Frame apply_transform(
       const Kinds& kinds,
       const Transforms& transforms,
+      const UsedKinds& used_kinds,
       AccessPath callee_port,
       const TransformList* local_transforms) const;
 

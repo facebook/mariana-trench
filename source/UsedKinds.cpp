@@ -62,7 +62,7 @@ void add_propagation_transforms(
 UsedKinds UsedKinds::from_rules(
     const Rules& rules,
     const Transforms& transforms) {
-  UsedKinds used_kinds;
+  UsedKinds used_kinds(transforms);
 
   std::unordered_map<const Kind*, std::unordered_set<const TransformKind*>>
       source_to_sink{};
@@ -112,6 +112,26 @@ UsedKinds UsedKinds::from_rules(
   }
 
   return used_kinds;
+}
+
+bool UsedKinds::should_keep(const TransformKind* transform_kind) const {
+  const auto* base_kind = transform_kind->base_kind();
+  if (base_kind == Kinds::artificial_source() ||
+      base_kind->is<PropagationKind>()) {
+    return propagation_kind_to_transforms_.find(
+               transform_kind->local_transforms()) !=
+        propagation_kind_to_transforms_.end();
+  }
+
+  const auto& valid_transforms = named_kind_to_transforms_.find(base_kind);
+  if (valid_transforms == named_kind_to_transforms_.end()) {
+    return false;
+  }
+
+  return valid_transforms->second.find(transforms_.concat(
+             transform_kind->local_transforms(),
+             transform_kind->global_transforms())) !=
+      valid_transforms->second.end();
 }
 
 } // namespace marianatrench

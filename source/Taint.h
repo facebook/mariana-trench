@@ -22,7 +22,6 @@
 #include <mariana-trench/Log.h>
 #include <mariana-trench/PropagationConfig.h>
 #include <mariana-trench/TaintConfig.h>
-#include <mariana-trench/Transforms.h>
 
 namespace marianatrench {
 
@@ -169,6 +168,7 @@ class Taint final : public sparta::AbstractDomain<Taint> {
   Taint apply_transform(
       const Kinds& kinds,
       const Transforms& transforms,
+      const UsedKinds& used_kinds,
       const TransformList* local_transforms) const;
 
   Json::Value to_json() const;

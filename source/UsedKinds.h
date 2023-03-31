@@ -23,7 +23,7 @@ class UsedKinds {
   using PropagationKindTransformsSet = std::unordered_set<const TransformList*>;
 
  public:
-  UsedKinds() = default;
+  explicit UsedKinds(const Transforms& transforms) : transforms_(transforms) {}
 
   INCLUDE_DEFAULT_COPY_CONSTRUCTORS_AND_ASSIGNMENTS(UsedKinds)
 
@@ -60,7 +60,10 @@ class UsedKinds {
     return propagation_kind_to_transforms_;
   }
 
+  bool should_keep(const TransformKind* transform_kind) const;
+
  private:
+  const Transforms& transforms_;
   NamedKindToTransformsMap named_kind_to_transforms_;
   PropagationKindTransformsSet propagation_kind_to_transforms_;
 };
