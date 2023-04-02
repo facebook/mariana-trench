@@ -718,7 +718,7 @@ bool BackwardTaintTransfer::analyze_load_param(
   }
 
   auto* parameter_memory_location =
-      memory_location->dyn_cast<ParameterMemoryLocation>();
+      memory_location->as<ParameterMemoryLocation>();
   if (parameter_memory_location == nullptr) {
     ERROR_OR_DUMP(context, 1, "Failed to deduce the parameter of a load");
     return false;

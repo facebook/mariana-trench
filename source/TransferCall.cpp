@@ -45,7 +45,7 @@ std::optional<std::string> register_constant_argument(
 
   MemoryLocation* memory_location = *memory_location_singleton;
   auto* instruction_memory_location =
-      memory_location->dyn_cast<InstructionMemoryLocation>();
+      memory_location->as<InstructionMemoryLocation>();
   if (instruction_memory_location == nullptr) {
     return std::nullopt;
   }

@@ -44,7 +44,7 @@ class MemoryLocation {
 
   /* Return the memory location as the given type, or nullptr. */
   template <typename T>
-  T* MT_NULLABLE dyn_cast() {
+  T* MT_NULLABLE as() {
     static_assert(std::is_base_of<MemoryLocation, T>::value, "invalid cast");
     return dynamic_cast<T*>(this);
   }

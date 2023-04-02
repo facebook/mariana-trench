@@ -28,7 +28,7 @@ FieldMemoryLocation* MemoryLocation::make_field(const DexString* field) {
   // location.
   MemoryLocation* memory_location = this;
   while (auto* field_memory_location =
-             memory_location->dyn_cast<FieldMemoryLocation>()) {
+             memory_location->as<FieldMemoryLocation>()) {
     if (field_memory_location->field() == field) {
       return field_memory_location;
     } else {
@@ -54,7 +54,7 @@ const Path& MemoryLocation::path() {
 }
 
 std::optional<AccessPath> MemoryLocation::access_path() {
-  auto* parameter = root()->dyn_cast<ParameterMemoryLocation>();
+  auto* parameter = root()->as<ParameterMemoryLocation>();
   if (!parameter) {
     return std::nullopt;
   }
