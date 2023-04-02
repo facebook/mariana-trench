@@ -250,6 +250,17 @@ class Taint final : public sparta::AbstractDomain<Taint> {
     return result;
   }
 
+  template <typename Key>
+  std::unordered_map<Key, Taint> partition_by_call_info(
+      const std::function<Key(CallInfo)>& map_call_info) const {
+    std::unordered_map<Key, Taint> result;
+    for (const auto& callee_frames : set_) {
+      auto mapped_value = map_call_info(callee_frames.call_info());
+      result[mapped_value].set_.add(callee_frames);
+    }
+    return result;
+  }
+
   /**
    * Returns a map from root to collapsed input paths for all the artificial
    * sources contained in this Taint instance.
@@ -275,6 +286,15 @@ class Taint final : public sparta::AbstractDomain<Taint> {
    * Return the taint representing the given propagation.
    */
   static Taint propagation(PropagationConfig propagation);
+
+  /**
+   * Create the taint used to infer propagations in the backward analysis.
+   */
+  static Taint propagation_taint(
+      const PropagationKind* kind,
+      PathTreeDomain output_paths,
+      FeatureMayAlwaysSet inferred_features,
+      FeatureSet user_features);
 
   /**
    * Return the same taint without any non-essential information (e.g,

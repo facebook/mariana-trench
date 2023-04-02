@@ -888,6 +888,13 @@
               ],
               "call_info" : "Propagation",
               "kind" : "LocalArgument(0)",
+              "local_features" : 
+              {
+                "always_features" : 
+                [
+                  "via-inner-class-this"
+                ]
+              },
               "output_paths" : 
               [
                 ".this$0"
@@ -922,6 +929,13 @@
               ],
               "call_info" : "Propagation",
               "kind" : "LocalArgument(0)",
+              "local_features" : 
+              {
+                "always_features" : 
+                [
+                  "via-inner-class-this"
+                ]
+              },
               "output_paths" : 
               [
                 ".this$0"
@@ -950,8 +964,19 @@
           "kinds" : 
           [
             {
+              "always_features" : 
+              [
+                "via-widen-broadening"
+              ],
               "call_info" : "Propagation",
               "kind" : "LocalArgument(0)",
+              "local_features" : 
+              {
+                "always_features" : 
+                [
+                  "via-widen-broadening"
+                ]
+              },
               "output_paths" : 
               [
                 ".a"
@@ -978,7 +1003,8 @@
       "always_features" : 
       [
         "via-cast:Lcom/facebook/marianatrench/integrationtests/Flow$Tree;",
-        "via-propagation-broadening"
+        "via-propagation-broadening",
+        "via-widen-broadening"
       ],
       "callee" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
       "position" : 
@@ -1024,7 +1050,8 @@
               "always_features" : 
               [
                 "via-cast:Lcom/facebook/marianatrench/integrationtests/Flow$Tree;",
-                "via-propagation-broadening"
+                "via-propagation-broadening",
+                "via-widen-broadening"
               ],
               "call_info" : "Origin",
               "kind" : "Source",
@@ -1033,7 +1060,8 @@
                 "always_features" : 
                 [
                   "via-cast:Lcom/facebook/marianatrench/integrationtests/Flow$Tree;",
-                  "via-propagation-broadening"
+                  "via-propagation-broadening",
+                  "via-widen-broadening"
                 ]
               },
               "local_positions" : 
@@ -1089,7 +1117,8 @@
               "always_features" : 
               [
                 "via-inner-class-this",
-                "via-propagation-broadening"
+                "via-propagation-broadening",
+                "via-widen-broadening"
               ],
               "call_info" : "Origin",
               "kind" : "Sink",
@@ -1098,7 +1127,8 @@
                 "always_features" : 
                 [
                   "via-inner-class-this",
-                  "via-propagation-broadening"
+                  "via-propagation-broadening",
+                  "via-widen-broadening"
                 ]
               },
               "local_positions" : 

@@ -22,7 +22,7 @@ public class Flow {
     Origin.sink(this.field);
   }
 
-  // Test that we only infer propagations at the end of the flow.
+  // TODO(T144485000): With a backward analysis, we now have a false positive here.
 
   public void add_propagation(Object x) {
     this.field = x;

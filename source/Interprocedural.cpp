@@ -13,6 +13,9 @@
 #include <TypeInference.h>
 #include <Walkers.h>
 
+#include <mariana-trench/BackwardTaintEnvironment.h>
+#include <mariana-trench/BackwardTaintFixpoint.h>
+#include <mariana-trench/BackwardTaintTransfer.h>
 #include <mariana-trench/ClassProperties.h>
 #include <mariana-trench/Context.h>
 #include <mariana-trench/Dependencies.h>
@@ -112,6 +115,23 @@ Model analyze(
         "Forward taint analysis of `{}` took {:.2f}s",
         method->show(),
         forward_taint_timer.duration_in_seconds());
+  }
+
+  {
+    Timer backward_taint_timer;
+    LOG_OR_DUMP(
+        &method_context, 4, "Backward taint analysis of `{}`", method->show());
+    auto backward_taint_fixpoint = BackwardTaintFixpoint(
+        code->cfg(),
+        InstructionAnalyzerCombiner<BackwardTaintTransfer>(&method_context));
+    backward_taint_fixpoint.run(
+        BackwardTaintEnvironment::initial(method_context));
+    LOG_OR_DUMP(
+        &method_context,
+        4,
+        "Backward taint analysis of `{}` took {:.2f}s",
+        method->show(),
+        backward_taint_timer.duration_in_seconds());
   }
 
   new_model.collapse_invalid_paths(global_context);

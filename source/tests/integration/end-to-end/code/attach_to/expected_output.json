@@ -947,6 +947,13 @@
               ],
               "call_info" : "Propagation",
               "kind" : "LocalReturn",
+              "local_features" : 
+              {
+                "always_features" : 
+                [
+                  "via-attach-propagations-argument"
+                ]
+              },
               "output_paths" : 
               [
                 ""
@@ -992,6 +999,13 @@
               ],
               "call_info" : "Propagation",
               "kind" : "LocalReturn",
+              "local_features" : 
+              {
+                "always_features" : 
+                [
+                  "via-attach-propagations-return"
+                ]
+              },
               "output_paths" : 
               [
                 ""
@@ -1156,6 +1170,13 @@
               ],
               "call_info" : "Propagation",
               "kind" : "LocalArgument(0)",
+              "local_features" : 
+              {
+                "always_features" : 
+                [
+                  "via-attach-propagations-return"
+                ]
+              },
               "output_paths" : 
               [
                 ".field"

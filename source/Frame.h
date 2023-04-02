@@ -191,6 +191,10 @@ class Frame final : public sparta::AbstractDomain<Frame> {
     return kind_;
   }
 
+  /* If this frame represents a propagation, return the PropagationKind.
+   * Asserts otherwise. */
+  const PropagationKind* propagation_kind() const;
+
   const AccessPath& callee_port() const {
     return callee_port_;
   }

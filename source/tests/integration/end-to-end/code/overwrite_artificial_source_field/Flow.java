@@ -18,7 +18,7 @@ public class Flow {
 
   public void inferred_sink(Test argument) {
     argument.field1 = new Object();
-    // FP: Inferred sink on Argument(1).field even though it is overwritten
+    // Do not infer propagations from Arg(1).field to the sink
     Origin.sink(argument.field1);
 
     argument.field2 = Origin.source();
@@ -28,7 +28,7 @@ public class Flow {
   public Object inferred_propagation(Test argument) {
     argument.field1 = new Object();
 
-    // FP: Inferred propagations from Argument(1).field even though it is overwritten
+    // Do not infer propagations from Arg(1).field to Arg(0).foo or Return
     this.foo = argument.field1;
     return argument.field1;
   }

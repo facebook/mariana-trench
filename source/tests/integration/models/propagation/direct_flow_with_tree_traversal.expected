@@ -287,39 +287,6 @@
                   "path" : "Flow.java"
                 }
               }
-            },
-            {
-              "kinds" :
-              [
-                {
-                  "always_features" :
-                  [
-                    "via-widen-broadening"
-                  ],
-                  "call_info" : "Origin",
-                  "kind" : "TestSink",
-                  "local_features" :
-                  {
-                    "always_features" :
-                    [
-                      "via-widen-broadening"
-                    ]
-                  },
-                  "origins" :
-                  [
-                    "LSink;.sink:(LData;)V"
-                  ]
-                }
-              ],
-              "origin" :
-              {
-                "method" : "LSink;.sink:(LData;)V",
-                "position" :
-                {
-                  "line" : 5,
-                  "path" : "Flow.java"
-                }
-              }
             }
           ]
         }

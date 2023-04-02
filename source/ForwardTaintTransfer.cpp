@@ -315,20 +315,20 @@ void apply_propagations(
           input_path,
           propagation);
 
-      auto propagation_info =
+      const PropagationKind* propagation_kind = propagation.propagation_kind();
+      auto output_taint_tree =
           transforms::apply_propagation(context, propagation, input_taint_tree);
 
-      auto output_root = propagation_info.propagation_kind->root();
+      auto output_root = propagation_kind->root();
       FeatureMayAlwaysSet features = FeatureMayAlwaysSet::make_always(
           callee.model.add_features_to_arguments(output_root));
       features.add(propagation.features());
       features.add_always(
           callee.model.add_features_to_arguments(input_path.root()));
 
-      propagation_info.output_taint_tree.map(
-          [&features, position](Taint& taints) {
-            taints.add_inferred_features_and_local_position(features, position);
-          });
+      output_taint_tree.map([&features, position](Taint& taints) {
+        taints.add_inferred_features_and_local_position(features, position);
+      });
 
       for (const auto& [output_path, _] :
            propagation.output_paths().elements()) {
@@ -342,11 +342,9 @@ void apply_propagations(
                 4,
                 "Tainting invoke result path {} with {}",
                 output_path_resolved,
-                propagation_info.output_taint_tree);
+                output_taint_tree);
             result_taint.write(
-                output_path_resolved,
-                propagation_info.output_taint_tree,
-                UpdateKind::Weak);
+                output_path_resolved, output_taint_tree, UpdateKind::Weak);
             break;
           }
           case Root::Kind::Argument: {
@@ -359,11 +357,11 @@ void apply_propagations(
                 "Tainting register {} path {} with {}",
                 output_register_id,
                 output_path_resolved,
-                propagation_info.output_taint_tree);
+                output_taint_tree);
             new_environment->write(
                 aliasing.register_memory_locations(output_register_id),
                 output_path_resolved,
-                propagation_info.output_taint_tree,
+                output_taint_tree,
                 callee.model.strong_write_on_propagation() ? UpdateKind::Strong
                                                            : UpdateKind::Weak);
             break;
@@ -449,83 +447,6 @@ void check_multi_source_multi_sink_rules(
   }
 }
 
-void add_inferred_sink(
-    MethodContext* context,
-    AccessPath sink_caller_port,
-    Taint new_sinks,
-    FeatureMayAlwaysSet widen_broadening_features) {
-  LOG_OR_DUMP(
-      context, 4, "Inferred sink for port {}: {}", sink_caller_port, new_sinks);
-  context->new_model.add_inferred_sinks(
-      sink_caller_port, new_sinks, widen_broadening_features);
-}
-
-void create_sinks(
-    MethodContext* context,
-    const Taint& sources,
-    const Taint& sinks,
-    const FeatureMayAlwaysSet& extra_features,
-    const FulfilledPartialKindState& fulfilled_partial_sinks) {
-  if (sources.is_bottom() || sinks.is_bottom()) {
-    return;
-  }
-
-  auto partitioned_by_artificial_sources =
-      sources.partition_by_kind<bool>([&](const Kind* kind) {
-        return kind->discard_transforms() == Kinds::artificial_source();
-      });
-
-  auto artificial_sources = partitioned_by_artificial_sources.find(true);
-  if (artificial_sources == partitioned_by_artificial_sources.end()) {
-    // Sinks are created when artificial sources are found flowing into them.
-    // No artificial sources, therefore no sinks.
-    return;
-  }
-
-  for (const auto& artificial_source :
-       artificial_sources->second.frames_iterator()) {
-    const auto* artificial_kind = artificial_source.kind();
-    mt_assert(artificial_kind != nullptr);
-
-    auto new_sinks = transforms::get_sink_for_artificial_source(
-        context, sinks, artificial_kind, fulfilled_partial_sinks);
-
-    const auto callee_port = artificial_source.callee_port();
-    auto features = extra_features;
-    features.add_always(
-        context->previous_model.attach_to_sinks(callee_port.root()));
-    features.add(artificial_source.features());
-
-    new_sinks.add_inferred_features(features);
-
-    // local_positions() are specific to the callee position. Normally,
-    // combining all of a Taint's local positions would be odd, but this method
-    // creates sinks and should always be called for the same call position
-    // (where the sink is).
-    new_sinks.set_local_positions(artificial_sources->second.local_positions());
-
-    FeatureMayAlwaysSet widen_broadening_features{
-        context->features.get_widen_broadening_feature()};
-    if (artificial_kind->is<TransformKind>()) {
-      // `callee_port` for transformed artificial source includes the `path`
-      add_inferred_sink(
-          context, callee_port, new_sinks, widen_broadening_features);
-
-      continue;
-    }
-
-    const auto input_paths_per_root = artificial_sources->second.input_paths();
-    for (const auto& [input_path, _] :
-         input_paths_per_root.get(callee_port.root()).elements()) {
-      add_inferred_sink(
-          context,
-          AccessPath(callee_port.root(), input_path),
-          new_sinks,
-          widen_broadening_features);
-    }
-  }
-}
-
 // Checks if the given sources/sinks fulfill any rule. If so, create an issue.
 //
 // If fulfilled_partial_sinks is non-null, also checks for multi-source rules
@@ -533,11 +454,7 @@ void create_sinks(
 // sink to a triggered sink and accumulates this list of triggered sinks. How
 // these sinks should be handled depends on what happens at other sinks/ports
 // within the same callsite/invoke. The caller MUST accumulate triggered sinks
-// at the callsite then call create_sinks. Regular sinks are also not created in
-// this mode.
-//
-// If fulfilled_partial_sinks is null, regular sinks will be created if an
-// artificial source is found to be flowing into a sink.
+// at the callsite then pass the results to the backward analysis.
 void check_sources_sinks_flows(
     MethodContext* context,
     const Taint& sources,
@@ -554,10 +471,6 @@ void check_sources_sinks_flows(
   auto sources_by_kind = sources.partition_by_kind();
   auto sinks_by_kind = sinks.partition_by_kind();
   for (const auto& [source_kind, source_taint] : sources_by_kind) {
-    if (source_kind->discard_transforms() == Kinds::artificial_source()) {
-      continue;
-    }
-
     for (const auto& [sink_kind, sink_taint] : sinks_by_kind) {
       // Check if this satisfies any rule. If so, create the issue.
       const auto& rules = context->rules.rules(source_kind, sink_kind);
@@ -599,15 +512,6 @@ void check_sources_sinks_flows(
       }
     }
   }
-
-  if (fulfilled_partial_sinks == nullptr) {
-    create_sinks(
-        context,
-        sources,
-        sinks,
-        extra_features,
-        /* fulfilled_partial_sinks */ {});
-  }
 }
 
 void check_call_flows(
@@ -618,14 +522,14 @@ void check_call_flows(
         get_parameter_register,
     const CalleeModel& callee,
     const std::vector<std::optional<std::string>>& source_constant_arguments,
-    const FeatureMayAlwaysSet& extra_features) {
+    const FeatureMayAlwaysSet& extra_features,
+    FulfilledPartialKindState* MT_NULLABLE fulfilled_partial_sinks) {
   LOG_OR_DUMP(
       context,
       4,
       "Processing sinks for call to `{}`",
       show(callee.method_reference));
 
-  FulfilledPartialKindState fulfilled_partial_sinks;
   std::vector<std::tuple<Taint, const Taint&>> sources_sinks;
 
   for (const auto& [port, sinks] : callee.model.sinks().elements()) {
@@ -658,28 +562,10 @@ void check_call_flows(
             ? callee.resolved_base_method->show()
             : std::string(k_unresolved_callee),
         extra_features,
-        &fulfilled_partial_sinks);
+        fulfilled_partial_sinks);
 
     sources_sinks.push_back(
         std::make_tuple(std::move(sources), std::cref(sinks)));
-  }
-
-  // Create the sinks, checking at each point, if any partial sinks should
-  // become triggered. This must not happen in the loop above because we need
-  // the full set of triggered sinks at all positions/port of the callsite.
-  //
-  // Example: callsite(partial_sink_A, triggered_sink_B).
-  // Scenario: triggered_sink_B discovered in check_sources_sinks_flows above
-  // when a source flows into the argument.
-  //
-  // This next loop needs that information to convert partial_sink_A into a
-  // triggered sink to be propagated if it is reachable via artifical sources.
-  //
-  // Outside of multi-source rules, this also creates regular sinks for the
-  // method if an artificial source is found flowing into a sink.
-  for (const auto& [sources, sinks] : sources_sinks) {
-    create_sinks(
-        context, sources, sinks, extra_features, fulfilled_partial_sinks);
   }
 }
 
@@ -690,7 +576,8 @@ void check_call_flows(
     const std::vector<Register>& instruction_sources,
     const CalleeModel& callee,
     const std::vector<std::optional<std::string>>& source_constant_arguments,
-    const FeatureMayAlwaysSet& extra_features) {
+    const FeatureMayAlwaysSet& extra_features,
+    FulfilledPartialKindState* MT_NULLABLE fulfilled_partial_sinks) {
   check_call_flows(
       context,
       aliasing,
@@ -705,7 +592,8 @@ void check_call_flows(
       },
       callee,
       source_constant_arguments,
-      extra_features);
+      extra_features,
+      fulfilled_partial_sinks);
 }
 
 void check_flows_to_array_allocation(
@@ -774,6 +662,7 @@ void check_artificial_calls_flows(
       context->call_graph.artificial_callees(context->method(), instruction);
 
   for (const auto& artificial_callee : artificial_callees) {
+    FulfilledPartialKindState fulfilled_partial_sinks;
     check_call_flows(
         context,
         aliasing,
@@ -790,7 +679,10 @@ void check_artificial_calls_flows(
         },
         get_callee(context, artificial_callee, aliasing.position()),
         source_constant_arguments,
-        FeatureMayAlwaysSet::make_always(artificial_callee.features));
+        FeatureMayAlwaysSet::make_always(artificial_callee.features),
+        &fulfilled_partial_sinks);
+    context->fulfilled_partial_sinks.store_artificial_call(
+        &artificial_callee, std::move(fulfilled_partial_sinks));
   }
 }
 
@@ -873,6 +765,8 @@ bool ForwardTaintTransfer::analyze_invoke(
       source_constant_arguments);
 
   const ForwardTaintEnvironment previous_environment = *environment;
+
+  FulfilledPartialKindState fulfilled_partial_sinks;
   check_call_flows(
       context,
       aliasing,
@@ -880,7 +774,11 @@ bool ForwardTaintTransfer::analyze_invoke(
       instruction->srcs_vec(),
       callee,
       source_constant_arguments,
-      /* extra_features */ {});
+      /* extra_features */ {},
+      &fulfilled_partial_sinks);
+  context->fulfilled_partial_sinks.store_call(
+      instruction, std::move(fulfilled_partial_sinks));
+
   check_call_effect_flows(context, callee);
   apply_call_effects(context, callee);
 
@@ -1076,11 +974,6 @@ bool ForwardTaintTransfer::analyze_load_param(
     sources = sources.attach_position(position);
   });
 
-  // Introduce an artificial parameter source in order to infer sinks and
-  // propagations.
-  taint.write(
-      Path{}, Taint::artificial_source(AccessPath(root)), UpdateKind::Weak);
-
   LOG_OR_DUMP(context, 4, "Tainting {} with {}", show(memory_location), taint);
   environment->write(memory_location, std::move(taint), UpdateKind::Strong);
 
@@ -1230,107 +1123,24 @@ bool ForwardTaintTransfer::analyze_binop_lit(
 
 namespace {
 
-void add_inferred_propagation(
-    MethodContext* context,
-    AccessPath input_path,
-    const Kind* output_kind,
-    PathTreeDomain output_paths,
-    FeatureMayAlwaysSet features) {
-  auto propagation = PropagationConfig(
-      /* input_path */ input_path,
-      /* kind */ output_kind,
-      /* output_paths */ output_paths,
-      /* inferred_features */ features,
-      /* locally_inferred_features */ FeatureMayAlwaysSet::bottom(),
-      /* user_features */ FeatureSet::bottom());
-
-  LOG_OR_DUMP(context, 4, "Inferred propagation {}", propagation);
-  context->new_model.add_inferred_propagation(
-      std::move(propagation),
-      /* widening_features */
-      FeatureMayAlwaysSet{context->features.get_widen_broadening_feature()});
-}
-
-// Infer propagations and generations for the output `taint` on port `root`.
+// Infer generations for the output `taint` on port `root`.
 void infer_output_taint(
     MethodContext* context,
     Root output_root,
     const PropagationKind* propagation_kind,
     const TaintTree& taint) {
   for (const auto& [output_path, sources] : taint.elements()) {
-    auto partitioned_by_artificial_sources =
-        sources.partition_by_kind<bool>([&](const Kind* kind) {
-          return kind->discard_transforms() == Kinds::artificial_source();
-        });
-
-    auto real_sources = partitioned_by_artificial_sources.find(false);
-    if (real_sources != partitioned_by_artificial_sources.end()) {
-      auto generation = real_sources->second;
-      generation.add_inferred_features(FeatureMayAlwaysSet::make_always(
-          context->previous_model.attach_to_sources(output_root)));
-      auto port = AccessPath(output_root, output_path);
-      LOG_OR_DUMP(
-          context, 4, "Inferred generation for port {}: {}", port, generation);
-      context->new_model.add_inferred_generations(
-          std::move(port),
-          std::move(generation),
-          /* widening_features */
-          FeatureMayAlwaysSet{
-              context->features.get_widen_broadening_feature()});
-    }
-
-    auto artificial_sources = partitioned_by_artificial_sources.find(true);
-    if (artificial_sources == partitioned_by_artificial_sources.end()) {
-      continue;
-    }
-
-    for (const auto& artificial_source :
-         artificial_sources->second.frames_iterator()) {
-      const auto& input_access_path = artificial_source.callee_port();
-      if (input_access_path.root() == output_root) {
-        continue;
-      }
-
-      const auto* kind_to_propagate =
-          transforms::get_propagation_for_artificial_source(
-              context, propagation_kind, artificial_source.kind());
-      if (kind_to_propagate == nullptr) {
-        continue;
-      }
-
-      auto features = artificial_source.features();
-      features.add_always(context->previous_model.attach_to_propagations(
-          input_access_path.root()));
-      features.add_always(
-          context->previous_model.attach_to_propagations(output_root));
-
-      if (kind_to_propagate->is<TransformKind>()) {
-        // `callee_port` for transformed artificial source includes the `path`
-        add_inferred_propagation(
-            context,
-            /* input_path */ input_access_path,
-            /* output_kind */ kind_to_propagate,
-            /* output_path */
-            PathTreeDomain{{output_path, SingletonAbstractDomain()}},
-            /* inferred features */ features);
-
-        continue;
-      }
-
-      const auto input_paths_per_root =
-          artificial_sources->second.input_paths();
-
-      for (const auto& [input_path, _] :
-           input_paths_per_root.get(input_access_path.root()).elements()) {
-        add_inferred_propagation(
-            context,
-            /* input_path */ AccessPath{input_access_path.root(), input_path},
-            /* output_kind */ kind_to_propagate,
-            /* output_path */
-            PathTreeDomain{{output_path, SingletonAbstractDomain()}},
-            /* inferred features */ features);
-      }
-    }
+    auto generation = sources;
+    generation.add_inferred_features(FeatureMayAlwaysSet::make_always(
+        context->previous_model.attach_to_sources(output_root)));
+    auto port = AccessPath(output_root, output_path);
+    LOG_OR_DUMP(
+        context, 4, "Inferred generation for port {}: {}", port, generation);
+    context->new_model.add_inferred_generations(
+        std::move(port),
+        std::move(generation),
+        /* widening_features */
+        FeatureMayAlwaysSet{context->features.get_widen_broadening_feature()});
   }
 }
 

@@ -276,27 +276,12 @@ CallPositionFrames CallPositionFrames::apply_transform(
 
   for (const auto& callee_port_frames : frames_) {
     for (const auto& frame : callee_port_frames) {
-      if (!callee_port_frames.is_artificial_source_frames()) {
-        frames_by_callee_port.add(CalleePortFrames{frame.apply_transform(
-            kinds,
-            transforms,
-            used_kinds,
-            frame.callee_port(),
-            local_transforms)});
-        continue;
-      }
-
-      // To apply transform on artificial sources, create a new
-      // callee_port_frame with the callee_port set to each of the input_paths.
-      for (const auto& [inner_path, _] :
-           callee_port_frames.input_paths().elements()) {
-        frames_by_callee_port.add(CalleePortFrames{frame.apply_transform(
-            kinds,
-            transforms,
-            used_kinds,
-            AccessPath(frame.callee_port().root(), inner_path),
-            local_transforms)});
-      }
+      frames_by_callee_port.add(CalleePortFrames{frame.apply_transform(
+          kinds,
+          transforms,
+          used_kinds,
+          frame.callee_port(),
+          local_transforms)});
     }
   }
 

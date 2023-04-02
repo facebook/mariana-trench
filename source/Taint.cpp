@@ -298,6 +298,32 @@ Taint Taint::propagation(PropagationConfig propagation) {
       /* call_info */ CallInfo::Propagation)};
 }
 
+Taint Taint::propagation_taint(
+    const PropagationKind* kind,
+    PathTreeDomain output_paths,
+    FeatureMayAlwaysSet inferred_features,
+    FeatureSet user_features) {
+  return Taint{TaintConfig(
+      /* kind */ kind,
+      /* callee_port */ AccessPath(kind->root()),
+      /* callee */ nullptr,
+      /* field_callee */ nullptr,
+      /* call_position */ nullptr,
+      /* distance */ 0,
+      /* origins */ {},
+      /* field_origins */ {},
+      /* inferred_features */ inferred_features,
+      /* locally_inferred_features */ {},
+      /* user_features */ user_features,
+      /* via_type_of_ports */ {},
+      /* via_value_of_ports */ {},
+      /* canonical_names */ {},
+      /* input_paths */ {},
+      /* output_paths */ output_paths,
+      /* local_positions */ {},
+      /* call_info */ CallInfo::Propagation)};
+}
+
 Taint Taint::essential() const {
   Taint result;
   for (const auto& frame : frames_iterator()) {

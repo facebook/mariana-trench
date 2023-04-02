@@ -180,6 +180,10 @@ LocalPositionSet CalleeFrames::local_positions() const {
 }
 
 void CalleeFrames::add_local_position(const Position* position) {
+  if (call_info_ == CallInfo::Propagation) {
+    return; // Do not add local positions on propagations.
+  }
+
   frames_.map([&](const CallPositionFrames& frames) {
     auto new_frames = frames;
     new_frames.add_local_position(position);

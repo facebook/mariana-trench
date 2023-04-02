@@ -513,7 +513,8 @@ void Model::approximate(const FeatureMayAlwaysSet& widening_features) {
   sinks_.limit_leaves(Heuristics::kSinkMaxInputPathLeaves, transform);
 
   propagations_.shape_with(make_mold, transform);
-  propagations_.limit_leaves(Heuristics::kPropagationMaxInputPathLeaves);
+  propagations_.limit_leaves(
+      Heuristics::kPropagationMaxInputPathLeaves, transform);
 }
 
 bool Model::empty() const {
@@ -683,19 +684,20 @@ void Model::add_propagation(PropagationConfig propagation) {
   add_propagation(propagation.input_path(), Taint::propagation(propagation));
 }
 
-void Model::add_inferred_propagation(
-    PropagationConfig propagation,
+void Model::add_inferred_propagations(
+    AccessPath input_path,
+    Taint local_taint,
     const FeatureMayAlwaysSet& widening_features) {
   if (has_global_propagation_sanitizer() ||
-      !port_sanitizers_.get(propagation.input_path().root()).is_bottom()) {
+      !port_sanitizers_.get(input_path.root()).is_bottom()) {
     return;
   }
 
   update_taint_tree(
       propagations_,
-      propagation.input_path(),
+      std::move(input_path),
       Heuristics::kPropagationMaxInputPathSize,
-      Taint::propagation(propagation),
+      std::move(local_taint),
       widening_features);
 }
 

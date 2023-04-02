@@ -247,8 +247,9 @@ class Model final {
 
   void add_propagation(PropagationConfig propagation);
   /* Add a propagation after applying sanitizers */
-  void add_inferred_propagation(
-      PropagationConfig propagation,
+  void add_inferred_propagations(
+      AccessPath input_path,
+      Taint local_taint,
       const FeatureMayAlwaysSet& widening_features);
   const TaintAccessPathTree& propagations() const {
     return propagations_;

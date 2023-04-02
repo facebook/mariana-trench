@@ -1540,6 +1540,13 @@
               ],
               "call_info" : "Propagation",
               "kind" : "LocalReturn",
+              "local_features" : 
+              {
+                "always_features" : 
+                [
+                  "via-array"
+                ]
+              },
               "output_paths" : 
               [
                 ""
@@ -1574,6 +1581,13 @@
               ],
               "call_info" : "Propagation",
               "kind" : "LocalReturn",
+              "local_features" : 
+              {
+                "always_features" : 
+                [
+                  "via-array"
+                ]
+              },
               "output_paths" : 
               [
                 ""

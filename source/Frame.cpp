@@ -134,6 +134,14 @@ void Frame::narrow_with(const Frame& other) {
   meet_with(other);
 }
 
+const PropagationKind* Frame::propagation_kind() const {
+  mt_assert(kind_ != nullptr);
+  const auto* propagation_kind =
+      kind_->discard_transforms()->as<PropagationKind>();
+  mt_assert(propagation_kind != nullptr);
+  return propagation_kind;
+}
+
 Frame Frame::with_kind(const Kind* kind) const {
   Frame new_frame(*this);
   new_frame.kind_ = kind;
@@ -168,8 +176,6 @@ Frame Frame::apply_transform(
 
   Frame new_frame{*this};
   new_frame.kind_ = new_kind;
-  new_frame.callee_port_ = callee_port;
-
   return new_frame;
 }
 

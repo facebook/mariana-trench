@@ -1586,14 +1586,6 @@
               "call_info" : "CallSite",
               "distance" : 3,
               "kind" : "LaunchingComponent",
-              "local_positions" : 
-              [
-                {
-                  "end" : 70,
-                  "line" : 89,
-                  "start" : 68
-                }
-              ],
               "origins" : 
               [
                 "Lcom/facebook/content/SecureContextHelper;.startFacebookActivity:(Landroid/content/Intent;Landroid/content/Context;)V",

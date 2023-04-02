@@ -40,8 +40,8 @@ public class Flow {
     return new IrrelevantField();
   }
 
-  // Analysis should find that withField.field can lead to the sink. This is
-  // correct.
+  // Analysis will find that withField can lead to the sink, even though only
+  // withField.field can lead to it. This is due to broadening.
   public void toSink(WithField2 withField) {
     WithField propagated = taintResult(withField);
     toSinkWithField(propagated);

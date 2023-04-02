@@ -888,6 +888,13 @@
               ],
               "call_info" : "Propagation",
               "kind" : "LocalArgument(0)",
+              "local_features" : 
+              {
+                "always_features" : 
+                [
+                  "via-inner-class-this"
+                ]
+              },
               "output_paths" : 
               [
                 ".this$0"
@@ -922,6 +929,13 @@
               ],
               "call_info" : "Propagation",
               "kind" : "LocalArgument(0)",
+              "local_features" : 
+              {
+                "always_features" : 
+                [
+                  "via-inner-class-this"
+                ]
+              },
               "output_paths" : 
               [
                 ".this$0"
@@ -956,6 +970,13 @@
               ],
               "call_info" : "Propagation",
               "kind" : "LocalArgument(0)",
+              "local_features" : 
+              {
+                "always_features" : 
+                [
+                  "via-inner-class-this"
+                ]
+              },
               "output_paths" : 
               [
                 ".this$0"
@@ -990,6 +1011,13 @@
               ],
               "call_info" : "Propagation",
               "kind" : "LocalArgument(0)",
+              "local_features" : 
+              {
+                "always_features" : 
+                [
+                  "via-inner-class-this"
+                ]
+              },
               "output_paths" : 
               [
                 ".this$0"
@@ -1409,6 +1437,13 @@
               ],
               "call_info" : "Propagation",
               "kind" : "LocalReturn",
+              "local_features" : 
+              {
+                "always_features" : 
+                [
+                  "via-inner-class-this"
+                ]
+              },
               "output_paths" : 
               [
                 ".this$0"
@@ -1599,14 +1634,20 @@
             {
               "always_features" : 
               [
-                "via-inner-class-this",
-                "via-propagation-broadening"
+                "via-inner-class-this"
               ],
               "call_info" : "Propagation",
               "kind" : "LocalReturn",
+              "local_features" : 
+              {
+                "always_features" : 
+                [
+                  "via-inner-class-this"
+                ]
+              },
               "output_paths" : 
               [
-                ""
+                ".this$0"
               ]
             }
           ]
@@ -1722,6 +1763,13 @@
               ],
               "call_info" : "Propagation",
               "kind" : "LocalReturn",
+              "local_features" : 
+              {
+                "always_features" : 
+                [
+                  "via-inner-class-this"
+                ]
+              },
               "output_paths" : 
               [
                 ".this$0"
@@ -1742,8 +1790,19 @@
           "kinds" : 
           [
             {
+              "always_features" : 
+              [
+                "via-widen-broadening"
+              ],
               "call_info" : "Origin",
               "kind" : "Sink",
+              "local_features" : 
+              {
+                "always_features" : 
+                [
+                  "via-widen-broadening"
+                ]
+              },
               "origins" : 
               [
                 "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V"

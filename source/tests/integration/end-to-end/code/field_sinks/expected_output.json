@@ -1164,13 +1164,7 @@
               [
                 "Lcom/facebook/marianatrench/integrationtests/TaintedFieldClass;.field:Ljava/lang/Object;"
               ],
-              "kind" : "Sink",
-              "local_positions" : 
-              [
-                {
-                  "line" : 20
-                }
-              ]
+              "kind" : "Sink"
             }
           ]
         }

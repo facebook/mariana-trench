@@ -8,28 +8,53 @@
 #include <Show.h>
 
 #include <mariana-trench/Assert.h>
-#include <mariana-trench/ForwardTaintEnvironment.h>
+#include <mariana-trench/BackwardTaintEnvironment.h>
 
 namespace marianatrench {
 
-ForwardTaintEnvironment ForwardTaintEnvironment::initial() {
-  return ForwardTaintEnvironment::bottom();
+/* This must be called when accessing a specific path in backward taint. */
+Taint BackwardTaintEnvironment::propagate_output_path(
+    Taint taint,
+    Path::Element path_element) {
+  taint.append_to_propagation_output_paths(path_element);
+  return taint;
 }
 
-TaintTree ForwardTaintEnvironment::read(MemoryLocation* memory_location) const {
-  return taint_.get(memory_location->root()).read(memory_location->path());
+BackwardTaintEnvironment BackwardTaintEnvironment::initial(
+    MethodContext& context) {
+  auto taint = TaintEnvironment::bottom();
+
+  if (!context.method()->is_static()) {
+    taint.set(
+        context.memory_factory.make_parameter(0),
+        TaintTree(Taint::propagation_taint(
+            /* kind */ context.kinds.local_receiver(),
+            /* output_paths */
+            PathTreeDomain{{Path{}, SingletonAbstractDomain()}},
+            /* inferred_features */ {},
+            /* user_features */ {})));
+  }
+
+  return BackwardTaintEnvironment(std::move(taint));
 }
 
-TaintTree ForwardTaintEnvironment::read(
+TaintTree BackwardTaintEnvironment::read(
+    MemoryLocation* memory_location) const {
+  return taint_.get(memory_location->root())
+      .read(memory_location->path(), propagate_output_path);
+}
+
+TaintTree BackwardTaintEnvironment::read(
     MemoryLocation* memory_location,
     const Path& path) const {
   Path full_path = memory_location->path();
   full_path.extend(path);
 
-  return taint_.get(memory_location->root()).read(full_path);
+  return taint_.get(memory_location->root())
+      .read(full_path, propagate_output_path);
 }
 
-TaintTree ForwardTaintEnvironment::read(
+TaintTree BackwardTaintEnvironment::read(
     const MemoryLocationsDomain& memory_locations) const {
   TaintTree taint;
   for (auto* memory_location : memory_locations.elements()) {
@@ -38,18 +63,7 @@ TaintTree ForwardTaintEnvironment::read(
   return taint;
 }
 
-TaintTree ForwardTaintEnvironment::read(
-    const MemoryLocationsDomain& memory_locations,
-    const Path& path) const {
-  TaintTree taint;
-  for (auto* memory_location : memory_locations.elements()) {
-    taint.join_with(read(memory_location, path));
-  }
-
-  return taint;
-}
-
-void ForwardTaintEnvironment::write(
+void BackwardTaintEnvironment::write(
     MemoryLocation* memory_location,
     TaintTree taint,
     UpdateKind kind) {
@@ -60,7 +74,7 @@ void ForwardTaintEnvironment::write(
   });
 }
 
-void ForwardTaintEnvironment::write(
+void BackwardTaintEnvironment::write(
     MemoryLocation* memory_location,
     const Path& path,
     TaintTree taint,
@@ -75,7 +89,7 @@ void ForwardTaintEnvironment::write(
   });
 }
 
-void ForwardTaintEnvironment::write(
+void BackwardTaintEnvironment::write(
     MemoryLocation* memory_location,
     const Path& path,
     Taint taint,
@@ -90,7 +104,7 @@ void ForwardTaintEnvironment::write(
   });
 }
 
-void ForwardTaintEnvironment::write(
+void BackwardTaintEnvironment::write(
     const MemoryLocationsDomain& memory_locations,
     TaintTree taint,
     UpdateKind kind) {
@@ -109,14 +123,14 @@ void ForwardTaintEnvironment::write(
   }
 }
 
-void ForwardTaintEnvironment::write(
+void BackwardTaintEnvironment::write(
     const MemoryLocationsDomain& memory_locations,
     Taint taint,
     UpdateKind kind) {
   write(memory_locations, TaintTree(std::move(taint)), kind);
 }
 
-void ForwardTaintEnvironment::write(
+void BackwardTaintEnvironment::write(
     const MemoryLocationsDomain& memory_locations,
     const Path& path,
     TaintTree taint,
@@ -136,7 +150,7 @@ void ForwardTaintEnvironment::write(
   }
 }
 
-void ForwardTaintEnvironment::write(
+void BackwardTaintEnvironment::write(
     const MemoryLocationsDomain& memory_locations,
     const Path& path,
     Taint taint,
@@ -158,7 +172,7 @@ void ForwardTaintEnvironment::write(
 
 std::ostream& operator<<(
     std::ostream& out,
-    const ForwardTaintEnvironment& environment) {
+    const BackwardTaintEnvironment& environment) {
   return out << environment.taint_;
 }
 

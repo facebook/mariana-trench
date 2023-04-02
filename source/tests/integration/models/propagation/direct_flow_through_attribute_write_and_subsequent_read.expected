@@ -80,38 +80,7 @@
       {
         "line" : 0,
         "path" : "Flow.java"
-      },
-      "sinks" :
-      [
-        {
-          "port" : "Argument(1).field",
-          "taint" :
-          [
-            {
-              "kinds" :
-              [
-                {
-                  "call_info" : "Origin",
-                  "kind" : "TestSink",
-                  "origins" :
-                  [
-                    "LSink;.sink:(LData;)V"
-                  ]
-                }
-              ],
-              "origin" :
-              {
-                "method" : "LSink;.sink:(LData;)V",
-                "position" :
-                {
-                  "line" : 3,
-                  "path" : "Flow.java"
-                }
-              }
-            }
-          ]
-        }
-      ]
+      }
     }
   ]
 }

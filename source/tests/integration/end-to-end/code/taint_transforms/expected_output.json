@@ -1512,6 +1512,11 @@
               "local_positions" : 
               [
                 {
+                  "end" : 34,
+                  "line" : 150,
+                  "start" : 34
+                },
+                {
                   "end" : 41,
                   "line" : 151,
                   "start" : 34
@@ -1527,6 +1532,11 @@
               "kind" : "T2@Sink",
               "local_positions" : 
               [
+                {
+                  "end" : 34,
+                  "line" : 150,
+                  "start" : 34
+                },
                 {
                   "end" : 41,
                   "line" : 151,
