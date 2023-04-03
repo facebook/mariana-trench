@@ -49,11 +49,13 @@ class Rule {
 
   template <typename T>
   const T* MT_NULLABLE as() const {
+    static_assert(std::is_base_of<Rule, T>::value, "invalid as<T>");
     return dynamic_cast<const T*>(this);
   }
 
   template <typename T>
   T* MT_NULLABLE as() {
+    static_assert(std::is_base_of<Rule, T>::value, "invalid as<T>");
     return dynamic_cast<T*>(this);
   }
 

@@ -38,14 +38,14 @@ class MemoryLocation {
   /* Check wether the memory location has the given type. */
   template <typename T>
   bool is() const {
-    static_assert(std::is_base_of<MemoryLocation, T>::value, "invalid check");
+    static_assert(std::is_base_of<MemoryLocation, T>::value, "invalid is<T>");
     return dynamic_cast<const T*>(this) != nullptr;
   }
 
   /* Return the memory location as the given type, or nullptr. */
   template <typename T>
   T* MT_NULLABLE as() {
-    static_assert(std::is_base_of<MemoryLocation, T>::value, "invalid cast");
+    static_assert(std::is_base_of<MemoryLocation, T>::value, "invalid as<T>");
     return dynamic_cast<T*>(this);
   }
 

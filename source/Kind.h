@@ -33,16 +33,19 @@ class Kind {
 
   template <typename T>
   const T* MT_NULLABLE as() const {
+    static_assert(std::is_base_of<Kind, T>::value, "invalid as<T>");
     return dynamic_cast<const T*>(this);
   }
 
   template <typename T>
   T* MT_NULLABLE as() {
+    static_assert(std::is_base_of<Kind, T>::value, "invalid as<T>");
     return dynamic_cast<T*>(this);
   }
 
   template <typename T>
   bool is() const {
+    static_assert(std::is_base_of<Kind, T>::value, "invalid is<T>");
     return dynamic_cast<const T*>(this) != nullptr;
   }
 
