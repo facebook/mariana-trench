@@ -228,7 +228,6 @@ TaintConfig TaintConfig::from_json(const Json::Value& value, Context& context) {
       std::move(via_type_of_ports),
       std::move(via_value_of_ports),
       std::move(canonical_names),
-      /* input_paths */ {},
       /* output_paths */ {},
       /* local_positions */ {},
       call_info);

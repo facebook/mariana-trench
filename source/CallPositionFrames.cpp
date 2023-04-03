@@ -248,7 +248,6 @@ CallPositionFrames CallPositionFrames::attach_position(
           /* via_type_of_ports */ {},
           /* via_value_of_ports */ {},
           frame.canonical_names(),
-          /* input_paths */ {},
           /* output_paths */ {},
           callee_port_frames.local_positions(),
           CallInfo::Origin)});
@@ -288,20 +287,6 @@ CallPositionFrames CallPositionFrames::apply_transform(
   return CallPositionFrames{position_, frames_by_callee_port};
 }
 
-void CallPositionFrames::append_to_artificial_source_input_paths(
-    Path::Element path_element) {
-  frames_.map([&](CalleePortFrames& callee_port_frames) {
-    callee_port_frames.append_to_artificial_source_input_paths(path_element);
-  });
-}
-
-void CallPositionFrames::add_inferred_features_to_real_sources(
-    const FeatureMayAlwaysSet& features) {
-  frames_.map([&](CalleePortFrames& callee_port_frames) {
-    callee_port_frames.add_inferred_features_to_real_sources(features);
-  });
-}
-
 std::unordered_map<const Position*, CallPositionFrames>
 CallPositionFrames::map_positions(
     const std::function<const Position*(const AccessPath&, const Position*)>&
@@ -334,7 +319,6 @@ CallPositionFrames::map_positions(
           frame.via_type_of_ports(),
           frame.via_value_of_ports(),
           frame.canonical_names(),
-          /* input_paths */ {},
           /* output_paths */ {},
           /* local_positions */ {},
           /* call_info */ frame.call_info());
@@ -372,21 +356,6 @@ bool CallPositionFrames::contains_kind(const Kind* kind) const {
     }
   }
   return false;
-}
-
-RootPatriciaTreeAbstractPartition<PathTreeDomain>
-CallPositionFrames::input_paths() const {
-  RootPatriciaTreeAbstractPartition<PathTreeDomain> input_paths;
-  for (const auto& callee_port_frames : frames_) {
-    if (callee_port_frames.is_artificial_source_frames()) {
-      input_paths.update(
-          callee_port_frames.callee_port().root(),
-          [&](const PathTreeDomain& existing) {
-            return existing.join(callee_port_frames.input_paths());
-          });
-    }
-  }
-  return input_paths;
 }
 
 Json::Value CallPositionFrames::to_json(

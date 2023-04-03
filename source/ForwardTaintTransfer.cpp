@@ -548,9 +548,8 @@ void check_call_flows(
                 aliasing.register_memory_locations(*register_id),
                 port.path().resolve(source_constant_arguments))
             .collapse(/* transform */ [context](Taint& taint) {
-              return taint.add_inferred_features_to_real_sources(
-                  FeatureMayAlwaysSet{
-                      context->features.get_issue_broadening_feature()});
+              return taint.add_inferred_features(FeatureMayAlwaysSet{
+                  context->features.get_issue_broadening_feature()});
             });
     check_sources_sinks_flows(
         context,
@@ -624,7 +623,6 @@ void check_flows_to_array_allocation(
       /* via_type_of_ports */ {},
       /* via_value_of_ports */ {},
       /* canonical_names */ {},
-      /* input_paths */ {},
       /* output_paths */ {},
       /* local_positions */ {},
       /* call_info */ CallInfo::Origin)};
@@ -1177,9 +1175,8 @@ bool ForwardTaintTransfer::analyze_return(
           environment->read(memory_locations, path)
               .collapse(
                   /* transform */ [context](Taint& taint) {
-                    return taint.add_inferred_features_to_real_sources(
-                        FeatureMayAlwaysSet{
-                            context->features.get_issue_broadening_feature()});
+                    return taint.add_inferred_features(FeatureMayAlwaysSet{
+                        context->features.get_issue_broadening_feature()});
                   });
       // Fulfilled partial sinks are not expected to be produced here. Return
       // sinks are never partial.

@@ -184,23 +184,9 @@ std::ostream& operator<<(std::ostream& out, const Taint& taint) {
   return out << taint.set_;
 }
 
-void Taint::append_to_artificial_source_input_paths(
-    Path::Element path_element) {
-  set_.map([path_element](CalleeFrames& frames) {
-    frames.append_to_artificial_source_input_paths(path_element);
-  });
-}
-
 void Taint::append_to_propagation_output_paths(Path::Element path_element) {
   set_.map([path_element](CalleeFrames& frames) {
     frames.append_to_propagation_output_paths(path_element);
-  });
-}
-
-void Taint::add_inferred_features_to_real_sources(
-    const FeatureMayAlwaysSet& features) {
-  set_.map([&features](CalleeFrames& frames) {
-    frames.add_inferred_features_to_real_sources(features);
   });
 }
 
@@ -234,15 +220,6 @@ std::unordered_map<const Kind*, Taint> Taint::partition_by_kind() const {
   return partition_by_kind<const Kind*>([](const Kind* kind) { return kind; });
 }
 
-RootPatriciaTreeAbstractPartition<PathTreeDomain> Taint::input_paths() const {
-  for (const auto& callee_frames : set_) {
-    if (!callee_frames.callee()) {
-      return callee_frames.input_paths();
-    }
-  }
-  return {};
-}
-
 FeatureMayAlwaysSet Taint::features_joined() const {
   auto features = FeatureMayAlwaysSet::bottom();
   for (const auto& callee_frames : set_) {
@@ -251,29 +228,6 @@ FeatureMayAlwaysSet Taint::features_joined() const {
     }
   }
   return features;
-}
-
-Taint Taint::artificial_source(AccessPath access_path) {
-  return Taint{TaintConfig(
-      /* kind */ Kinds::artificial_source(),
-      /* callee_port */ AccessPath(access_path.root()),
-      /* callee */ nullptr,
-      /* field_callee */ nullptr,
-      /* call_position */ nullptr,
-      /* distance */ 0,
-      /* origins */ {},
-      /* field_origins */ {},
-      /* inferred_features */ {},
-      /* locally_inferred_features */ {},
-      /* user_features */ {},
-      /* via_type_of_ports */ {},
-      /* via_value_of_ports */ {},
-      /* canonical_names */ {},
-      /* input_paths */
-      PathTreeDomain{{access_path.path(), SingletonAbstractDomain()}},
-      /* output_paths */ {},
-      /* local_positions */ {},
-      /* call_info */ CallInfo::Declaration)};
 }
 
 Taint Taint::propagation(PropagationConfig propagation) {
@@ -292,7 +246,6 @@ Taint Taint::propagation(PropagationConfig propagation) {
       /* via_type_of_ports */ {},
       /* via_value_of_ports */ {},
       /* canonical_names */ {},
-      /* input_paths */ {},
       /* output_paths */ propagation.output_paths(),
       /* local_positions */ {},
       /* call_info */ CallInfo::Propagation)};
@@ -318,7 +271,6 @@ Taint Taint::propagation_taint(
       /* via_type_of_ports */ {},
       /* via_value_of_ports */ {},
       /* canonical_names */ {},
-      /* input_paths */ {},
       /* output_paths */ output_paths,
       /* local_positions */ {},
       /* call_info */ CallInfo::Propagation)};
@@ -350,7 +302,6 @@ Taint Taint::essential() const {
         /* via_type_of_ports */ {},
         /* via_value_of_ports */ {},
         /* canonical_names */ {},
-        /* input_paths */ {},
         /* output_paths */ frame.output_paths(),
         /* local_positions */ {},
         /* call_info */ CallInfo::Declaration));

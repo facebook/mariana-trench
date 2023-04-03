@@ -23,9 +23,6 @@ TEST_F(CalleePortFramesTest, Constructor) {
   auto* test_kind_two = context.kinds->get("TestSinkTwo");
   auto* test_position_one = context.positions->get(std::nullopt, 1);
   auto* test_position_two = context.positions->get(std::nullopt, 2);
-  const auto x = PathElement::field("x");
-  const auto y = PathElement::field("y");
-  const auto z = PathElement::field("z");
 
   // Verify local positions only need to be specified on one TaintBuilder in
   // order to apply to the whole object.
@@ -65,31 +62,8 @@ TEST_F(CalleePortFramesTest, Constructor) {
       frames.local_positions(),
       (LocalPositionSet{test_position_one, test_position_two}));
 
-  // Default constructed and real sources have input paths set to bottom.
-  EXPECT_EQ(frames.input_paths(), PathTreeDomain::bottom());
-  frames = CalleePortFrames();
-  EXPECT_EQ(frames.input_paths(), PathTreeDomain::bottom());
-
   // Specifying different local positions would result in them being joined and
   // applied to all frames.
-  frames = CalleePortFrames(
-      {test::make_taint_config(
-           Kinds::artificial_source(),
-           test::FrameProperties{
-               .callee_port = AccessPath(Root(Root::Kind::Argument, 0)),
-               .input_paths =
-                   PathTreeDomain{{Path{x, y}, SingletonAbstractDomain()}}}),
-       test::make_taint_config(
-           Kinds::artificial_source(),
-           test::FrameProperties{
-               .callee_port = AccessPath(Root(Root::Kind::Argument, 0)),
-               .input_paths =
-                   PathTreeDomain{{Path{x, z}, SingletonAbstractDomain()}}})});
-  EXPECT_EQ(
-      frames.input_paths(),
-      PathTreeDomain(
-          {{Path{x, y}, SingletonAbstractDomain()},
-           {Path{x, z}, SingletonAbstractDomain()}}));
 }
 
 TEST_F(CalleePortFramesTest, Add) {
@@ -277,38 +251,36 @@ TEST_F(CalleePortFramesTest, Leq) {
                   .origins = MethodSet{one},
                   .call_info = CallInfo::CallSite})}));
 
-  // Artificial sources.
-  EXPECT_TRUE(
-      CalleePortFrames{
-          test::make_taint_config(
-              Kinds::artificial_source(),
-              test::FrameProperties{
-                  .callee_port = AccessPath(Root(Root::Kind::Argument, 0)),
-                  .input_paths =
-                      PathTreeDomain{
-                          {Path{PathElement::field("x")},
-                           SingletonAbstractDomain()}}})}
-          .leq(CalleePortFrames{test::make_taint_config(
-              Kinds::artificial_source(),
-              test::FrameProperties{
-                  .callee_port = AccessPath(Root(Root::Kind::Argument, 0)),
-                  .input_paths =
-                      PathTreeDomain{{Path{}, SingletonAbstractDomain()}}})}));
-  EXPECT_FALSE(
-      CalleePortFrames{
-          test::make_taint_config(
-              Kinds::artificial_source(),
-              test::FrameProperties{
-                  .callee_port = AccessPath(Root(Root::Kind::Argument, 0)),
-                  .input_paths =
-                      PathTreeDomain{{Path{}, SingletonAbstractDomain()}}})}
-          .leq(CalleePortFrames{test::make_taint_config(
-              Kinds::artificial_source(),
-              test::FrameProperties{
-                  .callee_port = AccessPath(Root(Root::Kind::Argument, 0)),
-                  .input_paths = PathTreeDomain{
+  // Local kinds with output paths.
+  EXPECT_TRUE(CalleePortFrames{
+      test::make_taint_config(
+          context.kinds->local_return(),
+          test::FrameProperties{
+              .callee_port = AccessPath(Root(Root::Kind::Return)),
+              .output_paths =
+                  PathTreeDomain{
                       {Path{PathElement::field("x")},
-                       SingletonAbstractDomain()}}})}));
+                       SingletonAbstractDomain()}}})}
+                  .leq(CalleePortFrames{test::make_taint_config(
+                      context.kinds->local_return(),
+                      test::FrameProperties{
+                          .callee_port = AccessPath(Root(Root::Kind::Return)),
+                          .output_paths = PathTreeDomain{
+                              {Path{}, SingletonAbstractDomain()}}})}));
+  EXPECT_FALSE(CalleePortFrames{
+      test::make_taint_config(
+          context.kinds->local_return(),
+          test::FrameProperties{
+              .callee_port = AccessPath(Root(Root::Kind::Return)),
+              .output_paths =
+                  PathTreeDomain{{Path{}, SingletonAbstractDomain()}}})}
+                   .leq(CalleePortFrames{test::make_taint_config(
+                       context.kinds->local_return(),
+                       test::FrameProperties{
+                           .callee_port = AccessPath(Root(Root::Kind::Return)),
+                           .output_paths = PathTreeDomain{
+                               {Path{PathElement::field("x")},
+                                SingletonAbstractDomain()}}})}));
 }
 
 TEST_F(CalleePortFramesTest, Equals) {
@@ -340,26 +312,25 @@ TEST_F(CalleePortFramesTest, Equals) {
                    .equals(CalleePortFrames{test::make_taint_config(
                        test_kind_two, test::FrameProperties{})}));
 
-  // Artificial source with same callee port root but different input path
-  // trees.
+  // Different output paths
   auto two_input_paths = CalleePortFrames(
       {test::make_taint_config(
-           Kinds::artificial_source(),
+           context.kinds->local_return(),
            test::FrameProperties{
-               .callee_port = AccessPath(Root(Root::Kind::Argument, 0)),
-               .input_paths =
+               .callee_port = AccessPath(Root(Root::Kind::Return)),
+               .output_paths =
                    PathTreeDomain{{Path{x, y}, SingletonAbstractDomain()}}}),
        test::make_taint_config(
-           Kinds::artificial_source(),
+           context.kinds->local_return(),
            test::FrameProperties{
-               .callee_port = AccessPath(Root(Root::Kind::Argument, 0)),
-               .input_paths =
+               .callee_port = AccessPath(Root(Root::Kind::Return)),
+               .output_paths =
                    PathTreeDomain{{Path{x, z}, SingletonAbstractDomain()}}})});
   EXPECT_FALSE(two_input_paths.equals(CalleePortFrames{test::make_taint_config(
-      Kinds::artificial_source(),
+      context.kinds->local_return(),
       test::FrameProperties{
-          .callee_port = AccessPath(Root(Root::Kind::Argument, 0)),
-          .input_paths =
+          .callee_port = AccessPath(Root(Root::Kind::Return)),
+          .output_paths =
               PathTreeDomain{{Path{x}, SingletonAbstractDomain()}}})}));
 }
 
@@ -448,48 +419,6 @@ TEST_F(CalleePortFramesTest, JoinWith) {
   frames = CalleePortFrames{frame_one};
   frames.join_with(CalleePortFrames{frame_two});
   EXPECT_EQ(frames, (CalleePortFrames{frame_one}));
-}
-
-TEST_F(CalleePortFramesTest, ArtificialSourceJoinWith) {
-  const auto x = PathElement::field("x");
-  const auto y = PathElement::field("y");
-
-  // Join different ports with same root for artificial sources.
-  // The `callee_port` should be collapsed to the common prefix, but the input
-  // path tree can still hold multiple paths.
-  auto frames = CalleePortFrames{test::make_taint_config(
-      Kinds::artificial_source(),
-      test::FrameProperties{
-          .callee_port = AccessPath(Root(Root::Kind::Argument, 0)),
-          .input_paths =
-              PathTreeDomain{{Path{x}, SingletonAbstractDomain()}}})};
-  frames.join_with(CalleePortFrames{test::make_taint_config(
-      Kinds::artificial_source(),
-      test::FrameProperties{
-          .callee_port = AccessPath(Root(Root::Kind::Argument, 0)),
-          .input_paths =
-              PathTreeDomain{{Path{y}, SingletonAbstractDomain()}}})});
-  EXPECT_EQ(
-      frames.input_paths(),
-      (PathTreeDomain{
-          {Path{x}, SingletonAbstractDomain()},
-          {Path{y}, SingletonAbstractDomain()}}));
-
-  frames.join_with(CalleePortFrames{test::make_taint_config(
-      Kinds::artificial_source(),
-      test::FrameProperties{
-          .callee_port = AccessPath(Root(Root::Kind::Argument, 0)),
-          .input_paths =
-              PathTreeDomain{{Path{}, SingletonAbstractDomain()}}})});
-  EXPECT_EQ(frames.input_paths(), PathTreeDomain{SingletonAbstractDomain()});
-  EXPECT_EQ(
-      frames,
-      CalleePortFrames{test::make_taint_config(
-          Kinds::artificial_source(),
-          test::FrameProperties{
-              .callee_port = AccessPath(Root(Root::Kind::Argument, 0)),
-              .input_paths =
-                  PathTreeDomain{{Path{}, SingletonAbstractDomain()}}})});
 }
 
 TEST_F(CalleePortFramesTest, Difference) {
@@ -901,97 +830,99 @@ TEST_F(CalleePortFramesTest, DifferenceLocalPositions) {
               .local_positions = LocalPositionSet{test_position_one}})});
 }
 
-TEST_F(CalleePortFramesTest, DifferenceInputPaths) {
+TEST_F(CalleePortFramesTest, DifferenceOutputPaths) {
   auto context = test::make_empty_context();
 
   const auto x = PathElement::field("x");
   const auto* feature = context.features->get("featureone");
 
-  // lhs.input_paths <= rhs.input_paths
+  // lhs.output_paths <= rhs.output_paths
   // lhs.frames <= rhs.frames
   auto lhs_frames = CalleePortFrames{test::make_taint_config(
-      Kinds::artificial_source(),
+      context.kinds->local_return(),
       test::FrameProperties{
-          .callee_port = AccessPath(Root(Root::Kind::Argument)),
-          .input_paths =
+          .callee_port = AccessPath(Root(Root::Kind::Return)),
+          .output_paths =
               PathTreeDomain{{Path{x}, SingletonAbstractDomain()}}})};
   lhs_frames.difference_with(CalleePortFrames{test::make_taint_config(
-      Kinds::artificial_source(),
+      context.kinds->local_return(),
       test::FrameProperties{
-          .callee_port = AccessPath(Root(Root::Kind::Argument)),
-          .input_paths =
+          .callee_port = AccessPath(Root(Root::Kind::Return)),
+          .output_paths =
               PathTreeDomain{{Path{}, SingletonAbstractDomain()}}})});
   EXPECT_TRUE(lhs_frames.is_bottom());
 
-  // lhs.input_paths <= rhs.input_paths
+  // lhs.output_paths <= rhs.output_paths
   // lhs.frames > rhs.frames
   lhs_frames = CalleePortFrames{test::make_taint_config(
-      Kinds::artificial_source(),
+      context.kinds->local_return(),
       test::FrameProperties{
-          .callee_port = AccessPath(Root(Root::Kind::Argument)),
+          .callee_port = AccessPath(Root(Root::Kind::Return)),
           .inferred_features = FeatureMayAlwaysSet{feature},
-          .input_paths =
+          .output_paths =
               PathTreeDomain{{Path{x}, SingletonAbstractDomain()}}})};
   lhs_frames.difference_with(CalleePortFrames{test::make_taint_config(
-      Kinds::artificial_source(),
+      context.kinds->local_return(),
       test::FrameProperties{
-          .callee_port = AccessPath(Root(Root::Kind::Argument)),
-          .input_paths =
+          .callee_port = AccessPath(Root(Root::Kind::Return)),
+          .output_paths =
               PathTreeDomain{{Path{}, SingletonAbstractDomain()}}})});
   EXPECT_EQ(
       lhs_frames,
       CalleePortFrames{test::make_taint_config(
-          Kinds::artificial_source(),
+          context.kinds->local_return(),
           test::FrameProperties{
-              .callee_port = AccessPath(Root(Root::Kind::Argument)),
+              .callee_port = AccessPath(Root(Root::Kind::Return)),
               .inferred_features = FeatureMayAlwaysSet{feature},
-              .input_paths =
+              .output_paths =
                   PathTreeDomain{{Path{x}, SingletonAbstractDomain()}}})});
 
-  // lhs.input_paths > rhs.input_paths
+  // lhs.output_paths > rhs.output_paths
   // lhs.frames <= rhs.frames
   lhs_frames = CalleePortFrames{test::make_taint_config(
-      Kinds::artificial_source(),
+      context.kinds->local_return(),
       test::FrameProperties{
-          .callee_port = AccessPath(Root(Root::Kind::Argument)),
-          .input_paths = PathTreeDomain{{Path{}, SingletonAbstractDomain()}}})};
+          .callee_port = AccessPath(Root(Root::Kind::Return)),
+          .output_paths =
+              PathTreeDomain{{Path{}, SingletonAbstractDomain()}}})};
   lhs_frames.difference_with(CalleePortFrames{test::make_taint_config(
-      Kinds::artificial_source(),
+      context.kinds->local_return(),
       test::FrameProperties{
-          .callee_port = AccessPath(Root(Root::Kind::Argument)),
-          .input_paths =
+          .callee_port = AccessPath(Root(Root::Kind::Return)),
+          .output_paths =
               PathTreeDomain{{Path{x}, SingletonAbstractDomain()}}})});
   EXPECT_EQ(
       lhs_frames,
       CalleePortFrames{test::make_taint_config(
-          Kinds::artificial_source(),
+          context.kinds->local_return(),
           test::FrameProperties{
-              .callee_port = AccessPath(Root(Root::Kind::Argument)),
-              .input_paths =
+              .callee_port = AccessPath(Root(Root::Kind::Return)),
+              .output_paths =
                   PathTreeDomain{{Path{}, SingletonAbstractDomain()}}})});
 
-  // lhs.input_paths > rhs.input_paths
+  // lhs.output_paths > rhs.output_paths
   // lhs.frames > rhs.frames
   lhs_frames = CalleePortFrames{test::make_taint_config(
-      Kinds::artificial_source(),
+      context.kinds->local_return(),
       test::FrameProperties{
-          .callee_port = AccessPath(Root(Root::Kind::Argument)),
+          .callee_port = AccessPath(Root(Root::Kind::Return)),
           .inferred_features = FeatureMayAlwaysSet{feature},
-          .input_paths = PathTreeDomain{{Path{}, SingletonAbstractDomain()}}})};
+          .output_paths =
+              PathTreeDomain{{Path{}, SingletonAbstractDomain()}}})};
   lhs_frames.difference_with(CalleePortFrames{test::make_taint_config(
-      Kinds::artificial_source(),
+      context.kinds->local_return(),
       test::FrameProperties{
-          .callee_port = AccessPath(Root(Root::Kind::Argument)),
-          .input_paths =
+          .callee_port = AccessPath(Root(Root::Kind::Return)),
+          .output_paths =
               PathTreeDomain{{Path{x}, SingletonAbstractDomain()}}})});
   EXPECT_EQ(
       lhs_frames,
       CalleePortFrames{test::make_taint_config(
-          Kinds::artificial_source(),
+          context.kinds->local_return(),
           test::FrameProperties{
-              .callee_port = AccessPath(Root(Root::Kind::Argument)),
+              .callee_port = AccessPath(Root(Root::Kind::Return)),
               .inferred_features = FeatureMayAlwaysSet{feature},
-              .input_paths =
+              .output_paths =
                   PathTreeDomain{{Path{}, SingletonAbstractDomain()}}})});
 }
 
@@ -1550,56 +1481,29 @@ TEST_F(CalleePortFramesTest, TransformKindWithFeatures) {
       }));
 }
 
-TEST_F(CalleePortFramesTest, AppendInputPaths) {
+TEST_F(CalleePortFramesTest, AppendOutputPaths) {
   auto context = test::make_empty_context();
 
   const auto path_element1 = PathElement::field("field1");
   const auto path_element2 = PathElement::field("field2");
 
   auto frames = CalleePortFrames{test::make_taint_config(
-      Kinds::artificial_source(),
+      context.kinds->local_return(),
       test::FrameProperties{
-          .callee_port = AccessPath(Root(Root::Kind::Argument)),
-          .input_paths = PathTreeDomain{
+          .callee_port = AccessPath(Root(Root::Kind::Return)),
+          .output_paths = PathTreeDomain{
               {Path{path_element1}, SingletonAbstractDomain()}}})};
 
-  frames.append_to_artificial_source_input_paths(path_element2);
+  frames.append_to_propagation_output_paths(path_element2);
   EXPECT_EQ(
       frames,
       (CalleePortFrames{test::make_taint_config(
-          Kinds::artificial_source(),
+          context.kinds->local_return(),
           test::FrameProperties{
-              .callee_port = AccessPath(Root(Root::Kind::Argument)),
-              .input_paths = PathTreeDomain{
+              .callee_port = AccessPath(Root(Root::Kind::Return)),
+              .output_paths = PathTreeDomain{
                   {Path{path_element1, path_element2},
                    SingletonAbstractDomain()}}})}));
-}
-
-TEST_F(CalleePortFramesTest, AddInferredFeaturesToRealSources) {
-  auto context = test::make_empty_context();
-  auto features = FeatureMayAlwaysSet{
-      context.features->get("feature1"), context.features->get("feature2")};
-
-  auto frames = CalleePortFrames{test::make_taint_config(
-      /* kind */ context.kinds->get("TestSource"), test::FrameProperties{})};
-  frames.add_inferred_features_to_real_sources(features);
-  EXPECT_EQ(
-      frames,
-      (CalleePortFrames{test::make_taint_config(
-          /* kind */ context.kinds->get("TestSource"),
-          test::FrameProperties{.locally_inferred_features = features})}));
-
-  auto frames2 = CalleePortFrames{test::make_taint_config(
-      /* kind */ Kinds::artificial_source(),
-      test::FrameProperties{
-          .callee_port = AccessPath(Root(Root::Kind::Argument))})};
-  frames2.add_inferred_features_to_real_sources(features);
-  EXPECT_EQ(
-      frames2,
-      (CalleePortFrames{test::make_taint_config(
-          /* kind */ Kinds::artificial_source(),
-          test::FrameProperties{
-              .callee_port = AccessPath(Root(Root::Kind::Argument))})}));
 }
 
 TEST_F(CalleePortFramesTest, FilterInvalidFrames) {
@@ -1724,7 +1628,7 @@ TEST_F(CalleePortFramesTest, Show) {
   EXPECT_EQ(
       show(frames),
       "CalleePortFrames(callee_port=AccessPath(Leaf), "
-      "is_artificial_source_frames=0, frames=[FrameByKind(kind=TestSink1, "
+      "frames=[FrameByKind(kind=TestSink1, "
       "frames={Frame(kind=`TestSink1`, callee_port=AccessPath(Leaf), "
       "call_info=Declaration, origins={`LOne;.one:()V`})}),])");
 
@@ -1737,43 +1641,43 @@ TEST_F(CalleePortFramesTest, Show) {
   EXPECT_EQ(
       show(frames),
       "CalleePortFrames(callee_port=AccessPath(Leaf), "
-      "is_artificial_source_frames=0, "
       "local_positions={Position(line=1)}, frames=[FrameByKind(kind=TestSink1, "
       "frames={Frame(kind=`TestSink1`, callee_port=AccessPath(Leaf), "
       "call_info=Declaration, origins={`LOne;.one:()V`})}),])");
 
   frames = CalleePortFrames{test::make_taint_config(
-      Kinds::artificial_source(),
+      context.kinds->local_return(),
       test::FrameProperties{
-          .callee_port = AccessPath(Root(Root::Kind::Argument)),
-          .input_paths = PathTreeDomain{{Path{}, SingletonAbstractDomain()}}})};
+          .callee_port = AccessPath(Root(Root::Kind::Return)),
+          .output_paths = PathTreeDomain{{Path{}, SingletonAbstractDomain()}},
+          .call_info = CallInfo::Propagation,
+      })};
   EXPECT_EQ(
       show(frames),
-      "CalleePortFrames(callee_port=AccessPath(Argument(0)), "
-      "is_artificial_source_frames=1, "
-      "input_paths=AbstractTree{Value}, "
-      "frames=[FrameByKind(kind=<ArtificialSource>, "
-      "frames={Frame(kind=`<ArtificialSource>`, "
-      "callee_port=AccessPath(Argument(0)), call_info=Declaration)}),])");
+      "CalleePortFrames(callee_port=AccessPath(Return), "
+      "frames=[FrameByKind(kind=LocalReturn, frames={Frame(kind=`LocalReturn`, "
+      "callee_port=AccessPath(Return), call_info=Propagation, "
+      "output_paths=AbstractTree{Value})}),])");
 
   frames = CalleePortFrames{test::make_taint_config(
-      Kinds::artificial_source(),
+      context.kinds->local_return(),
       test::FrameProperties{
-          .callee_port = AccessPath(Root(Root::Kind::Argument)),
-          .input_paths = PathTreeDomain{
-              {Path{PathElement::field("x")}, SingletonAbstractDomain()}}})};
+          .callee_port = AccessPath(Root(Root::Kind::Return)),
+          .output_paths =
+              PathTreeDomain{
+                  {Path{PathElement::field("x")}, SingletonAbstractDomain()}},
+          .call_info = CallInfo::Propagation,
+      })};
   EXPECT_EQ(
       show(frames),
-      "CalleePortFrames(callee_port=AccessPath(Argument(0)), "
-      "is_artificial_source_frames=1, "
-      "input_paths=AbstractTree{\n    `.x` -> AbstractTree{Value}\n}, "
-      "frames=[FrameByKind(kind=<ArtificialSource>, "
-      "frames={Frame(kind=`<ArtificialSource>`, "
-      "callee_port=AccessPath(Argument(0)), call_info=Declaration)}),])");
+      "CalleePortFrames(callee_port=AccessPath(Return), "
+      "frames=[FrameByKind(kind=LocalReturn, frames={Frame(kind=`LocalReturn`, "
+      "callee_port=AccessPath(Return), call_info=Propagation, "
+      "output_paths=AbstractTree{\n    `.x` -> AbstractTree{Value}\n})}),])");
 
   EXPECT_EQ(
       show(CalleePortFrames::bottom()),
-      "CalleePortFrames(callee_port=AccessPath(Leaf), is_artificial_source_frames=0, frames=[])");
+      "CalleePortFrames(callee_port=AccessPath(Leaf), frames=[])");
 
   EXPECT_EQ(show(CalleePortFrames::top()), "T");
 }

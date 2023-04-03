@@ -81,9 +81,4 @@ std::vector<const Kind*> Kinds::kinds() const {
   return result;
 }
 
-const Kind* Kinds::artificial_source() {
-  static const NamedKind kind("<ArtificialSource>");
-  return &kind;
-}
-
 } // namespace marianatrench

@@ -941,7 +941,7 @@ class AbstractTreeDomain final
    *
    * `propagate` is a function that is called when propagating elements down to
    * a child. This is mainly used to attach the correct access path to
-   * artificial sources.
+   * backward taint to infer propagations.
    */
   template <typename Propagate>
   AbstractTreeDomain read(const Path& path, const Propagate& propagate) const {

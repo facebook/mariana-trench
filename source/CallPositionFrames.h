@@ -181,11 +181,6 @@ class CallPositionFrames final
       const UsedKinds& used_kinds,
       const TransformList* local_transforms) const;
 
-  void append_to_artificial_source_input_paths(Path::Element path_element);
-
-  void add_inferred_features_to_real_sources(
-      const FeatureMayAlwaysSet& features);
-
   /**
    * Returns new `CallPositionFrames` containing updated call and local
    * positions computed by the input functions.
@@ -225,8 +220,6 @@ class CallPositionFrames final
     }
     return result;
   }
-
-  RootPatriciaTreeAbstractPartition<PathTreeDomain> input_paths() const;
 
   template <class T>
   std::unordered_map<T, std::vector<std::reference_wrapper<const Frame>>>

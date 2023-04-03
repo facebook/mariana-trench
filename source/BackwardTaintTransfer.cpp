@@ -436,7 +436,6 @@ void check_flows_to_array_allocation(
       /* via_type_of_ports */ {},
       /* via_value_of_ports */ {},
       /* canonical_names */ {},
-      /* input_paths */ {},
       /* output_paths */ {},
       /* local_positions */ {},
       /* call_info */ CallInfo::Origin)};

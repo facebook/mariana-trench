@@ -176,22 +176,9 @@ class Taint final : public sparta::AbstractDomain<Taint> {
   friend std::ostream& operator<<(std::ostream& out, const Taint& taint);
 
   /**
-   * Appends `path_element` to the input paths of all artificial source frames
-   * held in this instance.
-   */
-  void append_to_artificial_source_input_paths(Path::Element path_element);
-
-  /**
    * Appends `path_element` to the output paths of all propagation frames.
    */
   void append_to_propagation_output_paths(Path::Element path_element);
-
-  /**
-   * Adds `features` to the inferred features for all real (i.e not artificial)
-   * sources held in this instance.
-   */
-  void add_inferred_features_to_real_sources(
-      const FeatureMayAlwaysSet& features);
 
   /**
    * Update call and local positions of all non-leaf frames.
@@ -262,25 +249,9 @@ class Taint final : public sparta::AbstractDomain<Taint> {
   }
 
   /**
-   * Returns a map from root to collapsed input paths for all the artificial
-   * sources contained in this Taint instance.
-   */
-  RootPatriciaTreeAbstractPartition<PathTreeDomain> input_paths() const;
-
-  /**
    * Returns all features for this taint tree, joined as `FeatureMayAlwaysSet`.
    */
   FeatureMayAlwaysSet features_joined() const;
-
-  /**
-   * Return an artificial source for the given access path.
-   *
-   * An artificial source is a source used to track the flow of a parameter,
-   * to infer sinks and propagations. Instead of relying on a backward analysis,
-   * we introduce these artificial sources in the forward analysis. This saves
-   * the maintenance cost of having a forward and backward transfer function.
-   */
-  static Taint artificial_source(AccessPath access_path);
 
   /**
    * Return the taint representing the given propagation.

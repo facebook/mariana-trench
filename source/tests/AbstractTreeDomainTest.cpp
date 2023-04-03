@@ -17,15 +17,6 @@
 
 namespace marianatrench {
 
-namespace {
-
-Taint make_artificial_source(ParameterPosition parameter_position) {
-  return Taint::artificial_source(
-      AccessPath(Root(Root::Kind::Argument, parameter_position)));
-}
-
-} // namespace
-
 class AbstractTreeDomainTest : public test::Test {};
 
 using IntSet = sparta::PatriciaTreeSetAbstractDomain<unsigned>;
@@ -2073,9 +2064,21 @@ TEST_F(AbstractTreeDomainTest, Map) {
 
 namespace {
 
-struct PropagateArtificialSources {
+Taint make_propagation(
+    Context& context,
+    ParameterPosition parameter_position,
+    Path output_path = {}) {
+  return Taint::propagation_taint(
+      context.kinds->local_argument(parameter_position),
+      /* output_paths */
+      PathTreeDomain{{output_path, SingletonAbstractDomain{}}},
+      /* inferred_features */ {},
+      /* user_features */ {});
+}
+
+struct PropagateBackwardTaint {
   Taint operator()(Taint taint, Path::Element path_element) const {
-    taint.append_to_artificial_source_input_paths(path_element);
+    taint.append_to_propagation_output_paths(path_element);
     return taint;
   }
 };
@@ -2083,95 +2086,82 @@ struct PropagateArtificialSources {
 } // namespace
 
 TEST_F(AbstractTreeDomainTest, Propagate) {
+  auto context = test::make_empty_context();
   const auto x = PathElement::field("x");
   const auto y = PathElement::field("y");
   const auto z = PathElement::field("z");
 
-  auto tree = TaintTree{make_artificial_source(1)};
+  auto tree = TaintTree{make_propagation(context, 1)};
   EXPECT_EQ(
-      tree.read(Path{x, y}, PropagateArtificialSources()),
+      tree.read(Path{x, y}, PropagateBackwardTaint()),
       (TaintTree{
-          Taint::artificial_source(
-              AccessPath(Root(Root::Kind::Argument, 1), Path{x, y})),
+          make_propagation(context, 1, Path{x, y}),
       }));
 
-  tree.write(Path{x}, make_artificial_source(2), UpdateKind::Weak);
+  tree.write(Path{x}, make_propagation(context, 2), UpdateKind::Weak);
   EXPECT_EQ(
-      tree.read(Path{x, y}, PropagateArtificialSources()),
+      tree.read(Path{x, y}, PropagateBackwardTaint()),
       (TaintTree{
-          Taint::artificial_source(
-              AccessPath(Root(Root::Kind::Argument, 1), Path{x, y}))
-              .join(Taint::artificial_source(
-                  AccessPath(Root(Root::Kind::Argument, 2), Path{y}))),
+          make_propagation(context, 1, Path{x, y})
+              .join(make_propagation(context, 2, Path{y})),
       }));
 
-  tree.write(Path{x, y}, make_artificial_source(3), UpdateKind::Weak);
+  tree.write(Path{x, y}, make_propagation(context, 3), UpdateKind::Weak);
   EXPECT_EQ(
-      tree.read(Path{x, y}, PropagateArtificialSources()),
+      tree.read(Path{x, y}, PropagateBackwardTaint()),
       (TaintTree{
-          Taint::artificial_source(
-              AccessPath(Root(Root::Kind::Argument, 1), Path{x, y}))
-              .join(Taint::artificial_source(
-                  AccessPath(Root(Root::Kind::Argument, 2), Path{y})))
-              .join(Taint::artificial_source(
-                  AccessPath(Root(Root::Kind::Argument, 3)))),
+          make_propagation(context, 1, Path{x, y})
+              .join(make_propagation(context, 2, Path{y}))
+              .join(make_propagation(context, 3)),
       }));
 
-  tree.write(Path{x, y, z}, make_artificial_source(4), UpdateKind::Weak);
+  tree.write(Path{x, y, z}, make_propagation(context, 4), UpdateKind::Weak);
   EXPECT_EQ(
-      tree.read(Path{x, y}, PropagateArtificialSources()),
+      tree.read(Path{x, y}, PropagateBackwardTaint()),
       (TaintTree{
           {
               Path{},
-              Taint::artificial_source(
-                  AccessPath(Root(Root::Kind::Argument, 1), Path{x, y})),
+              make_propagation(context, 1, Path{x, y}),
           },
           {
               Path{},
-              Taint::artificial_source(
-                  AccessPath(Root(Root::Kind::Argument, 2), Path{y})),
+              make_propagation(context, 2, Path{y}),
           },
           {
               Path{},
-              Taint::artificial_source(
-                  AccessPath(Root(Root::Kind::Argument, 3))),
+              make_propagation(context, 3),
           },
           {
               Path{z},
-              Taint::artificial_source(
-                  AccessPath(Root(Root::Kind::Argument, 4))),
+              make_propagation(context, 4),
           },
       }));
 
   tree = TaintTree{
-      Taint::artificial_source(
-          AccessPath(Root(Root::Kind::Argument, 0), Path{x})),
+      make_propagation(context, 0, Path{x}),
   };
   EXPECT_EQ(
-      tree.read(Path{y}, PropagateArtificialSources()),
+      tree.read(Path{y}, PropagateBackwardTaint()),
       (TaintTree{
-          Taint::artificial_source(
-              AccessPath(Root(Root::Kind::Argument, 0), Path{x, y})),
+          make_propagation(context, 0, Path{x, y}),
       }));
 
   tree.set_to_bottom();
-  tree.write(Path{x}, make_artificial_source(0), UpdateKind::Weak);
-  tree.write(Path{y}, make_artificial_source(1), UpdateKind::Weak);
-  tree.write(Path{z}, make_artificial_source(2), UpdateKind::Weak);
+  tree.write(Path{x}, make_propagation(context, 0), UpdateKind::Weak);
+  tree.write(Path{y}, make_propagation(context, 1), UpdateKind::Weak);
+  tree.write(Path{z}, make_propagation(context, 2), UpdateKind::Weak);
   tree.write(
-      Path{y, z},
-      Taint::artificial_source(
-          AccessPath(Root(Root::Kind::Argument, 1), Path{z})),
-      UpdateKind::Weak);
+      Path{y, z}, make_propagation(context, 1, Path{z}), UpdateKind::Weak);
   EXPECT_EQ(
-      tree.read(Path{y, z}, PropagateArtificialSources()),
+      tree.read(Path{y, z}, PropagateBackwardTaint()),
       (TaintTree{
-          Taint::artificial_source(
-              AccessPath(Root(Root::Kind::Argument, 1), Path{z})),
+          make_propagation(context, 1, Path{z}),
       }));
 }
 
 TEST_F(AbstractTreeDomainTest, Transform) {
+  auto context = test::make_empty_context();
+  const auto kind = context.kinds->get("Test");
   const Feature broadening = Feature("via-broadening");
   const FeatureMayAlwaysSet features = FeatureMayAlwaysSet({&broadening});
   const auto& transform = [&features](Taint& taint) {
@@ -2184,163 +2174,229 @@ TEST_F(AbstractTreeDomainTest, Transform) {
   const auto z = PathElement::field("z");
 
   // Test collapse
-  auto tree = TaintTree{make_artificial_source(1)};
+  auto tree = TaintTree{Taint{test::make_taint_config(
+      kind,
+      test::FrameProperties{
+          .callee_port = AccessPath(Root(Root::Kind::Argument, 1))})}};
   EXPECT_EQ(
       tree.collapse(transform),
-      Taint::artificial_source(AccessPath(Root(Root::Kind::Argument, 1))));
+      Taint{test::make_taint_config(
+          kind,
+          test::FrameProperties{
+              .callee_port = AccessPath(Root(Root::Kind::Argument, 1))})});
 
-  tree.write(Path{x}, make_artificial_source(2), UpdateKind::Weak);
+  tree.write(
+      Path{x},
+      Taint{test::make_taint_config(
+          kind,
+          test::FrameProperties{
+              .callee_port = AccessPath(Root(Root::Kind::Argument, 2))})},
+      UpdateKind::Weak);
   EXPECT_EQ(
       tree.collapse(transform),
-      Taint(
-          {test::make_taint_config(
-               Kinds::artificial_source(),
-               test::FrameProperties{
-                   .callee_port = AccessPath(Root(Root::Kind::Argument, 1)),
-                   .input_paths =
-                       PathTreeDomain{{Path{}, SingletonAbstractDomain()}}}),
-           test::make_taint_config(
-               Kinds::artificial_source(),
-               test::FrameProperties{
-                   .callee_port = AccessPath(Root(Root::Kind::Argument, 2)),
-                   .locally_inferred_features = features,
-                   .input_paths =
-                       PathTreeDomain{{Path{}, SingletonAbstractDomain()}}})}));
+      (Taint{
+          test::make_taint_config(
+              kind,
+              test::FrameProperties{
+                  .callee_port = AccessPath(Root(Root::Kind::Argument, 1)),
+              }),
+          test::make_taint_config(
+              kind,
+              test::FrameProperties{
+                  .callee_port = AccessPath(Root(Root::Kind::Argument, 2)),
+                  .locally_inferred_features = features,
+              }),
+      }));
 
-  tree.write(Path{x, y}, make_artificial_source(3), UpdateKind::Weak);
+  tree.write(
+      Path{x, y},
+      (Taint{test::make_taint_config(
+          kind,
+          test::FrameProperties{
+              .callee_port = AccessPath(Root(Root::Kind::Argument, 3)),
+          })}),
+      UpdateKind::Weak);
   EXPECT_EQ(
       tree.collapse(transform),
-      Taint(
-          {test::make_taint_config(
-               Kinds::artificial_source(),
-               test::FrameProperties{
-                   .callee_port = AccessPath(Root(Root::Kind::Argument, 1)),
-                   .input_paths =
-                       PathTreeDomain{{Path{}, SingletonAbstractDomain()}}}),
-           test::make_taint_config(
-               Kinds::artificial_source(),
-               test::FrameProperties{
-                   .callee_port = AccessPath(Root(Root::Kind::Argument, 2)),
-                   .locally_inferred_features = features,
-                   .input_paths =
-                       PathTreeDomain{{Path{}, SingletonAbstractDomain()}}}),
-           test::make_taint_config(
-               Kinds::artificial_source(),
-               test::FrameProperties{
-                   .callee_port = AccessPath(Root(Root::Kind::Argument, 3)),
-                   .locally_inferred_features = features,
-                   .input_paths =
-                       PathTreeDomain{{Path{}, SingletonAbstractDomain()}}})}));
+      (Taint{
+          test::make_taint_config(
+              kind,
+              test::FrameProperties{
+                  .callee_port = AccessPath(Root(Root::Kind::Argument, 1)),
+              }),
+          test::make_taint_config(
+              kind,
+              test::FrameProperties{
+                  .callee_port = AccessPath(Root(Root::Kind::Argument, 2)),
+                  .locally_inferred_features = features,
+              }),
+          test::make_taint_config(
+              kind,
+              test::FrameProperties{
+                  .callee_port = AccessPath(Root(Root::Kind::Argument, 3)),
+                  .locally_inferred_features = features,
+              }),
+      }));
 
-  tree.write(Path{}, make_artificial_source(3), UpdateKind::Weak);
+  tree.write(
+      Path{},
+      (Taint{test::make_taint_config(
+          kind,
+          test::FrameProperties{
+              .callee_port = AccessPath(Root(Root::Kind::Argument, 3)),
+          })}),
+      UpdateKind::Weak);
   EXPECT_EQ(
       tree.collapse(transform),
-      Taint(
-          {test::make_taint_config(
-               Kinds::artificial_source(),
-               test::FrameProperties{
-                   .callee_port = AccessPath(Root(Root::Kind::Argument, 1)),
-                   .input_paths =
-                       PathTreeDomain{{Path{}, SingletonAbstractDomain()}}}),
-           test::make_taint_config(
-               Kinds::artificial_source(),
-               test::FrameProperties{
-                   .callee_port = AccessPath(Root(Root::Kind::Argument, 2)),
-                   .locally_inferred_features = features,
-                   .input_paths =
-                       PathTreeDomain{{Path{}, SingletonAbstractDomain()}}}),
-           test::make_taint_config(
-               Kinds::artificial_source(),
-               test::FrameProperties{
-                   .callee_port = AccessPath(Root(Root::Kind::Argument, 3)),
-                   .input_paths =
-                       PathTreeDomain{{Path{}, SingletonAbstractDomain()}}})}));
+      (Taint{
+          test::make_taint_config(
+              kind,
+              test::FrameProperties{
+                  .callee_port = AccessPath(Root(Root::Kind::Argument, 1)),
+              }),
+          test::make_taint_config(
+              kind,
+              test::FrameProperties{
+                  .callee_port = AccessPath(Root(Root::Kind::Argument, 2)),
+                  .locally_inferred_features = features,
+              }),
+          test::make_taint_config(
+              kind,
+              test::FrameProperties{
+                  .callee_port = AccessPath(Root(Root::Kind::Argument, 3)),
+              }),
+      }));
 
   // Test collapse_inplace
-  auto tree2 = TaintTree{make_artificial_source(1)};
+  auto tree2 = TaintTree{Taint{test::make_taint_config(
+      kind,
+      test::FrameProperties{
+          .callee_port = AccessPath(Root(Root::Kind::Argument, 1)),
+      })}};
   tree2.collapse_inplace(transform);
-  EXPECT_EQ(tree2, TaintTree{make_artificial_source(1)});
+  EXPECT_EQ(
+      tree2,
+      TaintTree{Taint{test::make_taint_config(
+          kind,
+          test::FrameProperties{
+              .callee_port = AccessPath(Root(Root::Kind::Argument, 1)),
+          })}});
 
-  tree2.write(Path{x}, make_artificial_source(2), UpdateKind::Weak);
-  tree2.write(Path{x, y}, make_artificial_source(3), UpdateKind::Weak);
+  tree2.write(
+      Path{x},
+      (Taint{test::make_taint_config(
+          kind,
+          test::FrameProperties{
+              .callee_port = AccessPath(Root(Root::Kind::Argument, 2)),
+          })}),
+      UpdateKind::Weak);
+  tree2.write(
+      Path{x, y},
+      (Taint{test::make_taint_config(
+          kind,
+          test::FrameProperties{
+              .callee_port = AccessPath(Root(Root::Kind::Argument, 3)),
+          })}),
+      UpdateKind::Weak);
   tree2.collapse_inplace(transform);
   EXPECT_EQ(
       tree2,
       (TaintTree{
           {
               Path{},
-              Taint::artificial_source(
-                  AccessPath(Root(Root::Kind::Argument, 1))),
+              Taint{test::make_taint_config(
+                  kind,
+                  test::FrameProperties{
+                      .callee_port = AccessPath(Root(Root::Kind::Argument, 1)),
+                  })},
           },
           {
               Path{},
               Taint{test::make_taint_config(
-                  Kinds::artificial_source(),
+                  kind,
                   test::FrameProperties{
                       .callee_port = AccessPath(Root(Root::Kind::Argument, 2)),
                       .locally_inferred_features = features,
-                      .input_paths =
-                          PathTreeDomain{
-                              {Path{}, SingletonAbstractDomain()}}})},
+                  })},
           },
           {
               Path{},
               Taint{test::make_taint_config(
-                  Kinds::artificial_source(),
+                  kind,
                   test::FrameProperties{
                       .callee_port = AccessPath(Root(Root::Kind::Argument, 3)),
                       .locally_inferred_features = features,
-                      .input_paths =
-                          PathTreeDomain{
-                              {Path{}, SingletonAbstractDomain()}}})},
+                  })},
           }}));
 
   // Test limit_leaves
-  auto tree3 = TaintTree{make_artificial_source(1)};
-  tree3.write(Path{x}, TaintTree{make_artificial_source(2)}, UpdateKind::Weak);
-  tree3.write(Path{y}, TaintTree{make_artificial_source(3)}, UpdateKind::Weak);
-  tree3.write(Path{z}, TaintTree{make_artificial_source(4)}, UpdateKind::Weak);
+  auto tree3 = TaintTree{Taint{test::make_taint_config(
+      kind,
+      test::FrameProperties{
+          .callee_port = AccessPath(Root(Root::Kind::Argument, 1)),
+      })}};
+  tree3.write(
+      Path{x},
+      TaintTree{Taint{test::make_taint_config(
+          kind,
+          test::FrameProperties{
+              .callee_port = AccessPath(Root(Root::Kind::Argument, 2)),
+          })}},
+      UpdateKind::Weak);
+  tree3.write(
+      Path{y},
+      TaintTree{Taint{test::make_taint_config(
+          kind,
+          test::FrameProperties{
+              .callee_port = AccessPath(Root(Root::Kind::Argument, 3)),
+          })}},
+      UpdateKind::Weak);
+  tree3.write(
+      Path{z},
+      TaintTree{Taint{test::make_taint_config(
+          kind,
+          test::FrameProperties{
+              .callee_port = AccessPath(Root(Root::Kind::Argument, 4)),
+          })}},
+      UpdateKind::Weak);
   tree3.limit_leaves(2, transform);
   EXPECT_EQ(
       tree3,
       (TaintTree{
           {
               Path{},
-              Taint::artificial_source(
-                  AccessPath(Root(Root::Kind::Argument, 1))),
+              Taint{test::make_taint_config(
+                  kind,
+                  test::FrameProperties{
+                      .callee_port = AccessPath(Root(Root::Kind::Argument, 1)),
+                  })},
           },
           {
               Path{},
               Taint{test::make_taint_config(
-                  Kinds::artificial_source(),
+                  kind,
                   test::FrameProperties{
                       .callee_port = AccessPath(Root(Root::Kind::Argument, 2)),
                       .locally_inferred_features = features,
-                      .input_paths =
-                          PathTreeDomain{
-                              {Path{}, SingletonAbstractDomain()}}})},
+                  })},
           },
           {
               Path{},
               Taint{test::make_taint_config(
-                  Kinds::artificial_source(),
+                  kind,
                   test::FrameProperties{
                       .callee_port = AccessPath(Root(Root::Kind::Argument, 3)),
                       .locally_inferred_features = features,
-                      .input_paths =
-                          PathTreeDomain{
-                              {Path{}, SingletonAbstractDomain()}}})},
+                  })},
           },
           {
               Path{},
               Taint{test::make_taint_config(
-                  Kinds::artificial_source(),
+                  kind,
                   test::FrameProperties{
                       .callee_port = AccessPath(Root(Root::Kind::Argument, 4)),
                       .locally_inferred_features = features,
-                      .input_paths =
-                          PathTreeDomain{
-                              {Path{}, SingletonAbstractDomain()}}})},
+                  })},
           }}));
 }
 

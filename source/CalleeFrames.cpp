@@ -299,18 +299,6 @@ CalleeFrames CalleeFrames::apply_transform(
   return CalleeFrames{callee_, call_info_, frames_by_call_position};
 }
 
-void CalleeFrames::append_to_artificial_source_input_paths(
-    Path::Element path_element) {
-  // TODO (T91357916): GroupHashedSetAbstractDomain could be more efficient than
-  // PatriciaTreeMapAbstractPartition for holding frames_. It supports in-place
-  // modifying of the elements as long as the key does not change.
-  frames_.map([&](const CallPositionFrames& frames) {
-    auto frames_copy = frames;
-    frames_copy.append_to_artificial_source_input_paths(path_element);
-    return frames_copy;
-  });
-}
-
 void CalleeFrames::append_to_propagation_output_paths(
     Path::Element path_element) {
   if (call_info_ != CallInfo::Propagation) {
@@ -321,15 +309,6 @@ void CalleeFrames::append_to_propagation_output_paths(
     if (frame.kind()->is<PropagationKind>()) {
       frame.append_to_propagation_output_paths(path_element);
     }
-  });
-}
-
-void CalleeFrames::add_inferred_features_to_real_sources(
-    const FeatureMayAlwaysSet& features) {
-  frames_.map([&](const CallPositionFrames& frames) {
-    auto frames_copy = frames;
-    frames_copy.add_inferred_features_to_real_sources(features);
-    return frames_copy;
   });
 }
 
@@ -385,11 +364,6 @@ bool CalleeFrames::contains_kind(const Kind* kind) const {
               callee_frames_pair) {
         return callee_frames_pair.second.contains_kind(kind);
       });
-}
-
-RootPatriciaTreeAbstractPartition<PathTreeDomain> CalleeFrames::input_paths()
-    const {
-  return frames_.get(nullptr).input_paths();
 }
 
 Json::Value CalleeFrames::to_json() const {

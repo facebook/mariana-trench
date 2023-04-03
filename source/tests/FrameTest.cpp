@@ -181,8 +181,7 @@ TEST_F(FrameTest, FrameLeq) {
                            .via_type_of_ports = RootSetAbstractDomain(
                                {Root(Root::Kind::Argument, 1)})})));
 
-  // callee_port, callee and call_position must be equal for non-artificial
-  // taint.
+  // callee_port, callee and call_position must be equal.
   EXPECT_TRUE(test::make_taint_frame(
                   /* kind */ context.kinds->get("TestSource"),
                   test::FrameProperties{
@@ -257,17 +256,6 @@ TEST_F(FrameTest, FrameLeq) {
                   .distance = 1,
                   .origins = MethodSet{one},
                   .call_info = CallInfo::CallSite})));
-
-  // For artificial sources callee ports can only contain roots.
-  EXPECT_FALSE(
-      test::make_taint_frame(
-          /* kind */ Kinds::artificial_source(),
-          test::FrameProperties{
-              .callee_port = AccessPath(Root(Root::Kind::Argument, 0))})
-          .leq(test::make_taint_frame(
-              /* kind */ Kinds::artificial_source(),
-              test::FrameProperties{
-                  .callee_port = AccessPath(Root(Root::Kind::Argument, 1))})));
 
   // Compare canonical names.
   EXPECT_TRUE(

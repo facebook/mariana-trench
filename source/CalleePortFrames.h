@@ -68,37 +68,25 @@ class CalleePortFrames final : public sparta::AbstractDomain<CalleePortFrames> {
  private:
   explicit CalleePortFrames(
       AccessPath callee_port,
-      bool is_artificial_source_frames,
       FramesByKind frames,
-      PathTreeDomain input_paths,
       LocalPositionSet local_positions)
       : callee_port_(std::move(callee_port)),
-        is_artificial_source_frames_(is_artificial_source_frames),
         frames_(std::move(frames)),
-        input_paths_(std::move(input_paths)),
         local_positions_(std::move(local_positions)) {
     mt_assert(!local_positions_.is_bottom());
-    if (is_artificial_source_frames_) {
-      mt_assert(callee_port.path().empty());
-    } else {
-      mt_assert(input_paths.is_bottom());
-    }
   }
 
  public:
   /**
-   * Create the bottom (i.e, empty) frame set. Value of callee_port_ and
-   * is_artificial_source_frames_ don't matter, so we pick some default. Leaf
-   * and false respectively seem like decent choices.
-   * Also avoid using `bottom()` for local_positions_ because
-   * bottom().add(new_position) gives bottom() which is not the desired
-   * behavior for CalleePortFrames::add. Consider re-visiting LocalPositionSet.
+   * Create the bottom (i.e, empty) frame set. Value of callee_port_ doesn't
+   * matter, so we pick some default (Leaf). Also avoid using `bottom()` for
+   * local_positions_ because `bottom().add(new_position)` gives `bottom()`
+   * which is not the desired behavior for `CalleePortFrames::add`.
+   * Consider re-visiting LocalPositionSet.
    */
   CalleePortFrames()
       : callee_port_(Root(Root::Kind::Leaf)),
-        is_artificial_source_frames_(false),
         frames_(FramesByKind::bottom()),
-        input_paths_(PathTreeDomain::bottom()),
         local_positions_({}) {}
 
   explicit CalleePortFrames(std::initializer_list<TaintConfig> configs);
@@ -131,9 +119,7 @@ class CalleePortFrames final : public sparta::AbstractDomain<CalleePortFrames> {
   static CalleePortFrames top() {
     return CalleePortFrames(
         /* callee_port */ AccessPath(Root(Root::Kind::Leaf)),
-        /* is_artificial_source_frames */ false,
         FramesByKind::top(),
-        /* input_paths */ {},
         /* local_positions */ {});
   }
 
@@ -147,18 +133,14 @@ class CalleePortFrames final : public sparta::AbstractDomain<CalleePortFrames> {
 
   void set_to_bottom() override {
     callee_port_ = AccessPath(Root(Root::Kind::Leaf));
-    is_artificial_source_frames_ = false;
     frames_.set_to_bottom();
     local_positions_ = {};
-    input_paths_.set_to_bottom();
   }
 
   void set_to_top() override {
     callee_port_ = AccessPath(Root(Root::Kind::Leaf));
-    is_artificial_source_frames_ = false;
     frames_.set_to_top();
     local_positions_.set_to_top();
-    input_paths_.set_to_top();
   }
 
   bool empty() const {
@@ -169,16 +151,8 @@ class CalleePortFrames final : public sparta::AbstractDomain<CalleePortFrames> {
     return callee_port_;
   }
 
-  bool is_artificial_source_frames() const {
-    return is_artificial_source_frames_;
-  }
-
   const LocalPositionSet& local_positions() const {
     return local_positions_;
-  }
-
-  const PathTreeDomain& input_paths() const {
-    return input_paths_;
   }
 
   void add(const TaintConfig& config);
@@ -228,6 +202,11 @@ class CalleePortFrames final : public sparta::AbstractDomain<CalleePortFrames> {
       const Position* MT_NULLABLE position);
 
   /**
+   * Appends `path_element` to the output paths of all propagation frames.
+   */
+  void append_to_propagation_output_paths(Path::Element path_element);
+
+  /**
    * Propagate the taint from the callee to the caller.
    *
    * Return bottom if the taint should not be propagated.
@@ -246,18 +225,6 @@ class CalleePortFrames final : public sparta::AbstractDomain<CalleePortFrames> {
       const std::function<std::vector<const Kind*>(const Kind*)>&,
       const std::function<FeatureMayAlwaysSet(const Kind*)>&);
 
-  /**
-   * Appends `path_element` to all the paths stored in `input_paths`
-   */
-  void append_to_artificial_source_input_paths(Path::Element path_element);
-
-  /**
-   * Adds `features` to inferred features of contained frames if this instance
-   * holds real (i.e not artificial) sources.
-   */
-  void add_inferred_features_to_real_sources(
-      const FeatureMayAlwaysSet& features);
-
   void filter_invalid_frames(
       const std::function<
           bool(const Method* MT_NULLABLE, const AccessPath&, const Kind*)>&
@@ -274,9 +241,7 @@ class CalleePortFrames final : public sparta::AbstractDomain<CalleePortFrames> {
       T mapped_value = map_kind(kind);
       auto new_frames = CalleePortFrames(
           callee_port_,
-          is_artificial_source_frames_,
           FramesByKind{std::pair(kind, kind_frames)},
-          input_paths_,
           local_positions_);
 
       auto existing = result.find(mapped_value);
@@ -315,11 +280,6 @@ class CalleePortFrames final : public sparta::AbstractDomain<CalleePortFrames> {
       const CalleePortFrames& frames);
 
  private:
-  void add_input_path(const Path& path) {
-    mt_assert(is_artificial_source_frames_);
-    input_paths_.join_with(PathTreeDomain{{path, SingletonAbstractDomain()}});
-  }
-
   Frame propagate_frames(
       const Method* callee,
       const AccessPath& callee_port,
@@ -346,20 +306,12 @@ class CalleePortFrames final : public sparta::AbstractDomain<CalleePortFrames> {
    * The only exception is if one of them `is_bottom()`.
    */
   bool has_same_key(const CalleePortFrames& other) const {
-    return callee_port_ == other.callee_port() &&
-        is_artificial_source_frames_ == other.is_artificial_source_frames_;
+    return callee_port_ == other.callee_port();
   }
 
  private:
-  // Note that for artificial sources, this Access Path will only contain a root
   AccessPath callee_port_;
-  bool is_artificial_source_frames_;
   FramesByKind frames_;
-  // input_paths are used only for artificial sources (should be bottom for all
-  // other frames). These keep track of the paths within the artificial
-  // source/argument that have been read from this taint. The paths are then
-  // used to infer sinks and propagations.
-  PathTreeDomain input_paths_;
 
   // TODO(T91357916): Move local_features here from `Frame`.
   LocalPositionSet local_positions_;

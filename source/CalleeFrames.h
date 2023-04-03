@@ -196,11 +196,7 @@ class CalleeFrames final : public sparta::AbstractDomain<CalleeFrames> {
       const UsedKinds& used_kinds,
       const TransformList* local_transforms) const;
 
-  void append_to_artificial_source_input_paths(Path::Element path_element);
   void append_to_propagation_output_paths(Path::Element path_element);
-
-  void add_inferred_features_to_real_sources(
-      const FeatureMayAlwaysSet& features);
 
   void update_non_leaf_positions(
       const std::function<
@@ -242,8 +238,6 @@ class CalleeFrames final : public sparta::AbstractDomain<CalleeFrames> {
     }
     return result;
   }
-
-  RootPatriciaTreeAbstractPartition<PathTreeDomain> input_paths() const;
 
   Json::Value to_json() const;
 

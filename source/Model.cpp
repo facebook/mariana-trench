@@ -1512,13 +1512,6 @@ bool Model::check_taint_config_consistency(
         kind));
     return false;
   }
-  if (config.is_artificial_source()) {
-    ModelConsistencyError::raise(fmt::format(
-        "Model for method `{}` contains an artificial {}.",
-        show(method_),
-        kind));
-    return false;
-  }
   return true;
 }
 

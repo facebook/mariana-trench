@@ -60,7 +60,7 @@ class SingletonAbstractValue final
 /*
  * This is a domain which can have only a single value and otherwise be Top or
  * Bottom. It is used along with the AbstractTreeDomain to store a tree of paths
- * within Artificial Sources to keep track of paths for propagations and sinks.
+ * within local taint to keep track of paths for propagations and sinks.
  */
 class SingletonAbstractDomain final : public sparta::AbstractDomainScaffolding<
                                           SingletonAbstractValue,

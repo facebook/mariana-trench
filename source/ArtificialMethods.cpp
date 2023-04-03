@@ -56,7 +56,6 @@ std::vector<Model> ArtificialMethods::models(Context& context) const {
           /* via_type_of_ports */ {},
           /* via_value_of_ports */ {},
           /* canonical_names */ {},
-          /* input_paths */ {},
           /* output_paths */ {},
           /* local_positions */ {},
           /* call_info */ CallInfo::Declaration));

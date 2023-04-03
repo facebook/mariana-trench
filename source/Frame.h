@@ -111,8 +111,6 @@ CallInfo propagate_call_info(CallInfo call_info);
  *
  * `output_paths` is used to infer propagations with the `local_result` and
  * `receiver` kinds in the backward analysis.
- *
- * For artificial sources, the callee port is used as the origin of the source.
  */
 class Frame final : public sparta::AbstractDomain<Frame> {
  public:
@@ -162,22 +160,11 @@ class Frame final : public sparta::AbstractDomain<Frame> {
     mt_assert(distance_ >= 0);
     mt_assert(!(callee && field_callee));
 
-    const auto* base_kind = kind_;
-    bool is_transform_kind = false;
-    if (const auto* transform_kind = kind_->as<TransformKind>()) {
-      is_transform_kind = true;
-      base_kind = transform_kind->base_kind();
-    }
-
-    if (auto* propagation_kind = base_kind->as<PropagationKind>()) {
+    if (auto* propagation_kind =
+            kind_->discard_transforms()->as<PropagationKind>()) {
       mt_assert(
           callee_port == AccessPath(propagation_kind->root()) &&
           !output_paths_.is_bottom());
-    } else if (base_kind == Kinds::artificial_source()) {
-      mt_assert(
-          callee_port.root().kind() == Root::Kind::Argument &&
-          output_paths_.is_bottom() &&
-          (is_transform_kind || callee_port.path().empty()));
     }
     if (callee != nullptr && !callee_port_.root().is_anchor()) {
       mt_assert(call_info == CallInfo::CallSite);
@@ -319,10 +306,6 @@ class Frame final : public sparta::AbstractDomain<Frame> {
   void meet_with(const Frame& other) override;
 
   void narrow_with(const Frame& other) override;
-
-  bool is_artificial_source() const {
-    return kind_->discard_transforms() == Kinds::artificial_source();
-  }
 
   /* Return frame with the given kind (and every other field kept the same) */
   Frame with_kind(const Kind* kind) const;
