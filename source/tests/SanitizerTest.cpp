@@ -24,7 +24,7 @@ TEST_F(SanitizerTest, Constructor) {
   EXPECT_THROW(
       Sanitizer(
           SanitizerKind::Propagations,
-          KindSetAbstractDomain(context.kinds->get("kind"))),
+          KindSetAbstractDomain(context.kind_factory->get("kind"))),
       std::exception);
 }
 
@@ -41,8 +41,8 @@ TEST_F(SanitizerTest, SanitizerLeq) {
                    /* kinds */ KindSetAbstractDomain::top())
                    .leq(Sanitizer::bottom()));
 
-  const auto* kind1 = context.kinds->get("Kind1");
-  const auto* kind2 = context.kinds->get("Kind2");
+  const auto* kind1 = context.kind_factory->get("Kind1");
+  const auto* kind2 = context.kind_factory->get("Kind2");
   // Comparison within same kind
   EXPECT_TRUE(Sanitizer(
                   SanitizerKind::Sources,
@@ -112,9 +112,9 @@ TEST_F(SanitizerTest, SanitizerJoin) {
           /* kinds */ KindSetAbstractDomain::top()));
 
   auto context = test::make_empty_context();
-  const auto* kind1 = context.kinds->get("Kind1");
-  const auto* kind2 = context.kinds->get("Kind2");
-  const auto* kind3 = context.kinds->get("Kind3");
+  const auto* kind1 = context.kind_factory->get("Kind1");
+  const auto* kind2 = context.kind_factory->get("Kind2");
+  const auto* kind3 = context.kind_factory->get("Kind3");
   EXPECT_EQ(
       Sanitizer(
           SanitizerKind::Sources,

@@ -12,6 +12,7 @@
 #include <mariana-trench/ArtificialMethods.h>
 #include <mariana-trench/Context.h>
 #include <mariana-trench/Kind.h>
+#include <mariana-trench/KindFactory.h>
 #include <mariana-trench/Method.h>
 #include <mariana-trench/Model.h>
 
@@ -23,7 +24,9 @@ namespace marianatrench {
  */
 class ArtificialMethods final {
  public:
-  explicit ArtificialMethods(Kinds& kinds, DexStoresVector& stores);
+  explicit ArtificialMethods(
+      KindFactory& kind_factory,
+      DexStoresVector& stores);
 
   DELETE_COPY_CONSTRUCTORS_AND_ASSIGNMENTS(ArtificialMethods)
 

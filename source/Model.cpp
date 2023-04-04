@@ -564,7 +564,7 @@ void Model::add_taint_in_taint_out(Context& context) {
     add_propagation(PropagationConfig(
         /* input_path */ AccessPath(
             Root(Root::Kind::Argument, parameter_position)),
-        /* kind */ context.kinds->local_return(),
+        /* kind */ context.kind_factory->local_return(),
         /* output_paths */
         PathTreeDomain{{Path{}, SingletonAbstractDomain()}},
         /* inferred_features */ FeatureMayAlwaysSet::bottom(),
@@ -591,7 +591,7 @@ void Model::add_taint_in_taint_this(Context& context) {
     add_propagation(PropagationConfig(
         /* input_path */ AccessPath(
             Root(Root::Kind::Argument, parameter_position)),
-        /* kind */ context.kinds->local_receiver(),
+        /* kind */ context.kind_factory->local_receiver(),
         /* output_paths */
         PathTreeDomain{{Path{}, SingletonAbstractDomain()}},
         /* inferred_features */ FeatureMayAlwaysSet::bottom(),

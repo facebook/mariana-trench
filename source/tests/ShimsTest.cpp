@@ -41,8 +41,8 @@ Context test_types(const Scope& scope) {
   DexStore store("test_store");
   store.add_classes(scope);
   context.stores = {store};
-  context.artificial_methods =
-      std::make_unique<ArtificialMethods>(*context.kinds, context.stores);
+  context.artificial_methods = std::make_unique<ArtificialMethods>(
+      *context.kind_factory, context.stores);
   context.methods = std::make_unique<Methods>(context.stores);
   context.control_flow_graphs =
       std::make_unique<ControlFlowGraphs>(context.stores);

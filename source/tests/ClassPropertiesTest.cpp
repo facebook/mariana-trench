@@ -157,7 +157,7 @@ TEST_F(ClassPropertiesTest, InvokeUtil) {
   auto via_caller_exported = context.features->get("via-caller-exported");
   auto via_class = context.features->get("via-class:LMainActivity;");
   std::unordered_set<const Kind*> kind_set = {
-      context.kinds->get("ActivityUserInput")};
+      context.kind_factory->get("ActivityUserInput")};
   EXPECT_EQ(
       class_properties.issue_features(activity, kind_set),
       FeatureMayAlwaysSet({via_caller_exported}));
@@ -215,7 +215,7 @@ TEST_F(ClassPropertiesTest, MultipleCallers) {
   auto via_caller_unexported = context.features->get("via-caller-unexported");
   auto via_class = context.features->get("via-class:LMainActivity;");
   std::unordered_set<const Kind*> kind_set = {
-      context.kinds->get("ActivityUserInput")};
+      context.kind_factory->get("ActivityUserInput")};
   EXPECT_EQ(
       class_properties.issue_features(main_activity, kind_set),
       FeatureMayAlwaysSet({via_caller_exported}));
@@ -280,7 +280,7 @@ TEST_F(ClassPropertiesTest, MultipleCallersMultipleHops) {
   auto via_caller_unexported = context.features->get("via-caller-unexported");
   auto via_class = context.features->get("via-class:LMainActivity;");
   std::unordered_set<const Kind*> kind_set = {
-      context.kinds->get("ActivityUserInput")};
+      context.kind_factory->get("ActivityUserInput")};
   EXPECT_EQ(
       class_properties.issue_features(main_activity, kind_set),
       FeatureMayAlwaysSet({via_caller_exported}));
@@ -335,7 +335,7 @@ TEST_F(ClassPropertiesTest, UnexportedHop) {
   auto via_caller_unexported = context.features->get("via-caller-unexported");
   auto via_class = context.features->get("via-class:LParentActivity;");
   std::unordered_set<const Kind*> kind_set = {
-      context.kinds->get("ActivityUserInput")};
+      context.kind_factory->get("ActivityUserInput")};
   EXPECT_EQ(
       class_properties.issue_features(main_activity, kind_set),
       FeatureMayAlwaysSet({via_caller_exported}));
@@ -402,7 +402,7 @@ TEST_F(ClassPropertiesTest, Cyclic) {
   auto via_caller_exported = context.features->get("via-caller-exported");
   auto via_class = context.features->get("via-class:LMainActivity;");
   std::unordered_set<const Kind*> kind_set = {
-      context.kinds->get("ActivityUserInput")};
+      context.kind_factory->get("ActivityUserInput")};
   EXPECT_EQ(
       class_properties.issue_features(main_activity, kind_set),
       FeatureMayAlwaysSet({via_caller_exported}));
@@ -447,7 +447,7 @@ TEST_F(ClassPropertiesTest, NestedClass) {
   auto via_nested_class =
       context.features->get("via-class:LMainActivity$NestedClass;");
   std::unordered_set<const Kind*> kind_set = {
-      context.kinds->get("ActivityUserInput")};
+      context.kind_factory->get("ActivityUserInput")};
   EXPECT_EQ(
       class_properties.issue_features(activity, kind_set),
       FeatureMayAlwaysSet({via_caller_exported}));

@@ -6,7 +6,7 @@
  */
 
 #include <mariana-trench/JsonValidation.h>
-#include <mariana-trench/Kinds.h>
+#include <mariana-trench/KindFactory.h>
 #include <mariana-trench/NamedKind.h>
 
 namespace marianatrench {
@@ -19,7 +19,7 @@ const NamedKind* NamedKind::from_json(
     const Json::Value& value,
     Context& context) {
   auto name = JsonValidation::string(value);
-  return context.kinds->get(name);
+  return context.kind_factory->get(name);
 }
 
 std::string NamedKind::to_trace_string() const {

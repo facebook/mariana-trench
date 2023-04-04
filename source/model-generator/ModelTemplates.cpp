@@ -6,7 +6,7 @@
  */
 
 #include <mariana-trench/JsonValidation.h>
-#include <mariana-trench/Kinds.h>
+#include <mariana-trench/KindFactory.h>
 #include <mariana-trench/Log.h>
 #include <mariana-trench/constraints/MethodConstraints.h>
 #include <mariana-trench/constraints/ParameterConstraints.h>
@@ -209,10 +209,10 @@ void PropagationTemplate::instantiate(
   auto output_port = output_.instantiate(parameter_positions);
   const PropagationKind* propagation_kind = nullptr;
   if (output_port.root().is_return()) {
-    propagation_kind = context.kinds->local_return();
+    propagation_kind = context.kind_factory->local_return();
   } else if (output_port.root().is_argument()) {
-    propagation_kind =
-        context.kinds->local_argument(output_port.root().parameter_position());
+    propagation_kind = context.kind_factory->local_argument(
+        output_port.root().parameter_position());
   } else {
     throw JsonValidationError(
         output_port.to_json(),
@@ -222,7 +222,7 @@ void PropagationTemplate::instantiate(
 
   const Kind* kind = propagation_kind;
   if (transforms_ != nullptr) {
-    kind = context.kinds->transform_kind(
+    kind = context.kind_factory->transform_kind(
         /* base_kind */ propagation_kind,
         /* local_transforms */
         transforms_,

@@ -326,7 +326,7 @@ void check_call_flows(
             return {sink_kind};
           }
           return fulfilled_partial_sinks.make_triggered_counterparts(
-              /* unfulfilled_kind */ partial_sink, context->kinds);
+              /* unfulfilled_kind */ partial_sink, context->kind_factory);
         },
         [&fulfilled_partial_sinks](const Kind* new_kind) {
           return get_fulfilled_sink_features(fulfilled_partial_sinks, new_kind);
@@ -883,7 +883,7 @@ bool BackwardTaintTransfer::analyze_return(
 
   // Add local return.
   taint.join_with(TaintTree(Taint::propagation_taint(
-      /* kind */ context->kinds.local_return(),
+      /* kind */ context->kind_factory.local_return(),
       /* output_paths */
       PathTreeDomain{{Path{}, SingletonAbstractDomain()}},
       /* inferred_features */ {},

@@ -14,7 +14,7 @@
 
 namespace marianatrench {
 
-class Kinds;
+class KindFactory;
 class Features;
 class Statistics;
 class Options;
@@ -48,7 +48,7 @@ class Context final {
   Context& operator=(Context&&) = delete;
   ~Context();
 
-  std::unique_ptr<Kinds> kinds;
+  std::unique_ptr<KindFactory> kind_factory;
   std::unique_ptr<Features> features;
   std::unique_ptr<Statistics> statistics;
   std::unique_ptr<Options> options;

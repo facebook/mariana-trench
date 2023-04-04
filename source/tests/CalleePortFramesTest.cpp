@@ -19,8 +19,8 @@ class CalleePortFramesTest : public test::Test {};
 TEST_F(CalleePortFramesTest, Constructor) {
   auto context = test::make_empty_context();
 
-  auto* test_kind_one = context.kinds->get("TestSinkOne");
-  auto* test_kind_two = context.kinds->get("TestSinkTwo");
+  auto* test_kind_one = context.kind_factory->get("TestSinkOne");
+  auto* test_kind_two = context.kind_factory->get("TestSinkTwo");
   auto* test_position_one = context.positions->get(std::nullopt, 1);
   auto* test_position_two = context.positions->get(std::nullopt, 2);
 
@@ -75,8 +75,8 @@ TEST_F(CalleePortFramesTest, Add) {
   auto* two = context.methods->create(
       redex::create_void_method(scope, "LOther;", "two"));
 
-  auto* source_kind_one = context.kinds->get("TestSourceOne");
-  auto* source_kind_two = context.kinds->get("TestSourceTwo");
+  auto* source_kind_one = context.kind_factory->get("TestSourceOne");
+  auto* source_kind_two = context.kind_factory->get("TestSourceTwo");
   auto* feature_one = context.features->get("FeatureOne");
   auto* feature_two = context.features->get("FeatureTwo");
   auto* user_feature_one = context.features->get("UserFeatureOne");
@@ -160,8 +160,8 @@ TEST_F(CalleePortFramesTest, Leq) {
   auto* one =
       context.methods->create(redex::create_void_method(scope, "LOne;", "one"));
 
-  auto* test_kind_one = context.kinds->get("TestSinkOne");
-  auto* test_kind_two = context.kinds->get("TestSinkTwo");
+  auto* test_kind_one = context.kind_factory->get("TestSinkOne");
+  auto* test_kind_two = context.kind_factory->get("TestSinkTwo");
 
   // Comparison to bottom
   EXPECT_TRUE(CalleePortFrames::bottom().leq(CalleePortFrames::bottom()));
@@ -254,7 +254,7 @@ TEST_F(CalleePortFramesTest, Leq) {
   // Local kinds with output paths.
   EXPECT_TRUE(CalleePortFrames{
       test::make_taint_config(
-          context.kinds->local_return(),
+          context.kind_factory->local_return(),
           test::FrameProperties{
               .callee_port = AccessPath(Root(Root::Kind::Return)),
               .output_paths =
@@ -262,20 +262,20 @@ TEST_F(CalleePortFramesTest, Leq) {
                       {Path{PathElement::field("x")},
                        SingletonAbstractDomain()}}})}
                   .leq(CalleePortFrames{test::make_taint_config(
-                      context.kinds->local_return(),
+                      context.kind_factory->local_return(),
                       test::FrameProperties{
                           .callee_port = AccessPath(Root(Root::Kind::Return)),
                           .output_paths = PathTreeDomain{
                               {Path{}, SingletonAbstractDomain()}}})}));
   EXPECT_FALSE(CalleePortFrames{
       test::make_taint_config(
-          context.kinds->local_return(),
+          context.kind_factory->local_return(),
           test::FrameProperties{
               .callee_port = AccessPath(Root(Root::Kind::Return)),
               .output_paths =
                   PathTreeDomain{{Path{}, SingletonAbstractDomain()}}})}
                    .leq(CalleePortFrames{test::make_taint_config(
-                       context.kinds->local_return(),
+                       context.kind_factory->local_return(),
                        test::FrameProperties{
                            .callee_port = AccessPath(Root(Root::Kind::Return)),
                            .output_paths = PathTreeDomain{
@@ -286,8 +286,8 @@ TEST_F(CalleePortFramesTest, Leq) {
 TEST_F(CalleePortFramesTest, Equals) {
   auto context = test::make_empty_context();
 
-  auto* test_kind_one = context.kinds->get("TestSinkOne");
-  auto* test_kind_two = context.kinds->get("TestSinkTwo");
+  auto* test_kind_one = context.kind_factory->get("TestSinkOne");
+  auto* test_kind_two = context.kind_factory->get("TestSinkTwo");
   const auto x = PathElement::field("x");
   const auto y = PathElement::field("y");
   const auto z = PathElement::field("z");
@@ -315,19 +315,19 @@ TEST_F(CalleePortFramesTest, Equals) {
   // Different output paths
   auto two_input_paths = CalleePortFrames(
       {test::make_taint_config(
-           context.kinds->local_return(),
+           context.kind_factory->local_return(),
            test::FrameProperties{
                .callee_port = AccessPath(Root(Root::Kind::Return)),
                .output_paths =
                    PathTreeDomain{{Path{x, y}, SingletonAbstractDomain()}}}),
        test::make_taint_config(
-           context.kinds->local_return(),
+           context.kind_factory->local_return(),
            test::FrameProperties{
                .callee_port = AccessPath(Root(Root::Kind::Return)),
                .output_paths =
                    PathTreeDomain{{Path{x, z}, SingletonAbstractDomain()}}})});
   EXPECT_FALSE(two_input_paths.equals(CalleePortFrames{test::make_taint_config(
-      context.kinds->local_return(),
+      context.kind_factory->local_return(),
       test::FrameProperties{
           .callee_port = AccessPath(Root(Root::Kind::Return)),
           .output_paths =
@@ -341,8 +341,8 @@ TEST_F(CalleePortFramesTest, JoinWith) {
   auto* one =
       context.methods->create(redex::create_void_method(scope, "LOne;", "one"));
 
-  auto* test_kind_one = context.kinds->get("TestSinkOne");
-  auto* test_kind_two = context.kinds->get("TestSinkTwo");
+  auto* test_kind_one = context.kind_factory->get("TestSinkOne");
+  auto* test_kind_two = context.kind_factory->get("TestSinkTwo");
 
   // Join with bottom.
   EXPECT_EQ(
@@ -432,8 +432,8 @@ TEST_F(CalleePortFramesTest, Difference) {
   auto* three = context.methods->create(
       redex::create_void_method(scope, "LThree;", "three"));
 
-  auto* test_kind_one = context.kinds->get("TestSinkOne");
-  auto* test_kind_two = context.kinds->get("TestSinkTwo");
+  auto* test_kind_one = context.kind_factory->get("TestSinkOne");
+  auto* test_kind_two = context.kind_factory->get("TestSinkTwo");
   auto* feature_one = context.features->get("FeatureOne");
   auto* feature_two = context.features->get("FeatureTwo");
   auto* user_feature_one = context.features->get("UserFeatureOne");
@@ -754,8 +754,8 @@ TEST_F(CalleePortFramesTest, Difference) {
 TEST_F(CalleePortFramesTest, DifferenceLocalPositions) {
   auto context = test::make_empty_context();
 
-  auto* test_kind_one = context.kinds->get("TestSinkOne");
-  auto* test_kind_two = context.kinds->get("TestSinkTwo");
+  auto* test_kind_one = context.kind_factory->get("TestSinkOne");
+  auto* test_kind_two = context.kind_factory->get("TestSinkTwo");
   auto* test_position_one = context.positions->get(std::nullopt, 1);
 
   // Empty left hand side.
@@ -839,13 +839,13 @@ TEST_F(CalleePortFramesTest, DifferenceOutputPaths) {
   // lhs.output_paths <= rhs.output_paths
   // lhs.frames <= rhs.frames
   auto lhs_frames = CalleePortFrames{test::make_taint_config(
-      context.kinds->local_return(),
+      context.kind_factory->local_return(),
       test::FrameProperties{
           .callee_port = AccessPath(Root(Root::Kind::Return)),
           .output_paths =
               PathTreeDomain{{Path{x}, SingletonAbstractDomain()}}})};
   lhs_frames.difference_with(CalleePortFrames{test::make_taint_config(
-      context.kinds->local_return(),
+      context.kind_factory->local_return(),
       test::FrameProperties{
           .callee_port = AccessPath(Root(Root::Kind::Return)),
           .output_paths =
@@ -855,14 +855,14 @@ TEST_F(CalleePortFramesTest, DifferenceOutputPaths) {
   // lhs.output_paths <= rhs.output_paths
   // lhs.frames > rhs.frames
   lhs_frames = CalleePortFrames{test::make_taint_config(
-      context.kinds->local_return(),
+      context.kind_factory->local_return(),
       test::FrameProperties{
           .callee_port = AccessPath(Root(Root::Kind::Return)),
           .inferred_features = FeatureMayAlwaysSet{feature},
           .output_paths =
               PathTreeDomain{{Path{x}, SingletonAbstractDomain()}}})};
   lhs_frames.difference_with(CalleePortFrames{test::make_taint_config(
-      context.kinds->local_return(),
+      context.kind_factory->local_return(),
       test::FrameProperties{
           .callee_port = AccessPath(Root(Root::Kind::Return)),
           .output_paths =
@@ -870,7 +870,7 @@ TEST_F(CalleePortFramesTest, DifferenceOutputPaths) {
   EXPECT_EQ(
       lhs_frames,
       CalleePortFrames{test::make_taint_config(
-          context.kinds->local_return(),
+          context.kind_factory->local_return(),
           test::FrameProperties{
               .callee_port = AccessPath(Root(Root::Kind::Return)),
               .inferred_features = FeatureMayAlwaysSet{feature},
@@ -880,13 +880,13 @@ TEST_F(CalleePortFramesTest, DifferenceOutputPaths) {
   // lhs.output_paths > rhs.output_paths
   // lhs.frames <= rhs.frames
   lhs_frames = CalleePortFrames{test::make_taint_config(
-      context.kinds->local_return(),
+      context.kind_factory->local_return(),
       test::FrameProperties{
           .callee_port = AccessPath(Root(Root::Kind::Return)),
           .output_paths =
               PathTreeDomain{{Path{}, SingletonAbstractDomain()}}})};
   lhs_frames.difference_with(CalleePortFrames{test::make_taint_config(
-      context.kinds->local_return(),
+      context.kind_factory->local_return(),
       test::FrameProperties{
           .callee_port = AccessPath(Root(Root::Kind::Return)),
           .output_paths =
@@ -894,7 +894,7 @@ TEST_F(CalleePortFramesTest, DifferenceOutputPaths) {
   EXPECT_EQ(
       lhs_frames,
       CalleePortFrames{test::make_taint_config(
-          context.kinds->local_return(),
+          context.kind_factory->local_return(),
           test::FrameProperties{
               .callee_port = AccessPath(Root(Root::Kind::Return)),
               .output_paths =
@@ -903,14 +903,14 @@ TEST_F(CalleePortFramesTest, DifferenceOutputPaths) {
   // lhs.output_paths > rhs.output_paths
   // lhs.frames > rhs.frames
   lhs_frames = CalleePortFrames{test::make_taint_config(
-      context.kinds->local_return(),
+      context.kind_factory->local_return(),
       test::FrameProperties{
           .callee_port = AccessPath(Root(Root::Kind::Return)),
           .inferred_features = FeatureMayAlwaysSet{feature},
           .output_paths =
               PathTreeDomain{{Path{}, SingletonAbstractDomain()}}})};
   lhs_frames.difference_with(CalleePortFrames{test::make_taint_config(
-      context.kinds->local_return(),
+      context.kind_factory->local_return(),
       test::FrameProperties{
           .callee_port = AccessPath(Root(Root::Kind::Return)),
           .output_paths =
@@ -918,7 +918,7 @@ TEST_F(CalleePortFramesTest, DifferenceOutputPaths) {
   EXPECT_EQ(
       lhs_frames,
       CalleePortFrames{test::make_taint_config(
-          context.kinds->local_return(),
+          context.kind_factory->local_return(),
           test::FrameProperties{
               .callee_port = AccessPath(Root(Root::Kind::Return)),
               .inferred_features = FeatureMayAlwaysSet{feature},
@@ -929,8 +929,8 @@ TEST_F(CalleePortFramesTest, DifferenceOutputPaths) {
 TEST_F(CalleePortFramesTest, Iterator) {
   auto context = test::make_empty_context();
 
-  auto* test_kind_one = context.kinds->get("TestSinkOne");
-  auto* test_kind_two = context.kinds->get("TestSinkTwo");
+  auto* test_kind_one = context.kind_factory->get("TestSinkOne");
+  auto* test_kind_two = context.kind_factory->get("TestSinkTwo");
 
   auto callee_port_frames = CalleePortFrames{
       test::make_taint_config(test_kind_one, test::FrameProperties{}),
@@ -962,8 +962,8 @@ TEST_F(CalleePortFramesTest, Map) {
   Scope scope;
   auto* one =
       context.methods->create(redex::create_void_method(scope, "LOne;", "one"));
-  auto* test_kind_one = context.kinds->get("TestSinkOne");
-  auto* test_kind_two = context.kinds->get("TestSinkTwo");
+  auto* test_kind_one = context.kind_factory->get("TestSinkOne");
+  auto* test_kind_two = context.kind_factory->get("TestSinkTwo");
   auto* feature_one = context.features->get("FeatureOne");
 
   auto frames = CalleePortFrames{
@@ -1017,8 +1017,8 @@ TEST_F(CalleePortFramesTest, FeaturesAndPositions) {
   auto context = test::make_empty_context();
 
   Scope scope;
-  auto* test_kind_one = context.kinds->get("TestSinkOne");
-  auto* test_kind_two = context.kinds->get("TestSinkTwo");
+  auto* test_kind_one = context.kind_factory->get("TestSinkOne");
+  auto* test_kind_two = context.kind_factory->get("TestSinkTwo");
   auto* test_position_one = context.positions->get(std::nullopt, 1);
   auto* test_position_two = context.positions->get(std::nullopt, 2);
   auto* feature_one = context.features->get("FeatureOne");
@@ -1074,8 +1074,8 @@ TEST_F(CalleePortFramesTest, Propagate) {
   auto* two =
       context.methods->create(redex::create_void_method(scope, "LTwo;", "two"));
 
-  auto* test_kind_one = context.kinds->get("TestSinkOne");
-  auto* test_kind_two = context.kinds->get("TestSinkTwo");
+  auto* test_kind_one = context.kind_factory->get("TestSinkOne");
+  auto* test_kind_two = context.kind_factory->get("TestSinkTwo");
   auto* call_position = context.positions->get("Test.java", 1);
 
   // Test propagating non-crtex frames. Crtex-ness determined by callee port.
@@ -1232,8 +1232,8 @@ TEST_F(CalleePortFramesTest, PropagateDropFrames) {
   auto* two =
       context.methods->create(redex::create_void_method(scope, "LTwo;", "two"));
 
-  auto* test_kind_one = context.kinds->get("TestSinkOne");
-  auto* test_kind_two = context.kinds->get("TestSinkTwo");
+  auto* test_kind_one = context.kind_factory->get("TestSinkOne");
+  auto* test_kind_two = context.kind_factory->get("TestSinkTwo");
   auto* call_position = context.positions->get("Test.java", 1);
   auto* user_feature_one = context.features->get("UserFeatureOne");
   auto* user_feature_two = context.features->get("UserFeatureTwo");
@@ -1303,12 +1303,12 @@ TEST_F(CalleePortFramesTest, TransformKindWithFeatures) {
   auto* feature_two = context.features->get("FeatureTwo");
   auto* user_feature_one = context.features->get("UserFeatureOne");
 
-  auto* test_kind_one = context.kinds->get("TestKindOne");
-  auto* test_kind_two = context.kinds->get("TestKindTwo");
+  auto* test_kind_one = context.kind_factory->get("TestKindOne");
+  auto* test_kind_two = context.kind_factory->get("TestKindTwo");
   auto* transformed_test_kind_one =
-      context.kinds->get("TransformedTestKindOne");
+      context.kind_factory->get("TransformedTestKindOne");
   auto* transformed_test_kind_two =
-      context.kinds->get("TransformedTestKindTwo");
+      context.kind_factory->get("TransformedTestKindTwo");
 
   auto initial_frames = CalleePortFrames{
       test::make_taint_config(
@@ -1488,7 +1488,7 @@ TEST_F(CalleePortFramesTest, AppendOutputPaths) {
   const auto path_element2 = PathElement::field("field2");
 
   auto frames = CalleePortFrames{test::make_taint_config(
-      context.kinds->local_return(),
+      context.kind_factory->local_return(),
       test::FrameProperties{
           .callee_port = AccessPath(Root(Root::Kind::Return)),
           .output_paths = PathTreeDomain{
@@ -1498,7 +1498,7 @@ TEST_F(CalleePortFramesTest, AppendOutputPaths) {
   EXPECT_EQ(
       frames,
       (CalleePortFrames{test::make_taint_config(
-          context.kinds->local_return(),
+          context.kind_factory->local_return(),
           test::FrameProperties{
               .callee_port = AccessPath(Root(Root::Kind::Return)),
               .output_paths = PathTreeDomain{
@@ -1512,8 +1512,8 @@ TEST_F(CalleePortFramesTest, FilterInvalidFrames) {
   Scope scope;
   auto* method1 =
       context.methods->create(redex::create_void_method(scope, "LOne;", "one"));
-  auto* test_kind_one = context.kinds->get("TestSourceOne");
-  auto* test_kind_two = context.kinds->get("TestSourceTwo");
+  auto* test_kind_one = context.kind_factory->get("TestSourceOne");
+  auto* test_kind_two = context.kind_factory->get("TestSourceTwo");
 
   // Filter by callee. In practice, this scenario where the frames each contain
   // a different callee will not happen. These frames will be never show up in
@@ -1620,7 +1620,7 @@ TEST_F(CalleePortFramesTest, Show) {
   Scope scope;
   auto* one =
       context.methods->create(redex::create_void_method(scope, "LOne;", "one"));
-  auto* test_kind_one = context.kinds->get("TestSink1");
+  auto* test_kind_one = context.kind_factory->get("TestSink1");
   auto frame_one = test::make_taint_config(
       test_kind_one, test::FrameProperties{.origins = MethodSet{one}});
   auto frames = CalleePortFrames{frame_one};
@@ -1646,7 +1646,7 @@ TEST_F(CalleePortFramesTest, Show) {
       "call_info=Declaration, origins={`LOne;.one:()V`})}),])");
 
   frames = CalleePortFrames{test::make_taint_config(
-      context.kinds->local_return(),
+      context.kind_factory->local_return(),
       test::FrameProperties{
           .callee_port = AccessPath(Root(Root::Kind::Return)),
           .output_paths = PathTreeDomain{{Path{}, SingletonAbstractDomain()}},
@@ -1660,7 +1660,7 @@ TEST_F(CalleePortFramesTest, Show) {
       "output_paths=AbstractTree{Value})}),])");
 
   frames = CalleePortFrames{test::make_taint_config(
-      context.kinds->local_return(),
+      context.kind_factory->local_return(),
       test::FrameProperties{
           .callee_port = AccessPath(Root(Root::Kind::Return)),
           .output_paths =
@@ -1687,22 +1687,22 @@ TEST_F(CalleePortFramesTest, ContainsKind) {
 
   auto frames = CalleePortFrames{
       test::make_taint_config(
-          /* kind */ context.kinds->get("TestSourceOne"),
+          /* kind */ context.kind_factory->get("TestSourceOne"),
           test::FrameProperties{}),
       test::make_taint_config(
-          /* kind */ context.kinds->get("TestSourceTwo"),
+          /* kind */ context.kind_factory->get("TestSourceTwo"),
           test::FrameProperties{})};
 
-  EXPECT_TRUE(frames.contains_kind(context.kinds->get("TestSourceOne")));
-  EXPECT_TRUE(frames.contains_kind(context.kinds->get("TestSourceTwo")));
-  EXPECT_FALSE(frames.contains_kind(context.kinds->get("TestSink")));
+  EXPECT_TRUE(frames.contains_kind(context.kind_factory->get("TestSourceOne")));
+  EXPECT_TRUE(frames.contains_kind(context.kind_factory->get("TestSourceTwo")));
+  EXPECT_FALSE(frames.contains_kind(context.kind_factory->get("TestSink")));
 }
 
 TEST_F(CalleePortFramesTest, PartitionByKind) {
   auto context = test::make_empty_context();
 
-  auto* test_kind_one = context.kinds->get("TestSource1");
-  auto* test_kind_two = context.kinds->get("TestSource2");
+  auto* test_kind_one = context.kind_factory->get("TestSource1");
+  auto* test_kind_two = context.kind_factory->get("TestSource2");
 
   auto frames = CalleePortFrames{
       test::make_taint_config(

@@ -56,8 +56,8 @@ Context make_context(const DexStore& store) {
       /* remove_unreachable_code */ false,
       /* emit_all_via_cast_features */ false);
   context.stores = {store};
-  context.artificial_methods =
-      std::make_unique<ArtificialMethods>(*context.kinds, context.stores);
+  context.artificial_methods = std::make_unique<ArtificialMethods>(
+      *context.kind_factory, context.stores);
   context.methods = std::make_unique<Methods>(context.stores);
   context.fields = std::make_unique<Fields>(context.stores);
   context.positions =

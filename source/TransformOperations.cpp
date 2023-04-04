@@ -6,7 +6,7 @@
  */
 
 #include <mariana-trench/Assert.h>
-#include <mariana-trench/Kinds.h>
+#include <mariana-trench/KindFactory.h>
 #include <mariana-trench/TransformOperations.h>
 #include <mariana-trench/Transforms.h>
 
@@ -37,7 +37,7 @@ TaintTree apply_propagation(
     output_taint_tree.write(
         path,
         taint.apply_transform(
-            context->kinds,
+            context->kind_factory,
             context->transforms,
             context->used_kinds,
             transform_kind->local_transforms()),

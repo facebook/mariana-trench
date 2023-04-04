@@ -25,7 +25,7 @@ TEST_F(ForwardTaintEnvironmentTest, LessOrEqual) {
 
 TEST_F(ForwardTaintEnvironmentTest, LessOrEqualSuperSet) {
   auto context = test::make_empty_context();
-  const auto* source_kind = context.kinds->get("TestSource");
+  const auto* source_kind = context.kind_factory->get("TestSource");
 
   Scope scope;
   auto* method = context.methods->create(
@@ -55,7 +55,7 @@ TEST_F(ForwardTaintEnvironmentTest, LessOrEqualSuperSet) {
 
 TEST_F(ForwardTaintEnvironmentTest, LessOrEqualDifferentSources) {
   auto context = test::make_empty_context();
-  const auto* source_kind = context.kinds->get("TestSource");
+  const auto* source_kind = context.kind_factory->get("TestSource");
 
   Scope scope;
   auto* method = context.methods->create(
@@ -82,7 +82,7 @@ TEST_F(ForwardTaintEnvironmentTest, LessOrEqualDifferentSources) {
 
 TEST_F(ForwardTaintEnvironmentTest, JoinSuperSet) {
   auto context = test::make_empty_context();
-  const auto* source_kind = context.kinds->get("TestSource");
+  const auto* source_kind = context.kind_factory->get("TestSource");
 
   Scope scope;
   auto* method = context.methods->create(
@@ -109,7 +109,7 @@ TEST_F(ForwardTaintEnvironmentTest, JoinSuperSet) {
 
 TEST_F(ForwardTaintEnvironmentTest, JoinTwoDifferent) {
   auto context = test::make_empty_context();
-  const auto* source_kind = context.kinds->get("TestSource");
+  const auto* source_kind = context.kind_factory->get("TestSource");
 
   Scope scope;
   auto* method = context.methods->create(
@@ -149,7 +149,7 @@ TEST_F(ForwardTaintEnvironmentTest, JoinTwoDifferent) {
 
 TEST_F(ForwardTaintEnvironmentTest, JoinTwoEnvironmentWithDifferentSources) {
   auto context = test::make_empty_context();
-  const auto* source_kind = context.kinds->get("TestSource");
+  const auto* source_kind = context.kind_factory->get("TestSource");
 
   Scope scope;
   auto* method = context.methods->create(

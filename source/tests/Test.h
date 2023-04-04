@@ -25,7 +25,6 @@
 #include <mariana-trench/Features.h>
 #include <mariana-trench/Frame.h>
 #include <mariana-trench/GlobalRedexContext.h>
-#include <mariana-trench/Kinds.h>
 #include <mariana-trench/Methods.h>
 #include <mariana-trench/Options.h>
 #include <mariana-trench/Overrides.h>

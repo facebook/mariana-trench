@@ -19,14 +19,14 @@ std::optional<Taint> FulfilledPartialKindState::fulfill_kind(
     const MultiSourceMultiSinkRule* rule,
     const FeatureMayAlwaysSet& features,
     const Taint& sink,
-    const Kinds& kinds_factory) {
+    const KindFactory& kind_factory) {
   const auto* counterpart = get_fulfilled_counterpart(kind, rule);
   if (counterpart != nullptr) {
     // If both partial sinks for the callsite have been fulfilled, the rule
     // is satisfied. Make this a triggered sink and create the sink flow taint
     // for the issue. Include the features from both flows (using .add, NOT
     // .join).
-    const auto* triggered_kind = kinds_factory.get_triggered(kind, rule);
+    const auto* triggered_kind = kind_factory.get_triggered(kind, rule);
     auto sink_features = get_features(counterpart, rule);
     sink_features.add(features);
 
@@ -69,13 +69,12 @@ FeatureMayAlwaysSet FulfilledPartialKindState::get_features(
 
 std::vector<const Kind*> FulfilledPartialKindState::make_triggered_counterparts(
     const PartialKind* unfulfilled_kind,
-    const Kinds& kinds_factory) const {
+    const KindFactory& kind_factory) const {
   std::vector<const Kind*> result;
   for (const auto& [kind, rules_map] : map_) {
     if (unfulfilled_kind->is_counterpart(kind)) {
       for (const auto& [rule, _features] : rules_map) {
-        result.emplace_back(
-            kinds_factory.get_triggered(unfulfilled_kind, rule));
+        result.emplace_back(kind_factory.get_triggered(unfulfilled_kind, rule));
       }
     }
   }

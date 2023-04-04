@@ -24,8 +24,8 @@ TEST_F(CallPositionFramesTest, Add) {
   auto* two = context.methods->create(
       redex::create_void_method(scope, "LOther;", "two"));
 
-  auto* source_kind_one = context.kinds->get("TestSourceOne");
-  auto* source_kind_two = context.kinds->get("TestSourceTwo");
+  auto* source_kind_one = context.kind_factory->get("TestSourceOne");
+  auto* source_kind_two = context.kind_factory->get("TestSourceTwo");
   auto* feature_one = context.features->get("FeatureOne");
   auto* feature_two = context.features->get("FeatureTwo");
   auto* user_feature_one = context.features->get("UserFeatureOne");
@@ -144,8 +144,8 @@ TEST_F(CallPositionFramesTest, Leq) {
   auto* one =
       context.methods->create(redex::create_void_method(scope, "LOne;", "one"));
 
-  auto* test_kind_one = context.kinds->get("TestSinkOne");
-  auto* test_kind_two = context.kinds->get("TestSinkTwo");
+  auto* test_kind_one = context.kind_factory->get("TestSinkOne");
+  auto* test_kind_two = context.kind_factory->get("TestSinkTwo");
   auto* test_position = context.positions->get(std::nullopt, 1);
 
   // Comparison to bottom
@@ -353,7 +353,7 @@ TEST_F(CallPositionFramesTest, LocalTaintLeq) {
   auto context = test::make_empty_context();
 
   Scope scope;
-  auto* test_kind_one = context.kinds->get("TestSink1");
+  auto* test_kind_one = context.kind_factory->get("TestSink1");
 
   // callee_port must be equal.
   EXPECT_TRUE(
@@ -402,7 +402,7 @@ TEST_F(CallPositionFramesTest, LocalTaintLeq) {
   // Local kinds.
   EXPECT_TRUE(CallPositionFrames{
       test::make_taint_config(
-          context.kinds->local_return(),
+          context.kind_factory->local_return(),
           test::FrameProperties{
               .callee_port = AccessPath(Root(Root::Kind::Return)),
               .output_paths =
@@ -410,20 +410,20 @@ TEST_F(CallPositionFramesTest, LocalTaintLeq) {
                       {Path{PathElement::field("x")},
                        SingletonAbstractDomain()}}})}
                   .leq(CallPositionFrames{test::make_taint_config(
-                      context.kinds->local_return(),
+                      context.kind_factory->local_return(),
                       test::FrameProperties{
                           .callee_port = AccessPath(Root(Root::Kind::Return)),
                           .output_paths = PathTreeDomain{
                               {Path{}, SingletonAbstractDomain()}}})}));
   EXPECT_FALSE(CallPositionFrames{
       test::make_taint_config(
-          context.kinds->local_return(),
+          context.kind_factory->local_return(),
           test::FrameProperties{
               .callee_port = AccessPath(Root(Root::Kind::Return)),
               .output_paths =
                   PathTreeDomain{{Path{}, SingletonAbstractDomain()}}})}
                    .leq(CallPositionFrames{test::make_taint_config(
-                       context.kinds->local_return(),
+                       context.kind_factory->local_return(),
                        test::FrameProperties{
                            .callee_port = AccessPath(Root(Root::Kind::Return)),
                            .output_paths = PathTreeDomain{
@@ -438,8 +438,8 @@ TEST_F(CallPositionFramesTest, Equals) {
   auto* one =
       context.methods->create(redex::create_void_method(scope, "LOne;", "one"));
 
-  auto* test_kind_one = context.kinds->get("TestSinkOne");
-  auto* test_kind_two = context.kinds->get("TestSinkTwo");
+  auto* test_kind_one = context.kind_factory->get("TestSinkOne");
+  auto* test_kind_two = context.kind_factory->get("TestSinkTwo");
   auto* test_position = context.positions->get(std::nullopt, 1);
 
   // Comparison to bottom
@@ -497,8 +497,8 @@ TEST_F(CallPositionFramesTest, JoinWith) {
   auto* one =
       context.methods->create(redex::create_void_method(scope, "LOne;", "one"));
 
-  auto* test_kind_one = context.kinds->get("TestSinkOne");
-  auto* test_kind_two = context.kinds->get("TestSinkTwo");
+  auto* test_kind_one = context.kind_factory->get("TestSinkOne");
+  auto* test_kind_two = context.kind_factory->get("TestSinkTwo");
   auto* test_position = context.positions->get(std::nullopt, 1);
 
   // Join with bottom
@@ -621,17 +621,17 @@ TEST_F(CallPositionFramesTest, JoinWith) {
 
 TEST_F(CallPositionFramesTest, LocalTaintJoinWith) {
   auto context = test::make_empty_context();
-  auto* test_kind_one = context.kinds->get("TestSinkOne");
+  auto* test_kind_one = context.kind_factory->get("TestSinkOne");
 
   // Callee ports only consist of the root. Input paths trees are joined.
   auto frames = CallPositionFrames{test::make_taint_config(
-      context.kinds->local_return(),
+      context.kind_factory->local_return(),
       test::FrameProperties{
           .callee_port = AccessPath(Root(Root::Kind::Return)),
           .output_paths = PathTreeDomain{
               {Path{PathElement::field("x")}, SingletonAbstractDomain()}}})};
   frames.join_with(CallPositionFrames{test::make_taint_config(
-      context.kinds->local_return(),
+      context.kind_factory->local_return(),
       test::FrameProperties{
           .callee_port = AccessPath(Root(Root::Kind::Return)),
           .output_paths =
@@ -639,7 +639,7 @@ TEST_F(CallPositionFramesTest, LocalTaintJoinWith) {
   EXPECT_EQ(
       frames,
       CallPositionFrames{test::make_taint_config(
-          context.kinds->local_return(),
+          context.kind_factory->local_return(),
           test::FrameProperties{
               .callee_port = AccessPath(Root(Root::Kind::Return)),
               .output_paths =
@@ -703,8 +703,8 @@ TEST_F(CallPositionFramesTest, Difference) {
   const auto x = PathElement::field("x");
   const auto y = PathElement::field("y");
 
-  auto* test_kind_one = context.kinds->get("TestSinkOne");
-  auto* test_kind_two = context.kinds->get("TestSinkTwo");
+  auto* test_kind_one = context.kind_factory->get("TestSinkOne");
+  auto* test_kind_two = context.kind_factory->get("TestSinkTwo");
   auto* test_position = context.positions->get(std::nullopt, 1);
   auto* feature_one = context.features->get("FeatureOne");
   auto* feature_two = context.features->get("FeatureTwo");
@@ -1137,8 +1137,8 @@ TEST_F(CallPositionFramesTest, Difference) {
 TEST_F(CallPositionFramesTest, Iterator) {
   auto context = test::make_empty_context();
 
-  auto* test_kind_one = context.kinds->get("TestSinkOne");
-  auto* test_kind_two = context.kinds->get("TestSinkTwo");
+  auto* test_kind_one = context.kind_factory->get("TestSinkOne");
+  auto* test_kind_two = context.kind_factory->get("TestSinkTwo");
 
   auto call_position_frames = CallPositionFrames{
       test::make_taint_config(
@@ -1189,7 +1189,7 @@ TEST_F(CallPositionFramesTest, Map) {
   Scope scope;
   auto* one =
       context.methods->create(redex::create_void_method(scope, "LOne;", "one"));
-  auto* test_kind = context.kinds->get("TestSink");
+  auto* test_kind = context.kind_factory->get("TestSink");
   auto* test_position = context.positions->get(std::nullopt, 1);
   auto* feature_one = context.features->get("FeatureOne");
 
@@ -1250,7 +1250,7 @@ TEST_F(CallPositionFramesTest, FeaturesAndPositions) {
   auto context = test::make_empty_context();
 
   Scope scope;
-  auto* test_kind_one = context.kinds->get("TestSinkOne");
+  auto* test_kind_one = context.kind_factory->get("TestSinkOne");
   auto* test_position_one = context.positions->get(std::nullopt, 1);
   auto* test_position_two = context.positions->get(std::nullopt, 2);
   auto* feature_one = context.features->get("FeatureOne");
@@ -1346,8 +1346,8 @@ TEST_F(CallPositionFramesTest, Propagate) {
   auto* two =
       context.methods->create(redex::create_void_method(scope, "LTwo;", "two"));
 
-  auto* test_kind_one = context.kinds->get("TestSinkOne");
-  auto* test_kind_two = context.kinds->get("TestSinkTwo");
+  auto* test_kind_one = context.kind_factory->get("TestSinkOne");
+  auto* test_kind_two = context.kind_factory->get("TestSinkTwo");
   auto* call_position = context.positions->get("Test.java", 1);
 
   // It is generally expected (though not enforced) that frames within
@@ -1462,8 +1462,8 @@ TEST_F(CallPositionFramesTest, PropagateDropFrames) {
   auto* two =
       context.methods->create(redex::create_void_method(scope, "LTwo;", "two"));
 
-  auto* test_kind_one = context.kinds->get("TestSinkOne");
-  auto* test_kind_two = context.kinds->get("TestSinkTwo");
+  auto* test_kind_one = context.kind_factory->get("TestSinkOne");
+  auto* test_kind_two = context.kind_factory->get("TestSinkTwo");
   auto* call_position = context.positions->get("Test.java", 1);
   auto* user_feature_one = context.features->get("UserFeatureOne");
   auto* user_feature_two = context.features->get("UserFeatureTwo");
@@ -1534,7 +1534,7 @@ TEST_F(CallPositionFramesTest, PartitionMap) {
   Scope scope;
   auto* one =
       context.methods->create(redex::create_void_method(scope, "LOne;", "one"));
-  auto* test_kind = context.kinds->get("TestSink");
+  auto* test_kind = context.kind_factory->get("TestSink");
 
   auto frames = CallPositionFrames{
       test::make_taint_config(
@@ -1586,7 +1586,7 @@ TEST_F(CallPositionFramesTest, AttachPosition) {
 
   auto* feature_one = context.features->get("FeatureOne");
   auto* feature_two = context.features->get("FeatureTwo");
-  auto* test_kind = context.kinds->get("TestSink");
+  auto* test_kind = context.kind_factory->get("TestSink");
   auto* test_position = context.positions->get(std::nullopt, 1);
 
   auto frames = CallPositionFrames{
@@ -1642,12 +1642,12 @@ TEST_F(CallPositionFramesTest, TransformKindWithFeatures) {
   auto* feature_two = context.features->get("FeatureTwo");
   auto* user_feature_one = context.features->get("UserFeatureOne");
 
-  auto* test_kind_one = context.kinds->get("TestKindOne");
-  auto* test_kind_two = context.kinds->get("TestKindTwo");
+  auto* test_kind_one = context.kind_factory->get("TestKindOne");
+  auto* test_kind_two = context.kind_factory->get("TestKindTwo");
   auto* transformed_test_kind_one =
-      context.kinds->get("TransformedTestKindOne");
+      context.kind_factory->get("TransformedTestKindOne");
   auto* transformed_test_kind_two =
-      context.kinds->get("TransformedTestKindTwo");
+      context.kind_factory->get("TransformedTestKindTwo");
 
   auto initial_frames = CallPositionFrames{
       test::make_taint_config(
@@ -1838,7 +1838,7 @@ TEST_F(CallPositionFramesTest, TransformKindWithFeatures) {
 TEST_F(CallPositionFramesTest, MapPositions) {
   auto context = test::make_empty_context();
 
-  auto* test_kind_one = context.kinds->get("TestKind1");
+  auto* test_kind_one = context.kind_factory->get("TestKind1");
   auto* test_position_one = context.positions->get(std::nullopt, 1);
   auto* test_position_two = context.positions->get(std::nullopt, 2);
 
@@ -1976,8 +1976,8 @@ TEST_F(CallPositionFramesTest, FilterInvalidFrames) {
   Scope scope;
   auto* method1 =
       context.methods->create(redex::create_void_method(scope, "LOne;", "one"));
-  auto* test_kind_one = context.kinds->get("TestSourceOne");
-  auto* test_kind_two = context.kinds->get("TestSourceTwo");
+  auto* test_kind_one = context.kind_factory->get("TestSourceOne");
+  auto* test_kind_two = context.kind_factory->get("TestSourceTwo");
 
   // Filter by callee
   auto frames = CallPositionFrames{
@@ -2053,7 +2053,7 @@ TEST_F(CallPositionFramesTest, Show) {
   Scope scope;
   auto* one =
       context.methods->create(redex::create_void_method(scope, "LOne;", "one"));
-  auto* test_kind_one = context.kinds->get("TestSink1");
+  auto* test_kind_one = context.kind_factory->get("TestSink1");
   auto frame_one = test::make_taint_config(
       test_kind_one, test::FrameProperties{.origins = MethodSet{one}});
   auto frames = CallPositionFrames{frame_one};
@@ -2078,25 +2078,26 @@ TEST_F(CallPositionFramesTest, ContainsKind) {
 
   auto frames = CallPositionFrames{
       test::make_taint_config(
-          /* kind */ context.kinds->get("TestSource"), test::FrameProperties{}),
+          /* kind */ context.kind_factory->get("TestSource"),
+          test::FrameProperties{}),
       test::make_taint_config(
-          context.kinds->local_return(),
+          context.kind_factory->local_return(),
           test::FrameProperties{
               .callee_port = AccessPath(Root(Root::Kind::Return)),
               .output_paths =
                   PathTreeDomain{{Path{}, SingletonAbstractDomain{}}}})};
 
-  EXPECT_TRUE(frames.contains_kind(context.kinds->local_return()));
-  EXPECT_TRUE(frames.contains_kind(context.kinds->get("TestSource")));
-  EXPECT_FALSE(frames.contains_kind(context.kinds->get("TestSink")));
+  EXPECT_TRUE(frames.contains_kind(context.kind_factory->local_return()));
+  EXPECT_TRUE(frames.contains_kind(context.kind_factory->get("TestSource")));
+  EXPECT_FALSE(frames.contains_kind(context.kind_factory->get("TestSink")));
 }
 
 TEST_F(CallPositionFramesTest, PartitionByKind) {
   auto context = test::make_empty_context();
 
   auto* test_position = context.positions->get(std::nullopt, 1);
-  auto* test_kind_one = context.kinds->get("TestSource1");
-  auto* test_kind_two = context.kinds->get("TestSource2");
+  auto* test_kind_one = context.kind_factory->get("TestSource1");
+  auto* test_kind_two = context.kind_factory->get("TestSource2");
 
   auto frames = CallPositionFrames{
       test::make_taint_config(

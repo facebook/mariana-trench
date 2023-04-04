@@ -267,7 +267,7 @@ void CallPositionFrames::transform_kind_with_features(
 }
 
 CallPositionFrames CallPositionFrames::apply_transform(
-    const Kinds& kinds,
+    const KindFactory& kind_factory,
     const Transforms& transforms,
     const UsedKinds& used_kinds,
     const TransformList* local_transforms) const {
@@ -276,7 +276,7 @@ CallPositionFrames CallPositionFrames::apply_transform(
   for (const auto& callee_port_frames : frames_) {
     for (const auto& frame : callee_port_frames) {
       frames_by_callee_port.add(CalleePortFrames{frame.apply_transform(
-          kinds,
+          kind_factory,
           transforms,
           used_kinds,
           frame.callee_port(),

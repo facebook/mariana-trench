@@ -6,7 +6,7 @@
  */
 
 #include <mariana-trench/JsonValidation.h>
-#include <mariana-trench/Kinds.h>
+#include <mariana-trench/KindFactory.h>
 #include <mariana-trench/PartialKind.h>
 
 namespace marianatrench {
@@ -20,7 +20,7 @@ const PartialKind* PartialKind::from_json(
     const std::string& label,
     Context& context) {
   auto name = JsonValidation::string(value);
-  return context.kinds->get_partial(name, label);
+  return context.kind_factory->get_partial(name, label);
 }
 
 std::string PartialKind::to_trace_string() const {

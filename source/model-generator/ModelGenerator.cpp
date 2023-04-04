@@ -265,7 +265,7 @@ void generator::add_propagation_to_return(
   model.add_propagation(PropagationConfig(
       /* input_path */ AccessPath(
           Root(Root::Kind::Argument, parameter_position)),
-      /* kind */ context.kinds->local_return(),
+      /* kind */ context.kind_factory->local_return(),
       /* output_paths */ PathTreeDomain{{Path{}, SingletonAbstractDomain()}},
       /* inferred_features */ FeatureMayAlwaysSet::bottom(),
       /* locally_inferred_features */ FeatureMayAlwaysSet::bottom(),
@@ -287,7 +287,7 @@ void generator::add_propagation_to_parameter(
   }
   model.add_propagation(PropagationConfig(
       /* input_path */ AccessPath(Root(Root::Kind::Argument, from)),
-      /* kind */ context.kinds->local_argument(to),
+      /* kind */ context.kind_factory->local_argument(to),
       /* output_paths */ PathTreeDomain{{Path{}, SingletonAbstractDomain()}},
       /* inferred_features */ FeatureMayAlwaysSet::bottom(),
       /* locally_inferred_features */ FeatureMayAlwaysSet::bottom(),
@@ -389,7 +389,7 @@ TaintConfig generator::source(
     user_features.add(context.features->get(feature));
   }
   return TaintConfig(
-      /* kind */ context.kinds->get(kind),
+      /* kind */ context.kind_factory->get(kind),
       /* callee_port */ AccessPath(Root(callee_port)),
       /* callee */ nullptr,
       /* field_callee */ nullptr,
@@ -431,7 +431,7 @@ TaintConfig generator::sink(
     user_features.add(context.features->get(feature));
   }
   return TaintConfig(
-      /* kind */ context.kinds->get(kind),
+      /* kind */ context.kind_factory->get(kind),
       /* callee_port */ AccessPath(Root(callee_port)),
       /* callee */ nullptr,
       /* field_callee */ nullptr,
@@ -468,7 +468,7 @@ TaintConfig generator::partial_sink(
     user_features.add(context.features->get(feature));
   }
   return TaintConfig(
-      /* kind */ context.kinds->get_partial(kind, label),
+      /* kind */ context.kind_factory->get_partial(kind, label),
       /* callee_port */ AccessPath(Root(callee_port)),
       /* callee */ nullptr,
       /* field_callee */ nullptr,

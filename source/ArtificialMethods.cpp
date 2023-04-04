@@ -11,7 +11,9 @@
 
 namespace marianatrench {
 
-ArtificialMethods::ArtificialMethods(Kinds& kinds, DexStoresVector& stores) {
+ArtificialMethods::ArtificialMethods(
+    KindFactory& kind_factory,
+    DexStoresVector& stores) {
   Scope scope;
   array_allocation_method_ = redex::create_void_method(
       scope,
@@ -23,7 +25,7 @@ ArtificialMethods::ArtificialMethods(Kinds& kinds, DexStoresVector& stores) {
       /* is_static */ true,
       /* is_private */ false,
       /* is_native*/ false);
-  array_allocation_kind_ = kinds.get("ArrayAllocation");
+  array_allocation_kind_ = kind_factory.get("ArrayAllocation");
   array_allocation_kind_used_ = true;
 
   DexStore store("artificial classes");

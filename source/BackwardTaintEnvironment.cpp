@@ -28,7 +28,7 @@ BackwardTaintEnvironment BackwardTaintEnvironment::initial(
     taint.set(
         context.memory_factory.make_parameter(0),
         TaintTree(Taint::propagation_taint(
-            /* kind */ context.kinds.local_receiver(),
+            /* kind */ context.kind_factory.local_receiver(),
             /* output_paths */
             PathTreeDomain{{Path{}, SingletonAbstractDomain()}},
             /* inferred_features */ {},

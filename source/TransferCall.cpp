@@ -176,7 +176,7 @@ MemoryLocation* MT_NULLABLE try_inline_invoke(
           {{/* input */ *access_path,
             Taint::propagation(PropagationConfig(
                 /* input_path */ *access_path,
-                /* kind */ context->kinds.local_return(),
+                /* kind */ context->kind_factory.local_return(),
                 /* output_paths */
                 PathTreeDomain{{Path{}, SingletonAbstractDomain()}},
                 /* inferred_features */ {},

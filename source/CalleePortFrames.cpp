@@ -523,7 +523,7 @@ Frame CalleePortFrames::propagate_frames(
   // For `TransformKind`, all local_transforms of the callee become
   // global_transforms for the caller.
   if (const auto* transform_kind = kind->as<TransformKind>()) {
-    kind = context.kinds->transform_kind(
+    kind = context.kind_factory->transform_kind(
         /* base_kind */ transform_kind->base_kind(),
         /* local_transforms */ nullptr,
         /* global_transforms */

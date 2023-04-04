@@ -28,7 +28,7 @@ namespace marianatrench {
 /**
  * The kind factory.
  */
-class Kinds final {
+class KindFactory final {
  private:
   template <typename... Ts>
   struct TupleHash {
@@ -38,9 +38,9 @@ class Kinds final {
   };
 
  public:
-  Kinds();
+  KindFactory();
 
-  DELETE_COPY_CONSTRUCTORS_AND_ASSIGNMENTS(Kinds)
+  DELETE_COPY_CONSTRUCTORS_AND_ASSIGNMENTS(KindFactory)
 
   const NamedKind* get(const std::string& name) const;
 

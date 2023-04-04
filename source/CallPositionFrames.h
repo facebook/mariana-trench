@@ -21,6 +21,7 @@
 #include <mariana-trench/Frame.h>
 #include <mariana-trench/GroupHashedSetAbstractDomain.h>
 #include <mariana-trench/IncludeMacros.h>
+#include <mariana-trench/KindFactory.h>
 #include <mariana-trench/RootPatriciaTreeAbstractPartition.h>
 #include <mariana-trench/TaintConfig.h>
 #include <mariana-trench/Transforms.h>
@@ -176,7 +177,7 @@ class CallPositionFrames final
       const std::function<FeatureMayAlwaysSet(const Kind*)>&);
 
   CallPositionFrames apply_transform(
-      const Kinds& kinds,
+      const KindFactory& kind_factory,
       const Transforms& transforms,
       const UsedKinds& used_kinds,
       const TransformList* local_transforms) const;

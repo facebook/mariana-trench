@@ -12,6 +12,7 @@
 
 #include <mariana-trench/CallPositionFrames.h>
 #include <mariana-trench/IncludeMacros.h>
+#include <mariana-trench/KindFactory.h>
 #include <mariana-trench/Position.h>
 #include <mariana-trench/TaintConfig.h>
 #include <mariana-trench/Transforms.h>
@@ -191,7 +192,7 @@ class CalleeFrames final : public sparta::AbstractDomain<CalleeFrames> {
       const std::function<FeatureMayAlwaysSet(const Kind*)>&);
 
   CalleeFrames apply_transform(
-      const Kinds& kinds,
+      const KindFactory& kind_factory,
       const Transforms& transforms,
       const UsedKinds& used_kinds,
       const TransformList* local_transforms) const;

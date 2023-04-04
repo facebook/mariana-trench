@@ -65,7 +65,7 @@ class Rules final {
  public:
   explicit Rules(Context& context)
       : transforms_factory(*context.transforms),
-        kinds_factory(*context.kinds) {}
+        kind_factory(*context.kind_factory) {}
 
   explicit Rules(Context& context, std::vector<std::unique_ptr<Rule>> rules);
 
@@ -103,7 +103,7 @@ class Rules final {
       const PartialKind* sink_kind) const;
 
   std::unordered_set<const Kind*> collect_unused_kinds(
-      const Kinds& kinds) const;
+      const KindFactory& kinds) const;
 
   const SourceSinkRulesMap& source_to_sink_rules() const {
     return source_to_sink_to_rules_;
@@ -123,7 +123,7 @@ class Rules final {
 
  private:
   const Transforms& transforms_factory;
-  const Kinds& kinds_factory;
+  const KindFactory& kind_factory;
   std::unordered_map<int, std::unique_ptr<Rule>> rules_;
   // For Rules with "transforms":
   //   Outer source kind = Kind without any Transforms

@@ -64,8 +64,8 @@ void MarianaTrench::add_options(
 }
 
 Registry MarianaTrench::analyze(Context& context) {
-  context.artificial_methods =
-      std::make_unique<ArtificialMethods>(*context.kinds, context.stores);
+  context.artificial_methods = std::make_unique<ArtificialMethods>(
+      *context.kind_factory, context.stores);
   Timer methods_timer;
   LOG(1, "Storing methods...");
   context.methods = std::make_unique<Methods>(context.stores);
@@ -269,7 +269,7 @@ Registry MarianaTrench::analyze(Context& context) {
   LOG(1, "Removing unused Kinds...");
   int num_removed = UsedKinds::remove_unused_kinds(
                         *context.rules,
-                        *context.kinds,
+                        *context.kind_factory,
                         *context.methods,
                         *context.artificial_methods,
                         registry)

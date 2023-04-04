@@ -448,11 +448,11 @@ TEST_F(JsonTest, Sanitizer) {
           SanitizerKind::Sources,
           /* kinds */ KindSetAbstractDomain::top()),
       context);
-  const auto* kind1 = context.kinds->get("Kind1");
-  const auto* kind2 = context.kinds->get("Kind2");
-  const auto* kind3 = context.kinds->get("Kind3");
-  const auto* partial_kind = context.kinds->get_partial("Kind3", "a");
-  const auto* partial_kind2 = context.kinds->get_partial("Kind3", "b");
+  const auto* kind1 = context.kind_factory->get("Kind1");
+  const auto* kind2 = context.kind_factory->get("Kind2");
+  const auto* kind3 = context.kind_factory->get("Kind3");
+  const auto* partial_kind = context.kind_factory->get_partial("Kind3", "a");
+  const auto* partial_kind2 = context.kind_factory->get_partial("Kind3", "b");
   // Test from_json
   EXPECT_EQ(
       Sanitizer::from_json(
@@ -655,10 +655,10 @@ TEST_F(JsonTest, Rule) {
       rule_with_single_source_and_sink->description(), "rule_description");
   EXPECT_THAT(
       rule_with_single_source_and_sink->source_kinds(),
-      testing::ElementsAre(context.kinds->get("rule_source")));
+      testing::ElementsAre(context.kind_factory->get("rule_source")));
   EXPECT_THAT(
       rule_with_single_source_and_sink->sink_kinds(),
-      testing::ElementsAre(context.kinds->get("rule_sink")));
+      testing::ElementsAre(context.kind_factory->get("rule_sink")));
 
   rule = Rule::from_json(
       test::parse_json(R"({
@@ -675,13 +675,13 @@ TEST_F(JsonTest, Rule) {
   EXPECT_THAT(
       rule_with_multiple_sources_and_sinks->source_kinds(),
       testing::UnorderedElementsAre(
-          context.kinds->get("rule_source_one"),
-          context.kinds->get("rule_source_two")));
+          context.kind_factory->get("rule_source_one"),
+          context.kind_factory->get("rule_source_two")));
   EXPECT_THAT(
       rule_with_multiple_sources_and_sinks->sink_kinds(),
       testing::UnorderedElementsAre(
-          context.kinds->get("rule_sink_one"),
-          context.kinds->get("rule_sink_two")));
+          context.kind_factory->get("rule_sink_one"),
+          context.kind_factory->get("rule_sink_two")));
 
   rule = Rule::from_json(
       test::parse_json(R"({
@@ -701,21 +701,22 @@ TEST_F(JsonTest, Rule) {
   EXPECT_THAT(
       rule_with_combined_sources->partial_sink_kinds("labelA"),
       testing::UnorderedElementsAre(
-          context.kinds->get_partial("rule_sink", "labelA")));
+          context.kind_factory->get_partial("rule_sink", "labelA")));
   EXPECT_THAT(
       rule_with_combined_sources->partial_sink_kinds("labelB"),
       testing::UnorderedElementsAre(
-          context.kinds->get_partial("rule_sink", "labelB")));
+          context.kind_factory->get_partial("rule_sink", "labelB")));
   EXPECT_TRUE(rule_with_combined_sources->partial_sink_kinds("labelC").empty());
   const auto& multi_sources = rule_with_combined_sources->multi_source_kinds();
   EXPECT_THAT(
       multi_sources.find("labelA")->second,
       testing::UnorderedElementsAre(
-          context.kinds->get("rule_source_one"),
-          context.kinds->get("rule_source_two")));
+          context.kind_factory->get("rule_source_one"),
+          context.kind_factory->get("rule_source_two")));
   EXPECT_THAT(
       multi_sources.find("labelB")->second,
-      testing::UnorderedElementsAre(context.kinds->get("rule_source_one")));
+      testing::UnorderedElementsAre(
+          context.kind_factory->get("rule_source_one")));
 }
 
 TEST_F(JsonTest, LocalPositionSet) {
@@ -787,7 +788,7 @@ TEST_F(JsonTest, TaintConfig) {
               })"),
           context),
       test::make_taint_config(
-          /* kind */ context.kinds->get("TestSource"),
+          /* kind */ context.kind_factory->get("TestSource"),
           test::FrameProperties{
               .inferred_features = FeatureMayAlwaysSet::bottom(),
               .locally_inferred_features = FeatureMayAlwaysSet::bottom()}));
@@ -808,7 +809,7 @@ TEST_F(JsonTest, TaintConfig) {
   EXPECT_EQ(
       frame,
       test::make_taint_config(
-          /* kind */ context.kinds->get_partial("TestSink", "X"),
+          /* kind */ context.kind_factory->get_partial("TestSink", "X"),
           test::FrameProperties{
               .inferred_features = FeatureMayAlwaysSet::bottom(),
               .locally_inferred_features = FeatureMayAlwaysSet::bottom()}));
@@ -837,7 +838,7 @@ TEST_F(JsonTest, TaintConfig) {
           })"),
           context),
       test::make_taint_config(
-          /* kind */ context.kinds->get("TestSource"),
+          /* kind */ context.kind_factory->get("TestSource"),
           test::FrameProperties{
               .inferred_features = FeatureMayAlwaysSet::bottom(),
               .locally_inferred_features = FeatureMayAlwaysSet::bottom()}));
@@ -852,7 +853,7 @@ TEST_F(JsonTest, TaintConfig) {
           })"),
           context),
       test::make_taint_config(
-          /* kind */ context.kinds->get("TestSource"),
+          /* kind */ context.kind_factory->get("TestSource"),
           test::FrameProperties{
               .callee_port = AccessPath(Root(Root::Kind::Return)),
               .callee = source_one,
@@ -871,7 +872,7 @@ TEST_F(JsonTest, TaintConfig) {
           })"),
           context),
       test::make_taint_config(
-          /* kind */ context.kinds->get("TestSource"),
+          /* kind */ context.kind_factory->get("TestSource"),
           test::FrameProperties{
               .callee_port = AccessPath(Root(Root::Kind::Return)),
               .callee = source_one,
@@ -898,7 +899,7 @@ TEST_F(JsonTest, TaintConfig) {
           })"),
           context),
       test::make_taint_config(
-          /* kind */ context.kinds->get("TestSource"),
+          /* kind */ context.kind_factory->get("TestSource"),
           test::FrameProperties{
               .origins = MethodSet{source_one},
               .inferred_features = FeatureMayAlwaysSet::bottom(),
@@ -912,7 +913,7 @@ TEST_F(JsonTest, TaintConfig) {
           })"),
           context),
       test::make_taint_config(
-          /* kind */ context.kinds->get("TestSource"),
+          /* kind */ context.kind_factory->get("TestSource"),
           test::FrameProperties{
               .origins = MethodSet{source_one, source_two},
               .inferred_features = FeatureMayAlwaysSet::bottom(),
@@ -936,7 +937,7 @@ TEST_F(JsonTest, TaintConfig) {
           })"),
           context),
       test::make_taint_config(
-          /* kind */ context.kinds->get("TestSource"),
+          /* kind */ context.kind_factory->get("TestSource"),
           test::FrameProperties{
               .field_origins = FieldSet{field_one},
               .inferred_features = FeatureMayAlwaysSet::bottom(),
@@ -950,7 +951,7 @@ TEST_F(JsonTest, TaintConfig) {
           })"),
           context),
       test::make_taint_config(
-          /* kind */ context.kinds->get("TestSource"),
+          /* kind */ context.kind_factory->get("TestSource"),
           test::FrameProperties{
               .field_origins = FieldSet{field_one, field_two},
               .inferred_features = FeatureMayAlwaysSet::bottom(),
@@ -966,7 +967,7 @@ TEST_F(JsonTest, TaintConfig) {
           })"),
           context),
       test::make_taint_config(
-          /* kind */ context.kinds->get("TestSource"),
+          /* kind */ context.kind_factory->get("TestSource"),
           test::FrameProperties{
               .inferred_features =
                   FeatureMayAlwaysSet{context.features->get("FeatureOne")},
@@ -980,7 +981,7 @@ TEST_F(JsonTest, TaintConfig) {
           })"),
           context),
       test::make_taint_config(
-          /* kind */ context.kinds->get("TestSource"),
+          /* kind */ context.kind_factory->get("TestSource"),
           test::FrameProperties{
               .inferred_features =
                   FeatureMayAlwaysSet{
@@ -997,7 +998,7 @@ TEST_F(JsonTest, TaintConfig) {
           })"),
           context),
       test::make_taint_config(
-          /* kind */ context.kinds->get("TestSource"),
+          /* kind */ context.kind_factory->get("TestSource"),
           test::FrameProperties{
               .inferred_features = FeatureMayAlwaysSet(
                   /* may */ FeatureSet{context.features->get("FeatureOne")},
@@ -1012,7 +1013,7 @@ TEST_F(JsonTest, TaintConfig) {
           })"),
           context),
       test::make_taint_config(
-          /* kind */ context.kinds->get("TestSource"),
+          /* kind */ context.kind_factory->get("TestSource"),
           test::FrameProperties{
               .inferred_features = FeatureMayAlwaysSet(
                   /* may */ FeatureSet{context.features->get("FeatureOne")},
@@ -1027,7 +1028,7 @@ TEST_F(JsonTest, TaintConfig) {
           })"),
           context),
       test::make_taint_config(
-          /* kind */ context.kinds->get("TestSource"),
+          /* kind */ context.kind_factory->get("TestSource"),
           test::FrameProperties{
               .inferred_features = FeatureMayAlwaysSet(
                   /* may */
@@ -1045,7 +1046,7 @@ TEST_F(JsonTest, TaintConfig) {
               })"),
           context),
       test::make_taint_config(
-          /* kind */ context.kinds->get("TestSource"),
+          /* kind */ context.kind_factory->get("TestSource"),
           test::FrameProperties{
               .inferred_features = FeatureMayAlwaysSet::bottom(),
               .locally_inferred_features = FeatureMayAlwaysSet::bottom(),
@@ -1060,7 +1061,7 @@ TEST_F(JsonTest, TaintConfig) {
               })"),
           context),
       test::make_taint_config(
-          /* kind */ context.kinds->get("TestSource"),
+          /* kind */ context.kind_factory->get("TestSource"),
           test::FrameProperties{
               .inferred_features = FeatureMayAlwaysSet::bottom(),
               .locally_inferred_features = FeatureMayAlwaysSet::bottom(),
@@ -1077,7 +1078,7 @@ TEST_F(JsonTest, TaintConfig) {
               })"),
           context),
       test::make_taint_config(
-          /* kind */ context.kinds->get("TestSource"),
+          /* kind */ context.kind_factory->get("TestSource"),
           test::FrameProperties{
               .inferred_features = FeatureMayAlwaysSet(
                   /* may */ FeatureSet{context.features->get("FeatureTwo")},
@@ -1096,7 +1097,7 @@ TEST_F(JsonTest, TaintConfig) {
               })"),
           context),
       test::make_taint_config(
-          /* kind */ context.kinds->get("TestSource"),
+          /* kind */ context.kind_factory->get("TestSource"),
           test::FrameProperties{
               .inferred_features = FeatureMayAlwaysSet(
                   /* may */ FeatureSet{context.features->get("FeatureTwo")},
@@ -1116,7 +1117,7 @@ TEST_F(JsonTest, TaintConfig) {
               })"),
           context),
       test::make_taint_config(
-          /* kind */ context.kinds->get("TestSource"),
+          /* kind */ context.kind_factory->get("TestSource"),
           test::FrameProperties{
               .locally_inferred_features = FeatureMayAlwaysSet::bottom(),
               .user_features =
@@ -1132,7 +1133,7 @@ TEST_F(JsonTest, TaintConfig) {
           })#"),
           context),
       test::make_taint_config(
-          /* kind */ context.kinds->get("TestSource"),
+          /* kind */ context.kind_factory->get("TestSource"),
           test::FrameProperties{
               .inferred_features = FeatureMayAlwaysSet::bottom(),
               .locally_inferred_features = FeatureMayAlwaysSet::bottom(),
@@ -1322,7 +1323,7 @@ TEST_F(JsonTest, Frame_Crtex) {
               })"),
           context),
       test::make_crtex_leaf_taint_config(
-          context.kinds->get("TestSource"),
+          context.kind_factory->get("TestSource"),
           /* callee_port */ AccessPath(Root(Root::Kind::Anchor)),
           /* canonical_names */
           CanonicalNameSetAbstractDomain{CanonicalName(
@@ -1337,7 +1338,7 @@ TEST_F(JsonTest, Frame_Crtex) {
               })#"),
           context),
       test::make_crtex_leaf_taint_config(
-          context.kinds->get("TestSource"),
+          context.kind_factory->get("TestSource"),
           /* callee_port */
           AccessPath(
               Root(Root::Kind::Producer),
@@ -1362,7 +1363,7 @@ TEST_F(JsonTest, Frame) {
   EXPECT_EQ(
       test::sorted_json(
           test::make_taint_frame(
-              /* kind */ context.kinds->get("TestSource"),
+              /* kind */ context.kind_factory->get("TestSource"),
               test::FrameProperties{
                   .inferred_features = FeatureMayAlwaysSet::make_always(
                       {context.features->get("FeatureTwo")}),
@@ -1393,7 +1394,7 @@ TEST_F(JsonTest, CallInfo) {
   EXPECT_EQ(
       test::sorted_json(
           test::make_taint_frame(
-              /* kind */ context.kinds->get("TestSource"),
+              /* kind */ context.kind_factory->get("TestSource"),
               test::FrameProperties{.call_info = CallInfo::Origin})
               .to_json(/* local_positions */ {})),
       test::parse_json(R"({
@@ -1402,7 +1403,7 @@ TEST_F(JsonTest, CallInfo) {
         })"));
   EXPECT_EQ(
       test::sorted_json(test::make_taint_frame(
-                            /* kind */ context.kinds->get("TestSource"),
+                            /* kind */ context.kind_factory->get("TestSource"),
                             test::FrameProperties{
                                 .distance = 5, .call_info = CallInfo::CallSite})
                             .to_json(/* local_positions */ {})),
@@ -1445,7 +1446,7 @@ TEST_F(JsonTest, Propagation) {
           context),
       PropagationConfig(
           /* input_path */ AccessPath(Root(Root::Kind::Argument, 1)),
-          /* kind */ context.kinds->local_return(),
+          /* kind */ context.kind_factory->local_return(),
           /* output_paths */
           PathTreeDomain{{Path{}, SingletonAbstractDomain()}},
           /* inferred_features */ FeatureMayAlwaysSet::bottom(),
@@ -1460,7 +1461,7 @@ TEST_F(JsonTest, Propagation) {
       PropagationConfig(
           /* input_path */ AccessPath(
               Root(Root::Kind::Argument, 1), Path{PathElement::field("x")}),
-          /* kind */ context.kinds->local_return(),
+          /* kind */ context.kind_factory->local_return(),
           /* output_paths */
           PathTreeDomain{{Path{}, SingletonAbstractDomain()}},
           /* inferred_features */
@@ -1475,7 +1476,7 @@ TEST_F(JsonTest, Propagation) {
           context),
       PropagationConfig(
           /* input_path */ AccessPath(Root(Root::Kind::Argument, 0)),
-          /* kind */ context.kinds->local_argument(1),
+          /* kind */ context.kind_factory->local_argument(1),
           /* output_paths */
           PathTreeDomain{
               {Path{PathElement::field("x")}, SingletonAbstractDomain()}},
@@ -1495,7 +1496,7 @@ TEST_F(JsonTest, Propagation) {
           context),
       PropagationConfig(
           /* input_path */ AccessPath(Root(Root::Kind::Argument, 1)),
-          /* kind */ context.kinds->local_return(),
+          /* kind */ context.kind_factory->local_return(),
           /* output_paths */
           PathTreeDomain{{Path{}, SingletonAbstractDomain()}},
           /* inferred_features */
@@ -1514,7 +1515,7 @@ TEST_F(JsonTest, Propagation) {
           context),
       PropagationConfig(
           /* input_path */ AccessPath(Root(Root::Kind::Argument, 1)),
-          /* kind */ context.kinds->local_return(),
+          /* kind */ context.kind_factory->local_return(),
           /* output_paths */
           PathTreeDomain{{Path{}, SingletonAbstractDomain()}},
           /* inferred_features */
@@ -1534,7 +1535,7 @@ TEST_F(JsonTest, Propagation) {
           context),
       PropagationConfig(
           /* input_path */ AccessPath(Root(Root::Kind::Argument, 1)),
-          /* kind */ context.kinds->local_return(),
+          /* kind */ context.kind_factory->local_return(),
           /* output_paths */
           PathTreeDomain{{Path{}, SingletonAbstractDomain()}},
           /* inferred_features */ FeatureMayAlwaysSet::bottom(),
@@ -1552,7 +1553,7 @@ TEST_F(JsonTest, Propagation) {
           context),
       PropagationConfig(
           /* input_path */ AccessPath(Root(Root::Kind::Argument, 1)),
-          /* kind */ context.kinds->local_return(),
+          /* kind */ context.kind_factory->local_return(),
           /* output_paths */
           PathTreeDomain{{Path{}, SingletonAbstractDomain()}},
           /* inferred_features */ FeatureMayAlwaysSet::bottom(),
@@ -1573,7 +1574,7 @@ TEST_F(JsonTest, Propagation) {
           context),
       PropagationConfig(
           /* input_path */ AccessPath(Root(Root::Kind::Argument, 1)),
-          /* kind */ context.kinds->local_return(),
+          /* kind */ context.kind_factory->local_return(),
           /* output_paths */
           PathTreeDomain{{Path{}, SingletonAbstractDomain()}},
           /* inferred_features */
@@ -1594,7 +1595,7 @@ TEST_F(JsonTest, Propagation) {
           context),
       PropagationConfig(
           /* input_path */ AccessPath(Root(Root::Kind::Argument, 1)),
-          /* kind */ context.kinds->local_return(),
+          /* kind */ context.kind_factory->local_return(),
           /* output_paths */
           PathTreeDomain{{Path{}, SingletonAbstractDomain()}},
           /* inferred_features */
@@ -1618,7 +1619,7 @@ TEST_F(JsonTest, Propagation) {
           context),
       PropagationConfig(
           /* input_path */ AccessPath(Root(Root::Kind::Argument, 1)),
-          /* kind */ context.kinds->local_return(),
+          /* kind */ context.kind_factory->local_return(),
           /* output_paths */
           PathTreeDomain{{Path{}, SingletonAbstractDomain()}},
           /* inferred_features */ FeatureMayAlwaysSet(),
@@ -1813,7 +1814,8 @@ TEST_F(JsonTest, Model) {
           /* frozen */ Model::FreezeKind::None,
           /* generations */
           {{AccessPath(Root(Root::Kind::Argument, 2)),
-            test::make_leaf_taint_config(context.kinds->get("source_kind"))}}));
+            test::make_leaf_taint_config(
+                context.kind_factory->get("source_kind"))}}));
   EXPECT_EQ(
       Model(
           method,
@@ -1822,7 +1824,8 @@ TEST_F(JsonTest, Model) {
           /* frozen */ Model::FreezeKind::None,
           /* generations */
           {{AccessPath(Root(Root::Kind::Argument, 2)),
-            test::make_leaf_taint_config(context.kinds->get("source_kind"))}})
+            test::make_leaf_taint_config(
+                context.kind_factory->get("source_kind"))}})
           .to_json(),
       test::parse_json(R"#({
       "method": "LData;.method:(LData;LData;)V",
@@ -1869,7 +1872,8 @@ TEST_F(JsonTest, Model) {
           /* generations */ {},
           /* parameter_sources */
           {{AccessPath(Root(Root::Kind::Argument, 1)),
-            test::make_leaf_taint_config(context.kinds->get("source_kind"))}}));
+            test::make_leaf_taint_config(
+                context.kind_factory->get("source_kind"))}}));
   EXPECT_EQ(
       Model(
           method,
@@ -1879,7 +1883,8 @@ TEST_F(JsonTest, Model) {
           /* generations */ {},
           /* parameter_sources */
           {{AccessPath(Root(Root::Kind::Argument, 1)),
-            test::make_leaf_taint_config(context.kinds->get("source_kind"))}})
+            test::make_leaf_taint_config(
+                context.kind_factory->get("source_kind"))}})
           .to_json(),
       test::parse_json(R"#({
       "method": "LData;.method:(LData;LData;)V",
@@ -1919,7 +1924,8 @@ TEST_F(JsonTest, Model) {
           /* frozen */ Model::FreezeKind::None,
           /* generations */
           {{AccessPath(Root(Root::Kind::Return)),
-            test::make_leaf_taint_config(context.kinds->get("source_kind"))}},
+            test::make_leaf_taint_config(
+                context.kind_factory->get("source_kind"))}},
           /* parameter_sources */ {}));
   EXPECT_EQ(
       Model::from_json(
@@ -1940,7 +1946,8 @@ TEST_F(JsonTest, Model) {
           /* frozen */ Model::FreezeKind::None,
           /* generations */
           {{AccessPath(Root(Root::Kind::Return)),
-            test::make_leaf_taint_config(context.kinds->get("source_kind"))}},
+            test::make_leaf_taint_config(
+                context.kind_factory->get("source_kind"))}},
           /* parameter_sources */ {}));
   EXPECT_EQ(
       Model::from_json(
@@ -1962,7 +1969,8 @@ TEST_F(JsonTest, Model) {
           /* generations */ {},
           /* parameter_sources */
           {{AccessPath(Root(Root::Kind::Argument, 1)),
-            test::make_leaf_taint_config(context.kinds->get("source_kind"))}}));
+            test::make_leaf_taint_config(
+                context.kind_factory->get("source_kind"))}}));
 
   EXPECT_THROW(
       Model::from_json(
@@ -2001,7 +2009,7 @@ TEST_F(JsonTest, Model) {
           {
               PropagationConfig(
                   /* input_path */ AccessPath(Root(Root::Kind::Argument, 1)),
-                  /* kind */ context.kinds->local_return(),
+                  /* kind */ context.kind_factory->local_return(),
                   /* output_paths */
                   PathTreeDomain{{Path{}, SingletonAbstractDomain()}},
                   /* inferred_features */ FeatureMayAlwaysSet::bottom(),
@@ -2009,7 +2017,7 @@ TEST_F(JsonTest, Model) {
                   /* user_features */ FeatureSet::bottom()),
               PropagationConfig(
                   /* input_path */ AccessPath(Root(Root::Kind::Argument, 2)),
-                  /* kind */ context.kinds->local_argument(0),
+                  /* kind */ context.kind_factory->local_argument(0),
                   /* output_paths */
                   PathTreeDomain{{Path{}, SingletonAbstractDomain()}},
                   /* inferred_features */ FeatureMayAlwaysSet::bottom(),
@@ -2031,7 +2039,7 @@ TEST_F(JsonTest, Model) {
                   PropagationConfig(
                       /* input_path */ AccessPath(
                           Root(Root::Kind::Argument, 1)),
-                      /* kind */ context.kinds->local_argument(0),
+                      /* kind */ context.kind_factory->local_argument(0),
                       /* output_paths */
                       PathTreeDomain{{Path{}, SingletonAbstractDomain()}},
                       /* inferred_features */ FeatureMayAlwaysSet::bottom(),
@@ -2041,7 +2049,7 @@ TEST_F(JsonTest, Model) {
                   PropagationConfig(
                       /* input_path */ AccessPath(
                           Root(Root::Kind::Argument, 2)),
-                      /* kind */ context.kinds->local_argument(0),
+                      /* kind */ context.kind_factory->local_argument(0),
                       /* output_paths */
                       PathTreeDomain{
                           {Path{PathElement::field("x")},
@@ -2088,9 +2096,9 @@ TEST_F(JsonTest, Model) {
         ]
       })#"));
 
-  const auto* kind1 = context.kinds->get("Kind1");
-  const auto* kind2 = context.kinds->get_partial("Kind2", "a");
-  const auto* kind3 = context.kinds->get("Kind3");
+  const auto* kind1 = context.kind_factory->get("Kind1");
+  const auto* kind2 = context.kind_factory->get_partial("Kind2", "a");
+  const auto* kind3 = context.kind_factory->get("Kind3");
   EXPECT_EQ(
       Model::from_json(
           method,
@@ -2119,7 +2127,7 @@ TEST_F(JsonTest, Model) {
           {
               PropagationConfig(
                   /* input_path */ AccessPath(Root(Root::Kind::Argument, 1)),
-                  /* kind */ context.kinds->local_return(),
+                  /* kind */ context.kind_factory->local_return(),
                   /* output_paths */
                   PathTreeDomain{{Path{}, SingletonAbstractDomain()}},
                   /* inferred_features */ FeatureMayAlwaysSet::bottom(),
@@ -2184,7 +2192,7 @@ TEST_F(JsonTest, Model) {
           {
               PropagationConfig(
                   /* input_path */ AccessPath(Root(Root::Kind::Argument, 1)),
-                  /* kind */ context.kinds->local_return(),
+                  /* kind */ context.kind_factory->local_return(),
                   /* output_paths */
                   PathTreeDomain{{Path{}, SingletonAbstractDomain()}},
                   /* inferred_features */ FeatureMayAlwaysSet::bottom(),
@@ -2262,7 +2270,8 @@ TEST_F(JsonTest, Model) {
           /* sinks */
           {
               {AccessPath(Root(Root::Kind::Argument, 2)),
-               test::make_leaf_taint_config(context.kinds->get("first_sink"))},
+               test::make_leaf_taint_config(
+                   context.kind_factory->get("first_sink"))},
           }));
   EXPECT_EQ(
       test::sorted_json(Model(
@@ -2276,7 +2285,7 @@ TEST_F(JsonTest, Model) {
                             {
                                 {AccessPath(Root(Root::Kind::Argument, 2)),
                                  test::make_leaf_taint_config(
-                                     context.kinds->get("first_sink"))},
+                                     context.kind_factory->get("first_sink"))},
                             })
                             .to_json()),
       test::parse_json(R"#({
@@ -2586,8 +2595,8 @@ TEST_F(JsonTest, Model) {
       /* name */ "Rule",
       /* code */ 1,
       /* description */ "",
-      Rule::KindSet{context.kinds->get("first_source")},
-      Rule::KindSet{context.kinds->get("first_sink")},
+      Rule::KindSet{context.kind_factory->get("first_source")},
+      Rule::KindSet{context.kind_factory->get("first_sink")},
       /* transforms */ nullptr);
   EXPECT_EQ(
       test::sorted_json(Model(
@@ -2609,10 +2618,10 @@ TEST_F(JsonTest, Model) {
                             /* inline_as */ AccessPathConstantDomain::bottom(),
                             IssueSet{Issue(
                                 /* source */ Taint{test::make_leaf_taint_config(
-                                    context.kinds->get("first_source"))},
+                                    context.kind_factory->get("first_source"))},
                                 /* sink */
                                 Taint{test::make_leaf_taint_config(
-                                    context.kinds->get("first_sink"))},
+                                    context.kind_factory->get("first_sink"))},
                                 rule.get(),
                                 /* callee */ "LClass;.someMethod:()V",
                                 /* sink_index */ 1,
@@ -2656,9 +2665,9 @@ TEST_F(JsonTest, FieldModel) {
   store.add_classes(scope);
   auto context = test::make_context(store);
   const auto* field = context.fields->get(dex_field);
-  const auto* source_kind = context.kinds->get("TestSource");
-  const auto* source_kind2 = context.kinds->get("TestSource2");
-  const auto* sink_kind = context.kinds->get("TestSink");
+  const auto* source_kind = context.kind_factory->get("TestSource");
+  const auto* source_kind2 = context.kind_factory->get("TestSource2");
+  const auto* sink_kind = context.kind_factory->get("TestSink");
   const auto* feature = context.features->get("test-feature");
 
   EXPECT_THROW(
@@ -2889,7 +2898,8 @@ TEST_F(JsonTest, CallEffectModel) {
   Model effect_source_model(entry_method, context);
   effect_source_model.add_call_effect_source(
       call_effect,
-      test::make_leaf_taint_config(context.kinds->get("CallChainOrigin")));
+      test::make_leaf_taint_config(
+          context.kind_factory->get("CallChainOrigin")));
 
   EXPECT_EQ(
       test::sorted_json(effect_source_model.to_json()), test::parse_json(R"#({
@@ -2915,7 +2925,7 @@ TEST_F(JsonTest, CallEffectModel) {
   Model effect_sink_model(exit_method, context);
   effect_sink_model.add_call_effect_sink(
       call_effect,
-      test::make_leaf_taint_config(context.kinds->get("CallChainSink")));
+      test::make_leaf_taint_config(context.kind_factory->get("CallChainSink")));
   EXPECT_EQ(
       test::sorted_json(effect_sink_model.to_json()), test::parse_json(R"#({
       "effect_sinks": [
@@ -2941,8 +2951,8 @@ TEST_F(JsonTest, CallEffectModel) {
       /* name */ "Rule",
       /* code */ 1,
       /* description */ "",
-      Rule::KindSet{context.kinds->get("CallChainOrigin")},
-      Rule::KindSet{context.kinds->get("CallChainSink")},
+      Rule::KindSet{context.kind_factory->get("CallChainOrigin")},
+      Rule::KindSet{context.kind_factory->get("CallChainSink")},
       /* transforms */ nullptr);
 
   auto source = effect_source_model.call_effect_sources().read(call_effect);

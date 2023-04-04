@@ -34,17 +34,19 @@ std::vector<int> to_codes(const std::vector<const RuleType*>& rules) {
 
 TEST_F(RuleTest, Rules) {
   auto context = test::make_empty_context();
-  auto* source_a = context.kinds->get("A");
-  auto* source_b = context.kinds->get("B");
-  auto* sink_x = context.kinds->get("X");
-  auto* sink_y = context.kinds->get("Y");
-  auto* sink_z = context.kinds->get("Z");
+  auto* source_a = context.kind_factory->get("A");
+  auto* source_b = context.kind_factory->get("B");
+  auto* sink_x = context.kind_factory->get("X");
+  auto* sink_y = context.kind_factory->get("Y");
+  auto* sink_z = context.kind_factory->get("Z");
 
   /* This creates the rule with the right combination of partial sinks.
      The testing of rule creation in practice is covered in JsonTest.cpp and
      asserted in the rule constructor. */
-  auto* partial_sink_lbl_a = context.kinds->get_partial("kind", "labelA");
-  auto* partial_sink_lbl_b = context.kinds->get_partial("kind", "labelB");
+  auto* partial_sink_lbl_a =
+      context.kind_factory->get_partial("kind", "labelA");
+  auto* partial_sink_lbl_b =
+      context.kind_factory->get_partial("kind", "labelB");
 
   std::vector<std::unique_ptr<Rule>> rule_list;
   rule_list.push_back(std::make_unique<SourceSinkRule>(
@@ -86,10 +88,10 @@ TEST_F(RuleTest, Rules) {
       /* partial_sink_kinds */
       MultiSourceMultiSinkRule::PartialKindSet{
           partial_sink_lbl_a, partial_sink_lbl_b});
-  auto* triggered_sink_lbl_a =
-      context.kinds->get_triggered(partial_sink_lbl_a, multi_source_rule.get());
-  auto* triggered_sink_lbl_b =
-      context.kinds->get_triggered(partial_sink_lbl_b, multi_source_rule.get());
+  auto* triggered_sink_lbl_a = context.kind_factory->get_triggered(
+      partial_sink_lbl_a, multi_source_rule.get());
+  auto* triggered_sink_lbl_b = context.kind_factory->get_triggered(
+      partial_sink_lbl_b, multi_source_rule.get());
   rule_list.push_back(std::move(multi_source_rule));
 
   auto rules = Rules(context, std::move(rule_list));
@@ -137,7 +139,7 @@ TEST_F(RuleTest, Rules) {
       /* partial_sink_kinds */
       MultiSourceMultiSinkRule::PartialKindSet{
           partial_sink_lbl_a, partial_sink_lbl_b});
-  auto* triggered_sink_invalid = context.kinds->get_triggered(
+  auto* triggered_sink_invalid = context.kind_factory->get_triggered(
       partial_sink_lbl_a, multi_source_rule_unused.get());
   EXPECT_TRUE(rules.rules(source_a, triggered_sink_invalid).empty());
 
@@ -155,10 +157,10 @@ TEST_F(RuleTest, Rules) {
 
 TEST_F(RuleTest, TransformRules) {
   auto context = test::make_empty_context();
-  auto* source_a = context.kinds->get("A");
-  auto* source_b = context.kinds->get("B");
-  auto* sink_x = context.kinds->get("X");
-  auto* sink_y = context.kinds->get("Y");
+  auto* source_a = context.kind_factory->get("A");
+  auto* source_b = context.kind_factory->get("B");
+  auto* sink_x = context.kind_factory->get("X");
+  auto* sink_y = context.kind_factory->get("Y");
 
   auto* t1 = context.transforms->create({"T1"}, context);
   auto* t2 = context.transforms->create({"T2"}, context);
@@ -200,7 +202,7 @@ TEST_F(RuleTest, TransformRules) {
   // Rule 1 checks
   EXPECT_THAT(
       to_codes(rules.rules(
-          context.kinds->transform_kind(
+          context.kind_factory->transform_kind(
               /* base_kind */ source_a,
               /* local_transforms */ t1,
               /* global_transforms */ nullptr),
@@ -208,21 +210,21 @@ TEST_F(RuleTest, TransformRules) {
       testing::UnorderedElementsAre(1));
   EXPECT_THAT(
       to_codes(rules.rules(
-          context.kinds->transform_kind(
+          context.kind_factory->transform_kind(
               /* base_kind */ source_a,
               /* local_transforms */ nullptr,
               /* global_transforms */ t1),
           sink_x)),
       testing::UnorderedElementsAre(1));
   EXPECT_TRUE(to_codes(rules.rules(
-                           context.kinds->transform_kind(
+                           context.kind_factory->transform_kind(
                                /* base_kind */ source_a,
                                /* local_transforms */ t1,
                                /* global_transforms */ t1),
                            sink_x))
                   .empty());
   EXPECT_TRUE(to_codes(rules.rules(
-                           context.kinds->transform_kind(
+                           context.kind_factory->transform_kind(
                                /* base_kind */ source_a,
                                /* local_transforms */ t2,
                                /* global_transforms */ nullptr),
@@ -231,7 +233,7 @@ TEST_F(RuleTest, TransformRules) {
   EXPECT_THAT(
       to_codes(rules.rules(
           source_a,
-          context.kinds->transform_kind(
+          context.kind_factory->transform_kind(
               /* base_kind */ sink_x,
               /* local_transforms */ t1,
               /* global_transforms */ nullptr))),
@@ -239,14 +241,14 @@ TEST_F(RuleTest, TransformRules) {
   EXPECT_THAT(
       to_codes(rules.rules(
           source_a,
-          context.kinds->transform_kind(
+          context.kind_factory->transform_kind(
               /* base_kind */ sink_x,
               /* local_transforms */ nullptr,
               /* global_transforms */ t1))),
       testing::UnorderedElementsAre(1));
   EXPECT_TRUE(to_codes(rules.rules(
                            source_a,
-                           context.kinds->transform_kind(
+                           context.kind_factory->transform_kind(
                                /* base_kind */ sink_x,
                                /* local_transforms */ t1,
                                /* global_transforms */ t1)))
@@ -255,7 +257,7 @@ TEST_F(RuleTest, TransformRules) {
   // Rule 2 checks
   EXPECT_THAT(
       to_codes(rules.rules(
-          context.kinds->transform_kind(
+          context.kind_factory->transform_kind(
               /* base_kind */ source_a,
               /* local_transforms */ t21,
               /* global_transforms */ nullptr),
@@ -263,7 +265,7 @@ TEST_F(RuleTest, TransformRules) {
       testing::UnorderedElementsAre(2));
   EXPECT_THAT(
       to_codes(rules.rules(
-          context.kinds->transform_kind(
+          context.kind_factory->transform_kind(
               /* base_kind */ source_a,
               /* local_transforms */ nullptr,
               /* global_transforms */ t21),
@@ -271,7 +273,7 @@ TEST_F(RuleTest, TransformRules) {
       testing::UnorderedElementsAre(2));
   EXPECT_THAT(
       to_codes(rules.rules(
-          context.kinds->transform_kind(
+          context.kind_factory->transform_kind(
               /* base_kind */ source_a,
               /* local_transforms */ t2,
               /* global_transforms */ t1),
@@ -279,14 +281,14 @@ TEST_F(RuleTest, TransformRules) {
       testing::UnorderedElementsAre(2));
 
   EXPECT_TRUE(to_codes(rules.rules(
-                           context.kinds->transform_kind(
+                           context.kind_factory->transform_kind(
                                /* base_kind */ source_a,
                                /* local_transforms */ t12,
                                /* global_transforms */ nullptr),
                            sink_x))
                   .empty());
   EXPECT_TRUE(to_codes(rules.rules(
-                           context.kinds->transform_kind(
+                           context.kind_factory->transform_kind(
                                /* base_kind */ source_a,
                                /* local_transforms */ nullptr,
                                /* global_transforms */ t12),
@@ -295,11 +297,11 @@ TEST_F(RuleTest, TransformRules) {
 
   EXPECT_THAT(
       to_codes(rules.rules(
-          context.kinds->transform_kind(
+          context.kind_factory->transform_kind(
               /* base_kind */ source_a,
               /* local_transforms */ t1,
               /* global_transforms */ nullptr),
-          context.kinds->transform_kind(
+          context.kind_factory->transform_kind(
               /* base_kind */ sink_x,
               /* local_transforms */ t2,
               /* global_transforms */ nullptr))),
@@ -308,7 +310,7 @@ TEST_F(RuleTest, TransformRules) {
   EXPECT_THAT(
       to_codes(rules.rules(
           source_a,
-          context.kinds->transform_kind(
+          context.kind_factory->transform_kind(
               /* base_kind */ sink_x,
               /* local_transforms */ t12,
               /* global_transforms */ nullptr))),
@@ -316,7 +318,7 @@ TEST_F(RuleTest, TransformRules) {
   EXPECT_THAT(
       to_codes(rules.rules(
           source_a,
-          context.kinds->transform_kind(
+          context.kind_factory->transform_kind(
               /* base_kind */ sink_x,
               /* local_transforms */ nullptr,
               /* global_transforms */ t12))),
@@ -324,14 +326,14 @@ TEST_F(RuleTest, TransformRules) {
   EXPECT_THAT(
       to_codes(rules.rules(
           source_a,
-          context.kinds->transform_kind(
+          context.kind_factory->transform_kind(
               /* base_kind */ sink_x,
               /* local_transforms */ t1,
               /* global_transforms */ t2))),
       testing::UnorderedElementsAre(2));
   EXPECT_TRUE(to_codes(rules.rules(
                            source_a,
-                           context.kinds->transform_kind(
+                           context.kind_factory->transform_kind(
                                /* base_kind */ sink_x,
                                /* local_transforms */ t1,
                                /* global_transforms */ t1)))
@@ -339,11 +341,11 @@ TEST_F(RuleTest, TransformRules) {
   // Rule 3 checks
   EXPECT_THAT(
       to_codes(rules.rules(
-          context.kinds->transform_kind(
+          context.kind_factory->transform_kind(
               /* base_kind */ source_b,
               /* local_transforms */ t1,
               /* global_transforms */ nullptr),
-          context.kinds->transform_kind(
+          context.kind_factory->transform_kind(
               /* base_kind */ sink_y,
               /* local_transforms */ t2,
               /* global_transforms */ nullptr))),
@@ -352,10 +354,10 @@ TEST_F(RuleTest, TransformRules) {
 
 TEST_F(RuleTest, Uses) {
   auto context = test::make_empty_context();
-  auto* source_a = context.kinds->get("A");
-  auto* source_b = context.kinds->get("B");
-  auto* sink_x = context.kinds->get("X");
-  auto* sink_y = context.kinds->get("Y");
+  auto* source_a = context.kind_factory->get("A");
+  auto* source_b = context.kind_factory->get("B");
+  auto* sink_x = context.kind_factory->get("X");
+  auto* sink_y = context.kind_factory->get("Y");
 
   /* Tests for SourceSinkRule */
   auto rule1 = std::make_unique<SourceSinkRule>(
@@ -371,8 +373,10 @@ TEST_F(RuleTest, Uses) {
   EXPECT_FALSE(rule1->uses(sink_y));
 
   /* Tests for MultiSourceMultiSink rule */
-  auto* partial_sink_lbl_a = context.kinds->get_partial("kind", "labelA");
-  auto* partial_sink_lbl_b = context.kinds->get_partial("kind", "labelB");
+  auto* partial_sink_lbl_a =
+      context.kind_factory->get_partial("kind", "labelA");
+  auto* partial_sink_lbl_b =
+      context.kind_factory->get_partial("kind", "labelB");
   auto rule2 = std::make_unique<MultiSourceMultiSinkRule>(
       /* name */ "Rule2",
       /* code */ 2,
@@ -389,9 +393,9 @@ TEST_F(RuleTest, Uses) {
   EXPECT_TRUE(rule2->uses(partial_sink_lbl_b));
 
   auto* triggered_sink_lbl_a =
-      context.kinds->get_triggered(partial_sink_lbl_a, rule2.get());
+      context.kind_factory->get_triggered(partial_sink_lbl_a, rule2.get());
   auto* triggered_sink_lbl_b =
-      context.kinds->get_triggered(partial_sink_lbl_b, rule2.get());
+      context.kind_factory->get_triggered(partial_sink_lbl_b, rule2.get());
   EXPECT_FALSE(rule2->uses(triggered_sink_lbl_a));
   EXPECT_FALSE(rule2->uses(triggered_sink_lbl_b));
   EXPECT_FALSE(rule2->uses(sink_y));

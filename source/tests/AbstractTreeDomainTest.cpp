@@ -2069,7 +2069,7 @@ Taint make_propagation(
     ParameterPosition parameter_position,
     Path output_path = {}) {
   return Taint::propagation_taint(
-      context.kinds->local_argument(parameter_position),
+      context.kind_factory->local_argument(parameter_position),
       /* output_paths */
       PathTreeDomain{{output_path, SingletonAbstractDomain{}}},
       /* inferred_features */ {},
@@ -2161,7 +2161,7 @@ TEST_F(AbstractTreeDomainTest, Propagate) {
 
 TEST_F(AbstractTreeDomainTest, Transform) {
   auto context = test::make_empty_context();
-  const auto kind = context.kinds->get("Test");
+  const auto kind = context.kind_factory->get("Test");
   const Feature broadening = Feature("via-broadening");
   const FeatureMayAlwaysSet features = FeatureMayAlwaysSet({&broadening});
   const auto& transform = [&features](Taint& taint) {

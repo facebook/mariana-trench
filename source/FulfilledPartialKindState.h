@@ -11,7 +11,7 @@
 
 #include <mariana-trench/FeatureMayAlwaysSet.h>
 #include <mariana-trench/IncludeMacros.h>
-#include <mariana-trench/Kinds.h>
+#include <mariana-trench/KindFactory.h>
 #include <mariana-trench/MultiSourceMultiSinkRule.h>
 #include <mariana-trench/Taint.h>
 #include <mariana-trench/TriggeredPartialKind.h>
@@ -53,7 +53,7 @@ class FulfilledPartialKindState final {
       const MultiSourceMultiSinkRule* rule,
       const FeatureMayAlwaysSet& features,
       const Taint& sink,
-      const Kinds& kinds_factory);
+      const KindFactory& kind_factory);
 
   /**
    * Given an `unfufilled_kind`, check if its counterpart flow has been
@@ -78,7 +78,7 @@ class FulfilledPartialKindState final {
    */
   std::vector<const Kind*> make_triggered_counterparts(
       const PartialKind* unfulfilled_kind,
-      const Kinds& kinds_factory) const;
+      const KindFactory& kind_factory) const;
 
  private:
   void add_fulfilled_kind(

@@ -149,7 +149,7 @@ Frame Frame::with_kind(const Kind* kind) const {
 }
 
 Frame Frame::apply_transform(
-    const Kinds& kinds,
+    const KindFactory& kind_factory,
     const Transforms& transforms,
     const UsedKinds& used_kinds,
     AccessPath callee_port,
@@ -167,8 +167,8 @@ Frame Frame::apply_transform(
   }
 
   mt_assert(base_kind != nullptr);
-  const auto* new_kind =
-      kinds.transform_kind(base_kind, local_transforms, global_transforms);
+  const auto* new_kind = kind_factory.transform_kind(
+      base_kind, local_transforms, global_transforms);
 
   if (!used_kinds.should_keep(new_kind)) {
     return Frame::bottom();

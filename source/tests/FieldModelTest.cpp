@@ -21,9 +21,9 @@ class FieldModelTest : public test::Test {};
 
 TEST_F(FieldModelTest, Join) {
   auto context = test::make_empty_context();
-  const auto* source_kind = context.kinds->get("TestSource");
-  const auto* source_kind2 = context.kinds->get("TestSource2");
-  const auto* sink_kind = context.kinds->get("TestSink");
+  const auto* source_kind = context.kind_factory->get("TestSource");
+  const auto* source_kind2 = context.kind_factory->get("TestSource2");
+  const auto* sink_kind = context.kind_factory->get("TestSink");
 
   FieldModel model;
   EXPECT_TRUE(model.sources().is_bottom());

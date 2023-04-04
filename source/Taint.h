@@ -19,6 +19,7 @@
 #include <mariana-trench/Frame.h>
 #include <mariana-trench/GroupHashedSetAbstractDomain.h>
 #include <mariana-trench/IncludeMacros.h>
+#include <mariana-trench/KindFactory.h>
 #include <mariana-trench/Log.h>
 #include <mariana-trench/PropagationConfig.h>
 #include <mariana-trench/TaintConfig.h>
@@ -166,7 +167,7 @@ class Taint final : public sparta::AbstractDomain<Taint> {
       const std::function<FeatureMayAlwaysSet(const Kind*)>&);
 
   Taint apply_transform(
-      const Kinds& kinds,
+      const KindFactory& kind_factory,
       const Transforms& transforms,
       const UsedKinds& used_kinds,
       const TransformList* local_transforms) const;

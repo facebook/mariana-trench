@@ -46,7 +46,8 @@ TEST_F(RegistryTest, remove_kinds) {
       std::make_unique<Rules>(Rules::load(context, *context.options));
   auto old_model_json = JsonValidation::null_or_array(
       registry.models_to_json(), /* field */ "models");
-  auto unused_kinds = context.rules->collect_unused_kinds(*context.kinds);
+  auto unused_kinds =
+      context.rules->collect_unused_kinds(*context.kind_factory);
   auto is_array_allocation = [](const Kind* kind) -> bool {
     const auto* named_kind = kind->as<NamedKind>();
     return named_kind != nullptr && named_kind->name() == "ArrayAllocation";
@@ -74,7 +75,7 @@ TEST_F(RegistryTest, remove_kinds) {
       "ArrayAllocation");
   UsedKinds::remove_unused_kinds(
       *context.rules,
-      *context.kinds,
+      *context.kind_factory,
       *context.methods,
       *context.artificial_methods,
       registry);
@@ -100,8 +101,8 @@ TEST_F(RegistryTest, JoinWith) {
   auto context = test::make_context(store);
   auto* method = context.methods->get(dex_method);
   auto field = context.fields->get(dex_field);
-  const auto* source_kind = context.kinds->get("TestSource");
-  const auto* source_kind_two = context.kinds->get("TestSourceTwo");
+  const auto* source_kind = context.kind_factory->get("TestSource");
+  const auto* source_kind_two = context.kind_factory->get("TestSourceTwo");
 
   auto registry = Registry(context);
   registry.join_with(Registry(
@@ -199,8 +200,8 @@ TEST_F(RegistryTest, ConstructorUseJoin) {
   auto context = test::make_context(store);
   auto* method = context.methods->get(dex_method);
   auto field = context.fields->get(dex_field);
-  const auto* source_kind = context.kinds->get("TestSource");
-  const auto* source_kind_two = context.kinds->get("TestSourceTwo");
+  const auto* source_kind = context.kind_factory->get("TestSource");
+  const auto* source_kind_two = context.kind_factory->get("TestSourceTwo");
 
   Model model_with_source(
       /* method */ method,

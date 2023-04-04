@@ -27,9 +27,9 @@ TEST_F(ModelTest, remove_kinds) {
   DexStore store("stores");
   store.add_classes(scope);
   auto context = test::make_context(store);
-  const auto* source_kind = context.kinds->get("TestSource");
-  const auto* sink_kind = context.kinds->get("TestSink");
-  const auto* removable_kind = context.kinds->get("RemoveMe");
+  const auto* source_kind = context.kind_factory->get("TestSource");
+  const auto* sink_kind = context.kind_factory->get("TestSink");
+  const auto* removable_kind = context.kind_factory->get("RemoveMe");
 
   Model model_with_removable_kind(
       /* method */ nullptr,
@@ -69,10 +69,11 @@ TEST_F(ModelTest, remove_kinds_call_effects) {
   DexStore store("stores");
   store.add_classes(scope);
   auto context = test::make_context(store);
-  const auto* source_kind = context.kinds->get("TestSource");
-  const auto* sink_kind = context.kinds->get("TestSink");
-  const auto* removable_source_kind = context.kinds->get("RemoveMeSource");
-  const auto* removable_sink_kind = context.kinds->get("RemoveMeSink");
+  const auto* source_kind = context.kind_factory->get("TestSource");
+  const auto* sink_kind = context.kind_factory->get("TestSink");
+  const auto* removable_source_kind =
+      context.kind_factory->get("RemoveMeSource");
+  const auto* removable_sink_kind = context.kind_factory->get("RemoveMeSink");
 
   CallEffect effect(CallEffect::Kind::CALL_CHAIN);
   Model model_with_removable_kind(
@@ -129,10 +130,10 @@ TEST_F(ModelTest, ModelConstructor) {
       (TaintAccessPathTree{
           {/* input */ AccessPath(Root(Root::Kind::Argument, 1)),
            Taint{test::make_propagation_taint_config(
-               context.kinds->local_argument(0))}},
+               context.kind_factory->local_argument(0))}},
           {/* input */ AccessPath(Root(Root::Kind::Argument, 2)),
            Taint{test::make_propagation_taint_config(
-               context.kinds->local_argument(0))}},
+               context.kind_factory->local_argument(0))}},
       }));
 
   auto* dex_untracked_method_returning_void = redex::create_void_method(
@@ -153,10 +154,10 @@ TEST_F(ModelTest, ModelConstructor) {
       (TaintAccessPathTree{
           {/* input */ AccessPath(Root(Root::Kind::Argument, 1)),
            Taint{test::make_propagation_taint_config(
-               context.kinds->local_argument(0))}},
+               context.kind_factory->local_argument(0))}},
           {/* input */ AccessPath(Root(Root::Kind::Argument, 2)),
            Taint{test::make_propagation_taint_config(
-               context.kinds->local_argument(0))}},
+               context.kind_factory->local_argument(0))}},
       }));
 
   auto* dex_untracked_method_returning_data = redex::create_void_method(
@@ -177,19 +178,19 @@ TEST_F(ModelTest, ModelConstructor) {
       (TaintAccessPathTree{
           {/* input */ AccessPath(Root(Root::Kind::Argument, 0)),
            Taint{test::make_propagation_taint_config(
-               context.kinds->local_return())}},
+               context.kind_factory->local_return())}},
           {/* input */ AccessPath(Root(Root::Kind::Argument, 1)),
            Taint{test::make_propagation_taint_config(
-               context.kinds->local_return())}},
+               context.kind_factory->local_return())}},
           {/* input */ AccessPath(Root(Root::Kind::Argument, 1)),
            Taint{test::make_propagation_taint_config(
-               context.kinds->local_argument(0))}},
+               context.kind_factory->local_argument(0))}},
           {/* input */ AccessPath(Root(Root::Kind::Argument, 2)),
            Taint{test::make_propagation_taint_config(
-               context.kinds->local_return())}},
+               context.kind_factory->local_return())}},
           {/* input */ AccessPath(Root(Root::Kind::Argument, 2)),
            Taint{test::make_propagation_taint_config(
-               context.kinds->local_argument(0))}},
+               context.kind_factory->local_argument(0))}},
       }));
 
   auto* dex_untracked_static_method = redex::create_void_method(
@@ -211,16 +212,16 @@ TEST_F(ModelTest, ModelConstructor) {
       (TaintAccessPathTree{
           {/* input */ AccessPath(Root(Root::Kind::Argument, 0)),
            Taint{test::make_propagation_taint_config(
-               context.kinds->local_return())}},
+               context.kind_factory->local_return())}},
           {/* input */ AccessPath(Root(Root::Kind::Argument, 1)),
            Taint{test::make_propagation_taint_config(
-               context.kinds->local_return())}},
+               context.kind_factory->local_return())}},
       }));
 }
 
 TEST_F(ModelTest, LessOrEqual) {
   auto context = test::make_empty_context();
-  const auto* source_kind = context.kinds->get("TestSource");
+  const auto* source_kind = context.kind_factory->get("TestSource");
 
   EXPECT_TRUE(Model().leq(Model()));
 
@@ -252,7 +253,7 @@ TEST_F(ModelTest, LessOrEqual) {
                       {{AccessPath(Root(Root::Kind::Return)),
                         test::make_leaf_taint_config(source_kind)}})));
 
-  const auto* other_source_kind = context.kinds->get("OtherTestSource");
+  const auto* other_source_kind = context.kind_factory->get("OtherTestSource");
   EXPECT_TRUE(Model(
                   /* method */ nullptr,
                   context,
@@ -368,7 +369,7 @@ TEST_F(ModelTest, LessOrEqual) {
           {
               PropagationConfig(
                   /* input_path */ AccessPath(Root(Root::Kind::Argument, 1)),
-                  /* kind */ context.kinds->local_return(),
+                  /* kind */ context.kind_factory->local_return(),
                   /* output_paths */
                   PathTreeDomain{
                       {Path{PathElement::field("x")},
@@ -390,7 +391,7 @@ TEST_F(ModelTest, LessOrEqual) {
                   PropagationConfig(
                       /* input_path */ AccessPath(
                           Root(Root::Kind::Argument, 1)),
-                      /* kind */ context.kinds->local_return(),
+                      /* kind */ context.kind_factory->local_return(),
                       /* output_paths */
                       PathTreeDomain{{Path{}, SingletonAbstractDomain()}},
                       /* inferred_features */ FeatureMayAlwaysSet::bottom(),
@@ -438,7 +439,7 @@ TEST_F(ModelTest, LessOrEqual) {
           /* global_sanitizers */
           {Sanitizer(
               SanitizerKind::Sources,
-              KindSetAbstractDomain({context.kinds->get("Kind")}))})
+              KindSetAbstractDomain({context.kind_factory->get("Kind")}))})
           .leq(Model(
               /* method */ nullptr,
               context,
@@ -468,7 +469,7 @@ TEST_F(ModelTest, LessOrEqual) {
           {{Root(Root::Kind::Return),
             SanitizerSet(Sanitizer(
                 SanitizerKind::Sources,
-                KindSetAbstractDomain({context.kinds->get("Kind")})))}})
+                KindSetAbstractDomain({context.kind_factory->get("Kind")})))}})
           .leq(Model(
               /* method */ nullptr,
               context,
@@ -573,8 +574,8 @@ TEST_F(ModelTest, Join) {
   using PortTaint = std::pair<AccessPath, Taint>;
 
   auto context = test::make_empty_context();
-  const auto* source_kind = context.kinds->get("TestSource");
-  const auto* sink_kind = context.kinds->get("TestSink");
+  const auto* source_kind = context.kind_factory->get("TestSource");
+  const auto* sink_kind = context.kind_factory->get("TestSink");
   auto rule = std::make_unique<SourceSinkRule>(
       "rule",
       1,
@@ -651,7 +652,7 @@ TEST_F(ModelTest, Join) {
           Taint{test::make_leaf_taint_config(source_kind)}}));
   EXPECT_TRUE(model.sinks().is_bottom());
 
-  const auto* other_source_kind = context.kinds->get("OtherTestSource");
+  const auto* other_source_kind = context.kind_factory->get("OtherTestSource");
   Model model_with_other_source(
       /* method */ nullptr,
       context,
@@ -708,7 +709,7 @@ TEST_F(ModelTest, Join) {
       {
           PropagationConfig(
               /* input_path */ AccessPath(Root(Root::Kind::Argument, 1)),
-              /* kind */ context.kinds->local_return(),
+              /* kind */ context.kind_factory->local_return(),
               /* output_paths */
               PathTreeDomain{{Path{}, SingletonAbstractDomain()}},
               /* inferred_features */ FeatureMayAlwaysSet::bottom(),
@@ -716,7 +717,7 @@ TEST_F(ModelTest, Join) {
               /* user_features */ {}),
           PropagationConfig(
               /* input_path */ AccessPath(Root(Root::Kind::Argument, 2)),
-              /* kind */ context.kinds->local_return(),
+              /* kind */ context.kind_factory->local_return(),
               /* output_paths */
               PathTreeDomain{{Path{}, SingletonAbstractDomain()}},
               /* inferred_features */ FeatureMayAlwaysSet::bottom(),
@@ -729,10 +730,10 @@ TEST_F(ModelTest, Join) {
       (TaintAccessPathTree{
           {/* input */ AccessPath(Root(Root::Kind::Argument, 1)),
            Taint{test::make_propagation_taint_config(
-               context.kinds->local_return())}},
+               context.kind_factory->local_return())}},
           {/* input */ AccessPath(Root(Root::Kind::Argument, 2)),
            Taint{test::make_propagation_taint_config(
-               context.kinds->local_return())}},
+               context.kind_factory->local_return())}},
       }));
   Model model_with_more_propagation(
       /* method */ nullptr,
@@ -746,7 +747,7 @@ TEST_F(ModelTest, Join) {
       {
           PropagationConfig(
               /* input_path */ AccessPath(Root(Root::Kind::Argument, 1)),
-              /* kind */ context.kinds->local_return(),
+              /* kind */ context.kind_factory->local_return(),
               /* output_paths */
               PathTreeDomain{
                   {Path{PathElement::field("x")}, SingletonAbstractDomain()}},
@@ -755,7 +756,7 @@ TEST_F(ModelTest, Join) {
               /* user_features */ {}),
           PropagationConfig(
               /* input_path */ AccessPath(Root(Root::Kind::Argument, 3)),
-              /* kind */ context.kinds->local_return(),
+              /* kind */ context.kind_factory->local_return(),
               /* output_paths */
               PathTreeDomain{
                   {Path{PathElement::field("x")}, SingletonAbstractDomain()}},
@@ -769,13 +770,13 @@ TEST_F(ModelTest, Join) {
       (TaintAccessPathTree{
           {/* input */ AccessPath(Root(Root::Kind::Argument, 1)),
            Taint{test::make_propagation_taint_config(
-               context.kinds->local_return())}},
+               context.kind_factory->local_return())}},
           {/* input */ AccessPath(Root(Root::Kind::Argument, 2)),
            Taint{test::make_propagation_taint_config(
-               context.kinds->local_return())}},
+               context.kind_factory->local_return())}},
           {/* input */ AccessPath(Root(Root::Kind::Argument, 3)),
            Taint{test::make_propagation_taint_config(
-               context.kinds->local_return(),
+               context.kind_factory->local_return(),
                /* input_paths */
                PathTreeDomain{
                    {Path{PathElement::field("x")}, SingletonAbstractDomain()}},
@@ -793,7 +794,7 @@ TEST_F(ModelTest, Join) {
       /* propagations */
       {{PropagationConfig(
           /* input_path */ AccessPath(Root(Root::Kind::Argument, 1)),
-          /* kind */ context.kinds->local_return(),
+          /* kind */ context.kind_factory->local_return(),
           /* output_paths */
           PathTreeDomain{
               {Path{PathElement::field("y")}, SingletonAbstractDomain()}},
@@ -806,13 +807,13 @@ TEST_F(ModelTest, Join) {
       (TaintAccessPathTree{
           {/* input */ AccessPath(Root(Root::Kind::Argument, 1)),
            Taint{test::make_propagation_taint_config(
-               context.kinds->local_return())}},
+               context.kind_factory->local_return())}},
           {/* input */ AccessPath(Root(Root::Kind::Argument, 2)),
            Taint{test::make_propagation_taint_config(
-               context.kinds->local_return())}},
+               context.kind_factory->local_return())}},
           {/* input */ AccessPath(Root(Root::Kind::Argument, 3)),
            Taint{test::make_propagation_taint_config(
-               context.kinds->local_return(),
+               context.kind_factory->local_return(),
                /* input_paths */
                PathTreeDomain{
                    {Path{PathElement::field("x")}, SingletonAbstractDomain()}},
@@ -831,7 +832,7 @@ TEST_F(ModelTest, Join) {
       {
           PropagationConfig(
               /* input_path */ AccessPath(Root(Root::Kind::Argument, 1)),
-              /* kind */ context.kinds->local_return(),
+              /* kind */ context.kind_factory->local_return(),
               /* output_paths */
               PathTreeDomain{{Path{}, SingletonAbstractDomain()}},
               /* inferred_features */
@@ -840,7 +841,7 @@ TEST_F(ModelTest, Join) {
               /* user_features */ {}),
           PropagationConfig(
               /* input_path */ AccessPath(Root(Root::Kind::Argument, 1)),
-              /* kind */ context.kinds->local_return(),
+              /* kind */ context.kind_factory->local_return(),
               /* output_paths */
               PathTreeDomain{{Path{}, SingletonAbstractDomain()}},
               /* inferred_features */
@@ -849,7 +850,7 @@ TEST_F(ModelTest, Join) {
               /* user_features */ {}),
           PropagationConfig(
               /* input_path */ AccessPath(Root(Root::Kind::Argument, 3)),
-              /* kind */ context.kinds->local_return(),
+              /* kind */ context.kind_factory->local_return(),
               /* output_paths */
               PathTreeDomain{{Path{}, SingletonAbstractDomain()}},
               /* inferred_features */
@@ -863,7 +864,7 @@ TEST_F(ModelTest, Join) {
       (TaintAccessPathTree{
           {/* input */ AccessPath(Root(Root::Kind::Argument, 1)),
            Taint{test::make_propagation_taint_config(
-               context.kinds->local_return(),
+               context.kind_factory->local_return(),
                /* input_paths */
                PathTreeDomain{{Path{}, SingletonAbstractDomain()}},
                /* inferred_features */
@@ -873,10 +874,10 @@ TEST_F(ModelTest, Join) {
                /* user_features */ {})}},
           {/* input */ AccessPath(Root(Root::Kind::Argument, 2)),
            Taint{test::make_propagation_taint_config(
-               context.kinds->local_return())}},
+               context.kind_factory->local_return())}},
           {/* input */ AccessPath(Root(Root::Kind::Argument, 3)),
            Taint{test::make_propagation_taint_config(
-               context.kinds->local_return(),
+               context.kind_factory->local_return(),
                /* input_paths */
                PathTreeDomain{{Path{}, SingletonAbstractDomain()}},
                /* inferred_features */
@@ -885,8 +886,8 @@ TEST_F(ModelTest, Join) {
       }));
 
   // Join models with global sanitizers
-  const auto* kind1 = context.kinds->get("Kind1");
-  const auto* kind2 = context.kinds->get("Kind2");
+  const auto* kind1 = context.kind_factory->get("Kind1");
+  const auto* kind2 = context.kind_factory->get("Kind2");
   auto model_with_sanitizers = Model(
       /* method */ nullptr,
       context,

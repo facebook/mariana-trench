@@ -20,10 +20,10 @@ PropagationConfig PropagationConfig::from_json(
   auto output = AccessPath::from_json(value["output"]);
   const PropagationKind* propagation_kind = nullptr;
   if (output.root().is_return()) {
-    propagation_kind = context.kinds->local_return();
+    propagation_kind = context.kind_factory->local_return();
   } else if (output.root().is_argument()) {
-    propagation_kind =
-        context.kinds->local_argument(output.root().parameter_position());
+    propagation_kind = context.kind_factory->local_argument(
+        output.root().parameter_position());
   } else {
     throw JsonValidationError(
         value,
@@ -46,7 +46,7 @@ PropagationConfig PropagationConfig::from_json(
 
   const Kind* kind = nullptr;
   if (value.isMember("transforms")) {
-    kind = context.kinds->transform_kind(
+    kind = context.kind_factory->transform_kind(
         /* base_kind */ propagation_kind,
         /* local_transforms */
         context.transforms->create(

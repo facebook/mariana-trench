@@ -6,7 +6,7 @@
  */
 
 #include <mariana-trench/Assert.h>
-#include <mariana-trench/Kinds.h>
+#include <mariana-trench/KindFactory.h>
 #include <mariana-trench/LocalArgumentKind.h>
 #include <mariana-trench/LocalReturnKind.h>
 #include <mariana-trench/NamedKind.h>
@@ -15,41 +15,42 @@
 
 namespace marianatrench {
 
-Kinds::Kinds() : local_return_(std::make_unique<LocalReturnKind>()) {
+KindFactory::KindFactory()
+    : local_return_(std::make_unique<LocalReturnKind>()) {
   local_receiver_ = local_argument_.create(0);
 }
 
-const NamedKind* Kinds::get(const std::string& name) const {
+const NamedKind* KindFactory::get(const std::string& name) const {
   return named_.create(name);
 }
 
-const PartialKind* Kinds::get_partial(
+const PartialKind* KindFactory::get_partial(
     const std::string& name,
     const std::string& label) const {
   return partial_.create(std::make_tuple(name, label), name, label);
 }
 
-const TriggeredPartialKind* Kinds::get_triggered(
+const TriggeredPartialKind* KindFactory::get_triggered(
     const PartialKind* partial,
     const MultiSourceMultiSinkRule* rule) const {
   return triggered_partial_.create(
       std::make_tuple(partial, rule), partial, rule);
 }
 
-const LocalReturnKind* Kinds::local_return() const {
+const LocalReturnKind* KindFactory::local_return() const {
   return local_return_.get();
 }
 
-const LocalArgumentKind* Kinds::local_receiver() const {
+const LocalArgumentKind* KindFactory::local_receiver() const {
   return local_receiver_;
 }
 
-const LocalArgumentKind* Kinds::local_argument(
+const LocalArgumentKind* KindFactory::local_argument(
     ParameterPosition parameter) const {
   return local_argument_.create(parameter);
 }
 
-const TransformKind* Kinds::transform_kind(
+const TransformKind* KindFactory::transform_kind(
     const Kind* base_kind,
     const TransformList* MT_NULLABLE local_transforms,
     const TransformList* MT_NULLABLE global_transforms) const {
@@ -64,7 +65,7 @@ const TransformKind* Kinds::transform_kind(
       global_transforms);
 }
 
-std::vector<const Kind*> Kinds::kinds() const {
+std::vector<const Kind*> KindFactory::kinds() const {
   std::vector<const Kind*> result;
   result.push_back(local_return_.get());
   result.push_back(local_receiver_);

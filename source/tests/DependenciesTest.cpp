@@ -45,8 +45,8 @@ Context test_dependencies(const Scope& scope) {
   DexStore store("test_store");
   store.add_classes(scope);
   context.stores = {store};
-  context.artificial_methods =
-      std::make_unique<ArtificialMethods>(*context.kinds, context.stores);
+  context.artificial_methods = std::make_unique<ArtificialMethods>(
+      *context.kind_factory, context.stores);
   context.methods = std::make_unique<Methods>(context.stores);
   MethodMappings method_mappings{*context.methods};
   context.control_flow_graphs =

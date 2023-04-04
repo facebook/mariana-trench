@@ -6,7 +6,7 @@
  */
 
 #include <mariana-trench/JsonValidation.h>
-#include <mariana-trench/Kinds.h>
+#include <mariana-trench/KindFactory.h>
 #include <mariana-trench/MultiSourceMultiSinkRule.h>
 #include <mariana-trench/Rule.h>
 #include <mariana-trench/SourceSinkRule.h>

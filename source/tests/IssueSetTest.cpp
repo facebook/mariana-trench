@@ -19,10 +19,10 @@ class IssueSetTest : public test::Test {};
 TEST_F(IssueSetTest, Insertion) {
   auto context = test::make_empty_context();
 
-  const auto* source_kind = context.kinds->get("TestSource");
-  const auto* other_source_kind = context.kinds->get("OtherSource");
-  const auto* sink_kind = context.kinds->get("TestSink");
-  const auto* other_sink_kind = context.kinds->get("OtherSink");
+  const auto* source_kind = context.kind_factory->get("TestSource");
+  const auto* other_source_kind = context.kind_factory->get("OtherSource");
+  const auto* sink_kind = context.kind_factory->get("TestSink");
+  const auto* other_sink_kind = context.kind_factory->get("OtherSink");
 
   SourceSinkRule rule_1(
       "rule 1",

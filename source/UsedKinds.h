@@ -9,7 +9,7 @@
 
 #include <mariana-trench/Context.h>
 #include <mariana-trench/IncludeMacros.h>
-#include <mariana-trench/Kinds.h>
+#include <mariana-trench/KindFactory.h>
 #include <mariana-trench/Registry.h>
 #include <mariana-trench/TransformKind.h>
 #include <mariana-trench/Transforms.h>
@@ -37,7 +37,7 @@ class UsedKinds {
    */
   static std::unordered_set<const Kind*> remove_unused_kinds(
       const Rules& rules,
-      const Kinds& kinds,
+      const KindFactory& kind_factory,
       const Methods& methods,
       ArtificialMethods& artificial_methods,
       Registry& registry);

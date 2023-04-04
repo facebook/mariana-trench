@@ -16,11 +16,11 @@ namespace marianatrench {
 
 std::unordered_set<const Kind*> UsedKinds::remove_unused_kinds(
     const Rules& rules,
-    const Kinds& kinds,
+    const KindFactory& kind_factory,
     const Methods& methods,
     ArtificialMethods& artificial_methods,
     Registry& registry) {
-  auto unused_kinds = rules.collect_unused_kinds(kinds);
+  auto unused_kinds = rules.collect_unused_kinds(kind_factory);
   auto queue = sparta::work_queue<const Method*>(
       [&](const Method* method) {
         auto model = registry.get(method);

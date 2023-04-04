@@ -66,10 +66,10 @@ TEST_F(UsedKindsTest, Combinations) {
 
 TEST_F(UsedKindsTest, UsedTransformKinds) {
   auto context = test::make_empty_context();
-  const auto* source_a = context.kinds->get("A");
-  const auto* source_b = context.kinds->get("B");
-  const auto* sink_x = context.kinds->get("X");
-  const auto* sink_y = context.kinds->get("Y");
+  const auto* source_a = context.kind_factory->get("A");
+  const auto* source_b = context.kind_factory->get("B");
+  const auto* sink_x = context.kind_factory->get("X");
+  const auto* sink_y = context.kind_factory->get("Y");
 
   const auto* t11 = context.transforms->create({"1", "1"}, context);
   const auto* t1234 = context.transforms->create({"1", "2", "3", "4"}, context);

@@ -23,8 +23,8 @@ TEST_F(CalleeFramesTest, Add) {
   auto* one = context.methods->create(
       redex::create_void_method(scope, "LClass;", "one"));
 
-  auto* source_kind_one = context.kinds->get("TestSourceOne");
-  auto* source_kind_two = context.kinds->get("TestSourceTwo");
+  auto* source_kind_one = context.kind_factory->get("TestSourceOne");
+  auto* source_kind_two = context.kind_factory->get("TestSourceTwo");
 
   auto* position_one = context.positions->get(std::nullopt, 1);
 
@@ -72,8 +72,8 @@ TEST_F(CalleeFramesTest, Add) {
 TEST_F(CalleeFramesTest, Leq) {
   auto context = test::make_empty_context();
 
-  auto* test_kind_one = context.kinds->get("TestSinkOne");
-  auto* test_kind_two = context.kinds->get("TestSinkTwo");
+  auto* test_kind_one = context.kind_factory->get("TestSinkOne");
+  auto* test_kind_two = context.kind_factory->get("TestSinkTwo");
   auto* test_position_one = context.positions->get(std::nullopt, 1);
   auto* test_position_two = context.positions->get(std::nullopt, 2);
 
@@ -147,8 +147,8 @@ TEST_F(CalleeFramesTest, Leq) {
 TEST_F(CalleeFramesTest, Equals) {
   auto context = test::make_empty_context();
 
-  auto* test_kind_one = context.kinds->get("TestSinkOne");
-  auto* test_kind_two = context.kinds->get("TestSinkTwo");
+  auto* test_kind_one = context.kind_factory->get("TestSinkOne");
+  auto* test_kind_two = context.kind_factory->get("TestSinkTwo");
   auto* test_position_one = context.positions->get(std::nullopt, 1);
   auto* test_position_two = context.positions->get(std::nullopt, 2);
 
@@ -192,7 +192,7 @@ TEST_F(CalleeFramesTest, JoinWith) {
   auto* one = context.methods->create(
       redex::create_void_method(scope, "LClass;", "one"));
 
-  auto* test_kind_one = context.kinds->get("TestSinkOne");
+  auto* test_kind_one = context.kind_factory->get("TestSinkOne");
   auto* test_position_one = context.positions->get(std::nullopt, 1);
   auto* test_position_two = context.positions->get(std::nullopt, 2);
   auto* feature_one = context.features->get("FeatureOne");
@@ -283,8 +283,8 @@ TEST_F(CalleeFramesTest, Difference) {
   auto* one =
       context.methods->create(redex::create_void_method(scope, "LOne;", "one"));
 
-  auto* test_kind_one = context.kinds->get("TestSinkOne");
-  auto* test_kind_two = context.kinds->get("TestSinkTwo");
+  auto* test_kind_one = context.kind_factory->get("TestSinkOne");
+  auto* test_kind_two = context.kind_factory->get("TestSinkTwo");
   auto* test_position_one = context.positions->get(std::nullopt, 1);
   auto* test_position_two = context.positions->get(std::nullopt, 2);
   auto* feature_one = context.features->get("FeatureOne");
@@ -504,8 +504,8 @@ TEST_F(CalleeFramesTest, Difference) {
 TEST_F(CalleeFramesTest, Iterator) {
   auto context = test::make_empty_context();
 
-  auto* test_kind_one = context.kinds->get("TestSinkOne");
-  auto* test_kind_two = context.kinds->get("TestSinkTwo");
+  auto* test_kind_one = context.kind_factory->get("TestSinkOne");
+  auto* test_kind_two = context.kind_factory->get("TestSinkTwo");
   auto* test_position_one = context.positions->get(std::nullopt, 1);
   auto* test_position_two = context.positions->get(std::nullopt, 2);
 
@@ -554,7 +554,7 @@ TEST_F(CalleeFramesTest, Map) {
   Scope scope;
   auto* one =
       context.methods->create(redex::create_void_method(scope, "LOne;", "one"));
-  auto* test_kind = context.kinds->get("TestSink");
+  auto* test_kind = context.kind_factory->get("TestSink");
   auto* test_position_one = context.positions->get(std::nullopt, 1);
   auto* test_position_two = context.positions->get(std::nullopt, 2);
   auto* feature_one = context.features->get("FeatureOne");
@@ -604,8 +604,8 @@ TEST_F(CalleeFramesTest, FeaturesAndPositions) {
   auto context = test::make_empty_context();
 
   Scope scope;
-  auto* test_kind_one = context.kinds->get("TestSinkOne");
-  auto* test_kind_two = context.kinds->get("TestSinkTwo");
+  auto* test_kind_one = context.kind_factory->get("TestSinkOne");
+  auto* test_kind_two = context.kind_factory->get("TestSinkTwo");
   auto* test_position_one = context.positions->get(std::nullopt, 1);
   auto* test_position_two = context.positions->get(std::nullopt, 2);
   auto* feature_one = context.features->get("FeatureOne");
@@ -668,8 +668,8 @@ TEST_F(CalleeFramesTest, Propagate) {
   auto* one =
       context.methods->create(redex::create_void_method(scope, "LOne;", "one"));
 
-  auto* test_kind_one = context.kinds->get("TestSinkOne");
-  auto* test_kind_two = context.kinds->get("TestSinkTwo");
+  auto* test_kind_one = context.kind_factory->get("TestSinkOne");
+  auto* test_kind_two = context.kind_factory->get("TestSinkTwo");
   auto* test_position_one = context.positions->get("Test.java", 1);
   auto* test_position_two = context.positions->get("Test.java", 2);
   auto* feature_one = context.features->get("FeatureOne");
@@ -856,8 +856,8 @@ TEST_F(CalleeFramesTest, AttachPosition) {
 
   auto* feature_one = context.features->get("FeatureOne");
   auto* feature_two = context.features->get("FeatureTwo");
-  auto* test_kind_one = context.kinds->get("TestSinkOne");
-  auto* test_kind_two = context.kinds->get("TestSinkTwo");
+  auto* test_kind_one = context.kind_factory->get("TestSinkOne");
+  auto* test_kind_two = context.kind_factory->get("TestSinkTwo");
   auto* test_position_one = context.positions->get(std::nullopt, 1);
   auto* test_position_two = context.positions->get(std::nullopt, 2);
   auto* test_position_three = context.positions->get(std::nullopt, 3);

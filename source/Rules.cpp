@@ -8,7 +8,7 @@
 #include <Show.h>
 
 #include <mariana-trench/JsonValidation.h>
-#include <mariana-trench/Kinds.h>
+#include <mariana-trench/KindFactory.h>
 #include <mariana-trench/Log.h>
 #include <mariana-trench/MultiSourceMultiSinkRule.h>
 #include <mariana-trench/Options.h>
@@ -18,14 +18,16 @@
 namespace marianatrench {
 
 Rules::Rules(Context& context, std::vector<std::unique_ptr<Rule>> rules)
-    : transforms_factory(*context.transforms), kinds_factory(*context.kinds) {
+    : transforms_factory(*context.transforms),
+      kind_factory(*context.kind_factory) {
   for (auto& rule : rules) {
     add(context, std::move(rule));
   }
 }
 
 Rules::Rules(Context& context, const Json::Value& rules_value)
-    : transforms_factory(*context.transforms), kinds_factory(*context.kinds) {
+    : transforms_factory(*context.transforms),
+      kind_factory(*context.kind_factory) {
   for (const auto& rule_value : JsonValidation::null_or_array(rules_value)) {
     add(context, Rule::from_json(rule_value, context));
   }
@@ -70,7 +72,7 @@ void Rules::add(Context& context, std::unique_ptr<Rule> rule) {
           continue;
         }
 
-        const auto* sink_transform_kind = context.kinds->transform_kind(
+        const auto* sink_transform_kind = context.kind_factory->transform_kind(
             sink_kind,
             /* local transforms */ transforms,
             /* global transforms */ nullptr);
@@ -114,7 +116,7 @@ void Rules::add(Context& context, std::unique_ptr<Rule> rule) {
         for (const auto* sink_kind :
              multi_source_rule->partial_sink_kinds(source_label)) {
           const auto* triggered =
-              context.kinds->get_triggered(sink_kind, multi_source_rule);
+              context.kind_factory->get_triggered(sink_kind, multi_source_rule);
           source_to_partial_sink_to_rules_[source_kind][sink_kind].push_back(
               multi_source_rule);
           source_to_sink_to_rules_[source_kind][triggered].push_back(
@@ -154,7 +156,7 @@ const std::vector<const Rule*>& Rules::rules(
   }
 
   if (all_transforms != nullptr) {
-    sink_kind = kinds_factory.transform_kind(
+    sink_kind = kind_factory.transform_kind(
         sink_kind->discard_transforms(),
         /* local transforms */ all_transforms,
         /* global transforms */ nullptr);
@@ -196,9 +198,9 @@ const std::vector<const MultiSourceMultiSinkRule*>& Rules::partial_rules(
 }
 
 std::unordered_set<const Kind*> Rules::collect_unused_kinds(
-    const Kinds& kinds) const {
+    const KindFactory& kind_factory) const {
   std::unordered_set<const Kind*> unused_kinds;
-  for (const auto* kind : kinds.kinds()) {
+  for (const auto* kind : kind_factory.kinds()) {
     if (kind->is<TriggeredPartialKind>() || kind->is<PropagationKind>()) {
       // These kinds are never used in rules.
       continue;

@@ -283,7 +283,7 @@ void CalleeFrames::transform_kind_with_features(
 }
 
 CalleeFrames CalleeFrames::apply_transform(
-    const Kinds& kinds,
+    const KindFactory& kind_factory,
     const Transforms& transforms,
     const UsedKinds& used_kinds,
     const TransformList* local_transforms) const {
@@ -293,7 +293,7 @@ CalleeFrames CalleeFrames::apply_transform(
     frames_by_call_position.set(
         position,
         call_position_frames.apply_transform(
-            kinds, transforms, used_kinds, local_transforms));
+            kind_factory, transforms, used_kinds, local_transforms));
   }
 
   return CalleeFrames{callee_, call_info_, frames_by_call_position};

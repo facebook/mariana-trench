@@ -15,7 +15,7 @@
 #include <mariana-trench/Features.h>
 #include <mariana-trench/FieldCache.h>
 #include <mariana-trench/Fields.h>
-#include <mariana-trench/Kinds.h>
+#include <mariana-trench/KindFactory.h>
 #include <mariana-trench/Methods.h>
 #include <mariana-trench/Options.h>
 #include <mariana-trench/Overrides.h>
@@ -30,7 +30,7 @@
 namespace marianatrench {
 
 Context::Context()
-    : kinds(std::make_unique<Kinds>()),
+    : kind_factory(std::make_unique<KindFactory>()),
       features(std::make_unique<Features>()),
       statistics(std::make_unique<Statistics>()),
       transforms(std::make_unique<Transforms>()) {}

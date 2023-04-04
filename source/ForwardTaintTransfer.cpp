@@ -424,7 +424,7 @@ void check_multi_source_multi_sink_rules(
   features.add(sink.features_joined());
 
   auto issue_sink_frame = fulfilled_partial_sinks.fulfill_kind(
-      sink_kind, rule, features, sink, context->kinds);
+      sink_kind, rule, features, sink, context->kind_factory);
 
   if (issue_sink_frame) {
     create_issue(
@@ -1167,7 +1167,7 @@ bool ForwardTaintTransfer::analyze_return(
     infer_output_taint(
         context,
         Root(Root::Kind::Return),
-        context->kinds.local_return(),
+        context->kind_factory.local_return(),
         environment->read(memory_locations));
 
     for (const auto& [path, sinks] : return_sinks.elements()) {
@@ -1196,7 +1196,7 @@ bool ForwardTaintTransfer::analyze_return(
     infer_output_taint(
         context,
         Root(Root::Kind::Argument, 0),
-        context->kinds.local_receiver(),
+        context->kind_factory.local_receiver(),
         environment->read(context->memory_factory.make_parameter(0)));
   }
 

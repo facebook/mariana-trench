@@ -27,7 +27,7 @@
 #include <mariana-trench/FieldSet.h>
 #include <mariana-trench/IncludeMacros.h>
 #include <mariana-trench/Kind.h>
-#include <mariana-trench/Kinds.h>
+#include <mariana-trench/KindFactory.h>
 #include <mariana-trench/LocalPositionSet.h>
 #include <mariana-trench/Method.h>
 #include <mariana-trench/MethodSet.h>
@@ -311,7 +311,7 @@ class Frame final : public sparta::AbstractDomain<Frame> {
   Frame with_kind(const Kind* kind) const;
 
   Frame apply_transform(
-      const Kinds& kinds,
+      const KindFactory& kind_factory,
       const Transforms& transforms,
       const UsedKinds& used_kinds,
       AccessPath callee_port,

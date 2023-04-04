@@ -32,7 +32,7 @@ MethodContext::MethodContext(
       rules(*context.rules),
       dependencies(*context.dependencies),
       scheduler(*context.scheduler),
-      kinds(*context.kinds),
+      kind_factory(*context.kind_factory),
       features(*context.features),
       registry(registry),
       transforms(*context.transforms),
