@@ -64,7 +64,7 @@ class MethodContext final {
   const Dependencies& dependencies;
   const Scheduler& scheduler;
   const KindFactory& kind_factory;
-  const Features& features;
+  const FeatureFactory& feature_factory;
   const Registry& registry;
   const Transforms& transforms;
   const UsedKinds& used_kinds;

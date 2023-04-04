@@ -20,7 +20,7 @@
 #include <mariana-trench/Context.h>
 #include <mariana-trench/Dependencies.h>
 #include <mariana-trench/EventLogger.h>
-#include <mariana-trench/Features.h>
+#include <mariana-trench/FeatureFactory.h>
 #include <mariana-trench/ForwardAliasEnvironment.h>
 #include <mariana-trench/ForwardAliasFixpoint.h>
 #include <mariana-trench/ForwardAliasTransfer.h>
@@ -137,7 +137,7 @@ Model analyze(
   new_model.collapse_invalid_paths(global_context);
   new_model.approximate(/* widening_features */
                         FeatureMayAlwaysSet{
-                            global_context.features
+                            global_context.feature_factory
                                 ->get_widen_broadening_feature()});
 
   LOG_OR_DUMP(

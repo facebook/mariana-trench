@@ -22,7 +22,7 @@
 #include <mariana-trench/Context.h>
 #include <mariana-trench/ControlFlowGraphs.h>
 #include <mariana-trench/Dependencies.h>
-#include <mariana-trench/Features.h>
+#include <mariana-trench/FeatureFactory.h>
 #include <mariana-trench/Frame.h>
 #include <mariana-trench/GlobalRedexContext.h>
 #include <mariana-trench/Methods.h>

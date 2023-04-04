@@ -16,11 +16,11 @@
 
 namespace marianatrench {
 
-class Features final {
+class FeatureFactory final {
  public:
-  Features() = default;
+  FeatureFactory() = default;
 
-  DELETE_COPY_CONSTRUCTORS_AND_ASSIGNMENTS(Features)
+  DELETE_COPY_CONSTRUCTORS_AND_ASSIGNMENTS(FeatureFactory)
 
   const Feature* get(const std::string& data) const;
 

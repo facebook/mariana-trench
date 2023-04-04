@@ -23,8 +23,8 @@ TEST_F(CanonicalNameTest, Instantiate) {
       redex::create_void_method(scope, "LClass;", "one"));
   const auto* method2 = context.methods->create(redex::create_void_method(
       scope, "Lcom/facebook/graphql/calls/SomeMutationData;", "setSomeField"));
-  const auto* feature1 = context.features->get("feature1");
-  const auto* feature2 = context.features->get("feature2");
+  const auto* feature1 = context.feature_factory->get("feature1");
+  const auto* feature2 = context.feature_factory->get("feature2");
 
   EXPECT_EQ(
       CanonicalName(CanonicalName::TemplateValue{"%programmatic_leaf_name%"})

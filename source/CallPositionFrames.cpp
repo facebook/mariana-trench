@@ -9,7 +9,7 @@
 
 #include <mariana-trench/Assert.h>
 #include <mariana-trench/CallPositionFrames.h>
-#include <mariana-trench/Features.h>
+#include <mariana-trench/FeatureFactory.h>
 #include <mariana-trench/JsonValidation.h>
 #include <mariana-trench/Log.h>
 

@@ -16,8 +16,8 @@ class FeatureMayAlwaysSetTest : public test::Test {};
 
 TEST_F(FeatureMayAlwaysSetTest, Constructor) {
   auto context = test::make_empty_context();
-  const auto* one = context.features->get("FeatureOne");
-  const auto* two = context.features->get("FeatureTwo");
+  const auto* one = context.feature_factory->get("FeatureOne");
+  const auto* two = context.feature_factory->get("FeatureTwo");
 
   EXPECT_TRUE(FeatureMayAlwaysSet::bottom().is_bottom());
   EXPECT_TRUE(FeatureMayAlwaysSet::top().is_top());
@@ -57,8 +57,8 @@ TEST_F(FeatureMayAlwaysSetTest, Constructor) {
 
 TEST_F(FeatureMayAlwaysSetTest, Leq) {
   auto context = test::make_empty_context();
-  const auto* one = context.features->get("FeatureOne");
-  const auto* two = context.features->get("FeatureTwo");
+  const auto* one = context.feature_factory->get("FeatureOne");
+  const auto* two = context.feature_factory->get("FeatureTwo");
 
   EXPECT_FALSE(
       FeatureMayAlwaysSet(/* may */ FeatureSet{one}, /* always */ FeatureSet{})
@@ -98,8 +98,8 @@ TEST_F(FeatureMayAlwaysSetTest, Leq) {
 
 TEST_F(FeatureMayAlwaysSetTest, Equals) {
   auto context = test::make_empty_context();
-  const auto* one = context.features->get("FeatureOne");
-  const auto* two = context.features->get("FeatureTwo");
+  const auto* one = context.feature_factory->get("FeatureOne");
+  const auto* two = context.feature_factory->get("FeatureTwo");
 
   EXPECT_TRUE(
       FeatureMayAlwaysSet(
@@ -115,9 +115,9 @@ TEST_F(FeatureMayAlwaysSetTest, Equals) {
 
 TEST_F(FeatureMayAlwaysSetTest, Join) {
   auto context = test::make_empty_context();
-  const auto* one = context.features->get("FeatureOne");
-  const auto* two = context.features->get("FeatureTwo");
-  const auto* three = context.features->get("FeatureThree");
+  const auto* one = context.feature_factory->get("FeatureOne");
+  const auto* two = context.feature_factory->get("FeatureTwo");
+  const auto* three = context.feature_factory->get("FeatureThree");
 
   EXPECT_EQ(
       FeatureMayAlwaysSet(
@@ -137,9 +137,9 @@ TEST_F(FeatureMayAlwaysSetTest, Join) {
 
 TEST_F(FeatureMayAlwaysSetTest, Meet) {
   auto context = test::make_empty_context();
-  const auto* one = context.features->get("FeatureOne");
-  const auto* two = context.features->get("FeatureTwo");
-  const auto* three = context.features->get("FeatureThree");
+  const auto* one = context.feature_factory->get("FeatureOne");
+  const auto* two = context.feature_factory->get("FeatureTwo");
+  const auto* three = context.feature_factory->get("FeatureThree");
 
   EXPECT_EQ(
       FeatureMayAlwaysSet(
@@ -166,9 +166,9 @@ TEST_F(FeatureMayAlwaysSetTest, Meet) {
 
 TEST_F(FeatureMayAlwaysSetTest, Add) {
   auto context = test::make_empty_context();
-  const auto* one = context.features->get("FeatureOne");
-  const auto* two = context.features->get("FeatureTwo");
-  const auto* three = context.features->get("FeatureThree");
+  const auto* one = context.feature_factory->get("FeatureOne");
+  const auto* two = context.feature_factory->get("FeatureTwo");
+  const auto* three = context.feature_factory->get("FeatureThree");
 
   auto set = FeatureMayAlwaysSet(
       /* may */ FeatureSet{one}, /* always */ FeatureSet{two});
@@ -194,9 +194,9 @@ TEST_F(FeatureMayAlwaysSetTest, Add) {
 
 TEST_F(FeatureMayAlwaysSetTest, AddMay) {
   auto context = test::make_empty_context();
-  const auto* one = context.features->get("FeatureOne");
-  const auto* two = context.features->get("FeatureTwo");
-  const auto* three = context.features->get("FeatureThree");
+  const auto* one = context.feature_factory->get("FeatureOne");
+  const auto* two = context.feature_factory->get("FeatureTwo");
+  const auto* three = context.feature_factory->get("FeatureThree");
 
   auto set = FeatureMayAlwaysSet(
       /* may */ FeatureSet{one}, /* always */ FeatureSet{two});
@@ -209,9 +209,9 @@ TEST_F(FeatureMayAlwaysSetTest, AddMay) {
 
 TEST_F(FeatureMayAlwaysSetTest, AddAlways) {
   auto context = test::make_empty_context();
-  const auto* one = context.features->get("FeatureOne");
-  const auto* two = context.features->get("FeatureTwo");
-  const auto* three = context.features->get("FeatureThree");
+  const auto* one = context.feature_factory->get("FeatureOne");
+  const auto* two = context.feature_factory->get("FeatureTwo");
+  const auto* three = context.feature_factory->get("FeatureThree");
 
   auto set = FeatureMayAlwaysSet(
       /* may */ FeatureSet{one}, /* always */ FeatureSet{two});

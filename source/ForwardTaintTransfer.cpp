@@ -9,7 +9,7 @@
 #include <mariana-trench/CallEffects.h>
 #include <mariana-trench/CallGraph.h>
 #include <mariana-trench/ClassProperties.h>
-#include <mariana-trench/Features.h>
+#include <mariana-trench/FeatureFactory.h>
 #include <mariana-trench/Fields.h>
 #include <mariana-trench/ForwardTaintTransfer.h>
 #include <mariana-trench/FulfilledPartialKindState.h>
@@ -59,7 +59,8 @@ bool ForwardTaintTransfer::analyze_check_cast(
           allowed_features.end(),
           instruction->get_type()->str()) != allowed_features.end()) {
     auto features = FeatureMayAlwaysSet::make_always(
-        {context->features.get_via_cast_feature(instruction->get_type())});
+        {context->feature_factory.get_via_cast_feature(
+            instruction->get_type())});
     taint.map([&features](Taint& sources) {
       sources.add_inferred_features(features);
     });
@@ -207,7 +208,7 @@ void apply_add_features_to_arguments(
         ? context->positions.get(callee.position, parameter, instruction)
         : nullptr;
     if (callee.model.add_via_obscure_feature()) {
-      features.add_always(context->features.get("via-obscure"));
+      features.add_always(context->feature_factory.get("via-obscure"));
     }
 
     if (features.empty()) {
@@ -300,7 +301,7 @@ void apply_propagations(
       input_taint_tree.collapse_inplace(
           /* transform */ [context](Taint& taint) {
             taint.add_inferred_features(FeatureMayAlwaysSet{
-                context->features.get_propagation_broadening_feature()});
+                context->feature_factory.get_propagation_broadening_feature()});
           });
     }
 
@@ -549,7 +550,7 @@ void check_call_flows(
                 port.path().resolve(source_constant_arguments))
             .collapse(/* transform */ [context](Taint& taint) {
               return taint.add_inferred_features(FeatureMayAlwaysSet{
-                  context->features.get_issue_broadening_feature()});
+                  context->feature_factory.get_issue_broadening_feature()});
             });
     check_sources_sinks_flows(
         context,
@@ -1018,8 +1019,8 @@ bool ForwardTaintTransfer::analyze_aput(
   auto taint = environment->read(
       aliasing.register_memory_locations(instruction->src(0)));
 
-  auto features =
-      FeatureMayAlwaysSet::make_always({context->features.get("via-array")});
+  auto features = FeatureMayAlwaysSet::make_always(
+      {context->feature_factory.get("via-array")});
   auto* position = context->positions.get(
       context->method(),
       aliasing.position(),
@@ -1079,7 +1080,7 @@ static bool analyze_numerical_operator(
   }
 
   auto features = FeatureMayAlwaysSet::make_always(
-      {context->features.get("via-numerical-operator")});
+      {context->feature_factory.get("via-numerical-operator")});
   auto* position = context->positions.get(
       context->method(),
       aliasing.position(),
@@ -1138,7 +1139,8 @@ void infer_output_taint(
         std::move(port),
         std::move(generation),
         /* widening_features */
-        FeatureMayAlwaysSet{context->features.get_widen_broadening_feature()});
+        FeatureMayAlwaysSet{
+            context->feature_factory.get_widen_broadening_feature()});
   }
 }
 
@@ -1176,7 +1178,8 @@ bool ForwardTaintTransfer::analyze_return(
               .collapse(
                   /* transform */ [context](Taint& taint) {
                     return taint.add_inferred_features(FeatureMayAlwaysSet{
-                        context->features.get_issue_broadening_feature()});
+                        context->feature_factory
+                            .get_issue_broadening_feature()});
                   });
       // Fulfilled partial sinks are not expected to be produced here. Return
       // sinks are never partial.

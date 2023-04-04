@@ -18,8 +18,8 @@
 
 #include <mariana-trench/Assert.h>
 #include <mariana-trench/CallGraph.h>
+#include <mariana-trench/FeatureFactory.h>
 #include <mariana-trench/FeatureSet.h>
-#include <mariana-trench/Features.h>
 #include <mariana-trench/JsonValidation.h>
 #include <mariana-trench/Log.h>
 #include <mariana-trench/Methods.h>
@@ -216,7 +216,7 @@ ArtificialCallees anonymous_class_artificial_callees(
 
 ArtificialCallees artificial_callees_from_arguments(
     const Methods& method_factory,
-    const Features& features,
+    const FeatureFactory& feature_factory,
     const IRInstruction* instruction,
     const DexMethod* callee,
     const ParameterTypeOverrides& parameter_type_overrides,
@@ -234,7 +234,7 @@ ArtificialCallees artificial_callees_from_arguments(
         instruction->src(parameter + (is_static(callee) ? 0 : 1)),
         sink_textual_order_index,
         /* features */
-        FeatureSet{features.get("via-anonymous-class-to-obscure")});
+        FeatureSet{feature_factory.get("via-anonymous-class-to-obscure")});
     callees.insert(
         callees.end(),
         std::make_move_iterator(artificial_callees_from_parameter.begin()),
@@ -254,7 +254,7 @@ const Method* get_callee_from_resolved_call(
     const ParameterTypeOverrides& parameter_type_overrides,
     const Options& options,
     Methods& method_factory,
-    const Features& features,
+    const FeatureFactory& feature_factory,
     ArtificialCallees& artificial_callees,
     std::unordered_map<std::string, TextualOrderIndex>&
         sink_textual_order_index,
@@ -265,7 +265,7 @@ const Method* get_callee_from_resolved_call(
     // artificial calls to all methods of the anonymous class.
     auto artificial_callees_for_instruction = artificial_callees_from_arguments(
         method_factory,
-        features,
+        feature_factory,
         instruction,
         dex_callee,
         parameter_type_overrides,
@@ -296,7 +296,7 @@ void process_shim_target(
     const Types& types,
     const Overrides& override_factory,
     const ClassHierarchies& class_hierarchies,
-    const Features& features,
+    const FeatureFactory& feature_factory,
     std::unordered_map<std::string, TextualOrderIndex>&
         sink_textual_order_index,
     std::vector<ArtificialCallee>& artificial_callees) {
@@ -313,7 +313,7 @@ void process_shim_target(
             instruction, method, call_index),
         /* parameter_registers */ parameter_registers,
         /* features */
-        FeatureSet{features.get_via_shim_feature(callee)},
+        FeatureSet{feature_factory.get_via_shim_feature(callee)},
     });
     return;
   }
@@ -350,7 +350,7 @@ void process_shim_target(
           override_factory),
       /* parameter_registers */ parameter_registers,
       /* features */
-      FeatureSet{features.get_via_shim_feature(callee)},
+      FeatureSet{feature_factory.get_via_shim_feature(callee)},
   });
 }
 
@@ -363,7 +363,7 @@ void process_shim_reflection(
     const Types& types,
     const Overrides& override_factory,
     const ClassHierarchies& class_hierarchies,
-    const Features& features,
+    const FeatureFactory& FeatureFactory,
     std::unordered_map<std::string, TextualOrderIndex>&
         sink_textual_order_index,
     std::vector<ArtificialCallee>& artificial_callees) {
@@ -425,7 +425,7 @@ void process_shim_reflection(
           override_factory),
       /* parameter_registers */ parameter_registers,
       /* features */
-      FeatureSet{features.get_via_shim_feature(callee)},
+      FeatureSet{FeatureFactory.get_via_shim_feature(callee)},
   });
 }
 
@@ -438,7 +438,7 @@ void process_shim_lifecycle(
     const Types& types,
     const Overrides& override_factory,
     const ClassHierarchies& class_hierarchies,
-    const Features& features,
+    const FeatureFactory& feature_factory,
     std::unordered_map<std::string, TextualOrderIndex>&
         sink_textual_order_index,
     std::vector<ArtificialCallee>& artificial_callees) {
@@ -492,7 +492,7 @@ void process_shim_lifecycle(
           override_factory),
       /* parameter_registers */ parameter_registers,
       /* features */
-      FeatureSet{features.get_via_shim_feature(callee)},
+      FeatureSet{feature_factory.get_via_shim_feature(callee)},
   });
 }
 
@@ -504,7 +504,7 @@ std::vector<ArtificialCallee> shim_artificial_callees(
     const Types& types,
     const Overrides& override_factory,
     const ClassHierarchies& class_hierarchies,
-    const Features& features,
+    const FeatureFactory& feature_factory,
     const Shim& shim,
     std::unordered_map<std::string, TextualOrderIndex>&
         sink_textual_order_index) {
@@ -520,7 +520,7 @@ std::vector<ArtificialCallee> shim_artificial_callees(
         types,
         override_factory,
         class_hierarchies,
-        features,
+        feature_factory,
         sink_textual_order_index,
         artificial_callees);
   }
@@ -535,7 +535,7 @@ std::vector<ArtificialCallee> shim_artificial_callees(
         types,
         override_factory,
         class_hierarchies,
-        features,
+        feature_factory,
         sink_textual_order_index,
         artificial_callees);
   }
@@ -550,7 +550,7 @@ std::vector<ArtificialCallee> shim_artificial_callees(
         types,
         override_factory,
         class_hierarchies,
-        features,
+        feature_factory,
         sink_textual_order_index,
         artificial_callees);
   }
@@ -586,7 +586,7 @@ InstructionCallGraphInformation process_instruction(
     const Types& types,
     Overrides& override_factory,
     const ClassHierarchies& class_hierarchies,
-    const Features& features,
+    const FeatureFactory& feature_factory,
     const Shims& shims,
     std::unordered_map<std::string, TextualOrderIndex>&
         sink_textual_order_index,
@@ -618,7 +618,7 @@ InstructionCallGraphInformation process_instruction(
               /* register */ instruction->src(0),
               sink_textual_order_index,
               /* features */
-              FeatureSet{features.get("via-anonymous-class-to-field")});
+              FeatureSet{feature_factory.get("via-anonymous-class-to-field")});
 
       if (!artificial_callees_for_instruction.empty()) {
         instruction_information.artificial_callees =
@@ -647,7 +647,7 @@ InstructionCallGraphInformation process_instruction(
       parameter_type_overrides,
       options,
       method_factory,
-      features,
+      feature_factory,
       instruction_information.artificial_callees,
       sink_textual_order_index,
       method_mappings);
@@ -661,7 +661,7 @@ InstructionCallGraphInformation process_instruction(
         types,
         override_factory,
         class_hierarchies,
-        features,
+        feature_factory,
         *shim,
         sink_textual_order_index);
     instruction_information.artificial_callees = std::move(artificial_callees);
@@ -891,7 +891,7 @@ CallGraph::CallGraph(
     const Types& types,
     const ClassHierarchies& class_hierarchies,
     Overrides& override_factory,
-    const Features& features,
+    const FeatureFactory& feature_factory,
     const Shims& shims,
     MethodMappings& method_mappings)
     : types_(types),
@@ -971,7 +971,7 @@ CallGraph::CallGraph(
                   types,
                   override_factory,
                   class_hierarchies,
-                  features,
+                  feature_factory,
                   shims,
                   sink_textual_order_index,
                   method_mappings);

@@ -172,12 +172,12 @@ TEST_F(TaintTest, Difference) {
       redex::create_void_method(scope, "LThree;", "three"));
 
   auto* test_position = context.positions->get(std::nullopt, 1);
-  auto* feature_one = context.features->get("FeatureOne");
-  auto* feature_two = context.features->get("FeatureTwo");
-  auto* feature_three = context.features->get("FeatureThree");
-  auto* user_feature_one = context.features->get("UserFeatureOne");
-  auto* user_feature_two = context.features->get("UserFeatureTwo");
-  auto* user_feature_three = context.features->get("UserFeatureThree");
+  auto* feature_one = context.feature_factory->get("FeatureOne");
+  auto* feature_two = context.feature_factory->get("FeatureTwo");
+  auto* feature_three = context.feature_factory->get("FeatureThree");
+  auto* user_feature_one = context.feature_factory->get("UserFeatureOne");
+  auto* user_feature_two = context.feature_factory->get("UserFeatureTwo");
+  auto* user_feature_three = context.feature_factory->get("UserFeatureThree");
 
   Taint taint = Taint{
       test::make_taint_config(
@@ -486,11 +486,11 @@ TEST_F(TaintTest, Propagate) {
       redex::create_void_method(scope, "LFour;", "four"));
 
   auto* test_position = context.positions->get(std::nullopt, 1);
-  auto* feature_one = context.features->get("FeatureOne");
-  auto* feature_two = context.features->get("FeatureTwo");
-  auto* feature_three = context.features->get("FeatureThree");
-  auto* user_feature_one = context.features->get("UserFeatureOne");
-  auto* user_feature_two = context.features->get("UserFeatureTwo");
+  auto* feature_one = context.feature_factory->get("FeatureOne");
+  auto* feature_two = context.feature_factory->get("FeatureTwo");
+  auto* feature_three = context.feature_factory->get("FeatureThree");
+  auto* user_feature_one = context.feature_factory->get("UserFeatureOne");
+  auto* user_feature_two = context.feature_factory->get("UserFeatureTwo");
 
   auto taint = Taint{
       test::make_taint_config(
@@ -578,10 +578,10 @@ TEST_F(TaintTest, TransformKind) {
       redex::create_void_method(scope, "LThree;", "three"));
 
   auto* test_position = context.positions->get(std::nullopt, 1);
-  auto* feature_one = context.features->get("FeatureOne");
-  auto* feature_two = context.features->get("FeatureTwo");
-  auto* user_feature_one = context.features->get("UserFeatureOne");
-  auto* user_feature_two = context.features->get("UserFeatureTwo");
+  auto* feature_one = context.feature_factory->get("FeatureOne");
+  auto* feature_two = context.feature_factory->get("FeatureTwo");
+  auto* user_feature_one = context.feature_factory->get("UserFeatureOne");
+  auto* user_feature_two = context.feature_factory->get("UserFeatureTwo");
 
   auto* test_source = context.kind_factory->get("TestSource");
   auto* transformed_test_source =
@@ -1223,9 +1223,9 @@ TEST_F(TaintTest, FeaturesJoined) {
   auto* method2 =
       context.methods->create(redex::create_void_method(scope, "LTwo;", "two"));
 
-  auto* feature1 = context.features->get("Feature1");
-  auto* feature2 = context.features->get("Feature2");
-  auto* feature3 = context.features->get("Feature3");
+  auto* feature1 = context.feature_factory->get("Feature1");
+  auto* feature2 = context.feature_factory->get("Feature2");
+  auto* feature3 = context.feature_factory->get("Feature3");
 
   auto taint = Taint{
       test::make_taint_config(

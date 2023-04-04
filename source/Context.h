@@ -15,7 +15,7 @@
 namespace marianatrench {
 
 class KindFactory;
-class Features;
+class FeatureFactory;
 class Statistics;
 class Options;
 class ArtificialMethods;
@@ -49,7 +49,7 @@ class Context final {
   ~Context();
 
   std::unique_ptr<KindFactory> kind_factory;
-  std::unique_ptr<Features> features;
+  std::unique_ptr<FeatureFactory> feature_factory;
   std::unique_ptr<Statistics> statistics;
   std::unique_ptr<Options> options;
   std::vector<DexStore> stores;

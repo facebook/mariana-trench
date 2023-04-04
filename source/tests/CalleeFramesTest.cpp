@@ -195,8 +195,8 @@ TEST_F(CalleeFramesTest, JoinWith) {
   auto* test_kind_one = context.kind_factory->get("TestSinkOne");
   auto* test_position_one = context.positions->get(std::nullopt, 1);
   auto* test_position_two = context.positions->get(std::nullopt, 2);
-  auto* feature_one = context.features->get("FeatureOne");
-  auto* feature_two = context.features->get("FeatureTwo");
+  auto* feature_one = context.feature_factory->get("FeatureOne");
+  auto* feature_two = context.feature_factory->get("FeatureTwo");
 
   // Join with bottom
   EXPECT_EQ(
@@ -287,8 +287,8 @@ TEST_F(CalleeFramesTest, Difference) {
   auto* test_kind_two = context.kind_factory->get("TestSinkTwo");
   auto* test_position_one = context.positions->get(std::nullopt, 1);
   auto* test_position_two = context.positions->get(std::nullopt, 2);
-  auto* feature_one = context.features->get("FeatureOne");
-  auto* feature_two = context.features->get("FeatureTwo");
+  auto* feature_one = context.feature_factory->get("FeatureOne");
+  auto* feature_two = context.feature_factory->get("FeatureTwo");
 
   CalleeFrames frames, initial_frames;
 
@@ -557,7 +557,7 @@ TEST_F(CalleeFramesTest, Map) {
   auto* test_kind = context.kind_factory->get("TestSink");
   auto* test_position_one = context.positions->get(std::nullopt, 1);
   auto* test_position_two = context.positions->get(std::nullopt, 2);
-  auto* feature_one = context.features->get("FeatureOne");
+  auto* feature_one = context.feature_factory->get("FeatureOne");
 
   auto frames = CalleeFrames{
       test::make_taint_config(
@@ -608,8 +608,8 @@ TEST_F(CalleeFramesTest, FeaturesAndPositions) {
   auto* test_kind_two = context.kind_factory->get("TestSinkTwo");
   auto* test_position_one = context.positions->get(std::nullopt, 1);
   auto* test_position_two = context.positions->get(std::nullopt, 2);
-  auto* feature_one = context.features->get("FeatureOne");
-  auto* feature_two = context.features->get("FeatureTwo");
+  auto* feature_one = context.feature_factory->get("FeatureOne");
+  auto* feature_two = context.feature_factory->get("FeatureTwo");
 
   // add_inferred_features should be an *add* operation on the features,
   // not a join.
@@ -672,7 +672,7 @@ TEST_F(CalleeFramesTest, Propagate) {
   auto* test_kind_two = context.kind_factory->get("TestSinkTwo");
   auto* test_position_one = context.positions->get("Test.java", 1);
   auto* test_position_two = context.positions->get("Test.java", 2);
-  auto* feature_one = context.features->get("FeatureOne");
+  auto* feature_one = context.feature_factory->get("FeatureOne");
 
   /**
    * The following `CalleeFrames` looks like (callee == nullptr):
@@ -854,8 +854,8 @@ TEST_F(CalleeFramesTest, Propagate) {
 TEST_F(CalleeFramesTest, AttachPosition) {
   auto context = test::make_empty_context();
 
-  auto* feature_one = context.features->get("FeatureOne");
-  auto* feature_two = context.features->get("FeatureTwo");
+  auto* feature_one = context.feature_factory->get("FeatureOne");
+  auto* feature_two = context.feature_factory->get("FeatureTwo");
   auto* test_kind_one = context.kind_factory->get("TestSinkOne");
   auto* test_kind_two = context.kind_factory->get("TestSinkTwo");
   auto* test_position_one = context.positions->get(std::nullopt, 1);

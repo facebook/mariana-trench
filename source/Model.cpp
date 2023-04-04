@@ -17,7 +17,7 @@
 #include <mariana-trench/Compiler.h>
 #include <mariana-trench/Constants.h>
 #include <mariana-trench/EventLogger.h>
-#include <mariana-trench/Features.h>
+#include <mariana-trench/FeatureFactory.h>
 #include <mariana-trench/FieldCache.h>
 #include <mariana-trench/Heuristics.h>
 #include <mariana-trench/JsonValidation.h>
@@ -329,9 +329,9 @@ Model Model::at_callsite(
       context.options->maximum_source_sink_distance();
 
   // Add special features that cannot be done in model generators.
-  mt_assert(context.features != nullptr);
+  mt_assert(context.feature_factory != nullptr);
   auto extra_features = context.class_properties->propagate_features(
-      caller, callee, *context.features);
+      caller, callee, *context.feature_factory);
 
   generations_.visit(
       [&model,
@@ -554,8 +554,9 @@ void Model::add_taint_in_taint_out(Context& context) {
 
   auto user_features = FeatureSet::bottom();
   if (modes_.test(Model::Mode::AddViaObscureFeature)) {
-    user_features.add(context.features->get("via-obscure"));
-    user_features.add(context.features->get("via-obscure-taint-in-taint-out"));
+    user_features.add(context.feature_factory->get("via-obscure"));
+    user_features.add(
+        context.feature_factory->get("via-obscure-taint-in-taint-out"));
   }
 
   for (ParameterPosition parameter_position = 0;
@@ -582,7 +583,7 @@ void Model::add_taint_in_taint_this(Context& context) {
 
   auto user_features = FeatureSet::bottom();
   if (modes_.test(Model::Mode::AddViaObscureFeature)) {
-    user_features.add(context.features->get("via-obscure"));
+    user_features.add(context.feature_factory->get("via-obscure"));
   }
 
   for (ParameterPosition parameter_position = 1;

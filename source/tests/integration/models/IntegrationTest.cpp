@@ -507,7 +507,7 @@ TEST_P(IntegrationTest, ReturnsExpectedModel) {
       *context.types,
       *context.class_hierarchies,
       *context.overrides,
-      *context.features,
+      *context.feature_factory,
       Shims{},
       method_mappings);
   context.rules = std::make_unique<Rules>(context, rules);
@@ -534,7 +534,7 @@ TEST_P(IntegrationTest, ReturnsExpectedModel) {
       *context.call_graph,
       registry);
   context.class_properties = std::make_unique<ClassProperties>(
-      options, context.stores, *context.features, *context.dependencies);
+      options, context.stores, *context.feature_factory, *context.dependencies);
   context.scheduler =
       std::make_unique<Scheduler>(*context.methods, *context.dependencies);
 

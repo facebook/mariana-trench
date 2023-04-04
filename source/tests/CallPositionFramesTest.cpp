@@ -26,9 +26,9 @@ TEST_F(CallPositionFramesTest, Add) {
 
   auto* source_kind_one = context.kind_factory->get("TestSourceOne");
   auto* source_kind_two = context.kind_factory->get("TestSourceTwo");
-  auto* feature_one = context.features->get("FeatureOne");
-  auto* feature_two = context.features->get("FeatureTwo");
-  auto* user_feature_one = context.features->get("UserFeatureOne");
+  auto* feature_one = context.feature_factory->get("FeatureOne");
+  auto* feature_two = context.feature_factory->get("FeatureTwo");
+  auto* user_feature_one = context.feature_factory->get("UserFeatureOne");
 
   CallPositionFrames frames;
   EXPECT_TRUE(frames.is_bottom());
@@ -706,10 +706,10 @@ TEST_F(CallPositionFramesTest, Difference) {
   auto* test_kind_one = context.kind_factory->get("TestSinkOne");
   auto* test_kind_two = context.kind_factory->get("TestSinkTwo");
   auto* test_position = context.positions->get(std::nullopt, 1);
-  auto* feature_one = context.features->get("FeatureOne");
-  auto* feature_two = context.features->get("FeatureTwo");
-  auto* user_feature_one = context.features->get("UserFeatureOne");
-  auto* user_feature_two = context.features->get("UserFeatureTwo");
+  auto* feature_one = context.feature_factory->get("FeatureOne");
+  auto* feature_two = context.feature_factory->get("FeatureTwo");
+  auto* user_feature_one = context.feature_factory->get("UserFeatureOne");
+  auto* user_feature_two = context.feature_factory->get("UserFeatureTwo");
 
   CallPositionFrames frames, initial_frames;
 
@@ -1191,7 +1191,7 @@ TEST_F(CallPositionFramesTest, Map) {
       context.methods->create(redex::create_void_method(scope, "LOne;", "one"));
   auto* test_kind = context.kind_factory->get("TestSink");
   auto* test_position = context.positions->get(std::nullopt, 1);
-  auto* feature_one = context.features->get("FeatureOne");
+  auto* feature_one = context.feature_factory->get("FeatureOne");
 
   auto frames = CallPositionFrames{
       test::make_taint_config(
@@ -1253,8 +1253,8 @@ TEST_F(CallPositionFramesTest, FeaturesAndPositions) {
   auto* test_kind_one = context.kind_factory->get("TestSinkOne");
   auto* test_position_one = context.positions->get(std::nullopt, 1);
   auto* test_position_two = context.positions->get(std::nullopt, 2);
-  auto* feature_one = context.features->get("FeatureOne");
-  auto* feature_two = context.features->get("FeatureTwo");
+  auto* feature_one = context.feature_factory->get("FeatureOne");
+  auto* feature_two = context.feature_factory->get("FeatureTwo");
 
   // add_inferred_features should be an *add* operation on the features,
   // not a join.
@@ -1465,8 +1465,8 @@ TEST_F(CallPositionFramesTest, PropagateDropFrames) {
   auto* test_kind_one = context.kind_factory->get("TestSinkOne");
   auto* test_kind_two = context.kind_factory->get("TestSinkTwo");
   auto* call_position = context.positions->get("Test.java", 1);
-  auto* user_feature_one = context.features->get("UserFeatureOne");
-  auto* user_feature_two = context.features->get("UserFeatureTwo");
+  auto* user_feature_one = context.feature_factory->get("UserFeatureOne");
+  auto* user_feature_two = context.feature_factory->get("UserFeatureTwo");
 
   // Propagating this frame will give it a distance of 2. It is expected to be
   // dropped as it exceeds the maximum distance allowed.
@@ -1584,8 +1584,8 @@ TEST_F(CallPositionFramesTest, AttachPosition) {
   auto* two =
       context.methods->create(redex::create_void_method(scope, "LTwo;", "two"));
 
-  auto* feature_one = context.features->get("FeatureOne");
-  auto* feature_two = context.features->get("FeatureTwo");
+  auto* feature_one = context.feature_factory->get("FeatureOne");
+  auto* feature_two = context.feature_factory->get("FeatureTwo");
   auto* test_kind = context.kind_factory->get("TestSink");
   auto* test_position = context.positions->get(std::nullopt, 1);
 
@@ -1638,9 +1638,9 @@ TEST_F(CallPositionFramesTest, TransformKindWithFeatures) {
   auto context = test::make_empty_context();
 
   auto* test_position = context.positions->get(std::nullopt, 1);
-  auto* feature_one = context.features->get("FeatureOne");
-  auto* feature_two = context.features->get("FeatureTwo");
-  auto* user_feature_one = context.features->get("UserFeatureOne");
+  auto* feature_one = context.feature_factory->get("FeatureOne");
+  auto* feature_two = context.feature_factory->get("FeatureTwo");
+  auto* user_feature_one = context.feature_factory->get("UserFeatureOne");
 
   auto* test_kind_one = context.kind_factory->get("TestKindOne");
   auto* test_kind_two = context.kind_factory->get("TestKindTwo");

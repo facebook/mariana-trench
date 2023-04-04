@@ -15,7 +15,7 @@
 #include <Resolver.h>
 #include <Walkers.h>
 
-#include <mariana-trench/Features.h>
+#include <mariana-trench/FeatureFactory.h>
 #include <mariana-trench/Fields.h>
 #include <mariana-trench/JsonValidation.h>
 #include <mariana-trench/Log.h>
@@ -260,7 +260,7 @@ void generator::add_propagation_to_return(
   auto output = AccessPath(Root(Root::Kind::Return));
   FeatureSet user_features;
   for (const auto& feature : features) {
-    user_features.add(context.features->get(feature));
+    user_features.add(context.feature_factory->get(feature));
   }
   model.add_propagation(PropagationConfig(
       /* input_path */ AccessPath(
@@ -283,7 +283,7 @@ void generator::add_propagation_to_parameter(
 
   FeatureSet user_features;
   for (const auto& feature : features) {
-    user_features.add(context.features->get(feature));
+    user_features.add(context.feature_factory->get(feature));
   }
   model.add_propagation(PropagationConfig(
       /* input_path */ AccessPath(Root(Root::Kind::Argument, from)),
@@ -386,7 +386,7 @@ TaintConfig generator::source(
 
   FeatureSet user_features;
   for (const auto& feature : features) {
-    user_features.add(context.features->get(feature));
+    user_features.add(context.feature_factory->get(feature));
   }
   return TaintConfig(
       /* kind */ context.kind_factory->get(kind),
@@ -428,7 +428,7 @@ TaintConfig generator::sink(
       canonical_names.size() > 0 ? CallInfo::Origin : CallInfo::Declaration;
   FeatureSet user_features;
   for (const auto& feature : features) {
-    user_features.add(context.features->get(feature));
+    user_features.add(context.feature_factory->get(feature));
   }
   return TaintConfig(
       /* kind */ context.kind_factory->get(kind),
@@ -465,7 +465,7 @@ TaintConfig generator::partial_sink(
 
   FeatureSet user_features;
   for (const auto& feature : features) {
-    user_features.add(context.features->get(feature));
+    user_features.add(context.feature_factory->get(feature));
   }
   return TaintConfig(
       /* kind */ context.kind_factory->get_partial(kind, label),

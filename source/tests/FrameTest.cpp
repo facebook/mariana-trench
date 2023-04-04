@@ -114,50 +114,51 @@ TEST_F(FrameTest, FrameLeq) {
                   /* kind */ context.kind_factory->get("TestSource"),
                   test::FrameProperties{
                       .inferred_features = FeatureMayAlwaysSet::make_may(
-                          {context.features->get("FeatureOne")})})
+                          {context.feature_factory->get("FeatureOne")})})
                   .leq(test::make_taint_frame(
                       /* kind */ context.kind_factory->get("TestSource"),
                       test::FrameProperties{
                           .inferred_features = FeatureMayAlwaysSet::make_may(
-                              {context.features->get("FeatureOne"),
-                               context.features->get("FeatureTwo")})})));
-  EXPECT_FALSE(test::make_taint_frame(
-                   /* kind */ context.kind_factory->get("TestSource"),
-                   test::FrameProperties{
-                       .inferred_features = FeatureMayAlwaysSet::make_may(
-                           {context.features->get("FeatureOne"),
-                            context.features->get("FeatureTwo")})})
-                   .leq(test::make_taint_frame(
-                       /* kind */ context.kind_factory->get("TestSource"),
-                       test::FrameProperties{
-                           .inferred_features = FeatureMayAlwaysSet::make_may(
-                               {context.features->get("FeatureOne")})})));
-
-  // Compare user features.
-  EXPECT_TRUE(
+                              {context.feature_factory->get("FeatureOne"),
+                               context.feature_factory->get("FeatureTwo")})})));
+  EXPECT_FALSE(
       test::make_taint_frame(
           /* kind */ context.kind_factory->get("TestSource"),
           test::FrameProperties{
-              .user_features = FeatureSet{context.features->get("FeatureOne")}})
+              .inferred_features = FeatureMayAlwaysSet::make_may(
+                  {context.feature_factory->get("FeatureOne"),
+                   context.feature_factory->get("FeatureTwo")})})
           .leq(test::make_taint_frame(
               /* kind */ context.kind_factory->get("TestSource"),
               test::FrameProperties{
-                  .locally_inferred_features = {},
-                  .user_features = FeatureSet{
-                      context.features->get("FeatureOne"),
-                      context.features->get("FeatureTwo")}})));
+                  .inferred_features = FeatureMayAlwaysSet::make_may(
+                      {context.feature_factory->get("FeatureOne")})})));
+
+  // Compare user features.
+  EXPECT_TRUE(test::make_taint_frame(
+                  /* kind */ context.kind_factory->get("TestSource"),
+                  test::FrameProperties{
+                      .user_features = FeatureSet{context.feature_factory->get(
+                          "FeatureOne")}})
+                  .leq(test::make_taint_frame(
+                      /* kind */ context.kind_factory->get("TestSource"),
+                      test::FrameProperties{
+                          .locally_inferred_features = {},
+                          .user_features = FeatureSet{
+                              context.feature_factory->get("FeatureOne"),
+                              context.feature_factory->get("FeatureTwo")}})));
   EXPECT_FALSE(test::make_taint_frame(
                    /* kind */ context.kind_factory->get("TestSource"),
                    test::FrameProperties{
                        .user_features =
                            FeatureSet{
-                               context.features->get("FeatureOne"),
-                               context.features->get("FeatureTwo")}})
+                               context.feature_factory->get("FeatureOne"),
+                               context.feature_factory->get("FeatureTwo")}})
                    .leq(test::make_taint_frame(
                        /* kind */ context.kind_factory->get("TestSource"),
                        test::FrameProperties{
                            .user_features = FeatureSet{
-                               context.features->get("FeatureOne")}})));
+                               context.feature_factory->get("FeatureOne")}})));
 
   // Compare via_type_of_ports
   EXPECT_TRUE(test::make_taint_frame(
@@ -516,7 +517,8 @@ TEST_F(FrameTest, FrameJoin) {
               .call_position = context.positions->unknown(),
               .distance = 2,
               .inferred_features =
-                  FeatureMayAlwaysSet{context.features->get("FeatureOne")},
+                  FeatureMayAlwaysSet{
+                      context.feature_factory->get("FeatureOne")},
               .call_info = CallInfo::CallSite})
           .join(test::make_taint_frame(
               /* kind */ context.kind_factory->get("TestSource"),
@@ -526,7 +528,8 @@ TEST_F(FrameTest, FrameJoin) {
                   .call_position = context.positions->unknown(),
                   .distance = 2,
                   .inferred_features =
-                      FeatureMayAlwaysSet{context.features->get("FeatureTwo")},
+                      FeatureMayAlwaysSet{
+                          context.feature_factory->get("FeatureTwo")},
                   .call_info = CallInfo::CallSite})),
       test::make_taint_frame(
           /* kind */ context.kind_factory->get("TestSource"),
@@ -536,8 +539,8 @@ TEST_F(FrameTest, FrameJoin) {
               .call_position = context.positions->unknown(),
               .distance = 2,
               .inferred_features = FeatureMayAlwaysSet::make_may(
-                  {context.features->get("FeatureOne"),
-                   context.features->get("FeatureTwo")}),
+                  {context.feature_factory->get("FeatureOne"),
+                   context.feature_factory->get("FeatureTwo")}),
               .call_info = CallInfo::CallSite,
           }));
 
@@ -550,7 +553,8 @@ TEST_F(FrameTest, FrameJoin) {
               .callee = one,
               .call_position = context.positions->unknown(),
               .distance = 2,
-              .user_features = FeatureSet{context.features->get("FeatureOne")},
+              .user_features =
+                  FeatureSet{context.feature_factory->get("FeatureOne")},
               .call_info = CallInfo::CallSite})
           .join(test::make_taint_frame(
               /* kind */ context.kind_factory->get("TestSource"),
@@ -560,7 +564,7 @@ TEST_F(FrameTest, FrameJoin) {
                   .call_position = context.positions->unknown(),
                   .distance = 2,
                   .user_features =
-                      FeatureSet{context.features->get("FeatureTwo")},
+                      FeatureSet{context.feature_factory->get("FeatureTwo")},
                   .call_info = CallInfo::CallSite})),
       test::make_taint_frame(
           /* kind */ context.kind_factory->get("TestSource"),
@@ -571,8 +575,8 @@ TEST_F(FrameTest, FrameJoin) {
               .distance = 2,
               .user_features =
                   FeatureSet{
-                      context.features->get("FeatureOne"),
-                      context.features->get("FeatureTwo")},
+                      context.feature_factory->get("FeatureOne"),
+                      context.feature_factory->get("FeatureTwo")},
               .call_info = CallInfo::CallSite}));
 
   // Join via_type_of_ports
@@ -694,8 +698,8 @@ TEST_F(FrameTest, FrameWithKind) {
           .origins = MethodSet{two},
           .field_origins = FieldSet{field},
           .inferred_features = FeatureMayAlwaysSet::make_may(
-              {context.features->get("FeatureOne"),
-               context.features->get("FeatureTwo")}),
+              {context.feature_factory->get("FeatureOne"),
+               context.feature_factory->get("FeatureTwo")}),
           .call_info = CallInfo::CallSite,
       });
 

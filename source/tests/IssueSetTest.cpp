@@ -432,7 +432,8 @@ TEST_F(IssueSetTest, Insertion) {
       /* source */ Taint{test::make_leaf_taint_config(
           source_kind,
           /* inferred_features */
-          FeatureMayAlwaysSet::make_always({context.features->get("Feature")}),
+          FeatureMayAlwaysSet::make_always(
+              {context.feature_factory->get("Feature")}),
           /* locally_inferred_features */ FeatureMayAlwaysSet::bottom(),
           /* user_features */ FeatureSet::bottom(),
           /* origins */ {})},
@@ -456,7 +457,7 @@ TEST_F(IssueSetTest, Insertion) {
                   source_kind,
                   /* inferred_features */
                   FeatureMayAlwaysSet::make_always(
-                      {context.features->get("Feature")}),
+                      {context.feature_factory->get("Feature")}),
                   /* locally_inferred_features */ FeatureMayAlwaysSet::bottom(),
                   /* user_features */ FeatureSet::bottom(),
                   /* origins */ {})},
@@ -473,8 +474,8 @@ TEST_F(IssueSetTest, Insertion) {
           source_kind,
           /* inferred_features */
           FeatureMayAlwaysSet::make_always(FeatureSet{
-              context.features->get("Feature"),
-              context.features->get("Feature2")}),
+              context.feature_factory->get("Feature"),
+              context.feature_factory->get("Feature2")}),
           /* locally_inferred_features */ FeatureMayAlwaysSet::bottom(),
           /* user_features */ FeatureSet::bottom(),
           /* origins */ {})},
@@ -498,9 +499,10 @@ TEST_F(IssueSetTest, Insertion) {
                   source_kind,
                   /* inferred_features */
                   FeatureMayAlwaysSet(
-                      /* may */ FeatureSet{context.features->get("Feature2")},
+                      /* may */ FeatureSet{context.feature_factory->get(
+                          "Feature2")},
                       /* always */
-                      FeatureSet{context.features->get("Feature")}),
+                      FeatureSet{context.feature_factory->get("Feature")}),
                   /* locally_inferred_features */ FeatureMayAlwaysSet::bottom(),
                   /* user_features */ FeatureSet::bottom(),
                   /* origins */ {})},

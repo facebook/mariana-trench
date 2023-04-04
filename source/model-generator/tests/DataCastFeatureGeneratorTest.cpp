@@ -63,7 +63,7 @@ TEST_F(DataCastFeatureGeneratorTest, CastToInt) {
               /* inferred_features */ FeatureMayAlwaysSet::bottom(),
               /* locally_inferred_features */ FeatureMayAlwaysSet::bottom(),
               /* user_features */
-              FeatureSet{context.features->get("cast:numeric")})})));
+              FeatureSet{context.feature_factory->get("cast:numeric")})})));
 }
 
 TEST_F(DataCastFeatureGeneratorTest, CastToBool) {
@@ -102,5 +102,5 @@ TEST_F(DataCastFeatureGeneratorTest, CastToBool) {
               /* inferred_features */ FeatureMayAlwaysSet::bottom(),
               /* locally_inferred_features */ FeatureMayAlwaysSet::bottom(),
               /* user_features */
-              FeatureSet{context.features->get("cast:boolean")})})));
+              FeatureSet{context.feature_factory->get("cast:boolean")})})));
 }

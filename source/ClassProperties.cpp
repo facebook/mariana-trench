@@ -17,7 +17,7 @@
 #include <mariana-trench/ClassProperties.h>
 #include <mariana-trench/Constants.h>
 #include <mariana-trench/EventLogger.h>
-#include <mariana-trench/Features.h>
+#include <mariana-trench/FeatureFactory.h>
 #include <mariana-trench/Heuristics.h>
 #include <mariana-trench/Log.h>
 #include <mariana-trench/Options.h>
@@ -156,10 +156,10 @@ namespace marianatrench {
 ClassProperties::ClassProperties(
     const Options& options,
     const DexStoresVector& stores,
-    const Features& features,
+    const FeatureFactory& feature_factory,
     const Dependencies& dependencies,
     std::unique_ptr<AndroidResources> android_resources)
-    : features_(features), dependencies_(dependencies) {
+    : feature_factory_(feature_factory), dependencies_(dependencies) {
   try {
     if (android_resources == nullptr) {
       android_resources = create_resource_reader(options.apk_directory());
@@ -247,12 +247,12 @@ FeatureSet ClassProperties::get_manifest_features(
     auto it = component_set.find(class_name);
     if (it != component_set.end()) {
       if (it->second == ExportedKind::Exported) {
-        features.add(features_.get("via-caller-exported"));
+        features.add(feature_factory_.get("via-caller-exported"));
       } else if (it->second == ExportedKind::ExportedWithPermission) {
-        features.add(features_.get("via-caller-exported"));
-        features.add(features_.get("via-caller-permission"));
+        features.add(feature_factory_.get("via-caller-exported"));
+        features.add(feature_factory_.get("via-caller-permission"));
       } else if (it->second == ExportedKind::Unexported) {
-        features.add(features_.get("via-caller-unexported"));
+        features.add(feature_factory_.get("via-caller-unexported"));
       }
       return features;
     }
@@ -262,12 +262,12 @@ FeatureSet ClassProperties::get_manifest_features(
     auto it = component_set.find(outer_class);
     if (it != component_set.end()) {
       if (it->second == ExportedKind::Exported) {
-        features.add(features_.get("via-caller-exported"));
+        features.add(feature_factory_.get("via-caller-exported"));
       } else if (it->second == ExportedKind::ExportedWithPermission) {
-        features.add(features_.get("via-caller-exported"));
-        features.add(features_.get("via-caller-permission"));
+        features.add(feature_factory_.get("via-caller-exported"));
+        features.add(feature_factory_.get("via-caller-permission"));
       } else if (it->second == ExportedKind::Unexported) {
-        features.add(features_.get("via-caller-unexported"));
+        features.add(feature_factory_.get("via-caller-unexported"));
       }
       return features;
     }
@@ -299,7 +299,7 @@ bool ClassProperties::has_privacy_decision(const Method* method) const {
 FeatureMayAlwaysSet ClassProperties::propagate_features(
     const Method* caller,
     const Method* /*callee*/,
-    const Features& feature_factory) const {
+    const FeatureFactory& feature_factory) const {
   FeatureSet features;
 
   if (has_privacy_decision(caller)) {
@@ -325,8 +325,9 @@ FeatureMayAlwaysSet ClassProperties::issue_features(
     auto kind_features =
         get_class_features(clazz, named_kind, /* via_dependency */ false);
 
-    if (!kind_features.contains(features_.get("via-caller-exported")) &&
-        !kind_features.contains(features_.get("via-caller-unexported"))) {
+    if (!kind_features.contains(feature_factory_.get("via-caller-exported")) &&
+        !kind_features.contains(
+            feature_factory_.get("via-caller-unexported"))) {
       kind_features.join_with(
           compute_transitive_class_features(method, named_kind));
     }
@@ -373,18 +374,18 @@ FeatureSet ClassProperties::get_class_features(
   }
 
   if (has_inline_permissions(clazz)) {
-    features.add(features_.get("via-permission-check-in-class"));
+    features.add(feature_factory_.get("via-permission-check-in-class"));
   }
 
   // `via-public-dfa-scheme` feature only applies within the same class.
   if (!via_dependency && is_dfa_public(clazz)) {
-    features.add(features_.get("via-public-dfa-scheme"));
+    features.add(feature_factory_.get("via-public-dfa-scheme"));
   }
   if (via_dependency) {
-    features.add(features_.get("via-dependency-graph"));
-    features.add(features_.get(fmt::format("via-class:{}", clazz)));
+    features.add(feature_factory_.get("via-dependency-graph"));
+    features.add(feature_factory_.get(fmt::format("via-class:{}", clazz)));
     if (dependency_depth > 5) {
-      features.add(features_.get("via-dependency-graph-depth-above-5"));
+      features.add(feature_factory_.get("via-dependency-graph-depth-above-5"));
     }
   }
 
@@ -451,13 +452,13 @@ FeatureSet ClassProperties::compute_transitive_class_features(
 
     const auto& features = get_class_features(class_name, kind, false);
 
-    if (features.contains(features_.get("via-caller-exported"))) {
+    if (features.contains(feature_factory_.get("via-caller-exported"))) {
       target = item;
       break;
     }
 
     if (target.method == nullptr &&
-        features.contains(features_.get("via-caller-unexported"))) {
+        features.contains(feature_factory_.get("via-caller-unexported"))) {
       // Continue search for user exposed properties along other paths.
       target = item;
       continue;

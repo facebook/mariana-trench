@@ -212,7 +212,7 @@ class CallGraph final {
       const Types& types,
       const ClassHierarchies& class_hierarchies,
       Overrides& overrides,
-      const Features& features,
+      const FeatureFactory& feature_factory,
       const Shims& shims,
       MethodMappings& method_mappings);
 

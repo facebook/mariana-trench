@@ -6,13 +6,13 @@
  */
 
 #include <mariana-trench/Feature.h>
-#include <mariana-trench/Features.h>
+#include <mariana-trench/FeatureFactory.h>
 #include <mariana-trench/JsonValidation.h>
 
 namespace marianatrench {
 
 const Feature* Feature::from_json(const Json::Value& value, Context& context) {
-  return context.features->get(JsonValidation::string(value));
+  return context.feature_factory->get(JsonValidation::string(value));
 }
 
 Json::Value Feature::to_json() const {

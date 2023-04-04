@@ -108,7 +108,7 @@ TEST_P(JsonModelGeneratorIntegrationTest, CompareModels) {
       *context.types,
       *context.class_hierarchies,
       *context.overrides,
-      *context.features,
+      *context.feature_factory,
       Shims{},
       method_mappings);
 

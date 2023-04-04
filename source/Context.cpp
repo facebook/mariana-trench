@@ -12,7 +12,7 @@
 #include <mariana-trench/Context.h>
 #include <mariana-trench/ControlFlowGraphs.h>
 #include <mariana-trench/Dependencies.h>
-#include <mariana-trench/Features.h>
+#include <mariana-trench/FeatureFactory.h>
 #include <mariana-trench/FieldCache.h>
 #include <mariana-trench/Fields.h>
 #include <mariana-trench/KindFactory.h>
@@ -31,7 +31,7 @@ namespace marianatrench {
 
 Context::Context()
     : kind_factory(std::make_unique<KindFactory>()),
-      features(std::make_unique<Features>()),
+      feature_factory(std::make_unique<FeatureFactory>()),
       statistics(std::make_unique<Statistics>()),
       transforms(std::make_unique<Transforms>()) {}
 

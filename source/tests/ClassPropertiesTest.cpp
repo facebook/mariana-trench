@@ -125,7 +125,7 @@ Context make_context(const Scope& scope) {
   context.class_properties = std::make_unique<ClassProperties>(
       *context.options,
       context.stores,
-      *context.features,
+      *context.feature_factory,
       *context.dependencies,
       std::make_unique<MockAndroidResources>());
   return context;
@@ -153,9 +153,11 @@ TEST_F(ClassPropertiesTest, InvokeUtil) {
   auto* util = context.methods->get(dex_util);
   auto* activity = context.methods->get(dex_activity);
 
-  auto via_dependency_graph = context.features->get("via-dependency-graph");
-  auto via_caller_exported = context.features->get("via-caller-exported");
-  auto via_class = context.features->get("via-class:LMainActivity;");
+  auto via_dependency_graph =
+      context.feature_factory->get("via-dependency-graph");
+  auto via_caller_exported =
+      context.feature_factory->get("via-caller-exported");
+  auto via_class = context.feature_factory->get("via-class:LMainActivity;");
   std::unordered_set<const Kind*> kind_set = {
       context.kind_factory->get("ActivityUserInput")};
   EXPECT_EQ(
@@ -210,10 +212,13 @@ TEST_F(ClassPropertiesTest, MultipleCallers) {
   auto* main_activity = context.methods->get(dex_main_activity);
   auto* parent_activity = context.methods->get(dex_parent_activity);
 
-  auto via_dependency_graph = context.features->get("via-dependency-graph");
-  auto via_caller_exported = context.features->get("via-caller-exported");
-  auto via_caller_unexported = context.features->get("via-caller-unexported");
-  auto via_class = context.features->get("via-class:LMainActivity;");
+  auto via_dependency_graph =
+      context.feature_factory->get("via-dependency-graph");
+  auto via_caller_exported =
+      context.feature_factory->get("via-caller-exported");
+  auto via_caller_unexported =
+      context.feature_factory->get("via-caller-unexported");
+  auto via_class = context.feature_factory->get("via-class:LMainActivity;");
   std::unordered_set<const Kind*> kind_set = {
       context.kind_factory->get("ActivityUserInput")};
   EXPECT_EQ(
@@ -275,10 +280,13 @@ TEST_F(ClassPropertiesTest, MultipleCallersMultipleHops) {
   auto* main_activity = context.methods->get(dex_main_activity);
   auto* parent_activity = context.methods->get(dex_parent_activity);
 
-  auto via_dependency_graph = context.features->get("via-dependency-graph");
-  auto via_caller_exported = context.features->get("via-caller-exported");
-  auto via_caller_unexported = context.features->get("via-caller-unexported");
-  auto via_class = context.features->get("via-class:LMainActivity;");
+  auto via_dependency_graph =
+      context.feature_factory->get("via-dependency-graph");
+  auto via_caller_exported =
+      context.feature_factory->get("via-caller-exported");
+  auto via_caller_unexported =
+      context.feature_factory->get("via-caller-unexported");
+  auto via_class = context.feature_factory->get("via-class:LMainActivity;");
   std::unordered_set<const Kind*> kind_set = {
       context.kind_factory->get("ActivityUserInput")};
   EXPECT_EQ(
@@ -330,10 +338,13 @@ TEST_F(ClassPropertiesTest, UnexportedHop) {
   auto* main_activity = context.methods->get(dex_main_activity);
   auto* parent_activity = context.methods->get(dex_parent_activity);
 
-  auto via_dependency_graph = context.features->get("via-dependency-graph");
-  auto via_caller_exported = context.features->get("via-caller-exported");
-  auto via_caller_unexported = context.features->get("via-caller-unexported");
-  auto via_class = context.features->get("via-class:LParentActivity;");
+  auto via_dependency_graph =
+      context.feature_factory->get("via-dependency-graph");
+  auto via_caller_exported =
+      context.feature_factory->get("via-caller-exported");
+  auto via_caller_unexported =
+      context.feature_factory->get("via-caller-unexported");
+  auto via_class = context.feature_factory->get("via-class:LParentActivity;");
   std::unordered_set<const Kind*> kind_set = {
       context.kind_factory->get("ActivityUserInput")};
   EXPECT_EQ(
@@ -398,9 +409,11 @@ TEST_F(ClassPropertiesTest, Cyclic) {
   auto* activity2 = context.methods->get(dex_activity2);
   auto* main_activity = context.methods->get(dex_main_activity);
 
-  auto via_dependency_graph = context.features->get("via-dependency-graph");
-  auto via_caller_exported = context.features->get("via-caller-exported");
-  auto via_class = context.features->get("via-class:LMainActivity;");
+  auto via_dependency_graph =
+      context.feature_factory->get("via-dependency-graph");
+  auto via_caller_exported =
+      context.feature_factory->get("via-caller-exported");
+  auto via_class = context.feature_factory->get("via-class:LMainActivity;");
   std::unordered_set<const Kind*> kind_set = {
       context.kind_factory->get("ActivityUserInput")};
   EXPECT_EQ(
@@ -442,10 +455,12 @@ TEST_F(ClassPropertiesTest, NestedClass) {
   auto* util = context.methods->get(dex_util);
   auto* activity = context.methods->get(dex_activity);
 
-  auto via_dependency_graph = context.features->get("via-dependency-graph");
-  auto via_caller_exported = context.features->get("via-caller-exported");
+  auto via_dependency_graph =
+      context.feature_factory->get("via-dependency-graph");
+  auto via_caller_exported =
+      context.feature_factory->get("via-caller-exported");
   auto via_nested_class =
-      context.features->get("via-class:LMainActivity$NestedClass;");
+      context.feature_factory->get("via-class:LMainActivity$NestedClass;");
   std::unordered_set<const Kind*> kind_set = {
       context.kind_factory->get("ActivityUserInput")};
   EXPECT_EQ(

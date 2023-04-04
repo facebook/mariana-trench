@@ -8,7 +8,7 @@
 #include <mariana-trench/ArtificialMethods.h>
 #include <mariana-trench/BackwardTaintTransfer.h>
 #include <mariana-trench/CallGraph.h>
-#include <mariana-trench/Features.h>
+#include <mariana-trench/FeatureFactory.h>
 #include <mariana-trench/Log.h>
 #include <mariana-trench/PartialKind.h>
 #include <mariana-trench/Positions.h>
@@ -45,7 +45,8 @@ bool BackwardTaintTransfer::analyze_check_cast(
           allowed_features.end(),
           instruction->get_type()->str()) != allowed_features.end()) {
     auto features = FeatureMayAlwaysSet::make_always(
-        {context->features.get_via_cast_feature(instruction->get_type())});
+        {context->feature_factory.get_via_cast_feature(
+            instruction->get_type())});
     taint.map(
         [&features](Taint& sinks) { sinks.add_inferred_features(features); });
   }
@@ -110,7 +111,7 @@ void apply_add_features_to_arguments(
         ? context->positions.get(callee.position, parameter, instruction)
         : nullptr;
     if (callee.model.add_via_obscure_feature()) {
-      features.add_always(context->features.get("via-obscure"));
+      features.add_always(context->feature_factory.get("via-obscure"));
     }
 
     if (features.empty()) {
@@ -250,7 +251,8 @@ void apply_propagations(
           input_taint_tree.collapse_inplace(
               /* transform */ [context](Taint& taint) {
                 taint.add_inferred_features(FeatureMayAlwaysSet{
-                    context->features.get_propagation_broadening_feature()});
+                    context->feature_factory
+                        .get_propagation_broadening_feature()});
               });
         }
 
@@ -655,7 +657,7 @@ void infer_input_taint(
           std::move(sinks),
           /* widening_features */
           FeatureMayAlwaysSet{
-              context->features.get_widen_broadening_feature()});
+              context->feature_factory.get_widen_broadening_feature()});
     }
 
     auto propagations_iterator = partitioned_by_propagations.find(true);
@@ -696,7 +698,7 @@ void infer_input_taint(
           std::move(propagations),
           /* widening_features */
           FeatureMayAlwaysSet{
-              context->features.get_widen_broadening_feature()});
+              context->feature_factory.get_widen_broadening_feature()});
     }
   }
 }
@@ -771,8 +773,8 @@ bool BackwardTaintTransfer::analyze_aput(
   auto taint = environment->read(
       aliasing.register_memory_locations(instruction->src(1)));
 
-  auto features =
-      FeatureMayAlwaysSet::make_always({context->features.get("via-array")});
+  auto features = FeatureMayAlwaysSet::make_always(
+      {context->feature_factory.get("via-array")});
   auto* position = context->positions.get(
       context->method(),
       aliasing.position(),
@@ -822,7 +824,7 @@ static bool analyze_numerical_operator(
   TaintTree taint = environment->read(aliasing.result_memory_location());
 
   auto features = FeatureMayAlwaysSet::make_always(
-      {context->features.get("via-numerical-operator")});
+      {context->feature_factory.get("via-numerical-operator")});
   auto* position = context->positions.get(
       context->method(),
       aliasing.position(),

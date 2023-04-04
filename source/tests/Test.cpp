@@ -78,7 +78,7 @@ Context make_context(const DexStore& store) {
       *context.types,
       *context.class_hierarchies,
       *context.overrides,
-      *context.features,
+      *context.feature_factory,
       shims,
       method_mappings);
   auto registry = Registry(context);
@@ -91,7 +91,7 @@ Context make_context(const DexStore& store) {
   context.class_properties = std::make_unique<ClassProperties>(
       *context.options,
       context.stores,
-      *context.features,
+      *context.feature_factory,
       *context.dependencies);
   context.rules = std::make_unique<Rules>(context);
   context.used_kinds = std::make_unique<UsedKinds>(*context.transforms);

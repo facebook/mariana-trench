@@ -36,8 +36,8 @@ TEST_F(FulfilledPartialKindStateTest, Basic) {
 
   auto state = FulfilledPartialKindState();
 
-  const auto feature_1 = context.features->get("Feature1");
-  const auto feature_2 = context.features->get("Feature2");
+  const auto feature_1 = context.feature_factory->get("Feature1");
+  const auto feature_2 = context.feature_factory->get("Feature2");
   const auto* source_1 = context.kind_factory->get("Source1");
   const auto* source_2 = context.kind_factory->get("Source2");
   const auto* fulfilled = context.kind_factory->get_partial("Partial", "a");

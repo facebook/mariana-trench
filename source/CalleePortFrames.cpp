@@ -9,7 +9,7 @@
 
 #include <mariana-trench/Assert.h>
 #include <mariana-trench/CalleePortFrames.h>
-#include <mariana-trench/Features.h>
+#include <mariana-trench/FeatureFactory.h>
 #include <mariana-trench/Heuristics.h>
 #include <mariana-trench/JsonValidation.h>
 #include <mariana-trench/Log.h>
@@ -43,7 +43,7 @@ void materialize_via_type_of_ports(
           callee->get_name());
       continue;
     }
-    const auto* feature = context.features->get_via_type_of_feature(
+    const auto* feature = context.feature_factory->get_via_type_of_feature(
         source_register_types[port.parameter_position()]);
     via_type_of_features_added.push_back(feature);
     inferred_features.add_always(feature);
@@ -74,7 +74,7 @@ void materialize_via_value_of_ports(
           callee->get_name());
       continue;
     }
-    const auto* feature = context.features->get_via_value_of_feature(
+    const auto* feature = context.feature_factory->get_via_value_of_feature(
         source_constant_arguments[port.parameter_position()]);
     inferred_features.add_always(feature);
   }

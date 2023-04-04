@@ -9,7 +9,7 @@
 
 #include <Show.h>
 
-#include <mariana-trench/Features.h>
+#include <mariana-trench/FeatureFactory.h>
 #include <mariana-trench/Log.h>
 #include <mariana-trench/Overrides.h>
 
@@ -33,7 +33,7 @@ MethodContext::MethodContext(
       dependencies(*context.dependencies),
       scheduler(*context.scheduler),
       kind_factory(*context.kind_factory),
-      features(*context.features),
+      feature_factory(*context.feature_factory),
       registry(registry),
       transforms(*context.transforms),
       used_kinds(*context.used_kinds),
@@ -124,7 +124,7 @@ Model MethodContext::model_at_callsite(
   }
 
   model.approximate(
-      FeatureMayAlwaysSet{context_.features->get_widen_broadening_feature()});
+      FeatureMayAlwaysSet{feature_factory.get_widen_broadening_feature()});
 
   callsite_model_cache_.emplace(CacheKey{call_target, position}, model);
   return model;

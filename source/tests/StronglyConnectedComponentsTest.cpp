@@ -59,7 +59,7 @@ Context test_components(const Scope& scope) {
       *context.types,
       *context.class_hierarchies,
       *context.overrides,
-      *context.features,
+      *context.feature_factory,
       Shims{},
       method_mappings);
   context.rules = std::make_unique<Rules>(context);

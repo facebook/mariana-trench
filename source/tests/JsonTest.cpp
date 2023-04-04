@@ -970,7 +970,8 @@ TEST_F(JsonTest, TaintConfig) {
           /* kind */ context.kind_factory->get("TestSource"),
           test::FrameProperties{
               .inferred_features =
-                  FeatureMayAlwaysSet{context.features->get("FeatureOne")},
+                  FeatureMayAlwaysSet{
+                      context.feature_factory->get("FeatureOne")},
               .locally_inferred_features = FeatureMayAlwaysSet::bottom()}));
   EXPECT_EQ(
       TaintConfig::from_json(
@@ -985,8 +986,8 @@ TEST_F(JsonTest, TaintConfig) {
           test::FrameProperties{
               .inferred_features =
                   FeatureMayAlwaysSet{
-                      context.features->get("FeatureOne"),
-                      context.features->get("FeatureTwo")},
+                      context.feature_factory->get("FeatureOne"),
+                      context.feature_factory->get("FeatureTwo")},
               .locally_inferred_features = FeatureMayAlwaysSet::bottom()}));
   EXPECT_EQ(
       TaintConfig::from_json(
@@ -1001,8 +1002,10 @@ TEST_F(JsonTest, TaintConfig) {
           /* kind */ context.kind_factory->get("TestSource"),
           test::FrameProperties{
               .inferred_features = FeatureMayAlwaysSet(
-                  /* may */ FeatureSet{context.features->get("FeatureOne")},
-                  /* always */ FeatureSet{context.features->get("FeatureTwo")}),
+                  /* may */ FeatureSet{context.feature_factory->get(
+                      "FeatureOne")},
+                  /* always */
+                  FeatureSet{context.feature_factory->get("FeatureTwo")}),
               .locally_inferred_features = FeatureMayAlwaysSet::bottom()}));
   EXPECT_EQ(
       TaintConfig::from_json(
@@ -1016,7 +1019,8 @@ TEST_F(JsonTest, TaintConfig) {
           /* kind */ context.kind_factory->get("TestSource"),
           test::FrameProperties{
               .inferred_features = FeatureMayAlwaysSet(
-                  /* may */ FeatureSet{context.features->get("FeatureOne")},
+                  /* may */ FeatureSet{context.feature_factory->get(
+                      "FeatureOne")},
                   /* always */ FeatureSet{}),
               .locally_inferred_features = FeatureMayAlwaysSet::bottom()}));
   EXPECT_EQ(
@@ -1033,8 +1037,8 @@ TEST_F(JsonTest, TaintConfig) {
               .inferred_features = FeatureMayAlwaysSet(
                   /* may */
                   FeatureSet{
-                      context.features->get("FeatureOne"),
-                      context.features->get("FeatureTwo")},
+                      context.feature_factory->get("FeatureOne"),
+                      context.feature_factory->get("FeatureTwo")},
                   /* always */ FeatureSet{}),
               .locally_inferred_features = FeatureMayAlwaysSet::bottom()}));
   EXPECT_EQ(
@@ -1051,7 +1055,7 @@ TEST_F(JsonTest, TaintConfig) {
               .inferred_features = FeatureMayAlwaysSet::bottom(),
               .locally_inferred_features = FeatureMayAlwaysSet::bottom(),
               .user_features =
-                  FeatureSet{context.features->get("FeatureOne")}}));
+                  FeatureSet{context.feature_factory->get("FeatureOne")}}));
   EXPECT_EQ(
       TaintConfig::from_json(
           test::parse_json(
@@ -1066,8 +1070,8 @@ TEST_F(JsonTest, TaintConfig) {
               .inferred_features = FeatureMayAlwaysSet::bottom(),
               .locally_inferred_features = FeatureMayAlwaysSet::bottom(),
               .user_features = FeatureSet{
-                  context.features->get("FeatureOne"),
-                  context.features->get("FeatureTwo")}}));
+                  context.feature_factory->get("FeatureOne"),
+                  context.feature_factory->get("FeatureTwo")}}));
   EXPECT_EQ(
       TaintConfig::from_json(
           test::parse_json(
@@ -1081,11 +1085,12 @@ TEST_F(JsonTest, TaintConfig) {
           /* kind */ context.kind_factory->get("TestSource"),
           test::FrameProperties{
               .inferred_features = FeatureMayAlwaysSet(
-                  /* may */ FeatureSet{context.features->get("FeatureTwo")},
+                  /* may */ FeatureSet{context.feature_factory->get(
+                      "FeatureTwo")},
                   /* always */ FeatureSet{}),
               .locally_inferred_features = FeatureMayAlwaysSet::bottom(),
               .user_features =
-                  FeatureSet{context.features->get("FeatureOne")}}));
+                  FeatureSet{context.feature_factory->get("FeatureOne")}}));
   EXPECT_EQ(
       TaintConfig::from_json(
           test::parse_json(
@@ -1100,12 +1105,13 @@ TEST_F(JsonTest, TaintConfig) {
           /* kind */ context.kind_factory->get("TestSource"),
           test::FrameProperties{
               .inferred_features = FeatureMayAlwaysSet(
-                  /* may */ FeatureSet{context.features->get("FeatureTwo")},
+                  /* may */ FeatureSet{context.feature_factory->get(
+                      "FeatureTwo")},
                   /* always */
-                  FeatureSet{context.features->get("FeatureThree")}),
+                  FeatureSet{context.feature_factory->get("FeatureThree")}),
               .locally_inferred_features = FeatureMayAlwaysSet::bottom(),
               .user_features =
-                  FeatureSet{context.features->get("FeatureOne")}}));
+                  FeatureSet{context.feature_factory->get("FeatureOne")}}));
   EXPECT_EQ(
       TaintConfig::from_json(
           test::parse_json(
@@ -1121,7 +1127,7 @@ TEST_F(JsonTest, TaintConfig) {
           test::FrameProperties{
               .locally_inferred_features = FeatureMayAlwaysSet::bottom(),
               .user_features =
-                  FeatureSet{context.features->get("FeatureOne")}}));
+                  FeatureSet{context.feature_factory->get("FeatureOne")}}));
 
   // Parse via_type_of_ports
   EXPECT_EQ(
@@ -1366,12 +1372,13 @@ TEST_F(JsonTest, Frame) {
               /* kind */ context.kind_factory->get("TestSource"),
               test::FrameProperties{
                   .inferred_features = FeatureMayAlwaysSet::make_always(
-                      {context.features->get("FeatureTwo")}),
+                      {context.feature_factory->get("FeatureTwo")}),
                   .locally_inferred_features = FeatureMayAlwaysSet(
-                      /* may */ FeatureSet{context.features->get("FeatureOne")},
+                      /* may */ FeatureSet{context.feature_factory->get(
+                          "FeatureOne")},
                       /* always */ {}),
-                  .user_features =
-                      FeatureSet({context.features->get("FeatureThree")})})
+                  .user_features = FeatureSet(
+                      {context.feature_factory->get("FeatureThree")})})
               .to_json(/* local_positions */ {})),
       test::parse_json(R"({
           "call_info": "Declaration",
@@ -1465,7 +1472,7 @@ TEST_F(JsonTest, Propagation) {
           /* output_paths */
           PathTreeDomain{{Path{}, SingletonAbstractDomain()}},
           /* inferred_features */
-          FeatureMayAlwaysSet{context.features->get("FeatureOne")},
+          FeatureMayAlwaysSet{context.feature_factory->get("FeatureOne")},
           /* locally_inferred_features */ FeatureMayAlwaysSet::bottom(),
           /* user_features */ {}));
 
@@ -1481,7 +1488,7 @@ TEST_F(JsonTest, Propagation) {
           PathTreeDomain{
               {Path{PathElement::field("x")}, SingletonAbstractDomain()}},
           /* inferred_features */
-          FeatureMayAlwaysSet{context.features->get("FeatureOne")},
+          FeatureMayAlwaysSet{context.feature_factory->get("FeatureOne")},
           /* locally_inferred_features */ FeatureMayAlwaysSet::bottom(),
           /* user_features */ {}));
 
@@ -1501,8 +1508,9 @@ TEST_F(JsonTest, Propagation) {
           PathTreeDomain{{Path{}, SingletonAbstractDomain()}},
           /* inferred_features */
           FeatureMayAlwaysSet(
-              /* may */ FeatureSet{context.features->get("FeatureOne")},
-              /* always */ FeatureSet{context.features->get("FeatureTwo")}),
+              /* may */ FeatureSet{context.feature_factory->get("FeatureOne")},
+              /* always */
+              FeatureSet{context.feature_factory->get("FeatureTwo")}),
           /* locally_inferred_features */ FeatureMayAlwaysSet::bottom(),
           /* user_features */ {}));
   EXPECT_EQ(
@@ -1520,7 +1528,7 @@ TEST_F(JsonTest, Propagation) {
           PathTreeDomain{{Path{}, SingletonAbstractDomain()}},
           /* inferred_features */
           FeatureMayAlwaysSet(
-              /* may */ FeatureSet{context.features->get("FeatureOne")},
+              /* may */ FeatureSet{context.feature_factory->get("FeatureOne")},
               /* always */ FeatureSet{}),
           /* locally_inferred_features */ FeatureMayAlwaysSet::bottom(),
           /* user_features */ {}));
@@ -1541,7 +1549,7 @@ TEST_F(JsonTest, Propagation) {
           /* inferred_features */ FeatureMayAlwaysSet::bottom(),
           /* locally_inferred_features */ FeatureMayAlwaysSet::bottom(),
           /* user_features */
-          FeatureSet{context.features->get("FeatureOne")}));
+          FeatureSet{context.feature_factory->get("FeatureOne")}));
   EXPECT_EQ(
       PropagationConfig::from_json(
           test::parse_json(
@@ -1560,8 +1568,8 @@ TEST_F(JsonTest, Propagation) {
           /* locally_inferred_features */ FeatureMayAlwaysSet::bottom(),
           /* user_features */
           FeatureSet{
-              context.features->get("FeatureOne"),
-              context.features->get("FeatureTwo")}));
+              context.feature_factory->get("FeatureOne"),
+              context.feature_factory->get("FeatureTwo")}));
   EXPECT_EQ(
       PropagationConfig::from_json(
           test::parse_json(
@@ -1578,10 +1586,11 @@ TEST_F(JsonTest, Propagation) {
           /* output_paths */
           PathTreeDomain{{Path{}, SingletonAbstractDomain()}},
           /* inferred_features */
-          FeatureMayAlwaysSet::make_may({context.features->get("FeatureTwo")}),
+          FeatureMayAlwaysSet::make_may(
+              {context.feature_factory->get("FeatureTwo")}),
           /* locally_inferred_features */ FeatureMayAlwaysSet::bottom(),
           /* user_features */
-          FeatureSet{context.features->get("FeatureOne")}));
+          FeatureSet{context.feature_factory->get("FeatureOne")}));
   EXPECT_EQ(
       PropagationConfig::from_json(
           test::parse_json(
@@ -1600,12 +1609,12 @@ TEST_F(JsonTest, Propagation) {
           PathTreeDomain{{Path{}, SingletonAbstractDomain()}},
           /* inferred_features */
           FeatureMayAlwaysSet(
-              /* may */ FeatureSet{context.features->get("FeatureTwo")},
+              /* may */ FeatureSet{context.feature_factory->get("FeatureTwo")},
               /* always */
-              FeatureSet{context.features->get("FeatureThree")}),
+              FeatureSet{context.feature_factory->get("FeatureThree")}),
           /* locally_inferred_features */ FeatureMayAlwaysSet::bottom(),
           /* user_features */
-          FeatureSet{context.features->get("FeatureOne")}));
+          FeatureSet{context.feature_factory->get("FeatureOne")}));
   EXPECT_EQ(
       PropagationConfig::from_json(
           test::parse_json(
@@ -1625,7 +1634,7 @@ TEST_F(JsonTest, Propagation) {
           /* inferred_features */ FeatureMayAlwaysSet(),
           /* locally_inferred_features */ FeatureMayAlwaysSet::bottom(),
           /* user_features */
-          FeatureSet{context.features->get("FeatureOne")}));
+          FeatureSet{context.feature_factory->get("FeatureOne")}));
 }
 
 TEST_F(JsonTest, Model) {
@@ -2333,23 +2342,24 @@ TEST_F(JsonTest, Model) {
           /* port_sanitizers */ {},
           /* attach_to_sources */
           {{Root(Root::Kind::Argument, 1),
-            FeatureSet{context.features->get("via-method")}}}));
+            FeatureSet{context.feature_factory->get("via-method")}}}));
   EXPECT_EQ(
-      test::sorted_json(Model(
-                            method,
-                            context,
-                            Model::Mode::Normal,
-                            /* frozen */ Model::FreezeKind::None,
-                            /* generations */ {},
-                            /* parameter_sources */ {},
-                            /* sinks */ {},
-                            /* propagations */ {},
-                            /* global_sanitizers */ {},
-                            /* port_sanitizers */ {},
-                            /* attach_to_sources */
-                            {{Root(Root::Kind::Argument, 1),
-                              FeatureSet{context.features->get("via-method")}}})
-                            .to_json()),
+      test::sorted_json(
+          Model(
+              method,
+              context,
+              Model::Mode::Normal,
+              /* frozen */ Model::FreezeKind::None,
+              /* generations */ {},
+              /* parameter_sources */ {},
+              /* sinks */ {},
+              /* propagations */ {},
+              /* global_sanitizers */ {},
+              /* port_sanitizers */ {},
+              /* attach_to_sources */
+              {{Root(Root::Kind::Argument, 1),
+                FeatureSet{context.feature_factory->get("via-method")}}})
+              .to_json()),
       test::parse_json(R"#({
         "method": "LData;.method:(LData;LData;)V",
         "attach_to_sources": [
@@ -2386,24 +2396,25 @@ TEST_F(JsonTest, Model) {
           /* attach_to_sources */ {},
           /* attach_to_sinks */
           {{Root(Root::Kind::Argument, 1),
-            FeatureSet{context.features->get("via-method")}}}));
+            FeatureSet{context.feature_factory->get("via-method")}}}));
   EXPECT_EQ(
-      test::sorted_json(Model(
-                            method,
-                            context,
-                            Model::Mode::Normal,
-                            /* frozen */ Model::FreezeKind::None,
-                            /* generations */ {},
-                            /* parameter_sources */ {},
-                            /* sinks */ {},
-                            /* propagations */ {},
-                            /* global_sanitizers */ {},
-                            /* port_sanitizers */ {},
-                            /* attach_to_sources */ {},
-                            /* attach_to_sinks */
-                            {{Root(Root::Kind::Argument, 1),
-                              FeatureSet{context.features->get("via-method")}}})
-                            .to_json()),
+      test::sorted_json(
+          Model(
+              method,
+              context,
+              Model::Mode::Normal,
+              /* frozen */ Model::FreezeKind::None,
+              /* generations */ {},
+              /* parameter_sources */ {},
+              /* sinks */ {},
+              /* propagations */ {},
+              /* global_sanitizers */ {},
+              /* port_sanitizers */ {},
+              /* attach_to_sources */ {},
+              /* attach_to_sinks */
+              {{Root(Root::Kind::Argument, 1),
+                FeatureSet{context.feature_factory->get("via-method")}}})
+              .to_json()),
       test::parse_json(R"#({
         "method": "LData;.method:(LData;LData;)V",
         "attach_to_sinks": [
@@ -2441,25 +2452,26 @@ TEST_F(JsonTest, Model) {
           /* attach_to_sinks */ {},
           /* attach_to_propagations */
           {{Root(Root::Kind::Argument, 1),
-            FeatureSet{context.features->get("via-method")}}}));
+            FeatureSet{context.feature_factory->get("via-method")}}}));
   EXPECT_EQ(
-      test::sorted_json(Model(
-                            method,
-                            context,
-                            Model::Mode::Normal,
-                            /* frozen */ Model::FreezeKind::None,
-                            /* generations */ {},
-                            /* parameter_sources */ {},
-                            /* sinks */ {},
-                            /* propagations */ {},
-                            /* global_sanitizers */ {},
-                            /* port_sanitizers */ {},
-                            /* attach_to_sources */ {},
-                            /* attach_to_sinks */ {},
-                            /* attach_to_propagations */
-                            {{Root(Root::Kind::Argument, 1),
-                              FeatureSet{context.features->get("via-method")}}})
-                            .to_json()),
+      test::sorted_json(
+          Model(
+              method,
+              context,
+              Model::Mode::Normal,
+              /* frozen */ Model::FreezeKind::None,
+              /* generations */ {},
+              /* parameter_sources */ {},
+              /* sinks */ {},
+              /* propagations */ {},
+              /* global_sanitizers */ {},
+              /* port_sanitizers */ {},
+              /* attach_to_sources */ {},
+              /* attach_to_sinks */ {},
+              /* attach_to_propagations */
+              {{Root(Root::Kind::Argument, 1),
+                FeatureSet{context.feature_factory->get("via-method")}}})
+              .to_json()),
       test::parse_json(R"#({
         "method": "LData;.method:(LData;LData;)V",
         "attach_to_propagations": [
@@ -2498,26 +2510,27 @@ TEST_F(JsonTest, Model) {
           /* attach_to_propagations */ {},
           /* add_features_to_arguments */
           {{Root(Root::Kind::Argument, 1),
-            FeatureSet{context.features->get("via-method")}}}));
+            FeatureSet{context.feature_factory->get("via-method")}}}));
   EXPECT_EQ(
-      test::sorted_json(Model(
-                            method,
-                            context,
-                            Model::Mode::Normal,
-                            /* frozen */ Model::FreezeKind::None,
-                            /* generations */ {},
-                            /* parameter_sources */ {},
-                            /* sinks */ {},
-                            /* propagations */ {},
-                            /* global_sanitizers */ {},
-                            /* port_sanitizers */ {},
-                            /* attach_to_sources */ {},
-                            /* attach_to_sinks */ {},
-                            /* attach_to_propagations */ {},
-                            /* add_features_to_arguments */
-                            {{Root(Root::Kind::Argument, 1),
-                              FeatureSet{context.features->get("via-method")}}})
-                            .to_json()),
+      test::sorted_json(
+          Model(
+              method,
+              context,
+              Model::Mode::Normal,
+              /* frozen */ Model::FreezeKind::None,
+              /* generations */ {},
+              /* parameter_sources */ {},
+              /* sinks */ {},
+              /* propagations */ {},
+              /* global_sanitizers */ {},
+              /* port_sanitizers */ {},
+              /* attach_to_sources */ {},
+              /* attach_to_sinks */ {},
+              /* attach_to_propagations */ {},
+              /* add_features_to_arguments */
+              {{Root(Root::Kind::Argument, 1),
+                FeatureSet{context.feature_factory->get("via-method")}}})
+              .to_json()),
       test::parse_json(R"#({
         "method": "LData;.method:(LData;LData;)V",
         "add_features_to_arguments": [
@@ -2668,7 +2681,7 @@ TEST_F(JsonTest, FieldModel) {
   const auto* source_kind = context.kind_factory->get("TestSource");
   const auto* source_kind2 = context.kind_factory->get("TestSource2");
   const auto* sink_kind = context.kind_factory->get("TestSink");
-  const auto* feature = context.features->get("test-feature");
+  const auto* feature = context.feature_factory->get("test-feature");
 
   EXPECT_THROW(
       FieldModel::from_json(field, test::parse_json(R"(1)"), context),

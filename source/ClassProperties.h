@@ -30,7 +30,7 @@ class ClassProperties final {
   explicit ClassProperties(
       const Options& options,
       const DexStoresVector& stores,
-      const Features& features,
+      const FeatureFactory& feature_factory,
       const Dependencies& dependencies,
       std::unique_ptr<AndroidResources> android_resources = nullptr);
 
@@ -62,7 +62,7 @@ class ClassProperties final {
   FeatureMayAlwaysSet propagate_features(
       const Method* caller,
       const Method* callee,
-      const Features& features) const;
+      const FeatureFactory& feature_factory) const;
 
   /* A set of features to add on issues found in the given method. */
   FeatureMayAlwaysSet issue_features(
@@ -84,7 +84,7 @@ class ClassProperties final {
   // Note: This is not thread-safe.
   StringStorage strings_;
 
-  const Features& features_;
+  const FeatureFactory& feature_factory_;
   const Dependencies& dependencies_;
   // This is a cache and updating it does not change the internal state of the
   // object and hence is safe to mark as mutable.

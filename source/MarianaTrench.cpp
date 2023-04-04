@@ -195,7 +195,7 @@ Registry MarianaTrench::analyze(Context& context) {
         *context.types,
         *context.class_hierarchies,
         *context.overrides,
-        *context.features,
+        *context.feature_factory,
         shims,
         method_mappings);
     context.statistics->log_time("call_graph", call_graph_timer);
@@ -299,7 +299,7 @@ Registry MarianaTrench::analyze(Context& context) {
     context.class_properties = std::make_unique<ClassProperties>(
         *context.options,
         context.stores,
-        *context.features,
+        *context.feature_factory,
         *context.dependencies);
     context.statistics->log_time("class_properties", class_properties_timer);
     LOG(1,

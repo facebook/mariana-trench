@@ -7,7 +7,7 @@
 
 #include <Show.h>
 
-#include <mariana-trench/Features.h>
+#include <mariana-trench/FeatureFactory.h>
 #include <mariana-trench/Log.h>
 #include <mariana-trench/Positions.h>
 #include <mariana-trench/TransferCall.h>
@@ -217,7 +217,7 @@ void add_field_features(
     return;
   }
   auto features = FeatureMayAlwaysSet::make_always(
-      {context->features.get("via-inner-class-this")});
+      {context->feature_factory.get("via-inner-class-this")});
   taint_tree.map(
       [&features](Taint& taint) { taint.add_inferred_features(features); });
 }
