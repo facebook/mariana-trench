@@ -719,24 +719,28 @@ Taint Model::apply_source_sink_sanitizers(
     Taint taint,
     Root root) {
   mt_assert(kind != SanitizerKind::Propagations);
+
+  std::unordered_set<const Kind*> sanitized_kinds;
   for (const auto& sanitizer_set :
        {global_sanitizers_, port_sanitizers_.get(root)}) {
     for (const auto& sanitizer : sanitizer_set) {
       if (sanitizer.sanitizer_kind() == kind) {
-        if (sanitizer.kinds().is_top()) {
+        const auto& kinds = sanitizer.kinds();
+        if (kinds.is_top()) {
           return Taint::bottom();
         }
-        taint.transform_kind_with_features(
-            [&sanitizer](const Kind* kind) -> std::vector<const Kind*> {
-              if (sanitizer.kinds().contains(kind)) {
-                return {};
-              }
-              return {kind};
-            },
-            /* add_features, never called */ nullptr);
+        sanitized_kinds.insert(
+            kinds.elements().begin(), kinds.elements().end());
       }
     }
   }
+
+  if (!sanitized_kinds.empty()) {
+    taint.filter([&sanitized_kinds](const Frame& frame) {
+      return sanitized_kinds.find(frame.kind()) == sanitized_kinds.end();
+    });
+  }
+
   return taint;
 }
 
