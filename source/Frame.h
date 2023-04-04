@@ -34,7 +34,7 @@
 #include <mariana-trench/Position.h>
 #include <mariana-trench/SingletonAbstractDomain.h>
 #include <mariana-trench/TransformKind.h>
-#include <mariana-trench/Transforms.h>
+#include <mariana-trench/TransformsFactory.h>
 
 namespace marianatrench {
 
@@ -312,7 +312,7 @@ class Frame final : public sparta::AbstractDomain<Frame> {
 
   Frame apply_transform(
       const KindFactory& kind_factory,
-      const Transforms& transforms,
+      const TransformsFactory& transforms_factory,
       const UsedKinds& used_kinds,
       AccessPath callee_port,
       const TransformList* local_transforms) const;

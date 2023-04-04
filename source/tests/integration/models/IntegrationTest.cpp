@@ -512,7 +512,7 @@ TEST_P(IntegrationTest, ReturnsExpectedModel) {
       method_mappings);
   context.rules = std::make_unique<Rules>(context, rules);
   context.used_kinds = std::make_unique<UsedKinds>(
-      UsedKinds::from_rules(*context.rules, *context.transforms));
+      UsedKinds::from_rules(*context.rules, *context.transforms_factory));
 
   Registry registry(context);
   registry.join_with(Registry(

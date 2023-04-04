@@ -32,7 +32,7 @@ class CallGraph;
 class Rules;
 class Dependencies;
 class Scheduler;
-class Transforms;
+class TransformsFactory;
 class UsedKinds;
 
 /**
@@ -67,7 +67,7 @@ class Context final {
   std::unique_ptr<Rules> rules;
   std::unique_ptr<Dependencies> dependencies;
   std::unique_ptr<Scheduler> scheduler;
-  std::unique_ptr<Transforms> transforms;
+  std::unique_ptr<TransformsFactory> transforms_factory;
   std::unique_ptr<UsedKinds> used_kinds;
 };
 

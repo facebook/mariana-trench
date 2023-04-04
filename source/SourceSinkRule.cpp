@@ -9,7 +9,7 @@
 #include <mariana-trench/NamedKind.h>
 #include <mariana-trench/Rule.h>
 #include <mariana-trench/SourceSinkRule.h>
-#include <mariana-trench/Transforms.h>
+#include <mariana-trench/TransformsFactory.h>
 
 namespace marianatrench {
 
@@ -38,7 +38,7 @@ std::unique_ptr<Rule> SourceSinkRule::from_json(
 
   const TransformList* transforms = nullptr;
   if (value.isMember("transforms")) {
-    transforms = context.transforms->create(
+    transforms = context.transforms_factory->create(
         TransformList::from_json(value["transforms"], context));
   }
 

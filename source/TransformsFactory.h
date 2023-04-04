@@ -23,11 +23,11 @@ struct TransformCombinations {
   std::unordered_set<const TransformList*> subsequences;
 };
 
-class Transforms final {
+class TransformsFactory final {
  public:
-  Transforms() = default;
+  TransformsFactory() = default;
 
-  DELETE_COPY_CONSTRUCTORS_AND_ASSIGNMENTS(Transforms)
+  DELETE_COPY_CONSTRUCTORS_AND_ASSIGNMENTS(TransformsFactory)
 
  public:
   size_t size() const {

@@ -18,7 +18,7 @@
 namespace marianatrench {
 
 Rules::Rules(Context& context, std::vector<std::unique_ptr<Rule>> rules)
-    : transforms_factory(*context.transforms),
+    : transforms_factory(*context.transforms_factory),
       kind_factory(*context.kind_factory) {
   for (auto& rule : rules) {
     add(context, std::move(rule));
@@ -26,7 +26,7 @@ Rules::Rules(Context& context, std::vector<std::unique_ptr<Rule>> rules)
 }
 
 Rules::Rules(Context& context, const Json::Value& rules_value)
-    : transforms_factory(*context.transforms),
+    : transforms_factory(*context.transforms_factory),
       kind_factory(*context.kind_factory) {
   for (const auto& rule_value : JsonValidation::null_or_array(rules_value)) {
     add(context, Rule::from_json(rule_value, context));

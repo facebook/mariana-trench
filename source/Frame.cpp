@@ -150,7 +150,7 @@ Frame Frame::with_kind(const Kind* kind) const {
 
 Frame Frame::apply_transform(
     const KindFactory& kind_factory,
-    const Transforms& transforms,
+    const TransformsFactory& transforms_factory,
     const UsedKinds& used_kinds,
     AccessPath callee_port,
     const TransformList* local_transforms) const {
@@ -160,8 +160,8 @@ Frame Frame::apply_transform(
   if (const auto* transform_kind = kind_->as<TransformKind>()) {
     // If the current kind is already a TransformKind, append existing
     // local_transforms.
-    local_transforms =
-        transforms.concat(local_transforms, transform_kind->local_transforms());
+    local_transforms = transforms_factory.concat(
+        local_transforms, transform_kind->local_transforms());
     global_transforms = transform_kind->global_transforms();
     base_kind = transform_kind->base_kind();
   }

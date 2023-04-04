@@ -8,7 +8,7 @@
 #include <mariana-trench/Assert.h>
 #include <mariana-trench/KindFactory.h>
 #include <mariana-trench/TransformOperations.h>
-#include <mariana-trench/Transforms.h>
+#include <mariana-trench/TransformsFactory.h>
 
 namespace marianatrench {
 namespace transforms {
@@ -38,7 +38,7 @@ TaintTree apply_propagation(
         path,
         taint.apply_transform(
             context->kind_factory,
-            context->transforms,
+            context->transforms_factory,
             context->used_kinds,
             transform_kind->local_transforms()),
         UpdateKind::Weak);

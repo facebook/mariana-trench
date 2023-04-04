@@ -11,7 +11,7 @@
 
 #include <mariana-trench/SourceSinkRule.h>
 #include <mariana-trench/TransformList.h>
-#include <mariana-trench/Transforms.h>
+#include <mariana-trench/TransformsFactory.h>
 #include <mariana-trench/tests/Test.h>
 
 namespace marianatrench {
@@ -50,9 +50,10 @@ std::unordered_set<std::string> to_trace_strings(
 
 TEST_F(UsedKindsTest, Combinations) {
   auto context = test::make_empty_context();
-  auto* t1234 = context.transforms->create({"1", "2", "3", "4"}, context);
+  auto* t1234 =
+      context.transforms_factory->create({"1", "2", "3", "4"}, context);
 
-  auto combinations = context.transforms->all_combinations(t1234);
+  auto combinations = context.transforms_factory->all_combinations(t1234);
   EXPECT_EQ(combinations.transform->to_trace_string(), "1:2:3:4");
 
   EXPECT_THAT(
@@ -71,8 +72,9 @@ TEST_F(UsedKindsTest, UsedTransformKinds) {
   const auto* sink_x = context.kind_factory->get("X");
   const auto* sink_y = context.kind_factory->get("Y");
 
-  const auto* t11 = context.transforms->create({"1", "1"}, context);
-  const auto* t1234 = context.transforms->create({"1", "2", "3", "4"}, context);
+  const auto* t11 = context.transforms_factory->create({"1", "1"}, context);
+  const auto* t1234 =
+      context.transforms_factory->create({"1", "2", "3", "4"}, context);
 
   EXPECT_EQ(t11->size(), 2);
   EXPECT_EQ(t1234->size(), 4);
@@ -94,7 +96,7 @@ TEST_F(UsedKindsTest, UsedTransformKinds) {
       /* transforms */ t1234));
 
   auto rules = Rules(context, std::move(rule_list));
-  auto used_kinds = UsedKinds::from_rules(rules, *context.transforms);
+  auto used_kinds = UsedKinds::from_rules(rules, *context.transforms_factory);
 
   const auto& named_kind_to_transforms = used_kinds.named_kind_to_transforms();
   const auto& propagation_kind_to_transforms =

@@ -23,7 +23,7 @@
 #include <mariana-trench/Rules.h>
 #include <mariana-trench/Scheduler.h>
 #include <mariana-trench/Statistics.h>
-#include <mariana-trench/Transforms.h>
+#include <mariana-trench/TransformsFactory.h>
 #include <mariana-trench/Types.h>
 #include <mariana-trench/UsedKinds.h>
 
@@ -33,7 +33,7 @@ Context::Context()
     : kind_factory(std::make_unique<KindFactory>()),
       feature_factory(std::make_unique<FeatureFactory>()),
       statistics(std::make_unique<Statistics>()),
-      transforms(std::make_unique<Transforms>()) {}
+      transforms_factory(std::make_unique<TransformsFactory>()) {}
 
 Context::Context(Context&&) noexcept = default;
 

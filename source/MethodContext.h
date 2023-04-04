@@ -66,7 +66,7 @@ class MethodContext final {
   const KindFactory& kind_factory;
   const FeatureFactory& feature_factory;
   const Registry& registry;
-  const Transforms& transforms;
+  const TransformsFactory& transforms_factory;
   const UsedKinds& used_kinds;
   MemoryFactory memory_factory;
   AliasAnalysisResults aliasing;

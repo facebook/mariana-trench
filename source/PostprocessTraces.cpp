@@ -47,7 +47,7 @@ bool check_callee_kinds(
     }
 
     if (global_transforms ==
-        context.transforms->concat(
+        context.transforms_factory->concat(
             frame_transform_kind->local_transforms(),
             frame_transform_kind->global_transforms())) {
       return true;

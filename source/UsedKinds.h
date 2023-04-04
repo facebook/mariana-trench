@@ -12,7 +12,7 @@
 #include <mariana-trench/KindFactory.h>
 #include <mariana-trench/Registry.h>
 #include <mariana-trench/TransformKind.h>
-#include <mariana-trench/Transforms.h>
+#include <mariana-trench/TransformsFactory.h>
 
 namespace marianatrench {
 
@@ -23,12 +23,15 @@ class UsedKinds {
   using PropagationKindTransformsSet = std::unordered_set<const TransformList*>;
 
  public:
-  explicit UsedKinds(const Transforms& transforms) : transforms_(transforms) {}
+  explicit UsedKinds(const TransformsFactory& transforms_factory)
+      : transforms_factory_(transforms_factory) {}
 
   INCLUDE_DEFAULT_COPY_CONSTRUCTORS_AND_ASSIGNMENTS(UsedKinds)
 
   /* Load the rules from the json file specified in the given options. */
-  static UsedKinds from_rules(const Rules& rules, const Transforms& transforms);
+  static UsedKinds from_rules(
+      const Rules& rules,
+      const TransformsFactory& transforms_factory);
 
   /*
    * Before the analysis begins, a context might contain Kinds that are built
@@ -63,7 +66,7 @@ class UsedKinds {
   bool should_keep(const TransformKind* transform_kind) const;
 
  private:
-  const Transforms& transforms_;
+  const TransformsFactory& transforms_factory_;
   NamedKindToTransformsMap named_kind_to_transforms_;
   PropagationKindTransformsSet propagation_kind_to_transforms_;
 };

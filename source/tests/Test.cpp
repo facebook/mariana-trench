@@ -94,7 +94,7 @@ Context make_context(const DexStore& store) {
       *context.feature_factory,
       *context.dependencies);
   context.rules = std::make_unique<Rules>(context);
-  context.used_kinds = std::make_unique<UsedKinds>(*context.transforms);
+  context.used_kinds = std::make_unique<UsedKinds>(*context.transforms_factory);
   context.scheduler =
       std::make_unique<Scheduler>(*context.methods, *context.dependencies);
   return context;

@@ -193,7 +193,7 @@ PropagationTemplate PropagationTemplate::from_json(
 
   const TransformList* transforms = nullptr;
   if (value.isMember("transforms")) {
-    transforms = context.transforms->create(
+    transforms = context.transforms_factory->create(
         TransformList::from_json(value["transforms"], context));
   }
 

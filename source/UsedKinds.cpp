@@ -61,8 +61,8 @@ void add_propagation_transforms(
 
 UsedKinds UsedKinds::from_rules(
     const Rules& rules,
-    const Transforms& transforms) {
-  UsedKinds used_kinds(transforms);
+    const TransformsFactory& transforms_factory) {
+  UsedKinds used_kinds(transforms_factory);
 
   std::unordered_map<const Kind*, std::unordered_set<const TransformKind*>>
       source_to_sink{};
@@ -75,7 +75,8 @@ UsedKinds UsedKinds::from_rules(
 
       const auto* sink = sink_transform_kind->base_kind();
       const auto* rule_transform = sink_transform_kind->local_transforms();
-      const auto* rule_transform_reverse = transforms.reverse(rule_transform);
+      const auto* rule_transform_reverse =
+          transforms_factory.reverse(rule_transform);
       mt_assert(rule_transform != nullptr && rule_transform_reverse != nullptr);
 
       add_source_sink_transforms(
@@ -85,9 +86,9 @@ UsedKinds UsedKinds::from_rules(
       add_propagation_transforms(
           used_kinds.propagation_kind_to_transforms_, rule_transform);
 
-      auto combinations = transforms.all_combinations(rule_transform);
+      auto combinations = transforms_factory.all_combinations(rule_transform);
       for (const auto& [left, right] : combinations.partitions) {
-        const TransformList* left_reverse = transforms.reverse(left);
+        const TransformList* left_reverse = transforms_factory.reverse(left);
 
         // Add all valid sink transforms
         add_source_sink_transforms(
@@ -127,7 +128,7 @@ bool UsedKinds::should_keep(const TransformKind* transform_kind) const {
     return false;
   }
 
-  return valid_transforms->second.find(transforms_.concat(
+  return valid_transforms->second.find(transforms_factory_.concat(
              transform_kind->local_transforms(),
              transform_kind->global_transforms())) !=
       valid_transforms->second.end();

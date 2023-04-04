@@ -20,7 +20,7 @@
 #include <mariana-trench/PartialKind.h>
 #include <mariana-trench/Rule.h>
 #include <mariana-trench/TransformKind.h>
-#include <mariana-trench/Transforms.h>
+#include <mariana-trench/TransformsFactory.h>
 
 namespace marianatrench {
 
@@ -64,7 +64,7 @@ class Rules final {
 
  public:
   explicit Rules(Context& context)
-      : transforms_factory(*context.transforms),
+      : transforms_factory(*context.transforms_factory),
         kind_factory(*context.kind_factory) {}
 
   explicit Rules(Context& context, std::vector<std::unique_ptr<Rule>> rules);
@@ -122,7 +122,7 @@ class Rules final {
   }
 
  private:
-  const Transforms& transforms_factory;
+  const TransformsFactory& transforms_factory;
   const KindFactory& kind_factory;
   std::unordered_map<int, std::unique_ptr<Rule>> rules_;
   // For Rules with "transforms":

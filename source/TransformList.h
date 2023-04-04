@@ -63,7 +63,7 @@ class TransformList final {
       Context& context);
 
  private:
-  friend class Transforms;
+  friend class TransformsFactory;
 
  private:
   List transforms_;

@@ -256,7 +256,7 @@ Registry MarianaTrench::analyze(Context& context) {
   Timer transforms_timer;
   LOG(1, "Initializing used transform kinds...");
   context.used_kinds = std::make_unique<UsedKinds>(
-      UsedKinds::from_rules(*context.rules, *context.transforms));
+      UsedKinds::from_rules(*context.rules, *context.transforms_factory));
   LOG(1,
       "Initialized {} source/sink transform kinds and {} propagation transform kinds in {:.2f}s."
       "Memory used, RSS: {:.2f}GB",

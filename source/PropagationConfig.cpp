@@ -7,7 +7,7 @@
 
 #include <mariana-trench/JsonValidation.h>
 #include <mariana-trench/PropagationConfig.h>
-#include <mariana-trench/Transforms.h>
+#include <mariana-trench/TransformsFactory.h>
 
 namespace marianatrench {
 
@@ -49,7 +49,7 @@ PropagationConfig PropagationConfig::from_json(
     kind = context.kind_factory->transform_kind(
         /* base_kind */ propagation_kind,
         /* local_transforms */
-        context.transforms->create(
+        context.transforms_factory->create(
             TransformList::from_json(value["transforms"], context)),
         /* global_transforms */ nullptr);
   } else {

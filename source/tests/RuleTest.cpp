@@ -12,7 +12,7 @@
 #include <mariana-trench/MultiSourceMultiSinkRule.h>
 #include <mariana-trench/SourceSinkRule.h>
 #include <mariana-trench/TransformList.h>
-#include <mariana-trench/Transforms.h>
+#include <mariana-trench/TransformsFactory.h>
 #include <mariana-trench/tests/Test.h>
 
 namespace marianatrench {
@@ -162,10 +162,10 @@ TEST_F(RuleTest, TransformRules) {
   auto* sink_x = context.kind_factory->get("X");
   auto* sink_y = context.kind_factory->get("Y");
 
-  auto* t1 = context.transforms->create({"T1"}, context);
-  auto* t2 = context.transforms->create({"T2"}, context);
-  auto* t12 = context.transforms->create({"T1", "T2"}, context);
-  auto* t21 = context.transforms->create({"T2", "T1"}, context);
+  auto* t1 = context.transforms_factory->create({"T1"}, context);
+  auto* t2 = context.transforms_factory->create({"T2"}, context);
+  auto* t12 = context.transforms_factory->create({"T1", "T2"}, context);
+  auto* t21 = context.transforms_factory->create({"T2", "T1"}, context);
 
   EXPECT_EQ(t1->size(), 1);
   EXPECT_EQ(t2->size(), 1);

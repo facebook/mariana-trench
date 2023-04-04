@@ -7,17 +7,17 @@
 
 #include <mariana-trench/Assert.h>
 #include <mariana-trench/Rules.h>
-#include <mariana-trench/Transforms.h>
+#include <mariana-trench/TransformsFactory.h>
 
 namespace marianatrench {
 
-const TransformList* Transforms::create(
+const TransformList* TransformsFactory::create(
     std::vector<std::string> transforms,
     Context& context) const {
   return transform_lists_.insert(TransformList(transforms, context)).first;
 }
 
-const TransformList* MT_NULLABLE Transforms::create(
+const TransformList* MT_NULLABLE TransformsFactory::create(
     TransformList::ConstIterator begin,
     TransformList::ConstIterator end) const {
   if (begin == end) {
@@ -27,11 +27,11 @@ const TransformList* MT_NULLABLE Transforms::create(
   return transform_lists_.insert(TransformList(begin, end)).first;
 }
 
-const TransformList* Transforms::create(TransformList transforms) const {
+const TransformList* TransformsFactory::create(TransformList transforms) const {
   return transform_lists_.insert(transforms).first;
 }
 
-const TransformList* Transforms::concat(
+const TransformList* TransformsFactory::concat(
     const TransformList* MT_NULLABLE left,
     const TransformList* MT_NULLABLE right) const {
   if (left == nullptr) {
@@ -51,7 +51,7 @@ const TransformList* Transforms::concat(
 }
 
 const TransformList* MT_NULLABLE
-Transforms::reverse(const TransformList* MT_NULLABLE transforms) const {
+TransformsFactory::reverse(const TransformList* MT_NULLABLE transforms) const {
   if (transforms == nullptr) {
     return transforms;
   }
@@ -59,7 +59,7 @@ Transforms::reverse(const TransformList* MT_NULLABLE transforms) const {
   return create(TransformList::reverse_of(transforms));
 }
 
-TransformCombinations Transforms::all_combinations(
+TransformCombinations TransformsFactory::all_combinations(
     const TransformList* transforms) const {
   TransformCombinations combinations{};
   combinations.transform = transforms;

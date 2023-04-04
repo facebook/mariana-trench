@@ -527,7 +527,7 @@ Frame CalleePortFrames::propagate_frames(
         /* base_kind */ transform_kind->base_kind(),
         /* local_transforms */ nullptr,
         /* global_transforms */
-        context.transforms->concat(
+        context.transforms_factory->concat(
             transform_kind->local_transforms(),
             transform_kind->global_transforms()));
   }

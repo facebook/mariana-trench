@@ -168,7 +168,7 @@ class Taint final : public sparta::AbstractDomain<Taint> {
 
   Taint apply_transform(
       const KindFactory& kind_factory,
-      const Transforms& transforms,
+      const TransformsFactory& transforms_factory,
       const UsedKinds& used_kinds,
       const TransformList* local_transforms) const;
 
