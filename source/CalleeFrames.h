@@ -222,18 +222,10 @@ class CalleeFrames final : public sparta::AbstractDomain<CalleeFrames> {
 
       for (const auto& [mapped_value, call_position_frames] :
            callee_frames_partitioned) {
-        auto new_frames = CalleeFrames(
+        result[mapped_value].join_with(CalleeFrames(
             callee_,
             call_info_,
-            FramesByCallPosition{std::pair(position, call_position_frames)});
-
-        auto existing = result.find(mapped_value);
-        auto existing_or_bottom = existing == result.end()
-            ? CalleeFrames::bottom()
-            : existing->second;
-        existing_or_bottom.join_with(new_frames);
-
-        result[mapped_value] = existing_or_bottom;
+            FramesByCallPosition{std::pair(position, call_position_frames)}));
       }
     }
     return result;

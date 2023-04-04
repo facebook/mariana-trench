@@ -226,12 +226,7 @@ class Taint final : public sparta::AbstractDomain<Taint> {
 
       for (const auto& [mapped_value, callee_frames] :
            callee_frames_partitioned) {
-        auto existing = result.find(mapped_value);
-        auto existing_or_bottom =
-            existing == result.end() ? Taint::bottom() : existing->second;
-        existing_or_bottom.set_.add(callee_frames);
-
-        result[mapped_value] = existing_or_bottom;
+        result[mapped_value].set_.add(callee_frames);
       }
     }
     return result;

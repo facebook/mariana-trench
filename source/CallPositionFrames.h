@@ -206,16 +206,8 @@ class CallPositionFrames final
       auto partition = callee_port_frames.partition_by_kind(map_kind);
 
       for (const auto& [mapped_value, partitioned_frames] : partition) {
-        auto new_frames = CallPositionFrames(
-            position_, FramesByCalleePort{partitioned_frames});
-
-        auto existing = result.find(mapped_value);
-        auto existing_or_bottom = existing == result.end()
-            ? CallPositionFrames::bottom()
-            : existing->second;
-        existing_or_bottom.join_with(new_frames);
-
-        result[mapped_value] = existing_or_bottom;
+        result[mapped_value].join_with(CallPositionFrames(
+            position_, FramesByCalleePort{partitioned_frames}));
       }
     }
     return result;

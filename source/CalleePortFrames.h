@@ -239,18 +239,10 @@ class CalleePortFrames final : public sparta::AbstractDomain<CalleePortFrames> {
 
     for (const auto& [kind, kind_frames] : frames_.bindings()) {
       T mapped_value = map_kind(kind);
-      auto new_frames = CalleePortFrames(
+      result[mapped_value].join_with(CalleePortFrames(
           callee_port_,
           FramesByKind{std::pair(kind, kind_frames)},
-          local_positions_);
-
-      auto existing = result.find(mapped_value);
-      auto existing_or_bottom = existing == result.end()
-          ? CalleePortFrames::bottom()
-          : existing->second;
-      existing_or_bottom.join_with(new_frames);
-
-      result[mapped_value] = existing_or_bottom;
+          local_positions_));
     }
     return result;
   }
