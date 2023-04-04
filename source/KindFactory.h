@@ -65,6 +65,8 @@ class KindFactory final {
 
   std::vector<const Kind*> kinds() const;
 
+  static const KindFactory& singleton();
+
  private:
   UniquePointerFactory<std::string, NamedKind> named_;
   std::unique_ptr<LocalReturnKind> local_return_;

@@ -30,10 +30,10 @@
 namespace marianatrench {
 
 Context::Context()
-    : kind_factory(std::make_unique<KindFactory>()),
-      feature_factory(std::make_unique<FeatureFactory>()),
-      statistics(std::make_unique<Statistics>()),
-      transforms_factory(std::make_unique<TransformsFactory>()) {}
+    : kind_factory(&KindFactory::singleton()),
+      feature_factory(&FeatureFactory::singleton()),
+      transforms_factory(&TransformsFactory::singleton()),
+      statistics(std::make_unique<Statistics>()) {}
 
 Context::Context(Context&&) noexcept = default;
 

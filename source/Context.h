@@ -48,8 +48,9 @@ class Context final {
   Context& operator=(Context&&) = delete;
   ~Context();
 
-  std::unique_ptr<KindFactory> kind_factory;
-  std::unique_ptr<FeatureFactory> feature_factory;
+  const KindFactory* kind_factory;
+  const FeatureFactory* feature_factory;
+  const TransformsFactory* transforms_factory;
   std::unique_ptr<Statistics> statistics;
   std::unique_ptr<Options> options;
   std::vector<DexStore> stores;
@@ -67,7 +68,6 @@ class Context final {
   std::unique_ptr<Rules> rules;
   std::unique_ptr<Dependencies> dependencies;
   std::unique_ptr<Scheduler> scheduler;
-  std::unique_ptr<TransformsFactory> transforms_factory;
   std::unique_ptr<UsedKinds> used_kinds;
 };
 

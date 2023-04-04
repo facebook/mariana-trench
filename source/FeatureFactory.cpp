@@ -49,4 +49,10 @@ const Feature* FeatureFactory::get_widen_broadening_feature() const {
   return factory_.create("via-widen-broadening");
 }
 
+const FeatureFactory& FeatureFactory::singleton() {
+  // Thread-safe global variable, initialized on first call.
+  static FeatureFactory instance;
+  return instance;
+}
+
 } // namespace marianatrench

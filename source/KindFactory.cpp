@@ -82,4 +82,10 @@ std::vector<const Kind*> KindFactory::kinds() const {
   return result;
 }
 
+const KindFactory& KindFactory::singleton() {
+  // Thread-safe global variable, initialized on first call.
+  static KindFactory instance;
+  return instance;
+}
+
 } // namespace marianatrench

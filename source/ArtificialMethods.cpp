@@ -12,7 +12,7 @@
 namespace marianatrench {
 
 ArtificialMethods::ArtificialMethods(
-    KindFactory& kind_factory,
+    const KindFactory& kind_factory,
     DexStoresVector& stores) {
   Scope scope;
   array_allocation_method_ = redex::create_void_method(

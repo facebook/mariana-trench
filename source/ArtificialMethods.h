@@ -25,7 +25,7 @@ namespace marianatrench {
 class ArtificialMethods final {
  public:
   explicit ArtificialMethods(
-      KindFactory& kind_factory,
+      const KindFactory& kind_factory,
       DexStoresVector& stores);
 
   DELETE_COPY_CONSTRUCTORS_AND_ASSIGNMENTS(ArtificialMethods)

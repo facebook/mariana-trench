@@ -53,6 +53,8 @@ class TransformsFactory final {
 
   TransformCombinations all_combinations(const TransformList* transforms) const;
 
+  static const TransformsFactory& singleton();
+
  private:
   mutable InsertOnlyConcurrentSet<TransformList> transform_lists_;
 };

@@ -45,6 +45,8 @@ class FeatureFactory final {
    */
   const Feature* get_widen_broadening_feature() const;
 
+  static const FeatureFactory& singleton();
+
  private:
   UniquePointerFactory<std::string, Feature> factory_;
 };

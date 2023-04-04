@@ -79,4 +79,10 @@ TransformCombinations TransformsFactory::all_combinations(
   return combinations;
 }
 
+const TransformsFactory& TransformsFactory::singleton() {
+  // Thread-safe global variable, initialized on first call.
+  static TransformsFactory instance;
+  return instance;
+}
+
 } // namespace marianatrench
