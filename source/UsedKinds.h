@@ -38,7 +38,7 @@ class UsedKinds {
    * into the binary, or specified in a model generator, but aren't actually
    * used in any rule. These can be removed to save memory/time.
    */
-  static std::unordered_set<const Kind*> remove_unused_kinds(
+  std::size_t remove_unused_kinds(
       const Rules& rules,
       const KindFactory& kind_factory,
       const Methods& methods,

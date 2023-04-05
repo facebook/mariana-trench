@@ -14,7 +14,7 @@
 
 namespace marianatrench {
 
-std::unordered_set<const Kind*> UsedKinds::remove_unused_kinds(
+std::size_t UsedKinds::remove_unused_kinds(
     const Rules& rules,
     const KindFactory& kind_factory,
     const Methods& methods,
@@ -33,7 +33,7 @@ std::unordered_set<const Kind*> UsedKinds::remove_unused_kinds(
   }
   queue.run_all();
   artificial_methods.set_unused_kinds(unused_kinds);
-  return unused_kinds;
+  return unused_kinds.size();
 }
 
 namespace {

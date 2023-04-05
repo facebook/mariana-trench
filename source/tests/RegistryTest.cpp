@@ -44,6 +44,8 @@ TEST_F(RegistryTest, remove_kinds) {
       /* generated_field_models */ {});
   context.rules =
       std::make_unique<Rules>(Rules::load(context, *context.options));
+  context.used_kinds = std::make_unique<UsedKinds>(
+      UsedKinds::from_rules(*context.rules, *context.transforms_factory));
   auto old_model_json = JsonValidation::null_or_array(
       registry.models_to_json(), /* field */ "models");
   auto unused_kinds =
@@ -73,7 +75,7 @@ TEST_F(RegistryTest, remove_kinds) {
   EXPECT_EQ(
       old_model_json[0]["sinks"][0]["taint"][0]["kinds"][0]["kind"],
       "ArrayAllocation");
-  UsedKinds::remove_unused_kinds(
+  context.used_kinds->remove_unused_kinds(
       *context.rules,
       *context.kind_factory,
       *context.methods,
