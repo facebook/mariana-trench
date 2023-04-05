@@ -189,13 +189,15 @@ class AccessPathTreeDomain final
       const std::function<
           std::pair<bool, Accumulator>(const Accumulator&, Path::Element)>&
           is_valid,
-      const std::function<Accumulator(const Root&)>& initial_accumulator) {
+      const std::function<Accumulator(const Root&)>& initial_accumulator,
+      const std::function<void(Elements&)>& transform_on_collapse) {
     Map new_map;
     for (const auto& [root, tree] : map_) {
       auto copy = tree;
       copy.collapse_invalid_paths(
           is_valid,
-          /* accumulator */ initial_accumulator(root));
+          /* accumulator */ initial_accumulator(root),
+          transform_on_collapse);
       new_map.set(root, std::move(copy));
     }
 

@@ -689,7 +689,8 @@ class AbstractTreeDomain final
       const std::function<
           std::pair<bool, Accumulator>(const Accumulator&, PathElement)>&
           is_valid,
-      const Accumulator& accumulator) {
+      const Accumulator& accumulator,
+      const std::function<void(Elements&)>& transform_on_collapse) {
     Map new_children;
     for (const auto& [path_element, subtree] :
          PathElementMapIterator(children_)) {
@@ -697,10 +698,11 @@ class AbstractTreeDomain final
           is_valid(accumulator, path_element);
       if (!valid) {
         // Invalid path, collapse subtree into current tree.
-        elements_.join_with(subtree.collapse());
+        subtree.collapse_into(elements_, transform_on_collapse);
       } else {
         auto subtree_copy = subtree;
-        subtree_copy.collapse_invalid_paths(is_valid, accumulator_for_subtree);
+        subtree_copy.collapse_invalid_paths(
+            is_valid, accumulator_for_subtree, transform_on_collapse);
         new_children.insert_or_assign(
             path_element.encode(), std::move(subtree_copy));
       }

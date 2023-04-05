@@ -44,6 +44,11 @@ class FeatureFactory final {
    * limiting the leaves or depth of stored taint.
    */
   const Feature* get_widen_broadening_feature() const;
+  /**
+   * This feature is added to source or sink taint that is collapsed when
+   * the analysis inferred taint on an undefined field.
+   */
+  const Feature* get_invalid_path_broadening() const;
 
   static const FeatureFactory& singleton();
 

@@ -1210,8 +1210,19 @@
           "kinds" : 
           [
             {
+              "always_features" : 
+              [
+                "via-invalid-path-broadening"
+              ],
               "call_info" : "Origin",
               "kind" : "Source",
+              "local_features" : 
+              {
+                "always_features" : 
+                [
+                  "via-invalid-path-broadening"
+                ]
+              },
               "local_positions" : 
               [
                 {

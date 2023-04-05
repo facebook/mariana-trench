@@ -569,7 +569,10 @@ TEST_F(AccessPathTreeDomainTest, CollapseInvalid) {
     return root.to_string();
   };
 
-  tree.collapse_invalid_paths<Accumulator>(is_valid, initial_accumulator);
+  auto identity = [](IntSet&) {};
+
+  tree.collapse_invalid_paths<Accumulator>(
+      is_valid, initial_accumulator, identity);
   EXPECT_EQ(
       tree,
       (IntSetAccessPathTree{

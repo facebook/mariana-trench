@@ -485,14 +485,19 @@ void Model::collapse_invalid_paths(Context& context) {
     return FieldTypesAccumulator{root_type};
   };
 
+  auto transform_on_collapse = [&context](Taint& taint) {
+    taint.add_inferred_features(FeatureMayAlwaysSet{
+        context.feature_factory->get_invalid_path_broadening()});
+  };
+
   generations_.collapse_invalid_paths<FieldTypesAccumulator>(
-      is_valid, initial_accumulator);
+      is_valid, initial_accumulator, transform_on_collapse);
   parameter_sources_.collapse_invalid_paths<FieldTypesAccumulator>(
-      is_valid, initial_accumulator);
+      is_valid, initial_accumulator, transform_on_collapse);
   sinks_.collapse_invalid_paths<FieldTypesAccumulator>(
-      is_valid, initial_accumulator);
+      is_valid, initial_accumulator, transform_on_collapse);
   propagations_.collapse_invalid_paths<FieldTypesAccumulator>(
-      is_valid, initial_accumulator);
+      is_valid, initial_accumulator, transform_on_collapse);
 }
 
 void Model::approximate(const FeatureMayAlwaysSet& widening_features) {

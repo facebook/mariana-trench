@@ -2426,7 +2426,10 @@ TEST_F(AbstractTreeDomainTest, CollapseInvalid) {
         current_path.append(path_element);
         return std::make_pair(true, current_path);
       };
-  tree.collapse_invalid_paths<Accumulator>(is_valid, Path());
+
+  auto identity = [](IntSet&) {};
+
+  tree.collapse_invalid_paths<Accumulator>(is_valid, Path(), identity);
 
   EXPECT_EQ(
       tree,
