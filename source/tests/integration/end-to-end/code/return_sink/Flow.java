@@ -63,4 +63,10 @@ public class Flow {
     tree.bar = (Tree) Origin.source();
     return_sink_foo(tree);
   }
+
+  static Tree direct_issue_with_broadening() {
+    Tree tree = new Tree();
+    tree.foo = (Tree) Origin.source();
+    return tree;
+  }
 }

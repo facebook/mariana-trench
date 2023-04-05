@@ -1231,6 +1231,178 @@
   "generations" : 
   [
     {
+      "port" : "Return.foo",
+      "taint" : 
+      [
+        {
+          "kinds" : 
+          [
+            {
+              "always_features" : 
+              [
+                "via-cast:Lcom/facebook/marianatrench/integrationtests/Flow$Tree;"
+              ],
+              "call_info" : "Origin",
+              "kind" : "Source",
+              "local_features" : 
+              {
+                "always_features" : 
+                [
+                  "via-cast:Lcom/facebook/marianatrench/integrationtests/Flow$Tree;"
+                ]
+              },
+              "local_positions" : 
+              [
+                {
+                  "end" : 37,
+                  "line" : 69,
+                  "start" : 15
+                }
+              ],
+              "origins" : 
+              [
+                "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;"
+              ]
+            }
+          ],
+          "origin" : 
+          {
+            "method" : "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;",
+            "position" : 
+            {
+              "end" : 34,
+              "line" : 69,
+              "path" : "Flow.java",
+              "start" : 29
+            }
+          }
+        }
+      ]
+    }
+  ],
+  "issues" : 
+  [
+    {
+      "always_features" : 
+      [
+        "via-cast:Lcom/facebook/marianatrench/integrationtests/Flow$Tree;",
+        "via-issue-broadening"
+      ],
+      "callee" : "return",
+      "position" : 
+      {
+        "line" : 70,
+        "path" : "Flow.java"
+      },
+      "rule" : 1,
+      "sink_index" : "0",
+      "sinks" : 
+      [
+        {
+          "call" : 
+          {
+            "position" : 
+            {
+              "line" : 70,
+              "path" : "Flow.java"
+            }
+          },
+          "kinds" : 
+          [
+            {
+              "call_info" : "Origin",
+              "kind" : "Sink",
+              "origins" : 
+              [
+                "Lcom/facebook/marianatrench/integrationtests/Flow;.direct_issue_with_broadening:()Lcom/facebook/marianatrench/integrationtests/Flow$Tree;"
+              ]
+            }
+          ]
+        }
+      ],
+      "sources" : 
+      [
+        {
+          "kinds" : 
+          [
+            {
+              "always_features" : 
+              [
+                "via-cast:Lcom/facebook/marianatrench/integrationtests/Flow$Tree;",
+                "via-issue-broadening"
+              ],
+              "call_info" : "Origin",
+              "kind" : "Source",
+              "local_features" : 
+              {
+                "always_features" : 
+                [
+                  "via-cast:Lcom/facebook/marianatrench/integrationtests/Flow$Tree;",
+                  "via-issue-broadening"
+                ]
+              },
+              "local_positions" : 
+              [
+                {
+                  "end" : 37,
+                  "line" : 69,
+                  "start" : 15
+                }
+              ],
+              "origins" : 
+              [
+                "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;"
+              ]
+            }
+          ],
+          "origin" : 
+          {
+            "method" : "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;",
+            "position" : 
+            {
+              "end" : 34,
+              "line" : 69,
+              "path" : "Flow.java",
+              "start" : 29
+            }
+          }
+        }
+      ]
+    }
+  ],
+  "method" : "Lcom/facebook/marianatrench/integrationtests/Flow;.direct_issue_with_broadening:()Lcom/facebook/marianatrench/integrationtests/Flow$Tree;",
+  "position" : 
+  {
+    "line" : 67,
+    "path" : "Flow.java"
+  },
+  "sinks" : 
+  [
+    {
+      "port" : "Return",
+      "taint" : 
+      [
+        {
+          "kinds" : 
+          [
+            {
+              "call_info" : "Declaration",
+              "kind" : "Sink",
+              "origins" : 
+              [
+                "Lcom/facebook/marianatrench/integrationtests/Flow;.direct_issue_with_broadening:()Lcom/facebook/marianatrench/integrationtests/Flow$Tree;"
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
+{
+  "generations" : 
+  [
+    {
       "port" : "Return.bar",
       "taint" : 
       [

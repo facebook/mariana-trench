@@ -549,7 +549,7 @@ void check_call_flows(
                 aliasing.register_memory_locations(*register_id),
                 port.path().resolve(source_constant_arguments))
             .collapse(/* transform */ [context](Taint& taint) {
-              return taint.add_inferred_features(FeatureMayAlwaysSet{
+              taint.add_inferred_features(FeatureMayAlwaysSet{
                   context->feature_factory.get_issue_broadening_feature()});
             });
     check_sources_sinks_flows(
@@ -636,7 +636,10 @@ void check_flows_to_array_allocation(
     auto register_id = instruction->src(parameter_position);
     Taint sources =
         environment->read(aliasing.register_memory_locations(register_id))
-            .collapse();
+            .collapse(/* transform */ [context](Taint& taint) {
+              taint.add_inferred_features(FeatureMayAlwaysSet{
+                  context->feature_factory.get_issue_broadening_feature()});
+            });
     // Fulfilled partial sinks ignored. No partial sinks for array allocation.
     check_sources_sinks_flows(
         context,
@@ -1173,14 +1176,13 @@ bool ForwardTaintTransfer::analyze_return(
         environment->read(memory_locations));
 
     for (const auto& [path, sinks] : return_sinks.elements()) {
-      Taint sources =
-          environment->read(memory_locations, path)
-              .collapse(
-                  /* transform */ [context](Taint& taint) {
-                    return taint.add_inferred_features(FeatureMayAlwaysSet{
-                        context->feature_factory
-                            .get_issue_broadening_feature()});
-                  });
+      Taint sources = environment->read(memory_locations, path)
+                          .collapse(
+                              /* transform */ [context](Taint& taint) {
+                                taint.add_inferred_features(FeatureMayAlwaysSet{
+                                    context->feature_factory
+                                        .get_issue_broadening_feature()});
+                              });
       // Fulfilled partial sinks are not expected to be produced here. Return
       // sinks are never partial.
       check_sources_sinks_flows(

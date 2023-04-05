@@ -233,6 +233,14 @@
       "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;"
     ]
   },
+  "Lcom/facebook/marianatrench/integrationtests/Flow;.direct_issue_with_broadening:()Lcom/facebook/marianatrench/integrationtests/Flow$Tree;" : 
+  {
+    "static" : 
+    [
+      "Lcom/facebook/marianatrench/integrationtests/Flow$Tree;.<init>:(Lcom/facebook/marianatrench/integrationtests/Flow$1;)V",
+      "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;"
+    ]
+  },
   "Lcom/facebook/marianatrench/integrationtests/Flow;.direct_non_issue_foo:()Lcom/facebook/marianatrench/integrationtests/Flow$Tree;" : 
   {
     "static" : 

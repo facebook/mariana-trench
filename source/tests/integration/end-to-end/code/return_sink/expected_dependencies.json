@@ -38,6 +38,7 @@
   "Lcom/facebook/marianatrench/integrationtests/Flow$Tree;.<init>:(Lcom/facebook/marianatrench/integrationtests/Flow$1;)V" : 
   [
     "Lcom/facebook/marianatrench/integrationtests/Flow;.direct_issue_foo:()Lcom/facebook/marianatrench/integrationtests/Flow$Tree;",
+    "Lcom/facebook/marianatrench/integrationtests/Flow;.direct_issue_with_broadening:()Lcom/facebook/marianatrench/integrationtests/Flow$Tree;",
     "Lcom/facebook/marianatrench/integrationtests/Flow;.direct_non_issue_foo:()Lcom/facebook/marianatrench/integrationtests/Flow$Tree;",
     "Lcom/facebook/marianatrench/integrationtests/Flow;.indirect_issue_foo:()V",
     "Lcom/facebook/marianatrench/integrationtests/Flow;.indirect_non_issue_foo:()V"
@@ -61,6 +62,7 @@
   [
     "Lcom/facebook/marianatrench/integrationtests/Flow;.direct_issue:()Ljava/lang/Object;",
     "Lcom/facebook/marianatrench/integrationtests/Flow;.direct_issue_foo:()Lcom/facebook/marianatrench/integrationtests/Flow$Tree;",
+    "Lcom/facebook/marianatrench/integrationtests/Flow;.direct_issue_with_broadening:()Lcom/facebook/marianatrench/integrationtests/Flow$Tree;",
     "Lcom/facebook/marianatrench/integrationtests/Flow;.direct_non_issue_foo:()Lcom/facebook/marianatrench/integrationtests/Flow$Tree;",
     "Lcom/facebook/marianatrench/integrationtests/Flow;.indirect_issue:()V",
     "Lcom/facebook/marianatrench/integrationtests/Flow;.indirect_issue_foo:()V",
