@@ -243,8 +243,7 @@ void Interprocedural::run_analysis(Context& context, Registry& registry) {
           new_model.join_with(previous_model);
 
           if (!new_model.leq(previous_model)) {
-            if (!context.call_graph->callees(method).empty() ||
-                !context.call_graph->artificial_callees(method).empty()) {
+            if (context.call_graph->has_callees(method)) {
               new_methods_to_analyze->insert(method);
             }
             for (const auto* dependency :

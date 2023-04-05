@@ -263,6 +263,9 @@ class CallGraph final {
   const std::vector<TextualOrderIndex> array_allocation_indices(
       const Method* caller) const;
 
+  /* Returns whether the caller has any callees without constructing the
+     intermediate structures. */
+  bool has_callees(const Method* caller);
   Json::Value to_json(bool with_overrides = true) const;
 
  private:

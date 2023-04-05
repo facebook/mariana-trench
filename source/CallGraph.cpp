@@ -1172,6 +1172,20 @@ const std::vector<TextualOrderIndex> CallGraph::array_allocation_indices(
   return array_allocation_indices;
 }
 
+bool CallGraph::has_callees(const Method* caller) {
+  auto base_callees = resolved_base_callees_.find(caller);
+  if (base_callees != resolved_base_callees_.end() &&
+      !base_callees->second.empty()) {
+    return true;
+  }
+  auto artificial_callees = artificial_callees_.find(caller);
+  if (artificial_callees != artificial_callees_.end() &&
+      !artificial_callees->second.empty()) {
+    return true;
+  }
+  return false;
+}
+
 Json::Value CallGraph::to_json(bool with_overrides) const {
   auto value = Json::Value(Json::objectValue);
   for (const auto& [method, callees] : resolved_base_callees_) {
