@@ -28,11 +28,12 @@ namespace marianatrench {
  *
  * See `AbstractTreeDomain` for more information.
  */
-template <typename Elements>
+template <typename Elements, typename Configuration>
 class AccessPathTreeDomain final
-    : public sparta::AbstractDomain<AccessPathTreeDomain<Elements>> {
+    : public sparta::AbstractDomain<
+          AccessPathTreeDomain<Elements, Configuration>> {
  public:
-  using AbstractTreeDomainT = AbstractTreeDomain<Elements>;
+  using AbstractTreeDomainT = AbstractTreeDomain<Elements, Configuration>;
 
  private:
   using Map = RootPatriciaTreeAbstractPartition<AbstractTreeDomainT>;

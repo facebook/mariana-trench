@@ -35,11 +35,11 @@ class Heuristics {
       std::nullopt;
 
   /**
-   * Maximum height of an abstract tree after widening.
+   * Maximum height of a taint (source or sink) tree after widening.
    *
    * When reaching the maximum, we collapse the leaves to reduce the height.
    */
-  constexpr static std::size_t kAbstractTreeWideningHeight = 4;
+  constexpr static std::size_t kSourceSinkTreeWideningHeight = 4;
 
   /**
    * Maximum size of the port of a generation.
@@ -116,6 +116,13 @@ class Heuristics {
    * Maximum number of leaves in the tree of output paths of propagations.
    */
   constexpr static std::size_t kPropagationMaxOutputPathLeaves = 4;
+
+  /**
+   * Maximum height of the output path tree of propagations after widening.
+   *
+   * When reaching the maximum, we collapse the leaves to reduce the height.
+   */
+  constexpr static std::size_t kPropagationOutputPathTreeWideningHeight = 4;
 };
 
 } // namespace marianatrench

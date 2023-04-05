@@ -15,7 +15,6 @@
 #include <AbstractDomain.h>
 #include <HashedSetAbstractDomain.h>
 
-#include <mariana-trench/AbstractTreeDomain.h>
 #include <mariana-trench/Access.h>
 #include <mariana-trench/Assert.h>
 #include <mariana-trench/CanonicalName.h>
@@ -31,15 +30,14 @@
 #include <mariana-trench/LocalPositionSet.h>
 #include <mariana-trench/Method.h>
 #include <mariana-trench/MethodSet.h>
+#include <mariana-trench/PathTreeDomain.h>
 #include <mariana-trench/Position.h>
-#include <mariana-trench/SingletonAbstractDomain.h>
 #include <mariana-trench/TransformKind.h>
 #include <mariana-trench/TransformsFactory.h>
 
 namespace marianatrench {
 
 using RootSetAbstractDomain = sparta::HashedSetAbstractDomain<Root>;
-using PathTreeDomain = AbstractTreeDomain<SingletonAbstractDomain>;
 using CanonicalNameSetAbstractDomain =
     sparta::HashedSetAbstractDomain<CanonicalName>;
 

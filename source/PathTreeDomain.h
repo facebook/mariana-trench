@@ -8,20 +8,19 @@
 #pragma once
 
 #include <mariana-trench/AbstractTreeDomain.h>
-#include <mariana-trench/AccessPathTreeDomain.h>
-#include <mariana-trench/Taint.h>
+#include <mariana-trench/SingletonAbstractDomain.h>
 
 namespace marianatrench {
 
-struct TaintTreeConfiguration {
+struct PathTreeConfiguration {
   static std::size_t max_tree_height_after_widening() {
-    return Heuristics::kSourceSinkTreeWideningHeight;
+    return Heuristics::kPropagationOutputPathTreeWideningHeight;
   }
 
-  static void transform_on_widening_collapse(Taint&);
+  static void transform_on_widening_collapse(SingletonAbstractDomain&) {}
 };
 
-using TaintTree = AbstractTreeDomain<Taint, TaintTreeConfiguration>;
-using TaintAccessPathTree = AccessPathTreeDomain<Taint, TaintTreeConfiguration>;
+using PathTreeDomain =
+    AbstractTreeDomain<SingletonAbstractDomain, PathTreeConfiguration>;
 
 } // namespace marianatrench

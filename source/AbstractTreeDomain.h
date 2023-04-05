@@ -120,16 +120,43 @@ class PathElementMapIterator final {
 };
 
 /**
- * An abstract tree domain.
+ * An abstract tree domain, where edges are access path elements (for instance,
+ * fields) and nodes store elements.
+ *
+ * `Elements` should be a abstract domain.
+ *
+ * `Configuration` should be a structure containing the following components:
+ *
+ * ```
+ * struct Configuration {
+ *   // Maximum tree depth after widening.
+ *   static std::size_t max_tree_height_after_widening();
+ *
+ *   // Transform elements that are collapsed during widening.
+ *   static void transform_on_widening_collapse(Elements&);
+ * }
+ * ```
  *
  * This is mainly used with a source set or a sink set as `Elements`, to store
  * the taint on each access paths.
  *
- * Elements on nodes are implicitly propagated to their children.
+ * `Elements` on nodes are implicitly propagated to their children.
+ *
  */
-template <typename Elements>
+template <typename Elements, typename Configuration>
 class AbstractTreeDomain final
-    : public sparta::AbstractDomain<AbstractTreeDomain<Elements>> {
+    : public sparta::AbstractDomain<
+          AbstractTreeDomain<Elements, Configuration>> {
+ private:
+  // Check requirements.
+  static_assert(std::is_same_v<
+                decltype(Configuration::max_tree_height_after_widening()),
+                std::size_t>);
+  static_assert(std::is_same_v<
+                decltype(Configuration::transform_on_widening_collapse(
+                    std::declval<Elements&>())),
+                void>);
+
  public:
   using PathElement = typename Path::Element;
 
@@ -488,7 +515,7 @@ class AbstractTreeDomain final
       widen_with_internal(
           other,
           Elements::bottom(),
-          /* max_height */ Heuristics::kAbstractTreeWideningHeight);
+          Configuration::max_tree_height_after_widening());
     }
 
     mt_expensive_assert(previous.leq(*this) && other.leq(*this));
@@ -500,8 +527,9 @@ class AbstractTreeDomain final
       const Elements& accumulator,
       std::size_t max_height) {
     if (max_height == 0) {
-      collapse_inplace();
-      other.collapse_into(elements_);
+      collapse_inplace(Configuration::transform_on_widening_collapse);
+      other.collapse_into(
+          elements_, Configuration::transform_on_widening_collapse);
       elements_.difference_with(accumulator);
       return;
     }
@@ -514,7 +542,8 @@ class AbstractTreeDomain final
     elements_.difference_with(accumulator);
 
     if (children_.reference_equals(other.children_)) {
-      collapse_deeper_than(max_height);
+      collapse_deeper_than(
+          max_height, Configuration::transform_on_widening_collapse);
       return;
     }
 
@@ -536,7 +565,8 @@ class AbstractTreeDomain final
       } else {
         if (!subtree.leq(new_accumulator_tree)) {
           auto subtree_copy = subtree;
-          subtree_copy.collapse_deeper_than(max_height - 1);
+          subtree_copy.collapse_deeper_than(
+              max_height - 1, Configuration::transform_on_widening_collapse);
           new_children.insert_or_assign(path_element, subtree_copy);
         }
       }
@@ -551,7 +581,8 @@ class AbstractTreeDomain final
 
       if (!other_subtree.leq(new_accumulator_tree)) {
         auto other_subtree_copy = other_subtree;
-        other_subtree_copy.collapse_deeper_than(max_height - 1);
+        other_subtree_copy.collapse_deeper_than(
+            max_height - 1, Configuration::transform_on_widening_collapse);
         new_children.insert_or_assign(path_element, other_subtree_copy);
       }
     }

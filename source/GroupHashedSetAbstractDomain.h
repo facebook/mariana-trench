@@ -82,6 +82,7 @@ class GroupHashedSetAbstractDomain final
           GroupEqual,
           GroupDifference>> {
  public:
+  // Check requirements.
   static_assert(std::is_same_v<
                 decltype(GroupHash()(std::declval<const Element>())),
                 std::size_t>);

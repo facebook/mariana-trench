@@ -18,8 +18,17 @@ namespace marianatrench {
 class AccessPathTreeDomainTest : public test::Test {};
 
 using IntSet = sparta::PatriciaTreeSetAbstractDomain<unsigned>;
-using IntSetPathTree = AbstractTreeDomain<IntSet>;
-using IntSetAccessPathTree = AccessPathTreeDomain<IntSet>;
+
+struct IntTreeConfiguration {
+  static std::size_t max_tree_height_after_widening() {
+    return 4;
+  }
+
+  static void transform_on_widening_collapse(IntSet&) {}
+};
+
+using IntSetPathTree = AbstractTreeDomain<IntSet, IntTreeConfiguration>;
+using IntSetAccessPathTree = AccessPathTreeDomain<IntSet, IntTreeConfiguration>;
 
 TEST_F(AccessPathTreeDomainTest, DefaultConstructor) {
   EXPECT_TRUE(IntSetAccessPathTree().is_bottom());

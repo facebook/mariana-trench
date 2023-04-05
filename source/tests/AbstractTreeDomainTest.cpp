@@ -20,7 +20,16 @@ namespace marianatrench {
 class AbstractTreeDomainTest : public test::Test {};
 
 using IntSet = sparta::PatriciaTreeSetAbstractDomain<unsigned>;
-using IntSetTree = AbstractTreeDomain<IntSet>;
+
+struct IntTreeConfiguration {
+  static std::size_t max_tree_height_after_widening() {
+    return 4;
+  }
+
+  static void transform_on_widening_collapse(IntSet&) {}
+};
+
+using IntSetTree = AbstractTreeDomain<IntSet, IntTreeConfiguration>;
 
 TEST_F(AbstractTreeDomainTest, PathElementMapIterator) {
   using Map = sparta::PatriciaTreeMap<PathElement::ElementEncoding, IntSet>;
