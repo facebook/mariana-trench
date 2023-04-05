@@ -123,35 +123,31 @@ void CalleeFrames::difference_with(const CalleeFrames& other) {
 }
 
 void CalleeFrames::map(const std::function<void(Frame&)>& f) {
-  frames_.map([&](const CallPositionFrames& frames) {
-    auto new_frames = frames;
-    new_frames.map(f);
-    return new_frames;
+  frames_.map([&f](CallPositionFrames frames) {
+    frames.map(f);
+    return frames;
   });
 }
 
 void CalleeFrames::filter(const std::function<bool(const Frame&)>& predicate) {
-  frames_.map([&](const CallPositionFrames& frames) {
-    auto new_frames = frames;
-    new_frames.filter(predicate);
-    return new_frames;
+  frames_.map([&predicate](CallPositionFrames frames) {
+    frames.filter(predicate);
+    return frames;
   });
 }
 
 void CalleeFrames::set_origins_if_empty(const MethodSet& origins) {
-  frames_.map([&](const CallPositionFrames& frames) {
-    auto new_frames = frames;
-    new_frames.set_origins_if_empty(origins);
-    return new_frames;
+  frames_.map([&origins](CallPositionFrames frames) {
+    frames.set_origins_if_empty(origins);
+    return frames;
   });
 }
 
 void CalleeFrames::set_field_origins_if_empty_with_field_callee(
     const Field* field) {
-  frames_.map([&](const CallPositionFrames& frames) {
-    auto new_frames = frames;
-    new_frames.set_field_origins_if_empty_with_field_callee(field);
-    return new_frames;
+  frames_.map([field](CallPositionFrames frames) {
+    frames.set_field_origins_if_empty_with_field_callee(field);
+    return frames;
   });
 }
 
@@ -184,18 +180,16 @@ void CalleeFrames::add_local_position(const Position* position) {
     return; // Do not add local positions on propagations.
   }
 
-  frames_.map([&](const CallPositionFrames& frames) {
-    auto new_frames = frames;
-    new_frames.add_local_position(position);
-    return new_frames;
+  frames_.map([position](CallPositionFrames frames) {
+    frames.add_local_position(position);
+    return frames;
   });
 }
 
 void CalleeFrames::set_local_positions(const LocalPositionSet& positions) {
-  frames_.map([&](const CallPositionFrames& frames) {
-    auto new_frames = frames;
-    new_frames.set_local_positions(positions);
-    return new_frames;
+  frames_.map([&positions](CallPositionFrames frames) {
+    frames.set_local_positions(positions);
+    return frames;
   });
 }
 
@@ -275,10 +269,9 @@ CalleeFrames CalleeFrames::attach_position(const Position* position) const {
 void CalleeFrames::transform_kind_with_features(
     const std::function<std::vector<const Kind*>(const Kind*)>& transform_kind,
     const std::function<FeatureMayAlwaysSet(const Kind*)>& add_features) {
-  frames_.map([&](const CallPositionFrames& frames) {
-    auto frames_copy = frames;
-    frames_copy.transform_kind_with_features(transform_kind, add_features);
-    return frames_copy;
+  frames_.map([&transform_kind, &add_features](CallPositionFrames frames) {
+    frames.transform_kind_with_features(transform_kind, add_features);
+    return frames;
   });
 }
 
@@ -348,10 +341,9 @@ void CalleeFrames::update_non_leaf_positions(
 void CalleeFrames::filter_invalid_frames(
     const std::function<bool(const Method*, const AccessPath&, const Kind*)>&
         is_valid) {
-  frames_.map([&](const CallPositionFrames& frames) {
-    auto frames_copy = frames;
-    frames_copy.filter_invalid_frames(is_valid);
-    return frames_copy;
+  frames_.map([&is_valid](CallPositionFrames frames) {
+    frames.filter_invalid_frames(is_valid);
+    return frames;
   });
 }
 

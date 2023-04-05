@@ -106,10 +106,9 @@ void CallEffectsAbstractDomain::visit(
 }
 
 void CallEffectsAbstractDomain::map(const std::function<void(Taint&)>& f) {
-  map_.map([&](const Taint& taint) {
-    auto copy = taint;
-    f(copy);
-    return copy;
+  map_.map([&f](Taint taint) {
+    f(taint);
+    return taint;
   });
 }
 

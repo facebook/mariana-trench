@@ -164,10 +164,9 @@ class AccessPathTreeDomain final
 
   /* Apply the given function on all elements. */
   void map(const std::function<void(Elements&)>& f) {
-    map_.map([&](const AbstractTreeDomainT& tree) {
-      auto copy = tree;
-      copy.map(f);
-      return copy;
+    map_.map([&f](AbstractTreeDomainT tree) {
+      tree.map(f);
+      return tree;
     });
   }
 
@@ -207,10 +206,9 @@ class AccessPathTreeDomain final
 
   /* Collapse children that have more than `max_leaves` leaves. */
   void limit_leaves(std::size_t max_leaves) {
-    map_.map([=](const AbstractTreeDomainT& tree) {
-      auto copy = tree;
-      copy.limit_leaves(max_leaves);
-      return copy;
+    map_.map([max_leaves](AbstractTreeDomainT tree) {
+      tree.limit_leaves(max_leaves);
+      return tree;
     });
   }
 
@@ -223,10 +221,9 @@ class AccessPathTreeDomain final
   void limit_leaves(
       std::size_t max_leaves,
       const std::function<void(Elements&)>& transform) {
-    map_.map([max_leaves, &transform](const AbstractTreeDomainT& tree) {
-      auto copy = tree;
-      copy.limit_leaves(max_leaves, transform);
-      return copy;
+    map_.map([max_leaves, &transform](AbstractTreeDomainT tree) {
+      tree.limit_leaves(max_leaves, transform);
+      return tree;
     });
   }
 

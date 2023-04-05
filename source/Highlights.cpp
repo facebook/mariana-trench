@@ -257,7 +257,7 @@ TaintAccessPathTree augment_taint_tree_positions(
     TaintAccessPathTree taint_tree,
     const FileLines& lines,
     const Context& context) {
-  taint_tree.map([&](Taint& taint) {
+  taint_tree.map([&lines, &context](Taint& taint) {
     auto new_taint = augment_taint_positions(taint, lines, context);
     taint = std::move(new_taint);
   });
@@ -268,7 +268,7 @@ IssueSet augment_issue_positions(
     IssueSet issues,
     const FileLines& lines,
     const Context& context) {
-  issues.map([&](Issue& issue) {
+  issues.map([&lines, &context](Issue& issue) {
     Issue augmented_issue = Issue(
         augment_taint_positions(issue.sources(), lines, context),
         augment_taint_positions(issue.sinks(), lines, context),

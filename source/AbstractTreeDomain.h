@@ -670,10 +670,9 @@ class AbstractTreeDomain final
     if (height == 0) {
       collapse_inplace();
     } else {
-      children_.map([=](const AbstractTreeDomain& subtree) {
-        auto copy = subtree;
-        copy.collapse_deeper_than(height - 1);
-        return copy;
+      children_.map([height](AbstractTreeDomain subtree) {
+        subtree.collapse_deeper_than(height - 1);
+        return subtree;
       });
     }
   }
@@ -685,10 +684,9 @@ class AbstractTreeDomain final
     if (height == 0) {
       collapse_inplace(transform);
     } else {
-      children_.map([height, &transform](const AbstractTreeDomain& subtree) {
-        auto copy = subtree;
-        copy.collapse_deeper_than(height - 1, transform);
-        return copy;
+      children_.map([height, &transform](AbstractTreeDomain subtree) {
+        subtree.collapse_deeper_than(height - 1, transform);
+        return subtree;
       });
     }
   }
@@ -702,10 +700,9 @@ class AbstractTreeDomain final
 
   /* Remove the given elements from the subtrees. */
   void prune_children(const Elements& accumulator) {
-    children_.map([&](const AbstractTreeDomain& subtree) {
-      auto copy = subtree;
-      copy.prune(accumulator);
-      return copy;
+    children_.map([&accumulator](AbstractTreeDomain subtree) {
+      subtree.prune(accumulator);
+      return subtree;
     });
   }
 
@@ -1188,10 +1185,9 @@ class AbstractTreeDomain final
       accumulator.join_with(elements_);
     }
 
-    children_.map([&](const AbstractTreeDomain& tree) {
-      auto copy = tree;
-      copy.map_internal(f, accumulator);
-      return copy;
+    children_.map([&f, &accumulator](AbstractTreeDomain tree) {
+      tree.map_internal(f, accumulator);
+      return tree;
     });
   }
 

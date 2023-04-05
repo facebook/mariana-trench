@@ -229,24 +229,22 @@ void CalleePortFrames::difference_with(const CalleePortFrames& other) {
 }
 
 void CalleePortFrames::map(const std::function<void(Frame&)>& f) {
-  frames_.map([&](const Frames& frames) {
-    auto new_frames = frames;
-    new_frames.map(f);
-    return new_frames;
+  frames_.map([&f](Frames frames) {
+    frames.map(f);
+    return frames;
   });
 }
 
 void CalleePortFrames::filter(
     const std::function<bool(const Frame&)>& predicate) {
-  frames_.map([&](const Frames& frames) {
-    auto new_frames = frames;
-    new_frames.filter(predicate);
-    return new_frames;
+  frames_.map([&predicate](Frames frames) {
+    frames.filter(predicate);
+    return frames;
   });
 }
 
 void CalleePortFrames::set_origins_if_empty(const MethodSet& origins) {
-  map([&](Frame& frame) {
+  map([&origins](Frame& frame) {
     if (frame.origins().empty()) {
       frame.set_origins(origins);
     }
@@ -407,7 +405,7 @@ void CalleePortFrames::filter_invalid_frames(
   FramesByKind new_frames;
   for (const auto& [kind, frames] : frames_.bindings()) {
     auto frames_copy = frames;
-    frames_copy.filter([&](const Frame& frame) {
+    frames_copy.filter([&is_valid](const Frame& frame) {
       return is_valid(frame.callee(), frame.callee_port(), frame.kind());
     });
     new_frames.set(kind, frames_copy);

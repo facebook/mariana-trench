@@ -37,12 +37,13 @@ void Taint::difference_with(const Taint& other) {
 }
 
 void Taint::map(const std::function<void(Frame&)>& f) {
-  set_.map([&](CalleeFrames& callee_frames) { callee_frames.map(f); });
+  set_.map([&f](CalleeFrames& callee_frames) { callee_frames.map(f); });
 }
 
 void Taint::filter(const std::function<bool(const Frame&)>& predicate) {
-  set_.map(
-      [&](CalleeFrames& callee_frames) { callee_frames.filter(predicate); });
+  set_.map([&predicate](CalleeFrames& callee_frames) {
+    callee_frames.filter(predicate);
+  });
 }
 
 void Taint::set_leaf_origins_if_empty(const MethodSet& origins) {

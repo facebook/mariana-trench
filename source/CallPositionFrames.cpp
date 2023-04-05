@@ -102,26 +102,27 @@ void CallPositionFrames::difference_with(const CallPositionFrames& other) {
 }
 
 void CallPositionFrames::map(const std::function<void(Frame&)>& f) {
-  frames_.map(
-      [&](CalleePortFrames& callee_port_frames) { callee_port_frames.map(f); });
+  frames_.map([&f](CalleePortFrames& callee_port_frames) {
+    callee_port_frames.map(f);
+  });
 }
 
 void CallPositionFrames::filter(
     const std::function<bool(const Frame&)>& predicate) {
-  frames_.map([&](CalleePortFrames& callee_port_frames) {
+  frames_.map([&predicate](CalleePortFrames& callee_port_frames) {
     callee_port_frames.filter(predicate);
   });
 }
 
 void CallPositionFrames::set_origins_if_empty(const MethodSet& origins) {
-  frames_.map([&](CalleePortFrames& callee_port_frames) {
+  frames_.map([&origins](CalleePortFrames& callee_port_frames) {
     callee_port_frames.set_origins_if_empty(origins);
   });
 }
 
 void CallPositionFrames::set_field_origins_if_empty_with_field_callee(
     const Field* field) {
-  frames_.map([&](CalleePortFrames& callee_port_frames) {
+  frames_.map([field](CalleePortFrames& callee_port_frames) {
     callee_port_frames.set_field_origins_if_empty_with_field_callee(field);
   });
 }
@@ -260,10 +261,11 @@ CallPositionFrames CallPositionFrames::attach_position(
 void CallPositionFrames::transform_kind_with_features(
     const std::function<std::vector<const Kind*>(const Kind*)>& transform_kind,
     const std::function<FeatureMayAlwaysSet(const Kind*)>& add_features) {
-  frames_.map([&](CalleePortFrames& callee_port_frames) {
-    callee_port_frames.transform_kind_with_features(
-        transform_kind, add_features);
-  });
+  frames_.map(
+      [&transform_kind, &add_features](CalleePortFrames& callee_port_frames) {
+        callee_port_frames.transform_kind_with_features(
+            transform_kind, add_features);
+      });
 }
 
 CallPositionFrames CallPositionFrames::apply_transform(
@@ -344,7 +346,7 @@ CallPositionFrames::map_positions(
 void CallPositionFrames::filter_invalid_frames(
     const std::function<bool(const Method*, const AccessPath&, const Kind*)>&
         is_valid) {
-  frames_.map([&](CalleePortFrames& callee_port_frames) {
+  frames_.map([&is_valid](CalleePortFrames& callee_port_frames) {
     callee_port_frames.filter_invalid_frames(is_valid);
   });
 }
