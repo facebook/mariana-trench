@@ -105,11 +105,8 @@ void CallEffectsAbstractDomain::visit(
   }
 }
 
-void CallEffectsAbstractDomain::map(const std::function<void(Taint&)>& f) {
-  map_.map([&f](Taint taint) {
-    f(taint);
-    return taint;
-  });
+void CallEffectsAbstractDomain::map(const std::function<Taint(Taint)>& f) {
+  map_.map(f);
 }
 
 void CallEffectsAbstractDomain::write(const CallEffect& effect, Taint value) {

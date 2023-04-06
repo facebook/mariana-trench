@@ -624,12 +624,18 @@ TEST_F(GroupHashedSetAbstractDomainTest, Difference) {
 TEST_F(GroupHashedSetAbstractDomainTest, Map) {
   auto domain = AbstractDomainT{};
 
-  domain.map([](Element& element) { element.values.insert(20); });
+  domain.map([](Element element) {
+    element.values.insert(20);
+    return element;
+  });
   EXPECT_EQ(domain, AbstractDomainT{});
 
   domain =
       AbstractDomainT{Element{/* group */ 1, /* values */ IntSet{10, 11, 12}}};
-  domain.map([](Element& element) { element.values.insert(20); });
+  domain.map([](Element element) {
+    element.values.insert(20);
+    return element;
+  });
   EXPECT_EQ(
       domain,
       (AbstractDomainT{
@@ -638,7 +644,10 @@ TEST_F(GroupHashedSetAbstractDomainTest, Map) {
   domain = AbstractDomainT{
       Element{/* group */ 1, /* values */ IntSet{10, 12}},
       Element{/* group */ 2, /* values */ IntSet{11}}};
-  domain.map([](Element& element) { element.values.insert(20); });
+  domain.map([](Element element) {
+    element.values.insert(20);
+    return element;
+  });
   EXPECT_EQ(
       domain,
       (AbstractDomainT{
@@ -648,7 +657,10 @@ TEST_F(GroupHashedSetAbstractDomainTest, Map) {
   domain = AbstractDomainT{
       Element{/* group */ 1, /* values */ IntSet{10, 12}},
       Element{/* group */ 2, /* values */ IntSet{11}}};
-  domain.map([](Element& element) { element.values.clear(); });
+  domain.map([](Element element) {
+    element.values.clear();
+    return element;
+  });
   EXPECT_EQ(
       domain,
       (AbstractDomainT{

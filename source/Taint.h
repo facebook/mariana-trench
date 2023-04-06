@@ -96,7 +96,7 @@ class Taint final : public sparta::AbstractDomain<Taint> {
 
   void difference_with(const Taint& other);
 
-  void map(const std::function<void(Frame&)>& f);
+  void map(const std::function<Frame(Frame)>& f);
 
   void filter(const std::function<bool(const Frame&)>& predicate);
 

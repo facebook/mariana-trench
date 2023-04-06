@@ -133,7 +133,7 @@ class PathElementMapIterator final {
  *   static std::size_t max_tree_height_after_widening();
  *
  *   // Transform elements that are collapsed during widening.
- *   static void transform_on_widening_collapse(Elements&);
+ *   static Elements transform_on_widening_collapse(Elements);
  * }
  * ```
  *
@@ -154,8 +154,8 @@ class AbstractTreeDomain final
                 std::size_t>);
   static_assert(std::is_same_v<
                 decltype(Configuration::transform_on_widening_collapse(
-                    std::declval<Elements&>())),
-                void>);
+                    std::declval<const Elements>())),
+                Elements>);
 
  public:
   using PathElement = typename Path::Element;
@@ -615,7 +615,7 @@ class AbstractTreeDomain final
    * the root. This is mainly used to attach broadening features to collapsed
    * taint.
    */
-  Elements collapse(const std::function<void(Elements&)>& transform) const {
+  Elements collapse(const std::function<Elements(Elements)>& transform) const {
     Elements elements = elements_;
     for (const auto& [path_element, subtree] : children_) {
       subtree.collapse_into(elements, transform);
@@ -638,7 +638,7 @@ class AbstractTreeDomain final
    * the root. This is mainly used to attach broadening features to collapsed
    * taint.
    */
-  void collapse_inplace(const std::function<void(Elements&)>& transform) {
+  void collapse_inplace(const std::function<Elements(Elements)>& transform) {
     for (const auto& [path_element, subtree] : children_) {
       subtree.collapse_into(elements_, transform);
     }
@@ -656,10 +656,8 @@ class AbstractTreeDomain final
   /* Collapse the tree into the given set of elements. */
   void collapse_into(
       Elements& elements,
-      const std::function<void(Elements&)>& transform) const {
-    Elements elements_copy = elements_;
-    transform(elements_copy);
-    elements.join_with(elements_copy);
+      const std::function<Elements(Elements)>& transform) const {
+    elements.join_with(transform(elements_));
     for (const auto& [_, subtree] : children_) {
       subtree.collapse_into(elements, transform);
     }
@@ -680,7 +678,7 @@ class AbstractTreeDomain final
   /* Collapse the tree to the given maximum height. */
   void collapse_deeper_than(
       std::size_t height,
-      const std::function<void(Elements&)>& transform) {
+      const std::function<Elements(Elements)>& transform) {
     if (height == 0) {
       collapse_inplace(transform);
     } else {
@@ -718,7 +716,7 @@ class AbstractTreeDomain final
           std::pair<bool, Accumulator>(const Accumulator&, PathElement)>&
           is_valid,
       const Accumulator& accumulator,
-      const std::function<void(Elements&)>& transform_on_collapse) {
+      const std::function<Elements(Elements)>& transform_on_collapse) {
     Map new_children;
     for (const auto& [path_element, subtree] :
          PathElementMapIterator(children_)) {
@@ -755,7 +753,7 @@ class AbstractTreeDomain final
    */
   void limit_leaves(
       std::size_t max_leaves,
-      const std::function<void(Elements&)>& transform) {
+      const std::function<Elements(Elements)>& transform) {
     auto depth = depth_exceeding_max_leaves(max_leaves);
     if (!depth) {
       return;
@@ -1065,14 +1063,14 @@ class AbstractTreeDomain final
    */
   void shape_with(
       const AbstractTreeDomain& mold,
-      const std::function<void(Elements&)>& transform) {
+      const std::function<Elements(Elements)>& transform) {
     shape_with_internal(mold, transform, Elements::bottom());
   }
 
  private:
   void shape_with_internal(
       const AbstractTreeDomain& mold,
-      const std::function<void(Elements&)>& transform,
+      const std::function<Elements(Elements)>& transform,
       const Elements& accumulator) {
     const auto& mold_any_index_subtree =
         mold.children_.at(PathElement::any_index().encode());
@@ -1171,16 +1169,16 @@ class AbstractTreeDomain final
   }
 
   /* Apply the given function on all elements. */
-  void map(const std::function<void(Elements&)>& f) {
+  void map(const std::function<Elements(Elements)>& f) {
     map_internal(f, Elements::bottom());
   }
 
  private:
   void map_internal(
-      const std::function<void(Elements&)>& f,
+      const std::function<Elements(Elements)>& f,
       Elements accumulator) {
     if (!elements_.is_bottom()) {
-      f(elements_);
+      elements_ = f(std::move(elements_));
       elements_.difference_with(accumulator);
       accumulator.join_with(elements_);
     }

@@ -26,7 +26,9 @@ struct IntTreeConfiguration {
     return 4;
   }
 
-  static void transform_on_widening_collapse(IntSet&) {}
+  static IntSet transform_on_widening_collapse(IntSet value) {
+    return value;
+  }
 };
 
 using IntSetTree = AbstractTreeDomain<IntSet, IntTreeConfiguration>;
@@ -2053,12 +2055,12 @@ TEST_F(AbstractTreeDomainTest, Map) {
       {Path{y}, IntSet{7, 8}},
       {Path{y, x}, IntSet{9, 10}},
   };
-  tree.map([](IntSet& set) {
-    auto copy = set;
-    set = IntSet{};
-    for (int value : copy.elements()) {
-      set.add(value * value);
+  tree.map([](const IntSet& set) {
+    auto new_set = IntSet{};
+    for (int value : set.elements()) {
+      new_set.add(value * value);
     }
+    return new_set;
   });
   EXPECT_EQ(
       tree,
@@ -2173,7 +2175,7 @@ TEST_F(AbstractTreeDomainTest, Transform) {
   const auto kind = context.kind_factory->get("Test");
   const Feature broadening = Feature("via-broadening");
   const FeatureMayAlwaysSet features = FeatureMayAlwaysSet({&broadening});
-  const auto& transform = [&features](Taint& taint) {
+  const auto transform = [&features](Taint taint) {
     taint.add_inferred_features(features);
     return taint;
   };
@@ -2436,7 +2438,7 @@ TEST_F(AbstractTreeDomainTest, CollapseInvalid) {
         return std::make_pair(true, current_path);
       };
 
-  auto identity = [](IntSet&) {};
+  auto identity = [](IntSet value) { return value; };
 
   tree.collapse_invalid_paths<Accumulator>(is_valid, Path(), identity);
 
@@ -2459,7 +2461,7 @@ TEST_F(AbstractTreeDomainTest, Shape) {
   const auto zi = PathElement::index("z");
   const auto ai = PathElement::any_index();
 
-  auto identity = [](IntSet& /* set */) {};
+  auto identity = [](IntSet value) { return value; };
 
   // Branches are properly collapsed.
   auto tree = IntSetTree{
@@ -2534,12 +2536,12 @@ TEST_F(AbstractTreeDomainTest, Shape) {
       }));
 
   // Transform is applied to collapsed elements.
-  auto add_thousand = [](IntSet& set) {
+  auto add_thousand = [](IntSet set) {
     IntSet new_set;
     for (int value : set.elements()) {
       new_set.add(value + 1000);
     }
-    std::swap(set, new_set);
+    return new_set;
   };
   tree = IntSetTree{
       {Path{}, IntSet{1}},

@@ -139,7 +139,7 @@ class CalleeFrames final : public sparta::AbstractDomain<CalleeFrames> {
 
   void difference_with(const CalleeFrames& other);
 
-  void map(const std::function<void(Frame&)>& f);
+  void map(const std::function<Frame(Frame)>& f);
 
   void filter(const std::function<bool(const Frame&)>& predicate);
 

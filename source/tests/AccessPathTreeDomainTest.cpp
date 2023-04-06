@@ -24,7 +24,9 @@ struct IntTreeConfiguration {
     return 4;
   }
 
-  static void transform_on_widening_collapse(IntSet&) {}
+  static IntSet transform_on_widening_collapse(IntSet value) {
+    return value;
+  }
 };
 
 using IntSetPathTree = AbstractTreeDomain<IntSet, IntTreeConfiguration>;
@@ -520,12 +522,12 @@ TEST_F(AccessPathTreeDomainTest, Map) {
       {AccessPath(Root(Root::Kind::Argument, 2)), IntSet{1, 2}},
       {AccessPath(Root(Root::Kind::Argument, 2), Path{x, y}), IntSet{3, 4}},
   };
-  tree.map([](IntSet& set) {
-    auto copy = set;
-    set = IntSet{};
-    for (int value : copy.elements()) {
-      set.add(value * value);
+  tree.map([](const IntSet& set) {
+    auto new_set = IntSet{};
+    for (int value : set.elements()) {
+      new_set.add(value * value);
     }
+    return new_set;
   });
   EXPECT_EQ(
       tree,
@@ -578,7 +580,7 @@ TEST_F(AccessPathTreeDomainTest, CollapseInvalid) {
     return root.to_string();
   };
 
-  auto identity = [](IntSet&) {};
+  auto identity = [](IntSet value) { return value; };
 
   tree.collapse_invalid_paths<Accumulator>(
       is_valid, initial_accumulator, identity);

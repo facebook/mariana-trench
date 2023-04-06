@@ -309,13 +309,14 @@ class GroupHashedSetAbstractDomain final
   }
 
   /* Update all elements without affecting the grouping. */
-  void map(const std::function<void(Element&)>& f) {
+  void map(const std::function<Element(Element)>& f) {
     for (auto iterator = set_.begin(), end = set_.end(); iterator != end;) {
       // This is safe as long as `f` does not change the grouping.
       const MutableElement& mutable_element = *iterator;
       auto previous_hash = MutableElementHash()(mutable_element);
-      f(mutable_element.get_unsafe());
-      if (mutable_element.get().is_bottom()) {
+      Element& element = mutable_element.get_unsafe();
+      element = f(std::move(element));
+      if (element.is_bottom()) {
         iterator = set_.erase(iterator);
       } else {
         auto current_hash = MutableElementHash()(mutable_element);

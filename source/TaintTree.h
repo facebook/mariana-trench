@@ -18,7 +18,7 @@ struct TaintTreeConfiguration {
     return Heuristics::kSourceSinkTreeWideningHeight;
   }
 
-  static void transform_on_widening_collapse(Taint&);
+  static Taint transform_on_widening_collapse(Taint);
 };
 
 using TaintTree = AbstractTreeDomain<Taint, TaintTreeConfiguration>;

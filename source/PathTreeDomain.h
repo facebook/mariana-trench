@@ -17,7 +17,10 @@ struct PathTreeConfiguration {
     return Heuristics::kPropagationOutputPathTreeWideningHeight;
   }
 
-  static void transform_on_widening_collapse(SingletonAbstractDomain&) {}
+  static SingletonAbstractDomain transform_on_widening_collapse(
+      SingletonAbstractDomain value) {
+    return value;
+  }
 };
 
 using PathTreeDomain =

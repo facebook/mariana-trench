@@ -485,9 +485,10 @@ void Model::collapse_invalid_paths(Context& context) {
     return FieldTypesAccumulator{root_type};
   };
 
-  auto transform_on_collapse = [&context](Taint& taint) {
+  auto transform_on_collapse = [&context](Taint taint) {
     taint.add_inferred_features(FeatureMayAlwaysSet{
         context.feature_factory->get_invalid_path_broadening()});
+    return taint;
   };
 
   generations_.collapse_invalid_paths<FieldTypesAccumulator>(
@@ -501,10 +502,11 @@ void Model::collapse_invalid_paths(Context& context) {
 }
 
 void Model::approximate(const FeatureMayAlwaysSet& widening_features) {
-  const auto transform = [&widening_features](Taint& taint) {
+  const auto transform = [&widening_features](Taint taint) {
     taint.add_inferred_features(widening_features);
+    return taint;
   };
-  const auto make_mold = [](Taint& taint) { taint = taint.essential(); };
+  const auto make_mold = [](Taint taint) { return taint.essential(); };
 
   generations_.shape_with(make_mold, transform);
   generations_.limit_leaves(
@@ -1433,9 +1435,10 @@ void Model::remove_kinds(const std::unordered_set<const Kind*>& to_remove) {
     }
     return std::vector<const Kind*>{kind};
   };
-  auto map = [&drop_special_kinds](Taint& taint) -> void {
+  auto map = [&drop_special_kinds](Taint taint) {
     taint.transform_kind_with_features(
         drop_special_kinds, /* add_features, never called */ nullptr);
+    return taint;
   };
 
   generations_.map(map);

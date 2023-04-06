@@ -124,7 +124,7 @@ class CallPositionFrames final
 
   void difference_with(const CallPositionFrames& other);
 
-  void map(const std::function<void(Frame&)>& f);
+  void map(const std::function<Frame(Frame)>& f);
 
   void filter(const std::function<bool(const Frame&)>& predicate);
 

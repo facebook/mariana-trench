@@ -228,7 +228,7 @@ void CalleePortFrames::difference_with(const CalleePortFrames& other) {
   }
 }
 
-void CalleePortFrames::map(const std::function<void(Frame&)>& f) {
+void CalleePortFrames::map(const std::function<Frame(Frame)>& f) {
   frames_.map([&f](Frames frames) {
     frames.map(f);
     return frames;
@@ -244,20 +244,22 @@ void CalleePortFrames::filter(
 }
 
 void CalleePortFrames::set_origins_if_empty(const MethodSet& origins) {
-  map([&origins](Frame& frame) {
+  map([&origins](Frame frame) {
     if (frame.origins().empty()) {
       frame.set_origins(origins);
     }
+    return frame;
   });
 }
 
 void CalleePortFrames::set_field_origins_if_empty_with_field_callee(
     const Field* field) {
-  map([&](Frame& frame) {
+  map([&](Frame frame) {
     if (frame.field_origins().empty()) {
       frame.set_field_origins(FieldSet{field});
     }
     frame.set_field_callee(field);
+    return frame;
   });
 }
 
@@ -281,7 +283,10 @@ void CalleePortFrames::add_inferred_features(
     return;
   }
 
-  map([&features](Frame& frame) { frame.add_inferred_features(features); });
+  map([&features](Frame frame) {
+    frame.add_inferred_features(features);
+    return frame;
+  });
 }
 
 void CalleePortFrames::add_local_position(const Position* position) {
@@ -299,10 +304,11 @@ void CalleePortFrames::add_inferred_features_and_local_position(
     return;
   }
 
-  map([&features](Frame& frame) {
+  map([&features](Frame frame) {
     if (!features.empty()) {
       frame.add_inferred_features(features);
     }
+    return frame;
   });
 
   if (position != nullptr) {
@@ -312,8 +318,9 @@ void CalleePortFrames::add_inferred_features_and_local_position(
 
 void CalleePortFrames::append_to_propagation_output_paths(
     Path::Element path_element) {
-  map([path_element](Frame& frame) {
+  map([path_element](Frame frame) {
     frame.append_to_propagation_output_paths(path_element);
+    return frame;
   });
 }
 
@@ -396,7 +403,7 @@ void CalleePortFrames::transform_kind_with_features(
     }
   }
 
-  frames_ = new_frames_by_kind;
+  frames_ = std::move(new_frames_by_kind);
 }
 
 void CalleePortFrames::filter_invalid_frames(

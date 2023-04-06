@@ -984,8 +984,9 @@ TEST_F(CalleePortFramesTest, Map) {
               .origins = MethodSet{one},
               .call_info = CallInfo::CallSite}),
   };
-  frames.map([feature_one](Frame& frame) {
+  frames.map([feature_one](Frame frame) {
     frame.add_inferred_features(FeatureMayAlwaysSet{feature_one});
+    return frame;
   });
   EXPECT_EQ(
       frames,

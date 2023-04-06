@@ -101,29 +101,33 @@ void CallPositionFrames::difference_with(const CallPositionFrames& other) {
   frames_.difference_with(other.frames_);
 }
 
-void CallPositionFrames::map(const std::function<void(Frame&)>& f) {
-  frames_.map([&f](CalleePortFrames& callee_port_frames) {
+void CallPositionFrames::map(const std::function<Frame(Frame)>& f) {
+  frames_.map([&f](CalleePortFrames callee_port_frames) {
     callee_port_frames.map(f);
+    return callee_port_frames;
   });
 }
 
 void CallPositionFrames::filter(
     const std::function<bool(const Frame&)>& predicate) {
-  frames_.map([&predicate](CalleePortFrames& callee_port_frames) {
+  frames_.map([&predicate](CalleePortFrames callee_port_frames) {
     callee_port_frames.filter(predicate);
+    return callee_port_frames;
   });
 }
 
 void CallPositionFrames::set_origins_if_empty(const MethodSet& origins) {
-  frames_.map([&origins](CalleePortFrames& callee_port_frames) {
+  frames_.map([&origins](CalleePortFrames callee_port_frames) {
     callee_port_frames.set_origins_if_empty(origins);
+    return callee_port_frames;
   });
 }
 
 void CallPositionFrames::set_field_origins_if_empty_with_field_callee(
     const Field* field) {
-  frames_.map([field](CalleePortFrames& callee_port_frames) {
+  frames_.map([field](CalleePortFrames callee_port_frames) {
     callee_port_frames.set_field_origins_if_empty_with_field_callee(field);
+    return callee_port_frames;
   });
 }
 
@@ -141,7 +145,10 @@ void CallPositionFrames::add_inferred_features(
     return;
   }
 
-  map([&features](Frame& frame) { frame.add_inferred_features(features); });
+  map([&features](Frame frame) {
+    frame.add_inferred_features(features);
+    return frame;
+  });
 }
 
 LocalPositionSet CallPositionFrames::local_positions() const {
@@ -153,15 +160,17 @@ LocalPositionSet CallPositionFrames::local_positions() const {
 }
 
 void CallPositionFrames::add_local_position(const Position* position) {
-  frames_.map([position](CalleePortFrames& callee_port_frames) {
+  frames_.map([position](CalleePortFrames callee_port_frames) {
     callee_port_frames.add_local_position(position);
+    return callee_port_frames;
   });
 }
 
 void CallPositionFrames::set_local_positions(
     const LocalPositionSet& positions) {
-  frames_.map([positions](CalleePortFrames& callee_port_frames) {
+  frames_.map([positions](CalleePortFrames callee_port_frames) {
     callee_port_frames.set_local_positions(positions);
+    return callee_port_frames;
   });
 }
 
@@ -172,10 +181,11 @@ void CallPositionFrames::add_inferred_features_and_local_position(
     return;
   }
 
-  map([&features](Frame& frame) {
+  map([&features](Frame frame) {
     if (!features.empty()) {
       frame.add_inferred_features(features);
     }
+    return frame;
   });
 
   if (position != nullptr) {
@@ -262,9 +272,10 @@ void CallPositionFrames::transform_kind_with_features(
     const std::function<std::vector<const Kind*>(const Kind*)>& transform_kind,
     const std::function<FeatureMayAlwaysSet(const Kind*)>& add_features) {
   frames_.map(
-      [&transform_kind, &add_features](CalleePortFrames& callee_port_frames) {
+      [&transform_kind, &add_features](CalleePortFrames callee_port_frames) {
         callee_port_frames.transform_kind_with_features(
             transform_kind, add_features);
+        return callee_port_frames;
       });
 }
 
@@ -346,8 +357,9 @@ CallPositionFrames::map_positions(
 void CallPositionFrames::filter_invalid_frames(
     const std::function<bool(const Method*, const AccessPath&, const Kind*)>&
         is_valid) {
-  frames_.map([&is_valid](CalleePortFrames& callee_port_frames) {
+  frames_.map([&is_valid](CalleePortFrames callee_port_frames) {
     callee_port_frames.filter_invalid_frames(is_valid);
+    return callee_port_frames;
   });
 }
 

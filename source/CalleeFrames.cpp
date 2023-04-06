@@ -122,7 +122,7 @@ void CalleeFrames::difference_with(const CalleeFrames& other) {
       });
 }
 
-void CalleeFrames::map(const std::function<void(Frame&)>& f) {
+void CalleeFrames::map(const std::function<Frame(Frame)>& f) {
   frames_.map([&f](CallPositionFrames frames) {
     frames.map(f);
     return frames;
@@ -164,7 +164,10 @@ void CalleeFrames::add_inferred_features(const FeatureMayAlwaysSet& features) {
     return;
   }
 
-  map([&features](Frame& frame) { frame.add_inferred_features(features); });
+  map([&features](Frame frame) {
+    frame.add_inferred_features(features);
+    return frame;
+  });
 }
 
 LocalPositionSet CalleeFrames::local_positions() const {
@@ -200,10 +203,11 @@ void CalleeFrames::add_inferred_features_and_local_position(
     return;
   }
 
-  map([&features](Frame& frame) {
+  map([&features](Frame frame) {
     if (!features.empty()) {
       frame.add_inferred_features(features);
     }
+    return frame;
   });
 
   if (position != nullptr) {
@@ -298,10 +302,11 @@ void CalleeFrames::append_to_propagation_output_paths(
     return;
   }
 
-  map([path_element](Frame& frame) {
+  map([path_element](Frame frame) {
     if (frame.kind()->is<PropagationKind>()) {
       frame.append_to_propagation_output_paths(path_element);
     }
+    return frame;
   });
 }
 

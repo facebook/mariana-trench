@@ -36,29 +36,35 @@ void Taint::difference_with(const Taint& other) {
   set_.difference_with(other.set_);
 }
 
-void Taint::map(const std::function<void(Frame&)>& f) {
-  set_.map([&f](CalleeFrames& callee_frames) { callee_frames.map(f); });
+void Taint::map(const std::function<Frame(Frame)>& f) {
+  set_.map([&f](CalleeFrames callee_frames) {
+    callee_frames.map(f);
+    return callee_frames;
+  });
 }
 
 void Taint::filter(const std::function<bool(const Frame&)>& predicate) {
-  set_.map([&predicate](CalleeFrames& callee_frames) {
+  set_.map([&predicate](CalleeFrames callee_frames) {
     callee_frames.filter(predicate);
+    return callee_frames;
   });
 }
 
 void Taint::set_leaf_origins_if_empty(const MethodSet& origins) {
-  set_.map([&origins](CalleeFrames& frames) {
+  set_.map([&origins](CalleeFrames frames) {
     if (frames.callee() == nullptr) {
       frames.set_origins_if_empty(origins);
     }
+    return frames;
   });
 }
 
 void Taint::set_field_origins_if_empty_with_field_callee(const Field* field) {
-  set_.map([field](CalleeFrames& frames) {
+  set_.map([field](CalleeFrames frames) {
     // Setting a field callee must always be done on non-propagated leaves.
     mt_assert(frames.callee() == nullptr);
     frames.set_field_origins_if_empty_with_field_callee(field);
+    return frames;
   });
 }
 
@@ -67,20 +73,23 @@ void Taint::add_inferred_features(const FeatureMayAlwaysSet& features) {
     return;
   }
 
-  set_.map([&features](CalleeFrames& frames) {
+  set_.map([&features](CalleeFrames frames) {
     frames.add_inferred_features(features);
+    return frames;
   });
 }
 
 void Taint::add_local_position(const Position* position) {
-  set_.map([position](CalleeFrames& frames) {
+  set_.map([position](CalleeFrames frames) {
     frames.add_local_position(position);
+    return frames;
   });
 }
 
 void Taint::set_local_positions(const LocalPositionSet& positions) {
-  set_.map([&positions](CalleeFrames& frames) {
+  set_.map([&positions](CalleeFrames frames) {
     frames.set_local_positions(positions);
+    return frames;
   });
 }
 
@@ -99,8 +108,9 @@ void Taint::add_inferred_features_and_local_position(
     return;
   }
 
-  set_.map([&features, position](CalleeFrames& frames) {
+  set_.map([&features, position](CalleeFrames frames) {
     frames.add_inferred_features_and_local_position(features, position);
+    return frames;
   });
 }
 
@@ -144,8 +154,9 @@ Taint Taint::attach_position(const Position* position) const {
 void Taint::transform_kind_with_features(
     const std::function<std::vector<const Kind*>(const Kind*)>& transform_kind,
     const std::function<FeatureMayAlwaysSet(const Kind*)>& add_features) {
-  set_.map([&transform_kind, &add_features](CalleeFrames& frames) {
+  set_.map([&transform_kind, &add_features](CalleeFrames frames) {
     frames.transform_kind_with_features(transform_kind, add_features);
+    return frames;
   });
 }
 
@@ -186,8 +197,9 @@ std::ostream& operator<<(std::ostream& out, const Taint& taint) {
 }
 
 void Taint::append_to_propagation_output_paths(Path::Element path_element) {
-  set_.map([path_element](CalleeFrames& frames) {
+  set_.map([path_element](CalleeFrames frames) {
     frames.append_to_propagation_output_paths(path_element);
+    return frames;
   });
 }
 
@@ -197,16 +209,18 @@ void Taint::update_non_leaf_positions(
         new_call_position,
     const std::function<LocalPositionSet(const LocalPositionSet&)>&
         new_local_positions) {
-  set_.map([&new_call_position, &new_local_positions](CalleeFrames& frames) {
+  set_.map([&new_call_position, &new_local_positions](CalleeFrames frames) {
     frames.update_non_leaf_positions(new_call_position, new_local_positions);
+    return frames;
   });
 }
 
 void Taint::filter_invalid_frames(
     const std::function<bool(const Method*, const AccessPath&, const Kind*)>&
         is_valid) {
-  set_.map([&is_valid](CalleeFrames& frames) {
+  set_.map([&is_valid](CalleeFrames frames) {
     frames.filter_invalid_frames(is_valid);
+    return frames;
   });
 }
 

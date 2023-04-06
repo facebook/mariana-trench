@@ -47,8 +47,10 @@ bool BackwardTaintTransfer::analyze_check_cast(
     auto features = FeatureMayAlwaysSet::make_always(
         {context->feature_factory.get_via_cast_feature(
             instruction->get_type())});
-    taint.map(
-        [&features](Taint& sinks) { sinks.add_inferred_features(features); });
+    taint.map([&features](Taint sinks) {
+      sinks.add_inferred_features(features);
+      return sinks;
+    });
   }
 
   LOG_OR_DUMP(
@@ -122,8 +124,9 @@ void apply_add_features_to_arguments(
     auto memory_locations = aliasing.register_memory_locations(register_id);
     for (auto* memory_location : memory_locations.elements()) {
       auto taint = previous_environment->read(memory_location);
-      taint.map([&features, position](Taint& sinks) {
+      taint.map([&features, position](Taint sinks) {
         sinks.add_inferred_features_and_local_position(features, position);
+        return sinks;
       });
       new_environment->write(
           memory_location, std::move(taint), UpdateKind::Strong);
@@ -214,8 +217,9 @@ void apply_propagations(
       features.add(propagation.features());
       features.add_always(callee.model.add_features_to_arguments(input.root()));
 
-      output_taint_tree.map([&features, position](Taint& taints) {
-        taints.add_inferred_features_and_local_position(features, position);
+      output_taint_tree.map([&features, position](Taint taint) {
+        taint.add_inferred_features_and_local_position(features, position);
+        return taint;
       });
 
       for (const auto& [output_path, _] :
@@ -249,10 +253,11 @@ void apply_propagations(
         if (!callee.model.no_collapse_on_propagation()) {
           LOG_OR_DUMP(context, 4, "Collapsing taint tree {}", input_taint_tree);
           input_taint_tree.collapse_inplace(
-              /* transform */ [context](Taint& taint) {
+              /* transform */ [context](Taint taint) {
                 taint.add_inferred_features(FeatureMayAlwaysSet{
                     context->feature_factory
                         .get_propagation_broadening_feature()});
+                return taint;
               });
         }
 
@@ -602,8 +607,10 @@ bool BackwardTaintTransfer::analyze_iput(
       aliasing.position(),
       Root(Root::Kind::Return),
       instruction);
-  target_taint.map(
-      [position](Taint& sinks) { sinks.add_local_position(position); });
+  target_taint.map([position](Taint sinks) {
+    sinks.add_local_position(position);
+    return sinks;
+  });
 
   LOG_OR_DUMP(
       context,
@@ -676,7 +683,7 @@ void infer_input_taint(
         continue;
       }
 
-      propagations.map([context, &input_root](Frame& frame) {
+      propagations.map([context, &input_root](Frame frame) {
         auto* propagation_kind = frame.propagation_kind();
         FeatureMayAlwaysSet features;
         features.add_always(
@@ -684,6 +691,7 @@ void infer_input_taint(
         features.add_always(context->previous_model.attach_to_propagations(
             propagation_kind->root()));
         frame.add_inferred_features(features);
+        return frame;
       });
 
       auto input_port = AccessPath(input_root, input_path);
@@ -780,8 +788,9 @@ bool BackwardTaintTransfer::analyze_aput(
       aliasing.position(),
       Root(Root::Kind::Return),
       instruction);
-  taint.map([&features, position](Taint& sources) {
+  taint.map([&features, position](Taint sources) {
     sources.add_inferred_features_and_local_position(features, position);
+    return sources;
   });
 
   LOG_OR_DUMP(
@@ -830,8 +839,9 @@ static bool analyze_numerical_operator(
       aliasing.position(),
       Root(Root::Kind::Return),
       instruction);
-  taint.map([&features, position](Taint& sources) {
+  taint.map([&features, position](Taint sources) {
     sources.add_inferred_features_and_local_position(features, position);
+    return sources;
   });
 
   for (auto register_id : instruction->srcs()) {
@@ -881,7 +891,7 @@ bool BackwardTaintTransfer::analyze_return(
   auto* position =
       context->positions.get(context->method(), aliasing.position());
   taint.map(
-      [position](Taint& sinks) { sinks = sinks.attach_position(position); });
+      [position](Taint sinks) { return sinks.attach_position(position); });
 
   // Add local return.
   taint.join_with(TaintTree(Taint::propagation_taint(

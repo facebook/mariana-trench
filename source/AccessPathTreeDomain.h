@@ -163,7 +163,7 @@ class AccessPathTreeDomain final
   }
 
   /* Apply the given function on all elements. */
-  void map(const std::function<void(Elements&)>& f) {
+  void map(const std::function<Elements(Elements)>& f) {
     map_.map([&f](AbstractTreeDomainT tree) {
       tree.map(f);
       return tree;
@@ -190,7 +190,7 @@ class AccessPathTreeDomain final
           std::pair<bool, Accumulator>(const Accumulator&, Path::Element)>&
           is_valid,
       const std::function<Accumulator(const Root&)>& initial_accumulator,
-      const std::function<void(Elements&)>& transform_on_collapse) {
+      const std::function<Elements(Elements)>& transform_on_collapse) {
     Map new_map;
     for (const auto& [root, tree] : map_) {
       auto copy = tree;
@@ -220,7 +220,7 @@ class AccessPathTreeDomain final
    */
   void limit_leaves(
       std::size_t max_leaves,
-      const std::function<void(Elements&)>& transform) {
+      const std::function<Elements(Elements)>& transform) {
     map_.map([max_leaves, &transform](AbstractTreeDomainT tree) {
       tree.limit_leaves(max_leaves, transform);
       return tree;
@@ -244,8 +244,8 @@ class AccessPathTreeDomain final
    * original taint tree if it was collapsed in the mold.
    */
   void shape_with(
-      const std::function<void(Elements&)>& make_mold,
-      const std::function<void(Elements&)>& transform_on_collapse) {
+      const std::function<Elements(Elements)>& make_mold,
+      const std::function<Elements(Elements)>& transform_on_collapse) {
     map_.map(
         [&make_mold, &transform_on_collapse](const AbstractTreeDomainT& tree) {
           auto mold = tree;
