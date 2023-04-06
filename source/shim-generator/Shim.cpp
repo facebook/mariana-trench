@@ -326,9 +326,9 @@ ShimLifecycleTarget::parameter_registers(
   return parameter_registers;
 }
 
-Shim::Shim(const Method* method) : method_(method) {}
+InstantiatedShim::InstantiatedShim(const Method* method) : method_(method) {}
 
-void Shim::add_target(ShimTargetVariant target) {
+void InstantiatedShim::add_target(ShimTargetVariant target) {
   if (std::holds_alternative<ShimTarget>(target)) {
     targets_.push_back(std::get<ShimTarget>(target));
   } else if (std::holds_alternative<ShimReflectionTarget>(target)) {
@@ -339,6 +339,12 @@ void Shim::add_target(ShimTargetVariant target) {
     mt_unreachable();
   }
 }
+
+Shim::Shim(
+    const InstantiatedShim* MT_NULLABLE instantiated_shim,
+    std::vector<ShimTarget> intent_routing_targets)
+    : instantiated_shim_(instantiated_shim),
+      intent_routing_targets_(std::move(intent_routing_targets)) {}
 
 std::ostream& operator<<(std::ostream& out, const ShimMethod& shim_method) {
   out << "ShimMethod(method=`";
@@ -395,8 +401,8 @@ std::ostream& operator<<(
   return out << ")";
 }
 
-std::ostream& operator<<(std::ostream& out, const Shim& shim) {
-  out << "Shim(method=`";
+std::ostream& operator<<(std::ostream& out, const InstantiatedShim& shim) {
+  out << "InstantiatedShim(method=`";
   if (auto* method = shim.method()) {
     out << method->show();
   }
@@ -426,6 +432,21 @@ std::ostream& operator<<(std::ostream& out, const Shim& shim) {
     out << "  ]";
   }
 
+  return out << ")";
+}
+
+std::ostream& operator<<(std::ostream& out, const Shim& shim) {
+  out << "Shim(shim=`";
+  out << *(shim.instantiated_shim_);
+  out << "`";
+
+  if (!shim.intent_routing_targets().empty()) {
+    out << ",\n  intent_routing_targets=[\n";
+    for (const auto& target : shim.intent_routing_targets()) {
+      out << "    " << target << ",\n";
+    }
+    out << "  ]";
+  }
   return out << ")";
 }
 

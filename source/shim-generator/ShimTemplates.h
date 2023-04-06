@@ -107,7 +107,7 @@ class ShimTemplate final {
  public:
   static ShimTemplate from_json(const Json::Value& shim_json);
 
-  std::optional<Shim> instantiate(
+  std::optional<InstantiatedShim> instantiate(
       const Methods* methods,
       const Method* method_to_shim) const;
 

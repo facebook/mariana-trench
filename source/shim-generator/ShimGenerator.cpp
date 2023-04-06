@@ -22,7 +22,8 @@ ShimGenerator::ShimGenerator(
       shim_template_(std::move(shim_template)),
       methods_(methods) {}
 
-std::optional<Shim> ShimGenerator::visit_method(const Method* method) const {
+std::optional<InstantiatedShim> ShimGenerator::visit_method(
+    const Method* method) const {
   if (constraint_->satisfy(method)) {
     LOG(5,
         "Method `{}{}` satisfies all constraints in shim model generator",
@@ -34,7 +35,7 @@ std::optional<Shim> ShimGenerator::visit_method(const Method* method) const {
   return std::nullopt;
 }
 
-std::vector<Shim> ShimGenerator::emit_method_shims(
+std::vector<InstantiatedShim> ShimGenerator::emit_method_shims(
     Shims& method_shims,
     const Methods* methods,
     const MethodMappings& method_mappings) {

@@ -30,9 +30,14 @@ bool skip_shim_for_caller(const Method* caller) {
       });
 }
 
+bool is_activity_routing_method(const Method* method) {
+  // TODO(T149770577): This should be configurable with model generator syntax.
+  LOG(4, "checking if {} activity", method->get_name());
+  return method->get_name() == "startActivity";
+}
 } // namespace
 
-bool Shims::add_global_method_shim(const Shim& shim) {
+bool Shims::add_instantiated_shim(const InstantiatedShim& shim) {
   return global_shims_.emplace(shim.method(), shim).second;
 }
 
@@ -40,10 +45,36 @@ std::optional<Shim> Shims::get_shim_for_caller(
     const Method* original_callee,
     const Method* caller) const {
   auto shim = global_shims_.find(original_callee);
-  if (shim == global_shims_.end() || skip_shim_for_caller(caller)) {
+  if (skip_shim_for_caller(caller)) {
     return std::nullopt;
   }
-  return shim->second;
+  const InstantiatedShim* MT_NULLABLE instantiated_shim = nullptr;
+  if (shim != global_shims_.end()) {
+    instantiated_shim = &(shim->second);
+  }
+  std::vector<ShimTarget> intent_routing_targets;
+  // Intent routing does not exist unless the callee is in the vein of
+  // startActivity(intent).
+  if (is_activity_routing_method(original_callee)) {
+    auto routed_intent_classes = methods_to_routed_intents_.find(caller);
+    if (routed_intent_classes != methods_to_routed_intents_.end()) {
+      for (const auto& intent_class : routed_intent_classes->second) {
+        if (auto intent_getters = classes_to_intent_getters_.find(intent_class);
+            intent_getters != classes_to_intent_getters_.end()) {
+          for (const auto& intent_getter : intent_getters->second) {
+            // TODO(T149770577): Add a mapping from intent -> call effect
+            // parameter here.
+            intent_routing_targets.emplace_back(
+                intent_getter, ShimParameterMapping{});
+          }
+        }
+      }
+    }
+  }
+  if (instantiated_shim == nullptr && intent_routing_targets.empty()) {
+    return std::nullopt;
+  }
+  return Shim{instantiated_shim, intent_routing_targets};
 }
 
 void Shims::add_intent_routing_data(

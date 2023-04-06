@@ -22,7 +22,7 @@ using ClassesToIntentGettersMap =
 
 class Shims final {
  private:
-  using MethodToShimMap = std::unordered_map<const Method*, Shim>;
+  using MethodToShimMap = std::unordered_map<const Method*, InstantiatedShim>;
 
  public:
   explicit Shims(std::size_t global_shims_size)
@@ -38,7 +38,7 @@ class Shims final {
       const Method* original_callee,
       const Method* caller) const;
 
-  bool add_global_method_shim(const Shim& shim);
+  bool add_instantiated_shim(const InstantiatedShim& shim);
 
   void add_intent_routing_data(
       const Method* method,

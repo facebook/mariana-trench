@@ -8,6 +8,7 @@
 #include <gmock/gmock.h>
 
 #include <mariana-trench/Context.h>
+#include <mariana-trench/Method.h>
 #include <mariana-trench/MethodMappings.h>
 #include <mariana-trench/Redex.h>
 #include <mariana-trench/shim-generator/ShimGeneration.h>
@@ -206,5 +207,95 @@ TEST_F(ShimsTest, TestBuildCrossComponentAnalysisShims) {
 
   };
   EXPECT_EQ(methods_to_routed_intents, expected_methods_to_routed_intents);
+}
+
+TEST_F(ShimsTest, TestGetShimForCaller) {
+  Scope scope;
+  auto intent_methods = redex::create_methods(
+      scope,
+      "Landroid/content/Intent;",
+      {
+          R"(
+            (method (public) "Landroid/content/Intent;.<init>:(Landroid/content/Context;Ljava/lang/Class;)V"
+            (
+              (return-void)
+            )
+            ))"});
+  auto routing_class_methods = redex::create_methods(
+      scope,
+      "LClass;",
+      {
+          R"(
+            (method (public) "LClass;.routes_intent:()V"
+            (
+              (new-instance "Landroid/content/Intent;")
+              (move-result-pseudo-object v0)
+              (new-instance "Landroid/content/Context;")
+              (move-result-pseudo-object v1)
+              (const-class "LRouteTo;")
+              (move-result-pseudo-object v2)
+              (invoke-direct (v0 v1 v2) "Landroid/content/Intent;.<init>:(Landroid/content/Context;Ljava/lang/Class;)V")
+              (invoke-direct (v0) "LClass;.startActivity:(Landroid/content/Intent;)V")
+              (return-void)
+            )
+            ))",
+          R"(
+            (method (public) "LClass;.startActivity:(Landroid/content/Intent;)V"
+            (
+              (return-void)
+            )
+            ))"});
+
+  auto routed_class_methods = redex::create_methods(
+      scope,
+      "LRouteTo;",
+      {
+          R"(
+            (method (public) "LRouteTo;.getIntent:()Landroid/content/Intent;"
+            (
+              (new-instance "Landroid/content/Intent;")
+              (move-result-pseudo-object v0)
+              (return-object v0)
+            )
+            ))",
+          R"(
+            (method (public) "LRouteTo;.gets_routed_intent:()V"
+            (
+              (new-instance "Landroid/content/Intent;")
+              (move-result-pseudo-object v0)
+              (invoke-direct (v0) "LRouteTo;.getIntent:()Landroid/content/Intent;")
+              (return-void)
+            )
+            ))",
+          R"(
+            (method (public) "LRouteTo;.also_gets_routed_intent:()V"
+            (
+              (new-instance "Landroid/content/Intent;")
+              (move-result-pseudo-object v0)
+              (invoke-direct (v0) "LRouteTo;.getIntent:()Landroid/content/Intent;")
+              (return-void)
+            )
+            ))",
+      });
+
+  auto context = test_types(scope);
+  MethodMappings method_mappings = MethodMappings(*context.methods);
+  Shims shims = ShimGeneration::run(context, method_mappings);
+
+  const Method* route_intent = context.methods->get(routing_class_methods[0]);
+  const Method* start_activity = context.methods->get(routing_class_methods[1]);
+  auto found_shim = shims.get_shim_for_caller(
+      /* original_callee */ start_activity, /* caller */ route_intent);
+  ASSERT_TRUE(found_shim != std::nullopt);
+  std::vector<std::string> serialized_routing_targets;
+  for (const auto& shim_target : found_shim->intent_routing_targets()) {
+    serialized_routing_targets.push_back(shim_target.method()->show());
+  }
+  sort(serialized_routing_targets.begin(), serialized_routing_targets.end());
+  EXPECT_EQ(
+      serialized_routing_targets,
+      (std::vector<std::string>{
+          "LRouteTo;.also_gets_routed_intent:()V",
+          "LRouteTo;.gets_routed_intent:()V"}));
 }
 } // namespace marianatrench

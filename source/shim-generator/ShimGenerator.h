@@ -26,18 +26,19 @@ class ShimGenerator final {
       const Methods* methods);
 
   /* Returns a vector of duplicate shims. */
-  std::vector<Shim> emit_method_shims(
+  std::vector<InstantiatedShim> emit_method_shims(
       Shims& method_shims,
       const Methods* methods,
       const MethodMappings& method_mappings);
 
  private:
-  std::optional<Shim> visit_method(const Method* method) const;
+  std::optional<InstantiatedShim> visit_method(const Method* method) const;
 
   template <typename InputIt>
-  std::vector<Shim> visit_methods(Shims& shims, InputIt begin, InputIt end) {
+  std::vector<InstantiatedShim>
+  visit_methods(Shims& shims, InputIt begin, InputIt end) {
     std::mutex mutex;
-    std::vector<Shim> duplicates;
+    std::vector<InstantiatedShim> duplicates;
 
     auto queue = sparta::work_queue<const Method*>([&](const Method* method) {
       auto shim = this->visit_method(method);
@@ -49,7 +50,7 @@ class ShimGenerator final {
       bool inserted;
       {
         std::lock_guard<std::mutex> lock(mutex);
-        inserted = shims.add_global_method_shim(*shim);
+        inserted = shims.add_instantiated_shim(*shim);
       }
 
       if (!inserted) {

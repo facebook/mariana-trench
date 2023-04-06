@@ -16,7 +16,6 @@
 
 namespace marianatrench {
 
-class Shim;
 /* Indicates the position of a parameter in the `shimmed-method`. */
 using ShimParameterPosition = ParameterPosition;
 
@@ -196,9 +195,9 @@ using ShimTargetVariant =
 /**
  * Represents an instantiated Shim for one `shimmed-method`.
  */
-class Shim {
+class InstantiatedShim {
  public:
-  explicit Shim(const Method* method);
+  explicit InstantiatedShim(const Method* method);
 
   void add_target(ShimTargetVariant target);
 
@@ -222,13 +221,74 @@ class Shim {
     return lifecycles_;
   }
 
-  friend std::ostream& operator<<(std::ostream& out, const Shim& shim);
+  friend std::ostream& operator<<(
+      std::ostream& out,
+      const InstantiatedShim& shim);
 
  private:
   const Method* method_;
   std::vector<ShimTarget> targets_;
   std::vector<ShimReflectionTarget> reflections_;
   std::vector<ShimLifecycleTarget> lifecycles_;
+};
+
+class Shim {
+ public:
+  explicit Shim(
+      const InstantiatedShim* MT_NULLABLE instantiated_shim,
+      std::vector<ShimTarget> intent_routing_targets);
+
+  const Method* method() const {
+    return instantiated_shim_->method();
+  }
+
+  bool empty() const {
+    return instantiated_shim_->empty() && intent_routing_targets_.empty();
+  }
+
+  const std::vector<ShimTarget>& targets() const {
+    if (instantiated_shim_ == nullptr) {
+      return Shim::empty_shim_targets();
+    }
+    return instantiated_shim_->targets();
+  }
+
+  const std::vector<ShimReflectionTarget>& reflections() const {
+    if (instantiated_shim_ == nullptr) {
+      return Shim::empty_reflection_targets();
+    }
+    return instantiated_shim_->reflections();
+  }
+
+  const std::vector<ShimLifecycleTarget>& lifecycles() const {
+    if (instantiated_shim_ == nullptr) {
+      return Shim::empty_lifecycle_targets();
+    }
+    return instantiated_shim_->lifecycles();
+  }
+
+  const std::vector<ShimTarget>& intent_routing_targets() const {
+    return intent_routing_targets_;
+  }
+
+  static const std::vector<ShimTarget>& empty_shim_targets() {
+    static const std::vector<ShimTarget> empty;
+    return empty;
+  }
+  static const std::vector<ShimLifecycleTarget>& empty_lifecycle_targets() {
+    static const std::vector<ShimLifecycleTarget> empty;
+    return empty;
+  }
+  static const std::vector<ShimReflectionTarget>& empty_reflection_targets() {
+    static const std::vector<ShimReflectionTarget> empty;
+    return empty;
+  }
+
+  friend std::ostream& operator<<(std::ostream& out, const Shim& shim);
+
+ private:
+  const InstantiatedShim* instantiated_shim_;
+  std::vector<ShimTarget> intent_routing_targets_;
 };
 
 } // namespace marianatrench
