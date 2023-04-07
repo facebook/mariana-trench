@@ -101,21 +101,6 @@ void CallPositionFrames::difference_with(const CallPositionFrames& other) {
   frames_.difference_with(other.frames_);
 }
 
-void CallPositionFrames::map(const std::function<Frame(Frame)>& f) {
-  frames_.map([&f](CalleePortFrames callee_port_frames) {
-    callee_port_frames.map(f);
-    return callee_port_frames;
-  });
-}
-
-void CallPositionFrames::filter(
-    const std::function<bool(const Frame&)>& predicate) {
-  frames_.map([&predicate](CalleePortFrames callee_port_frames) {
-    callee_port_frames.filter(predicate);
-    return callee_port_frames;
-  });
-}
-
 void CallPositionFrames::set_origins_if_empty(const MethodSet& origins) {
   frames_.map([&origins](CalleePortFrames callee_port_frames) {
     callee_port_frames.set_origins_if_empty(origins);
@@ -266,17 +251,6 @@ CallPositionFrames CallPositionFrames::attach_position(
   }
 
   return CallPositionFrames(position, result);
-}
-
-void CallPositionFrames::transform_kind_with_features(
-    const std::function<std::vector<const Kind*>(const Kind*)>& transform_kind,
-    const std::function<FeatureMayAlwaysSet(const Kind*)>& add_features) {
-  frames_.map(
-      [&transform_kind, &add_features](CalleePortFrames callee_port_frames) {
-        callee_port_frames.transform_kind_with_features(
-            transform_kind, add_features);
-        return callee_port_frames;
-      });
 }
 
 CallPositionFrames CallPositionFrames::apply_transform(

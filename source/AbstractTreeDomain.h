@@ -615,7 +615,8 @@ class AbstractTreeDomain final
    * the root. This is mainly used to attach broadening features to collapsed
    * taint.
    */
-  Elements collapse(const std::function<Elements(Elements)>& transform) const {
+  template <typename Transform> // Elements(Elements)
+  Elements collapse(Transform&& transform) const {
     Elements elements = elements_;
     for (const auto& [path_element, subtree] : children_) {
       subtree.collapse_into(elements, transform);
@@ -638,7 +639,8 @@ class AbstractTreeDomain final
    * the root. This is mainly used to attach broadening features to collapsed
    * taint.
    */
-  void collapse_inplace(const std::function<Elements(Elements)>& transform) {
+  template <typename Transform> // Elements(Elements)
+  void collapse_inplace(Transform&& transform) {
     for (const auto& [path_element, subtree] : children_) {
       subtree.collapse_into(elements_, transform);
     }
@@ -654,9 +656,12 @@ class AbstractTreeDomain final
   }
 
   /* Collapse the tree into the given set of elements. */
-  void collapse_into(
-      Elements& elements,
-      const std::function<Elements(Elements)>& transform) const {
+  template <typename Transform> // Elements(Elements)
+  void collapse_into(Elements& elements, Transform&& transform) const {
+    static_assert(std::is_same_v<
+                  decltype(transform(std::declval<Elements&&>())),
+                  Elements>);
+
     elements.join_with(transform(elements_));
     for (const auto& [_, subtree] : children_) {
       subtree.collapse_into(elements, transform);
@@ -676,13 +681,17 @@ class AbstractTreeDomain final
   }
 
   /* Collapse the tree to the given maximum height. */
-  void collapse_deeper_than(
-      std::size_t height,
-      const std::function<Elements(Elements)>& transform) {
+  template <typename Transform> // Elements(Elements)
+  void collapse_deeper_than(std::size_t height, Transform&& transform) {
+    static_assert(std::is_same_v<
+                  decltype(transform(std::declval<Elements&&>())),
+                  Elements>);
+
     if (height == 0) {
-      collapse_inplace(transform);
+      collapse_inplace(std::forward<Transform>(transform));
     } else {
-      children_.map([height, &transform](AbstractTreeDomain subtree) {
+      children_.map([height, transform = std::forward<Transform>(transform)](
+                        AbstractTreeDomain subtree) {
         subtree.collapse_deeper_than(height - 1, transform);
         return subtree;
       });
@@ -751,14 +760,13 @@ class AbstractTreeDomain final
    * `transform` is a function applied to the `Element`s that are collapsed.
    * Mainly used to add broadening features to collapsed taint
    */
-  void limit_leaves(
-      std::size_t max_leaves,
-      const std::function<Elements(Elements)>& transform) {
+  template <typename Transform> // Elements(Elements)
+  void limit_leaves(std::size_t max_leaves, Transform&& transform) {
     auto depth = depth_exceeding_max_leaves(max_leaves);
     if (!depth) {
       return;
     }
-    collapse_deeper_than(*depth, transform);
+    collapse_deeper_than(*depth, std::forward<Transform>(transform));
   }
 
   /* Return the depth at which the tree exceeds the given number of leaves. */
@@ -971,9 +979,16 @@ class AbstractTreeDomain final
    * a child. This is mainly used to attach the correct access path to
    * backward taint to infer propagations.
    */
-  template <typename Propagate>
-  AbstractTreeDomain read(const Path& path, const Propagate& propagate) const {
-    return read_internal(path.begin(), path.end(), propagate);
+  template <typename Propagate> // Elements(Elements, Path::Element)
+  AbstractTreeDomain read(const Path& path, Propagate&& propagate) const {
+    static_assert(
+        std::is_same_v<
+            decltype(propagate(
+                std::declval<Elements&&>(), std::declval<Path::Element>())),
+            Elements>);
+
+    return read_internal(
+        path.begin(), path.end(), std::forward<Propagate>(propagate));
   }
 
   /**
@@ -995,7 +1010,7 @@ class AbstractTreeDomain final
   AbstractTreeDomain read_internal(
       Path::ConstIterator begin,
       Path::ConstIterator end,
-      const Propagate& propagate) const {
+      Propagate&& propagate) const {
     if (begin == end) {
       return *this;
     }
@@ -1027,7 +1042,8 @@ class AbstractTreeDomain final
     }
 
     subtree.elements_.join_with(propagate(elements_, path_head));
-    return subtree.read_internal(begin, end, propagate);
+    return subtree.read_internal(
+        begin, end, std::forward<Propagate>(propagate));
   }
 
  public:
@@ -1061,16 +1077,21 @@ class AbstractTreeDomain final
    * `transform` is a function called when collapsing. This is mainly used to
    * attach broadening features to collapsed taint.
    */
-  void shape_with(
-      const AbstractTreeDomain& mold,
-      const std::function<Elements(Elements)>& transform) {
-    shape_with_internal(mold, transform, Elements::bottom());
+  template <typename Transform> // Elements(Elements)
+  void shape_with(const AbstractTreeDomain& mold, Transform&& transform) {
+    static_assert(std::is_same_v<
+                  decltype(transform(std::declval<Elements&&>())),
+                  Elements>);
+
+    shape_with_internal(
+        mold, std::forward<Transform>(transform), Elements::bottom());
   }
 
  private:
+  template <typename Transform> // Elements(Elements)
   void shape_with_internal(
       const AbstractTreeDomain& mold,
-      const std::function<Elements(Elements)>& transform,
+      Transform&& transform,
       const Elements& accumulator) {
     const auto& mold_any_index_subtree =
         mold.children_.at(PathElement::any_index().encode());
@@ -1132,15 +1153,21 @@ class AbstractTreeDomain final
    *
    * When visiting the tree, elements do not include their ancestors.
    */
-  void visit(std::function<void(const Path&, const Elements&)> visitor) const {
+  template <typename Visitor> // void(const Path&, const Elements&)
+  void visit(Visitor&& visitor) const {
+    static_assert(
+        std::is_same_v<
+            decltype(visitor(
+                std::declval<const Path>(), std::declval<const Elements>())),
+            void>);
+
     Path path;
-    visit_internal(path, visitor);
+    visit_internal(path, std::forward<Visitor>(visitor));
   }
 
  private:
-  void visit_internal(
-      Path& path,
-      std::function<void(const Path&, const Elements&)>& visitor) const {
+  template <typename Visitor> // void(const Path&, const Elements&)
+  void visit_internal(Path& path, Visitor&& visitor) const {
     if (!elements_.is_bottom()) {
       visitor(path, elements_);
     }
@@ -1162,31 +1189,35 @@ class AbstractTreeDomain final
    */
   std::vector<std::pair<Path, const Elements&>> elements() const {
     std::vector<std::pair<Path, const Elements&>> results;
-    visit([&](const Path& path, const Elements& elements) {
+    visit([&results](const Path& path, const Elements& elements) {
       results.push_back({path, elements});
     });
     return results;
   }
 
   /* Apply the given function on all elements. */
-  void map(const std::function<Elements(Elements)>& f) {
-    map_internal(f, Elements::bottom());
+  template <typename Function> // Elements(Elements)
+  void map(Function&& f) {
+    static_assert(
+        std::is_same_v<decltype(f(std::declval<Elements&&>())), Elements>);
+
+    map_internal(std::forward<Function>(f), Elements::bottom());
   }
 
  private:
-  void map_internal(
-      const std::function<Elements(Elements)>& f,
-      Elements accumulator) {
+  template <typename Function> // Elements(Elements)
+  void map_internal(Function&& f, Elements accumulator) {
     if (!elements_.is_bottom()) {
       elements_ = f(std::move(elements_));
       elements_.difference_with(accumulator);
       accumulator.join_with(elements_);
     }
 
-    children_.map([&f, &accumulator](AbstractTreeDomain tree) {
-      tree.map_internal(f, accumulator);
-      return tree;
-    });
+    children_.map(
+        [f = std::forward<Function>(f), &accumulator](AbstractTreeDomain tree) {
+          tree.map_internal(f, accumulator);
+          return tree;
+        });
   }
 
  public:

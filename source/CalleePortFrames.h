@@ -173,9 +173,27 @@ class CalleePortFrames final : public sparta::AbstractDomain<CalleePortFrames> {
 
   void difference_with(const CalleePortFrames& other);
 
-  void map(const std::function<Frame(Frame)>& f);
+  template <typename Function> // Frame(Frame)
+  void map(Function&& f) {
+    static_assert(std::is_same_v<decltype(f(std::declval<Frame&&>())), Frame>);
 
-  void filter(const std::function<bool(const Frame&)>& predicate);
+    frames_.map([f = std::forward<Function>(f)](Frames frames) {
+      frames.map(f);
+      return frames;
+    });
+  }
+
+  template <typename Predicate> // bool(const Frame&)
+  void filter(Predicate&& predicate) {
+    static_assert(
+        std::is_same_v<decltype(predicate(std::declval<const Frame>())), bool>);
+
+    frames_.map(
+        [predicate = std::forward<Predicate>(predicate)](Frames frames) {
+          frames.filter(predicate);
+          return frames;
+        });
+  }
 
   ConstIterator begin() const {
     return ConstIterator(frames_.bindings().begin(), frames_.bindings().end());
@@ -221,9 +239,38 @@ class CalleePortFrames final : public sparta::AbstractDomain<CalleePortFrames> {
       const std::vector<std::optional<std::string>>& source_constant_arguments)
       const;
 
+  template <typename TransformKind, typename AddFeatures>
   void transform_kind_with_features(
-      const std::function<std::vector<const Kind*>(const Kind*)>&,
-      const std::function<FeatureMayAlwaysSet(const Kind*)>&);
+      TransformKind&& transform_kind, // std::vector<const Kind*>(const Kind*)
+      AddFeatures&& add_features // FeatureMayAlwaysSet(const Kind*)
+  ) {
+    FramesByKind new_frames_by_kind;
+    for (const auto& [old_kind, frames] : frames_.bindings()) {
+      std::vector<const Kind*> new_kinds = transform_kind(old_kind);
+      if (new_kinds.empty()) {
+        continue;
+      } else if (new_kinds.size() == 1 && new_kinds.front() == old_kind) {
+        new_frames_by_kind.set(old_kind, frames); // no transformation
+      } else {
+        for (const auto* new_kind : new_kinds) {
+          // Even if new_kind == old_kind for some new_kind, perform
+          // map_frame_set because a transformation occurred.
+          Frames new_frames;
+          FeatureMayAlwaysSet features_to_add = add_features(new_kind);
+          for (const auto& frame : frames) {
+            auto new_frame = frame.with_kind(new_kind);
+            new_frame.add_inferred_features(features_to_add);
+            new_frames.add(new_frame);
+          }
+          new_frames_by_kind.update(
+              new_kind, [&new_frames](const Frames& existing) {
+                return existing.join(new_frames);
+              });
+        }
+      }
+    }
+    frames_ = std::move(new_frames_by_kind);
+  }
 
   void filter_invalid_frames(
       const std::function<

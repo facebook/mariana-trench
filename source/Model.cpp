@@ -1437,7 +1437,9 @@ void Model::remove_kinds(const std::unordered_set<const Kind*>& to_remove) {
   };
   auto map = [&drop_special_kinds](Taint taint) {
     taint.transform_kind_with_features(
-        drop_special_kinds, /* add_features, never called */ nullptr);
+        drop_special_kinds,
+        /* add_features, never called */
+        [](const Kind*) -> FeatureMayAlwaysSet { mt_unreachable(); });
     return taint;
   };
 

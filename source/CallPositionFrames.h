@@ -124,9 +124,28 @@ class CallPositionFrames final
 
   void difference_with(const CallPositionFrames& other);
 
-  void map(const std::function<Frame(Frame)>& f);
+  template <typename Function> // Frame(Frame)
+  void map(Function&& f) {
+    static_assert(std::is_same_v<decltype(f(std::declval<Frame&&>())), Frame>);
 
-  void filter(const std::function<bool(const Frame&)>& predicate);
+    frames_.map(
+        [f = std::forward<Function>(f)](CalleePortFrames callee_port_frames) {
+          callee_port_frames.map(f);
+          return callee_port_frames;
+        });
+  }
+
+  template <typename Predicate> // bool(const Frame&)
+  void filter(Predicate&& predicate) {
+    static_assert(
+        std::is_same_v<decltype(predicate(std::declval<const Frame>())), bool>);
+
+    frames_.map([predicate = std::forward<Predicate>(predicate)](
+                    CalleePortFrames callee_port_frames) {
+      callee_port_frames.filter(predicate);
+      return callee_port_frames;
+    });
+  }
 
   ConstIterator begin() const {
     return ConstIterator(frames_.begin(), frames_.end());
@@ -172,9 +191,19 @@ class CallPositionFrames final
   /* Return the set of leaf frames with the given position. */
   CallPositionFrames attach_position(const Position* position) const;
 
+  template <typename TransformKind, typename AddFeatures>
   void transform_kind_with_features(
-      const std::function<std::vector<const Kind*>(const Kind*)>&,
-      const std::function<FeatureMayAlwaysSet(const Kind*)>&);
+      TransformKind&& transform_kind, // std::vector<const Kind*>(const Kind*)
+      AddFeatures&& add_features // FeatureMayAlwaysSet(const Kind*)
+  ) {
+    frames_.map([transform_kind = std::forward<TransformKind>(transform_kind),
+                 add_features = std::forward<AddFeatures>(add_features)](
+                    CalleePortFrames callee_port_frames) {
+      callee_port_frames.transform_kind_with_features(
+          transform_kind, add_features);
+      return callee_port_frames;
+    });
+  }
 
   CallPositionFrames apply_transform(
       const KindFactory& kind_factory,

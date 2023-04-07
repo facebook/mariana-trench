@@ -228,21 +228,6 @@ void CalleePortFrames::difference_with(const CalleePortFrames& other) {
   }
 }
 
-void CalleePortFrames::map(const std::function<Frame(Frame)>& f) {
-  frames_.map([&f](Frames frames) {
-    frames.map(f);
-    return frames;
-  });
-}
-
-void CalleePortFrames::filter(
-    const std::function<bool(const Frame&)>& predicate) {
-  frames_.map([&predicate](Frames frames) {
-    frames.filter(predicate);
-    return frames;
-  });
-}
-
 void CalleePortFrames::set_origins_if_empty(const MethodSet& origins) {
   map([&origins](Frame frame) {
     if (frame.origins().empty()) {
@@ -373,37 +358,6 @@ CalleePortFrames CalleePortFrames::propagate(
   }
 
   return result;
-}
-
-void CalleePortFrames::transform_kind_with_features(
-    const std::function<std::vector<const Kind*>(const Kind*)>& transform_kind,
-    const std::function<FeatureMayAlwaysSet(const Kind*)>& add_features) {
-  FramesByKind new_frames_by_kind;
-  for (const auto& [old_kind, frames] : frames_.bindings()) {
-    auto new_kinds = transform_kind(old_kind);
-    if (new_kinds.empty()) {
-      continue;
-    } else if (new_kinds.size() == 1 && new_kinds.front() == old_kind) {
-      new_frames_by_kind.set(old_kind, frames); // no transformation
-    } else {
-      for (const auto* new_kind : new_kinds) {
-        // Even if new_kind == old_kind for some new_kind, perform map_frame_set
-        // because a transformation occurred.
-        Frames new_frames;
-        auto features_to_add = add_features(new_kind);
-        for (const auto& frame : frames) {
-          auto new_frame = frame.with_kind(new_kind);
-          new_frame.add_inferred_features(features_to_add);
-          new_frames.add(new_frame);
-        }
-        new_frames_by_kind.update(new_kind, [&](const Frames& existing) {
-          return existing.join(new_frames);
-        });
-      }
-    }
-  }
-
-  frames_ = std::move(new_frames_by_kind);
 }
 
 void CalleePortFrames::filter_invalid_frames(

@@ -309,7 +309,11 @@ class GroupHashedSetAbstractDomain final
   }
 
   /* Update all elements without affecting the grouping. */
-  void map(const std::function<Element(Element)>& f) {
+  template <typename Function> // Element(Element)
+  void map(Function&& f) {
+    static_assert(
+        std::is_same_v<decltype(f(std::declval<Element&&>())), Element>);
+
     for (auto iterator = set_.begin(), end = set_.end(); iterator != end;) {
       // This is safe as long as `f` does not change the grouping.
       const MutableElement& mutable_element = *iterator;
@@ -327,7 +331,12 @@ class GroupHashedSetAbstractDomain final
   }
 
   /* Remove all elements that do not match the given predicate. */
-  void filter(const std::function<bool(const Element&)>& predicate) {
+  template <typename Predicate> // bool(const Element&)
+  void filter(Predicate&& predicate) {
+    static_assert(std::is_same_v<
+                  decltype(predicate(std::declval<const Element>())),
+                  bool>);
+
     for (auto iterator = set_.begin(), end = set_.end(); iterator != end;) {
       if (!predicate(iterator->get())) {
         iterator = set_.erase(iterator);

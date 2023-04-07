@@ -96,22 +96,10 @@ const Taint& CallEffectsAbstractDomain::read(CallEffect effect) const {
   return map_.get(effect.encode());
 }
 
-void CallEffectsAbstractDomain::visit(
-    std::function<void(const CallEffect&, const Taint&)> visitor) const {
-  mt_assert(!is_top());
-
-  for (const auto& [effect, taint] : *this) {
-    visitor(effect, taint);
-  }
-}
-
-void CallEffectsAbstractDomain::map(const std::function<Taint(Taint)>& f) {
-  map_.map(f);
-}
-
 void CallEffectsAbstractDomain::write(const CallEffect& effect, Taint value) {
-  map_.update(
-      effect.encode(), [&](const Taint& taint) { return taint.join(value); });
+  map_.update(effect.encode(), [&value](const Taint& taint) {
+    return taint.join(value);
+  });
 }
 
 std::ostream& operator<<(

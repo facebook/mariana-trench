@@ -101,11 +101,11 @@ class AccessPathTreeDomain final
     return map_.get(root);
   }
 
-  template <typename Propagate>
-  AbstractTreeDomainT read(
-      const AccessPath& access_path,
-      const Propagate& propagate) const {
-    return map_.get(access_path.root()).read(access_path.path(), propagate);
+  template <typename Propagate> // Elements(Elements)
+  AbstractTreeDomainT read(const AccessPath& access_path, Propagate&& propagate)
+      const {
+    return map_.get(access_path.root())
+        .read(access_path.path(), std::forward<Propagate>(propagate));
   }
 
   AbstractTreeDomainT read(const AccessPath& access_path) const {
@@ -121,8 +121,13 @@ class AccessPathTreeDomain final
    *
    * When visiting the tree, elements do not include their ancestors.
    */
-  void visit(
-      std::function<void(const AccessPath&, const Elements&)> visitor) const {
+  template <typename Visitor> // void(const AccessPath&, const Elements&)
+  void visit(Visitor&& visitor) const {
+    static_assert(std::is_same_v<
+                  decltype(visitor(
+                      std::declval<const AccessPath>(),
+                      std::declval<const Elements>())),
+                  void>);
     mt_assert(!is_top());
 
     for (const auto& [root, tree] : map_) {
@@ -132,10 +137,11 @@ class AccessPathTreeDomain final
   }
 
  private:
+  template <typename Visitor> // void(const AccessPath&, const Elements&)
   static void visit_internal(
       AccessPath& access_path,
       const AbstractTreeDomainT& tree,
-      std::function<void(const AccessPath&, const Elements&)>& visitor) {
+      Visitor&& visitor) {
     if (!tree.root().is_bottom()) {
       visitor(access_path, tree.root());
     }
@@ -156,15 +162,19 @@ class AccessPathTreeDomain final
    */
   std::vector<std::pair<AccessPath, const Elements&>> elements() const {
     std::vector<std::pair<AccessPath, const Elements&>> results;
-    visit([&](const AccessPath& access_path, const Elements& element) {
+    visit([&results](const AccessPath& access_path, const Elements& element) {
       results.push_back({access_path, element});
     });
     return results;
   }
 
   /* Apply the given function on all elements. */
-  void map(const std::function<Elements(Elements)>& f) {
-    map_.map([&f](AbstractTreeDomainT tree) {
+  template <typename Function> // Elements(Elements)
+  void map(Function&& f) {
+    static_assert(
+        std::is_same_v<decltype(f(std::declval<Elements&&>())), Elements>);
+
+    map_.map([f = std::forward<Function>(f)](AbstractTreeDomainT tree) {
       tree.map(f);
       return tree;
     });
@@ -218,10 +228,14 @@ class AccessPathTreeDomain final
    * `transform` is a function applied to the `Element`s that are collapsed.
    * Mainly used to add broadening features to collapsed taint
    */
-  void limit_leaves(
-      std::size_t max_leaves,
-      const std::function<Elements(Elements)>& transform) {
-    map_.map([max_leaves, &transform](AbstractTreeDomainT tree) {
+  template <typename Transform> // Elements(Elements)
+  void limit_leaves(std::size_t max_leaves, Transform&& transform) {
+    static_assert(std::is_same_v<
+                  decltype(transform(std::declval<Elements&&>())),
+                  Elements>);
+
+    map_.map([max_leaves, transform = std::forward<Transform>(transform)](
+                 AbstractTreeDomainT tree) {
       tree.limit_leaves(max_leaves, transform);
       return tree;
     });
@@ -243,18 +257,28 @@ class AccessPathTreeDomain final
    * `AbstractTreeDomain::shape_with` will then collapse branches in the
    * original taint tree if it was collapsed in the mold.
    */
+  template <typename MakeMold, typename Transform>
   void shape_with(
-      const std::function<Elements(Elements)>& make_mold,
-      const std::function<Elements(Elements)>& transform_on_collapse) {
-    map_.map(
-        [&make_mold, &transform_on_collapse](const AbstractTreeDomainT& tree) {
-          auto mold = tree;
-          mold.map(make_mold);
+      MakeMold&& make_mold, // Elements(Elements)
+      Transform&& transform_on_collapse // Elements(Elements)
+  ) {
+    static_assert(std::is_same_v<
+                  decltype(make_mold(std::declval<Elements&&>())),
+                  Elements>);
+    static_assert(std::is_same_v<
+                  decltype(transform_on_collapse(std::declval<Elements&&>())),
+                  Elements>);
 
-          auto copy = tree;
-          copy.shape_with(mold, transform_on_collapse);
-          return copy;
-        });
+    map_.map([make_mold = std::forward<MakeMold>(make_mold),
+              transform_on_collapse = std::forward<Transform>(
+                  transform_on_collapse)](const AbstractTreeDomainT& tree) {
+      auto mold = tree;
+      mold.map(make_mold);
+
+      auto copy = tree;
+      copy.shape_with(mold, transform_on_collapse);
+      return copy;
+    });
   }
 
   friend std::ostream& operator<<(

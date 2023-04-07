@@ -139,9 +139,28 @@ class CalleeFrames final : public sparta::AbstractDomain<CalleeFrames> {
 
   void difference_with(const CalleeFrames& other);
 
-  void map(const std::function<Frame(Frame)>& f);
+  template <typename Function> // Frame(Frame)
+  void map(Function&& f) {
+    static_assert(std::is_same_v<decltype(f(std::declval<Frame&&>())), Frame>);
 
-  void filter(const std::function<bool(const Frame&)>& predicate);
+    frames_.map([f = std::forward<Function>(f)](CallPositionFrames frames) {
+      frames.map(f);
+      return frames;
+    });
+  }
+
+  template <typename Predicate> // bool(const Frame&)
+  void filter(Predicate&& predicate) {
+    static_assert(
+        std::
+            is_same_v<decltype(predicate(std::declval<const Frame&>())), bool>);
+
+    frames_.map([predicate = std::forward<Predicate>(predicate)](
+                    CallPositionFrames frames) {
+      frames.filter(predicate);
+      return frames;
+    });
+  }
 
   ConstIterator begin() const {
     return ConstIterator(frames_.bindings().begin(), frames_.bindings().end());
@@ -187,9 +206,18 @@ class CalleeFrames final : public sparta::AbstractDomain<CalleeFrames> {
   /* Return the set of leaf frames with the given position. */
   CalleeFrames attach_position(const Position* position) const;
 
+  template <typename TransformKind, typename AddFeatures>
   void transform_kind_with_features(
-      const std::function<std::vector<const Kind*>(const Kind*)>&,
-      const std::function<FeatureMayAlwaysSet(const Kind*)>&);
+      TransformKind&& transform_kind, // std::vector<const Kind*>(const Kind*)
+      AddFeatures&& add_features // FeatureMayAlwaysSet(const Kind*)
+  ) {
+    frames_.map([transform_kind = std::forward<TransformKind>(transform_kind),
+                 add_features = std::forward<AddFeatures>(add_features)](
+                    CallPositionFrames frames) {
+      frames.transform_kind_with_features(transform_kind, add_features);
+      return frames;
+    });
+  }
 
   CalleeFrames apply_transform(
       const KindFactory& kind_factory,

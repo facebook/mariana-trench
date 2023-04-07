@@ -96,9 +96,27 @@ class Taint final : public sparta::AbstractDomain<Taint> {
 
   void difference_with(const Taint& other);
 
-  void map(const std::function<Frame(Frame)>& f);
+  template <typename Function> // Frame(Frame)
+  void map(Function&& f) {
+    static_assert(std::is_same_v<decltype(f(std::declval<Frame&&>())), Frame>);
 
-  void filter(const std::function<bool(const Frame&)>& predicate);
+    set_.map([f = std::forward<Function>(f)](CalleeFrames callee_frames) {
+      callee_frames.map(f);
+      return callee_frames;
+    });
+  }
+
+  template <typename Predicate> // bool(const Frame&)
+  void filter(Predicate&& predicate) {
+    static_assert(
+        std::is_same_v<decltype(predicate(std::declval<const Frame>())), bool>);
+
+    set_.map([predicate = std::forward<Predicate>(predicate)](
+                 CalleeFrames callee_frames) {
+      callee_frames.filter(predicate);
+      return callee_frames;
+    });
+  }
 
   /**
    * Sets the origins for leaves that do not have one set yet.
@@ -162,9 +180,17 @@ class Taint final : public sparta::AbstractDomain<Taint> {
    * time of writing, there should be no such use-case, but new callers should
    * be mindful of this behavior.
    */
+  template <typename TransformKind, typename AddFeatures>
   void transform_kind_with_features(
-      const std::function<std::vector<const Kind*>(const Kind*)>&,
-      const std::function<FeatureMayAlwaysSet(const Kind*)>&);
+      TransformKind&& transform_kind, // std::vector<const Kind*>(const Kind*)
+      AddFeatures&& add_features // FeatureMayAlwaysSet(const Kind*)
+  ) {
+    set_.map([transform_kind = std::forward<TransformKind>(transform_kind),
+              add_features](CalleeFrames frames) {
+      frames.transform_kind_with_features(transform_kind, add_features);
+      return frames;
+    });
+  }
 
   Taint apply_transform(
       const KindFactory& kind_factory,

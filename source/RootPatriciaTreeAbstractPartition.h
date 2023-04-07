@@ -120,12 +120,14 @@ class RootPatriciaTreeAbstractPartition final
     map_.set(root.encode(), value);
   }
 
-  void update(Root root, std::function<Domain(const Domain&)> operation) {
-    map_.update(root.encode(), std::move(operation));
+  template <typename Operation> // Domain(const Domain&)
+  void update(Root root, Operation&& operation) {
+    map_.update(root.encode(), std::forward<Operation>(operation));
   }
 
-  bool map(std::function<Domain(const Domain&)> f) {
-    return map_.map(std::move(f));
+  template <typename Function> // Domain(const Domain&)
+  bool map(Function&& f) {
+    return map_.map(std::forward<Function>(f));
   }
 
   friend std::ostream& operator<<(

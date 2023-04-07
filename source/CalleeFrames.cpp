@@ -122,20 +122,6 @@ void CalleeFrames::difference_with(const CalleeFrames& other) {
       });
 }
 
-void CalleeFrames::map(const std::function<Frame(Frame)>& f) {
-  frames_.map([&f](CallPositionFrames frames) {
-    frames.map(f);
-    return frames;
-  });
-}
-
-void CalleeFrames::filter(const std::function<bool(const Frame&)>& predicate) {
-  frames_.map([&predicate](CallPositionFrames frames) {
-    frames.filter(predicate);
-    return frames;
-  });
-}
-
 void CalleeFrames::set_origins_if_empty(const MethodSet& origins) {
   frames_.map([&origins](CallPositionFrames frames) {
     frames.set_origins_if_empty(origins);
@@ -268,15 +254,6 @@ CalleeFrames CalleeFrames::attach_position(const Position* position) const {
       callee_,
       CallInfo::Origin,
       FramesByCallPosition{std::pair(position, result)});
-}
-
-void CalleeFrames::transform_kind_with_features(
-    const std::function<std::vector<const Kind*>(const Kind*)>& transform_kind,
-    const std::function<FeatureMayAlwaysSet(const Kind*)>& add_features) {
-  frames_.map([&transform_kind, &add_features](CallPositionFrames frames) {
-    frames.transform_kind_with_features(transform_kind, add_features);
-    return frames;
-  });
 }
 
 CalleeFrames CalleeFrames::apply_transform(

@@ -152,11 +152,25 @@ class CallEffectsAbstractDomain final
 
   const Taint& read(CallEffect effect) const;
 
-  void visit(
-      std::function<void(const CallEffect&, const Taint&)> visitor) const;
+  template <typename Visitor> // void(const CallEffect&, const Taint&)
+  void visit(Visitor&& visitor) const {
+    static_assert(
+        std::is_same_v<
+            decltype(visitor(
+                std::declval<const CallEffect>(), std::declval<const Taint>())),
+            void>);
+    mt_assert(!is_top());
+
+    for (const auto& [effect, taint] : *this) {
+      visitor(effect, taint);
+    }
+  }
 
   /* Apply the given function on all elements. */
-  void map(const std::function<Taint(Taint)>& f);
+  template <typename Function>
+  void map(Function&& f) {
+    map_.map(std::forward<Function>(f));
+  }
 
   /* Performs a weak update. */
   void write(const CallEffect& effect, Taint taint);

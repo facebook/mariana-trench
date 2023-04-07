@@ -36,20 +36,6 @@ void Taint::difference_with(const Taint& other) {
   set_.difference_with(other.set_);
 }
 
-void Taint::map(const std::function<Frame(Frame)>& f) {
-  set_.map([&f](CalleeFrames callee_frames) {
-    callee_frames.map(f);
-    return callee_frames;
-  });
-}
-
-void Taint::filter(const std::function<bool(const Frame&)>& predicate) {
-  set_.map([&predicate](CalleeFrames callee_frames) {
-    callee_frames.filter(predicate);
-    return callee_frames;
-  });
-}
-
 void Taint::set_leaf_origins_if_empty(const MethodSet& origins) {
   set_.map([&origins](CalleeFrames frames) {
     if (frames.callee() == nullptr) {
@@ -149,15 +135,6 @@ Taint Taint::attach_position(const Position* position) const {
     result.set_.add(frames.attach_position(position));
   }
   return result;
-}
-
-void Taint::transform_kind_with_features(
-    const std::function<std::vector<const Kind*>(const Kind*)>& transform_kind,
-    const std::function<FeatureMayAlwaysSet(const Kind*)>& add_features) {
-  set_.map([&transform_kind, &add_features](CalleeFrames frames) {
-    frames.transform_kind_with_features(transform_kind, add_features);
-    return frames;
-  });
 }
 
 Taint Taint::apply_transform(
