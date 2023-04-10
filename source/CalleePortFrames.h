@@ -272,6 +272,12 @@ class CalleePortFrames final : public sparta::AbstractDomain<CalleePortFrames> {
     frames_ = std::move(new_frames_by_kind);
   }
 
+  CalleePortFrames apply_transform(
+      const KindFactory& kind_factory,
+      const TransformsFactory& transforms,
+      const UsedKinds& used_kinds,
+      const TransformList* local_transforms) const;
+
   void filter_invalid_frames(
       const std::function<
           bool(const Method* MT_NULLABLE, const AccessPath&, const Kind*)>&

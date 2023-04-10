@@ -360,6 +360,22 @@ CalleePortFrames CalleePortFrames::propagate(
   return result;
 }
 
+CalleePortFrames CalleePortFrames::apply_transform(
+    const KindFactory& kind_factory,
+    const TransformsFactory& transforms,
+    const UsedKinds& used_kinds,
+    const TransformList* local_transforms) const {
+  CalleePortFrames new_frames(callee_port_, FramesByKind(), local_positions_);
+  for (const auto& frame : *this) {
+    auto new_frame = frame.apply_transform(
+        kind_factory, transforms, used_kinds, local_transforms);
+    if (!new_frame.is_bottom()) {
+      new_frames.add(new_frame);
+    }
+  }
+  return new_frames;
+}
+
 void CalleePortFrames::filter_invalid_frames(
     const std::function<bool(const Method*, const AccessPath&, const Kind*)>&
         is_valid) {

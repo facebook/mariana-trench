@@ -1649,6 +1649,11 @@
                   "end" : 30,
                   "line" : 114,
                   "start" : 23
+                },
+                {
+                  "end" : 48,
+                  "line" : 113,
+                  "start" : 34
                 }
               ],
               "origins" : 
@@ -1665,6 +1670,11 @@
                   "end" : 30,
                   "line" : 114,
                   "start" : 23
+                },
+                {
+                  "end" : 48,
+                  "line" : 113,
+                  "start" : 34
                 }
               ],
               "origins" : 
@@ -1925,6 +1935,11 @@
               },
               "local_positions" : 
               [
+                {
+                  "end" : 30,
+                  "line" : 194,
+                  "start" : 15
+                },
                 {
                   "end" : 49,
                   "line" : 195,

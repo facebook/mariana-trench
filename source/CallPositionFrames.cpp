@@ -261,14 +261,8 @@ CallPositionFrames CallPositionFrames::apply_transform(
   FramesByCalleePort frames_by_callee_port;
 
   for (const auto& callee_port_frames : frames_) {
-    for (const auto& frame : callee_port_frames) {
-      frames_by_callee_port.add(CalleePortFrames{frame.apply_transform(
-          kind_factory,
-          transforms_factory,
-          used_kinds,
-          frame.callee_port(),
-          local_transforms)});
-    }
+    frames_by_callee_port.add(callee_port_frames.apply_transform(
+        kind_factory, transforms_factory, used_kinds, local_transforms));
   }
 
   return CallPositionFrames{position_, frames_by_callee_port};

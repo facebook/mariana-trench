@@ -152,7 +152,6 @@ Frame Frame::apply_transform(
     const KindFactory& kind_factory,
     const TransformsFactory& transforms_factory,
     const UsedKinds& used_kinds,
-    AccessPath callee_port,
     const TransformList* local_transforms) const {
   const Kind* base_kind = kind_;
   const TransformList* global_transforms = nullptr;
