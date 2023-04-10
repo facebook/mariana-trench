@@ -17,6 +17,10 @@ public class MultiSources {
     return new Object();
   }
 
+  public static Object sourceD() {
+    return new Object();
+  }
+
   public static void sink(Object a, Object b) {}
 
   public void issue() {
@@ -38,7 +42,13 @@ public class MultiSources {
   }
 
   public void triggeredSinkA(Object object) {
-    MultiSources.sink(object, MultiSources.sourceB());
+    Object source = null;
+    if (object == null) {
+      source = MultiSources.sourceB();
+    } else {
+      source = MultiSources.sourceD();
+    }
+    MultiSources.sink(object, source);
   }
 
   public void noSinks() {

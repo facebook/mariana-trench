@@ -272,12 +272,20 @@
       "Ljava/lang/Object;.<init>:()V"
     ]
   },
+  "Lcom/facebook/marianatrench/integrationtests/MultiSources;.sourceD:()Ljava/lang/Object;" : 
+  {
+    "static" : 
+    [
+      "Ljava/lang/Object;.<init>:()V"
+    ]
+  },
   "Lcom/facebook/marianatrench/integrationtests/MultiSources;.triggeredSinkA:(Ljava/lang/Object;)V" : 
   {
     "static" : 
     [
       "Lcom/facebook/marianatrench/integrationtests/MultiSources;.sink:(Ljava/lang/Object;Ljava/lang/Object;)V",
-      "Lcom/facebook/marianatrench/integrationtests/MultiSources;.sourceB:()Ljava/lang/Object;"
+      "Lcom/facebook/marianatrench/integrationtests/MultiSources;.sourceB:()Ljava/lang/Object;",
+      "Lcom/facebook/marianatrench/integrationtests/MultiSources;.sourceD:()Ljava/lang/Object;"
     ]
   },
   "Lcom/facebook/marianatrench/integrationtests/MultiSources;.triggeredSinkB:(Ljava/lang/Object;)V" : 

@@ -259,7 +259,7 @@ class CalleePortFrames final : public sparta::AbstractDomain<CalleePortFrames> {
           FeatureMayAlwaysSet features_to_add = add_features(new_kind);
           for (const auto& frame : frames) {
             auto new_frame = frame.with_kind(new_kind);
-            new_frame.add_locally_inferred_features(features_to_add);
+            new_frame.add_inferred_features(features_to_add);
             new_frames.add(new_frame);
           }
           new_frames_by_kind.update(

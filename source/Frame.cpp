@@ -33,6 +33,10 @@ void Frame::add_locally_inferred_features(const FeatureMayAlwaysSet& features) {
   locally_inferred_features_.add(features);
 }
 
+void Frame::add_inferred_features(const FeatureMayAlwaysSet& features) {
+  inferred_features_.add(features);
+}
+
 FeatureMayAlwaysSet Frame::features() const {
   auto features = inferred_features_;
   features.add(locally_inferred_features_);

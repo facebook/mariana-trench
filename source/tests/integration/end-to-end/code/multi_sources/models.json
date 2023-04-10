@@ -24,6 +24,18 @@
     ]
   },
   {
+    "method": "Lcom/facebook/marianatrench/integrationtests/MultiSources;.sourceD:()Ljava/lang/Object;",
+    "generations": [
+      {
+        "kind": "TestSourceD",
+        "port": "Return",
+        "features": [
+          "source-d"
+        ]
+      }
+    ]
+  },
+  {
     "method": "Lcom/facebook/marianatrench/integrationtests/MultiSources;.sink:(Ljava/lang/Object;Ljava/lang/Object;)V",
     "sinks": [
       {

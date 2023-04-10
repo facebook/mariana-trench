@@ -689,8 +689,8 @@ TEST_F(TaintTest, TransformKind) {
         }
         return std::vector<const Kind*>{kind};
       },
-      [feature_one](const auto* /* unused kind */) {
-        return FeatureMayAlwaysSet{feature_one};
+      [feature_two](const auto* /* unused kind */) {
+        return FeatureMayAlwaysSet{feature_two};
       });
   EXPECT_EQ(
       map_test_source_taint,
@@ -699,7 +699,7 @@ TEST_F(TaintTest, TransformKind) {
               /* kind */ transformed_test_source,
               test::FrameProperties{
                   .origins = MethodSet{one},
-                  .locally_inferred_features = FeatureMayAlwaysSet{feature_one},
+                  .inferred_features = FeatureMayAlwaysSet{feature_two},
                   .user_features = FeatureSet{user_feature_one}}),
           test::make_taint_config(
               /* kind */ context.kind_factory->get("OtherSource"),
@@ -750,19 +750,19 @@ TEST_F(TaintTest, TransformKind) {
               /* kind */ test_source,
               test::FrameProperties{
                   .origins = MethodSet{one},
-                  .locally_inferred_features = FeatureMayAlwaysSet{feature_one},
+                  .inferred_features = FeatureMayAlwaysSet{feature_one},
                   .user_features = FeatureSet{user_feature_one}}),
           test::make_taint_config(
               /* kind */ transformed_test_source,
               test::FrameProperties{
                   .origins = MethodSet{one},
-                  .locally_inferred_features = FeatureMayAlwaysSet{feature_one},
+                  .inferred_features = FeatureMayAlwaysSet{feature_one},
                   .user_features = FeatureSet{user_feature_one}}),
           test::make_taint_config(
               /* kind */ transformed_test_source2,
               test::FrameProperties{
                   .origins = MethodSet{one},
-                  .locally_inferred_features = FeatureMayAlwaysSet{feature_one},
+                  .inferred_features = FeatureMayAlwaysSet{feature_one},
                   .user_features = FeatureSet{user_feature_one}}),
       }));
 
@@ -790,7 +790,7 @@ TEST_F(TaintTest, TransformKind) {
               /* kind */ transformed_test_source,
               test::FrameProperties{
                   .origins = MethodSet{one},
-                  .locally_inferred_features = FeatureMayAlwaysSet{feature_one},
+                  .inferred_features = FeatureMayAlwaysSet{feature_one},
                   .user_features = FeatureSet{user_feature_one}}),
           test::make_taint_config(
               /* kind */ transformed_test_source2,

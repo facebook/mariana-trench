@@ -129,8 +129,8 @@ TEST_F(FulfilledPartialKindStateTest, Basic) {
           /* kind */ context.kind_factory->get_triggered(
               unfulfilled, rule_1.get()),
           test::FrameProperties{
-              .inferred_features = FeatureMayAlwaysSet{feature_2},
-              .locally_inferred_features = FeatureMayAlwaysSet{feature_1}})});
+              .inferred_features =
+                  FeatureMayAlwaysSet{feature_1, feature_2}})});
 
   // Triggered counterparts now exclude rule_1 which was previously fulfilled.
   EXPECT_THAT(
