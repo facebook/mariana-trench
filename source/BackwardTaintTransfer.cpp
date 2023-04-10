@@ -687,12 +687,10 @@ void infer_input_taint(
 
       propagations.map([context, &input_root](Frame frame) {
         auto* propagation_kind = frame.propagation_kind();
-        FeatureMayAlwaysSet features;
-        features.add_always(
+        frame.add_user_features(
             context->previous_model.attach_to_propagations(input_root));
-        features.add_always(context->previous_model.attach_to_propagations(
+        frame.add_user_features(context->previous_model.attach_to_propagations(
             propagation_kind->root()));
-        frame.add_locally_inferred_features(features);
         return frame;
       });
 

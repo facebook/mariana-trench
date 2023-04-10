@@ -242,6 +242,8 @@ class Frame final : public sparta::AbstractDomain<Frame> {
 
   void add_inferred_features(const FeatureMayAlwaysSet& features);
 
+  void add_user_features(const FeatureSet& features);
+
   const FeatureMayAlwaysSet& inferred_features() const {
     return inferred_features_;
   }
