@@ -54,13 +54,13 @@ void Taint::set_field_origins_if_empty_with_field_callee(const Field* field) {
   });
 }
 
-void Taint::add_inferred_features(const FeatureMayAlwaysSet& features) {
+void Taint::add_locally_inferred_features(const FeatureMayAlwaysSet& features) {
   if (features.empty()) {
     return;
   }
 
   set_.map([&features](CalleeFrames frames) {
-    frames.add_inferred_features(features);
+    frames.add_locally_inferred_features(features);
     return frames;
   });
 }
@@ -87,7 +87,7 @@ LocalPositionSet Taint::local_positions() const {
   return result;
 }
 
-void Taint::add_inferred_features_and_local_position(
+void Taint::add_locally_inferred_features_and_local_position(
     const FeatureMayAlwaysSet& features,
     const Position* MT_NULLABLE position) {
   if (features.empty() && position == nullptr) {
@@ -95,7 +95,7 @@ void Taint::add_inferred_features_and_local_position(
   }
 
   set_.map([&features, position](CalleeFrames frames) {
-    frames.add_inferred_features_and_local_position(features, position);
+    frames.add_locally_inferred_features_and_local_position(features, position);
     return frames;
   });
 }
@@ -123,7 +123,7 @@ Taint Taint::propagate(
     if (propagated.is_bottom()) {
       continue;
     }
-    propagated.add_inferred_features(extra_features);
+    propagated.add_locally_inferred_features(extra_features);
     result.set_.add(propagated);
   }
   return result;

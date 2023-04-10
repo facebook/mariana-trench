@@ -2176,7 +2176,7 @@ TEST_F(AbstractTreeDomainTest, Transform) {
   const Feature broadening = Feature("via-broadening");
   const FeatureMayAlwaysSet features = FeatureMayAlwaysSet({&broadening});
   const auto transform = [&features](Taint taint) {
-    taint.add_inferred_features(features);
+    taint.add_locally_inferred_features(features);
     return taint;
   };
 

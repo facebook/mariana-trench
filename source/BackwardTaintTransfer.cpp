@@ -48,7 +48,7 @@ bool BackwardTaintTransfer::analyze_check_cast(
         {context->feature_factory.get_via_cast_feature(
             instruction->get_type())});
     taint.map([&features](Taint sinks) {
-      sinks.add_inferred_features(features);
+      sinks.add_locally_inferred_features(features);
       return sinks;
     });
   }
@@ -125,7 +125,8 @@ void apply_add_features_to_arguments(
     for (auto* memory_location : memory_locations.elements()) {
       auto taint = previous_environment->read(memory_location);
       taint.map([&features, position](Taint sinks) {
-        sinks.add_inferred_features_and_local_position(features, position);
+        sinks.add_locally_inferred_features_and_local_position(
+            features, position);
         return sinks;
       });
       new_environment->write(
@@ -218,7 +219,8 @@ void apply_propagations(
       features.add_always(callee.model.add_features_to_arguments(input.root()));
 
       output_taint_tree.map([&features, position](Taint taint) {
-        taint.add_inferred_features_and_local_position(features, position);
+        taint.add_locally_inferred_features_and_local_position(
+            features, position);
         return taint;
       });
 
@@ -254,7 +256,7 @@ void apply_propagations(
           LOG_OR_DUMP(context, 4, "Collapsing taint tree {}", input_taint_tree);
           input_taint_tree.collapse_inplace(
               /* transform */ [context](Taint taint) {
-                taint.add_inferred_features(FeatureMayAlwaysSet{
+                taint.add_locally_inferred_features(FeatureMayAlwaysSet{
                     context->feature_factory
                         .get_propagation_broadening_feature()});
                 return taint;
@@ -338,7 +340,7 @@ void check_call_flows(
         [&fulfilled_partial_sinks](const Kind* new_kind) {
           return get_fulfilled_sink_features(fulfilled_partial_sinks, new_kind);
         });
-    new_sinks.add_inferred_features(extra_features);
+    new_sinks.add_locally_inferred_features(extra_features);
 
     LOG_OR_DUMP(
         context,
@@ -655,7 +657,7 @@ void infer_input_taint(
     auto sinks_iterator = partitioned_by_propagations.find(false);
     if (sinks_iterator != partitioned_by_propagations.end()) {
       auto& sinks = sinks_iterator->second;
-      sinks.add_inferred_features(FeatureMayAlwaysSet::make_always(
+      sinks.add_locally_inferred_features(FeatureMayAlwaysSet::make_always(
           context->previous_model.attach_to_sinks(input_root)));
       auto port = AccessPath(input_root, input_path);
       LOG_OR_DUMP(context, 4, "Inferred sink for port {}: {}", port, sinks);
@@ -690,7 +692,7 @@ void infer_input_taint(
             context->previous_model.attach_to_propagations(input_root));
         features.add_always(context->previous_model.attach_to_propagations(
             propagation_kind->root()));
-        frame.add_inferred_features(features);
+        frame.add_locally_inferred_features(features);
         return frame;
       });
 
@@ -789,7 +791,8 @@ bool BackwardTaintTransfer::analyze_aput(
       Root(Root::Kind::Return),
       instruction);
   taint.map([&features, position](Taint sources) {
-    sources.add_inferred_features_and_local_position(features, position);
+    sources.add_locally_inferred_features_and_local_position(
+        features, position);
     return sources;
   });
 
@@ -840,7 +843,8 @@ static bool analyze_numerical_operator(
       Root(Root::Kind::Return),
       instruction);
   taint.map([&features, position](Taint sources) {
-    sources.add_inferred_features_and_local_position(features, position);
+    sources.add_locally_inferred_features_and_local_position(
+        features, position);
     return sources;
   });
 

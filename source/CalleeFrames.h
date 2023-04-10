@@ -176,7 +176,7 @@ class CalleeFrames final : public sparta::AbstractDomain<CalleeFrames> {
 
   FeatureMayAlwaysSet inferred_features() const;
 
-  void add_inferred_features(const FeatureMayAlwaysSet& features);
+  void add_locally_inferred_features(const FeatureMayAlwaysSet& features);
 
   LocalPositionSet local_positions() const;
 
@@ -184,7 +184,7 @@ class CalleeFrames final : public sparta::AbstractDomain<CalleeFrames> {
 
   void set_local_positions(const LocalPositionSet& positions);
 
-  void add_inferred_features_and_local_position(
+  void add_locally_inferred_features_and_local_position(
       const FeatureMayAlwaysSet& features,
       const Position* MT_NULLABLE position);
 

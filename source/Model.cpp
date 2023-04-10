@@ -486,7 +486,7 @@ void Model::collapse_invalid_paths(Context& context) {
   };
 
   auto transform_on_collapse = [&context](Taint taint) {
-    taint.add_inferred_features(FeatureMayAlwaysSet{
+    taint.add_locally_inferred_features(FeatureMayAlwaysSet{
         context.feature_factory->get_invalid_path_broadening()});
     return taint;
   };
@@ -503,7 +503,7 @@ void Model::collapse_invalid_paths(Context& context) {
 
 void Model::approximate(const FeatureMayAlwaysSet& widening_features) {
   const auto transform = [&widening_features](Taint taint) {
-    taint.add_inferred_features(widening_features);
+    taint.add_locally_inferred_features(widening_features);
     return taint;
   };
   const auto make_mold = [](Taint taint) { return taint.essential(); };
@@ -1461,7 +1461,7 @@ void Model::update_taint_tree(
   }
 
   if (port.path().size() > truncation_amount) {
-    new_taint.add_inferred_features(widening_features);
+    new_taint.add_locally_inferred_features(widening_features);
   }
   port.truncate(truncation_amount);
   tree.write(port, std::move(new_taint), UpdateKind::Weak);

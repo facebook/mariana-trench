@@ -238,11 +238,7 @@ class Frame final : public sparta::AbstractDomain<Frame> {
     return output_paths_;
   }
 
-  /**
-   * Despite its name, this adds to locally_inferred_features. Non-local
-   * inferred features are used only for frame propagation.
-   */
-  void add_inferred_features(const FeatureMayAlwaysSet& features);
+  void add_locally_inferred_features(const FeatureMayAlwaysSet& features);
 
   const FeatureMayAlwaysSet& inferred_features() const {
     return inferred_features_;

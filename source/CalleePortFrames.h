@@ -209,13 +209,13 @@ class CalleePortFrames final : public sparta::AbstractDomain<CalleePortFrames> {
 
   FeatureMayAlwaysSet inferred_features() const;
 
-  void add_inferred_features(const FeatureMayAlwaysSet& features);
+  void add_locally_inferred_features(const FeatureMayAlwaysSet& features);
 
   void add_local_position(const Position* position);
 
   void set_local_positions(LocalPositionSet positions);
 
-  void add_inferred_features_and_local_position(
+  void add_locally_inferred_features_and_local_position(
       const FeatureMayAlwaysSet& features,
       const Position* MT_NULLABLE position);
 
@@ -259,7 +259,7 @@ class CalleePortFrames final : public sparta::AbstractDomain<CalleePortFrames> {
           FeatureMayAlwaysSet features_to_add = add_features(new_kind);
           for (const auto& frame : frames) {
             auto new_frame = frame.with_kind(new_kind);
-            new_frame.add_inferred_features(features_to_add);
+            new_frame.add_locally_inferred_features(features_to_add);
             new_frames.add(new_frame);
           }
           new_frames_by_kind.update(

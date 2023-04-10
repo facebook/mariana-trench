@@ -62,7 +62,7 @@ bool ForwardTaintTransfer::analyze_check_cast(
         {context->feature_factory.get_via_cast_feature(
             instruction->get_type())});
     taint.map([&features](Taint sources) {
-      sources.add_inferred_features(features);
+      sources.add_locally_inferred_features(features);
       return sources;
     });
   }
@@ -221,7 +221,8 @@ void apply_add_features_to_arguments(
     for (auto* memory_location : memory_locations.elements()) {
       auto taint = previous_environment->read(memory_location);
       taint.map([&features, position](Taint sources) {
-        sources.add_inferred_features_and_local_position(features, position);
+        sources.add_locally_inferred_features_and_local_position(
+            features, position);
         return sources;
       });
       // This is using a strong update, since a weak update would turn
@@ -302,7 +303,7 @@ void apply_propagations(
       LOG_OR_DUMP(context, 4, "Collapsing taint tree {}", input_taint_tree);
       input_taint_tree.collapse_inplace(
           /* transform */ [context](Taint taint) {
-            taint.add_inferred_features(FeatureMayAlwaysSet{
+            taint.add_locally_inferred_features(FeatureMayAlwaysSet{
                 context->feature_factory.get_propagation_broadening_feature()});
             return taint;
           });
@@ -331,7 +332,8 @@ void apply_propagations(
           callee.model.add_features_to_arguments(input_path.root()));
 
       output_taint_tree.map([&features, position](Taint taint) {
-        taint.add_inferred_features_and_local_position(features, position);
+        taint.add_locally_inferred_features_and_local_position(
+            features, position);
         return taint;
       });
 
@@ -393,10 +395,10 @@ void create_issue(
     kinds.emplace(frame.kind());
   }
 
-  source.add_inferred_features(
+  source.add_locally_inferred_features(
       context->class_properties.issue_features(context->method(), kinds));
 
-  sink.add_inferred_features(extra_features);
+  sink.add_locally_inferred_features(extra_features);
   auto issue = Issue(
       Taint{std::move(source)},
       Taint{std::move(sink)},
@@ -553,7 +555,7 @@ void check_call_flows(
                 aliasing.register_memory_locations(*register_id),
                 port.path().resolve(source_constant_arguments))
             .collapse(/* transform */ [context](Taint taint) {
-              taint.add_inferred_features(FeatureMayAlwaysSet{
+              taint.add_locally_inferred_features(FeatureMayAlwaysSet{
                   context->feature_factory.get_issue_broadening_feature()});
               return taint;
             });
@@ -642,7 +644,7 @@ void check_flows_to_array_allocation(
     Taint sources =
         environment->read(aliasing.register_memory_locations(register_id))
             .collapse(/* transform */ [context](Taint taint) {
-              taint.add_inferred_features(FeatureMayAlwaysSet{
+              taint.add_locally_inferred_features(FeatureMayAlwaysSet{
                   context->feature_factory.get_issue_broadening_feature()});
               return taint;
             });
@@ -1039,7 +1041,8 @@ bool ForwardTaintTransfer::analyze_aput(
       Root(Root::Kind::Return),
       instruction);
   taint.map([&features, position](Taint sources) {
-    sources.add_inferred_features_and_local_position(features, position);
+    sources.add_locally_inferred_features_and_local_position(
+        features, position);
     return sources;
   });
 
@@ -1100,7 +1103,8 @@ static bool analyze_numerical_operator(
       Root(Root::Kind::Return),
       instruction);
   taint.map([&features, position](Taint sources) {
-    sources.add_inferred_features_and_local_position(features, position);
+    sources.add_locally_inferred_features_and_local_position(
+        features, position);
     return sources;
   });
 
@@ -1144,7 +1148,7 @@ void infer_output_taint(
     const TaintTree& taint) {
   for (const auto& [output_path, sources] : taint.elements()) {
     auto generation = sources;
-    generation.add_inferred_features(FeatureMayAlwaysSet::make_always(
+    generation.add_locally_inferred_features(FeatureMayAlwaysSet::make_always(
         context->previous_model.attach_to_sources(output_root)));
     auto port = AccessPath(output_root, output_path);
     LOG_OR_DUMP(
@@ -1187,14 +1191,15 @@ bool ForwardTaintTransfer::analyze_return(
         environment->read(memory_locations));
 
     for (const auto& [path, sinks] : return_sinks.elements()) {
-      Taint sources = environment->read(memory_locations, path)
-                          .collapse(
-                              /* transform */ [context](Taint taint) {
-                                taint.add_inferred_features(FeatureMayAlwaysSet{
-                                    context->feature_factory
-                                        .get_issue_broadening_feature()});
-                                return taint;
-                              });
+      Taint sources =
+          environment->read(memory_locations, path)
+              .collapse(
+                  /* transform */ [context](Taint taint) {
+                    taint.add_locally_inferred_features(FeatureMayAlwaysSet{
+                        context->feature_factory
+                            .get_issue_broadening_feature()});
+                    return taint;
+                  });
       // Fulfilled partial sinks are not expected to be produced here. Return
       // sinks are never partial.
       check_sources_sinks_flows(

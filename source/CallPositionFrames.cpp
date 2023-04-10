@@ -124,14 +124,14 @@ FeatureMayAlwaysSet CallPositionFrames::inferred_features() const {
   return result;
 }
 
-void CallPositionFrames::add_inferred_features(
+void CallPositionFrames::add_locally_inferred_features(
     const FeatureMayAlwaysSet& features) {
   if (features.empty()) {
     return;
   }
 
   map([&features](Frame frame) {
-    frame.add_inferred_features(features);
+    frame.add_locally_inferred_features(features);
     return frame;
   });
 }
@@ -159,7 +159,7 @@ void CallPositionFrames::set_local_positions(
   });
 }
 
-void CallPositionFrames::add_inferred_features_and_local_position(
+void CallPositionFrames::add_locally_inferred_features_and_local_position(
     const FeatureMayAlwaysSet& features,
     const Position* MT_NULLABLE position) {
   if (features.empty() && position == nullptr) {
@@ -168,7 +168,7 @@ void CallPositionFrames::add_inferred_features_and_local_position(
 
   map([&features](Frame frame) {
     if (!features.empty()) {
-      frame.add_inferred_features(features);
+      frame.add_locally_inferred_features(features);
     }
     return frame;
   });

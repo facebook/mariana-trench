@@ -219,7 +219,7 @@ void add_field_features(
   auto features = FeatureMayAlwaysSet::make_always(
       {context->feature_factory.get("via-inner-class-this")});
   taint_tree.map([&features](Taint taint) {
-    taint.add_inferred_features(features);
+    taint.add_locally_inferred_features(features);
     return taint;
   });
 }

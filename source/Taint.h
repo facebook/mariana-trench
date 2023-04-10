@@ -137,7 +137,7 @@ class Taint final : public sparta::AbstractDomain<Taint> {
    */
   void set_field_origins_if_empty_with_field_callee(const Field* field);
 
-  void add_inferred_features(const FeatureMayAlwaysSet& features);
+  void add_locally_inferred_features(const FeatureMayAlwaysSet& features);
 
   void add_local_position(const Position* position);
 
@@ -145,7 +145,7 @@ class Taint final : public sparta::AbstractDomain<Taint> {
 
   LocalPositionSet local_positions() const;
 
-  void add_inferred_features_and_local_position(
+  void add_locally_inferred_features_and_local_position(
       const FeatureMayAlwaysSet& features,
       const Position* MT_NULLABLE position);
 

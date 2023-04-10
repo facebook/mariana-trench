@@ -576,7 +576,7 @@ TEST_F(CalleeFramesTest, Map) {
           }),
   };
   frames.map([feature_one](Frame frame) {
-    frame.add_inferred_features(FeatureMayAlwaysSet{feature_one});
+    frame.add_locally_inferred_features(FeatureMayAlwaysSet{feature_one});
     return frame;
   });
   EXPECT_EQ(
@@ -612,7 +612,7 @@ TEST_F(CalleeFramesTest, FeaturesAndPositions) {
   auto* feature_one = context.feature_factory->get("FeatureOne");
   auto* feature_two = context.feature_factory->get("FeatureTwo");
 
-  // add_inferred_features should be an *add* operation on the features,
+  // add_locally_inferred_features should be an *add* operation on the features,
   // not a join.
   auto frames = CalleeFrames{
       test::make_taint_config(
@@ -624,7 +624,7 @@ TEST_F(CalleeFramesTest, FeaturesAndPositions) {
       test::make_taint_config(
           test_kind_two,
           test::FrameProperties{.call_position = test_position_one})};
-  frames.add_inferred_features(FeatureMayAlwaysSet{feature_two});
+  frames.add_locally_inferred_features(FeatureMayAlwaysSet{feature_two});
   EXPECT_EQ(
       frames.inferred_features(),
       FeatureMayAlwaysSet(
@@ -652,8 +652,8 @@ TEST_F(CalleeFramesTest, FeaturesAndPositions) {
   frames.set_local_positions(LocalPositionSet{test_position_two});
   EXPECT_EQ(frames.local_positions(), LocalPositionSet{test_position_two});
 
-  // Test add_inferred_features_and_local_position()
-  frames.add_inferred_features_and_local_position(
+  // Test add_locally_inferred_features_and_local_position()
+  frames.add_locally_inferred_features_and_local_position(
       /* features */ FeatureMayAlwaysSet{feature_one},
       /* position */ test_position_one);
   EXPECT_EQ(

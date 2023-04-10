@@ -262,14 +262,14 @@ FeatureMayAlwaysSet CalleePortFrames::inferred_features() const {
   return result;
 }
 
-void CalleePortFrames::add_inferred_features(
+void CalleePortFrames::add_locally_inferred_features(
     const FeatureMayAlwaysSet& features) {
   if (features.empty()) {
     return;
   }
 
   map([&features](Frame frame) {
-    frame.add_inferred_features(features);
+    frame.add_locally_inferred_features(features);
     return frame;
   });
 }
@@ -282,7 +282,7 @@ void CalleePortFrames::set_local_positions(LocalPositionSet positions) {
   local_positions_ = std::move(positions);
 }
 
-void CalleePortFrames::add_inferred_features_and_local_position(
+void CalleePortFrames::add_locally_inferred_features_and_local_position(
     const FeatureMayAlwaysSet& features,
     const Position* MT_NULLABLE position) {
   if (features.empty() && position == nullptr) {
@@ -291,7 +291,7 @@ void CalleePortFrames::add_inferred_features_and_local_position(
 
   map([&features](Frame frame) {
     if (!features.empty()) {
-      frame.add_inferred_features(features);
+      frame.add_locally_inferred_features(features);
     }
     return frame;
   });

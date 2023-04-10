@@ -29,7 +29,7 @@ void Frame::set_field_callee(const Field* field) {
   field_callee_ = field;
 }
 
-void Frame::add_inferred_features(const FeatureMayAlwaysSet& features) {
+void Frame::add_locally_inferred_features(const FeatureMayAlwaysSet& features) {
   locally_inferred_features_.add(features);
 }
 
