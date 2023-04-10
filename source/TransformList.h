@@ -9,14 +9,39 @@
 
 #include <mariana-trench/Context.h>
 #include <mariana-trench/IncludeMacros.h>
-#include <mariana-trench/NamedKind.h>
 
 namespace marianatrench {
 
+/**
+ * Represents a single Transform operation applied on a taint kind.
+ */
+class Transform final {
+ public:
+  explicit Transform(std::string name) : name_(std::move(name)) {}
+
+  DELETE_COPY_CONSTRUCTORS_AND_ASSIGNMENTS(Transform)
+
+  static const Transform* from_json(const Json::Value& value, Context& context);
+  std::string to_trace_string() const;
+
+  const auto& name() const {
+    return name_;
+  }
+
+ private:
+  std::string name_;
+};
+
+/**
+ * Represents an ordered list of Transform operations applied to a taint kind.
+ * Each application of a Transform operation leads to a creation of a new
+ * `TransformKind`. `TransformKind` internally uses `TransformList`s to keep
+ * track of the sequence of transformations that have been applied to a base
+ * kind.
+ */
 class TransformList final {
  private:
-  using Transform = const NamedKind*;
-  using List = std::vector<Transform>;
+  using List = std::vector<const Transform*>;
 
  public:
   using ConstIterator = List::const_iterator;

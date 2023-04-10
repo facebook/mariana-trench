@@ -11,6 +11,11 @@
 
 namespace marianatrench {
 
+const Transform* TransformsFactory::create_transform(
+    const std::string& name) const {
+  return transform_.create(name);
+}
+
 const TransformList* TransformsFactory::create(
     std::vector<std::string> transforms,
     Context& context) const {

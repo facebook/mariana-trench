@@ -11,6 +11,17 @@
 
 namespace marianatrench {
 
+const Transform* Transform::from_json(
+    const Json::Value& value,
+    Context& context) {
+  auto name = JsonValidation::string(value);
+  return context.transforms_factory->create_transform(name);
+}
+
+std::string Transform::to_trace_string() const {
+  return name_;
+}
+
 TransformList::TransformList(
     const std::vector<std::string>& transforms,
     Context& context) {
@@ -18,7 +29,8 @@ TransformList::TransformList(
   transforms_.reserve(transforms.size());
 
   for (const auto& transform : transforms) {
-    transforms_.push_back(context.kind_factory->get(transform));
+    transforms_.push_back(
+        context.transforms_factory->create_transform(transform));
   }
 }
 
@@ -52,8 +64,7 @@ TransformList TransformList::from_json(
   transforms.reserve(transforms_array.size());
 
   for (const auto& transform : transforms_array) {
-    transforms.push_back(
-        context.kind_factory->get(JsonValidation::string(transform)));
+    transforms.push_back(Transform::from_json(transform, context));
   }
 
   return TransformList(std::move(transforms));

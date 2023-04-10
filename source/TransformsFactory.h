@@ -11,6 +11,7 @@
 
 #include <mariana-trench/Context.h>
 #include <mariana-trench/TransformList.h>
+#include <mariana-trench/UniquePointerFactory.h>
 
 namespace marianatrench {
 
@@ -34,6 +35,9 @@ class TransformsFactory final {
     return transform_lists_.size();
   }
 
+  const Transform* create_transform(const std::string& name) const;
+
+  // Use for testing only
   const TransformList* create(
       std::vector<std::string> transforms,
       Context& context) const;
@@ -56,6 +60,7 @@ class TransformsFactory final {
   static const TransformsFactory& singleton();
 
  private:
+  UniquePointerFactory<std::string, Transform> transform_;
   mutable InsertOnlyConcurrentSet<TransformList> transform_lists_;
 };
 
