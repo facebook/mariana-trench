@@ -576,7 +576,7 @@ TEST_F(CalleeFramesTest, Map) {
           }),
   };
   frames.map([feature_one](Frame frame) {
-    frame.add_locally_inferred_features(FeatureMayAlwaysSet{feature_one});
+    frame.add_inferred_features(FeatureMayAlwaysSet{feature_one});
     return frame;
   });
   EXPECT_EQ(
@@ -587,7 +587,7 @@ TEST_F(CalleeFramesTest, Map) {
               test::FrameProperties{
                   .callee = one,
                   .call_position = test_position_one,
-                  .locally_inferred_features = FeatureMayAlwaysSet{feature_one},
+                  .inferred_features = FeatureMayAlwaysSet{feature_one},
                   .call_info = CallInfo::CallSite,
               }),
           test::make_taint_config(
@@ -595,7 +595,7 @@ TEST_F(CalleeFramesTest, Map) {
               test::FrameProperties{
                   .callee = one,
                   .call_position = test_position_two,
-                  .locally_inferred_features = FeatureMayAlwaysSet{feature_one},
+                  .inferred_features = FeatureMayAlwaysSet{feature_one},
                   .call_info = CallInfo::CallSite,
               }),
       }));
@@ -626,10 +626,22 @@ TEST_F(CalleeFramesTest, FeaturesAndPositions) {
           test::FrameProperties{.call_position = test_position_one})};
   frames.add_locally_inferred_features(FeatureMayAlwaysSet{feature_two});
   EXPECT_EQ(
-      frames.inferred_features(),
+      frames.locally_inferred_features(
+          /* position */ test_position_one,
+          /* callee_port */ AccessPath(Root(Root::Kind::Leaf))),
+      FeatureMayAlwaysSet{feature_two});
+  EXPECT_EQ(
+      frames.locally_inferred_features(
+          /* position */ nullptr,
+          /* callee_port */ AccessPath(Root(Root::Kind::Leaf))),
       FeatureMayAlwaysSet(
           /* may */ FeatureSet{feature_one},
           /* always */ FeatureSet{feature_two}));
+  EXPECT_EQ(
+      frames.locally_inferred_features(
+          /* position */ nullptr,
+          /* callee_port */ AccessPath(Root(Root::Kind::Argument))),
+      FeatureMayAlwaysSet::bottom());
 
   // Test add_local_positions()
   frames = CalleeFrames{
@@ -659,7 +671,11 @@ TEST_F(CalleeFramesTest, FeaturesAndPositions) {
   EXPECT_EQ(
       frames.local_positions(),
       (LocalPositionSet{test_position_one, test_position_two}));
-  EXPECT_EQ(frames.inferred_features(), FeatureMayAlwaysSet{feature_one});
+  EXPECT_EQ(
+      frames.locally_inferred_features(
+          /* position */ test_position_one,
+          /* callee_port */ AccessPath(Root(Root::Kind::Leaf))),
+      FeatureMayAlwaysSet{feature_one});
 }
 
 TEST_F(CalleeFramesTest, Propagate) {

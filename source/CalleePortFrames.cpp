@@ -83,7 +83,9 @@ void materialize_via_value_of_ports(
 } // namespace
 
 CalleePortFrames::CalleePortFrames(std::initializer_list<TaintConfig> configs)
-    : callee_port_(Root(Root::Kind::Leaf)), frames_(FramesByKind::bottom()) {
+    : callee_port_(Root(Root::Kind::Leaf)),
+      frames_(FramesByKind::bottom()),
+      locally_inferred_features_(FeatureMayAlwaysSet::bottom()) {
   for (const auto& config : configs) {
     add(config);
   }
@@ -120,6 +122,7 @@ void CalleePortFrames::add(const TaintConfig& config) {
   }
 
   local_positions_.join_with(config.local_positions());
+  locally_inferred_features_.join_with(config.locally_inferred_features());
   frames_.update(config.kind(), [&](const Frames& old_frames) {
     auto new_frames = old_frames;
     new_frames.add(Frame(
@@ -132,7 +135,6 @@ void CalleePortFrames::add(const TaintConfig& config) {
         config.origins(),
         config.field_origins(),
         config.inferred_features(),
-        config.locally_inferred_features(),
         config.user_features(),
         config.via_type_of_ports(),
         config.via_value_of_ports(),
@@ -151,13 +153,15 @@ bool CalleePortFrames::leq(const CalleePortFrames& other) const {
   }
   mt_assert(has_same_key(other));
   return frames_.leq(other.frames_) &&
-      local_positions_.leq(other.local_positions_);
+      local_positions_.leq(other.local_positions_) &&
+      locally_inferred_features_.leq(other.locally_inferred_features_);
 }
 
 bool CalleePortFrames::equals(const CalleePortFrames& other) const {
   mt_assert(is_bottom() || other.is_bottom() || has_same_key(other));
   return frames_.equals(other.frames_) &&
-      local_positions_.equals(other.local_positions_);
+      local_positions_.equals(other.local_positions_) &&
+      locally_inferred_features_.equals(other.locally_inferred_features_);
 }
 
 void CalleePortFrames::join_with(const CalleePortFrames& other) {
@@ -170,6 +174,7 @@ void CalleePortFrames::join_with(const CalleePortFrames& other) {
 
   frames_.join_with(other.frames_);
   local_positions_.join_with(other.local_positions_);
+  locally_inferred_features_.join_with(other.locally_inferred_features_);
 
   mt_expensive_assert(previous.leq(*this) && other.leq(*this));
 }
@@ -184,6 +189,7 @@ void CalleePortFrames::widen_with(const CalleePortFrames& other) {
 
   frames_.widen_with(other.frames_);
   local_positions_.widen_with(other.local_positions_);
+  locally_inferred_features_.widen_with(other.locally_inferred_features_);
 
   mt_expensive_assert(previous.leq(*this) && other.leq(*this));
 }
@@ -196,6 +202,7 @@ void CalleePortFrames::meet_with(const CalleePortFrames& other) {
 
   frames_.meet_with(other.frames_);
   local_positions_.meet_with(other.local_positions_);
+  locally_inferred_features_.meet_with(other.locally_inferred_features_);
 }
 
 void CalleePortFrames::narrow_with(const CalleePortFrames& other) {
@@ -206,6 +213,7 @@ void CalleePortFrames::narrow_with(const CalleePortFrames& other) {
 
   frames_.narrow_with(other.frames_);
   local_positions_.narrow_with(other.local_positions_);
+  locally_inferred_features_.narrow_with(other.locally_inferred_features_);
 }
 
 void CalleePortFrames::difference_with(const CalleePortFrames& other) {
@@ -214,10 +222,11 @@ void CalleePortFrames::difference_with(const CalleePortFrames& other) {
   }
   mt_assert(other.is_bottom() || has_same_key(other));
 
-  // Local positions and input paths apply to all frames. If LHS is not leq RHS,
-  // then do not apply the difference operator to the frames because every frame
-  // on LHS would not be considered leq its RHS frame.
-  if (local_positions_.leq(other.local_positions_)) {
+  // For properties that apply to all frames, if LHS is not leq RHS, do not
+  // apply the difference operator to the frames because every frame on LHS
+  // would not be considered leq its RHS frame.
+  if (local_positions_.leq(other.local_positions_) &&
+      locally_inferred_features_.leq(other.locally_inferred_features_)) {
     frames_.difference_like_operation(
         other.frames_,
         [](const Frames& frames_left, const Frames& frames_right) {
@@ -248,30 +257,13 @@ void CalleePortFrames::set_field_origins_if_empty_with_field_callee(
   });
 }
 
-FeatureMayAlwaysSet CalleePortFrames::inferred_features() const {
-  // TODO(T91357916): Store inferred features in CalleePortFrames rather than
-  // Frame.
-  auto result = FeatureMayAlwaysSet::bottom();
-  for (const auto& [_, frames] : frames_.bindings()) {
-    for (const auto& frame : frames) {
-      // Inferred features in this class are always locally (intraprocedurally)
-      // inferred.
-      result.join_with(frame.locally_inferred_features());
-    }
-  }
-  return result;
-}
-
 void CalleePortFrames::add_locally_inferred_features(
     const FeatureMayAlwaysSet& features) {
   if (features.empty()) {
     return;
   }
 
-  map([&features](Frame frame) {
-    frame.add_locally_inferred_features(features);
-    return frame;
-  });
+  locally_inferred_features_.add(features);
 }
 
 void CalleePortFrames::add_local_position(const Position* position) {
@@ -289,12 +281,7 @@ void CalleePortFrames::add_locally_inferred_features_and_local_position(
     return;
   }
 
-  map([&features](Frame frame) {
-    if (!features.empty()) {
-      frame.add_locally_inferred_features(features);
-    }
-    return frame;
-  });
+  add_locally_inferred_features(features);
 
   if (position != nullptr) {
     add_local_position(position);
@@ -365,7 +352,11 @@ CalleePortFrames CalleePortFrames::apply_transform(
     const TransformsFactory& transforms,
     const UsedKinds& used_kinds,
     const TransformList* local_transforms) const {
-  CalleePortFrames new_frames(callee_port_, FramesByKind(), local_positions_);
+  CalleePortFrames new_frames(
+      callee_port_,
+      FramesByKind(),
+      local_positions_,
+      locally_inferred_features_);
   for (const auto& frame : *this) {
     auto new_frame = frame.apply_transform(
         kind_factory, transforms, used_kinds, local_transforms);
@@ -388,7 +379,10 @@ void CalleePortFrames::filter_invalid_frames(
     new_frames.set(kind, frames_copy);
   }
 
-  frames_ = new_frames;
+  frames_ = std::move(new_frames);
+  if (frames_.is_bottom()) {
+    set_to_bottom();
+  }
 }
 
 bool CalleePortFrames::contains_kind(const Kind* kind) const {
@@ -400,6 +394,18 @@ bool CalleePortFrames::contains_kind(const Kind* kind) const {
   return false;
 }
 
+FeatureMayAlwaysSet CalleePortFrames::features_joined() const {
+  auto features = FeatureMayAlwaysSet::bottom();
+  for (const auto& [kind, frames] : frames_.bindings()) {
+    for (const auto& frame : frames) {
+      auto combined_features = frame.features();
+      combined_features.add(locally_inferred_features_);
+      features.join_with(combined_features);
+    }
+  }
+  return features;
+}
+
 std::ostream& operator<<(std::ostream& out, const CalleePortFrames& frames) {
   if (frames.is_top()) {
     return out << "T";
@@ -409,6 +415,12 @@ std::ostream& operator<<(std::ostream& out, const CalleePortFrames& frames) {
     const auto& local_positions = frames.local_positions();
     if (!local_positions.is_bottom() && !local_positions.empty()) {
       out << ", local_positions=" << frames.local_positions();
+    }
+
+    const auto& locally_inferred_features = frames.locally_inferred_features();
+    if (!locally_inferred_features.is_bottom() &&
+        !locally_inferred_features.empty()) {
+      out << ", locally_inferred_features=" << locally_inferred_features;
     }
 
     out << ", frames=[";
@@ -480,8 +492,10 @@ Frame CalleePortFrames::propagate_frames(
 
     origins.join_with(frame.origins());
     field_origins.join_with(frame.field_origins());
-    // Note: This merges user features with existing inferred features.
-    inferred_features.join_with(frame.features());
+
+    auto local_features = locally_inferred_features_;
+    local_features.add(frame.features());
+    inferred_features.join_with(local_features);
 
     materialize_via_type_of_ports(
         callee,
@@ -536,7 +550,6 @@ Frame CalleePortFrames::propagate_frames(
       std::move(origins),
       std::move(field_origins),
       std::move(inferred_features),
-      /* locally_inferred_features */ FeatureMayAlwaysSet::bottom(),
       /* user_features */ FeatureSet::bottom(),
       /* via_type_of_ports */ {},
       /* via_value_of_ports */ {},
@@ -619,7 +632,6 @@ CalleePortFrames CalleePortFrames::propagate_crtex_leaf_frames(
           propagated.origins(),
           propagated.field_origins(),
           propagated.inferred_features(),
-          propagated.locally_inferred_features(),
           propagated.user_features(),
           propagated.via_type_of_ports(),
           propagated.via_value_of_ports(),
@@ -645,7 +657,7 @@ Json::Value CalleePortFrames::to_json(
     // class by the `Taint` structure.
     mt_assert(frames_by_kind.size() == 1);
     for (const auto& frame : frames_by_kind) {
-      kinds.append(frame.to_json(local_positions_));
+      kinds.append(frame.to_json(local_positions_, locally_inferred_features_));
     }
   }
   taint["kinds"] = kinds;

@@ -711,8 +711,6 @@ TEST_F(FrameTest, FrameWithKind) {
   EXPECT_EQ(frame1.origins(), frame2.origins());
   EXPECT_EQ(frame1.field_origins(), frame2.field_origins());
   EXPECT_EQ(frame1.inferred_features(), frame2.inferred_features());
-  EXPECT_EQ(
-      frame1.locally_inferred_features(), frame2.locally_inferred_features());
 
   EXPECT_NE(frame1.kind(), frame2.kind());
   EXPECT_EQ(frame1.kind(), kind_a);

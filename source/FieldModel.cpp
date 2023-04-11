@@ -148,8 +148,10 @@ Json::Value FieldModel::to_json() const {
     auto sources_value = Json::Value(Json::arrayValue);
     for (const auto& source : sources_.frames_iterator()) {
       mt_assert(!source.is_bottom());
-      // Field models do not have local positions
-      sources_value.append(source.to_json(/* local_positions */ {}));
+      // Field models do not have local positions/features
+      sources_value.append(source.to_json(
+          /* local_positions */ {},
+          /* locally_inferred_features */ FeatureMayAlwaysSet::bottom()));
     }
     value["sources"] = sources_value;
   }
@@ -158,8 +160,10 @@ Json::Value FieldModel::to_json() const {
     auto sinks_value = Json::Value(Json::arrayValue);
     for (const auto& sink : sinks_.frames_iterator()) {
       mt_assert(!sink.is_bottom());
-      // Field models do not have local positions
-      sinks_value.append(sink.to_json(/* local_positions */ {}));
+      // Field models do not have local positions/features
+      sinks_value.append(sink.to_json(
+          /* local_positions */ {},
+          /* locally_inferred_features */ FeatureMayAlwaysSet::bottom()));
     }
     value["sinks"] = sinks_value;
   }

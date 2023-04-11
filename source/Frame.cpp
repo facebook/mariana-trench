@@ -29,10 +29,6 @@ void Frame::set_field_callee(const Field* field) {
   field_callee_ = field;
 }
 
-void Frame::add_locally_inferred_features(const FeatureMayAlwaysSet& features) {
-  locally_inferred_features_.add(features);
-}
-
 void Frame::add_inferred_features(const FeatureMayAlwaysSet& features) {
   inferred_features_.add(features);
 }
@@ -43,7 +39,6 @@ void Frame::add_user_features(const FeatureSet& features) {
 
 FeatureMayAlwaysSet Frame::features() const {
   auto features = inferred_features_;
-  features.add(locally_inferred_features_);
 
   if (features.is_bottom()) {
     return FeatureMayAlwaysSet::make_always(user_features_);
@@ -66,7 +61,6 @@ bool Frame::leq(const Frame& other) const {
         origins_.leq(other.origins_) &&
         field_origins_.leq(other.field_origins_) &&
         inferred_features_.leq(other.inferred_features_) &&
-        locally_inferred_features_.leq(other.locally_inferred_features_) &&
         user_features_.leq(other.user_features_) &&
         via_type_of_ports_.leq(other.via_type_of_ports_) &&
         via_value_of_ports_.leq(other.via_value_of_ports_) &&
@@ -86,7 +80,6 @@ bool Frame::equals(const Frame& other) const {
         call_info_ == other.call_info_ && distance_ == other.distance_ &&
         origins_ == other.origins_ && field_origins_ == other.field_origins_ &&
         inferred_features_ == other.inferred_features_ &&
-        locally_inferred_features_ == other.locally_inferred_features_ &&
         user_features_ == other.user_features_ &&
         via_type_of_ports_ == other.via_type_of_ports_ &&
         via_value_of_ports_ == other.via_value_of_ports_ &&
@@ -113,7 +106,6 @@ void Frame::join_with(const Frame& other) {
     origins_.join_with(other.origins_);
     field_origins_.join_with(other.field_origins_);
     inferred_features_.join_with(other.inferred_features_);
-    locally_inferred_features_.join_with(other.locally_inferred_features_);
     user_features_.join_with(other.user_features_);
     via_type_of_ports_.join_with(other.via_type_of_ports_);
     via_value_of_ports_.join_with(other.via_value_of_ports_);
@@ -198,7 +190,9 @@ void Frame::append_to_propagation_output_paths(Path::Element path_element) {
   output_paths_.limit_leaves(Heuristics::kPropagationMaxOutputPathLeaves);
 }
 
-Json::Value Frame::to_json(const LocalPositionSet& local_positions) const {
+Json::Value Frame::to_json(
+    const LocalPositionSet& local_positions,
+    const FeatureMayAlwaysSet& local_features) const {
   auto value = Json::Value(Json::objectValue);
 
   mt_assert(kind_ != nullptr);
@@ -224,9 +218,11 @@ Json::Value Frame::to_json(const LocalPositionSet& local_positions) const {
     value["field_origins"] = field_origins_.to_json();
   }
 
-  JsonValidation::update_object(value, features().to_json());
+  auto all_features = local_features;
+  all_features.add(features());
+  JsonValidation::update_object(value, all_features.to_json());
 
-  auto all_local_features = locally_inferred_features();
+  auto all_local_features = local_features;
   all_local_features.add_always(user_features_);
   if (!all_local_features.is_bottom() && !all_local_features.empty()) {
     value["local_features"] = all_local_features.to_json();
@@ -345,9 +341,6 @@ std::ostream& operator<<(std::ostream& out, const Frame& frame) {
   }
   if (!frame.inferred_features_.empty()) {
     out << ", inferred_features=" << frame.inferred_features_;
-  }
-  if (!frame.locally_inferred_features_.empty()) {
-    out << ", locally_inferred_features=" << frame.locally_inferred_features_;
   }
   if (!frame.user_features_.empty()) {
     out << ", user_features=" << frame.user_features_;

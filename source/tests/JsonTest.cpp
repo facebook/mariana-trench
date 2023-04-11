@@ -1373,13 +1373,15 @@ TEST_F(JsonTest, Frame) {
               test::FrameProperties{
                   .inferred_features = FeatureMayAlwaysSet::make_always(
                       {context.feature_factory->get("FeatureTwo")}),
-                  .locally_inferred_features = FeatureMayAlwaysSet(
-                      /* may */ FeatureSet{context.feature_factory->get(
-                          "FeatureOne")},
-                      /* always */ {}),
                   .user_features = FeatureSet(
                       {context.feature_factory->get("FeatureThree")})})
-              .to_json(/* local_positions */ {})),
+              .to_json(
+                  /* local_positions */ {},
+                  /* locally_inferred_features */
+                  FeatureMayAlwaysSet(
+                      /* may */ FeatureSet{context.feature_factory->get(
+                          "FeatureOne")},
+                      /* always */ {}))),
       test::parse_json(R"({
           "call_info": "Declaration",
           "kind": "TestSource",
@@ -1403,7 +1405,9 @@ TEST_F(JsonTest, CallInfo) {
           test::make_taint_frame(
               /* kind */ context.kind_factory->get("TestSource"),
               test::FrameProperties{.call_info = CallInfo::Origin})
-              .to_json(/* local_positions */ {})),
+              .to_json(
+                  /* local_positions */ {},
+                  /* locally_inferred_features */ {})),
       test::parse_json(R"({
           "call_info": "Origin",
           "kind": "TestSource",
@@ -1413,7 +1417,9 @@ TEST_F(JsonTest, CallInfo) {
                             /* kind */ context.kind_factory->get("TestSource"),
                             test::FrameProperties{
                                 .distance = 5, .call_info = CallInfo::CallSite})
-                            .to_json(/* local_positions */ {})),
+                            .to_json(
+                                /* local_positions */ {},
+                                /* locally_inferred_features */ {})),
       test::parse_json(R"({
           "call_info": "CallSite",
           "kind": "TestSource",

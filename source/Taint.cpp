@@ -87,6 +87,22 @@ LocalPositionSet Taint::local_positions() const {
   return result;
 }
 
+FeatureMayAlwaysSet Taint::locally_inferred_features(
+    const Method* MT_NULLABLE callee,
+    const Position* MT_NULLABLE position,
+    const AccessPath& callee_port) const {
+  auto result = FeatureMayAlwaysSet::bottom();
+  for (const auto& callee_frames : set_) {
+    // Key look up by callee will be nice but is not supported by underlying
+    // GroupHashedSetAbstractDomain.
+    if (callee_frames.callee() == callee) {
+      result.join_with(
+          callee_frames.locally_inferred_features(position, callee_port));
+    }
+  }
+  return result;
+}
+
 void Taint::add_locally_inferred_features_and_local_position(
     const FeatureMayAlwaysSet& features,
     const Position* MT_NULLABLE position) {
@@ -215,9 +231,7 @@ std::unordered_map<const Kind*, Taint> Taint::partition_by_kind() const {
 FeatureMayAlwaysSet Taint::features_joined() const {
   auto features = FeatureMayAlwaysSet::bottom();
   for (const auto& callee_frames : set_) {
-    for (const auto& frame : callee_frames) {
-      features.join_with(frame.features());
-    }
+    features.join_with(callee_frames.features_joined());
   }
   return features;
 }

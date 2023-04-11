@@ -985,7 +985,7 @@ TEST_F(CalleePortFramesTest, Map) {
               .call_info = CallInfo::CallSite}),
   };
   frames.map([feature_one](Frame frame) {
-    frame.add_locally_inferred_features(FeatureMayAlwaysSet{feature_one});
+    frame.add_inferred_features(FeatureMayAlwaysSet{feature_one});
     return frame;
   });
   EXPECT_EQ(
@@ -998,7 +998,7 @@ TEST_F(CalleePortFramesTest, Map) {
                   .callee = one,
                   .distance = 1,
                   .origins = MethodSet{one},
-                  .locally_inferred_features = FeatureMayAlwaysSet{feature_one},
+                  .inferred_features = FeatureMayAlwaysSet{feature_one},
                   .call_info = CallInfo::CallSite,
               }),
           test::make_taint_config(
@@ -1008,7 +1008,7 @@ TEST_F(CalleePortFramesTest, Map) {
                   .callee = one,
                   .distance = 2,
                   .origins = MethodSet{one},
-                  .locally_inferred_features = FeatureMayAlwaysSet{feature_one},
+                  .inferred_features = FeatureMayAlwaysSet{feature_one},
                   .call_info = CallInfo::CallSite,
               }),
       }));
@@ -1035,7 +1035,7 @@ TEST_F(CalleePortFramesTest, FeaturesAndPositions) {
               /* always */ FeatureSet{})})};
   frames.add_locally_inferred_features(FeatureMayAlwaysSet{feature_two});
   EXPECT_EQ(
-      frames.inferred_features(),
+      frames.locally_inferred_features(),
       FeatureMayAlwaysSet(
           /* may */ FeatureSet{feature_one},
           /* always */ FeatureSet{feature_two}));
@@ -1060,7 +1060,8 @@ TEST_F(CalleePortFramesTest, FeaturesAndPositions) {
   frames.add_locally_inferred_features_and_local_position(
       /* features */ FeatureMayAlwaysSet{feature_one},
       /* position */ test_position_one);
-  EXPECT_EQ(frames.inferred_features(), FeatureMayAlwaysSet{feature_one});
+  EXPECT_EQ(
+      frames.locally_inferred_features(), FeatureMayAlwaysSet{feature_one});
   EXPECT_EQ(
       frames.local_positions(),
       (LocalPositionSet{test_position_one, test_position_two}));
@@ -1384,6 +1385,35 @@ TEST_F(CalleePortFramesTest, TransformKindWithFeatures) {
                   .user_features = FeatureSet{user_feature_one}}),
       }));
 
+  // Similar transformation, but with may-features. The desired behavior for
+  // inferred features is an "add", not a "join"
+  frames = initial_frames;
+  frames.transform_kind_with_features(
+      [&](const auto* kind) {
+        if (kind == test_kind_two) {
+          return std::vector<const Kind*>{transformed_test_kind_two};
+        }
+        return std::vector<const Kind*>{kind};
+      },
+      [feature_two](const auto* /* unused kind */) {
+        return FeatureMayAlwaysSet::make_may({feature_two});
+      });
+  EXPECT_EQ(
+      frames,
+      (CalleePortFrames{
+          test::make_taint_config(
+              test_kind_one,
+              test::FrameProperties{
+                  .user_features = FeatureSet{user_feature_one}}),
+          test::make_taint_config(
+              transformed_test_kind_two,
+              test::FrameProperties{
+                  .inferred_features = FeatureMayAlwaysSet(
+                      /* may */ FeatureSet{feature_two},
+                      /* always */ FeatureSet{feature_one}),
+                  .user_features = FeatureSet{user_feature_one}}),
+      }));
+
   // Tests one -> many transformations (with features).
   frames = initial_frames;
   frames.transform_kind_with_features(
@@ -1396,8 +1426,8 @@ TEST_F(CalleePortFramesTest, TransformKindWithFeatures) {
         }
         return std::vector<const Kind*>{};
       },
-      [feature_one](const auto* /* unused kind */) {
-        return FeatureMayAlwaysSet{feature_one};
+      [feature_two](const auto* /* unused kind */) {
+        return FeatureMayAlwaysSet{feature_two};
       });
   EXPECT_EQ(
       frames,
@@ -1405,17 +1435,17 @@ TEST_F(CalleePortFramesTest, TransformKindWithFeatures) {
           test::make_taint_config(
               test_kind_one,
               test::FrameProperties{
-                  .inferred_features = FeatureMayAlwaysSet{feature_one},
+                  .inferred_features = FeatureMayAlwaysSet{feature_two},
                   .user_features = FeatureSet{user_feature_one}}),
           test::make_taint_config(
               transformed_test_kind_one,
               test::FrameProperties{
-                  .inferred_features = FeatureMayAlwaysSet{feature_one},
+                  .inferred_features = FeatureMayAlwaysSet{feature_two},
                   .user_features = FeatureSet{user_feature_one}}),
           test::make_taint_config(
               transformed_test_kind_two,
               test::FrameProperties{
-                  .inferred_features = FeatureMayAlwaysSet{feature_one},
+                  .inferred_features = FeatureMayAlwaysSet{feature_two},
                   .user_features = FeatureSet{user_feature_one}}),
       }));
 

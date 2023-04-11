@@ -69,10 +69,12 @@ class CalleePortFrames final : public sparta::AbstractDomain<CalleePortFrames> {
   explicit CalleePortFrames(
       AccessPath callee_port,
       FramesByKind frames,
-      LocalPositionSet local_positions)
+      LocalPositionSet local_positions,
+      FeatureMayAlwaysSet locally_inferred_features)
       : callee_port_(std::move(callee_port)),
         frames_(std::move(frames)),
-        local_positions_(std::move(local_positions)) {
+        local_positions_(std::move(local_positions)),
+        locally_inferred_features_(std::move(locally_inferred_features)) {
     mt_assert(!local_positions_.is_bottom());
   }
 
@@ -87,7 +89,8 @@ class CalleePortFrames final : public sparta::AbstractDomain<CalleePortFrames> {
   CalleePortFrames()
       : callee_port_(Root(Root::Kind::Leaf)),
         frames_(FramesByKind::bottom()),
-        local_positions_({}) {}
+        local_positions_({}),
+        locally_inferred_features_(FeatureMayAlwaysSet::bottom()) {}
 
   explicit CalleePortFrames(std::initializer_list<TaintConfig> configs);
 
@@ -120,7 +123,8 @@ class CalleePortFrames final : public sparta::AbstractDomain<CalleePortFrames> {
     return CalleePortFrames(
         /* callee_port */ AccessPath(Root(Root::Kind::Leaf)),
         FramesByKind::top(),
-        /* local_positions */ {});
+        /* local_positions */ {},
+        /* locally_inferred_features */ FeatureMayAlwaysSet::top());
   }
 
   bool is_bottom() const override {
@@ -135,12 +139,14 @@ class CalleePortFrames final : public sparta::AbstractDomain<CalleePortFrames> {
     callee_port_ = AccessPath(Root(Root::Kind::Leaf));
     frames_.set_to_bottom();
     local_positions_ = {};
+    locally_inferred_features_.set_to_bottom();
   }
 
   void set_to_top() override {
     callee_port_ = AccessPath(Root(Root::Kind::Leaf));
     frames_.set_to_top();
     local_positions_.set_to_top();
+    locally_inferred_features_.set_to_top();
   }
 
   bool empty() const {
@@ -153,6 +159,10 @@ class CalleePortFrames final : public sparta::AbstractDomain<CalleePortFrames> {
 
   const LocalPositionSet& local_positions() const {
     return local_positions_;
+  }
+
+  const FeatureMayAlwaysSet& locally_inferred_features() const {
+    return locally_inferred_features_;
   }
 
   void add(const TaintConfig& config);
@@ -206,8 +216,6 @@ class CalleePortFrames final : public sparta::AbstractDomain<CalleePortFrames> {
   void set_origins_if_empty(const MethodSet& origins);
 
   void set_field_origins_if_empty_with_field_callee(const Field* field);
-
-  FeatureMayAlwaysSet inferred_features() const;
 
   void add_locally_inferred_features(const FeatureMayAlwaysSet& features);
 
@@ -270,6 +278,9 @@ class CalleePortFrames final : public sparta::AbstractDomain<CalleePortFrames> {
       }
     }
     frames_ = std::move(new_frames_by_kind);
+    if (frames_.is_bottom()) {
+      set_to_bottom();
+    }
   }
 
   CalleePortFrames apply_transform(
@@ -295,10 +306,13 @@ class CalleePortFrames final : public sparta::AbstractDomain<CalleePortFrames> {
       result[mapped_value].join_with(CalleePortFrames(
           callee_port_,
           FramesByKind{std::pair(kind, kind_frames)},
-          local_positions_));
+          local_positions_,
+          locally_inferred_features_));
     }
     return result;
   }
+
+  FeatureMayAlwaysSet features_joined() const;
 
   template <class T>
   std::unordered_map<T, std::vector<std::reference_wrapper<const Frame>>>
@@ -358,8 +372,9 @@ class CalleePortFrames final : public sparta::AbstractDomain<CalleePortFrames> {
   AccessPath callee_port_;
   FramesByKind frames_;
 
-  // TODO(T91357916): Move local_features here from `Frame`.
   LocalPositionSet local_positions_;
+
+  FeatureMayAlwaysSet locally_inferred_features_;
 };
 
 } // namespace marianatrench

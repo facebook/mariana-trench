@@ -145,6 +145,11 @@ class Taint final : public sparta::AbstractDomain<Taint> {
 
   LocalPositionSet local_positions() const;
 
+  FeatureMayAlwaysSet locally_inferred_features(
+      const Method* MT_NULLABLE callee,
+      const Position* MT_NULLABLE position,
+      const AccessPath& callee_port) const;
+
   void add_locally_inferred_features_and_local_position(
       const FeatureMayAlwaysSet& features,
       const Position* MT_NULLABLE position);

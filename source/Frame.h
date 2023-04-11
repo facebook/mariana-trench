@@ -87,9 +87,6 @@ CallInfo propagate_call_info(CallInfo call_info);
  * trace goes through a numerical operator. Internally, this is represented by:
  *   inferred_features:
  *     Features propagated into this frame, usually from its callee.
- *   locally_inferred_features:
- *     Features inferred within this frame (not propagated from a callee).
- *     These features are only ever added after frame creation.
  *   user_features:
  *     User-defined features from a JSON.
  *
@@ -131,7 +128,6 @@ class Frame final : public sparta::AbstractDomain<Frame> {
       MethodSet origins,
       FieldSet field_origins,
       FeatureMayAlwaysSet inferred_features,
-      FeatureMayAlwaysSet locally_inferred_features,
       FeatureSet user_features,
       RootSetAbstractDomain via_type_of_ports,
       RootSetAbstractDomain via_value_of_ports,
@@ -147,7 +143,6 @@ class Frame final : public sparta::AbstractDomain<Frame> {
         origins_(std::move(origins)),
         field_origins_(std::move(field_origins)),
         inferred_features_(std::move(inferred_features)),
-        locally_inferred_features_(std::move(locally_inferred_features)),
         user_features_(std::move(user_features)),
         via_type_of_ports_(std::move(via_type_of_ports)),
         via_value_of_ports_(std::move(via_value_of_ports)),
@@ -238,18 +233,12 @@ class Frame final : public sparta::AbstractDomain<Frame> {
     return output_paths_;
   }
 
-  void add_locally_inferred_features(const FeatureMayAlwaysSet& features);
-
   void add_inferred_features(const FeatureMayAlwaysSet& features);
 
   void add_user_features(const FeatureSet& features);
 
   const FeatureMayAlwaysSet& inferred_features() const {
     return inferred_features_;
-  }
-
-  const FeatureMayAlwaysSet& locally_inferred_features() const {
-    return locally_inferred_features_;
   }
 
   const FeatureSet& user_features() const {
@@ -314,7 +303,9 @@ class Frame final : public sparta::AbstractDomain<Frame> {
       const UsedKinds& used_kinds,
       const TransformList* local_transforms) const;
 
-  Json::Value to_json(const LocalPositionSet& local_positions) const;
+  Json::Value to_json(
+      const LocalPositionSet& local_positions,
+      const FeatureMayAlwaysSet& local_features) const;
 
   // Describe how to join frames together in `CalleePortFrames`.
   struct GroupEqual {
@@ -338,7 +329,6 @@ class Frame final : public sparta::AbstractDomain<Frame> {
   MethodSet origins_;
   FieldSet field_origins_;
   FeatureMayAlwaysSet inferred_features_;
-  FeatureMayAlwaysSet locally_inferred_features_;
   FeatureSet user_features_;
   RootSetAbstractDomain via_type_of_ports_;
   RootSetAbstractDomain via_value_of_ports_;

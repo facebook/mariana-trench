@@ -116,10 +116,14 @@ void CallPositionFrames::set_field_origins_if_empty_with_field_callee(
   });
 }
 
-FeatureMayAlwaysSet CallPositionFrames::inferred_features() const {
+FeatureMayAlwaysSet CallPositionFrames::locally_inferred_features(
+    const AccessPath& callee_port) const {
   auto result = FeatureMayAlwaysSet::bottom();
   for (const auto& callee_port_frames : frames_) {
-    result.join_with(callee_port_frames.inferred_features());
+    if (callee_port_frames.callee_port() == callee_port) {
+      result.join_with(callee_port_frames.locally_inferred_features());
+      break;
+    }
   }
   return result;
 }
@@ -130,9 +134,9 @@ void CallPositionFrames::add_locally_inferred_features(
     return;
   }
 
-  map([&features](Frame frame) {
-    frame.add_locally_inferred_features(features);
-    return frame;
+  frames_.map([&features](CalleePortFrames callee_port_frames) {
+    callee_port_frames.add_locally_inferred_features(features);
+    return callee_port_frames;
   });
 }
 
@@ -166,12 +170,7 @@ void CallPositionFrames::add_locally_inferred_features_and_local_position(
     return;
   }
 
-  map([&features](Frame frame) {
-    if (!features.empty()) {
-      frame.add_locally_inferred_features(features);
-    }
-    return frame;
-  });
+  add_locally_inferred_features(features);
 
   if (position != nullptr) {
     add_local_position(position);
@@ -222,6 +221,9 @@ CallPositionFrames CallPositionFrames::attach_position(
         continue;
       }
 
+      auto inferred_features = frame.features();
+      inferred_features.add(callee_port_frames.locally_inferred_features());
+
       result.add(CalleePortFrames{TaintConfig(
           frame.kind(),
           frame.callee_port(),
@@ -231,7 +233,7 @@ CallPositionFrames CallPositionFrames::attach_position(
           /* distance */ 0,
           frame.origins(),
           frame.field_origins(),
-          frame.features(),
+          inferred_features,
           // Since CallPositionFrames::attach_position is used (only) for
           // parameter_sinks and return sources which may be included in an
           // issue as a leaf, we need to make sure that those leaf frames in
@@ -295,7 +297,7 @@ CallPositionFrames::map_positions(
           frame.origins(),
           frame.field_origins(),
           frame.inferred_features(),
-          frame.locally_inferred_features(),
+          callee_port_frames.locally_inferred_features(),
           frame.user_features(),
           frame.via_type_of_ports(),
           frame.via_value_of_ports(),
@@ -338,6 +340,14 @@ bool CallPositionFrames::contains_kind(const Kind* kind) const {
     }
   }
   return false;
+}
+
+FeatureMayAlwaysSet CallPositionFrames::features_joined() const {
+  auto features = FeatureMayAlwaysSet::bottom();
+  for (const auto& callee_port_frames : frames_) {
+    features.join_with(callee_port_frames.features_joined());
+  }
+  return features;
 }
 
 Json::Value CallPositionFrames::to_json(

@@ -159,7 +159,8 @@ class CallPositionFrames final
 
   void set_field_origins_if_empty_with_field_callee(const Field* field);
 
-  FeatureMayAlwaysSet inferred_features() const;
+  FeatureMayAlwaysSet locally_inferred_features(
+      const AccessPath& callee_port) const;
 
   void add_locally_inferred_features(const FeatureMayAlwaysSet& features);
 
@@ -257,6 +258,8 @@ class CallPositionFrames final
 
     return result;
   }
+
+  FeatureMayAlwaysSet features_joined() const;
 
   Json::Value to_json(const Method* MT_NULLABLE callee, CallInfo call_info)
       const;

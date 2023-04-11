@@ -137,11 +137,12 @@ void CalleeFrames::set_field_origins_if_empty_with_field_callee(
   });
 }
 
-FeatureMayAlwaysSet CalleeFrames::inferred_features() const {
+FeatureMayAlwaysSet CalleeFrames::locally_inferred_features(
+    const Position* MT_NULLABLE position,
+    const AccessPath& callee_port) const {
   auto result = FeatureMayAlwaysSet::bottom();
-  for (const auto& [_, frames] : frames_.bindings()) {
-    result.join_with(frames.inferred_features());
-  }
+  result.join_with(
+      frames_.get(position).locally_inferred_features(callee_port));
   return result;
 }
 
@@ -151,9 +152,9 @@ void CalleeFrames::add_locally_inferred_features(
     return;
   }
 
-  map([&features](Frame frame) {
-    frame.add_locally_inferred_features(features);
-    return frame;
+  frames_.map([&](CallPositionFrames frames) {
+    frames.add_locally_inferred_features(features);
+    return frames;
   });
 }
 
@@ -190,12 +191,7 @@ void CalleeFrames::add_locally_inferred_features_and_local_position(
     return;
   }
 
-  map([&features](Frame frame) {
-    if (!features.empty()) {
-      frame.add_locally_inferred_features(features);
-    }
-    return frame;
-  });
+  add_locally_inferred_features(features);
 
   if (position != nullptr) {
     add_local_position(position);
@@ -339,6 +335,14 @@ bool CalleeFrames::contains_kind(const Kind* kind) const {
               callee_frames_pair) {
         return callee_frames_pair.second.contains_kind(kind);
       });
+}
+
+FeatureMayAlwaysSet CalleeFrames::features_joined() const {
+  auto features = FeatureMayAlwaysSet::bottom();
+  for (const auto& [_, call_position_frames] : frames_.bindings()) {
+    features.join_with(call_position_frames.features_joined());
+  }
+  return features;
 }
 
 Json::Value CalleeFrames::to_json() const {
