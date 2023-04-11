@@ -511,7 +511,6 @@ Kind and port specifications may be included in the same sanitizer.
 
 Modes are used to describe specific behaviors of methods. Available modes are:
 
-* `override-default`: do not infer modes of methods using heuristics;
 * `skip-analysis`: skip the analysis of the method;
 * `add-via-obscure-feature`: add a feature/breadcrumb called `via-obscure:<method>` to sources flowing through this method;
 * `taint-in-taint-out`: propagate the taint on arguments to the return value and into the `this` parameter;
@@ -795,22 +794,5 @@ Note, the implicit `this` parameter for methods has the parameter number 0.
   3. You can also check the output models.
       Use `grep SourceKind models@*` to see if your source or sink kind exists.
       Use `grep 'Lcom/example/<class-name>;.<method-name>:' models@*` to see if a given method exists in the app.
-
-### Override the default model
-
-Mariana trench generates a default model for each method ([see above](models.md#default-model)) using a set of heuristics.
-
-Users can use a [model generator](models.md#generators) to override the default behavior. This can be done to:
-* Stop a method from propagating the taint (e.g, `escape` functions);
-* Skip the analysis of a slow method;
-* Avoid considering all overrides when handling a virtual method call;
-* Etc..
-
-In order to do that, one needs to create a model using the `override-default` mode, with any additional modes:
-```
-auto model = Model(method, /* modes */ Model::Mode::OverrideDefault | Model::Mode::NoJoinVirtualOverrides);
-```
-
-NOTE: If you get the error `Attempting to analyze method <name> with no code!`, it probably means that you forgot to mark the method with `Model::Mode::SkipAnalysis`
 
 <FbModels />
