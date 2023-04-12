@@ -215,20 +215,11 @@ ClassProperties::ClassProperties(
 void ClassProperties::emplace_classes(
     std::unordered_map<std::string_view, ExportedKind>& map,
     const ComponentTagInfo& tag_info) {
-  auto dex_class = redex::get_class(strings_[tag_info.classname]);
-
   if (tag_info.is_exported == BooleanXMLAttribute::True ||
       (tag_info.is_exported == BooleanXMLAttribute::Undefined &&
        tag_info.has_intent_filters)) {
     if (tag_info.permission.empty()) {
       map.emplace(strings_[tag_info.classname], ExportedKind::Exported);
-      if (dex_class) {
-        auto parent_classes =
-            generator::get_custom_parents_from_class(dex_class);
-        for (const auto& klass : parent_classes) {
-          map.emplace(klass, ExportedKind::Exported);
-        }
-      }
     } else {
       map.emplace(
           strings_[tag_info.classname], ExportedKind::ExportedWithPermission);
