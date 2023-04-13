@@ -345,10 +345,11 @@ FeatureMayAlwaysSet CalleeFrames::features_joined() const {
   return features;
 }
 
-Json::Value CalleeFrames::to_json() const {
+Json::Value CalleeFrames::to_json(ExportOriginsMode export_origins_mode) const {
   auto taint = Json::Value(Json::arrayValue);
   for (const auto& [_, call_position_frames] : frames_.bindings()) {
-    auto frames_json = call_position_frames.to_json(callee_, call_info_);
+    auto frames_json =
+        call_position_frames.to_json(callee_, call_info_, export_origins_mode);
     mt_assert(frames_json.isArray());
     for (const auto& frame_json : frames_json) {
       taint.append(frame_json);

@@ -514,6 +514,11 @@ def _add_debug_arguments(parser: argparse.ArgumentParser) -> None:
         action="store_true",
         help="Dump a list of the method signatures in `methods.json`.",
     )
+    debug_arguments.add_argument(
+        "--always-export-origins",
+        action="store_true",
+        help="Export the origins for every trace frame into the output JSON instead of only on origins.",
+    )
 
 
 def _get_command_options(
@@ -618,7 +623,8 @@ def _get_command_options(
         options.append("--dump-dependencies")
     if arguments.dump_methods:
         options.append("--dump-methods")
-
+    if arguments.always_export_origins:
+        options.append("--always-export-origins")
     return options
 
 

@@ -1123,7 +1123,7 @@ Model Model::from_json(
   return model;
 }
 
-Json::Value Model::to_json() const {
+Json::Value Model::to_json(ExportOriginsMode export_origins_mode) const {
   auto value = Json::Value(Json::objectValue);
 
   if (method_) {
@@ -1155,7 +1155,7 @@ Json::Value Model::to_json() const {
     for (const auto& [port, generation_taint] : generations_.elements()) {
       auto generation_value = Json::Value(Json::objectValue);
       generation_value["port"] = port.to_json();
-      generation_value["taint"] = generation_taint.to_json();
+      generation_value["taint"] = generation_taint.to_json(export_origins_mode);
       generations_value.append(generation_value);
     }
     value["generations"] = generations_value;
@@ -1167,7 +1167,8 @@ Json::Value Model::to_json() const {
          parameter_sources_.elements()) {
       auto parameter_source_value = Json::Value(Json::objectValue);
       parameter_source_value["port"] = port.to_json();
-      parameter_source_value["taint"] = parameter_source_taint.to_json();
+      parameter_source_value["taint"] =
+          parameter_source_taint.to_json(export_origins_mode);
       parameter_sources_value.append(parameter_source_value);
     }
     value["parameter_sources"] = parameter_sources_value;
@@ -1178,7 +1179,7 @@ Json::Value Model::to_json() const {
     for (const auto& [effect, source_taint] : call_effect_sources_) {
       auto source_value = Json::Value(Json::objectValue);
       source_value["port"] = effect.to_json();
-      source_value["taint"] = source_taint.to_json();
+      source_value["taint"] = source_taint.to_json(export_origins_mode);
       effect_sources_value.append(source_value);
     }
     value["effect_sources"] = effect_sources_value;
@@ -1189,7 +1190,7 @@ Json::Value Model::to_json() const {
     for (const auto& [port, sink_taint] : sinks_.elements()) {
       auto sink_value = Json::Value(Json::objectValue);
       sink_value["port"] = port.to_json();
-      sink_value["taint"] = sink_taint.to_json();
+      sink_value["taint"] = sink_taint.to_json(export_origins_mode);
       sinks_value.append(sink_value);
     }
     value["sinks"] = sinks_value;
@@ -1200,7 +1201,7 @@ Json::Value Model::to_json() const {
     for (const auto& [effect, sink_taint] : call_effect_sinks_) {
       auto sink_value = Json::Value(Json::objectValue);
       sink_value["port"] = effect.to_json();
-      sink_value["taint"] = sink_taint.to_json();
+      sink_value["taint"] = sink_taint.to_json(export_origins_mode);
       effect_sinks_value.append(sink_value);
     }
     value["effect_sinks"] = effect_sinks_value;
@@ -1212,7 +1213,8 @@ Json::Value Model::to_json() const {
          propagations_.elements()) {
       auto propagation_value = Json::Value(Json::objectValue);
       propagation_value["input"] = input_path.to_json();
-      propagation_value["output"] = propagation_taint.to_json();
+      propagation_value["output"] =
+          propagation_taint.to_json(export_origins_mode);
       propagations_value.append(propagation_value);
     }
     value["propagation"] = propagations_value;
@@ -1292,7 +1294,7 @@ Json::Value Model::to_json() const {
     auto issues_value = Json::Value(Json::arrayValue);
     for (const auto& issue : issues_) {
       mt_assert(!issue.is_bottom());
-      issues_value.append(issue.to_json());
+      issues_value.append(issue.to_json(export_origins_mode));
     }
     value["issues"] = issues_value;
   }
@@ -1301,7 +1303,7 @@ Json::Value Model::to_json() const {
 }
 
 Json::Value Model::to_json(Context& context) const {
-  auto value = to_json();
+  auto value = to_json(context.options->export_origins_mode());
 
   if (method_) {
     const auto* position = context.positions->get(method_);

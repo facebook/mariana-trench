@@ -137,7 +137,7 @@ FieldModel FieldModel::from_json(
   return model;
 }
 
-Json::Value FieldModel::to_json() const {
+Json::Value FieldModel::to_json(ExportOriginsMode export_origins_mode) const {
   auto value = Json::Value(Json::objectValue);
 
   if (field_) {
@@ -151,7 +151,8 @@ Json::Value FieldModel::to_json() const {
       // Field models do not have local positions/features
       sources_value.append(source.to_json(
           /* local_positions */ {},
-          /* locally_inferred_features */ FeatureMayAlwaysSet::bottom()));
+          /* locally_inferred_features */ FeatureMayAlwaysSet::bottom(),
+          /* export_origins_mode */ export_origins_mode));
     }
     value["sources"] = sources_value;
   }
@@ -163,7 +164,8 @@ Json::Value FieldModel::to_json() const {
       // Field models do not have local positions/features
       sinks_value.append(sink.to_json(
           /* local_positions */ {},
-          /* locally_inferred_features */ FeatureMayAlwaysSet::bottom()));
+          /* locally_inferred_features */ FeatureMayAlwaysSet::bottom(),
+          /* export_origins_mode */ export_origins_mode));
     }
     value["sinks"] = sinks_value;
   }
@@ -172,7 +174,7 @@ Json::Value FieldModel::to_json() const {
 }
 
 Json::Value FieldModel::to_json(Context& context) const {
-  auto value = to_json();
+  auto value = to_json(context.options->export_origins_mode());
   value["position"] = context.positions->unknown()->to_json();
   return value;
 }

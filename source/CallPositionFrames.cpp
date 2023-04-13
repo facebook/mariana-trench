@@ -352,10 +352,12 @@ FeatureMayAlwaysSet CallPositionFrames::features_joined() const {
 
 Json::Value CallPositionFrames::to_json(
     const Method* MT_NULLABLE callee,
-    CallInfo call_info) const {
+    CallInfo call_info,
+    ExportOriginsMode export_origins_mode) const {
   auto taint = Json::Value(Json::arrayValue);
   for (const auto& callee_port_frames : frames_) {
-    auto frames_json = callee_port_frames.to_json(callee, position_, call_info);
+    auto frames_json = callee_port_frames.to_json(
+        callee, position_, call_info, export_origins_mode);
     taint.append(frames_json);
   }
   return taint;

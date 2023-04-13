@@ -264,7 +264,7 @@ class CalleeFrames final : public sparta::AbstractDomain<CalleeFrames> {
 
   FeatureMayAlwaysSet features_joined() const;
 
-  Json::Value to_json() const;
+  Json::Value to_json(ExportOriginsMode export_origins_mode) const;
 
   friend std::ostream& operator<<(
       std::ostream& out,

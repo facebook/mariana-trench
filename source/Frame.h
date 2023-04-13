@@ -20,6 +20,7 @@
 #include <mariana-trench/CanonicalName.h>
 #include <mariana-trench/Compiler.h>
 #include <mariana-trench/Context.h>
+#include <mariana-trench/ExportOriginsMode.h>
 #include <mariana-trench/Feature.h>
 #include <mariana-trench/FeatureMayAlwaysSet.h>
 #include <mariana-trench/FeatureSet.h>
@@ -305,7 +306,8 @@ class Frame final : public sparta::AbstractDomain<Frame> {
 
   Json::Value to_json(
       const LocalPositionSet& local_positions,
-      const FeatureMayAlwaysSet& local_features) const;
+      const FeatureMayAlwaysSet& local_features,
+      ExportOriginsMode export_origins_mode) const;
 
   // Describe how to join frames together in `CalleePortFrames`.
   struct GroupEqual {

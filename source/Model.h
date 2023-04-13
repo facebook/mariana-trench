@@ -313,7 +313,7 @@ class Model final {
       const Method* MT_NULLABLE method,
       const Json::Value& value,
       Context& context);
-  Json::Value to_json() const;
+  Json::Value to_json(ExportOriginsMode export_origins_mode) const;
 
   /* Export the model to json and include the method position. */
   Json::Value to_json(Context& context) const;

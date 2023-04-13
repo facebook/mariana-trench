@@ -148,12 +148,12 @@ FeatureMayAlwaysSet Issue::features() const {
   return source_features;
 }
 
-Json::Value Issue::to_json() const {
+Json::Value Issue::to_json(ExportOriginsMode export_origins_mode) const {
   mt_assert(!is_bottom());
 
   auto value = Json::Value(Json::objectValue);
-  value["sources"] = sources_.to_json();
-  value["sinks"] = sinks_.to_json();
+  value["sources"] = sources_.to_json(export_origins_mode);
+  value["sinks"] = sinks_.to_json(export_origins_mode);
   value["rule"] = Json::Value(rule_->code());
   value["position"] = position_->to_json();
   value["sink_index"] = std::to_string(sink_index_);

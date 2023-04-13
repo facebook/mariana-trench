@@ -176,10 +176,10 @@ Taint Taint::apply_transform(
   return result;
 }
 
-Json::Value Taint::to_json() const {
+Json::Value Taint::to_json(ExportOriginsMode export_origins_mode) const {
   auto taint = Json::Value(Json::arrayValue);
   for (const auto& frames : set_) {
-    auto frames_json = frames.to_json();
+    auto frames_json = frames.to_json(export_origins_mode);
     mt_assert(frames_json.isArray());
     for (const auto& frame_json : frames_json) {
       taint.append(frame_json);

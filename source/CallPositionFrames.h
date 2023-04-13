@@ -261,8 +261,10 @@ class CallPositionFrames final
 
   FeatureMayAlwaysSet features_joined() const;
 
-  Json::Value to_json(const Method* MT_NULLABLE callee, CallInfo call_info)
-      const;
+  Json::Value to_json(
+      const Method* MT_NULLABLE callee,
+      CallInfo call_info,
+      ExportOriginsMode export_origins_mode) const;
 
   friend std::ostream& operator<<(
       std::ostream& out,

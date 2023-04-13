@@ -128,7 +128,7 @@ class Issue final : public sparta::AbstractDomain<Issue> {
 
   FeatureMayAlwaysSet features() const;
 
-  Json::Value to_json() const;
+  Json::Value to_json(ExportOriginsMode export_origins_mode) const;
 
   // Describe how to join issues together in `IssueSet`.
   struct GroupEqual {

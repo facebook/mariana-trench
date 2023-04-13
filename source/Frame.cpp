@@ -192,7 +192,8 @@ void Frame::append_to_propagation_output_paths(Path::Element path_element) {
 
 Json::Value Frame::to_json(
     const LocalPositionSet& local_positions,
-    const FeatureMayAlwaysSet& local_features) const {
+    const FeatureMayAlwaysSet& local_features,
+    ExportOriginsMode export_origins_mode) const {
   auto value = Json::Value(Json::objectValue);
 
   mt_assert(kind_ != nullptr);
@@ -211,7 +212,10 @@ Json::Value Frame::to_json(
   }
 
   if (!origins_.empty()) {
-    value["origins"] = origins_.to_json();
+    if (call_info_ == CallInfo::Origin ||
+        export_origins_mode == ExportOriginsMode::Always) {
+      value["origins"] = origins_.to_json();
+    }
   }
 
   if (!field_origins_.empty()) {

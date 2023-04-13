@@ -65,7 +65,7 @@ class FieldModel final {
       const Field* MT_NULLABLE field,
       const Json::Value& value,
       Context& context);
-  Json::Value to_json() const;
+  Json::Value to_json(ExportOriginsMode export_origins_mode) const;
 
   /*
    * Export the model to json and include the field position. For now, this is

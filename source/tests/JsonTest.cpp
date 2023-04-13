@@ -1381,7 +1381,8 @@ TEST_F(JsonTest, Frame) {
                   FeatureMayAlwaysSet(
                       /* may */ FeatureSet{context.feature_factory->get(
                           "FeatureOne")},
-                      /* always */ {}))),
+                      /* always */ {}),
+                  ExportOriginsMode::Always)),
       test::parse_json(R"({
           "call_info": "Declaration",
           "kind": "TestSource",
@@ -1407,7 +1408,8 @@ TEST_F(JsonTest, CallInfo) {
               test::FrameProperties{.call_info = CallInfo::Origin})
               .to_json(
                   /* local_positions */ {},
-                  /* locally_inferred_features */ {})),
+                  /* locally_inferred_features */ {},
+                  ExportOriginsMode::Always)),
       test::parse_json(R"({
           "call_info": "Origin",
           "kind": "TestSource",
@@ -1419,7 +1421,8 @@ TEST_F(JsonTest, CallInfo) {
                                 .distance = 5, .call_info = CallInfo::CallSite})
                             .to_json(
                                 /* local_positions */ {},
-                                /* locally_inferred_features */ {})),
+                                /* locally_inferred_features */ {},
+                                ExportOriginsMode::Always)),
       test::parse_json(R"({
           "call_info": "CallSite",
           "kind": "TestSource",
@@ -1664,7 +1667,9 @@ TEST_F(JsonTest, Model) {
   EXPECT_EQ(
       Model::from_json(method, test::parse_json(R"({})"), context),
       Model(method, context));
-  EXPECT_EQ(Model(method, context).to_json(), test::parse_json(R"({
+  EXPECT_EQ(
+      Model(method, context).to_json(ExportOriginsMode::Always),
+      test::parse_json(R"({
         "method": "LData;.method:(LData;LData;)V"
       })"));
 
@@ -1705,7 +1710,7 @@ TEST_F(JsonTest, Model) {
                   Model::Mode::NoJoinVirtualOverrides |
                   Model::Mode::NoCollapseOnPropagation |
                   Model::Mode::AliasMemoryLocationOnInvoke)
-              .to_json()),
+              .to_json(ExportOriginsMode::Always)),
       test::parse_json(R"#({
         "method": "LData;.method:(LData;LData;)V",
         "modes": [
@@ -1795,7 +1800,7 @@ TEST_F(JsonTest, Model) {
                                 Model::FreezeKind::ParameterSources |
                                 Model::FreezeKind::Sinks |
                                 Model::FreezeKind::Propagations)
-                            .to_json()),
+                            .to_json(ExportOriginsMode::Always)),
       test::parse_json(R"#({
         "freeze": [ "generations", "parameter_sources", "propagation", "sinks" ],
         "method": "LData;.method:(LData;LData;)V"
@@ -1841,7 +1846,7 @@ TEST_F(JsonTest, Model) {
           {{AccessPath(Root(Root::Kind::Argument, 2)),
             test::make_leaf_taint_config(
                 context.kind_factory->get("source_kind"))}})
-          .to_json(),
+          .to_json(ExportOriginsMode::Always),
       test::parse_json(R"#({
       "method": "LData;.method:(LData;LData;)V",
       "generations": [
@@ -1900,7 +1905,7 @@ TEST_F(JsonTest, Model) {
           {{AccessPath(Root(Root::Kind::Argument, 1)),
             test::make_leaf_taint_config(
                 context.kind_factory->get("source_kind"))}})
-          .to_json(),
+          .to_json(ExportOriginsMode::Always),
       test::parse_json(R"#({
       "method": "LData;.method:(LData;LData;)V",
       "parameter_sources": [
@@ -2076,7 +2081,7 @@ TEST_F(JsonTest, Model) {
                       FeatureMayAlwaysSet::bottom(),
                       /* user_features */ FeatureSet::bottom()),
               })
-              .to_json()),
+              .to_json(ExportOriginsMode::Always)),
       test::parse_json(R"#({
         "method": "LData;.method:(LData;LData;)V",
         "propagation": [
@@ -2170,7 +2175,7 @@ TEST_F(JsonTest, Model) {
                Sanitizer(
                    SanitizerKind::Sinks,
                    KindSetAbstractDomain({kind1, kind2}))})
-              .to_json()),
+              .to_json(ExportOriginsMode::Always)),
       test::sorted_json(test::parse_json(R"#({
         "method": "LData;.method:(LData;LData;)V",
         "sanitizers": [
@@ -2246,7 +2251,7 @@ TEST_F(JsonTest, Model) {
                 SanitizerSet(Sanitizer(
                     SanitizerKind::Sinks,
                     KindSetAbstractDomain({kind1, kind3})))}})
-              .to_json()),
+              .to_json(ExportOriginsMode::Always)),
       test::sorted_json(test::parse_json(R"#({
       "method": "LData;.method:(LData;LData;)V",
       "sanitizers": [
@@ -2302,7 +2307,7 @@ TEST_F(JsonTest, Model) {
                                  test::make_leaf_taint_config(
                                      context.kind_factory->get("first_sink"))},
                             })
-                            .to_json()),
+                            .to_json(ExportOriginsMode::Always)),
       test::parse_json(R"#({
         "method": "LData;.method:(LData;LData;)V",
         "sinks": [
@@ -2315,6 +2320,39 @@ TEST_F(JsonTest, Model) {
                     "call_info": "Declaration",
                     "kind": "first_sink",
                     "origins": ["LData;.method:(LData;LData;)V"]
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      })#"));
+  EXPECT_EQ(
+      test::sorted_json(Model(
+                            method,
+                            context,
+                            Model::Mode::Normal,
+                            /* frozen */ Model::FreezeKind::None,
+                            /* generations */ {},
+                            /* parameter_sources */ {},
+                            /* sinks */
+                            {
+                                {AccessPath(Root(Root::Kind::Argument, 2)),
+                                 test::make_leaf_taint_config(
+                                     context.kind_factory->get("first_sink"))},
+                            })
+                            .to_json(ExportOriginsMode::OnlyOnOrigins)),
+      test::parse_json(R"#({
+        "method": "LData;.method:(LData;LData;)V",
+        "sinks": [
+          {
+            "port": "Argument(2)",
+            "taint": [
+              {
+                "kinds": [
+                  {
+                    "call_info": "Declaration",
+                    "kind": "first_sink"
                   }
                 ]
               }
@@ -2365,7 +2403,7 @@ TEST_F(JsonTest, Model) {
               /* attach_to_sources */
               {{Root(Root::Kind::Argument, 1),
                 FeatureSet{context.feature_factory->get("via-method")}}})
-              .to_json()),
+              .to_json(ExportOriginsMode::Always)),
       test::parse_json(R"#({
         "method": "LData;.method:(LData;LData;)V",
         "attach_to_sources": [
@@ -2420,7 +2458,7 @@ TEST_F(JsonTest, Model) {
               /* attach_to_sinks */
               {{Root(Root::Kind::Argument, 1),
                 FeatureSet{context.feature_factory->get("via-method")}}})
-              .to_json()),
+              .to_json(ExportOriginsMode::Always)),
       test::parse_json(R"#({
         "method": "LData;.method:(LData;LData;)V",
         "attach_to_sinks": [
@@ -2477,7 +2515,7 @@ TEST_F(JsonTest, Model) {
               /* attach_to_propagations */
               {{Root(Root::Kind::Argument, 1),
                 FeatureSet{context.feature_factory->get("via-method")}}})
-              .to_json()),
+              .to_json(ExportOriginsMode::Always)),
       test::parse_json(R"#({
         "method": "LData;.method:(LData;LData;)V",
         "attach_to_propagations": [
@@ -2536,7 +2574,7 @@ TEST_F(JsonTest, Model) {
               /* add_features_to_arguments */
               {{Root(Root::Kind::Argument, 1),
                 FeatureSet{context.feature_factory->get("via-method")}}})
-              .to_json()),
+              .to_json(ExportOriginsMode::Always)),
       test::parse_json(R"#({
         "method": "LData;.method:(LData;LData;)V",
         "add_features_to_arguments": [
@@ -2593,7 +2631,7 @@ TEST_F(JsonTest, Model) {
                             AccessPathConstantDomain(AccessPath(
                                 Root(Root::Kind::Argument, 1),
                                 Path{PathElement::field("foo")})))
-                            .to_json()),
+                            .to_json(ExportOriginsMode::Always)),
       test::parse_json(R"#({
         "method": "LData;.method:(LData;LData;)V",
         "inline_as": "Argument(1).foo"
@@ -2645,7 +2683,7 @@ TEST_F(JsonTest, Model) {
                                 /* callee */ "LClass;.someMethod:()V",
                                 /* sink_index */ 1,
                                 context.positions->get("Data.java", 1))})
-                            .to_json()),
+                            .to_json(ExportOriginsMode::Always)),
       test::parse_json(R"#({
       "method": "LData;.method:(LData;LData;)V",
       "issues": [
@@ -2749,7 +2787,7 @@ TEST_F(JsonTest, FieldModel) {
 
   // Test to_json
   EXPECT_EQ(
-      FieldModel(field).to_json(),
+      FieldModel(field).to_json(ExportOriginsMode::Always),
       test::parse_json(R"({"field": "LBase;.field1:Ljava/lang/String;"})"));
   EXPECT_EQ(
       FieldModel(
@@ -2762,7 +2800,7 @@ TEST_F(JsonTest, FieldModel) {
                   .inferred_features = FeatureMayAlwaysSet::bottom(),
                   .locally_inferred_features = FeatureMayAlwaysSet::bottom(),
                   .user_features = FeatureSet{feature}})})
-          .to_json(),
+          .to_json(ExportOriginsMode::Always),
       test::parse_json(R"({
         "field": "LBase;.field1:Ljava/lang/String;",
         "sinks": [
@@ -2921,7 +2959,8 @@ TEST_F(JsonTest, CallEffectModel) {
           context.kind_factory->get("CallChainOrigin")));
 
   EXPECT_EQ(
-      test::sorted_json(effect_source_model.to_json()), test::parse_json(R"#({
+      test::sorted_json(effect_source_model.to_json(ExportOriginsMode::Always)),
+      test::parse_json(R"#({
       "effect_sources": [
         {
           "port": "CallEffect.call-chain",
@@ -2946,7 +2985,8 @@ TEST_F(JsonTest, CallEffectModel) {
       call_effect,
       test::make_leaf_taint_config(context.kind_factory->get("CallChainSink")));
   EXPECT_EQ(
-      test::sorted_json(effect_sink_model.to_json()), test::parse_json(R"#({
+      test::sorted_json(effect_sink_model.to_json(ExportOriginsMode::Always)),
+      test::parse_json(R"#({
       "effect_sinks": [
         {
           "port": "CallEffect.call-chain",
@@ -3002,7 +3042,7 @@ TEST_F(JsonTest, CallEffectModel) {
                                 /* callee */ exit_method->signature(),
                                 /* sink_index */ 0,
                                 context.positions->get("CallEffect.java", 1))})
-                            .to_json()),
+                            .to_json(ExportOriginsMode::Always)),
       test::parse_json(R"#({
       "issues": [
         {

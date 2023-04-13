@@ -108,7 +108,8 @@ Options::Options(
     bool remove_unreachable_code,
     bool emit_all_via_cast_features,
     const std::string& source_root_directory,
-    bool enable_cross_component_analysis)
+    bool enable_cross_component_analysis,
+    ExportOriginsMode export_origins_mode)
     : models_paths_(models_paths),
       field_models_paths_(field_models_paths),
       rules_paths_(rules_paths),
@@ -133,7 +134,8 @@ Options::Options(
       dump_call_graph_(false),
       dump_dependencies_(false),
       dump_methods_(false),
-      enable_cross_component_analysis_(enable_cross_component_analysis) {}
+      enable_cross_component_analysis_(enable_cross_component_analysis),
+      export_origins_mode_(export_origins_mode) {}
 
 Options::Options(const boost::program_options::variables_map& variables) {
   system_jar_paths_ = parse_paths_list(
@@ -249,6 +251,9 @@ Options::Options(const boost::program_options::variables_map& variables) {
 
   enable_cross_component_analysis_ =
       variables.count("enable-cross-component-analysis") > 0;
+  export_origins_mode_ = variables.count("always-export-origins")
+      ? ExportOriginsMode::Always
+      : ExportOriginsMode::OnlyOnOrigins;
 }
 
 void Options::add_options(
@@ -383,6 +388,9 @@ void Options::add_options(
   options.add_options()(
       "enable-cross-component-analysis",
       "Compute taint flows across Android components.");
+  options.add_options()(
+      "always-export-origins",
+      "Export origin information for all frames instead of only leaves. Used for debugging.");
 }
 
 const std::vector<std::string>& Options::models_paths() const {
@@ -564,6 +572,10 @@ const std::optional<std::string>& Options::metarun_id() const {
 
 bool Options::enable_cross_component_analysis() const {
   return enable_cross_component_analysis_;
+}
+
+ExportOriginsMode Options::export_origins_mode() const {
+  return export_origins_mode_;
 }
 
 } // namespace marianatrench
