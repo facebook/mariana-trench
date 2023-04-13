@@ -147,6 +147,7 @@ class Taint final : public sparta::AbstractDomain<Taint> {
 
   FeatureMayAlwaysSet locally_inferred_features(
       const Method* MT_NULLABLE callee,
+      CallInfo call_info,
       const Position* MT_NULLABLE position,
       const AccessPath& callee_port) const;
 

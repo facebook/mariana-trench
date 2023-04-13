@@ -472,6 +472,119 @@ TEST_F(TaintTest, SetFieldOriginsIfEmptyWithFieldCallee) {
       }));
 }
 
+TEST_F(TaintTest, LocallyInferredFeatures) {
+  auto context = test::make_empty_context();
+
+  Scope scope;
+  auto* one =
+      context.methods->create(redex::create_void_method(scope, "LOne;", "one"));
+
+  auto* feature_one = context.feature_factory->get("FeatureOne");
+  auto* feature_two = context.feature_factory->get("FeatureTwo");
+
+  // Basic case with only one frame.
+  auto taint = Taint{
+      test::make_taint_config(
+          /* kind */ context.kind_factory->get("TestSource"),
+          test::FrameProperties{
+              .callee = one,
+              .locally_inferred_features = FeatureMayAlwaysSet{feature_one},
+              .call_info = CallInfo::CallSite}),
+  };
+  EXPECT_EQ(
+      taint.locally_inferred_features(
+          /* callee */ one,
+          /* call_info */ CallInfo::CallSite,
+          /* position */ nullptr,
+          /* callee_port */ AccessPath(Root(Root::Kind::Leaf))),
+      FeatureMayAlwaysSet{feature_one});
+
+  // Port does not have features
+  EXPECT_EQ(
+      taint.locally_inferred_features(
+          /* callee */ one,
+          /* call_info */ CallInfo::CallSite,
+          /* position */ nullptr,
+          /* callee_port */ AccessPath(Root(Root::Kind::Argument))),
+      FeatureMayAlwaysSet::bottom());
+
+  // Position does not have features
+  EXPECT_EQ(
+      taint.locally_inferred_features(
+          /* callee */ one,
+          /* call_info */ CallInfo::CallSite,
+          /* position */ context.positions->unknown(),
+          /* callee_port */ AccessPath(Root(Root::Kind::Leaf))),
+      FeatureMayAlwaysSet::bottom());
+
+  // Frames with different call info.
+  taint = Taint{
+      test::make_taint_config(
+          /* kind */ context.kind_factory->get("TestSource"),
+          test::FrameProperties{
+              .callee = nullptr,
+              .locally_inferred_features = FeatureMayAlwaysSet{feature_one},
+              .call_info = CallInfo::CallSite}),
+      test::make_taint_config(
+          /* kind */ context.kind_factory->get("TestSource"),
+          test::FrameProperties{
+              .callee = nullptr,
+              .locally_inferred_features = FeatureMayAlwaysSet{feature_two},
+              .call_info = CallInfo::Origin}),
+  };
+  EXPECT_EQ(
+      taint.locally_inferred_features(
+          /* callee */ nullptr,
+          /* call_info */ CallInfo::CallSite,
+          /* position */ nullptr,
+          /* callee_port */ AccessPath(Root(Root::Kind::Leaf))),
+      FeatureMayAlwaysSet{feature_one});
+  EXPECT_EQ(
+      taint.locally_inferred_features(
+          /* callee */ nullptr,
+          /* call_info */ CallInfo::Origin,
+          /* position */ nullptr,
+          /* callee_port */ AccessPath(Root(Root::Kind::Leaf))),
+      FeatureMayAlwaysSet{feature_two});
+
+  // Frames with different callee.
+  taint = Taint{
+      test::make_taint_config(
+          /* kind */ context.kind_factory->get("TestSource"),
+          test::FrameProperties{
+              .callee = one,
+              .locally_inferred_features = FeatureMayAlwaysSet{feature_one},
+              .call_info = CallInfo::CallSite}),
+      test::make_taint_config(
+          /* kind */ context.kind_factory->get("TestSource"),
+          test::FrameProperties{
+              .callee = nullptr,
+              .locally_inferred_features = FeatureMayAlwaysSet{feature_two},
+              .call_info = CallInfo::CallSite}),
+  };
+  EXPECT_EQ(
+      taint.locally_inferred_features(
+          /* callee */ one,
+          /* call_info */ CallInfo::CallSite,
+          /* position */ nullptr,
+          /* callee_port */ AccessPath(Root(Root::Kind::Leaf))),
+      FeatureMayAlwaysSet{feature_one});
+  EXPECT_EQ(
+      taint.locally_inferred_features(
+          /* callee */ nullptr,
+          /* call_info */ CallInfo::CallSite,
+          /* position */ nullptr,
+          /* callee_port */ AccessPath(Root(Root::Kind::Leaf))),
+      FeatureMayAlwaysSet{feature_two});
+  EXPECT_EQ(
+      taint.locally_inferred_features(
+          /* callee */ one,
+          /* call_info */ CallInfo::Origin,
+          /* position */ nullptr,
+          /* callee_port */ AccessPath(Root(Root::Kind::Leaf))),
+      FeatureMayAlwaysSet::bottom());
+}
+
 TEST_F(TaintTest, Propagate) {
   auto context = test::make_empty_context();
 

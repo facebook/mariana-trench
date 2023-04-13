@@ -89,15 +89,18 @@ LocalPositionSet Taint::local_positions() const {
 
 FeatureMayAlwaysSet Taint::locally_inferred_features(
     const Method* MT_NULLABLE callee,
+    CallInfo call_info,
     const Position* MT_NULLABLE position,
     const AccessPath& callee_port) const {
   auto result = FeatureMayAlwaysSet::bottom();
   for (const auto& callee_frames : set_) {
     // Key look up by callee will be nice but is not supported by underlying
     // GroupHashedSetAbstractDomain.
-    if (callee_frames.callee() == callee) {
+    if (callee_frames.callee() == callee &&
+        callee_frames.call_info() == call_info) {
       result.join_with(
           callee_frames.locally_inferred_features(position, callee_port));
+      break;
     }
   }
   return result;

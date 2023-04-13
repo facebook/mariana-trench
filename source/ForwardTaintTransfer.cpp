@@ -330,6 +330,7 @@ void apply_propagations(
       features.add(propagation.features());
       features.add(propagations.locally_inferred_features(
           propagation.callee(),
+          propagation.call_info(),
           propagation.call_position(),
           propagation.callee_port()));
       features.add_always(
