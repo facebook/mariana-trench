@@ -371,6 +371,12 @@ def _add_configuration_arguments(parser: argparse.ArgumentParser) -> None:
         help="A `;`-separated list of files and directories containing lifecycle definitions.",
     )
     configuration_arguments.add_argument(
+        "--graphql-metadata-paths",
+        type=_separated_paths_exist,
+        default=None,
+        help="A json file containing graphql metadata mapping information.",
+    )
+    configuration_arguments.add_argument(
         "--shims-paths",
         type=_separated_paths_exist,
         default=None,
@@ -562,6 +568,10 @@ def _get_command_options(
     if arguments.shims_paths:
         options.append("--shims-paths")
         options.append(arguments.shims_paths)
+
+    if arguments.graphql_metadata_paths:
+        options.append("--graphql-metadata-paths")
+        options.append(arguments.graphql_metadata_paths)
 
     if arguments.source_exclude_directories:
         options.append("--source-exclude-directories")
