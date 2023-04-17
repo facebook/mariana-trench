@@ -300,7 +300,7 @@ void Options::add_options(
       program_options::value<std::string>(),
       "A `;` separated list of files and directories containing shims files.");
   options.add_options()(
-      "graphql-metadata-path",
+      "graphql-metadata-paths",
       program_options::value<std::string>(),
       "A graphql metadata JSON mapping file that will be used to generate asset_xid's for the GraphQL sink.");
   options.add_options()(
