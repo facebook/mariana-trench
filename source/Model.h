@@ -89,23 +89,20 @@ class Model final {
    * Note that enumeration values must be a power of 2, see `Flags`.
    */
   enum class Mode : unsigned {
-    // Do not infer modes using heuristics.
-    OverrideDefault = 0x1,
-
     // Skip the analysis of this method.
-    SkipAnalysis = 0x2,
+    SkipAnalysis = 0x1,
 
     // Add the 'via-obscure' feature to sources flowing through this method.
-    AddViaObscureFeature = 0x4,
+    AddViaObscureFeature = 0x2,
 
     // Taint-in-taint-out (taint on arguments flow into the return value).
-    TaintInTaintOut = 0x8,
+    TaintInTaintOut = 0x4,
 
     // Taint-in-taint-this (taint on arguments flow into `this`).
-    TaintInTaintThis = 0x10,
+    TaintInTaintThis = 0x8,
 
     // Do not join all overrides at virtual call sites.
-    NoJoinVirtualOverrides = 0x20,
+    NoJoinVirtualOverrides = 0x10,
 
     // Do not collapse input paths when applying propagations.
     NoCollapseOnPropagation = 0x40,
@@ -137,9 +134,6 @@ class Model final {
 
   /**
    * Create a model for the given method.
-   *
-   * By default, it uses a set of heuristics to infer the modes. Use
-   * `Mode::OverrideDefault` to disable it.
    */
   explicit Model(
       const Method* MT_NULLABLE method,
@@ -291,7 +285,6 @@ class Model final {
 
   void remove_kinds(const std::unordered_set<const Kind*>& to_remove);
 
-  bool override_default() const;
   bool skip_analysis() const;
   bool add_via_obscure_feature() const;
   bool is_taint_in_taint_out() const;
@@ -383,8 +376,7 @@ inline Model::Frozen operator|(
 std::string model_mode_to_string(Model::Mode mode);
 std::optional<Model::Mode> string_to_model_mode(const std::string& mode);
 
-constexpr std::array<Model::Mode, 8> k_all_modes = {
-    Model::Mode::OverrideDefault,
+constexpr std::array<Model::Mode, 7> k_all_modes = {
     Model::Mode::SkipAnalysis,
     Model::Mode::AddViaObscureFeature,
     Model::Mode::TaintInTaintOut,

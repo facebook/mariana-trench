@@ -264,7 +264,7 @@
   "method" : "Landroid/location/LocationListener;.onLocationChanged:(Landroid/location/Location;)V",
   "modes" : 
   [
-    "override-default",
+    "add-via-obscure-feature",
     "skip-analysis"
   ],
   "parameter_sources" : 

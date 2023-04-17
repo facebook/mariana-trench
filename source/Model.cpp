@@ -70,8 +70,6 @@ std::string model_mode_to_string(Model::Mode mode) {
   switch (mode) {
     case Model::Mode::Normal:
       return "normal";
-    case Model::Mode::OverrideDefault:
-      return "override-default";
     case Model::Mode::SkipAnalysis:
       return "skip-analysis";
     case Model::Mode::AddViaObscureFeature:
@@ -96,8 +94,6 @@ std::string model_mode_to_string(Model::Mode mode) {
 std::optional<Model::Mode> string_to_model_mode(const std::string& mode) {
   if (mode == "normal") {
     return Model::Mode::Normal;
-  } else if (mode == "override-default") {
-    return Model::Mode::OverrideDefault;
   } else if (mode == "skip-analysis") {
     return Model::Mode::SkipAnalysis;
   } else if (mode == "add-via-obscure-feature") {
@@ -171,7 +167,7 @@ Model::Model(
     const AccessPathConstantDomain& inline_as,
     const IssueSet& issues)
     : method_(method), modes_(modes), frozen_(frozen) {
-  if (method_ && !modes_.test(Model::Mode::OverrideDefault)) {
+  if (method_) {
     // Use a set of heuristics to infer the modes of this method.
 
     auto* code = method_->get_code();
@@ -536,8 +532,6 @@ bool Model::empty() const {
 }
 
 void Model::add_mode(Model::Mode mode, Context& context) {
-  mt_assert(mode != Model::Mode::OverrideDefault);
-
   modes_ |= mode;
 
   if (mode == Model::Mode::TaintInTaintOut ||
@@ -827,10 +821,6 @@ void Model::set_inline_as(AccessPathConstantDomain inline_as) {
 
 void Model::add_issue(Issue trace) {
   issues_.add(std::move(trace));
-}
-
-bool Model::override_default() const {
-  return modes_.test(Model::Mode::OverrideDefault);
 }
 
 bool Model::skip_analysis() const {

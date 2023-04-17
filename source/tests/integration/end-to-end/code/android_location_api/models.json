@@ -2,7 +2,6 @@
   {
     "method": "Landroid/location/LocationListener;.onLocationChanged:(Landroid/location/Location;)V",
     "modes": [
-      "override-default",
       "skip-analysis"
     ],
     "parameter_sources": [
