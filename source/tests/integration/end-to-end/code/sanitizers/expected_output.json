@@ -911,6 +911,21 @@
               ]
             }
           ],
+          "local_features" : 
+          {
+            "always_features" : 
+            [
+              "via-array"
+            ]
+          },
+          "local_positions" : 
+          [
+            {
+              "end" : 0,
+              "line" : 41,
+              "start" : 0
+            }
+          ],
           "origin" : 
           {
             "method" : "Lcom/facebook/marianatrench/integrationtests/GlobalSanitizers;.getSourceB:()Ljava/lang/Object;",
@@ -1861,7 +1876,14 @@
                 "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;"
               ]
             }
-          ]
+          ],
+          "local_features" : 
+          {
+            "always_features" : 
+            [
+              "via-issue-broadening"
+            ]
+          }
         }
       ]
     }
@@ -1941,7 +1963,14 @@
                 ""
               ]
             }
-          ]
+          ],
+          "local_features" : 
+          {
+            "always_features" : 
+            [
+              "via-array"
+            ]
+          }
         }
       ]
     }
@@ -2063,6 +2092,14 @@
               [
                 "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;"
               ]
+            }
+          ],
+          "local_positions" : 
+          [
+            {
+              "end" : 28,
+              "line" : 21,
+              "start" : 13
             }
           ],
           "origin" : 

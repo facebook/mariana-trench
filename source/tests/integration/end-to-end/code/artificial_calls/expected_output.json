@@ -1133,7 +1133,14 @@
                 "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V"
               ]
             }
-          ]
+          ],
+          "local_features" : 
+          {
+            "always_features" : 
+            [
+              "via-anonymous-class-to-obscure"
+            ]
+          }
         }
       ],
       "sources" : 
@@ -1167,6 +1174,21 @@
               [
                 "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;"
               ]
+            }
+          ],
+          "local_features" : 
+          {
+            "always_features" : 
+            [
+              "via-obscure"
+            ]
+          },
+          "local_positions" : 
+          [
+            {
+              "end" : 0,
+              "line" : 35,
+              "start" : 0
             }
           ],
           "origin" : 

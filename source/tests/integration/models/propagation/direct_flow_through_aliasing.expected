@@ -62,6 +62,12 @@
                   ]
                 }
               ],
+              "local_positions" :
+              [
+                {
+                  "line" : 3
+                }
+              ],
               "origin" :
               {
                 "method" : "LSource;.source:()LData;",

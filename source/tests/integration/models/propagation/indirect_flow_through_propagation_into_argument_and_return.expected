@@ -30,6 +30,12 @@
                   ]
                 }
               ],
+              "local_positions" :
+              [
+                {
+                  "line" : 2
+                }
+              ],
               "origin" :
               {
                 "method" : "LSource;.source:()LData;",
@@ -114,6 +120,19 @@
                   ]
                 }
               ],
+              "local_features" :
+              {
+                "always_features" :
+                [
+                  "via-issue-broadening"
+                ]
+              },
+              "local_positions" :
+              [
+                {
+                  "line" : 2
+                }
+              ],
               "origin" :
               {
                 "method" : "LSource;.source:()LData;",
@@ -155,6 +174,12 @@
                   [
                     "LSink;.sink:(LData;)V"
                   ]
+                }
+              ],
+              "local_positions" :
+              [
+                {
+                  "line" : 2
                 }
               ],
               "origin" :

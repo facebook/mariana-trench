@@ -900,7 +900,14 @@
                 ".this$0"
               ]
             }
-          ]
+          ],
+          "local_features" : 
+          {
+            "always_features" : 
+            [
+              "via-inner-class-this"
+            ]
+          }
         }
       ]
     }
@@ -941,7 +948,14 @@
                 ".this$0"
               ]
             }
-          ]
+          ],
+          "local_features" : 
+          {
+            "always_features" : 
+            [
+              "via-inner-class-this"
+            ]
+          }
         }
       ]
     }
@@ -1016,6 +1030,14 @@
               [
                 "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;"
               ]
+            }
+          ],
+          "local_positions" : 
+          [
+            {
+              "end" : 33,
+              "line" : 25,
+              "start" : 18
             }
           ],
           "origin" : 

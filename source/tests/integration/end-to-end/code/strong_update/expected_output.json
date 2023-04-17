@@ -977,6 +977,14 @@
               ]
             }
           ],
+          "local_positions" : 
+          [
+            {
+              "end" : 34,
+              "line" : 33,
+              "start" : 20
+            }
+          ],
           "origin" : 
           {
             "method" : "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;",
@@ -1050,6 +1058,14 @@
               [
                 "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;"
               ]
+            }
+          ],
+          "local_positions" : 
+          [
+            {
+              "end" : 34,
+              "line" : 33,
+              "start" : 20
             }
           ],
           "origin" : 

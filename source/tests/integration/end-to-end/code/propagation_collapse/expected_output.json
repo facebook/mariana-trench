@@ -900,7 +900,14 @@
                 ".this$0"
               ]
             }
-          ]
+          ],
+          "local_features" : 
+          {
+            "always_features" : 
+            [
+              "via-inner-class-this"
+            ]
+          }
         }
       ]
     }
@@ -941,7 +948,14 @@
                 ".this$0"
               ]
             }
-          ]
+          ],
+          "local_features" : 
+          {
+            "always_features" : 
+            [
+              "via-inner-class-this"
+            ]
+          }
         }
       ]
     }
@@ -982,7 +996,14 @@
                 ".a"
               ]
             }
-          ]
+          ],
+          "local_features" : 
+          {
+            "always_features" : 
+            [
+              "via-widen-broadening"
+            ]
+          }
         }
       ]
     }
@@ -1083,6 +1104,28 @@
               ]
             }
           ],
+          "local_features" : 
+          {
+            "always_features" : 
+            [
+              "via-cast:Lcom/facebook/marianatrench/integrationtests/Flow$Tree;",
+              "via-propagation-broadening",
+              "via-widen-broadening"
+            ]
+          },
+          "local_positions" : 
+          [
+            {
+              "end" : 25,
+              "line" : 45,
+              "start" : 21
+            },
+            {
+              "end" : 36,
+              "line" : 41,
+              "start" : 14
+            }
+          ],
           "origin" : 
           {
             "method" : "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;",
@@ -1148,6 +1191,28 @@
               [
                 "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V"
               ]
+            }
+          ],
+          "local_features" : 
+          {
+            "always_features" : 
+            [
+              "via-inner-class-this",
+              "via-propagation-broadening",
+              "via-widen-broadening"
+            ]
+          },
+          "local_positions" : 
+          [
+            {
+              "end" : 0,
+              "line" : 40,
+              "start" : 0
+            },
+            {
+              "end" : 25,
+              "line" : 45,
+              "start" : 21
             }
           ],
           "origin" : 

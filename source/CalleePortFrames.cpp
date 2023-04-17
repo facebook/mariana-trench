@@ -687,30 +687,33 @@ Json::Value CalleePortFrames::to_json(
       }
       taint["origin"] = origin;
     }
-    return taint;
+  } else if (
+      call_info != CallInfo::Declaration &&
+      call_info != CallInfo::Propagation) {
+    // Never emit calls for declarations and propagations.
+    // Emit it for everything else.
+    auto call = Json::Value(Json::objectValue);
+    if (callee != nullptr) {
+      call["resolves_to"] = callee->to_json();
+    }
+    if (position != nullptr) {
+      call["position"] = position->to_json();
+    }
+    if (!callee_port_.root().is_leaf()) {
+      call["port"] = callee_port_.to_json();
+    }
+    taint["call"] = call;
   }
 
-  // Never emit calls for declarations and propagations.
-  if (call_info == CallInfo::Declaration ||
-      call_info == CallInfo::Propagation) {
-    return taint;
+  if (!locally_inferred_features_.is_bottom() &&
+      !locally_inferred_features_.empty()) {
+    taint["local_features"] = locally_inferred_features_.to_json();
   }
 
-  auto call = Json::Value(Json::objectValue);
-
-  if (callee != nullptr) {
-    call["resolves_to"] = callee->to_json();
+  if (local_positions_.is_value() && !local_positions_.empty()) {
+    taint["local_positions"] = local_positions_.to_json();
   }
 
-  if (position != nullptr) {
-    call["position"] = position->to_json();
-  }
-
-  if (!callee_port_.root().is_leaf()) {
-    call["port"] = callee_port_.to_json();
-  }
-
-  taint["call"] = call;
   return taint;
 }
 

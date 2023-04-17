@@ -917,6 +917,12 @@
                 "Landroid_location_api/ActivityUsingAndroidLocationManager;.onLocationChanged:(Landroid/location/Location;)V"
               ]
             }
+          ],
+          "local_positions" : 
+          [
+            {
+              "line" : 28
+            }
           ]
         }
       ]

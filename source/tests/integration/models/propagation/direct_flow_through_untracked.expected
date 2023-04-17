@@ -71,6 +71,13 @@
                   ]
                 }
               ],
+              "local_features" :
+              {
+                "always_features" :
+                [
+                  "via-obscure"
+                ]
+              },
               "origin" :
               {
                 "method" : "LSource;.source:()LData;",

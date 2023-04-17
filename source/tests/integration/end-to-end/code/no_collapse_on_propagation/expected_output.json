@@ -944,7 +944,14 @@
                 ".this$0"
               ]
             }
-          ]
+          ],
+          "local_features" : 
+          {
+            "always_features" : 
+            [
+              "via-inner-class-this"
+            ]
+          }
         }
       ]
     },
@@ -1189,6 +1196,19 @@
               [
                 "Landroid/content/Intent;.getExtras:()Landroid/os/Bundle;"
               ]
+            }
+          ],
+          "local_positions" : 
+          [
+            {
+              "end" : 0,
+              "line" : 32,
+              "start" : 0
+            },
+            {
+              "end" : 24,
+              "line" : 33,
+              "start" : 9
             }
           ],
           "origin" : 

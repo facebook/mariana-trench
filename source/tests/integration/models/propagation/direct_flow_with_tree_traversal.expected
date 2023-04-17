@@ -30,6 +30,12 @@
                   ]
                 }
               ],
+              "local_positions" :
+              [
+                {
+                  "line" : 3
+                }
+              ],
               "origin" :
               {
                 "method" : "LSource;.source:()LData;",
@@ -97,6 +103,12 @@
                   [
                     "LSource;.source:()LData;"
                   ]
+                }
+              ],
+              "local_positions" :
+              [
+                {
+                  "line" : 3
                 }
               ],
               "origin" :
@@ -180,6 +192,19 @@
                   ]
                 }
               ],
+              "local_features" :
+              {
+                "always_features" :
+                [
+                  "via-issue-broadening"
+                ]
+              },
+              "local_positions" :
+              [
+                {
+                  "line" : 3
+                }
+              ],
               "origin" :
               {
                 "method" : "LSource;.source:()LData;",
@@ -250,6 +275,13 @@
                   ]
                 }
               ],
+              "local_features" :
+              {
+                "always_features" :
+                [
+                  "via-widen-broadening"
+                ]
+              },
               "origin" :
               {
                 "method" : "LSink;.sink:(LData;)V",

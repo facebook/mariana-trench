@@ -1052,6 +1052,27 @@
               ]
             }
           ],
+          "local_features" : 
+          {
+            "always_features" : 
+            [
+              "via-cast:Ljava/lang/String;",
+              "via-propagation-broadening"
+            ]
+          },
+          "local_positions" : 
+          [
+            {
+              "end" : 18,
+              "line" : 16,
+              "start" : 4
+            },
+            {
+              "end" : 57,
+              "line" : 15,
+              "start" : 42
+            }
+          ],
           "origin" : 
           {
             "method" : "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;",
@@ -1153,6 +1174,26 @@
               [
                 "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;"
               ]
+            }
+          ],
+          "local_features" : 
+          {
+            "always_features" : 
+            [
+              "via-cast:Ljava/lang/String;"
+            ]
+          },
+          "local_positions" : 
+          [
+            {
+              "end" : 18,
+              "line" : 27,
+              "start" : 4
+            },
+            {
+              "end" : 88,
+              "line" : 26,
+              "start" : 73
             }
           ],
           "origin" : 
@@ -1259,6 +1300,27 @@
               [
                 "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;"
               ]
+            }
+          ],
+          "local_features" : 
+          {
+            "always_features" : 
+            [
+              "via-cast:Ljava/lang/String;",
+              "via-propagation-broadening"
+            ]
+          },
+          "local_positions" : 
+          [
+            {
+              "end" : 18,
+              "line" : 21,
+              "start" : 4
+            },
+            {
+              "end" : 76,
+              "line" : 20,
+              "start" : 61
             }
           ],
           "origin" : 

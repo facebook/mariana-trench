@@ -917,6 +917,30 @@
       "taint" : 
       [
         {
+          "kinds" : 
+          [
+            {
+              "call_info" : "Origin",
+              "kind" : "Sink",
+              "origins" : 
+              [
+                "Lcom/facebook/marianatrench/integrationtests/ZeroRatingConnectionConfigOverrides;.getUri:()Landroid/net/Uri;"
+              ]
+            }
+          ],
+          "origin" : 
+          {
+            "method" : "Lcom/facebook/marianatrench/integrationtests/ZeroRatingConnectionConfigOverrides;.getUri:()Landroid/net/Uri;",
+            "position" : 
+            {
+              "end" : 52,
+              "line" : 24,
+              "path" : "Configerator.java",
+              "start" : 17
+            }
+          }
+        },
+        {
           "call" : 
           {
             "port" : "Argument(0).mUri",
@@ -951,30 +975,13 @@
                 "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V"
               ]
             }
-          ]
-        },
-        {
-          "kinds" : 
-          [
-            {
-              "call_info" : "Origin",
-              "kind" : "Sink",
-              "origins" : 
-              [
-                "Lcom/facebook/marianatrench/integrationtests/ZeroRatingConnectionConfigOverrides;.getUri:()Landroid/net/Uri;"
-              ]
-            }
           ],
-          "origin" : 
+          "local_features" : 
           {
-            "method" : "Lcom/facebook/marianatrench/integrationtests/ZeroRatingConnectionConfigOverrides;.getUri:()Landroid/net/Uri;",
-            "position" : 
-            {
-              "end" : 52,
-              "line" : 24,
-              "path" : "Configerator.java",
-              "start" : 17
-            }
+            "always_features" : 
+            [
+              "via-widen-broadening"
+            ]
           }
         }
       ]
@@ -1120,6 +1127,21 @@
               [
                 "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;"
               ]
+            }
+          ],
+          "local_features" : 
+          {
+            "always_features" : 
+            [
+              "via-propagation-broadening"
+            ]
+          },
+          "local_positions" : 
+          [
+            {
+              "end" : 37,
+              "line" : 16,
+              "start" : 30
             }
           ]
         }
@@ -1354,6 +1376,21 @@
               [
                 "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;"
               ]
+            }
+          ],
+          "local_features" : 
+          {
+            "always_features" : 
+            [
+              "via-cast:Landroid/net/Uri;"
+            ]
+          },
+          "local_positions" : 
+          [
+            {
+              "end" : 14,
+              "line" : 18,
+              "start" : 11
             }
           ],
           "origin" : 

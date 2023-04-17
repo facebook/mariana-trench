@@ -114,7 +114,14 @@
                     "LSource;.source:()LData;"
                   ]
                 }
-              ]
+              ],
+              "local_features" :
+              {
+                "always_features" :
+                [
+                  "via-issue-broadening"
+                ]
+              }
             }
           ]
         }
@@ -180,6 +187,12 @@
                   [
                     "LSource;.source:()LData;"
                   ]
+                }
+              ],
+              "local_positions" :
+              [
+                {
+                  "line" : 2
                 }
               ],
               "origin" :

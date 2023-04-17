@@ -1178,6 +1178,14 @@
                 "Lcom/instagram/common/analytics/intf/AnalyticsEvent;.addExtra:(Ljava/lang/String;Ljava/lang/String;)Lcom/instagram/common/analytics/intf/AnalyticsEvent;"
               ]
             }
+          ],
+          "local_positions" : 
+          [
+            {
+              "end" : 22,
+              "line" : 27,
+              "start" : 17
+            }
           ]
         },
         {
@@ -1211,6 +1219,14 @@
               [
                 "Lcom/instagram/common/analytics/intf/AnalyticsEvent;.addExtra:(Ljava/lang/String;Ljava/lang/String;)Lcom/instagram/common/analytics/intf/AnalyticsEvent;"
               ]
+            }
+          ],
+          "local_positions" : 
+          [
+            {
+              "end" : 31,
+              "line" : 32,
+              "start" : 26
             }
           ]
         }
@@ -1710,6 +1726,19 @@
               [
                 "Landroid/app/Activity;.getIntent:()Landroid/content/Intent;"
               ]
+            }
+          ],
+          "local_positions" : 
+          [
+            {
+              "end" : 28,
+              "line" : 20,
+              "start" : 23
+            },
+            {
+              "end" : 40,
+              "line" : 23,
+              "start" : 32
             }
           ],
           "origin" : 

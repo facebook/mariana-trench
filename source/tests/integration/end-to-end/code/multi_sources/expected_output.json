@@ -1655,6 +1655,21 @@
               ]
             }
           ],
+          "local_features" : 
+          {
+            "always_features" : 
+            [
+              "via-issue-broadening"
+            ]
+          },
+          "local_positions" : 
+          [
+            {
+              "end" : 50,
+              "line" : 19,
+              "start" : 20
+            }
+          ],
           "origin" : 
           {
             "method" : "Lcom/facebook/marianatrench/integrationtests/MultiSourcesSingleArg;.sourceA:()Ljava/lang/Object;",
@@ -1814,6 +1829,12 @@
                 "Lcom/facebook/marianatrench/integrationtests/MultiSourcesSingleArg;.sink:(Lcom/facebook/marianatrench/integrationtests/MockObjectWithThisPropagation;)V"
               ],
               "triggered_rule" : 2
+            }
+          ],
+          "local_positions" : 
+          [
+            {
+              "line" : 31
             }
           ],
           "origin" : 

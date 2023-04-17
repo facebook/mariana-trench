@@ -1175,6 +1175,14 @@
               ]
             }
           ],
+          "local_positions" : 
+          [
+            {
+              "end" : 29,
+              "line" : 17,
+              "start" : 14
+            }
+          ],
           "origin" : 
           {
             "method" : "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;",
