@@ -5,26 +5,63 @@
 # LICENSE file in the root directory of this source tree.
 
 import argparse
+import functools
 import json
 import subprocess
 from collections import OrderedDict
 from pathlib import Path
+from typing import Callable, Collection
+
+
+def builtin_compare(left: str, right: str) -> int:
+    if left < right:
+        return -1
+    elif left == right:
+        return 0
+    elif left > right:
+        return 1
+    else:
+        raise AssertionError(f"No strict order between {repr(left)} and {repr(right)}")
+
+
+def lexicographic_compare(
+    left: Collection[object],
+    right: Collection[object],
+    compare: Callable[[object, object], int],
+) -> int:
+    for left_element, right_element in zip(left, right):
+        result = compare(left_element, right_element)
+        if result != 0:
+            return result
+
+    return len(left) - len(right)
+
+
+def _recursive_compare(left: object, right: object) -> int:
+    left_type = type(left)
+    right_type = type(right)
+
+    if left_type is not right_type:
+        return builtin_compare(left_type.__name__, right_type.__name__)
+
+    if isinstance(left, (list, tuple)) and isinstance(right, (list, tuple)):
+        return lexicographic_compare(left, right, _recursive_compare)
+    elif isinstance(left, OrderedDict) and isinstance(right, OrderedDict):
+        return lexicographic_compare(left.items(), right.items(), _recursive_compare)
+    elif isinstance(left, int) and isinstance(right, int):
+        return left - right
+    elif isinstance(left, str) and isinstance(right, str):
+        return builtin_compare(left, right)
+    else:
+        raise AssertionError(f"Unexpected type in _recursive_compare: {left_type}")
 
 
 def _recursive_sort(data: object) -> object:
     if isinstance(data, list):
-        list_sorted = []
-        for item in data:
-            # The dump is necessary because list elements might be dictionaries
-            # Hence we first stringify all elements regardless of types and then sort them
-            list_sorted.append(json.dumps(_recursive_sort(item), sort_keys=True))
-        list_sorted.sort()
-
-        # Ensure contents in the return value are json values (instead of strings)
-        results = []
-        for item in list_sorted:
-            results.append(json.loads(item, object_pairs_hook=OrderedDict))
-        return results
+        for index in range(len(data)):
+            data[index] = _recursive_sort(data[index])
+        data.sort(key=functools.cmp_to_key(_recursive_compare))
+        return data
     elif isinstance(data, dict):
         # sort keys
         keys_sorted = sorted(data.keys())
@@ -33,8 +70,10 @@ def _recursive_sort(data: object) -> object:
         for key in keys_sorted:
             results[key] = _recursive_sort(data[key])
         return results
-    else:
+    elif isinstance(data, (int, str)):
         return data
+    else:
+        raise AssertionError(r"Unexpected type in _recursive_sort: {type(data)}")
 
 
 def process_file(input_file: Path) -> None:
