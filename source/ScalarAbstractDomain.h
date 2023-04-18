@@ -20,39 +20,62 @@ namespace marianatrench {
 class ScalarAbstractDomain final
     : public sparta::AbstractDomain<ScalarAbstractDomain> {
  public:
-  /* Create the bottom element. */
-  ScalarAbstractDomain() : value_(std::numeric_limits<std::uint32_t>::max()) {}
+  using IntType = std::uint32_t;
 
-  explicit ScalarAbstractDomain(std::uint32_t value) : value_(value) {}
+  enum class Enum : IntType {
+    Bottom = std::numeric_limits<IntType>::max(),
+    Max = std::numeric_limits<IntType>::max() - 1u,
+    Zero = 0u,
+    Top = 0u,
+  };
+
+ public:
+  /* Create the bottom element. */
+  ScalarAbstractDomain() : value_(static_cast<IntType>(Enum::Bottom)) {}
+
+  explicit ScalarAbstractDomain(IntType value) : value_(value) {}
+
+  explicit ScalarAbstractDomain(Enum value)
+      : value_(static_cast<IntType>(value)) {}
+
+  ScalarAbstractDomain& operator=(IntType value) {
+    value_ = value;
+    return *this;
+  }
+
+  ScalarAbstractDomain& operator=(Enum value) {
+    value_ = static_cast<IntType>(value);
+    return *this;
+  }
 
   INCLUDE_DEFAULT_COPY_CONSTRUCTORS_AND_ASSIGNMENTS(ScalarAbstractDomain)
 
-  std::uint32_t value() const {
+  IntType value() const {
     return value_;
   }
 
   static ScalarAbstractDomain bottom() {
-    return ScalarAbstractDomain(std::numeric_limits<std::uint32_t>::max());
+    return ScalarAbstractDomain(Enum::Bottom);
   }
 
   static ScalarAbstractDomain top() {
-    return ScalarAbstractDomain(0);
+    return ScalarAbstractDomain(Enum::Top);
   }
 
   bool is_bottom() const override {
-    return value_ == std::numeric_limits<std::uint32_t>::max();
+    return value_ == static_cast<IntType>(Enum::Bottom);
   }
 
   bool is_top() const override {
-    return value_ == 0;
+    return value_ == static_cast<IntType>(Enum::Top);
   }
 
   void set_to_bottom() override {
-    value_ = std::numeric_limits<std::uint32_t>::max();
+    value_ = static_cast<IntType>(Enum::Bottom);
   }
 
   void set_to_top() override {
-    value_ = 0;
+    value_ = static_cast<IntType>(Enum::Top);
   }
 
   bool leq(const ScalarAbstractDomain& other) const override {
@@ -97,7 +120,7 @@ class ScalarAbstractDomain final
   }
 
  private:
-  std::uint32_t value_;
+  IntType value_;
 };
 
 } // namespace marianatrench
