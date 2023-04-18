@@ -134,6 +134,12 @@ class PathElementMapIterator final {
  *
  *   // Transform elements that are collapsed during widening.
  *   static Elements transform_on_widening_collapse(Elements);
+ *
+ *   // Transform elements implicitly propagated down in the tree.
+ *   static Elements transform_on_sink(Elements);
+ *
+ *   // Transform elements implicitly propagated up in the tree.
+ *   static Elements transform_on_hoist(Elements);
  * }
  * ```
  *
@@ -155,6 +161,14 @@ class AbstractTreeDomain final
   static_assert(std::is_same_v<
                 decltype(Configuration::transform_on_widening_collapse(
                     std::declval<const Elements>())),
+                Elements>);
+  static_assert(
+      std::is_same_v<
+          decltype(Configuration::transform_on_sink(std::declval<Elements&>())),
+          Elements>);
+  static_assert(std::is_same_v<
+                decltype(Configuration::transform_on_hoist(
+                    std::declval<Elements&>())),
                 Elements>);
 
  public:
@@ -409,8 +423,8 @@ class AbstractTreeDomain final
       return;
     }
 
-    const auto new_accumulator_tree =
-        AbstractTreeDomain{accumulator.join(elements_)};
+    const auto new_accumulator_tree = AbstractTreeDomain{
+        Configuration::transform_on_sink(accumulator.join(elements_))};
     Map new_children;
     const auto& subtree_star = children_.at(PathElement::any_index().encode());
     const auto& other_subtree_star =
@@ -528,8 +542,8 @@ class AbstractTreeDomain final
       std::size_t max_height) {
     if (max_height == 0) {
       collapse_inplace(Configuration::transform_on_widening_collapse);
-      other.collapse_into(
-          elements_, Configuration::transform_on_widening_collapse);
+      elements_.join_with(
+          other.collapse(Configuration::transform_on_widening_collapse));
       elements_.difference_with(accumulator);
       return;
     }
@@ -547,8 +561,8 @@ class AbstractTreeDomain final
       return;
     }
 
-    const auto new_accumulator_tree =
-        AbstractTreeDomain{accumulator.join(elements_)};
+    const auto new_accumulator_tree = AbstractTreeDomain{
+        Configuration::transform_on_sink(accumulator.join(elements_))};
     Map new_children;
 
     for (const auto& [path_element, subtree] : children_) {
@@ -603,7 +617,7 @@ class AbstractTreeDomain final
   Elements collapse() const {
     Elements elements = elements_;
     for (const auto& [path_element, subtree] : children_) {
-      subtree.collapse_into(elements);
+      subtree.merge_into(elements, Configuration::transform_on_hoist);
     }
     return elements;
   }
@@ -619,7 +633,9 @@ class AbstractTreeDomain final
   Elements collapse(Transform&& transform) const {
     Elements elements = elements_;
     for (const auto& [path_element, subtree] : children_) {
-      subtree.collapse_into(elements, transform);
+      subtree.merge_into(elements, [&transform](Elements value) {
+        return transform(Configuration::transform_on_hoist(std::move(value)));
+      });
     }
     return elements;
   }
@@ -627,7 +643,7 @@ class AbstractTreeDomain final
   /* Collapse the tree into a singleton, in place. */
   void collapse_inplace() {
     for (const auto& [path_element, subtree] : children_) {
-      subtree.collapse_into(elements_);
+      subtree.merge_into(elements_, Configuration::transform_on_hoist);
     }
     children_.clear();
   }
@@ -642,32 +658,30 @@ class AbstractTreeDomain final
   template <typename Transform> // Elements(Elements)
   void collapse_inplace(Transform&& transform) {
     for (const auto& [path_element, subtree] : children_) {
-      subtree.collapse_into(elements_, transform);
+      subtree.merge_into(elements_, [&transform](Elements value) {
+        return transform(Configuration::transform_on_hoist(std::move(value)));
+      });
     }
     children_.clear();
   }
 
-  /* Collapse the tree into the given set of elements. */
-  void collapse_into(Elements& elements) const {
-    elements.join_with(elements_);
-    for (const auto& [_, subtree] : children_) {
-      subtree.collapse_into(elements);
-    }
-  }
-
-  /* Collapse the tree into the given set of elements. */
+ private:
+  /* Join all elements in the tree into the given set of elements.
+   *
+   * The given `transform` function is applied on all elements (including the
+   * root).
+   *
+   * Note: This does NOT call `transform_on_hoist`.
+   */
   template <typename Transform> // Elements(Elements)
-  void collapse_into(Elements& elements, Transform&& transform) const {
-    static_assert(std::is_same_v<
-                  decltype(transform(std::declval<Elements&&>())),
-                  Elements>);
-
+  void merge_into(Elements& elements, Transform&& transform) const {
     elements.join_with(transform(elements_));
     for (const auto& [_, subtree] : children_) {
-      subtree.collapse_into(elements, transform);
+      subtree.merge_into(elements, transform);
     }
   }
 
+ public:
   /* Collapse the tree to the given maximum height. */
   void collapse_deeper_than(std::size_t height) {
     if (height == 0) {
@@ -702,7 +716,7 @@ class AbstractTreeDomain final
   void prune(Elements accumulator) {
     elements_.difference_with(accumulator);
     accumulator.join_with(elements_);
-    prune_children(accumulator);
+    prune_children(Configuration::transform_on_sink(std::move(accumulator)));
   }
 
   /* Remove the given elements from the subtrees. */
@@ -733,7 +747,10 @@ class AbstractTreeDomain final
           is_valid(accumulator, path_element);
       if (!valid) {
         // Invalid path, collapse subtree into current tree.
-        subtree.collapse_into(elements_, transform_on_collapse);
+        subtree.merge_into(elements_, [&transform_on_collapse](Elements value) {
+          return transform_on_collapse(
+              Configuration::transform_on_hoist(std::move(value)));
+        });
       } else {
         auto subtree_copy = subtree;
         subtree_copy.collapse_invalid_paths(
@@ -832,7 +849,8 @@ class AbstractTreeDomain final
         case UpdateKind::Weak: {
           elements_.join_with(elements);
           accumulator.join_with(elements_);
-          prune_children(accumulator);
+          prune_children(
+              Configuration::transform_on_sink(std::move(accumulator)));
           break;
         }
       }
@@ -841,6 +859,7 @@ class AbstractTreeDomain final
 
     accumulator.join_with(elements_);
     elements.difference_with(accumulator);
+
     if (elements.is_bottom() && kind == UpdateKind::Weak) {
       return;
     }
@@ -859,7 +878,11 @@ class AbstractTreeDomain final
           children_.insert_or_assign(path_head.encode(), new_subtree);
         }
       }
-    } else if (path_head.is_any_index()) {
+    }
+
+    accumulator = Configuration::transform_on_sink(std::move(accumulator));
+
+    if (path_head.is_any_index()) {
       // Write on any_index [*] == write on every index:
       // [*] has a different meaning for the write() api than the [*] node in
       // the tree.
@@ -939,7 +962,11 @@ class AbstractTreeDomain final
         tree.join_with(children_.at(PathElement::any_index().encode()));
         tree.elements_.difference_with(accumulator);
       }
-    } else if (path_head.is_any_index()) {
+    }
+
+    accumulator = Configuration::transform_on_sink(std::move(accumulator));
+
+    if (path_head.is_any_index()) {
       // Write on any_index [*] == write on every index.
       kind = UpdateKind::Weak;
       Map new_children;
@@ -1034,14 +1061,16 @@ class AbstractTreeDomain final
     }
 
     if (subtree.is_bottom()) {
-      auto result = propagate(elements_, path_head);
+      auto result =
+          Configuration::transform_on_sink(propagate(elements_, path_head));
       for (; begin != end; ++begin) {
-        result = propagate(result, *begin);
+        result = Configuration::transform_on_sink(propagate(result, *begin));
       }
       return AbstractTreeDomain(result);
     }
 
-    subtree.elements_.join_with(propagate(elements_, path_head));
+    subtree.elements_.join_with(
+        Configuration::transform_on_sink(propagate(elements_, path_head)));
     return subtree.read_internal(
         begin, end, std::forward<Propagate>(propagate));
   }
@@ -1111,12 +1140,15 @@ class AbstractTreeDomain final
         // Keep `Index` branches when the mold has an `AnyIndex` branch.
         new_children.insert_or_assign(path_element.encode(), subtree);
       } else {
-        subtree.collapse_into(elements_, transform);
+        subtree.merge_into(elements_, [&transform](Elements value) {
+          return transform(Configuration::transform_on_hoist(std::move(value)));
+        });
       }
     }
 
     elements_.difference_with(accumulator);
-    auto new_accumulator = accumulator.join(elements_);
+    auto new_accumulator =
+        Configuration::transform_on_sink(accumulator.join(elements_));
 
     // Second pass: apply shape_with on children.
     children_.clear();
@@ -1212,6 +1244,8 @@ class AbstractTreeDomain final
       elements_.difference_with(accumulator);
       accumulator.join_with(elements_);
     }
+
+    accumulator = Configuration::transform_on_sink(std::move(accumulator));
 
     children_.map(
         [f = std::forward<Function>(f), &accumulator](AbstractTreeDomain tree) {

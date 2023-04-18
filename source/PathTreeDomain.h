@@ -21,6 +21,16 @@ struct PathTreeConfiguration {
       SingletonAbstractDomain value) {
     return value;
   }
+
+  static SingletonAbstractDomain transform_on_sink(
+      SingletonAbstractDomain value) {
+    return value;
+  }
+
+  static SingletonAbstractDomain transform_on_hoist(
+      SingletonAbstractDomain value) {
+    return value;
+  }
 };
 
 using PathTreeDomain =

@@ -19,6 +19,14 @@ struct TaintTreeConfiguration {
   }
 
   static Taint transform_on_widening_collapse(Taint);
+
+  static Taint transform_on_sink(Taint taint) {
+    return taint;
+  }
+
+  static Taint transform_on_hoist(Taint taint) {
+    return taint;
+  }
 };
 
 using TaintTree = AbstractTreeDomain<Taint, TaintTreeConfiguration>;

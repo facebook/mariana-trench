@@ -12,6 +12,7 @@
 
 #include <mariana-trench/AbstractTreeDomain.h>
 #include <mariana-trench/Redex.h>
+#include <mariana-trench/ScalarAbstractDomain.h>
 #include <mariana-trench/TaintTree.h>
 #include <mariana-trench/tests/Test.h>
 
@@ -21,7 +22,7 @@ class AbstractTreeDomainTest : public test::Test {};
 
 using IntSet = sparta::PatriciaTreeSetAbstractDomain<unsigned>;
 
-struct IntTreeConfiguration {
+struct IntSetTreeConfiguration {
   static std::size_t max_tree_height_after_widening() {
     return 4;
   }
@@ -29,9 +30,17 @@ struct IntTreeConfiguration {
   static IntSet transform_on_widening_collapse(IntSet value) {
     return value;
   }
+
+  static IntSet transform_on_sink(IntSet value) {
+    return value;
+  }
+
+  static IntSet transform_on_hoist(IntSet value) {
+    return value;
+  }
 };
 
-using IntSetTree = AbstractTreeDomain<IntSet, IntTreeConfiguration>;
+using IntSetTree = AbstractTreeDomain<IntSet, IntSetTreeConfiguration>;
 
 TEST_F(AbstractTreeDomainTest, PathElementMapIterator) {
   using Map = sparta::PatriciaTreeMap<PathElement::ElementEncoding, IntSet>;
@@ -2635,6 +2644,147 @@ TEST_F(AbstractTreeDomainTest, Shape) {
       },
       identity);
   EXPECT_EQ(tree, (IntSetTree{IntSet{1, 2, 3, 4, 5}}));
+}
+
+struct ScalarTreeConfiguration {
+  static std::size_t max_tree_height_after_widening() {
+    return 4;
+  }
+
+  static ScalarAbstractDomain transform_on_widening_collapse(
+      ScalarAbstractDomain /*value*/) {
+    return ScalarAbstractDomain::top();
+  }
+
+  static ScalarAbstractDomain transform_on_sink(ScalarAbstractDomain value) {
+    if (value.is_top()) {
+      return ScalarAbstractDomain::top();
+    } else {
+      return ScalarAbstractDomain::bottom();
+    }
+  }
+
+  static ScalarAbstractDomain transform_on_hoist(ScalarAbstractDomain value) {
+    if (value.is_bottom()) {
+      return ScalarAbstractDomain::bottom();
+    } else {
+      return ScalarAbstractDomain::top();
+    }
+  }
+};
+
+using ScalarTree =
+    AbstractTreeDomain<ScalarAbstractDomain, ScalarTreeConfiguration>;
+
+TEST_F(AbstractTreeDomainTest, TransformOnSinkAndHoist) {
+  const auto x = PathElement::field("x");
+  const auto y = PathElement::field("y");
+  const auto z = PathElement::field("z");
+  const auto xi = PathElement::index("x");
+  const auto yi = PathElement::index("y");
+  const auto ai = PathElement::any_index();
+
+  // Test that `transform_on_sink` is called when joining.
+
+  // Join with top.
+  auto tree = ScalarTree{
+      {Path{x}, ScalarAbstractDomain(0)},
+  };
+  tree.join_with(ScalarTree{{Path{x, y}, ScalarAbstractDomain(1)}});
+  EXPECT_EQ(
+      tree,
+      (ScalarTree{
+          {Path{x}, ScalarAbstractDomain(0)},
+      }));
+
+  // Join with specific values.
+  tree = ScalarTree{
+      {Path{x}, ScalarAbstractDomain(2)},
+  };
+  tree.join_with(ScalarTree{
+      {Path{x, y}, ScalarAbstractDomain(1)},
+      {Path{x, z}, ScalarAbstractDomain(3)},
+  });
+  EXPECT_EQ(
+      tree,
+      (ScalarTree{
+          {Path{x}, ScalarAbstractDomain(2)},
+          {Path{x, y}, ScalarAbstractDomain(1)},
+          {Path{x, z}, ScalarAbstractDomain(3)},
+      }));
+
+  // Test that `transform_on_hoist` is called when collapsing during widening.
+  tree = ScalarTree{
+      {Path{x, x, x, y, x}, ScalarAbstractDomain(1)},
+  };
+  tree.widen_with(ScalarTree{
+      {Path{x, x, x, z, x}, ScalarAbstractDomain(2)},
+  });
+  EXPECT_EQ(
+      tree,
+      (ScalarTree{
+          {Path{x, x, x, y}, ScalarAbstractDomain(0)},
+          {Path{x, x, x, z}, ScalarAbstractDomain(0)},
+      }));
+
+  // Test that `collapse` calls `transform_on_hoist`.
+  tree = ScalarTree{
+      {Path{x}, ScalarAbstractDomain(1)},
+  };
+  EXPECT_EQ(tree.collapse(), ScalarAbstractDomain(0));
+
+  // Test that `write` calls `transform_on_sink` when propagating elements down.
+  tree = ScalarTree{
+      {Path{x}, ScalarAbstractDomain(1)},
+  };
+  tree.write(Path{x, y}, ScalarAbstractDomain(2), UpdateKind::Weak);
+  EXPECT_EQ(
+      tree,
+      (ScalarTree{
+          {Path{x}, ScalarAbstractDomain(1)},
+          {Path{x, y}, ScalarAbstractDomain(2)},
+      }));
+
+  tree = ScalarTree{{Path{x}, ScalarAbstractDomain(0)}};
+  tree.write(Path{x, y}, ScalarAbstractDomain(2), UpdateKind::Weak);
+  EXPECT_EQ(tree, (ScalarTree{{Path{x}, ScalarAbstractDomain(0)}}));
+
+  // Test `write` with indexes.
+  tree = ScalarTree{
+      {Path{x}, ScalarAbstractDomain(2)},
+      {Path{x, ai}, ScalarAbstractDomain(4)},
+  };
+  tree.write(Path{x, xi}, ScalarAbstractDomain(6), UpdateKind::Weak);
+  EXPECT_EQ(
+      tree,
+      (ScalarTree{
+          {Path{x}, ScalarAbstractDomain(2)},
+          {Path{x, ai}, ScalarAbstractDomain(4)},
+          {Path{x, xi}, ScalarAbstractDomain(4)},
+      }));
+
+  tree = ScalarTree{
+      {Path{x}, ScalarAbstractDomain(2)},
+      {Path{x, xi}, ScalarAbstractDomain(4)},
+      {Path{x, yi}, ScalarAbstractDomain(6)},
+  };
+  tree.write(Path{x, ai}, ScalarAbstractDomain(5), UpdateKind::Weak);
+  EXPECT_EQ(
+      tree,
+      (ScalarTree{
+          {Path{x}, ScalarAbstractDomain(2)},
+          {Path{x, xi}, ScalarAbstractDomain(4)},
+          {Path{x, yi}, ScalarAbstractDomain(5)},
+          {Path{x, ai}, ScalarAbstractDomain(5)},
+      }));
+
+  // Test that `read` calls `transform_on_sink` when propagating elements down.
+  tree = ScalarTree{
+      {Path{x}, ScalarAbstractDomain(1)},
+      {Path{y}, ScalarAbstractDomain(0)},
+  };
+  EXPECT_EQ(tree.read(Path{x, y}), ScalarTree{ScalarAbstractDomain::bottom()});
+  EXPECT_EQ(tree.read(Path{y, z}), ScalarTree{ScalarAbstractDomain(0)});
 }
 
 } // namespace marianatrench

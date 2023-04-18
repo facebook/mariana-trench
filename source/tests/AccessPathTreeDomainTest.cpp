@@ -27,6 +27,14 @@ struct IntTreeConfiguration {
   static IntSet transform_on_widening_collapse(IntSet value) {
     return value;
   }
+
+  static IntSet transform_on_sink(IntSet value) {
+    return value;
+  }
+
+  static IntSet transform_on_hoist(IntSet value) {
+    return value;
+  }
 };
 
 using IntSetPathTree = AbstractTreeDomain<IntSet, IntTreeConfiguration>;
