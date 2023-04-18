@@ -78,6 +78,7 @@ std::vector<Model> TaintInTaintThisGenerator::visit_method(
           context_,
           model,
           parameter_position,
+          CollapseDepth::collapse(),
           {"via-obscure-taint-in-taint-this"});
     }
     return {model};

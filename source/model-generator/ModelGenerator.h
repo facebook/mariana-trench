@@ -173,18 +173,21 @@ void add_propagation_to_return(
     Context& context,
     Model& model,
     ParameterPosition parameter_position,
-    const std::vector<std::string>& features = {});
+    CollapseDepth collapse_depth,
+    const std::vector<std::string>& features);
 void add_propagation_to_parameter(
     Context& context,
     Model& model,
     ParameterPosition from,
     ParameterPosition to,
-    const std::vector<std::string>& features = {});
+    CollapseDepth collapse_depth,
+    const std::vector<std::string>& features);
 void add_propagation_to_self(
     Context& context,
     Model& model,
     ParameterPosition parameter_position,
-    const std::vector<std::string>& features = {});
+    CollapseDepth collapse_depth,
+    const std::vector<std::string>& features);
 
 /* Checks whether the given method is annotated with the given annotation type
  * and value. */

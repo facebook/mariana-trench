@@ -216,9 +216,9 @@
                   "call_info" : "Propagation",
                   "kind" : "LocalReturn",
                   "output_paths" :
-                  [
-                    ""
-                  ]
+                  {
+                    "" : 0
+                  }
                 }
               ]
             }
@@ -235,9 +235,9 @@
                   "call_info" : "Propagation",
                   "kind" : "LocalArgument(0)",
                   "output_paths" :
-                  [
-                    ".field"
-                  ]
+                  {
+                    ".field" : 0
+                  }
                 }
               ]
             },
@@ -248,9 +248,9 @@
                   "call_info" : "Propagation",
                   "kind" : "LocalReturn",
                   "output_paths" :
-                  [
-                    ".field"
-                  ]
+                  {
+                    ".field" : 0
+                  }
                 }
               ]
             }

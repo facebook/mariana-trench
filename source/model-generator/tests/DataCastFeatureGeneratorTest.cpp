@@ -59,7 +59,7 @@ TEST_F(DataCastFeatureGeneratorTest, CastToInt) {
               /* input_path */ AccessPath(Root(Root::Kind::Argument, 0)),
               /* kind */ context.kind_factory->local_return(),
               /* output_paths */
-              PathTreeDomain{{Path{}, SingletonAbstractDomain()}},
+              PathTreeDomain{{Path{}, CollapseDepth::zero()}},
               /* inferred_features */ FeatureMayAlwaysSet::bottom(),
               /* locally_inferred_features */ FeatureMayAlwaysSet::bottom(),
               /* user_features */
@@ -98,7 +98,7 @@ TEST_F(DataCastFeatureGeneratorTest, CastToBool) {
               /* input_path */ AccessPath(Root(Root::Kind::Argument, 0)),
               /* kind */ context.kind_factory->local_return(),
               /* output_paths */
-              PathTreeDomain{{Path{}, SingletonAbstractDomain()}},
+              PathTreeDomain{{Path{}, CollapseDepth::zero()}},
               /* inferred_features */ FeatureMayAlwaysSet::bottom(),
               /* locally_inferred_features */ FeatureMayAlwaysSet::bottom(),
               /* user_features */

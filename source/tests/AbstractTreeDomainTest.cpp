@@ -63,25 +63,25 @@ TEST_F(AbstractTreeDomainTest, PathElementMapIterator) {
     switch (path_element.kind()) {
       case PathElement::Kind::Field:
         EXPECT_TRUE(path_element.is_field());
-        EXPECT_EQ(path_element.str(), ".field");
+        EXPECT_EQ(path_element.to_string(), ".field");
         EXPECT_EQ(value, IntSet{1});
         break;
 
       case PathElement::Kind::Index:
         EXPECT_TRUE(path_element.is_index());
-        EXPECT_EQ(path_element.str(), "[index]");
+        EXPECT_EQ(path_element.to_string(), "[index]");
         EXPECT_EQ(value, IntSet{2});
         break;
 
       case PathElement::Kind::AnyIndex:
         EXPECT_TRUE(path_element.is_any_index());
-        EXPECT_EQ(path_element.str(), "[*]");
+        EXPECT_EQ(path_element.to_string(), "[*]");
         EXPECT_EQ(value, IntSet{3});
         break;
 
       case PathElement::Kind::IndexFromValueOf:
         EXPECT_TRUE(path_element.is_index_from_value_of());
-        EXPECT_EQ(path_element.str(), "[<Argument(0)>]");
+        EXPECT_EQ(path_element.to_string(), "[<Argument(0)>]");
         EXPECT_EQ(value, IntSet{4});
         break;
     }
@@ -2091,7 +2091,7 @@ Taint make_propagation(
   return Taint::propagation_taint(
       context.kind_factory->local_argument(parameter_position),
       /* output_paths */
-      PathTreeDomain{{output_path, SingletonAbstractDomain{}}},
+      PathTreeDomain{{output_path, CollapseDepth::zero()}},
       /* inferred_features */ {},
       /* user_features */ {});
 }

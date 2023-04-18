@@ -25,9 +25,9 @@
                   "call_info" : "Propagation",
                   "kind" : "LocalArgument(0)",
                   "output_paths" :
-                  [
-                    ".field"
-                  ]
+                  {
+                    ".field" : 0
+                  }
                 }
               ]
             }

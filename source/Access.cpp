@@ -87,7 +87,7 @@ ParameterPosition PathElement::parameter_position() const {
   return *position;
 }
 
-std::string PathElement::str() const {
+std::string PathElement::to_string() const {
   switch (kind()) {
     case PathElement::Kind::Field:
       return fmt::format(".{}", show(name()));
@@ -173,7 +173,7 @@ PathElement PathElement::resolve_index_from_value_of(
 }
 
 std::ostream& operator<<(std::ostream& out, const PathElement& path_element) {
-  return out << path_element.str();
+  return out << path_element.to_string();
 }
 
 bool Path::operator==(const Path& other) const {
@@ -230,14 +230,16 @@ Path Path::resolve(const std::vector<std::optional<std::string>>&
   return path;
 }
 
-Json::Value Path::to_json() const {
+std::string Path::to_string() const {
   std::string value;
-
   for (const auto& field : elements_) {
-    value.append(show(field));
+    value.append(field.to_string());
   }
-
   return value;
+}
+
+Json::Value Path::to_json() const {
+  return to_string();
 }
 
 std::ostream& operator<<(std::ostream& out, const Path& path) {
@@ -445,17 +447,18 @@ AccessPath AccessPath::from_json(const Json::Value& value) {
   return AccessPath(root, path);
 }
 
+std::string AccessPath::to_string() const {
+  std::string value = root_.to_string();
+  for (const auto& field : path_) {
+    value.append(field.to_string());
+  }
+  return value;
+}
+
 Json::Value AccessPath::to_json() const {
   // We could return a json array containing path elements, but this would break
   // all our tests since we sort all json arrays before comparing them.
-
-  std::string value = root_.to_string();
-
-  for (const auto& field : path_) {
-    value.append(show(field));
-  }
-
-  return value;
+  return to_string();
 }
 
 std::ostream& operator<<(std::ostream& out, const AccessPath& access_path) {

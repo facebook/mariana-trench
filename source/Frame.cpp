@@ -266,9 +266,12 @@ Json::Value Frame::to_json(
   value["call_info"] = Json::Value(std::string(show_call_info(call_info_)));
 
   if (!output_paths_.is_bottom()) {
-    auto output_paths_value = Json::Value(Json::arrayValue);
-    for (const auto& [output_path, _] : output_paths_.elements()) {
-      output_paths_value.append(output_path.to_json());
+    auto output_paths_value = Json::Value(Json::objectValue);
+    for (const auto& [output_path, collapse_depth] : output_paths_.elements()) {
+      // Convert to int64_t because `Json::Value` represents signed and
+      // unsigned integers differently.
+      output_paths_value[output_path.to_string()] =
+          Json::Value(static_cast<std::int64_t>(collapse_depth.value()));
     }
     value["output_paths"] = output_paths_value;
   }

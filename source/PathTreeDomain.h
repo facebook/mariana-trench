@@ -8,7 +8,7 @@
 #pragma once
 
 #include <mariana-trench/AbstractTreeDomain.h>
-#include <mariana-trench/SingletonAbstractDomain.h>
+#include <mariana-trench/CollapseDepth.h>
 
 namespace marianatrench {
 
@@ -17,23 +17,28 @@ struct PathTreeConfiguration {
     return Heuristics::kPropagationOutputPathTreeWideningHeight;
   }
 
-  static SingletonAbstractDomain transform_on_widening_collapse(
-      SingletonAbstractDomain value) {
-    return value;
+  static CollapseDepth transform_on_widening_collapse(
+      CollapseDepth /* depth */) {
+    return CollapseDepth::zero();
   }
 
-  static SingletonAbstractDomain transform_on_sink(
-      SingletonAbstractDomain value) {
-    return value;
+  static CollapseDepth transform_on_sink(CollapseDepth depth) {
+    if (depth.is_zero()) {
+      return CollapseDepth::zero();
+    } else {
+      return CollapseDepth::bottom();
+    }
   }
 
-  static SingletonAbstractDomain transform_on_hoist(
-      SingletonAbstractDomain value) {
-    return value;
+  static CollapseDepth transform_on_hoist(CollapseDepth depth) {
+    if (depth.is_bottom()) {
+      return CollapseDepth::bottom();
+    } else {
+      return CollapseDepth::zero();
+    }
   }
 };
 
-using PathTreeDomain =
-    AbstractTreeDomain<SingletonAbstractDomain, PathTreeConfiguration>;
+using PathTreeDomain = AbstractTreeDomain<CollapseDepth, PathTreeConfiguration>;
 
 } // namespace marianatrench

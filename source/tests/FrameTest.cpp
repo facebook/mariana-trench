@@ -281,30 +281,30 @@ TEST_F(FrameTest, FrameLeq) {
 
   // Compare output paths.
   auto x = PathElement::field("x");
-  EXPECT_TRUE(test::make_taint_frame(
-                  context.kind_factory->local_return(),
-                  test::FrameProperties{
-                      .callee_port = AccessPath(Root(Root::Kind::Return)),
-                      .output_paths =
-                          PathTreeDomain{{Path{x}, SingletonAbstractDomain{}}}})
-                  .leq(test::make_taint_frame(
-                      context.kind_factory->local_return(),
-                      test::FrameProperties{test::FrameProperties{
-                          .callee_port = AccessPath(Root(Root::Kind::Return)),
-                          .output_paths = PathTreeDomain{
-                              {Path{}, SingletonAbstractDomain{}}}}})));
-  EXPECT_FALSE(test::make_taint_frame(
-                   context.kind_factory->local_return(),
-                   test::FrameProperties{
-                       .callee_port = AccessPath(Root(Root::Kind::Return)),
-                       .output_paths =
-                           PathTreeDomain{{Path{}, SingletonAbstractDomain{}}}})
-                   .leq(test::make_taint_frame(
-                       context.kind_factory->local_return(),
-                       test::FrameProperties{test::FrameProperties{
-                           .callee_port = AccessPath(Root(Root::Kind::Return)),
-                           .output_paths = PathTreeDomain{
-                               {Path{x}, SingletonAbstractDomain{}}}}})));
+  EXPECT_TRUE(
+      test::make_taint_frame(
+          context.kind_factory->local_return(),
+          test::FrameProperties{
+              .callee_port = AccessPath(Root(Root::Kind::Return)),
+              .output_paths = PathTreeDomain{{Path{x}, CollapseDepth::zero()}}})
+          .leq(test::make_taint_frame(
+              context.kind_factory->local_return(),
+              test::FrameProperties{test::FrameProperties{
+                  .callee_port = AccessPath(Root(Root::Kind::Return)),
+                  .output_paths =
+                      PathTreeDomain{{Path{}, CollapseDepth::zero()}}}})));
+  EXPECT_FALSE(
+      test::make_taint_frame(
+          context.kind_factory->local_return(),
+          test::FrameProperties{
+              .callee_port = AccessPath(Root(Root::Kind::Return)),
+              .output_paths = PathTreeDomain{{Path{}, CollapseDepth::zero()}}})
+          .leq(test::make_taint_frame(
+              context.kind_factory->local_return(),
+              test::FrameProperties{test::FrameProperties{
+                  .callee_port = AccessPath(Root(Root::Kind::Return)),
+                  .output_paths =
+                      PathTreeDomain{{Path{x}, CollapseDepth::zero()}}}})));
 }
 
 TEST_F(FrameTest, FrameEquals) {
@@ -648,22 +648,21 @@ TEST_F(FrameTest, FrameJoin) {
           context.kind_factory->local_return(),
           test::FrameProperties{
               .callee_port = AccessPath(Root(Root::Kind::Return)),
-              .output_paths =
-                  PathTreeDomain{{Path{x}, SingletonAbstractDomain{}}}})
+              .output_paths = PathTreeDomain{{Path{x}, CollapseDepth::zero()}}})
           .join(test::make_taint_frame(
               context.kind_factory->local_return(),
               test::FrameProperties{test::FrameProperties{
                   .callee_port = AccessPath(Root(Root::Kind::Return)),
                   .output_paths =
-                      PathTreeDomain{{Path{y}, SingletonAbstractDomain{}}}}})),
+                      PathTreeDomain{{Path{y}, CollapseDepth::zero()}}}})),
       test::make_taint_frame(
           context.kind_factory->local_return(),
           test::FrameProperties{test::FrameProperties{
               .callee_port = AccessPath(Root(Root::Kind::Return)),
               .output_paths =
                   PathTreeDomain{
-                      {Path{x}, SingletonAbstractDomain{}},
-                      {Path{y}, SingletonAbstractDomain{}},
+                      {Path{x}, CollapseDepth::zero()},
+                      {Path{y}, CollapseDepth::zero()},
                   }}})
 
   );

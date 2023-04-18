@@ -232,7 +232,7 @@ void PropagationTemplate::instantiate(
   model.add_propagation(PropagationConfig(
       input_port,
       kind,
-      PathTreeDomain{{output_port.path(), SingletonAbstractDomain()}},
+      PathTreeDomain{{output_port.path(), CollapseDepth::zero()}},
       inferred_features_,
       /* locally_inferred_features */ FeatureMayAlwaysSet::bottom(),
       user_features_));

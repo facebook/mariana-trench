@@ -210,7 +210,7 @@ TaintConfig make_crtex_leaf_taint_config(
 TaintConfig make_propagation_taint_config(const PropagationKind* kind) {
   return make_propagation_taint_config(
       kind,
-      /* output_paths */ PathTreeDomain{{Path{}, SingletonAbstractDomain{}}},
+      /* output_paths */ PathTreeDomain{{Path{}, CollapseDepth::zero()}},
       /* inferred_features */ FeatureMayAlwaysSet::bottom(),
       /* user_features */ FeatureSet::bottom());
 }

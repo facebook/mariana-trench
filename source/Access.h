@@ -248,7 +248,7 @@ class PathElement final {
 
   ParameterPosition parameter_position() const;
 
-  std::string str() const;
+  std::string to_string() const;
 
   PathElement resolve_index_from_value_of(
       const std::vector<std::optional<std::string>>& source_constant_arguments)
@@ -347,6 +347,7 @@ class Path final {
   Path resolve(const std::vector<std::optional<std::string>>&
                    source_constant_arguments) const;
 
+  std::string to_string() const;
   Json::Value to_json() const;
 
  private:
@@ -435,6 +436,8 @@ class AccessPath final {
    * Throws a `JsonValidationError` if the format is invalid.
    */
   static std::vector<std::string> split_path(const Json::Value& value);
+
+  std::string to_string() const;
 
   /**
    * Parse a json string into an access path.

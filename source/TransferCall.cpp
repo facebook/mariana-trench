@@ -178,7 +178,7 @@ MemoryLocation* MT_NULLABLE try_inline_invoke(
                 /* input_path */ *access_path,
                 /* kind */ context->kind_factory.local_return(),
                 /* output_paths */
-                PathTreeDomain{{Path{}, SingletonAbstractDomain()}},
+                PathTreeDomain{{Path{}, CollapseDepth::zero()}},
                 /* inferred_features */ {},
                 /* locally_inferred_features */ {},
                 /* user_features */ FeatureSet::bottom()))}}))) {

@@ -904,7 +904,7 @@ bool BackwardTaintTransfer::analyze_return(
   taint.join_with(TaintTree(Taint::propagation_taint(
       /* kind */ context->kind_factory.local_return(),
       /* output_paths */
-      PathTreeDomain{{Path{}, SingletonAbstractDomain()}},
+      PathTreeDomain{{Path{}, CollapseDepth::zero()}},
       /* inferred_features */ {},
       /* user_features */ {})));
 

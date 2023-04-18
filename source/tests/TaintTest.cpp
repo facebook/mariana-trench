@@ -972,8 +972,7 @@ TEST_F(TaintTest, AppendOutputPaths) {
           test::FrameProperties{
               .callee_port = AccessPath(Root(Root::Kind::Return)),
               .output_paths =
-                  PathTreeDomain{
-                      {Path{path_element1}, SingletonAbstractDomain()}},
+                  PathTreeDomain{{Path{path_element1}, CollapseDepth::zero()}},
               .call_info = CallInfo::Propagation,
           })};
 
@@ -991,7 +990,7 @@ TEST_F(TaintTest, AppendOutputPaths) {
                   .output_paths =
                       PathTreeDomain{
                           {Path{path_element1, path_element2},
-                           SingletonAbstractDomain()}},
+                           CollapseDepth::zero()}},
                   .call_info = CallInfo::Propagation,
               })}));
 }
@@ -1183,7 +1182,7 @@ TEST_F(TaintTest, ContainsKind) {
           test::FrameProperties{
               .callee_port = AccessPath(Root(Root::Kind::Return)),
               .output_paths =
-                  PathTreeDomain{{Path{}, SingletonAbstractDomain{}}}})};
+                  PathTreeDomain{{Path{}, CollapseDepth::zero()}}})};
 
   EXPECT_TRUE(taint.contains_kind(context.kind_factory->local_return()));
   EXPECT_TRUE(taint.contains_kind(context.kind_factory->get("TestSource")));
@@ -1262,15 +1261,13 @@ TEST_F(TaintTest, PartitionByKindGeneric) {
           /* kind */ context.kind_factory->local_return(),
           test::FrameProperties{
               .callee_port = AccessPath(Root(Root::Kind::Return)),
-              .output_paths =
-                  PathTreeDomain{{Path{}, SingletonAbstractDomain{}}}}),
+              .output_paths = PathTreeDomain{{Path{}, CollapseDepth::zero()}}}),
       test::make_taint_config(
           /* kind */ context.kind_factory->local_return(),
           test::FrameProperties{
               .callee_port = AccessPath(Root(Root::Kind::Return)),
               .callee = method1,
-              .output_paths =
-                  PathTreeDomain{{Path{}, SingletonAbstractDomain{}}},
+              .output_paths = PathTreeDomain{{Path{}, CollapseDepth::zero()}},
               .call_info = CallInfo::CallSite,
           }),
       test::make_taint_config(
@@ -1298,14 +1295,14 @@ TEST_F(TaintTest, PartitionByKindGeneric) {
               test::FrameProperties{
                   .callee_port = AccessPath(Root(Root::Kind::Return)),
                   .output_paths =
-                      PathTreeDomain{{Path{}, SingletonAbstractDomain{}}}}),
+                      PathTreeDomain{{Path{}, CollapseDepth::zero()}}}),
           test::make_taint_config(
               /* kind */ context.kind_factory->local_return(),
               test::FrameProperties{
                   .callee_port = AccessPath(Root(Root::Kind::Return)),
                   .callee = method1,
                   .output_paths =
-                      PathTreeDomain{{Path{}, SingletonAbstractDomain{}}},
+                      PathTreeDomain{{Path{}, CollapseDepth::zero()}},
                   .call_info = CallInfo::CallSite,
               }),
       }));

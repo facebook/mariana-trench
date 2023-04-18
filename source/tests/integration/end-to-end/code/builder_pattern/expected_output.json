@@ -251,9 +251,9 @@
               "call_info" : "Propagation",
               "kind" : "LocalReturn",
               "output_paths" : 
-              [
-                ".host"
-              ]
+              {
+                ".host" : 0
+              }
             }
           ]
         }
@@ -270,9 +270,9 @@
               "call_info" : "Propagation",
               "kind" : "LocalReturn",
               "output_paths" : 
-              [
-                ".path"
-              ]
+              {
+                ".path" : 0
+              }
             }
           ]
         }
@@ -289,9 +289,9 @@
               "call_info" : "Propagation",
               "kind" : "LocalReturn",
               "output_paths" : 
-              [
-                ".scheme"
-              ]
+              {
+                ".scheme" : 0
+              }
             }
           ]
         }
@@ -323,9 +323,9 @@
               "call_info" : "Propagation",
               "kind" : "LocalReturn",
               "output_paths" : 
-              [
-                ""
-              ]
+              {
+                "" : 0
+              }
             }
           ]
         }
@@ -342,9 +342,9 @@
               "call_info" : "Propagation",
               "kind" : "LocalArgument(0)",
               "output_paths" : 
-              [
-                ".host"
-              ]
+              {
+                ".host" : 0
+              }
             }
           ]
         },
@@ -355,9 +355,9 @@
               "call_info" : "Propagation",
               "kind" : "LocalReturn",
               "output_paths" : 
-              [
-                ".host"
-              ]
+              {
+                ".host" : 0
+              }
             }
           ]
         }
@@ -389,9 +389,9 @@
               "call_info" : "Propagation",
               "kind" : "LocalReturn",
               "output_paths" : 
-              [
-                ""
-              ]
+              {
+                "" : 0
+              }
             }
           ]
         }
@@ -408,9 +408,9 @@
               "call_info" : "Propagation",
               "kind" : "LocalArgument(0)",
               "output_paths" : 
-              [
-                ".path"
-              ]
+              {
+                ".path" : 0
+              }
             }
           ]
         },
@@ -421,9 +421,9 @@
               "call_info" : "Propagation",
               "kind" : "LocalReturn",
               "output_paths" : 
-              [
-                ".path"
-              ]
+              {
+                ".path" : 0
+              }
             }
           ]
         }
@@ -455,9 +455,9 @@
               "call_info" : "Propagation",
               "kind" : "LocalReturn",
               "output_paths" : 
-              [
-                ""
-              ]
+              {
+                "" : 0
+              }
             }
           ]
         }
@@ -474,9 +474,9 @@
               "call_info" : "Propagation",
               "kind" : "LocalArgument(0)",
               "output_paths" : 
-              [
-                ".scheme"
-              ]
+              {
+                ".scheme" : 0
+              }
             }
           ]
         },
@@ -487,9 +487,9 @@
               "call_info" : "Propagation",
               "kind" : "LocalReturn",
               "output_paths" : 
-              [
-                ".scheme"
-              ]
+              {
+                ".scheme" : 0
+              }
             }
           ]
         }
@@ -523,9 +523,9 @@
               "call_info" : "Propagation",
               "kind" : "LocalArgument(0)",
               "output_paths" : 
-              [
-                ".scheme"
-              ]
+              {
+                ".scheme" : 0
+              }
             }
           ]
         }
@@ -542,9 +542,9 @@
               "call_info" : "Propagation",
               "kind" : "LocalArgument(0)",
               "output_paths" : 
-              [
-                ".host"
-              ]
+              {
+                ".host" : 0
+              }
             }
           ]
         }
@@ -561,9 +561,9 @@
               "call_info" : "Propagation",
               "kind" : "LocalArgument(0)",
               "output_paths" : 
-              [
-                ".path"
-              ]
+              {
+                ".path" : 0
+              }
             }
           ]
         }
@@ -598,9 +598,9 @@
               "call_info" : "Propagation",
               "kind" : "LocalReturn",
               "output_paths" : 
-              [
-                ""
-              ]
+              {
+                "" : 0
+              }
             }
           ]
         }
@@ -635,9 +635,9 @@
               "call_info" : "Propagation",
               "kind" : "LocalReturn",
               "output_paths" : 
-              [
-                ""
-              ]
+              {
+                "" : 0
+              }
             }
           ]
         }
@@ -671,9 +671,9 @@
               "call_info" : "Propagation",
               "kind" : "LocalReturn",
               "output_paths" : 
-              [
-                ""
-              ]
+              {
+                "" : 0
+              }
             }
           ]
         }
@@ -690,9 +690,9 @@
               "call_info" : "Propagation",
               "kind" : "LocalReturn",
               "output_paths" : 
-              [
-                ""
-              ]
+              {
+                "" : 0
+              }
             }
           ]
         }
@@ -709,9 +709,9 @@
               "call_info" : "Propagation",
               "kind" : "LocalReturn",
               "output_paths" : 
-              [
-                ""
-              ]
+              {
+                "" : 0
+              }
             }
           ]
         }
@@ -907,9 +907,9 @@
               "call_info" : "Propagation",
               "kind" : "LocalReturn",
               "output_paths" : 
-              [
-                ""
-              ]
+              {
+                "" : 0
+              }
             }
           ]
         }
@@ -1070,9 +1070,9 @@
               "call_info" : "Propagation",
               "kind" : "LocalReturn",
               "output_paths" : 
-              [
-                ""
-              ]
+              {
+                "" : 0
+              }
             }
           ]
         }
@@ -1089,9 +1089,9 @@
               "call_info" : "Propagation",
               "kind" : "LocalArgument(0)",
               "output_paths" : 
-              [
-                ".mCertificatePinner"
-              ]
+              {
+                ".mCertificatePinner" : 0
+              }
             }
           ]
         },
@@ -1102,9 +1102,9 @@
               "call_info" : "Propagation",
               "kind" : "LocalReturn",
               "output_paths" : 
-              [
-                ".mCertificatePinner"
-              ]
+              {
+                ".mCertificatePinner" : 0
+              }
             }
           ]
         }
@@ -1170,9 +1170,9 @@
               "call_info" : "Propagation",
               "kind" : "LocalReturn",
               "output_paths" : 
-              [
-                ""
-              ]
+              {
+                "" : 0
+              }
             }
           ]
         }
@@ -1205,9 +1205,9 @@
               "call_info" : "Propagation",
               "kind" : "LocalReturn",
               "output_paths" : 
-              [
-                ""
-              ]
+              {
+                "" : 0
+              }
             }
           ]
         }
@@ -1748,9 +1748,9 @@
               "call_info" : "Propagation",
               "kind" : "LocalReturn",
               "output_paths" : 
-              [
-                ""
-              ]
+              {
+                "" : 0
+              }
             }
           ]
         }
@@ -1862,9 +1862,9 @@
               "call_info" : "Propagation",
               "kind" : "LocalReturn",
               "output_paths" : 
-              [
-                ""
-              ]
+              {
+                "" : 0
+              }
             }
           ]
         }
@@ -1881,9 +1881,9 @@
               "call_info" : "Propagation",
               "kind" : "LocalReturn",
               "output_paths" : 
-              [
-                ""
-              ]
+              {
+                "" : 0
+              }
             }
           ]
         }
@@ -1973,9 +1973,9 @@
               "call_info" : "Propagation",
               "kind" : "LocalArgument(0)",
               "output_paths" : 
-              [
-                ".target"
-              ]
+              {
+                ".target" : 0
+              }
             }
           ]
         }

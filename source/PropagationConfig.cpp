@@ -59,7 +59,7 @@ PropagationConfig PropagationConfig::from_json(
   return PropagationConfig(
       std::move(input),
       kind,
-      PathTreeDomain{{output.path(), SingletonAbstractDomain{}}},
+      PathTreeDomain{{output.path(), CollapseDepth::zero()}},
       inferred_features,
       /* locally_inferred_features */ FeatureMayAlwaysSet::bottom(),
       user_features);

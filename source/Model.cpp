@@ -568,7 +568,7 @@ void Model::add_taint_in_taint_out(Context& context) {
             Root(Root::Kind::Argument, parameter_position)),
         /* kind */ context.kind_factory->local_return(),
         /* output_paths */
-        PathTreeDomain{{Path{}, SingletonAbstractDomain()}},
+        PathTreeDomain{{Path{}, CollapseDepth::zero()}},
         /* inferred_features */ FeatureMayAlwaysSet::bottom(),
         /* locally_inferred_features */ FeatureMayAlwaysSet::bottom(),
         user_features));
@@ -595,7 +595,7 @@ void Model::add_taint_in_taint_this(Context& context) {
             Root(Root::Kind::Argument, parameter_position)),
         /* kind */ context.kind_factory->local_receiver(),
         /* output_paths */
-        PathTreeDomain{{Path{}, SingletonAbstractDomain()}},
+        PathTreeDomain{{Path{}, CollapseDepth::zero()}},
         /* inferred_features */ FeatureMayAlwaysSet::bottom(),
         /* locally_inferred_features */ FeatureMayAlwaysSet::bottom(),
         user_features));

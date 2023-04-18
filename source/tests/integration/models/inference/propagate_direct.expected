@@ -26,9 +26,9 @@
                   "call_info" : "Propagation",
                   "kind" : "LocalReturn",
                   "output_paths" :
-                  [
-                    ""
-                  ]
+                  {
+                    "" : 0
+                  }
                 }
               ]
             }

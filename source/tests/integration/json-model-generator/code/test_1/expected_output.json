@@ -104,9 +104,9 @@
               "call_info" : "Propagation",
               "kind" : "LocalArgument(1)",
               "output_paths" : 
-              [
-                ""
-              ]
+              {
+                "" : 0
+              }
             }
           ]
         }

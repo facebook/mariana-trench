@@ -1432,7 +1432,7 @@ TEST_F(JsonTest, CallInfo) {
 
 TEST_F(JsonTest, Propagation) {
   auto context = test::make_empty_context();
-  auto empty_input_paths = PathTreeDomain{{Path{}, SingletonAbstractDomain()}};
+  auto empty_input_paths = PathTreeDomain{{Path{}, CollapseDepth::zero()}};
 
   EXPECT_THROW(
       PropagationConfig::from_json(test::parse_json(R"({})"), context),
@@ -1464,7 +1464,7 @@ TEST_F(JsonTest, Propagation) {
           /* input_path */ AccessPath(Root(Root::Kind::Argument, 1)),
           /* kind */ context.kind_factory->local_return(),
           /* output_paths */
-          PathTreeDomain{{Path{}, SingletonAbstractDomain()}},
+          PathTreeDomain{{Path{}, CollapseDepth::zero()}},
           /* inferred_features */ FeatureMayAlwaysSet::bottom(),
           /* locally_inferred_features */ FeatureMayAlwaysSet::bottom(),
           /* user_features */ {}));
@@ -1479,7 +1479,7 @@ TEST_F(JsonTest, Propagation) {
               Root(Root::Kind::Argument, 1), Path{PathElement::field("x")}),
           /* kind */ context.kind_factory->local_return(),
           /* output_paths */
-          PathTreeDomain{{Path{}, SingletonAbstractDomain()}},
+          PathTreeDomain{{Path{}, CollapseDepth::zero()}},
           /* inferred_features */
           FeatureMayAlwaysSet{context.feature_factory->get("FeatureOne")},
           /* locally_inferred_features */ FeatureMayAlwaysSet::bottom(),
@@ -1495,7 +1495,7 @@ TEST_F(JsonTest, Propagation) {
           /* kind */ context.kind_factory->local_argument(1),
           /* output_paths */
           PathTreeDomain{
-              {Path{PathElement::field("x")}, SingletonAbstractDomain()}},
+              {Path{PathElement::field("x")}, CollapseDepth::zero()}},
           /* inferred_features */
           FeatureMayAlwaysSet{context.feature_factory->get("FeatureOne")},
           /* locally_inferred_features */ FeatureMayAlwaysSet::bottom(),
@@ -1514,7 +1514,7 @@ TEST_F(JsonTest, Propagation) {
           /* input_path */ AccessPath(Root(Root::Kind::Argument, 1)),
           /* kind */ context.kind_factory->local_return(),
           /* output_paths */
-          PathTreeDomain{{Path{}, SingletonAbstractDomain()}},
+          PathTreeDomain{{Path{}, CollapseDepth::zero()}},
           /* inferred_features */
           FeatureMayAlwaysSet(
               /* may */ FeatureSet{context.feature_factory->get("FeatureOne")},
@@ -1534,7 +1534,7 @@ TEST_F(JsonTest, Propagation) {
           /* input_path */ AccessPath(Root(Root::Kind::Argument, 1)),
           /* kind */ context.kind_factory->local_return(),
           /* output_paths */
-          PathTreeDomain{{Path{}, SingletonAbstractDomain()}},
+          PathTreeDomain{{Path{}, CollapseDepth::zero()}},
           /* inferred_features */
           FeatureMayAlwaysSet(
               /* may */ FeatureSet{context.feature_factory->get("FeatureOne")},
@@ -1554,7 +1554,7 @@ TEST_F(JsonTest, Propagation) {
           /* input_path */ AccessPath(Root(Root::Kind::Argument, 1)),
           /* kind */ context.kind_factory->local_return(),
           /* output_paths */
-          PathTreeDomain{{Path{}, SingletonAbstractDomain()}},
+          PathTreeDomain{{Path{}, CollapseDepth::zero()}},
           /* inferred_features */ FeatureMayAlwaysSet::bottom(),
           /* locally_inferred_features */ FeatureMayAlwaysSet::bottom(),
           /* user_features */
@@ -1572,7 +1572,7 @@ TEST_F(JsonTest, Propagation) {
           /* input_path */ AccessPath(Root(Root::Kind::Argument, 1)),
           /* kind */ context.kind_factory->local_return(),
           /* output_paths */
-          PathTreeDomain{{Path{}, SingletonAbstractDomain()}},
+          PathTreeDomain{{Path{}, CollapseDepth::zero()}},
           /* inferred_features */ FeatureMayAlwaysSet::bottom(),
           /* locally_inferred_features */ FeatureMayAlwaysSet::bottom(),
           /* user_features */
@@ -1593,7 +1593,7 @@ TEST_F(JsonTest, Propagation) {
           /* input_path */ AccessPath(Root(Root::Kind::Argument, 1)),
           /* kind */ context.kind_factory->local_return(),
           /* output_paths */
-          PathTreeDomain{{Path{}, SingletonAbstractDomain()}},
+          PathTreeDomain{{Path{}, CollapseDepth::zero()}},
           /* inferred_features */
           FeatureMayAlwaysSet::make_may(
               {context.feature_factory->get("FeatureTwo")}),
@@ -1615,7 +1615,7 @@ TEST_F(JsonTest, Propagation) {
           /* input_path */ AccessPath(Root(Root::Kind::Argument, 1)),
           /* kind */ context.kind_factory->local_return(),
           /* output_paths */
-          PathTreeDomain{{Path{}, SingletonAbstractDomain()}},
+          PathTreeDomain{{Path{}, CollapseDepth::zero()}},
           /* inferred_features */
           FeatureMayAlwaysSet(
               /* may */ FeatureSet{context.feature_factory->get("FeatureTwo")},
@@ -1639,7 +1639,7 @@ TEST_F(JsonTest, Propagation) {
           /* input_path */ AccessPath(Root(Root::Kind::Argument, 1)),
           /* kind */ context.kind_factory->local_return(),
           /* output_paths */
-          PathTreeDomain{{Path{}, SingletonAbstractDomain()}},
+          PathTreeDomain{{Path{}, CollapseDepth::zero()}},
           /* inferred_features */ FeatureMayAlwaysSet(),
           /* locally_inferred_features */ FeatureMayAlwaysSet::bottom(),
           /* user_features */
@@ -1737,7 +1737,7 @@ TEST_F(JsonTest, Model) {
                     {
                       "always_features": [ "via-obscure" ]
                     },
-                    "output_paths": [ "" ]
+                    "output_paths": { "": 0 }
                   }
                 ]
               }
@@ -1757,7 +1757,7 @@ TEST_F(JsonTest, Model) {
                     {
                       "always_features": [ "via-obscure" ]
                     },
-                    "output_paths": [ "" ]
+                    "output_paths": { "": 0 }
                   }
                 ]
               }
@@ -2031,7 +2031,7 @@ TEST_F(JsonTest, Model) {
                   /* input_path */ AccessPath(Root(Root::Kind::Argument, 1)),
                   /* kind */ context.kind_factory->local_return(),
                   /* output_paths */
-                  PathTreeDomain{{Path{}, SingletonAbstractDomain()}},
+                  PathTreeDomain{{Path{}, CollapseDepth::zero()}},
                   /* inferred_features */ FeatureMayAlwaysSet::bottom(),
                   /* locally_inferred_features */ FeatureMayAlwaysSet::bottom(),
                   /* user_features */ FeatureSet::bottom()),
@@ -2039,7 +2039,7 @@ TEST_F(JsonTest, Model) {
                   /* input_path */ AccessPath(Root(Root::Kind::Argument, 2)),
                   /* kind */ context.kind_factory->local_argument(0),
                   /* output_paths */
-                  PathTreeDomain{{Path{}, SingletonAbstractDomain()}},
+                  PathTreeDomain{{Path{}, CollapseDepth::zero()}},
                   /* inferred_features */ FeatureMayAlwaysSet::bottom(),
                   /* locally_inferred_features */ FeatureMayAlwaysSet::bottom(),
                   /* user_features */ FeatureSet::bottom()),
@@ -2061,7 +2061,7 @@ TEST_F(JsonTest, Model) {
                           Root(Root::Kind::Argument, 1)),
                       /* kind */ context.kind_factory->local_argument(0),
                       /* output_paths */
-                      PathTreeDomain{{Path{}, SingletonAbstractDomain()}},
+                      PathTreeDomain{{Path{}, CollapseDepth::zero()}},
                       /* inferred_features */ FeatureMayAlwaysSet::bottom(),
                       /* locally_inferred_features */
                       FeatureMayAlwaysSet::bottom(),
@@ -2073,9 +2073,9 @@ TEST_F(JsonTest, Model) {
                       /* output_paths */
                       PathTreeDomain{
                           {Path{PathElement::field("x")},
-                           SingletonAbstractDomain()},
+                           CollapseDepth::zero()},
                           {Path{PathElement::field("y")},
-                           SingletonAbstractDomain()}},
+                           CollapseDepth::zero()}},
                       /* inferred_features */ FeatureMayAlwaysSet::bottom(),
                       /* locally_inferred_features */
                       FeatureMayAlwaysSet::bottom(),
@@ -2093,7 +2093,7 @@ TEST_F(JsonTest, Model) {
                   {
                     "call_info": "Propagation",
                     "kind": "LocalArgument(0)",
-                    "output_paths": [ "" ]
+                    "output_paths": { "": 0 }
                   }
                 ]
               }
@@ -2107,7 +2107,7 @@ TEST_F(JsonTest, Model) {
                   {
                     "call_info": "Propagation",
                     "kind": "LocalArgument(0)",
-                    "output_paths": [ ".x", ".y" ]
+                    "output_paths": { ".x": 0, ".y": 0 }
                   }
                 ]
               }
@@ -2149,7 +2149,7 @@ TEST_F(JsonTest, Model) {
                   /* input_path */ AccessPath(Root(Root::Kind::Argument, 1)),
                   /* kind */ context.kind_factory->local_return(),
                   /* output_paths */
-                  PathTreeDomain{{Path{}, SingletonAbstractDomain()}},
+                  PathTreeDomain{{Path{}, CollapseDepth::zero()}},
                   /* inferred_features */ FeatureMayAlwaysSet::bottom(),
                   /* locally_inferred_features */ FeatureMayAlwaysSet::bottom(),
                   /* user_features */ FeatureSet::bottom()),
@@ -2214,7 +2214,7 @@ TEST_F(JsonTest, Model) {
                   /* input_path */ AccessPath(Root(Root::Kind::Argument, 1)),
                   /* kind */ context.kind_factory->local_return(),
                   /* output_paths */
-                  PathTreeDomain{{Path{}, SingletonAbstractDomain()}},
+                  PathTreeDomain{{Path{}, CollapseDepth::zero()}},
                   /* inferred_features */ FeatureMayAlwaysSet::bottom(),
                   /* locally_inferred_features */ FeatureMayAlwaysSet::bottom(),
                   /* user_features */ FeatureSet::bottom()),

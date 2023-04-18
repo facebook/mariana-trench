@@ -372,8 +372,7 @@ TEST_F(ModelTest, LessOrEqual) {
                   /* kind */ context.kind_factory->local_return(),
                   /* output_paths */
                   PathTreeDomain{
-                      {Path{PathElement::field("x")},
-                       SingletonAbstractDomain()}},
+                      {Path{PathElement::field("x")}, CollapseDepth::zero()}},
                   /* inferred_features */ FeatureMayAlwaysSet::bottom(),
                   /* locally_inferred_features */ FeatureMayAlwaysSet::bottom(),
                   /* user_features */ {}),
@@ -393,7 +392,7 @@ TEST_F(ModelTest, LessOrEqual) {
                           Root(Root::Kind::Argument, 1)),
                       /* kind */ context.kind_factory->local_return(),
                       /* output_paths */
-                      PathTreeDomain{{Path{}, SingletonAbstractDomain()}},
+                      PathTreeDomain{{Path{}, CollapseDepth::zero()}},
                       /* inferred_features */ FeatureMayAlwaysSet::bottom(),
                       /* locally_inferred_features */
                       FeatureMayAlwaysSet::bottom(),
@@ -711,7 +710,7 @@ TEST_F(ModelTest, Join) {
               /* input_path */ AccessPath(Root(Root::Kind::Argument, 1)),
               /* kind */ context.kind_factory->local_return(),
               /* output_paths */
-              PathTreeDomain{{Path{}, SingletonAbstractDomain()}},
+              PathTreeDomain{{Path{}, CollapseDepth::zero()}},
               /* inferred_features */ FeatureMayAlwaysSet::bottom(),
               /* locally_inferred_features */ FeatureMayAlwaysSet::bottom(),
               /* user_features */ {}),
@@ -719,7 +718,7 @@ TEST_F(ModelTest, Join) {
               /* input_path */ AccessPath(Root(Root::Kind::Argument, 2)),
               /* kind */ context.kind_factory->local_return(),
               /* output_paths */
-              PathTreeDomain{{Path{}, SingletonAbstractDomain()}},
+              PathTreeDomain{{Path{}, CollapseDepth::zero()}},
               /* inferred_features */ FeatureMayAlwaysSet::bottom(),
               /* locally_inferred_features */ FeatureMayAlwaysSet::bottom(),
               /* user_features */ {}),
@@ -750,7 +749,7 @@ TEST_F(ModelTest, Join) {
               /* kind */ context.kind_factory->local_return(),
               /* output_paths */
               PathTreeDomain{
-                  {Path{PathElement::field("x")}, SingletonAbstractDomain()}},
+                  {Path{PathElement::field("x")}, CollapseDepth::zero()}},
               /* inferred_features */ FeatureMayAlwaysSet::bottom(),
               /* locally_inferred_features */ FeatureMayAlwaysSet::bottom(),
               /* user_features */ {}),
@@ -759,7 +758,7 @@ TEST_F(ModelTest, Join) {
               /* kind */ context.kind_factory->local_return(),
               /* output_paths */
               PathTreeDomain{
-                  {Path{PathElement::field("x")}, SingletonAbstractDomain()}},
+                  {Path{PathElement::field("x")}, CollapseDepth::zero()}},
               /* inferred_features */ FeatureMayAlwaysSet::bottom(),
               /* locally_inferred_features */ FeatureMayAlwaysSet::bottom(),
               /* user_features */ {}),
@@ -779,7 +778,7 @@ TEST_F(ModelTest, Join) {
                context.kind_factory->local_return(),
                /* input_paths */
                PathTreeDomain{
-                   {Path{PathElement::field("x")}, SingletonAbstractDomain()}},
+                   {Path{PathElement::field("x")}, CollapseDepth::zero()}},
                /* inferred_features */ FeatureMayAlwaysSet::bottom(),
                /* user_features */ {})}},
       }));
@@ -797,7 +796,7 @@ TEST_F(ModelTest, Join) {
           /* kind */ context.kind_factory->local_return(),
           /* output_paths */
           PathTreeDomain{
-              {Path{PathElement::field("y")}, SingletonAbstractDomain()}},
+              {Path{PathElement::field("y")}, CollapseDepth::zero()}},
           /* inferred_features */ FeatureMayAlwaysSet::bottom(),
           /* locally_inferred_features */ FeatureMayAlwaysSet::bottom(),
           /* user_features */ {})}});
@@ -816,7 +815,7 @@ TEST_F(ModelTest, Join) {
                context.kind_factory->local_return(),
                /* input_paths */
                PathTreeDomain{
-                   {Path{PathElement::field("x")}, SingletonAbstractDomain()}},
+                   {Path{PathElement::field("x")}, CollapseDepth::zero()}},
                /* inferred_features */ FeatureMayAlwaysSet::bottom(),
                /* user_features */ {})}},
       }));
@@ -834,7 +833,7 @@ TEST_F(ModelTest, Join) {
               /* input_path */ AccessPath(Root(Root::Kind::Argument, 1)),
               /* kind */ context.kind_factory->local_return(),
               /* output_paths */
-              PathTreeDomain{{Path{}, SingletonAbstractDomain()}},
+              PathTreeDomain{{Path{}, CollapseDepth::zero()}},
               /* inferred_features */
               FeatureMayAlwaysSet{context.feature_factory->get("int-cast")},
               /* locally_inferred_features */ FeatureMayAlwaysSet::bottom(),
@@ -843,7 +842,7 @@ TEST_F(ModelTest, Join) {
               /* input_path */ AccessPath(Root(Root::Kind::Argument, 1)),
               /* kind */ context.kind_factory->local_return(),
               /* output_paths */
-              PathTreeDomain{{Path{}, SingletonAbstractDomain()}},
+              PathTreeDomain{{Path{}, CollapseDepth::zero()}},
               /* inferred_features */
               FeatureMayAlwaysSet{context.feature_factory->get("sanitize")},
               /* locally_inferred_features */ FeatureMayAlwaysSet::bottom(),
@@ -852,7 +851,7 @@ TEST_F(ModelTest, Join) {
               /* input_path */ AccessPath(Root(Root::Kind::Argument, 3)),
               /* kind */ context.kind_factory->local_return(),
               /* output_paths */
-              PathTreeDomain{{Path{}, SingletonAbstractDomain()}},
+              PathTreeDomain{{Path{}, CollapseDepth::zero()}},
               /* inferred_features */
               FeatureMayAlwaysSet{context.feature_factory->get("escape")},
               /* locally_inferred_features */ FeatureMayAlwaysSet::bottom(),
@@ -866,7 +865,7 @@ TEST_F(ModelTest, Join) {
            Taint{test::make_propagation_taint_config(
                context.kind_factory->local_return(),
                /* input_paths */
-               PathTreeDomain{{Path{}, SingletonAbstractDomain()}},
+               PathTreeDomain{{Path{}, CollapseDepth::zero()}},
                /* inferred_features */
                FeatureMayAlwaysSet::make_may(
                    {context.feature_factory->get("int-cast"),
@@ -879,7 +878,7 @@ TEST_F(ModelTest, Join) {
            Taint{test::make_propagation_taint_config(
                context.kind_factory->local_return(),
                /* input_paths */
-               PathTreeDomain{{Path{}, SingletonAbstractDomain()}},
+               PathTreeDomain{{Path{}, CollapseDepth::zero()}},
                /* inferred_features */
                FeatureMayAlwaysSet{context.feature_factory->get("escape")},
                /* user_features */ {})}},

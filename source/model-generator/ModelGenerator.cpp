@@ -254,6 +254,7 @@ void generator::add_propagation_to_return(
     Context& context,
     Model& model,
     ParameterPosition parameter_position,
+    CollapseDepth collapse_depth,
     const std::vector<std::string>& features) {
   verify_parameter_position(model.method(), parameter_position);
 
@@ -266,7 +267,7 @@ void generator::add_propagation_to_return(
       /* input_path */ AccessPath(
           Root(Root::Kind::Argument, parameter_position)),
       /* kind */ context.kind_factory->local_return(),
-      /* output_paths */ PathTreeDomain{{Path{}, SingletonAbstractDomain()}},
+      /* output_paths */ PathTreeDomain{{Path{}, collapse_depth}},
       /* inferred_features */ FeatureMayAlwaysSet::bottom(),
       /* locally_inferred_features */ FeatureMayAlwaysSet::bottom(),
       /* user_features */ user_features));
@@ -277,6 +278,7 @@ void generator::add_propagation_to_parameter(
     Model& model,
     ParameterPosition from,
     ParameterPosition to,
+    CollapseDepth collapse_depth,
     const std::vector<std::string>& features) {
   verify_parameter_position(model.method(), from);
   verify_parameter_position(model.method(), to);
@@ -288,7 +290,7 @@ void generator::add_propagation_to_parameter(
   model.add_propagation(PropagationConfig(
       /* input_path */ AccessPath(Root(Root::Kind::Argument, from)),
       /* kind */ context.kind_factory->local_argument(to),
-      /* output_paths */ PathTreeDomain{{Path{}, SingletonAbstractDomain()}},
+      /* output_paths */ PathTreeDomain{{Path{}, collapse_depth}},
       /* inferred_features */ FeatureMayAlwaysSet::bottom(),
       /* locally_inferred_features */ FeatureMayAlwaysSet::bottom(),
       /* user_features */ user_features));
@@ -298,12 +300,14 @@ void generator::add_propagation_to_self(
     Context& context,
     Model& model,
     ParameterPosition parameter_position,
+    CollapseDepth collapse_depth,
     const std::vector<std::string>& features) {
   add_propagation_to_parameter(
       context,
       model,
       parameter_position,
       /* parameter self */ 0,
+      collapse_depth,
       features);
 }
 
