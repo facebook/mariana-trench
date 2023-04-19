@@ -20,15 +20,15 @@
           {
             "input": "Argument(1)",
             "output": "Argument(0)",
-            "features": [
-              "via-intent-data"
+            "transforms": [
+              "IntentData"
             ]
           },
           {
             "input": "Argument(1)",
             "output": "Return",
-            "features": [
-              "via-intent-data"
+            "transforms": [
+              "IntentData"
             ]
           }
         ]
@@ -57,8 +57,8 @@
               {
                 "input": "Argument(x)",
                 "output": "Argument(0)",
-                "features": [
-                  "via-intent-data"
+                "transforms": [
+                  "IntentData"
                 ]
               }
             ]
