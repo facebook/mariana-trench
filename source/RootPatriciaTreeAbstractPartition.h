@@ -36,6 +36,9 @@ class RootPatriciaTreeAbstractPartition final
     const std::pair<Root, Domain>& operator()(
         const std::pair<Root::IntegerEncoding, Domain>& pair) const {
       // This is safe as long as `Root` stores `IntegerEncoding` internally.
+      static_assert(
+          sizeof(std::pair<Root, Domain>) ==
+          sizeof(std::pair<Root::IntegerEncoding, Domain>));
       return *reinterpret_cast<const std::pair<Root, Domain>*>(&pair);
     }
   };

@@ -100,6 +100,9 @@ class CallEffectsAbstractDomain final
         const std::pair<CallEffect::IntegerEncoding, Taint>& pair) const {
       // This is safe as long as `CallEffect` stores `IntegerEncoding`
       // internally.
+      static_assert(
+          sizeof(std::pair<CallEffect, Taint>) ==
+          sizeof(std::pair<CallEffect::IntegerEncoding, Taint>));
       return *reinterpret_cast<const std::pair<CallEffect, Taint>*>(&pair);
     }
   };

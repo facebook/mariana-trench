@@ -67,6 +67,9 @@ class PathElementMapIterator final {
         const {
       // This is safe as `PathElement` stores `PathElement::ElementEncoding`
       // internally.
+      static_assert(
+          sizeof(std::pair<PathElement, Value>) ==
+          sizeof(std::pair<typename PathElement::ElementEncoding, Value>));
       return *reinterpret_cast<const std::pair<PathElement, Value>*>(&pair);
     }
   };

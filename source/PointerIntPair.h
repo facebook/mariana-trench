@@ -42,6 +42,7 @@ class BitOperations {
   static_assert(
       IntBits <= NumberOfLowBitsAvailable,
       "PointerIntPair with integer size too large for pointer");
+  static_assert(sizeof(PointerType) == sizeof(uintptr_t));
 
   // Mask for the bits of the pointer.
   static constexpr uintptr_t PointerBitMask =
