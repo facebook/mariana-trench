@@ -1266,7 +1266,7 @@ class AbstractTreeDomain final
 
  private:
   std::ostream& write(std::ostream& out, const std::string& indent) const {
-    out << "AbstractTree{";
+    out << "{";
     if (is_bottom()) {
       return out << "}";
     } else if (!elements_.is_bottom() && children_.empty()) {

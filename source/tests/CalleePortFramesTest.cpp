@@ -1512,7 +1512,7 @@ TEST_F(CalleePortFramesTest, AppendOutputPaths) {
       test::FrameProperties{
           .callee_port = AccessPath(Root(Root::Kind::Return)),
           .output_paths =
-              PathTreeDomain{{Path{path_element1}, CollapseDepth::zero()}}})};
+              PathTreeDomain{{Path{path_element1}, CollapseDepth(4)}}})};
 
   frames.append_to_propagation_output_paths(path_element2);
   EXPECT_EQ(
@@ -1522,8 +1522,7 @@ TEST_F(CalleePortFramesTest, AppendOutputPaths) {
           test::FrameProperties{
               .callee_port = AccessPath(Root(Root::Kind::Return)),
               .output_paths = PathTreeDomain{
-                  {Path{path_element1, path_element2},
-                   CollapseDepth::zero()}}})}));
+                  {Path{path_element1, path_element2}, CollapseDepth(3)}}})}));
 }
 
 TEST_F(CalleePortFramesTest, FilterInvalidFrames) {
@@ -1677,7 +1676,7 @@ TEST_F(CalleePortFramesTest, Show) {
       "CalleePortFrames(callee_port=AccessPath(Return), "
       "frames=[FrameByKind(kind=LocalReturn, frames={Frame(kind=`LocalReturn`, "
       "callee_port=AccessPath(Return), call_info=Propagation, "
-      "output_paths=AbstractTree{0})}),])");
+      "output_paths={0})}),])");
 
   frames = CalleePortFrames{test::make_taint_config(
       context.kind_factory->local_return(),
@@ -1693,7 +1692,7 @@ TEST_F(CalleePortFramesTest, Show) {
       "CalleePortFrames(callee_port=AccessPath(Return), "
       "frames=[FrameByKind(kind=LocalReturn, frames={Frame(kind=`LocalReturn`, "
       "callee_port=AccessPath(Return), call_info=Propagation, "
-      "output_paths=AbstractTree{\n    `.x` -> AbstractTree{0}\n})}),])");
+      "output_paths={\n    `.x` -> {0}\n})}),])");
 
   EXPECT_EQ(
       show(CalleePortFrames::bottom()),

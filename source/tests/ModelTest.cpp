@@ -780,6 +780,7 @@ TEST_F(ModelTest, Join) {
                PathTreeDomain{
                    {Path{PathElement::field("x")}, CollapseDepth::zero()}},
                /* inferred_features */ FeatureMayAlwaysSet::bottom(),
+               /* locally_inferred_features */ FeatureMayAlwaysSet::bottom(),
                /* user_features */ {})}},
       }));
   Model model_with_conflicting_propagation(
@@ -817,6 +818,7 @@ TEST_F(ModelTest, Join) {
                PathTreeDomain{
                    {Path{PathElement::field("x")}, CollapseDepth::zero()}},
                /* inferred_features */ FeatureMayAlwaysSet::bottom(),
+               /* locally_inferred_features */ FeatureMayAlwaysSet::bottom(),
                /* user_features */ {})}},
       }));
   Model model_with_propagation_with_features(
@@ -870,6 +872,7 @@ TEST_F(ModelTest, Join) {
                FeatureMayAlwaysSet::make_may(
                    {context.feature_factory->get("int-cast"),
                     context.feature_factory->get("sanitize")}),
+               /* locally_inferred_features */ FeatureMayAlwaysSet::bottom(),
                /* user_features */ {})}},
           {/* input */ AccessPath(Root(Root::Kind::Argument, 2)),
            Taint{test::make_propagation_taint_config(
@@ -881,6 +884,7 @@ TEST_F(ModelTest, Join) {
                PathTreeDomain{{Path{}, CollapseDepth::zero()}},
                /* inferred_features */
                FeatureMayAlwaysSet{context.feature_factory->get("escape")},
+               /* locally_inferred_features */ FeatureMayAlwaysSet::bottom(),
                /* user_features */ {})}},
       }));
 

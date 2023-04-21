@@ -70,6 +70,10 @@ class CollapseDepth final : public sparta::AbstractDomain<CollapseDepth> {
     return CollapseDepth(Enum::AlwaysCollapse);
   }
 
+  bool should_collapse() const {
+    return value() < static_cast<IntType>(Enum::NoCollapse);
+  }
+
   friend std::ostream& operator<<(
       std::ostream& out,
       const CollapseDepth& depth) {

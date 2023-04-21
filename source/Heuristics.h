@@ -123,6 +123,13 @@ class Heuristics {
    * When reaching the maximum, we collapse the leaves to reduce the height.
    */
   constexpr static std::size_t kPropagationOutputPathTreeWideningHeight = 4;
+
+  /**
+   * Maximum height of the input taint tree when applying propagations.
+   *
+   * This is also the maximum collapse depth for inferred propagations.
+   */
+  constexpr static std::uint32_t kPropagationMaxCollapseDepth = 4;
 };
 
 } // namespace marianatrench

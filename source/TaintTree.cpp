@@ -17,7 +17,152 @@ Taint TaintTreeConfiguration::transform_on_widening_collapse(Taint taint) {
   // current context.
   taint.add_locally_inferred_features(FeatureMayAlwaysSet::make_may(
       {FeatureFactory::singleton().get_widen_broadening_feature()}));
+  taint.update_maximum_collapse_depth(CollapseDepth::zero());
   return taint;
+}
+
+TaintTree TaintTree::read(const Path& path) const {
+  return TaintTree(tree_.read(path));
+}
+
+TaintTree TaintTree::raw_read(const Path& path) const {
+  return TaintTree(tree_.raw_read(path));
+}
+
+void TaintTree::write(const Path& path, Taint taint, UpdateKind kind) {
+  tree_.write(path, std::move(taint), kind);
+}
+
+void TaintTree::write(const Path& path, TaintTree tree, UpdateKind kind) {
+  tree_.write(path, std::move(tree.tree_), kind);
+}
+
+std::vector<std::pair<Path, const Taint&>> TaintTree::elements() const {
+  return tree_.elements();
+}
+
+void TaintTree::add_locally_inferred_features(
+    const FeatureMayAlwaysSet& features) {
+  if (features.empty()) {
+    return;
+  }
+
+  tree_.map([&features](Taint taint) {
+    taint.add_locally_inferred_features(features);
+    return taint;
+  });
+}
+
+void TaintTree::add_local_position(const Position* position) {
+  tree_.map([position](Taint taint) {
+    taint.add_local_position(position);
+    return taint;
+  });
+}
+
+void TaintTree::add_locally_inferred_features_and_local_position(
+    const FeatureMayAlwaysSet& features,
+    const Position* MT_NULLABLE position) {
+  if (features.empty() && position == nullptr) {
+    return;
+  }
+
+  tree_.map([&features, position](Taint taint) {
+    taint.add_locally_inferred_features_and_local_position(features, position);
+    return taint;
+  });
+}
+
+void TaintTree::attach_position(const Position* position) {
+  tree_.map(
+      [position](Taint taint) { return taint.attach_position(position); });
+}
+
+Taint TaintTree::collapse(
+    const FeatureMayAlwaysSet& broadening_features) const {
+  return tree_.collapse([&broadening_features](Taint taint) {
+    taint.add_locally_inferred_features(broadening_features);
+    taint.update_maximum_collapse_depth(CollapseDepth::zero());
+    return taint;
+  });
+}
+
+void TaintTree::collapse_deeper_than(
+    std::size_t height,
+    const FeatureMayAlwaysSet& broadening_features) {
+  tree_.collapse_deeper_than(height, [&broadening_features](Taint taint) {
+    taint.add_locally_inferred_features(broadening_features);
+    taint.update_maximum_collapse_depth(CollapseDepth::zero());
+    return taint;
+  });
+}
+
+void TaintTree::limit_leaves(
+    std::size_t max_leaves,
+    const FeatureMayAlwaysSet& broadening_features) {
+  tree_.limit_leaves(max_leaves, [&broadening_features](Taint taint) {
+    taint.add_locally_inferred_features(broadening_features);
+    taint.update_maximum_collapse_depth(CollapseDepth::zero());
+    return taint;
+  });
+}
+
+void TaintTree::update_maximum_collapse_depth(CollapseDepth collapse_depth) {
+  tree_.map([collapse_depth](Taint taint) {
+    taint.update_maximum_collapse_depth(collapse_depth);
+    return taint;
+  });
+}
+
+TaintTree TaintAccessPathTree::read(Root root) const {
+  return TaintTree(tree_.read(root));
+}
+
+TaintTree TaintAccessPathTree::read(const AccessPath& access_path) const {
+  return TaintTree(tree_.read(access_path));
+}
+
+TaintTree TaintAccessPathTree::raw_read(const AccessPath& access_path) const {
+  return TaintTree(tree_.raw_read(access_path));
+}
+
+void TaintAccessPathTree::write(
+    const AccessPath& access_path,
+    Taint taint,
+    UpdateKind kind) {
+  tree_.write(access_path, std::move(taint), kind);
+}
+
+void TaintAccessPathTree::write(
+    const AccessPath& access_path,
+    TaintTree tree,
+    UpdateKind kind) {
+  tree_.write(access_path, std::move(tree.tree_), kind);
+}
+
+std::vector<std::pair<AccessPath, const Taint&>> TaintAccessPathTree::elements()
+    const {
+  return tree_.elements();
+}
+
+std::vector<std::pair<Root, TaintTree>> TaintAccessPathTree::roots() const {
+  // Since sizeof(TaintTree) != sizeof(AbstractTreeDomain<Taint>), we cannot
+  // return references to `TaintTree`s.
+  std::vector<std::pair<Root, TaintTree>> results;
+  for (const auto& [root, tree] : tree_) {
+    results.emplace_back(root, TaintTree(tree));
+  }
+  return results;
+}
+
+void TaintAccessPathTree::limit_leaves(
+    std::size_t max_leaves,
+    const FeatureMayAlwaysSet& broadening_features) {
+  tree_.limit_leaves(max_leaves, [&broadening_features](Taint taint) {
+    taint.add_locally_inferred_features(broadening_features);
+    taint.update_maximum_collapse_depth(CollapseDepth::zero());
+    return taint;
+  });
 }
 
 } // namespace marianatrench

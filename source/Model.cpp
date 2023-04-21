@@ -481,43 +481,36 @@ void Model::collapse_invalid_paths(Context& context) {
     return FieldTypesAccumulator{root_type};
   };
 
-  auto transform_on_collapse = [&context](Taint taint) {
-    taint.add_locally_inferred_features(FeatureMayAlwaysSet{
-        context.feature_factory->get_invalid_path_broadening()});
-    return taint;
-  };
+  auto features = FeatureMayAlwaysSet{
+      context.feature_factory->get_invalid_path_broadening()};
 
   generations_.collapse_invalid_paths<FieldTypesAccumulator>(
-      is_valid, initial_accumulator, transform_on_collapse);
+      is_valid, initial_accumulator, features);
   parameter_sources_.collapse_invalid_paths<FieldTypesAccumulator>(
-      is_valid, initial_accumulator, transform_on_collapse);
+      is_valid, initial_accumulator, features);
   sinks_.collapse_invalid_paths<FieldTypesAccumulator>(
-      is_valid, initial_accumulator, transform_on_collapse);
+      is_valid, initial_accumulator, features);
   propagations_.collapse_invalid_paths<FieldTypesAccumulator>(
-      is_valid, initial_accumulator, transform_on_collapse);
+      is_valid, initial_accumulator, features);
 }
 
 void Model::approximate(const FeatureMayAlwaysSet& widening_features) {
-  const auto transform = [&widening_features](Taint taint) {
-    taint.add_locally_inferred_features(widening_features);
-    return taint;
-  };
   const auto make_mold = [](Taint taint) { return taint.essential(); };
 
-  generations_.shape_with(make_mold, transform);
+  generations_.shape_with(make_mold, widening_features);
   generations_.limit_leaves(
-      Heuristics::kGenerationMaxOutputPathLeaves, transform);
+      Heuristics::kGenerationMaxOutputPathLeaves, widening_features);
 
-  parameter_sources_.shape_with(make_mold, transform);
+  parameter_sources_.shape_with(make_mold, widening_features);
   parameter_sources_.limit_leaves(
-      Heuristics::kParameterSourceMaxOutputPathLeaves, transform);
+      Heuristics::kParameterSourceMaxOutputPathLeaves, widening_features);
 
-  sinks_.shape_with(make_mold, transform);
-  sinks_.limit_leaves(Heuristics::kSinkMaxInputPathLeaves, transform);
+  sinks_.shape_with(make_mold, widening_features);
+  sinks_.limit_leaves(Heuristics::kSinkMaxInputPathLeaves, widening_features);
 
-  propagations_.shape_with(make_mold, transform);
+  propagations_.shape_with(make_mold, widening_features);
   propagations_.limit_leaves(
-      Heuristics::kPropagationMaxInputPathLeaves, transform);
+      Heuristics::kPropagationMaxInputPathLeaves, widening_features);
 }
 
 bool Model::empty() const {

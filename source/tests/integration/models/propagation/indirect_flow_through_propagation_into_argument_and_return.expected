@@ -217,7 +217,7 @@
                   "kind" : "LocalReturn",
                   "output_paths" :
                   {
-                    "" : 0
+                    "" : 4
                   }
                 }
               ]
@@ -236,7 +236,7 @@
                   "kind" : "LocalArgument(0)",
                   "output_paths" :
                   {
-                    ".field" : 0
+                    ".field" : 3
                   }
                 }
               ]
@@ -249,7 +249,7 @@
                   "kind" : "LocalReturn",
                   "output_paths" :
                   {
-                    ".field" : 0
+                    ".field" : 3
                   }
                 }
               ]

@@ -212,6 +212,7 @@ TaintConfig make_propagation_taint_config(const PropagationKind* kind) {
       kind,
       /* output_paths */ PathTreeDomain{{Path{}, CollapseDepth::zero()}},
       /* inferred_features */ FeatureMayAlwaysSet::bottom(),
+      /* locally_inferred_features */ FeatureMayAlwaysSet::bottom(),
       /* user_features */ FeatureSet::bottom());
 }
 
@@ -219,6 +220,7 @@ TaintConfig make_propagation_taint_config(
     const PropagationKind* kind,
     PathTreeDomain output_paths,
     FeatureMayAlwaysSet inferred_features,
+    FeatureMayAlwaysSet locally_inferred_features,
     FeatureSet user_features) {
   return TaintConfig(
       kind,
@@ -230,7 +232,7 @@ TaintConfig make_propagation_taint_config(
       /* origins */ {},
       /* field_origins */ {},
       /* inferred_features */ inferred_features,
-      /* locally_inferred_features */ FeatureMayAlwaysSet::bottom(),
+      /* locally_inferred_features */ locally_inferred_features,
       /* user_features */ user_features,
       /* via_type_of_ports */ {},
       /* via_value_of_ports */ {},

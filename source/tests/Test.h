@@ -100,6 +100,7 @@ TaintConfig make_propagation_taint_config(
     const PropagationKind* kind,
     PathTreeDomain output_paths,
     FeatureMayAlwaysSet inferred_features,
+    FeatureMayAlwaysSet locally_inferred_features,
     FeatureSet user_features);
 
 boost::filesystem::path find_repository_root();

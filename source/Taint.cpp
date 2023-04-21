@@ -199,6 +199,17 @@ void Taint::append_to_propagation_output_paths(Path::Element path_element) {
   });
 }
 
+void Taint::update_maximum_collapse_depth(CollapseDepth collapse_depth) {
+  if (!collapse_depth.should_collapse()) {
+    return;
+  }
+
+  set_.map([collapse_depth](CalleeFrames frames) {
+    frames.update_maximum_collapse_depth(collapse_depth);
+    return frames;
+  });
+}
+
 void Taint::update_non_leaf_positions(
     const std::function<
         const Position*(const Method*, const AccessPath&, const Position*)>&

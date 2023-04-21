@@ -139,7 +139,7 @@
                   "kind" : "LocalReturn",
                   "output_paths" :
                   {
-                    "" : 0
+                    "" : 4
                   }
                 }
               ]

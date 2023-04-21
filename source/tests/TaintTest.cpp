@@ -972,7 +972,7 @@ TEST_F(TaintTest, AppendOutputPaths) {
           test::FrameProperties{
               .callee_port = AccessPath(Root(Root::Kind::Return)),
               .output_paths =
-                  PathTreeDomain{{Path{path_element1}, CollapseDepth::zero()}},
+                  PathTreeDomain{{Path{path_element1}, CollapseDepth(4)}},
               .call_info = CallInfo::Propagation,
           })};
 
@@ -990,7 +990,7 @@ TEST_F(TaintTest, AppendOutputPaths) {
                   .output_paths =
                       PathTreeDomain{
                           {Path{path_element1, path_element2},
-                           CollapseDepth::zero()}},
+                           CollapseDepth(3)}},
                   .call_info = CallInfo::Propagation,
               })}));
 }

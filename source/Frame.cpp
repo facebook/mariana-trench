@@ -180,14 +180,27 @@ Frame Frame::apply_transform(
 
 void Frame::append_to_propagation_output_paths(Path::Element path_element) {
   PathTreeDomain new_output_paths;
-  for (const auto& [path, elements] : output_paths_.elements()) {
-    auto new_path = path;
-    new_path.append(path_element);
-    new_output_paths.write(new_path, elements, UpdateKind::Weak);
+  for (const auto& [path, collapse_depth] : output_paths_.elements()) {
+    if (collapse_depth.is_zero()) {
+      new_output_paths.write(path, collapse_depth, UpdateKind::Weak);
+    } else {
+      auto new_collapse_depth = CollapseDepth(collapse_depth.value() - 1);
+      auto new_path = path;
+      new_path.append(path_element);
+      new_output_paths.write(new_path, new_collapse_depth, UpdateKind::Weak);
+    }
   }
   output_paths_ = std::move(new_output_paths);
   output_paths_.collapse_deeper_than(Heuristics::kPropagationMaxOutputPathSize);
   output_paths_.limit_leaves(Heuristics::kPropagationMaxOutputPathLeaves);
+}
+
+void Frame::update_maximum_collapse_depth(
+    CollapseDepth maximum_collapse_depth) {
+  output_paths_.map([maximum_collapse_depth](CollapseDepth collapse_depth) {
+    return CollapseDepth(
+        std::min(collapse_depth.value(), maximum_collapse_depth.value()));
+  });
 }
 
 Json::Value Frame::to_json(

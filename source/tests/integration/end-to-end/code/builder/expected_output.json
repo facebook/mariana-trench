@@ -252,7 +252,7 @@
               "kind" : "LocalReturn",
               "output_paths" : 
               {
-                ".host" : 0
+                ".host" : 3
               }
             }
           ]
@@ -271,7 +271,7 @@
               "kind" : "LocalReturn",
               "output_paths" : 
               {
-                ".path" : 0
+                ".path" : 3
               }
             }
           ]
@@ -290,7 +290,7 @@
               "kind" : "LocalReturn",
               "output_paths" : 
               {
-                ".scheme" : 0
+                ".scheme" : 3
               }
             }
           ]
@@ -319,7 +319,7 @@
               "kind" : "LocalReturn",
               "output_paths" : 
               {
-                "" : 0
+                "" : 4
               }
             }
           ]
@@ -338,7 +338,7 @@
               "kind" : "LocalArgument(0)",
               "output_paths" : 
               {
-                ".host" : 0
+                ".host" : 3
               }
             }
           ]
@@ -351,7 +351,7 @@
               "kind" : "LocalReturn",
               "output_paths" : 
               {
-                ".host" : 0
+                ".host" : 3
               }
             }
           ]
@@ -380,7 +380,7 @@
               "kind" : "LocalReturn",
               "output_paths" : 
               {
-                "" : 0
+                "" : 4
               }
             }
           ]
@@ -399,7 +399,7 @@
               "kind" : "LocalArgument(0)",
               "output_paths" : 
               {
-                ".path" : 0
+                ".path" : 3
               }
             }
           ]
@@ -412,7 +412,7 @@
               "kind" : "LocalReturn",
               "output_paths" : 
               {
-                ".path" : 0
+                ".path" : 3
               }
             }
           ]
@@ -441,7 +441,7 @@
               "kind" : "LocalReturn",
               "output_paths" : 
               {
-                "" : 0
+                "" : 4
               }
             }
           ]
@@ -460,7 +460,7 @@
               "kind" : "LocalArgument(0)",
               "output_paths" : 
               {
-                ".scheme" : 0
+                ".scheme" : 3
               }
             }
           ]
@@ -473,7 +473,7 @@
               "kind" : "LocalReturn",
               "output_paths" : 
               {
-                ".scheme" : 0
+                ".scheme" : 3
               }
             }
           ]
@@ -509,7 +509,7 @@
               "kind" : "LocalArgument(0)",
               "output_paths" : 
               {
-                ".scheme" : 0
+                ".scheme" : 3
               }
             }
           ]
@@ -528,7 +528,7 @@
               "kind" : "LocalArgument(0)",
               "output_paths" : 
               {
-                ".host" : 0
+                ".host" : 3
               }
             }
           ]
@@ -547,7 +547,7 @@
               "kind" : "LocalArgument(0)",
               "output_paths" : 
               {
-                ".path" : 0
+                ".path" : 3
               }
             }
           ]
@@ -584,7 +584,7 @@
               "kind" : "LocalReturn",
               "output_paths" : 
               {
-                "" : 0
+                "" : 4
               }
             }
           ]
@@ -621,7 +621,7 @@
               "kind" : "LocalReturn",
               "output_paths" : 
               {
-                "" : 0
+                "" : 4
               }
             }
           ]
@@ -893,7 +893,7 @@
               "kind" : "LocalReturn",
               "output_paths" : 
               {
-                "" : 0
+                "" : 4
               }
             }
           ]
@@ -974,8 +974,7 @@
     {
       "always_features" : 
       [
-        "via-cast:Ljava/lang/String;",
-        "via-propagation-broadening"
+        "via-cast:Ljava/lang/String;"
       ],
       "callee" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
       "position" : 
@@ -1020,8 +1019,7 @@
             {
               "always_features" : 
               [
-                "via-cast:Ljava/lang/String;",
-                "via-propagation-broadening"
+                "via-cast:Ljava/lang/String;"
               ],
               "call_info" : "Origin",
               "kind" : "Source",
@@ -1029,8 +1027,7 @@
               {
                 "always_features" : 
                 [
-                  "via-cast:Ljava/lang/String;",
-                  "via-propagation-broadening"
+                  "via-cast:Ljava/lang/String;"
                 ]
               },
               "local_positions" : 
@@ -1056,8 +1053,7 @@
           {
             "always_features" : 
             [
-              "via-cast:Ljava/lang/String;",
-              "via-propagation-broadening"
+              "via-cast:Ljava/lang/String;"
             ]
           },
           "local_positions" : 
@@ -1224,8 +1220,7 @@
     {
       "always_features" : 
       [
-        "via-cast:Ljava/lang/String;",
-        "via-propagation-broadening"
+        "via-cast:Ljava/lang/String;"
       ],
       "callee" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
       "position" : 
@@ -1270,8 +1265,7 @@
             {
               "always_features" : 
               [
-                "via-cast:Ljava/lang/String;",
-                "via-propagation-broadening"
+                "via-cast:Ljava/lang/String;"
               ],
               "call_info" : "Origin",
               "kind" : "Source",
@@ -1279,8 +1273,7 @@
               {
                 "always_features" : 
                 [
-                  "via-cast:Ljava/lang/String;",
-                  "via-propagation-broadening"
+                  "via-cast:Ljava/lang/String;"
                 ]
               },
               "local_positions" : 
@@ -1306,8 +1299,7 @@
           {
             "always_features" : 
             [
-              "via-cast:Ljava/lang/String;",
-              "via-propagation-broadening"
+              "via-cast:Ljava/lang/String;"
             ]
           },
           "local_positions" : 
@@ -1450,7 +1442,7 @@
               "kind" : "LocalReturn",
               "output_paths" : 
               {
-                "" : 0
+                "" : 4
               }
             }
           ]
@@ -1670,7 +1662,7 @@
               "kind" : "LocalArgument(0)",
               "output_paths" : 
               {
-                ".target" : 0
+                ".target" : 3
               }
             }
           ]

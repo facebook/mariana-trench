@@ -101,7 +101,7 @@ class AccessPathTreeDomain final
     return map_.get(root);
   }
 
-  template <typename Propagate> // Elements(Elements)
+  template <typename Propagate> // Elements(Elements, Path::Element)
   AbstractTreeDomainT read(const AccessPath& access_path, Propagate&& propagate)
       const {
     return map_.get(access_path.root())
@@ -284,7 +284,7 @@ class AccessPathTreeDomain final
   friend std::ostream& operator<<(
       std::ostream& out,
       const AccessPathTreeDomain& tree) {
-    out << "AccessPathTree{";
+    out << "{";
     for (auto iterator = tree.map_.begin(), end = tree.map_.end();
          iterator != end;) {
       out << iterator->first << " -> " << iterator->second;

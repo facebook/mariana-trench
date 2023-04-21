@@ -230,6 +230,8 @@ class Frame final : public sparta::AbstractDomain<Frame> {
 
   void append_to_propagation_output_paths(Path::Element path_element);
 
+  void update_maximum_collapse_depth(CollapseDepth collapse_depth);
+
   const PathTreeDomain& output_paths() const {
     return output_paths_;
   }

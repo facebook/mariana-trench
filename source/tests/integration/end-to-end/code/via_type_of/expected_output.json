@@ -278,7 +278,7 @@
               "kind" : "LocalReturn",
               "output_paths" : 
               {
-                ".host" : 0
+                ".host" : 3
               }
             }
           ]
@@ -297,7 +297,7 @@
               "kind" : "LocalReturn",
               "output_paths" : 
               {
-                ".path" : 0
+                ".path" : 3
               }
             }
           ]
@@ -316,7 +316,7 @@
               "kind" : "LocalReturn",
               "output_paths" : 
               {
-                ".scheme" : 0
+                ".scheme" : 3
               }
             }
           ]
@@ -345,7 +345,7 @@
               "kind" : "LocalReturn",
               "output_paths" : 
               {
-                "" : 0
+                "" : 4
               }
             }
           ]
@@ -364,7 +364,7 @@
               "kind" : "LocalArgument(0)",
               "output_paths" : 
               {
-                ".host" : 0
+                ".host" : 3
               }
             }
           ]
@@ -377,7 +377,7 @@
               "kind" : "LocalReturn",
               "output_paths" : 
               {
-                ".host" : 0
+                ".host" : 3
               }
             }
           ]
@@ -406,7 +406,7 @@
               "kind" : "LocalReturn",
               "output_paths" : 
               {
-                "" : 0
+                "" : 4
               }
             }
           ]
@@ -425,7 +425,7 @@
               "kind" : "LocalArgument(0)",
               "output_paths" : 
               {
-                ".path" : 0
+                ".path" : 3
               }
             }
           ]
@@ -438,7 +438,7 @@
               "kind" : "LocalReturn",
               "output_paths" : 
               {
-                ".path" : 0
+                ".path" : 3
               }
             }
           ]
@@ -467,7 +467,7 @@
               "kind" : "LocalReturn",
               "output_paths" : 
               {
-                "" : 0
+                "" : 4
               }
             }
           ]
@@ -486,7 +486,7 @@
               "kind" : "LocalArgument(0)",
               "output_paths" : 
               {
-                ".scheme" : 0
+                ".scheme" : 3
               }
             }
           ]
@@ -499,7 +499,7 @@
               "kind" : "LocalReturn",
               "output_paths" : 
               {
-                ".scheme" : 0
+                ".scheme" : 3
               }
             }
           ]
@@ -535,7 +535,7 @@
               "kind" : "LocalArgument(0)",
               "output_paths" : 
               {
-                ".scheme" : 0
+                ".scheme" : 3
               }
             }
           ]
@@ -554,7 +554,7 @@
               "kind" : "LocalArgument(0)",
               "output_paths" : 
               {
-                ".host" : 0
+                ".host" : 3
               }
             }
           ]
@@ -573,7 +573,7 @@
               "kind" : "LocalArgument(0)",
               "output_paths" : 
               {
-                ".path" : 0
+                ".path" : 3
               }
             }
           ]
@@ -610,7 +610,7 @@
               "kind" : "LocalReturn",
               "output_paths" : 
               {
-                "" : 0
+                "" : 4
               }
             }
           ]
@@ -647,7 +647,7 @@
               "kind" : "LocalReturn",
               "output_paths" : 
               {
-                "" : 0
+                "" : 4
               }
             }
           ]
@@ -683,7 +683,7 @@
               "kind" : "LocalReturn",
               "output_paths" : 
               {
-                "" : 0
+                "" : 4
               }
             }
           ]
@@ -702,7 +702,7 @@
               "kind" : "LocalReturn",
               "output_paths" : 
               {
-                "" : 0
+                "" : 4
               }
             }
           ]
@@ -721,7 +721,7 @@
               "kind" : "LocalReturn",
               "output_paths" : 
               {
-                "" : 0
+                "" : 4
               }
             }
           ]
@@ -945,7 +945,7 @@
               "kind" : "LocalReturn",
               "output_paths" : 
               {
-                "" : 0
+                "" : 4
               }
             }
           ]
@@ -1300,7 +1300,7 @@
               "kind" : "LocalReturn",
               "output_paths" : 
               {
-                "" : 0
+                "" : 4
               }
             }
           ]
@@ -1409,7 +1409,7 @@
               "kind" : "LocalReturn",
               "output_paths" : 
               {
-                "" : 0
+                "" : 4
               }
             }
           ]
@@ -1428,7 +1428,7 @@
               "kind" : "LocalReturn",
               "output_paths" : 
               {
-                "" : 0
+                "" : 4
               }
             }
           ]
@@ -1520,7 +1520,7 @@
               "kind" : "LocalArgument(0)",
               "output_paths" : 
               {
-                ".target" : 0
+                ".target" : 3
               }
             }
           ]

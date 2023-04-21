@@ -277,9 +277,18 @@ void CalleeFrames::append_to_propagation_output_paths(
   }
 
   map([path_element](Frame frame) {
-    if (frame.kind()->is<PropagationKind>()) {
-      frame.append_to_propagation_output_paths(path_element);
-    }
+    frame.append_to_propagation_output_paths(path_element);
+    return frame;
+  });
+}
+
+void CalleeFrames::update_maximum_collapse_depth(CollapseDepth collapse_depth) {
+  if (call_info_ != CallInfo::Propagation) {
+    return;
+  }
+
+  map([collapse_depth](Frame frame) {
+    frame.update_maximum_collapse_depth(collapse_depth);
     return frame;
   });
 }

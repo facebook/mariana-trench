@@ -229,6 +229,8 @@ class CalleeFrames final : public sparta::AbstractDomain<CalleeFrames> {
 
   void append_to_propagation_output_paths(Path::Element path_element);
 
+  void update_maximum_collapse_depth(CollapseDepth collapse_depth);
+
   void update_non_leaf_positions(
       const std::function<
           const Position*(const Method*, const AccessPath&, const Position*)>&

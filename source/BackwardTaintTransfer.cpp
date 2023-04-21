@@ -9,6 +9,7 @@
 #include <mariana-trench/BackwardTaintTransfer.h>
 #include <mariana-trench/CallGraph.h>
 #include <mariana-trench/FeatureFactory.h>
+#include <mariana-trench/Heuristics.h>
 #include <mariana-trench/Log.h>
 #include <mariana-trench/PartialKind.h>
 #include <mariana-trench/Positions.h>
@@ -47,10 +48,7 @@ bool BackwardTaintTransfer::analyze_check_cast(
     auto features = FeatureMayAlwaysSet::make_always(
         {context->feature_factory.get_via_cast_feature(
             instruction->get_type())});
-    taint.map([&features](Taint sinks) {
-      sinks.add_locally_inferred_features(features);
-      return sinks;
-    });
+    taint.add_locally_inferred_features(features);
   }
 
   LOG_OR_DUMP(
@@ -124,11 +122,8 @@ void apply_add_features_to_arguments(
     auto memory_locations = aliasing.register_memory_locations(register_id);
     for (auto* memory_location : memory_locations.elements()) {
       auto taint = previous_environment->read(memory_location);
-      taint.map([&features, position](Taint sinks) {
-        sinks.add_locally_inferred_features_and_local_position(
-            features, position);
-        return sinks;
-      });
+      taint.add_locally_inferred_features_and_local_position(
+          features, position);
       new_environment->write(
           memory_location, std::move(taint), UpdateKind::Strong);
     }
@@ -223,13 +218,10 @@ void apply_propagations(
           propagation.callee_port()));
       features.add_always(callee.model.add_features_to_arguments(input.root()));
 
-      output_taint_tree.map([&features, position](Taint taint) {
-        taint.add_locally_inferred_features_and_local_position(
-            features, position);
-        return taint;
-      });
+      output_taint_tree.add_locally_inferred_features_and_local_position(
+          features, position);
 
-      for (const auto& [output_path, _] :
+      for (const auto& [output_path, collapse_depth] :
            propagation.output_paths().elements()) {
         auto output_path_resolved =
             output_path.resolve(source_constant_arguments);
@@ -257,15 +249,19 @@ void apply_propagations(
         // tainted. For chained calls, it can lead to FP.
         // `no-collapse-on-propagation` mode is used to prevent such cases.
         // See the end-to-end test `no_collapse_on_propagation` for example.
-        if (!callee.model.no_collapse_on_propagation()) {
-          LOG_OR_DUMP(context, 4, "Collapsing taint tree {}", input_taint_tree);
-          input_taint_tree.collapse_inplace(
-              /* transform */ [context](Taint taint) {
-                taint.add_locally_inferred_features(FeatureMayAlwaysSet{
-                    context->feature_factory
-                        .get_propagation_broadening_feature()});
-                return taint;
-              });
+        if (collapse_depth.should_collapse() &&
+            !callee.model.no_collapse_on_propagation()) {
+          LOG_OR_DUMP(
+              context,
+              4,
+              "Collapsing taint tree {} to depth {}",
+              input_taint_tree,
+              collapse_depth.value());
+          input_taint_tree.collapse_deeper_than(
+              /* height */ collapse_depth.value(),
+              FeatureMayAlwaysSet{context->feature_factory
+                                      .get_propagation_broadening_feature()});
+          input_taint_tree.update_maximum_collapse_depth(collapse_depth);
         }
 
         LOG_OR_DUMP(
@@ -614,10 +610,7 @@ bool BackwardTaintTransfer::analyze_iput(
       aliasing.position(),
       Root(Root::Kind::Return),
       instruction);
-  target_taint.map([position](Taint sinks) {
-    sinks.add_local_position(position);
-    return sinks;
-  });
+  target_taint.add_local_position(position);
 
   LOG_OR_DUMP(
       context,
@@ -793,11 +786,7 @@ bool BackwardTaintTransfer::analyze_aput(
       aliasing.position(),
       Root(Root::Kind::Return),
       instruction);
-  taint.map([&features, position](Taint sources) {
-    sources.add_locally_inferred_features_and_local_position(
-        features, position);
-    return sources;
-  });
+  taint.add_locally_inferred_features_and_local_position(features, position);
 
   LOG_OR_DUMP(
       context, 4, "Tainting register {} with {}", instruction->src(0), taint);
@@ -845,11 +834,7 @@ static bool analyze_numerical_operator(
       aliasing.position(),
       Root(Root::Kind::Return),
       instruction);
-  taint.map([&features, position](Taint sources) {
-    sources.add_locally_inferred_features_and_local_position(
-        features, position);
-    return sources;
-  });
+  taint.add_locally_inferred_features_and_local_position(features, position);
 
   for (auto register_id : instruction->srcs()) {
     LOG_OR_DUMP(context, 4, "Tainting register {} with {}", register_id, taint);
@@ -897,14 +882,14 @@ bool BackwardTaintTransfer::analyze_return(
 
   auto* position =
       context->positions.get(context->method(), aliasing.position());
-  taint.map(
-      [position](Taint sinks) { return sinks.attach_position(position); });
+  taint.attach_position(position);
 
   // Add local return.
   taint.join_with(TaintTree(Taint::propagation_taint(
       /* kind */ context->kind_factory.local_return(),
       /* output_paths */
-      PathTreeDomain{{Path{}, CollapseDepth::zero()}},
+      PathTreeDomain{
+          {Path{}, CollapseDepth(Heuristics::kPropagationMaxCollapseDepth)}},
       /* inferred_features */ {},
       /* user_features */ {})));
 

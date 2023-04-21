@@ -9,6 +9,7 @@
 
 #include <mariana-trench/Assert.h>
 #include <mariana-trench/BackwardTaintEnvironment.h>
+#include <mariana-trench/Heuristics.h>
 
 namespace marianatrench {
 
@@ -30,7 +31,9 @@ BackwardTaintEnvironment BackwardTaintEnvironment::initial(
         TaintTree(Taint::propagation_taint(
             /* kind */ context.kind_factory.local_receiver(),
             /* output_paths */
-            PathTreeDomain{{Path{}, CollapseDepth::zero()}},
+            PathTreeDomain{
+                {Path{},
+                 CollapseDepth(Heuristics::kPropagationMaxCollapseDepth)}},
             /* inferred_features */ {},
             /* user_features */ {})));
   }

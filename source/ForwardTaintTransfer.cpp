@@ -61,10 +61,7 @@ bool ForwardTaintTransfer::analyze_check_cast(
     auto features = FeatureMayAlwaysSet::make_always(
         {context->feature_factory.get_via_cast_feature(
             instruction->get_type())});
-    taint.map([&features](Taint sources) {
-      sources.add_locally_inferred_features(features);
-      return sources;
-    });
+    taint.add_locally_inferred_features(features);
   }
 
   LOG_OR_DUMP(context, 4, "Tainting result register with {}", taint);
@@ -158,7 +155,7 @@ void apply_generations(
       "Processing generations for call to `{}`",
       show(callee.method_reference));
 
-  for (const auto& [root, generations] : callee.model.generations()) {
+  for (const auto& [root, generations] : callee.model.generations().roots()) {
     switch (root.kind()) {
       case Root::Kind::Return: {
         LOG_OR_DUMP(context, 4, "Tainting invoke result with {}", generations);
@@ -220,11 +217,8 @@ void apply_add_features_to_arguments(
     auto memory_locations = aliasing.register_memory_locations(register_id);
     for (auto* memory_location : memory_locations.elements()) {
       auto taint = previous_environment->read(memory_location);
-      taint.map([&features, position](Taint sources) {
-        sources.add_locally_inferred_features_and_local_position(
-            features, position);
-        return sources;
-      });
+      taint.add_locally_inferred_features_and_local_position(
+          features, position);
       // This is using a strong update, since a weak update would turn
       // the always-features we want to add into may-features.
       new_environment->write(
@@ -280,35 +274,6 @@ void apply_propagations(
       continue;
     }
 
-    // Collapsing the tree here is required for correctness and performance.
-    // Propagations can be collapsed, which results in taking the common
-    // prefix of the input paths. Because of this, if we don't collapse
-    // here, we might build invalid trees. See the end-to-end test
-    // `propagation_collapse` for an example.
-    // However, collapsing leads to FP with the builder pattern.
-    // eg:
-    // class A {
-    //   private String s1;
-    //
-    //   public A setS1(String s) {
-    //     this.s1 = s;
-    //     return this;
-    //   }
-    // }
-    // In this case, collapsing propagations results in entire `this` being
-    // tainted. For chained calls, it can lead to FP.
-    // `no-collapse-on-propagation` mode is used to prevent such cases.
-    // See the end-to-end test `no_collapse_on_propagation` for example.
-    if (!callee.model.no_collapse_on_propagation()) {
-      LOG_OR_DUMP(context, 4, "Collapsing taint tree {}", input_taint_tree);
-      input_taint_tree.collapse_inplace(
-          /* transform */ [context](Taint taint) {
-            taint.add_locally_inferred_features(FeatureMayAlwaysSet{
-                context->feature_factory.get_propagation_broadening_feature()});
-            return taint;
-          });
-    }
-
     auto position =
         context->positions.get(callee.position, input_path.root(), instruction);
 
@@ -321,7 +286,7 @@ void apply_propagations(
           propagation);
 
       const PropagationKind* propagation_kind = propagation.propagation_kind();
-      auto output_taint_tree =
+      auto transformed_taint_tree =
           transforms::apply_propagation(context, propagation, input_taint_tree);
 
       auto output_root = propagation_kind->root();
@@ -336,14 +301,46 @@ void apply_propagations(
       features.add_always(
           callee.model.add_features_to_arguments(input_path.root()));
 
-      output_taint_tree.map([&features, position](Taint taint) {
-        taint.add_locally_inferred_features_and_local_position(
-            features, position);
-        return taint;
-      });
+      transformed_taint_tree.add_locally_inferred_features_and_local_position(
+          features, position);
 
-      for (const auto& [output_path, _] :
+      for (const auto& [output_path, collapse_depth] :
            propagation.output_paths().elements()) {
+        auto output_taint_tree = transformed_taint_tree;
+
+        // Collapsing the tree here is required for correctness and performance.
+        // Propagations can be collapsed, which results in taking the common
+        // prefix of the input paths. Because of this, if we don't collapse
+        // here, we might build invalid trees. See the end-to-end test
+        // `propagation_collapse` for an example.
+        // However, collapsing leads to FP with the builder pattern.
+        // eg:
+        // class A {
+        //   private String s1;
+        //
+        //   public A setS1(String s) {
+        //     this.s1 = s;
+        //     return this;
+        //   }
+        // }
+        // In this case, collapsing propagations results in entire `this` being
+        // tainted. For chained calls, it can lead to FP.
+        // `no-collapse-on-propagation` mode is used to prevent such cases.
+        // See the end-to-end test `no_collapse_on_propagation` for example.
+        if (collapse_depth.should_collapse() &&
+            !callee.model.no_collapse_on_propagation()) {
+          LOG_OR_DUMP(
+              context,
+              4,
+              "Collapsing taint tree {} to depth {}",
+              input_taint_tree,
+              collapse_depth.value());
+          output_taint_tree.collapse_deeper_than(
+              /* height */ collapse_depth.value(),
+              FeatureMayAlwaysSet{context->feature_factory
+                                      .get_propagation_broadening_feature()});
+        }
+
         auto output_path_resolved =
             output_path.resolve(source_constant_arguments);
 
@@ -356,7 +353,9 @@ void apply_propagations(
                 output_path_resolved,
                 output_taint_tree);
             result_taint.write(
-                output_path_resolved, output_taint_tree, UpdateKind::Weak);
+                output_path_resolved,
+                std::move(output_taint_tree),
+                UpdateKind::Weak);
             break;
           }
           case Root::Kind::Argument: {
@@ -373,7 +372,7 @@ void apply_propagations(
             new_environment->write(
                 aliasing.register_memory_locations(output_register_id),
                 output_path_resolved,
-                output_taint_tree,
+                std::move(output_taint_tree),
                 callee.model.strong_write_on_propagation() ? UpdateKind::Strong
                                                            : UpdateKind::Weak);
             break;
@@ -559,11 +558,8 @@ void check_call_flows(
             ->read(
                 aliasing.register_memory_locations(*register_id),
                 port.path().resolve(source_constant_arguments))
-            .collapse(/* transform */ [context](Taint taint) {
-              taint.add_locally_inferred_features(FeatureMayAlwaysSet{
-                  context->feature_factory.get_issue_broadening_feature()});
-              return taint;
-            });
+            .collapse(FeatureMayAlwaysSet{
+                context->feature_factory.get_issue_broadening_feature()});
     check_sources_sinks_flows(
         context,
         sources,
@@ -648,11 +644,8 @@ void check_flows_to_array_allocation(
     auto register_id = instruction->src(parameter_position);
     Taint sources =
         environment->read(aliasing.register_memory_locations(register_id))
-            .collapse(/* transform */ [context](Taint taint) {
-              taint.add_locally_inferred_features(FeatureMayAlwaysSet{
-                  context->feature_factory.get_issue_broadening_feature()});
-              return taint;
-            });
+            .collapse(FeatureMayAlwaysSet{
+                context->feature_factory.get_issue_broadening_feature()});
     // Fulfilled partial sinks ignored. No partial sinks for array allocation.
     check_sources_sinks_flows(
         context,
@@ -902,10 +895,7 @@ bool ForwardTaintTransfer::analyze_iput(
       aliasing.position(),
       Root(Root::Kind::Return),
       instruction);
-  taint.map([position](Taint sources) {
-    sources.add_local_position(position);
-    return sources;
-  });
+  taint.add_local_position(position);
 
   check_flows_to_field_sink(context, instruction, taint, position);
 
@@ -955,10 +945,7 @@ bool ForwardTaintTransfer::analyze_sput(
       aliasing.position(),
       Root(Root::Kind::Return),
       instruction);
-  taint.map([position](Taint sources) {
-    sources.add_local_position(position);
-    return sources;
-  });
+  taint.add_local_position(position);
   check_flows_to_field_sink(context, instruction, taint, position);
   return false;
 }
@@ -989,8 +976,7 @@ bool ForwardTaintTransfer::analyze_load_param(
 
   // Add the position of the instruction to the parameter sources.
   auto* position = context->positions.get(context->method());
-  taint.map(
-      [position](Taint sources) { return sources.attach_position(position); });
+  taint.attach_position(position);
 
   LOG_OR_DUMP(context, 4, "Tainting {} with {}", show(memory_location), taint);
   environment->write(memory_location, std::move(taint), UpdateKind::Strong);
@@ -1045,11 +1031,7 @@ bool ForwardTaintTransfer::analyze_aput(
       aliasing.position(),
       Root(Root::Kind::Return),
       instruction);
-  taint.map([&features, position](Taint sources) {
-    sources.add_locally_inferred_features_and_local_position(
-        features, position);
-    return sources;
-  });
+  taint.add_locally_inferred_features_and_local_position(features, position);
 
   // We use a single memory location for the array and its elements.
   LOG_OR_DUMP(
@@ -1107,11 +1089,7 @@ static bool analyze_numerical_operator(
       aliasing.position(),
       Root(Root::Kind::Return),
       instruction);
-  taint.map([&features, position](Taint sources) {
-    sources.add_locally_inferred_features_and_local_position(
-        features, position);
-    return sources;
-  });
+  taint.add_locally_inferred_features_and_local_position(features, position);
 
   auto* memory_location = aliasing.result_memory_location();
   LOG_OR_DUMP(context, 4, "Tainting {} with {}", show(memory_location), taint);
@@ -1182,8 +1160,7 @@ bool ForwardTaintTransfer::analyze_return(
   // Add the position of the instruction to the return sinks.
   auto* position =
       context->positions.get(context->method(), aliasing.position());
-  return_sinks.map(
-      [position](Taint sinks) { return sinks.attach_position(position); });
+  return_sinks.attach_position(position);
   auto return_index =
       context->call_graph.return_index(context->method(), instruction);
 
@@ -1198,13 +1175,8 @@ bool ForwardTaintTransfer::analyze_return(
     for (const auto& [path, sinks] : return_sinks.elements()) {
       Taint sources =
           environment->read(memory_locations, path)
-              .collapse(
-                  /* transform */ [context](Taint taint) {
-                    taint.add_locally_inferred_features(FeatureMayAlwaysSet{
-                        context->feature_factory
-                            .get_issue_broadening_feature()});
-                    return taint;
-                  });
+              .collapse(FeatureMayAlwaysSet{
+                  context->feature_factory.get_issue_broadening_feature()});
       // Fulfilled partial sinks are not expected to be produced here. Return
       // sinks are never partial.
       check_sources_sinks_flows(
