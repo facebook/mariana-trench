@@ -97,7 +97,8 @@ class PropagationTemplate final {
       AccessPathTemplate output,
       FeatureMayAlwaysSet inferred_features,
       FeatureSet user_features,
-      const TransformList* transforms_);
+      const TransformList* transforms,
+      CollapseDepth collapse_depth);
 
   INCLUDE_DEFAULT_COPY_CONSTRUCTORS_AND_ASSIGNMENTS(PropagationTemplate)
 
@@ -115,6 +116,7 @@ class PropagationTemplate final {
   FeatureMayAlwaysSet inferred_features_;
   FeatureSet user_features_;
   const TransformList* transforms_;
+  CollapseDepth collapse_depth_;
 };
 
 class SinkTemplate final {

@@ -1644,6 +1644,96 @@ TEST_F(JsonTest, Propagation) {
           /* locally_inferred_features */ FeatureMayAlwaysSet::bottom(),
           /* user_features */
           FeatureSet{context.feature_factory->get("FeatureOne")}));
+
+  EXPECT_THROW(
+      PropagationConfig::from_json(
+          test::parse_json(
+              R"#({
+                "input": "Argument(0)",
+                "output": "Return",
+                "collapse": 42,
+              })#"),
+          context),
+      JsonValidationError);
+  EXPECT_EQ(
+      PropagationConfig::from_json(
+          test::parse_json(
+              R"#({
+                "input": "Argument(1)",
+                "output": "Return",
+                "collapse": true,
+              })#"),
+          context),
+      PropagationConfig(
+          /* input_path */ AccessPath(Root(Root::Kind::Argument, 1)),
+          /* kind */ context.kind_factory->local_return(),
+          /* output_paths */
+          PathTreeDomain{{Path{}, CollapseDepth::zero()}},
+          /* inferred_features */ FeatureMayAlwaysSet::bottom(),
+          /* locally_inferred_features */ FeatureMayAlwaysSet::bottom(),
+          /* user_features */ {}));
+  EXPECT_EQ(
+      PropagationConfig::from_json(
+          test::parse_json(
+              R"#({
+                "input": "Argument(1)",
+                "output": "Return",
+                "collapse": false,
+              })#"),
+          context),
+      PropagationConfig(
+          /* input_path */ AccessPath(Root(Root::Kind::Argument, 1)),
+          /* kind */ context.kind_factory->local_return(),
+          /* output_paths */
+          PathTreeDomain{{Path{}, CollapseDepth::no_collapse()}},
+          /* inferred_features */ FeatureMayAlwaysSet::bottom(),
+          /* locally_inferred_features */ FeatureMayAlwaysSet::bottom(),
+          /* user_features */ {}));
+
+  EXPECT_THROW(
+      PropagationConfig::from_json(
+          test::parse_json(
+              R"#({
+                "input": "Argument(0)",
+                "output": "Return",
+                "collapse-depth": -1,
+              })#"),
+          context),
+      JsonValidationError);
+  EXPECT_EQ(
+      PropagationConfig::from_json(
+          test::parse_json(
+              R"#({
+                "input": "Argument(1)",
+                "output": "Return",
+                "collapse-depth": 0,
+              })#"),
+          context),
+      PropagationConfig(
+          /* input_path */ AccessPath(Root(Root::Kind::Argument, 1)),
+          /* kind */ context.kind_factory->local_return(),
+          /* output_paths */
+          PathTreeDomain{{Path{}, CollapseDepth(0)}},
+          /* inferred_features */ FeatureMayAlwaysSet::bottom(),
+          /* locally_inferred_features */ FeatureMayAlwaysSet::bottom(),
+          /* user_features */ {}));
+  EXPECT_EQ(
+      PropagationConfig::from_json(
+          test::parse_json(
+              R"#({
+                "input": "Argument(1)",
+                "output": "Return",
+                "collapse-depth": 10,
+              })#"),
+          context),
+      PropagationConfig(
+          /* input_path */ AccessPath(Root(Root::Kind::Argument, 1)),
+          /* kind */ context.kind_factory->local_return(),
+          /* output_paths */
+          PathTreeDomain{{Path{}, CollapseDepth(10)}},
+          /* inferred_features */ FeatureMayAlwaysSet::bottom(),
+          /* locally_inferred_features */ FeatureMayAlwaysSet::bottom(),
+          /* user_features */ {}));
 }
 
 TEST_F(JsonTest, Model) {

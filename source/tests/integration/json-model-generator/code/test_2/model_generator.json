@@ -70,7 +70,8 @@
             "propagation": [
               {
                 "input": "Argument(x)",
-                "output": "Argument(1)"
+                "output": "Argument(1)",
+                "collapse": false
               }
             ],
             "generations": [

@@ -44,6 +44,21 @@ PropagationConfig PropagationConfig::from_json(
   auto inferred_features = FeatureMayAlwaysSet::from_json(value, context);
   FeatureSet user_features = FeatureSet::from_json(value["features"], context);
 
+  auto collapse_depth = CollapseDepth::zero();
+  if (value.isMember("collapse")) {
+    collapse_depth = JsonValidation::boolean(value, "collapse")
+        ? CollapseDepth::zero()
+        : CollapseDepth::no_collapse();
+  } else if (value.isMember("collapse-depth")) {
+    int collapse_depth_integer =
+        JsonValidation::integer(value, "collapse-depth");
+    if (collapse_depth_integer < 0) {
+      throw JsonValidationError(
+          value, "collapse-depth", /* expected */ "non-negative integer");
+    }
+    collapse_depth = CollapseDepth(collapse_depth_integer);
+  }
+
   const Kind* kind = nullptr;
   if (value.isMember("transforms")) {
     kind = context.kind_factory->transform_kind(
@@ -59,7 +74,7 @@ PropagationConfig PropagationConfig::from_json(
   return PropagationConfig(
       std::move(input),
       kind,
-      PathTreeDomain{{output.path(), CollapseDepth::zero()}},
+      PathTreeDomain{{output.path(), collapse_depth}},
       inferred_features,
       /* locally_inferred_features */ FeatureMayAlwaysSet::bottom(),
       user_features);

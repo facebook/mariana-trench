@@ -165,12 +165,14 @@ PropagationTemplate::PropagationTemplate(
     AccessPathTemplate output,
     FeatureMayAlwaysSet inferred_features,
     FeatureSet user_features,
-    const TransformList* transforms)
+    const TransformList* transforms,
+    CollapseDepth collapse_depth)
     : input_(std::move(input)),
       output_(std::move(output)),
       inferred_features_(std::move(inferred_features)),
       user_features_(std::move(user_features)),
-      transforms_(transforms) {}
+      transforms_(transforms),
+      collapse_depth_(collapse_depth) {}
 
 PropagationTemplate PropagationTemplate::from_json(
     const Json::Value& value,
@@ -197,8 +199,28 @@ PropagationTemplate PropagationTemplate::from_json(
         TransformList::from_json(value["transforms"], context));
   }
 
+  auto collapse_depth = CollapseDepth::zero();
+  if (value.isMember("collapse")) {
+    collapse_depth = JsonValidation::boolean(value, "collapse")
+        ? CollapseDepth::zero()
+        : CollapseDepth::no_collapse();
+  } else if (value.isMember("collapse-depth")) {
+    int collapse_depth_integer =
+        JsonValidation::integer(value, "collapse-depth");
+    if (collapse_depth_integer < 0) {
+      throw JsonValidationError(
+          value, "collapse-depth", /* expected */ "non-negative integer");
+    }
+    collapse_depth = CollapseDepth(collapse_depth_integer);
+  }
+
   return PropagationTemplate(
-      input, output, inferred_features, user_features, transforms);
+      input,
+      output,
+      inferred_features,
+      user_features,
+      transforms,
+      collapse_depth);
 }
 
 void PropagationTemplate::instantiate(
@@ -232,7 +254,7 @@ void PropagationTemplate::instantiate(
   model.add_propagation(PropagationConfig(
       input_port,
       kind,
-      PathTreeDomain{{output_port.path(), CollapseDepth::zero()}},
+      PathTreeDomain{{output_port.path(), collapse_depth_}},
       inferred_features_,
       /* locally_inferred_features */ FeatureMayAlwaysSet::bottom(),
       user_features_));
