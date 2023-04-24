@@ -956,27 +956,8 @@
           "kinds" : 
           [
             {
-              "always_features" : 
-              [
-                "via-cast:Ljava/lang/String;"
-              ],
               "call_info" : "Origin",
               "kind" : "Source",
-              "local_features" : 
-              {
-                "always_features" : 
-                [
-                  "via-cast:Ljava/lang/String;"
-                ]
-              },
-              "local_positions" : 
-              [
-                {
-                  "end" : 23,
-                  "line" : 19,
-                  "start" : 23
-                }
-              ],
               "origins" : 
               [
                 "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;"

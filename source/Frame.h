@@ -306,10 +306,7 @@ class Frame final : public sparta::AbstractDomain<Frame> {
       const UsedKinds& used_kinds,
       const TransformList* local_transforms) const;
 
-  Json::Value to_json(
-      const LocalPositionSet& local_positions,
-      const FeatureMayAlwaysSet& local_features,
-      ExportOriginsMode export_origins_mode) const;
+  Json::Value to_json(ExportOriginsMode export_origins_mode) const;
 
   // Describe how to join frames together in `CalleePortFrames`.
   struct GroupEqual {

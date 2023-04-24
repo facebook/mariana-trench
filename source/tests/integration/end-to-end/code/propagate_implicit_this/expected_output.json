@@ -894,19 +894,8 @@
           "kinds" : 
           [
             {
-              "always_features" : 
-              [
-                "via-inner-class-this"
-              ],
               "call_info" : "Propagation",
               "kind" : "LocalArgument(0)",
-              "local_features" : 
-              {
-                "always_features" : 
-                [
-                  "via-inner-class-this"
-                ]
-              },
               "output_paths" : 
               {
                 ".this$0" : 3
@@ -983,19 +972,8 @@
           "kinds" : 
           [
             {
-              "always_features" : 
-              [
-                "via-inner-class-this"
-              ],
               "call_info" : "Propagation",
               "kind" : "LocalArgument(0)",
-              "local_features" : 
-              {
-                "always_features" : 
-                [
-                  "via-inner-class-this"
-                ]
-              },
               "output_paths" : 
               {
                 ".this$0" : 3
@@ -1115,27 +1093,8 @@
           "kinds" : 
           [
             {
-              "always_features" : 
-              [
-                "via-cast:Ljava/lang/String;"
-              ],
               "call_info" : "Origin",
               "kind" : "Source",
-              "local_features" : 
-              {
-                "always_features" : 
-                [
-                  "via-cast:Ljava/lang/String;"
-                ]
-              },
-              "local_positions" : 
-              [
-                {
-                  "end" : 43,
-                  "line" : 36,
-                  "start" : 19
-                }
-              ],
               "origins" : 
               [
                 "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;"
@@ -1208,20 +1167,9 @@
           "kinds" : 
           [
             {
-              "always_features" : 
-              [
-                "via-anonymous-class-to-obscure"
-              ],
               "call_info" : "CallSite",
               "distance" : 2,
               "kind" : "Sink",
-              "local_features" : 
-              {
-                "always_features" : 
-                [
-                  "via-anonymous-class-to-obscure"
-                ]
-              },
               "origins" : 
               [
                 "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V"
@@ -1243,36 +1191,8 @@
           "kinds" : 
           [
             {
-              "always_features" : 
-              [
-                "via-cast:Ljava/lang/String;",
-                "via-inner-class-this",
-                "via-obscure"
-              ],
               "call_info" : "Origin",
               "kind" : "Source",
-              "local_features" : 
-              {
-                "always_features" : 
-                [
-                  "via-cast:Ljava/lang/String;",
-                  "via-inner-class-this",
-                  "via-obscure"
-                ]
-              },
-              "local_positions" : 
-              [
-                {
-                  "end" : 0,
-                  "line" : 39,
-                  "start" : 0
-                },
-                {
-                  "end" : 43,
-                  "line" : 36,
-                  "start" : 19
-                }
-              ],
               "origins" : 
               [
                 "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;"
@@ -1334,25 +1254,8 @@
           "kinds" : 
           [
             {
-              "always_features" : 
-              [
-                "via-cast:Ljava/lang/String;"
-              ],
               "call_info" : "Origin",
               "kind" : "Source",
-              "local_features" : 
-              {
-                "always_features" : 
-                [
-                  "via-cast:Ljava/lang/String;"
-                ]
-              },
-              "local_positions" : 
-              [
-                {
-                  "line" : 23
-                }
-              ],
               "origins" : 
               [
                 "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;"

@@ -18,12 +18,6 @@
                 {
                   "call_info" : "Origin",
                   "kind" : "TestSource",
-                  "local_positions" :
-                  [
-                    {
-                      "line" : 2
-                    }
-                  ],
                   "origins" :
                   [
                     "LSource;.source:()LData;"
@@ -95,25 +89,8 @@
               "kinds" :
               [
                 {
-                  "always_features" :
-                  [
-                    "via-issue-broadening"
-                  ],
                   "call_info" : "Origin",
                   "kind" : "TestSource",
-                  "local_features" :
-                  {
-                    "always_features" :
-                    [
-                      "via-issue-broadening"
-                    ]
-                  },
-                  "local_positions" :
-                  [
-                    {
-                      "line" : 2
-                    }
-                  ],
                   "origins" :
                   [
                     "LSource;.source:()LData;"
@@ -164,12 +141,6 @@
                 {
                   "call_info" : "Origin",
                   "kind" : "TestSink",
-                  "local_positions" :
-                  [
-                    {
-                      "line" : 2
-                    }
-                  ],
                   "origins" :
                   [
                     "LSink;.sink:(LData;)V"

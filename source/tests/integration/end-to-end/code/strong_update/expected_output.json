@@ -963,14 +963,6 @@
             {
               "call_info" : "Origin",
               "kind" : "Source",
-              "local_positions" : 
-              [
-                {
-                  "end" : 34,
-                  "line" : 33,
-                  "start" : 20
-                }
-              ],
               "origins" : 
               [
                 "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;"
@@ -1046,14 +1038,6 @@
             {
               "call_info" : "Origin",
               "kind" : "Source",
-              "local_positions" : 
-              [
-                {
-                  "end" : 34,
-                  "line" : 33,
-                  "start" : 20
-                }
-              ],
               "origins" : 
               [
                 "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;"

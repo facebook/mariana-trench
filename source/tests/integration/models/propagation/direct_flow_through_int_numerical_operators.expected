@@ -52,31 +52,8 @@
               "kinds" :
               [
                 {
-                  "always_features" :
-                  [
-                    "via-numerical-operator"
-                  ],
                   "call_info" : "Origin",
                   "kind" : "TestSource",
-                  "local_features" :
-                  {
-                    "always_features" :
-                    [
-                      "via-numerical-operator"
-                    ]
-                  },
-                  "local_positions" :
-                  [
-                    {
-                      "line" : 2
-                    },
-                    {
-                      "line" : 3
-                    },
-                    {
-                      "line" : 4
-                    }
-                  ],
                   "origins" :
                   [
                     "LSource;.source:()LData;"

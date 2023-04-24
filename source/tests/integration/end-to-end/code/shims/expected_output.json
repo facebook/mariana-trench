@@ -1724,20 +1724,9 @@
           "kinds" : 
           [
             {
-              "always_features" : 
-              [
-                "via-shim:Lcom/facebook/marianatrench/integrationtests/ReflectionShims;.reflectWithArgument:(Ljava/lang/Class;Ljava/lang/Object;)V"
-              ],
               "call_info" : "CallSite",
               "distance" : 1,
               "kind" : "Sink",
-              "local_features" : 
-              {
-                "always_features" : 
-                [
-                  "via-shim:Lcom/facebook/marianatrench/integrationtests/ReflectionShims;.reflectWithArgument:(Ljava/lang/Class;Ljava/lang/Object;)V"
-                ]
-              },
               "origins" : 
               [
                 "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V"
@@ -1839,20 +1828,9 @@
           "kinds" : 
           [
             {
-              "always_features" : 
-              [
-                "via-shim:Lcom/facebook/marianatrench/integrationtests/ReflectionShims;.reflectWithArgument:(Ljava/lang/Class;Ljava/lang/Object;)V"
-              ],
               "call_info" : "CallSite",
               "distance" : 1,
               "kind" : "Sink",
-              "local_features" : 
-              {
-                "always_features" : 
-                [
-                  "via-shim:Lcom/facebook/marianatrench/integrationtests/ReflectionShims;.reflectWithArgument:(Ljava/lang/Class;Ljava/lang/Object;)V"
-                ]
-              },
               "origins" : 
               [
                 "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V"
@@ -2075,20 +2053,9 @@
           "kinds" : 
           [
             {
-              "always_features" : 
-              [
-                "via-shim:Lcom/facebook/marianatrench/integrationtests/ParameterMapping;.definedAndInferred:(Lcom/facebook/marianatrench/integrationtests/ShimTarget;Ljava/lang/Object;Ljava/lang/String;)V"
-              ],
               "call_info" : "CallSite",
               "distance" : 1,
               "kind" : "Sink",
-              "local_features" : 
-              {
-                "always_features" : 
-                [
-                  "via-shim:Lcom/facebook/marianatrench/integrationtests/ParameterMapping;.definedAndInferred:(Lcom/facebook/marianatrench/integrationtests/ShimTarget;Ljava/lang/Object;Ljava/lang/String;)V"
-                ]
-              },
               "origins" : 
               [
                 "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V"
@@ -2119,20 +2086,9 @@
           "kinds" : 
           [
             {
-              "always_features" : 
-              [
-                "via-shim:Lcom/facebook/marianatrench/integrationtests/ParameterMapping;.definedAndInferred:(Lcom/facebook/marianatrench/integrationtests/ShimTarget;Ljava/lang/Object;Ljava/lang/String;)V"
-              ],
               "call_info" : "CallSite",
               "distance" : 1,
               "kind" : "Sink",
-              "local_features" : 
-              {
-                "always_features" : 
-                [
-                  "via-shim:Lcom/facebook/marianatrench/integrationtests/ParameterMapping;.definedAndInferred:(Lcom/facebook/marianatrench/integrationtests/ShimTarget;Ljava/lang/Object;Ljava/lang/String;)V"
-                ]
-              },
               "origins" : 
               [
                 "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V"
@@ -2154,19 +2110,8 @@
           "kinds" : 
           [
             {
-              "always_features" : 
-              [
-                "via-cast:Ljava/lang/String;"
-              ],
               "call_info" : "Origin",
               "kind" : "Source",
-              "local_features" : 
-              {
-                "always_features" : 
-                [
-                  "via-cast:Ljava/lang/String;"
-                ]
-              },
               "origins" : 
               [
                 "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;"
@@ -2313,20 +2258,9 @@
           "kinds" : 
           [
             {
-              "always_features" : 
-              [
-                "via-shim:Lcom/facebook/marianatrench/integrationtests/ParameterMapping;.defined:(Lcom/facebook/marianatrench/integrationtests/ShimTarget;Ljava/lang/Object;Ljava/lang/String;)V"
-              ],
               "call_info" : "CallSite",
               "distance" : 1,
               "kind" : "Sink",
-              "local_features" : 
-              {
-                "always_features" : 
-                [
-                  "via-shim:Lcom/facebook/marianatrench/integrationtests/ParameterMapping;.defined:(Lcom/facebook/marianatrench/integrationtests/ShimTarget;Ljava/lang/Object;Ljava/lang/String;)V"
-                ]
-              },
               "origins" : 
               [
                 "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V"
@@ -2412,20 +2346,9 @@
           "kinds" : 
           [
             {
-              "always_features" : 
-              [
-                "via-shim:Lcom/facebook/marianatrench/integrationtests/ParameterMapping;.inferred:(Lcom/facebook/marianatrench/integrationtests/ShimTarget;Ljava/lang/Object;)V"
-              ],
               "call_info" : "CallSite",
               "distance" : 1,
               "kind" : "Sink",
-              "local_features" : 
-              {
-                "always_features" : 
-                [
-                  "via-shim:Lcom/facebook/marianatrench/integrationtests/ParameterMapping;.inferred:(Lcom/facebook/marianatrench/integrationtests/ShimTarget;Ljava/lang/Object;)V"
-                ]
-              },
               "origins" : 
               [
                 "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V"
@@ -2511,20 +2434,9 @@
           "kinds" : 
           [
             {
-              "always_features" : 
-              [
-                "via-shim:Lcom/facebook/marianatrench/integrationtests/FragmentTest;.add:(Landroid/app/Activity;Ljava/lang/Object;)V"
-              ],
               "call_info" : "CallSite",
               "distance" : 2,
               "kind" : "Sink",
-              "local_features" : 
-              {
-                "always_features" : 
-                [
-                  "via-shim:Lcom/facebook/marianatrench/integrationtests/FragmentTest;.add:(Landroid/app/Activity;Ljava/lang/Object;)V"
-                ]
-              },
               "origins" : 
               [
                 "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V"
@@ -2610,20 +2522,9 @@
           "kinds" : 
           [
             {
-              "always_features" : 
-              [
-                "via-shim:Lcom/facebook/marianatrench/integrationtests/FragmentTest;.add:(Ljava/lang/Class;Ljava/lang/Object;)V"
-              ],
               "call_info" : "CallSite",
               "distance" : 2,
               "kind" : "Sink",
-              "local_features" : 
-              {
-                "always_features" : 
-                [
-                  "via-shim:Lcom/facebook/marianatrench/integrationtests/FragmentTest;.add:(Ljava/lang/Class;Ljava/lang/Object;)V"
-                ]
-              },
               "origins" : 
               [
                 "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V"
@@ -2709,20 +2610,9 @@
           "kinds" : 
           [
             {
-              "always_features" : 
-              [
-                "via-shim:Lcom/facebook/marianatrench/integrationtests/Messenger;.<init>:(Lcom/facebook/marianatrench/integrationtests/Handler;Ljava/lang/Object;)V"
-              ],
               "call_info" : "CallSite",
               "distance" : 1,
               "kind" : "Sink",
-              "local_features" : 
-              {
-                "always_features" : 
-                [
-                  "via-shim:Lcom/facebook/marianatrench/integrationtests/Messenger;.<init>:(Lcom/facebook/marianatrench/integrationtests/Handler;Ljava/lang/Object;)V"
-                ]
-              },
               "origins" : 
               [
                 "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V"
@@ -2840,20 +2730,9 @@
           "kinds" : 
           [
             {
-              "always_features" : 
-              [
-                "via-shim:Lcom/facebook/marianatrench/integrationtests/ParameterMapping;.<init>:(Lcom/facebook/marianatrench/integrationtests/Handler;Lcom/facebook/marianatrench/integrationtests/Handler;Ljava/lang/Object;Ljava/lang/Object;)V"
-              ],
               "call_info" : "CallSite",
               "distance" : 1,
               "kind" : "Sink",
-              "local_features" : 
-              {
-                "always_features" : 
-                [
-                  "via-shim:Lcom/facebook/marianatrench/integrationtests/ParameterMapping;.<init>:(Lcom/facebook/marianatrench/integrationtests/Handler;Lcom/facebook/marianatrench/integrationtests/Handler;Ljava/lang/Object;Ljava/lang/Object;)V"
-                ]
-              },
               "origins" : 
               [
                 "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V"
@@ -2948,20 +2827,9 @@
           "kinds" : 
           [
             {
-              "always_features" : 
-              [
-                "via-shim:Lcom/facebook/marianatrench/integrationtests/FragmentTest;.add:(Landroid/app/Activity;Ljava/lang/Object;)V"
-              ],
               "call_info" : "CallSite",
               "distance" : 2,
               "kind" : "Sink",
-              "local_features" : 
-              {
-                "always_features" : 
-                [
-                  "via-shim:Lcom/facebook/marianatrench/integrationtests/FragmentTest;.add:(Landroid/app/Activity;Ljava/lang/Object;)V"
-                ]
-              },
               "origins" : 
               [
                 "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V"
@@ -2983,32 +2851,8 @@
           "kinds" : 
           [
             {
-              "always_features" : 
-              [
-                "via-cast:Ljava/lang/String;"
-              ],
               "call_info" : "Origin",
               "kind" : "Source",
-              "local_features" : 
-              {
-                "always_features" : 
-                [
-                  "via-cast:Ljava/lang/String;"
-                ]
-              },
-              "local_positions" : 
-              [
-                {
-                  "end" : 19,
-                  "line" : 188,
-                  "start" : 19
-                },
-                {
-                  "end" : 52,
-                  "line" : 185,
-                  "start" : 29
-                }
-              ],
               "origins" : 
               [
                 "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;"
@@ -3091,20 +2935,9 @@
           "kinds" : 
           [
             {
-              "always_features" : 
-              [
-                "via-shim:Lcom/facebook/marianatrench/integrationtests/ParameterMapping;.callStatic:(Ljava/lang/Object;)V"
-              ],
               "call_info" : "CallSite",
               "distance" : 1,
               "kind" : "Sink",
-              "local_features" : 
-              {
-                "always_features" : 
-                [
-                  "via-shim:Lcom/facebook/marianatrench/integrationtests/ParameterMapping;.callStatic:(Ljava/lang/Object;)V"
-                ]
-              },
               "origins" : 
               [
                 "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V"
@@ -3322,20 +3155,9 @@
           "kinds" : 
           [
             {
-              "always_features" : 
-              [
-                "via-shim:Lcom/facebook/marianatrench/integrationtests/BroadcastReceiverBuilder;.addActionReceiver:(Lcom/facebook/marianatrench/integrationtests/ActionReceiver;Ljava/lang/Object;)V"
-              ],
               "call_info" : "CallSite",
               "distance" : 1,
               "kind" : "Sink",
-              "local_features" : 
-              {
-                "always_features" : 
-                [
-                  "via-shim:Lcom/facebook/marianatrench/integrationtests/BroadcastReceiverBuilder;.addActionReceiver:(Lcom/facebook/marianatrench/integrationtests/ActionReceiver;Ljava/lang/Object;)V"
-                ]
-              },
               "origins" : 
               [
                 "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V"
@@ -3421,20 +3243,9 @@
           "kinds" : 
           [
             {
-              "always_features" : 
-              [
-                "via-shim:Lcom/facebook/marianatrench/integrationtests/BroadcastReceiverBuilder;.addActionReceiver:(Lcom/facebook/marianatrench/integrationtests/ActionReceiver;Lcom/facebook/marianatrench/integrationtests/ActionReceiverLike;Ljava/lang/Object;)V"
-              ],
               "call_info" : "CallSite",
               "distance" : 2,
               "kind" : "Sink",
-              "local_features" : 
-              {
-                "always_features" : 
-                [
-                  "via-shim:Lcom/facebook/marianatrench/integrationtests/BroadcastReceiverBuilder;.addActionReceiver:(Lcom/facebook/marianatrench/integrationtests/ActionReceiver;Lcom/facebook/marianatrench/integrationtests/ActionReceiverLike;Ljava/lang/Object;)V"
-                ]
-              },
               "origins" : 
               [
                 "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V"
@@ -3465,20 +3276,9 @@
           "kinds" : 
           [
             {
-              "always_features" : 
-              [
-                "via-shim:Lcom/facebook/marianatrench/integrationtests/BroadcastReceiverBuilder;.addActionReceiver:(Lcom/facebook/marianatrench/integrationtests/ActionReceiver;Lcom/facebook/marianatrench/integrationtests/ActionReceiverLike;Ljava/lang/Object;)V"
-              ],
               "call_info" : "CallSite",
               "distance" : 1,
               "kind" : "Sink",
-              "local_features" : 
-              {
-                "always_features" : 
-                [
-                  "via-shim:Lcom/facebook/marianatrench/integrationtests/BroadcastReceiverBuilder;.addActionReceiver:(Lcom/facebook/marianatrench/integrationtests/ActionReceiver;Lcom/facebook/marianatrench/integrationtests/ActionReceiverLike;Ljava/lang/Object;)V"
-                ]
-              },
               "origins" : 
               [
                 "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V"

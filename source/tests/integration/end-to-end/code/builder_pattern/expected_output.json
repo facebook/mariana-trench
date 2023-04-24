@@ -1311,27 +1311,8 @@
           "kinds" : 
           [
             {
-              "always_features" : 
-              [
-                "via-certificate-pinner"
-              ],
               "call_info" : "Origin",
               "kind" : "Source",
-              "local_features" : 
-              {
-                "always_features" : 
-                [
-                  "via-certificate-pinner"
-                ]
-              },
-              "local_positions" : 
-              [
-                {
-                  "end" : 10,
-                  "line" : 60,
-                  "start" : 4
-                }
-              ],
               "origins" : 
               [
                 "Lcom/facebook/marianatrench/integrationtests/Test$Builder;.<init>:()V"
@@ -1436,28 +1417,9 @@
           "kinds" : 
           [
             {
-              "always_features" : 
-              [
-                "via-certificate-pinner"
-              ],
               "call_info" : "CallSite",
               "distance" : 1,
               "kind" : "Source",
-              "local_features" : 
-              {
-                "always_features" : 
-                [
-                  "via-certificate-pinner"
-                ]
-              },
-              "local_positions" : 
-              [
-                {
-                  "end" : 44,
-                  "line" : 74,
-                  "start" : 4
-                }
-              ],
               "origins" : 
               [
                 "Lcom/facebook/marianatrench/integrationtests/Test$Builder;.<init>:()V"
@@ -1484,27 +1446,8 @@
           "kinds" : 
           [
             {
-              "always_features" : 
-              [
-                "via-certificate-pinner"
-              ],
               "call_info" : "Origin",
               "kind" : "Source",
-              "local_features" : 
-              {
-                "always_features" : 
-                [
-                  "via-certificate-pinner"
-                ]
-              },
-              "local_positions" : 
-              [
-                {
-                  "end" : 10,
-                  "line" : 74,
-                  "start" : 4
-                }
-              ],
               "origins" : 
               [
                 "Lcom/facebook/marianatrench/integrationtests/Test$Builder;.<init>:()V"
@@ -1595,14 +1538,6 @@
             {
               "call_info" : "Origin",
               "kind" : "Source",
-              "local_positions" : 
-              [
-                {
-                  "end" : 10,
-                  "line" : 67,
-                  "start" : 4
-                }
-              ],
               "origins" : 
               [
                 "Lcom/facebook/marianatrench/integrationtests/Test$Builder;.<init>:()V"

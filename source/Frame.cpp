@@ -203,10 +203,7 @@ void Frame::update_maximum_collapse_depth(
   });
 }
 
-Json::Value Frame::to_json(
-    const LocalPositionSet& local_positions,
-    const FeatureMayAlwaysSet& local_features,
-    ExportOriginsMode export_origins_mode) const {
+Json::Value Frame::to_json(ExportOriginsMode export_origins_mode) const {
   auto value = Json::Value(Json::objectValue);
 
   mt_assert(kind_ != nullptr);
@@ -235,15 +232,10 @@ Json::Value Frame::to_json(
     value["field_origins"] = field_origins_.to_json();
   }
 
-  auto all_features = local_features;
-  all_features.add(features());
+  // For output purposes, user features and inferred features are not
+  // differentiated.
+  auto all_features = features();
   JsonValidation::update_object(value, all_features.to_json());
-
-  auto all_local_features = local_features;
-  all_local_features.add_always(user_features_);
-  if (!all_local_features.is_bottom() && !all_local_features.empty()) {
-    value["local_features"] = all_local_features.to_json();
-  }
 
   if (via_type_of_ports_.is_value() && !via_type_of_ports_.elements().empty()) {
     auto ports = Json::Value(Json::arrayValue);
@@ -260,12 +252,6 @@ Json::Value Frame::to_json(
       ports.append(root.to_json());
     }
     value["via_value_of"] = ports;
-  }
-
-  // TODO(T91357916): Emit local positions in Frame json until parser is updated
-  // to read from CalleePortFrames.
-  if (local_positions.is_value() && !local_positions.empty()) {
-    value["local_positions"] = local_positions.to_json();
   }
 
   if (canonical_names_.is_value() && !canonical_names_.elements().empty()) {

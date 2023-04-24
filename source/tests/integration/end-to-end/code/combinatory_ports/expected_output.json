@@ -882,19 +882,8 @@
           "kinds" : 
           [
             {
-              "always_features" : 
-              [
-                "via-inner-class-this"
-              ],
               "call_info" : "Propagation",
               "kind" : "LocalArgument(0)",
-              "local_features" : 
-              {
-                "always_features" : 
-                [
-                  "via-inner-class-this"
-                ]
-              },
               "output_paths" : 
               {
                 ".this$0" : 3
@@ -947,13 +936,6 @@
               "call_info" : "CallSite",
               "distance" : 4,
               "kind" : "Sink",
-              "local_features" : 
-              {
-                "always_features" : 
-                [
-                  "via-widen-broadening"
-                ]
-              },
               "origins" : 
               [
                 "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V"
@@ -989,13 +971,6 @@
               "call_info" : "CallSite",
               "distance" : 4,
               "kind" : "Sink",
-              "local_features" : 
-              {
-                "always_features" : 
-                [
-                  "via-widen-broadening"
-                ]
-              },
               "origins" : 
               [
                 "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V"
@@ -1031,13 +1006,6 @@
               "call_info" : "CallSite",
               "distance" : 4,
               "kind" : "Sink",
-              "local_features" : 
-              {
-                "always_features" : 
-                [
-                  "via-widen-broadening"
-                ]
-              },
               "origins" : 
               [
                 "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V"
@@ -1066,20 +1034,9 @@
           "kinds" : 
           [
             {
-              "always_features" : 
-              [
-                "via-widen-broadening"
-              ],
               "call_info" : "CallSite",
               "distance" : 3,
               "kind" : "Sink",
-              "local_features" : 
-              {
-                "always_features" : 
-                [
-                  "via-widen-broadening"
-                ]
-              },
               "origins" : 
               [
                 "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V"
@@ -1121,13 +1078,6 @@
               "call_info" : "CallSite",
               "distance" : 4,
               "kind" : "Sink",
-              "local_features" : 
-              {
-                "always_features" : 
-                [
-                  "via-widen-broadening"
-                ]
-              },
               "origins" : 
               [
                 "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V"
@@ -1163,13 +1113,6 @@
               "call_info" : "CallSite",
               "distance" : 4,
               "kind" : "Sink",
-              "local_features" : 
-              {
-                "always_features" : 
-                [
-                  "via-widen-broadening"
-                ]
-              },
               "origins" : 
               [
                 "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V"
@@ -1205,13 +1148,6 @@
               "call_info" : "CallSite",
               "distance" : 4,
               "kind" : "Sink",
-              "local_features" : 
-              {
-                "always_features" : 
-                [
-                  "via-widen-broadening"
-                ]
-              },
               "origins" : 
               [
                 "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V"
@@ -1240,20 +1176,9 @@
           "kinds" : 
           [
             {
-              "always_features" : 
-              [
-                "via-widen-broadening"
-              ],
               "call_info" : "CallSite",
               "distance" : 3,
               "kind" : "Sink",
-              "local_features" : 
-              {
-                "always_features" : 
-                [
-                  "via-widen-broadening"
-                ]
-              },
               "origins" : 
               [
                 "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V"
@@ -1295,13 +1220,6 @@
               "call_info" : "CallSite",
               "distance" : 4,
               "kind" : "Sink",
-              "local_features" : 
-              {
-                "always_features" : 
-                [
-                  "via-widen-broadening"
-                ]
-              },
               "origins" : 
               [
                 "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V"
@@ -1337,13 +1255,6 @@
               "call_info" : "CallSite",
               "distance" : 4,
               "kind" : "Sink",
-              "local_features" : 
-              {
-                "always_features" : 
-                [
-                  "via-widen-broadening"
-                ]
-              },
               "origins" : 
               [
                 "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V"
@@ -1379,13 +1290,6 @@
               "call_info" : "CallSite",
               "distance" : 4,
               "kind" : "Sink",
-              "local_features" : 
-              {
-                "always_features" : 
-                [
-                  "via-widen-broadening"
-                ]
-              },
               "origins" : 
               [
                 "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V"
@@ -1414,20 +1318,9 @@
           "kinds" : 
           [
             {
-              "always_features" : 
-              [
-                "via-widen-broadening"
-              ],
               "call_info" : "CallSite",
               "distance" : 3,
               "kind" : "Sink",
-              "local_features" : 
-              {
-                "always_features" : 
-                [
-                  "via-widen-broadening"
-                ]
-              },
               "origins" : 
               [
                 "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V"
@@ -1499,13 +1392,6 @@
               "call_info" : "CallSite",
               "distance" : 4,
               "kind" : "Sink",
-              "local_features" : 
-              {
-                "always_features" : 
-                [
-                  "via-widen-broadening"
-                ]
-              },
               "origins" : 
               [
                 "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V"
@@ -1541,13 +1427,6 @@
               "call_info" : "CallSite",
               "distance" : 4,
               "kind" : "Sink",
-              "local_features" : 
-              {
-                "always_features" : 
-                [
-                  "via-widen-broadening"
-                ]
-              },
               "origins" : 
               [
                 "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V"
@@ -1583,13 +1462,6 @@
               "call_info" : "CallSite",
               "distance" : 4,
               "kind" : "Sink",
-              "local_features" : 
-              {
-                "always_features" : 
-                [
-                  "via-widen-broadening"
-                ]
-              },
               "origins" : 
               [
                 "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V"
@@ -1618,20 +1490,9 @@
           "kinds" : 
           [
             {
-              "always_features" : 
-              [
-                "via-widen-broadening"
-              ],
               "call_info" : "CallSite",
               "distance" : 3,
               "kind" : "Sink",
-              "local_features" : 
-              {
-                "always_features" : 
-                [
-                  "via-widen-broadening"
-                ]
-              },
               "origins" : 
               [
                 "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V"
@@ -1673,13 +1534,6 @@
               "call_info" : "CallSite",
               "distance" : 4,
               "kind" : "Sink",
-              "local_features" : 
-              {
-                "always_features" : 
-                [
-                  "via-widen-broadening"
-                ]
-              },
               "origins" : 
               [
                 "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V"
@@ -1715,13 +1569,6 @@
               "call_info" : "CallSite",
               "distance" : 4,
               "kind" : "Sink",
-              "local_features" : 
-              {
-                "always_features" : 
-                [
-                  "via-widen-broadening"
-                ]
-              },
               "origins" : 
               [
                 "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V"
@@ -1757,13 +1604,6 @@
               "call_info" : "CallSite",
               "distance" : 4,
               "kind" : "Sink",
-              "local_features" : 
-              {
-                "always_features" : 
-                [
-                  "via-widen-broadening"
-                ]
-              },
               "origins" : 
               [
                 "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V"
@@ -1792,20 +1632,9 @@
           "kinds" : 
           [
             {
-              "always_features" : 
-              [
-                "via-widen-broadening"
-              ],
               "call_info" : "CallSite",
               "distance" : 3,
               "kind" : "Sink",
-              "local_features" : 
-              {
-                "always_features" : 
-                [
-                  "via-widen-broadening"
-                ]
-              },
               "origins" : 
               [
                 "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V"
@@ -1847,13 +1676,6 @@
               "call_info" : "CallSite",
               "distance" : 4,
               "kind" : "Sink",
-              "local_features" : 
-              {
-                "always_features" : 
-                [
-                  "via-widen-broadening"
-                ]
-              },
               "origins" : 
               [
                 "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V"
@@ -1889,13 +1711,6 @@
               "call_info" : "CallSite",
               "distance" : 4,
               "kind" : "Sink",
-              "local_features" : 
-              {
-                "always_features" : 
-                [
-                  "via-widen-broadening"
-                ]
-              },
               "origins" : 
               [
                 "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V"
@@ -1931,13 +1746,6 @@
               "call_info" : "CallSite",
               "distance" : 4,
               "kind" : "Sink",
-              "local_features" : 
-              {
-                "always_features" : 
-                [
-                  "via-widen-broadening"
-                ]
-              },
               "origins" : 
               [
                 "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V"
@@ -1966,20 +1774,9 @@
           "kinds" : 
           [
             {
-              "always_features" : 
-              [
-                "via-widen-broadening"
-              ],
               "call_info" : "CallSite",
               "distance" : 3,
               "kind" : "Sink",
-              "local_features" : 
-              {
-                "always_features" : 
-                [
-                  "via-widen-broadening"
-                ]
-              },
               "origins" : 
               [
                 "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V"
@@ -2051,13 +1848,6 @@
               "call_info" : "CallSite",
               "distance" : 4,
               "kind" : "Sink",
-              "local_features" : 
-              {
-                "always_features" : 
-                [
-                  "via-widen-broadening"
-                ]
-              },
               "origins" : 
               [
                 "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V"
@@ -2093,13 +1883,6 @@
               "call_info" : "CallSite",
               "distance" : 4,
               "kind" : "Sink",
-              "local_features" : 
-              {
-                "always_features" : 
-                [
-                  "via-widen-broadening"
-                ]
-              },
               "origins" : 
               [
                 "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V"
@@ -2135,13 +1918,6 @@
               "call_info" : "CallSite",
               "distance" : 4,
               "kind" : "Sink",
-              "local_features" : 
-              {
-                "always_features" : 
-                [
-                  "via-widen-broadening"
-                ]
-              },
               "origins" : 
               [
                 "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V"
@@ -2170,20 +1946,9 @@
           "kinds" : 
           [
             {
-              "always_features" : 
-              [
-                "via-widen-broadening"
-              ],
               "call_info" : "CallSite",
               "distance" : 3,
               "kind" : "Sink",
-              "local_features" : 
-              {
-                "always_features" : 
-                [
-                  "via-widen-broadening"
-                ]
-              },
               "origins" : 
               [
                 "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V"
@@ -2225,13 +1990,6 @@
               "call_info" : "CallSite",
               "distance" : 4,
               "kind" : "Sink",
-              "local_features" : 
-              {
-                "always_features" : 
-                [
-                  "via-widen-broadening"
-                ]
-              },
               "origins" : 
               [
                 "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V"
@@ -2267,13 +2025,6 @@
               "call_info" : "CallSite",
               "distance" : 4,
               "kind" : "Sink",
-              "local_features" : 
-              {
-                "always_features" : 
-                [
-                  "via-widen-broadening"
-                ]
-              },
               "origins" : 
               [
                 "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V"
@@ -2309,13 +2060,6 @@
               "call_info" : "CallSite",
               "distance" : 4,
               "kind" : "Sink",
-              "local_features" : 
-              {
-                "always_features" : 
-                [
-                  "via-widen-broadening"
-                ]
-              },
               "origins" : 
               [
                 "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V"
@@ -2344,20 +2088,9 @@
           "kinds" : 
           [
             {
-              "always_features" : 
-              [
-                "via-widen-broadening"
-              ],
               "call_info" : "CallSite",
               "distance" : 3,
               "kind" : "Sink",
-              "local_features" : 
-              {
-                "always_features" : 
-                [
-                  "via-widen-broadening"
-                ]
-              },
               "origins" : 
               [
                 "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V"
@@ -2399,13 +2132,6 @@
               "call_info" : "CallSite",
               "distance" : 4,
               "kind" : "Sink",
-              "local_features" : 
-              {
-                "always_features" : 
-                [
-                  "via-widen-broadening"
-                ]
-              },
               "origins" : 
               [
                 "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V"
@@ -2441,13 +2167,6 @@
               "call_info" : "CallSite",
               "distance" : 4,
               "kind" : "Sink",
-              "local_features" : 
-              {
-                "always_features" : 
-                [
-                  "via-widen-broadening"
-                ]
-              },
               "origins" : 
               [
                 "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V"
@@ -2483,13 +2202,6 @@
               "call_info" : "CallSite",
               "distance" : 4,
               "kind" : "Sink",
-              "local_features" : 
-              {
-                "always_features" : 
-                [
-                  "via-widen-broadening"
-                ]
-              },
               "origins" : 
               [
                 "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V"
@@ -2518,20 +2230,9 @@
           "kinds" : 
           [
             {
-              "always_features" : 
-              [
-                "via-widen-broadening"
-              ],
               "call_info" : "CallSite",
               "distance" : 3,
               "kind" : "Sink",
-              "local_features" : 
-              {
-                "always_features" : 
-                [
-                  "via-widen-broadening"
-                ]
-              },
               "origins" : 
               [
                 "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V"
@@ -2627,19 +2328,8 @@
           "kinds" : 
           [
             {
-              "always_features" : 
-              [
-                "via-inner-class-this"
-              ],
               "call_info" : "Propagation",
               "kind" : "LocalArgument(0)",
-              "local_features" : 
-              {
-                "always_features" : 
-                [
-                  "via-inner-class-this"
-                ]
-              },
               "output_paths" : 
               {
                 ".this$0" : 3
@@ -2692,13 +2382,6 @@
               "call_info" : "CallSite",
               "distance" : 4,
               "kind" : "Sink",
-              "local_features" : 
-              {
-                "always_features" : 
-                [
-                  "via-widen-broadening"
-                ]
-              },
               "origins" : 
               [
                 "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V"
@@ -2734,13 +2417,6 @@
               "call_info" : "CallSite",
               "distance" : 4,
               "kind" : "Sink",
-              "local_features" : 
-              {
-                "always_features" : 
-                [
-                  "via-widen-broadening"
-                ]
-              },
               "origins" : 
               [
                 "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V"
@@ -2776,13 +2452,6 @@
               "call_info" : "CallSite",
               "distance" : 4,
               "kind" : "Sink",
-              "local_features" : 
-              {
-                "always_features" : 
-                [
-                  "via-widen-broadening"
-                ]
-              },
               "origins" : 
               [
                 "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V"
@@ -2811,20 +2480,9 @@
           "kinds" : 
           [
             {
-              "always_features" : 
-              [
-                "via-widen-broadening"
-              ],
               "call_info" : "CallSite",
               "distance" : 3,
               "kind" : "Sink",
-              "local_features" : 
-              {
-                "always_features" : 
-                [
-                  "via-widen-broadening"
-                ]
-              },
               "origins" : 
               [
                 "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V"
@@ -2866,13 +2524,6 @@
               "call_info" : "CallSite",
               "distance" : 4,
               "kind" : "Sink",
-              "local_features" : 
-              {
-                "always_features" : 
-                [
-                  "via-widen-broadening"
-                ]
-              },
               "origins" : 
               [
                 "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V"
@@ -2908,13 +2559,6 @@
               "call_info" : "CallSite",
               "distance" : 4,
               "kind" : "Sink",
-              "local_features" : 
-              {
-                "always_features" : 
-                [
-                  "via-widen-broadening"
-                ]
-              },
               "origins" : 
               [
                 "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V"
@@ -2950,13 +2594,6 @@
               "call_info" : "CallSite",
               "distance" : 4,
               "kind" : "Sink",
-              "local_features" : 
-              {
-                "always_features" : 
-                [
-                  "via-widen-broadening"
-                ]
-              },
               "origins" : 
               [
                 "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V"
@@ -2985,20 +2622,9 @@
           "kinds" : 
           [
             {
-              "always_features" : 
-              [
-                "via-widen-broadening"
-              ],
               "call_info" : "CallSite",
               "distance" : 3,
               "kind" : "Sink",
-              "local_features" : 
-              {
-                "always_features" : 
-                [
-                  "via-widen-broadening"
-                ]
-              },
               "origins" : 
               [
                 "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V"
@@ -3040,13 +2666,6 @@
               "call_info" : "CallSite",
               "distance" : 4,
               "kind" : "Sink",
-              "local_features" : 
-              {
-                "always_features" : 
-                [
-                  "via-widen-broadening"
-                ]
-              },
               "origins" : 
               [
                 "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V"
@@ -3082,13 +2701,6 @@
               "call_info" : "CallSite",
               "distance" : 4,
               "kind" : "Sink",
-              "local_features" : 
-              {
-                "always_features" : 
-                [
-                  "via-widen-broadening"
-                ]
-              },
               "origins" : 
               [
                 "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V"
@@ -3124,13 +2736,6 @@
               "call_info" : "CallSite",
               "distance" : 4,
               "kind" : "Sink",
-              "local_features" : 
-              {
-                "always_features" : 
-                [
-                  "via-widen-broadening"
-                ]
-              },
               "origins" : 
               [
                 "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V"
@@ -3159,20 +2764,9 @@
           "kinds" : 
           [
             {
-              "always_features" : 
-              [
-                "via-widen-broadening"
-              ],
               "call_info" : "CallSite",
               "distance" : 3,
               "kind" : "Sink",
-              "local_features" : 
-              {
-                "always_features" : 
-                [
-                  "via-widen-broadening"
-                ]
-              },
               "origins" : 
               [
                 "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V"
@@ -3244,13 +2838,6 @@
               "call_info" : "CallSite",
               "distance" : 4,
               "kind" : "Sink",
-              "local_features" : 
-              {
-                "always_features" : 
-                [
-                  "via-widen-broadening"
-                ]
-              },
               "origins" : 
               [
                 "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V"
@@ -3286,13 +2873,6 @@
               "call_info" : "CallSite",
               "distance" : 4,
               "kind" : "Sink",
-              "local_features" : 
-              {
-                "always_features" : 
-                [
-                  "via-widen-broadening"
-                ]
-              },
               "origins" : 
               [
                 "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V"
@@ -3328,13 +2908,6 @@
               "call_info" : "CallSite",
               "distance" : 4,
               "kind" : "Sink",
-              "local_features" : 
-              {
-                "always_features" : 
-                [
-                  "via-widen-broadening"
-                ]
-              },
               "origins" : 
               [
                 "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V"
@@ -3363,20 +2936,9 @@
           "kinds" : 
           [
             {
-              "always_features" : 
-              [
-                "via-widen-broadening"
-              ],
               "call_info" : "CallSite",
               "distance" : 3,
               "kind" : "Sink",
-              "local_features" : 
-              {
-                "always_features" : 
-                [
-                  "via-widen-broadening"
-                ]
-              },
               "origins" : 
               [
                 "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V"
@@ -3418,13 +2980,6 @@
               "call_info" : "CallSite",
               "distance" : 4,
               "kind" : "Sink",
-              "local_features" : 
-              {
-                "always_features" : 
-                [
-                  "via-widen-broadening"
-                ]
-              },
               "origins" : 
               [
                 "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V"
@@ -3460,13 +3015,6 @@
               "call_info" : "CallSite",
               "distance" : 4,
               "kind" : "Sink",
-              "local_features" : 
-              {
-                "always_features" : 
-                [
-                  "via-widen-broadening"
-                ]
-              },
               "origins" : 
               [
                 "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V"
@@ -3502,13 +3050,6 @@
               "call_info" : "CallSite",
               "distance" : 4,
               "kind" : "Sink",
-              "local_features" : 
-              {
-                "always_features" : 
-                [
-                  "via-widen-broadening"
-                ]
-              },
               "origins" : 
               [
                 "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V"
@@ -3537,20 +3078,9 @@
           "kinds" : 
           [
             {
-              "always_features" : 
-              [
-                "via-widen-broadening"
-              ],
               "call_info" : "CallSite",
               "distance" : 3,
               "kind" : "Sink",
-              "local_features" : 
-              {
-                "always_features" : 
-                [
-                  "via-widen-broadening"
-                ]
-              },
               "origins" : 
               [
                 "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V"
@@ -3592,13 +3122,6 @@
               "call_info" : "CallSite",
               "distance" : 4,
               "kind" : "Sink",
-              "local_features" : 
-              {
-                "always_features" : 
-                [
-                  "via-widen-broadening"
-                ]
-              },
               "origins" : 
               [
                 "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V"
@@ -3634,13 +3157,6 @@
               "call_info" : "CallSite",
               "distance" : 4,
               "kind" : "Sink",
-              "local_features" : 
-              {
-                "always_features" : 
-                [
-                  "via-widen-broadening"
-                ]
-              },
               "origins" : 
               [
                 "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V"
@@ -3676,13 +3192,6 @@
               "call_info" : "CallSite",
               "distance" : 4,
               "kind" : "Sink",
-              "local_features" : 
-              {
-                "always_features" : 
-                [
-                  "via-widen-broadening"
-                ]
-              },
               "origins" : 
               [
                 "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V"
@@ -3711,20 +3220,9 @@
           "kinds" : 
           [
             {
-              "always_features" : 
-              [
-                "via-widen-broadening"
-              ],
               "call_info" : "CallSite",
               "distance" : 3,
               "kind" : "Sink",
-              "local_features" : 
-              {
-                "always_features" : 
-                [
-                  "via-widen-broadening"
-                ]
-              },
               "origins" : 
               [
                 "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V"
@@ -3796,13 +3294,6 @@
               "call_info" : "CallSite",
               "distance" : 4,
               "kind" : "Sink",
-              "local_features" : 
-              {
-                "always_features" : 
-                [
-                  "via-widen-broadening"
-                ]
-              },
               "origins" : 
               [
                 "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V"
@@ -3838,13 +3329,6 @@
               "call_info" : "CallSite",
               "distance" : 4,
               "kind" : "Sink",
-              "local_features" : 
-              {
-                "always_features" : 
-                [
-                  "via-widen-broadening"
-                ]
-              },
               "origins" : 
               [
                 "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V"
@@ -3880,13 +3364,6 @@
               "call_info" : "CallSite",
               "distance" : 4,
               "kind" : "Sink",
-              "local_features" : 
-              {
-                "always_features" : 
-                [
-                  "via-widen-broadening"
-                ]
-              },
               "origins" : 
               [
                 "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V"
@@ -3915,20 +3392,9 @@
           "kinds" : 
           [
             {
-              "always_features" : 
-              [
-                "via-widen-broadening"
-              ],
               "call_info" : "CallSite",
               "distance" : 3,
               "kind" : "Sink",
-              "local_features" : 
-              {
-                "always_features" : 
-                [
-                  "via-widen-broadening"
-                ]
-              },
               "origins" : 
               [
                 "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V"
@@ -3970,13 +3436,6 @@
               "call_info" : "CallSite",
               "distance" : 4,
               "kind" : "Sink",
-              "local_features" : 
-              {
-                "always_features" : 
-                [
-                  "via-widen-broadening"
-                ]
-              },
               "origins" : 
               [
                 "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V"
@@ -4012,13 +3471,6 @@
               "call_info" : "CallSite",
               "distance" : 4,
               "kind" : "Sink",
-              "local_features" : 
-              {
-                "always_features" : 
-                [
-                  "via-widen-broadening"
-                ]
-              },
               "origins" : 
               [
                 "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V"
@@ -4054,13 +3506,6 @@
               "call_info" : "CallSite",
               "distance" : 4,
               "kind" : "Sink",
-              "local_features" : 
-              {
-                "always_features" : 
-                [
-                  "via-widen-broadening"
-                ]
-              },
               "origins" : 
               [
                 "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V"
@@ -4089,20 +3534,9 @@
           "kinds" : 
           [
             {
-              "always_features" : 
-              [
-                "via-widen-broadening"
-              ],
               "call_info" : "CallSite",
               "distance" : 3,
               "kind" : "Sink",
-              "local_features" : 
-              {
-                "always_features" : 
-                [
-                  "via-widen-broadening"
-                ]
-              },
               "origins" : 
               [
                 "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V"
@@ -4144,13 +3578,6 @@
               "call_info" : "CallSite",
               "distance" : 4,
               "kind" : "Sink",
-              "local_features" : 
-              {
-                "always_features" : 
-                [
-                  "via-widen-broadening"
-                ]
-              },
               "origins" : 
               [
                 "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V"
@@ -4186,13 +3613,6 @@
               "call_info" : "CallSite",
               "distance" : 4,
               "kind" : "Sink",
-              "local_features" : 
-              {
-                "always_features" : 
-                [
-                  "via-widen-broadening"
-                ]
-              },
               "origins" : 
               [
                 "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V"
@@ -4228,13 +3648,6 @@
               "call_info" : "CallSite",
               "distance" : 4,
               "kind" : "Sink",
-              "local_features" : 
-              {
-                "always_features" : 
-                [
-                  "via-widen-broadening"
-                ]
-              },
               "origins" : 
               [
                 "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V"
@@ -4263,20 +3676,9 @@
           "kinds" : 
           [
             {
-              "always_features" : 
-              [
-                "via-widen-broadening"
-              ],
               "call_info" : "CallSite",
               "distance" : 3,
               "kind" : "Sink",
-              "local_features" : 
-              {
-                "always_features" : 
-                [
-                  "via-widen-broadening"
-                ]
-              },
               "origins" : 
               [
                 "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V"
@@ -4384,19 +3786,8 @@
           "kinds" : 
           [
             {
-              "always_features" : 
-              [
-                "via-inner-class-this"
-              ],
               "call_info" : "Propagation",
               "kind" : "LocalArgument(0)",
-              "local_features" : 
-              {
-                "always_features" : 
-                [
-                  "via-inner-class-this"
-                ]
-              },
               "output_paths" : 
               {
                 ".this$0" : 3
@@ -4449,13 +3840,6 @@
               "call_info" : "CallSite",
               "distance" : 4,
               "kind" : "Sink",
-              "local_features" : 
-              {
-                "always_features" : 
-                [
-                  "via-widen-broadening"
-                ]
-              },
               "origins" : 
               [
                 "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V"
@@ -4491,13 +3875,6 @@
               "call_info" : "CallSite",
               "distance" : 4,
               "kind" : "Sink",
-              "local_features" : 
-              {
-                "always_features" : 
-                [
-                  "via-widen-broadening"
-                ]
-              },
               "origins" : 
               [
                 "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V"
@@ -4533,13 +3910,6 @@
               "call_info" : "CallSite",
               "distance" : 4,
               "kind" : "Sink",
-              "local_features" : 
-              {
-                "always_features" : 
-                [
-                  "via-widen-broadening"
-                ]
-              },
               "origins" : 
               [
                 "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V"
@@ -4568,20 +3938,9 @@
           "kinds" : 
           [
             {
-              "always_features" : 
-              [
-                "via-widen-broadening"
-              ],
               "call_info" : "CallSite",
               "distance" : 3,
               "kind" : "Sink",
-              "local_features" : 
-              {
-                "always_features" : 
-                [
-                  "via-widen-broadening"
-                ]
-              },
               "origins" : 
               [
                 "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V"
@@ -4623,13 +3982,6 @@
               "call_info" : "CallSite",
               "distance" : 4,
               "kind" : "Sink",
-              "local_features" : 
-              {
-                "always_features" : 
-                [
-                  "via-widen-broadening"
-                ]
-              },
               "origins" : 
               [
                 "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V"
@@ -4665,13 +4017,6 @@
               "call_info" : "CallSite",
               "distance" : 4,
               "kind" : "Sink",
-              "local_features" : 
-              {
-                "always_features" : 
-                [
-                  "via-widen-broadening"
-                ]
-              },
               "origins" : 
               [
                 "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V"
@@ -4707,13 +4052,6 @@
               "call_info" : "CallSite",
               "distance" : 4,
               "kind" : "Sink",
-              "local_features" : 
-              {
-                "always_features" : 
-                [
-                  "via-widen-broadening"
-                ]
-              },
               "origins" : 
               [
                 "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V"
@@ -4742,20 +4080,9 @@
           "kinds" : 
           [
             {
-              "always_features" : 
-              [
-                "via-widen-broadening"
-              ],
               "call_info" : "CallSite",
               "distance" : 3,
               "kind" : "Sink",
-              "local_features" : 
-              {
-                "always_features" : 
-                [
-                  "via-widen-broadening"
-                ]
-              },
               "origins" : 
               [
                 "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V"
@@ -4797,13 +4124,6 @@
               "call_info" : "CallSite",
               "distance" : 4,
               "kind" : "Sink",
-              "local_features" : 
-              {
-                "always_features" : 
-                [
-                  "via-widen-broadening"
-                ]
-              },
               "origins" : 
               [
                 "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V"
@@ -4839,13 +4159,6 @@
               "call_info" : "CallSite",
               "distance" : 4,
               "kind" : "Sink",
-              "local_features" : 
-              {
-                "always_features" : 
-                [
-                  "via-widen-broadening"
-                ]
-              },
               "origins" : 
               [
                 "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V"
@@ -4881,13 +4194,6 @@
               "call_info" : "CallSite",
               "distance" : 4,
               "kind" : "Sink",
-              "local_features" : 
-              {
-                "always_features" : 
-                [
-                  "via-widen-broadening"
-                ]
-              },
               "origins" : 
               [
                 "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V"
@@ -4916,20 +4222,9 @@
           "kinds" : 
           [
             {
-              "always_features" : 
-              [
-                "via-widen-broadening"
-              ],
               "call_info" : "CallSite",
               "distance" : 3,
               "kind" : "Sink",
-              "local_features" : 
-              {
-                "always_features" : 
-                [
-                  "via-widen-broadening"
-                ]
-              },
               "origins" : 
               [
                 "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V"
@@ -5001,13 +4296,6 @@
               "call_info" : "CallSite",
               "distance" : 4,
               "kind" : "Sink",
-              "local_features" : 
-              {
-                "always_features" : 
-                [
-                  "via-widen-broadening"
-                ]
-              },
               "origins" : 
               [
                 "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V"
@@ -5043,13 +4331,6 @@
               "call_info" : "CallSite",
               "distance" : 4,
               "kind" : "Sink",
-              "local_features" : 
-              {
-                "always_features" : 
-                [
-                  "via-widen-broadening"
-                ]
-              },
               "origins" : 
               [
                 "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V"
@@ -5085,13 +4366,6 @@
               "call_info" : "CallSite",
               "distance" : 4,
               "kind" : "Sink",
-              "local_features" : 
-              {
-                "always_features" : 
-                [
-                  "via-widen-broadening"
-                ]
-              },
               "origins" : 
               [
                 "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V"
@@ -5120,20 +4394,9 @@
           "kinds" : 
           [
             {
-              "always_features" : 
-              [
-                "via-widen-broadening"
-              ],
               "call_info" : "CallSite",
               "distance" : 3,
               "kind" : "Sink",
-              "local_features" : 
-              {
-                "always_features" : 
-                [
-                  "via-widen-broadening"
-                ]
-              },
               "origins" : 
               [
                 "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V"
@@ -5175,13 +4438,6 @@
               "call_info" : "CallSite",
               "distance" : 4,
               "kind" : "Sink",
-              "local_features" : 
-              {
-                "always_features" : 
-                [
-                  "via-widen-broadening"
-                ]
-              },
               "origins" : 
               [
                 "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V"
@@ -5217,13 +4473,6 @@
               "call_info" : "CallSite",
               "distance" : 4,
               "kind" : "Sink",
-              "local_features" : 
-              {
-                "always_features" : 
-                [
-                  "via-widen-broadening"
-                ]
-              },
               "origins" : 
               [
                 "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V"
@@ -5259,13 +4508,6 @@
               "call_info" : "CallSite",
               "distance" : 4,
               "kind" : "Sink",
-              "local_features" : 
-              {
-                "always_features" : 
-                [
-                  "via-widen-broadening"
-                ]
-              },
               "origins" : 
               [
                 "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V"
@@ -5294,20 +4536,9 @@
           "kinds" : 
           [
             {
-              "always_features" : 
-              [
-                "via-widen-broadening"
-              ],
               "call_info" : "CallSite",
               "distance" : 3,
               "kind" : "Sink",
-              "local_features" : 
-              {
-                "always_features" : 
-                [
-                  "via-widen-broadening"
-                ]
-              },
               "origins" : 
               [
                 "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V"
@@ -5349,13 +4580,6 @@
               "call_info" : "CallSite",
               "distance" : 4,
               "kind" : "Sink",
-              "local_features" : 
-              {
-                "always_features" : 
-                [
-                  "via-widen-broadening"
-                ]
-              },
               "origins" : 
               [
                 "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V"
@@ -5391,13 +4615,6 @@
               "call_info" : "CallSite",
               "distance" : 4,
               "kind" : "Sink",
-              "local_features" : 
-              {
-                "always_features" : 
-                [
-                  "via-widen-broadening"
-                ]
-              },
               "origins" : 
               [
                 "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V"
@@ -5433,13 +4650,6 @@
               "call_info" : "CallSite",
               "distance" : 4,
               "kind" : "Sink",
-              "local_features" : 
-              {
-                "always_features" : 
-                [
-                  "via-widen-broadening"
-                ]
-              },
               "origins" : 
               [
                 "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V"
@@ -5468,20 +4678,9 @@
           "kinds" : 
           [
             {
-              "always_features" : 
-              [
-                "via-widen-broadening"
-              ],
               "call_info" : "CallSite",
               "distance" : 3,
               "kind" : "Sink",
-              "local_features" : 
-              {
-                "always_features" : 
-                [
-                  "via-widen-broadening"
-                ]
-              },
               "origins" : 
               [
                 "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V"
@@ -5553,13 +4752,6 @@
               "call_info" : "CallSite",
               "distance" : 4,
               "kind" : "Sink",
-              "local_features" : 
-              {
-                "always_features" : 
-                [
-                  "via-widen-broadening"
-                ]
-              },
               "origins" : 
               [
                 "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V"
@@ -5595,13 +4787,6 @@
               "call_info" : "CallSite",
               "distance" : 4,
               "kind" : "Sink",
-              "local_features" : 
-              {
-                "always_features" : 
-                [
-                  "via-widen-broadening"
-                ]
-              },
               "origins" : 
               [
                 "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V"
@@ -5637,13 +4822,6 @@
               "call_info" : "CallSite",
               "distance" : 4,
               "kind" : "Sink",
-              "local_features" : 
-              {
-                "always_features" : 
-                [
-                  "via-widen-broadening"
-                ]
-              },
               "origins" : 
               [
                 "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V"
@@ -5672,20 +4850,9 @@
           "kinds" : 
           [
             {
-              "always_features" : 
-              [
-                "via-widen-broadening"
-              ],
               "call_info" : "CallSite",
               "distance" : 3,
               "kind" : "Sink",
-              "local_features" : 
-              {
-                "always_features" : 
-                [
-                  "via-widen-broadening"
-                ]
-              },
               "origins" : 
               [
                 "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V"
@@ -5727,13 +4894,6 @@
               "call_info" : "CallSite",
               "distance" : 4,
               "kind" : "Sink",
-              "local_features" : 
-              {
-                "always_features" : 
-                [
-                  "via-widen-broadening"
-                ]
-              },
               "origins" : 
               [
                 "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V"
@@ -5769,13 +4929,6 @@
               "call_info" : "CallSite",
               "distance" : 4,
               "kind" : "Sink",
-              "local_features" : 
-              {
-                "always_features" : 
-                [
-                  "via-widen-broadening"
-                ]
-              },
               "origins" : 
               [
                 "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V"
@@ -5811,13 +4964,6 @@
               "call_info" : "CallSite",
               "distance" : 4,
               "kind" : "Sink",
-              "local_features" : 
-              {
-                "always_features" : 
-                [
-                  "via-widen-broadening"
-                ]
-              },
               "origins" : 
               [
                 "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V"
@@ -5846,20 +4992,9 @@
           "kinds" : 
           [
             {
-              "always_features" : 
-              [
-                "via-widen-broadening"
-              ],
               "call_info" : "CallSite",
               "distance" : 3,
               "kind" : "Sink",
-              "local_features" : 
-              {
-                "always_features" : 
-                [
-                  "via-widen-broadening"
-                ]
-              },
               "origins" : 
               [
                 "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V"
@@ -5901,13 +5036,6 @@
               "call_info" : "CallSite",
               "distance" : 4,
               "kind" : "Sink",
-              "local_features" : 
-              {
-                "always_features" : 
-                [
-                  "via-widen-broadening"
-                ]
-              },
               "origins" : 
               [
                 "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V"
@@ -5943,13 +5071,6 @@
               "call_info" : "CallSite",
               "distance" : 4,
               "kind" : "Sink",
-              "local_features" : 
-              {
-                "always_features" : 
-                [
-                  "via-widen-broadening"
-                ]
-              },
               "origins" : 
               [
                 "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V"
@@ -5985,13 +5106,6 @@
               "call_info" : "CallSite",
               "distance" : 4,
               "kind" : "Sink",
-              "local_features" : 
-              {
-                "always_features" : 
-                [
-                  "via-widen-broadening"
-                ]
-              },
               "origins" : 
               [
                 "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V"
@@ -6020,20 +5134,9 @@
           "kinds" : 
           [
             {
-              "always_features" : 
-              [
-                "via-widen-broadening"
-              ],
               "call_info" : "CallSite",
               "distance" : 3,
               "kind" : "Sink",
-              "local_features" : 
-              {
-                "always_features" : 
-                [
-                  "via-widen-broadening"
-                ]
-              },
               "origins" : 
               [
                 "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V"
@@ -6157,19 +5260,8 @@
           "kinds" : 
           [
             {
-              "always_features" : 
-              [
-                "via-inner-class-this"
-              ],
               "call_info" : "Propagation",
               "kind" : "LocalArgument(0)",
-              "local_features" : 
-              {
-                "always_features" : 
-                [
-                  "via-inner-class-this"
-                ]
-              },
               "output_paths" : 
               {
                 ".this$0" : 3
@@ -6237,20 +5329,13 @@
           "kinds" : 
           [
             {
-              "always_features" : 
-              [
-                "via-widen-broadening"
-              ],
               "call_info" : "CallSite",
               "distance" : 1,
               "kind" : "Sink",
-              "local_features" : 
-              {
-                "always_features" : 
-                [
-                  "via-widen-broadening"
-                ]
-              },
+              "may_features" : 
+              [
+                "via-widen-broadening"
+              ],
               "origins" : 
               [
                 "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V"
@@ -6303,13 +5388,6 @@
               "call_info" : "CallSite",
               "distance" : 5,
               "kind" : "Sink",
-              "local_features" : 
-              {
-                "always_features" : 
-                [
-                  "via-widen-broadening"
-                ]
-              },
               "origins" : 
               [
                 "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V"
@@ -6338,20 +5416,9 @@
           "kinds" : 
           [
             {
-              "always_features" : 
-              [
-                "via-widen-broadening"
-              ],
               "call_info" : "CallSite",
               "distance" : 4,
               "kind" : "Sink",
-              "local_features" : 
-              {
-                "always_features" : 
-                [
-                  "via-widen-broadening"
-                ]
-              },
               "origins" : 
               [
                 "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V"

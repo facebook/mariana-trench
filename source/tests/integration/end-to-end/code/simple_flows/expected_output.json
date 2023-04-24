@@ -1181,27 +1181,8 @@
           "kinds" : 
           [
             {
-              "always_features" : 
-              [
-                "sanitize"
-              ],
               "call_info" : "Origin",
               "kind" : "Source",
-              "local_features" : 
-              {
-                "always_features" : 
-                [
-                  "sanitize"
-                ]
-              },
-              "local_positions" : 
-              [
-                {
-                  "end" : 31,
-                  "line" : 13,
-                  "start" : 31
-                }
-              ],
               "origins" : 
               [
                 "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;"
@@ -1300,24 +1281,6 @@
             {
               "call_info" : "Origin",
               "kind" : "ExternalUserInput",
-              "local_positions" : 
-              [
-                {
-                  "end" : 25,
-                  "line" : 34,
-                  "start" : 12
-                },
-                {
-                  "end" : 27,
-                  "line" : 38,
-                  "start" : 27
-                },
-                {
-                  "end" : 73,
-                  "line" : 42,
-                  "start" : 61
-                }
-              ],
               "origins" : 
               [
                 "Landroid/app/Activity;.getIntent:()Landroid/content/Intent;"
@@ -1719,19 +1682,8 @@
           "kinds" : 
           [
             {
-              "always_features" : 
-              [
-                "via-inner-class-this"
-              ],
               "call_info" : "Propagation",
               "kind" : "LocalArgument(0)",
-              "local_features" : 
-              {
-                "always_features" : 
-                [
-                  "via-inner-class-this"
-                ]
-              },
               "output_paths" : 
               {
                 ".this$0" : 3
@@ -1863,13 +1815,6 @@
               ],
               "call_info" : "Propagation",
               "kind" : "LocalReturn",
-              "local_features" : 
-              {
-                "always_features" : 
-                [
-                  "sanitize"
-                ]
-              },
               "output_paths" : 
               {
                 "" : 0

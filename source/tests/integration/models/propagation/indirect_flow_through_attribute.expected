@@ -95,20 +95,9 @@
               "kinds" :
               [
                 {
-                  "always_features" :
-                  [
-                    "via-issue-broadening"
-                  ],
                   "call_info" : "CallSite",
                   "distance" : 1,
                   "kind" : "TestSource",
-                  "local_features" :
-                  {
-                    "always_features" :
-                    [
-                      "via-issue-broadening"
-                    ]
-                  },
                   "origins" :
                   [
                     "LSource;.source:()LData;"
@@ -177,12 +166,6 @@
                 {
                   "call_info" : "Origin",
                   "kind" : "TestSource",
-                  "local_positions" :
-                  [
-                    {
-                      "line" : 2
-                    }
-                  ],
                   "origins" :
                   [
                     "LSource;.source:()LData;"

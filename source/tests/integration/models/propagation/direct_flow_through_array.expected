@@ -52,25 +52,8 @@
               "kinds" :
               [
                 {
-                  "always_features" :
-                  [
-                    "via-array"
-                  ],
                   "call_info" : "Origin",
                   "kind" : "TestSource",
-                  "local_features" :
-                  {
-                    "always_features" :
-                    [
-                      "via-array"
-                    ]
-                  },
-                  "local_positions" :
-                  [
-                    {
-                      "line" : 3
-                    }
-                  ],
                   "origins" :
                   [
                     "LSource;.source:()LData;"

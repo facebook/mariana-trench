@@ -977,19 +977,8 @@
           "kinds" : 
           [
             {
-              "always_features" : 
-              [
-                "via-inner-class-this"
-              ],
               "call_info" : "Propagation",
               "kind" : "LocalArgument(0)",
-              "local_features" : 
-              {
-                "always_features" : 
-                [
-                  "via-inner-class-this"
-                ]
-              },
               "output_paths" : 
               {
                 ".this$0" : 3
@@ -1142,27 +1131,8 @@
           "kinds" : 
           [
             {
-              "always_features" : 
-              [
-                "via-cast:Ljava/lang/String;"
-              ],
               "call_info" : "Origin",
               "kind" : "Source",
-              "local_features" : 
-              {
-                "always_features" : 
-                [
-                  "via-cast:Ljava/lang/String;"
-                ]
-              },
-              "local_positions" : 
-              [
-                {
-                  "end" : 0,
-                  "line" : 15,
-                  "start" : 0
-                }
-              ],
               "origins" : 
               [
                 "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;"
@@ -1597,20 +1567,9 @@
           "kinds" : 
           [
             {
-              "always_features" : 
-              [
-                "via-anonymous-class-to-field"
-              ],
               "call_info" : "CallSite",
               "distance" : 1,
               "kind" : "Sink",
-              "local_features" : 
-              {
-                "always_features" : 
-                [
-                  "via-anonymous-class-to-field"
-                ]
-              },
               "origins" : 
               [
                 "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V"
@@ -1661,13 +1620,6 @@
               "call_info" : "CallSite",
               "distance" : 5,
               "kind" : "Sink",
-              "local_features" : 
-              {
-                "always_features" : 
-                [
-                  "via-widen-broadening"
-                ]
-              },
               "origins" : 
               [
                 "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V"
@@ -1695,20 +1647,9 @@
           "kinds" : 
           [
             {
-              "always_features" : 
-              [
-                "via-widen-broadening"
-              ],
               "call_info" : "CallSite",
               "distance" : 4,
               "kind" : "Sink",
-              "local_features" : 
-              {
-                "always_features" : 
-                [
-                  "via-widen-broadening"
-                ]
-              },
               "origins" : 
               [
                 "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V"

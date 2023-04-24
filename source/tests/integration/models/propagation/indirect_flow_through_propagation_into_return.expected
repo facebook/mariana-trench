@@ -50,12 +50,6 @@
                 {
                   "call_info" : "Origin",
                   "kind" : "TestSource",
-                  "local_positions" :
-                  [
-                    {
-                      "line" : 2
-                    }
-                  ],
                   "origins" :
                   [
                     "LSource;.source:()LData;"

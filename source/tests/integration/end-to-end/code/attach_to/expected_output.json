@@ -947,13 +947,6 @@
               ],
               "call_info" : "Propagation",
               "kind" : "LocalReturn",
-              "local_features" : 
-              {
-                "always_features" : 
-                [
-                  "via-attach-propagations-argument"
-                ]
-              },
               "output_paths" : 
               {
                 "" : 4
@@ -999,13 +992,6 @@
               ],
               "call_info" : "Propagation",
               "kind" : "LocalReturn",
-              "local_features" : 
-              {
-                "always_features" : 
-                [
-                  "via-attach-propagations-return"
-                ]
-              },
               "output_paths" : 
               {
                 "" : 4
@@ -1038,19 +1024,8 @@
           "kinds" : 
           [
             {
-              "always_features" : 
-              [
-                "via-attach-sources-return"
-              ],
               "call_info" : "Origin",
               "kind" : "Source",
-              "local_features" : 
-              {
-                "always_features" : 
-                [
-                  "via-attach-sources-return"
-                ]
-              },
               "origins" : 
               [
                 "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;"
@@ -1111,19 +1086,8 @@
           "kinds" : 
           [
             {
-              "always_features" : 
-              [
-                "via-attach-sinks"
-              ],
               "call_info" : "Origin",
               "kind" : "Sink",
-              "local_features" : 
-              {
-                "always_features" : 
-                [
-                  "via-attach-sinks"
-                ]
-              },
               "origins" : 
               [
                 "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V"
@@ -1184,13 +1148,6 @@
               ],
               "call_info" : "Propagation",
               "kind" : "LocalArgument(0)",
-              "local_features" : 
-              {
-                "always_features" : 
-                [
-                  "via-attach-propagations-return"
-                ]
-              },
               "output_paths" : 
               {
                 ".field" : 3
@@ -1223,25 +1180,8 @@
           "kinds" : 
           [
             {
-              "always_features" : 
-              [
-                "via-attach-sources-this"
-              ],
               "call_info" : "Origin",
               "kind" : "Source",
-              "local_features" : 
-              {
-                "always_features" : 
-                [
-                  "via-attach-sources-this"
-                ]
-              },
-              "local_positions" : 
-              [
-                {
-                  "line" : 18
-                }
-              ],
               "origins" : 
               [
                 "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;"

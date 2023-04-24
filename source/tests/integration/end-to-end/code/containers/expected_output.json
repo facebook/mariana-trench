@@ -1015,14 +1015,6 @@
             {
               "call_info" : "Origin",
               "kind" : "Source",
-              "local_positions" : 
-              [
-                {
-                  "end" : 37,
-                  "line" : 17,
-                  "start" : 23
-                }
-              ],
               "origins" : 
               [
                 "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;"

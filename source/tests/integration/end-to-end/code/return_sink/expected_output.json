@@ -900,27 +900,8 @@
           "kinds" : 
           [
             {
-              "always_features" : 
-              [
-                "via-array"
-              ],
               "call_info" : "Origin",
               "kind" : "Source",
-              "local_features" : 
-              {
-                "always_features" : 
-                [
-                  "via-array"
-                ]
-              },
-              "local_positions" : 
-              [
-                {
-                  "end" : 25,
-                  "line" : 18,
-                  "start" : 25
-                }
-              ],
               "origins" : 
               [
                 "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;"
@@ -1002,27 +983,8 @@
           "kinds" : 
           [
             {
-              "always_features" : 
-              [
-                "via-array"
-              ],
               "call_info" : "Origin",
               "kind" : "Source",
-              "local_features" : 
-              {
-                "always_features" : 
-                [
-                  "via-array"
-                ]
-              },
-              "local_positions" : 
-              [
-                {
-                  "end" : 25,
-                  "line" : 18,
-                  "start" : 25
-                }
-              ],
               "origins" : 
               [
                 "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;"
@@ -1099,27 +1061,8 @@
           "kinds" : 
           [
             {
-              "always_features" : 
-              [
-                "via-cast:Lcom/facebook/marianatrench/integrationtests/Flow$Tree;"
-              ],
               "call_info" : "Origin",
               "kind" : "Source",
-              "local_features" : 
-              {
-                "always_features" : 
-                [
-                  "via-cast:Lcom/facebook/marianatrench/integrationtests/Flow$Tree;"
-                ]
-              },
-              "local_positions" : 
-              [
-                {
-                  "end" : 37,
-                  "line" : 45,
-                  "start" : 15
-                }
-              ],
               "origins" : 
               [
                 "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;"
@@ -1201,27 +1144,8 @@
           "kinds" : 
           [
             {
-              "always_features" : 
-              [
-                "via-cast:Lcom/facebook/marianatrench/integrationtests/Flow$Tree;"
-              ],
               "call_info" : "Origin",
               "kind" : "Source",
-              "local_features" : 
-              {
-                "always_features" : 
-                [
-                  "via-cast:Lcom/facebook/marianatrench/integrationtests/Flow$Tree;"
-                ]
-              },
-              "local_positions" : 
-              [
-                {
-                  "end" : 37,
-                  "line" : 45,
-                  "start" : 15
-                }
-              ],
               "origins" : 
               [
                 "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;"
@@ -1298,27 +1222,8 @@
           "kinds" : 
           [
             {
-              "always_features" : 
-              [
-                "via-cast:Lcom/facebook/marianatrench/integrationtests/Flow$Tree;"
-              ],
               "call_info" : "Origin",
               "kind" : "Source",
-              "local_features" : 
-              {
-                "always_features" : 
-                [
-                  "via-cast:Lcom/facebook/marianatrench/integrationtests/Flow$Tree;"
-                ]
-              },
-              "local_positions" : 
-              [
-                {
-                  "end" : 37,
-                  "line" : 69,
-                  "start" : 15
-                }
-              ],
               "origins" : 
               [
                 "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;"
@@ -1401,29 +1306,8 @@
           "kinds" : 
           [
             {
-              "always_features" : 
-              [
-                "via-cast:Lcom/facebook/marianatrench/integrationtests/Flow$Tree;",
-                "via-issue-broadening"
-              ],
               "call_info" : "Origin",
               "kind" : "Source",
-              "local_features" : 
-              {
-                "always_features" : 
-                [
-                  "via-cast:Lcom/facebook/marianatrench/integrationtests/Flow$Tree;",
-                  "via-issue-broadening"
-                ]
-              },
-              "local_positions" : 
-              [
-                {
-                  "end" : 37,
-                  "line" : 69,
-                  "start" : 15
-                }
-              ],
               "origins" : 
               [
                 "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;"
@@ -1501,25 +1385,8 @@
           "kinds" : 
           [
             {
-              "always_features" : 
-              [
-                "via-cast:Lcom/facebook/marianatrench/integrationtests/Flow$Tree;"
-              ],
               "call_info" : "Origin",
               "kind" : "Source",
-              "local_features" : 
-              {
-                "always_features" : 
-                [
-                  "via-cast:Lcom/facebook/marianatrench/integrationtests/Flow$Tree;"
-                ]
-              },
-              "local_positions" : 
-              [
-                {
-                  "line" : 51
-                }
-              ],
               "origins" : 
               [
                 "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;"
@@ -1636,27 +1503,8 @@
           "kinds" : 
           [
             {
-              "always_features" : 
-              [
-                "via-array"
-              ],
               "call_info" : "Origin",
               "kind" : "Source",
-              "local_features" : 
-              {
-                "always_features" : 
-                [
-                  "via-array"
-                ]
-              },
-              "local_positions" : 
-              [
-                {
-                  "end" : 25,
-                  "line" : 24,
-                  "start" : 25
-                }
-              ],
               "origins" : 
               [
                 "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;"
@@ -1751,27 +1599,8 @@
           "kinds" : 
           [
             {
-              "always_features" : 
-              [
-                "via-cast:Lcom/facebook/marianatrench/integrationtests/Flow$Tree;"
-              ],
               "call_info" : "Origin",
               "kind" : "Source",
-              "local_features" : 
-              {
-                "always_features" : 
-                [
-                  "via-cast:Lcom/facebook/marianatrench/integrationtests/Flow$Tree;"
-                ]
-              },
-              "local_positions" : 
-              [
-                {
-                  "end" : 37,
-                  "line" : 57,
-                  "start" : 15
-                }
-              ],
               "origins" : 
               [
                 "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;"
@@ -1840,19 +1669,8 @@
           "kinds" : 
           [
             {
-              "always_features" : 
-              [
-                "via-array"
-              ],
               "call_info" : "Propagation",
               "kind" : "LocalReturn",
-              "local_features" : 
-              {
-                "always_features" : 
-                [
-                  "via-array"
-                ]
-              },
               "output_paths" : 
               {
                 "" : 4
@@ -1888,19 +1706,8 @@
           "kinds" : 
           [
             {
-              "always_features" : 
-              [
-                "via-array"
-              ],
               "call_info" : "Propagation",
               "kind" : "LocalReturn",
-              "local_features" : 
-              {
-                "always_features" : 
-                [
-                  "via-array"
-                ]
-              },
               "output_paths" : 
               {
                 "" : 4
@@ -1936,25 +1743,8 @@
           "kinds" : 
           [
             {
-              "always_features" : 
-              [
-                "via-array"
-              ],
               "call_info" : "Origin",
               "kind" : "Sink",
-              "local_features" : 
-              {
-                "always_features" : 
-                [
-                  "via-array"
-                ]
-              },
-              "local_positions" : 
-              [
-                {
-                  "line" : 12
-                }
-              ],
               "origins" : 
               [
                 "Lcom/facebook/marianatrench/integrationtests/Flow;.return_sink:(Ljava/lang/Object;)Ljava/lang/Object;"

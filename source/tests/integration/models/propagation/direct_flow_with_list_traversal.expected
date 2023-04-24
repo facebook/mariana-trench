@@ -18,12 +18,6 @@
                 {
                   "call_info" : "Origin",
                   "kind" : "TestSource",
-                  "local_positions" :
-                  [
-                    {
-                      "line" : 3
-                    }
-                  ],
                   "origins" :
                   [
                     "LSource;.source:()LData;"
@@ -93,12 +87,6 @@
                 {
                   "call_info" : "Origin",
                   "kind" : "TestSource",
-                  "local_positions" :
-                  [
-                    {
-                      "line" : 3
-                    }
-                  ],
                   "origins" :
                   [
                     "LSource;.source:()LData;"

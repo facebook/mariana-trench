@@ -658,8 +658,7 @@ Json::Value CalleePortFrames::to_json(
     // class by the `Taint` structure.
     mt_assert(frames_by_kind.size() == 1);
     for (const auto& frame : frames_by_kind) {
-      kinds.append(frame.to_json(
-          local_positions_, locally_inferred_features_, export_origins_mode));
+      kinds.append(frame.to_json(export_origins_mode));
     }
   }
   taint["kinds"] = kinds;

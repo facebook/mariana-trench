@@ -1361,11 +1361,6 @@ TEST_F(JsonTest, Frame) {
   store.add_classes(scope);
   auto context = test::make_context(store);
 
-  // Verifies to_json behavior for local inferred features. These cannot be
-  // covered by from_json tests as they are never specified in json. Note that
-  // locally_inferred_features show up twice in the json, once within a
-  // "local_features" key, another as "may/always_features" in the object
-  // alongside any existing inferred features.
   EXPECT_EQ(
       test::sorted_json(
           test::make_taint_frame(
@@ -1375,24 +1370,12 @@ TEST_F(JsonTest, Frame) {
                       {context.feature_factory->get("FeatureTwo")}),
                   .user_features = FeatureSet(
                       {context.feature_factory->get("FeatureThree")})})
-              .to_json(
-                  /* local_positions */ {},
-                  /* locally_inferred_features */
-                  FeatureMayAlwaysSet(
-                      /* may */ FeatureSet{context.feature_factory->get(
-                          "FeatureOne")},
-                      /* always */ {}),
-                  ExportOriginsMode::Always)),
-      test::parse_json(R"({
+              .to_json(ExportOriginsMode::Always)),
+      test::sorted_json(test::parse_json(R"({
           "call_info": "Declaration",
           "kind": "TestSource",
-          "may_features": ["FeatureOne"],
-          "always_features": ["FeatureThree", "FeatureTwo"],
-          "local_features": {
-            "may_features": ["FeatureOne"],
-            "always_features": ["FeatureThree"]
-          }
-        })"));
+          "always_features": ["FeatureTwo", "FeatureThree"]
+        })")));
 }
 
 TEST_F(JsonTest, CallInfo) {
@@ -1406,10 +1389,7 @@ TEST_F(JsonTest, CallInfo) {
           test::make_taint_frame(
               /* kind */ context.kind_factory->get("TestSource"),
               test::FrameProperties{.call_info = CallInfo::Origin})
-              .to_json(
-                  /* local_positions */ {},
-                  /* locally_inferred_features */ {},
-                  ExportOriginsMode::Always)),
+              .to_json(ExportOriginsMode::Always)),
       test::parse_json(R"({
           "call_info": "Origin",
           "kind": "TestSource",
@@ -1419,10 +1399,7 @@ TEST_F(JsonTest, CallInfo) {
                             /* kind */ context.kind_factory->get("TestSource"),
                             test::FrameProperties{
                                 .distance = 5, .call_info = CallInfo::CallSite})
-                            .to_json(
-                                /* local_positions */ {},
-                                /* locally_inferred_features */ {},
-                                ExportOriginsMode::Always)),
+                            .to_json(ExportOriginsMode::Always)),
       test::parse_json(R"({
           "call_info": "CallSite",
           "kind": "TestSource",
@@ -1823,10 +1800,6 @@ TEST_F(JsonTest, Model) {
                     "always_features": [ "via-obscure" ],
                     "call_info": "Propagation",
                     "kind": "LocalArgument(0)",
-                    "local_features":
-                    {
-                      "always_features": [ "via-obscure" ]
-                    },
                     "output_paths": { "": 0 }
                   }
                 ]
@@ -1843,10 +1816,6 @@ TEST_F(JsonTest, Model) {
                     "always_features": [ "via-obscure" ],
                     "call_info": "Propagation",
                     "kind": "LocalArgument(0)",
-                    "local_features":
-                    {
-                      "always_features": [ "via-obscure" ]
-                    },
                     "output_paths": { "": 0 }
                   }
                 ]
@@ -2888,7 +2857,6 @@ TEST_F(JsonTest, FieldModel) {
               sink_kind,
               test::FrameProperties{
                   .inferred_features = FeatureMayAlwaysSet::bottom(),
-                  .locally_inferred_features = FeatureMayAlwaysSet::bottom(),
                   .user_features = FeatureSet{feature}})})
           .to_json(ExportOriginsMode::Always),
       test::parse_json(R"({
@@ -2900,9 +2868,6 @@ TEST_F(JsonTest, FieldModel) {
             "always_features": ["test-feature"],
             "field_callee" : "LBase;.field1:Ljava/lang/String;",
             "field_origins": ["LBase;.field1:Ljava/lang/String;"],
-            "local_features": {
-              "always_features": ["test-feature"]
-            }
           }
         ]
       })"));

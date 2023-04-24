@@ -926,19 +926,8 @@
           "kinds" : 
           [
             {
-              "always_features" : 
-              [
-                "via-inner-class-this"
-              ],
               "call_info" : "Propagation",
               "kind" : "LocalArgument(0)",
-              "local_features" : 
-              {
-                "always_features" : 
-                [
-                  "via-inner-class-this"
-                ]
-              },
               "output_paths" : 
               {
                 ".this$0" : 3
@@ -1179,19 +1168,6 @@
             {
               "call_info" : "Origin",
               "kind" : "Source",
-              "local_positions" : 
-              [
-                {
-                  "end" : 0,
-                  "line" : 32,
-                  "start" : 0
-                },
-                {
-                  "end" : 24,
-                  "line" : 33,
-                  "start" : 9
-                }
-              ],
               "origins" : 
               [
                 "Landroid/content/Intent;.getExtras:()Landroid/os/Bundle;"

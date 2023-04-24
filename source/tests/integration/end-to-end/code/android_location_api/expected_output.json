@@ -906,12 +906,6 @@
             {
               "call_info" : "Origin",
               "kind" : "UserGeoLocation",
-              "local_positions" : 
-              [
-                {
-                  "line" : 28
-                }
-              ],
               "origins" : 
               [
                 "Landroid_location_api/ActivityUsingAndroidLocationManager;.onLocationChanged:(Landroid/location/Location;)V"

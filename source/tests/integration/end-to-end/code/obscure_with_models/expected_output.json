@@ -892,13 +892,6 @@
               ],
               "call_info" : "Propagation",
               "kind" : "LocalReturn",
-              "local_features" : 
-              {
-                "always_features" : 
-                [
-                  "via-IInterface-taint-this-taint-out"
-                ]
-              },
               "output_paths" : 
               {
                 "" : 0
@@ -937,13 +930,6 @@
               ],
               "call_info" : "Propagation",
               "kind" : "LocalReturn",
-              "local_features" : 
-              {
-                "always_features" : 
-                [
-                  "via-IInterface-taint-this-taint-out"
-                ]
-              },
               "output_paths" : 
               {
                 "" : 0

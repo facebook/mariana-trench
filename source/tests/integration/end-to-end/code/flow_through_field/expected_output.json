@@ -1061,19 +1061,6 @@
             {
               "call_info" : "Origin",
               "kind" : "ExternalUserInput",
-              "local_positions" : 
-              [
-                {
-                  "end" : 30,
-                  "line" : 27,
-                  "start" : 20
-                },
-                {
-                  "end" : 32,
-                  "line" : 28,
-                  "start" : 16
-                }
-              ],
               "origins" : 
               [
                 "Landroid/app/Activity;.getIntent:()Landroid/content/Intent;"
@@ -1156,19 +1143,6 @@
             {
               "call_info" : "Origin",
               "kind" : "ExternalUserInput",
-              "local_positions" : 
-              [
-                {
-                  "end" : 30,
-                  "line" : 27,
-                  "start" : 20
-                },
-                {
-                  "end" : 32,
-                  "line" : 28,
-                  "start" : 16
-                }
-              ],
               "origins" : 
               [
                 "Landroid/app/Activity;.getIntent:()Landroid/content/Intent;"
@@ -1248,19 +1222,6 @@
             {
               "call_info" : "Origin",
               "kind" : "ExternalUserInput",
-              "local_positions" : 
-              [
-                {
-                  "end" : 30,
-                  "line" : 27,
-                  "start" : 20
-                },
-                {
-                  "end" : 32,
-                  "line" : 28,
-                  "start" : 16
-                }
-              ],
               "origins" : 
               [
                 "Landroid/app/Activity;.getIntent:()Landroid/content/Intent;"
@@ -1329,14 +1290,6 @@
             {
               "call_info" : "Origin",
               "kind" : "LaunchingComponent",
-              "local_positions" : 
-              [
-                {
-                  "end" : 39,
-                  "line" : 25,
-                  "start" : 29
-                }
-              ],
               "origins" : 
               [
                 "Lcom/facebook/secure/context/IntentLauncher;.launchActivity:(Landroid/content/Intent;Landroid/content/Context;)Z"
