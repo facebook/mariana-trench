@@ -537,6 +537,75 @@ TEST_F(MethodConstraintTest, SignatureMultipleParentMatchConstraintSatisfy) {
       constraint->satisfy(context.methods->create(unrelated_class_methods[0])));
 }
 
+TEST_F(MethodConstraintTest, SignatureMatchExtendsConstraintSatisfy) {
+  Scope scope;
+  auto context = test::make_empty_context();
+  auto class_methods = redex::create_methods(
+      scope,
+      "LClass;",
+      {
+          R"(
+            (method (public) "LClass;.methodA:()V"
+            (
+              (return-void)
+            )
+            ))",
+          R"(
+            (method (public) "LClass;.methodB:()V"
+            (
+              (return-void)
+            )
+            ))",
+      });
+  auto class_dex_type = DexType::get_type(DexString::make_string("LClass;"));
+  // Need to have this out-of-line to avoid ambiguity in which create_methods
+  // call we route to.
+  std::vector<std::string> subclass_method_names = {
+      R"(
+            (method (public) "LSubclass;.methodA:()V"
+            (
+              (return-void)
+            )
+            ))",
+      R"(
+            (method (public) "LSubclass;.methodB:()V"
+            (
+              (return-void)
+            )
+            ))",
+  };
+
+  auto subclass_methods = redex::create_methods(
+      scope, "LSubclass;", subclass_method_names, class_dex_type);
+  auto unrelated_class_methods = redex::create_methods(
+      scope,
+      "LUnrelatedClass;",
+      {
+          R"(
+            (method (public) "LUnrelatedClass;.methodA:(I)V"
+            (
+              (return-void)
+            )
+            ))",
+      });
+  auto constraint = MethodConstraint::from_json(
+      test::parse_json(
+          R"({
+          "constraint": "signature_match",
+          "extends": "LClass;",
+          "name": "methodA"
+        })"),
+      context);
+  EXPECT_TRUE(constraint->satisfy(context.methods->create(class_methods[0])));
+  EXPECT_FALSE(constraint->satisfy(context.methods->create(class_methods[1])));
+  EXPECT_TRUE(
+      constraint->satisfy(context.methods->create(subclass_methods[0])));
+  EXPECT_FALSE(
+      constraint->satisfy(context.methods->create(subclass_methods[1])));
+  EXPECT_FALSE(
+      constraint->satisfy(context.methods->create(unrelated_class_methods[0])));
+}
+
 TEST_F(MethodConstraintTest, ExtendsConstraintSatisfy) {
   std::string class_name = "Landroid/util/Log;";
   ClassCreator creator(DexType::make_type(DexString::make_string(class_name)));
@@ -1517,6 +1586,53 @@ TEST_F(MethodConstraintTest, MethodConstraintFromJson) {
         std::make_unique<TypeNameConstraint>("Lmy/custom/Activity;")));
     expected_constraints.push_back(
         std::make_unique<AnyOfMethodConstraint>(std::move(parent_constraints)));
+    EXPECT_EQ(
+        AllOfMethodConstraint(std::move(expected_constraints)), *constraint);
+  }
+  {
+    auto constraint = MethodConstraint::from_json(
+        test::parse_json(
+            R"({
+          "constraint": "signature_match",
+          "extends": "Landroid/app/Activity;",
+          "name": "getIntent"
+        })"),
+        context);
+
+    std::vector<std::unique_ptr<MethodConstraint>> expected_constraints;
+    expected_constraints.push_back(
+        std::make_unique<ParentConstraint>(std::make_unique<ExtendsConstraint>(
+            std::make_unique<TypeNameConstraint>("Landroid/app/Activity;"),
+            /* includes_self */ true)));
+    expected_constraints.push_back(
+        std::make_unique<MethodNameConstraint>("getIntent"));
+    EXPECT_EQ(
+        AllOfMethodConstraint(std::move(expected_constraints)), *constraint);
+  }
+  {
+    auto constraint = MethodConstraint::from_json(
+        test::parse_json(
+            R"({
+          "constraint": "signature_match",
+          "extends": ["Landroid/app/Activity;", "Landroid/app/Other;"],
+          "name": "getIntent"
+        })"),
+        context);
+
+    std::vector<std::unique_ptr<MethodConstraint>> expected_constraints;
+    std::vector<std::unique_ptr<MethodConstraint>> extends_constraints;
+    extends_constraints.push_back(
+        std::make_unique<ParentConstraint>(std::make_unique<ExtendsConstraint>(
+            std::make_unique<TypeNameConstraint>("Landroid/app/Activity;"),
+            /* includes_self */ true)));
+    extends_constraints.push_back(
+        std::make_unique<ParentConstraint>(std::make_unique<ExtendsConstraint>(
+            std::make_unique<TypeNameConstraint>("Landroid/app/Other;"),
+            /* includes_self */ true)));
+    expected_constraints.push_back(std::make_unique<AnyOfMethodConstraint>(
+        std::move(extends_constraints)));
+    expected_constraints.push_back(
+        std::make_unique<MethodNameConstraint>("getIntent"));
     EXPECT_EQ(
         AllOfMethodConstraint(std::move(expected_constraints)), *constraint);
   }

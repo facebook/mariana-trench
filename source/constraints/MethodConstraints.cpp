@@ -558,6 +558,26 @@ std::unique_ptr<MethodConstraint> signature_match_parent_constraint(
       std::move(parent_name_constraints));
 }
 
+std::unique_ptr<MethodConstraint> signature_match_parent_extends_constraint(
+    std::string parent,
+    bool includes_self) {
+  return std::make_unique<ParentConstraint>(std::make_unique<ExtendsConstraint>(
+      std::make_unique<TypeNameConstraint>(parent), includes_self));
+}
+
+std::unique_ptr<MethodConstraint> signature_match_parent_extends_constraint(
+    const Json::Value& parents,
+    bool includes_self) {
+  std::vector<std::unique_ptr<MethodConstraint>> parent_extends_constraints;
+  for (const auto& parent : parents) {
+    parent_extends_constraints.push_back(
+        signature_match_parent_extends_constraint(
+            JsonValidation::string(parent), includes_self));
+  }
+  return std::make_unique<AnyOfMethodConstraint>(
+      std::move(parent_extends_constraints));
+}
+
 } // namespace
 
 std::unique_ptr<MethodConstraint> MethodConstraint::from_json(
@@ -629,35 +649,57 @@ std::unique_ptr<MethodConstraint> MethodConstraint::from_json(
         JsonValidation::string(constraint, /* field */ "pattern"));
   } else if (constraint_name == "signature_match") {
     std::vector<std::unique_ptr<MethodConstraint>> constraints;
+    int name_count = 0;
+    int parent_count = 0;
     if (constraint.isMember("name")) {
-      if (constraint.isMember("names")) {
-        throw JsonValidationError(
-            constraint,
-            /* field */ "names",
-            /* expected */
-            "Only one of \"name\" and \"names\" should be present.");
-      }
+      name_count++;
       constraints.push_back(signature_match_name_constraint(
           JsonValidation::string(constraint, /* field */ "name")));
-    } else {
+    }
+    if (constraint.isMember("names")) {
+      name_count++;
       constraints.push_back(signature_match_name_constraint(
           JsonValidation::nonempty_array(constraint, /* field */ "names")));
     }
     if (constraint.isMember("parent")) {
-      if (constraint.isMember("parents")) {
-        throw JsonValidationError(
-            constraint,
-            /* field */ "parents",
-            /* expected */
-            "Only one of \"parent\" and \"parents\" should be present.");
-      }
+      parent_count++;
       constraints.push_back(signature_match_parent_constraint(
           JsonValidation::string(constraint, /* field */ "parent")));
-    } else {
+    }
+    if (constraint.isMember("parents")) {
+      parent_count++;
       constraints.push_back(signature_match_parent_constraint(
           JsonValidation::nonempty_array(constraint, /* field */ "parents")));
     }
-
+    if (constraint.isMember("extends")) {
+      parent_count++;
+      bool includes_self = constraint.isMember("include_self")
+          ? JsonValidation::boolean(constraint, /* field */ "include_self")
+          : true;
+      const auto& extends_field = constraint["extends"];
+      if (extends_field.isString()) {
+        constraints.push_back(signature_match_parent_extends_constraint(
+            JsonValidation::string(constraint, /* field */ "extends"),
+            includes_self));
+      } else {
+        constraints.push_back(signature_match_parent_extends_constraint(
+            JsonValidation::nonempty_array(constraint, /* field */ "extends"),
+            includes_self));
+      }
+    }
+    if (parent_count != 1) {
+      throw JsonValidationError(
+          constraint,
+          /* field */ "parents",
+          "Exactly one of \"parent\", \"parents\" and \"extends\" should be present.");
+    }
+    if (name_count != 1) {
+      throw JsonValidationError(
+          constraint,
+          /* field */ "name",
+          /* expected */
+          "Exactly one of \"name\" and \"names\" should be present.");
+    }
     return std::make_unique<AllOfMethodConstraint>(std::move(constraints));
   } else if (constraint_name == "bytecode") {
     return std::make_unique<MethodHasStringConstraint>(
