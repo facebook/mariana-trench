@@ -397,38 +397,80 @@ we could use the following JSON to specifiy a via-value feature that would mater
 
 Note that this only works for numeric and string literals. In cases where the argument is not a constant, the feature will appear as `via-value:unknown`.
 
-#### Broadening Features
+### Taint Broadening
 
-Broadening features are added automatically whenever Mariana Trench makes an approximation about a taint flow. This approximation is also called "collapsing" since taint is internally represented in a tree structure where edges are fields and approximation involves placing taint onto nodes higher up in the tree. There are three kinds of broadening features that based on the reason for approximating the taint flow. These are:
+**Taint broadening** (also called **collapsing**) happens when Mariana Trench needs to make an approximation about a taint flow. It is the operation of reducing a **taint tree** into a single element. A **taint tree** is a tree where edges are field names and nodes are taint element. This is how Mariana Trench represents internally which fields (or sequence of fields) are tainted.
 
-##### Issue Broadening
+For instance, analyzing the following code:
+```java
+MyClass var = new MyClass();
+var.a = sourceX();
+var.b.c = sourceY();
+var.b.d = sourceZ();
+```
+
+The taint tree of variable `var` would be:
+```
+      .
+  a /   \ b
+ { X }    .
+       c / \ d
+     { Y }  { Z }
+```
+
+After collapsing, the tree is reduced to a single node `{ X, Y, Z }`, which is less precise.
+
+In conclusion, taint broadening effectively leads to considering the whole object as tainted while only some specific fields were initially tainted. This might happen for the correctness of the analysis or for performance reasons.
+
+In the following sections, we will discuss when collapsing can happen. In most cases, a feature is automatically added on collapsed taint to help detect false positives.
+
+#### Propagation Broadening
+
+Taint collapsing is applied when taint is propagated through a method.
+
+For instance:
+```java
+MyClass input = new MyClass();
+input.a = SourceX();
+MyClass output = SomeClass.UnknownMethod(input);
+Sink(output.b); // Considered an issue since `output` is considered tainted. This could be a False Negative without collapsing.
+```
+
+In that case, the [feature](#feature) `via-propagation-broadening` will be automatically added on the taint. This can help identify false positives.
+
+If you know that this method **preserves the structure** of the parameter, you could specify a model and disable collapsing using the `collapse` attribute within a [`propagation`](#propagation):
+```json
+{
+  "propagation": [
+    {
+      "input": "Argument(0)",
+      "output": "Return",
+      "collapse": false
+    }
+  ]
+}
+```
+
+Note that Mariana Trench can usually infer when a method propagates taint without collapsing it when it has access to the code of that method and subsequent calls. For instance:
+
+```java
+public String identity(String x) {
+  // Automatically infers a propagation `Arg(0) -> Return` with `collapse=false`
+  return x;
+}
+```
+
+##### Issue Broadening Feature
 
 The `via-issue-broadening` feature is added to issues where the taint flowing into the sink was not held directly on the object passed in but on one of its fields. For example:
 
 ```java
 Class input = new Class();
 input.field = source();
-sink(input); // input is not tainted, but input.field is tainted and creates an issue
+sink(input); // `input` is not tainted, but `input.field` is tainted and creates an issue
 ```
 
-##### Propagation Broadening
-
-The `via-propagation-broadening` feature is added when an object with tainted fields is propagated through a method. For correctness reasons, Mariana Trench makes the approximation that the whole object is tainted, i.e collapses all the taint from fields onto the object itself.
-
-```java
-public Class propagate(Class argument) {
-  return argument;
-}
-
-public void flow() {
-  Class input = new Class();
-  input.tainted_field = source();
-  Class output = propagate(input); // taint on input.tainted_field is collapsed onto input when applying propagation and it ends up on output. `via-propagation-broadening` feature is applied
-  sink(output);
-}
-```
-
-##### Widen Broadening
+##### Widen Broadening Feature
 
 For performance reasons, if a given taint tree becomes very large (either in depth or in number of nodes at a given level), Mariana Trench collapses the tree
 to a smaller size. In these cases, the `via-widen-broadening` feature is added to the collapsed taint
