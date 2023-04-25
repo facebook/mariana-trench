@@ -98,7 +98,7 @@ Options::Options(
     const std::vector<std::string>& rules_paths,
     const std::vector<std::string>& lifecycles_paths,
     const std::vector<std::string>& shims_paths,
-    const std::vector<std::string>& graphql_metadata_paths,
+    const std::string& graphql_metadata_paths,
     const std::vector<std::string>& proguard_configuration_paths,
     bool sequential,
     bool skip_source_indexing,
@@ -170,9 +170,8 @@ Options::Options(const boost::program_options::variables_map& variables) {
   }
 
   if (!variables["graphql-metadata-paths"].empty()) {
-    graphql_metadata_paths_ = parse_paths_list(
-        variables["graphql-metadata-paths"].as<std::string>(),
-        /* extension */ ".json");
+    graphql_metadata_paths_ = check_path_exists(
+        variables["graphql-metadata-paths"].as<std::string>());
   }
 
   if (!variables["proguard-configuration-paths"].empty()) {
@@ -430,7 +429,7 @@ const std::vector<std::string>& Options::shims_paths() const {
   return shims_paths_;
 }
 
-const std::vector<std::string>& Options::graphql_metadata_paths() const {
+const std::string& Options::graphql_metadata_paths() const {
   return graphql_metadata_paths_;
 }
 

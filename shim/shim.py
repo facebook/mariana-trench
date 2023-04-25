@@ -372,7 +372,7 @@ def _add_configuration_arguments(parser: argparse.ArgumentParser) -> None:
     )
     configuration_arguments.add_argument(
         "--graphql-metadata-paths",
-        type=_separated_paths_exist,
+        type=str,
         default=None,
         help="A json file containing graphql metadata mapping information.",
     )

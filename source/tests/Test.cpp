@@ -46,7 +46,7 @@ Context make_context(const DexStore& store) {
       /* rules_paths */ std::vector<std::string>{},
       /* lifecycles_paths */ std::vector<std::string>{},
       /* shims_path */ std::vector<std::string>{shims_path.native()},
-      /* graphql_metadata_path */ std::vector<std::string>{},
+      /* graphql_metadata_paths */ std::string{},
       /* proguard_configuration_paths */ std::vector<std::string>{},
       /* sequential */ false,
       /* skip_source_indexing */ true,

@@ -111,10 +111,10 @@ TEST_P(IntegrationTest, CompareFlows) {
     shims_paths.emplace_back(shims_path.native());
   }
 
-  std::vector<std::string> graphql_metadata_paths;
-  auto graphql_metadata_path = directory / "graphql_metadata.json";
-  if (boost::filesystem::exists(graphql_metadata_path)) {
-    graphql_metadata_paths.emplace_back(graphql_metadata_path.native());
+  std::string graphql_metadata_paths;
+  auto graphql_metadata_filepath = directory / "graphql_metadata.json";
+  if (boost::filesystem::exists(graphql_metadata_filepath)) {
+    graphql_metadata_paths = graphql_metadata_filepath.string();
   }
 
   auto generator_configuration_file = directory / "/generator_config.json";

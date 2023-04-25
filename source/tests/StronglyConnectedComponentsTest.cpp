@@ -28,7 +28,7 @@ Context test_components(const Scope& scope) {
       /* rules_path */ std::vector<std::string>{},
       /* lifecycles_path */ std::vector<std::string>{},
       /* shims_path */ std::vector<std::string>{},
-      /* graphql_metadata_path */ std::vector<std::string>{},
+      /* graphql_metadata_paths */ std::string{},
       /* proguard_configuration_paths */ std::vector<std::string>{},
       /* sequential */ false,
       /* skip_source_indexing */ true,
