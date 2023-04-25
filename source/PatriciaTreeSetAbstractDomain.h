@@ -78,20 +78,20 @@ class PatriciaTreeSetAbstractDomain<
     return PatriciaTreeSetAbstractDomain(/* is_top */ true);
   }
 
-  bool is_bottom() const override {
+  bool is_bottom() const {
     return !is_top_ && set_.empty();
   }
 
-  bool is_top() const override {
+  bool is_top() const {
     return is_top_;
   }
 
-  void set_to_bottom() override {
+  void set_to_bottom() {
     is_top_ = false;
     set_.clear();
   }
 
-  void set_to_top() override {
+  void set_to_top() {
     is_top_ = true;
     set_.clear();
   }
@@ -150,7 +150,7 @@ class PatriciaTreeSetAbstractDomain<
     }
   }
 
-  bool leq(const PatriciaTreeSetAbstractDomain& other) const override {
+  bool leq(const PatriciaTreeSetAbstractDomain& other) const {
     if (is_top_) {
       return other.is_top_;
     }
@@ -160,11 +160,11 @@ class PatriciaTreeSetAbstractDomain<
     return set_.is_subset_of(other.set_);
   }
 
-  bool equals(const PatriciaTreeSetAbstractDomain& other) const override {
+  bool equals(const PatriciaTreeSetAbstractDomain& other) const {
     return is_top_ == other.is_top_ && set_.equals(other.set_);
   }
 
-  void join_with(const PatriciaTreeSetAbstractDomain& other) override {
+  void join_with(const PatriciaTreeSetAbstractDomain& other) {
     if (is_top_) {
       return;
     }
@@ -175,11 +175,11 @@ class PatriciaTreeSetAbstractDomain<
     set_.union_with(other.set_);
   }
 
-  void widen_with(const PatriciaTreeSetAbstractDomain& other) override {
+  void widen_with(const PatriciaTreeSetAbstractDomain& other) {
     join_with(other);
   }
 
-  void meet_with(const PatriciaTreeSetAbstractDomain& other) override {
+  void meet_with(const PatriciaTreeSetAbstractDomain& other) {
     if (is_top_) {
       *this = other;
       return;
@@ -190,7 +190,7 @@ class PatriciaTreeSetAbstractDomain<
     set_.intersection_with(other.set_);
   }
 
-  void narrow_with(const PatriciaTreeSetAbstractDomain& other) override {
+  void narrow_with(const PatriciaTreeSetAbstractDomain& other) {
     meet_with(other);
   }
 
@@ -265,19 +265,19 @@ class PatriciaTreeSetAbstractDomain<
     mt_unreachable(); // does not exist
   }
 
-  bool is_bottom() const override {
+  bool is_bottom() const {
     return set_.empty();
   }
 
-  bool is_top() const override {
+  bool is_top() const {
     return false;
   }
 
-  void set_to_bottom() override {
+  void set_to_bottom() {
     set_.clear();
   }
 
-  void set_to_top() override {
+  void set_to_top() {
     mt_unreachable();
   }
 
@@ -317,27 +317,27 @@ class PatriciaTreeSetAbstractDomain<
     return set_.contains(element);
   }
 
-  bool leq(const PatriciaTreeSetAbstractDomain& other) const override {
+  bool leq(const PatriciaTreeSetAbstractDomain& other) const {
     return set_.is_subset_of(other.set_);
   }
 
-  bool equals(const PatriciaTreeSetAbstractDomain& other) const override {
+  bool equals(const PatriciaTreeSetAbstractDomain& other) const {
     return set_.equals(other.set_);
   }
 
-  void join_with(const PatriciaTreeSetAbstractDomain& other) override {
+  void join_with(const PatriciaTreeSetAbstractDomain& other) {
     set_.union_with(other.set_);
   }
 
-  void widen_with(const PatriciaTreeSetAbstractDomain& other) override {
+  void widen_with(const PatriciaTreeSetAbstractDomain& other) {
     join_with(other);
   }
 
-  void meet_with(const PatriciaTreeSetAbstractDomain& other) override {
+  void meet_with(const PatriciaTreeSetAbstractDomain& other) {
     set_.intersection_with(other.set_);
   }
 
-  void narrow_with(const PatriciaTreeSetAbstractDomain& other) override {
+  void narrow_with(const PatriciaTreeSetAbstractDomain& other) {
     meet_with(other);
   }
 

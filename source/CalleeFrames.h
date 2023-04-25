@@ -91,21 +91,21 @@ class CalleeFrames final : public sparta::AbstractDomain<CalleeFrames> {
         FramesByCallPosition::top());
   }
 
-  bool is_bottom() const override {
+  bool is_bottom() const {
     return frames_.is_bottom();
   }
 
-  bool is_top() const override {
+  bool is_top() const {
     return frames_.is_top();
   }
 
-  void set_to_bottom() override {
+  void set_to_bottom() {
     callee_ = nullptr;
     call_info_ = CallInfo::Declaration;
     frames_.set_to_bottom();
   }
 
-  void set_to_top() override {
+  void set_to_top() {
     callee_ = nullptr;
     call_info_ = CallInfo::Declaration;
     frames_.set_to_top();
@@ -125,17 +125,17 @@ class CalleeFrames final : public sparta::AbstractDomain<CalleeFrames> {
 
   void add(const TaintConfig& config);
 
-  bool leq(const CalleeFrames& other) const override;
+  bool leq(const CalleeFrames& other) const;
 
-  bool equals(const CalleeFrames& other) const override;
+  bool equals(const CalleeFrames& other) const;
 
-  void join_with(const CalleeFrames& other) override;
+  void join_with(const CalleeFrames& other);
 
-  void widen_with(const CalleeFrames& other) override;
+  void widen_with(const CalleeFrames& other);
 
-  void meet_with(const CalleeFrames& other) override;
+  void meet_with(const CalleeFrames& other);
 
-  void narrow_with(const CalleeFrames& other) override;
+  void narrow_with(const CalleeFrames& other);
 
   void difference_with(const CalleeFrames& other);
 

@@ -127,22 +127,22 @@ class CalleePortFrames final : public sparta::AbstractDomain<CalleePortFrames> {
         /* locally_inferred_features */ FeatureMayAlwaysSet::top());
   }
 
-  bool is_bottom() const override {
+  bool is_bottom() const {
     return frames_.is_bottom();
   }
 
-  bool is_top() const override {
+  bool is_top() const {
     return frames_.is_top();
   }
 
-  void set_to_bottom() override {
+  void set_to_bottom() {
     callee_port_ = AccessPath(Root(Root::Kind::Leaf));
     frames_.set_to_bottom();
     local_positions_ = {};
     locally_inferred_features_.set_to_bottom();
   }
 
-  void set_to_top() override {
+  void set_to_top() {
     callee_port_ = AccessPath(Root(Root::Kind::Leaf));
     frames_.set_to_top();
     local_positions_.set_to_top();
@@ -169,17 +169,17 @@ class CalleePortFrames final : public sparta::AbstractDomain<CalleePortFrames> {
 
   void add(const Frame& frame);
 
-  bool leq(const CalleePortFrames& other) const override;
+  bool leq(const CalleePortFrames& other) const;
 
-  bool equals(const CalleePortFrames& other) const override;
+  bool equals(const CalleePortFrames& other) const;
 
-  void join_with(const CalleePortFrames& other) override;
+  void join_with(const CalleePortFrames& other);
 
-  void widen_with(const CalleePortFrames& other) override;
+  void widen_with(const CalleePortFrames& other);
 
-  void meet_with(const CalleePortFrames& other) override;
+  void meet_with(const CalleePortFrames& other);
 
-  void narrow_with(const CalleePortFrames& other) override;
+  void narrow_with(const CalleePortFrames& other);
 
   void difference_with(const CalleePortFrames& other);
 

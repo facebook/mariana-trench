@@ -258,11 +258,11 @@ class Frame final : public sparta::AbstractDomain<Frame> {
     mt_unreachable(); // Not implemented.
   }
 
-  bool is_bottom() const override {
+  bool is_bottom() const {
     return kind_ == nullptr;
   }
 
-  bool is_top() const override {
+  bool is_top() const {
     return false;
   }
 
@@ -277,25 +277,25 @@ class Frame final : public sparta::AbstractDomain<Frame> {
     return callee_ == nullptr && callee_port_.root().is_anchor();
   }
 
-  void set_to_bottom() override {
+  void set_to_bottom() {
     kind_ = nullptr;
   }
 
-  void set_to_top() override {
+  void set_to_top() {
     mt_unreachable(); // Not implemented.
   }
 
-  bool leq(const Frame& other) const override;
+  bool leq(const Frame& other) const;
 
-  bool equals(const Frame& other) const override;
+  bool equals(const Frame& other) const;
 
-  void join_with(const Frame& other) override;
+  void join_with(const Frame& other);
 
-  void widen_with(const Frame& other) override;
+  void widen_with(const Frame& other);
 
-  void meet_with(const Frame& other) override;
+  void meet_with(const Frame& other);
 
-  void narrow_with(const Frame& other) override;
+  void narrow_with(const Frame& other);
 
   /* Return frame with the given kind (and every other field kept the same) */
   Frame with_kind(const Kind* kind) const;

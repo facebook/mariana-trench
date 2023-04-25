@@ -161,19 +161,19 @@ class GroupHashedSetAbstractDomain final
     mt_unreachable(); // Not implemented.
   }
 
-  bool is_bottom() const override {
+  bool is_bottom() const {
     return set_.empty();
   }
 
-  bool is_top() const override {
+  bool is_top() const {
     return false;
   }
 
-  void set_to_bottom() override {
+  void set_to_bottom() {
     set_.clear();
   }
 
-  void set_to_top() override {
+  void set_to_top() {
     mt_unreachable(); // Not implemented.
   }
 
@@ -229,7 +229,7 @@ class GroupHashedSetAbstractDomain final
     set_.clear();
   }
 
-  bool leq(const GroupHashedSetAbstractDomain& other) const override {
+  bool leq(const GroupHashedSetAbstractDomain& other) const {
     if (set_.size() > other.set_.size()) {
       return false;
     }
@@ -243,7 +243,7 @@ class GroupHashedSetAbstractDomain final
     return true;
   }
 
-  bool equals(const GroupHashedSetAbstractDomain& other) const override {
+  bool equals(const GroupHashedSetAbstractDomain& other) const {
     if (set_.size() != other.set_.size()) {
       return false;
     }
@@ -257,7 +257,7 @@ class GroupHashedSetAbstractDomain final
     return true;
   }
 
-  void join_with(const GroupHashedSetAbstractDomain& other) override {
+  void join_with(const GroupHashedSetAbstractDomain& other) {
     for (const MutableElement& mutable_element : other.set_) {
       auto result = set_.insert(mutable_element);
       if (!result.second) {
@@ -267,15 +267,15 @@ class GroupHashedSetAbstractDomain final
     }
   }
 
-  void widen_with(const GroupHashedSetAbstractDomain& other) override {
+  void widen_with(const GroupHashedSetAbstractDomain& other) {
     join_with(other);
   }
 
-  void meet_with(const GroupHashedSetAbstractDomain& /*other*/) override {
+  void meet_with(const GroupHashedSetAbstractDomain& /*other*/) {
     mt_unreachable(); // Not implemented.
   }
 
-  void narrow_with(const GroupHashedSetAbstractDomain& other) override {
+  void narrow_with(const GroupHashedSetAbstractDomain& other) {
     meet_with(other);
   }
 

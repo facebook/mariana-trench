@@ -82,20 +82,20 @@ class CallPositionFrames final
         /* position */ nullptr, FramesByCalleePort::top());
   }
 
-  bool is_bottom() const override {
+  bool is_bottom() const {
     return frames_.is_bottom();
   }
 
-  bool is_top() const override {
+  bool is_top() const {
     return frames_.is_top();
   }
 
-  void set_to_bottom() override {
+  void set_to_bottom() {
     position_ = nullptr;
     frames_.set_to_bottom();
   }
 
-  void set_to_top() override {
+  void set_to_top() {
     position_ = nullptr;
     frames_.set_to_top();
   }
@@ -110,17 +110,17 @@ class CallPositionFrames final
 
   void add(const TaintConfig& config);
 
-  bool leq(const CallPositionFrames& other) const override;
+  bool leq(const CallPositionFrames& other) const;
 
-  bool equals(const CallPositionFrames& other) const override;
+  bool equals(const CallPositionFrames& other) const;
 
-  void join_with(const CallPositionFrames& other) override;
+  void join_with(const CallPositionFrames& other);
 
-  void widen_with(const CallPositionFrames& other) override;
+  void widen_with(const CallPositionFrames& other);
 
-  void meet_with(const CallPositionFrames& other) override;
+  void meet_with(const CallPositionFrames& other);
 
-  void narrow_with(const CallPositionFrames& other) override;
+  void narrow_with(const CallPositionFrames& other);
 
   void difference_with(const CallPositionFrames& other);
 

@@ -62,43 +62,43 @@ class ScalarAbstractDomain final
     return ScalarAbstractDomain(Enum::Top);
   }
 
-  bool is_bottom() const override {
+  bool is_bottom() const {
     return value_ == static_cast<IntType>(Enum::Bottom);
   }
 
-  bool is_top() const override {
+  bool is_top() const {
     return value_ == static_cast<IntType>(Enum::Top);
   }
 
-  void set_to_bottom() override {
+  void set_to_bottom() {
     value_ = static_cast<IntType>(Enum::Bottom);
   }
 
-  void set_to_top() override {
+  void set_to_top() {
     value_ = static_cast<IntType>(Enum::Top);
   }
 
-  bool leq(const ScalarAbstractDomain& other) const override {
+  bool leq(const ScalarAbstractDomain& other) const {
     return value_ >= other.value_;
   }
 
-  bool equals(const ScalarAbstractDomain& other) const override {
+  bool equals(const ScalarAbstractDomain& other) const {
     return value_ == other.value_;
   }
 
-  void join_with(const ScalarAbstractDomain& other) override {
+  void join_with(const ScalarAbstractDomain& other) {
     value_ = std::min(value_, other.value_);
   }
 
-  void widen_with(const ScalarAbstractDomain& other) override {
+  void widen_with(const ScalarAbstractDomain& other) {
     this->join_with(other);
   }
 
-  void meet_with(const ScalarAbstractDomain& other) override {
+  void meet_with(const ScalarAbstractDomain& other) {
     value_ = std::max(value_, other.value_);
   }
 
-  void narrow_with(const ScalarAbstractDomain& other) override {
+  void narrow_with(const ScalarAbstractDomain& other) {
     this->meet_with(other);
   }
 

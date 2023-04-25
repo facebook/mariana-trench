@@ -24,35 +24,33 @@ class SingletonAbstractValue final
 
   INCLUDE_DEFAULT_COPY_CONSTRUCTORS_AND_ASSIGNMENTS(SingletonAbstractValue)
 
-  void clear() override {}
+  void clear() {}
 
-  AbstractValueKind kind() const override {
+  AbstractValueKind kind() const {
     return AbstractValueKind::Value;
   }
 
-  bool leq(const SingletonAbstractValue& other) const override {
+  bool leq(const SingletonAbstractValue& other) const {
     return equals(other);
   }
 
-  bool equals(const SingletonAbstractValue& /* unused */) const override {
+  bool equals(const SingletonAbstractValue& /* unused */) const {
     return true;
   }
 
-  AbstractValueKind join_with(
-      const SingletonAbstractValue& /* unused */) override {
+  AbstractValueKind join_with(const SingletonAbstractValue& /* unused */) {
     return AbstractValueKind::Value;
   }
 
-  AbstractValueKind widen_with(const SingletonAbstractValue& other) override {
+  AbstractValueKind widen_with(const SingletonAbstractValue& other) {
     return join_with(other);
   }
 
-  AbstractValueKind meet_with(
-      const SingletonAbstractValue& /* unused */) override {
+  AbstractValueKind meet_with(const SingletonAbstractValue& /* unused */) {
     mt_unreachable();
   }
 
-  AbstractValueKind narrow_with(const SingletonAbstractValue& other) override {
+  AbstractValueKind narrow_with(const SingletonAbstractValue& other) {
     mt_unreachable();
   }
 };

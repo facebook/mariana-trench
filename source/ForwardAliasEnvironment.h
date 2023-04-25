@@ -42,25 +42,25 @@ class ForwardAliasEnvironment final
   /* Return the initial environment. */
   static ForwardAliasEnvironment initial();
 
-  bool is_bottom() const override;
+  bool is_bottom() const;
 
-  bool is_top() const override;
+  bool is_top() const;
 
-  bool leq(const ForwardAliasEnvironment& other) const override;
+  bool leq(const ForwardAliasEnvironment& other) const;
 
-  bool equals(const ForwardAliasEnvironment& other) const override;
+  bool equals(const ForwardAliasEnvironment& other) const;
 
-  void set_to_bottom() override;
+  void set_to_bottom();
 
-  void set_to_top() override;
+  void set_to_top();
 
-  void join_with(const ForwardAliasEnvironment& other) override;
+  void join_with(const ForwardAliasEnvironment& other);
 
-  void widen_with(const ForwardAliasEnvironment& other) override;
+  void widen_with(const ForwardAliasEnvironment& other);
 
-  void meet_with(const ForwardAliasEnvironment& other) override;
+  void meet_with(const ForwardAliasEnvironment& other);
 
-  void narrow_with(const ForwardAliasEnvironment& other) override;
+  void narrow_with(const ForwardAliasEnvironment& other);
 
   /* Set the memory location where the register points to. */
   void assign(Register register_id, MemoryLocation* memory_location);

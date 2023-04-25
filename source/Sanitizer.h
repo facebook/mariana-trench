@@ -55,33 +55,33 @@ class Sanitizer final : public sparta::AbstractDomain<Sanitizer> {
     mt_unreachable(); // Not implemented.
   }
 
-  bool is_bottom() const override {
+  bool is_bottom() const {
     return kinds_.is_bottom();
   }
 
-  bool is_top() const override {
+  bool is_top() const {
     return false;
   }
 
-  void set_to_bottom() override {
+  void set_to_bottom() {
     kinds_.set_to_bottom();
   }
 
-  void set_to_top() override {
+  void set_to_top() {
     mt_unreachable(); // Not implemented.
   }
 
-  bool leq(const Sanitizer& other) const override;
+  bool leq(const Sanitizer& other) const;
 
-  bool equals(const Sanitizer& other) const override;
+  bool equals(const Sanitizer& other) const;
 
-  void join_with(const Sanitizer& other) override;
+  void join_with(const Sanitizer& other);
 
-  void widen_with(const Sanitizer& other) override;
+  void widen_with(const Sanitizer& other);
 
-  void meet_with(const Sanitizer& other) override;
+  void meet_with(const Sanitizer& other);
 
-  void narrow_with(const Sanitizer& other) override;
+  void narrow_with(const Sanitizer& other);
 
   SanitizerKind sanitizer_kind() const {
     return sanitizer_kind_;

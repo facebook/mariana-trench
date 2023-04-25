@@ -22,43 +22,43 @@
     return WrapperClass(WrappedClass::top());                 \
   }                                                           \
                                                               \
-  bool is_bottom() const override {                           \
+  bool is_bottom() const {                                    \
     return this->wrapped_member.is_bottom();                  \
   }                                                           \
                                                               \
-  bool is_top() const override {                              \
+  bool is_top() const {                                       \
     return this->wrapped_member.is_top();                     \
   }                                                           \
                                                               \
-  void set_to_bottom() override {                             \
+  void set_to_bottom() {                                      \
     this->wrapped_member.set_to_bottom();                     \
   }                                                           \
                                                               \
-  void set_to_top() override {                                \
+  void set_to_top() {                                         \
     this->wrapped_member.set_to_top();                        \
   }                                                           \
                                                               \
-  bool leq(const WrapperClass& other) const override {        \
+  bool leq(const WrapperClass& other) const {                 \
     return this->wrapped_member.leq(other.wrapped_member);    \
   }                                                           \
                                                               \
-  bool equals(const WrapperClass& other) const override {     \
+  bool equals(const WrapperClass& other) const {              \
     return this->wrapped_member.equals(other.wrapped_member); \
   }                                                           \
                                                               \
-  void join_with(const WrapperClass& other) override {        \
+  void join_with(const WrapperClass& other) {                 \
     this->wrapped_member.join_with(other.wrapped_member);     \
   }                                                           \
                                                               \
-  void widen_with(const WrapperClass& other) override {       \
+  void widen_with(const WrapperClass& other) {                \
     this->wrapped_member.widen_with(other.wrapped_member);    \
   }                                                           \
                                                               \
-  void meet_with(const WrapperClass& other) override {        \
+  void meet_with(const WrapperClass& other) {                 \
     this->wrapped_member.meet_with(other.wrapped_member);     \
   }                                                           \
                                                               \
-  void narrow_with(const WrapperClass& other) override {      \
+  void narrow_with(const WrapperClass& other) {               \
     this->wrapped_member.narrow_with(other.wrapped_member);   \
   }
 

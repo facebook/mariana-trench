@@ -236,20 +236,20 @@ class AbstractTreeDomain final
     mt_unreachable(); // Not implemented.
   }
 
-  bool is_bottom() const override {
+  bool is_bottom() const {
     return elements_.is_bottom() && children_.empty();
   }
 
-  bool is_top() const override {
+  bool is_top() const {
     return false;
   }
 
-  void set_to_bottom() override {
+  void set_to_bottom() {
     elements_.set_to_bottom();
     children_.clear();
   }
 
-  void set_to_top() override {
+  void set_to_top() {
     mt_unreachable(); // Not implemented.
   }
 
@@ -279,7 +279,7 @@ class AbstractTreeDomain final
    *  left_tree[*] <= right_tree[r] for all r in R /\
    *  left_tree[l] <= right_tree[*] for all l in L.
    */
-  bool leq(const AbstractTreeDomain& other) const override {
+  bool leq(const AbstractTreeDomain& other) const {
     // Case: left_tree.elements <= right_tree.elements
     if (!elements_.leq(other.elements_)) {
       return false;
@@ -340,7 +340,7 @@ class AbstractTreeDomain final
     return true;
   }
 
-  bool equals(const AbstractTreeDomain& other) const override {
+  bool equals(const AbstractTreeDomain& other) const {
     if (!elements_.equals(other.elements_)) {
       return false;
     }
@@ -382,7 +382,7 @@ class AbstractTreeDomain final
     return true;
   }
 
-  void join_with(const AbstractTreeDomain& other) override {
+  void join_with(const AbstractTreeDomain& other) {
     mt_if_expensive_assert(auto previous = *this);
 
     if (other.is_bottom()) {
@@ -521,7 +521,7 @@ class AbstractTreeDomain final
   }
 
  public:
-  void widen_with(const AbstractTreeDomain& other) override {
+  void widen_with(const AbstractTreeDomain& other) {
     mt_if_expensive_assert(auto previous = *this);
 
     if (other.is_bottom()) {
@@ -608,11 +608,11 @@ class AbstractTreeDomain final
   }
 
  public:
-  void meet_with(const AbstractTreeDomain& /*other*/) override {
+  void meet_with(const AbstractTreeDomain& /*other*/) {
     mt_unreachable(); // Not implemented.
   }
 
-  void narrow_with(const AbstractTreeDomain& other) override {
+  void narrow_with(const AbstractTreeDomain& other) {
     meet_with(other);
   }
 

@@ -84,37 +84,37 @@ class Issue final : public sparta::AbstractDomain<Issue> {
     mt_unreachable(); // Not implemented.
   }
 
-  bool is_bottom() const override {
+  bool is_bottom() const {
     return sources_.is_bottom() || sinks_.is_bottom() || rule_ == nullptr ||
         position_ == nullptr;
   }
 
-  bool is_top() const override {
+  bool is_top() const {
     return false;
   }
 
-  void set_to_bottom() override {
+  void set_to_bottom() {
     sources_.set_to_bottom();
     sinks_.set_to_bottom();
     rule_ = nullptr;
     position_ = nullptr;
   }
 
-  void set_to_top() override {
+  void set_to_top() {
     mt_unreachable(); // Not implemented.
   }
 
-  bool leq(const Issue& other) const override;
+  bool leq(const Issue& other) const;
 
-  bool equals(const Issue& other) const override;
+  bool equals(const Issue& other) const;
 
-  void join_with(const Issue& other) override;
+  void join_with(const Issue& other);
 
-  void widen_with(const Issue& other) override;
+  void widen_with(const Issue& other);
 
-  void meet_with(const Issue& other) override;
+  void meet_with(const Issue& other);
 
-  void narrow_with(const Issue& other) override;
+  void narrow_with(const Issue& other);
 
   void filter_sources(
       const std::function<
