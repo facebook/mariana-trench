@@ -19,6 +19,8 @@ public class Intent {
 
   public Intent(String action, Uri data) {}
 
+  public Intent(Context context, Class<?> cls) {}
+
   public String getDataString() {
     return "";
   }

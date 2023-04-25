@@ -87,6 +87,7 @@
     "Landroid/content/ContentProvider;.<init>:()V",
     "Landroid/content/Context;.<init>:()V",
     "Landroid/content/Intent;.<init>:()V",
+    "Landroid/content/Intent;.<init>:(Landroid/content/Context;Ljava/lang/Class;)V",
     "Landroid/content/Intent;.<init>:(Ljava/lang/String;Landroid/net/Uri;)V",
     "Landroid/database/Cursor;.<init>:()V",
     "Landroid/location/Location;.<init>:()V",

@@ -42,6 +42,13 @@
       "Ljava/lang/Object;.<init>:()V"
     ]
   },
+  "Landroid/content/Intent;.<init>:(Landroid/content/Context;Ljava/lang/Class;)V" : 
+  {
+    "static" : 
+    [
+      "Ljava/lang/Object;.<init>:()V"
+    ]
+  },
   "Landroid/content/Intent;.<init>:(Ljava/lang/String;Landroid/net/Uri;)V" : 
   {
     "static" : 
