@@ -172,6 +172,8 @@ Options::Options(const boost::program_options::variables_map& variables) {
   if (!variables["graphql-metadata-paths"].empty()) {
     graphql_metadata_paths_ = check_path_exists(
         variables["graphql-metadata-paths"].as<std::string>());
+  } else {
+    graphql_metadata_paths_ = "";
   }
 
   if (!variables["proguard-configuration-paths"].empty()) {
