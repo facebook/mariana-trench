@@ -395,8 +395,11 @@ void create_issue(
     std::string_view callee,
     const FeatureMayAlwaysSet& extra_features) {
   std::unordered_set<const Kind*> kinds;
-  for (const auto& frame : source.frames_iterator()) {
-    kinds.emplace(frame.kind());
+  for (const auto& source_frame : source.frames_iterator()) {
+    kinds.emplace(source_frame.kind());
+  }
+  for (const auto& sink_frame : sink.frames_iterator()) {
+    kinds.emplace(sink_frame.kind());
   }
 
   source.add_locally_inferred_features(

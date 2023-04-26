@@ -42,7 +42,9 @@ bool is_manifest_relevant_kind(const std::string_view kind) {
   return (
       kind == "ActivityUserInput" || kind == "ActivityLifecycle" ||
       kind == "ReceiverUserInput" || kind == "ServiceUserInput" ||
-      kind == "ServiceAIDLUserInput" || kind == "ProviderUserInput");
+      kind == "ServiceAIDLUserInput" || kind == "ProviderUserInput" ||
+      kind == "ActivityExitNode" || kind == "ProviderExitNode" ||
+      kind == "ServiceAIDLExitNode");
 }
 
 bool is_class_exported_via_uri(const DexClass* clazz) {
@@ -336,7 +338,8 @@ FeatureSet ClassProperties::get_class_features(
   FeatureSet features;
 
   if (kind->name() == "ActivityUserInput" ||
-      kind->name() == "ActivityLifecycle") {
+      kind->name() == "ActivityLifecycle" ||
+      kind->name() == "ActivityExitNode") {
     features.join_with(get_manifest_features(clazz, activities_));
   }
 
@@ -348,7 +351,8 @@ FeatureSet ClassProperties::get_class_features(
     features.join_with(get_manifest_features(clazz, services_));
   }
 
-  if (kind->name() == "ServiceAIDLUserInput") {
+  if (kind->name() == "ServiceAIDLUserInput" ||
+      kind->name() == "ServiceAIDLExitNode") {
     if (const auto* dex_class = redex::get_class(clazz)) {
       const auto* service_class = get_service_from_stub(dex_class);
       if (service_class != nullptr) {
@@ -360,7 +364,8 @@ FeatureSet ClassProperties::get_class_features(
     }
   }
 
-  if (kind->name() == "ProviderUserInput") {
+  if (kind->name() == "ProviderUserInput" ||
+      kind->name() == "ProviderExitNode") {
     features.join_with(get_manifest_features(clazz, providers_));
   }
 
