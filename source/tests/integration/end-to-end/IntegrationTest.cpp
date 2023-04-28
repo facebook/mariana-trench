@@ -162,7 +162,8 @@ TEST_P(IntegrationTest, CompareFlows) {
       model_generator_search_paths,
       /* remove_unreachable_code */ false,
       /* emit_all_via_cast_features */ true,
-      /* source_root_directory */ directory.string());
+      /* source_root_directory */ directory.string(),
+      /* enable_cross_component_analysis */ true);
 
   // Load test Java classes
   boost::filesystem::path dex_path = test::find_dex_path(directory);

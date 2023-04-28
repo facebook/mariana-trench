@@ -335,7 +335,9 @@ void process_shim_target(
 
   if (!dex_runtime_method) {
     WARNING(
-        1, "Could not resolve method for artificial call to: {}", show(method));
+        1,
+        "Could not resolve method for artificial call to: {}",
+        method->show());
     return;
   }
 
@@ -873,7 +875,7 @@ std::ostream& operator<<(std::ostream& out, const CallTarget& call_target) {
     out << ", receiver_type=`" << show(call_target.receiver_type())
         << "`, overrides={";
     for (const auto* method : call_target.overrides()) {
-      out << "`" << show(method) << "`, ";
+      out << "`" << method << "`, ";
     }
     out << "}";
   }
@@ -948,6 +950,8 @@ CallGraph::CallGraph(
           std::unordered_map<const IRInstruction*, CallTarget> callees;
           std::unordered_map<const IRInstruction*, ArtificialCallees>
               artificial_callees;
+          std::unordered_map<const IRInstruction*, ArtificialCallees>
+              intent_routing_callees;
           std::unordered_map<const IRInstruction*, FieldTarget> field_accesses;
           std::unordered_map<const IRInstruction*, TextualOrderIndex>
               indexed_returns;
@@ -999,6 +1003,11 @@ CallGraph::CallGraph(
                 artificial_callees.emplace(
                     instruction, instruction_information.artificial_callees);
               }
+              if (instruction_information.intent_routing_callees.size() > 0) {
+                intent_routing_callees.emplace(
+                    instruction,
+                    instruction_information.intent_routing_callees);
+              }
               if (instruction_information.callee) {
                 callees.emplace(instruction, *(instruction_information.callee));
               } else if (instruction_information.field_access) {
@@ -1015,6 +1024,10 @@ CallGraph::CallGraph(
           if (!artificial_callees.empty()) {
             artificial_callees_.insert_or_assign(
                 std::make_pair(caller, std::move(artificial_callees)));
+          }
+          if (!intent_routing_callees.empty()) {
+            intent_routing_callees_.insert_or_assign(
+                std::make_pair(caller, std::move(intent_routing_callees)));
           }
           if (!field_accesses.empty()) {
             resolved_fields_.insert_or_assign(
@@ -1274,8 +1287,9 @@ Json::Value CallGraph::to_json(bool with_overrides) const {
       method_value["virtual"] = virtual_callees_value;
     }
 
-    value[show(method)] = method_value;
+    value[method->show()] = method_value;
   }
+
   for (const auto& [method, instruction_artificial_callees] :
        artificial_callees_) {
     std::unordered_set<const Method*> callees;
@@ -1290,7 +1304,24 @@ Json::Value CallGraph::to_json(bool with_overrides) const {
     for (const auto* callee : callees) {
       callees_value.append(Json::Value(show(callee)));
     }
-    value[show(method)]["artificial"] = callees_value;
+    value[method->show()]["artificial"] = callees_value;
+  }
+
+  for (const auto& [method, instruction_artificial_callees] :
+       intent_routing_callees_) {
+    std::unordered_set<const Method*> callees;
+    for (const auto& [instruction, artificial_callees] :
+         instruction_artificial_callees) {
+      for (const auto& artificial_callee : artificial_callees) {
+        callees.insert(artificial_callee.call_target.resolved_base_callee());
+      }
+    }
+
+    auto callees_value = Json::Value(Json::arrayValue);
+    for (const auto* callee : callees) {
+      callees_value.append(Json::Value(callee->show()));
+    }
+    value[method->show()]["routed_intent"] = callees_value;
   }
   return value;
 }
