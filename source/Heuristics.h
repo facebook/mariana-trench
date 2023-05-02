@@ -78,6 +78,31 @@ class Heuristics {
   constexpr static std::size_t kSinkMaxInputPathLeaves = 20;
 
   /**
+   * Maximum size of the port of a call effect source.
+   */
+  constexpr static std::size_t kCallEffectSourceMaxPortSize = 4;
+
+  /**
+   * Maximum number of leaves in the tree of output paths of call effect
+   * sources.
+   *
+   * When reaching the maximum, we collapse all the subtrees into a single node.
+   */
+  constexpr static std::size_t kCallEffectSourceMaxOutputPathLeaves = 20;
+
+  /**
+   * Maximum size of the port of a call effect sink.
+   */
+  constexpr static std::size_t kCallEffectSinkMaxPortSize = 4;
+
+  /**
+   * Maximum number of leaves in the tree of input paths of call effect sinks.
+   *
+   * When reaching the maximum, we collapse all the subtrees into a single node.
+   */
+  constexpr static std::size_t kCallEffectSinkMaxInputPathLeaves = 20;
+
+  /**
    * Maximum number of global iterations before we abort.
    */
   constexpr static std::size_t kMaxNumberIterations = 150;

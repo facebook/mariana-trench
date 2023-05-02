@@ -11,7 +11,6 @@
 #include <TypeUtil.h>
 
 #include <mariana-trench/Assert.h>
-#include <mariana-trench/CallEffects.h>
 #include <mariana-trench/ClassHierarchies.h>
 #include <mariana-trench/ClassProperties.h>
 #include <mariana-trench/Compiler.h>
@@ -267,12 +266,12 @@ Model Model::instantiate(const Method* method, Context& context) const {
     model.add_sink(port, sink_taint);
   }
 
-  for (const auto& [effect, source_taint] : call_effect_sources_) {
-    model.add_call_effect_source(effect, source_taint);
+  for (const auto& [port, source_taint] : call_effect_sources_.elements()) {
+    model.add_call_effect_source(port, source_taint);
   }
 
-  for (const auto& [effect, sink_taint] : call_effect_sinks_) {
-    model.add_call_effect_sink(effect, sink_taint);
+  for (const auto& [port, sink_taint] : call_effect_sinks_.elements()) {
+    model.add_call_effect_sink(port, sink_taint);
   }
 
   for (const auto& [input_path, output] : propagations_.elements()) {
@@ -376,26 +375,28 @@ Model Model::at_callsite(
         UpdateKind::Weak);
   });
 
-  call_effect_sinks_.visit([&](const CallEffect& effect, const Taint& sinks) {
-    switch (effect.kind()) {
-      case CallEffect::Kind::CALL_CHAIN: {
-        model.call_effect_sinks_.write(
-            effect,
-            sinks.propagate(
-                callee,
-                effect.access_path(),
-                call_position,
-                Heuristics::kMaxCallChainSourceSinkDistance,
-                /* extra features */ {},
-                context,
-                /* source register types */ {},
-                /* source constant arguments */ {}));
-      } break;
-
-      default:
-        mt_unreachable();
-    }
-  });
+  call_effect_sinks_.visit(
+      [&model, callee, call_position, &context](
+          const AccessPath& callee_port, const Taint& call_effect) {
+        switch (callee_port.root().kind()) {
+          case Root::Kind::CallEffectCallChain: {
+            model.call_effect_sinks_.write(
+                callee_port,
+                call_effect.propagate(
+                    callee,
+                    callee_port,
+                    call_position,
+                    Heuristics::kMaxCallChainSourceSinkDistance,
+                    /* extra features */ {},
+                    context,
+                    /* source register types */ {},
+                    /* source constant arguments */ {}),
+                UpdateKind::Weak);
+          } break;
+          default:
+            mt_unreachable();
+        }
+      });
 
   model.propagations_ = propagations_;
   model.add_features_to_arguments_ = add_features_to_arguments_;
@@ -507,6 +508,14 @@ void Model::approximate(const FeatureMayAlwaysSet& widening_features) {
 
   sinks_.shape_with(make_mold, widening_features);
   sinks_.limit_leaves(Heuristics::kSinkMaxInputPathLeaves, widening_features);
+
+  call_effect_sources_.shape_with(make_mold, widening_features);
+  call_effect_sources_.limit_leaves(
+      Heuristics::kCallEffectSourceMaxOutputPathLeaves, widening_features);
+
+  call_effect_sinks_.shape_with(make_mold, widening_features);
+  call_effect_sinks_.limit_leaves(
+      Heuristics::kCallEffectSinkMaxInputPathLeaves, widening_features);
 
   propagations_.shape_with(make_mold, widening_features);
   propagations_.limit_leaves(
@@ -650,24 +659,24 @@ void Model::add_inferred_sinks(
   }
 }
 
-void Model::add_call_effect_source(CallEffect effect, TaintConfig source) {
+void Model::add_call_effect_source(AccessPath port, TaintConfig source) {
   if (!check_taint_config_consistency(source, "effect source")) {
     return;
   }
 
-  add_call_effect_source(effect, Taint{std::move(source)});
+  add_call_effect_source(port, Taint{std::move(source)});
 }
 
-void Model::add_call_effect_sink(CallEffect effect, TaintConfig sink) {
+void Model::add_call_effect_sink(AccessPath port, TaintConfig sink) {
   if (!check_taint_config_consistency(sink, "effect sink")) {
     return;
   }
 
-  add_call_effect_sink(effect, Taint{std::move(sink)});
+  add_call_effect_sink(port, Taint{std::move(sink)});
 }
 
-void Model::add_inferred_call_effect_sinks(CallEffect effect, Taint sinks) {
-  add_call_effect_sink(effect, sinks);
+void Model::add_inferred_call_effect_sinks(AccessPath port, Taint sinks) {
+  add_call_effect_sink(port, sinks);
 }
 
 void Model::add_propagation(PropagationConfig propagation) {
@@ -1015,9 +1024,9 @@ Model Model::from_json(
     std::string effect_type_port =
         effect_source_value.isMember("port") ? "port" : "type";
     JsonValidation::string(effect_source_value, /* field */ effect_type_port);
-    auto effect = CallEffect::from_json(effect_source_value[effect_type_port]);
+    auto port = AccessPath::from_json(effect_source_value[effect_type_port]);
     model.add_call_effect_source(
-        effect, TaintConfig::from_json(effect_source_value, context));
+        port, TaintConfig::from_json(effect_source_value, context));
   }
 
   for (auto effect_sink_value :
@@ -1025,9 +1034,9 @@ Model Model::from_json(
     std::string effect_type_port =
         effect_sink_value.isMember("port") ? "port" : "type";
     JsonValidation::string(effect_sink_value, /* field */ effect_type_port);
-    auto effect = CallEffect::from_json(effect_sink_value[effect_type_port]);
+    auto port = AccessPath::from_json(effect_sink_value[effect_type_port]);
     model.add_call_effect_sink(
-        effect, TaintConfig::from_json(effect_sink_value, context));
+        port, TaintConfig::from_json(effect_sink_value, context));
   }
 
   for (auto propagation_value :
@@ -1159,9 +1168,9 @@ Json::Value Model::to_json(ExportOriginsMode export_origins_mode) const {
 
   if (!call_effect_sources_.is_bottom()) {
     auto effect_sources_value = Json::Value(Json::arrayValue);
-    for (const auto& [effect, source_taint] : call_effect_sources_) {
+    for (const auto& [port, source_taint] : call_effect_sources_.elements()) {
       auto source_value = Json::Value(Json::objectValue);
-      source_value["port"] = effect.to_json();
+      source_value["port"] = port.to_json();
       source_value["taint"] = source_taint.to_json(export_origins_mode);
       effect_sources_value.append(source_value);
     }
@@ -1181,9 +1190,9 @@ Json::Value Model::to_json(ExportOriginsMode export_origins_mode) const {
 
   if (!call_effect_sinks_.is_bottom()) {
     auto effect_sinks_value = Json::Value(Json::arrayValue);
-    for (const auto& [effect, sink_taint] : call_effect_sinks_) {
+    for (const auto& [port, sink_taint] : call_effect_sinks_.elements()) {
       auto sink_value = Json::Value(Json::objectValue);
-      sink_value["port"] = effect.to_json();
+      sink_value["port"] = port.to_json();
       sink_value["taint"] = sink_taint.to_json(export_origins_mode);
       effect_sinks_value.append(sink_value);
     }
@@ -1562,6 +1571,18 @@ bool Model::check_inline_as_consistency(
   return check_port_consistency(*access_path);
 }
 
+bool Model::check_call_effect_port_consistency(
+    const AccessPath& port,
+    std::string_view kind) const {
+  if (!port.root().is_call_effect()) {
+    ModelConsistencyError::raise(
+        fmt::format("Port for {} must be a call effect port.", kind));
+    return false;
+  }
+
+  return true;
+}
+
 void Model::add_generation(AccessPath port, Taint source) {
   if (method_) {
     source.set_leaf_origins_if_empty(MethodSet{method_});
@@ -1628,7 +1649,11 @@ void Model::add_sink(AccessPath port, Taint sink) {
   sinks_.write(port, Taint{std::move(sink)}, UpdateKind::Weak);
 }
 
-void Model::add_call_effect_source(CallEffect effect, Taint source) {
+void Model::add_call_effect_source(AccessPath port, Taint source) {
+  if (!check_call_effect_port_consistency(port, "effect source")) {
+    return;
+  }
+
   if (method_) {
     source.set_leaf_origins_if_empty(MethodSet{method_});
   }
@@ -1637,10 +1662,24 @@ void Model::add_call_effect_source(CallEffect effect, Taint source) {
     return;
   }
 
-  call_effect_sources_.write(effect, Taint{std::move(source)});
+  if (port.path().size() > Heuristics::kCallEffectSourceMaxPortSize) {
+    WARNING(
+        1,
+        "Truncating user-defined call effect source port {} down to path length {} for method {}",
+        port,
+        Heuristics::kCallEffectSourceMaxPortSize,
+        method_ ? method_->get_name() : "nullptr");
+  }
+
+  port.truncate(Heuristics::kCallEffectSourceMaxPortSize);
+  call_effect_sources_.write(port, std::move(source), UpdateKind::Weak);
 }
 
-void Model::add_call_effect_sink(CallEffect effect, Taint sink) {
+void Model::add_call_effect_sink(AccessPath port, Taint sink) {
+  if (!check_call_effect_port_consistency(port, "effect sink")) {
+    return;
+  }
+
   if (method_) {
     sink.set_leaf_origins_if_empty(MethodSet{method_});
   }
@@ -1649,7 +1688,17 @@ void Model::add_call_effect_sink(CallEffect effect, Taint sink) {
     return;
   }
 
-  call_effect_sinks_.write(effect, Taint{std::move(sink)});
+  if (port.path().size() > Heuristics::kCallEffectSinkMaxPortSize) {
+    WARNING(
+        1,
+        "Truncating user-defined call effect sink port {} down to path length {} for method {}",
+        port,
+        Heuristics::kCallEffectSinkMaxPortSize,
+        method_ ? method_->get_name() : "nullptr");
+  }
+
+  port.truncate(Heuristics::kCallEffectSinkMaxPortSize);
+  call_effect_sinks_.write(port, std::move(sink), UpdateKind::Weak);
 }
 
 void Model::add_propagation(AccessPath input_path, Taint output) {

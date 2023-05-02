@@ -884,13 +884,13 @@
   "effect_sinks" : 
   [
     {
-      "port" : "CallEffect.call-chain",
+      "port" : "call-chain",
       "taint" : 
       [
         {
           "call" : 
           {
-            "port" : "CallEffect.call-chain",
+            "port" : "call-chain",
             "position" : 
             {
               "line" : 32,
@@ -933,13 +933,13 @@
   "effect_sinks" : 
   [
     {
-      "port" : "CallEffect.call-chain",
+      "port" : "call-chain",
       "taint" : 
       [
         {
           "call" : 
           {
-            "port" : "CallEffect.call-chain",
+            "port" : "call-chain",
             "position" : 
             {
               "line" : 16,
@@ -974,7 +974,7 @@
   "effect_sinks" : 
   [
     {
-      "port" : "CallEffect.call-chain",
+      "port" : "call-chain",
       "taint" : 
       [
         {
@@ -1021,13 +1021,13 @@
   "effect_sinks" : 
   [
     {
-      "port" : "CallEffect.call-chain",
+      "port" : "call-chain",
       "taint" : 
       [
         {
           "call" : 
           {
-            "port" : "CallEffect.call-chain",
+            "port" : "call-chain",
             "position" : 
             {
               "line" : 26,
@@ -1054,7 +1054,7 @@
   "effect_sources" : 
   [
     {
-      "port" : "CallEffect.call-chain",
+      "port" : "call-chain",
       "taint" : 
       [
         {
@@ -1089,7 +1089,7 @@
         {
           "call" : 
           {
-            "port" : "CallEffect.call-chain",
+            "port" : "call-chain",
             "position" : 
             {
               "end" : 30,
@@ -1209,7 +1209,7 @@
   "effect_sinks" : 
   [
     {
-      "port" : "CallEffect.call-chain",
+      "port" : "call-chain",
       "taint" : 
       [
         {

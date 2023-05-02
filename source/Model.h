@@ -15,7 +15,6 @@
 #include <json/json.h>
 
 #include <mariana-trench/Access.h>
-#include <mariana-trench/CallEffects.h>
 #include <mariana-trench/Context.h>
 #include <mariana-trench/FeatureSet.h>
 #include <mariana-trench/Flags.h>
@@ -228,16 +227,16 @@ class Model final {
     sinks_ = std::move(sinks);
   }
 
-  const CallEffectsAbstractDomain& call_effect_sources() const {
+  const TaintAccessPathTree& call_effect_sources() const {
     return call_effect_sources_;
   }
-  void add_call_effect_source(CallEffect effect, TaintConfig source);
+  void add_call_effect_source(AccessPath port, TaintConfig source);
 
-  const CallEffectsAbstractDomain& call_effect_sinks() const {
+  const TaintAccessPathTree& call_effect_sinks() const {
     return call_effect_sinks_;
   }
-  void add_call_effect_sink(CallEffect effect, TaintConfig sink);
-  void add_inferred_call_effect_sinks(CallEffect effect, Taint sink);
+  void add_call_effect_sink(AccessPath port, TaintConfig sink);
+  void add_inferred_call_effect_sinks(AccessPath port, Taint sink);
 
   void add_propagation(PropagationConfig propagation);
   /* Add a propagation after applying sanitizers */
@@ -331,6 +330,9 @@ class Model final {
   bool check_taint_consistency(const Taint& frame, std::string_view kind) const;
   bool check_inline_as_consistency(
       const AccessPathConstantDomain& inline_as) const;
+  bool check_call_effect_port_consistency(
+      const AccessPath& port,
+      std::string_view kind) const;
 
   // In the following methods, the `Taint` object should originate from a
   // `Model` object. This guarantees that it was constructed using a
@@ -339,8 +341,8 @@ class Model final {
   void add_generation(AccessPath port, Taint generation);
   void add_parameter_source(AccessPath port, Taint source);
   void add_sink(AccessPath port, Taint sink);
-  void add_call_effect_source(CallEffect effect, Taint source);
-  void add_call_effect_sink(CallEffect effect, Taint sink);
+  void add_call_effect_source(AccessPath port, Taint source);
+  void add_call_effect_sink(AccessPath port, Taint sink);
   void add_propagation(AccessPath input_path, Taint output);
 
  private:
@@ -350,8 +352,8 @@ class Model final {
   TaintAccessPathTree generations_;
   TaintAccessPathTree parameter_sources_;
   TaintAccessPathTree sinks_;
-  CallEffectsAbstractDomain call_effect_sources_;
-  CallEffectsAbstractDomain call_effect_sinks_;
+  TaintAccessPathTree call_effect_sources_;
+  TaintAccessPathTree call_effect_sinks_;
   TaintAccessPathTree propagations_;
   SanitizerSet global_sanitizers_;
   RootPatriciaTreeAbstractPartition<SanitizerSet> port_sanitizers_;

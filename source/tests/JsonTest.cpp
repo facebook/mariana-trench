@@ -8,7 +8,6 @@
 #include <gmock/gmock.h>
 
 #include <mariana-trench/Access.h>
-#include <mariana-trench/CallEffects.h>
 #include <mariana-trench/CanonicalName.h>
 #include <mariana-trench/Constants.h>
 #include <mariana-trench/Field.h>
@@ -65,7 +64,7 @@ TEST_F(JsonTest, Root) {
   EXPECT_JSON_EQ(Root, "\"Leaf\"", (Root(Root::Kind::Leaf)));
   EXPECT_JSON_EQ(Root, "\"Anchor\"", Root(Root::Kind::Anchor));
   EXPECT_JSON_EQ(Root, "\"Producer\"", Root(Root::Kind::Producer));
-  EXPECT_JSON_EQ(Root, "\"CallEffect\"", Root(Root::Kind::CallEffect));
+  EXPECT_JSON_EQ(Root, "\"call-chain\"", Root(Root::Kind::CallEffectCallChain));
   EXPECT_JSON_EQ(Root, "\"Argument(0)\"", Root(Root::Kind::Argument, 0));
   EXPECT_JSON_EQ(Root, "\"Argument(1)\"", Root(Root::Kind::Argument, 1));
   EXPECT_JSON_EQ(Root, "\"Argument(12)\"", Root(Root::Kind::Argument, 12));
@@ -2969,26 +2968,6 @@ TEST_F(JsonTest, LifecycleMethods) {
       JsonValidationError);
 }
 
-TEST_F(JsonTest, CallEffect) {
-  EXPECT_EQ(
-      CallEffect::from_json(test::parse_json(R"#("call-chain")#")),
-      CallEffect(CallEffect::Kind::CALL_CHAIN));
-
-  EXPECT_EQ(
-      CallEffect::from_json(test::parse_json(R"#("CallEffect.call-chain")#")),
-      CallEffect(CallEffect::Kind::CALL_CHAIN));
-
-  // Invalid root
-  EXPECT_THROW(
-      CallEffect::from_json(test::parse_json(R"#("Return.call-chain")#")),
-      JsonValidationError);
-
-  // Invalid effect
-  EXPECT_THROW(
-      CallEffect::from_json(test::parse_json(R"#("CallEffect.other")#")),
-      JsonValidationError);
-}
-
 TEST_F(JsonTest, CallEffectModel) {
   Scope scope;
   auto* dex_entry_method = redex::create_void_method(
@@ -3006,10 +2985,9 @@ TEST_F(JsonTest, CallEffectModel) {
   auto* entry_method = context.methods->get(dex_entry_method);
   auto* exit_method = context.methods->get(dex_exit_method);
 
-  CallEffect call_effect(CallEffect::Kind::CALL_CHAIN);
   Model effect_source_model(entry_method, context);
   effect_source_model.add_call_effect_source(
-      call_effect,
+      AccessPath(Root(Root::Kind::CallEffectCallChain)),
       test::make_leaf_taint_config(
           context.kind_factory->get("CallChainOrigin")));
 
@@ -3018,7 +2996,7 @@ TEST_F(JsonTest, CallEffectModel) {
       test::parse_json(R"#({
       "effect_sources": [
         {
-          "port": "CallEffect.call-chain",
+          "port": "call-chain",
           "taint": [
             {
               "kinds": [
@@ -3037,14 +3015,14 @@ TEST_F(JsonTest, CallEffectModel) {
 
   Model effect_sink_model(exit_method, context);
   effect_sink_model.add_call_effect_sink(
-      call_effect,
+      AccessPath(Root(Root::Kind::CallEffectCallChain)),
       test::make_leaf_taint_config(context.kind_factory->get("CallChainSink")));
   EXPECT_EQ(
       test::sorted_json(effect_sink_model.to_json(ExportOriginsMode::Always)),
       test::parse_json(R"#({
       "effect_sinks": [
         {
-          "port": "CallEffect.call-chain",
+          "port": "call-chain",
           "taint": [
             {
               "kinds": [
@@ -3069,8 +3047,12 @@ TEST_F(JsonTest, CallEffectModel) {
       Rule::KindSet{context.kind_factory->get("CallChainSink")},
       /* transforms */ nullptr);
 
-  auto source = effect_source_model.call_effect_sources().read(call_effect);
-  auto sink = effect_sink_model.call_effect_sinks().read(call_effect);
+  auto source = effect_source_model.call_effect_sources()
+                    .read(Root(Root::Kind::CallEffectCallChain))
+                    .collapse(/* broadening_features */ {});
+  auto sink = effect_sink_model.call_effect_sinks()
+                  .read(Root(Root::Kind::CallEffectCallChain))
+                  .collapse(/* broadening_features */ {});
 
   EXPECT_EQ(
       test::sorted_json(Model(

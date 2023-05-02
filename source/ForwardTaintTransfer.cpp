@@ -6,7 +6,6 @@
  */
 
 #include <mariana-trench/ArtificialMethods.h>
-#include <mariana-trench/CallEffects.h>
 #include <mariana-trench/CallGraph.h>
 #include <mariana-trench/ClassProperties.h>
 #include <mariana-trench/FeatureFactory.h>
@@ -718,28 +717,30 @@ void check_call_effect_flows(
       callee_call_effect_sinks);
 
   auto* position = context->positions.get(context->method());
-  for (const auto& [effect, sources] : caller_call_effect_sources) {
-    const auto& sinks = callee_call_effect_sinks.read(effect);
-    check_sources_sinks_flows(
-        context,
-        // Add the position of the caller to call effect sources.
-        sources.attach_position(position),
-        sinks,
-        callee.position,
-        callee.call_index,
-        /* sink_index */ callee.resolved_base_method
-            ? callee.resolved_base_method->show()
-            : std::string(k_unresolved_callee),
-        /* extra features */ {},
-        /* fulfilled partial sinks */ nullptr);
+  for (const auto& [port, sources] : caller_call_effect_sources.elements()) {
+    const auto& call_effect_sinks = callee_call_effect_sinks.read(port);
+    for (const auto& [_, sinks] : call_effect_sinks.elements()) {
+      check_sources_sinks_flows(
+          context,
+          // Add the position of the caller to call effect sources.
+          sources.attach_position(position),
+          sinks,
+          callee.position,
+          callee.call_index,
+          /* sink_index */ callee.resolved_base_method
+              ? callee.resolved_base_method->show()
+              : std::string(k_unresolved_callee),
+          /* extra features */ {},
+          /* fulfilled partial sinks */ nullptr);
+    }
   }
 }
 
 void apply_call_effects(MethodContext* context, const CalleeModel& callee) {
   const auto& callee_call_effect_sinks = callee.model.call_effect_sinks();
-  for (const auto& [effect, sinks] : callee_call_effect_sinks) {
-    switch (effect.kind()) {
-      case CallEffect::Kind::CALL_CHAIN: {
+  for (const auto& [port, sinks] : callee_call_effect_sinks.elements()) {
+    switch (port.root().kind()) {
+      case Root::Kind::CallEffectCallChain: {
         LOG(5,
             "Add inferred call effect sinks {} for method: {}",
             sinks,
@@ -747,7 +748,7 @@ void apply_call_effects(MethodContext* context, const CalleeModel& callee) {
 
         auto sinks_copy = sinks;
         context->new_model.add_inferred_call_effect_sinks(
-            effect, std::move(sinks_copy));
+            port, std::move(sinks_copy));
 
       } break;
 

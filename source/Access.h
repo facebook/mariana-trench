@@ -73,7 +73,13 @@ class Root final {
      * `CanonicalThis` is not considered an argument.
      */
     CanonicalThis = std::numeric_limits<IntegerEncoding>::max() - 4,
-    CallEffect = std::numeric_limits<IntegerEncoding>::max() - 5,
+    /*
+     * Used for call effects. The call chain effect means the corresponding
+     * Taint is derived from a method call to the callee. All call effect
+     * roots are stored in a separate call effects source/sink TaintTree in
+     * the Model.
+     */
+    CallEffectCallChain = std::numeric_limits<IntegerEncoding>::max() - 5,
     MaxArgument = std::numeric_limits<IntegerEncoding>::max() - 6,
   };
 
@@ -135,7 +141,7 @@ class Root final {
   }
 
   bool is_call_effect() const {
-    return value_ == static_cast<IntegerEncoding>(Kind::CallEffect);
+    return value_ == static_cast<IntegerEncoding>(Kind::CallEffectCallChain);
   }
 
   Kind kind() const {
