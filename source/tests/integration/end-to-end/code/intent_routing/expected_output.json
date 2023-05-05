@@ -8,10 +8,37 @@
 }
 {
   "method" : "Landroid/app/Activity;.getIntent:()Landroid/content/Intent;",
+  "modes" : 
+  [
+    "no-collapse-on-propagation",
+    "skip-analysis"
+  ],
   "position" : 
   {
     "line" : 22
-  }
+  },
+  "propagation" : 
+  [
+    {
+      "input" : "call-effect-intent",
+      "output" : 
+      [
+        {
+          "kinds" : 
+          [
+            {
+              "call_info" : "Propagation",
+              "kind" : "LocalReturn",
+              "output_paths" : 
+              {
+                "" : 0
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
 }
 {
   "method" : "Landroid/app/Activity;.onCreate:()V",
@@ -141,10 +168,37 @@
 }
 {
   "method" : "Landroid/content/Intent;.getStringExtra:(Ljava/lang/String;)Ljava/lang/String;",
+  "modes" : 
+  [
+    "no-collapse-on-propagation",
+    "skip-analysis"
+  ],
   "position" : 
   {
     "line" : 38
-  }
+  },
+  "propagation" : 
+  [
+    {
+      "input" : "Argument(0)[<Argument(1)>]",
+      "output" : 
+      [
+        {
+          "kinds" : 
+          [
+            {
+              "call_info" : "Propagation",
+              "kind" : "LocalReturn",
+              "output_paths" : 
+              {
+                "" : 0
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
 }
 {
   "method" : "Landroid/content/Intent;.hasExtra:(Ljava/lang/String;)Z",
@@ -1000,6 +1054,81 @@
   ]
 }
 {
+  "method" : "Lcom/facebook/marianatrench/integrationtests/IntentTarget;.fakeGetIntent:()Landroid/content/Intent;",
+  "modes" : 
+  [
+    "no-collapse-on-propagation",
+    "skip-analysis"
+  ],
+  "position" : 
+  {
+    "line" : 44,
+    "path" : "IntentTarget.java"
+  },
+  "propagation" : 
+  [
+    {
+      "input" : "call-effect-intent.path",
+      "output" : 
+      [
+        {
+          "kinds" : 
+          [
+            {
+              "call_info" : "Propagation",
+              "kind" : "LocalReturn",
+              "output_paths" : 
+              {
+                "" : 0
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
+{
+  "effect_sinks" : 
+  [
+    {
+      "port" : "call-effect-intent[anotherKey]",
+      "taint" : 
+      [
+        {
+          "kinds" : 
+          [
+            {
+              "call_info" : "Origin",
+              "kind" : "Sink",
+              "origins" : 
+              [
+                "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V"
+              ]
+            }
+          ],
+          "local_positions" : 
+          [
+            {
+              "line" : 32
+            },
+            {
+              "line" : 33
+            }
+          ],
+          "origin" : 
+          {
+            "method" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
+            "position" : 
+            {
+              "line" : 33,
+              "path" : "IntentTarget.java"
+            }
+          }
+        }
+      ]
+    }
+  ],
   "method" : "Lcom/facebook/marianatrench/integrationtests/IntentTarget;.readsRoutedIntent_anotherKeyToSink:()V",
   "position" : 
   {
@@ -1008,6 +1137,94 @@
   }
 }
 {
+  "effect_sinks" : 
+  [
+    {
+      "port" : "call-effect-intent.path[session]",
+      "taint" : 
+      [
+        {
+          "kinds" : 
+          [
+            {
+              "call_info" : "Origin",
+              "kind" : "Sink",
+              "origins" : 
+              [
+                "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V"
+              ]
+            }
+          ],
+          "local_positions" : 
+          [
+            {
+              "line" : 50
+            },
+            {
+              "line" : 51
+            }
+          ],
+          "origin" : 
+          {
+            "method" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
+            "position" : 
+            {
+              "line" : 51,
+              "path" : "IntentTarget.java"
+            }
+          }
+        }
+      ]
+    }
+  ],
+  "method" : "Lcom/facebook/marianatrench/integrationtests/IntentTarget;.readsRoutedIntent_pathSessionToSink:()V",
+  "position" : 
+  {
+    "line" : 49,
+    "path" : "IntentTarget.java"
+  }
+}
+{
+  "effect_sinks" : 
+  [
+    {
+      "port" : "call-effect-intent[session]",
+      "taint" : 
+      [
+        {
+          "kinds" : 
+          [
+            {
+              "call_info" : "Origin",
+              "kind" : "Sink",
+              "origins" : 
+              [
+                "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V"
+              ]
+            }
+          ],
+          "local_positions" : 
+          [
+            {
+              "line" : 19
+            },
+            {
+              "line" : 20
+            }
+          ],
+          "origin" : 
+          {
+            "method" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
+            "position" : 
+            {
+              "line" : 20,
+              "path" : "IntentTarget.java"
+            }
+          }
+        }
+      ]
+    }
+  ],
   "method" : "Lcom/facebook/marianatrench/integrationtests/IntentTarget;.readsRoutedIntent_sessionToSink:()V",
   "position" : 
   {
@@ -1016,6 +1233,48 @@
   }
 }
 {
+  "effect_sinks" : 
+  [
+    {
+      "port" : "call-effect-intent[session]",
+      "taint" : 
+      [
+        {
+          "call" : 
+          {
+            "port" : "Argument(1)",
+            "position" : 
+            {
+              "line" : 27,
+              "path" : "IntentTarget.java"
+            },
+            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/IntentTarget;.extraSinkHop:(Ljava/lang/Object;)V"
+          },
+          "kinds" : 
+          [
+            {
+              "call_info" : "CallSite",
+              "distance" : 1,
+              "kind" : "Sink",
+              "origins" : 
+              [
+                "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V"
+              ]
+            }
+          ],
+          "local_positions" : 
+          [
+            {
+              "line" : 26
+            },
+            {
+              "line" : 27
+            }
+          ]
+        }
+      ]
+    }
+  ],
   "method" : "Lcom/facebook/marianatrench/integrationtests/IntentTarget;.readsRoutedIntent_sessionToSinkViaExtraHop:()V",
   "position" : 
   {

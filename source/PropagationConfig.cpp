@@ -34,11 +34,12 @@ PropagationConfig PropagationConfig::from_json(
   JsonValidation::string(value, /* field */ "input");
   auto input = AccessPath::from_json(value["input"]);
 
-  if (!input.root().is_argument()) {
+  if (!input.root().is_argument() &&
+      !input.root().is_supported_call_effect_for_propagation_input()) {
     throw JsonValidationError(
         value,
         /* field */ "input",
-        "an access path to an argument");
+        "an access path to an argument or supported call effect");
   }
 
   auto inferred_features = FeatureMayAlwaysSet::from_json(value, context);

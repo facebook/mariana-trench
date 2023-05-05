@@ -353,6 +353,13 @@
       "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V"
     ]
   },
+  "Lcom/facebook/marianatrench/integrationtests/IntentTarget;.fakeGetIntent:()Landroid/content/Intent;" : 
+  {
+    "static" : 
+    [
+      "Landroid/content/Intent;.<init>:()V"
+    ]
+  },
   "Lcom/facebook/marianatrench/integrationtests/IntentTarget;.readsRoutedIntent_anotherKeyToSink:()V" : 
   {
     "static" : 
@@ -363,6 +370,18 @@
     [
       "Landroid/app/Activity;.getIntent:()Landroid/content/Intent;",
       "Landroid/content/Intent;.getStringExtra:(Ljava/lang/String;)Ljava/lang/String;"
+    ]
+  },
+  "Lcom/facebook/marianatrench/integrationtests/IntentTarget;.readsRoutedIntent_pathSessionToSink:()V" : 
+  {
+    "static" : 
+    [
+      "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V"
+    ],
+    "virtual" : 
+    [
+      "Landroid/content/Intent;.getStringExtra:(Ljava/lang/String;)Ljava/lang/String;",
+      "Lcom/facebook/marianatrench/integrationtests/IntentTarget;.fakeGetIntent:()Landroid/content/Intent;"
     ]
   },
   "Lcom/facebook/marianatrench/integrationtests/IntentTarget;.readsRoutedIntent_sessionToSink:()V" : 

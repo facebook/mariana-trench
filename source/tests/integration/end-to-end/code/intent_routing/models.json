@@ -16,5 +16,44 @@
         "port": "Argument(0)"
       }
     ]
+  },
+  {
+    "method": "Landroid/app/Activity;.getIntent:()Landroid/content/Intent;",
+    "modes": [
+      "no-collapse-on-propagation",
+      "skip-analysis"
+    ],
+    "propagation": [
+      {
+        "input": "call-effect-intent",
+        "output": "Return"
+      }
+    ]
+  },
+  {
+    "method": "Landroid/content/Intent;.getStringExtra:(Ljava/lang/String;)Ljava/lang/String;",
+    "modes": [
+      "no-collapse-on-propagation",
+      "skip-analysis"
+    ],
+    "propagation": [
+      {
+        "input": "Argument(0)[<Argument(1)>]",
+        "output": "Return"
+      }
+    ]
+  },
+  {
+    "method": "Lcom/facebook/marianatrench/integrationtests/IntentTarget;.fakeGetIntent:()Landroid/content/Intent;",
+    "modes": [
+      "no-collapse-on-propagation",
+      "skip-analysis"
+    ],
+    "propagation": [
+      {
+        "input": "call-effect-intent.path",
+        "output": "Return"
+      }
+    ]
   }
 ]

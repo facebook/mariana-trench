@@ -80,7 +80,11 @@ class Root final {
      * the Model.
      */
     CallEffectCallChain = std::numeric_limits<IntegerEncoding>::max() - 5,
-    MaxArgument = std::numeric_limits<IntegerEncoding>::max() - 6,
+    /*
+     * Used for propagation of taint via activity Intents.
+     */
+    CallEffectIntent = std::numeric_limits<IntegerEncoding>::max() - 6,
+    MaxArgument = std::numeric_limits<IntegerEncoding>::max() - 7,
   };
 
  private:
@@ -141,7 +145,22 @@ class Root final {
   }
 
   bool is_call_effect() const {
-    return value_ == static_cast<IntegerEncoding>(Kind::CallEffectCallChain);
+    switch (kind()) {
+      case Kind::CallEffectCallChain:
+      case Kind::CallEffectIntent:
+        return true;
+      default:
+        return false;
+    }
+  }
+
+  bool is_supported_call_effect_for_propagation_input() const {
+    switch (kind()) {
+      case Kind::CallEffectIntent:
+        return true;
+      default:
+        return false;
+    }
   }
 
   Kind kind() const {

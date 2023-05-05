@@ -679,6 +679,13 @@ void Model::add_inferred_call_effect_sinks(AccessPath port, Taint sinks) {
   add_call_effect_sink(port, sinks);
 }
 
+void Model::add_inferred_call_effect_sinks(
+    const AccessPath& port,
+    TaintTree sinks,
+    UpdateKind update_kind) {
+  call_effect_sinks_.write(port, std::move(sinks), update_kind);
+}
+
 void Model::add_propagation(PropagationConfig propagation) {
   if (!check_port_consistency(propagation.input_path()) ||
       !check_root_consistency(propagation.propagation_kind()->root())) {
@@ -1482,6 +1489,10 @@ bool Model::check_root_consistency(Root root) const {
             method_->number_of_parameters()));
         return false;
       }
+      return true;
+    }
+    case Root::Kind::CallEffectIntent: {
+      // Nothing to validate. This call-effect does not have any restrictions.
       return true;
     }
     default: {

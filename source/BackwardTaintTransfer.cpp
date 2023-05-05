@@ -130,6 +130,166 @@ void apply_add_features_to_arguments(
   }
 }
 
+// Taints the corresponding register/call-effect port based on the propagation's
+// input path.
+void taint_propagation_input(
+    MethodContext* context,
+    const InstructionAliasResults& aliasing,
+    BackwardTaintEnvironment* new_environment,
+    const IRInstruction* instruction,
+    const CalleeModel& callee,
+    const std::vector<std::optional<std::string>>& source_constant_arguments,
+    const AccessPath& input,
+    TaintTree input_taint_tree) {
+  auto input_path_resolved = input.path().resolve(source_constant_arguments);
+  if (input.root().is_argument()) {
+    auto input_parameter_position = input.root().parameter_position();
+    if (input_parameter_position >= instruction->srcs_size()) {
+      WARNING(
+          2,
+          "Model for method `{}` contains a port on parameter {} but the method only has {} parameters. Skipping...",
+          input_parameter_position,
+          show(callee.method_reference),
+          instruction->srcs_size());
+      return;
+    }
+
+    auto input_register_id = instruction->src(input_parameter_position);
+    LOG_OR_DUMP(
+        context,
+        4,
+        "Tainting register {} path {} with {}",
+        input_register_id,
+        input_path_resolved,
+        input_taint_tree);
+    new_environment->write(
+        aliasing.register_memory_locations(input_register_id),
+        input_path_resolved,
+        std::move(input_taint_tree),
+        callee.model.strong_write_on_propagation() ? UpdateKind::Strong
+                                                   : UpdateKind::Weak);
+  } else {
+    mt_assert(input.root().is_supported_call_effect_for_propagation_input());
+    auto call_effect_path = AccessPath(input.root(), input_path_resolved);
+    LOG_OR_DUMP(
+        context,
+        4,
+        "Tainting call-effect path {} with {}",
+        call_effect_path,
+        input_taint_tree);
+    context->new_model.add_inferred_call_effect_sinks(
+        call_effect_path,
+        std::move(input_taint_tree),
+        callee.model.strong_write_on_propagation() ? UpdateKind::Strong
+                                                   : UpdateKind::Weak);
+  }
+}
+
+void apply_propagation(
+    MethodContext* context,
+    const InstructionAliasResults& aliasing,
+    const BackwardTaintEnvironment* previous_environment,
+    BackwardTaintEnvironment* new_environment,
+    const IRInstruction* instruction,
+    const CalleeModel& callee,
+    const std::vector<std::optional<std::string>>& source_constant_arguments,
+    const TaintTree& result_taint,
+    const FeatureMayAlwaysSet& locally_inferred_features,
+    const Position* position,
+    const AccessPath& input,
+    const Frame& propagation) {
+  LOG_OR_DUMP(
+      context, 4, "Processing propagation from {} to {}", input, propagation);
+
+  const PropagationKind* propagation_kind = propagation.propagation_kind();
+  auto output_root = propagation_kind->root();
+
+  TaintTree output_taint_tree = TaintTree::bottom();
+  switch (output_root.kind()) {
+    case Root::Kind::Return: {
+      output_taint_tree = result_taint;
+      break;
+    }
+    case Root::Kind::Argument: {
+      auto output_parameter_position = output_root.parameter_position();
+      auto output_register_id = instruction->src(output_parameter_position);
+      output_taint_tree = previous_environment->read(
+          aliasing.register_memory_locations(output_register_id));
+      break;
+    }
+    default:
+      mt_unreachable();
+  }
+
+  if (output_taint_tree.is_bottom()) {
+    return;
+  }
+
+  output_taint_tree = transforms::apply_propagation(
+      context, propagation, std::move(output_taint_tree));
+
+  FeatureMayAlwaysSet features = FeatureMayAlwaysSet::make_always(
+      callee.model.add_features_to_arguments(output_root));
+  features.add(propagation.features());
+  features.add(locally_inferred_features);
+  features.add_always(callee.model.add_features_to_arguments(input.root()));
+
+  output_taint_tree.add_locally_inferred_features_and_local_position(
+      features, position);
+
+  for (const auto& [output_path, collapse_depth] :
+       propagation.output_paths().elements()) {
+    auto output_path_resolved = output_path.resolve(source_constant_arguments);
+
+    auto input_taint_tree = output_taint_tree.read(
+        output_path_resolved, BackwardTaintEnvironment::propagate_output_path);
+
+    // Collapsing the tree here is required for correctness and performance.
+    // Propagations can be collapsed, which results in taking the common
+    // prefix of the input paths. Because of this, if we don't collapse
+    // here, we might build invalid trees. See the end-to-end test
+    // `propagation_collapse` for an example.
+    // However, collapsing leads to FP with the builder pattern.
+    // eg:
+    // class A {
+    //   private String s1;
+    //
+    //   public A setS1(String s) {
+    //     this.s1 = s;
+    //     return this;
+    //   }
+    // }
+    // In this case, collapsing propagations results in entire `this` being
+    // tainted. For chained calls, it can lead to FP.
+    // `no-collapse-on-propagation` mode is used to prevent such cases.
+    // See the end-to-end test `no_collapse_on_propagation` for example.
+    if (collapse_depth.should_collapse() &&
+        !callee.model.no_collapse_on_propagation()) {
+      LOG_OR_DUMP(
+          context,
+          4,
+          "Collapsing taint tree {} to depth {}",
+          input_taint_tree,
+          collapse_depth.value());
+      input_taint_tree.collapse_deeper_than(
+          /* height */ collapse_depth.value(),
+          FeatureMayAlwaysSet{
+              context->feature_factory.get_propagation_broadening_feature()});
+      input_taint_tree.update_maximum_collapse_depth(collapse_depth);
+    }
+
+    taint_propagation_input(
+        context,
+        aliasing,
+        new_environment,
+        instruction,
+        callee,
+        source_constant_arguments,
+        input,
+        std::move(input_taint_tree));
+  }
+}
+
 void apply_propagations(
     MethodContext* context,
     const InstructionAliasResults& aliasing,
@@ -148,136 +308,37 @@ void apply_propagations(
   for (const auto& [input, propagations] :
        callee.model.propagations().elements()) {
     LOG_OR_DUMP(context, 4, "Processing propagations from {}", input);
-    if (!input.root().is_argument()) {
+    if (!input.root().is_argument() &&
+        !input.root().is_supported_call_effect_for_propagation_input()) {
       WARNING_OR_DUMP(
           context,
           2,
-          "Ignoring propagation with non-argument input: {}",
+          "Ignoring propagation with non-argument and non-supported call-effect input: {}",
           input);
       continue;
     }
 
-    auto input_parameter_position = input.root().parameter_position();
-    if (input_parameter_position >= instruction->srcs_size()) {
-      WARNING(
-          2,
-          "Model for method `{}` contains a port on parameter {} but the method only has {} parameters. Skipping...",
-          input_parameter_position,
-          show(callee.method_reference),
-          instruction->srcs_size());
-      continue;
-    }
-
-    auto input_register_id = instruction->src(input_parameter_position);
-    auto input_path_resolved = input.path().resolve(source_constant_arguments);
     auto* position =
         context->positions.get(callee.position, input.root(), instruction);
-
     for (const auto& propagation : propagations.frames_iterator()) {
-      LOG_OR_DUMP(
-          context,
-          4,
-          "Processing propagation from {} to {}",
-          input,
-          propagation);
-
-      const PropagationKind* propagation_kind = propagation.propagation_kind();
-      auto output_root = propagation_kind->root();
-
-      TaintTree output_taint_tree = TaintTree::bottom();
-      switch (output_root.kind()) {
-        case Root::Kind::Return: {
-          output_taint_tree = result_taint;
-          break;
-        }
-        case Root::Kind::Argument: {
-          auto output_parameter_position = output_root.parameter_position();
-          auto output_register_id = instruction->src(output_parameter_position);
-          output_taint_tree = previous_environment->read(
-              aliasing.register_memory_locations(output_register_id));
-          break;
-        }
-        default:
-          mt_unreachable();
-      }
-
-      if (output_taint_tree.is_bottom()) {
-        continue;
-      }
-
-      output_taint_tree = transforms::apply_propagation(
-          context, propagation, std::move(output_taint_tree));
-
-      FeatureMayAlwaysSet features = FeatureMayAlwaysSet::make_always(
-          callee.model.add_features_to_arguments(output_root));
-      features.add(propagation.features());
-      features.add(propagations.locally_inferred_features(
+      auto locally_inferred_features = propagations.locally_inferred_features(
           propagation.callee(),
           propagation.call_info(),
           propagation.call_position(),
-          propagation.callee_port()));
-      features.add_always(callee.model.add_features_to_arguments(input.root()));
-
-      output_taint_tree.add_locally_inferred_features_and_local_position(
-          features, position);
-
-      for (const auto& [output_path, collapse_depth] :
-           propagation.output_paths().elements()) {
-        auto output_path_resolved =
-            output_path.resolve(source_constant_arguments);
-
-        auto input_taint_tree = output_taint_tree.read(
-            output_path_resolved,
-            BackwardTaintEnvironment::propagate_output_path);
-
-        // Collapsing the tree here is required for correctness and performance.
-        // Propagations can be collapsed, which results in taking the common
-        // prefix of the input paths. Because of this, if we don't collapse
-        // here, we might build invalid trees. See the end-to-end test
-        // `propagation_collapse` for an example.
-        // However, collapsing leads to FP with the builder pattern.
-        // eg:
-        // class A {
-        //   private String s1;
-        //
-        //   public A setS1(String s) {
-        //     this.s1 = s;
-        //     return this;
-        //   }
-        // }
-        // In this case, collapsing propagations results in entire `this` being
-        // tainted. For chained calls, it can lead to FP.
-        // `no-collapse-on-propagation` mode is used to prevent such cases.
-        // See the end-to-end test `no_collapse_on_propagation` for example.
-        if (collapse_depth.should_collapse() &&
-            !callee.model.no_collapse_on_propagation()) {
-          LOG_OR_DUMP(
-              context,
-              4,
-              "Collapsing taint tree {} to depth {}",
-              input_taint_tree,
-              collapse_depth.value());
-          input_taint_tree.collapse_deeper_than(
-              /* height */ collapse_depth.value(),
-              FeatureMayAlwaysSet{context->feature_factory
-                                      .get_propagation_broadening_feature()});
-          input_taint_tree.update_maximum_collapse_depth(collapse_depth);
-        }
-
-        LOG_OR_DUMP(
-            context,
-            4,
-            "Tainting register {} path {} with {}",
-            input_register_id,
-            input_path_resolved,
-            input_taint_tree);
-        new_environment->write(
-            aliasing.register_memory_locations(input_register_id),
-            input_path_resolved,
-            std::move(input_taint_tree),
-            callee.model.strong_write_on_propagation() ? UpdateKind::Strong
-                                                       : UpdateKind::Weak);
-      }
+          propagation.callee_port());
+      apply_propagation(
+          context,
+          aliasing,
+          previous_environment,
+          new_environment,
+          instruction,
+          callee,
+          source_constant_arguments,
+          result_taint,
+          locally_inferred_features,
+          position,
+          input,
+          propagation);
     }
   }
 }

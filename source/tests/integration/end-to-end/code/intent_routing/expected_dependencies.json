@@ -29,7 +29,6 @@
   ],
   "Landroid/content/Intent;.<init>:()V" : 
   [
-    "Landroid/app/Activity;.getIntent:()Landroid/content/Intent;",
     "Lcom/facebook/base/activity/FragmentBaseActivityUtil;.getDefaultActivityIntent:()Landroid/content/Intent;",
     "Lcom/facebook/marianatrench/integrationtests/IntentRouter;.doesNotRouteIntent_noIntentTarget:()V"
   ],
@@ -45,6 +44,7 @@
   [
     "Lcom/facebook/marianatrench/integrationtests/IntentRouterAndTarget;.routesAndGetsIntent:(Landroid/content/Context;)V",
     "Lcom/facebook/marianatrench/integrationtests/IntentTarget;.readsRoutedIntent_anotherKeyToSink:()V",
+    "Lcom/facebook/marianatrench/integrationtests/IntentTarget;.readsRoutedIntent_pathSessionToSink:()V",
     "Lcom/facebook/marianatrench/integrationtests/IntentTarget;.readsRoutedIntent_sessionToSink:()V",
     "Lcom/facebook/marianatrench/integrationtests/IntentTarget;.readsRoutedIntent_sessionToSinkViaExtraHop:()V"
   ],
@@ -83,6 +83,10 @@
   [
     "Lcom/facebook/marianatrench/integrationtests/IntentTarget;.readsRoutedIntent_sessionToSinkViaExtraHop:()V"
   ],
+  "Lcom/facebook/marianatrench/integrationtests/IntentTarget;.fakeGetIntent:()Landroid/content/Intent;" : 
+  [
+    "Lcom/facebook/marianatrench/integrationtests/IntentTarget;.readsRoutedIntent_pathSessionToSink:()V"
+  ],
   "Lcom/facebook/marianatrench/integrationtests/IntentTarget;.readsRoutedIntent_anotherKeyToSink:()V" : 
   [
     "Lcom/facebook/marianatrench/integrationtests/IntentRouter;.doesNotRouteIntent_noTaintSources:(Landroid/content/Context;)V",
@@ -108,6 +112,7 @@
   [
     "Lcom/facebook/marianatrench/integrationtests/IntentTarget;.extraSinkHop:(Ljava/lang/Object;)V",
     "Lcom/facebook/marianatrench/integrationtests/IntentTarget;.readsRoutedIntent_anotherKeyToSink:()V",
+    "Lcom/facebook/marianatrench/integrationtests/IntentTarget;.readsRoutedIntent_pathSessionToSink:()V",
     "Lcom/facebook/marianatrench/integrationtests/IntentTarget;.readsRoutedIntent_sessionToSink:()V"
   ],
   "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;" : 
