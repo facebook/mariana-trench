@@ -827,6 +827,7 @@ TEST_F(DependenciesTest, ArtificialCalleesInvoke) {
               /* call_target */ CallTarget::static_call(
                   invoke, anonymous_one, /* call_index */ 0),
               /* parameter_registers */ {{0, 1}},
+              /* call_effect_registers */ {},
               /* features */
               FeatureSet{context.feature_factory->get(
                   "via-anonymous-class-to-obscure")}},
@@ -834,6 +835,7 @@ TEST_F(DependenciesTest, ArtificialCalleesInvoke) {
               /* call_target */ CallTarget::static_call(
                   invoke, anonymous_two, /* call_index */ 0),
               /* parameter_registers */ {{0, 1}},
+              /* call_effect_registers */ {},
               /* features */
               FeatureSet{context.feature_factory->get(
                   "via-anonymous-class-to-obscure")}},
@@ -932,6 +934,7 @@ TEST_F(DependenciesTest, ArtificialCalleesIput) {
               /* call_target */ CallTarget::static_call(
                   iput, anonymous_one, /* call_index */ 0),
               /* parameter_registers */ {{0, 1}},
+              /* call_effect_registers */ {},
               /* features */
               FeatureSet{context.feature_factory->get(
                   "via-anonymous-class-to-field")}},
@@ -939,6 +942,7 @@ TEST_F(DependenciesTest, ArtificialCalleesIput) {
               /* call_target */ CallTarget::static_call(
                   iput, anonymous_two, /* call_index */ 0),
               /* parameter_registers */ {{0, 1}},
+              /* call_effect_registers */ {},
               /* features */
               FeatureSet{context.feature_factory->get(
                   "via-anonymous-class-to-field")}},

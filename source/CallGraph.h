@@ -175,14 +175,20 @@ namespace marianatrench {
  * Represents an artificial edge in the call graph.
  *
  * This is currently used to simulate calls to methods of anonymous classes
- * flowing through an external method.
+ * flowing through an external method and to simulate calls to shim targets.
  *
  * `parameter_registers` is the map of parameters from position to registers for
  * the artificial invoke instruction.
+ *
+ * `call_effect_registers` is the map of roots to registers for the artificial
+ * invoke instruction. Used in place of `parameter_registers` when artificial
+ * callee has taint that needs to be passed to it from the register via a port
+ * (e.g. call-effects).
  */
 struct ArtificialCallee {
   CallTarget call_target;
   std::unordered_map<ParameterPosition, Register> parameter_registers;
+  std::unordered_map<Root, Register> call_effect_registers;
   FeatureSet features;
 
   bool operator==(const ArtificialCallee& other) const;

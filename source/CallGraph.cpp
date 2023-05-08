@@ -208,6 +208,8 @@ ArtificialCallees anonymous_class_artificial_callees(
             instruction, method, call_index),
         /* parameter_registers */
         {{0, register_id}},
+        /* call_effect_registers */
+        {},
         /* features */ features,
     });
   }
@@ -306,6 +308,7 @@ void process_shim_target(
 
   auto receiver_register = shim_target.receiver_register(instruction);
   auto parameter_registers = shim_target.parameter_registers(instruction);
+  auto call_effect_registers = shim_target.call_effect_registers(instruction);
 
   auto call_index = update_index(sink_textual_order_index, method->signature());
   if (method->is_static()) {
@@ -313,6 +316,7 @@ void process_shim_target(
         /* call_target */ CallTarget::static_call(
             instruction, method, call_index),
         /* parameter_registers */ parameter_registers,
+        /* call_effect_registers */ call_effect_registers,
         /* features */
         FeatureSet{feature_factory.get_via_shim_feature(callee)},
     });
@@ -352,6 +356,7 @@ void process_shim_target(
           class_hierarchies,
           override_factory),
       /* parameter_registers */ parameter_registers,
+      /* call_effect_registers */ call_effect_registers,
       /* features */
       FeatureSet{feature_factory.get_via_shim_feature(callee)},
   });
@@ -427,6 +432,7 @@ void process_shim_reflection(
           class_hierarchies,
           override_factory),
       /* parameter_registers */ parameter_registers,
+      /* call_effect_registers */ {},
       /* features */
       FeatureSet{FeatureFactory.get_via_shim_feature(callee)},
   });
@@ -494,6 +500,7 @@ void process_shim_lifecycle(
           class_hierarchies,
           override_factory),
       /* parameter_registers */ parameter_registers,
+      /* call_effect_registers */ {},
       /* features */
       FeatureSet{feature_factory.get_via_shim_feature(callee)},
   });
@@ -885,6 +892,7 @@ std::ostream& operator<<(std::ostream& out, const CallTarget& call_target) {
 bool ArtificialCallee::operator==(const ArtificialCallee& other) const {
   return call_target == other.call_target &&
       parameter_registers == other.parameter_registers &&
+      call_effect_registers == other.call_effect_registers &&
       features == other.features;
 }
 
@@ -893,6 +901,9 @@ std::ostream& operator<<(std::ostream& out, const ArtificialCallee& callee) {
       << ", parameter_registers={";
   for (const auto& [position, register_id] : callee.parameter_registers) {
     out << " " << position << ": v" << register_id << ",";
+  }
+  for (const auto& [root, register_id] : callee.call_effect_registers) {
+    out << " " << root << ": v" << register_id << ",";
   }
   return out << "}, features=" << callee.features << ")";
 }
