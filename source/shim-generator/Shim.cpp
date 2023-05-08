@@ -201,8 +201,12 @@ ShimParameterMapping ShimParameterMapping::instantiate_parameters(
 
 ShimTarget::ShimTarget(
     const Method* method,
-    ShimParameterMapping parameter_mapping)
-    : call_target_(method), parameter_mapping_(std::move(parameter_mapping)) {}
+    ShimParameterMapping parameter_mapping,
+    std::unordered_map<Root, ParameterPosition> call_effect_parameter_mapping)
+    : call_target_(method),
+      parameter_mapping_(std::move(parameter_mapping)),
+      call_effect_parameter_mapping_(std::move(call_effect_parameter_mapping)) {
+}
 
 std::optional<Register> ShimTarget::receiver_register(
     const IRInstruction* instruction) const {
@@ -234,6 +238,19 @@ std::unordered_map<ParameterPosition, Register> ShimTarget::parameter_registers(
   }
 
   return parameter_registers;
+}
+
+std::unordered_map<Root, Register> ShimTarget::call_effect_registers(
+    const IRInstruction* instruction) const {
+  std::unordered_map<Root, Register> call_effect_registers;
+  for (const auto& [call_effect, shim_target_position] :
+       call_effect_parameter_mapping_) {
+    mt_assert(shim_target_position < instruction->srcs_size());
+    call_effect_registers.emplace(
+        call_effect, instruction->src(shim_target_position));
+  }
+
+  return call_effect_registers;
 }
 
 ShimReflectionTarget::ShimReflectionTarget(

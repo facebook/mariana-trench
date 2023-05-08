@@ -62,10 +62,16 @@ std::optional<Shim> Shims::get_shim_for_caller(
         if (auto intent_getters = classes_to_intent_getters_.find(intent_class);
             intent_getters != classes_to_intent_getters_.end()) {
           for (const auto& intent_getter : intent_getters->second) {
-            // TODO(T149770577): Add a mapping from intent -> call effect
-            // parameter here.
+            // TODO(T149770577): Similar to is_activity_routing method, use a
+            // DSL to allow users to specify which argument maps to the intent,
+            // or infer it by type. For now, hard-code to argument(1) because
+            // that is what startActivity(intent) uses for the intent.
             intent_routing_targets.emplace_back(
-                intent_getter, ShimParameterMapping{});
+                intent_getter,
+                ShimParameterMapping{},
+                /* call_effect_parameter_mapping */
+                std::unordered_map<Root, ParameterPosition>{
+                    {Root(Root::Kind::CallEffectIntent), 1}});
           }
         }
       }

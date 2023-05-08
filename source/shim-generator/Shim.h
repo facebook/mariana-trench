@@ -93,10 +93,16 @@ class ShimParameterMapping {
  * Represents shim-targets which are instance methods.
  */
 class ShimTarget {
+ private:
+  using ShimCallEffectParameterMapping =
+      std::unordered_map<Root, ParameterPosition>;
+
  public:
   explicit ShimTarget(
       const Method* method,
-      ShimParameterMapping parameter_mapping);
+      ShimParameterMapping parameter_mapping,
+      std::unordered_map<Root, ParameterPosition>
+          call_effect_parameter_mapping);
 
   const Method* method() const {
     return call_target_;
@@ -108,6 +114,9 @@ class ShimTarget {
   std::unordered_map<ParameterPosition, Register> parameter_registers(
       const IRInstruction* instruction) const;
 
+  std::unordered_map<Root, Register> call_effect_registers(
+      const IRInstruction* instruction) const;
+
   friend std::ostream& operator<<(
       std::ostream& out,
       const ShimTarget& shim_target);
@@ -115,6 +124,10 @@ class ShimTarget {
  private:
   const Method* call_target_;
   ShimParameterMapping parameter_mapping_;
+  // Maps call effect ports in the shimmed target to its corresponding parameter
+  // positions in the shimmed method. Used in cases where the shimmed target
+  // receives taint via a call-effect rather than a register.
+  ShimCallEffectParameterMapping call_effect_parameter_mapping_;
 };
 
 /**
