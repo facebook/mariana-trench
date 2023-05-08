@@ -44,6 +44,20 @@
     ]
   },
   {
+    "method": "Landroid/content/Intent;.putExtra:(Ljava/lang/String;Ljava/lang/String;)V",
+    "modes": [
+      "no-collapse-on-propagation",
+      "strong-write-on-propagation",
+      "skip-analysis"
+    ],
+    "propagation": [
+      {
+        "input": "Argument(2)",
+        "output": "Argument(0)[<Argument(1)>]"
+      }
+    ]
+  },
+  {
     "method": "Lcom/facebook/marianatrench/integrationtests/IntentTarget;.fakeGetIntent:()Landroid/content/Intent;",
     "modes": [
       "no-collapse-on-propagation",

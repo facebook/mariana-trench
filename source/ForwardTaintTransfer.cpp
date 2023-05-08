@@ -543,8 +543,6 @@ void check_call_flows(
       "Processing sinks for call to `{}`",
       show(callee.method_reference));
 
-  std::vector<std::tuple<Taint, const Taint&>> sources_sinks;
-
   for (const auto& [port, sinks] : callee.model.sinks().elements()) {
     if (!port.root().is_argument()) {
       continue;
@@ -573,9 +571,6 @@ void check_call_flows(
             : std::string(k_unresolved_callee),
         extra_features,
         fulfilled_partial_sinks);
-
-    sources_sinks.push_back(
-        std::make_tuple(std::move(sources), std::cref(sinks)));
   }
 }
 
@@ -693,6 +688,88 @@ void check_artificial_calls_flows(
         &fulfilled_partial_sinks);
     context->fulfilled_partial_sinks.store_artificial_call(
         &artificial_callee, std::move(fulfilled_partial_sinks));
+  }
+}
+
+void check_intent_routing_call_flows(
+    MethodContext* context,
+    const InstructionAliasResults& aliasing,
+    ForwardTaintEnvironment* environment,
+    const CalleeModel& intent_routing_callee,
+    const std::vector<std::optional<std::string>>& source_constant_arguments,
+    const FeatureMayAlwaysSet& extra_features,
+    FulfilledPartialKindState* MT_NULLABLE fulfilled_partial_sinks,
+    const std::unordered_map<Root, Register>& call_effect_registers) {
+  LOG_OR_DUMP(
+      context,
+      4,
+      "Processing intent routing sinks for call to `{}`",
+      show(intent_routing_callee.method_reference));
+
+  for (const auto& [port, sinks] :
+       intent_routing_callee.model.call_effect_sinks().elements()) {
+    if (port.root().kind() != Root::Kind::CallEffectIntent) {
+      continue;
+    }
+
+    auto found = call_effect_registers.find(port.root());
+    if (found == call_effect_registers.end()) {
+      LOG_OR_DUMP(context, 4, "Port {} has no corresponding register.", port);
+      continue;
+    }
+    auto register_id = found->second;
+
+    Taint sources =
+        environment
+            ->read(
+                aliasing.register_memory_locations(register_id),
+                port.path().resolve(source_constant_arguments))
+            .collapse(FeatureMayAlwaysSet{
+                context->feature_factory.get_issue_broadening_feature()});
+    LOG_OR_DUMP(
+        context,
+        4,
+        "Port {} maps to register {} with sources {}.",
+        port,
+        register_id,
+        sources);
+    check_sources_sinks_flows(
+        context,
+        sources,
+        sinks,
+        intent_routing_callee.position,
+        /* sink_index */ intent_routing_callee.call_index,
+        /* callee */ intent_routing_callee.resolved_base_method
+            ? intent_routing_callee.resolved_base_method->show()
+            : std::string(k_unresolved_callee),
+        extra_features,
+        fulfilled_partial_sinks);
+  }
+}
+
+void check_intent_routing_calls_flows(
+    MethodContext* context,
+    const InstructionAliasResults& aliasing,
+    const IRInstruction* instruction,
+    ForwardTaintEnvironment* environment,
+    const std::vector<std::optional<std::string>>& source_constant_arguments) {
+  const auto& intent_routing_callees =
+      context->call_graph.intent_routing_callees(
+          context->method(), instruction);
+
+  for (const auto& intent_routing_callee : intent_routing_callees) {
+    FulfilledPartialKindState fulfilled_partial_sinks;
+    check_intent_routing_call_flows(
+        context,
+        aliasing,
+        environment,
+        get_callee(context, intent_routing_callee, aliasing.position()),
+        source_constant_arguments,
+        FeatureMayAlwaysSet::make_always(intent_routing_callee.features),
+        &fulfilled_partial_sinks,
+        intent_routing_callee.call_effect_registers);
+    context->fulfilled_partial_sinks.store_artificial_call(
+        &intent_routing_callee, std::move(fulfilled_partial_sinks));
   }
 }
 
@@ -833,6 +910,8 @@ bool ForwardTaintTransfer::analyze_invoke(
   }
 
   check_artificial_calls_flows(
+      context, aliasing, instruction, environment, source_constant_arguments);
+  check_intent_routing_calls_flows(
       context, aliasing, instruction, environment, source_constant_arguments);
 
   return false;
