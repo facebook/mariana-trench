@@ -202,7 +202,7 @@ ShimParameterMapping ShimParameterMapping::instantiate_parameters(
 ShimTarget::ShimTarget(
     const Method* method,
     ShimParameterMapping parameter_mapping,
-    std::unordered_map<Root, ParameterPosition> call_effect_parameter_mapping)
+    ShimCallEffectParameterMapping call_effect_parameter_mapping)
     : call_target_(method),
       parameter_mapping_(std::move(parameter_mapping)),
       call_effect_parameter_mapping_(std::move(call_effect_parameter_mapping)) {
