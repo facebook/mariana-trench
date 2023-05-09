@@ -479,6 +479,92 @@ void check_artificial_calls_flows(
   }
 }
 
+void check_intent_routing_call_flows(
+    MethodContext* context,
+    const InstructionAliasResults& aliasing,
+    BackwardTaintEnvironment* environment,
+    const CalleeModel& intent_routing_callee,
+    const std::vector<std::optional<std::string>>& source_constant_arguments,
+    const FeatureMayAlwaysSet& extra_features,
+    const FulfilledPartialKindState& fulfilled_partial_sinks,
+    const std::unordered_map<Root, Register>& call_effect_registers) {
+  LOG_OR_DUMP(
+      context,
+      4,
+      "Processing intent routing sinks for call to `{}`",
+      show(intent_routing_callee.method_reference));
+
+  for (const auto& [port, sinks] :
+       intent_routing_callee.model.call_effect_sinks().elements()) {
+    if (port.root().kind() != Root::Kind::CallEffectIntent) {
+      continue;
+    }
+
+    auto found = call_effect_registers.find(port.root());
+    if (found == call_effect_registers.end()) {
+      LOG_OR_DUMP(context, 4, "Port {} has no corresponding register.", port);
+      continue;
+    }
+    auto register_id = found->second;
+
+    auto path_resolved = port.path().resolve(source_constant_arguments);
+
+    auto new_sinks = sinks;
+    new_sinks.transform_kind_with_features(
+        [context, &fulfilled_partial_sinks](
+            const Kind* sink_kind) -> std::vector<const Kind*> {
+          const auto* partial_sink = sink_kind->as<PartialKind>();
+          if (!partial_sink) {
+            // No transformation. Keep sink as it is.
+            return {sink_kind};
+          }
+          return fulfilled_partial_sinks.make_triggered_counterparts(
+              /* unfulfilled_kind */ partial_sink, context->kind_factory);
+        },
+        [&fulfilled_partial_sinks](const Kind* new_kind) {
+          return get_fulfilled_sink_features(fulfilled_partial_sinks, new_kind);
+        });
+    new_sinks.add_locally_inferred_features(extra_features);
+
+    LOG_OR_DUMP(
+        context,
+        4,
+        "Tainting register {} path {} with {} from intent routing sinks",
+        register_id,
+        path_resolved,
+        new_sinks);
+    environment->write(
+        aliasing.register_memory_locations(register_id),
+        path_resolved,
+        std::move(new_sinks),
+        UpdateKind::Weak);
+  }
+}
+
+void check_intent_routing_calls_flows(
+    MethodContext* context,
+    const InstructionAliasResults& aliasing,
+    const IRInstruction* instruction,
+    BackwardTaintEnvironment* environment,
+    const std::vector<std::optional<std::string>>& source_constant_arguments) {
+  const auto& intent_routing_callees =
+      context->call_graph.intent_routing_callees(
+          context->method(), instruction);
+
+  for (const auto& intent_routing_callee : intent_routing_callees) {
+    check_intent_routing_call_flows(
+        context,
+        aliasing,
+        environment,
+        get_callee(context, intent_routing_callee, aliasing.position()),
+        source_constant_arguments,
+        FeatureMayAlwaysSet::make_always(intent_routing_callee.features),
+        context->fulfilled_partial_sinks.get_artificial_call(
+            &intent_routing_callee),
+        intent_routing_callee.call_effect_registers);
+  }
+}
+
 void check_flows_to_array_allocation(
     MethodContext* context,
     const InstructionAliasResults& aliasing,
@@ -535,6 +621,8 @@ bool BackwardTaintTransfer::analyze_invoke(
       aliasing.register_memory_locations_map(), instruction);
 
   check_artificial_calls_flows(
+      context, aliasing, instruction, environment, source_constant_arguments);
+  check_intent_routing_calls_flows(
       context, aliasing, instruction, environment, source_constant_arguments);
 
   const BackwardTaintEnvironment previous_environment = *environment;

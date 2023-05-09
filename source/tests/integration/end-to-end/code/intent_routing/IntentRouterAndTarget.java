@@ -15,7 +15,7 @@ public class IntentRouterAndTarget extends Activity {
   static final String SESSION2 = "session2";
 
   // A method can re-route Intent data into another Activity.
-  // Expected: Intent."session2" -> Sink
+  // Expected: Intent[session2] -> Sink
   void routesAndGetsIntent(Context context) {
     Intent intent = this.getIntent();
     String tainted = intent.getStringExtra(SESSION2);
