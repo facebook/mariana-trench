@@ -17,7 +17,7 @@
 namespace marianatrench {
 namespace {
 
-const DexType* MT_NULLABLE get_parameter_type(
+bool verify_has_parameter_type(
     std::string_view method_name,
     const DexType* dex_class,
     const DexProto* dex_proto,
@@ -34,10 +34,11 @@ const DexType* MT_NULLABLE get_parameter_type(
         show(dex_proto),
         position,
         number_of_parameters);
-    return nullptr;
+    return false;
   }
 
-  return dex_proto->get_args()->at(position - (is_static ? 0u : 1u));
+  return (
+      dex_proto->get_args()->at(position - (is_static ? 0u : 1u)) != nullptr);
 }
 
 } // namespace
@@ -90,12 +91,12 @@ bool ShimParameterMapping::empty() const {
   return map_.empty();
 }
 
-bool ShimParameterMapping::contains(ParameterPosition position) const {
+bool ShimParameterMapping::contains(const Root& position) const {
   return map_.count(position) > 0;
 }
 
 std::optional<ShimParameterPosition> ShimParameterMapping::at(
-    ParameterPosition parameter_position) const {
+    const Root& parameter_position) const {
   auto found = map_.find(parameter_position);
   if (found == map_.end()) {
     return std::nullopt;
@@ -105,7 +106,7 @@ std::optional<ShimParameterPosition> ShimParameterMapping::at(
 }
 
 void ShimParameterMapping::insert(
-    ParameterPosition parameter_position,
+    const Root& parameter_position,
     ShimParameterPosition shim_parameter_position) {
   map_.insert({parameter_position, shim_parameter_position});
 }
@@ -121,7 +122,7 @@ bool ShimParameterMapping::infer_from_types() const {
 void ShimParameterMapping::add_receiver(
     ShimParameterPosition shim_parameter_position) {
   // Include `this` as argument 0
-  insert(0, shim_parameter_position);
+  insert(Root::argument(0), shim_parameter_position);
 }
 
 void ShimParameterMapping::infer_parameters_from_types(
@@ -139,7 +140,8 @@ void ShimParameterMapping::infer_parameters_from_types(
     if (auto shim_position =
             shim_method.type_position(dex_arguments->at(position))) {
       insert(
-          static_cast<ParameterPosition>(position + first_parameter_position),
+          Root::argument(static_cast<ParameterPosition>(
+              position + first_parameter_position)),
           *shim_position);
     }
   }
@@ -161,7 +163,7 @@ ShimParameterMapping ShimParameterMapping::from_json(
     auto parameter_argument = JsonValidation::string(item.key());
     auto shim_argument = JsonValidation::string(*item);
     parameter_mapping.insert(
-        Root::from_json(parameter_argument).parameter_position(),
+        Root::from_json(parameter_argument),
         Root::from_json(shim_argument).parameter_position());
   }
 
@@ -178,13 +180,13 @@ ShimParameterMapping ShimParameterMapping::instantiate_parameters(
   parameter_mapping.set_infer_from_types(infer_from_types());
 
   for (const auto& [shim_target_position, shim_position] : map_) {
-    auto callee_type = get_parameter_type(
-        shim_target_method,
-        shim_target_class,
-        shim_target_proto,
-        shim_target_is_static,
-        shim_target_position);
-    if (callee_type == nullptr) {
+    if (shim_target_position.is_argument() &&
+        !verify_has_parameter_type(
+            shim_target_method,
+            shim_target_class,
+            shim_target_proto,
+            shim_target_is_static,
+            shim_target_position.parameter_position())) {
       continue;
     }
 
@@ -214,7 +216,7 @@ std::optional<Register> ShimTarget::receiver_register(
     return std::nullopt;
   }
 
-  auto receiver_position = parameter_mapping_.at(0);
+  auto receiver_position = parameter_mapping_.at(Root::argument(0));
   if (!receiver_position) {
     return std::nullopt;
   }
@@ -231,7 +233,8 @@ std::unordered_map<ParameterPosition, Register> ShimTarget::parameter_registers(
   for (ParameterPosition position = 0;
        position < call_target_->number_of_parameters();
        ++position) {
-    if (auto shim_position = parameter_mapping_.at(position)) {
+    if (auto shim_position = parameter_mapping_.at(Root::argument(position))) {
+      // TODO(T149770577): Merge parameter registers with call effect registers.
       mt_assert(*shim_position < instruction->srcs_size());
       parameter_registers.emplace(position, instruction->src(*shim_position));
     }
@@ -261,7 +264,7 @@ ShimReflectionTarget::ShimReflectionTarget(
 
 std::optional<Register> ShimReflectionTarget::receiver_register(
     const IRInstruction* instruction) const {
-  auto receiver_position = parameter_mapping_.at(0);
+  auto receiver_position = parameter_mapping_.at(Root::argument(0));
   if (!receiver_position) {
     return std::nullopt;
   }
@@ -282,7 +285,7 @@ ShimReflectionTarget::parameter_registers(
   for (ParameterPosition position = 1;
        position < resolved_reflection->number_of_parameters();
        ++position) {
-    if (auto shim_position = parameter_mapping_.at(position)) {
+    if (auto shim_position = parameter_mapping_.at(Root::argument(position))) {
       mt_assert(*shim_position < instruction->srcs_size());
       parameter_registers.emplace(position, instruction->src(*shim_position));
     }
@@ -334,7 +337,7 @@ ShimLifecycleTarget::parameter_registers(
   for (ParameterPosition position = 0;
        position < lifecycle_method->number_of_parameters();
        ++position) {
-    if (auto shim_position = parameter_mapping.at(position)) {
+    if (auto shim_position = parameter_mapping.at(Root::argument(position))) {
       mt_assert(*shim_position < instruction->srcs_size());
       parameter_registers.emplace(position, instruction->src(*shim_position));
     }
@@ -377,7 +380,7 @@ std::ostream& operator<<(std::ostream& out, const ShimParameterMapping& map) {
   out << (map.infer_from_types() ? "true" : "false") << "`, ";
   out << "parameters_map={";
   for (const auto& [parameter, shim_parameter] : map.map_) {
-    out << " Argument(" << parameter << "):";
+    out << " " << parameter << ":";
     out << " Argument(" << shim_parameter << "),";
   }
   return out << " }";

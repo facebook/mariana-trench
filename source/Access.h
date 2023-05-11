@@ -186,6 +186,10 @@ class Root final {
     return Root(value);
   }
 
+  static Root argument(ParameterPosition value) {
+    return Root(Kind::Argument, value);
+  }
+
   static Root from_json(const Json::Value& value);
   Json::Value to_json() const;
 

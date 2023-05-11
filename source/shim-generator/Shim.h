@@ -56,11 +56,10 @@ class ShimParameterMapping {
       bool infer_from_types);
 
   bool empty() const;
-  bool contains(ParameterPosition position) const;
-  std::optional<ShimParameterPosition> at(
-      ParameterPosition parameter_position) const;
+  bool contains(const Root& position) const;
+  std::optional<ShimParameterPosition> at(const Root& parameter_position) const;
   void insert(
-      ParameterPosition parameter_position,
+      const Root& parameter_position,
       ShimParameterPosition shim_parameter_position);
 
   void set_infer_from_types(bool value);
@@ -85,7 +84,7 @@ class ShimParameterMapping {
       const ShimParameterMapping& map);
 
  private:
-  std::unordered_map<ParameterPosition, ShimParameterPosition> map_;
+  std::unordered_map<Root, ShimParameterPosition> map_;
   bool infer_from_types_;
 };
 
