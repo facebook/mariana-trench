@@ -119,10 +119,7 @@ class ShimTarget {
   std::optional<Register> receiver_register(
       const IRInstruction* instruction) const;
 
-  std::unordered_map<ParameterPosition, Register> parameter_registers(
-      const IRInstruction* instruction) const;
-
-  std::unordered_map<Root, Register> call_effect_registers(
+  std::unordered_map<Root, Register> root_registers(
       const IRInstruction* instruction) const;
 
   friend std::ostream& operator<<(
@@ -150,7 +147,7 @@ class ShimReflectionTarget {
   std::optional<Register> receiver_register(
       const IRInstruction* instruction) const;
 
-  std::unordered_map<ParameterPosition, Register> parameter_registers(
+  std::unordered_map<Root, Register> root_registers(
       const Method* resolved_reflection,
       const IRInstruction* instruction) const;
 
@@ -182,7 +179,7 @@ class ShimLifecycleTarget {
 
   Register receiver_register(const IRInstruction* instruction) const;
 
-  std::unordered_map<ParameterPosition, Register> parameter_registers(
+  std::unordered_map<Root, Register> root_registers(
       const Method* callee,
       const Method* lifecycle_method,
       const IRInstruction* instruction) const;

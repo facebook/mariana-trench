@@ -224,37 +224,16 @@ std::optional<Register> ShimTarget::receiver_register(
   return instruction->src(*receiver_position);
 }
 
-std::unordered_map<ParameterPosition, Register> ShimTarget::parameter_registers(
+std::unordered_map<Root, Register> ShimTarget::root_registers(
     const IRInstruction* instruction) const {
-  std::unordered_map<ParameterPosition, Register> parameter_registers;
+  std::unordered_map<Root, Register> root_registers;
 
-  for (ParameterPosition position = 0;
-       position < call_target_->number_of_parameters();
-       ++position) {
-    if (auto shim_position = parameter_mapping_.at(Root::argument(position))) {
-      // TODO(T149770577): Merge parameter registers with call effect registers.
-      mt_assert(*shim_position < instruction->srcs_size());
-      parameter_registers.emplace(position, instruction->src(*shim_position));
-    }
-  }
-
-  return parameter_registers;
-}
-
-std::unordered_map<Root, Register> ShimTarget::call_effect_registers(
-    const IRInstruction* instruction) const {
-  std::unordered_map<Root, Register> call_effect_registers;
-  // TODO(T149770577): Merge parameter registers with call effect registers.
   for (const auto& [root, shimmed_method_position] : parameter_mapping_) {
-    if (!root.is_call_effect()) {
-      continue;
-    }
     mt_assert(shimmed_method_position < instruction->srcs_size());
-    call_effect_registers.emplace(
-        root, instruction->src(shimmed_method_position));
+    root_registers.emplace(root, instruction->src(shimmed_method_position));
   }
 
-  return call_effect_registers;
+  return root_registers;
 }
 
 ShimReflectionTarget::ShimReflectionTarget(
@@ -275,11 +254,10 @@ std::optional<Register> ShimReflectionTarget::receiver_register(
   return instruction->src(*receiver_position);
 }
 
-std::unordered_map<ParameterPosition, Register>
-ShimReflectionTarget::parameter_registers(
+std::unordered_map<Root, Register> ShimReflectionTarget::root_registers(
     const Method* resolved_reflection,
     const IRInstruction* instruction) const {
-  std::unordered_map<ParameterPosition, Register> parameter_registers;
+  std::unordered_map<Root, Register> root_registers;
 
   // For reflection receivers, do not propagate the `this` argument, as it
   // is always a new instance.
@@ -288,11 +266,13 @@ ShimReflectionTarget::parameter_registers(
        ++position) {
     if (auto shim_position = parameter_mapping_.at(Root::argument(position))) {
       mt_assert(*shim_position < instruction->srcs_size());
-      parameter_registers.emplace(position, instruction->src(*shim_position));
+      root_registers.emplace(
+          Root(Root::Kind::Argument, position),
+          instruction->src(*shim_position));
     }
   }
 
-  return parameter_registers;
+  return root_registers;
 }
 
 ShimLifecycleTarget::ShimLifecycleTarget(
@@ -312,12 +292,11 @@ Register ShimLifecycleTarget::receiver_register(
   return instruction->src(receiver_position_);
 }
 
-std::unordered_map<ParameterPosition, Register>
-ShimLifecycleTarget::parameter_registers(
+std::unordered_map<Root, Register> ShimLifecycleTarget::root_registers(
     const Method* callee,
     const Method* lifecycle_method,
     const IRInstruction* instruction) const {
-  std::unordered_map<ParameterPosition, Register> parameter_registers;
+  std::unordered_map<Root, Register> root_registers;
   ShimMethod shim_method{callee};
 
   ShimParameterMapping parameter_mapping;
@@ -340,11 +319,13 @@ ShimLifecycleTarget::parameter_registers(
        ++position) {
     if (auto shim_position = parameter_mapping.at(Root::argument(position))) {
       mt_assert(*shim_position < instruction->srcs_size());
-      parameter_registers.emplace(position, instruction->src(*shim_position));
+      root_registers.emplace(
+          Root(Root::Kind::Argument, position),
+          instruction->src(*shim_position));
     }
   }
 
-  return parameter_registers;
+  return root_registers;
 }
 
 InstantiatedShim::InstantiatedShim(const Method* method) : method_(method) {}

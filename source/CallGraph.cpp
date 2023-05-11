@@ -206,10 +206,8 @@ ArtificialCallees anonymous_class_artificial_callees(
     callees.push_back(ArtificialCallee{
         /* call_target */ CallTarget::static_call(
             instruction, method, call_index),
-        /* parameter_registers */
-        {{0, register_id}},
-        /* call_effect_registers */
-        {},
+        /* root_registers */
+        {{Root(Root::Kind::Argument, 0), register_id}},
         /* features */ features,
     });
   }
@@ -307,16 +305,14 @@ void process_shim_target(
   mt_assert(method != nullptr);
 
   auto receiver_register = shim_target.receiver_register(instruction);
-  auto parameter_registers = shim_target.parameter_registers(instruction);
-  auto call_effect_registers = shim_target.call_effect_registers(instruction);
+  auto root_registers = shim_target.root_registers(instruction);
 
   auto call_index = update_index(sink_textual_order_index, method->signature());
   if (method->is_static()) {
     artificial_callees.push_back(ArtificialCallee{
         /* call_target */ CallTarget::static_call(
             instruction, method, call_index),
-        /* parameter_registers */ parameter_registers,
-        /* call_effect_registers */ call_effect_registers,
+        /* root_registers */ root_registers,
         /* features */
         FeatureSet{feature_factory.get_via_shim_feature(callee)},
     });
@@ -355,8 +351,7 @@ void process_shim_target(
           receiver_type,
           class_hierarchies,
           override_factory),
-      /* parameter_registers */ parameter_registers,
-      /* call_effect_registers */ call_effect_registers,
+      /* root_registers */ root_registers,
       /* features */
       FeatureSet{feature_factory.get_via_shim_feature(callee)},
   });
@@ -418,8 +413,8 @@ void process_shim_reflection(
   }
 
   const auto* reflection_method = method_factory.get(dex_reflection_method);
-  auto parameter_registers =
-      shim_reflection.parameter_registers(reflection_method, instruction);
+  auto root_registers =
+      shim_reflection.root_registers(reflection_method, instruction);
   auto call_index =
       update_index(sink_textual_order_index, reflection_method->signature());
 
@@ -431,8 +426,7 @@ void process_shim_reflection(
           reflection_type,
           class_hierarchies,
           override_factory),
-      /* parameter_registers */ parameter_registers,
-      /* call_effect_registers */ {},
+      /* root_registers */ root_registers,
       /* features */
       FeatureSet{FeatureFactory.get_via_shim_feature(callee)},
   });
@@ -486,8 +480,8 @@ void process_shim_lifecycle(
   }
   const Method* lifecycle_method = *result;
 
-  auto parameter_registers =
-      shim_lifecycle.parameter_registers(callee, lifecycle_method, instruction);
+  auto root_registers =
+      shim_lifecycle.root_registers(callee, lifecycle_method, instruction);
   auto call_index =
       update_index(sink_textual_order_index, lifecycle_method->signature());
 
@@ -499,8 +493,7 @@ void process_shim_lifecycle(
           receiver_type,
           class_hierarchies,
           override_factory),
-      /* parameter_registers */ parameter_registers,
-      /* call_effect_registers */ {},
+      /* root_registers */ root_registers,
       /* features */
       FeatureSet{feature_factory.get_via_shim_feature(callee)},
   });
@@ -891,18 +884,13 @@ std::ostream& operator<<(std::ostream& out, const CallTarget& call_target) {
 
 bool ArtificialCallee::operator==(const ArtificialCallee& other) const {
   return call_target == other.call_target &&
-      parameter_registers == other.parameter_registers &&
-      call_effect_registers == other.call_effect_registers &&
-      features == other.features;
+      root_registers == other.root_registers && features == other.features;
 }
 
 std::ostream& operator<<(std::ostream& out, const ArtificialCallee& callee) {
   out << "ArtificialCallee(call_target=" << callee.call_target
-      << ", parameter_registers={";
-  for (const auto& [position, register_id] : callee.parameter_registers) {
-    out << " " << position << ": v" << register_id << ",";
-  }
-  for (const auto& [root, register_id] : callee.call_effect_registers) {
+      << ", root_registers={";
+  for (const auto& [root, register_id] : callee.root_registers) {
     out << " " << root << ": v" << register_id << ",";
   }
   return out << "}, features=" << callee.features << ")";

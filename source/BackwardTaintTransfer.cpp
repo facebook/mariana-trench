@@ -363,8 +363,7 @@ void check_call_flows(
     MethodContext* context,
     const InstructionAliasResults& aliasing,
     BackwardTaintEnvironment* environment,
-    const std::function<std::optional<Register>(ParameterPosition)>&
-        get_parameter_register,
+    const std::function<std::optional<Register>(Root)>& get_parameter_register,
     const CalleeModel& callee,
     const std::vector<std::optional<std::string>>& source_constant_arguments,
     const FeatureMayAlwaysSet& extra_features,
@@ -380,7 +379,7 @@ void check_call_flows(
       continue;
     }
 
-    auto register_id = get_parameter_register(port.root().parameter_position());
+    auto register_id = get_parameter_register(port.root());
     if (!register_id) {
       continue;
     }
@@ -433,12 +432,13 @@ void check_call_flows(
       aliasing,
       environment,
       [&instruction_sources](
-          ParameterPosition parameter_position) -> std::optional<Register> {
-        if (parameter_position >= instruction_sources.size()) {
+          Root parameter_position) -> std::optional<Register> {
+        if (parameter_position.parameter_position() >=
+            instruction_sources.size()) {
           return std::nullopt;
         }
 
-        return instruction_sources.at(parameter_position);
+        return instruction_sources.at(parameter_position.parameter_position());
       },
       callee,
       source_constant_arguments,
@@ -462,10 +462,10 @@ void check_artificial_calls_flows(
         aliasing,
         environment,
         [&artificial_callee](
-            ParameterPosition parameter_position) -> std::optional<Register> {
+            Root parameter_position) -> std::optional<Register> {
           auto found =
-              artificial_callee.parameter_registers.find(parameter_position);
-          if (found == artificial_callee.parameter_registers.end()) {
+              artificial_callee.root_registers.find(parameter_position);
+          if (found == artificial_callee.root_registers.end()) {
             return std::nullopt;
           }
 
@@ -561,7 +561,7 @@ void check_intent_routing_calls_flows(
         FeatureMayAlwaysSet::make_always(intent_routing_callee.features),
         context->fulfilled_partial_sinks.get_artificial_call(
             &intent_routing_callee),
-        intent_routing_callee.call_effect_registers);
+        intent_routing_callee.root_registers);
   }
 }
 
