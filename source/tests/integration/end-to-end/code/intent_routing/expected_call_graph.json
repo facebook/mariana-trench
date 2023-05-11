@@ -237,7 +237,7 @@
   },
   "Lcom/facebook/marianatrench/integrationtests/IntentRouter;.doesNotRouteIntent_noTaintSources:(Landroid/content/Context;)V" : 
   {
-    "routed_intent" : 
+    "artificial" : 
     [
       "Lcom/facebook/marianatrench/integrationtests/IntentTarget;.readsRoutedIntent_anotherKeyToSink:()V",
       "Lcom/facebook/marianatrench/integrationtests/IntentTarget;.readsRoutedIntent_sessionToSink:()V",
@@ -277,7 +277,7 @@
   },
   "Lcom/facebook/marianatrench/integrationtests/IntentRouter;.objectTaintUnknown:(Ljava/lang/String;Landroid/content/Context;)V" : 
   {
-    "routed_intent" : 
+    "artificial" : 
     [
       "Lcom/facebook/marianatrench/integrationtests/IntentTarget;.readsRoutedIntent_anotherKeyToSink:()V",
       "Lcom/facebook/marianatrench/integrationtests/IntentTarget;.readsRoutedIntent_sessionToSink:()V",
@@ -295,7 +295,7 @@
   },
   "Lcom/facebook/marianatrench/integrationtests/IntentRouter;.routesIntent:(Landroid/content/Context;)V" : 
   {
-    "routed_intent" : 
+    "artificial" : 
     [
       "Lcom/facebook/marianatrench/integrationtests/IntentTarget;.readsRoutedIntent_anotherKeyToSink:()V",
       "Lcom/facebook/marianatrench/integrationtests/IntentTarget;.readsRoutedIntent_sessionToSink:()V",
@@ -321,7 +321,7 @@
   },
   "Lcom/facebook/marianatrench/integrationtests/IntentRouterAndTarget;.routesAndGetsIntent:(Landroid/content/Context;)V" : 
   {
-    "routed_intent" : 
+    "artificial" : 
     [
       "Lcom/facebook/marianatrench/integrationtests/IntentTarget;.readsRoutedIntent_anotherKeyToSink:()V",
       "Lcom/facebook/marianatrench/integrationtests/IntentTarget;.readsRoutedIntent_sessionToSink:()V",

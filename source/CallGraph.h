@@ -266,15 +266,6 @@ class CallGraph final {
   const std::vector<TextualOrderIndex> array_allocation_indices(
       const Method* caller) const;
 
-  /* Return a mapping from invoke instruction to intent callees routed to. */
-  const std::unordered_map<const IRInstruction*, ArtificialCallees>&
-  intent_routing_callees(const Method* caller) const;
-
-  /* Return the artificial callees for an invoke instruction. */
-  const ArtificialCallees& intent_routing_callees(
-      const Method* caller,
-      const IRInstruction* instruction) const;
-
   /* Returns whether the caller has any callees without constructing the
      intermediate structures. */
   bool has_callees(const Method* caller);
@@ -309,10 +300,6 @@ class CallGraph final {
       const Method*,
       std::unordered_map<const IRInstruction*, TextualOrderIndex>>
       indexed_array_allocations_;
-  ConcurrentMap<
-      const Method*,
-      std::unordered_map<const IRInstruction*, ArtificialCallees>>
-      intent_routing_callees_;
 };
 
 } // namespace marianatrench

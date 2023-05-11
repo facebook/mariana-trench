@@ -90,15 +90,6 @@ Dependencies::Dependencies(
             add_dependency(artificial_callee.call_target);
           }
         }
-
-        const auto& intent_routing_callees =
-            call_graph.intent_routing_callees(caller);
-
-        for (const auto& [instruction, callees] : intent_routing_callees) {
-          for (const auto& intent_routing_callee : callees) {
-            add_dependency(intent_routing_callee.call_target);
-          }
-        }
       },
       sparta::parallel::default_num_threads());
   for (const auto* method : methods) {

@@ -123,7 +123,6 @@ using TextualOrderIndex = marianatrench::TextualOrderIndex;
 struct InstructionCallGraphInformation {
   std::optional<CallTarget> callee;
   ArtificialCallees artificial_callees = {};
-  ArtificialCallees intent_routing_callees = {};
   std::optional<FieldTarget> field_access;
 };
 
@@ -499,8 +498,7 @@ void process_shim_lifecycle(
   });
 }
 
-std::pair<std::vector<ArtificialCallee>, std::vector<ArtificialCallee>>
-shim_artificial_callees(
+std::vector<ArtificialCallee> shim_artificial_callees(
     const Method* caller,
     const Method* callee,
     const IRInstruction* instruction,
@@ -559,7 +557,6 @@ shim_artificial_callees(
         artificial_callees);
   }
 
-  std::vector<ArtificialCallee> intent_routing_callees;
   for (const auto& shim_target : shim.intent_routing_targets()) {
     process_shim_target(
         caller,
@@ -572,10 +569,10 @@ shim_artificial_callees(
         class_hierarchies,
         feature_factory,
         sink_textual_order_index,
-        intent_routing_callees);
+        artificial_callees);
   }
 
-  return std::make_pair(artificial_callees, intent_routing_callees);
+  return artificial_callees;
 }
 
 bool is_field_instruction(const IRInstruction* instruction) {
@@ -673,7 +670,7 @@ InstructionCallGraphInformation process_instruction(
       method_mappings);
 
   if (auto shim = shims.get_shim_for_caller(original_callee, caller)) {
-    auto [artificial_callees, intent_routing_callees] = shim_artificial_callees(
+    auto artificial_callees = shim_artificial_callees(
         caller,
         resolved_callee,
         instruction,
@@ -685,8 +682,6 @@ InstructionCallGraphInformation process_instruction(
         *shim,
         sink_textual_order_index);
     instruction_information.artificial_callees = std::move(artificial_callees);
-    instruction_information.intent_routing_callees =
-        std::move(intent_routing_callees);
   }
 
   auto call_index =
@@ -949,8 +944,6 @@ CallGraph::CallGraph(
           std::unordered_map<const IRInstruction*, CallTarget> callees;
           std::unordered_map<const IRInstruction*, ArtificialCallees>
               artificial_callees;
-          std::unordered_map<const IRInstruction*, ArtificialCallees>
-              intent_routing_callees;
           std::unordered_map<const IRInstruction*, FieldTarget> field_accesses;
           std::unordered_map<const IRInstruction*, TextualOrderIndex>
               indexed_returns;
@@ -1002,11 +995,6 @@ CallGraph::CallGraph(
                 artificial_callees.emplace(
                     instruction, instruction_information.artificial_callees);
               }
-              if (instruction_information.intent_routing_callees.size() > 0) {
-                intent_routing_callees.emplace(
-                    instruction,
-                    instruction_information.intent_routing_callees);
-              }
               if (instruction_information.callee) {
                 callees.emplace(instruction, *(instruction_information.callee));
               } else if (instruction_information.field_access) {
@@ -1023,10 +1011,6 @@ CallGraph::CallGraph(
           if (!artificial_callees.empty()) {
             artificial_callees_.insert_or_assign(
                 std::make_pair(caller, std::move(artificial_callees)));
-          }
-          if (!intent_routing_callees.empty()) {
-            intent_routing_callees_.insert_or_assign(
-                std::make_pair(caller, std::move(intent_routing_callees)));
           }
           if (!field_accesses.empty()) {
             resolved_fields_.insert_or_assign(
@@ -1124,30 +1108,6 @@ const ArtificialCallees& CallGraph::artificial_callees(
   }
 }
 
-const std::unordered_map<const IRInstruction*, ArtificialCallees>&
-CallGraph::intent_routing_callees(const Method* caller) const {
-  // Note that `find` is not thread-safe, but this is fine because
-  // `artificial_callees_` is read-only after the constructor completed.
-  auto intent_routing_callees_map = intent_routing_callees_.find(caller);
-  if (intent_routing_callees_map == intent_routing_callees_.end()) {
-    return empty_artificial_callees_map_;
-  } else {
-    return intent_routing_callees_map->second;
-  }
-}
-
-const ArtificialCallees& CallGraph::intent_routing_callees(
-    const Method* caller,
-    const IRInstruction* instruction) const {
-  const auto& intent_routing_callees_map = this->intent_routing_callees(caller);
-  auto intent_routing_callees = intent_routing_callees_map.find(instruction);
-  if (intent_routing_callees == intent_routing_callees_map.end()) {
-    return empty_artificial_callees_;
-  } else {
-    return intent_routing_callees->second;
-  }
-}
-
 const std::optional<FieldTarget> CallGraph::resolved_field_access(
     const Method* caller,
     const IRInstruction* instruction) const {
@@ -1239,11 +1199,6 @@ bool CallGraph::has_callees(const Method* caller) {
       !artificial_callees->second.empty()) {
     return true;
   }
-  auto intent_routing_callees = intent_routing_callees_.find(caller);
-  if (intent_routing_callees != intent_routing_callees_.end() &&
-      !intent_routing_callees->second.empty()) {
-    return true;
-  }
 
   return false;
 }
@@ -1306,22 +1261,6 @@ Json::Value CallGraph::to_json(bool with_overrides) const {
     value[method->show()]["artificial"] = callees_value;
   }
 
-  for (const auto& [method, instruction_artificial_callees] :
-       intent_routing_callees_) {
-    std::unordered_set<const Method*> callees;
-    for (const auto& [instruction, artificial_callees] :
-         instruction_artificial_callees) {
-      for (const auto& artificial_callee : artificial_callees) {
-        callees.insert(artificial_callee.call_target.resolved_base_callee());
-      }
-    }
-
-    auto callees_value = Json::Value(Json::arrayValue);
-    for (const auto* callee : callees) {
-      callees_value.append(Json::Value(callee->show()));
-    }
-    value[method->show()]["routed_intent"] = callees_value;
-  }
   return value;
 }
 

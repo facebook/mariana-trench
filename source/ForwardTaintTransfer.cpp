@@ -531,8 +531,9 @@ void check_call_flows(
     MethodContext* context,
     const InstructionAliasResults& aliasing,
     const ForwardTaintEnvironment* environment,
-    const std::function<std::optional<Register>(Root)>& get_parameter_register,
+    const std::function<std::optional<Register>(Root)>& get_register,
     const CalleeModel& callee,
+    const TaintAccessPathTree& sinks,
     const std::vector<std::optional<std::string>>& source_constant_arguments,
     const FeatureMayAlwaysSet& extra_features,
     FulfilledPartialKindState* MT_NULLABLE fulfilled_partial_sinks) {
@@ -542,12 +543,8 @@ void check_call_flows(
       "Processing sinks for call to `{}`",
       show(callee.method_reference));
 
-  for (const auto& [port, sinks] : callee.model.sinks().elements()) {
-    if (!port.root().is_argument()) {
-      continue;
-    }
-
-    auto register_id = get_parameter_register(port.root());
+  for (const auto& [port, sinks] : sinks.elements()) {
+    auto register_id = get_register(port.root());
     if (!register_id) {
       continue;
     }
@@ -586,8 +583,12 @@ void check_call_flows(
       context,
       aliasing,
       environment,
+      /* get_register */
       [&instruction_sources](
           Root parameter_position) -> std::optional<Register> {
+        if (!parameter_position.is_argument()) {
+          return std::nullopt;
+        }
         if (parameter_position.parameter_position() >=
             instruction_sources.size()) {
           return std::nullopt;
@@ -596,6 +597,7 @@ void check_call_flows(
         return instruction_sources.at(parameter_position.parameter_position());
       },
       callee,
+      callee.model.sinks(),
       source_constant_arguments,
       extra_features,
       fulfilled_partial_sinks);
@@ -667,109 +669,45 @@ void check_artificial_calls_flows(
       context->call_graph.artificial_callees(context->method(), instruction);
 
   for (const auto& artificial_callee : artificial_callees) {
+    auto callee = get_callee(context, artificial_callee, aliasing.position());
+    auto get_register =
+        [&artificial_callee](
+            Root parameter_position) -> std::optional<Register> {
+      auto found = artificial_callee.root_registers.find(parameter_position);
+      if (found == artificial_callee.root_registers.end()) {
+        return std::nullopt;
+      }
+
+      return found->second;
+    };
+    auto extra_features =
+        FeatureMayAlwaysSet::make_always(artificial_callee.features);
+
     FulfilledPartialKindState fulfilled_partial_sinks;
     check_call_flows(
         context,
         aliasing,
         environment,
-        [&artificial_callee](
-            Root parameter_position) -> std::optional<Register> {
-          auto found =
-              artificial_callee.root_registers.find(parameter_position);
-          if (found == artificial_callee.root_registers.end()) {
-            return std::nullopt;
-          }
-
-          return found->second;
-        },
-        get_callee(context, artificial_callee, aliasing.position()),
+        get_register,
+        callee,
+        callee.model.sinks(),
         source_constant_arguments,
-        FeatureMayAlwaysSet::make_always(artificial_callee.features),
-        &fulfilled_partial_sinks);
-    context->fulfilled_partial_sinks.store_artificial_call(
-        &artificial_callee, std::move(fulfilled_partial_sinks));
-  }
-}
-
-void check_intent_routing_call_flows(
-    MethodContext* context,
-    const InstructionAliasResults& aliasing,
-    ForwardTaintEnvironment* environment,
-    const CalleeModel& intent_routing_callee,
-    const std::vector<std::optional<std::string>>& source_constant_arguments,
-    const FeatureMayAlwaysSet& extra_features,
-    FulfilledPartialKindState* MT_NULLABLE fulfilled_partial_sinks,
-    const std::unordered_map<Root, Register>& call_effect_registers) {
-  LOG_OR_DUMP(
-      context,
-      4,
-      "Processing intent routing sinks for call to `{}`",
-      show(intent_routing_callee.method_reference));
-
-  for (const auto& [port, sinks] :
-       intent_routing_callee.model.call_effect_sinks().elements()) {
-    if (port.root().kind() != Root::Kind::CallEffectIntent) {
-      continue;
-    }
-
-    auto found = call_effect_registers.find(port.root());
-    if (found == call_effect_registers.end()) {
-      LOG_OR_DUMP(context, 4, "Port {} has no corresponding register.", port);
-      continue;
-    }
-    auto register_id = found->second;
-
-    Taint sources =
-        environment
-            ->read(
-                aliasing.register_memory_locations(register_id),
-                port.path().resolve(source_constant_arguments))
-            .collapse(FeatureMayAlwaysSet{
-                context->feature_factory.get_issue_broadening_feature()});
-    LOG_OR_DUMP(
-        context,
-        4,
-        "Port {} maps to register {} with sources {}.",
-        port,
-        register_id,
-        sources);
-    check_sources_sinks_flows(
-        context,
-        sources,
-        sinks,
-        intent_routing_callee.position,
-        /* sink_index */ intent_routing_callee.call_index,
-        /* callee */ intent_routing_callee.resolved_base_method
-            ? intent_routing_callee.resolved_base_method->show()
-            : std::string(k_unresolved_callee),
         extra_features,
-        fulfilled_partial_sinks);
-  }
-}
+        &fulfilled_partial_sinks);
 
-void check_intent_routing_calls_flows(
-    MethodContext* context,
-    const InstructionAliasResults& aliasing,
-    const IRInstruction* instruction,
-    ForwardTaintEnvironment* environment,
-    const std::vector<std::optional<std::string>>& source_constant_arguments) {
-  const auto& intent_routing_callees =
-      context->call_graph.intent_routing_callees(
-          context->method(), instruction);
-
-  for (const auto& intent_routing_callee : intent_routing_callees) {
-    FulfilledPartialKindState fulfilled_partial_sinks;
-    check_intent_routing_call_flows(
+    check_call_flows(
         context,
         aliasing,
         environment,
-        get_callee(context, intent_routing_callee, aliasing.position()),
+        get_register,
+        callee,
+        callee.model.call_effect_sinks(),
         source_constant_arguments,
-        FeatureMayAlwaysSet::make_always(intent_routing_callee.features),
-        &fulfilled_partial_sinks,
-        intent_routing_callee.root_registers);
+        extra_features,
+        &fulfilled_partial_sinks);
+
     context->fulfilled_partial_sinks.store_artificial_call(
-        &intent_routing_callee, std::move(fulfilled_partial_sinks));
+        &artificial_callee, std::move(fulfilled_partial_sinks));
   }
 }
 
@@ -910,8 +848,6 @@ bool ForwardTaintTransfer::analyze_invoke(
   }
 
   check_artificial_calls_flows(
-      context, aliasing, instruction, environment, source_constant_arguments);
-  check_intent_routing_calls_flows(
       context, aliasing, instruction, environment, source_constant_arguments);
 
   return false;
