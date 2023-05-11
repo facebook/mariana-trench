@@ -80,13 +80,7 @@ std::optional<ShimTarget> try_make_shim_target(
         std::get<ShimParameterPosition>(receiver_info.receiver()));
   }
 
-  // Specifying a mapping of parameters to arbitrary, typically non-argument
-  // ports is not supported yet. This is only used by programmatically created
-  // shims today.
-  return ShimTarget(
-      call_target,
-      std::move(instantiated_parameter_map),
-      /* call_effect_parameter_mapping */ {});
+  return ShimTarget(call_target, std::move(instantiated_parameter_map));
 }
 
 std::optional<ShimReflectionTarget> try_make_shim_reflection_target(

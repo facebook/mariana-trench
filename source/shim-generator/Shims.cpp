@@ -68,10 +68,7 @@ std::optional<Shim> Shims::get_shim_for_caller(
             // that is what startActivity(intent) uses for the intent.
             intent_routing_targets.emplace_back(
                 intent_getter,
-                ShimParameterMapping{},
-                /* call_effect_parameter_mapping */
-                std::unordered_map<Root, ParameterPosition>{
-                    {Root(Root::Kind::CallEffectIntent), 1}});
+                ShimParameterMapping{{Root(Root::Kind::CallEffectIntent), 1}});
           }
         }
       }

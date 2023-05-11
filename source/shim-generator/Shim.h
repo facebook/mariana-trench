@@ -7,6 +7,7 @@
 
 #pragma once
 
+#include <initializer_list>
 #include <optional>
 #include <variant>
 
@@ -49,7 +50,13 @@ class ShimMethod {
  */
 class ShimParameterMapping {
  public:
-  ShimParameterMapping();
+  using MapType = std::unordered_map<Root, ShimParameterPosition>;
+
+ public:
+  explicit ShimParameterMapping(
+      std::initializer_list<MapType::value_type> init = {});
+
+  INCLUDE_DEFAULT_COPY_CONSTRUCTORS_AND_ASSIGNMENTS(ShimParameterMapping)
 
   static ShimParameterMapping from_json(
       const Json::Value& value,
@@ -61,6 +68,14 @@ class ShimParameterMapping {
   void insert(
       const Root& parameter_position,
       ShimParameterPosition shim_parameter_position);
+
+  MapType::const_iterator begin() const {
+    return map_.begin();
+  }
+
+  MapType::const_iterator end() const {
+    return map_.end();
+  }
 
   void set_infer_from_types(bool value);
   bool infer_from_types() const;
@@ -84,7 +99,7 @@ class ShimParameterMapping {
       const ShimParameterMapping& map);
 
  private:
-  std::unordered_map<Root, ShimParameterPosition> map_;
+  MapType map_;
   bool infer_from_types_;
 };
 
@@ -92,15 +107,10 @@ class ShimParameterMapping {
  * Represents shim-targets which are instance methods.
  */
 class ShimTarget {
- private:
-  using ShimCallEffectParameterMapping =
-      std::unordered_map<Root, ParameterPosition>;
-
  public:
   explicit ShimTarget(
       const Method* method,
-      ShimParameterMapping parameter_mapping,
-      ShimCallEffectParameterMapping call_effect_parameter_mapping);
+      ShimParameterMapping parameter_mapping);
 
   const Method* method() const {
     return call_target_;
@@ -122,10 +132,6 @@ class ShimTarget {
  private:
   const Method* call_target_;
   ShimParameterMapping parameter_mapping_;
-  // Maps call effect ports in the shimmed target to its corresponding parameter
-  // positions in the shimmed method. Used in cases where the shimmed target
-  // receives taint via a call-effect rather than a register.
-  ShimCallEffectParameterMapping call_effect_parameter_mapping_;
 };
 
 /**

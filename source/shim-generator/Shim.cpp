@@ -85,7 +85,9 @@ std::optional<ShimParameterPosition> ShimMethod::type_position(
   return found->second;
 }
 
-ShimParameterMapping::ShimParameterMapping() {}
+ShimParameterMapping::ShimParameterMapping(
+    std::initializer_list<MapType::value_type> init)
+    : map_(init), infer_from_types_(false) {}
 
 bool ShimParameterMapping::empty() const {
   return map_.empty();
@@ -203,12 +205,8 @@ ShimParameterMapping ShimParameterMapping::instantiate_parameters(
 
 ShimTarget::ShimTarget(
     const Method* method,
-    ShimParameterMapping parameter_mapping,
-    ShimCallEffectParameterMapping call_effect_parameter_mapping)
-    : call_target_(method),
-      parameter_mapping_(std::move(parameter_mapping)),
-      call_effect_parameter_mapping_(std::move(call_effect_parameter_mapping)) {
-}
+    ShimParameterMapping parameter_mapping)
+    : call_target_(method), parameter_mapping_(std::move(parameter_mapping)) {}
 
 std::optional<Register> ShimTarget::receiver_register(
     const IRInstruction* instruction) const {
@@ -246,11 +244,14 @@ std::unordered_map<ParameterPosition, Register> ShimTarget::parameter_registers(
 std::unordered_map<Root, Register> ShimTarget::call_effect_registers(
     const IRInstruction* instruction) const {
   std::unordered_map<Root, Register> call_effect_registers;
-  for (const auto& [call_effect, shim_target_position] :
-       call_effect_parameter_mapping_) {
-    mt_assert(shim_target_position < instruction->srcs_size());
+  // TODO(T149770577): Merge parameter registers with call effect registers.
+  for (const auto& [root, shimmed_method_position] : parameter_mapping_) {
+    if (!root.is_call_effect()) {
+      continue;
+    }
+    mt_assert(shimmed_method_position < instruction->srcs_size());
     call_effect_registers.emplace(
-        call_effect, instruction->src(shim_target_position));
+        root, instruction->src(shimmed_method_position));
   }
 
   return call_effect_registers;
