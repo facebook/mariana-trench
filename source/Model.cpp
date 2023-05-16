@@ -1294,7 +1294,7 @@ Json::Value Model::to_json(ExportOriginsMode export_origins_mode) const {
     auto issues_value = Json::Value(Json::arrayValue);
     for (const auto& issue : issues_) {
       mt_assert(!issue.is_bottom());
-      issues_value.append(issue.to_json(export_origins_mode));
+      issues_value.append(issue.to_json(ExportOriginsMode::Always));
     }
     value["issues"] = issues_value;
   }
