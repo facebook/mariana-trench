@@ -1576,50 +1576,10 @@
   ]
 }
 {
-  "effect_sinks" : 
-  [
-    {
-      "port" : "call-effect-intent[session]",
-      "taint" : 
-      [
-        {
-          "kinds" : 
-          [
-            {
-              "call_info" : "Origin",
-              "kind" : "Sink",
-              "origins" : 
-              [
-                "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V"
-              ]
-            }
-          ],
-          "local_positions" : 
-          [
-            {
-              "line" : 69
-            },
-            {
-              "line" : 70
-            }
-          ],
-          "origin" : 
-          {
-            "method" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
-            "position" : 
-            {
-              "line" : 70,
-              "path" : "IntentTarget.java"
-            }
-          }
-        }
-      ]
-    }
-  ],
   "method" : "Lcom/facebook/marianatrench/integrationtests/IntentTarget;.falseNegative_toSinkViaPropagation:()V",
   "position" : 
   {
-    "line" : 68,
+    "line" : 72,
     "path" : "IntentTarget.java"
   }
 }
@@ -1627,61 +1587,17 @@
   "method" : "Lcom/facebook/marianatrench/integrationtests/IntentTarget;.readsAndReturnsRoutedIntent:()Landroid/content/Intent;",
   "position" : 
   {
-    "line" : 55,
+    "line" : 57,
     "path" : "IntentTarget.java"
-  },
-  "propagation" : 
-  [
-    {
-      "input" : "call-effect-intent",
-      "output" : 
-      [
-        {
-          "kinds" : 
-          [
-            {
-              "call_info" : "Propagation",
-              "kind" : "LocalReturn",
-              "output_paths" : 
-              {
-                "" : 4
-              }
-            }
-          ]
-        }
-      ]
-    }
-  ]
+  }
 }
 {
   "method" : "Lcom/facebook/marianatrench/integrationtests/IntentTarget;.readsAndReturnsRoutedIntent_sessionToReturn:()Ljava/lang/String;",
   "position" : 
   {
-    "line" : 60,
+    "line" : 63,
     "path" : "IntentTarget.java"
-  },
-  "propagation" : 
-  [
-    {
-      "input" : "call-effect-intent[session]",
-      "output" : 
-      [
-        {
-          "kinds" : 
-          [
-            {
-              "call_info" : "Propagation",
-              "kind" : "LocalReturn",
-              "output_paths" : 
-              {
-                "" : 4
-              }
-            }
-          ]
-        }
-      ]
-    }
-  ]
+  }
 }
 {
   "effect_sinks" : 

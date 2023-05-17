@@ -160,6 +160,17 @@ void infer_input_taint(
       }
     }
 
+    // Do not infer propagations of the form: (Local)CallEffect -> X. The
+    // propagation is meant for inferring (Local)CallEffect -> Sink flows
+    // intraprocedurally. For methods that call `to_sink_via_call_effect()`,
+    // while it is theoretically correct that they also contain the propagation
+    // CallEffect -> X, in the absence of an appropriate shim, the analysis
+    // will never see the source flowing into them. See `intent_router` in
+    // integration tests.
+    if (input_root.is_call_effect_for_local_propagation_input()) {
+      continue;
+    }
+
     auto propagations_iterator = partitioned_by_propagations.find(true);
     if (propagations_iterator != partitioned_by_propagations.end()) {
       auto& propagations = propagations_iterator->second;
@@ -239,7 +250,7 @@ void taint_propagation_input(
         callee.model.strong_write_on_propagation() ? UpdateKind::Strong
                                                    : UpdateKind::Weak);
   } else {
-    mt_assert(input.root().is_supported_call_effect_for_propagation_input());
+    mt_assert(input.root().is_call_effect_for_local_propagation_input());
     auto call_effect_path = AccessPath(input.root(), input_path_resolved);
     LOG_OR_DUMP(
         context,
@@ -375,7 +386,7 @@ void apply_propagations(
        callee.model.propagations().elements()) {
     LOG_OR_DUMP(context, 4, "Processing propagations from {}", input);
     if (!input.root().is_argument() &&
-        !input.root().is_supported_call_effect_for_propagation_input()) {
+        !input.root().is_call_effect_for_local_propagation_input()) {
       WARNING_OR_DUMP(
           context,
           2,

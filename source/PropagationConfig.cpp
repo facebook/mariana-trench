@@ -35,7 +35,7 @@ PropagationConfig PropagationConfig::from_json(
   auto input = AccessPath::from_json(value["input"]);
 
   if (!input.root().is_argument() &&
-      !input.root().is_supported_call_effect_for_propagation_input()) {
+      !input.root().is_call_effect_for_local_propagation_input()) {
     throw JsonValidationError(
         value,
         /* field */ "input",

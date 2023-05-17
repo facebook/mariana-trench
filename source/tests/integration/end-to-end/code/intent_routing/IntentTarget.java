@@ -51,17 +51,21 @@ public class IntentTarget extends Activity {
     Origin.sink((Object) intent.getStringExtra(SESSION));
   }
 
-  // Expected: Propagation: Intent -> Return
+  // Theoretically: Propagation: Intent -> Return
+  // Expected: No such propagation. Intent propagations should be
+  // intraprocedural only.
   Intent readsAndReturnsRoutedIntent() {
     return this.getIntent();
   }
 
-  // Expected: Propagation: Intent[session] -> Return
+  // Theoretically : Propagation: Intent[session] -> Return
+  // Expected: No such propagation.
   String readsAndReturnsRoutedIntent_sessionToReturn() {
     return this.getIntent().getStringExtra(SESSION);
   }
 
-  // Expected: Intent[session] -> Sink
+  // Theoretically: Intent[session] -> Sink
+  // Expected: No such propagation.
   // This flows intent to sink, but startActivity calls will not shim to it
   // because it does not call getIntent() directly. As a result, the analysis
   // never find issues leading to this sink.

@@ -154,7 +154,14 @@ class Root final {
     }
   }
 
-  bool is_supported_call_effect_for_propagation_input() const {
+  /**
+   * These non-argument/return ports can be used for propagation inputs, but are
+   * only expected to work intraprocedurally to infer sinks. They are not
+   * propagated into other propagations for both performance reasons and also
+   * because they are not expected to be reachable in the absence of appropriate
+   * shims.
+   */
+  bool is_call_effect_for_local_propagation_input() const {
     switch (kind()) {
       case Kind::CallEffectIntent:
         return true;
