@@ -766,7 +766,8 @@ void apply_call_effects(MethodContext* context, const CalleeModel& callee) {
             port, std::move(sinks_copy));
 
       } break;
-
+      case Root::Kind::CallEffectIntent:
+        break;
       default:
         mt_unreachable();
     }

@@ -10,6 +10,8 @@
   "Landroid/app/Activity;.getIntent:()Landroid/content/Intent;" : 
   [
     "Lcom/facebook/marianatrench/integrationtests/IntentRouterAndTarget;.routesAndGetsIntent:(Landroid/content/Context;)V",
+    "Lcom/facebook/marianatrench/integrationtests/IntentTarget;.readsAndReturnsRoutedIntent:()Landroid/content/Intent;",
+    "Lcom/facebook/marianatrench/integrationtests/IntentTarget;.readsAndReturnsRoutedIntent_sessionToReturn:()Ljava/lang/String;",
     "Lcom/facebook/marianatrench/integrationtests/IntentTarget;.readsRoutedIntent_anotherKeyToSink:()V",
     "Lcom/facebook/marianatrench/integrationtests/IntentTarget;.readsRoutedIntent_sessionToSink:()V",
     "Lcom/facebook/marianatrench/integrationtests/IntentTarget;.readsRoutedIntent_sessionToSinkViaExtraHop:()V"
@@ -43,6 +45,8 @@
   "Landroid/content/Intent;.getStringExtra:(Ljava/lang/String;)Ljava/lang/String;" : 
   [
     "Lcom/facebook/marianatrench/integrationtests/IntentRouterAndTarget;.routesAndGetsIntent:(Landroid/content/Context;)V",
+    "Lcom/facebook/marianatrench/integrationtests/IntentTarget;.falseNegative_toSinkViaPropagation:()V",
+    "Lcom/facebook/marianatrench/integrationtests/IntentTarget;.readsAndReturnsRoutedIntent_sessionToReturn:()Ljava/lang/String;",
     "Lcom/facebook/marianatrench/integrationtests/IntentTarget;.readsRoutedIntent_anotherKeyToSink:()V",
     "Lcom/facebook/marianatrench/integrationtests/IntentTarget;.readsRoutedIntent_pathSessionToSink:()V",
     "Lcom/facebook/marianatrench/integrationtests/IntentTarget;.readsRoutedIntent_sessionToSink:()V",
@@ -87,6 +91,21 @@
   [
     "Lcom/facebook/marianatrench/integrationtests/IntentTarget;.readsRoutedIntent_pathSessionToSink:()V"
   ],
+  "Lcom/facebook/marianatrench/integrationtests/IntentTarget;.readsAndReturnsRoutedIntent:()Landroid/content/Intent;" : 
+  [
+    "Lcom/facebook/marianatrench/integrationtests/IntentRouter;.doesNotRouteIntent_noTaintSources:(Landroid/content/Context;)V",
+    "Lcom/facebook/marianatrench/integrationtests/IntentRouter;.objectTaintUnknown:(Ljava/lang/String;Landroid/content/Context;)V",
+    "Lcom/facebook/marianatrench/integrationtests/IntentRouter;.routesIntent:(Landroid/content/Context;)V",
+    "Lcom/facebook/marianatrench/integrationtests/IntentRouterAndTarget;.routesAndGetsIntent:(Landroid/content/Context;)V",
+    "Lcom/facebook/marianatrench/integrationtests/IntentTarget;.falseNegative_toSinkViaPropagation:()V"
+  ],
+  "Lcom/facebook/marianatrench/integrationtests/IntentTarget;.readsAndReturnsRoutedIntent_sessionToReturn:()Ljava/lang/String;" : 
+  [
+    "Lcom/facebook/marianatrench/integrationtests/IntentRouter;.doesNotRouteIntent_noTaintSources:(Landroid/content/Context;)V",
+    "Lcom/facebook/marianatrench/integrationtests/IntentRouter;.objectTaintUnknown:(Ljava/lang/String;Landroid/content/Context;)V",
+    "Lcom/facebook/marianatrench/integrationtests/IntentRouter;.routesIntent:(Landroid/content/Context;)V",
+    "Lcom/facebook/marianatrench/integrationtests/IntentRouterAndTarget;.routesAndGetsIntent:(Landroid/content/Context;)V"
+  ],
   "Lcom/facebook/marianatrench/integrationtests/IntentTarget;.readsRoutedIntent_anotherKeyToSink:()V" : 
   [
     "Lcom/facebook/marianatrench/integrationtests/IntentRouter;.doesNotRouteIntent_noTaintSources:(Landroid/content/Context;)V",
@@ -111,6 +130,7 @@
   "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V" : 
   [
     "Lcom/facebook/marianatrench/integrationtests/IntentTarget;.extraSinkHop:(Ljava/lang/Object;)V",
+    "Lcom/facebook/marianatrench/integrationtests/IntentTarget;.falseNegative_toSinkViaPropagation:()V",
     "Lcom/facebook/marianatrench/integrationtests/IntentTarget;.readsRoutedIntent_anotherKeyToSink:()V",
     "Lcom/facebook/marianatrench/integrationtests/IntentTarget;.readsRoutedIntent_pathSessionToSink:()V",
     "Lcom/facebook/marianatrench/integrationtests/IntentTarget;.readsRoutedIntent_sessionToSink:()V"

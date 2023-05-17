@@ -681,10 +681,19 @@ void Model::add_inferred_call_effect_sinks(AccessPath port, Taint sinks) {
 }
 
 void Model::add_inferred_call_effect_sinks(
-    const AccessPath& port,
-    TaintTree sinks,
-    UpdateKind update_kind) {
-  call_effect_sinks_.write(port, std::move(sinks), update_kind);
+    AccessPath port,
+    Taint sinks,
+    const FeatureMayAlwaysSet& widening_features) {
+  auto sanitized_sinks = apply_source_sink_sanitizers(
+      SanitizerKind::Sinks, std::move(sinks), port.root());
+  if (!sanitized_sinks.is_bottom()) {
+    update_taint_tree(
+        call_effect_sinks_,
+        std::move(port),
+        Heuristics::kCallEffectSinkMaxPortSize,
+        std::move(sanitized_sinks),
+        widening_features);
+  }
 }
 
 void Model::add_propagation(PropagationConfig propagation) {

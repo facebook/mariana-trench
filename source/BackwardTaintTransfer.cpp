@@ -130,6 +130,76 @@ void apply_add_features_to_arguments(
   }
 }
 
+// Infer propagations and sinks for the backward `taint` on the given input.
+void infer_input_taint(
+    MethodContext* context,
+    AccessPath input,
+    const TaintTree& taint_tree) {
+  auto input_root = input.root();
+  auto widening_features = FeatureMayAlwaysSet{
+      context->feature_factory.get_widen_broadening_feature()};
+
+  for (const auto& [input_path, taint] : taint_tree.elements()) {
+    auto partitioned_by_propagations = taint.partition_by_call_info<bool>(
+        [](CallInfo call_info) { return call_info == CallInfo::Propagation; });
+
+    auto sinks_iterator = partitioned_by_propagations.find(false);
+    if (sinks_iterator != partitioned_by_propagations.end()) {
+      auto& sinks = sinks_iterator->second;
+      sinks.add_locally_inferred_features(FeatureMayAlwaysSet::make_always(
+          context->previous_model.attach_to_sinks(input_root)));
+      auto port = input;
+      port.extend(input_path);
+      LOG_OR_DUMP(context, 4, "Inferred sink for port {}: {}", port, sinks);
+      if (port.root().is_call_effect()) {
+        context->new_model.add_inferred_call_effect_sinks(
+            std::move(port), std::move(sinks), widening_features);
+      } else {
+        context->new_model.add_inferred_sinks(
+            std::move(port), std::move(sinks), widening_features);
+      }
+    }
+
+    auto propagations_iterator = partitioned_by_propagations.find(true);
+    if (propagations_iterator != partitioned_by_propagations.end()) {
+      auto& propagations = propagations_iterator->second;
+
+      if (!context->method()->is_static() && input_root.is_argument() &&
+          input_root.parameter_position() == 0) {
+        // Do not infer propagations Arg(0) -> Arg(0).
+        propagations.filter([](const Frame& frame) {
+          auto* kind = frame.kind()->as<LocalArgumentKind>();
+          return kind == nullptr || kind->parameter_position() != 0;
+        });
+      }
+
+      if (propagations.is_bottom()) {
+        continue;
+      }
+
+      propagations.map([context, &input_root](Frame frame) {
+        auto* propagation_kind = frame.propagation_kind();
+        frame.add_user_features(
+            context->previous_model.attach_to_propagations(input_root));
+        frame.add_user_features(context->previous_model.attach_to_propagations(
+            propagation_kind->root()));
+        return frame;
+      });
+
+      auto port = input;
+      port.extend(input_path);
+      LOG_OR_DUMP(
+          context,
+          4,
+          "Inferred propagations from {} to {}",
+          port,
+          propagations);
+      context->new_model.add_inferred_propagations(
+          std::move(port), std::move(propagations), widening_features);
+    }
+  }
+}
+
 // Taints the corresponding register/call-effect port based on the propagation's
 // input path.
 void taint_propagation_input(
@@ -174,14 +244,10 @@ void taint_propagation_input(
     LOG_OR_DUMP(
         context,
         4,
-        "Tainting call-effect path {} with {}",
+        "Tainting call-effect path {} with taint: {}",
         call_effect_path,
         input_taint_tree);
-    context->new_model.add_inferred_call_effect_sinks(
-        call_effect_path,
-        std::move(input_taint_tree),
-        callee.model.strong_write_on_propagation() ? UpdateKind::Strong
-                                                   : UpdateKind::Weak);
+    infer_input_taint(context, std::move(call_effect_path), input_taint_tree);
   }
 }
 
@@ -721,78 +787,6 @@ bool BackwardTaintTransfer::analyze_sput(
   return false;
 }
 
-namespace {
-
-// Infer propagations and sinks for the backward `taint` on the given parameter.
-void infer_input_taint(
-    MethodContext* context,
-    ParameterPosition parameter_position,
-    const TaintTree& taint_tree) {
-  auto input_root = Root(Root::Kind::Argument, parameter_position);
-
-  for (const auto& [input_path, taint] : taint_tree.elements()) {
-    auto partitioned_by_propagations = taint.partition_by_call_info<bool>(
-        [](CallInfo call_info) { return call_info == CallInfo::Propagation; });
-
-    auto sinks_iterator = partitioned_by_propagations.find(false);
-    if (sinks_iterator != partitioned_by_propagations.end()) {
-      auto& sinks = sinks_iterator->second;
-      sinks.add_locally_inferred_features(FeatureMayAlwaysSet::make_always(
-          context->previous_model.attach_to_sinks(input_root)));
-      auto port = AccessPath(input_root, input_path);
-      LOG_OR_DUMP(context, 4, "Inferred sink for port {}: {}", port, sinks);
-      context->new_model.add_inferred_sinks(
-          std::move(port),
-          std::move(sinks),
-          /* widening_features */
-          FeatureMayAlwaysSet{
-              context->feature_factory.get_widen_broadening_feature()});
-    }
-
-    auto propagations_iterator = partitioned_by_propagations.find(true);
-    if (propagations_iterator != partitioned_by_propagations.end()) {
-      auto& propagations = propagations_iterator->second;
-
-      if (parameter_position == 0 && !context->method()->is_static()) {
-        // Do not infer propagations Arg(0) -> Arg(0).
-        propagations.filter([](const Frame& frame) {
-          auto* kind = frame.kind()->as<LocalArgumentKind>();
-          return kind == nullptr || kind->parameter_position() != 0;
-        });
-      }
-
-      if (propagations.is_bottom()) {
-        continue;
-      }
-
-      propagations.map([context, &input_root](Frame frame) {
-        auto* propagation_kind = frame.propagation_kind();
-        frame.add_user_features(
-            context->previous_model.attach_to_propagations(input_root));
-        frame.add_user_features(context->previous_model.attach_to_propagations(
-            propagation_kind->root()));
-        return frame;
-      });
-
-      auto input_port = AccessPath(input_root, input_path);
-      LOG_OR_DUMP(
-          context,
-          4,
-          "Inferred propagations from {} to {}",
-          input_port,
-          propagations);
-      context->new_model.add_inferred_propagations(
-          std::move(input_port),
-          std::move(propagations),
-          /* widening_features */
-          FeatureMayAlwaysSet{
-              context->feature_factory.get_widen_broadening_feature()});
-    }
-  }
-}
-
-} // namespace
-
 bool BackwardTaintTransfer::analyze_load_param(
     MethodContext* context,
     const IRInstruction* instruction,
@@ -815,7 +809,7 @@ bool BackwardTaintTransfer::analyze_load_param(
 
   infer_input_taint(
       context,
-      parameter_memory_location->position(),
+      AccessPath(Root::argument(parameter_memory_location->position())),
       environment->read(parameter_memory_location));
 
   return false;

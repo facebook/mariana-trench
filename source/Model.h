@@ -238,9 +238,9 @@ class Model final {
   void add_call_effect_sink(AccessPath port, TaintConfig sink);
   void add_inferred_call_effect_sinks(AccessPath port, Taint sink);
   void add_inferred_call_effect_sinks(
-      const AccessPath& port,
-      TaintTree sink,
-      UpdateKind update_kind);
+      AccessPath port,
+      Taint sink,
+      const FeatureMayAlwaysSet& widening_features);
 
   void add_propagation(PropagationConfig propagation);
   /* Add a propagation after applying sanitizers */

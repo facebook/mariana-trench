@@ -50,4 +50,23 @@ public class IntentTarget extends Activity {
     Intent intent = this.fakeGetIntent();
     Origin.sink((Object) intent.getStringExtra(SESSION));
   }
+
+  // Expected: Propagation: Intent -> Return
+  Intent readsAndReturnsRoutedIntent() {
+    return this.getIntent();
+  }
+
+  // Expected: Propagation: Intent[session] -> Return
+  String readsAndReturnsRoutedIntent_sessionToReturn() {
+    return this.getIntent().getStringExtra(SESSION);
+  }
+
+  // Expected: Intent[session] -> Sink
+  // This flows intent to sink, but startActivity calls will not shim to it
+  // because it does not call getIntent() directly. As a result, the analysis
+  // never find issues leading to this sink.
+  void falseNegative_toSinkViaPropagation() {
+    Intent intent = this.readsAndReturnsRoutedIntent();
+    Origin.sink((Object) intent.getStringExtra(SESSION));
+  }
 }
