@@ -48,6 +48,11 @@ class Shims final {
   const ClassesToIntentGettersMap& classes_to_intent_getters() const;
 
  private:
+  std::vector<ShimTarget> get_intent_routing_targets(
+      const Method* original_callee,
+      const Method* caller) const;
+
+ private:
   MethodToShimMap global_shims_;
   MethodToRoutedIntentClassesMap methods_to_routed_intents_;
   ClassesToIntentGettersMap classes_to_intent_getters_;

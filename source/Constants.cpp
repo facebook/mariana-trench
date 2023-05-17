@@ -25,6 +25,15 @@ std::vector<std::string> get_private_uri_schemes() {
 std::string_view get_privacy_decision_type() {
   return "<undefined>";
 }
+
+std::unordered_map<std::string, ParameterPosition>
+get_activity_routing_methods() {
+  return {
+      // For ShimsTest.cpp
+      {"LClass;.startActivity:(Landroid/content/Intent;)V", 1},
+      {"Landroid/app/Activity;.startActivity:(Landroid/content/Intent;)V", 1},
+  };
+}
 #endif
 
 } // namespace constants

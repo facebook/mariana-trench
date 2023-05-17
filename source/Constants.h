@@ -8,7 +8,10 @@
 #pragma once
 
 #include <string>
+#include <unordered_map>
 #include <vector>
+
+#include <mariana-trench/Access.h>
 
 namespace marianatrench {
 namespace constants {
@@ -23,6 +26,13 @@ dfa_annotation get_dfa_annotation();
 std::vector<std::string> get_private_uri_schemes();
 
 std::string_view get_privacy_decision_type();
+
+// TODO(T149770577): Should be configurable with model generator syntax.
+// For now, use a mapping of method signature to intent argument position.
+// Taint is routed via the intent, so its position per activity routing method
+// needs to be known.
+std::unordered_map<std::string, ParameterPosition>
+get_activity_routing_methods();
 
 } // namespace constants
 } // namespace marianatrench
