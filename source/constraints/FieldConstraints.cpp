@@ -125,6 +125,23 @@ bool AllOfFieldConstraint::operator==(const FieldConstraint& other) const {
   }
 }
 
+NotFieldConstraint::NotFieldConstraint(
+    std::unique_ptr<FieldConstraint> constraint)
+    : constraint_(std::move(constraint)) {}
+
+bool NotFieldConstraint::satisfy(const Field* field) const {
+  return !constraint_->satisfy(field);
+}
+
+bool NotFieldConstraint::operator==(const FieldConstraint& other) const {
+  if (auto* other_constraint =
+          dynamic_cast<const NotFieldConstraint*>(&other)) {
+    return *(other_constraint->constraint_) == *constraint_;
+  } else {
+    return false;
+  }
+}
+
 AnyOfFieldConstraint::AnyOfFieldConstraint(
     std::vector<std::unique_ptr<FieldConstraint>> constraints)
     : constraints_(std::move(constraints)) {}
@@ -175,6 +192,9 @@ std::unique_ptr<FieldConstraint> FieldConstraint::from_json(
         ? JsonValidation::boolean(constraint, /* field */ "value")
         : true;
     return std::make_unique<IsStaticFieldConstraint>(expected);
+  } else if (constraint_name == "not") {
+    return std::make_unique<NotFieldConstraint>(FieldConstraint::from_json(
+        JsonValidation::object(constraint, /* field */ "inner")));
   } else if (constraint_name == "any_of" || constraint_name == "all_of") {
     std::vector<std::unique_ptr<FieldConstraint>> constraints;
     for (const auto& inner :

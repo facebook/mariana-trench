@@ -94,6 +94,16 @@ class AllOfFieldConstraint final : public FieldConstraint {
   std::vector<std::unique_ptr<FieldConstraint>> constraints_;
 };
 
+class NotFieldConstraint final : public FieldConstraint {
+ public:
+  explicit NotFieldConstraint(std::unique_ptr<FieldConstraint> constraint);
+  bool satisfy(const Field* field) const override;
+  bool operator==(const FieldConstraint& other) const override;
+
+ private:
+  std::unique_ptr<FieldConstraint> constraint_;
+};
+
 class AnyOfFieldConstraint final : public FieldConstraint {
  public:
   explicit AnyOfFieldConstraint(

@@ -167,6 +167,29 @@ TEST_F(FieldConstraintTest, AllOfFieldConstraintSatisfy) {
   }
 }
 
+TEST_F(FieldConstraintTest, NotFieldConstraintSatisfy) {
+  std::string field_name = "field_name";
+  Scope scope;
+  auto dex_field = redex::create_field(
+      scope, "LClass;", {field_name, type::java_lang_String()});
+  DexStore store("stores");
+  store.add_classes(scope);
+  auto context = test::make_context(store);
+  auto field = context.fields->get(dex_field);
+
+  {
+    std::unique_ptr<FieldConstraint> constraint =
+        std::make_unique<FieldNameConstraint>(field_name);
+    EXPECT_FALSE(NotFieldConstraint(std::move(constraint)).satisfy(field));
+  }
+
+  {
+    std::unique_ptr<FieldConstraint> constraint =
+        std::make_unique<FieldNameConstraint>("another_field");
+    EXPECT_TRUE(NotFieldConstraint(std::move(constraint)).satisfy(field));
+  }
+}
+
 TEST_F(FieldConstraintTest, AnyOfFieldConstraintSatisfy) {
   std::string field_name = "field_name";
   Scope scope;
