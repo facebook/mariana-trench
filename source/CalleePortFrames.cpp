@@ -37,10 +37,9 @@ void materialize_via_type_of_ports(
         port.parameter_position() >= source_register_types.size()) {
       ERROR(
           1,
-          "Invalid port {} provided for via_type_of ports of method {}.{}",
+          "Invalid port {} provided for via_type_of ports of method {}",
           port,
-          callee->get_class()->str(),
-          callee->get_name());
+          callee->show());
       continue;
     }
     const auto* feature = context.feature_factory->get_via_type_of_feature(
@@ -68,10 +67,9 @@ void materialize_via_value_of_ports(
         port.parameter_position() >= source_constant_arguments.size()) {
       ERROR(
           1,
-          "Invalid port {} provided for via_value_of ports of method {}.{}",
+          "Invalid port {} provided for via_value_of ports of method {}",
           port,
-          callee->get_class()->str(),
-          callee->get_name());
+          callee->show());
       continue;
     }
     const auto* feature = context.feature_factory->get_via_value_of_feature(
@@ -480,16 +478,6 @@ Frame CalleePortFrames::propagate_frames(
       continue;
     }
 
-    if (call_info == CallInfo::Declaration) {
-      // If we're propagating a declaration, there are no origins, and we should
-      // keep the set as bottom, and set the callee to nullptr explicitly to
-      // avoid emitting an invalid frame.
-      distance = 0;
-      callee = nullptr;
-    } else {
-      distance = std::min(distance, frame.distance() + 1);
-    }
-
     origins.join_with(frame.origins());
     field_origins.join_with(frame.field_origins());
 
@@ -507,6 +495,17 @@ Frame CalleePortFrames::propagate_frames(
 
     materialize_via_value_of_ports(
         callee, context, frame, source_constant_arguments, inferred_features);
+    // It's important that this check happens after we materialize the ports for
+    // the error messages on failure to not get null callables.
+    if (call_info == CallInfo::Declaration) {
+      // If we're propagating a declaration, there are no origins, and we should
+      // keep the set as bottom, and set the callee to nullptr explicitly to
+      // avoid emitting an invalid frame.
+      distance = 0;
+      callee = nullptr;
+    } else {
+      distance = std::min(distance, frame.distance() + 1);
+    }
   }
 
   // For `TransformKind`, all local_transforms of the callee become
