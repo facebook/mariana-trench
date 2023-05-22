@@ -3,10 +3,9 @@
   "description": "High signal filter for exported component input flowing into an injection sink",
   "features": [
     {
-      "mode": "any of",
+      "mode": "all of",
       "features": [
-        "via-caller-exported",
-        "via-child-exposed"
+        "via-caller-exported"
       ]
     },
     {
@@ -14,7 +13,6 @@
       "features": [
         "always-cast:numeric",
         "always-type:boolean",
-        "always-via:context",
         "always-via-caller-permission"
       ]
     }

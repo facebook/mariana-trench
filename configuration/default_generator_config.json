@@ -21,9 +21,6 @@
     "name": "content_provider_generator"
   },
   {
-    "name": "ContextFeature"
-  },
-  {
     "name": "DataCastFeatureGenerator"
   },
   {

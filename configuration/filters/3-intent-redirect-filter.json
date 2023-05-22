@@ -5,20 +5,13 @@
     {
       "mode": "all of",
       "features": [
-        "via-intent-data"
-      ]
-    },
-    {
-      "mode": "any of",
-      "features": [
-        "via-caller-exported",
-        "via-child-exposed"
+        "via-intent-data",
+        "via-caller-exported"
       ]
     },
     {
       "mode": "none of",
       "features": [
-        "always-via:context",
         "always-via-inner-class-this",
         "always-via-explicit-intent",
         "always-via-caller-permission"
