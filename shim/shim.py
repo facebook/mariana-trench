@@ -8,6 +8,7 @@ import argparse
 import json
 import logging
 import os
+import shlex
 import shutil
 import subprocess
 import sys
@@ -452,6 +453,15 @@ def _add_analysis_arguments(parser: argparse.ArgumentParser) -> None:
         action="store_true",
         help="Compute taint flows across Android components.",
     )
+    analysis_arguments.add_argument(
+        "--extra-analysis-arguments",
+        type=str,
+        help=(
+            "Additional arguments to be passed to the analysis that the "
+            "shim does not currently wrap. For convenience of testing "
+            "only."
+        ),
+    )
 
 
 def _add_metadata_arguments(parser: argparse.ArgumentParser) -> None:
@@ -604,6 +614,8 @@ def _get_command_options(
         options.append(str(arguments.maximum_method_analysis_time))
     if arguments.enable_cross_component_analysis:
         options.append("--enable-cross-component-analysis")
+    if arguments.extra_analysis_arguments:
+        options.extend(shlex.split(arguments.extra_analysis_arguments))
 
     if arguments.job_id:
         options.append("--job-id")
