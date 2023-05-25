@@ -28,41 +28,49 @@ std::vector<Model> TaintInTaintOutGenerator::visit_method(
     }
   }
 
-  // This logic sanitizes Argument(0) -> Return on specifc classes
   const auto class_name = generator::get_class_name(method);
-  if (!method->is_static() &&
-      (boost::contains(class_name, "Context;") ||
-       boost::contains(class_name, "ContextThemeWrapper;") ||
-       boost::contains(class_name, "ContextWrapper;") ||
-       boost::contains(class_name, "Activity;") ||
-       boost::contains(class_name, "Service;") ||
-       boost::contains(class_name, "WebView;") ||
-       boost::contains(class_name, "Fragment;") ||
-       boost::contains(class_name, "WebViewClient;") ||
-       boost::contains(class_name, "ContentProvider;") ||
-       boost::contains(class_name, "BroadcastReceiver;"))) {
-    auto model = Model(method, context_);
-    for (ParameterPosition parameter_position = 1;
-         parameter_position < method->number_of_parameters();
-         parameter_position++) {
-      generator::add_propagation_to_return(
-          context_,
-          model,
-          parameter_position,
-          CollapseDepth::collapse(),
-          {"via-obscure-taint-in-taint-out"});
-    }
-    return {model};
-  }
 
-  const auto method_signature = show(method);
+  const auto method_signature = method->show();
   if (boost::ends_with(method_signature, ".size:()I") ||
       boost::ends_with(method_signature, ".hashCode:()I") ||
       boost::starts_with(method_signature, "Ljava/lang/Object;.getClass:")) {
     return {};
   }
 
-  return {Model(method, context_, Model::Mode::TaintInTaintOut)};
+  auto model = Model(method, context_);
+  for (ParameterPosition parameter_position = 0;
+       parameter_position < method->number_of_parameters();
+       parameter_position++) {
+    // This logic sanitizes Argument(0) -> Return on specific classes
+    if (parameter_position == 0 && !method->is_static() &&
+        (boost::ends_with(class_name, "Context;") ||
+         boost::ends_with(class_name, "ContextThemeWrapper;") ||
+         boost::ends_with(class_name, "ContextWrapper;") ||
+         boost::ends_with(class_name, "Activity;") ||
+         boost::ends_with(class_name, "Service;") ||
+         boost::ends_with(class_name, "WebView;") ||
+         boost::ends_with(class_name, "Fragment;") ||
+         boost::ends_with(class_name, "WebViewClient;") ||
+         boost::ends_with(class_name, "ContentProvider;") ||
+         boost::ends_with(class_name, "BroadcastReceiver;"))) {
+      continue;
+    }
+
+    auto parameter_type = method->parameter_type(parameter_position);
+    if (parameter_type != nullptr &&
+        parameter_type->str() == "Landroid/content/Context;") {
+      continue;
+    }
+
+    generator::add_propagation_to_return(
+        context_,
+        model,
+        parameter_position,
+        CollapseDepth::collapse(),
+        {"via-obscure-taint-in-taint-out"});
+  }
+
+  return {model};
 }
 
 } // namespace marianatrench
