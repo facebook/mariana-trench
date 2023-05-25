@@ -70,10 +70,15 @@ std::vector<Model> TaintInTaintThisGenerator::visit_method(
           [method_name](const auto& prefix) {
             return boost::starts_with(method_name, prefix);
           })) {
-    auto model = Model(method, context_, Model::Mode::TaintInTaintThis);
+    auto model = Model(method, context_);
     for (ParameterPosition parameter_position = 1;
          parameter_position < method->number_of_parameters();
          parameter_position++) {
+      auto parameter_type = method->parameter_type(parameter_position);
+      if (parameter_type != nullptr &&
+          parameter_type->str() == "Landroid/content/Context;") {
+        continue;
+      }
       generator::add_propagation_to_self(
           context_,
           model,
