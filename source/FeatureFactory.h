@@ -29,6 +29,13 @@ class FeatureFactory final {
   const Feature* get_via_value_of_feature(
       const std::optional<std::string_view>& value) const;
   const Feature* get_via_shim_feature(const Method* MT_NULLABLE method) const;
+
+  /**
+   * This feature is added to artificial callees that routes Intent from
+   * one activity to another.
+   */
+  const Feature* get_intent_routing_feature() const;
+
   /**
    * This feature is added to source and sink taint that is collapsed
    * before checking for flows.

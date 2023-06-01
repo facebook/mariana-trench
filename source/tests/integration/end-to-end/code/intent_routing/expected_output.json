@@ -1000,6 +1000,7 @@
       "always_features" : 
       [
         "via-cast:Ljava/lang/String;",
+        "via-intent-routing",
         "via-shim:Landroid/app/Activity;.startActivity:(Landroid/content/Intent;)V"
       ],
       "callee" : "Lcom/facebook/marianatrench/integrationtests/IntentRouter;.objectTaintUnknown:(Ljava/lang/String;Landroid/content/Context;)V",
@@ -1030,6 +1031,7 @@
             {
               "always_features" : 
               [
+                "via-intent-routing",
                 "via-shim:Landroid/app/Activity;.startActivity:(Landroid/content/Intent;)V"
               ],
               "call_info" : "CallSite",
@@ -1128,6 +1130,7 @@
           {
             "always_features" : 
             [
+              "via-intent-routing",
               "via-shim:Landroid/app/Activity;.startActivity:(Landroid/content/Intent;)V"
             ]
           },
@@ -1169,6 +1172,7 @@
           {
             "always_features" : 
             [
+              "via-intent-routing",
               "via-shim:Landroid/app/Activity;.startActivity:(Landroid/content/Intent;)V"
             ]
           },
@@ -1192,6 +1196,7 @@
       "always_features" : 
       [
         "via-cast:Ljava/lang/String;",
+        "via-intent-routing",
         "via-shim:Landroid/app/Activity;.startActivity:(Landroid/content/Intent;)V"
       ],
       "callee" : "Lcom/facebook/marianatrench/integrationtests/IntentTarget;.readsRoutedIntent_sessionToSink:()V",
@@ -1233,6 +1238,7 @@
           {
             "always_features" : 
             [
+              "via-intent-routing",
               "via-shim:Landroid/app/Activity;.startActivity:(Landroid/content/Intent;)V"
             ]
           }
@@ -1285,6 +1291,7 @@
       "always_features" : 
       [
         "via-cast:Ljava/lang/String;",
+        "via-intent-routing",
         "via-shim:Landroid/app/Activity;.startActivity:(Landroid/content/Intent;)V"
       ],
       "callee" : "Lcom/facebook/marianatrench/integrationtests/IntentTarget;.readsRoutedIntent_sessionToSinkViaExtraHop:()V",
@@ -1326,6 +1333,7 @@
           {
             "always_features" : 
             [
+              "via-intent-routing",
               "via-shim:Landroid/app/Activity;.startActivity:(Landroid/content/Intent;)V"
             ]
           }
@@ -1424,6 +1432,7 @@
           {
             "always_features" : 
             [
+              "via-intent-routing",
               "via-shim:Landroid/app/Activity;.startActivity:(Landroid/content/Intent;)V"
             ]
           },
@@ -1467,6 +1476,7 @@
           {
             "always_features" : 
             [
+              "via-intent-routing",
               "via-shim:Landroid/app/Activity;.startActivity:(Landroid/content/Intent;)V"
             ]
           },

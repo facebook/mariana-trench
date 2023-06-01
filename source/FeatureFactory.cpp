@@ -37,6 +37,10 @@ const Feature* FeatureFactory::get_via_shim_feature(
   return factory_.create("via-shim:" + method_string);
 }
 
+const Feature* FeatureFactory::get_intent_routing_feature() const {
+  return factory_.create("via-intent-routing");
+}
+
 const Feature* FeatureFactory::get_issue_broadening_feature() const {
   return factory_.create("via-issue-broadening");
 }

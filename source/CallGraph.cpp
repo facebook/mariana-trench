@@ -299,7 +299,8 @@ void process_shim_target(
     const FeatureFactory& feature_factory,
     std::unordered_map<std::string, TextualOrderIndex>&
         sink_textual_order_index,
-    std::vector<ArtificialCallee>& artificial_callees) {
+    std::vector<ArtificialCallee>& artificial_callees,
+    const FeatureSet& extra_features) {
   const auto* method = shim_target.method();
   mt_assert(method != nullptr);
 
@@ -307,13 +308,15 @@ void process_shim_target(
   auto root_registers = shim_target.root_registers(instruction);
 
   auto call_index = update_index(sink_textual_order_index, method->signature());
+  auto features = FeatureSet{feature_factory.get_via_shim_feature(callee)}.join(
+      extra_features);
+
   if (method->is_static()) {
     artificial_callees.push_back(ArtificialCallee{
         /* call_target */ CallTarget::static_call(
             instruction, method, call_index),
         /* root_registers */ root_registers,
-        /* features */
-        FeatureSet{feature_factory.get_via_shim_feature(callee)},
+        /* features */ features,
     });
     return;
   }
@@ -351,8 +354,7 @@ void process_shim_target(
           class_hierarchies,
           override_factory),
       /* root_registers */ root_registers,
-      /* features */
-      FeatureSet{feature_factory.get_via_shim_feature(callee)},
+      /* features */ features,
   });
 }
 
@@ -524,7 +526,8 @@ std::vector<ArtificialCallee> shim_artificial_callees(
         class_hierarchies,
         feature_factory,
         sink_textual_order_index,
-        artificial_callees);
+        artificial_callees,
+        /* extra_features */ {});
   }
 
   for (const auto& shim_reflection : shim.reflections()) {
@@ -569,7 +572,9 @@ std::vector<ArtificialCallee> shim_artificial_callees(
         class_hierarchies,
         feature_factory,
         sink_textual_order_index,
-        artificial_callees);
+        artificial_callees,
+        /* extra_features */
+        FeatureSet{feature_factory.get_intent_routing_feature()});
   }
 
   return artificial_callees;
