@@ -273,6 +273,11 @@
   },
   "Lcom/facebook/marianatrench/integrationtests/RunnableFlows;.runRunnable:(Lcom/facebook/marianatrench/integrationtests/RunnableWithArgument;Ljava/lang/Object;)V" : 
   {
+    "static" : 
+    [
+      "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
+      "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;"
+    ],
     "virtual" : 
     [
       "Lcom/facebook/marianatrench/integrationtests/RunnableFlows$1;.run:(Ljava/lang/Object;)V",
@@ -282,6 +287,11 @@
   },
   "Lcom/facebook/marianatrench/integrationtests/RunnableFlows;.runRunnable:(Lcom/facebook/marianatrench/integrationtests/RunnableWithArgument;Ljava/lang/Object;)V[0: Lcom/facebook/marianatrench/integrationtests/RunnableFlows$1;]" : 
   {
+    "static" : 
+    [
+      "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
+      "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;"
+    ],
     "virtual" : 
     [
       "Lcom/facebook/marianatrench/integrationtests/RunnableFlows$1;.run:(Ljava/lang/Object;)V"
@@ -289,6 +299,11 @@
   },
   "Lcom/facebook/marianatrench/integrationtests/RunnableFlows;.runRunnable:(Lcom/facebook/marianatrench/integrationtests/RunnableWithArgument;Ljava/lang/Object;)V[0: Lcom/facebook/marianatrench/integrationtests/RunnableFlows$2;]" : 
   {
+    "static" : 
+    [
+      "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
+      "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;"
+    ],
     "virtual" : 
     [
       "Lcom/facebook/marianatrench/integrationtests/RunnableFlows$2;.run:(Ljava/lang/Object;)V"

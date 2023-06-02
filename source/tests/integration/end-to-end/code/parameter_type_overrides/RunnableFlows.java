@@ -45,5 +45,8 @@ public class RunnableFlows {
   static void runRunnable(RunnableWithArgument runnable, Object data) {
     // Run run run...
     runnable.run(data);
+
+    // Issue - Only reported on method without parameter type overrides.
+    Origin.sink(Origin.source());
   }
 }

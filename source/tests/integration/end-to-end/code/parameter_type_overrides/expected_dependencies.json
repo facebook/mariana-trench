@@ -33,13 +33,19 @@
   ],
   "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V" : 
   [
-    "Lcom/facebook/marianatrench/integrationtests/RunnableFlows$2;.run:(Ljava/lang/Object;)V"
+    "Lcom/facebook/marianatrench/integrationtests/RunnableFlows$2;.run:(Ljava/lang/Object;)V",
+    "Lcom/facebook/marianatrench/integrationtests/RunnableFlows;.runRunnable:(Lcom/facebook/marianatrench/integrationtests/RunnableWithArgument;Ljava/lang/Object;)V",
+    "Lcom/facebook/marianatrench/integrationtests/RunnableFlows;.runRunnable:(Lcom/facebook/marianatrench/integrationtests/RunnableWithArgument;Ljava/lang/Object;)V[0: Lcom/facebook/marianatrench/integrationtests/RunnableFlows$1;]",
+    "Lcom/facebook/marianatrench/integrationtests/RunnableFlows;.runRunnable:(Lcom/facebook/marianatrench/integrationtests/RunnableWithArgument;Ljava/lang/Object;)V[0: Lcom/facebook/marianatrench/integrationtests/RunnableFlows$2;]"
   ],
   "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;" : 
   [
     "Lcom/facebook/marianatrench/integrationtests/RunnableFlows;.flow:()V",
     "Lcom/facebook/marianatrench/integrationtests/RunnableFlows;.genericInvocation:(Lcom/facebook/marianatrench/integrationtests/RunnableWithArgument;)V",
-    "Lcom/facebook/marianatrench/integrationtests/RunnableFlows;.noFlow:()V"
+    "Lcom/facebook/marianatrench/integrationtests/RunnableFlows;.noFlow:()V",
+    "Lcom/facebook/marianatrench/integrationtests/RunnableFlows;.runRunnable:(Lcom/facebook/marianatrench/integrationtests/RunnableWithArgument;Ljava/lang/Object;)V",
+    "Lcom/facebook/marianatrench/integrationtests/RunnableFlows;.runRunnable:(Lcom/facebook/marianatrench/integrationtests/RunnableWithArgument;Ljava/lang/Object;)V[0: Lcom/facebook/marianatrench/integrationtests/RunnableFlows$1;]",
+    "Lcom/facebook/marianatrench/integrationtests/RunnableFlows;.runRunnable:(Lcom/facebook/marianatrench/integrationtests/RunnableWithArgument;Ljava/lang/Object;)V[0: Lcom/facebook/marianatrench/integrationtests/RunnableFlows$2;]"
   ],
   "Lcom/facebook/marianatrench/integrationtests/RunnableFlows$1;.<init>:()V" : 
   [
