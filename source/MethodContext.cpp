@@ -40,14 +40,8 @@ MethodContext::MethodContext(
       memory_factory(previous_model.method()),
       previous_model(previous_model),
       new_model(new_model),
-      context_(context) {
-  std::string method_name = show(previous_model.method());
-  const auto& log_methods = options.log_methods();
-  dump_ = std::any_of(
-      log_methods.begin(), log_methods.end(), [&](const auto& pattern) {
-        return method_name.find(pattern) != std::string::npos;
-      });
-}
+      context_(context),
+      dump_(previous_model.method()->should_be_logged(options)) {}
 
 Model MethodContext::model_at_callsite(
     const CallTarget& call_target,

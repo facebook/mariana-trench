@@ -229,6 +229,15 @@ std::string Method::show_control_flow_graph(const cfg::ControlFlowGraph& cfg) {
   return string;
 }
 
+bool Method::should_be_logged(const Options& options) const {
+  auto method_name = show();
+  auto methods = options.log_methods();
+  return std::any_of(
+      methods.begin(), methods.end(), [method_name](const auto& pattern) {
+        return method_name.find(pattern) != std::string::npos;
+      });
+}
+
 std::ostream& operator<<(std::ostream& out, const Method& method) {
   out << method.signature_;
   if (!method.parameter_type_overrides_.empty()) {

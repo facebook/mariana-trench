@@ -95,6 +95,10 @@ class Method final {
   /* Used for debug logs in Type analysis and Interprocedural analysis */
   static std::string show_control_flow_graph(const cfg::ControlFlowGraph& cfg);
 
+  /* True if this method meets the criteria for logging based on the options
+   * specified */
+  bool should_be_logged(const Options&) const;
+
  private:
   friend struct std::hash<Method>;
   friend std::ostream& operator<<(std::ostream& out, const Method& method);

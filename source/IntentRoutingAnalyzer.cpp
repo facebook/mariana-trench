@@ -33,11 +33,15 @@ using InstructionsToRoutedIntents = sparta::
 
 class IntentRoutingContext final {
  public:
-  IntentRoutingContext(const Method* method, const Types& types)
+  IntentRoutingContext(
+      const Method* method,
+      const Types& types,
+      const Options& options)
       : routed_intents_({}),
         method_(method),
         types_(types),
-        gets_routed_intent_(false) {}
+        gets_routed_intent_(false),
+        dump_(method->should_be_logged(options)) {}
 
   DELETE_COPY_CONSTRUCTORS_AND_ASSIGNMENTS(IntentRoutingContext)
 
@@ -69,11 +73,16 @@ class IntentRoutingContext final {
     return types_;
   }
 
+  bool dump() const {
+    return dump_;
+  }
+
  private:
   InstructionsToRoutedIntents routed_intents_;
   const Method* method_;
   const Types& types_;
   bool gets_routed_intent_;
+  bool dump_;
 };
 
 class Transfer final : public InstructionAnalyzerBase<
@@ -85,7 +94,6 @@ class Transfer final : public InstructionAnalyzerBase<
       IntentRoutingContext* context,
       const IRInstruction* instruction,
       InstructionsToRoutedIntents* current_state) {
-    LOG(4, "Analyzing instruction: {}", show(instruction));
     return false;
   }
 
@@ -93,7 +101,7 @@ class Transfer final : public InstructionAnalyzerBase<
       IntentRoutingContext* context,
       const IRInstruction* instruction,
       InstructionsToRoutedIntents* current_state) {
-    LOG(4, "Analyzing instruction: {}", show(instruction));
+    LOG_OR_DUMP(context, 4, "Analyzing instruction: {}", show(instruction));
     DexMethodRef* dex_method_reference = instruction->get_method();
     auto method = resolve_method(
         dex_method_reference,
@@ -122,11 +130,23 @@ class Transfer final : public InstructionAnalyzerBase<
       if (found == environment.end()) {
         return false;
       }
+
       const auto* type = found->second;
+      LOG_OR_DUMP(
+          context,
+          4,
+          "Method `{}` routes Intent to `{}`",
+          context->method()->show(),
+          show(type));
       context->add_routed_intent(instruction, type);
     } else if (
         method->get_name()->str() == "getIntent" &&
         method->get_proto()->get_rtype()->str() == "Landroid/content/Intent;") {
+      LOG_OR_DUMP(
+          context,
+          4,
+          "Method `{}` calls getIntent()",
+          context->method()->show());
       context->mark_as_getting_routed_intent();
     }
     return false;
@@ -177,7 +197,8 @@ struct IntentRoutingData {
 
 IntentRoutingData method_routes_intents_to(
     const Method* method,
-    const Types& types) {
+    const Types& types,
+    const Options& options) {
   auto* code = method->get_code();
   if (code == nullptr) {
     return {/* calls_get_intent */ false, /* routed_intents */ {}};
@@ -190,7 +211,7 @@ IntentRoutingData method_routes_intents_to(
     return {/* calls_get_intent */ false, /* routed_intents */ {}};
   }
 
-  auto context = std::make_unique<IntentRoutingContext>(method, types);
+  auto context = std::make_unique<IntentRoutingContext>(method, types, options);
   auto fixpoint = IntentRoutingFixpointIterator(
       code->cfg(), InstructionAnalyzerCombiner<Transfer>(context.get()));
   InstructionsToRoutedIntents instructions_to_routed_intents{};
@@ -219,7 +240,8 @@ IntentRoutingAnalyzer IntentRoutingAnalyzer::run(const Context& context) {
 
   IntentRoutingAnalyzer analyzer;
   auto queue = sparta::work_queue<const Method*>([&](const Method* method) {
-    auto intent_routing_data = method_routes_intents_to(method, *context.types);
+    auto intent_routing_data =
+        method_routes_intents_to(method, *context.types, *context.options);
     if (intent_routing_data.calls_get_intent) {
       LOG(5, "Shimming {} as a method that calls getIntent().", method->show());
       auto klass = method->get_class();
