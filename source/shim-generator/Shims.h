@@ -15,22 +15,16 @@
 
 namespace marianatrench {
 
-using MethodToRoutedIntentClassesMap =
-    ConcurrentMap<const Method*, std::vector<const DexType*>>;
-using ClassesToIntentGettersMap =
-    ConcurrentMap<const DexType*, std::vector<const Method*>>;
-
 class Shims final {
  private:
   using MethodToShimMap = std::unordered_map<const Method*, InstantiatedShim>;
 
  public:
-  explicit Shims(std::size_t global_shims_size)
+  explicit Shims(
+      std::size_t global_shims_size,
+      const IntentRoutingAnalyzer& intent_routing_analyzer)
       : global_shims_(global_shims_size),
-        methods_to_routed_intents_({}),
-        classes_to_intent_getters_({}) {}
-
-  explicit Shims() = default;
+        intent_routing_analyzer_(intent_routing_analyzer) {}
 
   INCLUDE_DEFAULT_COPY_CONSTRUCTORS_AND_ASSIGNMENTS(Shims)
 
@@ -40,22 +34,10 @@ class Shims final {
 
   bool add_instantiated_shim(const InstantiatedShim& shim);
 
-  void add_intent_routing_data(
-      const Method* method,
-      IntentRoutingData&& intent_routing_data);
-
-  const MethodToRoutedIntentClassesMap& methods_to_routed_intents() const;
-  const ClassesToIntentGettersMap& classes_to_intent_getters() const;
-
- private:
-  std::vector<ShimTarget> get_intent_routing_targets(
-      const Method* original_callee,
-      const Method* caller) const;
-
  private:
   MethodToShimMap global_shims_;
-  MethodToRoutedIntentClassesMap methods_to_routed_intents_;
-  ClassesToIntentGettersMap classes_to_intent_getters_;
+
+  const IntentRoutingAnalyzer& intent_routing_analyzer_;
 };
 
 } // namespace marianatrench

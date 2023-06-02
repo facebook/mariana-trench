@@ -51,26 +51,6 @@ std::vector<ShimGenerator> get_shim_generators(
   return shims;
 }
 
-void build_cross_component_analysis_shims(
-    const Context& context,
-    Shims& shims) {
-  if (!context.options->enable_cross_component_analysis()) {
-    return;
-  }
-
-  auto queue = sparta::work_queue<const Method*>([&](const Method* method) {
-    shims.add_intent_routing_data(
-        method, method_routes_intents_to(method, *context.types));
-  });
-
-  auto* methods = context.methods.get();
-  for (auto iterator = methods->begin(); iterator != methods->end();
-       ++iterator) {
-    queue.add_item(*iterator);
-  }
-  queue.run_all();
-}
-
 } // namespace
 
 ShimGeneratorError::ShimGeneratorError(const std::string& message)
@@ -78,6 +58,7 @@ ShimGeneratorError::ShimGeneratorError(const std::string& message)
 
 Shims ShimGeneration::run(
     Context& context,
+    const IntentRoutingAnalyzer& intent_routing_analyzer,
     const MethodMappings& method_mappings) {
   std::vector<ShimGenerator> all_shims;
   for (const auto& path : context.options->shims_paths()) {
@@ -99,7 +80,7 @@ Shims ShimGeneration::run(
   }
 
   // Run the shim generator
-  Shims method_shims(all_shims.size());
+  Shims method_shims(all_shims.size(), intent_routing_analyzer);
   std::size_t iteration = 0;
 
   for (auto& item : all_shims) {
@@ -121,7 +102,6 @@ Shims ShimGeneration::run(
     }
   }
 
-  build_cross_component_analysis_shims(context, method_shims);
   return method_shims;
 }
 

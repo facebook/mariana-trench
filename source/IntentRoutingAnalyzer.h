@@ -7,19 +7,45 @@
 
 #pragma once
 
+#include <ConcurrentContainers.h>
+
+#include <mariana-trench/IncludeMacros.h>
 #include <mariana-trench/Method.h>
 #include <mariana-trench/Types.h>
+#include <mariana-trench/shim-generator/Shim.h>
 
 namespace marianatrench {
 
-struct IntentRoutingData {
+class IntentRoutingAnalyzer final {
  public:
-  bool calls_get_intent;
-  std::vector<const DexType*> routed_intents;
-};
+  using MethodToRoutedIntentClassesMap =
+      ConcurrentMap<const Method*, std::vector<const DexType*>>;
+  using ClassesToIntentGettersMap =
+      ConcurrentMap<const DexType*, std::vector<const Method*>>;
 
-IntentRoutingData method_routes_intents_to(
-    const Method* method,
-    const Types& types);
+  explicit IntentRoutingAnalyzer() = default;
+
+ public:
+  static IntentRoutingAnalyzer run(const Context&);
+
+  // Move constructor required for static run() method to return the object.
+  MOVE_CONSTRUCTOR_ONLY(IntentRoutingAnalyzer);
+
+  std::vector<ShimTarget> get_intent_routing_targets(
+      const Method* original_callee,
+      const Method* caller) const;
+
+  const MethodToRoutedIntentClassesMap& methods_to_routed_intents() const {
+    return methods_to_routed_intents_;
+  }
+
+  const ClassesToIntentGettersMap& classes_to_intent_getters() const {
+    return classes_to_intent_getters_;
+  }
+
+ private:
+  MethodToRoutedIntentClassesMap methods_to_routed_intents_;
+  ClassesToIntentGettersMap classes_to_intent_getters_;
+};
 
 } // namespace marianatrench

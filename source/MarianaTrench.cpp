@@ -164,8 +164,8 @@ Registry MarianaTrench::analyze(Context& context) {
   std::vector<Model> generated_models;
   std::vector<FieldModel> generated_field_models;
 
-  // Scope for MethodMappings and MethodToShimMap as they are only used for shim
-  // and model generation steps.
+  // Scope for MethodMappings, Shims and IntentRoutingAnalyzer as they are only
+  // used for shim and model generation steps.
   {
     Timer method_mapping_timer;
     LOG(1,
@@ -178,9 +178,18 @@ Registry MarianaTrench::analyze(Context& context) {
         method_mapping_timer.duration_in_seconds(),
         resident_set_size_in_gb());
 
+    Timer intent_routing_analyzer_timer;
+    LOG(1, "Running intent routing analyzer...");
+    auto intent_routing_analyzer = IntentRoutingAnalyzer::run(context);
+    LOG(1,
+        "Created intent routing analyzer in {:.2f}s. Memory used, RSS: {:.2f}MB",
+        intent_routing_analyzer_timer.duration_in_seconds(),
+        resident_set_size_in_gb());
+
     Timer shims_timer;
     LOG(1, "Creating Shims...");
-    Shims shims = ShimGeneration::run(context, method_mappings);
+    Shims shims =
+        ShimGeneration::run(context, intent_routing_analyzer, method_mappings);
     LOG(1,
         "Created Shims in {:.2f}s. Memory used, RSS: {:.2f}GB",
         shims_timer.duration_in_seconds(),
@@ -217,7 +226,7 @@ Registry MarianaTrench::analyze(Context& context) {
         generated_field_models.size(),
         generation_timer.duration_in_seconds(),
         resident_set_size_in_gb());
-  } // end MethodMappings and MethodToShimMap
+  } // end MethodMappings, Shims and IntentRoutingAnalyzer
 
   LOG(1,
       "Reset MethodToShims and Method Mappings. Memory used, RSS: {:.2f}GB",

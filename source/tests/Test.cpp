@@ -71,7 +71,9 @@ Context make_context(const DexStore& store) {
   context.overrides = std::make_unique<Overrides>(
       *context.options, *context.methods, context.stores);
   MethodMappings method_mappings{*context.methods};
-  auto shims = ShimGeneration::run(context, method_mappings);
+  auto intent_routing_analyzer = IntentRoutingAnalyzer::run(context);
+  auto shims =
+      ShimGeneration::run(context, intent_routing_analyzer, method_mappings);
   context.call_graph = std::make_unique<CallGraph>(
       *context.options,
       *context.methods,

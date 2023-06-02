@@ -13,6 +13,7 @@
 #include <Show.h>
 
 #include <mariana-trench/CallGraph.h>
+#include <mariana-trench/Constants.h>
 #include <mariana-trench/IntentRoutingAnalyzer.h>
 #include <mariana-trench/Log.h>
 
@@ -168,7 +169,11 @@ class IntentRoutingFixpointIterator final
   InstructionAnalyzer<InstructionsToRoutedIntents> instruction_analyzer_;
 };
 
-} // namespace
+struct IntentRoutingData {
+ public:
+  bool calls_get_intent;
+  std::vector<const DexType*> routed_intents;
+};
 
 IntentRoutingData method_routes_intents_to(
     const Method* method,
@@ -200,6 +205,87 @@ IntentRoutingData method_routes_intents_to(
   return {
       /* calls_get_intent */ context->method_gets_routed_intent(),
       routed_intents};
+}
+
+static std::unordered_map<std::string, ParameterPosition>
+    activity_routing_methods = constants::get_activity_routing_methods();
+
+} // namespace
+
+IntentRoutingAnalyzer IntentRoutingAnalyzer::run(const Context& context) {
+  if (!context.options->enable_cross_component_analysis()) {
+    return IntentRoutingAnalyzer();
+  }
+
+  IntentRoutingAnalyzer analyzer;
+  auto queue = sparta::work_queue<const Method*>([&](const Method* method) {
+    auto intent_routing_data = method_routes_intents_to(method, *context.types);
+    if (intent_routing_data.calls_get_intent) {
+      LOG(5, "Shimming {} as a method that calls getIntent().", method->show());
+      auto klass = method->get_class();
+      analyzer.classes_to_intent_getters_.update(
+          klass,
+          [&method](
+              const DexType* /* key */,
+              std::vector<const Method*>& methods,
+              bool /* exists */) {
+            methods.emplace_back(method);
+            return methods;
+          });
+    }
+
+    if (!intent_routing_data.routed_intents.empty()) {
+      LOG(5,
+          "Shimming {} as a method that routes intents cross-component.",
+          method->show());
+      analyzer.methods_to_routed_intents_.emplace(
+          method, intent_routing_data.routed_intents);
+    }
+  });
+
+  auto* methods = context.methods.get();
+  for (auto iterator = methods->begin(); iterator != methods->end();
+       ++iterator) {
+    queue.add_item(*iterator);
+  }
+  queue.run_all();
+
+  return analyzer;
+}
+
+std::vector<ShimTarget> IntentRoutingAnalyzer::get_intent_routing_targets(
+    const Method* original_callee,
+    const Method* caller) const {
+  std::vector<ShimTarget> intent_routing_targets;
+
+  // Intent routing does not exist unless the callee is in the vein of
+  // an activity routing method (e.g. startActivity).
+  auto intent_parameter_position =
+      activity_routing_methods.find(original_callee->signature());
+  if (intent_parameter_position == activity_routing_methods.end()) {
+    return intent_routing_targets;
+  }
+
+  auto routed_intent_classes = methods_to_routed_intents_.find(caller);
+  if (routed_intent_classes == methods_to_routed_intents_.end()) {
+    return intent_routing_targets;
+  }
+
+  for (const auto& intent_class : routed_intent_classes->second) {
+    auto intent_getters = classes_to_intent_getters_.find(intent_class);
+    if (intent_getters == classes_to_intent_getters_.end()) {
+      continue;
+    }
+    for (const auto& intent_getter : intent_getters->second) {
+      intent_routing_targets.emplace_back(
+          intent_getter,
+          ShimParameterMapping{
+              {Root(Root::Kind::CallEffectIntent),
+               intent_parameter_position->second}});
+    }
+  }
+
+  return intent_routing_targets;
 }
 
 } // namespace marianatrench

@@ -33,7 +33,9 @@ Context test_types(const Scope& scope) {
       std::vector<ModelGeneratorConfiguration>{},
       /* model_generator_search_paths */ std::vector<std::string>{},
       /* remove_unreachable_code */ false,
-      /* emit_all_via_cast_features */ false);
+      /* emit_all_via_cast_features */ false,
+      /* source_root_directory */ ".",
+      /* enable_cross_component_analysis */ true);
   DexStore store("test_store");
   store.add_classes(scope);
   context.stores = {store};
@@ -120,17 +122,22 @@ TEST_F(IntentRoutingAnalyzerTest, IntentRoutingConstraint) {
 
   auto context = test_types(scope);
   auto methods = get_methods(context, dex_methods);
+  auto intent_routing_analyzer = IntentRoutingAnalyzer::run(context);
 
-  auto routed_intents_with_hit =
-      method_routes_intents_to(methods[0], *(context.types));
-  EXPECT_EQ(routed_intents_with_hit.routed_intents.size(), 1);
-  EXPECT_EQ(routed_intents_with_hit.routed_intents[0]->str(), "LRouteTo;");
-  EXPECT_EQ(routed_intents_with_hit.calls_get_intent, false);
+  const auto& methods_to_routed_intents =
+      intent_routing_analyzer.methods_to_routed_intents();
 
-  auto routed_intents_without_hit =
-      method_routes_intents_to(methods[1], *(context.types));
-  EXPECT_EQ(routed_intents_without_hit.routed_intents.size(), 0);
-  EXPECT_EQ(routed_intents_without_hit.calls_get_intent, false);
+  auto routed_intents_with_hit = methods_to_routed_intents.find(methods[0]);
+  EXPECT_NE(routed_intents_with_hit, methods_to_routed_intents.end());
+  EXPECT_EQ(routed_intents_with_hit->second.size(), 1);
+  EXPECT_EQ(routed_intents_with_hit->second[0]->str(), "LRouteTo;");
+
+  auto routed_intents_without_hit = methods_to_routed_intents.find(methods[1]);
+  EXPECT_EQ(routed_intents_without_hit, methods_to_routed_intents.end());
+
+  const auto& classes_to_intent_getters =
+      intent_routing_analyzer.classes_to_intent_getters();
+  EXPECT_EQ(classes_to_intent_getters.size(), 0);
 }
 
 TEST_F(IntentRoutingAnalyzerTest, IntentRoutingSetClass) {
@@ -174,11 +181,19 @@ TEST_F(IntentRoutingAnalyzerTest, IntentRoutingSetClass) {
 
   auto context = test_types(scope);
   auto methods = get_methods(context, dex_methods);
+  auto intent_routing_analyzer = IntentRoutingAnalyzer::run(context);
 
-  auto routed_intents = method_routes_intents_to(methods[0], *(context.types));
-  EXPECT_EQ(routed_intents.routed_intents.size(), 1);
-  EXPECT_EQ(routed_intents.routed_intents[0]->str(), "LRouteTo;");
-  EXPECT_EQ(routed_intents.calls_get_intent, false);
+  const auto& methods_to_routed_intents =
+      intent_routing_analyzer.methods_to_routed_intents();
+
+  auto routed_intents = methods_to_routed_intents.find(methods[0]);
+  EXPECT_NE(routed_intents, methods_to_routed_intents.end());
+  EXPECT_EQ(routed_intents->second.size(), 1);
+  EXPECT_EQ(routed_intents->second[0]->str(), "LRouteTo;");
+
+  const auto& classes_to_intent_getters =
+      intent_routing_analyzer.classes_to_intent_getters();
+  EXPECT_EQ(classes_to_intent_getters.size(), 0);
 }
 
 TEST_F(IntentRoutingAnalyzerTest, IntentRoutingGetIntent) {
@@ -208,8 +223,21 @@ TEST_F(IntentRoutingAnalyzerTest, IntentRoutingGetIntent) {
 
   auto context = test_types(scope);
   auto methods = get_methods(context, dex_methods);
+  auto intent_routing_analyzer = IntentRoutingAnalyzer::run(context);
 
-  auto routed_intents = method_routes_intents_to(methods[1], *(context.types));
-  EXPECT_EQ(routed_intents.routed_intents.size(), 0);
-  EXPECT_EQ(routed_intents.calls_get_intent, true);
+  const auto& methods_to_routed_intents =
+      intent_routing_analyzer.methods_to_routed_intents();
+
+  auto routed_intents = methods_to_routed_intents.find(methods[1]);
+  EXPECT_EQ(routed_intents, methods_to_routed_intents.end());
+
+  const auto& classes_to_intent_getters =
+      intent_routing_analyzer.classes_to_intent_getters();
+  EXPECT_EQ(classes_to_intent_getters.size(), 1);
+
+  const auto intent_getters =
+      classes_to_intent_getters.find(methods[1]->get_class());
+  EXPECT_NE(intent_getters, classes_to_intent_getters.end());
+  EXPECT_EQ(intent_getters->second.size(), 1);
+  EXPECT_EQ(intent_getters->second[0], methods[1]);
 }

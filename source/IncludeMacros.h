@@ -123,6 +123,13 @@
   using const_reference = ElementType&;                     \
   using const_pointer = ElementType*;
 
+#define MOVE_CONSTRUCTOR_ONLY(Class)       \
+  Class(const Class&) = delete;            \
+  Class(Class&&) = default;                \
+  Class& operator=(const Class&) = delete; \
+  Class& operator=(Class&&) = delete;      \
+  ~Class() = default;
+
 #define INCLUDE_DEFAULT_COPY_CONSTRUCTORS_AND_ASSIGNMENTS(Class) \
   Class(const Class&) = default;                                 \
   Class(Class&&) = default;                                      \

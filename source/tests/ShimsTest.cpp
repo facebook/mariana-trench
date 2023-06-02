@@ -56,7 +56,8 @@ using SerializedMultimap =
     std::vector<std::pair<std::string, std::vector<std::string>>>;
 
 SerializedMultimap serialize_classes_to_intent_getters(
-    const ClassesToIntentGettersMap& classes_to_intent_getters) {
+    const IntentRoutingAnalyzer::ClassesToIntentGettersMap&
+        classes_to_intent_getters) {
   SerializedMultimap serialized;
   for (const auto& [dex_type, methods] : classes_to_intent_getters) {
     std::vector<std::string> serialized_methods;
@@ -71,7 +72,8 @@ SerializedMultimap serialize_classes_to_intent_getters(
 }
 
 SerializedMultimap serialize_methods_to_routed_intents(
-    const MethodToRoutedIntentClassesMap& method_to_routed_intents) {
+    const IntentRoutingAnalyzer::MethodToRoutedIntentClassesMap&
+        method_to_routed_intents) {
   SerializedMultimap serialized;
   for (const auto& [method, dex_types] : method_to_routed_intents) {
     std::vector<std::string> serialized_types;
@@ -183,11 +185,10 @@ TEST_F(ShimsTest, TestBuildCrossComponentAnalysisShims) {
       });
 
   auto context = test_types(scope);
-  MethodMappings method_mappings = MethodMappings(*context.methods);
-  Shims shims = ShimGeneration::run(context, method_mappings);
+  auto intent_routing_analyzer = IntentRoutingAnalyzer::run(context);
 
-  auto classes_to_intent_getters =
-      serialize_classes_to_intent_getters(shims.classes_to_intent_getters());
+  auto classes_to_intent_getters = serialize_classes_to_intent_getters(
+      intent_routing_analyzer.classes_to_intent_getters());
   SerializedMultimap expected_classes_to_intent_getters{std::make_pair(
       "LClass;",
       std::vector<std::string>{
@@ -196,8 +197,8 @@ TEST_F(ShimsTest, TestBuildCrossComponentAnalysisShims) {
       })};
   EXPECT_EQ(classes_to_intent_getters, expected_classes_to_intent_getters);
 
-  auto methods_to_routed_intents =
-      serialize_methods_to_routed_intents(shims.methods_to_routed_intents());
+  auto methods_to_routed_intents = serialize_methods_to_routed_intents(
+      intent_routing_analyzer.methods_to_routed_intents());
   SerializedMultimap expected_methods_to_routed_intents{
       std::make_pair(
           "LClass;.routes_intent_via_constructor:()V",
@@ -281,7 +282,9 @@ TEST_F(ShimsTest, TestGetShimForCaller) {
 
   auto context = test_types(scope);
   MethodMappings method_mappings = MethodMappings(*context.methods);
-  Shims shims = ShimGeneration::run(context, method_mappings);
+  auto intent_routing_analyzer = IntentRoutingAnalyzer::run(context);
+  Shims shims =
+      ShimGeneration::run(context, intent_routing_analyzer, method_mappings);
 
   const Method* route_intent = context.methods->get(routing_class_methods[0]);
   const Method* start_activity = context.methods->get(routing_class_methods[1]);
