@@ -26,7 +26,7 @@ class UsedKinds {
   explicit UsedKinds(const TransformsFactory& transforms_factory)
       : transforms_factory_(transforms_factory) {}
 
-  INCLUDE_DEFAULT_COPY_CONSTRUCTORS_AND_ASSIGNMENTS(UsedKinds)
+  MOVE_CONSTRUCTOR_ONLY(UsedKinds);
 
   /* Load the rules from the json file specified in the given options. */
   static UsedKinds from_rules(

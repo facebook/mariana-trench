@@ -16,6 +16,7 @@
 
 #include <mariana-trench/Context.h>
 #include <mariana-trench/FieldModel.h>
+#include <mariana-trench/IncludeMacros.h>
 #include <mariana-trench/Model.h>
 
 namespace {
@@ -43,11 +44,7 @@ class Registry final {
       const Json::Value& models_value,
       const Json::Value& field_models_value);
 
-  Registry(const Registry&) = delete;
-  Registry(Registry&&) = default;
-  Registry& operator=(const Registry&) = delete;
-  Registry& operator=(Registry&&) = delete;
-  ~Registry() = default;
+  MOVE_CONSTRUCTOR_ONLY(Registry);
 
   /**
    * Load the global registry

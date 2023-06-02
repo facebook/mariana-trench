@@ -15,6 +15,7 @@
 #include <json/json.h>
 
 #include <mariana-trench/Context.h>
+#include <mariana-trench/IncludeMacros.h>
 #include <mariana-trench/Kind.h>
 #include <mariana-trench/MultiSourceMultiSinkRule.h>
 #include <mariana-trench/PartialKind.h>
@@ -74,11 +75,7 @@ class Rules final {
   /* Load the rules from the json file specified in the given options. */
   static Rules load(Context& context, const Options& options);
 
-  Rules(const Rules&) = delete;
-  Rules(Rules&&) = default;
-  Rules& operator=(const Rules&) = delete;
-  Rules& operator=(Rules&&) = delete;
-  ~Rules() = default;
+  MOVE_CONSTRUCTOR_ONLY(Rules);
 
   /* This is NOT thread-safe. */
   void add(Context& context, std::unique_ptr<Rule> rule);
