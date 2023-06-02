@@ -393,6 +393,17 @@ void create_issue(
     TextualOrderIndex sink_index,
     std::string_view callee,
     const FeatureMayAlwaysSet& extra_features) {
+  // Skip creating issue if there are parameter type overrides.
+  // The issue should be found in the copy of the Method that does not have
+  // parameter type overrides.
+  if (!context->method()->parameter_type_overrides().empty()) {
+    LOG_OR_DUMP(
+        context,
+        4,
+        "Skip creating issue for method with parameter type overrides.");
+    return;
+  }
+
   std::unordered_set<const Kind*> kinds;
   for (const auto& source_frame : source.frames_iterator()) {
     kinds.emplace(source_frame.kind());
