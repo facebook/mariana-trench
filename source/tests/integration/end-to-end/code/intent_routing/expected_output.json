@@ -954,6 +954,43 @@
   }
 }
 {
+  "method" : "Lcom/facebook/marianatrench/integrationtests/IntentRouter$IntentTargetNoSink;.<init>:(Lcom/facebook/marianatrench/integrationtests/IntentRouter;)V",
+  "position" : 
+  {
+    "line" : 60,
+    "path" : "IntentRouter.java"
+  },
+  "propagation" : 
+  [
+    {
+      "input" : "Argument(1)",
+      "output" : 
+      [
+        {
+          "kinds" : 
+          [
+            {
+              "call_info" : "Propagation",
+              "kind" : "LocalArgument(0)",
+              "output_paths" : 
+              {
+                ".this$0" : 3
+              }
+            }
+          ],
+          "local_features" : 
+          {
+            "always_features" : 
+            [
+              "via-inner-class-this"
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}
+{
   "method" : "Lcom/facebook/marianatrench/integrationtests/IntentRouter;.<init>:()V",
   "position" : 
   {
@@ -990,6 +1027,207 @@
   "position" : 
   {
     "line" : 42,
+    "path" : "IntentRouter.java"
+  }
+}
+{
+  "issues" : 
+  [
+    {
+      "always_features" : 
+      [
+        "via-cast:Ljava/lang/String;",
+        "via-intent-routing",
+        "via-shim:Landroid/app/Activity;.startActivity:(Landroid/content/Intent;)V"
+      ],
+      "callee" : "Lcom/facebook/marianatrench/integrationtests/IntentTarget;.readsRoutedIntent_sessionToSink:()V",
+      "position" : 
+      {
+        "line" : 74,
+        "path" : "IntentRouter.java"
+      },
+      "rule" : 1,
+      "sink_index" : "0",
+      "sinks" : 
+      [
+        {
+          "call" : 
+          {
+            "port" : "call-effect-intent[session]",
+            "position" : 
+            {
+              "end" : 0,
+              "line" : 74,
+              "path" : "IntentRouter.java",
+              "start" : 0
+            },
+            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/IntentTarget;.readsRoutedIntent_sessionToSink:()V"
+          },
+          "kinds" : 
+          [
+            {
+              "call_info" : "CallSite",
+              "distance" : 1,
+              "kind" : "Sink",
+              "origins" : 
+              [
+                "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V"
+              ]
+            }
+          ],
+          "local_features" : 
+          {
+            "always_features" : 
+            [
+              "via-intent-routing",
+              "via-shim:Landroid/app/Activity;.startActivity:(Landroid/content/Intent;)V"
+            ]
+          }
+        }
+      ],
+      "sources" : 
+      [
+        {
+          "kinds" : 
+          [
+            {
+              "call_info" : "Origin",
+              "kind" : "Source",
+              "origins" : 
+              [
+                "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;"
+              ]
+            }
+          ],
+          "local_features" : 
+          {
+            "always_features" : 
+            [
+              "via-cast:Ljava/lang/String;"
+            ]
+          },
+          "local_positions" : 
+          [
+            {
+              "end" : 65,
+              "line" : 72,
+              "start" : 42
+            }
+          ],
+          "origin" : 
+          {
+            "method" : "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;",
+            "position" : 
+            {
+              "end" : 63,
+              "line" : 72,
+              "path" : "IntentRouter.java",
+              "start" : 58
+            }
+          }
+        }
+      ]
+    },
+    {
+      "always_features" : 
+      [
+        "via-cast:Ljava/lang/String;",
+        "via-intent-routing",
+        "via-shim:Landroid/app/Activity;.startActivity:(Landroid/content/Intent;)V"
+      ],
+      "callee" : "Lcom/facebook/marianatrench/integrationtests/IntentTarget;.readsRoutedIntent_sessionToSinkViaExtraHop:()V",
+      "position" : 
+      {
+        "line" : 74,
+        "path" : "IntentRouter.java"
+      },
+      "rule" : 1,
+      "sink_index" : "0",
+      "sinks" : 
+      [
+        {
+          "call" : 
+          {
+            "port" : "call-effect-intent[session]",
+            "position" : 
+            {
+              "end" : 0,
+              "line" : 74,
+              "path" : "IntentRouter.java",
+              "start" : 0
+            },
+            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/IntentTarget;.readsRoutedIntent_sessionToSinkViaExtraHop:()V"
+          },
+          "kinds" : 
+          [
+            {
+              "call_info" : "CallSite",
+              "distance" : 2,
+              "kind" : "Sink",
+              "origins" : 
+              [
+                "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V"
+              ]
+            }
+          ],
+          "local_features" : 
+          {
+            "always_features" : 
+            [
+              "via-intent-routing",
+              "via-shim:Landroid/app/Activity;.startActivity:(Landroid/content/Intent;)V"
+            ]
+          }
+        }
+      ],
+      "sources" : 
+      [
+        {
+          "kinds" : 
+          [
+            {
+              "call_info" : "Origin",
+              "kind" : "Source",
+              "origins" : 
+              [
+                "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;"
+              ]
+            }
+          ],
+          "local_features" : 
+          {
+            "always_features" : 
+            [
+              "via-cast:Ljava/lang/String;"
+            ]
+          },
+          "local_positions" : 
+          [
+            {
+              "end" : 65,
+              "line" : 72,
+              "start" : 42
+            }
+          ],
+          "origin" : 
+          {
+            "method" : "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;",
+            "position" : 
+            {
+              "end" : 63,
+              "line" : 72,
+              "path" : "IntentRouter.java",
+              "start" : 58
+            }
+          }
+        }
+      ]
+    }
+  ],
+  "method" : "Lcom/facebook/marianatrench/integrationtests/IntentRouter;.falsePositive_wrongShim:(Landroid/content/Context;)V",
+  "position" : 
+  {
+    "line" : 70,
     "path" : "IntentRouter.java"
   }
 }

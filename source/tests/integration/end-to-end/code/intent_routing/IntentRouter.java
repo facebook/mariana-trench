@@ -55,4 +55,26 @@ public class IntentRouter extends Activity {
   void issueViaIntentRouter(Context context) {
     this.objectTaintUnknown((String) Origin.source(), context);
   }
+
+  // Intent target where none of its methods lead to a sink, or even calls
+  // getIntent(). Taint cannot flow through this.
+  class IntentTargetNoSink {}
+
+  // Expected: No issues found.
+  // However, IntentRoutingAnalyzer currently maintains the map:
+  //   method -> [TargetIntents]
+  // It does not track which startActivity() call flows into which target
+  // Intent. As a result, the first startActivity() call is assumed to flow
+  // into both IntentTargetNoSink and IntentTarget[WithSink]. The latter
+  // triggers a false positive.
+  void falsePositive_wrongShim(Context context) {
+    Intent intent = new Intent(context, IntentTargetNoSink.class);
+    intent.putExtra(IntentTarget.SESSION, (String) Origin.source());
+    // Tainted intent does not reach any sink. No issues expected
+    startActivity(intent);
+
+    // intent2 can reach sinks, but is not tainted.
+    Intent intent2 = new Intent(context, IntentTarget.class);
+    startActivity(intent2);
+  }
 }

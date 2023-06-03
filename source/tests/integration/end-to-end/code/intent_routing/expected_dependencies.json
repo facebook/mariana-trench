@@ -21,6 +21,7 @@
     "Lcom/facebook/marianatrench/integrationtests/IntentRouter;.doesNotRouteIntent_noIntentTarget:()V",
     "Lcom/facebook/marianatrench/integrationtests/IntentRouter;.doesNotRouteIntent_noTaintSources:(Landroid/content/Context;)V",
     "Lcom/facebook/marianatrench/integrationtests/IntentRouter;.falseNegative_targetClassUnknown:(Landroid/content/Intent;)V",
+    "Lcom/facebook/marianatrench/integrationtests/IntentRouter;.falsePositive_wrongShim:(Landroid/content/Context;)V",
     "Lcom/facebook/marianatrench/integrationtests/IntentRouter;.objectTaintUnknown:(Ljava/lang/String;Landroid/content/Context;)V",
     "Lcom/facebook/marianatrench/integrationtests/IntentRouter;.routesIntent:(Landroid/content/Context;)V",
     "Lcom/facebook/marianatrench/integrationtests/IntentRouterAndTarget;.routesAndGetsIntent:(Landroid/content/Context;)V"
@@ -38,6 +39,7 @@
   [
     "Lcom/facebook/marianatrench/integrationtests/IntentRouter;.doesNotRouteIntent_noStartActivity:(Landroid/content/Context;)V",
     "Lcom/facebook/marianatrench/integrationtests/IntentRouter;.doesNotRouteIntent_noTaintSources:(Landroid/content/Context;)V",
+    "Lcom/facebook/marianatrench/integrationtests/IntentRouter;.falsePositive_wrongShim:(Landroid/content/Context;)V",
     "Lcom/facebook/marianatrench/integrationtests/IntentRouter;.objectTaintUnknown:(Ljava/lang/String;Landroid/content/Context;)V",
     "Lcom/facebook/marianatrench/integrationtests/IntentRouter;.routesIntent:(Landroid/content/Context;)V",
     "Lcom/facebook/marianatrench/integrationtests/IntentRouterAndTarget;.routesAndGetsIntent:(Landroid/content/Context;)V"
@@ -57,6 +59,7 @@
     "Lcom/facebook/marianatrench/integrationtests/IntentRouter;.doesNotRouteIntent_noIntentTarget:()V",
     "Lcom/facebook/marianatrench/integrationtests/IntentRouter;.doesNotRouteIntent_noStartActivity:(Landroid/content/Context;)V",
     "Lcom/facebook/marianatrench/integrationtests/IntentRouter;.falseNegative_targetClassUnknown:(Landroid/content/Intent;)V",
+    "Lcom/facebook/marianatrench/integrationtests/IntentRouter;.falsePositive_wrongShim:(Landroid/content/Context;)V",
     "Lcom/facebook/marianatrench/integrationtests/IntentRouter;.objectTaintUnknown:(Ljava/lang/String;Landroid/content/Context;)V",
     "Lcom/facebook/marianatrench/integrationtests/IntentRouter;.routesIntent:(Landroid/content/Context;)V",
     "Lcom/facebook/marianatrench/integrationtests/IntentRouterAndTarget;.routesAndGetsIntent:(Landroid/content/Context;)V"
@@ -94,6 +97,7 @@
   "Lcom/facebook/marianatrench/integrationtests/IntentTarget;.readsAndReturnsRoutedIntent:()Landroid/content/Intent;" : 
   [
     "Lcom/facebook/marianatrench/integrationtests/IntentRouter;.doesNotRouteIntent_noTaintSources:(Landroid/content/Context;)V",
+    "Lcom/facebook/marianatrench/integrationtests/IntentRouter;.falsePositive_wrongShim:(Landroid/content/Context;)V",
     "Lcom/facebook/marianatrench/integrationtests/IntentRouter;.objectTaintUnknown:(Ljava/lang/String;Landroid/content/Context;)V",
     "Lcom/facebook/marianatrench/integrationtests/IntentRouter;.routesIntent:(Landroid/content/Context;)V",
     "Lcom/facebook/marianatrench/integrationtests/IntentRouterAndTarget;.routesAndGetsIntent:(Landroid/content/Context;)V",
@@ -102,6 +106,7 @@
   "Lcom/facebook/marianatrench/integrationtests/IntentTarget;.readsAndReturnsRoutedIntent_sessionToReturn:()Ljava/lang/String;" : 
   [
     "Lcom/facebook/marianatrench/integrationtests/IntentRouter;.doesNotRouteIntent_noTaintSources:(Landroid/content/Context;)V",
+    "Lcom/facebook/marianatrench/integrationtests/IntentRouter;.falsePositive_wrongShim:(Landroid/content/Context;)V",
     "Lcom/facebook/marianatrench/integrationtests/IntentRouter;.objectTaintUnknown:(Ljava/lang/String;Landroid/content/Context;)V",
     "Lcom/facebook/marianatrench/integrationtests/IntentRouter;.routesIntent:(Landroid/content/Context;)V",
     "Lcom/facebook/marianatrench/integrationtests/IntentRouterAndTarget;.routesAndGetsIntent:(Landroid/content/Context;)V"
@@ -109,6 +114,7 @@
   "Lcom/facebook/marianatrench/integrationtests/IntentTarget;.readsRoutedIntent_anotherKeyToSink:()V" : 
   [
     "Lcom/facebook/marianatrench/integrationtests/IntentRouter;.doesNotRouteIntent_noTaintSources:(Landroid/content/Context;)V",
+    "Lcom/facebook/marianatrench/integrationtests/IntentRouter;.falsePositive_wrongShim:(Landroid/content/Context;)V",
     "Lcom/facebook/marianatrench/integrationtests/IntentRouter;.objectTaintUnknown:(Ljava/lang/String;Landroid/content/Context;)V",
     "Lcom/facebook/marianatrench/integrationtests/IntentRouter;.routesIntent:(Landroid/content/Context;)V",
     "Lcom/facebook/marianatrench/integrationtests/IntentRouterAndTarget;.routesAndGetsIntent:(Landroid/content/Context;)V"
@@ -116,6 +122,7 @@
   "Lcom/facebook/marianatrench/integrationtests/IntentTarget;.readsRoutedIntent_sessionToSink:()V" : 
   [
     "Lcom/facebook/marianatrench/integrationtests/IntentRouter;.doesNotRouteIntent_noTaintSources:(Landroid/content/Context;)V",
+    "Lcom/facebook/marianatrench/integrationtests/IntentRouter;.falsePositive_wrongShim:(Landroid/content/Context;)V",
     "Lcom/facebook/marianatrench/integrationtests/IntentRouter;.objectTaintUnknown:(Ljava/lang/String;Landroid/content/Context;)V",
     "Lcom/facebook/marianatrench/integrationtests/IntentRouter;.routesIntent:(Landroid/content/Context;)V",
     "Lcom/facebook/marianatrench/integrationtests/IntentRouterAndTarget;.routesAndGetsIntent:(Landroid/content/Context;)V"
@@ -123,6 +130,7 @@
   "Lcom/facebook/marianatrench/integrationtests/IntentTarget;.readsRoutedIntent_sessionToSinkViaExtraHop:()V" : 
   [
     "Lcom/facebook/marianatrench/integrationtests/IntentRouter;.doesNotRouteIntent_noTaintSources:(Landroid/content/Context;)V",
+    "Lcom/facebook/marianatrench/integrationtests/IntentRouter;.falsePositive_wrongShim:(Landroid/content/Context;)V",
     "Lcom/facebook/marianatrench/integrationtests/IntentRouter;.objectTaintUnknown:(Ljava/lang/String;Landroid/content/Context;)V",
     "Lcom/facebook/marianatrench/integrationtests/IntentRouter;.routesIntent:(Landroid/content/Context;)V",
     "Lcom/facebook/marianatrench/integrationtests/IntentRouterAndTarget;.routesAndGetsIntent:(Landroid/content/Context;)V"
@@ -140,6 +148,7 @@
     "Lcom/facebook/marianatrench/integrationtests/IntentRouter;.doesNotRouteIntent_noIntentTarget:()V",
     "Lcom/facebook/marianatrench/integrationtests/IntentRouter;.doesNotRouteIntent_noStartActivity:(Landroid/content/Context;)V",
     "Lcom/facebook/marianatrench/integrationtests/IntentRouter;.falseNegative_targetClassUnknown:(Landroid/content/Intent;)V",
+    "Lcom/facebook/marianatrench/integrationtests/IntentRouter;.falsePositive_wrongShim:(Landroid/content/Context;)V",
     "Lcom/facebook/marianatrench/integrationtests/IntentRouter;.issueViaIntentRouter:(Landroid/content/Context;)V",
     "Lcom/facebook/marianatrench/integrationtests/IntentRouter;.routesIntent:(Landroid/content/Context;)V"
   ],
@@ -183,6 +192,7 @@
     "Lcom/facebook/auth/datastore/LoggedInUserAuthDataStore;.<init>:()V",
     "Lcom/facebook/base/activity/FragmentBaseActivityUtil;.<init>:()V",
     "Lcom/facebook/content/SecureContextHelper;.<init>:()V",
+    "Lcom/facebook/marianatrench/integrationtests/IntentRouter$IntentTargetNoSink;.<init>:(Lcom/facebook/marianatrench/integrationtests/IntentRouter;)V",
     "Lcom/facebook/marianatrench/integrationtests/Origin;.<init>:()V",
     "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;",
     "Lcom/facebook/secure/context/IntentLauncher;.<init>:()V",
