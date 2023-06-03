@@ -1006,9 +1006,12 @@ TEST_F(TaintTest, UpdateNonLeafPositions) {
   auto* method3 = context.methods->create(
       redex::create_void_method(scope, "LThree;", "three"));
 
-  auto dex_position1 = DexPosition(/* line */ 1);
-  auto dex_position2 = DexPosition(/* line */ 2);
-  auto dex_position3 = DexPosition(/* line */ 3);
+  auto dex_position1 =
+      DexPosition(DexString::make_string("UnknownSource"), /* line */ 1);
+  auto dex_position2 =
+      DexPosition(DexString::make_string("UnknownSource"), /* line */ 2);
+  auto dex_position3 =
+      DexPosition(DexString::make_string("UnknownSource"), /* line */ 3);
 
   auto position1 = context.positions->get(method1, &dex_position1);
   auto position2 = context.positions->get(method2, &dex_position2);
