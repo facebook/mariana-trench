@@ -7,9 +7,12 @@
 
 #include <cstdio>
 #include <fstream>
+#include <unordered_map>
 
 #include <boost/algorithm/string.hpp>
+#include <boost/algorithm/string/find_iterator.hpp>
 #include <boost/filesystem.hpp>
+#include <boost/filesystem/operations.hpp>
 #include <fmt/format.h>
 #include <re2/re2.h>
 
@@ -32,6 +35,11 @@ namespace {
 
 constexpr int k_unknown_line = -1;
 
+struct GrepoPaths {
+  std::vector<std::string> actual_paths;
+  std::unordered_map<std::string, std::string> actual_to_repo_paths;
+};
+
 // Performance optimization to avoid calling more expensive regex matches on
 // every line.
 bool maybe_class(const std::string& line) {
@@ -41,9 +49,175 @@ bool maybe_class(const std::string& line) {
       line.find("enum") != std::string::npos;
 }
 
+GrepoPaths get_grepo_paths(
+    std::string command_output,
+    Json::Value metadata_json) {
+  using split_iterator =
+      boost::algorithm::split_iterator<std::string::iterator>;
+  std::vector<std::string> actual_paths{};
+  std::unordered_map<std::string, std::string> actual_to_repo_paths{};
+
+  for (split_iterator iterator = boost::algorithm::make_split_iterator(
+           command_output, boost::first_finder("\n", boost::is_equal()));
+       iterator != split_iterator();
+       ++iterator) {
+    if (iterator->empty()) {
+      continue;
+    }
+
+    std::vector<std::string> splits;
+    boost::split(
+        splits,
+        std::string{iterator->begin(), iterator->end()},
+        boost::is_any_of(":"));
+
+    if (splits.size() != 3) {
+      WARNING(
+          2,
+          "Invalid line. Expected: `<REPO_PROJECT>:<path/to/repo/root>:<path/to/file>`. Skipping...");
+      continue;
+    }
+
+    // Find the project name
+    const auto& metadata =
+        JsonValidation::null_or_object(metadata_json, splits[0]);
+    if (metadata.isNull()) {
+      WARNING(
+          2, "Could not find metadata for repo: `{}`. Skipping...", splits[0]);
+      continue;
+    }
+
+    auto absolute_path = fmt::format("{}/{}", splits[1], splits[2]);
+    actual_paths.push_back(absolute_path);
+    actual_to_repo_paths.emplace(
+        absolute_path,
+        fmt::format(
+            "{}/{}", JsonValidation::string(metadata, "project"), splits[2]));
+  }
+
+  return GrepoPaths{actual_paths, actual_to_repo_paths};
+}
+
+void add_to_class_to_path_map(
+    std::vector<std::string>& exclude_directories,
+    std::atomic<std::size_t>& iteration,
+    std::vector<std::string>& paths,
+    ConcurrentMap<std::string, std::string>& class_to_path,
+    const std::unordered_map<std::string, std::string>& repo_paths) {
+  Timer index_timer;
+  LOG(2, "Indexing {} files...", paths.size());
+
+  re2::RE2 package_regex("^package\\s+([^;]+)(?:;|$)");
+  re2::RE2 class_regex(
+      "^\\s*(?:/\\*.*\\*/)?\\s*(?:public|internal|private)?\\s*(?:abstract|data|final|open)?\\s*(?:class|enum|interface|object)\\s+([A-z0-9]+)");
+  std::unordered_set<std::string> skipped_package_prefixes = {
+      "android/",
+  };
+
+  auto queue = sparta::work_queue<std::string*>(
+      [&](std::string* path) {
+        iteration++;
+        if (iteration % 10000 == 0) {
+          LOG(2, "Indexed {} of {} files.", iteration.load(), paths.size());
+        }
+
+        if (boost::starts_with(*path, "./")) {
+          // Remove the `./` prefix added by `find`.
+          path->erase(0, 2);
+        }
+        if (path->empty()) {
+          return;
+        }
+        for (const auto& exclude_directory : exclude_directories) {
+          if (boost::starts_with(*path, exclude_directory)) {
+            return;
+          }
+        }
+
+        std::optional<std::string> package = std::nullopt;
+        std::string final_path = *path;
+        if (auto find = repo_paths.find(*path); find != repo_paths.end()) {
+          final_path = find->second;
+        }
+
+        std::ifstream stream(*path);
+        std::string line;
+        while (std::getline(stream, line)) {
+          re2::StringPiece package_match;
+          // Using capturing groups with `re2` is very slow, so we only
+          // capture if we know the regex matches. This gives a huge
+          // performance boost.
+          if (!package && re2::RE2::PartialMatch(line, package_regex) &&
+              re2::RE2::PartialMatch(line, package_regex, &package_match)) {
+            package = package_match.as_string();
+            boost::replace_all(*package, ".", "/");
+            if (std::any_of(
+                    skipped_package_prefixes.begin(),
+                    skipped_package_prefixes.end(),
+                    [&](const auto& skipped_prefix) {
+                      return boost::starts_with(*package, skipped_prefix);
+                    })) {
+              LOG(3, "Skipping module `{}` at `{}`...", *package, *path);
+              return;
+            }
+            if (boost::ends_with(*path, ".kt")) {
+              auto pos = path->find_last_of("/");
+              if (pos != std::string::npos) {
+                auto filename = path->substr(pos + 1, path->size() - pos - 4);
+                auto classname = fmt::format("L{}/{}Kt;", *package, filename);
+
+                class_to_path.update(
+                    classname,
+                    [&final_path](
+                        const std::string& /* classname */,
+                        std::string& value,
+                        bool exists) mutable {
+                      if (exists && value < final_path) {
+                        return;
+                      }
+                      value = final_path;
+                    });
+              }
+            }
+          }
+
+          re2::StringPiece class_match;
+          if (package && maybe_class(line) &&
+              re2::RE2::PartialMatch(line, class_regex) &&
+              re2::RE2::PartialMatch(line, class_regex, &class_match)) {
+            auto classname = fmt::format("L{}/{};", *package, class_match);
+
+            class_to_path.update(
+                classname,
+                [&final_path](
+                    const std::string& /* classname */,
+                    std::string& value,
+                    bool exists) mutable {
+                  if (exists && value < final_path) {
+                    return;
+                  }
+                  value = final_path;
+                });
+          }
+        }
+      },
+      sparta::parallel::default_num_threads());
+  for (auto& path : paths) {
+    queue.add_item(&path);
+  }
+  queue.run_all();
+
+  LOG(2,
+      "Indexed {} top-level classes in {:.2f}s.",
+      class_to_path.size(),
+      index_timer.duration_in_seconds());
+}
+
 } // namespace
 
 Positions::Positions(const Options& options, const DexStoresVector& stores) {
+  Timer source_indexing_timer;
+
   if (options.skip_source_indexing()) {
     // Create a dummy path for all methods.
     for (auto& scope : DexStoreClassesIterator(stores)) {
@@ -65,48 +239,12 @@ Positions::Positions(const Options& options, const DexStoresVector& stores) {
         "Finding files to index in `{}`...",
         options.source_root_directory());
 
+    // Save current path
     auto current_path = boost::filesystem::current_path();
-    boost::filesystem::current_path(options.source_root_directory());
-
-    std::string hg_command =
-        "hg files --include=**.java --include=**.kt --include=**.mustache --exclude=.ovrsource-rest";
-    std::string find_command =
-        "find . -type f \\( -iname \\*.java -o -iname \\*.kt -o -iname \\*.mustache \\) -not -path ./.ovrsource-rest/\\*";
-
-    int return_code = -1;
-    std::string output;
-    output = execute_and_catch_output(hg_command, return_code);
-
-    if (return_code != EXIT_SUCCESS) {
-      WARNING(
-          1,
-          "Source directory is not a mercurial repository. Trying `find` to discover files.");
-      output = execute_and_catch_output(find_command, return_code);
-      if (return_code != EXIT_SUCCESS) {
-        ERROR(1, "`find` failed, no source file will be indexed.");
-      }
-    }
-
-    std::vector<std::string> paths;
-    boost::split(paths, output, boost::is_any_of("\n"));
-
-    LOG(2,
-        "Found {} files in {:.2f}s.",
-        paths.size(),
-        paths_timer.duration_in_seconds());
-
-    // Find top-level classes in files.
-    Timer index_timer;
-    LOG(2, "Indexing classes...");
-
-    std::atomic<std::size_t> iteration(0);
-    ConcurrentMap<std::string, std::string> class_to_path;
-    re2::RE2 package_regex("^package\\s+([^;]+)(?:;|$)");
-    re2::RE2 class_regex(
-        "^\\s*(?:/\\*.*\\*/)?\\s*(?:public|internal|private)?\\s*(?:abstract|data|final|open)?\\s*(?:class|enum|interface|object)\\s+([A-z0-9]+)");
-    std::unordered_set<std::string> skipped_package_prefixes = {
-        "android/",
-    };
+    boost::filesystem::path source_root_directory{
+        options.source_root_directory()};
+    // Switch to source root directory.
+    boost::filesystem::current_path(source_root_directory);
 
     auto exclude_directories = options.source_exclude_directories();
     for (auto& exclude_directory : exclude_directories) {
@@ -115,100 +253,89 @@ Positions::Positions(const Options& options, const DexStoresVector& stores) {
       }
     }
 
-    auto queue = sparta::work_queue<std::string*>(
-        [&](std::string* path) {
-          iteration++;
-          if (iteration % 10000 == 0) {
-            LOG(2, "Indexed {} of {} files.", iteration.load(), paths.size());
-          }
+    std::atomic<std::size_t> iteration(0);
+    ConcurrentMap<std::string, std::string> class_to_path;
 
-          if (boost::starts_with(*path, "./")) {
-            // Remove the `./` prefix added by `find`.
-            path->erase(0, 2);
-          }
-          if (path->empty()) {
-            return;
-          }
-          for (const auto& exclude_directory : exclude_directories) {
-            if (boost::starts_with(*path, exclude_directory)) {
-              return;
-            }
-          }
+    if (auto grepo_metadata_path = options.grepo_metadata_path();
+        !grepo_metadata_path.empty()) {
+      auto metadata_json = JsonValidation::parse_json_file(grepo_metadata_path);
+      JsonValidation::validate_object(metadata_json);
 
-          std::optional<std::string> package = std::nullopt;
+      // This command lists all tracked java and kotlin files in all sub
+      // git-repos under the source root directory excluding files under
+      // `test/*` directories.
+      //
+      // The output format is:
+      //   <REPO_PROJECT>:<path/to/root/of/subrepo>:<path/to/file/within/subrepo>
+      // - The absolute path on the filesystem is:
+      //   <path/to/root/of/subrepo>/<path/to/file/within/subrepo>
+      // - <REPO_PROJECT> is used to look up the grepo_metadata_json for the
+      //   "project" prefix.
+      // - The final path for sapp is:
+      //   <"project"prefix>/<path/to/file/within/subrepo>
+      std::string repo_command =
+          "repo forall -c 'git ls-files -- '\''*java'\'' '\''*kt'\'' '\'':!:test/*'\'' | xargs -n1 printf \"$REPO_PROJECT:$PWD:%s\\n\"'";
 
-          std::ifstream stream(*path);
-          std::string line;
-          while (std::getline(stream, line)) {
-            re2::StringPiece package_match;
-            // Using capturing groups with `re2` is very slow, so we only
-            // capture if we know the regex matches. This gives a huge
-            // performance boost.
-            if (!package && re2::RE2::PartialMatch(line, package_regex) &&
-                re2::RE2::PartialMatch(line, package_regex, &package_match)) {
-              package = package_match.as_string();
-              boost::replace_all(*package, ".", "/");
-              if (std::any_of(
-                      skipped_package_prefixes.begin(),
-                      skipped_package_prefixes.end(),
-                      [&](const auto& skipped_prefix) {
-                        return boost::starts_with(*package, skipped_prefix);
-                      })) {
-                LOG(3, "Skipping module `{}` at `{}`...", *package, *path);
-                return;
-              }
-              if (boost::ends_with(*path, ".kt")) {
-                auto pos = path->find_last_of("/");
-                if (pos != std::string::npos) {
-                  auto filename = path->substr(pos + 1, path->size() - pos - 4);
-                  auto classname = fmt::format("L{}/{}Kt;", *package, filename);
-                  class_to_path.update(
-                      classname,
-                      [&path](
-                          const std::string& /* classname */,
-                          std::string& value,
-                          bool exists) {
-                        if (exists && value < *path) {
-                          return;
-                        }
-                        value = *path;
-                      });
-                }
-              }
-            }
+      int return_code = -1;
+      std::string output = execute_and_catch_output(repo_command, return_code);
 
-            re2::StringPiece class_match;
-            if (package && maybe_class(line) &&
-                re2::RE2::PartialMatch(line, class_regex) &&
-                re2::RE2::PartialMatch(line, class_regex, &class_match)) {
-              auto classname = fmt::format("L{}/{};", *package, class_match);
-              class_to_path.update(
-                  classname,
-                  [&path](
-                      const std::string& /* classname */,
-                      std::string& value,
-                      bool exists) {
-                    if (exists && value < *path) {
-                      return;
-                    }
-                    value = *path;
-                  });
-            }
-          }
-        },
-        sparta::parallel::default_num_threads());
-    for (auto& path : paths) {
-      queue.add_item(&path);
+      if (return_code == EXIT_SUCCESS) {
+        auto grepo_paths =
+            get_grepo_paths(std::move(output), std::move(metadata_json));
+
+        LOG(2,
+            "Found {} files in {:.2f}s.",
+            grepo_paths.actual_paths.size(),
+            paths_timer.duration_in_seconds());
+
+        add_to_class_to_path_map(
+            exclude_directories,
+            iteration,
+            grepo_paths.actual_paths,
+            class_to_path,
+            grepo_paths.actual_to_repo_paths);
+      } else {
+        ERROR(1, "`{}` failed, no source file will be indexed.", repo_command);
+      }
+    } else {
+      std::string hg_command =
+          "hg files --include=**.java --include=**.kt --include=**.mustache --exclude=.ovrsource-rest";
+      std::string find_command =
+          "find . -type f \\( -iname \\*.java -o -iname \\*.kt -o -iname \\*.mustache \\) -not -path ./.ovrsource-rest/\\*";
+
+      int return_code = -1;
+      std::string output = execute_and_catch_output(hg_command, return_code);
+
+      if (return_code != EXIT_SUCCESS) {
+        WARNING(
+            1,
+            "Source directory is not a mercurial repository. Trying `find` to discover files.");
+        output = execute_and_catch_output(find_command, return_code);
+        if (return_code != EXIT_SUCCESS) {
+          ERROR(1, "`find` failed, no source file will be indexed.");
+        }
+      }
+
+      if (return_code == EXIT_SUCCESS) {
+        std::vector<std::string> paths;
+        boost::split(paths, output, boost::is_any_of("\n"));
+
+        LOG(2,
+            "Found {} files in {:.2f}s.",
+            paths.size(),
+            paths_timer.duration_in_seconds());
+
+        add_to_class_to_path_map(
+            exclude_directories,
+            iteration,
+            paths,
+            class_to_path,
+            /* actual_to_repo_paths */ {});
+      }
     }
-    queue.run_all();
 
+    // Switch back to current path.
     boost::filesystem::current_path(current_path);
-
-    LOG(2,
-        "Indexed {} top-level classes in {:.2f}s.",
-        class_to_path.size(),
-        index_timer.duration_in_seconds());
-
     Timer method_paths_timer;
     LOG(2, "Indexing method paths...");
 
@@ -262,6 +389,10 @@ Positions::Positions(const Options& options, const DexStoresVector& stores) {
       "Indexed {} method lines in {:.2f}s.",
       method_to_line_.size(),
       method_lines_timer.duration_in_seconds());
+
+  LOG(2,
+      "Total source indexing time: {:.2f}s.",
+      source_indexing_timer.duration_in_seconds());
 }
 
 std::string Positions::execute_and_catch_output(
