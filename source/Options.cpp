@@ -210,6 +210,11 @@ Options::Options(const boost::program_options::variables_map& variables) {
         /* check_exist */ false);
   }
 
+  if (!variables["grepo-metadata-path"].empty()) {
+    grepo_metadata_path_ =
+        check_path_exists(variables["grepo-metadata-path"].as<std::string>());
+  }
+
   apk_path_ = check_path_exists(variables["apk-path"].as<std::string>());
   output_directory_ = boost::filesystem::path(
       check_directory_exists(variables["output-directory"].as<std::string>()));
@@ -329,6 +334,10 @@ void Options::add_options(
       "source-exclude-directories",
       program_options::value<std::string>(),
       "A `;`-separated list of directories that should be excluded from indexed source files.");
+  options.add_options()(
+      "grepo-metadata-path",
+      program_options::value<std::string>(),
+      "A json file containing grepo metadata for source file indexing.");
 
   options.add_options()(
       "apk-path",
@@ -461,6 +470,10 @@ const std::string& Options::source_root_directory() const {
 
 const std::vector<std::string>& Options::source_exclude_directories() const {
   return source_exclude_directories_;
+}
+
+const std::string& Options::grepo_metadata_path() const {
+  return grepo_metadata_path_;
 }
 
 const std::vector<std::string>& Options::system_jar_paths() const {
