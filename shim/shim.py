@@ -350,6 +350,12 @@ def _add_configuration_arguments(parser: argparse.ArgumentParser) -> None:
         help="A `;`-separated list of directories that should be excluded from indexed source files.",
     )
     configuration_arguments.add_argument(
+        "--grepo-metadata-path",
+        type=str,
+        default=None,
+        help="A json file containing grepo metadata for source file indexing.",
+    )
+    configuration_arguments.add_argument(
         "--proguard-configuration-paths",
         type=_separated_paths_exist,
         default=None,
@@ -563,7 +569,11 @@ def _get_command_options(
         arguments.model_generator_configuration_paths,
     ]
 
-    if arguments.model_generator_search_paths is not None:
+    if arguments.grepo_metadata_path:
+        options.append("--grepo-metadata-path")
+        options.append(arguments.grepo_metadata_path)
+
+    if arguments.model_generator_search_paths:
         options.append("--model-generator-search-paths")
         options.append(arguments.model_generator_search_paths)
 
