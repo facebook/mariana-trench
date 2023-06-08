@@ -170,6 +170,25 @@ Types::Types(const Options& options, const DexStoresVector& stores) {
           [](DexClass* dex_class) { return dex_class->is_external(); }),
       scope.end());
 
+  if (!options.disable_global_type_analysis()) {
+    Timer global_timer;
+    type_analyzer::global::GlobalTypeAnalysis analysis;
+    global_type_analyzer_ = analysis.analyze(scope);
+
+    LOG(1,
+        "Global analysis {:.2f}s. Memory used, RSS: {:.2f}GB",
+        global_timer.duration_in_seconds(),
+        resident_set_size_in_gb());
+  } else {
+    LOG(1, "Disabled global type analysis.");
+    global_type_analyzer_ = nullptr;
+  }
+
+  // ReflectionAnalysis must run after GlobalTypeAnalysis. ReflectionAnalysis
+  // causes the cfg to be non-editable (code.cfg().editable() == false) but
+  // GlobalTypeAnalysis requires it to be editable. Alternatively, one can
+  // also re-build the cfg with editable set to true prior to running
+  // GlobalTypeAnalysis.
   Timer reflection_timer;
   reflection::MetadataCache reflection_metadata_cache;
   walk::parallel::code(scope, [&](DexMethod* method, IRCode& code) {
@@ -192,21 +211,6 @@ Types::Types(const Options& options, const DexStoresVector& stores) {
   LOG(1,
       "Reflection analysis {:.2f}s. Memory used, RSS: {:.2f}GB",
       reflection_timer.duration_in_seconds(),
-      resident_set_size_in_gb());
-
-  if (options.disable_global_type_analysis()) {
-    LOG(1, "Disabled global type analysis.");
-    global_type_analyzer_ = nullptr;
-    return;
-  }
-
-  Timer global_timer;
-  type_analyzer::global::GlobalTypeAnalysis analysis;
-  global_type_analyzer_ = analysis.analyze(scope);
-
-  LOG(1,
-      "Global analysis {:.2f}s. Memory used, RSS: {:.2f}GB",
-      global_timer.duration_in_seconds(),
       resident_set_size_in_gb());
 }
 
