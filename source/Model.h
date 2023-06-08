@@ -308,7 +308,8 @@ class Model final {
   static Model from_json(
       const Method* MT_NULLABLE method,
       const Json::Value& value,
-      Context& context);
+      Context& context,
+      bool check_unexpected_members = true);
   Json::Value to_json(ExportOriginsMode export_origins_mode) const;
 
   /* Export the model to json and include the method position. */

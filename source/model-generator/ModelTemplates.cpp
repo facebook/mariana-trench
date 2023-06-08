@@ -178,6 +178,16 @@ PropagationTemplate PropagationTemplate::from_json(
     const Json::Value& value,
     Context& context) {
   JsonValidation::validate_object(value);
+  JsonValidation::check_unexpected_members(
+      value,
+      {"input",
+       "output",
+       "may_features",
+       "always_features",
+       "features",
+       "transforms",
+       "collapse",
+       "collapse-depth"});
 
   JsonValidation::string(value, /* field */ "input");
   auto input = AccessPathTemplate::from_json(value["input"]);
@@ -190,7 +200,8 @@ PropagationTemplate PropagationTemplate::from_json(
   JsonValidation::string(value, /* field */ "output");
   auto output = AccessPathTemplate::from_json(value["output"]);
 
-  auto inferred_features = FeatureMayAlwaysSet::from_json(value, context);
+  auto inferred_features = FeatureMayAlwaysSet::from_json(
+      value, context, /* check_unexpected_members */ false);
   auto user_features = FeatureSet::from_json(value["features"], context);
 
   const TransformList* transforms = nullptr;
@@ -357,6 +368,7 @@ AttachToSourcesTemplate AttachToSourcesTemplate::from_json(
     const Json::Value& value,
     Context& context) {
   JsonValidation::validate_object(value);
+  JsonValidation::check_unexpected_members(value, {"port", "features"});
 
   JsonValidation::null_or_array(value, /* field */ "features");
   auto features = FeatureSet::from_json(value["features"], context);
@@ -390,6 +402,7 @@ AttachToSinksTemplate AttachToSinksTemplate::from_json(
     const Json::Value& value,
     Context& context) {
   JsonValidation::validate_object(value);
+  JsonValidation::check_unexpected_members(value, {"port", "features"});
 
   JsonValidation::null_or_array(value, /* field */ "features");
   auto features = FeatureSet::from_json(value["features"], context);
@@ -422,6 +435,7 @@ AttachToPropagationsTemplate AttachToPropagationsTemplate::from_json(
     const Json::Value& value,
     Context& context) {
   JsonValidation::validate_object(value);
+  JsonValidation::check_unexpected_members(value, {"port", "features"});
 
   JsonValidation::null_or_array(value, /* field */ "features");
   auto features = FeatureSet::from_json(value["features"], context);
@@ -455,6 +469,7 @@ AddFeaturesToArgumentsTemplate AddFeaturesToArgumentsTemplate::from_json(
     const Json::Value& value,
     Context& context) {
   JsonValidation::validate_object(value);
+  JsonValidation::check_unexpected_members(value, {"port", "features"});
 
   JsonValidation::null_or_array(value, /* field */ "features");
   auto features = FeatureSet::from_json(value["features"], context);
@@ -510,6 +525,19 @@ ForAllParameters ForAllParameters::from_json(
     const Json::Value& value,
     Context& context) {
   JsonValidation::validate_object(value);
+  JsonValidation::check_unexpected_members(
+      value,
+      {"variable",
+       "where",
+       "sinks",
+       "parameter_sources",
+       "generations",
+       "sources",
+       "propagation",
+       "attach_to_sources",
+       "attach_to_sinks",
+       "attach_to_propagations",
+       "add_features_to_arguments"});
 
   std::vector<std::unique_ptr<ParameterConstraint>> constraints;
   std::vector<SinkTemplate> sink_templates;
@@ -702,6 +730,25 @@ ModelTemplate ModelTemplate::from_json(
     const Json::Value& model,
     Context& context) {
   JsonValidation::validate_object(model);
+  JsonValidation::check_unexpected_members(
+      model,
+      {"for_all_parameters",
+       "modes",
+       "freeze",
+       "generations",
+       "parameter_sources",
+       "sources",
+       "sinks",
+       "effect_sources",
+       "effect_sinks",
+       "propagation",
+       "sanitizers",
+       "attach_to_sources",
+       "attach_to_sinks",
+       "attach_to_propagations",
+       "add_features_to_arguments",
+       "inline_as",
+       "issues"});
 
   std::vector<ForAllParameters> for_all_parameters;
   for (auto const& value :
@@ -712,7 +759,10 @@ ModelTemplate ModelTemplate::from_json(
 
   return ModelTemplate(
       Model::from_json(
-          /* method */ nullptr, model, context),
+          /* method */ nullptr,
+          model,
+          context,
+          /* check_unexpected_members */ false),
       std::move(for_all_parameters));
 }
 

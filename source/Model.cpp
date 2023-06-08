@@ -959,8 +959,30 @@ void Model::join_with(const Model& other) {
 Model Model::from_json(
     const Method* method,
     const Json::Value& value,
-    Context& context) {
+    Context& context,
+    bool check_unexpected_members) {
   JsonValidation::validate_object(value);
+  if (check_unexpected_members) {
+    JsonValidation::check_unexpected_members(
+        value,
+        {"method", // Only when called from `Registry`.
+         "modes",
+         "freeze",
+         "generations",
+         "parameter_sources",
+         "sources",
+         "sinks",
+         "effect_sources",
+         "effect_sinks",
+         "propagation",
+         "sanitizers",
+         "attach_to_sources",
+         "attach_to_sinks",
+         "attach_to_propagations",
+         "add_features_to_arguments",
+         "inline_as",
+         "issues"});
+  }
 
   Modes modes;
   for (auto mode_value :
@@ -1075,6 +1097,8 @@ Model Model::from_json(
 
   for (auto attach_to_sources_value :
        JsonValidation::null_or_array(value, /* field */ "attach_to_sources")) {
+    JsonValidation::check_unexpected_members(
+        attach_to_sources_value, {"port", "features"});
     JsonValidation::string(attach_to_sources_value, /* field */ "port");
     auto root = Root::from_json(attach_to_sources_value["port"]);
     JsonValidation::null_or_array(
@@ -1086,6 +1110,8 @@ Model Model::from_json(
 
   for (auto attach_to_sinks_value :
        JsonValidation::null_or_array(value, /* field */ "attach_to_sinks")) {
+    JsonValidation::check_unexpected_members(
+        attach_to_sinks_value, {"port", "features"});
     JsonValidation::string(attach_to_sinks_value, /* field */ "port");
     auto root = Root::from_json(attach_to_sinks_value["port"]);
     JsonValidation::null_or_array(
@@ -1097,6 +1123,8 @@ Model Model::from_json(
 
   for (auto attach_to_propagations_value : JsonValidation::null_or_array(
            value, /* field */ "attach_to_propagations")) {
+    JsonValidation::check_unexpected_members(
+        attach_to_propagations_value, {"port", "features"});
     JsonValidation::string(attach_to_propagations_value, /* field */ "port");
     auto root = Root::from_json(attach_to_propagations_value["port"]);
     JsonValidation::null_or_array(
@@ -1108,6 +1136,8 @@ Model Model::from_json(
 
   for (auto add_features_to_arguments_value : JsonValidation::null_or_array(
            value, /* field */ "add_features_to_arguments")) {
+    JsonValidation::check_unexpected_members(
+        add_features_to_arguments_value, {"port", "features"});
     JsonValidation::string(add_features_to_arguments_value, /* field */ "port");
     auto root = Root::from_json(add_features_to_arguments_value["port"]);
     JsonValidation::null_or_array(

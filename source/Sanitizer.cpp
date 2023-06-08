@@ -94,6 +94,12 @@ const Sanitizer Sanitizer::from_json(
     const Json::Value& value,
     Context& context) {
   JsonValidation::validate_object(value);
+  JsonValidation::check_unexpected_members(
+      value,
+      {"port", // Only when called from `TaintConfig::from_json`.
+       "sanitize",
+       "kinds"});
+
   SanitizerKind sanitizer_kind;
   auto sanitizer_kind_string =
       JsonValidation::string(value, /* field */ "sanitize");

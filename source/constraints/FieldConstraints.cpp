@@ -179,23 +179,35 @@ std::unique_ptr<FieldConstraint> FieldConstraint::from_json(
   std::string constraint_name =
       JsonValidation::string(constraint, "constraint");
   if (constraint_name == "name") {
+    JsonValidation::check_unexpected_members(
+        constraint, {"constraint", "pattern"});
     return std::make_unique<FieldNameConstraint>(
         JsonValidation::string(constraint, /* field */ "pattern"));
   } else if (constraint_name == "signature") {
+    JsonValidation::check_unexpected_members(
+        constraint, {"constraint", "pattern"});
     return std::make_unique<SignaturePatternFieldConstraint>(
         JsonValidation::string(constraint, /* field */ "pattern"));
   } else if (constraint_name == "signature_pattern") {
+    JsonValidation::check_unexpected_members(
+        constraint, {"constraint", "pattern"});
     return std::make_unique<SignaturePatternFieldConstraint>(
         JsonValidation::string(constraint, /* field */ "pattern"));
   } else if (constraint_name == "is_static") {
+    JsonValidation::check_unexpected_members(
+        constraint, {"constraint", "value"});
     bool expected = constraint.isMember("value")
         ? JsonValidation::boolean(constraint, /* field */ "value")
         : true;
     return std::make_unique<IsStaticFieldConstraint>(expected);
   } else if (constraint_name == "not") {
+    JsonValidation::check_unexpected_members(
+        constraint, {"constraint", "inner"});
     return std::make_unique<NotFieldConstraint>(FieldConstraint::from_json(
         JsonValidation::object(constraint, /* field */ "inner")));
   } else if (constraint_name == "any_of" || constraint_name == "all_of") {
+    JsonValidation::check_unexpected_members(
+        constraint, {"constraint", "inners"});
     std::vector<std::unique_ptr<FieldConstraint>> constraints;
     for (const auto& inner :
          JsonValidation::null_or_array(constraint, /* field */ "inners")) {
@@ -207,6 +219,8 @@ std::unique_ptr<FieldConstraint> FieldConstraint::from_json(
       return std::make_unique<AllOfFieldConstraint>(std::move(constraints));
     }
   } else if (constraint_name == "has_annotation") {
+    JsonValidation::check_unexpected_members(
+        constraint, {"constraint", "type", "pattern"});
     return std::make_unique<HasAnnotationFieldConstraint>(
         JsonValidation::string(constraint, "type"),
         constraint.isMember("pattern")
@@ -214,6 +228,8 @@ std::unique_ptr<FieldConstraint> FieldConstraint::from_json(
                   constraint, "pattern")}
             : std::nullopt);
   } else if (constraint_name == "parent") {
+    JsonValidation::check_unexpected_members(
+        constraint, {"constraint", "type", "inner"});
     return std::make_unique<ParentFieldConstraint>(TypeConstraint::from_json(
         JsonValidation::object(constraint, /* field */ "inner")));
   } else {

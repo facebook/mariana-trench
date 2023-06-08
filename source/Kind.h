@@ -60,7 +60,10 @@ class Kind {
    * If it is known beforehand (as in Rules) whether the Kind is a Named or
    * Partial kind then use the override of this method from the specific Kind.
    */
-  static const Kind* from_json(const Json::Value& value, Context& context);
+  static const Kind* from_json(
+      const Json::Value& value,
+      Context& context,
+      bool check_unexpected_members = true);
 
   /**
    * String value used for connecting traces of the same kind.

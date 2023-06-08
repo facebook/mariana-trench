@@ -108,8 +108,13 @@ JsonModelGenerator::JsonModelGenerator(
   const Json::Value& value =
       JsonValidation::parse_json_file(json_configuration_file);
 
+  JsonValidation::check_unexpected_members(value, {"model_generators"});
+
   for (auto model_generator :
        JsonValidation::nonempty_array(value, /* field */ "model_generators")) {
+    JsonValidation::check_unexpected_members(
+        model_generator, {"find", "where", "model", "verbosity"});
+
     int verbosity = model_generator.isMember("verbosity")
         ? JsonValidation::integer(model_generator, "verbosity")
         : 5; // default verbosity

@@ -1041,16 +1041,15 @@ TEST_F(MethodConstraintTest, MethodConstraintFromJson) {
     EXPECT_EQ(IsStaticConstraint(false), *constraint);
   }
 
-  {
-    auto constraint = MethodConstraint::from_json(
-        test::parse_json(
-            R"({
+  EXPECT_THROW(
+      MethodConstraint::from_json(
+          test::parse_json(
+              R"({
           "constraint": "is_static",
           "vAlue": false
         })"),
-        context);
-    EXPECT_EQ(IsStaticConstraint(true), *constraint);
-  }
+          context),
+      JsonValidationError);
 
   {
     auto constraint = MethodConstraint::from_json(
@@ -1095,16 +1094,15 @@ TEST_F(MethodConstraintTest, MethodConstraintFromJson) {
     EXPECT_EQ(IsConstructorConstraint(false), *constraint);
   }
 
-  {
-    auto constraint = MethodConstraint::from_json(
-        test::parse_json(
-            R"({
+  EXPECT_THROW(
+      MethodConstraint::from_json(
+          test::parse_json(
+              R"({
           "constraint": "is_constructor",
           "vAlue": false
         })"),
-        context);
-    EXPECT_EQ(IsConstructorConstraint(true), *constraint);
-  }
+          context),
+      JsonValidationError);
 
   {
     auto constraint = MethodConstraint::from_json(
@@ -1149,16 +1147,15 @@ TEST_F(MethodConstraintTest, MethodConstraintFromJson) {
     EXPECT_EQ(IsNativeConstraint(false), *constraint);
   }
 
-  {
-    auto constraint = MethodConstraint::from_json(
-        test::parse_json(
-            R"({
+  EXPECT_THROW(
+      MethodConstraint::from_json(
+          test::parse_json(
+              R"({
           "constraint": "is_native",
           "vAlue": false
         })"),
-        context);
-    EXPECT_EQ(IsNativeConstraint(true), *constraint);
-  }
+          context),
+      JsonValidationError);
 
   {
     auto constraint = MethodConstraint::from_json(
@@ -1203,16 +1200,15 @@ TEST_F(MethodConstraintTest, MethodConstraintFromJson) {
     EXPECT_EQ(HasCodeConstraint(false), *constraint);
   }
 
-  {
-    auto constraint = MethodConstraint::from_json(
-        test::parse_json(
-            R"({
+  EXPECT_THROW(
+      MethodConstraint::from_json(
+          test::parse_json(
+              R"({
           "constraint": "has_code",
           "vAlue": false
         })"),
-        context);
-    EXPECT_EQ(HasCodeConstraint(true), *constraint);
-  }
+          context),
+      JsonValidationError);
 
   {
     auto constraint = MethodConstraint::from_json(
@@ -1678,10 +1674,10 @@ TEST_F(MethodConstraintTest, MethodConstraintFromJson) {
     }
   }
 
-  {
-    auto constraint = MethodConstraint::from_json(
-        test::parse_json(
-            R"({
+  EXPECT_THROW(
+      MethodConstraint::from_json(
+          test::parse_json(
+              R"({
           "constraint": "any_of",
           "inNers": [
             {
@@ -1694,10 +1690,8 @@ TEST_F(MethodConstraintTest, MethodConstraintFromJson) {
             }
           ]
         })"),
-        context);
-    std::vector<std::unique_ptr<MethodConstraint>> constraints;
-    EXPECT_EQ(AnyOfMethodConstraint(std::move(constraints)), *constraint);
-  }
+          context),
+      JsonValidationError);
 
   EXPECT_THROW(
       MethodConstraint::from_json(
@@ -1781,10 +1775,10 @@ TEST_F(MethodConstraintTest, MethodConstraintFromJson) {
     }
   }
 
-  {
-    auto constraint = MethodConstraint::from_json(
-        test::parse_json(
-            R"({
+  EXPECT_THROW(
+      MethodConstraint::from_json(
+          test::parse_json(
+              R"({
           "constraint": "all_of",
           "inNers": [
             {
@@ -1797,10 +1791,8 @@ TEST_F(MethodConstraintTest, MethodConstraintFromJson) {
             }
           ]
         })"),
-        context);
-    std::vector<std::unique_ptr<MethodConstraint>> constraints;
-    EXPECT_EQ(AllOfMethodConstraint(std::move(constraints)), *constraint);
-  }
+          context),
+      JsonValidationError);
 
   EXPECT_THROW(
       MethodConstraint::from_json(

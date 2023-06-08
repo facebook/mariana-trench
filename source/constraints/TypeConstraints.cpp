@@ -342,9 +342,13 @@ std::unique_ptr<TypeConstraint> TypeConstraint::from_json(
   std::string constraint_name =
       JsonValidation::string(constraint, "constraint");
   if (constraint_name == "name") {
+    JsonValidation::check_unexpected_members(
+        constraint, {"constraint", "pattern"});
     return std::make_unique<TypePatternConstraint>(
         JsonValidation::string(constraint, "pattern"));
   } else if (constraint_name == "extends") {
+    JsonValidation::check_unexpected_members(
+        constraint, {"constraint", "inner", "include_self"});
     bool includes_self = constraint.isMember("include_self")
         ? JsonValidation::boolean(constraint, /* field */ "include_self")
         : true;
@@ -353,12 +357,18 @@ std::unique_ptr<TypeConstraint> TypeConstraint::from_json(
             JsonValidation::object(constraint, /* field */ "inner")),
         includes_self);
   } else if (constraint_name == "super") {
+    JsonValidation::check_unexpected_members(
+        constraint, {"constraint", "inner"});
     return std::make_unique<SuperConstraint>(TypeConstraint::from_json(
         JsonValidation::object(constraint, /* field */ "inner")));
   } else if (constraint_name == "not") {
+    JsonValidation::check_unexpected_members(
+        constraint, {"constraint", "inner"});
     return std::make_unique<NotTypeConstraint>(TypeConstraint::from_json(
         JsonValidation::object(constraint, /* field */ "inner")));
   } else if (constraint_name == "any_of" || constraint_name == "all_of") {
+    JsonValidation::check_unexpected_members(
+        constraint, {"constraint", "inners"});
     std::vector<std::unique_ptr<TypeConstraint>> constraints;
     for (const auto& inner :
          JsonValidation::null_or_array(constraint, /* field */ "inners")) {
@@ -370,6 +380,8 @@ std::unique_ptr<TypeConstraint> TypeConstraint::from_json(
       return std::make_unique<AllOfTypeConstraint>(std::move(constraints));
     }
   } else if (constraint_name == "has_annotation") {
+    JsonValidation::check_unexpected_members(
+        constraint, {"constraint", "type", "pattern"});
     return std::make_unique<HasAnnotationTypeConstraint>(
         JsonValidation::string(constraint, "type"),
         constraint.isMember("pattern")
@@ -379,6 +391,8 @@ std::unique_ptr<TypeConstraint> TypeConstraint::from_json(
   } else if (
       constraint_name == "is_class" || constraint_name == "is_interface" ||
       constraint_name == "is_enum") {
+    JsonValidation::check_unexpected_members(
+        constraint, {"constraint", "value"});
     bool expected = constraint.isMember("value")
         ? JsonValidation::boolean(constraint, /* field */ "value")
         : true;

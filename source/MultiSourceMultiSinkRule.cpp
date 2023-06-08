@@ -41,6 +41,9 @@ std::unique_ptr<Rule> MultiSourceMultiSinkRule::from_json(
     const std::string& description,
     const Json::Value& value,
     Context& context) {
+  JsonValidation::check_unexpected_members(
+      value, {"name", "code", "description", "multi_sources", "partial_sinks"});
+
   const auto& sources = JsonValidation::object(value, "multi_sources");
   const auto& labels = sources.getMemberNames();
 

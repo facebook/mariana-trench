@@ -149,6 +149,8 @@ std::unique_ptr<ParameterConstraint> ParameterConstraint::from_json(
   std::string constraint_name =
       JsonValidation::string(constraint, "constraint");
   if (constraint_name == "any_of" || constraint_name == "all_of") {
+    JsonValidation::check_unexpected_members(
+        constraint, {"constraint", "inners"});
     std::vector<std::unique_ptr<ParameterConstraint>> constraints;
     for (const auto& inner :
          JsonValidation::null_or_array(constraint, /* field */ "inners")) {
@@ -160,10 +162,14 @@ std::unique_ptr<ParameterConstraint> ParameterConstraint::from_json(
       return std::make_unique<AllOfParameterConstraint>(std::move(constraints));
     }
   } else if (constraint_name == "not") {
+    JsonValidation::check_unexpected_members(
+        constraint, {"constraint", "inner"});
     return std::make_unique<NotParameterConstraint>(
         ParameterConstraint::from_json(
             JsonValidation::object(constraint, /* field */ "inner")));
   } else if (constraint_name == "parameter_has_annotation") {
+    JsonValidation::check_unexpected_members(
+        constraint, {"constraint", "type", "pattern"});
     return std::make_unique<HasAnnotationParameterConstraint>(
         JsonValidation::string(constraint, "type"),
         constraint.isMember("pattern")

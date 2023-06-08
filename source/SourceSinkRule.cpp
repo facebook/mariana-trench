@@ -24,6 +24,9 @@ std::unique_ptr<Rule> SourceSinkRule::from_json(
     const std::string& description,
     const Json::Value& value,
     Context& context) {
+  JsonValidation::check_unexpected_members(
+      value, {"name", "code", "description", "sources", "sinks", "transforms"});
+
   KindSet source_kinds;
   for (const auto& source_kind :
        JsonValidation::nonempty_array(value, /* field */ "sources")) {

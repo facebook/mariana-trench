@@ -588,9 +588,13 @@ std::unique_ptr<MethodConstraint> MethodConstraint::from_json(
   std::string constraint_name =
       JsonValidation::string(constraint, "constraint");
   if (constraint_name == "name") {
+    JsonValidation::check_unexpected_members(
+        constraint, {"constraint", "pattern"});
     return std::make_unique<MethodPatternConstraint>(
         JsonValidation::string(constraint, "pattern"));
   } else if (constraint_name == "parent") {
+    JsonValidation::check_unexpected_members(
+        constraint, {"constraint", "inner", "pattern"});
     if (constraint.isMember("inner") && constraint.isMember("pattern")) {
       throw JsonValidationError(
           constraint,
@@ -612,42 +616,67 @@ std::unique_ptr<MethodConstraint> MethodConstraint::from_json(
               JsonValidation::string(constraint, /* field */ "pattern")));
     }
   } else if (constraint_name == "number_parameters") {
+    JsonValidation::check_unexpected_members(
+        constraint, {"constraint", "inner"});
     return std::make_unique<NumberParametersConstraint>(
         IntegerConstraint::from_json(
             JsonValidation::object(constraint, /* field */ "inner")));
   } else if (constraint_name == "number_overrides") {
+    JsonValidation::check_unexpected_members(
+        constraint, {"constraint", "inner"});
     return std::make_unique<NumberOverridesConstraint>(
         IntegerConstraint::from_json(
             JsonValidation::object(constraint, /* field */ "inner")),
         context);
   } else if (constraint_name == "is_static") {
+    JsonValidation::check_unexpected_members(
+        constraint, {"constraint", "value"});
     bool expected = constraint.isMember("value")
         ? JsonValidation::boolean(constraint, /* field */ "value")
         : true;
     return std::make_unique<IsStaticConstraint>(expected);
   } else if (constraint_name == "is_constructor") {
+    JsonValidation::check_unexpected_members(
+        constraint, {"constraint", "value"});
     bool expected = constraint.isMember("value")
         ? JsonValidation::boolean(constraint, /* field */ "value")
         : true;
     return std::make_unique<IsConstructorConstraint>(expected);
   } else if (constraint_name == "is_native") {
+    JsonValidation::check_unexpected_members(
+        constraint, {"constraint", "value"});
     bool expected = constraint.isMember("value")
         ? JsonValidation::boolean(constraint, /* field */ "value")
         : true;
     return std::make_unique<IsNativeConstraint>(expected);
   } else if (constraint_name == "parameter") {
+    JsonValidation::check_unexpected_members(
+        constraint, {"constraint", "idx", "inner"});
     int index = JsonValidation::integer(constraint, /* field */ "idx");
     return std::make_unique<NthParameterConstraint>(
         index,
         ParameterConstraint::from_json(
             JsonValidation::object(constraint, /* field */ "inner")));
   } else if (constraint_name == "signature") {
+    JsonValidation::check_unexpected_members(
+        constraint, {"constraint", "pattern"});
     return std::make_unique<SignaturePatternConstraint>(
         JsonValidation::string(constraint, /* field */ "pattern"));
   } else if (constraint_name == "signature_pattern") {
+    JsonValidation::check_unexpected_members(
+        constraint, {"constraint", "pattern"});
     return std::make_unique<SignaturePatternConstraint>(
         JsonValidation::string(constraint, /* field */ "pattern"));
   } else if (constraint_name == "signature_match") {
+    JsonValidation::check_unexpected_members(
+        constraint,
+        {"constraint",
+         "name",
+         "names",
+         "parent",
+         "parents",
+         "extends",
+         "include_self"});
     std::vector<std::unique_ptr<MethodConstraint>> constraints;
     int name_count = 0;
     int parent_count = 0;
@@ -702,9 +731,13 @@ std::unique_ptr<MethodConstraint> MethodConstraint::from_json(
     }
     return std::make_unique<AllOfMethodConstraint>(std::move(constraints));
   } else if (constraint_name == "bytecode") {
+    JsonValidation::check_unexpected_members(
+        constraint, {"constraint", "pattern"});
     return std::make_unique<MethodHasStringConstraint>(
         JsonValidation::string(constraint, /* field */ "pattern"));
   } else if (constraint_name == "any_of" || constraint_name == "all_of") {
+    JsonValidation::check_unexpected_members(
+        constraint, {"constraint", "inners"});
     std::vector<std::unique_ptr<MethodConstraint>> constraints;
     for (const auto& inner :
          JsonValidation::null_or_array(constraint, /* field */ "inners")) {
@@ -716,9 +749,12 @@ std::unique_ptr<MethodConstraint> MethodConstraint::from_json(
       return std::make_unique<AllOfMethodConstraint>(std::move(constraints));
     }
   } else if (constraint_name == "return") {
+    JsonValidation::check_unexpected_members(
+        constraint, {"constraint", "inner"});
     return std::make_unique<ReturnConstraint>(TypeConstraint::from_json(
         JsonValidation::object(constraint, /* field */ "inner")));
   } else if (constraint_name == "visibility") {
+    JsonValidation::check_unexpected_members(constraint, {"constraint", "is"});
     auto visibility_string =
         JsonValidation::string(constraint, /* field */ "is");
     auto visibility = string_to_visibility(visibility_string);
@@ -730,14 +766,20 @@ std::unique_ptr<MethodConstraint> MethodConstraint::from_json(
     }
     return std::make_unique<VisibilityMethodConstraint>(*visibility);
   } else if (constraint_name == "not") {
+    JsonValidation::check_unexpected_members(
+        constraint, {"constraint", "inner"});
     return std::make_unique<NotMethodConstraint>(MethodConstraint::from_json(
         JsonValidation::object(constraint, /* field */ "inner"), context));
   } else if (constraint_name == "has_code") {
+    JsonValidation::check_unexpected_members(
+        constraint, {"constraint", "value"});
     bool expected = constraint.isMember("value")
         ? JsonValidation::boolean(constraint, /* field */ "value")
         : true;
     return std::make_unique<HasCodeConstraint>(expected);
   } else if (constraint_name == "has_annotation") {
+    JsonValidation::check_unexpected_members(
+        constraint, {"constraint", "type", "pattern"});
     return std::make_unique<HasAnnotationMethodConstraint>(
         JsonValidation::string(constraint, "type"),
         constraint.isMember("pattern")

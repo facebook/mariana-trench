@@ -84,7 +84,8 @@ class FeatureMayAlwaysSet final
 
   static FeatureMayAlwaysSet from_json(
       const Json::Value& value,
-      Context& context);
+      Context& context,
+      bool check_unexpected_members = true);
   Json::Value to_json() const;
 
   friend std::ostream& operator<<(

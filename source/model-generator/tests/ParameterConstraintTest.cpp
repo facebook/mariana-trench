@@ -198,9 +198,9 @@ TEST_F(ParameterConstraintTest, ParameterConstraintFromJson) {
     }
   }
 
-  {
-    auto constraint = ParameterConstraint::from_json(test::parse_json(
-        R"({
+  EXPECT_THROW(
+      ParameterConstraint::from_json(test::parse_json(
+          R"({
           "constraint": "any_of",
           "inNers": [
             {
@@ -213,10 +213,8 @@ TEST_F(ParameterConstraintTest, ParameterConstraintFromJson) {
               "pattern": "A"
             }
           ]
-        })"));
-    std::vector<std::unique_ptr<ParameterConstraint>> constraints;
-    EXPECT_EQ(AnyOfParameterConstraint(std::move(constraints)), *constraint);
-  }
+        })")),
+      JsonValidationError);
 
   EXPECT_THROW(
       ParameterConstraint::from_json(test::parse_json(
@@ -292,9 +290,9 @@ TEST_F(ParameterConstraintTest, ParameterConstraintFromJson) {
     }
   }
 
-  {
-    auto constraint = ParameterConstraint::from_json(test::parse_json(
-        R"({
+  EXPECT_THROW(
+      ParameterConstraint::from_json(test::parse_json(
+          R"({
           "constraint": "all_of",
           "inNers": [
             {
@@ -307,10 +305,8 @@ TEST_F(ParameterConstraintTest, ParameterConstraintFromJson) {
               "pattern": "A"
             }
           ]
-        })"));
-    std::vector<std::unique_ptr<ParameterConstraint>> constraints;
-    EXPECT_EQ(AllOfParameterConstraint(std::move(constraints)), *constraint);
-  }
+        })")),
+      JsonValidationError);
 
   EXPECT_THROW(
       ParameterConstraint::from_json(test::parse_json(

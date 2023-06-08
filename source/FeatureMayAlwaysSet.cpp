@@ -75,7 +75,8 @@ void FeatureMayAlwaysSet::add(const FeatureMayAlwaysSet& other) {
 
 FeatureMayAlwaysSet FeatureMayAlwaysSet::from_json(
     const Json::Value& value,
-    Context& context) {
+    Context& context,
+    bool check_unexpected_members) {
   auto may_features = FeatureSet{};
   auto always_features = FeatureSet{};
 
@@ -84,6 +85,11 @@ FeatureMayAlwaysSet FeatureMayAlwaysSet::from_json(
   bool is_bottom = true;
 
   JsonValidation::validate_object(value);
+  if (check_unexpected_members) {
+    JsonValidation::check_unexpected_members(
+        value, {"may_features", "always_features"});
+  }
+
   if (value.isMember("may_features")) {
     JsonValidation::null_or_array(value, /* field */ "may_features");
     may_features.join_with(

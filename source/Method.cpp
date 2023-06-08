@@ -157,6 +157,9 @@ const Method* Method::from_json(const Json::Value& value, Context& context) {
         value, /* field */ std::nullopt, /* expected */ "object or string");
   }
 
+  JsonValidation::check_unexpected_members(
+      value, {"name", "parameter_type_overrides"});
+
   auto method_name = JsonValidation::string(value, "name");
 
   auto* dex_method = redex::get_method(method_name);
@@ -168,6 +171,8 @@ const Method* Method::from_json(const Json::Value& value, Context& context) {
   ParameterTypeOverrides parameter_type_overrides;
   for (auto parameter_type_override :
        JsonValidation::null_or_array(value, "parameter_type_overrides")) {
+    JsonValidation::check_unexpected_members(
+        parameter_type_override, {"parameter", "type"});
     auto parameter =
         JsonValidation::integer(parameter_type_override, "parameter");
     auto* type = JsonValidation::dex_type(parameter_type_override, "type");

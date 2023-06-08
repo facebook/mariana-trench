@@ -9,6 +9,7 @@
 
 #include <boost/algorithm/string/trim.hpp>
 #include <boost/filesystem/fstream.hpp>
+#include <boost/range/adaptor/transformed.hpp>
 #include <fmt/format.h>
 
 #include <mariana-trench/Assert.h>
@@ -331,6 +332,31 @@ void JsonValidation::update_object(
 
   for (const auto& key : right.getMemberNames()) {
     left[key] = right[key];
+  }
+}
+
+void JsonValidation::check_unexpected_members(
+    const Json::Value& value,
+    const std::unordered_set<std::string>& valid_members) {
+  validate_object(value);
+
+  for (const std::string& member : value.getMemberNames()) {
+    if (valid_members.find(member) == valid_members.end()) {
+      throw JsonValidationError(
+          value,
+          /* field */ std::nullopt,
+          /* expected */
+          fmt::format(
+              "fields {}, got `{}`",
+              fmt::join(
+                  boost::adaptors::transform(
+                      valid_members,
+                      [](const std::string& member) {
+                        return fmt::format("`{}`", member);
+                      }),
+                  ", "),
+              member));
+    }
   }
 }
 

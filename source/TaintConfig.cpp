@@ -91,8 +91,28 @@ AccessPath validate_and_infer_crtex_callee_port(
 
 TaintConfig TaintConfig::from_json(const Json::Value& value, Context& context) {
   JsonValidation::validate_object(value);
+  JsonValidation::check_unexpected_members(
+      value,
+      {"port", // Only when called from `Model::from_json`
+       "caller_port", // Only when called from `Model::from_json`
+       "type", // Only when called from `Model::from_json` for effects
+       "kind",
+       "partial_label",
+       "callee_port",
+       "callee",
+       "call_position",
+       "distance",
+       "origins",
+       "field_origins",
+       "features",
+       "may_features",
+       "always_features",
+       "via_type_of",
+       "via_value_of",
+       "canonical_names"});
 
-  const Kind* kind = Kind::from_json(value, context);
+  const Kind* kind =
+      Kind::from_json(value, context, /* check_unexpected_members */ false);
 
   auto callee_port = AccessPath(Root(Root::Kind::Leaf));
   if (value.isMember("callee_port")) {
@@ -127,7 +147,8 @@ TaintConfig TaintConfig::from_json(const Json::Value& value, Context& context) {
   // features should go under "user_features", but this gives a way to override
   // that behavior and specify "may/always" features. Note that local inferred
   // features cannot be user-specified.
-  auto inferred_features = FeatureMayAlwaysSet::from_json(value, context);
+  auto inferred_features = FeatureMayAlwaysSet::from_json(
+      value, context, /* check_unexpected_members */ false);
 
   // User specified always-features.
   FeatureSet user_features;

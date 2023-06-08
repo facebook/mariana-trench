@@ -45,6 +45,7 @@ bool IntegerConstraint::operator==(const IntegerConstraint& other) const {
 
 IntegerConstraint IntegerConstraint::from_json(const Json::Value& constraint) {
   JsonValidation::validate_object(constraint);
+  JsonValidation::check_unexpected_members(constraint, {"constraint", "value"});
 
   auto constraint_name = JsonValidation::string(constraint, "constraint");
   auto rhs = JsonValidation::integer(constraint, "value");

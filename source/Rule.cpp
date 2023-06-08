@@ -32,12 +32,12 @@ std::unique_ptr<Rule> Rule::from_json(
       value.isMember("multi_sources") && value.isMember("partial_sinks")) {
     return MultiSourceMultiSinkRule::from_json(
         name, code, description, value, context);
+  } else {
+    throw JsonValidationError(
+        value,
+        std::nullopt,
+        "keys: sources+sinks or multi_sources+partial_sinks");
   }
-
-  throw JsonValidationError(
-      value,
-      std::nullopt,
-      "keys: sources+sinks or multi_sources+partial_sinks");
 }
 
 Json::Value Rule::to_json() const {

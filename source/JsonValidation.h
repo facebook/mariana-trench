@@ -9,6 +9,7 @@
 
 #include <optional>
 #include <string>
+#include <unordered_set>
 
 #include <boost/filesystem.hpp>
 #include <json/json.h>
@@ -87,6 +88,11 @@ class JsonValidation final {
    * object, in place.
    */
   static void update_object(Json::Value& left, const Json::Value& right);
+
+  /* Error on invalid members of a json object. */
+  static void check_unexpected_members(
+      const Json::Value& value,
+      const std::unordered_set<std::string>& valid_members);
 };
 
 } // namespace marianatrench

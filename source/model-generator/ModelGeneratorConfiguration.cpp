@@ -18,6 +18,7 @@ ModelGeneratorConfiguration::ModelGeneratorConfiguration(
 ModelGeneratorConfiguration ModelGeneratorConfiguration::from_json(
     const Json::Value& value) {
   JsonValidation::validate_object(value);
+  JsonValidation::check_unexpected_members(value, {"name"});
 
   return ModelGeneratorConfiguration(JsonValidation::string(value, "name"));
 }

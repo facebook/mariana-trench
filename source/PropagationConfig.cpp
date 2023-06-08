@@ -15,6 +15,16 @@ PropagationConfig PropagationConfig::from_json(
     const Json::Value& value,
     Context& context) {
   JsonValidation::validate_object(value);
+  JsonValidation::check_unexpected_members(
+      value,
+      {"output",
+       "input",
+       "may_features",
+       "always_features",
+       "features",
+       "collapse",
+       "collapse-depth",
+       "transforms"});
 
   JsonValidation::string(value, /* field */ "output");
   auto output = AccessPath::from_json(value["output"]);
@@ -42,7 +52,8 @@ PropagationConfig PropagationConfig::from_json(
         "an access path to an argument or supported call effect");
   }
 
-  auto inferred_features = FeatureMayAlwaysSet::from_json(value, context);
+  auto inferred_features = FeatureMayAlwaysSet::from_json(
+      value, context, /* check_unexpected_members */ false);
   FeatureSet user_features = FeatureSet::from_json(value["features"], context);
 
   auto collapse_depth = CollapseDepth::zero();

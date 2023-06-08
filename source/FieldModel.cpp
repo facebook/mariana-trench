@@ -124,6 +124,9 @@ FieldModel FieldModel::from_json(
     const Json::Value& value,
     Context& context) {
   JsonValidation::validate_object(value);
+  JsonValidation::check_unexpected_members(
+      value, {"field", "sources", "sinks"});
+
   FieldModel model(field);
 
   for (auto source_value :
