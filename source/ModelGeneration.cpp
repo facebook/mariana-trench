@@ -123,7 +123,7 @@ ModelGeneratorResult ModelGeneration::run(
     }
   }
 
-  auto builtin_generators = make_model_generators(context);
+  auto generator_definitions = make_model_generators(context);
   std::vector<std::unique_ptr<ModelGenerator>> model_generators;
   const auto& configuration_entries = options.model_generators_configuration();
 
@@ -132,8 +132,8 @@ ModelGeneratorResult ModelGeneration::run(
     const std::string& name = entry.name();
     LOG(2, "Found model generator: `{}`", name);
 
-    auto iterator = builtin_generators.find(name);
-    if (iterator == builtin_generators.end()) {
+    auto iterator = generator_definitions.find(name);
+    if (iterator == generator_definitions.end()) {
       bool generator_exists = std::any_of(
           model_generators.begin(),
           model_generators.end(),
@@ -143,7 +143,7 @@ ModelGeneratorResult ModelGeneration::run(
       }
     } else {
       model_generators.push_back(std::move(iterator->second));
-      builtin_generators.erase(iterator);
+      generator_definitions.erase(iterator);
     }
   }
 
