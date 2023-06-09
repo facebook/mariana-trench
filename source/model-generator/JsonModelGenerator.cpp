@@ -113,7 +113,7 @@ JsonModelGenerator::JsonModelGenerator(
   for (auto model_generator :
        JsonValidation::nonempty_array(value, /* field */ "model_generators")) {
     JsonValidation::check_unexpected_members(
-        model_generator, {"find", "where", "model", "verbosity"});
+        model_generator, {"find", "where", "model", "verbosity", "_comment"});
 
     int verbosity = model_generator.isMember("verbosity")
         ? JsonValidation::integer(model_generator, "verbosity")
