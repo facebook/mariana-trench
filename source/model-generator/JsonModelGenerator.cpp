@@ -37,7 +37,7 @@ std::vector<Model> JsonModelGeneratorItem::visit_method(
         method->is_static() ? "(static) " : "",
         method->show(),
         name_);
-    auto model = model_template_.instantiate(method, context_);
+    auto model = model_template_.instantiate(method, context_, verbosity_);
     // If a method has an empty model, then don't add a model
     if (model) {
       models.push_back(*model);

@@ -290,7 +290,11 @@ class ForAllParameters final {
 
   /* Update a model with new sinks/generations/... when the model is/will be
    * instantiated with the method. Return true if the model was updated. */
-  bool instantiate(Model& model, const Method* method, Context& context) const;
+  bool instantiate(
+      Model& model,
+      const Method* method,
+      Context& context,
+      int verbosity) const;
 
  private:
   std::unique_ptr<AllOfParameterConstraint> constraints_;
@@ -322,8 +326,8 @@ class ModelTemplate final {
 
   /* Create a model with information that is associated with a method (e.g. new
    * sinks/generations/...). */
-  std::optional<Model> instantiate(const Method* method, Context& context)
-      const;
+  std::optional<Model>
+  instantiate(const Method* method, Context& context, int verbosity) const;
   static ModelTemplate from_json(
       const Json::Value& model_generator,
       Context& context);

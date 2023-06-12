@@ -631,14 +631,17 @@ ForAllParameters ForAllParameters::from_json(
 bool ForAllParameters::instantiate(
     Model& model,
     const Method* method,
-    Context& context) const {
+    Context& context,
+    int verbosity) const {
   bool updated = false;
   ParameterPosition index = method->first_parameter_index();
   for (auto type : *method->get_proto()->get_args()) {
     const auto* annotations_set = method->get_parameter_annotations(index);
 
     if (constraints_->satisfy(annotations_set, type)) {
-      LOG(3, "Type {} satifies constraints in for_all_parameters", show(type));
+      LOG(verbosity,
+          "Type `{}` satifies constraints in for_all_parameters",
+          show(type));
       TemplateVariableMapping variable_mapping;
       variable_mapping.insert(variable_, index);
 
@@ -697,12 +700,14 @@ ModelTemplate::ModelTemplate(
 
 std::optional<Model> ModelTemplate::instantiate(
     const Method* method,
-    Context& context) const {
+    Context& context,
+    int verbosity) const {
   Model model = model_.instantiate(method, context);
 
   bool updated = false;
   for (const auto& for_all_parameters : for_all_parameters_) {
-    bool result = for_all_parameters.instantiate(model, method, context);
+    bool result =
+        for_all_parameters.instantiate(model, method, context, verbosity);
     updated = updated || result;
   }
 
@@ -714,8 +719,8 @@ std::optional<Model> ModelTemplate::instantiate(
   if (!model_.empty() || updated) {
     return model;
   } else {
-    LOG(3,
-        "Method {} generates no new sinks/generations/propagations/sources from {} for_all_parameters constraints:\nInstantiated model: {}.\nModel template: {}.",
+    LOG(verbosity,
+        "Method `{}` generates no new sinks/generations/propagations/sources from {} for_all_parameters constraints:\nInstantiated model: {}.\nModel template: {}.",
         method->show(),
         for_all_parameters_.size(),
         JsonValidation::to_styled_string(
