@@ -44,7 +44,8 @@ TEST_F(DataCastFeatureGeneratorTest, CastToInt) {
   auto* method = context.methods->get(dex_method);
 
   EXPECT_THAT(
-      JsonModelGenerator("DataCastFeatureGenerator", context, json_file_path())
+      JsonModelGenerator::from_file(
+          "DataCastFeatureGenerator", context, json_file_path())
           .emit_method_models(*context.methods),
       testing::UnorderedElementsAre(Model(
           /* method */ method,
@@ -83,7 +84,8 @@ TEST_F(DataCastFeatureGeneratorTest, CastToBool) {
   auto* method = context.methods->get(dex_method);
 
   EXPECT_THAT(
-      JsonModelGenerator("DataCastFeatureGenerator", context, json_file_path())
+      JsonModelGenerator::from_file(
+          "DataCastFeatureGenerator", context, json_file_path())
           .emit_method_models(*context.methods),
       testing::UnorderedElementsAre(Model(
           /* method */ method,

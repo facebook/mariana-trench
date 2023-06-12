@@ -116,7 +116,7 @@ TEST_P(JsonModelGeneratorIntegrationTest, CompareModels) {
 
   // Run a model generator and compare output
   auto [models, field_models] =
-      JsonModelGenerator(
+      JsonModelGenerator::from_file(
           "TestModelGenerator", context, (directory / "model_generator.json"))
           .run(*context.methods, *context.fields);
   auto registry = Registry(context, models, field_models);

@@ -102,12 +102,10 @@ std::vector<FieldModel> JsonFieldModelGeneratorItem::visit_field(
 JsonModelGenerator::JsonModelGenerator(
     const std::string& name,
     Context& context,
-    const boost::filesystem::path& json_configuration_file)
+    const boost::filesystem::path& json_configuration_file,
+    const Json::Value& value)
     : ModelGenerator(name, context),
       json_configuration_file_(json_configuration_file) {
-  const Json::Value& value =
-      JsonValidation::parse_json_file(json_configuration_file);
-
   JsonValidation::check_unexpected_members(value, {"model_generators"});
 
   for (auto model_generator :
@@ -157,6 +155,22 @@ JsonModelGenerator::JsonModelGenerator(
       EventLogger::log_event("model_generator_error", error);
     }
   }
+}
+
+JsonModelGenerator JsonModelGenerator::from_file(
+    const std::string& name,
+    Context& context,
+    const boost::filesystem::path& json_configuration_file) {
+  Json::Value json = JsonValidation::parse_json_file(json_configuration_file);
+  return JsonModelGenerator(name, context, json_configuration_file, json);
+}
+
+JsonModelGenerator JsonModelGenerator::from_json(
+    const std::string& name,
+    Context& context,
+    const boost::filesystem::path& json_configuration_file,
+    const Json::Value& json) {
+  return JsonModelGenerator(name, context, json_configuration_file, json);
 }
 
 std::vector<Model> JsonModelGenerator::emit_method_models(

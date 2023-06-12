@@ -49,9 +49,20 @@ std::map<std::string, std::unique_ptr<ModelGenerator>> make_model_generators(
       auto name = path_copy.replace_extension("").filename().string();
 
       try {
+        Json::Value json = JsonValidation::parse_json_file(entry.path());
+
+        if (!json.isObject()) {
+          // TODO(T153463464): This means it is most likely not a model
+          // generator (it could be a rule definition file, lifecycle
+          // definition file, etc.). Ignore it silently for now. In the future,
+          // we should use the extension to differentiate between file types.
+          continue;
+        }
+
         auto [_, inserted] = generators.emplace(
             name,
-            std::make_unique<JsonModelGenerator>(name, context, entry.path()));
+            std::make_unique<JsonModelGenerator>(JsonModelGenerator::from_json(
+                name, context, entry.path(), json)));
         if (!inserted) {
           auto error = fmt::format(
               "Duplicate model generator {} defined at {}", name, entry.path());
@@ -61,7 +72,7 @@ std::map<std::string, std::unique_ptr<ModelGenerator>> make_model_generators(
       } catch (const JsonValidationError& e) {
         auto error = fmt::format(
             "Unable to parse generator at `{}`: {}", entry.path(), e.what());
-        LOG(3, error);
+        LOG(1, error);
         EventLogger::log_event(
             "model_generator_error", fmt::format("{}\n{}", error, e.what()));
       }

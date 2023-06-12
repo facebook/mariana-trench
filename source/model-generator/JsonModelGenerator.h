@@ -8,6 +8,7 @@
 #pragma once
 
 #include <mariana-trench/Context.h>
+#include <mariana-trench/JsonValidation.h>
 #include <mariana-trench/Model.h>
 #include <mariana-trench/constraints/FieldConstraints.h>
 #include <mariana-trench/constraints/MethodConstraints.h>
@@ -57,11 +58,24 @@ class JsonFieldModelGeneratorItem final : public FieldVisitorModelGenerator {
 };
 
 class JsonModelGenerator final : public ModelGenerator {
- public:
+ private:
   explicit JsonModelGenerator(
       const std::string& name,
       Context& context,
+      const boost::filesystem::path& json_configuration_file,
+      const Json::Value& json);
+
+ public:
+  static JsonModelGenerator from_file(
+      const std::string& name,
+      Context& context,
       const boost::filesystem::path& json_configuration_file);
+
+  static JsonModelGenerator from_json(
+      const std::string& name,
+      Context& context,
+      const boost::filesystem::path& json_configuration_file,
+      const Json::Value& json);
 
   std::vector<Model> emit_method_models(const Methods&) override;
   std::vector<Model> emit_method_models_optimized(
