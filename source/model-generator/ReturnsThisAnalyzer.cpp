@@ -195,7 +195,7 @@ bool method_returns_this(const Method* method) {
   fixpoint.run(ReturnsThisEnvironment());
 
   if (context->return_locations().size() == 0) {
-    LOG(1, "{} does not have return locations!", method->show());
+    LOG(3, "{} does not have return locations!", method->show());
     return false;
   }
 
