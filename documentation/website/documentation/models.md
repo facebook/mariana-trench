@@ -723,7 +723,10 @@ Each "rule" defines a "filter" (which uses "constraints" to specify methods for 
 - `find`: The type of thing to find. We support `methods` and `fields`;
 - `where`: A list of "constraints". All constraints **must be satisfied** by a method or field in order to generate a model for it. All the constraints are listed below, grouped by the type of object they are applied to:
   - **Method**:
-    - `signature`: Expects an extra property `pattern` which is a regex to fully match the full signature (class, method, argument types) of a method;
+    - `signature | signature_pattern`: Expects an extra property `pattern` which is a regex to fully match the full signature (class, method, argument types) of a method;
+    - `signature_match`: Expects at least one of the two allowed groups of extra properties: `[name | names] [parent | parents | extends [include_self]]` where:
+      - `name` (a single string) or `names` (a list of alternative strings): is exact matched to the method name
+      - `parent` (a single string) or `parents` (a list of alternative strings) is exact matched to the  class of the method or `extends` (either a single string or a list of alternative strings) is exact matched to the base classes or interfaces of the method. `extends` allows an additional property `includes_self` which is a boolean to indicate if the constraint is applied to the class itself or not.
     - `parent`: Expects an extra property `inner` [Type] which contains a nested constraint to apply to the class holding the method;
     - `parameter`: Expects an extra properties `idx` and `inner` [Parameter] or [Type], matches when the idx-th parameter of the function or method matches the nested constraint inner;
     - `return`: Expects an extra property `inner` [Type] which contains a nested constraint to apply to the return of the method;
