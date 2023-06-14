@@ -1066,12 +1066,7 @@ bool ForwardTaintTransfer::analyze_aput(
 
   // We use a single memory location for the array and its elements.
   LOG_OR_DUMP(
-      context,
-      4,
-      "Tainting register {} with {}",
-      instruction->src(1),
-      taint,
-      UpdateKind::Weak);
+      context, 4, "Tainting register {} with {}", instruction->src(1), taint);
   environment->write(
       aliasing.register_memory_locations(instruction->src(1)),
       taint,
