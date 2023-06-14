@@ -51,10 +51,10 @@ DexProto* Method::get_proto() const {
 DexAnnotationSet* MT_NULLABLE
 Method::get_parameter_annotations(const ParameterPosition index) const {
   DexAnnotationSet* annotations_set = nullptr;
-  auto parameter_index = index - this->first_parameter_index();
+  int parameter_index = index - first_parameter_index();
   // `this` parameter does not have annotations.
   if (parameter_index >= 0) {
-    if (const auto param_annotations = this->dex_method()->get_param_anno()) {
+    if (const auto param_annotations = dex_method()->get_param_anno()) {
       const auto& result = param_annotations->find(parameter_index);
       if (result != param_annotations->end()) {
         annotations_set = result->second.get();
