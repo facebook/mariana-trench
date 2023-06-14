@@ -209,6 +209,7 @@ ReceiverInfo::receiver_dex_type(const ShimMethod& shim_method) const {
       return dex_type;
     }
   }
+  mt_unreachable();
 }
 
 TargetTemplate::TargetTemplate(
@@ -267,6 +268,7 @@ std::optional<ShimTargetVariant> TargetTemplate::instantiate(
     case Kind::LIFECYCLE:
       return try_make_shim_lifecycle_target(*this, shim_method);
   }
+  mt_unreachable();
 }
 
 std::ostream& operator<<(std::ostream& out, const ReceiverInfo& info) {
