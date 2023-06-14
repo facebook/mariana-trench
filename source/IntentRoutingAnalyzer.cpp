@@ -91,9 +91,9 @@ class Transfer final : public InstructionAnalyzerBase<
                            IntentRoutingContext*> {
  public:
   static bool analyze_default(
-      IntentRoutingContext* context,
-      const IRInstruction* instruction,
-      InstructionsToRoutedIntents* current_state) {
+      IntentRoutingContext* /* context */,
+      const IRInstruction* /* instruction */,
+      InstructionsToRoutedIntents* /* current_state */) {
     return false;
   }
 

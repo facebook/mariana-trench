@@ -177,7 +177,7 @@ bool ForwardAliasTransfer::analyze_invoke(
 bool ForwardAliasTransfer::analyze_iput(
     MethodContext* context,
     const IRInstruction* instruction,
-    ForwardAliasEnvironment* environment) {
+    ForwardAliasEnvironment* /* environment */) {
   log_instruction(context, instruction);
 
   // This is a no-op.
@@ -187,7 +187,7 @@ bool ForwardAliasTransfer::analyze_iput(
 bool ForwardAliasTransfer::analyze_sput(
     MethodContext* context,
     const IRInstruction* instruction,
-    ForwardAliasEnvironment* environment) {
+    ForwardAliasEnvironment* /* environment */) {
   log_instruction(context, instruction);
   mt_assert(instruction->srcs_size() == 1);
   mt_assert(instruction->has_field());

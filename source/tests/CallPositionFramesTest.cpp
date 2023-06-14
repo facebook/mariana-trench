@@ -1300,7 +1300,7 @@ TEST_F(CallPositionFramesTest, FeaturesAndPositions) {
   // Remove a frame. Verify that local_position of the other frame,
   // i.e. local positions were kept separately after a join_with.
   frames.filter_invalid_frames(
-      /* is_valid */ [&](auto _callee, auto access_path, auto _kind) {
+      /* is_valid */ [&](auto /* callee */, auto access_path, auto /* kind */) {
         return access_path == AccessPath(Root(Root::Kind::Return));
       });
   EXPECT_EQ(frames.local_positions(), LocalPositionSet{test_position_one});
@@ -1315,7 +1315,7 @@ TEST_F(CallPositionFramesTest, FeaturesAndPositions) {
       frames.local_positions(),
       (LocalPositionSet{test_position_one, test_position_two}));
   frames.filter_invalid_frames(
-      /* is_valid */ [&](auto _callee, auto access_path, auto _kind) {
+      /* is_valid */ [&](auto /* callee */, auto access_path, auto /* kind */) {
         return access_path == AccessPath(Root(Root::Kind::Return));
       });
   EXPECT_EQ(
@@ -1851,7 +1851,7 @@ TEST_F(CallPositionFramesTest, MapPositions) {
   // Verify bottom() maps to nothing (empty map).
   auto frames = CallPositionFrames::bottom();
   auto new_positions = frames.map_positions(
-      /* new_call_position */ [&](const auto& _access_path,
+      /* new_call_position */ [&](const auto& /* access_path */,
                                   const auto* position) { return position; },
       /* new_local_positions */
       [&](const auto& local_positions) { return local_positions; });
@@ -1948,7 +1948,7 @@ TEST_F(CallPositionFramesTest, MapPositions) {
   };
   frames.set_local_positions(LocalPositionSet{test_position_two});
   new_positions = frames.map_positions(
-      /* new_call_position */ [&](const auto& _access_path,
+      /* new_call_position */ [&](const auto& /* access_path */,
                                   const auto* position) { return position; },
       /* new_local_positiions */
       [&](const auto& local_positions) {

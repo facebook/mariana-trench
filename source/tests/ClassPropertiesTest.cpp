@@ -93,8 +93,8 @@ class MockAndroidResources : public AndroidResources {
   }
 
   void collect_xml_attribute_string_values_for_file(
-      const std::string& file_path,
-      std::unordered_set<std::string>* out) override {}
+      const std::string& /* file_path */,
+      std::unordered_set<std::string>* /* out */) override {}
 
  protected:
   std::vector<std::string> find_res_directories() override {

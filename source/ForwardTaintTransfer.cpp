@@ -1018,7 +1018,7 @@ bool ForwardTaintTransfer::analyze_load_param(
 bool ForwardTaintTransfer::analyze_move(
     MethodContext* context,
     const IRInstruction* instruction,
-    ForwardTaintEnvironment* environment) {
+    ForwardTaintEnvironment* /* environment */) {
   log_instruction(context, instruction);
 
   // This is a no-op for taint.
@@ -1158,7 +1158,6 @@ namespace {
 void infer_output_taint(
     MethodContext* context,
     Root output_root,
-    const PropagationKind* propagation_kind,
     const TaintTree& taint) {
   for (const auto& [output_path, sources] : taint.elements()) {
     auto generation = sources;
@@ -1198,10 +1197,7 @@ bool ForwardTaintTransfer::analyze_return(
   for (auto register_id : instruction->srcs()) {
     auto memory_locations = aliasing.register_memory_locations(register_id);
     infer_output_taint(
-        context,
-        Root(Root::Kind::Return),
-        context->kind_factory.local_return(),
-        environment->read(memory_locations));
+        context, Root(Root::Kind::Return), environment->read(memory_locations));
 
     for (const auto& [path, sinks] : return_sinks.elements()) {
       Taint sources =
@@ -1226,7 +1222,6 @@ bool ForwardTaintTransfer::analyze_return(
     infer_output_taint(
         context,
         Root(Root::Kind::Argument, 0),
-        context->kind_factory.local_receiver(),
         environment->read(context->memory_factory.make_parameter(0)));
   }
 

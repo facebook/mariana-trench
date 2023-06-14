@@ -20,7 +20,7 @@ TaintTree apply_propagation(
   const auto* kind = propagation.kind();
   mt_assert(kind != nullptr);
 
-  if (const auto* propagation_kind = kind->as<PropagationKind>()) {
+  if (kind->is<PropagationKind>()) {
     return input_taint_tree;
   }
 
