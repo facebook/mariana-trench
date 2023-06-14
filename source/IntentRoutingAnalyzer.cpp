@@ -301,9 +301,9 @@ std::vector<ShimTarget> IntentRoutingAnalyzer::get_intent_routing_targets(
     for (const auto& intent_getter : intent_getters->second) {
       intent_routing_targets.emplace_back(
           intent_getter,
-          ShimParameterMapping{
-              {Root(Root::Kind::CallEffectIntent),
-               intent_parameter_position->second}});
+          ShimParameterMapping(
+              {{Root(Root::Kind::CallEffectIntent),
+                intent_parameter_position->second}}));
     }
   }
 
