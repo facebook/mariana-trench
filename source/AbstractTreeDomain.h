@@ -293,9 +293,9 @@ class AbstractTreeDomain final
         other.children_.at(PathElement::any_index().encode());
 
     // Cases:
-    //  left_tree[c] <= right_tree[c] for all c in C /\
-    //  left_tree[*] <= right_tree[*] if left_tree[*] present /\
-    //  left_tree[l] <= right_tree[*] for all l in L.
+    //  - left_tree[c] <= right_tree[c] for all c in C
+    //  - left_tree[*] <= right_tree[*] if left_tree[*] present
+    //  - left_tree[l] <= right_tree[*] for all l in L.
     for (const auto& [path_element, subtree] :
          PathElementMapIterator(children_)) {
       // Default to right_tree[*] for set of indices L
@@ -313,8 +313,8 @@ class AbstractTreeDomain final
     const auto& subtree_star = children_.at(PathElement::any_index().encode());
 
     // Cases:
-    //  left_tree[*] <= right_tree[r] for all r in R /\
-    //  left_tree[*] <= right_tree[*] if right_tree[*] present.
+    //  - left_tree[*] <= right_tree[r] for all r in R
+    //  - left_tree[*] <= right_tree[*] if right_tree[*] present.
     for (const auto& [path_element, other_subtree] :
          PathElementMapIterator(other.children_)) {
       if (path_element.is_field()) {
