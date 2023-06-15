@@ -6,10 +6,10 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
+      - uses: Homebrew/actions/setup-homebrew@master
 
       - name: Install dependencies
-        run: brew install cmake zlib boost googletest jsoncpp fmt re2
-
+        run: brew install cmake zlib boost googletest jsoncpp re2
 
       - name: Install Redex
         run: |
@@ -22,27 +22,53 @@ jobs:
           make install
           cd ../..
 
+      - name: Install fmt
+        run: |
+          git clone https://github.com/fmtlib/fmt.git
+          cd fmt
+          git checkout 9.1.0
+          mkdir build
+          cd build
+          cmake -DCMAKE_INSTALL_PREFIX="../install" ..
+          make -j$(sysctl -n hw.ncpu)
+          make install
+          cd ../..
+
       - name: Build and Test Mariana Trench
         run: |
           mkdir build
           cd build
-          cmake -DREDEX_ROOT="../redex/install" -DCMAKE_INSTALL_PREFIX="../install" ..
+          cmake -DREDEX_ROOT="../redex/install" -Dfmt_ROOT="../fmt/install" -DFMT_DEPRECATED_OSTREAM=ON -DCMAKE_INSTALL_PREFIX="../install" ..
           make -j$(sysctl -n hw.ncpu)
           make install
           make check -j$(sysctl -n hw.ncpu)
 
   run-tests-linux:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
 
     steps:
       - uses: actions/checkout@v2
+      - uses: Homebrew/actions/setup-homebrew@master
 
       - name: Install dependencies
         run: |
-          brew install cmake zlib boost jsoncpp fmt re2 git
+          brew install cmake zlib boost jsoncpp re2 git
           brew install googletest --build-from-source
           sudo apt update
           sudo apt install default-jre default-jdk
+
+      - name: Install fmt
+        run: |
+          git clone https://github.com/fmtlib/fmt.git
+          cd fmt
+          git checkout 9.1.0
+          mkdir build
+          cd build
+          cmake -DCMAKE_INSTALL_PREFIX="../install" ..
+          make -j$(nproc)
+          make install
+          cd ../..
+
 
       - name: Install Redex and build and test Mariana Trench
         run: |
@@ -57,7 +83,7 @@ jobs:
           cd ../..
           mkdir build
           cd build
-          cmake -DREDEX_ROOT="../redex/install" -DCMAKE_INSTALL_PREFIX="../install" ..
+          cmake -DREDEX_ROOT="../redex/install" -Dfmt_ROOT="../fmt/install" -DFMT_DEPRECATED_OSTREAM=ON -DCMAKE_INSTALL_PREFIX="../install" ..
           make -j$(nproc)
           make install
           make check -j$(nproc)
