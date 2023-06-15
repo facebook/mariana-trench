@@ -65,7 +65,7 @@ find_package(Boost 1.75.0 REQUIRED
 # We use `CONFIG` to find the `GTestConfig.cmake` provided by gtest, which properly defines GMock.
 find_package(GTest 1.10.0 REQUIRED CONFIG)
 find_package(JsonCpp 1.9.4 REQUIRED)
-find_package(fmt 7.1.2 REQUIRED)
+find_package(fmt 7.1.2...<10.0.0 REQUIRED)
 find_package(re2 REQUIRED)
 find_package(Redex REQUIRED)
 
@@ -80,6 +80,11 @@ elseif (CMAKE_CXX_COMPILER_ID MATCHES "GNU")
   add_compile_options("-Wall" "-Wextra" "-Wno-nonnull-compare")
 else()
   message(WARNING "Compiler ${CMAKE_CXX_COMPILER_ID} is not currently supported.")
+endif()
+
+# If specified, enable automatic std::ostream insertion operator (operator<<) discovery for fmt >8
+if (FMT_DEPRECATED_OSTREAM)
+  add_compile_options("-DFMT_DEPRECATED_OSTREAM=ON")
 endif()
 
 # Targets
