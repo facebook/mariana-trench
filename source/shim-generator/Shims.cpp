@@ -52,7 +52,7 @@ std::optional<Shim> Shims::get_shim_for_caller(
   }
 
   std::vector<ShimTarget> intent_routing_targets =
-      intent_routing_analyzer_.get_intent_routing_targets(
+      intent_routing_analyzer_.get().get_intent_routing_targets(
           original_callee, caller);
 
   if (instantiated_shim == nullptr && intent_routing_targets.empty()) {

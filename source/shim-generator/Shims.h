@@ -7,7 +7,10 @@
 
 #pragma once
 
+#include <functional>
+
 #include <ConcurrentContainers.h>
+
 #include <mariana-trench/IncludeMacros.h>
 #include <mariana-trench/IntentRoutingAnalyzer.h>
 #include <mariana-trench/Method.h>
@@ -24,7 +27,7 @@ class Shims final {
       std::size_t global_shims_size,
       const IntentRoutingAnalyzer& intent_routing_analyzer)
       : global_shims_(global_shims_size),
-        intent_routing_analyzer_(intent_routing_analyzer) {}
+        intent_routing_analyzer_(std::cref(intent_routing_analyzer)) {}
 
   INCLUDE_DEFAULT_COPY_CONSTRUCTORS_AND_ASSIGNMENTS(Shims)
 
@@ -37,7 +40,7 @@ class Shims final {
  private:
   MethodToShimMap global_shims_;
 
-  const IntentRoutingAnalyzer& intent_routing_analyzer_;
+  std::reference_wrapper<const IntentRoutingAnalyzer> intent_routing_analyzer_;
 };
 
 } // namespace marianatrench
