@@ -1028,7 +1028,7 @@ bool ForwardTaintTransfer::analyze_move(
 bool ForwardTaintTransfer::analyze_move_result(
     MethodContext* context,
     const IRInstruction* instruction,
-    ForwardTaintEnvironment* environment) {
+    ForwardTaintEnvironment* /* environment */) {
   log_instruction(context, instruction);
 
   // This is a no-op for taint.
@@ -1038,7 +1038,7 @@ bool ForwardTaintTransfer::analyze_move_result(
 bool ForwardTaintTransfer::analyze_aget(
     MethodContext* context,
     const IRInstruction* instruction,
-    ForwardTaintEnvironment* environment) {
+    ForwardTaintEnvironment* /* environment */) {
   log_instruction(context, instruction);
 
   // This is a no-op for taint.

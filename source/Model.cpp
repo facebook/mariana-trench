@@ -127,6 +127,7 @@ std::string model_freeze_kind_to_string(Model::FreezeKind freeze_kind) {
     case Model::FreezeKind::Propagations:
       return "propagation";
   }
+  mt_unreachable();
 }
 
 std::optional<Model::FreezeKind> string_to_freeze_kind(

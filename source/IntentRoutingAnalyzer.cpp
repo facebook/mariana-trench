@@ -100,7 +100,7 @@ class Transfer final : public InstructionAnalyzerBase<
   static bool analyze_invoke(
       IntentRoutingContext* context,
       const IRInstruction* instruction,
-      InstructionsToRoutedIntents* current_state) {
+      InstructionsToRoutedIntents* /* current_state */) {
     LOG_OR_DUMP(context, 4, "Analyzing instruction: {}", show(instruction));
     DexMethodRef* dex_method_reference = instruction->get_method();
     auto method = resolve_method(
