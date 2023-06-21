@@ -8,8 +8,10 @@ if (NOT AndroidSDK_FOUND)
 
   if (ANDROID_SDK)
     set(ANDROID_SDK_SEARCH_DIR "${ANDROID_SDK}")
-  else()
+  elseif(APPLE)
     set(ANDROID_SDK_SEARCH_DIR "$ENV{HOME}/Library/Android/sdk")
+  else()
+    set(ANDROID_SDK_SEARCH_DIR "/usr/local/lib/android/sdk")
   endif()
 
   file(GLOB ANDROID_BUILD_TOOLS "${ANDROID_SDK_SEARCH_DIR}/build-tools/*")
