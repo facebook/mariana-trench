@@ -213,5 +213,21 @@ else()
   generate_integration_test(json-model-generator)
 endif()
 
+if(INCLUDE_INTEGRATION_TESTS)
+  list(JOIN INCLUDE_INTEGRATION_TESTS " |" include_tests)
+  message(STATUS "Only integration tests matching the following regex will be included: \"${include_tests}\"")
+else()
+  set(include_tests ".*")
+endif()
+
+if(EXCLUDE_INTEGRATION_TESTS)
+  list(JOIN EXCLUDE_INTEGRATION_TESTS " |" exclude_tests)
+  message(STATUS "Integration tests matching the following regex will be excluded: \"${exclude_tests}\"")
+else()
+  set(exclude_tests "")
+endif()
+
 # CMake's `test` target does not build the tests, so we define our own `check` target.
-add_custom_target(check COMMAND ${CMAKE_CTEST_COMMAND} DEPENDS build-tests)
+add_custom_target(check
+        COMMAND ${CMAKE_CTEST_COMMAND} -R "\"${include_tests}\"" -E "\"${exclude_tests}\""
+        DEPENDS build-tests)
