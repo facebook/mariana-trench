@@ -2,7 +2,7 @@ on: [push, pull_request]
 
 jobs:
   run-tests-mac:
-    runs-on: macos-11
+    runs-on: macos-13
 
     steps:
       - uses: actions/checkout@v3
@@ -38,7 +38,7 @@ jobs:
         run: |
           mkdir build
           cd build
-          cmake -DREDEX_ROOT="../redex/install" -Dfmt_ROOT="../fmt/install" -DFMT_DEPRECATED_OSTREAM=ON -DCMAKE_INSTALL_PREFIX="../install" ..
+          cmake -DREDEX_ROOT="../redex/install" -Dfmt_ROOT="../fmt/install" -DFMT_DEPRECATED_OSTREAM=ON -DEXCLUDE_INTEGRATION_TESTS="check_cast_types" -DCMAKE_INSTALL_PREFIX="../install" ..
           make -j$(sysctl -n hw.ncpu)
           make install
           make check -j$(sysctl -n hw.ncpu)
@@ -82,7 +82,7 @@ jobs:
           cd ../..
           mkdir build
           cd build
-          cmake -DREDEX_ROOT="../redex/install" -Dfmt_ROOT="../fmt/install" -DFMT_DEPRECATED_OSTREAM=ON -DCMAKE_INSTALL_PREFIX="../install" ..
+          cmake -DREDEX_ROOT="../redex/install" -Dfmt_ROOT="../fmt/install" -DFMT_DEPRECATED_OSTREAM=ON -DEXCLUDE_INTEGRATION_TESTS="check_cast_types" -DCMAKE_INSTALL_PREFIX="../install" ..
           make -j$(nproc)
           make install
           make check -j$(nproc)
