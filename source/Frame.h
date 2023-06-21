@@ -308,16 +308,6 @@ class Frame final : public sparta::AbstractDomain<Frame> {
 
   Json::Value to_json(ExportOriginsMode export_origins_mode) const;
 
-  // Describe how to join frames together in `CalleePortFrames`.
-  struct GroupEqual {
-    bool operator()(const Frame& left, const Frame& right) const;
-  };
-
-  // Describe how to join frames together in `CalleePortFrames`.
-  struct GroupHash {
-    std::size_t operator()(const Frame& frame) const;
-  };
-
   friend std::ostream& operator<<(std::ostream& out, const Frame& frame);
 
  private:

@@ -7,10 +7,10 @@
 
 #pragma once
 
-#include <boost/iterator/transform_iterator.hpp>
 #include <initializer_list>
 #include <ostream>
 
+#include <boost/iterator/transform_iterator.hpp>
 #include <json/json.h>
 
 #include <AbstractDomain.h>
@@ -18,9 +18,7 @@
 
 #include <mariana-trench/Access.h>
 #include <mariana-trench/Assert.h>
-#include <mariana-trench/FlattenIterator.h>
 #include <mariana-trench/Frame.h>
-#include <mariana-trench/GroupHashedSetAbstractDomain.h>
 #include <mariana-trench/IncludeMacros.h>
 #include <mariana-trench/TaintConfig.h>
 
@@ -33,27 +31,20 @@ namespace marianatrench {
  */
 class CalleePortFrames final : public sparta::AbstractDomain<CalleePortFrames> {
  private:
-  using Frames =
-      GroupHashedSetAbstractDomain<Frame, Frame::GroupHash, Frame::GroupEqual>;
   using FramesByKind =
-      sparta::PatriciaTreeMapAbstractPartition<const Kind*, Frames>;
+      sparta::PatriciaTreeMapAbstractPartition<const Kind*, Frame>;
 
  private:
-  // Iterator based on `FlattenIterator`.
-
-  struct KindToFramesMapDereference {
-    static Frames::iterator begin(const std::pair<const Kind*, Frames>& pair) {
-      return pair.second.begin();
-    }
-    static Frames::iterator end(const std::pair<const Kind*, Frames>& pair) {
-      return pair.second.end();
+  struct GetFrameReference {
+    const Frame& operator()(
+        const std::pair<const Kind*, Frame>& element) const {
+      return std::cref(element.second);
     }
   };
 
-  using ConstIterator = FlattenIterator<
-      /* OuterIterator */ FramesByKind::MapType::iterator,
-      /* InnerIterator */ Frames::iterator,
-      KindToFramesMapDereference>;
+  using ConstIterator = boost::transform_iterator<
+      GetFrameReference,
+      typename FramesByKind::MapType::const_iterator>;
 
  public:
   // C++ container concept member types
@@ -186,31 +177,29 @@ class CalleePortFrames final : public sparta::AbstractDomain<CalleePortFrames> {
   template <typename Function> // Frame(Frame)
   void map(Function&& f) {
     static_assert(std::is_same_v<decltype(f(std::declval<Frame&&>())), Frame>);
-
-    frames_.map([f = std::forward<Function>(f)](Frames frames) {
-      frames.map(f);
-      return frames;
-    });
+    frames_.map(f);
   }
 
   template <typename Predicate> // bool(const Frame&)
   void filter(Predicate&& predicate) {
     static_assert(
         std::is_same_v<decltype(predicate(std::declval<const Frame>())), bool>);
-
-    frames_.map(
-        [predicate = std::forward<Predicate>(predicate)](Frames frames) {
-          frames.filter(predicate);
-          return frames;
-        });
+    frames_.map([predicate = std::forward<Predicate>(predicate)](Frame frame) {
+      if (!predicate(frame)) {
+        return Frame::bottom();
+      }
+      return frame;
+    });
   }
 
   ConstIterator begin() const {
-    return ConstIterator(frames_.bindings().begin(), frames_.bindings().end());
+    return boost::make_transform_iterator(
+        frames_.bindings().begin(), GetFrameReference());
   }
 
   ConstIterator end() const {
-    return ConstIterator(frames_.bindings().end(), frames_.bindings().end());
+    return boost::make_transform_iterator(
+        frames_.bindings().end(), GetFrameReference());
   }
 
   void set_origins_if_empty(const MethodSet& origins);
@@ -253,26 +242,22 @@ class CalleePortFrames final : public sparta::AbstractDomain<CalleePortFrames> {
       AddFeatures&& add_features // FeatureMayAlwaysSet(const Kind*)
   ) {
     FramesByKind new_frames_by_kind;
-    for (const auto& [old_kind, frames] : frames_.bindings()) {
+    for (const auto& [old_kind, frame] : frames_.bindings()) {
       std::vector<const Kind*> new_kinds = transform_kind(old_kind);
       if (new_kinds.empty()) {
         continue;
       } else if (new_kinds.size() == 1 && new_kinds.front() == old_kind) {
-        new_frames_by_kind.set(old_kind, frames); // no transformation
+        new_frames_by_kind.set(old_kind, frame); // no transformation
       } else {
         for (const auto* new_kind : new_kinds) {
           // Even if new_kind == old_kind for some new_kind, perform
           // map_frame_set because a transformation occurred.
-          Frames new_frames;
           FeatureMayAlwaysSet features_to_add = add_features(new_kind);
-          for (const auto& frame : frames) {
-            auto new_frame = frame.with_kind(new_kind);
-            new_frame.add_inferred_features(features_to_add);
-            new_frames.add(new_frame);
-          }
+          auto new_frame = frame.with_kind(new_kind);
+          new_frame.add_inferred_features(features_to_add);
           new_frames_by_kind.update(
-              new_kind, [&new_frames](const Frames& existing) {
-                return existing.join(new_frames);
+              new_kind, [&new_frame](const Frame& existing) {
+                return existing.join(new_frame);
               });
         }
       }
@@ -301,11 +286,11 @@ class CalleePortFrames final : public sparta::AbstractDomain<CalleePortFrames> {
       const std::function<T(const Kind*)>& map_kind) const {
     std::unordered_map<T, CalleePortFrames> result;
 
-    for (const auto& [kind, kind_frames] : frames_.bindings()) {
+    for (const auto& [kind, frame] : frames_.bindings()) {
       T mapped_value = map_kind(kind);
       result[mapped_value].join_with(CalleePortFrames(
           callee_port_,
-          FramesByKind{std::pair(kind, kind_frames)},
+          FramesByKind{std::pair(kind, frame)},
           local_positions_,
           locally_inferred_features_));
     }
@@ -319,11 +304,9 @@ class CalleePortFrames final : public sparta::AbstractDomain<CalleePortFrames> {
   partition_map(const std::function<T(const Frame&)>& map) const {
     std::unordered_map<T, std::vector<std::reference_wrapper<const Frame>>>
         result;
-    for (const auto& [_, frames] : frames_.bindings()) {
-      for (const auto& frame : frames) {
-        auto value = map(frame);
-        result[value].push_back(std::cref(frame));
-      }
+    for (const auto& [_, frame] : frames_.bindings()) {
+      auto value = map(frame);
+      result[value].push_back(std::cref(frame));
     }
 
     return result;

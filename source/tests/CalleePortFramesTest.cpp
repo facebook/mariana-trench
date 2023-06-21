@@ -553,7 +553,7 @@ TEST_F(CalleePortFramesTest, Difference) {
           test_kind_one,
           test::FrameProperties{
               .callee_port = AccessPath(Root(Root::Kind::Argument, 0)),
-              .callee = two,
+              .callee = one,
               .distance = 1,
               .origins = MethodSet{two},
               .inferred_features = FeatureMayAlwaysSet{feature_two},
@@ -619,63 +619,13 @@ TEST_F(CalleePortFramesTest, Difference) {
           test_kind_two,
           test::FrameProperties{
               .callee_port = AccessPath(Root(Root::Kind::Argument, 0)),
-              .callee = two,
+              .callee = one,
               .distance = 1,
-              .origins = MethodSet{two},
-              .call_info = CallInfo::CallSite,
-          }),
-      test::make_taint_config(
-          test_kind_two,
-          test::FrameProperties{
-              .callee_port = AccessPath(Root(Root::Kind::Argument, 0)),
-              .callee = three,
-              .distance = 1,
-              .origins = MethodSet{three},
+              .origins = MethodSet{two, three},
               .call_info = CallInfo::CallSite,
           }),
   };
   frames.difference_with(CalleePortFrames{
-      test::make_taint_config(
-          test_kind_one,
-          test::FrameProperties{
-              .callee_port = AccessPath(Root(Root::Kind::Argument, 0)),
-              .callee = one,
-              .distance = 1,
-              .origins = MethodSet{one},
-              .call_info = CallInfo::CallSite,
-          }),
-      test::make_taint_config(
-          test_kind_one,
-          test::FrameProperties{
-              .callee_port = AccessPath(Root(Root::Kind::Argument, 0)),
-              .callee = two,
-              .distance = 1,
-              .origins = MethodSet{two},
-              .call_info = CallInfo::CallSite,
-          }),
-      test::make_taint_config(
-          test_kind_two,
-          test::FrameProperties{
-              .callee_port = AccessPath(Root(Root::Kind::Argument, 0)),
-              .callee = two,
-              .distance = 1,
-              .origins = MethodSet{two},
-              .call_info = CallInfo::CallSite,
-          })});
-  EXPECT_EQ(
-      frames,
-      (CalleePortFrames{test::make_taint_config(
-          test_kind_two,
-          test::FrameProperties{
-              .callee_port = AccessPath(Root(Root::Kind::Argument, 0)),
-              .callee = three,
-              .distance = 1,
-              .origins = MethodSet{three},
-              .call_info = CallInfo::CallSite,
-          })}));
-
-  // Left hand side larger than right hand side for specific frames.
-  frames = CalleePortFrames{
       test::make_taint_config(
           test_kind_one,
           test::FrameProperties{
@@ -686,66 +636,25 @@ TEST_F(CalleePortFramesTest, Difference) {
               .call_info = CallInfo::CallSite,
           }),
       test::make_taint_config(
-          test_kind_one,
-          test::FrameProperties{
-              .callee_port = AccessPath(Root(Root::Kind::Argument, 0)),
-              .callee = two,
-              .distance = 1,
-              .origins = MethodSet{two},
-              .call_info = CallInfo::CallSite,
-          }),
-      test::make_taint_config(
-          test_kind_one,
-          test::FrameProperties{
-              .callee_port = AccessPath(Root(Root::Kind::Argument, 0)),
-              .callee = three,
-              .distance = 1,
-              .origins = MethodSet{one, three},
-              .call_info = CallInfo::CallSite,
-          }),
-  };
-  frames.difference_with(CalleePortFrames{
-      test::make_taint_config(
-          test_kind_one,
+          test_kind_two,
           test::FrameProperties{
               .callee_port = AccessPath(Root(Root::Kind::Argument, 0)),
               .callee = one,
               .distance = 1,
-              .origins = MethodSet{one},
+              .origins = MethodSet{two},
               .call_info = CallInfo::CallSite,
-          }),
-      test::make_taint_config(
-          test_kind_one,
-          test::FrameProperties{
-              .callee_port = AccessPath(Root(Root::Kind::Argument, 0)),
-              .callee = three,
-              .distance = 1,
-              .origins = MethodSet{one, two, three},
-              .call_info = CallInfo::CallSite,
-          }),
-  });
+          })});
   EXPECT_EQ(
       frames,
-      (CalleePortFrames{
-          test::make_taint_config(
-              test_kind_one,
-              test::FrameProperties{
-                  .callee_port = AccessPath(Root(Root::Kind::Argument, 0)),
-                  .callee = one,
-                  .distance = 1,
-                  .origins = MethodSet{one, two},
-                  .call_info = CallInfo::CallSite,
-              }),
-          test::make_taint_config(
-              test_kind_one,
-              test::FrameProperties{
-                  .callee_port = AccessPath(Root(Root::Kind::Argument, 0)),
-                  .callee = two,
-                  .distance = 1,
-                  .origins = MethodSet{two},
-                  .call_info = CallInfo::CallSite,
-              }),
-      }));
+      (CalleePortFrames{test::make_taint_config(
+          test_kind_two,
+          test::FrameProperties{
+              .callee_port = AccessPath(Root(Root::Kind::Argument, 0)),
+              .callee = one,
+              .distance = 1,
+              .origins = MethodSet{two, three},
+              .call_info = CallInfo::CallSite,
+          })}));
 }
 
 TEST_F(CalleePortFramesTest, DifferenceLocalPositions) {
@@ -1648,8 +1557,8 @@ TEST_F(CalleePortFramesTest, Show) {
       show(frames),
       "CalleePortFrames(callee_port=AccessPath(Leaf), "
       "frames=[FrameByKind(kind=TestSink1, "
-      "frames={Frame(kind=`TestSink1`, callee_port=AccessPath(Leaf), "
-      "call_info=Declaration, origins={`LOne;.one:()V`})}),])");
+      "frame=Frame(kind=`TestSink1`, callee_port=AccessPath(Leaf), "
+      "call_info=Declaration, origins={`LOne;.one:()V`})),])");
 
   frames = CalleePortFrames{test::make_taint_config(
       test_kind_one,
@@ -1661,8 +1570,8 @@ TEST_F(CalleePortFramesTest, Show) {
       show(frames),
       "CalleePortFrames(callee_port=AccessPath(Leaf), "
       "local_positions={Position(line=1)}, frames=[FrameByKind(kind=TestSink1, "
-      "frames={Frame(kind=`TestSink1`, callee_port=AccessPath(Leaf), "
-      "call_info=Declaration, origins={`LOne;.one:()V`})}),])");
+      "frame=Frame(kind=`TestSink1`, callee_port=AccessPath(Leaf), "
+      "call_info=Declaration, origins={`LOne;.one:()V`})),])");
 
   frames = CalleePortFrames{test::make_taint_config(
       context.kind_factory->local_return(),
@@ -1674,9 +1583,9 @@ TEST_F(CalleePortFramesTest, Show) {
   EXPECT_EQ(
       show(frames),
       "CalleePortFrames(callee_port=AccessPath(Return), "
-      "frames=[FrameByKind(kind=LocalReturn, frames={Frame(kind=`LocalReturn`, "
+      "frames=[FrameByKind(kind=LocalReturn, frame=Frame(kind=`LocalReturn`, "
       "callee_port=AccessPath(Return), call_info=Propagation, "
-      "output_paths={0})}),])");
+      "output_paths={0})),])");
 
   frames = CalleePortFrames{test::make_taint_config(
       context.kind_factory->local_return(),
@@ -1690,9 +1599,9 @@ TEST_F(CalleePortFramesTest, Show) {
   EXPECT_EQ(
       show(frames),
       "CalleePortFrames(callee_port=AccessPath(Return), "
-      "frames=[FrameByKind(kind=LocalReturn, frames={Frame(kind=`LocalReturn`, "
+      "frames=[FrameByKind(kind=LocalReturn, frame=Frame(kind=`LocalReturn`, "
       "callee_port=AccessPath(Return), call_info=Propagation, "
-      "output_paths={\n    `.x` -> {0}\n})}),])");
+      "output_paths={\n    `.x` -> {0}\n})),])");
 
   EXPECT_EQ(
       show(CalleePortFrames::bottom()),

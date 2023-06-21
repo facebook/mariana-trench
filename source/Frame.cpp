@@ -277,23 +277,6 @@ Json::Value Frame::to_json(ExportOriginsMode export_origins_mode) const {
   return value;
 }
 
-bool Frame::GroupEqual::operator()(const Frame& left, const Frame& right)
-    const {
-  return left.kind() == right.kind() &&
-      left.callee_port() == right.callee_port() &&
-      left.callee() == right.callee() &&
-      left.call_position() == right.call_position();
-}
-
-std::size_t Frame::GroupHash::operator()(const Frame& frame) const {
-  std::size_t seed = 0;
-  boost::hash_combine(seed, frame.kind());
-  boost::hash_combine(seed, std::hash<AccessPath>()(frame.callee_port()));
-  boost::hash_combine(seed, frame.callee());
-  boost::hash_combine(seed, frame.call_position());
-  return seed;
-}
-
 const std::string_view show_call_info(CallInfo call_info) {
   switch (call_info) {
     case CallInfo::Declaration:

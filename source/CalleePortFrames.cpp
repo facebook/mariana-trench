@@ -121,9 +121,8 @@ void CalleePortFrames::add(const TaintConfig& config) {
 
   local_positions_.join_with(config.local_positions());
   locally_inferred_features_.join_with(config.locally_inferred_features());
-  frames_.update(config.kind(), [&](const Frames& old_frames) {
-    auto new_frames = old_frames;
-    new_frames.add(Frame(
+  frames_.update(config.kind(), [&](const Frame& old_frame) {
+    return old_frame.join(Frame(
         config.kind(),
         config.callee_port(),
         config.callee(),
@@ -139,7 +138,6 @@ void CalleePortFrames::add(const TaintConfig& config) {
         config.canonical_names(),
         config.call_info(),
         config.output_paths()));
-    return new_frames;
   });
 }
 
@@ -226,11 +224,11 @@ void CalleePortFrames::difference_with(const CalleePortFrames& other) {
   if (local_positions_.leq(other.local_positions_) &&
       locally_inferred_features_.leq(other.locally_inferred_features_)) {
     frames_.difference_like_operation(
-        other.frames_,
-        [](const Frames& frames_left, const Frames& frames_right) {
-          auto frames_copy = frames_left;
-          frames_copy.difference_with(frames_right);
-          return frames_copy;
+        other.frames_, [](const Frame& left, const Frame& right) {
+          if (left.leq(right)) {
+            return Frame::bottom();
+          }
+          return left;
         });
   }
 }
@@ -369,12 +367,10 @@ void CalleePortFrames::filter_invalid_frames(
     const std::function<bool(const Method*, const AccessPath&, const Kind*)>&
         is_valid) {
   FramesByKind new_frames;
-  for (const auto& [kind, frames] : frames_.bindings()) {
-    auto frames_copy = frames;
-    frames_copy.filter([&is_valid](const Frame& frame) {
-      return is_valid(frame.callee(), frame.callee_port(), frame.kind());
-    });
-    new_frames.set(kind, frames_copy);
+  for (const auto& [kind, frame] : frames_.bindings()) {
+    if (is_valid(frame.callee(), frame.callee_port(), frame.kind())) {
+      new_frames.set(kind, frame);
+    }
   }
 
   frames_ = std::move(new_frames);
@@ -394,12 +390,10 @@ bool CalleePortFrames::contains_kind(const Kind* kind) const {
 
 FeatureMayAlwaysSet CalleePortFrames::features_joined() const {
   auto features = FeatureMayAlwaysSet::bottom();
-  for (const auto& [kind, frames] : frames_.bindings()) {
-    for (const auto& frame : frames) {
-      auto combined_features = frame.features();
-      combined_features.add(locally_inferred_features_);
-      features.join_with(combined_features);
-    }
+  for (const auto& [kind, frame] : frames_.bindings()) {
+    auto combined_features = frame.features();
+    combined_features.add(locally_inferred_features_);
+    features.join_with(combined_features);
   }
   return features;
 }
@@ -422,8 +416,8 @@ std::ostream& operator<<(std::ostream& out, const CalleePortFrames& frames) {
     }
 
     out << ", frames=[";
-    for (const auto& [kind, frames] : frames.frames_.bindings()) {
-      out << "FrameByKind(kind=" << show(kind) << ", frames=" << frames << "),";
+    for (const auto& [kind, frame] : frames.frames_.bindings()) {
+      out << "FrameByKind(kind=" << show(kind) << ", frame=" << frame << "),";
     }
     return out << "])";
   }
@@ -436,10 +430,8 @@ void CalleePortFrames::add(const Frame& frame) {
     mt_assert(callee_port_ == frame.callee_port());
   }
 
-  frames_.update(frame.kind(), [&](const Frames& old_frames) {
-    auto new_frames = old_frames;
-    new_frames.add(frame);
-    return new_frames;
+  frames_.update(frame.kind(), [&frame](const Frame& old_frame) {
+    return old_frame.join(frame);
   });
 }
 
@@ -651,14 +643,8 @@ Json::Value CalleePortFrames::to_json(
   auto taint = Json::Value(Json::objectValue);
 
   auto kinds = Json::Value(Json::arrayValue);
-  for (const auto& [_, frames_by_kind] : frames_.bindings()) {
-    // TODO(T91357916): `Frame` no longer needs to be stored in a
-    // GroupHashedSet. The key to that hashed set is maintained outside of this
-    // class by the `Taint` structure.
-    mt_assert(frames_by_kind.size() == 1);
-    for (const auto& frame : frames_by_kind) {
-      kinds.append(frame.to_json(export_origins_mode));
-    }
+  for (const auto& [_, frame] : frames_.bindings()) {
+    kinds.append(frame.to_json(export_origins_mode));
   }
   taint["kinds"] = kinds;
 

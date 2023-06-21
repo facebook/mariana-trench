@@ -856,8 +856,8 @@ TEST_F(CallPositionFramesTest, Difference) {
       test::make_taint_config(
           test_kind_one,
           test::FrameProperties{
-              .callee_port = AccessPath(Root(Root::Kind::Argument, 0)),
-              .callee = two,
+              .callee_port = AccessPath(Root(Root::Kind::Argument, 1)),
+              .callee = one,
               .call_position = test_position,
               .distance = 1,
               .origins = MethodSet{two},
@@ -932,7 +932,7 @@ TEST_F(CallPositionFramesTest, Difference) {
           test_kind_two,
           test::FrameProperties{
               .callee_port = AccessPath(Root(Root::Kind::Argument, 0)),
-              .callee = two,
+              .callee = one,
               .call_position = test_position,
               .distance = 1,
               .origins = MethodSet{two},
@@ -941,8 +941,8 @@ TEST_F(CallPositionFramesTest, Difference) {
       test::make_taint_config(
           test_kind_two,
           test::FrameProperties{
-              .callee_port = AccessPath(Root(Root::Kind::Argument, 0)),
-              .callee = three,
+              .callee_port = AccessPath(Root(Root::Kind::Argument, 1)),
+              .callee = one,
               .call_position = test_position,
               .distance = 1,
               .origins = MethodSet{three},
@@ -963,8 +963,8 @@ TEST_F(CallPositionFramesTest, Difference) {
       test::make_taint_config(
           test_kind_one,
           test::FrameProperties{
-              .callee_port = AccessPath(Root(Root::Kind::Argument, 0)),
-              .callee = two,
+              .callee_port = AccessPath(Root(Root::Kind::Argument, 1)),
+              .callee = one,
               .call_position = test_position,
               .distance = 1,
               .origins = MethodSet{two},
@@ -974,7 +974,7 @@ TEST_F(CallPositionFramesTest, Difference) {
           test_kind_two,
           test::FrameProperties{
               .callee_port = AccessPath(Root(Root::Kind::Argument, 0)),
-              .callee = two,
+              .callee = one,
               .call_position = test_position,
               .distance = 1,
               .origins = MethodSet{two},
@@ -985,8 +985,8 @@ TEST_F(CallPositionFramesTest, Difference) {
       (CallPositionFrames{test::make_taint_config(
           test_kind_two,
           test::FrameProperties{
-              .callee_port = AccessPath(Root(Root::Kind::Argument, 0)),
-              .callee = three,
+              .callee_port = AccessPath(Root(Root::Kind::Argument, 1)),
+              .callee = one,
               .call_position = test_position,
               .distance = 1,
               .origins = MethodSet{three},
@@ -1009,7 +1009,7 @@ TEST_F(CallPositionFramesTest, Difference) {
           test_kind_one,
           test::FrameProperties{
               .callee_port = AccessPath(Root(Root::Kind::Argument, 0), Path{y}),
-              .callee = two,
+              .callee = one,
               .call_position = test_position,
               .distance = 1,
               .origins = MethodSet{two},
@@ -1031,7 +1031,7 @@ TEST_F(CallPositionFramesTest, Difference) {
           test_kind_one,
           test::FrameProperties{
               .callee_port = AccessPath(Root(Root::Kind::Argument, 0), Path{y}),
-              .callee = two,
+              .callee = one,
               .call_position = test_position,
               .distance = 1,
               .origins = MethodSet{two},
@@ -1041,7 +1041,7 @@ TEST_F(CallPositionFramesTest, Difference) {
           test_kind_one,
           test::FrameProperties{
               .callee_port = AccessPath(Root(Root::Kind::Argument, 0)),
-              .callee = three,
+              .callee = one,
               .call_position = test_position,
               .distance = 1,
               .origins = MethodSet{three},
@@ -1049,86 +1049,6 @@ TEST_F(CallPositionFramesTest, Difference) {
           }),
   });
   EXPECT_TRUE(frames.is_bottom());
-
-  // Left hand side larger than right hand side for specific frames.
-  frames = CallPositionFrames{
-      test::make_taint_config(
-          test_kind_one,
-          test::FrameProperties{
-              .callee_port = AccessPath(Root(Root::Kind::Argument, 0)),
-              .callee = one,
-              .call_position = test_position,
-              .distance = 1,
-              .origins = MethodSet{one, two},
-              .call_info = CallInfo::CallSite,
-          }),
-      test::make_taint_config(
-          test_kind_one,
-          test::FrameProperties{
-              .callee_port = AccessPath(Root(Root::Kind::Argument, 0)),
-              .callee = two,
-              .call_position = test_position,
-              .distance = 1,
-              .origins = MethodSet{two},
-              .call_info = CallInfo::CallSite,
-          }),
-      test::make_taint_config(
-          test_kind_one,
-          test::FrameProperties{
-              .callee_port = AccessPath(Root(Root::Kind::Argument, 0)),
-              .callee = three,
-              .call_position = test_position,
-              .distance = 1,
-              .origins = MethodSet{one, three},
-              .call_info = CallInfo::CallSite,
-          }),
-  };
-  frames.difference_with(CallPositionFrames{
-      test::make_taint_config(
-          test_kind_one,
-          test::FrameProperties{
-              .callee_port = AccessPath(Root(Root::Kind::Argument, 0)),
-              .callee = one,
-              .call_position = test_position,
-              .distance = 1,
-              .origins = MethodSet{one},
-              .call_info = CallInfo::CallSite,
-          }),
-      test::make_taint_config(
-          test_kind_one,
-          test::FrameProperties{
-              .callee_port = AccessPath(Root(Root::Kind::Argument, 0)),
-              .callee = three,
-              .call_position = test_position,
-              .distance = 1,
-              .origins = MethodSet{one, two, three},
-              .call_info = CallInfo::CallSite,
-          }),
-  });
-  EXPECT_EQ(
-      frames,
-      (CallPositionFrames{
-          test::make_taint_config(
-              test_kind_one,
-              test::FrameProperties{
-                  .callee_port = AccessPath(Root(Root::Kind::Argument, 0)),
-                  .callee = one,
-                  .call_position = test_position,
-                  .distance = 1,
-                  .origins = MethodSet{one, two},
-                  .call_info = CallInfo::CallSite,
-              }),
-          test::make_taint_config(
-              test_kind_one,
-              test::FrameProperties{
-                  .callee_port = AccessPath(Root(Root::Kind::Argument, 0)),
-                  .callee = two,
-                  .call_position = test_position,
-                  .distance = 1,
-                  .origins = MethodSet{two},
-                  .call_info = CallInfo::CallSite,
-              }),
-      }));
 }
 
 TEST_F(CallPositionFramesTest, Iterator) {
@@ -2070,11 +1990,11 @@ TEST_F(CallPositionFramesTest, Show) {
       "callee_port=AccessPath(Leaf), "
       "frames=[FrameByKind("
       "kind=TestSink1, "
-      "frames={Frame("
+      "frame=Frame("
       "kind=`TestSink1`, "
       "callee_port=AccessPath(Leaf), "
       "call_info=Declaration, "
-      "origins={`LOne;.one:()V`})}),])),]");
+      "origins={`LOne;.one:()V`})),])),]");
 
   EXPECT_EQ(show(CallPositionFrames::bottom()), "[]");
 }
