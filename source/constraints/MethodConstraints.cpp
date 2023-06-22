@@ -405,6 +405,34 @@ bool NthParameterConstraint::operator==(const MethodConstraint& other) const {
   }
 }
 
+AnyParameterConstraint::AnyParameterConstraint(
+    std::optional<ParameterPosition> start_index,
+    std::unique_ptr<ParameterConstraint> inner_constraint)
+    : start_index_(start_index), inner_constraint_(std::move(inner_constraint)) {}
+
+bool AnyParameterConstraint::satisfy(const Method* method) const {
+  ParameterPosition i;
+  // always exclude `this`
+  for(i = start_index_.value_or(0) + method->first_parameter_index(); i < method->number_of_parameters(); i++) {
+    const auto* type = method->parameter_type(i);
+    const auto* annotations_set = method->get_parameter_annotations(i);
+    if (type != nullptr && inner_constraint_->satisfy(annotations_set, type)) {
+      return true;
+    }
+  }
+  return false;
+}
+
+bool AnyParameterConstraint::operator==(const MethodConstraint& other) const {
+  if (auto* other_constraint =
+          dynamic_cast<const AnyParameterConstraint*>(&other)) {
+    return other_constraint->start_index_ == start_index_ &&
+        *(other_constraint->inner_constraint_) == *inner_constraint_;
+  } else {
+    return false;
+  }
+}
+
 SignaturePatternConstraint::SignaturePatternConstraint(
     const std::string& regex_string)
     : pattern_(regex_string) {}
@@ -654,6 +682,15 @@ std::unique_ptr<MethodConstraint> MethodConstraint::from_json(
         constraint, {"constraint", "idx", "inner"});
     int index = JsonValidation::integer(constraint, /* field */ "idx");
     return std::make_unique<NthParameterConstraint>(
+        index,
+        ParameterConstraint::from_json(
+            JsonValidation::object(constraint, /* field */ "inner")));
+  } else if (constraint_name == "any_parameter") {
+    JsonValidation::check_unexpected_members(
+        constraint, {"start_idx", "constraint", "inner"});
+    std::optional<ParameterPosition> index =
+        JsonValidation::optional_integer(constraint, /* field */ "start_idx");
+    return std::make_unique<AnyParameterConstraint>(
         index,
         ParameterConstraint::from_json(
             JsonValidation::object(constraint, /* field */ "inner")));

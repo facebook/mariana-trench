@@ -1,0 +1,61 @@
+// @generated
+{
+  "generations" : 
+  [
+    {
+      "port" : "Return",
+      "taint" : 
+      [
+        {
+          "kinds" : 
+          [
+            {
+              "call_info" : "Declaration",
+              "kind" : "SensitiveData",
+              "origins" : 
+              [
+                "Lcom/facebook/marianatrench/integrationtests/JsonModelGeneratorIntegrationTest3;.functionB:(III)I"
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "method" : "Lcom/facebook/marianatrench/integrationtests/JsonModelGeneratorIntegrationTest3;.functionB:(III)I",
+  "position" : 
+  {
+    "line" : 18,
+    "path" : "com/facebook/marianatrench/integrationtests/JsonModelGeneratorIntegrationTest3.java"
+  }
+}
+{
+  "generations" : 
+  [
+    {
+      "port" : "Return",
+      "taint" : 
+      [
+        {
+          "kinds" : 
+          [
+            {
+              "call_info" : "Declaration",
+              "kind" : "SensitiveData",
+              "origins" : 
+              [
+                "Lcom/facebook/marianatrench/integrationtests/JsonModelGeneratorIntegrationTest3;.functionC:(III)I"
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "method" : "Lcom/facebook/marianatrench/integrationtests/JsonModelGeneratorIntegrationTest3;.functionC:(III)I",
+  "position" : 
+  {
+    "line" : 25,
+    "path" : "com/facebook/marianatrench/integrationtests/JsonModelGeneratorIntegrationTest3.java"
+  }
+}

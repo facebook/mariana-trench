@@ -214,6 +214,19 @@ class NthParameterConstraint final : public MethodConstraint {
   std::unique_ptr<ParameterConstraint> inner_constraint_;
 };
 
+class AnyParameterConstraint final : public MethodConstraint {
+ public:
+  AnyParameterConstraint(
+      std::optional<ParameterPosition> start_index,
+      std::unique_ptr<ParameterConstraint> inner_constraint);
+  bool satisfy(const Method* method) const override;
+  bool operator==(const MethodConstraint& other) const override;
+
+ private:
+  std::optional<ParameterPosition> start_index_;
+  std::unique_ptr<ParameterConstraint> inner_constraint_;
+};
+
 class SignaturePatternConstraint final : public MethodConstraint {
  public:
   explicit SignaturePatternConstraint(const std::string& regex_string);
