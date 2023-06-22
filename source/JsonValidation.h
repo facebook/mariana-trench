@@ -42,6 +42,9 @@ class JsonValidation final {
 
   static int integer(const Json::Value& value);
   static int integer(const Json::Value& value, const std::string& field);
+  static std::optional<int> optional_integer(
+      const Json::Value& value,
+      const std::string& field);
 
   static bool boolean(const Json::Value& value);
   static bool boolean(const Json::Value& value, const std::string& field);

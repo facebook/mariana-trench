@@ -1,0 +1,25 @@
+{
+  "model_generators": [
+    {
+      "find": "methods",
+      "where": [
+        {
+          "constraint": "any_parameter",
+          "inner": {
+            "constraint": "parameter_has_annotation",
+            "type": "Lcom/facebook/marianatrench/integrationtests/TestParameterAnnotation;",
+            "pattern": ".*"
+          }
+        }
+      ],
+      "model": {
+        "sources": [
+          {
+            "kind": "SensitiveData",
+            "port": "Return"
+          }
+        ]
+      }
+    }
+  ]
+}

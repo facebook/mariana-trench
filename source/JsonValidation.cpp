@@ -105,6 +105,21 @@ int JsonValidation::integer(
   return integer.asInt();
 }
 
+std::optional<int> JsonValidation::optional_integer(
+    const Json::Value& value,
+    const std::string& field) {
+  validate_object(
+      value, fmt::format("non-null object with integer field `{}`", field));
+  const auto& integer = value[field];
+  if (integer.isNull()) {
+    return std::nullopt;
+  }
+  if (!integer.isInt()) {
+    throw JsonValidationError(value, field, /* expected */ "integer");
+  }
+  return integer.asInt();
+}
+
 bool JsonValidation::boolean(const Json::Value& value) {
   if (value.isNull() || !value.isBool()) {
     throw JsonValidationError(

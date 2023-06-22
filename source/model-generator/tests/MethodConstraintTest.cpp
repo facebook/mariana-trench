@@ -351,6 +351,42 @@ TEST_F(MethodConstraintTest, NthParameterConstraintSatisfy) {
   EXPECT_FALSE(constraint.satisfy(context.methods->create(methods[1])));
 }
 
+TEST_F(MethodConstraintTest, AnyParameterConstraintSatisfy) {
+  Scope scope;
+  auto context = test::make_empty_context();
+  auto methods = redex::create_methods(
+      scope,
+      "LClass;",
+      {
+          R"(
+            (method (public static) "LClass;.method_1:(Landroid/content/Intent;I)V"
+            (
+              (return-void)
+            )
+            ))",
+          R"(
+            (method (public) "LClass;.method_2:(ILandroid/content/Intent;)V"
+            (
+              (return-void)
+            )
+            ))",
+      });
+  auto constraint = AnyParameterConstraint(
+      std::nullopt /* start_idx */,
+      std::make_unique<TypeParameterConstraint>(
+          std::make_unique<TypePatternConstraint>("Landroid/content/Intent;")));
+
+  EXPECT_TRUE(constraint.satisfy(context.methods->create(methods[0])));
+  EXPECT_TRUE(constraint.satisfy(context.methods->create(methods[1])));
+
+  auto constraint2 = AnyParameterConstraint(
+      1 /* start_idx */,
+      std::make_unique<TypeParameterConstraint>(
+          std::make_unique<TypePatternConstraint>("Landroid/content/Intent;")));
+  EXPECT_FALSE(constraint2.satisfy(context.methods->create(methods[0])));
+  EXPECT_TRUE(constraint2.satisfy(context.methods->create(methods[1])));
+}
+
 TEST_F(MethodConstraintTest, SignaturePatternConstraintSatisfy) {
   Scope scope;
   auto context = test::make_empty_context();
