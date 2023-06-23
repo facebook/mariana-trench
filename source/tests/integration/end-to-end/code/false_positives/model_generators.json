@@ -1,0 +1,59 @@
+{
+  "model_generators": [
+    {
+      "find": "methods",
+      "where": [
+        {
+          "constraint": "signature_pattern",
+          "pattern": ".*integrationtests/FalsePositives;.fp1.*"
+        }
+      ],
+      "model": {
+        "for_all_parameters": [
+          {
+            "variable": "x",
+            "where": [
+            ],
+            "parameter_sources": [
+              {
+                "port": "Argument(x)",
+                "kind": "Source"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "find": "methods",
+      "_comment": "Update the analysis mode for setter's like function to have strong-write-on-propagation",
+      "where": [
+        {
+          "constraint": "any_of",
+          "inners": [
+            {
+              "constraint": "name",
+              "pattern": "^set.*"
+            }
+          ]
+        },
+        {
+          "constraint": "visibility",
+          "is": "public"
+        },
+        {
+          "constraint": "return",
+          "inner": {
+            "constraint": "name",
+            "pattern": "V"
+          }
+        }
+      ],
+      "model": {
+        "modes": [
+          "strong-write-on-propagation"
+        ]
+      }
+    }
+  ]
+}
