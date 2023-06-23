@@ -16,6 +16,7 @@
 
 #include <mariana-trench/ArtificialMethods.h>
 #include <mariana-trench/ClassHierarchies.h>
+#include <mariana-trench/ClassIntervals.h>
 #include <mariana-trench/ClassProperties.h>
 #include <mariana-trench/Context.h>
 #include <mariana-trench/ControlFlowGraphs.h>
@@ -159,6 +160,16 @@ Registry MarianaTrench::analyze(Context& context) {
   LOG(1,
       "Built override graph in {:.2f}s. Memory used, RSS: {:.2f}GB",
       overrides_timer.duration_in_seconds(),
+      resident_set_size_in_gb());
+
+  Timer class_intervals_timer;
+  LOG(1, "Computing class intervals...");
+  context.class_intervals =
+      std::make_unique<ClassIntervals>(*context.options, context.stores);
+  context.statistics->log_time("class_intervals", class_intervals_timer);
+  LOG(1,
+      "Computed class intervals in {:.2f}s. Memory used, RSS: {:.2f}GB",
+      class_intervals_timer.duration_in_seconds(),
       resident_set_size_in_gb());
 
   std::vector<Model> generated_models;

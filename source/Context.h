@@ -26,6 +26,7 @@ class ControlFlowGraphs;
 class Types;
 class ClassProperties;
 class ClassHierarchies;
+class ClassIntervals;
 class FieldCache;
 class Overrides;
 class CallGraph;
@@ -62,6 +63,7 @@ class Context final {
   std::unique_ptr<Types> types;
   std::unique_ptr<ClassProperties> class_properties;
   std::unique_ptr<ClassHierarchies> class_hierarchies;
+  std::unique_ptr<ClassIntervals> class_intervals;
   std::unique_ptr<FieldCache> field_cache;
   std::unique_ptr<Overrides> overrides;
   std::unique_ptr<CallGraph> call_graph;

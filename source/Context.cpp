@@ -8,6 +8,7 @@
 #include <mariana-trench/ArtificialMethods.h>
 #include <mariana-trench/CallGraph.h>
 #include <mariana-trench/ClassHierarchies.h>
+#include <mariana-trench/ClassIntervals.h>
 #include <mariana-trench/ClassProperties.h>
 #include <mariana-trench/Context.h>
 #include <mariana-trench/ControlFlowGraphs.h>
