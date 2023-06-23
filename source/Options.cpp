@@ -110,6 +110,7 @@ Options::Options(
     bool emit_all_via_cast_features,
     const std::string& source_root_directory,
     bool enable_cross_component_analysis,
+    bool enable_class_intervals,
     ExportOriginsMode export_origins_mode)
     : models_paths_(models_paths),
       field_models_paths_(field_models_paths),
@@ -137,6 +138,7 @@ Options::Options(
       dump_dependencies_(false),
       dump_methods_(false),
       enable_cross_component_analysis_(enable_cross_component_analysis),
+      enable_class_intervals_(enable_class_intervals),
       export_origins_mode_(export_origins_mode) {}
 
 Options::Options(const boost::program_options::variables_map& variables) {
@@ -265,6 +267,7 @@ Options::Options(const boost::program_options::variables_map& variables) {
 
   enable_cross_component_analysis_ =
       variables.count("enable-cross-component-analysis") > 0;
+  enable_class_intervals_ = variables.count("enable-class-intervals") > 0;
   export_origins_mode_ = variables.count("always-export-origins")
       ? ExportOriginsMode::Always
       : ExportOriginsMode::OnlyOnOrigins;
@@ -410,6 +413,9 @@ void Options::add_options(
   options.add_options()(
       "enable-cross-component-analysis",
       "Compute taint flows across Android components.");
+  options.add_options()(
+      "enable-class-intervals",
+      "Compute and apply class intervals for improved precision.");
   options.add_options()(
       "always-export-origins",
       "Export origin information for all frames instead of only leaves. Used for debugging.");
@@ -602,6 +608,10 @@ const std::optional<std::string>& Options::metarun_id() const {
 
 bool Options::enable_cross_component_analysis() const {
   return enable_cross_component_analysis_;
+}
+
+bool Options::enable_class_intervals() const {
+  return enable_class_intervals_;
 }
 
 ExportOriginsMode Options::export_origins_mode() const {

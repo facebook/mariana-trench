@@ -41,6 +41,7 @@ class Options final {
       bool emit_all_via_cast_features,
       const std::string& source_root_directory = ".",
       bool enable_cross_component_analysis = false,
+      bool enable_class_intervals = false,
       ExportOriginsMode export_origins_mode = ExportOriginsMode::Always);
 
   explicit Options(const boost::program_options::variables_map& variables);
@@ -108,6 +109,7 @@ class Options final {
   const std::optional<std::string>& metarun_id() const;
 
   bool enable_cross_component_analysis() const;
+  bool enable_class_intervals() const;
   ExportOriginsMode export_origins_mode() const;
 
  private:
@@ -161,6 +163,7 @@ class Options final {
   std::optional<std::string> metarun_id_;
 
   bool enable_cross_component_analysis_;
+  bool enable_class_intervals_;
   ExportOriginsMode export_origins_mode_;
 };
 

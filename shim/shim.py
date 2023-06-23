@@ -460,6 +460,11 @@ def _add_analysis_arguments(parser: argparse.ArgumentParser) -> None:
         help="Compute taint flows across Android components.",
     )
     analysis_arguments.add_argument(
+        "--enable-class-intervals",
+        action="store_true",
+        help="Compute class intervals for better precision.",
+    )
+    analysis_arguments.add_argument(
         "--extra-analysis-arguments",
         type=str,
         help=(
@@ -624,6 +629,8 @@ def _get_command_options(
         options.append(str(arguments.maximum_method_analysis_time))
     if arguments.enable_cross_component_analysis:
         options.append("--enable-cross-component-analysis")
+    if arguments.enable_class_intervals:
+        options.append("--enable-class-intervals")
     if arguments.extra_analysis_arguments:
         options.extend(shlex.split(arguments.extra_analysis_arguments))
 
