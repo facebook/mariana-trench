@@ -149,10 +149,12 @@ void redex::remove_unreachable(
     return;
   }
 
+  reachability::ReachableAspects reachable_aspects;
   auto reachables = reachability::compute_reachable_objects(
       stores,
       /* empty ignore sets */ reachability::IgnoreSets(),
       /* number of ignore check strings */ nullptr,
+      &reachable_aspects,
       /* emit_graph_this_run */ false);
 
   reachability::ObjectCounts before = reachability::count_objects(stores);
