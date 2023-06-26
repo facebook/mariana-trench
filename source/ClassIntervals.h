@@ -10,6 +10,8 @@
 #include <limits>
 #include <unordered_map>
 
+#include <json/json.h>
+
 #include <ClassHierarchy.h>
 #include <DexStore.h>
 
@@ -61,6 +63,8 @@ class ClassIntervals final {
      */
     bool contains(const Interval& other) const;
 
+    friend std::ostream& operator<<(std::ostream&, const Interval&);
+
     std::uint32_t lower_bound;
     std::uint32_t upper_bound;
   };
@@ -78,6 +82,8 @@ class ClassIntervals final {
    * when class interval computation is disabled, or for non-class types.
    */
   const Interval& get_interval(const DexType* type) const;
+
+  Json::Value to_json() const;
 
  private:
   const Interval open_interval_;

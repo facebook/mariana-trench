@@ -133,6 +133,7 @@ Options::Options(
       emit_all_via_cast_features_(emit_all_via_cast_features),
       allow_via_cast_features_({}),
       dump_class_hierarchies_(false),
+      dump_class_intervals_(false),
       dump_overrides_(false),
       dump_call_graph_(false),
       dump_dependencies_(false),
@@ -252,6 +253,7 @@ Options::Options(const boost::program_options::variables_map& variables) {
         variables["log-method-types"].as<std::vector<std::string>>();
   }
   dump_class_hierarchies_ = variables.count("dump-class-hierarchies") > 0;
+  dump_class_intervals_ = variables.count("dump-class-intervals") > 0;
   dump_overrides_ = variables.count("dump-overrides") > 0;
   dump_call_graph_ = variables.count("dump-call-graph") > 0;
   dump_dependencies_ = variables.count("dump-dependencies") > 0;
@@ -394,6 +396,9 @@ void Options::add_options(
       "dump-class-hierarchies",
       "Dump the class hierarchies in `class_hierarchies.json`.");
   options.add_options()(
+      "dump-class-intervals",
+      "Dump the class intervals in `class_intervals.json`. For test/debug only.");
+  options.add_options()(
       "dump-overrides", "Dump the override graph in `overrides.json`.");
   options.add_options()(
       "dump-call-graph", "Dump the call graph in `call_graph.json`.");
@@ -522,6 +527,10 @@ const boost::filesystem::path Options::class_hierarchies_output_path() const {
   return output_directory_ / "class_hierarchies.json";
 }
 
+const boost::filesystem::path Options::class_intervals_output_path() const {
+  return output_directory_ / "class_intervals.json";
+}
+
 const boost::filesystem::path Options::overrides_output_path() const {
   return output_directory_ / "overrides.json";
 }
@@ -580,6 +589,10 @@ const std::vector<std::string>& Options::log_method_types() const {
 
 bool Options::dump_class_hierarchies() const {
   return dump_class_hierarchies_;
+}
+
+bool Options::dump_class_intervals() const {
+  return dump_class_intervals_;
 }
 
 bool Options::dump_overrides() const {

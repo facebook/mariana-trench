@@ -82,6 +82,7 @@ class Options final {
   const boost::filesystem::path methods_output_path() const;
   const boost::filesystem::path call_graph_output_path() const;
   const boost::filesystem::path class_hierarchies_output_path() const;
+  const boost::filesystem::path class_intervals_output_path() const;
   const boost::filesystem::path overrides_output_path() const;
   const boost::filesystem::path dependencies_output_path() const;
 
@@ -100,6 +101,7 @@ class Options final {
   const std::vector<std::string>& log_methods() const;
   const std::vector<std::string>& log_method_types() const;
   bool dump_class_hierarchies() const;
+  bool dump_class_intervals() const;
   bool dump_overrides() const;
   bool dump_call_graph() const;
   bool dump_dependencies() const;
@@ -154,6 +156,7 @@ class Options final {
   std::vector<std::string> log_methods_;
   std::vector<std::string> log_method_types_;
   bool dump_class_hierarchies_;
+  bool dump_class_intervals_;
   bool dump_overrides_;
   bool dump_call_graph_;
   bool dump_dependencies_;

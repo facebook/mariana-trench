@@ -5,10 +5,14 @@
  * LICENSE file in the root directory of this source tree.
  */
 
+#include <Show.h>
 #include <TypeUtil.h>
 
+#include <json/value.h>
 #include <mariana-trench/Assert.h>
 #include <mariana-trench/ClassIntervals.h>
+#include <mariana-trench/JsonValidation.h>
+#include <mariana-trench/Log.h>
 
 namespace marianatrench {
 
@@ -19,6 +23,12 @@ bool ClassIntervals::Interval::operator==(const Interval& other) const {
 bool ClassIntervals::Interval::contains(
     const ClassIntervals::Interval& other) const {
   return other.lower_bound >= lower_bound && other.upper_bound <= upper_bound;
+}
+
+std::ostream& operator<<(
+    std::ostream& out,
+    const ClassIntervals::Interval& interval) {
+  return out << interval.lower_bound << ", " << interval.upper_bound;
 }
 
 namespace {
@@ -74,6 +84,25 @@ ClassIntervals::ClassIntervals(
   const auto* root = type::java_lang_Object();
   std::uint32_t dfs_order = 0;
   dfs_on_hierarchy(class_hierarchy, root, dfs_order, class_intervals_);
+
+  if (options.dump_class_intervals()) {
+    auto class_intervals_path = options.class_intervals_output_path();
+    LOG(1, "Writing class intervals to `{}`", class_intervals_path.native());
+    JsonValidation::write_json_file(class_intervals_path, to_json());
+
+    // Dumping class intervals is test-only, perform additional, otherwise
+    // unnecessary/expensive validation here.
+    for (const auto& scope : DexStoreClassesIterator(stores)) {
+      for (const auto& klass : scope) {
+        if (!is_interface(klass) &&
+            class_intervals_.find(klass->get_type()) ==
+                class_intervals_.end()) {
+          // Might happen if not everything was rooted in Object.
+          WARNING(1, "Did not compute interval for `{}`.", show(klass));
+        }
+      }
+    }
+  }
 }
 
 const ClassIntervals::Interval& ClassIntervals::get_interval(
@@ -86,6 +115,17 @@ const ClassIntervals::Interval& ClassIntervals::get_interval(
   }
 
   return interval->second;
+}
+
+Json::Value ClassIntervals::to_json() const {
+  auto output = Json::Value(Json::objectValue);
+  for (auto [klass, interval] : class_intervals_) {
+    auto interval_json = Json::Value(Json::arrayValue);
+    interval_json.append(Json::Value(interval.lower_bound));
+    interval_json.append(Json::Value(interval.upper_bound));
+    output[show(klass)] = interval_json;
+  }
+  return output;
 }
 
 } // namespace marianatrench
