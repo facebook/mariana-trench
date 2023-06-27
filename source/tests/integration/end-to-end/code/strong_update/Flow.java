@@ -33,4 +33,19 @@ public class Flow {
     add_propagation(Origin.source());
     Origin.sink(this.field);
   }
+
+  // Another false positive due to the backward analysis.
+
+  public void field_setter(Object x) {
+    this.field = x;
+  }
+
+  public Object field_getter() {
+    return this.field;
+  }
+
+  public void sink_false_positive() {
+    field_setter(new Object());
+    Origin.sink(field_getter());
+  }
 }
