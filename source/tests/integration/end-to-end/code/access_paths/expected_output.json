@@ -2484,7 +2484,8 @@
   [
     "alias-memory-location-on-invoke",
     "no-collapse-on-propagation",
-    "skip-analysis"
+    "skip-analysis",
+    "strong-write-on-propagation"
   ],
   "position" : 
   {
@@ -2519,7 +2520,8 @@
   "modes" : 
   [
     "no-collapse-on-propagation",
-    "skip-analysis"
+    "skip-analysis",
+    "strong-write-on-propagation"
   ],
   "position" : 
   {

@@ -383,14 +383,16 @@ inline Model::Frozen operator|(
 std::string model_mode_to_string(Model::Mode mode);
 std::optional<Model::Mode> string_to_model_mode(const std::string& mode);
 
-constexpr std::array<Model::Mode, 7> k_all_modes = {
+constexpr std::array<Model::Mode, 8> k_all_modes = {
     Model::Mode::SkipAnalysis,
     Model::Mode::AddViaObscureFeature,
     Model::Mode::TaintInTaintOut,
     Model::Mode::TaintInTaintThis,
     Model::Mode::NoJoinVirtualOverrides,
     Model::Mode::NoCollapseOnPropagation,
-    Model::Mode::AliasMemoryLocationOnInvoke};
+    Model::Mode::AliasMemoryLocationOnInvoke,
+    Model::Mode::StrongWriteOnPropagation,
+};
 
 constexpr std::array<Model::FreezeKind, 4> k_all_freeze_kinds = {
     Model::FreezeKind::Generations,
