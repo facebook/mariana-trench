@@ -149,7 +149,7 @@ void add_to_class_to_path_map(
           // performance boost.
           if (!package && re2::RE2::PartialMatch(line, package_regex) &&
               re2::RE2::PartialMatch(line, package_regex, &package_match)) {
-            package = package_match.as_string();
+            package = std::string{package_match};
             boost::replace_all(*package, ".", "/");
             if (std::any_of(
                     skipped_package_prefixes.begin(),
