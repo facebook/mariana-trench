@@ -36,9 +36,9 @@ namespace marianatrench {
 
 namespace {
 
-std::map<const ModelGeneratorName*, std::unique_ptr<ModelGenerator>>
+std::unordered_map<const ModelGeneratorName*, std::unique_ptr<ModelGenerator>>
 make_model_generators(Context& context) {
-  std::map<const ModelGeneratorName*, std::unique_ptr<ModelGenerator>>
+  std::unordered_map<const ModelGeneratorName*, std::unique_ptr<ModelGenerator>>
       generators = ModelGeneration::make_builtin_model_generators(context);
   // Find JSON model generators in search path.
   for (const auto& path : context.options->model_generator_search_paths()) {
@@ -95,7 +95,7 @@ ModelGeneratorError::ModelGeneratorError(const std::string& message)
     : std::invalid_argument(message) {}
 
 #ifndef MARIANA_TRENCH_FACEBOOK_BUILD
-std::map<const ModelGeneratorName*, std::unique_ptr<ModelGenerator>>
+std::unordered_map<const ModelGeneratorName*, std::unique_ptr<ModelGenerator>>
 ModelGeneration::make_builtin_model_generators(Context& context) {
   std::vector<std::unique_ptr<ModelGenerator>> builtin_generators;
   builtin_generators.push_back(
@@ -111,7 +111,7 @@ ModelGeneration::make_builtin_model_generators(Context& context) {
   builtin_generators.push_back(
       std::make_unique<JoinOverrideGenerator>(context));
 
-  std::map<const ModelGeneratorName*, std::unique_ptr<ModelGenerator>>
+  std::unordered_map<const ModelGeneratorName*, std::unique_ptr<ModelGenerator>>
       builtin_generator_map;
   for (auto& generator : builtin_generators) {
     const auto* name = generator->name();

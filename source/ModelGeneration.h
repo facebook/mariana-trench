@@ -7,7 +7,8 @@
 
 #pragma once
 
-#include <vector>
+#include <memory>
+#include <unordered_map>
 
 #include <mariana-trench/Context.h>
 #include <mariana-trench/Model.h>
@@ -27,8 +28,9 @@ class ModelGeneration {
       Context& context,
       const MethodMappings& method_mappings);
 
-  static std::map<const ModelGeneratorName*, std::unique_ptr<ModelGenerator>>
-  make_builtin_model_generators(Context& context);
+  static std::
+      unordered_map<const ModelGeneratorName*, std::unique_ptr<ModelGenerator>>
+      make_builtin_model_generators(Context& context);
 };
 
 } // namespace marianatrench
