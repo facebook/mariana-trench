@@ -23,18 +23,30 @@
 #include <mariana-trench/Methods.h>
 #include <mariana-trench/Redex.h>
 #include <mariana-trench/model-generator/ModelGenerator.h>
+#include <mariana-trench/model-generator/ModelGeneratorNameFactory.h>
 
 namespace marianatrench {
 
-ModelGenerator::ModelGenerator(const std::string& name, Context& context)
+ModelGenerator::ModelGenerator(const ModelGeneratorName* name, Context& context)
     : name_(name),
       context_(context),
       options_(*context.options),
       methods_(*context.methods),
       overrides_(*context.overrides) {
-  mt_assert_log(context.options != nullptr, "invalid context");
-  mt_assert_log(context.methods != nullptr, "invalid context");
-  mt_assert_log(context.overrides != nullptr, "invalid context");
+  mt_assert_log(context.options != nullptr, "invalid options in context");
+  mt_assert_log(context.methods != nullptr, "invalid methods in context");
+  mt_assert_log(context.overrides != nullptr, "invalid overrides in context");
+}
+
+ModelGenerator::ModelGenerator(const std::string& name, Context& context)
+    : name_(context.model_generator_name_factory->create(name)),
+      context_(context),
+      options_(*context.options),
+      methods_(*context.methods),
+      overrides_(*context.overrides) {
+  mt_assert_log(context.options != nullptr, "invalid options in context");
+  mt_assert_log(context.methods != nullptr, "invalid methods in context");
+  mt_assert_log(context.overrides != nullptr, "invalid overrides in context");
 }
 
 ModelGeneratorResult ModelGenerator::run(

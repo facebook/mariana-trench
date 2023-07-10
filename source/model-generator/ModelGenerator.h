@@ -25,6 +25,7 @@
 #include <mariana-trench/Options.h>
 #include <mariana-trench/Overrides.h>
 #include <mariana-trench/TaintConfig.h>
+#include <mariana-trench/model-generator/ModelGeneratorName.h>
 
 namespace marianatrench {
 
@@ -35,6 +36,8 @@ struct ModelGeneratorResult {
 
 class ModelGenerator {
  public:
+  ModelGenerator(const ModelGeneratorName* name, Context& context);
+
   ModelGenerator(const std::string& name, Context& context);
 
   ModelGenerator(const ModelGenerator&) = delete;
@@ -43,7 +46,7 @@ class ModelGenerator {
   ModelGenerator& operator=(ModelGenerator&&) = delete;
   virtual ~ModelGenerator() = default;
 
-  virtual const std::string& name() const {
+  const ModelGeneratorName* name() const {
     return name_;
   }
 
@@ -67,7 +70,7 @@ class ModelGenerator {
       const Fields& fields);
 
  protected:
-  std::string name_;
+  const ModelGeneratorName* name_;
   Context& context_;
   const Options& options_;
   const Methods& methods_;
@@ -76,6 +79,9 @@ class ModelGenerator {
 
 class MethodVisitorModelGenerator : public ModelGenerator {
  public:
+  MethodVisitorModelGenerator(const ModelGeneratorName* name, Context& context)
+      : ModelGenerator(name, context) {}
+
   MethodVisitorModelGenerator(const std::string& name, Context& context)
       : ModelGenerator(name, context) {}
 
@@ -111,6 +117,9 @@ class MethodVisitorModelGenerator : public ModelGenerator {
 
 class FieldVisitorModelGenerator : public ModelGenerator {
  public:
+  FieldVisitorModelGenerator(const ModelGeneratorName* name, Context& context)
+      : ModelGenerator(name, context) {}
+
   FieldVisitorModelGenerator(const std::string& name, Context& context)
       : ModelGenerator(name, context) {}
 

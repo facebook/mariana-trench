@@ -35,6 +35,7 @@ class Dependencies;
 class Scheduler;
 class TransformsFactory;
 class UsedKinds;
+class ModelGeneratorNameFactory;
 
 /**
  * Mariana Trench global context.
@@ -52,6 +53,7 @@ class Context final {
   const KindFactory* kind_factory;
   const FeatureFactory* feature_factory;
   const TransformsFactory* transforms_factory;
+  const ModelGeneratorNameFactory* model_generator_name_factory;
   std::unique_ptr<Statistics> statistics;
   std::unique_ptr<Options> options;
   std::vector<DexStore> stores;

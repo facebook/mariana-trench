@@ -22,7 +22,7 @@ namespace marianatrench {
 class JsonModelGeneratorItem final : public MethodVisitorModelGenerator {
  public:
   JsonModelGeneratorItem(
-      const std::string& name,
+      const ModelGeneratorName* name,
       Context& context,
       std::unique_ptr<AllOfMethodConstraint> constraint,
       ModelTemplate model_template,
@@ -44,7 +44,7 @@ class JsonModelGeneratorItem final : public MethodVisitorModelGenerator {
 class JsonFieldModelGeneratorItem final : public FieldVisitorModelGenerator {
  public:
   explicit JsonFieldModelGeneratorItem(
-      const std::string& name,
+      const ModelGeneratorName* name,
       Context& context,
       std::unique_ptr<AllOfFieldConstraint> constraint,
       FieldModelTemplate field_model_template,
@@ -60,7 +60,7 @@ class JsonFieldModelGeneratorItem final : public FieldVisitorModelGenerator {
 class JsonModelGenerator final : public ModelGenerator {
  private:
   explicit JsonModelGenerator(
-      const std::string& name,
+      const ModelGeneratorName* name,
       Context& context,
       const boost::filesystem::path& json_configuration_file,
       const Json::Value& json);
@@ -73,6 +73,12 @@ class JsonModelGenerator final : public ModelGenerator {
 
   static JsonModelGenerator from_json(
       const std::string& name,
+      Context& context,
+      const boost::filesystem::path& json_configuration_file,
+      const Json::Value& json);
+
+  static JsonModelGenerator from_json(
+      const ModelGeneratorName* name,
       Context& context,
       const boost::filesystem::path& json_configuration_file,
       const Json::Value& json);

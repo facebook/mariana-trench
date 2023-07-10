@@ -12,6 +12,7 @@
 #include <mariana-trench/Context.h>
 #include <mariana-trench/Model.h>
 #include <mariana-trench/model-generator/ModelGenerator.h>
+#include <mariana-trench/model-generator/ModelGeneratorName.h>
 
 namespace marianatrench {
 
@@ -26,7 +27,7 @@ class ModelGeneration {
       Context& context,
       const MethodMappings& method_mappings);
 
-  static std::map<std::string, std::unique_ptr<ModelGenerator>>
+  static std::map<const ModelGeneratorName*, std::unique_ptr<ModelGenerator>>
   make_builtin_model_generators(Context& context);
 };
 

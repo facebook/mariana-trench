@@ -9,11 +9,12 @@
 #include <mariana-trench/JsonValidation.h>
 #include <mariana-trench/Log.h>
 #include <mariana-trench/model-generator/JsonModelGenerator.h>
+#include <mariana-trench/model-generator/ModelGeneratorNameFactory.h>
 
 namespace marianatrench {
 
 JsonModelGeneratorItem::JsonModelGeneratorItem(
-    const std::string& name,
+    const ModelGeneratorName* name,
     Context& context,
     std::unique_ptr<AllOfMethodConstraint> constraint,
     ModelTemplate model_template,
@@ -36,7 +37,7 @@ std::vector<Model> JsonModelGeneratorItem::visit_method(
         "Method `{}{}` satisfies all constraints in json model generator {}",
         method->is_static() ? "(static) " : "",
         method->show(),
-        name_);
+        show(name_));
     auto model = model_template_.instantiate(method, context_, verbosity_);
     // If a method has an empty model, then don't add a model
     if (model) {
@@ -72,7 +73,7 @@ MethodHashedSet JsonModelGeneratorItem::may_satisfy(
 }
 
 JsonFieldModelGeneratorItem::JsonFieldModelGeneratorItem(
-    const std::string& name,
+    const ModelGeneratorName* name,
     Context& context,
     std::unique_ptr<AllOfFieldConstraint> constraint,
     FieldModelTemplate field_model_template,
@@ -89,7 +90,7 @@ std::vector<FieldModel> JsonFieldModelGeneratorItem::visit_field(
     LOG(verbosity_,
         "Field `{}` satisfies all constraints in json model generator {}",
         field->show(),
-        name_);
+        show(name_));
     auto field_model = field_model_template_.instantiate(field);
     // If a field has an empty model, then don't add it
     if (field_model) {
@@ -100,7 +101,7 @@ std::vector<FieldModel> JsonFieldModelGeneratorItem::visit_field(
 }
 
 JsonModelGenerator::JsonModelGenerator(
-    const std::string& name,
+    const ModelGeneratorName* name,
     Context& context,
     const boost::filesystem::path& json_configuration_file,
     const Json::Value& value)
@@ -108,10 +109,13 @@ JsonModelGenerator::JsonModelGenerator(
       json_configuration_file_(json_configuration_file) {
   JsonValidation::check_unexpected_members(value, {"model_generators"});
 
+  int index = 0;
   for (auto model_generator :
        JsonValidation::nonempty_array(value, /* field */ "model_generators")) {
     JsonValidation::check_unexpected_members(
         model_generator, {"find", "where", "model", "verbosity", "_comment"});
+    const auto* item_name = context.model_generator_name_factory->create(
+        name->identifier(), index++);
 
     int verbosity = model_generator.isMember("verbosity")
         ? JsonValidation::integer(model_generator, "verbosity")
@@ -126,7 +130,7 @@ JsonModelGenerator::JsonModelGenerator(
             MethodConstraint::from_json(constraint, context));
       }
       items_.push_back(JsonModelGeneratorItem(
-          name,
+          item_name,
           context,
           std::make_unique<AllOfMethodConstraint>(std::move(model_constraints)),
           ModelTemplate::from_json(
@@ -141,7 +145,7 @@ JsonModelGenerator::JsonModelGenerator(
             FieldConstraint::from_json(constraint));
       }
       field_items_.push_back(JsonFieldModelGeneratorItem(
-          name,
+          item_name,
           context,
           std::make_unique<AllOfFieldConstraint>(
               std::move(field_model_constraints)),
@@ -161,12 +165,27 @@ JsonModelGenerator JsonModelGenerator::from_file(
     const std::string& name,
     Context& context,
     const boost::filesystem::path& json_configuration_file) {
-  Json::Value json = JsonValidation::parse_json_file(json_configuration_file);
-  return JsonModelGenerator(name, context, json_configuration_file, json);
+  return JsonModelGenerator::from_json(
+      context.model_generator_name_factory->create(name),
+      context,
+      json_configuration_file,
+      JsonValidation::parse_json_file(json_configuration_file));
 }
 
 JsonModelGenerator JsonModelGenerator::from_json(
     const std::string& name,
+    Context& context,
+    const boost::filesystem::path& json_configuration_file,
+    const Json::Value& json) {
+  return JsonModelGenerator::from_json(
+      context.model_generator_name_factory->create(name),
+      context,
+      json_configuration_file,
+      json);
+}
+
+JsonModelGenerator JsonModelGenerator::from_json(
+    const ModelGeneratorName* name,
     Context& context,
     const boost::filesystem::path& json_configuration_file,
     const Json::Value& json) {
@@ -190,8 +209,7 @@ std::vector<Model> JsonModelGenerator::emit_method_models_optimized(
     const Methods& methods,
     const MethodMappings& method_mappings) {
   std::vector<Model> models;
-  for (size_t i = 0; i < items_.size(); ++i) {
-    auto& item = items_[i];
+  for (auto& item : items_) {
     MethodHashedSet filtered_methods = item.may_satisfy(method_mappings);
     if (filtered_methods.is_bottom()) {
       continue;
@@ -205,13 +223,10 @@ std::vector<Model> JsonModelGenerator::emit_method_models_optimized(
 
     LOG(4,
         "Model generator `{}`'s item {} emitted {} models.",
-        this->name(),
-        i,
+        show(item.name()),
         method_models.size());
     EventLogger::log_event(
-        "model_generator_match",
-        fmt::format("{}:{}", this->name(), i),
-        method_models.size());
+        "model_generator_match", show(item.name()), method_models.size());
 
     models.insert(
         models.end(),

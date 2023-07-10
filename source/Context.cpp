@@ -27,6 +27,7 @@
 #include <mariana-trench/TransformsFactory.h>
 #include <mariana-trench/Types.h>
 #include <mariana-trench/UsedKinds.h>
+#include <mariana-trench/model-generator/ModelGeneratorNameFactory.h>
 
 namespace marianatrench {
 
@@ -34,6 +35,7 @@ Context::Context()
     : kind_factory(&KindFactory::singleton()),
       feature_factory(&FeatureFactory::singleton()),
       transforms_factory(&TransformsFactory::singleton()),
+      model_generator_name_factory(&ModelGeneratorNameFactory::singleton()),
       statistics(std::make_unique<Statistics>()) {}
 
 Context::Context(Context&&) noexcept = default;

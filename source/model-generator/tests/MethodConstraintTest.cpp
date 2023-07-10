@@ -11,6 +11,7 @@
 #include <mariana-trench/JsonValidation.h>
 #include <mariana-trench/Redex.h>
 #include <mariana-trench/model-generator/JsonModelGenerator.h>
+#include <mariana-trench/model-generator/ModelGeneratorNameFactory.h>
 #include <mariana-trench/tests/Test.h>
 
 using namespace marianatrench;
@@ -2402,7 +2403,7 @@ TEST_F(MethodConstraintTest, UniqueConstraints) {
     }
 
     const JsonModelGeneratorItem generator = JsonModelGeneratorItem(
-        "test_generator_name",
+        context.model_generator_name_factory->create("test_generator_name"),
         context,
         std::make_unique<AllOfMethodConstraint>(std::move(constraints)),
         ModelTemplate::from_json(model_template, context),
@@ -2442,7 +2443,7 @@ TEST_F(MethodConstraintTest, UniqueConstraints) {
     constraints.push_back(std::move(any_constraint));
 
     const JsonModelGeneratorItem generator = JsonModelGeneratorItem(
-        "test_generator_name",
+        context.model_generator_name_factory->create("test_generator_name"),
         context,
         std::make_unique<AllOfMethodConstraint>(std::move(constraints)),
         ModelTemplate::from_json(model_template, context),
