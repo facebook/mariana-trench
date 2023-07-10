@@ -73,6 +73,9 @@ Registry Registry::load(
   // Create a registry with the generated models
   Registry registry(context, generated_models, generated_field_models);
 
+  // TODO(T157984454): We should unify the loading of models from files and
+  // loading model generators, so we can use unique "model generator" names.
+
   // Load models json input
   for (const auto& models_path : options.models_paths()) {
     registry.join_with(Registry(
