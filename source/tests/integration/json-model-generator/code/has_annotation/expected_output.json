@@ -23,6 +23,10 @@
     }
   ],
   "method" : "Lcom/facebook/marianatrench/integrationtests/HasAnnotation;.functionA:()Ljava/lang/Object;",
+  "model_generators" : 
+  [
+    "TestModelGenerator:0"
+  ],
   "position" : 
   {
     "line" : 12,
@@ -53,6 +57,10 @@
     }
   ],
   "method" : "Lcom/facebook/marianatrench/integrationtests/HasAnnotation;.functionB:()Lcom/facebook/marianatrench/integrationtests/MyClass;",
+  "model_generators" : 
+  [
+    "TestModelGenerator:0"
+  ],
   "position" : 
   {
     "line" : 16,
@@ -83,6 +91,10 @@
     }
   ],
   "method" : "Lcom/facebook/marianatrench/integrationtests/HasAnnotation;.functionC:(Lcom/facebook/marianatrench/integrationtests/MyClass;)Ljava/lang/Object;",
+  "model_generators" : 
+  [
+    "TestModelGenerator:0"
+  ],
   "position" : 
   {
     "line" : 20,
@@ -113,6 +125,10 @@
     }
   ],
   "method" : "Lcom/facebook/marianatrench/integrationtests/HasAnnotation;.functionD:(Lcom/facebook/marianatrench/integrationtests/MyClassWithoutAnnotation;)Ljava/lang/Object;",
+  "model_generators" : 
+  [
+    "TestModelGenerator:0"
+  ],
   "position" : 
   {
     "line" : 25,
@@ -121,6 +137,10 @@
 }
 {
   "method" : "Lcom/facebook/marianatrench/integrationtests/MyClass;.<init>:()V",
+  "model_generators" : 
+  [
+    "TestModelGenerator:0"
+  ],
   "position" : 
   {
     "line" : 30,
@@ -151,6 +171,10 @@
     }
   ],
   "method" : "Lcom/facebook/marianatrench/integrationtests/MyClass;.functionE:()Ljava/lang/Object;",
+  "model_generators" : 
+  [
+    "TestModelGenerator:0"
+  ],
   "position" : 
   {
     "line" : 32,

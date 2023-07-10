@@ -41,6 +41,10 @@
     }
   ],
   "method" : "Lcom/facebook/marianatrench/integrationtests/JsonModelGeneratorIntegrationTest1;.function:(II)V",
+  "model_generators" : 
+  [
+    "TestModelGenerator:0"
+  ],
   "modes" : 
   [
     "skip-analysis"

@@ -129,13 +129,15 @@ JsonModelGenerator::JsonModelGenerator(
         model_constraints.push_back(
             MethodConstraint::from_json(constraint, context));
       }
+      auto model_template = ModelTemplate::from_json(
+          JsonValidation::object(model_generator, /* field */ "model"),
+          context);
+      model_template.add_model_generator(item_name);
       items_.push_back(JsonModelGeneratorItem(
           item_name,
           context,
           std::make_unique<AllOfMethodConstraint>(std::move(model_constraints)),
-          ModelTemplate::from_json(
-              JsonValidation::object(model_generator, /* field */ "model"),
-              context),
+          std::move(model_template),
           verbosity));
     } else if (find_name == "fields") {
       std::vector<std::unique_ptr<FieldConstraint>> field_model_constraints;
@@ -144,14 +146,16 @@ JsonModelGenerator::JsonModelGenerator(
         field_model_constraints.push_back(
             FieldConstraint::from_json(constraint));
       }
+      auto field_model_template = FieldModelTemplate::from_json(
+          JsonValidation::object(model_generator, /* field */ "model"),
+          context);
+      field_model_template.add_model_generator(item_name);
       field_items_.push_back(JsonFieldModelGeneratorItem(
           item_name,
           context,
           std::make_unique<AllOfFieldConstraint>(
               std::move(field_model_constraints)),
-          FieldModelTemplate::from_json(
-              JsonValidation::object(model_generator, /* field */ "model"),
-              context),
+          std::move(field_model_template),
           verbosity));
     } else {
       auto error = fmt::format("Models for `{}` are not supported.", find_name);

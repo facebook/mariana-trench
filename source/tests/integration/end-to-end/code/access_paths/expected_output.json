@@ -999,6 +999,10 @@
 }
 {
   "method" : "Lcom/facebook/marianatrench/integrationtests/AccessPaths;.sinkIndex:(Lcom/facebook/marianatrench/integrationtests/Dictionary;Ljava/lang/String;)V",
+  "model_generators" : 
+  [
+    "model_generators:3"
+  ],
   "modes" : 
   [
     "skip-analysis"
@@ -2445,6 +2449,10 @@
 }
 {
   "method" : "Lcom/facebook/marianatrench/integrationtests/Dictionary;.getIndex:(Ljava/lang/String;)Ljava/lang/Object;",
+  "model_generators" : 
+  [
+    "model_generators:2"
+  ],
   "modes" : 
   [
     "no-collapse-on-propagation",
@@ -2480,6 +2488,10 @@
 }
 {
   "method" : "Lcom/facebook/marianatrench/integrationtests/Dictionary;.putExtra:(Ljava/lang/String;Ljava/lang/Object;)Lcom/facebook/marianatrench/integrationtests/Dictionary;",
+  "model_generators" : 
+  [
+    "model_generators:1"
+  ],
   "modes" : 
   [
     "alias-memory-location-on-invoke",
@@ -2517,6 +2529,10 @@
 }
 {
   "method" : "Lcom/facebook/marianatrench/integrationtests/Dictionary;.setIndex:(Ljava/lang/String;Ljava/lang/Object;)V",
+  "model_generators" : 
+  [
+    "model_generators:0"
+  ],
   "modes" : 
   [
     "no-collapse-on-propagation",
@@ -2553,6 +2569,10 @@
 }
 {
   "method" : "Lcom/facebook/marianatrench/integrationtests/Dictionary;.sinkIndex:(Ljava/lang/String;)V",
+  "model_generators" : 
+  [
+    "model_generators:3"
+  ],
   "modes" : 
   [
     "skip-analysis"

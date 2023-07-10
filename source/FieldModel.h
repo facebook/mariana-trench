@@ -11,6 +11,7 @@
 #include <mariana-trench/IncludeMacros.h>
 #include <mariana-trench/Taint.h>
 #include <mariana-trench/TaintConfig.h>
+#include <mariana-trench/model-generator/ModelGeneratorNameSet.h>
 
 namespace marianatrench {
 
@@ -23,6 +24,8 @@ namespace marianatrench {
  * respectively. This taint is not affected by assignments to the field within
  * the analyzed source code.
  *
+ * *model generators* is a set of model generator names that originated a part
+ * of that model.
  */
 class FieldModel final {
  public:
@@ -33,7 +36,8 @@ class FieldModel final {
   explicit FieldModel(
       const Field* field,
       const std::vector<TaintConfig>& sources,
-      const std::vector<TaintConfig>& sinks);
+      const std::vector<TaintConfig>& sinks,
+      const ModelGeneratorNameSet& model_generators = {});
 
   INCLUDE_DEFAULT_COPY_CONSTRUCTORS_AND_ASSIGNMENTS(FieldModel)
 
@@ -67,6 +71,12 @@ class FieldModel final {
       Context& context);
   Json::Value to_json(ExportOriginsMode export_origins_mode) const;
 
+  void add_source(Taint source);
+  void add_sink(Taint source);
+
+  void add_model_generator(const ModelGeneratorName* model_generator);
+  void add_model_generator_if_empty(const ModelGeneratorName* model_generator);
+
   /*
    * Export the model to json and include the field position. For now, this is
    * always unknown
@@ -82,12 +92,11 @@ class FieldModel final {
 
   void check_taint_consistency(const Taint& frame, std::string_view kind) const;
 
-  void add_source(Taint source);
-  void add_sink(Taint source);
-
+ private:
   const Field* MT_NULLABLE field_;
   Taint sources_;
   Taint sinks_;
+  ModelGeneratorNameSet model_generators_;
 };
 
 } // namespace marianatrench

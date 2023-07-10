@@ -165,6 +165,7 @@ Model::Model(
     const std::vector<std::pair<Root, FeatureSet>>& attach_to_propagations,
     const std::vector<std::pair<Root, FeatureSet>>& add_features_to_arguments,
     const AccessPathConstantDomain& inline_as,
+    const ModelGeneratorNameSet& model_generators,
     const IssueSet& issues)
     : method_(method), modes_(modes), frozen_(frozen) {
   if (method_) {
@@ -226,6 +227,10 @@ Model::Model(
 
   set_inline_as(inline_as);
 
+  for (const auto* model_generator : model_generators) {
+    add_model_generator(model_generator);
+  }
+
   for (const auto& issue : issues) {
     add_issue(issue);
   }
@@ -244,7 +249,8 @@ bool Model::operator==(const Model& other) const {
       attach_to_sinks_ == other.attach_to_sinks_ &&
       attach_to_propagations_ == other.attach_to_propagations_ &&
       add_features_to_arguments_ == other.add_features_to_arguments_ &&
-      inline_as_ == other.inline_as_ && issues_ == other.issues_;
+      inline_as_ == other.inline_as_ &&
+      model_generators_ == other.model_generators_ && issues_ == other.issues_;
 }
 
 bool Model::operator!=(const Model& other) const {
@@ -304,6 +310,10 @@ Model Model::instantiate(const Method* method, Context& context) const {
   }
 
   model.set_inline_as(inline_as_);
+
+  for (const auto* model_generator : model_generators_) {
+    model.add_model_generator(model_generator);
+  }
 
   return model;
 }
@@ -419,6 +429,7 @@ Model Model::initial_model_for_iteration() const {
   model.modes_ = modes_;
   model.global_sanitizers_ = global_sanitizers_;
   model.port_sanitizers_ = port_sanitizers_;
+  model.model_generators_ = model_generators_;
   return model;
 }
 
@@ -532,7 +543,7 @@ bool Model::empty() const {
       port_sanitizers_.is_bottom() && attach_to_sources_.is_bottom() &&
       attach_to_sinks_.is_bottom() && attach_to_propagations_.is_bottom() &&
       add_features_to_arguments_.is_bottom() && inline_as_.is_bottom() &&
-      issues_.is_bottom();
+      model_generators_.is_bottom() && issues_.is_bottom();
 }
 
 void Model::add_mode(Model::Mode mode, Context& context) {
@@ -839,6 +850,19 @@ void Model::set_inline_as(AccessPathConstantDomain inline_as) {
   inline_as_ = std::move(inline_as);
 }
 
+void Model::add_model_generator(const ModelGeneratorName* model_generator) {
+  model_generators_.add(model_generator);
+}
+
+void Model::add_model_generator_if_empty(
+    const ModelGeneratorName* model_generator) {
+  if (!model_generators_.is_bottom()) {
+    return;
+  }
+
+  model_generators_.add(model_generator);
+}
+
 void Model::add_issue(Issue trace) {
   issues_.add(std::move(trace));
 }
@@ -910,7 +934,9 @@ bool Model::leq(const Model& other) const {
       attach_to_sinks_.leq(other.attach_to_sinks_) &&
       attach_to_propagations_.leq(other.attach_to_propagations_) &&
       add_features_to_arguments_.leq(other.add_features_to_arguments_) &&
-      inline_as_.leq(other.inline_as_) && issues_.leq(other.issues_);
+      inline_as_.leq(other.inline_as_) &&
+      model_generators_.leq(other.model_generators_) &&
+      issues_.leq(other.issues_);
 }
 
 void Model::join_with(const Model& other) {
@@ -952,6 +978,7 @@ void Model::join_with(const Model& other) {
   attach_to_propagations_.join_with(other.attach_to_propagations_);
   add_features_to_arguments_.join_with(other.add_features_to_arguments_);
   inline_as_.join_with(other.inline_as_);
+  model_generators_.join_with(other.model_generators_);
   issues_.join_with(other.issues_);
 
   mt_expensive_assert(previous.leq(*this) && other.leq(*this));
@@ -1330,6 +1357,14 @@ Json::Value Model::to_json(ExportOriginsMode export_origins_mode) const {
     value["inline_as"] = access_path->to_json();
   }
 
+  if (!model_generators_.is_bottom()) {
+    auto model_generators_value = Json::Value(Json::arrayValue);
+    for (const auto* model_generator : model_generators_) {
+      model_generators_value.append(model_generator->to_json());
+    }
+    value["model_generators"] = model_generators_value;
+  }
+
   if (!issues_.is_bottom()) {
     auto issues_value = Json::Value(Json::arrayValue);
     for (const auto& issue : issues_) {
@@ -1458,6 +1493,13 @@ std::ostream& operator<<(std::ostream& out, const Model& model) {
   }
   if (auto access_path = model.inline_as_.get_constant()) {
     out << ",\n  inline_as=" << *access_path;
+  }
+  if (!model.model_generators_.is_bottom()) {
+    out << ",\n  model_generators={";
+    for (const auto* model_generator : model.model_generators_) {
+      out << *model_generator << ", ";
+    }
+    out << "}";
   }
   if (!model.issues_.is_bottom()) {
     out << ",\n  issues={\n";

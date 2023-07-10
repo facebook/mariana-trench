@@ -912,6 +912,10 @@
 }
 {
   "method" : "Lcom/facebook/marianatrench/integrationtests/Flow$IInterface;.obscure_taint_this_taint_out_via_model_generator:()I",
+  "model_generators" : 
+  [
+    "model_generators:0"
+  ],
   "modes" : 
   [
     "add-via-obscure-feature",

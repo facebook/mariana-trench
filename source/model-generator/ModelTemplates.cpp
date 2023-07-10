@@ -698,6 +698,11 @@ ModelTemplate::ModelTemplate(
   mt_assert(model.method() == nullptr);
 }
 
+void ModelTemplate::add_model_generator(
+    const ModelGeneratorName* model_generator) {
+  model_.add_model_generator(model_generator);
+}
+
 std::optional<Model> ModelTemplate::instantiate(
     const Method* method,
     Context& context,

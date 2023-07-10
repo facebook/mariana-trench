@@ -1,5 +1,17 @@
 // @generated
 {
+  "method" : "Lcom/facebook/marianatrench/integrationtests/JsonModelGeneratorIntegrationTest2;.<init>:()V",
+  "model_generators" : 
+  [
+    "TestModelGenerator:1"
+  ],
+  "position" : 
+  {
+    "line" : 9,
+    "path" : "com/facebook/marianatrench/integrationtests/JsonModelGeneratorIntegrationTest2.java"
+  }
+}
+{
   "add_features_to_arguments" : 
   [
     {
@@ -133,6 +145,11 @@
     }
   ],
   "method" : "Lcom/facebook/marianatrench/integrationtests/JsonModelGeneratorIntegrationTest2;.function:(II)I",
+  "model_generators" : 
+  [
+    "TestModelGenerator:0",
+    "TestModelGenerator:1"
+  ],
   "modes" : 
   [
     "skip-analysis"
@@ -292,6 +309,10 @@
 }
 {
   "method" : "Lcom/facebook/marianatrench/integrationtests/JsonModelGeneratorIntegrationTest2;.functionB:(III)I",
+  "model_generators" : 
+  [
+    "TestModelGenerator:1"
+  ],
   "parameter_sources" : 
   [
     {
@@ -360,6 +381,10 @@
 }
 {
   "method" : "Lcom/facebook/marianatrench/integrationtests/JsonModelGeneratorIntegrationTest2;.functionC:(III)I",
+  "model_generators" : 
+  [
+    "TestModelGenerator:1"
+  ],
   "parameter_sources" : 
   [
     {
@@ -405,5 +430,32 @@
   {
     "line" : 25,
     "path" : "com/facebook/marianatrench/integrationtests/JsonModelGeneratorIntegrationTest2.java"
+  }
+}
+{
+  "method" : "Lcom/facebook/marianatrench/integrationtests/TestParameterAnnotation;.value:()Ljava/lang/String;",
+  "model_generators" : 
+  [
+    "TestModelGenerator:1"
+  ],
+  "modes" : 
+  [
+    "add-via-obscure-feature",
+    "skip-analysis"
+  ],
+  "position" : 
+  {
+    "path" : "com/facebook/marianatrench/integrationtests/TestParameterAnnotation.java"
+  }
+}
+{
+  "method" : "Lcom/mariana_trench/artificial/ArrayAllocation;.allocateArray:(I)V",
+  "model_generators" : 
+  [
+    "TestModelGenerator:1"
+  ],
+  "position" : 
+  {
+    "path" : "com/mariana_trench/artificial/ArrayAllocation.java"
   }
 }

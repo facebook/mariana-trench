@@ -28,6 +28,7 @@
 #include <mariana-trench/Sanitizer.h>
 #include <mariana-trench/Taint.h>
 #include <mariana-trench/TaintTree.h>
+#include <mariana-trench/model-generator/ModelGeneratorNameSet.h>
 
 namespace marianatrench {
 
@@ -79,6 +80,9 @@ using SanitizerSet = GroupHashedSetAbstractDomain<
  *
  * *inline as* is either top, bottom or an argument access path that will be
  * used to inline the method at call sites.
+ *
+ * *model generators* is a set of model generator names that originated a part
+ * of that model.
  */
 class Model final {
  public:
@@ -154,6 +158,7 @@ class Model final {
           add_features_to_arguments = {},
       const AccessPathConstantDomain& inline_as =
           AccessPathConstantDomain::bottom(),
+      const ModelGeneratorNameSet& model_generators = {},
       const IssueSet& issues = {});
 
   INCLUDE_DEFAULT_COPY_CONSTRUCTORS_AND_ASSIGNMENTS(Model)
@@ -278,6 +283,9 @@ class Model final {
   const AccessPathConstantDomain& inline_as() const;
   void set_inline_as(AccessPathConstantDomain inline_as);
 
+  void add_model_generator(const ModelGeneratorName* model_generator);
+  void add_model_generator_if_empty(const ModelGeneratorName* model_generator);
+
   void add_issue(Issue issue);
   const IssueSet& issues() const {
     return issues_;
@@ -367,6 +375,7 @@ class Model final {
   RootPatriciaTreeAbstractPartition<FeatureSet> attach_to_propagations_;
   RootPatriciaTreeAbstractPartition<FeatureSet> add_features_to_arguments_;
   AccessPathConstantDomain inline_as_;
+  ModelGeneratorNameSet model_generators_;
   IssueSet issues_;
 };
 

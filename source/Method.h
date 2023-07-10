@@ -8,6 +8,7 @@
 #pragma once
 
 #include <boost/container/flat_map.hpp>
+#include <boost/functional/hash.hpp>
 #include <json/json.h>
 
 #include <ControlFlow.h>

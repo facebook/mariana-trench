@@ -31,8 +31,9 @@ class FieldModelConsistencyError {
 FieldModel::FieldModel(
     const Field* field,
     const std::vector<TaintConfig>& sources,
-    const std::vector<TaintConfig>& sinks)
-    : field_(field) {
+    const std::vector<TaintConfig>& sinks,
+    const ModelGeneratorNameSet& model_generators)
+    : field_(field), model_generators_(model_generators) {
   for (const auto& config : sources) {
     add_source(config);
   }
@@ -43,7 +44,8 @@ FieldModel::FieldModel(
 }
 
 bool FieldModel::operator==(const FieldModel& other) const {
-  return sources_ == other.sources_ && sinks_ == other.sinks_;
+  return sources_ == other.sources_ && sinks_ == other.sinks_ &&
+      model_generators_ == other.model_generators_;
 }
 
 bool FieldModel::operator!=(const FieldModel& other) const {
@@ -55,12 +57,14 @@ FieldModel FieldModel::instantiate(const Field* field) const {
 
   field_model.add_source(sources_);
   field_model.add_sink(sinks_);
+  field_model.model_generators_ = model_generators_;
 
   return field_model;
 }
 
 bool FieldModel::empty() const {
-  return sources_.is_bottom() && sinks_.is_bottom();
+  return sources_.is_bottom() && sinks_.is_bottom() &&
+      model_generators_.is_bottom();
 }
 
 void FieldModel::check_taint_config_consistency(
@@ -115,6 +119,7 @@ void FieldModel::join_with(const FieldModel& other) {
 
   sources_.join_with(other.sources_);
   sinks_.join_with(other.sinks_);
+  model_generators_.join_with(other.model_generators_);
 
   mt_expensive_assert(previous.leq(*this) && other.leq(*this));
 }
@@ -167,6 +172,14 @@ Json::Value FieldModel::to_json(ExportOriginsMode export_origins_mode) const {
     value["sinks"] = sinks_value;
   }
 
+  if (!model_generators_.is_bottom()) {
+    auto model_generators_value = Json::Value(Json::arrayValue);
+    for (const auto* model_generator : model_generators_) {
+      model_generators_value.append(model_generator->to_json());
+    }
+    value["model_generators"] = model_generators_value;
+  }
+
   return value;
 }
 
@@ -192,6 +205,13 @@ std::ostream& operator<<(std::ostream& out, const FieldModel& model) {
     }
     out << "  }";
   }
+  if (!model.model_generators_.is_bottom()) {
+    out << ",\n  model_generators={";
+    for (const auto* model_generator : model.model_generators_) {
+      out << *model_generator << ", ";
+    }
+    out << "}";
+  }
   return out << ")";
 }
 
@@ -209,6 +229,20 @@ void FieldModel::add_sink(Taint sink) {
   }
   check_taint_consistency(sink, "sink");
   sinks_.join_with(sink);
+}
+
+void FieldModel::add_model_generator(
+    const ModelGeneratorName* model_generator) {
+  model_generators_.add(model_generator);
+}
+
+void FieldModel::add_model_generator_if_empty(
+    const ModelGeneratorName* model_generator) {
+  if (!model_generators_.is_bottom()) {
+    return;
+  }
+
+  model_generators_.add(model_generator);
 }
 
 } // namespace marianatrench

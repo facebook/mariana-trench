@@ -977,6 +977,10 @@
 }
 {
   "method" : "Lcom/facebook/marianatrench/integrationtests/Test;.sinkNonExistent:(Ljava/lang/Object;)V",
+  "model_generators" : 
+  [
+    "model_generators:2"
+  ],
   "position" : 
   {
     "line" : 16,
@@ -1011,6 +1015,10 @@
     }
   ],
   "method" : "Lcom/facebook/marianatrench/integrationtests/Test;.sourceViaType:()Ljava/lang/Object;",
+  "model_generators" : 
+  [
+    "model_generators:1"
+  ],
   "position" : 
   {
     "line" : 13,
@@ -1110,6 +1118,10 @@
 }
 {
   "method" : "Lcom/facebook/marianatrench/integrationtests/Test;.transferTaint:(Ljava/lang/String;Ljava/lang/Object;)V",
+  "model_generators" : 
+  [
+    "model_generators:0"
+  ],
   "position" : 
   {
     "line" : 10,

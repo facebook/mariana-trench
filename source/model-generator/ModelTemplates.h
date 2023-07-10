@@ -324,6 +324,8 @@ class ModelTemplate final {
   ModelTemplate& operator=(ModelTemplate&& other) = delete;
   ~ModelTemplate() = default;
 
+  void add_model_generator(const ModelGeneratorName* model_generator);
+
   /* Create a model with information that is associated with a method (e.g. new
    * sinks/generations/...). */
   std::optional<Model>

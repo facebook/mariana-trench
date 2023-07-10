@@ -10,6 +10,7 @@
 
 #include <mariana-trench/Redex.h>
 #include <mariana-trench/model-generator/JsonModelGenerator.h>
+#include <mariana-trench/model-generator/ModelGeneratorNameFactory.h>
 #include <mariana-trench/tests/Test.h>
 
 using namespace marianatrench;
@@ -43,28 +44,33 @@ TEST_F(DataCastFeatureGeneratorTest, CastToInt) {
   auto context = test::make_context(store);
   auto* method = context.methods->get(dex_method);
 
+  auto expected_model = Model(
+      /* method */ method,
+      context,
+      /* modes */ Model::Mode::Normal,
+      /* frozen */ Model::FreezeKind::None,
+      /* generations */ std::vector<std::pair<AccessPath, TaintConfig>>{},
+      /* parameter_sources */ {},
+      /* sinks */ {},
+      /* propagations */
+      {PropagationConfig(
+          /* input_path */ AccessPath(Root(Root::Kind::Argument, 0)),
+          /* kind */ context.kind_factory->local_return(),
+          /* output_paths */
+          PathTreeDomain{{Path{}, CollapseDepth::zero()}},
+          /* inferred_features */ FeatureMayAlwaysSet::bottom(),
+          /* locally_inferred_features */ FeatureMayAlwaysSet::bottom(),
+          /* user_features */
+          FeatureSet{context.feature_factory->get("cast:numeric")})});
+  expected_model.add_model_generator(
+      context.model_generator_name_factory->create(
+          "DataCastFeatureGenerator", 2));
+
   EXPECT_THAT(
       JsonModelGenerator::from_file(
           "DataCastFeatureGenerator", context, json_file_path())
           .emit_method_models(*context.methods),
-      testing::UnorderedElementsAre(Model(
-          /* method */ method,
-          context,
-          /* modes */ Model::Mode::Normal,
-          /* frozen */ Model::FreezeKind::None,
-          /* generations */ std::vector<std::pair<AccessPath, TaintConfig>>{},
-          /* parameter_sources */ {},
-          /* sinks */ {},
-          /* propagations */
-          {PropagationConfig(
-              /* input_path */ AccessPath(Root(Root::Kind::Argument, 0)),
-              /* kind */ context.kind_factory->local_return(),
-              /* output_paths */
-              PathTreeDomain{{Path{}, CollapseDepth::zero()}},
-              /* inferred_features */ FeatureMayAlwaysSet::bottom(),
-              /* locally_inferred_features */ FeatureMayAlwaysSet::bottom(),
-              /* user_features */
-              FeatureSet{context.feature_factory->get("cast:numeric")})})));
+      testing::UnorderedElementsAre(expected_model));
 }
 
 TEST_F(DataCastFeatureGeneratorTest, CastToBool) {
@@ -83,26 +89,31 @@ TEST_F(DataCastFeatureGeneratorTest, CastToBool) {
   auto context = test::make_context(store);
   auto* method = context.methods->get(dex_method);
 
+  auto expected_model = Model(
+      /* method */ method,
+      context,
+      /* modes */ Model::Mode::Normal,
+      /* frozen */ Model::FreezeKind::None,
+      /* generations */ std::vector<std::pair<AccessPath, TaintConfig>>{},
+      /* parameter_sources */ {},
+      /* sinks */ {},
+      /* propagations */
+      {PropagationConfig(
+          /* input_path */ AccessPath(Root(Root::Kind::Argument, 0)),
+          /* kind */ context.kind_factory->local_return(),
+          /* output_paths */
+          PathTreeDomain{{Path{}, CollapseDepth::zero()}},
+          /* inferred_features */ FeatureMayAlwaysSet::bottom(),
+          /* locally_inferred_features */ FeatureMayAlwaysSet::bottom(),
+          /* user_features */
+          FeatureSet{context.feature_factory->get("cast:boolean")})});
+  expected_model.add_model_generator(
+      context.model_generator_name_factory->create(
+          "DataCastFeatureGenerator", 3));
+
   EXPECT_THAT(
       JsonModelGenerator::from_file(
           "DataCastFeatureGenerator", context, json_file_path())
           .emit_method_models(*context.methods),
-      testing::UnorderedElementsAre(Model(
-          /* method */ method,
-          context,
-          /* modes */ Model::Mode::Normal,
-          /* frozen */ Model::FreezeKind::None,
-          /* generations */ std::vector<std::pair<AccessPath, TaintConfig>>{},
-          /* parameter_sources */ {},
-          /* sinks */ {},
-          /* propagations */
-          {PropagationConfig(
-              /* input_path */ AccessPath(Root(Root::Kind::Argument, 0)),
-              /* kind */ context.kind_factory->local_return(),
-              /* output_paths */
-              PathTreeDomain{{Path{}, CollapseDepth::zero()}},
-              /* inferred_features */ FeatureMayAlwaysSet::bottom(),
-              /* locally_inferred_features */ FeatureMayAlwaysSet::bottom(),
-              /* user_features */
-              FeatureSet{context.feature_factory->get("cast:boolean")})})));
+      testing::UnorderedElementsAre(expected_model));
 }

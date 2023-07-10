@@ -2731,6 +2731,7 @@ TEST_F(JsonTest, Model) {
                             /* attach_to_propagations */ {},
                             /* add_features_to_arguments */ {},
                             /* inline_as */ AccessPathConstantDomain::bottom(),
+                            /* model_generators */ {},
                             IssueSet{Issue(
                                 /* source */ Taint{test::make_leaf_taint_config(
                                     context.kind_factory->get("first_source"))},
@@ -3072,6 +3073,7 @@ TEST_F(JsonTest, CallEffectModel) {
                             /* attach_to_propagations */ {},
                             /* add_features_to_arguments */ {},
                             /* inline_as */ AccessPathConstantDomain::bottom(),
+                            /* model_generators */ {},
                             IssueSet{Issue(
                                 std::move(source),
                                 std::move(sink),

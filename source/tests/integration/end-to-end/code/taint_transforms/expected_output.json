@@ -3201,6 +3201,10 @@
   ],
   "inline_as" : "Argument(1)",
   "method" : "Lcom/facebook/marianatrench/integrationtests/TaintTransforms;.transformForAllParameters:(Lcom/facebook/marianatrench/integrationtests/Data;Ljava/lang/Object;)Ljava/lang/Object;",
+  "model_generators" : 
+  [
+    "model_generators:5"
+  ],
   "position" : 
   {
     "line" : 57,
@@ -3232,6 +3236,10 @@
 {
   "inline_as" : "Argument(0)",
   "method" : "Lcom/facebook/marianatrench/integrationtests/TaintTransforms;.transformT1:(Ljava/lang/Object;)Ljava/lang/Object;",
+  "model_generators" : 
+  [
+    "model_generators:0"
+  ],
   "position" : 
   {
     "line" : 29,
@@ -3275,6 +3283,10 @@
   ],
   "inline_as" : "Argument(0)",
   "method" : "Lcom/facebook/marianatrench/integrationtests/TaintTransforms;.transformT1T2:(Ljava/lang/Object;)Ljava/lang/Object;",
+  "model_generators" : 
+  [
+    "model_generators:1"
+  ],
   "position" : 
   {
     "line" : 39,
@@ -3310,6 +3322,10 @@
   ],
   "inline_as" : "Argument(0)",
   "method" : "Lcom/facebook/marianatrench/integrationtests/TaintTransforms;.transformT2:(Ljava/lang/Object;)Ljava/lang/Object;",
+  "model_generators" : 
+  [
+    "model_generators:2"
+  ],
   "position" : 
   {
     "line" : 34,
@@ -3385,6 +3401,10 @@
     }
   ],
   "method" : "Lcom/facebook/marianatrench/integrationtests/TaintTransforms;.transformT3WithSource:(Lcom/facebook/marianatrench/integrationtests/Data;)Lcom/facebook/marianatrench/integrationtests/Data;",
+  "model_generators" : 
+  [
+    "model_generators:3"
+  ],
   "position" : 
   {
     "line" : 45,
@@ -3420,6 +3440,10 @@
   ],
   "inline_as" : "Argument(0)",
   "method" : "Lcom/facebook/marianatrench/integrationtests/TaintTransforms;.transformUnused:(Ljava/lang/Object;)Ljava/lang/Object;",
+  "model_generators" : 
+  [
+    "model_generators:4"
+  ],
   "position" : 
   {
     "line" : 51,

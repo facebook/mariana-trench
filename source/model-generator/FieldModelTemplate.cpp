@@ -15,6 +15,11 @@ FieldModelTemplate::FieldModelTemplate(const FieldModel& field_model)
   mt_assert(field_model.field() == nullptr);
 }
 
+void FieldModelTemplate::add_model_generator(
+    const ModelGeneratorName* model_generator) {
+  field_model_.add_model_generator(model_generator);
+}
+
 std::optional<FieldModel> FieldModelTemplate::instantiate(
     const Field* field) const {
   auto field_model = field_model_.instantiate(field);

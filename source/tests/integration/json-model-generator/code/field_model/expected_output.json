@@ -1,6 +1,10 @@
 // @generated
 {
   "field" : "Lcom/facebook/marianatrench/integrationtests/FieldModel;.field_one:Ljava/lang/String;",
+  "model_generators" : 
+  [
+    "TestModelGenerator:0"
+  ],
   "position" : {},
   "sinks" : 
   [
@@ -29,6 +33,10 @@
 }
 {
   "field" : "Lcom/facebook/marianatrench/integrationtests/FieldModel;.field_three:Ljava/lang/Integer;",
+  "model_generators" : 
+  [
+    "TestModelGenerator:2"
+  ],
   "position" : {},
   "sources" : 
   [
@@ -45,6 +53,11 @@
 }
 {
   "field" : "Lcom/facebook/marianatrench/integrationtests/FieldModel;.field_two:Ljava/lang/Boolean;",
+  "model_generators" : 
+  [
+    "TestModelGenerator:1",
+    "TestModelGenerator:2"
+  ],
   "position" : {},
   "sinks" : 
   [

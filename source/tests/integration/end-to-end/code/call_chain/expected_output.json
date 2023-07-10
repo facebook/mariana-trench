@@ -1140,6 +1140,10 @@
     }
   ],
   "method" : "Lcom/facebook/marianatrench/integrationtests/Exported;.entry:()V",
+  "model_generators" : 
+  [
+    "model_generators:0"
+  ],
   "position" : 
   {
     "line" : 25,

@@ -32,9 +32,13 @@ std::unordered_set<std::string_view> service_methods = {
     "onUnbind",
     "handleMessage"};
 
-Model source_first_argument(const Method* method, Context& context) {
+Model source_first_argument(
+    const Method* method,
+    const ModelGeneratorName* generator_name,
+    Context& context) {
   auto model = Model(method, context);
   model.add_mode(Model::Mode::NoJoinVirtualOverrides, context);
+  model.add_model_generator(generator_name);
   model.add_parameter_source(
       AccessPath(Root(Root::Kind::Argument, 1)),
       generator::source(
@@ -92,7 +96,7 @@ std::vector<Model> ServiceSourceGenerator::emit_method_models(
     }
 
     if (boost::equals(method_name, "handleMessage")) {
-      auto model = source_first_argument(method, context_);
+      auto model = source_first_argument(method, name_, context_);
       std::lock_guard<std::mutex> lock(mutex);
       models.push_back(model);
     }
@@ -100,7 +104,7 @@ std::vector<Model> ServiceSourceGenerator::emit_method_models(
     if (service_methods.find(method_name) != service_methods.end() &&
         manifest_services.find(generator::get_outer_class(class_name)) !=
             manifest_services.end()) {
-      auto model = source_first_argument(method, context_);
+      auto model = source_first_argument(method, name_, context_);
       std::lock_guard<std::mutex> lock(mutex);
       models.push_back(model);
     }

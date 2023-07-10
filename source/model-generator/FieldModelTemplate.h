@@ -23,6 +23,8 @@ class FieldModelTemplate final {
   FieldModelTemplate& operator=(FieldModelTemplate&& other) = delete;
   ~FieldModelTemplate() = default;
 
+  void add_model_generator(const ModelGeneratorName* model_generator);
+
   /* Create a FieldModel with information that is associated with a field. */
   std::optional<FieldModel> instantiate(const Field* field) const;
   static FieldModelTemplate from_json(

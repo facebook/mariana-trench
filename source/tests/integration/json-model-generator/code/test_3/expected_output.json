@@ -23,6 +23,10 @@
     }
   ],
   "method" : "Lcom/facebook/marianatrench/integrationtests/JsonModelGeneratorIntegrationTest3;.functionB:(III)I",
+  "model_generators" : 
+  [
+    "TestModelGenerator:0"
+  ],
   "position" : 
   {
     "line" : 18,
@@ -53,6 +57,10 @@
     }
   ],
   "method" : "Lcom/facebook/marianatrench/integrationtests/JsonModelGeneratorIntegrationTest3;.functionC:(III)I",
+  "model_generators" : 
+  [
+    "TestModelGenerator:0"
+  ],
   "position" : 
   {
     "line" : 25,

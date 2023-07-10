@@ -30,9 +30,13 @@ std::unordered_set<std::string> provider_regex_strings = {
     ".*;\\.openPipeHelper:\\(Landroid/net/Uri;Ljava/lang/String;.*\\)Landroid/os/ParcelFileDescriptor;",
     ".*;\\.openTypedAssetFile:\\(Landroid/net/Uri;Ljava/lang/String;.*\\)Landroid/content/res/AssetFileDescriptor;"};
 
-Model create_model(const Method* method, Context& context) {
+Model create_model(
+    const Method* method,
+    const ModelGeneratorName* generator_name,
+    Context& context) {
   auto model = Model(method, context);
   model.add_mode(Model::Mode::NoJoinVirtualOverrides, context);
+  model.add_model_generator(generator_name);
   for (const auto& argument : generator::get_argument_types(method)) {
     model.add_parameter_source(
         AccessPath(Root(Root::Kind::Argument, argument.first)),
@@ -101,7 +105,7 @@ std::vector<Model> ContentProviderGenerator::emit_method_models(
       for (const auto& regex : provider_regexes) {
         if (re2::RE2::FullMatch(signature, *regex)) {
           std::lock_guard<std::mutex> lock(mutex);
-          models.push_back(create_model(method, context_));
+          models.push_back(create_model(method, name_, context_));
           break;
         }
       }

@@ -308,6 +308,10 @@
 }
 {
   "method" : "Landroid/net/Uri$Builder;.host:(Ljava/lang/String;)Landroid/net/Uri$Builder;",
+  "model_generators" : 
+  [
+    "BuilderPatternGenerator"
+  ],
   "modes" : 
   [
     "alias-memory-location-on-invoke",
@@ -374,6 +378,10 @@
 }
 {
   "method" : "Landroid/net/Uri$Builder;.path:(Ljava/lang/String;)Landroid/net/Uri$Builder;",
+  "model_generators" : 
+  [
+    "BuilderPatternGenerator"
+  ],
   "modes" : 
   [
     "alias-memory-location-on-invoke",
@@ -440,6 +448,10 @@
 }
 {
   "method" : "Landroid/net/Uri$Builder;.scheme:(Ljava/lang/String;)Landroid/net/Uri$Builder;",
+  "model_generators" : 
+  [
+    "BuilderPatternGenerator"
+  ],
   "modes" : 
   [
     "alias-memory-location-on-invoke",
@@ -1054,6 +1066,10 @@
     }
   ],
   "method" : "Lcom/facebook/marianatrench/integrationtests/Test$Builder;.certificatePinner:(Ljava/lang/String;)Lcom/facebook/marianatrench/integrationtests/Test$Builder;",
+  "model_generators" : 
+  [
+    "BuilderPatternGenerator"
+  ],
   "modes" : 
   [
     "alias-memory-location-on-invoke",
@@ -1154,6 +1170,10 @@
     }
   ],
   "method" : "Lcom/facebook/marianatrench/integrationtests/Test$Builder;.maybeNewInstance:()Lcom/facebook/marianatrench/integrationtests/Test$Builder;",
+  "model_generators" : 
+  [
+    "BuilderPatternGenerator"
+  ],
   "modes" : 
   [
     "alias-memory-location-on-invoke",
@@ -1189,6 +1209,10 @@
 }
 {
   "method" : "Lcom/facebook/marianatrench/integrationtests/Test$Builder;.method:(Ljava/lang/String;)Lcom/facebook/marianatrench/integrationtests/Test$Builder;",
+  "model_generators" : 
+  [
+    "BuilderPatternGenerator"
+  ],
   "modes" : 
   [
     "alias-memory-location-on-invoke",
@@ -1668,6 +1692,10 @@
 {
   "inline_as" : "Argument(0)",
   "method" : "Lcom/instagram/common/analytics/intf/AnalyticsEvent;.addExtra:(Ljava/lang/String;Ljava/lang/String;)Lcom/instagram/common/analytics/intf/AnalyticsEvent;",
+  "model_generators" : 
+  [
+    "BuilderPatternGenerator"
+  ],
   "modes" : 
   [
     "alias-memory-location-on-invoke",
@@ -1782,6 +1810,10 @@
 }
 {
   "method" : "Ljava/lang/String;.concat:(Ljava/lang/String;)Ljava/lang/String;",
+  "model_generators" : 
+  [
+    "BuilderPatternGenerator"
+  ],
   "modes" : 
   [
     "alias-memory-location-on-invoke",

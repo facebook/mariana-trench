@@ -99,7 +99,15 @@ class MethodVisitorModelGenerator : public ModelGenerator {
     auto queue = sparta::work_queue<const Method*>([&](const Method* method) {
       std::vector<Model> method_models = this->visit_method(method);
 
-      if (!method_models.empty()) {
+      if (method_models.empty()) {
+        return;
+      }
+
+      for (auto& model : method_models) {
+        model.add_model_generator_if_empty(name_);
+      }
+
+      {
         std::lock_guard<std::mutex> lock(mutex);
         models.insert(
             models.end(),
@@ -137,7 +145,15 @@ class FieldVisitorModelGenerator : public ModelGenerator {
     auto queue = sparta::work_queue<const Field*>([&](const Field* field) {
       auto field_models = this->visit_field(field);
 
-      if (!field_models.empty()) {
+      if (field_models.empty()) {
+        return;
+      }
+
+      for (auto& model : field_models) {
+        model.add_model_generator_if_empty(name_);
+      }
+
+      {
         std::lock_guard<std::mutex> lock(mutex);
         models.insert(
             models.end(),
