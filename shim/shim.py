@@ -238,13 +238,13 @@ def _build_apk_from_jar(jar_path: Path) -> Path:
     LOG.info(f"Running d8 on `{jar_path}`...")
     output = subprocess.run(
         [
-            "/opt/android/sdk_D37111790/build-tools/29.0.2/d8",
+            "/opt/android/sdk_DEFAULT/build-tools/29.0.2/d8",
             "-JXmx8G",
             jar_path,
             "--output",
             dex_file,
             "--lib",
-            "/opt/android/sdk_D37111790/platforms/android-29/android.jar",
+            "/opt/android/sdk_DEFAULT/platforms/android-29/android.jar",
             "--min-api",
             "25",  # mininum api 25 corresponds to dex 37
         ],
