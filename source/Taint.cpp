@@ -113,10 +113,10 @@ void Taint::add_locally_inferred_features_and_local_position(
     return;
   }
 
-  set_.map([&features, position](CalleeFrames frames) {
-    frames.add_locally_inferred_features_and_local_position(features, position);
-    return frames;
-  });
+  add_locally_inferred_features(features);
+  if (position != nullptr) {
+    add_local_position(position);
+  }
 }
 
 Taint Taint::propagate(

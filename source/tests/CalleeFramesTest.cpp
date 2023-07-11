@@ -663,19 +663,6 @@ TEST_F(CalleeFramesTest, FeaturesAndPositions) {
   // Test set_local_positions()
   frames.set_local_positions(LocalPositionSet{test_position_two});
   EXPECT_EQ(frames.local_positions(), LocalPositionSet{test_position_two});
-
-  // Test add_locally_inferred_features_and_local_position()
-  frames.add_locally_inferred_features_and_local_position(
-      /* features */ FeatureMayAlwaysSet{feature_one},
-      /* position */ test_position_one);
-  EXPECT_EQ(
-      frames.local_positions(),
-      (LocalPositionSet{test_position_one, test_position_two}));
-  EXPECT_EQ(
-      frames.locally_inferred_features(
-          /* position */ test_position_one,
-          /* callee_port */ AccessPath(Root(Root::Kind::Leaf))),
-      FeatureMayAlwaysSet{feature_one});
 }
 
 TEST_F(CalleeFramesTest, Propagate) {
