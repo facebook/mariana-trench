@@ -174,13 +174,59 @@ bool ForwardAliasTransfer::analyze_invoke(
   return false;
 }
 
+SetterAccessPathConstantDomain infer_field_write(
+    MethodContext* context,
+    const IRInstruction* instruction,
+    const ForwardAliasEnvironment* environment) {
+  auto value_memory_locations =
+      environment->memory_locations(instruction->src(0));
+  auto* value_memory_location_singleton = value_memory_locations.singleton();
+  if (value_memory_location_singleton == nullptr) {
+    return SetterAccessPathConstantDomain::top();
+  }
+  MemoryLocation* value_memory_location = *value_memory_location_singleton;
+  auto value_access_path = value_memory_location->access_path();
+  if (!value_access_path) {
+    return SetterAccessPathConstantDomain::top();
+  }
+
+  auto target_memory_locations =
+      environment->memory_locations(instruction->src(1));
+  auto* target_memory_location_singleton = target_memory_locations.singleton();
+  if (target_memory_location_singleton == nullptr) {
+    return SetterAccessPathConstantDomain::top();
+  }
+  MemoryLocation* target_memory_location = *target_memory_location_singleton;
+  auto target_access_path = target_memory_location->access_path();
+  if (!target_access_path) {
+    return SetterAccessPathConstantDomain::top();
+  }
+
+  auto* field_name = instruction->get_field()->get_name();
+  target_access_path->append(PathElement::field(field_name));
+
+  auto setter = SetterAccessPath(
+      /* target */ *target_access_path,
+      /* value */ *value_access_path);
+  LOG_OR_DUMP(context, 4, "Instruction can be inlined as {}", setter);
+  return SetterAccessPathConstantDomain(setter);
+}
+
 bool ForwardAliasTransfer::analyze_iput(
     MethodContext* context,
     const IRInstruction* instruction,
-    ForwardAliasEnvironment* /* environment */) {
+    ForwardAliasEnvironment* environment) {
   log_instruction(context, instruction);
 
-  // This is a no-op.
+  const auto& current_field_write = environment->field_write();
+  if (!current_field_write.is_bottom()) {
+    // We have already seen a `iput` before.
+    environment->set_field_write(SetterAccessPathConstantDomain::top());
+    return false;
+  }
+
+  environment->set_field_write(
+      infer_field_write(context, instruction, environment));
   return false;
 }
 
@@ -327,13 +373,58 @@ bool has_side_effect(const MethodItemEntry& instruction) {
   }
 }
 
-// Infer whether the method could be inlined as a trivial getter.
+bool is_iput_instruction(const MethodItemEntry& instruction) {
+  return instruction.type == MFLOW_OPCODE &&
+      opcode::is_an_iput(instruction.insn->opcode());
+}
+
+bool is_safe_to_inline(MethodContext* context, bool allow_iput) {
+  if (context->previous_model.has_global_propagation_sanitizer()) {
+    LOG_OR_DUMP(
+        context,
+        4,
+        "Method has global propagation sanitizers, it cannot be inlined.");
+    return false;
+  }
+
+  // Check if the method has any side effect.
+  const auto* code = context->method()->get_code();
+  mt_assert(code != nullptr);
+  const auto& cfg = code->cfg();
+  if (cfg.blocks().size() != 1) {
+    // There could be multiple return statements.
+    LOG_OR_DUMP(
+        context, 4, "Method has multiple basic blocks, it cannot be inlined.");
+    return false;
+  }
+
+  auto* entry_block = cfg.entry_block();
+  auto found = std::find_if(
+      entry_block->begin(),
+      entry_block->end(),
+      [allow_iput](const auto& instruction) {
+        return has_side_effect(instruction) &&
+            (!allow_iput || !is_iput_instruction(instruction));
+      });
+  if (found != entry_block->end()) {
+    LOG_OR_DUMP(
+        context,
+        4,
+        "Method has an instruction with possible side effects: {}, it cannot be inlined.",
+        show(*found));
+    return false;
+  }
+
+  return true;
+}
+
 AccessPathConstantDomain infer_inline_as_getter(
     MethodContext* context,
     const MemoryLocationsDomain& memory_locations) {
-  if (context->previous_model.has_global_propagation_sanitizer()) {
+  if (!is_safe_to_inline(context, /* allow_iput */ false)) {
     return AccessPathConstantDomain::top();
   }
+
   // Check if we are returning an argument access path.
   auto* memory_location_singleton = memory_locations.singleton();
   if (memory_location_singleton == nullptr) {
@@ -347,33 +438,24 @@ AccessPathConstantDomain infer_inline_as_getter(
   }
 
   LOG_OR_DUMP(
-      context, 4, "Instruction returns the access path: {}", *access_path);
-
-  // Check if the method has any side effect.
-  const auto* code = context->method()->get_code();
-  mt_assert(code != nullptr);
-  const auto& cfg = code->cfg();
-  if (cfg.blocks().size() != 1) {
-    // There could be multiple return statements.
-    LOG_OR_DUMP(
-        context, 4, "Method has multiple basic blocks, it cannot be inlined.");
-    return AccessPathConstantDomain::top();
-  }
-
-  auto* entry_block = cfg.entry_block();
-  auto found =
-      std::find_if(entry_block->begin(), entry_block->end(), has_side_effect);
-  if (found != entry_block->end()) {
-    LOG_OR_DUMP(
-        context,
-        4,
-        "Method has an instruction with possible side effects: {}, it cannot be inlined.",
-        show(*found));
-    return AccessPathConstantDomain::top();
-  }
-
-  LOG_OR_DUMP(context, 4, "Method can be inlined as {}", *access_path);
+      context, 4, "Method can be inlined as a getter for {}", *access_path);
   return AccessPathConstantDomain(*access_path);
+}
+
+SetterAccessPathConstantDomain infer_inline_as_setter(
+    MethodContext* context,
+    const ForwardAliasEnvironment* environment) {
+  if (!is_safe_to_inline(context, /* allow_iput */ true)) {
+    return SetterAccessPathConstantDomain::top();
+  }
+
+  auto field_write = environment->field_write().get_constant();
+  if (!field_write) {
+    return SetterAccessPathConstantDomain::top();
+  }
+
+  LOG_OR_DUMP(context, 4, "Method can be inlined as setter {}", *field_write);
+  return SetterAccessPathConstantDomain(*field_write);
 }
 
 } // namespace
@@ -390,6 +472,12 @@ bool ForwardAliasTransfer::analyze_return(
     auto memory_locations = environment->memory_locations(register_id);
     context->new_model.set_inline_as_getter(
         infer_inline_as_getter(context, memory_locations));
+    context->new_model.set_inline_as_setter(
+        SetterAccessPathConstantDomain::top());
+  } else if (instruction->srcs_size() == 0) {
+    context->new_model.set_inline_as_setter(
+        infer_inline_as_setter(context, environment));
+    context->new_model.set_inline_as_getter(AccessPathConstantDomain::top());
   }
 
   return false;

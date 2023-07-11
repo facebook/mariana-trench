@@ -950,6 +950,11 @@
   ]
 }
 {
+  "inline_as_setter" : 
+  {
+    "target" : "Argument(0).field",
+    "value" : "Argument(1)"
+  },
   "method" : "Lcom/facebook/marianatrench/integrationtests/Flow;.field_setter:(Ljava/lang/Object;)V",
   "position" : 
   {

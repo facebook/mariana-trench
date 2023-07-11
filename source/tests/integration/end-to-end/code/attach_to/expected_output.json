@@ -1133,6 +1133,11 @@
       "port" : "Argument(0)"
     }
   ],
+  "inline_as_setter" : 
+  {
+    "target" : "Argument(0).field",
+    "value" : "Argument(1)"
+  },
   "method" : "Lcom/facebook/marianatrench/integrationtests/Flow;.attach_to_this_propagations:(Ljava/lang/Object;)V",
   "position" : 
   {

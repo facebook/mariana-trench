@@ -6,6 +6,11 @@
   "models" :
   [
     {
+      "inline_as_setter" :
+      {
+        "target" : "Argument(0).field",
+        "value" : "Argument(1)"
+      },
       "method" : "LFlow;.<init>:(LData;LData;)V",
       "position" :
       {

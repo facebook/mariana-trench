@@ -17,6 +17,7 @@
 #include <mariana-trench/Compiler.h>
 #include <mariana-trench/MemoryLocation.h>
 #include <mariana-trench/MemoryLocationEnvironment.h>
+#include <mariana-trench/SetterAccessPathConstantDomain.h>
 
 namespace marianatrench {
 
@@ -37,7 +38,8 @@ class ForwardAliasEnvironment final
   ForwardAliasEnvironment(
       MemoryLocationEnvironment memory_locations,
       DexPositionDomain position,
-      LastParameterLoadDomain last_parameter_load);
+      LastParameterLoadDomain last_parameter_load,
+      SetterAccessPathConstantDomain field_write);
 
   /* Return the initial environment. */
   static ForwardAliasEnvironment initial();
@@ -79,10 +81,11 @@ class ForwardAliasEnvironment final
   const MemoryLocationEnvironment& memory_location_environment() const;
 
   DexPosition* MT_NULLABLE last_position() const;
-
   void set_last_position(DexPosition* position);
-
   const LastParameterLoadDomain& last_parameter_loaded() const;
+
+  const SetterAccessPathConstantDomain& field_write() const;
+  void set_field_write(SetterAccessPathConstantDomain field_write);
 
   void increment_last_parameter_loaded();
 
@@ -94,6 +97,12 @@ class ForwardAliasEnvironment final
   MemoryLocationEnvironment memory_locations_;
   DexPositionDomain position_;
   LastParameterLoadDomain last_parameter_load_;
+
+  // Used to infer a trivial setter.
+  // * This is bottom if no iput instruction was seen
+  // * This is top if an iput was seen but is not trivial
+  // * This is top if multiple iput instructions were seen
+  SetterAccessPathConstantDomain field_write_;
 };
 
 } // namespace marianatrench

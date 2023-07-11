@@ -1289,6 +1289,11 @@
   ]
 }
 {
+  "inline_as_setter" : 
+  {
+    "target" : "Argument(0).mArguments",
+    "value" : "Argument(1)"
+  },
   "method" : "Lcom/facebook/marianatrench/integrationtests/FragmentActivity;.setArguments:(Landroid/os/Bundle;)V",
   "position" : 
   {
