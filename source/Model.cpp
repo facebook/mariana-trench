@@ -164,7 +164,7 @@ Model::Model(
     const std::vector<std::pair<Root, FeatureSet>>& attach_to_sinks,
     const std::vector<std::pair<Root, FeatureSet>>& attach_to_propagations,
     const std::vector<std::pair<Root, FeatureSet>>& add_features_to_arguments,
-    const AccessPathConstantDomain& inline_as,
+    const AccessPathConstantDomain& inline_as_getter,
     const ModelGeneratorNameSet& model_generators,
     const IssueSet& issues)
     : method_(method), modes_(modes), frozen_(frozen) {
@@ -225,7 +225,7 @@ Model::Model(
     add_add_features_to_arguments(root, features);
   }
 
-  set_inline_as(inline_as);
+  set_inline_as_getter(inline_as_getter);
 
   for (const auto* model_generator : model_generators) {
     add_model_generator(model_generator);
@@ -249,7 +249,7 @@ bool Model::operator==(const Model& other) const {
       attach_to_sinks_ == other.attach_to_sinks_ &&
       attach_to_propagations_ == other.attach_to_propagations_ &&
       add_features_to_arguments_ == other.add_features_to_arguments_ &&
-      inline_as_ == other.inline_as_ &&
+      inline_as_getter_ == other.inline_as_getter_ &&
       model_generators_ == other.model_generators_ && issues_ == other.issues_;
 }
 
@@ -309,7 +309,7 @@ Model Model::instantiate(const Method* method, Context& context) const {
     model.add_add_features_to_arguments(root, features);
   }
 
-  model.set_inline_as(inline_as_);
+  model.set_inline_as_getter(inline_as_getter_);
 
   for (const auto* model_generator : model_generators_) {
     model.add_model_generator(model_generator);
@@ -413,11 +413,11 @@ Model Model::at_callsite(
   model.propagations_ = propagations_;
   model.add_features_to_arguments_ = add_features_to_arguments_;
 
-  model.inline_as_ = inline_as_;
-  if (inline_as_.is_bottom()) {
+  model.inline_as_getter_ = inline_as_getter_;
+  if (inline_as_getter_.is_bottom()) {
     // This is bottom when the method was never analyzed.
     // Set it to top to be sound when joining models.
-    model.inline_as_.set_to_top();
+    model.inline_as_getter_.set_to_top();
   }
 
   return model;
@@ -542,7 +542,7 @@ bool Model::empty() const {
       propagations_.is_bottom() && global_sanitizers_.is_bottom() &&
       port_sanitizers_.is_bottom() && attach_to_sources_.is_bottom() &&
       attach_to_sinks_.is_bottom() && attach_to_propagations_.is_bottom() &&
-      add_features_to_arguments_.is_bottom() && inline_as_.is_bottom() &&
+      add_features_to_arguments_.is_bottom() && inline_as_getter_.is_bottom() &&
       model_generators_.is_bottom() && issues_.is_bottom();
 }
 
@@ -838,16 +838,16 @@ FeatureSet Model::add_features_to_arguments(Root root) const {
   return add_features_to_arguments_.get(root);
 }
 
-const AccessPathConstantDomain& Model::inline_as() const {
-  return inline_as_;
+const AccessPathConstantDomain& Model::inline_as_getter() const {
+  return inline_as_getter_;
 }
 
-void Model::set_inline_as(AccessPathConstantDomain inline_as) {
-  if (!check_inline_as_consistency(inline_as)) {
+void Model::set_inline_as_getter(AccessPathConstantDomain inline_as_getter) {
+  if (!check_inline_as_consistency(inline_as_getter)) {
     return;
   }
 
-  inline_as_ = std::move(inline_as);
+  inline_as_getter_ = std::move(inline_as_getter);
 }
 
 void Model::add_model_generator(const ModelGeneratorName* model_generator) {
@@ -934,7 +934,7 @@ bool Model::leq(const Model& other) const {
       attach_to_sinks_.leq(other.attach_to_sinks_) &&
       attach_to_propagations_.leq(other.attach_to_propagations_) &&
       add_features_to_arguments_.leq(other.add_features_to_arguments_) &&
-      inline_as_.leq(other.inline_as_) &&
+      inline_as_getter_.leq(other.inline_as_getter_) &&
       model_generators_.leq(other.model_generators_) &&
       issues_.leq(other.issues_);
 }
@@ -977,7 +977,7 @@ void Model::join_with(const Model& other) {
   attach_to_sinks_.join_with(other.attach_to_sinks_);
   attach_to_propagations_.join_with(other.attach_to_propagations_);
   add_features_to_arguments_.join_with(other.add_features_to_arguments_);
-  inline_as_.join_with(other.inline_as_);
+  inline_as_getter_.join_with(other.inline_as_getter_);
   model_generators_.join_with(other.model_generators_);
   issues_.join_with(other.issues_);
 
@@ -1008,7 +1008,7 @@ Model Model::from_json(
          "attach_to_sinks",
          "attach_to_propagations",
          "add_features_to_arguments",
-         "inline_as",
+         "inline_as_getter",
          "issues"});
   }
 
@@ -1175,10 +1175,10 @@ Model Model::from_json(
     model.add_add_features_to_arguments(root, features);
   }
 
-  if (value.isMember("inline_as")) {
-    JsonValidation::string(value, /* field */ "inline_as");
-    model.set_inline_as(
-        AccessPathConstantDomain(AccessPath::from_json(value["inline_as"])));
+  if (value.isMember("inline_as_getter")) {
+    JsonValidation::string(value, /* field */ "inline_as_getter");
+    model.set_inline_as_getter(AccessPathConstantDomain(
+        AccessPath::from_json(value["inline_as_getter"])));
   }
 
   // We cannot parse issues for now.
@@ -1353,8 +1353,8 @@ Json::Value Model::to_json(ExportOriginsMode export_origins_mode) const {
     value["add_features_to_arguments"] = add_features_to_arguments_value;
   }
 
-  if (auto access_path = inline_as_.get_constant()) {
-    value["inline_as"] = access_path->to_json();
+  if (auto getter_access_path = inline_as_getter_.get_constant()) {
+    value["inline_as_getter"] = getter_access_path->to_json();
   }
 
   if (!model_generators_.is_bottom()) {
@@ -1491,8 +1491,8 @@ std::ostream& operator<<(std::ostream& out, const Model& model) {
     }
     out << "  }";
   }
-  if (auto access_path = model.inline_as_.get_constant()) {
-    out << ",\n  inline_as=" << *access_path;
+  if (auto getter_access_path = model.inline_as_getter_.get_constant()) {
+    out << ",\n  inline_as_getter=" << *getter_access_path;
   }
   if (!model.model_generators_.is_bottom()) {
     out << ",\n  model_generators={";

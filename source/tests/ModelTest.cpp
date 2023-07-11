@@ -602,7 +602,7 @@ TEST_F(ModelTest, Join) {
       /* attach_to_sinks */ {},
       /* attach_to_propagations */ {},
       /* add_features_to_arguments */ {},
-      /* inline_as */ AccessPathConstantDomain::bottom(),
+      /* inline_as_getter */ AccessPathConstantDomain::bottom(),
       /* model_generators */ {},
       /* issues */
       IssueSet{Issue(

@@ -78,8 +78,8 @@ using SanitizerSet = GroupHashedSetAbstractDomain<
  * // Here x has the feature, regardless of the propagations of f.
  * ```
  *
- * *inline as* is either top, bottom or an argument access path that will be
- * used to inline the method at call sites.
+ * *inline as getter* is either top, bottom or an argument access path that will
+ * be used to inline a getter method at call sites.
  *
  * *model generators* is a set of model generator names that originated a part
  * of that model.
@@ -156,7 +156,7 @@ class Model final {
           {},
       const std::vector<std::pair<Root, FeatureSet>>&
           add_features_to_arguments = {},
-      const AccessPathConstantDomain& inline_as =
+      const AccessPathConstantDomain& inline_as_getter =
           AccessPathConstantDomain::bottom(),
       const ModelGeneratorNameSet& model_generators = {},
       const IssueSet& issues = {});
@@ -280,8 +280,8 @@ class Model final {
   bool has_add_features_to_arguments() const;
   FeatureSet add_features_to_arguments(Root root) const;
 
-  const AccessPathConstantDomain& inline_as() const;
-  void set_inline_as(AccessPathConstantDomain inline_as);
+  const AccessPathConstantDomain& inline_as_getter() const;
+  void set_inline_as_getter(AccessPathConstantDomain inline_as_getter);
 
   void add_model_generator(const ModelGeneratorName* model_generator);
   void add_model_generator_if_empty(const ModelGeneratorName* model_generator);
@@ -374,7 +374,7 @@ class Model final {
   RootPatriciaTreeAbstractPartition<FeatureSet> attach_to_sinks_;
   RootPatriciaTreeAbstractPartition<FeatureSet> attach_to_propagations_;
   RootPatriciaTreeAbstractPartition<FeatureSet> add_features_to_arguments_;
-  AccessPathConstantDomain inline_as_;
+  AccessPathConstantDomain inline_as_getter_;
   ModelGeneratorNameSet model_generators_;
   IssueSet issues_;
 };

@@ -57,9 +57,9 @@ CalleeModel get_callee(
     const ArtificialCallee& callee,
     const DexPosition* MT_NULLABLE dex_position);
 
-/* If the method invoke can be safely inlined, return the result memory
- * location, otherwise return nullptr. */
-MemoryLocation* MT_NULLABLE try_inline_invoke(
+/* If the method invoke can be safely inlined as a getter, return the result
+ * memory location, otherwise return nullptr. */
+MemoryLocation* MT_NULLABLE try_inline_invoke_as_getter(
     const MethodContext* context,
     const RegisterMemoryLocationsMap& register_memory_locations_map,
     const IRInstruction* instruction,

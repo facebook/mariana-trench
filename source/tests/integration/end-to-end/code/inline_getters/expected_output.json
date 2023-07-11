@@ -571,7 +571,7 @@
   }
 }
 {
-  "inline_as" : "Argument(0).host",
+  "inline_as_getter" : "Argument(0).host",
   "method" : "Landroid/net/Uri;.getHost:()Ljava/lang/String;",
   "position" : 
   {
@@ -608,7 +608,7 @@
   }
 }
 {
-  "inline_as" : "Argument(0).scheme",
+  "inline_as_getter" : "Argument(0).scheme",
   "method" : "Landroid/net/Uri;.getScheme:()Ljava/lang/String;",
   "position" : 
   {
@@ -1106,7 +1106,7 @@
   ]
 }
 {
-  "inline_as" : "Argument(0).bar",
+  "inline_as_getter" : "Argument(0).bar",
   "method" : "Lcom/facebook/marianatrench/integrationtests/Flow;.getBar:()Lcom/facebook/marianatrench/integrationtests/Flow;",
   "position" : 
   {
@@ -1137,7 +1137,7 @@
   ]
 }
 {
-  "inline_as" : "Argument(0).bar.foo",
+  "inline_as_getter" : "Argument(0).bar.foo",
   "method" : "Lcom/facebook/marianatrench/integrationtests/Flow;.getBarFoo:()Lcom/facebook/marianatrench/integrationtests/Flow;",
   "position" : 
   {
@@ -1168,7 +1168,7 @@
   ]
 }
 {
-  "inline_as" : "Argument(0).foo",
+  "inline_as_getter" : "Argument(0).foo",
   "method" : "Lcom/facebook/marianatrench/integrationtests/Flow;.getFoo:()Lcom/facebook/marianatrench/integrationtests/Flow;",
   "position" : 
   {
@@ -1199,7 +1199,7 @@
   ]
 }
 {
-  "inline_as" : "Argument(0).foo.bar",
+  "inline_as_getter" : "Argument(0).foo.bar",
   "method" : "Lcom/facebook/marianatrench/integrationtests/Flow;.getFooBar:()Lcom/facebook/marianatrench/integrationtests/Flow;",
   "position" : 
   {
@@ -1230,7 +1230,7 @@
   ]
 }
 {
-  "inline_as" : "Argument(0)",
+  "inline_as_getter" : "Argument(0)",
   "method" : "Lcom/facebook/marianatrench/integrationtests/Flow;.getThis:()Lcom/facebook/marianatrench/integrationtests/Flow;",
   "position" : 
   {
@@ -1747,7 +1747,7 @@
   }
 }
 {
-  "inline_as" : "Argument(0)",
+  "inline_as_getter" : "Argument(0)",
   "method" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sanitize:(Ljava/lang/Object;)Ljava/lang/Object;",
   "position" : 
   {
@@ -1919,7 +1919,7 @@
   }
 }
 {
-  "inline_as" : "Argument(0)",
+  "inline_as_getter" : "Argument(0)",
   "method" : "Lcom/instagram/common/analytics/intf/AnalyticsEvent;.addExtra:(Ljava/lang/String;Ljava/lang/String;)Lcom/instagram/common/analytics/intf/AnalyticsEvent;",
   "position" : 
   {

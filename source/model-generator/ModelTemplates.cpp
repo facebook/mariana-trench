@@ -757,7 +757,7 @@ ModelTemplate ModelTemplate::from_json(
        "attach_to_sinks",
        "attach_to_propagations",
        "add_features_to_arguments",
-       "inline_as",
+       "inline_as_getter",
        "issues"});
 
   std::vector<ForAllParameters> for_all_parameters;

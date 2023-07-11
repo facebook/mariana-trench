@@ -571,7 +571,7 @@
   }
 }
 {
-  "inline_as" : "Argument(0).host",
+  "inline_as_getter" : "Argument(0).host",
   "method" : "Landroid/net/Uri;.getHost:()Ljava/lang/String;",
   "position" : 
   {
@@ -608,7 +608,7 @@
   }
 }
 {
-  "inline_as" : "Argument(0).scheme",
+  "inline_as_getter" : "Argument(0).scheme",
   "method" : "Landroid/net/Uri;.getScheme:()Ljava/lang/String;",
   "position" : 
   {
@@ -931,7 +931,7 @@
       "port" : "Argument(1)"
     }
   ],
-  "inline_as" : "Argument(1)",
+  "inline_as_getter" : "Argument(1)",
   "method" : "Lcom/facebook/marianatrench/integrationtests/Flow;.attach_to_argument_propagations:(Ljava/lang/Object;)Ljava/lang/Object;",
   "position" : 
   {
@@ -976,7 +976,7 @@
       "port" : "Return"
     }
   ],
-  "inline_as" : "Argument(1)",
+  "inline_as_getter" : "Argument(1)",
   "method" : "Lcom/facebook/marianatrench/integrationtests/Flow;.attach_to_return_propagations:(Ljava/lang/Object;)Ljava/lang/Object;",
   "position" : 
   {
@@ -1244,7 +1244,7 @@
   }
 }
 {
-  "inline_as" : "Argument(0)",
+  "inline_as_getter" : "Argument(0)",
   "method" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sanitize:(Ljava/lang/Object;)Ljava/lang/Object;",
   "position" : 
   {
@@ -1416,7 +1416,7 @@
   }
 }
 {
-  "inline_as" : "Argument(0)",
+  "inline_as_getter" : "Argument(0)",
   "method" : "Lcom/instagram/common/analytics/intf/AnalyticsEvent;.addExtra:(Ljava/lang/String;Ljava/lang/String;)Lcom/instagram/common/analytics/intf/AnalyticsEvent;",
   "position" : 
   {

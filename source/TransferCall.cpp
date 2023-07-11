@@ -135,12 +135,12 @@ CalleeModel get_callee(
       std::move(model)};
 }
 
-MemoryLocation* MT_NULLABLE try_inline_invoke(
+MemoryLocation* MT_NULLABLE try_inline_invoke_as_getter(
     const MethodContext* context,
     const RegisterMemoryLocationsMap& register_memory_locations_map,
     const IRInstruction* instruction,
     const CalleeModel& callee) {
-  auto access_path = callee.model.inline_as().get_constant();
+  auto access_path = callee.model.inline_as_getter().get_constant();
   if (!access_path) {
     return nullptr;
   }

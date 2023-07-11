@@ -6,7 +6,7 @@
   "models" :
   [
     {
-      "inline_as" : "Argument(1)",
+      "inline_as_getter" : "Argument(1)",
       "method" : "LFlow;.flow:(LData;LData;)LData;",
       "position" :
       {

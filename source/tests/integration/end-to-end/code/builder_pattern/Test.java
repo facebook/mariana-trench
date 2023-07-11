@@ -15,7 +15,7 @@ public class Test {
     String mCertificatePinner;
 
     public Builder method(String name) {
-      // Added so that the method is not trivially inferred as "inline_as"
+      // Added so that the method is not trivially inferred as "inline_as_getter"
       String exception = "name == null";
       if (name == null) {
         throw new NullPointerException(exception);
@@ -24,7 +24,7 @@ public class Test {
     }
 
     public Builder certificatePinner(String certificatePinner) {
-      // Added so that the method is not trivially inferred as "inline_as"
+      // Added so that the method is not trivially inferred as "inline_as_getter"
       String exception = "certificatePinner == null";
       if (certificatePinner == null) {
         throw new NullPointerException(exception);
@@ -55,7 +55,7 @@ public class Test {
     Test.Builder builder = new Test.Builder();
     // As the return value of the builder methods are ignored,
     // "via-certificate-pinner" feature introduced by mCertificatePinner() is
-    // lost  Adding `"inline_as": "Argument(0)"` attribute to the builder
+    // lost  Adding `"inline_as_getter": "Argument(0)"` attribute to the builder
     // pattern model generator resolves this issue.
     builder.method("name").certificatePinner("certificate");
 

@@ -703,7 +703,7 @@
   }
 }
 {
-  "inline_as" : "Argument(0).host",
+  "inline_as_getter" : "Argument(0).host",
   "method" : "Landroid/net/Uri;.getHost:()Ljava/lang/String;",
   "position" : 
   {
@@ -762,7 +762,7 @@
   ]
 }
 {
-  "inline_as" : "Argument(0).scheme",
+  "inline_as_getter" : "Argument(0).scheme",
   "method" : "Landroid/net/Uri;.getScheme:()Ljava/lang/String;",
   "position" : 
   {
@@ -2095,7 +2095,7 @@
   }
 }
 {
-  "inline_as" : "Argument(0)",
+  "inline_as_getter" : "Argument(0)",
   "method" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sanitize:(Ljava/lang/Object;)Ljava/lang/Object;",
   "position" : 
   {
@@ -2307,7 +2307,7 @@
   }
 }
 {
-  "inline_as" : "Argument(0)",
+  "inline_as_getter" : "Argument(0)",
   "method" : "Lcom/instagram/common/analytics/intf/AnalyticsEvent;.addExtra:(Ljava/lang/String;Ljava/lang/String;)Lcom/instagram/common/analytics/intf/AnalyticsEvent;",
   "position" : 
   {

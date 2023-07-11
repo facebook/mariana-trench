@@ -845,7 +845,7 @@ bool ForwardTaintTransfer::analyze_invoke(
       callee.resolved_base_method->returns_void()) {
     // No result.
   } else if (
-      try_inline_invoke(
+      try_inline_invoke_as_getter(
           context,
           aliasing.register_memory_locations_map(),
           instruction,

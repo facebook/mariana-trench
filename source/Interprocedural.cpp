@@ -83,8 +83,8 @@ Model analyze(
 
   {
     // TODO(T144485000): This could potentially be done once as a pre-analysis
-    // step and cached. The handling of inlining (`inline_as`) might make this
-    // impossible unfortunately.
+    // step and cached. The handling of inlining (`inline_as_getter`) might make
+    // this impossible unfortunately.
     LOG_OR_DUMP(
         &method_context, 4, "Forward alias analysis of `{}`", method->show());
     Timer forward_alias_timer;

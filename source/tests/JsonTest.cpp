@@ -2647,7 +2647,7 @@ TEST_F(JsonTest, Model) {
       Model::from_json(
           method,
           test::parse_json(R"#({
-            "inline_as": "Argument(1).foo"
+            "inline_as_getter": "Argument(1).foo"
           })#"),
           context),
       Model(
@@ -2665,7 +2665,7 @@ TEST_F(JsonTest, Model) {
           /* attach_to_sinks */ {},
           /* attach_to_propagations */ {},
           /* add_features_to_arguments */ {},
-          /* inline_as */
+          /* inline_as_getter */
           AccessPathConstantDomain(AccessPath(
               Root(Root::Kind::Argument, 1),
               Path{PathElement::field("foo")}))));
@@ -2685,14 +2685,14 @@ TEST_F(JsonTest, Model) {
                             /* attach_to_sinks */ {},
                             /* attach_to_propagations */ {},
                             /* add_features_to_arguments */ {},
-                            /* inline_as */
+                            /* inline_as_getter */
                             AccessPathConstantDomain(AccessPath(
                                 Root(Root::Kind::Argument, 1),
                                 Path{PathElement::field("foo")})))
                             .to_json(ExportOriginsMode::Always)),
       test::parse_json(R"#({
         "method": "LData;.method:(LData;LData;)V",
-        "inline_as": "Argument(1).foo"
+        "inline_as_getter": "Argument(1).foo"
       })#"));
 
   // We do not parse issues for now.
@@ -2714,35 +2714,36 @@ TEST_F(JsonTest, Model) {
       Rule::KindSet{context.kind_factory->get("first_sink")},
       /* transforms */ nullptr);
   EXPECT_EQ(
-      test::sorted_json(Model(
-                            method,
-                            context,
-                            Model::Mode::Normal,
-                            /* frozen */ Model::FreezeKind::None,
-                            /* generations */
-                            std::vector<std::pair<AccessPath, TaintConfig>>{},
-                            /* parameter_sources */ {},
-                            /* sinks */ {},
-                            /* propagations */ {},
-                            /* global_sanitizers */ {},
-                            /* port_sanitizers */ {},
-                            /* attach_to_sources */ {},
-                            /* attach_to_sinks */ {},
-                            /* attach_to_propagations */ {},
-                            /* add_features_to_arguments */ {},
-                            /* inline_as */ AccessPathConstantDomain::bottom(),
-                            /* model_generators */ {},
-                            IssueSet{Issue(
-                                /* source */ Taint{test::make_leaf_taint_config(
-                                    context.kind_factory->get("first_source"))},
-                                /* sink */
-                                Taint{test::make_leaf_taint_config(
-                                    context.kind_factory->get("first_sink"))},
-                                rule.get(),
-                                /* callee */ "LClass;.someMethod:()V",
-                                /* sink_index */ 1,
-                                context.positions->get("Data.java", 1))})
-                            .to_json(ExportOriginsMode::Always)),
+      test::sorted_json(
+          Model(
+              method,
+              context,
+              Model::Mode::Normal,
+              /* frozen */ Model::FreezeKind::None,
+              /* generations */
+              std::vector<std::pair<AccessPath, TaintConfig>>{},
+              /* parameter_sources */ {},
+              /* sinks */ {},
+              /* propagations */ {},
+              /* global_sanitizers */ {},
+              /* port_sanitizers */ {},
+              /* attach_to_sources */ {},
+              /* attach_to_sinks */ {},
+              /* attach_to_propagations */ {},
+              /* add_features_to_arguments */ {},
+              /* inline_as_getter */ AccessPathConstantDomain::bottom(),
+              /* model_generators */ {},
+              IssueSet{Issue(
+                  /* source */ Taint{test::make_leaf_taint_config(
+                      context.kind_factory->get("first_source"))},
+                  /* sink */
+                  Taint{test::make_leaf_taint_config(
+                      context.kind_factory->get("first_sink"))},
+                  rule.get(),
+                  /* callee */ "LClass;.someMethod:()V",
+                  /* sink_index */ 1,
+                  context.positions->get("Data.java", 1))})
+              .to_json(ExportOriginsMode::Always)),
       test::parse_json(R"#({
       "method": "LData;.method:(LData;LData;)V",
       "issues": [
@@ -3056,32 +3057,33 @@ TEST_F(JsonTest, CallEffectModel) {
                   .collapse(/* broadening_features */ {});
 
   EXPECT_EQ(
-      test::sorted_json(Model(
-                            entry_method,
-                            context,
-                            Model::Mode::Normal,
-                            /* frozen */ Model::FreezeKind::None,
-                            /* generations */
-                            std::vector<std::pair<AccessPath, TaintConfig>>{},
-                            /* parameter_sources */ {},
-                            /* sinks */ {},
-                            /* propagations */ {},
-                            /* global_sanitizers */ {},
-                            /* port_sanitizers */ {},
-                            /* attach_to_sources */ {},
-                            /* attach_to_sinks */ {},
-                            /* attach_to_propagations */ {},
-                            /* add_features_to_arguments */ {},
-                            /* inline_as */ AccessPathConstantDomain::bottom(),
-                            /* model_generators */ {},
-                            IssueSet{Issue(
-                                std::move(source),
-                                std::move(sink),
-                                rule.get(),
-                                /* callee */ exit_method->signature(),
-                                /* sink_index */ 0,
-                                context.positions->get("CallEffect.java", 1))})
-                            .to_json(ExportOriginsMode::Always)),
+      test::sorted_json(
+          Model(
+              entry_method,
+              context,
+              Model::Mode::Normal,
+              /* frozen */ Model::FreezeKind::None,
+              /* generations */
+              std::vector<std::pair<AccessPath, TaintConfig>>{},
+              /* parameter_sources */ {},
+              /* sinks */ {},
+              /* propagations */ {},
+              /* global_sanitizers */ {},
+              /* port_sanitizers */ {},
+              /* attach_to_sources */ {},
+              /* attach_to_sinks */ {},
+              /* attach_to_propagations */ {},
+              /* add_features_to_arguments */ {},
+              /* inline_as_getter */ AccessPathConstantDomain::bottom(),
+              /* model_generators */ {},
+              IssueSet{Issue(
+                  std::move(source),
+                  std::move(sink),
+                  rule.get(),
+                  /* callee */ exit_method->signature(),
+                  /* sink_index */ 0,
+                  context.positions->get("CallEffect.java", 1))})
+              .to_json(ExportOriginsMode::Always)),
       test::parse_json(R"#({
       "issues": [
         {

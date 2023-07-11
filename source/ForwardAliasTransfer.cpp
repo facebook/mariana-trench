@@ -142,7 +142,7 @@ MemoryLocationsDomain invoke_result_memory_location(
     return MemoryLocationsDomain::bottom();
   }
 
-  auto* memory_location = try_inline_invoke(
+  auto* memory_location = try_inline_invoke_as_getter(
       context, register_memory_locations_map, instruction, callee);
   if (memory_location != nullptr) {
     LOG_OR_DUMP(context, 4, "Inlining method call");
@@ -327,8 +327,8 @@ bool has_side_effect(const MethodItemEntry& instruction) {
   }
 }
 
-// Infer whether the method could be inlined.
-AccessPathConstantDomain infer_inline_as(
+// Infer whether the method could be inlined as a trivial getter.
+AccessPathConstantDomain infer_inline_as_getter(
     MethodContext* context,
     const MemoryLocationsDomain& memory_locations) {
   if (context->previous_model.has_global_propagation_sanitizer()) {
@@ -386,8 +386,8 @@ bool ForwardAliasTransfer::analyze_return(
 
   for (auto register_id : instruction->srcs()) {
     auto memory_locations = environment->memory_locations(register_id);
-    context->new_model.set_inline_as(
-        infer_inline_as(context, memory_locations));
+    context->new_model.set_inline_as_getter(
+        infer_inline_as_getter(context, memory_locations));
   }
 
   return false;
