@@ -22,6 +22,7 @@ module.exports = {
     'models',
     'shims',
     'configuration',
+    'feature-descriptions',
     fbInternalOnly("fb/known-false-negatives"),
     fbInternalOnly("fb/testing-diffs"),
     fbInternalOnly("fb/running-on-new-apps"),
