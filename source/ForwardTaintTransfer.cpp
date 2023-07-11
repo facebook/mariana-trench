@@ -1177,6 +1177,7 @@ bool ForwardTaintTransfer::analyze_return(
     const IRInstruction* instruction,
     ForwardTaintEnvironment* environment) {
   log_instruction(context, instruction);
+  mt_assert(instruction->srcs_size() <= 1);
   const auto& aliasing = context->aliasing.get(instruction);
 
   auto return_sinks =
@@ -1189,7 +1190,8 @@ bool ForwardTaintTransfer::analyze_return(
   auto return_index =
       context->call_graph.return_index(context->method(), instruction);
 
-  for (auto register_id : instruction->srcs()) {
+  if (instruction->srcs_size() == 1) {
+    auto register_id = instruction->src(0);
     auto memory_locations = aliasing.register_memory_locations(register_id);
     infer_output_taint(
         context, Root(Root::Kind::Return), environment->read(memory_locations));

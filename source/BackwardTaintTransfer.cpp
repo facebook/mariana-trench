@@ -962,6 +962,7 @@ bool BackwardTaintTransfer::analyze_return(
     const IRInstruction* instruction,
     BackwardTaintEnvironment* environment) {
   log_instruction(context, instruction);
+  mt_assert(instruction->srcs_size() <= 1);
   const auto& aliasing = context->aliasing.get(instruction);
 
   // Add return sinks.
@@ -980,7 +981,8 @@ bool BackwardTaintTransfer::analyze_return(
       /* inferred_features */ {},
       /* user_features */ {})));
 
-  for (auto register_id : instruction->srcs()) {
+  if (instruction->srcs_size() == 1) {
+    auto register_id = instruction->src(0);
     LOG_OR_DUMP(context, 4, "Tainting register {} with {}", register_id, taint);
     // Using a strong update here could override and remove the LocalArgument
     // taint on Argument(0), which is necessary to infer propagations to `this`.

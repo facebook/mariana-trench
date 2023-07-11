@@ -383,8 +383,10 @@ bool ForwardAliasTransfer::analyze_return(
     const IRInstruction* instruction,
     ForwardAliasEnvironment* environment) {
   log_instruction(context, instruction);
+  mt_assert(instruction->srcs_size() <= 1);
 
-  for (auto register_id : instruction->srcs()) {
+  if (instruction->srcs_size() == 1) {
+    auto register_id = instruction->src(0);
     auto memory_locations = environment->memory_locations(register_id);
     context->new_model.set_inline_as_getter(
         infer_inline_as_getter(context, memory_locations));
