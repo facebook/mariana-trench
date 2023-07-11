@@ -603,6 +603,7 @@ TEST_F(ModelTest, Join) {
       /* attach_to_propagations */ {},
       /* add_features_to_arguments */ {},
       /* inline_as_getter */ AccessPathConstantDomain::bottom(),
+      /* inline_as_setter */ SetterAccessPathConstantDomain::bottom(),
       /* model_generators */ {},
       /* issues */
       IssueSet{Issue(

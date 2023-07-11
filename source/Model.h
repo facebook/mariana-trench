@@ -26,6 +26,7 @@
 #include <mariana-trench/PropagationConfig.h>
 #include <mariana-trench/RootPatriciaTreeAbstractPartition.h>
 #include <mariana-trench/Sanitizer.h>
+#include <mariana-trench/SetterAccessPathConstantDomain.h>
 #include <mariana-trench/Taint.h>
 #include <mariana-trench/TaintTree.h>
 #include <mariana-trench/model-generator/ModelGeneratorNameSet.h>
@@ -80,6 +81,9 @@ using SanitizerSet = GroupHashedSetAbstractDomain<
  *
  * *inline as getter* is either top, bottom or an argument access path that will
  * be used to inline a getter method at call sites.
+ *
+ * *inline as setter* is either top, bottom or a target and value access path
+ * that will be used to inline a setter method at call sites.
  *
  * *model generators* is a set of model generator names that originated a part
  * of that model.
@@ -158,6 +162,8 @@ class Model final {
           add_features_to_arguments = {},
       const AccessPathConstantDomain& inline_as_getter =
           AccessPathConstantDomain::bottom(),
+      const SetterAccessPathConstantDomain& inline_as_setter =
+          SetterAccessPathConstantDomain::bottom(),
       const ModelGeneratorNameSet& model_generators = {},
       const IssueSet& issues = {});
 
@@ -283,6 +289,9 @@ class Model final {
   const AccessPathConstantDomain& inline_as_getter() const;
   void set_inline_as_getter(AccessPathConstantDomain inline_as_getter);
 
+  const SetterAccessPathConstantDomain& inline_as_setter() const;
+  void set_inline_as_setter(SetterAccessPathConstantDomain inline_as_setter);
+
   void add_model_generator(const ModelGeneratorName* model_generator);
   void add_model_generator_if_empty(const ModelGeneratorName* model_generator);
 
@@ -341,8 +350,10 @@ class Model final {
       const TaintConfig& frame,
       std::string_view kind) const;
   bool check_taint_consistency(const Taint& frame, std::string_view kind) const;
-  bool check_inline_as_consistency(
+  bool check_inline_as_getter_consistency(
       const AccessPathConstantDomain& inline_as) const;
+  bool check_inline_as_setter_consistency(
+      const SetterAccessPathConstantDomain& inline_as) const;
   bool check_call_effect_port_consistency(
       const AccessPath& port,
       std::string_view kind) const;
@@ -375,6 +386,7 @@ class Model final {
   RootPatriciaTreeAbstractPartition<FeatureSet> attach_to_propagations_;
   RootPatriciaTreeAbstractPartition<FeatureSet> add_features_to_arguments_;
   AccessPathConstantDomain inline_as_getter_;
+  SetterAccessPathConstantDomain inline_as_setter_;
   ModelGeneratorNameSet model_generators_;
   IssueSet issues_;
 };

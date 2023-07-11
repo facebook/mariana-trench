@@ -165,6 +165,7 @@ Model::Model(
     const std::vector<std::pair<Root, FeatureSet>>& attach_to_propagations,
     const std::vector<std::pair<Root, FeatureSet>>& add_features_to_arguments,
     const AccessPathConstantDomain& inline_as_getter,
+    const SetterAccessPathConstantDomain& inline_as_setter,
     const ModelGeneratorNameSet& model_generators,
     const IssueSet& issues)
     : method_(method), modes_(modes), frozen_(frozen) {
@@ -226,6 +227,7 @@ Model::Model(
   }
 
   set_inline_as_getter(inline_as_getter);
+  set_inline_as_setter(inline_as_setter);
 
   for (const auto* model_generator : model_generators) {
     add_model_generator(model_generator);
@@ -250,6 +252,7 @@ bool Model::operator==(const Model& other) const {
       attach_to_propagations_ == other.attach_to_propagations_ &&
       add_features_to_arguments_ == other.add_features_to_arguments_ &&
       inline_as_getter_ == other.inline_as_getter_ &&
+      inline_as_setter_ == other.inline_as_setter_ &&
       model_generators_ == other.model_generators_ && issues_ == other.issues_;
 }
 
@@ -310,6 +313,7 @@ Model Model::instantiate(const Method* method, Context& context) const {
   }
 
   model.set_inline_as_getter(inline_as_getter_);
+  model.set_inline_as_setter(inline_as_setter_);
 
   for (const auto* model_generator : model_generators_) {
     model.add_model_generator(model_generator);
@@ -414,10 +418,15 @@ Model Model::at_callsite(
   model.add_features_to_arguments_ = add_features_to_arguments_;
 
   model.inline_as_getter_ = inline_as_getter_;
+  model.inline_as_setter_ = inline_as_setter_;
+
+  // This is bottom when the method was never analyzed.
+  // Set it to top to be sound when joining models.
   if (inline_as_getter_.is_bottom()) {
-    // This is bottom when the method was never analyzed.
-    // Set it to top to be sound when joining models.
     model.inline_as_getter_.set_to_top();
+  }
+  if (inline_as_setter_.is_bottom()) {
+    model.inline_as_setter_.set_to_top();
   }
 
   return model;
@@ -543,7 +552,8 @@ bool Model::empty() const {
       port_sanitizers_.is_bottom() && attach_to_sources_.is_bottom() &&
       attach_to_sinks_.is_bottom() && attach_to_propagations_.is_bottom() &&
       add_features_to_arguments_.is_bottom() && inline_as_getter_.is_bottom() &&
-      model_generators_.is_bottom() && issues_.is_bottom();
+      inline_as_setter_.is_bottom() && model_generators_.is_bottom() &&
+      issues_.is_bottom();
 }
 
 void Model::add_mode(Model::Mode mode, Context& context) {
@@ -843,7 +853,7 @@ const AccessPathConstantDomain& Model::inline_as_getter() const {
 }
 
 void Model::set_inline_as_getter(AccessPathConstantDomain inline_as_getter) {
-  if (!check_inline_as_consistency(inline_as_getter)) {
+  if (!check_inline_as_getter_consistency(inline_as_getter)) {
     return;
   }
 
@@ -861,6 +871,19 @@ void Model::add_model_generator_if_empty(
   }
 
   model_generators_.add(model_generator);
+}
+
+const SetterAccessPathConstantDomain& Model::inline_as_setter() const {
+  return inline_as_setter_;
+}
+
+void Model::set_inline_as_setter(
+    SetterAccessPathConstantDomain inline_as_setter) {
+  if (!check_inline_as_setter_consistency(inline_as_setter)) {
+    return;
+  }
+
+  inline_as_setter_ = std::move(inline_as_setter);
 }
 
 void Model::add_issue(Issue trace) {
@@ -935,6 +958,7 @@ bool Model::leq(const Model& other) const {
       attach_to_propagations_.leq(other.attach_to_propagations_) &&
       add_features_to_arguments_.leq(other.add_features_to_arguments_) &&
       inline_as_getter_.leq(other.inline_as_getter_) &&
+      inline_as_setter_.leq(other.inline_as_setter_) &&
       model_generators_.leq(other.model_generators_) &&
       issues_.leq(other.issues_);
 }
@@ -978,6 +1002,7 @@ void Model::join_with(const Model& other) {
   attach_to_propagations_.join_with(other.attach_to_propagations_);
   add_features_to_arguments_.join_with(other.add_features_to_arguments_);
   inline_as_getter_.join_with(other.inline_as_getter_);
+  inline_as_setter_.join_with(other.inline_as_setter_);
   model_generators_.join_with(other.model_generators_);
   issues_.join_with(other.issues_);
 
@@ -1009,6 +1034,7 @@ Model Model::from_json(
          "attach_to_propagations",
          "add_features_to_arguments",
          "inline_as_getter",
+         "inline_as_setter",
          "issues"});
   }
 
@@ -1179,6 +1205,12 @@ Model Model::from_json(
     JsonValidation::string(value, /* field */ "inline_as_getter");
     model.set_inline_as_getter(AccessPathConstantDomain(
         AccessPath::from_json(value["inline_as_getter"])));
+  }
+
+  if (value.isMember("inline_as_setter")) {
+    model.set_inline_as_setter(
+        SetterAccessPathConstantDomain(SetterAccessPath::from_json(
+            JsonValidation::object(value, "inline_as_setter"))));
   }
 
   // We cannot parse issues for now.
@@ -1357,6 +1389,10 @@ Json::Value Model::to_json(ExportOriginsMode export_origins_mode) const {
     value["inline_as_getter"] = getter_access_path->to_json();
   }
 
+  if (auto setter_access_path = inline_as_setter_.get_constant()) {
+    value["inline_as_setter"] = setter_access_path->to_json();
+  }
+
   if (!model_generators_.is_bottom()) {
     auto model_generators_value = Json::Value(Json::arrayValue);
     for (const auto* model_generator : model_generators_) {
@@ -1493,6 +1529,9 @@ std::ostream& operator<<(std::ostream& out, const Model& model) {
   }
   if (auto getter_access_path = model.inline_as_getter_.get_constant()) {
     out << ",\n  inline_as_getter=" << *getter_access_path;
+  }
+  if (auto setter_access_path = model.inline_as_setter_.get_constant()) {
+    out << ",\n  inline_as_setter=" << *setter_access_path;
   }
   if (!model.model_generators_.is_bottom()) {
     out << ",\n  model_generators={";
@@ -1646,7 +1685,7 @@ bool Model::check_taint_consistency(const Taint& taint, std::string_view kind)
   return true;
 }
 
-bool Model::check_inline_as_consistency(
+bool Model::check_inline_as_getter_consistency(
     const AccessPathConstantDomain& inline_as) const {
   auto access_path = inline_as.get_constant();
 
@@ -1656,13 +1695,45 @@ bool Model::check_inline_as_consistency(
 
   if (!access_path->root().is_argument()) {
     ModelConsistencyError::raise(fmt::format(
-        "Model for method `{}` has an inline-as with a non-argument root.",
+        "Model for method `{}` has an inline-as-getter with a non-argument root.",
         show(method_)));
-
     return false;
   }
 
   return check_port_consistency(*access_path);
+}
+
+bool Model::check_inline_as_setter_consistency(
+    const SetterAccessPathConstantDomain& inline_as) const {
+  auto setter = inline_as.get_constant();
+
+  if (!setter) {
+    return true;
+  }
+
+  if (!setter->target().root().is_argument()) {
+    ModelConsistencyError::raise(fmt::format(
+        "Model for method `{}` has an inline-as-setter with a non-argument target.",
+        show(method_)));
+    return false;
+  }
+
+  if (!setter->value().root().is_argument()) {
+    ModelConsistencyError::raise(fmt::format(
+        "Model for method `{}` has an inline-as-setter with a non-argument value.",
+        show(method_)));
+    return false;
+  }
+
+  if (!check_port_consistency(setter->target())) {
+    return false;
+  }
+
+  if (!check_port_consistency(setter->value())) {
+    return false;
+  }
+
+  return true;
 }
 
 bool Model::check_call_effect_port_consistency(

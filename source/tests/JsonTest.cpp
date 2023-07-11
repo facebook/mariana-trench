@@ -2695,6 +2695,73 @@ TEST_F(JsonTest, Model) {
         "inline_as_getter": "Argument(1).foo"
       })#"));
 
+  EXPECT_EQ(
+      Model::from_json(
+          method,
+          test::parse_json(R"#({
+            "inline_as_setter": {
+              "target": "Argument(0).foo",
+              "value": "Argument(1)",
+            }
+          })#"),
+          context),
+      Model(
+          method,
+          context,
+          Model::Mode::Normal,
+          /* frozen */ Model::FreezeKind::None,
+          /* generations */ {},
+          /* parameter_sources */ {},
+          /* sinks */ {},
+          /* propagations */ {},
+          /* global_sanitizers */ {},
+          /* port_sanitizers */ {},
+          /* attach_to_sources */ {},
+          /* attach_to_sinks */ {},
+          /* attach_to_propagations */ {},
+          /* add_features_to_arguments */ {},
+          /* inline_as_getter */ AccessPathConstantDomain::bottom(),
+          /* inline_as_setter */
+          SetterAccessPathConstantDomain(SetterAccessPath(
+              /* target */ AccessPath(
+                  Root(Root::Kind::Argument, 0),
+                  Path{PathElement::field("foo")}),
+              /* value */ AccessPath(Root(Root::Kind::Argument, 1))))));
+  EXPECT_EQ(
+      test::sorted_json(
+          Model(
+              method,
+              context,
+              Model::Mode::Normal,
+              /* frozen */ Model::FreezeKind::None,
+              /* generations */ {},
+              /* parameter_sources */ {},
+              /* sinks */ {},
+              /* propagations */ {},
+              /* global_sanitizers */ {},
+              /* port_sanitizers */ {},
+              /* attach_to_sources */ {},
+              /* attach_to_sinks */ {},
+              /* attach_to_propagations */ {},
+              /* add_features_to_arguments */ {},
+              /* inline_as_getter */ AccessPathConstantDomain::bottom(),
+              /* inline_as_setter */
+              SetterAccessPathConstantDomain(SetterAccessPath(
+                  /* target */ AccessPath(
+                      Root(Root::Kind::Argument, 0),
+                      Path{PathElement::field("foo")}),
+                  /* value */ AccessPath(Root(Root::Kind::Argument, 1))))
+
+                  )
+              .to_json(ExportOriginsMode::Always)),
+      test::parse_json(R"#({
+        "method": "LData;.method:(LData;LData;)V",
+        "inline_as_setter": {
+          "target": "Argument(0).foo",
+          "value": "Argument(1)"
+        }
+      })#"));
+
   // We do not parse issues for now.
   EXPECT_THROW(
       Model::from_json(method, test::parse_json(R"({"issues": 1})"), context),
@@ -2732,6 +2799,7 @@ TEST_F(JsonTest, Model) {
               /* attach_to_propagations */ {},
               /* add_features_to_arguments */ {},
               /* inline_as_getter */ AccessPathConstantDomain::bottom(),
+              /* inline_as_setter */ SetterAccessPathConstantDomain::bottom(),
               /* model_generators */ {},
               IssueSet{Issue(
                   /* source */ Taint{test::make_leaf_taint_config(
@@ -3075,6 +3143,7 @@ TEST_F(JsonTest, CallEffectModel) {
               /* attach_to_propagations */ {},
               /* add_features_to_arguments */ {},
               /* inline_as_getter */ AccessPathConstantDomain::bottom(),
+              /* inline_as_setter */ SetterAccessPathConstantDomain::bottom(),
               /* model_generators */ {},
               IssueSet{Issue(
                   std::move(source),
