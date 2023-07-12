@@ -135,6 +135,8 @@ CalleeModel get_callee(
       std::move(model)};
 }
 
+namespace {
+
 bool is_safe_to_inline(
     const MethodContext* context,
     const CalleeModel& callee,
@@ -187,6 +189,27 @@ bool is_safe_to_inline(
   return true;
 }
 
+/* Returns the memory location for the given parameter access path at the given
+ * invoke instruction. Returns nullptr if there are multiple possible memory
+ * locations.
+ */
+MemoryLocation* MT_NULLABLE memory_location_for_invoke_parameter(
+    const IRInstruction* instruction,
+    const RegisterMemoryLocationsMap& register_memory_locations_map,
+    const AccessPath& parameter) {
+  mt_assert(parameter.root().is_argument());
+  auto register_id = instruction->src(parameter.root().parameter_position());
+  auto memory_locations = register_memory_locations_map.at(register_id);
+  auto* memory_location_singleton = memory_locations.singleton();
+  if (memory_location_singleton == nullptr) {
+    return nullptr;
+  }
+  MemoryLocation* memory_location = *memory_location_singleton;
+  return memory_location->make_field(parameter.path());
+}
+
+} // namespace
+
 MemoryLocation* MT_NULLABLE try_inline_invoke_as_getter(
     const MethodContext* context,
     const RegisterMemoryLocationsMap& register_memory_locations_map,
@@ -197,19 +220,16 @@ MemoryLocation* MT_NULLABLE try_inline_invoke_as_getter(
     return nullptr;
   }
 
-  auto register_id = instruction->src(access_path->root().parameter_position());
-  auto memory_locations = register_memory_locations_map.at(register_id);
-  auto* memory_location_singleton = memory_locations.singleton();
-  if (memory_location_singleton == nullptr) {
+  auto* memory_location = memory_location_for_invoke_parameter(
+      instruction, register_memory_locations_map, *access_path);
+  if (memory_location == nullptr) {
     LOG_OR_DUMP(
         context,
         4,
-        "Could not inline call because register {} points to multiple memory locations",
-        register_id);
+        "Could not inline call because parameter {} points to multiple memory locations",
+        access_path->root());
     return nullptr;
   }
-  MemoryLocation* memory_location = *memory_location_singleton;
-  memory_location = memory_location->make_field(access_path->path());
 
   if (!is_safe_to_inline(
           context,
@@ -233,39 +253,27 @@ std::optional<SetterInlineMemoryLocations> try_inline_invoke_as_setter(
     return std::nullopt;
   }
 
-  auto target_register_id =
-      instruction->src(setter->target().root().parameter_position());
-  auto target_memory_locations =
-      register_memory_locations_map.at(target_register_id);
-  auto* target_memory_location_singleton = target_memory_locations.singleton();
-  if (target_memory_location_singleton == nullptr) {
+  auto* target_memory_location = memory_location_for_invoke_parameter(
+      instruction, register_memory_locations_map, setter->target());
+  if (target_memory_location == nullptr) {
     LOG_OR_DUMP(
         context,
         4,
-        "Could not inline call because target register {} points to multiple memory locations",
-        target_register_id);
+        "Could not inline call because target {} points to multiple memory locations",
+        setter->target());
     return std::nullopt;
   }
-  MemoryLocation* target_memory_location = *target_memory_location_singleton;
-  target_memory_location =
-      target_memory_location->make_field(setter->target().path());
 
-  auto value_register_id =
-      instruction->src(setter->value().root().parameter_position());
-  auto value_memory_locations =
-      register_memory_locations_map.at(value_register_id);
-  auto* value_memory_location_singleton = value_memory_locations.singleton();
-  if (value_memory_location_singleton == nullptr) {
+  auto* value_memory_location = memory_location_for_invoke_parameter(
+      instruction, register_memory_locations_map, setter->value());
+  if (value_memory_location == nullptr) {
     LOG_OR_DUMP(
         context,
         4,
-        "Could not inline call because value register {} points to multiple memory locations",
-        target_register_id);
+        "Could not inline call because value {} points to multiple memory locations",
+        setter->value());
     return std::nullopt;
   }
-  MemoryLocation* value_memory_location = *value_memory_location_singleton;
-  value_memory_location =
-      value_memory_location->make_field(setter->value().path());
 
   if (!is_safe_to_inline(
           context,
