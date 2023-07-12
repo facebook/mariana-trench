@@ -42,6 +42,15 @@ FieldMemoryLocation* MemoryLocation::make_field(const DexString* field) {
   return result.first->second.get();
 }
 
+MemoryLocation* MemoryLocation::make_field(const Path& path) {
+  MemoryLocation* current = this;
+  for (const auto& field : path) {
+    mt_assert(field.is_field());
+    current = current->make_field(field.name());
+  }
+  return current;
+}
+
 MemoryLocation* MemoryLocation::root() {
   // By defaut, this is a root memory location.
   return this;

@@ -420,6 +420,21 @@ void apply_propagations(
   }
 }
 
+void apply_inline_setter(
+    MethodContext* context,
+    const SetterInlineMemoryLocations& setter,
+    const BackwardTaintEnvironment* previous_environment,
+    BackwardTaintEnvironment* environment) {
+  LOG_OR_DUMP(context, 4, "Clearing the taint for {}", show(setter.target));
+  environment->write(setter.target, TaintTree::bottom(), UpdateKind::Strong);
+
+  TaintTree target_taint = previous_environment->read(setter.target);
+  target_taint.add_local_position(setter.position);
+  LOG_OR_DUMP(
+      context, 4, "Tainting {} with {}", show(setter.value), target_taint);
+  environment->write(setter.value, std::move(target_taint), UpdateKind::Weak);
+}
+
 FeatureMayAlwaysSet get_fulfilled_sink_features(
     const FulfilledPartialKindState& fulfilled_partial_sinks,
     const Kind* transformed_sink_kind) {
@@ -676,15 +691,25 @@ bool BackwardTaintTransfer::analyze_invoke(
       source_constant_arguments,
       /* extra_features */ {},
       context->fulfilled_partial_sinks.get_call(instruction));
-  apply_propagations(
-      context,
-      aliasing,
-      &previous_environment,
-      environment,
-      instruction,
-      callee,
-      source_constant_arguments,
-      result_taint);
+
+  if (auto setter = try_inline_invoke_as_setter(
+          context,
+          aliasing.register_memory_locations_map(),
+          instruction,
+          callee);
+      setter) {
+    apply_inline_setter(context, *setter, &previous_environment, environment);
+  } else {
+    apply_propagations(
+        context,
+        aliasing,
+        &previous_environment,
+        environment,
+        instruction,
+        callee,
+        source_constant_arguments,
+        result_taint);
+  }
 
   return false;
 }
@@ -755,11 +780,7 @@ bool BackwardTaintTransfer::analyze_iput(
     auto* field_memory_location =
         (*target_memory_location)->make_field(field_name);
     LOG_OR_DUMP(
-        context,
-        4,
-        "Clearing the taint for {}",
-        show(field_memory_location),
-        target_taint);
+        context, 4, "Clearing the taint for {}", show(field_memory_location));
     environment->write(
         field_memory_location, TaintTree::bottom(), UpdateKind::Strong);
   }

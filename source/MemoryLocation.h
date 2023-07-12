@@ -52,6 +52,8 @@ class MemoryLocation {
   /* Return the memory location for the given field of this memory location. */
   FieldMemoryLocation* make_field(const DexString* field);
 
+  MemoryLocation* make_field(const Path& path);
+
   /**
    * Return the root memory location for this memory location.
    *

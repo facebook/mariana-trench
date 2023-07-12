@@ -34,7 +34,7 @@ public class Flow {
     Origin.sink(this.field);
   }
 
-  // Another false positive due to the backward analysis.
+  // The following example requires inlining setters to avoid a false positive.
 
   public void field_setter(Object x) {
     this.field = x;

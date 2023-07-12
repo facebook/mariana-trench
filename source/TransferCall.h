@@ -65,6 +65,20 @@ MemoryLocation* MT_NULLABLE try_inline_invoke_as_getter(
     const IRInstruction* instruction,
     const CalleeModel& callee);
 
+struct SetterInlineMemoryLocations {
+  MemoryLocation* target;
+  MemoryLocation* value;
+  const Position* position;
+};
+
+/* If the method invoke can be safely inlined as a setter, return the target
+ * and value memory locations, otherwise return nullopt. */
+std::optional<SetterInlineMemoryLocations> try_inline_invoke_as_setter(
+    const MethodContext* context,
+    const RegisterMemoryLocationsMap& register_memory_locations_map,
+    const IRInstruction* instruction,
+    const CalleeModel& callee);
+
 /* Add a set of hardcoded features on field access. */
 void add_field_features(
     MethodContext* context,

@@ -1186,38 +1186,7 @@
   {
     "line" : 47,
     "path" : "Flow.java"
-  },
-  "sinks" : 
-  [
-    {
-      "port" : "Argument(0).field",
-      "taint" : 
-      [
-        {
-          "kinds" : 
-          [
-            {
-              "call_info" : "Origin",
-              "kind" : "Sink",
-              "origins" : 
-              [
-                "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V"
-              ]
-            }
-          ],
-          "origin" : 
-          {
-            "method" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
-            "position" : 
-            {
-              "line" : 49,
-              "path" : "Flow.java"
-            }
-          }
-        }
-      ]
-    }
-  ]
+  }
 }
 {
   "method" : "Lcom/facebook/marianatrench/integrationtests/Origin;.<init>:()V",

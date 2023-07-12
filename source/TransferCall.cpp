@@ -135,6 +135,58 @@ CalleeModel get_callee(
       std::move(model)};
 }
 
+bool is_safe_to_inline(
+    const MethodContext* context,
+    const CalleeModel& callee,
+    const AccessPath& input,
+    const Kind* output_kind,
+    const Path& output_path) {
+  if (!callee.model.generations().is_bottom()) {
+    LOG_OR_DUMP(
+        context,
+        4,
+        "Could not inline call because callee model has generations");
+    return false;
+  }
+  if (!callee.model.sinks().is_bottom()) {
+    LOG_OR_DUMP(
+        context, 4, "Could not inline call because callee model has sinks");
+    return false;
+  }
+  if (callee.model.add_via_obscure_feature()) {
+    LOG_OR_DUMP(
+        context,
+        4,
+        "Could not inline call because callee model has add-via-obscure");
+    return false;
+  }
+  if (callee.model.has_add_features_to_arguments()) {
+    LOG_OR_DUMP(
+        context,
+        4,
+        "Could not inline call because callee model has add-features-to-arguments");
+    return false;
+  }
+  if (!callee.model.propagations().leq(TaintAccessPathTree(
+          {{/* input */ input,
+            Taint::propagation(PropagationConfig(
+                /* input_path */ input,
+                /* kind */ output_kind,
+                /* output_paths */
+                PathTreeDomain{{output_path, CollapseDepth::zero()}},
+                /* inferred_features */ {},
+                /* locally_inferred_features */ {},
+                /* user_features */ FeatureSet::bottom()))}}))) {
+    LOG_OR_DUMP(
+        context,
+        4,
+        "Could not inline call because callee model has extra propagations");
+    return false;
+  }
+
+  return true;
+}
+
 MemoryLocation* MT_NULLABLE try_inline_invoke_as_getter(
     const MethodContext* context,
     const RegisterMemoryLocationsMap& register_memory_locations_map,
@@ -147,7 +199,6 @@ MemoryLocation* MT_NULLABLE try_inline_invoke_as_getter(
 
   auto register_id = instruction->src(access_path->root().parameter_position());
   auto memory_locations = register_memory_locations_map.at(register_id);
-
   auto* memory_location_singleton = memory_locations.singleton();
   if (memory_location_singleton == nullptr) {
     LOG_OR_DUMP(
@@ -157,47 +208,81 @@ MemoryLocation* MT_NULLABLE try_inline_invoke_as_getter(
         register_id);
     return nullptr;
   }
-
   MemoryLocation* memory_location = *memory_location_singleton;
-  for (const auto& field : access_path->path()) {
-    mt_assert(field.is_field());
-    memory_location = memory_location->make_field(field.name());
-  }
+  memory_location = memory_location->make_field(access_path->path());
 
-  // Only inline if the model does not generate or propagate extra taint.
-  if (!callee.model.generations().is_bottom()) {
-    LOG_OR_DUMP(
-        context,
-        4,
-        "Could not inline call because callee model has generations");
-    return nullptr;
-  }
-  if (!callee.model.propagations().leq(TaintAccessPathTree(
-          {{/* input */ *access_path,
-            Taint::propagation(PropagationConfig(
-                /* input_path */ *access_path,
-                /* kind */ context->kind_factory.local_return(),
-                /* output_paths */
-                PathTreeDomain{{Path{}, CollapseDepth::zero()}},
-                /* inferred_features */ {},
-                /* locally_inferred_features */ {},
-                /* user_features */ FeatureSet::bottom()))}}))) {
-    LOG_OR_DUMP(
-        context,
-        4,
-        "Could not inline call because callee model has extra propagations");
-    return nullptr;
-  }
-  if (callee.model.add_via_obscure_feature() ||
-      callee.model.has_add_features_to_arguments()) {
-    LOG_OR_DUMP(
-        context,
-        4,
-        "Could not inline call because callee model has add-via-obscure or add-features-to-arguments");
+  if (!is_safe_to_inline(
+          context,
+          callee,
+          /* input */ *access_path,
+          /* output */ context->kind_factory.local_return(),
+          /* output_path */ Path{})) {
     return nullptr;
   }
 
   return memory_location;
+}
+
+std::optional<SetterInlineMemoryLocations> try_inline_invoke_as_setter(
+    const MethodContext* context,
+    const RegisterMemoryLocationsMap& register_memory_locations_map,
+    const IRInstruction* instruction,
+    const CalleeModel& callee) {
+  auto setter = callee.model.inline_as_setter().get_constant();
+  if (!setter) {
+    return std::nullopt;
+  }
+
+  auto target_register_id =
+      instruction->src(setter->target().root().parameter_position());
+  auto target_memory_locations =
+      register_memory_locations_map.at(target_register_id);
+  auto* target_memory_location_singleton = target_memory_locations.singleton();
+  if (target_memory_location_singleton == nullptr) {
+    LOG_OR_DUMP(
+        context,
+        4,
+        "Could not inline call because target register {} points to multiple memory locations",
+        target_register_id);
+    return std::nullopt;
+  }
+  MemoryLocation* target_memory_location = *target_memory_location_singleton;
+  target_memory_location =
+      target_memory_location->make_field(setter->target().path());
+
+  auto value_register_id =
+      instruction->src(setter->value().root().parameter_position());
+  auto value_memory_locations =
+      register_memory_locations_map.at(value_register_id);
+  auto* value_memory_location_singleton = value_memory_locations.singleton();
+  if (value_memory_location_singleton == nullptr) {
+    LOG_OR_DUMP(
+        context,
+        4,
+        "Could not inline call because value register {} points to multiple memory locations",
+        target_register_id);
+    return std::nullopt;
+  }
+  MemoryLocation* value_memory_location = *value_memory_location_singleton;
+  value_memory_location =
+      value_memory_location->make_field(setter->value().path());
+
+  if (!is_safe_to_inline(
+          context,
+          callee,
+          /* input */ setter->value(),
+          /* output */
+          context->kind_factory.local_argument(
+              setter->target().root().parameter_position()),
+          /* output_path */ setter->target().path())) {
+    return std::nullopt;
+  }
+
+  auto* position = context->positions.get(
+      callee.position, setter->value().root(), instruction);
+
+  return SetterInlineMemoryLocations{
+      target_memory_location, value_memory_location, position};
 }
 
 namespace {

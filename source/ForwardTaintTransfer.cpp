@@ -384,6 +384,20 @@ void apply_propagations(
   }
 }
 
+void apply_inline_setter(
+    MethodContext* context,
+    const SetterInlineMemoryLocations& setter,
+    const ForwardTaintEnvironment* previous_environment,
+    ForwardTaintEnvironment* environment,
+    TaintTree& result_taint) {
+  auto taint = previous_environment->read(setter.value);
+  taint.add_local_position(setter.position);
+  LOG_OR_DUMP(context, 4, "Tainting {} with {}", show(setter.target), taint);
+  environment->write(setter.target, taint, UpdateKind::Strong);
+
+  result_taint = TaintTree::bottom();
+}
+
 void create_issue(
     MethodContext* context,
     Taint source,
@@ -829,15 +843,27 @@ bool ForwardTaintTransfer::analyze_invoke(
       environment,
       instruction,
       callee);
-  apply_propagations(
-      context,
-      aliasing,
-      &previous_environment,
-      environment,
-      instruction,
-      callee,
-      source_constant_arguments,
-      result_taint);
+
+  if (auto setter = try_inline_invoke_as_setter(
+          context,
+          aliasing.register_memory_locations_map(),
+          instruction,
+          callee);
+      setter) {
+    apply_inline_setter(
+        context, *setter, &previous_environment, environment, result_taint);
+  } else {
+    apply_propagations(
+        context,
+        aliasing,
+        &previous_environment,
+        environment,
+        instruction,
+        callee,
+        source_constant_arguments,
+        result_taint);
+  }
+
   apply_generations(
       context, aliasing, environment, instruction, callee, result_taint);
 
