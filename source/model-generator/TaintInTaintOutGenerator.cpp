@@ -13,6 +13,10 @@
 
 namespace marianatrench {
 
+namespace {
+std::unordered_set<std::string_view> numeric_types = {"J", "F", "D", "I", "S"};
+}
+
 std::vector<Model> TaintInTaintOutGenerator::visit_method(
     const Method* method) const {
   if (method->get_code() || method->returns_void()) {
@@ -57,9 +61,24 @@ std::vector<Model> TaintInTaintOutGenerator::visit_method(
     }
 
     auto parameter_type = method->parameter_type(parameter_position);
-    if (parameter_type != nullptr &&
-        parameter_type->str() == "Landroid/content/Context;") {
+    if (parameter_type == nullptr) {
       continue;
+    }
+    auto parameter_type_string = parameter_type->str();
+    if (parameter_type_string == "Landroid/content/Context;") {
+      continue;
+    }
+
+    std::vector<std::string> feature_set{"via-obscure-taint-in-taint-out"};
+    auto return_type = generator::get_return_type_string(method);
+    if (return_type != std::nullopt) {
+      if (numeric_types.find(*return_type) != numeric_types.end() ||
+          numeric_types.find(parameter_type_string) != numeric_types.end()) {
+        feature_set.emplace_back("cast:numeric");
+      }
+      if (*return_type == "Z" || parameter_type_string == "Z") {
+        feature_set.emplace_back("cast:boolean");
+      }
     }
 
     generator::add_propagation_to_return(
@@ -67,7 +86,7 @@ std::vector<Model> TaintInTaintOutGenerator::visit_method(
         model,
         parameter_position,
         CollapseDepth::collapse(),
-        {"via-obscure-taint-in-taint-out"});
+        feature_set);
   }
 
   return {model};
