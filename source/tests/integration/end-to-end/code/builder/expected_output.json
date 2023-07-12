@@ -308,6 +308,15 @@
 }
 {
   "method" : "Landroid/net/Uri$Builder;.host:(Ljava/lang/String;)Landroid/net/Uri$Builder;",
+  "model_generators" : 
+  [
+    "BuilderPatternGenerator"
+  ],
+  "modes" : 
+  [
+    "alias-memory-location-on-invoke",
+    "no-collapse-on-propagation"
+  ],
   "position" : 
   {
     "line" : 62
@@ -369,6 +378,15 @@
 }
 {
   "method" : "Landroid/net/Uri$Builder;.path:(Ljava/lang/String;)Landroid/net/Uri$Builder;",
+  "model_generators" : 
+  [
+    "BuilderPatternGenerator"
+  ],
+  "modes" : 
+  [
+    "alias-memory-location-on-invoke",
+    "no-collapse-on-propagation"
+  ],
   "position" : 
   {
     "line" : 67
@@ -430,6 +448,15 @@
 }
 {
   "method" : "Landroid/net/Uri$Builder;.scheme:(Ljava/lang/String;)Landroid/net/Uri$Builder;",
+  "model_generators" : 
+  [
+    "BuilderPatternGenerator"
+  ],
+  "modes" : 
+  [
+    "alias-memory-location-on-invoke",
+    "no-collapse-on-propagation"
+  ],
   "position" : 
   {
     "line" : 54
@@ -664,7 +691,7 @@
               "kind" : "LocalReturn",
               "output_paths" : 
               {
-                "" : 0
+                "" : 4
               }
             }
           ]
@@ -683,7 +710,7 @@
               "kind" : "LocalReturn",
               "output_paths" : 
               {
-                "" : 0
+                "" : 4
               }
             }
           ]
@@ -702,7 +729,7 @@
               "kind" : "LocalReturn",
               "output_paths" : 
               {
-                "" : 0
+                "" : 4
               }
             }
           ]
@@ -1359,6 +1386,15 @@
 {
   "inline_as_getter" : "Argument(0)",
   "method" : "Lcom/instagram/common/analytics/intf/AnalyticsEvent;.addExtra:(Ljava/lang/String;Ljava/lang/String;)Lcom/instagram/common/analytics/intf/AnalyticsEvent;",
+  "model_generators" : 
+  [
+    "BuilderPatternGenerator"
+  ],
+  "modes" : 
+  [
+    "alias-memory-location-on-invoke",
+    "no-collapse-on-propagation"
+  ],
   "position" : 
   {
     "line" : 16
@@ -1468,6 +1504,15 @@
 }
 {
   "method" : "Ljava/lang/String;.concat:(Ljava/lang/String;)Ljava/lang/String;",
+  "model_generators" : 
+  [
+    "BuilderPatternGenerator"
+  ],
+  "modes" : 
+  [
+    "alias-memory-location-on-invoke",
+    "no-collapse-on-propagation"
+  ],
   "position" : 
   {
     "line" : 52
