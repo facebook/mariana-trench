@@ -309,7 +309,8 @@ FeatureMayAlwaysSet ClassProperties::issue_features(
   auto clazz = method->get_class()->str();
 
   for (const auto* kind : kinds) {
-    const auto* named_kind = kind->as<NamedKind>();
+    auto normalized_kind = kind->discard_transforms();
+    const auto* named_kind = normalized_kind->as<NamedKind>();
     if (named_kind == nullptr ||
         !is_manifest_relevant_kind(named_kind->name())) {
       continue;
@@ -336,37 +337,41 @@ FeatureSet ClassProperties::get_class_features(
     bool via_dependency,
     size_t dependency_depth) const {
   FeatureSet features;
+  auto normalized_kind = kind->discard_transforms();
+  const auto* named_kind = normalized_kind->as<NamedKind>();
 
-  if (kind->name() == "ActivityUserInput" ||
-      kind->name() == "ActivityLifecycle" ||
-      kind->name() == "ActivityExitNode") {
-    features.join_with(get_manifest_features(clazz, activities_));
-  }
+  if (named_kind != nullptr) {
+    if (named_kind->name() == "ActivityUserInput" ||
+        named_kind->name() == "ActivityLifecycle" ||
+        named_kind->name() == "ActivityExitNode") {
+      features.join_with(get_manifest_features(clazz, activities_));
+    }
 
-  if (kind->name() == "ReceiverUserInput") {
-    features.join_with(get_manifest_features(clazz, receivers_));
-  }
+    if (named_kind->name() == "ReceiverUserInput") {
+      features.join_with(get_manifest_features(clazz, receivers_));
+    }
 
-  if (kind->name() == "ServiceUserInput") {
-    features.join_with(get_manifest_features(clazz, services_));
-  }
+    if (named_kind->name() == "ServiceUserInput") {
+      features.join_with(get_manifest_features(clazz, services_));
+    }
 
-  if (kind->name() == "ServiceAIDLUserInput" ||
-      kind->name() == "ServiceAIDLExitNode") {
-    if (const auto* dex_class = redex::get_class(clazz)) {
-      const auto* service_class = get_service_from_stub(dex_class);
-      if (service_class != nullptr) {
-        features.join_with(
-            get_manifest_features(service_class->str(), services_));
-      } else {
-        features.join_with(get_manifest_features(clazz, services_));
+    if (named_kind->name() == "ServiceAIDLUserInput" ||
+        named_kind->name() == "ServiceAIDLExitNode") {
+      if (const auto* dex_class = redex::get_class(clazz)) {
+        const auto* service_class = get_service_from_stub(dex_class);
+        if (service_class != nullptr) {
+          features.join_with(
+              get_manifest_features(service_class->str(), services_));
+        } else {
+          features.join_with(get_manifest_features(clazz, services_));
+        }
       }
     }
-  }
 
-  if (kind->name() == "ProviderUserInput" ||
-      kind->name() == "ProviderExitNode") {
-    features.join_with(get_manifest_features(clazz, providers_));
+    if (named_kind->name() == "ProviderUserInput" ||
+        named_kind->name() == "ProviderExitNode") {
+      features.join_with(get_manifest_features(clazz, providers_));
+    }
   }
 
   if (has_inline_permissions(clazz)) {
