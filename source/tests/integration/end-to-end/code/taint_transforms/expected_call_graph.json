@@ -439,6 +439,15 @@
       "Lcom/facebook/marianatrench/integrationtests/TaintTransforms;.sourceWithTransformT1:()Ljava/lang/Object;"
     ]
   },
+  "Lcom/facebook/marianatrench/integrationtests/TaintTransforms;.testTransformOnArg:()V" : 
+  {
+    "static" : 
+    [
+      "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
+      "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;",
+      "Lcom/facebook/marianatrench/integrationtests/TaintTransforms;.transformT1OnArg:(Ljava/lang/Object;)V"
+    ]
+  },
   "Lcom/facebook/marianatrench/integrationtests/TaintTransforms;.testTransformsT1T2T1T2Issue:()V" : 
   {
     "static" : 

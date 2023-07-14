@@ -52,6 +52,8 @@ public class TaintTransforms {
     return o;
   }
 
+  static void transformT1OnArg(Object o) {}
+
   static Object transformForAllParameters(Data d, Object o) {
     // Declared frozen propagation using for_all_parameters:
     //   Argument(1) -> `T1@LocalReturn`
@@ -264,5 +266,16 @@ public class TaintTransforms {
     //   Source -> T1 -> T2 -> Sink
     Object source = transformForAllParameters(new Data(), Origin.source());
     sinkWithTransformT2(source);
+  }
+
+  public static void testTransformOnArg() {
+    // Expect issue for rules:
+    //   Source -> T1 -> Sink
+    // Actual: 2 issues
+    //   Source -> Sink [FP]
+    //   Source -> T1 -> Sink
+    Object source = Origin.source();
+    transformT1OnArg(source);
+    Origin.sink(source);
   }
 }

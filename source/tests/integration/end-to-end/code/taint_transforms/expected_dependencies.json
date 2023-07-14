@@ -48,7 +48,8 @@
     "Lcom/facebook/marianatrench/integrationtests/TaintTransforms;.testMultihopSource1:()V",
     "Lcom/facebook/marianatrench/integrationtests/TaintTransforms;.testMultihopSource2:()V",
     "Lcom/facebook/marianatrench/integrationtests/TaintTransforms;.testPropagateAlternateTransforms:()V",
-    "Lcom/facebook/marianatrench/integrationtests/TaintTransforms;.testSourceWithTransformIssue:()V"
+    "Lcom/facebook/marianatrench/integrationtests/TaintTransforms;.testSourceWithTransformIssue:()V",
+    "Lcom/facebook/marianatrench/integrationtests/TaintTransforms;.testTransformOnArg:()V"
   ],
   "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;" : 
   [
@@ -60,7 +61,8 @@
     "Lcom/facebook/marianatrench/integrationtests/TaintTransforms;.testMultihopSink1:()V",
     "Lcom/facebook/marianatrench/integrationtests/TaintTransforms;.testMultihopSink2:()V",
     "Lcom/facebook/marianatrench/integrationtests/TaintTransforms;.testPropagateAlternateTransforms:()V",
-    "Lcom/facebook/marianatrench/integrationtests/TaintTransforms;.testSinkWithTransformIssue:()V"
+    "Lcom/facebook/marianatrench/integrationtests/TaintTransforms;.testSinkWithTransformIssue:()V",
+    "Lcom/facebook/marianatrench/integrationtests/TaintTransforms;.testTransformOnArg:()V"
   ],
   "Lcom/facebook/marianatrench/integrationtests/TaintTransforms;.getNewSource:()Ljava/lang/Object;" : 
   [
@@ -125,6 +127,10 @@
     "Lcom/facebook/marianatrench/integrationtests/TaintTransforms;.sinkWithTransformsT1T2:(Ljava/lang/Object;)V",
     "Lcom/facebook/marianatrench/integrationtests/TaintTransforms;.sourceWithTransformT1:()Ljava/lang/Object;",
     "Lcom/facebook/marianatrench/integrationtests/TaintTransforms;.sourceWithTransformsT1T2:()Ljava/lang/Object;"
+  ],
+  "Lcom/facebook/marianatrench/integrationtests/TaintTransforms;.transformT1OnArg:(Ljava/lang/Object;)V" : 
+  [
+    "Lcom/facebook/marianatrench/integrationtests/TaintTransforms;.testTransformOnArg:()V"
   ],
   "Lcom/facebook/marianatrench/integrationtests/TaintTransforms;.transformT2:(Ljava/lang/Object;)Ljava/lang/Object;" : 
   [
