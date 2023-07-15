@@ -226,7 +226,7 @@ std::vector<Model> JsonModelGenerator::emit_method_models_optimized(
     }
 
     LOG(4,
-        "Model generator `{}`'s item {} emitted {} models.",
+        "Model generator `{}` emitted {} models.",
         show(item.name()),
         method_models.size());
     EventLogger::log_event(
