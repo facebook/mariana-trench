@@ -44,9 +44,11 @@ make_model_generators(Context& context) {
   for (const auto& path : context.options->model_generator_search_paths()) {
     LOG(3, "Searching for model generators in `{}`...", path);
     for (auto& entry : boost::filesystem::recursive_directory_iterator(path)) {
-      if (entry.path().extension() != ".json") {
+      if (entry.path().extension() != ".json" &&
+          entry.path().extension() != ".models") {
         continue;
       }
+      bool always_validate_models = entry.path().extension() == ".models";
 
       auto path_copy = entry.path();
       auto identifier = path_copy.replace_extension("").filename().string();
@@ -57,11 +59,16 @@ make_model_generators(Context& context) {
         Json::Value json = JsonValidation::parse_json_file(entry.path());
 
         if (!json.isObject()) {
-          // TODO(T153463464): This means it is most likely not a model
-          // generator (it could be a rule definition file, lifecycle
-          // definition file, etc.). Ignore it silently for now. In the future,
-          // we should use the extension to differentiate between file types.
-          continue;
+          // TODO(T153463464): We always validate .models files, but still
+          // accept legacy .json files that may not parse. (it could be a rule
+          // definition file, lifecycle definition file, etc.). Ignore it
+          // silently for now. In the future, we should use the extension to
+          // differentiate between file types.
+          if (!always_validate_models) {
+            continue;
+          }
+          throw ModelGeneratorError(fmt::format(
+              "Unable to parse `{}` as a valid models JSON.", entry.path()));
         }
 
         auto [_, inserted] = generators.emplace(
