@@ -314,8 +314,7 @@
   ],
   "modes" : 
   [
-    "alias-memory-location-on-invoke",
-    "no-collapse-on-propagation"
+    "alias-memory-location-on-invoke"
   ],
   "position" : 
   {
@@ -384,8 +383,7 @@
   ],
   "modes" : 
   [
-    "alias-memory-location-on-invoke",
-    "no-collapse-on-propagation"
+    "alias-memory-location-on-invoke"
   ],
   "position" : 
   {
@@ -454,8 +452,7 @@
   ],
   "modes" : 
   [
-    "alias-memory-location-on-invoke",
-    "no-collapse-on-propagation"
+    "alias-memory-location-on-invoke"
   ],
   "position" : 
   {
@@ -691,7 +688,7 @@
               "kind" : "LocalReturn",
               "output_paths" : 
               {
-                "" : 4
+                "" : 0
               }
             }
           ]
@@ -710,7 +707,7 @@
               "kind" : "LocalReturn",
               "output_paths" : 
               {
-                "" : 4
+                "" : 0
               }
             }
           ]
@@ -729,7 +726,7 @@
               "kind" : "LocalReturn",
               "output_paths" : 
               {
-                "" : 4
+                "" : 0
               }
             }
           ]
@@ -1392,8 +1389,7 @@
   ],
   "modes" : 
   [
-    "alias-memory-location-on-invoke",
-    "no-collapse-on-propagation"
+    "alias-memory-location-on-invoke"
   ],
   "position" : 
   {
@@ -1510,8 +1506,7 @@
   ],
   "modes" : 
   [
-    "alias-memory-location-on-invoke",
-    "no-collapse-on-propagation"
+    "alias-memory-location-on-invoke"
   ],
   "position" : 
   {

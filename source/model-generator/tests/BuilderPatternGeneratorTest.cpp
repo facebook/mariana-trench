@@ -84,10 +84,7 @@ TEST_F(BuilderPatternGeneratorTest, BuilderPatternModels) {
   EXPECT_THAT(
       builder_pattern_models,
       testing::UnorderedElementsAre(Model(
-          methods[0],
-          context,
-          Model::Mode::AliasMemoryLocationOnInvoke |
-              Model::Mode::NoCollapseOnPropagation)));
+          methods[0], context, Model::Mode::AliasMemoryLocationOnInvoke)));
 
   builder_pattern_models = builder_pattern_generator.visit_method(methods[1]);
   EXPECT_EQ(builder_pattern_models.size(), 0);

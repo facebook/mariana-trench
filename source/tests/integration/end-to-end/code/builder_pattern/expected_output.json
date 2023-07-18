@@ -314,8 +314,7 @@
   ],
   "modes" : 
   [
-    "alias-memory-location-on-invoke",
-    "no-collapse-on-propagation"
+    "alias-memory-location-on-invoke"
   ],
   "position" : 
   {
@@ -384,8 +383,7 @@
   ],
   "modes" : 
   [
-    "alias-memory-location-on-invoke",
-    "no-collapse-on-propagation"
+    "alias-memory-location-on-invoke"
   ],
   "position" : 
   {
@@ -454,8 +452,7 @@
   ],
   "modes" : 
   [
-    "alias-memory-location-on-invoke",
-    "no-collapse-on-propagation"
+    "alias-memory-location-on-invoke"
   ],
   "position" : 
   {
@@ -1078,8 +1075,7 @@
   ],
   "modes" : 
   [
-    "alias-memory-location-on-invoke",
-    "no-collapse-on-propagation"
+    "alias-memory-location-on-invoke"
   ],
   "position" : 
   {
@@ -1149,8 +1145,7 @@
   ],
   "modes" : 
   [
-    "alias-memory-location-on-invoke",
-    "no-collapse-on-propagation"
+    "alias-memory-location-on-invoke"
   ],
   "position" : 
   {
@@ -1220,8 +1215,7 @@
   ],
   "modes" : 
   [
-    "alias-memory-location-on-invoke",
-    "no-collapse-on-propagation"
+    "alias-memory-location-on-invoke"
   ],
   "position" : 
   {
@@ -1291,8 +1285,7 @@
   ],
   "modes" : 
   [
-    "alias-memory-location-on-invoke",
-    "no-collapse-on-propagation"
+    "alias-memory-location-on-invoke"
   ],
   "position" : 
   {
@@ -1362,8 +1355,7 @@
   ],
   "modes" : 
   [
-    "alias-memory-location-on-invoke",
-    "no-collapse-on-propagation"
+    "alias-memory-location-on-invoke"
   ],
   "position" : 
   {
@@ -1433,8 +1425,7 @@
   ],
   "modes" : 
   [
-    "alias-memory-location-on-invoke",
-    "no-collapse-on-propagation"
+    "alias-memory-location-on-invoke"
   ],
   "position" : 
   {
@@ -1892,7 +1883,8 @@
     {
       "always_features" : 
       [
-        "via-cast:Lcom/facebook/marianatrench/integrationtests/Test;"
+        "via-cast:Lcom/facebook/marianatrench/integrationtests/Test;",
+        "via-propagation-broadening"
       ],
       "callee" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
       "position" : 
@@ -1947,7 +1939,8 @@
           {
             "always_features" : 
             [
-              "via-cast:Lcom/facebook/marianatrench/integrationtests/Test;"
+              "via-cast:Lcom/facebook/marianatrench/integrationtests/Test;",
+              "via-propagation-broadening"
             ]
           },
           "local_positions" : 
@@ -1981,7 +1974,97 @@
       "always_features" : 
       [
         "via-cast:Lcom/facebook/marianatrench/integrationtests/Test;",
-        "via-issue-broadening"
+        "via-propagation-broadening"
+      ],
+      "callee" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
+      "position" : 
+      {
+        "line" : 109,
+        "path" : "Test.java"
+      },
+      "rule" : 1,
+      "sink_index" : "3",
+      "sinks" : 
+      [
+        {
+          "kinds" : 
+          [
+            {
+              "call_info" : "Origin",
+              "kind" : "Sink",
+              "origins" : 
+              [
+                "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V"
+              ]
+            }
+          ],
+          "origin" : 
+          {
+            "method" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
+            "position" : 
+            {
+              "end" : 25,
+              "line" : 109,
+              "path" : "Test.java",
+              "start" : 16
+            }
+          }
+        }
+      ],
+      "sources" : 
+      [
+        {
+          "kinds" : 
+          [
+            {
+              "call_info" : "Origin",
+              "kind" : "Source",
+              "origins" : 
+              [
+                "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;"
+              ]
+            }
+          ],
+          "local_features" : 
+          {
+            "always_features" : 
+            [
+              "via-cast:Lcom/facebook/marianatrench/integrationtests/Test;",
+              "via-propagation-broadening"
+            ]
+          },
+          "local_positions" : 
+          [
+            {
+              "end" : 36,
+              "line" : 97,
+              "start" : 14
+            },
+            {
+              "end" : 70,
+              "line" : 99,
+              "start" : 66
+            }
+          ],
+          "origin" : 
+          {
+            "method" : "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;",
+            "position" : 
+            {
+              "end" : 33,
+              "line" : 97,
+              "path" : "Test.java",
+              "start" : 28
+            }
+          }
+        }
+      ]
+    },
+    {
+      "always_features" : 
+      [
+        "via-cast:Lcom/facebook/marianatrench/integrationtests/Test;",
+        "via-propagation-broadening"
       ],
       "callee" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
       "position" : 
@@ -2037,7 +2120,7 @@
             "always_features" : 
             [
               "via-cast:Lcom/facebook/marianatrench/integrationtests/Test;",
-              "via-issue-broadening"
+              "via-propagation-broadening"
             ]
           },
           "local_positions" : 
@@ -2071,7 +2154,7 @@
       "always_features" : 
       [
         "via-cast:Lcom/facebook/marianatrench/integrationtests/Test;",
-        "via-issue-broadening"
+        "via-propagation-broadening"
       ],
       "callee" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
       "position" : 
@@ -2127,7 +2210,7 @@
             "always_features" : 
             [
               "via-cast:Lcom/facebook/marianatrench/integrationtests/Test;",
-              "via-issue-broadening"
+              "via-propagation-broadening"
             ]
           },
           "local_positions" : 
@@ -2797,8 +2880,7 @@
   ],
   "modes" : 
   [
-    "alias-memory-location-on-invoke",
-    "no-collapse-on-propagation"
+    "alias-memory-location-on-invoke"
   ],
   "position" : 
   {
@@ -2915,8 +2997,7 @@
   ],
   "modes" : 
   [
-    "alias-memory-location-on-invoke",
-    "no-collapse-on-propagation"
+    "alias-memory-location-on-invoke"
   ],
   "position" : 
   {

@@ -16,11 +16,8 @@ std::vector<Model> BuilderPatternGenerator::visit_method(
   std::vector<Model> models;
 
   if (returns_this_analyzer::method_returns_this(method)) {
-    models.push_back(Model(
-        method,
-        context_,
-        Model::Mode::NoCollapseOnPropagation |
-            Model::Mode::AliasMemoryLocationOnInvoke));
+    models.push_back(
+        Model(method, context_, Model::Mode::AliasMemoryLocationOnInvoke));
   }
 
   return models;

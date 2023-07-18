@@ -105,7 +105,7 @@ public class Test {
     // Issue.
     Origin.sink(output.y.x);
 
-    // TODO(T158150113): Should be an issue because taint is collapsed in `setCollapseY`
+    // Issue.
     Origin.sink(output.y.z);
 
     // Issue.
