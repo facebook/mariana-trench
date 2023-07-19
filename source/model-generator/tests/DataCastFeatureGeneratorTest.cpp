@@ -17,9 +17,9 @@ using namespace marianatrench;
 
 namespace {
 
-boost::filesystem::path json_file_path() {
+boost::filesystem::path models_file_path() {
   return test::find_repository_root() /
-      "configuration/model-generators/propagations/DataCastFeatureGenerator.json";
+      "configuration/model-generators/propagations/DataCastFeatureGenerator.models";
 }
 
 } // namespace
@@ -68,7 +68,7 @@ TEST_F(DataCastFeatureGeneratorTest, CastToInt) {
 
   EXPECT_THAT(
       JsonModelGenerator::from_file(
-          "DataCastFeatureGenerator", context, json_file_path())
+          "DataCastFeatureGenerator", context, models_file_path())
           .emit_method_models(*context.methods),
       testing::UnorderedElementsAre(expected_model));
 }
@@ -113,7 +113,7 @@ TEST_F(DataCastFeatureGeneratorTest, CastToBool) {
 
   EXPECT_THAT(
       JsonModelGenerator::from_file(
-          "DataCastFeatureGenerator", context, json_file_path())
+          "DataCastFeatureGenerator", context, models_file_path())
           .emit_method_models(*context.methods),
       testing::UnorderedElementsAre(expected_model));
 }
