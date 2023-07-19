@@ -36,9 +36,8 @@ MethodHashedSet TypePatternConstraint::may_satisfy(
     case MaySatisfyMethodConstraintKind::Extends:
       return method_mappings.class_to_override_methods().get(
           *string_pattern, MethodHashedSet::bottom());
-    default:
-      mt_unreachable();
   }
+  mt_unreachable();
 }
 
 bool TypePatternConstraint::satisfy(const DexType* type) const {
@@ -67,9 +66,8 @@ MethodHashedSet TypeNameConstraint::may_satisfy(
     case MaySatisfyMethodConstraintKind::Extends:
       return method_mappings.class_to_override_methods().get(
           name_, MethodHashedSet::bottom());
-    default:
-      mt_unreachable();
   }
+  mt_unreachable();
 }
 
 bool TypeNameConstraint::satisfy(const DexType* type) const {

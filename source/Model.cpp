@@ -85,9 +85,8 @@ std::string model_mode_to_string(Model::Mode mode) {
       return "alias-memory-location-on-invoke";
     case Model::Mode::StrongWriteOnPropagation:
       return "strong-write-on-propagation";
-    default:
-      mt_unreachable();
   }
+  mt_unreachable();
 }
 
 std::optional<Model::Mode> string_to_model_mode(const std::string& mode) {

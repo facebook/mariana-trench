@@ -101,10 +101,9 @@ std::string PathElement::to_string() const {
     case PathElement::Kind::IndexFromValueOf:
       return fmt::format(
           "[<{}>]", Root(Root::Kind::Argument, parameter_position()));
-
-    default:
-      mt_unreachable();
   }
+
+  mt_unreachable();
 }
 
 PathElement PathElement::from_json(const Json::Value& value) {
@@ -273,9 +272,10 @@ std::string Root::to_string() const {
       return "call-chain";
     case Root::Kind::CallEffectIntent:
       return "call-effect-intent";
-    default:
+    case Root::Kind::MaxArgument:
       mt_unreachable();
   }
+  mt_unreachable();
 }
 
 Json::Value Root::to_json() const {

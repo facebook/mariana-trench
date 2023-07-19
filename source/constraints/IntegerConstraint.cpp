@@ -32,11 +32,8 @@ bool IntegerConstraint::satisfy(int lhs) const {
     case Operator::EQ: {
       return lhs == rhs_;
     }
-    default: {
-      mt_unreachable();
-      return true;
-    }
   }
+  mt_unreachable();
 }
 
 bool IntegerConstraint::operator==(const IntegerConstraint& other) const {
