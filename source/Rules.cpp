@@ -174,9 +174,11 @@ const std::vector<const Rule*>& Rules::rules(
   }
 
   LOG(4,
-      "Found rule match for: {} -> {} ",
-      source_kind->to_trace_string(),
-      sink_kind->to_trace_string());
+      "Found rule match for: {}->{}{} ",
+      source_kind->discard_transforms()->to_trace_string(),
+      all_transforms != nullptr ? (all_transforms->to_trace_string() + "->")
+                                : "",
+      sink_kind->discard_transforms()->to_trace_string());
 
   return rules->second;
 }

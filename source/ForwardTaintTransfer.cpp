@@ -332,7 +332,7 @@ void apply_propagations(
               context,
               4,
               "Collapsing taint tree {} to depth {}",
-              input_taint_tree,
+              output_taint_tree,
               collapse_depth.value());
           output_taint_tree.collapse_deeper_than(
               /* height */ collapse_depth.value(),
