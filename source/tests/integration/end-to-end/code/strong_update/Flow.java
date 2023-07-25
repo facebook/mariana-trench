@@ -17,7 +17,7 @@ public class Flow {
     this.field = new Object();
   }
 
-  public void issue_generation() {
+  public void no_issue_generation() {
     add_generation();
     Origin.sink(this.field);
   }
@@ -44,7 +44,7 @@ public class Flow {
     return this.field;
   }
 
-  public void sink_false_positive() {
+  public void no_issue_inlining() {
     field_setter(new Object());
     Origin.sink(field_getter());
   }

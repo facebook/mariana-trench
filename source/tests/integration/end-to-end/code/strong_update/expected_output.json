@@ -985,45 +985,6 @@
   ]
 }
 {
-  "method" : "Lcom/facebook/marianatrench/integrationtests/Flow;.issue_generation:()V",
-  "position" : 
-  {
-    "line" : 20,
-    "path" : "Flow.java"
-  },
-  "sinks" : 
-  [
-    {
-      "port" : "Argument(0).field",
-      "taint" : 
-      [
-        {
-          "kinds" : 
-          [
-            {
-              "call_info" : "Origin",
-              "kind" : "Sink",
-              "origins" : 
-              [
-                "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V"
-              ]
-            }
-          ],
-          "origin" : 
-          {
-            "method" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
-            "position" : 
-            {
-              "line" : 22,
-              "path" : "Flow.java"
-            }
-          }
-        }
-      ]
-    }
-  ]
-}
-{
   "generations" : 
   [
     {
@@ -1181,7 +1142,46 @@
   ]
 }
 {
-  "method" : "Lcom/facebook/marianatrench/integrationtests/Flow;.sink_false_positive:()V",
+  "method" : "Lcom/facebook/marianatrench/integrationtests/Flow;.no_issue_generation:()V",
+  "position" : 
+  {
+    "line" : 20,
+    "path" : "Flow.java"
+  },
+  "sinks" : 
+  [
+    {
+      "port" : "Argument(0).field",
+      "taint" : 
+      [
+        {
+          "kinds" : 
+          [
+            {
+              "call_info" : "Origin",
+              "kind" : "Sink",
+              "origins" : 
+              [
+                "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V"
+              ]
+            }
+          ],
+          "origin" : 
+          {
+            "method" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
+            "position" : 
+            {
+              "line" : 22,
+              "path" : "Flow.java"
+            }
+          }
+        }
+      ]
+    }
+  ]
+}
+{
+  "method" : "Lcom/facebook/marianatrench/integrationtests/Flow;.no_issue_inlining:()V",
   "position" : 
   {
     "line" : 47,
