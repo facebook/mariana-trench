@@ -19,7 +19,6 @@
 #include <mariana-trench/Assert.h>
 #include <mariana-trench/CanonicalName.h>
 #include <mariana-trench/Compiler.h>
-#include <mariana-trench/Context.h>
 #include <mariana-trench/ExportOriginsMode.h>
 #include <mariana-trench/Feature.h>
 #include <mariana-trench/FeatureMayAlwaysSet.h>
@@ -28,7 +27,6 @@
 #include <mariana-trench/IncludeMacros.h>
 #include <mariana-trench/Kind.h>
 #include <mariana-trench/KindFactory.h>
-#include <mariana-trench/LocalPositionSet.h>
 #include <mariana-trench/Method.h>
 #include <mariana-trench/MethodSet.h>
 #include <mariana-trench/PathTreeDomain.h>

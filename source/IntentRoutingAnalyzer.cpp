@@ -6,8 +6,6 @@
  */
 
 #include <ControlFlow.h>
-#include <HashedAbstractEnvironment.h>
-#include <HashedSetAbstractDomain.h>
 #include <InstructionAnalyzer.h>
 #include <MonotonicFixpointIterator.h>
 #include <Show.h>

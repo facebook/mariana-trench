@@ -11,7 +11,6 @@
 #include <json/json.h>
 
 #include <AbstractDomain.h>
-#include <HashedSetAbstractDomain.h>
 
 #include <mariana-trench/Assert.h>
 #include <mariana-trench/Compiler.h>

@@ -13,7 +13,6 @@
 #include <json/json.h>
 
 #include <AbstractDomain.h>
-#include <HashedSetAbstractDomain.h>
 
 #include <mariana-trench/Access.h>
 #include <mariana-trench/Assert.h>
