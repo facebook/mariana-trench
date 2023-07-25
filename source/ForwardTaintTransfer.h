@@ -104,6 +104,11 @@ class ForwardTaintTransfer final : public InstructionAnalyzerBase<
       const IRInstruction* instruction,
       ForwardTaintEnvironment* taint);
 
+  static bool analyze_const_string(
+      MethodContext* context,
+      const IRInstruction* instruction,
+      ForwardTaintEnvironment* taint);
+
   static bool analyze_return(
       MethodContext* context,
       const IRInstruction* instruction,

@@ -1,0 +1,26 @@
+[
+  {
+    "method": "Lcom/facebook/marianatrench/integrationtests/RegexSource;.getAttackerControlledInput:()Ljava/lang/String;",
+    "generations": [
+      {
+        "kind": "AttackerControlledInput",
+        "port": "Return"
+      }
+    ]
+  },
+  {
+    "method": "Lcom/facebook/marianatrench/integrationtests/RegexSource;.sink:(Ljava/lang/String;Ljava/lang/String;)V",
+    "sinks": [
+      {
+        "kind": "TestSink",
+        "partial_label": "regex",
+        "port": "Argument(0)"
+      },
+      {
+        "kind": "TestSink",
+        "partial_label": "aci",
+        "port": "Argument(1)"
+      }
+    ]
+  }
+]

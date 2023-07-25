@@ -1,0 +1,10 @@
+[
+  {
+    "field": "Lcom/facebook/marianatrench/integrationtests/RegexSource;.TEMPLATE_FIELD:Ljava/lang/String;",
+    "sources": [
+      {
+        "kind": "Regex"
+      }
+    ]
+  }
+]
