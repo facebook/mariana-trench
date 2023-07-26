@@ -89,23 +89,6 @@ class CalleePortFrames final : public sparta::AbstractDomain<CalleePortFrames> {
 
   INCLUDE_DEFAULT_COPY_CONSTRUCTORS_AND_ASSIGNMENTS(CalleePortFrames)
 
-  // Describe how to join frames together in `CallPositionFrames`.
-  struct GroupEqual {
-    bool operator()(const CalleePortFrames& left, const CalleePortFrames& right)
-        const;
-  };
-
-  // Describe how to join frames together in `CallPositionFrames`.
-  struct GroupHash {
-    std::size_t operator()(const CalleePortFrames& frame) const;
-  };
-
-  // Describe how to diff frames together in `CallPositionFrames`.
-  struct GroupDifference {
-    void operator()(CalleePortFrames& left, const CalleePortFrames& right)
-        const;
-  };
-
   static CalleePortFrames bottom() {
     return CalleePortFrames();
   }

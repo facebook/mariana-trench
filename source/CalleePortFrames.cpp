@@ -95,23 +95,6 @@ CalleePortFrames::CalleePortFrames(const Frame& frame) : CalleePortFrames() {
   }
 }
 
-bool CalleePortFrames::GroupEqual::operator()(
-    const CalleePortFrames& left,
-    const CalleePortFrames& right) const {
-  return left.callee_port() == right.callee_port();
-}
-
-std::size_t CalleePortFrames::GroupHash::operator()(
-    const CalleePortFrames& frame) const {
-  return std::hash<AccessPath>()(frame.callee_port());
-}
-
-void CalleePortFrames::GroupDifference::operator()(
-    CalleePortFrames& left,
-    const CalleePortFrames& right) const {
-  left.difference_with(right);
-}
-
 void CalleePortFrames::add(const TaintConfig& config) {
   if (is_bottom()) {
     callee_port_ = config.callee_port();

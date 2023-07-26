@@ -348,7 +348,7 @@ class FramesMap : public sparta::AbstractDomain<Derived> {
     return std::any_of(
         frames_iterator.begin(),
         frames_iterator.end(),
-        [kind](const std::pair<const Position*, Value>& frames_pair) {
+        [kind](const std::pair<Key, Value>& frames_pair) {
           return frames_pair.second.contains_kind(kind);
         });
   }

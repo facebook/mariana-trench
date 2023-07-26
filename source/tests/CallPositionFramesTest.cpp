@@ -1245,22 +1245,6 @@ TEST_F(CallPositionFramesTest, FeaturesAndPositions) {
   // Verify set_local_positions.
   frames.set_local_positions(LocalPositionSet{test_position_two});
   EXPECT_EQ(frames.local_positions(), LocalPositionSet{test_position_two});
-
-  // Verify add_locally_inferred_features_and_local_position.
-  frames.join_with(CallPositionFrames{test::make_taint_config(
-      test_kind_one,
-      test::FrameProperties{
-          .callee_port = AccessPath(Root(Root::Kind::Argument, 0))})});
-  frames.add_locally_inferred_features_and_local_position(
-      /* features */ FeatureMayAlwaysSet{feature_one},
-      /* position */ test_position_one);
-  EXPECT_EQ(
-      frames.local_positions(),
-      (LocalPositionSet{test_position_one, test_position_two}));
-  EXPECT_EQ(
-      frames.locally_inferred_features(
-          /* callee_port */ AccessPath(Root(Root::Kind::Argument, 0))),
-      FeatureMayAlwaysSet{feature_one});
 }
 
 TEST_F(CallPositionFramesTest, Propagate) {
@@ -1452,53 +1436,6 @@ TEST_F(CallPositionFramesTest, PropagateDropFrames) {
                   .locally_inferred_features = FeatureMayAlwaysSet::bottom(),
                   .call_info = CallInfo::CallSite}),
       }));
-}
-
-TEST_F(CallPositionFramesTest, PartitionMap) {
-  auto context = test::make_empty_context();
-
-  Scope scope;
-  auto* one =
-      context.methods->create(redex::create_void_method(scope, "LOne;", "one"));
-  auto* test_kind = context.kind_factory->get("TestSink");
-
-  auto frames = CallPositionFrames{
-      test::make_taint_config(
-          test_kind,
-          test::FrameProperties{
-              .callee_port = AccessPath(Root(Root::Kind::Return)),
-              .origins = MethodSet{one}}),
-      test::make_taint_config(
-          test_kind,
-          test::FrameProperties{
-              .callee_port = AccessPath(Root(Root::Kind::Anchor)),
-              .origins = MethodSet{one},
-              .canonical_names = CanonicalNameSetAbstractDomain{CanonicalName(
-                  CanonicalName::TemplateValue{"%programmatic_leaf_name%"})}}),
-  };
-
-  auto partitions = frames.partition_map<bool>(
-      [](const Frame& frame) { return frame.is_crtex_producer_declaration(); });
-
-  EXPECT_EQ(partitions[true].size(), 1);
-  EXPECT_EQ(
-      partitions[true][0],
-      test::make_taint_frame(
-          test_kind,
-          test::FrameProperties{
-              .callee_port = AccessPath(Root(Root::Kind::Anchor)),
-              .origins = MethodSet{one},
-              .canonical_names = CanonicalNameSetAbstractDomain{CanonicalName(
-                  CanonicalName::TemplateValue{"%programmatic_leaf_name%"})}}));
-
-  EXPECT_EQ(partitions[false].size(), 1);
-  EXPECT_EQ(
-      partitions[false][0],
-      test::make_taint_frame(
-          test_kind,
-          test::FrameProperties{
-              .callee_port = AccessPath(Root(Root::Kind::Return)),
-              .origins = MethodSet{one}}));
 }
 
 TEST_F(CallPositionFramesTest, AttachPosition) {
