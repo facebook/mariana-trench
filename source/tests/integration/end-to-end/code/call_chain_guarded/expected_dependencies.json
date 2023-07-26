@@ -1,0 +1,134 @@
+// @generated
+{
+  "Landroid/app/Activity;.<init>:()V" : 
+  [
+    "Landroidx/fragment/app/FragmentActivity;.<init>:()V"
+  ],
+  "Landroid/content/Context;.<init>:()V" : 
+  [
+    "Landroid/app/Activity;.<init>:()V"
+  ],
+  "Landroid/content/Intent;.<init>:()V" : 
+  [
+    "Landroid/app/Activity;.getIntent:()Landroid/content/Intent;",
+    "Lcom/facebook/base/activity/FragmentBaseActivityUtil;.getDefaultActivityIntent:()Landroid/content/Intent;"
+  ],
+  "Landroid/database/Cursor;.<init>:()V" : 
+  [
+    "Landroid/content/ContentProvider;.query:(Landroid/net/Uri;[Ljava/lang/String;Ljava/lang/String;[Ljava/lang/String;Ljava/lang/String;)Landroid/database/Cursor;"
+  ],
+  "Landroid/net/Uri;.<init>:()V" : 
+  [
+    "Landroid/content/Intent;.getData:()Landroid/net/Uri;",
+    "Landroid/net/Uri;.parse:(Ljava/lang/String;)Landroid/net/Uri;"
+  ],
+  "Landroid/net/Uri;.<init>:(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V" : 
+  [
+    "Landroid/net/Uri$Builder;.build:()Landroid/net/Uri;"
+  ],
+  "Landroid/os/Bundle;.<init>:()V" : 
+  [
+    "Landroid/content/Intent;.getBundleExtra:(Ljava/lang/String;)Landroid/os/Bundle;",
+    "Landroid/content/Intent;.getExtras:()Landroid/os/Bundle;"
+  ],
+  "Lcom/facebook/marianatrench/integrationtests/CallChainService;.<init>:()V" : 
+  [
+    "Lcom/facebook/marianatrench/integrationtests/Exported;.entry:()V"
+  ],
+  "Lcom/facebook/marianatrench/integrationtests/CallChainService;.request:(Ljava/lang/String;)V" : 
+  [
+    "Lcom/facebook/marianatrench/integrationtests/Exported;.entry:()V"
+  ],
+  "Lcom/facebook/marianatrench/integrationtests/Exported;.<init>:()V" : 
+  [
+    "Lcom/facebook/marianatrench/integrationtests/CallChainGuarded;.callChainIssue:()V"
+  ],
+  "Lcom/facebook/marianatrench/integrationtests/Exported;.entry:()V" : 
+  [
+    "Lcom/facebook/marianatrench/integrationtests/CallChainGuarded;.callChainIssue:()V"
+  ],
+  "Lcom/facebook/marianatrench/integrationtests/SensitiveApi;.<init>:()V" : 
+  [
+    "Lcom/facebook/marianatrench/integrationtests/CallChainService;.request:(Ljava/lang/String;)V"
+  ],
+  "Lcom/facebook/marianatrench/integrationtests/SensitiveApi;.execute:()V" : 
+  [
+    "Lcom/facebook/marianatrench/integrationtests/CallChainService;.request:(Ljava/lang/String;)V"
+  ],
+  "Lcom/facebook/secure/context/IntentLauncher;.<init>:()V" : 
+  [
+    "Lcom/facebook/secure/context/SecureContextHelperV2;.inAppBrowser:()Lcom/facebook/secure/context/IntentLauncher;",
+    "Lcom/facebook/secure/context/SecureContextHelperV2;.internal:()Lcom/facebook/secure/context/IntentLauncher;"
+  ],
+  "Lcom/facebook/secure/context/SecureContextHelperV2;.<init>:()V" : 
+  [
+    "Lcom/facebook/secure/context/SecureContextHelperV2;.get:()Lcom/facebook/secure/context/SecureContextHelperV2;"
+  ],
+  "Lcom/facebook/user/model/User;.<init>:()V" : 
+  [
+    "Lcom/facebook/auth/datastore/LoggedInUserAuthDataStore;.getLoggedInUser:()Lcom/facebook/user/model/User;"
+  ],
+  "Lcom/instagram/common/analytics/IgAnalyticsLogger;.<init>:()V" : 
+  [
+    "Lcom/instagram/common/analytics/IgAnalyticsLogger;.getInstance:()Lcom/instagram/common/analytics/IgAnalyticsLogger;"
+  ],
+  "Lcom/instagram/common/analytics/intf/AnalyticsEvent;.<init>:()V" : 
+  [
+    "Lcom/instagram/common/analytics/intf/AnalyticsEvent;.obtain:(Ljava/lang/String;)Lcom/instagram/common/analytics/intf/AnalyticsEvent;"
+  ],
+  "Ljava/lang/Object;.<init>:()V" : 
+  [
+    "Landroid/content/ContentProvider;.<init>:()V",
+    "Landroid/content/Context;.<init>:()V",
+    "Landroid/content/Intent;.<init>:()V",
+    "Landroid/content/Intent;.<init>:(Landroid/content/Context;Ljava/lang/Class;)V",
+    "Landroid/content/Intent;.<init>:(Ljava/lang/String;Landroid/net/Uri;)V",
+    "Landroid/database/Cursor;.<init>:()V",
+    "Landroid/location/Location;.<init>:()V",
+    "Landroid/net/Uri$Builder;.<init>:()V",
+    "Landroid/net/Uri;.<init>:()V",
+    "Landroid/net/Uri;.<init>:(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V",
+    "Landroid/os/Bundle;.<init>:()V",
+    "Landroid/text/TextUtils;.<init>:()V",
+    "Landroid/util/Log;.<init>:()V",
+    "Landroid/webkit/WebViewClient;.<init>:()V",
+    "Lcom/facebook/auth/datastore/LoggedInUserAuthDataStore;.<init>:()V",
+    "Lcom/facebook/base/activity/FragmentBaseActivityUtil;.<init>:()V",
+    "Lcom/facebook/content/SecureContextHelper;.<init>:()V",
+    "Lcom/facebook/marianatrench/integrationtests/CallChainGuarded;.<init>:()V",
+    "Lcom/facebook/marianatrench/integrationtests/CallChainService;.<init>:()V",
+    "Lcom/facebook/marianatrench/integrationtests/Exported;.<init>:()V",
+    "Lcom/facebook/marianatrench/integrationtests/Origin;.<init>:()V",
+    "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;",
+    "Lcom/facebook/marianatrench/integrationtests/SensitiveApi;.<init>:()V",
+    "Lcom/facebook/secure/context/IntentLauncher;.<init>:()V",
+    "Lcom/facebook/secure/context/SecureContextHelperV2;.<init>:()V",
+    "Lcom/facebook/user/model/User;.<init>:()V",
+    "Lcom/instagram/common/analytics/IgAnalyticsLogger;.<init>:()V",
+    "Lcom/instagram/common/analytics/intf/AnalyticsEvent;.<init>:()V",
+    "Ljava/lang/Integer;.<init>:()V",
+    "Ljava/lang/String;.<init>:()V",
+    "Ljava/lang/Thread;.<init>:(Ljava/lang/Runnable;)V",
+    "Ljava/util/TreeMap;.<init>:()V"
+  ],
+  "Ljava/lang/Object;.equals:(Ljava/lang/Object;)Z" : 
+  [
+    "Lcom/facebook/marianatrench/integrationtests/CallChainService;.request:(Ljava/lang/String;)V"
+  ],
+  "Ljava/lang/Runnable;.run:()V" : 
+  [
+    "Ljava/lang/Thread;.run:()V"
+  ],
+  "Ljava/lang/String;.concat:(Ljava/lang/String;)Ljava/lang/String;" : 
+  [
+    "Landroid/net/Uri;.toString:()Ljava/lang/String;"
+  ],
+  "Ljava/lang/String;.isEmpty:()Z" : 
+  [
+    "Ljava/lang/String;.concat:(Ljava/lang/String;)Ljava/lang/String;"
+  ],
+  "Ljava/lang/Thread;.run:()V" : 
+  [
+    "Ljava/lang/Thread;.run:()V"
+  ]
+}
