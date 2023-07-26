@@ -52,6 +52,10 @@ class ClassIntervals final {
     explicit Interval(std::uint32_t lower_bound, std::uint32_t upper_bound)
         : lower_bound(lower_bound), upper_bound(upper_bound) {}
 
+    static Interval max_interval() {
+      return Interval();
+    }
+
     INCLUDE_DEFAULT_COPY_CONSTRUCTORS_AND_ASSIGNMENTS(Interval)
 
     bool operator==(const Interval& other) const;

@@ -72,20 +72,20 @@ TEST_F(ClassIntervalsTest, IntervalComputation) {
 
   auto interval_a = context.class_intervals->get_interval(a->get_type());
   EXPECT_EQ(ClassIntervals::Interval(1, 6), interval_a);
-  EXPECT_TRUE(ClassIntervals::Interval().contains(interval_a));
-  EXPECT_FALSE(interval_a.contains(ClassIntervals::Interval()));
+  EXPECT_TRUE(ClassIntervals::Interval::max_interval().contains(interval_a));
+  EXPECT_FALSE(interval_a.contains(ClassIntervals::Interval::max_interval()));
 
   auto interval_a1 = context.class_intervals->get_interval(a1->get_type());
   EXPECT_EQ(ClassIntervals::Interval(2, 3), interval_a1);
-  EXPECT_TRUE(ClassIntervals::Interval().contains(interval_a1));
-  EXPECT_FALSE(interval_a1.contains(ClassIntervals::Interval()));
+  EXPECT_TRUE(ClassIntervals::Interval::max_interval().contains(interval_a1));
+  EXPECT_FALSE(interval_a1.contains(ClassIntervals::Interval::max_interval()));
   EXPECT_FALSE(interval_a1.contains(interval_a));
   EXPECT_TRUE(interval_a.contains(interval_a1));
 
   auto interval_a2 = context.class_intervals->get_interval(a2->get_type());
   EXPECT_EQ(ClassIntervals::Interval(4, 5), interval_a2);
-  EXPECT_TRUE(ClassIntervals::Interval().contains(interval_a2));
-  EXPECT_FALSE(interval_a2.contains(ClassIntervals::Interval()));
+  EXPECT_TRUE(ClassIntervals::Interval::max_interval().contains(interval_a2));
+  EXPECT_FALSE(interval_a2.contains(ClassIntervals::Interval::max_interval()));
   EXPECT_FALSE(interval_a2.contains(interval_a));
   EXPECT_TRUE(interval_a.contains(interval_a2));
   EXPECT_FALSE(interval_a2.contains(interval_a1));
@@ -93,22 +93,23 @@ TEST_F(ClassIntervalsTest, IntervalComputation) {
 
   auto interval_b = context.class_intervals->get_interval(b->get_type());
   EXPECT_EQ(ClassIntervals::Interval(7, 12), interval_b);
-  EXPECT_TRUE(ClassIntervals::Interval().contains(interval_b));
-  EXPECT_FALSE(interval_b.contains(ClassIntervals::Interval()));
+  EXPECT_TRUE(ClassIntervals::Interval::max_interval().contains(interval_b));
+  EXPECT_FALSE(interval_b.contains(ClassIntervals::Interval::max_interval()));
   EXPECT_FALSE(interval_b.contains(interval_a));
   EXPECT_FALSE(interval_a.contains(interval_b));
 
   auto interval_b1 = context.class_intervals->get_interval(b1->get_type());
   EXPECT_EQ(ClassIntervals::Interval(8, 11), interval_b1);
-  EXPECT_TRUE(ClassIntervals::Interval().contains(interval_b1));
-  EXPECT_FALSE(interval_b1.contains(ClassIntervals::Interval()));
+  EXPECT_TRUE(ClassIntervals::Interval::max_interval().contains(interval_b1));
+  EXPECT_FALSE(interval_b1.contains(ClassIntervals::Interval::max_interval()));
   EXPECT_FALSE(interval_b1.contains(interval_b));
   EXPECT_TRUE(interval_b.contains(interval_b1));
 
   auto interval_b1_1 = context.class_intervals->get_interval(b1_1->get_type());
   EXPECT_EQ(ClassIntervals::Interval(9, 10), interval_b1_1);
-  EXPECT_TRUE(ClassIntervals::Interval().contains(interval_b1_1));
-  EXPECT_FALSE(interval_b1_1.contains(ClassIntervals::Interval()));
+  EXPECT_TRUE(ClassIntervals::Interval::max_interval().contains(interval_b1_1));
+  EXPECT_FALSE(
+      interval_b1_1.contains(ClassIntervals::Interval::max_interval()));
   EXPECT_FALSE(interval_b1_1.contains(interval_b1));
   EXPECT_TRUE(interval_b.contains(interval_b1_1));
   EXPECT_TRUE(interval_b1.contains(interval_b1_1));
