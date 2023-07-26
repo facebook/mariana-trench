@@ -111,6 +111,8 @@ void CalleePortFrames::add(const TaintConfig& config) {
         config.callee(),
         config.field_callee(),
         config.call_position(),
+        config.callee_interval(),
+        config.preserves_type_context(),
         config.distance(),
         config.origins(),
         config.field_origins(),
@@ -520,6 +522,9 @@ Frame CalleePortFrames::propagate_frames(
       /* field_callee */ nullptr, // Since propagate is only called at method
                                   // callsites and not field accesses
       call_position,
+      // TODO(T158171922): Actually compute the interval.
+      /* callee_interval */ ClassIntervals::Interval::max_interval(),
+      /* preserves_type_context */ false,
       distance,
       std::move(origins),
       std::move(field_origins),
@@ -602,6 +607,8 @@ CalleePortFrames CalleePortFrames::propagate_crtex_leaf_frames(
           propagated.callee(),
           propagated.field_callee(),
           propagated.call_position(),
+          propagated.callee_interval(),
+          propagated.preserves_type_context(),
           /* distance (always leaves for crtex frames) */ 0,
           propagated.origins(),
           propagated.field_origins(),

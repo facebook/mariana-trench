@@ -17,6 +17,7 @@
 #include <mariana-trench/Access.h>
 #include <mariana-trench/Assert.h>
 #include <mariana-trench/CanonicalName.h>
+#include <mariana-trench/ClassIntervals.h>
 #include <mariana-trench/Compiler.h>
 #include <mariana-trench/Context.h>
 #include <mariana-trench/Feature.h>
@@ -47,37 +48,41 @@ class TaintConfig final {
       const Kind* kind,
       AccessPath callee_port,
       const Method* MT_NULLABLE callee,
+      CallInfo call_info,
       const Field* MT_NULLABLE field_callee,
       const Position* MT_NULLABLE call_position,
+      ClassIntervals::Interval callee_interval,
+      bool preserves_type_context,
       int distance,
       MethodSet origins,
       FieldSet field_origins,
       FeatureMayAlwaysSet inferred_features,
-      FeatureMayAlwaysSet locally_inferred_features,
       FeatureSet user_features,
       RootSetAbstractDomain via_type_of_ports,
       RootSetAbstractDomain via_value_of_ports,
       CanonicalNameSetAbstractDomain canonical_names,
       PathTreeDomain output_paths,
       LocalPositionSet local_positions,
-      CallInfo call_info)
+      FeatureMayAlwaysSet locally_inferred_features)
       : kind_(kind),
         callee_port_(std::move(callee_port)),
         callee_(callee),
+        call_info_(call_info),
         field_callee_(field_callee),
         call_position_(call_position),
+        callee_interval_(std::move(callee_interval)),
+        preserves_type_context_(preserves_type_context),
         distance_(distance),
         origins_(std::move(origins)),
         field_origins_(std::move(field_origins)),
         inferred_features_(std::move(inferred_features)),
-        locally_inferred_features_(std::move(locally_inferred_features)),
         user_features_(std::move(user_features)),
         via_type_of_ports_(std::move(via_type_of_ports)),
         via_value_of_ports_(std::move(via_value_of_ports)),
         canonical_names_(std::move(canonical_names)),
         output_paths_(std::move(output_paths)),
         local_positions_(std::move(local_positions)),
-        call_info_(call_info) {
+        locally_inferred_features_(std::move(locally_inferred_features)) {
     mt_assert(kind_ != nullptr);
     mt_assert(distance_ >= 0);
     mt_assert(!(callee && field_callee));
@@ -129,12 +134,24 @@ class TaintConfig final {
     return callee_;
   }
 
+  CallInfo call_info() const {
+    return call_info_;
+  }
+
   const Field* MT_NULLABLE field_callee() const {
     return field_callee_;
   }
 
   const Position* MT_NULLABLE call_position() const {
     return call_position_;
+  }
+
+  const ClassIntervals::Interval& callee_interval() const {
+    return callee_interval_;
+  }
+
+  bool preserves_type_context() const {
+    return preserves_type_context_;
   }
 
   int distance() const {
@@ -181,10 +198,6 @@ class TaintConfig final {
     return local_positions_;
   }
 
-  CallInfo call_info() const {
-    return call_info_;
-  }
-
   bool is_leaf() const {
     return callee_ == nullptr;
   }
@@ -196,13 +209,15 @@ class TaintConfig final {
   const Kind* MT_NULLABLE kind_;
   AccessPath callee_port_;
   const Method* MT_NULLABLE callee_;
+  CallInfo call_info_;
   const Field* MT_NULLABLE field_callee_;
   const Position* MT_NULLABLE call_position_;
+  ClassIntervals::Interval callee_interval_;
+  bool preserves_type_context_;
   int distance_;
   MethodSet origins_;
   FieldSet field_origins_;
   FeatureMayAlwaysSet inferred_features_;
-  FeatureMayAlwaysSet locally_inferred_features_;
   FeatureSet user_features_;
   RootSetAbstractDomain via_type_of_ports_;
   RootSetAbstractDomain via_value_of_ports_;
@@ -220,7 +235,7 @@ class TaintConfig final {
    * even if only some `TaintConfig`s contain it.
    */
   LocalPositionSet local_positions_;
-  CallInfo call_info_;
+  FeatureMayAlwaysSet locally_inferred_features_;
 };
 
 } // namespace marianatrench

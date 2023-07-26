@@ -237,21 +237,23 @@ TaintConfig TaintConfig::from_json(const Json::Value& value, Context& context) {
       kind,
       std::move(callee_port),
       callee,
+      call_info,
       /* field_callee */ nullptr, // A field callee can never be set from a json
                                   // model generator
       call_position,
+      /* callee_interval */ ClassIntervals::Interval::max_interval(),
+      /* preserves_type_context */ false,
       distance,
       std::move(origins),
       std::move(field_origins),
       std::move(inferred_features),
-      /* locally_inferred_features */ FeatureMayAlwaysSet::bottom(),
       std::move(user_features),
       std::move(via_type_of_ports),
       std::move(via_value_of_ports),
       std::move(canonical_names),
       /* output_paths */ {},
       /* local_positions */ {},
-      call_info);
+      /* locally_inferred_features */ FeatureMayAlwaysSet::bottom());
 }
 
 } // namespace marianatrench

@@ -114,6 +114,8 @@ Frame make_taint_frame(const Kind* kind, const FrameProperties& properties) {
       properties.callee,
       properties.field_callee,
       properties.call_position,
+      properties.callee_interval,
+      properties.preserves_type_context,
       properties.distance,
       properties.origins,
       properties.field_origins,
@@ -133,20 +135,22 @@ TaintConfig make_taint_config(
       kind,
       properties.callee_port,
       properties.callee,
+      properties.call_info,
       properties.field_callee,
       properties.call_position,
+      properties.callee_interval,
+      properties.preserves_type_context,
       properties.distance,
       properties.origins,
       properties.field_origins,
       properties.inferred_features,
-      properties.locally_inferred_features,
       properties.user_features,
       properties.via_type_of_ports,
       properties.via_value_of_ports,
       properties.canonical_names,
       properties.output_paths,
       properties.local_positions,
-      properties.call_info);
+      properties.locally_inferred_features);
 }
 
 TaintConfig make_leaf_taint_config(const Kind* kind) {
@@ -168,20 +172,22 @@ TaintConfig make_leaf_taint_config(
       kind,
       /* callee_port */ AccessPath(Root(Root::Kind::Leaf)),
       /* callee */ nullptr,
+      /* call_info */ CallInfo::Declaration,
       /* field_callee */ nullptr,
       /* call_position */ nullptr,
+      /* callee_intervals */ ClassIntervals::Interval::max_interval(),
+      /* preserves_type_context */ false,
       /* distance */ 0,
       origins,
       /* field origins */ {},
       inferred_features,
-      locally_inferred_features,
       user_features,
       /* via_type_of_ports */ {},
       /* via_value_of_ports */ {},
       /* canonical_names */ {},
       /* output_paths */ {},
       /* local_positions */ {},
-      /* call_info */ CallInfo::Declaration);
+      locally_inferred_features);
 }
 
 TaintConfig make_crtex_leaf_taint_config(
@@ -193,20 +199,22 @@ TaintConfig make_crtex_leaf_taint_config(
       kind,
       /* callee_port */ callee_port,
       /* callee */ nullptr,
+      /* call_info */ CallInfo::Origin,
       /* field_callee */ nullptr,
       /* call_position */ nullptr,
+      /* callee_intervals */ ClassIntervals::Interval::max_interval(),
+      /* preserves_type_context */ false,
       /* distance */ 0,
       /* origins */ {},
       /* field_origins */ {},
       /* inferred_features */ FeatureMayAlwaysSet::bottom(),
-      /* locally_inferred_features */ FeatureMayAlwaysSet::bottom(),
       /* user_features */ {},
       /* via_type_of_ports */ {},
       /* via_value_of_ports */ {},
       canonical_names,
       /* output_paths */ {},
       /* local_positions */ {},
-      /* call_info */ CallInfo::Origin);
+      /* locally_inferred_features */ FeatureMayAlwaysSet::bottom());
 }
 
 TaintConfig make_propagation_taint_config(const PropagationKind* kind) {
@@ -228,20 +236,22 @@ TaintConfig make_propagation_taint_config(
       kind,
       /* callee_port */ AccessPath(kind->root()),
       /* callee */ nullptr,
+      /* call_info */ CallInfo::Propagation,
       /* field_callee */ nullptr,
       /* call_position */ nullptr,
+      /* callee_interval */ ClassIntervals::Interval::max_interval(),
+      /* preserves_type_context */ false,
       /* distance */ 0,
       /* origins */ {},
       /* field_origins */ {},
       /* inferred_features */ inferred_features,
-      /* locally_inferred_features */ locally_inferred_features,
       /* user_features */ user_features,
       /* via_type_of_ports */ {},
       /* via_value_of_ports */ {},
       /* canonical_names */ {},
       output_paths,
       /* local_positions */ {},
-      /* call_info */ CallInfo::Propagation);
+      /* locally_inferred_features */ locally_inferred_features);
 }
 
 #ifndef MARIANA_TRENCH_FACEBOOK_BUILD

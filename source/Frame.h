@@ -18,6 +18,7 @@
 #include <mariana-trench/Access.h>
 #include <mariana-trench/Assert.h>
 #include <mariana-trench/CanonicalName.h>
+#include <mariana-trench/ClassIntervals.h>
 #include <mariana-trench/Compiler.h>
 #include <mariana-trench/ExportOriginsMode.h>
 #include <mariana-trench/Feature.h>
@@ -114,6 +115,8 @@ class Frame final : public sparta::AbstractDomain<Frame> {
         callee_port_(Root(Root::Kind::Leaf)),
         callee_(nullptr),
         call_position_(nullptr),
+        callee_interval_(ClassIntervals::Interval::max_interval()),
+        preserves_type_context_(false),
         distance_(0),
         call_info_(CallInfo::Declaration) {}
 
@@ -123,6 +126,8 @@ class Frame final : public sparta::AbstractDomain<Frame> {
       const Method* MT_NULLABLE callee,
       const Field* MT_NULLABLE field_callee,
       const Position* MT_NULLABLE call_position,
+      ClassIntervals::Interval callee_interval,
+      bool preserves_type_context,
       int distance,
       MethodSet origins,
       FieldSet field_origins,
@@ -138,6 +143,8 @@ class Frame final : public sparta::AbstractDomain<Frame> {
         callee_(callee),
         field_callee_(field_callee),
         call_position_(call_position),
+        callee_interval_(std::move(callee_interval)),
+        preserves_type_context_(preserves_type_context),
         distance_(distance),
         origins_(std::move(origins)),
         field_origins_(std::move(field_origins)),
@@ -192,6 +199,14 @@ class Frame final : public sparta::AbstractDomain<Frame> {
   /* Return the position of the call, or `nullptr` if this is a leaf frame. */
   const Position* MT_NULLABLE call_position() const {
     return call_position_;
+  }
+
+  const ClassIntervals::Interval& callee_interval() const {
+    return callee_interval_;
+  }
+
+  bool preserves_type_context() const {
+    return preserves_type_context_;
   }
 
   int distance() const {
@@ -314,6 +329,8 @@ class Frame final : public sparta::AbstractDomain<Frame> {
   const Method* MT_NULLABLE callee_;
   const Field* MT_NULLABLE field_callee_;
   const Position* MT_NULLABLE call_position_;
+  ClassIntervals::Interval callee_interval_;
+  bool preserves_type_context_;
   int distance_;
   MethodSet origins_;
   FieldSet field_origins_;

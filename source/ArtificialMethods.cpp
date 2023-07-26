@@ -47,20 +47,22 @@ std::vector<Model> ArtificialMethods::models(Context& context) const {
           array_allocation_kind_,
           /* callee_port */ AccessPath(Root(Root::Kind::Leaf)),
           /* callee */ nullptr,
+          /* call_info */ CallInfo::Declaration,
           /* field_callee */ nullptr,
           /* call_position */ nullptr,
+          /* callee_interval */ ClassIntervals::Interval::max_interval(),
+          /* preserves_type_context */ false,
           /* distance */ 0,
           /* origins */ {},
           /* field origins */ {},
           /* inferred_features */ FeatureMayAlwaysSet::bottom(),
-          /* locally_inferred_features */ FeatureMayAlwaysSet::bottom(),
           /* user_features */ FeatureSet::bottom(),
           /* via_type_of_ports */ {},
           /* via_value_of_ports */ {},
           /* canonical_names */ {},
           /* output_paths */ {},
           /* local_positions */ {},
-          /* call_info */ CallInfo::Declaration));
+          /* locally_inferred_features */ FeatureMayAlwaysSet::bottom()));
   models.push_back(model);
 
   return models;

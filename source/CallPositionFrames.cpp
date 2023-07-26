@@ -110,12 +110,23 @@ CallPositionFrames CallPositionFrames::attach_position(
                 frame.kind(),
                 frame.callee_port(),
                 /* callee */ nullptr,
+                CallInfo::Origin,
                 /* field_callee */ nullptr,
                 /* call_position */ position,
+                // TODO(T158171922): Re-visit what the appropriate interval
+                // should be when implementing class intervals.
+                frame.callee_interval(),
+                frame.preserves_type_context(),
                 /* distance */ 0,
                 frame.origins(),
                 frame.field_origins(),
                 inferred_features,
+                /* user_features */ FeatureSet::bottom(),
+                /* via_type_of_ports */ {},
+                /* via_value_of_ports */ {},
+                frame.canonical_names(),
+                /* output_paths */ {},
+                local_positions,
                 // Since CallPositionFrames::attach_position is used (only) for
                 // parameter_sinks and return sources which may be included in
                 // an issue as a leaf, we need to make sure that those leaf
@@ -124,14 +135,8 @@ CallPositionFrames CallPositionFrames::attach_position(
                 /* locally_inferred_features */
                 frame.user_features().is_bottom()
                     ? FeatureMayAlwaysSet::bottom()
-                    : FeatureMayAlwaysSet::make_always(frame.user_features()),
-                /* user_features */ FeatureSet::bottom(),
-                /* via_type_of_ports */ {},
-                /* via_value_of_ports */ {},
-                frame.canonical_names(),
-                /* output_paths */ {},
-                local_positions,
-                CallInfo::Origin)});
+                    : FeatureMayAlwaysSet::make_always(
+                          frame.user_features()))});
           });
     }
   }
@@ -179,20 +184,22 @@ CallPositionFrames::map_positions(
           frame.kind(),
           frame.callee_port(),
           frame.callee(),
+          frame.call_info(),
           frame.field_callee(),
           call_position,
+          frame.callee_interval(),
+          frame.preserves_type_context(),
           frame.distance(),
           frame.origins(),
           frame.field_origins(),
           frame.inferred_features(),
-          callee_port_frames.locally_inferred_features(),
           frame.user_features(),
           frame.via_type_of_ports(),
           frame.via_value_of_ports(),
           frame.canonical_names(),
           /* output_paths */ {},
           /* local_positions */ {},
-          /* call_info */ frame.call_info());
+          callee_port_frames.locally_inferred_features());
       new_frames.add(new_frame);
     }
 

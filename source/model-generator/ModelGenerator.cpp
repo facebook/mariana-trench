@@ -408,20 +408,22 @@ TaintConfig generator::source(
       /* kind */ context.kind_factory->get(kind),
       /* callee_port */ AccessPath(Root(callee_port)),
       /* callee */ nullptr,
+      /* call_info */ CallInfo::Declaration,
       /* field_callee */ nullptr,
       /* call_position */ nullptr,
+      /* callee_interval */ ClassIntervals::Interval::max_interval(),
+      /* preserves_type_context */ false,
       /* distance */ 0,
       /* origins */ MethodSet{method},
       /* field_origins */ {},
       /* inferred features */ FeatureMayAlwaysSet::bottom(),
-      /* locally_inferred_features */ FeatureMayAlwaysSet::bottom(),
       /* user features */ user_features,
       /* via_type_of_ports */ via_type_of_ports,
       /* via_value_of_ports */ via_value_of_ports,
       /* canonical_names */ {},
       /* output_paths */ {},
       /* local_positions */ {},
-      /* call_info */ CallInfo::Declaration);
+      /* locally_inferred_features */ FeatureMayAlwaysSet::bottom());
 }
 
 TaintConfig generator::sink(
@@ -450,20 +452,22 @@ TaintConfig generator::sink(
       /* kind */ context.kind_factory->get(kind),
       /* callee_port */ AccessPath(Root(callee_port)),
       /* callee */ nullptr,
+      /* call_info */ call_info,
       /* field_callee */ nullptr,
       /* call_position */ nullptr,
+      /* callee_interval */ ClassIntervals::Interval::max_interval(),
+      /* preserves_type_context */ false,
       /* distance */ 0,
       /* origins */ MethodSet{method},
       /* field_origins */ {},
       /* inferred features */ FeatureMayAlwaysSet::bottom(),
-      /* locally_inferred_features */ FeatureMayAlwaysSet::bottom(),
       /* user features */ user_features,
       /* via_type_of_ports */ via_type_of_ports,
       /* via_type_of_ports */ via_value_of_ports,
       /* canonical_names */ canonical_names,
       /* output_paths */ {},
       /* local_positions */ {},
-      /* call_info */ call_info);
+      /* locally_inferred_features */ FeatureMayAlwaysSet::bottom());
 }
 
 TaintConfig generator::partial_sink(
@@ -487,20 +491,22 @@ TaintConfig generator::partial_sink(
       /* kind */ context.kind_factory->get_partial(kind, label),
       /* callee_port */ AccessPath(Root(callee_port)),
       /* callee */ nullptr,
+      /* call_info */ CallInfo::Declaration,
       /* field_callee */ nullptr,
       /* call_position */ nullptr,
+      /* callee_interval */ ClassIntervals::Interval::max_interval(),
+      /* preserves_type_context */ false,
       /* distance */ 0,
       /* origins */ MethodSet{method},
       /* field_origins */ {},
       /* inferred features */ FeatureMayAlwaysSet::bottom(),
-      /* locally_inferred_features */ FeatureMayAlwaysSet::bottom(),
       /* user features */ user_features,
       /* via_type_of_ports */ via_type_of_ports,
       /* via_value_of_ports */ via_value_of_ports,
       /* canonical_names */ {},
       /* output_paths */ {},
       /* local_positions */ {},
-      /* call_info */ CallInfo::Declaration);
+      /* locally_inferred_features */ FeatureMayAlwaysSet::bottom());
 }
 
 } // namespace marianatrench

@@ -609,8 +609,11 @@ void check_flows_to_array_allocation(
       /* kind */ context->artificial_methods.array_allocation_kind(),
       /* callee_port */ AccessPath(Root(Root::Kind::Argument, 0)),
       /* callee */ nullptr,
+      /* call_info */ CallInfo::Origin,
       /* field_callee */ nullptr,
       /* call_position */ position,
+      /* callee_interval */ ClassIntervals::Interval::max_interval(),
+      /* preserves_type_context */ false,
       /* distance */ 1,
       /* origins */ MethodSet{array_allocation_method},
       /* field_origins */ {},
@@ -621,8 +624,7 @@ void check_flows_to_array_allocation(
       /* via_value_of_ports */ {},
       /* canonical_names */ {},
       /* output_paths */ {},
-      /* local_positions */ {},
-      /* call_info */ CallInfo::Origin)};
+      /* local_positions */ {})};
   for (std::size_t parameter_position = 0,
                    number_parameters = instruction->srcs_size();
        parameter_position < number_parameters;
