@@ -8,7 +8,7 @@
 #pragma once
 
 #include <AbstractDomain.h>
-#include <PatriciaTreeMapAbstractPartition.h>
+#include <HashedAbstractPartition.h>
 
 #include <mariana-trench/FlattenIterator.h>
 #include <mariana-trench/IncludeMacros.h>
@@ -75,20 +75,24 @@ template <
     typename MapProperties>
 class FramesMap : public sparta::AbstractDomain<Derived> {
  protected:
-  using FramesByKey = sparta::PatriciaTreeMapAbstractPartition<Key, Value>;
+  using FramesByKey = sparta::HashedAbstractPartition<Key, Value>;
 
  private:
   struct KeyToFramesMapDereference {
-    static typename Value::iterator begin(const std::pair<Key, Value>& pair) {
-      return pair.second.begin();
+    using Reference = typename std::iterator_traits<
+        typename std::unordered_map<Key, Value>::const_iterator>::reference;
+
+    static typename Value::iterator begin(Reference iterator) {
+      return iterator.second.begin();
     }
-    static typename Value::iterator end(const std::pair<Key, Value>& pair) {
-      return pair.second.end();
+    static typename Value::iterator end(Reference iterator) {
+      return iterator.second.end();
     }
   };
 
   using ConstIterator = FlattenIterator<
-      /* OuterIterator */ typename FramesByKey::MapType::iterator,
+      /* OuterIterator */ typename std::unordered_map<Key, Value>::
+          const_iterator,
       /* InnerIterator */ typename Value::iterator,
       KeyToFramesMapDereference>;
 
@@ -205,12 +209,15 @@ class FramesMap : public sparta::AbstractDomain<Derived> {
     }
     mt_assert(other.is_bottom() || properties_ == other.properties_);
 
-    frames_.difference_like_operation(
-        other.frames_, [](const Value& frames_left, const Value& frames_right) {
-          auto frames_copy = frames_left;
-          frames_copy.difference_with(frames_right);
-          return frames_copy;
-        });
+    FramesByKey new_frames;
+    for (const auto& [key, value] : frames_.bindings()) {
+      auto other_value = other.frames_.get(key);
+      auto value_copy = value;
+      value_copy.difference_with(other_value);
+      new_frames.set(key, value_copy);
+    }
+
+    frames_ = std::move(new_frames);
   }
 
   bool empty() const {
@@ -223,19 +230,30 @@ class FramesMap : public sparta::AbstractDomain<Derived> {
     } else {
       mt_assert(properties_ == MapProperties(config));
     }
-    frames_.update(
-        KeyFromTaintConfig()(config), [&config](const Value& old_frames) {
-          auto new_frames = old_frames;
-          new_frames.add(config);
-          return new_frames;
-        });
+    frames_.update(KeyFromTaintConfig()(config), [&config](Value* old_frames) {
+      old_frames->add(config);
+    });
+  }
+
+  template <typename Operation> // Value(Value)
+  void map_frames(Operation&& f) {
+    if (frames_.is_top()) {
+      return;
+    }
+
+    FramesByKey new_frames;
+    for (const auto& [key, value] : frames_.bindings()) {
+      auto new_value = f(value);
+      new_frames.set(key, new_value);
+    }
+    frames_ = std::move(new_frames);
   }
 
   template <typename Function> // Frame(Frame)
   void map(Function&& f) {
     static_assert(std::is_same_v<decltype(f(std::declval<Frame&&>())), Frame>);
 
-    frames_.map([f = std::forward<Function>(f)](Value frames) {
+    map_frames([f = std::forward<Function>(f)](Value frames) {
       frames.map(f);
       return frames;
     });
@@ -247,29 +265,30 @@ class FramesMap : public sparta::AbstractDomain<Derived> {
         std::
             is_same_v<decltype(predicate(std::declval<const Frame&>())), bool>);
 
-    frames_.map([predicate = std::forward<Predicate>(predicate)](Value frames) {
+    map_frames([predicate = std::forward<Predicate>(predicate)](Value frames) {
       frames.filter(predicate);
       return frames;
     });
   }
 
   ConstIterator begin() const {
-    return ConstIterator(frames_.bindings().begin(), frames_.bindings().end());
+    return ConstIterator(
+        frames_.bindings().cbegin(), frames_.bindings().cend());
   }
 
   ConstIterator end() const {
-    return ConstIterator(frames_.bindings().end(), frames_.bindings().end());
+    return ConstIterator(frames_.bindings().cend(), frames_.bindings().cend());
   }
 
   void set_origins_if_empty(const MethodSet& origins) {
-    frames_.map([&origins](Value frames) {
+    map_frames([&origins](Value frames) {
       frames.set_origins_if_empty(origins);
       return frames;
     });
   }
 
   void set_field_origins_if_empty_with_field_callee(const Field* field) {
-    frames_.map([field](Value frames) {
+    map_frames([field](Value frames) {
       frames.set_field_origins_if_empty_with_field_callee(field);
       return frames;
     });
@@ -280,7 +299,7 @@ class FramesMap : public sparta::AbstractDomain<Derived> {
       return;
     }
 
-    frames_.map([&features](Value frames) {
+    map_frames([&features](Value frames) {
       frames.add_locally_inferred_features(features);
       return frames;
     });
@@ -295,7 +314,7 @@ class FramesMap : public sparta::AbstractDomain<Derived> {
   }
 
   void set_local_positions(const LocalPositionSet& positions) {
-    frames_.map([&positions](Value frames) {
+    map_frames([&positions](Value frames) {
       frames.set_local_positions(positions);
       return frames;
     });
@@ -306,7 +325,7 @@ class FramesMap : public sparta::AbstractDomain<Derived> {
       TransformKind&& transform_kind, // std::vector<const Kind*>(const Kind*)
       AddFeatures&& add_features // FeatureMayAlwaysSet(const Kind*)
   ) {
-    frames_.map(
+    map_frames(
         [transform_kind = std::forward<TransformKind>(transform_kind),
          add_features = std::forward<AddFeatures>(add_features)](Value frames) {
           frames.transform_kind_with_features(transform_kind, add_features);
@@ -318,7 +337,7 @@ class FramesMap : public sparta::AbstractDomain<Derived> {
       const std::function<
           bool(const Method* MT_NULLABLE, const AccessPath&, const Kind*)>&
           is_valid) {
-    frames_.map([&is_valid](Value frames) {
+    map_frames([&is_valid](Value frames) {
       frames.filter_invalid_frames(is_valid);
       return frames;
     });
