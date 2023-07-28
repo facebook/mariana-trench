@@ -34,33 +34,11 @@ class TaintFramesIterator;
  */
 class Taint final : public sparta::AbstractDomain<Taint> {
  private:
-  struct GroupEqual {
-    bool operator()(const CalleeFrames& left, const CalleeFrames& right) const {
-      return left.callee() == right.callee() &&
-          left.call_info() == right.call_info();
-    }
-  };
-
-  struct GroupHash {
-    std::size_t operator()(const CalleeFrames& frame) const {
-      std::size_t seed = 0;
-      boost::hash_combine(seed, frame.callee());
-      boost::hash_combine(seed, frame.call_info());
-      return seed;
-    }
-  };
-
-  struct GroupDifference {
-    void operator()(CalleeFrames& left, const CalleeFrames& right) const {
-      left.difference_with(right);
-    }
-  };
-
   using Set = GroupHashedSetAbstractDomain<
       CalleeFrames,
-      GroupHash,
-      GroupEqual,
-      GroupDifference>;
+      CalleeFrames::GroupHash,
+      CalleeFrames::GroupEqual,
+      CalleeFrames::GroupDifference>;
 
   explicit Taint(Set set) : set_(std::move(set)) {}
 

@@ -73,6 +73,28 @@ class CalleeFrames final : public FramesMap<
  public:
   INCLUDE_DERIVED_FRAMES_MAP_CONSTRUCTORS(CalleeFrames, Base, CalleeProperties)
 
+  struct GroupEqual {
+    bool operator()(const CalleeFrames& left, const CalleeFrames& right) const {
+      return left.callee() == right.callee() &&
+          left.call_info() == right.call_info();
+    }
+  };
+
+  struct GroupHash {
+    std::size_t operator()(const CalleeFrames& frame) const {
+      std::size_t seed = 0;
+      boost::hash_combine(seed, frame.callee());
+      boost::hash_combine(seed, frame.call_info());
+      return seed;
+    }
+  };
+
+  struct GroupDifference {
+    void operator()(CalleeFrames& left, const CalleeFrames& right) const {
+      left.difference_with(right);
+    }
+  };
+
   const Method* MT_NULLABLE callee() const {
     return properties_.callee();
   }
