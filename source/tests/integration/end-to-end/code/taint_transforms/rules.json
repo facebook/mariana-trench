@@ -86,5 +86,23 @@
     "sinks": [
       "Sink"
     ]
+  },
+  {
+    "name": "Flow for extra traces",
+    "code": 7,
+    "description": "Extra traces flows",
+    "sources": [
+      "NewSource"
+    ],
+    "transforms": [
+      "T1",
+      "T1",
+      "T2",
+      "T2",
+      "T2"
+    ],
+    "sinks": [
+      "Sink"
+    ]
   }
 ]

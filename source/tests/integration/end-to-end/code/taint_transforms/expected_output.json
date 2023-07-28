@@ -881,6 +881,680 @@
   }
 }
 {
+  "method" : "Lcom/facebook/marianatrench/integrationtests/ExtraTraces;.<init>:()V",
+  "position" : 
+  {
+    "line" : 11,
+    "path" : "ExtraTraces.java"
+  }
+}
+{
+  "method" : "Lcom/facebook/marianatrench/integrationtests/ExtraTraces;.hopPropagation1:(Ljava/lang/Object;)Ljava/lang/Object;",
+  "position" : 
+  {
+    "line" : 27,
+    "path" : "ExtraTraces.java"
+  },
+  "propagation" : 
+  [
+    {
+      "input" : "Argument(0)",
+      "output" : 
+      [
+        {
+          "kinds" : 
+          [
+            {
+              "call_info" : "Propagation",
+              "kind" : "T2:T1@LocalReturn",
+              "output_paths" : 
+              {
+                "" : 0
+              }
+            },
+            {
+              "call_info" : "Propagation",
+              "kind" : "T2:T2@LocalReturn",
+              "output_paths" : 
+              {
+                "" : 0
+              }
+            },
+            {
+              "call_info" : "Propagation",
+              "kind" : "T2@LocalReturn",
+              "output_paths" : 
+              {
+                "" : 0
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
+{
+  "method" : "Lcom/facebook/marianatrench/integrationtests/ExtraTraces;.hopPropagation2:(Ljava/lang/Object;)Ljava/lang/Object;",
+  "position" : 
+  {
+    "line" : 32,
+    "path" : "ExtraTraces.java"
+  },
+  "propagation" : 
+  [
+    {
+      "input" : "Argument(0)",
+      "output" : 
+      [
+        {
+          "kinds" : 
+          [
+            {
+              "call_info" : "Propagation",
+              "kind" : "T2:T1@LocalReturn",
+              "output_paths" : 
+              {
+                "" : 0
+              }
+            },
+            {
+              "call_info" : "Propagation",
+              "kind" : "T2:T2@LocalReturn",
+              "output_paths" : 
+              {
+                "" : 0
+              }
+            },
+            {
+              "call_info" : "Propagation",
+              "kind" : "T2@LocalReturn",
+              "output_paths" : 
+              {
+                "" : 0
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
+{
+  "method" : "Lcom/facebook/marianatrench/integrationtests/ExtraTraces;.hopPropagation3:(Ljava/lang/Object;)Ljava/lang/Object;",
+  "position" : 
+  {
+    "line" : 38,
+    "path" : "ExtraTraces.java"
+  },
+  "propagation" : 
+  [
+    {
+      "input" : "Argument(0)",
+      "output" : 
+      [
+        {
+          "kinds" : 
+          [
+            {
+              "call_info" : "Propagation",
+              "kind" : "LocalReturn",
+              "output_paths" : 
+              {
+                "" : 4
+              }
+            },
+            {
+              "call_info" : "Propagation",
+              "kind" : "T1@LocalReturn",
+              "output_paths" : 
+              {
+                "" : 0
+              }
+            },
+            {
+              "call_info" : "Propagation",
+              "kind" : "T2@LocalReturn",
+              "output_paths" : 
+              {
+                "" : 0
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
+{
+  "method" : "Lcom/facebook/marianatrench/integrationtests/ExtraTraces;.hopPropagation4:(Ljava/lang/Object;)Ljava/lang/Object;",
+  "position" : 
+  {
+    "line" : 43,
+    "path" : "ExtraTraces.java"
+  },
+  "propagation" : 
+  [
+    {
+      "input" : "Argument(0)",
+      "output" : 
+      [
+        {
+          "kinds" : 
+          [
+            {
+              "call_info" : "Propagation",
+              "kind" : "LocalReturn",
+              "output_paths" : 
+              {
+                "" : 4
+              }
+            },
+            {
+              "call_info" : "Propagation",
+              "kind" : "T1@LocalReturn",
+              "output_paths" : 
+              {
+                "" : 0
+              }
+            },
+            {
+              "call_info" : "Propagation",
+              "kind" : "T2@LocalReturn",
+              "output_paths" : 
+              {
+                "" : 0
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
+{
+  "method" : "Lcom/facebook/marianatrench/integrationtests/ExtraTraces;.hopToSink1:(Ljava/lang/Object;)V",
+  "position" : 
+  {
+    "line" : 52,
+    "path" : "ExtraTraces.java"
+  },
+  "sinks" : 
+  [
+    {
+      "port" : "Argument(0)",
+      "taint" : 
+      [
+        {
+          "call" : 
+          {
+            "port" : "Argument(0)",
+            "position" : 
+            {
+              "end" : 15,
+              "line" : 53,
+              "path" : "ExtraTraces.java",
+              "start" : 15
+            },
+            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/ExtraTraces;.hopToSink2:(Ljava/lang/Object;)V"
+          },
+          "kinds" : 
+          [
+            {
+              "call_info" : "CallSite",
+              "distance" : 3,
+              "kind" : "Sink",
+              "origins" : 
+              [
+                "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V"
+              ]
+            },
+            {
+              "call_info" : "CallSite",
+              "distance" : 3,
+              "kind" : "T1:Sink",
+              "origins" : 
+              [
+                "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V"
+              ]
+            },
+            {
+              "call_info" : "CallSite",
+              "distance" : 3,
+              "kind" : "T2:Sink",
+              "origins" : 
+              [
+                "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V"
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
+{
+  "method" : "Lcom/facebook/marianatrench/integrationtests/ExtraTraces;.hopToSink2:(Ljava/lang/Object;)V",
+  "position" : 
+  {
+    "line" : 56,
+    "path" : "ExtraTraces.java"
+  },
+  "sinks" : 
+  [
+    {
+      "port" : "Argument(0)",
+      "taint" : 
+      [
+        {
+          "call" : 
+          {
+            "port" : "Argument(0)",
+            "position" : 
+            {
+              "end" : 15,
+              "line" : 57,
+              "path" : "ExtraTraces.java",
+              "start" : 15
+            },
+            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/ExtraTraces;.hopToSink3:(Ljava/lang/Object;)V"
+          },
+          "kinds" : 
+          [
+            {
+              "call_info" : "CallSite",
+              "distance" : 2,
+              "kind" : "Sink",
+              "origins" : 
+              [
+                "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V"
+              ]
+            },
+            {
+              "call_info" : "CallSite",
+              "distance" : 2,
+              "kind" : "T1:Sink",
+              "origins" : 
+              [
+                "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V"
+              ]
+            },
+            {
+              "call_info" : "CallSite",
+              "distance" : 2,
+              "kind" : "T2:Sink",
+              "origins" : 
+              [
+                "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V"
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
+{
+  "method" : "Lcom/facebook/marianatrench/integrationtests/ExtraTraces;.hopToSink3:(Ljava/lang/Object;)V",
+  "position" : 
+  {
+    "line" : 60,
+    "path" : "ExtraTraces.java"
+  },
+  "sinks" : 
+  [
+    {
+      "port" : "Argument(0)",
+      "taint" : 
+      [
+        {
+          "call" : 
+          {
+            "port" : "Argument(0)",
+            "position" : 
+            {
+              "end" : 16,
+              "line" : 70,
+              "path" : "ExtraTraces.java",
+              "start" : 15
+            },
+            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/ExtraTraces;.hopToSink4:(Ljava/lang/Object;)V"
+          },
+          "kinds" : 
+          [
+            {
+              "call_info" : "CallSite",
+              "distance" : 1,
+              "kind" : "Sink",
+              "origins" : 
+              [
+                "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V"
+              ]
+            },
+            {
+              "call_info" : "CallSite",
+              "distance" : 1,
+              "kind" : "T1@Sink",
+              "origins" : 
+              [
+                "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V"
+              ]
+            },
+            {
+              "call_info" : "CallSite",
+              "distance" : 1,
+              "kind" : "T2@Sink",
+              "origins" : 
+              [
+                "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V"
+              ]
+            }
+          ],
+          "local_positions" : 
+          [
+            {
+              "end" : 39,
+              "line" : 65,
+              "start" : 39
+            },
+            {
+              "end" : 39,
+              "line" : 68,
+              "start" : 39
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
+{
+  "method" : "Lcom/facebook/marianatrench/integrationtests/ExtraTraces;.hopToSink4:(Ljava/lang/Object;)V",
+  "position" : 
+  {
+    "line" : 73,
+    "path" : "ExtraTraces.java"
+  },
+  "sinks" : 
+  [
+    {
+      "port" : "Argument(0)",
+      "taint" : 
+      [
+        {
+          "kinds" : 
+          [
+            {
+              "call_info" : "Origin",
+              "kind" : "Sink",
+              "origins" : 
+              [
+                "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V"
+              ]
+            }
+          ],
+          "origin" : 
+          {
+            "method" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
+            "position" : 
+            {
+              "end" : 16,
+              "line" : 74,
+              "path" : "ExtraTraces.java",
+              "start" : 16
+            }
+          }
+        }
+      ]
+    }
+  ]
+}
+{
+  "generations" : 
+  [
+    {
+      "port" : "Return",
+      "taint" : 
+      [
+        {
+          "call" : 
+          {
+            "port" : "Return",
+            "position" : 
+            {
+              "end" : 22,
+              "line" : 14,
+              "path" : "ExtraTraces.java",
+              "start" : 11
+            },
+            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/ExtraTraces;.hopToSource2:()Ljava/lang/Object;"
+          },
+          "kinds" : 
+          [
+            {
+              "call_info" : "CallSite",
+              "distance" : 2,
+              "kind" : "NewSource",
+              "origins" : 
+              [
+                "Lcom/facebook/marianatrench/integrationtests/TaintTransforms;.getNewSource:()Ljava/lang/Object;"
+              ]
+            },
+            {
+              "call_info" : "CallSite",
+              "distance" : 2,
+              "kind" : "T1:NewSource",
+              "origins" : 
+              [
+                "Lcom/facebook/marianatrench/integrationtests/TaintTransforms;.getNewSource:()Ljava/lang/Object;"
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "method" : "Lcom/facebook/marianatrench/integrationtests/ExtraTraces;.hopToSource1:()Ljava/lang/Object;",
+  "position" : 
+  {
+    "line" : 13,
+    "path" : "ExtraTraces.java"
+  }
+}
+{
+  "generations" : 
+  [
+    {
+      "port" : "Return",
+      "taint" : 
+      [
+        {
+          "call" : 
+          {
+            "port" : "Return",
+            "position" : 
+            {
+              "end" : 31,
+              "line" : 18,
+              "path" : "ExtraTraces.java",
+              "start" : 20
+            },
+            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/ExtraTraces;.hopToSource3:()Ljava/lang/Object;"
+          },
+          "kinds" : 
+          [
+            {
+              "call_info" : "CallSite",
+              "distance" : 1,
+              "kind" : "NewSource",
+              "origins" : 
+              [
+                "Lcom/facebook/marianatrench/integrationtests/TaintTransforms;.getNewSource:()Ljava/lang/Object;"
+              ]
+            },
+            {
+              "call_info" : "CallSite",
+              "distance" : 1,
+              "kind" : "T1@NewSource",
+              "origins" : 
+              [
+                "Lcom/facebook/marianatrench/integrationtests/TaintTransforms;.getNewSource:()Ljava/lang/Object;"
+              ]
+            }
+          ],
+          "local_positions" : 
+          [
+            {
+              "end" : 44,
+              "line" : 20,
+              "start" : 39
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "method" : "Lcom/facebook/marianatrench/integrationtests/ExtraTraces;.hopToSource2:()Ljava/lang/Object;",
+  "position" : 
+  {
+    "line" : 17,
+    "path" : "ExtraTraces.java"
+  }
+}
+{
+  "generations" : 
+  [
+    {
+      "port" : "Return",
+      "taint" : 
+      [
+        {
+          "kinds" : 
+          [
+            {
+              "call_info" : "Origin",
+              "kind" : "NewSource",
+              "origins" : 
+              [
+                "Lcom/facebook/marianatrench/integrationtests/TaintTransforms;.getNewSource:()Ljava/lang/Object;"
+              ]
+            }
+          ],
+          "origin" : 
+          {
+            "method" : "Lcom/facebook/marianatrench/integrationtests/TaintTransforms;.getNewSource:()Ljava/lang/Object;",
+            "position" : 
+            {
+              "end" : 38,
+              "line" : 24,
+              "path" : "ExtraTraces.java",
+              "start" : 27
+            }
+          }
+        }
+      ]
+    }
+  ],
+  "method" : "Lcom/facebook/marianatrench/integrationtests/ExtraTraces;.hopToSource3:()Ljava/lang/Object;",
+  "position" : 
+  {
+    "line" : 23,
+    "path" : "ExtraTraces.java"
+  }
+}
+{
+  "issues" : 
+  [
+    {
+      "callee" : "Lcom/facebook/marianatrench/integrationtests/ExtraTraces;.hopToSink1:(Ljava/lang/Object;)V",
+      "position" : 
+      {
+        "line" : 82,
+        "path" : "ExtraTraces.java"
+      },
+      "rule" : 7,
+      "sink_index" : "0",
+      "sinks" : 
+      [
+        {
+          "call" : 
+          {
+            "port" : "Argument(0)",
+            "position" : 
+            {
+              "end" : 16,
+              "line" : 82,
+              "path" : "ExtraTraces.java",
+              "start" : 15
+            },
+            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/ExtraTraces;.hopToSink1:(Ljava/lang/Object;)V"
+          },
+          "kinds" : 
+          [
+            {
+              "call_info" : "CallSite",
+              "distance" : 4,
+              "kind" : "T2:Sink",
+              "origins" : 
+              [
+                "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V"
+              ]
+            }
+          ]
+        }
+      ],
+      "sources" : 
+      [
+        {
+          "call" : 
+          {
+            "port" : "Return",
+            "position" : 
+            {
+              "end" : 26,
+              "line" : 78,
+              "path" : "ExtraTraces.java",
+              "start" : 15
+            },
+            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/ExtraTraces;.hopToSource1:()Ljava/lang/Object;"
+          },
+          "kinds" : 
+          [
+            {
+              "call_info" : "CallSite",
+              "distance" : 3,
+              "kind" : "T2:T2:T1@T1:NewSource",
+              "origins" : 
+              [
+                "Lcom/facebook/marianatrench/integrationtests/TaintTransforms;.getNewSource:()Ljava/lang/Object;"
+              ]
+            }
+          ],
+          "local_positions" : 
+          [
+            {
+              "end" : 32,
+              "line" : 81,
+              "start" : 32
+            },
+            {
+              "end" : 43,
+              "line" : 80,
+              "start" : 43
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "method" : "Lcom/facebook/marianatrench/integrationtests/ExtraTraces;.testExtraTraces:()V",
+  "position" : 
+  {
+    "line" : 77,
+    "path" : "ExtraTraces.java"
+  }
+}
+{
   "method" : "Lcom/facebook/marianatrench/integrationtests/Origin;.<init>:()V",
   "position" : 
   {
