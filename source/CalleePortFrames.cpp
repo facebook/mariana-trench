@@ -16,70 +16,6 @@
 
 namespace marianatrench {
 
-namespace {
-
-void materialize_via_type_of_ports(
-    const Method* callee,
-    Context& context,
-    const Frame& frame,
-    const std::vector<const DexType * MT_NULLABLE>& source_register_types,
-    std::vector<const Feature*>& via_type_of_features_added,
-    FeatureMayAlwaysSet& inferred_features) {
-  if (!frame.via_type_of_ports().is_value() ||
-      frame.via_type_of_ports().elements().empty()) {
-    return;
-  }
-
-  // Materialize via_type_of_ports into features and add them to the inferred
-  // features
-  for (const auto& port : frame.via_type_of_ports().elements()) {
-    if (!port.is_argument() ||
-        port.parameter_position() >= source_register_types.size()) {
-      ERROR(
-          1,
-          "Invalid port {} provided for via_type_of ports of method {}",
-          port,
-          callee->show());
-      continue;
-    }
-    const auto* feature = context.feature_factory->get_via_type_of_feature(
-        source_register_types[port.parameter_position()]);
-    via_type_of_features_added.push_back(feature);
-    inferred_features.add_always(feature);
-  }
-}
-
-void materialize_via_value_of_ports(
-    const Method* callee,
-    Context& context,
-    const Frame& frame,
-    const std::vector<std::optional<std::string>>& source_constant_arguments,
-    FeatureMayAlwaysSet& inferred_features) {
-  if (!frame.via_value_of_ports().is_value() ||
-      frame.via_value_of_ports().elements().empty()) {
-    return;
-  }
-
-  // Materialize via_value_of_ports into features and add them to the inferred
-  // features
-  for (const auto& port : frame.via_value_of_ports().elements()) {
-    if (!port.is_argument() ||
-        port.parameter_position() >= source_constant_arguments.size()) {
-      ERROR(
-          1,
-          "Invalid port {} provided for via_value_of ports of method {}",
-          port,
-          callee->show());
-      continue;
-    }
-    const auto* feature = context.feature_factory->get_via_value_of_feature(
-        source_constant_arguments[port.parameter_position()]);
-    inferred_features.add_always(feature);
-  }
-}
-
-} // namespace
-
 CalleePortFrames::CalleePortFrames(std::initializer_list<TaintConfig> configs)
     : callee_port_(Root(Root::Kind::Leaf)),
       frames_(FramesByKind::bottom()),
@@ -104,25 +40,10 @@ void CalleePortFrames::add(const TaintConfig& config) {
 
   local_positions_.join_with(config.local_positions());
   locally_inferred_features_.join_with(config.locally_inferred_features());
-  frames_.update(config.kind(), [&](const Frame& old_frame) {
-    return old_frame.join(Frame(
-        config.kind(),
-        config.callee_port(),
-        config.callee(),
-        config.field_callee(),
-        config.call_position(),
-        config.callee_interval(),
-        config.preserves_type_context(),
-        config.distance(),
-        config.origins(),
-        config.field_origins(),
-        config.inferred_features(),
-        config.user_features(),
-        config.via_type_of_ports(),
-        config.via_value_of_ports(),
-        config.canonical_names(),
-        config.call_info(),
-        config.output_paths()));
+  frames_.update(config.kind(), [&config](const KindFrames& frames) {
+    auto frames_copy = frames;
+    frames_copy.add(config);
+    return frames_copy;
   });
 }
 
@@ -182,8 +103,12 @@ void CalleePortFrames::meet_with(const CalleePortFrames& other) {
   mt_assert(other.is_bottom() || has_same_key(other));
 
   frames_.meet_with(other.frames_);
-  local_positions_.meet_with(other.local_positions_);
-  locally_inferred_features_.meet_with(other.locally_inferred_features_);
+  if (frames_.is_bottom()) {
+    set_to_bottom();
+  } else {
+    local_positions_.meet_with(other.local_positions_);
+    locally_inferred_features_.meet_with(other.locally_inferred_features_);
+  }
 }
 
 void CalleePortFrames::narrow_with(const CalleePortFrames& other) {
@@ -193,8 +118,12 @@ void CalleePortFrames::narrow_with(const CalleePortFrames& other) {
   mt_assert(other.is_bottom() || has_same_key(other));
 
   frames_.narrow_with(other.frames_);
-  local_positions_.narrow_with(other.local_positions_);
-  locally_inferred_features_.narrow_with(other.locally_inferred_features_);
+  if (frames_.is_bottom()) {
+    set_to_bottom();
+  } else {
+    local_positions_.narrow_with(other.local_positions_);
+    locally_inferred_features_.narrow_with(other.locally_inferred_features_);
+  }
 }
 
 void CalleePortFrames::difference_with(const CalleePortFrames& other) {
@@ -209,12 +138,14 @@ void CalleePortFrames::difference_with(const CalleePortFrames& other) {
   if (local_positions_.leq(other.local_positions_) &&
       locally_inferred_features_.leq(other.locally_inferred_features_)) {
     frames_.difference_like_operation(
-        other.frames_, [](const Frame& left, const Frame& right) {
-          if (left.leq(right)) {
-            return Frame::bottom();
-          }
-          return left;
+        other.frames_, [](const KindFrames& left, const KindFrames& right) {
+          auto left_copy = left;
+          left_copy.difference_with(right);
+          return left_copy;
         });
+    if (frames_.is_bottom()) {
+      set_to_bottom();
+    }
   }
 }
 
@@ -229,7 +160,7 @@ void CalleePortFrames::set_origins_if_empty(const MethodSet& origins) {
 
 void CalleePortFrames::set_field_origins_if_empty_with_field_callee(
     const Field* field) {
-  map([&](Frame frame) {
+  map([field](Frame frame) {
     if (frame.field_origins().empty()) {
       frame.set_field_origins(FieldSet{field});
     }
@@ -255,20 +186,6 @@ void CalleePortFrames::set_local_positions(LocalPositionSet positions) {
   local_positions_ = std::move(positions);
 }
 
-void CalleePortFrames::add_locally_inferred_features_and_local_position(
-    const FeatureMayAlwaysSet& features,
-    const Position* MT_NULLABLE position) {
-  if (features.empty() && position == nullptr) {
-    return;
-  }
-
-  add_locally_inferred_features(features);
-
-  if (position != nullptr) {
-    add_local_position(position);
-  }
-}
-
 void CalleePortFrames::append_to_propagation_output_paths(
     Path::Element path_element) {
   map([path_element](Frame frame) {
@@ -290,42 +207,55 @@ CalleePortFrames CalleePortFrames::propagate(
     return CalleePortFrames::bottom();
   }
 
-  CalleePortFrames result;
-  auto partitioned_by_kind = partition_map<const Kind*>(
-      [](const Frame& frame) { return frame.kind(); });
-
-  for (const auto& [kind, frames] : partitioned_by_kind) {
-    if (callee_port_.root().is_anchor() && callee_port_.path().size() == 0) {
-      // These are CRTEX leaf frames. CRTEX is identified by the "anchor" port,
-      // leaf-ness is identified by the path() length. Once a CRTEX frame is
-      // propagated, it's path is never empty.
-      result.join_with(propagate_crtex_leaf_frames(
+  // CRTEX is identified by the "anchor" port, leaf-ness is identified by the
+  // path() length. Once a CRTEX frame is propagated, its path is never empty.
+  bool is_crtex_leaf =
+      callee_port_.root().is_anchor() && callee_port_.path().size() == 0;
+  auto propagated_callee_port =
+      is_crtex_leaf ? callee_port.canonicalize_for_method(callee) : callee_port;
+  FramesByKind propagated_frames_by_kind;
+  for (const auto& [kind, frames] : frames_.bindings()) {
+    KindFrames propagated;
+    if (is_crtex_leaf) {
+      propagated = frames.propagate_crtex_leaf_frames(
           callee,
-          callee_port,
+          propagated_callee_port,
           call_position,
+          locally_inferred_features_,
           maximum_source_sink_distance,
           context,
-          source_register_types,
-          frames));
+          source_register_types);
     } else {
       std::vector<const Feature*> via_type_of_features_added;
-      auto non_crtex_frame = propagate_frames(
+      propagated = frames.propagate(
           callee,
-          callee_port,
+          propagated_callee_port,
           call_position,
+          locally_inferred_features_,
           maximum_source_sink_distance,
           context,
           source_register_types,
           source_constant_arguments,
-          frames,
           via_type_of_features_added);
-      if (!non_crtex_frame.is_bottom()) {
-        result.add(non_crtex_frame);
-      }
+    }
+
+    if (!propagated.is_bottom()) {
+      propagated_frames_by_kind.update(
+          propagated.kind(), [&propagated](const KindFrames& previous) {
+            return previous.join(propagated);
+          });
     }
   }
 
-  return result;
+  if (propagated_frames_by_kind.is_bottom()) {
+    return CalleePortFrames::bottom();
+  }
+
+  return CalleePortFrames(
+      propagated_callee_port,
+      propagated_frames_by_kind,
+      /* local_positions */ {},
+      /* locally_inferred_features */ FeatureMayAlwaysSet::bottom());
 }
 
 CalleePortFrames CalleePortFrames::apply_transform(
@@ -333,34 +263,44 @@ CalleePortFrames CalleePortFrames::apply_transform(
     const TransformsFactory& transforms,
     const UsedKinds& used_kinds,
     const TransformList* local_transforms) const {
-  CalleePortFrames new_frames(
-      callee_port_,
-      FramesByKind(),
-      local_positions_,
-      locally_inferred_features_);
+  FramesByKind new_frames;
   for (const auto& frame : *this) {
     auto new_frame = frame.apply_transform(
         kind_factory, transforms, used_kinds, local_transforms);
     if (!new_frame.is_bottom()) {
-      new_frames.add(new_frame);
+      new_frames.update(
+          new_frame.kind(), [&new_frame](const KindFrames& old_frames) {
+            auto frames_copy = old_frames;
+            frames_copy.add(new_frame);
+            return frames_copy;
+          });
     }
   }
-  return new_frames;
+
+  if (new_frames.is_bottom()) {
+    return CalleePortFrames::bottom();
+  }
+
+  return CalleePortFrames(
+      callee_port_, new_frames, local_positions_, locally_inferred_features_);
 }
 
 void CalleePortFrames::filter_invalid_frames(
     const std::function<bool(const Method*, const AccessPath&, const Kind*)>&
         is_valid) {
   FramesByKind new_frames;
-  for (const auto& [kind, frame] : frames_.bindings()) {
-    if (is_valid(frame.callee(), frame.callee_port(), frame.kind())) {
-      new_frames.set(kind, frame);
+  for (const auto& [kind, kind_frames] : frames_.bindings()) {
+    auto kind_frames_copy = kind_frames;
+    kind_frames_copy.filter_invalid_frames(is_valid);
+    if (kind_frames_copy != KindFrames::bottom()) {
+      new_frames.set(kind, kind_frames_copy);
     }
   }
 
-  frames_ = std::move(new_frames);
-  if (frames_.is_bottom()) {
+  if (new_frames.is_bottom()) {
     set_to_bottom();
+  } else {
+    frames_ = std::move(new_frames);
   }
 }
 
@@ -375,7 +315,7 @@ bool CalleePortFrames::contains_kind(const Kind* kind) const {
 
 FeatureMayAlwaysSet CalleePortFrames::features_joined() const {
   auto features = FeatureMayAlwaysSet::bottom();
-  for (const auto& [kind, frame] : frames_.bindings()) {
+  for (const auto& frame : *this) {
     auto combined_features = frame.features();
     combined_features.add(locally_inferred_features_);
     features.join_with(combined_features);
@@ -384,28 +324,25 @@ FeatureMayAlwaysSet CalleePortFrames::features_joined() const {
 }
 
 std::ostream& operator<<(std::ostream& out, const CalleePortFrames& frames) {
-  if (frames.is_top()) {
-    return out << "T";
-  } else {
-    out << "CalleePortFrames(callee_port=" << frames.callee_port();
+  mt_assert(!frames.frames_.is_top());
+  out << "CalleePortFrames(callee_port=" << frames.callee_port();
 
-    const auto& local_positions = frames.local_positions();
-    if (!local_positions.is_bottom() && !local_positions.empty()) {
-      out << ", local_positions=" << frames.local_positions();
-    }
-
-    const auto& locally_inferred_features = frames.locally_inferred_features();
-    if (!locally_inferred_features.is_bottom() &&
-        !locally_inferred_features.empty()) {
-      out << ", locally_inferred_features=" << locally_inferred_features;
-    }
-
-    out << ", frames=[";
-    for (const auto& [kind, frame] : frames.frames_.bindings()) {
-      out << "FrameByKind(kind=" << show(kind) << ", frame=" << frame << "),";
-    }
-    return out << "])";
+  const auto& local_positions = frames.local_positions();
+  if (!local_positions.is_bottom() && !local_positions.empty()) {
+    out << ", local_positions=" << frames.local_positions();
   }
+
+  const auto& locally_inferred_features = frames.locally_inferred_features();
+  if (!locally_inferred_features.is_bottom() &&
+      !locally_inferred_features.empty()) {
+    out << ", locally_inferred_features=" << locally_inferred_features;
+  }
+
+  out << ", frames=[";
+  for (const auto& [kind, frame] : frames.frames_.bindings()) {
+    out << show(frame) << ",";
+  }
+  return out << "])";
 }
 
 void CalleePortFrames::add(const Frame& frame) {
@@ -415,214 +352,11 @@ void CalleePortFrames::add(const Frame& frame) {
     mt_assert(callee_port_ == frame.callee_port());
   }
 
-  frames_.update(frame.kind(), [&frame](const Frame& old_frame) {
-    return old_frame.join(frame);
+  frames_.update(frame.kind(), [&frame](const KindFrames& old_frames) {
+    auto frames_copy = old_frames;
+    frames_copy.add(frame);
+    return frames_copy;
   });
-}
-
-Frame CalleePortFrames::propagate_frames(
-    const Method* callee,
-    const AccessPath& callee_port,
-    const Position* call_position,
-    int maximum_source_sink_distance,
-    Context& context,
-    const std::vector<const DexType * MT_NULLABLE>& source_register_types,
-    const std::vector<std::optional<std::string>>& source_constant_arguments,
-    std::vector<std::reference_wrapper<const Frame>> frames,
-    std::vector<const Feature*>& via_type_of_features_added) const {
-  if (frames.size() == 0) {
-    return Frame::bottom();
-  }
-
-  const auto* kind = frames.begin()->get().kind();
-  mt_assert(kind != nullptr);
-  int distance = std::numeric_limits<int>::max();
-  auto origins = MethodSet::bottom();
-  auto field_origins = FieldSet::bottom();
-  auto inferred_features = FeatureMayAlwaysSet::bottom();
-  std::optional<CallInfo> call_info = std::nullopt;
-
-  for (const Frame& frame : frames) {
-    // Only frames sharing the same kind can be propagated this way.
-    mt_assert(frame.kind() == kind);
-    if (call_info == std::nullopt) {
-      call_info = frame.call_info();
-    } else {
-      mt_assert(frame.call_info() == call_info);
-    }
-
-    if (frame.distance() >= maximum_source_sink_distance) {
-      continue;
-    }
-
-    origins.join_with(frame.origins());
-    field_origins.join_with(frame.field_origins());
-
-    auto local_features = locally_inferred_features_;
-    local_features.add(frame.features());
-    inferred_features.join_with(local_features);
-
-    materialize_via_type_of_ports(
-        callee,
-        context,
-        frame,
-        source_register_types,
-        via_type_of_features_added,
-        inferred_features);
-
-    materialize_via_value_of_ports(
-        callee, context, frame, source_constant_arguments, inferred_features);
-    // It's important that this check happens after we materialize the ports for
-    // the error messages on failure to not get null callables.
-    if (call_info == CallInfo::Declaration) {
-      // If we're propagating a declaration, there are no origins, and we should
-      // keep the set as bottom, and set the callee to nullptr explicitly to
-      // avoid emitting an invalid frame.
-      distance = 0;
-      callee = nullptr;
-    } else {
-      distance = std::min(distance, frame.distance() + 1);
-    }
-  }
-
-  // For `TransformKind`, all local_transforms of the callee become
-  // global_transforms for the caller.
-  if (const auto* transform_kind = kind->as<TransformKind>()) {
-    kind = context.kind_factory->transform_kind(
-        /* base_kind */ transform_kind->base_kind(),
-        /* local_transforms */ nullptr,
-        /* global_transforms */
-        context.transforms_factory->concat(
-            transform_kind->local_transforms(),
-            transform_kind->global_transforms()));
-  }
-
-  if (kind == nullptr) {
-    // Invalid sequence of transforms.
-    return Frame::bottom();
-  }
-
-  if (distance == std::numeric_limits<int>::max()) {
-    return Frame::bottom();
-  }
-
-  mt_assert(distance <= maximum_source_sink_distance);
-  mt_assert(call_info != std::nullopt);
-  CallInfo propagated = propagate_call_info(*call_info);
-  if (distance > 0) {
-    mt_assert(
-        propagated != CallInfo::Declaration && propagated != CallInfo::Origin);
-  } else {
-    mt_assert(propagated == CallInfo::Origin);
-  }
-  return Frame(
-      kind,
-      callee_port,
-      callee,
-      /* field_callee */ nullptr, // Since propagate is only called at method
-                                  // callsites and not field accesses
-      call_position,
-      // TODO(T158171922): Actually compute the interval.
-      /* callee_interval */ ClassIntervals::Interval::max_interval(),
-      /* preserves_type_context */ false,
-      distance,
-      std::move(origins),
-      std::move(field_origins),
-      std::move(inferred_features),
-      /* user_features */ FeatureSet::bottom(),
-      /* via_type_of_ports */ {},
-      /* via_value_of_ports */ {},
-      /* canonical_names */ {},
-      propagate_call_info(*call_info),
-      /* output_paths */ PathTreeDomain::bottom());
-}
-
-CalleePortFrames CalleePortFrames::propagate_crtex_leaf_frames(
-    const Method* callee,
-    const AccessPath& callee_port,
-    const Position* call_position,
-    int maximum_source_sink_distance,
-    Context& context,
-    const std::vector<const DexType * MT_NULLABLE>& source_register_types,
-    std::vector<std::reference_wrapper<const Frame>> frames) const {
-  if (frames.size() == 0) {
-    return CalleePortFrames::bottom();
-  }
-
-  CalleePortFrames result;
-  const auto* kind = frames.begin()->get().kind();
-
-  for (const Frame& frame : frames) {
-    // Only frames sharing the same kind can be propagated this way.
-    mt_assert(frame.kind() == kind);
-
-    std::vector<const Feature*> via_type_of_features_added;
-    auto propagated = propagate_frames(
-        callee,
-        callee_port,
-        call_position,
-        maximum_source_sink_distance,
-        context,
-        source_register_types,
-        {}, // TODO: Support via-value-of for crtex frames
-        {std::cref(frame)},
-        via_type_of_features_added);
-
-    if (propagated.is_bottom()) {
-      continue;
-    }
-
-    auto canonical_names = frame.canonical_names();
-    if (!canonical_names.is_value() || canonical_names.elements().empty()) {
-      WARNING(
-          2,
-          "Encountered crtex frame without canonical names. Frame: `{}`",
-          frame);
-      continue;
-    }
-
-    CanonicalNameSetAbstractDomain instantiated_names;
-    for (const auto& canonical_name : canonical_names.elements()) {
-      auto instantiated_name = canonical_name.instantiate(
-          propagated.callee(), via_type_of_features_added);
-      if (!instantiated_name) {
-        continue;
-      }
-      instantiated_names.add(*instantiated_name);
-    }
-
-    auto canonical_callee_port =
-        propagated.callee_port().canonicalize_for_method(propagated.callee());
-
-    // All fields should be propagated like other frames, except the crtex
-    // fields. Ideally, origins should contain the canonical names as well,
-    // but canonical names are strings and cannot be stored in MethodSet.
-    // Frame is not propagated if none of the canonical names instantiated
-    // successfully.
-    if (instantiated_names.is_value() &&
-        !instantiated_names.elements().empty()) {
-      result.add(Frame(
-          kind,
-          canonical_callee_port,
-          propagated.callee(),
-          propagated.field_callee(),
-          propagated.call_position(),
-          propagated.callee_interval(),
-          propagated.preserves_type_context(),
-          /* distance (always leaves for crtex frames) */ 0,
-          propagated.origins(),
-          propagated.field_origins(),
-          propagated.inferred_features(),
-          propagated.user_features(),
-          propagated.via_type_of_ports(),
-          propagated.via_value_of_ports(),
-          /* canonical_names */ instantiated_names,
-          CallInfo::CallSite,
-          /* output_paths */ PathTreeDomain::bottom()));
-    }
-  }
-
-  return result;
 }
 
 Json::Value CalleePortFrames::to_json(
@@ -633,7 +367,7 @@ Json::Value CalleePortFrames::to_json(
   auto taint = Json::Value(Json::objectValue);
 
   auto kinds = Json::Value(Json::arrayValue);
-  for (const auto& [_, frame] : frames_.bindings()) {
+  for (const auto& frame : *this) {
     kinds.append(frame.to_json(export_origins_mode));
   }
   taint["kinds"] = kinds;

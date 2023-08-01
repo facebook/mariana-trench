@@ -20,31 +20,37 @@
 #include <mariana-trench/Assert.h>
 #include <mariana-trench/Frame.h>
 #include <mariana-trench/IncludeMacros.h>
+#include <mariana-trench/KindFrames.h>
 #include <mariana-trench/TaintConfig.h>
 
 namespace marianatrench {
 
 /**
- * Represents a set of frames with the same call position.
+ * Represents a set of frames with the same callee port.
  * Based on its position in `Taint`, it is expected that all frames within
- * this class have the same callee and call position.
+ * this class have the same callee, call info, and call position.
  */
 class CalleePortFrames final : public sparta::AbstractDomain<CalleePortFrames> {
  private:
   using FramesByKind =
-      sparta::PatriciaTreeMapAbstractPartition<const Kind*, Frame>;
+      sparta::PatriciaTreeMapAbstractPartition<const Kind*, KindFrames>;
 
  private:
-  struct GetFrameReference {
-    const Frame& operator()(
-        const std::pair<const Kind*, Frame>& element) const {
-      return std::cref(element.second);
+  struct KeyToFramesMapDereference {
+    static KindFrames::iterator begin(
+        const std::pair<const Kind*, KindFrames>& iterator) {
+      return iterator.second.begin();
+    }
+    static KindFrames::iterator end(
+        const std::pair<const Kind*, KindFrames>& iterator) {
+      return iterator.second.end();
     }
   };
 
-  using ConstIterator = boost::transform_iterator<
-      GetFrameReference,
-      typename FramesByKind::MapType::const_iterator>;
+  using ConstIterator = FlattenIterator<
+      /* OuterIterator */ typename FramesByKind::MapType::iterator,
+      /* InnerIterator */ typename KindFrames::iterator,
+      KeyToFramesMapDereference>;
 
  public:
   // C++ container concept member types
@@ -67,6 +73,11 @@ class CalleePortFrames final : public sparta::AbstractDomain<CalleePortFrames> {
         local_positions_(std::move(local_positions)),
         locally_inferred_features_(std::move(locally_inferred_features)) {
     mt_assert(!local_positions_.is_bottom());
+    if (frames_.is_bottom()) {
+      mt_assert(
+          callee_port_.root().is_leaf_port() && local_positions_.empty() &&
+          locally_inferred_features_.is_bottom());
+    }
   }
 
  public:
@@ -94,15 +105,20 @@ class CalleePortFrames final : public sparta::AbstractDomain<CalleePortFrames> {
   }
 
   static CalleePortFrames top() {
-    return CalleePortFrames(
-        /* callee_port */ AccessPath(Root(Root::Kind::Leaf)),
-        FramesByKind::top(),
-        /* local_positions */ {},
-        /* locally_inferred_features */ FeatureMayAlwaysSet::top());
+    mt_unreachable();
   }
 
   bool is_bottom() const {
-    return frames_.is_bottom();
+    auto is_bottom = frames_.is_bottom();
+    if (is_bottom) {
+      // Assert to ensure that set_to_bottom() is called whenever frames_ is
+      // updated. Not strictly required for correct functionality, but helpful
+      // to have a definitive notion of bottom.
+      mt_assert(
+          callee_port_.root().is_leaf_port() && local_positions_.empty() &&
+          locally_inferred_features_.is_bottom());
+    }
+    return is_bottom;
   }
 
   bool is_top() const {
@@ -117,10 +133,8 @@ class CalleePortFrames final : public sparta::AbstractDomain<CalleePortFrames> {
   }
 
   void set_to_top() {
-    callee_port_ = AccessPath(Root(Root::Kind::Leaf));
-    frames_.set_to_top();
-    local_positions_.set_to_top();
-    locally_inferred_features_.set_to_top();
+    // This domain is never set to top.
+    mt_unreachable();
   }
 
   bool empty() const {
@@ -160,29 +174,35 @@ class CalleePortFrames final : public sparta::AbstractDomain<CalleePortFrames> {
   template <typename Function> // Frame(Frame)
   void map(Function&& f) {
     static_assert(std::is_same_v<decltype(f(std::declval<Frame&&>())), Frame>);
-    frames_.map(f);
+    frames_.map([f = std::forward<Function>(f)](KindFrames kind_frames) {
+      kind_frames.map(f);
+      return kind_frames;
+    });
+    if (frames_.is_bottom()) {
+      set_to_bottom();
+    }
   }
 
   template <typename Predicate> // bool(const Frame&)
   void filter(Predicate&& predicate) {
     static_assert(
         std::is_same_v<decltype(predicate(std::declval<const Frame>())), bool>);
-    frames_.map([predicate = std::forward<Predicate>(predicate)](Frame frame) {
-      if (!predicate(frame)) {
-        return Frame::bottom();
-      }
-      return frame;
+    frames_.map([predicate = std::forward<Predicate>(predicate)](
+                    KindFrames kind_frames) {
+      kind_frames.filter(predicate);
+      return kind_frames;
     });
+    if (frames_.is_bottom()) {
+      set_to_bottom();
+    }
   }
 
   ConstIterator begin() const {
-    return boost::make_transform_iterator(
-        frames_.bindings().begin(), GetFrameReference());
+    return ConstIterator(frames_.bindings().begin(), frames_.bindings().end());
   }
 
   ConstIterator end() const {
-    return boost::make_transform_iterator(
-        frames_.bindings().end(), GetFrameReference());
+    return ConstIterator(frames_.bindings().end(), frames_.bindings().end());
   }
 
   void set_origins_if_empty(const MethodSet& origins);
@@ -194,10 +214,6 @@ class CalleePortFrames final : public sparta::AbstractDomain<CalleePortFrames> {
   void add_local_position(const Position* position);
 
   void set_local_positions(LocalPositionSet positions);
-
-  void add_locally_inferred_features_and_local_position(
-      const FeatureMayAlwaysSet& features,
-      const Position* MT_NULLABLE position);
 
   /**
    * Appends `path_element` to the output paths of all propagation frames.
@@ -239,15 +255,16 @@ class CalleePortFrames final : public sparta::AbstractDomain<CalleePortFrames> {
           auto new_frame = frame.with_kind(new_kind);
           new_frame.add_inferred_features(features_to_add);
           new_frames_by_kind.update(
-              new_kind, [&new_frame](const Frame& existing) {
+              new_kind, [&new_frame](const KindFrames& existing) {
                 return existing.join(new_frame);
               });
         }
       }
     }
-    frames_ = std::move(new_frames_by_kind);
-    if (frames_.is_bottom()) {
+    if (new_frames_by_kind.is_bottom()) {
       set_to_bottom();
+    } else {
+      frames_ = std::move(new_frames_by_kind);
     }
   }
 
@@ -282,19 +299,6 @@ class CalleePortFrames final : public sparta::AbstractDomain<CalleePortFrames> {
 
   FeatureMayAlwaysSet features_joined() const;
 
-  template <class T>
-  std::unordered_map<T, std::vector<std::reference_wrapper<const Frame>>>
-  partition_map(const std::function<T(const Frame&)>& map) const {
-    std::unordered_map<T, std::vector<std::reference_wrapper<const Frame>>>
-        result;
-    for (const auto& [_, frame] : frames_.bindings()) {
-      auto value = map(frame);
-      result[value].push_back(std::cref(frame));
-    }
-
-    return result;
-  }
-
   Json::Value to_json(
       const Method* MT_NULLABLE callee,
       const Position* MT_NULLABLE position,
@@ -306,26 +310,6 @@ class CalleePortFrames final : public sparta::AbstractDomain<CalleePortFrames> {
       const CalleePortFrames& frames);
 
  private:
-  Frame propagate_frames(
-      const Method* callee,
-      const AccessPath& callee_port,
-      const Position* call_position,
-      int maximum_source_sink_distance,
-      Context& context,
-      const std::vector<const DexType * MT_NULLABLE>& source_register_types,
-      const std::vector<std::optional<std::string>>& source_constant_arguments,
-      std::vector<std::reference_wrapper<const Frame>> frames,
-      std::vector<const Feature*>& via_type_of_features_added) const;
-
-  CalleePortFrames propagate_crtex_leaf_frames(
-      const Method* callee,
-      const AccessPath& callee_port,
-      const Position* call_position,
-      int maximum_source_sink_distance,
-      Context& context,
-      const std::vector<const DexType * MT_NULLABLE>& source_register_types,
-      std::vector<std::reference_wrapper<const Frame>> frames) const;
-
   /**
    * Checks that this object and `other` have the same key. Abstract domain
    * operations here only operate on `CalleePortFrames` that have the same key.

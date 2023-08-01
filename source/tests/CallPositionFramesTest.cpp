@@ -1923,15 +1923,11 @@ TEST_F(CallPositionFramesTest, Show) {
 
   EXPECT_EQ(
       show(frames),
-      "[FramesByCalleePort(CalleePortFrames("
-      "callee_port=AccessPath(Leaf), "
-      "frames=[FrameByKind("
-      "kind=TestSink1, "
-      "frame=Frame("
-      "kind=`TestSink1`, "
-      "callee_port=AccessPath(Leaf), "
-      "call_info=Declaration, "
-      "origins={`LOne;.one:()V`})),])),]");
+      "[FramesByCalleePort(CalleePortFrames(callee_port=AccessPath(Leaf), "
+      "frames=[KindFrames(frames=[FramesByInterval(interval={[0, 4294967295], "
+      "preserves_type_context=0}, frame=Frame(kind=`TestSink1`, callee_port="
+      "AccessPath(Leaf), call_info=Declaration, "
+      "origins={`LOne;.one:()V`})),]),])),]");
 
   EXPECT_EQ(show(CallPositionFrames::bottom()), "[]");
 }
