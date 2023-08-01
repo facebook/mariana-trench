@@ -1310,7 +1310,7 @@
   "method" : "Lcom/facebook/marianatrench/integrationtests/ChildFragment;.onStart:()V",
   "position" : 
   {
-    "line" : 26,
+    "line" : 35,
     "path" : "ChildFragment.java"
   },
   "sinks" : 
@@ -1336,7 +1336,7 @@
             "method" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
             "position" : 
             {
-              "line" : 28,
+              "line" : 37,
               "path" : "ChildFragment.java"
             }
           }
