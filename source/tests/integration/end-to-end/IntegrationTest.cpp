@@ -130,7 +130,7 @@ TEST_P(IntegrationTest, CompareFlows) {
     }
   }
 
-  auto model_generators_file = directory / "/model_generators.json";
+  auto model_generators_file = directory / "/model_generators.models";
   std::vector<std::string> model_generator_search_paths;
   if (boost::filesystem::exists(model_generators_file)) {
     LOG(3, "Found model generator. Will run model generation.");

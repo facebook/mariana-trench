@@ -12,7 +12,7 @@ public class Flow {
     /** The models.json file defines a breadcrumb on this obscure method. */
     abstract int obscure_taint_this_taint_out();
 
-    /** The model_generators.json file defines a breadcrumb on this obscure method. */
+    /** The model_generators.models file defines a breadcrumb on this obscure method. */
     abstract int obscure_taint_this_taint_out_via_model_generator();
   }
 }
