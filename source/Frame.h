@@ -58,6 +58,8 @@ enum class CallInfo : KindEncoding {
 const std::string_view show_call_info(CallInfo call_info);
 CallInfo propagate_call_info(CallInfo call_info);
 
+class TaintConfig;
+
 /**
  * Represents a frame of a trace, i.e a single hop between methods.
  *
@@ -169,6 +171,8 @@ class Frame final : public sparta::AbstractDomain<Frame> {
       mt_assert(call_info == CallInfo::CallSite);
     }
   }
+
+  explicit Frame(const TaintConfig& config);
 
   INCLUDE_DEFAULT_COPY_CONSTRUCTORS_AND_ASSIGNMENTS(Frame)
 
@@ -318,6 +322,18 @@ class Frame final : public sparta::AbstractDomain<Frame> {
       const TransformsFactory& transforms_factory,
       const UsedKinds& used_kinds,
       const TransformList* local_transforms) const;
+
+  std::vector<const Feature*> materialize_via_type_of_ports(
+      const Method* callee,
+      const FeatureFactory* feature_factory,
+      const std::vector<const DexType * MT_NULLABLE>& source_register_types)
+      const;
+
+  std::vector<const Feature*> materialize_via_value_of_ports(
+      const Method* callee,
+      const FeatureFactory* feature_factory,
+      const std::vector<std::optional<std::string>>& source_constant_arguments)
+      const;
 
   Json::Value to_json(ExportOriginsMode export_origins_mode) const;
 

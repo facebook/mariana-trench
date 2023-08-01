@@ -27,8 +27,9 @@ bool ClassIntervals::Interval::contains(
 
 std::ostream& operator<<(
     std::ostream& out,
-    const ClassIntervals::Interval& interval) {
-  return out << interval.lower_bound << ", " << interval.upper_bound;
+    const marianatrench::ClassIntervals::Interval& interval) {
+  return out << "[" << interval.lower_bound << ", " << interval.upper_bound
+             << "]";
 }
 
 namespace {

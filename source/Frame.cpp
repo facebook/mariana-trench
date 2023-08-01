@@ -11,11 +11,32 @@
 
 #include <mariana-trench/Access.h>
 #include <mariana-trench/Constants.h>
+#include <mariana-trench/FeatureFactory.h>
 #include <mariana-trench/Frame.h>
 #include <mariana-trench/JsonValidation.h>
 #include <mariana-trench/UsedKinds.h>
 
 namespace marianatrench {
+
+Frame::Frame(const TaintConfig& config)
+    : Frame(
+          config.kind(),
+          config.callee_port(),
+          config.callee(),
+          config.field_callee(),
+          config.call_position(),
+          config.callee_interval(),
+          config.preserves_type_context(),
+          config.distance(),
+          config.origins(),
+          config.field_origins(),
+          config.inferred_features(),
+          config.user_features(),
+          config.via_type_of_ports(),
+          config.via_value_of_ports(),
+          config.canonical_names(),
+          config.call_info(),
+          config.output_paths()) {}
 
 void Frame::set_origins(const MethodSet& origins) {
   origins_ = origins;
@@ -58,6 +79,8 @@ bool Frame::leq(const Frame& other) const {
     return kind_ == other.kind_ && callee_port_ == other.callee_port_ &&
         callee_ == other.callee_ && call_position_ == other.call_position_ &&
         call_info_ == other.call_info_ && distance_ >= other.distance_ &&
+        callee_interval_ == other.callee_interval_ &&
+        preserves_type_context_ == other.preserves_type_context_ &&
         origins_.leq(other.origins_) &&
         field_origins_.leq(other.field_origins_) &&
         inferred_features_.leq(other.inferred_features_) &&
@@ -77,8 +100,11 @@ bool Frame::equals(const Frame& other) const {
   } else {
     return kind_ == other.kind_ && callee_port_ == other.callee_port_ &&
         callee_ == other.callee_ && call_position_ == other.call_position_ &&
-        call_info_ == other.call_info_ && distance_ == other.distance_ &&
-        origins_ == other.origins_ && field_origins_ == other.field_origins_ &&
+        call_info_ == other.call_info_ &&
+        callee_interval_ == other.callee_interval_ &&
+        preserves_type_context_ == other.preserves_type_context_ &&
+        distance_ == other.distance_ && origins_ == other.origins_ &&
+        field_origins_ == other.field_origins_ &&
         inferred_features_ == other.inferred_features_ &&
         user_features_ == other.user_features_ &&
         via_type_of_ports_ == other.via_type_of_ports_ &&
@@ -101,6 +127,8 @@ void Frame::join_with(const Frame& other) {
     mt_assert(call_position_ == other.call_position_);
     mt_assert(callee_port_ == other.callee_port_);
     mt_assert(call_info_ == other.call_info_);
+    mt_assert(callee_interval_ == other.callee_interval_);
+    mt_assert(preserves_type_context_ == other.preserves_type_context_);
 
     distance_ = std::min(distance_, other.distance_);
     origins_.join_with(other.origins_);
@@ -176,6 +204,66 @@ Frame Frame::apply_transform(
   Frame new_frame{*this};
   new_frame.kind_ = new_kind;
   return new_frame;
+}
+
+std::vector<const Feature*> Frame::materialize_via_type_of_ports(
+    const Method* callee,
+    const FeatureFactory* feature_factory,
+    const std::vector<const DexType * MT_NULLABLE>& source_register_types)
+    const {
+  std::vector<const Feature*> features_added;
+  if (!via_type_of_ports().is_value() ||
+      via_type_of_ports().elements().empty()) {
+    return features_added;
+  }
+
+  // Materialize via_type_of_ports into features and add them to the inferred
+  // features
+  for (const auto& port : via_type_of_ports().elements()) {
+    if (!port.is_argument() ||
+        port.parameter_position() >= source_register_types.size()) {
+      ERROR(
+          1,
+          "Invalid port {} provided for via_type_of ports of method {}",
+          port,
+          callee->show());
+      continue;
+    }
+    const auto* feature = feature_factory->get_via_type_of_feature(
+        source_register_types[port.parameter_position()]);
+    features_added.push_back(feature);
+  }
+  return features_added;
+}
+
+std::vector<const Feature*> Frame::materialize_via_value_of_ports(
+    const Method* callee,
+    const FeatureFactory* feature_factory,
+    const std::vector<std::optional<std::string>>& source_constant_arguments)
+    const {
+  std::vector<const Feature*> features_added;
+  if (!via_value_of_ports().is_value() ||
+      via_value_of_ports().elements().empty()) {
+    return features_added;
+  }
+
+  // Materialize via_value_of_ports into features and add them to the inferred
+  // features
+  for (const auto& port : via_value_of_ports().elements()) {
+    if (!port.is_argument() ||
+        port.parameter_position() >= source_constant_arguments.size()) {
+      ERROR(
+          1,
+          "Invalid port {} provided for via_value_of ports of method {}",
+          port,
+          callee->show());
+      continue;
+    }
+    const auto* feature = feature_factory->get_via_value_of_feature(
+        source_constant_arguments[port.parameter_position()]);
+    features_added.push_back(feature);
+  }
+  return features_added;
 }
 
 void Frame::append_to_propagation_output_paths(Path::Element path_element) {

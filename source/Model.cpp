@@ -329,6 +329,8 @@ Model Model::at_callsite(
     const std::vector<std::optional<std::string>>& source_constant_arguments)
     const {
   const auto* callee = method_;
+  // at_callsite() does not make sense if there is no callee
+  mt_assert(callee != nullptr);
 
   Model model;
   model.modes_ = modes_;
