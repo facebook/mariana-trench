@@ -222,6 +222,14 @@ bool has_annotation(
     const std::optional<std::unordered_set<std::string>>& expected_values =
         std::nullopt);
 
+/* Checks whether the given field is annotated with the given annotation type
+ * and value. */
+bool has_annotation(
+    const DexField* field,
+    const std::string& expected_type,
+    const std::optional<std::unordered_set<std::string>>& expected_values =
+        std::nullopt);
+
 /* Checks whether the given class is annotated with the given annotation type
  * and value. */
 bool has_annotation(

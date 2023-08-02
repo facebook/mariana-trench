@@ -378,6 +378,17 @@ bool generator::has_annotation(
 }
 
 bool generator::has_annotation(
+    const DexField* field,
+    const std::string& expected_type,
+    const std::optional<std::unordered_set<std::string>>& expected_values) {
+  if (!field) {
+    return false;
+  }
+  return marianatrench::has_annotation(
+      field->get_anno_set(), expected_type, expected_values);
+}
+
+bool generator::has_annotation(
     const DexClass* dex_class,
     const std::string& expected_type,
     const std::optional<std::unordered_set<std::string>>& expected_values) {
