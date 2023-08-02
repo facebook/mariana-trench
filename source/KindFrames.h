@@ -13,8 +13,8 @@
 #include <boost/iterator/transform_iterator.hpp>
 #include <json/json.h>
 
-#include <AbstractDomain.h>
-#include <HashedAbstractPartition.h>
+#include <sparta/AbstractDomain.h>
+#include <sparta/HashedAbstractPartition.h>
 
 #include <mariana-trench/Access.h>
 #include <mariana-trench/Assert.h>

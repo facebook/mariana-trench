@@ -12,8 +12,8 @@
 
 #include <json/json.h>
 
-#include <AbstractDomain.h>
-#include <SmallSortedSetAbstractDomain.h>
+#include <sparta/AbstractDomain.h>
+#include <sparta/SmallSortedSetAbstractDomain.h>
 
 #include <mariana-trench/Context.h>
 #include <mariana-trench/Heuristics.h>

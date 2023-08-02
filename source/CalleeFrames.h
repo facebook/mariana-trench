@@ -7,7 +7,7 @@
 
 #pragma once
 
-#include <PatriciaTreeMapAbstractPartition.h>
+#include <sparta/PatriciaTreeMapAbstractPartition.h>
 
 #include <mariana-trench/CallPositionFrames.h>
 #include <mariana-trench/FramesMap.h>

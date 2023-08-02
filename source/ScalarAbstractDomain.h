@@ -10,7 +10,7 @@
 #include <cstdint>
 #include <limits>
 
-#include <AbstractDomain.h>
+#include <sparta/AbstractDomain.h>
 
 #include <mariana-trench/IncludeMacros.h>
 

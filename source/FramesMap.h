@@ -7,8 +7,8 @@
 
 #pragma once
 
-#include <AbstractDomain.h>
-#include <HashedAbstractPartition.h>
+#include <sparta/AbstractDomain.h>
+#include <sparta/HashedAbstractPartition.h>
 
 #include <mariana-trench/FlattenIterator.h>
 #include <mariana-trench/IncludeMacros.h>

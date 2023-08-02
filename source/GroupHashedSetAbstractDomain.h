@@ -14,7 +14,7 @@
 
 #include <boost/iterator/transform_iterator.hpp>
 
-#include <AbstractDomain.h>
+#include <sparta/AbstractDomain.h>
 
 #include <mariana-trench/Assert.h>
 #include <mariana-trench/IncludeMacros.h>

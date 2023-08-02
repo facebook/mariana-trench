@@ -14,8 +14,9 @@
 
 #include <boost/iterator/transform_iterator.hpp>
 
-#include <AbstractDomain.h>
-#include <PatriciaTreeMap.h>
+#include <sparta/AbstractDomain.h>
+#include <sparta/PatriciaTreeMap.h>
+
 #include <Show.h>
 
 #include <mariana-trench/Access.h>

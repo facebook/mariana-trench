@@ -7,7 +7,7 @@
 
 #pragma once
 
-#include <PatriciaTreeMapAbstractPartition.h>
+#include <sparta/PatriciaTreeMapAbstractPartition.h>
 
 #include <mariana-trench/MemoryLocation.h>
 #include <mariana-trench/TaintTree.h>

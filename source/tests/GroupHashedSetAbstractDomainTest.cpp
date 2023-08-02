@@ -7,7 +7,7 @@
 
 #include <gtest/gtest.h>
 
-#include <PatriciaTreeSet.h>
+#include <sparta/PatriciaTreeSet.h>
 
 #include <mariana-trench/GroupHashedSetAbstractDomain.h>
 #include <mariana-trench/tests/Test.h>

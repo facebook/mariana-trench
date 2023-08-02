@@ -12,9 +12,9 @@
 
 #include <json/json.h>
 
-#include <AbstractDomain.h>
-#include <PatriciaTreeOverUnderSetAbstractDomain.h>
-#include <PatriciaTreeSet.h>
+#include <sparta/AbstractDomain.h>
+#include <sparta/PatriciaTreeOverUnderSetAbstractDomain.h>
+#include <sparta/PatriciaTreeSet.h>
 
 #include <mariana-trench/Feature.h>
 #include <mariana-trench/FeatureSet.h>

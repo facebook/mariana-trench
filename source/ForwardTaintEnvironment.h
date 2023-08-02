@@ -7,7 +7,7 @@
 
 #pragma once
 
-#include <AbstractDomain.h>
+#include <sparta/AbstractDomain.h>
 
 #include <mariana-trench/IncludeMacros.h>
 #include <mariana-trench/MemoryLocation.h>

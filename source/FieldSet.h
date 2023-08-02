@@ -12,7 +12,7 @@
 
 #include <json/json.h>
 
-#include <AbstractDomain.h>
+#include <sparta/AbstractDomain.h>
 
 #include <mariana-trench/Assert.h>
 #include <mariana-trench/Field.h>

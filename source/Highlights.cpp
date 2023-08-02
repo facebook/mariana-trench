@@ -7,8 +7,9 @@
 
 #include <fstream>
 
+#include <sparta/SpartaWorkQueue.h>
+
 #include <DexUtil.h>
-#include <SpartaWorkQueue.h>
 
 #include <mariana-trench/Highlights.h>
 #include <mariana-trench/Log.h>

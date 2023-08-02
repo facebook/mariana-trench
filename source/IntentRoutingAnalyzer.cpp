@@ -5,9 +5,10 @@
  * LICENSE file in the root directory of this source tree.
  */
 
+#include <sparta/MonotonicFixpointIterator.h>
+
 #include <ControlFlow.h>
 #include <InstructionAnalyzer.h>
-#include <MonotonicFixpointIterator.h>
 #include <Show.h>
 
 #include <mariana-trench/CallGraph.h>

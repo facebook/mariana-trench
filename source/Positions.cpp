@@ -16,11 +16,12 @@
 #include <fmt/format.h>
 #include <re2/re2.h>
 
+#include <sparta/SpartaWorkQueue.h>
+
 #include <ConcurrentContainers.h>
 #include <DexClass.h>
 #include <IRCode.h>
 #include <Show.h>
-#include <SpartaWorkQueue.h>
 #include <Walkers.h>
 
 #include <mariana-trench/Assert.h>

@@ -7,9 +7,10 @@
 
 #include <fmt/format.h>
 
+#include <sparta/SpartaWorkQueue.h>
+
 #include <ControlFlow.h>
 #include <Show.h>
-#include <SpartaWorkQueue.h>
 #include <TypeInference.h>
 #include <Walkers.h>
 

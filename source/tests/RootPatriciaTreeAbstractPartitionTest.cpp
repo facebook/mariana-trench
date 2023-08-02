@@ -7,7 +7,7 @@
 
 #include <gmock/gmock.h>
 
-#include <PatriciaTreeSetAbstractDomain.h>
+#include <sparta/PatriciaTreeSetAbstractDomain.h>
 
 #include <mariana-trench/RootPatriciaTreeAbstractPartition.h>
 #include <mariana-trench/tests/Test.h>

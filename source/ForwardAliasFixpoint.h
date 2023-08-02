@@ -7,9 +7,10 @@
 
 #pragma once
 
+#include <sparta/MonotonicFixpointIterator.h>
+
 #include <ControlFlow.h>
 #include <InstructionAnalyzer.h>
-#include <MonotonicFixpointIterator.h>
 
 #include <mariana-trench/ForwardAliasEnvironment.h>
 #include <mariana-trench/MethodContext.h>

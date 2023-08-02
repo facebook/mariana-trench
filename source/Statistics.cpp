@@ -7,8 +7,9 @@
 
 #include <algorithm>
 
+#include <sparta/SpartaWorkQueue.h>
+
 #include <Show.h>
-#include <SpartaWorkQueue.h>
 
 #include <mariana-trench/Statistics.h>
 

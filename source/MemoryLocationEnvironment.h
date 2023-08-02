@@ -9,8 +9,9 @@
 
 #include <boost/container/flat_map.hpp>
 
+#include <sparta/PatriciaTreeMapAbstractPartition.h>
+
 #include <IRInstruction.h>
-#include <PatriciaTreeMapAbstractPartition.h>
 
 #include <mariana-trench/MemoryLocation.h>
 #include <mariana-trench/PatriciaTreeSetAbstractDomain.h>

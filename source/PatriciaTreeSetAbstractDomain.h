@@ -7,7 +7,7 @@
 
 #pragma once
 
-#include <PatriciaTreeSetAbstractDomain.h>
+#include <sparta/PatriciaTreeSetAbstractDomain.h>
 
 #include <mariana-trench/Assert.h>
 #include <mariana-trench/Compiler.h>

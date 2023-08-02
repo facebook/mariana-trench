@@ -7,9 +7,10 @@
 
 #include <fmt/format.h>
 
+#include <sparta/SpartaWorkQueue.h>
+
 #include <IRInstruction.h>
 #include <Show.h>
-#include <SpartaWorkQueue.h>
 
 #include <mariana-trench/Assert.h>
 #include <mariana-trench/Dependencies.h>

@@ -11,7 +11,8 @@
 #include <initializer_list>
 #include <vector>
 
-#include <AbstractDomain.h>
+#include <sparta/AbstractDomain.h>
+
 #include <Show.h>
 
 #include <mariana-trench/AbstractTreeDomain.h>

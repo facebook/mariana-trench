@@ -7,14 +7,14 @@
 
 #pragma once
 
-#include <boost/iterator/transform_iterator.hpp>
 #include <initializer_list>
 #include <ostream>
 
+#include <boost/iterator/transform_iterator.hpp>
 #include <json/json.h>
 
-#include <AbstractDomain.h>
-#include <PatriciaTreeMapAbstractPartition.h>
+#include <sparta/AbstractDomain.h>
+#include <sparta/PatriciaTreeMapAbstractPartition.h>
 
 #include <mariana-trench/CalleePortFrames.h>
 #include <mariana-trench/FlattenIterator.h>

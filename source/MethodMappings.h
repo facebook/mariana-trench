@@ -7,7 +7,7 @@
 
 #pragma once
 
-#include <HashedSetAbstractDomain.h>
+#include <sparta/HashedSetAbstractDomain.h>
 
 #include <mariana-trench/IncludeMacros.h>
 #include <mariana-trench/Methods.h>

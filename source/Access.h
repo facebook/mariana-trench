@@ -16,7 +16,8 @@
 #include <boost/functional/hash.hpp>
 #include <json/json.h>
 
-#include <ConstantAbstractDomain.h>
+#include <sparta/ConstantAbstractDomain.h>
+
 #include <DexClass.h>
 #include <IRInstruction.h>
 

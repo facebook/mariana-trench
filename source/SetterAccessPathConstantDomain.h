@@ -9,7 +9,7 @@
 
 #include <json/json.h>
 
-#include <ConstantAbstractDomain.h>
+#include <sparta/ConstantAbstractDomain.h>
 
 #include <mariana-trench/Access.h>
 #include <mariana-trench/IncludeMacros.h>

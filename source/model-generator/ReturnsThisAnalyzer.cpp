@@ -5,11 +5,12 @@
  * LICENSE file in the root directory of this source tree.
  */
 
+#include <sparta/HashedAbstractEnvironment.h>
+#include <sparta/HashedSetAbstractDomain.h>
+#include <sparta/MonotonicFixpointIterator.h>
+
 #include <ControlFlow.h>
-#include <HashedAbstractEnvironment.h>
-#include <HashedSetAbstractDomain.h>
 #include <InstructionAnalyzer.h>
-#include <MonotonicFixpointIterator.h>
 #include <Show.h>
 
 #include <mariana-trench/Assert.h>

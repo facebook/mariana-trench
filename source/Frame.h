@@ -12,8 +12,8 @@
 
 #include <json/json.h>
 
-#include <AbstractDomain.h>
-#include <HashedSetAbstractDomain.h>
+#include <sparta/AbstractDomain.h>
+#include <sparta/HashedSetAbstractDomain.h>
 
 #include <mariana-trench/Access.h>
 #include <mariana-trench/Assert.h>

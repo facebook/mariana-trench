@@ -5,16 +5,18 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-#include <boost/algorithm/string/predicate.hpp>
-#include <re2/re2.h>
 #include <algorithm>
 #include <unordered_map>
+
+#include <boost/algorithm/string/predicate.hpp>
+#include <re2/re2.h>
+
+#include <sparta/SpartaWorkQueue.h>
 
 #include <GraphUtil.h>
 #include <IRInstruction.h>
 #include <Resolver.h>
 #include <Show.h>
-#include <SpartaWorkQueue.h>
 
 #include <mariana-trench/Assert.h>
 #include <mariana-trench/CallGraph.h>

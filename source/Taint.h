@@ -13,7 +13,7 @@
 #include <boost/functional/hash.hpp>
 #include <json/json.h>
 
-#include <AbstractDomain.h>
+#include <sparta/AbstractDomain.h>
 
 #include <mariana-trench/CalleeFrames.h>
 #include <mariana-trench/Frame.h>

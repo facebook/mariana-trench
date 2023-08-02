@@ -5,8 +5,9 @@
  * LICENSE file in the root directory of this source tree.
  */
 
+#include <sparta/SpartaWorkQueue.h>
+
 #include <Creators.h>
-#include <SpartaWorkQueue.h>
 
 #include <mariana-trench/ClassHierarchies.h>
 #include <mariana-trench/JsonValidation.h>

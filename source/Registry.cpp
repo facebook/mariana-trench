@@ -10,10 +10,10 @@
 #include <boost/algorithm/string/predicate.hpp>
 #include <boost/filesystem/string_file.hpp>
 #include <fmt/format.h>
-
-#include <SpartaWorkQueue.h>
-
 #include <json/value.h>
+
+#include <sparta/SpartaWorkQueue.h>
+
 #include <mariana-trench/Constants.h>
 #include <mariana-trench/JsonValidation.h>
 #include <mariana-trench/Log.h>
