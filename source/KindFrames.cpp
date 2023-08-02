@@ -16,20 +16,6 @@
 
 namespace marianatrench {
 
-CalleeInterval::CalleeInterval(
-    ClassIntervals::Interval interval,
-    bool preserves_type_context)
-    : interval_(std::move(interval)),
-      preserves_type_context_(preserves_type_context) {}
-
-CalleeInterval::CalleeInterval(const TaintConfig& config)
-    : interval_(config.callee_interval()),
-      preserves_type_context_(config.preserves_type_context()) {}
-
-CalleeInterval::CalleeInterval(const Frame& frame)
-    : interval_(frame.callee_interval()),
-      preserves_type_context_(frame.preserves_type_context()) {}
-
 KindFrames::KindFrames(std::initializer_list<TaintConfig> configs)
     : kind_(nullptr), frames_(FramesByInterval::bottom()) {
   for (const auto& config : configs) {
@@ -316,8 +302,7 @@ KindFrames KindFrames::propagate(
                                   // callsites and not field accesses
       call_position,
       // TODO(T158171922): Actually compute the interval.
-      /* callee_interval */ ClassIntervals::Interval::max_interval(),
-      /* preserves_type_context */ false,
+      CalleeInterval(),
       distance,
       std::move(origins),
       std::move(field_origins),
@@ -403,7 +388,6 @@ KindFrames KindFrames::propagate_crtex_leaf_frames(
             propagated_frame.field_callee(),
             propagated_frame.call_position(),
             propagated_frame.callee_interval(),
-            propagated_frame.preserves_type_context(),
             /* distance (always leaves for crtex frames) */ 0,
             propagated_frame.origins(),
             propagated_frame.field_origins(),
@@ -456,13 +440,6 @@ void KindFrames::add_inferred_features(const FeatureMayAlwaysSet& features) {
     frame.add_inferred_features(features);
     return frame;
   });
-}
-
-std::ostream& operator<<(
-    std::ostream& out,
-    const CalleeInterval& callee_interval) {
-  return out << "{" << callee_interval.interval() << ", preserves_type_context="
-             << callee_interval.preserves_type_context() << "}";
 }
 
 std::ostream& operator<<(std::ostream& out, const KindFrames& frames) {

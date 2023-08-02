@@ -18,59 +18,11 @@
 
 #include <mariana-trench/Access.h>
 #include <mariana-trench/Assert.h>
+#include <mariana-trench/CalleeInterval.h>
 #include <mariana-trench/Frame.h>
 #include <mariana-trench/FramesMap.h>
 #include <mariana-trench/IncludeMacros.h>
 #include <mariana-trench/TaintConfig.h>
-
-namespace marianatrench {
-
-class CalleeInterval {
- public:
-  explicit CalleeInterval(
-      ClassIntervals::Interval interval,
-      bool preserves_type_context);
-
-  explicit CalleeInterval(const TaintConfig& config);
-
-  explicit CalleeInterval(const Frame& frame);
-
-  INCLUDE_DEFAULT_COPY_CONSTRUCTORS_AND_ASSIGNMENTS(CalleeInterval)
-
-  bool operator==(const CalleeInterval& other) const {
-    return interval_ == other.interval_ &&
-        preserves_type_context_ == other.preserves_type_context_;
-  }
-
-  const ClassIntervals::Interval& interval() const {
-    return interval_;
-  }
-
-  bool preserves_type_context() const {
-    return preserves_type_context_;
-  }
-
- private:
-  ClassIntervals::Interval interval_;
-  bool preserves_type_context_;
-};
-
-} // namespace marianatrench
-
-template <>
-struct std::hash<marianatrench::CalleeInterval> {
-  std::size_t operator()(
-      const marianatrench::CalleeInterval& callee_interval) const {
-    std::size_t seed = 0;
-    boost::hash_combine(
-        seed,
-        std::hash<marianatrench::ClassIntervals::Interval>()(
-            callee_interval.interval()));
-    boost::hash_combine(
-        seed, std::hash<bool>()(callee_interval.preserves_type_context()));
-    return seed;
-  }
-};
 
 namespace marianatrench {
 

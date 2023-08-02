@@ -26,7 +26,6 @@ Frame::Frame(const TaintConfig& config)
           config.field_callee(),
           config.call_position(),
           config.callee_interval(),
-          config.preserves_type_context(),
           config.distance(),
           config.origins(),
           config.field_origins(),
@@ -80,7 +79,6 @@ bool Frame::leq(const Frame& other) const {
         callee_ == other.callee_ && call_position_ == other.call_position_ &&
         call_info_ == other.call_info_ && distance_ >= other.distance_ &&
         callee_interval_ == other.callee_interval_ &&
-        preserves_type_context_ == other.preserves_type_context_ &&
         origins_.leq(other.origins_) &&
         field_origins_.leq(other.field_origins_) &&
         inferred_features_.leq(other.inferred_features_) &&
@@ -102,7 +100,6 @@ bool Frame::equals(const Frame& other) const {
         callee_ == other.callee_ && call_position_ == other.call_position_ &&
         call_info_ == other.call_info_ &&
         callee_interval_ == other.callee_interval_ &&
-        preserves_type_context_ == other.preserves_type_context_ &&
         distance_ == other.distance_ && origins_ == other.origins_ &&
         field_origins_ == other.field_origins_ &&
         inferred_features_ == other.inferred_features_ &&
@@ -128,7 +125,6 @@ void Frame::join_with(const Frame& other) {
     mt_assert(callee_port_ == other.callee_port_);
     mt_assert(call_info_ == other.call_info_);
     mt_assert(callee_interval_ == other.callee_interval_);
-    mt_assert(preserves_type_context_ == other.preserves_type_context_);
 
     distance_ = std::min(distance_, other.distance_);
     origins_.join_with(other.origins_);

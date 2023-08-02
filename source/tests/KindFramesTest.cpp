@@ -24,7 +24,8 @@ TEST_F(KindFramesTest, Add) {
       redex::create_void_method(scope, "LClass;", "one"));
 
   auto* source_kind_one = context.kind_factory->get("TestSourceOne");
-  auto interval = ClassIntervals::Interval(2, 3);
+  auto interval = CalleeInterval(
+      ClassIntervals::Interval(2, 3), /* preserves_type_context */ false);
 
   KindFrames frames;
   EXPECT_TRUE(frames.is_bottom());
@@ -75,8 +76,17 @@ TEST_F(KindFramesTest, Leq) {
   auto context = test::make_empty_context();
 
   auto* test_kind_one = context.kind_factory->get("TestSinkOne");
-  auto interval_one = ClassIntervals::Interval(2, 3);
-  auto interval_two = ClassIntervals::Interval(4, 5);
+  auto interval_one = CalleeInterval(
+      ClassIntervals::Interval(2, 3), /* preserves_type_context */ false);
+  auto interval_one_preserves_type_context = CalleeInterval(
+      ClassIntervals::Interval(2, 3), /* preserves_type_context */ true);
+  auto interval_two = CalleeInterval(
+      ClassIntervals::Interval(4, 5), /* preserves_type_context */ false);
+  auto interval_two_preserves_type_context = CalleeInterval(
+      ClassIntervals::Interval(4, 5), /* preserves_type_context */ true);
+  auto interval_three = CalleeInterval(
+      ClassIntervals::Interval::max_interval(),
+      /* preserves_type_context */ true);
   auto* feature_one = context.feature_factory->get("FeatureOne");
 
   // Comparison to bottom
@@ -89,7 +99,7 @@ TEST_F(KindFramesTest, Leq) {
                    .leq(KindFrames::bottom()));
   EXPECT_FALSE((KindFrames{test::make_taint_config(
                     test_kind_one,
-                    test::FrameProperties{.preserves_type_context = true})})
+                    test::FrameProperties{.callee_interval = interval_three})})
                    .leq(KindFrames::bottom()));
 
   // Comparison to self
@@ -125,39 +135,32 @@ TEST_F(KindFramesTest, Leq) {
               test::FrameProperties{.callee_interval = interval_one})}));
 
   // Different intervals (preserves_type_context)
-  EXPECT_TRUE((KindFrames{test::make_taint_config(
-                   test_kind_one,
-                   test::FrameProperties{
-                       .callee_interval = interval_one,
-                       .preserves_type_context = false})})
-                  .leq(KindFrames{
-                      test::make_taint_config(
-                          test_kind_one,
-                          test::FrameProperties{
-                              .callee_interval = interval_one,
-                              .preserves_type_context = false}),
-                      test::make_taint_config(
-                          test_kind_one,
-                          test::FrameProperties{
-                              .callee_interval = interval_one,
-                              .preserves_type_context = true}),
-                  }));
-  EXPECT_FALSE((KindFrames{
-                    test::make_taint_config(
-                        test_kind_one,
-                        test::FrameProperties{
-                            .callee_interval = interval_one,
-                            .preserves_type_context = false}),
-                    test::make_taint_config(
-                        test_kind_one,
-                        test::FrameProperties{
-                            .callee_interval = interval_two,
-                            .preserves_type_context = true})})
-                   .leq(KindFrames{test::make_taint_config(
-                       test_kind_one,
-                       test::FrameProperties{
-                           .callee_interval = interval_one,
-                           .preserves_type_context = false})}));
+  EXPECT_TRUE(
+      (KindFrames{test::make_taint_config(
+           test_kind_one,
+           test::FrameProperties{
+               .callee_interval = interval_one_preserves_type_context})})
+          .leq(KindFrames{
+              test::make_taint_config(
+                  test_kind_one,
+                  test::FrameProperties{.callee_interval = interval_one}),
+              test::make_taint_config(
+                  test_kind_one,
+                  test::FrameProperties{
+                      .callee_interval = interval_one_preserves_type_context}),
+          }));
+  EXPECT_FALSE(
+      (KindFrames{
+           test::make_taint_config(
+               test_kind_one,
+               test::FrameProperties{.callee_interval = interval_one}),
+           test::make_taint_config(
+               test_kind_one,
+               test::FrameProperties{
+                   .callee_interval = interval_two_preserves_type_context})})
+          .leq(KindFrames{test::make_taint_config(
+              test_kind_one,
+              test::FrameProperties{.callee_interval = interval_one})}));
 
   // Same intervals, different frame details
   EXPECT_TRUE((KindFrames{test::make_taint_config(
@@ -187,8 +190,10 @@ TEST_F(KindFramesTest, Equals) {
   auto context = test::make_empty_context();
 
   auto* test_kind_one = context.kind_factory->get("TestSinkOne");
-  auto interval_one = ClassIntervals::Interval(2, 3);
-  auto interval_two = ClassIntervals::Interval(4, 5);
+  auto interval_one = CalleeInterval(
+      ClassIntervals::Interval(2, 3), /* preserves_type_context */ false);
+  auto interval_two = CalleeInterval(
+      ClassIntervals::Interval(4, 5), /* preserves_type_context */ false);
 
   // Comparison to bottom
   EXPECT_TRUE(KindFrames::bottom().equals(KindFrames::bottom()));
@@ -215,13 +220,18 @@ TEST_F(KindFramesTest, Equals) {
               test::FrameProperties{.callee_interval = interval_two})}));
 
   // Different intervals (preserves_type_context)
-  EXPECT_FALSE(
-      (KindFrames{test::make_taint_config(
-           test_kind_one,
-           test::FrameProperties{.preserves_type_context = true})})
-          .equals(KindFrames{test::make_taint_config(
-              test_kind_one,
-              test::FrameProperties{.preserves_type_context = false})}));
+  EXPECT_FALSE((KindFrames{test::make_taint_config(
+                    test_kind_one,
+                    test::FrameProperties{
+                        .callee_interval = CalleeInterval(
+                            ClassIntervals::Interval::max_interval(),
+                            /* preserves_type_context */ true)})})
+                   .equals(KindFrames{test::make_taint_config(
+                       test_kind_one,
+                       test::FrameProperties{
+                           .callee_interval = CalleeInterval(
+                               ClassIntervals::Interval::max_interval(),
+                               /* preserves_type_context */ false)})}));
 }
 
 TEST_F(KindFramesTest, JoinWith) {
@@ -229,8 +239,10 @@ TEST_F(KindFramesTest, JoinWith) {
 
   Scope scope;
   auto* test_kind_one = context.kind_factory->get("TestSinkOne");
-  auto interval_one = ClassIntervals::Interval(2, 3);
-  auto interval_two = ClassIntervals::Interval(4, 5);
+  auto interval_one = CalleeInterval(
+      ClassIntervals::Interval(2, 3), /* preserves_type_context */ false);
+  auto interval_two = CalleeInterval(
+      ClassIntervals::Interval(4, 5), /* preserves_type_context */ false);
   auto* feature_one = context.feature_factory->get("FeatureOne");
   auto* feature_two = context.feature_factory->get("FeatureTwo");
 
@@ -297,8 +309,10 @@ TEST_F(KindFramesTest, Difference) {
 
   Scope scope;
   auto* test_kind_one = context.kind_factory->get("TestSinkOne");
-  auto interval_one = ClassIntervals::Interval(2, 3);
-  auto interval_two = ClassIntervals::Interval(4, 5);
+  auto interval_one = CalleeInterval(
+      ClassIntervals::Interval(2, 3), /* preserves_type_context */ false);
+  auto interval_two = CalleeInterval(
+      ClassIntervals::Interval(4, 5), /* preserves_type_context */ false);
   auto* feature_one = context.feature_factory->get("FeatureOne");
 
   KindFrames frames;
@@ -425,8 +439,10 @@ TEST_F(KindFramesTest, Iterator) {
   auto context = test::make_empty_context();
 
   auto* test_kind_one = context.kind_factory->get("TestSinkOne");
-  auto interval_one = ClassIntervals::Interval(2, 3);
-  auto interval_two = ClassIntervals::Interval(4, 5);
+  auto interval_one = CalleeInterval(
+      ClassIntervals::Interval(2, 3), /* preserves_type_context */ false);
+  auto interval_two = CalleeInterval(
+      ClassIntervals::Interval(4, 5), /* preserves_type_context */ false);
 
   auto kind_frames = KindFrames{
       test::make_taint_config(
@@ -466,8 +482,10 @@ TEST_F(KindFramesTest, Map) {
 
   Scope scope;
   auto* test_kind = context.kind_factory->get("TestSink");
-  auto interval_one = ClassIntervals::Interval(2, 3);
-  auto interval_two = ClassIntervals::Interval(4, 5);
+  auto interval_one = CalleeInterval(
+      ClassIntervals::Interval(2, 3), /* preserves_type_context */ false);
+  auto interval_two = CalleeInterval(
+      ClassIntervals::Interval(4, 5), /* preserves_type_context */ false);
   auto* feature_one = context.feature_factory->get("FeatureOne");
 
   auto frames = KindFrames{
@@ -509,8 +527,10 @@ TEST_F(KindFramesTest, Filter) {
 
   Scope scope;
   auto* test_kind = context.kind_factory->get("TestSink");
-  auto interval_one = ClassIntervals::Interval(2, 3);
-  auto interval_two = ClassIntervals::Interval(4, 5);
+  auto interval_one = CalleeInterval(
+      ClassIntervals::Interval(2, 3), /* preserves_type_context */ false);
+  auto interval_two = CalleeInterval(
+      ClassIntervals::Interval(4, 5), /* preserves_type_context */ false);
 
   auto frames = KindFrames{
       test::make_taint_config(
@@ -550,8 +570,10 @@ TEST_F(KindFramesTest, Propagate) {
       context.methods->create(redex::create_void_method(scope, "LOne;", "one"));
   auto* two =
       context.methods->create(redex::create_void_method(scope, "LTwo;", "two"));
-  auto interval_one = ClassIntervals::Interval(2, 3);
-  auto interval_two = ClassIntervals::Interval(4, 5);
+  auto interval_one = CalleeInterval(
+      ClassIntervals::Interval(2, 3), /* preserves_type_context */ false);
+  auto interval_two = CalleeInterval(
+      ClassIntervals::Interval(4, 5), /* preserves_type_context */ false);
   auto* feature_one = context.feature_factory->get("FeatureOne");
   auto* test_kind_one = context.kind_factory->get("TestSinkOne");
   auto* call_position = context.positions->get("Test.java", 1);

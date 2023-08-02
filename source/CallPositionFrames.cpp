@@ -116,7 +116,6 @@ CallPositionFrames CallPositionFrames::attach_position(
                 // TODO(T158171922): Re-visit what the appropriate interval
                 // should be when implementing class intervals.
                 frame.callee_interval(),
-                frame.preserves_type_context(),
                 /* distance */ 0,
                 frame.origins(),
                 frame.field_origins(),
@@ -188,7 +187,6 @@ CallPositionFrames::map_positions(
           frame.field_callee(),
           call_position,
           frame.callee_interval(),
-          frame.preserves_type_context(),
           frame.distance(),
           frame.origins(),
           frame.field_origins(),
