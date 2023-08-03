@@ -14,5 +14,16 @@
     "partial_sinks": [
       "TestSink"
     ]
+  },
+  {
+    "name": "Secret Logging",
+    "code": 2,
+    "description": "Secret logging detection",
+    "sources": [
+      "GoogleAPIKey"
+    ],
+    "sinks": [
+      "Logging"
+    ]
   }
 ]

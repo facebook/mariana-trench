@@ -231,7 +231,15 @@
       "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V"
     ]
   },
-  "Lcom/facebook/marianatrench/integrationtests/RegexSource;.testRegexSourceMessageFormat:()V" : 
+  "Lcom/facebook/marianatrench/integrationtests/RegexSource;.testRegexSourceIssue:()V" : 
+  {
+    "static" : 
+    [
+      "Lcom/facebook/marianatrench/integrationtests/RegexSource;.getAttackerControlledInput:()Ljava/lang/String;",
+      "Lcom/facebook/marianatrench/integrationtests/RegexSource;.sink:(Ljava/lang/String;Ljava/lang/String;)V"
+    ]
+  },
+  "Lcom/facebook/marianatrench/integrationtests/RegexSource;.testRegexSourceMessageFormatIssue:()V" : 
   {
     "static" : 
     [

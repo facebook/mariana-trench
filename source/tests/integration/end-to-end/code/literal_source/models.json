@@ -103,5 +103,14 @@
         "port": "Argument(1)"
       }
     ]
+  },
+  {
+    "method": "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
+    "sinks": [
+      {
+        "kind": "Logging",
+        "port": "Argument(0)"
+      }
+    ]
   }
 ]

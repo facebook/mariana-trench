@@ -85,4 +85,11 @@ public class RegexSource {
     String aci = getAttackerControlledInput();
     MessageFormat.format("SELECT * FROM USERS WHERE id = {}", aci);
   }
+
+  public static void testRegexSourceGoogleApiKeyIssue() {
+    // Expect issue for rules:
+    //   GoogleAPIKey -> Logging
+    String secret = "AIABCD1234EFGH5678";
+    Origin.sink(secret);
+  }
 }

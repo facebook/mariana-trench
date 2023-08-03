@@ -31,6 +31,10 @@
     "Landroid/content/Intent;.getBundleExtra:(Ljava/lang/String;)Landroid/os/Bundle;",
     "Landroid/content/Intent;.getExtras:()Landroid/os/Bundle;"
   ],
+  "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V" : 
+  [
+    "Lcom/facebook/marianatrench/integrationtests/RegexSource;.testRegexSourceGoogleApiKeyIssue:()V"
+  ],
   "Lcom/facebook/marianatrench/integrationtests/RegexSource;.getAttackerControlledInput:()Ljava/lang/String;" : 
   [
     "Lcom/facebook/marianatrench/integrationtests/RegexSource;.testRegexSourceIssue:()V",
