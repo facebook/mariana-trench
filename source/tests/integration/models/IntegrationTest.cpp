@@ -466,6 +466,7 @@ TEST_P(IntegrationTest, ReturnsExpectedModel) {
   context.options = std::make_unique<Options>(
       /* models_path */ std::vector<std::string>{},
       /* field_models_path */ std::vector<std::string>{},
+      /* literal_models_path */ std::vector<std::string>{},
       /* rules_path */ std::vector<std::string>{},
       /* lifecycles_path */ std::vector<std::string>{},
       /* shims_path */ std::vector<std::string>{},
@@ -522,7 +523,8 @@ TEST_P(IntegrationTest, ReturnsExpectedModel) {
   registry.join_with(Registry(
       context,
       /* models_value */ models,
-      /* field_models_value */ test::parse_json(R"([])")));
+      /* field_models_value */ test::parse_json(R"([])"),
+      /* literal_models_value */ test::parse_json(R"([])")));
 
   Model external_method(
       context.methods->get("LExternal;.external:(LData;)V"),

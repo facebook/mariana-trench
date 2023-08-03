@@ -1,5 +1,16 @@
 // @generated
 {
+  "pattern" : "SELECT \\*.*",
+  "position" : {},
+  "sources" : 
+  [
+    {
+      "call_info" : "Declaration",
+      "kind" : "Regex"
+    }
+  ]
+}
+{
   "method" : "Landroid/app/Activity;.<init>:()V",
   "position" : 
   {
@@ -308,6 +319,14 @@
 }
 {
   "method" : "Landroid/net/Uri$Builder;.host:(Ljava/lang/String;)Landroid/net/Uri$Builder;",
+  "model_generators" : 
+  [
+    "BuilderPatternGenerator"
+  ],
+  "modes" : 
+  [
+    "alias-memory-location-on-invoke"
+  ],
   "position" : 
   {
     "line" : 62
@@ -369,6 +388,14 @@
 }
 {
   "method" : "Landroid/net/Uri$Builder;.path:(Ljava/lang/String;)Landroid/net/Uri$Builder;",
+  "model_generators" : 
+  [
+    "BuilderPatternGenerator"
+  ],
+  "modes" : 
+  [
+    "alias-memory-location-on-invoke"
+  ],
   "position" : 
   {
     "line" : 67
@@ -430,6 +457,14 @@
 }
 {
   "method" : "Landroid/net/Uri$Builder;.scheme:(Ljava/lang/String;)Landroid/net/Uri$Builder;",
+  "model_generators" : 
+  [
+    "BuilderPatternGenerator"
+  ],
+  "modes" : 
+  [
+    "alias-memory-location-on-invoke"
+  ],
   "position" : 
   {
     "line" : 54
@@ -927,25 +962,9 @@
   "method" : "Lcom/facebook/marianatrench/integrationtests/RegexSource;.<init>:()V",
   "position" : 
   {
-    "line" : 9,
+    "line" : 11,
     "path" : "RegexSource.java"
   }
-}
-{
-  "field" : "Lcom/facebook/marianatrench/integrationtests/RegexSource;.TEMPLATE_FIELD:Ljava/lang/String;",
-  "position" : {},
-  "sources" : 
-  [
-    {
-      "call_info" : "Declaration",
-      "field_callee" : "Lcom/facebook/marianatrench/integrationtests/RegexSource;.TEMPLATE_FIELD:Ljava/lang/String;",
-      "field_origins" : 
-      [
-        "Lcom/facebook/marianatrench/integrationtests/RegexSource;.TEMPLATE_FIELD:Ljava/lang/String;"
-      ],
-      "kind" : "Regex"
-    }
-  ]
 }
 {
   "generations" : 
@@ -1030,10 +1049,74 @@
   "issues" : 
   [
     {
-      "callee" : "Lcom/facebook/marianatrench/integrationtests/RegexSource;.sink:(Ljava/lang/String;Ljava/lang/String;)V",
+      "callee" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
       "position" : 
       {
-        "line" : 29,
+        "line" : 93,
+        "path" : "RegexSource.java"
+      },
+      "rule" : 2,
+      "sink_index" : "0",
+      "sinks" : 
+      [
+        {
+          "kinds" : 
+          [
+            {
+              "call_info" : "Origin",
+              "kind" : "Logging",
+              "origins" : 
+              [
+                "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V"
+              ]
+            }
+          ],
+          "origin" : 
+          {
+            "method" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
+            "position" : 
+            {
+              "end" : 21,
+              "line" : 93,
+              "path" : "RegexSource.java",
+              "start" : 16
+            }
+          }
+        }
+      ],
+      "sources" : 
+      [
+        {
+          "kinds" : 
+          [
+            {
+              "call_info" : "Declaration",
+              "kind" : "GoogleAPIKey"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "method" : "Lcom/facebook/marianatrench/integrationtests/RegexSource;.testRegexSourceGoogleApiKeyIssue:()V",
+  "position" : 
+  {
+    "line" : 91,
+    "path" : "RegexSource.java"
+  }
+}
+{
+  "issues" : 
+  [
+    {
+      "always_features" : 
+      [
+        "via-array"
+      ],
+      "callee" : "Ljava/text/MessageFormat;.format:(Ljava/lang/String;[Ljava/lang/Object;)Ljava/lang/String;",
+      "position" : 
+      {
+        "line" : 86,
         "path" : "RegexSource.java"
       },
       "rule" : 1,
@@ -1044,24 +1127,188 @@
           "kinds" : 
           [
             {
+              "always_features" : 
+              [
+                "via-array"
+              ],
               "call_info" : "Origin",
               "kind" : "Partial:TestSink:aci",
               "origins" : 
               [
-                "Lcom/facebook/marianatrench/integrationtests/RegexSource;.sink:(Ljava/lang/String;Ljava/lang/String;)V"
+                "Ljava/text/MessageFormat;.format:(Ljava/lang/String;[Ljava/lang/Object;)Ljava/lang/String;"
               ],
               "triggered_rule" : 1
             }
           ],
           "origin" : 
           {
-            "method" : "Lcom/facebook/marianatrench/integrationtests/RegexSource;.sink:(Ljava/lang/String;Ljava/lang/String;)V",
+            "method" : "Ljava/text/MessageFormat;.format:(Ljava/lang/String;[Ljava/lang/Object;)Ljava/lang/String;",
             "position" : 
             {
-              "end" : 18,
-              "line" : 29,
+              "end" : 64,
+              "line" : 86,
               "path" : "RegexSource.java",
-              "start" : 16
+              "start" : 62
+            }
+          }
+        }
+      ],
+      "sources" : 
+      [
+        {
+          "kinds" : 
+          [
+            {
+              "call_info" : "Origin",
+              "kind" : "AttackerControlledInput",
+              "origins" : 
+              [
+                "Lcom/facebook/marianatrench/integrationtests/RegexSource;.getAttackerControlledInput:()Ljava/lang/String;"
+              ]
+            }
+          ],
+          "local_features" : 
+          {
+            "always_features" : 
+            [
+              "via-array"
+            ]
+          },
+          "local_positions" : 
+          [
+            {
+              "end" : 0,
+              "line" : 86,
+              "start" : 0
+            }
+          ],
+          "origin" : 
+          {
+            "method" : "Lcom/facebook/marianatrench/integrationtests/RegexSource;.getAttackerControlledInput:()Ljava/lang/String;",
+            "position" : 
+            {
+              "end" : 42,
+              "line" : 85,
+              "path" : "RegexSource.java",
+              "start" : 17
+            }
+          }
+        }
+      ]
+    }
+  ],
+  "method" : "Lcom/facebook/marianatrench/integrationtests/RegexSource;.testRegexSourceMessageFormatIssue:()V",
+  "position" : 
+  {
+    "line" : 84,
+    "path" : "RegexSource.java"
+  }
+}
+{
+  "method" : "Lcom/facebook/marianatrench/integrationtests/RegexSource;.testRegexSourceNoMatchNoIssue:()V",
+  "position" : 
+  {
+    "line" : 32,
+    "path" : "RegexSource.java"
+  }
+}
+{
+  "issues" : 
+  [
+    {
+      "callee" : "Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;",
+      "position" : 
+      {
+        "line" : 71,
+        "path" : "RegexSource.java"
+      },
+      "rule" : 1,
+      "sink_index" : "1",
+      "sinks" : 
+      [
+        {
+          "kinds" : 
+          [
+            {
+              "call_info" : "Origin",
+              "kind" : "Partial:TestSink:regex",
+              "origins" : 
+              [
+                "Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;"
+              ],
+              "triggered_rule" : 1
+            }
+          ],
+          "origin" : 
+          {
+            "method" : "Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;",
+            "position" : 
+            {
+              "end" : 19,
+              "line" : 71,
+              "path" : "RegexSource.java",
+              "start" : 17
+            }
+          }
+        }
+      ],
+      "sources" : 
+      [
+        {
+          "kinds" : 
+          [
+            {
+              "call_info" : "Declaration",
+              "kind" : "Regex"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "method" : "Lcom/facebook/marianatrench/integrationtests/RegexSource;.testRegexSourceStringBuilderAciFirstIssue:()V",
+  "position" : 
+  {
+    "line" : 67,
+    "path" : "RegexSource.java"
+  }
+}
+{
+  "issues" : 
+  [
+    {
+      "callee" : "Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;",
+      "position" : 
+      {
+        "line" : 62,
+        "path" : "RegexSource.java"
+      },
+      "rule" : 1,
+      "sink_index" : "1",
+      "sinks" : 
+      [
+        {
+          "kinds" : 
+          [
+            {
+              "call_info" : "Origin",
+              "kind" : "Partial:TestSink:aci",
+              "origins" : 
+              [
+                "Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;"
+              ],
+              "triggered_rule" : 1
+            }
+          ],
+          "origin" : 
+          {
+            "method" : "Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;",
+            "position" : 
+            {
+              "end" : 22,
+              "line" : 62,
+              "path" : "RegexSource.java",
+              "start" : 17
             }
           }
         }
@@ -1086,7 +1333,7 @@
             "position" : 
             {
               "end" : 42,
-              "line" : 28,
+              "line" : 60,
               "path" : "RegexSource.java",
               "start" : 17
             }
@@ -1095,10 +1342,246 @@
       ]
     }
   ],
-  "method" : "Lcom/facebook/marianatrench/integrationtests/RegexSource;.testRegexSource:()V",
+  "method" : "Lcom/facebook/marianatrench/integrationtests/RegexSource;.testRegexSourceStringBuilderIssue:()V",
   "position" : 
   {
-    "line" : 26,
+    "line" : 58,
+    "path" : "RegexSource.java"
+  }
+}
+{
+  "issues" : 
+  [
+    {
+      "callee" : "Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;",
+      "position" : 
+      {
+        "line" : 53,
+        "path" : "RegexSource.java"
+      },
+      "rule" : 1,
+      "sink_index" : "1",
+      "sinks" : 
+      [
+        {
+          "kinds" : 
+          [
+            {
+              "call_info" : "Origin",
+              "kind" : "Partial:TestSink:regex",
+              "origins" : 
+              [
+                "Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;"
+              ],
+              "triggered_rule" : 1
+            }
+          ],
+          "origin" : 
+          {
+            "method" : "Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;",
+            "position" : 
+            {
+              "end" : 0,
+              "line" : 53,
+              "path" : "RegexSource.java",
+              "start" : 0
+            }
+          }
+        }
+      ],
+      "sources" : 
+      [
+        {
+          "kinds" : 
+          [
+            {
+              "call_info" : "Declaration",
+              "kind" : "Regex"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "method" : "Lcom/facebook/marianatrench/integrationtests/RegexSource;.testRegexSourceStringConcatAciFirstIssue:()V",
+  "position" : 
+  {
+    "line" : 49,
+    "path" : "RegexSource.java"
+  }
+}
+{
+  "issues" : 
+  [
+    {
+      "callee" : "Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;",
+      "position" : 
+      {
+        "line" : 44,
+        "path" : "RegexSource.java"
+      },
+      "rule" : 1,
+      "sink_index" : "1",
+      "sinks" : 
+      [
+        {
+          "kinds" : 
+          [
+            {
+              "call_info" : "Origin",
+              "kind" : "Partial:TestSink:aci",
+              "origins" : 
+              [
+                "Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;"
+              ],
+              "triggered_rule" : 1
+            }
+          ],
+          "origin" : 
+          {
+            "method" : "Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;",
+            "position" : 
+            {
+              "end" : 0,
+              "line" : 44,
+              "path" : "RegexSource.java",
+              "start" : 0
+            }
+          }
+        }
+      ],
+      "sources" : 
+      [
+        {
+          "kinds" : 
+          [
+            {
+              "call_info" : "Origin",
+              "kind" : "AttackerControlledInput",
+              "origins" : 
+              [
+                "Lcom/facebook/marianatrench/integrationtests/RegexSource;.getAttackerControlledInput:()Ljava/lang/String;"
+              ]
+            }
+          ],
+          "origin" : 
+          {
+            "method" : "Lcom/facebook/marianatrench/integrationtests/RegexSource;.getAttackerControlledInput:()Ljava/lang/String;",
+            "position" : 
+            {
+              "end" : 42,
+              "line" : 42,
+              "path" : "RegexSource.java",
+              "start" : 17
+            }
+          }
+        }
+      ]
+    }
+  ],
+  "method" : "Lcom/facebook/marianatrench/integrationtests/RegexSource;.testRegexSourceStringConcatIssue:()V",
+  "position" : 
+  {
+    "line" : 40,
+    "path" : "RegexSource.java"
+  }
+}
+{
+  "issues" : 
+  [
+    {
+      "always_features" : 
+      [
+        "via-array"
+      ],
+      "callee" : "Ljava/lang/String;.format:(Ljava/lang/String;[Ljava/lang/Object;)Ljava/lang/String;",
+      "position" : 
+      {
+        "line" : 79,
+        "path" : "RegexSource.java"
+      },
+      "rule" : 1,
+      "sink_index" : "0",
+      "sinks" : 
+      [
+        {
+          "kinds" : 
+          [
+            {
+              "always_features" : 
+              [
+                "via-array"
+              ],
+              "call_info" : "Origin",
+              "kind" : "Partial:TestSink:aci",
+              "origins" : 
+              [
+                "Ljava/lang/String;.format:(Ljava/lang/String;[Ljava/lang/Object;)Ljava/lang/String;"
+              ],
+              "triggered_rule" : 1
+            }
+          ],
+          "origin" : 
+          {
+            "method" : "Ljava/lang/String;.format:(Ljava/lang/String;[Ljava/lang/Object;)Ljava/lang/String;",
+            "position" : 
+            {
+              "end" : 28,
+              "line" : 79,
+              "path" : "RegexSource.java",
+              "start" : 26
+            }
+          }
+        }
+      ],
+      "sources" : 
+      [
+        {
+          "kinds" : 
+          [
+            {
+              "call_info" : "Origin",
+              "kind" : "AttackerControlledInput",
+              "origins" : 
+              [
+                "Lcom/facebook/marianatrench/integrationtests/RegexSource;.getAttackerControlledInput:()Ljava/lang/String;"
+              ]
+            }
+          ],
+          "local_features" : 
+          {
+            "always_features" : 
+            [
+              "via-array"
+            ]
+          },
+          "local_positions" : 
+          [
+            {
+              "end" : 0,
+              "line" : 79,
+              "start" : 0
+            }
+          ],
+          "origin" : 
+          {
+            "method" : "Lcom/facebook/marianatrench/integrationtests/RegexSource;.getAttackerControlledInput:()Ljava/lang/String;",
+            "position" : 
+            {
+              "end" : 42,
+              "line" : 78,
+              "path" : "RegexSource.java",
+              "start" : 17
+            }
+          }
+        }
+      ]
+    }
+  ],
+  "method" : "Lcom/facebook/marianatrench/integrationtests/RegexSource;.testRegexSourceStringFormatIssue:()V",
+  "position" : 
+  {
+    "line" : 76,
     "path" : "RegexSource.java"
   }
 }
@@ -1189,6 +1672,14 @@
 {
   "inline_as_getter" : "Argument(0)",
   "method" : "Lcom/instagram/common/analytics/intf/AnalyticsEvent;.addExtra:(Ljava/lang/String;Ljava/lang/String;)Lcom/instagram/common/analytics/intf/AnalyticsEvent;",
+  "model_generators" : 
+  [
+    "BuilderPatternGenerator"
+  ],
+  "modes" : 
+  [
+    "alias-memory-location-on-invoke"
+  ],
   "position" : 
   {
     "line" : 16
@@ -1298,6 +1789,14 @@
 }
 {
   "method" : "Ljava/lang/String;.concat:(Ljava/lang/String;)Ljava/lang/String;",
+  "model_generators" : 
+  [
+    "BuilderPatternGenerator"
+  ],
+  "modes" : 
+  [
+    "alias-memory-location-on-invoke"
+  ],
   "position" : 
   {
     "line" : 52
@@ -1350,6 +1849,95 @@
   {
     "line" : 36
   }
+}
+{
+  "method" : "Ljava/lang/String;.format:(Ljava/lang/String;[Ljava/lang/Object;)Ljava/lang/String;",
+  "position" : 
+  {
+    "line" : 60
+  },
+  "propagation" : 
+  [
+    {
+      "input" : "Argument(0)",
+      "output" : 
+      [
+        {
+          "kinds" : 
+          [
+            {
+              "call_info" : "Propagation",
+              "kind" : "LocalReturn",
+              "output_paths" : 
+              {
+                "" : 0
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "input" : "Argument(1)",
+      "output" : 
+      [
+        {
+          "kinds" : 
+          [
+            {
+              "call_info" : "Propagation",
+              "kind" : "LocalReturn",
+              "output_paths" : 
+              {
+                "" : 0
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "sinks" : 
+  [
+    {
+      "port" : "Argument(0)",
+      "taint" : 
+      [
+        {
+          "kinds" : 
+          [
+            {
+              "call_info" : "Declaration",
+              "kind" : "Partial:TestSink:regex",
+              "origins" : 
+              [
+                "Ljava/lang/String;.format:(Ljava/lang/String;[Ljava/lang/Object;)Ljava/lang/String;"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "port" : "Argument(1)",
+      "taint" : 
+      [
+        {
+          "kinds" : 
+          [
+            {
+              "call_info" : "Declaration",
+              "kind" : "Partial:TestSink:aci",
+              "origins" : 
+              [
+                "Ljava/lang/String;.format:(Ljava/lang/String;[Ljava/lang/Object;)Ljava/lang/String;"
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
 }
 {
   "method" : "Ljava/lang/String;.indexOf:(Ljava/lang/String;)I",
@@ -1408,6 +1996,127 @@
   }
 }
 {
+  "method" : "Ljava/lang/StringBuilder;.<init>:()V",
+  "position" : 
+  {
+    "line" : 9
+  }
+}
+{
+  "inline_as_getter" : "Argument(0)",
+  "method" : "Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;",
+  "model_generators" : 
+  [
+    "BuilderPatternGenerator"
+  ],
+  "modes" : 
+  [
+    "alias-memory-location-on-invoke"
+  ],
+  "position" : 
+  {
+    "line" : 12
+  },
+  "propagation" : 
+  [
+    {
+      "input" : "Argument(0)",
+      "output" : 
+      [
+        {
+          "kinds" : 
+          [
+            {
+              "call_info" : "Propagation",
+              "kind" : "LocalReturn",
+              "output_paths" : 
+              {
+                "" : 4
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "input" : "Argument(1)",
+      "output" : 
+      [
+        {
+          "kinds" : 
+          [
+            {
+              "call_info" : "Propagation",
+              "kind" : "LocalArgument(0)",
+              "output_paths" : 
+              {
+                "" : 0
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "sinks" : 
+  [
+    {
+      "port" : "Argument(0)",
+      "taint" : 
+      [
+        {
+          "kinds" : 
+          [
+            {
+              "call_info" : "Declaration",
+              "kind" : "Partial:TestSink:aci",
+              "origins" : 
+              [
+                "Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;"
+              ]
+            },
+            {
+              "call_info" : "Declaration",
+              "kind" : "Partial:TestSink:regex",
+              "origins" : 
+              [
+                "Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "port" : "Argument(1)",
+      "taint" : 
+      [
+        {
+          "kinds" : 
+          [
+            {
+              "call_info" : "Declaration",
+              "kind" : "Partial:TestSink:aci",
+              "origins" : 
+              [
+                "Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;"
+              ]
+            },
+            {
+              "call_info" : "Declaration",
+              "kind" : "Partial:TestSink:regex",
+              "origins" : 
+              [
+                "Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;"
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
+{
   "method" : "Ljava/lang/Thread;.<init>:(Ljava/lang/Runnable;)V",
   "position" : 
   {
@@ -1449,6 +2158,102 @@
   {
     "line" : 24
   }
+}
+{
+  "method" : "Ljava/text/MessageFormat;.<init>:()V",
+  "position" : 
+  {
+    "line" : 9
+  }
+}
+{
+  "method" : "Ljava/text/MessageFormat;.format:(Ljava/lang/String;[Ljava/lang/Object;)Ljava/lang/String;",
+  "position" : 
+  {
+    "line" : 12
+  },
+  "propagation" : 
+  [
+    {
+      "input" : "Argument(0)",
+      "output" : 
+      [
+        {
+          "kinds" : 
+          [
+            {
+              "call_info" : "Propagation",
+              "kind" : "LocalReturn",
+              "output_paths" : 
+              {
+                "" : 0
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "input" : "Argument(1)",
+      "output" : 
+      [
+        {
+          "kinds" : 
+          [
+            {
+              "call_info" : "Propagation",
+              "kind" : "LocalReturn",
+              "output_paths" : 
+              {
+                "" : 0
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "sinks" : 
+  [
+    {
+      "port" : "Argument(0)",
+      "taint" : 
+      [
+        {
+          "kinds" : 
+          [
+            {
+              "call_info" : "Declaration",
+              "kind" : "Partial:TestSink:regex",
+              "origins" : 
+              [
+                "Ljava/text/MessageFormat;.format:(Ljava/lang/String;[Ljava/lang/Object;)Ljava/lang/String;"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "port" : "Argument(1)",
+      "taint" : 
+      [
+        {
+          "kinds" : 
+          [
+            {
+              "call_info" : "Declaration",
+              "kind" : "Partial:TestSink:aci",
+              "origins" : 
+              [
+                "Ljava/text/MessageFormat;.format:(Ljava/lang/String;[Ljava/lang/Object;)Ljava/lang/String;"
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
 }
 {
   "method" : "Ljava/util/Map;.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;",

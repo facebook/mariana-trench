@@ -224,12 +224,85 @@
       "Ljava/lang/Object;.<init>:()V"
     ]
   },
-  "Lcom/facebook/marianatrench/integrationtests/RegexSource;.testRegexSource:()V" : 
+  "Lcom/facebook/marianatrench/integrationtests/RegexSource;.testRegexSourceGoogleApiKeyIssue:()V" : 
+  {
+    "static" : 
+    [
+      "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V"
+    ]
+  },
+  "Lcom/facebook/marianatrench/integrationtests/RegexSource;.testRegexSourceMessageFormat:()V" : 
+  {
+    "static" : 
+    [
+      "Lcom/facebook/marianatrench/integrationtests/RegexSource;.getAttackerControlledInput:()Ljava/lang/String;",
+      "Ljava/text/MessageFormat;.format:(Ljava/lang/String;[Ljava/lang/Object;)Ljava/lang/String;"
+    ]
+  },
+  "Lcom/facebook/marianatrench/integrationtests/RegexSource;.testRegexSourceNoMatchNoIssue:()V" : 
   {
     "static" : 
     [
       "Lcom/facebook/marianatrench/integrationtests/RegexSource;.getAttackerControlledInput:()Ljava/lang/String;",
       "Lcom/facebook/marianatrench/integrationtests/RegexSource;.sink:(Ljava/lang/String;Ljava/lang/String;)V"
+    ]
+  },
+  "Lcom/facebook/marianatrench/integrationtests/RegexSource;.testRegexSourceStringBuilderAciFirstIssue:()V" : 
+  {
+    "static" : 
+    [
+      "Lcom/facebook/marianatrench/integrationtests/RegexSource;.getAttackerControlledInput:()Ljava/lang/String;",
+      "Ljava/lang/StringBuilder;.<init>:()V"
+    ],
+    "virtual" : 
+    [
+      "Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;"
+    ]
+  },
+  "Lcom/facebook/marianatrench/integrationtests/RegexSource;.testRegexSourceStringBuilderIssue:()V" : 
+  {
+    "static" : 
+    [
+      "Lcom/facebook/marianatrench/integrationtests/RegexSource;.getAttackerControlledInput:()Ljava/lang/String;",
+      "Ljava/lang/StringBuilder;.<init>:()V"
+    ],
+    "virtual" : 
+    [
+      "Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;"
+    ]
+  },
+  "Lcom/facebook/marianatrench/integrationtests/RegexSource;.testRegexSourceStringConcatAciFirstIssue:()V" : 
+  {
+    "static" : 
+    [
+      "Lcom/facebook/marianatrench/integrationtests/RegexSource;.getAttackerControlledInput:()Ljava/lang/String;",
+      "Ljava/lang/StringBuilder;.<init>:()V"
+    ],
+    "virtual" : 
+    [
+      "Ljava/lang/Object;.toString:()Ljava/lang/String;",
+      "Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;"
+    ]
+  },
+  "Lcom/facebook/marianatrench/integrationtests/RegexSource;.testRegexSourceStringConcatIssue:()V" : 
+  {
+    "static" : 
+    [
+      "Lcom/facebook/marianatrench/integrationtests/RegexSource;.getAttackerControlledInput:()Ljava/lang/String;",
+      "Ljava/lang/StringBuilder;.<init>:()V"
+    ],
+    "virtual" : 
+    [
+      "Ljava/lang/Object;.toString:()Ljava/lang/String;",
+      "Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;"
+    ]
+  },
+  "Lcom/facebook/marianatrench/integrationtests/RegexSource;.testRegexSourceStringFormatIssue:()V" : 
+  {
+    "static" : 
+    [
+      "Lcom/facebook/marianatrench/integrationtests/RegexSource;.getAttackerControlledInput:()Ljava/lang/String;",
+      "Ljava/lang/String;.format:(Ljava/lang/String;[Ljava/lang/Object;)Ljava/lang/String;"
     ]
   },
   "Lcom/facebook/secure/context/IntentLauncher;.<init>:()V" : 
@@ -323,6 +396,13 @@
       "Ljava/lang/String;.isEmpty:()Z"
     ]
   },
+  "Ljava/lang/StringBuilder;.<init>:()V" : 
+  {
+    "static" : 
+    [
+      "Ljava/lang/Object;.<init>:()V"
+    ]
+  },
   "Ljava/lang/Thread;.<init>:(Ljava/lang/Runnable;)V" : 
   {
     "static" : 
@@ -336,6 +416,13 @@
     [
       "Ljava/lang/Runnable;.run:()V",
       "Ljava/lang/Thread;.run:()V"
+    ]
+  },
+  "Ljava/text/MessageFormat;.<init>:()V" : 
+  {
+    "static" : 
+    [
+      "Ljava/lang/Object;.<init>:()V"
     ]
   },
   "Ljava/util/TreeMap;.<init>:()V" : 

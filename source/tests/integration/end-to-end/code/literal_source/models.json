@@ -1,0 +1,107 @@
+[
+  {
+    "method": "Lcom/facebook/marianatrench/integrationtests/RegexSource;.getAttackerControlledInput:()Ljava/lang/String;",
+    "generations": [
+      {
+        "kind": "AttackerControlledInput",
+        "port": "Return"
+      }
+    ]
+  },
+  {
+    "method": "Lcom/facebook/marianatrench/integrationtests/RegexSource;.sink:(Ljava/lang/String;Ljava/lang/String;)V",
+    "sinks": [
+      {
+        "kind": "TestSink",
+        "partial_label": "regex",
+        "port": "Argument(0)"
+      },
+      {
+        "kind": "TestSink",
+        "partial_label": "aci",
+        "port": "Argument(1)"
+      }
+    ]
+  },
+  {
+    "method": "Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;",
+    "propagation": [
+      {
+        "input": "Argument(1)",
+        "output": "Argument(0)"
+      }
+    ],
+    "sinks": [
+      {
+        "kind": "TestSink",
+        "partial_label": "regex",
+        "port": "Argument(0)"
+      },
+      {
+        "kind": "TestSink",
+        "partial_label": "regex",
+        "port": "Argument(1)"
+      },
+      {
+        "kind": "TestSink",
+        "partial_label": "aci",
+        "port": "Argument(0)"
+      },
+      {
+        "kind": "TestSink",
+        "partial_label": "aci",
+        "port": "Argument(1)"
+      }
+    ]
+  },
+  {
+    "method": "Ljava/lang/String;.format:(Ljava/lang/String;[Ljava/lang/Object;)Ljava/lang/String;",
+    "propagation": [
+      {
+        "input": "Argument(1)",
+        "output": "Return"
+      },
+      {
+        "input": "Argument(0)",
+        "output": "Return"
+      }
+    ],
+    "sinks": [
+      {
+        "kind": "TestSink",
+        "partial_label": "regex",
+        "port": "Argument(0)"
+      },
+      {
+        "kind": "TestSink",
+        "partial_label": "aci",
+        "port": "Argument(1)"
+      }
+    ]
+  },
+  {
+    "method": "Ljava/text/MessageFormat;.format:(Ljava/lang/String;[Ljava/lang/Object;)Ljava/lang/String;",
+    "propagation": [
+      {
+        "input": "Argument(1)",
+        "output": "Return"
+      },
+      {
+        "input": "Argument(0)",
+        "output": "Return"
+      }
+    ],
+    "sinks": [
+      {
+        "kind": "TestSink",
+        "partial_label": "regex",
+        "port": "Argument(0)"
+      },
+      {
+        "kind": "TestSink",
+        "partial_label": "aci",
+        "port": "Argument(1)"
+      }
+    ]
+  }
+]

@@ -95,6 +95,7 @@ namespace program_options = boost::program_options;
 Options::Options(
     const std::vector<std::string>& models_paths,
     const std::vector<std::string>& field_models_paths,
+    const std::vector<std::string>& literal_models_paths,
     const std::vector<std::string>& rules_paths,
     const std::vector<std::string>& lifecycles_paths,
     const std::vector<std::string>& shims_paths,
@@ -114,6 +115,7 @@ Options::Options(
     ExportOriginsMode export_origins_mode)
     : models_paths_(models_paths),
       field_models_paths_(field_models_paths),
+      literal_models_paths_(literal_models_paths),
       rules_paths_(rules_paths),
       lifecycles_paths_(lifecycles_paths),
       shims_paths_(shims_paths),
@@ -432,6 +434,10 @@ const std::vector<std::string>& Options::models_paths() const {
 
 const std::vector<std::string>& Options::field_models_paths() const {
   return field_models_paths_;
+}
+
+const std::vector<std::string>& Options::literal_models_paths() const {
+  return literal_models_paths_;
 }
 
 const std::vector<ModelGeneratorConfiguration>&

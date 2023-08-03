@@ -26,6 +26,7 @@ class Options final {
   explicit Options(
       const std::vector<std::string>& models_paths,
       const std::vector<std::string>& field_models_paths,
+      const std::vector<std::string>& literal_models_paths,
       const std::vector<std::string>& rules_paths,
       const std::vector<std::string>& lifecycles_paths,
       const std::vector<std::string>& shims_paths,
@@ -52,6 +53,7 @@ class Options final {
 
   const std::vector<std::string>& models_paths() const;
   const std::vector<std::string>& field_models_paths() const;
+  const std::vector<std::string>& literal_models_paths() const;
   const std::vector<ModelGeneratorConfiguration>&
   model_generators_configuration() const;
   const std::vector<std::string>& rules_paths() const;
@@ -117,6 +119,7 @@ class Options final {
  private:
   std::vector<std::string> models_paths_;
   std::vector<std::string> field_models_paths_;
+  std::vector<std::string> literal_models_paths_;
   std::vector<std::string> rules_paths_;
   std::vector<std::string> lifecycles_paths_;
   std::vector<std::string> shims_paths_;

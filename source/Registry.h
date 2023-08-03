@@ -17,6 +17,7 @@
 #include <mariana-trench/Context.h>
 #include <mariana-trench/FieldModel.h>
 #include <mariana-trench/IncludeMacros.h>
+#include <mariana-trench/LiteralModel.h>
 #include <mariana-trench/Model.h>
 
 namespace {
@@ -42,7 +43,8 @@ class Registry final {
   explicit Registry(
       Context& context,
       const Json::Value& models_value,
-      const Json::Value& field_models_value);
+      const Json::Value& field_models_value,
+      const Json::Value& literal_models_value);
 
   MOVE_CONSTRUCTOR_ONLY(Registry);
 
@@ -67,12 +69,22 @@ class Registry final {
   /* This is thread-safe. */
   void set(const Model& model);
 
+  /*
+   * Checks the given literal against each configured literal model and returns
+   * the combined model of all matched models.
+   * 
+   * @param literal String literal for which to provide a model.
+   * @return Combined literal model of all matched models.
+   */
+  LiteralModel match_literal(std::string_view literal) const;
+
   std::size_t models_size() const;
   std::size_t field_models_size() const;
   std::size_t issues_size() const;
 
   void join_with(const Model& model);
   void join_with(const FieldModel& field_model);
+  void join_with(const LiteralModel& literal_model);
   void join_with(const Registry& other);
 
   void dump_metadata(const boost::filesystem::path& path) const;
@@ -87,6 +99,7 @@ class Registry final {
 
   mutable ConcurrentMap<const Method*, Model> models_;
   ConcurrentMap<const Field*, FieldModel> field_models_;
+  ConcurrentMap<std::string, LiteralModel> literal_models_;
 };
 
 } // namespace marianatrench

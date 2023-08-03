@@ -1207,32 +1207,20 @@ bool ForwardTaintTransfer::analyze_const_string(
     ForwardTaintEnvironment* environment) {
   log_instruction(context, instruction);
 
-  // TODO: Specify regex model in config
-  const Fields::Iterator template_field = find_if(std::cbegin(context->fields), std::cend(context->fields), [](const Field* field) {
-    return field->get_name().find("TEMPLATE_FIELD") != std::string::npos;
-  });
-  if (template_field == std::cend(context->fields))
-    return false;
-
-  // TODO: Specify regex to match in config
-  const std::string literal{instruction->get_string()->str()};
-  if (!std::regex_match(literal, std::regex("SELECT \\*.*")))
-    return false;
-
-  const Field* field = *template_field;
-  const FieldModel declared_field_model = context->registry.get(field);
-
-  const auto& aliasing = context->aliasing.get(instruction);
+  const std::string_view literal{instruction->get_string()->str()};
+  const LiteralModel model{context->registry.get(literal)};
   LOG_OR_DUMP(
       context,
       4,
       "Tainting register {} with {}",
       k_result_register,
-      declared_field_model.sources());
+      model.sources());
+
+  const auto& aliasing = context->aliasing.get(instruction);
   environment->write(
       aliasing.result_memory_locations(),
-      declared_field_model.sources(),
-      UpdateKind::Weak);
+      model.sources(),
+      UpdateKind::Strong);
 
   return false;
 }

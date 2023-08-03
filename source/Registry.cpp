@@ -51,7 +51,8 @@ Registry::Registry(
 Registry::Registry(
     Context& context,
     const Json::Value& models_value,
-    const Json::Value& field_models_value)
+    const Json::Value& field_models_value,
+    const Json::Value& literal_models_value)
     : context_(context) {
   for (const auto& value : JsonValidation::null_or_array(models_value)) {
     const auto* method = Method::from_json(value["method"], context);
@@ -62,6 +63,9 @@ Registry::Registry(
     const auto* field = Field::from_json(value["field"], context);
     mt_assert(field != nullptr);
     join_with(FieldModel::from_json(field, value, context));
+  }
+  for (const auto& value : JsonValidation::null_or_array(literal_models_value)) {
+    join_with(LiteralModel::from_json(value, context));
   }
 }
 
@@ -81,14 +85,24 @@ Registry Registry::load(
     registry.join_with(Registry(
         context,
         /* models_value */ JsonValidation::parse_json_file(models_path),
-        /* field_models_value */ Json::Value(Json::arrayValue)));
+        /* field_models_value */ Json::Value(Json::arrayValue),
+        /* literal_models_value */ Json::Value(Json::arrayValue)));
   }
   for (const auto& field_models_path : options.field_models_paths()) {
     registry.join_with(Registry(
         context,
         /* models_value */ Json::Value(Json::arrayValue),
         /* field_models_value */
-        JsonValidation::parse_json_file(field_models_path)));
+        JsonValidation::parse_json_file(field_models_path),
+        /* literal_models_value */ Json::Value(Json::arrayValue)));
+  }
+  for (const auto& literal_models_path : options.literal_models_paths()) {
+    registry.join_with(Registry(
+        context,
+        /* models_value */ Json::Value(Json::arrayValue),
+        /* field_models_value */ Json::Value(Json::arrayValue),
+        /* literal_models_value */
+        JsonValidation::parse_json_file(literal_models_path)));
   }
 
   // Add a default model for methods that don't have one
@@ -138,6 +152,16 @@ void Registry::set(const Model& model) {
   models_.insert_or_assign(std::make_pair(model.method(), model));
 }
 
+LiteralModel Registry::match_literal(const std::string_view literal) const {
+  LiteralModel result_model;
+  for (const auto& [pattern, model] : literal_models_) {
+    if (model.matches(literal)) {
+      result_model.join_with(model);
+    } 
+  }
+  return result_model;
+}
+
 std::size_t Registry::models_size() const {
   return models_.size();
 }
@@ -176,12 +200,26 @@ void Registry::join_with(const FieldModel& field_model) {
   }
 }
 
+void Registry::join_with(const LiteralModel& literal_model) {
+  const std::optional<std::string> pattern{literal_model.pattern()};
+  mt_assert(pattern);
+  auto iterator = literal_models_.find(*pattern);
+  if (iterator != literal_models_.end()) {
+    iterator->second.join_with(literal_model);
+  } else {
+    literal_models_.emplace(*pattern, literal_model);
+  }
+}
+
 void Registry::join_with(const Registry& other) {
   for (const auto& other_model : other.models_) {
     join_with(other_model.second);
   }
   for (const auto& other_field_model : other.field_models_) {
     join_with(other_field_model.second);
+  }
+  for (const auto& other_literal_model : other.literal_models_) {
+    join_with(other_literal_model.second);
   }
 }
 
@@ -238,6 +276,10 @@ std::string Registry::dump_models() const {
     writer->write(field_model.second.to_json(context_), &string);
     string << "\n";
   }
+  for (const auto& literal_model : literal_models_) {
+    writer->write(literal_model.second.to_json(context_), &string);
+    string << "\n";
+  }
   return string.str();
 }
 
@@ -250,6 +292,10 @@ Json::Value Registry::models_to_json() const {
   models_value["field_models"] = Json::Value(Json::arrayValue);
   for (auto field_model : field_models_) {
     models_value["field_models"].append(field_model.second.to_json(context_));
+  }
+  models_value["literal_models"] = Json::Value(Json::arrayValue);
+  for (const auto& literal_model : literal_models_) {
+    models_value["literal_models"].append(literal_model.second.to_json(context_));
   }
   return models_value;
 }
@@ -276,8 +322,13 @@ void Registry::dump_models(
     field_models.push_back(field_model.second);
   }
 
+  std::vector<LiteralModel> literal_models;
+  for (const auto& literal_model : literal_models_) {
+    literal_models.push_back(literal_model.second);
+  }
+
   const auto total_batch =
-      (models_.size() + field_models_.size()) / batch_size + 1;
+      (models_.size() + field_models_.size() + literal_models_.size()) / batch_size + 1;
   const auto padded_total_batch = fmt::format("{:0>5}", total_batch);
 
   auto queue = sparta::work_queue<std::size_t>(
@@ -298,13 +349,17 @@ void Registry::dump_models(
         // Write the current batch of models to file.
         auto writer = JsonValidation::compact_writer();
         for (std::size_t i = batch_size * batch; i < batch_size * (batch + 1) &&
-             i < models.size() + field_models.size();
+             i < models.size() + field_models.size() + literal_models.size();
              i++) {
           if (i < models.size()) {
             writer->write(models[i].to_json(context_), &batch_stream);
-          } else {
+          } else if (i < models.size() + field_models.size()) {
             writer->write(
                 field_models[i - models.size()].to_json(context_),
+                &batch_stream);
+          } else {
+            writer->write(
+                literal_models[i - models.size() - field_models.size()].to_json(context_),
                 &batch_stream);
           }
           batch_stream << "\n";

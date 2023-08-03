@@ -1,0 +1,10 @@
+[
+  {
+    "pattern": "SELECT \\*.*",
+    "sources": [
+      {
+        "kind": "Regex"
+      }
+    ]
+  }
+]
