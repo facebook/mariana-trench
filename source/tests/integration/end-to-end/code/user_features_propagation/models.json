@@ -1,0 +1,21 @@
+[
+  {
+    "method": "Lcom/facebook/marianatrench/integrationtests/UserFeaturesPropagation;.source:()Ljava/lang/Object;",
+    "generations": [
+      {
+        "kind": "Source1",
+        "port": "Return",
+        "features": [
+          "source1"
+        ]
+      },
+      {
+        "kind": "Source2",
+        "port": "Return",
+        "features": [
+          "source2"
+        ]
+      }
+    ]
+  }
+]
