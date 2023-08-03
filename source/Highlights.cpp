@@ -7,7 +7,7 @@
 
 #include <fstream>
 
-#include <sparta/SpartaWorkQueue.h>
+#include <sparta/WorkQueue.h>
 
 #include <DexUtil.h>
 

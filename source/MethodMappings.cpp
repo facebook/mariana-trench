@@ -5,7 +5,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-#include <sparta/SpartaWorkQueue.h>
+#include <sparta/WorkQueue.h>
 
 #include <mariana-trench/MethodMappings.h>
 #include <mariana-trench/Redex.h>

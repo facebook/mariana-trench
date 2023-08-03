@@ -16,7 +16,7 @@
 #include <fmt/format.h>
 #include <re2/re2.h>
 
-#include <sparta/SpartaWorkQueue.h>
+#include <sparta/WorkQueue.h>
 
 #include <ConcurrentContainers.h>
 #include <DexClass.h>

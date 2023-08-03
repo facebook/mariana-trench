@@ -11,7 +11,7 @@
 #include <boost/algorithm/string/predicate.hpp>
 #include <re2/re2.h>
 
-#include <sparta/SpartaWorkQueue.h>
+#include <sparta/WorkQueue.h>
 
 #include <GraphUtil.h>
 #include <IRInstruction.h>

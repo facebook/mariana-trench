@@ -7,7 +7,7 @@
 
 #include <fmt/format.h>
 
-#include <sparta/SpartaWorkQueue.h>
+#include <sparta/WorkQueue.h>
 
 #include <ControlFlow.h>
 #include <Show.h>

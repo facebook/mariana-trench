@@ -7,7 +7,7 @@
 
 #include <algorithm>
 
-#include <sparta/SpartaWorkQueue.h>
+#include <sparta/WorkQueue.h>
 
 #include <Show.h>
 

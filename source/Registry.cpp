@@ -12,7 +12,7 @@
 #include <fmt/format.h>
 #include <json/value.h>
 
-#include <sparta/SpartaWorkQueue.h>
+#include <sparta/WorkQueue.h>
 
 #include <mariana-trench/Constants.h>
 #include <mariana-trench/JsonValidation.h>
