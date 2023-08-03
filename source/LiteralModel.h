@@ -67,6 +67,13 @@ class LiteralModel final {
    */
   void join_with(const LiteralModel& other);
 
+  /**
+   * Indicates whether model contains any taints.
+   * 
+   * @return \a true iff \a sources_ is bottom.
+   */
+  bool empty() const;
+
   static LiteralModel from_json(
       const Json::Value& value,
       Context& context);

@@ -75,9 +75,9 @@ void LiteralModel::join_with(const LiteralModel& other) {
   sources_.join_with(other.sources_);
 }
 
-static constexpr const char* PATTERN = "pattern";
-
-static constexpr const char* SOURCES = "sources";
+bool LiteralModel::empty() const {
+  return sources_.is_bottom();
+}
 
 LiteralModel LiteralModel::from_json(
     const Json::Value& value,

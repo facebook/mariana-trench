@@ -1208,7 +1208,11 @@ bool ForwardTaintTransfer::analyze_const_string(
   log_instruction(context, instruction);
 
   const std::string_view literal{instruction->get_string()->str()};
-  const LiteralModel model{context->registry.get(literal)};
+  const LiteralModel model{context->registry.match_literal(literal)};
+  if (model.empty()) {
+    return false;
+  }
+
   LOG_OR_DUMP(
       context,
       4,
