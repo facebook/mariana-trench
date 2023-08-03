@@ -98,7 +98,9 @@
     "Lcom/instagram/common/analytics/intf/AnalyticsEvent;.<init>:()V",
     "Ljava/lang/Integer;.<init>:()V",
     "Ljava/lang/String;.<init>:()V",
+    "Ljava/lang/StringBuilder;.<init>:()V",
     "Ljava/lang/Thread;.<init>:(Ljava/lang/Runnable;)V",
+    "Ljava/text/MessageFormat;.<init>:()V",
     "Ljava/util/TreeMap;.<init>:()V"
   ],
   "Ljava/lang/Runnable;.run:()V" : 
