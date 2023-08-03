@@ -83,7 +83,7 @@ LiteralModel LiteralModel::from_json(
     const Json::Value& value,
     Context& context) {
   JsonValidation::check_unexpected_members(
-      value, {PATTERN, SOURCES});
+      value, {"pattern", "sources", "description"});
 
   std::vector<TaintConfig> sources;
   for (auto source : JsonValidation::null_or_array(value, /* field */ "sources")) {
