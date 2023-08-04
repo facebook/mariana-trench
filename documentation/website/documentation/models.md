@@ -640,6 +640,50 @@ public class TestClass {
 
 Field signature formats follow the Dalvik bytecode format similar to methods as discussed [above](#method-name-format). This is of the form `<className>.<fieldName>:<fieldType>`.
 
+### Literal Models
+
+Literal models represent user-defined taints on string literals matching configurable regular expressions. They can only be configured as sources and are intended to identify suspicious patterns, such as user-controlled data being concatenated with a string literal which looks like an SQL query.
+
+> **NOTE:** Each use of a literal in the analysed code which matches a pattern in a literal model will generate a new taint which needs to be explored by Mariana Trench. Using overly broad patterns like `.*` should thus be avoided, as they can lead to poor performance and high memory usage.
+
+Example literal models:
+```
+[
+  {
+    "pattern": "SELECT \\*.*",
+    "description": "Potential SQL Query",
+    "sources": [
+      {
+        "kind": "SqlQuery"
+      }
+    ]
+  },
+  {
+    "pattern": "AI[0-9A-Z]{16}",
+    "description": "Suspected Google API Key",
+    "sources": [
+      {
+        "kind": "GoogleAPIKey"
+      }
+    ]
+  }
+]
+```
+
+Example code:
+```java
+void testRegexSource() {
+  String prefix = "SELECT * FROM USERS WHERE id = ";
+  String aci = getAttackerControlledInput();
+  String query = prefix + aci; // Sink
+}
+
+void testRegexSourceGoogleApiKey() {
+  String secret = "AIABCD1234EFGH5678";
+  sink(secret);
+}
+```
+
 ## Generators
 
 Mariana Trench allows for dynamic model specifications. This allows a user to specify models of methods before running the analysis. This is used to specify sources, sinks, propagation and modes.
