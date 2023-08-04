@@ -1,0 +1,50 @@
+// @generated
+{
+  "Landroid/content/Context;.startActivity:(Landroid/content/Intent;)V" : 
+  [
+    "Landroid/app/Activity;.startActivity:(Landroid/content/Intent;)V"
+  ],
+  "Lcom/facebook/marianatrench/integrationtests/Basic$Base;.derived1Sink:(Ljava/lang/Object;)V" : 
+  [
+    "Lcom/facebook/marianatrench/integrationtests/Basic$Derived1;.derived1Sink:(Ljava/lang/Object;)V",
+    "Lcom/facebook/marianatrench/integrationtests/Basic$Derived2;.derived1Sink:(Ljava/lang/Object;)V"
+  ],
+  "Lcom/facebook/marianatrench/integrationtests/Basic$Base;.derived1Source:()Ljava/lang/Object;" : 
+  [
+    "Lcom/facebook/marianatrench/integrationtests/Basic$Derived1;.derived1Source:()Ljava/lang/Object;",
+    "Lcom/facebook/marianatrench/integrationtests/Basic$Derived2;.derived1Source:()Ljava/lang/Object;"
+  ],
+  "Lcom/facebook/marianatrench/integrationtests/Basic$Base;.potentialSink:(Ljava/lang/Object;)V" : 
+  [
+    "Lcom/facebook/marianatrench/integrationtests/Basic$Derived1;.potentialSink:(Ljava/lang/Object;)V",
+    "Lcom/facebook/marianatrench/integrationtests/Basic$Derived2;.potentialSink:(Ljava/lang/Object;)V"
+  ],
+  "Lcom/facebook/marianatrench/integrationtests/Basic$Base;.potentialSource:()Ljava/lang/Object;" : 
+  [
+    "Lcom/facebook/marianatrench/integrationtests/Basic$Derived1;.potentialSource:()Ljava/lang/Object;",
+    "Lcom/facebook/marianatrench/integrationtests/Basic$Derived2;.potentialSource:()Ljava/lang/Object;"
+  ],
+  "Lcom/facebook/marianatrench/integrationtests/PropagateIntervals$Base;.sink:(Ljava/lang/Object;)V" : 
+  [
+    "Lcom/facebook/marianatrench/integrationtests/PropagateIntervals$Derived1;.sink:(Ljava/lang/Object;)V",
+    "Lcom/facebook/marianatrench/integrationtests/PropagateIntervals$Derived2;.sink:(Ljava/lang/Object;)V"
+  ],
+  "Lcom/facebook/marianatrench/integrationtests/PropagateIntervals$Base;.source:()Ljava/lang/Object;" : 
+  [
+    "Lcom/facebook/marianatrench/integrationtests/PropagateIntervals$Derived1;.source:()Ljava/lang/Object;",
+    "Lcom/facebook/marianatrench/integrationtests/PropagateIntervals$Derived2;.source:()Ljava/lang/Object;"
+  ],
+  "Ljava/lang/Object;.toString:()Ljava/lang/String;" : 
+  [
+    "Landroid/location/Location;.toString:()Ljava/lang/String;",
+    "Landroid/net/Uri;.toString:()Ljava/lang/String;"
+  ],
+  "Ljava/lang/Runnable;.run:()V" : 
+  [
+    "Ljava/lang/Thread;.run:()V"
+  ],
+  "Ljava/util/Map;.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;" : 
+  [
+    "Ljava/util/TreeMap;.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;"
+  ]
+}
