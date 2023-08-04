@@ -7,6 +7,7 @@
 
 #pragma once
 
+#include <mariana-trench/Assert.h>
 #include <mariana-trench/ClassIntervals.h>
 #include <mariana-trench/IncludeMacros.h>
 
@@ -29,7 +30,10 @@ class CalleeInterval {
  public:
   CalleeInterval()
       : interval_(ClassIntervals::Interval::max_interval()),
-        preserves_type_context_(false) {}
+        preserves_type_context_(false) {
+    // Default constructor is expected to produce a "default" interval.
+    mt_assert(is_default());
+  }
 
   explicit CalleeInterval(
       ClassIntervals::Interval interval,
@@ -44,6 +48,11 @@ class CalleeInterval {
   bool operator==(const CalleeInterval& other) const {
     return interval_ == other.interval_ &&
         preserves_type_context_ == other.preserves_type_context_;
+  }
+
+  bool is_default() const {
+    return interval_ == ClassIntervals::Interval::max_interval() &&
+        !preserves_type_context_;
   }
 
   const ClassIntervals::Interval& interval() const {

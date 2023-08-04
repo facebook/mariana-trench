@@ -25,6 +25,18 @@ bool ClassIntervals::Interval::contains(
   return other.lower_bound >= lower_bound && other.upper_bound <= upper_bound;
 }
 
+Json::Value ClassIntervals::Interval::to_json() const {
+  auto interval_json = Json::Value(Json::arrayValue);
+  // Use the int64 constructor. This allows comparison against a Json::Value
+  // object returned from parsing a JSON string. Otherwise, we could end up
+  // comparing a Json::UInt type against a Json::Int type and fail equality
+  // check even for the same integer value.
+  interval_json.append(Json::Value(static_cast<int64_t>(lower_bound)));
+  interval_json.append(Json::Value(static_cast<int64_t>(upper_bound)));
+
+  return interval_json;
+}
+
 std::ostream& operator<<(
     std::ostream& out,
     const marianatrench::ClassIntervals::Interval& interval) {
@@ -121,10 +133,7 @@ const ClassIntervals::Interval& ClassIntervals::get_interval(
 Json::Value ClassIntervals::to_json() const {
   auto output = Json::Value(Json::objectValue);
   for (auto [klass, interval] : class_intervals_) {
-    auto interval_json = Json::Value(Json::arrayValue);
-    interval_json.append(Json::Value(interval.lower_bound));
-    interval_json.append(Json::Value(interval.upper_bound));
-    output[show(klass)] = interval_json;
+    output[show(klass)] = interval.to_json();
   }
   return output;
 }

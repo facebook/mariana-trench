@@ -1926,7 +1926,8 @@ TEST_F(CallPositionFramesTest, Show) {
       "[FramesByCalleePort(CalleePortFrames(callee_port=AccessPath(Leaf), "
       "frames=[KindFrames(frames=[FramesByInterval(interval={[0, 4294967295], "
       "preserves_type_context=0}, frame=Frame(kind=`TestSink1`, callee_port="
-      "AccessPath(Leaf), call_info=Declaration, "
+      "AccessPath(Leaf), callee_interval={[0, 4294967295], "
+      "preserves_type_context=0}, call_info=Declaration, "
       "origins={`LOne;.one:()V`})),]),])),]");
 
   EXPECT_EQ(show(CallPositionFrames::bottom()), "[]");

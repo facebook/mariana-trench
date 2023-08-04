@@ -67,6 +67,8 @@ class ClassIntervals final {
      */
     bool contains(const Interval& other) const;
 
+    Json::Value to_json() const;
+
     friend std::ostream& operator<<(std::ostream&, const Interval&);
 
     std::uint32_t lower_bound;

@@ -358,6 +358,13 @@ Json::Value Frame::to_json(ExportOriginsMode export_origins_mode) const {
     }
     value["output_paths"] = output_paths_value;
   }
+
+  if (!callee_interval_.is_default()) {
+    value["callee_interval"] = callee_interval_.interval().to_json();
+    value["preserves_type_context"] =
+        Json::Value(callee_interval_.preserves_type_context());
+  }
+
   return value;
 }
 
@@ -402,6 +409,7 @@ std::ostream& operator<<(std::ostream& out, const Frame& frame) {
   if (frame.call_position_ != nullptr) {
     out << ", call_position=" << show(frame.call_position_);
   }
+  out << ", callee_interval=" << show(frame.callee_interval_);
   out << ", call_info=" << show_call_info(frame.call_info_);
   if (frame.distance_ != 0) {
     out << ", distance=" << frame.distance_;
