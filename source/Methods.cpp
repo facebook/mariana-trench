@@ -21,7 +21,7 @@ namespace marianatrench {
 Methods::Methods(const DexStoresVector& stores) {
   // Create all methods with no type overrides.
   for (auto& scope : DexStoreClassesIterator(stores)) {
-    walk::parallel::methods(scope, [&](DexMethod* method) {
+    walk::parallel::methods(scope, [this](DexMethod* method) {
       set_.insert(Method(method, /* parameter_type_overrides */ {}));
     });
   }

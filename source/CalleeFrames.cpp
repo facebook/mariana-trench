@@ -159,7 +159,8 @@ void CalleeFrames::update_non_leaf_positions(
         new_call_position,
     const std::function<LocalPositionSet(const LocalPositionSet&)>&
         new_local_positions) {
-  if (callee() == nullptr) {
+  const auto* callee = this->callee();
+  if (callee == nullptr) {
     // This is a leaf.
     return;
   }
@@ -167,8 +168,9 @@ void CalleeFrames::update_non_leaf_positions(
   FramesByKey result;
   for (const auto& [_, call_position_frames] : frames_.bindings()) {
     auto new_positions = call_position_frames.map_positions(
-        [&](const auto& access_path, const auto* position) {
-          return new_call_position(callee(), access_path, position);
+        [&new_call_position, callee](
+            const auto& access_path, const auto* position) {
+          return new_call_position(callee, access_path, position);
         },
         new_local_positions);
 
@@ -176,9 +178,10 @@ void CalleeFrames::update_non_leaf_positions(
       // Lambda below refuses to capture `new_frames` from a structured
       // binding, so explicitly declare it here.
       const auto& frames = new_frames;
-      result.update(position, [&](CallPositionFrames* call_position_frames) {
-        call_position_frames->join_with(frames);
-      });
+      result.update(
+          position, [&frames](CallPositionFrames* call_position_frames) {
+            call_position_frames->join_with(frames);
+          });
     }
   }
 

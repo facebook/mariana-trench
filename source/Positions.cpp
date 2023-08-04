@@ -155,7 +155,7 @@ void add_to_class_to_path_map(
             if (std::any_of(
                     skipped_package_prefixes.begin(),
                     skipped_package_prefixes.end(),
-                    [&](const auto& skipped_prefix) {
+                    [&package](const auto& skipped_prefix) {
                       return boost::starts_with(*package, skipped_prefix);
                     })) {
               LOG(3, "Skipping module `{}` at `{}`...", *package, *path);
@@ -222,7 +222,7 @@ Positions::Positions(const Options& options, const DexStoresVector& stores) {
   if (options.skip_source_indexing()) {
     // Create a dummy path for all methods.
     for (auto& scope : DexStoreClassesIterator(stores)) {
-      walk::parallel::methods(scope, [&](DexMethod* method) {
+      walk::parallel::methods(scope, [this](DexMethod* method) {
         auto class_name = method->get_class()->str_copy();
         class_name = class_name.substr(0, class_name.find(";"));
         class_name = class_name.substr(0, class_name.find("$")) + ";";
@@ -341,7 +341,7 @@ Positions::Positions(const Options& options, const DexStoresVector& stores) {
     LOG(2, "Indexing method paths...");
 
     for (auto& scope : DexStoreClassesIterator(stores)) {
-      walk::parallel::methods(scope, [&](DexMethod* method) {
+      walk::parallel::methods(scope, [this, &class_to_path](DexMethod* method) {
         auto class_name = method->get_class()->str_copy();
         class_name = class_name.substr(0, class_name.find(";"));
         class_name = class_name.substr(0, class_name.find("$")) + ";";
@@ -365,7 +365,7 @@ Positions::Positions(const Options& options, const DexStoresVector& stores) {
   // Index first lines of methods because building the control flow graph will
   // destroy them.
   for (auto& scope : DexStoreClassesIterator(stores)) {
-    walk::parallel::methods(scope, [&](DexMethod* method) {
+    walk::parallel::methods(scope, [this](DexMethod* method) {
       const auto* code = method->get_code();
       if (!code) {
         return;

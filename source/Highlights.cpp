@@ -242,13 +242,14 @@ Taint augment_taint_positions(
     const FileLines& lines,
     const Context& context) {
   taint.update_non_leaf_positions(
-      [&](const Method* callee,
+      [&lines, &context](
+          const Method* callee,
           const AccessPath& callee_port,
           const Position* position) {
         return augment_frame_position(
             callee, callee_port, position, lines, context);
       },
-      [&](const LocalPositionSet& local_positions) {
+      [&lines, &context](const LocalPositionSet& local_positions) {
         return augment_local_positions(local_positions, lines, context);
       });
   return taint;
@@ -308,7 +309,8 @@ void get_frames_files_to_methods(
       if (method_position && method_position->path()) {
         issue_files_to_methods.update(
             method_position->path(),
-            [&](const std::string* /*filepath*/,
+            [callee](
+                const std::string* /*filepath*/,
                 std::unordered_set<const Method*>& methods,
                 bool) { methods.emplace(callee); });
       }
@@ -373,7 +375,8 @@ get_issue_files_to_methods(const Context& context, const Registry& registry) {
     }
     issue_files_to_methods.update(
         method_position->path(),
-        [&](const std::string* /*filepath*/,
+        [method](
+            const std::string* /*filepath*/,
             std::unordered_set<const Method*>& methods,
             bool) { methods.emplace(method); });
   });

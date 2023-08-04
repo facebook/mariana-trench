@@ -20,7 +20,7 @@ namespace marianatrench {
 Fields::Fields(const DexStoresVector& stores) {
   for (auto& scope : DexStoreClassesIterator(stores)) {
     walk::parallel::fields(
-        scope, [&](DexField* field) { set_.insert(Field(field)); });
+        scope, [this](DexField* field) { set_.insert(Field(field)); });
   }
 }
 

@@ -53,11 +53,13 @@ void ForwardTaintEnvironment::write(
     MemoryLocation* memory_location,
     TaintTree taint,
     UpdateKind kind) {
-  taint_.update(memory_location->root(), [&](const TaintTree& tree) {
-    auto copy = tree;
-    copy.write(memory_location->path(), std::move(taint), kind);
-    return copy;
-  });
+  taint_.update(
+      memory_location->root(),
+      [memory_location, &taint, kind](const TaintTree& tree) {
+        auto copy = tree;
+        copy.write(memory_location->path(), std::move(taint), kind);
+        return copy;
+      });
 }
 
 void ForwardTaintEnvironment::write(
@@ -68,11 +70,13 @@ void ForwardTaintEnvironment::write(
   Path full_path = memory_location->path();
   full_path.extend(path);
 
-  taint_.update(memory_location->root(), [&](const TaintTree& tree) {
-    auto copy = tree;
-    copy.write(full_path, std::move(taint), kind);
-    return copy;
-  });
+  taint_.update(
+      memory_location->root(),
+      [&full_path, &taint, kind](const TaintTree& tree) {
+        auto copy = tree;
+        copy.write(full_path, std::move(taint), kind);
+        return copy;
+      });
 }
 
 void ForwardTaintEnvironment::write(
@@ -83,11 +87,13 @@ void ForwardTaintEnvironment::write(
   Path full_path = memory_location->path();
   full_path.extend(path);
 
-  taint_.update(memory_location->root(), [&](const TaintTree& tree) {
-    auto copy = tree;
-    copy.write(full_path, std::move(taint), kind);
-    return copy;
-  });
+  taint_.update(
+      memory_location->root(),
+      [&full_path, &taint, kind](const TaintTree& tree) {
+        auto copy = tree;
+        copy.write(full_path, std::move(taint), kind);
+        return copy;
+      });
 }
 
 void ForwardTaintEnvironment::write(

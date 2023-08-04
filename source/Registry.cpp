@@ -27,7 +27,7 @@ namespace marianatrench {
 
 Registry::Registry(Context& context) : context_(context) {
   auto queue = sparta::work_queue<const Method*>(
-      [&](const Method* method) { set(Model(method, context)); },
+      [this, &context](const Method* method) { set(Model(method, context)); },
       sparta::parallel::default_num_threads());
   for (const auto* method : *context.methods) {
     queue.add_item(method);
@@ -99,7 +99,7 @@ Registry Registry::load(
 
 void Registry::add_default_models() {
   auto queue = sparta::work_queue<const Method*>(
-      [&](const Method* method) {
+      [this](const Method* method) {
         models_.insert(std::make_pair(method, Model(method, context_)));
       },
       sparta::parallel::default_num_threads());

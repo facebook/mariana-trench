@@ -20,7 +20,7 @@ ControlFlowGraphs::ControlFlowGraphs(const DexStoresVector& stores) {
           [](DexClass* dex_class) { return dex_class->is_external(); }),
       scope.end());
 
-  walk::parallel::code(scope, [&](DexMethod* /* method */, IRCode& code) {
+  walk::parallel::code(scope, [](DexMethod* /* method */, IRCode& code) {
     code.build_cfg();
     code.cfg().calculate_exit_block();
   });

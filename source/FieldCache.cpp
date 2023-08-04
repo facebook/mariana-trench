@@ -62,7 +62,7 @@ FieldCache::FieldCache(
   // Class hierarchy is ignored at this stage.
   ConcurrentMap<const DexType*, FieldNameToTypeMap> fields_in_class;
   for (const auto& scope : DexStoreClassesIterator(stores)) {
-    walk::parallel::classes(scope, [&](const DexClass* klass) {
+    walk::parallel::classes(scope, [&fields_in_class](const DexClass* klass) {
       FieldNameToTypeMap field_to_type;
       for (const auto* field : klass->get_all_fields()) {
         field_to_type.emplace(field->get_name(), field->get_type());
@@ -77,28 +77,30 @@ FieldCache::FieldCache(
   // Use class hierarchy to compute
   // class_type -> derived/inherited fields -> type
   for (const auto& scope : DexStoreClassesIterator(stores)) {
-    walk::parallel::classes(scope, [&](const DexClass* klass) {
-      const auto* type = klass->get_type();
-      if (type == type::java_lang_Object()) {
-        return;
-      }
-      auto class_types = types_in_class_hierarchy(type, class_hierarchies);
-      FieldTypeMap all_field_types;
-      for (const auto* class_type : class_types) {
-        auto field_types = fields_in_class.find(class_type);
-        if (field_types == fields_in_class.end()) {
-          // No fields in this class.
-          continue;
-        }
-        for (const auto& [field, field_type] : field_types->second) {
-          all_field_types[field].insert(field_type);
-        }
-      }
+    walk::parallel::classes(
+        scope,
+        [&class_hierarchies, &fields_in_class, this](const DexClass* klass) {
+          const auto* type = klass->get_type();
+          if (type == type::java_lang_Object()) {
+            return;
+          }
+          auto class_types = types_in_class_hierarchy(type, class_hierarchies);
+          FieldTypeMap all_field_types;
+          for (const auto* class_type : class_types) {
+            auto field_types = fields_in_class.find(class_type);
+            if (field_types == fields_in_class.end()) {
+              // No fields in this class.
+              continue;
+            }
+            for (const auto& [field, field_type] : field_types->second) {
+              all_field_types[field].insert(field_type);
+            }
+          }
 
-      field_cache_.emplace(
-          klass->get_type(),
-          std::make_unique<FieldTypeMap>(std::move(all_field_types)));
-    });
+          field_cache_.emplace(
+              klass->get_type(),
+              std::make_unique<FieldTypeMap>(std::move(all_field_types)));
+        });
   }
 }
 

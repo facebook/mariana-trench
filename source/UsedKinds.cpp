@@ -22,7 +22,7 @@ std::size_t UsedKinds::remove_unused_kinds(
     Registry& registry) {
   auto unused_kinds = rules.collect_unused_kinds(kind_factory);
   auto queue = sparta::work_queue<const Method*>(
-      [&](const Method* method) {
+      [&registry, &unused_kinds](const Method* method) {
         auto model = registry.get(method);
         model.remove_kinds(unused_kinds);
         registry.set(model);

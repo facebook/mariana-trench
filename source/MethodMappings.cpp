@@ -20,7 +20,8 @@ void create_name_to_method(
   auto method_name = method->get_name();
   method_mapping.update(
       method_name,
-      [&](std::string_view /* name */,
+      [method](
+          std::string_view /* name */,
           MethodHashedSet& methods,
           bool /* exists */) { methods.add(method); });
 }
@@ -31,7 +32,8 @@ void create_class_to_method(
   auto parent_class = method->get_class()->get_name()->str();
   method_mapping.update(
       parent_class,
-      [&](std::string_view /* parent_name */,
+      [method](
+          std::string_view /* parent_name */,
           MethodHashedSet& methods,
           bool /* exists */) { methods.add(method); });
 }
@@ -51,7 +53,8 @@ void create_class_to_override_method(
   for (const auto& parent_class : parent_classes) {
     method_mapping.update(
         parent_class,
-        [&](std::string_view /* parent_name */,
+        [method](
+            std::string_view /* parent_name */,
             MethodHashedSet& methods,
             bool /* exists */) { methods.add(method); });
   }
@@ -63,7 +66,8 @@ void create_signature_to_method(
   std::string signature = method->signature();
   method_mapping.update(
       signature,
-      [&](const std::string& /* parent_name */,
+      [method](
+          const std::string& /* parent_name */,
           MethodHashedSet& methods,
           bool /* exists */) { methods.add(method); });
 }
@@ -84,7 +88,8 @@ void create_annotation_type_to_method(
     }
     method_mapping.update(
         annotation_type->str(),
-        [&](std::string_view /* annotation_type */,
+        [method](
+            std::string_view /* annotation_type */,
             MethodHashedSet& methods,
             bool /* exists */) { methods.add(method); });
   }

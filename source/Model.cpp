@@ -754,8 +754,9 @@ void Model::add_port_sanitizers(SanitizerSet sanitizers, Root root) {
     return;
   }
 
-  port_sanitizers_.update(
-      root, [&](const SanitizerSet& set) { return set.join(sanitizers); });
+  port_sanitizers_.update(root, [&sanitizers](const SanitizerSet& set) {
+    return set.join(sanitizers);
+  });
 }
 
 Taint Model::apply_source_sink_sanitizers(
@@ -799,7 +800,7 @@ void Model::add_attach_to_sources(Root root, FeatureSet features) {
   }
 
   attach_to_sources_.update(
-      root, [&](const FeatureSet& set) { return set.join(features); });
+      root, [&features](const FeatureSet& set) { return set.join(features); });
 }
 
 FeatureSet Model::attach_to_sources(Root root) const {
@@ -812,7 +813,7 @@ void Model::add_attach_to_sinks(Root root, FeatureSet features) {
   }
 
   attach_to_sinks_.update(
-      root, [&](const FeatureSet& set) { return set.join(features); });
+      root, [&features](const FeatureSet& set) { return set.join(features); });
 }
 
 FeatureSet Model::attach_to_sinks(Root root) const {
@@ -825,7 +826,7 @@ void Model::add_attach_to_propagations(Root root, FeatureSet features) {
   }
 
   attach_to_propagations_.update(
-      root, [&](const FeatureSet& set) { return set.join(features); });
+      root, [&features](const FeatureSet& set) { return set.join(features); });
 }
 
 FeatureSet Model::attach_to_propagations(Root root) const {
@@ -838,7 +839,7 @@ void Model::add_add_features_to_arguments(Root root, FeatureSet features) {
   }
 
   add_features_to_arguments_.update(
-      root, [&](const FeatureSet& set) { return set.join(features); });
+      root, [&features](const FeatureSet& set) { return set.join(features); });
 }
 
 bool Model::has_add_features_to_arguments() const {

@@ -91,7 +91,7 @@ bool is_class_exported_via_uri(const DexClass* clazz) {
         if (!std::any_of(
                 private_schemes.begin(),
                 private_schemes.end(),
-                [&](std::string scheme) {
+                [&pattern_value](std::string scheme) {
                   return pattern_value.find(scheme) != std::string::npos;
                 })) {
           LOG(2,
@@ -195,7 +195,7 @@ ClassProperties::ClassProperties(
 
   std::mutex mutex;
   for (auto& scope : DexStoreClassesIterator(stores)) {
-    walk::parallel::classes(scope, [&](DexClass* clazz) {
+    walk::parallel::classes(scope, [&mutex, this](DexClass* clazz) {
       if (is_class_exported_via_uri(clazz)) {
         std::lock_guard<std::mutex> lock(mutex);
         dfa_public_scheme_classes_.emplace(clazz->str());

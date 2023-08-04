@@ -32,13 +32,15 @@ std::optional<Taint> FulfilledPartialKindState::fulfill_kind(
 
     auto issue_sink = sink;
     issue_sink.transform_kind_with_features(
-        [&](const Kind* sink_kind) {
+        [kind, triggered_kind](const Kind* sink_kind) {
           // The given taint should only contain the given partial kind.
           // Transform it into the triggered kind.
           mt_assert(sink_kind == kind);
           return std::vector<const Kind*>{triggered_kind};
         },
-        [&](const Kind* /* new_sink_kind */) { return sink_features; });
+        [&sink_features](const Kind* /* new_sink_kind */) {
+          return sink_features;
+        });
     erase(counterpart, rule);
     return issue_sink;
   }

@@ -79,11 +79,13 @@ class AccessPathTreeDomain final
   /* Write elements at the given access path. */
   void
   write(const AccessPath& access_path, Elements elements, UpdateKind kind) {
-    map_.update(access_path.root(), [&](const AbstractTreeDomainT& tree) {
-      auto copy = tree;
-      copy.write(access_path.path(), std::move(elements), kind);
-      return copy;
-    });
+    map_.update(
+        access_path.root(),
+        [&access_path, &elements, kind](const AbstractTreeDomainT& tree) {
+          auto copy = tree;
+          copy.write(access_path.path(), std::move(elements), kind);
+          return copy;
+        });
   }
 
   /* Write a tree at the given access path. */
@@ -91,11 +93,13 @@ class AccessPathTreeDomain final
       const AccessPath& access_path,
       AbstractTreeDomainT tree,
       UpdateKind kind) {
-    map_.update(access_path.root(), [&](const AbstractTreeDomainT& subtree) {
-      auto copy = subtree;
-      copy.write(access_path.path(), std::move(tree), kind);
-      return copy;
-    });
+    map_.update(
+        access_path.root(),
+        [&access_path, &tree, kind](const AbstractTreeDomainT& subtree) {
+          auto copy = subtree;
+          copy.write(access_path.path(), std::move(tree), kind);
+          return copy;
+        });
   }
 
   const AbstractTreeDomainT& read(Root root) const {

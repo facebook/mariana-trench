@@ -63,7 +63,7 @@ ClassHierarchies::ClassHierarchies(
 
   // Compute the class hierarchy graph.
   for (const auto& scope : DexStoreClassesIterator(stores)) {
-    walk::parallel::classes(scope, [&](const DexClass* klass) {
+    walk::parallel::classes(scope, [&graph](const DexClass* klass) {
       const DexType* super = klass->get_super_class();
       if (super != type::java_lang_Object()) {
         graph.add_edge(/* child */ klass->get_type(), /* parent */ super);
@@ -76,7 +76,7 @@ ClassHierarchies::ClassHierarchies(
 
   // Record the results.
   for (const auto& scope : DexStoreClassesIterator(stores)) {
-    walk::parallel::classes(scope, [&](const DexClass* klass) {
+    walk::parallel::classes(scope, [&graph, this](const DexClass* klass) {
       auto extends = graph.extends(klass->get_type());
 
       if (!extends.empty()) {

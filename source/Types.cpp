@@ -56,7 +56,7 @@ bool has_reflection(const IRCode& code) {
 
       auto* dex_arguments = method->get_proto()->get_args();
       if (std::any_of(
-              dex_arguments->begin(), dex_arguments->end(), [&](DexType* type) {
+              dex_arguments->begin(), dex_arguments->end(), [](DexType* type) {
                 return type->str() == type::java_lang_Class()->str();
               })) {
         return true;
@@ -191,23 +191,25 @@ Types::Types(const Options& options, const DexStoresVector& stores) {
   // GlobalTypeAnalysis.
   Timer reflection_timer;
   reflection::MetadataCache reflection_metadata_cache;
-  walk::parallel::code(scope, [&](DexMethod* method, IRCode& code) {
-    mt_assert(code.cfg_built());
+  walk::parallel::code(
+      scope,
+      [this, &reflection_metadata_cache](DexMethod* method, IRCode& code) {
+        mt_assert(code.cfg_built());
 
-    if (!has_reflection(code)) {
-      return;
-    }
+        if (!has_reflection(code)) {
+          return;
+        }
 
-    reflection::ReflectionAnalysis analysis(
-        /* dex_method */ method,
-        /* context */ nullptr,
-        /* summary_query_fn */ nullptr,
-        /* metadata_cache */ &reflection_metadata_cache);
+        reflection::ReflectionAnalysis analysis(
+            /* dex_method */ method,
+            /* context */ nullptr,
+            /* summary_query_fn */ nullptr,
+            /* metadata_cache */ &reflection_metadata_cache);
 
-    const_class_environments_.emplace(
-        method,
-        std::make_unique<TypeEnvironments>(make_environments(analysis)));
-  });
+        const_class_environments_.emplace(
+            method,
+            std::make_unique<TypeEnvironments>(make_environments(analysis)));
+      });
   LOG(1,
       "Reflection analysis {:.2f}s. Memory used, RSS: {:.2f}GB",
       reflection_timer.duration_in_seconds(),

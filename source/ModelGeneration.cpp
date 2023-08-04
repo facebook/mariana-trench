@@ -168,7 +168,7 @@ ModelGeneratorResult ModelGeneration::run(
       bool generator_exists = std::any_of(
           model_generators.begin(),
           model_generators.end(),
-          [&](const auto& generator) { return generator->name() == name; });
+          [name](const auto& generator) { return generator->name() == name; });
       if (!generator_exists) {
         nonexistent_model_generators.push_back(identifier);
       }
