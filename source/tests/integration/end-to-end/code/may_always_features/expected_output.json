@@ -970,6 +970,13 @@
               "start" : 26
             }
           ],
+          "local_user_features" : 
+          {
+            "always_features" : 
+            [
+              "via-source"
+            ]
+          },
           "origin" : 
           {
             "method" : "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;",

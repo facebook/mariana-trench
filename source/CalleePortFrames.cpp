@@ -217,6 +217,11 @@ CalleePortFrames CalleePortFrames::propagate(
   for (const auto& [kind, frames] : frames_.bindings()) {
     KindFrames propagated;
     if (is_crtex_leaf) {
+      // NOTE: Re-visit CRTEX implementation. Now that all frames have a call
+      // info, CRTEX frames could be treated like a CallInfo::Declaration frame
+      // with less special-casing around it. Also think about how user features
+      // should be handled. They are currently handled differently from
+      // non-CRTEX frames which is non-ideal.
       propagated = frames.propagate_crtex_leaf_frames(
           callee,
           propagated_callee_port,
@@ -416,6 +421,21 @@ Json::Value CalleePortFrames::to_json(
   if (!locally_inferred_features_.is_bottom() &&
       !locally_inferred_features_.empty()) {
     taint["local_features"] = locally_inferred_features_.to_json();
+  }
+
+  if (call_info == CallInfo::Origin) {
+    // User features on the origin frame come from the declaration and should be
+    // reported in order to show up in the UI. Note that they cannot be stored
+    // as locally_inferred_features in CalleePortFrames because they may be
+    // defined on different kinds and do not apply to all frames within the
+    // propagated CalleePortFrame.
+    FeatureMayAlwaysSet local_user_features;
+    for (const auto& frame : *this) {
+      local_user_features.add_always(frame.user_features());
+    }
+    if (!local_user_features.is_bottom() && !local_user_features.empty()) {
+      taint["local_user_features"] = local_user_features.to_json();
+    }
   }
 
   if (local_positions_.is_value() && !local_positions_.empty()) {

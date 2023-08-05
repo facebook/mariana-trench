@@ -214,6 +214,7 @@ KindFrames KindFrames::propagate(
   auto origins = MethodSet::bottom();
   auto field_origins = FieldSet::bottom();
   auto inferred_features = FeatureMayAlwaysSet::bottom();
+  auto user_features = FeatureSet::bottom();
   std::optional<CallInfo> call_info = std::nullopt;
 
   for (const Frame& frame : *this) {
@@ -231,7 +232,15 @@ KindFrames KindFrames::propagate(
     field_origins.join_with(frame.field_origins());
 
     auto local_features = locally_inferred_features;
-    local_features.add(frame.features());
+    if (call_info == CallInfo::Declaration) {
+      // If propagating a declaration, user features are kept as user features
+      // in the propagated frame(s). Only inferred features are propagated.
+      local_features.add(frame.inferred_features());
+    } else {
+      // Otherwise, user features are considered part of the propagated set of
+      // (non-locally) inferred features.
+      local_features.add(frame.features());
+    }
     inferred_features.join_with(local_features);
 
     // Address clangtidy nullptr dereference warning. `callee` cannot actually
@@ -258,6 +267,9 @@ KindFrames KindFrames::propagate(
       // avoid emitting an invalid frame.
       distance = 0;
       callee = nullptr;
+      // User features should be propagated from the declaration frame in order
+      // for them to show up at the leaf frame (e.g. in the UI).
+      user_features = frame.user_features();
     } else {
       distance = std::min(distance, frame.distance() + 1);
     }
@@ -307,7 +319,7 @@ KindFrames KindFrames::propagate(
       std::move(origins),
       std::move(field_origins),
       std::move(inferred_features),
-      /* user_features */ FeatureSet::bottom(),
+      /* user_features */ user_features,
       /* via_type_of_ports */ {},
       /* via_value_of_ports */ {},
       /* canonical_names */ {},

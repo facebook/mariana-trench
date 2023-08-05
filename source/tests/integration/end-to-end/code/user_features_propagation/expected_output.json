@@ -1012,6 +1012,14 @@
               ]
             }
           ],
+          "local_user_features" : 
+          {
+            "always_features" : 
+            [
+              "source1",
+              "source2"
+            ]
+          },
           "origin" : 
           {
             "method" : "Lcom/facebook/marianatrench/integrationtests/UserFeaturesPropagation;.source:()Ljava/lang/Object;",
