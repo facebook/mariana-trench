@@ -99,7 +99,7 @@ struct std::hash<marianatrench::Position> {
     boost::hash_combine(seed, position.path_);
     boost::hash_combine(seed, position.line_);
     if (position.port_) {
-      boost::hash_combine(seed, position.port_->encode());
+      boost::hash_combine(seed, position.port_->hash());
     }
     boost::hash_combine(seed, position.instruction_);
     boost::hash_combine(seed, position.start_);

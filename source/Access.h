@@ -185,15 +185,11 @@ class Root final {
     return value_;
   }
 
-  IntegerEncoding encode() const {
-    return value_;
+  std::size_t hash() const {
+    return std::hash<IntegerEncoding>()(value_);
   }
 
   std::string to_string() const;
-
-  static Root decode(IntegerEncoding value) {
-    return Root(value);
-  }
 
   static Root argument(ParameterPosition value) {
     return Root(Kind::Argument, value);
@@ -217,8 +213,13 @@ class Root final {
 template <>
 struct std::hash<marianatrench::Root> {
   std::size_t operator()(const marianatrench::Root& root) const {
-    return root.encode();
+    return root.hash();
   }
+};
+
+template <>
+struct sparta::PatriciaTreeKeyTrait<marianatrench::Root> {
+  using IntegerType = marianatrench::Root::IntegerEncoding;
 };
 
 namespace marianatrench {

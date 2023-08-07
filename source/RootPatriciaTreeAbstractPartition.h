@@ -27,42 +27,19 @@ template <typename Domain>
 class RootPatriciaTreeAbstractPartition final
     : public sparta::AbstractDomain<RootPatriciaTreeAbstractPartition<Domain>> {
  private:
-  using Map =
-      sparta::PatriciaTreeMapAbstractPartition<Root::IntegerEncoding, Domain>;
-
-  // Since the patricia tree map key needs to be an integer, we need this to
-  // transform the key back to a `Root` when iterating on the map.
-  struct ExposeBinding {
-    const std::pair<Root, Domain>& operator()(
-        const std::pair<Root::IntegerEncoding, Domain>& pair) const {
-      // This is safe as long as `Root` stores `IntegerEncoding` internally.
-      static_assert(
-          sizeof(std::pair<Root, Domain>) ==
-          sizeof(std::pair<Root::IntegerEncoding, Domain>));
-      return *reinterpret_cast<const std::pair<Root, Domain>*>(&pair);
-    }
-  };
+  using Map = sparta::PatriciaTreeMapAbstractPartition<Root, Domain>;
 
  public:
   // C++ container concept member types
   using key_type = Root;
   using mapped_type = Domain;
-  using value_type = std::pair<Root, Domain>;
-  using iterator =
-      boost::transform_iterator<ExposeBinding, typename Map::MapType::iterator>;
+  using value_type = std::pair<const Root, Domain>;
+  using iterator = typename Map::MapType::iterator;
   using const_iterator = iterator;
   using difference_type = std::ptrdiff_t;
   using size_type = std::size_t;
   using const_reference = const value_type&;
   using const_pointer = const value_type*;
-
- private:
-  // Safety checks of `boost::transform_iterator`.
-  static_assert(std::is_same_v<typename iterator::value_type, value_type>);
-  static_assert(
-      std::is_same_v<typename iterator::difference_type, difference_type>);
-  static_assert(std::is_same_v<typename iterator::reference, const_reference>);
-  static_assert(std::is_same_v<typename iterator::pointer, const_pointer>);
 
  private:
   explicit RootPatriciaTreeAbstractPartition(Map map) : map_(std::move(map)) {}
@@ -96,13 +73,11 @@ class RootPatriciaTreeAbstractPartition final
   }
 
   iterator begin() const {
-    return boost::make_transform_iterator(
-        map_.bindings().begin(), ExposeBinding());
+    return map_.bindings().begin();
   }
 
   iterator end() const {
-    return boost::make_transform_iterator(
-        map_.bindings().end(), ExposeBinding());
+    return map_.bindings().end();
   }
 
   void difference_with(const RootPatriciaTreeAbstractPartition& other) {
@@ -116,16 +91,16 @@ class RootPatriciaTreeAbstractPartition final
   }
 
   const Domain& get(Root root) const {
-    return map_.get(root.encode());
+    return map_.get(root);
   }
 
   void set(Root root, const Domain& value) {
-    map_.set(root.encode(), value);
+    map_.set(root, value);
   }
 
   template <typename Operation> // Domain(const Domain&)
   void update(Root root, Operation&& operation) {
-    map_.update(root.encode(), std::forward<Operation>(operation));
+    map_.update(root, std::forward<Operation>(operation));
   }
 
   template <typename Function> // Domain(const Domain&)
