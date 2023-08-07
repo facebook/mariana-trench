@@ -33,7 +33,7 @@ const AbstractTreeDomain& get_element_or_star(
     const typename AbstractTreeDomain::Map& children,
     typename AbstractTreeDomain::PathElement path_element,
     const AbstractTreeDomain& subtree_star) {
-  auto& subtree = children.at(path_element.encode());
+  auto& subtree = children.at(path_element);
 
   if (path_element.is_index() && subtree.is_bottom()) {
     return subtree_star;
@@ -50,77 +50,6 @@ enum class UpdateKind {
 
   /* Perform a weak update, i.e elements are joined. */
   Weak,
-};
-
-/**
- * This implements an iterator over a map which transforms the key of type
- * `PathElement::ElementEncoding` to a concrete `PathElement`.
- */
-template <typename Map>
-class PathElementMapIterator final {
-  static_assert(
-      std::is_same_v<typename Map::key_type, PathElement::ElementEncoding>);
-
-  template <typename Value>
-  struct ExposeBinding {
-    const std::pair<PathElement, Value>& operator()(
-        const std::pair<typename PathElement::ElementEncoding, Value>& pair)
-        const {
-      // This is safe as `PathElement` stores `PathElement::ElementEncoding`
-      // internally.
-      static_assert(
-          sizeof(std::pair<PathElement, Value>) ==
-          sizeof(std::pair<typename PathElement::ElementEncoding, Value>));
-      return *reinterpret_cast<const std::pair<PathElement, Value>*>(&pair);
-    }
-  };
-
- public:
-  // C++ container concept member types
-  using key_type = PathElement;
-  using mapped_type = typename Map::mapped_type;
-  using value_type = std::pair<key_type, mapped_type>;
-  using iterator = boost::
-      transform_iterator<ExposeBinding<mapped_type>, typename Map::iterator>;
-  using const_iterator = iterator;
-  using difference_type = std::ptrdiff_t;
-  using size_type = std::size_t;
-  using const_reference = const value_type&;
-  using const_pointer = const value_type*;
-
- private:
-  // Safety checks of `boost::transform_iterator`.
-  static_assert(std::is_same_v<typename iterator::value_type, value_type>);
-  static_assert(
-      std::is_same_v<typename iterator::difference_type, difference_type>);
-  static_assert(std::is_same_v<typename iterator::reference, const_reference>);
-  static_assert(std::is_same_v<typename iterator::pointer, const_pointer>);
-
- public:
-  explicit PathElementMapIterator(Map& map) : map_(map) {}
-
-  DELETE_COPY_CONSTRUCTORS_AND_ASSIGNMENTS(PathElementMapIterator)
-
-  iterator begin() const {
-    return boost::make_transform_iterator(
-        map_.begin(), ExposeBinding<mapped_type>());
-  }
-
-  iterator end() const {
-    return boost::make_transform_iterator(
-        map_.end(), ExposeBinding<mapped_type>());
-  }
-
-  size_t size() const {
-    return map_.size();
-  }
-
-  bool empty() const {
-    return map_.empty();
-  }
-
- private:
-  Map& map_;
 };
 
 /**
@@ -207,10 +136,8 @@ class AbstractTreeDomain final
   };
 
  public:
-  using Map = sparta::PatriciaTreeMap<
-      PathElement::ElementEncoding,
-      AbstractTreeDomain,
-      ValueInterface>;
+  using Map =
+      sparta::PatriciaTreeMap<PathElement, AbstractTreeDomain, ValueInterface>;
 
  public:
   /* Return the bottom value (i.e, the empty tree). */
@@ -258,12 +185,12 @@ class AbstractTreeDomain final
     return elements_;
   }
 
-  const PathElementMapIterator<const Map> successors() const {
-    return PathElementMapIterator(children_);
+  const Map& successors() const {
+    return children_;
   }
 
   const AbstractTreeDomain& successor(PathElement path_element) const {
-    return children_.at(path_element.encode());
+    return children_.at(path_element);
   }
 
   /**
@@ -291,14 +218,13 @@ class AbstractTreeDomain final
     }
 
     const auto& other_subtree_star =
-        other.children_.at(PathElement::any_index().encode());
+        other.children_.at(PathElement::any_index());
 
     // Cases:
     //  - left_tree[c] <= right_tree[c] for all c in C
     //  - left_tree[*] <= right_tree[*] if left_tree[*] present
     //  - left_tree[l] <= right_tree[*] for all l in L.
-    for (const auto& [path_element, subtree] :
-         PathElementMapIterator(children_)) {
+    for (const auto& [path_element, subtree] : children_) {
       // Default to right_tree[*] for set of indices L
       auto other_subtree_copy = get_element_or_star(
           other.children_, path_element, other_subtree_star);
@@ -311,18 +237,17 @@ class AbstractTreeDomain final
       }
     }
 
-    const auto& subtree_star = children_.at(PathElement::any_index().encode());
+    const auto& subtree_star = children_.at(PathElement::any_index());
 
     // Cases:
     //  - left_tree[*] <= right_tree[r] for all r in R
     //  - left_tree[*] <= right_tree[*] if right_tree[*] present.
-    for (const auto& [path_element, other_subtree] :
-         PathElementMapIterator(other.children_)) {
+    for (const auto& [path_element, other_subtree] : other.children_) {
       if (path_element.is_field()) {
         continue;
       }
 
-      const auto& subtree = children_.at(path_element.encode());
+      const auto& subtree = children_.at(path_element);
 
       if (!subtree.is_bottom()) {
         continue; // Already handled.
@@ -430,9 +355,9 @@ class AbstractTreeDomain final
     const auto new_accumulator_tree = AbstractTreeDomain{
         Configuration::transform_on_sink(accumulator.join(elements_))};
     Map new_children;
-    const auto& subtree_star = children_.at(PathElement::any_index().encode());
+    const auto& subtree_star = children_.at(PathElement::any_index());
     const auto& other_subtree_star =
-        other.children_.at(PathElement::any_index().encode());
+        other.children_.at(PathElement::any_index());
 
     // Cases:
     // - joined.element = pointwise merge of left_tree.element and
@@ -440,8 +365,7 @@ class AbstractTreeDomain final
     // - joined[*] = left_tree[*] merge right_tree[*] (if left_tree[*] exists)
     // - joined[c] = left_tree[c] merge right_tree[c] for c in C
     // - joined[l] = left_tree[l] merge right_tree[*] for l in L
-    for (const auto& [path_element, subtree] :
-         PathElementMapIterator(children_)) {
+    for (const auto& [path_element, subtree] : children_) {
       // Default to right_tree[*] for set of indices L
       const auto& other_subtree = get_element_or_star(
           other.children_, path_element, other_subtree_star);
@@ -454,9 +378,8 @@ class AbstractTreeDomain final
           other_subtree);
     }
 
-    for (const auto& [path_element, other_subtree] :
-         PathElementMapIterator(other.children_)) {
-      const auto& subtree = children_.at(path_element.encode());
+    for (const auto& [path_element, other_subtree] : other.children_) {
+      const auto& subtree = children_.at(path_element);
 
       if (!subtree.is_bottom()) {
         // Cases already handled:
@@ -504,8 +427,7 @@ class AbstractTreeDomain final
           right_subtree, accumulator_tree.elements_);
 
       if (!left_subtree_copy.is_bottom()) {
-        children.insert_or_assign(
-            path_element.encode(), std::move(left_subtree_copy));
+        children.insert_or_assign(path_element, std::move(left_subtree_copy));
       }
     } else {
       if (!left_subtree.leq(accumulator_tree)) {
@@ -514,8 +436,7 @@ class AbstractTreeDomain final
             right_subtree, accumulator_tree.elements_);
 
         if (!left_subtree_copy.is_bottom()) {
-          children.insert_or_assign(
-              path_element.encode(), std::move(left_subtree_copy));
+          children.insert_or_assign(path_element, std::move(left_subtree_copy));
         }
       }
     }
@@ -745,8 +666,7 @@ class AbstractTreeDomain final
       const Accumulator& accumulator,
       const std::function<Elements(Elements)>& transform_on_collapse) {
     Map new_children;
-    for (const auto& [path_element, subtree] :
-         PathElementMapIterator(children_)) {
+    for (const auto& [path_element, subtree] : children_) {
       const auto& [valid, accumulator_for_subtree] =
           is_valid(accumulator, path_element);
       if (!valid) {
@@ -759,8 +679,7 @@ class AbstractTreeDomain final
         auto subtree_copy = subtree;
         subtree_copy.collapse_invalid_paths(
             is_valid, accumulator_for_subtree, transform_on_collapse);
-        new_children.insert_or_assign(
-            path_element.encode(), std::move(subtree_copy));
+        new_children.insert_or_assign(path_element, std::move(subtree_copy));
       }
     }
     children_ = new_children;
@@ -876,10 +795,10 @@ class AbstractTreeDomain final
       // If we are weak assigning to a new index and the tree already consists
       // of a path element [*], we need to merge [*] with the index as the
       // existing [*] also covered this index.
-      if (children_.at(path_head.encode()).is_bottom()) {
-        auto new_subtree = children_.at(PathElement::any_index().encode());
+      if (children_.at(path_head).is_bottom()) {
+        auto new_subtree = children_.at(PathElement::any_index());
         if (!new_subtree.is_bottom()) {
-          children_.insert_or_assign(path_head.encode(), new_subtree);
+          children_.insert_or_assign(path_head, new_subtree);
         }
       }
     }
@@ -899,8 +818,7 @@ class AbstractTreeDomain final
       kind = UpdateKind::Weak;
       Map new_children;
 
-      for (const auto& [path_element, subtree] :
-           PathElementMapIterator(children_)) {
+      for (const auto& [path_element, subtree] : children_) {
         auto new_subtree = subtree;
 
         if (path_element.is_index()) {
@@ -908,8 +826,7 @@ class AbstractTreeDomain final
         }
 
         if (!new_subtree.is_bottom()) {
-          new_children.insert_or_assign(
-              path_element.encode(), std::move(new_subtree));
+          new_children.insert_or_assign(path_element, std::move(new_subtree));
         }
       }
 
@@ -923,7 +840,7 @@ class AbstractTreeDomain final
               begin, end, std::move(elements), std::move(accumulator), kind);
           return new_subtree;
         },
-        path_head.encode());
+        path_head);
   }
 
  public:
@@ -962,8 +879,8 @@ class AbstractTreeDomain final
 
     // Merge in existing [*] for weak write on new index.
     if (path_head.is_index() && kind == UpdateKind::Weak) {
-      if (children_.at(path_head.encode()).is_bottom()) {
-        tree.join_with(children_.at(PathElement::any_index().encode()));
+      if (children_.at(path_head).is_bottom()) {
+        tree.join_with(children_.at(PathElement::any_index()));
         tree.elements_.difference_with(accumulator);
       }
     }
@@ -975,8 +892,7 @@ class AbstractTreeDomain final
       kind = UpdateKind::Weak;
       Map new_children;
 
-      for (const auto& [path_element, subtree] :
-           PathElementMapIterator(children_)) {
+      for (const auto& [path_element, subtree] : children_) {
         auto new_subtree = subtree;
 
         if (path_element.is_index()) {
@@ -984,8 +900,7 @@ class AbstractTreeDomain final
         }
 
         if (!new_subtree.is_bottom()) {
-          new_children.insert_or_assign(
-              path_element.encode(), std::move(new_subtree));
+          new_children.insert_or_assign(path_element, std::move(new_subtree));
         }
       }
 
@@ -999,7 +914,7 @@ class AbstractTreeDomain final
               begin, end, std::move(tree), std::move(accumulator), kind);
           return new_subtree;
         },
-        path_head.encode());
+        path_head);
   }
 
  public:
@@ -1048,14 +963,13 @@ class AbstractTreeDomain final
     auto path_head = *begin;
     ++begin;
 
-    auto subtree = children_.at(path_head.encode());
+    auto subtree = children_.at(path_head);
     if (path_head.is_index() && subtree.is_bottom()) {
       // Read from any_index [*] if the index is not in the tree.
-      subtree = children_.at(PathElement::any_index().encode());
+      subtree = children_.at(PathElement::any_index());
     } else if (path_head.is_any_index()) {
       // Read from [*] == read from every index
-      for (const auto& [path_element, index_subtree] :
-           PathElementMapIterator(children_)) {
+      for (const auto& [path_element, index_subtree] : children_) {
         if (!path_element.is_index()) {
           continue;
         }
@@ -1097,7 +1011,7 @@ class AbstractTreeDomain final
       return *this;
     }
 
-    auto subtree = children_.at(begin->encode());
+    auto subtree = children_.at(*begin);
 
     return subtree.raw_read_internal(std::next(begin), end);
   }
@@ -1127,22 +1041,21 @@ class AbstractTreeDomain final
       Transform&& transform,
       const Elements& accumulator) {
     const auto& mold_any_index_subtree =
-        mold.children_.at(PathElement::any_index().encode());
+        mold.children_.at(PathElement::any_index());
     bool mold_has_any_index = !mold_any_index_subtree.is_bottom();
 
     // First pass: collapse branches, so we can build a new accumulator.
     Map new_children;
-    for (const auto& [path_element, subtree] :
-         PathElementMapIterator(children_)) {
-      const auto& mold_subtree = mold.children_.at(path_element.encode());
+    for (const auto& [path_element, subtree] : children_) {
+      const auto& mold_subtree = mold.children_.at(path_element);
 
       if (!mold_subtree.is_bottom()) {
-        new_children.insert_or_assign(path_element.encode(), subtree);
+        new_children.insert_or_assign(path_element, subtree);
       } else if (
           mold_has_any_index &&
           path_element.kind() == PathElement::Kind::Index) {
         // Keep `Index` branches when the mold has an `AnyIndex` branch.
-        new_children.insert_or_assign(path_element.encode(), subtree);
+        new_children.insert_or_assign(path_element, subtree);
       } else {
         subtree.merge_into(elements_, [&transform](Elements value) {
           return transform(Configuration::transform_on_hoist(std::move(value)));
@@ -1156,9 +1069,8 @@ class AbstractTreeDomain final
 
     // Second pass: apply shape_with on children.
     children_.clear();
-    for (const auto& [path_element, subtree] :
-         PathElementMapIterator(new_children)) {
-      const auto& mold_subtree = mold.children_.at(path_element.encode());
+    for (const auto& [path_element, subtree] : new_children) {
+      const auto& mold_subtree = mold.children_.at(path_element);
 
       auto new_subtree = subtree;
       if (!mold_subtree.is_bottom()) {
@@ -1179,7 +1091,7 @@ class AbstractTreeDomain final
           [&new_subtree](const auto& subtree) {
             return subtree.join(new_subtree);
           },
-          path_element.encode());
+          path_element);
     }
   }
 
@@ -1208,8 +1120,7 @@ class AbstractTreeDomain final
       visitor(path, elements_);
     }
 
-    for (const auto& [path_element, subtree] :
-         PathElementMapIterator(children_)) {
+    for (const auto& [path_element, subtree] : children_) {
       path.append(path_element);
       subtree.visit_internal(path, visitor);
       path.pop_back();
@@ -1277,8 +1188,7 @@ class AbstractTreeDomain final
       if (!elements_.is_bottom()) {
         out << "\n" << new_indent << elements_;
       }
-      for (const auto& [path_element, subtree] :
-           PathElementMapIterator(children_)) {
+      for (const auto& [path_element, subtree] : children_) {
         out << "\n" << new_indent << "`" << show(path_element) << "` -> ";
         subtree.write(out, new_indent);
       }

@@ -17,6 +17,7 @@
 #include <json/json.h>
 
 #include <sparta/ConstantAbstractDomain.h>
+#include <sparta/PatriciaTreeKeyTrait.h>
 
 #include <DexClass.h>
 #include <IRInstruction.h>
@@ -228,7 +229,7 @@ class PathElement final {
   using Element = PointerIntPair<const DexString*, 3, KindEncoding>;
 
  public:
-  using ElementEncoding = uintptr_t;
+  using IntegerEncoding = uintptr_t;
 
  public:
   enum class Kind : KindEncoding {
@@ -255,8 +256,8 @@ class PathElement final {
   }
 
  public:
-  ElementEncoding encode() const {
-    return value_.encode();
+  std::size_t hash() const {
+    return std::hash<IntegerEncoding>()(value_.encode());
   }
 
   const DexString* MT_NULLABLE name() const {
@@ -318,9 +319,13 @@ class PathElement final {
 template <>
 struct std::hash<marianatrench::PathElement> {
   std::size_t operator()(const marianatrench::PathElement& path_element) const {
-    return std::hash<marianatrench::PathElement::ElementEncoding>()(
-        path_element.encode());
+    return path_element.hash();
   }
+};
+
+template <>
+struct sparta::PatriciaTreeKeyTrait<marianatrench::PathElement> {
+  using IntegerType = marianatrench::PathElement::IntegerEncoding;
 };
 
 namespace marianatrench {

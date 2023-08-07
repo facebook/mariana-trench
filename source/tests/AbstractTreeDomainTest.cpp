@@ -44,7 +44,7 @@ struct IntSetTreeConfiguration {
 using IntSetTree = AbstractTreeDomain<IntSet, IntSetTreeConfiguration>;
 
 TEST_F(AbstractTreeDomainTest, PathElementMapIterator) {
-  using Map = sparta::PatriciaTreeMap<PathElement::ElementEncoding, IntSet>;
+  using Map = sparta::PatriciaTreeMap<PathElement, IntSet>;
 
   const auto field_element = PathElement::field("field");
   const auto index_element = PathElement::index("index");
@@ -54,13 +54,13 @@ TEST_F(AbstractTreeDomainTest, PathElementMapIterator) {
 
   auto map = Map();
   // Insert using PathElement::ElementEncoding
-  map.insert_or_assign(field_element.encode(), IntSet{1});
-  map.insert_or_assign(index_element.encode(), IntSet{2});
-  map.insert_or_assign(any_index_element.encode(), IntSet{3});
-  map.insert_or_assign(value_of_element.encode(), IntSet{4});
+  map.insert_or_assign(field_element, IntSet{1});
+  map.insert_or_assign(index_element, IntSet{2});
+  map.insert_or_assign(any_index_element, IntSet{3});
+  map.insert_or_assign(value_of_element, IntSet{4});
 
   // Iterate
-  for (const auto& [path_element, value] : PathElementMapIterator(map)) {
+  for (const auto& [path_element, value] : map) {
     switch (path_element.kind()) {
       case PathElement::Kind::Field:
         EXPECT_TRUE(path_element.is_field());
