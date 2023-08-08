@@ -234,8 +234,16 @@ KindFrames KindFrames::propagate(
     auto local_features = locally_inferred_features;
     if (call_info == CallInfo::Declaration) {
       // If propagating a declaration, user features are kept as user features
-      // in the propagated frame(s). Only inferred features are propagated.
-      local_features.add(frame.inferred_features());
+      // in the propagated frame(s). Inferred features are not expected on
+      // declarations.
+      mt_assert(
+          frame.inferred_features().is_bottom() ||
+          frame.inferred_features().empty());
+      // User features should be propagated from the declaration frame in order
+      // for them to show up at the leaf frame (e.g. in the UI).
+      // TODO(T158171922): When class intervals are enabled, add test case to
+      // verify that the join occurs.
+      user_features.join_with(frame.user_features());
     } else {
       // Otherwise, user features are considered part of the propagated set of
       // (non-locally) inferred features.
@@ -267,9 +275,6 @@ KindFrames KindFrames::propagate(
       // avoid emitting an invalid frame.
       distance = 0;
       callee = nullptr;
-      // User features should be propagated from the declaration frame in order
-      // for them to show up at the leaf frame (e.g. in the UI).
-      user_features = frame.user_features();
     } else {
       distance = std::min(distance, frame.distance() + 1);
     }
