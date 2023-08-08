@@ -401,6 +401,21 @@ def _add_configuration_arguments(parser: argparse.ArgumentParser) -> None:
         help="A `;`-separated list of paths where we look up JSON model generators.",
     )
     configuration_arguments.add_argument(
+        "--models-paths",
+        type=_separated_paths_exist,
+        help="A `;` separated list of models files and directories containing models files.",
+    )
+    configuration_arguments.add_argument(
+        "--field-models-paths",
+        type=_separated_paths_exist,
+        help="A `;` separated list of field models files and directories containing field models files.",
+    )
+    configuration_arguments.add_argument(
+        "--literal-models-paths",
+        type=_separated_paths_exist,
+        help="A `;` separated list of literal models files and directories containing literal models files.",
+    )
+    configuration_arguments.add_argument(
         "--maximum-source-sink-distance",
         type=int,
         default=configuration.DEFAULT_MAXIMUM_SOURCE_SINK_DISTANCE,
@@ -581,6 +596,18 @@ def _get_command_options(
     if arguments.model_generator_search_paths:
         options.append("--model-generator-search-paths")
         options.append(arguments.model_generator_search_paths)
+
+    if arguments.models_paths:
+        options.append("--models-paths")
+        options.append(arguments.models_paths)
+
+    if arguments.field_models_paths:
+        options.append("--field-models-paths")
+        options.append(arguments.field_models_paths)
+
+    if arguments.literal_models_paths:
+        options.append("--literal-models-paths")
+        options.append(arguments.literal_models_paths)
 
     if arguments.proguard_configuration_paths:
         options.append("--proguard-configuration-paths")

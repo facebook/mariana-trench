@@ -159,6 +159,14 @@ Options::Options(const boost::program_options::variables_map& variables) {
     models_paths_ = parse_paths_list(
         variables["models-paths"].as<std::string>(), /* extension */ ".json");
   }
+  if (!variables["field-models-paths"].empty()) {
+    field_models_paths_ = parse_paths_list(
+        variables["field-models-paths"].as<std::string>(), /* extension */ ".json");
+  }
+  if (!variables["literal-models-paths"].empty()) {
+    literal_models_paths_ = parse_paths_list(
+        variables["literal-models-paths"].as<std::string>(), /* extension */ ".json");
+  }
   rules_paths_ = parse_paths_list(
       variables["rules-paths"].as<std::string>(), /* extension */ ".json");
 
@@ -296,6 +304,14 @@ void Options::add_options(
       "models-paths",
       program_options::value<std::string>(),
       "A `;` separated list of models files and directories containing models files.");
+  options.add_options()(
+      "field-models-paths",
+      program_options::value<std::string>(),
+      "A `;` separated list of field models files and directories containing field models files.");
+  options.add_options()(
+      "literal-models-paths",
+      program_options::value<std::string>(),
+      "A `;` separated list of literal models files and directories containing literal models files.");
   options.add_options()(
       "rules-paths",
       program_options::value<std::string>()->required(),
