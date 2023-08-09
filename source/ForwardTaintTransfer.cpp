@@ -288,11 +288,6 @@ void apply_propagations(
       auto transformed_taint_tree =
           transforms::apply_propagation(context, propagation, input_taint_tree);
 
-      if (propagation.call_info().is_propagation_with_trace()) {
-        // Add ExtraTrace first hop
-        transformed_taint_tree.add_extra_trace(propagation);
-      }
-
       auto output_root = propagation_kind->root();
       FeatureMayAlwaysSet features = FeatureMayAlwaysSet::make_always(
           callee.model.add_features_to_arguments(output_root));

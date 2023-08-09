@@ -109,8 +109,13 @@ CalleeFrames CalleeFrames::update_with_propagation_trace(
     // "callee" so we do not need to "propagate" these calls.
     // All these (prior) transform hops are tracked as ExtraTrace hop
     // frames to create a subtrace.
-    // TODO: T158087152 Add extra trace hops for subtraces.
-    return *this;
+    CalleeFrames result = *this;
+    result.map([&propagation_frame](Frame frame) {
+      frame.add_extra_trace(propagation_frame);
+      return frame;
+    });
+
+    return result;
   }
 
   mt_assert(callee_call_info.is_propagation_without_trace());

@@ -988,6 +988,20 @@
             {
               "call_info" : "PropagationWithTrace:CallSite",
               "distance" : 2,
+              "extra_traces" : 
+              [
+                {
+                  "kind" : "T2:LocalReturn",
+                  "origin" : 
+                  {
+                    "position" : 
+                    {
+                      "line" : 33,
+                      "path" : "ExtraTraces.java"
+                    }
+                  }
+                }
+              ],
               "kind" : "T2@T1:LocalReturn",
               "origins" : 
               [
@@ -1001,6 +1015,20 @@
             {
               "call_info" : "PropagationWithTrace:CallSite",
               "distance" : 2,
+              "extra_traces" : 
+              [
+                {
+                  "kind" : "T2:LocalReturn",
+                  "origin" : 
+                  {
+                    "position" : 
+                    {
+                      "line" : 33,
+                      "path" : "ExtraTraces.java"
+                    }
+                  }
+                }
+              ],
               "kind" : "T2@T2:LocalReturn",
               "origins" : 
               [
@@ -1355,6 +1383,20 @@
             {
               "call_info" : "CallSite",
               "distance" : 1,
+              "extra_traces" : 
+              [
+                {
+                  "kind" : "T1:LocalReturn",
+                  "origin" : 
+                  {
+                    "position" : 
+                    {
+                      "line" : 65,
+                      "path" : "ExtraTraces.java"
+                    }
+                  }
+                }
+              ],
               "kind" : "T1@Sink",
               "origins" : 
               [
@@ -1364,6 +1406,20 @@
             {
               "call_info" : "CallSite",
               "distance" : 1,
+              "extra_traces" : 
+              [
+                {
+                  "kind" : "T2:LocalReturn",
+                  "origin" : 
+                  {
+                    "position" : 
+                    {
+                      "line" : 68,
+                      "path" : "ExtraTraces.java"
+                    }
+                  }
+                }
+              ],
               "kind" : "T2@Sink",
               "origins" : 
               [
@@ -1880,7 +1936,7 @@
             {
               "call_info" : "CallSite",
               "distance" : 1,
-              "kind" : "T1@T2:Sink",
+              "kind" : "T2:Sink",
               "origins" : 
               [
                 "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V"
@@ -1889,7 +1945,21 @@
             {
               "call_info" : "CallSite",
               "distance" : 1,
-              "kind" : "T2:Sink",
+              "extra_traces" : 
+              [
+                {
+                  "kind" : "T1:LocalReturn",
+                  "origin" : 
+                  {
+                    "position" : 
+                    {
+                      "line" : 159,
+                      "path" : "TaintTransforms.java"
+                    }
+                  }
+                }
+              ],
+              "kind" : "T1@T2:Sink",
               "origins" : 
               [
                 "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V"
@@ -2315,6 +2385,20 @@
             },
             {
               "call_info" : "Origin",
+              "extra_traces" : 
+              [
+                {
+                  "kind" : "T1:LocalReturn",
+                  "origin" : 
+                  {
+                    "position" : 
+                    {
+                      "line" : 135,
+                      "path" : "TaintTransforms.java"
+                    }
+                  }
+                }
+              ],
               "kind" : "T1@Sink",
               "origins" : 
               [
@@ -2364,6 +2448,20 @@
           [
             {
               "call_info" : "Origin",
+              "extra_traces" : 
+              [
+                {
+                  "kind" : "T2:LocalReturn",
+                  "origin" : 
+                  {
+                    "position" : 
+                    {
+                      "line" : 142,
+                      "path" : "TaintTransforms.java"
+                    }
+                  }
+                }
+              ],
               "kind" : "T2@Sink",
               "origins" : 
               [
@@ -2413,7 +2511,21 @@
           [
             {
               "call_info" : "Origin",
-              "kind" : "T1:T2@Sink",
+              "extra_traces" : 
+              [
+                {
+                  "kind" : "T2:LocalReturn",
+                  "origin" : 
+                  {
+                    "position" : 
+                    {
+                      "line" : 151,
+                      "path" : "TaintTransforms.java"
+                    }
+                  }
+                }
+              ],
+              "kind" : "T2@Sink",
               "origins" : 
               [
                 "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V"
@@ -2421,7 +2533,32 @@
             },
             {
               "call_info" : "Origin",
-              "kind" : "T2@Sink",
+              "extra_traces" : 
+              [
+                {
+                  "kind" : "T1:LocalReturn",
+                  "origin" : 
+                  {
+                    "position" : 
+                    {
+                      "line" : 150,
+                      "path" : "TaintTransforms.java"
+                    }
+                  }
+                },
+                {
+                  "kind" : "T2:LocalReturn",
+                  "origin" : 
+                  {
+                    "position" : 
+                    {
+                      "line" : 151,
+                      "path" : "TaintTransforms.java"
+                    }
+                  }
+                }
+              ],
+              "kind" : "T1:T2@Sink",
               "origins" : 
               [
                 "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V"
