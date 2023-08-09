@@ -264,6 +264,30 @@ CalleePortFrames CalleePortFrames::propagate(
       /* locally_inferred_features */ FeatureMayAlwaysSet::bottom());
 }
 
+CalleePortFrames CalleePortFrames::update_with_propagation_trace(
+    const Frame& propagation_frame) const {
+  FramesByKind frames_by_kind{};
+  for (const auto& frame : *this) {
+    auto new_frame = frame.update_with_propagation_trace(propagation_frame);
+    if (!new_frame.is_bottom()) {
+      frames_by_kind.update(
+          new_frame.kind(), [&new_frame](const KindFrames& old_frames) {
+            auto frames_copy = old_frames;
+            frames_copy.add(new_frame);
+            return frames_copy;
+          });
+    }
+  }
+
+  mt_assert(!frames_by_kind.is_bottom());
+
+  return CalleePortFrames(
+      propagation_frame.callee_port(),
+      frames_by_kind,
+      local_positions_,
+      locally_inferred_features_);
+}
+
 CalleePortFrames CalleePortFrames::apply_transform(
     const KindFactory& kind_factory,
     const TransformsFactory& transforms,

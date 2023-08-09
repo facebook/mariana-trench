@@ -235,6 +235,13 @@ class CalleePortFrames final : public sparta::AbstractDomain<CalleePortFrames> {
       const std::vector<std::optional<std::string>>& source_constant_arguments)
       const;
 
+  /**
+   * Propagate the taint from the callee to the caller to track the next hops
+   * for taints with CallInfo kind PropagationWithTrace.
+   */
+  CalleePortFrames update_with_propagation_trace(
+      const Frame& propagation_frame) const;
+
   template <typename TransformKind, typename AddFeatures>
   void transform_kind_with_features(
       TransformKind&& transform_kind, // std::vector<const Kind*>(const Kind*)

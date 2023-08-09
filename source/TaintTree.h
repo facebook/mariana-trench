@@ -124,6 +124,10 @@ class TaintTree final : public sparta::AbstractDomain<TaintTree> {
 
   void update_maximum_collapse_depth(CollapseDepth collapse_depth);
 
+  /* Update the propagation taint tree with the trace information collected from
+   * the propagation frame. */
+  void update_with_propagation_trace(const Frame& propagation_frame);
+
   /* Apply the given function on all taint. */
   template <typename Function> // Taint(Taint)
   void map(Function&& f) {

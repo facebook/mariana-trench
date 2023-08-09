@@ -297,6 +297,8 @@ class Frame final : public sparta::AbstractDomain<Frame> {
   /* Return frame with the given kind (and every other field kept the same) */
   Frame with_kind(const Kind* kind) const;
 
+  Frame update_with_propagation_trace(const Frame& propagation_frame) const;
+
   Frame apply_transform(
       const KindFactory& kind_factory,
       const TransformsFactory& transforms_factory,

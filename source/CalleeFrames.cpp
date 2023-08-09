@@ -97,6 +97,39 @@ CalleeFrames CalleeFrames::propagate(
       FramesByKey{std::pair(call_position, result)});
 }
 
+CalleeFrames CalleeFrames::update_with_propagation_trace(
+    const Frame& propagation_frame) const {
+  if (is_bottom()) {
+    return CalleeFrames::bottom();
+  }
+
+  const auto& callee_call_info = call_info();
+  if (!callee_call_info.is_propagation_without_trace()) {
+    // The propagation taint tree tracks the final transform hop as the
+    // "callee" so we do not need to "propagate" these calls.
+    // All these (prior) transform hops are tracked as ExtraTrace hop
+    // frames to create a subtrace.
+    // TODO: T158087152 Add extra trace hops for subtraces.
+    return *this;
+  }
+
+  mt_assert(callee_call_info.is_propagation_without_trace());
+
+  CallPositionFrames result;
+  for (const auto& [position, call_position_frames] : frames_.bindings()) {
+    result.join_with(
+        call_position_frames.update_with_propagation_trace(propagation_frame));
+  }
+
+  mt_assert(!result.is_bottom());
+  mt_assert(result.position() == propagation_frame.call_position());
+
+  return CalleeFrames(
+      CalleeProperties(
+          propagation_frame.callee(), propagation_frame.call_info()),
+      FramesByKey{std::pair(propagation_frame.call_position(), result)});
+}
+
 CalleeFrames CalleeFrames::attach_position(const Position* position) const {
   CallPositionFrames result;
 

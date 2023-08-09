@@ -114,6 +114,12 @@ void TaintTree::update_maximum_collapse_depth(CollapseDepth collapse_depth) {
   });
 }
 
+void TaintTree::update_with_propagation_trace(const Frame& propagation_frame) {
+  tree_.map([&propagation_frame](const Taint& taint) {
+    return taint.update_with_propagation_trace(propagation_frame);
+  });
+}
+
 TaintTree TaintAccessPathTree::read(Root root) const {
   return TaintTree(tree_.read(root));
 }

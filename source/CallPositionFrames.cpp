@@ -87,6 +87,30 @@ CallPositionFrames CallPositionFrames::propagate(
   return CallPositionFrames(CallPositionProperties(call_position), result);
 }
 
+CallPositionFrames CallPositionFrames::update_with_propagation_trace(
+    const Frame& propagation_frame) const {
+  if (is_bottom()) {
+    return CallPositionFrames::bottom();
+  }
+
+  mt_assert(position() == nullptr);
+
+  FramesByKey result;
+  for (const auto& [_, callee_port_frames] : frames_.bindings()) {
+    auto propagated =
+        callee_port_frames.update_with_propagation_trace(propagation_frame);
+    mt_assert(propagated.callee_port() == propagation_frame.callee_port());
+
+    result.update(
+        propagated.callee_port(), [&propagated](CalleePortFrames* frames) {
+          frames->join_with(propagated);
+        });
+  }
+
+  return CallPositionFrames(
+      CallPositionProperties(propagation_frame.call_position()), result);
+}
+
 CallPositionFrames CallPositionFrames::attach_position(
     const Position* position) const {
   FramesByKey result;

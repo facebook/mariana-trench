@@ -193,6 +193,8 @@ class Taint final : public sparta::AbstractDomain<Taint> {
 
   void update_maximum_collapse_depth(CollapseDepth collapse_depth);
 
+  Taint update_with_propagation_trace(const Frame& propagation_frame) const;
+
   /**
    * Update call and local positions of all non-leaf frames.
    * `new_call_position` is given callee, callee_port and (existing) position.

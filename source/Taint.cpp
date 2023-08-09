@@ -184,6 +184,18 @@ Taint Taint::apply_transform(
   return result;
 }
 
+Taint Taint::update_with_propagation_trace(
+    const Frame& propagation_frame) const {
+  Taint result;
+
+  for (const auto& callee_frame : set_) {
+    result.set_.add(
+        callee_frame.update_with_propagation_trace(propagation_frame));
+  }
+
+  return result;
+}
+
 Json::Value Taint::to_json(ExportOriginsMode export_origins_mode) const {
   auto taint = Json::Value(Json::arrayValue);
   for (const auto& frames : set_) {

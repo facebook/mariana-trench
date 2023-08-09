@@ -172,6 +172,28 @@ Frame Frame::with_kind(const Kind* kind) const {
   return new_frame;
 }
 
+Frame Frame::update_with_propagation_trace(
+    const Frame& propagation_frame) const {
+  return Frame(
+      kind_,
+      propagation_frame.callee_port_,
+      propagation_frame.callee_,
+      /* field_callee */ nullptr, // Since propagate is only called at method
+                                  // callsites and not field accesses
+      propagation_frame.call_position_,
+      callee_interval_,
+      propagation_frame.distance_,
+      propagation_frame.origins_,
+      field_origins_,
+      inferred_features_,
+      /* user_features */ FeatureSet::bottom(),
+      /* via_type_of_ports */ {},
+      /* via_value_of_ports */ {},
+      /* canonical_names */ {},
+      propagation_frame.call_info_,
+      output_paths_);
+}
+
 Frame Frame::apply_transform(
     const KindFactory& kind_factory,
     const TransformsFactory& transforms_factory,

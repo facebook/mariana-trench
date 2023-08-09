@@ -124,6 +124,13 @@ class CalleeFrames final : public FramesMap<
       const std::vector<std::optional<std::string>>& source_constant_arguments)
       const;
 
+  /**
+   * Propagate the taint from the callee to the caller to track the next hops
+   * for taints with CallInfo kind PropagationWithTrace.
+   */
+  CalleeFrames update_with_propagation_trace(
+      const Frame& propagation_frame) const;
+
   /* Return the set of leaf frames with the given position. */
   CalleeFrames attach_position(const Position* position) const;
 

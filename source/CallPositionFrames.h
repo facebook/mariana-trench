@@ -123,6 +123,9 @@ class CallPositionFrames final : public FramesMap<
       const UsedKinds& used_kinds,
       const TransformList* local_transforms) const;
 
+  CallPositionFrames update_with_propagation_trace(
+      const Frame& propagation_frame) const;
+
   /**
    * Returns new `CallPositionFrames` containing updated call and local
    * positions computed by the input functions.
