@@ -133,6 +133,8 @@ class Taint final : public sparta::AbstractDomain<Taint> {
       const FeatureMayAlwaysSet& features,
       const Position* MT_NULLABLE position);
 
+  void add_extra_trace(const Frame& propagation_frame);
+
   /**
    * Propagate the taint from the callee to the caller.
    *

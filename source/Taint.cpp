@@ -120,6 +120,13 @@ void Taint::add_locally_inferred_features_and_local_position(
   }
 }
 
+void Taint::add_extra_trace(const Frame& propagation_frame) {
+  map([&propagation_frame](Frame frame) {
+    frame.add_extra_trace(propagation_frame);
+    return frame;
+  });
+}
+
 Taint Taint::propagate(
     const Method* callee,
     const AccessPath& callee_port,

@@ -107,6 +107,8 @@ class TaintTree final : public sparta::AbstractDomain<TaintTree> {
       const FeatureMayAlwaysSet& features,
       const Position* MT_NULLABLE position);
 
+  void add_extra_trace(const Frame& propagation_frame);
+
   void attach_position(const Position* position);
 
   /* Return all taint in the tree. */

@@ -73,6 +73,13 @@ void TaintTree::add_locally_inferred_features_and_local_position(
   });
 }
 
+void TaintTree::add_extra_trace(const Frame& propagation_frame) {
+  tree_.map([&propagation_frame](Taint taint) {
+    taint.add_extra_trace(propagation_frame);
+    return taint;
+  });
+}
+
 void TaintTree::attach_position(const Position* position) {
   tree_.map(
       [position](Taint taint) { return taint.attach_position(position); });
