@@ -82,6 +82,11 @@
   [
     "Lcom/facebook/marianatrench/integrationtests/ExtraTraces;.hopToSource2:()Ljava/lang/Object;"
   ],
+  "Lcom/facebook/marianatrench/integrationtests/ExtraTraces;.hopToTransformT1:(Ljava/lang/Object;)Ljava/lang/Object;" : 
+  [
+    "Lcom/facebook/marianatrench/integrationtests/ExtraTraces;.hopToSink3:(Ljava/lang/Object;)V",
+    "Lcom/facebook/marianatrench/integrationtests/ExtraTraces;.hopToSource2:()Ljava/lang/Object;"
+  ],
   "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V" : 
   [
     "Lcom/facebook/marianatrench/integrationtests/ExtraTraces;.hopToSink4:(Ljava/lang/Object;)V",
@@ -164,8 +169,8 @@
   "Lcom/facebook/marianatrench/integrationtests/TaintTransforms;.transformT1:(Ljava/lang/Object;)Ljava/lang/Object;" : 
   [
     "Lcom/facebook/marianatrench/integrationtests/ExtraTraces;.hopPropagation4:(Ljava/lang/Object;)Ljava/lang/Object;",
-    "Lcom/facebook/marianatrench/integrationtests/ExtraTraces;.hopToSink3:(Ljava/lang/Object;)V",
     "Lcom/facebook/marianatrench/integrationtests/ExtraTraces;.hopToSource2:()Ljava/lang/Object;",
+    "Lcom/facebook/marianatrench/integrationtests/ExtraTraces;.hopToTransformT1:(Ljava/lang/Object;)Ljava/lang/Object;",
     "Lcom/facebook/marianatrench/integrationtests/ExtraTraces;.testExtraTraces:()V",
     "Lcom/facebook/marianatrench/integrationtests/TaintTransforms;.hopSinkWithTransformsT1T2:(Ljava/lang/Object;)V",
     "Lcom/facebook/marianatrench/integrationtests/TaintTransforms;.propagateAlternateTransforms:(Lcom/facebook/marianatrench/integrationtests/Data;)Lcom/facebook/marianatrench/integrationtests/Data;",

@@ -14,10 +14,21 @@ class ExtraTraces {
     return hopToSource2();
   }
 
+  public static Object hopToTransformT1(Object o) {
+    return TaintTransforms.transformT1(o);
+  }
+
   public static Object hopToSource2() {
     Object source = hopToSource3();
-    // Expect extra_trace to transformT1().
-    return TaintTransforms.transformT1(source);
+
+    int rand = new Random().nextInt(2);
+    if (rand == 0) {
+      // Expect extra_trace to hopTotransformT1().
+      return hopToTransformT1(source);
+    } else {
+      // Expect extra_trace to transformT1().
+      return TaintTransforms.transformT1(source);
+    }
   }
 
   public static Object hopToSource3() {
@@ -30,8 +41,8 @@ class ExtraTraces {
 
   public static Object hopPropagation2(Object o) {
     // Expect extra_trace to transformT2().
-    Object o1 = TaintTransforms.transformT2(o);
-    return hopPropagation3(o1);
+    Object withT2 = TaintTransforms.transformT2(o);
+    return hopPropagation3(withT2);
   }
 
   public static Object hopPropagation3(Object o) {
@@ -59,15 +70,15 @@ class ExtraTraces {
 
   public static void hopToSink3(Object o) {
     int rand = new Random().nextInt(2);
-    Object o1;
+    Object withTransform;
     if (rand == 0) {
-      // Expect extra_trace to transformT1().
-      o1 = TaintTransforms.transformT1(o);
+      // Expect extra_trace to hopTotransformT1().
+      withTransform = hopToTransformT1(o);
     } else {
       // Expect extra_trace to transformT2().
-      o1 = TaintTransforms.transformT2(o);
+      withTransform = TaintTransforms.transformT2(o);
     }
-    hopToSink4(o1);
+    hopToSink4(withTransform);
   }
 
   public static void hopToSink4(Object o) {
@@ -75,10 +86,11 @@ class ExtraTraces {
   }
 
   public static void testExtraTraces() {
-    Object s = hopToSource1();
+    Object fromHopToSource = hopToSource1();
     // Expect extra_trace to transformT1().
-    Object t = TaintTransforms.transformT1(s);
-    Object tt = hopPropagation1(t);
-    hopToSink1(tt);
+    Object withT1 = TaintTransforms.transformT1(fromHopToSource);
+    // expect extra_trace to hopPropagation1().
+    Object withT1AndHopPropagation = hopPropagation1(withT1);
+    hopToSink1(withT1AndHopPropagation);
   }
 }
