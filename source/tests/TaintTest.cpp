@@ -1184,8 +1184,9 @@ TEST_F(TaintTest, ContainsKind) {
           /* kind */ context.kind_factory->local_return(),
           test::FrameProperties{
               .callee_port = AccessPath(Root(Root::Kind::Return)),
-              .output_paths =
-                  PathTreeDomain{{Path{}, CollapseDepth::zero()}}})};
+              .output_paths = PathTreeDomain{{Path{}, CollapseDepth::zero()}},
+              .call_info = CallInfo::propagation(),
+          })};
 
   EXPECT_TRUE(taint.contains_kind(context.kind_factory->local_return()));
   EXPECT_TRUE(taint.contains_kind(context.kind_factory->get("TestSource")));
@@ -1264,14 +1265,17 @@ TEST_F(TaintTest, PartitionByKindGeneric) {
           /* kind */ context.kind_factory->local_return(),
           test::FrameProperties{
               .callee_port = AccessPath(Root(Root::Kind::Return)),
-              .output_paths = PathTreeDomain{{Path{}, CollapseDepth::zero()}}}),
+              .output_paths = PathTreeDomain{{Path{}, CollapseDepth::zero()}},
+              .call_info = CallInfo::propagation(),
+          }),
       test::make_taint_config(
           /* kind */ context.kind_factory->local_return(),
           test::FrameProperties{
               .callee_port = AccessPath(Root(Root::Kind::Return)),
               .callee = method1,
               .output_paths = PathTreeDomain{{Path{}, CollapseDepth::zero()}},
-              .call_info = CallInfo::callsite(),
+              .call_info =
+                  CallInfo::propagation_with_trace(CallInfo::Kind::CallSite),
           }),
       test::make_taint_config(
           /* kind */ context.kind_factory->get("TestSource1"),
@@ -1298,7 +1302,9 @@ TEST_F(TaintTest, PartitionByKindGeneric) {
               test::FrameProperties{
                   .callee_port = AccessPath(Root(Root::Kind::Return)),
                   .output_paths =
-                      PathTreeDomain{{Path{}, CollapseDepth::zero()}}}),
+                      PathTreeDomain{{Path{}, CollapseDepth::zero()}},
+                  .call_info = CallInfo::propagation(),
+              }),
           test::make_taint_config(
               /* kind */ context.kind_factory->local_return(),
               test::FrameProperties{
@@ -1306,7 +1312,8 @@ TEST_F(TaintTest, PartitionByKindGeneric) {
                   .callee = method1,
                   .output_paths =
                       PathTreeDomain{{Path{}, CollapseDepth::zero()}},
-                  .call_info = CallInfo::callsite(),
+                  .call_info = CallInfo::propagation_with_trace(
+                      CallInfo::Kind::CallSite),
               }),
       }));
   EXPECT_EQ(

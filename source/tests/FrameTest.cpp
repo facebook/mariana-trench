@@ -286,25 +286,33 @@ TEST_F(FrameTest, FrameLeq) {
           context.kind_factory->local_return(),
           test::FrameProperties{
               .callee_port = AccessPath(Root(Root::Kind::Return)),
-              .output_paths = PathTreeDomain{{Path{x}, CollapseDepth::zero()}}})
+              .output_paths = PathTreeDomain{{Path{x}, CollapseDepth::zero()}},
+              .call_info = CallInfo::propagation(),
+          })
           .leq(test::make_taint_frame(
               context.kind_factory->local_return(),
               test::FrameProperties{test::FrameProperties{
                   .callee_port = AccessPath(Root(Root::Kind::Return)),
                   .output_paths =
-                      PathTreeDomain{{Path{}, CollapseDepth::zero()}}}})));
+                      PathTreeDomain{{Path{}, CollapseDepth::zero()}},
+                  .call_info = CallInfo::propagation(),
+              }})));
   EXPECT_FALSE(
       test::make_taint_frame(
           context.kind_factory->local_return(),
           test::FrameProperties{
               .callee_port = AccessPath(Root(Root::Kind::Return)),
-              .output_paths = PathTreeDomain{{Path{}, CollapseDepth::zero()}}})
+              .output_paths = PathTreeDomain{{Path{}, CollapseDepth::zero()}},
+              .call_info = CallInfo::propagation(),
+          })
           .leq(test::make_taint_frame(
               context.kind_factory->local_return(),
               test::FrameProperties{test::FrameProperties{
                   .callee_port = AccessPath(Root(Root::Kind::Return)),
                   .output_paths =
-                      PathTreeDomain{{Path{x}, CollapseDepth::zero()}}}})));
+                      PathTreeDomain{{Path{x}, CollapseDepth::zero()}},
+                  .call_info = CallInfo::propagation(),
+              }})));
 }
 
 TEST_F(FrameTest, FrameEquals) {
@@ -648,13 +656,17 @@ TEST_F(FrameTest, FrameJoin) {
           context.kind_factory->local_return(),
           test::FrameProperties{
               .callee_port = AccessPath(Root(Root::Kind::Return)),
-              .output_paths = PathTreeDomain{{Path{x}, CollapseDepth::zero()}}})
+              .output_paths = PathTreeDomain{{Path{x}, CollapseDepth::zero()}},
+              .call_info = CallInfo::propagation(),
+          })
           .join(test::make_taint_frame(
               context.kind_factory->local_return(),
               test::FrameProperties{test::FrameProperties{
                   .callee_port = AccessPath(Root(Root::Kind::Return)),
                   .output_paths =
-                      PathTreeDomain{{Path{y}, CollapseDepth::zero()}}}})),
+                      PathTreeDomain{{Path{y}, CollapseDepth::zero()}},
+                  .call_info = CallInfo::propagation(),
+              }})),
       test::make_taint_frame(
           context.kind_factory->local_return(),
           test::FrameProperties{test::FrameProperties{
@@ -663,7 +675,9 @@ TEST_F(FrameTest, FrameJoin) {
                   PathTreeDomain{
                       {Path{x}, CollapseDepth::zero()},
                       {Path{y}, CollapseDepth::zero()},
-                  }}})
+                  },
+              .call_info = CallInfo::propagation(),
+          }})
 
   );
 }

@@ -66,7 +66,7 @@ class TaintConfig final {
       : kind_(kind),
         callee_port_(std::move(callee_port)),
         callee_(callee),
-        call_info_(call_info),
+        call_info_(std::move(call_info)),
         field_callee_(field_callee),
         call_position_(call_position),
         callee_interval_(std::move(callee_interval)),
@@ -89,7 +89,10 @@ class TaintConfig final {
     if (auto* propagation_kind =
             kind_->discard_transforms()->as<PropagationKind>()) {
       mt_assert(!output_paths_.is_bottom());
-      mt_assert(callee_port == AccessPath(propagation_kind->root()));
+      if (!call_info_.is_propagation_with_trace()) {
+        mt_assert(call_info_.is_propagation());
+        mt_assert(callee_port == AccessPath(propagation_kind->root()));
+      }
     } else {
       mt_assert(output_paths_.is_bottom());
     }

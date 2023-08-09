@@ -407,26 +407,35 @@ TEST_F(CallPositionFramesTest, LocalTaintLeq) {
               .callee_port = AccessPath(Root(Root::Kind::Return)),
               .output_paths =
                   PathTreeDomain{
-                      {Path{PathElement::field("x")}, CollapseDepth::zero()}}})}
+                      {Path{PathElement::field("x")}, CollapseDepth::zero()}},
+              .call_info = CallInfo::propagation(),
+          })}
                   .leq(CallPositionFrames{test::make_taint_config(
                       context.kind_factory->local_return(),
                       test::FrameProperties{
                           .callee_port = AccessPath(Root(Root::Kind::Return)),
-                          .output_paths = PathTreeDomain{
-                              {Path{}, CollapseDepth::zero()}}})}));
+                          .output_paths =
+                              PathTreeDomain{{Path{}, CollapseDepth::zero()}},
+                          .call_info = CallInfo::propagation(),
+                      })}));
   EXPECT_FALSE(CallPositionFrames{
       test::make_taint_config(
           context.kind_factory->local_return(),
           test::FrameProperties{
               .callee_port = AccessPath(Root(Root::Kind::Return)),
-              .output_paths = PathTreeDomain{{Path{}, CollapseDepth::zero()}}})}
+              .output_paths = PathTreeDomain{{Path{}, CollapseDepth::zero()}},
+              .call_info = CallInfo::propagation(),
+          })}
                    .leq(CallPositionFrames{test::make_taint_config(
                        context.kind_factory->local_return(),
                        test::FrameProperties{
                            .callee_port = AccessPath(Root(Root::Kind::Return)),
-                           .output_paths = PathTreeDomain{
-                               {Path{PathElement::field("x")},
-                                CollapseDepth::zero()}}})}));
+                           .output_paths =
+                               PathTreeDomain{
+                                   {Path{PathElement::field("x")},
+                                    CollapseDepth::zero()}},
+                           .call_info = CallInfo::propagation(),
+                       })}));
 }
 
 TEST_F(CallPositionFramesTest, Equals) {
@@ -626,21 +635,27 @@ TEST_F(CallPositionFramesTest, LocalTaintJoinWith) {
       context.kind_factory->local_return(),
       test::FrameProperties{
           .callee_port = AccessPath(Root(Root::Kind::Return)),
-          .output_paths = PathTreeDomain{
-              {Path{PathElement::field("x")}, CollapseDepth::zero()}}})};
+          .output_paths =
+              PathTreeDomain{
+                  {Path{PathElement::field("x")}, CollapseDepth::zero()}},
+          .call_info = CallInfo::propagation(),
+      })};
   frames.join_with(CallPositionFrames{test::make_taint_config(
       context.kind_factory->local_return(),
       test::FrameProperties{
           .callee_port = AccessPath(Root(Root::Kind::Return)),
-          .output_paths = PathTreeDomain{{Path{}, CollapseDepth::zero()}}})});
+          .output_paths = PathTreeDomain{{Path{}, CollapseDepth::zero()}},
+          .call_info = CallInfo::propagation(),
+      })});
   EXPECT_EQ(
       frames,
       CallPositionFrames{test::make_taint_config(
           context.kind_factory->local_return(),
           test::FrameProperties{
               .callee_port = AccessPath(Root(Root::Kind::Return)),
-              .output_paths =
-                  PathTreeDomain{{Path{}, CollapseDepth::zero()}}})});
+              .output_paths = PathTreeDomain{{Path{}, CollapseDepth::zero()}},
+              .call_info = CallInfo::propagation(),
+          })});
 
   // Join different ports with same prefix, for non-artificial kinds
   frames = CallPositionFrames{test::make_taint_config(
@@ -1944,8 +1959,8 @@ TEST_F(CallPositionFramesTest, ContainsKind) {
           context.kind_factory->local_return(),
           test::FrameProperties{
               .callee_port = AccessPath(Root(Root::Kind::Return)),
-              .output_paths =
-                  PathTreeDomain{{Path{}, CollapseDepth::zero()}}})};
+              .output_paths = PathTreeDomain{{Path{}, CollapseDepth::zero()}},
+              .call_info = CallInfo::propagation()})};
 
   EXPECT_TRUE(frames.contains_kind(context.kind_factory->local_return()));
   EXPECT_TRUE(frames.contains_kind(context.kind_factory->get("TestSource")));

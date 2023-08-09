@@ -74,6 +74,14 @@ class CallInfo final {
         call_infos_.test(Kind::PropagationWithTrace);
   }
 
+  bool is_propagation_with_trace() const {
+    return call_infos_.test(Kind::PropagationWithTrace);
+  }
+
+  bool is_propagation_without_trace() const {
+    return call_infos_.test(Kind::Propagation);
+  }
+
   std::string to_trace_string() const;
 
   CallInfo propagate() const;
@@ -103,9 +111,11 @@ class CallInfo final {
     return CallInfo{CallInfo::Kind::Propagation};
   }
 
-  static CallInfo propagation_with_trace() {
-    CallInfoFlags call_info_flags =
-        CallInfo::Kind::PropagationWithTrace | CallInfo::Kind::Declaration;
+  static CallInfo propagation_with_trace(CallInfo::Kind kind) {
+    mt_assert(
+        kind == CallInfo::Kind::Declaration || kind == CallInfo::Kind::Origin ||
+        kind == CallInfo::Kind::CallSite);
+    CallInfoFlags call_info_flags = CallInfo::Kind::PropagationWithTrace | kind;
 
     return CallInfo{call_info_flags};
   }

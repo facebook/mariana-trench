@@ -3894,7 +3894,7 @@
           "kinds" : 
           [
             {
-              "call_info" : "Propagation",
+              "call_info" : "PropagationWithTrace:Declaration",
               "kind" : "T1@LocalReturn",
               "output_paths" : 
               {
@@ -3935,9 +3935,14 @@
               {
                 "" : 4
               }
-            },
+            }
+          ]
+        },
+        {
+          "kinds" : 
+          [
             {
-              "call_info" : "Propagation",
+              "call_info" : "PropagationWithTrace:Declaration",
               "kind" : "T1@LocalReturn",
               "output_paths" : 
               {
@@ -3976,7 +3981,7 @@
           "kinds" : 
           [
             {
-              "call_info" : "Propagation",
+              "call_info" : "PropagationWithTrace:Declaration",
               "kind" : "T1:T2@LocalReturn",
               "output_paths" : 
               {
@@ -4015,7 +4020,7 @@
           "kinds" : 
           [
             {
-              "call_info" : "Propagation",
+              "call_info" : "PropagationWithTrace:Declaration",
               "kind" : "T2@LocalReturn",
               "output_paths" : 
               {
@@ -4094,7 +4099,7 @@
           "kinds" : 
           [
             {
-              "call_info" : "Propagation",
+              "call_info" : "PropagationWithTrace:Declaration",
               "kind" : "T3@LocalReturn",
               "output_paths" : 
               {
@@ -4133,7 +4138,7 @@
           "kinds" : 
           [
             {
-              "call_info" : "Propagation",
+              "call_info" : "PropagationWithTrace:Declaration",
               "kind" : "Unused@LocalReturn",
               "output_paths" : 
               {

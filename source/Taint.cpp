@@ -253,9 +253,9 @@ FeatureMayAlwaysSet Taint::features_joined() const {
 Taint Taint::propagation(PropagationConfig propagation) {
   return Taint{TaintConfig(
       /* kind */ propagation.kind(),
-      /* callee_port */ AccessPath(propagation.propagation_kind()->root()),
+      /* callee_port */ propagation.callee_port(),
       /* callee */ nullptr,
-      /* call_info */ CallInfo::propagation(),
+      /* call_info */ propagation.call_info(),
       /* field_callee */ nullptr,
       /* call_position */ nullptr,
       /* callee_interval */ CalleeInterval(),
@@ -302,18 +302,20 @@ Taint Taint::essential() const {
   Taint result;
   for (const auto& frame : frames_iterator()) {
     auto callee_port = AccessPath(Root(Root::Kind::Return));
+    CallInfo call_info = CallInfo::declaration();
 
     // This is required by structure invariants.
     if (auto* propagation_kind =
             frame.kind()->discard_transforms()->as<PropagationKind>()) {
       callee_port = AccessPath(propagation_kind->root());
+      call_info = CallInfo::propagation();
     }
 
     result.add(TaintConfig(
         /* kind */ frame.kind(),
         /* callee_port */ callee_port,
         /* callee */ nullptr,
-        /* call_info */ CallInfo::declaration(),
+        /* call_info */ call_info,
         /* field_callee */ nullptr,
         /* call_position */ nullptr,
         /* callee_interval */ CalleeInterval(),

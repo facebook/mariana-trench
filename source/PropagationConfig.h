@@ -11,6 +11,7 @@
 
 #include <mariana-trench/Access.h>
 #include <mariana-trench/Assert.h>
+#include <mariana-trench/CallInfo.h>
 #include <mariana-trench/Context.h>
 #include <mariana-trench/Feature.h>
 #include <mariana-trench/FeatureMayAlwaysSet.h>
@@ -43,10 +44,18 @@ class PropagationConfig final {
         output_paths_(std::move(output_paths)),
         inferred_features_(std::move(inferred_features)),
         locally_inferred_features_(std::move(locally_inferred_features)),
-        user_features_(std::move(user_features)) {
+        user_features_(std::move(user_features)),
+        call_info_(CallInfo::propagation()) {
     mt_assert(kind_ != nullptr);
     mt_assert(kind_->discard_transforms()->is<PropagationKind>());
     mt_assert(!output_paths_.is_bottom());
+
+    if (kind_->is<TransformKind>()) {
+      call_info_ =
+          CallInfo::propagation_with_trace(CallInfo::Kind::Declaration);
+    } else {
+      call_info_ = CallInfo::propagation();
+    }
   }
 
   INCLUDE_DEFAULT_COPY_CONSTRUCTORS_AND_ASSIGNMENTS(PropagationConfig)
@@ -98,6 +107,12 @@ class PropagationConfig final {
     return user_features_;
   }
 
+  const CallInfo& call_info() const {
+    return call_info_;
+  }
+
+  AccessPath callee_port() const;
+
   static PropagationConfig from_json(
       const Json::Value& value,
       Context& context);
@@ -113,6 +128,7 @@ class PropagationConfig final {
   FeatureMayAlwaysSet inferred_features_;
   FeatureMayAlwaysSet locally_inferred_features_;
   FeatureSet user_features_;
+  CallInfo call_info_;
 };
 
 } // namespace marianatrench
