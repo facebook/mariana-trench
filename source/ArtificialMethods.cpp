@@ -61,7 +61,8 @@ std::vector<Model> ArtificialMethods::models(Context& context) const {
           /* canonical_names */ {},
           /* output_paths */ {},
           /* local_positions */ {},
-          /* locally_inferred_features */ FeatureMayAlwaysSet::bottom()));
+          /* locally_inferred_features */ FeatureMayAlwaysSet::bottom(),
+          /* extra_traces */ {}));
   models.push_back(model);
 
   return models;

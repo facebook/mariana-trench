@@ -433,7 +433,8 @@ TaintConfig generator::source(
       /* canonical_names */ {},
       /* output_paths */ {},
       /* local_positions */ {},
-      /* locally_inferred_features */ FeatureMayAlwaysSet::bottom());
+      /* locally_inferred_features */ FeatureMayAlwaysSet::bottom(),
+      /* extra_traces */ {});
 }
 
 TaintConfig generator::sink(
@@ -476,7 +477,8 @@ TaintConfig generator::sink(
       /* canonical_names */ canonical_names,
       /* output_paths */ {},
       /* local_positions */ {},
-      /* locally_inferred_features */ FeatureMayAlwaysSet::bottom());
+      /* locally_inferred_features */ FeatureMayAlwaysSet::bottom(),
+      /* extra_traces */ {});
 }
 
 TaintConfig generator::partial_sink(
@@ -514,7 +516,8 @@ TaintConfig generator::partial_sink(
       /* canonical_names */ {},
       /* output_paths */ {},
       /* local_positions */ {},
-      /* locally_inferred_features */ FeatureMayAlwaysSet::bottom());
+      /* locally_inferred_features */ FeatureMayAlwaysSet::bottom(),
+      /* extra_traces */ {});
 }
 
 } // namespace marianatrench

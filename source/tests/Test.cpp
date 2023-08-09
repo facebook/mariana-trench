@@ -124,7 +124,8 @@ Frame make_taint_frame(const Kind* kind, const FrameProperties& properties) {
       properties.via_value_of_ports,
       properties.canonical_names,
       properties.call_info,
-      properties.output_paths);
+      properties.output_paths,
+      properties.extra_traces);
 }
 
 TaintConfig make_taint_config(
@@ -148,7 +149,8 @@ TaintConfig make_taint_config(
       properties.canonical_names,
       properties.output_paths,
       properties.local_positions,
-      properties.locally_inferred_features);
+      properties.locally_inferred_features,
+      properties.extra_traces);
 }
 
 TaintConfig make_leaf_taint_config(const Kind* kind) {
@@ -184,7 +186,8 @@ TaintConfig make_leaf_taint_config(
       /* canonical_names */ {},
       /* output_paths */ {},
       /* local_positions */ {},
-      locally_inferred_features);
+      locally_inferred_features,
+      /* extra_traces */ {});
 }
 
 TaintConfig make_crtex_leaf_taint_config(
@@ -210,7 +213,8 @@ TaintConfig make_crtex_leaf_taint_config(
       canonical_names,
       /* output_paths */ {},
       /* local_positions */ {},
-      /* locally_inferred_features */ FeatureMayAlwaysSet::bottom());
+      /* locally_inferred_features */ FeatureMayAlwaysSet::bottom(),
+      /* extra_traces */ {});
 }
 
 TaintConfig make_propagation_taint_config(const PropagationKind* kind) {
@@ -246,7 +250,8 @@ TaintConfig make_propagation_taint_config(
       /* canonical_names */ {},
       output_paths,
       /* local_positions */ {},
-      /* locally_inferred_features */ locally_inferred_features);
+      /* locally_inferred_features */ locally_inferred_features,
+      /* extra_traces */ {});
 }
 
 #ifndef MARIANA_TRENCH_FACEBOOK_BUILD

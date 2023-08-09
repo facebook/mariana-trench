@@ -289,7 +289,8 @@ Taint Taint::propagation(PropagationConfig propagation) {
       /* canonical_names */ {},
       /* output_paths */ propagation.output_paths(),
       /* local_positions */ {},
-      /* locally_inferred_features */ propagation.locally_inferred_features())};
+      /* locally_inferred_features */ propagation.locally_inferred_features(),
+      /* extra_traces */ {})};
 }
 
 Taint Taint::propagation_taint(
@@ -315,7 +316,8 @@ Taint Taint::propagation_taint(
       /* canonical_names */ {},
       /* output_paths */ output_paths,
       /* local_positions */ {},
-      /* locally_inferred_features */ {})};
+      /* locally_inferred_features */ {},
+      /* extra_traces */ {})};
 }
 
 Taint Taint::essential() const {
@@ -349,7 +351,8 @@ Taint Taint::essential() const {
         /* canonical_names */ {},
         /* output_paths */ frame.output_paths(),
         /* local_positions */ {},
-        /* locally_inferred_features */ FeatureMayAlwaysSet::bottom()));
+        /* locally_inferred_features */ FeatureMayAlwaysSet::bottom(),
+        /* extra_traces */ {}));
   }
   return result;
 }

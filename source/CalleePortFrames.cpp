@@ -9,6 +9,7 @@
 
 #include <mariana-trench/Assert.h>
 #include <mariana-trench/CalleePortFrames.h>
+#include <mariana-trench/ExtraTraceSet.h>
 #include <mariana-trench/FeatureFactory.h>
 #include <mariana-trench/Heuristics.h>
 #include <mariana-trench/JsonValidation.h>

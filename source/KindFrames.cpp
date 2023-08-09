@@ -337,7 +337,8 @@ KindFrames KindFrames::propagate(
       /* via_value_of_ports */ {},
       /* canonical_names */ {},
       propagated_call_info,
-      output_paths);
+      output_paths,
+      /* extra_traces */ {});
 
   return KindFrames(
       kind,
@@ -422,7 +423,8 @@ KindFrames KindFrames::propagate_crtex_leaf_frames(
             propagated_frame.via_value_of_ports(),
             /* canonical_names */ instantiated_names,
             CallInfo::callsite(),
-            /* output_paths */ PathTreeDomain::bottom()));
+            /* output_paths */ PathTreeDomain::bottom(),
+            /* extra_traces */ propagated_frame.extra_traces()));
       }
     }
   }

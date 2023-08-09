@@ -35,7 +35,8 @@ Frame::Frame(const TaintConfig& config)
           config.via_value_of_ports(),
           config.canonical_names(),
           config.call_info(),
-          config.output_paths()) {}
+          config.output_paths(),
+          config.extra_traces()) {}
 
 void Frame::set_origins(const MethodSet& origins) {
   origins_ = origins;
@@ -69,6 +70,19 @@ FeatureMayAlwaysSet Frame::features() const {
   return features;
 }
 
+void Frame::add_extra_trace(const Frame& propagation_frame) {
+  if (call_info_.is_propagation_without_trace()) {
+    // These should be added as the next hop of the trace.
+    return;
+  }
+  extra_traces_.add(ExtraTrace(
+      propagation_frame.kind_,
+      propagation_frame.callee_,
+      propagation_frame.call_position_,
+      propagation_frame.callee_port_,
+      propagation_frame.call_info_));
+}
+
 bool Frame::leq(const Frame& other) const {
   if (is_bottom()) {
     return true;
@@ -86,7 +100,8 @@ bool Frame::leq(const Frame& other) const {
         via_type_of_ports_.leq(other.via_type_of_ports_) &&
         via_value_of_ports_.leq(other.via_value_of_ports_) &&
         canonical_names_.leq(other.canonical_names_) &&
-        output_paths_.leq(other.output_paths_);
+        output_paths_.leq(other.output_paths_) &&
+        extra_traces_.leq(other.extra_traces_);
   }
 }
 
@@ -107,7 +122,8 @@ bool Frame::equals(const Frame& other) const {
         via_type_of_ports_ == other.via_type_of_ports_ &&
         via_value_of_ports_ == other.via_value_of_ports_ &&
         canonical_names_ == other.canonical_names_ &&
-        output_paths_ == other.output_paths_;
+        output_paths_ == other.output_paths_ &&
+        extra_traces_ == other.extra_traces_;
   }
 }
 
@@ -141,6 +157,8 @@ void Frame::join_with(const Frame& other) {
     output_paths_.collapse_deeper_than(
         Heuristics::kPropagationMaxOutputPathSize);
     output_paths_.limit_leaves(Heuristics::kPropagationMaxOutputPathLeaves);
+
+    extra_traces_.join_with(other.extra_traces_);
   }
 
   mt_expensive_assert(previous.leq(*this) && other.leq(*this));
@@ -191,7 +209,8 @@ Frame Frame::update_with_propagation_trace(
       /* via_value_of_ports */ {},
       /* canonical_names */ {},
       propagation_frame.call_info_,
-      output_paths_);
+      output_paths_,
+      extra_traces_);
 }
 
 Frame Frame::apply_transform(
@@ -393,6 +412,14 @@ Json::Value Frame::to_json(ExportOriginsMode export_origins_mode) const {
         Json::Value(callee_interval_.preserves_type_context());
   }
 
+  if (extra_traces_.is_value() && !extra_traces_.elements().empty()) {
+    auto extra_traces = Json::Value(Json::arrayValue);
+    for (const auto& extra_trace : extra_traces_.elements()) {
+      extra_traces.append(extra_trace.to_json());
+    }
+    value["extra_traces"] = extra_traces;
+  }
+
   return value;
 }
 
@@ -438,6 +465,10 @@ std::ostream& operator<<(std::ostream& out, const Frame& frame) {
   }
   if (!frame.output_paths_.is_bottom()) {
     out << ", output_paths=" << frame.output_paths_;
+  }
+  if (frame.extra_traces_.is_value() &&
+      !frame.extra_traces_.elements().empty()) {
+    out << ", extra_traces=" << frame.extra_traces_;
   }
   return out << ")";
 }

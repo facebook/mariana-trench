@@ -23,6 +23,7 @@
 #include <mariana-trench/ClassIntervals.h>
 #include <mariana-trench/Compiler.h>
 #include <mariana-trench/ExportOriginsMode.h>
+#include <mariana-trench/ExtraTraceSet.h>
 #include <mariana-trench/Feature.h>
 #include <mariana-trench/FeatureMayAlwaysSet.h>
 #include <mariana-trench/FeatureSet.h>
@@ -120,7 +121,8 @@ class Frame final : public sparta::AbstractDomain<Frame> {
       RootSetAbstractDomain via_value_of_ports,
       CanonicalNameSetAbstractDomain canonical_names,
       CallInfo call_info,
-      PathTreeDomain output_paths)
+      PathTreeDomain output_paths,
+      ExtraTraceSet extra_traces)
       : kind_(kind),
         callee_port_(std::move(callee_port)),
         callee_(callee),
@@ -136,7 +138,8 @@ class Frame final : public sparta::AbstractDomain<Frame> {
         via_value_of_ports_(std::move(via_value_of_ports)),
         canonical_names_(std::move(canonical_names)),
         call_info_(call_info),
-        output_paths_(std::move(output_paths)) {
+        output_paths_(std::move(output_paths)),
+        extra_traces_(std::move(extra_traces)) {
     mt_assert(kind_ != nullptr);
     mt_assert(distance_ >= 0);
     mt_assert(!(callee && field_callee));
@@ -247,6 +250,12 @@ class Frame final : public sparta::AbstractDomain<Frame> {
 
   FeatureMayAlwaysSet features() const;
 
+  void add_extra_trace(const Frame& propagation_frame);
+
+  const ExtraTraceSet& extra_traces() const {
+    return extra_traces_;
+  }
+
   static Frame bottom() {
     return Frame();
   }
@@ -269,8 +278,8 @@ class Frame final : public sparta::AbstractDomain<Frame> {
 
   bool is_crtex_producer_declaration() const {
     // If true, this frame corresponds to the crtex leaf frame declared by
-    // the user (callee == nullptr). Also, the producer run declarations use the
-    // `Anchor` port, while consumer runs use the `Producer` port.
+    // the user (callee == nullptr). Also, the producer run declarations use
+    // the `Anchor` port, while consumer runs use the `Producer` port.
     return callee_ == nullptr && callee_port_.root().is_anchor();
   }
 
@@ -338,6 +347,7 @@ class Frame final : public sparta::AbstractDomain<Frame> {
   CanonicalNameSetAbstractDomain canonical_names_;
   CallInfo call_info_;
   PathTreeDomain output_paths_;
+  ExtraTraceSet extra_traces_;
 };
 
 } // namespace marianatrench

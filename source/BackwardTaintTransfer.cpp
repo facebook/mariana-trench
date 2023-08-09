@@ -623,7 +623,8 @@ void check_flows_to_array_allocation(
       /* via_value_of_ports */ {},
       /* canonical_names */ {},
       /* output_paths */ {},
-      /* local_positions */ {})};
+      /* local_positions */ {},
+      /* extra_traces */ {})};
   for (std::size_t parameter_position = 0,
                    number_parameters = instruction->srcs_size();
        parameter_position < number_parameters;

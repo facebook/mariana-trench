@@ -20,6 +20,7 @@
 #include <mariana-trench/ClassIntervals.h>
 #include <mariana-trench/Compiler.h>
 #include <mariana-trench/Context.h>
+#include <mariana-trench/ExtraTraceSet.h>
 #include <mariana-trench/Feature.h>
 #include <mariana-trench/FeatureMayAlwaysSet.h>
 #include <mariana-trench/FeatureSet.h>
@@ -62,7 +63,8 @@ class TaintConfig final {
       CanonicalNameSetAbstractDomain canonical_names,
       PathTreeDomain output_paths,
       LocalPositionSet local_positions,
-      FeatureMayAlwaysSet locally_inferred_features)
+      FeatureMayAlwaysSet locally_inferred_features,
+      ExtraTraceSet extra_traces)
       : kind_(kind),
         callee_port_(std::move(callee_port)),
         callee_(callee),
@@ -80,7 +82,8 @@ class TaintConfig final {
         canonical_names_(std::move(canonical_names)),
         output_paths_(std::move(output_paths)),
         local_positions_(std::move(local_positions)),
-        locally_inferred_features_(std::move(locally_inferred_features)) {
+        locally_inferred_features_(std::move(locally_inferred_features)),
+        extra_traces_(std::move(extra_traces)) {
     mt_assert(kind_ != nullptr);
     mt_assert(distance_ >= 0);
     mt_assert(!(callee && field_callee));
@@ -116,7 +119,8 @@ class TaintConfig final {
         self.canonical_names_ == other.canonical_names_ &&
         self.output_paths_ == other.output_paths_ &&
         self.local_positions_ == other.local_positions_ &&
-        self.call_info_ == other.call_info_;
+        self.call_info_ == other.call_info_ &&
+        self.extra_traces_ == other.extra_traces_;
   }
 
   friend bool operator!=(const TaintConfig& self, const TaintConfig& other) {
@@ -195,6 +199,10 @@ class TaintConfig final {
     return local_positions_;
   }
 
+  const ExtraTraceSet& extra_traces() const {
+    return extra_traces_;
+  }
+
   bool is_leaf() const {
     return callee_ == nullptr;
   }
@@ -232,6 +240,10 @@ class TaintConfig final {
    */
   LocalPositionSet local_positions_;
   FeatureMayAlwaysSet locally_inferred_features_;
+
+  // These are only used to track the first hops of the subtraces for taint
+  // transforms. Should be bottom in all other cases.
+  ExtraTraceSet extra_traces_;
 };
 
 } // namespace marianatrench

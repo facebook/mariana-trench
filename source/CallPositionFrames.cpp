@@ -158,8 +158,8 @@ CallPositionFrames CallPositionFrames::attach_position(
                 /* locally_inferred_features */
                 frame.user_features().is_bottom()
                     ? FeatureMayAlwaysSet::bottom()
-                    : FeatureMayAlwaysSet::make_always(
-                          frame.user_features()))});
+                    : FeatureMayAlwaysSet::make_always(frame.user_features()),
+                frame.extra_traces())});
           });
     }
   }
@@ -221,7 +221,8 @@ CallPositionFrames::map_positions(
           frame.canonical_names(),
           /* output_paths */ {},
           /* local_positions */ {},
-          callee_port_frames.locally_inferred_features());
+          callee_port_frames.locally_inferred_features(),
+          frame.extra_traces());
       new_frames.add(new_frame);
     }
 

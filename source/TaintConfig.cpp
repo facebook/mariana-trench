@@ -6,6 +6,7 @@
  */
 
 #include <mariana-trench/Context.h>
+#include <mariana-trench/ExtraTraceSet.h>
 #include <mariana-trench/JsonValidation.h>
 #include <mariana-trench/TaintConfig.h>
 
@@ -253,7 +254,8 @@ TaintConfig TaintConfig::from_json(const Json::Value& value, Context& context) {
       std::move(canonical_names),
       /* output_paths */ {},
       /* local_positions */ {},
-      /* locally_inferred_features */ FeatureMayAlwaysSet::bottom());
+      /* locally_inferred_features */ FeatureMayAlwaysSet::bottom(),
+      /* extra_traces */ {});
 }
 
 } // namespace marianatrench
