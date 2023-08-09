@@ -13,6 +13,7 @@
 #include <mariana-trench/Heuristics.h>
 #include <mariana-trench/JsonValidation.h>
 #include <mariana-trench/Log.h>
+#include <mariana-trench/PathTreeDomain.h>
 
 namespace marianatrench {
 
@@ -400,8 +401,10 @@ Json::Value CalleePortFrames::to_json(
       }
       taint["origin"] = origin;
     }
-  } else if (!call_info.is_declaration() && !call_info.is_propagation()) {
-    // Never emit calls for declarations and propagations.
+  } else if (
+      !call_info.is_declaration() &&
+      !call_info.is_propagation_without_trace()) {
+    // Never emit calls for declarations and propagations without traces.
     // Emit it for everything else.
     auto call = Json::Value(Json::objectValue);
     if (callee != nullptr) {

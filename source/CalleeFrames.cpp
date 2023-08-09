@@ -73,6 +73,8 @@ CalleeFrames CalleeFrames::propagate(
     return CalleeFrames::bottom();
   }
 
+  mt_assert(!call_info().is_propagation_without_trace());
+
   CallPositionFrames result;
   for (const auto& [_, call_position_frames] : frames_.bindings()) {
     result.join_with(call_position_frames.propagate(

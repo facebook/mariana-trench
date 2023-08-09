@@ -3896,6 +3896,10 @@
             {
               "call_info" : "PropagationWithTrace:Declaration",
               "kind" : "T1@LocalReturn",
+              "origins" : 
+              [
+                "Lcom/facebook/marianatrench/integrationtests/TaintTransforms;.transformForAllParameters:(Lcom/facebook/marianatrench/integrationtests/Data;Ljava/lang/Object;)Ljava/lang/Object;"
+              ],
               "output_paths" : 
               {
                 "" : 0
@@ -3944,6 +3948,10 @@
             {
               "call_info" : "PropagationWithTrace:Declaration",
               "kind" : "T1@LocalReturn",
+              "origins" : 
+              [
+                "Lcom/facebook/marianatrench/integrationtests/TaintTransforms;.transformT1:(Ljava/lang/Object;)Ljava/lang/Object;"
+              ],
               "output_paths" : 
               {
                 "" : 0
@@ -3983,6 +3991,10 @@
             {
               "call_info" : "PropagationWithTrace:Declaration",
               "kind" : "T1:T2@LocalReturn",
+              "origins" : 
+              [
+                "Lcom/facebook/marianatrench/integrationtests/TaintTransforms;.transformT1T2:(Ljava/lang/Object;)Ljava/lang/Object;"
+              ],
               "output_paths" : 
               {
                 "" : 0
@@ -4022,6 +4034,10 @@
             {
               "call_info" : "PropagationWithTrace:Declaration",
               "kind" : "T2@LocalReturn",
+              "origins" : 
+              [
+                "Lcom/facebook/marianatrench/integrationtests/TaintTransforms;.transformT2:(Ljava/lang/Object;)Ljava/lang/Object;"
+              ],
               "output_paths" : 
               {
                 "" : 0
@@ -4101,6 +4117,10 @@
             {
               "call_info" : "PropagationWithTrace:Declaration",
               "kind" : "T3@LocalReturn",
+              "origins" : 
+              [
+                "Lcom/facebook/marianatrench/integrationtests/TaintTransforms;.transformT3WithSource:(Lcom/facebook/marianatrench/integrationtests/Data;)Lcom/facebook/marianatrench/integrationtests/Data;"
+              ],
               "output_paths" : 
               {
                 "" : 0
@@ -4140,6 +4160,10 @@
             {
               "call_info" : "PropagationWithTrace:Declaration",
               "kind" : "Unused@LocalReturn",
+              "origins" : 
+              [
+                "Lcom/facebook/marianatrench/integrationtests/TaintTransforms;.transformUnused:(Ljava/lang/Object;)Ljava/lang/Object;"
+              ],
               "output_paths" : 
               {
                 "" : 0

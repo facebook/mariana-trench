@@ -415,7 +415,30 @@ Model Model::at_callsite(
         }
       });
 
-  model.propagations_ = propagations_;
+  propagations_.visit(
+      [&model,
+       callee,
+       call_position,
+       maximum_source_sink_distance,
+       &extra_features,
+       &context,
+       &source_register_types,
+       &source_constant_arguments](
+          const AccessPath& callee_port, const Taint& propagations) {
+        model.propagations_.write(
+            callee_port,
+            propagations.propagate(
+                callee,
+                callee_port,
+                call_position,
+                maximum_source_sink_distance,
+                extra_features,
+                context,
+                source_register_types,
+                source_constant_arguments),
+            UpdateKind::Weak);
+      });
+
   model.add_features_to_arguments_ = add_features_to_arguments_;
 
   model.inline_as_getter_ = inline_as_getter_;
@@ -1871,6 +1894,10 @@ void Model::add_call_effect_sink(AccessPath port, Taint sink) {
 void Model::add_propagation(AccessPath input_path, Taint output) {
   if (!check_root_consistency(input_path.root())) {
     return;
+  }
+
+  if (method_) {
+    output.set_leaf_origins_if_empty(MethodSet{method_});
   }
 
   if (input_path.path().size() > Heuristics::kPropagationMaxInputPathSize) {

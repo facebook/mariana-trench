@@ -13,6 +13,7 @@
 #include <mariana-trench/JsonValidation.h>
 #include <mariana-trench/KindFrames.h>
 #include <mariana-trench/Log.h>
+#include <mariana-trench/PathTreeDomain.h>
 
 namespace marianatrench {
 
@@ -215,6 +216,7 @@ KindFrames KindFrames::propagate(
   auto field_origins = FieldSet::bottom();
   auto inferred_features = FeatureMayAlwaysSet::bottom();
   auto user_features = FeatureSet::bottom();
+  auto output_paths = PathTreeDomain::bottom();
   std::optional<CallInfo> call_info = std::nullopt;
 
   for (const Frame& frame : *this) {
@@ -278,6 +280,11 @@ KindFrames KindFrames::propagate(
     } else {
       distance = std::min(distance, frame.distance() + 1);
     }
+
+    if (call_info->is_propagation_with_trace()) {
+      // Propagate the output paths for PropagationWithTrace frames.
+      output_paths.join_with(frame.output_paths());
+    }
   }
 
   // For `TransformKind`, all local_transforms of the callee become
@@ -303,11 +310,13 @@ KindFrames KindFrames::propagate(
 
   mt_assert(distance <= maximum_source_sink_distance);
   mt_assert(call_info != std::nullopt);
-  CallInfo propagated = call_info->propagate();
+  CallInfo propagated_call_info = call_info->propagate();
   if (distance > 0) {
-    mt_assert(!propagated.is_declaration() && !propagated.is_origin());
+    mt_assert(
+        !propagated_call_info.is_declaration() &&
+        !propagated_call_info.is_origin());
   } else {
-    mt_assert(propagated.is_origin());
+    mt_assert(propagated_call_info.is_origin());
   }
 
   auto propagated_frame = Frame(
@@ -327,8 +336,8 @@ KindFrames KindFrames::propagate(
       /* via_type_of_ports */ {},
       /* via_value_of_ports */ {},
       /* canonical_names */ {},
-      call_info->propagate(),
-      /* output_paths */ PathTreeDomain::bottom());
+      propagated_call_info,
+      output_paths);
 
   return KindFrames(
       kind,

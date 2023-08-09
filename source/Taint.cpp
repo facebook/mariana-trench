@@ -38,7 +38,8 @@ void Taint::difference_with(const Taint& other) {
 
 void Taint::set_leaf_origins_if_empty(const MethodSet& origins) {
   set_.map([&origins](CalleeFrames frames) {
-    if (frames.callee() == nullptr) {
+    if (frames.callee() == nullptr &&
+        !frames.call_info().is_propagation_without_trace()) {
       frames.set_origins_if_empty(origins);
     }
     return frames;
@@ -131,6 +132,12 @@ Taint Taint::propagate(
     const {
   Taint result;
   for (const auto& frames : set_) {
+    if (frames.call_info().is_propagation_without_trace()) {
+      // For propagation without traces, add as is.
+      result.set_.add(frames);
+      continue;
+    }
+
     auto propagated = frames.propagate(
         callee,
         callee_port,
@@ -142,6 +149,7 @@ Taint Taint::propagate(
     if (propagated.is_bottom()) {
       continue;
     }
+
     propagated.add_locally_inferred_features(extra_features);
     result.set_.add(propagated);
   }

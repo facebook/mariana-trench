@@ -26,7 +26,13 @@ TaintTree apply_propagation(
 
   const auto* transform_kind = kind->as<TransformKind>();
   mt_assert(transform_kind != nullptr);
-  mt_assert(transform_kind->global_transforms() == nullptr);
+  // For propagations with traces, we can have local and global transforms the
+  // same as with source/sink traces. Regardless, both local and global
+  // transforms in the propagation are local to the call-site where it's
+  // applied. Hence we combine them here before applying it.
+  const auto* all_transforms = context->transforms_factory.concat(
+      transform_kind->local_transforms(), transform_kind->global_transforms());
+  mt_assert(all_transforms != nullptr);
 
   const auto* propagation_kind =
       transform_kind->base_kind()->as<PropagationKind>();
@@ -40,7 +46,7 @@ TaintTree apply_propagation(
             context->kind_factory,
             context->transforms_factory,
             context->used_kinds,
-            transform_kind->local_transforms()),
+            all_transforms),
         UpdateKind::Weak);
   }
 
