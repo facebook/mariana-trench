@@ -75,7 +75,7 @@ CallPositionFrames CallPositionFrames::propagate(
         source_register_types,
         source_constant_arguments);
     result.update(
-        propagated.callee_port(), [propagated](CalleePortFrames* frames) {
+        propagated.callee_port(), [&propagated](CalleePortFrames* frames) {
           frames->join_with(propagated);
         });
   }
