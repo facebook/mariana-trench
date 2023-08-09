@@ -141,7 +141,7 @@ void infer_input_taint(
 
   for (const auto& [input_path, taint] : taint_tree.elements()) {
     auto partitioned_by_propagations = taint.partition_by_call_info<bool>(
-        [](CallInfo call_info) { return call_info == CallInfo::Propagation; });
+        [](CallInfo call_info) { return call_info.is_propagation(); });
 
     auto sinks_iterator = partitioned_by_propagations.find(false);
     if (sinks_iterator != partitioned_by_propagations.end()) {
@@ -609,7 +609,7 @@ void check_flows_to_array_allocation(
       /* kind */ context->artificial_methods.array_allocation_kind(),
       /* callee_port */ AccessPath(Root(Root::Kind::Argument, 0)),
       /* callee */ nullptr,
-      /* call_info */ CallInfo::Origin,
+      /* call_info */ CallInfo::origin(),
       /* field_callee */ nullptr,
       /* call_position */ position,
       /* callee_interval */ CalleeInterval(),

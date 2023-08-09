@@ -64,7 +64,7 @@ TEST_F(TaintTest, Insertion) {
           .call_position = context.positions->unknown(),
           .distance = 2,
           .origins = MethodSet{one},
-          .call_info = CallInfo::CallSite,
+          .call_info = CallInfo::callsite(),
       }));
   EXPECT_EQ(
       taint,
@@ -83,7 +83,7 @@ TEST_F(TaintTest, Insertion) {
                   .call_position = context.positions->unknown(),
                   .distance = 2,
                   .origins = MethodSet{one},
-                  .call_info = CallInfo::CallSite,
+                  .call_info = CallInfo::callsite(),
               }),
       }));
 
@@ -95,7 +95,7 @@ TEST_F(TaintTest, Insertion) {
           .call_position = context.positions->unknown(),
           .distance = 3,
           .origins = MethodSet{two},
-          .call_info = CallInfo::CallSite,
+          .call_info = CallInfo::callsite(),
       }));
   EXPECT_EQ(
       taint,
@@ -114,7 +114,7 @@ TEST_F(TaintTest, Insertion) {
                   .call_position = context.positions->unknown(),
                   .distance = 2,
                   .origins = MethodSet{one, two},
-                  .call_info = CallInfo::CallSite,
+                  .call_info = CallInfo::callsite(),
               }),
       }));
 
@@ -126,7 +126,7 @@ TEST_F(TaintTest, Insertion) {
           .call_position = context.positions->unknown(),
           .distance = 3,
           .origins = MethodSet{two},
-          .call_info = CallInfo::CallSite,
+          .call_info = CallInfo::callsite(),
       }));
   EXPECT_EQ(
       taint,
@@ -145,7 +145,7 @@ TEST_F(TaintTest, Insertion) {
                   .call_position = context.positions->unknown(),
                   .distance = 2,
                   .origins = MethodSet{one, two},
-                  .call_info = CallInfo::CallSite,
+                  .call_info = CallInfo::callsite(),
               }),
           test::make_taint_config(
               /* kind */ context.kind_factory->get("IndirectSource"),
@@ -155,7 +155,7 @@ TEST_F(TaintTest, Insertion) {
                   .call_position = context.positions->unknown(),
                   .distance = 3,
                   .origins = MethodSet{two},
-                  .call_info = CallInfo::CallSite,
+                  .call_info = CallInfo::callsite(),
               }),
       }));
 }
@@ -190,7 +190,7 @@ TEST_F(TaintTest, Difference) {
               .origins = MethodSet{one},
               .inferred_features = FeatureMayAlwaysSet{feature_one},
               .user_features = FeatureSet{user_feature_one},
-              .call_info = CallInfo::CallSite,
+              .call_info = CallInfo::callsite(),
           }),
       test::make_taint_config(
           /* kind */ context.kind_factory->get("OtherSource"),
@@ -202,7 +202,7 @@ TEST_F(TaintTest, Difference) {
               .origins = MethodSet{two},
               .inferred_features = FeatureMayAlwaysSet{feature_two},
               .user_features = FeatureSet{user_feature_two},
-              .call_info = CallInfo::CallSite,
+              .call_info = CallInfo::callsite(),
           }),
   };
   taint.difference_with(Taint{
@@ -216,7 +216,7 @@ TEST_F(TaintTest, Difference) {
               .origins = MethodSet{one},
               .inferred_features = FeatureMayAlwaysSet{feature_one},
               .user_features = FeatureSet{user_feature_one},
-              .call_info = CallInfo::CallSite,
+              .call_info = CallInfo::callsite(),
           }),
       test::make_taint_config(
           /* kind */ context.kind_factory->get("OtherSource"),
@@ -228,7 +228,7 @@ TEST_F(TaintTest, Difference) {
               .origins = MethodSet{two},
               .inferred_features = FeatureMayAlwaysSet{feature_two},
               .user_features = FeatureSet{user_feature_two},
-              .call_info = CallInfo::CallSite,
+              .call_info = CallInfo::callsite(),
           }),
       test::make_taint_config(
           /* kind */ context.kind_factory->get("OtherSource"),
@@ -240,7 +240,7 @@ TEST_F(TaintTest, Difference) {
               .origins = MethodSet{three},
               .inferred_features = FeatureMayAlwaysSet{feature_three},
               .user_features = FeatureSet{user_feature_three},
-              .call_info = CallInfo::CallSite,
+              .call_info = CallInfo::callsite(),
           }),
   });
   EXPECT_TRUE(taint.is_bottom());
@@ -254,7 +254,7 @@ TEST_F(TaintTest, Difference) {
               .call_position = test_position,
               .distance = 2,
               .origins = MethodSet{one},
-              .call_info = CallInfo::CallSite,
+              .call_info = CallInfo::callsite(),
           }),
       test::make_taint_config(
           /* kind */ context.kind_factory->get("OtherSource"),
@@ -264,7 +264,7 @@ TEST_F(TaintTest, Difference) {
               .call_position = test_position,
               .distance = 1,
               .origins = MethodSet{two},
-              .call_info = CallInfo::CallSite,
+              .call_info = CallInfo::callsite(),
           }),
       test::make_taint_config(
           /* kind */ context.kind_factory->get("TestSource"),
@@ -274,7 +274,7 @@ TEST_F(TaintTest, Difference) {
               .call_position = test_position,
               .distance = 1,
               .origins = MethodSet{three},
-              .call_info = CallInfo::CallSite,
+              .call_info = CallInfo::callsite(),
           }),
   };
   taint.difference_with(Taint{
@@ -286,7 +286,7 @@ TEST_F(TaintTest, Difference) {
               .call_position = test_position,
               .distance = 1,
               .origins = MethodSet{one},
-              .call_info = CallInfo::CallSite,
+              .call_info = CallInfo::callsite(),
           }),
       test::make_taint_config(
           /* kind */ context.kind_factory->get("TestSource"),
@@ -296,7 +296,7 @@ TEST_F(TaintTest, Difference) {
               .call_position = test_position,
               .distance = 1,
               .origins = MethodSet{two},
-              .call_info = CallInfo::CallSite,
+              .call_info = CallInfo::callsite(),
           }),
   });
   EXPECT_EQ(
@@ -310,7 +310,7 @@ TEST_F(TaintTest, Difference) {
                   .call_position = test_position,
                   .distance = 1,
                   .origins = MethodSet{two},
-                  .call_info = CallInfo::CallSite,
+                  .call_info = CallInfo::callsite(),
               }),
           test::make_taint_config(
               /* kind */ context.kind_factory->get("TestSource"),
@@ -320,7 +320,7 @@ TEST_F(TaintTest, Difference) {
                   .call_position = test_position,
                   .distance = 1,
                   .origins = MethodSet{three},
-                  .call_info = CallInfo::CallSite,
+                  .call_info = CallInfo::callsite(),
               }),
       }));
 
@@ -333,7 +333,7 @@ TEST_F(TaintTest, Difference) {
               .call_position = test_position,
               .distance = 1,
               .origins = MethodSet{one},
-              .call_info = CallInfo::CallSite,
+              .call_info = CallInfo::callsite(),
           }),
       test::make_taint_config(
           /* kind */ context.kind_factory->get("SomeOtherSource"),
@@ -343,7 +343,7 @@ TEST_F(TaintTest, Difference) {
               .call_position = test_position,
               .distance = 1,
               .origins = MethodSet{two},
-              .call_info = CallInfo::CallSite,
+              .call_info = CallInfo::callsite(),
           }),
   };
   taint.difference_with(Taint{
@@ -355,7 +355,7 @@ TEST_F(TaintTest, Difference) {
               .call_position = test_position,
               .distance = 1,
               .origins = MethodSet{one},
-              .call_info = CallInfo::CallSite,
+              .call_info = CallInfo::callsite(),
           }),
       test::make_taint_config(
           /* kind */ context.kind_factory->get("TestSource"),
@@ -365,7 +365,7 @@ TEST_F(TaintTest, Difference) {
               .call_position = test_position,
               .distance = 1,
               .origins = MethodSet{two},
-              .call_info = CallInfo::CallSite,
+              .call_info = CallInfo::callsite(),
           }),
       test::make_taint_config(
           /* kind */ context.kind_factory->get("TestSource"),
@@ -375,7 +375,7 @@ TEST_F(TaintTest, Difference) {
               .call_position = test_position,
               .distance = 1,
               .origins = MethodSet{three},
-              .call_info = CallInfo::CallSite,
+              .call_info = CallInfo::callsite(),
           }),
   });
   EXPECT_EQ(
@@ -389,7 +389,7 @@ TEST_F(TaintTest, Difference) {
                   .call_position = test_position,
                   .distance = 1,
                   .origins = MethodSet{two},
-                  .call_info = CallInfo::CallSite,
+                  .call_info = CallInfo::callsite(),
               }),
       }));
 }
@@ -415,7 +415,7 @@ TEST_F(TaintTest, SetLeafOriginsIfEmpty) {
       test::make_taint_config(
           /* kind */ context.kind_factory->get("TestSource3"),
           test::FrameProperties{
-              .callee = two, .call_info = CallInfo::CallSite}),
+              .callee = two, .call_info = CallInfo::callsite()}),
   };
   taint.set_leaf_origins_if_empty(MethodSet{one});
   EXPECT_EQ(
@@ -430,7 +430,7 @@ TEST_F(TaintTest, SetLeafOriginsIfEmpty) {
           test::make_taint_config(
               /* kind */ context.kind_factory->get("TestSource3"),
               test::FrameProperties{
-                  .callee = two, .call_info = CallInfo::CallSite}),
+                  .callee = two, .call_info = CallInfo::callsite()}),
       }));
 }
 
@@ -489,12 +489,12 @@ TEST_F(TaintTest, LocallyInferredFeatures) {
           test::FrameProperties{
               .callee = one,
               .locally_inferred_features = FeatureMayAlwaysSet{feature_one},
-              .call_info = CallInfo::CallSite}),
+              .call_info = CallInfo::callsite()}),
   };
   EXPECT_EQ(
       taint.locally_inferred_features(
           /* callee */ one,
-          /* call_info */ CallInfo::CallSite,
+          /* call_info */ CallInfo::callsite(),
           /* position */ nullptr,
           /* callee_port */ AccessPath(Root(Root::Kind::Leaf))),
       FeatureMayAlwaysSet{feature_one});
@@ -503,7 +503,7 @@ TEST_F(TaintTest, LocallyInferredFeatures) {
   EXPECT_EQ(
       taint.locally_inferred_features(
           /* callee */ one,
-          /* call_info */ CallInfo::CallSite,
+          /* call_info */ CallInfo::callsite(),
           /* position */ nullptr,
           /* callee_port */ AccessPath(Root(Root::Kind::Argument))),
       FeatureMayAlwaysSet::bottom());
@@ -512,7 +512,7 @@ TEST_F(TaintTest, LocallyInferredFeatures) {
   EXPECT_EQ(
       taint.locally_inferred_features(
           /* callee */ one,
-          /* call_info */ CallInfo::CallSite,
+          /* call_info */ CallInfo::callsite(),
           /* position */ context.positions->unknown(),
           /* callee_port */ AccessPath(Root(Root::Kind::Leaf))),
       FeatureMayAlwaysSet::bottom());
@@ -524,25 +524,25 @@ TEST_F(TaintTest, LocallyInferredFeatures) {
           test::FrameProperties{
               .callee = nullptr,
               .locally_inferred_features = FeatureMayAlwaysSet{feature_one},
-              .call_info = CallInfo::CallSite}),
+              .call_info = CallInfo::callsite()}),
       test::make_taint_config(
           /* kind */ context.kind_factory->get("TestSource"),
           test::FrameProperties{
               .callee = nullptr,
               .locally_inferred_features = FeatureMayAlwaysSet{feature_two},
-              .call_info = CallInfo::Origin}),
+              .call_info = CallInfo::origin()}),
   };
   EXPECT_EQ(
       taint.locally_inferred_features(
           /* callee */ nullptr,
-          /* call_info */ CallInfo::CallSite,
+          /* call_info */ CallInfo::callsite(),
           /* position */ nullptr,
           /* callee_port */ AccessPath(Root(Root::Kind::Leaf))),
       FeatureMayAlwaysSet{feature_one});
   EXPECT_EQ(
       taint.locally_inferred_features(
           /* callee */ nullptr,
-          /* call_info */ CallInfo::Origin,
+          /* call_info */ CallInfo::origin(),
           /* position */ nullptr,
           /* callee_port */ AccessPath(Root(Root::Kind::Leaf))),
       FeatureMayAlwaysSet{feature_two});
@@ -554,32 +554,32 @@ TEST_F(TaintTest, LocallyInferredFeatures) {
           test::FrameProperties{
               .callee = one,
               .locally_inferred_features = FeatureMayAlwaysSet{feature_one},
-              .call_info = CallInfo::CallSite}),
+              .call_info = CallInfo::callsite()}),
       test::make_taint_config(
           /* kind */ context.kind_factory->get("TestSource"),
           test::FrameProperties{
               .callee = nullptr,
               .locally_inferred_features = FeatureMayAlwaysSet{feature_two},
-              .call_info = CallInfo::CallSite}),
+              .call_info = CallInfo::callsite()}),
   };
   EXPECT_EQ(
       taint.locally_inferred_features(
           /* callee */ one,
-          /* call_info */ CallInfo::CallSite,
+          /* call_info */ CallInfo::callsite(),
           /* position */ nullptr,
           /* callee_port */ AccessPath(Root(Root::Kind::Leaf))),
       FeatureMayAlwaysSet{feature_one});
   EXPECT_EQ(
       taint.locally_inferred_features(
           /* callee */ nullptr,
-          /* call_info */ CallInfo::CallSite,
+          /* call_info */ CallInfo::callsite(),
           /* position */ nullptr,
           /* callee_port */ AccessPath(Root(Root::Kind::Leaf))),
       FeatureMayAlwaysSet{feature_two});
   EXPECT_EQ(
       taint.locally_inferred_features(
           /* callee */ one,
-          /* call_info */ CallInfo::Origin,
+          /* call_info */ CallInfo::origin(),
           /* position */ nullptr,
           /* callee_port */ AccessPath(Root(Root::Kind::Leaf))),
       FeatureMayAlwaysSet::bottom());
@@ -611,7 +611,7 @@ TEST_F(TaintTest, Propagate) {
           test::FrameProperties{
               .origins = MethodSet{one},
               .user_features = FeatureSet{user_feature_one},
-              .call_info = CallInfo::Origin}),
+              .call_info = CallInfo::origin()}),
       test::make_taint_config(
           /* kind */ context.kind_factory->get("OtherSource"),
           test::FrameProperties{
@@ -622,7 +622,7 @@ TEST_F(TaintTest, Propagate) {
               .origins = MethodSet{two},
               .inferred_features = FeatureMayAlwaysSet{feature_one},
               .user_features = FeatureSet{user_feature_one},
-              .call_info = CallInfo::CallSite}),
+              .call_info = CallInfo::callsite()}),
       test::make_taint_config(
           /* kind */ context.kind_factory->get("OtherSource"),
           test::FrameProperties{
@@ -634,7 +634,7 @@ TEST_F(TaintTest, Propagate) {
               .inferred_features = FeatureMayAlwaysSet{feature_one},
               .locally_inferred_features = FeatureMayAlwaysSet{feature_two},
               .user_features = FeatureSet{user_feature_one, user_feature_two},
-              .call_info = CallInfo::CallSite})};
+              .call_info = CallInfo::callsite()})};
 
   // When propagating, all user features become inferred features.
   EXPECT_EQ(
@@ -659,7 +659,7 @@ TEST_F(TaintTest, Propagate) {
                   .inferred_features = FeatureMayAlwaysSet{user_feature_one},
                   .locally_inferred_features =
                       FeatureMayAlwaysSet{feature_three},
-                  .call_info = CallInfo::CallSite,
+                  .call_info = CallInfo::callsite(),
               }),
           test::make_taint_config(
               /* kind */ context.kind_factory->get("OtherSource"),
@@ -675,7 +675,7 @@ TEST_F(TaintTest, Propagate) {
                       FeatureSet{user_feature_one, feature_one}),
                   .locally_inferred_features =
                       FeatureMayAlwaysSet{feature_three},
-                  .call_info = CallInfo::CallSite}),
+                  .call_info = CallInfo::callsite()}),
       }));
 }
 
@@ -718,7 +718,7 @@ TEST_F(TaintTest, TransformKind) {
               .origins = MethodSet{two},
               .inferred_features = FeatureMayAlwaysSet{feature_one},
               .user_features = FeatureSet{user_feature_one},
-              .call_info = CallInfo::CallSite,
+              .call_info = CallInfo::callsite(),
           }),
       test::make_taint_config(
           /* kind */ context.kind_factory->get("OtherSource"),
@@ -731,7 +731,7 @@ TEST_F(TaintTest, TransformKind) {
               .inferred_features =
                   FeatureMayAlwaysSet{feature_one, feature_two},
               .user_features = FeatureSet{user_feature_one, user_feature_two},
-              .call_info = CallInfo::CallSite,
+              .call_info = CallInfo::callsite(),
           }),
   };
 
@@ -775,7 +775,7 @@ TEST_F(TaintTest, TransformKind) {
                   .origins = MethodSet{two},
                   .inferred_features = FeatureMayAlwaysSet{feature_one},
                   .user_features = FeatureSet{user_feature_one},
-                  .call_info = CallInfo::CallSite,
+                  .call_info = CallInfo::callsite(),
               }),
           test::make_taint_config(
               /* kind */ context.kind_factory->get("OtherSource"),
@@ -789,7 +789,7 @@ TEST_F(TaintTest, TransformKind) {
                       FeatureMayAlwaysSet{feature_one, feature_two},
                   .user_features =
                       FeatureSet{user_feature_one, user_feature_two},
-                  .call_info = CallInfo::CallSite,
+                  .call_info = CallInfo::callsite(),
               }),
       }));
 
@@ -824,7 +824,7 @@ TEST_F(TaintTest, TransformKind) {
                   .origins = MethodSet{two},
                   .inferred_features = FeatureMayAlwaysSet{feature_one},
                   .user_features = FeatureSet{user_feature_one},
-                  .call_info = CallInfo::CallSite,
+                  .call_info = CallInfo::callsite(),
               }),
           test::make_taint_config(
               /* kind */ context.kind_factory->get("OtherSource"),
@@ -838,7 +838,7 @@ TEST_F(TaintTest, TransformKind) {
                       FeatureMayAlwaysSet{feature_one, feature_two},
                   .user_features =
                       FeatureSet{user_feature_one, user_feature_two},
-                  .call_info = CallInfo::CallSite,
+                  .call_info = CallInfo::callsite(),
               }),
       }));
 
@@ -921,7 +921,7 @@ TEST_F(TaintTest, TransformKind) {
               .call_position = test_position,
               .origins = MethodSet{two},
               .inferred_features = FeatureMayAlwaysSet{feature_one},
-              .call_info = CallInfo::CallSite,
+              .call_info = CallInfo::callsite(),
           }),
       test::make_taint_config(
           /* kind */ context.kind_factory->get("OtherSource2"),
@@ -930,7 +930,7 @@ TEST_F(TaintTest, TransformKind) {
               .call_position = test_position,
               .origins = MethodSet{three},
               .inferred_features = FeatureMayAlwaysSet{feature_two},
-              .call_info = CallInfo::CallSite,
+              .call_info = CallInfo::callsite(),
           }),
   };
   taint.transform_kind_with_features(
@@ -952,7 +952,7 @@ TEST_F(TaintTest, TransformKind) {
                   .inferred_features = FeatureMayAlwaysSet(
                       /* may */ FeatureSet{feature_one, feature_two},
                       /* always */ FeatureSet{}),
-                  .call_info = CallInfo::CallSite,
+                  .call_info = CallInfo::callsite(),
               }),
       }));
 }
@@ -973,7 +973,7 @@ TEST_F(TaintTest, AppendOutputPaths) {
               .callee_port = AccessPath(Root(Root::Kind::Return)),
               .output_paths =
                   PathTreeDomain{{Path{path_element1}, CollapseDepth(4)}},
-              .call_info = CallInfo::Propagation,
+              .call_info = CallInfo::propagation(),
           })};
 
   taint.append_to_propagation_output_paths(path_element2);
@@ -991,7 +991,7 @@ TEST_F(TaintTest, AppendOutputPaths) {
                       PathTreeDomain{
                           {Path{path_element1, path_element2},
                            CollapseDepth(3)}},
-                  .call_info = CallInfo::Propagation,
+                  .call_info = CallInfo::propagation(),
               })}));
 }
 
@@ -1027,7 +1027,7 @@ TEST_F(TaintTest, UpdateNonLeafPositions) {
               .callee_port = AccessPath(Root(Root::Kind::Return)),
               .callee = method1,
               .call_position = position1,
-              .call_info = CallInfo::CallSite,
+              .call_info = CallInfo::callsite(),
           }),
       test::make_taint_config(
           /* kind */ context.kind_factory->get("NonLeafFrame2"),
@@ -1035,7 +1035,7 @@ TEST_F(TaintTest, UpdateNonLeafPositions) {
               .callee_port = AccessPath(Root(Root::Kind::Argument)),
               .callee = method2,
               .call_position = position2,
-              .call_info = CallInfo::CallSite,
+              .call_info = CallInfo::callsite(),
           }),
       test::make_taint_config(
           /* kind */ context.kind_factory->get("NonLeafFrame3"),
@@ -1043,7 +1043,7 @@ TEST_F(TaintTest, UpdateNonLeafPositions) {
               .callee_port = AccessPath(Root(Root::Kind::Argument, 1)),
               .callee = method3,
               .call_position = position3,
-              .call_info = CallInfo::CallSite,
+              .call_info = CallInfo::callsite(),
           })};
 
   taint.update_non_leaf_positions(
@@ -1116,7 +1116,7 @@ TEST_F(TaintTest, FilterInvalidFrames) {
           test::FrameProperties{
               .callee_port = AccessPath(Root(Root::Kind::Argument)),
               .callee = method1,
-              .call_info = CallInfo::CallSite,
+              .call_info = CallInfo::callsite(),
           })};
   taint.filter_invalid_frames(
       /* is_valid */
@@ -1135,7 +1135,7 @@ TEST_F(TaintTest, FilterInvalidFrames) {
           test::FrameProperties{
               .callee_port = AccessPath(Root(Root::Kind::Argument)),
               .callee = method1,
-              .call_info = CallInfo::CallSite,
+              .call_info = CallInfo::callsite(),
           })};
   taint.filter_invalid_frames(
       /* is_valid */
@@ -1151,7 +1151,7 @@ TEST_F(TaintTest, FilterInvalidFrames) {
           test::FrameProperties{
               .callee_port = AccessPath(Root(Root::Kind::Argument)),
               .callee = method1,
-              .call_info = CallInfo::CallSite,
+              .call_info = CallInfo::callsite(),
           })}));
   // Filter by kind
   taint = Taint{
@@ -1161,7 +1161,7 @@ TEST_F(TaintTest, FilterInvalidFrames) {
           test::FrameProperties{
               .callee_port = AccessPath(Root(Root::Kind::Argument)),
               .callee = method1,
-              .call_info = CallInfo::CallSite,
+              .call_info = CallInfo::callsite(),
           })};
   taint.filter_invalid_frames(
       /* is_valid */
@@ -1212,13 +1212,13 @@ TEST_F(TaintTest, PartitionByKind) {
           /* kind */ context.kind_factory->get("TestSource3"),
           test::FrameProperties{
               .callee = method1,
-              .call_info = CallInfo::CallSite,
+              .call_info = CallInfo::callsite(),
           }),
       test::make_taint_config(
           /* kind */ context.kind_factory->get("TestSource3"),
           test::FrameProperties{
               .callee = method2,
-              .call_info = CallInfo::CallSite,
+              .call_info = CallInfo::callsite(),
           })};
 
   auto taint_by_kind = taint.partition_by_kind();
@@ -1240,13 +1240,13 @@ TEST_F(TaintTest, PartitionByKind) {
               /* kind */ context.kind_factory->get("TestSource3"),
               test::FrameProperties{
                   .callee = method1,
-                  .call_info = CallInfo::CallSite,
+                  .call_info = CallInfo::callsite(),
               }),
           test::make_taint_config(
               /* kind */ context.kind_factory->get("TestSource3"),
               test::FrameProperties{
                   .callee = method2,
-                  .call_info = CallInfo::CallSite,
+                  .call_info = CallInfo::callsite(),
               })}));
 }
 
@@ -1271,19 +1271,19 @@ TEST_F(TaintTest, PartitionByKindGeneric) {
               .callee_port = AccessPath(Root(Root::Kind::Return)),
               .callee = method1,
               .output_paths = PathTreeDomain{{Path{}, CollapseDepth::zero()}},
-              .call_info = CallInfo::CallSite,
+              .call_info = CallInfo::callsite(),
           }),
       test::make_taint_config(
           /* kind */ context.kind_factory->get("TestSource1"),
           test::FrameProperties{
               .callee = method1,
-              .call_info = CallInfo::CallSite,
+              .call_info = CallInfo::callsite(),
           }),
       test::make_taint_config(
           /* kind */ context.kind_factory->get("TestSource2"),
           test::FrameProperties{
               .callee = method2,
-              .call_info = CallInfo::CallSite,
+              .call_info = CallInfo::callsite(),
           })};
 
   auto taint_by_kind = taint.partition_by_kind<bool>([&](const Kind* kind) {
@@ -1306,7 +1306,7 @@ TEST_F(TaintTest, PartitionByKindGeneric) {
                   .callee = method1,
                   .output_paths =
                       PathTreeDomain{{Path{}, CollapseDepth::zero()}},
-                  .call_info = CallInfo::CallSite,
+                  .call_info = CallInfo::callsite(),
               }),
       }));
   EXPECT_EQ(
@@ -1316,13 +1316,13 @@ TEST_F(TaintTest, PartitionByKindGeneric) {
               /* kind */ context.kind_factory->get("TestSource1"),
               test::FrameProperties{
                   .callee = method1,
-                  .call_info = CallInfo::CallSite,
+                  .call_info = CallInfo::callsite(),
               }),
           test::make_taint_config(
               /* kind */ context.kind_factory->get("TestSource2"),
               test::FrameProperties{
                   .callee = method2,
-                  .call_info = CallInfo::CallSite,
+                  .call_info = CallInfo::callsite(),
               }),
       }));
 }
@@ -1346,7 +1346,7 @@ TEST_F(TaintTest, FeaturesJoined) {
           test::FrameProperties{
               .callee = method1,
               .inferred_features = FeatureMayAlwaysSet{feature1},
-              .call_info = CallInfo::CallSite,
+              .call_info = CallInfo::callsite(),
           }),
       test::make_taint_config(
           /* kind */ context.kind_factory->get("TestSource"),
@@ -1356,7 +1356,7 @@ TEST_F(TaintTest, FeaturesJoined) {
                   /* may */ FeatureSet{feature2},
                   /* always */ FeatureSet{feature3}),
               .locally_inferred_features = FeatureMayAlwaysSet{feature1},
-              .call_info = CallInfo::CallSite,
+              .call_info = CallInfo::callsite(),
           })};
 
   // In practice, features_joined() is called on `Taint` objects with only one

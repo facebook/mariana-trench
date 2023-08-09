@@ -47,7 +47,7 @@ std::vector<Model> ArtificialMethods::models(Context& context) const {
           array_allocation_kind_,
           /* callee_port */ AccessPath(Root(Root::Kind::Leaf)),
           /* callee */ nullptr,
-          /* call_info */ CallInfo::Declaration,
+          /* call_info */ CallInfo::declaration(),
           /* field_callee */ nullptr,
           /* call_position */ nullptr,
           /* callee_interval */ CalleeInterval(),

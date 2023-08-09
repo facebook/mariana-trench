@@ -1383,7 +1383,7 @@ TEST_F(JsonTest, Frame) {
                                 .callee_interval = CalleeInterval(
                                     ClassIntervals::Interval(1, 2),
                                     /* preserves_type_context */ true),
-                                .call_info = CallInfo::CallSite})
+                                .call_info = CallInfo::callsite()})
                             .to_json(ExportOriginsMode::Always)),
       test::sorted_json(test::parse_json(R"({
           "call_info": "CallSite",
@@ -1403,18 +1403,19 @@ TEST_F(JsonTest, CallInfo) {
       test::sorted_json(
           test::make_taint_frame(
               /* kind */ context.kind_factory->get("TestSource"),
-              test::FrameProperties{.call_info = CallInfo::Origin})
+              test::FrameProperties{.call_info = CallInfo::origin()})
               .to_json(ExportOriginsMode::Always)),
       test::parse_json(R"({
           "call_info": "Origin",
           "kind": "TestSource",
         })"));
   EXPECT_EQ(
-      test::sorted_json(test::make_taint_frame(
-                            /* kind */ context.kind_factory->get("TestSource"),
-                            test::FrameProperties{
-                                .distance = 5, .call_info = CallInfo::CallSite})
-                            .to_json(ExportOriginsMode::Always)),
+      test::sorted_json(
+          test::make_taint_frame(
+              /* kind */ context.kind_factory->get("TestSource"),
+              test::FrameProperties{
+                  .distance = 5, .call_info = CallInfo::callsite()})
+              .to_json(ExportOriginsMode::Always)),
       test::parse_json(R"({
           "call_info": "CallSite",
           "kind": "TestSource",

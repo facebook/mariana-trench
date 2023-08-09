@@ -77,7 +77,7 @@ struct FrameProperties {
   CanonicalNameSetAbstractDomain canonical_names = {};
   PathTreeDomain output_paths = {};
   LocalPositionSet local_positions = {};
-  CallInfo call_info = CallInfo::Declaration;
+  CallInfo call_info = CallInfo::declaration();
 };
 
 Frame make_taint_frame(const Kind* kind, const FrameProperties& properties);

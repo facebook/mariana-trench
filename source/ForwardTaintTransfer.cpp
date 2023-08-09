@@ -645,7 +645,7 @@ void check_flows_to_array_allocation(
       /* kind */ context->artificial_methods.array_allocation_kind(),
       /* callee_port */ AccessPath(Root(Root::Kind::Argument, 0)),
       /* callee */ nullptr,
-      /* call_info */ CallInfo::Origin,
+      /* call_info */ CallInfo::origin(),
       /* field_callee */ nullptr,
       /* call_position */ position,
       /* callee_interval */ CalleeInterval(),

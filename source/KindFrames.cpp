@@ -232,7 +232,7 @@ KindFrames KindFrames::propagate(
     field_origins.join_with(frame.field_origins());
 
     auto local_features = locally_inferred_features;
-    if (call_info == CallInfo::Declaration) {
+    if (call_info->is_declaration()) {
       // If propagating a declaration, user features are kept as user features
       // in the propagated frame(s). Inferred features are not expected on
       // declarations.
@@ -269,7 +269,7 @@ KindFrames KindFrames::propagate(
 
     // It's important that this check happens after we materialize the ports for
     // the error messages on failure to not get null callables.
-    if (call_info == CallInfo::Declaration) {
+    if (call_info->is_declaration()) {
       // If we're propagating a declaration, there are no origins, and we should
       // keep the set as bottom, and set the callee to nullptr explicitly to
       // avoid emitting an invalid frame.
@@ -303,12 +303,11 @@ KindFrames KindFrames::propagate(
 
   mt_assert(distance <= maximum_source_sink_distance);
   mt_assert(call_info != std::nullopt);
-  CallInfo propagated = propagate_call_info(*call_info);
+  CallInfo propagated = call_info->propagate();
   if (distance > 0) {
-    mt_assert(
-        propagated != CallInfo::Declaration && propagated != CallInfo::Origin);
+    mt_assert(!propagated.is_declaration() && !propagated.is_origin());
   } else {
-    mt_assert(propagated == CallInfo::Origin);
+    mt_assert(propagated.is_origin());
   }
 
   auto propagated_frame = Frame(
@@ -328,7 +327,7 @@ KindFrames KindFrames::propagate(
       /* via_type_of_ports */ {},
       /* via_value_of_ports */ {},
       /* canonical_names */ {},
-      propagate_call_info(*call_info),
+      call_info->propagate(),
       /* output_paths */ PathTreeDomain::bottom());
 
   return KindFrames(
@@ -413,7 +412,7 @@ KindFrames KindFrames::propagate_crtex_leaf_frames(
             propagated_frame.via_type_of_ports(),
             propagated_frame.via_value_of_ports(),
             /* canonical_names */ instantiated_names,
-            CallInfo::CallSite,
+            CallInfo::callsite(),
             /* output_paths */ PathTreeDomain::bottom()));
       }
     }

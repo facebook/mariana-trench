@@ -27,12 +27,12 @@ bool CalleeProperties::operator==(const CalleeProperties& other) const {
 }
 
 bool CalleeProperties::is_default() const {
-  return callee_ == nullptr && call_info_ == CallInfo::Declaration;
+  return callee_ == nullptr && call_info_.is_declaration();
 }
 
 void CalleeProperties::set_to_default() {
   callee_ = nullptr;
-  call_info_ = CallInfo::Declaration;
+  call_info_ = CallInfo::declaration();
 }
 
 const Position* MT_NULLABLE
@@ -41,7 +41,7 @@ CallPositionFromTaintConfig::operator()(const TaintConfig& config) const {
 }
 
 void CalleeFrames::add_local_position(const Position* position) {
-  if (call_info() == CallInfo::Propagation) {
+  if (call_info().is_propagation()) {
     return; // Do not add local positions on propagations.
   }
 
@@ -91,7 +91,7 @@ CalleeFrames CalleeFrames::propagate(
 
   mt_assert(call_position == result.position());
   return CalleeFrames(
-      CalleeProperties(callee, propagate_call_info(call_info())),
+      CalleeProperties(callee, call_info().propagate()),
       FramesByKey{std::pair(call_position, result)});
 }
 
@@ -109,7 +109,7 @@ CalleeFrames CalleeFrames::attach_position(const Position* position) const {
   return CalleeFrames(
       // Since attaching the position creates a new leaf of the trace, we don't
       // respect the previous call info and instead default to origin.
-      CalleeProperties(callee(), CallInfo::Origin),
+      CalleeProperties(callee(), CallInfo::origin()),
       FramesByKey{std::pair(position, result)});
 }
 
@@ -132,7 +132,7 @@ CalleeFrames CalleeFrames::apply_transform(
 
 void CalleeFrames::append_to_propagation_output_paths(
     Path::Element path_element) {
-  if (call_info() != CallInfo::Propagation) {
+  if (!call_info().is_propagation()) {
     return;
   }
 
@@ -143,7 +143,7 @@ void CalleeFrames::append_to_propagation_output_paths(
 }
 
 void CalleeFrames::update_maximum_collapse_depth(CollapseDepth collapse_depth) {
-  if (call_info() != CallInfo::Propagation) {
+  if (!call_info().is_propagation()) {
     return;
   }
 

@@ -306,7 +306,7 @@ Json::Value Frame::to_json(ExportOriginsMode export_origins_mode) const {
   }
 
   if (!origins_.empty()) {
-    if (call_info_ == CallInfo::Origin ||
+    if (call_info_.is_origin() ||
         export_origins_mode == ExportOriginsMode::Always) {
       value["origins"] = origins_.to_json();
     }
@@ -346,7 +346,7 @@ Json::Value Frame::to_json(ExportOriginsMode export_origins_mode) const {
     value["canonical_names"] = canonical_names;
   }
 
-  value["call_info"] = Json::Value(std::string(show_call_info(call_info_)));
+  value["call_info"] = Json::Value(std::string(call_info_.to_trace_string()));
 
   if (!output_paths_.is_bottom()) {
     auto output_paths_value = Json::Value(Json::objectValue);
@@ -368,36 +368,6 @@ Json::Value Frame::to_json(ExportOriginsMode export_origins_mode) const {
   return value;
 }
 
-const std::string_view show_call_info(CallInfo call_info) {
-  switch (call_info) {
-    case CallInfo::Declaration:
-      return "Declaration";
-    case CallInfo::Origin:
-      return "Origin";
-    case CallInfo::CallSite:
-      return "CallSite";
-    case CallInfo::Propagation:
-      return "Propagation";
-    default:
-      mt_unreachable();
-  }
-}
-
-CallInfo propagate_call_info(CallInfo call_info) {
-  switch (call_info) {
-    case CallInfo::Declaration:
-      return CallInfo::Origin;
-    case CallInfo::Origin:
-      return CallInfo::CallSite;
-    case CallInfo::CallSite:
-      return CallInfo::CallSite;
-    case CallInfo::Propagation:
-      mt_unreachable();
-    default:
-      mt_unreachable();
-  }
-}
-
 std::ostream& operator<<(std::ostream& out, const Frame& frame) {
   out << "Frame(kind=`" << show(frame.kind_)
       << "`, callee_port=" << frame.callee_port_;
@@ -410,7 +380,7 @@ std::ostream& operator<<(std::ostream& out, const Frame& frame) {
     out << ", call_position=" << show(frame.call_position_);
   }
   out << ", callee_interval=" << show(frame.callee_interval_);
-  out << ", call_info=" << show_call_info(frame.call_info_);
+  out << ", call_info=" << frame.call_info_.to_trace_string();
   if (frame.distance_ != 0) {
     out << ", distance=" << frame.distance_;
   }

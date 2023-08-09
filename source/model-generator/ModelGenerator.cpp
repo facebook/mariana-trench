@@ -419,7 +419,7 @@ TaintConfig generator::source(
       /* kind */ context.kind_factory->get(kind),
       /* callee_port */ AccessPath(Root(callee_port)),
       /* callee */ nullptr,
-      /* call_info */ CallInfo::Declaration,
+      /* call_info */ CallInfo::declaration(),
       /* field_callee */ nullptr,
       /* call_position */ nullptr,
       /* callee_interval */ CalleeInterval(),
@@ -453,7 +453,7 @@ TaintConfig generator::sink(
 
   // CRTEX leaves are origins.
   CallInfo call_info =
-      canonical_names.size() > 0 ? CallInfo::Origin : CallInfo::Declaration;
+      canonical_names.size() > 0 ? CallInfo::origin() : CallInfo::declaration();
   FeatureSet user_features;
   for (const auto& feature : features) {
     user_features.add(context.feature_factory->get(feature));
@@ -500,7 +500,7 @@ TaintConfig generator::partial_sink(
       /* kind */ context.kind_factory->get_partial(kind, label),
       /* callee_port */ AccessPath(Root(callee_port)),
       /* callee */ nullptr,
-      /* call_info */ CallInfo::Declaration,
+      /* call_info */ CallInfo::declaration(),
       /* field_callee */ nullptr,
       /* call_position */ nullptr,
       /* callee_interval */ CalleeInterval(),

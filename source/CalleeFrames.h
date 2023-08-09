@@ -32,7 +32,7 @@ class CalleeProperties {
   bool operator==(const CalleeProperties& other) const;
 
   static CalleeProperties make_default() {
-    return CalleeProperties(/* callee */ nullptr, CallInfo::Declaration);
+    return CalleeProperties(/* callee */ nullptr, CallInfo::declaration());
   }
 
   bool is_default() const;
@@ -84,7 +84,7 @@ class CalleeFrames final : public FramesMap<
     std::size_t operator()(const CalleeFrames& frame) const {
       std::size_t seed = 0;
       boost::hash_combine(seed, frame.callee());
-      boost::hash_combine(seed, frame.call_info());
+      boost::hash_combine(seed, frame.call_info().encode());
       return seed;
     }
   };

@@ -590,7 +590,7 @@ TEST_F(KindFramesTest, Propagate) {
               .callee_interval = interval_one,
               .distance = 1,
               .origins = MethodSet{one},
-              .call_info = CallInfo::CallSite}),
+              .call_info = CallInfo::callsite()}),
       test::make_taint_config(
           test_kind_one,
           test::FrameProperties{
@@ -598,7 +598,7 @@ TEST_F(KindFramesTest, Propagate) {
               .callee_interval = interval_two,
               .distance = 2,
               .origins = MethodSet{one},
-              .call_info = CallInfo::CallSite}),
+              .call_info = CallInfo::callsite()}),
   };
   std::vector<const Feature*> via_type_of_features_added;
   EXPECT_EQ(
@@ -622,7 +622,7 @@ TEST_F(KindFramesTest, Propagate) {
                   .distance = 2,
                   .origins = MethodSet{one},
                   .inferred_features = FeatureMayAlwaysSet{feature_one},
-                  .call_info = CallInfo::CallSite}),
+                  .call_info = CallInfo::callsite()}),
       }));
 }
 
@@ -650,7 +650,7 @@ TEST_F(KindFramesTest, PropagateCrtex) {
               .origins = MethodSet{one},
               .canonical_names = CanonicalNameSetAbstractDomain{CanonicalName(
                   CanonicalName::TemplateValue{"%programmatic_leaf_name%"})},
-              .call_info = CallInfo::Origin}),
+              .call_info = CallInfo::origin()}),
       test::make_taint_config(
           test_kind_one,
           test::FrameProperties{
@@ -658,7 +658,7 @@ TEST_F(KindFramesTest, PropagateCrtex) {
               .origins = MethodSet{one},
               .canonical_names = CanonicalNameSetAbstractDomain{CanonicalName(
                   CanonicalName::TemplateValue{"constant value"})},
-              .call_info = CallInfo::Origin}),
+              .call_info = CallInfo::origin()}),
   };
 
   auto canonical_callee_port =
@@ -687,7 +687,7 @@ TEST_F(KindFramesTest, PropagateCrtex) {
                   .canonical_names =
                       CanonicalNameSetAbstractDomain{
                           expected_instantiated_name},
-                  .call_info = CallInfo::CallSite}),
+                  .call_info = CallInfo::callsite()}),
           test::make_taint_config(
               test_kind_one,
               test::FrameProperties{
@@ -699,7 +699,7 @@ TEST_F(KindFramesTest, PropagateCrtex) {
                   .canonical_names =
                       CanonicalNameSetAbstractDomain(CanonicalName(
                           CanonicalName::InstantiatedValue{"constant value"})),
-                  .call_info = CallInfo::CallSite}),
+                  .call_info = CallInfo::callsite()}),
       }));
 
   // Test propagating crtex-like frames (callee port == anchor.<path>),
@@ -728,7 +728,7 @@ TEST_F(KindFramesTest, PropagateCrtex) {
                   .origins = MethodSet{one},
                   .inferred_features =
                       FeatureMayAlwaysSet{feature_one, feature_two},
-                  .call_info = CallInfo::CallSite}),
+                  .call_info = CallInfo::callsite()}),
       }));
 }
 

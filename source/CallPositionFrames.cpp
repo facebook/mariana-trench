@@ -110,7 +110,7 @@ CallPositionFrames CallPositionFrames::attach_position(
                 frame.kind(),
                 frame.callee_port(),
                 /* callee */ nullptr,
-                CallInfo::Origin,
+                CallInfo::origin(),
                 /* field_callee */ nullptr,
                 /* call_position */ position,
                 // TODO(T158171922): Re-visit what the appropriate interval

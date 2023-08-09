@@ -17,6 +17,7 @@
 
 #include <mariana-trench/Access.h>
 #include <mariana-trench/Assert.h>
+#include <mariana-trench/CallInfo.h>
 #include <mariana-trench/CalleeInterval.h>
 #include <mariana-trench/CanonicalName.h>
 #include <mariana-trench/ClassIntervals.h>
@@ -41,25 +42,6 @@ namespace marianatrench {
 using RootSetAbstractDomain = sparta::HashedSetAbstractDomain<Root>;
 using CanonicalNameSetAbstractDomain =
     sparta::HashedSetAbstractDomain<CanonicalName>;
-
-using KindEncoding = unsigned int;
-
-enum class CallInfo : KindEncoding {
-  // A declaration of taint from a model - should not be included in the final
-  // trace.
-  Declaration = 0,
-  // The origin frame for taint that indicates a leaf.
-  Origin = 1,
-  // A call site where taint is propagated from some origin.
-  CallSite = 2,
-  // Special taint used to infer propagations.
-  Propagation = 3,
-};
-
-const std::string_view show_call_info(CallInfo call_info);
-CallInfo propagate_call_info(CallInfo call_info);
-
-class TaintConfig;
 
 /**
  * Represents a frame of a trace, i.e a single hop between methods.
@@ -120,7 +102,7 @@ class Frame final : public sparta::AbstractDomain<Frame> {
         call_position_(nullptr),
         callee_interval_(CalleeInterval()),
         distance_(0),
-        call_info_(CallInfo::Declaration) {}
+        call_info_(CallInfo::declaration()) {}
 
   explicit Frame(
       const Kind* kind,
@@ -166,7 +148,7 @@ class Frame final : public sparta::AbstractDomain<Frame> {
           !output_paths_.is_bottom());
     }
     if (callee != nullptr && !callee_port_.root().is_anchor()) {
-      mt_assert(call_info == CallInfo::CallSite);
+      mt_assert(call_info.is_callsite());
     }
   }
 
