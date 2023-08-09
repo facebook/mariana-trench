@@ -29,8 +29,6 @@ class Flags final {
 
  public:
   using EnumType = Enum;
-
- private:
   using IntT = std::underlying_type_t<Enum>;
 
  public:
@@ -143,6 +141,14 @@ class Flags final {
 
   bool is_subset_of(Flags flags) const {
     return (value_ | flags.value_) == flags.value_;
+  }
+
+  bool has_single_bit() const {
+    return (value_ && !(value_ & (value_ - 1)));
+  }
+
+  IntT encode() const {
+    return value_;
   }
 
  private:
