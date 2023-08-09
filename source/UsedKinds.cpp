@@ -118,8 +118,9 @@ UsedKinds UsedKinds::from_rules(
 bool UsedKinds::should_keep(const TransformKind* transform_kind) const {
   const auto* base_kind = transform_kind->base_kind();
   if (base_kind->is<PropagationKind>()) {
-    return propagation_kind_to_transforms_.find(
-               transform_kind->local_transforms()) !=
+    return propagation_kind_to_transforms_.find(transforms_factory_.concat(
+               transform_kind->local_transforms(),
+               transform_kind->global_transforms())) !=
         propagation_kind_to_transforms_.end();
   }
 

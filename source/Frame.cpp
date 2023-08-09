@@ -187,6 +187,12 @@ Frame Frame::apply_transform(
         local_transforms, transform_kind->local_transforms());
     global_transforms = transform_kind->global_transforms();
     base_kind = transform_kind->base_kind();
+  } else if (const auto* propagation_kind = kind_->as<PropagationKind>()) {
+    // If the current kind is PropagationKind, set the transform as a global
+    // transform. This is done to track the next hops for propagation with
+    // trace.
+    global_transforms = local_transforms;
+    local_transforms = nullptr;
   }
 
   mt_assert(base_kind != nullptr);
