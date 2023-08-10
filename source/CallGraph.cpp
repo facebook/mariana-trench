@@ -877,7 +877,7 @@ std::ostream& operator<<(std::ostream& out, const CallTarget& call_target) {
     out << ", receiver_type=`" << show(call_target.receiver_type())
         << "`, overrides={";
     for (const auto* method : call_target.overrides()) {
-      out << "`" << method << "`, ";
+      out << "`" << method->show() << "`, ";
     }
     out << "}";
   }
