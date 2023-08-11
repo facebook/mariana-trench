@@ -407,9 +407,10 @@ Json::Value Frame::to_json(ExportOriginsMode export_origins_mode) const {
   }
 
   if (!callee_interval_.is_default()) {
-    value["callee_interval"] = callee_interval_.interval().to_json();
-    value["preserves_type_context"] =
-        Json::Value(callee_interval_.preserves_type_context());
+    auto interval_json = callee_interval_.to_json();
+    for (const auto& member : interval_json.getMemberNames()) {
+      value[member] = interval_json[member];
+    }
   }
 
   if (extra_traces_.is_value() && !extra_traces_.elements().empty()) {

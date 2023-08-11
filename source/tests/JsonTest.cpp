@@ -1381,7 +1381,7 @@ TEST_F(JsonTest, Frame) {
                             /* kind */ context.kind_factory->get("TestSource"),
                             test::FrameProperties{
                                 .callee_interval = CalleeInterval(
-                                    ClassIntervals::Interval(1, 2),
+                                    ClassIntervals::Interval::finite(1, 2),
                                     /* preserves_type_context */ true),
                                 .call_info = CallInfo::callsite()})
                             .to_json(ExportOriginsMode::Always)),

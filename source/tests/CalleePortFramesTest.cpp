@@ -1586,10 +1586,9 @@ TEST_F(CalleePortFramesTest, Show) {
   EXPECT_EQ(
       show(frames),
       "CalleePortFrames(callee_port=AccessPath(Leaf), frames=[KindFrames("
-      "frames=[FramesByInterval(interval={[0, 4294967295], "
-      "preserves_type_context=0}, frame=Frame(kind=`TestSink1`, callee_port="
-      "AccessPath(Leaf), callee_interval={[0, 4294967295], "
-      "preserves_type_context=0}, call_info=Declaration, "
+      "frames=[FramesByInterval(interval={T, preserves_type_context=0}, "
+      "frame=Frame(kind=`TestSink1`, callee_port=AccessPath(Leaf), "
+      "callee_interval={T, preserves_type_context=0}, call_info=Declaration, "
       "origins={`LOne;.one:()V`})),]),])");
 
   frames = CalleePortFrames{test::make_taint_config(
@@ -1602,10 +1601,10 @@ TEST_F(CalleePortFramesTest, Show) {
       show(frames),
       "CalleePortFrames(callee_port=AccessPath(Leaf), "
       "local_positions={Position(line=1)}, frames=[KindFrames(frames=["
-      "FramesByInterval(interval={[0, 4294967295], preserves_type_context=0}, "
-      "frame=Frame(kind=`TestSink1`, callee_port=AccessPath(Leaf), "
-      "callee_interval={[0, 4294967295], preserves_type_context=0}, "
-      "call_info=Declaration, origins={`LOne;.one:()V`})),]),])");
+      "FramesByInterval(interval={T, preserves_type_context=0}, frame=Frame("
+      "kind=`TestSink1`, callee_port=AccessPath(Leaf), callee_interval={T, "
+      "preserves_type_context=0}, call_info=Declaration, "
+      "origins={`LOne;.one:()V`})),]),])");
 
   frames = CalleePortFrames{test::make_taint_config(
       context.kind_factory->local_return(),
@@ -1617,10 +1616,9 @@ TEST_F(CalleePortFramesTest, Show) {
   EXPECT_EQ(
       show(frames),
       "CalleePortFrames(callee_port=AccessPath(Return), frames=[KindFrames("
-      "frames=[FramesByInterval(interval={[0, 4294967295], "
-      "preserves_type_context=0}, frame=Frame(kind=`LocalReturn`, callee_port="
-      "AccessPath(Return), callee_interval={[0, 4294967295], "
-      "preserves_type_context=0}, call_info=Propagation, "
+      "frames=[FramesByInterval(interval={T, preserves_type_context=0}, "
+      "frame=Frame(kind=`LocalReturn`, callee_port=AccessPath(Return), "
+      "callee_interval={T, preserves_type_context=0}, call_info=Propagation, "
       "output_paths={0})),]),])");
 
   frames = CalleePortFrames{test::make_taint_config(
@@ -1635,10 +1633,9 @@ TEST_F(CalleePortFramesTest, Show) {
   EXPECT_EQ(
       show(frames),
       "CalleePortFrames(callee_port=AccessPath(Return), frames=[KindFrames("
-      "frames=[FramesByInterval(interval={[0, 4294967295], "
-      "preserves_type_context=0}, frame=Frame(kind=`LocalReturn`, callee_port="
-      "AccessPath(Return), callee_interval={[0, 4294967295], "
-      "preserves_type_context=0}, call_info=Propagation, "
+      "frames=[FramesByInterval(interval={T, preserves_type_context=0}, "
+      "frame=Frame(kind=`LocalReturn`, callee_port=AccessPath(Return), "
+      "callee_interval={T, preserves_type_context=0}, call_info=Propagation, "
       "output_paths={\n    `.x` -> {0}\n})),]),])");
 
   EXPECT_EQ(

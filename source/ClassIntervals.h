@@ -12,6 +12,8 @@
 
 #include <json/json.h>
 
+#include <sparta/IntervalDomain.h>
+
 #include <ClassHierarchy.h>
 #include <DexStore.h>
 
@@ -39,43 +41,15 @@ namespace marianatrench {
  * Derived2[2,3]
  */
 class ClassIntervals final {
- public:
-  struct Interval {
-    /**
-     * Defaults to the equivalent of an open interval: (-inf,+inf) which
-     * represents all classes.
-     */
-    explicit Interval()
-        : lower_bound(std::numeric_limits<std::uint32_t>::min()),
-          upper_bound(std::numeric_limits<std::uint32_t>::max()) {}
-
-    explicit Interval(std::uint32_t lower_bound, std::uint32_t upper_bound)
-        : lower_bound(lower_bound), upper_bound(upper_bound) {}
-
-    static Interval max_interval() {
-      return Interval();
-    }
-
-    INCLUDE_DEFAULT_COPY_CONSTRUCTORS_AND_ASSIGNMENTS(Interval)
-
-    bool operator==(const Interval& other) const;
-
-    /**
-     * Returns true if this interval contains `other`.
-     * Semantically, returns true if the class represented by the interval
-     * `other` is derived from the class represented by this interval.
-     */
-    bool contains(const Interval& other) const;
-
-    Json::Value to_json() const;
-
-    friend std::ostream& operator<<(std::ostream&, const Interval&);
-
-    std::uint32_t lower_bound;
-    std::uint32_t upper_bound;
-  };
+ private:
+  // 0 is the lower/min bound of the unsigned interval and is internally used
+  // by sparta::IntervalDomain to represent an interval that is unbounded below.
+  // Class intervals are bounded, so the the interval should not fall below 1.
+  static constexpr std::uint32_t MIN_INTERVAL = 1;
 
  public:
+  using Interval = sparta::IntervalDomain<std::uint32_t>;
+
   explicit ClassIntervals(
       const Options& options,
       const DexStoresVector& stores);
@@ -89,10 +63,12 @@ class ClassIntervals final {
    */
   const Interval& get_interval(const DexType* type) const;
 
+  static Json::Value interval_to_json(const Interval& interval);
+
   Json::Value to_json() const;
 
  private:
-  const Interval open_interval_;
+  const Interval top_;
 
   std::unordered_map<const DexType*, Interval> class_intervals_;
 };
@@ -104,8 +80,8 @@ struct std::hash<marianatrench::ClassIntervals::Interval> {
   std::size_t operator()(
       const marianatrench::ClassIntervals::Interval& interval) const {
     std::size_t seed = 0;
-    boost::hash_combine(seed, std::hash<std::uint32_t>()(interval.lower_bound));
-    boost::hash_combine(seed, std::hash<std::uint32_t>()(interval.upper_bound));
+    boost::hash_combine(seed, interval.lower_bound());
+    boost::hash_combine(seed, interval.upper_bound());
     return seed;
   }
 };

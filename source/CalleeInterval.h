@@ -29,7 +29,7 @@ class Frame;
 class CalleeInterval {
  public:
   CalleeInterval()
-      : interval_(ClassIntervals::Interval::max_interval()),
+      : interval_(ClassIntervals::Interval::top()),
         preserves_type_context_(false) {
     // Default constructor is expected to produce a "default" interval.
     mt_assert(is_default());
@@ -51,8 +51,7 @@ class CalleeInterval {
   }
 
   bool is_default() const {
-    return interval_ == ClassIntervals::Interval::max_interval() &&
-        !preserves_type_context_;
+    return interval_.is_top() && !preserves_type_context_;
   }
 
   const ClassIntervals::Interval& interval() const {
@@ -62,6 +61,8 @@ class CalleeInterval {
   bool preserves_type_context() const {
     return preserves_type_context_;
   }
+
+  Json::Value to_json() const;
 
   friend std::ostream& operator<<(
       std::ostream& out,

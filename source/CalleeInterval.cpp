@@ -25,6 +25,13 @@ CalleeInterval::CalleeInterval(const TaintConfig& config)
 CalleeInterval::CalleeInterval(const Frame& frame)
     : CalleeInterval(frame.callee_interval()) {}
 
+Json::Value CalleeInterval::to_json() const {
+  auto value = Json::Value(Json::objectValue);
+  value["callee_interval"] = ClassIntervals::interval_to_json(interval_);
+  value["preserves_type_context"] = Json::Value(preserves_type_context_);
+  return value;
+}
+
 std::ostream& operator<<(
     std::ostream& out,
     const CalleeInterval& callee_interval) {

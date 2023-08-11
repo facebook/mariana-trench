@@ -25,7 +25,8 @@ TEST_F(KindFramesTest, Add) {
 
   auto* source_kind_one = context.kind_factory->get("TestSourceOne");
   auto interval = CalleeInterval(
-      ClassIntervals::Interval(2, 3), /* preserves_type_context */ false);
+      ClassIntervals::Interval::finite(2, 3),
+      /* preserves_type_context */ false);
 
   KindFrames frames;
   EXPECT_TRUE(frames.is_bottom());
@@ -77,15 +78,19 @@ TEST_F(KindFramesTest, Leq) {
 
   auto* test_kind_one = context.kind_factory->get("TestSinkOne");
   auto interval_one = CalleeInterval(
-      ClassIntervals::Interval(2, 3), /* preserves_type_context */ false);
+      ClassIntervals::Interval::finite(2, 3),
+      /* preserves_type_context */ false);
   auto interval_one_preserves_type_context = CalleeInterval(
-      ClassIntervals::Interval(2, 3), /* preserves_type_context */ true);
+      ClassIntervals::Interval::finite(2, 3),
+      /* preserves_type_context */ true);
   auto interval_two = CalleeInterval(
-      ClassIntervals::Interval(4, 5), /* preserves_type_context */ false);
+      ClassIntervals::Interval::finite(4, 5),
+      /* preserves_type_context */ false);
   auto interval_two_preserves_type_context = CalleeInterval(
-      ClassIntervals::Interval(4, 5), /* preserves_type_context */ true);
+      ClassIntervals::Interval::finite(4, 5),
+      /* preserves_type_context */ true);
   auto interval_three = CalleeInterval(
-      ClassIntervals::Interval::max_interval(),
+      ClassIntervals::Interval::top(),
       /* preserves_type_context */ true);
   auto* feature_one = context.feature_factory->get("FeatureOne");
 
@@ -191,9 +196,11 @@ TEST_F(KindFramesTest, Equals) {
 
   auto* test_kind_one = context.kind_factory->get("TestSinkOne");
   auto interval_one = CalleeInterval(
-      ClassIntervals::Interval(2, 3), /* preserves_type_context */ false);
+      ClassIntervals::Interval::finite(2, 3),
+      /* preserves_type_context */ false);
   auto interval_two = CalleeInterval(
-      ClassIntervals::Interval(4, 5), /* preserves_type_context */ false);
+      ClassIntervals::Interval::finite(4, 5),
+      /* preserves_type_context */ false);
 
   // Comparison to bottom
   EXPECT_TRUE(KindFrames::bottom().equals(KindFrames::bottom()));
@@ -224,13 +231,13 @@ TEST_F(KindFramesTest, Equals) {
                     test_kind_one,
                     test::FrameProperties{
                         .callee_interval = CalleeInterval(
-                            ClassIntervals::Interval::max_interval(),
+                            ClassIntervals::Interval::top(),
                             /* preserves_type_context */ true)})})
                    .equals(KindFrames{test::make_taint_config(
                        test_kind_one,
                        test::FrameProperties{
                            .callee_interval = CalleeInterval(
-                               ClassIntervals::Interval::max_interval(),
+                               ClassIntervals::Interval::top(),
                                /* preserves_type_context */ false)})}));
 }
 
@@ -240,9 +247,11 @@ TEST_F(KindFramesTest, JoinWith) {
   Scope scope;
   auto* test_kind_one = context.kind_factory->get("TestSinkOne");
   auto interval_one = CalleeInterval(
-      ClassIntervals::Interval(2, 3), /* preserves_type_context */ false);
+      ClassIntervals::Interval::finite(2, 3),
+      /* preserves_type_context */ false);
   auto interval_two = CalleeInterval(
-      ClassIntervals::Interval(4, 5), /* preserves_type_context */ false);
+      ClassIntervals::Interval::finite(4, 5),
+      /* preserves_type_context */ false);
   auto* feature_one = context.feature_factory->get("FeatureOne");
   auto* feature_two = context.feature_factory->get("FeatureTwo");
 
@@ -310,9 +319,11 @@ TEST_F(KindFramesTest, Difference) {
   Scope scope;
   auto* test_kind_one = context.kind_factory->get("TestSinkOne");
   auto interval_one = CalleeInterval(
-      ClassIntervals::Interval(2, 3), /* preserves_type_context */ false);
+      ClassIntervals::Interval::finite(2, 3),
+      /* preserves_type_context */ false);
   auto interval_two = CalleeInterval(
-      ClassIntervals::Interval(4, 5), /* preserves_type_context */ false);
+      ClassIntervals::Interval::finite(4, 5),
+      /* preserves_type_context */ false);
   auto* feature_one = context.feature_factory->get("FeatureOne");
 
   KindFrames frames;
@@ -440,9 +451,11 @@ TEST_F(KindFramesTest, Iterator) {
 
   auto* test_kind_one = context.kind_factory->get("TestSinkOne");
   auto interval_one = CalleeInterval(
-      ClassIntervals::Interval(2, 3), /* preserves_type_context */ false);
+      ClassIntervals::Interval::finite(2, 3),
+      /* preserves_type_context */ false);
   auto interval_two = CalleeInterval(
-      ClassIntervals::Interval(4, 5), /* preserves_type_context */ false);
+      ClassIntervals::Interval::finite(4, 5),
+      /* preserves_type_context */ false);
 
   auto kind_frames = KindFrames{
       test::make_taint_config(
@@ -483,9 +496,11 @@ TEST_F(KindFramesTest, Map) {
   Scope scope;
   auto* test_kind = context.kind_factory->get("TestSink");
   auto interval_one = CalleeInterval(
-      ClassIntervals::Interval(2, 3), /* preserves_type_context */ false);
+      ClassIntervals::Interval::finite(2, 3),
+      /* preserves_type_context */ false);
   auto interval_two = CalleeInterval(
-      ClassIntervals::Interval(4, 5), /* preserves_type_context */ false);
+      ClassIntervals::Interval::finite(4, 5),
+      /* preserves_type_context */ false);
   auto* feature_one = context.feature_factory->get("FeatureOne");
 
   auto frames = KindFrames{
@@ -528,9 +543,11 @@ TEST_F(KindFramesTest, Filter) {
   Scope scope;
   auto* test_kind = context.kind_factory->get("TestSink");
   auto interval_one = CalleeInterval(
-      ClassIntervals::Interval(2, 3), /* preserves_type_context */ false);
+      ClassIntervals::Interval::finite(2, 3),
+      /* preserves_type_context */ false);
   auto interval_two = CalleeInterval(
-      ClassIntervals::Interval(4, 5), /* preserves_type_context */ false);
+      ClassIntervals::Interval::finite(4, 5),
+      /* preserves_type_context */ false);
 
   auto frames = KindFrames{
       test::make_taint_config(
@@ -571,9 +588,11 @@ TEST_F(KindFramesTest, Propagate) {
   auto* two =
       context.methods->create(redex::create_void_method(scope, "LTwo;", "two"));
   auto interval_one = CalleeInterval(
-      ClassIntervals::Interval(2, 3), /* preserves_type_context */ false);
+      ClassIntervals::Interval::finite(2, 3),
+      /* preserves_type_context */ false);
   auto interval_two = CalleeInterval(
-      ClassIntervals::Interval(4, 5), /* preserves_type_context */ false);
+      ClassIntervals::Interval::finite(4, 5),
+      /* preserves_type_context */ false);
   auto* feature_one = context.feature_factory->get("FeatureOne");
   auto* test_kind_one = context.kind_factory->get("TestSinkOne");
   auto* call_position = context.positions->get("Test.java", 1);
@@ -634,8 +653,8 @@ TEST_F(KindFramesTest, PropagateCrtex) {
       context.methods->create(redex::create_void_method(scope, "LOne;", "one"));
   auto* two =
       context.methods->create(redex::create_void_method(scope, "LTwo;", "two"));
-  auto interval_one = ClassIntervals::Interval(2, 3);
-  auto interval_two = ClassIntervals::Interval(4, 5);
+  auto interval_one = ClassIntervals::Interval::finite(2, 3);
+  auto interval_two = ClassIntervals::Interval::finite(4, 5);
   auto* feature_one = context.feature_factory->get("FeatureOne");
   auto* feature_two = context.feature_factory->get("FeatureTwo");
   auto* test_kind_one = context.kind_factory->get("TestSinkOne");

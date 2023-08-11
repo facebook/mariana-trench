@@ -71,98 +71,24 @@ TEST_F(ClassIntervalsTest, IntervalComputation) {
   auto context = test_context(scope);
 
   auto interval_a = context.class_intervals->get_interval(a->get_type());
-  EXPECT_EQ(ClassIntervals::Interval(1, 6), interval_a);
-  EXPECT_TRUE(ClassIntervals::Interval::max_interval().contains(interval_a));
-  EXPECT_FALSE(interval_a.contains(ClassIntervals::Interval::max_interval()));
+  EXPECT_EQ(ClassIntervals::Interval::finite(2, 7), interval_a);
 
   auto interval_a1 = context.class_intervals->get_interval(a1->get_type());
-  EXPECT_EQ(ClassIntervals::Interval(2, 3), interval_a1);
-  EXPECT_TRUE(ClassIntervals::Interval::max_interval().contains(interval_a1));
-  EXPECT_FALSE(interval_a1.contains(ClassIntervals::Interval::max_interval()));
-  EXPECT_FALSE(interval_a1.contains(interval_a));
-  EXPECT_TRUE(interval_a.contains(interval_a1));
+  EXPECT_EQ(ClassIntervals::Interval::finite(3, 4), interval_a1);
 
   auto interval_a2 = context.class_intervals->get_interval(a2->get_type());
-  EXPECT_EQ(ClassIntervals::Interval(4, 5), interval_a2);
-  EXPECT_TRUE(ClassIntervals::Interval::max_interval().contains(interval_a2));
-  EXPECT_FALSE(interval_a2.contains(ClassIntervals::Interval::max_interval()));
-  EXPECT_FALSE(interval_a2.contains(interval_a));
-  EXPECT_TRUE(interval_a.contains(interval_a2));
-  EXPECT_FALSE(interval_a2.contains(interval_a1));
-  EXPECT_FALSE(interval_a1.contains(interval_a2));
+  EXPECT_EQ(ClassIntervals::Interval::finite(5, 6), interval_a2);
 
   auto interval_b = context.class_intervals->get_interval(b->get_type());
-  EXPECT_EQ(ClassIntervals::Interval(7, 12), interval_b);
-  EXPECT_TRUE(ClassIntervals::Interval::max_interval().contains(interval_b));
-  EXPECT_FALSE(interval_b.contains(ClassIntervals::Interval::max_interval()));
-  EXPECT_FALSE(interval_b.contains(interval_a));
-  EXPECT_FALSE(interval_a.contains(interval_b));
+  EXPECT_EQ(ClassIntervals::Interval::finite(8, 13), interval_b);
 
   auto interval_b1 = context.class_intervals->get_interval(b1->get_type());
-  EXPECT_EQ(ClassIntervals::Interval(8, 11), interval_b1);
-  EXPECT_TRUE(ClassIntervals::Interval::max_interval().contains(interval_b1));
-  EXPECT_FALSE(interval_b1.contains(ClassIntervals::Interval::max_interval()));
-  EXPECT_FALSE(interval_b1.contains(interval_b));
-  EXPECT_TRUE(interval_b.contains(interval_b1));
+  EXPECT_EQ(ClassIntervals::Interval::finite(9, 12), interval_b1);
 
   auto interval_b1_1 = context.class_intervals->get_interval(b1_1->get_type());
-  EXPECT_EQ(ClassIntervals::Interval(9, 10), interval_b1_1);
-  EXPECT_TRUE(ClassIntervals::Interval::max_interval().contains(interval_b1_1));
-  EXPECT_FALSE(
-      interval_b1_1.contains(ClassIntervals::Interval::max_interval()));
-  EXPECT_FALSE(interval_b1_1.contains(interval_b1));
-  EXPECT_TRUE(interval_b.contains(interval_b1_1));
-  EXPECT_TRUE(interval_b1.contains(interval_b1_1));
+  EXPECT_EQ(ClassIntervals::Interval::finite(10, 11), interval_b1_1);
 
   auto interval_object =
       context.class_intervals->get_interval(type::java_lang_Object());
-  EXPECT_EQ(ClassIntervals::Interval(0, 13), interval_object);
-  EXPECT_TRUE(interval_object.contains(interval_a));
-  EXPECT_TRUE(interval_object.contains(interval_a1));
-  EXPECT_TRUE(interval_object.contains(interval_a2));
-  EXPECT_TRUE(interval_object.contains(interval_b));
-  EXPECT_TRUE(interval_object.contains(interval_b1));
-  EXPECT_TRUE(interval_object.contains(interval_b1_1));
-  EXPECT_FALSE(interval_a.contains(interval_object));
-  EXPECT_FALSE(interval_a1.contains(interval_object));
-  EXPECT_FALSE(interval_a2.contains(interval_object));
-  EXPECT_FALSE(interval_b.contains(interval_object));
-  EXPECT_FALSE(interval_b1.contains(interval_object));
-  EXPECT_FALSE(interval_b1_1.contains(interval_object));
-}
-
-TEST_F(ClassIntervalsTest, Contains) {
-  // Verifies:
-  // - Interval contains itself.
-  // - Open interval contains everything.
-  // - Nothing contains open interval, except open interval.
-  // - Disjoint or partially intersecting intervals do not contain each other.
-  // NOTE: A.contains(B) && B.contains(A) => A == B
-
-  ClassIntervals::Interval open_interval;
-  EXPECT_TRUE(open_interval.contains(open_interval));
-
-  ClassIntervals::Interval interval1_1(1, 1);
-  EXPECT_TRUE(interval1_1.contains(interval1_1));
-  EXPECT_TRUE(open_interval.contains(interval1_1));
-  EXPECT_FALSE(interval1_1.contains(open_interval));
-
-  // Disjoint interval
-  ClassIntervals::Interval interval3_4(3, 4);
-  EXPECT_FALSE(interval3_4.contains(interval1_1));
-  EXPECT_FALSE(interval1_1.contains(interval3_4));
-
-  // Partially intersecting interval
-  ClassIntervals::Interval interval2_3(2, 3);
-  EXPECT_FALSE(interval2_3.contains(interval3_4));
-  EXPECT_FALSE(interval3_4.contains(interval2_3));
-
-  // Larger, containing interval
-  ClassIntervals::Interval interval1_4(1, 4);
-  EXPECT_TRUE(interval1_4.contains(interval1_1));
-  EXPECT_TRUE(interval1_4.contains(interval3_4));
-  EXPECT_TRUE(interval1_4.contains(interval2_3));
-  EXPECT_FALSE(interval1_1.contains(interval1_4));
-  EXPECT_FALSE(interval3_4.contains(interval1_4));
-  EXPECT_FALSE(interval2_3.contains(interval1_4));
+  EXPECT_EQ(ClassIntervals::Interval::finite(1, 14), interval_object);
 }

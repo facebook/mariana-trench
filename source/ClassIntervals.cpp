@@ -16,34 +16,6 @@
 
 namespace marianatrench {
 
-bool ClassIntervals::Interval::operator==(const Interval& other) const {
-  return lower_bound == other.lower_bound && upper_bound == other.upper_bound;
-}
-
-bool ClassIntervals::Interval::contains(
-    const ClassIntervals::Interval& other) const {
-  return other.lower_bound >= lower_bound && other.upper_bound <= upper_bound;
-}
-
-Json::Value ClassIntervals::Interval::to_json() const {
-  auto interval_json = Json::Value(Json::arrayValue);
-  // Use the int64 constructor. This allows comparison against a Json::Value
-  // object returned from parsing a JSON string. Otherwise, we could end up
-  // comparing a Json::UInt type against a Json::Int type and fail equality
-  // check even for the same integer value.
-  interval_json.append(Json::Value(static_cast<int64_t>(lower_bound)));
-  interval_json.append(Json::Value(static_cast<int64_t>(upper_bound)));
-
-  return interval_json;
-}
-
-std::ostream& operator<<(
-    std::ostream& out,
-    const marianatrench::ClassIntervals::Interval& interval) {
-  return out << "[" << interval.lower_bound << ", " << interval.upper_bound
-             << "]";
-}
-
 namespace {
 
 // Sets the class interval for `current_node` while performing a DFS on it.
@@ -69,7 +41,7 @@ void dfs_on_hierarchy(
   // Each node should only be visited once since multiple inheritance is not
   // supported by Java/Kotlin.
   mt_assert(result.find(current_node) == result.end());
-  auto interval = ClassIntervals::Interval(lower_bound, dfs_order);
+  auto interval = ClassIntervals::Interval::finite(lower_bound, dfs_order);
   result.emplace(current_node, interval);
 }
 
@@ -77,7 +49,8 @@ void dfs_on_hierarchy(
 
 ClassIntervals::ClassIntervals(
     const Options& options,
-    const DexStoresVector& stores) {
+    const DexStoresVector& stores)
+    : top_(Interval::top()) {
   if (!options.enable_class_intervals()) {
     return;
   }
@@ -95,7 +68,8 @@ ClassIntervals::ClassIntervals(
   // direct children of Object, then compute in parallel. Need to make sure
   // dfs_order does not intersect between different trees.
   const auto* root = type::java_lang_Object();
-  std::uint32_t dfs_order = 0;
+
+  std::uint32_t dfs_order = MIN_INTERVAL;
   dfs_on_hierarchy(class_hierarchy, root, dfs_order, class_intervals_);
 
   if (options.dump_class_intervals()) {
@@ -122,18 +96,36 @@ const ClassIntervals::Interval& ClassIntervals::get_interval(
     const DexType* type) const {
   auto interval = class_intervals_.find(type);
   if (interval == class_intervals_.end()) {
-    // Type not found. Return an open interval to represent the broadest
-    // possible type.
-    return open_interval_;
+    // Type not found. Use top to represent the broadest possible type.
+    return top_;
   }
 
   return interval->second;
 }
 
+Json::Value ClassIntervals::interval_to_json(const Interval& interval) {
+  auto interval_json = Json::Value(Json::arrayValue);
+  if (interval.is_bottom()) {
+    // Empty array for bottom interval.
+    return interval_json;
+  }
+
+  // Use the int64 constructor. This allows comparison against a Json::Value
+  // object returned from parsing a JSON string. Otherwise, we could end up
+  // comparing a Json::UInt type against a Json::Int type and fail equality
+  // check even for the same integer value.
+  interval_json.append(
+      Json::Value(static_cast<int64_t>(interval.lower_bound())));
+  interval_json.append(
+      Json::Value(static_cast<int64_t>(interval.upper_bound())));
+
+  return interval_json;
+}
+
 Json::Value ClassIntervals::to_json() const {
   auto output = Json::Value(Json::objectValue);
   for (auto [klass, interval] : class_intervals_) {
-    output[show(klass)] = interval.to_json();
+    output[show(klass)] = interval_to_json(interval);
   }
   return output;
 }
