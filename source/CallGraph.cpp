@@ -83,7 +83,8 @@ const DexMethod* MT_NULLABLE resolve_call(
 
       if (!method) {
         // `MethodSearch::Virtual` returns null for interface methods.
-        method = resolve_method(dex_method_reference, MethodSearch::Interface);
+        method = resolve_method(
+            dex_method_reference, MethodSearch::InterfaceVirtual);
       }
       break;
     }
