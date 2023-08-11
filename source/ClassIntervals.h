@@ -74,14 +74,3 @@ class ClassIntervals final {
 };
 
 } // namespace marianatrench
-
-template <>
-struct std::hash<marianatrench::ClassIntervals::Interval> {
-  std::size_t operator()(
-      const marianatrench::ClassIntervals::Interval& interval) const {
-    std::size_t seed = 0;
-    boost::hash_combine(seed, interval.lower_bound());
-    boost::hash_combine(seed, interval.upper_bound());
-    return seed;
-  }
-};
