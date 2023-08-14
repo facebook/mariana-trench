@@ -440,6 +440,16 @@ def _add_configuration_arguments(parser: argparse.ArgumentParser) -> None:
             "Use --emit-all-via-cast-features to allow everything."
         ),
     )
+    configuration_arguments.add_argument(
+        "--propagate-across-arguments",
+        action="store_true",
+        help=(
+            "Enable taint propagation across object type arguments. By "
+            "default taint propagation is only tracked for return values and "
+            "the `this` argument. This flag enables taint propagation across "
+            "method invocations for all other object type arguments as well."
+        ),
+    )
 
 
 def _add_analysis_arguments(parser: argparse.ArgumentParser) -> None:
@@ -630,6 +640,8 @@ def _get_command_options(
 
     if arguments.emit_all_via_cast_features:
         options.append("--emit-all-via-cast-features")
+    if arguments.propagate_across_arguments:
+        options.append("--propagate-across-arguments")
     if arguments.allow_via_cast_feature:
         for feature in arguments.allow_via_cast_feature:
             options.append("--allow-via-cast-feature=%s" % feature.strip())

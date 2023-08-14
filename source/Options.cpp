@@ -111,7 +111,8 @@ Options::Options(
     bool emit_all_via_cast_features,
     const std::string& source_root_directory,
     bool enable_cross_component_analysis,
-    ExportOriginsMode export_origins_mode)
+    ExportOriginsMode export_origins_mode,
+    bool propagate_across_arguments)
     : models_paths_(models_paths),
       field_models_paths_(field_models_paths),
       literal_models_paths_(literal_models_paths),
@@ -140,7 +141,8 @@ Options::Options(
       dump_dependencies_(false),
       dump_methods_(false),
       enable_cross_component_analysis_(enable_cross_component_analysis),
-      export_origins_mode_(export_origins_mode) {}
+      export_origins_mode_(export_origins_mode),
+      propagate_across_arguments_(propagate_across_arguments) {}
 
 Options::Options(const boost::program_options::variables_map& variables) {
   system_jar_paths_ = parse_paths_list(
@@ -282,6 +284,7 @@ Options::Options(const boost::program_options::variables_map& variables) {
   export_origins_mode_ = variables.count("always-export-origins")
       ? ExportOriginsMode::Always
       : ExportOriginsMode::OnlyOnOrigins;
+  propagate_across_arguments_ = variables.count("propagate-across-arguments");
 }
 
 void Options::add_options(
@@ -441,6 +444,9 @@ void Options::add_options(
   options.add_options()(
       "always-export-origins",
       "Export origin information for all frames instead of only leaves. Used for debugging.");
+  options.add_options()(
+      "propagate-across-arguments",
+      "Enable taint propagation across object type arguments. By default taint propagation is only tracked for return values and the `this` argument. This flag enables taint propagation across method invocations for all other object type arguments as well.");
 }
 
 const std::vector<std::string>& Options::models_paths() const {
@@ -646,6 +652,10 @@ bool Options::enable_cross_component_analysis() const {
 
 ExportOriginsMode Options::export_origins_mode() const {
   return export_origins_mode_;
+}
+
+bool Options::propagate_across_arguments() const {
+  return propagate_across_arguments_;
 }
 
 } // namespace marianatrench

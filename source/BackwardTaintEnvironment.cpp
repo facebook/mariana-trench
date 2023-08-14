@@ -25,7 +25,9 @@ BackwardTaintEnvironment BackwardTaintEnvironment::initial(
     MethodContext& context) {
   auto taint = TaintEnvironment::bottom();
 
-  if (!context.method()->is_static()) {
+  const Method* method = context.method();
+  const bool is_static = method->is_static();
+  if (!is_static) {
     taint.set(
         context.memory_factory.make_parameter(0),
         TaintTree(Taint::propagation_taint(
@@ -36,6 +38,26 @@ BackwardTaintEnvironment BackwardTaintEnvironment::initial(
                  CollapseDepth(Heuristics::kPropagationMaxCollapseDepth)}},
             /* inferred_features */ {},
             /* user_features */ {})));
+  }
+
+  if (context.options.propagate_across_arguments() && !context.previous_model.is_frozen(Model::FreezeKind::Propagations)) {
+    for (ParameterPosition i = method->first_parameter_index(); i < method->number_of_parameters(); ++i) {
+      const DexType* const argument_type = method->parameter_type(i);
+      if (!type::is_object(argument_type)) {
+        continue;
+      }
+
+      taint.set(
+          context.memory_factory.make_parameter(i),
+          TaintTree(Taint::propagation_taint(
+              /* kind */ context.kind_factory.local_argument(i),
+              /* output_paths */
+              PathTreeDomain{
+                  {Path{},
+                   CollapseDepth(Heuristics::kPropagationMaxCollapseDepth)}},
+              /* inferred_features */ {},
+              /* user_features */ {})));
+    }
   }
 
   return BackwardTaintEnvironment(std::move(taint));

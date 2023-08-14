@@ -140,6 +140,7 @@ TEST_P(IntegrationTest, CompareFlows) {
   }
   auto field_models_file = directory / "/field_models.json";
   auto literal_models_file = directory / "/literal_models.json";
+  bool propagate_across_arguments = "propagation_via_arg" == name.string();
 
   // Read the configuration for this test case.
   context.options = std::make_unique<Options>(
@@ -168,7 +169,9 @@ TEST_P(IntegrationTest, CompareFlows) {
       /* remove_unreachable_code */ false,
       /* emit_all_via_cast_features */ true,
       /* source_root_directory */ directory.string(),
-      /* enable_cross_component_analysis */ true);
+      /* enable_cross_component_analysis */ true,
+      /* export_origins_mode */ ExportOriginsMode::Always,
+      propagate_across_arguments);
 
   // Load test Java classes
   boost::filesystem::path dex_path = test::find_dex_path(directory);

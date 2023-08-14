@@ -1,0 +1,63 @@
+[
+  {
+    "method": "Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;",
+    "propagation": [
+      {
+        "input": "Argument(1)",
+        "output": "Return"
+      },
+      {
+        "input": "Argument(1)",
+        "output": "Argument(0)"
+      }
+    ]
+  },
+  {
+    "method": "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;",
+    "sources": [
+      {
+        "kind": "Source",
+        "port": "Return"
+      }
+    ]
+  },
+  {
+    "method": "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
+    "sinks": [
+      {
+        "kind": "Sink",
+        "port": "Argument(0)"
+      }
+    ]
+  },
+  {
+    "method": "Lcom/facebook/marianatrench/integrationtests/propagateViaArg;.validate:(Ljava/lang/String;)V",
+    "propagation": [
+      {
+        "input": "Argument(0)",
+        "output": "Argument(0)",
+        "features": [
+          "via-validation:regex"
+        ]
+      }
+    ]
+  },
+  {
+    "method": "Lcom/facebook/marianatrench/integrationtests/propagateViaArg;.transform:(Ljava/lang/String;)V",
+    "modes": [
+      "strong-write-on-propagation"
+    ],
+    "freeze": [
+      "propagation"
+    ],
+    "propagation": [
+      {
+        "input": "Argument(0)",
+        "output": "Argument(0)",
+        "transforms": [
+          "Validators-Regex"
+        ]
+      }
+    ]
+  }
+]

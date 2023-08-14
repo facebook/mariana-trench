@@ -71,7 +71,7 @@ int maybeIssue(IFace iface) {
 
 ## Propagation across Arguments
 
-Mariana Trench computes propagations for each method (this may be known as “tito” (taint-in-taint-out) in other tools). Propagations tell the analysis that if an argument is tainted by a source, whether its return value, or the method’s “this” object become tainted by the argument. However, Mariana Trench does not propagate taint from one argument to another. In code:
+Mariana Trench computes propagations for each method (this may be known as “tito” (taint-in-taint-out) in other tools). Propagations tell the analysis that if an argument is tainted by a source, whether its return value, or the method’s “this” object become tainted by the argument. However, without explictly specifying `--propagate-across-arguments`, Mariana Trench does not propagate taint from one argument to another. In code:
 ```
 void setIntentVaue(Intent intent, Uri uri) {
   // MT sees that intent.putExtra has a propagation from uri (Argument(2)) to
@@ -95,6 +95,6 @@ void falseNegative() {
   launchActivitySink(intent);
 }
 ```
-**Workaround:** Write a propagation model for the method. While Mariana Trench does not infer propagations across arguments, it does allow manual specification of such models.
+**Workaround:** Option 1: Write an explicit propagation model for the method While Mariana Trench does not infer propagations across arguments, it does allow manual specification of such models. Option 2: Enable `--propagate-across-arguments`, which enables taint propagation across method invocations for object. Note that the behaviour is enabled globally, meaning that this may incur a significant runtime and memory overhead.
 
 <FbInternalOnly> <FbKnownFalseNegatives/> </FbInternalOnly>
