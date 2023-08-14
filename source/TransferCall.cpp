@@ -53,6 +53,47 @@ std::optional<std::string> register_constant_argument(
   return instruction_memory_location->get_constant();
 }
 
+CalleeInterval get_callee_interval(
+    const MethodContext* context,
+    const IRInstruction* instruction,
+    bool is_this_call) {
+  if (!context->options.enable_class_intervals()) {
+    return CalleeInterval();
+  }
+
+  if (instruction->opcode() != OPCODE_INVOKE_VIRTUAL) {
+    // Class intervals only apply to virtual calls.
+    return CalleeInterval();
+  }
+
+  // Virtual calls have at least one argument (the receiver).
+  mt_assert(instruction->srcs_size() > 0);
+
+  auto receiver_register = instruction->src(0);
+  const auto* receiver_type = context->types.register_type(
+      context->method(), instruction, receiver_register);
+  if (receiver_type == nullptr) {
+    WARNING(
+        1,
+        "Could not get type for receiver in instruction `{}`.",
+        show(instruction));
+    // Receiver type unknown, use top to cover all possible types.
+    return CalleeInterval(
+        ClassIntervals::Interval::top(),
+        /* preserves_type_context */ is_this_call);
+  }
+
+  auto interval = context->class_intervals.get_interval(receiver_type);
+
+  LOG_OR_DUMP(
+      context,
+      4,
+      "Receiver interval: {}, preserves_type_context: {}",
+      interval,
+      is_this_call);
+  return CalleeInterval(interval, /* preserves_type_context */ is_this_call);
+}
+
 } // namespace
 
 std::vector<std::optional<std::string>> get_source_constant_arguments(
@@ -69,12 +110,38 @@ std::vector<std::optional<std::string>> get_source_constant_arguments(
   return constant_arguments;
 }
 
+bool get_is_this_call(
+    const RegisterMemoryLocationsMap& register_memory_locations_map,
+    const IRInstruction* instruction) {
+  if (instruction->opcode() != OPCODE_INVOKE_VIRTUAL) {
+    return false;
+  }
+
+  // Virtual calls have at least one argument (the receiver).
+  mt_assert(instruction->srcs_size() > 0);
+
+  auto receiver_register = instruction->src(0);
+  const auto* receiver_memory_location_singleton =
+      register_memory_locations_map.at(receiver_register).singleton();
+  if (receiver_memory_location_singleton == nullptr) {
+    return false;
+  }
+
+  const auto* receiver_memory_location = *receiver_memory_location_singleton;
+  if (receiver_memory_location == nullptr) {
+    return false;
+  }
+
+  return receiver_memory_location->is<ThisParameterMemoryLocation>();
+}
+
 CalleeModel get_callee(
     const MethodContext* context,
     const IRInstruction* instruction,
     const DexPosition* MT_NULLABLE dex_position,
     const std::vector<const DexType * MT_NULLABLE>& source_register_types,
-    const std::vector<std::optional<std::string>>& source_constant_arguments) {
+    const std::vector<std::optional<std::string>>& source_constant_arguments,
+    bool is_this_call) {
   mt_assert(opcode::is_an_invoke(instruction->opcode()));
 
   auto call_target = context->call_graph.callee(context->method(), instruction);
@@ -94,8 +161,14 @@ CalleeModel get_callee(
 
   auto* position = context->positions.get(context->method(), dex_position);
 
+  auto callee_interval =
+      get_callee_interval(context, instruction, is_this_call);
   auto model = context->model_at_callsite(
-      call_target, position, source_register_types, source_constant_arguments);
+      call_target,
+      position,
+      source_register_types,
+      source_constant_arguments,
+      callee_interval);
   LOG_OR_DUMP(context, 4, "Callee model: {}", model);
 
   // Avoid copies using `std::move`.
@@ -124,7 +197,8 @@ CalleeModel get_callee(
       callee.call_target,
       position,
       /* source_register_types */ {},
-      /* source_constant_arguments */ {});
+      /* source_constant_arguments */ {},
+      /* callee_interval */ CalleeInterval());
   LOG_OR_DUMP(context, 4, "Callee model: {}", model);
 
   return CalleeModel{

@@ -192,6 +192,112 @@ void KindFrames::append_to_propagation_output_paths(
   });
 }
 
+namespace {
+
+const Kind* propagate_kind(const Kind* kind, Context& context) {
+  mt_assert(kind != nullptr);
+
+  // For `TransformKind`, all local_transforms of the callee become
+  // global_transforms for the caller.
+  if (const auto* transform_kind = kind->as<TransformKind>()) {
+    return context.kind_factory->transform_kind(
+        /* base_kind */ transform_kind->base_kind(),
+        /* local_transforms */ nullptr,
+        /* global_transforms */
+        context.transforms_factory->concat(
+            transform_kind->local_transforms(),
+            transform_kind->global_transforms()));
+  }
+
+  return kind;
+}
+
+CalleeInterval propagate_interval(
+    const Frame& frame,
+    const CalleeInterval& callee_interval,
+    const ClassIntervals::Interval& caller_class_interval) {
+  const auto& frame_interval = frame.callee_interval();
+  if (frame.call_info().is_declaration()) {
+    // The source/sink declaration is the base case. Its propagated frame
+    // (caller -> callee with source/sink) should have the properties:
+    //
+    // 1. Propagated interval is that of the caller's class since the
+    //    source/sink call occurs in the context of the caller's class.
+    // 2. Although it may not be a this.* call, the propagated interval occurs
+    //    in the context of the caller's class => preserves_type_context = true.
+    mt_assert(frame_interval.is_default());
+    return CalleeInterval(
+        caller_class_interval, /* preserves_type_context */ true);
+  }
+
+  auto propagated_interval = callee_interval.interval();
+  if (frame_interval.preserves_type_context()) {
+    // If the frame representing a (f() -> g()) call preserves the type context,
+    // it is either a call to a declared source/sink, or a this.* call. The
+    // frame's interval must intersect with the callee_interval, which is the
+    // interval of the receiver in receiver.f()), i.e. the receiver type should
+    // be a derived class of the class which f() is defined in.
+    propagated_interval =
+        frame_interval.interval().meet(callee_interval.interval());
+  }
+
+  return CalleeInterval(
+      propagated_interval, callee_interval.preserves_type_context());
+}
+
+// Returns the propagated inferred features.
+// User features, if any, are "returned" via the `propagated_user_features`
+// argument.
+FeatureMayAlwaysSet propagate_features(
+    const Frame& frame,
+    const FeatureMayAlwaysSet& locally_inferred_features,
+    const Method* callee,
+    Context& context,
+    const std::vector<const DexType * MT_NULLABLE>& source_register_types,
+    const std::vector<std::optional<std::string>>& source_constant_arguments,
+    FeatureSet& propagated_user_features,
+    std::vector<const Feature*>& via_type_of_features_added) {
+  auto propagated_local_features = locally_inferred_features;
+  if (frame.call_info().is_declaration()) {
+    // If propagating a declaration, user features are kept as user features
+    // in the propagated frame(s). Inferred features are not expected on
+    // declarations.
+    mt_assert(
+        frame.inferred_features().is_bottom() ||
+        frame.inferred_features().empty());
+    // User features should be propagated from the declaration frame in order
+    // for them to show up at the leaf frame (e.g. in the UI).
+    propagated_user_features = frame.user_features();
+  } else {
+    // Otherwise, user features are considered part of the propagated set of
+    // (non-locally) inferred features.
+    propagated_local_features.add(frame.features());
+    propagated_user_features = FeatureSet::bottom();
+  }
+
+  auto inferred_features = propagated_local_features;
+
+  // Address clangtidy nullptr dereference warning. `callee` cannot actually
+  // be nullptr here in practice.
+  mt_assert(callee != nullptr);
+  auto via_type_of_features = frame.materialize_via_type_of_ports(
+      callee, context.feature_factory, source_register_types);
+  for (const auto* feature : via_type_of_features) {
+    via_type_of_features_added.push_back(feature);
+    inferred_features.add_always(feature);
+  }
+
+  auto via_value_features = frame.materialize_via_value_of_ports(
+      callee, context.feature_factory, source_constant_arguments);
+  for (const auto* feature : via_value_features) {
+    inferred_features.add_always(feature);
+  }
+
+  return inferred_features;
+}
+
+} // namespace
+
 KindFrames KindFrames::propagate(
     const Method* callee,
     const AccessPath& callee_port,
@@ -201,149 +307,107 @@ KindFrames KindFrames::propagate(
     Context& context,
     const std::vector<const DexType * MT_NULLABLE>& source_register_types,
     const std::vector<std::optional<std::string>>& source_constant_arguments,
-    std::vector<const Feature*>& via_type_of_features_added) const {
-  // TODO(T158171922): Handle intervals. For now, intervals are ignored and
-  // all frames with different intervals propagated together.
+    std::vector<const Feature*>& via_type_of_features_added,
+    const CalleeInterval& callee_interval,
+    const ClassIntervals::Interval& caller_class_interval) const {
   if (is_bottom()) {
     return KindFrames::bottom();
   }
 
-  const auto* kind = kind_;
+  const auto* kind = propagate_kind(kind_, context);
   mt_assert(kind != nullptr);
 
-  int distance = std::numeric_limits<int>::max();
-  auto origins = MethodSet::bottom();
-  auto field_origins = FieldSet::bottom();
-  auto inferred_features = FeatureMayAlwaysSet::bottom();
-  auto user_features = FeatureSet::bottom();
-  auto output_paths = PathTreeDomain::bottom();
-  std::optional<CallInfo> call_info = std::nullopt;
-
-  for (const Frame& frame : *this) {
-    if (call_info == std::nullopt) {
-      call_info = frame.call_info();
-    } else {
-      mt_assert(frame.call_info() == call_info);
+  FramesByInterval propagated_frames;
+  for (const auto& [_interval, frame] : frames_.bindings()) {
+    auto propagated_interval = CalleeInterval();
+    if (context.options->enable_class_intervals()) {
+      propagated_interval =
+          propagate_interval(frame, callee_interval, caller_class_interval);
+      if (propagated_interval.interval().is_bottom()) {
+        // Intervals do not intersect. Do not propagate this frame.
+        continue;
+      }
     }
+
+    int distance = std::numeric_limits<int>::max();
+    auto origins = frame.origins();
+    auto field_origins = frame.field_origins();
+    auto call_info = frame.call_info();
+    auto output_paths = PathTreeDomain::bottom();
 
     if (frame.distance() >= maximum_source_sink_distance) {
       continue;
     }
 
-    origins.join_with(frame.origins());
-    field_origins.join_with(frame.field_origins());
+    auto propagated_user_features = FeatureSet::bottom();
+    auto inferred_features = propagate_features(
+        frame,
+        locally_inferred_features,
+        callee,
+        context,
+        source_register_types,
+        source_constant_arguments,
+        propagated_user_features,
+        via_type_of_features_added);
 
-    auto local_features = locally_inferred_features;
-    if (call_info->is_declaration()) {
-      // If propagating a declaration, user features are kept as user features
-      // in the propagated frame(s). Inferred features are not expected on
-      // declarations.
-      mt_assert(
-          frame.inferred_features().is_bottom() ||
-          frame.inferred_features().empty());
-      // User features should be propagated from the declaration frame in order
-      // for them to show up at the leaf frame (e.g. in the UI).
-      // TODO(T158171922): When class intervals are enabled, add test case to
-      // verify that the join occurs.
-      user_features.join_with(frame.user_features());
-    } else {
-      // Otherwise, user features are considered part of the propagated set of
-      // (non-locally) inferred features.
-      local_features.add(frame.features());
-    }
-    inferred_features.join_with(local_features);
-
-    // Address clangtidy nullptr dereference warning. `callee` cannot actually
-    // be nullptr here in practice.
-    mt_assert(callee != nullptr);
-    auto via_type_of_features = frame.materialize_via_type_of_ports(
-        callee, context.feature_factory, source_register_types);
-    for (const auto* feature : via_type_of_features) {
-      via_type_of_features_added.push_back(feature);
-      inferred_features.add_always(feature);
-    }
-
-    auto via_value_features = frame.materialize_via_value_of_ports(
-        callee, context.feature_factory, source_constant_arguments);
-    for (const auto* feature : via_value_features) {
-      inferred_features.add_always(feature);
-    }
-
-    // It's important that this check happens after we materialize the ports for
-    // the error messages on failure to not get null callables.
-    if (call_info->is_declaration()) {
+    const auto* propagated_callee = callee;
+    if (call_info.is_declaration()) {
       // If we're propagating a declaration, there are no origins, and we should
       // keep the set as bottom, and set the callee to nullptr explicitly to
       // avoid emitting an invalid frame.
       distance = 0;
-      callee = nullptr;
+      propagated_callee = nullptr;
     } else {
-      distance = std::min(distance, frame.distance() + 1);
+      distance = frame.distance() + 1;
     }
 
-    if (call_info->is_propagation_with_trace()) {
+    if (call_info.is_propagation_with_trace()) {
       // Propagate the output paths for PropagationWithTrace frames.
       output_paths.join_with(frame.output_paths());
     }
+
+    mt_assert(distance <= maximum_source_sink_distance);
+
+    CallInfo propagated_call_info = call_info.propagate();
+    if (distance > 0) {
+      mt_assert(
+          !propagated_call_info.is_declaration() &&
+          !propagated_call_info.is_origin());
+    } else {
+      mt_assert(propagated_call_info.is_origin());
+    }
+
+    auto propagated_frame = Frame(
+        kind,
+        callee_port,
+        propagated_callee,
+        /* field_callee */ nullptr, // Since propagate is only called at method
+                                    // callsites and not field accesses
+        call_position,
+        propagated_interval,
+        distance,
+        std::move(origins),
+        std::move(field_origins),
+        std::move(inferred_features),
+        propagated_user_features,
+        /* via_type_of_ports */ {},
+        /* via_value_of_ports */ {},
+        /* canonical_names */ {},
+        propagated_call_info,
+        output_paths,
+        /* extra_traces */ {});
+
+    propagated_frames.update(
+        propagated_interval, [&propagated_frame](Frame* frame) {
+          frame->join_with(propagated_frame);
+        });
   }
 
-  // For `TransformKind`, all local_transforms of the callee become
-  // global_transforms for the caller.
-  if (const auto* transform_kind = kind->as<TransformKind>()) {
-    kind = context.kind_factory->transform_kind(
-        /* base_kind */ transform_kind->base_kind(),
-        /* local_transforms */ nullptr,
-        /* global_transforms */
-        context.transforms_factory->concat(
-            transform_kind->local_transforms(),
-            transform_kind->global_transforms()));
-  }
-
-  if (kind == nullptr) {
-    // Invalid sequence of transforms.
+  if (propagated_frames.is_bottom()) {
     return KindFrames::bottom();
   }
 
-  if (distance == std::numeric_limits<int>::max()) {
-    return KindFrames::bottom();
-  }
-
-  mt_assert(distance <= maximum_source_sink_distance);
-  mt_assert(call_info != std::nullopt);
-  CallInfo propagated_call_info = call_info->propagate();
-  if (distance > 0) {
-    mt_assert(
-        !propagated_call_info.is_declaration() &&
-        !propagated_call_info.is_origin());
-  } else {
-    mt_assert(propagated_call_info.is_origin());
-  }
-
-  auto propagated_frame = Frame(
-      kind,
-      callee_port,
-      callee,
-      /* field_callee */ nullptr, // Since propagate is only called at method
-                                  // callsites and not field accesses
-      call_position,
-      // TODO(T158171922): Actually compute the interval.
-      CalleeInterval(),
-      distance,
-      std::move(origins),
-      std::move(field_origins),
-      std::move(inferred_features),
-      /* user_features */ user_features,
-      /* via_type_of_ports */ {},
-      /* via_value_of_ports */ {},
-      /* canonical_names */ {},
-      propagated_call_info,
-      output_paths,
-      /* extra_traces */ {});
-
-  return KindFrames(
-      kind,
-      FramesByInterval{
-          std::pair(CalleeInterval(propagated_frame), propagated_frame)});
+  return KindFrames(kind, propagated_frames);
 }
 
 KindFrames KindFrames::propagate_crtex_leaf_frames(
@@ -353,8 +417,9 @@ KindFrames KindFrames::propagate_crtex_leaf_frames(
     const FeatureMayAlwaysSet& locally_inferred_features,
     int maximum_source_sink_distance,
     Context& context,
-    const std::vector<const DexType * MT_NULLABLE>& source_register_types)
-    const {
+    const std::vector<const DexType * MT_NULLABLE>& source_register_types,
+    const CalleeInterval& callee_interval,
+    const ClassIntervals::Interval& caller_class_interval) const {
   if (is_bottom()) {
     return KindFrames::bottom();
   }
@@ -370,7 +435,9 @@ KindFrames KindFrames::propagate_crtex_leaf_frames(
       context,
       source_register_types,
       /* source_constant_arguments */ {}, // via-value not supported for crtex
-      via_type_of_features_added);
+      via_type_of_features_added,
+      callee_interval,
+      caller_class_interval);
 
   if (propagated.is_bottom()) {
     return KindFrames::bottom();

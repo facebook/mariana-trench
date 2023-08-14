@@ -581,6 +581,7 @@ TEST_F(KindFramesTest, Filter) {
 
 TEST_F(KindFramesTest, Propagate) {
   auto context = test::make_empty_context();
+  context.options = test::make_default_options();
 
   Scope scope;
   auto* one =
@@ -599,8 +600,6 @@ TEST_F(KindFramesTest, Propagate) {
 
   // Test propagating non-crtex frames (crtex-ness to be determined by caller,
   // typically using the callee_port).
-  // TODO(T158171922): Frames with different intervals should be propagated
-  // separately. Currently, intervals are not propagated.
   auto non_crtex_frames = KindFrames{
       test::make_taint_config(
           test_kind_one,
@@ -620,6 +619,13 @@ TEST_F(KindFramesTest, Propagate) {
               .call_info = CallInfo::callsite()}),
   };
   std::vector<const Feature*> via_type_of_features_added;
+
+  // The callee interval is default (top, !preserves_type_context) in some of
+  // the following situations:
+  //  - The receiver's type is unknown
+  //  - It is not an invoke_virtual call (e.g. static method call)
+  // The expected behavior is that the propagation works as if class intervals
+  // didn't exist.
   EXPECT_EQ(
       non_crtex_frames.propagate(
           /* callee */ two,
@@ -630,7 +636,9 @@ TEST_F(KindFramesTest, Propagate) {
           context,
           /* source_register_types */ {},
           /* source_constant_arguments */ {},
-          via_type_of_features_added),
+          via_type_of_features_added,
+          /* use default callee interval */ CalleeInterval(),
+          /* caller_class_interval */ ClassIntervals::Interval::top()),
       (KindFrames{
           test::make_taint_config(
               test_kind_one,
@@ -645,8 +653,241 @@ TEST_F(KindFramesTest, Propagate) {
       }));
 }
 
+TEST_F(KindFramesTest, PropagateIntervals) {
+  auto context = test::make_empty_context();
+
+  // Make sure class intervals are enabled for this.
+  context.options = std::make_unique<Options>(
+      /* models_paths */ std::vector<std::string>{},
+      /* field_models_path */ std::vector<std::string>{},
+      /* rules_paths */ std::vector<std::string>{},
+      /* lifecycles_paths */ std::vector<std::string>{},
+      /* shims_path */ std::vector<std::string>{},
+      /* graphql_metadata_paths */ std::string{},
+      /* proguard_configuration_paths */ std::vector<std::string>{},
+      /* sequential */ false,
+      /* skip_source_indexing */ true,
+      /* skip_analysis */ true,
+      /* model_generators_configuration */
+      std::vector<ModelGeneratorConfiguration>{},
+      /* model_generators_search_path */ std::vector<std::string>{},
+      /* remove_unreachable_code */ false,
+      /* emit_all_via_cast_features */ false,
+      /* source_root_directory */ ".",
+      /* enable_cross_component_analysis */ false,
+      /* enable_class_intervals */ true);
+
+  Scope scope;
+  auto* one =
+      context.methods->create(redex::create_void_method(scope, "LOne;", "one"));
+  auto* two =
+      context.methods->create(redex::create_void_method(scope, "LTwo;", "two"));
+  auto* test_kind_one = context.kind_factory->get("TestSinkOne");
+  auto* call_position = context.positions->get("Test.java", 1);
+
+  auto caller_class_interval = ClassIntervals::Interval::finite(6, 7);
+  auto callee_port = AccessPath(Root(Root::Kind::Argument, 0));
+  std::vector<const Feature*> via_type_of_features_added;
+
+  auto interval_2_3_t = CalleeInterval(
+      ClassIntervals::Interval::finite(2, 3),
+      /* preserves_type_context */ true);
+  auto interval_2_3_f = CalleeInterval(
+      ClassIntervals::Interval::finite(2, 3),
+      /* preserves_type_context */ false);
+  auto interval_5_6_t = CalleeInterval(
+      ClassIntervals::Interval::finite(5, 6),
+      /* preserves_type_context */ true);
+  auto interval_5_6_f = CalleeInterval(
+      ClassIntervals::Interval::finite(5, 6),
+      /* preserves_type_context */ false);
+  auto interval_1_4_t = CalleeInterval(
+      ClassIntervals::Interval::finite(1, 4),
+      /* preserves_type_context */ true);
+  auto interval_1_4_f = CalleeInterval(
+      ClassIntervals::Interval::finite(1, 4),
+      /* preserves_type_context */ false);
+
+  {
+    auto frames = KindFrames{
+        // Declaration frames should be propagated as (caller_class_interval,
+        // preserves_type_context=true). Note that declaration frames should
+        // never have a non-default callee interval because intervals cannot
+        // be user-defined.
+        test::make_taint_config(
+            test_kind_one,
+            test::FrameProperties{
+                .callee = nullptr,
+                .callee_interval = CalleeInterval(),
+                .distance = 0,
+                .call_info = CallInfo::declaration()}),
+    };
+    EXPECT_EQ(
+        frames.propagate(
+            /* callee */ two,
+            callee_port,
+            call_position,
+            /* locally_inferred_features */ FeatureMayAlwaysSet{},
+            /* maximum_source_sink_distance */ 100,
+            context,
+            /* source_register_types */ {},
+            /* source_constant_arguments */ {},
+            via_type_of_features_added,
+            /* callee_interval */ interval_1_4_f,
+            caller_class_interval),
+        (KindFrames{
+            test::make_taint_config(
+                test_kind_one,
+                test::FrameProperties{
+                    .callee_port = callee_port,
+                    .callee = nullptr,
+                    .call_position = call_position,
+                    .callee_interval = CalleeInterval(
+                        caller_class_interval,
+                        /* preserves_type_context */ true),
+                    .distance = 0,
+                    .call_info = CallInfo::origin()}),
+        }));
+  }
+
+  {
+    auto frames = KindFrames{
+        // When preserves_type_context=true, the frame's interval should be
+        // intersected with the callee_interval to get the final propagated
+        // interval.
+        test::make_taint_config(
+            test_kind_one,
+            test::FrameProperties{
+                .callee = one,
+                .callee_interval = interval_2_3_t,
+                .distance = 1,
+                .call_info = CallInfo::callsite()}),
+        // When preserves_type_context=false for non-Declaration frames, it
+        // should be propagated as if class intervals didn't exist, even if
+        // the intervals do not intersect. Other properties of the propagated
+        // frame (e.g. distance) should be joined.
+        test::make_taint_config(
+            test_kind_one,
+            test::FrameProperties{
+                .callee = one,
+                .callee_interval = interval_5_6_f,
+                .distance = 4,
+                .call_info = CallInfo::callsite()}),
+        test::make_taint_config(
+            test_kind_one,
+            test::FrameProperties{
+                .callee = one,
+                .callee_interval = interval_2_3_f,
+                .distance = 3,
+                .call_info = CallInfo::callsite()}),
+    };
+    EXPECT_EQ(
+        frames.propagate(
+            /* callee */ two,
+            callee_port,
+            call_position,
+            /* locally_inferred_features */ FeatureMayAlwaysSet{},
+            /* maximum_source_sink_distance */ 100,
+            context,
+            /* source_register_types */ {},
+            /* source_constant_arguments */ {},
+            via_type_of_features_added,
+            /* callee_interval */ interval_1_4_f,
+            caller_class_interval),
+        (KindFrames{
+            test::make_taint_config(
+                test_kind_one,
+                test::FrameProperties{
+                    .callee_port = callee_port,
+                    .callee = two,
+                    .call_position = call_position,
+                    .callee_interval = interval_2_3_f,
+                    .distance = 2,
+                    .call_info = CallInfo::callsite()}),
+            test::make_taint_config(
+                test_kind_one,
+                test::FrameProperties{
+                    .callee_port = callee_port,
+                    .callee = two,
+                    .call_position = call_position,
+                    .callee_interval = interval_1_4_f,
+                    .distance = 4,
+                    .call_info = CallInfo::callsite()}),
+
+        }));
+  }
+
+  {
+    auto frames = KindFrames{
+        // When preserves_type_context=true, only frames that intersect with the
+        // callee_interval should be propagated.
+        test::make_taint_config(
+            test_kind_one,
+            test::FrameProperties{
+                .callee = nullptr,
+                .callee_interval = interval_2_3_t,
+                .distance = 1,
+                .call_info = CallInfo::origin()}),
+        // This frame will not intersect with callee_interval, the propagated
+        // frame will not have "origins" as a result.
+        test::make_taint_config(
+            test_kind_one,
+            test::FrameProperties{
+                .callee = nullptr,
+                .callee_interval = interval_5_6_t,
+                .distance = 1,
+                .origins = MethodSet{one},
+                .call_info = CallInfo::origin()}),
+        // This frame does not preserves type context and should be kept as is.
+        test::make_taint_config(
+            test_kind_one,
+            test::FrameProperties{
+                .callee = nullptr,
+                .callee_interval = interval_5_6_f,
+                .distance = 1,
+                .origins = MethodSet{two},
+                .call_info = CallInfo::origin()}),
+    };
+    EXPECT_EQ(
+        frames.propagate(
+            /* callee */ two,
+            callee_port,
+            call_position,
+            /* locally_inferred_features */ FeatureMayAlwaysSet{},
+            /* maximum_source_sink_distance */ 100,
+            context,
+            /* source_register_types */ {},
+            /* source_constant_arguments */ {},
+            via_type_of_features_added,
+            /* callee_interval */ interval_1_4_f,
+            caller_class_interval),
+        (KindFrames{
+            test::make_taint_config(
+                test_kind_one,
+                test::FrameProperties{
+                    .callee_port = callee_port,
+                    .callee = two,
+                    .call_position = call_position,
+                    .callee_interval = interval_2_3_f,
+                    .distance = 2,
+                    .call_info = CallInfo::callsite()}),
+            test::make_taint_config(
+                test_kind_one,
+                test::FrameProperties{
+                    .callee_port = callee_port,
+                    .callee = two,
+                    .call_position = call_position,
+                    .callee_interval = interval_1_4_f,
+                    .distance = 2,
+                    .origins = MethodSet{two},
+                    .call_info = CallInfo::callsite()}),
+        }));
+  }
+}
+
 TEST_F(KindFramesTest, PropagateCrtex) {
   auto context = test::make_empty_context();
+  context.options = test::make_default_options();
 
   Scope scope;
   auto* one =
@@ -691,7 +932,9 @@ TEST_F(KindFramesTest, PropagateCrtex) {
       /* locally_inferred_features */ FeatureMayAlwaysSet{feature_one},
       /* maximum_source_sink_distance */ 100,
       context,
-      /* source_register_types */ {});
+      /* source_register_types */ {},
+      CalleeInterval(),
+      ClassIntervals::Interval::top());
   EXPECT_EQ(
       propagated_crtex_frames,
       (KindFrames{
@@ -735,7 +978,9 @@ TEST_F(KindFramesTest, PropagateCrtex) {
           context,
           /* source_register_types */ {},
           /* source_constant_arguments */ {},
-          via_type_of_features_added),
+          via_type_of_features_added,
+          CalleeInterval(),
+          ClassIntervals::Interval::top()),
       (KindFrames{
           test::make_taint_config(
               test_kind_one,

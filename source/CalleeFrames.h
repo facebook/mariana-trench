@@ -121,8 +121,9 @@ class CalleeFrames final : public FramesMap<
       int maximum_source_sink_distance,
       Context& context,
       const std::vector<const DexType * MT_NULLABLE>& source_register_types,
-      const std::vector<std::optional<std::string>>& source_constant_arguments)
-      const;
+      const std::vector<std::optional<std::string>>& source_constant_arguments,
+      const CalleeInterval& callee_interval,
+      const ClassIntervals::Interval& caller_class_interval) const;
 
   /**
    * Propagate the taint from the callee to the caller to track the next hops

@@ -203,8 +203,9 @@ CalleePortFrames CalleePortFrames::propagate(
     int maximum_source_sink_distance,
     Context& context,
     const std::vector<const DexType * MT_NULLABLE>& source_register_types,
-    const std::vector<std::optional<std::string>>& source_constant_arguments)
-    const {
+    const std::vector<std::optional<std::string>>& source_constant_arguments,
+    const CalleeInterval& callee_interval,
+    const ClassIntervals::Interval& caller_class_interval) const {
   if (is_bottom()) {
     return CalleePortFrames::bottom();
   }
@@ -231,7 +232,9 @@ CalleePortFrames CalleePortFrames::propagate(
           locally_inferred_features_,
           maximum_source_sink_distance,
           context,
-          source_register_types);
+          source_register_types,
+          callee_interval,
+          caller_class_interval);
     } else {
       std::vector<const Feature*> via_type_of_features_added;
       propagated = frames.propagate(
@@ -243,7 +246,9 @@ CalleePortFrames CalleePortFrames::propagate(
           context,
           source_register_types,
           source_constant_arguments,
-          via_type_of_features_added);
+          via_type_of_features_added,
+          callee_interval,
+          caller_class_interval);
     }
 
     if (!propagated.is_bottom()) {

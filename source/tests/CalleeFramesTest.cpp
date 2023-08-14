@@ -668,6 +668,7 @@ TEST_F(CalleeFramesTest, FeaturesAndPositions) {
 
 TEST_F(CalleeFramesTest, Propagate) {
   auto context = test::make_empty_context();
+  context.options = test::make_default_options();
 
   Scope scope;
   auto* one =
@@ -738,7 +739,9 @@ TEST_F(CalleeFramesTest, Propagate) {
           /* maximum_source_sink_distance */ 100,
           context,
           /* source_register_types */ {},
-          /* source_constant_arguments */ {}),
+          /* source_constant_arguments */ {},
+          CalleeInterval(),
+          ClassIntervals::Interval::top()),
       (CalleeFrames{
           test::make_taint_config(
               test_kind_one,
@@ -825,7 +828,9 @@ TEST_F(CalleeFramesTest, Propagate) {
           /* maximum_source_sink_distance */ 100,
           context,
           /* source_register_types */ {},
-          /* source_constant_arguments */ {}),
+          /* source_constant_arguments */ {},
+          CalleeInterval(),
+          ClassIntervals::Interval::top()),
       (CalleeFrames{
           test::make_taint_config(
               test_kind_one,

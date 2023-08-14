@@ -128,8 +128,9 @@ Taint Taint::propagate(
     const FeatureMayAlwaysSet& extra_features,
     Context& context,
     const std::vector<const DexType * MT_NULLABLE>& source_register_types,
-    const std::vector<std::optional<std::string>>& source_constant_arguments)
-    const {
+    const std::vector<std::optional<std::string>>& source_constant_arguments,
+    const CalleeInterval& callee_interval,
+    const ClassIntervals::Interval& caller_class_interval) const {
   Taint result;
   for (const auto& frames : set_) {
     if (frames.call_info().is_propagation_without_trace()) {
@@ -145,7 +146,9 @@ Taint Taint::propagate(
         maximum_source_sink_distance,
         context,
         source_register_types,
-        source_constant_arguments);
+        source_constant_arguments,
+        callee_interval,
+        caller_class_interval);
     if (propagated.is_bottom()) {
       continue;
     }

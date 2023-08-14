@@ -27,6 +27,7 @@ MethodContext::MethodContext(
       positions(*context.positions),
       types(*context.types),
       class_properties(*context.class_properties),
+      class_intervals(*context.class_intervals),
       overrides(*context.overrides),
       call_graph(*context.call_graph),
       rules(*context.rules),
@@ -47,8 +48,8 @@ Model MethodContext::model_at_callsite(
     const CallTarget& call_target,
     const Position* position,
     const std::vector<const DexType * MT_NULLABLE>& source_register_types,
-    const std::vector<std::optional<std::string>>& source_constant_arguments)
-    const {
+    const std::vector<std::optional<std::string>>& source_constant_arguments,
+    const CalleeInterval& callee_interval) const {
   auto* caller = method();
 
   LOG_OR_DUMP(
@@ -79,7 +80,8 @@ Model MethodContext::model_at_callsite(
                        position,
                        context_,
                        source_register_types,
-                       source_constant_arguments);
+                       source_constant_arguments,
+                       callee_interval);
 
   if (!call_target.is_virtual()) {
     return model;
@@ -107,7 +109,8 @@ Model MethodContext::model_at_callsite(
         position,
         context_,
         source_register_types,
-        source_constant_arguments);
+        source_constant_arguments,
+        callee_interval);
     LOG_OR_DUMP(
         this,
         5,

@@ -326,8 +326,8 @@ Model Model::at_callsite(
     const Position* call_position,
     Context& context,
     const std::vector<const DexType * MT_NULLABLE>& source_register_types,
-    const std::vector<std::optional<std::string>>& source_constant_arguments)
-    const {
+    const std::vector<std::optional<std::string>>& source_constant_arguments,
+    const CalleeInterval& callee_interval) const {
   const auto* callee = method_;
   // at_callsite() does not make sense if there is no callee
   mt_assert(callee != nullptr);
@@ -344,6 +344,9 @@ Model Model::at_callsite(
   auto extra_features = context.class_properties->propagate_features(
       caller, callee, *context.feature_factory);
 
+  auto caller_class_interval =
+      context.class_intervals->get_interval(caller->get_class());
+
   generations_.visit(
       [&model,
        callee,
@@ -352,7 +355,9 @@ Model Model::at_callsite(
        &extra_features,
        &context,
        &source_register_types,
-       &source_constant_arguments](
+       &source_constant_arguments,
+       &callee_interval,
+       &caller_class_interval](
           const AccessPath& callee_port, const Taint& generations) {
         model.generations_.write(
             callee_port,
@@ -364,7 +369,9 @@ Model Model::at_callsite(
                 extra_features,
                 context,
                 source_register_types,
-                source_constant_arguments),
+                source_constant_arguments,
+                callee_interval,
+                caller_class_interval),
             UpdateKind::Weak);
       });
 
@@ -375,7 +382,9 @@ Model Model::at_callsite(
                 &extra_features,
                 &context,
                 &source_register_types,
-                &source_constant_arguments](
+                &source_constant_arguments,
+                &callee_interval,
+                &caller_class_interval](
                    const AccessPath& callee_port, const Taint& sinks) {
     model.sinks_.write(
         callee_port,
@@ -387,12 +396,19 @@ Model Model::at_callsite(
             extra_features,
             context,
             source_register_types,
-            source_constant_arguments),
+            source_constant_arguments,
+            callee_interval,
+            caller_class_interval),
         UpdateKind::Weak);
   });
 
   call_effect_sinks_.visit(
-      [&model, callee, call_position, &context](
+      [&model,
+       callee,
+       call_position,
+       &context,
+       &callee_interval,
+       &caller_class_interval](
           const AccessPath& callee_port, const Taint& call_effect) {
         switch (callee_port.root().kind()) {
           case Root::Kind::CallEffectCallChain:
@@ -407,7 +423,9 @@ Model Model::at_callsite(
                     /* extra features */ {},
                     context,
                     /* source register types */ {},
-                    /* source constant arguments */ {}),
+                    /* source constant arguments */ {},
+                    callee_interval,
+                    caller_class_interval),
                 UpdateKind::Weak);
           } break;
           default:
@@ -423,7 +441,9 @@ Model Model::at_callsite(
        &extra_features,
        &context,
        &source_register_types,
-       &source_constant_arguments](
+       &source_constant_arguments,
+       &callee_interval,
+       &caller_class_interval](
           const AccessPath& callee_port, const Taint& propagations) {
         model.propagations_.write(
             callee_port,
@@ -435,7 +455,9 @@ Model Model::at_callsite(
                 extra_features,
                 context,
                 source_register_types,
-                source_constant_arguments),
+                source_constant_arguments,
+                callee_interval,
+                caller_class_interval),
             UpdateKind::Weak);
       });
 

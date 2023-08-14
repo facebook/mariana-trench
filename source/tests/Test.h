@@ -60,6 +60,8 @@ class ContextGuard {
 Context make_empty_context();
 Context make_context(const DexStore& store);
 
+std::unique_ptr<Options> make_default_options();
+
 struct FrameProperties {
   AccessPath callee_port = AccessPath(Root(Root::Kind::Leaf));
   const Method* MT_NULLABLE callee = nullptr;

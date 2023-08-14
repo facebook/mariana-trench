@@ -54,8 +54,9 @@ CallPositionFrames CallPositionFrames::propagate(
     int maximum_source_sink_distance,
     Context& context,
     const std::vector<const DexType * MT_NULLABLE>& source_register_types,
-    const std::vector<std::optional<std::string>>& source_constant_arguments)
-    const {
+    const std::vector<std::optional<std::string>>& source_constant_arguments,
+    const CalleeInterval& callee_interval,
+    const ClassIntervals::Interval& caller_class_interval) const {
   if (is_bottom()) {
     return CallPositionFrames::bottom();
   }
@@ -73,7 +74,9 @@ CallPositionFrames CallPositionFrames::propagate(
         maximum_source_sink_distance,
         context,
         source_register_types,
-        source_constant_arguments);
+        source_constant_arguments,
+        callee_interval,
+        caller_class_interval);
     result.update(
         propagated.callee_port(), [&propagated](CalleePortFrames* frames) {
           frames->join_with(propagated);

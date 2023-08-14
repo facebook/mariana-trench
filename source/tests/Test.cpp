@@ -103,6 +103,25 @@ Context make_context(const DexStore& store) {
   return context;
 }
 
+std::unique_ptr<Options> make_default_options() {
+  return std::make_unique<Options>(
+      /* models_paths */ std::vector<std::string>{},
+      /* field_models_path */ std::vector<std::string>{},
+      /* rules_paths */ std::vector<std::string>{},
+      /* lifecycles_paths */ std::vector<std::string>{},
+      /* shims_path */ std::vector<std::string>{},
+      /* graphql_metadata_paths */ std::string{},
+      /* proguard_configuration_paths */ std::vector<std::string>{},
+      /* sequential */ false,
+      /* skip_source_indexing */ true,
+      /* skip_analysis */ true,
+      /* model_generators_configuration */
+      std::vector<ModelGeneratorConfiguration>{},
+      /* model_generators_search_path */ std::vector<std::string>{},
+      /* remove_unreachable_code */ false,
+      /* emit_all_via_cast_features */ false);
+}
+
 Frame make_taint_frame(const Kind* kind, const FrameProperties& properties) {
   // Local positions/features should not be specified when making a Frame
   // because it is not stored in the Frame.

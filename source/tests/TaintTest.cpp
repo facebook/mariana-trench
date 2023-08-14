@@ -587,6 +587,7 @@ TEST_F(TaintTest, LocallyInferredFeatures) {
 
 TEST_F(TaintTest, Propagate) {
   auto context = test::make_empty_context();
+  context.options = test::make_default_options();
 
   Scope scope;
   auto* one =
@@ -646,7 +647,9 @@ TEST_F(TaintTest, Propagate) {
           /* extra_features */ FeatureMayAlwaysSet{feature_three},
           /* context */ context,
           /* source_register_types */ {},
-          /* source_constant_arguments */ {}),
+          /* source_constant_arguments */ {},
+          CalleeInterval(),
+          ClassIntervals::Interval::top()),
       (Taint{
           test::make_taint_config(
               /* kind */ context.kind_factory->get("TestSource"),

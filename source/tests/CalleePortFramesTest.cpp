@@ -992,6 +992,7 @@ TEST_F(CalleePortFramesTest, FeaturesAndPositions) {
 
 TEST_F(CalleePortFramesTest, Propagate) {
   auto context = test::make_empty_context();
+  context.options = test::make_default_options();
 
   Scope scope;
   auto* one =
@@ -1025,7 +1026,9 @@ TEST_F(CalleePortFramesTest, Propagate) {
           /* maximum_source_sink_distance */ 100,
           context,
           /* source_register_types */ {},
-          /* source_constant_arguments */ {}),
+          /* source_constant_arguments */ {},
+          CalleeInterval(),
+          ClassIntervals::Interval::top()),
       (CalleePortFrames{
           test::make_taint_config(
               test_kind_one,
@@ -1078,7 +1081,9 @@ TEST_F(CalleePortFramesTest, Propagate) {
       /* maximum_source_sink_distance */ 100,
       context,
       /* source_register_types */ {},
-      /* source_constant_arguments */ {});
+      /* source_constant_arguments */ {},
+      CalleeInterval(),
+      ClassIntervals::Interval::top());
   EXPECT_EQ(
       propagated_crtex_frames,
       (CalleePortFrames{
@@ -1123,7 +1128,9 @@ TEST_F(CalleePortFramesTest, Propagate) {
           /* maximum_source_sink_distance */ 100,
           context,
           /* source_register_types */ {},
-          /* source_constant_arguments */ {}),
+          /* source_constant_arguments */ {},
+          CalleeInterval(),
+          ClassIntervals::Interval::top()),
       (CalleePortFrames{
           test::make_taint_config(
               test_kind_one,
@@ -1150,6 +1157,7 @@ TEST_F(CalleePortFramesTest, Propagate) {
 
 TEST_F(CalleePortFramesTest, PropagateDropFrames) {
   auto context = test::make_empty_context();
+  context.options = test::make_default_options();
 
   Scope scope;
   auto* one =
@@ -1177,7 +1185,9 @@ TEST_F(CalleePortFramesTest, PropagateDropFrames) {
           /* maximum_source_sink_distance */ 1,
           context,
           /* source_register_types */ {},
-          /* source_constant_arguments */ {}),
+          /* source_constant_arguments */ {},
+          CalleeInterval(),
+          ClassIntervals::Interval::top()),
       CalleePortFrames::bottom());
 
   // One of the two frames will be ignored during propagation because its
@@ -1206,7 +1216,9 @@ TEST_F(CalleePortFramesTest, PropagateDropFrames) {
           /* maximum_source_sink_distance */ 2,
           context,
           /* source_register_types */ {},
-          /* source_constant_arguments */ {}),
+          /* source_constant_arguments */ {},
+          CalleeInterval(),
+          ClassIntervals::Interval::top()),
       (CalleePortFrames{
           test::make_taint_config(
               test_kind_two,

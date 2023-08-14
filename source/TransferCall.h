@@ -45,12 +45,17 @@ std::vector<std::optional<std::string>> get_source_constant_arguments(
     const RegisterMemoryLocationsMap& register_memory_locations_map,
     const IRInstruction* instruction);
 
+bool get_is_this_call(
+    const RegisterMemoryLocationsMap& register_memory_locations_map,
+    const IRInstruction* instruction);
+
 CalleeModel get_callee(
     const MethodContext* context,
     const IRInstruction* instruction,
     const DexPosition* MT_NULLABLE position,
     const std::vector<const DexType * MT_NULLABLE>& source_register_types,
-    const std::vector<std::optional<std::string>>& source_constant_arguments);
+    const std::vector<std::optional<std::string>>& source_constant_arguments,
+    bool is_this_call);
 
 CalleeModel get_callee(
     const MethodContext* context,

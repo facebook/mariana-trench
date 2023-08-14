@@ -178,7 +178,9 @@ class KindFrames final : public sparta::AbstractDomain<KindFrames> {
       Context& context,
       const std::vector<const DexType * MT_NULLABLE>& source_register_types,
       const std::vector<std::optional<std::string>>& source_constant_arguments,
-      std::vector<const Feature*>& via_type_of_features_added) const;
+      std::vector<const Feature*>& via_type_of_features_added,
+      const CalleeInterval& callee_interval,
+      const ClassIntervals::Interval& caller_class_interval) const;
 
   /**
    * Similar to propagate but intended to be used for CRTEX frames.
@@ -192,8 +194,9 @@ class KindFrames final : public sparta::AbstractDomain<KindFrames> {
       const FeatureMayAlwaysSet& locally_inferred_features,
       int maximum_source_sink_distance,
       Context& context,
-      const std::vector<const DexType * MT_NULLABLE>& source_register_types)
-      const;
+      const std::vector<const DexType * MT_NULLABLE>& source_register_types,
+      const CalleeInterval& callee_interval,
+      const ClassIntervals::Interval& caller_class_interval) const;
 
   void filter_invalid_frames(
       const std::function<

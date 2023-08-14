@@ -48,8 +48,8 @@ class MethodContext final {
       const CallTarget& call_target,
       const Position* position,
       const std::vector<const DexType * MT_NULLABLE>& source_register_types,
-      const std::vector<std::optional<std::string>>& source_constant_arguments)
-      const;
+      const std::vector<std::optional<std::string>>& source_constant_arguments,
+      const CalleeInterval& callee_interval) const;
 
   const Options& options;
   const ArtificialMethods& artificial_methods;
@@ -58,6 +58,7 @@ class MethodContext final {
   const Positions& positions;
   const Types& types;
   const ClassProperties& class_properties;
+  const ClassIntervals& class_intervals;
   const Overrides& overrides;
   const CallGraph& call_graph;
   const Rules& rules;

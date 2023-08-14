@@ -146,8 +146,9 @@ class Taint final : public sparta::AbstractDomain<Taint> {
       const FeatureMayAlwaysSet& extra_features,
       Context& context,
       const std::vector<const DexType * MT_NULLABLE>& source_register_types,
-      const std::vector<std::optional<std::string>>& source_constant_arguments)
-      const;
+      const std::vector<std::optional<std::string>>& source_constant_arguments,
+      const CalleeInterval& callee_interval,
+      const ClassIntervals::Interval& caller_class_interval) const;
 
   /* Return the set of leaf frames with the given position. */
   Taint attach_position(const Position* position) const;
