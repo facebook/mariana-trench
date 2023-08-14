@@ -18,7 +18,7 @@
 
 #include <mariana-trench/Access.h>
 #include <mariana-trench/Assert.h>
-#include <mariana-trench/CalleeInterval.h>
+#include <mariana-trench/CallClassIntervalContext.h>
 #include <mariana-trench/Frame.h>
 #include <mariana-trench/FramesMap.h>
 #include <mariana-trench/IncludeMacros.h>
@@ -32,13 +32,13 @@ namespace marianatrench {
 class KindFrames final : public sparta::AbstractDomain<KindFrames> {
  private:
   using FramesByInterval =
-      sparta::HashedAbstractPartition<CalleeInterval, Frame>;
+      sparta::HashedAbstractPartition<CallClassIntervalContext, Frame>;
 
  private:
   struct GetFrameReference {
-    using Reference = typename std::iterator_traits<
-        typename std::unordered_map<CalleeInterval, Frame>::const_iterator>::
-        reference;
+    using Reference = typename std::iterator_traits<typename std::unordered_map<
+        CallClassIntervalContext,
+        Frame>::const_iterator>::reference;
 
     const Frame& operator()(Reference element) const {
       return element.second;
@@ -47,7 +47,8 @@ class KindFrames final : public sparta::AbstractDomain<KindFrames> {
 
   using ConstIterator = boost::transform_iterator<
       GetFrameReference,
-      typename std::unordered_map<CalleeInterval, Frame>::const_iterator>;
+      typename std::unordered_map<CallClassIntervalContext, Frame>::
+          const_iterator>;
 
  public:
   // C++ container concept member types
@@ -179,7 +180,7 @@ class KindFrames final : public sparta::AbstractDomain<KindFrames> {
       const std::vector<const DexType * MT_NULLABLE>& source_register_types,
       const std::vector<std::optional<std::string>>& source_constant_arguments,
       std::vector<const Feature*>& via_type_of_features_added,
-      const CalleeInterval& callee_interval,
+      const CallClassIntervalContext& class_interval_context,
       const ClassIntervals::Interval& caller_class_interval) const;
 
   /**
@@ -195,7 +196,7 @@ class KindFrames final : public sparta::AbstractDomain<KindFrames> {
       int maximum_source_sink_distance,
       Context& context,
       const std::vector<const DexType * MT_NULLABLE>& source_register_types,
-      const CalleeInterval& callee_interval,
+      const CallClassIntervalContext& class_interval_context,
       const ClassIntervals::Interval& caller_class_interval) const;
 
   void filter_invalid_frames(

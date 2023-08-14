@@ -49,7 +49,7 @@ class MethodContext final {
       const Position* position,
       const std::vector<const DexType * MT_NULLABLE>& source_register_types,
       const std::vector<std::optional<std::string>>& source_constant_arguments,
-      const CalleeInterval& callee_interval) const;
+      const CallClassIntervalContext& class_interval_context) const;
 
   const Options& options;
   const ArtificialMethods& artificial_methods;

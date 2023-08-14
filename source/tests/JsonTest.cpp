@@ -1377,14 +1377,15 @@ TEST_F(JsonTest, Frame) {
         })")));
 
   EXPECT_EQ(
-      test::sorted_json(test::make_taint_frame(
-                            /* kind */ context.kind_factory->get("TestSource"),
-                            test::FrameProperties{
-                                .callee_interval = CalleeInterval(
-                                    ClassIntervals::Interval::finite(1, 2),
-                                    /* preserves_type_context */ true),
-                                .call_info = CallInfo::callsite()})
-                            .to_json(ExportOriginsMode::Always)),
+      test::sorted_json(
+          test::make_taint_frame(
+              /* kind */ context.kind_factory->get("TestSource"),
+              test::FrameProperties{
+                  .class_interval_context = CallClassIntervalContext(
+                      ClassIntervals::Interval::finite(1, 2),
+                      /* preserves_type_context */ true),
+                  .call_info = CallInfo::callsite()})
+              .to_json(ExportOriginsMode::Always)),
       test::sorted_json(test::parse_json(R"({
           "call_info": "CallSite",
           "callee_interval": [1, 2],

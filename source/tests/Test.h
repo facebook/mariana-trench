@@ -67,7 +67,7 @@ struct FrameProperties {
   const Method* MT_NULLABLE callee = nullptr;
   const Field* MT_NULLABLE field_callee = nullptr;
   const Position* MT_NULLABLE call_position = nullptr;
-  CalleeInterval callee_interval = CalleeInterval();
+  CallClassIntervalContext class_interval_context = CallClassIntervalContext();
   int distance = 0;
   MethodSet origins = {};
   FieldSet field_origins = {};

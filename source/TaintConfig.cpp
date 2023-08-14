@@ -242,8 +242,8 @@ TaintConfig TaintConfig::from_json(const Json::Value& value, Context& context) {
       /* field_callee */ nullptr, // A field callee can never be set from a json
                                   // model generator
       call_position,
-      /* callee_interval */ CalleeInterval(), // Intervals cannot be set from a
-                                              // json model generator.
+      // Intervals cannot be set from a json model generator.
+      /* class_interval_context */ CallClassIntervalContext(),
       distance,
       std::move(origins),
       std::move(field_origins),

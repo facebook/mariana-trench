@@ -1327,7 +1327,7 @@ TEST_F(CallPositionFramesTest, Propagate) {
           context,
           /* source_register_types */ {},
           /* source_constant_arguments */ {},
-          CalleeInterval(),
+          CallClassIntervalContext(),
           ClassIntervals::Interval::top()),
       (CallPositionFrames{
           test::make_taint_config(
@@ -1414,7 +1414,7 @@ TEST_F(CallPositionFramesTest, PropagateDropFrames) {
           context,
           /* source_register_types */ {},
           /* source_constant_arguments */ {},
-          CalleeInterval(),
+          CallClassIntervalContext(),
           ClassIntervals::Interval::top()),
       CallPositionFrames::bottom());
 
@@ -1445,7 +1445,7 @@ TEST_F(CallPositionFramesTest, PropagateDropFrames) {
           context,
           /* source_register_types */ {},
           /* source_constant_arguments */ {},
-          CalleeInterval(),
+          CallClassIntervalContext(),
           ClassIntervals::Interval::top()),
       (CallPositionFrames{
           test::make_taint_config(
@@ -1949,7 +1949,7 @@ TEST_F(CallPositionFramesTest, Show) {
       "[FramesByCalleePort(CalleePortFrames(callee_port=AccessPath(Leaf), "
       "frames=[KindFrames(frames=[FramesByInterval(interval={T, "
       "preserves_type_context=0}, frame=Frame(kind=`TestSink1`, callee_port="
-      "AccessPath(Leaf), callee_interval={T, preserves_type_context=0}, "
+      "AccessPath(Leaf), class_interval_context={T, preserves_type_context=0}, "
       "call_info=Declaration, origins={`LOne;.one:()V`})),]),])),]");
 
   EXPECT_EQ(show(CallPositionFrames::bottom()), "[]");

@@ -129,7 +129,7 @@ Taint Taint::propagate(
     Context& context,
     const std::vector<const DexType * MT_NULLABLE>& source_register_types,
     const std::vector<std::optional<std::string>>& source_constant_arguments,
-    const CalleeInterval& callee_interval,
+    const CallClassIntervalContext& class_interval_context,
     const ClassIntervals::Interval& caller_class_interval) const {
   Taint result;
   for (const auto& frames : set_) {
@@ -147,7 +147,7 @@ Taint Taint::propagate(
         context,
         source_register_types,
         source_constant_arguments,
-        callee_interval,
+        class_interval_context,
         caller_class_interval);
     if (propagated.is_bottom()) {
       continue;
@@ -281,7 +281,7 @@ Taint Taint::propagation(PropagationConfig propagation) {
       /* call_info */ propagation.call_info(),
       /* field_callee */ nullptr,
       /* call_position */ nullptr,
-      /* callee_interval */ CalleeInterval(),
+      /* class_interval_context */ CallClassIntervalContext(),
       /* distance */ 0,
       /* origins */ {},
       /* field_origins */ {},
@@ -308,7 +308,7 @@ Taint Taint::propagation_taint(
       /* call_info */ CallInfo::propagation(),
       /* field_callee */ nullptr,
       /* call_position */ nullptr,
-      /* callee_interval */ CalleeInterval(),
+      /* class_interval_context */ CallClassIntervalContext(),
       /* distance */ 0,
       /* origins */ {},
       /* field_origins */ {},
@@ -343,7 +343,7 @@ Taint Taint::essential() const {
         /* call_info */ call_info,
         /* field_callee */ nullptr,
         /* call_position */ nullptr,
-        /* callee_interval */ CalleeInterval(),
+        /* class_interval_context */ CallClassIntervalContext(),
         /* distance */ 0,
         /* origins */ {},
         /* field_origins */ {},

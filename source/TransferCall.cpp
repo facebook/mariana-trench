@@ -53,17 +53,17 @@ std::optional<std::string> register_constant_argument(
   return instruction_memory_location->get_constant();
 }
 
-CalleeInterval get_callee_interval(
+CallClassIntervalContext get_type_context(
     const MethodContext* context,
     const IRInstruction* instruction,
     bool is_this_call) {
   if (!context->options.enable_class_intervals()) {
-    return CalleeInterval();
+    return CallClassIntervalContext();
   }
 
   if (instruction->opcode() != OPCODE_INVOKE_VIRTUAL) {
     // Class intervals only apply to virtual calls.
-    return CalleeInterval();
+    return CallClassIntervalContext();
   }
 
   // Virtual calls have at least one argument (the receiver).
@@ -78,7 +78,7 @@ CalleeInterval get_callee_interval(
         "Could not get type for receiver in instruction `{}`.",
         show(instruction));
     // Receiver type unknown, use top to cover all possible types.
-    return CalleeInterval(
+    return CallClassIntervalContext(
         ClassIntervals::Interval::top(),
         /* preserves_type_context */ is_this_call);
   }
@@ -91,7 +91,8 @@ CalleeInterval get_callee_interval(
       "Receiver interval: {}, preserves_type_context: {}",
       interval,
       is_this_call);
-  return CalleeInterval(interval, /* preserves_type_context */ is_this_call);
+  return CallClassIntervalContext(
+      interval, /* preserves_type_context */ is_this_call);
 }
 
 } // namespace
@@ -161,14 +162,14 @@ CalleeModel get_callee(
 
   auto* position = context->positions.get(context->method(), dex_position);
 
-  auto callee_interval =
-      get_callee_interval(context, instruction, is_this_call);
+  auto class_interval_context =
+      get_type_context(context, instruction, is_this_call);
   auto model = context->model_at_callsite(
       call_target,
       position,
       source_register_types,
       source_constant_arguments,
-      callee_interval);
+      class_interval_context);
   LOG_OR_DUMP(context, 4, "Callee model: {}", model);
 
   // Avoid copies using `std::move`.
@@ -198,7 +199,7 @@ CalleeModel get_callee(
       position,
       /* source_register_types */ {},
       /* source_constant_arguments */ {},
-      /* callee_interval */ CalleeInterval());
+      /* class_interval_context */ CallClassIntervalContext());
   LOG_OR_DUMP(context, 4, "Callee model: {}", model);
 
   return CalleeModel{

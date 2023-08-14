@@ -125,7 +125,7 @@ void KindFrames::add(const TaintConfig& config) {
     mt_assert(kind_ == config.kind());
   }
 
-  frames_.update(CalleeInterval(config), [&config](Frame* frame) {
+  frames_.update(CallClassIntervalContext(config), [&config](Frame* frame) {
     frame->join_with(Frame(config));
   });
 }
@@ -137,9 +137,9 @@ void KindFrames::add(const Frame& frame) {
     mt_assert(kind_ == frame.kind());
   }
 
-  frames_.update(CalleeInterval(frame), [&frame](Frame* original_frame) {
-    original_frame->join_with(frame);
-  });
+  frames_.update(
+      CallClassIntervalContext(frame),
+      [&frame](Frame* original_frame) { original_frame->join_with(frame); });
 }
 
 void KindFrames::difference_with(const KindFrames& other) {
@@ -212,11 +212,11 @@ const Kind* propagate_kind(const Kind* kind, Context& context) {
   return kind;
 }
 
-CalleeInterval propagate_interval(
+CallClassIntervalContext propagate_interval(
     const Frame& frame,
-    const CalleeInterval& callee_interval,
+    const CallClassIntervalContext& class_interval_context,
     const ClassIntervals::Interval& caller_class_interval) {
-  const auto& frame_interval = frame.callee_interval();
+  const auto& frame_interval = frame.class_interval_context();
   if (frame.call_info().is_declaration()) {
     // The source/sink declaration is the base case. Its propagated frame
     // (caller -> callee with source/sink) should have the properties:
@@ -226,23 +226,23 @@ CalleeInterval propagate_interval(
     // 2. Although it may not be a this.* call, the propagated interval occurs
     //    in the context of the caller's class => preserves_type_context = true.
     mt_assert(frame_interval.is_default());
-    return CalleeInterval(
+    return CallClassIntervalContext(
         caller_class_interval, /* preserves_type_context */ true);
   }
 
-  auto propagated_interval = callee_interval.interval();
+  auto propagated_interval = class_interval_context.callee_interval();
   if (frame_interval.preserves_type_context()) {
     // If the frame representing a (f() -> g()) call preserves the type context,
     // it is either a call to a declared source/sink, or a this.* call. The
-    // frame's interval must intersect with the callee_interval, which is the
-    // interval of the receiver in receiver.f()), i.e. the receiver type should
-    // be a derived class of the class which f() is defined in.
-    propagated_interval =
-        frame_interval.interval().meet(callee_interval.interval());
+    // frame's interval must intersect with the class_interval_context, which is
+    // the interval of the receiver in receiver.f()), i.e. the receiver type
+    // should be a derived class of the class which f() is defined in.
+    propagated_interval = frame_interval.callee_interval().meet(
+        class_interval_context.callee_interval());
   }
 
-  return CalleeInterval(
-      propagated_interval, callee_interval.preserves_type_context());
+  return CallClassIntervalContext(
+      propagated_interval, class_interval_context.preserves_type_context());
 }
 
 // Returns the propagated inferred features.
@@ -308,7 +308,7 @@ KindFrames KindFrames::propagate(
     const std::vector<const DexType * MT_NULLABLE>& source_register_types,
     const std::vector<std::optional<std::string>>& source_constant_arguments,
     std::vector<const Feature*>& via_type_of_features_added,
-    const CalleeInterval& callee_interval,
+    const CallClassIntervalContext& class_interval_context,
     const ClassIntervals::Interval& caller_class_interval) const {
   if (is_bottom()) {
     return KindFrames::bottom();
@@ -319,11 +319,11 @@ KindFrames KindFrames::propagate(
 
   FramesByInterval propagated_frames;
   for (const auto& [_interval, frame] : frames_.bindings()) {
-    auto propagated_interval = CalleeInterval();
+    auto propagated_interval = CallClassIntervalContext();
     if (context.options->enable_class_intervals()) {
-      propagated_interval =
-          propagate_interval(frame, callee_interval, caller_class_interval);
-      if (propagated_interval.interval().is_bottom()) {
+      propagated_interval = propagate_interval(
+          frame, class_interval_context, caller_class_interval);
+      if (propagated_interval.callee_interval().is_bottom()) {
         // Intervals do not intersect. Do not propagate this frame.
         continue;
       }
@@ -418,7 +418,7 @@ KindFrames KindFrames::propagate_crtex_leaf_frames(
     int maximum_source_sink_distance,
     Context& context,
     const std::vector<const DexType * MT_NULLABLE>& source_register_types,
-    const CalleeInterval& callee_interval,
+    const CallClassIntervalContext& class_interval_context,
     const ClassIntervals::Interval& caller_class_interval) const {
   if (is_bottom()) {
     return KindFrames::bottom();
@@ -436,7 +436,7 @@ KindFrames KindFrames::propagate_crtex_leaf_frames(
       source_register_types,
       /* source_constant_arguments */ {}, // via-value not supported for crtex
       via_type_of_features_added,
-      callee_interval,
+      class_interval_context,
       caller_class_interval);
 
   if (propagated.is_bottom()) {
@@ -480,7 +480,7 @@ KindFrames KindFrames::propagate_crtex_leaf_frames(
             callee,
             propagated_frame.field_callee(),
             propagated_frame.call_position(),
-            propagated_frame.callee_interval(),
+            propagated_frame.class_interval_context(),
             /* distance (always leaves for crtex frames) */ 0,
             propagated_frame.origins(),
             propagated_frame.field_origins(),
@@ -505,7 +505,7 @@ void KindFrames::filter_invalid_frames(
   FramesByInterval new_frames;
   for (const auto& frame : *this) {
     if (is_valid(frame.callee(), frame.callee_port(), frame.kind())) {
-      new_frames.set(CalleeInterval(frame), frame);
+      new_frames.set(CallClassIntervalContext(frame), frame);
     }
   }
 

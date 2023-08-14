@@ -49,7 +49,7 @@ Model MethodContext::model_at_callsite(
     const Position* position,
     const std::vector<const DexType * MT_NULLABLE>& source_register_types,
     const std::vector<std::optional<std::string>>& source_constant_arguments,
-    const CalleeInterval& callee_interval) const {
+    const CallClassIntervalContext& class_interval_context) const {
   auto* caller = method();
 
   LOG_OR_DUMP(
@@ -81,7 +81,7 @@ Model MethodContext::model_at_callsite(
                        context_,
                        source_register_types,
                        source_constant_arguments,
-                       callee_interval);
+                       class_interval_context);
 
   if (!call_target.is_virtual()) {
     return model;
@@ -110,7 +110,7 @@ Model MethodContext::model_at_callsite(
         context_,
         source_register_types,
         source_constant_arguments,
-        callee_interval);
+        class_interval_context);
     LOG_OR_DUMP(
         this,
         5,

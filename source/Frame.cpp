@@ -25,7 +25,7 @@ Frame::Frame(const TaintConfig& config)
           config.callee(),
           config.field_callee(),
           config.call_position(),
-          config.callee_interval(),
+          config.class_interval_context(),
           config.distance(),
           config.origins(),
           config.field_origins(),
@@ -92,7 +92,7 @@ bool Frame::leq(const Frame& other) const {
     return kind_ == other.kind_ && callee_port_ == other.callee_port_ &&
         callee_ == other.callee_ && call_position_ == other.call_position_ &&
         call_info_ == other.call_info_ && distance_ >= other.distance_ &&
-        callee_interval_ == other.callee_interval_ &&
+        class_interval_context_ == other.class_interval_context_ &&
         origins_.leq(other.origins_) &&
         field_origins_.leq(other.field_origins_) &&
         inferred_features_.leq(other.inferred_features_) &&
@@ -114,7 +114,7 @@ bool Frame::equals(const Frame& other) const {
     return kind_ == other.kind_ && callee_port_ == other.callee_port_ &&
         callee_ == other.callee_ && call_position_ == other.call_position_ &&
         call_info_ == other.call_info_ &&
-        callee_interval_ == other.callee_interval_ &&
+        class_interval_context_ == other.class_interval_context_ &&
         distance_ == other.distance_ && origins_ == other.origins_ &&
         field_origins_ == other.field_origins_ &&
         inferred_features_ == other.inferred_features_ &&
@@ -140,7 +140,7 @@ void Frame::join_with(const Frame& other) {
     mt_assert(call_position_ == other.call_position_);
     mt_assert(callee_port_ == other.callee_port_);
     mt_assert(call_info_ == other.call_info_);
-    mt_assert(callee_interval_ == other.callee_interval_);
+    mt_assert(class_interval_context_ == other.class_interval_context_);
 
     distance_ = std::min(distance_, other.distance_);
     origins_.join_with(other.origins_);
@@ -199,7 +199,7 @@ Frame Frame::update_with_propagation_trace(
       /* field_callee */ nullptr, // Since propagate is only called at method
                                   // callsites and not field accesses
       propagation_frame.call_position_,
-      callee_interval_,
+      class_interval_context_,
       propagation_frame.distance_,
       propagation_frame.origins_,
       field_origins_,
@@ -406,8 +406,8 @@ Json::Value Frame::to_json(ExportOriginsMode export_origins_mode) const {
     value["output_paths"] = output_paths_value;
   }
 
-  if (!callee_interval_.is_default()) {
-    auto interval_json = callee_interval_.to_json();
+  if (!class_interval_context_.is_default()) {
+    auto interval_json = class_interval_context_.to_json();
     for (const auto& member : interval_json.getMemberNames()) {
       value[member] = interval_json[member];
     }
@@ -435,7 +435,7 @@ std::ostream& operator<<(std::ostream& out, const Frame& frame) {
   if (frame.call_position_ != nullptr) {
     out << ", call_position=" << show(frame.call_position_);
   }
-  out << ", callee_interval=" << show(frame.callee_interval_);
+  out << ", class_interval_context=" << show(frame.class_interval_context_);
   out << ", call_info=" << frame.call_info_.to_trace_string();
   if (frame.distance_ != 0) {
     out << ", distance=" << frame.distance_;

@@ -648,7 +648,7 @@ void check_flows_to_array_allocation(
       /* call_info */ CallInfo::origin(),
       /* field_callee */ nullptr,
       /* call_position */ position,
-      /* callee_interval */ CalleeInterval(),
+      /* class_interval_context */ CallClassIntervalContext(),
       /* distance */ 1,
       /* origins */ MethodSet{array_allocation_method},
       /* field_origins */ {},

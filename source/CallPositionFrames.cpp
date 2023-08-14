@@ -55,7 +55,7 @@ CallPositionFrames CallPositionFrames::propagate(
     Context& context,
     const std::vector<const DexType * MT_NULLABLE>& source_register_types,
     const std::vector<std::optional<std::string>>& source_constant_arguments,
-    const CalleeInterval& callee_interval,
+    const CallClassIntervalContext& class_interval_context,
     const ClassIntervals::Interval& caller_class_interval) const {
   if (is_bottom()) {
     return CallPositionFrames::bottom();
@@ -75,7 +75,7 @@ CallPositionFrames CallPositionFrames::propagate(
         context,
         source_register_types,
         source_constant_arguments,
-        callee_interval,
+        class_interval_context,
         caller_class_interval);
     result.update(
         propagated.callee_port(), [&propagated](CalleePortFrames* frames) {
@@ -142,7 +142,7 @@ CallPositionFrames CallPositionFrames::attach_position(
                 /* call_position */ position,
                 // TODO(T158171922): Re-visit what the appropriate interval
                 // should be when implementing class intervals.
-                frame.callee_interval(),
+                frame.class_interval_context(),
                 /* distance */ 0,
                 frame.origins(),
                 frame.field_origins(),
@@ -213,7 +213,7 @@ CallPositionFrames::map_positions(
           frame.call_info(),
           frame.field_callee(),
           call_position,
-          frame.callee_interval(),
+          frame.class_interval_context(),
           frame.distance(),
           frame.origins(),
           frame.field_origins(),

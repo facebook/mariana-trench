@@ -186,7 +186,7 @@ class Model final {
       Context& context,
       const std::vector<const DexType * MT_NULLABLE>& source_register_types,
       const std::vector<std::optional<std::string>>& source_constant_arguments,
-      const CalleeInterval& callee_interval) const;
+      const CallClassIntervalContext& class_interval_context) const;
 
   /* Create a new fresh model without sources/sinks/propagations based on the
    * structure of the current model. */

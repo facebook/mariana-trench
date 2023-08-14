@@ -1027,7 +1027,7 @@ TEST_F(CalleePortFramesTest, Propagate) {
           context,
           /* source_register_types */ {},
           /* source_constant_arguments */ {},
-          CalleeInterval(),
+          CallClassIntervalContext(),
           ClassIntervals::Interval::top()),
       (CalleePortFrames{
           test::make_taint_config(
@@ -1082,7 +1082,7 @@ TEST_F(CalleePortFramesTest, Propagate) {
       context,
       /* source_register_types */ {},
       /* source_constant_arguments */ {},
-      CalleeInterval(),
+      CallClassIntervalContext(),
       ClassIntervals::Interval::top());
   EXPECT_EQ(
       propagated_crtex_frames,
@@ -1129,7 +1129,7 @@ TEST_F(CalleePortFramesTest, Propagate) {
           context,
           /* source_register_types */ {},
           /* source_constant_arguments */ {},
-          CalleeInterval(),
+          CallClassIntervalContext(),
           ClassIntervals::Interval::top()),
       (CalleePortFrames{
           test::make_taint_config(
@@ -1186,7 +1186,7 @@ TEST_F(CalleePortFramesTest, PropagateDropFrames) {
           context,
           /* source_register_types */ {},
           /* source_constant_arguments */ {},
-          CalleeInterval(),
+          CallClassIntervalContext(),
           ClassIntervals::Interval::top()),
       CalleePortFrames::bottom());
 
@@ -1217,7 +1217,7 @@ TEST_F(CalleePortFramesTest, PropagateDropFrames) {
           context,
           /* source_register_types */ {},
           /* source_constant_arguments */ {},
-          CalleeInterval(),
+          CallClassIntervalContext(),
           ClassIntervals::Interval::top()),
       (CalleePortFrames{
           test::make_taint_config(
@@ -1600,8 +1600,8 @@ TEST_F(CalleePortFramesTest, Show) {
       "CalleePortFrames(callee_port=AccessPath(Leaf), frames=[KindFrames("
       "frames=[FramesByInterval(interval={T, preserves_type_context=0}, "
       "frame=Frame(kind=`TestSink1`, callee_port=AccessPath(Leaf), "
-      "callee_interval={T, preserves_type_context=0}, call_info=Declaration, "
-      "origins={`LOne;.one:()V`})),]),])");
+      "class_interval_context={T, preserves_type_context=0}, call_info="
+      "Declaration, origins={`LOne;.one:()V`})),]),])");
 
   frames = CalleePortFrames{test::make_taint_config(
       test_kind_one,
@@ -1614,8 +1614,8 @@ TEST_F(CalleePortFramesTest, Show) {
       "CalleePortFrames(callee_port=AccessPath(Leaf), "
       "local_positions={Position(line=1)}, frames=[KindFrames(frames=["
       "FramesByInterval(interval={T, preserves_type_context=0}, frame=Frame("
-      "kind=`TestSink1`, callee_port=AccessPath(Leaf), callee_interval={T, "
-      "preserves_type_context=0}, call_info=Declaration, "
+      "kind=`TestSink1`, callee_port=AccessPath(Leaf), class_interval_context="
+      "{T, preserves_type_context=0}, call_info=Declaration, "
       "origins={`LOne;.one:()V`})),]),])");
 
   frames = CalleePortFrames{test::make_taint_config(
@@ -1630,8 +1630,8 @@ TEST_F(CalleePortFramesTest, Show) {
       "CalleePortFrames(callee_port=AccessPath(Return), frames=[KindFrames("
       "frames=[FramesByInterval(interval={T, preserves_type_context=0}, "
       "frame=Frame(kind=`LocalReturn`, callee_port=AccessPath(Return), "
-      "callee_interval={T, preserves_type_context=0}, call_info=Propagation, "
-      "output_paths={0})),]),])");
+      "class_interval_context={T, preserves_type_context=0}, call_info="
+      "Propagation, output_paths={0})),]),])");
 
   frames = CalleePortFrames{test::make_taint_config(
       context.kind_factory->local_return(),
@@ -1647,8 +1647,8 @@ TEST_F(CalleePortFramesTest, Show) {
       "CalleePortFrames(callee_port=AccessPath(Return), frames=[KindFrames("
       "frames=[FramesByInterval(interval={T, preserves_type_context=0}, "
       "frame=Frame(kind=`LocalReturn`, callee_port=AccessPath(Return), "
-      "callee_interval={T, preserves_type_context=0}, call_info=Propagation, "
-      "output_paths={\n    `.x` -> {0}\n})),]),])");
+      "class_interval_context={T, preserves_type_context=0}, call_info="
+      "Propagation, output_paths={\n    `.x` -> {0}\n})),]),])");
 
   EXPECT_EQ(
       show(CalleePortFrames::bottom()),

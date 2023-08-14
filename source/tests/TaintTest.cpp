@@ -648,7 +648,7 @@ TEST_F(TaintTest, Propagate) {
           /* context */ context,
           /* source_register_types */ {},
           /* source_constant_arguments */ {},
-          CalleeInterval(),
+          CallClassIntervalContext(),
           ClassIntervals::Interval::top()),
       (Taint{
           test::make_taint_config(

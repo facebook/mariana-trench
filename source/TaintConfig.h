@@ -52,7 +52,7 @@ class TaintConfig final {
       CallInfo call_info,
       const Field* MT_NULLABLE field_callee,
       const Position* MT_NULLABLE call_position,
-      CalleeInterval callee_interval,
+      CallClassIntervalContext class_interval_context,
       int distance,
       MethodSet origins,
       FieldSet field_origins,
@@ -71,7 +71,7 @@ class TaintConfig final {
         call_info_(std::move(call_info)),
         field_callee_(field_callee),
         call_position_(call_position),
-        callee_interval_(std::move(callee_interval)),
+        class_interval_context_(std::move(class_interval_context)),
         distance_(distance),
         origins_(std::move(origins)),
         field_origins_(std::move(field_origins)),
@@ -151,8 +151,8 @@ class TaintConfig final {
     return call_position_;
   }
 
-  const CalleeInterval& callee_interval() const {
-    return callee_interval_;
+  const CallClassIntervalContext& class_interval_context() const {
+    return class_interval_context_;
   }
 
   int distance() const {
@@ -217,7 +217,7 @@ class TaintConfig final {
   CallInfo call_info_;
   const Field* MT_NULLABLE field_callee_;
   const Position* MT_NULLABLE call_position_;
-  CalleeInterval callee_interval_;
+  CallClassIntervalContext class_interval_context_;
   int distance_;
   MethodSet origins_;
   FieldSet field_origins_;

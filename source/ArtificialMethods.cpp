@@ -50,7 +50,7 @@ std::vector<Model> ArtificialMethods::models(Context& context) const {
           /* call_info */ CallInfo::declaration(),
           /* field_callee */ nullptr,
           /* call_position */ nullptr,
-          /* callee_interval */ CalleeInterval(),
+          /* class_interval_context */ CallClassIntervalContext(),
           /* distance */ 0,
           /* origins */ {},
           /* field origins */ {},

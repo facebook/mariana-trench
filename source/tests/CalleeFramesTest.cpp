@@ -740,7 +740,7 @@ TEST_F(CalleeFramesTest, Propagate) {
           context,
           /* source_register_types */ {},
           /* source_constant_arguments */ {},
-          CalleeInterval(),
+          CallClassIntervalContext(),
           ClassIntervals::Interval::top()),
       (CalleeFrames{
           test::make_taint_config(
@@ -829,7 +829,7 @@ TEST_F(CalleeFramesTest, Propagate) {
           context,
           /* source_register_types */ {},
           /* source_constant_arguments */ {},
-          CalleeInterval(),
+          CallClassIntervalContext(),
           ClassIntervals::Interval::top()),
       (CalleeFrames{
           test::make_taint_config(
