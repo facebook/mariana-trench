@@ -137,7 +137,7 @@ class Frame final : public sparta::AbstractDomain<Frame> {
         via_type_of_ports_(std::move(via_type_of_ports)),
         via_value_of_ports_(std::move(via_value_of_ports)),
         canonical_names_(std::move(canonical_names)),
-        call_info_(call_info),
+        call_info_(std::move(call_info)),
         output_paths_(std::move(output_paths)),
         extra_traces_(std::move(extra_traces)) {
     mt_assert(kind_ != nullptr);
@@ -224,7 +224,7 @@ class Frame final : public sparta::AbstractDomain<Frame> {
     return field_origins_;
   }
 
-  CallInfo call_info() const {
+  const CallInfo& call_info() const {
     return call_info_;
   }
 
