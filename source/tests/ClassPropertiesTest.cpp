@@ -40,6 +40,11 @@ class MockAndroidResources : public AndroidResources {
     return boost::none;
   }
 
+  void fully_qualify_layout(
+      const std::unordered_map<std::string, std::string>&,
+      const std::string&,
+      size_t*) override {}
+
   ManifestClassInfo get_manifest_class_info() override {
     ManifestClassInfo info;
 
