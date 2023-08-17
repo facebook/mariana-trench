@@ -153,7 +153,7 @@ TEST_F(IntentRoutingAnalyzerTest, IntentRoutingSetClass) {
             )
             ))",
           R"(
-            (method (public) "Landroid/content/Intent;.setClass:(Landroid/content/Context;Ljava/lang/Class;)V"
+            (method (public) "Landroid/content/Intent;.setClass:(Landroid/content/Context;Ljava/lang/Class;)Landroid/content/Intent;"
             (
               (return-void)
             )
@@ -173,7 +173,7 @@ TEST_F(IntentRoutingAnalyzerTest, IntentRoutingSetClass) {
               (move-result-pseudo-object v1)
               (const-class "LRouteTo;")
               (move-result-pseudo-object v2)
-              (invoke-direct (v0 v1 v2) "Landroid/content/Intent;.setClass:(Landroid/content/Context;Ljava/lang/Class;)V")
+              (invoke-direct (v0 v1 v2) "Landroid/content/Intent;.setClass:(Landroid/content/Context;Ljava/lang/Class;)Landroid/content/Intent;")
               (return-void)
             )
             ))",

@@ -34,6 +34,19 @@ get_activity_routing_methods() {
       {"Landroid/app/Activity;.startActivity:(Landroid/content/Intent;)V", 1},
   };
 }
+
+const std::unordered_map<std::string, ParameterPosition>&
+get_intent_class_setters() {
+  static const std::unordered_map<std::string, ParameterPosition> intent_class_setters =
+      {{"Landroid/content/Intent;.<init>:(Landroid/content/Context;Ljava/lang/Class;)V",
+        2},
+       {"Landroid/content/Intent;.<init>:(Ljava/lang/String;Landroid/net/Uri;Landroid/content/Context;Ljava/lang/Class;)V",
+        4},
+       {"Landroid/content/Intent;.setClass:(Landroid/content/Context;Ljava/lang/Class;)Landroid/content/Intent;",
+        2}};
+  return intent_class_setters;
+}
+
 #endif
 
 } // namespace constants

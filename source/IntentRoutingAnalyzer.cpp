@@ -110,22 +110,23 @@ class Transfer final : public InstructionAnalyzerBase<
     if (method == nullptr || method->get_class() == nullptr) {
       return false;
     }
-    // Handle new Intent(context, C.class) and intent.setClass(context,
-    // C.class).
-    if (method->get_class()->get_name()->str() == ANDROID_INTENT_CLASS &&
-        (method->get_name()->str() == "<init>" ||
-         method->get_name()->str() == "setClass")) {
+
+    const auto& intent_class_setters = constants::get_intent_class_setters();
+    auto intent_parameter_position = intent_class_setters.find(show(method));
+    if (intent_parameter_position != intent_class_setters.end()) {
+      auto class_index = intent_parameter_position->second;
+
+      mt_assert(class_index > 0);
+      mt_assert(!::is_static(method));
+
       const auto dex_arguments = method->get_proto()->get_args();
-      if (dex_arguments->size() != 2) {
-        return false;
-      }
-      const std::size_t class_index = 1;
-      if (dex_arguments->at(class_index) != type::java_lang_Class()) {
+      if (dex_arguments->at(class_index - 1) != type::java_lang_Class()) {
         return false;
       }
       const auto& environment = context->types().const_class_environment(
           context->method(), instruction);
-      auto found = environment.find(instruction->src(class_index + 1));
+      mt_assert(class_index < instruction->srcs_size());
+      auto found = environment.find(instruction->src(class_index));
       if (found == environment.end()) {
         return false;
       }

@@ -33,6 +33,8 @@ std::string_view get_privacy_decision_type();
 // needs to be known.
 std::unordered_map<std::string, ParameterPosition>
 get_activity_routing_methods();
+const std::unordered_map<std::string, ParameterPosition>&
+get_intent_class_setters();
 
 } // namespace constants
 } // namespace marianatrench
