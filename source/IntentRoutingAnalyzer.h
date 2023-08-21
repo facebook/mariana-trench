@@ -20,8 +20,9 @@ class IntentRoutingAnalyzer final {
  public:
   using MethodToRoutedIntentClassesMap =
       ConcurrentMap<const Method*, std::vector<const DexType*>>;
-  using ClassesToIntentGettersMap =
-      ConcurrentMap<const DexType*, std::vector<const Method*>>;
+  using ClassesToIntentReceiversMap = ConcurrentMap<
+      const DexType*,
+      std::vector<std::pair<const Method*, Root>>>;
 
   explicit IntentRoutingAnalyzer() = default;
 
@@ -39,13 +40,13 @@ class IntentRoutingAnalyzer final {
     return methods_to_routed_intents_;
   }
 
-  const ClassesToIntentGettersMap& classes_to_intent_getters() const {
-    return classes_to_intent_getters_;
+  const ClassesToIntentReceiversMap& classes_to_intent_receivers() const {
+    return classes_to_intent_receivers_;
   }
 
  private:
   MethodToRoutedIntentClassesMap methods_to_routed_intents_;
-  ClassesToIntentGettersMap classes_to_intent_getters_;
+  ClassesToIntentReceiversMap classes_to_intent_receivers_;
 };
 
 } // namespace marianatrench

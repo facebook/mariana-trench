@@ -20,7 +20,8 @@ namespace marianatrench {
 
 namespace {
 
-const std::string ANDROID_INTENT_CLASS = "Landroid/content/Intent;";
+static std::unordered_map<std::string, ParameterPosition> intent_class_setters =
+    constants::get_intent_class_setters();
 
 using RoutedIntents = PatriciaTreeSetAbstractDomain<
     const DexType*,
@@ -39,7 +40,7 @@ class IntentRoutingContext final {
       : routed_intents_({}),
         method_(method),
         types_(types),
-        gets_routed_intent_(false),
+        routed_intent_root_(),
         dump_(method->should_be_logged(options)) {}
 
   DELETE_COPY_CONSTRUCTORS_AND_ASSIGNMENTS(IntentRoutingContext)
@@ -52,12 +53,12 @@ class IntentRoutingContext final {
     routed_intents_.set(instruction, routed_intents);
   }
 
-  void mark_as_getting_routed_intent() {
-    gets_routed_intent_ = true;
+  void mark_as_getting_routed_intent(Root root) {
+    routed_intent_root_ = root;
   }
 
-  bool method_gets_routed_intent() {
-    return gets_routed_intent_;
+  std::optional<Root> method_gets_routed_intent() {
+    return routed_intent_root_;
   }
 
   const InstructionsToRoutedIntents& instructions_to_routed_intents() {
@@ -80,7 +81,7 @@ class IntentRoutingContext final {
   InstructionsToRoutedIntents routed_intents_;
   const Method* method_;
   const Types& types_;
-  bool gets_routed_intent_;
+  std::optional<Root> routed_intent_root_;
   bool dump_;
 };
 
@@ -147,7 +148,8 @@ class Transfer final : public InstructionAnalyzerBase<
           4,
           "Method `{}` calls getIntent()",
           context->method()->show());
-      context->mark_as_getting_routed_intent();
+      context->mark_as_getting_routed_intent(
+          Root(Root::Kind::CallEffectIntent));
     }
     return false;
   }
@@ -191,7 +193,7 @@ class IntentRoutingFixpointIterator final
 
 struct IntentRoutingData {
  public:
-  bool calls_get_intent;
+  std::optional<Root> receiving_intent_root;
   std::vector<const DexType*> routed_intents;
 };
 
@@ -201,17 +203,32 @@ IntentRoutingData method_routes_intents_to(
     const Options& options) {
   auto* code = method->get_code();
   if (code == nullptr) {
-    return {/* calls_get_intent */ false, /* routed_intents */ {}};
+    return {/* receiving_intent_root */ std::nullopt, /* routed_intents */ {}};
   }
 
   if (!code->cfg_built()) {
     LOG(1,
         "CFG not built for method: {}. Cannot evaluate routed intents.",
         method->show());
-    return {/* calls_get_intent */ false, /* routed_intents */ {}};
+    return {/* receiving_intent_root */ std::nullopt, /* routed_intents */ {}};
   }
 
   auto context = std::make_unique<IntentRoutingContext>(method, types, options);
+
+  auto intent_receiving_method_names =
+      constants::get_intent_receiving_method_names();
+  auto match =
+      intent_receiving_method_names.find(std::string(method->get_name()));
+  if (match != intent_receiving_method_names.end()) {
+    auto args = method->get_proto()->get_args();
+    if (args->size() >= match->second &&
+        args->at(match->second - 1) ==
+            DexType::get_type("Landroid/content/Intent;")) {
+      context->mark_as_getting_routed_intent(
+          Root(Root::Kind::Argument, match->second));
+    }
+  }
+
   auto fixpoint = IntentRoutingFixpointIterator(
       code->cfg(), InstructionAnalyzerCombiner<Transfer>(context.get()));
   InstructionsToRoutedIntents instructions_to_routed_intents{};
@@ -224,12 +241,14 @@ IntentRoutingData method_routes_intents_to(
     }
   }
   return {
-      /* calls_get_intent */ context->method_gets_routed_intent(),
+      /* receiving_intent_root */ context->method_gets_routed_intent(),
       routed_intents};
 }
 
 static std::unordered_map<std::string, ParameterPosition>
     activity_routing_methods = constants::get_activity_routing_methods();
+static std::unordered_map<std::string, ParameterPosition>
+    service_routing_methods = constants::get_service_routing_methods();
 
 } // namespace
 
@@ -242,16 +261,19 @@ IntentRoutingAnalyzer IntentRoutingAnalyzer::run(const Context& context) {
   auto queue = sparta::work_queue<const Method*>([&](const Method* method) {
     auto intent_routing_data =
         method_routes_intents_to(method, *context.types, *context.options);
-    if (intent_routing_data.calls_get_intent) {
-      LOG(5, "Shimming {} as a method that calls getIntent().", method->show());
+    if (intent_routing_data.receiving_intent_root != std::nullopt) {
+      LOG(5,
+          "Shimming {} as a method that receivings an Intent.",
+          method->show());
       auto klass = method->get_class();
-      analyzer.classes_to_intent_getters_.update(
+      auto root = *intent_routing_data.receiving_intent_root;
+      analyzer.classes_to_intent_receivers_.update(
           klass,
-          [&method](
+          [&method, &root](
               const DexType* /* key */,
-              std::vector<const Method*>& methods,
+              std::vector<std::pair<const Method*, Root>>& methods,
               bool /* exists */) {
-            methods.emplace_back(method);
+            methods.emplace_back(method, root);
             return methods;
           });
     }
@@ -280,30 +302,34 @@ std::vector<ShimTarget> IntentRoutingAnalyzer::get_intent_routing_targets(
     const Method* caller) const {
   std::vector<ShimTarget> intent_routing_targets;
 
-  // Intent routing does not exist unless the callee is in the vein of
-  // an activity routing method (e.g. startActivity).
+  // Find if the callee is an Activity launcher (e.g. startActivity)
   auto intent_parameter_position =
       activity_routing_methods.find(original_callee->signature());
   if (intent_parameter_position == activity_routing_methods.end()) {
-    return intent_routing_targets;
+    // Find if the callee is an Service launcher (e.g. startService)
+    intent_parameter_position =
+        service_routing_methods.find(original_callee->signature());
+    if (intent_parameter_position == service_routing_methods.end()) {
+      return intent_routing_targets;
+    }
   }
 
+  // check if the method handles incoming intents (e.g. getIntent())
   auto routed_intent_classes = methods_to_routed_intents_.find(caller);
   if (routed_intent_classes == methods_to_routed_intents_.end()) {
     return intent_routing_targets;
   }
 
   for (const auto& intent_class : routed_intent_classes->second) {
-    auto intent_getters = classes_to_intent_getters_.find(intent_class);
-    if (intent_getters == classes_to_intent_getters_.end()) {
+    auto intent_receivers = classes_to_intent_receivers_.find(intent_class);
+    if (intent_receivers == classes_to_intent_receivers_.end()) {
       continue;
     }
-    for (const auto& intent_getter : intent_getters->second) {
+    for (const auto& intent_receiver : intent_receivers->second) {
       intent_routing_targets.emplace_back(
-          intent_getter,
+          intent_receiver.first,
           ShimParameterMapping(
-              {{Root(Root::Kind::CallEffectIntent),
-                intent_parameter_position->second}}));
+              {{intent_receiver.second, intent_parameter_position->second}}));
     }
   }
 

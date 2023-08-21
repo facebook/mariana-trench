@@ -55,13 +55,13 @@ Context test_types(const Scope& scope) {
 using SerializedMultimap =
     std::vector<std::pair<std::string, std::vector<std::string>>>;
 
-SerializedMultimap serialize_classes_to_intent_getters(
-    const IntentRoutingAnalyzer::ClassesToIntentGettersMap&
-        classes_to_intent_getters) {
+SerializedMultimap serialize_classes_to_intent_receivers(
+    const IntentRoutingAnalyzer::ClassesToIntentReceiversMap&
+        classes_to_intent_receivers) {
   SerializedMultimap serialized;
-  for (const auto& [dex_type, methods] : classes_to_intent_getters) {
+  for (const auto& [dex_type, methods_pairs] : classes_to_intent_receivers) {
     std::vector<std::string> serialized_methods;
-    for (const auto& method : methods) {
+    for (const auto& [method, _] : methods_pairs) {
       serialized_methods.push_back(method->show());
     }
     sort(serialized_methods.begin(), serialized_methods.end());
@@ -187,15 +187,15 @@ TEST_F(ShimsTest, TestBuildCrossComponentAnalysisShims) {
   auto context = test_types(scope);
   auto intent_routing_analyzer = IntentRoutingAnalyzer::run(context);
 
-  auto classes_to_intent_getters = serialize_classes_to_intent_getters(
-      intent_routing_analyzer.classes_to_intent_getters());
-  SerializedMultimap expected_classes_to_intent_getters{std::make_pair(
+  auto classes_to_intent_receivers = serialize_classes_to_intent_receivers(
+      intent_routing_analyzer.classes_to_intent_receivers());
+  SerializedMultimap expected_classes_to_intent_receivers{std::make_pair(
       "LClass;",
       std::vector<std::string>{
           "LClass;.also_gets_routed_intent:()V",
           "LClass;.gets_routed_intent:()V",
       })};
-  EXPECT_EQ(classes_to_intent_getters, expected_classes_to_intent_getters);
+  EXPECT_EQ(classes_to_intent_receivers, expected_classes_to_intent_receivers);
 
   auto methods_to_routed_intents = serialize_methods_to_routed_intents(
       intent_routing_analyzer.methods_to_routed_intents());

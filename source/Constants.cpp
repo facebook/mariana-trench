@@ -35,6 +35,22 @@ get_activity_routing_methods() {
   };
 }
 
+std::unordered_map<std::string, ParameterPosition>
+get_service_routing_methods() {
+  return {
+      {"Landroid/content/Context;.startService:(Landroid/content/Intent;)Landroid/content/ComponentName;",
+       1},
+  };
+}
+
+const std::unordered_map<std::string, ParameterPosition>&
+get_intent_receiving_method_names() {
+  static const std::unordered_map<std::string, ParameterPosition>
+      intent_receiving_method_names = {
+          {"onStartCommand", 1}, {"onHandleIntent", 1}};
+  return intent_receiving_method_names;
+}
+
 const std::unordered_map<std::string, ParameterPosition>&
 get_intent_class_setters() {
   static const std::unordered_map<std::string, ParameterPosition> intent_class_setters =

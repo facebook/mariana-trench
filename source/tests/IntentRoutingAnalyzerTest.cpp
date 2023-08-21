@@ -135,9 +135,9 @@ TEST_F(IntentRoutingAnalyzerTest, IntentRoutingConstraint) {
   auto routed_intents_without_hit = methods_to_routed_intents.find(methods[1]);
   EXPECT_EQ(routed_intents_without_hit, methods_to_routed_intents.end());
 
-  const auto& classes_to_intent_getters =
-      intent_routing_analyzer.classes_to_intent_getters();
-  EXPECT_EQ(classes_to_intent_getters.size(), 0);
+  const auto& classes_to_intent_receivers =
+      intent_routing_analyzer.classes_to_intent_receivers();
+  EXPECT_EQ(classes_to_intent_receivers.size(), 0);
 }
 
 TEST_F(IntentRoutingAnalyzerTest, IntentRoutingSetClass) {
@@ -191,9 +191,9 @@ TEST_F(IntentRoutingAnalyzerTest, IntentRoutingSetClass) {
   EXPECT_EQ(routed_intents->second.size(), 1);
   EXPECT_EQ(routed_intents->second[0]->str(), "LRouteTo;");
 
-  const auto& classes_to_intent_getters =
-      intent_routing_analyzer.classes_to_intent_getters();
-  EXPECT_EQ(classes_to_intent_getters.size(), 0);
+  const auto& classes_to_intent_receivers =
+      intent_routing_analyzer.classes_to_intent_receivers();
+  EXPECT_EQ(classes_to_intent_receivers.size(), 0);
 }
 
 TEST_F(IntentRoutingAnalyzerTest, IntentRoutingGetIntent) {
@@ -231,13 +231,47 @@ TEST_F(IntentRoutingAnalyzerTest, IntentRoutingGetIntent) {
   auto routed_intents = methods_to_routed_intents.find(methods[1]);
   EXPECT_EQ(routed_intents, methods_to_routed_intents.end());
 
-  const auto& classes_to_intent_getters =
-      intent_routing_analyzer.classes_to_intent_getters();
-  EXPECT_EQ(classes_to_intent_getters.size(), 1);
+  const auto& classes_to_intent_receivers =
+      intent_routing_analyzer.classes_to_intent_receivers();
+  EXPECT_EQ(classes_to_intent_receivers.size(), 1);
 
   const auto intent_getters =
-      classes_to_intent_getters.find(methods[1]->get_class());
-  EXPECT_NE(intent_getters, classes_to_intent_getters.end());
+      classes_to_intent_receivers.find(methods[1]->get_class());
+  EXPECT_NE(intent_getters, classes_to_intent_receivers.end());
   EXPECT_EQ(intent_getters->second.size(), 1);
-  EXPECT_EQ(intent_getters->second[0], methods[1]);
+  EXPECT_EQ(intent_getters->second[0].first, methods[1]);
+}
+
+TEST_F(IntentRoutingAnalyzerTest, IntentRoutingServiceIntent) {
+  Scope scope;
+  auto dex_methods = redex::create_methods(
+      scope,
+      "LClass;",
+      {
+          R"(
+            (method (public) "LClass;.onStartCommand:(Landroid/content/Intent;II)I"
+            (
+              (return-void)
+            )
+            ))"});
+
+  auto context = test_types(scope);
+  auto methods = get_methods(context, dex_methods);
+  auto intent_routing_analyzer = IntentRoutingAnalyzer::run(context);
+
+  const auto& methods_to_routed_intents =
+      intent_routing_analyzer.methods_to_routed_intents();
+
+  auto routed_intents = methods_to_routed_intents.find(methods[0]);
+  EXPECT_EQ(routed_intents, methods_to_routed_intents.end());
+
+  const auto& classes_to_intent_receivers =
+      intent_routing_analyzer.classes_to_intent_receivers();
+  EXPECT_EQ(classes_to_intent_receivers.size(), 1);
+
+  const auto intent_receivers =
+      classes_to_intent_receivers.find(methods[0]->get_class());
+  EXPECT_NE(intent_receivers, classes_to_intent_receivers.end());
+  EXPECT_EQ(intent_receivers->second.size(), 1);
+  EXPECT_EQ(intent_receivers->second[0].first, methods[0]);
 }
