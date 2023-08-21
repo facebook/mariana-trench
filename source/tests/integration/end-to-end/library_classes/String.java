@@ -56,4 +56,8 @@ public class String implements CharSequence {
       return other;
     }
   }
+
+  public static String format(String format, Object... args) {
+    return "";
+  }
 }

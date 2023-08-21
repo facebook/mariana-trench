@@ -3053,6 +3053,13 @@
   }
 }
 {
+  "method" : "Ljava/lang/String;.format:(Ljava/lang/String;[Ljava/lang/Object;)Ljava/lang/String;",
+  "position" : 
+  {
+    "line" : 60
+  }
+}
+{
   "method" : "Ljava/lang/String;.indexOf:(Ljava/lang/String;)I",
   "position" : 
   {
@@ -3109,6 +3116,51 @@
   }
 }
 {
+  "method" : "Ljava/lang/StringBuilder;.<init>:()V",
+  "position" : 
+  {
+    "line" : 9
+  }
+}
+{
+  "inline_as_getter" : "Argument(0)",
+  "method" : "Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;",
+  "model_generators" : 
+  [
+    "BuilderPatternGenerator"
+  ],
+  "modes" : 
+  [
+    "alias-memory-location-on-invoke"
+  ],
+  "position" : 
+  {
+    "line" : 12
+  },
+  "propagation" : 
+  [
+    {
+      "input" : "Argument(0)",
+      "output" : 
+      [
+        {
+          "kinds" : 
+          [
+            {
+              "call_info" : "Propagation",
+              "kind" : "LocalReturn",
+              "output_paths" : 
+              {
+                "" : 4
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
+{
   "method" : "Ljava/lang/Thread;.<init>:(Ljava/lang/Runnable;)V",
   "position" : 
   {
@@ -3149,6 +3201,20 @@
   "position" : 
   {
     "line" : 24
+  }
+}
+{
+  "method" : "Ljava/text/MessageFormat;.<init>:()V",
+  "position" : 
+  {
+    "line" : 9
+  }
+}
+{
+  "method" : "Ljava/text/MessageFormat;.format:(Ljava/lang/String;[Ljava/lang/Object;)Ljava/lang/String;",
+  "position" : 
+  {
+    "line" : 12
   }
 }
 {

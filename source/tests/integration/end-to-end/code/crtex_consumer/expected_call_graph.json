@@ -329,6 +329,13 @@
       "Ljava/lang/String;.isEmpty:()Z"
     ]
   },
+  "Ljava/lang/StringBuilder;.<init>:()V" : 
+  {
+    "static" : 
+    [
+      "Ljava/lang/Object;.<init>:()V"
+    ]
+  },
   "Ljava/lang/Thread;.<init>:(Ljava/lang/Runnable;)V" : 
   {
     "static" : 
@@ -342,6 +349,13 @@
     [
       "Ljava/lang/Runnable;.run:()V",
       "Ljava/lang/Thread;.run:()V"
+    ]
+  },
+  "Ljava/text/MessageFormat;.<init>:()V" : 
+  {
+    "static" : 
+    [
+      "Ljava/lang/Object;.<init>:()V"
     ]
   },
   "Ljava/util/TreeMap;.<init>:()V" : 
