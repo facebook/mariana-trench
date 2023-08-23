@@ -74,6 +74,8 @@ get_intent_class_setters() {
        {"Landroid/content/Intent;.<init>:(Ljava/lang/String;Landroid/net/Uri;Landroid/content/Context;Ljava/lang/Class;)V",
         4},
        {"Landroid/content/Intent;.setClass:(Landroid/content/Context;Ljava/lang/Class;)Landroid/content/Intent;",
+        2},
+       {"Landroid/content/ComponentName;.<init>:(Landroid/content/Context;Ljava/lang/Class;)V",
         2}};
   return intent_class_setters;
 }
