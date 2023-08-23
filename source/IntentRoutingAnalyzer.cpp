@@ -34,14 +34,13 @@ using InstructionsToRoutedIntents = sparta::
 class IntentRoutingContext final {
  public:
   IntentRoutingContext(
-      const Method* method,
+      ReceivingMethod& method,
       const Types& types,
       const Options& options)
       : routed_intents_({}),
-        method_(method),
+        receiving_method_(method),
         types_(types),
-        routed_intent_root_(),
-        dump_(method->should_be_logged(options)) {}
+        dump_(receiving_method_.method->should_be_logged(options)) {}
 
   DELETE_COPY_CONSTRUCTORS_AND_ASSIGNMENTS(IntentRoutingContext)
 
@@ -53,12 +52,13 @@ class IntentRoutingContext final {
     routed_intents_.set(instruction, routed_intents);
   }
 
-  void mark_as_getting_routed_intent(Root root) {
-    routed_intent_root_ = root;
+  void mark_as_getting_routed_intent(Root root, Component component) {
+    receiving_method_.root = root;
+    receiving_method_.component = component;
   }
 
-  std::optional<Root> method_gets_routed_intent() {
-    return routed_intent_root_;
+  ReceivingMethod method_gets_routed_intent() {
+    return receiving_method_;
   }
 
   const InstructionsToRoutedIntents& instructions_to_routed_intents() {
@@ -66,7 +66,7 @@ class IntentRoutingContext final {
   }
 
   const Method* method() {
-    return method_;
+    return receiving_method_.method;
   }
 
   const Types& types() {
@@ -79,9 +79,8 @@ class IntentRoutingContext final {
 
  private:
   InstructionsToRoutedIntents routed_intents_;
-  const Method* method_;
+  ReceivingMethod receiving_method_;
   const Types& types_;
-  std::optional<Root> routed_intent_root_;
   bool dump_;
 };
 
@@ -149,7 +148,7 @@ class Transfer final : public InstructionAnalyzerBase<
           "Method `{}` calls getIntent()",
           context->method()->show());
       context->mark_as_getting_routed_intent(
-          Root(Root::Kind::CallEffectIntent));
+          Root(Root::Kind::CallEffectIntent), Component::Activity);
     }
     return false;
   }
@@ -193,27 +192,67 @@ class IntentRoutingFixpointIterator final
 
 struct IntentRoutingData {
  public:
-  std::optional<Root> receiving_intent_root;
+  ReceivingMethod receiving_intent_root;
   std::vector<const DexType*> routed_intents;
 };
+
+std::pair<std::optional<Component>, std::optional<ShimParameterPosition>>
+get_position_from_callee(const Method* original_callee) {
+  const auto& activity_routing_methods =
+      constants::get_activity_routing_methods();
+  const auto& service_routing_methods =
+      constants::get_service_routing_methods();
+
+  auto activity_match =
+      activity_routing_methods.find(original_callee->signature());
+  if (activity_match != activity_routing_methods.end()) {
+    return std::pair(Component::Activity, activity_match->second);
+  }
+  auto service_match =
+      service_routing_methods.find(original_callee->signature());
+  if (service_match != service_routing_methods.end()) {
+    return std::pair(Component::Service, service_match->second);
+  }
+
+  auto receiver_methods =
+      constants::get_broadcast_receiver_routing_method_names();
+  auto receiver_match =
+      receiver_methods.find(std::string(original_callee->get_name()));
+  if (receiver_match != receiver_methods.end()) {
+    auto args = original_callee->get_proto()->get_args();
+    if (args->size() > 0 &&
+        args->at(0) == DexType::make_type("Landroid/content/Intent;")) {
+      return std::pair(
+          Component::BroadcastReceiver, ::is_static(original_callee) ? 0 : 1);
+    }
+  }
+
+  return std::pair(std::nullopt, std::nullopt);
+}
 
 IntentRoutingData method_routes_intents_to(
     const Method* method,
     const Types& types,
     const Options& options) {
+  ReceivingMethod receiving_method = {
+      .method = method,
+  };
   auto* code = method->get_code();
   if (code == nullptr) {
-    return {/* receiving_intent_root */ std::nullopt, /* routed_intents */ {}};
+    return {
+        /* receiving_intent_root */ receiving_method, /* routed_intents */ {}};
   }
 
   if (!code->cfg_built()) {
     LOG(1,
         "CFG not built for method: {}. Cannot evaluate routed intents.",
         method->show());
-    return {/* receiving_intent_root */ std::nullopt, /* routed_intents */ {}};
+    return {
+        /* receiving_intent_root */ receiving_method, /* routed_intents */ {}};
   }
 
-  auto context = std::make_unique<IntentRoutingContext>(method, types, options);
+  auto context =
+      std::make_unique<IntentRoutingContext>(receiving_method, types, options);
 
   auto intent_receiving_method_names =
       constants::get_intent_receiving_method_names();
@@ -221,11 +260,12 @@ IntentRoutingData method_routes_intents_to(
       intent_receiving_method_names.find(std::string(method->get_name()));
   if (match != intent_receiving_method_names.end()) {
     auto args = method->get_proto()->get_args();
-    if (args->size() >= match->second &&
-        args->at(match->second - 1) ==
+    if (args->size() >= match->second.first &&
+        args->at(match->second.first - 1) ==
             DexType::get_type("Landroid/content/Intent;")) {
       context->mark_as_getting_routed_intent(
-          Root(Root::Kind::Argument, match->second));
+          Root(Root::Kind::Argument, match->second.first),
+          match->second.second);
     }
   }
 
@@ -245,11 +285,6 @@ IntentRoutingData method_routes_intents_to(
       routed_intents};
 }
 
-static std::unordered_map<std::string, ParameterPosition>
-    activity_routing_methods = constants::get_activity_routing_methods();
-static std::unordered_map<std::string, ParameterPosition>
-    service_routing_methods = constants::get_service_routing_methods();
-
 } // namespace
 
 IntentRoutingAnalyzer IntentRoutingAnalyzer::run(const Context& context) {
@@ -261,19 +296,18 @@ IntentRoutingAnalyzer IntentRoutingAnalyzer::run(const Context& context) {
   auto queue = sparta::work_queue<const Method*>([&](const Method* method) {
     auto intent_routing_data =
         method_routes_intents_to(method, *context.types, *context.options);
-    if (intent_routing_data.receiving_intent_root != std::nullopt) {
+    if (intent_routing_data.receiving_intent_root.root != std::nullopt) {
       LOG(5,
           "Shimming {} as a method that receivings an Intent.",
           method->show());
       auto klass = method->get_class();
-      auto root = *intent_routing_data.receiving_intent_root;
       analyzer.classes_to_intent_receivers_.update(
           klass,
-          [&method, &root](
+          [&intent_routing_data](
               const DexType* /* key */,
-              std::vector<std::pair<const Method*, Root>>& methods,
+              std::vector<ReceivingMethod>& methods,
               bool /* exists */) {
-            methods.emplace_back(method, root);
+            methods.emplace_back(intent_routing_data.receiving_intent_root);
             return methods;
           });
     }
@@ -302,16 +336,10 @@ std::vector<ShimTarget> IntentRoutingAnalyzer::get_intent_routing_targets(
     const Method* caller) const {
   std::vector<ShimTarget> intent_routing_targets;
 
-  // Find if the callee is an Activity launcher (e.g. startActivity)
-  auto intent_parameter_position =
-      activity_routing_methods.find(original_callee->signature());
-  if (intent_parameter_position == activity_routing_methods.end()) {
-    // Find if the callee is an Service launcher (e.g. startService)
-    intent_parameter_position =
-        service_routing_methods.find(original_callee->signature());
-    if (intent_parameter_position == service_routing_methods.end()) {
-      return intent_routing_targets;
-    }
+  // Check if callee is an intent launcher
+  auto [component, position] = get_position_from_callee(original_callee);
+  if (!component || !position) {
+    return intent_routing_targets;
   }
 
   // check if the method handles incoming intents (e.g. getIntent())
@@ -326,10 +354,13 @@ std::vector<ShimTarget> IntentRoutingAnalyzer::get_intent_routing_targets(
       continue;
     }
     for (const auto& intent_receiver : intent_receivers->second) {
+      if (*component != intent_receiver.component ||
+          intent_receiver.root == std::nullopt) {
+        continue;
+      }
       intent_routing_targets.emplace_back(
-          intent_receiver.first,
-          ShimParameterMapping(
-              {{intent_receiver.second, intent_parameter_position->second}}));
+          intent_receiver.method,
+          ShimParameterMapping({{*intent_receiver.root, *position}}));
     }
   }
 

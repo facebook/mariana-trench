@@ -14,6 +14,13 @@
 #include <mariana-trench/Access.h>
 
 namespace marianatrench {
+
+enum class Component {
+  Activity,
+  Service,
+  BroadcastReceiver,
+};
+
 namespace constants {
 
 struct dfa_annotation {
@@ -35,7 +42,9 @@ std::unordered_map<std::string, ParameterPosition>
 get_activity_routing_methods();
 std::unordered_map<std::string, ParameterPosition>
 get_service_routing_methods();
-const std::unordered_map<std::string, ParameterPosition>&
+const std::unordered_set<std::string>&
+get_broadcast_receiver_routing_method_names();
+const std::unordered_map<std::string, std::pair<ParameterPosition, Component>>&
 get_intent_receiving_method_names();
 const std::unordered_map<std::string, ParameterPosition>&
 get_intent_class_setters();

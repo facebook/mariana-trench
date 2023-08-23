@@ -43,6 +43,21 @@ get_service_routing_methods() {
   };
 }
 
+const std::unordered_set<std::string>&
+get_broadcast_receiver_routing_method_names() {
+  static const std::unordered_set<std::string> receiver_routing_method_names = {
+      "sendBroadcast",
+      "sendBroadcastAsUser",
+      "sendBroadcastWithMultiplePermissions",
+      "sendOrderedBroadcast",
+      "sendOrderedBroadcastAsUser",
+      "sendStickyBroadcast",
+      "sendStickyBroadcastAsUser",
+      "sendStickyOrderedBroadcast",
+      "sendStickyOrderedBroadcastAsUser"};
+  return receiver_routing_method_names;
+}
+
 const std::unordered_map<std::string, ParameterPosition>&
 get_intent_receiving_method_names() {
   static const std::unordered_map<std::string, ParameterPosition>

@@ -9,6 +9,7 @@
 
 #include <ConcurrentContainers.h>
 
+#include <mariana-trench/Constants.h>
 #include <mariana-trench/IncludeMacros.h>
 #include <mariana-trench/Method.h>
 #include <mariana-trench/Types.h>
@@ -16,13 +17,18 @@
 
 namespace marianatrench {
 
+struct ReceivingMethod {
+  const Method* method;
+  std::optional<Root> root;
+  std::optional<Component> component;
+};
+
 class IntentRoutingAnalyzer final {
  public:
   using MethodToRoutedIntentClassesMap =
       ConcurrentMap<const Method*, std::vector<const DexType*>>;
-  using ClassesToIntentReceiversMap = ConcurrentMap<
-      const DexType*,
-      std::vector<std::pair<const Method*, Root>>>;
+  using ClassesToIntentReceiversMap =
+      ConcurrentMap<const DexType*, std::vector<ReceivingMethod>>;
 
   explicit IntentRoutingAnalyzer() = default;
 

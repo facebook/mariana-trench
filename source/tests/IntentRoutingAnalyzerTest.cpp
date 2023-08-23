@@ -237,9 +237,10 @@ TEST_F(IntentRoutingAnalyzerTest, IntentRoutingGetIntent) {
 
   const auto intent_getters =
       classes_to_intent_receivers.find(methods[1]->get_class());
+
   EXPECT_NE(intent_getters, classes_to_intent_receivers.end());
   EXPECT_EQ(intent_getters->second.size(), 1);
-  EXPECT_EQ(intent_getters->second[0].first, methods[1]);
+  EXPECT_EQ(intent_getters->second[0].method, methods[1]);
 }
 
 TEST_F(IntentRoutingAnalyzerTest, IntentRoutingServiceIntent) {
@@ -273,5 +274,5 @@ TEST_F(IntentRoutingAnalyzerTest, IntentRoutingServiceIntent) {
       classes_to_intent_receivers.find(methods[0]->get_class());
   EXPECT_NE(intent_receivers, classes_to_intent_receivers.end());
   EXPECT_EQ(intent_receivers->second.size(), 1);
-  EXPECT_EQ(intent_receivers->second[0].first, methods[0]);
+  EXPECT_EQ(intent_receivers->second[0].method, methods[0]);
 }
