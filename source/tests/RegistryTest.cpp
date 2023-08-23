@@ -120,7 +120,8 @@ TEST_F(RegistryTest, JoinWith) {
             ]
           }
         ])"),
-      /* field_models_value */ test::parse_json(R"([])")));
+      /* field_models_value */ test::parse_json(R"([])"),
+      /* literal_models_value */ test::parse_json(R"([])")));
 
   auto model = Model();
 
@@ -142,7 +143,8 @@ TEST_F(RegistryTest, JoinWith) {
             ]
           }
         ])"),
-      /* field_models_value */ test::parse_json(R"([])")));
+      /* field_models_value */ test::parse_json(R"([])"),
+      /* literal_models_value */ test::parse_json(R"([])")));
 
   EXPECT_EQ(registry.get(method).generations().elements().size(), 1);
   EXPECT_EQ(

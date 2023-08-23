@@ -62,6 +62,7 @@ Context test_types(
   context.options = std::make_unique<Options>(
       /* models_path */ std::vector<std::string>{},
       /* field_models_path */ std::vector<std::string>{},
+      /* literal_models_path */ std::vector<std::string>{},
       /* rules_path */ std::vector<std::string>{},
       /* lifecycles_path */ std::vector<std::string>{},
       /* shims_path */ std::vector<std::string>{},

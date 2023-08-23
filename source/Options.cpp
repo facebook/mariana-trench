@@ -95,6 +95,7 @@ namespace program_options = boost::program_options;
 Options::Options(
     const std::vector<std::string>& models_paths,
     const std::vector<std::string>& field_models_paths,
+    const std::vector<std::string>& literal_models_paths,
     const std::vector<std::string>& rules_paths,
     const std::vector<std::string>& lifecycles_paths,
     const std::vector<std::string>& shims_paths,
@@ -114,6 +115,7 @@ Options::Options(
     ExportOriginsMode export_origins_mode)
     : models_paths_(models_paths),
       field_models_paths_(field_models_paths),
+      literal_models_paths_(literal_models_paths),
       rules_paths_(rules_paths),
       lifecycles_paths_(lifecycles_paths),
       shims_paths_(shims_paths),
@@ -156,6 +158,16 @@ Options::Options(const boost::program_options::variables_map& variables) {
   if (!variables["models-paths"].empty()) {
     models_paths_ = parse_paths_list(
         variables["models-paths"].as<std::string>(), /* extension */ ".json");
+  }
+  if (!variables["field-models-paths"].empty()) {
+    field_models_paths_ = parse_paths_list(
+        variables["field-models-paths"].as<std::string>(),
+        /* extension */ ".json");
+  }
+  if (!variables["literal-models-paths"].empty()) {
+    literal_models_paths_ = parse_paths_list(
+        variables["literal-models-paths"].as<std::string>(),
+        /* extension */ ".json");
   }
   rules_paths_ = parse_paths_list(
       variables["rules-paths"].as<std::string>(), /* extension */ ".json");
@@ -295,6 +307,14 @@ void Options::add_options(
       program_options::value<std::string>(),
       "A `;` separated list of models files and directories containing models files.");
   options.add_options()(
+      "field-models-paths",
+      program_options::value<std::string>(),
+      "A `;` separated list of field models files and directories containing field models files.");
+  options.add_options()(
+      "literal-models-paths",
+      program_options::value<std::string>(),
+      "A `;` separated list of literal models files and directories containing literal models files.");
+  options.add_options()(
       "rules-paths",
       program_options::value<std::string>()->required(),
       "A `;` separated list of rules files and directories containing rules files.");
@@ -432,6 +452,10 @@ const std::vector<std::string>& Options::models_paths() const {
 
 const std::vector<std::string>& Options::field_models_paths() const {
   return field_models_paths_;
+}
+
+const std::vector<std::string>& Options::literal_models_paths() const {
+  return literal_models_paths_;
 }
 
 const std::vector<ModelGeneratorConfiguration>&

@@ -43,6 +43,7 @@ Context make_context(const DexStore& store) {
   context.options = std::make_unique<Options>(
       /* models_paths */ std::vector<std::string>{},
       /* field_models_path */ std::vector<std::string>{},
+      /* literal_models_path */ std::vector<std::string>{},
       /* rules_paths */ std::vector<std::string>{},
       /* lifecycles_paths */ std::vector<std::string>{},
       /* shims_path */ std::vector<std::string>{shims_path.native()},
@@ -107,6 +108,7 @@ std::unique_ptr<Options> make_default_options() {
   return std::make_unique<Options>(
       /* models_paths */ std::vector<std::string>{},
       /* field_models_path */ std::vector<std::string>{},
+      /* literal_models_path */ std::vector<std::string>{},
       /* rules_paths */ std::vector<std::string>{},
       /* lifecycles_paths */ std::vector<std::string>{},
       /* shims_path */ std::vector<std::string>{},

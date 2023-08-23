@@ -1201,6 +1201,32 @@ void infer_output_taint(
 
 } // namespace
 
+bool ForwardTaintTransfer::analyze_const_string(
+    MethodContext* context,
+    const IRInstruction* instruction,
+    ForwardTaintEnvironment* environment) {
+  log_instruction(context, instruction);
+
+  const std::string_view literal{instruction->get_string()->str()};
+  const LiteralModel model{context->registry.match_literal(literal)};
+  if (model.empty()) {
+    return false;
+  }
+
+  LOG_OR_DUMP(
+      context,
+      4,
+      "Tainting register {} with {}",
+      k_result_register,
+      model.sources());
+
+  const auto& aliasing = context->aliasing.get(instruction);
+  environment->write(
+      aliasing.result_memory_locations(), model.sources(), UpdateKind::Strong);
+
+  return false;
+}
+
 bool ForwardTaintTransfer::analyze_return(
     MethodContext* context,
     const IRInstruction* instruction,

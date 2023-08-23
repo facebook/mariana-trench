@@ -1,0 +1,29 @@
+[
+  {
+    "name": "FrameworkDiscovery",
+    "code": 1,
+    "description": "FrameworkDiscovery description",
+    "multi_sources": {
+      "regex": [
+        "Regex"
+      ],
+      "aci": [
+        "AttackerControlledInput"
+      ]
+    },
+    "partial_sinks": [
+      "TestSink"
+    ]
+  },
+  {
+    "name": "Secret Logging",
+    "code": 2,
+    "description": "Secret logging detection",
+    "sources": [
+      "GoogleAPIKey"
+    ],
+    "sinks": [
+      "Logging"
+    ]
+  }
+]

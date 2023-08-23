@@ -133,6 +133,13 @@ class ShouldStoreAliasResults final
     *should_store_alias_results = true;
     return false;
   }
+
+  static bool analyze_const_string(
+      const IRInstruction* /* instruction */,
+      bool* should_store_alias_results) {
+    *should_store_alias_results = true;
+    return false;
+  }
 };
 
 bool should_store_alias_results(const IRInstruction* instruction) {

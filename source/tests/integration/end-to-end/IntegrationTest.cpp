@@ -139,6 +139,7 @@ TEST_P(IntegrationTest, CompareFlows) {
         model_generators_file.stem().native());
   }
   auto field_models_file = directory / "/field_models.json";
+  auto literal_models_file = directory / "/literal_models.json";
 
   // Read the configuration for this test case.
   context.options = std::make_unique<Options>(
@@ -147,6 +148,10 @@ TEST_P(IntegrationTest, CompareFlows) {
       /* field_models_path */
       boost::filesystem::exists(field_models_file)
           ? std::vector<std::string>{field_models_file.string()}
+          : std::vector<std::string>{},
+      /* literal_models_path */
+      boost::filesystem::exists(literal_models_file)
+          ? std::vector<std::string>{literal_models_file.string()}
           : std::vector<std::string>{},
       /* rules_paths */
       std::vector<std::string>{(directory / "/rules.json").native()},

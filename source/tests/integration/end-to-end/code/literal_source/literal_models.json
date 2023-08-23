@@ -1,0 +1,20 @@
+[
+  {
+    "pattern": "SELECT \\*.*",
+    "description": "Potential SQL Query",
+    "sources": [
+      {
+        "kind": "Regex"
+      }
+    ]
+  },
+  {
+    "pattern": "AI[0-9A-Z]{16}",
+    "description": "Suspected Google API Key",
+    "sources": [
+      {
+        "kind": "GoogleAPIKey"
+      }
+    ]
+  }
+]

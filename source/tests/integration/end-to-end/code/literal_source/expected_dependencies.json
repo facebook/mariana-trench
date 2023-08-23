@@ -1,0 +1,152 @@
+// @generated
+{
+  "Landroid/app/Activity;.<init>:()V" : 
+  [
+    "Landroidx/fragment/app/FragmentActivity;.<init>:()V"
+  ],
+  "Landroid/content/Context;.<init>:()V" : 
+  [
+    "Landroid/app/Activity;.<init>:()V"
+  ],
+  "Landroid/content/Intent;.<init>:()V" : 
+  [
+    "Landroid/app/Activity;.getIntent:()Landroid/content/Intent;",
+    "Lcom/facebook/base/activity/FragmentBaseActivityUtil;.getDefaultActivityIntent:()Landroid/content/Intent;"
+  ],
+  "Landroid/database/Cursor;.<init>:()V" : 
+  [
+    "Landroid/content/ContentProvider;.query:(Landroid/net/Uri;[Ljava/lang/String;Ljava/lang/String;[Ljava/lang/String;Ljava/lang/String;)Landroid/database/Cursor;"
+  ],
+  "Landroid/net/Uri;.<init>:()V" : 
+  [
+    "Landroid/content/Intent;.getData:()Landroid/net/Uri;",
+    "Landroid/net/Uri;.parse:(Ljava/lang/String;)Landroid/net/Uri;"
+  ],
+  "Landroid/net/Uri;.<init>:(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V" : 
+  [
+    "Landroid/net/Uri$Builder;.build:()Landroid/net/Uri;"
+  ],
+  "Landroid/os/Bundle;.<init>:()V" : 
+  [
+    "Landroid/content/Intent;.getBundleExtra:(Ljava/lang/String;)Landroid/os/Bundle;",
+    "Landroid/content/Intent;.getExtras:()Landroid/os/Bundle;"
+  ],
+  "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V" : 
+  [
+    "Lcom/facebook/marianatrench/integrationtests/RegexSource;.testRegexSourceGoogleApiKeyIssue:()V"
+  ],
+  "Lcom/facebook/marianatrench/integrationtests/RegexSource;.getAttackerControlledInput:()Ljava/lang/String;" : 
+  [
+    "Lcom/facebook/marianatrench/integrationtests/RegexSource;.testRegexSourceIssue:()V",
+    "Lcom/facebook/marianatrench/integrationtests/RegexSource;.testRegexSourceMessageFormatIssue:()V",
+    "Lcom/facebook/marianatrench/integrationtests/RegexSource;.testRegexSourceNoMatchNoIssue:()V",
+    "Lcom/facebook/marianatrench/integrationtests/RegexSource;.testRegexSourceStringBuilderAciFirstIssue:()V",
+    "Lcom/facebook/marianatrench/integrationtests/RegexSource;.testRegexSourceStringBuilderIssue:()V",
+    "Lcom/facebook/marianatrench/integrationtests/RegexSource;.testRegexSourceStringConcatAciFirstIssue:()V",
+    "Lcom/facebook/marianatrench/integrationtests/RegexSource;.testRegexSourceStringConcatIssue:()V",
+    "Lcom/facebook/marianatrench/integrationtests/RegexSource;.testRegexSourceStringFormatIssue:()V"
+  ],
+  "Lcom/facebook/marianatrench/integrationtests/RegexSource;.sink:(Ljava/lang/String;Ljava/lang/String;)V" : 
+  [
+    "Lcom/facebook/marianatrench/integrationtests/RegexSource;.testRegexSourceIssue:()V",
+    "Lcom/facebook/marianatrench/integrationtests/RegexSource;.testRegexSourceNoMatchNoIssue:()V"
+  ],
+  "Lcom/facebook/secure/context/IntentLauncher;.<init>:()V" : 
+  [
+    "Lcom/facebook/secure/context/SecureContextHelperV2;.inAppBrowser:()Lcom/facebook/secure/context/IntentLauncher;",
+    "Lcom/facebook/secure/context/SecureContextHelperV2;.internal:()Lcom/facebook/secure/context/IntentLauncher;"
+  ],
+  "Lcom/facebook/secure/context/SecureContextHelperV2;.<init>:()V" : 
+  [
+    "Lcom/facebook/secure/context/SecureContextHelperV2;.get:()Lcom/facebook/secure/context/SecureContextHelperV2;"
+  ],
+  "Lcom/facebook/user/model/User;.<init>:()V" : 
+  [
+    "Lcom/facebook/auth/datastore/LoggedInUserAuthDataStore;.getLoggedInUser:()Lcom/facebook/user/model/User;"
+  ],
+  "Lcom/instagram/common/analytics/IgAnalyticsLogger;.<init>:()V" : 
+  [
+    "Lcom/instagram/common/analytics/IgAnalyticsLogger;.getInstance:()Lcom/instagram/common/analytics/IgAnalyticsLogger;"
+  ],
+  "Lcom/instagram/common/analytics/intf/AnalyticsEvent;.<init>:()V" : 
+  [
+    "Lcom/instagram/common/analytics/intf/AnalyticsEvent;.obtain:(Ljava/lang/String;)Lcom/instagram/common/analytics/intf/AnalyticsEvent;"
+  ],
+  "Ljava/lang/Object;.<init>:()V" : 
+  [
+    "Landroid/content/ContentProvider;.<init>:()V",
+    "Landroid/content/Context;.<init>:()V",
+    "Landroid/content/Intent;.<init>:()V",
+    "Landroid/content/Intent;.<init>:(Landroid/content/Context;Ljava/lang/Class;)V",
+    "Landroid/content/Intent;.<init>:(Ljava/lang/String;Landroid/net/Uri;)V",
+    "Landroid/database/Cursor;.<init>:()V",
+    "Landroid/location/Location;.<init>:()V",
+    "Landroid/net/Uri$Builder;.<init>:()V",
+    "Landroid/net/Uri;.<init>:()V",
+    "Landroid/net/Uri;.<init>:(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V",
+    "Landroid/os/Bundle;.<init>:()V",
+    "Landroid/text/TextUtils;.<init>:()V",
+    "Landroid/util/Log;.<init>:()V",
+    "Landroid/webkit/WebViewClient;.<init>:()V",
+    "Lcom/facebook/auth/datastore/LoggedInUserAuthDataStore;.<init>:()V",
+    "Lcom/facebook/base/activity/FragmentBaseActivityUtil;.<init>:()V",
+    "Lcom/facebook/content/SecureContextHelper;.<init>:()V",
+    "Lcom/facebook/marianatrench/integrationtests/Origin;.<init>:()V",
+    "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;",
+    "Lcom/facebook/marianatrench/integrationtests/RegexSource;.<init>:()V",
+    "Lcom/facebook/secure/context/IntentLauncher;.<init>:()V",
+    "Lcom/facebook/secure/context/SecureContextHelperV2;.<init>:()V",
+    "Lcom/facebook/user/model/User;.<init>:()V",
+    "Lcom/instagram/common/analytics/IgAnalyticsLogger;.<init>:()V",
+    "Lcom/instagram/common/analytics/intf/AnalyticsEvent;.<init>:()V",
+    "Ljava/lang/Integer;.<init>:()V",
+    "Ljava/lang/String;.<init>:()V",
+    "Ljava/lang/StringBuilder;.<init>:()V",
+    "Ljava/lang/Thread;.<init>:(Ljava/lang/Runnable;)V",
+    "Ljava/text/MessageFormat;.<init>:()V",
+    "Ljava/util/TreeMap;.<init>:()V"
+  ],
+  "Ljava/lang/Object;.toString:()Ljava/lang/String;" : 
+  [
+    "Lcom/facebook/marianatrench/integrationtests/RegexSource;.testRegexSourceStringConcatAciFirstIssue:()V",
+    "Lcom/facebook/marianatrench/integrationtests/RegexSource;.testRegexSourceStringConcatIssue:()V"
+  ],
+  "Ljava/lang/Runnable;.run:()V" : 
+  [
+    "Ljava/lang/Thread;.run:()V"
+  ],
+  "Ljava/lang/String;.concat:(Ljava/lang/String;)Ljava/lang/String;" : 
+  [
+    "Landroid/net/Uri;.toString:()Ljava/lang/String;"
+  ],
+  "Ljava/lang/String;.format:(Ljava/lang/String;[Ljava/lang/Object;)Ljava/lang/String;" : 
+  [
+    "Lcom/facebook/marianatrench/integrationtests/RegexSource;.testRegexSourceStringFormatIssue:()V"
+  ],
+  "Ljava/lang/String;.isEmpty:()Z" : 
+  [
+    "Ljava/lang/String;.concat:(Ljava/lang/String;)Ljava/lang/String;"
+  ],
+  "Ljava/lang/StringBuilder;.<init>:()V" : 
+  [
+    "Lcom/facebook/marianatrench/integrationtests/RegexSource;.testRegexSourceStringBuilderAciFirstIssue:()V",
+    "Lcom/facebook/marianatrench/integrationtests/RegexSource;.testRegexSourceStringBuilderIssue:()V",
+    "Lcom/facebook/marianatrench/integrationtests/RegexSource;.testRegexSourceStringConcatAciFirstIssue:()V",
+    "Lcom/facebook/marianatrench/integrationtests/RegexSource;.testRegexSourceStringConcatIssue:()V"
+  ],
+  "Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;" : 
+  [
+    "Lcom/facebook/marianatrench/integrationtests/RegexSource;.testRegexSourceStringBuilderAciFirstIssue:()V",
+    "Lcom/facebook/marianatrench/integrationtests/RegexSource;.testRegexSourceStringBuilderIssue:()V",
+    "Lcom/facebook/marianatrench/integrationtests/RegexSource;.testRegexSourceStringConcatAciFirstIssue:()V",
+    "Lcom/facebook/marianatrench/integrationtests/RegexSource;.testRegexSourceStringConcatIssue:()V"
+  ],
+  "Ljava/lang/Thread;.run:()V" : 
+  [
+    "Ljava/lang/Thread;.run:()V"
+  ],
+  "Ljava/text/MessageFormat;.format:(Ljava/lang/String;[Ljava/lang/Object;)Ljava/lang/String;" : 
+  [
+    "Lcom/facebook/marianatrench/integrationtests/RegexSource;.testRegexSourceMessageFormatIssue:()V"
+  ]
+}
