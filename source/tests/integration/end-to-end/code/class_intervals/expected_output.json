@@ -1442,6 +1442,476 @@
   }
 }
 {
+  "method" : "Lcom/facebook/marianatrench/integrationtests/ClassIntervalDetails$Base;.<init>:(Lcom/facebook/marianatrench/integrationtests/ClassIntervalDetails;)V",
+  "position" : 
+  {
+    "line" : 14,
+    "path" : "ClassIntervalDetails.java"
+  },
+  "propagation" : 
+  [
+    {
+      "input" : "Argument(1)",
+      "output" : 
+      [
+        {
+          "kinds" : 
+          [
+            {
+              "call_info" : "Propagation",
+              "kind" : "LocalArgument(0)",
+              "output_paths" : 
+              {
+                ".this$0" : 3
+              }
+            }
+          ],
+          "local_features" : 
+          {
+            "always_features" : 
+            [
+              "via-inner-class-this"
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}
+{
+  "generations" : 
+  [
+    {
+      "port" : "Return",
+      "taint" : 
+      [
+        {
+          "kinds" : 
+          [
+            {
+              "call_info" : "Origin",
+              "callee_interval" : 
+              [
+                42,
+                45
+              ],
+              "kind" : "Source",
+              "origins" : 
+              [
+                "Lcom/facebook/marianatrench/integrationtests/ClassIntervalDetails$Base;.source:()Ljava/lang/Object;"
+              ],
+              "preserves_type_context" : true
+            }
+          ],
+          "origin" : 
+          {
+            "method" : "Lcom/facebook/marianatrench/integrationtests/ClassIntervalDetails$Base;.source:()Ljava/lang/Object;",
+            "position" : 
+            {
+              "line" : 24,
+              "path" : "ClassIntervalDetails.java"
+            }
+          }
+        }
+      ]
+    }
+  ],
+  "method" : "Lcom/facebook/marianatrench/integrationtests/ClassIntervalDetails$Base;.hop1Base:()Ljava/lang/Object;",
+  "position" : 
+  {
+    "line" : 23,
+    "path" : "ClassIntervalDetails.java"
+  }
+}
+{
+  "generations" : 
+  [
+    {
+      "port" : "Return",
+      "taint" : 
+      [
+        {
+          "call" : 
+          {
+            "port" : "Return",
+            "position" : 
+            {
+              "line" : 30,
+              "path" : "ClassIntervalDetails.java"
+            },
+            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/ClassIntervalDetails$Base;.hop1Base:()Ljava/lang/Object;"
+          },
+          "kinds" : 
+          [
+            {
+              "call_info" : "CallSite",
+              "callee_interval" : 
+              [
+                42,
+                45
+              ],
+              "distance" : 1,
+              "kind" : "Source",
+              "origins" : 
+              [
+                "Lcom/facebook/marianatrench/integrationtests/ClassIntervalDetails$Base;.source:()Ljava/lang/Object;"
+              ],
+              "preserves_type_context" : true
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "method" : "Lcom/facebook/marianatrench/integrationtests/ClassIntervalDetails$Base;.hop2Base:()Ljava/lang/Object;",
+  "position" : 
+  {
+    "line" : 29,
+    "path" : "ClassIntervalDetails.java"
+  }
+}
+{
+  "generations" : 
+  [
+    {
+      "port" : "Return",
+      "taint" : 
+      [
+        {
+          "kinds" : 
+          [
+            {
+              "call_info" : "Declaration",
+              "kind" : "Source",
+              "origins" : 
+              [
+                "Lcom/facebook/marianatrench/integrationtests/ClassIntervalDetails$Base;.source:()Ljava/lang/Object;"
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "method" : "Lcom/facebook/marianatrench/integrationtests/ClassIntervalDetails$Base;.source:()Ljava/lang/Object;",
+  "position" : 
+  {
+    "line" : 17,
+    "path" : "ClassIntervalDetails.java"
+  }
+}
+{
+  "method" : "Lcom/facebook/marianatrench/integrationtests/ClassIntervalDetails$Derived;.<init>:(Lcom/facebook/marianatrench/integrationtests/ClassIntervalDetails;)V",
+  "position" : 
+  {
+    "line" : 33,
+    "path" : "ClassIntervalDetails.java"
+  },
+  "propagation" : 
+  [
+    {
+      "input" : "Argument(1)",
+      "output" : 
+      [
+        {
+          "kinds" : 
+          [
+            {
+              "call_info" : "Propagation",
+              "kind" : "LocalArgument(0)",
+              "output_paths" : 
+              {
+                ".this$0" : 3
+              }
+            }
+          ],
+          "local_features" : 
+          {
+            "always_features" : 
+            [
+              "via-inner-class-this"
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}
+{
+  "generations" : 
+  [
+    {
+      "port" : "Return",
+      "taint" : 
+      [
+        {
+          "kinds" : 
+          [
+            {
+              "call_info" : "Origin",
+              "callee_interval" : 
+              [
+                43,
+                44
+              ],
+              "kind" : "Source",
+              "origins" : 
+              [
+                "Lcom/facebook/marianatrench/integrationtests/ClassIntervalDetails$Base;.source:()Ljava/lang/Object;"
+              ],
+              "preserves_type_context" : true
+            }
+          ],
+          "origin" : 
+          {
+            "method" : "Lcom/facebook/marianatrench/integrationtests/ClassIntervalDetails$Base;.source:()Ljava/lang/Object;",
+            "position" : 
+            {
+              "line" : 38,
+              "path" : "ClassIntervalDetails.java"
+            }
+          }
+        }
+      ]
+    }
+  ],
+  "method" : "Lcom/facebook/marianatrench/integrationtests/ClassIntervalDetails$Derived;.hop1Derived:()Ljava/lang/Object;",
+  "position" : 
+  {
+    "line" : 37,
+    "path" : "ClassIntervalDetails.java"
+  }
+}
+{
+  "generations" : 
+  [
+    {
+      "port" : "Return",
+      "taint" : 
+      [
+        {
+          "call" : 
+          {
+            "port" : "Return",
+            "position" : 
+            {
+              "line" : 45,
+              "path" : "ClassIntervalDetails.java"
+            },
+            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/ClassIntervalDetails$Base;.hop1Base:()Ljava/lang/Object;"
+          },
+          "kinds" : 
+          [
+            {
+              "call_info" : "CallSite",
+              "callee_interval" : 
+              [
+                43,
+                44
+              ],
+              "distance" : 1,
+              "kind" : "Source",
+              "origins" : 
+              [
+                "Lcom/facebook/marianatrench/integrationtests/ClassIntervalDetails$Base;.source:()Ljava/lang/Object;"
+              ],
+              "preserves_type_context" : true
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "method" : "Lcom/facebook/marianatrench/integrationtests/ClassIntervalDetails$Derived;.hop2DerivedViaHop1Base:()Ljava/lang/Object;",
+  "position" : 
+  {
+    "line" : 44,
+    "path" : "ClassIntervalDetails.java"
+  }
+}
+{
+  "method" : "Lcom/facebook/marianatrench/integrationtests/ClassIntervalDetails$Unrelated;.<init>:(Lcom/facebook/marianatrench/integrationtests/ClassIntervalDetails;)V",
+  "position" : 
+  {
+    "line" : 48,
+    "path" : "ClassIntervalDetails.java"
+  },
+  "propagation" : 
+  [
+    {
+      "input" : "Argument(1)",
+      "output" : 
+      [
+        {
+          "kinds" : 
+          [
+            {
+              "call_info" : "Propagation",
+              "kind" : "LocalArgument(0)",
+              "output_paths" : 
+              {
+                ".this$0" : 3
+              }
+            }
+          ],
+          "local_features" : 
+          {
+            "always_features" : 
+            [
+              "via-inner-class-this"
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}
+{
+  "generations" : 
+  [
+    {
+      "port" : "Return",
+      "taint" : 
+      [
+        {
+          "kinds" : 
+          [
+            {
+              "call_info" : "Origin",
+              "callee_interval" : 
+              [
+                46,
+                47
+              ],
+              "kind" : "Source",
+              "origins" : 
+              [
+                "Lcom/facebook/marianatrench/integrationtests/ClassIntervalDetails$Base;.source:()Ljava/lang/Object;"
+              ],
+              "preserves_type_context" : true
+            }
+          ],
+          "origin" : 
+          {
+            "method" : "Lcom/facebook/marianatrench/integrationtests/ClassIntervalDetails$Base;.source:()Ljava/lang/Object;",
+            "position" : 
+            {
+              "line" : 53,
+              "path" : "ClassIntervalDetails.java"
+            }
+          }
+        }
+      ]
+    }
+  ],
+  "method" : "Lcom/facebook/marianatrench/integrationtests/ClassIntervalDetails$Unrelated;.hop1ViaReceiverBase:(Lcom/facebook/marianatrench/integrationtests/ClassIntervalDetails$Base;)Ljava/lang/Object;",
+  "position" : 
+  {
+    "line" : 52,
+    "path" : "ClassIntervalDetails.java"
+  }
+}
+{
+  "generations" : 
+  [
+    {
+      "port" : "Return",
+      "taint" : 
+      [
+        {
+          "kinds" : 
+          [
+            {
+              "call_info" : "Origin",
+              "callee_interval" : 
+              [
+                46,
+                47
+              ],
+              "kind" : "Source",
+              "origins" : 
+              [
+                "Lcom/facebook/marianatrench/integrationtests/ClassIntervalDetails$Base;.source:()Ljava/lang/Object;"
+              ],
+              "preserves_type_context" : true
+            }
+          ],
+          "origin" : 
+          {
+            "method" : "Lcom/facebook/marianatrench/integrationtests/ClassIntervalDetails$Base;.source:()Ljava/lang/Object;",
+            "position" : 
+            {
+              "line" : 59,
+              "path" : "ClassIntervalDetails.java"
+            }
+          }
+        }
+      ]
+    }
+  ],
+  "method" : "Lcom/facebook/marianatrench/integrationtests/ClassIntervalDetails$Unrelated;.hop1ViaReceiverDerived:(Lcom/facebook/marianatrench/integrationtests/ClassIntervalDetails$Derived;)Ljava/lang/Object;",
+  "position" : 
+  {
+    "line" : 58,
+    "path" : "ClassIntervalDetails.java"
+  }
+}
+{
+  "generations" : 
+  [
+    {
+      "port" : "Return",
+      "taint" : 
+      [
+        {
+          "call" : 
+          {
+            "port" : "Return",
+            "position" : 
+            {
+              "line" : 67,
+              "path" : "ClassIntervalDetails.java"
+            },
+            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/ClassIntervalDetails$Unrelated;.hop1ViaReceiverBase:(Lcom/facebook/marianatrench/integrationtests/ClassIntervalDetails$Base;)Ljava/lang/Object;"
+          },
+          "kinds" : 
+          [
+            {
+              "call_info" : "CallSite",
+              "callee_interval" : 
+              [
+                46,
+                47
+              ],
+              "distance" : 1,
+              "kind" : "Source",
+              "origins" : 
+              [
+                "Lcom/facebook/marianatrench/integrationtests/ClassIntervalDetails$Base;.source:()Ljava/lang/Object;"
+              ],
+              "preserves_type_context" : true
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "method" : "Lcom/facebook/marianatrench/integrationtests/ClassIntervalDetails$Unrelated;.hop2ViaUnrelated:()Ljava/lang/Object;",
+  "position" : 
+  {
+    "line" : 66,
+    "path" : "ClassIntervalDetails.java"
+  }
+}
+{
+  "method" : "Lcom/facebook/marianatrench/integrationtests/ClassIntervalDetails;.<init>:()V",
+  "position" : 
+  {
+    "line" : 13,
+    "path" : "ClassIntervalDetails.java"
+  }
+}
+{
   "method" : "Lcom/facebook/marianatrench/integrationtests/Origin;.<init>:()V",
   "position" : 
   {
@@ -1615,8 +2085,8 @@
               "call_info" : "CallSite",
               "callee_interval" : 
               [
-                45,
-                46
+                53,
+                54
               ],
               "distance" : 1,
               "kind" : "Sink",
@@ -1645,8 +2115,8 @@
               "call_info" : "CallSite",
               "callee_interval" : 
               [
-                47,
-                48
+                55,
+                56
               ],
               "distance" : 1,
               "kind" : "Sink2",
@@ -1698,8 +2168,8 @@
               "call_info" : "CallSite",
               "callee_interval" : 
               [
-                45,
-                46
+                53,
+                54
               ],
               "distance" : 1,
               "kind" : "Source",
@@ -1728,8 +2198,8 @@
               "call_info" : "CallSite",
               "callee_interval" : 
               [
-                47,
-                48
+                55,
+                56
               ],
               "distance" : 1,
               "kind" : "Source2",
@@ -1808,8 +2278,8 @@
               "call_info" : "Origin",
               "callee_interval" : 
               [
-                45,
-                46
+                53,
+                54
               ],
               "kind" : "Sink",
               "origins" : 
@@ -1847,8 +2317,8 @@
               "call_info" : "Origin",
               "callee_interval" : 
               [
-                45,
-                46
+                53,
+                54
               ],
               "kind" : "Source",
               "origins" : 
@@ -1995,8 +2465,8 @@
               "call_info" : "Origin",
               "callee_interval" : 
               [
-                47,
-                48
+                55,
+                56
               ],
               "kind" : "Sink2",
               "origins" : 
@@ -2034,8 +2504,8 @@
               "call_info" : "Origin",
               "callee_interval" : 
               [
-                47,
-                48
+                55,
+                56
               ],
               "kind" : "Source2",
               "origins" : 
@@ -2132,8 +2602,8 @@
               "call_info" : "CallSite",
               "callee_interval" : 
               [
-                45,
-                46
+                53,
+                54
               ],
               "distance" : 2,
               "kind" : "Sink",
@@ -2173,8 +2643,8 @@
               "call_info" : "CallSite",
               "callee_interval" : 
               [
-                45,
-                46
+                53,
+                54
               ],
               "distance" : 2,
               "kind" : "Source",

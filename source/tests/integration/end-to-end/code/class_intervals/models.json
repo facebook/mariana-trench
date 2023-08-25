@@ -34,5 +34,14 @@
         "port": "Argument(1)"
       }
     ]
+  },
+  {
+    "method": "Lcom/facebook/marianatrench/integrationtests/ClassIntervalDetails$Base;.source:()Ljava/lang/Object;",
+    "generations": [
+      {
+        "kind": "Source",
+        "port": "Return"
+      }
+    ]
   }
 ]

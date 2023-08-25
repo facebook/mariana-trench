@@ -16,6 +16,10 @@
       "Lcom/facebook/marianatrench/integrationtests/Basic$Derived1;",
       "Lcom/facebook/marianatrench/integrationtests/Basic$Derived2;"
     ],
+    "Lcom/facebook/marianatrench/integrationtests/ClassIntervalDetails$Base;" : 
+    [
+      "Lcom/facebook/marianatrench/integrationtests/ClassIntervalDetails$Derived;"
+    ],
     "Lcom/facebook/marianatrench/integrationtests/PropagateIntervals$Base;" : 
     [
       "Lcom/facebook/marianatrench/integrationtests/PropagateIntervals$Derived1;",

@@ -297,6 +297,94 @@
       "Ljava/lang/Object;.<init>:()V"
     ]
   },
+  "Lcom/facebook/marianatrench/integrationtests/ClassIntervalDetails$Base;.<init>:(Lcom/facebook/marianatrench/integrationtests/ClassIntervalDetails;)V" : 
+  {
+    "static" : 
+    [
+      "Ljava/lang/Object;.<init>:()V"
+    ]
+  },
+  "Lcom/facebook/marianatrench/integrationtests/ClassIntervalDetails$Base;.hop1Base:()Ljava/lang/Object;" : 
+  {
+    "virtual" : 
+    [
+      "Lcom/facebook/marianatrench/integrationtests/ClassIntervalDetails$Base;.source:()Ljava/lang/Object;"
+    ]
+  },
+  "Lcom/facebook/marianatrench/integrationtests/ClassIntervalDetails$Base;.hop2Base:()Ljava/lang/Object;" : 
+  {
+    "virtual" : 
+    [
+      "Lcom/facebook/marianatrench/integrationtests/ClassIntervalDetails$Base;.hop1Base:()Ljava/lang/Object;"
+    ]
+  },
+  "Lcom/facebook/marianatrench/integrationtests/ClassIntervalDetails$Base;.source:()Ljava/lang/Object;" : 
+  {
+    "static" : 
+    [
+      "Ljava/lang/Object;.<init>:()V"
+    ]
+  },
+  "Lcom/facebook/marianatrench/integrationtests/ClassIntervalDetails$Derived;.<init>:(Lcom/facebook/marianatrench/integrationtests/ClassIntervalDetails;)V" : 
+  {
+    "static" : 
+    [
+      "Lcom/facebook/marianatrench/integrationtests/ClassIntervalDetails$Base;.<init>:(Lcom/facebook/marianatrench/integrationtests/ClassIntervalDetails;)V"
+    ]
+  },
+  "Lcom/facebook/marianatrench/integrationtests/ClassIntervalDetails$Derived;.hop1Derived:()Ljava/lang/Object;" : 
+  {
+    "virtual" : 
+    [
+      "Lcom/facebook/marianatrench/integrationtests/ClassIntervalDetails$Base;.source:()Ljava/lang/Object;"
+    ]
+  },
+  "Lcom/facebook/marianatrench/integrationtests/ClassIntervalDetails$Derived;.hop2DerivedViaHop1Base:()Ljava/lang/Object;" : 
+  {
+    "virtual" : 
+    [
+      "Lcom/facebook/marianatrench/integrationtests/ClassIntervalDetails$Base;.hop1Base:()Ljava/lang/Object;"
+    ]
+  },
+  "Lcom/facebook/marianatrench/integrationtests/ClassIntervalDetails$Unrelated;.<init>:(Lcom/facebook/marianatrench/integrationtests/ClassIntervalDetails;)V" : 
+  {
+    "static" : 
+    [
+      "Ljava/lang/Object;.<init>:()V"
+    ]
+  },
+  "Lcom/facebook/marianatrench/integrationtests/ClassIntervalDetails$Unrelated;.hop1ViaReceiverBase:(Lcom/facebook/marianatrench/integrationtests/ClassIntervalDetails$Base;)Ljava/lang/Object;" : 
+  {
+    "virtual" : 
+    [
+      "Lcom/facebook/marianatrench/integrationtests/ClassIntervalDetails$Base;.source:()Ljava/lang/Object;"
+    ]
+  },
+  "Lcom/facebook/marianatrench/integrationtests/ClassIntervalDetails$Unrelated;.hop1ViaReceiverDerived:(Lcom/facebook/marianatrench/integrationtests/ClassIntervalDetails$Derived;)Ljava/lang/Object;" : 
+  {
+    "virtual" : 
+    [
+      "Lcom/facebook/marianatrench/integrationtests/ClassIntervalDetails$Base;.source:()Ljava/lang/Object;"
+    ]
+  },
+  "Lcom/facebook/marianatrench/integrationtests/ClassIntervalDetails$Unrelated;.hop2ViaUnrelated:()Ljava/lang/Object;" : 
+  {
+    "static" : 
+    [
+      "Lcom/facebook/marianatrench/integrationtests/ClassIntervalDetails$Base;.<init>:(Lcom/facebook/marianatrench/integrationtests/ClassIntervalDetails;)V"
+    ],
+    "virtual" : 
+    [
+      "Lcom/facebook/marianatrench/integrationtests/ClassIntervalDetails$Unrelated;.hop1ViaReceiverBase:(Lcom/facebook/marianatrench/integrationtests/ClassIntervalDetails$Base;)Ljava/lang/Object;"
+    ]
+  },
+  "Lcom/facebook/marianatrench/integrationtests/ClassIntervalDetails;.<init>:()V" : 
+  {
+    "static" : 
+    [
+      "Ljava/lang/Object;.<init>:()V"
+    ]
+  },
   "Lcom/facebook/marianatrench/integrationtests/Origin;.<init>:()V" : 
   {
     "static" : 

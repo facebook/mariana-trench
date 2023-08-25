@@ -746,8 +746,7 @@ TEST_F(KindFramesTest, PropagateIntervals) {
     auto frames = KindFrames{
         // When preserves_type_context=true, the frame's interval should be
         // intersected with the class_interval_context to get the final
-        // propagated
-        // interval.
+        // propagated interval.
         test::make_taint_config(
             test_kind_one,
             test::FrameProperties{
