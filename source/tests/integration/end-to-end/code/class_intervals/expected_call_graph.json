@@ -412,6 +412,93 @@
       "Ljava/lang/Object;.<init>:()V"
     ]
   },
+  "Lcom/facebook/marianatrench/integrationtests/IntervalsForPropagations$Base;.<init>:(Lcom/facebook/marianatrench/integrationtests/IntervalsForPropagations;)V" : 
+  {
+    "static" : 
+    [
+      "Ljava/lang/Object;.<init>:()V"
+    ]
+  },
+  "Lcom/facebook/marianatrench/integrationtests/IntervalsForPropagations$Base;.polymorphicPropagation:(Ljava/lang/Object;)Ljava/lang/Object;" : 
+  {
+    "virtual" : 
+    [
+      "Lcom/facebook/marianatrench/integrationtests/IntervalsForPropagations$Base;.maybePropagation:(Ljava/lang/Object;)Ljava/lang/Object;",
+      "Lcom/facebook/marianatrench/integrationtests/IntervalsForPropagations$DerivedWithPropagation;.maybePropagation:(Ljava/lang/Object;)Ljava/lang/Object;",
+      "Lcom/facebook/marianatrench/integrationtests/IntervalsForPropagations$DerivedWithoutPropagation;.maybePropagation:(Ljava/lang/Object;)Ljava/lang/Object;"
+    ]
+  },
+  "Lcom/facebook/marianatrench/integrationtests/IntervalsForPropagations$DerivedWithPropagation;.<init>:(Lcom/facebook/marianatrench/integrationtests/IntervalsForPropagations;)V" : 
+  {
+    "static" : 
+    [
+      "Lcom/facebook/marianatrench/integrationtests/IntervalsForPropagations$Base;.<init>:(Lcom/facebook/marianatrench/integrationtests/IntervalsForPropagations;)V"
+    ]
+  },
+  "Lcom/facebook/marianatrench/integrationtests/IntervalsForPropagations$DerivedWithoutPropagation;.<init>:(Lcom/facebook/marianatrench/integrationtests/IntervalsForPropagations;)V" : 
+  {
+    "static" : 
+    [
+      "Lcom/facebook/marianatrench/integrationtests/IntervalsForPropagations$Base;.<init>:(Lcom/facebook/marianatrench/integrationtests/IntervalsForPropagations;)V"
+    ]
+  },
+  "Lcom/facebook/marianatrench/integrationtests/IntervalsForPropagations$DerivedWithoutPropagation;.maybePropagation:(Ljava/lang/Object;)Ljava/lang/Object;" : 
+  {
+    "static" : 
+    [
+      "Ljava/lang/Object;.<init>:()V"
+    ]
+  },
+  "Lcom/facebook/marianatrench/integrationtests/IntervalsForPropagations$Unrelated;.<init>:(Lcom/facebook/marianatrench/integrationtests/IntervalsForPropagations;)V" : 
+  {
+    "static" : 
+    [
+      "Ljava/lang/Object;.<init>:()V"
+    ]
+  },
+  "Lcom/facebook/marianatrench/integrationtests/IntervalsForPropagations$Unrelated;.issueViaBase:(Lcom/facebook/marianatrench/integrationtests/IntervalsForPropagations$Base;)V" : 
+  {
+    "static" : 
+    [
+      "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
+      "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;"
+    ],
+    "virtual" : 
+    [
+      "Lcom/facebook/marianatrench/integrationtests/IntervalsForPropagations$Base;.polymorphicPropagation:(Ljava/lang/Object;)Ljava/lang/Object;"
+    ]
+  },
+  "Lcom/facebook/marianatrench/integrationtests/IntervalsForPropagations$Unrelated;.issueViaDerived:(Lcom/facebook/marianatrench/integrationtests/IntervalsForPropagations$DerivedWithPropagation;)V" : 
+  {
+    "static" : 
+    [
+      "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
+      "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;"
+    ],
+    "virtual" : 
+    [
+      "Lcom/facebook/marianatrench/integrationtests/IntervalsForPropagations$Base;.polymorphicPropagation:(Ljava/lang/Object;)Ljava/lang/Object;"
+    ]
+  },
+  "Lcom/facebook/marianatrench/integrationtests/IntervalsForPropagations$Unrelated;.noIssue:(Lcom/facebook/marianatrench/integrationtests/IntervalsForPropagations$DerivedWithoutPropagation;)V" : 
+  {
+    "static" : 
+    [
+      "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
+      "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;"
+    ],
+    "virtual" : 
+    [
+      "Lcom/facebook/marianatrench/integrationtests/IntervalsForPropagations$Base;.polymorphicPropagation:(Ljava/lang/Object;)Ljava/lang/Object;"
+    ]
+  },
+  "Lcom/facebook/marianatrench/integrationtests/IntervalsForPropagations;.<init>:()V" : 
+  {
+    "static" : 
+    [
+      "Ljava/lang/Object;.<init>:()V"
+    ]
+  },
   "Lcom/facebook/marianatrench/integrationtests/Origin;.<init>:()V" : 
   {
     "static" : 

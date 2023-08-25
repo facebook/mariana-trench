@@ -128,16 +128,45 @@
   [
     "Lcom/facebook/marianatrench/integrationtests/ClassIntervalDetails$Unrelated;.hop2ViaReceiverBase:(I)Ljava/lang/Object;"
   ],
+  "Lcom/facebook/marianatrench/integrationtests/IntervalsForPropagations$Base;.<init>:(Lcom/facebook/marianatrench/integrationtests/IntervalsForPropagations;)V" : 
+  [
+    "Lcom/facebook/marianatrench/integrationtests/IntervalsForPropagations$DerivedWithPropagation;.<init>:(Lcom/facebook/marianatrench/integrationtests/IntervalsForPropagations;)V",
+    "Lcom/facebook/marianatrench/integrationtests/IntervalsForPropagations$DerivedWithoutPropagation;.<init>:(Lcom/facebook/marianatrench/integrationtests/IntervalsForPropagations;)V"
+  ],
+  "Lcom/facebook/marianatrench/integrationtests/IntervalsForPropagations$Base;.maybePropagation:(Ljava/lang/Object;)Ljava/lang/Object;" : 
+  [
+    "Lcom/facebook/marianatrench/integrationtests/IntervalsForPropagations$Base;.polymorphicPropagation:(Ljava/lang/Object;)Ljava/lang/Object;"
+  ],
+  "Lcom/facebook/marianatrench/integrationtests/IntervalsForPropagations$Base;.polymorphicPropagation:(Ljava/lang/Object;)Ljava/lang/Object;" : 
+  [
+    "Lcom/facebook/marianatrench/integrationtests/IntervalsForPropagations$Unrelated;.issueViaBase:(Lcom/facebook/marianatrench/integrationtests/IntervalsForPropagations$Base;)V",
+    "Lcom/facebook/marianatrench/integrationtests/IntervalsForPropagations$Unrelated;.issueViaDerived:(Lcom/facebook/marianatrench/integrationtests/IntervalsForPropagations$DerivedWithPropagation;)V",
+    "Lcom/facebook/marianatrench/integrationtests/IntervalsForPropagations$Unrelated;.noIssue:(Lcom/facebook/marianatrench/integrationtests/IntervalsForPropagations$DerivedWithoutPropagation;)V"
+  ],
+  "Lcom/facebook/marianatrench/integrationtests/IntervalsForPropagations$DerivedWithPropagation;.maybePropagation:(Ljava/lang/Object;)Ljava/lang/Object;" : 
+  [
+    "Lcom/facebook/marianatrench/integrationtests/IntervalsForPropagations$Base;.polymorphicPropagation:(Ljava/lang/Object;)Ljava/lang/Object;"
+  ],
+  "Lcom/facebook/marianatrench/integrationtests/IntervalsForPropagations$DerivedWithoutPropagation;.maybePropagation:(Ljava/lang/Object;)Ljava/lang/Object;" : 
+  [
+    "Lcom/facebook/marianatrench/integrationtests/IntervalsForPropagations$Base;.polymorphicPropagation:(Ljava/lang/Object;)Ljava/lang/Object;"
+  ],
   "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V" : 
   [
     "Lcom/facebook/marianatrench/integrationtests/Basic$Derived1;.derived1Sink:(Ljava/lang/Object;)V",
     "Lcom/facebook/marianatrench/integrationtests/Basic$Derived2;.potentialSink:(Ljava/lang/Object;)V",
+    "Lcom/facebook/marianatrench/integrationtests/IntervalsForPropagations$Unrelated;.issueViaBase:(Lcom/facebook/marianatrench/integrationtests/IntervalsForPropagations$Base;)V",
+    "Lcom/facebook/marianatrench/integrationtests/IntervalsForPropagations$Unrelated;.issueViaDerived:(Lcom/facebook/marianatrench/integrationtests/IntervalsForPropagations$DerivedWithPropagation;)V",
+    "Lcom/facebook/marianatrench/integrationtests/IntervalsForPropagations$Unrelated;.noIssue:(Lcom/facebook/marianatrench/integrationtests/IntervalsForPropagations$DerivedWithoutPropagation;)V",
     "Lcom/facebook/marianatrench/integrationtests/PropagateIntervals$Derived1;.sink:(Ljava/lang/Object;)V"
   ],
   "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;" : 
   [
     "Lcom/facebook/marianatrench/integrationtests/Basic$Derived1;.derived1Source:()Ljava/lang/Object;",
     "Lcom/facebook/marianatrench/integrationtests/Basic$Derived1;.potentialSource:()Ljava/lang/Object;",
+    "Lcom/facebook/marianatrench/integrationtests/IntervalsForPropagations$Unrelated;.issueViaBase:(Lcom/facebook/marianatrench/integrationtests/IntervalsForPropagations$Base;)V",
+    "Lcom/facebook/marianatrench/integrationtests/IntervalsForPropagations$Unrelated;.issueViaDerived:(Lcom/facebook/marianatrench/integrationtests/IntervalsForPropagations$DerivedWithPropagation;)V",
+    "Lcom/facebook/marianatrench/integrationtests/IntervalsForPropagations$Unrelated;.noIssue:(Lcom/facebook/marianatrench/integrationtests/IntervalsForPropagations$DerivedWithoutPropagation;)V",
     "Lcom/facebook/marianatrench/integrationtests/PropagateIntervals$Derived1;.source:()Ljava/lang/Object;"
   ],
   "Lcom/facebook/marianatrench/integrationtests/PropagateIntervals$Base;.<init>:(Lcom/facebook/marianatrench/integrationtests/PropagateIntervals;)V" : 
@@ -234,6 +263,10 @@
     "Lcom/facebook/marianatrench/integrationtests/ClassIntervalDetails$DerivedSibling;.source:()Ljava/lang/Object;",
     "Lcom/facebook/marianatrench/integrationtests/ClassIntervalDetails$Unrelated;.<init>:(Lcom/facebook/marianatrench/integrationtests/ClassIntervalDetails;)V",
     "Lcom/facebook/marianatrench/integrationtests/ClassIntervalDetails;.<init>:()V",
+    "Lcom/facebook/marianatrench/integrationtests/IntervalsForPropagations$Base;.<init>:(Lcom/facebook/marianatrench/integrationtests/IntervalsForPropagations;)V",
+    "Lcom/facebook/marianatrench/integrationtests/IntervalsForPropagations$DerivedWithoutPropagation;.maybePropagation:(Ljava/lang/Object;)Ljava/lang/Object;",
+    "Lcom/facebook/marianatrench/integrationtests/IntervalsForPropagations$Unrelated;.<init>:(Lcom/facebook/marianatrench/integrationtests/IntervalsForPropagations;)V",
+    "Lcom/facebook/marianatrench/integrationtests/IntervalsForPropagations;.<init>:()V",
     "Lcom/facebook/marianatrench/integrationtests/Origin;.<init>:()V",
     "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;",
     "Lcom/facebook/marianatrench/integrationtests/PropagateIntervals$Base;.<init>:(Lcom/facebook/marianatrench/integrationtests/PropagateIntervals;)V",

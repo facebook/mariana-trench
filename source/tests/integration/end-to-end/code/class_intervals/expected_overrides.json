@@ -29,6 +29,11 @@
     "Lcom/facebook/marianatrench/integrationtests/ClassIntervalDetails$Derived;.source:()Ljava/lang/Object;",
     "Lcom/facebook/marianatrench/integrationtests/ClassIntervalDetails$DerivedSibling;.source:()Ljava/lang/Object;"
   ],
+  "Lcom/facebook/marianatrench/integrationtests/IntervalsForPropagations$Base;.maybePropagation:(Ljava/lang/Object;)Ljava/lang/Object;" : 
+  [
+    "Lcom/facebook/marianatrench/integrationtests/IntervalsForPropagations$DerivedWithPropagation;.maybePropagation:(Ljava/lang/Object;)Ljava/lang/Object;",
+    "Lcom/facebook/marianatrench/integrationtests/IntervalsForPropagations$DerivedWithoutPropagation;.maybePropagation:(Ljava/lang/Object;)Ljava/lang/Object;"
+  ],
   "Lcom/facebook/marianatrench/integrationtests/PropagateIntervals$Base;.sink:(Ljava/lang/Object;)V" : 
   [
     "Lcom/facebook/marianatrench/integrationtests/PropagateIntervals$Derived1;.sink:(Ljava/lang/Object;)V",
