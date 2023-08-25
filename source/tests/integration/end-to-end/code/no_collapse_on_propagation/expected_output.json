@@ -990,11 +990,17 @@
           [
             {
               "call_info" : "Origin",
+              "callee_interval" : 
+              [
+                36,
+                37
+              ],
               "kind" : "Sink",
               "origins" : 
               [
                 "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V"
-              ]
+              ],
+              "preserves_type_context" : true
             }
           ],
           "origin" : 
@@ -1031,11 +1037,17 @@
           [
             {
               "call_info" : "Origin",
+              "callee_interval" : 
+              [
+                36,
+                37
+              ],
               "kind" : "Sink",
               "origins" : 
               [
                 "Landroid/util/Log;.e:(Ljava/lang/String;Ljava/lang/String;)I"
-              ]
+              ],
+              "preserves_type_context" : true
             }
           ],
           "origin" : 
@@ -1161,12 +1173,18 @@
           [
             {
               "call_info" : "CallSite",
+              "callee_interval" : 
+              [
+                36,
+                37
+              ],
               "distance" : 1,
               "kind" : "Sink",
               "origins" : 
               [
                 "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V"
-              ]
+              ],
+              "preserves_type_context" : false
             }
           ]
         }
@@ -1178,11 +1196,17 @@
           [
             {
               "call_info" : "Origin",
+              "callee_interval" : 
+              [
+                7,
+                8
+              ],
               "kind" : "Source",
               "origins" : 
               [
                 "Landroid/content/Intent;.getExtras:()Landroid/os/Bundle;"
-              ]
+              ],
+              "preserves_type_context" : true
             }
           ],
           "local_positions" : 

@@ -917,11 +917,17 @@
           [
             {
               "call_info" : "Origin",
+              "callee_interval" : 
+              [
+                34,
+                35
+              ],
               "kind" : "Sink",
               "origins" : 
               [
                 "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V"
-              ]
+              ],
+              "preserves_type_context" : true
             }
           ],
           "origin" : 
@@ -944,11 +950,17 @@
           [
             {
               "call_info" : "Origin",
+              "callee_interval" : 
+              [
+                34,
+                35
+              ],
               "kind" : "Source",
               "origins" : 
               [
                 "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;"
-              ]
+              ],
+              "preserves_type_context" : true
             }
           ],
           "origin" : 
@@ -981,11 +993,17 @@
           [
             {
               "call_info" : "Origin",
+              "callee_interval" : 
+              [
+                34,
+                35
+              ],
               "kind" : "Sink",
               "origins" : 
               [
                 "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V"
-              ]
+              ],
+              "preserves_type_context" : true
             }
           ],
           "origin" : 
@@ -1008,11 +1026,17 @@
           [
             {
               "call_info" : "Origin",
+              "callee_interval" : 
+              [
+                34,
+                35
+              ],
               "kind" : "Source",
               "origins" : 
               [
                 "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;"
-              ]
+              ],
+              "preserves_type_context" : true
             }
           ],
           "origin" : 
@@ -1045,11 +1069,17 @@
           [
             {
               "call_info" : "Origin",
+              "callee_interval" : 
+              [
+                34,
+                35
+              ],
               "kind" : "Sink",
               "origins" : 
               [
                 "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V"
-              ]
+              ],
+              "preserves_type_context" : true
             }
           ],
           "origin" : 
@@ -1072,11 +1102,17 @@
           [
             {
               "call_info" : "Origin",
+              "callee_interval" : 
+              [
+                34,
+                35
+              ],
               "kind" : "Source",
               "origins" : 
               [
                 "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;"
-              ]
+              ],
+              "preserves_type_context" : true
             }
           ],
           "origin" : 

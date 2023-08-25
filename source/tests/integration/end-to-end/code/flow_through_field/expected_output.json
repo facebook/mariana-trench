@@ -1042,12 +1042,18 @@
           [
             {
               "call_info" : "CallSite",
+              "callee_interval" : 
+              [
+                36,
+                37
+              ],
               "distance" : 1,
               "kind" : "LaunchingComponent",
               "origins" : 
               [
                 "Lcom/facebook/secure/context/IntentLauncher;.launchActivity:(Landroid/content/Intent;Landroid/content/Context;)Z"
-              ]
+              ],
+              "preserves_type_context" : false
             }
           ]
         }
@@ -1067,11 +1073,17 @@
           [
             {
               "call_info" : "Origin",
+              "callee_interval" : 
+              [
+                7,
+                8
+              ],
               "kind" : "ExternalUserInput",
               "origins" : 
               [
                 "Landroid/app/Activity;.getIntent:()Landroid/content/Intent;"
-              ]
+              ],
+              "preserves_type_context" : true
             }
           ],
           "local_positions" : 
@@ -1149,11 +1161,17 @@
           [
             {
               "call_info" : "Origin",
+              "callee_interval" : 
+              [
+                7,
+                8
+              ],
               "kind" : "ExternalUserInput",
               "origins" : 
               [
                 "Landroid/app/Activity;.getIntent:()Landroid/content/Intent;"
-              ]
+              ],
+              "preserves_type_context" : true
             }
           ],
           "local_positions" : 
@@ -1211,12 +1229,18 @@
           [
             {
               "call_info" : "CallSite",
+              "callee_interval" : 
+              [
+                36,
+                37
+              ],
               "distance" : 1,
               "kind" : "LaunchingComponent",
               "origins" : 
               [
                 "Lcom/facebook/secure/context/IntentLauncher;.launchActivity:(Landroid/content/Intent;Landroid/content/Context;)Z"
-              ]
+              ],
+              "preserves_type_context" : false
             }
           ]
         }
@@ -1228,11 +1252,17 @@
           [
             {
               "call_info" : "Origin",
+              "callee_interval" : 
+              [
+                7,
+                8
+              ],
               "kind" : "ExternalUserInput",
               "origins" : 
               [
                 "Landroid/app/Activity;.getIntent:()Landroid/content/Intent;"
-              ]
+              ],
+              "preserves_type_context" : true
             }
           ],
           "local_positions" : 
@@ -1296,11 +1326,17 @@
           [
             {
               "call_info" : "Origin",
+              "callee_interval" : 
+              [
+                36,
+                37
+              ],
               "kind" : "LaunchingComponent",
               "origins" : 
               [
                 "Lcom/facebook/secure/context/IntentLauncher;.launchActivity:(Landroid/content/Intent;Landroid/content/Context;)Z"
-              ]
+              ],
+              "preserves_type_context" : true
             }
           ],
           "local_positions" : 

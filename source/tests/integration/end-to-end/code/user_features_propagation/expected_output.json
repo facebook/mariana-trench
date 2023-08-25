@@ -993,11 +993,17 @@
                 "source1"
               ],
               "call_info" : "Origin",
+              "callee_interval" : 
+              [
+                36,
+                37
+              ],
               "kind" : "Source1",
               "origins" : 
               [
                 "Lcom/facebook/marianatrench/integrationtests/UserFeaturesPropagation;.source:()Ljava/lang/Object;"
-              ]
+              ],
+              "preserves_type_context" : true
             },
             {
               "always_features" : 
@@ -1005,11 +1011,17 @@
                 "source2"
               ],
               "call_info" : "Origin",
+              "callee_interval" : 
+              [
+                36,
+                37
+              ],
               "kind" : "Source2",
               "origins" : 
               [
                 "Lcom/facebook/marianatrench/integrationtests/UserFeaturesPropagation;.source:()Ljava/lang/Object;"
-              ]
+              ],
+              "preserves_type_context" : true
             }
           ],
           "local_user_features" : 
@@ -1066,12 +1078,18 @@
                 "source1"
               ],
               "call_info" : "CallSite",
+              "callee_interval" : 
+              [
+                36,
+                37
+              ],
               "distance" : 1,
               "kind" : "Source1",
               "origins" : 
               [
                 "Lcom/facebook/marianatrench/integrationtests/UserFeaturesPropagation;.source:()Ljava/lang/Object;"
-              ]
+              ],
+              "preserves_type_context" : true
             },
             {
               "always_features" : 
@@ -1079,12 +1097,18 @@
                 "source2"
               ],
               "call_info" : "CallSite",
+              "callee_interval" : 
+              [
+                36,
+                37
+              ],
               "distance" : 1,
               "kind" : "Source2",
               "origins" : 
               [
                 "Lcom/facebook/marianatrench/integrationtests/UserFeaturesPropagation;.source:()Ljava/lang/Object;"
-              ]
+              ],
+              "preserves_type_context" : true
             }
           ]
         }

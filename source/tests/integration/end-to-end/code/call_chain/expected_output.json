@@ -902,12 +902,18 @@
           [
             {
               "call_info" : "CallSite",
+              "callee_interval" : 
+              [
+                38,
+                39
+              ],
               "distance" : 3,
               "kind" : "CallChainSink",
               "origins" : 
               [
                 "Lcom/facebook/marianatrench/integrationtests/SensitiveApi;.execute:()V"
-              ]
+              ],
+              "preserves_type_context" : false
             }
           ]
         }
@@ -951,12 +957,18 @@
           [
             {
               "call_info" : "CallSite",
+              "callee_interval" : 
+              [
+                36,
+                37
+              ],
               "distance" : 1,
               "kind" : "CallChainSink",
               "origins" : 
               [
                 "Lcom/facebook/marianatrench/integrationtests/SensitiveApi;.execute:()V"
-              ]
+              ],
+              "preserves_type_context" : true
             }
           ]
         }
@@ -982,11 +994,17 @@
           [
             {
               "call_info" : "Origin",
+              "callee_interval" : 
+              [
+                36,
+                37
+              ],
               "kind" : "CallChainSink",
               "origins" : 
               [
                 "Lcom/facebook/marianatrench/integrationtests/SensitiveApi;.execute:()V"
-              ]
+              ],
+              "preserves_type_context" : true
             }
           ],
           "origin" : 
@@ -1039,12 +1057,18 @@
           [
             {
               "call_info" : "CallSite",
+              "callee_interval" : 
+              [
+                36,
+                37
+              ],
               "distance" : 2,
               "kind" : "CallChainSink",
               "origins" : 
               [
                 "Lcom/facebook/marianatrench/integrationtests/SensitiveApi;.execute:()V"
-              ]
+              ],
+              "preserves_type_context" : false
             }
           ]
         }
@@ -1103,12 +1127,18 @@
           [
             {
               "call_info" : "CallSite",
+              "callee_interval" : 
+              [
+                36,
+                37
+              ],
               "distance" : 2,
               "kind" : "CallChainSink",
               "origins" : 
               [
                 "Lcom/facebook/marianatrench/integrationtests/SensitiveApi;.execute:()V"
-              ]
+              ],
+              "preserves_type_context" : false
             }
           ]
         }

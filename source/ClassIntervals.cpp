@@ -51,10 +51,6 @@ ClassIntervals::ClassIntervals(
     const Options& options,
     const DexStoresVector& stores)
     : top_(Interval::top()) {
-  if (!options.enable_class_intervals()) {
-    return;
-  }
-
   ClassHierarchy class_hierarchy;
   for (const auto& scope : DexStoreClassesIterator(stores)) {
     auto store_hierarchy = build_type_hierarchy(scope);

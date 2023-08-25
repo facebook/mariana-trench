@@ -1097,11 +1097,17 @@
           [
             {
               "call_info" : "Origin",
+              "callee_interval" : 
+              [
+                36,
+                37
+              ],
               "kind" : "Logging",
               "origins" : 
               [
                 "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V"
-              ]
+              ],
+              "preserves_type_context" : true
             }
           ],
           "origin" : 
@@ -1157,11 +1163,17 @@
           [
             {
               "call_info" : "Origin",
+              "callee_interval" : 
+              [
+                36,
+                37
+              ],
               "kind" : "Partial:TestSink:aci",
               "origins" : 
               [
                 "Lcom/facebook/marianatrench/integrationtests/RegexSource;.sink:(Ljava/lang/String;Ljava/lang/String;)V"
               ],
+              "preserves_type_context" : true,
               "triggered_rule" : 1
             }
           ],
@@ -1185,11 +1197,17 @@
           [
             {
               "call_info" : "Origin",
+              "callee_interval" : 
+              [
+                36,
+                37
+              ],
               "kind" : "AttackerControlledInput",
               "origins" : 
               [
                 "Lcom/facebook/marianatrench/integrationtests/RegexSource;.getAttackerControlledInput:()Ljava/lang/String;"
-              ]
+              ],
+              "preserves_type_context" : true
             }
           ],
           "origin" : 
@@ -1241,11 +1259,17 @@
                 "via-array"
               ],
               "call_info" : "Origin",
+              "callee_interval" : 
+              [
+                36,
+                37
+              ],
               "kind" : "Partial:TestSink:aci",
               "origins" : 
               [
                 "Ljava/text/MessageFormat;.format:(Ljava/lang/String;[Ljava/lang/Object;)Ljava/lang/String;"
               ],
+              "preserves_type_context" : true,
               "triggered_rule" : 1
             }
           ],
@@ -1269,11 +1293,17 @@
           [
             {
               "call_info" : "Origin",
+              "callee_interval" : 
+              [
+                36,
+                37
+              ],
               "kind" : "AttackerControlledInput",
               "origins" : 
               [
                 "Lcom/facebook/marianatrench/integrationtests/RegexSource;.getAttackerControlledInput:()Ljava/lang/String;"
-              ]
+              ],
+              "preserves_type_context" : true
             }
           ],
           "local_features" : 
@@ -1340,11 +1370,17 @@
           [
             {
               "call_info" : "Origin",
+              "callee_interval" : 
+              [
+                36,
+                37
+              ],
               "kind" : "Partial:TestSink:regex",
               "origins" : 
               [
                 "Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;"
               ],
+              "preserves_type_context" : true,
               "triggered_rule" : 1
             }
           ],
@@ -1401,11 +1437,17 @@
           [
             {
               "call_info" : "Origin",
+              "callee_interval" : 
+              [
+                36,
+                37
+              ],
               "kind" : "Partial:TestSink:aci",
               "origins" : 
               [
                 "Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;"
               ],
+              "preserves_type_context" : true,
               "triggered_rule" : 1
             }
           ],
@@ -1429,11 +1471,17 @@
           [
             {
               "call_info" : "Origin",
+              "callee_interval" : 
+              [
+                36,
+                37
+              ],
               "kind" : "AttackerControlledInput",
               "origins" : 
               [
                 "Lcom/facebook/marianatrench/integrationtests/RegexSource;.getAttackerControlledInput:()Ljava/lang/String;"
-              ]
+              ],
+              "preserves_type_context" : true
             }
           ],
           "origin" : 
@@ -1477,11 +1525,17 @@
           [
             {
               "call_info" : "Origin",
+              "callee_interval" : 
+              [
+                36,
+                37
+              ],
               "kind" : "Partial:TestSink:regex",
               "origins" : 
               [
                 "Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;"
               ],
+              "preserves_type_context" : true,
               "triggered_rule" : 1
             }
           ],
@@ -1538,11 +1592,17 @@
           [
             {
               "call_info" : "Origin",
+              "callee_interval" : 
+              [
+                36,
+                37
+              ],
               "kind" : "Partial:TestSink:aci",
               "origins" : 
               [
                 "Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;"
               ],
+              "preserves_type_context" : true,
               "triggered_rule" : 1
             }
           ],
@@ -1566,11 +1626,17 @@
           [
             {
               "call_info" : "Origin",
+              "callee_interval" : 
+              [
+                36,
+                37
+              ],
               "kind" : "AttackerControlledInput",
               "origins" : 
               [
                 "Lcom/facebook/marianatrench/integrationtests/RegexSource;.getAttackerControlledInput:()Ljava/lang/String;"
-              ]
+              ],
+              "preserves_type_context" : true
             }
           ],
           "origin" : 
@@ -1622,11 +1688,17 @@
                 "via-array"
               ],
               "call_info" : "Origin",
+              "callee_interval" : 
+              [
+                36,
+                37
+              ],
               "kind" : "Partial:TestSink:aci",
               "origins" : 
               [
                 "Ljava/lang/String;.format:(Ljava/lang/String;[Ljava/lang/Object;)Ljava/lang/String;"
               ],
+              "preserves_type_context" : true,
               "triggered_rule" : 1
             }
           ],
@@ -1650,11 +1722,17 @@
           [
             {
               "call_info" : "Origin",
+              "callee_interval" : 
+              [
+                36,
+                37
+              ],
               "kind" : "AttackerControlledInput",
               "origins" : 
               [
                 "Lcom/facebook/marianatrench/integrationtests/RegexSource;.getAttackerControlledInput:()Ljava/lang/String;"
-              ]
+              ],
+              "preserves_type_context" : true
             }
           ],
           "local_features" : 

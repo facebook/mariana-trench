@@ -1264,7 +1264,6 @@ TEST_F(CallPositionFramesTest, FeaturesAndPositions) {
 
 TEST_F(CallPositionFramesTest, Propagate) {
   auto context = test::make_empty_context();
-  context.options = test::make_default_options();
 
   Scope scope;
   auto* one =
@@ -1383,7 +1382,6 @@ TEST_F(CallPositionFramesTest, Propagate) {
 
 TEST_F(CallPositionFramesTest, PropagateDropFrames) {
   auto context = test::make_empty_context();
-  context.options = test::make_default_options();
 
   Scope scope;
   auto* one =

@@ -1075,11 +1075,17 @@
           [
             {
               "call_info" : "Origin",
+              "callee_interval" : 
+              [
+                10,
+                11
+              ],
               "kind" : "LaunchingComponent",
               "origins" : 
               [
                 "Landroid/app/Activity;.startActivity:(Landroid/content/Intent;)V"
-              ]
+              ],
+              "preserves_type_context" : true
             }
           ],
           "origin" : 
@@ -1102,11 +1108,17 @@
           [
             {
               "call_info" : "Origin",
+              "callee_interval" : 
+              [
+                10,
+                11
+              ],
               "kind" : "ExternalUserInput",
               "origins" : 
               [
                 "Landroid/app/Activity;.getIntent:()Landroid/content/Intent;"
-              ]
+              ],
+              "preserves_type_context" : true
             }
           ],
           "origin" : 
@@ -1162,11 +1174,17 @@
           [
             {
               "call_info" : "Origin",
+              "callee_interval" : 
+              [
+                40,
+                41
+              ],
               "kind" : "Sink",
               "origins" : 
               [
                 "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V"
-              ]
+              ],
+              "preserves_type_context" : true
             }
           ],
           "origin" : 
@@ -1189,11 +1207,17 @@
           [
             {
               "call_info" : "Origin",
+              "callee_interval" : 
+              [
+                40,
+                41
+              ],
               "kind" : "Source",
               "origins" : 
               [
                 "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;"
-              ]
+              ],
+              "preserves_type_context" : true
             }
           ],
           "local_features" : 
@@ -1260,11 +1284,17 @@
           [
             {
               "call_info" : "Origin",
+              "callee_interval" : 
+              [
+                7,
+                8
+              ],
               "kind" : "LaunchingComponent",
               "origins" : 
               [
                 "Lcom/facebook/content/SecureContextHelper;.startFacebookActivity:(Landroid/content/Intent;Landroid/content/Context;)V"
-              ]
+              ],
+              "preserves_type_context" : true
             }
           ],
           "origin" : 
@@ -1287,11 +1317,17 @@
           [
             {
               "call_info" : "Origin",
+              "callee_interval" : 
+              [
+                7,
+                8
+              ],
               "kind" : "ExternalUserInput",
               "origins" : 
               [
                 "Landroid/app/Activity;.getIntent:()Landroid/content/Intent;"
-              ]
+              ],
+              "preserves_type_context" : true
             }
           ],
           "local_positions" : 
@@ -1361,11 +1397,17 @@
           [
             {
               "call_info" : "Origin",
+              "callee_interval" : 
+              [
+                42,
+                43
+              ],
               "kind" : "LaunchingComponent",
               "origins" : 
               [
                 "Landroid/app/Activity;.startActivity:(Landroid/content/Intent;)V"
-              ]
+              ],
+              "preserves_type_context" : true
             }
           ],
           "origin" : 
@@ -1388,11 +1430,17 @@
           [
             {
               "call_info" : "Origin",
+              "callee_interval" : 
+              [
+                42,
+                43
+              ],
               "kind" : "ExternalUserInput",
               "origins" : 
               [
                 "Landroid/app/Activity;.getIntent:()Landroid/content/Intent;"
-              ]
+              ],
+              "preserves_type_context" : true
             }
           ],
           "origin" : 
@@ -1437,11 +1485,17 @@
           [
             {
               "call_info" : "Origin",
+              "callee_interval" : 
+              [
+                44,
+                45
+              ],
               "kind" : "Source",
               "origins" : 
               [
                 "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;"
-              ]
+              ],
+              "preserves_type_context" : true
             }
           ],
           "origin" : 
@@ -1490,12 +1544,18 @@
           [
             {
               "call_info" : "CallSite",
+              "callee_interval" : 
+              [
+                44,
+                45
+              ],
               "distance" : 1,
               "kind" : "Source",
               "origins" : 
               [
                 "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;"
-              ]
+              ],
+              "preserves_type_context" : true
             }
           ]
         }
@@ -1540,12 +1600,18 @@
           [
             {
               "call_info" : "CallSite",
+              "callee_interval" : 
+              [
+                44,
+                45
+              ],
               "distance" : 2,
               "kind" : "Sink",
               "origins" : 
               [
                 "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V"
-              ]
+              ],
+              "preserves_type_context" : true
             }
           ]
         }
@@ -1569,12 +1635,18 @@
           [
             {
               "call_info" : "CallSite",
+              "callee_interval" : 
+              [
+                44,
+                45
+              ],
               "distance" : 2,
               "kind" : "Source",
               "origins" : 
               [
                 "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;"
-              ]
+              ],
+              "preserves_type_context" : true
             }
           ]
         }
@@ -1606,11 +1678,17 @@
           [
             {
               "call_info" : "Origin",
+              "callee_interval" : 
+              [
+                44,
+                45
+              ],
               "kind" : "Sink",
               "origins" : 
               [
                 "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V"
-              ]
+              ],
+              "preserves_type_context" : true
             }
           ],
           "origin" : 
@@ -1659,12 +1737,18 @@
           [
             {
               "call_info" : "CallSite",
+              "callee_interval" : 
+              [
+                44,
+                45
+              ],
               "distance" : 1,
               "kind" : "Sink",
               "origins" : 
               [
                 "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V"
-              ]
+              ],
+              "preserves_type_context" : true
             }
           ]
         }
@@ -1736,11 +1820,17 @@
           [
             {
               "call_info" : "Origin",
+              "callee_interval" : 
+              [
+                46,
+                47
+              ],
               "kind" : "LaunchingComponent",
               "origins" : 
               [
                 "Landroid/app/Activity;.startActivity:(Landroid/content/Intent;)V"
-              ]
+              ],
+              "preserves_type_context" : true
             }
           ],
           "origin" : 
@@ -1763,11 +1853,17 @@
           [
             {
               "call_info" : "Origin",
+              "callee_interval" : 
+              [
+                46,
+                47
+              ],
               "kind" : "ExternalUserInput",
               "origins" : 
               [
                 "Landroid/app/Activity;.getIntent:()Landroid/content/Intent;"
-              ]
+              ],
+              "preserves_type_context" : true
             }
           ],
           "origin" : 

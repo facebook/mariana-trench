@@ -17,11 +17,17 @@
               [
                 {
                   "call_info" : "Origin",
+                  "callee_interval" :
+                  [
+                    6,
+                    7
+                  ],
                   "kind" : "TestSource",
                   "origins" :
                   [
                     "LSource;.source:()LData;"
-                  ]
+                  ],
+                  "preserves_type_context" : true
                 }
               ],
               "local_positions" :
@@ -61,11 +67,17 @@
               [
                 {
                   "call_info" : "Origin",
+                  "callee_interval" :
+                  [
+                    6,
+                    7
+                  ],
                   "kind" : "TestSink",
                   "origins" :
                   [
                     "LSink;.sink:(LData;)V"
-                  ]
+                  ],
+                  "preserves_type_context" : true
                 }
               ],
               "origin" :
@@ -86,11 +98,17 @@
               [
                 {
                   "call_info" : "Origin",
+                  "callee_interval" :
+                  [
+                    6,
+                    7
+                  ],
                   "kind" : "TestSource",
                   "origins" :
                   [
                     "LSource;.source:()LData;"
-                  ]
+                  ],
+                  "preserves_type_context" : true
                 }
               ],
               "local_positions" :
@@ -131,11 +149,17 @@
               [
                 {
                   "call_info" : "Origin",
+                  "callee_interval" :
+                  [
+                    6,
+                    7
+                  ],
                   "kind" : "TestSink",
                   "origins" :
                   [
                     "LSink;.sink:(LData;)V"
-                  ]
+                  ],
+                  "preserves_type_context" : true
                 }
               ],
               "origin" :
@@ -156,11 +180,17 @@
               [
                 {
                   "call_info" : "Origin",
+                  "callee_interval" :
+                  [
+                    6,
+                    7
+                  ],
                   "kind" : "TestSource",
                   "origins" :
                   [
                     "LSource;.source:()LData;"
-                  ]
+                  ],
+                  "preserves_type_context" : true
                 }
               ],
               "local_features" :
@@ -206,11 +236,17 @@
               [
                 {
                   "call_info" : "Origin",
+                  "callee_interval" :
+                  [
+                    6,
+                    7
+                  ],
                   "kind" : "TestSink",
                   "origins" :
                   [
                     "LSink;.sink:(LData;)V"
-                  ]
+                  ],
+                  "preserves_type_context" : true
                 }
               ],
               "origin" :
@@ -228,11 +264,17 @@
               [
                 {
                   "call_info" : "Origin",
+                  "callee_interval" :
+                  [
+                    6,
+                    7
+                  ],
                   "kind" : "TestSink",
                   "origins" :
                   [
                     "LSink;.sink:(LData;)V"
-                  ]
+                  ],
+                  "preserves_type_context" : true
                 }
               ],
               "local_features" :
@@ -263,11 +305,17 @@
               [
                 {
                   "call_info" : "Origin",
+                  "callee_interval" :
+                  [
+                    6,
+                    7
+                  ],
                   "kind" : "TestSink",
                   "origins" :
                   [
                     "LSink;.sink:(LData;)V"
-                  ]
+                  ],
+                  "preserves_type_context" : true
                 }
               ],
               "origin" :

@@ -668,7 +668,6 @@ TEST_F(CalleeFramesTest, FeaturesAndPositions) {
 
 TEST_F(CalleeFramesTest, Propagate) {
   auto context = test::make_empty_context();
-  context.options = test::make_default_options();
 
   Scope scope;
   auto* one =

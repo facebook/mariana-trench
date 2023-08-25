@@ -23,11 +23,17 @@
               [
                 {
                   "call_info" : "Origin",
+                  "callee_interval" :
+                  [
+                    6,
+                    7
+                  ],
                   "kind" : "TestSink",
                   "origins" :
                   [
                     "LSink;.sink:(LData;)V"
-                  ]
+                  ],
+                  "preserves_type_context" : true
                 }
               ],
               "origin" :

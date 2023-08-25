@@ -21,29 +21,10 @@ class ClassIntervalsTest : public test::Test {};
 
 Context test_context(const Scope& scope) {
   Context context;
-  context.options = std::make_unique<Options>(
-      /* models_path */ std::vector<std::string>{},
-      /* field_models_path */ std::vector<std::string>{},
-      /* literal_models_path */ std::vector<std::string>{},
-      /* rules_path */ std::vector<std::string>{},
-      /* lifecycles_path */ std::vector<std::string>{},
-      /* shims_path */ std::vector<std::string>{},
-      /* graphql_metadata_paths */ std::string{},
-      /* proguard_configuration_paths */ std::vector<std::string>{},
-      /* sequential */ false,
-      /* skip_source_indexing */ true,
-      /* skip_analysis */ true,
-      /* model_generators_configuration */
-      std::vector<ModelGeneratorConfiguration>{},
-      /* model_generator_search_paths */ std::vector<std::string>{},
-      /* remove_unreachable_code */ false,
-      /* emit_all_via_cast_features */ false,
-      /* source_root_directory */ ".",
-      /* enable_cross_component_analysis */ false,
-      /* enable_class_intervals */ true);
   DexStore store("test_store");
   store.add_classes(scope);
   context.stores = {store};
+  context.options = test::make_default_options();
   context.class_intervals =
       std::make_unique<ClassIntervals>(*context.options, context.stores);
   return context;

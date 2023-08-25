@@ -992,7 +992,6 @@ TEST_F(CalleePortFramesTest, FeaturesAndPositions) {
 
 TEST_F(CalleePortFramesTest, Propagate) {
   auto context = test::make_empty_context();
-  context.options = test::make_default_options();
 
   Scope scope;
   auto* one =
@@ -1157,7 +1156,6 @@ TEST_F(CalleePortFramesTest, Propagate) {
 
 TEST_F(CalleePortFramesTest, PropagateDropFrames) {
   auto context = test::make_empty_context();
-  context.options = test::make_default_options();
 
   Scope scope;
   auto* one =

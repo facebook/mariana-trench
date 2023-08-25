@@ -57,10 +57,6 @@ CallClassIntervalContext get_type_context(
     const MethodContext* context,
     const IRInstruction* instruction,
     bool is_this_call) {
-  if (!context->options.enable_class_intervals()) {
-    return CallClassIntervalContext();
-  }
-
   if (instruction->opcode() != OPCODE_INVOKE_VIRTUAL) {
     // Class intervals only apply to virtual calls.
     return CallClassIntervalContext();

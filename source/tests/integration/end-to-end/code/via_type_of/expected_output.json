@@ -1050,11 +1050,17 @@
           [
             {
               "call_info" : "Origin",
+              "callee_interval" : 
+              [
+                7,
+                8
+              ],
               "kind" : "Sink",
               "origins" : 
               [
                 "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V"
-              ]
+              ],
+              "preserves_type_context" : true
             }
           ],
           "origin" : 
@@ -1077,11 +1083,17 @@
           [
             {
               "call_info" : "Origin",
+              "callee_interval" : 
+              [
+                7,
+                8
+              ],
               "kind" : "Source",
               "origins" : 
               [
                 "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;"
-              ]
+              ],
+              "preserves_type_context" : true
             }
           ],
           "origin" : 
@@ -1134,11 +1146,17 @@
                 "via-type:Lcom/facebook/marianatrench/integrationtests/RecorderActivity;"
               ],
               "call_info" : "Origin",
+              "callee_interval" : 
+              [
+                7,
+                8
+              ],
               "kind" : "Sink",
               "origins" : 
               [
                 "Lcom/facebook/content/SecureContextHelper;.startFacebookActivityForResult:(Landroid/content/Intent;ILandroid/app/Activity;)V"
-              ]
+              ],
+              "preserves_type_context" : true
             }
           ],
           "origin" : 
@@ -1165,11 +1183,17 @@
                 "via-type:Lcom/facebook/marianatrench/integrationtests/TestUri;"
               ],
               "call_info" : "Origin",
+              "callee_interval" : 
+              [
+                7,
+                8
+              ],
               "kind" : "Source",
               "origins" : 
               [
                 "Landroid/content/Intent;.<init>:(Ljava/lang/String;Landroid/net/Uri;)V"
-              ]
+              ],
+              "preserves_type_context" : true
             }
           ],
           "origin" : 

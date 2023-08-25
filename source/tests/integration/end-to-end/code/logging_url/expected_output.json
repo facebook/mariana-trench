@@ -1170,12 +1170,18 @@
           [
             {
               "call_info" : "CallSite",
+              "callee_interval" : 
+              [
+                8,
+                9
+              ],
               "distance" : 1,
               "kind" : "Logging",
               "origins" : 
               [
                 "Lcom/instagram/common/analytics/intf/AnalyticsEvent;.addExtra:(Ljava/lang/String;Ljava/lang/String;)Lcom/instagram/common/analytics/intf/AnalyticsEvent;"
-              ]
+              ],
+              "preserves_type_context" : false
             }
           ],
           "local_positions" : 
@@ -1204,12 +1210,18 @@
           [
             {
               "call_info" : "CallSite",
+              "callee_interval" : 
+              [
+                8,
+                9
+              ],
               "distance" : 1,
               "kind" : "Logging",
               "origins" : 
               [
                 "Lcom/instagram/common/analytics/intf/AnalyticsEvent;.addExtra:(Ljava/lang/String;Ljava/lang/String;)Lcom/instagram/common/analytics/intf/AnalyticsEvent;"
-              ]
+              ],
+              "preserves_type_context" : false
             }
           ],
           "local_positions" : 
@@ -1273,11 +1285,17 @@
           [
             {
               "call_info" : "Origin",
+              "callee_interval" : 
+              [
+                8,
+                9
+              ],
               "kind" : "ExternalUserInput",
               "origins" : 
               [
                 "Landroid/app/Activity;.getIntent:()Landroid/content/Intent;"
-              ]
+              ],
+              "preserves_type_context" : true
             }
           ],
           "origin" : 
@@ -1320,11 +1338,17 @@
           [
             {
               "call_info" : "Origin",
+              "callee_interval" : 
+              [
+                8,
+                9
+              ],
               "kind" : "Logging",
               "origins" : 
               [
                 "Lcom/instagram/common/analytics/intf/AnalyticsEvent;.addExtra:(Ljava/lang/String;Ljava/lang/String;)Lcom/instagram/common/analytics/intf/AnalyticsEvent;"
-              ]
+              ],
+              "preserves_type_context" : true
             }
           ],
           "origin" : 
@@ -1350,11 +1374,17 @@
           [
             {
               "call_info" : "Origin",
+              "callee_interval" : 
+              [
+                8,
+                9
+              ],
               "kind" : "Logging",
               "origins" : 
               [
                 "Lcom/instagram/common/analytics/intf/AnalyticsEvent;.addExtra:(Ljava/lang/String;Ljava/lang/String;)Lcom/instagram/common/analytics/intf/AnalyticsEvent;"
-              ]
+              ],
+              "preserves_type_context" : true
             }
           ],
           "origin" : 
@@ -1730,11 +1760,17 @@
           [
             {
               "call_info" : "Origin",
+              "callee_interval" : 
+              [
+                10,
+                11
+              ],
               "kind" : "Logging",
               "origins" : 
               [
                 "Lcom/instagram/common/analytics/intf/AnalyticsEvent;.addExtra:(Ljava/lang/String;Ljava/lang/String;)Lcom/instagram/common/analytics/intf/AnalyticsEvent;"
-              ]
+              ],
+              "preserves_type_context" : true
             }
           ],
           "origin" : 
@@ -1757,11 +1793,17 @@
           [
             {
               "call_info" : "Origin",
+              "callee_interval" : 
+              [
+                10,
+                11
+              ],
               "kind" : "ExternalUserInput",
               "origins" : 
               [
                 "Landroid/app/Activity;.getIntent:()Landroid/content/Intent;"
-              ]
+              ],
+              "preserves_type_context" : true
             }
           ],
           "local_positions" : 

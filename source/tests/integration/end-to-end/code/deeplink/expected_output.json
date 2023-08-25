@@ -1692,6 +1692,11 @@
           [
             {
               "call_info" : "CallSite",
+              "callee_interval" : 
+              [
+                46,
+                47
+              ],
               "distance" : 5,
               "kind" : "LaunchingComponent",
               "origins" : 
@@ -1700,7 +1705,8 @@
                 "Lcom/facebook/content/SecureContextHelper;.startFacebookActivityForResult:(Landroid/content/Intent;ILandroid/app/Activity;)V",
                 "Lcom/facebook/content/SecureContextHelper;.startNonFacebookActivity:(Landroid/content/Intent;Landroid/content/Context;)V",
                 "Lcom/facebook/content/SecureContextHelper;.startNonFacebookActivityForResult:(Landroid/content/Intent;ILandroid/app/Activity;)V"
-              ]
+              ],
+              "preserves_type_context" : true
             }
           ],
           "local_features" : 
@@ -1758,13 +1764,19 @@
           [
             {
               "call_info" : "CallSite",
+              "callee_interval" : 
+              [
+                46,
+                47
+              ],
               "distance" : 1,
               "kind" : "LaunchingComponent",
               "origins" : 
               [
                 "Lcom/facebook/content/SecureContextHelper;.startFacebookActivity:(Landroid/content/Intent;Landroid/content/Context;)V",
                 "Lcom/facebook/content/SecureContextHelper;.startNonFacebookActivity:(Landroid/content/Intent;Landroid/content/Context;)V"
-              ]
+              ],
+              "preserves_type_context" : false
             }
           ]
         },
@@ -1785,13 +1797,19 @@
           [
             {
               "call_info" : "CallSite",
+              "callee_interval" : 
+              [
+                46,
+                47
+              ],
               "distance" : 1,
               "kind" : "LaunchingComponent",
               "origins" : 
               [
                 "Lcom/facebook/content/SecureContextHelper;.startFacebookActivityForResult:(Landroid/content/Intent;ILandroid/app/Activity;)V",
                 "Lcom/facebook/content/SecureContextHelper;.startNonFacebookActivityForResult:(Landroid/content/Intent;ILandroid/app/Activity;)V"
-              ]
+              ],
+              "preserves_type_context" : false
             }
           ]
         }
@@ -1817,11 +1835,17 @@
           [
             {
               "call_info" : "Origin",
+              "callee_interval" : 
+              [
+                46,
+                47
+              ],
               "kind" : "LaunchingComponent",
               "origins" : 
               [
                 "Lcom/facebook/content/SecureContextHelper;.startFacebookActivityForResult:(Landroid/content/Intent;ILandroid/app/Activity;)V"
-              ]
+              ],
+              "preserves_type_context" : true
             }
           ],
           "origin" : 
@@ -1841,11 +1865,17 @@
           [
             {
               "call_info" : "Origin",
+              "callee_interval" : 
+              [
+                46,
+                47
+              ],
               "kind" : "LaunchingComponent",
               "origins" : 
               [
                 "Lcom/facebook/content/SecureContextHelper;.startNonFacebookActivityForResult:(Landroid/content/Intent;ILandroid/app/Activity;)V"
-              ]
+              ],
+              "preserves_type_context" : true
             }
           ],
           "origin" : 
@@ -1882,11 +1912,17 @@
           [
             {
               "call_info" : "Origin",
+              "callee_interval" : 
+              [
+                46,
+                47
+              ],
               "kind" : "LaunchingComponent",
               "origins" : 
               [
                 "Lcom/facebook/content/SecureContextHelper;.startFacebookActivity:(Landroid/content/Intent;Landroid/content/Context;)V"
-              ]
+              ],
+              "preserves_type_context" : true
             }
           ],
           "origin" : 
@@ -1906,11 +1942,17 @@
           [
             {
               "call_info" : "Origin",
+              "callee_interval" : 
+              [
+                46,
+                47
+              ],
               "kind" : "LaunchingComponent",
               "origins" : 
               [
                 "Lcom/facebook/content/SecureContextHelper;.startNonFacebookActivity:(Landroid/content/Intent;Landroid/content/Context;)V"
-              ]
+              ],
+              "preserves_type_context" : true
             }
           ],
           "origin" : 
@@ -1996,6 +2038,11 @@
           [
             {
               "call_info" : "CallSite",
+              "callee_interval" : 
+              [
+                46,
+                47
+              ],
               "distance" : 4,
               "kind" : "LaunchingComponent",
               "may_features" : 
@@ -2008,7 +2055,8 @@
                 "Lcom/facebook/content/SecureContextHelper;.startFacebookActivityForResult:(Landroid/content/Intent;ILandroid/app/Activity;)V",
                 "Lcom/facebook/content/SecureContextHelper;.startNonFacebookActivity:(Landroid/content/Intent;Landroid/content/Context;)V",
                 "Lcom/facebook/content/SecureContextHelper;.startNonFacebookActivityForResult:(Landroid/content/Intent;ILandroid/app/Activity;)V"
-              ]
+              ],
+              "preserves_type_context" : false
             }
           ]
         }
@@ -2020,11 +2068,17 @@
           [
             {
               "call_info" : "Origin",
+              "callee_interval" : 
+              [
+                7,
+                8
+              ],
               "kind" : "ExternalUserInput",
               "origins" : 
               [
                 "Landroid/app/Activity;.getIntent:()Landroid/content/Intent;"
-              ]
+              ],
+              "preserves_type_context" : true
             }
           ],
           "origin" : 

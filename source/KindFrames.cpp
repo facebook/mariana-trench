@@ -319,14 +319,11 @@ KindFrames KindFrames::propagate(
 
   FramesByInterval propagated_frames;
   for (const auto& [_interval, frame] : frames_.bindings()) {
-    auto propagated_interval = CallClassIntervalContext();
-    if (context.options->enable_class_intervals()) {
-      propagated_interval = propagate_interval(
-          frame, class_interval_context, caller_class_interval);
-      if (propagated_interval.callee_interval().is_bottom()) {
-        // Intervals do not intersect. Do not propagate this frame.
-        continue;
-      }
+    auto propagated_interval = propagate_interval(
+        frame, class_interval_context, caller_class_interval);
+    if (propagated_interval.callee_interval().is_bottom()) {
+      // Intervals do not intersect. Do not propagate this frame.
+      continue;
     }
 
     int distance = std::numeric_limits<int>::max();

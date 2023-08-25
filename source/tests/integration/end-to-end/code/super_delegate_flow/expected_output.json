@@ -999,12 +999,18 @@
           [
             {
               "call_info" : "CallSite",
+              "callee_interval" : 
+              [
+                28,
+                29
+              ],
               "distance" : 1,
               "kind" : "Sink",
               "origins" : 
               [
                 "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V"
-              ]
+              ],
+              "preserves_type_context" : false
             }
           ]
         }
@@ -1038,11 +1044,17 @@
           [
             {
               "call_info" : "Origin",
+              "callee_interval" : 
+              [
+                28,
+                29
+              ],
               "kind" : "Sink",
               "origins" : 
               [
                 "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V"
-              ]
+              ],
+              "preserves_type_context" : true
             }
           ],
           "origin" : 

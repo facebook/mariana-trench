@@ -595,7 +595,6 @@ TEST_F(KindFramesTest, Filter) {
 
 TEST_F(KindFramesTest, Propagate) {
   auto context = test::make_empty_context();
-  context.options = test::make_default_options();
 
   Scope scope;
   auto* one =
@@ -669,28 +668,6 @@ TEST_F(KindFramesTest, Propagate) {
 
 TEST_F(KindFramesTest, PropagateIntervals) {
   auto context = test::make_empty_context();
-
-  // Make sure class intervals are enabled for this.
-  context.options = std::make_unique<Options>(
-      /* models_paths */ std::vector<std::string>{},
-      /* field_models_path */ std::vector<std::string>{},
-      /* literal_models_path */ std::vector<std::string>{},
-      /* rules_paths */ std::vector<std::string>{},
-      /* lifecycles_paths */ std::vector<std::string>{},
-      /* shims_path */ std::vector<std::string>{},
-      /* graphql_metadata_paths */ std::string{},
-      /* proguard_configuration_paths */ std::vector<std::string>{},
-      /* sequential */ false,
-      /* skip_source_indexing */ true,
-      /* skip_analysis */ true,
-      /* model_generators_configuration */
-      std::vector<ModelGeneratorConfiguration>{},
-      /* model_generators_search_path */ std::vector<std::string>{},
-      /* remove_unreachable_code */ false,
-      /* emit_all_via_cast_features */ false,
-      /* source_root_directory */ ".",
-      /* enable_cross_component_analysis */ false,
-      /* enable_class_intervals */ true);
 
   Scope scope;
   auto* one =
@@ -903,7 +880,6 @@ TEST_F(KindFramesTest, PropagateIntervals) {
 
 TEST_F(KindFramesTest, PropagateCrtex) {
   auto context = test::make_empty_context();
-  context.options = test::make_default_options();
 
   Scope scope;
   auto* one =

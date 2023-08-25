@@ -24,11 +24,17 @@
               [
                 {
                   "call_info" : "Origin",
+                  "callee_interval" :
+                  [
+                    6,
+                    7
+                  ],
                   "kind" : "AlternativeSink",
                   "origins" :
                   [
                     "LSink;.sink_with_two_kinds:(LData;)V"
-                  ]
+                  ],
+                  "preserves_type_context" : true
                 }
               ],
               "origin" :
@@ -49,11 +55,17 @@
               [
                 {
                   "call_info" : "Origin",
+                  "callee_interval" :
+                  [
+                    6,
+                    7
+                  ],
                   "kind" : "AlternativeSource",
                   "origins" :
                   [
                     "LSource;.alternative_source:()LData;"
-                  ]
+                  ],
+                  "preserves_type_context" : true
                 }
               ],
               "origin" :

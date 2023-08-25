@@ -923,12 +923,18 @@
           [
             {
               "call_info" : "CallSite",
+              "callee_interval" : 
+              [
+                4,
+                5
+              ],
               "distance" : 1,
               "kind" : "Sink",
               "origins" : 
               [
                 "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V"
-              ]
+              ],
+              "preserves_type_context" : true
             }
           ]
         }
@@ -1010,12 +1016,18 @@
           [
             {
               "call_info" : "CallSite",
+              "callee_interval" : 
+              [
+                4,
+                5
+              ],
               "distance" : 1,
               "kind" : "Sink",
               "origins" : 
               [
                 "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V"
-              ]
+              ],
+              "preserves_type_context" : true
             }
           ]
         }
@@ -1049,11 +1061,17 @@
           [
             {
               "call_info" : "Origin",
+              "callee_interval" : 
+              [
+                4,
+                5
+              ],
               "kind" : "Sink",
               "origins" : 
               [
                 "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V"
-              ]
+              ],
+              "preserves_type_context" : true
             }
           ],
           "origin" : 

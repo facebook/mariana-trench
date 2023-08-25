@@ -587,7 +587,6 @@ TEST_F(TaintTest, LocallyInferredFeatures) {
 
 TEST_F(TaintTest, Propagate) {
   auto context = test::make_empty_context();
-  context.options = test::make_default_options();
 
   Scope scope;
   auto* one =

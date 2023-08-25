@@ -947,11 +947,17 @@
           [
             {
               "call_info" : "Origin",
+              "callee_interval" : 
+              [
+                6,
+                7
+              ],
               "kind" : "Logging",
               "origins" : 
               [
                 "Landroid/util/Log;.e:(Ljava/lang/String;Ljava/lang/String;)I"
-              ]
+              ],
+              "preserves_type_context" : true
             }
           ],
           "origin" : 
@@ -974,11 +980,17 @@
           [
             {
               "call_info" : "Origin",
+              "callee_interval" : 
+              [
+                6,
+                7
+              ],
               "kind" : "UserGeoLocation",
               "origins" : 
               [
                 "Landroid/location/Location;.toString:()Ljava/lang/String;"
-              ]
+              ],
+              "preserves_type_context" : true
             }
           ],
           "origin" : 
