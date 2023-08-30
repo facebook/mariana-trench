@@ -9,9 +9,6 @@
     "name": "AndroidIntentLaunchSinkGenerator"
   },
   {
-    "name": "CastUriFeatureGenerator"
-  },
-  {
     "name": "CodeExecutionSinkGenerator"
   },
   {

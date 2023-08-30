@@ -15,7 +15,11 @@ namespace marianatrench {
 
 namespace {
 std::unordered_set<std::string_view> numeric_types = {"J", "F", "D", "I", "S"};
-}
+
+std::unordered_set<std::string_view> uri_types = {
+    "Landroid/net/Uri;",
+    "Ljava/net/URI;"};
+} // namespace
 
 std::vector<Model> TaintInTaintOutGenerator::visit_method(
     const Method* method) const {
@@ -78,6 +82,10 @@ std::vector<Model> TaintInTaintOutGenerator::visit_method(
       }
       if (*return_type == "Z" || parameter_type_string == "Z") {
         feature_set.emplace_back("cast:boolean");
+      }
+      if (uri_types.find(*return_type) != uri_types.end() ||
+          uri_types.find(parameter_type_string) != uri_types.end()) {
+        feature_set.emplace_back("cast:uri");
       }
     }
 
