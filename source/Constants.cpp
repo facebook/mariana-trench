@@ -58,11 +58,15 @@ get_broadcast_receiver_routing_method_names() {
   return receiver_routing_method_names;
 }
 
-const std::unordered_map<std::string, ParameterPosition>&
+const std::unordered_map<std::string, std::pair<ParameterPosition, Component>>&
 get_intent_receiving_method_names() {
-  static const std::unordered_map<std::string, ParameterPosition>
-      intent_receiving_method_names = {
-          {"onStartCommand", 1}, {"onHandleIntent", 1}};
+  static const std::
+      unordered_map<std::string, std::pair<ParameterPosition, Component>>
+          intent_receiving_method_names = {
+              {"onStartCommand", {1, Component::Service}},
+              {"onHandleIntent", {1, Component::Service}},
+              {"onNewIntent", {1, Component::Activity}},
+              {"onReceive", {2, Component::BroadcastReceiver}}};
   return intent_receiving_method_names;
 }
 
