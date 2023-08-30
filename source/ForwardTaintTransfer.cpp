@@ -508,8 +508,14 @@ void check_sources_sinks_flows(
 
   auto sources_by_kind = sources.partition_by_kind();
   auto sinks_by_kind = sinks.partition_by_kind();
-  for (const auto& [source_kind, source_taint] : sources_by_kind) {
-    for (const auto& [sink_kind, sink_taint] : sinks_by_kind) {
+  for (auto& [source_kind, source_taint] : sources_by_kind) {
+    for (auto& [sink_kind, sink_taint] : sinks_by_kind) {
+      source_taint.intersect_intervals_with(sink_taint);
+      sink_taint.intersect_intervals_with(source_taint);
+      if (source_taint.is_bottom() || sink_taint.is_bottom()) {
+        // Intervals do not intersect, flow is not possible.
+        continue;
+      }
       // Check if this satisfies any rule. If so, create the issue.
       const auto& rules = context->rules.rules(source_kind, sink_kind);
       for (const auto* rule : rules) {

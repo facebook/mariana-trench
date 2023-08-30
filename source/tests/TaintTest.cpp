@@ -1336,6 +1336,187 @@ TEST_F(TaintTest, PartitionByKindGeneric) {
       }));
 }
 
+TEST_F(TaintTest, IntersectIntervals) {
+  auto context = test::make_empty_context();
+
+  Scope scope;
+  auto* method1 =
+      context.methods->create(redex::create_void_method(scope, "LOne;", "one"));
+  auto* method2 =
+      context.methods->create(redex::create_void_method(scope, "LTwo;", "two"));
+
+  auto initial_taint = Taint{
+      test::make_taint_config(
+          /* kind */ context.kind_factory->get("TestSource"),
+          test::FrameProperties{
+              .callee = method1,
+              .class_interval_context = CallClassIntervalContext(
+                  ClassIntervals::Interval::finite(2, 6),
+                  /* preserves_type_context*/ true),
+              .call_info = CallInfo::callsite(),
+          }),
+      test::make_taint_config(
+          /* kind */ context.kind_factory->get("TestSource"),
+          test::FrameProperties{
+              .callee = method2,
+              .class_interval_context = CallClassIntervalContext(
+                  ClassIntervals::Interval::finite(4, 5),
+                  /* preserves_type_context*/ false),
+              .call_info = CallInfo::callsite(),
+          })};
+
+  {
+    // Frames with preserves_type_context = false are always preserved even if
+    // they intersect with nothing.
+    auto taint = initial_taint;
+    taint.intersect_intervals_with(Taint::bottom());
+    EXPECT_EQ(
+        taint,
+        Taint{test::make_taint_config(
+            /* kind */ context.kind_factory->get("TestSource"),
+            test::FrameProperties{
+                .callee = method2,
+                .class_interval_context = CallClassIntervalContext(
+                    ClassIntervals::Interval::finite(4, 5),
+                    /* preserves_type_context*/ false),
+                .call_info = CallInfo::callsite(),
+            })});
+  }
+
+  {
+    // Drop frames with preserves_type_context=true that don't intersect with
+    // anything.
+    auto taint = initial_taint;
+    taint.intersect_intervals_with(Taint{test::make_taint_config(
+        /* kind */ context.kind_factory->get("TestSource"),
+        test::FrameProperties{
+            .callee = method2,
+            .class_interval_context = CallClassIntervalContext(
+                ClassIntervals::Interval::finite(10, 11),
+                /* preserves_type_context*/ true),
+            .call_info = CallInfo::callsite(),
+        })});
+    EXPECT_EQ(
+        taint,
+        Taint{test::make_taint_config(
+            /* kind */ context.kind_factory->get("TestSource"),
+            test::FrameProperties{
+                .callee = method2,
+                .class_interval_context = CallClassIntervalContext(
+                    ClassIntervals::Interval::finite(4, 5),
+                    /* preserves_type_context*/ false),
+                .call_info = CallInfo::callsite(),
+            })});
+  }
+
+  {
+    // Taint is never "expanded" as a result of the intersection.
+    auto taint = Taint::bottom();
+    taint.intersect_intervals_with(initial_taint);
+    EXPECT_EQ(taint, Taint::bottom());
+  }
+
+  {
+    // Taint intersecting with itself gives itself
+    auto taint = initial_taint;
+    taint.intersect_intervals_with(initial_taint);
+    EXPECT_EQ(taint, initial_taint);
+  }
+
+  {
+    // Produce bottom() if nothing intersects
+    auto taint = Taint{test::make_taint_config(
+        /* kind */ context.kind_factory->get("TestSource"),
+        test::FrameProperties{
+            .callee = method2,
+            .class_interval_context = CallClassIntervalContext(
+                ClassIntervals::Interval::finite(4, 5),
+                /* preserves_type_context*/ true),
+            .call_info = CallInfo::callsite(),
+        })};
+    taint.intersect_intervals_with(Taint{test::make_taint_config(
+        /* kind */ context.kind_factory->get("TestSource"),
+        test::FrameProperties{
+            .callee = method2,
+            .class_interval_context = CallClassIntervalContext(
+                ClassIntervals::Interval::finite(6, 7),
+                /* preserves_type_context*/ true),
+            .call_info = CallInfo::callsite(),
+        })});
+    EXPECT_TRUE(taint.is_bottom());
+  }
+
+  {
+    // If a frame is kept during intersection, all properties are kept the same
+    auto taint = initial_taint;
+    taint.intersect_intervals_with(Taint{test::make_taint_config(
+        /* kind */ context.kind_factory->get("TestSource"),
+        test::FrameProperties{
+            .callee = method2, // method1 in initial_taint
+            .class_interval_context = CallClassIntervalContext(
+                ClassIntervals::Interval::finite(
+                    2, 3), // (2, 6) in initial_taint
+                /* preserves_type_context*/ true),
+            .call_info = CallInfo::callsite(),
+        })});
+    EXPECT_EQ(taint, initial_taint);
+  }
+
+  {
+    // Taint is preserved as long as it intersects with least one frame
+    auto taint = initial_taint;
+    taint.intersect_intervals_with(Taint{
+        test::make_taint_config(
+            /* kind */ context.kind_factory->get("TestSource"),
+            test::FrameProperties{
+                .callee = method1,
+                .class_interval_context = CallClassIntervalContext(
+                    ClassIntervals::Interval::finite(2, 3),
+                    /* preserves_type_context*/ true),
+                .call_info = CallInfo::callsite(),
+            }),
+        test::make_taint_config(
+            /* kind */ context.kind_factory->get("TestSource"),
+            test::FrameProperties{
+                .callee = method1,
+                .class_interval_context = CallClassIntervalContext(
+                    ClassIntervals::Interval::finite(10, 11),
+                    /* preserves_type_context*/ true),
+                .call_info = CallInfo::callsite(),
+            }),
+    });
+    EXPECT_EQ(taint, initial_taint);
+  }
+
+  {
+    // If other has at least one frame with preserves_type_context=false, all
+    // frames are retained (because everything intersects with it).
+    auto taint = initial_taint;
+    taint.intersect_intervals_with(Taint{
+        test::make_taint_config(
+            /* kind */ context.kind_factory->get("TestSource"),
+            test::FrameProperties{
+                .callee = method2,
+                .class_interval_context = CallClassIntervalContext(
+                    ClassIntervals::Interval::top(),
+                    /* preserves_type_context*/ false),
+                .call_info = CallInfo::callsite(),
+            }),
+        test::make_taint_config(
+            /* kind */ context.kind_factory->get("TestSource"),
+            test::FrameProperties{
+                .callee = method1,
+                .class_interval_context = CallClassIntervalContext(
+                    ClassIntervals::Interval::finite(
+                        10, 11), // intersects with nothing in initial_taint
+                    /* preserves_type_context*/ true),
+                .call_info = CallInfo::callsite(),
+            }),
+    });
+    EXPECT_EQ(taint, initial_taint);
+  }
+}
+
 TEST_F(TaintTest, FeaturesJoined) {
   auto context = test::make_empty_context();
 

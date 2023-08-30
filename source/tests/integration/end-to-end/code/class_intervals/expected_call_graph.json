@@ -210,7 +210,7 @@
       "Ljava/lang/Object;.<init>:()V"
     ]
   },
-  "Lcom/facebook/marianatrench/integrationtests/Basic$Base;.falsePositive:()V" : 
+  "Lcom/facebook/marianatrench/integrationtests/Basic$Base;.noIssue:()V" : 
   {
     "virtual" : 
     [

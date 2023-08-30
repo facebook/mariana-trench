@@ -17,10 +17,10 @@ public class Basic {
 
     abstract void derived1Sink(Object argument);
 
-    void falsePositive() {
+    void noIssue() {
       // Derived1's source cannot flow into Derived2's sink since they are
       // unrelated objects in the hierarchy. Class intervals are necessary
-      // to address this false positive.
+      // to address this or we will get a false positive.
       Object o = this.potentialSource();
       this.potentialSink(o);
     }

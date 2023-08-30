@@ -5,6 +5,8 @@
  * LICENSE file in the root directory of this source tree.
  */
 
+#include <unordered_set>
+
 #include <mariana-trench/Constants.h>
 #include <mariana-trench/JsonValidation.h>
 #include <mariana-trench/Taint.h>
@@ -263,6 +265,40 @@ bool Taint::contains_kind(const Kind* kind) const {
 
 std::unordered_map<const Kind*, Taint> Taint::partition_by_kind() const {
   return partition_by_kind<const Kind*>([](const Kind* kind) { return kind; });
+}
+
+void Taint::intersect_intervals_with(const Taint& other) {
+  std::unordered_set<CallClassIntervalContext> other_intervals;
+  for (const auto& other_frame : other.frames_iterator()) {
+    const auto& other_frame_interval = other_frame.class_interval_context();
+    // All frames in `this` will intersect with a frame in `other` that does not
+    // preserve type context.
+    if (!other_frame_interval.preserves_type_context()) {
+      return;
+    }
+
+    other_intervals.insert(other_frame_interval);
+  }
+
+  // Keep only frames that intersect with some interval in `other`.
+  // Frames that do not preserve type context are considered to intersect with
+  // everything.
+  filter([&other_intervals](const Frame& frame) {
+    const auto& frame_interval = frame.class_interval_context();
+    if (!frame_interval.preserves_type_context()) {
+      return true;
+    }
+
+    bool intersects_with_some_other_frame = std::any_of(
+        other_intervals.begin(),
+        other_intervals.end(),
+        [&frame_interval](const auto& other_frame_interval) {
+          return !other_frame_interval.callee_interval()
+                      .meet(frame_interval.callee_interval())
+                      .is_bottom();
+        });
+    return intersects_with_some_other_frame;
+  });
 }
 
 FeatureMayAlwaysSet Taint::features_joined() const {

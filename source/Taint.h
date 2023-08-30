@@ -260,6 +260,12 @@ class Taint final : public sparta::AbstractDomain<Taint> {
   }
 
   /**
+   * Retain only intervals that intersect with `other`. This happens regardless
+   * of kind, i.e. intervals will be dropped even if kind is not the same.
+   */
+  void intersect_intervals_with(const Taint& other);
+
+  /**
    * Returns all features for this taint tree, joined as `FeatureMayAlwaysSet`.
    */
   FeatureMayAlwaysSet features_joined() const;
