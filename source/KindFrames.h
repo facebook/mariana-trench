@@ -179,23 +179,6 @@ class KindFrames final : public sparta::AbstractDomain<KindFrames> {
       Context& context,
       const std::vector<const DexType * MT_NULLABLE>& source_register_types,
       const std::vector<std::optional<std::string>>& source_constant_arguments,
-      std::vector<const Feature*>& via_type_of_features_added,
-      const CallClassIntervalContext& class_interval_context,
-      const ClassIntervals::Interval& caller_class_interval) const;
-
-  /**
-   * Similar to propagate but intended to be used for CRTEX frames.
-   * Caller is responsible for determining whether the frame a CRTEX
-   * leaf (using the callee port).
-   */
-  KindFrames propagate_crtex_leaf_frames(
-      const Method* callee,
-      const AccessPath& canonical_callee_port,
-      const Position* call_position,
-      const FeatureMayAlwaysSet& locally_inferred_features,
-      int maximum_source_sink_distance,
-      Context& context,
-      const std::vector<const DexType * MT_NULLABLE>& source_register_types,
       const CallClassIntervalContext& class_interval_context,
       const ClassIntervals::Interval& caller_class_interval) const;
 

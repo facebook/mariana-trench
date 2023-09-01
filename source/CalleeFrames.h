@@ -43,7 +43,7 @@ class CalleeProperties {
     return callee_;
   }
 
-  CallInfo call_info() const {
+  const CallInfo& call_info() const {
     return call_info_;
   }
 

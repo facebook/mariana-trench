@@ -218,38 +218,17 @@ CalleePortFrames CalleePortFrames::propagate(
       is_crtex_leaf ? callee_port.canonicalize_for_method(callee) : callee_port;
   FramesByKind propagated_frames_by_kind;
   for (const auto& [kind, frames] : frames_.bindings()) {
-    KindFrames propagated;
-    if (is_crtex_leaf) {
-      // NOTE: Re-visit CRTEX implementation. Now that all frames have a call
-      // info, CRTEX frames could be treated like a CallInfo::Declaration frame
-      // with less special-casing around it. Also think about how user features
-      // should be handled. They are currently handled differently from
-      // non-CRTEX frames which is non-ideal.
-      propagated = frames.propagate_crtex_leaf_frames(
-          callee,
-          propagated_callee_port,
-          call_position,
-          locally_inferred_features_,
-          maximum_source_sink_distance,
-          context,
-          source_register_types,
-          class_interval_context,
-          caller_class_interval);
-    } else {
-      std::vector<const Feature*> via_type_of_features_added;
-      propagated = frames.propagate(
-          callee,
-          propagated_callee_port,
-          call_position,
-          locally_inferred_features_,
-          maximum_source_sink_distance,
-          context,
-          source_register_types,
-          source_constant_arguments,
-          via_type_of_features_added,
-          class_interval_context,
-          caller_class_interval);
-    }
+    auto propagated = frames.propagate(
+        callee,
+        propagated_callee_port,
+        call_position,
+        locally_inferred_features_,
+        maximum_source_sink_distance,
+        context,
+        source_register_types,
+        source_constant_arguments,
+        class_interval_context,
+        caller_class_interval);
 
     if (!propagated.is_bottom()) {
       propagated_frames_by_kind.update(

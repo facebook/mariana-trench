@@ -296,6 +296,37 @@ FeatureMayAlwaysSet propagate_features(
   return inferred_features;
 }
 
+CanonicalNameSetAbstractDomain propagate_canonical_names(
+    const Frame& frame,
+    const Method* callee,
+    const std::vector<const Feature*>& via_type_of_features_added) {
+  auto canonical_names = frame.canonical_names();
+  if (!canonical_names.is_value() || canonical_names.elements().empty()) {
+    // Non-crtex frame
+    return CanonicalNameSetAbstractDomain{};
+  }
+
+  auto first_name = canonical_names.elements().begin();
+  if (first_name->instantiated_value().has_value()) {
+    // The canonical names are either all instantiated values, or all
+    // templated values that need to be instantiated. Instantiated values do
+    // not need to be propagated.
+    return CanonicalNameSetAbstractDomain{};
+  }
+
+  CanonicalNameSetAbstractDomain instantiated_names{};
+  for (const auto& canonical_name : canonical_names.elements()) {
+    auto instantiated_name =
+        canonical_name.instantiate(callee, via_type_of_features_added);
+    if (!instantiated_name) {
+      continue;
+    }
+    instantiated_names.add(*instantiated_name);
+  }
+
+  return instantiated_names;
+}
+
 } // namespace
 
 KindFrames KindFrames::propagate(
@@ -307,7 +338,6 @@ KindFrames KindFrames::propagate(
     Context& context,
     const std::vector<const DexType * MT_NULLABLE>& source_register_types,
     const std::vector<std::optional<std::string>>& source_constant_arguments,
-    std::vector<const Feature*>& via_type_of_features_added,
     const CallClassIntervalContext& class_interval_context,
     const ClassIntervals::Interval& caller_class_interval) const {
   if (is_bottom()) {
@@ -336,6 +366,7 @@ KindFrames KindFrames::propagate(
       continue;
     }
 
+    std::vector<const Feature*> via_type_of_features_added;
     auto propagated_user_features = FeatureSet::bottom();
     auto inferred_features = propagate_features(
         frame,
@@ -347,10 +378,24 @@ KindFrames KindFrames::propagate(
         propagated_user_features,
         via_type_of_features_added);
 
+    // Canonical names can only be instantiated after propagate_features because
+    // via_type_of_features_added should be populated based on the features
+    // added there.
+    auto instantiated_canonical_names =
+        propagate_canonical_names(frame, callee, via_type_of_features_added);
+    // We do not use bottom() for canonical names, only empty().
+    mt_assert(instantiated_canonical_names.is_value());
+
     const auto* propagated_callee = callee;
-    if (call_info.is_declaration()) {
-      // If we're propagating a declaration, there are no origins, and we should
-      // keep the set as bottom, and set the callee to nullptr explicitly to
+    if (!instantiated_canonical_names.elements().empty()) {
+      // For CRTEX, frames with templated canonical names are declarations.
+      // The propagated frame is considered a leaf, hence distance = 0.
+      // If name instantiation failed (empty instantiated_canonical_names), the
+      // frame acts like any non-declaration frame and the trace to the consumer
+      // CRTEX issue will be broken.
+      distance = 0;
+    } else if (call_info.is_declaration()) {
+      // When propagating a declaration, set the callee to nullptr explicitly to
       // avoid emitting an invalid frame.
       distance = 0;
       propagated_callee = nullptr;
@@ -371,7 +416,13 @@ KindFrames KindFrames::propagate(
           !propagated_call_info.is_declaration() &&
           !propagated_call_info.is_origin());
     } else {
-      mt_assert(propagated_call_info.is_origin());
+      // At distance 0, the propagated frame is typically an origin.
+      // However, if it is a CRTEX frame (identified by the "anchor" port), then
+      // it would be a callsite because CRTEX does not use "declaration" frames.
+      mt_assert(
+          propagated_call_info.is_origin() ||
+          (callee_port.root().is_anchor() &&
+           propagated_call_info.is_callsite()));
     }
 
     auto propagated_frame = Frame(
@@ -389,7 +440,7 @@ KindFrames KindFrames::propagate(
         propagated_user_features,
         /* via_type_of_ports */ {},
         /* via_value_of_ports */ {},
-        /* canonical_names */ {},
+        instantiated_canonical_names,
         propagated_call_info,
         output_paths,
         /* extra_traces */ {});
@@ -405,95 +456,6 @@ KindFrames KindFrames::propagate(
   }
 
   return KindFrames(kind, propagated_frames);
-}
-
-KindFrames KindFrames::propagate_crtex_leaf_frames(
-    const Method* callee,
-    const AccessPath& canonical_callee_port,
-    const Position* call_position,
-    const FeatureMayAlwaysSet& locally_inferred_features,
-    int maximum_source_sink_distance,
-    Context& context,
-    const std::vector<const DexType * MT_NULLABLE>& source_register_types,
-    const CallClassIntervalContext& class_interval_context,
-    const ClassIntervals::Interval& caller_class_interval) const {
-  if (is_bottom()) {
-    return KindFrames::bottom();
-  }
-
-  KindFrames result;
-  std::vector<const Feature*> via_type_of_features_added;
-  auto propagated = propagate(
-      callee,
-      canonical_callee_port,
-      call_position,
-      locally_inferred_features,
-      maximum_source_sink_distance,
-      context,
-      source_register_types,
-      /* source_constant_arguments */ {}, // via-value not supported for crtex
-      via_type_of_features_added,
-      class_interval_context,
-      caller_class_interval);
-
-  if (propagated.is_bottom()) {
-    return KindFrames::bottom();
-  }
-
-  // All frames in `propagated` should have `callee` and `callee_port` set to
-  // what was passed as its input arguments. Instantiation of canonical names
-  // and ports below assume this.
-  for (const auto& frame : *this) {
-    auto canonical_names = frame.canonical_names();
-    if (!canonical_names.is_value() || canonical_names.elements().empty()) {
-      WARNING(
-          2,
-          "Encountered crtex frame without canonical names. Frame: `{}`",
-          frame);
-      continue;
-    }
-
-    CanonicalNameSetAbstractDomain instantiated_names;
-    for (const auto& canonical_name : canonical_names.elements()) {
-      auto instantiated_name =
-          canonical_name.instantiate(callee, via_type_of_features_added);
-      if (!instantiated_name) {
-        continue;
-      }
-      instantiated_names.add(*instantiated_name);
-    }
-
-    // All fields should be propagated like other frames, except the crtex
-    // fields. Ideally, origins should contain the canonical names as well,
-    // but canonical names are strings and cannot be stored in MethodSet.
-    // Frame is not propagated if none of the canonical names instantiated
-    // successfully.
-    if (instantiated_names.is_value() &&
-        !instantiated_names.elements().empty()) {
-      for (const auto& propagated_frame : propagated) {
-        result.add(Frame(
-            kind_,
-            canonical_callee_port,
-            callee,
-            propagated_frame.field_callee(),
-            propagated_frame.call_position(),
-            propagated_frame.class_interval_context(),
-            /* distance (always leaves for crtex frames) */ 0,
-            propagated_frame.origins(),
-            propagated_frame.field_origins(),
-            propagated_frame.inferred_features(),
-            propagated_frame.user_features(),
-            propagated_frame.via_type_of_ports(),
-            propagated_frame.via_value_of_ports(),
-            /* canonical_names */ instantiated_names,
-            CallInfo::callsite(),
-            /* output_paths */ PathTreeDomain::bottom(),
-            /* extra_traces */ propagated_frame.extra_traces()));
-      }
-    }
-  }
-
-  return result;
 }
 
 void KindFrames::filter_invalid_frames(

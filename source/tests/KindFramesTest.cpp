@@ -631,7 +631,6 @@ TEST_F(KindFramesTest, Propagate) {
               .origins = MethodSet{one},
               .call_info = CallInfo::callsite()}),
   };
-  std::vector<const Feature*> via_type_of_features_added;
 
   // The callee interval is default (top, !preserves_type_context) in some of
   // the following situations:
@@ -649,7 +648,6 @@ TEST_F(KindFramesTest, Propagate) {
           context,
           /* source_register_types */ {},
           /* source_constant_arguments */ {},
-          via_type_of_features_added,
           /* use default type context */ CallClassIntervalContext(),
           /* caller_class_interval */ ClassIntervals::Interval::top()),
       (KindFrames{
@@ -679,7 +677,6 @@ TEST_F(KindFramesTest, PropagateIntervals) {
 
   auto caller_class_interval = ClassIntervals::Interval::finite(6, 7);
   auto callee_port = AccessPath(Root(Root::Kind::Argument, 0));
-  std::vector<const Feature*> via_type_of_features_added;
 
   auto interval_2_3_t = CallClassIntervalContext(
       ClassIntervals::Interval::finite(2, 3),
@@ -724,7 +721,6 @@ TEST_F(KindFramesTest, PropagateIntervals) {
             context,
             /* source_register_types */ {},
             /* source_constant_arguments */ {},
-            via_type_of_features_added,
             /* class_interval_context */ interval_1_4_f,
             caller_class_interval),
         (KindFrames{
@@ -783,7 +779,6 @@ TEST_F(KindFramesTest, PropagateIntervals) {
             context,
             /* source_register_types */ {},
             /* source_constant_arguments */ {},
-            via_type_of_features_added,
             /* class_interval_context */ interval_1_4_f,
             caller_class_interval),
         (KindFrames{
@@ -850,7 +845,6 @@ TEST_F(KindFramesTest, PropagateIntervals) {
             context,
             /* source_register_types */ {},
             /* source_constant_arguments */ {},
-            via_type_of_features_added,
             /* class_interval_context */ interval_1_4_f,
             caller_class_interval),
         (KindFrames{
@@ -916,7 +910,7 @@ TEST_F(KindFramesTest, PropagateCrtex) {
       AccessPath(Root(Root::Kind::Argument, 0)).canonicalize_for_method(two);
   auto expected_instantiated_name =
       CanonicalName(CanonicalName::InstantiatedValue{two->signature()});
-  auto propagated_crtex_frames = crtex_frames.propagate_crtex_leaf_frames(
+  auto propagated_crtex_frames = crtex_frames.propagate(
       /* callee */ two,
       canonical_callee_port,
       call_position,
@@ -924,6 +918,7 @@ TEST_F(KindFramesTest, PropagateCrtex) {
       /* maximum_source_sink_distance */ 100,
       context,
       /* source_register_types */ {},
+      /* source_constant_arguments */ {},
       CallClassIntervalContext(),
       ClassIntervals::Interval::top());
   EXPECT_EQ(
@@ -958,7 +953,6 @@ TEST_F(KindFramesTest, PropagateCrtex) {
   // Test propagating crtex-like frames (callee port == anchor.<path>),
   // specifically, propagate the propagated frames above again. These frames
   // originate from crtex leaves, but are not themselves the leaves.
-  std::vector<const Feature*> via_type_of_features_added;
   EXPECT_EQ(
       propagated_crtex_frames.propagate(
           /* callee */ two,
@@ -969,7 +963,6 @@ TEST_F(KindFramesTest, PropagateCrtex) {
           context,
           /* source_register_types */ {},
           /* source_constant_arguments */ {},
-          via_type_of_features_added,
           CallClassIntervalContext(),
           ClassIntervals::Interval::top()),
       (KindFrames{
