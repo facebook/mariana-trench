@@ -349,6 +349,10 @@ KindFrames KindFrames::propagate(
 
   FramesByInterval propagated_frames;
   for (const auto& [_interval, frame] : frames_.bindings()) {
+    if (frame.distance() >= maximum_source_sink_distance) {
+      continue;
+    }
+
     auto propagated_interval = propagate_interval(
         frame, class_interval_context, caller_class_interval);
     if (propagated_interval.callee_interval().is_bottom()) {
@@ -356,19 +360,9 @@ KindFrames KindFrames::propagate(
       continue;
     }
 
-    int distance = std::numeric_limits<int>::max();
-    auto origins = frame.origins();
-    auto field_origins = frame.field_origins();
-    auto call_info = frame.call_info();
-    auto output_paths = PathTreeDomain::bottom();
-
-    if (frame.distance() >= maximum_source_sink_distance) {
-      continue;
-    }
-
     std::vector<const Feature*> via_type_of_features_added;
     auto propagated_user_features = FeatureSet::bottom();
-    auto inferred_features = propagate_features(
+    auto propagated_inferred_features = propagate_features(
         frame,
         locally_inferred_features,
         callee,
@@ -381,37 +375,37 @@ KindFrames KindFrames::propagate(
     // Canonical names can only be instantiated after propagate_features because
     // via_type_of_features_added should be populated based on the features
     // added there.
-    auto instantiated_canonical_names =
+    auto propagated_canonical_names =
         propagate_canonical_names(frame, callee, via_type_of_features_added);
     // We do not use bottom() for canonical names, only empty().
-    mt_assert(instantiated_canonical_names.is_value());
+    mt_assert(propagated_canonical_names.is_value());
 
     const auto* propagated_callee = callee;
-    if (!instantiated_canonical_names.elements().empty()) {
+    int propagated_distance = frame.distance() + 1;
+    auto call_info = frame.call_info();
+    if (!propagated_canonical_names.elements().empty()) {
       // For CRTEX, frames with templated canonical names are declarations.
       // The propagated frame is considered a leaf, hence distance = 0.
-      // If name instantiation failed (empty instantiated_canonical_names), the
+      // If name instantiation failed (empty propagated_canonical_names), the
       // frame acts like any non-declaration frame and the trace to the consumer
       // CRTEX issue will be broken.
-      distance = 0;
+      propagated_distance = 0;
     } else if (call_info.is_declaration()) {
       // When propagating a declaration, set the callee to nullptr explicitly to
       // avoid emitting an invalid frame.
-      distance = 0;
+      propagated_distance = 0;
       propagated_callee = nullptr;
-    } else {
-      distance = frame.distance() + 1;
     }
+    mt_assert(propagated_distance <= maximum_source_sink_distance);
 
+    auto propagated_output_paths = PathTreeDomain::bottom();
     if (call_info.is_propagation_with_trace()) {
       // Propagate the output paths for PropagationWithTrace frames.
-      output_paths.join_with(frame.output_paths());
+      propagated_output_paths.join_with(frame.output_paths());
     }
 
-    mt_assert(distance <= maximum_source_sink_distance);
-
     CallInfo propagated_call_info = call_info.propagate();
-    if (distance > 0) {
+    if (propagated_distance > 0) {
       mt_assert(
           !propagated_call_info.is_declaration() &&
           !propagated_call_info.is_origin());
@@ -433,16 +427,16 @@ KindFrames KindFrames::propagate(
                                     // callsites and not field accesses
         call_position,
         propagated_interval,
-        distance,
-        std::move(origins),
-        std::move(field_origins),
-        std::move(inferred_features),
+        propagated_distance,
+        frame.origins(),
+        frame.field_origins(),
+        std::move(propagated_inferred_features),
         propagated_user_features,
         /* via_type_of_ports */ {},
         /* via_value_of_ports */ {},
-        instantiated_canonical_names,
+        propagated_canonical_names,
         propagated_call_info,
-        output_paths,
+        propagated_output_paths,
         /* extra_traces */ {});
 
     propagated_frames.update(
