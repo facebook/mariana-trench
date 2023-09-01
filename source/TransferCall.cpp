@@ -70,7 +70,7 @@ CallClassIntervalContext get_type_context(
       context->method(), instruction, receiver_register);
   if (receiver_type == nullptr) {
     WARNING(
-        1,
+        2,
         "Could not get type for receiver in instruction `{}`.",
         show(instruction));
     // Receiver type unknown, use top to cover all possible types.
