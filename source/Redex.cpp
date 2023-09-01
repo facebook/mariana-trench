@@ -165,6 +165,7 @@ void redex::remove_unreachable(
       before.num_methods);
 
   ConcurrentSet<std::string> removed_symbols;
+  reachability::mark_classes_abstract(stores, *reachables, reachable_aspects);
   reachability::sweep(
       stores, *reachables, removed_symbols_path ? &removed_symbols : nullptr);
 
