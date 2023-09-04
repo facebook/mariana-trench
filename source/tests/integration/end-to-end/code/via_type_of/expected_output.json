@@ -1159,6 +1159,13 @@
               "preserves_type_context" : true
             }
           ],
+          "local_user_features" : 
+          {
+            "always_features" : 
+            [
+              "via-type:Lcom/facebook/marianatrench/integrationtests/RecorderActivity;"
+            ]
+          },
           "origin" : 
           {
             "method" : "Lcom/facebook/content/SecureContextHelper;.startFacebookActivityForResult:(Landroid/content/Intent;ILandroid/app/Activity;)V",
@@ -1196,6 +1203,13 @@
               "preserves_type_context" : true
             }
           ],
+          "local_user_features" : 
+          {
+            "always_features" : 
+            [
+              "via-type:Lcom/facebook/marianatrench/integrationtests/TestUri;"
+            ]
+          },
           "origin" : 
           {
             "method" : "Landroid/content/Intent;.<init>:(Ljava/lang/String;Landroid/net/Uri;)V",

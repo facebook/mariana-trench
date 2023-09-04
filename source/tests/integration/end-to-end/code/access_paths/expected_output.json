@@ -1080,6 +1080,13 @@
               "preserves_type_context" : true
             }
           ],
+          "local_user_features" : 
+          {
+            "always_features" : 
+            [
+              "via-value:source"
+            ]
+          },
           "origin" : 
           {
             "method" : "Lcom/facebook/marianatrench/integrationtests/Dictionary;.sinkIndex:(Ljava/lang/String;)V",
@@ -1236,6 +1243,13 @@
               "preserves_type_context" : true
             }
           ],
+          "local_user_features" : 
+          {
+            "always_features" : 
+            [
+              "via-value:differentSource"
+            ]
+          },
           "origin" : 
           {
             "method" : "Lcom/facebook/marianatrench/integrationtests/AccessPaths;.sinkIndex:(Lcom/facebook/marianatrench/integrationtests/Dictionary;Ljava/lang/String;)V",
@@ -1328,6 +1342,13 @@
               "preserves_type_context" : true
             }
           ],
+          "local_user_features" : 
+          {
+            "always_features" : 
+            [
+              "via-value:source"
+            ]
+          },
           "origin" : 
           {
             "method" : "Lcom/facebook/marianatrench/integrationtests/AccessPaths;.sinkIndex:(Lcom/facebook/marianatrench/integrationtests/Dictionary;Ljava/lang/String;)V",
@@ -1420,6 +1441,13 @@
               "preserves_type_context" : true
             }
           ],
+          "local_user_features" : 
+          {
+            "always_features" : 
+            [
+              "via-value:unknown"
+            ]
+          },
           "origin" : 
           {
             "method" : "Lcom/facebook/marianatrench/integrationtests/AccessPaths;.sinkIndex:(Lcom/facebook/marianatrench/integrationtests/Dictionary;Ljava/lang/String;)V",
@@ -1512,6 +1540,13 @@
               "preserves_type_context" : true
             }
           ],
+          "local_user_features" : 
+          {
+            "always_features" : 
+            [
+              "via-value:unknown"
+            ]
+          },
           "origin" : 
           {
             "method" : "Lcom/facebook/marianatrench/integrationtests/AccessPaths;.sinkIndex:(Lcom/facebook/marianatrench/integrationtests/Dictionary;Ljava/lang/String;)V",

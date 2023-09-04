@@ -1306,6 +1306,13 @@
               "preserves_type_context" : true
             }
           ],
+          "local_user_features" : 
+          {
+            "always_features" : 
+            [
+              "via-value:Foo"
+            ]
+          },
           "origin" : 
           {
             "method" : "Lcom/facebook/marianatrench/integrationtests/ViaValueOf;.sinkViaString:(Ljava/lang/String;Ljava/lang/Object;)V",
@@ -1343,6 +1350,13 @@
               "preserves_type_context" : true
             }
           ],
+          "local_user_features" : 
+          {
+            "always_features" : 
+            [
+              "via-value:Bar"
+            ]
+          },
           "origin" : 
           {
             "method" : "Lcom/facebook/marianatrench/integrationtests/ViaValueOf;.getSourceViaString:(Ljava/lang/String;)Ljava/lang/Object;",
@@ -1492,6 +1506,13 @@
               "preserves_type_context" : true
             }
           ],
+          "local_user_features" : 
+          {
+            "always_features" : 
+            [
+              "via-value:42"
+            ]
+          },
           "origin" : 
           {
             "method" : "Lcom/facebook/marianatrench/integrationtests/ViaValueOf;.sinkViaInt:(ILjava/lang/Object;)V",
@@ -1587,6 +1608,13 @@
               "preserves_type_context" : true
             }
           ],
+          "local_user_features" : 
+          {
+            "always_features" : 
+            [
+              "via-value:42"
+            ]
+          },
           "origin" : 
           {
             "method" : "Lcom/facebook/marianatrench/integrationtests/ViaValueOf;.sinkViaInt:(ILjava/lang/Object;)V",
@@ -1682,6 +1710,13 @@
               "preserves_type_context" : true
             }
           ],
+          "local_user_features" : 
+          {
+            "always_features" : 
+            [
+              "via-value:Bar"
+            ]
+          },
           "origin" : 
           {
             "method" : "Lcom/facebook/marianatrench/integrationtests/ViaValueOf;.sinkViaString:(Ljava/lang/String;Ljava/lang/Object;)V",
@@ -1777,6 +1812,13 @@
               "preserves_type_context" : true
             }
           ],
+          "local_user_features" : 
+          {
+            "always_features" : 
+            [
+              "via-value:Foo"
+            ]
+          },
           "origin" : 
           {
             "method" : "Lcom/facebook/marianatrench/integrationtests/ViaValueOf;.sinkViaString:(Ljava/lang/String;Ljava/lang/Object;)V",
@@ -1905,6 +1947,13 @@
               "preserves_type_context" : true
             }
           ],
+          "local_user_features" : 
+          {
+            "always_features" : 
+            [
+              "via-value:42"
+            ]
+          },
           "origin" : 
           {
             "method" : "Lcom/facebook/marianatrench/integrationtests/ViaValueOf;.getSourceViaInt:(I)Ljava/lang/Object;",
@@ -2000,6 +2049,13 @@
               "preserves_type_context" : true
             }
           ],
+          "local_user_features" : 
+          {
+            "always_features" : 
+            [
+              "via-value:42"
+            ]
+          },
           "origin" : 
           {
             "method" : "Lcom/facebook/marianatrench/integrationtests/ViaValueOf;.getSourceViaInt:(I)Ljava/lang/Object;",
@@ -2095,6 +2151,13 @@
               "preserves_type_context" : true
             }
           ],
+          "local_user_features" : 
+          {
+            "always_features" : 
+            [
+              "via-value:Bar"
+            ]
+          },
           "origin" : 
           {
             "method" : "Lcom/facebook/marianatrench/integrationtests/ViaValueOf;.getSourceViaString:(Ljava/lang/String;)Ljava/lang/Object;",
@@ -2190,6 +2253,13 @@
               "preserves_type_context" : true
             }
           ],
+          "local_user_features" : 
+          {
+            "always_features" : 
+            [
+              "via-value:Foo"
+            ]
+          },
           "origin" : 
           {
             "method" : "Lcom/facebook/marianatrench/integrationtests/ViaValueOf;.getSourceViaString:(Ljava/lang/String;)Ljava/lang/Object;",
@@ -2253,6 +2323,13 @@
               "preserves_type_context" : true
             }
           ],
+          "local_user_features" : 
+          {
+            "always_features" : 
+            [
+              "via-value:tito"
+            ]
+          },
           "origin" : 
           {
             "method" : "Lcom/facebook/marianatrench/integrationtests/ViaValueOf;.sinkViaString:(Ljava/lang/String;Ljava/lang/Object;)V",
@@ -2290,6 +2367,13 @@
               "preserves_type_context" : true
             }
           ],
+          "local_user_features" : 
+          {
+            "always_features" : 
+            [
+              "via-value:unknown"
+            ]
+          },
           "origin" : 
           {
             "method" : "Lcom/facebook/marianatrench/integrationtests/ViaValueOf;.getSourceViaString:(Ljava/lang/String;)Ljava/lang/Object;",
@@ -2352,6 +2436,13 @@
               "preserves_type_context" : true
             }
           ],
+          "local_user_features" : 
+          {
+            "always_features" : 
+            [
+              "via-value:unknown"
+            ]
+          },
           "origin" : 
           {
             "method" : "Lcom/facebook/marianatrench/integrationtests/ViaValueOf;.sinkViaString:(Ljava/lang/String;Ljava/lang/Object;)V",
@@ -2389,6 +2480,13 @@
               "preserves_type_context" : true
             }
           ],
+          "local_user_features" : 
+          {
+            "always_features" : 
+            [
+              "via-value:unknown"
+            ]
+          },
           "origin" : 
           {
             "method" : "Lcom/facebook/marianatrench/integrationtests/ViaValueOf;.getSourceViaString:(Ljava/lang/String;)Ljava/lang/Object;",

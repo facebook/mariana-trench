@@ -275,25 +275,26 @@ FeatureMayAlwaysSet propagate_features(
     propagated_user_features = FeatureSet::bottom();
   }
 
-  auto inferred_features = propagated_local_features;
-
   // Address clangtidy nullptr dereference warning. `callee` cannot actually
   // be nullptr here in practice.
   mt_assert(callee != nullptr);
+
+  // The via-type/value-of features are also treated as user features.
+  // They need to show up on the frame in which they are materialized.
   auto via_type_of_features = frame.materialize_via_type_of_ports(
       callee, context.feature_factory, source_register_types);
   for (const auto* feature : via_type_of_features) {
     via_type_of_features_added.push_back(feature);
-    inferred_features.add_always(feature);
+    propagated_user_features.add(feature);
   }
 
   auto via_value_features = frame.materialize_via_value_of_ports(
       callee, context.feature_factory, source_constant_arguments);
   for (const auto* feature : via_value_features) {
-    inferred_features.add_always(feature);
+    propagated_user_features.add(feature);
   }
 
-  return inferred_features;
+  return propagated_local_features;
 }
 
 CanonicalNameSetAbstractDomain propagate_canonical_names(

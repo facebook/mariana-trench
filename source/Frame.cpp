@@ -260,6 +260,9 @@ std::vector<const Feature*> Frame::materialize_via_type_of_ports(
     return features_added;
   }
 
+  // via_type_of_ports apply to leaf/declaration frames and are not propagated.
+  mt_assert(distance() == 0);
+
   // Materialize via_type_of_ports into features and add them to the inferred
   // features
   for (const auto& port : via_type_of_ports().elements()) {
@@ -289,6 +292,9 @@ std::vector<const Feature*> Frame::materialize_via_value_of_ports(
       via_value_of_ports().elements().empty()) {
     return features_added;
   }
+
+  // via_value_of_ports apply to leaf/declaration frames and are not propagated.
+  mt_assert(distance() == 0);
 
   // Materialize via_value_of_ports into features and add them to the inferred
   // features
