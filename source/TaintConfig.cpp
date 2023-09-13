@@ -166,11 +166,11 @@ TaintConfig TaintConfig::from_json(const Json::Value& value, Context& context) {
     }
   }
 
-  RootSetAbstractDomain via_value_of_ports;
+  LabelledRootSetAbstractDomain via_value_of_ports;
   if (value.isMember("via_value_of")) {
     for (const auto& root :
          JsonValidation::null_or_array(value, /* field */ "via_value_of")) {
-      via_value_of_ports.add(Root::from_json(root));
+      via_value_of_ports.add(LabelledRoot::from_json(root));
     }
   }
 

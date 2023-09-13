@@ -27,6 +27,7 @@ class FeatureFactory final {
   const Feature* get_via_type_of_feature(const DexType* MT_NULLABLE type) const;
   const Feature* get_via_cast_feature(const DexType* MT_NULLABLE type) const;
   const Feature* get_via_value_of_feature(
+      const std::optional<std::string_view>& label,
       const std::optional<std::string_view>& value) const;
   const Feature* get_via_shim_feature(const Method* MT_NULLABLE method) const;
 

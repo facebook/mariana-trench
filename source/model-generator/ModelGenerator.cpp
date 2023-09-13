@@ -406,7 +406,7 @@ TaintConfig generator::source(
     const std::vector<std::string>& features,
     Root::Kind callee_port,
     RootSetAbstractDomain via_type_of_ports,
-    RootSetAbstractDomain via_value_of_ports) {
+    LabelledRootSetAbstractDomain via_value_of_ports) {
   // These ports must go with canonical names.
   mt_assert(
       callee_port != Root::Kind::Anchor && callee_port != Root::Kind::Producer);
@@ -444,7 +444,7 @@ TaintConfig generator::sink(
     const std::vector<std::string>& features,
     Root::Kind callee_port,
     RootSetAbstractDomain via_type_of_ports,
-    RootSetAbstractDomain via_value_of_ports,
+    LabelledRootSetAbstractDomain via_value_of_ports,
     CanonicalNameSetAbstractDomain canonical_names) {
   // These ports must go with canonical names.
   mt_assert(
@@ -489,7 +489,7 @@ TaintConfig generator::partial_sink(
     const std::vector<std::string>& features,
     Root::Kind callee_port,
     RootSetAbstractDomain via_type_of_ports,
-    RootSetAbstractDomain via_value_of_ports) {
+    LabelledRootSetAbstractDomain via_value_of_ports) {
   // These ports must go with canonical names.
   mt_assert(
       callee_port != Root::Kind::Anchor && callee_port != Root::Kind::Producer);

@@ -31,6 +31,7 @@
 #include <mariana-trench/IncludeMacros.h>
 #include <mariana-trench/Kind.h>
 #include <mariana-trench/KindFactory.h>
+#include <mariana-trench/LabelledRoot.h>
 #include <mariana-trench/Method.h>
 #include <mariana-trench/MethodSet.h>
 #include <mariana-trench/PathTreeDomain.h>
@@ -41,6 +42,7 @@
 namespace marianatrench {
 
 using RootSetAbstractDomain = sparta::HashedSetAbstractDomain<Root>;
+using LabelledRootSetAbstractDomain = sparta::HashedSetAbstractDomain<LabelledRoot>;
 using CanonicalNameSetAbstractDomain =
     sparta::HashedSetAbstractDomain<CanonicalName>;
 
@@ -118,7 +120,7 @@ class Frame final : public sparta::AbstractDomain<Frame> {
       FeatureMayAlwaysSet inferred_features,
       FeatureSet user_features,
       RootSetAbstractDomain via_type_of_ports,
-      RootSetAbstractDomain via_value_of_ports,
+      LabelledRootSetAbstractDomain via_value_of_ports,
       CanonicalNameSetAbstractDomain canonical_names,
       CallInfo call_info,
       PathTreeDomain output_paths,
@@ -204,7 +206,7 @@ class Frame final : public sparta::AbstractDomain<Frame> {
     return via_type_of_ports_;
   }
 
-  const RootSetAbstractDomain& via_value_of_ports() const {
+  const LabelledRootSetAbstractDomain& via_value_of_ports() const {
     return via_value_of_ports_;
   }
 
@@ -343,7 +345,7 @@ class Frame final : public sparta::AbstractDomain<Frame> {
   FeatureMayAlwaysSet inferred_features_;
   FeatureSet user_features_;
   RootSetAbstractDomain via_type_of_ports_;
-  RootSetAbstractDomain via_value_of_ports_;
+  LabelledRootSetAbstractDomain via_value_of_ports_;
   CanonicalNameSetAbstractDomain canonical_names_;
   CallInfo call_info_;
   PathTreeDomain output_paths_;

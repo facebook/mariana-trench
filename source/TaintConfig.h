@@ -59,7 +59,7 @@ class TaintConfig final {
       FeatureMayAlwaysSet inferred_features,
       FeatureSet user_features,
       RootSetAbstractDomain via_type_of_ports,
-      RootSetAbstractDomain via_value_of_ports,
+      LabelledRootSetAbstractDomain via_value_of_ports,
       CanonicalNameSetAbstractDomain canonical_names,
       PathTreeDomain output_paths,
       LocalPositionSet local_positions,
@@ -183,7 +183,7 @@ class TaintConfig final {
     return via_type_of_ports_;
   }
 
-  const RootSetAbstractDomain& via_value_of_ports() const {
+  const LabelledRootSetAbstractDomain& via_value_of_ports() const {
     return via_value_of_ports_;
   }
 
@@ -224,7 +224,7 @@ class TaintConfig final {
   FeatureMayAlwaysSet inferred_features_;
   FeatureSet user_features_;
   RootSetAbstractDomain via_type_of_ports_;
-  RootSetAbstractDomain via_value_of_ports_;
+  LabelledRootSetAbstractDomain via_value_of_ports_;
   CanonicalNameSetAbstractDomain canonical_names_;
   // These are used only for result and receiver sinks (should be bottom in all
   // other cases). They are used for propagation/sink inference in backward

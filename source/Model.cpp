@@ -1725,7 +1725,7 @@ bool Model::check_taint_consistency(const Taint& taint, std::string_view kind)
       for (const auto& root : frame.via_value_of_ports().elements()) {
         // Logs invalid ports specifed for via_value_of but does not prevent the
         // model from being created.
-        check_root_consistency(root);
+        check_root_consistency(root.root());
       }
     }
   }

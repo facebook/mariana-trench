@@ -1047,7 +1047,7 @@
   "method" : "Lcom/facebook/marianatrench/integrationtests/ViaValueOf;.getSourceViaInvalidModel:()Ljava/lang/Object;",
   "position" : 
   {
-    "line" : 24,
+    "line" : 28,
     "path" : "ViaValueOf.java"
   }
 }
@@ -1086,10 +1086,47 @@
   }
 }
 {
+  "generations" : 
+  [
+    {
+      "port" : "Return",
+      "taint" : 
+      [
+        {
+          "kinds" : 
+          [
+            {
+              "call_info" : "Declaration",
+              "kind" : "Source",
+              "origins" : 
+              [
+                "Lcom/facebook/marianatrench/integrationtests/ViaValueOf;.getSourceViaStringWithLabel:(Ljava/lang/String;)Ljava/lang/Object;"
+              ],
+              "via_value_of" : 
+              [
+                {
+                  "label" : "MyLabel",
+                  "port" : "Argument(1)"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "method" : "Lcom/facebook/marianatrench/integrationtests/ViaValueOf;.getSourceViaStringWithLabel:(Ljava/lang/String;)Ljava/lang/Object;",
+  "position" : 
+  {
+    "line" : 24,
+    "path" : "ViaValueOf.java"
+  }
+}
+{
   "method" : "Lcom/facebook/marianatrench/integrationtests/ViaValueOf;.getString:()Ljava/lang/String;",
   "position" : 
   {
-    "line" : 44,
+    "line" : 48,
     "path" : "ViaValueOf.java"
   }
 }
@@ -1098,7 +1135,7 @@
   "method" : "Lcom/facebook/marianatrench/integrationtests/ViaValueOf;.propagationReturn:(Ljava/lang/Object;)Ljava/lang/Object;",
   "position" : 
   {
-    "line" : 34,
+    "line" : 38,
     "path" : "ViaValueOf.java"
   },
   "propagation" : 
@@ -1129,7 +1166,7 @@
   "method" : "Lcom/facebook/marianatrench/integrationtests/ViaValueOf;.propagationReturnString:(Ljava/lang/String;)Ljava/lang/String;",
   "position" : 
   {
-    "line" : 40,
+    "line" : 44,
     "path" : "ViaValueOf.java"
   },
   "propagation" : 
@@ -1159,7 +1196,7 @@
   "method" : "Lcom/facebook/marianatrench/integrationtests/ViaValueOf;.sinkViaInt:(ILjava/lang/Object;)V",
   "position" : 
   {
-    "line" : 27,
+    "line" : 31,
     "path" : "ViaValueOf.java"
   },
   "sinks" : 
@@ -1193,7 +1230,7 @@
   "method" : "Lcom/facebook/marianatrench/integrationtests/ViaValueOf;.sinkViaInvalidModel:(Ljava/lang/Object;)V",
   "position" : 
   {
-    "line" : 31,
+    "line" : 35,
     "path" : "ViaValueOf.java"
   },
   "sinks" : 
@@ -1227,7 +1264,7 @@
   "method" : "Lcom/facebook/marianatrench/integrationtests/ViaValueOf;.sinkViaString:(Ljava/lang/String;Ljava/lang/Object;)V",
   "position" : 
   {
-    "line" : 29,
+    "line" : 33,
     "path" : "ViaValueOf.java"
   },
   "sinks" : 
@@ -1261,7 +1298,7 @@
   "method" : "Lcom/facebook/marianatrench/integrationtests/ViaValueOf;.someProcessing:(Ljava/lang/Object;)V",
   "position" : 
   {
-    "line" : 37,
+    "line" : 41,
     "path" : "ViaValueOf.java"
   }
 }
@@ -1277,7 +1314,7 @@
       "callee" : "Lcom/facebook/marianatrench/integrationtests/ViaValueOf;.sinkViaString:(Ljava/lang/String;Ljava/lang/Object;)V",
       "position" : 
       {
-        "line" : 91,
+        "line" : 100,
         "path" : "ViaValueOf.java"
       },
       "rule" : 1,
@@ -1319,7 +1356,7 @@
             "position" : 
             {
               "end" : 49,
-              "line" : 91,
+              "line" : 100,
               "path" : "ViaValueOf.java",
               "start" : 25
             }
@@ -1363,7 +1400,7 @@
             "position" : 
             {
               "end" : 37,
-              "line" : 89,
+              "line" : 98,
               "path" : "ViaValueOf.java",
               "start" : 20
             }
@@ -1375,7 +1412,7 @@
   "method" : "Lcom/facebook/marianatrench/integrationtests/ViaValueOf;.testHops:()V",
   "position" : 
   {
-    "line" : 88,
+    "line" : 97,
     "path" : "ViaValueOf.java"
   }
 }
@@ -1386,7 +1423,7 @@
       "callee" : "Lcom/facebook/marianatrench/integrationtests/ViaValueOf;.sinkViaInvalidModel:(Ljava/lang/Object;)V",
       "position" : 
       {
-        "line" : 96,
+        "line" : 105,
         "path" : "ViaValueOf.java"
       },
       "rule" : 1,
@@ -1417,7 +1454,7 @@
             "position" : 
             {
               "end" : 29,
-              "line" : 96,
+              "line" : 105,
               "path" : "ViaValueOf.java",
               "start" : 24
             }
@@ -1450,7 +1487,7 @@
             "position" : 
             {
               "end" : 43,
-              "line" : 95,
+              "line" : 104,
               "path" : "ViaValueOf.java",
               "start" : 20
             }
@@ -1462,7 +1499,7 @@
   "method" : "Lcom/facebook/marianatrench/integrationtests/ViaValueOf;.testInvalidModel:()V",
   "position" : 
   {
-    "line" : 94,
+    "line" : 103,
     "path" : "ViaValueOf.java"
   }
 }
@@ -1477,7 +1514,7 @@
       "callee" : "Lcom/facebook/marianatrench/integrationtests/ViaValueOf;.sinkViaInt:(ILjava/lang/Object;)V",
       "position" : 
       {
-        "line" : 75,
+        "line" : 84,
         "path" : "ViaValueOf.java"
       },
       "rule" : 1,
@@ -1519,7 +1556,7 @@
             "position" : 
             {
               "end" : 35,
-              "line" : 75,
+              "line" : 84,
               "path" : "ViaValueOf.java",
               "start" : 30
             }
@@ -1552,7 +1589,7 @@
             "position" : 
             {
               "end" : 32,
-              "line" : 74,
+              "line" : 83,
               "path" : "ViaValueOf.java",
               "start" : 27
             }
@@ -1564,7 +1601,7 @@
   "method" : "Lcom/facebook/marianatrench/integrationtests/ViaValueOf;.testSinkIntConstant:()V",
   "position" : 
   {
-    "line" : 73,
+    "line" : 82,
     "path" : "ViaValueOf.java"
   }
 }
@@ -1579,7 +1616,7 @@
       "callee" : "Lcom/facebook/marianatrench/integrationtests/ViaValueOf;.sinkViaInt:(ILjava/lang/Object;)V",
       "position" : 
       {
-        "line" : 70,
+        "line" : 79,
         "path" : "ViaValueOf.java"
       },
       "rule" : 1,
@@ -1621,7 +1658,7 @@
             "position" : 
             {
               "end" : 24,
-              "line" : 70,
+              "line" : 79,
               "path" : "ViaValueOf.java",
               "start" : 19
             }
@@ -1654,7 +1691,7 @@
             "position" : 
             {
               "end" : 32,
-              "line" : 69,
+              "line" : 78,
               "path" : "ViaValueOf.java",
               "start" : 27
             }
@@ -1666,7 +1703,7 @@
   "method" : "Lcom/facebook/marianatrench/integrationtests/ViaValueOf;.testSinkIntLiteral:()V",
   "position" : 
   {
-    "line" : 68,
+    "line" : 77,
     "path" : "ViaValueOf.java"
   }
 }
@@ -1681,7 +1718,7 @@
       "callee" : "Lcom/facebook/marianatrench/integrationtests/ViaValueOf;.sinkViaString:(Ljava/lang/String;Ljava/lang/Object;)V",
       "position" : 
       {
-        "line" : 85,
+        "line" : 94,
         "path" : "ViaValueOf.java"
       },
       "rule" : 1,
@@ -1723,7 +1760,7 @@
             "position" : 
             {
               "end" : 38,
-              "line" : 85,
+              "line" : 94,
               "path" : "ViaValueOf.java",
               "start" : 33
             }
@@ -1756,7 +1793,7 @@
             "position" : 
             {
               "end" : 32,
-              "line" : 84,
+              "line" : 93,
               "path" : "ViaValueOf.java",
               "start" : 27
             }
@@ -1768,7 +1805,7 @@
   "method" : "Lcom/facebook/marianatrench/integrationtests/ViaValueOf;.testSinkStringConstant:()V",
   "position" : 
   {
-    "line" : 83,
+    "line" : 92,
     "path" : "ViaValueOf.java"
   }
 }
@@ -1783,7 +1820,7 @@
       "callee" : "Lcom/facebook/marianatrench/integrationtests/ViaValueOf;.sinkViaString:(Ljava/lang/String;Ljava/lang/Object;)V",
       "position" : 
       {
-        "line" : 80,
+        "line" : 89,
         "path" : "ViaValueOf.java"
       },
       "rule" : 1,
@@ -1825,7 +1862,7 @@
             "position" : 
             {
               "end" : 30,
-              "line" : 80,
+              "line" : 89,
               "path" : "ViaValueOf.java",
               "start" : 25
             }
@@ -1858,7 +1895,7 @@
             "position" : 
             {
               "end" : 32,
-              "line" : 79,
+              "line" : 88,
               "path" : "ViaValueOf.java",
               "start" : 27
             }
@@ -1870,7 +1907,7 @@
   "method" : "Lcom/facebook/marianatrench/integrationtests/ViaValueOf;.testSinkStringLiteral:()V",
   "position" : 
   {
-    "line" : 78,
+    "line" : 87,
     "path" : "ViaValueOf.java"
   }
 }
@@ -1885,7 +1922,7 @@
       "callee" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
       "position" : 
       {
-        "line" : 55,
+        "line" : 59,
         "path" : "ViaValueOf.java"
       },
       "rule" : 1,
@@ -1916,7 +1953,7 @@
             "position" : 
             {
               "end" : 21,
-              "line" : 55,
+              "line" : 59,
               "path" : "ViaValueOf.java",
               "start" : 16
             }
@@ -1960,7 +1997,7 @@
             "position" : 
             {
               "end" : 34,
-              "line" : 54,
+              "line" : 58,
               "path" : "ViaValueOf.java",
               "start" : 20
             }
@@ -1972,7 +2009,7 @@
   "method" : "Lcom/facebook/marianatrench/integrationtests/ViaValueOf;.testSourceIntConstant:()V",
   "position" : 
   {
-    "line" : 53,
+    "line" : 57,
     "path" : "ViaValueOf.java"
   }
 }
@@ -1987,7 +2024,7 @@
       "callee" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
       "position" : 
       {
-        "line" : 50,
+        "line" : 54,
         "path" : "ViaValueOf.java"
       },
       "rule" : 1,
@@ -2018,7 +2055,7 @@
             "position" : 
             {
               "end" : 21,
-              "line" : 50,
+              "line" : 54,
               "path" : "ViaValueOf.java",
               "start" : 16
             }
@@ -2062,7 +2099,7 @@
             "position" : 
             {
               "end" : 34,
-              "line" : 49,
+              "line" : 53,
               "path" : "ViaValueOf.java",
               "start" : 20
             }
@@ -2074,7 +2111,7 @@
   "method" : "Lcom/facebook/marianatrench/integrationtests/ViaValueOf;.testSourceIntLiteral:()V",
   "position" : 
   {
-    "line" : 48,
+    "line" : 52,
     "path" : "ViaValueOf.java"
   }
 }
@@ -2089,7 +2126,7 @@
       "callee" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
       "position" : 
       {
-        "line" : 65,
+        "line" : 74,
         "path" : "ViaValueOf.java"
       },
       "rule" : 1,
@@ -2120,7 +2157,7 @@
             "position" : 
             {
               "end" : 21,
-              "line" : 65,
+              "line" : 74,
               "path" : "ViaValueOf.java",
               "start" : 16
             }
@@ -2164,7 +2201,7 @@
             "position" : 
             {
               "end" : 37,
-              "line" : 64,
+              "line" : 73,
               "path" : "ViaValueOf.java",
               "start" : 20
             }
@@ -2176,7 +2213,7 @@
   "method" : "Lcom/facebook/marianatrench/integrationtests/ViaValueOf;.testSourceStringConstant:()V",
   "position" : 
   {
-    "line" : 63,
+    "line" : 72,
     "path" : "ViaValueOf.java"
   }
 }
@@ -2191,7 +2228,7 @@
       "callee" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
       "position" : 
       {
-        "line" : 60,
+        "line" : 64,
         "path" : "ViaValueOf.java"
       },
       "rule" : 1,
@@ -2222,7 +2259,7 @@
             "position" : 
             {
               "end" : 21,
-              "line" : 60,
+              "line" : 64,
               "path" : "ViaValueOf.java",
               "start" : 16
             }
@@ -2266,7 +2303,7 @@
             "position" : 
             {
               "end" : 37,
-              "line" : 59,
+              "line" : 63,
               "path" : "ViaValueOf.java",
               "start" : 20
             }
@@ -2278,7 +2315,109 @@
   "method" : "Lcom/facebook/marianatrench/integrationtests/ViaValueOf;.testSourceStringLiteral:()V",
   "position" : 
   {
-    "line" : 58,
+    "line" : 62,
+    "path" : "ViaValueOf.java"
+  }
+}
+{
+  "issues" : 
+  [
+    {
+      "always_features" : 
+      [
+        "via-value:MyLabel=Foo"
+      ],
+      "callee" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
+      "position" : 
+      {
+        "line" : 69,
+        "path" : "ViaValueOf.java"
+      },
+      "rule" : 1,
+      "sink_index" : "0",
+      "sinks" : 
+      [
+        {
+          "kinds" : 
+          [
+            {
+              "call_info" : "Origin",
+              "callee_interval" : 
+              [
+                38,
+                39
+              ],
+              "kind" : "Sink",
+              "origins" : 
+              [
+                "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V"
+              ],
+              "preserves_type_context" : true
+            }
+          ],
+          "origin" : 
+          {
+            "method" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
+            "position" : 
+            {
+              "end" : 21,
+              "line" : 69,
+              "path" : "ViaValueOf.java",
+              "start" : 16
+            }
+          }
+        }
+      ],
+      "sources" : 
+      [
+        {
+          "kinds" : 
+          [
+            {
+              "always_features" : 
+              [
+                "via-value:MyLabel=Foo"
+              ],
+              "call_info" : "Origin",
+              "callee_interval" : 
+              [
+                38,
+                39
+              ],
+              "kind" : "Source",
+              "origins" : 
+              [
+                "Lcom/facebook/marianatrench/integrationtests/ViaValueOf;.getSourceViaStringWithLabel:(Ljava/lang/String;)Ljava/lang/Object;"
+              ],
+              "preserves_type_context" : true
+            }
+          ],
+          "local_user_features" : 
+          {
+            "always_features" : 
+            [
+              "via-value:MyLabel=Foo"
+            ]
+          },
+          "origin" : 
+          {
+            "method" : "Lcom/facebook/marianatrench/integrationtests/ViaValueOf;.getSourceViaStringWithLabel:(Ljava/lang/String;)Ljava/lang/Object;",
+            "position" : 
+            {
+              "end" : 46,
+              "line" : 68,
+              "path" : "ViaValueOf.java",
+              "start" : 20
+            }
+          }
+        }
+      ]
+    }
+  ],
+  "method" : "Lcom/facebook/marianatrench/integrationtests/ViaValueOf;.testSourceStringLiteralWithLabel:()V",
+  "position" : 
+  {
+    "line" : 67,
     "path" : "ViaValueOf.java"
   }
 }
@@ -2294,7 +2433,7 @@
       "callee" : "Lcom/facebook/marianatrench/integrationtests/ViaValueOf;.sinkViaString:(Ljava/lang/String;Ljava/lang/Object;)V",
       "position" : 
       {
-        "line" : 104,
+        "line" : 113,
         "path" : "ViaValueOf.java"
       },
       "rule" : 1,
@@ -2336,122 +2475,9 @@
             "position" : 
             {
               "end" : 28,
-              "line" : 104,
+              "line" : 113,
               "path" : "ViaValueOf.java",
               "start" : 23
-            }
-          }
-        }
-      ],
-      "sources" : 
-      [
-        {
-          "kinds" : 
-          [
-            {
-              "always_features" : 
-              [
-                "via-value:unknown"
-              ],
-              "call_info" : "Origin",
-              "callee_interval" : 
-              [
-                38,
-                39
-              ],
-              "kind" : "Source",
-              "origins" : 
-              [
-                "Lcom/facebook/marianatrench/integrationtests/ViaValueOf;.getSourceViaString:(Ljava/lang/String;)Ljava/lang/Object;"
-              ],
-              "preserves_type_context" : true
-            }
-          ],
-          "local_user_features" : 
-          {
-            "always_features" : 
-            [
-              "via-value:unknown"
-            ]
-          },
-          "origin" : 
-          {
-            "method" : "Lcom/facebook/marianatrench/integrationtests/ViaValueOf;.getSourceViaString:(Ljava/lang/String;)Ljava/lang/Object;",
-            "position" : 
-            {
-              "end" : 37,
-              "line" : 101,
-              "path" : "ViaValueOf.java",
-              "start" : 20
-            }
-          }
-        }
-      ]
-    }
-  ],
-  "method" : "Lcom/facebook/marianatrench/integrationtests/ViaValueOf;.testUnknown1:()V",
-  "position" : 
-  {
-    "line" : 99,
-    "path" : "ViaValueOf.java"
-  }
-}
-{
-  "issues" : 
-  [
-    {
-      "always_features" : 
-      [
-        "via-value:unknown"
-      ],
-      "callee" : "Lcom/facebook/marianatrench/integrationtests/ViaValueOf;.sinkViaString:(Ljava/lang/String;Ljava/lang/Object;)V",
-      "position" : 
-      {
-        "line" : 112,
-        "path" : "ViaValueOf.java"
-      },
-      "rule" : 1,
-      "sink_index" : "0",
-      "sinks" : 
-      [
-        {
-          "kinds" : 
-          [
-            {
-              "always_features" : 
-              [
-                "via-value:unknown"
-              ],
-              "call_info" : "Origin",
-              "callee_interval" : 
-              [
-                38,
-                39
-              ],
-              "kind" : "Sink",
-              "origins" : 
-              [
-                "Lcom/facebook/marianatrench/integrationtests/ViaValueOf;.sinkViaString:(Ljava/lang/String;Ljava/lang/Object;)V"
-              ],
-              "preserves_type_context" : true
-            }
-          ],
-          "local_user_features" : 
-          {
-            "always_features" : 
-            [
-              "via-value:unknown"
-            ]
-          },
-          "origin" : 
-          {
-            "method" : "Lcom/facebook/marianatrench/integrationtests/ViaValueOf;.sinkViaString:(Ljava/lang/String;Ljava/lang/Object;)V",
-            "position" : 
-            {
-              "end" : 27,
-              "line" : 112,
-              "path" : "ViaValueOf.java",
-              "start" : 22
             }
           }
         }
@@ -2502,10 +2528,123 @@
       ]
     }
   ],
+  "method" : "Lcom/facebook/marianatrench/integrationtests/ViaValueOf;.testUnknown1:()V",
+  "position" : 
+  {
+    "line" : 108,
+    "path" : "ViaValueOf.java"
+  }
+}
+{
+  "issues" : 
+  [
+    {
+      "always_features" : 
+      [
+        "via-value:unknown"
+      ],
+      "callee" : "Lcom/facebook/marianatrench/integrationtests/ViaValueOf;.sinkViaString:(Ljava/lang/String;Ljava/lang/Object;)V",
+      "position" : 
+      {
+        "line" : 121,
+        "path" : "ViaValueOf.java"
+      },
+      "rule" : 1,
+      "sink_index" : "0",
+      "sinks" : 
+      [
+        {
+          "kinds" : 
+          [
+            {
+              "always_features" : 
+              [
+                "via-value:unknown"
+              ],
+              "call_info" : "Origin",
+              "callee_interval" : 
+              [
+                38,
+                39
+              ],
+              "kind" : "Sink",
+              "origins" : 
+              [
+                "Lcom/facebook/marianatrench/integrationtests/ViaValueOf;.sinkViaString:(Ljava/lang/String;Ljava/lang/Object;)V"
+              ],
+              "preserves_type_context" : true
+            }
+          ],
+          "local_user_features" : 
+          {
+            "always_features" : 
+            [
+              "via-value:unknown"
+            ]
+          },
+          "origin" : 
+          {
+            "method" : "Lcom/facebook/marianatrench/integrationtests/ViaValueOf;.sinkViaString:(Ljava/lang/String;Ljava/lang/Object;)V",
+            "position" : 
+            {
+              "end" : 27,
+              "line" : 121,
+              "path" : "ViaValueOf.java",
+              "start" : 22
+            }
+          }
+        }
+      ],
+      "sources" : 
+      [
+        {
+          "kinds" : 
+          [
+            {
+              "always_features" : 
+              [
+                "via-value:unknown"
+              ],
+              "call_info" : "Origin",
+              "callee_interval" : 
+              [
+                38,
+                39
+              ],
+              "kind" : "Source",
+              "origins" : 
+              [
+                "Lcom/facebook/marianatrench/integrationtests/ViaValueOf;.getSourceViaString:(Ljava/lang/String;)Ljava/lang/Object;"
+              ],
+              "preserves_type_context" : true
+            }
+          ],
+          "local_user_features" : 
+          {
+            "always_features" : 
+            [
+              "via-value:unknown"
+            ]
+          },
+          "origin" : 
+          {
+            "method" : "Lcom/facebook/marianatrench/integrationtests/ViaValueOf;.getSourceViaString:(Ljava/lang/String;)Ljava/lang/Object;",
+            "position" : 
+            {
+              "end" : 37,
+              "line" : 119,
+              "path" : "ViaValueOf.java",
+              "start" : 20
+            }
+          }
+        }
+      ]
+    }
+  ],
   "method" : "Lcom/facebook/marianatrench/integrationtests/ViaValueOf;.testUnknown2:()V",
   "position" : 
   {
-    "line" : 107,
+    "line" : 116,
     "path" : "ViaValueOf.java"
   }
 }

@@ -298,7 +298,8 @@ std::vector<const Feature*> Frame::materialize_via_value_of_ports(
 
   // Materialize via_value_of_ports into features and add them to the inferred
   // features
-  for (const auto& port : via_value_of_ports().elements()) {
+  for (const auto& labelled_port : via_value_of_ports().elements()) {
+    const auto& port = labelled_port.root();
     if (!port.is_argument() ||
         port.parameter_position() >= source_constant_arguments.size()) {
       ERROR(
@@ -309,7 +310,7 @@ std::vector<const Feature*> Frame::materialize_via_value_of_ports(
       continue;
     }
     const auto* feature = feature_factory->get_via_value_of_feature(
-        source_constant_arguments[port.parameter_position()]);
+        labelled_port.label(), source_constant_arguments[port.parameter_position()]);
     features_added.push_back(feature);
   }
   return features_added;

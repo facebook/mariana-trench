@@ -252,6 +252,13 @@
       "Ljava/lang/Object;.<init>:()V"
     ]
   },
+  "Lcom/facebook/marianatrench/integrationtests/ViaValueOf;.getSourceViaStringWithLabel:(Ljava/lang/String;)Ljava/lang/Object;" : 
+  {
+    "static" : 
+    [
+      "Ljava/lang/Object;.<init>:()V"
+    ]
+  },
   "Lcom/facebook/marianatrench/integrationtests/ViaValueOf;.testHops:()V" : 
   {
     "virtual" : 
@@ -356,6 +363,17 @@
     "virtual" : 
     [
       "Lcom/facebook/marianatrench/integrationtests/ViaValueOf;.getSourceViaString:(Ljava/lang/String;)Ljava/lang/Object;"
+    ]
+  },
+  "Lcom/facebook/marianatrench/integrationtests/ViaValueOf;.testSourceStringLiteralWithLabel:()V" : 
+  {
+    "static" : 
+    [
+      "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V"
+    ],
+    "virtual" : 
+    [
+      "Lcom/facebook/marianatrench/integrationtests/ViaValueOf;.getSourceViaStringWithLabel:(Ljava/lang/String;)Ljava/lang/Object;"
     ]
   },
   "Lcom/facebook/marianatrench/integrationtests/ViaValueOf;.testUnknown1:()V" : 
