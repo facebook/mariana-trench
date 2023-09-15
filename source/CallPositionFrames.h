@@ -20,7 +20,6 @@
 #include <mariana-trench/FlattenIterator.h>
 #include <mariana-trench/Frame.h>
 #include <mariana-trench/FramesMap.h>
-#include <mariana-trench/GroupHashedSetAbstractDomain.h>
 #include <mariana-trench/IncludeMacros.h>
 #include <mariana-trench/KindFactory.h>
 #include <mariana-trench/RootPatriciaTreeAbstractPartition.h>

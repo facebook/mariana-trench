@@ -10,7 +10,6 @@
 #include <sparta/HashedSetAbstractDomain.h>
 
 #include <mariana-trench/ExtraTrace.h>
-#include <mariana-trench/GroupHashedSetAbstractDomain.h>
 
 namespace marianatrench {
 
