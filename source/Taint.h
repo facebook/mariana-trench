@@ -14,10 +14,10 @@
 #include <json/json.h>
 
 #include <sparta/AbstractDomain.h>
+#include <sparta/PatriciaTreeMapAbstractPartition.h>
 
 #include <mariana-trench/CalleeFrames.h>
 #include <mariana-trench/Frame.h>
-#include <mariana-trench/GroupHashedSetAbstractDomain.h>
 #include <mariana-trench/IncludeMacros.h>
 #include <mariana-trench/KindFactory.h>
 #include <mariana-trench/Log.h>
@@ -34,13 +34,10 @@ class TaintFramesIterator;
  */
 class Taint final : public sparta::AbstractDomain<Taint> {
  private:
-  using Set = GroupHashedSetAbstractDomain<
-      CalleeFrames,
-      CalleeFrames::GroupHash,
-      CalleeFrames::GroupEqual,
-      CalleeFrames::GroupDifference>;
+  using Map =
+      sparta::PatriciaTreeMapAbstractPartition<CalleeFrames::Key, CalleeFrames>;
 
-  explicit Taint(Set set) : set_(std::move(set)) {}
+  explicit Taint(Map map) : map_(std::move(map)) {}
 
   friend class TaintFramesIterator;
 
@@ -52,10 +49,10 @@ class Taint final : public sparta::AbstractDomain<Taint> {
 
   INCLUDE_DEFAULT_COPY_CONSTRUCTORS_AND_ASSIGNMENTS(Taint)
 
-  INCLUDE_ABSTRACT_DOMAIN_METHODS(Taint, Set, set_)
+  INCLUDE_ABSTRACT_DOMAIN_METHODS(Taint, Map, map_)
 
   bool empty() const {
-    return set_.empty();
+    return map_.is_bottom();
   }
 
   TaintFramesIterator frames_iterator() const;
@@ -68,8 +65,10 @@ class Taint final : public sparta::AbstractDomain<Taint> {
 
   void add(const TaintConfig& config);
 
+  void add(const CalleeFrames& callee_frames);
+
   void clear() {
-    set_.clear();
+    map_.set_to_bottom();
   }
 
   void difference_with(const Taint& other);
@@ -78,7 +77,7 @@ class Taint final : public sparta::AbstractDomain<Taint> {
   void map(Function&& f) {
     static_assert(std::is_same_v<decltype(f(std::declval<Frame&&>())), Frame>);
 
-    set_.map([f = std::forward<Function>(f)](CalleeFrames callee_frames) {
+    map_.map([f = std::forward<Function>(f)](CalleeFrames callee_frames) {
       callee_frames.map(f);
       return callee_frames;
     });
@@ -89,7 +88,7 @@ class Taint final : public sparta::AbstractDomain<Taint> {
     static_assert(
         std::is_same_v<decltype(predicate(std::declval<const Frame>())), bool>);
 
-    set_.map([predicate = std::forward<Predicate>(predicate)](
+    map_.map([predicate = std::forward<Predicate>(predicate)](
                  CalleeFrames callee_frames) {
       callee_frames.filter(predicate);
       return callee_frames;
@@ -170,7 +169,7 @@ class Taint final : public sparta::AbstractDomain<Taint> {
       TransformKind&& transform_kind, // std::vector<const Kind*>(const Kind*)
       AddFeatures&& add_features // FeatureMayAlwaysSet(const Kind*)
   ) {
-    set_.map([transform_kind = std::forward<TransformKind>(transform_kind),
+    map_.map([transform_kind = std::forward<TransformKind>(transform_kind),
               add_features](CalleeFrames frames) {
       frames.transform_kind_with_features(transform_kind, add_features);
       return frames;
@@ -236,13 +235,13 @@ class Taint final : public sparta::AbstractDomain<Taint> {
   std::unordered_map<Key, Taint> partition_by_kind(
       const std::function<Key(const Kind*)>& map_kind) const {
     std::unordered_map<Key, Taint> result;
-    for (const auto& callee_frames : set_) {
+    for (const auto& [_, callee_frames] : map_.bindings()) {
       auto callee_frames_partitioned =
           callee_frames.partition_by_kind(map_kind);
 
       for (const auto& [mapped_value, callee_frames] :
            callee_frames_partitioned) {
-        result[mapped_value].set_.add(callee_frames);
+        result[mapped_value].add(callee_frames);
       }
     }
     return result;
@@ -252,9 +251,9 @@ class Taint final : public sparta::AbstractDomain<Taint> {
   std::unordered_map<Key, Taint> partition_by_call_info(
       const std::function<Key(CallInfo)>& map_call_info) const {
     std::unordered_map<Key, Taint> result;
-    for (const auto& callee_frames : set_) {
+    for (const auto& [_, callee_frames] : map_.bindings()) {
       auto mapped_value = map_call_info(callee_frames.call_info());
-      result[mapped_value].set_.add(callee_frames);
+      result[mapped_value].add(callee_frames);
     }
     return result;
   }
@@ -293,14 +292,26 @@ class Taint final : public sparta::AbstractDomain<Taint> {
   Taint essential() const;
 
  private:
-  Set set_;
+  Map map_;
 };
 
 class TaintFramesIterator {
  private:
+  struct KeyToFramesMapDereference {
+    static CalleeFrames::iterator begin(
+        const std::pair<CalleeFrames::Key, CalleeFrames>& iterator) {
+      return iterator.second.begin();
+    }
+    static CalleeFrames::iterator end(
+        const std::pair<CalleeFrames::Key, CalleeFrames>& iterator) {
+      return iterator.second.end();
+    }
+  };
+
   using ConstIterator = FlattenIterator<
-      /* OuterIterator */ Taint::Set::iterator,
-      /* InnerIterator */ CalleeFrames::iterator>;
+      /* OuterIterator */ Taint::Map::MapType::iterator,
+      /* InnerIterator */ CalleeFrames::iterator,
+      KeyToFramesMapDereference>;
 
  public:
   // C++ container concept member types
@@ -318,11 +329,13 @@ class TaintFramesIterator {
   DELETE_COPY_CONSTRUCTORS_AND_ASSIGNMENTS(TaintFramesIterator)
 
   const_iterator begin() const {
-    return ConstIterator(taint_.set_.begin(), taint_.set_.end());
+    return ConstIterator(
+        taint_.map_.bindings().begin(), taint_.map_.bindings().end());
   }
 
   const_iterator end() const {
-    return ConstIterator(taint_.set_.end(), taint_.set_.end());
+    return ConstIterator(
+        taint_.map_.bindings().end(), taint_.map_.bindings().end());
   }
 
  private:

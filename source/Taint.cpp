@@ -30,16 +30,29 @@ std::size_t Taint::num_frames() const {
   return count;
 }
 
+void Taint::add(const CalleeFrames& callee_frames) {
+  map_.update(
+      callee_frames.callee_frame_key(),
+      [&callee_frames](const CalleeFrames& existing) {
+        return existing.join(callee_frames);
+      });
+}
+
 void Taint::add(const TaintConfig& config) {
-  set_.add(CalleeFrames{config});
+  add(CalleeFrames{config});
 }
 
 void Taint::difference_with(const Taint& other) {
-  set_.difference_with(other.set_);
+  map_.difference_like_operation(
+      other.map_, [](const CalleeFrames& left, const CalleeFrames& right) {
+        auto left_copy = left;
+        left_copy.difference_with(right);
+        return left_copy;
+      });
 }
 
 void Taint::set_leaf_origins_if_empty(const MethodSet& origins) {
-  set_.map([&origins](CalleeFrames frames) {
+  map_.map([&origins](CalleeFrames frames) {
     if (frames.callee() == nullptr &&
         !frames.call_info().is_propagation_without_trace()) {
       frames.set_origins_if_empty(origins);
@@ -49,7 +62,7 @@ void Taint::set_leaf_origins_if_empty(const MethodSet& origins) {
 }
 
 void Taint::set_field_origins_if_empty_with_field_callee(const Field* field) {
-  set_.map([field](CalleeFrames frames) {
+  map_.map([field](CalleeFrames frames) {
     // Setting a field callee must always be done on non-propagated leaves.
     mt_assert(frames.callee() == nullptr);
     frames.set_field_origins_if_empty_with_field_callee(field);
@@ -62,21 +75,21 @@ void Taint::add_locally_inferred_features(const FeatureMayAlwaysSet& features) {
     return;
   }
 
-  set_.map([&features](CalleeFrames frames) {
+  map_.map([&features](CalleeFrames frames) {
     frames.add_locally_inferred_features(features);
     return frames;
   });
 }
 
 void Taint::add_local_position(const Position* position) {
-  set_.map([position](CalleeFrames frames) {
+  map_.map([position](CalleeFrames frames) {
     frames.add_local_position(position);
     return frames;
   });
 }
 
 void Taint::set_local_positions(const LocalPositionSet& positions) {
-  set_.map([&positions](CalleeFrames frames) {
+  map_.map([&positions](CalleeFrames frames) {
     frames.set_local_positions(positions);
     return frames;
   });
@@ -84,7 +97,7 @@ void Taint::set_local_positions(const LocalPositionSet& positions) {
 
 LocalPositionSet Taint::local_positions() const {
   auto result = LocalPositionSet::bottom();
-  for (const auto& callee_frames : set_) {
+  for (const auto& [_, callee_frames] : map_.bindings()) {
     result.join_with(callee_frames.local_positions());
   }
   return result;
@@ -96,7 +109,7 @@ FeatureMayAlwaysSet Taint::locally_inferred_features(
     const Position* MT_NULLABLE position,
     const AccessPath& callee_port) const {
   auto result = FeatureMayAlwaysSet::bottom();
-  for (const auto& callee_frames : set_) {
+  for (const auto& [_, callee_frames] : map_.bindings()) {
     // Key look up by callee will be nice but is not supported by underlying
     // GroupHashedSetAbstractDomain.
     if (callee_frames.callee() == callee &&
@@ -134,10 +147,10 @@ Taint Taint::propagate(
     const CallClassIntervalContext& class_interval_context,
     const ClassIntervals::Interval& caller_class_interval) const {
   Taint result;
-  for (const auto& frames : set_) {
+  for (const auto& [_, frames] : map_.bindings()) {
     if (frames.call_info().is_propagation_without_trace()) {
       // For propagation without traces, add as is.
-      result.set_.add(frames);
+      result.add(frames);
       continue;
     }
 
@@ -156,15 +169,15 @@ Taint Taint::propagate(
     }
 
     propagated.add_locally_inferred_features(extra_features);
-    result.set_.add(propagated);
+    result.add(propagated);
   }
   return result;
 }
 
 Taint Taint::attach_position(const Position* position) const {
   Taint result;
-  for (const auto& frames : set_) {
-    result.set_.add(frames.attach_position(position));
+  for (const auto& [_, frames] : map_.bindings()) {
+    result.add(frames.attach_position(position));
   }
   return result;
 }
@@ -176,14 +189,14 @@ Taint Taint::apply_transform(
     const TransformList* local_transforms) const {
   Taint result{};
 
-  for (const auto& callee_frames : set_) {
+  for (const auto& [_, callee_frames] : map_.bindings()) {
     auto new_callee_frames = callee_frames.apply_transform(
         kind_factory, transforms_factory, used_kinds, local_transforms);
     if (new_callee_frames.is_bottom()) {
       continue;
     }
 
-    result.set_.add(new_callee_frames);
+    result.add(new_callee_frames);
   }
 
   return result;
@@ -193,9 +206,8 @@ Taint Taint::update_with_propagation_trace(
     const Frame& propagation_frame) const {
   Taint result;
 
-  for (const auto& callee_frame : set_) {
-    result.set_.add(
-        callee_frame.update_with_propagation_trace(propagation_frame));
+  for (const auto& [_, callee_frame] : map_.bindings()) {
+    result.add(callee_frame.update_with_propagation_trace(propagation_frame));
   }
 
   return result;
@@ -203,7 +215,7 @@ Taint Taint::update_with_propagation_trace(
 
 Json::Value Taint::to_json(ExportOriginsMode export_origins_mode) const {
   auto taint = Json::Value(Json::arrayValue);
-  for (const auto& frames : set_) {
+  for (const auto& [_, frames] : map_.bindings()) {
     auto frames_json = frames.to_json(export_origins_mode);
     mt_assert(frames_json.isArray());
     for (const auto& frame_json : frames_json) {
@@ -214,11 +226,20 @@ Json::Value Taint::to_json(ExportOriginsMode export_origins_mode) const {
 }
 
 std::ostream& operator<<(std::ostream& out, const Taint& taint) {
-  return out << taint.set_;
+  out << "{";
+  for (auto it = taint.map_.bindings().begin();
+       it != taint.map_.bindings().end();) {
+    out << it->second;
+    ++it;
+    if (it != taint.map_.bindings().end()) {
+      out << ", ";
+    }
+  }
+  return out << "}";
 }
 
 void Taint::append_to_propagation_output_paths(Path::Element path_element) {
-  set_.map([path_element](CalleeFrames frames) {
+  map_.map([path_element](CalleeFrames frames) {
     frames.append_to_propagation_output_paths(path_element);
     return frames;
   });
@@ -229,7 +250,7 @@ void Taint::update_maximum_collapse_depth(CollapseDepth collapse_depth) {
     return;
   }
 
-  set_.map([collapse_depth](CalleeFrames frames) {
+  map_.map([collapse_depth](CalleeFrames frames) {
     frames.update_maximum_collapse_depth(collapse_depth);
     return frames;
   });
@@ -241,7 +262,7 @@ void Taint::update_non_leaf_positions(
         new_call_position,
     const std::function<LocalPositionSet(const LocalPositionSet&)>&
         new_local_positions) {
-  set_.map([&new_call_position, &new_local_positions](CalleeFrames frames) {
+  map_.map([&new_call_position, &new_local_positions](CalleeFrames frames) {
     frames.update_non_leaf_positions(new_call_position, new_local_positions);
     return frames;
   });
@@ -250,7 +271,7 @@ void Taint::update_non_leaf_positions(
 void Taint::filter_invalid_frames(
     const std::function<bool(const Method*, const AccessPath&, const Kind*)>&
         is_valid) {
-  set_.map([&is_valid](CalleeFrames frames) {
+  map_.map([&is_valid](CalleeFrames frames) {
     frames.filter_invalid_frames(is_valid);
     return frames;
   });
@@ -258,8 +279,10 @@ void Taint::filter_invalid_frames(
 
 bool Taint::contains_kind(const Kind* kind) const {
   return std::any_of(
-      set_.begin(), set_.end(), [kind](const CalleeFrames& callee_frames) {
-        return callee_frames.contains_kind(kind);
+      map_.bindings().begin(),
+      map_.bindings().end(),
+      [kind](const std::pair<CalleeFrames::Key, CalleeFrames>& iterator) {
+        return iterator.second.contains_kind(kind);
       });
 }
 
@@ -303,7 +326,7 @@ void Taint::intersect_intervals_with(const Taint& other) {
 
 FeatureMayAlwaysSet Taint::features_joined() const {
   auto features = FeatureMayAlwaysSet::bottom();
-  for (const auto& callee_frames : set_) {
+  for (const auto& [_, callee_frames] : map_.bindings()) {
     features.join_with(callee_frames.features_joined());
   }
   return features;

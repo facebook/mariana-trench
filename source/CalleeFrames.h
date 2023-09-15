@@ -25,6 +25,9 @@ class CalleeProperties {
   using Pair = PointerIntPair<const Method*, 3, CallInfo::KindEncoding>;
 
  public:
+  using IntegerEncoding = uintptr_t;
+
+ public:
   explicit CalleeProperties(
       const Method* MT_NULLABLE callee,
       CallInfo call_info);
@@ -49,6 +52,15 @@ class CalleeProperties {
   Pair value_;
 };
 
+} // namespace marianatrench
+
+template <>
+struct sparta::PatriciaTreeKeyTrait<marianatrench::CalleeProperties> {
+  using IntegerType = marianatrench::CalleeProperties::IntegerEncoding;
+};
+
+namespace marianatrench {
+
 struct CallPositionFromTaintConfig {
   const Position* MT_NULLABLE operator()(const TaintConfig& config) const;
 };
@@ -66,6 +78,9 @@ class CalleeFrames final : public FramesMap<
       CallPositionFrames,
       CallPositionFromTaintConfig,
       CalleeProperties>;
+
+ public:
+  using Key = CalleeProperties;
 
  public:
   INCLUDE_DERIVED_FRAMES_MAP_CONSTRUCTORS(CalleeFrames, Base, CalleeProperties)
@@ -98,6 +113,10 @@ class CalleeFrames final : public FramesMap<
 
   CallInfo call_info() const {
     return properties_.call_info();
+  }
+
+  Key callee_frame_key() const {
+    return properties_;
   }
 
   void add_local_position(const Position* position);
