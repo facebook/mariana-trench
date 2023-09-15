@@ -13,6 +13,7 @@
 #include <mariana-trench/FramesMap.h>
 #include <mariana-trench/IncludeMacros.h>
 #include <mariana-trench/KindFactory.h>
+#include <mariana-trench/PointerIntPair.h>
 #include <mariana-trench/Position.h>
 #include <mariana-trench/TaintConfig.h>
 #include <mariana-trench/TransformsFactory.h>
@@ -20,6 +21,9 @@
 namespace marianatrench {
 
 class CalleeProperties {
+ private:
+  using Pair = PointerIntPair<const Method*, 3, CallInfo::KindEncoding>;
+
  public:
   explicit CalleeProperties(
       const Method* MT_NULLABLE callee,
@@ -31,25 +35,18 @@ class CalleeProperties {
 
   bool operator==(const CalleeProperties& other) const;
 
-  static CalleeProperties make_default() {
-    return CalleeProperties(/* callee */ nullptr, CallInfo::declaration());
-  }
+  static CalleeProperties make_default();
 
   bool is_default() const;
 
   void set_to_default();
 
-  const Method* MT_NULLABLE callee() const {
-    return callee_;
-  }
+  const Method* MT_NULLABLE callee() const;
 
-  const CallInfo& call_info() const {
-    return call_info_;
-  }
+  CallInfo call_info() const;
 
  private:
-  const Method* MT_NULLABLE callee_;
-  CallInfo call_info_;
+  Pair value_;
 };
 
 struct CallPositionFromTaintConfig {

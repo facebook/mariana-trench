@@ -63,6 +63,15 @@ CallInfo CallInfo::propagation_with_trace(CallInfo::KindEncoding kind) {
   return CallInfo{CallInfo::PropagationWithTrace | kind};
 }
 
+CallInfo CallInfo::decode(KindEncoding encoding) {
+  mt_assert(
+      ((encoding & (CallInfo::PropagationWithTrace)) !=
+       CallInfo::PropagationWithTrace) ||
+      ((encoding & (CallInfo::Propagation)) != CallInfo::Propagation));
+
+  return CallInfo(encoding);
+}
+
 bool CallInfo::is_declaration() const {
   return (call_infos_ & (~CallInfo::PropagationWithTrace)) == Declaration;
 }

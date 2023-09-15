@@ -83,6 +83,8 @@ class CallInfo final {
 
   static CallInfo propagation_with_trace(KindEncoding kind);
 
+  static CallInfo decode(KindEncoding kind);
+
  private:
   KindEncoding call_infos_;
 };

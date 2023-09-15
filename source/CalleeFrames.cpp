@@ -17,22 +17,33 @@ namespace marianatrench {
 CalleeProperties::CalleeProperties(
     const Method* MT_NULLABLE callee,
     CallInfo call_info)
-    : callee_(callee), call_info_(call_info) {}
+    : value_(Pair{callee, call_info.encode()}) {}
 
 CalleeProperties::CalleeProperties(const TaintConfig& config)
-    : callee_(config.callee()), call_info_(config.call_info()) {}
+    : value_(Pair{config.callee(), config.call_info().encode()}) {}
+
+CalleeProperties CalleeProperties::make_default() {
+  return CalleeProperties(/* callee */ nullptr, CallInfo::declaration());
+}
 
 bool CalleeProperties::operator==(const CalleeProperties& other) const {
-  return callee_ == other.callee_ && call_info_ == other.call_info_;
+  return value_ == other.value_;
 }
 
 bool CalleeProperties::is_default() const {
-  return callee_ == nullptr && call_info_.is_declaration();
+  return callee() == nullptr && call_info().is_declaration();
 }
 
 void CalleeProperties::set_to_default() {
-  callee_ = nullptr;
-  call_info_ = CallInfo::declaration();
+  value_ = Pair{/* callee */ nullptr, CallInfo::declaration().encode()};
+}
+
+const Method* MT_NULLABLE CalleeProperties::callee() const {
+  return value_.get_pointer();
+}
+
+CallInfo CalleeProperties::call_info() const {
+  return CallInfo::decode(value_.get_int());
 }
 
 const Position* MT_NULLABLE
