@@ -51,8 +51,7 @@ class PropagationConfig final {
     mt_assert(!output_paths_.is_bottom());
 
     if (kind_->is<TransformKind>()) {
-      call_info_ =
-          CallInfo::propagation_with_trace(CallInfo::Kind::Declaration);
+      call_info_ = CallInfo::propagation_with_trace(CallInfo::Declaration);
     } else {
       call_info_ = CallInfo::propagation();
     }

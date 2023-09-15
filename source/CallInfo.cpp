@@ -12,36 +12,23 @@
 
 namespace marianatrench {
 
-CallInfo::CallInfo(CallInfoFlags call_infos) : call_infos_(call_infos) {
-  static const CallInfo::CallInfoFlags k_mutually_exclusive_call_info =
-      CallInfo::Kind::Declaration | CallInfo::Kind::Origin |
-      CallInfo::Kind::CallSite;
-
-  if (call_infos.test(CallInfo::Kind::Propagation)) {
-    // Check that none of the mutually exclusive call info are set.
-    mt_assert((call_infos & k_mutually_exclusive_call_info).empty());
-  } else {
-    // Check that only 1 of the mutually exclusive call info are set.
-    auto check = (call_infos & k_mutually_exclusive_call_info);
-    mt_assert(check.has_single_bit());
-  }
-}
+CallInfo::CallInfo(KindEncoding call_infos) : call_infos_(call_infos) {}
 
 std::string CallInfo::to_trace_string() const {
   std::string call_info = "";
 
-  if (call_infos_.test(CallInfo::Kind::PropagationWithTrace)) {
+  if (is_propagation_with_trace()) {
     call_info = "PropagationWithTrace:";
   }
 
-  if (call_infos_.test(CallInfo::Kind::Declaration)) {
+  if (is_declaration()) {
     call_info += "Declaration";
-  } else if (call_infos_.test(CallInfo::Kind::Origin)) {
+  } else if (is_origin()) {
     call_info += "Origin";
-  } else if (call_infos_.test(CallInfo::Kind::CallSite)) {
+  } else if (is_callsite()) {
     call_info += "CallSite";
   } else {
-    mt_assert(call_infos_.test(CallInfo::Kind::Propagation));
+    mt_assert(is_propagation_without_trace());
     call_info += "Propagation";
   }
 
@@ -52,21 +39,73 @@ std::ostream& operator<<(std::ostream& out, const CallInfo& call_info) {
   return out << call_info.to_trace_string();
 }
 
-CallInfo CallInfo::propagate() const {
-  CallInfoFlags call_infos{};
+CallInfo CallInfo::declaration() {
+  return CallInfo{CallInfo::Declaration};
+}
 
-  if (call_infos_.test(CallInfo::Kind::Declaration)) {
-    call_infos |= CallInfo::Kind::Origin;
-  } else if (call_infos_.test(CallInfo::Kind::Origin)) {
-    call_infos |= CallInfo::Kind::CallSite;
-  } else if (call_infos_.test(CallInfo::Kind::CallSite)) {
-    call_infos |= CallInfo::Kind::CallSite;
+CallInfo CallInfo::origin() {
+  return CallInfo{CallInfo::Origin};
+}
+
+CallInfo CallInfo::callsite() {
+  return CallInfo{CallInfo::CallSite};
+}
+
+CallInfo CallInfo::propagation() {
+  return CallInfo{CallInfo::Propagation};
+}
+
+CallInfo CallInfo::propagation_with_trace(CallInfo::KindEncoding kind) {
+  mt_assert(
+      kind == CallInfo::Declaration || kind == CallInfo::Origin ||
+      kind == CallInfo::CallSite);
+
+  return CallInfo{CallInfo::PropagationWithTrace | kind};
+}
+
+bool CallInfo::is_declaration() const {
+  return (call_infos_ & (~CallInfo::PropagationWithTrace)) == Declaration;
+}
+
+bool CallInfo::is_origin() const {
+  return (call_infos_ & (~CallInfo::PropagationWithTrace)) == Origin;
+}
+
+bool CallInfo::is_callsite() const {
+  return (call_infos_ & (~CallInfo::PropagationWithTrace)) == CallSite;
+}
+
+bool CallInfo::is_propagation() const {
+  return call_infos_ == Propagation ||
+      (call_infos_ & CallInfo::PropagationWithTrace) == PropagationWithTrace;
+}
+
+bool CallInfo::is_propagation_with_trace() const {
+  return (call_infos_ & CallInfo::PropagationWithTrace) == PropagationWithTrace;
+}
+
+bool CallInfo::is_propagation_without_trace() const {
+  return call_infos_ == Propagation;
+}
+
+CallInfo CallInfo::propagate() const {
+  if (is_propagation_without_trace()) {
+    return *this;
   }
 
-  if (call_infos_.test(CallInfo::Kind::Propagation)) {
-    call_infos |= CallInfo::Kind::Propagation;
-  } else if (call_infos_.test(CallInfo::Kind::PropagationWithTrace)) {
-    call_infos |= CallInfo::Kind::PropagationWithTrace;
+  KindEncoding call_infos{};
+
+  if (is_propagation_with_trace()) {
+    call_infos |= CallInfo::PropagationWithTrace;
+  }
+
+  // Propagate the callinfo states.
+  if (is_declaration()) {
+    call_infos |= CallInfo::Origin;
+  } else if (is_origin()) {
+    call_infos |= CallInfo::CallSite;
+  } else if (is_callsite()) {
+    call_infos |= CallInfo::CallSite;
   }
 
   return CallInfo{call_infos};

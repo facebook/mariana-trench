@@ -1276,8 +1276,7 @@ TEST_F(TaintTest, PartitionByKindGeneric) {
               .callee_port = AccessPath(Root(Root::Kind::Return)),
               .callee = method1,
               .output_paths = PathTreeDomain{{Path{}, CollapseDepth::zero()}},
-              .call_info =
-                  CallInfo::propagation_with_trace(CallInfo::Kind::CallSite),
+              .call_info = CallInfo::propagation_with_trace(CallInfo::CallSite),
           }),
       test::make_taint_config(
           /* kind */ context.kind_factory->get("TestSource1"),
@@ -1314,8 +1313,8 @@ TEST_F(TaintTest, PartitionByKindGeneric) {
                   .callee = method1,
                   .output_paths =
                       PathTreeDomain{{Path{}, CollapseDepth::zero()}},
-                  .call_info = CallInfo::propagation_with_trace(
-                      CallInfo::Kind::CallSite),
+                  .call_info =
+                      CallInfo::propagation_with_trace(CallInfo::CallSite),
               }),
       }));
   EXPECT_EQ(

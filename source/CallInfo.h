@@ -19,30 +19,23 @@ class CallInfo final {
  public:
   using KindEncoding = unsigned int;
 
-  enum class Kind : KindEncoding {
-    // A declaration of taint from a model - should not be included in the final
-    // trace.
-    Declaration = 0x1,
-    // The origin frame for taint that indicates a leaf.
-    Origin = 0x2,
-    // A call site where taint is propagated from some origin.
-    CallSite = 0x4,
-    // Special taint used to infer propagations.
-    Propagation = 0x8,
-    // Special taint used to infer propagations and track next hops.
-    // The trace root will be paired with `Declaration`, leaf frames with
-    // `Origin` and rest with `CallSite` where they will retain their respective
-    // meaning when building the traces.
-    PropagationWithTrace = 0x10
-  };
+ public:
+  /**
+   * To use CallInfo along with PointerIntPair, we limit the underlying
+   * representation of Kind to use only the lower 3 bits.
+   * We only export named constructors for creation of CallInfo and
+   * the propagate() method for mutation/state transition.
+   */
+  static constexpr KindEncoding Declaration = 0b000;
+  static constexpr KindEncoding Origin = 0b001;
+  static constexpr KindEncoding CallSite = 0b010;
 
  private:
-  using CallInfoFlags = Flags<Kind>;
+  static constexpr KindEncoding Propagation = 0b011;
+  static constexpr KindEncoding PropagationWithTrace = 0b100;
 
  private:
-  explicit CallInfo(Kind kind) : call_infos_(kind) {}
-
-  explicit CallInfo(CallInfoFlags call_infos);
+  explicit CallInfo(KindEncoding call_infos);
 
  public:
   CallInfo() = delete;
@@ -57,77 +50,41 @@ class CallInfo final {
     return !(call_infos_ == other.call_infos_);
   }
 
-  bool is_declaration() const {
-    return call_infos_.test(Kind::Declaration);
-  }
+  bool is_declaration() const;
 
-  bool is_origin() const {
-    return call_infos_.test(Kind::Origin);
-  }
+  bool is_origin() const;
 
-  bool is_callsite() const {
-    return call_infos_.test(Kind::CallSite);
-  }
+  bool is_callsite() const;
 
-  bool is_propagation() const {
-    return call_infos_.test(Kind::Propagation) ||
-        call_infos_.test(Kind::PropagationWithTrace);
-  }
+  bool is_propagation() const;
 
-  bool is_propagation_with_trace() const {
-    return call_infos_.test(Kind::PropagationWithTrace);
-  }
+  bool is_propagation_with_trace() const;
 
-  bool is_propagation_without_trace() const {
-    return call_infos_.test(Kind::Propagation);
-  }
+  bool is_propagation_without_trace() const;
 
   std::string to_trace_string() const;
 
   CallInfo propagate() const;
 
   KindEncoding encode() const {
-    return call_infos_.encode();
+    return call_infos_;
   }
-
-  friend CallInfoFlags operator|(Kind left, Kind right);
 
   friend std::ostream& operator<<(std::ostream& out, const CallInfo& call_info);
 
  public:
-  static CallInfo declaration() {
-    return CallInfo{CallInfo::Kind::Declaration};
-  }
+  static CallInfo declaration();
 
-  static CallInfo origin() {
-    return CallInfo{CallInfo::Kind::Origin};
-  }
+  static CallInfo origin();
 
-  static CallInfo callsite() {
-    return CallInfo{CallInfo::Kind::CallSite};
-  }
+  static CallInfo callsite();
 
-  static CallInfo propagation() {
-    return CallInfo{CallInfo::Kind::Propagation};
-  }
+  static CallInfo propagation();
 
-  static CallInfo propagation_with_trace(CallInfo::Kind kind) {
-    mt_assert(
-        kind == CallInfo::Kind::Declaration || kind == CallInfo::Kind::Origin ||
-        kind == CallInfo::Kind::CallSite);
-    CallInfoFlags call_info_flags = CallInfo::Kind::PropagationWithTrace | kind;
-
-    return CallInfo{call_info_flags};
-  }
+  static CallInfo propagation_with_trace(KindEncoding kind);
 
  private:
-  CallInfoFlags call_infos_;
+  KindEncoding call_infos_;
 };
-
-inline CallInfo::CallInfoFlags operator|(
-    CallInfo::Kind left,
-    CallInfo::Kind right) {
-  return CallInfo::CallInfoFlags(left) | right;
-}
 
 } // namespace marianatrench
