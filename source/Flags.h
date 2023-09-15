@@ -34,9 +34,10 @@ class Flags final {
  public:
   Flags() = default;
 
-  /* implicit */ Flags(Enum flag) : value_(static_cast<IntT>(flag)) {}
+  /* implicit */ constexpr Flags(Enum flag) : value_(static_cast<IntT>(flag)) {}
 
-  /* implicit */ Flags(std::initializer_list<Enum> flags) : value_(0) {
+  /* implicit */ constexpr Flags(std::initializer_list<Enum> flags)
+      : value_(0) {
     for (auto flag : flags) {
       value_ |= static_cast<IntT>(flag);
     }
@@ -44,77 +45,81 @@ class Flags final {
 
   INCLUDE_DEFAULT_COPY_CONSTRUCTORS_AND_ASSIGNMENTS(Flags)
 
-  Flags& operator&=(Enum flag) {
+  constexpr Flags& operator&=(Enum flag) {
     value_ &= static_cast<IntT>(flag);
     return *this;
   }
 
-  Flags& operator&=(Flags flags) {
+  constexpr Flags& operator&=(Flags flags) {
     value_ &= flags.value_;
     return *this;
   }
 
-  Flags& operator|=(Enum flag) {
+  constexpr Flags& operator|=(Enum flag) {
     value_ |= static_cast<IntT>(flag);
     return *this;
   }
 
-  Flags& operator|=(Flags flags) {
+  constexpr Flags& operator|=(Flags flags) {
     value_ |= flags.value_;
     return *this;
   }
 
-  Flags& operator^=(Enum flag) {
+  constexpr Flags& operator^=(Enum flag) {
     value_ ^= static_cast<IntT>(flag);
     return *this;
   }
 
-  Flags& operator^=(Flags flags) {
+  constexpr Flags& operator^=(Flags flags) {
     value_ ^= flags.value_;
     return *this;
   }
 
-  Flags operator&(Enum flag) const {
+  constexpr Flags operator&(Enum flag) const {
     return Flags(value_ & static_cast<IntT>(flag));
   }
 
-  Flags operator&(Flags flags) const {
+  constexpr Flags operator&(Flags flags) const {
     return Flags(value_ & flags.value_);
   }
 
-  Flags operator|(Enum flag) const {
+  constexpr Flags operator|(Enum flag) const {
     return Flags(value_ | static_cast<IntT>(flag));
   }
 
-  Flags operator|(Flags flags) const {
+  constexpr Flags operator|(Flags flags) const {
     return Flags(value_ | flags.value_);
   }
 
-  Flags operator^(Enum flag) const {
+  constexpr Flags operator^(Enum flag) const {
     return Flags(value_ ^ static_cast<IntT>(flag));
   }
 
-  Flags operator^(Flags flags) const {
+  constexpr Flags operator^(Flags flags) const {
     return Flags(value_ ^ flags.value_);
   }
 
-  Flags operator~() const {
+  constexpr Flags operator~() const {
     return Flags(~value_);
   }
 
-  explicit operator bool() const {
+  explicit constexpr operator bool() const {
     return value_ != 0;
   }
 
-  bool operator!() const {
+  constexpr bool operator!() const {
     return value_ == 0;
   }
 
-  bool operator==(Flags flags) const {
+  constexpr bool operator==(Flags flags) const {
     return value_ == flags.value_;
   }
 
-  bool test(Enum flag) const {
+  constexpr bool operator!=(Flags flags) const {
+    return value_ != flags.value_;
+  }
+
+  constexpr bool test(Enum flag) const {
     if (static_cast<IntT>(flag) == 0) {
       return value_ == 0;
     } else {
@@ -122,7 +127,7 @@ class Flags final {
     }
   }
 
-  Flags& set(Enum flag, bool on = true) {
+  constexpr Flags& set(Enum flag, bool on = true) {
     if (on) {
       value_ |= static_cast<IntT>(flag);
     } else {
@@ -131,28 +136,32 @@ class Flags final {
     return *this;
   }
 
-  bool empty() const {
+  constexpr bool empty() const {
     return value_ == 0;
   }
 
-  void clear() {
+  constexpr void clear() {
     value_ = 0;
   }
 
-  bool is_subset_of(Flags flags) const {
+  constexpr bool is_subset_of(Flags flags) const {
     return (value_ | flags.value_) == flags.value_;
   }
 
-  bool has_single_bit() const {
+  constexpr bool has_single_bit() const {
     return (value_ && !(value_ & (value_ - 1)));
   }
 
-  IntT encode() const {
+  constexpr IntT encode() const {
     return value_;
   }
 
+  static constexpr Flags decode(IntT encoding) {
+    return Flags(encoding);
+  }
+
  private:
-  explicit Flags(IntT value) : value_(value) {}
+  explicit constexpr Flags(IntT value) : value_(value) {}
 
  private:
   IntT value_ = 0;
