@@ -1,8 +1,8 @@
 [
   {
-    "name": "User input flows into code execution sink (RCE)",
+    "name": "Third-party flows into code execution sink (RCE)",
     "code": 1,
-    "description": "Values from user-controlled source may eventually flow into code execution sink",
+    "description": "Values from third-party controlled source may eventually flow into code execution sink",
     "sources": [
       "ActivityUserInput",
       "ProviderUserInput",
@@ -14,9 +14,9 @@
     ]
   },
   {
-    "name": "User input flows into file resolver",
+    "name": "Third-party input flows into file resolver",
     "code": 2,
-    "description": "Values from user-controlled source may eventually flow into sink file resolver",
+    "description": "Values from third-party controlled source may eventually flow into sink file resolver",
     "sources": [
       "ActivityUserInput",
       "ProviderUserInput",
@@ -29,9 +29,9 @@
     ]
   },
   {
-    "name": "User input flows into implicitly launched intent",
+    "name": "Third-party flows into implicitly launched intent",
     "code": 3,
-    "description": "Values from user-controlled source may eventually flow into an implicit intent and intent launcher",
+    "description": "Values from third-party controlled source may eventually flow into an implicit intent and intent launcher",
     "multi_sources": {
       "a": [
         "IntentCreation"
@@ -47,9 +47,9 @@
     ]
   },
   {
-    "name": "User input flows into raw SQL statement",
+    "name": "Third-party flows into raw SQL statement",
     "code": 4,
-    "description": "Values from user-controlled source may eventually flow into a raw SQL statement potentially causing SQL injection",
+    "description": "Values from third-party controlled source may eventually flow into a raw SQL statement potentially causing SQL injection",
     "sources": [
       "ActivityUserInput",
       "ProviderUserInput",
@@ -61,9 +61,9 @@
     ]
   },
   {
-    "name": "User input flows into WebView load",
+    "name": "Third-party input flows into WebView Javascript execution API",
     "code": 5,
-    "description": "Values from user-controlled source may eventually flow into a Webview load potentially causing XSS",
+    "description": "Values from third-party controlled source may eventually flow into a Webview Javascript execution API",
     "sources": [
       "ActivityUserInput",
       "ProviderUserInput",
@@ -71,7 +71,7 @@
       "ServiceUserInput"
     ],
     "sinks": [
-      "WebViewLoadContent"
+      "ExecuteJavascript"
     ]
   }
 ]

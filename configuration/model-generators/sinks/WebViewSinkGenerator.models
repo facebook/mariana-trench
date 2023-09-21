@@ -1,0 +1,133 @@
+{
+  "model_generators": [
+    {
+      "find": "methods",
+      "where": [
+        {
+          "constraint": "signature_match",
+          "parent": "Landroid/webkit/WebView;",
+          "name": "evaluateJavascript"
+        }
+      ],
+      "model": {
+        "sinks": [
+          {
+            "kind": "ExecuteJavascript",
+            "port": "Argument(1)"
+          }
+        ]
+      }
+    },
+    {
+      "find": "methods",
+      "where": [
+        {
+          "constraint": "signature_match",
+          "extends": "Landroid/webkit/WebView;",
+          "name": "loadUrl"
+        }
+      ],
+      "model": {
+        "modes": [
+          "skip-analysis",
+          "no-join-virtual-overrides"
+        ],
+        "sinks": [
+          {
+            "kind": "WebViewLoadUrl",
+            "port": "Argument(1)"
+          }
+        ]
+      }
+    },
+    {
+      "find": "methods",
+      "where": [
+        {
+          "constraint": "signature_match",
+          "extends": "Landroid/webkit/WebView;",
+          "name": "loadUrl"
+        },
+        {
+          "constraint": "not",
+          "inner": {
+            "constraint": "signature_match",
+            "extends": "Lcom/facebook/secure/securewebview/SecureWebView;",
+            "name": "loadUrl"
+          }
+        }
+      ],
+      "model": {
+        "modes": [
+          "skip-analysis",
+          "no-join-virtual-overrides"
+        ],
+        "sinks": [
+          {
+            "kind": "ExecuteJavascript",
+            "port": "Argument(1)"
+          }
+        ]
+      }
+    },
+    {
+      "find": "methods",
+      "where": [
+        {
+          "constraint": "signature_match",
+          "parent": "Landroid/webkit/WebView;",
+          "name": "loadDataWithBaseURL"
+        }
+      ],
+      "model": {
+        "sinks": [
+          {
+            "kind": "ExecuteJavascript",
+            "port": "Argument(1)"
+          },
+          {
+            "kind": "WebViewLoadUrl",
+            "port": "Argument(1)"
+          },
+          {
+            "kind": "ExecuteJavascript",
+            "port": "Argument(2)"
+          },
+          {
+            "kind": "ExecuteJavascript",
+            "port": "Argument(5)"
+          },
+          {
+            "kind": "WebViewLoadUrl",
+            "port": "Argument(5)"
+          }
+        ]
+      }
+    },
+    {
+      "find": "methods",
+      "where": [
+        {
+          "constraint": "signature_match",
+          "parent": "Landroid/webkit/WebView;",
+          "names": [
+            "loadData",
+            "postUrl"
+          ]
+        }
+      ],
+      "model": {
+        "sinks": [
+          {
+            "kind": "ExecuteJavascript",
+            "port": "Argument(1)"
+          },
+          {
+            "kind": "WebViewLoadUrl",
+            "port": "Argument(1)"
+          }
+        ]
+      }
+    }
+  ]
+}

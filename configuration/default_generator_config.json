@@ -51,6 +51,6 @@
     "name": "taint_in_taint_this"
   },
   {
-    "name": "WebViewLoadGenerator"
+    "name": "WebViewSinkGenerator"
   }
 ]
