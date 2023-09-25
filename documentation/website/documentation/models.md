@@ -415,6 +415,117 @@ Note that this only works for numeric and string literals. In cases where the ar
 }
 ```
 
+#### Annotation Features
+
+In model generators we can also use annotation features, which translate to regular user features based on annotation parameter values.
+
+Config example:
+```json
+{
+{
+  "model_generators": [
+    {
+      "find": "methods",
+      "where": [
+        {
+          "constraint": "signature_match",
+          "parent": "Lcom/facebook/marianatrench/integrationtests/AnnotationFeature;",
+          "name": "getSourceWithMethodAnnotation"
+        }
+      ],
+      "model": {
+        "generations": [
+          {
+            "kind": "Source",
+            "port": "Return",
+            "via_annotation": [
+              {
+                "type": "Lcom/facebook/marianatrench/integrationtests/Path;",
+                "port": "Return"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "find": "methods",
+      "where": [
+        {
+          "constraint": "signature_match",
+          "parent": "Lcom/facebook/marianatrench/integrationtests/AnnotationFeature;",
+          "name": "getSourceWithParameterAnnotation"
+        }
+      ],
+      "model": {
+        "generations": [
+          {
+            "kind": "Source",
+            "port": "Return",
+            "via_annotation": [
+              {
+                "type": "Lcom/facebook/marianatrench/integrationtests/QueryParam;",
+                "port": "Argument(1)"
+              }
+            ]
+          }
+        ]
+      }
+    }
+  ]
+}
+```
+
+Java class with annotations:
+```java
+public class AnnotationFeature {
+
+  @Path("/issue_1")
+  Object getSourceWithMethodAnnotation() {
+    return new Object();
+  }
+
+  Object getSourceWithParameterAnnotation(@QueryParam("query_param_name") String value) {
+    return "unrelated";
+  }
+
+  void testSourceWithMethodAnnotation() {
+    Object source = getSourceWithMethodAnnotation();
+    Origin.sink(source);
+  }
+
+  void testSourceWithParameterAnnotation() {
+    Object source = getSourceWithParameterAnnotation("argument_value");
+    Origin.sink(source);
+  }
+}
+```
+
+Resulting issues:
+
+```json
+{
+  "issues" : 
+  [
+    {
+      "always_features" : 
+      [
+        "/issue_1"
+      ],
+      "callee" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
+...
+{
+  "issues" : 
+  [
+    {
+      "always_features" : 
+      [
+        "query_param_name"
+      ],
+      "callee" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
+...
+```
+
 ### Taint Broadening
 
 **Taint broadening** (also called **collapsing**) happens when Mariana Trench needs to make an approximation about a taint flow. It is the operation of reducing a **taint tree** into a single element. A **taint tree** is a tree where edges are field names and nodes are taint element. This is how Mariana Trench represents internally which fields (or sequence of fields) are tainted.

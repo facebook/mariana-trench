@@ -16,6 +16,7 @@
 #include <sparta/HashedSetAbstractDomain.h>
 
 #include <mariana-trench/Access.h>
+#include <mariana-trench/AnnotationFeatureSet.h>
 #include <mariana-trench/Assert.h>
 #include <mariana-trench/CallClassIntervalContext.h>
 #include <mariana-trench/CallInfo.h>
@@ -119,6 +120,7 @@ class Frame final : public sparta::AbstractDomain<Frame> {
       FieldSet field_origins,
       FeatureMayAlwaysSet inferred_features,
       FeatureSet user_features,
+      AnnotationFeatureSet annotation_features,
       RootSetAbstractDomain via_type_of_ports,
       LabelledRootSetAbstractDomain via_value_of_ports,
       CanonicalNameSetAbstractDomain canonical_names,
@@ -136,6 +138,7 @@ class Frame final : public sparta::AbstractDomain<Frame> {
         field_origins_(std::move(field_origins)),
         inferred_features_(std::move(inferred_features)),
         user_features_(std::move(user_features)),
+        annotation_features_(std::move(annotation_features)),
         via_type_of_ports_(std::move(via_type_of_ports)),
         via_value_of_ports_(std::move(via_value_of_ports)),
         canonical_names_(std::move(canonical_names)),
@@ -250,6 +253,10 @@ class Frame final : public sparta::AbstractDomain<Frame> {
     return user_features_;
   }
 
+  const AnnotationFeatureSet& annotation_features() const {
+    return annotation_features_;
+  }
+
   FeatureMayAlwaysSet features() const;
 
   void add_extra_trace(const Frame& propagation_frame);
@@ -328,6 +335,12 @@ class Frame final : public sparta::AbstractDomain<Frame> {
       const std::vector<std::optional<std::string>>& source_constant_arguments)
       const;
 
+  /**
+   * Removes all annotation features. Invoked after they have been
+   * instantiated as user features.
+   */
+  void clear_annotation_features();
+
   Json::Value to_json(ExportOriginsMode export_origins_mode) const;
 
   friend std::ostream& operator<<(std::ostream& out, const Frame& frame);
@@ -344,6 +357,7 @@ class Frame final : public sparta::AbstractDomain<Frame> {
   FieldSet field_origins_;
   FeatureMayAlwaysSet inferred_features_;
   FeatureSet user_features_;
+  AnnotationFeatureSet annotation_features_;
   RootSetAbstractDomain via_type_of_ports_;
   LabelledRootSetAbstractDomain via_value_of_ports_;
   CanonicalNameSetAbstractDomain canonical_names_;

@@ -31,6 +31,7 @@ Frame::Frame(const TaintConfig& config)
           config.field_origins(),
           config.inferred_features(),
           config.user_features(),
+          config.annotation_features(),
           config.via_type_of_ports(),
           config.via_value_of_ports(),
           config.canonical_names(),
@@ -97,6 +98,7 @@ bool Frame::leq(const Frame& other) const {
         field_origins_.leq(other.field_origins_) &&
         inferred_features_.leq(other.inferred_features_) &&
         user_features_.leq(other.user_features_) &&
+        annotation_features_.leq(other.annotation_features_) &&
         via_type_of_ports_.leq(other.via_type_of_ports_) &&
         via_value_of_ports_.leq(other.via_value_of_ports_) &&
         canonical_names_.leq(other.canonical_names_) &&
@@ -119,6 +121,7 @@ bool Frame::equals(const Frame& other) const {
         field_origins_ == other.field_origins_ &&
         inferred_features_ == other.inferred_features_ &&
         user_features_ == other.user_features_ &&
+        annotation_features_ == other.annotation_features_ &&
         via_type_of_ports_ == other.via_type_of_ports_ &&
         via_value_of_ports_ == other.via_value_of_ports_ &&
         canonical_names_ == other.canonical_names_ &&
@@ -147,6 +150,7 @@ void Frame::join_with(const Frame& other) {
     field_origins_.join_with(other.field_origins_);
     inferred_features_.join_with(other.inferred_features_);
     user_features_.join_with(other.user_features_);
+    annotation_features_.join_with(other.annotation_features_);
     via_type_of_ports_.join_with(other.via_type_of_ports_);
     via_value_of_ports_.join_with(other.via_value_of_ports_);
     canonical_names_.join_with(other.canonical_names_);
@@ -205,6 +209,7 @@ Frame Frame::update_with_propagation_trace(
       field_origins_,
       inferred_features_,
       /* user_features */ FeatureSet::bottom(),
+      /* annotation_features */ AnnotationFeatureSet::bottom(),
       /* via_type_of_ports */ {},
       /* via_value_of_ports */ {},
       /* canonical_names */ {},
@@ -341,6 +346,10 @@ void Frame::update_maximum_collapse_depth(
   });
 }
 
+void Frame::clear_annotation_features() {
+  annotation_features_.difference_with(annotation_features_);
+}
+
 Json::Value Frame::to_json(ExportOriginsMode export_origins_mode) const {
   auto value = Json::Value(Json::objectValue);
 
@@ -458,6 +467,9 @@ std::ostream& operator<<(std::ostream& out, const Frame& frame) {
   }
   if (!frame.user_features_.empty()) {
     out << ", user_features=" << frame.user_features_;
+  }
+  if (!frame.annotation_features_.empty()) {
+    out << ", annotation_features=" << frame.annotation_features_;
   }
   if (frame.via_type_of_ports_.is_value() &&
       !frame.via_type_of_ports_.elements().empty()) {
