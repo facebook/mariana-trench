@@ -15,6 +15,7 @@
 #include <sparta/AbstractDomain.h>
 
 #include <mariana-trench/Access.h>
+#include <mariana-trench/AnnotationFeatureSet.h>
 #include <mariana-trench/Assert.h>
 #include <mariana-trench/CallKind.h>
 #include <mariana-trench/CanonicalName.h>
@@ -57,6 +58,7 @@ class TaintConfig final {
       OriginSet origins,
       FeatureMayAlwaysSet inferred_features,
       FeatureSet user_features,
+      AnnotationFeatureSet annotation_features,
       TaggedRootSet via_type_of_ports,
       TaggedRootSet via_value_of_ports,
       CanonicalNameSetAbstractDomain canonical_names,
@@ -74,6 +76,7 @@ class TaintConfig final {
         origins_(std::move(origins)),
         inferred_features_(std::move(inferred_features)),
         user_features_(std::move(user_features)),
+        annotation_features_(std::move(annotation_features)),
         via_type_of_ports_(std::move(via_type_of_ports)),
         via_value_of_ports_(std::move(via_value_of_ports)),
         canonical_names_(std::move(canonical_names)),
@@ -110,6 +113,7 @@ class TaintConfig final {
         self.inferred_features_ == other.inferred_features_ &&
         self.locally_inferred_features_ == other.locally_inferred_features_ &&
         self.user_features_ == other.user_features_ &&
+        self.annotation_features_ == other.annotation_features_ &&
         self.via_type_of_ports_ == other.via_type_of_ports_ &&
         self.via_value_of_ports_ == other.via_value_of_ports_ &&
         self.canonical_names_ == other.canonical_names_ &&
@@ -167,6 +171,10 @@ class TaintConfig final {
     return user_features_;
   }
 
+  const AnnotationFeatureSet& annotation_features() const {
+    return annotation_features_;
+  }
+
   const TaggedRootSet& via_type_of_ports() const {
     return via_type_of_ports_;
   }
@@ -209,6 +217,7 @@ class TaintConfig final {
   OriginSet origins_;
   FeatureMayAlwaysSet inferred_features_;
   FeatureSet user_features_;
+  AnnotationFeatureSet annotation_features_;
   TaggedRootSet via_type_of_ports_;
   TaggedRootSet via_value_of_ports_;
   CanonicalNameSetAbstractDomain canonical_names_;

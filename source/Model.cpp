@@ -262,20 +262,65 @@ bool Model::operator!=(const Model& other) const {
   return !(*this == other);
 }
 
+/**
+ * Looks up the concrete annotation parameter values from \p method for all
+ * annotation features in \p taint and inserts them as user features into
+ * \p taint.
+ */
+static Taint instantiate_annotation_features(const Method* method, Context& context, Taint taint) {
+  taint.map([method, &context](Frame frame) {
+    FeatureSet new_user_features;
+    for (const AnnotationFeature* annotation_feature : frame.annotation_features()) {
+      const DexType* const expected_type = annotation_feature->dex_type();
+      const DexAnnotationSet* anno_set;
+      if (annotation_feature->port().is_return()) {
+        anno_set = method->dex_method()->get_anno_set();
+      } else {
+        anno_set = method->get_parameter_annotations(annotation_feature->port().parameter_position());
+      }
+
+      const std::vector<std::unique_ptr<DexAnnotation>>& annotations = anno_set->get_annotations();
+      auto annotation = find_if(annotations.begin(), annotations.end(), [expected_type](const std::unique_ptr<DexAnnotation>& annotation) {
+        return expected_type == annotation->type();
+      });
+      if (annotation == annotations.end()) {
+        continue;
+      }
+
+      const EncodedAnnotations& anno_elems = (*annotation)->anno_elems();
+      auto value = find_if(anno_elems.begin(), anno_elems.end(), [](const DexAnnotationElement& e) {
+        return "value" == e.string->str();
+      });
+      if (value != anno_elems.end()) {
+        const std::string user_feature_data = value->encoded_value->show();
+        const Feature* user_feature = context.feature_factory->get_via_annotation_feature(
+          annotation_feature->label(),
+          user_feature_data
+        );
+        new_user_features.add(user_feature);
+      }
+    }
+    frame.add_user_features(new_user_features);
+    frame.clear_annotation_features();
+    return frame;
+  });
+  return taint;
+}
+
 Model Model::instantiate(const Method* method, Context& context) const {
   Model model(method, context, modes_, frozen_);
 
   for (const auto& [port, generation_taint] : generations_.elements()) {
-    model.add_generation(port, generation_taint);
+    model.add_generation(port, instantiate_annotation_features(method, context, generation_taint));
   }
 
   for (const auto& [port, parameter_source_taint] :
        parameter_sources_.elements()) {
-    model.add_parameter_source(port, parameter_source_taint);
+    model.add_parameter_source(port, instantiate_annotation_features(method, context, parameter_source_taint));
   }
 
   for (const auto& [port, sink_taint] : sinks_.elements()) {
-    model.add_sink(port, sink_taint);
+    model.add_sink(port, instantiate_annotation_features(method, context, sink_taint));
   }
 
   for (const auto& [port, source_taint] : call_effect_sources_.elements()) {
@@ -1260,8 +1305,8 @@ Model Model::from_config_json(
       JsonValidation::string(generation_value, /* field */ "caller_port");
       port = AccessPath::from_json(generation_value["caller_port"]);
     }
-    model.add_generation(
-        port, TaintConfig::from_json(generation_value, context));
+    model.add_generation(port,
+        TaintConfig::from_json(generation_value, context));
   }
 
   for (auto parameter_source_value :
@@ -1284,11 +1329,12 @@ Model Model::from_config_json(
       JsonValidation::string(source_value, /* field */ "caller_port");
       port = AccessPath::from_json(source_value["caller_port"]);
     }
+
     auto source = TaintConfig::from_json(source_value, context);
     if (port.root().is_argument()) {
-      model.add_parameter_source(port, source);
+      model.add_parameter_source(port, std::move(source));
     } else {
-      model.add_generation(port, source);
+      model.add_generation(port, std::move(source));
     }
   }
 

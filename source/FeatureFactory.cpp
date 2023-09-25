@@ -69,6 +69,10 @@ const Feature* FeatureFactory::get_invalid_path_broadening() const {
   return factory_.create("via-invalid-path-broadening");
 }
 
+const AnnotationFeature* FeatureFactory::get_unique_annotation_feature(const AnnotationFeature& annotation_feature) const {
+  return annotation_factory_.create(annotation_feature);
+}
+
 const FeatureFactory& FeatureFactory::singleton() {
   // Thread-safe global variable, initialized on first call.
   static FeatureFactory instance;

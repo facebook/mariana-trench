@@ -1,0 +1,81 @@
+{
+  "model_generators": [
+    {
+      "find": "methods",
+      "where": [
+        {
+          "constraint": "signature_match",
+          "parent": "Lcom/facebook/marianatrench/integrationtests/AnnotationFeature;",
+          "name": "getSourceWithMethodAnnotation"
+        }
+      ],
+      "model": {
+        "generations": [
+          {
+            "kind": "Source",
+            "port": "Return",
+            "via_annotation": [
+              {
+                "type": "Lcom/facebook/marianatrench/integrationtests/Path;",
+                "port": "Return"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "find": "methods",
+      "where": [
+        {
+          "constraint": "signature_match",
+          "parent": "Lcom/facebook/marianatrench/integrationtests/AnnotationFeature;",
+          "name": "getSourceWithParameterAnnotation"
+        }
+      ],
+      "model": {
+        "generations": [
+          {
+            "kind": "Source",
+            "port": "Return",
+            "via_annotation": [
+              {
+                "type": "Lcom/facebook/marianatrench/integrationtests/QueryParam;",
+                "port": "Argument(1)"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "find": "methods",
+      "where": [
+        {
+          "constraint": "signature_match",
+          "parent": "Lcom/facebook/marianatrench/integrationtests/AnnotationFeature;",
+          "name": "parameterSourceWithLabel"
+        }
+      ],
+      "model": {
+        "parameter_sources": [
+          {
+            "kind": "Source",
+            "port": "Argument(1)",
+            "via_annotation": [
+              {
+                "type": "Lcom/facebook/marianatrench/integrationtests/Path;",
+                "port": "Return",
+                "label": "MyPathLabel"
+              },
+              {
+                "type": "Lcom/facebook/marianatrench/integrationtests/QueryParam;",
+                "port": "Argument(1)"
+              }
+            ]
+          }
+        ]
+      }
+    }
+  ]
+}

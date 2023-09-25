@@ -683,6 +683,7 @@ void check_flows_to_array_allocation(
       /* inferred features */ {},
       /* locally_inferred_features */ {},
       /* user features */ {},
+      /* annotation_features */ {},
       /* via_type_of_ports */ {},
       /* via_value_of_ports */ {},
       /* canonical_names */ {},

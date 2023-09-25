@@ -9,6 +9,7 @@
 
 #include <string>
 
+#include <mariana-trench/AnnotationFeature.h>
 #include <mariana-trench/Feature.h>
 #include <mariana-trench/IncludeMacros.h>
 #include <mariana-trench/Method.h>
@@ -31,6 +32,9 @@ class FeatureFactory final {
   const Feature* get_via_value_of_feature(
       const std::optional<std::string_view>& value,
       const DexString* MT_NULLABLE tag) const;
+  const Feature* get_via_annotation_feature(
+      const std::optional<std::string_view>& label,
+      const std::string_view& value) const;
   const Feature* get_via_shim_feature(const Method* MT_NULLABLE method) const;
 
   /**
@@ -60,10 +64,14 @@ class FeatureFactory final {
    */
   const Feature* get_invalid_path_broadening() const;
 
+  /** Creates a unique annotation feature pointer for efficient comparison. */
+  const AnnotationFeature* get_unique_annotation_feature(const AnnotationFeature& annotation_feature) const;
+
   static const FeatureFactory& singleton();
 
  private:
   UniquePointerFactory<std::string, Feature> factory_;
+  UniquePointerFactory<AnnotationFeature, AnnotationFeature> annotation_factory_;
 };
 
 } // namespace marianatrench

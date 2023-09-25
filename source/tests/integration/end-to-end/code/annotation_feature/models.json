@@ -1,0 +1,11 @@
+[
+  {
+    "method": "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
+    "sinks": [
+      {
+        "kind": "Sink",
+        "port": "Argument(0)"
+      }
+    ]
+  }
+]

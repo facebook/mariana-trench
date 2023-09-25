@@ -109,6 +109,7 @@ TaintConfig TaintConfig::from_json(const Json::Value& value, Context& context) {
        "call_position",
        "distance",
        "features",
+       "via_annotation",
        "via_type_of",
        "via_value_of",
        "canonical_names"});
@@ -147,6 +148,13 @@ TaintConfig TaintConfig::from_json(const Json::Value& value, Context& context) {
   if (value.isMember("features")) {
     JsonValidation::null_or_array(value, /* field */ "features");
     user_features = FeatureSet::from_json(value["features"], context);
+  }
+
+  // Annotation features, to be converted to user features at model instantiation time.
+  AnnotationFeatureSet annotation_features;
+  if (value.isMember("via_annotation")) {
+    JsonValidation::null_or_array(value, /* field */ "via_annotation");
+    annotation_features = AnnotationFeatureSet::from_json(value["via_annotation"], context);
   }
 
   TaggedRootSet via_type_of_ports;
@@ -249,6 +257,7 @@ TaintConfig TaintConfig::from_json(const Json::Value& value, Context& context) {
       std::move(origins),
       /* inferred_features */ FeatureMayAlwaysSet::bottom(),
       std::move(user_features),
+      std::move(annotation_features),
       std::move(via_type_of_ports),
       std::move(via_value_of_ports),
       std::move(canonical_names),
