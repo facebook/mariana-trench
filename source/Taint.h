@@ -14,6 +14,7 @@
 #include <json/json.h>
 
 #include <sparta/AbstractDomain.h>
+#include <sparta/FlattenIterator.h>
 #include <sparta/PatriciaTreeMapAbstractPartition.h>
 
 #include <mariana-trench/CalleeFrames.h>
@@ -308,7 +309,7 @@ class TaintFramesIterator {
     }
   };
 
-  using ConstIterator = FlattenIterator<
+  using ConstIterator = sparta::FlattenIterator<
       /* OuterIterator */ Taint::Map::MapType::iterator,
       /* InnerIterator */ CalleeFrames::iterator,
       KeyToFramesMapDereference>;

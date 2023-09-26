@@ -14,6 +14,7 @@
 #include <json/json.h>
 
 #include <sparta/AbstractDomain.h>
+#include <sparta/FlattenIterator.h>
 #include <sparta/PatriciaTreeMapAbstractPartition.h>
 
 #include <mariana-trench/Access.h>
@@ -47,7 +48,7 @@ class CalleePortFrames final : public sparta::AbstractDomain<CalleePortFrames> {
     }
   };
 
-  using ConstIterator = FlattenIterator<
+  using ConstIterator = sparta::FlattenIterator<
       /* OuterIterator */ typename FramesByKind::MapType::iterator,
       /* InnerIterator */ typename KindFrames::iterator,
       KeyToFramesMapDereference>;

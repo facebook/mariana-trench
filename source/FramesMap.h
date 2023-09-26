@@ -10,7 +10,8 @@
 #include <sparta/AbstractDomain.h>
 #include <sparta/HashedAbstractPartition.h>
 
-#include <mariana-trench/FlattenIterator.h>
+#include <sparta/FlattenIterator.h>
+
 #include <mariana-trench/IncludeMacros.h>
 #include <mariana-trench/KindFactory.h>
 #include <mariana-trench/Position.h>
@@ -90,7 +91,7 @@ class FramesMap : public sparta::AbstractDomain<Derived> {
     }
   };
 
-  using ConstIterator = FlattenIterator<
+  using ConstIterator = sparta::FlattenIterator<
       /* OuterIterator */ typename std::unordered_map<Key, Value>::
           const_iterator,
       /* InnerIterator */ typename Value::iterator,

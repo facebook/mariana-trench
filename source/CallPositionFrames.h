@@ -17,7 +17,6 @@
 #include <sparta/PatriciaTreeMapAbstractPartition.h>
 
 #include <mariana-trench/CalleePortFrames.h>
-#include <mariana-trench/FlattenIterator.h>
 #include <mariana-trench/Frame.h>
 #include <mariana-trench/FramesMap.h>
 #include <mariana-trench/IncludeMacros.h>
