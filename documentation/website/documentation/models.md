@@ -556,7 +556,8 @@ Modes are used to describe specific behaviors of methods. Available modes are:
 
 * `skip-analysis`: skip the analysis of the method;
 * `add-via-obscure-feature`: add a feature/breadcrumb called `via-obscure:<method>` to sources flowing through this method;
-* `taint-in-taint-out`: propagate the taint on arguments to the return value and into the `this` parameter;
+* `taint-in-taint-out`: propagate the taint on arguments to the return value;
+* `taint-in-taint-this`: propagate the taint on arguments into the `this` parameter;
 * `no-join-virtual-overrides`: do not consider all possible overrides when handling a virtual call to this method;
 * `no-collapse-on-propagation`: do not collapse input paths when applying propagations;
 * `alias-memory-location-on-invoke`: aliases existing memory location at the callsite instead of creating a new one;
