@@ -133,6 +133,9 @@ class AbstractTreeDomain final
         const AbstractTreeDomain& /*y*/) {
       mt_unreachable(); // Never used.
     }
+
+    constexpr static sparta::AbstractValueKind default_value_kind =
+        sparta::AbstractValueKind::Bottom;
   };
 
  public:
