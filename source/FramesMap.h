@@ -210,15 +210,9 @@ class FramesMap : public sparta::AbstractDomain<Derived> {
     }
     mt_assert(other.is_bottom() || properties_ == other.properties_);
 
-    FramesByKey new_frames;
-    for (const auto& [key, value] : frames_.bindings()) {
-      auto other_value = other.frames_.get(key);
-      auto value_copy = value;
-      value_copy.difference_with(other_value);
-      new_frames.set(key, value_copy);
-    }
-
-    frames_ = std::move(new_frames);
+    frames_.difference_like_operation(
+        other.frames_,
+        [](Value* left, const Value& right) { left->difference_with(right); });
   }
 
   bool empty() const {
