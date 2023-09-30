@@ -113,24 +113,15 @@ class KindFrames final : public sparta::AbstractDomain<KindFrames> {
   template <typename Function> // Frame(Frame)
   void map(Function&& f) {
     static_assert(std::is_same_v<decltype(f(std::declval<Frame&&>())), Frame>);
-    // TODO(T158171922): Implement map in HashedAbstractPartition to avoid copy.
-    if (frames_.is_top()) {
-      return;
-    }
 
-    FramesByInterval new_frames;
-    for (const auto& [key, value] : frames_.bindings()) {
-      auto new_value = f(value);
+    frames_.map([f = std::forward<Function>(f)](Frame* frame) -> void {
       // The map operation must not change the kind, unless it is
       // Frame::bottom(), in which case, the entry will be dropped from the map
-      mt_assert(new_value.is_bottom() || new_value.kind() == kind_);
-      new_frames.set(key, new_value);
-    }
+      *frame = f(std::move(*frame));
+    });
 
-    if (new_frames.is_bottom()) {
+    if (frames_.is_bottom()) {
       set_to_bottom();
-    } else {
-      frames_ = std::move(new_frames);
     }
   }
 
@@ -138,12 +129,17 @@ class KindFrames final : public sparta::AbstractDomain<KindFrames> {
   void filter(Predicate&& predicate) {
     static_assert(
         std::is_same_v<decltype(predicate(std::declval<const Frame>())), bool>);
-    map([predicate = std::forward<Predicate>(predicate)](Frame frame) {
-      if (!predicate(frame)) {
-        return Frame::bottom();
-      }
-      return frame;
-    });
+
+    frames_.map(
+        [predicate = std::forward<Predicate>(predicate)](Frame* frame) -> void {
+          if (!predicate(*frame)) {
+            frame->set_to_bottom();
+          }
+        });
+
+    if (frames_.is_bottom()) {
+      set_to_bottom();
+    }
   }
 
   ConstIterator begin() const {

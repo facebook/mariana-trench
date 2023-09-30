@@ -230,27 +230,17 @@ class FramesMap : public sparta::AbstractDomain<Derived> {
     });
   }
 
-  template <typename Operation> // Value(Value)
+  template <typename Operation> // void(Value*)
   void map_frames(Operation&& f) {
-    if (frames_.is_top()) {
-      return;
-    }
-
-    FramesByKey new_frames;
-    for (const auto& [key, value] : frames_.bindings()) {
-      auto new_value = f(value);
-      new_frames.set(key, new_value);
-    }
-    frames_ = std::move(new_frames);
+    frames_.map(std::forward<Operation>(f));
   }
 
   template <typename Function> // Frame(Frame)
   void map(Function&& f) {
     static_assert(std::is_same_v<decltype(f(std::declval<Frame&&>())), Frame>);
 
-    map_frames([f = std::forward<Function>(f)](Value frames) {
-      frames.map(f);
-      return frames;
+    map_frames([f = std::forward<Function>(f)](Value* frames) -> void {
+      frames->map(f);
     });
   }
 
@@ -260,10 +250,9 @@ class FramesMap : public sparta::AbstractDomain<Derived> {
         std::
             is_same_v<decltype(predicate(std::declval<const Frame&>())), bool>);
 
-    map_frames([predicate = std::forward<Predicate>(predicate)](Value frames) {
-      frames.filter(predicate);
-      return frames;
-    });
+    map_frames(
+        [predicate = std::forward<Predicate>(predicate)](
+            Value* frames) -> void { frames->filter(predicate); });
   }
 
   ConstIterator begin() const {
@@ -276,16 +265,14 @@ class FramesMap : public sparta::AbstractDomain<Derived> {
   }
 
   void set_origins_if_empty(const MethodSet& origins) {
-    map_frames([&origins](Value frames) {
-      frames.set_origins_if_empty(origins);
-      return frames;
+    map_frames([&origins](Value* frames) -> void {
+      frames->set_origins_if_empty(origins);
     });
   }
 
   void set_field_origins_if_empty_with_field_callee(const Field* field) {
-    map_frames([field](Value frames) {
-      frames.set_field_origins_if_empty_with_field_callee(field);
-      return frames;
+    map_frames([field](Value* frames) -> void {
+      frames->set_field_origins_if_empty_with_field_callee(field);
     });
   }
 
@@ -294,9 +281,8 @@ class FramesMap : public sparta::AbstractDomain<Derived> {
       return;
     }
 
-    map_frames([&features](Value frames) {
-      frames.add_locally_inferred_features(features);
-      return frames;
+    map_frames([&features](Value* frames) -> void {
+      frames->add_locally_inferred_features(features);
     });
   }
 
@@ -309,9 +295,8 @@ class FramesMap : public sparta::AbstractDomain<Derived> {
   }
 
   void set_local_positions(const LocalPositionSet& positions) {
-    map_frames([&positions](Value frames) {
-      frames.set_local_positions(positions);
-      return frames;
+    map_frames([&positions](Value* frames) -> void {
+      frames->set_local_positions(positions);
     });
   }
 
@@ -322,9 +307,9 @@ class FramesMap : public sparta::AbstractDomain<Derived> {
   ) {
     map_frames(
         [transform_kind = std::forward<TransformKind>(transform_kind),
-         add_features = std::forward<AddFeatures>(add_features)](Value frames) {
-          frames.transform_kind_with_features(transform_kind, add_features);
-          return frames;
+         add_features =
+             std::forward<AddFeatures>(add_features)](Value* frames) -> void {
+          frames->transform_kind_with_features(transform_kind, add_features);
         });
   }
 
@@ -332,9 +317,8 @@ class FramesMap : public sparta::AbstractDomain<Derived> {
       const std::function<
           bool(const Method* MT_NULLABLE, const AccessPath&, const Kind*)>&
           is_valid) {
-    map_frames([&is_valid](Value frames) {
-      frames.filter_invalid_frames(is_valid);
-      return frames;
+    map_frames([&is_valid](Value* frames) -> void {
+      frames->filter_invalid_frames(is_valid);
     });
   }
 

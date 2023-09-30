@@ -56,9 +56,8 @@ void CalleeFrames::add_local_position(const Position* position) {
     return; // Do not add local positions on propagations.
   }
 
-  map_frames([position](CallPositionFrames frames) {
-    frames.add_local_position(position);
-    return frames;
+  map_frames([position](CallPositionFrames* frames) -> void {
+    frames->add_local_position(position);
   });
 }
 

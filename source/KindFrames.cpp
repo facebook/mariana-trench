@@ -148,47 +148,40 @@ void KindFrames::difference_with(const KindFrames& other) {
   }
   mt_assert(other.is_bottom() || kind_ == other.kind_);
 
-  FramesByInterval new_frames;
-  for (const auto& [key, value] : frames_.bindings()) {
-    auto other_value = other.frames_.get(key);
-    if (value.leq(other_value)) {
-      continue;
-    }
-    new_frames.set(key, value);
-  }
+  frames_.difference_like_operation(
+      other.frames_, [](Frame* left, const Frame& right) -> void {
+        if (left->leq(right)) {
+          left->set_to_bottom();
+        }
+      });
 
-  if (new_frames.is_bottom()) {
+  if (frames_.is_bottom()) {
     set_to_bottom();
-  } else {
-    frames_ = std::move(new_frames);
   }
 }
 
 void KindFrames::set_origins_if_empty(const MethodSet& origins) {
-  map([&origins](Frame frame) {
-    if (frame.origins().empty()) {
-      frame.set_origins(origins);
+  frames_.map([&origins](Frame* frame) -> void {
+    if (frame->origins().empty()) {
+      frame->set_origins(origins);
     }
-    return frame;
   });
 }
 
 void KindFrames::set_field_origins_if_empty_with_field_callee(
     const Field* field) {
-  map([field](Frame frame) {
-    if (frame.field_origins().empty()) {
-      frame.set_field_origins(FieldSet{field});
+  frames_.map([field](Frame* frame) -> void {
+    if (frame->field_origins().empty()) {
+      frame->set_field_origins(FieldSet{field});
     }
-    frame.set_field_callee(field);
-    return frame;
+    frame->set_field_callee(field);
   });
 }
 
 void KindFrames::append_to_propagation_output_paths(
     Path::Element path_element) {
-  map([path_element](Frame frame) {
-    frame.append_to_propagation_output_paths(path_element);
-    return frame;
+  frames_.map([path_element](Frame* frame) -> void {
+    frame->append_to_propagation_output_paths(path_element);
   });
 }
 
@@ -456,17 +449,13 @@ KindFrames KindFrames::propagate(
 void KindFrames::filter_invalid_frames(
     const std::function<bool(const Method*, const AccessPath&, const Kind*)>&
         is_valid) {
-  FramesByInterval new_frames;
-  for (const auto& frame : *this) {
-    if (is_valid(frame.callee(), frame.callee_port(), frame.kind())) {
-      new_frames.set(CallClassIntervalContext(frame), frame);
+  frames_.map([&is_valid](Frame* frame) -> void {
+    if (!is_valid(frame->callee(), frame->callee_port(), frame->kind())) {
+      frame->set_to_bottom();
     }
-  }
-
-  if (new_frames.is_bottom()) {
+  });
+  if (frames_.is_bottom()) {
     set_to_bottom();
-  } else {
-    frames_ = std::move(new_frames);
   }
 }
 
@@ -484,9 +473,8 @@ KindFrames KindFrames::with_kind(const Kind* kind) const {
 }
 
 void KindFrames::add_inferred_features(const FeatureMayAlwaysSet& features) {
-  map([&features](Frame frame) {
-    frame.add_inferred_features(features);
-    return frame;
+  frames_.map([&features](Frame* frame) -> void {
+    frame->add_inferred_features(features);
   });
 }
 

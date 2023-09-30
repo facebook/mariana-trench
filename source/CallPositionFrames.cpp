@@ -41,9 +41,8 @@ AccessPath CalleePortFromTaintConfig::operator()(
 }
 
 void CallPositionFrames::add_local_position(const Position* position) {
-  map_frames([position](CalleePortFrames callee_port_frames) {
-    callee_port_frames.add_local_position(position);
-    return callee_port_frames;
+  map_frames([position](CalleePortFrames* callee_port_frames) -> void {
+    callee_port_frames->add_local_position(position);
   });
 }
 
