@@ -9,7 +9,6 @@
 
 #include <string>
 
-#include <boost/functional/hash.hpp>
 #include <json/json.h>
 
 #include <IRInstruction.h>
@@ -17,6 +16,7 @@
 #include <mariana-trench/Access.h>
 #include <mariana-trench/Compiler.h>
 #include <mariana-trench/Context.h>
+#include <mariana-trench/Hash.h>
 #include <mariana-trench/IncludeMacros.h>
 
 namespace {
@@ -99,7 +99,7 @@ struct std::hash<marianatrench::Position> {
     boost::hash_combine(seed, position.path_);
     boost::hash_combine(seed, position.line_);
     if (position.port_) {
-      boost::hash_combine(seed, position.port_->hash());
+      boost::hash_combine(seed, *position.port_);
     }
     boost::hash_combine(seed, position.instruction_);
     boost::hash_combine(seed, position.start_);

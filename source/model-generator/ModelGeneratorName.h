@@ -10,9 +10,9 @@
 #include <optional>
 #include <string>
 
-#include <boost/functional/hash.hpp>
 #include <json/json.h>
 
+#include <mariana-trench/Hash.h>
 #include <mariana-trench/IncludeMacros.h>
 
 namespace marianatrench {

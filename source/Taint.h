@@ -10,7 +10,6 @@
 #include <initializer_list>
 #include <ostream>
 
-#include <boost/functional/hash.hpp>
 #include <json/json.h>
 
 #include <sparta/AbstractDomain.h>

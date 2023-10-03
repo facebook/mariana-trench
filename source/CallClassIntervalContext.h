@@ -9,6 +9,7 @@
 
 #include <mariana-trench/Assert.h>
 #include <mariana-trench/ClassIntervals.h>
+#include <mariana-trench/Hash.h>
 #include <mariana-trench/IncludeMacros.h>
 
 namespace marianatrench {

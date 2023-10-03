@@ -14,6 +14,7 @@
 #include <mariana-trench/Compiler.h>
 #include <mariana-trench/Context.h>
 #include <mariana-trench/FulfilledPartialKindResults.h>
+#include <mariana-trench/Hash.h>
 #include <mariana-trench/IncludeMacros.h>
 #include <mariana-trench/MemoryLocation.h>
 #include <mariana-trench/Method.h>
@@ -88,7 +89,7 @@ class MethodContext final {
   struct CacheKeyHash {
     std::size_t operator()(const CacheKey& key) const {
       std::size_t seed = 0;
-      boost::hash_combine(seed, std::hash<CallTarget>()(key.call_target));
+      boost::hash_combine(seed, key.call_target);
       boost::hash_combine(seed, key.position);
       return seed;
     }

@@ -8,7 +8,6 @@
 #pragma once
 
 #include <boost/container/flat_map.hpp>
-#include <boost/functional/hash.hpp>
 #include <json/json.h>
 
 #include <ControlFlow.h>
@@ -17,6 +16,7 @@
 #include <mariana-trench/Access.h>
 #include <mariana-trench/Compiler.h>
 #include <mariana-trench/Context.h>
+#include <mariana-trench/Hash.h>
 #include <mariana-trench/IncludeMacros.h>
 
 namespace marianatrench {

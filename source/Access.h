@@ -13,7 +13,6 @@
 #include <string_view>
 #include <vector>
 
-#include <boost/functional/hash.hpp>
 #include <json/json.h>
 
 #include <sparta/ConstantAbstractDomain.h>
@@ -24,6 +23,7 @@
 
 #include <mariana-trench/Assert.h>
 #include <mariana-trench/Compiler.h>
+#include <mariana-trench/Hash.h>
 #include <mariana-trench/IncludeMacros.h>
 #include <mariana-trench/PointerIntPair.h>
 
@@ -407,8 +407,7 @@ struct std::hash<marianatrench::Path> {
   std::size_t operator()(const marianatrench::Path& path) const {
     std::size_t seed = 0;
     for (const auto& path_element : path) {
-      boost::hash_combine(
-          seed, std::hash<marianatrench::Path::Element>()(path_element));
+      boost::hash_combine(seed, path_element);
     }
     return seed;
   }
@@ -506,10 +505,8 @@ template <>
 struct std::hash<marianatrench::AccessPath> {
   std::size_t operator()(const marianatrench::AccessPath& access_path) const {
     std::size_t seed = 0;
-    boost::hash_combine(
-        seed, std::hash<marianatrench::Root>()(access_path.root()));
-    boost::hash_combine(
-        seed, std::hash<marianatrench::Path>()(access_path.path()));
+    boost::hash_combine(seed, access_path.root());
+    boost::hash_combine(seed, access_path.path());
     return seed;
   }
 };

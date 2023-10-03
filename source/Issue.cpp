@@ -5,11 +5,10 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-#include <boost/functional/hash.hpp>
-
 #include <Show.h>
 
 #include <json/value.h>
+#include <mariana-trench/Hash.h>
 #include <mariana-trench/Issue.h>
 #include <mariana-trench/JsonValidation.h>
 
