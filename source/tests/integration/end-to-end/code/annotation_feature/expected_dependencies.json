@@ -41,6 +41,8 @@
   ],
   "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V" : 
   [
+    "Lcom/facebook/marianatrench/integrationtests/AnnotationFeature;.forAllParameterSourceWithLabel:(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V",
+    "Lcom/facebook/marianatrench/integrationtests/AnnotationFeature;.parameterSourceWithClassAnnotation:(Ljava/lang/String;)V",
     "Lcom/facebook/marianatrench/integrationtests/AnnotationFeature;.parameterSourceWithLabel:(Ljava/lang/String;)V",
     "Lcom/facebook/marianatrench/integrationtests/AnnotationFeature;.testSourceWithMethodAnnotation:()V",
     "Lcom/facebook/marianatrench/integrationtests/AnnotationFeature;.testSourceWithParameterAnnotation:()V"

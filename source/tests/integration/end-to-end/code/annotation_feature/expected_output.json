@@ -252,10 +252,14 @@
       "output" : 
       [
         {
+          "call_info" : 
+          {
+            "call_kind" : "Propagation",
+            "port" : "Return"
+          },
           "kinds" : 
           [
             {
-              "call_info" : "Propagation",
               "kind" : "LocalReturn",
               "output_paths" : 
               {
@@ -271,10 +275,14 @@
       "output" : 
       [
         {
+          "call_info" : 
+          {
+            "call_kind" : "Propagation",
+            "port" : "Return"
+          },
           "kinds" : 
           [
             {
-              "call_info" : "Propagation",
               "kind" : "LocalReturn",
               "output_paths" : 
               {
@@ -290,10 +298,14 @@
       "output" : 
       [
         {
+          "call_info" : 
+          {
+            "call_kind" : "Propagation",
+            "port" : "Return"
+          },
           "kinds" : 
           [
             {
-              "call_info" : "Propagation",
               "kind" : "LocalReturn",
               "output_paths" : 
               {
@@ -319,10 +331,14 @@
       "output" : 
       [
         {
+          "call_info" : 
+          {
+            "call_kind" : "Propagation",
+            "port" : "Return"
+          },
           "kinds" : 
           [
             {
-              "call_info" : "Propagation",
               "kind" : "LocalReturn",
               "output_paths" : 
               {
@@ -338,10 +354,14 @@
       "output" : 
       [
         {
+          "call_info" : 
+          {
+            "call_kind" : "Propagation",
+            "port" : "Argument(0)"
+          },
           "kinds" : 
           [
             {
-              "call_info" : "Propagation",
               "kind" : "LocalArgument(0)",
               "output_paths" : 
               {
@@ -351,10 +371,14 @@
           ]
         },
         {
+          "call_info" : 
+          {
+            "call_kind" : "Propagation",
+            "port" : "Return"
+          },
           "kinds" : 
           [
             {
-              "call_info" : "Propagation",
               "kind" : "LocalReturn",
               "output_paths" : 
               {
@@ -380,10 +404,14 @@
       "output" : 
       [
         {
+          "call_info" : 
+          {
+            "call_kind" : "Propagation",
+            "port" : "Return"
+          },
           "kinds" : 
           [
             {
-              "call_info" : "Propagation",
               "kind" : "LocalReturn",
               "output_paths" : 
               {
@@ -399,10 +427,14 @@
       "output" : 
       [
         {
+          "call_info" : 
+          {
+            "call_kind" : "Propagation",
+            "port" : "Argument(0)"
+          },
           "kinds" : 
           [
             {
-              "call_info" : "Propagation",
               "kind" : "LocalArgument(0)",
               "output_paths" : 
               {
@@ -412,10 +444,14 @@
           ]
         },
         {
+          "call_info" : 
+          {
+            "call_kind" : "Propagation",
+            "port" : "Return"
+          },
           "kinds" : 
           [
             {
-              "call_info" : "Propagation",
               "kind" : "LocalReturn",
               "output_paths" : 
               {
@@ -441,10 +477,14 @@
       "output" : 
       [
         {
+          "call_info" : 
+          {
+            "call_kind" : "Propagation",
+            "port" : "Return"
+          },
           "kinds" : 
           [
             {
-              "call_info" : "Propagation",
               "kind" : "LocalReturn",
               "output_paths" : 
               {
@@ -460,10 +500,14 @@
       "output" : 
       [
         {
+          "call_info" : 
+          {
+            "call_kind" : "Propagation",
+            "port" : "Argument(0)"
+          },
           "kinds" : 
           [
             {
-              "call_info" : "Propagation",
               "kind" : "LocalArgument(0)",
               "output_paths" : 
               {
@@ -473,10 +517,14 @@
           ]
         },
         {
+          "call_info" : 
+          {
+            "call_kind" : "Propagation",
+            "port" : "Return"
+          },
           "kinds" : 
           [
             {
-              "call_info" : "Propagation",
               "kind" : "LocalReturn",
               "output_paths" : 
               {
@@ -509,10 +557,14 @@
       "output" : 
       [
         {
+          "call_info" : 
+          {
+            "call_kind" : "Propagation",
+            "port" : "Argument(0)"
+          },
           "kinds" : 
           [
             {
-              "call_info" : "Propagation",
               "kind" : "LocalArgument(0)",
               "output_paths" : 
               {
@@ -528,10 +580,14 @@
       "output" : 
       [
         {
+          "call_info" : 
+          {
+            "call_kind" : "Propagation",
+            "port" : "Argument(0)"
+          },
           "kinds" : 
           [
             {
-              "call_info" : "Propagation",
               "kind" : "LocalArgument(0)",
               "output_paths" : 
               {
@@ -547,10 +603,14 @@
       "output" : 
       [
         {
+          "call_info" : 
+          {
+            "call_kind" : "Propagation",
+            "port" : "Argument(0)"
+          },
           "kinds" : 
           [
             {
-              "call_info" : "Propagation",
               "kind" : "LocalArgument(0)",
               "output_paths" : 
               {
@@ -584,10 +644,14 @@
       "output" : 
       [
         {
+          "call_info" : 
+          {
+            "call_kind" : "Propagation",
+            "port" : "Return"
+          },
           "kinds" : 
           [
             {
-              "call_info" : "Propagation",
               "kind" : "LocalReturn",
               "output_paths" : 
               {
@@ -621,10 +685,14 @@
       "output" : 
       [
         {
+          "call_info" : 
+          {
+            "call_kind" : "Propagation",
+            "port" : "Return"
+          },
           "kinds" : 
           [
             {
-              "call_info" : "Propagation",
               "kind" : "LocalReturn",
               "output_paths" : 
               {
@@ -657,10 +725,14 @@
       "output" : 
       [
         {
+          "call_info" : 
+          {
+            "call_kind" : "Propagation",
+            "port" : "Return"
+          },
           "kinds" : 
           [
             {
-              "call_info" : "Propagation",
               "kind" : "LocalReturn",
               "output_paths" : 
               {
@@ -676,10 +748,14 @@
       "output" : 
       [
         {
+          "call_info" : 
+          {
+            "call_kind" : "Propagation",
+            "port" : "Return"
+          },
           "kinds" : 
           [
             {
-              "call_info" : "Propagation",
               "kind" : "LocalReturn",
               "output_paths" : 
               {
@@ -695,10 +771,14 @@
       "output" : 
       [
         {
+          "call_info" : 
+          {
+            "call_kind" : "Propagation",
+            "port" : "Return"
+          },
           "kinds" : 
           [
             {
-              "call_info" : "Propagation",
               "kind" : "LocalReturn",
               "output_paths" : 
               {
@@ -876,7 +956,7 @@
   "method" : "Lcom/facebook/marianatrench/integrationtests/AnnotationFeature;.<init>:()V",
   "position" : 
   {
-    "line" : 30
+    "line" : 31
   }
 }
 {
@@ -892,7 +972,7 @@
       "callee" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
       "position" : 
       {
-        "line" : 47
+        "line" : 46
       },
       "rule" : 1,
       "sink_index" : "0",
@@ -905,7 +985,7 @@
             "port" : "Argument(0)",
             "position" : 
             {
-              "line" : 47
+              "line" : 46
             }
           },
           "kinds" : 
@@ -937,7 +1017,7 @@
             "call_kind" : "Origin",
             "position" : 
             {
-              "line" : 46
+              "line" : 45
             }
           },
           "kinds" : 
@@ -1073,7 +1153,7 @@
   ],
   "position" : 
   {
-    "line" : 46
+    "line" : 45
   },
   "sinks" : 
   [
@@ -1088,7 +1168,7 @@
             "port" : "Argument(0)",
             "position" : 
             {
-              "line" : 47
+              "line" : 46
             }
           },
           "kinds" : 
@@ -1123,6 +1203,10 @@
       "taint" : 
       [
         {
+          "call_info" : 
+          {
+            "call_kind" : "Declaration"
+          },
           "kinds" : 
           [
             {
@@ -1130,11 +1214,13 @@
               [
                 "via-annotation:/issue_1"
               ],
-              "call_info" : "Declaration",
               "kind" : "Source",
               "origins" : 
               [
-                "Lcom/facebook/marianatrench/integrationtests/AnnotationFeature;.getSourceWithMethodAnnotation:()Ljava/lang/Object;"
+                {
+                  "method" : "Lcom/facebook/marianatrench/integrationtests/AnnotationFeature;.getSourceWithMethodAnnotation:()Ljava/lang/Object;",
+                  "port" : "Return"
+                }
               ]
             }
           ]
@@ -1149,7 +1235,7 @@
   ],
   "position" : 
   {
-    "line" : 34
+    "line" : 35
   }
 }
 {
@@ -1160,6 +1246,10 @@
       "taint" : 
       [
         {
+          "call_info" : 
+          {
+            "call_kind" : "Declaration"
+          },
           "kinds" : 
           [
             {
@@ -1167,11 +1257,13 @@
               [
                 "via-annotation:query_param_name"
               ],
-              "call_info" : "Declaration",
               "kind" : "Source",
               "origins" : 
               [
-                "Lcom/facebook/marianatrench/integrationtests/AnnotationFeature;.getSourceWithParameterAnnotation:(Ljava/lang/String;)Ljava/lang/Object;"
+                {
+                  "method" : "Lcom/facebook/marianatrench/integrationtests/AnnotationFeature;.getSourceWithParameterAnnotation:(Ljava/lang/String;)Ljava/lang/Object;",
+                  "port" : "Return"
+                }
               ]
             }
           ]
@@ -1186,7 +1278,7 @@
   ],
   "position" : 
   {
-    "line" : 55
+    "line" : 54
   }
 }
 {
@@ -1200,7 +1292,7 @@
       "callee" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
       "position" : 
       {
-        "line" : 52
+        "line" : 51
       },
       "rule" : 1,
       "sink_index" : "0",
@@ -1213,7 +1305,7 @@
             "port" : "Argument(0)",
             "position" : 
             {
-              "line" : 52
+              "line" : 51
             }
           },
           "kinds" : 
@@ -1245,7 +1337,7 @@
             "call_kind" : "Origin",
             "position" : 
             {
-              "line" : 51
+              "line" : 50
             }
           },
           "kinds" : 
@@ -1315,7 +1407,7 @@
   ],
   "position" : 
   {
-    "line" : 51
+    "line" : 50
   },
   "sinks" : 
   [
@@ -1330,7 +1422,7 @@
             "port" : "Argument(0)",
             "position" : 
             {
-              "line" : 52
+              "line" : 51
             }
           },
           "kinds" : 
@@ -1369,7 +1461,7 @@
       "callee" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
       "position" : 
       {
-        "line" : 40
+        "line" : 41
       },
       "rule" : 1,
       "sink_index" : "0",
@@ -1382,13 +1474,12 @@
             "port" : "Argument(0)",
             "position" : 
             {
-              "line" : 40
+              "line" : 41
             }
           },
           "kinds" : 
           [
             {
-              "call_info" : "Origin",
               "callee_interval" : 
               [
                 34,
@@ -1397,32 +1488,25 @@
               "kind" : "Sink",
               "origins" : 
               [
-                "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V"
+                {
+                  "method" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
+                  "port" : "Argument(0)"
+                }
               ],
               "preserves_type_context" : true
             }
-          ],
-          "origin" : 
-          {
-            "method" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
-            "position" : 
-            {
-              "end" : 22,
-              "line" : 27,
-              "path" : "AnnotationFeature.java",
-              "start" : 16
-            }
-          }
+          ]
         }
       ],
       "sources" : 
       [
         {
-          "call" : 
+          "call_info" : 
           {
+            "call_kind" : "Origin",
             "position" : 
             {
-              "line" : 39
+              "line" : 40
             }
           },
           "kinds" : 
@@ -1430,14 +1514,16 @@
             {
               "always_features" : 
               [
-                "via-annotation:MyPathLabel=/issue_2",
+                "via-MyPathLabel-annotation:/issue_2",
                 "via-annotation:query_param_name"
               ],
-              "call_info" : "Origin",
               "kind" : "Source",
               "origins" : 
               [
-                "Lcom/facebook/marianatrench/integrationtests/AnnotationFeature;.parameterSourceWithLabel:(Ljava/lang/String;)V"
+                {
+                  "method" : "Lcom/facebook/marianatrench/integrationtests/AnnotationFeature;.parameterSourceWithLabel:(Ljava/lang/String;)V",
+                  "port" : "Argument(1)"
+                }
               ]
             }
           ],
@@ -1445,7 +1531,7 @@
           {
             "always_features" : 
             [
-              "via-annotation:MyPathLabel=/issue_2",
+              "via-MyPathLabel-annotation:/issue_2",
               "via-annotation:query_param_name"
             ]
           }
@@ -1465,19 +1551,25 @@
       "taint" : 
       [
         {
+          "call_info" : 
+          {
+            "call_kind" : "Declaration"
+          },
           "kinds" : 
           [
             {
               "always_features" : 
               [
-                "via-annotation:MyPathLabel=/issue_2",
+                "via-MyPathLabel-annotation:/issue_2",
                 "via-annotation:query_param_name"
               ],
-              "call_info" : "Declaration",
               "kind" : "Source",
               "origins" : 
               [
-                "Lcom/facebook/marianatrench/integrationtests/AnnotationFeature;.parameterSourceWithLabel:(Ljava/lang/String;)V"
+                {
+                  "method" : "Lcom/facebook/marianatrench/integrationtests/AnnotationFeature;.parameterSourceWithLabel:(Ljava/lang/String;)V",
+                  "port" : "Argument(1)"
+                }
               ]
             }
           ]
@@ -1487,7 +1579,7 @@
   ],
   "position" : 
   {
-    "line" : 39
+    "line" : 40
   },
   "sinks" : 
   [
@@ -1502,13 +1594,12 @@
             "port" : "Argument(0)",
             "position" : 
             {
-              "line" : 40
+              "line" : 41
             }
           },
           "kinds" : 
           [
             {
-              "call_info" : "Origin",
               "callee_interval" : 
               [
                 34,
@@ -1517,22 +1608,14 @@
               "kind" : "Sink",
               "origins" : 
               [
-                "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V"
+                {
+                  "method" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
+                  "port" : "Argument(0)"
+                }
               ],
               "preserves_type_context" : true
             }
-          ],
-          "origin" : 
-          {
-            "method" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
-            "position" : 
-            {
-              "end" : 22,
-              "line" : 27,
-              "path" : "AnnotationFeature.java",
-              "start" : 16
-            }
-          }
+          ]
         }
       ]
     }
@@ -1549,7 +1632,7 @@
       "callee" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
       "position" : 
       {
-        "line" : 61
+        "line" : 60
       },
       "rule" : 1,
       "sink_index" : "0",
@@ -1562,13 +1645,12 @@
             "port" : "Argument(0)",
             "position" : 
             {
-              "line" : 61
+              "line" : 60
             }
           },
           "kinds" : 
           [
             {
-              "call_info" : "Origin",
               "callee_interval" : 
               [
                 34,
@@ -1577,22 +1659,14 @@
               "kind" : "Sink",
               "origins" : 
               [
-                "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V"
+                {
+                  "method" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
+                  "port" : "Argument(0)"
+                }
               ],
               "preserves_type_context" : true
             }
-          ],
-          "origin" : 
-          {
-            "method" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
-            "position" : 
-            {
-              "end" : 21,
-              "line" : 36,
-              "path" : "AnnotationFeature.java",
-              "start" : 16
-            }
-          }
+          ]
         }
       ],
       "sources" : 
@@ -1604,7 +1678,7 @@
             "port" : "Return",
             "position" : 
             {
-              "line" : 60
+              "line" : 59
             }
           },
           "kinds" : 
@@ -1614,7 +1688,6 @@
               [
                 "via-annotation:/issue_1"
               ],
-              "call_info" : "Origin",
               "callee_interval" : 
               [
                 34,
@@ -1623,7 +1696,10 @@
               "kind" : "Source",
               "origins" : 
               [
-                "Lcom/facebook/marianatrench/integrationtests/AnnotationFeature;.getSourceWithMethodAnnotation:()Ljava/lang/Object;"
+                {
+                  "method" : "Lcom/facebook/marianatrench/integrationtests/AnnotationFeature;.getSourceWithMethodAnnotation:()Ljava/lang/Object;",
+                  "port" : "Return"
+                }
               ],
               "preserves_type_context" : true
             }
@@ -1634,17 +1710,6 @@
             [
               "via-annotation:/issue_1"
             ]
-          },
-          "origin" : 
-          {
-            "method" : "Lcom/facebook/marianatrench/integrationtests/AnnotationFeature;.getSourceWithMethodAnnotation:()Ljava/lang/Object;",
-            "position" : 
-            {
-              "end" : 48,
-              "line" : 35,
-              "path" : "AnnotationFeature.java",
-              "start" : 20
-            }
           }
         }
       ]
@@ -1653,7 +1718,7 @@
   "method" : "Lcom/facebook/marianatrench/integrationtests/AnnotationFeature;.testSourceWithMethodAnnotation:()V",
   "position" : 
   {
-    "line" : 59
+    "line" : 58
   }
 }
 {
@@ -1667,7 +1732,7 @@
       "callee" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
       "position" : 
       {
-        "line" : 66
+        "line" : 65
       },
       "rule" : 1,
       "sink_index" : "0",
@@ -1680,13 +1745,12 @@
             "port" : "Argument(0)",
             "position" : 
             {
-              "line" : 66
+              "line" : 65
             }
           },
           "kinds" : 
           [
             {
-              "call_info" : "Origin",
               "callee_interval" : 
               [
                 34,
@@ -1695,22 +1759,14 @@
               "kind" : "Sink",
               "origins" : 
               [
-                "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V"
+                {
+                  "method" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
+                  "port" : "Argument(0)"
+                }
               ],
               "preserves_type_context" : true
             }
-          ],
-          "origin" : 
-          {
-            "method" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
-            "position" : 
-            {
-              "end" : 21,
-              "line" : 41,
-              "path" : "AnnotationFeature.java",
-              "start" : 16
-            }
-          }
+          ]
         }
       ],
       "sources" : 
@@ -1722,7 +1778,7 @@
             "port" : "Return",
             "position" : 
             {
-              "line" : 65
+              "line" : 64
             }
           },
           "kinds" : 
@@ -1732,7 +1788,6 @@
               [
                 "via-annotation:query_param_name"
               ],
-              "call_info" : "Origin",
               "callee_interval" : 
               [
                 34,
@@ -1741,7 +1796,10 @@
               "kind" : "Source",
               "origins" : 
               [
-                "Lcom/facebook/marianatrench/integrationtests/AnnotationFeature;.getSourceWithParameterAnnotation:(Ljava/lang/String;)Ljava/lang/Object;"
+                {
+                  "method" : "Lcom/facebook/marianatrench/integrationtests/AnnotationFeature;.getSourceWithParameterAnnotation:(Ljava/lang/String;)Ljava/lang/Object;",
+                  "port" : "Return"
+                }
               ],
               "preserves_type_context" : true
             }
@@ -1752,17 +1810,6 @@
             [
               "via-annotation:query_param_name"
             ]
-          },
-          "origin" : 
-          {
-            "method" : "Lcom/facebook/marianatrench/integrationtests/AnnotationFeature;.getSourceWithParameterAnnotation:(Ljava/lang/String;)Ljava/lang/Object;",
-            "position" : 
-            {
-              "end" : 51,
-              "line" : 40,
-              "path" : "AnnotationFeature.java",
-              "start" : 20
-            }
           }
         }
       ]
@@ -1771,7 +1818,7 @@
   "method" : "Lcom/facebook/marianatrench/integrationtests/AnnotationFeature;.testSourceWithParameterAnnotation:()V",
   "position" : 
   {
-    "line" : 64
+    "line" : 63
   }
 }
 {
@@ -1795,10 +1842,14 @@
       "output" : 
       [
         {
+          "call_info" : 
+          {
+            "call_kind" : "Propagation",
+            "port" : "Return"
+          },
           "kinds" : 
           [
             {
-              "call_info" : "Propagation",
               "kind" : "LocalReturn",
               "output_paths" : 
               {
@@ -1824,14 +1875,20 @@
       "taint" : 
       [
         {
+          "call_info" : 
+          {
+            "call_kind" : "Declaration"
+          },
           "kinds" : 
           [
             {
-              "call_info" : "Declaration",
               "kind" : "Sink",
               "origins" : 
               [
-                "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V"
+                {
+                  "method" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
+                  "port" : "Argument(0)"
+                }
               ]
             }
           ]
@@ -1846,6 +1903,24 @@
   {
     "line" : 11
   }
+}
+{
+  "method" : "Lcom/facebook/marianatrench/integrationtests/OtherQueryParam;.description:()Ljava/lang/String;",
+  "modes" : 
+  [
+    "add-via-obscure-feature",
+    "skip-analysis"
+  ],
+  "position" : {}
+}
+{
+  "method" : "Lcom/facebook/marianatrench/integrationtests/OtherQueryParam;.value:()Ljava/lang/String;",
+  "modes" : 
+  [
+    "add-via-obscure-feature",
+    "skip-analysis"
+  ],
+  "position" : {}
 }
 {
   "method" : "Lcom/facebook/marianatrench/integrationtests/Path;.value:()Ljava/lang/String;",
@@ -1963,10 +2038,14 @@
       "output" : 
       [
         {
+          "call_info" : 
+          {
+            "call_kind" : "Propagation",
+            "port" : "Return"
+          },
           "kinds" : 
           [
             {
-              "call_info" : "Propagation",
               "kind" : "LocalReturn",
               "output_paths" : 
               {
@@ -2072,10 +2151,14 @@
       "output" : 
       [
         {
+          "call_info" : 
+          {
+            "call_kind" : "Propagation",
+            "port" : "Return"
+          },
           "kinds" : 
           [
             {
-              "call_info" : "Propagation",
               "kind" : "LocalReturn",
               "output_paths" : 
               {
@@ -2091,10 +2174,14 @@
       "output" : 
       [
         {
+          "call_info" : 
+          {
+            "call_kind" : "Propagation",
+            "port" : "Return"
+          },
           "kinds" : 
           [
             {
-              "call_info" : "Propagation",
               "kind" : "LocalReturn",
               "output_paths" : 
               {
@@ -2198,10 +2285,14 @@
       "output" : 
       [
         {
+          "call_info" : 
+          {
+            "call_kind" : "Propagation",
+            "port" : "Return"
+          },
           "kinds" : 
           [
             {
-              "call_info" : "Propagation",
               "kind" : "LocalReturn",
               "output_paths" : 
               {
@@ -2227,10 +2318,14 @@
       "output" : 
       [
         {
+          "call_info" : 
+          {
+            "call_kind" : "Propagation",
+            "port" : "Argument(0)"
+          },
           "kinds" : 
           [
             {
-              "call_info" : "Propagation",
               "kind" : "LocalArgument(0)",
               "output_paths" : 
               {

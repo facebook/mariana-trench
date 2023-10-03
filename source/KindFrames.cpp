@@ -406,7 +406,6 @@ KindFrames KindFrames::propagate(
         propagated_origins,
         std::move(propagated_inferred_features),
         propagated_user_features,
-        /* annotation_features */ {},
         /* via_type_of_ports */ {},
         /* via_value_of_ports */ {},
         propagated_canonical_names,

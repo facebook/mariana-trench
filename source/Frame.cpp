@@ -31,7 +31,6 @@ Frame::Frame(const TaintConfig& config)
           config.origins(),
           config.inferred_features(),
           config.user_features(),
-          config.annotation_features(),
           config.via_type_of_ports(),
           config.via_value_of_ports(),
           config.canonical_names(),
@@ -85,7 +84,6 @@ bool Frame::leq(const Frame& other) const {
         origins_.leq(other.origins_) &&
         inferred_features_.leq(other.inferred_features_) &&
         user_features_.leq(other.user_features_) &&
-        annotation_features_.leq(other.annotation_features_) &&
         via_type_of_ports_.leq(other.via_type_of_ports_) &&
         via_value_of_ports_.leq(other.via_value_of_ports_) &&
         canonical_names_.leq(other.canonical_names_) &&
@@ -105,7 +103,6 @@ bool Frame::equals(const Frame& other) const {
         distance_ == other.distance_ && origins_ == other.origins_ &&
         inferred_features_ == other.inferred_features_ &&
         user_features_ == other.user_features_ &&
-        annotation_features_ == other.annotation_features_ &&
         via_type_of_ports_ == other.via_type_of_ports_ &&
         via_value_of_ports_ == other.via_value_of_ports_ &&
         canonical_names_ == other.canonical_names_ &&
@@ -129,7 +126,6 @@ void Frame::join_with(const Frame& other) {
     origins_.join_with(other.origins_);
     inferred_features_.join_with(other.inferred_features_);
     user_features_.join_with(other.user_features_);
-    annotation_features_.join_with(other.annotation_features_);
     via_type_of_ports_.join_with(other.via_type_of_ports_);
     via_value_of_ports_.join_with(other.via_value_of_ports_);
     canonical_names_.join_with(other.canonical_names_);
@@ -182,7 +178,6 @@ Frame Frame::update_with_propagation_trace(
       propagation_frame.origins_,
       inferred_features_,
       /* user_features */ FeatureSet::bottom(),
-      /* annotation_features */ AnnotationFeatureSet::bottom(),
       /* via_type_of_ports */ {},
       /* via_value_of_ports */ {},
       /* canonical_names */ {},
@@ -324,10 +319,6 @@ Frame Frame::with_origins(OriginSet origins) const {
   auto copy = *this;
   copy.origins_ = std::move(origins);
   return copy;
-}
-
-void Frame::clear_annotation_features() {
-  annotation_features_.difference_with(annotation_features_);
 }
 
 Frame Frame::from_json(

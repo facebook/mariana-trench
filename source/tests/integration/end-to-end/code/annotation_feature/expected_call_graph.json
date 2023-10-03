@@ -210,11 +210,25 @@
       "Ljava/lang/Object;.<init>:()V"
     ]
   },
+  "Lcom/facebook/marianatrench/integrationtests/AnnotationFeature;.forAllParameterSourceWithLabel:(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V" : 
+  {
+    "static" : 
+    [
+      "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V"
+    ]
+  },
   "Lcom/facebook/marianatrench/integrationtests/AnnotationFeature;.getSourceWithMethodAnnotation:()Ljava/lang/Object;" : 
   {
     "static" : 
     [
       "Ljava/lang/Object;.<init>:()V"
+    ]
+  },
+  "Lcom/facebook/marianatrench/integrationtests/AnnotationFeature;.parameterSourceWithClassAnnotation:(Ljava/lang/String;)V" : 
+  {
+    "static" : 
+    [
+      "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V"
     ]
   },
   "Lcom/facebook/marianatrench/integrationtests/AnnotationFeature;.parameterSourceWithLabel:(Ljava/lang/String;)V" : 

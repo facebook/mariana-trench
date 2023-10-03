@@ -5,6 +5,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
+#include <boost/range/adaptor/filtered.hpp>
 #include <fmt/format.h>
 
 #include <Show.h>
@@ -26,6 +27,7 @@
 #include <mariana-trench/Overrides.h>
 #include <mariana-trench/Positions.h>
 #include <mariana-trench/model-generator/ModelGeneratorNameFactory.h>
+#include <mariana-trench/model-generator/TaintConfigTemplate.h>
 
 namespace marianatrench {
 
@@ -262,65 +264,20 @@ bool Model::operator!=(const Model& other) const {
   return !(*this == other);
 }
 
-/**
- * Looks up the concrete annotation parameter values from \p method for all
- * annotation features in \p taint and inserts them as user features into
- * \p taint.
- */
-static Taint instantiate_annotation_features(const Method* method, Context& context, Taint taint) {
-  taint.map([method, &context](Frame frame) {
-    FeatureSet new_user_features;
-    for (const AnnotationFeature* annotation_feature : frame.annotation_features()) {
-      const DexType* const expected_type = annotation_feature->dex_type();
-      const DexAnnotationSet* anno_set;
-      if (annotation_feature->port().is_return()) {
-        anno_set = method->dex_method()->get_anno_set();
-      } else {
-        anno_set = method->get_parameter_annotations(annotation_feature->port().parameter_position());
-      }
-
-      const std::vector<std::unique_ptr<DexAnnotation>>& annotations = anno_set->get_annotations();
-      auto annotation = find_if(annotations.begin(), annotations.end(), [expected_type](const std::unique_ptr<DexAnnotation>& annotation) {
-        return expected_type == annotation->type();
-      });
-      if (annotation == annotations.end()) {
-        continue;
-      }
-
-      const EncodedAnnotations& anno_elems = (*annotation)->anno_elems();
-      auto value = find_if(anno_elems.begin(), anno_elems.end(), [](const DexAnnotationElement& e) {
-        return "value" == e.string->str();
-      });
-      if (value != anno_elems.end()) {
-        const std::string user_feature_data = value->encoded_value->show();
-        const Feature* user_feature = context.feature_factory->get_via_annotation_feature(
-          annotation_feature->label(),
-          user_feature_data
-        );
-        new_user_features.add(user_feature);
-      }
-    }
-    frame.add_user_features(new_user_features);
-    frame.clear_annotation_features();
-    return frame;
-  });
-  return taint;
-}
-
 Model Model::instantiate(const Method* method, Context& context) const {
   Model model(method, context, modes_, frozen_);
 
   for (const auto& [port, generation_taint] : generations_.elements()) {
-    model.add_generation(port, instantiate_annotation_features(method, context, generation_taint));
+    model.add_generation(port, generation_taint);
   }
 
   for (const auto& [port, parameter_source_taint] :
        parameter_sources_.elements()) {
-    model.add_parameter_source(port, instantiate_annotation_features(method, context, parameter_source_taint));
+    model.add_parameter_source(port, parameter_source_taint);
   }
 
   for (const auto& [port, sink_taint] : sinks_.elements()) {
-    model.add_sink(port, instantiate_annotation_features(method, context, sink_taint));
+    model.add_sink(port, sink_taint);
   }
 
   for (const auto& [port, source_taint] : call_effect_sources_.elements()) {
@@ -1295,55 +1252,27 @@ Model Model::from_config_json(
 
   Model model(method, context, modes, frozen);
 
-  for (auto generation_value :
-       JsonValidation::null_or_array(value, /* field */ "generations")) {
-    auto port = AccessPath(Root(Root::Kind::Return));
-    if (generation_value.isMember("port")) {
-      JsonValidation::string(generation_value, /* field */ "port");
-      port = AccessPath::from_json(generation_value["port"]);
-    } else if (generation_value.isMember("caller_port")) {
-      JsonValidation::string(generation_value, /* field */ "caller_port");
-      port = AccessPath::from_json(generation_value["caller_port"]);
-    }
+  std::vector<std::pair<AccessPath, Json::Value>> generation_values;
+  std::vector<std::pair<AccessPath, Json::Value>> parameter_source_values;
+  std::vector<std::pair<AccessPath, Json::Value>> sink_values;
+  read_taint_configs_from_json(
+    value,
+    generation_values,
+    parameter_source_values,
+    sink_values,
+    TaintConfigTemplate::is_concrete);
+
+  for (const auto& [port, generation_value] : generation_values) {
     model.add_generation(port,
         TaintConfig::from_json(generation_value, context));
   }
 
-  for (auto parameter_source_value :
-       JsonValidation::null_or_array(value, /* field */ "parameter_sources")) {
-    std::string port_field =
-        parameter_source_value.isMember("port") ? "port" : "caller_port";
-    JsonValidation::string(parameter_source_value, /* field */ port_field);
-    auto port = AccessPath::from_json(parameter_source_value[port_field]);
+  for (const auto& [port, parameter_source_value] : parameter_source_values) {
     model.add_parameter_source(
         port, TaintConfig::from_json(parameter_source_value, context));
   }
 
-  for (auto source_value :
-       JsonValidation::null_or_array(value, /* field */ "sources")) {
-    auto port = AccessPath(Root(Root::Kind::Return));
-    if (source_value.isMember("port")) {
-      JsonValidation::string(source_value, /* field */ "port");
-      port = AccessPath::from_json(source_value["port"]);
-    } else if (source_value.isMember("caller_port")) {
-      JsonValidation::string(source_value, /* field */ "caller_port");
-      port = AccessPath::from_json(source_value["caller_port"]);
-    }
-
-    auto source = TaintConfig::from_json(source_value, context);
-    if (port.root().is_argument()) {
-      model.add_parameter_source(port, std::move(source));
-    } else {
-      model.add_generation(port, std::move(source));
-    }
-  }
-
-  for (auto sink_value :
-       JsonValidation::null_or_array(value, /* field */ "sinks")) {
-    std::string port_field =
-        sink_value.isMember("port") ? "port" : "caller_port";
-    JsonValidation::string(sink_value, /* field */ port_field);
-    auto port = AccessPath::from_json(sink_value[port_field]);
+  for (const auto& [port, sink_value] : sink_values) {
     model.add_sink(port, TaintConfig::from_json(sink_value, context));
   }
 
@@ -1467,6 +1396,67 @@ Model Model::from_config_json(
   }
 
   return model;
+}
+
+void Model::read_taint_configs_from_json(
+    const Json::Value& value,
+    std::vector<std::pair<AccessPath, Json::Value>>& generation_values,
+    std::vector<std::pair<AccessPath, Json::Value>>& parameter_source_values,
+    std::vector<std::pair<AccessPath, Json::Value>>& sink_values,
+    bool (*predicate)(const Json::Value& value)) {
+
+  for (auto generation_value :
+       JsonValidation::null_or_array(value, /* field */ "generations") |
+       boost::adaptors::filtered(predicate)) {
+    auto port = AccessPath(Root(Root::Kind::Return));
+    if (generation_value.isMember("port")) {
+      JsonValidation::string(generation_value, /* field */ "port");
+      port = AccessPath::from_json(generation_value["port"]);
+    } else if (generation_value.isMember("caller_port")) {
+      JsonValidation::string(generation_value, /* field */ "caller_port");
+      port = AccessPath::from_json(generation_value["caller_port"]);
+    }
+    generation_values.emplace_back(std::move(port), std::move(generation_value));
+  }
+
+  for (auto parameter_source_value : 
+       JsonValidation::null_or_array(value, /* field */ "parameter_sources") |
+       boost::adaptors::filtered(predicate)) {
+    std::string port_field =
+        parameter_source_value.isMember("port") ? "port" : "caller_port";
+    JsonValidation::string(parameter_source_value, /* field */ port_field);
+    auto port = AccessPath::from_json(parameter_source_value[port_field]);
+    parameter_source_values.emplace_back(std::move(port), std::move(parameter_source_value));
+  }
+
+  for (const auto& source_value :
+       JsonValidation::null_or_array(value, /* field */ "sources") |
+       boost::adaptors::filtered(predicate)) {
+    auto port = AccessPath(Root(Root::Kind::Return));
+    if (source_value.isMember("port")) {
+      JsonValidation::string(source_value, /* field */ "port");
+      port = AccessPath::from_json(source_value["port"]);
+    } else if (source_value.isMember("caller_port")) {
+      JsonValidation::string(source_value, /* field */ "caller_port");
+      port = AccessPath::from_json(source_value["caller_port"]);
+    }
+
+    if (port.root().is_argument()) {
+      parameter_source_values.emplace_back(std::move(port), std::move(source_value));
+    } else {
+      generation_values.emplace_back(std::move(port), std::move(source_value));
+    }
+  }
+
+  for (const auto& sink_value :
+       JsonValidation::null_or_array(value, /* field */ "sinks") |
+       boost::adaptors::filtered(predicate)) {
+    std::string port_field =
+        sink_value.isMember("port") ? "port" : "caller_port";
+    JsonValidation::string(sink_value, /* field */ port_field);
+    auto port = AccessPath::from_json(sink_value[port_field]);
+    sink_values.emplace_back(std::move(port), std::move(sink_value));
+  }
 }
 
 Model Model::from_json(const Json::Value& value, Context& context) {

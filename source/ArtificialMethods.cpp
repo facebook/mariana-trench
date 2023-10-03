@@ -54,7 +54,6 @@ std::vector<Model> ArtificialMethods::models(Context& context) const {
           /* origins */ {},
           /* inferred_features */ FeatureMayAlwaysSet::bottom(),
           /* user_features */ FeatureSet::bottom(),
-          /* annotation_features */ AnnotationFeatureSet::bottom(),
           /* via_type_of_ports */ {},
           /* via_value_of_ports */ {},
           /* canonical_names */ {},

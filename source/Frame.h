@@ -97,7 +97,6 @@ class Frame final : public sparta::AbstractDomain<Frame> {
       OriginSet origins,
       FeatureMayAlwaysSet inferred_features,
       FeatureSet user_features,
-      AnnotationFeatureSet annotation_features,
       TaggedRootSet via_type_of_ports,
       TaggedRootSet via_value_of_ports,
       CanonicalNameSetAbstractDomain canonical_names,
@@ -109,7 +108,6 @@ class Frame final : public sparta::AbstractDomain<Frame> {
         origins_(std::move(origins)),
         inferred_features_(std::move(inferred_features)),
         user_features_(std::move(user_features)),
-        annotation_features_(std::move(annotation_features)),
         via_type_of_ports_(std::move(via_type_of_ports)),
         via_value_of_ports_(std::move(via_value_of_ports)),
         canonical_names_(std::move(canonical_names)),
@@ -182,10 +180,6 @@ class Frame final : public sparta::AbstractDomain<Frame> {
     return user_features_;
   }
 
-  const AnnotationFeatureSet& annotation_features() const {
-    return annotation_features_;
-  }
-
   FeatureMayAlwaysSet features() const;
 
   void add_extra_trace(ExtraTrace&& extra_trace);
@@ -255,12 +249,6 @@ class Frame final : public sparta::AbstractDomain<Frame> {
 
   Frame with_origins(OriginSet origins) const;
 
-  /**
-   * Removes all annotation features. Invoked after they have been
-   * instantiated as user features.
-   */
-  void clear_annotation_features();
-
   static Frame from_json(
       const Json::Value& value,
       const CallInfo& call_info,
@@ -278,7 +266,6 @@ class Frame final : public sparta::AbstractDomain<Frame> {
   OriginSet origins_;
   FeatureMayAlwaysSet inferred_features_;
   FeatureSet user_features_;
-  AnnotationFeatureSet annotation_features_;
   TaggedRootSet via_type_of_ports_;
   TaggedRootSet via_value_of_ports_;
   CanonicalNameSetAbstractDomain canonical_names_;
