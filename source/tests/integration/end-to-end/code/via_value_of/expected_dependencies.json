@@ -36,7 +36,8 @@
     "Lcom/facebook/marianatrench/integrationtests/ViaValueOf;.testSourceIntConstant:()V",
     "Lcom/facebook/marianatrench/integrationtests/ViaValueOf;.testSourceIntLiteral:()V",
     "Lcom/facebook/marianatrench/integrationtests/ViaValueOf;.testSourceStringConstant:()V",
-    "Lcom/facebook/marianatrench/integrationtests/ViaValueOf;.testSourceStringLiteral:()V"
+    "Lcom/facebook/marianatrench/integrationtests/ViaValueOf;.testSourceStringLiteral:()V",
+    "Lcom/facebook/marianatrench/integrationtests/ViaValueOf;.testSourceStringLiteralWithLabel:()V"
   ],
   "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;" : 
   [
@@ -61,6 +62,10 @@
     "Lcom/facebook/marianatrench/integrationtests/ViaValueOf;.testSourceStringLiteral:()V",
     "Lcom/facebook/marianatrench/integrationtests/ViaValueOf;.testUnknown1:()V",
     "Lcom/facebook/marianatrench/integrationtests/ViaValueOf;.testUnknown2:()V"
+  ],
+  "Lcom/facebook/marianatrench/integrationtests/ViaValueOf;.getSourceViaStringWithLabel:(Ljava/lang/String;)Ljava/lang/Object;" : 
+  [
+    "Lcom/facebook/marianatrench/integrationtests/ViaValueOf;.testSourceStringLiteralWithLabel:()V"
   ],
   "Lcom/facebook/marianatrench/integrationtests/ViaValueOf;.getString:()Ljava/lang/String;" : 
   [
@@ -143,6 +148,7 @@
     "Lcom/facebook/marianatrench/integrationtests/ViaValueOf;.getSourceViaInt:(I)Ljava/lang/Object;",
     "Lcom/facebook/marianatrench/integrationtests/ViaValueOf;.getSourceViaInvalidModel:()Ljava/lang/Object;",
     "Lcom/facebook/marianatrench/integrationtests/ViaValueOf;.getSourceViaString:(Ljava/lang/String;)Ljava/lang/Object;",
+    "Lcom/facebook/marianatrench/integrationtests/ViaValueOf;.getSourceViaStringWithLabel:(Ljava/lang/String;)Ljava/lang/Object;",
     "Lcom/facebook/secure/context/IntentLauncher;.<init>:()V",
     "Lcom/facebook/secure/context/SecureContextHelperV2;.<init>:()V",
     "Lcom/facebook/user/model/User;.<init>:()V",

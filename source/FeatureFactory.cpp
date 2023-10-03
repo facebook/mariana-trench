@@ -25,10 +25,34 @@ const Feature* FeatureFactory::get_via_cast_feature(
   return factory_.create("via-cast:" + type_string);
 }
 
+/**
+ * Helper to format a feature with optional values and labels. Used for
+ * via-value with labels and annotation features.
+ */
+static const Feature* get_labelled_feature(
+    const UniquePointerFactory<std::string, Feature>& factory,
+    const std::string& prefix,
+    const std::optional<std::string_view>& label,
+    const std::optional<std::string_view>& value) {
+  std::string key{prefix};
+  if (label) {
+    key += *label;
+    key += '=';
+  }
+  key += value.value_or("unknown");
+  return factory.create(key);
+}
+
 const Feature* FeatureFactory::get_via_value_of_feature(
+    const std::optional<std::string_view>& label,
     const std::optional<std::string_view>& value) const {
-  const auto& via_value = value.value_or("unknown");
-  return factory_.create("via-value:" + via_value);
+  return get_labelled_feature(factory_, "via-value:", label, value);
+}
+
+const Feature* FeatureFactory::get_via_annotation_feature(
+    const std::optional<std::string_view>& label,
+    const std::string_view& value) const {
+  return get_labelled_feature(factory_, "via-annotation:", label, value);
 }
 
 const Feature* FeatureFactory::get_via_shim_feature(
@@ -55,6 +79,10 @@ const Feature* FeatureFactory::get_widen_broadening_feature() const {
 
 const Feature* FeatureFactory::get_invalid_path_broadening() const {
   return factory_.create("via-invalid-path-broadening");
+}
+
+const AnnotationFeature* FeatureFactory::get_unique_annotation_feature(const AnnotationFeature& annotation_feature) const {
+  return annotation_factory_.create(annotation_feature);
 }
 
 const FeatureFactory& FeatureFactory::singleton() {

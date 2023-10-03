@@ -21,6 +21,10 @@ public class ViaValueOf {
     return new Object();
   }
 
+  Object getSourceViaStringWithLabel(String arg1) {
+    return new Object();
+  }
+
   Object getSourceViaInvalidModel() {
     return new Object();
   }
@@ -57,6 +61,11 @@ public class ViaValueOf {
 
   void testSourceStringLiteral() {
     Object source = getSourceViaString("Foo");
+    Origin.sink(source);
+  }
+
+  void testSourceStringLiteralWithLabel() {
+    Object source = getSourceViaStringWithLabel("Foo");
     Origin.sink(source);
   }
 

@@ -42,6 +42,21 @@
     ]
   },
   {
+    "method": "Lcom/facebook/marianatrench/integrationtests/ViaValueOf;.getSourceViaStringWithLabel:(Ljava/lang/String;)Ljava/lang/Object;",
+    "generations": [
+      {
+        "kind": "Source",
+        "port": "Return",
+        "via_value_of": [
+          {
+            "port": "Argument(1)",
+            "label": "MyLabel"
+          }          
+        ]
+      }
+    ]
+  },
+  {
     "method": "Lcom/facebook/marianatrench/integrationtests/ViaValueOf;.getSourceViaInvalidModel:()Ljava/lang/Object;",
     "generations": [
       {

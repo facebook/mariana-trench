@@ -108,6 +108,7 @@ TaintConfig TaintConfig::from_json(const Json::Value& value, Context& context) {
        "features",
        "may_features",
        "always_features",
+       "via_annotation",
        "via_type_of",
        "via_value_of",
        "canonical_names"});
@@ -158,6 +159,13 @@ TaintConfig TaintConfig::from_json(const Json::Value& value, Context& context) {
     user_features = FeatureSet::from_json(value["features"], context);
   }
 
+  // Annotation features, to be converted to user features at model instantiation time.
+  AnnotationFeatureSet annotation_features;
+  if (value.isMember("via_annotation")) {
+    JsonValidation::null_or_array(value, /* field */ "via_annotation");
+    annotation_features = AnnotationFeatureSet::from_json(value["via_annotation"], context);
+  }
+
   RootSetAbstractDomain via_type_of_ports;
   if (value.isMember("via_type_of")) {
     for (const auto& root :
@@ -166,11 +174,11 @@ TaintConfig TaintConfig::from_json(const Json::Value& value, Context& context) {
     }
   }
 
-  RootSetAbstractDomain via_value_of_ports;
+  LabelledRootSetAbstractDomain via_value_of_ports;
   if (value.isMember("via_value_of")) {
     for (const auto& root :
          JsonValidation::null_or_array(value, /* field */ "via_value_of")) {
-      via_value_of_ports.add(Root::from_json(root));
+      via_value_of_ports.add(LabelledRoot::from_json(root));
     }
   }
 
@@ -247,6 +255,7 @@ TaintConfig TaintConfig::from_json(const Json::Value& value, Context& context) {
       std::move(field_origins),
       std::move(inferred_features),
       std::move(user_features),
+      std::move(annotation_features),
       std::move(via_type_of_ports),
       std::move(via_value_of_ports),
       std::move(canonical_names),

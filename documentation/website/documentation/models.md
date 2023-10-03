@@ -396,7 +396,135 @@ we could use the following JSON to specifiy a via-value feature that would mater
 }
 ```
 
-Note that this only works for numeric and string literals. In cases where the argument is not a constant, the feature will appear as `via-value:unknown`.
+Note that this only works for numeric and string literals. In cases where the argument is not a constant, the feature will appear as `via-value:unknown`. We can also specify an optional label for a via-value feature. The feature specified by the following JSON would materialize as `via-value:MyLabel=M1`:
+
+```json
+{
+ "sinks": [
+   {
+     "port": "Argument(1)",
+     "kind": "SinkKind",
+     "via_value_of": [
+      {
+        "port": "Argument(0)",
+        "label": "MyLabel"
+      }
+    ]
+   }
+ ]
+}
+```
+
+#### Annotation Features
+
+In model generators we can also use annotation features, which translate to regular user features based on annotation parameter values.
+
+Config example:
+```json
+{
+{
+  "model_generators": [
+    {
+      "find": "methods",
+      "where": [
+        {
+          "constraint": "signature_match",
+          "parent": "Lcom/facebook/marianatrench/integrationtests/AnnotationFeature;",
+          "name": "getSourceWithMethodAnnotation"
+        }
+      ],
+      "model": {
+        "generations": [
+          {
+            "kind": "Source",
+            "port": "Return",
+            "via_annotation": [
+              {
+                "type": "Lcom/facebook/marianatrench/integrationtests/Path;",
+                "port": "Return"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "find": "methods",
+      "where": [
+        {
+          "constraint": "signature_match",
+          "parent": "Lcom/facebook/marianatrench/integrationtests/AnnotationFeature;",
+          "name": "getSourceWithParameterAnnotation"
+        }
+      ],
+      "model": {
+        "generations": [
+          {
+            "kind": "Source",
+            "port": "Return",
+            "via_annotation": [
+              {
+                "type": "Lcom/facebook/marianatrench/integrationtests/QueryParam;",
+                "port": "Argument(1)"
+              }
+            ]
+          }
+        ]
+      }
+    }
+  ]
+}
+```
+
+Java class with annotations:
+```java
+public class AnnotationFeature {
+
+  @Path("/issue_1")
+  Object getSourceWithMethodAnnotation() {
+    return new Object();
+  }
+
+  Object getSourceWithParameterAnnotation(@QueryParam("query_param_name") String value) {
+    return "unrelated";
+  }
+
+  void testSourceWithMethodAnnotation() {
+    Object source = getSourceWithMethodAnnotation();
+    Origin.sink(source);
+  }
+
+  void testSourceWithParameterAnnotation() {
+    Object source = getSourceWithParameterAnnotation("argument_value");
+    Origin.sink(source);
+  }
+}
+```
+
+Resulting issues:
+
+```json
+{
+  "issues" : 
+  [
+    {
+      "always_features" : 
+      [
+        "/issue_1"
+      ],
+      "callee" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
+...
+{
+  "issues" : 
+  [
+    {
+      "always_features" : 
+      [
+        "query_param_name"
+      ],
+      "callee" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
+...
+```
 
 ### Taint Broadening
 

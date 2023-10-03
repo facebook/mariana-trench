@@ -15,6 +15,7 @@
 #include <sparta/AbstractDomain.h>
 
 #include <mariana-trench/Access.h>
+#include <mariana-trench/AnnotationFeatureSet.h>
 #include <mariana-trench/Assert.h>
 #include <mariana-trench/CallKind.h>
 #include <mariana-trench/CanonicalName.h>
@@ -58,8 +59,9 @@ class TaintConfig final {
       FieldSet field_origins,
       FeatureMayAlwaysSet inferred_features,
       FeatureSet user_features,
+      AnnotationFeatureSet annotation_features,
       RootSetAbstractDomain via_type_of_ports,
-      RootSetAbstractDomain via_value_of_ports,
+      LabelledRootSetAbstractDomain via_value_of_ports,
       CanonicalNameSetAbstractDomain canonical_names,
       PathTreeDomain output_paths,
       LocalPositionSet local_positions,
@@ -76,6 +78,7 @@ class TaintConfig final {
         field_origins_(std::move(field_origins)),
         inferred_features_(std::move(inferred_features)),
         user_features_(std::move(user_features)),
+        annotation_features_(std::move(annotation_features)),
         via_type_of_ports_(std::move(via_type_of_ports)),
         via_value_of_ports_(std::move(via_value_of_ports)),
         canonical_names_(std::move(canonical_names)),
@@ -111,6 +114,7 @@ class TaintConfig final {
         self.inferred_features_ == other.inferred_features_ &&
         self.locally_inferred_features_ == other.locally_inferred_features_ &&
         self.user_features_ == other.user_features_ &&
+        self.annotation_features_ == other.annotation_features_ &&
         self.via_type_of_ports_ == other.via_type_of_ports_ &&
         self.via_value_of_ports_ == other.via_value_of_ports_ &&
         self.canonical_names_ == other.canonical_names_ &&
@@ -172,11 +176,15 @@ class TaintConfig final {
     return user_features_;
   }
 
+  const AnnotationFeatureSet& annotation_features() const {
+    return annotation_features_;
+  }
+
   const RootSetAbstractDomain& via_type_of_ports() const {
     return via_type_of_ports_;
   }
 
-  const RootSetAbstractDomain& via_value_of_ports() const {
+  const LabelledRootSetAbstractDomain& via_value_of_ports() const {
     return via_value_of_ports_;
   }
 
@@ -215,8 +223,9 @@ class TaintConfig final {
   FieldSet field_origins_;
   FeatureMayAlwaysSet inferred_features_;
   FeatureSet user_features_;
+  AnnotationFeatureSet annotation_features_;
   RootSetAbstractDomain via_type_of_ports_;
-  RootSetAbstractDomain via_value_of_ports_;
+  LabelledRootSetAbstractDomain via_value_of_ports_;
   CanonicalNameSetAbstractDomain canonical_names_;
   // These are used only for result and receiver sinks (should be bottom in all
   // other cases). They are used for propagation/sink inference in backward

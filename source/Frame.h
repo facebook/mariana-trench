@@ -16,6 +16,7 @@
 #include <sparta/HashedSetAbstractDomain.h>
 
 #include <mariana-trench/Access.h>
+#include <mariana-trench/AnnotationFeatureSet.h>
 #include <mariana-trench/Assert.h>
 #include <mariana-trench/CallClassIntervalContext.h>
 #include <mariana-trench/CallKind.h>
@@ -31,6 +32,7 @@
 #include <mariana-trench/IncludeMacros.h>
 #include <mariana-trench/Kind.h>
 #include <mariana-trench/KindFactory.h>
+#include <mariana-trench/LabelledRoot.h>
 #include <mariana-trench/Method.h>
 #include <mariana-trench/MethodSet.h>
 #include <mariana-trench/PathTreeDomain.h>
@@ -41,6 +43,7 @@
 namespace marianatrench {
 
 using RootSetAbstractDomain = sparta::HashedSetAbstractDomain<Root>;
+using LabelledRootSetAbstractDomain = sparta::HashedSetAbstractDomain<LabelledRoot>;
 using CanonicalNameSetAbstractDomain =
     sparta::HashedSetAbstractDomain<CanonicalName>;
 
@@ -112,8 +115,9 @@ class Frame final : public sparta::AbstractDomain<Frame> {
       FieldSet field_origins,
       FeatureMayAlwaysSet inferred_features,
       FeatureSet user_features,
+      AnnotationFeatureSet annotation_features,
       RootSetAbstractDomain via_type_of_ports,
-      RootSetAbstractDomain via_value_of_ports,
+      LabelledRootSetAbstractDomain via_value_of_ports,
       CanonicalNameSetAbstractDomain canonical_names,
       CallKind call_kind,
       PathTreeDomain output_paths,
@@ -128,6 +132,7 @@ class Frame final : public sparta::AbstractDomain<Frame> {
         field_origins_(std::move(field_origins)),
         inferred_features_(std::move(inferred_features)),
         user_features_(std::move(user_features)),
+        annotation_features_(std::move(annotation_features)),
         via_type_of_ports_(std::move(via_type_of_ports)),
         via_value_of_ports_(std::move(via_value_of_ports)),
         canonical_names_(std::move(canonical_names)),
@@ -191,7 +196,7 @@ class Frame final : public sparta::AbstractDomain<Frame> {
     return via_type_of_ports_;
   }
 
-  const RootSetAbstractDomain& via_value_of_ports() const {
+  const LabelledRootSetAbstractDomain& via_value_of_ports() const {
     return via_value_of_ports_;
   }
 
@@ -232,6 +237,10 @@ class Frame final : public sparta::AbstractDomain<Frame> {
 
   const FeatureSet& user_features() const {
     return user_features_;
+  }
+
+  const AnnotationFeatureSet& annotation_features() const {
+    return annotation_features_;
   }
 
   FeatureMayAlwaysSet features() const;
@@ -312,6 +321,12 @@ class Frame final : public sparta::AbstractDomain<Frame> {
       const std::vector<std::optional<std::string>>& source_constant_arguments)
       const;
 
+  /**
+   * Removes all annotation features. Invoked after they have been
+   * instantiated as user features.
+   */
+  void clear_annotation_features();
+
   Json::Value to_json(ExportOriginsMode export_origins_mode) const;
 
   friend std::ostream& operator<<(std::ostream& out, const Frame& frame);
@@ -327,8 +342,9 @@ class Frame final : public sparta::AbstractDomain<Frame> {
   FieldSet field_origins_;
   FeatureMayAlwaysSet inferred_features_;
   FeatureSet user_features_;
+  AnnotationFeatureSet annotation_features_;
   RootSetAbstractDomain via_type_of_ports_;
-  RootSetAbstractDomain via_value_of_ports_;
+  LabelledRootSetAbstractDomain via_value_of_ports_;
   CanonicalNameSetAbstractDomain canonical_names_;
   CallKind call_kind_;
   PathTreeDomain output_paths_;

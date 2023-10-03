@@ -406,7 +406,7 @@ TaintConfig generator::source(
     const std::vector<std::string>& features,
     Root::Kind callee_port,
     RootSetAbstractDomain via_type_of_ports,
-    RootSetAbstractDomain via_value_of_ports) {
+    LabelledRootSetAbstractDomain via_value_of_ports) {
   // These ports must go with canonical names.
   mt_assert(
       callee_port != Root::Kind::Anchor && callee_port != Root::Kind::Producer);
@@ -426,7 +426,8 @@ TaintConfig generator::source(
       /* origins */ MethodSet{method},
       /* field_origins */ {},
       /* inferred features */ FeatureMayAlwaysSet::bottom(),
-      /* user features */ user_features,
+      /* user_features */ user_features,
+      /* annotation_features */ AnnotationFeatureSet::bottom(),
       /* via_type_of_ports */ via_type_of_ports,
       /* via_value_of_ports */ via_value_of_ports,
       /* canonical_names */ {},
@@ -443,7 +444,7 @@ TaintConfig generator::sink(
     const std::vector<std::string>& features,
     Root::Kind callee_port,
     RootSetAbstractDomain via_type_of_ports,
-    RootSetAbstractDomain via_value_of_ports,
+    LabelledRootSetAbstractDomain via_value_of_ports,
     CanonicalNameSetAbstractDomain canonical_names) {
   // These ports must go with canonical names.
   mt_assert(
@@ -470,6 +471,7 @@ TaintConfig generator::sink(
       /* field_origins */ {},
       /* inferred features */ FeatureMayAlwaysSet::bottom(),
       /* user features */ user_features,
+      /* annotation_features */ AnnotationFeatureSet::bottom(),
       /* via_type_of_ports */ via_type_of_ports,
       /* via_type_of_ports */ via_value_of_ports,
       /* canonical_names */ canonical_names,
@@ -487,7 +489,7 @@ TaintConfig generator::partial_sink(
     const std::vector<std::string>& features,
     Root::Kind callee_port,
     RootSetAbstractDomain via_type_of_ports,
-    RootSetAbstractDomain via_value_of_ports) {
+    LabelledRootSetAbstractDomain via_value_of_ports) {
   // These ports must go with canonical names.
   mt_assert(
       callee_port != Root::Kind::Anchor && callee_port != Root::Kind::Producer);
@@ -508,6 +510,7 @@ TaintConfig generator::partial_sink(
       /* field_origins */ {},
       /* inferred features */ FeatureMayAlwaysSet::bottom(),
       /* user features */ user_features,
+      /* annotation_features */ AnnotationFeatureSet::bottom(),
       /* via_type_of_ports */ via_type_of_ports,
       /* via_value_of_ports */ via_value_of_ports,
       /* canonical_names */ {},

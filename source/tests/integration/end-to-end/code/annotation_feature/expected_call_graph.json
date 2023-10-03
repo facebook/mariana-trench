@@ -203,11 +203,47 @@
       "Ljava/lang/Object;.<init>:()V"
     ]
   },
-  "Lcom/facebook/marianatrench/integrationtests/Constants;.<init>:()V" : 
+  "Lcom/facebook/marianatrench/integrationtests/AnnotationFeature;.<init>:()V" : 
   {
     "static" : 
     [
       "Ljava/lang/Object;.<init>:()V"
+    ]
+  },
+  "Lcom/facebook/marianatrench/integrationtests/AnnotationFeature;.getSourceWithMethodAnnotation:()Ljava/lang/Object;" : 
+  {
+    "static" : 
+    [
+      "Ljava/lang/Object;.<init>:()V"
+    ]
+  },
+  "Lcom/facebook/marianatrench/integrationtests/AnnotationFeature;.parameterSourceWithLabel:(Ljava/lang/String;)V" : 
+  {
+    "static" : 
+    [
+      "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V"
+    ]
+  },
+  "Lcom/facebook/marianatrench/integrationtests/AnnotationFeature;.testSourceWithMethodAnnotation:()V" : 
+  {
+    "static" : 
+    [
+      "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V"
+    ],
+    "virtual" : 
+    [
+      "Lcom/facebook/marianatrench/integrationtests/AnnotationFeature;.getSourceWithMethodAnnotation:()Ljava/lang/Object;"
+    ]
+  },
+  "Lcom/facebook/marianatrench/integrationtests/AnnotationFeature;.testSourceWithParameterAnnotation:()V" : 
+  {
+    "static" : 
+    [
+      "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V"
+    ],
+    "virtual" : 
+    [
+      "Lcom/facebook/marianatrench/integrationtests/AnnotationFeature;.getSourceWithParameterAnnotation:(Ljava/lang/String;)Ljava/lang/Object;"
     ]
   },
   "Lcom/facebook/marianatrench/integrationtests/Origin;.<init>:()V" : 
@@ -222,178 +258,6 @@
     "static" : 
     [
       "Ljava/lang/Object;.<init>:()V"
-    ]
-  },
-  "Lcom/facebook/marianatrench/integrationtests/ViaValueOf;.<init>:()V" : 
-  {
-    "static" : 
-    [
-      "Ljava/lang/Object;.<init>:()V"
-    ]
-  },
-  "Lcom/facebook/marianatrench/integrationtests/ViaValueOf;.getSourceViaInt:(I)Ljava/lang/Object;" : 
-  {
-    "static" : 
-    [
-      "Ljava/lang/Object;.<init>:()V"
-    ]
-  },
-  "Lcom/facebook/marianatrench/integrationtests/ViaValueOf;.getSourceViaInvalidModel:()Ljava/lang/Object;" : 
-  {
-    "static" : 
-    [
-      "Ljava/lang/Object;.<init>:()V"
-    ]
-  },
-  "Lcom/facebook/marianatrench/integrationtests/ViaValueOf;.getSourceViaString:(Ljava/lang/String;)Ljava/lang/Object;" : 
-  {
-    "static" : 
-    [
-      "Ljava/lang/Object;.<init>:()V"
-    ]
-  },
-  "Lcom/facebook/marianatrench/integrationtests/ViaValueOf;.getSourceViaStringWithLabel:(Ljava/lang/String;)Ljava/lang/Object;" : 
-  {
-    "static" : 
-    [
-      "Ljava/lang/Object;.<init>:()V"
-    ]
-  },
-  "Lcom/facebook/marianatrench/integrationtests/ViaValueOf;.testHops:()V" : 
-  {
-    "virtual" : 
-    [
-      "Lcom/facebook/marianatrench/integrationtests/ViaValueOf;.getSourceViaString:(Ljava/lang/String;)Ljava/lang/Object;",
-      "Lcom/facebook/marianatrench/integrationtests/ViaValueOf;.propagationReturn:(Ljava/lang/Object;)Ljava/lang/Object;",
-      "Lcom/facebook/marianatrench/integrationtests/ViaValueOf;.sinkViaString:(Ljava/lang/String;Ljava/lang/Object;)V",
-      "Lcom/facebook/marianatrench/integrationtests/ViaValueOf;.someProcessing:(Ljava/lang/Object;)V"
-    ]
-  },
-  "Lcom/facebook/marianatrench/integrationtests/ViaValueOf;.testInvalidModel:()V" : 
-  {
-    "virtual" : 
-    [
-      "Lcom/facebook/marianatrench/integrationtests/ViaValueOf;.getSourceViaInvalidModel:()Ljava/lang/Object;",
-      "Lcom/facebook/marianatrench/integrationtests/ViaValueOf;.sinkViaInvalidModel:(Ljava/lang/Object;)V"
-    ]
-  },
-  "Lcom/facebook/marianatrench/integrationtests/ViaValueOf;.testSinkIntConstant:()V" : 
-  {
-    "static" : 
-    [
-      "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;"
-    ],
-    "virtual" : 
-    [
-      "Lcom/facebook/marianatrench/integrationtests/ViaValueOf;.sinkViaInt:(ILjava/lang/Object;)V"
-    ]
-  },
-  "Lcom/facebook/marianatrench/integrationtests/ViaValueOf;.testSinkIntLiteral:()V" : 
-  {
-    "static" : 
-    [
-      "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;"
-    ],
-    "virtual" : 
-    [
-      "Lcom/facebook/marianatrench/integrationtests/ViaValueOf;.sinkViaInt:(ILjava/lang/Object;)V"
-    ]
-  },
-  "Lcom/facebook/marianatrench/integrationtests/ViaValueOf;.testSinkStringConstant:()V" : 
-  {
-    "static" : 
-    [
-      "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;"
-    ],
-    "virtual" : 
-    [
-      "Lcom/facebook/marianatrench/integrationtests/ViaValueOf;.sinkViaString:(Ljava/lang/String;Ljava/lang/Object;)V"
-    ]
-  },
-  "Lcom/facebook/marianatrench/integrationtests/ViaValueOf;.testSinkStringLiteral:()V" : 
-  {
-    "static" : 
-    [
-      "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;"
-    ],
-    "virtual" : 
-    [
-      "Lcom/facebook/marianatrench/integrationtests/ViaValueOf;.sinkViaString:(Ljava/lang/String;Ljava/lang/Object;)V"
-    ]
-  },
-  "Lcom/facebook/marianatrench/integrationtests/ViaValueOf;.testSourceIntConstant:()V" : 
-  {
-    "static" : 
-    [
-      "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V"
-    ],
-    "virtual" : 
-    [
-      "Lcom/facebook/marianatrench/integrationtests/ViaValueOf;.getSourceViaInt:(I)Ljava/lang/Object;"
-    ]
-  },
-  "Lcom/facebook/marianatrench/integrationtests/ViaValueOf;.testSourceIntLiteral:()V" : 
-  {
-    "static" : 
-    [
-      "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V"
-    ],
-    "virtual" : 
-    [
-      "Lcom/facebook/marianatrench/integrationtests/ViaValueOf;.getSourceViaInt:(I)Ljava/lang/Object;"
-    ]
-  },
-  "Lcom/facebook/marianatrench/integrationtests/ViaValueOf;.testSourceStringConstant:()V" : 
-  {
-    "static" : 
-    [
-      "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V"
-    ],
-    "virtual" : 
-    [
-      "Lcom/facebook/marianatrench/integrationtests/ViaValueOf;.getSourceViaString:(Ljava/lang/String;)Ljava/lang/Object;"
-    ]
-  },
-  "Lcom/facebook/marianatrench/integrationtests/ViaValueOf;.testSourceStringLiteral:()V" : 
-  {
-    "static" : 
-    [
-      "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V"
-    ],
-    "virtual" : 
-    [
-      "Lcom/facebook/marianatrench/integrationtests/ViaValueOf;.getSourceViaString:(Ljava/lang/String;)Ljava/lang/Object;"
-    ]
-  },
-  "Lcom/facebook/marianatrench/integrationtests/ViaValueOf;.testSourceStringLiteralWithLabel:()V" : 
-  {
-    "static" : 
-    [
-      "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V"
-    ],
-    "virtual" : 
-    [
-      "Lcom/facebook/marianatrench/integrationtests/ViaValueOf;.getSourceViaStringWithLabel:(Ljava/lang/String;)Ljava/lang/Object;"
-    ]
-  },
-  "Lcom/facebook/marianatrench/integrationtests/ViaValueOf;.testUnknown1:()V" : 
-  {
-    "virtual" : 
-    [
-      "Lcom/facebook/marianatrench/integrationtests/ViaValueOf;.getSourceViaString:(Ljava/lang/String;)Ljava/lang/Object;",
-      "Lcom/facebook/marianatrench/integrationtests/ViaValueOf;.getString:()Ljava/lang/String;",
-      "Lcom/facebook/marianatrench/integrationtests/ViaValueOf;.propagationReturnString:(Ljava/lang/String;)Ljava/lang/String;",
-      "Lcom/facebook/marianatrench/integrationtests/ViaValueOf;.sinkViaString:(Ljava/lang/String;Ljava/lang/Object;)V"
-    ]
-  },
-  "Lcom/facebook/marianatrench/integrationtests/ViaValueOf;.testUnknown2:()V" : 
-  {
-    "virtual" : 
-    [
-      "Lcom/facebook/marianatrench/integrationtests/ViaValueOf;.getSourceViaString:(Ljava/lang/String;)Ljava/lang/Object;",
-      "Lcom/facebook/marianatrench/integrationtests/ViaValueOf;.propagationReturn:(Ljava/lang/Object;)Ljava/lang/Object;",
-      "Lcom/facebook/marianatrench/integrationtests/ViaValueOf;.sinkViaString:(Ljava/lang/String;Ljava/lang/Object;)V",
-      "Ljava/lang/String;.concat:(Ljava/lang/String;)Ljava/lang/String;"
     ]
   },
   "Lcom/facebook/secure/context/IntentLauncher;.<init>:()V" : 
