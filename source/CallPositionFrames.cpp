@@ -137,7 +137,6 @@ CallPositionFrames CallPositionFrames::attach_position(
                 frame.callee_port(),
                 /* callee */ nullptr,
                 CallKind::origin(),
-                /* field_callee */ nullptr,
                 /* call_position */ position,
                 // TODO(T158171922): Re-visit what the appropriate interval
                 // should be when implementing class intervals.
@@ -210,7 +209,6 @@ CallPositionFrames::map_positions(
           frame.callee_port(),
           frame.callee(),
           frame.call_kind(),
-          frame.field_callee(),
           call_position,
           frame.class_interval_context(),
           frame.distance(),

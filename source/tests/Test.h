@@ -65,7 +65,6 @@ std::unique_ptr<Options> make_default_options();
 struct FrameProperties {
   AccessPath callee_port = AccessPath(Root(Root::Kind::Leaf));
   const Method* MT_NULLABLE callee = nullptr;
-  const Field* MT_NULLABLE field_callee = nullptr;
   const Position* MT_NULLABLE call_position = nullptr;
   CallClassIntervalContext class_interval_context = CallClassIntervalContext();
   int distance = 0;

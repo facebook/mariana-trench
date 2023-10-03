@@ -48,7 +48,6 @@ std::vector<Model> ArtificialMethods::models(Context& context) const {
           /* callee_port */ AccessPath(Root(Root::Kind::Leaf)),
           /* callee */ nullptr,
           /* call_kind */ CallKind::declaration(),
-          /* field_callee */ nullptr,
           /* call_position */ nullptr,
           /* class_interval_context */ CallClassIntervalContext(),
           /* distance */ 0,

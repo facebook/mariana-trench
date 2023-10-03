@@ -217,7 +217,7 @@ std::ostream& operator<<(std::ostream& out, const FieldModel& model) {
 
 void FieldModel::add_source(Taint source) {
   if (field_) {
-    source.set_field_origins_if_empty_with_field_callee(field_);
+    source.set_field_origins_if_empty(field_);
   }
   check_taint_consistency(source, "source");
   sources_.join_with(source);
@@ -225,7 +225,7 @@ void FieldModel::add_source(Taint source) {
 
 void FieldModel::add_sink(Taint sink) {
   if (field_) {
-    sink.set_field_origins_if_empty_with_field_callee(field_);
+    sink.set_field_origins_if_empty(field_);
   }
   check_taint_consistency(sink, "sink");
   sinks_.join_with(sink);

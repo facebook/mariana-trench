@@ -2953,7 +2953,6 @@ TEST_F(JsonTest, FieldModel) {
             "kind": "TestSink",
             "call_info": "Declaration",
             "always_features": ["test-feature"],
-            "field_callee" : "LBase;.field1:Ljava/lang/String;",
             "field_origins": ["LBase;.field1:Ljava/lang/String;"],
           }
         ]

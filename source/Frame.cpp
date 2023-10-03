@@ -23,7 +23,6 @@ Frame::Frame(const TaintConfig& config)
           config.kind(),
           config.callee_port(),
           config.callee(),
-          config.field_callee(),
           config.call_position(),
           config.class_interval_context(),
           config.distance(),
@@ -44,10 +43,6 @@ void Frame::set_origins(const MethodSet& origins) {
 
 void Frame::set_field_origins(const FieldSet& field_origins) {
   field_origins_ = field_origins;
-}
-
-void Frame::set_field_callee(const Field* field) {
-  field_callee_ = field;
 }
 
 void Frame::add_inferred_features(const FeatureMayAlwaysSet& features) {
@@ -196,8 +191,6 @@ Frame Frame::update_with_propagation_trace(
       kind_,
       propagation_frame.callee_port_,
       propagation_frame.callee_,
-      /* field_callee */ nullptr, // Since propagate is only called at method
-                                  // callsites and not field accesses
       propagation_frame.call_position_,
       class_interval_context_,
       propagation_frame.distance_,
@@ -350,10 +343,6 @@ Json::Value Frame::to_json(ExportOriginsMode export_origins_mode) const {
     value[member] = kind_json[member];
   }
 
-  if (callee_ == nullptr && field_callee_ != nullptr) {
-    value["field_callee"] = field_callee_->to_json();
-  }
-
   if (distance_ != 0) {
     value["distance"] = Json::Value(distance_);
   }
@@ -437,8 +426,6 @@ std::ostream& operator<<(std::ostream& out, const Frame& frame) {
       << "`, callee_port=" << frame.callee_port_;
   if (frame.callee_ != nullptr) {
     out << ", callee=`" << show(frame.callee_) << "`";
-  } else if (frame.field_callee_ != nullptr) {
-    out << ", field_callee=`" << show(frame.field_callee_) << "`";
   }
   if (frame.call_position_ != nullptr) {
     out << ", call_position=" << show(frame.call_position_);

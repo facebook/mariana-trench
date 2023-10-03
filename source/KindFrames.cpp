@@ -160,24 +160,6 @@ void KindFrames::difference_with(const KindFrames& other) {
   }
 }
 
-void KindFrames::set_origins_if_empty(const MethodSet& origins) {
-  frames_.map([&origins](Frame* frame) -> void {
-    if (frame->origins().empty()) {
-      frame->set_origins(origins);
-    }
-  });
-}
-
-void KindFrames::set_field_origins_if_empty_with_field_callee(
-    const Field* field) {
-  frames_.map([field](Frame* frame) -> void {
-    if (frame->field_origins().empty()) {
-      frame->set_field_origins(FieldSet{field});
-    }
-    frame->set_field_callee(field);
-  });
-}
-
 void KindFrames::append_to_propagation_output_paths(
     Path::Element path_element) {
   frames_.map([path_element](Frame* frame) -> void {
@@ -417,8 +399,6 @@ KindFrames KindFrames::propagate(
         kind,
         callee_port,
         propagated_callee,
-        /* field_callee */ nullptr, // Since propagate is only called at method
-                                    // callsites and not field accesses
         call_position,
         propagated_interval,
         propagated_distance,

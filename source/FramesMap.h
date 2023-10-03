@@ -270,9 +270,9 @@ class FramesMap : public sparta::AbstractDomain<Derived> {
     });
   }
 
-  void set_field_origins_if_empty_with_field_callee(const Field* field) {
+  void set_field_origins_if_empty(const Field* field) {
     map_frames([field](Value* frames) -> void {
-      frames->set_field_origins_if_empty_with_field_callee(field);
+      frames->set_field_origins_if_empty(field);
     });
   }
 

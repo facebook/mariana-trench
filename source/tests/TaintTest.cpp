@@ -434,7 +434,7 @@ TEST_F(TaintTest, SetLeafOriginsIfEmpty) {
       }));
 }
 
-TEST_F(TaintTest, SetFieldOriginsIfEmptyWithFieldCallee) {
+TEST_F(TaintTest, SetFieldOriginsIfEmpty) {
   Scope scope;
   const auto* field_one = redex::create_field(
       scope, "LClassA", {"field_one", type::java_lang_String()});
@@ -457,18 +457,16 @@ TEST_F(TaintTest, SetFieldOriginsIfEmptyWithFieldCallee) {
           test::FrameProperties{.field_origins = FieldSet{two}}),
   };
 
-  taint.set_field_origins_if_empty_with_field_callee(one);
+  taint.set_field_origins_if_empty(one);
   EXPECT_EQ(
       taint,
       (Taint{
           test::make_taint_config(
               /* kind */ context.kind_factory->get("TestSource"),
-              test::FrameProperties{
-                  .field_callee = one, .field_origins = FieldSet{one}}),
+              test::FrameProperties{.field_origins = FieldSet{one}}),
           test::make_taint_config(
               /* kind */ context.kind_factory->get("TestSource2"),
-              test::FrameProperties{
-                  .field_callee = one, .field_origins = FieldSet{two}}),
+              test::FrameProperties{.field_origins = FieldSet{two}}),
       }));
 }
 

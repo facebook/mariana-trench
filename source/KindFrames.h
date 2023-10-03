@@ -152,10 +152,6 @@ class KindFrames final : public sparta::AbstractDomain<KindFrames> {
         frames_.bindings().cend(), GetFrameReference());
   }
 
-  void set_origins_if_empty(const MethodSet& origins);
-
-  void set_field_origins_if_empty_with_field_callee(const Field* field);
-
   /**
    * Appends `path_element` to the output paths of all propagation frames.
    */

@@ -160,13 +160,11 @@ void CalleePortFrames::set_origins_if_empty(const MethodSet& origins) {
   });
 }
 
-void CalleePortFrames::set_field_origins_if_empty_with_field_callee(
-    const Field* field) {
+void CalleePortFrames::set_field_origins_if_empty(const Field* field) {
   map([field](Frame frame) {
     if (frame.field_origins().empty()) {
       frame.set_field_origins(FieldSet{field});
     }
-    frame.set_field_callee(field);
     return frame;
   });
 }

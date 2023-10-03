@@ -61,11 +61,10 @@ void Taint::set_leaf_origins_if_empty(const MethodSet& origins) {
   });
 }
 
-void Taint::set_field_origins_if_empty_with_field_callee(const Field* field) {
+void Taint::set_field_origins_if_empty(const Field* field) {
   map_.map([field](CalleeFrames frames) {
-    // Setting a field callee must always be done on non-propagated leaves.
     mt_assert(frames.callee() == nullptr);
-    frames.set_field_origins_if_empty_with_field_callee(field);
+    frames.set_field_origins_if_empty(field);
     return frames;
   });
 }
@@ -338,7 +337,6 @@ Taint Taint::propagation(PropagationConfig propagation) {
       /* callee_port */ propagation.callee_port(),
       /* callee */ nullptr,
       /* call_kind */ propagation.call_kind(),
-      /* field_callee */ nullptr,
       /* call_position */ nullptr,
       /* class_interval_context */ CallClassIntervalContext(),
       /* distance */ 0,
@@ -365,7 +363,6 @@ Taint Taint::propagation_taint(
       /* callee_port */ AccessPath(kind->root()),
       /* callee */ nullptr,
       /* call_kind */ CallKind::propagation(),
-      /* field_callee */ nullptr,
       /* call_position */ nullptr,
       /* class_interval_context */ CallClassIntervalContext(),
       /* distance */ 0,
@@ -400,7 +397,6 @@ Taint Taint::essential() const {
         /* callee_port */ callee_port,
         /* callee */ nullptr,
         /* call_kind */ call_kind,
-        /* field_callee */ nullptr,
         /* call_position */ nullptr,
         /* class_interval_context */ CallClassIntervalContext(),
         /* distance */ 0,

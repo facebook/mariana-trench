@@ -54,10 +54,6 @@ using CanonicalNameSetAbstractDomain =
  *
  * `callee` is the next method in the trace. This is `nullptr` for a leaf frame.
  *
- * `field_callee` is set only if this frame is a frame within a field model or
- * if it represents taint in a method model that came from a field access. Both
- * callee and field_callee should never be set in one frame.
- *
  * `call_position` is the position of the call to the `callee`. This is
  * `nullptr` for a leaf frame. This can be non-null for leaf frames inside
  * issues, to describe the position of a parameter source or return sink.
@@ -109,7 +105,6 @@ class Frame final : public sparta::AbstractDomain<Frame> {
       const Kind* kind,
       AccessPath callee_port,
       const Method* MT_NULLABLE callee,
-      const Field* MT_NULLABLE field_callee,
       const Position* MT_NULLABLE call_position,
       CallClassIntervalContext class_interval_context,
       int distance,
@@ -126,7 +121,6 @@ class Frame final : public sparta::AbstractDomain<Frame> {
       : kind_(kind),
         callee_port_(std::move(callee_port)),
         callee_(callee),
-        field_callee_(field_callee),
         call_position_(call_position),
         class_interval_context_(std::move(class_interval_context)),
         distance_(distance),
@@ -142,7 +136,6 @@ class Frame final : public sparta::AbstractDomain<Frame> {
         extra_traces_(std::move(extra_traces)) {
     mt_assert(kind_ != nullptr);
     mt_assert(distance_ >= 0);
-    mt_assert(!(callee && field_callee));
 
     if (auto* propagation_kind =
             kind_->discard_transforms()->as<PropagationKind>()) {
@@ -181,12 +174,6 @@ class Frame final : public sparta::AbstractDomain<Frame> {
     return callee_;
   }
 
-  /* Return the field_callee, or `nullptr` if this frame has a method callee or
-   * is a leaf. */
-  const Field* MT_NULLABLE field_callee() const {
-    return field_callee_;
-  }
-
   /* Return the position of the call, or `nullptr` if this is a leaf frame. */
   const Position* MT_NULLABLE call_position() const {
     return call_position_;
@@ -214,7 +201,6 @@ class Frame final : public sparta::AbstractDomain<Frame> {
 
   void set_origins(const MethodSet& origins);
   void set_field_origins(const FieldSet& field_origins);
-  void set_field_callee(const Field* field);
 
   const MethodSet& origins() const {
     return origins_;
@@ -334,7 +320,6 @@ class Frame final : public sparta::AbstractDomain<Frame> {
   const Kind* MT_NULLABLE kind_;
   AccessPath callee_port_;
   const Method* MT_NULLABLE callee_;
-  const Field* MT_NULLABLE field_callee_;
   const Position* MT_NULLABLE call_position_;
   CallClassIntervalContext class_interval_context_;
   int distance_;

@@ -652,7 +652,6 @@ void check_flows_to_array_allocation(
       /* callee_port */ AccessPath(Root(Root::Kind::Argument, 0)),
       /* callee */ nullptr,
       /* call_kind */ CallKind::origin(),
-      /* field_callee */ nullptr,
       /* call_position */ position,
       /* class_interval_context */ CallClassIntervalContext(),
       /* distance */ 1,

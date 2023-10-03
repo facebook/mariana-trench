@@ -892,7 +892,6 @@
           [
             {
               "call_info" : "Declaration",
-              "field_callee" : "Lcom/facebook/marianatrench/integrationtests/TaintedFieldClass;.field:Ljava/lang/Object;",
               "field_origins" : 
               [
                 "Lcom/facebook/marianatrench/integrationtests/TaintedFieldClass;.field:Ljava/lang/Object;"
@@ -912,7 +911,6 @@
           [
             {
               "call_info" : "Declaration",
-              "field_callee" : "Lcom/facebook/marianatrench/integrationtests/ChildClass;.shadowedField:Ljava/lang/Object;",
               "field_origins" : 
               [
                 "Lcom/facebook/marianatrench/integrationtests/ChildClass;.shadowedField:Ljava/lang/Object;"
@@ -975,7 +973,6 @@
           [
             {
               "call_info" : "Declaration",
-              "field_callee" : "Lcom/facebook/marianatrench/integrationtests/ChildClass;.shadowedField:Ljava/lang/Object;",
               "field_origins" : 
               [
                 "Lcom/facebook/marianatrench/integrationtests/ChildClass;.shadowedField:Ljava/lang/Object;"
@@ -1035,7 +1032,6 @@
           [
             {
               "call_info" : "Declaration",
-              "field_callee" : "Lcom/facebook/marianatrench/integrationtests/TaintedFieldClass;.field:Ljava/lang/Object;",
               "field_origins" : 
               [
                 "Lcom/facebook/marianatrench/integrationtests/TaintedFieldClass;.field:Ljava/lang/Object;"
@@ -1136,7 +1132,6 @@
   [
     {
       "call_info" : "Declaration",
-      "field_callee" : "Lcom/facebook/marianatrench/integrationtests/ChildClass;.shadowedField:Ljava/lang/Object;",
       "field_origins" : 
       [
         "Lcom/facebook/marianatrench/integrationtests/ChildClass;.shadowedField:Ljava/lang/Object;"
@@ -1205,7 +1200,6 @@
           [
             {
               "call_info" : "Declaration",
-              "field_callee" : "Lcom/facebook/marianatrench/integrationtests/TaintedFieldClass;.field:Ljava/lang/Object;",
               "field_origins" : 
               [
                 "Lcom/facebook/marianatrench/integrationtests/TaintedFieldClass;.field:Ljava/lang/Object;"
@@ -1315,7 +1309,6 @@
           [
             {
               "call_info" : "Declaration",
-              "field_callee" : "Lcom/facebook/marianatrench/integrationtests/TaintedFieldClass;.field:Ljava/lang/Object;",
               "field_origins" : 
               [
                 "Lcom/facebook/marianatrench/integrationtests/TaintedFieldClass;.field:Ljava/lang/Object;"
@@ -1646,7 +1639,6 @@
           [
             {
               "call_info" : "Declaration",
-              "field_callee" : "Lcom/facebook/marianatrench/integrationtests/TaintedFieldClass;.field:Ljava/lang/Object;",
               "field_origins" : 
               [
                 "Lcom/facebook/marianatrench/integrationtests/TaintedFieldClass;.field:Ljava/lang/Object;"
@@ -1801,7 +1793,6 @@
           [
             {
               "call_info" : "Declaration",
-              "field_callee" : "Lcom/facebook/marianatrench/integrationtests/TaintedFieldClass;.field:Ljava/lang/Object;",
               "field_origins" : 
               [
                 "Lcom/facebook/marianatrench/integrationtests/TaintedFieldClass;.field:Ljava/lang/Object;"
@@ -1956,7 +1947,6 @@
           [
             {
               "call_info" : "Declaration",
-              "field_callee" : "Lcom/facebook/marianatrench/integrationtests/TaintedFieldClass;.field:Ljava/lang/Object;",
               "field_origins" : 
               [
                 "Lcom/facebook/marianatrench/integrationtests/TaintedFieldClass;.field:Ljava/lang/Object;"
@@ -2638,7 +2628,6 @@
   [
     {
       "call_info" : "Declaration",
-      "field_callee" : "Lcom/facebook/marianatrench/integrationtests/TaintedFieldClass;.field:Ljava/lang/Object;",
       "field_origins" : 
       [
         "Lcom/facebook/marianatrench/integrationtests/TaintedFieldClass;.field:Ljava/lang/Object;"
@@ -2654,7 +2643,6 @@
   [
     {
       "call_info" : "Declaration",
-      "field_callee" : "Lcom/facebook/marianatrench/integrationtests/TaintedFieldClass;.finalStringField:Ljava/lang/String;",
       "field_origins" : 
       [
         "Lcom/facebook/marianatrench/integrationtests/TaintedFieldClass;.finalStringField:Ljava/lang/String;"
@@ -2675,7 +2663,6 @@
           [
             {
               "call_info" : "Declaration",
-              "field_callee" : "Lcom/facebook/marianatrench/integrationtests/TaintedFieldClass;.field:Ljava/lang/Object;",
               "field_origins" : 
               [
                 "Lcom/facebook/marianatrench/integrationtests/TaintedFieldClass;.field:Ljava/lang/Object;"
@@ -2738,7 +2725,6 @@
           [
             {
               "call_info" : "Declaration",
-              "field_callee" : "Lcom/facebook/marianatrench/integrationtests/TaintedFieldClass;.field:Ljava/lang/Object;",
               "field_origins" : 
               [
                 "Lcom/facebook/marianatrench/integrationtests/TaintedFieldClass;.field:Ljava/lang/Object;"
@@ -2798,7 +2784,6 @@
           [
             {
               "call_info" : "Declaration",
-              "field_callee" : "Lcom/facebook/marianatrench/integrationtests/TaintedFieldClass;.staticField:Ljava/lang/Object;",
               "field_origins" : 
               [
                 "Lcom/facebook/marianatrench/integrationtests/TaintedFieldClass;.staticField:Ljava/lang/Object;"
@@ -2858,7 +2843,6 @@
           [
             {
               "call_info" : "Declaration",
-              "field_callee" : "Lcom/facebook/marianatrench/integrationtests/TaintedFieldClass;.staticFinalField:Ljava/lang/Object;",
               "field_origins" : 
               [
                 "Lcom/facebook/marianatrench/integrationtests/TaintedFieldClass;.staticFinalField:Ljava/lang/Object;"
@@ -2918,7 +2902,6 @@
           [
             {
               "call_info" : "Declaration",
-              "field_callee" : "Lcom/facebook/marianatrench/integrationtests/TaintedFieldClass;.staticStringField:Ljava/lang/String;",
               "field_origins" : 
               [
                 "Lcom/facebook/marianatrench/integrationtests/TaintedFieldClass;.staticStringField:Ljava/lang/String;"
@@ -2988,7 +2971,6 @@
           [
             {
               "call_info" : "Declaration",
-              "field_callee" : "Lcom/facebook/marianatrench/integrationtests/TaintedFieldClass;.field:Ljava/lang/Object;",
               "field_origins" : 
               [
                 "Lcom/facebook/marianatrench/integrationtests/TaintedFieldClass;.field:Ljava/lang/Object;"
@@ -3008,7 +2990,6 @@
           [
             {
               "call_info" : "Declaration",
-              "field_callee" : "Lcom/facebook/marianatrench/integrationtests/TaintedFieldClass;.field:Ljava/lang/Object;",
               "field_origins" : 
               [
                 "Lcom/facebook/marianatrench/integrationtests/TaintedFieldClass;.field:Ljava/lang/Object;"
@@ -3122,7 +3103,6 @@
   [
     {
       "call_info" : "Declaration",
-      "field_callee" : "Lcom/facebook/marianatrench/integrationtests/TaintedFieldClass;.staticField:Ljava/lang/Object;",
       "field_origins" : 
       [
         "Lcom/facebook/marianatrench/integrationtests/TaintedFieldClass;.staticField:Ljava/lang/Object;"
@@ -3138,7 +3118,6 @@
   [
     {
       "call_info" : "Declaration",
-      "field_callee" : "Lcom/facebook/marianatrench/integrationtests/TaintedFieldClass;.staticFinalField:Ljava/lang/Object;",
       "field_origins" : 
       [
         "Lcom/facebook/marianatrench/integrationtests/TaintedFieldClass;.staticFinalField:Ljava/lang/Object;"
@@ -3154,7 +3133,6 @@
   [
     {
       "call_info" : "Declaration",
-      "field_callee" : "Lcom/facebook/marianatrench/integrationtests/TaintedFieldClass;.staticFinalStringField:Ljava/lang/String;",
       "field_origins" : 
       [
         "Lcom/facebook/marianatrench/integrationtests/TaintedFieldClass;.staticFinalStringField:Ljava/lang/String;"
@@ -3170,7 +3148,6 @@
   [
     {
       "call_info" : "Declaration",
-      "field_callee" : "Lcom/facebook/marianatrench/integrationtests/TaintedFieldClass;.staticStringField:Ljava/lang/String;",
       "field_origins" : 
       [
         "Lcom/facebook/marianatrench/integrationtests/TaintedFieldClass;.staticStringField:Ljava/lang/String;"
@@ -3269,7 +3246,6 @@
           [
             {
               "call_info" : "Declaration",
-              "field_callee" : "Lcom/facebook/marianatrench/integrationtests/TaintedFieldClass;.field:Ljava/lang/Object;",
               "field_origins" : 
               [
                 "Lcom/facebook/marianatrench/integrationtests/TaintedFieldClass;.field:Ljava/lang/Object;"
@@ -3329,7 +3305,6 @@
           [
             {
               "call_info" : "Declaration",
-              "field_callee" : "Lcom/facebook/marianatrench/integrationtests/TaintedFieldClass;.field:Ljava/lang/Object;",
               "field_origins" : 
               [
                 "Lcom/facebook/marianatrench/integrationtests/TaintedFieldClass;.field:Ljava/lang/Object;"
@@ -3389,7 +3364,6 @@
           [
             {
               "call_info" : "Declaration",
-              "field_callee" : "Lcom/facebook/marianatrench/integrationtests/TaintedFieldClass;.staticField:Ljava/lang/Object;",
               "field_origins" : 
               [
                 "Lcom/facebook/marianatrench/integrationtests/TaintedFieldClass;.staticField:Ljava/lang/Object;"

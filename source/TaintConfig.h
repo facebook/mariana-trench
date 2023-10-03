@@ -51,7 +51,6 @@ class TaintConfig final {
       AccessPath callee_port,
       const Method* MT_NULLABLE callee,
       CallKind call_kind,
-      const Field* MT_NULLABLE field_callee,
       const Position* MT_NULLABLE call_position,
       CallClassIntervalContext class_interval_context,
       int distance,
@@ -70,7 +69,6 @@ class TaintConfig final {
         callee_port_(std::move(callee_port)),
         callee_(callee),
         call_kind_(std::move(call_kind)),
-        field_callee_(field_callee),
         call_position_(call_position),
         class_interval_context_(std::move(class_interval_context)),
         distance_(distance),
@@ -87,7 +85,6 @@ class TaintConfig final {
         extra_traces_(std::move(extra_traces)) {
     mt_assert(kind_ != nullptr);
     mt_assert(distance_ >= 0);
-    mt_assert(!(callee && field_callee));
     mt_assert(!local_positions.is_bottom());
 
     if (auto* propagation_kind =
@@ -108,7 +105,6 @@ class TaintConfig final {
     return self.kind_ == other.kind_ &&
         self.callee_port_ == other.callee_port_ &&
         self.callee_ == other.callee_ &&
-        self.field_callee_ == other.field_callee_ &&
         self.call_position_ == other.call_position_ &&
         self.distance_ == other.distance_ && self.origins_ == other.origins_ &&
         self.field_origins_ == other.field_origins_ &&
@@ -142,10 +138,6 @@ class TaintConfig final {
 
   CallKind call_kind() const {
     return call_kind_;
-  }
-
-  const Field* MT_NULLABLE field_callee() const {
-    return field_callee_;
   }
 
   const Position* MT_NULLABLE call_position() const {
@@ -216,7 +208,6 @@ class TaintConfig final {
   AccessPath callee_port_;
   const Method* MT_NULLABLE callee_;
   CallKind call_kind_;
-  const Field* MT_NULLABLE field_callee_;
   const Position* MT_NULLABLE call_position_;
   CallClassIntervalContext class_interval_context_;
   int distance_;
