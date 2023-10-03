@@ -65,7 +65,7 @@ class CalleePortFrames final : public sparta::AbstractDomain<CalleePortFrames> {
 
  private:
   explicit CalleePortFrames(
-      AccessPath callee_port,
+      const AccessPath* MT_NULLABLE callee_port,
       FramesByKind frames,
       LocalPositionSet local_positions,
       FeatureMayAlwaysSet locally_inferred_features)
@@ -76,7 +76,7 @@ class CalleePortFrames final : public sparta::AbstractDomain<CalleePortFrames> {
     mt_assert(!local_positions_.is_bottom());
     if (frames_.is_bottom()) {
       mt_assert(
-          callee_port_.root().is_leaf_port() && local_positions_.empty() &&
+          callee_port == nullptr && local_positions_.empty() &&
           locally_inferred_features_.is_bottom());
     }
   }
@@ -84,13 +84,13 @@ class CalleePortFrames final : public sparta::AbstractDomain<CalleePortFrames> {
  public:
   /**
    * Create the bottom (i.e, empty) frame set. Value of callee_port_ doesn't
-   * matter, so we pick some default (Leaf). Also avoid using `bottom()` for
+   * matter, so we pick some default (nullptr). Also avoid using `bottom()` for
    * local_positions_ because `bottom().add(new_position)` gives `bottom()`
    * which is not the desired behavior for `CalleePortFrames::add`.
    * Consider re-visiting LocalPositionSet.
    */
   CalleePortFrames()
-      : callee_port_(Root(Root::Kind::Leaf)),
+      : callee_port_(nullptr),
         frames_(FramesByKind::bottom()),
         local_positions_({}),
         locally_inferred_features_(FeatureMayAlwaysSet::bottom()) {}
@@ -116,7 +116,7 @@ class CalleePortFrames final : public sparta::AbstractDomain<CalleePortFrames> {
       // updated. Not strictly required for correct functionality, but helpful
       // to have a definitive notion of bottom.
       mt_assert(
-          callee_port_.root().is_leaf_port() && local_positions_.empty() &&
+          callee_port_ == nullptr && local_positions_.empty() &&
           locally_inferred_features_.is_bottom());
     }
     return is_bottom;
@@ -127,7 +127,7 @@ class CalleePortFrames final : public sparta::AbstractDomain<CalleePortFrames> {
   }
 
   void set_to_bottom() {
-    callee_port_ = AccessPath(Root(Root::Kind::Leaf));
+    callee_port_ = nullptr;
     frames_.set_to_bottom();
     local_positions_ = {};
     locally_inferred_features_.set_to_bottom();
@@ -142,7 +142,8 @@ class CalleePortFrames final : public sparta::AbstractDomain<CalleePortFrames> {
     return frames_.is_bottom();
   }
 
-  const AccessPath& callee_port() const {
+  const AccessPath* callee_port() const {
+    mt_assert(callee_port_ != nullptr);
     return callee_port_;
   }
 
@@ -325,11 +326,11 @@ class CalleePortFrames final : public sparta::AbstractDomain<CalleePortFrames> {
    * The only exception is if one of them `is_bottom()`.
    */
   bool has_same_key(const CalleePortFrames& other) const {
-    return callee_port_ == other.callee_port();
+    return callee_port_ == other.callee_port_;
   }
 
  private:
-  AccessPath callee_port_;
+  const AccessPath* MT_NULLABLE callee_port_;
   FramesByKind frames_;
 
   LocalPositionSet local_positions_;

@@ -5,6 +5,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
+#include <mariana-trench/AccessPathFactory.h>
 #include <mariana-trench/ArtificialMethods.h>
 #include <mariana-trench/CallGraph.h>
 #include <mariana-trench/ClassHierarchies.h>
@@ -36,6 +37,7 @@ Context::Context()
       feature_factory(&FeatureFactory::singleton()),
       transforms_factory(&TransformsFactory::singleton()),
       model_generator_name_factory(&ModelGeneratorNameFactory::singleton()),
+      access_path_factory(&AccessPathFactory::singleton()),
       statistics(std::make_unique<Statistics>()) {}
 
 Context::Context(Context&&) noexcept = default;

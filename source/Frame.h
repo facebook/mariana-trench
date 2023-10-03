@@ -16,6 +16,7 @@
 #include <sparta/HashedSetAbstractDomain.h>
 
 #include <mariana-trench/Access.h>
+#include <mariana-trench/AccessPathFactory.h>
 #include <mariana-trench/Assert.h>
 #include <mariana-trench/CallClassIntervalContext.h>
 #include <mariana-trench/CallKind.h>
@@ -98,7 +99,7 @@ class Frame final : public sparta::AbstractDomain<Frame> {
   /* Create the bottom frame. */
   explicit Frame()
       : kind_(nullptr),
-        callee_port_(Root(Root::Kind::Leaf)),
+        callee_port_(nullptr),
         callee_(nullptr),
         call_position_(nullptr),
         class_interval_context_(CallClassIntervalContext()),
@@ -107,7 +108,7 @@ class Frame final : public sparta::AbstractDomain<Frame> {
 
   explicit Frame(
       const Kind* kind,
-      AccessPath callee_port,
+      const AccessPath* callee_port,
       const Method* MT_NULLABLE callee,
       const Position* MT_NULLABLE call_position,
       CallClassIntervalContext class_interval_context,
@@ -123,7 +124,7 @@ class Frame final : public sparta::AbstractDomain<Frame> {
       PathTreeDomain output_paths,
       ExtraTraceSet extra_traces)
       : kind_(kind),
-        callee_port_(std::move(callee_port)),
+        callee_port_(callee_port),
         callee_(callee),
         call_position_(call_position),
         class_interval_context_(std::move(class_interval_context)),
@@ -139,6 +140,7 @@ class Frame final : public sparta::AbstractDomain<Frame> {
         output_paths_(std::move(output_paths)),
         extra_traces_(std::move(extra_traces)) {
     mt_assert(kind_ != nullptr);
+    mt_assert(callee_port_ != nullptr);
     mt_assert(distance_ >= 0);
 
     if (auto* propagation_kind =
@@ -148,10 +150,10 @@ class Frame final : public sparta::AbstractDomain<Frame> {
       if (call_kind_.is_propagation_without_trace()) {
         // Retaining previous invariant of callee port == output port
         // for propagations without traces.
-        mt_assert(callee_port == AccessPath(propagation_kind->root()));
+        mt_assert(*callee_port_ == AccessPath(propagation_kind->root()));
       }
     }
-    if (callee != nullptr && !callee_port_.root().is_anchor()) {
+    if (callee != nullptr && !callee_port_->root().is_anchor()) {
       mt_assert(call_kind.is_callsite());
     }
   }
@@ -169,7 +171,8 @@ class Frame final : public sparta::AbstractDomain<Frame> {
    * Asserts otherwise. */
   const PropagationKind* propagation_kind() const;
 
-  const AccessPath& callee_port() const {
+  const AccessPath* callee_port() const {
+    mt_assert(callee_port_ != nullptr);
     return callee_port_;
   }
 
@@ -270,7 +273,8 @@ class Frame final : public sparta::AbstractDomain<Frame> {
     // If true, this frame corresponds to the crtex leaf frame declared by
     // the user (callee == nullptr). Also, the producer run declarations use
     // the `Anchor` port, while consumer runs use the `Producer` port.
-    return callee_ == nullptr && callee_port_.root().is_anchor();
+    return kind_ != nullptr && callee_ == nullptr &&
+        callee_port_->root().is_anchor();
   }
 
   void set_to_bottom() {
@@ -322,7 +326,7 @@ class Frame final : public sparta::AbstractDomain<Frame> {
 
  private:
   const Kind* MT_NULLABLE kind_;
-  AccessPath callee_port_;
+  const AccessPath* MT_NULLABLE callee_port_;
   const Method* MT_NULLABLE callee_;
   const Position* MT_NULLABLE call_position_;
   CallClassIntervalContext class_interval_context_;

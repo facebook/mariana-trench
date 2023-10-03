@@ -304,7 +304,7 @@ void get_frames_files_to_methods(
         return;
       }
       auto callee_model = registry.get(callee);
-      const auto& callee_port = frame->callee_port();
+      const auto* callee_port = frame->callee_port();
       const auto* method_position = context.positions->get(callee);
       if (method_position && method_position->path()) {
         issue_files_to_methods.update(
@@ -317,9 +317,9 @@ void get_frames_files_to_methods(
 
       Taint taint;
       if (frame_type == FrameType::Source) {
-        taint = callee_model.generations().raw_read(callee_port).root();
+        taint = callee_model.generations().raw_read(*callee_port).root();
       } else if (frame_type == FrameType::Sink) {
-        taint = callee_model.sinks().raw_read(callee_port).root();
+        taint = callee_model.sinks().raw_read(*callee_port).root();
       }
       for (const auto& callee_frame : taint.frames_iterator()) {
         if (callee_frame.is_leaf() || !seen_frames->emplace(&callee_frame)) {

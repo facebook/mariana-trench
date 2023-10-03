@@ -19,7 +19,7 @@
 namespace marianatrench {
 
 CalleePortFrames::CalleePortFrames(std::initializer_list<TaintConfig> configs)
-    : callee_port_(Root(Root::Kind::Leaf)),
+    : callee_port_(nullptr),
       frames_(FramesByKind::bottom()),
       locally_inferred_features_(FeatureMayAlwaysSet::bottom()) {
   for (const auto& config : configs) {
@@ -35,9 +35,9 @@ CalleePortFrames::CalleePortFrames(const Frame& frame) : CalleePortFrames() {
 
 void CalleePortFrames::add(const TaintConfig& config) {
   if (is_bottom()) {
-    callee_port_ = config.callee_port();
+    callee_port_ = AccessPathFactory::singleton().get(config.callee_port());
   } else {
-    mt_assert(callee_port_ == config.callee_port());
+    mt_assert(*callee_port_ == config.callee_port());
   }
 
   local_positions_.join_with(config.local_positions());
@@ -72,7 +72,7 @@ void CalleePortFrames::join_with(const CalleePortFrames& other) {
   mt_if_expensive_assert(auto previous = *this);
 
   if (is_bottom()) {
-    callee_port_ = other.callee_port();
+    callee_port_ = other.callee_port_;
   }
   mt_assert(other.is_bottom() || has_same_key(other));
 
@@ -87,7 +87,7 @@ void CalleePortFrames::widen_with(const CalleePortFrames& other) {
   mt_if_expensive_assert(auto previous = *this);
 
   if (is_bottom()) {
-    callee_port_ = other.callee_port();
+    callee_port_ = other.callee_port_;
   }
   mt_assert(other.is_bottom() || has_same_key(other));
 
@@ -100,7 +100,7 @@ void CalleePortFrames::widen_with(const CalleePortFrames& other) {
 
 void CalleePortFrames::meet_with(const CalleePortFrames& other) {
   if (is_bottom()) {
-    callee_port_ = other.callee_port();
+    callee_port_ = other.callee_port_;
   }
   mt_assert(other.is_bottom() || has_same_key(other));
 
@@ -115,7 +115,7 @@ void CalleePortFrames::meet_with(const CalleePortFrames& other) {
 
 void CalleePortFrames::narrow_with(const CalleePortFrames& other) {
   if (is_bottom()) {
-    callee_port_ = other.callee_port();
+    callee_port_ = other.callee_port_;
   }
   mt_assert(other.is_bottom() || has_same_key(other));
 
@@ -130,7 +130,7 @@ void CalleePortFrames::narrow_with(const CalleePortFrames& other) {
 
 void CalleePortFrames::difference_with(const CalleePortFrames& other) {
   if (is_bottom()) {
-    callee_port_ = other.callee_port();
+    callee_port_ = other.callee_port_;
   }
   mt_assert(other.is_bottom() || has_same_key(other));
 
@@ -211,7 +211,7 @@ CalleePortFrames CalleePortFrames::propagate(
   // CRTEX is identified by the "anchor" port, leaf-ness is identified by the
   // path() length. Once a CRTEX frame is propagated, its path is never empty.
   bool is_crtex_leaf =
-      callee_port_.root().is_anchor() && callee_port_.path().size() == 0;
+      callee_port_->root().is_anchor() && callee_port_->path().size() == 0;
   auto propagated_callee_port =
       is_crtex_leaf ? callee_port.canonicalize_for_method(callee) : callee_port;
   FramesByKind propagated_frames_by_kind;
@@ -241,7 +241,7 @@ CalleePortFrames CalleePortFrames::propagate(
   }
 
   return CalleePortFrames(
-      propagated_callee_port,
+      context.access_path_factory->get(propagated_callee_port),
       propagated_frames_by_kind,
       /* local_positions */ {},
       /* locally_inferred_features */ FeatureMayAlwaysSet::bottom());
@@ -338,7 +338,7 @@ FeatureMayAlwaysSet CalleePortFrames::features_joined() const {
 
 std::ostream& operator<<(std::ostream& out, const CalleePortFrames& frames) {
   mt_assert(!frames.frames_.is_top());
-  out << "CalleePortFrames(callee_port=" << frames.callee_port();
+  out << "CalleePortFrames(callee_port=" << show(frames.callee_port_);
 
   const auto& local_positions = frames.local_positions();
   if (!local_positions.is_bottom() && !local_positions.empty()) {
@@ -397,7 +397,8 @@ Json::Value CalleePortFrames::to_json(
   //   position points to the return instruction/parameter.
 
   // We don't want to emit calls in origin frames in the non-CRTEX case.
-  if (!callee_port_.root().is_leaf_port() && call_kind.is_origin()) {
+  if (callee_port_ != nullptr && !callee_port_->root().is_leaf_port() &&
+      call_kind.is_origin()) {
     // Since we don't emit calls for origins, we need to provide the origin
     // location for proper visualisation.
     if (position != nullptr) {
@@ -420,8 +421,8 @@ Json::Value CalleePortFrames::to_json(
     if (position != nullptr) {
       call["position"] = position->to_json();
     }
-    if (!callee_port_.root().is_leaf()) {
-      call["port"] = callee_port_.to_json();
+    if (!callee_port_->root().is_leaf()) {
+      call["port"] = callee_port_->to_json();
     }
     taint["call"] = call;
   }

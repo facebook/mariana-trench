@@ -34,8 +34,8 @@ Json::Value ExtraTrace::to_json() const {
     if (position_ != nullptr) {
       call["position"] = position_->to_json();
     }
-    if (!callee_port_.root().is_leaf()) {
-      call["port"] = callee_port_.to_json();
+    if (!callee_port_->root().is_leaf()) {
+      call["port"] = callee_port_->to_json();
     }
     extra_trace["call"] = call;
   }
@@ -47,7 +47,7 @@ std::ostream& operator<<(std::ostream& out, const ExtraTrace& extra_trace) {
   return out << "ExtraTrace(kind=" << show(extra_trace.kind_)
              << ", position=" << show(extra_trace.position_)
              << ", callee=" << show(extra_trace.callee_)
-             << ", callee_port=" << extra_trace.callee_port_
+             << ", callee_port=" << show(extra_trace.callee_port_)
              << ", call_kind=" << extra_trace.call_kind_ << ")";
 }
 

@@ -296,7 +296,7 @@ void apply_propagations(
           propagation.callee(),
           propagation.call_kind(),
           propagation.call_position(),
-          propagation.callee_port()));
+          *propagation.callee_port()));
       features.add_always(
           callee.model.add_features_to_arguments(input_path.root()));
 

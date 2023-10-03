@@ -131,7 +131,7 @@ Frame make_taint_frame(const Kind* kind, const FrameProperties& properties) {
   mt_assert(properties.locally_inferred_features == FeatureMayAlwaysSet{});
   return Frame(
       kind,
-      properties.callee_port,
+      AccessPathFactory::singleton().get(properties.callee_port),
       properties.callee,
       properties.call_position,
       properties.class_interval_context,

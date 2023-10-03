@@ -235,7 +235,7 @@ TaintConfig TaintConfig::from_json(const Json::Value& value, Context& context) {
 
   return TaintConfig(
       kind,
-      std::move(callee_port),
+      callee_port,
       callee,
       call_kind,
       call_position,

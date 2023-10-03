@@ -92,7 +92,7 @@ TEST_F(CalleePortFramesTest, Add) {
           .origins = MethodSet{one},
           .inferred_features = FeatureMayAlwaysSet{feature_one}}));
   EXPECT_FALSE(frames.is_bottom());
-  EXPECT_EQ(frames.callee_port(), AccessPath(Root(Root::Kind::Return)));
+  EXPECT_EQ(*frames.callee_port(), AccessPath(Root(Root::Kind::Return)));
   EXPECT_EQ(
       frames,
       CalleePortFrames{test::make_taint_config(
@@ -150,7 +150,7 @@ TEST_F(CalleePortFramesTest, Add) {
   // constructor in the implementation.
   frames = CalleePortFrames();
   frames.add(test::make_taint_config(source_kind_one, test::FrameProperties{}));
-  EXPECT_EQ(frames.callee_port(), AccessPath(Root(Root::Kind::Leaf)));
+  EXPECT_EQ(*frames.callee_port(), AccessPath(Root(Root::Kind::Leaf)));
 }
 
 TEST_F(CalleePortFramesTest, Leq) {
@@ -383,7 +383,7 @@ TEST_F(CalleePortFramesTest, JoinWith) {
           test_kind_one,
           test::FrameProperties{
               .callee_port = AccessPath(Root(Root::Kind::Return))})});
-  EXPECT_EQ(frames.callee_port(), AccessPath(Root(Root::Kind::Return)));
+  EXPECT_EQ(*frames.callee_port(), AccessPath(Root(Root::Kind::Return)));
 
   frames =
       CalleePortFrames::bottom().join(CalleePortFrames{test::make_taint_config(
@@ -396,7 +396,7 @@ TEST_F(CalleePortFramesTest, JoinWith) {
           test_kind_one,
           test::FrameProperties{
               .callee_port = AccessPath(Root(Root::Kind::Return))})});
-  EXPECT_EQ(frames.callee_port(), AccessPath(Root(Root::Kind::Return)));
+  EXPECT_EQ(*frames.callee_port(), AccessPath(Root(Root::Kind::Return)));
 
   // Join different kinds
   frames = CalleePortFrames{
@@ -1650,7 +1650,7 @@ TEST_F(CalleePortFramesTest, Show) {
 
   EXPECT_EQ(
       show(CalleePortFrames::bottom()),
-      "CalleePortFrames(callee_port=AccessPath(Leaf), frames=[])");
+      "CalleePortFrames(callee_port=, frames=[])");
 }
 
 TEST_F(CalleePortFramesTest, ContainsKind) {
@@ -1696,7 +1696,7 @@ TEST_F(CalleePortFramesTest, PartitionByKind) {
           test::FrameProperties{
               .callee_port = AccessPath(Root(Root::Kind::Return))})});
   EXPECT_EQ(
-      frames_by_kind[test_kind_one].callee_port(),
+      *frames_by_kind[test_kind_one].callee_port(),
       AccessPath(Root(Root::Kind::Return)));
   EXPECT_EQ(
       frames_by_kind[test_kind_two],
@@ -1705,7 +1705,7 @@ TEST_F(CalleePortFramesTest, PartitionByKind) {
           test::FrameProperties{
               .callee_port = AccessPath(Root(Root::Kind::Return))})});
   EXPECT_EQ(
-      frames_by_kind[test_kind_two].callee_port(),
+      *frames_by_kind[test_kind_two].callee_port(),
       AccessPath(Root(Root::Kind::Return)));
 }
 

@@ -92,7 +92,7 @@ class TaintConfig final {
       mt_assert(!output_paths_.is_bottom());
       if (!call_kind_.is_propagation_with_trace()) {
         mt_assert(call_kind_.is_propagation());
-        mt_assert(callee_port == AccessPath(propagation_kind->root()));
+        mt_assert(callee_port_ == AccessPath(propagation_kind->root()));
       }
     } else {
       mt_assert(output_paths_.is_bottom());

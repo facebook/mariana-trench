@@ -19,7 +19,7 @@ namespace marianatrench {
 Frame::Frame(const TaintConfig& config)
     : Frame(
           config.kind(),
-          config.callee_port(),
+          AccessPathFactory::singleton().get(config.callee_port()),
           config.callee(),
           config.call_position(),
           config.class_interval_context(),
@@ -418,7 +418,7 @@ Json::Value Frame::to_json(ExportOriginsMode export_origins_mode) const {
 
 std::ostream& operator<<(std::ostream& out, const Frame& frame) {
   out << "Frame(kind=`" << show(frame.kind_)
-      << "`, callee_port=" << frame.callee_port_;
+      << "`, callee_port=" << show(frame.callee_port_);
   if (frame.callee_ != nullptr) {
     out << ", callee=`" << show(frame.callee_) << "`";
   }

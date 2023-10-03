@@ -27,7 +27,7 @@ FeatureMayAlwaysSet CallPositionFrames::locally_inferred_features(
     const AccessPath& callee_port) const {
   auto result = FeatureMayAlwaysSet::bottom();
   for (const auto& [_, callee_port_frames] : frames_.bindings()) {
-    if (callee_port_frames.callee_port() == callee_port) {
+    if (*callee_port_frames.callee_port() == callee_port) {
       result.join_with(callee_port_frames.locally_inferred_features());
       break;
     }
@@ -35,9 +35,9 @@ FeatureMayAlwaysSet CallPositionFrames::locally_inferred_features(
   return result;
 }
 
-AccessPath CalleePortFromTaintConfig::operator()(
+const AccessPath* CalleePortFromTaintConfig::operator()(
     const TaintConfig& config) const {
-  return config.callee_port();
+  return AccessPathFactory::singleton().get(config.callee_port());
 }
 
 void CallPositionFrames::add_local_position(const Position* position) {
@@ -76,6 +76,9 @@ CallPositionFrames CallPositionFrames::propagate(
         source_constant_arguments,
         class_interval_context,
         caller_class_interval);
+    if (propagated.is_bottom()) {
+      continue;
+    }
     result.update(
         propagated.callee_port(), [&propagated](CalleePortFrames* frames) {
           frames->join_with(propagated);
@@ -134,7 +137,7 @@ CallPositionFrames CallPositionFrames::attach_position(
               CalleePortFrames* frames) {
             frames->join_with(CalleePortFrames{TaintConfig(
                 frame.kind(),
-                frame.callee_port(),
+                *frame.callee_port(),
                 /* callee */ nullptr,
                 CallKind::origin(),
                 /* call_position */ position,
@@ -196,7 +199,7 @@ CallPositionFrames::map_positions(
   for (const auto& [callee_port_hash, callee_port_frames] :
        frames_.bindings()) {
     auto call_position = new_call_position(
-        callee_port_frames.callee_port(), properties_.position());
+        *callee_port_frames.callee_port(), properties_.position());
     auto local_positions =
         new_local_positions(callee_port_frames.local_positions());
 
@@ -206,7 +209,7 @@ CallPositionFrames::map_positions(
       // `CallPositionFrames` so we do not need to update every frame.
       auto new_frame = TaintConfig(
           frame.kind(),
-          frame.callee_port(),
+          *frame.callee_port(),
           frame.callee(),
           frame.call_kind(),
           call_position,

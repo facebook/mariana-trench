@@ -397,7 +397,7 @@ KindFrames KindFrames::propagate(
 
     auto propagated_frame = Frame(
         kind,
-        callee_port,
+        context.access_path_factory->get(callee_port),
         propagated_callee,
         call_position,
         propagated_interval,
@@ -430,7 +430,7 @@ void KindFrames::filter_invalid_frames(
     const std::function<bool(const Method*, const AccessPath&, const Kind*)>&
         is_valid) {
   frames_.map([&is_valid](Frame* frame) -> void {
-    if (!is_valid(frame->callee(), frame->callee_port(), frame->kind())) {
+    if (!is_valid(frame->callee(), *frame->callee_port(), frame->kind())) {
       frame->set_to_bottom();
     }
   });

@@ -402,7 +402,7 @@ void apply_propagations(
           propagation.callee(),
           propagation.call_kind(),
           propagation.call_position(),
-          propagation.callee_port());
+          *propagation.callee_port());
       apply_propagation(
           context,
           aliasing,

@@ -26,12 +26,12 @@ class ExtraTrace final {
       const Kind* kind,
       const Method* MT_NULLABLE callee,
       const Position* position,
-      AccessPath callee_port,
+      const AccessPath* callee_port,
       CallKind call_kind)
       : kind_(kind),
         callee_(callee),
         position_(position),
-        callee_port_(std::move(callee_port)),
+        callee_port_(callee_port),
         call_kind_(std::move(call_kind)) {
     mt_assert(
         call_kind_.is_propagation_with_trace() && kind_ != nullptr &&
@@ -58,7 +58,7 @@ class ExtraTrace final {
     return callee_;
   }
 
-  const AccessPath& callee_port() const {
+  const AccessPath* callee_port() const {
     return callee_port_;
   }
 
@@ -80,7 +80,7 @@ class ExtraTrace final {
   const Kind* kind_;
   const Method* MT_NULLABLE callee_;
   const Position* position_;
-  AccessPath callee_port_;
+  const AccessPath* callee_port_;
   CallKind call_kind_;
 };
 

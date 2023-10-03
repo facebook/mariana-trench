@@ -60,7 +60,7 @@ class CallPositionProperties {
 };
 
 struct CalleePortFromTaintConfig {
-  AccessPath operator()(const TaintConfig& config) const;
+  const AccessPath* operator()(const TaintConfig& config) const;
 };
 
 /**
@@ -70,14 +70,14 @@ struct CalleePortFromTaintConfig {
  */
 class CallPositionFrames final : public FramesMap<
                                      CallPositionFrames,
-                                     AccessPath,
+                                     const AccessPath*,
                                      CalleePortFrames,
                                      CalleePortFromTaintConfig,
                                      CallPositionProperties> {
  private:
   using Base = FramesMap<
       CallPositionFrames,
-      AccessPath,
+      const AccessPath*,
       CalleePortFrames,
       CalleePortFromTaintConfig,
       CallPositionProperties>;
