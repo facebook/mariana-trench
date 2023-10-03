@@ -34,13 +34,17 @@
 #include <mariana-trench/Method.h>
 #include <mariana-trench/MethodSet.h>
 #include <mariana-trench/PathTreeDomain.h>
+#include <mariana-trench/PatriciaTreeSetAbstractDomain.h>
 #include <mariana-trench/Position.h>
 #include <mariana-trench/TransformKind.h>
 #include <mariana-trench/TransformsFactory.h>
 
 namespace marianatrench {
 
-using RootSetAbstractDomain = sparta::HashedSetAbstractDomain<Root>;
+using RootSetAbstractDomain = PatriciaTreeSetAbstractDomain<
+    Root,
+    /* bottom_is_empty */ true,
+    /* with_top */ false>;
 using CanonicalNameSetAbstractDomain =
     sparta::HashedSetAbstractDomain<CanonicalName>;
 

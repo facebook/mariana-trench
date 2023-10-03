@@ -1714,15 +1714,15 @@ bool Model::check_taint_consistency(const Taint& taint, std::string_view kind)
           kind));
       return false;
     }
-    if (frame.via_type_of_ports().is_value()) {
-      for (const auto& root : frame.via_type_of_ports().elements()) {
+    if (!frame.via_type_of_ports().is_bottom()) {
+      for (const auto& root : frame.via_type_of_ports()) {
         // Logs invalid ports specifed for via_type_of but does not prevent the
         // model from being created.
         check_root_consistency(root);
       }
     }
-    if (frame.via_value_of_ports().is_value()) {
-      for (const auto& root : frame.via_value_of_ports().elements()) {
+    if (!frame.via_value_of_ports().is_bottom()) {
+      for (const auto& root : frame.via_value_of_ports()) {
         // Logs invalid ports specifed for via_value_of but does not prevent the
         // model from being created.
         check_root_consistency(root);

@@ -248,8 +248,7 @@ std::vector<const Feature*> Frame::materialize_via_type_of_ports(
     const std::vector<const DexType * MT_NULLABLE>& source_register_types)
     const {
   std::vector<const Feature*> features_added;
-  if (!via_type_of_ports().is_value() ||
-      via_type_of_ports().elements().empty()) {
+  if (via_type_of_ports().is_bottom()) {
     return features_added;
   }
 
@@ -258,7 +257,7 @@ std::vector<const Feature*> Frame::materialize_via_type_of_ports(
 
   // Materialize via_type_of_ports into features and add them to the inferred
   // features
-  for (const auto& port : via_type_of_ports().elements()) {
+  for (const auto& port : via_type_of_ports()) {
     if (!port.is_argument() ||
         port.parameter_position() >= source_register_types.size()) {
       ERROR(
@@ -281,8 +280,7 @@ std::vector<const Feature*> Frame::materialize_via_value_of_ports(
     const std::vector<std::optional<std::string>>& source_constant_arguments)
     const {
   std::vector<const Feature*> features_added;
-  if (!via_value_of_ports().is_value() ||
-      via_value_of_ports().elements().empty()) {
+  if (via_value_of_ports().is_bottom()) {
     return features_added;
   }
 
@@ -363,18 +361,17 @@ Json::Value Frame::to_json(ExportOriginsMode export_origins_mode) const {
   auto all_features = features();
   JsonValidation::update_object(value, all_features.to_json());
 
-  if (via_type_of_ports_.is_value() && !via_type_of_ports_.elements().empty()) {
+  if (!via_type_of_ports_.is_bottom()) {
     auto ports = Json::Value(Json::arrayValue);
-    for (const auto& root : via_type_of_ports_.elements()) {
+    for (const auto& root : via_type_of_ports_) {
       ports.append(root.to_json());
     }
     value["via_type_of"] = ports;
   }
 
-  if (via_value_of_ports_.is_value() &&
-      !via_value_of_ports_.elements().empty()) {
+  if (!via_value_of_ports_.is_bottom()) {
     auto ports = Json::Value(Json::arrayValue);
-    for (const auto& root : via_value_of_ports_.elements()) {
+    for (const auto& root : via_value_of_ports_) {
       ports.append(root.to_json());
     }
     value["via_value_of"] = ports;
@@ -447,13 +444,11 @@ std::ostream& operator<<(std::ostream& out, const Frame& frame) {
   if (!frame.user_features_.empty()) {
     out << ", user_features=" << frame.user_features_;
   }
-  if (frame.via_type_of_ports_.is_value() &&
-      !frame.via_type_of_ports_.elements().empty()) {
-    out << ", via_type_of_ports=" << frame.via_type_of_ports_;
+  if (!frame.via_type_of_ports_.is_bottom()) {
+    out << ", via_type_of_ports=" << frame.via_type_of_ports_.elements();
   }
-  if (frame.via_value_of_ports_.is_value() &&
-      !frame.via_value_of_ports_.elements().empty()) {
-    out << ", via_value_of_ports=" << frame.via_value_of_ports_;
+  if (!frame.via_value_of_ports_.is_bottom()) {
+    out << ", via_value_of_ports=" << frame.via_value_of_ports_.elements();
   }
   if (frame.canonical_names_.is_value() &&
       !frame.canonical_names_.elements().empty()) {

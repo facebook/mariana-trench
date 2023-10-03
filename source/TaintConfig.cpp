@@ -41,8 +41,7 @@ AccessPath validate_and_infer_crtex_callee_port(
   }
 
   if (is_templated) {
-    auto num_via_type_of_ports =
-        via_type_of_ports.is_value() ? via_type_of_ports.elements().size() : 0;
+    auto num_via_type_of_ports = via_type_of_ports.size();
     for (const auto& canonical_name : canonical_names.elements()) {
       auto is_via_type_of = canonical_name.is_via_type_of_template();
       if (is_via_type_of && num_via_type_of_ports != 1) {
