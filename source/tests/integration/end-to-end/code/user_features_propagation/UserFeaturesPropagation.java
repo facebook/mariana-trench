@@ -9,14 +9,14 @@ package com.facebook.marianatrench.integrationtests;
 
 public class UserFeaturesPropagation {
   // Expected frame properties:
-  //   CallInfo::Declaration
+  //   CallKind::Declaration
   //   User feature(s): always:source1, always:source2
   public Object source() {
     return new Object();
   }
 
   // Expected frame properties:
-  //   CallInfo::Origin
+  //   CallKind::Origin
   //   Locally inferred feature(s): always:source1, always:source2
   // Origin frames should contain user-declared features from the declaration
   // as locally-inferred features.
@@ -25,7 +25,7 @@ public class UserFeaturesPropagation {
   }
 
   // Expected frame propeerties:
-  //   CallInfo::CallSite
+  //   CallKind::CallSite
   //   Inferred features: always:source1, always:source2
   // Call-site frames do not contain user features. These are considered
   // (non-locally) inferred/propagated features at this point and must

@@ -47,7 +47,7 @@ TEST_F(ForwardTaintEnvironmentTest, LessOrEqualSuperSet) {
                    .callee = method,
                    .distance = 1,
                    .origins = MethodSet{method},
-                   .call_info = CallInfo::callsite()})}}}};
+                   .call_kind = CallKind::callsite()})}}}};
 
   EXPECT_TRUE(domain1.leq(domain2));
   EXPECT_FALSE(domain2.leq(domain1));
@@ -74,7 +74,7 @@ TEST_F(ForwardTaintEnvironmentTest, LessOrEqualDifferentSources) {
                .call_position = context.positions->unknown(),
                .distance = 1,
                .origins = MethodSet{method},
-               .call_info = CallInfo::callsite()})}}}};
+               .call_kind = CallKind::callsite()})}}}};
 
   EXPECT_FALSE(domain1.leq(domain2));
   EXPECT_FALSE(domain2.leq(domain1));
@@ -102,7 +102,7 @@ TEST_F(ForwardTaintEnvironmentTest, JoinSuperSet) {
                    .call_position = context.positions->unknown(),
                    .distance = 1,
                    .origins = MethodSet{method},
-                   .call_info = CallInfo::callsite()})}}}};
+                   .call_kind = CallKind::callsite()})}}}};
   domain1.join_with(domain2);
   EXPECT_TRUE(domain1 == domain2);
 }
@@ -128,7 +128,7 @@ TEST_F(ForwardTaintEnvironmentTest, JoinTwoDifferent) {
                .call_position = context.positions->unknown(),
                .distance = 1,
                .origins = MethodSet{method},
-               .call_info = CallInfo::callsite()})}}}};
+               .call_kind = CallKind::callsite()})}}}};
 
   auto domain3 = TaintEnvironment{
       {nullptr,
@@ -142,7 +142,7 @@ TEST_F(ForwardTaintEnvironmentTest, JoinTwoDifferent) {
                    .call_position = context.positions->unknown(),
                    .distance = 1,
                    .origins = MethodSet{method},
-                   .call_info = CallInfo::callsite()})}}}};
+                   .call_kind = CallKind::callsite()})}}}};
   domain1.join_with(domain2);
   EXPECT_TRUE(domain1 == domain3);
 }
@@ -180,7 +180,7 @@ TEST_F(ForwardTaintEnvironmentTest, JoinTwoEnvironmentWithDifferentSources) {
               .call_position = context.positions->unknown(),
               .distance = 1,
               .origins = MethodSet{method},
-              .call_info = CallInfo::callsite()})}},
+              .call_kind = CallKind::callsite()})}},
       UpdateKind::Weak);
 
   environment1.join_with(environment2);
@@ -200,7 +200,7 @@ TEST_F(ForwardTaintEnvironmentTest, JoinTwoEnvironmentWithDifferentSources) {
                   .call_position = context.positions->unknown(),
                   .distance = 1,
                   .origins = MethodSet{method},
-                  .call_info = CallInfo::callsite()})}}));
+                  .call_kind = CallKind::callsite()})}}));
 }
 
 } // namespace marianatrench

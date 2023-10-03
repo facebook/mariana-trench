@@ -79,7 +79,7 @@ struct FrameProperties {
   CanonicalNameSetAbstractDomain canonical_names = {};
   PathTreeDomain output_paths = {};
   LocalPositionSet local_positions = {};
-  CallInfo call_info = CallInfo::declaration();
+  CallKind call_kind = CallKind::declaration();
   ExtraTraceSet extra_traces = {};
 };
 

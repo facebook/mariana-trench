@@ -16,6 +16,7 @@
 
 #include <mariana-trench/Access.h>
 #include <mariana-trench/Assert.h>
+#include <mariana-trench/CallKind.h>
 #include <mariana-trench/CanonicalName.h>
 #include <mariana-trench/ClassIntervals.h>
 #include <mariana-trench/Compiler.h>
@@ -49,7 +50,7 @@ class TaintConfig final {
       const Kind* kind,
       AccessPath callee_port,
       const Method* MT_NULLABLE callee,
-      CallInfo call_info,
+      CallKind call_kind,
       const Field* MT_NULLABLE field_callee,
       const Position* MT_NULLABLE call_position,
       CallClassIntervalContext class_interval_context,
@@ -68,7 +69,7 @@ class TaintConfig final {
       : kind_(kind),
         callee_port_(std::move(callee_port)),
         callee_(callee),
-        call_info_(std::move(call_info)),
+        call_kind_(std::move(call_kind)),
         field_callee_(field_callee),
         call_position_(call_position),
         class_interval_context_(std::move(class_interval_context)),
@@ -92,8 +93,8 @@ class TaintConfig final {
     if (auto* propagation_kind =
             kind_->discard_transforms()->as<PropagationKind>()) {
       mt_assert(!output_paths_.is_bottom());
-      if (!call_info_.is_propagation_with_trace()) {
-        mt_assert(call_info_.is_propagation());
+      if (!call_kind_.is_propagation_with_trace()) {
+        mt_assert(call_kind_.is_propagation());
         mt_assert(callee_port == AccessPath(propagation_kind->root()));
       }
     } else {
@@ -119,7 +120,7 @@ class TaintConfig final {
         self.canonical_names_ == other.canonical_names_ &&
         self.output_paths_ == other.output_paths_ &&
         self.local_positions_ == other.local_positions_ &&
-        self.call_info_ == other.call_info_ &&
+        self.call_kind_ == other.call_kind_ &&
         self.extra_traces_ == other.extra_traces_;
   }
 
@@ -139,8 +140,8 @@ class TaintConfig final {
     return callee_;
   }
 
-  CallInfo call_info() const {
-    return call_info_;
+  CallKind call_kind() const {
+    return call_kind_;
   }
 
   const Field* MT_NULLABLE field_callee() const {
@@ -214,7 +215,7 @@ class TaintConfig final {
   const Kind* MT_NULLABLE kind_;
   AccessPath callee_port_;
   const Method* MT_NULLABLE callee_;
-  CallInfo call_info_;
+  CallKind call_kind_;
   const Field* MT_NULLABLE field_callee_;
   const Position* MT_NULLABLE call_position_;
   CallClassIntervalContext class_interval_context_;

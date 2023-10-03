@@ -140,8 +140,8 @@ void infer_input_taint(
       context->feature_factory.get_widen_broadening_feature()};
 
   for (const auto& [input_path, taint] : taint_tree.elements()) {
-    auto partitioned_by_propagations = taint.partition_by_call_info<bool>(
-        [](CallInfo call_info) { return call_info.is_propagation(); });
+    auto partitioned_by_propagations = taint.partition_by_call_kind<bool>(
+        [](CallKind call_kind) { return call_kind.is_propagation(); });
 
     auto sinks_iterator = partitioned_by_propagations.find(false);
     if (sinks_iterator != partitioned_by_propagations.end()) {
@@ -400,7 +400,7 @@ void apply_propagations(
     for (const auto& propagation : propagations.frames_iterator()) {
       auto locally_inferred_features = propagations.locally_inferred_features(
           propagation.callee(),
-          propagation.call_info(),
+          propagation.call_kind(),
           propagation.call_position(),
           propagation.callee_port());
       apply_propagation(
@@ -609,7 +609,7 @@ void check_flows_to_array_allocation(
       /* kind */ context->artificial_methods.array_allocation_kind(),
       /* callee_port */ AccessPath(Root(Root::Kind::Argument, 0)),
       /* callee */ nullptr,
-      /* call_info */ CallInfo::origin(),
+      /* call_kind */ CallKind::origin(),
       /* field_callee */ nullptr,
       /* call_position */ position,
       /* class_interval_context */ CallClassIntervalContext(),

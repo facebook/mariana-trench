@@ -8,7 +8,7 @@
 #pragma once
 
 #include <mariana-trench/Access.h>
-#include <mariana-trench/CallInfo.h>
+#include <mariana-trench/CallKind.h>
 #include <mariana-trench/IncludeMacros.h>
 #include <mariana-trench/Kind.h>
 #include <mariana-trench/Method.h>
@@ -26,14 +26,14 @@ class ExtraTrace final {
       const Method* MT_NULLABLE callee,
       const Position* position,
       AccessPath callee_port,
-      CallInfo call_info)
+      CallKind call_kind)
       : kind_(kind),
         callee_(callee),
         position_(position),
         callee_port_(std::move(callee_port)),
-        call_info_(std::move(call_info)) {
+        call_kind_(std::move(call_kind)) {
     mt_assert(
-        call_info_.is_propagation_with_trace() && kind_ != nullptr &&
+        call_kind_.is_propagation_with_trace() && kind_ != nullptr &&
         position_ != nullptr);
   }
 
@@ -42,7 +42,7 @@ class ExtraTrace final {
   bool operator==(const ExtraTrace& other) const {
     return kind_ == other.kind_ && callee_ == other.callee_ &&
         position_ == other.position_ && callee_port_ == other.callee_port_ &&
-        call_info_ == other.call_info_;
+        call_kind_ == other.call_kind_;
   }
 
   bool operator!=(const ExtraTrace& other) const {
@@ -65,8 +65,8 @@ class ExtraTrace final {
     return position_;
   }
 
-  const CallInfo& call_info() const {
-    return call_info_;
+  const CallKind& call_kind() const {
+    return call_kind_;
   }
 
   Json::Value to_json() const;
@@ -80,7 +80,7 @@ class ExtraTrace final {
   const Method* MT_NULLABLE callee_;
   const Position* position_;
   AccessPath callee_port_;
-  CallInfo call_info_;
+  CallKind call_kind_;
 };
 
 } // namespace marianatrench
@@ -92,7 +92,7 @@ struct std::hash<marianatrench::ExtraTrace> {
 
     boost::hash_combine(seed, extra_trace.kind());
     boost::hash_combine(seed, extra_trace.position());
-    boost::hash_combine(seed, extra_trace.call_info().encode());
+    boost::hash_combine(seed, extra_trace.call_kind().encode());
     if (extra_trace.callee() != nullptr) {
       boost::hash_combine(seed, extra_trace.callee());
       boost::hash_combine(

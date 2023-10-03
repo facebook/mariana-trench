@@ -377,7 +377,7 @@ void CalleePortFrames::add(const Frame& frame) {
 Json::Value CalleePortFrames::to_json(
     const Method* MT_NULLABLE callee,
     const Position* MT_NULLABLE position,
-    CallInfo call_info,
+    CallKind call_kind,
     ExportOriginsMode export_origins_mode) const {
   auto taint = Json::Value(Json::objectValue);
 
@@ -399,7 +399,7 @@ Json::Value CalleePortFrames::to_json(
   //   position points to the return instruction/parameter.
 
   // We don't want to emit calls in origin frames in the non-CRTEX case.
-  if (!callee_port_.root().is_leaf_port() && call_info.is_origin()) {
+  if (!callee_port_.root().is_leaf_port() && call_kind.is_origin()) {
     // Since we don't emit calls for origins, we need to provide the origin
     // location for proper visualisation.
     if (position != nullptr) {
@@ -411,8 +411,8 @@ Json::Value CalleePortFrames::to_json(
       taint["origin"] = origin;
     }
   } else if (
-      !call_info.is_declaration() &&
-      !call_info.is_propagation_without_trace()) {
+      !call_kind.is_declaration() &&
+      !call_kind.is_propagation_without_trace()) {
     // Never emit calls for declarations and propagations without traces.
     // Emit it for everything else.
     auto call = Json::Value(Json::objectValue);
@@ -433,7 +433,7 @@ Json::Value CalleePortFrames::to_json(
     taint["local_features"] = locally_inferred_features_.to_json();
   }
 
-  if (call_info.is_origin()) {
+  if (call_kind.is_origin()) {
     // User features on the origin frame come from the declaration and should be
     // reported in order to show up in the UI. Note that they cannot be stored
     // as locally_inferred_features in CalleePortFrames because they may be

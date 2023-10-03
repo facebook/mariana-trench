@@ -182,13 +182,13 @@ TaintConfig TaintConfig::from_json(const Json::Value& value, Context& context) {
     }
   }
 
-  CallInfo call_info = CallInfo::declaration();
+  CallKind call_kind = CallKind::declaration();
   if (canonical_names.is_value() && !canonical_names.elements().empty()) {
     callee_port = validate_and_infer_crtex_callee_port(
         value, callee_port, canonical_names, via_type_of_ports);
     // CRTEX frames are special - we treat them as origins instead of
     // declaration as we want the leaf to be preserved in the trace.
-    call_info = CallInfo::origin();
+    call_kind = CallKind::origin();
   } else if (
       callee_port.root().is_anchor() || callee_port.root().is_producer()) {
     throw JsonValidationError(
@@ -238,7 +238,7 @@ TaintConfig TaintConfig::from_json(const Json::Value& value, Context& context) {
       kind,
       std::move(callee_port),
       callee,
-      call_info,
+      call_kind,
       /* field_callee */ nullptr, // A field callee can never be set from a json
                                   // model generator
       call_position,

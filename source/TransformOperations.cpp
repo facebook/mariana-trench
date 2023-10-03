@@ -26,7 +26,7 @@ TaintTree apply_propagation(
 
   const auto* transform_kind = kind->as<TransformKind>();
   mt_assert(transform_kind != nullptr);
-  mt_assert(propagation.call_info().is_propagation_with_trace());
+  mt_assert(propagation.call_kind().is_propagation_with_trace());
   // For propagations with traces, we can have local and global transforms the
   // same as with source/sink traces. Regardless, both local and global
   // transforms in the propagation are local to the call-site where it's

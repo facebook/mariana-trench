@@ -419,7 +419,7 @@ TaintConfig generator::source(
       /* kind */ context.kind_factory->get(kind),
       /* callee_port */ AccessPath(Root(callee_port)),
       /* callee */ nullptr,
-      /* call_info */ CallInfo::declaration(),
+      /* call_kind */ CallKind::declaration(),
       /* field_callee */ nullptr,
       /* call_position */ nullptr,
       /* class_interval_context */ CallClassIntervalContext(),
@@ -453,8 +453,8 @@ TaintConfig generator::sink(
        callee_port != Root::Kind::Producer));
 
   // CRTEX leaves are origins.
-  CallInfo call_info =
-      canonical_names.size() > 0 ? CallInfo::origin() : CallInfo::declaration();
+  CallKind call_kind =
+      canonical_names.size() > 0 ? CallKind::origin() : CallKind::declaration();
   FeatureSet user_features;
   for (const auto& feature : features) {
     user_features.add(context.feature_factory->get(feature));
@@ -463,7 +463,7 @@ TaintConfig generator::sink(
       /* kind */ context.kind_factory->get(kind),
       /* callee_port */ AccessPath(Root(callee_port)),
       /* callee */ nullptr,
-      /* call_info */ call_info,
+      /* call_kind */ call_kind,
       /* field_callee */ nullptr,
       /* call_position */ nullptr,
       /* class_interval_context */ CallClassIntervalContext(),
@@ -502,7 +502,7 @@ TaintConfig generator::partial_sink(
       /* kind */ context.kind_factory->get_partial(kind, label),
       /* callee_port */ AccessPath(Root(callee_port)),
       /* callee */ nullptr,
-      /* call_info */ CallInfo::declaration(),
+      /* call_kind */ CallKind::declaration(),
       /* field_callee */ nullptr,
       /* call_position */ nullptr,
       /* class_interval_context */ CallClassIntervalContext(),

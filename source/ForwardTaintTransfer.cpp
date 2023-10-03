@@ -294,7 +294,7 @@ void apply_propagations(
       features.add(propagation.features());
       features.add(propagations.locally_inferred_features(
           propagation.callee(),
-          propagation.call_info(),
+          propagation.call_kind(),
           propagation.call_position(),
           propagation.callee_port()));
       features.add_always(
@@ -651,7 +651,7 @@ void check_flows_to_array_allocation(
       /* kind */ context->artificial_methods.array_allocation_kind(),
       /* callee_port */ AccessPath(Root(Root::Kind::Argument, 0)),
       /* callee */ nullptr,
-      /* call_info */ CallInfo::origin(),
+      /* call_kind */ CallKind::origin(),
       /* field_callee */ nullptr,
       /* call_position */ position,
       /* class_interval_context */ CallClassIntervalContext(),

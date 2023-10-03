@@ -1384,7 +1384,7 @@ TEST_F(JsonTest, Frame) {
                   .class_interval_context = CallClassIntervalContext(
                       ClassIntervals::Interval::finite(1, 2),
                       /* preserves_type_context */ true),
-                  .call_info = CallInfo::callsite()})
+                  .call_kind = CallKind::callsite()})
               .to_json(ExportOriginsMode::Always)),
       test::sorted_json(test::parse_json(R"({
           "call_info": "CallSite",
@@ -1394,7 +1394,7 @@ TEST_F(JsonTest, Frame) {
         })")));
 }
 
-TEST_F(JsonTest, CallInfo) {
+TEST_F(JsonTest, CallKind) {
   Scope scope;
   DexStore store("stores");
   store.add_classes(scope);
@@ -1404,7 +1404,7 @@ TEST_F(JsonTest, CallInfo) {
       test::sorted_json(
           test::make_taint_frame(
               /* kind */ context.kind_factory->get("TestSource"),
-              test::FrameProperties{.call_info = CallInfo::origin()})
+              test::FrameProperties{.call_kind = CallKind::origin()})
               .to_json(ExportOriginsMode::Always)),
       test::parse_json(R"({
           "call_info": "Origin",
@@ -1415,7 +1415,7 @@ TEST_F(JsonTest, CallInfo) {
           test::make_taint_frame(
               /* kind */ context.kind_factory->get("TestSource"),
               test::FrameProperties{
-                  .distance = 5, .call_info = CallInfo::callsite()})
+                  .distance = 5, .call_kind = CallKind::callsite()})
               .to_json(ExportOriginsMode::Always)),
       test::parse_json(R"({
           "call_info": "CallSite",

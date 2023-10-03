@@ -22,7 +22,7 @@ namespace marianatrench {
 
 class CalleeProperties {
  private:
-  using Pair = PointerIntPair<const Method*, 3, CallInfo::KindEncoding>;
+  using Pair = PointerIntPair<const Method*, 3, CallKind::Encoding>;
 
  public:
   using IntegerEncoding = uintptr_t;
@@ -30,7 +30,7 @@ class CalleeProperties {
  public:
   explicit CalleeProperties(
       const Method* MT_NULLABLE callee,
-      CallInfo call_info);
+      CallKind call_kind);
 
   explicit CalleeProperties(const TaintConfig& config);
 
@@ -46,7 +46,7 @@ class CalleeProperties {
 
   const Method* MT_NULLABLE callee() const;
 
-  CallInfo call_info() const;
+  CallKind call_kind() const;
 
  private:
   Pair value_;
@@ -88,7 +88,7 @@ class CalleeFrames final : public FramesMap<
   struct GroupEqual {
     bool operator()(const CalleeFrames& left, const CalleeFrames& right) const {
       return left.callee() == right.callee() &&
-          left.call_info() == right.call_info();
+          left.call_kind() == right.call_kind();
     }
   };
 
@@ -96,7 +96,7 @@ class CalleeFrames final : public FramesMap<
     std::size_t operator()(const CalleeFrames& frame) const {
       std::size_t seed = 0;
       boost::hash_combine(seed, frame.callee());
-      boost::hash_combine(seed, frame.call_info().encode());
+      boost::hash_combine(seed, frame.call_kind().encode());
       return seed;
     }
   };
@@ -111,8 +111,8 @@ class CalleeFrames final : public FramesMap<
     return properties_.callee();
   }
 
-  CallInfo call_info() const {
-    return properties_.call_info();
+  CallKind call_kind() const {
+    return properties_.call_kind();
   }
 
   Key callee_frame_key() const {
@@ -143,7 +143,7 @@ class CalleeFrames final : public FramesMap<
 
   /**
    * Propagate the taint from the callee to the caller to track the next hops
-   * for taints with CallInfo kind PropagationWithTrace.
+   * for taints with call kind PropagationWithTrace.
    */
   CalleeFrames update_with_propagation_trace(
       const Frame& propagation_frame) const;

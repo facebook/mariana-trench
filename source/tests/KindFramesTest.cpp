@@ -621,7 +621,7 @@ TEST_F(KindFramesTest, Propagate) {
               .class_interval_context = interval_one,
               .distance = 1,
               .origins = MethodSet{one},
-              .call_info = CallInfo::callsite()}),
+              .call_kind = CallKind::callsite()}),
       test::make_taint_config(
           test_kind_one,
           test::FrameProperties{
@@ -629,7 +629,7 @@ TEST_F(KindFramesTest, Propagate) {
               .class_interval_context = interval_two,
               .distance = 2,
               .origins = MethodSet{one},
-              .call_info = CallInfo::callsite()}),
+              .call_kind = CallKind::callsite()}),
   };
 
   // The callee interval is default (top, !preserves_type_context) in some of
@@ -660,7 +660,7 @@ TEST_F(KindFramesTest, Propagate) {
                   .distance = 2,
                   .origins = MethodSet{one},
                   .inferred_features = FeatureMayAlwaysSet{feature_one},
-                  .call_info = CallInfo::callsite()}),
+                  .call_kind = CallKind::callsite()}),
       }));
 }
 
@@ -709,7 +709,7 @@ TEST_F(KindFramesTest, PropagateIntervals) {
                 .callee = nullptr,
                 .class_interval_context = CallClassIntervalContext(),
                 .distance = 0,
-                .call_info = CallInfo::declaration()}),
+                .call_kind = CallKind::declaration()}),
     };
     EXPECT_EQ(
         frames.propagate(
@@ -734,7 +734,7 @@ TEST_F(KindFramesTest, PropagateIntervals) {
                         caller_class_interval,
                         /* preserves_type_context */ true),
                     .distance = 0,
-                    .call_info = CallInfo::origin()}),
+                    .call_kind = CallKind::origin()}),
         }));
   }
 
@@ -749,7 +749,7 @@ TEST_F(KindFramesTest, PropagateIntervals) {
                 .callee = one,
                 .class_interval_context = interval_2_3_t,
                 .distance = 1,
-                .call_info = CallInfo::callsite()}),
+                .call_kind = CallKind::callsite()}),
         // When preserves_type_context=false for non-Declaration frames, it
         // should be propagated as if class intervals didn't exist, even if
         // the intervals do not intersect. Other properties of the propagated
@@ -760,14 +760,14 @@ TEST_F(KindFramesTest, PropagateIntervals) {
                 .callee = one,
                 .class_interval_context = interval_5_6_f,
                 .distance = 4,
-                .call_info = CallInfo::callsite()}),
+                .call_kind = CallKind::callsite()}),
         test::make_taint_config(
             test_kind_one,
             test::FrameProperties{
                 .callee = one,
                 .class_interval_context = interval_2_3_f,
                 .distance = 3,
-                .call_info = CallInfo::callsite()}),
+                .call_kind = CallKind::callsite()}),
     };
     EXPECT_EQ(
         frames.propagate(
@@ -790,7 +790,7 @@ TEST_F(KindFramesTest, PropagateIntervals) {
                     .call_position = call_position,
                     .class_interval_context = interval_2_3_f,
                     .distance = 2,
-                    .call_info = CallInfo::callsite()}),
+                    .call_kind = CallKind::callsite()}),
             test::make_taint_config(
                 test_kind_one,
                 test::FrameProperties{
@@ -799,7 +799,7 @@ TEST_F(KindFramesTest, PropagateIntervals) {
                     .call_position = call_position,
                     .class_interval_context = interval_1_4_f,
                     .distance = 4,
-                    .call_info = CallInfo::callsite()}),
+                    .call_kind = CallKind::callsite()}),
 
         }));
   }
@@ -814,7 +814,7 @@ TEST_F(KindFramesTest, PropagateIntervals) {
                 .callee = nullptr,
                 .class_interval_context = interval_2_3_t,
                 .distance = 1,
-                .call_info = CallInfo::origin()}),
+                .call_kind = CallKind::origin()}),
         // This frame will not intersect with class_interval_context, the
         // propagated frame will not have "origins" as a result.
         test::make_taint_config(
@@ -824,7 +824,7 @@ TEST_F(KindFramesTest, PropagateIntervals) {
                 .class_interval_context = interval_5_6_t,
                 .distance = 1,
                 .origins = MethodSet{one},
-                .call_info = CallInfo::origin()}),
+                .call_kind = CallKind::origin()}),
         // This frame does not preserves type context and should be kept as is.
         test::make_taint_config(
             test_kind_one,
@@ -833,7 +833,7 @@ TEST_F(KindFramesTest, PropagateIntervals) {
                 .class_interval_context = interval_5_6_f,
                 .distance = 1,
                 .origins = MethodSet{two},
-                .call_info = CallInfo::origin()}),
+                .call_kind = CallKind::origin()}),
     };
     EXPECT_EQ(
         frames.propagate(
@@ -856,7 +856,7 @@ TEST_F(KindFramesTest, PropagateIntervals) {
                     .call_position = call_position,
                     .class_interval_context = interval_2_3_f,
                     .distance = 2,
-                    .call_info = CallInfo::callsite()}),
+                    .call_kind = CallKind::callsite()}),
             test::make_taint_config(
                 test_kind_one,
                 test::FrameProperties{
@@ -866,7 +866,7 @@ TEST_F(KindFramesTest, PropagateIntervals) {
                     .class_interval_context = interval_1_4_f,
                     .distance = 2,
                     .origins = MethodSet{two},
-                    .call_info = CallInfo::callsite()}),
+                    .call_kind = CallKind::callsite()}),
         }));
   }
 }
@@ -895,7 +895,7 @@ TEST_F(KindFramesTest, PropagateCrtex) {
               .origins = MethodSet{one},
               .canonical_names = CanonicalNameSetAbstractDomain{CanonicalName(
                   CanonicalName::TemplateValue{"%programmatic_leaf_name%"})},
-              .call_info = CallInfo::origin()}),
+              .call_kind = CallKind::origin()}),
       test::make_taint_config(
           test_kind_one,
           test::FrameProperties{
@@ -903,7 +903,7 @@ TEST_F(KindFramesTest, PropagateCrtex) {
               .origins = MethodSet{one},
               .canonical_names = CanonicalNameSetAbstractDomain{CanonicalName(
                   CanonicalName::TemplateValue{"constant value"})},
-              .call_info = CallInfo::origin()}),
+              .call_kind = CallKind::origin()}),
   };
 
   auto canonical_callee_port =
@@ -935,7 +935,7 @@ TEST_F(KindFramesTest, PropagateCrtex) {
                   .canonical_names =
                       CanonicalNameSetAbstractDomain{
                           expected_instantiated_name},
-                  .call_info = CallInfo::callsite()}),
+                  .call_kind = CallKind::callsite()}),
           test::make_taint_config(
               test_kind_one,
               test::FrameProperties{
@@ -947,7 +947,7 @@ TEST_F(KindFramesTest, PropagateCrtex) {
                   .canonical_names =
                       CanonicalNameSetAbstractDomain(CanonicalName(
                           CanonicalName::InstantiatedValue{"constant value"})),
-                  .call_info = CallInfo::callsite()}),
+                  .call_kind = CallKind::callsite()}),
       }));
 
   // Test propagating crtex-like frames (callee port == anchor.<path>),
@@ -976,7 +976,7 @@ TEST_F(KindFramesTest, PropagateCrtex) {
                   .origins = MethodSet{one},
                   .inferred_features =
                       FeatureMayAlwaysSet{feature_one, feature_two},
-                  .call_info = CallInfo::callsite()}),
+                  .call_kind = CallKind::callsite()}),
       }));
 }
 

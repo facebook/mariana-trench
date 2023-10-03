@@ -16,14 +16,14 @@ namespace marianatrench {
 
 CalleeProperties::CalleeProperties(
     const Method* MT_NULLABLE callee,
-    CallInfo call_info)
-    : value_(Pair{callee, call_info.encode()}) {}
+    CallKind call_kind)
+    : value_(Pair{callee, call_kind.encode()}) {}
 
 CalleeProperties::CalleeProperties(const TaintConfig& config)
-    : value_(Pair{config.callee(), config.call_info().encode()}) {}
+    : value_(Pair{config.callee(), config.call_kind().encode()}) {}
 
 CalleeProperties CalleeProperties::make_default() {
-  return CalleeProperties(/* callee */ nullptr, CallInfo::declaration());
+  return CalleeProperties(/* callee */ nullptr, CallKind::declaration());
 }
 
 bool CalleeProperties::operator==(const CalleeProperties& other) const {
@@ -31,19 +31,19 @@ bool CalleeProperties::operator==(const CalleeProperties& other) const {
 }
 
 bool CalleeProperties::is_default() const {
-  return callee() == nullptr && call_info().is_declaration();
+  return callee() == nullptr && call_kind().is_declaration();
 }
 
 void CalleeProperties::set_to_default() {
-  value_ = Pair{/* callee */ nullptr, CallInfo::declaration().encode()};
+  value_ = Pair{/* callee */ nullptr, CallKind::declaration().encode()};
 }
 
 const Method* MT_NULLABLE CalleeProperties::callee() const {
   return value_.get_pointer();
 }
 
-CallInfo CalleeProperties::call_info() const {
-  return CallInfo::decode(value_.get_int());
+CallKind CalleeProperties::call_kind() const {
+  return CallKind::decode(value_.get_int());
 }
 
 const Position* MT_NULLABLE
@@ -52,7 +52,7 @@ CallPositionFromTaintConfig::operator()(const TaintConfig& config) const {
 }
 
 void CalleeFrames::add_local_position(const Position* position) {
-  if (call_info().is_propagation()) {
+  if (call_kind().is_propagation()) {
     return; // Do not add local positions on propagations.
   }
 
@@ -84,7 +84,7 @@ CalleeFrames CalleeFrames::propagate(
     return CalleeFrames::bottom();
   }
 
-  mt_assert(!call_info().is_propagation_without_trace());
+  mt_assert(!call_kind().is_propagation_without_trace());
 
   CallPositionFrames result;
   for (const auto& [_, call_position_frames] : frames_.bindings()) {
@@ -106,7 +106,7 @@ CalleeFrames CalleeFrames::propagate(
 
   mt_assert(call_position == result.position());
   return CalleeFrames(
-      CalleeProperties(callee, call_info().propagate()),
+      CalleeProperties(callee, call_kind().propagate()),
       FramesByKey{std::pair(call_position, result)});
 }
 
@@ -116,8 +116,8 @@ CalleeFrames CalleeFrames::update_with_propagation_trace(
     return CalleeFrames::bottom();
   }
 
-  const auto& callee_call_info = call_info();
-  if (!callee_call_info.is_propagation_without_trace()) {
+  const auto& callee_call_kind = call_kind();
+  if (!callee_call_kind.is_propagation_without_trace()) {
     // The propagation taint tree tracks the final transform hop as the
     // "callee" so we do not need to "propagate" these calls.
     // All these (prior) transform hops are tracked as ExtraTrace hop
@@ -131,7 +131,7 @@ CalleeFrames CalleeFrames::update_with_propagation_trace(
     return result;
   }
 
-  mt_assert(callee_call_info.is_propagation_without_trace());
+  mt_assert(callee_call_kind.is_propagation_without_trace());
 
   CallPositionFrames result;
   for (const auto& [position, call_position_frames] : frames_.bindings()) {
@@ -144,7 +144,7 @@ CalleeFrames CalleeFrames::update_with_propagation_trace(
 
   return CalleeFrames(
       CalleeProperties(
-          propagation_frame.callee(), propagation_frame.call_info()),
+          propagation_frame.callee(), propagation_frame.call_kind()),
       FramesByKey{std::pair(propagation_frame.call_position(), result)});
 }
 
@@ -162,7 +162,7 @@ CalleeFrames CalleeFrames::attach_position(const Position* position) const {
   return CalleeFrames(
       // Since attaching the position creates a new leaf of the trace, we don't
       // respect the previous call info and instead default to origin.
-      CalleeProperties(callee(), CallInfo::origin()),
+      CalleeProperties(callee(), CallKind::origin()),
       FramesByKey{std::pair(position, result)});
 }
 
@@ -185,7 +185,7 @@ CalleeFrames CalleeFrames::apply_transform(
 
 void CalleeFrames::append_to_propagation_output_paths(
     Path::Element path_element) {
-  if (!call_info().is_propagation()) {
+  if (!call_kind().is_propagation()) {
     return;
   }
 
@@ -196,7 +196,7 @@ void CalleeFrames::append_to_propagation_output_paths(
 }
 
 void CalleeFrames::update_maximum_collapse_depth(CollapseDepth collapse_depth) {
-  if (!call_info().is_propagation()) {
+  if (!call_kind().is_propagation()) {
     return;
   }
 
@@ -245,7 +245,7 @@ Json::Value CalleeFrames::to_json(ExportOriginsMode export_origins_mode) const {
   auto taint = Json::Value(Json::arrayValue);
   for (const auto& [_, call_position_frames] : frames_.bindings()) {
     auto frames_json = call_position_frames.to_json(
-        callee(), call_info(), export_origins_mode);
+        callee(), call_kind(), export_origins_mode);
     mt_assert(frames_json.isArray());
     for (const auto& frame_json : frames_json) {
       taint.append(frame_json);

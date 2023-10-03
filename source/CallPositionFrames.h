@@ -137,7 +137,7 @@ class CallPositionFrames final : public FramesMap<
 
   Json::Value to_json(
       const Method* MT_NULLABLE callee,
-      CallInfo call_info,
+      CallKind call_kind,
       ExportOriginsMode export_origins_mode) const;
 
   friend std::ostream& operator<<(

@@ -34,7 +34,7 @@ Frame::Frame(const TaintConfig& config)
           config.via_type_of_ports(),
           config.via_value_of_ports(),
           config.canonical_names(),
-          config.call_info(),
+          config.call_kind(),
           config.output_paths(),
           config.extra_traces()) {}
 
@@ -71,7 +71,7 @@ FeatureMayAlwaysSet Frame::features() const {
 }
 
 void Frame::add_extra_trace(const Frame& propagation_frame) {
-  if (call_info_.is_propagation_without_trace()) {
+  if (call_kind_.is_propagation_without_trace()) {
     // These should be added as the next hop of the trace.
     return;
   }
@@ -80,7 +80,7 @@ void Frame::add_extra_trace(const Frame& propagation_frame) {
       propagation_frame.callee_,
       propagation_frame.call_position_,
       propagation_frame.callee_port_,
-      propagation_frame.call_info_));
+      propagation_frame.call_kind_));
 }
 
 bool Frame::leq(const Frame& other) const {
@@ -91,7 +91,7 @@ bool Frame::leq(const Frame& other) const {
   } else {
     return kind_ == other.kind_ && callee_port_ == other.callee_port_ &&
         callee_ == other.callee_ && call_position_ == other.call_position_ &&
-        call_info_ == other.call_info_ && distance_ >= other.distance_ &&
+        call_kind_ == other.call_kind_ && distance_ >= other.distance_ &&
         class_interval_context_ == other.class_interval_context_ &&
         origins_.leq(other.origins_) &&
         field_origins_.leq(other.field_origins_) &&
@@ -113,7 +113,7 @@ bool Frame::equals(const Frame& other) const {
   } else {
     return kind_ == other.kind_ && callee_port_ == other.callee_port_ &&
         callee_ == other.callee_ && call_position_ == other.call_position_ &&
-        call_info_ == other.call_info_ &&
+        call_kind_ == other.call_kind_ &&
         class_interval_context_ == other.class_interval_context_ &&
         distance_ == other.distance_ && origins_ == other.origins_ &&
         field_origins_ == other.field_origins_ &&
@@ -139,7 +139,7 @@ void Frame::join_with(const Frame& other) {
     mt_assert(callee_ == other.callee_);
     mt_assert(call_position_ == other.call_position_);
     mt_assert(callee_port_ == other.callee_port_);
-    mt_assert(call_info_ == other.call_info_);
+    mt_assert(call_kind_ == other.call_kind_);
     mt_assert(class_interval_context_ == other.class_interval_context_);
 
     distance_ = std::min(distance_, other.distance_);
@@ -208,7 +208,7 @@ Frame Frame::update_with_propagation_trace(
       /* via_type_of_ports */ {},
       /* via_value_of_ports */ {},
       /* canonical_names */ {},
-      propagation_frame.call_info_,
+      propagation_frame.call_kind_,
       output_paths_,
       extra_traces_);
 }
@@ -359,7 +359,7 @@ Json::Value Frame::to_json(ExportOriginsMode export_origins_mode) const {
   }
 
   if (!origins_.empty()) {
-    if (call_info_.is_origin() ||
+    if (call_kind_.is_origin() ||
         export_origins_mode == ExportOriginsMode::Always) {
       value["origins"] = origins_.to_json();
     }
@@ -399,7 +399,9 @@ Json::Value Frame::to_json(ExportOriginsMode export_origins_mode) const {
     value["canonical_names"] = canonical_names;
   }
 
-  value["call_info"] = Json::Value(std::string(call_info_.to_trace_string()));
+  // This was originally called `call_info` and was renamed `call_kind`.
+  // We keep this for backward compatibility.
+  value["call_info"] = Json::Value(std::string(call_kind_.to_trace_string()));
 
   if (!output_paths_.is_bottom()) {
     auto output_paths_value = Json::Value(Json::objectValue);
@@ -442,7 +444,7 @@ std::ostream& operator<<(std::ostream& out, const Frame& frame) {
     out << ", call_position=" << show(frame.call_position_);
   }
   out << ", class_interval_context=" << show(frame.class_interval_context_);
-  out << ", call_info=" << frame.call_info_.to_trace_string();
+  out << ", call_kind=" << frame.call_kind_.to_trace_string();
   if (frame.distance_ != 0) {
     out << ", distance=" << frame.distance_;
   }

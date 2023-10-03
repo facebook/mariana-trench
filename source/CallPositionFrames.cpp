@@ -136,7 +136,7 @@ CallPositionFrames CallPositionFrames::attach_position(
                 frame.kind(),
                 frame.callee_port(),
                 /* callee */ nullptr,
-                CallInfo::origin(),
+                CallKind::origin(),
                 /* field_callee */ nullptr,
                 /* call_position */ position,
                 // TODO(T158171922): Re-visit what the appropriate interval
@@ -209,7 +209,7 @@ CallPositionFrames::map_positions(
           frame.kind(),
           frame.callee_port(),
           frame.callee(),
-          frame.call_info(),
+          frame.call_kind(),
           frame.field_callee(),
           call_position,
           frame.class_interval_context(),
@@ -247,12 +247,12 @@ CallPositionFrames::map_positions(
 
 Json::Value CallPositionFrames::to_json(
     const Method* MT_NULLABLE callee,
-    CallInfo call_info,
+    CallKind call_kind,
     ExportOriginsMode export_origins_mode) const {
   auto taint = Json::Value(Json::arrayValue);
   for (const auto& [_, callee_port_frames] : frames_.bindings()) {
     auto frames_json = callee_port_frames.to_json(
-        callee, properties_.position(), call_info, export_origins_mode);
+        callee, properties_.position(), call_kind, export_origins_mode);
     taint.append(frames_json);
   }
   return taint;

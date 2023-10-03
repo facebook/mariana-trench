@@ -125,7 +125,7 @@ class Taint final : public sparta::AbstractDomain<Taint> {
 
   FeatureMayAlwaysSet locally_inferred_features(
       const Method* MT_NULLABLE callee,
-      CallInfo call_info,
+      CallKind call_kind,
       const Position* MT_NULLABLE position,
       const AccessPath& callee_port) const;
 
@@ -249,11 +249,11 @@ class Taint final : public sparta::AbstractDomain<Taint> {
   }
 
   template <typename Key>
-  std::unordered_map<Key, Taint> partition_by_call_info(
-      const std::function<Key(CallInfo)>& map_call_info) const {
+  std::unordered_map<Key, Taint> partition_by_call_kind(
+      const std::function<Key(CallKind)>& map_call_kind) const {
     std::unordered_map<Key, Taint> result;
     for (const auto& [_, callee_frames] : map_.bindings()) {
-      auto mapped_value = map_call_info(callee_frames.call_info());
+      auto mapped_value = map_call_kind(callee_frames.call_kind());
       result[mapped_value].add(callee_frames);
     }
     return result;

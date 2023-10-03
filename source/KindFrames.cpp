@@ -210,7 +210,7 @@ CallClassIntervalContext propagate_interval(
     const CallClassIntervalContext& class_interval_context,
     const ClassIntervals::Interval& caller_class_interval) {
   const auto& frame_interval = frame.class_interval_context();
-  if (frame.call_info().is_declaration()) {
+  if (frame.call_kind().is_declaration()) {
     // The source/sink declaration is the base case. Its propagated frame
     // (caller -> callee with source/sink) should have the properties:
     //
@@ -251,7 +251,7 @@ FeatureMayAlwaysSet propagate_features(
     FeatureSet& propagated_user_features,
     std::vector<const Feature*>& via_type_of_features_added) {
   auto propagated_local_features = locally_inferred_features;
-  if (frame.call_info().is_declaration()) {
+  if (frame.call_kind().is_declaration()) {
     // If propagating a declaration, user features are kept as user features
     // in the propagated frame(s). Inferred features are not expected on
     // declarations.
@@ -376,7 +376,7 @@ KindFrames KindFrames::propagate(
 
     const auto* propagated_callee = callee;
     int propagated_distance = frame.distance() + 1;
-    auto call_info = frame.call_info();
+    auto call_kind = frame.call_kind();
     if (!propagated_canonical_names.elements().empty()) {
       // For CRTEX, frames with templated canonical names are declarations.
       // The propagated frame is considered a leaf, hence distance = 0.
@@ -384,7 +384,7 @@ KindFrames KindFrames::propagate(
       // frame acts like any non-declaration frame and the trace to the consumer
       // CRTEX issue will be broken.
       propagated_distance = 0;
-    } else if (call_info.is_declaration()) {
+    } else if (call_kind.is_declaration()) {
       // When propagating a declaration, set the callee to nullptr explicitly to
       // avoid emitting an invalid frame.
       propagated_distance = 0;
@@ -393,24 +393,24 @@ KindFrames KindFrames::propagate(
     mt_assert(propagated_distance <= maximum_source_sink_distance);
 
     auto propagated_output_paths = PathTreeDomain::bottom();
-    if (call_info.is_propagation_with_trace()) {
+    if (call_kind.is_propagation_with_trace()) {
       // Propagate the output paths for PropagationWithTrace frames.
       propagated_output_paths.join_with(frame.output_paths());
     }
 
-    CallInfo propagated_call_info = call_info.propagate();
+    CallKind propagated_call_kind = call_kind.propagate();
     if (propagated_distance > 0) {
       mt_assert(
-          !propagated_call_info.is_declaration() &&
-          !propagated_call_info.is_origin());
+          !propagated_call_kind.is_declaration() &&
+          !propagated_call_kind.is_origin());
     } else {
       // At distance 0, the propagated frame is typically an origin.
       // However, if it is a CRTEX frame (identified by the "anchor" port), then
       // it would be a callsite because CRTEX does not use "declaration" frames.
       mt_assert(
-          propagated_call_info.is_origin() ||
+          propagated_call_kind.is_origin() ||
           (callee_port.root().is_anchor() &&
-           propagated_call_info.is_callsite()));
+           propagated_call_kind.is_callsite()));
     }
 
     auto propagated_frame = Frame(
@@ -429,7 +429,7 @@ KindFrames KindFrames::propagate(
         /* via_type_of_ports */ {},
         /* via_value_of_ports */ {},
         propagated_canonical_names,
-        propagated_call_info,
+        propagated_call_kind,
         propagated_output_paths,
         /* extra_traces */ {});
 

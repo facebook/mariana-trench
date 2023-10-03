@@ -54,7 +54,7 @@ void Taint::difference_with(const Taint& other) {
 void Taint::set_leaf_origins_if_empty(const MethodSet& origins) {
   map_.map([&origins](CalleeFrames frames) {
     if (frames.callee() == nullptr &&
-        !frames.call_info().is_propagation_without_trace()) {
+        !frames.call_kind().is_propagation_without_trace()) {
       frames.set_origins_if_empty(origins);
     }
     return frames;
@@ -105,7 +105,7 @@ LocalPositionSet Taint::local_positions() const {
 
 FeatureMayAlwaysSet Taint::locally_inferred_features(
     const Method* MT_NULLABLE callee,
-    CallInfo call_info,
+    CallKind call_kind,
     const Position* MT_NULLABLE position,
     const AccessPath& callee_port) const {
   auto result = FeatureMayAlwaysSet::bottom();
@@ -113,7 +113,7 @@ FeatureMayAlwaysSet Taint::locally_inferred_features(
     // Key look up by callee will be nice but is not supported by underlying
     // GroupHashedSetAbstractDomain.
     if (callee_frames.callee() == callee &&
-        callee_frames.call_info() == call_info) {
+        callee_frames.call_kind() == call_kind) {
       result.join_with(
           callee_frames.locally_inferred_features(position, callee_port));
       break;
@@ -148,7 +148,7 @@ Taint Taint::propagate(
     const ClassIntervals::Interval& caller_class_interval) const {
   Taint result;
   for (const auto& [_, frames] : map_.bindings()) {
-    if (frames.call_info().is_propagation_without_trace()) {
+    if (frames.call_kind().is_propagation_without_trace()) {
       // For propagation without traces, add as is.
       result.add(frames);
       continue;
@@ -337,7 +337,7 @@ Taint Taint::propagation(PropagationConfig propagation) {
       /* kind */ propagation.kind(),
       /* callee_port */ propagation.callee_port(),
       /* callee */ nullptr,
-      /* call_info */ propagation.call_info(),
+      /* call_kind */ propagation.call_kind(),
       /* field_callee */ nullptr,
       /* call_position */ nullptr,
       /* class_interval_context */ CallClassIntervalContext(),
@@ -364,7 +364,7 @@ Taint Taint::propagation_taint(
       /* kind */ kind,
       /* callee_port */ AccessPath(kind->root()),
       /* callee */ nullptr,
-      /* call_info */ CallInfo::propagation(),
+      /* call_kind */ CallKind::propagation(),
       /* field_callee */ nullptr,
       /* call_position */ nullptr,
       /* class_interval_context */ CallClassIntervalContext(),
@@ -386,20 +386,20 @@ Taint Taint::essential() const {
   Taint result;
   for (const auto& frame : frames_iterator()) {
     auto callee_port = AccessPath(Root(Root::Kind::Return));
-    CallInfo call_info = CallInfo::declaration();
+    CallKind call_kind = CallKind::declaration();
 
     // This is required by structure invariants.
     if (auto* propagation_kind =
             frame.kind()->discard_transforms()->as<PropagationKind>()) {
       callee_port = AccessPath(propagation_kind->root());
-      call_info = CallInfo::propagation();
+      call_kind = CallKind::propagation();
     }
 
     result.add(TaintConfig(
         /* kind */ frame.kind(),
         /* callee_port */ callee_port,
         /* callee */ nullptr,
-        /* call_info */ call_info,
+        /* call_kind */ call_kind,
         /* field_callee */ nullptr,
         /* call_position */ nullptr,
         /* class_interval_context */ CallClassIntervalContext(),

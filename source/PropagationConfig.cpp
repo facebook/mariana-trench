@@ -12,8 +12,8 @@
 namespace marianatrench {
 
 AccessPath PropagationConfig::callee_port() const {
-  if (call_info_.is_propagation_with_trace()) {
-    mt_assert(call_info_.is_declaration());
+  if (call_kind_.is_propagation_with_trace()) {
+    mt_assert(call_kind_.is_declaration());
     return AccessPath(Root(Root::Kind::Leaf));
   } else {
     return AccessPath(propagation_kind()->root());
@@ -107,7 +107,7 @@ std::ostream& operator<<(
   out << "PropagationConfig(input_path=" << propagation.input_path_
       << ", kind=`" << show(propagation.kind_) << "`"
       << ", output_paths=" << propagation.output_paths_
-      << ", call_info=" << propagation.call_info_;
+      << ", call_kind=" << propagation.call_kind_;
   if (!propagation.inferred_features_.empty()) {
     out << ", inferred_features=" << propagation.inferred_features_;
   }

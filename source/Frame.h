@@ -18,7 +18,7 @@
 #include <mariana-trench/Access.h>
 #include <mariana-trench/Assert.h>
 #include <mariana-trench/CallClassIntervalContext.h>
-#include <mariana-trench/CallInfo.h>
+#include <mariana-trench/CallKind.h>
 #include <mariana-trench/CanonicalName.h>
 #include <mariana-trench/ClassIntervals.h>
 #include <mariana-trench/Compiler.h>
@@ -103,7 +103,7 @@ class Frame final : public sparta::AbstractDomain<Frame> {
         call_position_(nullptr),
         class_interval_context_(CallClassIntervalContext()),
         distance_(0),
-        call_info_(CallInfo::declaration()) {}
+        call_kind_(CallKind::declaration()) {}
 
   explicit Frame(
       const Kind* kind,
@@ -120,7 +120,7 @@ class Frame final : public sparta::AbstractDomain<Frame> {
       RootSetAbstractDomain via_type_of_ports,
       RootSetAbstractDomain via_value_of_ports,
       CanonicalNameSetAbstractDomain canonical_names,
-      CallInfo call_info,
+      CallKind call_kind,
       PathTreeDomain output_paths,
       ExtraTraceSet extra_traces)
       : kind_(kind),
@@ -137,7 +137,7 @@ class Frame final : public sparta::AbstractDomain<Frame> {
         via_type_of_ports_(std::move(via_type_of_ports)),
         via_value_of_ports_(std::move(via_value_of_ports)),
         canonical_names_(std::move(canonical_names)),
-        call_info_(std::move(call_info)),
+        call_kind_(std::move(call_kind)),
         output_paths_(std::move(output_paths)),
         extra_traces_(std::move(extra_traces)) {
     mt_assert(kind_ != nullptr);
@@ -147,15 +147,15 @@ class Frame final : public sparta::AbstractDomain<Frame> {
     if (auto* propagation_kind =
             kind_->discard_transforms()->as<PropagationKind>()) {
       mt_assert(!output_paths_.is_bottom());
-      mt_assert(call_info_.is_propagation());
-      if (call_info_.is_propagation_without_trace()) {
+      mt_assert(call_kind_.is_propagation());
+      if (call_kind_.is_propagation_without_trace()) {
         // Retaining previous invariant of callee port == output port
         // for propagations without traces.
         mt_assert(callee_port == AccessPath(propagation_kind->root()));
       }
     }
     if (callee != nullptr && !callee_port_.root().is_anchor()) {
-      mt_assert(call_info.is_callsite());
+      mt_assert(call_kind.is_callsite());
     }
   }
 
@@ -224,8 +224,8 @@ class Frame final : public sparta::AbstractDomain<Frame> {
     return field_origins_;
   }
 
-  const CallInfo& call_info() const {
-    return call_info_;
+  const CallKind& call_kind() const {
+    return call_kind_;
   }
 
   void append_to_propagation_output_paths(Path::Element path_element);
@@ -345,7 +345,7 @@ class Frame final : public sparta::AbstractDomain<Frame> {
   RootSetAbstractDomain via_type_of_ports_;
   RootSetAbstractDomain via_value_of_ports_;
   CanonicalNameSetAbstractDomain canonical_names_;
-  CallInfo call_info_;
+  CallKind call_kind_;
   PathTreeDomain output_paths_;
   ExtraTraceSet extra_traces_;
 };
