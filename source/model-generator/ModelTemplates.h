@@ -14,6 +14,7 @@
 #include <mariana-trench/TaintConfig.h>
 #include <mariana-trench/TransformList.h>
 #include <mariana-trench/model-generator/ModelGenerator.h>
+#include <mariana-trench/model-generator/ParameterPositionTemplate.h>
 
 namespace marianatrench {
 class TemplateVariableMapping final {
@@ -27,24 +28,6 @@ class TemplateVariableMapping final {
 
  private:
   std::unordered_map<std::string, ParameterPosition> map_;
-};
-
-/* Store either an integer typed parameter position, or a string typed parameter
- * position (which is its name and can be instantiated when given a mapping from
- * variable names to variable indices) */
-class ParameterPositionTemplate final {
- public:
-  explicit ParameterPositionTemplate(ParameterPosition parameter_position);
-  explicit ParameterPositionTemplate(std::string parameter_position);
-
-  INCLUDE_DEFAULT_COPY_CONSTRUCTORS_AND_ASSIGNMENTS(ParameterPositionTemplate)
-
-  ParameterPosition instantiate(
-      const TemplateVariableMapping& parameter_positions) const;
-  std::string to_string() const;
-
- private:
-  std::variant<ParameterPosition, std::string> parameter_position_;
 };
 
 class RootTemplate final {
@@ -284,7 +267,7 @@ class AddFeaturesToArgumentsTemplate final {
 class ForAllParameters final {
  public:
   explicit ForAllParameters(
-      std::unique_ptr<AllOfParameterConstraint> constraints,
+      std::unique_ptr<class AllOfParameterConstraint> constraints,
       std::string variable,
       std::vector<SinkTemplate> sink_templates = {},
       std::vector<ParameterSourceTemplate> parameter_source_templates = {},
