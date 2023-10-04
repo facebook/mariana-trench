@@ -15,6 +15,7 @@
 #include <mariana-trench/TransformList.h>
 #include <mariana-trench/model-generator/ModelGenerator.h>
 #include <mariana-trench/model-generator/ParameterPositionTemplate.h>
+#include <mariana-trench/model-generator/RootTemplate.h>
 
 namespace marianatrench {
 class TemplateVariableMapping final {
@@ -28,25 +29,6 @@ class TemplateVariableMapping final {
 
  private:
   std::unordered_map<std::string, ParameterPosition> map_;
-};
-
-class RootTemplate final {
- public:
-  explicit RootTemplate(
-      Root::Kind kind,
-      std::optional<ParameterPositionTemplate> parameter_position =
-          std::nullopt);
-
-  INCLUDE_DEFAULT_COPY_CONSTRUCTORS_AND_ASSIGNMENTS(RootTemplate)
-
-  bool is_argument() const;
-
-  Root instantiate(const TemplateVariableMapping& parameter_positions) const;
-  std::string to_string() const;
-
- private:
-  Root::Kind kind_;
-  std::optional<ParameterPositionTemplate> parameter_position_;
 };
 
 class AccessPathTemplate final {

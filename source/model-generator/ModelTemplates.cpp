@@ -30,39 +30,6 @@ std::optional<ParameterPosition> TemplateVariableMapping::at(
   }
 }
 
-RootTemplate::RootTemplate(
-    Root::Kind kind,
-    std::optional<ParameterPositionTemplate> parameter_position)
-    : kind_(kind), parameter_position_(parameter_position) {}
-
-bool RootTemplate::is_argument() const {
-  return kind_ == Root::Kind::Argument;
-}
-
-std::string RootTemplate::to_string() const {
-  return is_argument()
-      ? fmt::format("Argument({})", parameter_position_->to_string())
-      : "Return";
-}
-
-Root RootTemplate::instantiate(
-    const TemplateVariableMapping& parameter_positions) const {
-  switch (kind_) {
-    case Root::Kind::Return: {
-      return Root(Root::Kind::Return);
-    }
-    case Root::Kind::Argument: {
-      mt_assert(parameter_position_);
-      return Root(
-          Root::Kind::Argument,
-          parameter_position_->instantiate(parameter_positions));
-    }
-    default: {
-      mt_unreachable();
-    }
-  }
-}
-
 AccessPathTemplate::AccessPathTemplate(RootTemplate root, Path path)
     : root_(root), path_(std::move(path)) {}
 
@@ -74,30 +41,7 @@ AccessPathTemplate AccessPathTemplate::from_json(const Json::Value& value) {
         value, /* field */ std::nullopt, "non-empty string for access path");
   }
 
-  // Parse the root.
-  auto root = RootTemplate(Root::Kind::Return);
-  const auto& root_string = elements.front();
-
-  if (boost::starts_with(root_string, "Argument(") &&
-      boost::ends_with(root_string, ")") && root_string.size() >= 11) {
-    auto parameter_string = root_string.substr(9, root_string.size() - 10);
-    auto parameter = parse_parameter_position(parameter_string);
-    if (parameter) {
-      root = RootTemplate(
-          Root::Kind::Argument, ParameterPositionTemplate(*parameter));
-    } else {
-      root = RootTemplate(
-          Root::Kind::Argument, ParameterPositionTemplate(parameter_string));
-    }
-  } else if (root_string != "Return") {
-    throw JsonValidationError(
-        value,
-        /* field */ std::nullopt,
-        fmt::format(
-            "valid access path root (`Return` or `Argument(...)`), got `{}`",
-            root_string));
-  }
-
+  auto root = RootTemplate::from_json(elements.front());
   Path path;
   for (auto iterator = std::next(elements.begin()), end = elements.end();
        iterator != end;
