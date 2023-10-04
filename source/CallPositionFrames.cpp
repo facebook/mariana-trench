@@ -41,8 +41,9 @@ const AccessPath* CalleePortFromTaintConfig::operator()(
 }
 
 void CallPositionFrames::add_local_position(const Position* position) {
-  map_frames([position](CalleePortFrames* callee_port_frames) -> void {
-    callee_port_frames->add_local_position(position);
+  map_frames([position](CalleePortFrames callee_port_frames) {
+    callee_port_frames.add_local_position(position);
+    return callee_port_frames;
   });
 }
 
@@ -80,8 +81,9 @@ CallPositionFrames CallPositionFrames::propagate(
       continue;
     }
     result.update(
-        propagated.callee_port(), [&propagated](CalleePortFrames* frames) {
-          frames->join_with(propagated);
+        propagated.callee_port(), [&propagated](CalleePortFrames frames) {
+          frames.join_with(propagated);
+          return frames;
         });
   }
 
@@ -107,8 +109,9 @@ CallPositionFrames CallPositionFrames::update_with_propagation_trace(
     mt_assert(propagated.callee_port() == propagation_frame.callee_port());
 
     result.update(
-        propagated.callee_port(), [&propagated](CalleePortFrames* frames) {
-          frames->join_with(propagated);
+        propagated.callee_port(), [&propagated](CalleePortFrames frames) {
+          frames.join_with(propagated);
+          return frames;
         });
   }
 
@@ -134,8 +137,8 @@ CallPositionFrames CallPositionFrames::attach_position(
       result.update(
           frame.callee_port(),
           [position, &frame, &inferred_features, &local_positions](
-              CalleePortFrames* frames) {
-            frames->join_with(CalleePortFrames{TaintConfig(
+              CalleePortFrames frames) {
+            frames.join_with(CalleePortFrames{TaintConfig(
                 frame.kind(),
                 *frame.callee_port(),
                 /* callee */ nullptr,
@@ -164,6 +167,7 @@ CallPositionFrames CallPositionFrames::attach_position(
                     ? FeatureMayAlwaysSet::bottom()
                     : FeatureMayAlwaysSet::make_always(frame.user_features()),
                 frame.extra_traces())});
+            return frames;
           });
     }
   }

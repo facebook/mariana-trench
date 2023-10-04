@@ -56,8 +56,9 @@ void CalleeFrames::add_local_position(const Position* position) {
     return; // Do not add local positions on propagations.
   }
 
-  map_frames([position](CallPositionFrames* frames) -> void {
-    frames->add_local_position(position);
+  map_frames([position](CallPositionFrames frames) {
+    frames.add_local_position(position);
+    return frames;
   });
 }
 
@@ -232,8 +233,9 @@ void CalleeFrames::update_non_leaf_positions(
       // binding, so explicitly declare it here.
       const auto& frames = new_frames;
       result.update(
-          position, [&frames](CallPositionFrames* call_position_frames) {
-            call_position_frames->join_with(frames);
+          position, [&frames](CallPositionFrames call_position_frames) {
+            call_position_frames.join_with(frames);
+            return call_position_frames;
           });
     }
   }
