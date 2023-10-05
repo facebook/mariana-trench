@@ -12,7 +12,6 @@
 #include <mariana-trench/Constants.h>
 #include <mariana-trench/Context.h>
 #include <mariana-trench/Dependencies.h>
-#include <mariana-trench/FieldSet.h>
 #include <mariana-trench/Fields.h>
 #include <mariana-trench/Model.h>
 #include <mariana-trench/Redex.h>
@@ -161,7 +160,8 @@ TEST_F(RegistryTest, JoinWith) {
           {test::make_taint_config(
               source_kind,
               test::FrameProperties{
-                  .field_origins = FieldSet{field},
+                  .origins =
+                      OriginSet{context.origin_factory->field_origin(field)},
                   .inferred_features = FeatureMayAlwaysSet::bottom(),
                   .locally_inferred_features = FeatureMayAlwaysSet::bottom(),
                   .user_features = FeatureSet::bottom()})},
@@ -178,7 +178,8 @@ TEST_F(RegistryTest, JoinWith) {
           {test::make_taint_config(
               source_kind_two,
               test::FrameProperties{
-                  .field_origins = FieldSet{field},
+                  .origins =
+                      OriginSet{context.origin_factory->field_origin(field)},
                   .inferred_features = FeatureMayAlwaysSet::bottom(),
                   .locally_inferred_features = FeatureMayAlwaysSet::bottom(),
                   .user_features = FeatureSet::bottom()})},
@@ -250,7 +251,8 @@ TEST_F(RegistryTest, ConstructorUseJoin) {
                   /* locally_inferred_features */
                   FeatureMayAlwaysSet::bottom(),
                   /* user_features */ FeatureSet::bottom(),
-                  /* origins */ MethodSet{method})}},
+                  /* origins */
+                  OriginSet{context.origin_factory->method_origin(method)})}},
           PortTaint{
               AccessPath(Root(Root::Kind::Argument, 2)),
               Taint{test::make_leaf_taint_config(
@@ -259,7 +261,8 @@ TEST_F(RegistryTest, ConstructorUseJoin) {
                   /* locally_inferred_features */
                   FeatureMayAlwaysSet::bottom(),
                   /* user_features */ FeatureSet::bottom(),
-                  /* origins */ MethodSet{method})}}));
+                  /* origins */
+                  OriginSet{context.origin_factory->method_origin(method)})}}));
 
   EXPECT_EQ(
       registry.get(field).sources(),
@@ -267,14 +270,16 @@ TEST_F(RegistryTest, ConstructorUseJoin) {
           {test::make_taint_config(
                source_kind,
                test::FrameProperties{
-                   .field_origins = FieldSet{field},
+                   .origins =
+                       OriginSet{context.origin_factory->field_origin(field)},
                    .inferred_features = FeatureMayAlwaysSet::bottom(),
                    .locally_inferred_features = FeatureMayAlwaysSet::bottom(),
                    .user_features = FeatureSet::bottom()}),
            test::make_taint_config(
                source_kind_two,
                test::FrameProperties{
-                   .field_origins = FieldSet{field},
+                   .origins =
+                       OriginSet{context.origin_factory->field_origin(field)},
                    .inferred_features = FeatureMayAlwaysSet::bottom(),
                    .locally_inferred_features = FeatureMayAlwaysSet::bottom(),
                    .user_features = FeatureSet::bottom()})}));

@@ -25,13 +25,12 @@
 #include <mariana-trench/Feature.h>
 #include <mariana-trench/FeatureMayAlwaysSet.h>
 #include <mariana-trench/FeatureSet.h>
-#include <mariana-trench/FieldSet.h>
 #include <mariana-trench/Frame.h>
 #include <mariana-trench/IncludeMacros.h>
 #include <mariana-trench/Kind.h>
 #include <mariana-trench/LocalPositionSet.h>
 #include <mariana-trench/Method.h>
-#include <mariana-trench/MethodSet.h>
+#include <mariana-trench/OriginSet.h>
 #include <mariana-trench/Position.h>
 
 namespace marianatrench {
@@ -54,8 +53,7 @@ class TaintConfig final {
       const Position* MT_NULLABLE call_position,
       CallClassIntervalContext class_interval_context,
       int distance,
-      MethodSet origins,
-      FieldSet field_origins,
+      OriginSet origins,
       FeatureMayAlwaysSet inferred_features,
       FeatureSet user_features,
       RootSetAbstractDomain via_type_of_ports,
@@ -73,7 +71,6 @@ class TaintConfig final {
         class_interval_context_(std::move(class_interval_context)),
         distance_(distance),
         origins_(std::move(origins)),
-        field_origins_(std::move(field_origins)),
         inferred_features_(std::move(inferred_features)),
         user_features_(std::move(user_features)),
         via_type_of_ports_(std::move(via_type_of_ports)),
@@ -107,7 +104,6 @@ class TaintConfig final {
         self.callee_ == other.callee_ &&
         self.call_position_ == other.call_position_ &&
         self.distance_ == other.distance_ && self.origins_ == other.origins_ &&
-        self.field_origins_ == other.field_origins_ &&
         self.inferred_features_ == other.inferred_features_ &&
         self.locally_inferred_features_ == other.locally_inferred_features_ &&
         self.user_features_ == other.user_features_ &&
@@ -152,12 +148,8 @@ class TaintConfig final {
     return distance_;
   }
 
-  const MethodSet& origins() const {
+  const OriginSet& origins() const {
     return origins_;
-  }
-
-  const FieldSet& field_origins() const {
-    return field_origins_;
   }
 
   const FeatureMayAlwaysSet& inferred_features() const {
@@ -211,8 +203,7 @@ class TaintConfig final {
   const Position* MT_NULLABLE call_position_;
   CallClassIntervalContext class_interval_context_;
   int distance_;
-  MethodSet origins_;
-  FieldSet field_origins_;
+  OriginSet origins_;
   FeatureMayAlwaysSet inferred_features_;
   FeatureSet user_features_;
   RootSetAbstractDomain via_type_of_ports_;

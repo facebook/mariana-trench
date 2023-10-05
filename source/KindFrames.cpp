@@ -403,7 +403,6 @@ KindFrames KindFrames::propagate(
         propagated_interval,
         propagated_distance,
         frame.origins(),
-        frame.field_origins(),
         std::move(propagated_inferred_features),
         propagated_user_features,
         /* via_type_of_ports */ {},

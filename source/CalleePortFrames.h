@@ -207,9 +207,9 @@ class CalleePortFrames final : public sparta::AbstractDomain<CalleePortFrames> {
     return ConstIterator(frames_.bindings().end(), frames_.bindings().end());
   }
 
-  void set_origins_if_empty(const MethodSet& origins);
+  void set_origins(const Method* method);
 
-  void set_field_origins_if_empty(const Field* field);
+  void set_origins(const Field* field);
 
   void add_locally_inferred_features(const FeatureMayAlwaysSet& features);
 

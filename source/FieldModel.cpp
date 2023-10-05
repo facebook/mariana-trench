@@ -89,7 +89,10 @@ void FieldModel::check_taint_consistency(
     const Taint& taint,
     std::string_view kind) const {
   for (const auto& frame : taint.frames_iterator()) {
-    if (field_ && frame.field_origins().empty()) {
+    // If a field_ exists, there should be exactly one origin at the
+    // declaration frame..
+    const auto* origin = frame.origins().elements().singleton();
+    if (field_ && (origin == nullptr || !(*origin)->is<FieldOrigin>())) {
       FieldModelConsistencyError::raise(fmt::format(
           "Model for field `{}` contains a {} without field origins.",
           show(field_),
@@ -217,7 +220,7 @@ std::ostream& operator<<(std::ostream& out, const FieldModel& model) {
 
 void FieldModel::add_source(Taint source) {
   if (field_) {
-    source.set_field_origins_if_empty(field_);
+    source.set_origins(field_);
   }
   check_taint_consistency(source, "source");
   sources_.join_with(source);
@@ -225,7 +228,7 @@ void FieldModel::add_source(Taint source) {
 
 void FieldModel::add_sink(Taint sink) {
   if (field_) {
-    sink.set_field_origins_if_empty(field_);
+    sink.set_origins(field_);
   }
   check_taint_consistency(sink, "sink");
   sinks_.join_with(sink);

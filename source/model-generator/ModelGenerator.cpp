@@ -19,8 +19,9 @@
 #include <mariana-trench/Fields.h>
 #include <mariana-trench/JsonValidation.h>
 #include <mariana-trench/Log.h>
-#include <mariana-trench/MethodSet.h>
 #include <mariana-trench/Methods.h>
+#include <mariana-trench/OriginFactory.h>
+#include <mariana-trench/OriginSet.h>
 #include <mariana-trench/Redex.h>
 #include <mariana-trench/model-generator/ModelGenerator.h>
 #include <mariana-trench/model-generator/ModelGeneratorNameFactory.h>
@@ -423,8 +424,7 @@ TaintConfig generator::source(
       /* call_position */ nullptr,
       /* class_interval_context */ CallClassIntervalContext(),
       /* distance */ 0,
-      /* origins */ MethodSet{method},
-      /* field_origins */ {},
+      /* origins */ OriginSet{context.origin_factory->method_origin(method)},
       /* inferred features */ FeatureMayAlwaysSet::bottom(),
       /* user features */ user_features,
       /* via_type_of_ports */ via_type_of_ports,
@@ -466,8 +466,7 @@ TaintConfig generator::sink(
       /* call_position */ nullptr,
       /* class_interval_context */ CallClassIntervalContext(),
       /* distance */ 0,
-      /* origins */ MethodSet{method},
-      /* field_origins */ {},
+      /* origins */ OriginSet{context.origin_factory->method_origin(method)},
       /* inferred features */ FeatureMayAlwaysSet::bottom(),
       /* user features */ user_features,
       /* via_type_of_ports */ via_type_of_ports,
@@ -504,8 +503,7 @@ TaintConfig generator::partial_sink(
       /* call_position */ nullptr,
       /* class_interval_context */ CallClassIntervalContext(),
       /* distance */ 0,
-      /* origins */ MethodSet{method},
-      /* field_origins */ {},
+      /* origins */ OriginSet{context.origin_factory->method_origin(method)},
       /* inferred features */ FeatureMayAlwaysSet::bottom(),
       /* user features */ user_features,
       /* via_type_of_ports */ via_type_of_ports,

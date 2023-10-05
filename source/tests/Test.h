@@ -27,6 +27,7 @@
 #include <mariana-trench/GlobalRedexContext.h>
 #include <mariana-trench/Methods.h>
 #include <mariana-trench/Options.h>
+#include <mariana-trench/OriginFactory.h>
 #include <mariana-trench/Overrides.h>
 #include <mariana-trench/Positions.h>
 #include <mariana-trench/Rules.h>
@@ -68,8 +69,7 @@ struct FrameProperties {
   const Position* MT_NULLABLE call_position = nullptr;
   CallClassIntervalContext class_interval_context = CallClassIntervalContext();
   int distance = 0;
-  MethodSet origins = {};
-  FieldSet field_origins = {};
+  OriginSet origins = {};
   FeatureMayAlwaysSet inferred_features = {};
   FeatureMayAlwaysSet locally_inferred_features = {};
   FeatureSet user_features = {};
@@ -93,7 +93,7 @@ TaintConfig make_leaf_taint_config(
     FeatureMayAlwaysSet inferred_features,
     FeatureMayAlwaysSet locally_inferred_features,
     FeatureSet user_features,
-    MethodSet origins);
+    OriginSet origins);
 TaintConfig make_crtex_leaf_taint_config(
     const Kind* kind,
     AccessPath callee_port,

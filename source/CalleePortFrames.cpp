@@ -151,20 +151,16 @@ void CalleePortFrames::difference_with(const CalleePortFrames& other) {
   }
 }
 
-void CalleePortFrames::set_origins_if_empty(const MethodSet& origins) {
-  map([&origins](Frame frame) {
-    if (frame.origins().empty()) {
-      frame.set_origins(origins);
-    }
+void CalleePortFrames::set_origins(const Method* method) {
+  map([method](Frame frame) {
+    frame.set_origins(method);
     return frame;
   });
 }
 
-void CalleePortFrames::set_field_origins_if_empty(const Field* field) {
+void CalleePortFrames::set_origins(const Field* field) {
   map([field](Frame frame) {
-    if (frame.field_origins().empty()) {
-      frame.set_field_origins(FieldSet{field});
-    }
+    frame.set_origins(field);
     return frame;
   });
 }

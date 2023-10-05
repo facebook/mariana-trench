@@ -1707,7 +1707,10 @@ bool Model::check_taint_config_consistency(
 bool Model::check_taint_consistency(const Taint& taint, std::string_view kind)
     const {
   for (const auto& frame : taint.frames_iterator()) {
-    if (method_ && (frame.origins().empty() && frame.field_origins().empty())) {
+    // If a method_ exists, there should be exactly one origin at the
+    // declaration frame.
+    const auto* origin = frame.origins().elements().singleton();
+    if (method_ && (origin == nullptr || !(*origin)->is<MethodOrigin>())) {
       ModelConsistencyError::raise(fmt::format(
           "Model for method `{}` contains a {} without origins.",
           show(method_),
@@ -1797,7 +1800,7 @@ bool Model::check_call_effect_port_consistency(
 
 void Model::add_generation(AccessPath port, Taint source) {
   if (method_) {
-    source.set_leaf_origins_if_empty(MethodSet{method_});
+    source.set_origins(method_);
   }
 
   if (!check_port_consistency(port) ||
@@ -1819,7 +1822,7 @@ void Model::add_generation(AccessPath port, Taint source) {
 
 void Model::add_parameter_source(AccessPath port, Taint source) {
   if (method_) {
-    source.set_leaf_origins_if_empty(MethodSet{method_});
+    source.set_origins(method_);
   }
 
   if (!check_port_consistency(port) ||
@@ -1842,7 +1845,7 @@ void Model::add_parameter_source(AccessPath port, Taint source) {
 
 void Model::add_sink(AccessPath port, Taint sink) {
   if (method_) {
-    sink.set_leaf_origins_if_empty(MethodSet{method_});
+    sink.set_origins(method_);
   }
 
   if (!check_port_consistency(port) || !check_taint_consistency(sink, "sink")) {
@@ -1867,7 +1870,7 @@ void Model::add_call_effect_source(AccessPath port, Taint source) {
   }
 
   if (method_) {
-    source.set_leaf_origins_if_empty(MethodSet{method_});
+    source.set_origins(method_);
   }
 
   if (!check_taint_consistency(source, "effect source")) {
@@ -1893,7 +1896,7 @@ void Model::add_call_effect_sink(AccessPath port, Taint sink) {
   }
 
   if (method_) {
-    sink.set_leaf_origins_if_empty(MethodSet{method_});
+    sink.set_origins(method_);
   }
 
   if (!check_taint_consistency(sink, "effect sink")) {
@@ -1919,7 +1922,7 @@ void Model::add_propagation(AccessPath input_path, Taint output) {
   }
 
   if (method_) {
-    output.set_leaf_origins_if_empty(MethodSet{method_});
+    output.set_origins(method_);
   }
 
   if (input_path.path().size() > Heuristics::kPropagationMaxInputPathSize) {

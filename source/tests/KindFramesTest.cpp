@@ -22,6 +22,7 @@ TEST_F(KindFramesTest, Add) {
   Scope scope;
   auto* one = context.methods->create(
       redex::create_void_method(scope, "LClass;", "one"));
+  auto* one_origin = context.origin_factory->method_origin(one);
 
   auto* source_kind_one = context.kind_factory->get("TestSourceOne");
   auto interval = CallClassIntervalContext(
@@ -43,13 +44,14 @@ TEST_F(KindFramesTest, Add) {
 
   // Add frame with more details (origins)
   frames.add(test::make_taint_config(
-      source_kind_one, test::FrameProperties{.origins = MethodSet{one}}));
+      source_kind_one,
+      test::FrameProperties{.origins = OriginSet{one_origin}}));
   EXPECT_EQ(
       frames,
       (KindFrames{
           test::make_taint_config(
               source_kind_one,
-              test::FrameProperties{.origins = MethodSet{one}}),
+              test::FrameProperties{.origins = OriginSet{one_origin}}),
       }));
   EXPECT_EQ(1, std::count_if(frames.begin(), frames.end(), [](auto) {
               return true;
@@ -64,7 +66,7 @@ TEST_F(KindFramesTest, Add) {
       (KindFrames{
           test::make_taint_config(
               source_kind_one,
-              test::FrameProperties{.origins = MethodSet{one}}),
+              test::FrameProperties{.origins = OriginSet{one_origin}}),
           test::make_taint_config(
               source_kind_one,
               test::FrameProperties{.class_interval_context = interval}),
@@ -610,6 +612,7 @@ TEST_F(KindFramesTest, Propagate) {
   auto* feature_one = context.feature_factory->get("FeatureOne");
   auto* test_kind_one = context.kind_factory->get("TestSinkOne");
   auto* call_position = context.positions->get("Test.java", 1);
+  auto* one_origin = context.origin_factory->method_origin(one);
 
   // Test propagating non-crtex frames (crtex-ness to be determined by caller,
   // typically using the callee_port).
@@ -620,7 +623,7 @@ TEST_F(KindFramesTest, Propagate) {
               .callee = one,
               .class_interval_context = interval_one,
               .distance = 1,
-              .origins = MethodSet{one},
+              .origins = OriginSet{one_origin},
               .call_kind = CallKind::callsite()}),
       test::make_taint_config(
           test_kind_one,
@@ -628,7 +631,7 @@ TEST_F(KindFramesTest, Propagate) {
               .callee = one,
               .class_interval_context = interval_two,
               .distance = 2,
-              .origins = MethodSet{one},
+              .origins = OriginSet{one_origin},
               .call_kind = CallKind::callsite()}),
   };
 
@@ -658,7 +661,7 @@ TEST_F(KindFramesTest, Propagate) {
                   .callee = two,
                   .call_position = call_position,
                   .distance = 2,
-                  .origins = MethodSet{one},
+                  .origins = OriginSet{one_origin},
                   .inferred_features = FeatureMayAlwaysSet{feature_one},
                   .call_kind = CallKind::callsite()}),
       }));
@@ -672,6 +675,10 @@ TEST_F(KindFramesTest, PropagateIntervals) {
       context.methods->create(redex::create_void_method(scope, "LOne;", "one"));
   auto* two =
       context.methods->create(redex::create_void_method(scope, "LTwo;", "two"));
+
+  auto* one_origin = context.origin_factory->method_origin(one);
+  auto* two_origin = context.origin_factory->method_origin(two);
+
   auto* test_kind_one = context.kind_factory->get("TestSinkOne");
   auto* call_position = context.positions->get("Test.java", 1);
 
@@ -823,7 +830,7 @@ TEST_F(KindFramesTest, PropagateIntervals) {
                 .callee = nullptr,
                 .class_interval_context = interval_5_6_t,
                 .distance = 1,
-                .origins = MethodSet{one},
+                .origins = OriginSet{one_origin},
                 .call_kind = CallKind::origin()}),
         // This frame does not preserves type context and should be kept as is.
         test::make_taint_config(
@@ -832,7 +839,7 @@ TEST_F(KindFramesTest, PropagateIntervals) {
                 .callee = nullptr,
                 .class_interval_context = interval_5_6_f,
                 .distance = 1,
-                .origins = MethodSet{two},
+                .origins = OriginSet{two_origin},
                 .call_kind = CallKind::origin()}),
     };
     EXPECT_EQ(
@@ -865,7 +872,7 @@ TEST_F(KindFramesTest, PropagateIntervals) {
                     .call_position = call_position,
                     .class_interval_context = interval_1_4_f,
                     .distance = 2,
-                    .origins = MethodSet{two},
+                    .origins = OriginSet{two_origin},
                     .call_kind = CallKind::callsite()}),
         }));
   }
@@ -879,6 +886,7 @@ TEST_F(KindFramesTest, PropagateCrtex) {
       context.methods->create(redex::create_void_method(scope, "LOne;", "one"));
   auto* two =
       context.methods->create(redex::create_void_method(scope, "LTwo;", "two"));
+  auto* one_origin = context.origin_factory->method_origin(one);
   auto interval_one = ClassIntervals::Interval::finite(2, 3);
   auto interval_two = ClassIntervals::Interval::finite(4, 5);
   auto* feature_one = context.feature_factory->get("FeatureOne");
@@ -892,7 +900,7 @@ TEST_F(KindFramesTest, PropagateCrtex) {
           test_kind_one,
           test::FrameProperties{
               .callee_port = AccessPath(Root(Root::Kind::Anchor)),
-              .origins = MethodSet{one},
+              .origins = OriginSet{one_origin},
               .canonical_names = CanonicalNameSetAbstractDomain{CanonicalName(
                   CanonicalName::TemplateValue{"%programmatic_leaf_name%"})},
               .call_kind = CallKind::origin()}),
@@ -900,7 +908,7 @@ TEST_F(KindFramesTest, PropagateCrtex) {
           test_kind_one,
           test::FrameProperties{
               .callee_port = AccessPath(Root(Root::Kind::Anchor)),
-              .origins = MethodSet{one},
+              .origins = OriginSet{one_origin},
               .canonical_names = CanonicalNameSetAbstractDomain{CanonicalName(
                   CanonicalName::TemplateValue{"constant value"})},
               .call_kind = CallKind::origin()}),
@@ -930,7 +938,7 @@ TEST_F(KindFramesTest, PropagateCrtex) {
                   .callee_port = canonical_callee_port,
                   .callee = two,
                   .call_position = call_position,
-                  .origins = MethodSet{one},
+                  .origins = OriginSet{one_origin},
                   .inferred_features = FeatureMayAlwaysSet{feature_one},
                   .canonical_names =
                       CanonicalNameSetAbstractDomain{
@@ -942,7 +950,7 @@ TEST_F(KindFramesTest, PropagateCrtex) {
                   .callee_port = canonical_callee_port,
                   .callee = two,
                   .call_position = call_position,
-                  .origins = MethodSet{one},
+                  .origins = OriginSet{one_origin},
                   .inferred_features = FeatureMayAlwaysSet{feature_one},
                   .canonical_names =
                       CanonicalNameSetAbstractDomain(CanonicalName(
@@ -973,7 +981,7 @@ TEST_F(KindFramesTest, PropagateCrtex) {
                   .callee = two,
                   .call_position = call_position,
                   .distance = 1,
-                  .origins = MethodSet{one},
+                  .origins = OriginSet{one_origin},
                   .inferred_features =
                       FeatureMayAlwaysSet{feature_one, feature_two},
                   .call_kind = CallKind::callsite()}),

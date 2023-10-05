@@ -12,8 +12,11 @@
 #include <mariana-trench/Access.h>
 #include <mariana-trench/Constants.h>
 #include <mariana-trench/FeatureFactory.h>
+#include <mariana-trench/FieldSet.h>
 #include <mariana-trench/Frame.h>
 #include <mariana-trench/JsonValidation.h>
+#include <mariana-trench/MethodSet.h>
+#include <mariana-trench/OriginFactory.h>
 #include <mariana-trench/UsedKinds.h>
 
 namespace marianatrench {
@@ -27,7 +30,6 @@ Frame::Frame(const TaintConfig& config)
           config.class_interval_context(),
           config.distance(),
           config.origins(),
-          config.field_origins(),
           config.inferred_features(),
           config.user_features(),
           config.via_type_of_ports(),
@@ -37,12 +39,12 @@ Frame::Frame(const TaintConfig& config)
           config.output_paths(),
           config.extra_traces()) {}
 
-void Frame::set_origins(const MethodSet& origins) {
-  origins_ = origins;
+void Frame::set_origins(const Method* method) {
+  origins_ = OriginSet{OriginFactory::singleton().method_origin(method)};
 }
 
-void Frame::set_field_origins(const FieldSet& field_origins) {
-  field_origins_ = field_origins;
+void Frame::set_origins(const Field* field) {
+  origins_ = OriginSet{OriginFactory::singleton().field_origin(field)};
 }
 
 void Frame::add_inferred_features(const FeatureMayAlwaysSet& features) {
@@ -89,7 +91,6 @@ bool Frame::leq(const Frame& other) const {
         call_kind_ == other.call_kind_ && distance_ >= other.distance_ &&
         class_interval_context_ == other.class_interval_context_ &&
         origins_.leq(other.origins_) &&
-        field_origins_.leq(other.field_origins_) &&
         inferred_features_.leq(other.inferred_features_) &&
         user_features_.leq(other.user_features_) &&
         via_type_of_ports_.leq(other.via_type_of_ports_) &&
@@ -111,7 +112,6 @@ bool Frame::equals(const Frame& other) const {
         call_kind_ == other.call_kind_ &&
         class_interval_context_ == other.class_interval_context_ &&
         distance_ == other.distance_ && origins_ == other.origins_ &&
-        field_origins_ == other.field_origins_ &&
         inferred_features_ == other.inferred_features_ &&
         user_features_ == other.user_features_ &&
         via_type_of_ports_ == other.via_type_of_ports_ &&
@@ -139,7 +139,6 @@ void Frame::join_with(const Frame& other) {
 
     distance_ = std::min(distance_, other.distance_);
     origins_.join_with(other.origins_);
-    field_origins_.join_with(other.field_origins_);
     inferred_features_.join_with(other.inferred_features_);
     user_features_.join_with(other.user_features_);
     via_type_of_ports_.join_with(other.via_type_of_ports_);
@@ -195,7 +194,6 @@ Frame Frame::update_with_propagation_trace(
       class_interval_context_,
       propagation_frame.distance_,
       propagation_frame.origins_,
-      field_origins_,
       inferred_features_,
       /* user_features */ FeatureSet::bottom(),
       /* via_type_of_ports */ {},
@@ -345,15 +343,30 @@ Json::Value Frame::to_json(ExportOriginsMode export_origins_mode) const {
     value["distance"] = Json::Value(distance_);
   }
 
+  // TODO(T163918472): Replace this with new origins json that reflects the
+  // structure in Frame. Update parser to handle the new format.
+  MethodSet method_origins;
+  FieldSet field_origins;
+
   if (!origins_.empty()) {
+    for (const auto* origin : origins_.elements()) {
+      if (const auto* method_origin = origin->as<MethodOrigin>()) {
+        method_origins.add(method_origin->method());
+      } else if (const auto* field_origin = origin->as<FieldOrigin>()) {
+        field_origins.add(field_origin->field());
+      }
+    }
+  }
+
+  if (!method_origins.empty()) {
     if (call_kind_.is_origin() ||
         export_origins_mode == ExportOriginsMode::Always) {
       value["origins"] = origins_.to_json();
     }
   }
 
-  if (!field_origins_.empty()) {
-    value["field_origins"] = field_origins_.to_json();
+  if (!field_origins.empty()) {
+    value["field_origins"] = field_origins.to_json();
   }
 
   // For output purposes, user features and inferred features are not
@@ -434,9 +447,6 @@ std::ostream& operator<<(std::ostream& out, const Frame& frame) {
   }
   if (!frame.origins_.empty()) {
     out << ", origins=" << frame.origins_;
-  }
-  if (!frame.field_origins_.empty()) {
-    out << ", field_origins=" << frame.field_origins_;
   }
   if (!frame.inferred_features_.empty()) {
     out << ", inferred_features=" << frame.inferred_features_;

@@ -28,12 +28,11 @@
 #include <mariana-trench/Feature.h>
 #include <mariana-trench/FeatureMayAlwaysSet.h>
 #include <mariana-trench/FeatureSet.h>
-#include <mariana-trench/FieldSet.h>
 #include <mariana-trench/IncludeMacros.h>
 #include <mariana-trench/Kind.h>
 #include <mariana-trench/KindFactory.h>
 #include <mariana-trench/Method.h>
-#include <mariana-trench/MethodSet.h>
+#include <mariana-trench/OriginSet.h>
 #include <mariana-trench/PathTreeDomain.h>
 #include <mariana-trench/PatriciaTreeSetAbstractDomain.h>
 #include <mariana-trench/Position.h>
@@ -113,8 +112,7 @@ class Frame final : public sparta::AbstractDomain<Frame> {
       const Position* MT_NULLABLE call_position,
       CallClassIntervalContext class_interval_context,
       int distance,
-      MethodSet origins,
-      FieldSet field_origins,
+      OriginSet origins,
       FeatureMayAlwaysSet inferred_features,
       FeatureSet user_features,
       RootSetAbstractDomain via_type_of_ports,
@@ -130,7 +128,6 @@ class Frame final : public sparta::AbstractDomain<Frame> {
         class_interval_context_(std::move(class_interval_context)),
         distance_(distance),
         origins_(std::move(origins)),
-        field_origins_(std::move(field_origins)),
         inferred_features_(std::move(inferred_features)),
         user_features_(std::move(user_features)),
         via_type_of_ports_(std::move(via_type_of_ports)),
@@ -206,15 +203,12 @@ class Frame final : public sparta::AbstractDomain<Frame> {
     return canonical_names_;
   }
 
-  void set_origins(const MethodSet& origins);
-  void set_field_origins(const FieldSet& field_origins);
+  void set_origins(const Method* method);
 
-  const MethodSet& origins() const {
+  void set_origins(const Field* field);
+
+  const OriginSet& origins() const {
     return origins_;
-  }
-
-  const FieldSet& field_origins() const {
-    return field_origins_;
   }
 
   const CallKind& call_kind() const {
@@ -331,8 +325,7 @@ class Frame final : public sparta::AbstractDomain<Frame> {
   const Position* MT_NULLABLE call_position_;
   CallClassIntervalContext class_interval_context_;
   int distance_;
-  MethodSet origins_;
-  FieldSet field_origins_;
+  OriginSet origins_;
   FeatureMayAlwaysSet inferred_features_;
   FeatureSet user_features_;
   RootSetAbstractDomain via_type_of_ports_;

@@ -267,16 +267,16 @@ class FramesMap : public sparta::AbstractDomain<Derived> {
     return ConstIterator(frames_.bindings().end(), frames_.bindings().end());
   }
 
-  void set_origins_if_empty(const MethodSet& origins) {
-    map_frames([&origins](Value frames) {
-      frames.set_origins_if_empty(origins);
+  void set_origins(const Method* method) {
+    map_frames([method](Value frames) {
+      frames.set_origins(method);
       return frames;
     });
   }
 
-  void set_field_origins_if_empty(const Field* field) {
+  void set_origins(const Field* field) {
     map_frames([field](Value frames) {
-      frames.set_field_origins_if_empty(field);
+      frames.set_origins(field);
       return frames;
     });
   }

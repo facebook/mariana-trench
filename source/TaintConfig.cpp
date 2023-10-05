@@ -7,7 +7,10 @@
 
 #include <mariana-trench/Context.h>
 #include <mariana-trench/ExtraTraceSet.h>
+#include <mariana-trench/FieldSet.h>
 #include <mariana-trench/JsonValidation.h>
+#include <mariana-trench/MethodSet.h>
+#include <mariana-trench/OriginFactory.h>
 #include <mariana-trench/TaintConfig.h>
 
 namespace marianatrench {
@@ -137,11 +140,19 @@ TaintConfig TaintConfig::from_json(const Json::Value& value, Context& context) {
     distance = JsonValidation::integer(value, /* field */ "distance");
   }
 
+  // TODO(T163918472): Update json and parsers to have a single OriginSet.
   JsonValidation::null_or_array(value, /* field */ "origins");
-  auto origins = MethodSet::from_json(value["origins"], context);
-
+  auto method_origins = MethodSet::from_json(value["origins"], context);
   JsonValidation::null_or_array(value, /* field */ "field_origins");
   auto field_origins = FieldSet::from_json(value["field_origins"], context);
+
+  OriginSet origins;
+  for (const auto* method : method_origins) {
+    origins.add(context.origin_factory->method_origin(method));
+  }
+  for (const auto* field : field_origins) {
+    origins.add(context.origin_factory->field_origin(field));
+  }
 
   // Inferred may_features and always_features. Technically, user-specified
   // features should go under "user_features", but this gives a way to override
@@ -243,7 +254,6 @@ TaintConfig TaintConfig::from_json(const Json::Value& value, Context& context) {
       /* class_interval_context */ CallClassIntervalContext(),
       distance,
       std::move(origins),
-      std::move(field_origins),
       std::move(inferred_features),
       std::move(user_features),
       std::move(via_type_of_ports),

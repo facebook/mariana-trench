@@ -137,7 +137,6 @@ Frame make_taint_frame(const Kind* kind, const FrameProperties& properties) {
       properties.class_interval_context,
       properties.distance,
       properties.origins,
-      properties.field_origins,
       properties.inferred_features,
       properties.user_features,
       properties.via_type_of_ports,
@@ -160,7 +159,6 @@ TaintConfig make_taint_config(
       properties.class_interval_context,
       properties.distance,
       properties.origins,
-      properties.field_origins,
       properties.inferred_features,
       properties.user_features,
       properties.via_type_of_ports,
@@ -186,7 +184,7 @@ TaintConfig make_leaf_taint_config(
     FeatureMayAlwaysSet inferred_features,
     FeatureMayAlwaysSet locally_inferred_features,
     FeatureSet user_features,
-    MethodSet origins) {
+    OriginSet origins) {
   return TaintConfig(
       kind,
       /* callee_port */ AccessPath(Root(Root::Kind::Leaf)),
@@ -196,7 +194,6 @@ TaintConfig make_leaf_taint_config(
       /* type_contexts */ CallClassIntervalContext(),
       /* distance */ 0,
       origins,
-      /* field origins */ {},
       inferred_features,
       user_features,
       /* via_type_of_ports */ {},
@@ -222,7 +219,6 @@ TaintConfig make_crtex_leaf_taint_config(
       /* type_contexts */ CallClassIntervalContext(),
       /* distance */ 0,
       /* origins */ {},
-      /* field_origins */ {},
       /* inferred_features */ FeatureMayAlwaysSet::bottom(),
       /* user_features */ {},
       /* via_type_of_ports */ {},
@@ -258,7 +254,6 @@ TaintConfig make_propagation_taint_config(
       /* class_interval_context */ CallClassIntervalContext(),
       /* distance */ 0,
       /* origins */ {},
-      /* field_origins */ {},
       /* inferred_features */ inferred_features,
       /* user_features */ user_features,
       /* via_type_of_ports */ {},

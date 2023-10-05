@@ -54,6 +54,8 @@ TEST_F(IssueSetTest, Insertion) {
       redex::create_void_method(scope, "LClass;", "one"));
   auto* two = context.methods->create(
       redex::create_void_method(scope, "LOther;", "two"));
+  auto* one_origin = context.origin_factory->method_origin(one);
+  auto* two_origin = context.origin_factory->method_origin(two);
 
   IssueSet set = {};
   EXPECT_EQ(set, IssueSet{});
@@ -112,7 +114,7 @@ TEST_F(IssueSetTest, Insertion) {
               .callee = one,
               .call_position = context.positions->unknown(),
               .distance = 1,
-              .origins = MethodSet{one},
+              .origins = OriginSet{one_origin},
               .call_kind = CallKind::callsite(),
           })},
       /* sink */ Taint{test::make_leaf_taint_config(other_sink_kind)},
@@ -141,7 +143,7 @@ TEST_F(IssueSetTest, Insertion) {
                           .callee = one,
                           .call_position = context.positions->unknown(),
                           .distance = 1,
-                          .origins = MethodSet{one},
+                          .origins = OriginSet{one_origin},
                           .call_kind = CallKind::callsite(),
                       }),
               },
@@ -162,7 +164,7 @@ TEST_F(IssueSetTest, Insertion) {
               .callee = two,
               .call_position = context.positions->unknown(),
               .distance = 2,
-              .origins = MethodSet{two},
+              .origins = OriginSet{two_origin},
               .call_kind = CallKind::callsite(),
           })},
       &rule_2,
@@ -190,7 +192,7 @@ TEST_F(IssueSetTest, Insertion) {
                           .callee = one,
                           .call_position = context.positions->unknown(),
                           .distance = 1,
-                          .origins = MethodSet{one},
+                          .origins = OriginSet{one_origin},
                           .call_kind = CallKind::callsite(),
                       }),
               },
@@ -213,7 +215,7 @@ TEST_F(IssueSetTest, Insertion) {
                       .callee = two,
                       .call_position = context.positions->unknown(),
                       .distance = 2,
-                      .origins = MethodSet{two},
+                      .origins = OriginSet{two_origin},
                       .call_kind = CallKind::callsite(),
                   })},
               &rule_2,
@@ -229,7 +231,7 @@ TEST_F(IssueSetTest, Insertion) {
               .callee = two,
               .call_position = context.positions->unknown(),
               .distance = 3,
-              .origins = MethodSet{two},
+              .origins = OriginSet{two_origin},
               .call_kind = CallKind::callsite(),
           })},
       /* sink */ Taint{test::make_leaf_taint_config(other_sink_kind)},
@@ -258,7 +260,7 @@ TEST_F(IssueSetTest, Insertion) {
                           .callee = one,
                           .call_position = context.positions->unknown(),
                           .distance = 1,
-                          .origins = MethodSet{one},
+                          .origins = OriginSet{one_origin},
                           .call_kind = CallKind::callsite(),
                       }),
                   test::make_taint_config(
@@ -268,7 +270,7 @@ TEST_F(IssueSetTest, Insertion) {
                           .callee = two,
                           .call_position = context.positions->unknown(),
                           .distance = 3,
-                          .origins = MethodSet{two},
+                          .origins = OriginSet{two_origin},
                           .call_kind = CallKind::callsite(),
                       }),
               },
@@ -291,7 +293,7 @@ TEST_F(IssueSetTest, Insertion) {
                       .callee = two,
                       .call_position = context.positions->unknown(),
                       .distance = 2,
-                      .origins = MethodSet{two},
+                      .origins = OriginSet{two_origin},
                       .call_kind = CallKind::callsite(),
                   })},
               &rule_2,
@@ -334,7 +336,7 @@ TEST_F(IssueSetTest, Insertion) {
                           .callee = one,
                           .call_position = context.positions->unknown(),
                           .distance = 1,
-                          .origins = MethodSet{one},
+                          .origins = OriginSet{one_origin},
                           .call_kind = CallKind::callsite(),
                       }),
                   test::make_taint_config(
@@ -344,7 +346,7 @@ TEST_F(IssueSetTest, Insertion) {
                           .callee = two,
                           .call_position = context.positions->unknown(),
                           .distance = 3,
-                          .origins = MethodSet{two},
+                          .origins = OriginSet{two_origin},
                           .call_kind = CallKind::callsite(),
                       }),
               },
@@ -367,7 +369,7 @@ TEST_F(IssueSetTest, Insertion) {
                       .callee = two,
                       .call_position = context.positions->unknown(),
                       .distance = 2,
-                      .origins = MethodSet{two},
+                      .origins = OriginSet{two_origin},
                       .call_kind = CallKind::callsite(),
                   })},
               &rule_2,

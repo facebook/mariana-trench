@@ -52,7 +52,6 @@ std::vector<Model> ArtificialMethods::models(Context& context) const {
           /* class_interval_context */ CallClassIntervalContext(),
           /* distance */ 0,
           /* origins */ {},
-          /* field origins */ {},
           /* inferred_features */ FeatureMayAlwaysSet::bottom(),
           /* user_features */ FeatureSet::bottom(),
           /* via_type_of_ports */ {},

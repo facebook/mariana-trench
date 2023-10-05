@@ -97,21 +97,19 @@ class Taint final : public sparta::AbstractDomain<Taint> {
   }
 
   /**
-   * Sets the origins for leaves that do not have one set yet.
    * For use when instantiating the `Model` of a method, once the concrete
    * method (i.e. the origin of the `Taint`) becomes known.
    */
-  void set_leaf_origins_if_empty(const MethodSet& origins);
+  void set_origins(const Method* method);
 
   /**
-   * Similar to `set_leaf_origins_if_empty`.
    * For use when instantiating `FieldModel` once the concrete field is known.
    *
    * It is expected that this method is only ever called on leaves, i.e.
    * [method]callee == nullptr, because `FieldModel`s are always leaves. There
    * is no field-to-field taint propagation.
    */
-  void set_field_origins_if_empty(const Field* field);
+  void set_origins(const Field* field);
 
   void add_locally_inferred_features(const FeatureMayAlwaysSet& features);
 

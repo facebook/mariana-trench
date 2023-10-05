@@ -22,6 +22,7 @@ TEST_F(CalleeFramesTest, Add) {
   Scope scope;
   auto* one = context.methods->create(
       redex::create_void_method(scope, "LClass;", "one"));
+  auto* one_origin = context.origin_factory->method_origin(one);
 
   auto* source_kind_one = context.kind_factory->get("TestSourceOne");
   auto* source_kind_two = context.kind_factory->get("TestSourceTwo");
@@ -43,14 +44,15 @@ TEST_F(CalleeFramesTest, Add) {
 
   // Add frame with the same position (nullptr), different kind
   frames.add(test::make_taint_config(
-      source_kind_two, test::FrameProperties{.origins = MethodSet{one}}));
+      source_kind_two,
+      test::FrameProperties{.origins = OriginSet{one_origin}}));
   EXPECT_EQ(
       frames,
       (CalleeFrames{
           test::make_taint_config(source_kind_one, test::FrameProperties{}),
           test::make_taint_config(
               source_kind_two,
-              test::FrameProperties{.origins = MethodSet{one}}),
+              test::FrameProperties{.origins = OriginSet{one_origin}}),
       }));
 
   // Add frame with a different position
@@ -62,7 +64,7 @@ TEST_F(CalleeFramesTest, Add) {
           test::make_taint_config(source_kind_one, test::FrameProperties{}),
           test::make_taint_config(
               source_kind_two,
-              test::FrameProperties{.origins = MethodSet{one}}),
+              test::FrameProperties{.origins = OriginSet{one_origin}}),
           test::make_taint_config(
               source_kind_two,
               test::FrameProperties{.call_position = position_one}),
@@ -283,6 +285,7 @@ TEST_F(CalleeFramesTest, Difference) {
   Scope scope;
   auto* one =
       context.methods->create(redex::create_void_method(scope, "LOne;", "one"));
+  auto* one_origin = context.origin_factory->method_origin(one);
 
   auto* test_kind_one = context.kind_factory->get("TestSinkOne");
   auto* test_kind_two = context.kind_factory->get("TestSinkTwo");
@@ -344,7 +347,7 @@ TEST_F(CalleeFramesTest, Difference) {
           test::FrameProperties{
               .callee = one,
               .call_position = test_position_one,
-              .origins = MethodSet{one},
+              .origins = OriginSet{one_origin},
               .inferred_features = FeatureMayAlwaysSet{feature_one},
               .call_kind = CallKind::callsite(),
           }),

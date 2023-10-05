@@ -74,6 +74,8 @@ TEST_F(CalleePortFramesTest, Add) {
       redex::create_void_method(scope, "LClass;", "one"));
   auto* two = context.methods->create(
       redex::create_void_method(scope, "LOther;", "two"));
+  auto* one_origin = context.origin_factory->method_origin(one);
+  auto* two_origin = context.origin_factory->method_origin(two);
 
   auto* source_kind_one = context.kind_factory->get("TestSourceOne");
   auto* source_kind_two = context.kind_factory->get("TestSourceTwo");
@@ -89,7 +91,7 @@ TEST_F(CalleePortFramesTest, Add) {
       source_kind_one,
       test::FrameProperties{
           .callee_port = AccessPath(Root(Root::Kind::Return)),
-          .origins = MethodSet{one},
+          .origins = OriginSet{one_origin},
           .inferred_features = FeatureMayAlwaysSet{feature_one}}));
   EXPECT_FALSE(frames.is_bottom());
   EXPECT_EQ(*frames.callee_port(), AccessPath(Root(Root::Kind::Return)));
@@ -99,7 +101,7 @@ TEST_F(CalleePortFramesTest, Add) {
           source_kind_one,
           test::FrameProperties{
               .callee_port = AccessPath(Root(Root::Kind::Return)),
-              .origins = MethodSet{one},
+              .origins = OriginSet{one_origin},
               .inferred_features = FeatureMayAlwaysSet{feature_one}})});
 
   // Add frame with the same kind
@@ -107,7 +109,7 @@ TEST_F(CalleePortFramesTest, Add) {
       source_kind_one,
       test::FrameProperties{
           .callee_port = AccessPath(Root(Root::Kind::Return)),
-          .origins = MethodSet{two},
+          .origins = OriginSet{two_origin},
           .inferred_features = FeatureMayAlwaysSet{feature_two},
           .user_features = FeatureSet{user_feature_one}}));
   EXPECT_EQ(
@@ -116,7 +118,7 @@ TEST_F(CalleePortFramesTest, Add) {
           source_kind_one,
           test::FrameProperties{
               .callee_port = AccessPath(Root(Root::Kind::Return)),
-              .origins = MethodSet{one, two},
+              .origins = OriginSet{one_origin, two_origin},
               .inferred_features =
                   FeatureMayAlwaysSet::make_may({feature_one, feature_two}),
               .user_features = FeatureSet{user_feature_one}})});
@@ -126,7 +128,7 @@ TEST_F(CalleePortFramesTest, Add) {
       source_kind_two,
       test::FrameProperties{
           .callee_port = AccessPath(Root(Root::Kind::Return)),
-          .origins = MethodSet{two},
+          .origins = OriginSet{two_origin},
           .inferred_features = FeatureMayAlwaysSet{feature_two}}));
   EXPECT_EQ(
       frames,
@@ -135,7 +137,7 @@ TEST_F(CalleePortFramesTest, Add) {
               source_kind_one,
               test::FrameProperties{
                   .callee_port = AccessPath(Root(Root::Kind::Return)),
-                  .origins = MethodSet{one, two},
+                  .origins = OriginSet{one_origin, two_origin},
                   .inferred_features =
                       FeatureMayAlwaysSet::make_may({feature_one, feature_two}),
                   .user_features = FeatureSet{user_feature_one}}),
@@ -143,7 +145,7 @@ TEST_F(CalleePortFramesTest, Add) {
               source_kind_two,
               test::FrameProperties{
                   .callee_port = AccessPath(Root(Root::Kind::Return)),
-                  .origins = MethodSet{two},
+                  .origins = OriginSet{two_origin},
                   .inferred_features = FeatureMayAlwaysSet{feature_two}})}));
 
   // Additional test for when callee_port == default value selected by
@@ -159,6 +161,7 @@ TEST_F(CalleePortFramesTest, Leq) {
   Scope scope;
   auto* one =
       context.methods->create(redex::create_void_method(scope, "LOne;", "one"));
+  auto* one_origin = context.origin_factory->method_origin(one);
 
   auto* test_kind_one = context.kind_factory->get("TestSinkOne");
   auto* test_kind_two = context.kind_factory->get("TestSinkTwo");
@@ -185,7 +188,7 @@ TEST_F(CalleePortFramesTest, Leq) {
                .callee_port = AccessPath(Root(Root::Kind::Argument, 0)),
                .callee = one,
                .distance = 1,
-               .origins = MethodSet{one},
+               .origins = OriginSet{one_origin},
                .call_kind = CallKind::callsite()})})
           .leq(CalleePortFrames{test::make_taint_config(
               test_kind_one,
@@ -193,7 +196,7 @@ TEST_F(CalleePortFramesTest, Leq) {
                   .callee_port = AccessPath(Root(Root::Kind::Argument, 0)),
                   .callee = one,
                   .distance = 1,
-                  .origins = MethodSet{one},
+                  .origins = OriginSet{one_origin},
                   .call_kind = CallKind::callsite()})}));
 
   // Different kinds
@@ -204,7 +207,7 @@ TEST_F(CalleePortFramesTest, Leq) {
                .callee_port = AccessPath(Root(Root::Kind::Argument, 0)),
                .callee = one,
                .distance = 1,
-               .origins = MethodSet{one},
+               .origins = OriginSet{one_origin},
                .call_kind = CallKind::callsite()})})
           .leq(CalleePortFrames{
               test::make_taint_config(
@@ -213,7 +216,7 @@ TEST_F(CalleePortFramesTest, Leq) {
                       .callee_port = AccessPath(Root(Root::Kind::Argument, 0)),
                       .callee = one,
                       .distance = 1,
-                      .origins = MethodSet{one},
+                      .origins = OriginSet{one_origin},
                       .call_kind = CallKind::callsite()}),
               test::make_taint_config(
                   test_kind_two,
@@ -221,7 +224,7 @@ TEST_F(CalleePortFramesTest, Leq) {
                       .callee_port = AccessPath(Root(Root::Kind::Argument, 0)),
                       .callee = one,
                       .distance = 1,
-                      .origins = MethodSet{one},
+                      .origins = OriginSet{one_origin},
                       .call_kind = CallKind::callsite()}),
           }));
   EXPECT_FALSE(
@@ -232,7 +235,7 @@ TEST_F(CalleePortFramesTest, Leq) {
                    .callee_port = AccessPath(Root(Root::Kind::Argument, 0)),
                    .callee = one,
                    .distance = 1,
-                   .origins = MethodSet{one},
+                   .origins = OriginSet{one_origin},
                    .call_kind = CallKind::callsite()}),
            test::make_taint_config(
                test_kind_two,
@@ -240,7 +243,7 @@ TEST_F(CalleePortFramesTest, Leq) {
                    .callee_port = AccessPath(Root(Root::Kind::Argument, 0)),
                    .callee = one,
                    .distance = 1,
-                   .origins = MethodSet{one},
+                   .origins = OriginSet{one_origin},
                    .call_kind = CallKind::callsite()})})
           .leq(CalleePortFrames{test::make_taint_config(
               test_kind_one,
@@ -248,7 +251,7 @@ TEST_F(CalleePortFramesTest, Leq) {
                   .callee_port = AccessPath(Root(Root::Kind::Argument, 0)),
                   .callee = one,
                   .distance = 1,
-                  .origins = MethodSet{one},
+                  .origins = OriginSet{one_origin},
                   .call_kind = CallKind::callsite()})}));
 
   // Local kinds with output paths.
@@ -352,6 +355,7 @@ TEST_F(CalleePortFramesTest, JoinWith) {
   Scope scope;
   auto* one =
       context.methods->create(redex::create_void_method(scope, "LOne;", "one"));
+  auto* one_origin = context.origin_factory->method_origin(one);
 
   auto* test_kind_one = context.kind_factory->get("TestSinkOne");
   auto* test_kind_two = context.kind_factory->get("TestSinkTwo");
@@ -416,7 +420,7 @@ TEST_F(CalleePortFramesTest, JoinWith) {
           .callee_port = AccessPath(Root(Root::Kind::Argument, 0)),
           .callee = one,
           .distance = 1,
-          .origins = MethodSet{one},
+          .origins = OriginSet{one_origin},
           .call_kind = CallKind::callsite(),
       });
   auto frame_two = test::make_taint_config(
@@ -425,7 +429,7 @@ TEST_F(CalleePortFramesTest, JoinWith) {
           .callee_port = AccessPath(Root(Root::Kind::Argument, 0)),
           .callee = one,
           .distance = 2,
-          .origins = MethodSet{one},
+          .origins = OriginSet{one_origin},
           .call_kind = CallKind::callsite(),
       });
   frames = CalleePortFrames{frame_one};
@@ -443,6 +447,9 @@ TEST_F(CalleePortFramesTest, Difference) {
       context.methods->create(redex::create_void_method(scope, "LTwo;", "two"));
   auto* three = context.methods->create(
       redex::create_void_method(scope, "LThree;", "three"));
+  auto* one_origin = context.origin_factory->method_origin(one);
+  auto* two_origin = context.origin_factory->method_origin(two);
+  auto* three_origin = context.origin_factory->method_origin(three);
 
   auto* test_kind_one = context.kind_factory->get("TestSinkOne");
   auto* test_kind_two = context.kind_factory->get("TestSinkTwo");
@@ -469,7 +476,7 @@ TEST_F(CalleePortFramesTest, Difference) {
               .callee_port = AccessPath(Root(Root::Kind::Argument, 0)),
               .callee = one,
               .distance = 1,
-              .origins = MethodSet{one},
+              .origins = OriginSet{one_origin},
               .inferred_features = FeatureMayAlwaysSet{feature_one},
               .user_features = FeatureSet{user_feature_one},
               .call_kind = CallKind::callsite()}),
@@ -487,7 +494,7 @@ TEST_F(CalleePortFramesTest, Difference) {
               .callee_port = AccessPath(Root(Root::Kind::Argument, 0)),
               .callee = one,
               .distance = 1,
-              .origins = MethodSet{one},
+              .origins = OriginSet{one_origin},
               .inferred_features = FeatureMayAlwaysSet{feature_one},
               .user_features = FeatureSet{user_feature_one},
               .call_kind = CallKind::callsite()}),
@@ -503,7 +510,7 @@ TEST_F(CalleePortFramesTest, Difference) {
               .callee_port = AccessPath(Root(Root::Kind::Argument, 0)),
               .callee = one,
               .distance = 1,
-              .origins = MethodSet{one},
+              .origins = OriginSet{one_origin},
               .call_kind = CallKind::callsite()}),
   });
   EXPECT_EQ(frames, initial_frames);
@@ -517,7 +524,7 @@ TEST_F(CalleePortFramesTest, Difference) {
               .callee_port = AccessPath(Root(Root::Kind::Argument, 0)),
               .callee = one,
               .distance = 1,
-              .origins = MethodSet{one},
+              .origins = OriginSet{one_origin},
               .inferred_features = FeatureMayAlwaysSet{feature_two},
               .user_features = FeatureSet{user_feature_one},
               .call_kind = CallKind::callsite()}),
@@ -533,7 +540,7 @@ TEST_F(CalleePortFramesTest, Difference) {
               .callee_port = AccessPath(Root(Root::Kind::Argument, 0)),
               .callee = one,
               .distance = 1,
-              .origins = MethodSet{one},
+              .origins = OriginSet{one_origin},
               .inferred_features = FeatureMayAlwaysSet{feature_one},
               .user_features = FeatureSet{user_feature_two},
               .call_kind = CallKind::callsite()}),
@@ -548,7 +555,7 @@ TEST_F(CalleePortFramesTest, Difference) {
               .callee_port = AccessPath(Root(Root::Kind::Argument, 0)),
               .callee = one,
               .distance = 1,
-              .origins = MethodSet{one},
+              .origins = OriginSet{one_origin},
               .inferred_features = FeatureMayAlwaysSet{feature_one},
               .user_features = FeatureSet{user_feature_one},
               .call_kind = CallKind::callsite()}),
@@ -560,7 +567,7 @@ TEST_F(CalleePortFramesTest, Difference) {
               .callee_port = AccessPath(Root(Root::Kind::Argument, 0)),
               .callee = one,
               .distance = 1,
-              .origins = MethodSet{one},
+              .origins = OriginSet{one_origin},
               .inferred_features = FeatureMayAlwaysSet{feature_one},
               .user_features = FeatureSet{user_feature_one},
               .call_kind = CallKind::callsite()}),
@@ -570,7 +577,7 @@ TEST_F(CalleePortFramesTest, Difference) {
               .callee_port = AccessPath(Root(Root::Kind::Argument, 0)),
               .callee = one,
               .distance = 1,
-              .origins = MethodSet{two},
+              .origins = OriginSet{two_origin},
               .inferred_features = FeatureMayAlwaysSet{feature_two},
               .user_features = FeatureSet{user_feature_two},
               .call_kind = CallKind::callsite()}),
@@ -585,7 +592,7 @@ TEST_F(CalleePortFramesTest, Difference) {
               .callee_port = AccessPath(Root(Root::Kind::Argument, 0)),
               .callee = one,
               .distance = 1,
-              .origins = MethodSet{one},
+              .origins = OriginSet{one_origin},
               .call_kind = CallKind::callsite()}),
       test::make_taint_config(
           test_kind_two,
@@ -593,7 +600,7 @@ TEST_F(CalleePortFramesTest, Difference) {
               .callee_port = AccessPath(Root(Root::Kind::Argument, 0)),
               .callee = one,
               .distance = 1,
-              .origins = MethodSet{one},
+              .origins = OriginSet{one_origin},
               .call_kind = CallKind::callsite()}),
   };
   frames.difference_with(CalleePortFrames{test::make_taint_config(
@@ -602,7 +609,7 @@ TEST_F(CalleePortFramesTest, Difference) {
           .callee_port = AccessPath(Root(Root::Kind::Argument, 0)),
           .callee = one,
           .distance = 1,
-          .origins = MethodSet{one},
+          .origins = OriginSet{one_origin},
           .call_kind = CallKind::callsite(),
       })});
   EXPECT_EQ(
@@ -614,7 +621,7 @@ TEST_F(CalleePortFramesTest, Difference) {
                   .callee_port = AccessPath(Root(Root::Kind::Argument, 0)),
                   .callee = one,
                   .distance = 1,
-                  .origins = MethodSet{one},
+                  .origins = OriginSet{one_origin},
                   .call_kind = CallKind::callsite(),
               }),
       }));
@@ -627,7 +634,7 @@ TEST_F(CalleePortFramesTest, Difference) {
               .callee_port = AccessPath(Root(Root::Kind::Argument, 0)),
               .callee = one,
               .distance = 1,
-              .origins = MethodSet{one},
+              .origins = OriginSet{one_origin},
               .call_kind = CallKind::callsite(),
           }),
       test::make_taint_config(
@@ -636,7 +643,7 @@ TEST_F(CalleePortFramesTest, Difference) {
               .callee_port = AccessPath(Root(Root::Kind::Argument, 0)),
               .callee = one,
               .distance = 1,
-              .origins = MethodSet{two, three},
+              .origins = OriginSet{two_origin, three_origin},
               .call_kind = CallKind::callsite(),
           }),
   };
@@ -647,7 +654,7 @@ TEST_F(CalleePortFramesTest, Difference) {
               .callee_port = AccessPath(Root(Root::Kind::Argument, 0)),
               .callee = one,
               .distance = 1,
-              .origins = MethodSet{one, two},
+              .origins = OriginSet{one_origin, two_origin},
               .call_kind = CallKind::callsite(),
           }),
       test::make_taint_config(
@@ -656,7 +663,7 @@ TEST_F(CalleePortFramesTest, Difference) {
               .callee_port = AccessPath(Root(Root::Kind::Argument, 0)),
               .callee = one,
               .distance = 1,
-              .origins = MethodSet{two},
+              .origins = OriginSet{two_origin},
               .call_kind = CallKind::callsite(),
           })});
   EXPECT_EQ(
@@ -667,7 +674,7 @@ TEST_F(CalleePortFramesTest, Difference) {
               .callee_port = AccessPath(Root(Root::Kind::Argument, 0)),
               .callee = one,
               .distance = 1,
-              .origins = MethodSet{two, three},
+              .origins = OriginSet{two_origin, three_origin},
               .call_kind = CallKind::callsite(),
           })}));
 }
@@ -894,6 +901,7 @@ TEST_F(CalleePortFramesTest, Map) {
   Scope scope;
   auto* one =
       context.methods->create(redex::create_void_method(scope, "LOne;", "one"));
+  auto* one_origin = context.origin_factory->method_origin(one);
   auto* test_kind_one = context.kind_factory->get("TestSinkOne");
   auto* test_kind_two = context.kind_factory->get("TestSinkTwo");
   auto* feature_one = context.feature_factory->get("FeatureOne");
@@ -905,7 +913,7 @@ TEST_F(CalleePortFramesTest, Map) {
               .callee_port = AccessPath(Root(Root::Kind::Argument, 0)),
               .callee = one,
               .distance = 1,
-              .origins = MethodSet{one},
+              .origins = OriginSet{one_origin},
               .call_kind = CallKind::callsite()}),
       test::make_taint_config(
           test_kind_two,
@@ -913,7 +921,7 @@ TEST_F(CalleePortFramesTest, Map) {
               .callee_port = AccessPath(Root(Root::Kind::Argument, 0)),
               .callee = one,
               .distance = 2,
-              .origins = MethodSet{one},
+              .origins = OriginSet{one_origin},
               .call_kind = CallKind::callsite()}),
   };
   frames.map([feature_one](Frame frame) {
@@ -929,7 +937,7 @@ TEST_F(CalleePortFramesTest, Map) {
                   .callee_port = AccessPath(Root(Root::Kind::Argument, 0)),
                   .callee = one,
                   .distance = 1,
-                  .origins = MethodSet{one},
+                  .origins = OriginSet{one_origin},
                   .inferred_features = FeatureMayAlwaysSet{feature_one},
                   .call_kind = CallKind::callsite(),
               }),
@@ -939,7 +947,7 @@ TEST_F(CalleePortFramesTest, Map) {
                   .callee_port = AccessPath(Root(Root::Kind::Argument, 0)),
                   .callee = one,
                   .distance = 2,
-                  .origins = MethodSet{one},
+                  .origins = OriginSet{one_origin},
                   .inferred_features = FeatureMayAlwaysSet{feature_one},
                   .call_kind = CallKind::callsite(),
               }),
@@ -998,6 +1006,7 @@ TEST_F(CalleePortFramesTest, Propagate) {
       context.methods->create(redex::create_void_method(scope, "LOne;", "one"));
   auto* two =
       context.methods->create(redex::create_void_method(scope, "LTwo;", "two"));
+  auto* one_origin = context.origin_factory->method_origin(one);
 
   auto* test_kind_one = context.kind_factory->get("TestSinkOne");
   auto* test_kind_two = context.kind_factory->get("TestSinkTwo");
@@ -1010,12 +1019,13 @@ TEST_F(CalleePortFramesTest, Propagate) {
           test::FrameProperties{
               .callee = one,
               .distance = 1,
-              .origins = MethodSet{one},
+              .origins = OriginSet{one_origin},
               .call_kind = CallKind::callsite()}),
       test::make_taint_config(
           test_kind_two,
           test::FrameProperties{
-              .origins = MethodSet{one}, .call_kind = CallKind::origin()}),
+              .origins = OriginSet{one_origin},
+              .call_kind = CallKind::origin()}),
   };
   EXPECT_EQ(
       non_crtex_frames.propagate(
@@ -1036,7 +1046,7 @@ TEST_F(CalleePortFramesTest, Propagate) {
                   .callee = two,
                   .call_position = call_position,
                   .distance = 2,
-                  .origins = MethodSet{one},
+                  .origins = OriginSet{one_origin},
                   .locally_inferred_features = FeatureMayAlwaysSet::bottom(),
                   .call_kind = CallKind::callsite()}),
           test::make_taint_config(
@@ -1046,7 +1056,7 @@ TEST_F(CalleePortFramesTest, Propagate) {
                   .callee = two,
                   .call_position = call_position,
                   .distance = 1,
-                  .origins = MethodSet{one},
+                  .origins = OriginSet{one_origin},
                   .locally_inferred_features = FeatureMayAlwaysSet::bottom(),
                   .call_kind = CallKind::callsite()}),
       }));
@@ -1057,7 +1067,7 @@ TEST_F(CalleePortFramesTest, Propagate) {
           test_kind_one,
           test::FrameProperties{
               .callee_port = AccessPath(Root(Root::Kind::Anchor)),
-              .origins = MethodSet{one},
+              .origins = OriginSet{one_origin},
               .canonical_names = CanonicalNameSetAbstractDomain{CanonicalName(
                   CanonicalName::TemplateValue{"%programmatic_leaf_name%"})},
               .call_kind = CallKind::origin()}),
@@ -1065,7 +1075,7 @@ TEST_F(CalleePortFramesTest, Propagate) {
           test_kind_two,
           test::FrameProperties{
               .callee_port = AccessPath(Root(Root::Kind::Anchor)),
-              .origins = MethodSet{one},
+              .origins = OriginSet{one_origin},
               .canonical_names = CanonicalNameSetAbstractDomain{CanonicalName(
                   CanonicalName::TemplateValue{"constant value"})},
               .call_kind = CallKind::origin()}),
@@ -1094,7 +1104,7 @@ TEST_F(CalleePortFramesTest, Propagate) {
                       Path{PathElement::field("Argument(-1)")}),
                   .callee = two,
                   .call_position = call_position,
-                  .origins = MethodSet{one},
+                  .origins = OriginSet{one_origin},
                   .locally_inferred_features = FeatureMayAlwaysSet::bottom(),
                   .canonical_names =
                       CanonicalNameSetAbstractDomain{
@@ -1108,7 +1118,7 @@ TEST_F(CalleePortFramesTest, Propagate) {
                       Path{PathElement::field("Argument(-1)")}),
                   .callee = two,
                   .call_position = call_position,
-                  .origins = MethodSet{one},
+                  .origins = OriginSet{one_origin},
                   .locally_inferred_features = FeatureMayAlwaysSet::bottom(),
                   .canonical_names =
                       CanonicalNameSetAbstractDomain(CanonicalName(
@@ -1138,7 +1148,7 @@ TEST_F(CalleePortFramesTest, Propagate) {
                   .callee = two,
                   .call_position = call_position,
                   .distance = 1,
-                  .origins = MethodSet{one},
+                  .origins = OriginSet{one_origin},
                   .locally_inferred_features = FeatureMayAlwaysSet::bottom(),
                   .call_kind = CallKind::callsite()}),
           test::make_taint_config(
@@ -1148,7 +1158,7 @@ TEST_F(CalleePortFramesTest, Propagate) {
                   .callee = two,
                   .call_position = call_position,
                   .distance = 1,
-                  .origins = MethodSet{one},
+                  .origins = OriginSet{one_origin},
                   .locally_inferred_features = FeatureMayAlwaysSet::bottom(),
                   .call_kind = CallKind::callsite()}),
       }));
@@ -1588,9 +1598,10 @@ TEST_F(CalleePortFramesTest, Show) {
   Scope scope;
   auto* one =
       context.methods->create(redex::create_void_method(scope, "LOne;", "one"));
+  auto* one_origin = context.origin_factory->method_origin(one);
   auto* test_kind_one = context.kind_factory->get("TestSink1");
   auto frame_one = test::make_taint_config(
-      test_kind_one, test::FrameProperties{.origins = MethodSet{one}});
+      test_kind_one, test::FrameProperties{.origins = OriginSet{one_origin}});
   auto frames = CalleePortFrames{frame_one};
 
   EXPECT_EQ(
@@ -1604,7 +1615,7 @@ TEST_F(CalleePortFramesTest, Show) {
   frames = CalleePortFrames{test::make_taint_config(
       test_kind_one,
       test::FrameProperties{
-          .origins = MethodSet{one},
+          .origins = OriginSet{one_origin},
           .local_positions =
               LocalPositionSet{context.positions->get(std::nullopt, 1)}})};
   EXPECT_EQ(

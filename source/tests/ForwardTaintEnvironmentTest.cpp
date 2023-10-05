@@ -30,6 +30,7 @@ TEST_F(ForwardTaintEnvironmentTest, LessOrEqualSuperSet) {
   Scope scope;
   auto* method = context.methods->create(
       redex::create_void_method(scope, "LClass;", "method"));
+  auto* method_origin = context.origin_factory->method_origin(method);
 
   auto domain1 = TaintEnvironment{
       {nullptr, TaintTree{Taint{test::make_leaf_taint_config(source_kind)}}}};
@@ -46,7 +47,7 @@ TEST_F(ForwardTaintEnvironmentTest, LessOrEqualSuperSet) {
                    .callee_port = AccessPath(Root(Root::Kind::Return)),
                    .callee = method,
                    .distance = 1,
-                   .origins = MethodSet{method},
+                   .origins = OriginSet{method_origin},
                    .call_kind = CallKind::callsite()})}}}};
 
   EXPECT_TRUE(domain1.leq(domain2));
@@ -60,6 +61,7 @@ TEST_F(ForwardTaintEnvironmentTest, LessOrEqualDifferentSources) {
   Scope scope;
   auto* method = context.methods->create(
       redex::create_void_method(scope, "LClass;", "method"));
+  auto* method_origin = context.origin_factory->method_origin(method);
 
   auto domain1 = TaintEnvironment{
       {nullptr, TaintTree{Taint{test::make_leaf_taint_config(source_kind)}}}};
@@ -73,7 +75,7 @@ TEST_F(ForwardTaintEnvironmentTest, LessOrEqualDifferentSources) {
                .callee = method,
                .call_position = context.positions->unknown(),
                .distance = 1,
-               .origins = MethodSet{method},
+               .origins = OriginSet{method_origin},
                .call_kind = CallKind::callsite()})}}}};
 
   EXPECT_FALSE(domain1.leq(domain2));
@@ -87,6 +89,7 @@ TEST_F(ForwardTaintEnvironmentTest, JoinSuperSet) {
   Scope scope;
   auto* method = context.methods->create(
       redex::create_void_method(scope, "LClass;", "method"));
+  auto* method_origin = context.origin_factory->method_origin(method);
 
   auto domain1 = TaintEnvironment{
       {nullptr, TaintTree{Taint{test::make_leaf_taint_config(source_kind)}}}};
@@ -101,7 +104,7 @@ TEST_F(ForwardTaintEnvironmentTest, JoinSuperSet) {
                    .callee = method,
                    .call_position = context.positions->unknown(),
                    .distance = 1,
-                   .origins = MethodSet{method},
+                   .origins = OriginSet{method_origin},
                    .call_kind = CallKind::callsite()})}}}};
   domain1.join_with(domain2);
   EXPECT_TRUE(domain1 == domain2);
@@ -114,6 +117,7 @@ TEST_F(ForwardTaintEnvironmentTest, JoinTwoDifferent) {
   Scope scope;
   auto* method = context.methods->create(
       redex::create_void_method(scope, "LClass;", "method"));
+  auto* method_origin = context.origin_factory->method_origin(method);
 
   auto domain1 = TaintEnvironment{
       {nullptr, TaintTree{Taint{test::make_leaf_taint_config(source_kind)}}}};
@@ -127,7 +131,7 @@ TEST_F(ForwardTaintEnvironmentTest, JoinTwoDifferent) {
                .callee = method,
                .call_position = context.positions->unknown(),
                .distance = 1,
-               .origins = MethodSet{method},
+               .origins = OriginSet{method_origin},
                .call_kind = CallKind::callsite()})}}}};
 
   auto domain3 = TaintEnvironment{
@@ -141,7 +145,7 @@ TEST_F(ForwardTaintEnvironmentTest, JoinTwoDifferent) {
                    .callee = method,
                    .call_position = context.positions->unknown(),
                    .distance = 1,
-                   .origins = MethodSet{method},
+                   .origins = OriginSet{method_origin},
                    .call_kind = CallKind::callsite()})}}}};
   domain1.join_with(domain2);
   EXPECT_TRUE(domain1 == domain3);
@@ -154,6 +158,7 @@ TEST_F(ForwardTaintEnvironmentTest, JoinTwoEnvironmentWithDifferentSources) {
   Scope scope;
   auto* method = context.methods->create(
       redex::create_void_method(scope, "LClass;", "method"));
+  auto* method_origin = context.origin_factory->method_origin(method);
 
   auto parameter_1 = std::make_unique<ParameterMemoryLocation>(1);
   auto parameter_2 = std::make_unique<ParameterMemoryLocation>(2);
@@ -179,7 +184,7 @@ TEST_F(ForwardTaintEnvironmentTest, JoinTwoEnvironmentWithDifferentSources) {
               .callee = method,
               .call_position = context.positions->unknown(),
               .distance = 1,
-              .origins = MethodSet{method},
+              .origins = OriginSet{method_origin},
               .call_kind = CallKind::callsite()})}},
       UpdateKind::Weak);
 
@@ -199,7 +204,7 @@ TEST_F(ForwardTaintEnvironmentTest, JoinTwoEnvironmentWithDifferentSources) {
                   .callee = method,
                   .call_position = context.positions->unknown(),
                   .distance = 1,
-                  .origins = MethodSet{method},
+                  .origins = OriginSet{method_origin},
                   .call_kind = CallKind::callsite()})}}));
 }
 

@@ -900,7 +900,8 @@ TEST_F(JsonTest, TaintConfig) {
       test::make_taint_config(
           /* kind */ context.kind_factory->get("TestSource"),
           test::FrameProperties{
-              .origins = MethodSet{source_one},
+              .origins =
+                  OriginSet{context.origin_factory->method_origin(source_one)},
               .inferred_features = FeatureMayAlwaysSet::bottom(),
               .locally_inferred_features = FeatureMayAlwaysSet::bottom()}));
   EXPECT_EQ(
@@ -914,7 +915,10 @@ TEST_F(JsonTest, TaintConfig) {
       test::make_taint_config(
           /* kind */ context.kind_factory->get("TestSource"),
           test::FrameProperties{
-              .origins = MethodSet{source_one, source_two},
+              .origins =
+                  OriginSet{
+                      context.origin_factory->method_origin(source_one),
+                      context.origin_factory->method_origin(source_two)},
               .inferred_features = FeatureMayAlwaysSet::bottom(),
               .locally_inferred_features = FeatureMayAlwaysSet::bottom()}));
 
@@ -938,7 +942,8 @@ TEST_F(JsonTest, TaintConfig) {
       test::make_taint_config(
           /* kind */ context.kind_factory->get("TestSource"),
           test::FrameProperties{
-              .field_origins = FieldSet{field_one},
+              .origins =
+                  OriginSet{context.origin_factory->field_origin(field_one)},
               .inferred_features = FeatureMayAlwaysSet::bottom(),
               .locally_inferred_features = FeatureMayAlwaysSet::bottom()}));
   EXPECT_EQ(
@@ -952,7 +957,10 @@ TEST_F(JsonTest, TaintConfig) {
       test::make_taint_config(
           /* kind */ context.kind_factory->get("TestSource"),
           test::FrameProperties{
-              .field_origins = FieldSet{field_one, field_two},
+              .origins =
+                  OriginSet{
+                      context.origin_factory->field_origin(field_one),
+                      context.origin_factory->field_origin(field_two)},
               .inferred_features = FeatureMayAlwaysSet::bottom(),
               .locally_inferred_features = FeatureMayAlwaysSet::bottom()}));
 

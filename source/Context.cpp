@@ -20,6 +20,7 @@
 #include <mariana-trench/KindFactory.h>
 #include <mariana-trench/Methods.h>
 #include <mariana-trench/Options.h>
+#include <mariana-trench/OriginFactory.h>
 #include <mariana-trench/Overrides.h>
 #include <mariana-trench/Positions.h>
 #include <mariana-trench/Rules.h>
@@ -38,6 +39,7 @@ Context::Context()
       transforms_factory(&TransformsFactory::singleton()),
       model_generator_name_factory(&ModelGeneratorNameFactory::singleton()),
       access_path_factory(&AccessPathFactory::singleton()),
+      origin_factory(&OriginFactory::singleton()),
       statistics(std::make_unique<Statistics>()) {}
 
 Context::Context(Context&&) noexcept = default;

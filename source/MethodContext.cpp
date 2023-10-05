@@ -38,6 +38,7 @@ MethodContext::MethodContext(
       registry(registry),
       transforms_factory(*context.transforms_factory),
       used_kinds(*context.used_kinds),
+      origin_factory(*context.origin_factory),
       memory_factory(previous_model.method()),
       previous_model(previous_model),
       new_model(new_model),

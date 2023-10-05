@@ -15,6 +15,7 @@
 #include <mariana-trench/Log.h>
 #include <mariana-trench/Methods.h>
 #include <mariana-trench/MultiSourceMultiSinkRule.h>
+#include <mariana-trench/OriginFactory.h>
 #include <mariana-trench/PartialKind.h>
 #include <mariana-trench/Positions.h>
 #include <mariana-trench/Rules.h>
@@ -655,8 +656,8 @@ void check_flows_to_array_allocation(
       /* call_position */ position,
       /* class_interval_context */ CallClassIntervalContext(),
       /* distance */ 1,
-      /* origins */ MethodSet{array_allocation_method},
-      /* field_origins */ {},
+      /* origins */
+      OriginSet{context->origin_factory.method_origin(array_allocation_method)},
       /* inferred features */ {},
       /* locally_inferred_features */ {},
       /* user features */ {},

@@ -7,7 +7,6 @@
 
 #include <gmock/gmock.h>
 
-#include <mariana-trench/FieldSet.h>
 #include <mariana-trench/Fields.h>
 #include <mariana-trench/Frame.h>
 #include <mariana-trench/Redex.h>
@@ -79,35 +78,56 @@ TEST_F(FrameTest, FrameLeq) {
                        test::FrameProperties{.distance = 1})));
 
   // Compare origins.
-  EXPECT_TRUE(test::make_taint_frame(
-                  /* kind */ context.kind_factory->get("TestSource"),
-                  test::FrameProperties{.origins = MethodSet{one}})
-                  .leq(test::make_taint_frame(
-                      /* kind */ context.kind_factory->get("TestSource"),
-                      test::FrameProperties{.origins = MethodSet{one, two}})));
+  EXPECT_TRUE(
+      test::make_taint_frame(
+          /* kind */ context.kind_factory->get("TestSource"),
+          test::FrameProperties{
+              .origins = OriginSet{context.origin_factory->method_origin(one)}})
+          .leq(test::make_taint_frame(
+              /* kind */ context.kind_factory->get("TestSource"),
+              test::FrameProperties{
+                  .origins = OriginSet{
+                      context.origin_factory->method_origin(one),
+                      context.origin_factory->method_origin(two)}})));
   EXPECT_FALSE(test::make_taint_frame(
                    /* kind */ context.kind_factory->get("TestSource"),
-                   test::FrameProperties{.origins = MethodSet{one, two}})
+                   test::FrameProperties{
+                       .origins =
+                           OriginSet{
+                               context.origin_factory->method_origin(one),
+                               context.origin_factory->method_origin(two)}})
                    .leq(test::make_taint_frame(
                        /* kind */ context.kind_factory->get("TestSource"),
-                       test::FrameProperties{.origins = MethodSet{one}})));
+                       test::FrameProperties{
+                           .origins = OriginSet{
+                               context.origin_factory->method_origin(one)}})));
 
   // Compare field origins.
-  EXPECT_TRUE(test::make_taint_frame(
-                  /* kind */ context.kind_factory->get("TestSource"),
-                  test::FrameProperties{.field_origins = FieldSet{field_one}})
-                  .leq(test::make_taint_frame(
-                      /* kind */ context.kind_factory->get("TestSource"),
-                      test::FrameProperties{
-                          .field_origins = FieldSet{field_one, field_two}})));
+  EXPECT_TRUE(
+      test::make_taint_frame(
+          /* kind */ context.kind_factory->get("TestSource"),
+          test::FrameProperties{
+              .origins =
+                  OriginSet{context.origin_factory->field_origin(field_one)}})
+          .leq(test::make_taint_frame(
+              /* kind */ context.kind_factory->get("TestSource"),
+              test::FrameProperties{
+                  .origins = OriginSet{
+                      context.origin_factory->field_origin(field_one),
+                      context.origin_factory->field_origin(field_two)}})));
   EXPECT_FALSE(
       test::make_taint_frame(
           /* kind */ context.kind_factory->get("TestSource"),
           test::FrameProperties{
-              .field_origins = FieldSet{field_one, field_two}})
+              .origins =
+                  OriginSet{
+                      context.origin_factory->field_origin(field_one),
+                      context.origin_factory->field_origin(field_two)}})
           .leq(test::make_taint_frame(
               /* kind */ context.kind_factory->get("TestSource"),
-              test::FrameProperties{.field_origins = FieldSet{field_one}})));
+              test::FrameProperties{
+                  .origins = OriginSet{
+                      context.origin_factory->field_origin(field_one)}})));
 
   // Compare inferred features.
   EXPECT_TRUE(test::make_taint_frame(
@@ -184,24 +204,26 @@ TEST_F(FrameTest, FrameLeq) {
                                {Root(Root::Kind::Argument, 1)})})));
 
   // callee_port, callee and call_position must be equal.
-  EXPECT_TRUE(test::make_taint_frame(
-                  /* kind */ context.kind_factory->get("TestSource"),
-                  test::FrameProperties{
-                      .callee_port = AccessPath(Root(Root::Kind::Return)),
-                      .callee = one,
-                      .call_position = context.positions->unknown(),
-                      .distance = 1,
-                      .origins = MethodSet{one},
-                      .call_kind = CallKind::callsite()})
-                  .leq(test::make_taint_frame(
-                      /* kind */ context.kind_factory->get("TestSource"),
-                      test::FrameProperties{
-                          .callee_port = AccessPath(Root(Root::Kind::Return)),
-                          .callee = one,
-                          .call_position = context.positions->unknown(),
-                          .distance = 1,
-                          .origins = MethodSet{one},
-                          .call_kind = CallKind::callsite()})));
+  EXPECT_TRUE(
+      test::make_taint_frame(
+          /* kind */ context.kind_factory->get("TestSource"),
+          test::FrameProperties{
+              .callee_port = AccessPath(Root(Root::Kind::Return)),
+              .callee = one,
+              .call_position = context.positions->unknown(),
+              .distance = 1,
+              .origins = OriginSet{context.origin_factory->method_origin(one)},
+              .call_kind = CallKind::callsite()})
+          .leq(test::make_taint_frame(
+              /* kind */ context.kind_factory->get("TestSource"),
+              test::FrameProperties{
+                  .callee_port = AccessPath(Root(Root::Kind::Return)),
+                  .callee = one,
+                  .call_position = context.positions->unknown(),
+                  .distance = 1,
+                  .origins =
+                      OriginSet{context.origin_factory->method_origin(one)},
+                  .call_kind = CallKind::callsite()})));
   EXPECT_FALSE(
       test::make_taint_frame(
           /* kind */ context.kind_factory->get("TestSource"),
@@ -210,7 +232,7 @@ TEST_F(FrameTest, FrameLeq) {
               .callee = one,
               .call_position = context.positions->unknown(),
               .distance = 1,
-              .origins = MethodSet{one},
+              .origins = OriginSet{context.origin_factory->method_origin(one)},
               .call_kind = CallKind::callsite()})
           .leq(test::make_taint_frame(
               /* kind */ context.kind_factory->get("TestSource"),
@@ -219,26 +241,9 @@ TEST_F(FrameTest, FrameLeq) {
                   .callee = one,
                   .call_position = context.positions->unknown(),
                   .distance = 1,
-                  .origins = MethodSet{one},
+                  .origins =
+                      OriginSet{context.origin_factory->method_origin(one)},
                   .call_kind = CallKind::callsite()})));
-  EXPECT_FALSE(test::make_taint_frame(
-                   /* kind */ context.kind_factory->get("TestSource"),
-                   test::FrameProperties{
-                       .callee_port = AccessPath(Root(Root::Kind::Return)),
-                       .callee = one,
-                       .call_position = context.positions->unknown(),
-                       .distance = 1,
-                       .origins = MethodSet{one},
-                       .call_kind = CallKind::callsite()})
-                   .leq(test::make_taint_frame(
-                       /* kind */ context.kind_factory->get("TestSource"),
-                       test::FrameProperties{
-                           .callee_port = AccessPath(Root(Root::Kind::Return)),
-                           .callee = two,
-                           .call_position = context.positions->unknown(),
-                           .distance = 1,
-                           .origins = MethodSet{one},
-                           .call_kind = CallKind::callsite()})));
   EXPECT_FALSE(
       test::make_taint_frame(
           /* kind */ context.kind_factory->get("TestSource"),
@@ -247,7 +252,27 @@ TEST_F(FrameTest, FrameLeq) {
               .callee = one,
               .call_position = context.positions->unknown(),
               .distance = 1,
-              .origins = MethodSet{one},
+              .origins = OriginSet{context.origin_factory->method_origin(one)},
+              .call_kind = CallKind::callsite()})
+          .leq(test::make_taint_frame(
+              /* kind */ context.kind_factory->get("TestSource"),
+              test::FrameProperties{
+                  .callee_port = AccessPath(Root(Root::Kind::Return)),
+                  .callee = two,
+                  .call_position = context.positions->unknown(),
+                  .distance = 1,
+                  .origins =
+                      OriginSet{context.origin_factory->method_origin(one)},
+                  .call_kind = CallKind::callsite()})));
+  EXPECT_FALSE(
+      test::make_taint_frame(
+          /* kind */ context.kind_factory->get("TestSource"),
+          test::FrameProperties{
+              .callee_port = AccessPath(Root(Root::Kind::Return)),
+              .callee = one,
+              .call_position = context.positions->unknown(),
+              .distance = 1,
+              .origins = OriginSet{context.origin_factory->method_origin(one)},
               .call_kind = CallKind::callsite()})
           .leq(test::make_taint_frame(
               /* kind */ context.kind_factory->get("TestSource"),
@@ -256,7 +281,8 @@ TEST_F(FrameTest, FrameLeq) {
                   .callee = one,
                   .call_position = context.positions->get("Test.java", 1),
                   .distance = 1,
-                  .origins = MethodSet{one},
+                  .origins =
+                      OriginSet{context.origin_factory->method_origin(one)},
                   .call_kind = CallKind::callsite()})));
 
   // Compare canonical names.
@@ -464,7 +490,7 @@ TEST_F(FrameTest, FrameJoin) {
               .callee = one,
               .call_position = context.positions->unknown(),
               .distance = 1,
-              .origins = MethodSet{one},
+              .origins = OriginSet{context.origin_factory->method_origin(one)},
               .call_kind = CallKind::callsite()})
           .join(test::make_taint_frame(
               /* kind */ context.kind_factory->get("TestSource"),
@@ -473,7 +499,8 @@ TEST_F(FrameTest, FrameJoin) {
                   .callee = one,
                   .call_position = context.positions->unknown(),
                   .distance = 1,
-                  .origins = MethodSet{two},
+                  .origins =
+                      OriginSet{context.origin_factory->method_origin(two)},
                   .call_kind = CallKind::callsite()})),
       test::make_taint_frame(
           /* kind */ context.kind_factory->get("TestSource"),
@@ -482,7 +509,10 @@ TEST_F(FrameTest, FrameJoin) {
               .callee = one,
               .call_position = context.positions->unknown(),
               .distance = 1,
-              .origins = MethodSet{one, two},
+              .origins =
+                  OriginSet{
+                      context.origin_factory->method_origin(one),
+                      context.origin_factory->method_origin(two)},
               .call_kind = CallKind::callsite()}));
 
   // Join field origins
@@ -494,7 +524,8 @@ TEST_F(FrameTest, FrameJoin) {
               .callee = one,
               .call_position = context.positions->unknown(),
               .distance = 1,
-              .field_origins = FieldSet{field_one},
+              .origins =
+                  OriginSet{context.origin_factory->field_origin(field_one)},
               .call_kind = CallKind::callsite()})
           .join(test::make_taint_frame(
               /* kind */ context.kind_factory->get("TestSource"),
@@ -503,7 +534,8 @@ TEST_F(FrameTest, FrameJoin) {
                   .callee = one,
                   .call_position = context.positions->unknown(),
                   .distance = 1,
-                  .field_origins = FieldSet{field_two},
+                  .origins = OriginSet{context.origin_factory->field_origin(
+                      field_two)},
                   .call_kind = CallKind::callsite()})),
       test::make_taint_frame(
           /* kind */ context.kind_factory->get("TestSource"),
@@ -512,7 +544,10 @@ TEST_F(FrameTest, FrameJoin) {
               .callee = one,
               .call_position = context.positions->unknown(),
               .distance = 1,
-              .field_origins = FieldSet{field_one, field_two},
+              .origins =
+                  OriginSet{
+                      context.origin_factory->field_origin(field_one),
+                      context.origin_factory->field_origin(field_two)},
               .call_kind = CallKind::callsite()}));
 
   // Join inferred features.
@@ -708,8 +743,10 @@ TEST_F(FrameTest, FrameWithKind) {
           .callee = one,
           .call_position = context.positions->unknown(),
           .distance = 5,
-          .origins = MethodSet{two},
-          .field_origins = FieldSet{field},
+          .origins =
+              OriginSet{
+                  context.origin_factory->method_origin(two),
+                  context.origin_factory->field_origin(field)},
           .inferred_features = FeatureMayAlwaysSet::make_may(
               {context.feature_factory->get("FeatureOne"),
                context.feature_factory->get("FeatureTwo")}),
@@ -722,7 +759,6 @@ TEST_F(FrameTest, FrameWithKind) {
   EXPECT_EQ(frame1.call_position(), frame2.call_position());
   EXPECT_EQ(frame1.distance(), frame2.distance());
   EXPECT_EQ(frame1.origins(), frame2.origins());
-  EXPECT_EQ(frame1.field_origins(), frame2.field_origins());
   EXPECT_EQ(frame1.inferred_features(), frame2.inferred_features());
 
   EXPECT_NE(frame1.kind(), frame2.kind());

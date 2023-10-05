@@ -23,6 +23,8 @@ TEST_F(CallPositionFramesTest, Add) {
       redex::create_void_method(scope, "LClass;", "one"));
   auto* two = context.methods->create(
       redex::create_void_method(scope, "LOther;", "two"));
+  auto* one_origin = context.origin_factory->method_origin(one);
+  auto* two_origin = context.origin_factory->method_origin(two);
 
   auto* source_kind_one = context.kind_factory->get("TestSourceOne");
   auto* source_kind_two = context.kind_factory->get("TestSourceTwo");
@@ -38,7 +40,7 @@ TEST_F(CallPositionFramesTest, Add) {
   frames.add(test::make_taint_config(
       source_kind_one,
       test::FrameProperties{
-          .origins = MethodSet{one},
+          .origins = OriginSet{one_origin},
           .inferred_features = FeatureMayAlwaysSet{feature_one},
           .call_kind = CallKind::origin()}));
   EXPECT_FALSE(frames.is_bottom());
@@ -48,7 +50,7 @@ TEST_F(CallPositionFramesTest, Add) {
       CallPositionFrames{test::make_taint_config(
           source_kind_one,
           test::FrameProperties{
-              .origins = MethodSet{one},
+              .origins = OriginSet{one_origin},
               .inferred_features = FeatureMayAlwaysSet{feature_one},
               .call_kind = CallKind::origin()})});
 
@@ -56,7 +58,7 @@ TEST_F(CallPositionFramesTest, Add) {
   frames.add(test::make_taint_config(
       source_kind_one,
       test::FrameProperties{
-          .origins = MethodSet{two},
+          .origins = OriginSet{two_origin},
           .inferred_features = FeatureMayAlwaysSet{feature_two},
           .user_features = FeatureSet{user_feature_one},
           .call_kind = CallKind::origin()}));
@@ -65,7 +67,7 @@ TEST_F(CallPositionFramesTest, Add) {
       CallPositionFrames{test::make_taint_config(
           source_kind_one,
           test::FrameProperties{
-              .origins = MethodSet{one, two},
+              .origins = OriginSet{one_origin, two_origin},
               .inferred_features =
                   FeatureMayAlwaysSet::make_may({feature_one, feature_two}),
               .user_features = FeatureSet{user_feature_one},
@@ -75,7 +77,7 @@ TEST_F(CallPositionFramesTest, Add) {
   frames.add(test::make_taint_config(
       source_kind_two,
       test::FrameProperties{
-          .origins = MethodSet{two},
+          .origins = OriginSet{two_origin},
           .inferred_features = FeatureMayAlwaysSet{feature_two},
           .call_kind = CallKind::origin()}));
   EXPECT_EQ(
@@ -84,7 +86,7 @@ TEST_F(CallPositionFramesTest, Add) {
           test::make_taint_config(
               source_kind_one,
               test::FrameProperties{
-                  .origins = MethodSet{one, two},
+                  .origins = OriginSet{one_origin, two_origin},
                   .inferred_features =
                       FeatureMayAlwaysSet::make_may({feature_one, feature_two}),
                   .user_features = FeatureSet{user_feature_one},
@@ -92,7 +94,7 @@ TEST_F(CallPositionFramesTest, Add) {
           test::make_taint_config(
               source_kind_two,
               test::FrameProperties{
-                  .origins = MethodSet{two},
+                  .origins = OriginSet{two_origin},
                   .inferred_features = FeatureMayAlwaysSet{feature_two},
                   .call_kind = CallKind::origin()})}));
 
@@ -101,7 +103,7 @@ TEST_F(CallPositionFramesTest, Add) {
       source_kind_two,
       test::FrameProperties{
           .callee_port = AccessPath(Root(Root::Kind::Return)),
-          .origins = MethodSet{two},
+          .origins = OriginSet{two_origin},
           .inferred_features = FeatureMayAlwaysSet{feature_two},
           .call_kind = CallKind::origin()}));
   EXPECT_EQ(
@@ -110,7 +112,7 @@ TEST_F(CallPositionFramesTest, Add) {
           test::make_taint_config(
               source_kind_one,
               test::FrameProperties{
-                  .origins = MethodSet{one, two},
+                  .origins = OriginSet{one_origin, two_origin},
                   .inferred_features =
                       FeatureMayAlwaysSet::make_may({feature_one, feature_two}),
                   .user_features = FeatureSet{user_feature_one},
@@ -118,14 +120,14 @@ TEST_F(CallPositionFramesTest, Add) {
           test::make_taint_config(
               source_kind_two,
               test::FrameProperties{
-                  .origins = MethodSet{two},
+                  .origins = OriginSet{two_origin},
                   .inferred_features = FeatureMayAlwaysSet{feature_two},
                   .call_kind = CallKind::origin()}),
           test::make_taint_config(
               source_kind_two,
               test::FrameProperties{
                   .callee_port = AccessPath(Root(Root::Kind::Return)),
-                  .origins = MethodSet{two},
+                  .origins = OriginSet{two_origin},
                   .inferred_features = FeatureMayAlwaysSet{feature_two},
                   .call_kind = CallKind::origin()})}));
 
@@ -143,6 +145,7 @@ TEST_F(CallPositionFramesTest, Leq) {
   Scope scope;
   auto* one =
       context.methods->create(redex::create_void_method(scope, "LOne;", "one"));
+  auto* one_origin = context.origin_factory->method_origin(one);
 
   auto* test_kind_one = context.kind_factory->get("TestSinkOne");
   auto* test_kind_two = context.kind_factory->get("TestSinkTwo");
@@ -166,7 +169,7 @@ TEST_F(CallPositionFramesTest, Leq) {
                .callee = one,
                .call_position = test_position,
                .distance = 1,
-               .origins = MethodSet{one},
+               .origins = OriginSet{one_origin},
                .call_kind = CallKind::callsite(),
            })})
           .leq(CallPositionFrames{test::make_taint_config(
@@ -176,7 +179,7 @@ TEST_F(CallPositionFramesTest, Leq) {
                   .callee = one,
                   .call_position = test_position,
                   .distance = 1,
-                  .origins = MethodSet{one},
+                  .origins = OriginSet{one_origin},
                   .call_kind = CallKind::callsite(),
               })}));
 
@@ -189,7 +192,7 @@ TEST_F(CallPositionFramesTest, Leq) {
                .callee = one,
                .call_position = test_position,
                .distance = 1,
-               .origins = MethodSet{one},
+               .origins = OriginSet{one_origin},
                .call_kind = CallKind::callsite(),
            })})
           .leq(CallPositionFrames{
@@ -200,7 +203,7 @@ TEST_F(CallPositionFramesTest, Leq) {
                       .callee = one,
                       .call_position = test_position,
                       .distance = 1,
-                      .origins = MethodSet{one},
+                      .origins = OriginSet{one_origin},
                       .call_kind = CallKind::callsite(),
                   }),
               test::make_taint_config(
@@ -210,7 +213,7 @@ TEST_F(CallPositionFramesTest, Leq) {
                       .callee = one,
                       .call_position = test_position,
                       .distance = 1,
-                      .origins = MethodSet{one},
+                      .origins = OriginSet{one_origin},
                       .call_kind = CallKind::callsite(),
                   }),
           }));
@@ -223,7 +226,7 @@ TEST_F(CallPositionFramesTest, Leq) {
                    .callee = one,
                    .call_position = test_position,
                    .distance = 1,
-                   .origins = MethodSet{one},
+                   .origins = OriginSet{one_origin},
                    .call_kind = CallKind::callsite(),
                }),
            test::make_taint_config(
@@ -233,7 +236,7 @@ TEST_F(CallPositionFramesTest, Leq) {
                    .callee = one,
                    .call_position = test_position,
                    .distance = 1,
-                   .origins = MethodSet{one},
+                   .origins = OriginSet{one_origin},
                    .call_kind = CallKind::callsite(),
                }),
        })
@@ -244,7 +247,7 @@ TEST_F(CallPositionFramesTest, Leq) {
                   .callee = one,
                   .call_position = test_position,
                   .distance = 1,
-                  .origins = MethodSet{one},
+                  .origins = OriginSet{one_origin},
                   .call_kind = CallKind::callsite(),
               })}));
 
@@ -257,7 +260,7 @@ TEST_F(CallPositionFramesTest, Leq) {
                .callee = one,
                .call_position = test_position,
                .distance = 1,
-               .origins = MethodSet{one},
+               .origins = OriginSet{one_origin},
                .call_kind = CallKind::callsite(),
            })})
           .leq(CallPositionFrames{
@@ -268,7 +271,7 @@ TEST_F(CallPositionFramesTest, Leq) {
                       .callee = one,
                       .call_position = test_position,
                       .distance = 1,
-                      .origins = MethodSet{one},
+                      .origins = OriginSet{one_origin},
                       .call_kind = CallKind::callsite(),
                   }),
               test::make_taint_config(
@@ -278,7 +281,7 @@ TEST_F(CallPositionFramesTest, Leq) {
                       .callee = one,
                       .call_position = test_position,
                       .distance = 1,
-                      .origins = MethodSet{one},
+                      .origins = OriginSet{one_origin},
                       .call_kind = CallKind::callsite(),
                   }),
           }));
@@ -291,7 +294,7 @@ TEST_F(CallPositionFramesTest, Leq) {
                    .callee = one,
                    .call_position = test_position,
                    .distance = 1,
-                   .origins = MethodSet{one},
+                   .origins = OriginSet{one_origin},
                    .call_kind = CallKind::callsite(),
                }),
            test::make_taint_config(
@@ -301,7 +304,7 @@ TEST_F(CallPositionFramesTest, Leq) {
                    .callee = one,
                    .call_position = test_position,
                    .distance = 1,
-                   .origins = MethodSet{one},
+                   .origins = OriginSet{one_origin},
                    .call_kind = CallKind::callsite(),
                })})
           .leq(CallPositionFrames{test::make_taint_config(
@@ -311,7 +314,7 @@ TEST_F(CallPositionFramesTest, Leq) {
                   .callee = one,
                   .call_position = test_position,
                   .distance = 1,
-                  .origins = MethodSet{one},
+                  .origins = OriginSet{one_origin},
                   .call_kind = CallKind::callsite(),
               })}));
 
@@ -444,6 +447,7 @@ TEST_F(CallPositionFramesTest, Equals) {
   Scope scope;
   auto* one =
       context.methods->create(redex::create_void_method(scope, "LOne;", "one"));
+  auto* one_origin = context.origin_factory->method_origin(one);
 
   auto* test_kind_one = context.kind_factory->get("TestSinkOne");
   auto* test_kind_two = context.kind_factory->get("TestSinkTwo");
@@ -476,7 +480,7 @@ TEST_F(CallPositionFramesTest, Equals) {
                .callee = one,
                .call_position = test_position,
                .distance = 1,
-               .origins = MethodSet{one},
+               .origins = OriginSet{one_origin},
                .call_kind = CallKind::callsite(),
            })})
           .equals(CallPositionFrames{test::make_taint_config(
@@ -486,7 +490,7 @@ TEST_F(CallPositionFramesTest, Equals) {
                   .callee = one,
                   .call_position = test_position,
                   .distance = 1,
-                  .origins = MethodSet{one},
+                  .origins = OriginSet{one_origin},
                   .call_kind = CallKind::callsite(),
               })}));
 
@@ -503,6 +507,7 @@ TEST_F(CallPositionFramesTest, JoinWith) {
   Scope scope;
   auto* one =
       context.methods->create(redex::create_void_method(scope, "LOne;", "one"));
+  auto* one_origin = context.origin_factory->method_origin(one);
 
   auto* test_kind_one = context.kind_factory->get("TestSinkOne");
   auto* test_kind_two = context.kind_factory->get("TestSinkTwo");
@@ -564,7 +569,7 @@ TEST_F(CallPositionFramesTest, JoinWith) {
           .callee = one,
           .call_position = test_position,
           .distance = 1,
-          .origins = MethodSet{one},
+          .origins = OriginSet{one_origin},
           .call_kind = CallKind::callsite(),
       });
   auto frame_two = test::make_taint_config(
@@ -574,7 +579,7 @@ TEST_F(CallPositionFramesTest, JoinWith) {
           .callee = one,
           .call_position = test_position,
           .distance = 2,
-          .origins = MethodSet{one},
+          .origins = OriginSet{one_origin},
           .call_kind = CallKind::callsite(),
       });
   frames = CallPositionFrames{frame_one};
@@ -711,6 +716,9 @@ TEST_F(CallPositionFramesTest, Difference) {
       context.methods->create(redex::create_void_method(scope, "LTwo;", "two"));
   auto* three = context.methods->create(
       redex::create_void_method(scope, "LThree;", "three"));
+  auto* one_origin = context.origin_factory->method_origin(one);
+  auto* two_origin = context.origin_factory->method_origin(two);
+  auto* three_origin = context.origin_factory->method_origin(three);
 
   const auto x = PathElement::field("x");
   const auto y = PathElement::field("y");
@@ -742,7 +750,7 @@ TEST_F(CallPositionFramesTest, Difference) {
               .callee = one,
               .call_position = test_position,
               .distance = 1,
-              .origins = MethodSet{one},
+              .origins = OriginSet{one_origin},
               .inferred_features = FeatureMayAlwaysSet{feature_one},
               .user_features = FeatureSet{user_feature_one},
               .call_kind = CallKind::callsite(),
@@ -762,7 +770,7 @@ TEST_F(CallPositionFramesTest, Difference) {
               .callee = one,
               .call_position = test_position,
               .distance = 1,
-              .origins = MethodSet{one},
+              .origins = OriginSet{one_origin},
               .inferred_features = FeatureMayAlwaysSet{feature_one},
               .user_features = FeatureSet{user_feature_one},
               .call_kind = CallKind::callsite(),
@@ -780,7 +788,7 @@ TEST_F(CallPositionFramesTest, Difference) {
               .callee = one,
               .call_position = test_position,
               .distance = 1,
-              .origins = MethodSet{one},
+              .origins = OriginSet{one_origin},
               .call_kind = CallKind::callsite(),
           }),
   });
@@ -796,7 +804,7 @@ TEST_F(CallPositionFramesTest, Difference) {
               .callee = one,
               .call_position = test_position,
               .distance = 1,
-              .origins = MethodSet{one},
+              .origins = OriginSet{one_origin},
               .inferred_features = FeatureMayAlwaysSet{feature_two},
               .user_features = FeatureSet{user_feature_one},
               .call_kind = CallKind::callsite(),
@@ -814,7 +822,7 @@ TEST_F(CallPositionFramesTest, Difference) {
               .callee = one,
               .call_position = test_position,
               .distance = 1,
-              .origins = MethodSet{one},
+              .origins = OriginSet{one_origin},
               .inferred_features = FeatureMayAlwaysSet{feature_one},
               .user_features = FeatureSet{user_feature_two},
               .call_kind = CallKind::callsite(),
@@ -832,7 +840,7 @@ TEST_F(CallPositionFramesTest, Difference) {
               .callee = one,
               .call_position = test_position,
               .distance = 1,
-              .origins = MethodSet{one},
+              .origins = OriginSet{one_origin},
               .inferred_features = FeatureMayAlwaysSet{feature_one},
               .user_features = FeatureSet{user_feature_one},
               .call_kind = CallKind::callsite(),
@@ -849,7 +857,7 @@ TEST_F(CallPositionFramesTest, Difference) {
               .callee = one,
               .call_position = test_position,
               .distance = 1,
-              .origins = MethodSet{one},
+              .origins = OriginSet{one_origin},
               .inferred_features = FeatureMayAlwaysSet{feature_one},
               .user_features = FeatureSet{user_feature_one},
               .call_kind = CallKind::callsite(),
@@ -863,7 +871,7 @@ TEST_F(CallPositionFramesTest, Difference) {
               .callee = one,
               .call_position = test_position,
               .distance = 1,
-              .origins = MethodSet{one},
+              .origins = OriginSet{one_origin},
               .inferred_features = FeatureMayAlwaysSet{feature_one},
               .user_features = FeatureSet{user_feature_one},
               .call_kind = CallKind::callsite(),
@@ -875,7 +883,7 @@ TEST_F(CallPositionFramesTest, Difference) {
               .callee = one,
               .call_position = test_position,
               .distance = 1,
-              .origins = MethodSet{two},
+              .origins = OriginSet{two_origin},
               .inferred_features = FeatureMayAlwaysSet{feature_two},
               .user_features = FeatureSet{user_feature_two},
               .call_kind = CallKind::callsite(),
@@ -892,7 +900,7 @@ TEST_F(CallPositionFramesTest, Difference) {
               .callee = one,
               .call_position = test_position,
               .distance = 1,
-              .origins = MethodSet{one},
+              .origins = OriginSet{one_origin},
               .call_kind = CallKind::callsite(),
           }),
       test::make_taint_config(
@@ -902,7 +910,7 @@ TEST_F(CallPositionFramesTest, Difference) {
               .callee = one,
               .call_position = test_position,
               .distance = 1,
-              .origins = MethodSet{one},
+              .origins = OriginSet{one_origin},
               .call_kind = CallKind::callsite(),
           }),
   };
@@ -913,7 +921,7 @@ TEST_F(CallPositionFramesTest, Difference) {
           .callee = one,
           .call_position = test_position,
           .distance = 1,
-          .origins = MethodSet{one},
+          .origins = OriginSet{one_origin},
           .call_kind = CallKind::callsite(),
       })});
   EXPECT_EQ(
@@ -926,7 +934,7 @@ TEST_F(CallPositionFramesTest, Difference) {
                   .callee = one,
                   .call_position = test_position,
                   .distance = 1,
-                  .origins = MethodSet{one},
+                  .origins = OriginSet{one_origin},
                   .call_kind = CallKind::callsite(),
               }),
       }));
@@ -940,7 +948,7 @@ TEST_F(CallPositionFramesTest, Difference) {
               .callee = one,
               .call_position = test_position,
               .distance = 1,
-              .origins = MethodSet{one},
+              .origins = OriginSet{one_origin},
               .call_kind = CallKind::callsite(),
           }),
       test::make_taint_config(
@@ -950,7 +958,7 @@ TEST_F(CallPositionFramesTest, Difference) {
               .callee = one,
               .call_position = test_position,
               .distance = 1,
-              .origins = MethodSet{two},
+              .origins = OriginSet{two_origin},
               .call_kind = CallKind::callsite(),
           }),
       test::make_taint_config(
@@ -960,7 +968,7 @@ TEST_F(CallPositionFramesTest, Difference) {
               .callee = one,
               .call_position = test_position,
               .distance = 1,
-              .origins = MethodSet{three},
+              .origins = OriginSet{three_origin},
               .call_kind = CallKind::callsite(),
           }),
   };
@@ -972,7 +980,7 @@ TEST_F(CallPositionFramesTest, Difference) {
               .callee = one,
               .call_position = test_position,
               .distance = 1,
-              .origins = MethodSet{one},
+              .origins = OriginSet{one_origin},
               .call_kind = CallKind::callsite(),
           }),
       test::make_taint_config(
@@ -982,7 +990,7 @@ TEST_F(CallPositionFramesTest, Difference) {
               .callee = one,
               .call_position = test_position,
               .distance = 1,
-              .origins = MethodSet{two},
+              .origins = OriginSet{two_origin},
               .call_kind = CallKind::callsite(),
           }),
       test::make_taint_config(
@@ -992,7 +1000,7 @@ TEST_F(CallPositionFramesTest, Difference) {
               .callee = one,
               .call_position = test_position,
               .distance = 1,
-              .origins = MethodSet{two},
+              .origins = OriginSet{two_origin},
               .call_kind = CallKind::callsite(),
           })});
   EXPECT_EQ(
@@ -1004,7 +1012,7 @@ TEST_F(CallPositionFramesTest, Difference) {
               .callee = one,
               .call_position = test_position,
               .distance = 1,
-              .origins = MethodSet{three},
+              .origins = OriginSet{three_origin},
               .call_kind = CallKind::callsite(),
           })}));
 
@@ -1017,7 +1025,7 @@ TEST_F(CallPositionFramesTest, Difference) {
               .callee = one,
               .call_position = test_position,
               .distance = 1,
-              .origins = MethodSet{one},
+              .origins = OriginSet{one_origin},
               .call_kind = CallKind::callsite(),
           }),
       test::make_taint_config(
@@ -1027,7 +1035,7 @@ TEST_F(CallPositionFramesTest, Difference) {
               .callee = one,
               .call_position = test_position,
               .distance = 1,
-              .origins = MethodSet{two},
+              .origins = OriginSet{two_origin},
               .call_kind = CallKind::callsite(),
           }),
   };
@@ -1039,7 +1047,7 @@ TEST_F(CallPositionFramesTest, Difference) {
               .callee = one,
               .call_position = test_position,
               .distance = 1,
-              .origins = MethodSet{one},
+              .origins = OriginSet{one_origin},
               .call_kind = CallKind::callsite(),
           }),
       test::make_taint_config(
@@ -1049,7 +1057,7 @@ TEST_F(CallPositionFramesTest, Difference) {
               .callee = one,
               .call_position = test_position,
               .distance = 1,
-              .origins = MethodSet{two},
+              .origins = OriginSet{two_origin},
               .call_kind = CallKind::callsite(),
           }),
       test::make_taint_config(
@@ -1059,7 +1067,7 @@ TEST_F(CallPositionFramesTest, Difference) {
               .callee = one,
               .call_position = test_position,
               .distance = 1,
-              .origins = MethodSet{three},
+              .origins = OriginSet{three_origin},
               .call_kind = CallKind::callsite(),
           }),
   });
@@ -1121,6 +1129,7 @@ TEST_F(CallPositionFramesTest, Map) {
   Scope scope;
   auto* one =
       context.methods->create(redex::create_void_method(scope, "LOne;", "one"));
+  auto* one_origin = context.origin_factory->method_origin(one);
   auto* test_kind = context.kind_factory->get("TestSink");
   auto* test_position = context.positions->get(std::nullopt, 1);
   auto* feature_one = context.feature_factory->get("FeatureOne");
@@ -1133,7 +1142,7 @@ TEST_F(CallPositionFramesTest, Map) {
               .callee = one,
               .call_position = test_position,
               .distance = 1,
-              .origins = MethodSet{one},
+              .origins = OriginSet{one_origin},
               .call_kind = CallKind::callsite(),
           }),
       test::make_taint_config(
@@ -1143,7 +1152,7 @@ TEST_F(CallPositionFramesTest, Map) {
               .callee = one,
               .call_position = test_position,
               .distance = 2,
-              .origins = MethodSet{one},
+              .origins = OriginSet{one_origin},
               .call_kind = CallKind::callsite(),
           }),
   };
@@ -1161,7 +1170,7 @@ TEST_F(CallPositionFramesTest, Map) {
                   .callee = one,
                   .call_position = test_position,
                   .distance = 1,
-                  .origins = MethodSet{one},
+                  .origins = OriginSet{one_origin},
                   .inferred_features = FeatureMayAlwaysSet{feature_one},
                   .call_kind = CallKind::callsite(),
               }),
@@ -1172,7 +1181,7 @@ TEST_F(CallPositionFramesTest, Map) {
                   .callee = one,
                   .call_position = test_position,
                   .distance = 2,
-                  .origins = MethodSet{one},
+                  .origins = OriginSet{one_origin},
                   .inferred_features = FeatureMayAlwaysSet{feature_one},
                   .call_kind = CallKind::callsite(),
               }),
@@ -1270,6 +1279,8 @@ TEST_F(CallPositionFramesTest, Propagate) {
       context.methods->create(redex::create_void_method(scope, "LOne;", "one"));
   auto* two =
       context.methods->create(redex::create_void_method(scope, "LTwo;", "two"));
+  auto* one_origin = context.origin_factory->method_origin(one);
+  auto* two_origin = context.origin_factory->method_origin(two);
 
   auto* test_kind_one = context.kind_factory->get("TestSinkOne");
   auto* test_kind_two = context.kind_factory->get("TestSinkTwo");
@@ -1284,32 +1295,34 @@ TEST_F(CallPositionFramesTest, Propagate) {
       test::make_taint_config(
           test_kind_one,
           test::FrameProperties{
-              .origins = MethodSet{two}, .call_kind = CallKind::origin()}),
+              .origins = OriginSet{two_origin},
+              .call_kind = CallKind::origin()}),
       test::make_taint_config(
           test_kind_one,
           test::FrameProperties{
               .callee_port = AccessPath(Root(Root::Kind::Argument, 0)),
               .callee = one,
               .distance = 1,
-              .origins = MethodSet{one},
+              .origins = OriginSet{one_origin},
               .call_kind = CallKind::callsite()}),
       test::make_taint_config(
           test_kind_one,
           test::FrameProperties{
               .callee_port = AccessPath(Root(Root::Kind::Anchor)),
-              .origins = MethodSet{one},
+              .origins = OriginSet{one_origin},
               .canonical_names = CanonicalNameSetAbstractDomain{CanonicalName(
                   CanonicalName::TemplateValue{"%programmatic_leaf_name%"})},
               .call_kind = CallKind::origin()}),
       test::make_taint_config(
           test_kind_two,
           test::FrameProperties{
-              .origins = MethodSet{one}, .call_kind = CallKind::origin()}),
+              .origins = OriginSet{one_origin},
+              .call_kind = CallKind::origin()}),
       test::make_taint_config(
           test_kind_two,
           test::FrameProperties{
               .callee_port = AccessPath(Root(Root::Kind::Anchor)),
-              .origins = MethodSet{one},
+              .origins = OriginSet{one_origin},
               .canonical_names = CanonicalNameSetAbstractDomain{CanonicalName(
                   CanonicalName::TemplateValue{"%programmatic_leaf_name%"})},
               .call_kind = CallKind::origin()}),
@@ -1336,7 +1349,7 @@ TEST_F(CallPositionFramesTest, Propagate) {
                   .callee = two,
                   .call_position = call_position,
                   .distance = 1,
-                  .origins = MethodSet{one, two},
+                  .origins = OriginSet{one_origin, two_origin},
                   .locally_inferred_features = FeatureMayAlwaysSet::bottom(),
                   .call_kind = CallKind::callsite()}),
           test::make_taint_config(
@@ -1347,7 +1360,7 @@ TEST_F(CallPositionFramesTest, Propagate) {
                       Path{PathElement::field("Argument(-1)")}),
                   .callee = two,
                   .call_position = call_position,
-                  .origins = MethodSet{one},
+                  .origins = OriginSet{one_origin},
                   .locally_inferred_features = FeatureMayAlwaysSet::bottom(),
                   .canonical_names =
                       CanonicalNameSetAbstractDomain{
@@ -1360,7 +1373,7 @@ TEST_F(CallPositionFramesTest, Propagate) {
                   .callee = two,
                   .call_position = call_position,
                   .distance = 1,
-                  .origins = MethodSet{one},
+                  .origins = OriginSet{one_origin},
                   .locally_inferred_features = FeatureMayAlwaysSet::bottom(),
                   .call_kind = CallKind::callsite()}),
           test::make_taint_config(
@@ -1371,7 +1384,7 @@ TEST_F(CallPositionFramesTest, Propagate) {
                       Path{PathElement::field("Argument(-1)")}),
                   .callee = two,
                   .call_position = call_position,
-                  .origins = MethodSet{one},
+                  .origins = OriginSet{one_origin},
                   .locally_inferred_features = FeatureMayAlwaysSet::bottom(),
                   .canonical_names =
                       CanonicalNameSetAbstractDomain{
@@ -1467,6 +1480,8 @@ TEST_F(CallPositionFramesTest, AttachPosition) {
       context.methods->create(redex::create_void_method(scope, "LOne;", "one"));
   auto* two =
       context.methods->create(redex::create_void_method(scope, "LTwo;", "two"));
+  auto* one_origin = context.origin_factory->method_origin(one);
+  auto* two_origin = context.origin_factory->method_origin(two);
 
   auto* feature_one = context.feature_factory->get("FeatureOne");
   auto* feature_two = context.feature_factory->get("FeatureTwo");
@@ -1478,7 +1493,7 @@ TEST_F(CallPositionFramesTest, AttachPosition) {
           test_kind,
           test::FrameProperties{
               .call_position = test_position,
-              .origins = MethodSet{one},
+              .origins = OriginSet{one_origin},
               .locally_inferred_features = FeatureMayAlwaysSet{feature_one},
               .user_features = FeatureSet{feature_two}}),
       test::make_taint_config(
@@ -1486,7 +1501,7 @@ TEST_F(CallPositionFramesTest, AttachPosition) {
           test::FrameProperties{
               .callee_port = AccessPath(Root(Root::Kind::Argument, 0)),
               .call_position = test_position,
-              .origins = MethodSet{two}}),
+              .origins = OriginSet{two_origin}}),
   };
 
   auto* new_test_position = context.positions->get(std::nullopt, 2);
@@ -1500,7 +1515,7 @@ TEST_F(CallPositionFramesTest, AttachPosition) {
               test_kind,
               test::FrameProperties{
                   .call_position = new_test_position,
-                  .origins = MethodSet{one},
+                  .origins = OriginSet{one_origin},
                   .inferred_features =
                       FeatureMayAlwaysSet{feature_one, feature_two},
                   .locally_inferred_features = FeatureMayAlwaysSet{feature_two},
@@ -1511,7 +1526,7 @@ TEST_F(CallPositionFramesTest, AttachPosition) {
               test::FrameProperties{
                   .callee_port = AccessPath(Root(Root::Kind::Argument, 0)),
                   .call_position = new_test_position,
-                  .origins = MethodSet{two},
+                  .origins = OriginSet{two_origin},
                   .locally_inferred_features = FeatureMayAlwaysSet::bottom(),
                   .call_kind = CallKind::origin(),
               }),
@@ -1937,9 +1952,10 @@ TEST_F(CallPositionFramesTest, Show) {
   Scope scope;
   auto* one =
       context.methods->create(redex::create_void_method(scope, "LOne;", "one"));
+  auto* one_origin = context.origin_factory->method_origin(one);
   auto* test_kind_one = context.kind_factory->get("TestSink1");
   auto frame_one = test::make_taint_config(
-      test_kind_one, test::FrameProperties{.origins = MethodSet{one}});
+      test_kind_one, test::FrameProperties{.origins = OriginSet{one_origin}});
   auto frames = CallPositionFrames{frame_one};
 
   EXPECT_EQ(

@@ -51,20 +51,20 @@ void Taint::difference_with(const Taint& other) {
       });
 }
 
-void Taint::set_leaf_origins_if_empty(const MethodSet& origins) {
-  map_.map([&origins](CalleeFrames frames) {
+void Taint::set_origins(const Method* method) {
+  map_.map([method](CalleeFrames frames) {
     if (frames.callee() == nullptr &&
         !frames.call_kind().is_propagation_without_trace()) {
-      frames.set_origins_if_empty(origins);
+      frames.set_origins(method);
     }
     return frames;
   });
 }
 
-void Taint::set_field_origins_if_empty(const Field* field) {
+void Taint::set_origins(const Field* field) {
   map_.map([field](CalleeFrames frames) {
     mt_assert(frames.callee() == nullptr);
-    frames.set_field_origins_if_empty(field);
+    frames.set_origins(field);
     return frames;
   });
 }
@@ -341,7 +341,6 @@ Taint Taint::propagation(PropagationConfig propagation) {
       /* class_interval_context */ CallClassIntervalContext(),
       /* distance */ 0,
       /* origins */ {},
-      /* field_origins */ {},
       /* inferred_features */ propagation.inferred_features(),
       /* user_features */ propagation.user_features(),
       /* via_type_of_ports */ {},
@@ -367,7 +366,6 @@ Taint Taint::propagation_taint(
       /* class_interval_context */ CallClassIntervalContext(),
       /* distance */ 0,
       /* origins */ {},
-      /* field_origins */ {},
       /* inferred_features */ inferred_features,
       /* user_features */ user_features,
       /* via_type_of_ports */ {},
@@ -401,7 +399,6 @@ Taint Taint::essential() const {
         /* class_interval_context */ CallClassIntervalContext(),
         /* distance */ 0,
         /* origins */ {},
-        /* field_origins */ {},
         /* inferred_features */ FeatureMayAlwaysSet::bottom(),
         /* user_features */ FeatureSet::bottom(),
         /* via_type_of_ports */ {},
