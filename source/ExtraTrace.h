@@ -9,7 +9,6 @@
 
 #include <mariana-trench/Access.h>
 #include <mariana-trench/CallKind.h>
-#include <mariana-trench/Hash.h>
 #include <mariana-trench/IncludeMacros.h>
 #include <mariana-trench/Kind.h>
 #include <mariana-trench/Method.h>
@@ -90,15 +89,15 @@ template <>
 struct std::hash<marianatrench::ExtraTrace> {
   std::size_t operator()(const marianatrench::ExtraTrace& extra_trace) const {
     std::size_t seed = 0;
+
     boost::hash_combine(seed, extra_trace.kind());
-    if (extra_trace.position() != nullptr) {
-      boost::hash_combine(seed, extra_trace.position());
-    }
+    boost::hash_combine(seed, extra_trace.position());
     boost::hash_combine(seed, extra_trace.call_kind().encode());
     if (extra_trace.callee() != nullptr) {
       boost::hash_combine(seed, extra_trace.callee());
+      boost::hash_combine(seed, extra_trace.callee_port());
     }
-    boost::hash_combine(seed, extra_trace.callee_port());
+
     return seed;
   }
 };
