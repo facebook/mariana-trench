@@ -21,6 +21,7 @@
 #include <mariana-trench/TransformKind.h>
 #include <mariana-trench/TransformList.h>
 #include <mariana-trench/TriggeredPartialKind.h>
+#include <mariana-trench/TupleHash.h>
 #include <mariana-trench/UniquePointerFactory.h>
 
 namespace marianatrench {
@@ -29,14 +30,6 @@ namespace marianatrench {
  * The kind factory.
  */
 class KindFactory final {
- private:
-  template <typename... Ts>
-  struct TupleHash {
-    std::size_t operator()(const std::tuple<Ts...>& tuple) const {
-      return boost::hash_value(tuple);
-    }
-  };
-
  public:
   KindFactory();
 
