@@ -175,12 +175,12 @@ void infer_input_taint(
     if (propagations_iterator != partitioned_by_propagations.end()) {
       auto& propagations = propagations_iterator->second;
 
-      if (!context->method()->is_static() && input_root.is_argument() &&
-          input_root.parameter_position() == 0) {
-        // Do not infer propagations Arg(0) -> Arg(0).
-        propagations.filter([](const Frame& frame) {
+      if (input_root.is_argument()) {
+        // Do not infer propagations Arg(i) -> Arg(i). (especially with x=0)
+        propagations.filter([input_root](const Frame& frame) {
           auto* kind = frame.kind()->as<LocalArgumentKind>();
-          return kind == nullptr || kind->parameter_position() != 0;
+          return kind == nullptr ||
+              kind->parameter_position() != input_root.parameter_position();
         });
       }
 

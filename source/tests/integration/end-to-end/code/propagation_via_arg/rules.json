@@ -1,0 +1,27 @@
+[
+  {
+    "name": "Flow",
+    "code": 1,
+    "description": "Flow without transform",
+    "sources": [
+      "Source"
+    ],
+    "sinks": [
+      "Sink"
+    ]
+  },
+  {
+    "name": "FlowTransform",
+    "code": 2,
+    "description": "Flow with transform",
+    "sources": [
+      "Source"
+    ],
+    "transforms": [
+      "Validators-Regex"
+    ],
+    "sinks": [
+      "Sink"
+    ]
+  }
+]

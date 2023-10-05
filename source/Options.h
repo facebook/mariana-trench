@@ -42,7 +42,8 @@ class Options final {
       bool emit_all_via_cast_features,
       const std::string& source_root_directory = ".",
       bool enable_cross_component_analysis = false,
-      ExportOriginsMode export_origins_mode = ExportOriginsMode::Always);
+      ExportOriginsMode export_origins_mode = ExportOriginsMode::Always,
+      bool propagate_across_arguments = false);
 
   explicit Options(const boost::program_options::variables_map& variables);
 
@@ -113,6 +114,7 @@ class Options final {
 
   bool enable_cross_component_analysis() const;
   ExportOriginsMode export_origins_mode() const;
+  bool propagate_across_arguments() const;
 
  private:
   std::vector<std::string> models_paths_;
@@ -168,6 +170,7 @@ class Options final {
 
   bool enable_cross_component_analysis_;
   ExportOriginsMode export_origins_mode_;
+  bool propagate_across_arguments_;
 };
 
 } // namespace marianatrench
