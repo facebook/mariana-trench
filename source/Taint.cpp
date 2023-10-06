@@ -30,42 +30,38 @@ std::size_t Taint::num_frames() const {
   return count;
 }
 
-void Taint::add(const CalleeFrames& callee_frames) {
+void Taint::add(const LocalTaint& local_taint) {
   map_.update(
-      callee_frames.callee_frame_key(),
-      [&callee_frames](const CalleeFrames& existing) {
-        return existing.join(callee_frames);
+      local_taint.call_info(), [&local_taint](LocalTaint* existing) -> void {
+        return existing->join_with(local_taint);
       });
 }
 
 void Taint::add(const TaintConfig& config) {
-  add(CalleeFrames{config});
+  add(LocalTaint{config});
 }
 
 void Taint::difference_with(const Taint& other) {
   map_.difference_like_operation(
-      other.map_, [](const CalleeFrames& left, const CalleeFrames& right) {
-        auto left_copy = left;
-        left_copy.difference_with(right);
-        return left_copy;
+      other.map_, [](LocalTaint* left, const LocalTaint& right) -> void {
+        left->difference_with(right);
       });
 }
 
 void Taint::set_origins(const Method* method) {
-  map_.map([method](CalleeFrames frames) {
-    if (frames.callee() == nullptr &&
-        !frames.call_kind().is_propagation_without_trace()) {
-      frames.set_origins(method);
+  map_.map([method](LocalTaint* local_taint) -> void {
+    if (local_taint->callee() == nullptr &&
+        !local_taint->call_kind().is_propagation_without_trace()) {
+      local_taint->set_origins(method);
     }
-    return frames;
   });
 }
 
 void Taint::set_origins(const Field* field) {
-  map_.map([field](CalleeFrames frames) {
-    mt_assert(frames.callee() == nullptr);
-    frames.set_origins(field);
-    return frames;
+  map_.map([field](LocalTaint* local_taint) -> void {
+    // Setting a field callee must always be done on non-propagated leaves.
+    mt_assert(local_taint->callee() == nullptr);
+    local_taint->set_origins(field);
   });
 }
 
@@ -74,23 +70,20 @@ void Taint::add_locally_inferred_features(const FeatureMayAlwaysSet& features) {
     return;
   }
 
-  map_.map([&features](CalleeFrames frames) {
-    frames.add_locally_inferred_features(features);
-    return frames;
+  map_.map([&features](LocalTaint* local_taint) -> void {
+    local_taint->add_locally_inferred_features(features);
   });
 }
 
 void Taint::add_local_position(const Position* position) {
-  map_.map([position](CalleeFrames frames) {
-    frames.add_local_position(position);
-    return frames;
+  map_.map([position](LocalTaint* local_taint) -> void {
+    local_taint->add_local_position(position);
   });
 }
 
 void Taint::set_local_positions(const LocalPositionSet& positions) {
-  map_.map([&positions](CalleeFrames frames) {
-    frames.set_local_positions(positions);
-    return frames;
+  map_.map([&positions](LocalTaint* local_taint) -> void {
+    local_taint->set_local_positions(positions);
   });
 }
 
@@ -103,22 +96,8 @@ LocalPositionSet Taint::local_positions() const {
 }
 
 FeatureMayAlwaysSet Taint::locally_inferred_features(
-    const Method* MT_NULLABLE callee,
-    CallKind call_kind,
-    const Position* MT_NULLABLE position,
-    const AccessPath& callee_port) const {
-  auto result = FeatureMayAlwaysSet::bottom();
-  for (const auto& [_, callee_frames] : map_.bindings()) {
-    // Key look up by callee will be nice but is not supported by underlying
-    // GroupHashedSetAbstractDomain.
-    if (callee_frames.callee() == callee &&
-        callee_frames.call_kind() == call_kind) {
-      result.join_with(
-          callee_frames.locally_inferred_features(position, callee_port));
-      break;
-    }
-  }
-  return result;
+    const CallInfo& call_info) const {
+  return map_.get(call_info).locally_inferred_features();
 }
 
 void Taint::add_locally_inferred_features_and_local_position(
@@ -146,14 +125,14 @@ Taint Taint::propagate(
     const CallClassIntervalContext& class_interval_context,
     const ClassIntervals::Interval& caller_class_interval) const {
   Taint result;
-  for (const auto& [_, frames] : map_.bindings()) {
-    if (frames.call_kind().is_propagation_without_trace()) {
+  for (const auto& [_, local_taint] : map_.bindings()) {
+    if (local_taint.call_kind().is_propagation_without_trace()) {
       // For propagation without traces, add as is.
-      result.add(frames);
+      result.add(local_taint);
       continue;
     }
 
-    auto propagated = frames.propagate(
+    auto propagated = local_taint.propagate(
         callee,
         callee_port,
         call_position,
@@ -175,8 +154,8 @@ Taint Taint::propagate(
 
 Taint Taint::attach_position(const Position* position) const {
   Taint result;
-  for (const auto& [_, frames] : map_.bindings()) {
-    result.add(frames.attach_position(position));
+  for (const auto& [_, local_taint] : map_.bindings()) {
+    result.add(local_taint.attach_position(position));
   }
   return result;
 }
@@ -188,8 +167,8 @@ Taint Taint::apply_transform(
     const TransformList* local_transforms) const {
   Taint result{};
 
-  for (const auto& [_, callee_frames] : map_.bindings()) {
-    auto new_callee_frames = callee_frames.apply_transform(
+  for (const auto& [_, local_taint] : map_.bindings()) {
+    auto new_callee_frames = local_taint.apply_transform(
         kind_factory, transforms_factory, used_kinds, local_transforms);
     if (new_callee_frames.is_bottom()) {
       continue;
@@ -205,8 +184,8 @@ Taint Taint::update_with_propagation_trace(
     const Frame& propagation_frame) const {
   Taint result;
 
-  for (const auto& [_, callee_frame] : map_.bindings()) {
-    result.add(callee_frame.update_with_propagation_trace(propagation_frame));
+  for (const auto& [_, local_taint] : map_.bindings()) {
+    result.add(local_taint.update_with_propagation_trace(propagation_frame));
   }
 
   return result;
@@ -214,12 +193,8 @@ Taint Taint::update_with_propagation_trace(
 
 Json::Value Taint::to_json(ExportOriginsMode export_origins_mode) const {
   auto taint = Json::Value(Json::arrayValue);
-  for (const auto& [_, frames] : map_.bindings()) {
-    auto frames_json = frames.to_json(export_origins_mode);
-    mt_assert(frames_json.isArray());
-    for (const auto& frame_json : frames_json) {
-      taint.append(frame_json);
-    }
+  for (const auto& [_, local_taint] : map_.bindings()) {
+    taint.append(local_taint.to_json(export_origins_mode));
   }
   return taint;
 }
@@ -238,9 +213,8 @@ std::ostream& operator<<(std::ostream& out, const Taint& taint) {
 }
 
 void Taint::append_to_propagation_output_paths(Path::Element path_element) {
-  map_.map([path_element](CalleeFrames frames) {
-    frames.append_to_propagation_output_paths(path_element);
-    return frames;
+  map_.map([path_element](LocalTaint* local_taint) -> void {
+    local_taint->append_to_propagation_output_paths(path_element);
   });
 }
 
@@ -249,9 +223,8 @@ void Taint::update_maximum_collapse_depth(CollapseDepth collapse_depth) {
     return;
   }
 
-  map_.map([collapse_depth](CalleeFrames frames) {
-    frames.update_maximum_collapse_depth(collapse_depth);
-    return frames;
+  map_.map([collapse_depth](LocalTaint* local_taint) -> void {
+    local_taint->update_maximum_collapse_depth(collapse_depth);
   });
 }
 
@@ -261,18 +234,21 @@ void Taint::update_non_leaf_positions(
         new_call_position,
     const std::function<LocalPositionSet(const LocalPositionSet&)>&
         new_local_positions) {
-  map_.map([&new_call_position, &new_local_positions](CalleeFrames frames) {
-    frames.update_non_leaf_positions(new_call_position, new_local_positions);
-    return frames;
-  });
+  Taint result;
+  for (const auto& [_, local_taint] : map_.bindings()) {
+    auto new_local_taint = local_taint;
+    new_local_taint.update_non_leaf_positions(
+        new_call_position, new_local_positions);
+    result.add(new_local_taint);
+  }
+  map_ = std::move(result.map_);
 }
 
 void Taint::filter_invalid_frames(
     const std::function<bool(const Method*, const AccessPath&, const Kind*)>&
         is_valid) {
-  map_.map([&is_valid](CalleeFrames frames) {
-    frames.filter_invalid_frames(is_valid);
-    return frames;
+  map_.map([&is_valid](LocalTaint* local_taint) -> void {
+    local_taint->filter_invalid_frames(is_valid);
   });
 }
 
@@ -280,7 +256,7 @@ bool Taint::contains_kind(const Kind* kind) const {
   return std::any_of(
       map_.bindings().begin(),
       map_.bindings().end(),
-      [kind](const std::pair<CalleeFrames::Key, CalleeFrames>& iterator) {
+      [kind](const std::pair<CallInfo, LocalTaint>& iterator) {
         return iterator.second.contains_kind(kind);
       });
 }
@@ -325,8 +301,8 @@ void Taint::intersect_intervals_with(const Taint& other) {
 
 FeatureMayAlwaysSet Taint::features_joined() const {
   auto features = FeatureMayAlwaysSet::bottom();
-  for (const auto& [_, callee_frames] : map_.bindings()) {
-    features.join_with(callee_frames.features_joined());
+  for (const auto& [_, local_taint] : map_.bindings()) {
+    features.join_with(local_taint.features_joined());
   }
   return features;
 }

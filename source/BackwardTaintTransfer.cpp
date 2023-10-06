@@ -399,11 +399,8 @@ void apply_propagations(
     auto* position =
         context->positions.get(callee.position, input.root(), instruction);
     for (const auto& propagation : propagations.frames_iterator()) {
-      auto locally_inferred_features = propagations.locally_inferred_features(
-          propagation.callee(),
-          propagation.call_kind(),
-          propagation.call_position(),
-          *propagation.callee_port());
+      auto locally_inferred_features =
+          propagations.locally_inferred_features(propagation.call_info());
       apply_propagation(
           context,
           aliasing,

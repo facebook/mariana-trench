@@ -15,12 +15,13 @@
 
 #include <sparta/AbstractDomain.h>
 #include <sparta/FlattenIterator.h>
-#include <sparta/PatriciaTreeMapAbstractPartition.h>
+#include <sparta/PatriciaTreeHashMapAbstractPartition.h>
 
-#include <mariana-trench/CalleeFrames.h>
+#include <mariana-trench/CallInfo.h>
 #include <mariana-trench/Frame.h>
 #include <mariana-trench/IncludeMacros.h>
 #include <mariana-trench/KindFactory.h>
+#include <mariana-trench/LocalTaint.h>
 #include <mariana-trench/Log.h>
 #include <mariana-trench/PropagationConfig.h>
 #include <mariana-trench/TaintConfig.h>
@@ -31,12 +32,11 @@ class TaintFramesIterator;
 
 /**
  * Represents an abstract taint, as a map from taint kind to set of frames.
- * Replacement of `Taint`.
  */
 class Taint final : public sparta::AbstractDomain<Taint> {
  private:
   using Map =
-      sparta::PatriciaTreeMapAbstractPartition<CalleeFrames::Key, CalleeFrames>;
+      sparta::PatriciaTreeHashMapAbstractPartition<CallInfo, LocalTaint>;
 
   explicit Taint(Map map) : map_(std::move(map)) {}
 
@@ -66,7 +66,7 @@ class Taint final : public sparta::AbstractDomain<Taint> {
 
   void add(const TaintConfig& config);
 
-  void add(const CalleeFrames& callee_frames);
+  void add(const LocalTaint& local_taint);
 
   void clear() {
     map_.set_to_bottom();
@@ -78,9 +78,8 @@ class Taint final : public sparta::AbstractDomain<Taint> {
   void map(Function&& f) {
     static_assert(std::is_same_v<decltype(f(std::declval<Frame&&>())), Frame>);
 
-    map_.map([f = std::forward<Function>(f)](CalleeFrames callee_frames) {
-      callee_frames.map(f);
-      return callee_frames;
+    map_.map([f = std::forward<Function>(f)](LocalTaint* local_taint) -> void {
+      local_taint->map(f);
     });
   }
 
@@ -89,11 +88,11 @@ class Taint final : public sparta::AbstractDomain<Taint> {
     static_assert(
         std::is_same_v<decltype(predicate(std::declval<const Frame>())), bool>);
 
-    map_.map([predicate = std::forward<Predicate>(predicate)](
-                 CalleeFrames callee_frames) {
-      callee_frames.filter(predicate);
-      return callee_frames;
-    });
+    map_.map(
+        [predicate = std::forward<Predicate>(predicate)](
+            LocalTaint* local_taint) -> void {
+          local_taint->filter(predicate);
+        });
   }
 
   /**
@@ -120,10 +119,7 @@ class Taint final : public sparta::AbstractDomain<Taint> {
   LocalPositionSet local_positions() const;
 
   FeatureMayAlwaysSet locally_inferred_features(
-      const Method* MT_NULLABLE callee,
-      CallKind call_kind,
-      const Position* MT_NULLABLE position,
-      const AccessPath& callee_port) const;
+      const CallInfo& call_info) const;
 
   void add_locally_inferred_features_and_local_position(
       const FeatureMayAlwaysSet& features,
@@ -166,11 +162,12 @@ class Taint final : public sparta::AbstractDomain<Taint> {
       TransformKind&& transform_kind, // std::vector<const Kind*>(const Kind*)
       AddFeatures&& add_features // FeatureMayAlwaysSet(const Kind*)
   ) {
-    map_.map([transform_kind = std::forward<TransformKind>(transform_kind),
-              add_features](CalleeFrames frames) {
-      frames.transform_kind_with_features(transform_kind, add_features);
-      return frames;
-    });
+    map_.map(
+        [transform_kind = std::forward<TransformKind>(transform_kind),
+         add_features](LocalTaint* local_taint) -> void {
+          local_taint->transform_kind_with_features(
+              transform_kind, add_features);
+        });
   }
 
   Taint apply_transform(
@@ -232,13 +229,11 @@ class Taint final : public sparta::AbstractDomain<Taint> {
   std::unordered_map<Key, Taint> partition_by_kind(
       const std::function<Key(const Kind*)>& map_kind) const {
     std::unordered_map<Key, Taint> result;
-    for (const auto& [_, callee_frames] : map_.bindings()) {
-      auto callee_frames_partitioned =
-          callee_frames.partition_by_kind(map_kind);
+    for (const auto& [_, local_taint] : map_.bindings()) {
+      auto local_taint_partitioned = local_taint.partition_by_kind(map_kind);
 
-      for (const auto& [mapped_value, callee_frames] :
-           callee_frames_partitioned) {
-        result[mapped_value].add(callee_frames);
+      for (const auto& [mapped_value, local_taint] : local_taint_partitioned) {
+        result[mapped_value].add(local_taint);
       }
     }
     return result;
@@ -248,9 +243,9 @@ class Taint final : public sparta::AbstractDomain<Taint> {
   std::unordered_map<Key, Taint> partition_by_call_kind(
       const std::function<Key(CallKind)>& map_call_kind) const {
     std::unordered_map<Key, Taint> result;
-    for (const auto& [_, callee_frames] : map_.bindings()) {
-      auto mapped_value = map_call_kind(callee_frames.call_kind());
-      result[mapped_value].add(callee_frames);
+    for (const auto& [_, local_taint] : map_.bindings()) {
+      auto mapped_value = map_call_kind(local_taint.call_kind());
+      result[mapped_value].add(local_taint);
     }
     return result;
   }
@@ -295,19 +290,19 @@ class Taint final : public sparta::AbstractDomain<Taint> {
 class TaintFramesIterator {
  private:
   struct KeyToFramesMapDereference {
-    static CalleeFrames::iterator begin(
-        const std::pair<CalleeFrames::Key, CalleeFrames>& iterator) {
+    static LocalTaint::iterator begin(
+        const std::pair<CallInfo, LocalTaint>& iterator) {
       return iterator.second.begin();
     }
-    static CalleeFrames::iterator end(
-        const std::pair<CalleeFrames::Key, CalleeFrames>& iterator) {
+    static LocalTaint::iterator end(
+        const std::pair<CallInfo, LocalTaint>& iterator) {
       return iterator.second.end();
     }
   };
 
   using ConstIterator = sparta::FlattenIterator<
       /* OuterIterator */ Taint::Map::MapType::iterator,
-      /* InnerIterator */ CalleeFrames::iterator,
+      /* InnerIterator */ LocalTaint::iterator,
       KeyToFramesMapDereference>;
 
  public:

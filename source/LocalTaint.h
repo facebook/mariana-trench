@@ -19,6 +19,7 @@
 
 #include <mariana-trench/Access.h>
 #include <mariana-trench/Assert.h>
+#include <mariana-trench/CallInfo.h>
 #include <mariana-trench/Frame.h>
 #include <mariana-trench/IncludeMacros.h>
 #include <mariana-trench/KindFrames.h>
@@ -27,11 +28,10 @@
 namespace marianatrench {
 
 /**
- * Represents a set of frames with the same callee port.
- * Based on its position in `Taint`, it is expected that all frames within
- * this class have the same callee, call info, and call position.
+ * Represents a set of frames with the same call info (calle, call kind, callee
+ * port, position).
  */
-class CalleePortFrames final : public sparta::AbstractDomain<CalleePortFrames> {
+class LocalTaint final : public sparta::AbstractDomain<LocalTaint> {
  private:
   using FramesByKind =
       sparta::PatriciaTreeMapAbstractPartition<const Kind*, KindFrames>;
@@ -64,48 +64,46 @@ class CalleePortFrames final : public sparta::AbstractDomain<CalleePortFrames> {
   using const_pointer = const Frame*;
 
  private:
-  explicit CalleePortFrames(
-      const AccessPath* MT_NULLABLE callee_port,
+  explicit LocalTaint(
+      const CallInfo& call_info,
       FramesByKind frames,
       LocalPositionSet local_positions,
       FeatureMayAlwaysSet locally_inferred_features)
-      : callee_port_(std::move(callee_port)),
+      : call_info_(call_info),
         frames_(std::move(frames)),
         local_positions_(std::move(local_positions)),
         locally_inferred_features_(std::move(locally_inferred_features)) {
     mt_assert(!local_positions_.is_bottom());
-    if (frames_.is_bottom()) {
-      mt_assert(
-          callee_port == nullptr && local_positions_.empty() &&
-          locally_inferred_features_.is_bottom());
-    }
+
+    // This constructor should NOT be used to create bottom.
+    mt_assert(!frames_.is_bottom());
   }
 
  public:
   /**
-   * Create the bottom (i.e, empty) frame set. Value of callee_port_ doesn't
-   * matter, so we pick some default (nullptr). Also avoid using `bottom()` for
-   * local_positions_ because `bottom().add(new_position)` gives `bottom()`
-   * which is not the desired behavior for `CalleePortFrames::add`.
-   * Consider re-visiting LocalPositionSet.
+   * Create the bottom (i.e, empty) local taint.
+   *
+   * We do not use `bottom()` for `local_positions_` because
+   * `bottom().add(new_position)` gives `bottom()` which is not the desired
+   * behavior for `LocalTaint::add`. Consider re-visiting LocalPositionSet.
    */
-  CalleePortFrames()
-      : callee_port_(nullptr),
+  LocalTaint()
+      : call_info_(CallInfo::make_default()),
         frames_(FramesByKind::bottom()),
         local_positions_({}),
         locally_inferred_features_(FeatureMayAlwaysSet::bottom()) {}
 
-  explicit CalleePortFrames(std::initializer_list<TaintConfig> configs);
+  explicit LocalTaint(std::initializer_list<TaintConfig> configs);
 
-  explicit CalleePortFrames(const Frame& frame);
+  explicit LocalTaint(const Frame& frame);
 
-  INCLUDE_DEFAULT_COPY_CONSTRUCTORS_AND_ASSIGNMENTS(CalleePortFrames)
+  INCLUDE_DEFAULT_COPY_CONSTRUCTORS_AND_ASSIGNMENTS(LocalTaint)
 
-  static CalleePortFrames bottom() {
-    return CalleePortFrames();
+  static LocalTaint bottom() {
+    return LocalTaint();
   }
 
-  static CalleePortFrames top() {
+  static LocalTaint top() {
     mt_unreachable();
   }
 
@@ -116,7 +114,7 @@ class CalleePortFrames final : public sparta::AbstractDomain<CalleePortFrames> {
       // updated. Not strictly required for correct functionality, but helpful
       // to have a definitive notion of bottom.
       mt_assert(
-          callee_port_ == nullptr && local_positions_.empty() &&
+          call_info_.is_default() && local_positions_.empty() &&
           locally_inferred_features_.is_bottom());
     }
     return is_bottom;
@@ -127,7 +125,7 @@ class CalleePortFrames final : public sparta::AbstractDomain<CalleePortFrames> {
   }
 
   void set_to_bottom() {
-    callee_port_ = nullptr;
+    call_info_ = CallInfo::make_default();
     frames_.set_to_bottom();
     local_positions_ = {};
     locally_inferred_features_.set_to_bottom();
@@ -142,9 +140,24 @@ class CalleePortFrames final : public sparta::AbstractDomain<CalleePortFrames> {
     return frames_.is_bottom();
   }
 
-  const AccessPath* callee_port() const {
-    mt_assert(callee_port_ != nullptr);
-    return callee_port_;
+  const CallInfo& call_info() const {
+    return call_info_;
+  }
+
+  const Method* MT_NULLABLE callee() const {
+    return call_info_.callee();
+  }
+
+  CallKind call_kind() const {
+    return call_info_.call_kind();
+  }
+
+  const AccessPath* MT_NULLABLE callee_port() const {
+    return call_info_.callee_port();
+  }
+
+  const Position* MT_NULLABLE call_position() const {
+    return call_info_.call_position();
   }
 
   const LocalPositionSet& local_positions() const {
@@ -159,19 +172,19 @@ class CalleePortFrames final : public sparta::AbstractDomain<CalleePortFrames> {
 
   void add(const Frame& frame);
 
-  bool leq(const CalleePortFrames& other) const;
+  bool leq(const LocalTaint& other) const;
 
-  bool equals(const CalleePortFrames& other) const;
+  bool equals(const LocalTaint& other) const;
 
-  void join_with(const CalleePortFrames& other);
+  void join_with(const LocalTaint& other);
 
-  void widen_with(const CalleePortFrames& other);
+  void widen_with(const LocalTaint& other);
 
-  void meet_with(const CalleePortFrames& other);
+  void meet_with(const LocalTaint& other);
 
-  void narrow_with(const CalleePortFrames& other);
+  void narrow_with(const LocalTaint& other);
 
-  void difference_with(const CalleePortFrames& other);
+  void difference_with(const LocalTaint& other);
 
   template <typename Function> // Frame(Frame)
   void map(Function&& f) {
@@ -227,7 +240,7 @@ class CalleePortFrames final : public sparta::AbstractDomain<CalleePortFrames> {
    *
    * Return bottom if the taint should not be propagated.
    */
-  CalleePortFrames propagate(
+  LocalTaint propagate(
       const Method* callee,
       const AccessPath& callee_port,
       const Position* call_position,
@@ -242,7 +255,7 @@ class CalleePortFrames final : public sparta::AbstractDomain<CalleePortFrames> {
    * Propagate the taint from the callee to the caller to track the next hops
    * for taints with CallInfo kind PropagationWithTrace.
    */
-  CalleePortFrames update_with_propagation_trace(
+  LocalTaint update_with_propagation_trace(
       const Frame& propagation_frame) const;
 
   template <typename TransformKind, typename AddFeatures>
@@ -278,11 +291,23 @@ class CalleePortFrames final : public sparta::AbstractDomain<CalleePortFrames> {
     }
   }
 
-  CalleePortFrames apply_transform(
+  /* Return the set of leaf frames with the given position. */
+  LocalTaint attach_position(const Position* call_position) const;
+
+  LocalTaint apply_transform(
       const KindFactory& kind_factory,
       const TransformsFactory& transforms,
       const UsedKinds& used_kinds,
       const TransformList* local_transforms) const;
+
+  void update_maximum_collapse_depth(CollapseDepth collapse_depth);
+
+  void update_non_leaf_positions(
+      const std::function<
+          const Position*(const Method*, const AccessPath&, const Position*)>&
+          new_call_position,
+      const std::function<LocalPositionSet(const LocalPositionSet&)>&
+          new_local_positions);
 
   void filter_invalid_frames(
       const std::function<
@@ -292,14 +317,14 @@ class CalleePortFrames final : public sparta::AbstractDomain<CalleePortFrames> {
   bool contains_kind(const Kind*) const;
 
   template <class T>
-  std::unordered_map<T, CalleePortFrames> partition_by_kind(
+  std::unordered_map<T, LocalTaint> partition_by_kind(
       const std::function<T(const Kind*)>& map_kind) const {
-    std::unordered_map<T, CalleePortFrames> result;
+    std::unordered_map<T, LocalTaint> result;
 
     for (const auto& [kind, frame] : frames_.bindings()) {
       T mapped_value = map_kind(kind);
-      result[mapped_value].join_with(CalleePortFrames(
-          callee_port_,
+      result[mapped_value].join_with(LocalTaint(
+          call_info_,
           FramesByKind{std::pair(kind, frame)},
           local_positions_,
           locally_inferred_features_));
@@ -309,32 +334,14 @@ class CalleePortFrames final : public sparta::AbstractDomain<CalleePortFrames> {
 
   FeatureMayAlwaysSet features_joined() const;
 
-  Json::Value to_json(
-      const Method* MT_NULLABLE callee,
-      const Position* MT_NULLABLE position,
-      CallKind call_kind,
-      ExportOriginsMode export_origins_mode) const;
+  Json::Value to_json(ExportOriginsMode export_origins_mode) const;
 
-  friend std::ostream& operator<<(
-      std::ostream& out,
-      const CalleePortFrames& frames);
+  friend std::ostream& operator<<(std::ostream& out, const LocalTaint& frames);
 
  private:
-  /**
-   * Checks that this object and `other` have the same key. Abstract domain
-   * operations here only operate on `CalleePortFrames` that have the same key.
-   * The only exception is if one of them `is_bottom()`.
-   */
-  bool has_same_key(const CalleePortFrames& other) const {
-    return callee_port_ == other.callee_port_;
-  }
-
- private:
-  const AccessPath* MT_NULLABLE callee_port_;
+  CallInfo call_info_;
   FramesByKind frames_;
-
   LocalPositionSet local_positions_;
-
   FeatureMayAlwaysSet locally_inferred_features_;
 };
 

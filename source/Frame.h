@@ -19,6 +19,7 @@
 #include <mariana-trench/AccessPathFactory.h>
 #include <mariana-trench/Assert.h>
 #include <mariana-trench/CallClassIntervalContext.h>
+#include <mariana-trench/CallInfo.h>
 #include <mariana-trench/CallKind.h>
 #include <mariana-trench/CanonicalName.h>
 #include <mariana-trench/ClassIntervals.h>
@@ -213,6 +214,10 @@ class Frame final : public sparta::AbstractDomain<Frame> {
 
   const CallKind& call_kind() const {
     return call_kind_;
+  }
+
+  CallInfo call_info() const {
+    return CallInfo(callee_, call_kind_, callee_port_, call_position_);
   }
 
   void append_to_propagation_output_paths(Path::Element path_element);

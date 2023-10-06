@@ -293,11 +293,8 @@ void apply_propagations(
       FeatureMayAlwaysSet features = FeatureMayAlwaysSet::make_always(
           callee.model.add_features_to_arguments(output_root));
       features.add(propagation.features());
-      features.add(propagations.locally_inferred_features(
-          propagation.callee(),
-          propagation.call_kind(),
-          propagation.call_position(),
-          *propagation.callee_port()));
+      features.add(
+          propagations.locally_inferred_features(propagation.call_info()));
       features.add_always(
           callee.model.add_features_to_arguments(input_path.root()));
 

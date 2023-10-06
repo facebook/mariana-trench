@@ -20,7 +20,6 @@
 #include <mariana-trench/Assert.h>
 #include <mariana-trench/CallClassIntervalContext.h>
 #include <mariana-trench/Frame.h>
-#include <mariana-trench/FramesMap.h>
 #include <mariana-trench/IncludeMacros.h>
 #include <mariana-trench/TaintConfig.h>
 
