@@ -15,7 +15,10 @@ TaintConfigTemplate TaintConfigTemplate::from_json(const Json::Value& value, Con
   std::vector<AnnotationFeatureTemplate> annotation_features;
   if (value.isMember("via_annotation")) {
     for (const auto& feature_value : JsonValidation::null_or_array(value, "via_annotation")) {
-      annotation_features.emplace_back(AnnotationFeatureTemplate::from_json(feature_value));
+      auto template_feature = AnnotationFeatureTemplate::from_json(feature_value);
+      if (template_feature.has_value()) {
+        annotation_features.emplace_back(template_feature.value());
+      }
     }
   }
   return TaintConfigTemplate{std::move(taint_config), std::move(annotation_features)};

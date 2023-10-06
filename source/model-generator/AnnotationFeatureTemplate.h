@@ -60,7 +60,7 @@ class AnnotationTarget {
  */
 class AnnotationFeatureTemplate {
  public:
-  static AnnotationFeatureTemplate from_json(const Json::Value& value);
+  static std::optional<AnnotationFeatureTemplate> from_json(const Json::Value& value);
 
   /**
    * Converts the annotation feature to a concrete user feature based on

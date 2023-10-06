@@ -147,6 +147,10 @@
                     "target": "Argument(name)",
                     "tag": "ParameterNameLabel",
                     "annotation_parameter": "description"
+                  },
+                  {
+                    "type": "Lcom/facebook/marianatrench/integrationtests/TypeThatDoesnNotExist;",
+                    "target": "Argument(name)"
                   }
                 ]
               }

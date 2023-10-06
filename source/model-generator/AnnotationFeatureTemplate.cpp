@@ -60,12 +60,28 @@ AnnotationFeatureTemplate::AnnotationFeatureTemplate(
                                      ? annotation_parameter_name
                                      : DexString::get_string("value")) {}
 
-AnnotationFeatureTemplate AnnotationFeatureTemplate::from_json(
+std::optional<AnnotationFeatureTemplate> AnnotationFeatureTemplate::from_json(
     const Json::Value& value) {
   JsonValidation::check_unexpected_members(
       value, {"target", "type", "tag", "annotation_parameter"});
   AnnotationTarget port = AnnotationTarget::from_json(value["target"]);
-  const DexType* dex_type = JsonValidation::dex_type(value, "type");
+  const DexType* dex_type = nullptr;
+  try {
+    dex_type = redex::get_or_make_type(JsonValidation::string(value, "type"));
+  } catch (const JsonValidationError& exception) {
+    const char* const message = exception.what();
+    if (!std::strstr(message, "existing type name")) {
+      throw;
+    }
+
+    auto type_name = JsonValidation::string(value, "type");
+    WARNING(4,
+            "Annotation type `{}` not found. No user features will be "
+            "generated for this annotation.",
+            type_name);
+    return std::nullopt;
+  }
+
   Json::Value optional_tag = value["tag"];
   const DexString* tag = nullptr;
   if (!optional_tag.isNull()) {
