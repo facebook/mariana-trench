@@ -120,10 +120,10 @@ const Feature* MT_NULLABLE AnnotationFeatureTemplate::instantiate(
     case AnnotationTarget::Kind::Parameter:
       const Root root = target_.argument().instantiate(parameter_positions);
       anno_set = method->get_parameter_annotations(root.parameter_position());
-      if (!anno_set) {
-        return nullptr;
-      }
       break;
+  }
+  if (!anno_set) {
+    return nullptr;
   }
 
   const std::vector<std::unique_ptr<DexAnnotation>>& annotations =
