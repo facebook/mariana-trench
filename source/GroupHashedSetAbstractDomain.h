@@ -310,7 +310,7 @@ class GroupHashedSetAbstractDomain final
 
   /* Update all elements without affecting the grouping. */
   template <typename Function> // Element(Element)
-  void map(Function&& f) {
+  void transform(Function&& f) {
     static_assert(
         std::is_same_v<decltype(f(std::declval<Element&&>())), Element>);
 

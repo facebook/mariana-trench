@@ -187,10 +187,10 @@ class LocalTaint final : public sparta::AbstractDomain<LocalTaint> {
   void difference_with(const LocalTaint& other);
 
   template <typename Function> // Frame(Frame)
-  void map(Function&& f) {
+  void transform_frames(Function&& f) {
     static_assert(std::is_same_v<decltype(f(std::declval<Frame&&>())), Frame>);
-    frames_.map([f = std::forward<Function>(f)](KindFrames kind_frames) {
-      kind_frames.map(f);
+    frames_.transform([f = std::forward<Function>(f)](KindFrames kind_frames) {
+      kind_frames.transform(f);
       return kind_frames;
     });
     if (frames_.is_bottom()) {
@@ -199,11 +199,11 @@ class LocalTaint final : public sparta::AbstractDomain<LocalTaint> {
   }
 
   template <typename Predicate> // bool(const Frame&)
-  void filter(Predicate&& predicate) {
+  void filter_frames(Predicate&& predicate) {
     static_assert(
         std::is_same_v<decltype(predicate(std::declval<const Frame>())), bool>);
-    frames_.map([predicate = std::forward<Predicate>(predicate)](
-                    KindFrames kind_frames) {
+    frames_.transform([predicate = std::forward<Predicate>(predicate)](
+                          KindFrames kind_frames) {
       kind_frames.filter(predicate);
       return kind_frames;
     });

@@ -175,12 +175,12 @@ class AccessPathTreeDomain final
 
   /* Apply the given function on all elements. */
   template <typename Function> // Elements(Elements)
-  void map(Function&& f) {
+  void transform(Function&& f) {
     static_assert(
         std::is_same_v<decltype(f(std::declval<Elements&&>())), Elements>);
 
-    map_.map([f = std::forward<Function>(f)](AbstractTreeDomainT tree) {
-      tree.map(f);
+    map_.transform([f = std::forward<Function>(f)](AbstractTreeDomainT tree) {
+      tree.transform(f);
       return tree;
     });
   }
@@ -221,7 +221,7 @@ class AccessPathTreeDomain final
 
   /* Collapse children that have more than `max_leaves` leaves. */
   void limit_leaves(std::size_t max_leaves) {
-    map_.map([max_leaves](AbstractTreeDomainT tree) {
+    map_.transform([max_leaves](AbstractTreeDomainT tree) {
       tree.limit_leaves(max_leaves);
       return tree;
     });
@@ -239,8 +239,8 @@ class AccessPathTreeDomain final
                   decltype(transform(std::declval<Elements&&>())),
                   Elements>);
 
-    map_.map([max_leaves, transform = std::forward<Transform>(transform)](
-                 AbstractTreeDomainT tree) {
+    map_.transform([max_leaves, transform = std::forward<Transform>(transform)](
+                       AbstractTreeDomainT tree) {
       tree.limit_leaves(max_leaves, transform);
       return tree;
     });
@@ -274,11 +274,12 @@ class AccessPathTreeDomain final
                   decltype(transform_on_collapse(std::declval<Elements&&>())),
                   Elements>);
 
-    map_.map([make_mold = std::forward<MakeMold>(make_mold),
-              transform_on_collapse = std::forward<Transform>(
-                  transform_on_collapse)](const AbstractTreeDomainT& tree) {
+    map_.transform([make_mold = std::forward<MakeMold>(make_mold),
+                    transform_on_collapse =
+                        std::forward<Transform>(transform_on_collapse)](
+                       const AbstractTreeDomainT& tree) {
       auto mold = tree;
-      mold.map(make_mold);
+      mold.transform(make_mold);
 
       auto copy = tree;
       copy.shape_with(mold, transform_on_collapse);

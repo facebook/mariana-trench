@@ -516,7 +516,7 @@ TEST_F(AccessPathTreeDomainTest, Elements) {
               IntSet{3, 4}}));
 }
 
-TEST_F(AccessPathTreeDomainTest, Map) {
+TEST_F(AccessPathTreeDomainTest, Transform) {
   const auto x = PathElement::field("x");
   const auto y = PathElement::field("y");
   const auto z = PathElement::field("z");
@@ -530,7 +530,7 @@ TEST_F(AccessPathTreeDomainTest, Map) {
       {AccessPath(Root(Root::Kind::Argument, 2)), IntSet{1, 2}},
       {AccessPath(Root(Root::Kind::Argument, 2), Path{x, y}), IntSet{3, 4}},
   };
-  tree.map([](const IntSet& set) {
+  tree.transform([](const IntSet& set) {
     auto new_set = IntSet{};
     for (int value : set.elements()) {
       new_set.add(value * value);

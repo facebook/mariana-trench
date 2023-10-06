@@ -615,7 +615,7 @@ class AbstractTreeDomain final
     if (height == 0) {
       collapse_inplace();
     } else {
-      children_.map([height](AbstractTreeDomain subtree) {
+      children_.transform([height](AbstractTreeDomain subtree) {
         subtree.collapse_deeper_than(height - 1);
         return subtree;
       });
@@ -632,11 +632,12 @@ class AbstractTreeDomain final
     if (height == 0) {
       collapse_inplace(std::forward<Transform>(transform));
     } else {
-      children_.map([height, transform = std::forward<Transform>(transform)](
-                        AbstractTreeDomain subtree) {
-        subtree.collapse_deeper_than(height - 1, transform);
-        return subtree;
-      });
+      children_.transform(
+          [height, transform = std::forward<Transform>(transform)](
+              AbstractTreeDomain subtree) {
+            subtree.collapse_deeper_than(height - 1, transform);
+            return subtree;
+          });
     }
   }
 
@@ -649,7 +650,7 @@ class AbstractTreeDomain final
 
   /* Remove the given elements from the subtrees. */
   void prune_children(const Elements& accumulator) {
-    children_.map([&accumulator](AbstractTreeDomain subtree) {
+    children_.transform([&accumulator](AbstractTreeDomain subtree) {
       subtree.prune(accumulator);
       return subtree;
     });
@@ -1147,16 +1148,16 @@ class AbstractTreeDomain final
 
   /* Apply the given function on all elements. */
   template <typename Function> // Elements(Elements)
-  void map(Function&& f) {
+  void transform(Function&& f) {
     static_assert(
         std::is_same_v<decltype(f(std::declval<Elements&&>())), Elements>);
 
-    map_internal(std::forward<Function>(f), Elements::bottom());
+    transform_internal(std::forward<Function>(f), Elements::bottom());
   }
 
  private:
   template <typename Function> // Elements(Elements)
-  void map_internal(Function&& f, Elements accumulator) {
+  void transform_internal(Function&& f, Elements accumulator) {
     if (!elements_.is_bottom()) {
       elements_ = f(std::move(elements_));
       elements_.difference_with(accumulator);
@@ -1165,9 +1166,9 @@ class AbstractTreeDomain final
 
     accumulator = Configuration::transform_on_sink(std::move(accumulator));
 
-    children_.map(
+    children_.transform(
         [f = std::forward<Function>(f), &accumulator](AbstractTreeDomain tree) {
-          tree.map_internal(f, accumulator);
+          tree.transform_internal(f, accumulator);
           return tree;
         });
   }

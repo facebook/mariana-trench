@@ -178,7 +178,7 @@ void infer_input_taint(
 
       if (input_root.is_argument()) {
         // Do not infer propagations Arg(i) -> Arg(i). (especially with x=0)
-        propagations.filter([input_root](const Frame& frame) {
+        propagations.filter_frames([input_root](const Frame& frame) {
           auto* kind = frame.kind()->as<LocalArgumentKind>();
           return kind == nullptr ||
               kind->parameter_position() != input_root.parameter_position();
@@ -189,7 +189,7 @@ void infer_input_taint(
         continue;
       }
 
-      propagations.map([context, &input_root](Frame frame) {
+      propagations.transform_frames([context, &input_root](Frame frame) {
         auto* propagation_kind = frame.propagation_kind();
         frame.add_user_features(
             context->previous_model.attach_to_propagations(input_root));

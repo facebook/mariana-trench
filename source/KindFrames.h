@@ -110,10 +110,10 @@ class KindFrames final : public sparta::AbstractDomain<KindFrames> {
   void difference_with(const KindFrames& other);
 
   template <typename Function> // Frame(Frame)
-  void map(Function&& f) {
+  void transform(Function&& f) {
     static_assert(std::is_same_v<decltype(f(std::declval<Frame&&>())), Frame>);
 
-    frames_.map([f = std::forward<Function>(f)](Frame* frame) -> void {
+    frames_.transform([f = std::forward<Function>(f)](Frame* frame) -> void {
       // The map operation must not change the kind, unless it is
       // Frame::bottom(), in which case, the entry will be dropped from the map
       *frame = f(std::move(*frame));
@@ -129,7 +129,7 @@ class KindFrames final : public sparta::AbstractDomain<KindFrames> {
     static_assert(
         std::is_same_v<decltype(predicate(std::declval<const Frame>())), bool>);
 
-    frames_.map(
+    frames_.transform(
         [predicate = std::forward<Predicate>(predicate)](Frame* frame) -> void {
           if (!predicate(*frame)) {
             frame->set_to_bottom();

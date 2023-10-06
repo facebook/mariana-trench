@@ -2054,7 +2054,7 @@ TEST_F(AbstractTreeDomainTest, Elements) {
           Pair{Path{x, x}, IntSet{9, 10}}));
 }
 
-TEST_F(AbstractTreeDomainTest, Map) {
+TEST_F(AbstractTreeDomainTest, Transform) {
   const auto x = PathElement::field("x");
   const auto y = PathElement::field("y");
 
@@ -2065,7 +2065,7 @@ TEST_F(AbstractTreeDomainTest, Map) {
       {Path{y}, IntSet{7, 8}},
       {Path{y, x}, IntSet{9, 10}},
   };
-  tree.map([](const IntSet& set) {
+  tree.transform([](const IntSet& set) {
     auto new_set = IntSet{};
     for (int value : set.elements()) {
       new_set.add(value * value);

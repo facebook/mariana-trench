@@ -130,8 +130,8 @@ class TaintTree final : public sparta::AbstractDomain<TaintTree> {
 
   /* Apply the given function on all taint. */
   template <typename Function> // Taint(Taint)
-  void map(Function&& f) {
-    tree_.map(std::forward<Function>(f));
+  void transform(Function&& f) {
+    tree_.transform(std::forward<Function>(f));
   }
 
   friend std::ostream& operator<<(std::ostream& out, const TaintTree& tree) {
@@ -203,8 +203,8 @@ class TaintAccessPathTree final
 
   /* Apply the given function on all taint. */
   template <typename Function> // Taint(Taint)
-  void map(Function&& f) {
-    tree_.map(std::forward<Function>(f));
+  void transform(Function&& f) {
+    tree_.transform(std::forward<Function>(f));
   }
 
   /* Collapse children that have more than `max_leaves` leaves. */

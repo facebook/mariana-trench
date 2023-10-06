@@ -506,7 +506,7 @@ TEST_F(KindFramesTest, Iterator) {
       frames.end());
 }
 
-TEST_F(KindFramesTest, Map) {
+TEST_F(KindFramesTest, Transform) {
   auto context = test::make_empty_context();
 
   Scope scope;
@@ -531,7 +531,7 @@ TEST_F(KindFramesTest, Map) {
               .class_interval_context = interval_two,
           }),
   };
-  frames.map([feature_one](Frame frame) {
+  frames.transform([feature_one](Frame frame) {
     frame.add_inferred_features(FeatureMayAlwaysSet{feature_one});
     return frame;
   });

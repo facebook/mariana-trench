@@ -826,7 +826,7 @@ Taint Model::apply_source_sink_sanitizers(
   }
 
   if (!sanitized_kinds.empty()) {
-    taint.filter([&sanitized_kinds](const Frame& frame) {
+    taint.filter_frames([&sanitized_kinds](const Frame& frame) {
       return sanitized_kinds.find(frame.kind()) == sanitized_kinds.end();
     });
   }
@@ -1605,7 +1605,7 @@ void Model::remove_kinds(const std::unordered_set<const Kind*>& to_remove) {
     }
     return std::vector<const Kind*>{kind};
   };
-  auto map = [&drop_special_kinds](Taint taint) {
+  auto transformer = [&drop_special_kinds](Taint taint) {
     taint.transform_kind_with_features(
         drop_special_kinds,
         /* add_features, never called */
@@ -1613,11 +1613,11 @@ void Model::remove_kinds(const std::unordered_set<const Kind*>& to_remove) {
     return taint;
   };
 
-  generations_.map(map);
-  parameter_sources_.map(map);
-  sinks_.map(map);
-  call_effect_sources_.map(map);
-  call_effect_sinks_.map(map);
+  generations_.transform(transformer);
+  parameter_sources_.transform(transformer);
+  sinks_.transform(transformer);
+  call_effect_sources_.transform(transformer);
+  call_effect_sinks_.transform(transformer);
 }
 
 void Model::update_taint_tree(

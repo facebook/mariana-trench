@@ -156,14 +156,14 @@ void LocalTaint::difference_with(const LocalTaint& other) {
 }
 
 void LocalTaint::set_origins(const Method* method) {
-  map([method](Frame frame) {
+  transform_frames([method](Frame frame) {
     frame.set_origins(method);
     return frame;
   });
 }
 
 void LocalTaint::set_origins(const Field* field) {
-  map([field](Frame frame) {
+  transform_frames([field](Frame frame) {
     frame.set_origins(field);
     return frame;
   });
@@ -200,7 +200,7 @@ void LocalTaint::append_to_propagation_output_paths(
     return;
   }
 
-  map([path_element](Frame frame) {
+  transform_frames([path_element](Frame frame) {
     frame.append_to_propagation_output_paths(path_element);
     return frame;
   });
@@ -213,8 +213,8 @@ sparta::PatriciaTreeMapAbstractPartition<const Kind*, KindFrames>
 map_frames_by_kind(
     sparta::PatriciaTreeMapAbstractPartition<const Kind*, KindFrames> frames,
     Function&& f) {
-  frames.map([f = std::forward<Function>(f)](KindFrames kind_frames) {
-    kind_frames.map(f);
+  frames.transform([f = std::forward<Function>(f)](KindFrames kind_frames) {
+    kind_frames.transform(f);
     return kind_frames;
   });
   return frames;
@@ -297,7 +297,7 @@ LocalTaint LocalTaint::update_with_propagation_trace(
     // All these (prior) transform hops are tracked as ExtraTrace hop
     // frames to create a subtrace.
     LocalTaint result = *this;
-    result.map([&propagation_frame](Frame frame) {
+    result.transform_frames([&propagation_frame](Frame frame) {
       frame.add_extra_trace(propagation_frame);
       return frame;
     });
@@ -412,7 +412,7 @@ void LocalTaint::update_maximum_collapse_depth(CollapseDepth collapse_depth) {
     return;
   }
 
-  map([collapse_depth](Frame frame) {
+  transform_frames([collapse_depth](Frame frame) {
     frame.update_maximum_collapse_depth(collapse_depth);
     return frame;
   });
@@ -467,7 +467,7 @@ void LocalTaint::filter_invalid_frames(
     return;
   }
 
-  frames_.map([&is_valid](KindFrames kind_frames) {
+  frames_.transform([&is_valid](KindFrames kind_frames) {
     kind_frames.filter_invalid_frames(is_valid);
     return kind_frames;
   });

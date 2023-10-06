@@ -47,14 +47,14 @@ void TaintTree::add_locally_inferred_features(
     return;
   }
 
-  tree_.map([&features](Taint taint) {
+  tree_.transform([&features](Taint taint) {
     taint.add_locally_inferred_features(features);
     return taint;
   });
 }
 
 void TaintTree::add_local_position(const Position* position) {
-  tree_.map([position](Taint taint) {
+  tree_.transform([position](Taint taint) {
     taint.add_local_position(position);
     return taint;
   });
@@ -67,14 +67,14 @@ void TaintTree::add_locally_inferred_features_and_local_position(
     return;
   }
 
-  tree_.map([&features, position](Taint taint) {
+  tree_.transform([&features, position](Taint taint) {
     taint.add_locally_inferred_features_and_local_position(features, position);
     return taint;
   });
 }
 
 void TaintTree::attach_position(const Position* position) {
-  tree_.map(
+  tree_.transform(
       [position](Taint taint) { return taint.attach_position(position); });
 }
 
@@ -108,7 +108,7 @@ void TaintTree::limit_leaves(
 }
 
 void TaintTree::update_maximum_collapse_depth(CollapseDepth collapse_depth) {
-  tree_.map([collapse_depth](Taint taint) {
+  tree_.transform([collapse_depth](Taint taint) {
     taint.update_maximum_collapse_depth(collapse_depth);
     return taint;
   });
@@ -116,7 +116,7 @@ void TaintTree::update_maximum_collapse_depth(CollapseDepth collapse_depth) {
 
 void TaintTree::update_with_propagation_trace(const Frame& propagation_frame) {
   mt_assert(propagation_frame.call_kind().is_propagation_with_trace());
-  tree_.map([&propagation_frame](const Taint& taint) {
+  tree_.transform([&propagation_frame](const Taint& taint) {
     return taint.update_with_propagation_trace(propagation_frame);
   });
 }

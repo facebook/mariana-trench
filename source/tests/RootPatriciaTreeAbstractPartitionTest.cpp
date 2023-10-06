@@ -184,12 +184,12 @@ TEST_F(RootPatriciaTreeAbstractPartitionTest, Update) {
       }));
 }
 
-TEST_F(RootPatriciaTreeAbstractPartitionTest, Map) {
+TEST_F(RootPatriciaTreeAbstractPartitionTest, Transform) {
   auto map = RootToIntSetPartition{
       {Root(Root::Kind::Return), IntSet{1}},
       {Root(Root::Kind::Argument, 0), IntSet{2}},
   };
-  map.map([](const IntSet& set) {
+  map.transform([](const IntSet& set) {
     auto copy = set;
     copy.add(10);
     return copy;

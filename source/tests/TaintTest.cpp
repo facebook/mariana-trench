@@ -3409,7 +3409,7 @@ TEST_F(TaintTest, FramesIterator) {
   EXPECT_NE(kinds.find(context.kind_factory->get("TestSource2")), kinds.end());
 }
 
-TEST_F(TaintTest, Map) {
+TEST_F(TaintTest, Transform) {
   auto context = test::make_empty_context();
 
   Scope scope;
@@ -3436,7 +3436,7 @@ TEST_F(TaintTest, Map) {
               .call_kind = CallKind::callsite(),
           }),
   };
-  taint.map([feature_one](Frame frame) {
+  taint.transform_frames([feature_one](Frame frame) {
     frame.add_inferred_features(FeatureMayAlwaysSet{feature_one});
     return frame;
   });

@@ -49,7 +49,7 @@ void Taint::difference_with(const Taint& other) {
 }
 
 void Taint::set_origins(const Method* method) {
-  map_.map([method](LocalTaint* local_taint) -> void {
+  map_.transform([method](LocalTaint* local_taint) -> void {
     if (local_taint->callee() == nullptr &&
         !local_taint->call_kind().is_propagation_without_trace()) {
       local_taint->set_origins(method);
@@ -58,7 +58,7 @@ void Taint::set_origins(const Method* method) {
 }
 
 void Taint::set_origins(const Field* field) {
-  map_.map([field](LocalTaint* local_taint) -> void {
+  map_.transform([field](LocalTaint* local_taint) -> void {
     // Setting a field callee must always be done on non-propagated leaves.
     mt_assert(local_taint->callee() == nullptr);
     local_taint->set_origins(field);
@@ -70,19 +70,19 @@ void Taint::add_locally_inferred_features(const FeatureMayAlwaysSet& features) {
     return;
   }
 
-  map_.map([&features](LocalTaint* local_taint) -> void {
+  map_.transform([&features](LocalTaint* local_taint) -> void {
     local_taint->add_locally_inferred_features(features);
   });
 }
 
 void Taint::add_local_position(const Position* position) {
-  map_.map([position](LocalTaint* local_taint) -> void {
+  map_.transform([position](LocalTaint* local_taint) -> void {
     local_taint->add_local_position(position);
   });
 }
 
 void Taint::set_local_positions(const LocalPositionSet& positions) {
-  map_.map([&positions](LocalTaint* local_taint) -> void {
+  map_.transform([&positions](LocalTaint* local_taint) -> void {
     local_taint->set_local_positions(positions);
   });
 }
@@ -213,7 +213,7 @@ std::ostream& operator<<(std::ostream& out, const Taint& taint) {
 }
 
 void Taint::append_to_propagation_output_paths(Path::Element path_element) {
-  map_.map([path_element](LocalTaint* local_taint) -> void {
+  map_.transform([path_element](LocalTaint* local_taint) -> void {
     local_taint->append_to_propagation_output_paths(path_element);
   });
 }
@@ -223,7 +223,7 @@ void Taint::update_maximum_collapse_depth(CollapseDepth collapse_depth) {
     return;
   }
 
-  map_.map([collapse_depth](LocalTaint* local_taint) -> void {
+  map_.transform([collapse_depth](LocalTaint* local_taint) -> void {
     local_taint->update_maximum_collapse_depth(collapse_depth);
   });
 }
@@ -247,7 +247,7 @@ void Taint::update_non_leaf_positions(
 void Taint::filter_invalid_frames(
     const std::function<bool(const Method*, const AccessPath&, const Kind*)>&
         is_valid) {
-  map_.map([&is_valid](LocalTaint* local_taint) -> void {
+  map_.transform([&is_valid](LocalTaint* local_taint) -> void {
     local_taint->filter_invalid_frames(is_valid);
   });
 }
@@ -281,7 +281,7 @@ void Taint::intersect_intervals_with(const Taint& other) {
   // Keep only frames that intersect with some interval in `other`.
   // Frames that do not preserve type context are considered to intersect with
   // everything.
-  filter([&other_intervals](const Frame& frame) {
+  filter_frames([&other_intervals](const Frame& frame) {
     const auto& frame_interval = frame.class_interval_context();
     if (!frame_interval.preserves_type_context()) {
       return true;

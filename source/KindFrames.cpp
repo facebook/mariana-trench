@@ -162,7 +162,7 @@ void KindFrames::difference_with(const KindFrames& other) {
 
 void KindFrames::append_to_propagation_output_paths(
     Path::Element path_element) {
-  frames_.map([path_element](Frame* frame) -> void {
+  frames_.transform([path_element](Frame* frame) -> void {
     frame->append_to_propagation_output_paths(path_element);
   });
 }
@@ -428,7 +428,7 @@ KindFrames KindFrames::propagate(
 void KindFrames::filter_invalid_frames(
     const std::function<bool(const Method*, const AccessPath&, const Kind*)>&
         is_valid) {
-  frames_.map([&is_valid](Frame* frame) -> void {
+  frames_.transform([&is_valid](Frame* frame) -> void {
     if (!is_valid(frame->callee(), *frame->callee_port(), frame->kind())) {
       frame->set_to_bottom();
     }
@@ -452,7 +452,7 @@ KindFrames KindFrames::with_kind(const Kind* kind) const {
 }
 
 void KindFrames::add_inferred_features(const FeatureMayAlwaysSet& features) {
-  frames_.map([&features](Frame* frame) -> void {
+  frames_.transform([&features](Frame* frame) -> void {
     frame->add_inferred_features(features);
   });
 }

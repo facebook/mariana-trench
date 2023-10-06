@@ -75,23 +75,24 @@ class Taint final : public sparta::AbstractDomain<Taint> {
   void difference_with(const Taint& other);
 
   template <typename Function> // Frame(Frame)
-  void map(Function&& f) {
+  void transform_frames(Function&& f) {
     static_assert(std::is_same_v<decltype(f(std::declval<Frame&&>())), Frame>);
 
-    map_.map([f = std::forward<Function>(f)](LocalTaint* local_taint) -> void {
-      local_taint->map(f);
-    });
+    map_.transform(
+        [f = std::forward<Function>(f)](LocalTaint* local_taint) -> void {
+          local_taint->transform_frames(f);
+        });
   }
 
   template <typename Predicate> // bool(const Frame&)
-  void filter(Predicate&& predicate) {
+  void filter_frames(Predicate&& predicate) {
     static_assert(
         std::is_same_v<decltype(predicate(std::declval<const Frame>())), bool>);
 
-    map_.map(
+    map_.transform(
         [predicate = std::forward<Predicate>(predicate)](
             LocalTaint* local_taint) -> void {
-          local_taint->filter(predicate);
+          local_taint->filter_frames(predicate);
         });
   }
 
@@ -162,7 +163,7 @@ class Taint final : public sparta::AbstractDomain<Taint> {
       TransformKind&& transform_kind, // std::vector<const Kind*>(const Kind*)
       AddFeatures&& add_features // FeatureMayAlwaysSet(const Kind*)
   ) {
-    map_.map(
+    map_.transform(
         [transform_kind = std::forward<TransformKind>(transform_kind),
          add_features](LocalTaint* local_taint) -> void {
           local_taint->transform_kind_with_features(

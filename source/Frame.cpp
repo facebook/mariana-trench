@@ -323,10 +323,11 @@ void Frame::append_to_propagation_output_paths(Path::Element path_element) {
 
 void Frame::update_maximum_collapse_depth(
     CollapseDepth maximum_collapse_depth) {
-  output_paths_.map([maximum_collapse_depth](CollapseDepth collapse_depth) {
-    return CollapseDepth(
-        std::min(collapse_depth.value(), maximum_collapse_depth.value()));
-  });
+  output_paths_.transform(
+      [maximum_collapse_depth](CollapseDepth collapse_depth) {
+        return CollapseDepth(
+            std::min(collapse_depth.value(), maximum_collapse_depth.value()));
+      });
 }
 
 Json::Value Frame::to_json(ExportOriginsMode export_origins_mode) const {

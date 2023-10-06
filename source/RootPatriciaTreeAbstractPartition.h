@@ -104,8 +104,8 @@ class RootPatriciaTreeAbstractPartition final
   }
 
   template <typename Function> // Domain(const Domain&)
-  bool map(Function&& f) {
-    return map_.map(std::forward<Function>(f));
+  bool transform(Function&& f) {
+    return map_.transform(std::forward<Function>(f));
   }
 
   friend std::ostream& operator<<(

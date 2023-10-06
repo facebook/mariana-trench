@@ -123,7 +123,7 @@ TaintAccessPathTree cull_collapsed_generations(
     const Context& context,
     TaintAccessPathTree generation_tree,
     const Registry& registry) {
-  generation_tree.map([&context, &registry](Taint generation_taint) {
+  generation_tree.transform([&context, &registry](Taint generation_taint) {
     generation_taint.filter_invalid_frames([&context, &registry](
                                                const Method* MT_NULLABLE callee,
                                                const AccessPath& callee_port,
@@ -139,7 +139,7 @@ TaintAccessPathTree cull_collapsed_sinks(
     const Context& context,
     TaintAccessPathTree sink_tree,
     const Registry& registry) {
-  sink_tree.map([&context, &registry](Taint sink_taint) {
+  sink_tree.transform([&context, &registry](Taint sink_taint) {
     sink_taint.filter_invalid_frames([&context, &registry](
                                          const Method* MT_NULLABLE callee,
                                          const AccessPath& callee_port,
@@ -155,7 +155,7 @@ IssueSet cull_collapsed_issues(
     const Context& context,
     IssueSet issues,
     const Registry& registry) {
-  issues.map([&context, &registry](Issue issue) {
+  issues.transform([&context, &registry](Issue issue) {
     issue.filter_sources([&context, &registry](
                              const Method* MT_NULLABLE callee,
                              const AccessPath& callee_port,
