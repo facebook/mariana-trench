@@ -1,7 +1,7 @@
 ---
 id: feature-descriptions
-title: Feature descriptions
-sidebar_label: Feature descriptions
+title: Feature Glossary
+sidebar_label: Feature Glossary
 ---
 
 As explained in the [features section of the models wiki](../models/#features), a feature can be used to tag a flow and help filtering issues. A feature describes a property of a flow. A feature can be any arbitrary string. A feature that's prefixed with `always-` signals that every path in the issue has that feature associated with it, while lacking that prefix means that at least one path, but not all paths, contains that feature.
@@ -9,6 +9,7 @@ As explained in the [features section of the models wiki](../models/#features), 
 This page will cover the purpose of the pre-configured features to help you understand how you can use them best.
 
 ## Pre-configured features
+
 - via-caller-exported
   - This feature is applied when the root callable is directly or indirectly called from an exported component defined in the Android manifest. For example, if the root callable is in the `MainActivity` and the `MainActivity` is exported, this feature will be attached. It is needed in order to determine if an `Intent` source is third-party controllable or not. This feature is sometimes accompanied by `via-class` which tells you which class Mariana Trench used to determine that the root callable is called from an exported class.
 - via-caller-unexported
