@@ -7,9 +7,7 @@
 
 #include <mariana-trench/Context.h>
 #include <mariana-trench/ExtraTraceSet.h>
-#include <mariana-trench/FieldSet.h>
 #include <mariana-trench/JsonValidation.h>
-#include <mariana-trench/MethodSet.h>
 #include <mariana-trench/OriginFactory.h>
 #include <mariana-trench/TaintConfig.h>
 
@@ -105,8 +103,6 @@ TaintConfig TaintConfig::from_json(const Json::Value& value, Context& context) {
        "callee",
        "call_position",
        "distance",
-       "origins",
-       "field_origins",
        "features",
        "may_features",
        "always_features",
@@ -138,21 +134,6 @@ TaintConfig TaintConfig::from_json(const Json::Value& value, Context& context) {
   int distance = 0;
   if (value.isMember("distance")) {
     distance = JsonValidation::integer(value, /* field */ "distance");
-  }
-
-  // TODO(T163918472): Update json and parsers to have a single OriginSet.
-  JsonValidation::null_or_array(value, /* field */ "origins");
-  auto method_origins = MethodSet::from_json(value["origins"], context);
-  JsonValidation::null_or_array(value, /* field */ "field_origins");
-  auto field_origins = FieldSet::from_json(value["field_origins"], context);
-
-  OriginSet origins;
-  const auto* port = context.access_path_factory->get(callee_port);
-  for (const auto* method : method_origins) {
-    origins.add(context.origin_factory->method_origin(method, port));
-  }
-  for (const auto* field : field_origins) {
-    origins.add(context.origin_factory->field_origin(field));
   }
 
   // Inferred may_features and always_features. Technically, user-specified
@@ -254,7 +235,9 @@ TaintConfig TaintConfig::from_json(const Json::Value& value, Context& context) {
       // Intervals cannot be set from a json model generator.
       /* class_interval_context */ CallClassIntervalContext(),
       distance,
-      std::move(origins),
+      // Origins are not configurable. They are auto-populated when the config
+      // is applied as a model for a specific method/field.
+      /* origins */ {},
       std::move(inferred_features),
       std::move(user_features),
       std::move(via_type_of_ports),

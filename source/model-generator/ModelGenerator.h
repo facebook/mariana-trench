@@ -19,7 +19,6 @@
 #include <mariana-trench/FieldModel.h>
 #include <mariana-trench/Frame.h>
 #include <mariana-trench/MethodMappings.h>
-#include <mariana-trench/MethodSet.h>
 #include <mariana-trench/Methods.h>
 #include <mariana-trench/Model.h>
 #include <mariana-trench/Options.h>

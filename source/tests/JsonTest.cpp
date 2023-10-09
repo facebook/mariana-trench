@@ -751,28 +751,11 @@ TEST_F(JsonTest, TaintConfig) {
   Scope scope;
   auto* dex_source_one =
       redex::create_void_method(scope, "LClassOne;", "source");
-  auto* dex_source_two =
-      redex::create_void_method(scope, "LClassTwo;", "source");
-  auto dex_fields = redex::create_fields(
-      scope,
-      /* class_name */ "LClassThree;",
-      /* fields */
-      {{"field1", type::java_lang_Boolean()},
-       {"field2", type::java_lang_String()}});
 
   DexStore store("stores");
   store.add_classes(scope);
   auto context = test::make_context(store);
   auto* source_one = context.methods->get(dex_source_one);
-  auto* source_two = context.methods->get(dex_source_two);
-  auto* field_one = context.fields->get(dex_fields[0]);
-  auto* field_two = context.fields->get(dex_fields[1]);
-  auto* leaf =
-      context.access_path_factory->get(AccessPath(Root(Root::Kind::Leaf)));
-  auto* source_one_origin =
-      context.origin_factory->method_origin(source_one, leaf);
-  auto* source_two_origin =
-      context.origin_factory->method_origin(source_two, leaf);
 
   EXPECT_THROW(
       TaintConfig::from_json(test::parse_json(R"(1)"), context),
@@ -883,86 +866,6 @@ TEST_F(JsonTest, TaintConfig) {
               .callee = source_one,
               .call_position = context.positions->get("Object.java", 2),
               .distance = 2,
-              .inferred_features = FeatureMayAlwaysSet::bottom(),
-              .locally_inferred_features = FeatureMayAlwaysSet::bottom()}));
-
-  // Parse the origins.
-  EXPECT_THROW(
-      TaintConfig::from_json(
-          test::parse_json(R"({
-            "kind": "TestSource",
-            "origins": "LClassOne;.source:()V"
-          })"),
-          context),
-      JsonValidationError);
-  EXPECT_EQ(
-      TaintConfig::from_json(
-          test::parse_json(R"({
-            "kind": "TestSource",
-            "callee_port": "Leaf",
-            "origins": ["LClassOne;.source:()V"]
-          })"),
-          context),
-      test::make_taint_config(
-          /* kind */ context.kind_factory->get("TestSource"),
-          test::FrameProperties{
-              .origins = OriginSet{source_one_origin},
-              .inferred_features = FeatureMayAlwaysSet::bottom(),
-              .locally_inferred_features = FeatureMayAlwaysSet::bottom()}));
-  EXPECT_EQ(
-      TaintConfig::from_json(
-          test::parse_json(R"({
-            "kind": "TestSource",
-            "callee_port": "Leaf",
-            "origins": ["LClassOne;.source:()V", "LClassTwo;.source:()V"]
-          })"),
-          context),
-      test::make_taint_config(
-          /* kind */ context.kind_factory->get("TestSource"),
-          test::FrameProperties{
-              .origins = OriginSet{source_one_origin, source_two_origin},
-              .inferred_features = FeatureMayAlwaysSet::bottom(),
-              .locally_inferred_features = FeatureMayAlwaysSet::bottom()}));
-
-  // Parse the field origins
-  EXPECT_THROW(
-      TaintConfig::from_json(
-          test::parse_json(R"({
-            "kind": "TestSource",
-            "field_origins": "LClassThree;.field1:Ljava/lang/Boolean;"
-          })"),
-          context),
-      JsonValidationError);
-  EXPECT_EQ(
-      TaintConfig::from_json(
-          test::parse_json(R"({
-            "kind": "TestSource",
-            "callee_port": "Leaf",
-            "field_origins": ["LClassThree;.field1:Ljava/lang/Boolean;"]
-          })"),
-          context),
-      test::make_taint_config(
-          /* kind */ context.kind_factory->get("TestSource"),
-          test::FrameProperties{
-              .origins =
-                  OriginSet{context.origin_factory->field_origin(field_one)},
-              .inferred_features = FeatureMayAlwaysSet::bottom(),
-              .locally_inferred_features = FeatureMayAlwaysSet::bottom()}));
-  EXPECT_EQ(
-      TaintConfig::from_json(
-          test::parse_json(R"({
-            "kind": "TestSource",
-            "callee_port": "Leaf",
-            "field_origins": ["LClassThree;.field1:Ljava/lang/Boolean;", "LClassThree;.field2:Ljava/lang/String;"]
-          })"),
-          context),
-      test::make_taint_config(
-          /* kind */ context.kind_factory->get("TestSource"),
-          test::FrameProperties{
-              .origins =
-                  OriginSet{
-                      context.origin_factory->field_origin(field_one),
-                      context.origin_factory->field_origin(field_two)},
               .inferred_features = FeatureMayAlwaysSet::bottom(),
               .locally_inferred_features = FeatureMayAlwaysSet::bottom()}));
 
