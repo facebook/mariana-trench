@@ -203,7 +203,7 @@ bool method_returns_this(const Method* method) {
   const auto& return_locations = context->return_locations().elements();
   // Over-estimate if multiple return statements present.
   return std::any_of(
-      return_locations.cbegin(), return_locations.cend(), [](auto location) {
+      return_locations.begin(), return_locations.end(), [](auto location) {
         return location == Location::ThisParameter;
       });
 }
