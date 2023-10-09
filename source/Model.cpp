@@ -1800,7 +1800,7 @@ bool Model::check_call_effect_port_consistency(
 
 void Model::add_generation(AccessPath port, Taint source) {
   if (method_) {
-    source.set_origins(method_);
+    source.set_origins(method_, AccessPathFactory::singleton().get(port));
   }
 
   if (!check_port_consistency(port) ||
@@ -1822,7 +1822,7 @@ void Model::add_generation(AccessPath port, Taint source) {
 
 void Model::add_parameter_source(AccessPath port, Taint source) {
   if (method_) {
-    source.set_origins(method_);
+    source.set_origins(method_, AccessPathFactory::singleton().get(port));
   }
 
   if (!check_port_consistency(port) ||
@@ -1845,7 +1845,7 @@ void Model::add_parameter_source(AccessPath port, Taint source) {
 
 void Model::add_sink(AccessPath port, Taint sink) {
   if (method_) {
-    sink.set_origins(method_);
+    sink.set_origins(method_, AccessPathFactory::singleton().get(port));
   }
 
   if (!check_port_consistency(port) || !check_taint_consistency(sink, "sink")) {
@@ -1870,7 +1870,7 @@ void Model::add_call_effect_source(AccessPath port, Taint source) {
   }
 
   if (method_) {
-    source.set_origins(method_);
+    source.set_origins(method_, AccessPathFactory::singleton().get(port));
   }
 
   if (!check_taint_consistency(source, "effect source")) {
@@ -1896,7 +1896,7 @@ void Model::add_call_effect_sink(AccessPath port, Taint sink) {
   }
 
   if (method_) {
-    sink.set_origins(method_);
+    sink.set_origins(method_, AccessPathFactory::singleton().get(port));
   }
 
   if (!check_taint_consistency(sink, "effect sink")) {
@@ -1922,7 +1922,7 @@ void Model::add_propagation(AccessPath input_path, Taint output) {
   }
 
   if (method_) {
-    output.set_origins(method_);
+    output.set_origins(method_, AccessPathFactory::singleton().get(input_path));
   }
 
   if (input_path.path().size() > Heuristics::kPropagationMaxInputPathSize) {

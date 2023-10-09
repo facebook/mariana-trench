@@ -39,8 +39,8 @@ Frame::Frame(const TaintConfig& config)
           config.output_paths(),
           config.extra_traces()) {}
 
-void Frame::set_origins(const Method* method) {
-  origins_ = OriginSet{OriginFactory::singleton().method_origin(method)};
+void Frame::set_origins(const Method* method, const AccessPath* port) {
+  origins_ = OriginSet{OriginFactory::singleton().method_origin(method, port)};
 }
 
 void Frame::set_origins(const Field* field) {

@@ -45,7 +45,8 @@ class Origin {
 
 class MethodOrigin final : public Origin {
  public:
-  explicit MethodOrigin(const Method* method) : method_(method) {}
+  explicit MethodOrigin(const Method* method, const AccessPath* port)
+      : method_(method), port_(port) {}
 
   DELETE_COPY_CONSTRUCTORS_AND_ASSIGNMENTS(MethodOrigin)
 
@@ -57,9 +58,13 @@ class MethodOrigin final : public Origin {
     return method_;
   }
 
+  const AccessPath* port() const {
+    return port_;
+  }
+
  private:
-  // TODO(T163918472): Include port in method origins
   const Method* method_;
+  const AccessPath* port_;
 };
 
 class FieldOrigin final : public Origin {

@@ -9,8 +9,10 @@
 
 namespace marianatrench {
 
-const MethodOrigin* OriginFactory::method_origin(const Method* method) const {
-  return method_origins_.create(method);
+const MethodOrigin* OriginFactory::method_origin(
+    const Method* method,
+    const AccessPath* port) const {
+  return method_origins_.create(std::make_tuple(method, port), method, port);
 }
 
 const FieldOrigin* OriginFactory::field_origin(const Field* field) const {

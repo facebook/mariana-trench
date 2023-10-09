@@ -30,7 +30,10 @@ TEST_F(ForwardTaintEnvironmentTest, LessOrEqualSuperSet) {
   Scope scope;
   auto* method = context.methods->create(
       redex::create_void_method(scope, "LClass;", "method"));
-  auto* method_origin = context.origin_factory->method_origin(method);
+  auto* return_port =
+      context.access_path_factory->get(AccessPath(Root(Root::Kind::Return)));
+  auto* method_origin =
+      context.origin_factory->method_origin(method, return_port);
 
   auto domain1 = TaintEnvironment{
       {nullptr, TaintTree{Taint{test::make_leaf_taint_config(source_kind)}}}};
@@ -61,7 +64,10 @@ TEST_F(ForwardTaintEnvironmentTest, LessOrEqualDifferentSources) {
   Scope scope;
   auto* method = context.methods->create(
       redex::create_void_method(scope, "LClass;", "method"));
-  auto* method_origin = context.origin_factory->method_origin(method);
+  auto* return_port =
+      context.access_path_factory->get(AccessPath(Root(Root::Kind::Return)));
+  auto* method_origin =
+      context.origin_factory->method_origin(method, return_port);
 
   auto domain1 = TaintEnvironment{
       {nullptr, TaintTree{Taint{test::make_leaf_taint_config(source_kind)}}}};
@@ -89,7 +95,10 @@ TEST_F(ForwardTaintEnvironmentTest, JoinSuperSet) {
   Scope scope;
   auto* method = context.methods->create(
       redex::create_void_method(scope, "LClass;", "method"));
-  auto* method_origin = context.origin_factory->method_origin(method);
+  auto* return_port =
+      context.access_path_factory->get(AccessPath(Root(Root::Kind::Return)));
+  auto* method_origin =
+      context.origin_factory->method_origin(method, return_port);
 
   auto domain1 = TaintEnvironment{
       {nullptr, TaintTree{Taint{test::make_leaf_taint_config(source_kind)}}}};
@@ -117,7 +126,10 @@ TEST_F(ForwardTaintEnvironmentTest, JoinTwoDifferent) {
   Scope scope;
   auto* method = context.methods->create(
       redex::create_void_method(scope, "LClass;", "method"));
-  auto* method_origin = context.origin_factory->method_origin(method);
+  auto* return_port =
+      context.access_path_factory->get(AccessPath(Root(Root::Kind::Return)));
+  auto* method_origin =
+      context.origin_factory->method_origin(method, return_port);
 
   auto domain1 = TaintEnvironment{
       {nullptr, TaintTree{Taint{test::make_leaf_taint_config(source_kind)}}}};
@@ -158,7 +170,10 @@ TEST_F(ForwardTaintEnvironmentTest, JoinTwoEnvironmentWithDifferentSources) {
   Scope scope;
   auto* method = context.methods->create(
       redex::create_void_method(scope, "LClass;", "method"));
-  auto* method_origin = context.origin_factory->method_origin(method);
+  auto* return_port =
+      context.access_path_factory->get(AccessPath(Root(Root::Kind::Return)));
+  auto* method_origin =
+      context.origin_factory->method_origin(method, return_port);
 
   auto parameter_1 = std::make_unique<ParameterMemoryLocation>(1);
   auto parameter_2 = std::make_unique<ParameterMemoryLocation>(2);

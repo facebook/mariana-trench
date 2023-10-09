@@ -21,21 +21,20 @@ class OriginFactory final {
  public:
   DELETE_COPY_CONSTRUCTORS_AND_ASSIGNMENTS(OriginFactory)
 
-  const MethodOrigin* method_origin(const Method* method) const;
+  const MethodOrigin* method_origin(
+      const Method* method,
+      const AccessPath* port) const;
 
   const FieldOrigin* field_origin(const Field* field) const;
 
   static const OriginFactory& singleton();
 
  private:
-  // TODO(T163918472): Include port in method origins
-  // UniquePointerFactory<
-  //     std::tuple<const Method*, const AccessPath*>,
-  //     MethodOrigin,
-  //     TupleHash<const Method*, const AccessPath*>>
-  //     method_origins_;
-
-  UniquePointerFactory<const Method*, MethodOrigin> method_origins_;
+  UniquePointerFactory<
+      std::tuple<const Method*, const AccessPath*>,
+      MethodOrigin,
+      TupleHash<const Method*, const AccessPath*>>
+      method_origins_;
   UniquePointerFactory<const Field*, FieldOrigin> field_origins_;
 };
 

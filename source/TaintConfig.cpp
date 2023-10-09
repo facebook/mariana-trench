@@ -147,8 +147,9 @@ TaintConfig TaintConfig::from_json(const Json::Value& value, Context& context) {
   auto field_origins = FieldSet::from_json(value["field_origins"], context);
 
   OriginSet origins;
+  const auto* port = context.access_path_factory->get(callee_port);
   for (const auto* method : method_origins) {
-    origins.add(context.origin_factory->method_origin(method));
+    origins.add(context.origin_factory->method_origin(method, port));
   }
   for (const auto* field : field_origins) {
     origins.add(context.origin_factory->field_origin(field));

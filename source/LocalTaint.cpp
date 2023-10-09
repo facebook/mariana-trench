@@ -155,9 +155,9 @@ void LocalTaint::difference_with(const LocalTaint& other) {
   }
 }
 
-void LocalTaint::set_origins(const Method* method) {
-  transform_frames([method](Frame frame) {
-    frame.set_origins(method);
+void LocalTaint::set_origins(const Method* method, const AccessPath* port) {
+  transform_frames([method, port](Frame frame) {
+    frame.set_origins(method, port);
     return frame;
   });
 }

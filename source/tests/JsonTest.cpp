@@ -767,6 +767,12 @@ TEST_F(JsonTest, TaintConfig) {
   auto* source_two = context.methods->get(dex_source_two);
   auto* field_one = context.fields->get(dex_fields[0]);
   auto* field_two = context.fields->get(dex_fields[1]);
+  auto* leaf =
+      context.access_path_factory->get(AccessPath(Root(Root::Kind::Leaf)));
+  auto* source_one_origin =
+      context.origin_factory->method_origin(source_one, leaf);
+  auto* source_two_origin =
+      context.origin_factory->method_origin(source_two, leaf);
 
   EXPECT_THROW(
       TaintConfig::from_json(test::parse_json(R"(1)"), context),
@@ -900,8 +906,7 @@ TEST_F(JsonTest, TaintConfig) {
       test::make_taint_config(
           /* kind */ context.kind_factory->get("TestSource"),
           test::FrameProperties{
-              .origins =
-                  OriginSet{context.origin_factory->method_origin(source_one)},
+              .origins = OriginSet{source_one_origin},
               .inferred_features = FeatureMayAlwaysSet::bottom(),
               .locally_inferred_features = FeatureMayAlwaysSet::bottom()}));
   EXPECT_EQ(
@@ -915,10 +920,7 @@ TEST_F(JsonTest, TaintConfig) {
       test::make_taint_config(
           /* kind */ context.kind_factory->get("TestSource"),
           test::FrameProperties{
-              .origins =
-                  OriginSet{
-                      context.origin_factory->method_origin(source_one),
-                      context.origin_factory->method_origin(source_two)},
+              .origins = OriginSet{source_one_origin, source_two_origin},
               .inferred_features = FeatureMayAlwaysSet::bottom(),
               .locally_inferred_features = FeatureMayAlwaysSet::bottom()}));
 

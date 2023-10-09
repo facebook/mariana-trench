@@ -603,16 +603,19 @@ void check_flows_to_array_allocation(
       context->artificial_methods.array_allocation_method());
   auto* position =
       context->positions.get(context->method(), aliasing.position());
+  const auto* port = context->access_path_factory.get(
+      AccessPath(Root(Root::Kind::Argument, 0)));
   auto array_allocation_sink = Taint{TaintConfig(
       /* kind */ context->artificial_methods.array_allocation_kind(),
-      /* callee_port */ AccessPath(Root(Root::Kind::Argument, 0)),
+      /* callee_port */ *port,
       /* callee */ nullptr,
       /* call_kind */ CallKind::origin(),
       /* call_position */ position,
       /* class_interval_context */ CallClassIntervalContext(),
       /* distance */ 1,
       /* origins */
-      OriginSet{context->origin_factory.method_origin(array_allocation_method)},
+      OriginSet{
+          context->origin_factory.method_origin(array_allocation_method, port)},
       /* inferred features */ {},
       /* locally_inferred_features */ {},
       /* user features */ {},

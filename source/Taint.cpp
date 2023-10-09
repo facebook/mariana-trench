@@ -48,11 +48,11 @@ void Taint::difference_with(const Taint& other) {
       });
 }
 
-void Taint::set_origins(const Method* method) {
-  map_.transform([method](LocalTaint* local_taint) -> void {
+void Taint::set_origins(const Method* method, const AccessPath* port) {
+  map_.transform([method, port](LocalTaint* local_taint) {
     if (local_taint->callee() == nullptr &&
         !local_taint->call_kind().is_propagation_without_trace()) {
-      local_taint->set_origins(method);
+      local_taint->set_origins(method, port);
     }
   });
 }

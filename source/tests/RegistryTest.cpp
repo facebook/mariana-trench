@@ -208,6 +208,15 @@ TEST_F(RegistryTest, ConstructorUseJoin) {
   const auto* source_kind = context.kind_factory->get("TestSource");
   const auto* source_kind_two = context.kind_factory->get("TestSourceTwo");
 
+  auto* return_port =
+      context.access_path_factory->get(AccessPath(Root(Root::Kind::Return)));
+  auto* argument2_port = context.access_path_factory->get(
+      AccessPath(Root(Root::Kind::Argument, 2)));
+  auto* return_origin =
+      context.origin_factory->method_origin(method, return_port);
+  auto* argument2_origin =
+      context.origin_factory->method_origin(method, argument2_port);
+
   Model model_with_source(
       /* method */ method,
       context,
@@ -244,25 +253,23 @@ TEST_F(RegistryTest, ConstructorUseJoin) {
       registry.get(method).generations().elements(),
       testing::UnorderedElementsAre(
           PortTaint{
-              AccessPath(Root(Root::Kind::Return)),
+              *return_port,
               Taint{test::make_leaf_taint_config(
                   source_kind,
                   /* inferred_features */ FeatureMayAlwaysSet::bottom(),
                   /* locally_inferred_features */
                   FeatureMayAlwaysSet::bottom(),
                   /* user_features */ FeatureSet::bottom(),
-                  /* origins */
-                  OriginSet{context.origin_factory->method_origin(method)})}},
+                  /* origins */ OriginSet{return_origin})}},
           PortTaint{
-              AccessPath(Root(Root::Kind::Argument, 2)),
+              *argument2_port,
               Taint{test::make_leaf_taint_config(
                   source_kind,
                   /* inferred_features */ FeatureMayAlwaysSet::bottom(),
                   /* locally_inferred_features */
                   FeatureMayAlwaysSet::bottom(),
                   /* user_features */ FeatureSet::bottom(),
-                  /* origins */
-                  OriginSet{context.origin_factory->method_origin(method)})}}));
+                  /* origins */ OriginSet{argument2_origin})}}));
 
   EXPECT_EQ(
       registry.get(field).sources(),

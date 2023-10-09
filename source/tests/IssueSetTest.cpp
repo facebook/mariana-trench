@@ -54,8 +54,10 @@ TEST_F(IssueSetTest, Insertion) {
       redex::create_void_method(scope, "LClass;", "one"));
   auto* two = context.methods->create(
       redex::create_void_method(scope, "LOther;", "two"));
-  auto* one_origin = context.origin_factory->method_origin(one);
-  auto* two_origin = context.origin_factory->method_origin(two);
+  auto* leaf =
+      context.access_path_factory->get(AccessPath(Root(Root::Kind::Leaf)));
+  auto* one_origin = context.origin_factory->method_origin(one, leaf);
+  auto* two_origin = context.origin_factory->method_origin(two, leaf);
 
   IssueSet set = {};
   EXPECT_EQ(set, IssueSet{});

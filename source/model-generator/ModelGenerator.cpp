@@ -416,15 +416,20 @@ TaintConfig generator::source(
   for (const auto& feature : features) {
     user_features.add(context.feature_factory->get(feature));
   }
+
+  const auto* port =
+      context.access_path_factory->get(AccessPath(Root(callee_port)));
+
   return TaintConfig(
       /* kind */ context.kind_factory->get(kind),
-      /* callee_port */ AccessPath(Root(callee_port)),
+      /* callee_port */ *port,
       /* callee */ nullptr,
       /* call_kind */ CallKind::declaration(),
       /* call_position */ nullptr,
       /* class_interval_context */ CallClassIntervalContext(),
       /* distance */ 0,
-      /* origins */ OriginSet{context.origin_factory->method_origin(method)},
+      /* origins */
+      OriginSet{context.origin_factory->method_origin(method, port)},
       /* inferred features */ FeatureMayAlwaysSet::bottom(),
       /* user features */ user_features,
       /* via_type_of_ports */ via_type_of_ports,
@@ -458,15 +463,20 @@ TaintConfig generator::sink(
   for (const auto& feature : features) {
     user_features.add(context.feature_factory->get(feature));
   }
+
+  const auto* port =
+      context.access_path_factory->get(AccessPath(Root(callee_port)));
+
   return TaintConfig(
       /* kind */ context.kind_factory->get(kind),
-      /* callee_port */ AccessPath(Root(callee_port)),
+      /* callee_port */ *port,
       /* callee */ nullptr,
       /* call_kind */ call_kind,
       /* call_position */ nullptr,
       /* class_interval_context */ CallClassIntervalContext(),
       /* distance */ 0,
-      /* origins */ OriginSet{context.origin_factory->method_origin(method)},
+      /* origins */
+      OriginSet{context.origin_factory->method_origin(method, port)},
       /* inferred features */ FeatureMayAlwaysSet::bottom(),
       /* user features */ user_features,
       /* via_type_of_ports */ via_type_of_ports,
@@ -495,15 +505,20 @@ TaintConfig generator::partial_sink(
   for (const auto& feature : features) {
     user_features.add(context.feature_factory->get(feature));
   }
+
+  const auto* port =
+      context.access_path_factory->get(AccessPath(Root(callee_port)));
+
   return TaintConfig(
       /* kind */ context.kind_factory->get_partial(kind, label),
-      /* callee_port */ AccessPath(Root(callee_port)),
+      /* callee_port */ *port,
       /* callee */ nullptr,
       /* call_kind */ CallKind::declaration(),
       /* call_position */ nullptr,
       /* class_interval_context */ CallClassIntervalContext(),
       /* distance */ 0,
-      /* origins */ OriginSet{context.origin_factory->method_origin(method)},
+      /* origins */
+      OriginSet{context.origin_factory->method_origin(method, port)},
       /* inferred features */ FeatureMayAlwaysSet::bottom(),
       /* user features */ user_features,
       /* via_type_of_ports */ via_type_of_ports,

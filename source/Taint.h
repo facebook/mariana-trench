@@ -100,7 +100,7 @@ class Taint final : public sparta::AbstractDomain<Taint> {
    * For use when instantiating the `Model` of a method, once the concrete
    * method (i.e. the origin of the `Taint`) becomes known.
    */
-  void set_origins(const Method* method);
+  void set_origins(const Method* method, const AccessPath* port);
 
   /**
    * For use when instantiating `FieldModel` once the concrete field is known.

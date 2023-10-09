@@ -27,8 +27,10 @@ TEST_F(TaintTest, Insertion) {
       redex::create_void_method(scope, "LClass;", "one"));
   auto* method_two = context.methods->create(
       redex::create_void_method(scope, "LOther;", "two"));
-  auto* one_origin = context.origin_factory->method_origin(method_one);
-  auto* two_origin = context.origin_factory->method_origin(method_two);
+  auto* leaf =
+      context.access_path_factory->get(AccessPath(Root(Root::Kind::Leaf)));
+  auto one_origin = context.origin_factory->method_origin(method_one, leaf);
+  auto two_origin = context.origin_factory->method_origin(method_two, leaf);
 
   auto* position_one = context.positions->get(std::nullopt, 1);
   auto* position_two = context.positions->get(std::nullopt, 2);
@@ -252,7 +254,9 @@ TEST_F(TaintTest, Leq) {
   auto* test_kind_two = context.kind_factory->get("TestSinkTwo");
   auto* test_position_one = context.positions->get(std::nullopt, 1);
   auto* test_position_two = context.positions->get(std::nullopt, 2);
-  auto* one_origin = context.origin_factory->method_origin(method_one);
+  auto* leaf =
+      context.access_path_factory->get(AccessPath(Root(Root::Kind::Leaf)));
+  auto* one_origin = context.origin_factory->method_origin(method_one, leaf);
 
   // Comparison to bottom
   EXPECT_TRUE(Taint::bottom().leq(Taint::bottom()));
@@ -618,7 +622,9 @@ TEST_F(TaintTest, Equals) {
   auto* test_kind_two = context.kind_factory->get("TestSinkTwo");
   auto* test_position_one = context.positions->get(std::nullopt, 1);
   auto* test_position_two = context.positions->get(std::nullopt, 2);
-  auto* one_origin = context.origin_factory->method_origin(method_one);
+  auto* leaf =
+      context.access_path_factory->get(AccessPath(Root(Root::Kind::Leaf)));
+  auto* one_origin = context.origin_factory->method_origin(method_one, leaf);
   const auto x = PathElement::field("x");
   const auto y = PathElement::field("y");
   const auto z = PathElement::field("z");
@@ -717,7 +723,9 @@ TEST_F(TaintTest, JoinWith) {
   auto* test_position_two = context.positions->get(std::nullopt, 2);
   auto* feature_one = context.feature_factory->get("FeatureOne");
   auto* feature_two = context.feature_factory->get("FeatureTwo");
-  auto* one_origin = context.origin_factory->method_origin(method_one);
+  auto* leaf =
+      context.access_path_factory->get(AccessPath(Root(Root::Kind::Leaf)));
+  auto* one_origin = context.origin_factory->method_origin(method_one, leaf);
 
   // Join with bottom
   EXPECT_EQ(
@@ -963,9 +971,12 @@ TEST_F(TaintTest, Difference) {
   auto* user_feature_one = context.feature_factory->get("UserFeatureOne");
   auto* user_feature_two = context.feature_factory->get("UserFeatureTwo");
   auto* user_feature_three = context.feature_factory->get("UserFeatureThree");
-  auto* one_origin = context.origin_factory->method_origin(method_one);
-  auto* two_origin = context.origin_factory->method_origin(method_two);
-  auto* three_origin = context.origin_factory->method_origin(method_three);
+  auto* leaf =
+      context.access_path_factory->get(AccessPath(Root(Root::Kind::Leaf)));
+  auto* one_origin = context.origin_factory->method_origin(method_one, leaf);
+  auto* two_origin = context.origin_factory->method_origin(method_two, leaf);
+  auto* three_origin =
+      context.origin_factory->method_origin(method_three, leaf);
   const auto x = PathElement::field("x");
   const auto y = PathElement::field("y");
 
@@ -1838,8 +1849,10 @@ TEST_F(TaintTest, SetMethodOrigins) {
   auto* method_two =
       context.methods->create(redex::create_void_method(scope, "LTwo;", "two"));
 
-  auto* one_origin = context.origin_factory->method_origin(method_one);
-  auto* two_origin = context.origin_factory->method_origin(method_two);
+  auto* leaf =
+      context.access_path_factory->get(AccessPath(Root(Root::Kind::Leaf)));
+  auto* one_origin = context.origin_factory->method_origin(method_one, leaf);
+  auto* two_origin = context.origin_factory->method_origin(method_two, leaf);
 
   auto taint = Taint{
       // Only the "TestSource" frame should be affected (it is a leaf with empty
@@ -1855,7 +1868,7 @@ TEST_F(TaintTest, SetMethodOrigins) {
           test::FrameProperties{
               .callee = method_two, .call_kind = CallKind::callsite()}),
   };
-  taint.set_origins(method_one);
+  taint.set_origins(method_one, leaf);
   EXPECT_EQ(
       taint,
       (Taint{
@@ -2059,14 +2072,18 @@ TEST_F(TaintTest, Propagate) {
   auto* test_kind_two = context.kind_factory->get("TestSinkTwo");
   auto* test_position_one = context.positions->get(std::nullopt, 1);
   auto* test_position_two = context.positions->get("Test.java", 2);
+
   auto* feature_one = context.feature_factory->get("FeatureOne");
   auto* feature_two = context.feature_factory->get("FeatureTwo");
   auto* feature_three = context.feature_factory->get("FeatureThree");
   auto* user_feature_one = context.feature_factory->get("UserFeatureOne");
   auto* user_feature_two = context.feature_factory->get("UserFeatureTwo");
-  auto* one_origin = context.origin_factory->method_origin(method_one);
-  auto* two_origin = context.origin_factory->method_origin(method_two);
-  auto* three_origin = context.origin_factory->method_origin(method_three);
+  auto* leaf =
+      context.access_path_factory->get(AccessPath(Root(Root::Kind::Leaf)));
+  auto* one_origin = context.origin_factory->method_origin(method_one, leaf);
+  auto* two_origin = context.origin_factory->method_origin(method_two, leaf);
+  auto* three_origin =
+      context.origin_factory->method_origin(method_three, leaf);
 
   auto taint = Taint{
       test::make_taint_config(
@@ -2516,9 +2533,13 @@ TEST_F(TaintTest, TransformKind) {
   auto* feature_two = context.feature_factory->get("FeatureTwo");
   auto* user_feature_one = context.feature_factory->get("UserFeatureOne");
   auto* user_feature_two = context.feature_factory->get("UserFeatureTwo");
-  auto* one_origin = context.origin_factory->method_origin(method_one);
-  auto* two_origin = context.origin_factory->method_origin(method_two);
-  auto* three_origin = context.origin_factory->method_origin(method_three);
+
+  auto* leaf =
+      context.access_path_factory->get(AccessPath(Root(Root::Kind::Leaf)));
+  auto* one_origin = context.origin_factory->method_origin(method_one, leaf);
+  auto* two_origin = context.origin_factory->method_origin(method_two, leaf);
+  auto* three_origin =
+      context.origin_factory->method_origin(method_three, leaf);
 
   auto* test_source = context.kind_factory->get("TestSource");
   auto* transformed_test_source =

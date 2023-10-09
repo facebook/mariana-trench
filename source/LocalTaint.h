@@ -220,7 +220,7 @@ class LocalTaint final : public sparta::AbstractDomain<LocalTaint> {
     return ConstIterator(frames_.bindings().end(), frames_.bindings().end());
   }
 
-  void set_origins(const Method* method);
+  void set_origins(const Method* method, const AccessPath* port);
 
   void set_origins(const Field* field);
 

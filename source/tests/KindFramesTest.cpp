@@ -22,7 +22,9 @@ TEST_F(KindFramesTest, Add) {
   Scope scope;
   auto* one = context.methods->create(
       redex::create_void_method(scope, "LClass;", "one"));
-  auto* one_origin = context.origin_factory->method_origin(one);
+  auto* leaf =
+      context.access_path_factory->get(AccessPath(Root(Root::Kind::Leaf)));
+  auto* one_origin = context.origin_factory->method_origin(one, leaf);
 
   auto* source_kind_one = context.kind_factory->get("TestSourceOne");
   auto interval = CallClassIntervalContext(
@@ -612,7 +614,9 @@ TEST_F(KindFramesTest, Propagate) {
   auto* feature_one = context.feature_factory->get("FeatureOne");
   auto* test_kind_one = context.kind_factory->get("TestSinkOne");
   auto* call_position = context.positions->get("Test.java", 1);
-  auto* one_origin = context.origin_factory->method_origin(one);
+  auto* leaf =
+      context.access_path_factory->get(AccessPath(Root(Root::Kind::Leaf)));
+  auto* one_origin = context.origin_factory->method_origin(one, leaf);
 
   // Test propagating non-crtex frames (crtex-ness to be determined by caller,
   // typically using the callee_port).
@@ -676,8 +680,10 @@ TEST_F(KindFramesTest, PropagateIntervals) {
   auto* two =
       context.methods->create(redex::create_void_method(scope, "LTwo;", "two"));
 
-  auto* one_origin = context.origin_factory->method_origin(one);
-  auto* two_origin = context.origin_factory->method_origin(two);
+  auto* leaf =
+      context.access_path_factory->get(AccessPath(Root(Root::Kind::Leaf)));
+  auto* one_origin = context.origin_factory->method_origin(one, leaf);
+  auto* two_origin = context.origin_factory->method_origin(two, leaf);
 
   auto* test_kind_one = context.kind_factory->get("TestSinkOne");
   auto* call_position = context.positions->get("Test.java", 1);
@@ -886,7 +892,9 @@ TEST_F(KindFramesTest, PropagateCrtex) {
       context.methods->create(redex::create_void_method(scope, "LOne;", "one"));
   auto* two =
       context.methods->create(redex::create_void_method(scope, "LTwo;", "two"));
-  auto* one_origin = context.origin_factory->method_origin(one);
+  auto* leaf =
+      context.access_path_factory->get(AccessPath(Root(Root::Kind::Leaf)));
+  auto* one_origin = context.origin_factory->method_origin(one, leaf);
   auto interval_one = ClassIntervals::Interval::finite(2, 3);
   auto interval_two = ClassIntervals::Interval::finite(4, 5);
   auto* feature_one = context.feature_factory->get("FeatureOne");
