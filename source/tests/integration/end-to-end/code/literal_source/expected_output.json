@@ -976,6 +976,13 @@
               "origins" : 
               [
                 "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V"
+              ],
+              "taint_origins" : 
+              [
+                {
+                  "method" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
+                  "port" : "Argument(0)"
+                }
               ]
             }
           ]
@@ -1015,6 +1022,13 @@
               "origins" : 
               [
                 "Lcom/facebook/marianatrench/integrationtests/RegexSource;.getAttackerControlledInput:()Ljava/lang/String;"
+              ],
+              "taint_origins" : 
+              [
+                {
+                  "method" : "Lcom/facebook/marianatrench/integrationtests/RegexSource;.getAttackerControlledInput:()Ljava/lang/String;",
+                  "port" : "Return"
+                }
               ]
             }
           ]
@@ -1051,6 +1065,13 @@
               "origins" : 
               [
                 "Lcom/facebook/marianatrench/integrationtests/RegexSource;.sink:(Ljava/lang/String;Ljava/lang/String;)V"
+              ],
+              "taint_origins" : 
+              [
+                {
+                  "method" : "Lcom/facebook/marianatrench/integrationtests/RegexSource;.sink:(Ljava/lang/String;Ljava/lang/String;)V",
+                  "port" : "Argument(0)"
+                }
               ]
             }
           ]
@@ -1070,6 +1091,13 @@
               "origins" : 
               [
                 "Lcom/facebook/marianatrench/integrationtests/RegexSource;.sink:(Ljava/lang/String;Ljava/lang/String;)V"
+              ],
+              "taint_origins" : 
+              [
+                {
+                  "method" : "Lcom/facebook/marianatrench/integrationtests/RegexSource;.sink:(Ljava/lang/String;Ljava/lang/String;)V",
+                  "port" : "Argument(1)"
+                }
               ]
             }
           ]
@@ -1107,7 +1135,14 @@
               [
                 "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V"
               ],
-              "preserves_type_context" : true
+              "preserves_type_context" : true,
+              "taint_origins" : 
+              [
+                {
+                  "method" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
+                  "port" : "Argument(0)"
+                }
+              ]
             }
           ],
           "origin" : 
@@ -1174,6 +1209,13 @@
                 "Lcom/facebook/marianatrench/integrationtests/RegexSource;.sink:(Ljava/lang/String;Ljava/lang/String;)V"
               ],
               "preserves_type_context" : true,
+              "taint_origins" : 
+              [
+                {
+                  "method" : "Lcom/facebook/marianatrench/integrationtests/RegexSource;.sink:(Ljava/lang/String;Ljava/lang/String;)V",
+                  "port" : "Argument(1)"
+                }
+              ],
               "triggered_rule" : 1
             }
           ],
@@ -1207,7 +1249,14 @@
               [
                 "Lcom/facebook/marianatrench/integrationtests/RegexSource;.getAttackerControlledInput:()Ljava/lang/String;"
               ],
-              "preserves_type_context" : true
+              "preserves_type_context" : true,
+              "taint_origins" : 
+              [
+                {
+                  "method" : "Lcom/facebook/marianatrench/integrationtests/RegexSource;.getAttackerControlledInput:()Ljava/lang/String;",
+                  "port" : "Return"
+                }
+              ]
             }
           ],
           "origin" : 
@@ -1270,6 +1319,13 @@
                 "Ljava/text/MessageFormat;.format:(Ljava/lang/String;[Ljava/lang/Object;)Ljava/lang/String;"
               ],
               "preserves_type_context" : true,
+              "taint_origins" : 
+              [
+                {
+                  "method" : "Ljava/text/MessageFormat;.format:(Ljava/lang/String;[Ljava/lang/Object;)Ljava/lang/String;",
+                  "port" : "Argument(1)"
+                }
+              ],
               "triggered_rule" : 1
             }
           ],
@@ -1303,7 +1359,14 @@
               [
                 "Lcom/facebook/marianatrench/integrationtests/RegexSource;.getAttackerControlledInput:()Ljava/lang/String;"
               ],
-              "preserves_type_context" : true
+              "preserves_type_context" : true,
+              "taint_origins" : 
+              [
+                {
+                  "method" : "Lcom/facebook/marianatrench/integrationtests/RegexSource;.getAttackerControlledInput:()Ljava/lang/String;",
+                  "port" : "Return"
+                }
+              ]
             }
           ],
           "local_features" : 
@@ -1381,6 +1444,13 @@
                 "Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;"
               ],
               "preserves_type_context" : true,
+              "taint_origins" : 
+              [
+                {
+                  "method" : "Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;",
+                  "port" : "Argument(1)"
+                }
+              ],
               "triggered_rule" : 1
             }
           ],
@@ -1448,6 +1518,13 @@
                 "Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;"
               ],
               "preserves_type_context" : true,
+              "taint_origins" : 
+              [
+                {
+                  "method" : "Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;",
+                  "port" : "Argument(1)"
+                }
+              ],
               "triggered_rule" : 1
             }
           ],
@@ -1481,7 +1558,14 @@
               [
                 "Lcom/facebook/marianatrench/integrationtests/RegexSource;.getAttackerControlledInput:()Ljava/lang/String;"
               ],
-              "preserves_type_context" : true
+              "preserves_type_context" : true,
+              "taint_origins" : 
+              [
+                {
+                  "method" : "Lcom/facebook/marianatrench/integrationtests/RegexSource;.getAttackerControlledInput:()Ljava/lang/String;",
+                  "port" : "Return"
+                }
+              ]
             }
           ],
           "origin" : 
@@ -1536,6 +1620,13 @@
                 "Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;"
               ],
               "preserves_type_context" : true,
+              "taint_origins" : 
+              [
+                {
+                  "method" : "Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;",
+                  "port" : "Argument(1)"
+                }
+              ],
               "triggered_rule" : 1
             }
           ],
@@ -1603,6 +1694,13 @@
                 "Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;"
               ],
               "preserves_type_context" : true,
+              "taint_origins" : 
+              [
+                {
+                  "method" : "Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;",
+                  "port" : "Argument(1)"
+                }
+              ],
               "triggered_rule" : 1
             }
           ],
@@ -1636,7 +1734,14 @@
               [
                 "Lcom/facebook/marianatrench/integrationtests/RegexSource;.getAttackerControlledInput:()Ljava/lang/String;"
               ],
-              "preserves_type_context" : true
+              "preserves_type_context" : true,
+              "taint_origins" : 
+              [
+                {
+                  "method" : "Lcom/facebook/marianatrench/integrationtests/RegexSource;.getAttackerControlledInput:()Ljava/lang/String;",
+                  "port" : "Return"
+                }
+              ]
             }
           ],
           "origin" : 
@@ -1699,6 +1804,13 @@
                 "Ljava/lang/String;.format:(Ljava/lang/String;[Ljava/lang/Object;)Ljava/lang/String;"
               ],
               "preserves_type_context" : true,
+              "taint_origins" : 
+              [
+                {
+                  "method" : "Ljava/lang/String;.format:(Ljava/lang/String;[Ljava/lang/Object;)Ljava/lang/String;",
+                  "port" : "Argument(1)"
+                }
+              ],
               "triggered_rule" : 1
             }
           ],
@@ -1732,7 +1844,14 @@
               [
                 "Lcom/facebook/marianatrench/integrationtests/RegexSource;.getAttackerControlledInput:()Ljava/lang/String;"
               ],
-              "preserves_type_context" : true
+              "preserves_type_context" : true,
+              "taint_origins" : 
+              [
+                {
+                  "method" : "Lcom/facebook/marianatrench/integrationtests/RegexSource;.getAttackerControlledInput:()Ljava/lang/String;",
+                  "port" : "Return"
+                }
+              ]
             }
           ],
           "local_features" : 
@@ -2099,6 +2218,13 @@
               "origins" : 
               [
                 "Ljava/lang/String;.format:(Ljava/lang/String;[Ljava/lang/Object;)Ljava/lang/String;"
+              ],
+              "taint_origins" : 
+              [
+                {
+                  "method" : "Ljava/lang/String;.format:(Ljava/lang/String;[Ljava/lang/Object;)Ljava/lang/String;",
+                  "port" : "Argument(0)"
+                }
               ]
             }
           ]
@@ -2118,6 +2244,13 @@
               "origins" : 
               [
                 "Ljava/lang/String;.format:(Ljava/lang/String;[Ljava/lang/Object;)Ljava/lang/String;"
+              ],
+              "taint_origins" : 
+              [
+                {
+                  "method" : "Ljava/lang/String;.format:(Ljava/lang/String;[Ljava/lang/Object;)Ljava/lang/String;",
+                  "port" : "Argument(1)"
+                }
               ]
             }
           ]
@@ -2260,6 +2393,13 @@
               "origins" : 
               [
                 "Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;"
+              ],
+              "taint_origins" : 
+              [
+                {
+                  "method" : "Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;",
+                  "port" : "Argument(0)"
+                }
               ]
             },
             {
@@ -2268,6 +2408,13 @@
               "origins" : 
               [
                 "Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;"
+              ],
+              "taint_origins" : 
+              [
+                {
+                  "method" : "Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;",
+                  "port" : "Argument(0)"
+                }
               ]
             }
           ]
@@ -2287,6 +2434,13 @@
               "origins" : 
               [
                 "Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;"
+              ],
+              "taint_origins" : 
+              [
+                {
+                  "method" : "Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;",
+                  "port" : "Argument(1)"
+                }
               ]
             },
             {
@@ -2295,6 +2449,13 @@
               "origins" : 
               [
                 "Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;"
+              ],
+              "taint_origins" : 
+              [
+                {
+                  "method" : "Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;",
+                  "port" : "Argument(1)"
+                }
               ]
             }
           ]
@@ -2415,6 +2576,13 @@
               "origins" : 
               [
                 "Ljava/text/MessageFormat;.format:(Ljava/lang/String;[Ljava/lang/Object;)Ljava/lang/String;"
+              ],
+              "taint_origins" : 
+              [
+                {
+                  "method" : "Ljava/text/MessageFormat;.format:(Ljava/lang/String;[Ljava/lang/Object;)Ljava/lang/String;",
+                  "port" : "Argument(0)"
+                }
               ]
             }
           ]
@@ -2434,6 +2602,13 @@
               "origins" : 
               [
                 "Ljava/text/MessageFormat;.format:(Ljava/lang/String;[Ljava/lang/Object;)Ljava/lang/String;"
+              ],
+              "taint_origins" : 
+              [
+                {
+                  "method" : "Ljava/text/MessageFormat;.format:(Ljava/lang/String;[Ljava/lang/Object;)Ljava/lang/String;",
+                  "port" : "Argument(1)"
+                }
               ]
             }
           ]

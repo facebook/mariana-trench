@@ -913,7 +913,14 @@
               [
                 "Lcom/facebook/marianatrench/integrationtests/SensitiveApi;.execute:()V"
               ],
-              "preserves_type_context" : false
+              "preserves_type_context" : false,
+              "taint_origins" : 
+              [
+                {
+                  "method" : "Lcom/facebook/marianatrench/integrationtests/SensitiveApi;.execute:()V",
+                  "port" : "call-chain"
+                }
+              ]
             }
           ]
         }
@@ -968,7 +975,14 @@
               [
                 "Lcom/facebook/marianatrench/integrationtests/SensitiveApi;.execute:()V"
               ],
-              "preserves_type_context" : true
+              "preserves_type_context" : true,
+              "taint_origins" : 
+              [
+                {
+                  "method" : "Lcom/facebook/marianatrench/integrationtests/SensitiveApi;.execute:()V",
+                  "port" : "call-chain"
+                }
+              ]
             }
           ]
         }
@@ -1004,7 +1018,14 @@
               [
                 "Lcom/facebook/marianatrench/integrationtests/SensitiveApi;.execute:()V"
               ],
-              "preserves_type_context" : true
+              "preserves_type_context" : true,
+              "taint_origins" : 
+              [
+                {
+                  "method" : "Lcom/facebook/marianatrench/integrationtests/SensitiveApi;.execute:()V",
+                  "port" : "call-chain"
+                }
+              ]
             }
           ],
           "origin" : 
@@ -1068,7 +1089,14 @@
               [
                 "Lcom/facebook/marianatrench/integrationtests/SensitiveApi;.execute:()V"
               ],
-              "preserves_type_context" : false
+              "preserves_type_context" : false,
+              "taint_origins" : 
+              [
+                {
+                  "method" : "Lcom/facebook/marianatrench/integrationtests/SensitiveApi;.execute:()V",
+                  "port" : "call-chain"
+                }
+              ]
             }
           ]
         }
@@ -1090,6 +1118,13 @@
               "origins" : 
               [
                 "Lcom/facebook/marianatrench/integrationtests/Exported;.entry:()V"
+              ],
+              "taint_origins" : 
+              [
+                {
+                  "method" : "Lcom/facebook/marianatrench/integrationtests/Exported;.entry:()V",
+                  "port" : "call-chain"
+                }
               ]
             }
           ]
@@ -1138,7 +1173,14 @@
               [
                 "Lcom/facebook/marianatrench/integrationtests/SensitiveApi;.execute:()V"
               ],
-              "preserves_type_context" : false
+              "preserves_type_context" : false,
+              "taint_origins" : 
+              [
+                {
+                  "method" : "Lcom/facebook/marianatrench/integrationtests/SensitiveApi;.execute:()V",
+                  "port" : "call-chain"
+                }
+              ]
             }
           ]
         }
@@ -1162,6 +1204,13 @@
               "origins" : 
               [
                 "Lcom/facebook/marianatrench/integrationtests/Exported;.entry:()V"
+              ],
+              "taint_origins" : 
+              [
+                {
+                  "method" : "Lcom/facebook/marianatrench/integrationtests/Exported;.entry:()V",
+                  "port" : "call-chain"
+                }
               ]
             }
           ]
@@ -1255,6 +1304,13 @@
               "origins" : 
               [
                 "Lcom/facebook/marianatrench/integrationtests/SensitiveApi;.execute:()V"
+              ],
+              "taint_origins" : 
+              [
+                {
+                  "method" : "Lcom/facebook/marianatrench/integrationtests/SensitiveApi;.execute:()V",
+                  "port" : "call-chain"
+                }
               ]
             }
           ]

@@ -14,7 +14,10 @@ std::string MethodOrigin::to_string() const {
 }
 
 Json::Value MethodOrigin::to_json() const {
-  return method_->to_json();
+  auto value = Json::Value(Json::objectValue);
+  value["method"] = method_->to_json();
+  value["port"] = port_->to_json();
+  return value;
 }
 
 std::string FieldOrigin::to_string() const {
@@ -22,7 +25,9 @@ std::string FieldOrigin::to_string() const {
 }
 
 Json::Value FieldOrigin::to_json() const {
-  return field_->to_json();
+  auto value = Json::Value(Json::objectValue);
+  value["field"] = field_->to_json();
+  return value;
 }
 
 } // namespace marianatrench

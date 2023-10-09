@@ -934,7 +934,14 @@
               [
                 "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V"
               ],
-              "preserves_type_context" : true
+              "preserves_type_context" : true,
+              "taint_origins" : 
+              [
+                {
+                  "method" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
+                  "port" : "Argument(0)"
+                }
+              ]
             }
           ]
         }
@@ -958,6 +965,13 @@
               "origins" : 
               [
                 "Lcom/facebook/marianatrench/integrationtests/AbstractContentProvider;.query:(Landroid/net/Uri;[Ljava/lang/String;Ljava/lang/String;[Ljava/lang/String;Ljava/lang/String;)Landroid/database/Cursor;"
+              ],
+              "taint_origins" : 
+              [
+                {
+                  "method" : "Lcom/facebook/marianatrench/integrationtests/AbstractContentProvider;.query:(Landroid/net/Uri;[Ljava/lang/String;Ljava/lang/String;[Ljava/lang/String;Ljava/lang/String;)Landroid/database/Cursor;",
+                  "port" : "Argument(1)"
+                }
               ]
             }
           ]
@@ -981,6 +995,13 @@
               "origins" : 
               [
                 "Lcom/facebook/marianatrench/integrationtests/AbstractContentProvider;.query:(Landroid/net/Uri;[Ljava/lang/String;Ljava/lang/String;[Ljava/lang/String;Ljava/lang/String;)Landroid/database/Cursor;"
+              ],
+              "taint_origins" : 
+              [
+                {
+                  "method" : "Lcom/facebook/marianatrench/integrationtests/AbstractContentProvider;.query:(Landroid/net/Uri;[Ljava/lang/String;Ljava/lang/String;[Ljava/lang/String;Ljava/lang/String;)Landroid/database/Cursor;",
+                  "port" : "Argument(1)"
+                }
               ]
             }
           ]
@@ -1027,7 +1048,14 @@
               [
                 "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V"
               ],
-              "preserves_type_context" : true
+              "preserves_type_context" : true,
+              "taint_origins" : 
+              [
+                {
+                  "method" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
+                  "port" : "Argument(0)"
+                }
+              ]
             }
           ]
         }
@@ -1071,7 +1099,14 @@
               [
                 "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V"
               ],
-              "preserves_type_context" : true
+              "preserves_type_context" : true,
+              "taint_origins" : 
+              [
+                {
+                  "method" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
+                  "port" : "Argument(0)"
+                }
+              ]
             }
           ],
           "origin" : 
@@ -1148,6 +1183,13 @@
               "origins" : 
               [
                 "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V"
+              ],
+              "taint_origins" : 
+              [
+                {
+                  "method" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
+                  "port" : "Argument(0)"
+                }
               ]
             }
           ]

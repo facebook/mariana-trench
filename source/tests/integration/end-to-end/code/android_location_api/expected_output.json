@@ -218,6 +218,13 @@
               "origins" : 
               [
                 "Landroid/location/Location;.getLatitude:()D"
+              ],
+              "taint_origins" : 
+              [
+                {
+                  "method" : "Landroid/location/Location;.getLatitude:()D",
+                  "port" : "Return"
+                }
               ]
             }
           ]
@@ -254,6 +261,13 @@
               "origins" : 
               [
                 "Landroid/location/Location;.toString:()Ljava/lang/String;"
+              ],
+              "taint_origins" : 
+              [
+                {
+                  "method" : "Landroid/location/Location;.toString:()Ljava/lang/String;",
+                  "port" : "Return"
+                }
               ]
             }
           ]
@@ -289,6 +303,13 @@
               "origins" : 
               [
                 "Landroid/location/LocationListener;.onLocationChanged:(Landroid/location/Location;)V"
+              ],
+              "taint_origins" : 
+              [
+                {
+                  "method" : "Landroid/location/LocationListener;.onLocationChanged:(Landroid/location/Location;)V",
+                  "port" : "Argument(1)"
+                }
               ]
             }
           ]
@@ -854,6 +875,13 @@
               "origins" : 
               [
                 "Landroid/util/Log;.e:(Ljava/lang/String;Ljava/lang/String;)I"
+              ],
+              "taint_origins" : 
+              [
+                {
+                  "method" : "Landroid/util/Log;.e:(Ljava/lang/String;Ljava/lang/String;)I",
+                  "port" : "Argument(1)"
+                }
               ]
             }
           ]
@@ -916,6 +944,13 @@
               "origins" : 
               [
                 "Landroid_location_api/ActivityUsingAndroidLocationManager;.onLocationChanged:(Landroid/location/Location;)V"
+              ],
+              "taint_origins" : 
+              [
+                {
+                  "method" : "Landroid_location_api/ActivityUsingAndroidLocationManager;.onLocationChanged:(Landroid/location/Location;)V",
+                  "port" : "Argument(1)"
+                }
               ]
             }
           ],
@@ -957,7 +992,14 @@
               [
                 "Landroid/util/Log;.e:(Ljava/lang/String;Ljava/lang/String;)I"
               ],
-              "preserves_type_context" : true
+              "preserves_type_context" : true,
+              "taint_origins" : 
+              [
+                {
+                  "method" : "Landroid/util/Log;.e:(Ljava/lang/String;Ljava/lang/String;)I",
+                  "port" : "Argument(1)"
+                }
+              ]
             }
           ],
           "origin" : 
@@ -990,7 +1032,14 @@
               [
                 "Landroid/location/Location;.toString:()Ljava/lang/String;"
               ],
-              "preserves_type_context" : true
+              "preserves_type_context" : true,
+              "taint_origins" : 
+              [
+                {
+                  "method" : "Landroid/location/Location;.toString:()Ljava/lang/String;",
+                  "port" : "Return"
+                }
+              ]
             }
           ],
           "origin" : 
@@ -1024,6 +1073,13 @@
               "origins" : 
               [
                 "Landroid_location_api/ActivityUsingAndroidLocationManager;.onLocationChanged:(Landroid/location/Location;)V"
+              ],
+              "taint_origins" : 
+              [
+                {
+                  "method" : "Landroid_location_api/ActivityUsingAndroidLocationManager;.onLocationChanged:(Landroid/location/Location;)V",
+                  "port" : "Argument(1)"
+                }
               ]
             }
           ]

@@ -14,7 +14,13 @@
       [
         "Lcom/facebook/marianatrench/integrationtests/FieldModel;.field_one:Ljava/lang/String;"
       ],
-      "kind" : "TestSinkA"
+      "kind" : "TestSinkA",
+      "taint_origins" : 
+      [
+        {
+          "field" : "Lcom/facebook/marianatrench/integrationtests/FieldModel;.field_one:Ljava/lang/String;"
+        }
+      ]
     }
   ],
   "sources" : 
@@ -25,7 +31,13 @@
       [
         "Lcom/facebook/marianatrench/integrationtests/FieldModel;.field_one:Ljava/lang/String;"
       ],
-      "kind" : "TestGenerationA"
+      "kind" : "TestGenerationA",
+      "taint_origins" : 
+      [
+        {
+          "field" : "Lcom/facebook/marianatrench/integrationtests/FieldModel;.field_one:Ljava/lang/String;"
+        }
+      ]
     }
   ]
 }
@@ -44,7 +56,13 @@
       [
         "Lcom/facebook/marianatrench/integrationtests/FieldModel;.field_three:Ljava/lang/Integer;"
       ],
-      "kind" : "TestGenerationB"
+      "kind" : "TestGenerationB",
+      "taint_origins" : 
+      [
+        {
+          "field" : "Lcom/facebook/marianatrench/integrationtests/FieldModel;.field_three:Ljava/lang/Integer;"
+        }
+      ]
     }
   ]
 }
@@ -64,7 +82,13 @@
       [
         "Lcom/facebook/marianatrench/integrationtests/FieldModel;.field_two:Ljava/lang/Boolean;"
       ],
-      "kind" : "TestSinkB"
+      "kind" : "TestSinkB",
+      "taint_origins" : 
+      [
+        {
+          "field" : "Lcom/facebook/marianatrench/integrationtests/FieldModel;.field_two:Ljava/lang/Boolean;"
+        }
+      ]
     }
   ],
   "sources" : 
@@ -75,7 +99,13 @@
       [
         "Lcom/facebook/marianatrench/integrationtests/FieldModel;.field_two:Ljava/lang/Boolean;"
       ],
-      "kind" : "TestGenerationB"
+      "kind" : "TestGenerationB",
+      "taint_origins" : 
+      [
+        {
+          "field" : "Lcom/facebook/marianatrench/integrationtests/FieldModel;.field_two:Ljava/lang/Boolean;"
+        }
+      ]
     }
   ]
 }

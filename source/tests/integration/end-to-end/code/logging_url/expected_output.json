@@ -22,6 +22,13 @@
               "origins" : 
               [
                 "Landroid/app/Activity;.getIntent:()Landroid/content/Intent;"
+              ],
+              "taint_origins" : 
+              [
+                {
+                  "method" : "Landroid/app/Activity;.getIntent:()Landroid/content/Intent;",
+                  "port" : "Return"
+                }
               ]
             }
           ]
@@ -1117,6 +1124,13 @@
               "origins" : 
               [
                 "Lcom/instagram/common/analytics/intf/AnalyticsEvent;.addExtra:(Ljava/lang/String;Ljava/lang/String;)Lcom/instagram/common/analytics/intf/AnalyticsEvent;"
+              ],
+              "taint_origins" : 
+              [
+                {
+                  "method" : "Lcom/instagram/common/analytics/intf/AnalyticsEvent;.addExtra:(Ljava/lang/String;Ljava/lang/String;)Lcom/instagram/common/analytics/intf/AnalyticsEvent;",
+                  "port" : "Argument(2)"
+                }
               ]
             }
           ]
@@ -1181,7 +1195,14 @@
               [
                 "Lcom/instagram/common/analytics/intf/AnalyticsEvent;.addExtra:(Ljava/lang/String;Ljava/lang/String;)Lcom/instagram/common/analytics/intf/AnalyticsEvent;"
               ],
-              "preserves_type_context" : false
+              "preserves_type_context" : false,
+              "taint_origins" : 
+              [
+                {
+                  "method" : "Lcom/instagram/common/analytics/intf/AnalyticsEvent;.addExtra:(Ljava/lang/String;Ljava/lang/String;)Lcom/instagram/common/analytics/intf/AnalyticsEvent;",
+                  "port" : "Argument(2)"
+                }
+              ]
             }
           ],
           "local_positions" : 
@@ -1221,7 +1242,14 @@
               [
                 "Lcom/instagram/common/analytics/intf/AnalyticsEvent;.addExtra:(Ljava/lang/String;Ljava/lang/String;)Lcom/instagram/common/analytics/intf/AnalyticsEvent;"
               ],
-              "preserves_type_context" : false
+              "preserves_type_context" : false,
+              "taint_origins" : 
+              [
+                {
+                  "method" : "Lcom/instagram/common/analytics/intf/AnalyticsEvent;.addExtra:(Ljava/lang/String;Ljava/lang/String;)Lcom/instagram/common/analytics/intf/AnalyticsEvent;",
+                  "port" : "Argument(2)"
+                }
+              ]
             }
           ],
           "local_positions" : 
@@ -1273,6 +1301,13 @@
               "origins" : 
               [
                 "Lcom/instagram/common/analytics/intf/AnalyticsEvent;.addExtra:(Ljava/lang/String;Ljava/lang/String;)Lcom/instagram/common/analytics/intf/AnalyticsEvent;"
+              ],
+              "taint_origins" : 
+              [
+                {
+                  "method" : "Lcom/instagram/common/analytics/intf/AnalyticsEvent;.addExtra:(Ljava/lang/String;Ljava/lang/String;)Lcom/instagram/common/analytics/intf/AnalyticsEvent;",
+                  "port" : "Argument(2)"
+                }
               ]
             }
           ]
@@ -1295,7 +1330,14 @@
               [
                 "Landroid/app/Activity;.getIntent:()Landroid/content/Intent;"
               ],
-              "preserves_type_context" : true
+              "preserves_type_context" : true,
+              "taint_origins" : 
+              [
+                {
+                  "method" : "Landroid/app/Activity;.getIntent:()Landroid/content/Intent;",
+                  "port" : "Return"
+                }
+              ]
             }
           ],
           "origin" : 
@@ -1348,7 +1390,14 @@
               [
                 "Lcom/instagram/common/analytics/intf/AnalyticsEvent;.addExtra:(Ljava/lang/String;Ljava/lang/String;)Lcom/instagram/common/analytics/intf/AnalyticsEvent;"
               ],
-              "preserves_type_context" : true
+              "preserves_type_context" : true,
+              "taint_origins" : 
+              [
+                {
+                  "method" : "Lcom/instagram/common/analytics/intf/AnalyticsEvent;.addExtra:(Ljava/lang/String;Ljava/lang/String;)Lcom/instagram/common/analytics/intf/AnalyticsEvent;",
+                  "port" : "Argument(2)"
+                }
+              ]
             }
           ],
           "origin" : 
@@ -1384,7 +1433,14 @@
               [
                 "Lcom/instagram/common/analytics/intf/AnalyticsEvent;.addExtra:(Ljava/lang/String;Ljava/lang/String;)Lcom/instagram/common/analytics/intf/AnalyticsEvent;"
               ],
-              "preserves_type_context" : true
+              "preserves_type_context" : true,
+              "taint_origins" : 
+              [
+                {
+                  "method" : "Lcom/instagram/common/analytics/intf/AnalyticsEvent;.addExtra:(Ljava/lang/String;Ljava/lang/String;)Lcom/instagram/common/analytics/intf/AnalyticsEvent;",
+                  "port" : "Argument(2)"
+                }
+              ]
             }
           ],
           "origin" : 
@@ -1770,7 +1826,14 @@
               [
                 "Lcom/instagram/common/analytics/intf/AnalyticsEvent;.addExtra:(Ljava/lang/String;Ljava/lang/String;)Lcom/instagram/common/analytics/intf/AnalyticsEvent;"
               ],
-              "preserves_type_context" : true
+              "preserves_type_context" : true,
+              "taint_origins" : 
+              [
+                {
+                  "method" : "Lcom/instagram/common/analytics/intf/AnalyticsEvent;.addExtra:(Ljava/lang/String;Ljava/lang/String;)Lcom/instagram/common/analytics/intf/AnalyticsEvent;",
+                  "port" : "Argument(2)"
+                }
+              ]
             }
           ],
           "origin" : 
@@ -1803,7 +1866,14 @@
               [
                 "Landroid/app/Activity;.getIntent:()Landroid/content/Intent;"
               ],
-              "preserves_type_context" : true
+              "preserves_type_context" : true,
+              "taint_origins" : 
+              [
+                {
+                  "method" : "Landroid/app/Activity;.getIntent:()Landroid/content/Intent;",
+                  "port" : "Return"
+                }
+              ]
             }
           ],
           "local_positions" : 

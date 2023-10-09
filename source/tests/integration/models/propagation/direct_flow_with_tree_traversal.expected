@@ -27,7 +27,14 @@
                   [
                     "LSource;.source:()LData;"
                   ],
-                  "preserves_type_context" : true
+                  "preserves_type_context" : true,
+                  "taint_origins" :
+                  [
+                    {
+                      "method" : "LSource;.source:()LData;",
+                      "port" : "Return"
+                    }
+                  ]
                 }
               ],
               "local_positions" :
@@ -77,7 +84,14 @@
                   [
                     "LSink;.sink:(LData;)V"
                   ],
-                  "preserves_type_context" : true
+                  "preserves_type_context" : true,
+                  "taint_origins" :
+                  [
+                    {
+                      "method" : "LSink;.sink:(LData;)V",
+                      "port" : "Argument(1)"
+                    }
+                  ]
                 }
               ],
               "origin" :
@@ -108,7 +122,14 @@
                   [
                     "LSource;.source:()LData;"
                   ],
-                  "preserves_type_context" : true
+                  "preserves_type_context" : true,
+                  "taint_origins" :
+                  [
+                    {
+                      "method" : "LSource;.source:()LData;",
+                      "port" : "Return"
+                    }
+                  ]
                 }
               ],
               "local_positions" :
@@ -159,7 +180,14 @@
                   [
                     "LSink;.sink:(LData;)V"
                   ],
-                  "preserves_type_context" : true
+                  "preserves_type_context" : true,
+                  "taint_origins" :
+                  [
+                    {
+                      "method" : "LSink;.sink:(LData;)V",
+                      "port" : "Argument(1)"
+                    }
+                  ]
                 }
               ],
               "origin" :
@@ -190,7 +218,14 @@
                   [
                     "LSource;.source:()LData;"
                   ],
-                  "preserves_type_context" : true
+                  "preserves_type_context" : true,
+                  "taint_origins" :
+                  [
+                    {
+                      "method" : "LSource;.source:()LData;",
+                      "port" : "Return"
+                    }
+                  ]
                 }
               ],
               "local_features" :
@@ -246,7 +281,14 @@
                   [
                     "LSink;.sink:(LData;)V"
                   ],
-                  "preserves_type_context" : true
+                  "preserves_type_context" : true,
+                  "taint_origins" :
+                  [
+                    {
+                      "method" : "LSink;.sink:(LData;)V",
+                      "port" : "Argument(1)"
+                    }
+                  ]
                 }
               ],
               "origin" :
@@ -274,7 +316,14 @@
                   [
                     "LSink;.sink:(LData;)V"
                   ],
-                  "preserves_type_context" : true
+                  "preserves_type_context" : true,
+                  "taint_origins" :
+                  [
+                    {
+                      "method" : "LSink;.sink:(LData;)V",
+                      "port" : "Argument(1)"
+                    }
+                  ]
                 }
               ],
               "local_features" :
@@ -315,7 +364,14 @@
                   [
                     "LSink;.sink:(LData;)V"
                   ],
-                  "preserves_type_context" : true
+                  "preserves_type_context" : true,
+                  "taint_origins" :
+                  [
+                    {
+                      "method" : "LSink;.sink:(LData;)V",
+                      "port" : "Argument(1)"
+                    }
+                  ]
                 }
               ],
               "origin" :

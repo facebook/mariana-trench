@@ -15,6 +15,13 @@
               "origins" : 
               [
                 "Lcom/facebook/marianatrench/integrationtests/HasAnnotation;.functionA:()Ljava/lang/Object;"
+              ],
+              "taint_origins" : 
+              [
+                {
+                  "method" : "Lcom/facebook/marianatrench/integrationtests/HasAnnotation;.functionA:()Ljava/lang/Object;",
+                  "port" : "Return"
+                }
               ]
             }
           ]
@@ -49,6 +56,13 @@
               "origins" : 
               [
                 "Lcom/facebook/marianatrench/integrationtests/HasAnnotation;.functionB:()Lcom/facebook/marianatrench/integrationtests/MyClass;"
+              ],
+              "taint_origins" : 
+              [
+                {
+                  "method" : "Lcom/facebook/marianatrench/integrationtests/HasAnnotation;.functionB:()Lcom/facebook/marianatrench/integrationtests/MyClass;",
+                  "port" : "Return"
+                }
               ]
             }
           ]
@@ -83,6 +97,13 @@
               "origins" : 
               [
                 "Lcom/facebook/marianatrench/integrationtests/HasAnnotation;.functionC:(Lcom/facebook/marianatrench/integrationtests/MyClass;)Ljava/lang/Object;"
+              ],
+              "taint_origins" : 
+              [
+                {
+                  "method" : "Lcom/facebook/marianatrench/integrationtests/HasAnnotation;.functionC:(Lcom/facebook/marianatrench/integrationtests/MyClass;)Ljava/lang/Object;",
+                  "port" : "Return"
+                }
               ]
             }
           ]
@@ -117,6 +138,13 @@
               "origins" : 
               [
                 "Lcom/facebook/marianatrench/integrationtests/HasAnnotation;.functionD:(Lcom/facebook/marianatrench/integrationtests/MyClassWithoutAnnotation;)Ljava/lang/Object;"
+              ],
+              "taint_origins" : 
+              [
+                {
+                  "method" : "Lcom/facebook/marianatrench/integrationtests/HasAnnotation;.functionD:(Lcom/facebook/marianatrench/integrationtests/MyClassWithoutAnnotation;)Ljava/lang/Object;",
+                  "port" : "Return"
+                }
               ]
             }
           ]
@@ -163,6 +191,13 @@
               "origins" : 
               [
                 "Lcom/facebook/marianatrench/integrationtests/MyClass;.functionE:()Ljava/lang/Object;"
+              ],
+              "taint_origins" : 
+              [
+                {
+                  "method" : "Lcom/facebook/marianatrench/integrationtests/MyClass;.functionE:()Ljava/lang/Object;",
+                  "port" : "Return"
+                }
               ]
             }
           ]

@@ -15,6 +15,13 @@
               "origins" : 
               [
                 "Lcom/facebook/marianatrench/integrationtests/JsonModelGeneratorIntegrationTest3;.functionB:(III)I"
+              ],
+              "taint_origins" : 
+              [
+                {
+                  "method" : "Lcom/facebook/marianatrench/integrationtests/JsonModelGeneratorIntegrationTest3;.functionB:(III)I",
+                  "port" : "Return"
+                }
               ]
             }
           ]
@@ -49,6 +56,13 @@
               "origins" : 
               [
                 "Lcom/facebook/marianatrench/integrationtests/JsonModelGeneratorIntegrationTest3;.functionC:(III)I"
+              ],
+              "taint_origins" : 
+              [
+                {
+                  "method" : "Lcom/facebook/marianatrench/integrationtests/JsonModelGeneratorIntegrationTest3;.functionC:(III)I",
+                  "port" : "Return"
+                }
               ]
             }
           ]

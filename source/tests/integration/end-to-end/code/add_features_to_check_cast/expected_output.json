@@ -903,6 +903,13 @@
               "origins" : 
               [
                 "Lcom/mariana_trench/artificial/ArrayAllocation;.allocateArray:(I)V"
+              ],
+              "taint_origins" : 
+              [
+                {
+                  "method" : "Lcom/mariana_trench/artificial/ArrayAllocation;.allocateArray:(I)V",
+                  "port" : "Argument(0)"
+                }
               ]
             }
           ],
@@ -954,6 +961,13 @@
               "origins" : 
               [
                 "Lcom/facebook/marianatrench/integrationtests/AddFeatureToCheckCast;.sink:(Ljava/lang/String;)V"
+              ],
+              "taint_origins" : 
+              [
+                {
+                  "method" : "Lcom/facebook/marianatrench/integrationtests/AddFeatureToCheckCast;.sink:(Ljava/lang/String;)V",
+                  "port" : "Argument(1)"
+                }
               ]
             }
           ]
@@ -1008,7 +1022,14 @@
               [
                 "Lcom/facebook/marianatrench/integrationtests/AddFeatureToCheckCast;.sink:(Ljava/lang/String;)V"
               ],
-              "preserves_type_context" : false
+              "preserves_type_context" : false,
+              "taint_origins" : 
+              [
+                {
+                  "method" : "Lcom/facebook/marianatrench/integrationtests/AddFeatureToCheckCast;.sink:(Ljava/lang/String;)V",
+                  "port" : "Argument(1)"
+                }
+              ]
             }
           ]
         }
@@ -1030,7 +1051,14 @@
               [
                 "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;"
               ],
-              "preserves_type_context" : true
+              "preserves_type_context" : true,
+              "taint_origins" : 
+              [
+                {
+                  "method" : "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;",
+                  "port" : "Return"
+                }
+              ]
             }
           ],
           "local_features" : 
@@ -1113,7 +1141,14 @@
               [
                 "Lcom/mariana_trench/artificial/ArrayAllocation;.allocateArray:(I)V"
               ],
-              "preserves_type_context" : true
+              "preserves_type_context" : true,
+              "taint_origins" : 
+              [
+                {
+                  "method" : "Lcom/mariana_trench/artificial/ArrayAllocation;.allocateArray:(I)V",
+                  "port" : "Argument(0)"
+                }
+              ]
             }
           ]
         }
@@ -1135,7 +1170,14 @@
               [
                 "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;"
               ],
-              "preserves_type_context" : true
+              "preserves_type_context" : true,
+              "taint_origins" : 
+              [
+                {
+                  "method" : "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;",
+                  "port" : "Return"
+                }
+              ]
             }
           ],
           "local_features" : 
@@ -1208,7 +1250,14 @@
               [
                 "Lcom/facebook/marianatrench/integrationtests/AddFeatureToCheckCast;.sink:(Ljava/lang/String;)V"
               ],
-              "preserves_type_context" : true
+              "preserves_type_context" : true,
+              "taint_origins" : 
+              [
+                {
+                  "method" : "Lcom/facebook/marianatrench/integrationtests/AddFeatureToCheckCast;.sink:(Ljava/lang/String;)V",
+                  "port" : "Argument(1)"
+                }
+              ]
             }
           ],
           "origin" : 
@@ -1241,7 +1290,14 @@
               [
                 "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;"
               ],
-              "preserves_type_context" : true
+              "preserves_type_context" : true,
+              "taint_origins" : 
+              [
+                {
+                  "method" : "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;",
+                  "port" : "Return"
+                }
+              ]
             }
           ],
           "local_features" : 
@@ -1302,7 +1358,14 @@
               [
                 "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V"
               ],
-              "preserves_type_context" : true
+              "preserves_type_context" : true,
+              "taint_origins" : 
+              [
+                {
+                  "method" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
+                  "port" : "Argument(0)"
+                }
+              ]
             }
           ],
           "origin" : 
@@ -1335,7 +1398,14 @@
               [
                 "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;"
               ],
-              "preserves_type_context" : true
+              "preserves_type_context" : true,
+              "taint_origins" : 
+              [
+                {
+                  "method" : "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;",
+                  "port" : "Return"
+                }
+              ]
             }
           ],
           "origin" : 
@@ -1389,6 +1459,13 @@
               "origins" : 
               [
                 "Lcom/mariana_trench/artificial/ArrayAllocation;.allocateArray:(I)V"
+              ],
+              "taint_origins" : 
+              [
+                {
+                  "method" : "Lcom/mariana_trench/artificial/ArrayAllocation;.allocateArray:(I)V",
+                  "port" : "Argument(0)"
+                }
               ]
             }
           ],
@@ -1419,7 +1496,14 @@
               [
                 "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;"
               ],
-              "preserves_type_context" : true
+              "preserves_type_context" : true,
+              "taint_origins" : 
+              [
+                {
+                  "method" : "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;",
+                  "port" : "Return"
+                }
+              ]
             }
           ],
           "local_features" : 
@@ -1488,7 +1572,14 @@
               [
                 "Lcom/facebook/marianatrench/integrationtests/AddFeatureToCheckCast;.sink:(Ljava/lang/String;)V"
               ],
-              "preserves_type_context" : true
+              "preserves_type_context" : true,
+              "taint_origins" : 
+              [
+                {
+                  "method" : "Lcom/facebook/marianatrench/integrationtests/AddFeatureToCheckCast;.sink:(Ljava/lang/String;)V",
+                  "port" : "Argument(1)"
+                }
+              ]
             }
           ],
           "origin" : 
@@ -1565,6 +1656,13 @@
               "origins" : 
               [
                 "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V"
+              ],
+              "taint_origins" : 
+              [
+                {
+                  "method" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
+                  "port" : "Argument(0)"
+                }
               ]
             }
           ]
@@ -1589,6 +1687,13 @@
               "origins" : 
               [
                 "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;"
+              ],
+              "taint_origins" : 
+              [
+                {
+                  "method" : "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;",
+                  "port" : "Return"
+                }
               ]
             }
           ]
@@ -1745,6 +1850,13 @@
               "origins" : 
               [
                 "Lcom/mariana_trench/artificial/ArrayAllocation;.allocateArray:(I)V"
+              ],
+              "taint_origins" : 
+              [
+                {
+                  "method" : "Lcom/mariana_trench/artificial/ArrayAllocation;.allocateArray:(I)V",
+                  "port" : "Argument(0)"
+                }
               ]
             }
           ]

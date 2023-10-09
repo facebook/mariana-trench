@@ -95,6 +95,13 @@
               "origins" : 
               [
                 "Lcom/facebook/marianatrench/integrationtests/JsonModelGeneratorIntegrationTest2;.function:(II)I"
+              ],
+              "taint_origins" : 
+              [
+                {
+                  "method" : "Lcom/facebook/marianatrench/integrationtests/JsonModelGeneratorIntegrationTest2;.function:(II)I",
+                  "port" : "Argument(1)"
+                }
               ]
             }
           ]
@@ -114,6 +121,13 @@
               "origins" : 
               [
                 "Lcom/facebook/marianatrench/integrationtests/JsonModelGeneratorIntegrationTest2;.function:(II)I"
+              ],
+              "taint_origins" : 
+              [
+                {
+                  "method" : "Lcom/facebook/marianatrench/integrationtests/JsonModelGeneratorIntegrationTest2;.function:(II)I",
+                  "port" : "Argument(2)"
+                }
               ]
             }
           ]
@@ -133,6 +147,13 @@
               "origins" : 
               [
                 "Lcom/facebook/marianatrench/integrationtests/JsonModelGeneratorIntegrationTest2;.function:(II)I"
+              ],
+              "taint_origins" : 
+              [
+                {
+                  "method" : "Lcom/facebook/marianatrench/integrationtests/JsonModelGeneratorIntegrationTest2;.function:(II)I",
+                  "port" : "Return"
+                }
               ],
               "via_type_of" : 
               [
@@ -169,6 +190,13 @@
               "origins" : 
               [
                 "Lcom/facebook/marianatrench/integrationtests/JsonModelGeneratorIntegrationTest2;.function:(II)I"
+              ],
+              "taint_origins" : 
+              [
+                {
+                  "method" : "Lcom/facebook/marianatrench/integrationtests/JsonModelGeneratorIntegrationTest2;.function:(II)I",
+                  "port" : "Argument(1)"
+                }
               ]
             },
             {
@@ -177,6 +205,13 @@
               "origins" : 
               [
                 "Lcom/facebook/marianatrench/integrationtests/JsonModelGeneratorIntegrationTest2;.function:(II)I"
+              ],
+              "taint_origins" : 
+              [
+                {
+                  "method" : "Lcom/facebook/marianatrench/integrationtests/JsonModelGeneratorIntegrationTest2;.function:(II)I",
+                  "port" : "Argument(1)"
+                }
               ]
             }
           ]
@@ -196,6 +231,13 @@
               "origins" : 
               [
                 "Lcom/facebook/marianatrench/integrationtests/JsonModelGeneratorIntegrationTest2;.function:(II)I"
+              ],
+              "taint_origins" : 
+              [
+                {
+                  "method" : "Lcom/facebook/marianatrench/integrationtests/JsonModelGeneratorIntegrationTest2;.function:(II)I",
+                  "port" : "Argument(2)"
+                }
               ]
             },
             {
@@ -204,6 +246,13 @@
               "origins" : 
               [
                 "Lcom/facebook/marianatrench/integrationtests/JsonModelGeneratorIntegrationTest2;.function:(II)I"
+              ],
+              "taint_origins" : 
+              [
+                {
+                  "method" : "Lcom/facebook/marianatrench/integrationtests/JsonModelGeneratorIntegrationTest2;.function:(II)I",
+                  "port" : "Argument(2)"
+                }
               ]
             }
           ]
@@ -273,6 +322,13 @@
               [
                 "Lcom/facebook/marianatrench/integrationtests/JsonModelGeneratorIntegrationTest2;.function:(II)I"
               ],
+              "taint_origins" : 
+              [
+                {
+                  "method" : "Lcom/facebook/marianatrench/integrationtests/JsonModelGeneratorIntegrationTest2;.function:(II)I",
+                  "port" : "Argument(1)"
+                }
+              ],
               "via_type_of" : 
               [
                 "Argument(0)"
@@ -295,6 +351,13 @@
               "origins" : 
               [
                 "Lcom/facebook/marianatrench/integrationtests/JsonModelGeneratorIntegrationTest2;.function:(II)I"
+              ],
+              "taint_origins" : 
+              [
+                {
+                  "method" : "Lcom/facebook/marianatrench/integrationtests/JsonModelGeneratorIntegrationTest2;.function:(II)I",
+                  "port" : "Argument(2)"
+                }
               ],
               "via_type_of" : 
               [
@@ -328,6 +391,13 @@
               "origins" : 
               [
                 "Lcom/facebook/marianatrench/integrationtests/JsonModelGeneratorIntegrationTest2;.functionB:(III)I"
+              ],
+              "taint_origins" : 
+              [
+                {
+                  "method" : "Lcom/facebook/marianatrench/integrationtests/JsonModelGeneratorIntegrationTest2;.functionB:(III)I",
+                  "port" : "Argument(1)"
+                }
               ]
             }
           ]
@@ -347,6 +417,13 @@
               "origins" : 
               [
                 "Lcom/facebook/marianatrench/integrationtests/JsonModelGeneratorIntegrationTest2;.functionB:(III)I"
+              ],
+              "taint_origins" : 
+              [
+                {
+                  "method" : "Lcom/facebook/marianatrench/integrationtests/JsonModelGeneratorIntegrationTest2;.functionB:(III)I",
+                  "port" : "Argument(2)"
+                }
               ]
             }
           ]
@@ -366,6 +443,13 @@
               "origins" : 
               [
                 "Lcom/facebook/marianatrench/integrationtests/JsonModelGeneratorIntegrationTest2;.functionB:(III)I"
+              ],
+              "taint_origins" : 
+              [
+                {
+                  "method" : "Lcom/facebook/marianatrench/integrationtests/JsonModelGeneratorIntegrationTest2;.functionB:(III)I",
+                  "port" : "Argument(3)"
+                }
               ]
             }
           ]
@@ -400,6 +484,13 @@
               "origins" : 
               [
                 "Lcom/facebook/marianatrench/integrationtests/JsonModelGeneratorIntegrationTest2;.functionC:(III)I"
+              ],
+              "taint_origins" : 
+              [
+                {
+                  "method" : "Lcom/facebook/marianatrench/integrationtests/JsonModelGeneratorIntegrationTest2;.functionC:(III)I",
+                  "port" : "Argument(0)"
+                }
               ]
             }
           ]
@@ -419,6 +510,13 @@
               "origins" : 
               [
                 "Lcom/facebook/marianatrench/integrationtests/JsonModelGeneratorIntegrationTest2;.functionC:(III)I"
+              ],
+              "taint_origins" : 
+              [
+                {
+                  "method" : "Lcom/facebook/marianatrench/integrationtests/JsonModelGeneratorIntegrationTest2;.functionC:(III)I",
+                  "port" : "Argument(2)"
+                }
               ]
             }
           ]

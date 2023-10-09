@@ -34,7 +34,14 @@
                   [
                     "LSink;.sink_with_two_kinds:(LData;)V"
                   ],
-                  "preserves_type_context" : true
+                  "preserves_type_context" : true,
+                  "taint_origins" :
+                  [
+                    {
+                      "method" : "LSink;.sink_with_two_kinds:(LData;)V",
+                      "port" : "Argument(1)"
+                    }
+                  ]
                 }
               ],
               "origin" :
@@ -65,7 +72,14 @@
                   [
                     "LSource;.alternative_source:()LData;"
                   ],
-                  "preserves_type_context" : true
+                  "preserves_type_context" : true,
+                  "taint_origins" :
+                  [
+                    {
+                      "method" : "LSource;.alternative_source:()LData;",
+                      "port" : "Return"
+                    }
+                  ]
                 }
               ],
               "origin" :

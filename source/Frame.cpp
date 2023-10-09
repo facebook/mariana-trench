@@ -344,8 +344,15 @@ Json::Value Frame::to_json(ExportOriginsMode export_origins_mode) const {
     value["distance"] = Json::Value(distance_);
   }
 
-  // TODO(T163918472): Replace this with new origins json that reflects the
-  // structure in Frame. Update parser to handle the new format.
+  if (!origins_.empty()) {
+    if (call_kind_.is_origin() ||
+        export_origins_mode == ExportOriginsMode::Always) {
+      value["taint_origins"] = origins_.to_json();
+    }
+  }
+
+  // TODO(T163918472): Remove legacy origins json when parser is updated to
+  // handle the new format.
   MethodSet method_origins;
   FieldSet field_origins;
 
@@ -362,7 +369,7 @@ Json::Value Frame::to_json(ExportOriginsMode export_origins_mode) const {
   if (!method_origins.empty()) {
     if (call_kind_.is_origin() ||
         export_origins_mode == ExportOriginsMode::Always) {
-      value["origins"] = origins_.to_json();
+      value["origins"] = method_origins.to_json();
     }
   }
 
