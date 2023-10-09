@@ -108,7 +108,8 @@ class AbstractTreeDomain final
   using PathElement = typename Path::Element;
 
  private:
-  struct ValueInterface {
+  struct ValueInterface final
+      : public sparta::AbstractMapValue<ValueInterface> {
     using type = AbstractTreeDomain;
 
     static AbstractTreeDomain default_value() {
