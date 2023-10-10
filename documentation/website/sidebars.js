@@ -24,6 +24,7 @@ module.exports = {
       fbInternalOnly('fb/running-on-3rd-party-apps'),
       'configuration',
       'customize-sources-and-sinks',
+      'rules',
       'models',
       'shims',
       'feature-descriptions',

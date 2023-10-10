@@ -1,12 +1,16 @@
 ---
 id: models
-title: Models
-sidebar_label: Models
+title: Models & Model Generators
+sidebar_label: Models & Model Generators
 ---
 
-import FbModels from './fb/models.md'; import MultiSourceSinkRule from './fb/multi_source_sink_rules.md';
+import FbModels from './fb/models.md';
 
-The main way to configure the analysis is through defining models for methods.
+The main way to configure the analysis is through defining model generators. Each model generator defines (1) a **filter**, made up of constraints to specify the methods (or fields) for which a model should be generated, and (2) a **model**, an abstract representation of how data flows through a method.
+
+Model generators are what define Sink and Source kinds which are the key component of [Rules](/rules.md). Model generators can do other things too, like attach **features** (a.k.a. breadcrumbs) to flows and **sanitize** (redact) flows which go through certain "data-safe" methods (e.g. a method which hashes a user's password).
+
+Filters are conceptually straightforward. Thus, this page focuses heavily on conceptualizing the various types of models as well as examples. See the [Model Generators](#model-generators) section for full implementation documentation for both filters and models.
 
 ## Models
 
@@ -103,26 +107,6 @@ Examples:
 ### Kinds
 
 A source has a **kind** that describes its content (e.g, user input, file system, etc). A sink also has a **kind** that describes the operation the method performs (e.g, execute a command, read a file, etc.). Kinds can be arbitrary strings (e.g, `UserInput`). We usually avoid whitespaces.
-
-### Rules
-
-A rule describes flows that we want to catch (e.g, user input flowing into command execution). A rule is made of a set of source kinds, a set of sink kinds, a name, a code and a description.
-
-Here is an example of a rule in JSON:
-
-```json
-{
-  "name": "User input flows into code execution (RCE)",
-  "code": 1,
-  "description": "Values from user-controlled source may eventually flow into code execution",
-  "sources": ["UserInput"],
-  "sinks": ["CodeExecution"]
-}
-```
-
-Rules used by Mariana Trench can be specified with the `--rules-paths` argument. The default set of rules that run can be found in [configuration/rules.json](https://github.com/facebook/mariana-trench/blob/main/configuration/rules.json).
-
-<MultiSourceSinkRule />
 
 ### Sources
 
@@ -721,7 +705,7 @@ void testRegexSourceGoogleApiKey() {
 }
 ```
 
-## Generators
+## Model Generators
 
 Mariana Trench allows for dynamic model specifications. This allows a user to specify models of methods before running the analysis. This is used to specify sources, sinks, propagation and modes.
 
@@ -928,7 +912,7 @@ Note, the implicit `this` parameter for methods has the parameter number 0.
 
    ```json
    {
-     "model_generators":. [
+     "model_generators": [
        {
          "find": "methods",
          "where": /* ... */,
