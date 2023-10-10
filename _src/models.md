@@ -10,7 +10,7 @@ The main way to configure the analysis is through defining model generators. Eac
 
 Model generators are what define Sink and Source kinds which are the key component of [Rules](/rules.md). Model generators can do other things too, like attach **features** (a.k.a. breadcrumbs) to flows and **sanitize** (redact) flows which go through certain "data-safe" methods (e.g. a method which hashes a user's password).
 
-Filters are conceptually straightforward. Thus, this page focuses heavily on conceptualizing the various types of models as well as examples. See the [Model Generators](#model-generators) section for full implementation documentation for both filters and models.
+Filters are conceptually straightforward. Thus, this page focuses heavily on conceptualizing and providing examples for the various types of models. See the [Model Generators](#model-generators) section for full implementation documentation for both filters and models.
 
 ## Models
 
@@ -73,13 +73,13 @@ For the parameters and return types use the following table to pick the correct 
 - F - float
 - D - double (64 bits)
 
-Classes take the form `Lpackage/name/ClassName;` - where the leading `L` indicates that it is a class type, `package/name/` is the package that the class is in.
+Classes take the form `Lpackage/name/ClassName;` - where the leading `L` indicates that it is a class type, `package/name/` is the package that the class is in. A nested class will take the form `Lpackage/name/ClassName$NestedClassName` (the `$` will need to be double escaped `\\$` in json regex).
 
 > **NOTE:** Instance (i.e, non-static) method parameters are indexed starting from 1! The 0th parameter is the `this` parameter in dalvik byte-code. For static method parameter, indices start from 0.
 
 ### Access path format
 
-An access path describes the symbolic location of a taint. This is commonly used to indicate where a source or a sink originates from.
+An access path describes the symbolic location of a taint. This is commonly used to indicate where a source or a sink originates from. The "port" field of any model is represented by an access path.
 
 An access path is composed of a root and a path.
 
