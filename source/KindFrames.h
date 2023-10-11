@@ -143,12 +143,12 @@ class KindFrames final : public sparta::AbstractDomain<KindFrames> {
 
   ConstIterator begin() const {
     return boost::make_transform_iterator(
-        frames_.bindings().cbegin(), GetFrameReference());
+        frames_.bindings().begin(), GetFrameReference());
   }
 
   ConstIterator end() const {
     return boost::make_transform_iterator(
-        frames_.bindings().cend(), GetFrameReference());
+        frames_.bindings().end(), GetFrameReference());
   }
 
   /**
