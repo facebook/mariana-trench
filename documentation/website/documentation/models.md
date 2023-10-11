@@ -120,16 +120,26 @@ public static String getPath() {
 }
 ```
 
-The JSON model for this method could be:
+The JSON model generator for this method could be:
 
 ```json
 {
-  "sources": [
+  "find": "methods",
+  "where": [
     {
-      "kind": "UserControlled",
-      "port": "Return"
+      "constraint": "signature_match",
+      "parent": "Lcom/example/Class;",
+      "name": "getPath"
     }
-  ]
+  ],
+  "model": {
+    "sources": [
+      {
+        "kind": "UserControlled",
+        "port": "Return"
+      }
+    ]
+  }
 }
 ```
 
@@ -143,16 +153,26 @@ class MyActivity extends Activity {
 }
 ```
 
-The JSON model for this method could be:
+The JSON model generator for this method could be:
 
 ```json
 {
-  "sources": [
+  "find": "methods",
+  "where": [
     {
-      "kind": "UserControlled",
-      "port": "Argument(1)"
+      "constraint": "signature_match",
+      "extends": "Landroid/app/Activity",
+      "name": "onNewIntent"
     }
-  ]
+  ],
+  "model": {
+    "sources": [
+      {
+        "kind": "UserControlled",
+        "port": "Argument(1)"
+      }
+    ]
+  }
 }
 ```
 
@@ -170,20 +190,30 @@ public static String readFile(String path, String extension, int mode) {
 }
 ```
 
-Since `path` and `extension` can be used to read arbitrary files, we consider them sinks. We do not consider `mode` as a sink since we do not care whether the user can control it. The JSON model for this method could be:
+Since `path` and `extension` can be used to read arbitrary files, we consider them sinks. We do not consider `mode` as a sink since we do not care whether the user can control it. The JSON model generator for this method could be:
 
 ```json
 {
-  "sinks": [
+  "find": "methods",
+  "where": [
     {
-      "kind": "FileRead",
-      "port": "Argument(0)"
-    },
-    {
-      "kind": "FileRead",
-      "port": "Argument(1)"
+      "constraint": "signature_match",
+      "parent": "Lcom/example/Class",
+      "name": "readFile"
     }
-  ]
+  ],
+  "model": {
+    "sinks": [
+      {
+        "kind": "FileRead",
+        "port": "Argument(0)"
+      },
+      {
+        "kind": "FileRead",
+        "port": "Argument(1)"
+      }
+    ]
+  }
 }
 ```
 
@@ -203,20 +233,30 @@ public static String concat(String x, String y) {
 }
 ```
 
-The return value of the method can be controlled by both parameters, hence it has the propagations `Argument(0) -> Return` and `Argument(1) -> Return`. The JSON model for this method could be:
+The return value of the method can be controlled by both parameters, hence it has the propagations `Argument(0) -> Return` and `Argument(1) -> Return`. The JSON model generator for this method could be:
 
 ```json
 {
-  "propagation": [
+  "find": "methods",
+  "where": [
     {
-      "input": "Argument(0)",
-      "output": "Return"
-    },
-    {
-      "input": "Argument(1)",
-      "output": "Return"
+      "constraint": "signature_match",
+      "parent": "Lcom/example/Class",
+      "name": "concat"
     }
-  ]
+  ],
+  "model": {
+    "propagation": [
+      {
+        "input": "Argument(0)",
+        "output": "Return"
+      },
+      {
+        "input": "Argument(1)",
+        "output": "Return"
+      }
+    ]
+  }
 }
 ```
 
@@ -240,16 +280,28 @@ For instance, if we want to add the feature `via-signed` to all sources flowing 
 public String getSignedCookie();
 ```
 
-We could use the following JSON model:
+We could use the following JSON model generator:
 
 ```json
 {
-  "attach_to_sources": [
+  "find": "methods",
+  "where": [
     {
-      "features": ["via-signed"],
-      "port": "Return"
+      "constraint": "signature_match",
+      "parent": "Lcom/example/Class",
+      "name": "getSignedCookie"
     }
-  ]
+  ],
+  "model": {
+    "attach_to_sources": [
+      {
+        "features": [
+          "via-signed"
+        ],
+        "port": "Return"
+      }
+    ]
+  }
 }
 ```
 
@@ -269,16 +321,28 @@ class User {
 }
 ```
 
-We could use the following JSON model:
+We could use the following JSON model generator:
 
 ```json
 {
-  "attach_to_sinks": [
+  "find": "methods",
+  "where": [
     {
-      "features": ["via-user"],
-      "port": "Argument(0)"
+      "constraint": "signature_match",
+      "parent": "Lcom/example/User",
+      "name": "findUser"
     }
-  ]
+  ],
+  "model": {
+    "attach_to_sinks": [
+      {
+        "features": [
+          "via-user"
+        ],
+        "port": "Argument(0)"
+      }
+    ]
+  }
 }
 ```
 
@@ -294,16 +358,28 @@ For instance, if we want to add the feature `via-concat` to the propagations of 
 public static String concat(String x, String y);
 ```
 
-We could use the following JSON model:
+We could use the following JSON model generator:
 
 ```json
 {
-  "attach_to_propagations": [
+  "find": "methods",
+  "where": [
     {
-      "features": ["via-concat"],
-      "port": "Return" // We could also use Argument(0) and Argument(1)
+      "constraint": "signature_match",
+      "parent": "Lcom/example/Class",
+      "name": "concat"
     }
-  ]
+  ],
+  "model": {
+    "attach_to_propagations": [
+      {
+        "features": [
+          "via-concat"
+        ],
+        "port": "Return" // We could also use Argument(0) and Argument(1)
+      }
+    ]
+  }
 }
 ```
 
@@ -329,16 +405,28 @@ public void buyView() {
 }
 ```
 
-Technically, the `log` method doesn't have any source, sink or propagation. We can use _add features to arguments_ to add a feature `was-logged` on the flow from `getParameter("username")` to `buy(username, product)`. We could use the following JSON model for the `log` method:
+Technically, the `log` method doesn't have any source, sink or propagation. We can use _add features to arguments_ to add a feature `was-logged` on the flow from `getParameter("username")` to `buy(username, product)`. We could use the following JSON model generator for the `log` method:
 
 ```json
 {
-  "add_features_to_arguments": [
+  "find": "methods",
+  "where": [
     {
-      "features": ["was-logged"],
-      "port": "Argument(0)"
+      "constraint": "signature_match",
+      "parent": "Lcom/example/Class",
+      "name": "log"
     }
-  ]
+  ],
+  "model": {
+    "add_features_to_arguments": [
+      {
+        "features": [
+          "was-logged"
+        ],
+        "port": "Argument(0)"
+      }
+    ]
+  }
 }
 ```
 
@@ -350,7 +438,7 @@ For example, if we were interested in the specific Activity subclasses with whic
 
 ```java
 
-public void startActivityForResult (Intent intent, int requestCode);
+public void startActivityForResult(Intent intent, int requestCode);
 
 // At some callsite:
 ActivitySubclass activitySubclassInstance;
@@ -362,13 +450,25 @@ we could use the following JSON to specifiy a via-type feature that would materi
 
 ```json
 {
-  "sinks": [
+  "find": "methods",
+  "where": [
     {
-      "port": "Argument(1)",
-      "kind": "SinkKind",
-      "via_type_of": ["Argument(0)"]
+      "constraint": "signature_match",
+      "parent": "Lcom/example/Class",
+      "name": "startActivityForResult"
     }
-  ]
+  ],
+  "model": {
+    "sinks": [
+      {
+        "port": "Argument(1)",
+        "kind": "SinkKind",
+        "via_type_of": [
+          "Argument(0)"
+        ]
+      }
+    ]
+  }
 }
 ```
 
@@ -379,7 +479,7 @@ _Via-value_ feature captures the value of the specified callable's port seen at 
 For example, if we were interested in the specific `mode` with which the method below was called:
 
 ```java
-public void log (String mode, String message);
+public void log(String mode, String message);
 
 class Constants {
   public static final String MODE = "M1";
@@ -394,13 +494,25 @@ we could use the following JSON to specifiy a via-value feature that would mater
 
 ```json
 {
-  "sinks": [
+  "find": "methods",
+  "where": [
     {
-      "port": "Argument(1)",
-      "kind": "SinkKind",
-      "via_value_of": ["Argument(0)"]
+      "constraint": "signature_match",
+      "parent": "Lcom/example/Class",
+      "name": "log"
     }
-  ]
+  ],
+  "model": {
+    "sinks": [
+      {
+        "port": "Argument(1)",
+        "kind": "SinkKind",
+        "via_value_of": [
+          "Argument(0)"
+        ]
+      }
+    ]
+  }
 }
 ```
 
@@ -454,13 +566,23 @@ If you know that this method **preserves the structure** of the parameter, you c
 
 ```json
 {
-  "propagation": [
+  "find": "methods",
+  "where": [
     {
-      "input": "Argument(0)",
-      "output": "Return",
-      "collapse": false
+      "constraint": "signature_match",
+      "parent": "Lcom/example/SomeClass",
+      "name": "UnknownMethod"
     }
-  ]
+  ],
+  "model": {
+    "propagation": [
+      {
+        "input": "Argument(0)",
+        "output": "Return",
+        "collapse": false
+      }
+    ]
+  }
 }
 ```
 
@@ -511,16 +633,24 @@ Specifying sanitizers on a model allow us to stop taint flowing through that met
 
 These can be specified in model generators as follows -
 
-```
-"find": "methods",
-"where": ...,
-"model": {
-  "sanitizers": [
-    {"sanitize": "sources"},
-    {"sanitize": "sinks"},
-    {"sanitize": "propagations"},
-  ],
-  ...
+```json
+{
+  "find": "methods",
+  "where": ...,
+  "model": {
+    "sanitizers": [
+      {
+        "sanitize": "sources"
+      },
+      {
+        "sanitize": "sinks"
+      },
+      {
+        "sanitize": "propagations"
+      }
+    ],
+    ...
+  }
 }
 ```
 
@@ -530,9 +660,20 @@ Note, if there are any user-specificed sources, sinks or propagations on the mod
 
 `sources` and `sinks` sanitizers may include a list of kinds (each with or without a partial_label) to restrict the sanitizer to only sanitizing taint of those kinds. (When unspecified, as in the example above, all taint is sanitized regardless of kind).
 
-```
+```json
 "sanitizers": [
-  {"sanitize": "sinks", "kinds": [{"kind": "SinkKindA"}, {"kind": "SinkKindB", "partial_label": "A"}]},
+  {
+    "sanitize": "sinks",
+    "kinds": [
+      {
+        "kind": "SinkKindA"
+      },
+      {
+        "kind": "SinkKindB",
+        "partial_label": "A"
+      }
+    ]
+  }
 ]
 ```
 
@@ -546,7 +687,7 @@ Sanitizers can also specify a specific port ([access path](models.md#access-path
 
 For example if the following method
 
-```
+```java
 public void someMethod(Object argument1, Object argument2) {
   toSink(argument1);
   toSink(argument2);
@@ -555,9 +696,12 @@ public void someMethod(Object argument1, Object argument2) {
 
 had the following sanitizer in its model,
 
-```
+```json
 "sanitizers": [
-  {"sanitize": "sinks", "port": "Argument(1)"},
+  {
+    "sanitize": "sinks",
+    "port": "Argument(1)"
+  }
 ]
 ```
 
@@ -596,20 +740,22 @@ These models represent user-defined taint on class fields (as opposed to methods
 
 Example field model generator for sources:
 
-```
-"find": "fields",
-"where": [
-  {
-    "constraint": "name",
-    "pattern": "SOURCE_EXAMPLE"
-  }
-],
-"model": {
-  "sources" : [
+```json
+{
+  "find": "fields",
+  "where": [
     {
-      "kind": "FieldSource"
+      "constraint": "name",
+      "pattern": "SOURCE_EXAMPLE"
     }
-  ]
+  ],
+  "model": {
+    "sources" : [
+      {
+        "kind": "FieldSource"
+      }
+    ]
+  }
 }
 ```
 
@@ -628,20 +774,22 @@ public class TestClass {
 
 Example field model generator for sinks:
 
-```
-"find": "fields",
-"where": [
-  {
-    "constraint": "name",
-    "pattern": "SINK_EXAMPLE"
-  }
-],
-"model": {
-  "sinks" : [
+```json
+{
+  "find": "fields",
+  "where": [
     {
-      "kind": "FieldSink"
+      "constraint": "name",
+      "pattern": "SINK_EXAMPLE"
     }
-  ]
+  ],
+  "model": {
+    "sinks" : [
+      {
+        "kind": "FieldSink"
+      }
+    ]
+  }
 }
 ```
 
