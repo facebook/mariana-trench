@@ -962,6 +962,7 @@ Each "rule" defines a "filter" (which uses "constraints" to specify methods for 
       - `name` (a single string) or `names` (a list of alternative strings): is exact matched to the method name
       - `parent` (a single string) or `parents` (a list of alternative strings) is exact matched to the class of the method or `extends` (either a single string or a list of alternative strings) is exact matched to the base classes or interfaces of the method. `extends` allows an additional property `includes_self` which is a boolean to indicate if the constraint is applied to the class itself or not.
     - `signature | signature_pattern`: Expects an extra property `pattern` which is a regex to fully match the full signature (class, method, argument types) of a method;
+      - **NOTE:** Usage of this constraint is discouraged as it has poor performance. Try using `signature_match` instead!
     - `parent`: Expects an extra property `inner` [Type] which contains a nested constraint to apply to the class holding the method;
     - `parameter`: Expects an extra properties `idx` and `inner` [Parameter] or [Type], matches when the idx-th parameter of the function or method matches the nested constraint inner;
     - `any_parameter`: Expects an optional extra property `start_idx` and `inner` [Parameter] or [Type], matches when there is any parameters (starting at start_idx) of the function or method matches the nested constraint inner;
