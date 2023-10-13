@@ -32,16 +32,12 @@
                   "kind" : "TestSink",
                   "origins" :
                   [
-                    "LSink;.interface_sink:(LData;)V"
-                  ],
-                  "preserves_type_context" : true,
-                  "taint_origins" :
-                  [
                     {
                       "method" : "LSink;.interface_sink:(LData;)V",
                       "port" : "Argument(1)"
                     }
-                  ]
+                  ],
+                  "preserves_type_context" : true
                 }
               ],
               "origin" :
@@ -70,16 +66,12 @@
                   "kind" : "TestSource",
                   "origins" :
                   [
-                    "LSource;.source:()LData;"
-                  ],
-                  "preserves_type_context" : true,
-                  "taint_origins" :
-                  [
                     {
                       "method" : "LSource;.source:()LData;",
                       "port" : "Return"
                     }
-                  ]
+                  ],
+                  "preserves_type_context" : true
                 }
               ],
               "origin" :

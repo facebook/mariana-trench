@@ -1847,8 +1847,7 @@ TEST_F(JsonTest, Model) {
                 {
                   "call_info": "Declaration",
                   "kind": "source_kind",
-                  "taint_origins": [{"method": "LData;.method:(LData;LData;)V", "port": "Argument(2)"}],
-                  "origins": ["LData;.method:(LData;LData;)V"]
+                  "origins": [{"method": "LData;.method:(LData;LData;)V", "port": "Argument(2)"}],
                 }
               ]
             }
@@ -1907,8 +1906,7 @@ TEST_F(JsonTest, Model) {
                 {
                   "call_info": "Declaration",
                   "kind": "source_kind",
-                  "taint_origins": [{"method": "LData;.method:(LData;LData;)V", "port": "Argument(1)"}],
-                  "origins": ["LData;.method:(LData;LData;)V"]
+                  "origins": [{"method": "LData;.method:(LData;LData;)V", "port": "Argument(1)"}],
                 }
               ]
             }
@@ -2310,8 +2308,7 @@ TEST_F(JsonTest, Model) {
                   {
                     "call_info": "Declaration",
                     "kind": "first_sink",
-                    "taint_origins": [{"method": "LData;.method:(LData;LData;)V", "port": "Argument(2)"}],
-                    "origins": ["LData;.method:(LData;LData;)V"]
+                    "origins": [{"method": "LData;.method:(LData;LData;)V", "port": "Argument(2)"}],
                   }
                 ]
               }
@@ -2869,8 +2866,7 @@ TEST_F(JsonTest, FieldModel) {
             "kind": "TestSink",
             "call_info": "Declaration",
             "always_features": ["test-feature"],
-            "field_origins": ["LBase;.field1:Ljava/lang/String;"],
-            "taint_origins": [{"field": "LBase;.field1:Ljava/lang/String;"}],
+            "origins": [{"field": "LBase;.field1:Ljava/lang/String;"}],
           }
         ]
       })"));
@@ -3007,8 +3003,7 @@ TEST_F(JsonTest, CallEffectModel) {
                 {
                   "call_info": "Declaration",
                   "kind": "CallChainOrigin",
-                  "taint_origins": [{"method": "LEntry;.method:()V", "port": "call-chain"}],
-                  "origins": ["LEntry;.method:()V"]
+                  "origins": [{"method": "LEntry;.method:()V", "port": "call-chain"}],
                 }
               ]
             }
@@ -3034,8 +3029,7 @@ TEST_F(JsonTest, CallEffectModel) {
                 {
                   "call_info": "Declaration",
                   "kind": "CallChainSink",
-                  "taint_origins": [{"method": "LExit;.method:()V", "port": "call-chain"}],
-                  "origins": ["LExit;.method:()V"]
+                  "origins": [{"method": "LExit;.method:()V", "port": "call-chain"}],
                 }
               ]
             }
@@ -3105,8 +3099,7 @@ TEST_F(JsonTest, CallEffectModel) {
                 {
                   "call_info": "Declaration",
                   "kind": "CallChainSink",
-                  "taint_origins": [{"method": "LExit;.method:()V", "port": "call-chain"}],
-                  "origins": ["LExit;.method:()V"]
+                  "origins": [{"method": "LExit;.method:()V", "port": "call-chain"}],
                 }
               ]
             }
@@ -3117,8 +3110,7 @@ TEST_F(JsonTest, CallEffectModel) {
                 {
                   "call_info": "Declaration",
                   "kind": "CallChainOrigin",
-                  "taint_origins": [{"method": "LEntry;.method:()V", "port": "call-chain"}],
-                  "origins": ["LEntry;.method:()V"]
+                  "origins": [{"method": "LEntry;.method:()V", "port": "call-chain"}],
                 }
               ]
             }

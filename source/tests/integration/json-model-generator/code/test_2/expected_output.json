@@ -94,10 +94,6 @@
               "kind" : "TestGeneration",
               "origins" : 
               [
-                "Lcom/facebook/marianatrench/integrationtests/JsonModelGeneratorIntegrationTest2;.function:(II)I"
-              ],
-              "taint_origins" : 
-              [
                 {
                   "method" : "Lcom/facebook/marianatrench/integrationtests/JsonModelGeneratorIntegrationTest2;.function:(II)I",
                   "port" : "Argument(1)"
@@ -120,10 +116,6 @@
               "kind" : "TestGeneration",
               "origins" : 
               [
-                "Lcom/facebook/marianatrench/integrationtests/JsonModelGeneratorIntegrationTest2;.function:(II)I"
-              ],
-              "taint_origins" : 
-              [
                 {
                   "method" : "Lcom/facebook/marianatrench/integrationtests/JsonModelGeneratorIntegrationTest2;.function:(II)I",
                   "port" : "Argument(2)"
@@ -145,10 +137,6 @@
               "call_info" : "Declaration",
               "kind" : "TestOtherGeneration",
               "origins" : 
-              [
-                "Lcom/facebook/marianatrench/integrationtests/JsonModelGeneratorIntegrationTest2;.function:(II)I"
-              ],
-              "taint_origins" : 
               [
                 {
                   "method" : "Lcom/facebook/marianatrench/integrationtests/JsonModelGeneratorIntegrationTest2;.function:(II)I",
@@ -189,10 +177,6 @@
               "kind" : "TestOtherParameterSource",
               "origins" : 
               [
-                "Lcom/facebook/marianatrench/integrationtests/JsonModelGeneratorIntegrationTest2;.function:(II)I"
-              ],
-              "taint_origins" : 
-              [
                 {
                   "method" : "Lcom/facebook/marianatrench/integrationtests/JsonModelGeneratorIntegrationTest2;.function:(II)I",
                   "port" : "Argument(1)"
@@ -203,10 +187,6 @@
               "call_info" : "Declaration",
               "kind" : "TestParameterSource",
               "origins" : 
-              [
-                "Lcom/facebook/marianatrench/integrationtests/JsonModelGeneratorIntegrationTest2;.function:(II)I"
-              ],
-              "taint_origins" : 
               [
                 {
                   "method" : "Lcom/facebook/marianatrench/integrationtests/JsonModelGeneratorIntegrationTest2;.function:(II)I",
@@ -230,10 +210,6 @@
               "kind" : "TestOtherParameterSource",
               "origins" : 
               [
-                "Lcom/facebook/marianatrench/integrationtests/JsonModelGeneratorIntegrationTest2;.function:(II)I"
-              ],
-              "taint_origins" : 
-              [
                 {
                   "method" : "Lcom/facebook/marianatrench/integrationtests/JsonModelGeneratorIntegrationTest2;.function:(II)I",
                   "port" : "Argument(2)"
@@ -244,10 +220,6 @@
               "call_info" : "Declaration",
               "kind" : "TestParameterSource",
               "origins" : 
-              [
-                "Lcom/facebook/marianatrench/integrationtests/JsonModelGeneratorIntegrationTest2;.function:(II)I"
-              ],
-              "taint_origins" : 
               [
                 {
                   "method" : "Lcom/facebook/marianatrench/integrationtests/JsonModelGeneratorIntegrationTest2;.function:(II)I",
@@ -320,10 +292,6 @@
               "kind" : "TestSink",
               "origins" : 
               [
-                "Lcom/facebook/marianatrench/integrationtests/JsonModelGeneratorIntegrationTest2;.function:(II)I"
-              ],
-              "taint_origins" : 
-              [
                 {
                   "method" : "Lcom/facebook/marianatrench/integrationtests/JsonModelGeneratorIntegrationTest2;.function:(II)I",
                   "port" : "Argument(1)"
@@ -349,10 +317,6 @@
               "call_info" : "Declaration",
               "kind" : "TestSink",
               "origins" : 
-              [
-                "Lcom/facebook/marianatrench/integrationtests/JsonModelGeneratorIntegrationTest2;.function:(II)I"
-              ],
-              "taint_origins" : 
               [
                 {
                   "method" : "Lcom/facebook/marianatrench/integrationtests/JsonModelGeneratorIntegrationTest2;.function:(II)I",
@@ -390,10 +354,6 @@
               "kind" : "SensitiveData",
               "origins" : 
               [
-                "Lcom/facebook/marianatrench/integrationtests/JsonModelGeneratorIntegrationTest2;.functionB:(III)I"
-              ],
-              "taint_origins" : 
-              [
                 {
                   "method" : "Lcom/facebook/marianatrench/integrationtests/JsonModelGeneratorIntegrationTest2;.functionB:(III)I",
                   "port" : "Argument(1)"
@@ -416,10 +376,6 @@
               "kind" : "SensitiveData",
               "origins" : 
               [
-                "Lcom/facebook/marianatrench/integrationtests/JsonModelGeneratorIntegrationTest2;.functionB:(III)I"
-              ],
-              "taint_origins" : 
-              [
                 {
                   "method" : "Lcom/facebook/marianatrench/integrationtests/JsonModelGeneratorIntegrationTest2;.functionB:(III)I",
                   "port" : "Argument(2)"
@@ -441,10 +397,6 @@
               "call_info" : "Declaration",
               "kind" : "SensitiveData",
               "origins" : 
-              [
-                "Lcom/facebook/marianatrench/integrationtests/JsonModelGeneratorIntegrationTest2;.functionB:(III)I"
-              ],
-              "taint_origins" : 
               [
                 {
                   "method" : "Lcom/facebook/marianatrench/integrationtests/JsonModelGeneratorIntegrationTest2;.functionB:(III)I",
@@ -483,10 +435,6 @@
               "kind" : "SensitiveData",
               "origins" : 
               [
-                "Lcom/facebook/marianatrench/integrationtests/JsonModelGeneratorIntegrationTest2;.functionC:(III)I"
-              ],
-              "taint_origins" : 
-              [
                 {
                   "method" : "Lcom/facebook/marianatrench/integrationtests/JsonModelGeneratorIntegrationTest2;.functionC:(III)I",
                   "port" : "Argument(0)"
@@ -508,10 +456,6 @@
               "call_info" : "Declaration",
               "kind" : "SensitiveData",
               "origins" : 
-              [
-                "Lcom/facebook/marianatrench/integrationtests/JsonModelGeneratorIntegrationTest2;.functionC:(III)I"
-              ],
-              "taint_origins" : 
               [
                 {
                   "method" : "Lcom/facebook/marianatrench/integrationtests/JsonModelGeneratorIntegrationTest2;.functionC:(III)I",

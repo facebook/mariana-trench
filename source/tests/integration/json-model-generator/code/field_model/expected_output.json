@@ -10,12 +10,8 @@
   [
     {
       "call_info" : "Declaration",
-      "field_origins" : 
-      [
-        "Lcom/facebook/marianatrench/integrationtests/FieldModel;.field_one:Ljava/lang/String;"
-      ],
       "kind" : "TestSinkA",
-      "taint_origins" : 
+      "origins" : 
       [
         {
           "field" : "Lcom/facebook/marianatrench/integrationtests/FieldModel;.field_one:Ljava/lang/String;"
@@ -27,12 +23,8 @@
   [
     {
       "call_info" : "Declaration",
-      "field_origins" : 
-      [
-        "Lcom/facebook/marianatrench/integrationtests/FieldModel;.field_one:Ljava/lang/String;"
-      ],
       "kind" : "TestGenerationA",
-      "taint_origins" : 
+      "origins" : 
       [
         {
           "field" : "Lcom/facebook/marianatrench/integrationtests/FieldModel;.field_one:Ljava/lang/String;"
@@ -52,12 +44,8 @@
   [
     {
       "call_info" : "Declaration",
-      "field_origins" : 
-      [
-        "Lcom/facebook/marianatrench/integrationtests/FieldModel;.field_three:Ljava/lang/Integer;"
-      ],
       "kind" : "TestGenerationB",
-      "taint_origins" : 
+      "origins" : 
       [
         {
           "field" : "Lcom/facebook/marianatrench/integrationtests/FieldModel;.field_three:Ljava/lang/Integer;"
@@ -78,12 +66,8 @@
   [
     {
       "call_info" : "Declaration",
-      "field_origins" : 
-      [
-        "Lcom/facebook/marianatrench/integrationtests/FieldModel;.field_two:Ljava/lang/Boolean;"
-      ],
       "kind" : "TestSinkB",
-      "taint_origins" : 
+      "origins" : 
       [
         {
           "field" : "Lcom/facebook/marianatrench/integrationtests/FieldModel;.field_two:Ljava/lang/Boolean;"
@@ -95,12 +79,8 @@
   [
     {
       "call_info" : "Declaration",
-      "field_origins" : 
-      [
-        "Lcom/facebook/marianatrench/integrationtests/FieldModel;.field_two:Ljava/lang/Boolean;"
-      ],
       "kind" : "TestGenerationB",
-      "taint_origins" : 
+      "origins" : 
       [
         {
           "field" : "Lcom/facebook/marianatrench/integrationtests/FieldModel;.field_two:Ljava/lang/Boolean;"

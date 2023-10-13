@@ -98,10 +98,6 @@
               "kind" : "Source",
               "origins" : 
               [
-                "Landroid/content/Intent;.<init>:(Ljava/lang/String;Landroid/net/Uri;)V"
-              ],
-              "taint_origins" : 
-              [
                 {
                   "method" : "Landroid/content/Intent;.<init>:(Ljava/lang/String;Landroid/net/Uri;)V",
                   "port" : "Argument(0)"
@@ -950,10 +946,6 @@
               "kind" : "Sink",
               "origins" : 
               [
-                "Lcom/facebook/marianatrench/integrationtests/Crtex;.startActivityHelper:(Landroid/content/Intent;Landroid/app/Activity;)V"
-              ],
-              "taint_origins" : 
-              [
                 {
                   "method" : "Lcom/facebook/marianatrench/integrationtests/Crtex;.startActivityHelper:(Landroid/content/Intent;Landroid/app/Activity;)V",
                   "port" : "Argument(0)"
@@ -987,10 +979,6 @@
               "kind" : "Sink",
               "origins" : 
               [
-                "Lcom/facebook/marianatrench/integrationtests/Crtex;.crtex_with_regular_sink:(Landroid/content/Intent;)V"
-              ],
-              "taint_origins" : 
-              [
                 {
                   "method" : "Lcom/facebook/marianatrench/integrationtests/Crtex;.crtex_with_regular_sink:(Landroid/content/Intent;)V",
                   "port" : "Argument(0)"
@@ -1016,10 +1004,6 @@
               ],
               "kind" : "Sink",
               "origins" : 
-              [
-                "Lcom/facebook/marianatrench/integrationtests/Crtex;.crtex_with_regular_sink:(Landroid/content/Intent;)V"
-              ],
-              "taint_origins" : 
               [
                 {
                   "method" : "Lcom/facebook/marianatrench/integrationtests/Crtex;.crtex_with_regular_sink:(Landroid/content/Intent;)V",
@@ -1070,10 +1054,6 @@
               "kind" : "Sink",
               "origins" : 
               [
-                "Lcom/facebook/marianatrench/integrationtests/Crtex;.crtex_with_regular_sink:(Landroid/content/Intent;)V"
-              ],
-              "taint_origins" : 
-              [
                 {
                   "method" : "Lcom/facebook/marianatrench/integrationtests/Crtex;.crtex_with_regular_sink:(Landroid/content/Intent;)V",
                   "port" : "Argument(0)"
@@ -1095,16 +1075,12 @@
               "kind" : "Sink",
               "origins" : 
               [
-                "Lcom/facebook/marianatrench/integrationtests/Crtex;.crtex_with_regular_sink:(Landroid/content/Intent;)V"
-              ],
-              "preserves_type_context" : true,
-              "taint_origins" : 
-              [
                 {
                   "method" : "Lcom/facebook/marianatrench/integrationtests/Crtex;.crtex_with_regular_sink:(Landroid/content/Intent;)V",
                   "port" : "Argument(0)"
                 }
-              ]
+              ],
+              "preserves_type_context" : true
             }
           ],
           "origin" : 
@@ -1155,10 +1131,6 @@
               "kind" : "Sink",
               "origins" : 
               [
-                "Lcom/facebook/marianatrench/integrationtests/Crtex;.multiple_canonical_names:(Landroid/content/Intent;Landroid/app/Activity;I)V"
-              ],
-              "taint_origins" : 
-              [
                 {
                   "method" : "Lcom/facebook/marianatrench/integrationtests/Crtex;.multiple_canonical_names:(Landroid/content/Intent;Landroid/app/Activity;I)V",
                   "port" : "Argument(0)"
@@ -1194,10 +1166,6 @@
               ],
               "kind" : "Sink",
               "origins" : 
-              [
-                "Lcom/facebook/marianatrench/integrationtests/Crtex;.multiple_canonical_names:(Landroid/content/Intent;Landroid/app/Activity;I)V"
-              ],
-              "taint_origins" : 
               [
                 {
                   "method" : "Lcom/facebook/marianatrench/integrationtests/Crtex;.multiple_canonical_names:(Landroid/content/Intent;Landroid/app/Activity;I)V",
@@ -1255,10 +1223,6 @@
               "kind" : "Sink",
               "origins" : 
               [
-                "Lcom/facebook/marianatrench/integrationtests/Crtex;.multiple_canonical_names:(Landroid/content/Intent;Landroid/app/Activity;I)V"
-              ],
-              "taint_origins" : 
-              [
                 {
                   "method" : "Lcom/facebook/marianatrench/integrationtests/Crtex;.multiple_canonical_names:(Landroid/content/Intent;Landroid/app/Activity;I)V",
                   "port" : "Argument(0)"
@@ -1296,10 +1260,6 @@
               ],
               "kind" : "Sink",
               "origins" : 
-              [
-                "Lcom/facebook/marianatrench/integrationtests/Crtex;.multiple_canonical_names:(Landroid/content/Intent;Landroid/app/Activity;I)V"
-              ],
-              "taint_origins" : 
               [
                 {
                   "method" : "Lcom/facebook/marianatrench/integrationtests/Crtex;.multiple_canonical_names:(Landroid/content/Intent;Landroid/app/Activity;I)V",
@@ -1354,16 +1314,12 @@
               "kind" : "Sink",
               "origins" : 
               [
-                "Lcom/facebook/marianatrench/integrationtests/Crtex;.startActivityHelper:(Landroid/content/Intent;Landroid/app/Activity;)V"
-              ],
-              "preserves_type_context" : true,
-              "taint_origins" : 
-              [
                 {
                   "method" : "Lcom/facebook/marianatrench/integrationtests/Crtex;.startActivityHelper:(Landroid/content/Intent;Landroid/app/Activity;)V",
                   "port" : "Argument(0)"
                 }
-              ]
+              ],
+              "preserves_type_context" : true
             }
           ]
         }
@@ -1419,10 +1375,6 @@
               "kind" : "Sink",
               "origins" : 
               [
-                "Lcom/facebook/marianatrench/integrationtests/Crtex;.startActivityHelper:(Landroid/content/Intent;Landroid/app/Activity;)V"
-              ],
-              "taint_origins" : 
-              [
                 {
                   "method" : "Lcom/facebook/marianatrench/integrationtests/Crtex;.startActivityHelper:(Landroid/content/Intent;Landroid/app/Activity;)V",
                   "port" : "Argument(0)"
@@ -1447,16 +1399,12 @@
               "kind" : "Source",
               "origins" : 
               [
-                "Landroid/content/Intent;.<init>:(Ljava/lang/String;Landroid/net/Uri;)V"
-              ],
-              "preserves_type_context" : true,
-              "taint_origins" : 
-              [
                 {
                   "method" : "Landroid/content/Intent;.<init>:(Ljava/lang/String;Landroid/net/Uri;)V",
                   "port" : "Argument(0)"
                 }
-              ]
+              ],
+              "preserves_type_context" : true
             }
           ],
           "origin" : 
@@ -1511,10 +1459,6 @@
               ],
               "kind" : "Sink",
               "origins" : 
-              [
-                "Lcom/facebook/marianatrench/integrationtests/Crtex;.startActivityHelper:(Landroid/content/Intent;Landroid/app/Activity;)V"
-              ],
-              "taint_origins" : 
               [
                 {
                   "method" : "Lcom/facebook/marianatrench/integrationtests/Crtex;.startActivityHelper:(Landroid/content/Intent;Landroid/app/Activity;)V",
@@ -1589,10 +1533,6 @@
               "kind" : "Sink",
               "origins" : 
               [
-                "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V"
-              ],
-              "taint_origins" : 
-              [
                 {
                   "method" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
                   "port" : "Argument(0)"
@@ -1619,10 +1559,6 @@
               "call_info" : "Declaration",
               "kind" : "Source",
               "origins" : 
-              [
-                "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;"
-              ],
-              "taint_origins" : 
               [
                 {
                   "method" : "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;",

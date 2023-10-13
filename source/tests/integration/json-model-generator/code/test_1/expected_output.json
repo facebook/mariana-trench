@@ -63,10 +63,6 @@
               "kind" : "TestParameterSource",
               "origins" : 
               [
-                "Lcom/facebook/marianatrench/integrationtests/JsonModelGeneratorIntegrationTest1;.function:(II)V"
-              ],
-              "taint_origins" : 
-              [
                 {
                   "method" : "Lcom/facebook/marianatrench/integrationtests/JsonModelGeneratorIntegrationTest1;.function:(II)V",
                   "port" : "Argument(0)"
@@ -88,10 +84,6 @@
               "call_info" : "Declaration",
               "kind" : "TestParameterSource",
               "origins" : 
-              [
-                "Lcom/facebook/marianatrench/integrationtests/JsonModelGeneratorIntegrationTest1;.function:(II)V"
-              ],
-              "taint_origins" : 
               [
                 {
                   "method" : "Lcom/facebook/marianatrench/integrationtests/JsonModelGeneratorIntegrationTest1;.function:(II)V",
@@ -144,10 +136,6 @@
               "call_info" : "Declaration",
               "kind" : "TestSink",
               "origins" : 
-              [
-                "Lcom/facebook/marianatrench/integrationtests/JsonModelGeneratorIntegrationTest1;.function:(II)V"
-              ],
-              "taint_origins" : 
               [
                 {
                   "method" : "Lcom/facebook/marianatrench/integrationtests/JsonModelGeneratorIntegrationTest1;.function:(II)V",

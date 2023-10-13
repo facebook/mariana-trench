@@ -126,10 +126,6 @@
               "kind" : "Source",
               "origins" : 
               [
-                "Landroid/content/Intent;.getExtras:()Landroid/os/Bundle;"
-              ],
-              "taint_origins" : 
-              [
                 {
                   "method" : "Landroid/content/Intent;.getExtras:()Landroid/os/Bundle;",
                   "port" : "Return"
@@ -816,10 +812,6 @@
               "kind" : "Sink",
               "origins" : 
               [
-                "Landroid/util/Log;.e:(Ljava/lang/String;Ljava/lang/String;)I"
-              ],
-              "taint_origins" : 
-              [
                 {
                   "method" : "Landroid/util/Log;.e:(Ljava/lang/String;Ljava/lang/String;)I",
                   "port" : "Argument(1)"
@@ -1012,16 +1004,12 @@
               "kind" : "Sink",
               "origins" : 
               [
-                "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V"
-              ],
-              "preserves_type_context" : true,
-              "taint_origins" : 
-              [
                 {
                   "method" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
                   "port" : "Argument(0)"
                 }
-              ]
+              ],
+              "preserves_type_context" : true
             }
           ],
           "origin" : 
@@ -1066,16 +1054,12 @@
               "kind" : "Sink",
               "origins" : 
               [
-                "Landroid/util/Log;.e:(Ljava/lang/String;Ljava/lang/String;)I"
-              ],
-              "preserves_type_context" : true,
-              "taint_origins" : 
-              [
                 {
                   "method" : "Landroid/util/Log;.e:(Ljava/lang/String;Ljava/lang/String;)I",
                   "port" : "Argument(1)"
                 }
-              ]
+              ],
+              "preserves_type_context" : true
             }
           ],
           "origin" : 
@@ -1210,16 +1194,12 @@
               "kind" : "Sink",
               "origins" : 
               [
-                "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V"
-              ],
-              "preserves_type_context" : false,
-              "taint_origins" : 
-              [
                 {
                   "method" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
                   "port" : "Argument(0)"
                 }
-              ]
+              ],
+              "preserves_type_context" : false
             }
           ]
         }
@@ -1239,16 +1219,12 @@
               "kind" : "Source",
               "origins" : 
               [
-                "Landroid/content/Intent;.getExtras:()Landroid/os/Bundle;"
-              ],
-              "preserves_type_context" : true,
-              "taint_origins" : 
-              [
                 {
                   "method" : "Landroid/content/Intent;.getExtras:()Landroid/os/Bundle;",
                   "port" : "Return"
                 }
-              ]
+              ],
+              "preserves_type_context" : true
             }
           ],
           "local_positions" : 
@@ -1350,10 +1326,6 @@
               "call_info" : "Declaration",
               "kind" : "Sink",
               "origins" : 
-              [
-                "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V"
-              ],
-              "taint_origins" : 
               [
                 {
                   "method" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",

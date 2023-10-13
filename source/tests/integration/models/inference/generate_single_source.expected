@@ -25,16 +25,12 @@
                   "kind" : "TestSource",
                   "origins" :
                   [
-                    "LSource;.source:()LData;"
-                  ],
-                  "preserves_type_context" : true,
-                  "taint_origins" :
-                  [
                     {
                       "method" : "LSource;.source:()LData;",
                       "port" : "Return"
                     }
-                  ]
+                  ],
+                  "preserves_type_context" : true
                 }
               ],
               "origin" :

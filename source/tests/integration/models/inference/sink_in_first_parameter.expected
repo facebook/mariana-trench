@@ -31,16 +31,12 @@
                   "kind" : "TestSink",
                   "origins" :
                   [
-                    "LSink;.sink:(LData;)V"
-                  ],
-                  "preserves_type_context" : true,
-                  "taint_origins" :
-                  [
                     {
                       "method" : "LSink;.sink:(LData;)V",
                       "port" : "Argument(1)"
                     }
-                  ]
+                  ],
+                  "preserves_type_context" : true
                 }
               ],
               "origin" :

@@ -21,10 +21,6 @@
               "kind" : "ExternalUserInput",
               "origins" : 
               [
-                "Landroid/app/Activity;.getIntent:()Landroid/content/Intent;"
-              ],
-              "taint_origins" : 
-              [
                 {
                   "method" : "Landroid/app/Activity;.getIntent:()Landroid/content/Intent;",
                   "port" : "Return"
@@ -1058,16 +1054,12 @@
               "kind" : "LaunchingComponent",
               "origins" : 
               [
-                "Lcom/facebook/secure/context/IntentLauncher;.launchActivity:(Landroid/content/Intent;Landroid/content/Context;)Z"
-              ],
-              "preserves_type_context" : false,
-              "taint_origins" : 
-              [
                 {
                   "method" : "Lcom/facebook/secure/context/IntentLauncher;.launchActivity:(Landroid/content/Intent;Landroid/content/Context;)Z",
                   "port" : "Argument(1)"
                 }
-              ]
+              ],
+              "preserves_type_context" : false
             }
           ]
         }
@@ -1095,16 +1087,12 @@
               "kind" : "ExternalUserInput",
               "origins" : 
               [
-                "Landroid/app/Activity;.getIntent:()Landroid/content/Intent;"
-              ],
-              "preserves_type_context" : true,
-              "taint_origins" : 
-              [
                 {
                   "method" : "Landroid/app/Activity;.getIntent:()Landroid/content/Intent;",
                   "port" : "Return"
                 }
-              ]
+              ],
+              "preserves_type_context" : true
             }
           ],
           "local_positions" : 
@@ -1169,10 +1157,6 @@
               "kind" : "LaunchingComponent",
               "origins" : 
               [
-                "Lcom/facebook/secure/context/IntentLauncher;.launchActivity:(Landroid/content/Intent;Landroid/content/Context;)Z"
-              ],
-              "taint_origins" : 
-              [
                 {
                   "method" : "Lcom/facebook/secure/context/IntentLauncher;.launchActivity:(Landroid/content/Intent;Landroid/content/Context;)Z",
                   "port" : "Argument(1)"
@@ -1197,16 +1181,12 @@
               "kind" : "ExternalUserInput",
               "origins" : 
               [
-                "Landroid/app/Activity;.getIntent:()Landroid/content/Intent;"
-              ],
-              "preserves_type_context" : true,
-              "taint_origins" : 
-              [
                 {
                   "method" : "Landroid/app/Activity;.getIntent:()Landroid/content/Intent;",
                   "port" : "Return"
                 }
-              ]
+              ],
+              "preserves_type_context" : true
             }
           ],
           "local_positions" : 
@@ -1273,16 +1253,12 @@
               "kind" : "LaunchingComponent",
               "origins" : 
               [
-                "Lcom/facebook/secure/context/IntentLauncher;.launchActivity:(Landroid/content/Intent;Landroid/content/Context;)Z"
-              ],
-              "preserves_type_context" : false,
-              "taint_origins" : 
-              [
                 {
                   "method" : "Lcom/facebook/secure/context/IntentLauncher;.launchActivity:(Landroid/content/Intent;Landroid/content/Context;)Z",
                   "port" : "Argument(1)"
                 }
-              ]
+              ],
+              "preserves_type_context" : false
             }
           ]
         }
@@ -1302,16 +1278,12 @@
               "kind" : "ExternalUserInput",
               "origins" : 
               [
-                "Landroid/app/Activity;.getIntent:()Landroid/content/Intent;"
-              ],
-              "preserves_type_context" : true,
-              "taint_origins" : 
-              [
                 {
                   "method" : "Landroid/app/Activity;.getIntent:()Landroid/content/Intent;",
                   "port" : "Return"
                 }
-              ]
+              ],
+              "preserves_type_context" : true
             }
           ],
           "local_positions" : 
@@ -1383,16 +1355,12 @@
               "kind" : "LaunchingComponent",
               "origins" : 
               [
-                "Lcom/facebook/secure/context/IntentLauncher;.launchActivity:(Landroid/content/Intent;Landroid/content/Context;)Z"
-              ],
-              "preserves_type_context" : true,
-              "taint_origins" : 
-              [
                 {
                   "method" : "Lcom/facebook/secure/context/IntentLauncher;.launchActivity:(Landroid/content/Intent;Landroid/content/Context;)Z",
                   "port" : "Argument(1)"
                 }
-              ]
+              ],
+              "preserves_type_context" : true
             }
           ],
           "local_positions" : 
@@ -1496,10 +1464,6 @@
               "call_info" : "Declaration",
               "kind" : "LaunchingComponent",
               "origins" : 
-              [
-                "Lcom/facebook/secure/context/IntentLauncher;.launchActivity:(Landroid/content/Intent;Landroid/content/Context;)Z"
-              ],
-              "taint_origins" : 
               [
                 {
                   "method" : "Lcom/facebook/secure/context/IntentLauncher;.launchActivity:(Landroid/content/Intent;Landroid/content/Context;)Z",

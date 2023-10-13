@@ -902,10 +902,6 @@
               "kind" : "ArrayAllocation",
               "origins" : 
               [
-                "Lcom/mariana_trench/artificial/ArrayAllocation;.allocateArray:(I)V"
-              ],
-              "taint_origins" : 
-              [
                 {
                   "method" : "Lcom/mariana_trench/artificial/ArrayAllocation;.allocateArray:(I)V",
                   "port" : "Argument(0)"
@@ -962,10 +958,6 @@
               "kind" : "ArrayAllocation",
               "origins" : 
               [
-                "Lcom/mariana_trench/artificial/ArrayAllocation;.allocateArray:(I)V"
-              ],
-              "taint_origins" : 
-              [
                 {
                   "method" : "Lcom/mariana_trench/artificial/ArrayAllocation;.allocateArray:(I)V",
                   "port" : "Argument(0)"
@@ -998,16 +990,12 @@
               "kind" : "Source",
               "origins" : 
               [
-                "Lcom/facebook/marianatrench/integrationtests/ArrayAllocation;.source:()I"
-              ],
-              "preserves_type_context" : true,
-              "taint_origins" : 
-              [
                 {
                   "method" : "Lcom/facebook/marianatrench/integrationtests/ArrayAllocation;.source:()I",
                   "port" : "Return"
                 }
-              ]
+              ],
+              "preserves_type_context" : true
             }
           ],
           "origin" : 
@@ -1075,10 +1063,6 @@
               "kind" : "ArrayAllocation",
               "origins" : 
               [
-                "Lcom/mariana_trench/artificial/ArrayAllocation;.allocateArray:(I)V"
-              ],
-              "taint_origins" : 
-              [
                 {
                   "method" : "Lcom/mariana_trench/artificial/ArrayAllocation;.allocateArray:(I)V",
                   "port" : "Argument(0)"
@@ -1103,16 +1087,12 @@
               "kind" : "Source",
               "origins" : 
               [
-                "Lcom/facebook/marianatrench/integrationtests/ArrayAllocation;.source:()I"
-              ],
-              "preserves_type_context" : true,
-              "taint_origins" : 
-              [
                 {
                   "method" : "Lcom/facebook/marianatrench/integrationtests/ArrayAllocation;.source:()I",
                   "port" : "Return"
                 }
-              ]
+              ],
+              "preserves_type_context" : true
             }
           ],
           "origin" : 
@@ -1164,10 +1144,6 @@
               "kind" : "ArrayAllocation",
               "origins" : 
               [
-                "Lcom/mariana_trench/artificial/ArrayAllocation;.allocateArray:(I)V"
-              ],
-              "taint_origins" : 
-              [
                 {
                   "method" : "Lcom/mariana_trench/artificial/ArrayAllocation;.allocateArray:(I)V",
                   "port" : "Argument(0)"
@@ -1200,16 +1176,12 @@
               "kind" : "Source",
               "origins" : 
               [
-                "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;"
-              ],
-              "preserves_type_context" : true,
-              "taint_origins" : 
-              [
                 {
                   "method" : "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;",
                   "port" : "Return"
                 }
-              ]
+              ],
+              "preserves_type_context" : true
             }
           ],
           "local_features" : 
@@ -1265,10 +1237,6 @@
               "kind" : "ArrayAllocation",
               "origins" : 
               [
-                "Lcom/mariana_trench/artificial/ArrayAllocation;.allocateArray:(I)V"
-              ],
-              "taint_origins" : 
-              [
                 {
                   "method" : "Lcom/mariana_trench/artificial/ArrayAllocation;.allocateArray:(I)V",
                   "port" : "Argument(0)"
@@ -1301,16 +1269,12 @@
               "kind" : "Source",
               "origins" : 
               [
-                "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;"
-              ],
-              "preserves_type_context" : true,
-              "taint_origins" : 
-              [
                 {
                   "method" : "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;",
                   "port" : "Return"
                 }
-              ]
+              ],
+              "preserves_type_context" : true
             }
           ],
           "local_features" : 
@@ -1366,10 +1330,6 @@
               "kind" : "ArrayAllocation",
               "origins" : 
               [
-                "Lcom/mariana_trench/artificial/ArrayAllocation;.allocateArray:(I)V"
-              ],
-              "taint_origins" : 
-              [
                 {
                   "method" : "Lcom/mariana_trench/artificial/ArrayAllocation;.allocateArray:(I)V",
                   "port" : "Argument(0)"
@@ -1402,16 +1362,12 @@
               "kind" : "Source",
               "origins" : 
               [
-                "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;"
-              ],
-              "preserves_type_context" : true,
-              "taint_origins" : 
-              [
                 {
                   "method" : "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;",
                   "port" : "Return"
                 }
-              ]
+              ],
+              "preserves_type_context" : true
             }
           ],
           "local_features" : 
@@ -1474,10 +1430,6 @@
               "kind" : "ArrayAllocation",
               "origins" : 
               [
-                "Lcom/mariana_trench/artificial/ArrayAllocation;.allocateArray:(I)V"
-              ],
-              "taint_origins" : 
-              [
                 {
                   "method" : "Lcom/mariana_trench/artificial/ArrayAllocation;.allocateArray:(I)V",
                   "port" : "Argument(0)"
@@ -1510,16 +1462,12 @@
               "kind" : "Source",
               "origins" : 
               [
-                "Lcom/facebook/marianatrench/integrationtests/ArrayAllocation;.source:()I"
-              ],
-              "preserves_type_context" : true,
-              "taint_origins" : 
-              [
                 {
                   "method" : "Lcom/facebook/marianatrench/integrationtests/ArrayAllocation;.source:()I",
                   "port" : "Return"
                 }
-              ]
+              ],
+              "preserves_type_context" : true
             }
           ],
           "origin" : 
@@ -1567,10 +1515,6 @@
               "kind" : "ArrayAllocation",
               "origins" : 
               [
-                "Lcom/mariana_trench/artificial/ArrayAllocation;.allocateArray:(I)V"
-              ],
-              "taint_origins" : 
-              [
                 {
                   "method" : "Lcom/mariana_trench/artificial/ArrayAllocation;.allocateArray:(I)V",
                   "port" : "Argument(0)"
@@ -1603,16 +1547,12 @@
               "kind" : "Source",
               "origins" : 
               [
-                "Lcom/facebook/marianatrench/integrationtests/ArrayAllocation;.source:()I"
-              ],
-              "preserves_type_context" : true,
-              "taint_origins" : 
-              [
                 {
                   "method" : "Lcom/facebook/marianatrench/integrationtests/ArrayAllocation;.source:()I",
                   "port" : "Return"
                 }
-              ]
+              ],
+              "preserves_type_context" : true
             }
           ],
           "origin" : 
@@ -1660,10 +1600,6 @@
               "kind" : "ArrayAllocation",
               "origins" : 
               [
-                "Lcom/mariana_trench/artificial/ArrayAllocation;.allocateArray:(I)V"
-              ],
-              "taint_origins" : 
-              [
                 {
                   "method" : "Lcom/mariana_trench/artificial/ArrayAllocation;.allocateArray:(I)V",
                   "port" : "Argument(0)"
@@ -1696,16 +1632,12 @@
               "kind" : "Source",
               "origins" : 
               [
-                "Lcom/facebook/marianatrench/integrationtests/ArrayAllocation;.source:()I"
-              ],
-              "preserves_type_context" : true,
-              "taint_origins" : 
-              [
                 {
                   "method" : "Lcom/facebook/marianatrench/integrationtests/ArrayAllocation;.source:()I",
                   "port" : "Return"
                 }
-              ]
+              ],
+              "preserves_type_context" : true
             }
           ],
           "origin" : 
@@ -1753,10 +1685,6 @@
               "kind" : "ArrayAllocation",
               "origins" : 
               [
-                "Lcom/mariana_trench/artificial/ArrayAllocation;.allocateArray:(I)V"
-              ],
-              "taint_origins" : 
-              [
                 {
                   "method" : "Lcom/mariana_trench/artificial/ArrayAllocation;.allocateArray:(I)V",
                   "port" : "Argument(0)"
@@ -1789,16 +1717,12 @@
               "kind" : "Source",
               "origins" : 
               [
-                "Lcom/facebook/marianatrench/integrationtests/ArrayAllocation;.source:()I"
-              ],
-              "preserves_type_context" : true,
-              "taint_origins" : 
-              [
                 {
                   "method" : "Lcom/facebook/marianatrench/integrationtests/ArrayAllocation;.source:()I",
                   "port" : "Return"
                 }
-              ]
+              ],
+              "preserves_type_context" : true
             }
           ],
           "origin" : 
@@ -1846,10 +1770,6 @@
               "kind" : "ArrayAllocation",
               "origins" : 
               [
-                "Lcom/mariana_trench/artificial/ArrayAllocation;.allocateArray:(I)V"
-              ],
-              "taint_origins" : 
-              [
                 {
                   "method" : "Lcom/mariana_trench/artificial/ArrayAllocation;.allocateArray:(I)V",
                   "port" : "Argument(0)"
@@ -1882,16 +1802,12 @@
               "kind" : "Source",
               "origins" : 
               [
-                "Lcom/facebook/marianatrench/integrationtests/ArrayAllocation;.source:()I"
-              ],
-              "preserves_type_context" : true,
-              "taint_origins" : 
-              [
                 {
                   "method" : "Lcom/facebook/marianatrench/integrationtests/ArrayAllocation;.source:()I",
                   "port" : "Return"
                 }
-              ]
+              ],
+              "preserves_type_context" : true
             }
           ],
           "origin" : 
@@ -1930,10 +1846,6 @@
               "call_info" : "Declaration",
               "kind" : "Source",
               "origins" : 
-              [
-                "Lcom/facebook/marianatrench/integrationtests/ArrayAllocation;.source:()I"
-              ],
-              "taint_origins" : 
               [
                 {
                   "method" : "Lcom/facebook/marianatrench/integrationtests/ArrayAllocation;.source:()I",
@@ -2011,10 +1923,6 @@
               "call_info" : "Declaration",
               "kind" : "Source",
               "origins" : 
-              [
-                "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;"
-              ],
-              "taint_origins" : 
               [
                 {
                   "method" : "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;",
@@ -2174,10 +2082,6 @@
               "call_info" : "Declaration",
               "kind" : "ArrayAllocation",
               "origins" : 
-              [
-                "Lcom/mariana_trench/artificial/ArrayAllocation;.allocateArray:(I)V"
-              ],
-              "taint_origins" : 
               [
                 {
                   "method" : "Lcom/mariana_trench/artificial/ArrayAllocation;.allocateArray:(I)V",

@@ -21,10 +21,6 @@
               "kind" : "ExternalUserInput",
               "origins" : 
               [
-                "Landroid/app/Activity;.getIntent:()Landroid/content/Intent;"
-              ],
-              "taint_origins" : 
-              [
                 {
                   "method" : "Landroid/app/Activity;.getIntent:()Landroid/content/Intent;",
                   "port" : "Return"
@@ -1123,10 +1119,6 @@
               "kind" : "Logging",
               "origins" : 
               [
-                "Lcom/instagram/common/analytics/intf/AnalyticsEvent;.addExtra:(Ljava/lang/String;Ljava/lang/String;)Lcom/instagram/common/analytics/intf/AnalyticsEvent;"
-              ],
-              "taint_origins" : 
-              [
                 {
                   "method" : "Lcom/instagram/common/analytics/intf/AnalyticsEvent;.addExtra:(Ljava/lang/String;Ljava/lang/String;)Lcom/instagram/common/analytics/intf/AnalyticsEvent;",
                   "port" : "Argument(2)"
@@ -1193,16 +1185,12 @@
               "kind" : "Logging",
               "origins" : 
               [
-                "Lcom/instagram/common/analytics/intf/AnalyticsEvent;.addExtra:(Ljava/lang/String;Ljava/lang/String;)Lcom/instagram/common/analytics/intf/AnalyticsEvent;"
-              ],
-              "preserves_type_context" : false,
-              "taint_origins" : 
-              [
                 {
                   "method" : "Lcom/instagram/common/analytics/intf/AnalyticsEvent;.addExtra:(Ljava/lang/String;Ljava/lang/String;)Lcom/instagram/common/analytics/intf/AnalyticsEvent;",
                   "port" : "Argument(2)"
                 }
-              ]
+              ],
+              "preserves_type_context" : false
             }
           ],
           "local_positions" : 
@@ -1240,16 +1228,12 @@
               "kind" : "Logging",
               "origins" : 
               [
-                "Lcom/instagram/common/analytics/intf/AnalyticsEvent;.addExtra:(Ljava/lang/String;Ljava/lang/String;)Lcom/instagram/common/analytics/intf/AnalyticsEvent;"
-              ],
-              "preserves_type_context" : false,
-              "taint_origins" : 
-              [
                 {
                   "method" : "Lcom/instagram/common/analytics/intf/AnalyticsEvent;.addExtra:(Ljava/lang/String;Ljava/lang/String;)Lcom/instagram/common/analytics/intf/AnalyticsEvent;",
                   "port" : "Argument(2)"
                 }
-              ]
+              ],
+              "preserves_type_context" : false
             }
           ],
           "local_positions" : 
@@ -1300,10 +1284,6 @@
               "kind" : "Logging",
               "origins" : 
               [
-                "Lcom/instagram/common/analytics/intf/AnalyticsEvent;.addExtra:(Ljava/lang/String;Ljava/lang/String;)Lcom/instagram/common/analytics/intf/AnalyticsEvent;"
-              ],
-              "taint_origins" : 
-              [
                 {
                   "method" : "Lcom/instagram/common/analytics/intf/AnalyticsEvent;.addExtra:(Ljava/lang/String;Ljava/lang/String;)Lcom/instagram/common/analytics/intf/AnalyticsEvent;",
                   "port" : "Argument(2)"
@@ -1328,16 +1308,12 @@
               "kind" : "ExternalUserInput",
               "origins" : 
               [
-                "Landroid/app/Activity;.getIntent:()Landroid/content/Intent;"
-              ],
-              "preserves_type_context" : true,
-              "taint_origins" : 
-              [
                 {
                   "method" : "Landroid/app/Activity;.getIntent:()Landroid/content/Intent;",
                   "port" : "Return"
                 }
-              ]
+              ],
+              "preserves_type_context" : true
             }
           ],
           "origin" : 
@@ -1388,16 +1364,12 @@
               "kind" : "Logging",
               "origins" : 
               [
-                "Lcom/instagram/common/analytics/intf/AnalyticsEvent;.addExtra:(Ljava/lang/String;Ljava/lang/String;)Lcom/instagram/common/analytics/intf/AnalyticsEvent;"
-              ],
-              "preserves_type_context" : true,
-              "taint_origins" : 
-              [
                 {
                   "method" : "Lcom/instagram/common/analytics/intf/AnalyticsEvent;.addExtra:(Ljava/lang/String;Ljava/lang/String;)Lcom/instagram/common/analytics/intf/AnalyticsEvent;",
                   "port" : "Argument(2)"
                 }
-              ]
+              ],
+              "preserves_type_context" : true
             }
           ],
           "origin" : 
@@ -1431,16 +1403,12 @@
               "kind" : "Logging",
               "origins" : 
               [
-                "Lcom/instagram/common/analytics/intf/AnalyticsEvent;.addExtra:(Ljava/lang/String;Ljava/lang/String;)Lcom/instagram/common/analytics/intf/AnalyticsEvent;"
-              ],
-              "preserves_type_context" : true,
-              "taint_origins" : 
-              [
                 {
                   "method" : "Lcom/instagram/common/analytics/intf/AnalyticsEvent;.addExtra:(Ljava/lang/String;Ljava/lang/String;)Lcom/instagram/common/analytics/intf/AnalyticsEvent;",
                   "port" : "Argument(2)"
                 }
-              ]
+              ],
+              "preserves_type_context" : true
             }
           ],
           "origin" : 
@@ -1824,16 +1792,12 @@
               "kind" : "Logging",
               "origins" : 
               [
-                "Lcom/instagram/common/analytics/intf/AnalyticsEvent;.addExtra:(Ljava/lang/String;Ljava/lang/String;)Lcom/instagram/common/analytics/intf/AnalyticsEvent;"
-              ],
-              "preserves_type_context" : true,
-              "taint_origins" : 
-              [
                 {
                   "method" : "Lcom/instagram/common/analytics/intf/AnalyticsEvent;.addExtra:(Ljava/lang/String;Ljava/lang/String;)Lcom/instagram/common/analytics/intf/AnalyticsEvent;",
                   "port" : "Argument(2)"
                 }
-              ]
+              ],
+              "preserves_type_context" : true
             }
           ],
           "origin" : 
@@ -1864,16 +1828,12 @@
               "kind" : "ExternalUserInput",
               "origins" : 
               [
-                "Landroid/app/Activity;.getIntent:()Landroid/content/Intent;"
-              ],
-              "preserves_type_context" : true,
-              "taint_origins" : 
-              [
                 {
                   "method" : "Landroid/app/Activity;.getIntent:()Landroid/content/Intent;",
                   "port" : "Return"
                 }
-              ]
+              ],
+              "preserves_type_context" : true
             }
           ],
           "local_positions" : 

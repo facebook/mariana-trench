@@ -14,10 +14,6 @@
               "kind" : "SensitiveData",
               "origins" : 
               [
-                "Lcom/facebook/marianatrench/integrationtests/JsonModelGeneratorIntegrationTest3;.functionB:(III)I"
-              ],
-              "taint_origins" : 
-              [
                 {
                   "method" : "Lcom/facebook/marianatrench/integrationtests/JsonModelGeneratorIntegrationTest3;.functionB:(III)I",
                   "port" : "Return"
@@ -54,10 +50,6 @@
               "call_info" : "Declaration",
               "kind" : "SensitiveData",
               "origins" : 
-              [
-                "Lcom/facebook/marianatrench/integrationtests/JsonModelGeneratorIntegrationTest3;.functionC:(III)I"
-              ],
-              "taint_origins" : 
               [
                 {
                   "method" : "Lcom/facebook/marianatrench/integrationtests/JsonModelGeneratorIntegrationTest3;.functionC:(III)I",

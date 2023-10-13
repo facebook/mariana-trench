@@ -14,10 +14,6 @@
               "kind" : "SensitiveData",
               "origins" : 
               [
-                "Lcom/facebook/marianatrench/integrationtests/HasAnnotation;.functionA:()Ljava/lang/Object;"
-              ],
-              "taint_origins" : 
-              [
                 {
                   "method" : "Lcom/facebook/marianatrench/integrationtests/HasAnnotation;.functionA:()Ljava/lang/Object;",
                   "port" : "Return"
@@ -54,10 +50,6 @@
               "call_info" : "Declaration",
               "kind" : "SensitiveData",
               "origins" : 
-              [
-                "Lcom/facebook/marianatrench/integrationtests/HasAnnotation;.functionB:()Lcom/facebook/marianatrench/integrationtests/MyClass;"
-              ],
-              "taint_origins" : 
               [
                 {
                   "method" : "Lcom/facebook/marianatrench/integrationtests/HasAnnotation;.functionB:()Lcom/facebook/marianatrench/integrationtests/MyClass;",
@@ -96,10 +88,6 @@
               "kind" : "SensitiveData",
               "origins" : 
               [
-                "Lcom/facebook/marianatrench/integrationtests/HasAnnotation;.functionC:(Lcom/facebook/marianatrench/integrationtests/MyClass;)Ljava/lang/Object;"
-              ],
-              "taint_origins" : 
-              [
                 {
                   "method" : "Lcom/facebook/marianatrench/integrationtests/HasAnnotation;.functionC:(Lcom/facebook/marianatrench/integrationtests/MyClass;)Ljava/lang/Object;",
                   "port" : "Return"
@@ -136,10 +124,6 @@
               "call_info" : "Declaration",
               "kind" : "SensitiveData",
               "origins" : 
-              [
-                "Lcom/facebook/marianatrench/integrationtests/HasAnnotation;.functionD:(Lcom/facebook/marianatrench/integrationtests/MyClassWithoutAnnotation;)Ljava/lang/Object;"
-              ],
-              "taint_origins" : 
               [
                 {
                   "method" : "Lcom/facebook/marianatrench/integrationtests/HasAnnotation;.functionD:(Lcom/facebook/marianatrench/integrationtests/MyClassWithoutAnnotation;)Ljava/lang/Object;",
@@ -189,10 +173,6 @@
               "call_info" : "Declaration",
               "kind" : "SensitiveData",
               "origins" : 
-              [
-                "Lcom/facebook/marianatrench/integrationtests/MyClass;.functionE:()Ljava/lang/Object;"
-              ],
-              "taint_origins" : 
               [
                 {
                   "method" : "Lcom/facebook/marianatrench/integrationtests/MyClass;.functionE:()Ljava/lang/Object;",

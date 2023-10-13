@@ -12,10 +12,8 @@
 #include <mariana-trench/Access.h>
 #include <mariana-trench/Constants.h>
 #include <mariana-trench/FeatureFactory.h>
-#include <mariana-trench/FieldSet.h>
 #include <mariana-trench/Frame.h>
 #include <mariana-trench/JsonValidation.h>
-#include <mariana-trench/MethodSet.h>
 #include <mariana-trench/OriginFactory.h>
 #include <mariana-trench/UsedKinds.h>
 
@@ -347,34 +345,8 @@ Json::Value Frame::to_json(ExportOriginsMode export_origins_mode) const {
   if (!origins_.empty()) {
     if (call_kind_.is_origin() ||
         export_origins_mode == ExportOriginsMode::Always) {
-      value["taint_origins"] = origins_.to_json();
+      value["origins"] = origins_.to_json();
     }
-  }
-
-  // TODO(T163918472): Remove legacy origins json when parser is updated to
-  // handle the new format.
-  MethodSet method_origins;
-  FieldSet field_origins;
-
-  if (!origins_.empty()) {
-    for (const auto* origin : origins_.elements()) {
-      if (const auto* method_origin = origin->as<MethodOrigin>()) {
-        method_origins.add(method_origin->method());
-      } else if (const auto* field_origin = origin->as<FieldOrigin>()) {
-        field_origins.add(field_origin->field());
-      }
-    }
-  }
-
-  if (!method_origins.empty()) {
-    if (call_kind_.is_origin() ||
-        export_origins_mode == ExportOriginsMode::Always) {
-      value["origins"] = method_origins.to_json();
-    }
-  }
-
-  if (!field_origins.empty()) {
-    value["field_origins"] = field_origins.to_json();
   }
 
   // For output purposes, user features and inferred features are not

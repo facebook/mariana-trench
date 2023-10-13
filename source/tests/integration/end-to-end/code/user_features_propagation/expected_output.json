@@ -950,10 +950,6 @@
               "kind" : "Source1",
               "origins" : 
               [
-                "Lcom/facebook/marianatrench/integrationtests/UserFeaturesPropagation;.source:()Ljava/lang/Object;"
-              ],
-              "taint_origins" : 
-              [
                 {
                   "method" : "Lcom/facebook/marianatrench/integrationtests/UserFeaturesPropagation;.source:()Ljava/lang/Object;",
                   "port" : "Return"
@@ -968,10 +964,6 @@
               "call_info" : "Declaration",
               "kind" : "Source2",
               "origins" : 
-              [
-                "Lcom/facebook/marianatrench/integrationtests/UserFeaturesPropagation;.source:()Ljava/lang/Object;"
-              ],
-              "taint_origins" : 
               [
                 {
                   "method" : "Lcom/facebook/marianatrench/integrationtests/UserFeaturesPropagation;.source:()Ljava/lang/Object;",
@@ -1015,16 +1007,12 @@
               "kind" : "Source1",
               "origins" : 
               [
-                "Lcom/facebook/marianatrench/integrationtests/UserFeaturesPropagation;.source:()Ljava/lang/Object;"
-              ],
-              "preserves_type_context" : true,
-              "taint_origins" : 
-              [
                 {
                   "method" : "Lcom/facebook/marianatrench/integrationtests/UserFeaturesPropagation;.source:()Ljava/lang/Object;",
                   "port" : "Return"
                 }
-              ]
+              ],
+              "preserves_type_context" : true
             },
             {
               "always_features" : 
@@ -1040,16 +1028,12 @@
               "kind" : "Source2",
               "origins" : 
               [
-                "Lcom/facebook/marianatrench/integrationtests/UserFeaturesPropagation;.source:()Ljava/lang/Object;"
-              ],
-              "preserves_type_context" : true,
-              "taint_origins" : 
-              [
                 {
                   "method" : "Lcom/facebook/marianatrench/integrationtests/UserFeaturesPropagation;.source:()Ljava/lang/Object;",
                   "port" : "Return"
                 }
-              ]
+              ],
+              "preserves_type_context" : true
             }
           ],
           "local_user_features" : 
@@ -1115,16 +1099,12 @@
               "kind" : "Source1",
               "origins" : 
               [
-                "Lcom/facebook/marianatrench/integrationtests/UserFeaturesPropagation;.source:()Ljava/lang/Object;"
-              ],
-              "preserves_type_context" : true,
-              "taint_origins" : 
-              [
                 {
                   "method" : "Lcom/facebook/marianatrench/integrationtests/UserFeaturesPropagation;.source:()Ljava/lang/Object;",
                   "port" : "Return"
                 }
-              ]
+              ],
+              "preserves_type_context" : true
             },
             {
               "always_features" : 
@@ -1141,16 +1121,12 @@
               "kind" : "Source2",
               "origins" : 
               [
-                "Lcom/facebook/marianatrench/integrationtests/UserFeaturesPropagation;.source:()Ljava/lang/Object;"
-              ],
-              "preserves_type_context" : true,
-              "taint_origins" : 
-              [
                 {
                   "method" : "Lcom/facebook/marianatrench/integrationtests/UserFeaturesPropagation;.source:()Ljava/lang/Object;",
                   "port" : "Return"
                 }
-              ]
+              ],
+              "preserves_type_context" : true
             }
           ]
         }

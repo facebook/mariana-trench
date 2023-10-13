@@ -21,10 +21,6 @@
               "kind" : "ExternalUserInput",
               "origins" : 
               [
-                "Landroid/app/Activity;.getIntent:()Landroid/content/Intent;"
-              ],
-              "taint_origins" : 
-              [
                 {
                   "method" : "Landroid/app/Activity;.getIntent:()Landroid/content/Intent;",
                   "port" : "Return"
@@ -82,10 +78,6 @@
               "call_info" : "Declaration",
               "kind" : "LaunchingComponent",
               "origins" : 
-              [
-                "Landroid/app/Activity;.startActivity:(Landroid/content/Intent;)V"
-              ],
-              "taint_origins" : 
               [
                 {
                   "method" : "Landroid/app/Activity;.startActivity:(Landroid/content/Intent;)V",
@@ -1010,10 +1002,6 @@
               "kind" : "LaunchingComponent",
               "origins" : 
               [
-                "Lcom/facebook/content/SecureContextHelper;.startFacebookActivity:(Landroid/content/Intent;Landroid/content/Context;)V"
-              ],
-              "taint_origins" : 
-              [
                 {
                   "method" : "Lcom/facebook/content/SecureContextHelper;.startFacebookActivity:(Landroid/content/Intent;Landroid/content/Context;)V",
                   "port" : "Argument(1)"
@@ -1052,10 +1040,6 @@
               "call_info" : "Declaration",
               "kind" : "LaunchingComponent",
               "origins" : 
-              [
-                "Lcom/facebook/content/SecureContextHelper;.startNonFacebookActivity:(Landroid/content/Intent;Landroid/content/Context;)V"
-              ],
-              "taint_origins" : 
               [
                 {
                   "method" : "Lcom/facebook/content/SecureContextHelper;.startNonFacebookActivity:(Landroid/content/Intent;Landroid/content/Context;)V",
@@ -1111,16 +1095,12 @@
               "kind" : "LaunchingComponent",
               "origins" : 
               [
-                "Landroid/app/Activity;.startActivity:(Landroid/content/Intent;)V"
-              ],
-              "preserves_type_context" : true,
-              "taint_origins" : 
-              [
                 {
                   "method" : "Landroid/app/Activity;.startActivity:(Landroid/content/Intent;)V",
                   "port" : "Argument(1)"
                 }
-              ]
+              ],
+              "preserves_type_context" : true
             }
           ],
           "origin" : 
@@ -1151,16 +1131,12 @@
               "kind" : "ExternalUserInput",
               "origins" : 
               [
-                "Landroid/app/Activity;.getIntent:()Landroid/content/Intent;"
-              ],
-              "preserves_type_context" : true,
-              "taint_origins" : 
-              [
                 {
                   "method" : "Landroid/app/Activity;.getIntent:()Landroid/content/Intent;",
                   "port" : "Return"
                 }
-              ]
+              ],
+              "preserves_type_context" : true
             }
           ],
           "origin" : 
@@ -1224,16 +1200,12 @@
               "kind" : "Sink",
               "origins" : 
               [
-                "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V"
-              ],
-              "preserves_type_context" : true,
-              "taint_origins" : 
-              [
                 {
                   "method" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
                   "port" : "Argument(0)"
                 }
-              ]
+              ],
+              "preserves_type_context" : true
             }
           ],
           "origin" : 
@@ -1264,16 +1236,12 @@
               "kind" : "Source",
               "origins" : 
               [
-                "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;"
-              ],
-              "preserves_type_context" : true,
-              "taint_origins" : 
-              [
                 {
                   "method" : "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;",
                   "port" : "Return"
                 }
-              ]
+              ],
+              "preserves_type_context" : true
             }
           ],
           "local_features" : 
@@ -1348,16 +1316,12 @@
               "kind" : "LaunchingComponent",
               "origins" : 
               [
-                "Lcom/facebook/content/SecureContextHelper;.startFacebookActivity:(Landroid/content/Intent;Landroid/content/Context;)V"
-              ],
-              "preserves_type_context" : true,
-              "taint_origins" : 
-              [
                 {
                   "method" : "Lcom/facebook/content/SecureContextHelper;.startFacebookActivity:(Landroid/content/Intent;Landroid/content/Context;)V",
                   "port" : "Argument(1)"
                 }
-              ]
+              ],
+              "preserves_type_context" : true
             }
           ],
           "origin" : 
@@ -1388,16 +1352,12 @@
               "kind" : "ExternalUserInput",
               "origins" : 
               [
-                "Landroid/app/Activity;.getIntent:()Landroid/content/Intent;"
-              ],
-              "preserves_type_context" : true,
-              "taint_origins" : 
-              [
                 {
                   "method" : "Landroid/app/Activity;.getIntent:()Landroid/content/Intent;",
                   "port" : "Return"
                 }
-              ]
+              ],
+              "preserves_type_context" : true
             }
           ],
           "local_positions" : 
@@ -1475,16 +1435,12 @@
               "kind" : "LaunchingComponent",
               "origins" : 
               [
-                "Landroid/app/Activity;.startActivity:(Landroid/content/Intent;)V"
-              ],
-              "preserves_type_context" : true,
-              "taint_origins" : 
-              [
                 {
                   "method" : "Landroid/app/Activity;.startActivity:(Landroid/content/Intent;)V",
                   "port" : "Argument(1)"
                 }
-              ]
+              ],
+              "preserves_type_context" : true
             }
           ],
           "origin" : 
@@ -1515,16 +1471,12 @@
               "kind" : "ExternalUserInput",
               "origins" : 
               [
-                "Landroid/app/Activity;.getIntent:()Landroid/content/Intent;"
-              ],
-              "preserves_type_context" : true,
-              "taint_origins" : 
-              [
                 {
                   "method" : "Landroid/app/Activity;.getIntent:()Landroid/content/Intent;",
                   "port" : "Return"
                 }
-              ]
+              ],
+              "preserves_type_context" : true
             }
           ],
           "origin" : 
@@ -1577,16 +1529,12 @@
               "kind" : "Source",
               "origins" : 
               [
-                "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;"
-              ],
-              "preserves_type_context" : true,
-              "taint_origins" : 
-              [
                 {
                   "method" : "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;",
                   "port" : "Return"
                 }
-              ]
+              ],
+              "preserves_type_context" : true
             }
           ],
           "origin" : 
@@ -1644,16 +1592,12 @@
               "kind" : "Source",
               "origins" : 
               [
-                "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;"
-              ],
-              "preserves_type_context" : true,
-              "taint_origins" : 
-              [
                 {
                   "method" : "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;",
                   "port" : "Return"
                 }
-              ]
+              ],
+              "preserves_type_context" : true
             }
           ]
         }
@@ -1707,16 +1651,12 @@
               "kind" : "Sink",
               "origins" : 
               [
-                "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V"
-              ],
-              "preserves_type_context" : true,
-              "taint_origins" : 
-              [
                 {
                   "method" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
                   "port" : "Argument(0)"
                 }
-              ]
+              ],
+              "preserves_type_context" : true
             }
           ]
         }
@@ -1749,16 +1689,12 @@
               "kind" : "Source",
               "origins" : 
               [
-                "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;"
-              ],
-              "preserves_type_context" : true,
-              "taint_origins" : 
-              [
                 {
                   "method" : "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;",
                   "port" : "Return"
                 }
-              ]
+              ],
+              "preserves_type_context" : true
             }
           ]
         }
@@ -1798,16 +1734,12 @@
               "kind" : "Sink",
               "origins" : 
               [
-                "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V"
-              ],
-              "preserves_type_context" : true,
-              "taint_origins" : 
-              [
                 {
                   "method" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
                   "port" : "Argument(0)"
                 }
-              ]
+              ],
+              "preserves_type_context" : true
             }
           ],
           "origin" : 
@@ -1865,16 +1797,12 @@
               "kind" : "Sink",
               "origins" : 
               [
-                "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V"
-              ],
-              "preserves_type_context" : true,
-              "taint_origins" : 
-              [
                 {
                   "method" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
                   "port" : "Argument(0)"
                 }
-              ]
+              ],
+              "preserves_type_context" : true
             }
           ]
         }
@@ -1954,16 +1882,12 @@
               "kind" : "LaunchingComponent",
               "origins" : 
               [
-                "Landroid/app/Activity;.startActivity:(Landroid/content/Intent;)V"
-              ],
-              "preserves_type_context" : true,
-              "taint_origins" : 
-              [
                 {
                   "method" : "Landroid/app/Activity;.startActivity:(Landroid/content/Intent;)V",
                   "port" : "Argument(1)"
                 }
-              ]
+              ],
+              "preserves_type_context" : true
             }
           ],
           "origin" : 
@@ -1994,16 +1918,12 @@
               "kind" : "ExternalUserInput",
               "origins" : 
               [
-                "Landroid/app/Activity;.getIntent:()Landroid/content/Intent;"
-              ],
-              "preserves_type_context" : true,
-              "taint_origins" : 
-              [
                 {
                   "method" : "Landroid/app/Activity;.getIntent:()Landroid/content/Intent;",
                   "port" : "Return"
                 }
-              ]
+              ],
+              "preserves_type_context" : true
             }
           ],
           "origin" : 
@@ -2089,10 +2009,6 @@
               "kind" : "Sink",
               "origins" : 
               [
-                "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V"
-              ],
-              "taint_origins" : 
-              [
                 {
                   "method" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
                   "port" : "Argument(0)"
@@ -2119,10 +2035,6 @@
               "call_info" : "Declaration",
               "kind" : "Source",
               "origins" : 
-              [
-                "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;"
-              ],
-              "taint_origins" : 
               [
                 {
                   "method" : "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;",

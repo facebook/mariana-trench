@@ -21,10 +21,6 @@
               "kind" : "ExternalUserInput",
               "origins" : 
               [
-                "Landroid/app/Activity;.getIntent:()Landroid/content/Intent;"
-              ],
-              "taint_origins" : 
-              [
                 {
                   "method" : "Landroid/app/Activity;.getIntent:()Landroid/content/Intent;",
                   "port" : "Return"
@@ -82,10 +78,6 @@
               "call_info" : "Declaration",
               "kind" : "LaunchingComponent",
               "origins" : 
-              [
-                "Landroid/app/Activity;.startActivity:(Landroid/content/Intent;)V"
-              ],
-              "taint_origins" : 
               [
                 {
                   "method" : "Landroid/app/Activity;.startActivity:(Landroid/content/Intent;)V",
@@ -1095,10 +1087,6 @@
               "kind" : "LaunchingComponent",
               "origins" : 
               [
-                "Lcom/facebook/content/SecureContextHelper;.startFacebookActivity:(Landroid/content/Intent;Landroid/content/Context;)V"
-              ],
-              "taint_origins" : 
-              [
                 {
                   "method" : "Lcom/facebook/content/SecureContextHelper;.startFacebookActivity:(Landroid/content/Intent;Landroid/content/Context;)V",
                   "port" : "Argument(1)"
@@ -1130,10 +1118,6 @@
               "call_info" : "Declaration",
               "kind" : "LaunchingComponent",
               "origins" : 
-              [
-                "Lcom/facebook/content/SecureContextHelper;.startFacebookActivityForResult:(Landroid/content/Intent;ILandroid/app/Activity;)V"
-              ],
-              "taint_origins" : 
               [
                 {
                   "method" : "Lcom/facebook/content/SecureContextHelper;.startFacebookActivityForResult:(Landroid/content/Intent;ILandroid/app/Activity;)V",
@@ -1167,10 +1151,6 @@
               "kind" : "LaunchingComponent",
               "origins" : 
               [
-                "Lcom/facebook/content/SecureContextHelper;.startNonFacebookActivity:(Landroid/content/Intent;Landroid/content/Context;)V"
-              ],
-              "taint_origins" : 
-              [
                 {
                   "method" : "Lcom/facebook/content/SecureContextHelper;.startNonFacebookActivity:(Landroid/content/Intent;Landroid/content/Context;)V",
                   "port" : "Argument(1)"
@@ -1202,10 +1182,6 @@
               "call_info" : "Declaration",
               "kind" : "LaunchingComponent",
               "origins" : 
-              [
-                "Lcom/facebook/content/SecureContextHelper;.startNonFacebookActivityForResult:(Landroid/content/Intent;ILandroid/app/Activity;)V"
-              ],
-              "taint_origins" : 
               [
                 {
                   "method" : "Lcom/facebook/content/SecureContextHelper;.startNonFacebookActivityForResult:(Landroid/content/Intent;ILandroid/app/Activity;)V",
@@ -1429,13 +1405,6 @@
               "kind" : "LaunchingComponent",
               "origins" : 
               [
-                "Lcom/facebook/content/SecureContextHelper;.startFacebookActivity:(Landroid/content/Intent;Landroid/content/Context;)V",
-                "Lcom/facebook/content/SecureContextHelper;.startFacebookActivityForResult:(Landroid/content/Intent;ILandroid/app/Activity;)V",
-                "Lcom/facebook/content/SecureContextHelper;.startNonFacebookActivity:(Landroid/content/Intent;Landroid/content/Context;)V",
-                "Lcom/facebook/content/SecureContextHelper;.startNonFacebookActivityForResult:(Landroid/content/Intent;ILandroid/app/Activity;)V"
-              ],
-              "taint_origins" : 
-              [
                 {
                   "method" : "Lcom/facebook/content/SecureContextHelper;.startFacebookActivity:(Landroid/content/Intent;Landroid/content/Context;)V",
                   "port" : "Argument(1)"
@@ -1476,13 +1445,6 @@
               "distance" : 2,
               "kind" : "LaunchingComponent",
               "origins" : 
-              [
-                "Lcom/facebook/content/SecureContextHelper;.startFacebookActivity:(Landroid/content/Intent;Landroid/content/Context;)V",
-                "Lcom/facebook/content/SecureContextHelper;.startFacebookActivityForResult:(Landroid/content/Intent;ILandroid/app/Activity;)V",
-                "Lcom/facebook/content/SecureContextHelper;.startNonFacebookActivity:(Landroid/content/Intent;Landroid/content/Context;)V",
-                "Lcom/facebook/content/SecureContextHelper;.startNonFacebookActivityForResult:(Landroid/content/Intent;ILandroid/app/Activity;)V"
-              ],
-              "taint_origins" : 
               [
                 {
                   "method" : "Lcom/facebook/content/SecureContextHelper;.startFacebookActivity:(Landroid/content/Intent;Landroid/content/Context;)V",
@@ -1539,13 +1501,6 @@
               "distance" : 4,
               "kind" : "LaunchingComponent",
               "origins" : 
-              [
-                "Lcom/facebook/content/SecureContextHelper;.startFacebookActivity:(Landroid/content/Intent;Landroid/content/Context;)V",
-                "Lcom/facebook/content/SecureContextHelper;.startFacebookActivityForResult:(Landroid/content/Intent;ILandroid/app/Activity;)V",
-                "Lcom/facebook/content/SecureContextHelper;.startNonFacebookActivity:(Landroid/content/Intent;Landroid/content/Context;)V",
-                "Lcom/facebook/content/SecureContextHelper;.startNonFacebookActivityForResult:(Landroid/content/Intent;ILandroid/app/Activity;)V"
-              ],
-              "taint_origins" : 
               [
                 {
                   "method" : "Lcom/facebook/content/SecureContextHelper;.startFacebookActivity:(Landroid/content/Intent;Landroid/content/Context;)V",
@@ -1605,13 +1560,6 @@
               "kind" : "LaunchingComponent",
               "origins" : 
               [
-                "Lcom/facebook/content/SecureContextHelper;.startFacebookActivity:(Landroid/content/Intent;Landroid/content/Context;)V",
-                "Lcom/facebook/content/SecureContextHelper;.startFacebookActivityForResult:(Landroid/content/Intent;ILandroid/app/Activity;)V",
-                "Lcom/facebook/content/SecureContextHelper;.startNonFacebookActivity:(Landroid/content/Intent;Landroid/content/Context;)V",
-                "Lcom/facebook/content/SecureContextHelper;.startNonFacebookActivityForResult:(Landroid/content/Intent;ILandroid/app/Activity;)V"
-              ],
-              "taint_origins" : 
-              [
                 {
                   "method" : "Lcom/facebook/content/SecureContextHelper;.startFacebookActivity:(Landroid/content/Intent;Landroid/content/Context;)V",
                   "port" : "Argument(1)"
@@ -1670,13 +1618,6 @@
               "kind" : "LaunchingComponent",
               "origins" : 
               [
-                "Lcom/facebook/content/SecureContextHelper;.startFacebookActivity:(Landroid/content/Intent;Landroid/content/Context;)V",
-                "Lcom/facebook/content/SecureContextHelper;.startFacebookActivityForResult:(Landroid/content/Intent;ILandroid/app/Activity;)V",
-                "Lcom/facebook/content/SecureContextHelper;.startNonFacebookActivity:(Landroid/content/Intent;Landroid/content/Context;)V",
-                "Lcom/facebook/content/SecureContextHelper;.startNonFacebookActivityForResult:(Landroid/content/Intent;ILandroid/app/Activity;)V"
-              ],
-              "taint_origins" : 
-              [
                 {
                   "method" : "Lcom/facebook/content/SecureContextHelper;.startFacebookActivity:(Landroid/content/Intent;Landroid/content/Context;)V",
                   "port" : "Argument(1)"
@@ -1731,13 +1672,6 @@
               "distance" : 3,
               "kind" : "LaunchingComponent",
               "origins" : 
-              [
-                "Lcom/facebook/content/SecureContextHelper;.startFacebookActivity:(Landroid/content/Intent;Landroid/content/Context;)V",
-                "Lcom/facebook/content/SecureContextHelper;.startFacebookActivityForResult:(Landroid/content/Intent;ILandroid/app/Activity;)V",
-                "Lcom/facebook/content/SecureContextHelper;.startNonFacebookActivity:(Landroid/content/Intent;Landroid/content/Context;)V",
-                "Lcom/facebook/content/SecureContextHelper;.startNonFacebookActivityForResult:(Landroid/content/Intent;ILandroid/app/Activity;)V"
-              ],
-              "taint_origins" : 
               [
                 {
                   "method" : "Lcom/facebook/content/SecureContextHelper;.startFacebookActivity:(Landroid/content/Intent;Landroid/content/Context;)V",
@@ -1805,13 +1739,6 @@
               "kind" : "LaunchingComponent",
               "origins" : 
               [
-                "Lcom/facebook/content/SecureContextHelper;.startFacebookActivity:(Landroid/content/Intent;Landroid/content/Context;)V",
-                "Lcom/facebook/content/SecureContextHelper;.startFacebookActivityForResult:(Landroid/content/Intent;ILandroid/app/Activity;)V",
-                "Lcom/facebook/content/SecureContextHelper;.startNonFacebookActivity:(Landroid/content/Intent;Landroid/content/Context;)V",
-                "Lcom/facebook/content/SecureContextHelper;.startNonFacebookActivityForResult:(Landroid/content/Intent;ILandroid/app/Activity;)V"
-              ],
-              "taint_origins" : 
-              [
                 {
                   "method" : "Lcom/facebook/content/SecureContextHelper;.startFacebookActivity:(Landroid/content/Intent;Landroid/content/Context;)V",
                   "port" : "Argument(1)"
@@ -1876,14 +1803,6 @@
               "kind" : "LaunchingComponent",
               "origins" : 
               [
-                "Lcom/facebook/content/SecureContextHelper;.startFacebookActivity:(Landroid/content/Intent;Landroid/content/Context;)V",
-                "Lcom/facebook/content/SecureContextHelper;.startFacebookActivityForResult:(Landroid/content/Intent;ILandroid/app/Activity;)V",
-                "Lcom/facebook/content/SecureContextHelper;.startNonFacebookActivity:(Landroid/content/Intent;Landroid/content/Context;)V",
-                "Lcom/facebook/content/SecureContextHelper;.startNonFacebookActivityForResult:(Landroid/content/Intent;ILandroid/app/Activity;)V"
-              ],
-              "preserves_type_context" : true,
-              "taint_origins" : 
-              [
                 {
                   "method" : "Lcom/facebook/content/SecureContextHelper;.startFacebookActivity:(Landroid/content/Intent;Landroid/content/Context;)V",
                   "port" : "Argument(1)"
@@ -1900,7 +1819,8 @@
                   "method" : "Lcom/facebook/content/SecureContextHelper;.startNonFacebookActivityForResult:(Landroid/content/Intent;ILandroid/app/Activity;)V",
                   "port" : "Argument(1)"
                 }
-              ]
+              ],
+              "preserves_type_context" : true
             }
           ],
           "local_features" : 
@@ -1967,12 +1887,6 @@
               "kind" : "LaunchingComponent",
               "origins" : 
               [
-                "Lcom/facebook/content/SecureContextHelper;.startFacebookActivity:(Landroid/content/Intent;Landroid/content/Context;)V",
-                "Lcom/facebook/content/SecureContextHelper;.startNonFacebookActivity:(Landroid/content/Intent;Landroid/content/Context;)V"
-              ],
-              "preserves_type_context" : false,
-              "taint_origins" : 
-              [
                 {
                   "method" : "Lcom/facebook/content/SecureContextHelper;.startFacebookActivity:(Landroid/content/Intent;Landroid/content/Context;)V",
                   "port" : "Argument(1)"
@@ -1981,7 +1895,8 @@
                   "method" : "Lcom/facebook/content/SecureContextHelper;.startNonFacebookActivity:(Landroid/content/Intent;Landroid/content/Context;)V",
                   "port" : "Argument(1)"
                 }
-              ]
+              ],
+              "preserves_type_context" : false
             }
           ]
         },
@@ -2011,12 +1926,6 @@
               "kind" : "LaunchingComponent",
               "origins" : 
               [
-                "Lcom/facebook/content/SecureContextHelper;.startFacebookActivityForResult:(Landroid/content/Intent;ILandroid/app/Activity;)V",
-                "Lcom/facebook/content/SecureContextHelper;.startNonFacebookActivityForResult:(Landroid/content/Intent;ILandroid/app/Activity;)V"
-              ],
-              "preserves_type_context" : false,
-              "taint_origins" : 
-              [
                 {
                   "method" : "Lcom/facebook/content/SecureContextHelper;.startFacebookActivityForResult:(Landroid/content/Intent;ILandroid/app/Activity;)V",
                   "port" : "Argument(1)"
@@ -2025,7 +1934,8 @@
                   "method" : "Lcom/facebook/content/SecureContextHelper;.startNonFacebookActivityForResult:(Landroid/content/Intent;ILandroid/app/Activity;)V",
                   "port" : "Argument(1)"
                 }
-              ]
+              ],
+              "preserves_type_context" : false
             }
           ]
         }
@@ -2059,16 +1969,12 @@
               "kind" : "LaunchingComponent",
               "origins" : 
               [
-                "Lcom/facebook/content/SecureContextHelper;.startFacebookActivityForResult:(Landroid/content/Intent;ILandroid/app/Activity;)V"
-              ],
-              "preserves_type_context" : true,
-              "taint_origins" : 
-              [
                 {
                   "method" : "Lcom/facebook/content/SecureContextHelper;.startFacebookActivityForResult:(Landroid/content/Intent;ILandroid/app/Activity;)V",
                   "port" : "Argument(1)"
                 }
-              ]
+              ],
+              "preserves_type_context" : true
             }
           ],
           "origin" : 
@@ -2096,16 +2002,12 @@
               "kind" : "LaunchingComponent",
               "origins" : 
               [
-                "Lcom/facebook/content/SecureContextHelper;.startNonFacebookActivityForResult:(Landroid/content/Intent;ILandroid/app/Activity;)V"
-              ],
-              "preserves_type_context" : true,
-              "taint_origins" : 
-              [
                 {
                   "method" : "Lcom/facebook/content/SecureContextHelper;.startNonFacebookActivityForResult:(Landroid/content/Intent;ILandroid/app/Activity;)V",
                   "port" : "Argument(1)"
                 }
-              ]
+              ],
+              "preserves_type_context" : true
             }
           ],
           "origin" : 
@@ -2150,16 +2052,12 @@
               "kind" : "LaunchingComponent",
               "origins" : 
               [
-                "Lcom/facebook/content/SecureContextHelper;.startFacebookActivity:(Landroid/content/Intent;Landroid/content/Context;)V"
-              ],
-              "preserves_type_context" : true,
-              "taint_origins" : 
-              [
                 {
                   "method" : "Lcom/facebook/content/SecureContextHelper;.startFacebookActivity:(Landroid/content/Intent;Landroid/content/Context;)V",
                   "port" : "Argument(1)"
                 }
-              ]
+              ],
+              "preserves_type_context" : true
             }
           ],
           "origin" : 
@@ -2187,16 +2085,12 @@
               "kind" : "LaunchingComponent",
               "origins" : 
               [
-                "Lcom/facebook/content/SecureContextHelper;.startNonFacebookActivity:(Landroid/content/Intent;Landroid/content/Context;)V"
-              ],
-              "preserves_type_context" : true,
-              "taint_origins" : 
-              [
                 {
                   "method" : "Lcom/facebook/content/SecureContextHelper;.startNonFacebookActivity:(Landroid/content/Intent;Landroid/content/Context;)V",
                   "port" : "Argument(1)"
                 }
-              ]
+              ],
+              "preserves_type_context" : true
             }
           ],
           "origin" : 
@@ -2295,14 +2189,6 @@
               ],
               "origins" : 
               [
-                "Lcom/facebook/content/SecureContextHelper;.startFacebookActivity:(Landroid/content/Intent;Landroid/content/Context;)V",
-                "Lcom/facebook/content/SecureContextHelper;.startFacebookActivityForResult:(Landroid/content/Intent;ILandroid/app/Activity;)V",
-                "Lcom/facebook/content/SecureContextHelper;.startNonFacebookActivity:(Landroid/content/Intent;Landroid/content/Context;)V",
-                "Lcom/facebook/content/SecureContextHelper;.startNonFacebookActivityForResult:(Landroid/content/Intent;ILandroid/app/Activity;)V"
-              ],
-              "preserves_type_context" : false,
-              "taint_origins" : 
-              [
                 {
                   "method" : "Lcom/facebook/content/SecureContextHelper;.startFacebookActivity:(Landroid/content/Intent;Landroid/content/Context;)V",
                   "port" : "Argument(1)"
@@ -2319,7 +2205,8 @@
                   "method" : "Lcom/facebook/content/SecureContextHelper;.startNonFacebookActivityForResult:(Landroid/content/Intent;ILandroid/app/Activity;)V",
                   "port" : "Argument(1)"
                 }
-              ]
+              ],
+              "preserves_type_context" : false
             }
           ]
         }
@@ -2339,16 +2226,12 @@
               "kind" : "ExternalUserInput",
               "origins" : 
               [
-                "Landroid/app/Activity;.getIntent:()Landroid/content/Intent;"
-              ],
-              "preserves_type_context" : true,
-              "taint_origins" : 
-              [
                 {
                   "method" : "Landroid/app/Activity;.getIntent:()Landroid/content/Intent;",
                   "port" : "Return"
                 }
-              ]
+              ],
+              "preserves_type_context" : true
             }
           ],
           "origin" : 

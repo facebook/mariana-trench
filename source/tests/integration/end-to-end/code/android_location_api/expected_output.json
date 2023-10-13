@@ -217,10 +217,6 @@
               "kind" : "UserGeoLocation",
               "origins" : 
               [
-                "Landroid/location/Location;.getLatitude:()D"
-              ],
-              "taint_origins" : 
-              [
                 {
                   "method" : "Landroid/location/Location;.getLatitude:()D",
                   "port" : "Return"
@@ -260,10 +256,6 @@
               "kind" : "UserGeoLocation",
               "origins" : 
               [
-                "Landroid/location/Location;.toString:()Ljava/lang/String;"
-              ],
-              "taint_origins" : 
-              [
                 {
                   "method" : "Landroid/location/Location;.toString:()Ljava/lang/String;",
                   "port" : "Return"
@@ -301,10 +293,6 @@
               "call_info" : "Declaration",
               "kind" : "UserGeoLocation",
               "origins" : 
-              [
-                "Landroid/location/LocationListener;.onLocationChanged:(Landroid/location/Location;)V"
-              ],
-              "taint_origins" : 
               [
                 {
                   "method" : "Landroid/location/LocationListener;.onLocationChanged:(Landroid/location/Location;)V",
@@ -874,10 +862,6 @@
               "kind" : "Logging",
               "origins" : 
               [
-                "Landroid/util/Log;.e:(Ljava/lang/String;Ljava/lang/String;)I"
-              ],
-              "taint_origins" : 
-              [
                 {
                   "method" : "Landroid/util/Log;.e:(Ljava/lang/String;Ljava/lang/String;)I",
                   "port" : "Argument(1)"
@@ -943,10 +927,6 @@
               "kind" : "UserGeoLocation",
               "origins" : 
               [
-                "Landroid_location_api/ActivityUsingAndroidLocationManager;.onLocationChanged:(Landroid/location/Location;)V"
-              ],
-              "taint_origins" : 
-              [
                 {
                   "method" : "Landroid_location_api/ActivityUsingAndroidLocationManager;.onLocationChanged:(Landroid/location/Location;)V",
                   "port" : "Argument(1)"
@@ -990,16 +970,12 @@
               "kind" : "Logging",
               "origins" : 
               [
-                "Landroid/util/Log;.e:(Ljava/lang/String;Ljava/lang/String;)I"
-              ],
-              "preserves_type_context" : true,
-              "taint_origins" : 
-              [
                 {
                   "method" : "Landroid/util/Log;.e:(Ljava/lang/String;Ljava/lang/String;)I",
                   "port" : "Argument(1)"
                 }
-              ]
+              ],
+              "preserves_type_context" : true
             }
           ],
           "origin" : 
@@ -1030,16 +1006,12 @@
               "kind" : "UserGeoLocation",
               "origins" : 
               [
-                "Landroid/location/Location;.toString:()Ljava/lang/String;"
-              ],
-              "preserves_type_context" : true,
-              "taint_origins" : 
-              [
                 {
                   "method" : "Landroid/location/Location;.toString:()Ljava/lang/String;",
                   "port" : "Return"
                 }
-              ]
+              ],
+              "preserves_type_context" : true
             }
           ],
           "origin" : 
@@ -1071,10 +1043,6 @@
               "call_info" : "Declaration",
               "kind" : "UserGeoLocation",
               "origins" : 
-              [
-                "Landroid_location_api/ActivityUsingAndroidLocationManager;.onLocationChanged:(Landroid/location/Location;)V"
-              ],
-              "taint_origins" : 
               [
                 {
                   "method" : "Landroid_location_api/ActivityUsingAndroidLocationManager;.onLocationChanged:(Landroid/location/Location;)V",

@@ -911,16 +911,12 @@
               "kind" : "CallChainSink",
               "origins" : 
               [
-                "Lcom/facebook/marianatrench/integrationtests/SensitiveApi;.execute:()V"
-              ],
-              "preserves_type_context" : false,
-              "taint_origins" : 
-              [
                 {
                   "method" : "Lcom/facebook/marianatrench/integrationtests/SensitiveApi;.execute:()V",
                   "port" : "call-chain"
                 }
-              ]
+              ],
+              "preserves_type_context" : false
             }
           ]
         }
@@ -973,16 +969,12 @@
               "kind" : "CallChainSink",
               "origins" : 
               [
-                "Lcom/facebook/marianatrench/integrationtests/SensitiveApi;.execute:()V"
-              ],
-              "preserves_type_context" : true,
-              "taint_origins" : 
-              [
                 {
                   "method" : "Lcom/facebook/marianatrench/integrationtests/SensitiveApi;.execute:()V",
                   "port" : "call-chain"
                 }
-              ]
+              ],
+              "preserves_type_context" : true
             }
           ]
         }
@@ -1016,16 +1008,12 @@
               "kind" : "CallChainSink",
               "origins" : 
               [
-                "Lcom/facebook/marianatrench/integrationtests/SensitiveApi;.execute:()V"
-              ],
-              "preserves_type_context" : true,
-              "taint_origins" : 
-              [
                 {
                   "method" : "Lcom/facebook/marianatrench/integrationtests/SensitiveApi;.execute:()V",
                   "port" : "call-chain"
                 }
-              ]
+              ],
+              "preserves_type_context" : true
             }
           ],
           "origin" : 
@@ -1087,16 +1075,12 @@
               "kind" : "CallChainSink",
               "origins" : 
               [
-                "Lcom/facebook/marianatrench/integrationtests/SensitiveApi;.execute:()V"
-              ],
-              "preserves_type_context" : false,
-              "taint_origins" : 
-              [
                 {
                   "method" : "Lcom/facebook/marianatrench/integrationtests/SensitiveApi;.execute:()V",
                   "port" : "call-chain"
                 }
-              ]
+              ],
+              "preserves_type_context" : false
             }
           ]
         }
@@ -1116,10 +1100,6 @@
               "call_info" : "Declaration",
               "kind" : "CallChainOrigin",
               "origins" : 
-              [
-                "Lcom/facebook/marianatrench/integrationtests/Exported;.entry:()V"
-              ],
-              "taint_origins" : 
               [
                 {
                   "method" : "Lcom/facebook/marianatrench/integrationtests/Exported;.entry:()V",
@@ -1171,16 +1151,12 @@
               "kind" : "CallChainSink",
               "origins" : 
               [
-                "Lcom/facebook/marianatrench/integrationtests/SensitiveApi;.execute:()V"
-              ],
-              "preserves_type_context" : false,
-              "taint_origins" : 
-              [
                 {
                   "method" : "Lcom/facebook/marianatrench/integrationtests/SensitiveApi;.execute:()V",
                   "port" : "call-chain"
                 }
-              ]
+              ],
+              "preserves_type_context" : false
             }
           ]
         }
@@ -1202,10 +1178,6 @@
               "call_info" : "Origin",
               "kind" : "CallChainOrigin",
               "origins" : 
-              [
-                "Lcom/facebook/marianatrench/integrationtests/Exported;.entry:()V"
-              ],
-              "taint_origins" : 
               [
                 {
                   "method" : "Lcom/facebook/marianatrench/integrationtests/Exported;.entry:()V",
@@ -1302,10 +1274,6 @@
               "call_info" : "Declaration",
               "kind" : "CallChainSink",
               "origins" : 
-              [
-                "Lcom/facebook/marianatrench/integrationtests/SensitiveApi;.execute:()V"
-              ],
-              "taint_origins" : 
               [
                 {
                   "method" : "Lcom/facebook/marianatrench/integrationtests/SensitiveApi;.execute:()V",
