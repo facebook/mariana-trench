@@ -172,9 +172,14 @@ def _sync_python_files(build_root: Path, repository: Path, pyredex: Path) -> Non
 
 
 def _sync_configuration_files(build_root: Path, repository: Path) -> None:
-    filters = ["+ */", "-! *.json"]
     _rsync_files(
-        filters,
+        ["+ */", "-! *.json"],
+        repository / "configuration",
+        build_root / "share/mariana-trench",
+        ["-avm"],
+    )
+    _rsync_files(
+        ["+ */", "-! *.models"],
         repository / "configuration",
         build_root / "share/mariana-trench",
         ["-avm"],
