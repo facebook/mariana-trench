@@ -7,6 +7,8 @@
 
 #pragma once
 
+#include <DexClass.h>
+
 #include <mariana-trench/Access.h>
 #include <mariana-trench/Field.h>
 #include <mariana-trench/IncludeMacros.h>
@@ -83,6 +85,30 @@ class FieldOrigin final : public Origin {
 
  private:
   const Field* field_;
+};
+
+/**
+ * Represents an origin for Cross-Repo Taint EXchange (CRTEX).
+ * CRTEX is a scenario intended to work with other static analysis tools, in
+ * which taint flow is detected across repositories. An origin frame that
+ * contains a CRTEX origin is one which connects to the traces of a different
+ * run. The connection point is represented by a canonical name/port as stored
+ * in this class.
+ */
+class CrtexOrigin final : public Origin {
+ public:
+  explicit CrtexOrigin(const DexString* canonical_name, const AccessPath* port)
+      : canonical_name_(canonical_name), port_(port) {}
+
+  DELETE_COPY_CONSTRUCTORS_AND_ASSIGNMENTS(CrtexOrigin)
+
+  std::string to_string() const override;
+
+  Json::Value to_json() const override;
+
+ private:
+  const DexString* canonical_name_;
+  const AccessPath* port_;
 };
 
 } // namespace marianatrench

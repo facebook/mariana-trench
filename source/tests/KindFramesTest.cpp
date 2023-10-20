@@ -922,13 +922,17 @@ TEST_F(KindFramesTest, PropagateCrtex) {
               .call_kind = CallKind::origin()}),
   };
 
-  auto canonical_callee_port =
-      AccessPath(Root(Root::Kind::Argument, 0)).canonicalize_for_method(two);
   auto expected_instantiated_name =
       CanonicalName(CanonicalName::InstantiatedValue{two->signature()});
+  auto* canonical_callee_port = context.access_path_factory->get(
+      AccessPath(Root(Root::Kind::Argument, 0)).canonicalize_for_method(two));
+  auto* instantiated_argument_origin = context.origin_factory->crtex_origin(
+      *expected_instantiated_name.instantiated_value(), canonical_callee_port);
+  auto* constant_argument_origin = context.origin_factory->crtex_origin(
+      /* canonical_name */ "constant value", canonical_callee_port);
   auto propagated_crtex_frames = crtex_frames.propagate(
       /* callee */ two,
-      canonical_callee_port,
+      *canonical_callee_port,
       call_position,
       /* locally_inferred_features */ FeatureMayAlwaysSet{feature_one},
       /* maximum_source_sink_distance */ 100,
@@ -943,10 +947,11 @@ TEST_F(KindFramesTest, PropagateCrtex) {
           test::make_taint_config(
               test_kind_one,
               test::FrameProperties{
-                  .callee_port = canonical_callee_port,
+                  .callee_port = *canonical_callee_port,
                   .callee = two,
                   .call_position = call_position,
-                  .origins = OriginSet{one_origin},
+                  .origins =
+                      OriginSet{one_origin, instantiated_argument_origin},
                   .inferred_features = FeatureMayAlwaysSet{feature_one},
                   .canonical_names =
                       CanonicalNameSetAbstractDomain{
@@ -955,10 +960,10 @@ TEST_F(KindFramesTest, PropagateCrtex) {
           test::make_taint_config(
               test_kind_one,
               test::FrameProperties{
-                  .callee_port = canonical_callee_port,
+                  .callee_port = *canonical_callee_port,
                   .callee = two,
                   .call_position = call_position,
-                  .origins = OriginSet{one_origin},
+                  .origins = OriginSet{one_origin, constant_argument_origin},
                   .inferred_features = FeatureMayAlwaysSet{feature_one},
                   .canonical_names =
                       CanonicalNameSetAbstractDomain(CanonicalName(
@@ -989,7 +994,11 @@ TEST_F(KindFramesTest, PropagateCrtex) {
                   .callee = two,
                   .call_position = call_position,
                   .distance = 1,
-                  .origins = OriginSet{one_origin},
+                  .origins =
+                      OriginSet{
+                          one_origin,
+                          instantiated_argument_origin,
+                          constant_argument_origin},
                   .inferred_features =
                       FeatureMayAlwaysSet{feature_one, feature_two},
                   .call_kind = CallKind::callsite()}),

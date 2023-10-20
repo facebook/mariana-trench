@@ -2209,8 +2209,6 @@ TEST_F(TaintTest, Propagate) {
    * Locally inferred features are explicitly set to `bottom()` because these
    * should be propagated into inferred features (joined across each kind).
    */
-  auto expected_instantiated_name =
-      CanonicalName(CanonicalName::InstantiatedValue{method_one->signature()});
   EXPECT_EQ(
       non_crtex_frames.propagate(
           /* callee */ method_one,
@@ -2301,6 +2299,13 @@ TEST_F(TaintTest, Propagate) {
    * Locally inferred features are explicitly set to `bottom()` because these
    * should be propagated into inferred features (joined across each kind).
    */
+  auto expected_instantiated_name =
+      CanonicalName(CanonicalName::InstantiatedValue{method_one->signature()});
+  auto expected_callee_port = AccessPath(
+      Root(Root::Kind::Anchor), Path{PathElement::field("Argument(0)")});
+  auto* expected_origin = context.origin_factory->crtex_origin(
+      *expected_instantiated_name.instantiated_value(),
+      context.access_path_factory->get(expected_callee_port));
   EXPECT_EQ(
       crtex_frames.propagate(
           /* callee */ method_one,
@@ -2317,11 +2322,10 @@ TEST_F(TaintTest, Propagate) {
           test::make_taint_config(
               test_kind_one,
               test::FrameProperties{
-                  .callee_port = AccessPath(
-                      Root(Root::Kind::Anchor),
-                      Path{PathElement::field("Argument(0)")}),
+                  .callee_port = expected_callee_port,
                   .callee = method_one,
                   .call_position = test_position_two,
+                  .origins = OriginSet{expected_origin},
                   .locally_inferred_features = FeatureMayAlwaysSet::bottom(),
                   .canonical_names =
                       CanonicalNameSetAbstractDomain{
@@ -2330,11 +2334,10 @@ TEST_F(TaintTest, Propagate) {
           test::make_taint_config(
               test_kind_two,
               test::FrameProperties{
-                  .callee_port = AccessPath(
-                      Root(Root::Kind::Anchor),
-                      Path{PathElement::field("Argument(0)")}),
+                  .callee_port = expected_callee_port,
                   .callee = method_one,
                   .call_position = test_position_two,
+                  .origins = OriginSet{expected_origin},
                   .locally_inferred_features = FeatureMayAlwaysSet::bottom(),
                   .canonical_names =
                       CanonicalNameSetAbstractDomain{
@@ -2386,6 +2389,11 @@ TEST_F(TaintTest, Propagate) {
 
   expected_instantiated_name =
       CanonicalName(CanonicalName::InstantiatedValue{method_two->signature()});
+  expected_callee_port = AccessPath(
+      Root(Root::Kind::Anchor), Path{PathElement::field("Argument(-1)")});
+  expected_origin = context.origin_factory->crtex_origin(
+      *expected_instantiated_name.instantiated_value(),
+      context.access_path_factory->get(expected_callee_port));
   EXPECT_EQ(
       taint.propagate(
           /* callee */ method_two,
@@ -2412,12 +2420,10 @@ TEST_F(TaintTest, Propagate) {
           test::make_taint_config(
               test_kind_one,
               test::FrameProperties{
-                  .callee_port = AccessPath(
-                      Root(Root::Kind::Anchor),
-                      Path{PathElement::field("Argument(-1)")}),
+                  .callee_port = expected_callee_port,
                   .callee = method_two,
                   .call_position = test_position_one,
-                  .origins = OriginSet{one_origin},
+                  .origins = OriginSet{one_origin, expected_origin},
                   .locally_inferred_features = FeatureMayAlwaysSet::bottom(),
                   .canonical_names =
                       CanonicalNameSetAbstractDomain{
@@ -2436,12 +2442,10 @@ TEST_F(TaintTest, Propagate) {
           test::make_taint_config(
               test_kind_two,
               test::FrameProperties{
-                  .callee_port = AccessPath(
-                      Root(Root::Kind::Anchor),
-                      Path{PathElement::field("Argument(-1)")}),
+                  .callee_port = expected_callee_port,
                   .callee = method_two,
                   .call_position = test_position_one,
-                  .origins = OriginSet{one_origin},
+                  .origins = OriginSet{one_origin, expected_origin},
                   .locally_inferred_features = FeatureMayAlwaysSet::bottom(),
                   .canonical_names =
                       CanonicalNameSetAbstractDomain{

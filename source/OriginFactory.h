@@ -27,6 +27,10 @@ class OriginFactory final {
 
   const FieldOrigin* field_origin(const Field* field) const;
 
+  const CrtexOrigin* crtex_origin(
+      std::string_view canonical_name,
+      const AccessPath* port) const;
+
   static const OriginFactory& singleton();
 
  private:
@@ -36,6 +40,11 @@ class OriginFactory final {
       TupleHash<const Method*, const AccessPath*>>
       method_origins_;
   UniquePointerFactory<const Field*, FieldOrigin> field_origins_;
+  UniquePointerFactory<
+      std::tuple<const DexString*, const AccessPath*>,
+      CrtexOrigin,
+      TupleHash<const DexString*, const AccessPath*>>
+      crtex_origins_;
 };
 
 } // namespace marianatrench

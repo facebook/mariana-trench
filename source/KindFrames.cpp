@@ -13,6 +13,7 @@
 #include <mariana-trench/JsonValidation.h>
 #include <mariana-trench/KindFrames.h>
 #include <mariana-trench/Log.h>
+#include <mariana-trench/OriginFactory.h>
 #include <mariana-trench/PathTreeDomain.h>
 
 namespace marianatrench {
@@ -356,6 +357,16 @@ KindFrames KindFrames::propagate(
     // We do not use bottom() for canonical names, only empty().
     mt_assert(propagated_canonical_names.is_value());
 
+    // Propagate instantiated canonical names into origins.
+    // TODO(T163918472): Update Parser to determine callee from origins then
+    // set propagated_callee to nullptr.
+    auto propagated_origins = frame.origins();
+    for (const auto& name : propagated_canonical_names.elements()) {
+      propagated_origins.add(context.origin_factory->crtex_origin(
+          /* canonical_name */ *name.instantiated_value(),
+          /* port */ context.access_path_factory->get(callee_port)));
+    }
+
     const auto* propagated_callee = callee;
     int propagated_distance = frame.distance() + 1;
     auto call_kind = frame.call_kind();
@@ -402,7 +413,7 @@ KindFrames KindFrames::propagate(
         call_position,
         propagated_interval,
         propagated_distance,
-        frame.origins(),
+        propagated_origins,
         std::move(propagated_inferred_features),
         propagated_user_features,
         /* via_type_of_ports */ {},

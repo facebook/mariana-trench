@@ -30,4 +30,15 @@ Json::Value FieldOrigin::to_json() const {
   return value;
 }
 
+std::string CrtexOrigin::to_string() const {
+  return canonical_name_->str_copy();
+}
+
+Json::Value CrtexOrigin::to_json() const {
+  auto value = Json::Value(Json::objectValue);
+  value["canonical_name"] = canonical_name_->str_copy();
+  value["port"] = port_->to_json();
+  return value;
+}
+
 } // namespace marianatrench

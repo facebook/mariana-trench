@@ -19,6 +19,14 @@ const FieldOrigin* OriginFactory::field_origin(const Field* field) const {
   return field_origins_.create(field);
 }
 
+const CrtexOrigin* OriginFactory::crtex_origin(
+    std::string_view canonical_name,
+    const AccessPath* port) const {
+  const auto* dex_canonical_name = DexString::make_string(canonical_name);
+  return crtex_origins_.create(
+      std::make_tuple(dex_canonical_name, port), dex_canonical_name, port);
+}
+
 const OriginFactory& OriginFactory::singleton() {
   // Thread-safe global variable, initialized on first call.
   static OriginFactory instance;
