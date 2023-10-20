@@ -1014,6 +1014,13 @@
           ],
           "origin" : 
           {
+            "leaves" : 
+            [
+              {
+                "method" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
+                "port" : "Argument(0)"
+              }
+            ],
             "method" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
             "position" : 
             {
@@ -1064,6 +1071,13 @@
           ],
           "origin" : 
           {
+            "leaves" : 
+            [
+              {
+                "method" : "Landroid/util/Log;.e:(Ljava/lang/String;Ljava/lang/String;)I",
+                "port" : "Argument(1)"
+              }
+            ],
             "method" : "Landroid/util/Log;.e:(Ljava/lang/String;Ljava/lang/String;)I",
             "position" : 
             {
@@ -1242,6 +1256,13 @@
           ],
           "origin" : 
           {
+            "leaves" : 
+            [
+              {
+                "method" : "Landroid/content/Intent;.getExtras:()Landroid/os/Bundle;",
+                "port" : "Return"
+              }
+            ],
             "method" : "Landroid/content/Intent;.getExtras:()Landroid/os/Bundle;",
             "position" : 
             {

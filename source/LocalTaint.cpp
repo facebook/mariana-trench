@@ -564,9 +564,22 @@ Json::Value LocalTaint::to_json(ExportOriginsMode export_origins_mode) const {
     if (call_position != nullptr) {
       auto origin = Json::Value(Json::objectValue);
       origin["position"] = call_position->to_json();
+
+      // TODO(T163918472): Remove this in favor of "leaves" after parser is
+      // updated. New format should work for CRTEX as well. Callee should
+      // always be nullptr at origins.
       if (callee != nullptr) {
         origin["method"] = callee->to_json();
       }
+
+      OriginSet leaves;
+      for (const auto& frame : *this) {
+        leaves.join_with(frame.origins());
+      }
+      if (!leaves.empty()) {
+        origin["leaves"] = leaves.to_json();
+      }
+
       taint["origin"] = origin;
     }
   } else if (

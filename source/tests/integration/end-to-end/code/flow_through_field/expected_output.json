@@ -1110,6 +1110,13 @@
           ],
           "origin" : 
           {
+            "leaves" : 
+            [
+              {
+                "method" : "Landroid/app/Activity;.getIntent:()Landroid/content/Intent;",
+                "port" : "Return"
+              }
+            ],
             "method" : "Landroid/app/Activity;.getIntent:()Landroid/content/Intent;",
             "position" : 
             {
@@ -1204,6 +1211,13 @@
           ],
           "origin" : 
           {
+            "leaves" : 
+            [
+              {
+                "method" : "Landroid/app/Activity;.getIntent:()Landroid/content/Intent;",
+                "port" : "Return"
+              }
+            ],
             "method" : "Landroid/app/Activity;.getIntent:()Landroid/content/Intent;",
             "position" : 
             {
@@ -1301,6 +1315,13 @@
           ],
           "origin" : 
           {
+            "leaves" : 
+            [
+              {
+                "method" : "Landroid/app/Activity;.getIntent:()Landroid/content/Intent;",
+                "port" : "Return"
+              }
+            ],
             "method" : "Landroid/app/Activity;.getIntent:()Landroid/content/Intent;",
             "position" : 
             {
@@ -1373,6 +1394,13 @@
           ],
           "origin" : 
           {
+            "leaves" : 
+            [
+              {
+                "method" : "Lcom/facebook/secure/context/IntentLauncher;.launchActivity:(Landroid/content/Intent;Landroid/content/Context;)Z",
+                "port" : "Argument(1)"
+              }
+            ],
             "method" : "Lcom/facebook/secure/context/IntentLauncher;.launchActivity:(Landroid/content/Intent;Landroid/content/Context;)Z",
             "position" : 
             {

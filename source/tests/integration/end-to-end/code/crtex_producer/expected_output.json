@@ -1085,6 +1085,13 @@
           ],
           "origin" : 
           {
+            "leaves" : 
+            [
+              {
+                "method" : "Lcom/facebook/marianatrench/integrationtests/Crtex;.crtex_with_regular_sink:(Landroid/content/Intent;)V",
+                "port" : "Argument(0)"
+              }
+            ],
             "method" : "Lcom/facebook/marianatrench/integrationtests/Crtex;.crtex_with_regular_sink:(Landroid/content/Intent;)V",
             "position" : 
             {
@@ -1409,6 +1416,13 @@
           ],
           "origin" : 
           {
+            "leaves" : 
+            [
+              {
+                "method" : "Landroid/content/Intent;.<init>:(Ljava/lang/String;Landroid/net/Uri;)V",
+                "port" : "Argument(0)"
+              }
+            ],
             "method" : "Landroid/content/Intent;.<init>:(Ljava/lang/String;Landroid/net/Uri;)V",
             "position" : 
             {

@@ -42,6 +42,13 @@
               ],
               "origin" :
               {
+                "leaves" :
+                [
+                  {
+                    "method" : "LSink;.sink_in_second_parameter:(II)V",
+                    "port" : "Argument(2)"
+                  }
+                ],
                 "method" : "LSink;.sink_in_second_parameter:(II)V",
                 "position" :
                 {
@@ -76,6 +83,13 @@
               ],
               "origin" :
               {
+                "leaves" :
+                [
+                  {
+                    "method" : "LSource;.source:()LData;",
+                    "port" : "Return"
+                  }
+                ],
                 "method" : "LSource;.source:()LData;",
                 "position" :
                 {

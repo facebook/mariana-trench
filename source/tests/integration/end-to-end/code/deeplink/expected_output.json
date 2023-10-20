@@ -1979,6 +1979,13 @@
           ],
           "origin" : 
           {
+            "leaves" : 
+            [
+              {
+                "method" : "Lcom/facebook/content/SecureContextHelper;.startFacebookActivityForResult:(Landroid/content/Intent;ILandroid/app/Activity;)V",
+                "port" : "Argument(1)"
+              }
+            ],
             "method" : "Lcom/facebook/content/SecureContextHelper;.startFacebookActivityForResult:(Landroid/content/Intent;ILandroid/app/Activity;)V",
             "position" : 
             {
@@ -2012,6 +2019,13 @@
           ],
           "origin" : 
           {
+            "leaves" : 
+            [
+              {
+                "method" : "Lcom/facebook/content/SecureContextHelper;.startNonFacebookActivityForResult:(Landroid/content/Intent;ILandroid/app/Activity;)V",
+                "port" : "Argument(1)"
+              }
+            ],
             "method" : "Lcom/facebook/content/SecureContextHelper;.startNonFacebookActivityForResult:(Landroid/content/Intent;ILandroid/app/Activity;)V",
             "position" : 
             {
@@ -2062,6 +2076,13 @@
           ],
           "origin" : 
           {
+            "leaves" : 
+            [
+              {
+                "method" : "Lcom/facebook/content/SecureContextHelper;.startFacebookActivity:(Landroid/content/Intent;Landroid/content/Context;)V",
+                "port" : "Argument(1)"
+              }
+            ],
             "method" : "Lcom/facebook/content/SecureContextHelper;.startFacebookActivity:(Landroid/content/Intent;Landroid/content/Context;)V",
             "position" : 
             {
@@ -2095,6 +2116,13 @@
           ],
           "origin" : 
           {
+            "leaves" : 
+            [
+              {
+                "method" : "Lcom/facebook/content/SecureContextHelper;.startNonFacebookActivity:(Landroid/content/Intent;Landroid/content/Context;)V",
+                "port" : "Argument(1)"
+              }
+            ],
             "method" : "Lcom/facebook/content/SecureContextHelper;.startNonFacebookActivity:(Landroid/content/Intent;Landroid/content/Context;)V",
             "position" : 
             {
@@ -2236,6 +2264,13 @@
           ],
           "origin" : 
           {
+            "leaves" : 
+            [
+              {
+                "method" : "Landroid/app/Activity;.getIntent:()Landroid/content/Intent;",
+                "port" : "Return"
+              }
+            ],
             "method" : "Landroid/app/Activity;.getIntent:()Landroid/content/Intent;",
             "position" : 
             {

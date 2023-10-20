@@ -924,6 +924,13 @@
           ],
           "origin" : 
           {
+            "leaves" : 
+            [
+              {
+                "method" : "Lcom/mariana_trench/artificial/ArrayAllocation;.allocateArray:(I)V",
+                "port" : "Argument(0)"
+              }
+            ],
             "position" : 
             {
               "line" : 45,
@@ -1054,6 +1061,13 @@
           },
           "origin" : 
           {
+            "leaves" : 
+            [
+              {
+                "method" : "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;",
+                "port" : "Return"
+              }
+            ],
             "method" : "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;",
             "position" : 
             {
@@ -1173,6 +1187,13 @@
           ],
           "origin" : 
           {
+            "leaves" : 
+            [
+              {
+                "method" : "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;",
+                "port" : "Return"
+              }
+            ],
             "method" : "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;",
             "position" : 
             {
@@ -1234,6 +1255,13 @@
           ],
           "origin" : 
           {
+            "leaves" : 
+            [
+              {
+                "method" : "Lcom/facebook/marianatrench/integrationtests/AddFeatureToCheckCast;.sink:(Ljava/lang/String;)V",
+                "port" : "Argument(1)"
+              }
+            ],
             "method" : "Lcom/facebook/marianatrench/integrationtests/AddFeatureToCheckCast;.sink:(Ljava/lang/String;)V",
             "position" : 
             {
@@ -1277,6 +1305,13 @@
           },
           "origin" : 
           {
+            "leaves" : 
+            [
+              {
+                "method" : "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;",
+                "port" : "Return"
+              }
+            ],
             "method" : "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;",
             "position" : 
             {
@@ -1334,6 +1369,13 @@
           ],
           "origin" : 
           {
+            "leaves" : 
+            [
+              {
+                "method" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
+                "port" : "Argument(0)"
+              }
+            ],
             "method" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
             "position" : 
             {
@@ -1370,6 +1412,13 @@
           ],
           "origin" : 
           {
+            "leaves" : 
+            [
+              {
+                "method" : "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;",
+                "port" : "Return"
+              }
+            ],
             "method" : "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;",
             "position" : 
             {
@@ -1427,6 +1476,13 @@
           ],
           "origin" : 
           {
+            "leaves" : 
+            [
+              {
+                "method" : "Lcom/mariana_trench/artificial/ArrayAllocation;.allocateArray:(I)V",
+                "port" : "Argument(0)"
+              }
+            ],
             "position" : 
             {
               "line" : 27,
@@ -1476,6 +1532,13 @@
           ],
           "origin" : 
           {
+            "leaves" : 
+            [
+              {
+                "method" : "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;",
+                "port" : "Return"
+              }
+            ],
             "method" : "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;",
             "position" : 
             {
@@ -1532,6 +1595,13 @@
           ],
           "origin" : 
           {
+            "leaves" : 
+            [
+              {
+                "method" : "Lcom/facebook/marianatrench/integrationtests/AddFeatureToCheckCast;.sink:(Ljava/lang/String;)V",
+                "port" : "Argument(1)"
+              }
+            ],
             "method" : "Lcom/facebook/marianatrench/integrationtests/AddFeatureToCheckCast;.sink:(Ljava/lang/String;)V",
             "position" : 
             {

@@ -1018,6 +1018,13 @@
           ],
           "origin" : 
           {
+            "leaves" : 
+            [
+              {
+                "method" : "Lcom/facebook/marianatrench/integrationtests/SensitiveApi;.execute:()V",
+                "port" : "call-chain"
+              }
+            ],
             "method" : "Lcom/facebook/marianatrench/integrationtests/SensitiveApi;.execute:()V",
             "position" : 
             {
