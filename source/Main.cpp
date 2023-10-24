@@ -14,7 +14,7 @@
 #include <boost/program_options.hpp>
 
 #include <AggregateException.h>
-#include <Debug.h>
+#include <DebugUtils.h>
 #include <RedexContext.h>
 
 #include <mariana-trench/ExitCode.h>
