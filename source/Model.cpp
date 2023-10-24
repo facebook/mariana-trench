@@ -1707,16 +1707,6 @@ bool Model::check_taint_config_consistency(
 bool Model::check_taint_consistency(const Taint& taint, std::string_view kind)
     const {
   for (const auto& frame : taint.frames_iterator()) {
-    // If a method_ exists, there should be exactly one origin at the
-    // declaration frame.
-    const auto* origin = frame.origins().elements().singleton();
-    if (method_ && (origin == nullptr || !(*origin)->is<MethodOrigin>())) {
-      ModelConsistencyError::raise(fmt::format(
-          "Model for method `{}` contains a {} without origins.",
-          show(method_),
-          kind));
-      return false;
-    }
     if (!frame.via_type_of_ports().is_bottom()) {
       for (const auto& root : frame.via_type_of_ports()) {
         // Logs invalid ports specifed for via_type_of but does not prevent the
@@ -1800,7 +1790,8 @@ bool Model::check_call_effect_port_consistency(
 
 void Model::add_generation(AccessPath port, Taint source) {
   if (method_) {
-    source.set_origins(method_, AccessPathFactory::singleton().get(port));
+    source.set_origins_if_declaration(
+        method_, AccessPathFactory::singleton().get(port));
   }
 
   if (!check_port_consistency(port) ||
@@ -1822,7 +1813,8 @@ void Model::add_generation(AccessPath port, Taint source) {
 
 void Model::add_parameter_source(AccessPath port, Taint source) {
   if (method_) {
-    source.set_origins(method_, AccessPathFactory::singleton().get(port));
+    source.set_origins_if_declaration(
+        method_, AccessPathFactory::singleton().get(port));
   }
 
   if (!check_port_consistency(port) ||
@@ -1845,7 +1837,8 @@ void Model::add_parameter_source(AccessPath port, Taint source) {
 
 void Model::add_sink(AccessPath port, Taint sink) {
   if (method_) {
-    sink.set_origins(method_, AccessPathFactory::singleton().get(port));
+    sink.set_origins_if_declaration(
+        method_, AccessPathFactory::singleton().get(port));
   }
 
   if (!check_port_consistency(port) || !check_taint_consistency(sink, "sink")) {
@@ -1870,7 +1863,8 @@ void Model::add_call_effect_source(AccessPath port, Taint source) {
   }
 
   if (method_) {
-    source.set_origins(method_, AccessPathFactory::singleton().get(port));
+    source.set_origins_if_declaration(
+        method_, AccessPathFactory::singleton().get(port));
   }
 
   if (!check_taint_consistency(source, "effect source")) {
@@ -1896,7 +1890,8 @@ void Model::add_call_effect_sink(AccessPath port, Taint sink) {
   }
 
   if (method_) {
-    sink.set_origins(method_, AccessPathFactory::singleton().get(port));
+    sink.set_origins_if_declaration(
+        method_, AccessPathFactory::singleton().get(port));
   }
 
   if (!check_taint_consistency(sink, "effect sink")) {
@@ -1922,7 +1917,8 @@ void Model::add_propagation(AccessPath input_path, Taint output) {
   }
 
   if (method_) {
-    output.set_origins(method_, AccessPathFactory::singleton().get(input_path));
+    output.set_origins_if_declaration(
+        method_, AccessPathFactory::singleton().get(input_path));
   }
 
   if (input_path.path().size() > Heuristics::kPropagationMaxInputPathSize) {

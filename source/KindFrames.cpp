@@ -361,11 +361,8 @@ KindFrames KindFrames::propagate(
     // TODO(T163918472): Update Parser to determine callee from origins then
     // set propagated_callee to nullptr.
     auto propagated_origins = frame.origins();
-    for (const auto& name : propagated_canonical_names.elements()) {
-      propagated_origins.add(context.origin_factory->crtex_origin(
-          /* canonical_name */ *name.instantiated_value(),
-          /* port */ context.access_path_factory->get(callee_port)));
-    }
+    propagated_origins.join_with(
+        CanonicalName::propagate(propagated_canonical_names, callee_port));
 
     const auto* propagated_callee = callee;
     int propagated_distance = frame.distance() + 1;

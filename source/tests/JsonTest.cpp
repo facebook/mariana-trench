@@ -1240,12 +1240,57 @@ TEST_F(JsonTest, Frame_Crtex) {
                 "canonical_names": [ {"template": "%programmatic_leaf_name%"} ]
               })"),
           context),
-      test::make_crtex_leaf_taint_config(
+      TaintConfig(
           context.kind_factory->get("TestSource"),
           /* callee_port */ AccessPath(Root(Root::Kind::Anchor)),
+          /* callee */ nullptr,
+          /* call_kind */ CallKind::declaration(),
+          /* call_position */ nullptr,
+          /* type_contexts */ CallClassIntervalContext(),
+          /* distance */ 0,
+          /* origins */ {},
+          /* inferred_features */ FeatureMayAlwaysSet::bottom(),
+          /* user_features */ {},
+          /* via_type_of_ports */ {},
+          /* via_value_of_ports */ {},
           /* canonical_names */
           CanonicalNameSetAbstractDomain{CanonicalName(
-              CanonicalName::TemplateValue{"%programmatic_leaf_name%"})}));
+              CanonicalName::TemplateValue{"%programmatic_leaf_name%"})},
+          /* output_paths */ {},
+          /* local_positions */ {},
+          /* locally_inferred_features */ FeatureMayAlwaysSet::bottom(),
+          /* extra_traces */ {}));
+
+  // CRTEX consumer frames (identified by "producer" port) are a special case.
+  // They are "origins" rather than declarations, and the origins should contain
+  // information leading to the next hop (in the CRTEX producer run), i.e. the
+  // canonical port and name for the leaf.
+  auto producer_port = AccessPath(
+      Root(Root::Kind::Producer),
+      Path{PathElement::field("123"), PathElement::field("formal(0)")});
+  auto expected_taint_config = TaintConfig(
+      context.kind_factory->get("TestSource"),
+      /* callee_port */ producer_port,
+      /* callee */ nullptr,
+      /* call_kind */ CallKind::origin(),
+      /* call_position */ nullptr,
+      /* type_contexts */ CallClassIntervalContext(),
+      /* distance */ 0,
+      /* origins */
+      OriginSet{context.origin_factory->crtex_origin(
+          /* canonical_name */ "Lcom/android/MyClass;.MyMethod",
+          /* port */ context.access_path_factory->get(producer_port))},
+      /* inferred_features */ FeatureMayAlwaysSet::bottom(),
+      /* user_features */ {},
+      /* via_type_of_ports */ {},
+      /* via_value_of_ports */ {},
+      /* canonical_names */
+      CanonicalNameSetAbstractDomain{CanonicalName(
+          CanonicalName::InstantiatedValue{"Lcom/android/MyClass;.MyMethod"})},
+      /* output_paths */ {},
+      /* local_positions */ {},
+      /* locally_inferred_features */ FeatureMayAlwaysSet::bottom(),
+      /* extra_traces */ {});
   EXPECT_EQ(
       TaintConfig::from_json(
           test::parse_json(
@@ -1255,16 +1300,7 @@ TEST_F(JsonTest, Frame_Crtex) {
                 "canonical_names": [ {"instantiated": "Lcom/android/MyClass;.MyMethod"} ]
               })#"),
           context),
-      test::make_crtex_leaf_taint_config(
-          context.kind_factory->get("TestSource"),
-          /* callee_port */
-          AccessPath(
-              Root(Root::Kind::Producer),
-              Path{PathElement::field("123"), PathElement::field("formal(0)")}),
-          /* canonical_names */
-          CanonicalNameSetAbstractDomain{
-              CanonicalName(CanonicalName::InstantiatedValue{
-                  "Lcom/android/MyClass;.MyMethod"})}));
+      expected_taint_config);
 }
 
 TEST_F(JsonTest, Frame) {

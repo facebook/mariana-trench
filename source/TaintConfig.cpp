@@ -8,7 +8,6 @@
 #include <mariana-trench/Context.h>
 #include <mariana-trench/ExtraTraceSet.h>
 #include <mariana-trench/JsonValidation.h>
-#include <mariana-trench/OriginFactory.h>
 #include <mariana-trench/TaintConfig.h>
 
 namespace marianatrench {
@@ -175,15 +174,19 @@ TaintConfig TaintConfig::from_json(const Json::Value& value, Context& context) {
   }
 
   CallKind call_kind = CallKind::declaration();
+  OriginSet origins;
   if (canonical_names.is_value() && !canonical_names.elements().empty()) {
     callee_port = validate_and_infer_crtex_callee_port(
         value, callee_port, canonical_names, via_type_of_ports);
     // CRTEX consumer frames (unintuitively identified by "producer" in the
     // port) are treated as origins instead of declaration so that the trace
     // to the producer issue is retained. Declaration frames would be ignored
-    // by the JSON parser.
+    // by the JSON parser. The instantiated canonical name(s) and port should
+    // be reported in the origins as they indicate the next hop of the trace.
+    // This acts like we are propagating the call kind and canonical names.
     if (callee_port.root().is_producer()) {
-      call_kind = CallKind::origin();
+      call_kind = call_kind.propagate();
+      origins.join_with(CanonicalName::propagate(canonical_names, callee_port));
     }
   } else if (
       callee_port.root().is_anchor() || callee_port.root().is_producer()) {
@@ -241,7 +244,7 @@ TaintConfig TaintConfig::from_json(const Json::Value& value, Context& context) {
       distance,
       // Origins are not configurable. They are auto-populated when the config
       // is applied as a model for a specific method/field.
-      /* origins */ {},
+      std::move(origins),
       std::move(inferred_features),
       std::move(user_features),
       std::move(via_type_of_ports),

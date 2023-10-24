@@ -205,33 +205,6 @@ TaintConfig make_leaf_taint_config(
       /* extra_traces */ {});
 }
 
-TaintConfig make_crtex_leaf_taint_config(
-    const Kind* kind,
-    AccessPath callee_port,
-    CanonicalNameSetAbstractDomain canonical_names) {
-  mt_assert(callee_port.root().is_anchor() || callee_port.root().is_producer());
-  auto call_kind = callee_port.root().is_anchor() ? CallKind::declaration()
-                                                  : CallKind::origin();
-  return TaintConfig(
-      kind,
-      /* callee_port */ callee_port,
-      /* callee */ nullptr,
-      call_kind,
-      /* call_position */ nullptr,
-      /* type_contexts */ CallClassIntervalContext(),
-      /* distance */ 0,
-      /* origins */ {},
-      /* inferred_features */ FeatureMayAlwaysSet::bottom(),
-      /* user_features */ {},
-      /* via_type_of_ports */ {},
-      /* via_value_of_ports */ {},
-      canonical_names,
-      /* output_paths */ {},
-      /* local_positions */ {},
-      /* locally_inferred_features */ FeatureMayAlwaysSet::bottom(),
-      /* extra_traces */ {});
-}
-
 TaintConfig make_propagation_taint_config(const PropagationKind* kind) {
   return make_propagation_taint_config(
       kind,

@@ -155,16 +155,18 @@ void LocalTaint::difference_with(const LocalTaint& other) {
   }
 }
 
-void LocalTaint::set_origins(const Method* method, const AccessPath* port) {
+void LocalTaint::set_origins_if_declaration(
+    const Method* method,
+    const AccessPath* port) {
   transform_frames([method, port](Frame frame) {
-    frame.set_origins(method, port);
+    frame.set_origins_if_declaration(method, port);
     return frame;
   });
 }
 
-void LocalTaint::set_origins(const Field* field) {
+void LocalTaint::set_origins_if_declaration(const Field* field) {
   transform_frames([field](Frame frame) {
-    frame.set_origins(field);
+    frame.set_origins_if_declaration(field);
     return frame;
   });
 }

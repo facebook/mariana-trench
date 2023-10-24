@@ -9,10 +9,12 @@
 #include <json/value.h>
 #include <re2/re2.h>
 
+#include <mariana-trench/AccessPathFactory.h>
 #include <mariana-trench/Assert.h>
 #include <mariana-trench/CanonicalName.h>
 #include <mariana-trench/JsonValidation.h>
 #include <mariana-trench/Log.h>
+#include <mariana-trench/OriginFactory.h>
 
 namespace marianatrench {
 
@@ -140,6 +142,19 @@ Json::Value CanonicalName::to_json() const {
 
   mt_unreachable();
   return result;
+}
+
+OriginSet CanonicalName::propagate(
+    const sparta::HashedSetAbstractDomain<CanonicalName>&
+        instantiated_canonical_names,
+    const AccessPath& callee_port) {
+  OriginSet origins;
+  for (const auto& name : instantiated_canonical_names.elements()) {
+    origins.add(OriginFactory::singleton().crtex_origin(
+        /* canonical_name */ *name.instantiated_value(),
+        /* port */ AccessPathFactory::singleton().get(callee_port)));
+  }
+  return origins;
 }
 
 std::ostream& operator<<(std::ostream& out, const CanonicalName& root) {

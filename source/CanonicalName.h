@@ -14,9 +14,12 @@
 #include <boost/container_hash/extensions.hpp>
 #include <json/json.h>
 
+#include <sparta/HashedSetAbstractDomain.h>
+
 #include <mariana-trench/Feature.h>
 #include <mariana-trench/IncludeMacros.h>
 #include <mariana-trench/Method.h>
+#include <mariana-trench/OriginSet.h>
 
 namespace marianatrench {
 
@@ -120,6 +123,15 @@ class CanonicalName final {
 
   static CanonicalName from_json(const Json::Value& value);
   Json::Value to_json() const;
+
+  /**
+   * A set of instantiated canonical names will be propagated as crtex
+   * origins.
+   */
+  static OriginSet propagate(
+      const sparta::HashedSetAbstractDomain<CanonicalName>&
+          instantiated_canonical_names,
+      const AccessPath& callee_port);
 
  private:
   friend std::ostream& operator<<(std::ostream& out, const CanonicalName& root);

@@ -37,12 +37,19 @@ Frame::Frame(const TaintConfig& config)
           config.output_paths(),
           config.extra_traces()) {}
 
-void Frame::set_origins(const Method* method, const AccessPath* port) {
-  origins_ = OriginSet{OriginFactory::singleton().method_origin(method, port)};
+void Frame::set_origins_if_declaration(
+    const Method* method,
+    const AccessPath* port) {
+  if (call_kind_.is_declaration()) {
+    origins_ =
+        OriginSet{OriginFactory::singleton().method_origin(method, port)};
+  }
 }
 
-void Frame::set_origins(const Field* field) {
-  origins_ = OriginSet{OriginFactory::singleton().field_origin(field)};
+void Frame::set_origins_if_declaration(const Field* field) {
+  if (call_kind_.is_declaration()) {
+    origins_ = OriginSet{OriginFactory::singleton().field_origin(field)};
+  }
 }
 
 void Frame::add_inferred_features(const FeatureMayAlwaysSet& features) {

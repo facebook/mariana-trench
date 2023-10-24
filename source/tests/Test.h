@@ -94,10 +94,6 @@ TaintConfig make_leaf_taint_config(
     FeatureMayAlwaysSet locally_inferred_features,
     FeatureSet user_features,
     OriginSet origins);
-TaintConfig make_crtex_leaf_taint_config(
-    const Kind* kind,
-    AccessPath callee_port,
-    CanonicalNameSetAbstractDomain canonical_names);
 TaintConfig make_propagation_taint_config(const PropagationKind* kind);
 TaintConfig make_propagation_taint_config(
     const PropagationKind* kind,

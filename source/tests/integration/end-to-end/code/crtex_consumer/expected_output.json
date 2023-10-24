@@ -906,8 +906,8 @@
               "origins" : 
               [
                 {
-                  "method" : "Lcom/facebook/marianatrench/integrationtests/Consumer;.getCrtexField:()I",
-                  "port" : "Return"
+                  "canonical_name" : "Producer::writeCrtexField",
+                  "port" : "Producer.153993.Argument(0)"
                 }
               ]
             }
@@ -1004,8 +1004,8 @@
               "origins" : 
               [
                 {
-                  "method" : "Lcom/facebook/marianatrench/integrationtests/Consumer;.onActivityResult:(IILandroid/content/Intent;)V",
-                  "port" : "Argument(3)"
+                  "canonical_name" : "Landroid/app/Activity;.startActivity:(Landroid/content/Intent;Landroid/os/Bundle;)V__via-type:Lcom/facebook/browser/lite/BrowserLiteActivity;",
+                  "port" : "Producer.153993.Argument(0)"
                 }
               ]
             }
@@ -1040,8 +1040,8 @@
               "origins" : 
               [
                 {
-                  "method" : "Lcom/facebook/marianatrench/integrationtests/Consumer;.onActivityResult:(IILandroid/content/Intent;)V",
-                  "port" : "Argument(3)"
+                  "canonical_name" : "Landroid/app/Activity;.startActivity:(Landroid/content/Intent;Landroid/os/Bundle;)V__via-type:Lcom/facebook/browser/lite/BrowserLiteActivity;",
+                  "port" : "Producer.153993.Argument(0)"
                 }
               ]
             }
@@ -1137,8 +1137,8 @@
               "origins" : 
               [
                 {
-                  "method" : "Lcom/facebook/marianatrench/integrationtests/Consumer;.getCrtexField:()I",
-                  "port" : "Return"
+                  "canonical_name" : "Producer::writeCrtexField",
+                  "port" : "Producer.153993.Argument(0)"
                 }
               ],
               "preserves_type_context" : true

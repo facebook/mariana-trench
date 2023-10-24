@@ -1868,7 +1868,7 @@ TEST_F(TaintTest, SetMethodOrigins) {
           test::FrameProperties{
               .callee = method_two, .call_kind = CallKind::callsite()}),
   };
-  taint.set_origins(method_one, leaf);
+  taint.set_origins_if_declaration(method_one, leaf);
   EXPECT_EQ(
       taint,
       (Taint{
@@ -1911,7 +1911,7 @@ TEST_F(TaintTest, SetFieldOrigins) {
           test::FrameProperties{.origins = OriginSet{two_origin}}),
   };
 
-  taint.set_origins(one);
+  taint.set_origins_if_declaration(one);
   EXPECT_EQ(
       taint,
       (Taint{
