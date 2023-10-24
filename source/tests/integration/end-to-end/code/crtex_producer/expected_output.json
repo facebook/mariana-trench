@@ -936,7 +936,12 @@
               [
                 "via-type:Lcom/facebook/marianatrench/integrationtests/Crtex;"
               ],
-              "call_info" : "CallSite",
+              "call_info" : "Origin",
+              "callee_interval" : 
+              [
+                7,
+                8
+              ],
               "canonical_names" : 
               [
                 {
@@ -954,9 +959,17 @@
                   "method" : "Lcom/facebook/marianatrench/integrationtests/Crtex;.startActivityHelper:(Landroid/content/Intent;Landroid/app/Activity;)V",
                   "port" : "Argument(0)"
                 }
-              ]
+              ],
+              "preserves_type_context" : true
             }
-          ]
+          ],
+          "local_user_features" : 
+          {
+            "always_features" : 
+            [
+              "via-type:Lcom/facebook/marianatrench/integrationtests/Crtex;"
+            ]
+          }
         }
       ]
     }
@@ -992,14 +1005,10 @@
           ]
         },
         {
-          "call" : 
-          {
-            "port" : "Anchor"
-          },
           "kinds" : 
           [
             {
-              "call_info" : "Origin",
+              "call_info" : "Declaration",
               "canonical_names" : 
               [
                 {
@@ -1048,7 +1057,12 @@
           "kinds" : 
           [
             {
-              "call_info" : "CallSite",
+              "call_info" : "Origin",
+              "callee_interval" : 
+              [
+                7,
+                8
+              ],
               "canonical_names" : 
               [
                 {
@@ -1066,7 +1080,8 @@
                   "method" : "Lcom/facebook/marianatrench/integrationtests/Crtex;.crtex_with_regular_sink:(Landroid/content/Intent;)V",
                   "port" : "Argument(0)"
                 }
-              ]
+              ],
+              "preserves_type_context" : true
             }
           ]
         },
@@ -1126,14 +1141,10 @@
       "taint" : 
       [
         {
-          "call" : 
-          {
-            "port" : "Anchor"
-          },
           "kinds" : 
           [
             {
-              "call_info" : "Origin",
+              "call_info" : "Declaration",
               "canonical_names" : 
               [
                 {
@@ -1165,14 +1176,10 @@
       "taint" : 
       [
         {
-          "call" : 
-          {
-            "port" : "Anchor"
-          },
           "kinds" : 
           [
             {
-              "call_info" : "Origin",
+              "call_info" : "Declaration",
               "canonical_names" : 
               [
                 {
@@ -1225,7 +1232,12 @@
               [
                 "via-type:Landroid/app/Activity;"
               ],
-              "call_info" : "CallSite",
+              "call_info" : "Origin",
+              "callee_interval" : 
+              [
+                7,
+                8
+              ],
               "canonical_names" : 
               [
                 {
@@ -1250,9 +1262,17 @@
                   "method" : "Lcom/facebook/marianatrench/integrationtests/Crtex;.multiple_canonical_names:(Landroid/content/Intent;Landroid/app/Activity;I)V",
                   "port" : "Argument(0)"
                 }
-              ]
+              ],
+              "preserves_type_context" : true
             }
-          ]
+          ],
+          "local_user_features" : 
+          {
+            "always_features" : 
+            [
+              "via-type:Landroid/app/Activity;"
+            ]
+          }
         }
       ]
     },
@@ -1274,7 +1294,12 @@
           "kinds" : 
           [
             {
-              "call_info" : "CallSite",
+              "call_info" : "Origin",
+              "callee_interval" : 
+              [
+                7,
+                8
+              ],
               "canonical_names" : 
               [
                 {
@@ -1292,7 +1317,8 @@
                   "method" : "Lcom/facebook/marianatrench/integrationtests/Crtex;.multiple_canonical_names:(Landroid/content/Intent;Landroid/app/Activity;I)V",
                   "port" : "Argument(1)"
                 }
-              ]
+              ],
+              "preserves_type_context" : true
             }
           ]
         }
@@ -1396,7 +1422,12 @@
               [
                 "via-type:Lcom/facebook/marianatrench/integrationtests/Crtex;"
               ],
-              "call_info" : "CallSite",
+              "call_info" : "Origin",
+              "callee_interval" : 
+              [
+                7,
+                8
+              ],
               "canonical_names" : 
               [
                 {
@@ -1414,9 +1445,17 @@
                   "method" : "Lcom/facebook/marianatrench/integrationtests/Crtex;.startActivityHelper:(Landroid/content/Intent;Landroid/app/Activity;)V",
                   "port" : "Argument(0)"
                 }
-              ]
+              ],
+              "preserves_type_context" : true
             }
-          ]
+          ],
+          "local_user_features" : 
+          {
+            "always_features" : 
+            [
+              "via-type:Lcom/facebook/marianatrench/integrationtests/Crtex;"
+            ]
+          }
         }
       ],
       "sources" : 
@@ -1485,14 +1524,10 @@
       "taint" : 
       [
         {
-          "call" : 
-          {
-            "port" : "Anchor"
-          },
           "kinds" : 
           [
             {
-              "call_info" : "Origin",
+              "call_info" : "Declaration",
               "canonical_names" : 
               [
                 {

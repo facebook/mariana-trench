@@ -178,9 +178,13 @@ TaintConfig TaintConfig::from_json(const Json::Value& value, Context& context) {
   if (canonical_names.is_value() && !canonical_names.elements().empty()) {
     callee_port = validate_and_infer_crtex_callee_port(
         value, callee_port, canonical_names, via_type_of_ports);
-    // CRTEX frames are special - we treat them as origins instead of
-    // declaration as we want the leaf to be preserved in the trace.
-    call_kind = CallKind::origin();
+    // CRTEX consumer frames (unintuitively identified by "producer" in the
+    // port) are treated as origins instead of declaration so that the trace
+    // to the producer issue is retained. Declaration frames would be ignored
+    // by the JSON parser.
+    if (callee_port.root().is_producer()) {
+      call_kind = CallKind::origin();
+    }
   } else if (
       callee_port.root().is_anchor() || callee_port.root().is_producer()) {
     throw JsonValidationError(

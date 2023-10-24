@@ -210,11 +210,13 @@ TaintConfig make_crtex_leaf_taint_config(
     AccessPath callee_port,
     CanonicalNameSetAbstractDomain canonical_names) {
   mt_assert(callee_port.root().is_anchor() || callee_port.root().is_producer());
+  auto call_kind = callee_port.root().is_anchor() ? CallKind::declaration()
+                                                  : CallKind::origin();
   return TaintConfig(
       kind,
       /* callee_port */ callee_port,
       /* callee */ nullptr,
-      /* call_kind */ CallKind::origin(),
+      call_kind,
       /* call_position */ nullptr,
       /* type_contexts */ CallClassIntervalContext(),
       /* distance */ 0,
