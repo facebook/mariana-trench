@@ -454,7 +454,7 @@ we could use the following JSON to specifiy a via-type feature that would materi
   "where": [
     {
       "constraint": "signature_match",
-      "parent": "Lcom/example/Class",
+      "extends": "Landroid/app/Activity",
       "name": "startActivityForResult"
     }
   ],
