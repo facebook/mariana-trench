@@ -77,6 +77,8 @@ Classes take the form `Lpackage/name/ClassName;` - where the leading `L` indicat
 
 > **NOTE:** Instance (i.e, non-static) method parameters are indexed starting from 1! The 0th parameter is the `this` parameter in dalvik byte-code. For static method parameter, indices start from 0.
 
+> **NOTE:** In a constructor (\<init\> method), parameters are also indexed starting from 1. The 0th parameter refers to the instance being constructed, similar to the `this` reference.
+
 ### Access path format
 
 An access path describes the symbolic location of a taint. This is commonly used to indicate where a source or a sink originates from. The "port" field of any model is represented by an access path.
