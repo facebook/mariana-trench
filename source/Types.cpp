@@ -14,6 +14,7 @@
 #include <ProguardParser.h>
 #include <ReflectionAnalysis.h>
 #include <Show.h>
+#include <TypeInference.h>
 #include <Walkers.h>
 
 #include <mariana-trench/Assert.h>

@@ -11,7 +11,6 @@
 
 #include <ControlFlow.h>
 #include <Show.h>
-#include <TypeInference.h>
 #include <Walkers.h>
 
 #include <mariana-trench/BackwardTaintEnvironment.h>

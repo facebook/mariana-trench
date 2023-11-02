@@ -11,8 +11,6 @@
 
 #include <DexClass.h>
 #include <GlobalTypeAnalyzer.h>
-#include <ReflectionAnalysis.h>
-#include <TypeInference.h>
 
 #include <mariana-trench/Access.h>
 #include <mariana-trench/Compiler.h>
