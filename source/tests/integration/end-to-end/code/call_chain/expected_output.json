@@ -1171,14 +1171,6 @@
       "sources" : 
       [
         {
-          "call" : 
-          {
-            "position" : 
-            {
-              "line" : 25,
-              "path" : "CallChain.java"
-            }
-          },
           "kinds" : 
           [
             {
@@ -1192,7 +1184,22 @@
                 }
               ]
             }
-          ]
+          ],
+          "origin" : 
+          {
+            "leaves" : 
+            [
+              {
+                "method" : "Lcom/facebook/marianatrench/integrationtests/Exported;.entry:()V",
+                "port" : "call-chain"
+              }
+            ],
+            "position" : 
+            {
+              "line" : 25,
+              "path" : "CallChain.java"
+            }
+          }
         }
       ]
     }

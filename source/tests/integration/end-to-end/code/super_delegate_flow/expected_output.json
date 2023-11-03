@@ -1144,14 +1144,6 @@
       "sources" : 
       [
         {
-          "call" : 
-          {
-            "position" : 
-            {
-              "line" : 13,
-              "path" : "SourceWebViewClient.java"
-            }
-          },
           "kinds" : 
           [
             {
@@ -1165,7 +1157,22 @@
                 }
               ]
             }
-          ]
+          ],
+          "origin" : 
+          {
+            "leaves" : 
+            [
+              {
+                "method" : "Lcom/facebook/marianatrench/integrationtests/SourceWebViewClient;.onPageFinished:(Ljava/lang/String;)V",
+                "port" : "Argument(1)"
+              }
+            ],
+            "position" : 
+            {
+              "line" : 13,
+              "path" : "SourceWebViewClient.java"
+            }
+          }
         }
       ]
     }

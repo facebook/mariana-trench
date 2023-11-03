@@ -945,14 +945,6 @@
       "sources" : 
       [
         {
-          "call" : 
-          {
-            "position" : 
-            {
-              "line" : 17,
-              "path" : "AbstractContentProvider.java"
-            }
-          },
           "kinds" : 
           [
             {
@@ -966,7 +958,22 @@
                 }
               ]
             }
-          ]
+          ],
+          "origin" : 
+          {
+            "leaves" : 
+            [
+              {
+                "method" : "Lcom/facebook/marianatrench/integrationtests/AbstractContentProvider;.query:(Landroid/net/Uri;[Ljava/lang/String;Ljava/lang/String;[Ljava/lang/String;Ljava/lang/String;)Landroid/database/Cursor;",
+                "port" : "Argument(1)"
+              }
+            ],
+            "position" : 
+            {
+              "line" : 17,
+              "path" : "AbstractContentProvider.java"
+            }
+          }
         }
       ]
     }

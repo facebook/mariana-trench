@@ -1427,14 +1427,6 @@
       "sinks" : 
       [
         {
-          "call" : 
-          {
-            "position" : 
-            {
-              "line" : 23,
-              "path" : "Flow.java"
-            }
-          },
           "kinds" : 
           [
             {
@@ -1448,7 +1440,22 @@
                 }
               ]
             }
-          ]
+          ],
+          "origin" : 
+          {
+            "leaves" : 
+            [
+              {
+                "method" : "Lcom/facebook/marianatrench/integrationtests/Flow;.broadened_issues:()Ljava/lang/Object;",
+                "port" : "Return"
+              }
+            ],
+            "position" : 
+            {
+              "line" : 23,
+              "path" : "Flow.java"
+            }
+          }
         }
       ],
       "sources" : 
@@ -1553,14 +1560,6 @@
       "taint" : 
       [
         {
-          "call" : 
-          {
-            "position" : 
-            {
-              "line" : 23,
-              "path" : "Flow.java"
-            }
-          },
           "kinds" : 
           [
             {
@@ -1587,7 +1586,22 @@
             {
               "line" : 17
             }
-          ]
+          ],
+          "origin" : 
+          {
+            "leaves" : 
+            [
+              {
+                "method" : "Lcom/facebook/marianatrench/integrationtests/Flow;.broadened_issues:()Ljava/lang/Object;",
+                "port" : "Return"
+              }
+            ],
+            "position" : 
+            {
+              "line" : 23,
+              "path" : "Flow.java"
+            }
+          }
         },
         {
           "kinds" : 

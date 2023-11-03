@@ -888,10 +888,6 @@
       "taint" : 
       [
         {
-          "call" : 
-          {
-            "port" : "Producer.153993.Argument(0)"
-          },
           "kinds" : 
           [
             {
@@ -981,15 +977,6 @@
       "sources" : 
       [
         {
-          "call" : 
-          {
-            "port" : "Producer.153993.Argument(0)",
-            "position" : 
-            {
-              "line" : 19,
-              "path" : "Consumer.java"
-            }
-          },
           "kinds" : 
           [
             {
@@ -1009,7 +996,23 @@
                 }
               ]
             }
-          ]
+          ],
+          "origin" : 
+          {
+            "leaves" : 
+            [
+              {
+                "canonical_name" : "Landroid/app/Activity;.startActivity:(Landroid/content/Intent;Landroid/os/Bundle;)V__via-type:Lcom/facebook/browser/lite/BrowserLiteActivity;",
+                "port" : "Producer.153993.Argument(0)"
+              }
+            ],
+            "port" : "Producer.153993.Argument(0)",
+            "position" : 
+            {
+              "line" : 19,
+              "path" : "Consumer.java"
+            }
+          }
         }
       ]
     }
@@ -1022,10 +1025,6 @@
       "taint" : 
       [
         {
-          "call" : 
-          {
-            "port" : "Producer.153993.Argument(0)"
-          },
           "kinds" : 
           [
             {

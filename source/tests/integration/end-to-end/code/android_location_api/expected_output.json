@@ -912,14 +912,6 @@
       "taint" : 
       [
         {
-          "call" : 
-          {
-            "position" : 
-            {
-              "line" : 25,
-              "path" : "ActivityUsingAndroidLocationManager.java"
-            }
-          },
           "kinds" : 
           [
             {
@@ -939,7 +931,22 @@
             {
               "line" : 28
             }
-          ]
+          ],
+          "origin" : 
+          {
+            "leaves" : 
+            [
+              {
+                "method" : "Landroid_location_api/ActivityUsingAndroidLocationManager;.onLocationChanged:(Landroid/location/Location;)V",
+                "port" : "Argument(1)"
+              }
+            ],
+            "position" : 
+            {
+              "line" : 25,
+              "path" : "ActivityUsingAndroidLocationManager.java"
+            }
+          }
         }
       ]
     }

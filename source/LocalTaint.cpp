@@ -558,9 +558,7 @@ Json::Value LocalTaint::to_json(ExportOriginsMode export_origins_mode) const {
   const AccessPath* callee_port = this->callee_port();
   const Position* call_position = this->call_position();
 
-  // We don't want to emit calls in origin frames in the non-CRTEX case.
-  if (callee_port != nullptr && !callee_port->root().is_leaf_port() &&
-      call_kind.is_origin()) {
+  if (call_kind.is_origin()) {
     // Since we don't emit calls for origins, we need to provide the origin
     // location for proper visualisation.
     if (call_position != nullptr) {
@@ -572,6 +570,13 @@ Json::Value LocalTaint::to_json(ExportOriginsMode export_origins_mode) const {
       // always be nullptr at origins.
       if (callee != nullptr) {
         origin["method"] = callee->to_json();
+      }
+
+      // TODO(T163918472): Remove this in favor of "leaves" after parser is
+      // updated. This is added to handle an interrim state in which the CRTEX
+      // producer port is reported in the "origin".
+      if (callee_port != nullptr && callee_port->root().is_producer()) {
+        origin["port"] = callee_port->to_json();
       }
 
       OriginSet leaves;
