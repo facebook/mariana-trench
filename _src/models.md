@@ -963,8 +963,8 @@ Each "rule" defines a "filter" (which uses "constraints" to specify methods for 
     - `signature_match`: Expects at least one of the two allowed groups of extra properties: `[name | names] [parent | parents | extends [include_self]]` where:
       - `name` (a single string) or `names` (a list of alternative strings): is exact matched to the method name
       - `parent` (a single string) or `parents` (a list of alternative strings) is exact matched to the class of the method or `extends` (either a single string or a list of alternative strings) is exact matched to the base classes or interfaces of the method. `extends` allows an optional property `include_self` which is a boolean to indicate if the constraint is applied to the class itself or not (defaults to `true`).
-    - `signature | signature_pattern`: Expects an extra property `pattern` which is a regex to fully match the full signature (class, method, argument types) of a method;
-      - **NOTE:** Usage of this constraint is discouraged as it has poor performance. Try using `signature_match` instead!
+    - `signature | signature_pattern`: Expects an extra property `pattern` which is a regex (with appropriate escaping) to fully match the full signature (class, method, argument types) of a method;
+      - **NOTE:** Usage of this constraint is discouraged as it has poor performance. Try using `signature_match` instead! (Exception: Performance does not suffer if the entire method signature is exactly as specified in `pattern`. This provides an easy way to match full signatures with parameter and return types)
     - `parent`: Expects an extra property `inner` [Type] which contains a nested constraint to apply to the class holding the method;
     - `parameter`: Expects an extra properties `idx` and `inner` [Parameter] or [Type], matches when the idx-th parameter of the function or method matches the nested constraint inner;
     - `any_parameter`: Expects an optional extra property `start_idx` and `inner` [Parameter] or [Type], matches when there is any parameters (starting at start_idx) of the function or method matches the nested constraint inner;
