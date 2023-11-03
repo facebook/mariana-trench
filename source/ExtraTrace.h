@@ -35,6 +35,15 @@ class ExtraTrace final {
     mt_assert(
         call_kind_.is_propagation_with_trace() && kind_ != nullptr &&
         position_ != nullptr);
+
+    // Callee is nullptr iff this trace is an origin (i.e. no next hop).
+    // Unlike LocalTaint, in which origins indicate where a user-declared taint
+    // originates, extra traces originate from propagations, typically taint
+    // transforms. These are like return sinks or parameter sources where the
+    // "next hop" is either "return" or an "argument". Today, this information
+    // is not stored/emitted in the extra trace.
+    mt_assert(call_kind_.is_origin() || callee_ != nullptr);
+    mt_assert(!call_kind_.is_origin() || callee_ == nullptr);
   }
 
   INCLUDE_DEFAULT_COPY_CONSTRUCTORS_AND_ASSIGNMENTS(ExtraTrace)

@@ -542,16 +542,17 @@ Json::Value LocalTaint::to_json(ExportOriginsMode export_origins_mode) const {
   }
   taint["kinds"] = kinds;
 
-  // In most cases, all 3 values (callee, position, port) are expected to be
-  // present. Some edge cases are:
+  // The next hop is indicated by (callee, position, port).
   //
-  // - Standard leaf/terminal frames: The "call" key will be absent because
-  //   there is no "next hop".
-  // - CRTEX leaf/terminal frames: The callee port will be "producer/anchor".
-  //   SAPP post-processing will transform it to something that other static
-  //   analysis tools in the family can understand.
-  // - Return sinks and parameter sources: There is no "callee", but the
-  //   position points to the return instruction/parameter.
+  // When call_kind = origin, this is a leaf taint and there is no next hop.
+  // Examples of when this is the case:
+  // - Calling into a method(/frame) where a source/sink is defined, i.e.
+  //   declaration frame.
+  // - Return sinks and parameter sources. There is no callee for these, but
+  //   the position points to the return instruction/parameter.
+  //
+  // NOTE: Keep format in-sync with ExtraTrace::to_json() when representing
+  // next-hop details. The parser assumes they are the same.
 
   const Method* callee = this->callee();
   CallKind call_kind = this->call_kind();
@@ -561,32 +562,27 @@ Json::Value LocalTaint::to_json(ExportOriginsMode export_origins_mode) const {
   if (call_kind.is_origin()) {
     // Since we don't emit calls for origins, we need to provide the origin
     // location for proper visualisation.
-    if (call_position != nullptr) {
-      auto origin = Json::Value(Json::objectValue);
-      origin["position"] = call_position->to_json();
+    OriginSet leaves;
+    for (const auto& frame : *this) {
+      leaves.join_with(frame.origins());
+    }
+    auto origin = LocalTaint::origin_json(call_position, leaves);
 
-      // TODO(T163918472): Remove this in favor of "leaves" after parser is
-      // updated. New format should work for CRTEX as well. Callee should
-      // always be nullptr at origins.
-      if (callee != nullptr) {
-        origin["method"] = callee->to_json();
-      }
+    // TODO(T163918472): Remove this in favor of "leaves" after parser is
+    // updated. New format should work for CRTEX as well. Callee should
+    // always be nullptr at origins.
+    if (callee != nullptr) {
+      origin["method"] = callee->to_json();
+    }
 
-      // TODO(T163918472): Remove this in favor of "leaves" after parser is
-      // updated. This is added to handle an interrim state in which the CRTEX
-      // producer port is reported in the "origin".
-      if (callee_port != nullptr && callee_port->root().is_producer()) {
-        origin["port"] = callee_port->to_json();
-      }
+    // TODO(T163918472): Remove this in favor of "leaves" after parser is
+    // updated. This is added to handle an interrim state in which the CRTEX
+    // producer port is reported in the "origin".
+    if (callee_port != nullptr && callee_port->root().is_producer()) {
+      origin["port"] = callee_port->to_json();
+    }
 
-      OriginSet leaves;
-      for (const auto& frame : *this) {
-        leaves.join_with(frame.origins());
-      }
-      if (!leaves.empty()) {
-        origin["leaves"] = leaves.to_json();
-      }
-
+    if (!origin.empty()) {
       taint["origin"] = origin;
     }
   } else if (
@@ -594,17 +590,10 @@ Json::Value LocalTaint::to_json(ExportOriginsMode export_origins_mode) const {
       !call_kind.is_propagation_without_trace()) {
     // Never emit calls for declarations and propagations without traces.
     // Emit it for everything else.
-    auto call = Json::Value(Json::objectValue);
-    if (callee != nullptr) {
-      call["resolves_to"] = callee->to_json();
+    auto call = LocalTaint::next_hop_json(callee, call_position, callee_port);
+    if (!call.empty()) {
+      taint["call"] = call;
     }
-    if (call_position != nullptr) {
-      call["position"] = call_position->to_json();
-    }
-    if (callee_port != nullptr && !callee_port->root().is_leaf()) {
-      call["port"] = callee_port->to_json();
-    }
-    taint["call"] = call;
   }
 
   if (!locally_inferred_features_.is_bottom() &&
@@ -632,6 +621,36 @@ Json::Value LocalTaint::to_json(ExportOriginsMode export_origins_mode) const {
   }
 
   return taint;
+}
+
+Json::Value LocalTaint::next_hop_json(
+    const Method* MT_NULLABLE callee,
+    const Position* MT_NULLABLE callee_position,
+    const AccessPath* MT_NULLABLE callee_port) {
+  auto call = Json::Value(Json::objectValue);
+  if (callee != nullptr) {
+    call["resolves_to"] = callee->to_json();
+  }
+  if (callee_position != nullptr) {
+    call["position"] = callee_position->to_json();
+  }
+  if (callee_port != nullptr && !callee_port->root().is_leaf()) {
+    call["port"] = callee_port->to_json();
+  }
+  return call;
+}
+
+Json::Value LocalTaint::origin_json(
+    const Position* MT_NULLABLE callee_position,
+    const OriginSet& origins) {
+  auto origin = Json::Value(Json::objectValue);
+  if (callee_position != nullptr) {
+    origin["position"] = callee_position->to_json();
+  }
+  if (!origins.empty()) {
+    origin["leaves"] = origins.to_json();
+  }
+  return origin;
 }
 
 } // namespace marianatrench
