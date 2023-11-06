@@ -243,27 +243,29 @@ class AbstractTreeDomain final
 
     const auto& subtree_star = children_.at(PathElement::any_index());
 
-    // Cases:
-    //  - left_tree[*] <= right_tree[r] for all r in R
-    //  - left_tree[*] <= right_tree[*] if right_tree[*] present.
-    for (const auto& [path_element, other_subtree] : other.children_) {
-      if (path_element.is_field()) {
-        continue;
-      }
+    if (!subtree_star.is_bottom()) {
+      // Cases:
+      //  - left_tree[*] <= right_tree[r] for all r in R
+      //  - left_tree[*] <= right_tree[*] if right_tree[*] present.
+      for (const auto& [path_element, other_subtree] : other.children_) {
+        if (path_element.is_field()) {
+          continue;
+        }
 
-      const auto& subtree = children_.at(path_element);
+        const auto& subtree = children_.at(path_element);
 
-      if (!subtree.is_bottom()) {
-        continue; // Already handled.
-      }
+        if (!subtree.is_bottom()) {
+          continue; // Already handled.
+        }
 
-      // Read semantics: we propagate the elements to the children.
-      auto other_subtree_copy = other_subtree;
-      other_subtree_copy.elements_.join_with(other.elements_);
+        // Read semantics: we propagate the elements to the children.
+        auto other_subtree_copy = other_subtree;
+        other_subtree_copy.elements_.join_with(other.elements_);
 
-      // Compare with left_tree[*]
-      if (!subtree_star.leq(other_subtree_copy)) {
-        return false;
+        // Compare with left_tree[*]
+        if (!subtree_star.leq(other_subtree_copy)) {
+          return false;
+        }
       }
     }
 
