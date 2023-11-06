@@ -173,7 +173,9 @@ Types::Types(const Options& options, const DexStoresVector& stores) {
 
   if (!options.disable_global_type_analysis()) {
     Timer global_timer;
-    type_analyzer::global::GlobalTypeAnalysis analysis;
+    type_analyzer::global::GlobalTypeAnalysis analysis(
+        /* max_global_analysis_iteration */ 10,
+        /* use_multiple_callee_callgraph */ true);
     global_type_analyzer_ = analysis.analyze(scope);
 
     LOG(1,
