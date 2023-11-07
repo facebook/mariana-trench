@@ -924,13 +924,6 @@
           ],
           "origin" : 
           {
-            "leaves" : 
-            [
-              {
-                "method" : "Lcom/mariana_trench/artificial/ArrayAllocation;.allocateArray:(I)V",
-                "port" : "Argument(0)"
-              }
-            ],
             "position" : 
             {
               "line" : 64,
@@ -974,13 +967,6 @@
           ],
           "origin" : 
           {
-            "leaves" : 
-            [
-              {
-                "method" : "Lcom/mariana_trench/artificial/ArrayAllocation;.allocateArray:(I)V",
-                "port" : "Argument(0)"
-              }
-            ],
             "position" : 
             {
               "line" : 13,
@@ -1014,13 +1000,6 @@
           ],
           "origin" : 
           {
-            "leaves" : 
-            [
-              {
-                "method" : "Lcom/facebook/marianatrench/integrationtests/ArrayAllocation;.source:()I",
-                "port" : "Return"
-              }
-            ],
             "method" : "Lcom/facebook/marianatrench/integrationtests/ArrayAllocation;.source:()I",
             "position" : 
             {
@@ -1118,13 +1097,6 @@
           ],
           "origin" : 
           {
-            "leaves" : 
-            [
-              {
-                "method" : "Lcom/facebook/marianatrench/integrationtests/ArrayAllocation;.source:()I",
-                "port" : "Return"
-              }
-            ],
             "method" : "Lcom/facebook/marianatrench/integrationtests/ArrayAllocation;.source:()I",
             "position" : 
             {
@@ -1181,13 +1153,6 @@
           ],
           "origin" : 
           {
-            "leaves" : 
-            [
-              {
-                "method" : "Lcom/mariana_trench/artificial/ArrayAllocation;.allocateArray:(I)V",
-                "port" : "Argument(0)"
-              }
-            ],
             "position" : 
             {
               "line" : 18,
@@ -1236,13 +1201,6 @@
           ],
           "origin" : 
           {
-            "leaves" : 
-            [
-              {
-                "method" : "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;",
-                "port" : "Return"
-              }
-            ],
             "method" : "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;",
             "position" : 
             {
@@ -1288,13 +1246,6 @@
           ],
           "origin" : 
           {
-            "leaves" : 
-            [
-              {
-                "method" : "Lcom/mariana_trench/artificial/ArrayAllocation;.allocateArray:(I)V",
-                "port" : "Argument(0)"
-              }
-            ],
             "position" : 
             {
               "line" : 22,
@@ -1343,13 +1294,6 @@
           ],
           "origin" : 
           {
-            "leaves" : 
-            [
-              {
-                "method" : "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;",
-                "port" : "Return"
-              }
-            ],
             "method" : "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;",
             "position" : 
             {
@@ -1395,13 +1339,6 @@
           ],
           "origin" : 
           {
-            "leaves" : 
-            [
-              {
-                "method" : "Lcom/mariana_trench/artificial/ArrayAllocation;.allocateArray:(I)V",
-                "port" : "Argument(0)"
-              }
-            ],
             "position" : 
             {
               "line" : 24,
@@ -1450,13 +1387,6 @@
           ],
           "origin" : 
           {
-            "leaves" : 
-            [
-              {
-                "method" : "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;",
-                "port" : "Return"
-              }
-            ],
             "method" : "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;",
             "position" : 
             {
@@ -1509,13 +1439,6 @@
           ],
           "origin" : 
           {
-            "leaves" : 
-            [
-              {
-                "method" : "Lcom/mariana_trench/artificial/ArrayAllocation;.allocateArray:(I)V",
-                "port" : "Argument(0)"
-              }
-            ],
             "position" : 
             {
               "line" : 36,
@@ -1549,13 +1472,6 @@
           ],
           "origin" : 
           {
-            "leaves" : 
-            [
-              {
-                "method" : "Lcom/facebook/marianatrench/integrationtests/ArrayAllocation;.source:()I",
-                "port" : "Return"
-              }
-            ],
             "method" : "Lcom/facebook/marianatrench/integrationtests/ArrayAllocation;.source:()I",
             "position" : 
             {
@@ -1608,13 +1524,6 @@
           ],
           "origin" : 
           {
-            "leaves" : 
-            [
-              {
-                "method" : "Lcom/mariana_trench/artificial/ArrayAllocation;.allocateArray:(I)V",
-                "port" : "Argument(0)"
-              }
-            ],
             "position" : 
             {
               "line" : 49,
@@ -1648,13 +1557,6 @@
           ],
           "origin" : 
           {
-            "leaves" : 
-            [
-              {
-                "method" : "Lcom/facebook/marianatrench/integrationtests/ArrayAllocation;.source:()I",
-                "port" : "Return"
-              }
-            ],
             "method" : "Lcom/facebook/marianatrench/integrationtests/ArrayAllocation;.source:()I",
             "position" : 
             {
@@ -1707,13 +1609,6 @@
           ],
           "origin" : 
           {
-            "leaves" : 
-            [
-              {
-                "method" : "Lcom/mariana_trench/artificial/ArrayAllocation;.allocateArray:(I)V",
-                "port" : "Argument(0)"
-              }
-            ],
             "position" : 
             {
               "line" : 42,
@@ -1747,13 +1642,6 @@
           ],
           "origin" : 
           {
-            "leaves" : 
-            [
-              {
-                "method" : "Lcom/facebook/marianatrench/integrationtests/ArrayAllocation;.source:()I",
-                "port" : "Return"
-              }
-            ],
             "method" : "Lcom/facebook/marianatrench/integrationtests/ArrayAllocation;.source:()I",
             "position" : 
             {
@@ -1806,13 +1694,6 @@
           ],
           "origin" : 
           {
-            "leaves" : 
-            [
-              {
-                "method" : "Lcom/mariana_trench/artificial/ArrayAllocation;.allocateArray:(I)V",
-                "port" : "Argument(0)"
-              }
-            ],
             "position" : 
             {
               "line" : 55,
@@ -1846,13 +1727,6 @@
           ],
           "origin" : 
           {
-            "leaves" : 
-            [
-              {
-                "method" : "Lcom/facebook/marianatrench/integrationtests/ArrayAllocation;.source:()I",
-                "port" : "Return"
-              }
-            ],
             "method" : "Lcom/facebook/marianatrench/integrationtests/ArrayAllocation;.source:()I",
             "position" : 
             {
@@ -1905,13 +1779,6 @@
           ],
           "origin" : 
           {
-            "leaves" : 
-            [
-              {
-                "method" : "Lcom/mariana_trench/artificial/ArrayAllocation;.allocateArray:(I)V",
-                "port" : "Argument(0)"
-              }
-            ],
             "position" : 
             {
               "line" : 30,
@@ -1945,13 +1812,6 @@
           ],
           "origin" : 
           {
-            "leaves" : 
-            [
-              {
-                "method" : "Lcom/facebook/marianatrench/integrationtests/ArrayAllocation;.source:()I",
-                "port" : "Return"
-              }
-            ],
             "method" : "Lcom/facebook/marianatrench/integrationtests/ArrayAllocation;.source:()I",
             "position" : 
             {

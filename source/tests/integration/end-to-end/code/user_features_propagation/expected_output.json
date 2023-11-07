@@ -1046,13 +1046,6 @@
           },
           "origin" : 
           {
-            "leaves" : 
-            [
-              {
-                "method" : "Lcom/facebook/marianatrench/integrationtests/UserFeaturesPropagation;.source:()Ljava/lang/Object;",
-                "port" : "Return"
-              }
-            ],
             "method" : "Lcom/facebook/marianatrench/integrationtests/UserFeaturesPropagation;.source:()Ljava/lang/Object;",
             "position" : 
             {

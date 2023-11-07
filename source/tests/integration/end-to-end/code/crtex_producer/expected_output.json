@@ -962,17 +962,6 @@
           },
           "origin" : 
           {
-            "leaves" : 
-            [
-              {
-                "canonical_name" : "Lcom/facebook/marianatrench/integrationtests/Crtex;.startActivityHelper:(Landroid/content/Intent;Landroid/app/Activity;)V__via-type:Lcom/facebook/marianatrench/integrationtests/Crtex;",
-                "port" : "Anchor.Argument(0)"
-              },
-              {
-                "method" : "Lcom/facebook/marianatrench/integrationtests/Crtex;.startActivityHelper:(Landroid/content/Intent;Landroid/app/Activity;)V",
-                "port" : "Argument(0)"
-              }
-            ],
             "method" : "Lcom/facebook/marianatrench/integrationtests/Crtex;.startActivityHelper:(Landroid/content/Intent;Landroid/app/Activity;)V",
             "position" : 
             {
@@ -1076,13 +1065,6 @@
           ],
           "origin" : 
           {
-            "leaves" : 
-            [
-              {
-                "method" : "Lcom/facebook/marianatrench/integrationtests/Crtex;.crtex_with_regular_sink:(Landroid/content/Intent;)V",
-                "port" : "Argument(0)"
-              }
-            ],
             "method" : "Lcom/facebook/marianatrench/integrationtests/Crtex;.crtex_with_regular_sink:(Landroid/content/Intent;)V",
             "position" : 
             {
@@ -1124,17 +1106,6 @@
           ],
           "origin" : 
           {
-            "leaves" : 
-            [
-              {
-                "canonical_name" : "Lcom/facebook/marianatrench/integrationtests/Crtex;.crtex_with_regular_sink:(Landroid/content/Intent;)V",
-                "port" : "Anchor.Argument(0)"
-              },
-              {
-                "method" : "Lcom/facebook/marianatrench/integrationtests/Crtex;.crtex_with_regular_sink:(Landroid/content/Intent;)V",
-                "port" : "Argument(0)"
-              }
-            ],
             "method" : "Lcom/facebook/marianatrench/integrationtests/Crtex;.crtex_with_regular_sink:(Landroid/content/Intent;)V",
             "position" : 
             {
@@ -1285,21 +1256,6 @@
           },
           "origin" : 
           {
-            "leaves" : 
-            [
-              {
-                "canonical_name" : "Lcom/facebook/marianatrench/integrationtests/Crtex;.multiple_canonical_names:(Landroid/content/Intent;Landroid/app/Activity;I)V",
-                "port" : "Anchor.Argument(0)"
-              },
-              {
-                "canonical_name" : "Lcom/facebook/marianatrench/integrationtests/Crtex;.multiple_canonical_names:(Landroid/content/Intent;Landroid/app/Activity;I)V__via-type:Landroid/app/Activity;",
-                "port" : "Anchor.Argument(0)"
-              },
-              {
-                "method" : "Lcom/facebook/marianatrench/integrationtests/Crtex;.multiple_canonical_names:(Landroid/content/Intent;Landroid/app/Activity;I)V",
-                "port" : "Argument(0)"
-              }
-            ],
             "method" : "Lcom/facebook/marianatrench/integrationtests/Crtex;.multiple_canonical_names:(Landroid/content/Intent;Landroid/app/Activity;I)V",
             "position" : 
             {
@@ -1347,17 +1303,6 @@
           ],
           "origin" : 
           {
-            "leaves" : 
-            [
-              {
-                "canonical_name" : "Lcom/facebook/marianatrench/integrationtests/Crtex;.multiple_canonical_names:(Landroid/content/Intent;Landroid/app/Activity;I)V",
-                "port" : "Anchor.Argument(1)"
-              },
-              {
-                "method" : "Lcom/facebook/marianatrench/integrationtests/Crtex;.multiple_canonical_names:(Landroid/content/Intent;Landroid/app/Activity;I)V",
-                "port" : "Argument(1)"
-              }
-            ],
             "method" : "Lcom/facebook/marianatrench/integrationtests/Crtex;.multiple_canonical_names:(Landroid/content/Intent;Landroid/app/Activity;I)V",
             "position" : 
             {
@@ -1490,17 +1435,6 @@
           },
           "origin" : 
           {
-            "leaves" : 
-            [
-              {
-                "canonical_name" : "Lcom/facebook/marianatrench/integrationtests/Crtex;.startActivityHelper:(Landroid/content/Intent;Landroid/app/Activity;)V__via-type:Lcom/facebook/marianatrench/integrationtests/Crtex;",
-                "port" : "Anchor.Argument(0)"
-              },
-              {
-                "method" : "Lcom/facebook/marianatrench/integrationtests/Crtex;.startActivityHelper:(Landroid/content/Intent;Landroid/app/Activity;)V",
-                "port" : "Argument(0)"
-              }
-            ],
             "method" : "Lcom/facebook/marianatrench/integrationtests/Crtex;.startActivityHelper:(Landroid/content/Intent;Landroid/app/Activity;)V",
             "position" : 
             {
@@ -1537,13 +1471,6 @@
           ],
           "origin" : 
           {
-            "leaves" : 
-            [
-              {
-                "method" : "Landroid/content/Intent;.<init>:(Ljava/lang/String;Landroid/net/Uri;)V",
-                "port" : "Argument(0)"
-              }
-            ],
             "method" : "Landroid/content/Intent;.<init>:(Ljava/lang/String;Landroid/net/Uri;)V",
             "position" : 
             {

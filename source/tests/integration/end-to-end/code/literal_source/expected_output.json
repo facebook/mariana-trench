@@ -1127,13 +1127,6 @@
           ],
           "origin" : 
           {
-            "leaves" : 
-            [
-              {
-                "method" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
-                "port" : "Argument(0)"
-              }
-            ],
             "method" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
             "position" : 
             {
@@ -1204,13 +1197,6 @@
           ],
           "origin" : 
           {
-            "leaves" : 
-            [
-              {
-                "method" : "Lcom/facebook/marianatrench/integrationtests/RegexSource;.sink:(Ljava/lang/String;Ljava/lang/String;)V",
-                "port" : "Argument(1)"
-              }
-            ],
             "method" : "Lcom/facebook/marianatrench/integrationtests/RegexSource;.sink:(Ljava/lang/String;Ljava/lang/String;)V",
             "position" : 
             {
@@ -1247,13 +1233,6 @@
           ],
           "origin" : 
           {
-            "leaves" : 
-            [
-              {
-                "method" : "Lcom/facebook/marianatrench/integrationtests/RegexSource;.getAttackerControlledInput:()Ljava/lang/String;",
-                "port" : "Return"
-              }
-            ],
             "method" : "Lcom/facebook/marianatrench/integrationtests/RegexSource;.getAttackerControlledInput:()Ljava/lang/String;",
             "position" : 
             {
@@ -1320,13 +1299,6 @@
           ],
           "origin" : 
           {
-            "leaves" : 
-            [
-              {
-                "method" : "Ljava/text/MessageFormat;.format:(Ljava/lang/String;[Ljava/lang/Object;)Ljava/lang/String;",
-                "port" : "Argument(1)"
-              }
-            ],
             "method" : "Ljava/text/MessageFormat;.format:(Ljava/lang/String;[Ljava/lang/Object;)Ljava/lang/String;",
             "position" : 
             {
@@ -1378,13 +1350,6 @@
           ],
           "origin" : 
           {
-            "leaves" : 
-            [
-              {
-                "method" : "Lcom/facebook/marianatrench/integrationtests/RegexSource;.getAttackerControlledInput:()Ljava/lang/String;",
-                "port" : "Return"
-              }
-            ],
             "method" : "Lcom/facebook/marianatrench/integrationtests/RegexSource;.getAttackerControlledInput:()Ljava/lang/String;",
             "position" : 
             {
@@ -1451,13 +1416,6 @@
           ],
           "origin" : 
           {
-            "leaves" : 
-            [
-              {
-                "method" : "Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;",
-                "port" : "Argument(1)"
-              }
-            ],
             "method" : "Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;",
             "position" : 
             {
@@ -1528,13 +1486,6 @@
           ],
           "origin" : 
           {
-            "leaves" : 
-            [
-              {
-                "method" : "Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;",
-                "port" : "Argument(1)"
-              }
-            ],
             "method" : "Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;",
             "position" : 
             {
@@ -1571,13 +1522,6 @@
           ],
           "origin" : 
           {
-            "leaves" : 
-            [
-              {
-                "method" : "Lcom/facebook/marianatrench/integrationtests/RegexSource;.getAttackerControlledInput:()Ljava/lang/String;",
-                "port" : "Return"
-              }
-            ],
             "method" : "Lcom/facebook/marianatrench/integrationtests/RegexSource;.getAttackerControlledInput:()Ljava/lang/String;",
             "position" : 
             {
@@ -1636,13 +1580,6 @@
           ],
           "origin" : 
           {
-            "leaves" : 
-            [
-              {
-                "method" : "Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;",
-                "port" : "Argument(1)"
-              }
-            ],
             "method" : "Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;",
             "position" : 
             {
@@ -1713,13 +1650,6 @@
           ],
           "origin" : 
           {
-            "leaves" : 
-            [
-              {
-                "method" : "Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;",
-                "port" : "Argument(1)"
-              }
-            ],
             "method" : "Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;",
             "position" : 
             {
@@ -1756,13 +1686,6 @@
           ],
           "origin" : 
           {
-            "leaves" : 
-            [
-              {
-                "method" : "Lcom/facebook/marianatrench/integrationtests/RegexSource;.getAttackerControlledInput:()Ljava/lang/String;",
-                "port" : "Return"
-              }
-            ],
             "method" : "Lcom/facebook/marianatrench/integrationtests/RegexSource;.getAttackerControlledInput:()Ljava/lang/String;",
             "position" : 
             {
@@ -1829,13 +1752,6 @@
           ],
           "origin" : 
           {
-            "leaves" : 
-            [
-              {
-                "method" : "Ljava/lang/String;.format:(Ljava/lang/String;[Ljava/lang/Object;)Ljava/lang/String;",
-                "port" : "Argument(1)"
-              }
-            ],
             "method" : "Ljava/lang/String;.format:(Ljava/lang/String;[Ljava/lang/Object;)Ljava/lang/String;",
             "position" : 
             {
@@ -1887,13 +1803,6 @@
           ],
           "origin" : 
           {
-            "leaves" : 
-            [
-              {
-                "method" : "Lcom/facebook/marianatrench/integrationtests/RegexSource;.getAttackerControlledInput:()Ljava/lang/String;",
-                "port" : "Return"
-              }
-            ],
             "method" : "Lcom/facebook/marianatrench/integrationtests/RegexSource;.getAttackerControlledInput:()Ljava/lang/String;",
             "position" : 
             {

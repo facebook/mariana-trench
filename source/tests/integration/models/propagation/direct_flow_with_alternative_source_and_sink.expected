@@ -42,13 +42,6 @@
               ],
               "origin" :
               {
-                "leaves" :
-                [
-                  {
-                    "method" : "LSink;.sink_with_two_kinds:(LData;)V",
-                    "port" : "Argument(1)"
-                  }
-                ],
                 "method" : "LSink;.sink_with_two_kinds:(LData;)V",
                 "position" :
                 {
@@ -83,13 +76,6 @@
               ],
               "origin" :
               {
-                "leaves" :
-                [
-                  {
-                    "method" : "LSource;.alternative_source:()LData;",
-                    "port" : "Return"
-                  }
-                ],
                 "method" : "LSource;.alternative_source:()LData;",
                 "position" :
                 {

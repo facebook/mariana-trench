@@ -910,13 +910,6 @@
           ],
           "origin" : 
           {
-            "leaves" : 
-            [
-              {
-                "canonical_name" : "Producer::writeCrtexField",
-                "port" : "Producer.153993.Argument(0)"
-              }
-            ],
             "port" : "Producer.153993.Argument(0)"
           }
         }
@@ -967,13 +960,6 @@
           ],
           "origin" : 
           {
-            "leaves" : 
-            [
-              {
-                "method" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
-                "port" : "Argument(0)"
-              }
-            ],
             "method" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
             "position" : 
             {
@@ -1010,13 +996,6 @@
           ],
           "origin" : 
           {
-            "leaves" : 
-            [
-              {
-                "canonical_name" : "Landroid/app/Activity;.startActivity:(Landroid/content/Intent;Landroid/os/Bundle;)V__via-type:Lcom/facebook/browser/lite/BrowserLiteActivity;",
-                "port" : "Producer.153993.Argument(0)"
-              }
-            ],
             "port" : "Producer.153993.Argument(0)",
             "position" : 
             {
@@ -1058,13 +1037,6 @@
           ],
           "origin" : 
           {
-            "leaves" : 
-            [
-              {
-                "canonical_name" : "Landroid/app/Activity;.startActivity:(Landroid/content/Intent;Landroid/os/Bundle;)V__via-type:Lcom/facebook/browser/lite/BrowserLiteActivity;",
-                "port" : "Producer.153993.Argument(0)"
-              }
-            ],
             "port" : "Producer.153993.Argument(0)"
           }
         }
@@ -1105,13 +1077,6 @@
           ],
           "origin" : 
           {
-            "leaves" : 
-            [
-              {
-                "method" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
-                "port" : "Argument(0)"
-              }
-            ],
             "method" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
             "position" : 
             {

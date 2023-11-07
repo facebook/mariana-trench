@@ -57,7 +57,7 @@ class CallInfo final {
     return CallInfo(nullptr, CallKind::declaration(), nullptr, nullptr);
   }
 
-  Json::Value to_json(const OriginSet& origins) const;
+  Json::Value to_json() const;
 
   friend bool operator==(const CallInfo& self, const CallInfo& other);
 

@@ -534,15 +534,12 @@ void LocalTaint::add(const Frame& frame) {
 }
 
 Json::Value LocalTaint::to_json(ExportOriginsMode export_origins_mode) const {
-  OriginSet leaves;
-
   auto kinds = Json::Value(Json::arrayValue);
   for (const auto& frame : *this) {
-    leaves.join_with(frame.origins());
     kinds.append(frame.to_json(export_origins_mode));
   }
 
-  auto taint = call_info_.to_json(leaves);
+  auto taint = call_info_.to_json();
   mt_assert(taint.isObject() && !taint.isNull());
   taint["kinds"] = kinds;
 

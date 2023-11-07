@@ -934,13 +934,6 @@
           ],
           "origin" : 
           {
-            "leaves" : 
-            [
-              {
-                "method" : "Landroid_location_api/ActivityUsingAndroidLocationManager;.onLocationChanged:(Landroid/location/Location;)V",
-                "port" : "Argument(1)"
-              }
-            ],
             "position" : 
             {
               "line" : 25,
@@ -987,13 +980,6 @@
           ],
           "origin" : 
           {
-            "leaves" : 
-            [
-              {
-                "method" : "Landroid/util/Log;.e:(Ljava/lang/String;Ljava/lang/String;)I",
-                "port" : "Argument(1)"
-              }
-            ],
             "method" : "Landroid/util/Log;.e:(Ljava/lang/String;Ljava/lang/String;)I",
             "position" : 
             {
@@ -1030,13 +1016,6 @@
           ],
           "origin" : 
           {
-            "leaves" : 
-            [
-              {
-                "method" : "Landroid/location/Location;.toString:()Ljava/lang/String;",
-                "port" : "Return"
-              }
-            ],
             "method" : "Landroid/location/Location;.toString:()Ljava/lang/String;",
             "position" : 
             {

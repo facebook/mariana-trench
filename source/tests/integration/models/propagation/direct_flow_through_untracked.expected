@@ -46,13 +46,6 @@
               ],
               "origin" :
               {
-                "leaves" :
-                [
-                  {
-                    "method" : "LSink;.interface_sink:(LData;)V",
-                    "port" : "Argument(1)"
-                  }
-                ],
                 "method" : "LSink;.interface_sink:(LData;)V",
                 "position" :
                 {
@@ -94,13 +87,6 @@
               },
               "origin" :
               {
-                "leaves" :
-                [
-                  {
-                    "method" : "LSource;.source:()LData;",
-                    "port" : "Return"
-                  }
-                ],
                 "method" : "LSource;.source:()LData;",
                 "position" :
                 {

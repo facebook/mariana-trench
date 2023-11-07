@@ -1318,13 +1318,6 @@
           ],
           "origin" : 
           {
-            "leaves" : 
-            [
-              {
-                "method" : "Landroid/app/Activity;.getIntent:()Landroid/content/Intent;",
-                "port" : "Return"
-              }
-            ],
             "method" : "Landroid/app/Activity;.getIntent:()Landroid/content/Intent;",
             "position" : 
             {
@@ -1381,13 +1374,6 @@
           ],
           "origin" : 
           {
-            "leaves" : 
-            [
-              {
-                "method" : "Lcom/instagram/common/analytics/intf/AnalyticsEvent;.addExtra:(Ljava/lang/String;Ljava/lang/String;)Lcom/instagram/common/analytics/intf/AnalyticsEvent;",
-                "port" : "Argument(2)"
-              }
-            ],
             "method" : "Lcom/instagram/common/analytics/intf/AnalyticsEvent;.addExtra:(Ljava/lang/String;Ljava/lang/String;)Lcom/instagram/common/analytics/intf/AnalyticsEvent;",
             "position" : 
             {
@@ -1427,13 +1413,6 @@
           ],
           "origin" : 
           {
-            "leaves" : 
-            [
-              {
-                "method" : "Lcom/instagram/common/analytics/intf/AnalyticsEvent;.addExtra:(Ljava/lang/String;Ljava/lang/String;)Lcom/instagram/common/analytics/intf/AnalyticsEvent;",
-                "port" : "Argument(2)"
-              }
-            ],
             "method" : "Lcom/instagram/common/analytics/intf/AnalyticsEvent;.addExtra:(Ljava/lang/String;Ljava/lang/String;)Lcom/instagram/common/analytics/intf/AnalyticsEvent;",
             "position" : 
             {
@@ -1823,13 +1802,6 @@
           ],
           "origin" : 
           {
-            "leaves" : 
-            [
-              {
-                "method" : "Lcom/instagram/common/analytics/intf/AnalyticsEvent;.addExtra:(Ljava/lang/String;Ljava/lang/String;)Lcom/instagram/common/analytics/intf/AnalyticsEvent;",
-                "port" : "Argument(2)"
-              }
-            ],
             "method" : "Lcom/instagram/common/analytics/intf/AnalyticsEvent;.addExtra:(Ljava/lang/String;Ljava/lang/String;)Lcom/instagram/common/analytics/intf/AnalyticsEvent;",
             "position" : 
             {
@@ -1879,13 +1851,6 @@
           ],
           "origin" : 
           {
-            "leaves" : 
-            [
-              {
-                "method" : "Landroid/app/Activity;.getIntent:()Landroid/content/Intent;",
-                "port" : "Return"
-              }
-            ],
             "method" : "Landroid/app/Activity;.getIntent:()Landroid/content/Intent;",
             "position" : 
             {

@@ -16,7 +16,7 @@
 namespace marianatrench {
 
 Json::Value ExtraTrace::to_json() const {
-  auto extra_trace = call_info_.to_json(/* origins */ {});
+  auto extra_trace = call_info_.to_json();
   mt_assert(extra_trace.isObject() && !extra_trace.isNull());
   extra_trace["kind"] = kind_->to_trace_string();
   return extra_trace;

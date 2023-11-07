@@ -12,6 +12,7 @@
 namespace marianatrench {
 
 namespace {
+
 /**
  * Returns a JSON representation of the next hop. Used only when there is a
  * valid next hop. Use `origin_json()` otherwise.
@@ -38,22 +39,17 @@ Json::Value next_hop_json(
  * terminal, a.k.a. a leaf call, or the origin of the taint. If there is a
  * next hop, use `next_hop_json()`.
  */
-Json::Value origin_json(
-    const Position* MT_NULLABLE callee_position,
-    const OriginSet& origins) {
+Json::Value origin_json(const Position* MT_NULLABLE callee_position) {
   auto origin = Json::Value(Json::objectValue);
   if (callee_position != nullptr) {
     origin["position"] = callee_position->to_json();
-  }
-  if (!origins.empty()) {
-    origin["leaves"] = origins.to_json();
   }
   return origin;
 }
 
 } // namespace
 
-Json::Value CallInfo::to_json(const OriginSet& origins) const {
+Json::Value CallInfo::to_json() const {
   auto result = Json::Value(Json::objectValue);
 
   // The next hop is indicated by a CallInfo object.
@@ -74,7 +70,7 @@ Json::Value CallInfo::to_json(const OriginSet& origins) const {
     // Since we don't emit calls for origins, we need to provide the origin
     // location for proper visualisation.
 
-    auto origin = origin_json(call_position, origins);
+    auto origin = origin_json(call_position);
 
     // TODO(T163918472): Remove this in favor of "leaves" after parser is
     // updated. New format should work for CRTEX as well. Callee should

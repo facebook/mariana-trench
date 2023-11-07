@@ -41,13 +41,6 @@
               ],
               "origin" :
               {
-                "leaves" :
-                [
-                  {
-                    "method" : "LSource;.source:()LData;",
-                    "port" : "Return"
-                  }
-                ],
                 "method" : "LSource;.source:()LData;",
                 "position" :
                 {
