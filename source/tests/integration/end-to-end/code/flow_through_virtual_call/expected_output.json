@@ -252,6 +252,11 @@
       "output" : 
       [
         {
+          "call_info" : 
+          {
+            "call_kind" : "Propagation",
+            "port" : "Return"
+          },
           "kinds" : 
           [
             {
@@ -271,6 +276,11 @@
       "output" : 
       [
         {
+          "call_info" : 
+          {
+            "call_kind" : "Propagation",
+            "port" : "Return"
+          },
           "kinds" : 
           [
             {
@@ -290,6 +300,11 @@
       "output" : 
       [
         {
+          "call_info" : 
+          {
+            "call_kind" : "Propagation",
+            "port" : "Return"
+          },
           "kinds" : 
           [
             {
@@ -319,6 +334,11 @@
       "output" : 
       [
         {
+          "call_info" : 
+          {
+            "call_kind" : "Propagation",
+            "port" : "Return"
+          },
           "kinds" : 
           [
             {
@@ -338,6 +358,11 @@
       "output" : 
       [
         {
+          "call_info" : 
+          {
+            "call_kind" : "Propagation",
+            "port" : "Argument(0)"
+          },
           "kinds" : 
           [
             {
@@ -351,6 +376,11 @@
           ]
         },
         {
+          "call_info" : 
+          {
+            "call_kind" : "Propagation",
+            "port" : "Return"
+          },
           "kinds" : 
           [
             {
@@ -380,6 +410,11 @@
       "output" : 
       [
         {
+          "call_info" : 
+          {
+            "call_kind" : "Propagation",
+            "port" : "Return"
+          },
           "kinds" : 
           [
             {
@@ -399,6 +434,11 @@
       "output" : 
       [
         {
+          "call_info" : 
+          {
+            "call_kind" : "Propagation",
+            "port" : "Argument(0)"
+          },
           "kinds" : 
           [
             {
@@ -412,6 +452,11 @@
           ]
         },
         {
+          "call_info" : 
+          {
+            "call_kind" : "Propagation",
+            "port" : "Return"
+          },
           "kinds" : 
           [
             {
@@ -441,6 +486,11 @@
       "output" : 
       [
         {
+          "call_info" : 
+          {
+            "call_kind" : "Propagation",
+            "port" : "Return"
+          },
           "kinds" : 
           [
             {
@@ -460,6 +510,11 @@
       "output" : 
       [
         {
+          "call_info" : 
+          {
+            "call_kind" : "Propagation",
+            "port" : "Argument(0)"
+          },
           "kinds" : 
           [
             {
@@ -473,6 +528,11 @@
           ]
         },
         {
+          "call_info" : 
+          {
+            "call_kind" : "Propagation",
+            "port" : "Return"
+          },
           "kinds" : 
           [
             {
@@ -509,6 +569,11 @@
       "output" : 
       [
         {
+          "call_info" : 
+          {
+            "call_kind" : "Propagation",
+            "port" : "Argument(0)"
+          },
           "kinds" : 
           [
             {
@@ -528,6 +593,11 @@
       "output" : 
       [
         {
+          "call_info" : 
+          {
+            "call_kind" : "Propagation",
+            "port" : "Argument(0)"
+          },
           "kinds" : 
           [
             {
@@ -547,6 +617,11 @@
       "output" : 
       [
         {
+          "call_info" : 
+          {
+            "call_kind" : "Propagation",
+            "port" : "Argument(0)"
+          },
           "kinds" : 
           [
             {
@@ -584,6 +659,11 @@
       "output" : 
       [
         {
+          "call_info" : 
+          {
+            "call_kind" : "Propagation",
+            "port" : "Return"
+          },
           "kinds" : 
           [
             {
@@ -621,6 +701,11 @@
       "output" : 
       [
         {
+          "call_info" : 
+          {
+            "call_kind" : "Propagation",
+            "port" : "Return"
+          },
           "kinds" : 
           [
             {
@@ -657,6 +742,11 @@
       "output" : 
       [
         {
+          "call_info" : 
+          {
+            "call_kind" : "Propagation",
+            "port" : "Return"
+          },
           "kinds" : 
           [
             {
@@ -676,6 +766,11 @@
       "output" : 
       [
         {
+          "call_info" : 
+          {
+            "call_kind" : "Propagation",
+            "port" : "Return"
+          },
           "kinds" : 
           [
             {
@@ -695,6 +790,11 @@
       "output" : 
       [
         {
+          "call_info" : 
+          {
+            "call_kind" : "Propagation",
+            "port" : "Return"
+          },
           "kinds" : 
           [
             {
@@ -898,6 +998,11 @@
       "output" : 
       [
         {
+          "call_info" : 
+          {
+            "call_kind" : "Propagation",
+            "port" : "Argument(0)"
+          },
           "kinds" : 
           [
             {
@@ -935,6 +1040,11 @@
       "output" : 
       [
         {
+          "call_info" : 
+          {
+            "call_kind" : "Propagation",
+            "port" : "Argument(0)"
+          },
           "kinds" : 
           [
             {
@@ -972,6 +1082,19 @@
       "taint" : 
       [
         {
+          "call_info" : 
+          {
+            "call_kind" : "Origin",
+            "port" : "Argument(0)",
+            "position" : 
+            {
+              "end" : 18,
+              "line" : 19,
+              "path" : "Flow.java",
+              "start" : 18
+            },
+            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V"
+          },
           "kinds" : 
           [
             {
@@ -1022,6 +1145,11 @@
       "output" : 
       [
         {
+          "call_info" : 
+          {
+            "call_kind" : "Propagation",
+            "port" : "Argument(0)"
+          },
           "kinds" : 
           [
             {
@@ -1059,6 +1187,17 @@
       "taint" : 
       [
         {
+          "call_info" : 
+          {
+            "call_kind" : "Origin",
+            "port" : "Argument(0)",
+            "position" : 
+            {
+              "line" : 25,
+              "path" : "Flow.java"
+            },
+            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V"
+          },
           "kinds" : 
           [
             {
@@ -1118,6 +1257,20 @@
         {
           "call" : 
           {
+            "call_kind" : "CallSite",
+            "port" : "Argument(1)",
+            "position" : 
+            {
+              "end" : 11,
+              "line" : 31,
+              "path" : "Flow.java",
+              "start" : 11
+            },
+            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/Flow$C;.sink:(Ljava/lang/Object;)V"
+          },
+          "call_info" : 
+          {
+            "call_kind" : "CallSite",
             "port" : "Argument(1)",
             "position" : 
             {
@@ -1154,6 +1307,19 @@
       "sources" : 
       [
         {
+          "call_info" : 
+          {
+            "call_kind" : "Origin",
+            "port" : "Return",
+            "position" : 
+            {
+              "end" : 27,
+              "line" : 30,
+              "path" : "Flow.java",
+              "start" : 22
+            },
+            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;"
+          },
           "kinds" : 
           [
             {
@@ -1217,6 +1383,11 @@
       "output" : 
       [
         {
+          "call_info" : 
+          {
+            "call_kind" : "Propagation",
+            "port" : "Return"
+          },
           "kinds" : 
           [
             {
@@ -1246,6 +1417,10 @@
       "taint" : 
       [
         {
+          "call_info" : 
+          {
+            "call_kind" : "Declaration"
+          },
           "kinds" : 
           [
             {
@@ -1273,6 +1448,10 @@
       "taint" : 
       [
         {
+          "call_info" : 
+          {
+            "call_kind" : "Declaration"
+          },
           "kinds" : 
           [
             {
@@ -1395,6 +1574,11 @@
       "output" : 
       [
         {
+          "call_info" : 
+          {
+            "call_kind" : "Propagation",
+            "port" : "Return"
+          },
           "kinds" : 
           [
             {
@@ -1504,6 +1688,11 @@
       "output" : 
       [
         {
+          "call_info" : 
+          {
+            "call_kind" : "Propagation",
+            "port" : "Return"
+          },
           "kinds" : 
           [
             {
@@ -1523,6 +1712,11 @@
       "output" : 
       [
         {
+          "call_info" : 
+          {
+            "call_kind" : "Propagation",
+            "port" : "Return"
+          },
           "kinds" : 
           [
             {
@@ -1630,6 +1824,11 @@
       "output" : 
       [
         {
+          "call_info" : 
+          {
+            "call_kind" : "Propagation",
+            "port" : "Return"
+          },
           "kinds" : 
           [
             {
@@ -1659,6 +1858,11 @@
       "output" : 
       [
         {
+          "call_info" : 
+          {
+            "call_kind" : "Propagation",
+            "port" : "Argument(0)"
+          },
           "kinds" : 
           [
             {

@@ -14,6 +14,10 @@
       "taint" : 
       [
         {
+          "call_info" : 
+          {
+            "call_kind" : "Declaration"
+          },
           "kinds" : 
           [
             {
@@ -72,6 +76,10 @@
       "taint" : 
       [
         {
+          "call_info" : 
+          {
+            "call_kind" : "Declaration"
+          },
           "kinds" : 
           [
             {
@@ -146,6 +154,11 @@
       "output" : 
       [
         {
+          "call_info" : 
+          {
+            "call_kind" : "Propagation",
+            "port" : "Argument(0)"
+          },
           "kinds" : 
           [
             {
@@ -182,6 +195,11 @@
       "output" : 
       [
         {
+          "call_info" : 
+          {
+            "call_kind" : "Propagation",
+            "port" : "Return"
+          },
           "kinds" : 
           [
             {
@@ -346,6 +364,11 @@
       "output" : 
       [
         {
+          "call_info" : 
+          {
+            "call_kind" : "Propagation",
+            "port" : "Return"
+          },
           "kinds" : 
           [
             {
@@ -365,6 +388,11 @@
       "output" : 
       [
         {
+          "call_info" : 
+          {
+            "call_kind" : "Propagation",
+            "port" : "Return"
+          },
           "kinds" : 
           [
             {
@@ -384,6 +412,11 @@
       "output" : 
       [
         {
+          "call_info" : 
+          {
+            "call_kind" : "Propagation",
+            "port" : "Return"
+          },
           "kinds" : 
           [
             {
@@ -413,6 +446,11 @@
       "output" : 
       [
         {
+          "call_info" : 
+          {
+            "call_kind" : "Propagation",
+            "port" : "Return"
+          },
           "kinds" : 
           [
             {
@@ -432,6 +470,11 @@
       "output" : 
       [
         {
+          "call_info" : 
+          {
+            "call_kind" : "Propagation",
+            "port" : "Argument(0)"
+          },
           "kinds" : 
           [
             {
@@ -445,6 +488,11 @@
           ]
         },
         {
+          "call_info" : 
+          {
+            "call_kind" : "Propagation",
+            "port" : "Return"
+          },
           "kinds" : 
           [
             {
@@ -474,6 +522,11 @@
       "output" : 
       [
         {
+          "call_info" : 
+          {
+            "call_kind" : "Propagation",
+            "port" : "Return"
+          },
           "kinds" : 
           [
             {
@@ -493,6 +546,11 @@
       "output" : 
       [
         {
+          "call_info" : 
+          {
+            "call_kind" : "Propagation",
+            "port" : "Argument(0)"
+          },
           "kinds" : 
           [
             {
@@ -506,6 +564,11 @@
           ]
         },
         {
+          "call_info" : 
+          {
+            "call_kind" : "Propagation",
+            "port" : "Return"
+          },
           "kinds" : 
           [
             {
@@ -535,6 +598,11 @@
       "output" : 
       [
         {
+          "call_info" : 
+          {
+            "call_kind" : "Propagation",
+            "port" : "Return"
+          },
           "kinds" : 
           [
             {
@@ -554,6 +622,11 @@
       "output" : 
       [
         {
+          "call_info" : 
+          {
+            "call_kind" : "Propagation",
+            "port" : "Argument(0)"
+          },
           "kinds" : 
           [
             {
@@ -567,6 +640,11 @@
           ]
         },
         {
+          "call_info" : 
+          {
+            "call_kind" : "Propagation",
+            "port" : "Return"
+          },
           "kinds" : 
           [
             {
@@ -603,6 +681,11 @@
       "output" : 
       [
         {
+          "call_info" : 
+          {
+            "call_kind" : "Propagation",
+            "port" : "Argument(0)"
+          },
           "kinds" : 
           [
             {
@@ -622,6 +705,11 @@
       "output" : 
       [
         {
+          "call_info" : 
+          {
+            "call_kind" : "Propagation",
+            "port" : "Argument(0)"
+          },
           "kinds" : 
           [
             {
@@ -641,6 +729,11 @@
       "output" : 
       [
         {
+          "call_info" : 
+          {
+            "call_kind" : "Propagation",
+            "port" : "Argument(0)"
+          },
           "kinds" : 
           [
             {
@@ -678,6 +771,11 @@
       "output" : 
       [
         {
+          "call_info" : 
+          {
+            "call_kind" : "Propagation",
+            "port" : "Return"
+          },
           "kinds" : 
           [
             {
@@ -707,6 +805,11 @@
       "output" : 
       [
         {
+          "call_info" : 
+          {
+            "call_kind" : "Propagation",
+            "port" : "Return"
+          },
           "kinds" : 
           [
             {
@@ -737,6 +840,11 @@
       "output" : 
       [
         {
+          "call_info" : 
+          {
+            "call_kind" : "Propagation",
+            "port" : "Return"
+          },
           "kinds" : 
           [
             {
@@ -766,6 +874,11 @@
       "output" : 
       [
         {
+          "call_info" : 
+          {
+            "call_kind" : "Propagation",
+            "port" : "Return"
+          },
           "kinds" : 
           [
             {
@@ -795,6 +908,11 @@
       "output" : 
       [
         {
+          "call_info" : 
+          {
+            "call_kind" : "Propagation",
+            "port" : "Return"
+          },
           "kinds" : 
           [
             {
@@ -814,6 +932,11 @@
       "output" : 
       [
         {
+          "call_info" : 
+          {
+            "call_kind" : "Propagation",
+            "port" : "Return"
+          },
           "kinds" : 
           [
             {
@@ -833,6 +956,11 @@
       "output" : 
       [
         {
+          "call_info" : 
+          {
+            "call_kind" : "Propagation",
+            "port" : "Return"
+          },
           "kinds" : 
           [
             {
@@ -995,6 +1123,10 @@
       "taint" : 
       [
         {
+          "call_info" : 
+          {
+            "call_kind" : "Declaration"
+          },
           "kinds" : 
           [
             {
@@ -1034,6 +1166,10 @@
       "taint" : 
       [
         {
+          "call_info" : 
+          {
+            "call_kind" : "Declaration"
+          },
           "kinds" : 
           [
             {
@@ -1083,6 +1219,19 @@
       "sinks" : 
       [
         {
+          "call_info" : 
+          {
+            "call_kind" : "Origin",
+            "port" : "Argument(1)",
+            "position" : 
+            {
+              "end" : 23,
+              "line" : 19,
+              "path" : "DirectFlow.java",
+              "start" : 18
+            },
+            "resolves_to" : "Landroid/app/Activity;.startActivity:(Landroid/content/Intent;)V"
+          },
           "kinds" : 
           [
             {
@@ -1119,6 +1268,19 @@
       "sources" : 
       [
         {
+          "call_info" : 
+          {
+            "call_kind" : "Origin",
+            "port" : "Return",
+            "position" : 
+            {
+              "end" : 28,
+              "line" : 18,
+              "path" : "DirectFlow.java",
+              "start" : 20
+            },
+            "resolves_to" : "Landroid/app/Activity;.getIntent:()Landroid/content/Intent;"
+          },
           "kinds" : 
           [
             {
@@ -1188,6 +1350,19 @@
       "sinks" : 
       [
         {
+          "call_info" : 
+          {
+            "call_kind" : "Origin",
+            "port" : "Argument(0)",
+            "position" : 
+            {
+              "end" : 16,
+              "line" : 14,
+              "path" : "DirectFlowWithSanitizer.java",
+              "start" : 16
+            },
+            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V"
+          },
           "kinds" : 
           [
             {
@@ -1224,6 +1399,19 @@
       "sources" : 
       [
         {
+          "call_info" : 
+          {
+            "call_kind" : "Origin",
+            "port" : "Return",
+            "position" : 
+            {
+              "end" : 27,
+              "line" : 12,
+              "path" : "DirectFlowWithSanitizer.java",
+              "start" : 22
+            },
+            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;"
+          },
           "kinds" : 
           [
             {
@@ -1304,6 +1492,19 @@
       "sinks" : 
       [
         {
+          "call_info" : 
+          {
+            "call_kind" : "Origin",
+            "port" : "Argument(1)",
+            "position" : 
+            {
+              "end" : 64,
+              "line" : 58,
+              "path" : "DirectOpenRedirectFlow.java",
+              "start" : 50
+            },
+            "resolves_to" : "Lcom/facebook/content/SecureContextHelper;.startFacebookActivity:(Landroid/content/Intent;Landroid/content/Context;)V"
+          },
           "kinds" : 
           [
             {
@@ -1340,6 +1541,19 @@
       "sources" : 
       [
         {
+          "call_info" : 
+          {
+            "call_kind" : "Origin",
+            "port" : "Return",
+            "position" : 
+            {
+              "end" : 36,
+              "line" : 26,
+              "path" : "DirectOpenRedirectFlow.java",
+              "start" : 28
+            },
+            "resolves_to" : "Landroid/app/Activity;.getIntent:()Landroid/content/Intent;"
+          },
           "kinds" : 
           [
             {
@@ -1423,6 +1637,19 @@
       "sinks" : 
       [
         {
+          "call_info" : 
+          {
+            "call_kind" : "Origin",
+            "port" : "Argument(1)",
+            "position" : 
+            {
+              "end" : 32,
+              "line" : 17,
+              "path" : "ExternalDirectFlow.java",
+              "start" : 27
+            },
+            "resolves_to" : "Landroid/app/Activity;.startActivity:(Landroid/content/Intent;)V"
+          },
           "kinds" : 
           [
             {
@@ -1459,6 +1686,19 @@
       "sources" : 
       [
         {
+          "call_info" : 
+          {
+            "call_kind" : "Origin",
+            "port" : "Return",
+            "position" : 
+            {
+              "end" : 37,
+              "line" : 16,
+              "path" : "ExternalDirectFlow.java",
+              "start" : 29
+            },
+            "resolves_to" : "Landroid/app/Activity;.getIntent:()Landroid/content/Intent;"
+          },
           "kinds" : 
           [
             {
@@ -1517,6 +1757,19 @@
       "taint" : 
       [
         {
+          "call_info" : 
+          {
+            "call_kind" : "Origin",
+            "port" : "Return",
+            "position" : 
+            {
+              "end" : 23,
+              "line" : 13,
+              "path" : "FlowWithHops.java",
+              "start" : 18
+            },
+            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;"
+          },
           "kinds" : 
           [
             {
@@ -1569,6 +1822,20 @@
         {
           "call" : 
           {
+            "call_kind" : "CallSite",
+            "port" : "Return",
+            "position" : 
+            {
+              "end" : 24,
+              "line" : 17,
+              "path" : "FlowWithHops.java",
+              "start" : 16
+            },
+            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/FlowWithHops;.getSource:()Ljava/lang/Object;"
+          },
+          "call_info" : 
+          {
+            "call_kind" : "CallSite",
             "port" : "Return",
             "position" : 
             {
@@ -1628,6 +1895,20 @@
         {
           "call" : 
           {
+            "call_kind" : "CallSite",
+            "port" : "Argument(1)",
+            "position" : 
+            {
+              "end" : 45,
+              "line" : 29,
+              "path" : "FlowWithHops.java",
+              "start" : 23
+            },
+            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/FlowWithHops;.toSinkWithHop:(Ljava/lang/Object;)V"
+          },
+          "call_info" : 
+          {
+            "call_kind" : "CallSite",
             "port" : "Argument(1)",
             "position" : 
             {
@@ -1666,6 +1947,20 @@
         {
           "call" : 
           {
+            "call_kind" : "CallSite",
+            "port" : "Return",
+            "position" : 
+            {
+              "end" : 43,
+              "line" : 29,
+              "path" : "FlowWithHops.java",
+              "start" : 28
+            },
+            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/FlowWithHops;.getSourceWithHop:()Ljava/lang/Object;"
+          },
+          "call_info" : 
+          {
+            "call_kind" : "CallSite",
             "port" : "Return",
             "position" : 
             {
@@ -1722,6 +2017,19 @@
       "taint" : 
       [
         {
+          "call_info" : 
+          {
+            "call_kind" : "Origin",
+            "port" : "Argument(0)",
+            "position" : 
+            {
+              "end" : 23,
+              "line" : 21,
+              "path" : "FlowWithHops.java",
+              "start" : 16
+            },
+            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V"
+          },
           "kinds" : 
           [
             {
@@ -1774,6 +2082,20 @@
         {
           "call" : 
           {
+            "call_kind" : "CallSite",
+            "port" : "Argument(1)",
+            "position" : 
+            {
+              "end" : 23,
+              "line" : 25,
+              "path" : "FlowWithHops.java",
+              "start" : 16
+            },
+            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/FlowWithHops;.toSink:(Ljava/lang/Object;)V"
+          },
+          "call_info" : 
+          {
+            "call_kind" : "CallSite",
             "port" : "Argument(1)",
             "position" : 
             {
@@ -1824,6 +2146,11 @@
       "output" : 
       [
         {
+          "call_info" : 
+          {
+            "call_kind" : "Propagation",
+            "port" : "Argument(0)"
+          },
           "kinds" : 
           [
             {
@@ -1870,6 +2197,19 @@
       "sinks" : 
       [
         {
+          "call_info" : 
+          {
+            "call_kind" : "Origin",
+            "port" : "Argument(1)",
+            "position" : 
+            {
+              "end" : 32,
+              "line" : 19,
+              "path" : "InheritanceFlows.java",
+              "start" : 27
+            },
+            "resolves_to" : "Landroid/app/Activity;.startActivity:(Landroid/content/Intent;)V"
+          },
           "kinds" : 
           [
             {
@@ -1906,6 +2246,19 @@
       "sources" : 
       [
         {
+          "call_info" : 
+          {
+            "call_kind" : "Origin",
+            "port" : "Return",
+            "position" : 
+            {
+              "end" : 37,
+              "line" : 18,
+              "path" : "InheritanceFlows.java",
+              "start" : 29
+            },
+            "resolves_to" : "Landroid/app/Activity;.getIntent:()Landroid/content/Intent;"
+          },
           "kinds" : 
           [
             {
@@ -1969,6 +2322,11 @@
       "output" : 
       [
         {
+          "call_info" : 
+          {
+            "call_kind" : "Propagation",
+            "port" : "Return"
+          },
           "kinds" : 
           [
             {
@@ -2002,6 +2360,10 @@
       "taint" : 
       [
         {
+          "call_info" : 
+          {
+            "call_kind" : "Declaration"
+          },
           "kinds" : 
           [
             {
@@ -2029,6 +2391,10 @@
       "taint" : 
       [
         {
+          "call_info" : 
+          {
+            "call_kind" : "Declaration"
+          },
           "kinds" : 
           [
             {
@@ -2151,6 +2517,11 @@
       "output" : 
       [
         {
+          "call_info" : 
+          {
+            "call_kind" : "Propagation",
+            "port" : "Return"
+          },
           "kinds" : 
           [
             {
@@ -2260,6 +2631,11 @@
       "output" : 
       [
         {
+          "call_info" : 
+          {
+            "call_kind" : "Propagation",
+            "port" : "Return"
+          },
           "kinds" : 
           [
             {
@@ -2279,6 +2655,11 @@
       "output" : 
       [
         {
+          "call_info" : 
+          {
+            "call_kind" : "Propagation",
+            "port" : "Return"
+          },
           "kinds" : 
           [
             {
@@ -2386,6 +2767,11 @@
       "output" : 
       [
         {
+          "call_info" : 
+          {
+            "call_kind" : "Propagation",
+            "port" : "Return"
+          },
           "kinds" : 
           [
             {
@@ -2415,6 +2801,11 @@
       "output" : 
       [
         {
+          "call_info" : 
+          {
+            "call_kind" : "Propagation",
+            "port" : "Argument(0)"
+          },
           "kinds" : 
           [
             {

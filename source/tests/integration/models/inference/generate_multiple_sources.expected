@@ -13,6 +13,17 @@
           "taint" :
           [
             {
+              "call_info" :
+              {
+                "call_kind" : "Origin",
+                "port" : "Return",
+                "position" :
+                {
+                  "line" : 2,
+                  "path" : "Flow.java"
+                },
+                "resolves_to" : "LSource;.source:()LData;"
+              },
               "kinds" :
               [
                 {
@@ -44,6 +55,17 @@
               }
             },
             {
+              "call_info" :
+              {
+                "call_kind" : "Origin",
+                "port" : "Return",
+                "position" :
+                {
+                  "line" : 4,
+                  "path" : "Flow.java"
+                },
+                "resolves_to" : "LSource;.source:()LData;"
+              },
               "kinds" :
               [
                 {

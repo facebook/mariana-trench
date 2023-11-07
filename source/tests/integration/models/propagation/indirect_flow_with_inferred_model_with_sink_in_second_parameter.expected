@@ -22,6 +22,18 @@
             {
               "call" :
               {
+                "call_kind" : "CallSite",
+                "port" : "Argument(2)",
+                "position" :
+                {
+                  "line" : 2,
+                  "path" : "Flow.java"
+                },
+                "resolves_to" : "LFlow;.into_sink:(LData;LData;)V"
+              },
+              "call_info" :
+              {
+                "call_kind" : "CallSite",
                 "port" : "Argument(2)",
                 "position" :
                 {
@@ -56,6 +68,17 @@
           "sources" :
           [
             {
+              "call_info" :
+              {
+                "call_kind" : "Origin",
+                "port" : "Return",
+                "position" :
+                {
+                  "line" : 1,
+                  "path" : "Flow.java"
+                },
+                "resolves_to" : "LSource;.source:()LData;"
+              },
               "kinds" :
               [
                 {
@@ -110,6 +133,17 @@
           "taint" :
           [
             {
+              "call_info" :
+              {
+                "call_kind" : "Origin",
+                "port" : "Argument(1)",
+                "position" :
+                {
+                  "line" : 1,
+                  "path" : "Flow.java"
+                },
+                "resolves_to" : "LSink;.sink:(LData;)V"
+              },
               "kinds" :
               [
                 {

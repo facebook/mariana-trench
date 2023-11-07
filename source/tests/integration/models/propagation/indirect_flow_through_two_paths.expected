@@ -22,6 +22,18 @@
             {
               "call" :
               {
+                "call_kind" : "CallSite",
+                "port" : "Argument(1)",
+                "position" :
+                {
+                  "line" : 2,
+                  "path" : "Flow.java"
+                },
+                "resolves_to" : "LFlow;.into_into_sink_one:(LData;)V"
+              },
+              "call_info" :
+              {
+                "call_kind" : "CallSite",
                 "port" : "Argument(1)",
                 "position" :
                 {
@@ -56,6 +68,17 @@
           "sources" :
           [
             {
+              "call_info" :
+              {
+                "call_kind" : "Origin",
+                "port" : "Return",
+                "position" :
+                {
+                  "line" : 1,
+                  "path" : "Flow.java"
+                },
+                "resolves_to" : "LSource;.source:()LData;"
+              },
               "kinds" :
               [
                 {
@@ -102,6 +125,18 @@
             {
               "call" :
               {
+                "call_kind" : "CallSite",
+                "port" : "Argument(1)",
+                "position" :
+                {
+                  "line" : 2,
+                  "path" : "Flow.java"
+                },
+                "resolves_to" : "LFlow;.into_into_sink_two:(LData;)V"
+              },
+              "call_info" :
+              {
+                "call_kind" : "CallSite",
                 "port" : "Argument(1)",
                 "position" :
                 {
@@ -136,6 +171,17 @@
           "sources" :
           [
             {
+              "call_info" :
+              {
+                "call_kind" : "Origin",
+                "port" : "Return",
+                "position" :
+                {
+                  "line" : 1,
+                  "path" : "Flow.java"
+                },
+                "resolves_to" : "LSource;.source:()LData;"
+              },
               "kinds" :
               [
                 {
@@ -192,6 +238,18 @@
             {
               "call" :
               {
+                "call_kind" : "CallSite",
+                "port" : "Argument(1)",
+                "position" :
+                {
+                  "line" : 1,
+                  "path" : "Flow.java"
+                },
+                "resolves_to" : "LFlow;.into_sink:(LData;)V"
+              },
+              "call_info" :
+              {
+                "call_kind" : "CallSite",
                 "port" : "Argument(1)",
                 "position" :
                 {
@@ -242,6 +300,18 @@
             {
               "call" :
               {
+                "call_kind" : "CallSite",
+                "port" : "Argument(1)",
+                "position" :
+                {
+                  "line" : 1,
+                  "path" : "Flow.java"
+                },
+                "resolves_to" : "LFlow;.into_sink:(LData;)V"
+              },
+              "call_info" :
+              {
+                "call_kind" : "CallSite",
                 "port" : "Argument(1)",
                 "position" :
                 {
@@ -290,6 +360,17 @@
           "taint" :
           [
             {
+              "call_info" :
+              {
+                "call_kind" : "Origin",
+                "port" : "Argument(1)",
+                "position" :
+                {
+                  "line" : 1,
+                  "path" : "Flow.java"
+                },
+                "resolves_to" : "LSink;.sink:(LData;)V"
+              },
               "kinds" :
               [
                 {

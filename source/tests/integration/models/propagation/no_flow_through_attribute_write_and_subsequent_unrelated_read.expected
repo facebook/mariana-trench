@@ -19,6 +19,17 @@
           "taint" :
           [
             {
+              "call_info" :
+              {
+                "call_kind" : "Origin",
+                "port" : "Argument(1)",
+                "position" :
+                {
+                  "line" : 3,
+                  "path" : "Flow.java"
+                },
+                "resolves_to" : "LSink;.sink:(LData;)V"
+              },
               "kinds" :
               [
                 {

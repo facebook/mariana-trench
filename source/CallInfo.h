@@ -68,6 +68,13 @@ class CallInfo final {
   friend std::ostream& operator<<(std::ostream& out, const CallInfo& call_info);
 
  private:
+  /**
+   * Returns a JSON representation of the next hop. Used only when there is a
+   * valid next hop. Use `origin_json()` otherwise.
+   */
+  Json::Value next_hop_json() const;
+
+ private:
   MethodCallKindPair method_call_kind_;
   const AccessPath* MT_NULLABLE callee_port_;
   const Position* MT_NULLABLE call_position_;

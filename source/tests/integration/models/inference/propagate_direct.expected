@@ -20,6 +20,11 @@
           "output" :
           [
             {
+              "call_info" :
+              {
+                "call_kind" : "Propagation",
+                "port" : "Return"
+              },
               "kinds" :
               [
                 {

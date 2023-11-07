@@ -21,6 +21,18 @@
             {
               "call" :
               {
+                "call_kind" : "CallSite",
+                "port" : "Argument(1)",
+                "position" :
+                {
+                  "line" : 1,
+                  "path" : "Flow.java"
+                },
+                "resolves_to" : "LFlow;.into_into_sink:(LData;)V"
+              },
+              "call_info" :
+              {
+                "call_kind" : "CallSite",
                 "port" : "Argument(1)",
                 "position" :
                 {
@@ -54,6 +66,18 @@
             {
               "call" :
               {
+                "call_kind" : "CallSite",
+                "port" : "Argument(1)",
+                "position" :
+                {
+                  "line" : 1,
+                  "path" : "Flow.java"
+                },
+                "resolves_to" : "LFlow;.into_sink:(LData;)V"
+              },
+              "call_info" :
+              {
+                "call_kind" : "CallSite",
                 "port" : "Argument(1)",
                 "position" :
                 {
@@ -104,6 +128,18 @@
             {
               "call" :
               {
+                "call_kind" : "CallSite",
+                "port" : "Argument(1)",
+                "position" :
+                {
+                  "line" : 1,
+                  "path" : "Flow.java"
+                },
+                "resolves_to" : "LFlow;.different_lengths:(LData;)V"
+              },
+              "call_info" :
+              {
+                "call_kind" : "CallSite",
                 "port" : "Argument(1)",
                 "position" :
                 {
@@ -154,6 +190,18 @@
             {
               "call" :
               {
+                "call_kind" : "CallSite",
+                "port" : "Argument(1)",
+                "position" :
+                {
+                  "line" : 1,
+                  "path" : "Flow.java"
+                },
+                "resolves_to" : "LFlow;.into_sink:(LData;)V"
+              },
+              "call_info" :
+              {
+                "call_kind" : "CallSite",
                 "port" : "Argument(1)",
                 "position" :
                 {
@@ -202,6 +250,17 @@
           "taint" :
           [
             {
+              "call_info" :
+              {
+                "call_kind" : "Origin",
+                "port" : "Argument(1)",
+                "position" :
+                {
+                  "line" : 1,
+                  "path" : "Flow.java"
+                },
+                "resolves_to" : "LSink;.sink:(LData;)V"
+              },
               "kinds" :
               [
                 {

@@ -1761,6 +1761,10 @@ TEST_F(JsonTest, Model) {
             "output":
             [
               {
+                "call_info": {
+                  "call_kind": "Propagation",
+                  "port": "Argument(0)"
+                },
                 "kinds": [
                   {
                     "always_features": [ "via-obscure" ],
@@ -1777,6 +1781,10 @@ TEST_F(JsonTest, Model) {
             "output":
             [
               {
+                "call_info": {
+                  "call_kind": "Propagation",
+                  "port": "Argument(0)"
+                },
                 "kinds": [
                   {
                     "always_features": [ "via-obscure" ],
@@ -1879,6 +1887,7 @@ TEST_F(JsonTest, Model) {
           "port": "Argument(2)",
           "taint": [
             {
+              "call_info": { "call_kind": "Declaration" },
               "kinds": [
                 {
                   "call_info": "Declaration",
@@ -1938,6 +1947,7 @@ TEST_F(JsonTest, Model) {
           "port": "Argument(1)",
           "taint": [
             {
+              "call_info": { "call_kind": "Declaration" },
               "kinds": [
                 {
                   "call_info": "Declaration",
@@ -2114,6 +2124,10 @@ TEST_F(JsonTest, Model) {
             "input": "Argument(1)",
             "output": [
               {
+                "call_info": {
+                  "call_kind": "Propagation",
+                  "port": "Argument(0)"
+                },
                 "kinds": [
                   {
                     "call_info": "Propagation",
@@ -2128,6 +2142,10 @@ TEST_F(JsonTest, Model) {
             "input": "Argument(2)",
             "output": [
               {
+                "call_info": {
+                  "call_kind": "Propagation",
+                  "port": "Argument(0)"
+                },
                 "kinds": [
                   {
                     "call_info": "Propagation",
@@ -2340,6 +2358,7 @@ TEST_F(JsonTest, Model) {
             "port": "Argument(2)",
             "taint": [
               {
+                "call_info": { "call_kind": "Declaration" },
                 "kinds": [
                   {
                     "call_info": "Declaration",
@@ -2374,6 +2393,7 @@ TEST_F(JsonTest, Model) {
             "port": "Argument(2)",
             "taint": [
               {
+                "call_info": { "call_kind": "Declaration" },
                 "kinds": [
                   {
                     "call_info": "Declaration",
@@ -2792,11 +2812,13 @@ TEST_F(JsonTest, Model) {
         "sink_index" : "1",
           "sources": [
             {
+              "call_info": { "call_kind": "Declaration" },
               "kinds": [ {"call_info": "Declaration", "kind": "first_source"} ]
             }
           ],
           "sinks": [
             {
+              "call_info": { "call_kind": "Declaration" },
               "kinds": [ {"call_info": "Declaration", "kind": "first_sink"} ]
             }
           ]
@@ -3035,6 +3057,9 @@ TEST_F(JsonTest, CallEffectModel) {
           "port": "call-chain",
           "taint": [
             {
+              "call_info": {
+                "call_kind": "Declaration"
+              },
               "kinds": [
                 {
                   "call_info": "Declaration",
@@ -3061,6 +3086,9 @@ TEST_F(JsonTest, CallEffectModel) {
           "port": "call-chain",
           "taint": [
             {
+              "call_info": {
+                "call_kind": "Declaration"
+              },
               "kinds": [
                 {
                   "call_info": "Declaration",
@@ -3131,6 +3159,9 @@ TEST_F(JsonTest, CallEffectModel) {
           "sink_index" : "0",
           "sinks": [
             {
+              "call_info": {
+                "call_kind": "Declaration"
+              },
               "kinds": [
                 {
                   "call_info": "Declaration",
@@ -3142,6 +3173,9 @@ TEST_F(JsonTest, CallEffectModel) {
           ],
           "sources": [
             {
+              "call_info": {
+                "call_kind": "Declaration"
+              },
               "kinds": [
                 {
                   "call_info": "Declaration",
