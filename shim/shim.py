@@ -144,7 +144,7 @@ def _build_target(target: str, *, mode: Optional[str] = None) -> Path:
     if is_fbcode_target:
         target = target[len(fbcode_target_prefix) :]
 
-    command = ["buck", "build", "--show-json-output"]
+    command = ["buck2", "build", "--show-json-output"]
     if mode:
         command.append(str(mode))
     command.append(target)
@@ -172,7 +172,9 @@ def _build_target(target: str, *, mode: Optional[str] = None) -> Path:
             exit_code=ExitCode.BUCK_ERROR,
         )
 
-    return working_directory / next(iter(list(response.values())))
+    # Use current_working_directory instead of working_directory.
+    # Path should be relative to fbsource/ rather than fbcode/
+    return current_working_directory / next(iter(list(response.values())))
 
 
 def _build_executable_target(target: str, *, mode: Optional[str] = None) -> Path:
