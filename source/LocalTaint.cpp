@@ -534,74 +534,24 @@ void LocalTaint::add(const Frame& frame) {
 }
 
 Json::Value LocalTaint::to_json(ExportOriginsMode export_origins_mode) const {
-  auto taint = Json::Value(Json::objectValue);
+  OriginSet leaves;
 
   auto kinds = Json::Value(Json::arrayValue);
   for (const auto& frame : *this) {
+    leaves.join_with(frame.origins());
     kinds.append(frame.to_json(export_origins_mode));
   }
+
+  auto taint = call_info_.to_json(leaves);
+  mt_assert(taint.isObject() && !taint.isNull());
   taint["kinds"] = kinds;
-
-  // The next hop is indicated by (callee, position, port).
-  //
-  // When call_kind = origin, this is a leaf taint and there is no next hop.
-  // Examples of when this is the case:
-  // - Calling into a method(/frame) where a source/sink is defined, i.e.
-  //   declaration frame.
-  // - Return sinks and parameter sources. There is no callee for these, but
-  //   the position points to the return instruction/parameter.
-  //
-  // NOTE: Keep format in-sync with ExtraTrace::to_json() when representing
-  // next-hop details. The parser assumes they are the same.
-
-  const Method* callee = this->callee();
-  CallKind call_kind = this->call_kind();
-  const AccessPath* callee_port = this->callee_port();
-  const Position* call_position = this->call_position();
-
-  if (call_kind.is_origin()) {
-    // Since we don't emit calls for origins, we need to provide the origin
-    // location for proper visualisation.
-    OriginSet leaves;
-    for (const auto& frame : *this) {
-      leaves.join_with(frame.origins());
-    }
-    auto origin = LocalTaint::origin_json(call_position, leaves);
-
-    // TODO(T163918472): Remove this in favor of "leaves" after parser is
-    // updated. New format should work for CRTEX as well. Callee should
-    // always be nullptr at origins.
-    if (callee != nullptr) {
-      origin["method"] = callee->to_json();
-    }
-
-    // TODO(T163918472): Remove this in favor of "leaves" after parser is
-    // updated. This is added to handle an interrim state in which the CRTEX
-    // producer port is reported in the "origin".
-    if (callee_port != nullptr && callee_port->root().is_producer()) {
-      origin["port"] = callee_port->to_json();
-    }
-
-    if (!origin.empty()) {
-      taint["origin"] = origin;
-    }
-  } else if (
-      !call_kind.is_declaration() &&
-      !call_kind.is_propagation_without_trace()) {
-    // Never emit calls for declarations and propagations without traces.
-    // Emit it for everything else.
-    auto call = LocalTaint::next_hop_json(callee, call_position, callee_port);
-    if (!call.empty()) {
-      taint["call"] = call;
-    }
-  }
 
   if (!locally_inferred_features_.is_bottom() &&
       !locally_inferred_features_.empty()) {
     taint["local_features"] = locally_inferred_features_.to_json();
   }
 
-  if (call_kind.is_origin()) {
+  if (call_kind().is_origin()) {
     // User features on the origin frame come from the declaration and should
     // be reported in order to show up in the UI. Note that they cannot be
     // stored as locally_inferred_features in LocalTaint because they may be
@@ -621,36 +571,6 @@ Json::Value LocalTaint::to_json(ExportOriginsMode export_origins_mode) const {
   }
 
   return taint;
-}
-
-Json::Value LocalTaint::next_hop_json(
-    const Method* MT_NULLABLE callee,
-    const Position* MT_NULLABLE callee_position,
-    const AccessPath* MT_NULLABLE callee_port) {
-  auto call = Json::Value(Json::objectValue);
-  if (callee != nullptr) {
-    call["resolves_to"] = callee->to_json();
-  }
-  if (callee_position != nullptr) {
-    call["position"] = callee_position->to_json();
-  }
-  if (callee_port != nullptr && !callee_port->root().is_leaf()) {
-    call["port"] = callee_port->to_json();
-  }
-  return call;
-}
-
-Json::Value LocalTaint::origin_json(
-    const Position* MT_NULLABLE callee_position,
-    const OriginSet& origins) {
-  auto origin = Json::Value(Json::objectValue);
-  if (callee_position != nullptr) {
-    origin["position"] = callee_position->to_json();
-  }
-  if (!origins.empty()) {
-    origin["leaves"] = origins.to_json();
-  }
-  return origin;
 }
 
 } // namespace marianatrench

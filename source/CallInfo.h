@@ -9,6 +9,7 @@
 
 #include <mariana-trench/CallKind.h>
 #include <mariana-trench/Method.h>
+#include <mariana-trench/OriginSet.h>
 #include <mariana-trench/PointerIntPair.h>
 #include <mariana-trench/Position.h>
 
@@ -55,6 +56,8 @@ class CallInfo final {
   static CallInfo make_default() {
     return CallInfo(nullptr, CallKind::declaration(), nullptr, nullptr);
   }
+
+  Json::Value to_json(const OriginSet& origins) const;
 
   friend bool operator==(const CallInfo& self, const CallInfo& other);
 

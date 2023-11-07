@@ -338,24 +338,6 @@ class LocalTaint final : public sparta::AbstractDomain<LocalTaint> {
 
   friend std::ostream& operator<<(std::ostream& out, const LocalTaint& frames);
 
-  /**
-   * Returns a JSON representation of the next hop. Used only when there is a
-   * valid next hop. Use `origin_json()` otherwise.
-   */
-  static Json::Value next_hop_json(
-      const Method* MT_NULLABLE callee,
-      const Position* MT_NULLABLE callee_position,
-      const AccessPath* MT_NULLABLE callee_port);
-
-  /**
-   * Returns a JSON representation of the origin. Used when a call/frame is
-   * terminal, a.k.a. a leaf call, or the origin of the taint. If there is a
-   * next hop, use `next_hop_json()`.
-   */
-  static Json::Value origin_json(
-      const Position* MT_NULLABLE callee_position,
-      const OriginSet& origins);
-
  private:
   CallInfo call_info_;
   FramesByKind frames_;

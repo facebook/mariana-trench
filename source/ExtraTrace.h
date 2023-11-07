@@ -7,12 +7,9 @@
 
 #pragma once
 
-#include <mariana-trench/Access.h>
-#include <mariana-trench/CallKind.h>
+#include <mariana-trench/CallInfo.h>
 #include <mariana-trench/IncludeMacros.h>
 #include <mariana-trench/Kind.h>
-#include <mariana-trench/Method.h>
-#include <mariana-trench/Position.h>
 
 namespace marianatrench {
 
@@ -27,14 +24,10 @@ class ExtraTrace final {
       const Position* position,
       const AccessPath* callee_port,
       CallKind call_kind)
-      : kind_(kind),
-        callee_(callee),
-        position_(position),
-        callee_port_(callee_port),
-        call_kind_(std::move(call_kind)) {
+      : kind_(kind), call_info_(callee, call_kind, callee_port, position) {
     mt_assert(
-        call_kind_.is_propagation_with_trace() && kind_ != nullptr &&
-        position_ != nullptr);
+        call_info_.call_kind().is_propagation_with_trace() &&
+        kind_ != nullptr && call_info_.call_position() != nullptr);
 
     // Callee is nullptr iff this trace is an origin (i.e. no next hop).
     // Unlike LocalTaint, in which origins indicate where a user-declared taint
@@ -42,16 +35,16 @@ class ExtraTrace final {
     // transforms. These are like return sinks or parameter sources where the
     // "next hop" is either "return" or an "argument". Today, this information
     // is not stored/emitted in the extra trace.
-    mt_assert(call_kind_.is_origin() || callee_ != nullptr);
-    mt_assert(!call_kind_.is_origin() || callee_ == nullptr);
+    mt_assert(
+        call_info_.call_kind().is_origin() || call_info_.callee() != nullptr);
+    mt_assert(
+        !call_info_.call_kind().is_origin() || call_info_.callee() == nullptr);
   }
 
   INCLUDE_DEFAULT_COPY_CONSTRUCTORS_AND_ASSIGNMENTS(ExtraTrace)
 
   bool operator==(const ExtraTrace& other) const {
-    return kind_ == other.kind_ && callee_ == other.callee_ &&
-        position_ == other.position_ && callee_port_ == other.callee_port_ &&
-        call_kind_ == other.call_kind_;
+    return kind_ == other.kind_ && call_info_ == other.call_info_;
   }
 
   bool operator!=(const ExtraTrace& other) const {
@@ -62,20 +55,24 @@ class ExtraTrace final {
     return kind_;
   }
 
+  const CallInfo& call_info() const {
+    return call_info_;
+  }
+
   const Method* MT_NULLABLE callee() const {
-    return callee_;
+    return call_info_.callee();
   }
 
   const AccessPath* callee_port() const {
-    return callee_port_;
+    return call_info_.callee_port();
   }
 
   const Position* position() const {
-    return position_;
+    return call_info_.call_position();
   }
 
-  const CallKind& call_kind() const {
-    return call_kind_;
+  CallKind call_kind() const {
+    return call_info_.call_kind();
   }
 
   Json::Value to_json() const;
@@ -86,10 +83,7 @@ class ExtraTrace final {
 
  private:
   const Kind* kind_;
-  const Method* MT_NULLABLE callee_;
-  const Position* position_;
-  const AccessPath* callee_port_;
-  CallKind call_kind_;
+  CallInfo call_info_;
 };
 
 } // namespace marianatrench
