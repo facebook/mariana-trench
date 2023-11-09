@@ -245,8 +245,6 @@ def _build_apk_from_jar(jar_path: Path) -> Path:
             jar_path,
             "--output",
             dex_file,
-            "--lib",
-            "/opt/android/sdk_DEFAULT/platforms/android-29/android.jar",
             "--min-api",
             "25",  # mininum api 25 corresponds to dex 37
         ],
@@ -770,11 +768,14 @@ def main() -> None:
 
         # Build the vanilla java project.
         if configuration.FACEBOOK_SHIM and arguments.java_target:
-            jar_file = _extract_jex_file_if_exists(
-                _build_target(arguments.java_target, mode=arguments.java_mode),
-                arguments.java_target,
-                build_directory,
-            )
+            if arguments.java_target.endswith(".jar"):
+                jar_file = Path(arguments.java_target)
+            else:
+                jar_file = _extract_jex_file_if_exists(
+                    _build_target(arguments.java_target, mode=arguments.java_mode),
+                    arguments.java_target,
+                    build_directory,
+                )
             desugared_jar_file = _desugar_jar_file(jar_file)
             arguments.apk_path = os.fspath(_build_apk_from_jar(desugared_jar_file))
 
