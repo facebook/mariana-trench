@@ -94,7 +94,7 @@
           "kinds" : 
           [
             {
-              "call_info" : "Declaration",
+              "call_kind" : "Declaration",
               "kind" : "TestGeneration",
               "origins" : 
               [
@@ -120,7 +120,7 @@
           "kinds" : 
           [
             {
-              "call_info" : "Declaration",
+              "call_kind" : "Declaration",
               "kind" : "TestGeneration",
               "origins" : 
               [
@@ -146,7 +146,7 @@
           "kinds" : 
           [
             {
-              "call_info" : "Declaration",
+              "call_kind" : "Declaration",
               "kind" : "TestOtherGeneration",
               "origins" : 
               [
@@ -189,7 +189,7 @@
           "kinds" : 
           [
             {
-              "call_info" : "Declaration",
+              "call_kind" : "Declaration",
               "kind" : "TestOtherParameterSource",
               "origins" : 
               [
@@ -200,7 +200,7 @@
               ]
             },
             {
-              "call_info" : "Declaration",
+              "call_kind" : "Declaration",
               "kind" : "TestParameterSource",
               "origins" : 
               [
@@ -226,7 +226,7 @@
           "kinds" : 
           [
             {
-              "call_info" : "Declaration",
+              "call_kind" : "Declaration",
               "kind" : "TestOtherParameterSource",
               "origins" : 
               [
@@ -237,7 +237,7 @@
               ]
             },
             {
-              "call_info" : "Declaration",
+              "call_kind" : "Declaration",
               "kind" : "TestParameterSource",
               "origins" : 
               [
@@ -272,7 +272,7 @@
           "kinds" : 
           [
             {
-              "call_info" : "Propagation",
+              "call_kind" : "Propagation",
               "kind" : "LocalArgument(1)",
               "output_paths" : 
               {
@@ -296,7 +296,7 @@
           "kinds" : 
           [
             {
-              "call_info" : "Propagation",
+              "call_kind" : "Propagation",
               "kind" : "LocalArgument(1)",
               "output_paths" : 
               {
@@ -322,7 +322,7 @@
           "kinds" : 
           [
             {
-              "call_info" : "Declaration",
+              "call_kind" : "Declaration",
               "kind" : "TestSink",
               "origins" : 
               [
@@ -352,7 +352,7 @@
           "kinds" : 
           [
             {
-              "call_info" : "Declaration",
+              "call_kind" : "Declaration",
               "kind" : "TestSink",
               "origins" : 
               [
@@ -392,7 +392,7 @@
           "kinds" : 
           [
             {
-              "call_info" : "Declaration",
+              "call_kind" : "Declaration",
               "kind" : "SensitiveData",
               "origins" : 
               [
@@ -418,7 +418,7 @@
           "kinds" : 
           [
             {
-              "call_info" : "Declaration",
+              "call_kind" : "Declaration",
               "kind" : "SensitiveData",
               "origins" : 
               [
@@ -444,7 +444,7 @@
           "kinds" : 
           [
             {
-              "call_info" : "Declaration",
+              "call_kind" : "Declaration",
               "kind" : "SensitiveData",
               "origins" : 
               [
@@ -485,7 +485,7 @@
           "kinds" : 
           [
             {
-              "call_info" : "Declaration",
+              "call_kind" : "Declaration",
               "kind" : "SensitiveData",
               "origins" : 
               [
@@ -511,7 +511,7 @@
           "kinds" : 
           [
             {
-              "call_info" : "Declaration",
+              "call_kind" : "Declaration",
               "kind" : "SensitiveData",
               "origins" : 
               [

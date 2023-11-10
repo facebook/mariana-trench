@@ -260,7 +260,7 @@
           "kinds" : 
           [
             {
-              "call_info" : "Propagation",
+              "call_kind" : "Propagation",
               "kind" : "LocalReturn",
               "output_paths" : 
               {
@@ -284,7 +284,7 @@
           "kinds" : 
           [
             {
-              "call_info" : "Propagation",
+              "call_kind" : "Propagation",
               "kind" : "LocalReturn",
               "output_paths" : 
               {
@@ -308,7 +308,7 @@
           "kinds" : 
           [
             {
-              "call_info" : "Propagation",
+              "call_kind" : "Propagation",
               "kind" : "LocalReturn",
               "output_paths" : 
               {
@@ -342,7 +342,7 @@
           "kinds" : 
           [
             {
-              "call_info" : "Propagation",
+              "call_kind" : "Propagation",
               "kind" : "LocalReturn",
               "output_paths" : 
               {
@@ -366,7 +366,7 @@
           "kinds" : 
           [
             {
-              "call_info" : "Propagation",
+              "call_kind" : "Propagation",
               "kind" : "LocalArgument(0)",
               "output_paths" : 
               {
@@ -384,7 +384,7 @@
           "kinds" : 
           [
             {
-              "call_info" : "Propagation",
+              "call_kind" : "Propagation",
               "kind" : "LocalReturn",
               "output_paths" : 
               {
@@ -418,7 +418,7 @@
           "kinds" : 
           [
             {
-              "call_info" : "Propagation",
+              "call_kind" : "Propagation",
               "kind" : "LocalReturn",
               "output_paths" : 
               {
@@ -442,7 +442,7 @@
           "kinds" : 
           [
             {
-              "call_info" : "Propagation",
+              "call_kind" : "Propagation",
               "kind" : "LocalArgument(0)",
               "output_paths" : 
               {
@@ -460,7 +460,7 @@
           "kinds" : 
           [
             {
-              "call_info" : "Propagation",
+              "call_kind" : "Propagation",
               "kind" : "LocalReturn",
               "output_paths" : 
               {
@@ -494,7 +494,7 @@
           "kinds" : 
           [
             {
-              "call_info" : "Propagation",
+              "call_kind" : "Propagation",
               "kind" : "LocalReturn",
               "output_paths" : 
               {
@@ -518,7 +518,7 @@
           "kinds" : 
           [
             {
-              "call_info" : "Propagation",
+              "call_kind" : "Propagation",
               "kind" : "LocalArgument(0)",
               "output_paths" : 
               {
@@ -536,7 +536,7 @@
           "kinds" : 
           [
             {
-              "call_info" : "Propagation",
+              "call_kind" : "Propagation",
               "kind" : "LocalReturn",
               "output_paths" : 
               {
@@ -577,7 +577,7 @@
           "kinds" : 
           [
             {
-              "call_info" : "Propagation",
+              "call_kind" : "Propagation",
               "kind" : "LocalArgument(0)",
               "output_paths" : 
               {
@@ -601,7 +601,7 @@
           "kinds" : 
           [
             {
-              "call_info" : "Propagation",
+              "call_kind" : "Propagation",
               "kind" : "LocalArgument(0)",
               "output_paths" : 
               {
@@ -625,7 +625,7 @@
           "kinds" : 
           [
             {
-              "call_info" : "Propagation",
+              "call_kind" : "Propagation",
               "kind" : "LocalArgument(0)",
               "output_paths" : 
               {
@@ -667,7 +667,7 @@
           "kinds" : 
           [
             {
-              "call_info" : "Propagation",
+              "call_kind" : "Propagation",
               "kind" : "LocalReturn",
               "output_paths" : 
               {
@@ -709,7 +709,7 @@
           "kinds" : 
           [
             {
-              "call_info" : "Propagation",
+              "call_kind" : "Propagation",
               "kind" : "LocalReturn",
               "output_paths" : 
               {
@@ -750,7 +750,7 @@
           "kinds" : 
           [
             {
-              "call_info" : "Propagation",
+              "call_kind" : "Propagation",
               "kind" : "LocalReturn",
               "output_paths" : 
               {
@@ -774,7 +774,7 @@
           "kinds" : 
           [
             {
-              "call_info" : "Propagation",
+              "call_kind" : "Propagation",
               "kind" : "LocalReturn",
               "output_paths" : 
               {
@@ -798,7 +798,7 @@
           "kinds" : 
           [
             {
-              "call_info" : "Propagation",
+              "call_kind" : "Propagation",
               "kind" : "LocalReturn",
               "output_paths" : 
               {
@@ -995,7 +995,7 @@
           "kinds" : 
           [
             {
-              "call_info" : "Declaration",
+              "call_kind" : "Declaration",
               "kind" : "DifferentSource",
               "origins" : 
               [
@@ -1055,7 +1055,7 @@
           "kinds" : 
           [
             {
-              "call_info" : "Origin",
+              "call_kind" : "Origin",
               "callee_interval" : 
               [
                 34,
@@ -1107,7 +1107,7 @@
           "kinds" : 
           [
             {
-              "call_info" : "Propagation",
+              "call_kind" : "Propagation",
               "kind" : "LocalReturn",
               "output_paths" : 
               {
@@ -1149,7 +1149,7 @@
           "kinds" : 
           [
             {
-              "call_info" : "Declaration",
+              "call_kind" : "Declaration",
               "kind" : "Sink",
               "origins" : 
               [
@@ -1203,7 +1203,7 @@
               [
                 "via-value:source"
               ],
-              "call_info" : "Origin",
+              "call_kind" : "Origin",
               "callee_interval" : 
               [
                 34,
@@ -1263,7 +1263,7 @@
           "kinds" : 
           [
             {
-              "call_info" : "Origin",
+              "call_kind" : "Origin",
               "callee_interval" : 
               [
                 34,
@@ -1301,7 +1301,7 @@
           "kinds" : 
           [
             {
-              "call_info" : "Origin",
+              "call_kind" : "Origin",
               "callee_interval" : 
               [
                 34,
@@ -1381,7 +1381,7 @@
               [
                 "via-value:differentSource"
               ],
-              "call_info" : "Origin",
+              "call_kind" : "Origin",
               "callee_interval" : 
               [
                 34,
@@ -1426,7 +1426,7 @@
           "kinds" : 
           [
             {
-              "call_info" : "Origin",
+              "call_kind" : "Origin",
               "callee_interval" : 
               [
                 34,
@@ -1490,7 +1490,7 @@
               [
                 "via-value:source"
               ],
-              "call_info" : "Origin",
+              "call_kind" : "Origin",
               "callee_interval" : 
               [
                 34,
@@ -1535,7 +1535,7 @@
           "kinds" : 
           [
             {
-              "call_info" : "Origin",
+              "call_kind" : "Origin",
               "callee_interval" : 
               [
                 34,
@@ -1599,7 +1599,7 @@
               [
                 "via-value:unknown"
               ],
-              "call_info" : "Origin",
+              "call_kind" : "Origin",
               "callee_interval" : 
               [
                 34,
@@ -1644,7 +1644,7 @@
           "kinds" : 
           [
             {
-              "call_info" : "Origin",
+              "call_kind" : "Origin",
               "callee_interval" : 
               [
                 34,
@@ -1708,7 +1708,7 @@
               [
                 "via-value:unknown"
               ],
-              "call_info" : "Origin",
+              "call_kind" : "Origin",
               "callee_interval" : 
               [
                 34,
@@ -1753,7 +1753,7 @@
           "kinds" : 
           [
             {
-              "call_info" : "Origin",
+              "call_kind" : "Origin",
               "callee_interval" : 
               [
                 34,
@@ -1828,7 +1828,7 @@
               [
                 "via-value:source"
               ],
-              "call_info" : "CallSite",
+              "call_kind" : "CallSite",
               "callee_interval" : 
               [
                 34,
@@ -1867,7 +1867,7 @@
           "kinds" : 
           [
             {
-              "call_info" : "Origin",
+              "call_kind" : "Origin",
               "callee_interval" : 
               [
                 34,
@@ -1934,7 +1934,7 @@
           "kinds" : 
           [
             {
-              "call_info" : "Origin",
+              "call_kind" : "Origin",
               "callee_interval" : 
               [
                 34,
@@ -1972,7 +1972,7 @@
           "kinds" : 
           [
             {
-              "call_info" : "Origin",
+              "call_kind" : "Origin",
               "callee_interval" : 
               [
                 34,
@@ -2044,7 +2044,7 @@
           "kinds" : 
           [
             {
-              "call_info" : "Origin",
+              "call_kind" : "Origin",
               "callee_interval" : 
               [
                 34,
@@ -2082,7 +2082,7 @@
           "kinds" : 
           [
             {
-              "call_info" : "Origin",
+              "call_kind" : "Origin",
               "callee_interval" : 
               [
                 34,
@@ -2143,7 +2143,7 @@
           "kinds" : 
           [
             {
-              "call_info" : "Origin",
+              "call_kind" : "Origin",
               "callee_interval" : 
               [
                 34,
@@ -2181,7 +2181,7 @@
           "kinds" : 
           [
             {
-              "call_info" : "Origin",
+              "call_kind" : "Origin",
               "callee_interval" : 
               [
                 34,
@@ -2242,7 +2242,7 @@
           "kinds" : 
           [
             {
-              "call_info" : "Origin",
+              "call_kind" : "Origin",
               "callee_interval" : 
               [
                 34,
@@ -2280,7 +2280,7 @@
           "kinds" : 
           [
             {
-              "call_info" : "Origin",
+              "call_kind" : "Origin",
               "callee_interval" : 
               [
                 34,
@@ -2341,7 +2341,7 @@
           "kinds" : 
           [
             {
-              "call_info" : "Origin",
+              "call_kind" : "Origin",
               "callee_interval" : 
               [
                 34,
@@ -2379,7 +2379,7 @@
           "kinds" : 
           [
             {
-              "call_info" : "Origin",
+              "call_kind" : "Origin",
               "callee_interval" : 
               [
                 34,
@@ -2451,7 +2451,7 @@
           "kinds" : 
           [
             {
-              "call_info" : "Origin",
+              "call_kind" : "Origin",
               "callee_interval" : 
               [
                 34,
@@ -2489,7 +2489,7 @@
           "kinds" : 
           [
             {
-              "call_info" : "Origin",
+              "call_kind" : "Origin",
               "callee_interval" : 
               [
                 34,
@@ -2550,7 +2550,7 @@
           "kinds" : 
           [
             {
-              "call_info" : "Origin",
+              "call_kind" : "Origin",
               "callee_interval" : 
               [
                 34,
@@ -2588,7 +2588,7 @@
           "kinds" : 
           [
             {
-              "call_info" : "Origin",
+              "call_kind" : "Origin",
               "callee_interval" : 
               [
                 34,
@@ -2660,7 +2660,7 @@
           "kinds" : 
           [
             {
-              "call_info" : "CallSite",
+              "call_kind" : "CallSite",
               "callee_interval" : 
               [
                 34,
@@ -2699,7 +2699,7 @@
           "kinds" : 
           [
             {
-              "call_info" : "Origin",
+              "call_kind" : "Origin",
               "callee_interval" : 
               [
                 34,
@@ -2771,7 +2771,7 @@
           "kinds" : 
           [
             {
-              "call_info" : "CallSite",
+              "call_kind" : "CallSite",
               "callee_interval" : 
               [
                 34,
@@ -2810,7 +2810,7 @@
           "kinds" : 
           [
             {
-              "call_info" : "Origin",
+              "call_kind" : "Origin",
               "callee_interval" : 
               [
                 34,
@@ -2877,7 +2877,7 @@
           "kinds" : 
           [
             {
-              "call_info" : "Origin",
+              "call_kind" : "Origin",
               "callee_interval" : 
               [
                 34,
@@ -2915,7 +2915,7 @@
           "kinds" : 
           [
             {
-              "call_info" : "Origin",
+              "call_kind" : "Origin",
               "callee_interval" : 
               [
                 34,
@@ -3003,7 +3003,7 @@
           "kinds" : 
           [
             {
-              "call_info" : "Propagation",
+              "call_kind" : "Propagation",
               "kind" : "LocalReturn",
               "output_paths" : 
               {
@@ -3049,7 +3049,7 @@
           "kinds" : 
           [
             {
-              "call_info" : "Propagation",
+              "call_kind" : "Propagation",
               "kind" : "LocalArgument(0)",
               "output_paths" : 
               {
@@ -3094,7 +3094,7 @@
           "kinds" : 
           [
             {
-              "call_info" : "Propagation",
+              "call_kind" : "Propagation",
               "kind" : "LocalArgument(0)",
               "output_paths" : 
               {
@@ -3136,7 +3136,7 @@
           "kinds" : 
           [
             {
-              "call_info" : "Declaration",
+              "call_kind" : "Declaration",
               "kind" : "Sink",
               "origins" : 
               [
@@ -3185,7 +3185,7 @@
           "kinds" : 
           [
             {
-              "call_info" : "Propagation",
+              "call_kind" : "Propagation",
               "kind" : "LocalReturn",
               "output_paths" : 
               {
@@ -3218,7 +3218,7 @@
           "kinds" : 
           [
             {
-              "call_info" : "Declaration",
+              "call_kind" : "Declaration",
               "kind" : "Sink",
               "origins" : 
               [
@@ -3249,7 +3249,7 @@
           "kinds" : 
           [
             {
-              "call_info" : "Declaration",
+              "call_kind" : "Declaration",
               "kind" : "Source",
               "origins" : 
               [
@@ -3376,7 +3376,7 @@
           "kinds" : 
           [
             {
-              "call_info" : "Propagation",
+              "call_kind" : "Propagation",
               "kind" : "LocalReturn",
               "output_paths" : 
               {
@@ -3490,7 +3490,7 @@
           "kinds" : 
           [
             {
-              "call_info" : "Propagation",
+              "call_kind" : "Propagation",
               "kind" : "LocalReturn",
               "output_paths" : 
               {
@@ -3514,7 +3514,7 @@
           "kinds" : 
           [
             {
-              "call_info" : "Propagation",
+              "call_kind" : "Propagation",
               "kind" : "LocalReturn",
               "output_paths" : 
               {
@@ -3626,7 +3626,7 @@
           "kinds" : 
           [
             {
-              "call_info" : "Propagation",
+              "call_kind" : "Propagation",
               "kind" : "LocalReturn",
               "output_paths" : 
               {
@@ -3660,7 +3660,7 @@
           "kinds" : 
           [
             {
-              "call_info" : "Propagation",
+              "call_kind" : "Propagation",
               "kind" : "LocalArgument(0)",
               "output_paths" : 
               {

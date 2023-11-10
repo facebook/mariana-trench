@@ -32,7 +32,7 @@
           "kinds" : 
           [
             {
-              "call_info" : "Propagation",
+              "call_kind" : "Propagation",
               "kind" : "LocalReturn",
               "output_paths" : 
               {
@@ -197,7 +197,7 @@
           "kinds" : 
           [
             {
-              "call_info" : "Propagation",
+              "call_kind" : "Propagation",
               "kind" : "LocalReturn",
               "output_paths" : 
               {
@@ -244,7 +244,7 @@
           "kinds" : 
           [
             {
-              "call_info" : "Propagation",
+              "call_kind" : "Propagation",
               "kind" : "LocalArgument(0)",
               "output_paths" : 
               {
@@ -357,7 +357,7 @@
           "kinds" : 
           [
             {
-              "call_info" : "Propagation",
+              "call_kind" : "Propagation",
               "kind" : "LocalReturn",
               "output_paths" : 
               {
@@ -381,7 +381,7 @@
           "kinds" : 
           [
             {
-              "call_info" : "Propagation",
+              "call_kind" : "Propagation",
               "kind" : "LocalReturn",
               "output_paths" : 
               {
@@ -405,7 +405,7 @@
           "kinds" : 
           [
             {
-              "call_info" : "Propagation",
+              "call_kind" : "Propagation",
               "kind" : "LocalReturn",
               "output_paths" : 
               {
@@ -439,7 +439,7 @@
           "kinds" : 
           [
             {
-              "call_info" : "Propagation",
+              "call_kind" : "Propagation",
               "kind" : "LocalReturn",
               "output_paths" : 
               {
@@ -463,7 +463,7 @@
           "kinds" : 
           [
             {
-              "call_info" : "Propagation",
+              "call_kind" : "Propagation",
               "kind" : "LocalArgument(0)",
               "output_paths" : 
               {
@@ -481,7 +481,7 @@
           "kinds" : 
           [
             {
-              "call_info" : "Propagation",
+              "call_kind" : "Propagation",
               "kind" : "LocalReturn",
               "output_paths" : 
               {
@@ -515,7 +515,7 @@
           "kinds" : 
           [
             {
-              "call_info" : "Propagation",
+              "call_kind" : "Propagation",
               "kind" : "LocalReturn",
               "output_paths" : 
               {
@@ -539,7 +539,7 @@
           "kinds" : 
           [
             {
-              "call_info" : "Propagation",
+              "call_kind" : "Propagation",
               "kind" : "LocalArgument(0)",
               "output_paths" : 
               {
@@ -557,7 +557,7 @@
           "kinds" : 
           [
             {
-              "call_info" : "Propagation",
+              "call_kind" : "Propagation",
               "kind" : "LocalReturn",
               "output_paths" : 
               {
@@ -591,7 +591,7 @@
           "kinds" : 
           [
             {
-              "call_info" : "Propagation",
+              "call_kind" : "Propagation",
               "kind" : "LocalReturn",
               "output_paths" : 
               {
@@ -615,7 +615,7 @@
           "kinds" : 
           [
             {
-              "call_info" : "Propagation",
+              "call_kind" : "Propagation",
               "kind" : "LocalArgument(0)",
               "output_paths" : 
               {
@@ -633,7 +633,7 @@
           "kinds" : 
           [
             {
-              "call_info" : "Propagation",
+              "call_kind" : "Propagation",
               "kind" : "LocalReturn",
               "output_paths" : 
               {
@@ -674,7 +674,7 @@
           "kinds" : 
           [
             {
-              "call_info" : "Propagation",
+              "call_kind" : "Propagation",
               "kind" : "LocalArgument(0)",
               "output_paths" : 
               {
@@ -698,7 +698,7 @@
           "kinds" : 
           [
             {
-              "call_info" : "Propagation",
+              "call_kind" : "Propagation",
               "kind" : "LocalArgument(0)",
               "output_paths" : 
               {
@@ -722,7 +722,7 @@
           "kinds" : 
           [
             {
-              "call_info" : "Propagation",
+              "call_kind" : "Propagation",
               "kind" : "LocalArgument(0)",
               "output_paths" : 
               {
@@ -764,7 +764,7 @@
           "kinds" : 
           [
             {
-              "call_info" : "Propagation",
+              "call_kind" : "Propagation",
               "kind" : "LocalReturn",
               "output_paths" : 
               {
@@ -806,7 +806,7 @@
           "kinds" : 
           [
             {
-              "call_info" : "Propagation",
+              "call_kind" : "Propagation",
               "kind" : "LocalReturn",
               "output_paths" : 
               {
@@ -847,7 +847,7 @@
           "kinds" : 
           [
             {
-              "call_info" : "Propagation",
+              "call_kind" : "Propagation",
               "kind" : "LocalReturn",
               "output_paths" : 
               {
@@ -871,7 +871,7 @@
           "kinds" : 
           [
             {
-              "call_info" : "Propagation",
+              "call_kind" : "Propagation",
               "kind" : "LocalReturn",
               "output_paths" : 
               {
@@ -895,7 +895,7 @@
           "kinds" : 
           [
             {
-              "call_info" : "Propagation",
+              "call_kind" : "Propagation",
               "kind" : "LocalReturn",
               "output_paths" : 
               {
@@ -1091,7 +1091,7 @@
           "kinds" : 
           [
             {
-              "call_info" : "Propagation",
+              "call_kind" : "Propagation",
               "kind" : "LocalArgument(0)",
               "output_paths" : 
               {
@@ -1188,7 +1188,7 @@
           "kinds" : 
           [
             {
-              "call_info" : "CallSite",
+              "call_kind" : "CallSite",
               "callee_interval" : 
               [
                 12,
@@ -1235,7 +1235,7 @@
           "kinds" : 
           [
             {
-              "call_info" : "Origin",
+              "call_kind" : "Origin",
               "callee_interval" : 
               [
                 8,
@@ -1304,7 +1304,7 @@
           "kinds" : 
           [
             {
-              "call_info" : "CallSite",
+              "call_kind" : "CallSite",
               "callee_interval" : 
               [
                 12,
@@ -1351,7 +1351,7 @@
           "kinds" : 
           [
             {
-              "call_info" : "Origin",
+              "call_kind" : "Origin",
               "callee_interval" : 
               [
                 8,
@@ -1436,7 +1436,7 @@
                 "via-intent-routing",
                 "via-shim:Landroid/app/Activity;.startActivity:(Landroid/content/Intent;)V"
               ],
-              "call_info" : "CallSite",
+              "call_kind" : "CallSite",
               "callee_interval" : 
               [
                 8,
@@ -1475,7 +1475,7 @@
           "kinds" : 
           [
             {
-              "call_info" : "Origin",
+              "call_kind" : "Origin",
               "callee_interval" : 
               [
                 8,
@@ -1540,7 +1540,7 @@
           "kinds" : 
           [
             {
-              "call_info" : "CallSite",
+              "call_kind" : "CallSite",
               "callee_interval" : 
               [
                 12,
@@ -1592,7 +1592,7 @@
           "kinds" : 
           [
             {
-              "call_info" : "CallSite",
+              "call_kind" : "CallSite",
               "callee_interval" : 
               [
                 12,
@@ -1668,7 +1668,7 @@
           "kinds" : 
           [
             {
-              "call_info" : "CallSite",
+              "call_kind" : "CallSite",
               "callee_interval" : 
               [
                 12,
@@ -1715,7 +1715,7 @@
           "kinds" : 
           [
             {
-              "call_info" : "Origin",
+              "call_kind" : "Origin",
               "callee_interval" : 
               [
                 8,
@@ -1784,7 +1784,7 @@
           "kinds" : 
           [
             {
-              "call_info" : "CallSite",
+              "call_kind" : "CallSite",
               "callee_interval" : 
               [
                 12,
@@ -1831,7 +1831,7 @@
           "kinds" : 
           [
             {
-              "call_info" : "Origin",
+              "call_kind" : "Origin",
               "callee_interval" : 
               [
                 8,
@@ -1904,7 +1904,7 @@
           "kinds" : 
           [
             {
-              "call_info" : "CallSite",
+              "call_kind" : "CallSite",
               "callee_interval" : 
               [
                 12,
@@ -1958,7 +1958,7 @@
           "kinds" : 
           [
             {
-              "call_info" : "CallSite",
+              "call_kind" : "CallSite",
               "callee_interval" : 
               [
                 12,
@@ -2043,7 +2043,7 @@
           "kinds" : 
           [
             {
-              "call_info" : "Origin",
+              "call_kind" : "Origin",
               "callee_interval" : 
               [
                 12,
@@ -2092,7 +2092,7 @@
           "kinds" : 
           [
             {
-              "call_info" : "Propagation",
+              "call_kind" : "Propagation",
               "kind" : "LocalReturn",
               "output_paths" : 
               {
@@ -2151,7 +2151,7 @@
           "kinds" : 
           [
             {
-              "call_info" : "Origin",
+              "call_kind" : "Origin",
               "callee_interval" : 
               [
                 12,
@@ -2210,7 +2210,7 @@
           "kinds" : 
           [
             {
-              "call_info" : "Origin",
+              "call_kind" : "Origin",
               "callee_interval" : 
               [
                 12,
@@ -2269,7 +2269,7 @@
           "kinds" : 
           [
             {
-              "call_info" : "Origin",
+              "call_kind" : "Origin",
               "callee_interval" : 
               [
                 12,
@@ -2328,7 +2328,7 @@
           "kinds" : 
           [
             {
-              "call_info" : "CallSite",
+              "call_kind" : "CallSite",
               "callee_interval" : 
               [
                 12,
@@ -2395,7 +2395,7 @@
           "kinds" : 
           [
             {
-              "call_info" : "Propagation",
+              "call_kind" : "Propagation",
               "kind" : "LocalReturn",
               "output_paths" : 
               {
@@ -2428,7 +2428,7 @@
           "kinds" : 
           [
             {
-              "call_info" : "Declaration",
+              "call_kind" : "Declaration",
               "kind" : "Sink",
               "origins" : 
               [
@@ -2459,7 +2459,7 @@
           "kinds" : 
           [
             {
-              "call_info" : "Declaration",
+              "call_kind" : "Declaration",
               "kind" : "Source",
               "origins" : 
               [
@@ -2586,7 +2586,7 @@
           "kinds" : 
           [
             {
-              "call_info" : "Propagation",
+              "call_kind" : "Propagation",
               "kind" : "LocalReturn",
               "output_paths" : 
               {
@@ -2700,7 +2700,7 @@
           "kinds" : 
           [
             {
-              "call_info" : "Propagation",
+              "call_kind" : "Propagation",
               "kind" : "LocalReturn",
               "output_paths" : 
               {
@@ -2724,7 +2724,7 @@
           "kinds" : 
           [
             {
-              "call_info" : "Propagation",
+              "call_kind" : "Propagation",
               "kind" : "LocalReturn",
               "output_paths" : 
               {
@@ -2836,7 +2836,7 @@
           "kinds" : 
           [
             {
-              "call_info" : "Propagation",
+              "call_kind" : "Propagation",
               "kind" : "LocalReturn",
               "output_paths" : 
               {
@@ -2870,7 +2870,7 @@
           "kinds" : 
           [
             {
-              "call_info" : "Propagation",
+              "call_kind" : "Propagation",
               "kind" : "LocalArgument(0)",
               "output_paths" : 
               {

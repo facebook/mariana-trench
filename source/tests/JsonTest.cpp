@@ -1320,7 +1320,7 @@ TEST_F(JsonTest, Frame) {
                       {context.feature_factory->get("FeatureThree")})})
               .to_json(ExportOriginsMode::Always)),
       test::sorted_json(test::parse_json(R"({
-          "call_info": "Declaration",
+          "call_kind": "Declaration",
           "kind": "TestSource",
           "always_features": ["FeatureTwo", "FeatureThree"]
         })")));
@@ -1336,7 +1336,7 @@ TEST_F(JsonTest, Frame) {
                   .call_kind = CallKind::callsite()})
               .to_json(ExportOriginsMode::Always)),
       test::sorted_json(test::parse_json(R"({
-          "call_info": "CallSite",
+          "call_kind": "CallSite",
           "callee_interval": [1, 2],
           "kind": "TestSource",
           "preserves_type_context": true
@@ -1356,7 +1356,7 @@ TEST_F(JsonTest, CallKind) {
               test::FrameProperties{.call_kind = CallKind::origin()})
               .to_json(ExportOriginsMode::Always)),
       test::parse_json(R"({
-          "call_info": "Origin",
+          "call_kind": "Origin",
           "kind": "TestSource",
         })"));
   EXPECT_EQ(
@@ -1367,7 +1367,7 @@ TEST_F(JsonTest, CallKind) {
                   .distance = 5, .call_kind = CallKind::callsite()})
               .to_json(ExportOriginsMode::Always)),
       test::parse_json(R"({
-          "call_info": "CallSite",
+          "call_kind": "CallSite",
           "kind": "TestSource",
           "distance": 5
         })"));
@@ -1768,7 +1768,7 @@ TEST_F(JsonTest, Model) {
                 "kinds": [
                   {
                     "always_features": [ "via-obscure" ],
-                    "call_info": "Propagation",
+                    "call_kind": "Propagation",
                     "kind": "LocalArgument(0)",
                     "output_paths": { "": 0 }
                   }
@@ -1788,7 +1788,7 @@ TEST_F(JsonTest, Model) {
                 "kinds": [
                   {
                     "always_features": [ "via-obscure" ],
-                    "call_info": "Propagation",
+                    "call_kind": "Propagation",
                     "kind": "LocalArgument(0)",
                     "output_paths": { "": 0 }
                   }
@@ -1890,7 +1890,7 @@ TEST_F(JsonTest, Model) {
               "call_info": { "call_kind": "Declaration" },
               "kinds": [
                 {
-                  "call_info": "Declaration",
+                  "call_kind": "Declaration",
                   "kind": "source_kind",
                   "origins": [{"method": "LData;.method:(LData;LData;)V", "port": "Argument(2)"}],
                 }
@@ -1950,7 +1950,7 @@ TEST_F(JsonTest, Model) {
               "call_info": { "call_kind": "Declaration" },
               "kinds": [
                 {
-                  "call_info": "Declaration",
+                  "call_kind": "Declaration",
                   "kind": "source_kind",
                   "origins": [{"method": "LData;.method:(LData;LData;)V", "port": "Argument(1)"}],
                 }
@@ -2130,7 +2130,7 @@ TEST_F(JsonTest, Model) {
                 },
                 "kinds": [
                   {
-                    "call_info": "Propagation",
+                    "call_kind": "Propagation",
                     "kind": "LocalArgument(0)",
                     "output_paths": { "": 0 }
                   }
@@ -2148,7 +2148,7 @@ TEST_F(JsonTest, Model) {
                 },
                 "kinds": [
                   {
-                    "call_info": "Propagation",
+                    "call_kind": "Propagation",
                     "kind": "LocalArgument(0)",
                     "output_paths": { ".x": 0, ".y": 0 }
                   }
@@ -2361,7 +2361,7 @@ TEST_F(JsonTest, Model) {
                 "call_info": { "call_kind": "Declaration" },
                 "kinds": [
                   {
-                    "call_info": "Declaration",
+                    "call_kind": "Declaration",
                     "kind": "first_sink",
                     "origins": [{"method": "LData;.method:(LData;LData;)V", "port": "Argument(2)"}],
                   }
@@ -2396,7 +2396,7 @@ TEST_F(JsonTest, Model) {
                 "call_info": { "call_kind": "Declaration" },
                 "kinds": [
                   {
-                    "call_info": "Declaration",
+                    "call_kind": "Declaration",
                     "kind": "first_sink"
                   }
                 ]
@@ -2813,13 +2813,13 @@ TEST_F(JsonTest, Model) {
           "sources": [
             {
               "call_info": { "call_kind": "Declaration" },
-              "kinds": [ {"call_info": "Declaration", "kind": "first_source"} ]
+              "kinds": [ {"call_kind": "Declaration", "kind": "first_source"} ]
             }
           ],
           "sinks": [
             {
               "call_info": { "call_kind": "Declaration" },
-              "kinds": [ {"call_info": "Declaration", "kind": "first_sink"} ]
+              "kinds": [ {"call_kind": "Declaration", "kind": "first_sink"} ]
             }
           ]
         }
@@ -2922,7 +2922,7 @@ TEST_F(JsonTest, FieldModel) {
         "sinks": [
           {
             "kind": "TestSink",
-            "call_info": "Declaration",
+            "call_kind": "Declaration",
             "always_features": ["test-feature"],
             "origins": [{"field": "LBase;.field1:Ljava/lang/String;"}],
           }
@@ -3062,7 +3062,7 @@ TEST_F(JsonTest, CallEffectModel) {
               },
               "kinds": [
                 {
-                  "call_info": "Declaration",
+                  "call_kind": "Declaration",
                   "kind": "CallChainOrigin",
                   "origins": [{"method": "LEntry;.method:()V", "port": "call-chain"}],
                 }
@@ -3091,7 +3091,7 @@ TEST_F(JsonTest, CallEffectModel) {
               },
               "kinds": [
                 {
-                  "call_info": "Declaration",
+                  "call_kind": "Declaration",
                   "kind": "CallChainSink",
                   "origins": [{"method": "LExit;.method:()V", "port": "call-chain"}],
                 }
@@ -3164,7 +3164,7 @@ TEST_F(JsonTest, CallEffectModel) {
               },
               "kinds": [
                 {
-                  "call_info": "Declaration",
+                  "call_kind": "Declaration",
                   "kind": "CallChainSink",
                   "origins": [{"method": "LExit;.method:()V", "port": "call-chain"}],
                 }
@@ -3178,7 +3178,7 @@ TEST_F(JsonTest, CallEffectModel) {
               },
               "kinds": [
                 {
-                  "call_info": "Declaration",
+                  "call_kind": "Declaration",
                   "kind": "CallChainOrigin",
                   "origins": [{"method": "LEntry;.method:()V", "port": "call-chain"}],
                 }

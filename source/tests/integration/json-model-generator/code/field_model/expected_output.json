@@ -9,7 +9,7 @@
   "sinks" : 
   [
     {
-      "call_info" : "Declaration",
+      "call_kind" : "Declaration",
       "kind" : "TestSinkA",
       "origins" : 
       [
@@ -22,7 +22,7 @@
   "sources" : 
   [
     {
-      "call_info" : "Declaration",
+      "call_kind" : "Declaration",
       "kind" : "TestGenerationA",
       "origins" : 
       [
@@ -43,7 +43,7 @@
   "sources" : 
   [
     {
-      "call_info" : "Declaration",
+      "call_kind" : "Declaration",
       "kind" : "TestGenerationB",
       "origins" : 
       [
@@ -65,7 +65,7 @@
   "sinks" : 
   [
     {
-      "call_info" : "Declaration",
+      "call_kind" : "Declaration",
       "kind" : "TestSinkB",
       "origins" : 
       [
@@ -78,7 +78,7 @@
   "sources" : 
   [
     {
-      "call_info" : "Declaration",
+      "call_kind" : "Declaration",
       "kind" : "TestGenerationB",
       "origins" : 
       [

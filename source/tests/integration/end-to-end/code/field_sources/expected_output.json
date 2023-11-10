@@ -260,7 +260,7 @@
           "kinds" : 
           [
             {
-              "call_info" : "Propagation",
+              "call_kind" : "Propagation",
               "kind" : "LocalReturn",
               "output_paths" : 
               {
@@ -284,7 +284,7 @@
           "kinds" : 
           [
             {
-              "call_info" : "Propagation",
+              "call_kind" : "Propagation",
               "kind" : "LocalReturn",
               "output_paths" : 
               {
@@ -308,7 +308,7 @@
           "kinds" : 
           [
             {
-              "call_info" : "Propagation",
+              "call_kind" : "Propagation",
               "kind" : "LocalReturn",
               "output_paths" : 
               {
@@ -342,7 +342,7 @@
           "kinds" : 
           [
             {
-              "call_info" : "Propagation",
+              "call_kind" : "Propagation",
               "kind" : "LocalReturn",
               "output_paths" : 
               {
@@ -366,7 +366,7 @@
           "kinds" : 
           [
             {
-              "call_info" : "Propagation",
+              "call_kind" : "Propagation",
               "kind" : "LocalArgument(0)",
               "output_paths" : 
               {
@@ -384,7 +384,7 @@
           "kinds" : 
           [
             {
-              "call_info" : "Propagation",
+              "call_kind" : "Propagation",
               "kind" : "LocalReturn",
               "output_paths" : 
               {
@@ -418,7 +418,7 @@
           "kinds" : 
           [
             {
-              "call_info" : "Propagation",
+              "call_kind" : "Propagation",
               "kind" : "LocalReturn",
               "output_paths" : 
               {
@@ -442,7 +442,7 @@
           "kinds" : 
           [
             {
-              "call_info" : "Propagation",
+              "call_kind" : "Propagation",
               "kind" : "LocalArgument(0)",
               "output_paths" : 
               {
@@ -460,7 +460,7 @@
           "kinds" : 
           [
             {
-              "call_info" : "Propagation",
+              "call_kind" : "Propagation",
               "kind" : "LocalReturn",
               "output_paths" : 
               {
@@ -494,7 +494,7 @@
           "kinds" : 
           [
             {
-              "call_info" : "Propagation",
+              "call_kind" : "Propagation",
               "kind" : "LocalReturn",
               "output_paths" : 
               {
@@ -518,7 +518,7 @@
           "kinds" : 
           [
             {
-              "call_info" : "Propagation",
+              "call_kind" : "Propagation",
               "kind" : "LocalArgument(0)",
               "output_paths" : 
               {
@@ -536,7 +536,7 @@
           "kinds" : 
           [
             {
-              "call_info" : "Propagation",
+              "call_kind" : "Propagation",
               "kind" : "LocalReturn",
               "output_paths" : 
               {
@@ -577,7 +577,7 @@
           "kinds" : 
           [
             {
-              "call_info" : "Propagation",
+              "call_kind" : "Propagation",
               "kind" : "LocalArgument(0)",
               "output_paths" : 
               {
@@ -601,7 +601,7 @@
           "kinds" : 
           [
             {
-              "call_info" : "Propagation",
+              "call_kind" : "Propagation",
               "kind" : "LocalArgument(0)",
               "output_paths" : 
               {
@@ -625,7 +625,7 @@
           "kinds" : 
           [
             {
-              "call_info" : "Propagation",
+              "call_kind" : "Propagation",
               "kind" : "LocalArgument(0)",
               "output_paths" : 
               {
@@ -667,7 +667,7 @@
           "kinds" : 
           [
             {
-              "call_info" : "Propagation",
+              "call_kind" : "Propagation",
               "kind" : "LocalReturn",
               "output_paths" : 
               {
@@ -709,7 +709,7 @@
           "kinds" : 
           [
             {
-              "call_info" : "Propagation",
+              "call_kind" : "Propagation",
               "kind" : "LocalReturn",
               "output_paths" : 
               {
@@ -750,7 +750,7 @@
           "kinds" : 
           [
             {
-              "call_info" : "Propagation",
+              "call_kind" : "Propagation",
               "kind" : "LocalReturn",
               "output_paths" : 
               {
@@ -774,7 +774,7 @@
           "kinds" : 
           [
             {
-              "call_info" : "Propagation",
+              "call_kind" : "Propagation",
               "kind" : "LocalReturn",
               "output_paths" : 
               {
@@ -798,7 +798,7 @@
           "kinds" : 
           [
             {
-              "call_info" : "Propagation",
+              "call_kind" : "Propagation",
               "kind" : "LocalReturn",
               "output_paths" : 
               {
@@ -995,7 +995,7 @@
           "kinds" : 
           [
             {
-              "call_info" : "Declaration",
+              "call_kind" : "Declaration",
               "kind" : "FieldSource",
               "origins" : 
               [
@@ -1020,7 +1020,7 @@
           "kinds" : 
           [
             {
-              "call_info" : "Declaration",
+              "call_kind" : "Declaration",
               "kind" : "FieldSource",
               "origins" : 
               [
@@ -1064,7 +1064,7 @@
           "kinds" : 
           [
             {
-              "call_info" : "Origin",
+              "call_kind" : "Origin",
               "callee_interval" : 
               [
                 39,
@@ -1093,7 +1093,7 @@
           "kinds" : 
           [
             {
-              "call_info" : "Declaration",
+              "call_kind" : "Declaration",
               "kind" : "FieldSource",
               "origins" : 
               [
@@ -1134,7 +1134,7 @@
           "kinds" : 
           [
             {
-              "call_info" : "Origin",
+              "call_kind" : "Origin",
               "callee_interval" : 
               [
                 39,
@@ -1163,7 +1163,7 @@
           "kinds" : 
           [
             {
-              "call_info" : "Declaration",
+              "call_kind" : "Declaration",
               "kind" : "FieldSource",
               "origins" : 
               [
@@ -1206,7 +1206,7 @@
           "kinds" : 
           [
             {
-              "call_info" : "Origin",
+              "call_kind" : "Origin",
               "callee_interval" : 
               [
                 39,
@@ -1247,7 +1247,7 @@
           "kinds" : 
           [
             {
-              "call_info" : "Origin",
+              "call_kind" : "Origin",
               "callee_interval" : 
               [
                 39,
@@ -1275,7 +1275,7 @@
   "sources" : 
   [
     {
-      "call_info" : "Declaration",
+      "call_kind" : "Declaration",
       "kind" : "FieldSource",
       "origins" : 
       [
@@ -1325,7 +1325,7 @@
           "kinds" : 
           [
             {
-              "call_info" : "Origin",
+              "call_kind" : "Origin",
               "callee_interval" : 
               [
                 34,
@@ -1354,7 +1354,7 @@
           "kinds" : 
           [
             {
-              "call_info" : "Declaration",
+              "call_kind" : "Declaration",
               "kind" : "FieldSource",
               "origins" : 
               [
@@ -1397,7 +1397,7 @@
           "kinds" : 
           [
             {
-              "call_info" : "Origin",
+              "call_kind" : "Origin",
               "callee_interval" : 
               [
                 34,
@@ -1450,7 +1450,7 @@
           "kinds" : 
           [
             {
-              "call_info" : "Origin",
+              "call_kind" : "Origin",
               "callee_interval" : 
               [
                 34,
@@ -1479,7 +1479,7 @@
           "kinds" : 
           [
             {
-              "call_info" : "Declaration",
+              "call_kind" : "Declaration",
               "kind" : "FieldSource",
               "origins" : 
               [
@@ -1520,7 +1520,7 @@
           "kinds" : 
           [
             {
-              "call_info" : "Origin",
+              "call_kind" : "Origin",
               "callee_interval" : 
               [
                 34,
@@ -1558,7 +1558,7 @@
           "kinds" : 
           [
             {
-              "call_info" : "Origin",
+              "call_kind" : "Origin",
               "callee_interval" : 
               [
                 34,
@@ -1625,7 +1625,7 @@
           "kinds" : 
           [
             {
-              "call_info" : "Origin",
+              "call_kind" : "Origin",
               "callee_interval" : 
               [
                 34,
@@ -1663,7 +1663,7 @@
           "kinds" : 
           [
             {
-              "call_info" : "Origin",
+              "call_kind" : "Origin",
               "callee_interval" : 
               [
                 34,
@@ -1710,7 +1710,7 @@
           "kinds" : 
           [
             {
-              "call_info" : "Origin",
+              "call_kind" : "Origin",
               "callee_interval" : 
               [
                 34,
@@ -1748,7 +1748,7 @@
           "kinds" : 
           [
             {
-              "call_info" : "Origin",
+              "call_kind" : "Origin",
               "callee_interval" : 
               [
                 34,
@@ -1820,7 +1820,7 @@
           "kinds" : 
           [
             {
-              "call_info" : "Origin",
+              "call_kind" : "Origin",
               "callee_interval" : 
               [
                 34,
@@ -1849,7 +1849,7 @@
           "kinds" : 
           [
             {
-              "call_info" : "Declaration",
+              "call_kind" : "Declaration",
               "kind" : "FieldSource",
               "origins" : 
               [
@@ -1890,7 +1890,7 @@
           "kinds" : 
           [
             {
-              "call_info" : "Origin",
+              "call_kind" : "Origin",
               "callee_interval" : 
               [
                 34,
@@ -1928,7 +1928,7 @@
           "kinds" : 
           [
             {
-              "call_info" : "Origin",
+              "call_kind" : "Origin",
               "callee_interval" : 
               [
                 34,
@@ -1995,7 +1995,7 @@
           "kinds" : 
           [
             {
-              "call_info" : "Origin",
+              "call_kind" : "Origin",
               "callee_interval" : 
               [
                 34,
@@ -2024,7 +2024,7 @@
           "kinds" : 
           [
             {
-              "call_info" : "Declaration",
+              "call_kind" : "Declaration",
               "kind" : "FieldSource",
               "origins" : 
               [
@@ -2065,7 +2065,7 @@
           "kinds" : 
           [
             {
-              "call_info" : "Origin",
+              "call_kind" : "Origin",
               "callee_interval" : 
               [
                 34,
@@ -2103,7 +2103,7 @@
           "kinds" : 
           [
             {
-              "call_info" : "Origin",
+              "call_kind" : "Origin",
               "callee_interval" : 
               [
                 34,
@@ -2170,7 +2170,7 @@
           "kinds" : 
           [
             {
-              "call_info" : "Origin",
+              "call_kind" : "Origin",
               "callee_interval" : 
               [
                 34,
@@ -2199,7 +2199,7 @@
           "kinds" : 
           [
             {
-              "call_info" : "Declaration",
+              "call_kind" : "Declaration",
               "kind" : "FieldSource",
               "origins" : 
               [
@@ -2244,7 +2244,7 @@
           "kinds" : 
           [
             {
-              "call_info" : "Origin",
+              "call_kind" : "Origin",
               "callee_interval" : 
               [
                 34,
@@ -2282,7 +2282,7 @@
           "kinds" : 
           [
             {
-              "call_info" : "Origin",
+              "call_kind" : "Origin",
               "callee_interval" : 
               [
                 34,
@@ -2354,7 +2354,7 @@
           "kinds" : 
           [
             {
-              "call_info" : "Origin",
+              "call_kind" : "Origin",
               "callee_interval" : 
               [
                 34,
@@ -2392,7 +2392,7 @@
           "kinds" : 
           [
             {
-              "call_info" : "Origin",
+              "call_kind" : "Origin",
               "callee_interval" : 
               [
                 34,
@@ -2475,7 +2475,7 @@
           "kinds" : 
           [
             {
-              "call_info" : "Origin",
+              "call_kind" : "Origin",
               "callee_interval" : 
               [
                 34,
@@ -2513,7 +2513,7 @@
           "kinds" : 
           [
             {
-              "call_info" : "Origin",
+              "call_kind" : "Origin",
               "callee_interval" : 
               [
                 34,
@@ -2580,7 +2580,7 @@
           "kinds" : 
           [
             {
-              "call_info" : "Origin",
+              "call_kind" : "Origin",
               "callee_interval" : 
               [
                 34,
@@ -2618,7 +2618,7 @@
           "kinds" : 
           [
             {
-              "call_info" : "Origin",
+              "call_kind" : "Origin",
               "callee_interval" : 
               [
                 34,
@@ -2705,7 +2705,7 @@
           "kinds" : 
           [
             {
-              "call_info" : "CallSite",
+              "call_kind" : "CallSite",
               "callee_interval" : 
               [
                 34,
@@ -2744,7 +2744,7 @@
           "kinds" : 
           [
             {
-              "call_info" : "Origin",
+              "call_kind" : "Origin",
               "callee_interval" : 
               [
                 34,
@@ -2806,7 +2806,7 @@
           "kinds" : 
           [
             {
-              "call_info" : "Propagation",
+              "call_kind" : "Propagation",
               "kind" : "LocalReturn",
               "output_paths" : 
               {
@@ -2848,7 +2848,7 @@
           "kinds" : 
           [
             {
-              "call_info" : "Propagation",
+              "call_kind" : "Propagation",
               "kind" : "LocalReturn",
               "output_paths" : 
               {
@@ -2881,7 +2881,7 @@
           "kinds" : 
           [
             {
-              "call_info" : "Declaration",
+              "call_kind" : "Declaration",
               "kind" : "Sink",
               "origins" : 
               [
@@ -2912,7 +2912,7 @@
           "kinds" : 
           [
             {
-              "call_info" : "Declaration",
+              "call_kind" : "Declaration",
               "kind" : "OriginSource",
               "origins" : 
               [
@@ -2955,7 +2955,7 @@
   "sources" : 
   [
     {
-      "call_info" : "Declaration",
+      "call_kind" : "Declaration",
       "kind" : "FieldSource",
       "origins" : 
       [
@@ -2972,7 +2972,7 @@
   "sources" : 
   [
     {
-      "call_info" : "Declaration",
+      "call_kind" : "Declaration",
       "kind" : "FieldSource",
       "origins" : 
       [
@@ -2998,7 +2998,7 @@
           "kinds" : 
           [
             {
-              "call_info" : "Declaration",
+              "call_kind" : "Declaration",
               "kind" : "FieldSource",
               "origins" : 
               [
@@ -3042,7 +3042,7 @@
           "kinds" : 
           [
             {
-              "call_info" : "Origin",
+              "call_kind" : "Origin",
               "callee_interval" : 
               [
                 38,
@@ -3071,7 +3071,7 @@
           "kinds" : 
           [
             {
-              "call_info" : "Declaration",
+              "call_kind" : "Declaration",
               "kind" : "FieldSource",
               "origins" : 
               [
@@ -3112,7 +3112,7 @@
           "kinds" : 
           [
             {
-              "call_info" : "Origin",
+              "call_kind" : "Origin",
               "callee_interval" : 
               [
                 38,
@@ -3141,7 +3141,7 @@
           "kinds" : 
           [
             {
-              "call_info" : "Declaration",
+              "call_kind" : "Declaration",
               "kind" : "FieldSource",
               "origins" : 
               [
@@ -3182,7 +3182,7 @@
           "kinds" : 
           [
             {
-              "call_info" : "Origin",
+              "call_kind" : "Origin",
               "callee_interval" : 
               [
                 38,
@@ -3211,7 +3211,7 @@
           "kinds" : 
           [
             {
-              "call_info" : "Declaration",
+              "call_kind" : "Declaration",
               "kind" : "FieldSource",
               "origins" : 
               [
@@ -3252,7 +3252,7 @@
           "kinds" : 
           [
             {
-              "call_info" : "Origin",
+              "call_kind" : "Origin",
               "callee_interval" : 
               [
                 38,
@@ -3281,7 +3281,7 @@
           "kinds" : 
           [
             {
-              "call_info" : "Declaration",
+              "call_kind" : "Declaration",
               "kind" : "FieldSource",
               "origins" : 
               [
@@ -3324,7 +3324,7 @@
           "kinds" : 
           [
             {
-              "call_info" : "Origin",
+              "call_kind" : "Origin",
               "callee_interval" : 
               [
                 38,
@@ -3361,7 +3361,7 @@
           "kinds" : 
           [
             {
-              "call_info" : "Declaration",
+              "call_kind" : "Declaration",
               "kind" : "FieldSource",
               "origins" : 
               [
@@ -3386,7 +3386,7 @@
           "kinds" : 
           [
             {
-              "call_info" : "Declaration",
+              "call_kind" : "Declaration",
               "kind" : "FieldSource",
               "origins" : 
               [
@@ -3422,7 +3422,7 @@
           "kinds" : 
           [
             {
-              "call_info" : "Propagation",
+              "call_kind" : "Propagation",
               "kind" : "LocalReturn",
               "output_paths" : 
               {
@@ -3462,7 +3462,7 @@
           "kinds" : 
           [
             {
-              "call_info" : "Propagation",
+              "call_kind" : "Propagation",
               "kind" : "LocalArgument(0)",
               "output_paths" : 
               {
@@ -3497,7 +3497,7 @@
           "kinds" : 
           [
             {
-              "call_info" : "Propagation",
+              "call_kind" : "Propagation",
               "kind" : "LocalArgument(0)",
               "output_paths" : 
               {
@@ -3516,7 +3516,7 @@
   "sources" : 
   [
     {
-      "call_info" : "Declaration",
+      "call_kind" : "Declaration",
       "kind" : "FieldSource",
       "origins" : 
       [
@@ -3533,7 +3533,7 @@
   "sources" : 
   [
     {
-      "call_info" : "Declaration",
+      "call_kind" : "Declaration",
       "kind" : "FieldSource",
       "origins" : 
       [
@@ -3550,7 +3550,7 @@
   "sources" : 
   [
     {
-      "call_info" : "Declaration",
+      "call_kind" : "Declaration",
       "kind" : "FieldSource",
       "origins" : 
       [
@@ -3567,7 +3567,7 @@
   "sources" : 
   [
     {
-      "call_info" : "Declaration",
+      "call_kind" : "Declaration",
       "kind" : "FieldSource",
       "origins" : 
       [
@@ -3599,7 +3599,7 @@
           "kinds" : 
           [
             {
-              "call_info" : "Declaration",
+              "call_kind" : "Declaration",
               "kind" : "Sink",
               "origins" : 
               [
@@ -3654,7 +3654,7 @@
           "kinds" : 
           [
             {
-              "call_info" : "Origin",
+              "call_kind" : "Origin",
               "callee_interval" : 
               [
                 42,
@@ -3683,7 +3683,7 @@
           "kinds" : 
           [
             {
-              "call_info" : "Declaration",
+              "call_kind" : "Declaration",
               "kind" : "FieldSource",
               "origins" : 
               [
@@ -3724,7 +3724,7 @@
           "kinds" : 
           [
             {
-              "call_info" : "Origin",
+              "call_kind" : "Origin",
               "callee_interval" : 
               [
                 42,
@@ -3753,7 +3753,7 @@
           "kinds" : 
           [
             {
-              "call_info" : "Declaration",
+              "call_kind" : "Declaration",
               "kind" : "FieldSource",
               "origins" : 
               [
@@ -3794,7 +3794,7 @@
           "kinds" : 
           [
             {
-              "call_info" : "Origin",
+              "call_kind" : "Origin",
               "callee_interval" : 
               [
                 42,
@@ -3823,7 +3823,7 @@
           "kinds" : 
           [
             {
-              "call_info" : "Declaration",
+              "call_kind" : "Declaration",
               "kind" : "FieldSource",
               "origins" : 
               [
@@ -3866,7 +3866,7 @@
           "kinds" : 
           [
             {
-              "call_info" : "Origin",
+              "call_kind" : "Origin",
               "callee_interval" : 
               [
                 42,
@@ -3994,7 +3994,7 @@
           "kinds" : 
           [
             {
-              "call_info" : "Propagation",
+              "call_kind" : "Propagation",
               "kind" : "LocalReturn",
               "output_paths" : 
               {
@@ -4108,7 +4108,7 @@
           "kinds" : 
           [
             {
-              "call_info" : "Propagation",
+              "call_kind" : "Propagation",
               "kind" : "LocalReturn",
               "output_paths" : 
               {
@@ -4132,7 +4132,7 @@
           "kinds" : 
           [
             {
-              "call_info" : "Propagation",
+              "call_kind" : "Propagation",
               "kind" : "LocalReturn",
               "output_paths" : 
               {
@@ -4244,7 +4244,7 @@
           "kinds" : 
           [
             {
-              "call_info" : "Propagation",
+              "call_kind" : "Propagation",
               "kind" : "LocalReturn",
               "output_paths" : 
               {
@@ -4278,7 +4278,7 @@
           "kinds" : 
           [
             {
-              "call_info" : "Propagation",
+              "call_kind" : "Propagation",
               "kind" : "LocalArgument(0)",
               "output_paths" : 
               {

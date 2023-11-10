@@ -27,7 +27,7 @@
               "kinds" :
               [
                 {
-                  "call_info" : "Propagation",
+                  "call_kind" : "Propagation",
                   "kind" : "LocalReturn",
                   "output_paths" :
                   {
@@ -51,7 +51,7 @@
               "kinds" :
               [
                 {
-                  "call_info" : "Propagation",
+                  "call_kind" : "Propagation",
                   "kind" : "LocalArgument(0)",
                   "output_paths" :
                   {
@@ -69,7 +69,7 @@
               "kinds" :
               [
                 {
-                  "call_info" : "Propagation",
+                  "call_kind" : "Propagation",
                   "kind" : "LocalReturn",
                   "output_paths" :
                   {

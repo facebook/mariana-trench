@@ -33,7 +33,7 @@
               "kinds" :
               [
                 {
-                  "call_info" : "CallSite",
+                  "call_kind" : "CallSite",
                   "callee_interval" :
                   [
                     6,
@@ -67,7 +67,7 @@
               "kinds" :
               [
                 {
-                  "call_info" : "CallSite",
+                  "call_kind" : "CallSite",
                   "callee_interval" :
                   [
                     6,
@@ -118,7 +118,7 @@
               "kinds" :
               [
                 {
-                  "call_info" : "CallSite",
+                  "call_kind" : "CallSite",
                   "callee_interval" :
                   [
                     6,
@@ -169,7 +169,7 @@
               "kinds" :
               [
                 {
-                  "call_info" : "CallSite",
+                  "call_kind" : "CallSite",
                   "callee_interval" :
                   [
                     6,
@@ -220,7 +220,7 @@
               "kinds" :
               [
                 {
-                  "call_info" : "Origin",
+                  "call_kind" : "Origin",
                   "callee_interval" :
                   [
                     6,

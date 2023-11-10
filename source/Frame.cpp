@@ -385,9 +385,7 @@ Json::Value Frame::to_json(ExportOriginsMode export_origins_mode) const {
     value["canonical_names"] = canonical_names;
   }
 
-  // This was originally called `call_info` and was renamed `call_kind`.
-  // We keep this for backward compatibility.
-  value["call_info"] = Json::Value(std::string(call_kind_.to_trace_string()));
+  value["call_kind"] = Json::Value(call_kind_.to_trace_string());
 
   if (!output_paths_.is_bottom()) {
     auto output_paths_value = Json::Value(Json::objectValue);

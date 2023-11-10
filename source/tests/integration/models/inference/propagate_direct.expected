@@ -28,7 +28,7 @@
               "kinds" :
               [
                 {
-                  "call_info" : "Propagation",
+                  "call_kind" : "Propagation",
                   "kind" : "LocalReturn",
                   "output_paths" :
                   {
