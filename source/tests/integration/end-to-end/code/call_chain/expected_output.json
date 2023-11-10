@@ -988,17 +988,6 @@
       "taint" : 
       [
         {
-          "call" : 
-          {
-            "call_kind" : "CallSite",
-            "port" : "call-chain",
-            "position" : 
-            {
-              "line" : 32,
-              "path" : "CallChain.java"
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/Exported;.entry:()V"
-          },
           "call_info" : 
           {
             "call_kind" : "CallSite",
@@ -1058,17 +1047,6 @@
       "taint" : 
       [
         {
-          "call" : 
-          {
-            "call_kind" : "CallSite",
-            "port" : "call-chain",
-            "position" : 
-            {
-              "line" : 16,
-              "path" : "CallChain.java"
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/CallChainService;.hop2:()V"
-          },
           "call_info" : 
           {
             "call_kind" : "CallSite",
@@ -1150,16 +1128,7 @@
               ],
               "preserves_type_context" : true
             }
-          ],
-          "origin" : 
-          {
-            "method" : "Lcom/facebook/marianatrench/integrationtests/SensitiveApi;.execute:()V",
-            "position" : 
-            {
-              "line" : 20,
-              "path" : "CallChain.java"
-            }
-          }
+          ]
         }
       ]
     }
@@ -1187,17 +1156,6 @@
       "taint" : 
       [
         {
-          "call" : 
-          {
-            "call_kind" : "CallSite",
-            "port" : "call-chain",
-            "position" : 
-            {
-              "line" : 26,
-              "path" : "CallChain.java"
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/CallChainService;.hop1:()V"
-          },
           "call_info" : 
           {
             "call_kind" : "CallSite",
@@ -1277,19 +1235,6 @@
       "sinks" : 
       [
         {
-          "call" : 
-          {
-            "call_kind" : "CallSite",
-            "port" : "call-chain",
-            "position" : 
-            {
-              "end" : 30,
-              "line" : 26,
-              "path" : "CallChain.java",
-              "start" : 27
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/CallChainService;.hop1:()V"
-          },
           "call_info" : 
           {
             "call_kind" : "CallSite",
@@ -1351,15 +1296,7 @@
                 }
               ]
             }
-          ],
-          "origin" : 
-          {
-            "position" : 
-            {
-              "line" : 25,
-              "path" : "CallChain.java"
-            }
-          }
+          ]
         }
       ]
     }

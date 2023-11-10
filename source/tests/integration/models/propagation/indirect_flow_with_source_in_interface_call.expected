@@ -50,32 +50,12 @@
                   ],
                   "preserves_type_context" : true
                 }
-              ],
-              "origin" :
-              {
-                "method" : "LSink;.sink:(LData;)V",
-                "position" :
-                {
-                  "line" : 2,
-                  "path" : "Flow.java"
-                }
-              }
+              ]
             }
           ],
           "sources" :
           [
             {
-              "call" :
-              {
-                "call_kind" : "CallSite",
-                "port" : "Return",
-                "position" :
-                {
-                  "line" : 1,
-                  "path" : "Flow.java"
-                },
-                "resolves_to" : "LImplementation;.source:()LData;"
-              },
               "call_info" :
               {
                 "call_kind" : "CallSite",
@@ -157,16 +137,7 @@
                   ],
                   "preserves_type_context" : true
                 }
-              ],
-              "origin" :
-              {
-                "method" : "LSource;.source:()LData;",
-                "position" :
-                {
-                  "line" : 1,
-                  "path" : "Implementation.java"
-                }
-              }
+              ]
             }
           ]
         }

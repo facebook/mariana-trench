@@ -1198,18 +1198,7 @@
               ],
               "preserves_type_context" : true
             }
-          ],
-          "origin" : 
-          {
-            "method" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
-            "position" : 
-            {
-              "end" : 30,
-              "line" : 19,
-              "path" : "RunnableActivity.java",
-              "start" : 24
-            }
-          }
+          ]
         }
       ]
     }
@@ -1243,29 +1232,6 @@
       "sinks" : 
       [
         {
-          "call" : 
-          {
-            "call_kind" : "CallSite",
-            "port" : "Argument(1).val$tainted",
-            "position" : 
-            {
-              "end" : 38,
-              "line" : 23,
-              "path" : "RunnableActivity.java",
-              "start" : 31
-            },
-            "resolves_to" : 
-            {
-              "name" : "Ljava/lang/Thread;.<init>:(Ljava/lang/Runnable;)V",
-              "parameter_type_overrides" : 
-              [
-                {
-                  "parameter" : 0,
-                  "type" : "Lcom/facebook/marianatrench/integrationtests/RunnableActivity$1;"
-                }
-              ]
-            }
-          },
           "call_info" : 
           {
             "call_kind" : "CallSite",
@@ -1360,18 +1326,7 @@
               "line" : 15,
               "start" : 0
             }
-          ],
-          "origin" : 
-          {
-            "method" : "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;",
-            "position" : 
-            {
-              "end" : 48,
-              "line" : 13,
-              "path" : "RunnableActivity.java",
-              "start" : 43
-            }
-          }
+          ]
         }
       ]
     }
@@ -1836,16 +1791,6 @@
       "taint" : 
       [
         {
-          "call" : 
-          {
-            "call_kind" : "CallSite",
-            "port" : "Argument(0).val$tainted",
-            "position" : 
-            {
-              "line" : 15
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/RunnableActivity$1;.run:()V"
-          },
           "call_info" : 
           {
             "call_kind" : "CallSite",
@@ -1902,16 +1847,6 @@
       "taint" : 
       [
         {
-          "call" : 
-          {
-            "call_kind" : "CallSite",
-            "port" : "Argument(0).target.target.target.target",
-            "position" : 
-            {
-              "line" : 21
-            },
-            "resolves_to" : "Ljava/lang/Thread;.run:()V"
-          },
           "call_info" : 
           {
             "call_kind" : "CallSite",
@@ -1950,16 +1885,6 @@
           }
         },
         {
-          "call" : 
-          {
-            "call_kind" : "CallSite",
-            "port" : "Argument(0).target.target.target.val$tainted",
-            "position" : 
-            {
-              "line" : 21
-            },
-            "resolves_to" : "Ljava/lang/Thread;.run:()V"
-          },
           "call_info" : 
           {
             "call_kind" : "CallSite",
@@ -2000,16 +1925,6 @@
       "taint" : 
       [
         {
-          "call" : 
-          {
-            "call_kind" : "CallSite",
-            "port" : "Argument(0).target.target.val$tainted",
-            "position" : 
-            {
-              "line" : 21
-            },
-            "resolves_to" : "Ljava/lang/Thread;.run:()V"
-          },
           "call_info" : 
           {
             "call_kind" : "CallSite",
@@ -2043,16 +1958,6 @@
       "taint" : 
       [
         {
-          "call" : 
-          {
-            "call_kind" : "CallSite",
-            "port" : "Argument(0).target.val$tainted",
-            "position" : 
-            {
-              "line" : 21
-            },
-            "resolves_to" : "Ljava/lang/Thread;.run:()V"
-          },
           "call_info" : 
           {
             "call_kind" : "CallSite",
@@ -2086,16 +1991,6 @@
       "taint" : 
       [
         {
-          "call" : 
-          {
-            "call_kind" : "CallSite",
-            "port" : "Argument(0).val$tainted",
-            "position" : 
-            {
-              "line" : 21
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/RunnableActivity$1;.run:()V"
-          },
           "call_info" : 
           {
             "call_kind" : "CallSite",

@@ -1141,18 +1141,7 @@
               ],
               "preserves_type_context" : true
             }
-          ],
-          "origin" : 
-          {
-            "method" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
-            "position" : 
-            {
-              "end" : 21,
-              "line" : 18,
-              "path" : "Test.java",
-              "start" : 16
-            }
-          }
+          ]
         }
       ],
       "sources" : 
@@ -1198,18 +1187,7 @@
               "line" : 17,
               "start" : 23
             }
-          ],
-          "origin" : 
-          {
-            "method" : "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;",
-            "position" : 
-            {
-              "end" : 35,
-              "line" : 17,
-              "path" : "Test.java",
-              "start" : 30
-            }
-          }
+          ]
         }
       ]
     }

@@ -1384,18 +1384,7 @@
               ],
               "preserves_type_context" : true
             }
-          ],
-          "origin" : 
-          {
-            "method" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
-            "position" : 
-            {
-              "end" : 25,
-              "line" : 25,
-              "path" : "JavaCheckCast.java",
-              "start" : 18
-            }
-          }
+          ]
         }
       ]
     }
@@ -1428,19 +1417,6 @@
       "sinks" : 
       [
         {
-          "call" : 
-          {
-            "call_kind" : "CallSite",
-            "port" : "Argument(1)",
-            "position" : 
-            {
-              "end" : 0,
-              "line" : 62,
-              "path" : "JavaCheckCast.java",
-              "start" : 0
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/JavaCheckCast$DerivedWithSink;.run:(Ljava/lang/Object;)V"
-          },
           "call_info" : 
           {
             "call_kind" : "CallSite",
@@ -1519,18 +1495,7 @@
               ],
               "preserves_type_context" : true
             }
-          ],
-          "origin" : 
-          {
-            "method" : "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;",
-            "position" : 
-            {
-              "end" : 33,
-              "line" : 62,
-              "path" : "JavaCheckCast.java",
-              "start" : 28
-            }
-          }
+          ]
         }
       ]
     }
@@ -1561,19 +1526,6 @@
       "sinks" : 
       [
         {
-          "call" : 
-          {
-            "call_kind" : "CallSite",
-            "port" : "Argument(1)",
-            "position" : 
-            {
-              "end" : 0,
-              "line" : 40,
-              "path" : "JavaCheckCast.java",
-              "start" : 0
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/JavaCheckCast$DerivedWithSink;.run:(Ljava/lang/Object;)V"
-          },
           "call_info" : 
           {
             "call_kind" : "CallSite",
@@ -1652,18 +1604,7 @@
               ],
               "preserves_type_context" : true
             }
-          ],
-          "origin" : 
-          {
-            "method" : "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;",
-            "position" : 
-            {
-              "end" : 47,
-              "line" : 40,
-              "path" : "JavaCheckCast.java",
-              "start" : 42
-            }
-          }
+          ]
         }
       ]
     }
@@ -1694,19 +1635,6 @@
       "sinks" : 
       [
         {
-          "call" : 
-          {
-            "call_kind" : "CallSite",
-            "port" : "Argument(1)",
-            "position" : 
-            {
-              "end" : 0,
-              "line" : 57,
-              "path" : "JavaCheckCast.java",
-              "start" : 0
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/JavaCheckCast$DerivedWithSink;.run:(Ljava/lang/Object;)V"
-          },
           "call_info" : 
           {
             "call_kind" : "CallSite",
@@ -1785,18 +1713,7 @@
               ],
               "preserves_type_context" : true
             }
-          ],
-          "origin" : 
-          {
-            "method" : "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;",
-            "position" : 
-            {
-              "end" : 30,
-              "line" : 57,
-              "path" : "JavaCheckCast.java",
-              "start" : 25
-            }
-          }
+          ]
         }
       ]
     }
@@ -1925,17 +1842,6 @@
             [
               "via-obscure"
             ]
-          },
-          "origin" : 
-          {
-            "method" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
-            "position" : 
-            {
-              "end" : 25,
-              "line" : 23,
-              "path" : "KotlinCheckCast.kt",
-              "start" : 18
-            }
           }
         }
       ]
@@ -1970,19 +1876,6 @@
       "sinks" : 
       [
         {
-          "call" : 
-          {
-            "call_kind" : "CallSite",
-            "port" : "Argument(1)",
-            "position" : 
-            {
-              "end" : 0,
-              "line" : 63,
-              "path" : "KotlinCheckCast.kt",
-              "start" : 0
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/KotlinCheckCast$DerivedWithSink;.run:(Ljava/lang/Object;)V"
-          },
           "call_info" : 
           {
             "call_kind" : "CallSite",
@@ -2072,17 +1965,6 @@
             [
               "via-obscure"
             ]
-          },
-          "origin" : 
-          {
-            "method" : "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;",
-            "position" : 
-            {
-              "end" : 33,
-              "line" : 63,
-              "path" : "KotlinCheckCast.kt",
-              "start" : 28
-            }
           }
         }
       ]
@@ -2115,19 +1997,6 @@
       "sinks" : 
       [
         {
-          "call" : 
-          {
-            "call_kind" : "CallSite",
-            "port" : "Argument(1)",
-            "position" : 
-            {
-              "end" : 0,
-              "line" : 38,
-              "path" : "KotlinCheckCast.kt",
-              "start" : 0
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/KotlinCheckCast$DerivedWithSink;.run:(Ljava/lang/Object;)V"
-          },
           "call_info" : 
           {
             "call_kind" : "CallSite",
@@ -2217,17 +2086,6 @@
             [
               "via-obscure"
             ]
-          },
-          "origin" : 
-          {
-            "method" : "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;",
-            "position" : 
-            {
-              "end" : 43,
-              "line" : 38,
-              "path" : "KotlinCheckCast.kt",
-              "start" : 38
-            }
           }
         }
       ]
@@ -2260,19 +2118,6 @@
       "sinks" : 
       [
         {
-          "call" : 
-          {
-            "call_kind" : "CallSite",
-            "port" : "Argument(1)",
-            "position" : 
-            {
-              "end" : 0,
-              "line" : 58,
-              "path" : "KotlinCheckCast.kt",
-              "start" : 0
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/KotlinCheckCast$DerivedWithSink;.run:(Ljava/lang/Object;)V"
-          },
           "call_info" : 
           {
             "call_kind" : "CallSite",
@@ -2362,17 +2207,6 @@
             [
               "via-obscure"
             ]
-          },
-          "origin" : 
-          {
-            "method" : "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;",
-            "position" : 
-            {
-              "end" : 30,
-              "line" : 58,
-              "path" : "KotlinCheckCast.kt",
-              "start" : 25
-            }
           }
         }
       ]

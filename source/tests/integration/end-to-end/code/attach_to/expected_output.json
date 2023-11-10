@@ -1175,15 +1175,6 @@
             [
               "via-attach-sources-return"
             ]
-          },
-          "origin" : 
-          {
-            "method" : "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;",
-            "position" : 
-            {
-              "line" : 14,
-              "path" : "Flow.java"
-            }
           }
         }
       ]
@@ -1257,15 +1248,6 @@
             [
               "via-attach-sinks"
             ]
-          },
-          "origin" : 
-          {
-            "method" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
-            "position" : 
-            {
-              "line" : 22,
-              "path" : "Flow.java"
-            }
           }
         }
       ]
@@ -1387,16 +1369,7 @@
             {
               "line" : 18
             }
-          ],
-          "origin" : 
-          {
-            "method" : "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;",
-            "position" : 
-            {
-              "line" : 18,
-              "path" : "Flow.java"
-            }
-          }
+          ]
         }
       ]
     }

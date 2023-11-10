@@ -1569,19 +1569,6 @@
       "taint" : 
       [
         {
-          "call" : 
-          {
-            "call_kind" : "CallSite",
-            "port" : "Argument(2)",
-            "position" : 
-            {
-              "end" : 60,
-              "line" : 118,
-              "path" : "IntentHandlerUtil.java",
-              "start" : 55
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/IntentHandlerUtil;.startActivityDetectInternalOrExternal:(Landroid/content/Context;Landroid/content/Intent;)V"
-          },
           "call_info" : 
           {
             "call_kind" : "CallSite",
@@ -1624,19 +1611,6 @@
           ]
         },
         {
-          "call" : 
-          {
-            "call_kind" : "CallSite",
-            "port" : "Argument(2)",
-            "position" : 
-            {
-              "end" : 60,
-              "line" : 124,
-              "path" : "IntentHandlerUtil.java",
-              "start" : 55
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/IntentHandlerUtil;.startActivityDetectInternalOrExternal:(Landroid/content/Context;Landroid/content/Intent;)V"
-          },
           "call_info" : 
           {
             "call_kind" : "CallSite",
@@ -1696,17 +1670,6 @@
       "taint" : 
       [
         {
-          "call" : 
-          {
-            "call_kind" : "CallSite",
-            "port" : "Argument(2)",
-            "position" : 
-            {
-              "line" : 73,
-              "path" : "IntentHandlerUtil.java"
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/IntentHandlerUtil;.handleUri:(Landroid/content/Context;Ljava/lang/String;Landroid/os/Bundle;Landroid/content/Intent;)Z"
-          },
           "call_info" : 
           {
             "call_kind" : "CallSite",
@@ -1764,19 +1727,6 @@
       "taint" : 
       [
         {
-          "call" : 
-          {
-            "call_kind" : "CallSite",
-            "port" : "Argument(2)",
-            "position" : 
-            {
-              "end" : 32,
-              "line" : 77,
-              "path" : "IntentHandlerUtil.java",
-              "start" : 30
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/IntentHandlerUtil;.handleUri:(Landroid/content/Context;Ljava/lang/String;Landroid/os/Bundle;Landroid/content/Intent;)Z"
-          },
           "call_info" : 
           {
             "call_kind" : "CallSite",
@@ -1836,19 +1786,6 @@
       "taint" : 
       [
         {
-          "call" : 
-          {
-            "call_kind" : "CallSite",
-            "port" : "Argument(3)",
-            "position" : 
-            {
-              "end" : 65,
-              "line" : 97,
-              "path" : "IntentHandlerUtil.java",
-              "start" : 49
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/IntentHandlerUtil;.handleDestinationIntent:(Landroid/content/Context;Ljava/lang/String;Landroid/content/Intent;)Z"
-          },
           "call_info" : 
           {
             "call_kind" : "CallSite",
@@ -1905,19 +1842,6 @@
       "taint" : 
       [
         {
-          "call" : 
-          {
-            "call_kind" : "CallSite",
-            "port" : "Argument(3)",
-            "position" : 
-            {
-              "end" : 65,
-              "line" : 97,
-              "path" : "IntentHandlerUtil.java",
-              "start" : 49
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/IntentHandlerUtil;.handleDestinationIntent:(Landroid/content/Context;Ljava/lang/String;Landroid/content/Intent;)Z"
-          },
           "call_info" : 
           {
             "call_kind" : "CallSite",
@@ -1985,19 +1909,6 @@
       "taint" : 
       [
         {
-          "call" : 
-          {
-            "call_kind" : "CallSite",
-            "port" : "Argument(3)",
-            "position" : 
-            {
-              "end" : 83,
-              "line" : 61,
-              "path" : "IntentHandlerUtil.java",
-              "start" : 70
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/IntentHandlerUtil;.handleDestinationIntent:(Landroid/content/Context;Ljava/lang/String;Landroid/content/Intent;)Z"
-          },
           "call_info" : 
           {
             "call_kind" : "CallSite",
@@ -2058,19 +1969,6 @@
           ]
         },
         {
-          "call" : 
-          {
-            "call_kind" : "CallSite",
-            "port" : "Argument(2)",
-            "position" : 
-            {
-              "end" : 46,
-              "line" : 51,
-              "path" : "IntentHandlerUtil.java",
-              "start" : 44
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/IntentHandlerUtil;.handleUri:(Landroid/content/Context;Ljava/lang/String;Landroid/os/Bundle;)Z"
-          },
           "call_info" : 
           {
             "call_kind" : "CallSite",
@@ -2156,19 +2054,6 @@
       "taint" : 
       [
         {
-          "call" : 
-          {
-            "call_kind" : "CallSite",
-            "port" : "Argument(2)",
-            "position" : 
-            {
-              "end" : 62,
-              "line" : 152,
-              "path" : "IntentHandlerUtil.java",
-              "start" : 57
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/IntentHandlerUtil;.startActivityDetectInternalOrExternalImpl:(Landroid/content/Context;Landroid/content/Intent;)V"
-          },
           "call_info" : 
           {
             "call_kind" : "CallSite",
@@ -2209,19 +2094,6 @@
           ]
         },
         {
-          "call" : 
-          {
-            "call_kind" : "CallSite",
-            "port" : "Argument(2)",
-            "position" : 
-            {
-              "end" : 67,
-              "line" : 150,
-              "path" : "IntentHandlerUtil.java",
-              "start" : 62
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/IntentHandlerUtil;.startActivityDetectInternalOrExternalForResult:(Landroid/content/Context;Landroid/content/Intent;ILandroid/app/Activity;)V"
-          },
           "call_info" : 
           {
             "call_kind" : "CallSite",
@@ -2311,18 +2183,7 @@
               ],
               "preserves_type_context" : true
             }
-          ],
-          "origin" : 
-          {
-            "method" : "Lcom/facebook/content/SecureContextHelper;.startFacebookActivityForResult:(Landroid/content/Intent;ILandroid/app/Activity;)V",
-            "position" : 
-            {
-              "end" : 63,
-              "line" : 167,
-              "path" : "IntentHandlerUtil.java",
-              "start" : 58
-            }
-          }
+          ]
         },
         {
           "call_info" : 
@@ -2357,18 +2218,7 @@
               ],
               "preserves_type_context" : true
             }
-          ],
-          "origin" : 
-          {
-            "method" : "Lcom/facebook/content/SecureContextHelper;.startNonFacebookActivityForResult:(Landroid/content/Intent;ILandroid/app/Activity;)V",
-            "position" : 
-            {
-              "end" : 66,
-              "line" : 169,
-              "path" : "IntentHandlerUtil.java",
-              "start" : 61
-            }
-          }
+          ]
         }
       ]
     }
@@ -2420,18 +2270,7 @@
               ],
               "preserves_type_context" : true
             }
-          ],
-          "origin" : 
-          {
-            "method" : "Lcom/facebook/content/SecureContextHelper;.startFacebookActivity:(Landroid/content/Intent;Landroid/content/Context;)V",
-            "position" : 
-            {
-              "end" : 54,
-              "line" : 158,
-              "path" : "IntentHandlerUtil.java",
-              "start" : 49
-            }
-          }
+          ]
         },
         {
           "call_info" : 
@@ -2466,18 +2305,7 @@
               ],
               "preserves_type_context" : true
             }
-          ],
-          "origin" : 
-          {
-            "method" : "Lcom/facebook/content/SecureContextHelper;.startNonFacebookActivity:(Landroid/content/Intent;Landroid/content/Context;)V",
-            "position" : 
-            {
-              "end" : 57,
-              "line" : 160,
-              "path" : "IntentHandlerUtil.java",
-              "start" : 52
-            }
-          }
+          ]
         }
       ]
     }
@@ -2534,19 +2362,6 @@
       "sinks" : 
       [
         {
-          "call" : 
-          {
-            "call_kind" : "CallSite",
-            "port" : "Argument(2)",
-            "position" : 
-            {
-              "end" : 58,
-              "line" : 23,
-              "path" : "IntentUriHandler.java",
-              "start" : 48
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/IntentHandlerUtil;.launchNextActivity:(Landroid/content/Context;Landroid/content/Intent;)V"
-          },
           "call_info" : 
           {
             "call_kind" : "CallSite",
@@ -2634,18 +2449,7 @@
               ],
               "preserves_type_context" : true
             }
-          ],
-          "origin" : 
-          {
-            "method" : "Landroid/app/Activity;.getIntent:()Landroid/content/Intent;",
-            "position" : 
-            {
-              "end" : 56,
-              "line" : 23,
-              "path" : "IntentUriHandler.java",
-              "start" : 48
-            }
-          }
+          ]
         }
       ]
     }

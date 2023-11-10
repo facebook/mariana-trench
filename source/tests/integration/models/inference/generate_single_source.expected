@@ -43,16 +43,7 @@
                   ],
                   "preserves_type_context" : true
                 }
-              ],
-              "origin" :
-              {
-                "method" : "LSource;.source:()LData;",
-                "position" :
-                {
-                  "line" : 1,
-                  "path" : "Flow.java"
-                }
-              }
+              ]
             }
           ]
         }

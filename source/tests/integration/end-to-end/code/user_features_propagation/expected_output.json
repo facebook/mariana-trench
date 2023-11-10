@@ -1163,15 +1163,6 @@
               "source1",
               "source2"
             ]
-          },
-          "origin" : 
-          {
-            "method" : "Lcom/facebook/marianatrench/integrationtests/UserFeaturesPropagation;.source:()Ljava/lang/Object;",
-            "position" : 
-            {
-              "line" : 24,
-              "path" : "UserFeaturesPropagation.java"
-            }
           }
         }
       ]
@@ -1192,17 +1183,6 @@
       "taint" : 
       [
         {
-          "call" : 
-          {
-            "call_kind" : "CallSite",
-            "port" : "Return",
-            "position" : 
-            {
-              "line" : 34,
-              "path" : "UserFeaturesPropagation.java"
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/UserFeaturesPropagation;.sourceHopDistance1:()Ljava/lang/Object;"
-          },
           "call_info" : 
           {
             "call_kind" : "CallSite",

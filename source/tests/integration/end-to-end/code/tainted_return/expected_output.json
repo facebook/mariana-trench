@@ -1061,33 +1061,9 @@
               ],
               "preserves_type_context" : true
             }
-          ],
-          "origin" : 
-          {
-            "method" : "Lcom/facebook/marianatrench/integrationtests/ZeroRatingConnectionConfigOverrides;.getUri:()Landroid/net/Uri;",
-            "position" : 
-            {
-              "end" : 52,
-              "line" : 24,
-              "path" : "Configerator.java",
-              "start" : 17
-            }
-          }
+          ]
         },
         {
-          "call" : 
-          {
-            "call_kind" : "CallSite",
-            "port" : "Argument(0).mUri",
-            "position" : 
-            {
-              "end" : 52,
-              "line" : 24,
-              "path" : "Configerator.java",
-              "start" : 17
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/ZeroRatingConnectionConfigOverrides;.getUri:()Landroid/net/Uri;"
-          },
           "call_info" : 
           {
             "call_kind" : "CallSite",
@@ -1202,19 +1178,6 @@
       "sinks" : 
       [
         {
-          "call" : 
-          {
-            "call_kind" : "CallSite",
-            "port" : "Argument(0).mZeroRatingConnectionConfigOverrides",
-            "position" : 
-            {
-              "end" : 9,
-              "line" : 17,
-              "path" : "Instantiate.java",
-              "start" : 4
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/Configerator;.configure:()V"
-          },
           "call_info" : 
           {
             "call_kind" : "CallSite",
@@ -1262,19 +1225,6 @@
       "sources" : 
       [
         {
-          "call" : 
-          {
-            "call_kind" : "CallSite",
-            "port" : "Argument(0).mUri",
-            "position" : 
-            {
-              "end" : 11,
-              "line" : 15,
-              "path" : "Instantiate.java",
-              "start" : 4
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/ZeroRatingConnectionConfigOverrides;.onCreate:()V"
-          },
           "call_info" : 
           {
             "call_kind" : "CallSite",
@@ -1560,18 +1510,7 @@
               ],
               "preserves_type_context" : true
             }
-          ],
-          "origin" : 
-          {
-            "method" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
-            "position" : 
-            {
-              "end" : 19,
-              "line" : 22,
-              "path" : "ZeroRatingConnectionConfigOverrides.java",
-              "start" : 16
-            }
-          }
+          ]
         }
       ]
     }
@@ -1632,18 +1571,7 @@
               "line" : 18,
               "start" : 11
             }
-          ],
-          "origin" : 
-          {
-            "method" : "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;",
-            "position" : 
-            {
-              "end" : 32,
-              "line" : 17,
-              "path" : "ZeroRatingConnectionConfigOverrides.java",
-              "start" : 27
-            }
-          }
+          ]
         }
       ]
     }

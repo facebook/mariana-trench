@@ -1095,19 +1095,6 @@
       "taint" : 
       [
         {
-          "call" : 
-          {
-            "call_kind" : "CallSite",
-            "port" : "Argument(1)",
-            "position" : 
-            {
-              "end" : 44,
-              "line" : 21,
-              "path" : "SecureWebViewClient.java",
-              "start" : 42
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/SinkWebViewClient;.onPageFinished:(Ljava/lang/String;)V"
-          },
           "call_info" : 
           {
             "call_kind" : "CallSite",
@@ -1201,18 +1188,7 @@
               ],
               "preserves_type_context" : true
             }
-          ],
-          "origin" : 
-          {
-            "method" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
-            "position" : 
-            {
-              "end" : 18,
-              "line" : 14,
-              "path" : "SinkWebViewClient.java",
-              "start" : 16
-            }
-          }
+          ]
         }
       ]
     }
@@ -1241,19 +1217,6 @@
       "sinks" : 
       [
         {
-          "call" : 
-          {
-            "call_kind" : "CallSite",
-            "port" : "Argument(1)",
-            "position" : 
-            {
-              "end" : 27,
-              "line" : 14,
-              "path" : "SourceWebViewClient.java",
-              "start" : 25
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/SecureWebViewClient;.onPageFinished:(Ljava/lang/String;)V"
-          },
           "call_info" : 
           {
             "call_kind" : "CallSite",
@@ -1309,15 +1272,7 @@
                 }
               ]
             }
-          ],
-          "origin" : 
-          {
-            "position" : 
-            {
-              "line" : 13,
-              "path" : "SourceWebViewClient.java"
-            }
-          }
+          ]
         }
       ]
     }
@@ -1364,19 +1319,6 @@
       "taint" : 
       [
         {
-          "call" : 
-          {
-            "call_kind" : "CallSite",
-            "port" : "Argument(1)",
-            "position" : 
-            {
-              "end" : 27,
-              "line" : 14,
-              "path" : "SourceWebViewClient.java",
-              "start" : 25
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/SecureWebViewClient;.onPageFinished:(Ljava/lang/String;)V"
-          },
           "call_info" : 
           {
             "call_kind" : "CallSite",

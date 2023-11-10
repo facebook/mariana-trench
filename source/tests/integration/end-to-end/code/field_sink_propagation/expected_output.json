@@ -1079,19 +1079,6 @@
       "sinks" : 
       [
         {
-          "call" : 
-          {
-            "call_kind" : "CallSite",
-            "port" : "Argument(1).field",
-            "position" : 
-            {
-              "end" : 27,
-              "line" : 26,
-              "path" : "Flow.java",
-              "start" : 23
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/Flow;.toSinkWithFieldHop:(Lcom/facebook/marianatrench/integrationtests/Flow$Event;)V"
-          },
           "call_info" : 
           {
             "call_kind" : "CallSite",
@@ -1171,18 +1158,7 @@
               "line" : 25,
               "start" : 18
             }
-          ],
-          "origin" : 
-          {
-            "method" : "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;",
-            "position" : 
-            {
-              "end" : 30,
-              "line" : 25,
-              "path" : "Flow.java",
-              "start" : 25
-            }
-          }
+          ]
         }
       ]
     }
@@ -1240,18 +1216,7 @@
               ],
               "preserves_type_context" : true
             }
-          ],
-          "origin" : 
-          {
-            "method" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
-            "position" : 
-            {
-              "end" : 26,
-              "line" : 16,
-              "path" : "Flow.java",
-              "start" : 16
-            }
-          }
+          ]
         }
       ]
     }
@@ -1271,19 +1236,6 @@
       "taint" : 
       [
         {
-          "call" : 
-          {
-            "call_kind" : "CallSite",
-            "port" : "Argument(1).field",
-            "position" : 
-            {
-              "end" : 24,
-              "line" : 20,
-              "path" : "Flow.java",
-              "start" : 20
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/Flow;.toSinkWithField:(Lcom/facebook/marianatrench/integrationtests/Flow$Event;)V"
-          },
           "call_info" : 
           {
             "call_kind" : "CallSite",

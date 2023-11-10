@@ -1119,18 +1119,7 @@
               "line" : 15,
               "start" : 21
             }
-          ],
-          "origin" : 
-          {
-            "method" : "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;",
-            "position" : 
-            {
-              "end" : 42,
-              "line" : 15,
-              "path" : "MainActivity.java",
-              "start" : 37
-            }
-          }
+          ]
         }
       ]
     }
@@ -1196,19 +1185,6 @@
       "taint" : 
       [
         {
-          "call" : 
-          {
-            "call_kind" : "CallSite",
-            "port" : "Argument(0).mEvent.tainted",
-            "position" : 
-            {
-              "end" : 7,
-              "line" : 20,
-              "path" : "MainActivity.java",
-              "start" : 4
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/MainActivity;.call:()V"
-          },
           "call_info" : 
           {
             "call_kind" : "CallSite",
@@ -1311,36 +1287,12 @@
               ],
               "preserves_type_context" : true
             }
-          ],
-          "origin" : 
-          {
-            "method" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
-            "position" : 
-            {
-              "end" : 19,
-              "line" : 22,
-              "path" : "MainActivity.java",
-              "start" : 16
-            }
-          }
+          ]
         }
       ],
       "sources" : 
       [
         {
-          "call" : 
-          {
-            "call_kind" : "CallSite",
-            "port" : "Argument(0).mEvent.tainted",
-            "position" : 
-            {
-              "end" : 7,
-              "line" : 20,
-              "path" : "MainActivity.java",
-              "start" : 4
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/MainActivity;.call:()V"
-          },
           "call_info" : 
           {
             "call_kind" : "CallSite",
@@ -1461,18 +1413,7 @@
               "line" : 21,
               "start" : 18
             }
-          ],
-          "origin" : 
-          {
-            "method" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
-            "position" : 
-            {
-              "end" : 19,
-              "line" : 22,
-              "path" : "MainActivity.java",
-              "start" : 16
-            }
-          }
+          ]
         }
       ]
     }

@@ -1012,11 +1012,7 @@
                 }
               ]
             }
-          ],
-          "origin" : 
-          {
-            "port" : "Producer.153993.Argument(0)"
-          }
+          ]
         }
       ]
     }
@@ -1075,18 +1071,7 @@
               ],
               "preserves_type_context" : true
             }
-          ],
-          "origin" : 
-          {
-            "method" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
-            "position" : 
-            {
-              "end" : 19,
-              "line" : 20,
-              "path" : "Consumer.java",
-              "start" : 16
-            }
-          }
+          ]
         }
       ],
       "sources" : 
@@ -1121,16 +1106,7 @@
                 }
               ]
             }
-          ],
-          "origin" : 
-          {
-            "port" : "Producer.153993.Argument(0)",
-            "position" : 
-            {
-              "line" : 19,
-              "path" : "Consumer.java"
-            }
-          }
+          ]
         }
       ]
     }
@@ -1167,11 +1143,7 @@
                 }
               ]
             }
-          ],
-          "origin" : 
-          {
-            "port" : "Producer.153993.Argument(0)"
-          }
+          ]
         }
       ]
     }
@@ -1220,18 +1192,7 @@
               ],
               "preserves_type_context" : true
             }
-          ],
-          "origin" : 
-          {
-            "method" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
-            "position" : 
-            {
-              "end" : 19,
-              "line" : 20,
-              "path" : "Consumer.java",
-              "start" : 16
-            }
-          }
+          ]
         }
       ]
     }
@@ -1245,17 +1206,6 @@
       "taint" : 
       [
         {
-          "call" : 
-          {
-            "call_kind" : "CallSite",
-            "port" : "Return",
-            "position" : 
-            {
-              "line" : 30,
-              "path" : "Consumer.java"
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/Consumer;.getCrtexField:()I"
-          },
           "call_info" : 
           {
             "call_kind" : "CallSite",

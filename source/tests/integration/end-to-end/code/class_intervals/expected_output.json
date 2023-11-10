@@ -1085,19 +1085,6 @@
       "sinks" : 
       [
         {
-          "call" : 
-          {
-            "call_kind" : "CallSite",
-            "port" : "Argument(1)",
-            "position" : 
-            {
-              "end" : 24,
-              "line" : 30,
-              "path" : "Basic.java",
-              "start" : 24
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/Basic$Derived1;.derived1Sink:(Ljava/lang/Object;)V"
-          },
           "call_info" : 
           {
             "call_kind" : "CallSite",
@@ -1137,19 +1124,6 @@
       "sources" : 
       [
         {
-          "call" : 
-          {
-            "call_kind" : "CallSite",
-            "port" : "Return",
-            "position" : 
-            {
-              "end" : 35,
-              "line" : 29,
-              "path" : "Basic.java",
-              "start" : 22
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/Basic$Derived1;.derived1Source:()Ljava/lang/Object;"
-          },
           "call_info" : 
           {
             "call_kind" : "CallSite",
@@ -1283,18 +1257,7 @@
               ],
               "preserves_type_context" : true
             }
-          ],
-          "origin" : 
-          {
-            "method" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
-            "position" : 
-            {
-              "end" : 25,
-              "line" : 50,
-              "path" : "Basic.java",
-              "start" : 18
-            }
-          }
+          ]
         }
       ]
     }
@@ -1340,18 +1303,7 @@
               ],
               "preserves_type_context" : true
             }
-          ],
-          "origin" : 
-          {
-            "method" : "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;",
-            "position" : 
-            {
-              "end" : 25,
-              "line" : 45,
-              "path" : "Basic.java",
-              "start" : 20
-            }
-          }
+          ]
         }
       ]
     }
@@ -1409,16 +1361,7 @@
               ],
               "preserves_type_context" : true
             }
-          ],
-          "origin" : 
-          {
-            "method" : "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;",
-            "position" : 
-            {
-              "line" : 37,
-              "path" : "Basic.java"
-            }
-          }
+          ]
         }
       ]
     }
@@ -1532,16 +1475,7 @@
               ],
               "preserves_type_context" : true
             }
-          ],
-          "origin" : 
-          {
-            "method" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
-            "position" : 
-            {
-              "line" : 62,
-              "path" : "Basic.java"
-            }
-          }
+          ]
         }
       ]
     }
@@ -1613,17 +1547,6 @@
       "taint" : 
       [
         {
-          "call" : 
-          {
-            "call_kind" : "CallSite",
-            "port" : "Return",
-            "position" : 
-            {
-              "line" : 26,
-              "path" : "ClassIntervalDetails.java"
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/ClassIntervalDetails$Derived;.source:()Ljava/lang/Object;"
-          },
           "call_info" : 
           {
             "call_kind" : "CallSite",
@@ -1688,16 +1611,7 @@
               ],
               "preserves_type_context" : true
             }
-          ],
-          "origin" : 
-          {
-            "method" : "Lcom/facebook/marianatrench/integrationtests/ClassIntervalDetails$Base;.source:()Ljava/lang/Object;",
-            "position" : 
-            {
-              "line" : 26,
-              "path" : "ClassIntervalDetails.java"
-            }
-          }
+          ]
         }
       ]
     }
@@ -1717,17 +1631,6 @@
       "taint" : 
       [
         {
-          "call" : 
-          {
-            "call_kind" : "CallSite",
-            "port" : "Return",
-            "position" : 
-            {
-              "line" : 33,
-              "path" : "ClassIntervalDetails.java"
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/ClassIntervalDetails$Base;.hop1Base:()Ljava/lang/Object;"
-          },
           "call_info" : 
           {
             "call_kind" : "CallSite",
@@ -1906,16 +1809,7 @@
               ],
               "preserves_type_context" : true
             }
-          ],
-          "origin" : 
-          {
-            "method" : "Lcom/facebook/marianatrench/integrationtests/ClassIntervalDetails$Base;.source:()Ljava/lang/Object;",
-            "position" : 
-            {
-              "line" : 49,
-              "path" : "ClassIntervalDetails.java"
-            }
-          }
+          ]
         }
       ]
     }
@@ -1935,17 +1829,6 @@
       "taint" : 
       [
         {
-          "call" : 
-          {
-            "call_kind" : "CallSite",
-            "port" : "Return",
-            "position" : 
-            {
-              "line" : 56,
-              "path" : "ClassIntervalDetails.java"
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/ClassIntervalDetails$Base;.hop1Base:()Ljava/lang/Object;"
-          },
           "call_info" : 
           {
             "call_kind" : "CallSite",
@@ -2027,16 +1910,7 @@
               ],
               "preserves_type_context" : true
             }
-          ],
-          "origin" : 
-          {
-            "method" : "Lcom/facebook/marianatrench/integrationtests/ClassIntervalDetails$Base;.source:()Ljava/lang/Object;",
-            "position" : 
-            {
-              "line" : 43,
-              "path" : "ClassIntervalDetails.java"
-            }
-          }
+          ]
         }
       ]
     }
@@ -2148,17 +2022,6 @@
       "taint" : 
       [
         {
-          "call" : 
-          {
-            "call_kind" : "CallSite",
-            "port" : "Return",
-            "position" : 
-            {
-              "line" : 81,
-              "path" : "ClassIntervalDetails.java"
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/ClassIntervalDetails$Derived;.source:()Ljava/lang/Object;"
-          },
           "call_info" : 
           {
             "call_kind" : "CallSite",
@@ -2223,16 +2086,7 @@
               ],
               "preserves_type_context" : true
             }
-          ],
-          "origin" : 
-          {
-            "method" : "Lcom/facebook/marianatrench/integrationtests/ClassIntervalDetails$Base;.source:()Ljava/lang/Object;",
-            "position" : 
-            {
-              "line" : 81,
-              "path" : "ClassIntervalDetails.java"
-            }
-          }
+          ]
         }
       ]
     }
@@ -2252,17 +2106,6 @@
       "taint" : 
       [
         {
-          "call" : 
-          {
-            "call_kind" : "CallSite",
-            "port" : "Return",
-            "position" : 
-            {
-              "line" : 103,
-              "path" : "ClassIntervalDetails.java"
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/ClassIntervalDetails$Unrelated;.hop1ViaReceiverBase:(Lcom/facebook/marianatrench/integrationtests/ClassIntervalDetails$Base;)Ljava/lang/Object;"
-          },
           "call_info" : 
           {
             "call_kind" : "CallSite",
@@ -2297,17 +2140,6 @@
           ]
         },
         {
-          "call" : 
-          {
-            "call_kind" : "CallSite",
-            "port" : "Return",
-            "position" : 
-            {
-              "line" : 108,
-              "path" : "ClassIntervalDetails.java"
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/ClassIntervalDetails$Unrelated;.hop1ViaReceiverBase:(Lcom/facebook/marianatrench/integrationtests/ClassIntervalDetails$Base;)Ljava/lang/Object;"
-          },
           "call_info" : 
           {
             "call_kind" : "CallSite",
@@ -2342,17 +2174,6 @@
           ]
         },
         {
-          "call" : 
-          {
-            "call_kind" : "CallSite",
-            "port" : "Return",
-            "position" : 
-            {
-              "line" : 113,
-              "path" : "ClassIntervalDetails.java"
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/ClassIntervalDetails$Unrelated;.hop1ViaReceiverBase:(Lcom/facebook/marianatrench/integrationtests/ClassIntervalDetails$Base;)Ljava/lang/Object;"
-          },
           "call_info" : 
           {
             "call_kind" : "CallSite",
@@ -2404,17 +2225,6 @@
       "taint" : 
       [
         {
-          "call" : 
-          {
-            "call_kind" : "CallSite",
-            "port" : "Return",
-            "position" : 
-            {
-              "line" : 87,
-              "path" : "ClassIntervalDetails.java"
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/ClassIntervalDetails$Derived;.hop1Derived:()Ljava/lang/Object;"
-          },
           "call_info" : 
           {
             "call_kind" : "CallSite",
@@ -2772,18 +2582,7 @@
               ],
               "preserves_type_context" : true
             }
-          ],
-          "origin" : 
-          {
-            "method" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
-            "position" : 
-            {
-              "end" : 33,
-              "line" : 40,
-              "path" : "IntervalsForPropagations.java",
-              "start" : 18
-            }
-          }
+          ]
         }
       ],
       "sources" : 
@@ -2829,18 +2628,7 @@
               "line" : 39,
               "start" : 60
             }
-          ],
-          "origin" : 
-          {
-            "method" : "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;",
-            "position" : 
-            {
-              "end" : 34,
-              "line" : 35,
-              "path" : "IntervalsForPropagations.java",
-              "start" : 29
-            }
-          }
+          ]
         }
       ]
     }
@@ -2899,18 +2687,7 @@
               ],
               "preserves_type_context" : true
             }
-          ],
-          "origin" : 
-          {
-            "method" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
-            "position" : 
-            {
-              "end" : 33,
-              "line" : 46,
-              "path" : "IntervalsForPropagations.java",
-              "start" : 18
-            }
-          }
+          ]
         }
       ],
       "sources" : 
@@ -2956,18 +2733,7 @@
               "line" : 45,
               "start" : 0
             }
-          ],
-          "origin" : 
-          {
-            "method" : "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;",
-            "position" : 
-            {
-              "end" : 34,
-              "line" : 44,
-              "path" : "IntervalsForPropagations.java",
-              "start" : 29
-            }
-          }
+          ]
         }
       ]
     }
@@ -3026,18 +2792,7 @@
               ],
               "preserves_type_context" : true
             }
-          ],
-          "origin" : 
-          {
-            "method" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
-            "position" : 
-            {
-              "end" : 33,
-              "line" : 56,
-              "path" : "IntervalsForPropagations.java",
-              "start" : 18
-            }
-          }
+          ]
         }
       ],
       "sources" : 
@@ -3083,18 +2838,7 @@
               "line" : 55,
               "start" : 0
             }
-          ],
-          "origin" : 
-          {
-            "method" : "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;",
-            "position" : 
-            {
-              "end" : 34,
-              "line" : 50,
-              "path" : "IntervalsForPropagations.java",
-              "start" : 29
-            }
-          }
+          ]
         }
       ]
     }
@@ -3296,17 +3040,6 @@
       "taint" : 
       [
         {
-          "call" : 
-          {
-            "call_kind" : "CallSite",
-            "port" : "Argument(1)",
-            "position" : 
-            {
-              "line" : 22,
-              "path" : "PropagateIntervals.java"
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/PropagateIntervals$Derived1;.sink:(Ljava/lang/Object;)V"
-          },
           "call_info" : 
           {
             "call_kind" : "CallSite",
@@ -3341,17 +3074,6 @@
           ]
         },
         {
-          "call" : 
-          {
-            "call_kind" : "CallSite",
-            "port" : "Argument(1)",
-            "position" : 
-            {
-              "line" : 22,
-              "path" : "PropagateIntervals.java"
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/PropagateIntervals$Derived2;.sink:(Ljava/lang/Object;)V"
-          },
           "call_info" : 
           {
             "call_kind" : "CallSite",
@@ -3409,17 +3131,6 @@
       "taint" : 
       [
         {
-          "call" : 
-          {
-            "call_kind" : "CallSite",
-            "port" : "Return",
-            "position" : 
-            {
-              "line" : 18,
-              "path" : "PropagateIntervals.java"
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/PropagateIntervals$Derived1;.source:()Ljava/lang/Object;"
-          },
           "call_info" : 
           {
             "call_kind" : "CallSite",
@@ -3454,17 +3165,6 @@
           ]
         },
         {
-          "call" : 
-          {
-            "call_kind" : "CallSite",
-            "port" : "Return",
-            "position" : 
-            {
-              "line" : 18,
-              "path" : "PropagateIntervals.java"
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/PropagateIntervals$Derived2;.source:()Ljava/lang/Object;"
-          },
           "call_info" : 
           {
             "call_kind" : "CallSite",
@@ -3594,16 +3294,7 @@
               ],
               "preserves_type_context" : true
             }
-          ],
-          "origin" : 
-          {
-            "method" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
-            "position" : 
-            {
-              "line" : 34,
-              "path" : "PropagateIntervals.java"
-            }
-          }
+          ]
         }
       ]
     }
@@ -3647,16 +3338,7 @@
               ],
               "preserves_type_context" : true
             }
-          ],
-          "origin" : 
-          {
-            "method" : "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;",
-            "position" : 
-            {
-              "line" : 29,
-              "path" : "PropagateIntervals.java"
-            }
-          }
+          ]
         }
       ]
     }
@@ -3828,16 +3510,7 @@
               ],
               "preserves_type_context" : true
             }
-          ],
-          "origin" : 
-          {
-            "method" : "Lcom/facebook/marianatrench/integrationtests/PropagateIntervals$Derived2;.derived2Sink:(Ljava/lang/Object;)V",
-            "position" : 
-            {
-              "line" : 52,
-              "path" : "PropagateIntervals.java"
-            }
-          }
+          ]
         }
       ]
     }
@@ -3881,16 +3554,7 @@
               ],
               "preserves_type_context" : true
             }
-          ],
-          "origin" : 
-          {
-            "method" : "Lcom/facebook/marianatrench/integrationtests/PropagateIntervals$Derived2;.derived2Source:()Ljava/lang/Object;",
-            "position" : 
-            {
-              "line" : 47,
-              "path" : "PropagateIntervals.java"
-            }
-          }
+          ]
         }
       ]
     }
@@ -3958,17 +3622,6 @@
       "taint" : 
       [
         {
-          "call" : 
-          {
-            "call_kind" : "CallSite",
-            "port" : "Argument(1)",
-            "position" : 
-            {
-              "line" : 66,
-              "path" : "PropagateIntervals.java"
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/PropagateIntervals$Base;.sinkPropagated:(Ljava/lang/Object;)V"
-          },
           "call_info" : 
           {
             "call_kind" : "CallSite",
@@ -4014,17 +3667,6 @@
       "taint" : 
       [
         {
-          "call" : 
-          {
-            "call_kind" : "CallSite",
-            "port" : "Return",
-            "position" : 
-            {
-              "line" : 62,
-              "path" : "PropagateIntervals.java"
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/PropagateIntervals$Base;.sourcePropagated:()Ljava/lang/Object;"
-          },
           "call_info" : 
           {
             "call_kind" : "CallSite",

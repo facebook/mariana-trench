@@ -43,16 +43,7 @@
                   ],
                   "preserves_type_context" : true
                 }
-              ],
-              "origin" :
-              {
-                "method" : "LSource;.source:()LData;",
-                "position" :
-                {
-                  "line" : 2,
-                  "path" : "Flow.java"
-                }
-              }
+              ]
             },
             {
               "call_info" :
@@ -85,16 +76,7 @@
                   ],
                   "preserves_type_context" : true
                 }
-              ],
-              "origin" :
-              {
-                "method" : "LSource;.source:()LData;",
-                "position" :
-                {
-                  "line" : 4,
-                  "path" : "Flow.java"
-                }
-              }
+              ]
             }
           ]
         }

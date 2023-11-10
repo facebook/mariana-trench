@@ -20,17 +20,6 @@
           "sinks" :
           [
             {
-              "call" :
-              {
-                "call_kind" : "CallSite",
-                "port" : "Argument(1)",
-                "position" :
-                {
-                  "line" : 2,
-                  "path" : "Flow.java"
-                },
-                "resolves_to" : "LFlow;.into_sink_or_alternative_sink:(LData;)V"
-              },
               "call_info" :
               {
                 "call_kind" : "CallSite",
@@ -102,16 +91,7 @@
                   ],
                   "preserves_type_context" : true
                 }
-              ],
-              "origin" :
-              {
-                "method" : "LSource;.source:()LData;",
-                "position" :
-                {
-                  "line" : 1,
-                  "path" : "Flow.java"
-                }
-              }
+              ]
             }
           ]
         }
@@ -167,16 +147,7 @@
                   ],
                   "preserves_type_context" : true
                 }
-              ],
-              "origin" :
-              {
-                "method" : "LSink;.alternative_sink:(LData;)V",
-                "position" :
-                {
-                  "line" : 1,
-                  "path" : "Flow.java"
-                }
-              }
+              ]
             }
           ]
         }
@@ -196,17 +167,6 @@
           "taint" :
           [
             {
-              "call" :
-              {
-                "call_kind" : "CallSite",
-                "port" : "Argument(1)",
-                "position" :
-                {
-                  "line" : 2,
-                  "path" : "Flow.java"
-                },
-                "resolves_to" : "LFlow;.into_alternative_sink:(LData;)V"
-              },
               "call_info" :
               {
                 "call_kind" : "CallSite",
@@ -271,16 +231,7 @@
                   ],
                   "preserves_type_context" : true
                 }
-              ],
-              "origin" :
-              {
-                "method" : "LSink;.sink:(LData;)V",
-                "position" :
-                {
-                  "line" : 1,
-                  "path" : "Flow.java"
-                }
-              }
+              ]
             }
           ]
         }

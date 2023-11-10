@@ -1043,18 +1043,7 @@
               ],
               "preserves_type_context" : true
             }
-          ],
-          "origin" : 
-          {
-            "method" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
-            "position" : 
-            {
-              "end" : 21,
-              "line" : 16,
-              "path" : "Flow.java",
-              "start" : 16
-            }
-          }
+          ]
         }
       ]
     }
@@ -1117,18 +1106,7 @@
               ],
               "preserves_type_context" : true
             }
-          ],
-          "origin" : 
-          {
-            "method" : "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;",
-            "position" : 
-            {
-              "end" : 23,
-              "line" : 12,
-              "path" : "Flow.java",
-              "start" : 18
-            }
-          }
+          ]
         }
       ]
     }
@@ -1155,19 +1133,6 @@
       "sinks" : 
       [
         {
-          "call" : 
-          {
-            "call_kind" : "CallSite",
-            "port" : "Argument(0)",
-            "position" : 
-            {
-              "end" : 44,
-              "line" : 20,
-              "path" : "Flow.java",
-              "start" : 23
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/Flow;.indirect_sink:(Ljava/lang/Object;)V"
-          },
           "call_info" : 
           {
             "call_kind" : "CallSite",
@@ -1225,19 +1190,6 @@
       "sources" : 
       [
         {
-          "call" : 
-          {
-            "call_kind" : "CallSite",
-            "port" : "Return",
-            "position" : 
-            {
-              "end" : 42,
-              "line" : 20,
-              "path" : "Flow.java",
-              "start" : 28
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/Flow;.indirect_source:()Ljava/lang/Object;"
-          },
           "call_info" : 
           {
             "call_kind" : "CallSite",

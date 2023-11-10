@@ -1074,15 +1074,6 @@
             [
               "via-type:Lcom/facebook/marianatrench/integrationtests/Crtex;"
             ]
-          },
-          "origin" : 
-          {
-            "method" : "Lcom/facebook/marianatrench/integrationtests/Crtex;.startActivityHelper:(Landroid/content/Intent;Landroid/app/Activity;)V",
-            "position" : 
-            {
-              "line" : 29,
-              "path" : "Crtex.java"
-            }
           }
         }
       ]
@@ -1207,16 +1198,7 @@
               ],
               "preserves_type_context" : true
             }
-          ],
-          "origin" : 
-          {
-            "method" : "Lcom/facebook/marianatrench/integrationtests/Crtex;.crtex_with_regular_sink:(Landroid/content/Intent;)V",
-            "position" : 
-            {
-              "line" : 52,
-              "path" : "Crtex.java"
-            }
-          }
+          ]
         },
         {
           "call_info" : 
@@ -1249,16 +1231,7 @@
               ],
               "preserves_type_context" : true
             }
-          ],
-          "origin" : 
-          {
-            "method" : "Lcom/facebook/marianatrench/integrationtests/Crtex;.crtex_with_regular_sink:(Landroid/content/Intent;)V",
-            "position" : 
-            {
-              "line" : 52,
-              "path" : "Crtex.java"
-            }
-          }
+          ]
         }
       ]
     }
@@ -1420,15 +1393,6 @@
             [
               "via-type:Landroid/app/Activity;"
             ]
-          },
-          "origin" : 
-          {
-            "method" : "Lcom/facebook/marianatrench/integrationtests/Crtex;.multiple_canonical_names:(Landroid/content/Intent;Landroid/app/Activity;I)V",
-            "position" : 
-            {
-              "line" : 45,
-              "path" : "Crtex.java"
-            }
           }
         }
       ]
@@ -1478,16 +1442,7 @@
               ],
               "preserves_type_context" : true
             }
-          ],
-          "origin" : 
-          {
-            "method" : "Lcom/facebook/marianatrench/integrationtests/Crtex;.multiple_canonical_names:(Landroid/content/Intent;Landroid/app/Activity;I)V",
-            "position" : 
-            {
-              "line" : 45,
-              "path" : "Crtex.java"
-            }
-          }
+          ]
         }
       ]
     }
@@ -1507,17 +1462,6 @@
       "taint" : 
       [
         {
-          "call" : 
-          {
-            "call_kind" : "CallSite",
-            "port" : "Argument(1)",
-            "position" : 
-            {
-              "line" : 33,
-              "path" : "Crtex.java"
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/Crtex;.crtex_precondition_leaf:(Landroid/content/Intent;)V"
-          },
           "call_info" : 
           {
             "call_kind" : "CallSite",
@@ -1635,17 +1579,6 @@
             [
               "via-type:Lcom/facebook/marianatrench/integrationtests/Crtex;"
             ]
-          },
-          "origin" : 
-          {
-            "method" : "Lcom/facebook/marianatrench/integrationtests/Crtex;.startActivityHelper:(Landroid/content/Intent;Landroid/app/Activity;)V",
-            "position" : 
-            {
-              "end" : 28,
-              "line" : 25,
-              "path" : "Crtex.java",
-              "start" : 10
-            }
           }
         }
       ],
@@ -1684,18 +1617,7 @@
               ],
               "preserves_type_context" : true
             }
-          ],
-          "origin" : 
-          {
-            "method" : "Landroid/content/Intent;.<init>:(Ljava/lang/String;Landroid/net/Uri;)V",
-            "position" : 
-            {
-              "end" : 29,
-              "line" : 24,
-              "path" : "Crtex.java",
-              "start" : 20
-            }
-          }
+          ]
         }
       ]
     }

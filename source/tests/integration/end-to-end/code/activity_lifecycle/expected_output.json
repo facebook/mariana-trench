@@ -994,16 +994,6 @@
       "sinks" : 
       [
         {
-          "call" : 
-          {
-            "call_kind" : "CallSite",
-            "port" : "Argument(0).mSource",
-            "position" : 
-            {
-              "line" : 0
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/BaseActivity;.onStart:()V"
-          },
           "call_info" : 
           {
             "call_kind" : "CallSite",
@@ -1040,16 +1030,6 @@
       "sources" : 
       [
         {
-          "call" : 
-          {
-            "call_kind" : "CallSite",
-            "port" : "Argument(0).mSource",
-            "position" : 
-            {
-              "line" : 0
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/BaseActivity;.onCreate:(Landroid/os/Bundle;)V"
-          },
           "call_info" : 
           {
             "call_kind" : "CallSite",
@@ -1094,16 +1074,6 @@
       "taint" : 
       [
         {
-          "call" : 
-          {
-            "call_kind" : "CallSite",
-            "port" : "Argument(0).mSource",
-            "position" : 
-            {
-              "line" : 0
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/BaseActivity;.onStart:()V"
-          },
           "call_info" : 
           {
             "call_kind" : "CallSite",
@@ -1172,19 +1142,6 @@
       "taint" : 
       [
         {
-          "call" : 
-          {
-            "call_kind" : "CallSite",
-            "port" : "Argument(0).mSource",
-            "position" : 
-            {
-              "end" : 7,
-              "line" : 22,
-              "path" : "BaseActivity.java",
-              "start" : 4
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/MainActivity;.doCreate:(Landroid/os/Bundle;)V"
-          },
           "call_info" : 
           {
             "call_kind" : "CallSite",
@@ -1244,19 +1201,6 @@
       "taint" : 
       [
         {
-          "call" : 
-          {
-            "call_kind" : "CallSite",
-            "port" : "Argument(0).mSource",
-            "position" : 
-            {
-              "end" : 7,
-              "line" : 28,
-              "path" : "BaseActivity.java",
-              "start" : 4
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/MainActivity2;.doStart:()V"
-          },
           "call_info" : 
           {
             "call_kind" : "CallSite",
@@ -1358,18 +1302,7 @@
               ],
               "preserves_type_context" : true
             }
-          ],
-          "origin" : 
-          {
-            "method" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
-            "position" : 
-            {
-              "end" : 22,
-              "line" : 23,
-              "path" : "MainActivity2.java",
-              "start" : 16
-            }
-          }
+          ]
         }
       ]
     }
@@ -1431,18 +1364,7 @@
               "line" : 17,
               "start" : 14
             }
-          ],
-          "origin" : 
-          {
-            "method" : "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;",
-            "position" : 
-            {
-              "end" : 26,
-              "line" : 17,
-              "path" : "MainActivity.java",
-              "start" : 21
-            }
-          }
+          ]
         }
       ]
     }

@@ -1258,18 +1258,7 @@
               ],
               "preserves_type_context" : true
             }
-          ],
-          "origin" : 
-          {
-            "method" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
-            "position" : 
-            {
-              "end" : 21,
-              "line" : 92,
-              "path" : "RegexSource.java",
-              "start" : 16
-            }
-          }
+          ]
         }
       ],
       "sources" : 
@@ -1345,18 +1334,7 @@
               "preserves_type_context" : true,
               "triggered_rule" : 1
             }
-          ],
-          "origin" : 
-          {
-            "method" : "Lcom/facebook/marianatrench/integrationtests/RegexSource;.sink:(Ljava/lang/String;Ljava/lang/String;)V",
-            "position" : 
-            {
-              "end" : 18,
-              "line" : 28,
-              "path" : "RegexSource.java",
-              "start" : 16
-            }
-          }
+          ]
         }
       ],
       "sources" : 
@@ -1394,18 +1372,7 @@
               ],
               "preserves_type_context" : true
             }
-          ],
-          "origin" : 
-          {
-            "method" : "Lcom/facebook/marianatrench/integrationtests/RegexSource;.getAttackerControlledInput:()Ljava/lang/String;",
-            "position" : 
-            {
-              "end" : 42,
-              "line" : 27,
-              "path" : "RegexSource.java",
-              "start" : 17
-            }
-          }
+          ]
         }
       ]
     }
@@ -1473,18 +1440,7 @@
               "preserves_type_context" : true,
               "triggered_rule" : 1
             }
-          ],
-          "origin" : 
-          {
-            "method" : "Ljava/text/MessageFormat;.format:(Ljava/lang/String;[Ljava/lang/Object;)Ljava/lang/String;",
-            "position" : 
-            {
-              "end" : 64,
-              "line" : 85,
-              "path" : "RegexSource.java",
-              "start" : 62
-            }
-          }
+          ]
         }
       ],
       "sources" : 
@@ -1537,18 +1493,7 @@
               "line" : 85,
               "start" : 0
             }
-          ],
-          "origin" : 
-          {
-            "method" : "Lcom/facebook/marianatrench/integrationtests/RegexSource;.getAttackerControlledInput:()Ljava/lang/String;",
-            "position" : 
-            {
-              "end" : 42,
-              "line" : 84,
-              "path" : "RegexSource.java",
-              "start" : 17
-            }
-          }
+          ]
         }
       ]
     }
@@ -1616,18 +1561,7 @@
               "preserves_type_context" : true,
               "triggered_rule" : 1
             }
-          ],
-          "origin" : 
-          {
-            "method" : "Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;",
-            "position" : 
-            {
-              "end" : 19,
-              "line" : 70,
-              "path" : "RegexSource.java",
-              "start" : 17
-            }
-          }
+          ]
         }
       ],
       "sources" : 
@@ -1703,18 +1637,7 @@
               "preserves_type_context" : true,
               "triggered_rule" : 1
             }
-          ],
-          "origin" : 
-          {
-            "method" : "Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;",
-            "position" : 
-            {
-              "end" : 22,
-              "line" : 61,
-              "path" : "RegexSource.java",
-              "start" : 17
-            }
-          }
+          ]
         }
       ],
       "sources" : 
@@ -1752,18 +1675,7 @@
               ],
               "preserves_type_context" : true
             }
-          ],
-          "origin" : 
-          {
-            "method" : "Lcom/facebook/marianatrench/integrationtests/RegexSource;.getAttackerControlledInput:()Ljava/lang/String;",
-            "position" : 
-            {
-              "end" : 42,
-              "line" : 59,
-              "path" : "RegexSource.java",
-              "start" : 17
-            }
-          }
+          ]
         }
       ]
     }
@@ -1823,18 +1735,7 @@
               "preserves_type_context" : true,
               "triggered_rule" : 1
             }
-          ],
-          "origin" : 
-          {
-            "method" : "Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;",
-            "position" : 
-            {
-              "end" : 0,
-              "line" : 52,
-              "path" : "RegexSource.java",
-              "start" : 0
-            }
-          }
+          ]
         }
       ],
       "sources" : 
@@ -1910,18 +1811,7 @@
               "preserves_type_context" : true,
               "triggered_rule" : 1
             }
-          ],
-          "origin" : 
-          {
-            "method" : "Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;",
-            "position" : 
-            {
-              "end" : 0,
-              "line" : 43,
-              "path" : "RegexSource.java",
-              "start" : 0
-            }
-          }
+          ]
         }
       ],
       "sources" : 
@@ -1959,18 +1849,7 @@
               ],
               "preserves_type_context" : true
             }
-          ],
-          "origin" : 
-          {
-            "method" : "Lcom/facebook/marianatrench/integrationtests/RegexSource;.getAttackerControlledInput:()Ljava/lang/String;",
-            "position" : 
-            {
-              "end" : 42,
-              "line" : 41,
-              "path" : "RegexSource.java",
-              "start" : 17
-            }
-          }
+          ]
         }
       ]
     }
@@ -2038,18 +1917,7 @@
               "preserves_type_context" : true,
               "triggered_rule" : 1
             }
-          ],
-          "origin" : 
-          {
-            "method" : "Ljava/lang/String;.format:(Ljava/lang/String;[Ljava/lang/Object;)Ljava/lang/String;",
-            "position" : 
-            {
-              "end" : 28,
-              "line" : 78,
-              "path" : "RegexSource.java",
-              "start" : 26
-            }
-          }
+          ]
         }
       ],
       "sources" : 
@@ -2102,18 +1970,7 @@
               "line" : 78,
               "start" : 0
             }
-          ],
-          "origin" : 
-          {
-            "method" : "Lcom/facebook/marianatrench/integrationtests/RegexSource;.getAttackerControlledInput:()Ljava/lang/String;",
-            "position" : 
-            {
-              "end" : 42,
-              "line" : 77,
-              "path" : "RegexSource.java",
-              "start" : 17
-            }
-          }
+          ]
         }
       ]
     }

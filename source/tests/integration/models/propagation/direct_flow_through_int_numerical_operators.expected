@@ -54,16 +54,7 @@
                   ],
                   "preserves_type_context" : true
                 }
-              ],
-              "origin" :
-              {
-                "method" : "LSink;.sink:(LData;)V",
-                "position" :
-                {
-                  "line" : 6,
-                  "path" : "Flow.java"
-                }
-              }
+              ]
             }
           ],
           "sources" :
@@ -118,16 +109,7 @@
                 {
                   "line" : 4
                 }
-              ],
-              "origin" :
-              {
-                "method" : "LSource;.source:()LData;",
-                "position" :
-                {
-                  "line" : 1,
-                  "path" : "Flow.java"
-                }
-              }
+              ]
             }
           ]
         }

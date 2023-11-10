@@ -1211,18 +1211,7 @@
               ],
               "preserves_type_context" : true
             }
-          ],
-          "origin" : 
-          {
-            "method" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
-            "position" : 
-            {
-              "end" : 30,
-              "line" : 30,
-              "path" : "RecorderActivity.java",
-              "start" : 16
-            }
-          }
+          ]
         }
       ],
       "sources" : 
@@ -1260,18 +1249,7 @@
               ],
               "preserves_type_context" : true
             }
-          ],
-          "origin" : 
-          {
-            "method" : "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;",
-            "position" : 
-            {
-              "end" : 28,
-              "line" : 30,
-              "path" : "RecorderActivity.java",
-              "start" : 23
-            }
-          }
+          ]
         }
       ]
     }
@@ -1346,17 +1324,6 @@
             [
               "via-type:Lcom/facebook/marianatrench/integrationtests/RecorderActivity;"
             ]
-          },
-          "origin" : 
-          {
-            "method" : "Lcom/facebook/content/SecureContextHelper;.startFacebookActivityForResult:(Landroid/content/Intent;ILandroid/app/Activity;)V",
-            "position" : 
-            {
-              "end" : 61,
-              "line" : 22,
-              "path" : "RecorderActivity.java",
-              "start" : 56
-            }
           }
         }
       ],
@@ -1406,17 +1373,6 @@
             [
               "via-type:Lcom/facebook/marianatrench/integrationtests/TestUri;"
             ]
-          },
-          "origin" : 
-          {
-            "method" : "Landroid/content/Intent;.<init>:(Ljava/lang/String;Landroid/net/Uri;)V",
-            "position" : 
-            {
-              "end" : 29,
-              "line" : 21,
-              "path" : "RecorderActivity.java",
-              "start" : 20
-            }
           }
         }
       ]

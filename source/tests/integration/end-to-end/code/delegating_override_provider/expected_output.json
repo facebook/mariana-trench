@@ -1007,19 +1007,6 @@
       "sinks" : 
       [
         {
-          "call" : 
-          {
-            "call_kind" : "CallSite",
-            "port" : "Argument(1)",
-            "position" : 
-            {
-              "end" : 21,
-              "line" : 18,
-              "path" : "AbstractContentProvider.java",
-              "start" : 19
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/CallableContentProvider;.doQuery:(Landroid/net/Uri;[Ljava/lang/String;Ljava/lang/String;[Ljava/lang/String;Ljava/lang/String;)Landroid/database/Cursor;"
-          },
           "call_info" : 
           {
             "call_kind" : "CallSite",
@@ -1081,15 +1068,7 @@
                 }
               ]
             }
-          ],
-          "origin" : 
-          {
-            "position" : 
-            {
-              "line" : 17,
-              "path" : "AbstractContentProvider.java"
-            }
-          }
+          ]
         }
       ]
     }
@@ -1136,19 +1115,6 @@
       "taint" : 
       [
         {
-          "call" : 
-          {
-            "call_kind" : "CallSite",
-            "port" : "Argument(1)",
-            "position" : 
-            {
-              "end" : 21,
-              "line" : 18,
-              "path" : "AbstractContentProvider.java",
-              "start" : 19
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/CallableContentProvider;.doQuery:(Landroid/net/Uri;[Ljava/lang/String;Ljava/lang/String;[Ljava/lang/String;Ljava/lang/String;)Landroid/database/Cursor;"
-          },
           "call_info" : 
           {
             "call_kind" : "CallSite",
@@ -1242,18 +1208,7 @@
               ],
               "preserves_type_context" : true
             }
-          ],
-          "origin" : 
-          {
-            "method" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
-            "position" : 
-            {
-              "end" : 18,
-              "line" : 18,
-              "path" : "CallableContentProvider.java",
-              "start" : 16
-            }
-          }
+          ]
         }
       ]
     }

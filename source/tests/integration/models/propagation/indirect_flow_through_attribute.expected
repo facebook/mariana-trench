@@ -13,17 +13,6 @@
           "taint" :
           [
             {
-              "call" :
-              {
-                "call_kind" : "CallSite",
-                "port" : "Argument(0).field",
-                "position" :
-                {
-                  "line" : 1,
-                  "path" : "Flow.java"
-                },
-                "resolves_to" : "LFlow;.into_attribute:()V"
-              },
               "call_info" :
               {
                 "call_kind" : "CallSite",
@@ -108,32 +97,12 @@
                   ],
                   "preserves_type_context" : true
                 }
-              ],
-              "origin" :
-              {
-                "method" : "LSink;.sink:(LData;)V",
-                "position" :
-                {
-                  "line" : 2,
-                  "path" : "Flow.java"
-                }
-              }
+              ]
             }
           ],
           "sources" :
           [
             {
-              "call" :
-              {
-                "call_kind" : "CallSite",
-                "port" : "Argument(0).field",
-                "position" :
-                {
-                  "line" : 1,
-                  "path" : "Flow.java"
-                },
-                "resolves_to" : "LFlow;.into_attribute:()V"
-              },
               "call_info" :
               {
                 "call_kind" : "CallSite",
@@ -220,16 +189,7 @@
                   ],
                   "preserves_type_context" : true
                 }
-              ],
-              "origin" :
-              {
-                "method" : "LSink;.sink:(LData;)V",
-                "position" :
-                {
-                  "line" : 2,
-                  "path" : "Flow.java"
-                }
-              }
+              ]
             }
           ]
         }
@@ -279,16 +239,7 @@
                 {
                   "line" : 2
                 }
-              ],
-              "origin" :
-              {
-                "method" : "LSource;.source:()LData;",
-                "position" :
-                {
-                  "line" : 1,
-                  "path" : "Flow.java"
-                }
-              }
+              ]
             }
           ]
         }

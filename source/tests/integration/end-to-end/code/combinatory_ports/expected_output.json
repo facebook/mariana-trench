@@ -1028,17 +1028,6 @@
       "taint" : 
       [
         {
-          "call" : 
-          {
-            "call_kind" : "CallSite",
-            "port" : "Argument(0).a.a.a",
-            "position" : 
-            {
-              "line" : 21,
-              "path" : "Flow.java"
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/Flow$A;.method:()V"
-          },
           "call_info" : 
           {
             "call_kind" : "CallSite",
@@ -1078,17 +1067,6 @@
           }
         },
         {
-          "call" : 
-          {
-            "call_kind" : "CallSite",
-            "port" : "Argument(0).a.a.b",
-            "position" : 
-            {
-              "line" : 21,
-              "path" : "Flow.java"
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/Flow$A;.method:()V"
-          },
           "call_info" : 
           {
             "call_kind" : "CallSite",
@@ -1128,17 +1106,6 @@
           }
         },
         {
-          "call" : 
-          {
-            "call_kind" : "CallSite",
-            "port" : "Argument(0).a.a.c",
-            "position" : 
-            {
-              "line" : 21,
-              "path" : "Flow.java"
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/Flow$A;.method:()V"
-          },
           "call_info" : 
           {
             "call_kind" : "CallSite",
@@ -1178,17 +1145,6 @@
           }
         },
         {
-          "call" : 
-          {
-            "call_kind" : "CallSite",
-            "port" : "Argument(0).a.a.x",
-            "position" : 
-            {
-              "line" : 21,
-              "path" : "Flow.java"
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/Flow$A;.method:()V"
-          },
           "call_info" : 
           {
             "call_kind" : "CallSite",
@@ -1230,17 +1186,6 @@
       "taint" : 
       [
         {
-          "call" : 
-          {
-            "call_kind" : "CallSite",
-            "port" : "Argument(0).a.b.a",
-            "position" : 
-            {
-              "line" : 21,
-              "path" : "Flow.java"
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/Flow$A;.method:()V"
-          },
           "call_info" : 
           {
             "call_kind" : "CallSite",
@@ -1280,17 +1225,6 @@
           }
         },
         {
-          "call" : 
-          {
-            "call_kind" : "CallSite",
-            "port" : "Argument(0).a.b.b",
-            "position" : 
-            {
-              "line" : 21,
-              "path" : "Flow.java"
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/Flow$A;.method:()V"
-          },
           "call_info" : 
           {
             "call_kind" : "CallSite",
@@ -1330,17 +1264,6 @@
           }
         },
         {
-          "call" : 
-          {
-            "call_kind" : "CallSite",
-            "port" : "Argument(0).a.b.c",
-            "position" : 
-            {
-              "line" : 21,
-              "path" : "Flow.java"
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/Flow$A;.method:()V"
-          },
           "call_info" : 
           {
             "call_kind" : "CallSite",
@@ -1380,17 +1303,6 @@
           }
         },
         {
-          "call" : 
-          {
-            "call_kind" : "CallSite",
-            "port" : "Argument(0).a.b.x",
-            "position" : 
-            {
-              "line" : 21,
-              "path" : "Flow.java"
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/Flow$A;.method:()V"
-          },
           "call_info" : 
           {
             "call_kind" : "CallSite",
@@ -1432,17 +1344,6 @@
       "taint" : 
       [
         {
-          "call" : 
-          {
-            "call_kind" : "CallSite",
-            "port" : "Argument(0).a.c.a",
-            "position" : 
-            {
-              "line" : 21,
-              "path" : "Flow.java"
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/Flow$A;.method:()V"
-          },
           "call_info" : 
           {
             "call_kind" : "CallSite",
@@ -1482,17 +1383,6 @@
           }
         },
         {
-          "call" : 
-          {
-            "call_kind" : "CallSite",
-            "port" : "Argument(0).a.c.b",
-            "position" : 
-            {
-              "line" : 21,
-              "path" : "Flow.java"
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/Flow$A;.method:()V"
-          },
           "call_info" : 
           {
             "call_kind" : "CallSite",
@@ -1532,17 +1422,6 @@
           }
         },
         {
-          "call" : 
-          {
-            "call_kind" : "CallSite",
-            "port" : "Argument(0).a.c.c",
-            "position" : 
-            {
-              "line" : 21,
-              "path" : "Flow.java"
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/Flow$A;.method:()V"
-          },
           "call_info" : 
           {
             "call_kind" : "CallSite",
@@ -1582,17 +1461,6 @@
           }
         },
         {
-          "call" : 
-          {
-            "call_kind" : "CallSite",
-            "port" : "Argument(0).a.c.x",
-            "position" : 
-            {
-              "line" : 21,
-              "path" : "Flow.java"
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/Flow$A;.method:()V"
-          },
           "call_info" : 
           {
             "call_kind" : "CallSite",
@@ -1634,17 +1502,6 @@
       "taint" : 
       [
         {
-          "call" : 
-          {
-            "call_kind" : "CallSite",
-            "port" : "Argument(0).a.x",
-            "position" : 
-            {
-              "line" : 21,
-              "path" : "Flow.java"
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/Flow$A;.method:()V"
-          },
           "call_info" : 
           {
             "call_kind" : "CallSite",
@@ -1679,17 +1536,6 @@
       "taint" : 
       [
         {
-          "call" : 
-          {
-            "call_kind" : "CallSite",
-            "port" : "Argument(0).b.a.a",
-            "position" : 
-            {
-              "line" : 21,
-              "path" : "Flow.java"
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/Flow$B;.method:()V"
-          },
           "call_info" : 
           {
             "call_kind" : "CallSite",
@@ -1729,17 +1575,6 @@
           }
         },
         {
-          "call" : 
-          {
-            "call_kind" : "CallSite",
-            "port" : "Argument(0).b.a.b",
-            "position" : 
-            {
-              "line" : 21,
-              "path" : "Flow.java"
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/Flow$B;.method:()V"
-          },
           "call_info" : 
           {
             "call_kind" : "CallSite",
@@ -1779,17 +1614,6 @@
           }
         },
         {
-          "call" : 
-          {
-            "call_kind" : "CallSite",
-            "port" : "Argument(0).b.a.c",
-            "position" : 
-            {
-              "line" : 21,
-              "path" : "Flow.java"
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/Flow$B;.method:()V"
-          },
           "call_info" : 
           {
             "call_kind" : "CallSite",
@@ -1829,17 +1653,6 @@
           }
         },
         {
-          "call" : 
-          {
-            "call_kind" : "CallSite",
-            "port" : "Argument(0).b.a.x",
-            "position" : 
-            {
-              "line" : 21,
-              "path" : "Flow.java"
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/Flow$B;.method:()V"
-          },
           "call_info" : 
           {
             "call_kind" : "CallSite",
@@ -1881,17 +1694,6 @@
       "taint" : 
       [
         {
-          "call" : 
-          {
-            "call_kind" : "CallSite",
-            "port" : "Argument(0).b.b.a",
-            "position" : 
-            {
-              "line" : 21,
-              "path" : "Flow.java"
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/Flow$B;.method:()V"
-          },
           "call_info" : 
           {
             "call_kind" : "CallSite",
@@ -1931,17 +1733,6 @@
           }
         },
         {
-          "call" : 
-          {
-            "call_kind" : "CallSite",
-            "port" : "Argument(0).b.b.b",
-            "position" : 
-            {
-              "line" : 21,
-              "path" : "Flow.java"
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/Flow$B;.method:()V"
-          },
           "call_info" : 
           {
             "call_kind" : "CallSite",
@@ -1981,17 +1772,6 @@
           }
         },
         {
-          "call" : 
-          {
-            "call_kind" : "CallSite",
-            "port" : "Argument(0).b.b.c",
-            "position" : 
-            {
-              "line" : 21,
-              "path" : "Flow.java"
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/Flow$B;.method:()V"
-          },
           "call_info" : 
           {
             "call_kind" : "CallSite",
@@ -2031,17 +1811,6 @@
           }
         },
         {
-          "call" : 
-          {
-            "call_kind" : "CallSite",
-            "port" : "Argument(0).b.b.x",
-            "position" : 
-            {
-              "line" : 21,
-              "path" : "Flow.java"
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/Flow$B;.method:()V"
-          },
           "call_info" : 
           {
             "call_kind" : "CallSite",
@@ -2083,17 +1852,6 @@
       "taint" : 
       [
         {
-          "call" : 
-          {
-            "call_kind" : "CallSite",
-            "port" : "Argument(0).b.c.a",
-            "position" : 
-            {
-              "line" : 21,
-              "path" : "Flow.java"
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/Flow$B;.method:()V"
-          },
           "call_info" : 
           {
             "call_kind" : "CallSite",
@@ -2133,17 +1891,6 @@
           }
         },
         {
-          "call" : 
-          {
-            "call_kind" : "CallSite",
-            "port" : "Argument(0).b.c.b",
-            "position" : 
-            {
-              "line" : 21,
-              "path" : "Flow.java"
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/Flow$B;.method:()V"
-          },
           "call_info" : 
           {
             "call_kind" : "CallSite",
@@ -2183,17 +1930,6 @@
           }
         },
         {
-          "call" : 
-          {
-            "call_kind" : "CallSite",
-            "port" : "Argument(0).b.c.c",
-            "position" : 
-            {
-              "line" : 21,
-              "path" : "Flow.java"
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/Flow$B;.method:()V"
-          },
           "call_info" : 
           {
             "call_kind" : "CallSite",
@@ -2233,17 +1969,6 @@
           }
         },
         {
-          "call" : 
-          {
-            "call_kind" : "CallSite",
-            "port" : "Argument(0).b.c.x",
-            "position" : 
-            {
-              "line" : 21,
-              "path" : "Flow.java"
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/Flow$B;.method:()V"
-          },
           "call_info" : 
           {
             "call_kind" : "CallSite",
@@ -2285,17 +2010,6 @@
       "taint" : 
       [
         {
-          "call" : 
-          {
-            "call_kind" : "CallSite",
-            "port" : "Argument(0).b.x",
-            "position" : 
-            {
-              "line" : 21,
-              "path" : "Flow.java"
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/Flow$B;.method:()V"
-          },
           "call_info" : 
           {
             "call_kind" : "CallSite",
@@ -2330,17 +2044,6 @@
       "taint" : 
       [
         {
-          "call" : 
-          {
-            "call_kind" : "CallSite",
-            "port" : "Argument(0).c.a.a",
-            "position" : 
-            {
-              "line" : 21,
-              "path" : "Flow.java"
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/Flow$C;.method:()V"
-          },
           "call_info" : 
           {
             "call_kind" : "CallSite",
@@ -2380,17 +2083,6 @@
           }
         },
         {
-          "call" : 
-          {
-            "call_kind" : "CallSite",
-            "port" : "Argument(0).c.a.b",
-            "position" : 
-            {
-              "line" : 21,
-              "path" : "Flow.java"
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/Flow$C;.method:()V"
-          },
           "call_info" : 
           {
             "call_kind" : "CallSite",
@@ -2430,17 +2122,6 @@
           }
         },
         {
-          "call" : 
-          {
-            "call_kind" : "CallSite",
-            "port" : "Argument(0).c.a.c",
-            "position" : 
-            {
-              "line" : 21,
-              "path" : "Flow.java"
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/Flow$C;.method:()V"
-          },
           "call_info" : 
           {
             "call_kind" : "CallSite",
@@ -2480,17 +2161,6 @@
           }
         },
         {
-          "call" : 
-          {
-            "call_kind" : "CallSite",
-            "port" : "Argument(0).c.a.x",
-            "position" : 
-            {
-              "line" : 21,
-              "path" : "Flow.java"
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/Flow$C;.method:()V"
-          },
           "call_info" : 
           {
             "call_kind" : "CallSite",
@@ -2532,17 +2202,6 @@
       "taint" : 
       [
         {
-          "call" : 
-          {
-            "call_kind" : "CallSite",
-            "port" : "Argument(0).c.b.a",
-            "position" : 
-            {
-              "line" : 21,
-              "path" : "Flow.java"
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/Flow$C;.method:()V"
-          },
           "call_info" : 
           {
             "call_kind" : "CallSite",
@@ -2582,17 +2241,6 @@
           }
         },
         {
-          "call" : 
-          {
-            "call_kind" : "CallSite",
-            "port" : "Argument(0).c.b.b",
-            "position" : 
-            {
-              "line" : 21,
-              "path" : "Flow.java"
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/Flow$C;.method:()V"
-          },
           "call_info" : 
           {
             "call_kind" : "CallSite",
@@ -2632,17 +2280,6 @@
           }
         },
         {
-          "call" : 
-          {
-            "call_kind" : "CallSite",
-            "port" : "Argument(0).c.b.c",
-            "position" : 
-            {
-              "line" : 21,
-              "path" : "Flow.java"
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/Flow$C;.method:()V"
-          },
           "call_info" : 
           {
             "call_kind" : "CallSite",
@@ -2682,17 +2319,6 @@
           }
         },
         {
-          "call" : 
-          {
-            "call_kind" : "CallSite",
-            "port" : "Argument(0).c.b.x",
-            "position" : 
-            {
-              "line" : 21,
-              "path" : "Flow.java"
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/Flow$C;.method:()V"
-          },
           "call_info" : 
           {
             "call_kind" : "CallSite",
@@ -2734,17 +2360,6 @@
       "taint" : 
       [
         {
-          "call" : 
-          {
-            "call_kind" : "CallSite",
-            "port" : "Argument(0).c.c.a",
-            "position" : 
-            {
-              "line" : 21,
-              "path" : "Flow.java"
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/Flow$C;.method:()V"
-          },
           "call_info" : 
           {
             "call_kind" : "CallSite",
@@ -2784,17 +2399,6 @@
           }
         },
         {
-          "call" : 
-          {
-            "call_kind" : "CallSite",
-            "port" : "Argument(0).c.c.b",
-            "position" : 
-            {
-              "line" : 21,
-              "path" : "Flow.java"
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/Flow$C;.method:()V"
-          },
           "call_info" : 
           {
             "call_kind" : "CallSite",
@@ -2834,17 +2438,6 @@
           }
         },
         {
-          "call" : 
-          {
-            "call_kind" : "CallSite",
-            "port" : "Argument(0).c.c.c",
-            "position" : 
-            {
-              "line" : 21,
-              "path" : "Flow.java"
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/Flow$C;.method:()V"
-          },
           "call_info" : 
           {
             "call_kind" : "CallSite",
@@ -2884,17 +2477,6 @@
           }
         },
         {
-          "call" : 
-          {
-            "call_kind" : "CallSite",
-            "port" : "Argument(0).c.c.x",
-            "position" : 
-            {
-              "line" : 21,
-              "path" : "Flow.java"
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/Flow$C;.method:()V"
-          },
           "call_info" : 
           {
             "call_kind" : "CallSite",
@@ -2936,17 +2518,6 @@
       "taint" : 
       [
         {
-          "call" : 
-          {
-            "call_kind" : "CallSite",
-            "port" : "Argument(0).c.x",
-            "position" : 
-            {
-              "line" : 21,
-              "path" : "Flow.java"
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/Flow$C;.method:()V"
-          },
           "call_info" : 
           {
             "call_kind" : "CallSite",
@@ -2981,17 +2552,6 @@
       "taint" : 
       [
         {
-          "call" : 
-          {
-            "call_kind" : "CallSite",
-            "port" : "Argument(0).x",
-            "position" : 
-            {
-              "line" : 21,
-              "path" : "Flow.java"
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/Flow$C;.method:()V"
-          },
           "call_info" : 
           {
             "call_kind" : "CallSite",
@@ -3085,17 +2645,6 @@
       "taint" : 
       [
         {
-          "call" : 
-          {
-            "call_kind" : "CallSite",
-            "port" : "Argument(0).a.a.a",
-            "position" : 
-            {
-              "line" : 29,
-              "path" : "Flow.java"
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/Flow$A;.method:()V"
-          },
           "call_info" : 
           {
             "call_kind" : "CallSite",
@@ -3135,17 +2684,6 @@
           }
         },
         {
-          "call" : 
-          {
-            "call_kind" : "CallSite",
-            "port" : "Argument(0).a.a.b",
-            "position" : 
-            {
-              "line" : 29,
-              "path" : "Flow.java"
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/Flow$A;.method:()V"
-          },
           "call_info" : 
           {
             "call_kind" : "CallSite",
@@ -3185,17 +2723,6 @@
           }
         },
         {
-          "call" : 
-          {
-            "call_kind" : "CallSite",
-            "port" : "Argument(0).a.a.c",
-            "position" : 
-            {
-              "line" : 29,
-              "path" : "Flow.java"
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/Flow$A;.method:()V"
-          },
           "call_info" : 
           {
             "call_kind" : "CallSite",
@@ -3235,17 +2762,6 @@
           }
         },
         {
-          "call" : 
-          {
-            "call_kind" : "CallSite",
-            "port" : "Argument(0).a.a.x",
-            "position" : 
-            {
-              "line" : 29,
-              "path" : "Flow.java"
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/Flow$A;.method:()V"
-          },
           "call_info" : 
           {
             "call_kind" : "CallSite",
@@ -3287,17 +2803,6 @@
       "taint" : 
       [
         {
-          "call" : 
-          {
-            "call_kind" : "CallSite",
-            "port" : "Argument(0).a.b.a",
-            "position" : 
-            {
-              "line" : 29,
-              "path" : "Flow.java"
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/Flow$A;.method:()V"
-          },
           "call_info" : 
           {
             "call_kind" : "CallSite",
@@ -3337,17 +2842,6 @@
           }
         },
         {
-          "call" : 
-          {
-            "call_kind" : "CallSite",
-            "port" : "Argument(0).a.b.b",
-            "position" : 
-            {
-              "line" : 29,
-              "path" : "Flow.java"
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/Flow$A;.method:()V"
-          },
           "call_info" : 
           {
             "call_kind" : "CallSite",
@@ -3387,17 +2881,6 @@
           }
         },
         {
-          "call" : 
-          {
-            "call_kind" : "CallSite",
-            "port" : "Argument(0).a.b.c",
-            "position" : 
-            {
-              "line" : 29,
-              "path" : "Flow.java"
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/Flow$A;.method:()V"
-          },
           "call_info" : 
           {
             "call_kind" : "CallSite",
@@ -3437,17 +2920,6 @@
           }
         },
         {
-          "call" : 
-          {
-            "call_kind" : "CallSite",
-            "port" : "Argument(0).a.b.x",
-            "position" : 
-            {
-              "line" : 29,
-              "path" : "Flow.java"
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/Flow$A;.method:()V"
-          },
           "call_info" : 
           {
             "call_kind" : "CallSite",
@@ -3489,17 +2961,6 @@
       "taint" : 
       [
         {
-          "call" : 
-          {
-            "call_kind" : "CallSite",
-            "port" : "Argument(0).a.c.a",
-            "position" : 
-            {
-              "line" : 29,
-              "path" : "Flow.java"
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/Flow$A;.method:()V"
-          },
           "call_info" : 
           {
             "call_kind" : "CallSite",
@@ -3539,17 +3000,6 @@
           }
         },
         {
-          "call" : 
-          {
-            "call_kind" : "CallSite",
-            "port" : "Argument(0).a.c.b",
-            "position" : 
-            {
-              "line" : 29,
-              "path" : "Flow.java"
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/Flow$A;.method:()V"
-          },
           "call_info" : 
           {
             "call_kind" : "CallSite",
@@ -3589,17 +3039,6 @@
           }
         },
         {
-          "call" : 
-          {
-            "call_kind" : "CallSite",
-            "port" : "Argument(0).a.c.c",
-            "position" : 
-            {
-              "line" : 29,
-              "path" : "Flow.java"
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/Flow$A;.method:()V"
-          },
           "call_info" : 
           {
             "call_kind" : "CallSite",
@@ -3639,17 +3078,6 @@
           }
         },
         {
-          "call" : 
-          {
-            "call_kind" : "CallSite",
-            "port" : "Argument(0).a.c.x",
-            "position" : 
-            {
-              "line" : 29,
-              "path" : "Flow.java"
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/Flow$A;.method:()V"
-          },
           "call_info" : 
           {
             "call_kind" : "CallSite",
@@ -3691,17 +3119,6 @@
       "taint" : 
       [
         {
-          "call" : 
-          {
-            "call_kind" : "CallSite",
-            "port" : "Argument(0).a.x",
-            "position" : 
-            {
-              "line" : 29,
-              "path" : "Flow.java"
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/Flow$A;.method:()V"
-          },
           "call_info" : 
           {
             "call_kind" : "CallSite",
@@ -3736,17 +3153,6 @@
       "taint" : 
       [
         {
-          "call" : 
-          {
-            "call_kind" : "CallSite",
-            "port" : "Argument(0).b.a.a",
-            "position" : 
-            {
-              "line" : 29,
-              "path" : "Flow.java"
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/Flow$B;.method:()V"
-          },
           "call_info" : 
           {
             "call_kind" : "CallSite",
@@ -3786,17 +3192,6 @@
           }
         },
         {
-          "call" : 
-          {
-            "call_kind" : "CallSite",
-            "port" : "Argument(0).b.a.b",
-            "position" : 
-            {
-              "line" : 29,
-              "path" : "Flow.java"
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/Flow$B;.method:()V"
-          },
           "call_info" : 
           {
             "call_kind" : "CallSite",
@@ -3836,17 +3231,6 @@
           }
         },
         {
-          "call" : 
-          {
-            "call_kind" : "CallSite",
-            "port" : "Argument(0).b.a.c",
-            "position" : 
-            {
-              "line" : 29,
-              "path" : "Flow.java"
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/Flow$B;.method:()V"
-          },
           "call_info" : 
           {
             "call_kind" : "CallSite",
@@ -3886,17 +3270,6 @@
           }
         },
         {
-          "call" : 
-          {
-            "call_kind" : "CallSite",
-            "port" : "Argument(0).b.a.x",
-            "position" : 
-            {
-              "line" : 29,
-              "path" : "Flow.java"
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/Flow$B;.method:()V"
-          },
           "call_info" : 
           {
             "call_kind" : "CallSite",
@@ -3938,17 +3311,6 @@
       "taint" : 
       [
         {
-          "call" : 
-          {
-            "call_kind" : "CallSite",
-            "port" : "Argument(0).b.b.a",
-            "position" : 
-            {
-              "line" : 29,
-              "path" : "Flow.java"
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/Flow$B;.method:()V"
-          },
           "call_info" : 
           {
             "call_kind" : "CallSite",
@@ -3988,17 +3350,6 @@
           }
         },
         {
-          "call" : 
-          {
-            "call_kind" : "CallSite",
-            "port" : "Argument(0).b.b.b",
-            "position" : 
-            {
-              "line" : 29,
-              "path" : "Flow.java"
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/Flow$B;.method:()V"
-          },
           "call_info" : 
           {
             "call_kind" : "CallSite",
@@ -4038,17 +3389,6 @@
           }
         },
         {
-          "call" : 
-          {
-            "call_kind" : "CallSite",
-            "port" : "Argument(0).b.b.c",
-            "position" : 
-            {
-              "line" : 29,
-              "path" : "Flow.java"
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/Flow$B;.method:()V"
-          },
           "call_info" : 
           {
             "call_kind" : "CallSite",
@@ -4088,17 +3428,6 @@
           }
         },
         {
-          "call" : 
-          {
-            "call_kind" : "CallSite",
-            "port" : "Argument(0).b.b.x",
-            "position" : 
-            {
-              "line" : 29,
-              "path" : "Flow.java"
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/Flow$B;.method:()V"
-          },
           "call_info" : 
           {
             "call_kind" : "CallSite",
@@ -4140,17 +3469,6 @@
       "taint" : 
       [
         {
-          "call" : 
-          {
-            "call_kind" : "CallSite",
-            "port" : "Argument(0).b.c.a",
-            "position" : 
-            {
-              "line" : 29,
-              "path" : "Flow.java"
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/Flow$B;.method:()V"
-          },
           "call_info" : 
           {
             "call_kind" : "CallSite",
@@ -4190,17 +3508,6 @@
           }
         },
         {
-          "call" : 
-          {
-            "call_kind" : "CallSite",
-            "port" : "Argument(0).b.c.b",
-            "position" : 
-            {
-              "line" : 29,
-              "path" : "Flow.java"
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/Flow$B;.method:()V"
-          },
           "call_info" : 
           {
             "call_kind" : "CallSite",
@@ -4240,17 +3547,6 @@
           }
         },
         {
-          "call" : 
-          {
-            "call_kind" : "CallSite",
-            "port" : "Argument(0).b.c.c",
-            "position" : 
-            {
-              "line" : 29,
-              "path" : "Flow.java"
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/Flow$B;.method:()V"
-          },
           "call_info" : 
           {
             "call_kind" : "CallSite",
@@ -4290,17 +3586,6 @@
           }
         },
         {
-          "call" : 
-          {
-            "call_kind" : "CallSite",
-            "port" : "Argument(0).b.c.x",
-            "position" : 
-            {
-              "line" : 29,
-              "path" : "Flow.java"
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/Flow$B;.method:()V"
-          },
           "call_info" : 
           {
             "call_kind" : "CallSite",
@@ -4342,17 +3627,6 @@
       "taint" : 
       [
         {
-          "call" : 
-          {
-            "call_kind" : "CallSite",
-            "port" : "Argument(0).b.x",
-            "position" : 
-            {
-              "line" : 29,
-              "path" : "Flow.java"
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/Flow$B;.method:()V"
-          },
           "call_info" : 
           {
             "call_kind" : "CallSite",
@@ -4387,17 +3661,6 @@
       "taint" : 
       [
         {
-          "call" : 
-          {
-            "call_kind" : "CallSite",
-            "port" : "Argument(0).c.a.a",
-            "position" : 
-            {
-              "line" : 29,
-              "path" : "Flow.java"
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/Flow$C;.method:()V"
-          },
           "call_info" : 
           {
             "call_kind" : "CallSite",
@@ -4437,17 +3700,6 @@
           }
         },
         {
-          "call" : 
-          {
-            "call_kind" : "CallSite",
-            "port" : "Argument(0).c.a.b",
-            "position" : 
-            {
-              "line" : 29,
-              "path" : "Flow.java"
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/Flow$C;.method:()V"
-          },
           "call_info" : 
           {
             "call_kind" : "CallSite",
@@ -4487,17 +3739,6 @@
           }
         },
         {
-          "call" : 
-          {
-            "call_kind" : "CallSite",
-            "port" : "Argument(0).c.a.c",
-            "position" : 
-            {
-              "line" : 29,
-              "path" : "Flow.java"
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/Flow$C;.method:()V"
-          },
           "call_info" : 
           {
             "call_kind" : "CallSite",
@@ -4537,17 +3778,6 @@
           }
         },
         {
-          "call" : 
-          {
-            "call_kind" : "CallSite",
-            "port" : "Argument(0).c.a.x",
-            "position" : 
-            {
-              "line" : 29,
-              "path" : "Flow.java"
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/Flow$C;.method:()V"
-          },
           "call_info" : 
           {
             "call_kind" : "CallSite",
@@ -4589,17 +3819,6 @@
       "taint" : 
       [
         {
-          "call" : 
-          {
-            "call_kind" : "CallSite",
-            "port" : "Argument(0).c.b.a",
-            "position" : 
-            {
-              "line" : 29,
-              "path" : "Flow.java"
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/Flow$C;.method:()V"
-          },
           "call_info" : 
           {
             "call_kind" : "CallSite",
@@ -4639,17 +3858,6 @@
           }
         },
         {
-          "call" : 
-          {
-            "call_kind" : "CallSite",
-            "port" : "Argument(0).c.b.b",
-            "position" : 
-            {
-              "line" : 29,
-              "path" : "Flow.java"
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/Flow$C;.method:()V"
-          },
           "call_info" : 
           {
             "call_kind" : "CallSite",
@@ -4689,17 +3897,6 @@
           }
         },
         {
-          "call" : 
-          {
-            "call_kind" : "CallSite",
-            "port" : "Argument(0).c.b.c",
-            "position" : 
-            {
-              "line" : 29,
-              "path" : "Flow.java"
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/Flow$C;.method:()V"
-          },
           "call_info" : 
           {
             "call_kind" : "CallSite",
@@ -4739,17 +3936,6 @@
           }
         },
         {
-          "call" : 
-          {
-            "call_kind" : "CallSite",
-            "port" : "Argument(0).c.b.x",
-            "position" : 
-            {
-              "line" : 29,
-              "path" : "Flow.java"
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/Flow$C;.method:()V"
-          },
           "call_info" : 
           {
             "call_kind" : "CallSite",
@@ -4791,17 +3977,6 @@
       "taint" : 
       [
         {
-          "call" : 
-          {
-            "call_kind" : "CallSite",
-            "port" : "Argument(0).c.c.a",
-            "position" : 
-            {
-              "line" : 29,
-              "path" : "Flow.java"
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/Flow$C;.method:()V"
-          },
           "call_info" : 
           {
             "call_kind" : "CallSite",
@@ -4841,17 +4016,6 @@
           }
         },
         {
-          "call" : 
-          {
-            "call_kind" : "CallSite",
-            "port" : "Argument(0).c.c.b",
-            "position" : 
-            {
-              "line" : 29,
-              "path" : "Flow.java"
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/Flow$C;.method:()V"
-          },
           "call_info" : 
           {
             "call_kind" : "CallSite",
@@ -4891,17 +4055,6 @@
           }
         },
         {
-          "call" : 
-          {
-            "call_kind" : "CallSite",
-            "port" : "Argument(0).c.c.c",
-            "position" : 
-            {
-              "line" : 29,
-              "path" : "Flow.java"
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/Flow$C;.method:()V"
-          },
           "call_info" : 
           {
             "call_kind" : "CallSite",
@@ -4941,17 +4094,6 @@
           }
         },
         {
-          "call" : 
-          {
-            "call_kind" : "CallSite",
-            "port" : "Argument(0).c.c.x",
-            "position" : 
-            {
-              "line" : 29,
-              "path" : "Flow.java"
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/Flow$C;.method:()V"
-          },
           "call_info" : 
           {
             "call_kind" : "CallSite",
@@ -4993,17 +4135,6 @@
       "taint" : 
       [
         {
-          "call" : 
-          {
-            "call_kind" : "CallSite",
-            "port" : "Argument(0).c.x",
-            "position" : 
-            {
-              "line" : 29,
-              "path" : "Flow.java"
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/Flow$C;.method:()V"
-          },
           "call_info" : 
           {
             "call_kind" : "CallSite",
@@ -5038,17 +4169,6 @@
       "taint" : 
       [
         {
-          "call" : 
-          {
-            "call_kind" : "CallSite",
-            "port" : "Argument(0).x",
-            "position" : 
-            {
-              "line" : 29,
-              "path" : "Flow.java"
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/Flow$C;.method:()V"
-          },
           "call_info" : 
           {
             "call_kind" : "CallSite",
@@ -5154,17 +4274,6 @@
       "taint" : 
       [
         {
-          "call" : 
-          {
-            "call_kind" : "CallSite",
-            "port" : "Argument(0).a.a.a",
-            "position" : 
-            {
-              "line" : 39,
-              "path" : "Flow.java"
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/Flow$A;.method:()V"
-          },
           "call_info" : 
           {
             "call_kind" : "CallSite",
@@ -5204,17 +4313,6 @@
           }
         },
         {
-          "call" : 
-          {
-            "call_kind" : "CallSite",
-            "port" : "Argument(0).a.a.b",
-            "position" : 
-            {
-              "line" : 39,
-              "path" : "Flow.java"
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/Flow$A;.method:()V"
-          },
           "call_info" : 
           {
             "call_kind" : "CallSite",
@@ -5254,17 +4352,6 @@
           }
         },
         {
-          "call" : 
-          {
-            "call_kind" : "CallSite",
-            "port" : "Argument(0).a.a.c",
-            "position" : 
-            {
-              "line" : 39,
-              "path" : "Flow.java"
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/Flow$A;.method:()V"
-          },
           "call_info" : 
           {
             "call_kind" : "CallSite",
@@ -5304,17 +4391,6 @@
           }
         },
         {
-          "call" : 
-          {
-            "call_kind" : "CallSite",
-            "port" : "Argument(0).a.a.x",
-            "position" : 
-            {
-              "line" : 39,
-              "path" : "Flow.java"
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/Flow$A;.method:()V"
-          },
           "call_info" : 
           {
             "call_kind" : "CallSite",
@@ -5356,17 +4432,6 @@
       "taint" : 
       [
         {
-          "call" : 
-          {
-            "call_kind" : "CallSite",
-            "port" : "Argument(0).a.b.a",
-            "position" : 
-            {
-              "line" : 39,
-              "path" : "Flow.java"
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/Flow$A;.method:()V"
-          },
           "call_info" : 
           {
             "call_kind" : "CallSite",
@@ -5406,17 +4471,6 @@
           }
         },
         {
-          "call" : 
-          {
-            "call_kind" : "CallSite",
-            "port" : "Argument(0).a.b.b",
-            "position" : 
-            {
-              "line" : 39,
-              "path" : "Flow.java"
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/Flow$A;.method:()V"
-          },
           "call_info" : 
           {
             "call_kind" : "CallSite",
@@ -5456,17 +4510,6 @@
           }
         },
         {
-          "call" : 
-          {
-            "call_kind" : "CallSite",
-            "port" : "Argument(0).a.b.c",
-            "position" : 
-            {
-              "line" : 39,
-              "path" : "Flow.java"
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/Flow$A;.method:()V"
-          },
           "call_info" : 
           {
             "call_kind" : "CallSite",
@@ -5506,17 +4549,6 @@
           }
         },
         {
-          "call" : 
-          {
-            "call_kind" : "CallSite",
-            "port" : "Argument(0).a.b.x",
-            "position" : 
-            {
-              "line" : 39,
-              "path" : "Flow.java"
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/Flow$A;.method:()V"
-          },
           "call_info" : 
           {
             "call_kind" : "CallSite",
@@ -5558,17 +4590,6 @@
       "taint" : 
       [
         {
-          "call" : 
-          {
-            "call_kind" : "CallSite",
-            "port" : "Argument(0).a.c.a",
-            "position" : 
-            {
-              "line" : 39,
-              "path" : "Flow.java"
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/Flow$A;.method:()V"
-          },
           "call_info" : 
           {
             "call_kind" : "CallSite",
@@ -5608,17 +4629,6 @@
           }
         },
         {
-          "call" : 
-          {
-            "call_kind" : "CallSite",
-            "port" : "Argument(0).a.c.b",
-            "position" : 
-            {
-              "line" : 39,
-              "path" : "Flow.java"
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/Flow$A;.method:()V"
-          },
           "call_info" : 
           {
             "call_kind" : "CallSite",
@@ -5658,17 +4668,6 @@
           }
         },
         {
-          "call" : 
-          {
-            "call_kind" : "CallSite",
-            "port" : "Argument(0).a.c.c",
-            "position" : 
-            {
-              "line" : 39,
-              "path" : "Flow.java"
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/Flow$A;.method:()V"
-          },
           "call_info" : 
           {
             "call_kind" : "CallSite",
@@ -5708,17 +4707,6 @@
           }
         },
         {
-          "call" : 
-          {
-            "call_kind" : "CallSite",
-            "port" : "Argument(0).a.c.x",
-            "position" : 
-            {
-              "line" : 39,
-              "path" : "Flow.java"
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/Flow$A;.method:()V"
-          },
           "call_info" : 
           {
             "call_kind" : "CallSite",
@@ -5760,17 +4748,6 @@
       "taint" : 
       [
         {
-          "call" : 
-          {
-            "call_kind" : "CallSite",
-            "port" : "Argument(0).a.x",
-            "position" : 
-            {
-              "line" : 39,
-              "path" : "Flow.java"
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/Flow$A;.method:()V"
-          },
           "call_info" : 
           {
             "call_kind" : "CallSite",
@@ -5805,17 +4782,6 @@
       "taint" : 
       [
         {
-          "call" : 
-          {
-            "call_kind" : "CallSite",
-            "port" : "Argument(0).b.a.a",
-            "position" : 
-            {
-              "line" : 39,
-              "path" : "Flow.java"
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/Flow$B;.method:()V"
-          },
           "call_info" : 
           {
             "call_kind" : "CallSite",
@@ -5855,17 +4821,6 @@
           }
         },
         {
-          "call" : 
-          {
-            "call_kind" : "CallSite",
-            "port" : "Argument(0).b.a.b",
-            "position" : 
-            {
-              "line" : 39,
-              "path" : "Flow.java"
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/Flow$B;.method:()V"
-          },
           "call_info" : 
           {
             "call_kind" : "CallSite",
@@ -5905,17 +4860,6 @@
           }
         },
         {
-          "call" : 
-          {
-            "call_kind" : "CallSite",
-            "port" : "Argument(0).b.a.c",
-            "position" : 
-            {
-              "line" : 39,
-              "path" : "Flow.java"
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/Flow$B;.method:()V"
-          },
           "call_info" : 
           {
             "call_kind" : "CallSite",
@@ -5955,17 +4899,6 @@
           }
         },
         {
-          "call" : 
-          {
-            "call_kind" : "CallSite",
-            "port" : "Argument(0).b.a.x",
-            "position" : 
-            {
-              "line" : 39,
-              "path" : "Flow.java"
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/Flow$B;.method:()V"
-          },
           "call_info" : 
           {
             "call_kind" : "CallSite",
@@ -6007,17 +4940,6 @@
       "taint" : 
       [
         {
-          "call" : 
-          {
-            "call_kind" : "CallSite",
-            "port" : "Argument(0).b.b.a",
-            "position" : 
-            {
-              "line" : 39,
-              "path" : "Flow.java"
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/Flow$B;.method:()V"
-          },
           "call_info" : 
           {
             "call_kind" : "CallSite",
@@ -6057,17 +4979,6 @@
           }
         },
         {
-          "call" : 
-          {
-            "call_kind" : "CallSite",
-            "port" : "Argument(0).b.b.b",
-            "position" : 
-            {
-              "line" : 39,
-              "path" : "Flow.java"
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/Flow$B;.method:()V"
-          },
           "call_info" : 
           {
             "call_kind" : "CallSite",
@@ -6107,17 +5018,6 @@
           }
         },
         {
-          "call" : 
-          {
-            "call_kind" : "CallSite",
-            "port" : "Argument(0).b.b.c",
-            "position" : 
-            {
-              "line" : 39,
-              "path" : "Flow.java"
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/Flow$B;.method:()V"
-          },
           "call_info" : 
           {
             "call_kind" : "CallSite",
@@ -6157,17 +5057,6 @@
           }
         },
         {
-          "call" : 
-          {
-            "call_kind" : "CallSite",
-            "port" : "Argument(0).b.b.x",
-            "position" : 
-            {
-              "line" : 39,
-              "path" : "Flow.java"
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/Flow$B;.method:()V"
-          },
           "call_info" : 
           {
             "call_kind" : "CallSite",
@@ -6209,17 +5098,6 @@
       "taint" : 
       [
         {
-          "call" : 
-          {
-            "call_kind" : "CallSite",
-            "port" : "Argument(0).b.c.a",
-            "position" : 
-            {
-              "line" : 39,
-              "path" : "Flow.java"
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/Flow$B;.method:()V"
-          },
           "call_info" : 
           {
             "call_kind" : "CallSite",
@@ -6259,17 +5137,6 @@
           }
         },
         {
-          "call" : 
-          {
-            "call_kind" : "CallSite",
-            "port" : "Argument(0).b.c.b",
-            "position" : 
-            {
-              "line" : 39,
-              "path" : "Flow.java"
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/Flow$B;.method:()V"
-          },
           "call_info" : 
           {
             "call_kind" : "CallSite",
@@ -6309,17 +5176,6 @@
           }
         },
         {
-          "call" : 
-          {
-            "call_kind" : "CallSite",
-            "port" : "Argument(0).b.c.c",
-            "position" : 
-            {
-              "line" : 39,
-              "path" : "Flow.java"
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/Flow$B;.method:()V"
-          },
           "call_info" : 
           {
             "call_kind" : "CallSite",
@@ -6359,17 +5215,6 @@
           }
         },
         {
-          "call" : 
-          {
-            "call_kind" : "CallSite",
-            "port" : "Argument(0).b.c.x",
-            "position" : 
-            {
-              "line" : 39,
-              "path" : "Flow.java"
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/Flow$B;.method:()V"
-          },
           "call_info" : 
           {
             "call_kind" : "CallSite",
@@ -6411,17 +5256,6 @@
       "taint" : 
       [
         {
-          "call" : 
-          {
-            "call_kind" : "CallSite",
-            "port" : "Argument(0).b.x",
-            "position" : 
-            {
-              "line" : 39,
-              "path" : "Flow.java"
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/Flow$B;.method:()V"
-          },
           "call_info" : 
           {
             "call_kind" : "CallSite",
@@ -6456,17 +5290,6 @@
       "taint" : 
       [
         {
-          "call" : 
-          {
-            "call_kind" : "CallSite",
-            "port" : "Argument(0).c.a.a",
-            "position" : 
-            {
-              "line" : 39,
-              "path" : "Flow.java"
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/Flow$C;.method:()V"
-          },
           "call_info" : 
           {
             "call_kind" : "CallSite",
@@ -6506,17 +5329,6 @@
           }
         },
         {
-          "call" : 
-          {
-            "call_kind" : "CallSite",
-            "port" : "Argument(0).c.a.b",
-            "position" : 
-            {
-              "line" : 39,
-              "path" : "Flow.java"
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/Flow$C;.method:()V"
-          },
           "call_info" : 
           {
             "call_kind" : "CallSite",
@@ -6556,17 +5368,6 @@
           }
         },
         {
-          "call" : 
-          {
-            "call_kind" : "CallSite",
-            "port" : "Argument(0).c.a.c",
-            "position" : 
-            {
-              "line" : 39,
-              "path" : "Flow.java"
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/Flow$C;.method:()V"
-          },
           "call_info" : 
           {
             "call_kind" : "CallSite",
@@ -6606,17 +5407,6 @@
           }
         },
         {
-          "call" : 
-          {
-            "call_kind" : "CallSite",
-            "port" : "Argument(0).c.a.x",
-            "position" : 
-            {
-              "line" : 39,
-              "path" : "Flow.java"
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/Flow$C;.method:()V"
-          },
           "call_info" : 
           {
             "call_kind" : "CallSite",
@@ -6658,17 +5448,6 @@
       "taint" : 
       [
         {
-          "call" : 
-          {
-            "call_kind" : "CallSite",
-            "port" : "Argument(0).c.b.a",
-            "position" : 
-            {
-              "line" : 39,
-              "path" : "Flow.java"
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/Flow$C;.method:()V"
-          },
           "call_info" : 
           {
             "call_kind" : "CallSite",
@@ -6708,17 +5487,6 @@
           }
         },
         {
-          "call" : 
-          {
-            "call_kind" : "CallSite",
-            "port" : "Argument(0).c.b.b",
-            "position" : 
-            {
-              "line" : 39,
-              "path" : "Flow.java"
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/Flow$C;.method:()V"
-          },
           "call_info" : 
           {
             "call_kind" : "CallSite",
@@ -6758,17 +5526,6 @@
           }
         },
         {
-          "call" : 
-          {
-            "call_kind" : "CallSite",
-            "port" : "Argument(0).c.b.c",
-            "position" : 
-            {
-              "line" : 39,
-              "path" : "Flow.java"
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/Flow$C;.method:()V"
-          },
           "call_info" : 
           {
             "call_kind" : "CallSite",
@@ -6808,17 +5565,6 @@
           }
         },
         {
-          "call" : 
-          {
-            "call_kind" : "CallSite",
-            "port" : "Argument(0).c.b.x",
-            "position" : 
-            {
-              "line" : 39,
-              "path" : "Flow.java"
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/Flow$C;.method:()V"
-          },
           "call_info" : 
           {
             "call_kind" : "CallSite",
@@ -6860,17 +5606,6 @@
       "taint" : 
       [
         {
-          "call" : 
-          {
-            "call_kind" : "CallSite",
-            "port" : "Argument(0).c.c.a",
-            "position" : 
-            {
-              "line" : 39,
-              "path" : "Flow.java"
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/Flow$C;.method:()V"
-          },
           "call_info" : 
           {
             "call_kind" : "CallSite",
@@ -6910,17 +5645,6 @@
           }
         },
         {
-          "call" : 
-          {
-            "call_kind" : "CallSite",
-            "port" : "Argument(0).c.c.b",
-            "position" : 
-            {
-              "line" : 39,
-              "path" : "Flow.java"
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/Flow$C;.method:()V"
-          },
           "call_info" : 
           {
             "call_kind" : "CallSite",
@@ -6960,17 +5684,6 @@
           }
         },
         {
-          "call" : 
-          {
-            "call_kind" : "CallSite",
-            "port" : "Argument(0).c.c.c",
-            "position" : 
-            {
-              "line" : 39,
-              "path" : "Flow.java"
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/Flow$C;.method:()V"
-          },
           "call_info" : 
           {
             "call_kind" : "CallSite",
@@ -7010,17 +5723,6 @@
           }
         },
         {
-          "call" : 
-          {
-            "call_kind" : "CallSite",
-            "port" : "Argument(0).c.c.x",
-            "position" : 
-            {
-              "line" : 39,
-              "path" : "Flow.java"
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/Flow$C;.method:()V"
-          },
           "call_info" : 
           {
             "call_kind" : "CallSite",
@@ -7062,17 +5764,6 @@
       "taint" : 
       [
         {
-          "call" : 
-          {
-            "call_kind" : "CallSite",
-            "port" : "Argument(0).c.x",
-            "position" : 
-            {
-              "line" : 39,
-              "path" : "Flow.java"
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/Flow$C;.method:()V"
-          },
           "call_info" : 
           {
             "call_kind" : "CallSite",
@@ -7107,17 +5798,6 @@
       "taint" : 
       [
         {
-          "call" : 
-          {
-            "call_kind" : "CallSite",
-            "port" : "Argument(0).x",
-            "position" : 
-            {
-              "line" : 39,
-              "path" : "Flow.java"
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/Flow$C;.method:()V"
-          },
           "call_info" : 
           {
             "call_kind" : "CallSite",
@@ -7188,16 +5868,7 @@
               ],
               "preserves_type_context" : true
             }
-          ],
-          "origin" : 
-          {
-            "method" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
-            "position" : 
-            {
-              "line" : 38,
-              "path" : "Flow.java"
-            }
-          }
+          ]
         }
       ]
     }
@@ -7289,29 +5960,9 @@
               ],
               "preserves_type_context" : true
             }
-          ],
-          "origin" : 
-          {
-            "method" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
-            "position" : 
-            {
-              "line" : 53,
-              "path" : "Flow.java"
-            }
-          }
+          ]
         },
         {
-          "call" : 
-          {
-            "call_kind" : "CallSite",
-            "port" : "Argument(0)",
-            "position" : 
-            {
-              "line" : 51,
-              "path" : "Flow.java"
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/Flow$Node;.recursive_parent:()V"
-          },
           "call_info" : 
           {
             "call_kind" : "CallSite",
@@ -7374,17 +6025,6 @@
       "taint" : 
       [
         {
-          "call" : 
-          {
-            "call_kind" : "CallSite",
-            "port" : "Argument(0).parent.parent.parent.parent",
-            "position" : 
-            {
-              "line" : 59,
-              "path" : "Flow.java"
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/Flow$Node;.recursive_parent_x:()V"
-          },
           "call_info" : 
           {
             "call_kind" : "CallSite",
@@ -7430,17 +6070,6 @@
           }
         },
         {
-          "call" : 
-          {
-            "call_kind" : "CallSite",
-            "port" : "Argument(0).parent.parent.parent.x",
-            "position" : 
-            {
-              "line" : 59,
-              "path" : "Flow.java"
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/Flow$Node;.recursive_parent_x:()V"
-          },
           "call_info" : 
           {
             "call_kind" : "CallSite",
@@ -7488,17 +6117,6 @@
       "taint" : 
       [
         {
-          "call" : 
-          {
-            "call_kind" : "CallSite",
-            "port" : "Argument(0).parent.parent.x",
-            "position" : 
-            {
-              "line" : 59,
-              "path" : "Flow.java"
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/Flow$Node;.recursive_parent_x:()V"
-          },
           "call_info" : 
           {
             "call_kind" : "CallSite",
@@ -7539,17 +6157,6 @@
       "taint" : 
       [
         {
-          "call" : 
-          {
-            "call_kind" : "CallSite",
-            "port" : "Argument(0).parent.x",
-            "position" : 
-            {
-              "line" : 59,
-              "path" : "Flow.java"
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/Flow$Node;.recursive_parent_x:()V"
-          },
           "call_info" : 
           {
             "call_kind" : "CallSite",
@@ -7590,17 +6197,6 @@
       "taint" : 
       [
         {
-          "call" : 
-          {
-            "call_kind" : "CallSite",
-            "port" : "Argument(0).x",
-            "position" : 
-            {
-              "line" : 59,
-              "path" : "Flow.java"
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/Flow$Node;.recursive_parent_x:()V"
-          },
           "call_info" : 
           {
             "call_kind" : "CallSite",
@@ -7671,16 +6267,7 @@
               ],
               "preserves_type_context" : true
             }
-          ],
-          "origin" : 
-          {
-            "method" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
-            "position" : 
-            {
-              "line" : 61,
-              "path" : "Flow.java"
-            }
-          }
+          ]
         }
       ]
     }

@@ -1056,15 +1056,7 @@
             {
               "line" : 28
             }
-          ],
-          "origin" : 
-          {
-            "position" : 
-            {
-              "line" : 25,
-              "path" : "ActivityUsingAndroidLocationManager.java"
-            }
-          }
+          ]
         }
       ]
     }
@@ -1115,18 +1107,7 @@
               ],
               "preserves_type_context" : true
             }
-          ],
-          "origin" : 
-          {
-            "method" : "Landroid/util/Log;.e:(Ljava/lang/String;Ljava/lang/String;)I",
-            "position" : 
-            {
-              "end" : 50,
-              "line" : 29,
-              "path" : "ActivityUsingAndroidLocationManager.java",
-              "start" : 22
-            }
-          }
+          ]
         }
       ],
       "sources" : 
@@ -1164,18 +1145,7 @@
               ],
               "preserves_type_context" : true
             }
-          ],
-          "origin" : 
-          {
-            "method" : "Landroid/location/Location;.toString:()Ljava/lang/String;",
-            "position" : 
-            {
-              "end" : 48,
-              "line" : 29,
-              "path" : "ActivityUsingAndroidLocationManager.java",
-              "start" : 41
-            }
-          }
+          ]
         }
       ]
     }

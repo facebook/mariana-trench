@@ -1288,19 +1288,6 @@
       "taint" : 
       [
         {
-          "call" : 
-          {
-            "call_kind" : "CallSite",
-            "port" : "Argument(1)",
-            "position" : 
-            {
-              "end" : 23,
-              "line" : 32,
-              "path" : "UrlHandlerActivity.java",
-              "start" : 21
-            },
-            "resolves_to" : "Lcom/instagram/url/UrlHandlerActivity;.reportUrlEvent:(Ljava/lang/String;Ljava/lang/String;)V"
-          },
           "call_info" : 
           {
             "call_kind" : "CallSite",
@@ -1345,19 +1332,6 @@
           ]
         },
         {
-          "call" : 
-          {
-            "call_kind" : "CallSite",
-            "port" : "Argument(2)",
-            "position" : 
-            {
-              "end" : 57,
-              "line" : 32,
-              "path" : "UrlHandlerActivity.java",
-              "start" : 26
-            },
-            "resolves_to" : "Lcom/instagram/url/UrlHandlerActivity;.reportUrlEvent:(Ljava/lang/String;Ljava/lang/String;)V"
-          },
           "call_info" : 
           {
             "call_kind" : "CallSite",
@@ -1420,19 +1394,6 @@
       "sinks" : 
       [
         {
-          "call" : 
-          {
-            "call_kind" : "CallSite",
-            "port" : "Argument(1)",
-            "position" : 
-            {
-              "end" : 27,
-              "line" : 23,
-              "path" : "UrlHandlerActivity.java",
-              "start" : 17
-            },
-            "resolves_to" : "Lcom/instagram/url/UrlHandlerActivity;.handleIntent:(Landroid/content/Intent;)V"
-          },
           "call_info" : 
           {
             "call_kind" : "CallSite",
@@ -1498,18 +1459,7 @@
               ],
               "preserves_type_context" : true
             }
-          ],
-          "origin" : 
-          {
-            "method" : "Landroid/app/Activity;.getIntent:()Landroid/content/Intent;",
-            "position" : 
-            {
-              "end" : 25,
-              "line" : 23,
-              "path" : "UrlHandlerActivity.java",
-              "start" : 17
-            }
-          }
+          ]
         }
       ]
     }
@@ -1567,18 +1517,7 @@
               ],
               "preserves_type_context" : true
             }
-          ],
-          "origin" : 
-          {
-            "method" : "Lcom/instagram/common/analytics/intf/AnalyticsEvent;.addExtra:(Ljava/lang/String;Ljava/lang/String;)Lcom/instagram/common/analytics/intf/AnalyticsEvent;",
-            "position" : 
-            {
-              "end" : 84,
-              "line" : 38,
-              "path" : "UrlHandlerActivity.java",
-              "start" : 82
-            }
-          }
+          ]
         }
       ]
     },
@@ -1619,18 +1558,7 @@
               ],
               "preserves_type_context" : true
             }
-          ],
-          "origin" : 
-          {
-            "method" : "Lcom/instagram/common/analytics/intf/AnalyticsEvent;.addExtra:(Ljava/lang/String;Ljava/lang/String;)Lcom/instagram/common/analytics/intf/AnalyticsEvent;",
-            "position" : 
-            {
-              "end" : 41,
-              "line" : 40,
-              "path" : "UrlHandlerActivity.java",
-              "start" : 34
-            }
-          }
+          ]
         }
       ]
     }
@@ -2046,18 +1974,7 @@
               ],
               "preserves_type_context" : true
             }
-          ],
-          "origin" : 
-          {
-            "method" : "Lcom/instagram/common/analytics/intf/AnalyticsEvent;.addExtra:(Ljava/lang/String;Ljava/lang/String;)Lcom/instagram/common/analytics/intf/AnalyticsEvent;",
-            "position" : 
-            {
-              "end" : 51,
-              "line" : 23,
-              "path" : "SimpleLogging.java",
-              "start" : 32
-            }
-          }
+          ]
         }
       ],
       "sources" : 
@@ -2108,18 +2025,7 @@
               "line" : 23,
               "start" : 32
             }
-          ],
-          "origin" : 
-          {
-            "method" : "Landroid/app/Activity;.getIntent:()Landroid/content/Intent;",
-            "position" : 
-            {
-              "end" : 28,
-              "line" : 19,
-              "path" : "SimpleLogging.java",
-              "start" : 20
-            }
-          }
+          ]
         }
       ]
     }

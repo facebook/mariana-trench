@@ -1142,18 +1142,7 @@
               ],
               "preserves_type_context" : true
             }
-          ],
-          "origin" : 
-          {
-            "method" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
-            "position" : 
-            {
-              "end" : 32,
-              "line" : 57,
-              "path" : "MainActivity.java",
-              "start" : 18
-            }
-          }
+          ]
         }
       ]
     }
@@ -1203,16 +1192,7 @@
               ],
               "preserves_type_context" : true
             }
-          ],
-          "origin" : 
-          {
-            "method" : "Landroid/util/Log;.e:(Ljava/lang/String;Ljava/lang/String;)I",
-            "position" : 
-            {
-              "line" : 53,
-              "path" : "MainActivity.java"
-            }
-          }
+          ]
         }
       ]
     }
@@ -1326,19 +1306,6 @@
       "sinks" : 
       [
         {
-          "call" : 
-          {
-            "call_kind" : "CallSite",
-            "port" : "Argument(0).mArguments",
-            "position" : 
-            {
-              "end" : 28,
-              "line" : 34,
-              "path" : "MainActivity.java",
-              "start" : 9
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/MainActivity$ModalActivityLauncher;.mArgumentFlowsToSink:()V"
-          },
           "call_info" : 
           {
             "call_kind" : "CallSite",
@@ -1423,18 +1390,7 @@
               "line" : 33,
               "start" : 9
             }
-          ],
-          "origin" : 
-          {
-            "method" : "Landroid/content/Intent;.getExtras:()Landroid/os/Bundle;",
-            "position" : 
-            {
-              "end" : 40,
-              "line" : 31,
-              "path" : "MainActivity.java",
-              "start" : 32
-            }
-          }
+          ]
         }
       ]
     }

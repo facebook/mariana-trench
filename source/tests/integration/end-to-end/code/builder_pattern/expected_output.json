@@ -1894,18 +1894,7 @@
               ],
               "preserves_type_context" : true
             }
-          ],
-          "origin" : 
-          {
-            "method" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
-            "position" : 
-            {
-              "end" : 78,
-              "line" : 128,
-              "path" : "Test.java",
-              "start" : 16
-            }
-          }
+          ]
         }
       ],
       "sources" : 
@@ -1964,18 +1953,7 @@
               "line" : 128,
               "start" : 55
             }
-          ],
-          "origin" : 
-          {
-            "method" : "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;",
-            "position" : 
-            {
-              "end" : 67,
-              "line" : 128,
-              "path" : "Test.java",
-              "start" : 62
-            }
-          }
+          ]
         }
       ]
     },
@@ -2028,18 +2006,7 @@
               ],
               "preserves_type_context" : true
             }
-          ],
-          "origin" : 
-          {
-            "method" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
-            "position" : 
-            {
-              "end" : 78,
-              "line" : 131,
-              "path" : "Test.java",
-              "start" : 16
-            }
-          }
+          ]
         }
       ],
       "sources" : 
@@ -2098,18 +2065,7 @@
               "line" : 131,
               "start" : 37
             }
-          ],
-          "origin" : 
-          {
-            "method" : "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;",
-            "position" : 
-            {
-              "end" : 56,
-              "line" : 131,
-              "path" : "Test.java",
-              "start" : 51
-            }
-          }
+          ]
         }
       ]
     }
@@ -2174,16 +2130,7 @@
             {
               "line" : 120
             }
-          ],
-          "origin" : 
-          {
-            "method" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
-            "position" : 
-            {
-              "line" : 120,
-              "path" : "Test.java"
-            }
-          }
+          ]
         }
       ]
     },
@@ -2234,16 +2181,7 @@
             {
               "line" : 123
             }
-          ],
-          "origin" : 
-          {
-            "method" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
-            "position" : 
-            {
-              "line" : 123,
-              "path" : "Test.java"
-            }
-          }
+          ]
         }
       ]
     }
@@ -2301,18 +2239,7 @@
               ],
               "preserves_type_context" : true
             }
-          ],
-          "origin" : 
-          {
-            "method" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
-            "position" : 
-            {
-              "end" : 25,
-              "line" : 106,
-              "path" : "Test.java",
-              "start" : 16
-            }
-          }
+          ]
         }
       ],
       "sources" : 
@@ -2371,18 +2298,7 @@
               "line" : 99,
               "start" : 66
             }
-          ],
-          "origin" : 
-          {
-            "method" : "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;",
-            "position" : 
-            {
-              "end" : 33,
-              "line" : 97,
-              "path" : "Test.java",
-              "start" : 28
-            }
-          }
+          ]
         }
       ]
     },
@@ -2435,18 +2351,7 @@
               ],
               "preserves_type_context" : true
             }
-          ],
-          "origin" : 
-          {
-            "method" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
-            "position" : 
-            {
-              "end" : 25,
-              "line" : 109,
-              "path" : "Test.java",
-              "start" : 16
-            }
-          }
+          ]
         }
       ],
       "sources" : 
@@ -2505,18 +2410,7 @@
               "line" : 99,
               "start" : 66
             }
-          ],
-          "origin" : 
-          {
-            "method" : "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;",
-            "position" : 
-            {
-              "end" : 33,
-              "line" : 97,
-              "path" : "Test.java",
-              "start" : 28
-            }
-          }
+          ]
         }
       ]
     },
@@ -2569,18 +2463,7 @@
               ],
               "preserves_type_context" : true
             }
-          ],
-          "origin" : 
-          {
-            "method" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
-            "position" : 
-            {
-              "end" : 25,
-              "line" : 112,
-              "path" : "Test.java",
-              "start" : 16
-            }
-          }
+          ]
         }
       ],
       "sources" : 
@@ -2639,18 +2522,7 @@
               "line" : 99,
               "start" : 66
             }
-          ],
-          "origin" : 
-          {
-            "method" : "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;",
-            "position" : 
-            {
-              "end" : 33,
-              "line" : 97,
-              "path" : "Test.java",
-              "start" : 28
-            }
-          }
+          ]
         }
       ]
     },
@@ -2703,18 +2575,7 @@
               ],
               "preserves_type_context" : true
             }
-          ],
-          "origin" : 
-          {
-            "method" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
-            "position" : 
-            {
-              "end" : 23,
-              "line" : 115,
-              "path" : "Test.java",
-              "start" : 16
-            }
-          }
+          ]
         }
       ],
       "sources" : 
@@ -2773,18 +2634,7 @@
               "line" : 99,
               "start" : 66
             }
-          ],
-          "origin" : 
-          {
-            "method" : "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;",
-            "position" : 
-            {
-              "end" : 33,
-              "line" : 97,
-              "path" : "Test.java",
-              "start" : 28
-            }
-          }
+          ]
         }
       ]
     }
@@ -2847,18 +2697,7 @@
               ],
               "preserves_type_context" : true
             }
-          ],
-          "origin" : 
-          {
-            "method" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
-            "position" : 
-            {
-              "end" : 25,
-              "line" : 144,
-              "path" : "Test.java",
-              "start" : 16
-            }
-          }
+          ]
         }
       ],
       "sources" : 
@@ -2921,18 +2760,7 @@
               "line" : 141,
               "start" : 39
             }
-          ],
-          "origin" : 
-          {
-            "method" : "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;",
-            "position" : 
-            {
-              "end" : 39,
-              "line" : 136,
-              "path" : "Test.java",
-              "start" : 34
-            }
-          }
+          ]
         }
       ]
     },
@@ -2984,18 +2812,7 @@
               ],
               "preserves_type_context" : true
             }
-          ],
-          "origin" : 
-          {
-            "method" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
-            "position" : 
-            {
-              "end" : 25,
-              "line" : 147,
-              "path" : "Test.java",
-              "start" : 16
-            }
-          }
+          ]
         }
       ],
       "sources" : 
@@ -3053,18 +2870,7 @@
               "line" : 141,
               "start" : 39
             }
-          ],
-          "origin" : 
-          {
-            "method" : "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;",
-            "position" : 
-            {
-              "end" : 39,
-              "line" : 139,
-              "path" : "Test.java",
-              "start" : 34
-            }
-          }
+          ]
         }
       ]
     }
@@ -3127,18 +2933,7 @@
               ],
               "preserves_type_context" : true
             }
-          ],
-          "origin" : 
-          {
-            "method" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
-            "position" : 
-            {
-              "end" : 25,
-              "line" : 83,
-              "path" : "Test.java",
-              "start" : 16
-            }
-          }
+          ]
         }
       ],
       "sources" : 
@@ -3196,18 +2991,7 @@
               "line" : 76,
               "start" : 50
             }
-          ],
-          "origin" : 
-          {
-            "method" : "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;",
-            "position" : 
-            {
-              "end" : 33,
-              "line" : 74,
-              "path" : "Test.java",
-              "start" : 28
-            }
-          }
+          ]
         }
       ]
     },
@@ -3260,18 +3044,7 @@
               ],
               "preserves_type_context" : true
             }
-          ],
-          "origin" : 
-          {
-            "method" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
-            "position" : 
-            {
-              "end" : 25,
-              "line" : 89,
-              "path" : "Test.java",
-              "start" : 16
-            }
-          }
+          ]
         }
       ],
       "sources" : 
@@ -3330,18 +3103,7 @@
               "line" : 76,
               "start" : 50
             }
-          ],
-          "origin" : 
-          {
-            "method" : "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;",
-            "position" : 
-            {
-              "end" : 33,
-              "line" : 74,
-              "path" : "Test.java",
-              "start" : 28
-            }
-          }
+          ]
         }
       ]
     },
@@ -3394,18 +3156,7 @@
               ],
               "preserves_type_context" : true
             }
-          ],
-          "origin" : 
-          {
-            "method" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
-            "position" : 
-            {
-              "end" : 23,
-              "line" : 92,
-              "path" : "Test.java",
-              "start" : 16
-            }
-          }
+          ]
         }
       ],
       "sources" : 
@@ -3464,18 +3215,7 @@
               "line" : 76,
               "start" : 50
             }
-          ],
-          "origin" : 
-          {
-            "method" : "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;",
-            "position" : 
-            {
-              "end" : 33,
-              "line" : 74,
-              "path" : "Test.java",
-              "start" : 28
-            }
-          }
+          ]
         }
       ]
     }

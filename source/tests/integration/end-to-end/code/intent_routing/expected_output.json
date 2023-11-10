@@ -1172,19 +1172,6 @@
       "sinks" : 
       [
         {
-          "call" : 
-          {
-            "call_kind" : "CallSite",
-            "port" : "call-effect-intent[session]",
-            "position" : 
-            {
-              "end" : 0,
-              "line" : 74,
-              "path" : "IntentRouter.java",
-              "start" : 0
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/IntentTarget;.readsRoutedIntent_sessionToSink:()V"
-          },
           "call_info" : 
           {
             "call_kind" : "CallSite",
@@ -1279,18 +1266,7 @@
               "line" : 72,
               "start" : 42
             }
-          ],
-          "origin" : 
-          {
-            "method" : "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;",
-            "position" : 
-            {
-              "end" : 63,
-              "line" : 72,
-              "path" : "IntentRouter.java",
-              "start" : 58
-            }
-          }
+          ]
         }
       ]
     },
@@ -1312,19 +1288,6 @@
       "sinks" : 
       [
         {
-          "call" : 
-          {
-            "call_kind" : "CallSite",
-            "port" : "call-effect-intent[session]",
-            "position" : 
-            {
-              "end" : 0,
-              "line" : 74,
-              "path" : "IntentRouter.java",
-              "start" : 0
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/IntentTarget;.readsRoutedIntent_sessionToSinkViaExtraHop:()V"
-          },
           "call_info" : 
           {
             "call_kind" : "CallSite",
@@ -1419,18 +1382,7 @@
               "line" : 72,
               "start" : 42
             }
-          ],
-          "origin" : 
-          {
-            "method" : "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;",
-            "position" : 
-            {
-              "end" : 63,
-              "line" : 72,
-              "path" : "IntentRouter.java",
-              "start" : 58
-            }
-          }
+          ]
         }
       ]
     }
@@ -1463,19 +1415,6 @@
       "sinks" : 
       [
         {
-          "call" : 
-          {
-            "call_kind" : "CallSite",
-            "port" : "Argument(1)",
-            "position" : 
-            {
-              "end" : 51,
-              "line" : 56,
-              "path" : "IntentRouter.java",
-              "start" : 28
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/IntentRouter;.objectTaintUnknown:(Ljava/lang/String;Landroid/content/Context;)V"
-          },
           "call_info" : 
           {
             "call_kind" : "CallSite",
@@ -1559,17 +1498,6 @@
             [
               "via-cast:Ljava/lang/String;"
             ]
-          },
-          "origin" : 
-          {
-            "method" : "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;",
-            "position" : 
-            {
-              "end" : 49,
-              "line" : 56,
-              "path" : "IntentRouter.java",
-              "start" : 44
-            }
           }
         }
       ]
@@ -1596,19 +1524,6 @@
       "taint" : 
       [
         {
-          "call" : 
-          {
-            "call_kind" : "CallSite",
-            "port" : "call-effect-intent[session]",
-            "position" : 
-            {
-              "end" : 0,
-              "line" : 51,
-              "path" : "IntentRouter.java",
-              "start" : 0
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/IntentTarget;.readsRoutedIntent_sessionToSink:()V"
-          },
           "call_info" : 
           {
             "call_kind" : "CallSite",
@@ -1661,19 +1576,6 @@
           ]
         },
         {
-          "call" : 
-          {
-            "call_kind" : "CallSite",
-            "port" : "call-effect-intent[session]",
-            "position" : 
-            {
-              "end" : 0,
-              "line" : 51,
-              "path" : "IntentRouter.java",
-              "start" : 0
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/IntentTarget;.readsRoutedIntent_sessionToSinkViaExtraHop:()V"
-          },
           "call_info" : 
           {
             "call_kind" : "CallSite",
@@ -1750,19 +1652,6 @@
       "sinks" : 
       [
         {
-          "call" : 
-          {
-            "call_kind" : "CallSite",
-            "port" : "call-effect-intent[session]",
-            "position" : 
-            {
-              "end" : 0,
-              "line" : 21,
-              "path" : "IntentRouter.java",
-              "start" : 0
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/IntentTarget;.readsRoutedIntent_sessionToSink:()V"
-          },
           "call_info" : 
           {
             "call_kind" : "CallSite",
@@ -1857,18 +1746,7 @@
               "line" : 18,
               "start" : 42
             }
-          ],
-          "origin" : 
-          {
-            "method" : "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;",
-            "position" : 
-            {
-              "end" : 63,
-              "line" : 18,
-              "path" : "IntentRouter.java",
-              "start" : 58
-            }
-          }
+          ]
         }
       ]
     },
@@ -1890,19 +1768,6 @@
       "sinks" : 
       [
         {
-          "call" : 
-          {
-            "call_kind" : "CallSite",
-            "port" : "call-effect-intent[session]",
-            "position" : 
-            {
-              "end" : 0,
-              "line" : 21,
-              "path" : "IntentRouter.java",
-              "start" : 0
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/IntentTarget;.readsRoutedIntent_sessionToSinkViaExtraHop:()V"
-          },
           "call_info" : 
           {
             "call_kind" : "CallSite",
@@ -1997,18 +1862,7 @@
               "line" : 18,
               "start" : 42
             }
-          ],
-          "origin" : 
-          {
-            "method" : "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;",
-            "position" : 
-            {
-              "end" : 63,
-              "line" : 18,
-              "path" : "IntentRouter.java",
-              "start" : 58
-            }
-          }
+          ]
         }
       ]
     }
@@ -2036,17 +1890,6 @@
       "taint" : 
       [
         {
-          "call" : 
-          {
-            "call_kind" : "CallSite",
-            "port" : "call-effect-intent[session]",
-            "position" : 
-            {
-              "line" : 27,
-              "path" : "IntentRouterAndTarget.java"
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/IntentTarget;.readsRoutedIntent_sessionToSink:()V"
-          },
           "call_info" : 
           {
             "call_kind" : "CallSite",
@@ -2101,17 +1944,6 @@
           ]
         },
         {
-          "call" : 
-          {
-            "call_kind" : "CallSite",
-            "port" : "call-effect-intent[session]",
-            "position" : 
-            {
-              "line" : 27,
-              "path" : "IntentRouterAndTarget.java"
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/IntentTarget;.readsRoutedIntent_sessionToSinkViaExtraHop:()V"
-          },
           "call_info" : 
           {
             "call_kind" : "CallSite",
@@ -2227,16 +2059,7 @@
               ],
               "preserves_type_context" : true
             }
-          ],
-          "origin" : 
-          {
-            "method" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
-            "position" : 
-            {
-              "line" : 38,
-              "path" : "IntentTarget.java"
-            }
-          }
+          ]
         }
       ]
     }
@@ -2353,16 +2176,7 @@
             {
               "line" : 33
             }
-          ],
-          "origin" : 
-          {
-            "method" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
-            "position" : 
-            {
-              "line" : 33,
-              "path" : "IntentTarget.java"
-            }
-          }
+          ]
         }
       ]
     }
@@ -2421,16 +2235,7 @@
             {
               "line" : 51
             }
-          ],
-          "origin" : 
-          {
-            "method" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
-            "position" : 
-            {
-              "line" : 51,
-              "path" : "IntentTarget.java"
-            }
-          }
+          ]
         }
       ]
     }
@@ -2489,16 +2294,7 @@
             {
               "line" : 20
             }
-          ],
-          "origin" : 
-          {
-            "method" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
-            "position" : 
-            {
-              "line" : 20,
-              "path" : "IntentTarget.java"
-            }
-          }
+          ]
         }
       ]
     }
@@ -2518,17 +2314,6 @@
       "taint" : 
       [
         {
-          "call" : 
-          {
-            "call_kind" : "CallSite",
-            "port" : "Argument(1)",
-            "position" : 
-            {
-              "line" : 27,
-              "path" : "IntentTarget.java"
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/IntentTarget;.extraSinkHop:(Ljava/lang/Object;)V"
-          },
           "call_info" : 
           {
             "call_kind" : "CallSite",

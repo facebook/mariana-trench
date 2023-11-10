@@ -1031,15 +1031,7 @@
             {
               "line" : 64
             }
-          ],
-          "origin" : 
-          {
-            "position" : 
-            {
-              "line" : 64,
-              "path" : "ArrayAllocation.java"
-            }
-          }
+          ]
         }
       ]
     }
@@ -1084,15 +1076,7 @@
                 }
               ]
             }
-          ],
-          "origin" : 
-          {
-            "position" : 
-            {
-              "line" : 13,
-              "path" : "ArrayAllocation.java"
-            }
-          }
+          ]
         }
       ],
       "sources" : 
@@ -1130,18 +1114,7 @@
               ],
               "preserves_type_context" : true
             }
-          ],
-          "origin" : 
-          {
-            "method" : "Lcom/facebook/marianatrench/integrationtests/ArrayAllocation;.source:()I",
-            "position" : 
-            {
-              "end" : 36,
-              "line" : 12,
-              "path" : "ArrayAllocation.java",
-              "start" : 31
-            }
-          }
+          ]
         }
       ]
     }
@@ -1172,19 +1145,6 @@
       "sinks" : 
       [
         {
-          "call" : 
-          {
-            "call_kind" : "CallSite",
-            "port" : "Argument(1)",
-            "position" : 
-            {
-              "end" : 21,
-              "line" : 60,
-              "path" : "ArrayAllocation.java",
-              "start" : 18
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/ArrayAllocation;.allocateArray:(I)V"
-          },
           "call_info" : 
           {
             "call_kind" : "CallSite",
@@ -1254,18 +1214,7 @@
               ],
               "preserves_type_context" : true
             }
-          ],
-          "origin" : 
-          {
-            "method" : "Lcom/facebook/marianatrench/integrationtests/ArrayAllocation;.source:()I",
-            "position" : 
-            {
-              "end" : 36,
-              "line" : 59,
-              "path" : "ArrayAllocation.java",
-              "start" : 31
-            }
-          }
+          ]
         }
       ]
     }
@@ -1320,15 +1269,7 @@
                 }
               ]
             }
-          ],
-          "origin" : 
-          {
-            "position" : 
-            {
-              "line" : 18,
-              "path" : "ArrayAllocation.java"
-            }
-          }
+          ]
         }
       ],
       "sources" : 
@@ -1381,18 +1322,7 @@
               "line" : 17,
               "start" : 0
             }
-          ],
-          "origin" : 
-          {
-            "method" : "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;",
-            "position" : 
-            {
-              "end" : 34,
-              "line" : 17,
-              "path" : "ArrayAllocation.java",
-              "start" : 29
-            }
-          }
+          ]
         }
       ]
     },
@@ -1436,15 +1366,7 @@
                 }
               ]
             }
-          ],
-          "origin" : 
-          {
-            "position" : 
-            {
-              "line" : 22,
-              "path" : "ArrayAllocation.java"
-            }
-          }
+          ]
         }
       ],
       "sources" : 
@@ -1497,18 +1419,7 @@
               "line" : 22,
               "start" : 0
             }
-          ],
-          "origin" : 
-          {
-            "method" : "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;",
-            "position" : 
-            {
-              "end" : 42,
-              "line" : 20,
-              "path" : "ArrayAllocation.java",
-              "start" : 37
-            }
-          }
+          ]
         }
       ]
     },
@@ -1552,15 +1463,7 @@
                 }
               ]
             }
-          ],
-          "origin" : 
-          {
-            "position" : 
-            {
-              "line" : 24,
-              "path" : "ArrayAllocation.java"
-            }
-          }
+          ]
         }
       ],
       "sources" : 
@@ -1613,18 +1516,7 @@
               "line" : 24,
               "start" : 0
             }
-          ],
-          "origin" : 
-          {
-            "method" : "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;",
-            "position" : 
-            {
-              "end" : 42,
-              "line" : 20,
-              "path" : "ArrayAllocation.java",
-              "start" : 37
-            }
-          }
+          ]
         }
       ]
     }
@@ -1675,15 +1567,7 @@
                 }
               ]
             }
-          ],
-          "origin" : 
-          {
-            "position" : 
-            {
-              "line" : 36,
-              "path" : "ArrayAllocation.java"
-            }
-          }
+          ]
         }
       ],
       "sources" : 
@@ -1721,18 +1605,7 @@
               ],
               "preserves_type_context" : true
             }
-          ],
-          "origin" : 
-          {
-            "method" : "Lcom/facebook/marianatrench/integrationtests/ArrayAllocation;.source:()I",
-            "position" : 
-            {
-              "end" : 37,
-              "line" : 35,
-              "path" : "ArrayAllocation.java",
-              "start" : 32
-            }
-          }
+          ]
         }
       ]
     }
@@ -1783,15 +1656,7 @@
                 }
               ]
             }
-          ],
-          "origin" : 
-          {
-            "position" : 
-            {
-              "line" : 49,
-              "path" : "ArrayAllocation.java"
-            }
-          }
+          ]
         }
       ],
       "sources" : 
@@ -1829,18 +1694,7 @@
               ],
               "preserves_type_context" : true
             }
-          ],
-          "origin" : 
-          {
-            "method" : "Lcom/facebook/marianatrench/integrationtests/ArrayAllocation;.source:()I",
-            "position" : 
-            {
-              "end" : 37,
-              "line" : 48,
-              "path" : "ArrayAllocation.java",
-              "start" : 32
-            }
-          }
+          ]
         }
       ]
     }
@@ -1891,15 +1745,7 @@
                 }
               ]
             }
-          ],
-          "origin" : 
-          {
-            "position" : 
-            {
-              "line" : 42,
-              "path" : "ArrayAllocation.java"
-            }
-          }
+          ]
         }
       ],
       "sources" : 
@@ -1937,18 +1783,7 @@
               ],
               "preserves_type_context" : true
             }
-          ],
-          "origin" : 
-          {
-            "method" : "Lcom/facebook/marianatrench/integrationtests/ArrayAllocation;.source:()I",
-            "position" : 
-            {
-              "end" : 37,
-              "line" : 40,
-              "path" : "ArrayAllocation.java",
-              "start" : 32
-            }
-          }
+          ]
         }
       ]
     }
@@ -1999,15 +1834,7 @@
                 }
               ]
             }
-          ],
-          "origin" : 
-          {
-            "position" : 
-            {
-              "line" : 55,
-              "path" : "ArrayAllocation.java"
-            }
-          }
+          ]
         }
       ],
       "sources" : 
@@ -2045,18 +1872,7 @@
               ],
               "preserves_type_context" : true
             }
-          ],
-          "origin" : 
-          {
-            "method" : "Lcom/facebook/marianatrench/integrationtests/ArrayAllocation;.source:()I",
-            "position" : 
-            {
-              "end" : 37,
-              "line" : 54,
-              "path" : "ArrayAllocation.java",
-              "start" : 32
-            }
-          }
+          ]
         }
       ]
     }
@@ -2107,15 +1923,7 @@
                 }
               ]
             }
-          ],
-          "origin" : 
-          {
-            "position" : 
-            {
-              "line" : 30,
-              "path" : "ArrayAllocation.java"
-            }
-          }
+          ]
         }
       ],
       "sources" : 
@@ -2153,18 +1961,7 @@
               ],
               "preserves_type_context" : true
             }
-          ],
-          "origin" : 
-          {
-            "method" : "Lcom/facebook/marianatrench/integrationtests/ArrayAllocation;.source:()I",
-            "position" : 
-            {
-              "end" : 36,
-              "line" : 29,
-              "path" : "ArrayAllocation.java",
-              "start" : 31
-            }
-          }
+          ]
         }
       ]
     }
