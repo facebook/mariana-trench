@@ -7,9 +7,41 @@
 
 #include <Show.h>
 
+#include <mariana-trench/AccessPathFactory.h>
 #include <mariana-trench/CallInfo.h>
 
 namespace marianatrench {
+
+CallInfo CallInfo::propagate(
+    const Method* callee,
+    const AccessPath& callee_port,
+    const Position* call_position,
+    Context& context) const {
+  mt_assert(!call_kind().is_propagation_without_trace());
+
+  // CRTEX is identified by the "anchor" port, leaf-ness is identified by the
+  // path() length. Once a CRTEX frame is propagated, its path is never empty.
+  const auto* current_callee_port = this->callee_port();
+  bool is_crtex_leaf = current_callee_port != nullptr &&
+      current_callee_port->root().is_anchor() &&
+      current_callee_port->path().size() == 0;
+  auto propagated_callee_port =
+      is_crtex_leaf ? callee_port.canonicalize_for_method(callee) : callee_port;
+
+  const auto* propagated_callee = callee;
+  if (call_kind().is_declaration()) {
+    // When propagating a declaration, set the callee to nullptr. Traces do
+    // not need to point to the declaration (which may not even be a method).
+    propagated_callee = nullptr;
+  }
+
+  auto propagated_call_kind = call_kind().propagate();
+  return CallInfo(
+      propagated_callee,
+      propagated_call_kind,
+      context.access_path_factory->get(propagated_callee_port),
+      call_position);
+}
 
 Json::Value CallInfo::to_json() const {
   auto result = Json::Value(Json::objectValue);
@@ -23,8 +55,6 @@ Json::Value CallInfo::to_json() const {
   // - Return sinks and parameter sources. There is no callee for these, but
   //   the position points to the return instruction/parameter.
 
-  // TODO(T163918472): For call_kind == origin, ensure the following
-  // invariants: callee == nullptr && callee_port.is_leaf()
   auto call_info = Json::Value(Json::objectValue);
   call_info["call_kind"] = call_kind().to_trace_string();
   const auto* callee = this->callee();

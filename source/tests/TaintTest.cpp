@@ -2263,7 +2263,7 @@ TEST_F(TaintTest, Propagate) {
               .call_position = test_position_one,
               .canonical_names = CanonicalNameSetAbstractDomain{CanonicalName(
                   CanonicalName::TemplateValue{"%programmatic_leaf_name%"})},
-              .call_kind = CallKind::origin()}),
+              .call_kind = CallKind::declaration()}),
       /* call_position == nullptr */
       test::make_taint_config(
           test_kind_two,
@@ -2272,7 +2272,7 @@ TEST_F(TaintTest, Propagate) {
               .canonical_names = CanonicalNameSetAbstractDomain{CanonicalName(
                   CanonicalName::TemplateValue{"%programmatic_leaf_name%"})},
 
-              .call_kind = CallKind::origin()}),
+              .call_kind = CallKind::declaration()}),
   };
 
   /**
@@ -2323,26 +2323,32 @@ TEST_F(TaintTest, Propagate) {
               test_kind_one,
               test::FrameProperties{
                   .callee_port = expected_callee_port,
-                  .callee = method_one,
+                  .callee = nullptr,
                   .call_position = test_position_two,
+                  .class_interval_context = CallClassIntervalContext(
+                      ClassIntervals::Interval::top(),
+                      /* preserves_type_context*/ true),
                   .origins = OriginSet{expected_origin},
                   .locally_inferred_features = FeatureMayAlwaysSet::bottom(),
                   .canonical_names =
                       CanonicalNameSetAbstractDomain{
                           expected_instantiated_name},
-                  .call_kind = CallKind::callsite()}),
+                  .call_kind = CallKind::origin()}),
           test::make_taint_config(
               test_kind_two,
               test::FrameProperties{
                   .callee_port = expected_callee_port,
-                  .callee = method_one,
+                  .callee = nullptr,
                   .call_position = test_position_two,
+                  .class_interval_context = CallClassIntervalContext(
+                      ClassIntervals::Interval::top(),
+                      /* preserves_type_context*/ true),
                   .origins = OriginSet{expected_origin},
                   .locally_inferred_features = FeatureMayAlwaysSet::bottom(),
                   .canonical_names =
                       CanonicalNameSetAbstractDomain{
                           expected_instantiated_name},
-                  .call_kind = CallKind::callsite()}),
+                  .call_kind = CallKind::origin()}),
       }));
 
   // It is generally expected (though not enforced) that frames within
@@ -2371,7 +2377,7 @@ TEST_F(TaintTest, Propagate) {
               .origins = OriginSet{one_origin},
               .canonical_names = CanonicalNameSetAbstractDomain{CanonicalName(
                   CanonicalName::TemplateValue{"%programmatic_leaf_name%"})},
-              .call_kind = CallKind::origin()}),
+              .call_kind = CallKind::declaration()}),
       test::make_taint_config(
           test_kind_two,
           test::FrameProperties{
@@ -2384,7 +2390,7 @@ TEST_F(TaintTest, Propagate) {
               .origins = OriginSet{one_origin},
               .canonical_names = CanonicalNameSetAbstractDomain{CanonicalName(
                   CanonicalName::TemplateValue{"%programmatic_leaf_name%"})},
-              .call_kind = CallKind::origin()}),
+              .call_kind = CallKind::declaration()}),
   };
 
   expected_instantiated_name =
@@ -2421,14 +2427,17 @@ TEST_F(TaintTest, Propagate) {
               test_kind_one,
               test::FrameProperties{
                   .callee_port = expected_callee_port,
-                  .callee = method_two,
+                  .callee = nullptr,
                   .call_position = test_position_one,
+                  .class_interval_context = CallClassIntervalContext(
+                      ClassIntervals::Interval::top(),
+                      /* preserves_type_context */ true),
                   .origins = OriginSet{one_origin, expected_origin},
                   .locally_inferred_features = FeatureMayAlwaysSet::bottom(),
                   .canonical_names =
                       CanonicalNameSetAbstractDomain{
                           expected_instantiated_name},
-                  .call_kind = CallKind::callsite()}),
+                  .call_kind = CallKind::origin()}),
           test::make_taint_config(
               test_kind_two,
               test::FrameProperties{
@@ -2443,14 +2452,17 @@ TEST_F(TaintTest, Propagate) {
               test_kind_two,
               test::FrameProperties{
                   .callee_port = expected_callee_port,
-                  .callee = method_two,
+                  .callee = nullptr,
                   .call_position = test_position_one,
+                  .class_interval_context = CallClassIntervalContext(
+                      ClassIntervals::Interval::top(),
+                      /* preserves_type_context */ true),
                   .origins = OriginSet{one_origin, expected_origin},
                   .locally_inferred_features = FeatureMayAlwaysSet::bottom(),
                   .canonical_names =
                       CanonicalNameSetAbstractDomain{
                           expected_instantiated_name},
-                  .call_kind = CallKind::callsite()}),
+                  .call_kind = CallKind::origin()}),
       }));
 
   // Propagating this frame will give it a distance of 2. It is expected to be

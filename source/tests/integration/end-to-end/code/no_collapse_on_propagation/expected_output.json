@@ -1120,8 +1120,7 @@
               "line" : 57,
               "path" : "MainActivity.java",
               "start" : 18
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V"
+            }
           },
           "kinds" : 
           [
@@ -1170,8 +1169,7 @@
             {
               "line" : 53,
               "path" : "MainActivity.java"
-            },
-            "resolves_to" : "Landroid/util/Log;.e:(Ljava/lang/String;Ljava/lang/String;)I"
+            }
           },
           "kinds" : 
           [
@@ -1355,8 +1353,7 @@
               "line" : 31,
               "path" : "MainActivity.java",
               "start" : 32
-            },
-            "resolves_to" : "Landroid/content/Intent;.getExtras:()Landroid/os/Bundle;"
+            }
           },
           "kinds" : 
           [

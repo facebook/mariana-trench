@@ -1362,8 +1362,7 @@
               "line" : 25,
               "path" : "JavaCheckCast.java",
               "start" : 18
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V"
+            }
           },
           "kinds" : 
           [
@@ -1473,8 +1472,7 @@
               "line" : 62,
               "path" : "JavaCheckCast.java",
               "start" : 28
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;"
+            }
           },
           "kinds" : 
           [
@@ -1582,8 +1580,7 @@
               "line" : 40,
               "path" : "JavaCheckCast.java",
               "start" : 42
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;"
+            }
           },
           "kinds" : 
           [
@@ -1691,8 +1688,7 @@
               "line" : 57,
               "path" : "JavaCheckCast.java",
               "start" : 25
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;"
+            }
           },
           "kinds" : 
           [
@@ -1813,8 +1809,7 @@
               "line" : 23,
               "path" : "KotlinCheckCast.kt",
               "start" : 18
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V"
+            }
           },
           "kinds" : 
           [
@@ -1936,8 +1931,7 @@
               "line" : 63,
               "path" : "KotlinCheckCast.kt",
               "start" : 28
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;"
+            }
           },
           "kinds" : 
           [
@@ -2057,8 +2051,7 @@
               "line" : 38,
               "path" : "KotlinCheckCast.kt",
               "start" : 38
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;"
+            }
           },
           "kinds" : 
           [
@@ -2178,8 +2171,7 @@
               "line" : 58,
               "path" : "KotlinCheckCast.kt",
               "start" : 25
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;"
+            }
           },
           "kinds" : 
           [

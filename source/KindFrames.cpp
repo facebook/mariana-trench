@@ -308,8 +308,7 @@ CanonicalNameSetAbstractDomain propagate_canonical_names(
 
 KindFrames KindFrames::propagate(
     const Method* callee,
-    const AccessPath& callee_port,
-    const Position* call_position,
+    const CallInfo& propagated_call_info,
     const FeatureMayAlwaysSet& locally_inferred_features,
     int maximum_source_sink_distance,
     Context& context,
@@ -358,27 +357,16 @@ KindFrames KindFrames::propagate(
     mt_assert(propagated_canonical_names.is_value());
 
     // Propagate instantiated canonical names into origins.
-    // TODO(T163918472): Update Parser to determine callee from origins then
-    // set propagated_callee to nullptr.
     auto propagated_origins = frame.origins();
-    propagated_origins.join_with(
-        CanonicalName::propagate(propagated_canonical_names, callee_port));
+    propagated_origins.join_with(CanonicalName::propagate(
+        propagated_canonical_names, *propagated_call_info.callee_port()));
 
-    const auto* propagated_callee = callee;
     int propagated_distance = frame.distance() + 1;
     auto call_kind = frame.call_kind();
-    if (!propagated_canonical_names.elements().empty()) {
-      // For CRTEX, frames with templated canonical names are declarations.
-      // The propagated frame is considered a leaf, hence distance = 0.
-      // If name instantiation failed (empty propagated_canonical_names), the
-      // frame acts like any non-declaration frame and the trace to the consumer
-      // CRTEX issue will be broken.
-      propagated_distance = 0;
-    } else if (call_kind.is_declaration()) {
+    if (call_kind.is_declaration()) {
       // When propagating a declaration, set the callee to nullptr explicitly to
       // avoid emitting an invalid frame.
       propagated_distance = 0;
-      propagated_callee = nullptr;
     }
     mt_assert(propagated_distance <= maximum_source_sink_distance);
 
@@ -388,26 +376,20 @@ KindFrames KindFrames::propagate(
       propagated_output_paths.join_with(frame.output_paths());
     }
 
-    CallKind propagated_call_kind = call_kind.propagate();
+    CallKind propagated_call_kind = propagated_call_info.call_kind();
     if (propagated_distance > 0) {
       mt_assert(
           !propagated_call_kind.is_declaration() &&
           !propagated_call_kind.is_origin());
     } else {
-      // At distance 0, the propagated frame is typically an origin.
-      // However, if it is a CRTEX frame (identified by the "anchor" port), then
-      // it would be a callsite because CRTEX does not use "declaration" frames.
-      mt_assert(
-          propagated_call_kind.is_origin() ||
-          (callee_port.root().is_anchor() &&
-           propagated_call_kind.is_callsite()));
+      mt_assert(propagated_call_kind.is_origin());
     }
 
     auto propagated_frame = Frame(
         kind,
-        context.access_path_factory->get(callee_port),
-        propagated_callee,
-        call_position,
+        propagated_call_info.callee_port(),
+        propagated_call_info.callee(),
+        propagated_call_info.call_position(),
         propagated_interval,
         propagated_distance,
         propagated_origins,

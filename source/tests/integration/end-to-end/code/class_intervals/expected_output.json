@@ -1235,8 +1235,7 @@
               "line" : 50,
               "path" : "Basic.java",
               "start" : 18
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V"
+            }
           },
           "kinds" : 
           [
@@ -1281,8 +1280,7 @@
               "line" : 45,
               "path" : "Basic.java",
               "start" : 20
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;"
+            }
           },
           "kinds" : 
           [
@@ -1339,8 +1337,7 @@
             {
               "line" : 37,
               "path" : "Basic.java"
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;"
+            }
           },
           "kinds" : 
           [
@@ -1453,8 +1450,7 @@
             {
               "line" : 62,
               "path" : "Basic.java"
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V"
+            }
           },
           "kinds" : 
           [
@@ -1549,6 +1545,38 @@
         {
           "call_info" : 
           {
+            "call_kind" : "Origin",
+            "port" : "Return",
+            "position" : 
+            {
+              "line" : 26,
+              "path" : "ClassIntervalDetails.java"
+            }
+          },
+          "kinds" : 
+          [
+            {
+              "call_kind" : "Origin",
+              "callee_interval" : 
+              [
+                42,
+                47
+              ],
+              "kind" : "Source",
+              "origins" : 
+              [
+                {
+                  "method" : "Lcom/facebook/marianatrench/integrationtests/ClassIntervalDetails$Base;.source:()Ljava/lang/Object;",
+                  "port" : "Return"
+                }
+              ],
+              "preserves_type_context" : true
+            }
+          ]
+        },
+        {
+          "call_info" : 
+          {
             "call_kind" : "CallSite",
             "port" : "Return",
             "position" : 
@@ -1568,39 +1596,6 @@
                 44
               ],
               "distance" : 1,
-              "kind" : "Source",
-              "origins" : 
-              [
-                {
-                  "method" : "Lcom/facebook/marianatrench/integrationtests/ClassIntervalDetails$Base;.source:()Ljava/lang/Object;",
-                  "port" : "Return"
-                }
-              ],
-              "preserves_type_context" : true
-            }
-          ]
-        },
-        {
-          "call_info" : 
-          {
-            "call_kind" : "Origin",
-            "port" : "Return",
-            "position" : 
-            {
-              "line" : 26,
-              "path" : "ClassIntervalDetails.java"
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/ClassIntervalDetails$Base;.source:()Ljava/lang/Object;"
-          },
-          "kinds" : 
-          [
-            {
-              "call_kind" : "Origin",
-              "callee_interval" : 
-              [
-                42,
-                47
-              ],
               "kind" : "Source",
               "origins" : 
               [
@@ -1787,8 +1782,7 @@
             {
               "line" : 49,
               "path" : "ClassIntervalDetails.java"
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/ClassIntervalDetails$Base;.source:()Ljava/lang/Object;"
+            }
           },
           "kinds" : 
           [
@@ -1888,8 +1882,7 @@
             {
               "line" : 43,
               "path" : "ClassIntervalDetails.java"
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/ClassIntervalDetails$Base;.source:()Ljava/lang/Object;"
+            }
           },
           "kinds" : 
           [
@@ -2024,6 +2017,38 @@
         {
           "call_info" : 
           {
+            "call_kind" : "Origin",
+            "port" : "Return",
+            "position" : 
+            {
+              "line" : 81,
+              "path" : "ClassIntervalDetails.java"
+            }
+          },
+          "kinds" : 
+          [
+            {
+              "call_kind" : "Origin",
+              "callee_interval" : 
+              [
+                48,
+                49
+              ],
+              "kind" : "Source",
+              "origins" : 
+              [
+                {
+                  "method" : "Lcom/facebook/marianatrench/integrationtests/ClassIntervalDetails$Base;.source:()Ljava/lang/Object;",
+                  "port" : "Return"
+                }
+              ],
+              "preserves_type_context" : true
+            }
+          ]
+        },
+        {
+          "call_info" : 
+          {
             "call_kind" : "CallSite",
             "port" : "Return",
             "position" : 
@@ -2052,39 +2077,6 @@
                 }
               ],
               "preserves_type_context" : false
-            }
-          ]
-        },
-        {
-          "call_info" : 
-          {
-            "call_kind" : "Origin",
-            "port" : "Return",
-            "position" : 
-            {
-              "line" : 81,
-              "path" : "ClassIntervalDetails.java"
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/ClassIntervalDetails$Base;.source:()Ljava/lang/Object;"
-          },
-          "kinds" : 
-          [
-            {
-              "call_kind" : "Origin",
-              "callee_interval" : 
-              [
-                48,
-                49
-              ],
-              "kind" : "Source",
-              "origins" : 
-              [
-                {
-                  "method" : "Lcom/facebook/marianatrench/integrationtests/ClassIntervalDetails$Base;.source:()Ljava/lang/Object;",
-                  "port" : "Return"
-                }
-              ],
-              "preserves_type_context" : true
             }
           ]
         }
@@ -2560,8 +2552,7 @@
               "line" : 40,
               "path" : "IntervalsForPropagations.java",
               "start" : 18
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V"
+            }
           },
           "kinds" : 
           [
@@ -2598,8 +2589,7 @@
               "line" : 35,
               "path" : "IntervalsForPropagations.java",
               "start" : 29
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;"
+            }
           },
           "kinds" : 
           [
@@ -2665,8 +2655,7 @@
               "line" : 46,
               "path" : "IntervalsForPropagations.java",
               "start" : 18
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V"
+            }
           },
           "kinds" : 
           [
@@ -2703,8 +2692,7 @@
               "line" : 44,
               "path" : "IntervalsForPropagations.java",
               "start" : 29
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;"
+            }
           },
           "kinds" : 
           [
@@ -2770,8 +2758,7 @@
               "line" : 56,
               "path" : "IntervalsForPropagations.java",
               "start" : 18
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V"
+            }
           },
           "kinds" : 
           [
@@ -2808,8 +2795,7 @@
               "line" : 50,
               "path" : "IntervalsForPropagations.java",
               "start" : 29
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;"
+            }
           },
           "kinds" : 
           [
@@ -3272,8 +3258,7 @@
             {
               "line" : 34,
               "path" : "PropagateIntervals.java"
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V"
+            }
           },
           "kinds" : 
           [
@@ -3316,8 +3301,7 @@
             {
               "line" : 29,
               "path" : "PropagateIntervals.java"
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;"
+            }
           },
           "kinds" : 
           [
@@ -3488,8 +3472,7 @@
             {
               "line" : 52,
               "path" : "PropagateIntervals.java"
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/PropagateIntervals$Derived2;.derived2Sink:(Ljava/lang/Object;)V"
+            }
           },
           "kinds" : 
           [
@@ -3532,8 +3515,7 @@
             {
               "line" : 47,
               "path" : "PropagateIntervals.java"
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/PropagateIntervals$Derived2;.derived2Source:()Ljava/lang/Object;"
+            }
           },
           "kinds" : 
           [

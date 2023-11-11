@@ -1166,8 +1166,7 @@
               "line" : 14,
               "path" : "SinkWebViewClient.java",
               "start" : 16
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V"
+            }
           },
           "kinds" : 
           [

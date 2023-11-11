@@ -21,8 +21,7 @@
                 {
                   "line" : 2,
                   "path" : "Flow.java"
-                },
-                "resolves_to" : "LSource;.source:()LData;"
+                }
               },
               "kinds" :
               [
@@ -54,8 +53,7 @@
                 {
                   "line" : 4,
                   "path" : "Flow.java"
-                },
-                "resolves_to" : "LSource;.source:()LData;"
+                }
               },
               "kinds" :
               [

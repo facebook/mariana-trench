@@ -21,8 +21,7 @@
                 {
                   "line" : 1,
                   "path" : "Flow.java"
-                },
-                "resolves_to" : "LSource;.source:()LData;"
+                }
               },
               "kinds" :
               [
@@ -80,8 +79,7 @@
                 {
                   "line" : 3,
                   "path" : "Flow.java"
-                },
-                "resolves_to" : "LSink;.sink:(LData;)V"
+                }
               },
               "kinds" :
               [
@@ -116,8 +114,7 @@
                 {
                   "line" : 1,
                   "path" : "Flow.java"
-                },
-                "resolves_to" : "LSource;.source:()LData;"
+                }
               },
               "kinds" :
               [
@@ -177,8 +174,7 @@
                 {
                   "line" : 3,
                   "path" : "Flow.java"
-                },
-                "resolves_to" : "LSink;.sink:(LData;)V"
+                }
               },
               "kinds" :
               [

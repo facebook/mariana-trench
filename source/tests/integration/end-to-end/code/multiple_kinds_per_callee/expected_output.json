@@ -1004,8 +1004,7 @@
               "line" : 16,
               "path" : "Flow.java",
               "start" : 16
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V"
+            }
           },
           "kinds" : 
           [
@@ -1067,8 +1066,7 @@
               "line" : 12,
               "path" : "Flow.java",
               "start" : 18
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;"
+            }
           },
           "kinds" : 
           [

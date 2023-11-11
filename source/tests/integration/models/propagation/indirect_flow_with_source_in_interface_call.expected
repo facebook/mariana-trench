@@ -28,8 +28,7 @@
                 {
                   "line" : 2,
                   "path" : "Flow.java"
-                },
-                "resolves_to" : "LSink;.sink:(LData;)V"
+                }
               },
               "kinds" :
               [
@@ -115,8 +114,7 @@
                 {
                   "line" : 1,
                   "path" : "Implementation.java"
-                },
-                "resolves_to" : "LSource;.source:()LData;"
+                }
               },
               "kinds" :
               [

@@ -1229,8 +1229,7 @@
               "line" : 19,
               "path" : "DirectFlow.java",
               "start" : 18
-            },
-            "resolves_to" : "Landroid/app/Activity;.startActivity:(Landroid/content/Intent;)V"
+            }
           },
           "kinds" : 
           [
@@ -1267,8 +1266,7 @@
               "line" : 18,
               "path" : "DirectFlow.java",
               "start" : 20
-            },
-            "resolves_to" : "Landroid/app/Activity;.getIntent:()Landroid/content/Intent;"
+            }
           },
           "kinds" : 
           [
@@ -1338,8 +1336,7 @@
               "line" : 14,
               "path" : "DirectFlowWithSanitizer.java",
               "start" : 16
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V"
+            }
           },
           "kinds" : 
           [
@@ -1376,8 +1373,7 @@
               "line" : 12,
               "path" : "DirectFlowWithSanitizer.java",
               "start" : 22
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;"
+            }
           },
           "kinds" : 
           [
@@ -1458,8 +1454,7 @@
               "line" : 58,
               "path" : "DirectOpenRedirectFlow.java",
               "start" : 50
-            },
-            "resolves_to" : "Lcom/facebook/content/SecureContextHelper;.startFacebookActivity:(Landroid/content/Intent;Landroid/content/Context;)V"
+            }
           },
           "kinds" : 
           [
@@ -1496,8 +1491,7 @@
               "line" : 26,
               "path" : "DirectOpenRedirectFlow.java",
               "start" : 28
-            },
-            "resolves_to" : "Landroid/app/Activity;.getIntent:()Landroid/content/Intent;"
+            }
           },
           "kinds" : 
           [
@@ -1581,8 +1575,7 @@
               "line" : 17,
               "path" : "ExternalDirectFlow.java",
               "start" : 27
-            },
-            "resolves_to" : "Landroid/app/Activity;.startActivity:(Landroid/content/Intent;)V"
+            }
           },
           "kinds" : 
           [
@@ -1619,8 +1612,7 @@
               "line" : 16,
               "path" : "ExternalDirectFlow.java",
               "start" : 29
-            },
-            "resolves_to" : "Landroid/app/Activity;.getIntent:()Landroid/content/Intent;"
+            }
           },
           "kinds" : 
           [
@@ -1679,8 +1671,7 @@
               "line" : 13,
               "path" : "FlowWithHops.java",
               "start" : 18
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;"
+            }
           },
           "kinds" : 
           [
@@ -1889,8 +1880,7 @@
               "line" : 21,
               "path" : "FlowWithHops.java",
               "start" : 16
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V"
+            }
           },
           "kinds" : 
           [
@@ -2045,8 +2035,7 @@
               "line" : 19,
               "path" : "InheritanceFlows.java",
               "start" : 27
-            },
-            "resolves_to" : "Landroid/app/Activity;.startActivity:(Landroid/content/Intent;)V"
+            }
           },
           "kinds" : 
           [
@@ -2083,8 +2072,7 @@
               "line" : 18,
               "path" : "InheritanceFlows.java",
               "start" : 29
-            },
-            "resolves_to" : "Landroid/app/Activity;.getIntent:()Landroid/content/Intent;"
+            }
           },
           "kinds" : 
           [

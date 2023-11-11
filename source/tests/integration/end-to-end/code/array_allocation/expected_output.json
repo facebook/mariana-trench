@@ -1098,8 +1098,7 @@
               "line" : 12,
               "path" : "ArrayAllocation.java",
               "start" : 31
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/ArrayAllocation;.source:()I"
+            }
           },
           "kinds" : 
           [
@@ -1198,8 +1197,7 @@
               "line" : 59,
               "path" : "ArrayAllocation.java",
               "start" : 31
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/ArrayAllocation;.source:()I"
+            }
           },
           "kinds" : 
           [
@@ -1293,8 +1291,7 @@
               "line" : 17,
               "path" : "ArrayAllocation.java",
               "start" : 29
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;"
+            }
           },
           "kinds" : 
           [
@@ -1392,8 +1389,7 @@
               "line" : 20,
               "path" : "ArrayAllocation.java",
               "start" : 37
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;"
+            }
           },
           "kinds" : 
           [
@@ -1491,8 +1487,7 @@
               "line" : 20,
               "path" : "ArrayAllocation.java",
               "start" : 37
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;"
+            }
           },
           "kinds" : 
           [
@@ -1597,8 +1592,7 @@
               "line" : 35,
               "path" : "ArrayAllocation.java",
               "start" : 32
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/ArrayAllocation;.source:()I"
+            }
           },
           "kinds" : 
           [
@@ -1688,8 +1682,7 @@
               "line" : 48,
               "path" : "ArrayAllocation.java",
               "start" : 32
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/ArrayAllocation;.source:()I"
+            }
           },
           "kinds" : 
           [
@@ -1779,8 +1772,7 @@
               "line" : 40,
               "path" : "ArrayAllocation.java",
               "start" : 32
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/ArrayAllocation;.source:()I"
+            }
           },
           "kinds" : 
           [
@@ -1870,8 +1862,7 @@
               "line" : 54,
               "path" : "ArrayAllocation.java",
               "start" : 32
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/ArrayAllocation;.source:()I"
+            }
           },
           "kinds" : 
           [
@@ -1961,8 +1952,7 @@
               "line" : 29,
               "path" : "ArrayAllocation.java",
               "start" : 31
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/ArrayAllocation;.source:()I"
+            }
           },
           "kinds" : 
           [

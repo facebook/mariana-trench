@@ -69,8 +69,7 @@
                 {
                   "line" : 1,
                   "path" : "Flow.java"
-                },
-                "resolves_to" : "LSource;.source:()LData;"
+                }
               },
               "kinds" :
               [
@@ -125,8 +124,7 @@
                 {
                   "line" : 1,
                   "path" : "Flow.java"
-                },
-                "resolves_to" : "LSink;.alternative_sink:(LData;)V"
+                }
               },
               "kinds" :
               [
@@ -169,6 +167,38 @@
             {
               "call_info" :
               {
+                "call_kind" : "Origin",
+                "port" : "Argument(1)",
+                "position" :
+                {
+                  "line" : 1,
+                  "path" : "Flow.java"
+                }
+              },
+              "kinds" :
+              [
+                {
+                  "call_kind" : "Origin",
+                  "callee_interval" :
+                  [
+                    6,
+                    7
+                  ],
+                  "kind" : "TestSink",
+                  "origins" :
+                  [
+                    {
+                      "method" : "LSink;.sink:(LData;)V",
+                      "port" : "Argument(1)"
+                    }
+                  ],
+                  "preserves_type_context" : true
+                }
+              ]
+            },
+            {
+              "call_info" :
+              {
                 "call_kind" : "CallSite",
                 "port" : "Argument(1)",
                 "position" :
@@ -193,39 +223,6 @@
                   [
                     {
                       "method" : "LSink;.alternative_sink:(LData;)V",
-                      "port" : "Argument(1)"
-                    }
-                  ],
-                  "preserves_type_context" : true
-                }
-              ]
-            },
-            {
-              "call_info" :
-              {
-                "call_kind" : "Origin",
-                "port" : "Argument(1)",
-                "position" :
-                {
-                  "line" : 1,
-                  "path" : "Flow.java"
-                },
-                "resolves_to" : "LSink;.sink:(LData;)V"
-              },
-              "kinds" :
-              [
-                {
-                  "call_kind" : "Origin",
-                  "callee_interval" :
-                  [
-                    6,
-                    7
-                  ],
-                  "kind" : "TestSink",
-                  "origins" :
-                  [
-                    {
-                      "method" : "LSink;.sink:(LData;)V",
                       "port" : "Argument(1)"
                     }
                   ],

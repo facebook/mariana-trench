@@ -1192,8 +1192,7 @@
               "line" : 31,
               "path" : "Test.java",
               "start" : 16
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V"
+            }
           },
           "kinds" : 
           [
@@ -1230,8 +1229,7 @@
               "line" : 31,
               "path" : "Test.java",
               "start" : 16
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/Test;.sourceViaType:()Ljava/lang/Object;"
+            }
           },
           "kinds" : 
           [

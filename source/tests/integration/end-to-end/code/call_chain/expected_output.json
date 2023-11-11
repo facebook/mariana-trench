@@ -1106,8 +1106,7 @@
             {
               "line" : 20,
               "path" : "CallChain.java"
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/SensitiveApi;.execute:()V"
+            }
           },
           "kinds" : 
           [

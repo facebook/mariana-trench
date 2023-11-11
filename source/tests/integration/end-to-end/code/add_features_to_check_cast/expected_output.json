@@ -1146,8 +1146,7 @@
               "line" : 31,
               "path" : "AddFeatureToCheckCast.java",
               "start" : 40
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;"
+            }
           },
           "kinds" : 
           [
@@ -1260,8 +1259,7 @@
               "line" : 36,
               "path" : "AddFeatureToCheckCast.java",
               "start" : 36
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;"
+            }
           },
           "kinds" : 
           [
@@ -1338,8 +1336,7 @@
               "line" : 16,
               "path" : "AddFeatureToCheckCast.java",
               "start" : 9
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/AddFeatureToCheckCast;.sink:(Ljava/lang/String;)V"
+            }
           },
           "kinds" : 
           [
@@ -1376,8 +1373,7 @@
               "line" : 14,
               "path" : "AddFeatureToCheckCast.java",
               "start" : 27
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;"
+            }
           },
           "kinds" : 
           [
@@ -1442,8 +1438,7 @@
               "line" : 22,
               "path" : "AddFeatureToCheckCast.java",
               "start" : 16
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V"
+            }
           },
           "kinds" : 
           [
@@ -1480,8 +1475,7 @@
               "line" : 20,
               "path" : "AddFeatureToCheckCast.java",
               "start" : 27
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;"
+            }
           },
           "kinds" : 
           [
@@ -1576,8 +1570,7 @@
               "line" : 26,
               "path" : "AddFeatureToCheckCast.java",
               "start" : 36
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;"
+            }
           },
           "kinds" : 
           [
@@ -1650,8 +1643,7 @@
               "line" : 41,
               "path" : "AddFeatureToCheckCast.java",
               "start" : 9
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/AddFeatureToCheckCast;.sink:(Ljava/lang/String;)V"
+            }
           },
           "kinds" : 
           [

@@ -1280,8 +1280,7 @@
               "line" : 23,
               "path" : "MainActivity2.java",
               "start" : 16
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V"
+            }
           },
           "kinds" : 
           [
@@ -1334,8 +1333,7 @@
               "line" : 17,
               "path" : "MainActivity.java",
               "start" : 21
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;"
+            }
           },
           "kinds" : 
           [

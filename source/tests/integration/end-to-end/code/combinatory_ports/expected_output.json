@@ -5846,8 +5846,7 @@
             {
               "line" : 38,
               "path" : "Flow.java"
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V"
+            }
           },
           "kinds" : 
           [
@@ -5938,8 +5937,7 @@
             {
               "line" : 53,
               "path" : "Flow.java"
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V"
+            }
           },
           "kinds" : 
           [
@@ -6245,8 +6243,7 @@
             {
               "line" : 61,
               "path" : "Flow.java"
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V"
+            }
           },
           "kinds" : 
           [

@@ -57,6 +57,12 @@ class CallInfo final {
     return CallInfo(nullptr, CallKind::declaration(), nullptr, nullptr);
   }
 
+  CallInfo propagate(
+      const Method* callee,
+      const AccessPath& callee_port,
+      const Position* call_position,
+      Context& context) const;
+
   Json::Value to_json() const;
 
   friend bool operator==(const CallInfo& self, const CallInfo& other);

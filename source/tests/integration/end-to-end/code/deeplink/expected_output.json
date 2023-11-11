@@ -2161,8 +2161,7 @@
               "line" : 167,
               "path" : "IntentHandlerUtil.java",
               "start" : 58
-            },
-            "resolves_to" : "Lcom/facebook/content/SecureContextHelper;.startFacebookActivityForResult:(Landroid/content/Intent;ILandroid/app/Activity;)V"
+            }
           },
           "kinds" : 
           [
@@ -2196,8 +2195,7 @@
               "line" : 169,
               "path" : "IntentHandlerUtil.java",
               "start" : 61
-            },
-            "resolves_to" : "Lcom/facebook/content/SecureContextHelper;.startNonFacebookActivityForResult:(Landroid/content/Intent;ILandroid/app/Activity;)V"
+            }
           },
           "kinds" : 
           [
@@ -2248,8 +2246,7 @@
               "line" : 158,
               "path" : "IntentHandlerUtil.java",
               "start" : 49
-            },
-            "resolves_to" : "Lcom/facebook/content/SecureContextHelper;.startFacebookActivity:(Landroid/content/Intent;Landroid/content/Context;)V"
+            }
           },
           "kinds" : 
           [
@@ -2283,8 +2280,7 @@
               "line" : 160,
               "path" : "IntentHandlerUtil.java",
               "start" : 52
-            },
-            "resolves_to" : "Lcom/facebook/content/SecureContextHelper;.startNonFacebookActivity:(Landroid/content/Intent;Landroid/content/Context;)V"
+            }
           },
           "kinds" : 
           [
@@ -2427,8 +2423,7 @@
               "line" : 23,
               "path" : "IntentUriHandler.java",
               "start" : 48
-            },
-            "resolves_to" : "Landroid/app/Activity;.getIntent:()Landroid/content/Intent;"
+            }
           },
           "kinds" : 
           [

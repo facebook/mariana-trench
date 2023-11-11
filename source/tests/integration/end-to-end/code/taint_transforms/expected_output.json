@@ -1675,8 +1675,7 @@
               "line" : 85,
               "path" : "ExtraTraces.java",
               "start" : 16
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V"
+            }
           },
           "kinds" : 
           [
@@ -1894,8 +1893,7 @@
               "line" : 35,
               "path" : "ExtraTraces.java",
               "start" : 27
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/TaintTransforms;.getNewSource:()Ljava/lang/Object;"
+            }
           },
           "kinds" : 
           [
@@ -2854,8 +2852,7 @@
               "line" : 136,
               "path" : "TaintTransforms.java",
               "start" : 16
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V"
+            }
           },
           "kinds" : 
           [
@@ -2947,8 +2944,7 @@
               "line" : 143,
               "path" : "TaintTransforms.java",
               "start" : 16
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V"
+            }
           },
           "kinds" : 
           [
@@ -3023,8 +3019,7 @@
               "line" : 152,
               "path" : "TaintTransforms.java",
               "start" : 16
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V"
+            }
           },
           "kinds" : 
           [
@@ -3144,8 +3139,7 @@
               "line" : 104,
               "path" : "TaintTransforms.java",
               "start" : 27
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;"
+            }
           },
           "kinds" : 
           [
@@ -3237,8 +3231,7 @@
               "line" : 113,
               "path" : "TaintTransforms.java",
               "start" : 41
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;"
+            }
           },
           "kinds" : 
           [
@@ -3410,8 +3403,7 @@
               "line" : 265,
               "path" : "TaintTransforms.java",
               "start" : 65
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;"
+            }
           },
           "kinds" : 
           [
@@ -3497,8 +3489,7 @@
               "line" : 200,
               "path" : "TaintTransforms.java",
               "start" : 16
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V"
+            }
           },
           "kinds" : 
           [
@@ -3589,8 +3580,7 @@
               "line" : 200,
               "path" : "TaintTransforms.java",
               "start" : 16
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V"
+            }
           },
           "kinds" : 
           [
@@ -3627,8 +3617,7 @@
               "line" : 194,
               "path" : "TaintTransforms.java",
               "start" : 22
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;"
+            }
           },
           "kinds" : 
           [
@@ -3762,8 +3751,7 @@
               "line" : 235,
               "path" : "TaintTransforms.java",
               "start" : 27
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;"
+            }
           },
           "kinds" : 
           [
@@ -3849,8 +3837,7 @@
               "line" : 235,
               "path" : "TaintTransforms.java",
               "start" : 27
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;"
+            }
           },
           "kinds" : 
           [
@@ -3941,8 +3928,7 @@
               "line" : 243,
               "path" : "TaintTransforms.java",
               "start" : 27
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;"
+            }
           },
           "kinds" : 
           [
@@ -4022,8 +4008,7 @@
               "line" : 243,
               "path" : "TaintTransforms.java",
               "start" : 27
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;"
+            }
           },
           "kinds" : 
           [
@@ -4081,8 +4066,7 @@
               "line" : 220,
               "path" : "TaintTransforms.java",
               "start" : 16
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V"
+            }
           },
           "kinds" : 
           [
@@ -4168,8 +4152,7 @@
               "line" : 220,
               "path" : "TaintTransforms.java",
               "start" : 16
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V"
+            }
           },
           "kinds" : 
           [
@@ -4266,8 +4249,7 @@
               "line" : 228,
               "path" : "TaintTransforms.java",
               "start" : 16
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V"
+            }
           },
           "kinds" : 
           [
@@ -4347,8 +4329,7 @@
               "line" : 228,
               "path" : "TaintTransforms.java",
               "start" : 16
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V"
+            }
           },
           "kinds" : 
           [
@@ -4630,8 +4611,7 @@
               "line" : 212,
               "path" : "TaintTransforms.java",
               "start" : 16
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V"
+            }
           },
           "kinds" : 
           [
@@ -4668,8 +4648,7 @@
               "line" : 205,
               "path" : "TaintTransforms.java",
               "start" : 22
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;"
+            }
           },
           "kinds" : 
           [
@@ -4740,8 +4719,7 @@
               "line" : 212,
               "path" : "TaintTransforms.java",
               "start" : 16
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V"
+            }
           },
           "kinds" : 
           [
@@ -4778,8 +4756,7 @@
               "line" : 205,
               "path" : "TaintTransforms.java",
               "start" : 22
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;"
+            }
           },
           "kinds" : 
           [
@@ -4913,8 +4890,7 @@
               "line" : 181,
               "path" : "TaintTransforms.java",
               "start" : 31
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;"
+            }
           },
           "kinds" : 
           [
@@ -5000,8 +4976,7 @@
               "line" : 181,
               "path" : "TaintTransforms.java",
               "start" : 31
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;"
+            }
           },
           "kinds" : 
           [
@@ -5067,8 +5042,7 @@
               "line" : 176,
               "path" : "TaintTransforms.java",
               "start" : 16
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V"
+            }
           },
           "kinds" : 
           [
@@ -5154,8 +5128,7 @@
               "line" : 176,
               "path" : "TaintTransforms.java",
               "start" : 16
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V"
+            }
           },
           "kinds" : 
           [
@@ -5550,8 +5523,7 @@
               "line" : 46,
               "path" : "TaintTransforms.java",
               "start" : 12
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/TaintTransforms;.getNewSource:()Ljava/lang/Object;"
+            }
           },
           "kinds" : 
           [

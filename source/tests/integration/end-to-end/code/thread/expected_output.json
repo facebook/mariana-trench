@@ -1176,8 +1176,7 @@
               "line" : 19,
               "path" : "RunnableActivity.java",
               "start" : 24
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V"
+            }
           },
           "kinds" : 
           [
@@ -1289,8 +1288,7 @@
               "line" : 13,
               "path" : "RunnableActivity.java",
               "start" : 43
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;"
+            }
           },
           "kinds" : 
           [

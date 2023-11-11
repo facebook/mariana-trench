@@ -1215,8 +1215,7 @@
               "line" : 27,
               "path" : "OfferRedirectToWebActivity.java",
               "start" : 20
-            },
-            "resolves_to" : "Landroid/app/Activity;.getIntent:()Landroid/content/Intent;"
+            }
           },
           "kinds" : 
           [
@@ -1312,8 +1311,7 @@
               "line" : 27,
               "path" : "OfferRedirectToWebActivity.java",
               "start" : 20
-            },
-            "resolves_to" : "Landroid/app/Activity;.getIntent:()Landroid/content/Intent;"
+            }
           },
           "kinds" : 
           [
@@ -1412,8 +1410,7 @@
               "line" : 27,
               "path" : "OfferRedirectToWebActivity.java",
               "start" : 20
-            },
-            "resolves_to" : "Landroid/app/Activity;.getIntent:()Landroid/content/Intent;"
+            }
           },
           "kinds" : 
           [
@@ -1491,8 +1488,7 @@
               "line" : 26,
               "path" : "OfferRenderingUtils.java",
               "start" : 55
-            },
-            "resolves_to" : "Lcom/facebook/secure/context/IntentLauncher;.launchActivity:(Landroid/content/Intent;Landroid/content/Context;)Z"
+            }
           },
           "kinds" : 
           [

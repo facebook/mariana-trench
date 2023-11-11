@@ -1185,8 +1185,7 @@
               "line" : 39,
               "path" : "RunnableFlows.java",
               "start" : 24
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V"
+            }
           },
           "kinds" : 
           [
@@ -1297,8 +1296,7 @@
               "line" : 33,
               "path" : "RunnableFlows.java",
               "start" : 31
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;"
+            }
           },
           "kinds" : 
           [

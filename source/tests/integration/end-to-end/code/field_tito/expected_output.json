@@ -1094,8 +1094,7 @@
               "line" : 15,
               "path" : "MainActivity.java",
               "start" : 16
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V"
+            }
           },
           "kinds" : 
           [
@@ -1132,8 +1131,7 @@
               "line" : 14,
               "path" : "MainActivity.java",
               "start" : 36
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;"
+            }
           },
           "kinds" : 
           [
@@ -1198,8 +1196,7 @@
               "line" : 15,
               "path" : "MainActivity.java",
               "start" : 16
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V"
+            }
           },
           "kinds" : 
           [

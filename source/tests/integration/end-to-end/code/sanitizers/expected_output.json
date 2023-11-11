@@ -998,8 +998,7 @@
               "line" : 41,
               "path" : "GlobalSanitizers.java",
               "start" : 15
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/GlobalSanitizers;.getSourceB:()Ljava/lang/Object;"
+            }
           },
           "kinds" : 
           [
@@ -1091,8 +1090,7 @@
               "line" : 13,
               "path" : "GlobalSanitizers.java",
               "start" : 18
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;"
+            }
           },
           "kinds" : 
           [
@@ -1688,8 +1686,7 @@
               "line" : 25,
               "path" : "GlobalSanitizers.java",
               "start" : 16
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V"
+            }
           },
           "kinds" : 
           [
@@ -1984,8 +1981,7 @@
               "line" : 33,
               "path" : "PortSanitizers.java",
               "start" : 36
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;"
+            }
           },
           "kinds" : 
           [
@@ -2071,8 +2067,7 @@
               "line" : 33,
               "path" : "PortSanitizers.java",
               "start" : 36
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;"
+            }
           },
           "kinds" : 
           [
@@ -2123,8 +2118,7 @@
               "line" : 36,
               "path" : "PortSanitizers.java",
               "start" : 16
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V"
+            }
           },
           "kinds" : 
           [
@@ -2219,8 +2213,7 @@
               "line" : 36,
               "path" : "PortSanitizers.java",
               "start" : 16
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V"
+            }
           },
           "kinds" : 
           [
@@ -2333,8 +2326,7 @@
               "line" : 15,
               "path" : "PortSanitizers.java",
               "start" : 16
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V"
+            }
           },
           "kinds" : 
           [
@@ -2374,8 +2366,7 @@
               "line" : 17,
               "path" : "PortSanitizers.java",
               "start" : 29
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/GlobalSanitizers;.toSinkB:(Ljava/lang/Object;)V"
+            }
           },
           "kinds" : 
           [
@@ -2420,8 +2411,7 @@
               "line" : 21,
               "path" : "PortSanitizers.java",
               "start" : 20
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;"
+            }
           },
           "kinds" : 
           [

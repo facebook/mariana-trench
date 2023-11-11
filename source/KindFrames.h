@@ -163,8 +163,7 @@ class KindFrames final : public sparta::AbstractDomain<KindFrames> {
    */
   KindFrames propagate(
       const Method* callee,
-      const AccessPath& callee_port,
-      const Position* call_position,
+      const CallInfo& propagated_call_info,
       const FeatureMayAlwaysSet& locally_inferred_features,
       int maximum_source_sink_distance,
       Context& context,

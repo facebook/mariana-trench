@@ -1108,8 +1108,7 @@
             {
               "line" : 24,
               "path" : "UserFeaturesPropagation.java"
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/UserFeaturesPropagation;.source:()Ljava/lang/Object;"
+            }
           },
           "kinds" : 
           [

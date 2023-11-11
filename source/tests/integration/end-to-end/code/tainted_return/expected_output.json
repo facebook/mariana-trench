@@ -1039,8 +1039,7 @@
               "line" : 24,
               "path" : "Configerator.java",
               "start" : 17
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/ZeroRatingConnectionConfigOverrides;.getUri:()Landroid/net/Uri;"
+            }
           },
           "kinds" : 
           [
@@ -1488,8 +1487,7 @@
               "line" : 22,
               "path" : "ZeroRatingConnectionConfigOverrides.java",
               "start" : 16
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V"
+            }
           },
           "kinds" : 
           [
@@ -1534,8 +1532,7 @@
               "line" : 17,
               "path" : "ZeroRatingConnectionConfigOverrides.java",
               "start" : 27
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;"
+            }
           },
           "kinds" : 
           [

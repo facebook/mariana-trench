@@ -1089,8 +1089,7 @@
               "line" : 29,
               "path" : "ActivityUsingAndroidLocationManager.java",
               "start" : 22
-            },
-            "resolves_to" : "Landroid/util/Log;.e:(Ljava/lang/String;Ljava/lang/String;)I"
+            }
           },
           "kinds" : 
           [
@@ -1127,8 +1126,7 @@
               "line" : 29,
               "path" : "ActivityUsingAndroidLocationManager.java",
               "start" : 41
-            },
-            "resolves_to" : "Landroid/location/Location;.toString:()Ljava/lang/String;"
+            }
           },
           "kinds" : 
           [

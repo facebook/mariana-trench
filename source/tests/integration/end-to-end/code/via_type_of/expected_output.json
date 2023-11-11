@@ -1189,8 +1189,7 @@
               "line" : 30,
               "path" : "RecorderActivity.java",
               "start" : 16
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V"
+            }
           },
           "kinds" : 
           [
@@ -1227,8 +1226,7 @@
               "line" : 30,
               "path" : "RecorderActivity.java",
               "start" : 23
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;"
+            }
           },
           "kinds" : 
           [
@@ -1291,8 +1289,7 @@
               "line" : 22,
               "path" : "RecorderActivity.java",
               "start" : 56
-            },
-            "resolves_to" : "Lcom/facebook/content/SecureContextHelper;.startFacebookActivityForResult:(Landroid/content/Intent;ILandroid/app/Activity;)V"
+            }
           },
           "kinds" : 
           [
@@ -1340,8 +1337,7 @@
               "line" : 21,
               "path" : "RecorderActivity.java",
               "start" : 20
-            },
-            "resolves_to" : "Landroid/content/Intent;.<init>:(Ljava/lang/String;Landroid/net/Uri;)V"
+            }
           },
           "kinds" : 
           [

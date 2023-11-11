@@ -1031,8 +1031,7 @@
             {
               "line" : 29,
               "path" : "Crtex.java"
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/Crtex;.startActivityHelper:(Landroid/content/Intent;Landroid/app/Activity;)V"
+            }
           },
           "kinds" : 
           [
@@ -1166,8 +1165,7 @@
             {
               "line" : 52,
               "path" : "Crtex.java"
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/Crtex;.crtex_with_regular_sink:(Landroid/content/Intent;)V"
+            }
           },
           "kinds" : 
           [
@@ -1209,8 +1207,7 @@
             {
               "line" : 52,
               "path" : "Crtex.java"
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/Crtex;.crtex_with_regular_sink:(Landroid/content/Intent;)V"
+            }
           },
           "kinds" : 
           [
@@ -1343,8 +1340,7 @@
             {
               "line" : 45,
               "path" : "Crtex.java"
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/Crtex;.multiple_canonical_names:(Landroid/content/Intent;Landroid/app/Activity;I)V"
+            }
           },
           "kinds" : 
           [
@@ -1410,8 +1406,7 @@
             {
               "line" : 45,
               "path" : "Crtex.java"
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/Crtex;.multiple_canonical_names:(Landroid/content/Intent;Landroid/app/Activity;I)V"
+            }
           },
           "kinds" : 
           [
@@ -1534,8 +1529,7 @@
             {
               "line" : 25,
               "path" : "Crtex.java"
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/Crtex;.startActivityHelper:(Landroid/content/Intent;Landroid/app/Activity;)V"
+            }
           },
           "kinds" : 
           [
@@ -1586,8 +1580,7 @@
               "line" : 25,
               "path" : "Crtex.java",
               "start" : 10
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/Crtex;.startActivityHelper:(Landroid/content/Intent;Landroid/app/Activity;)V"
+            }
           },
           "kinds" : 
           [
@@ -1641,8 +1634,7 @@
               "line" : 24,
               "path" : "Crtex.java",
               "start" : 20
-            },
-            "resolves_to" : "Landroid/content/Intent;.<init>:(Ljava/lang/String;Landroid/net/Uri;)V"
+            }
           },
           "kinds" : 
           [

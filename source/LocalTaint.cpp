@@ -239,21 +239,14 @@ LocalTaint LocalTaint::propagate(
   }
 
   mt_assert(!call_kind().is_propagation_without_trace());
+  auto propagated_call_info =
+      call_info_.propagate(callee, callee_port, call_position, context);
 
-  // CRTEX is identified by the "anchor" port, leaf-ness is identified by the
-  // path() length. Once a CRTEX frame is propagated, its path is never empty.
-  const auto* current_callee_port = call_info_.callee_port();
-  bool is_crtex_leaf = current_callee_port != nullptr &&
-      current_callee_port->root().is_anchor() &&
-      current_callee_port->path().size() == 0;
-  auto propagated_callee_port =
-      is_crtex_leaf ? callee_port.canonicalize_for_method(callee) : callee_port;
   FramesByKind propagated_frames_by_kind;
   for (const auto& [kind, frames] : frames_.bindings()) {
     auto propagated = frames.propagate(
         callee,
-        propagated_callee_port,
-        call_position,
+        propagated_call_info,
         locally_inferred_features_,
         maximum_source_sink_distance,
         context,
@@ -275,12 +268,7 @@ LocalTaint LocalTaint::propagate(
   }
 
   return LocalTaint(
-      CallInfo(
-          /* callee */ callee,
-          /* call_kind */ call_kind().propagate(),
-          /* callee_port */
-          context.access_path_factory->get(propagated_callee_port),
-          /* call_position */ call_position),
+      propagated_call_info,
       propagated_frames_by_kind,
       /* local_positions */ {},
       /* locally_inferred_features */ FeatureMayAlwaysSet::bottom());

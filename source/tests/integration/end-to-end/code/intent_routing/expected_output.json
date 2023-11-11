@@ -1229,8 +1229,7 @@
               "line" : 72,
               "path" : "IntentRouter.java",
               "start" : 58
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;"
+            }
           },
           "kinds" : 
           [
@@ -1345,8 +1344,7 @@
               "line" : 72,
               "path" : "IntentRouter.java",
               "start" : 58
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;"
+            }
           },
           "kinds" : 
           [
@@ -1469,8 +1467,7 @@
               "line" : 56,
               "path" : "IntentRouter.java",
               "start" : 44
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;"
+            }
           },
           "kinds" : 
           [
@@ -1709,8 +1706,7 @@
               "line" : 18,
               "path" : "IntentRouter.java",
               "start" : 58
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;"
+            }
           },
           "kinds" : 
           [
@@ -1825,8 +1821,7 @@
               "line" : 18,
               "path" : "IntentRouter.java",
               "start" : 58
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;"
+            }
           },
           "kinds" : 
           [
@@ -2037,8 +2032,7 @@
             {
               "line" : 38,
               "path" : "IntentTarget.java"
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V"
+            }
           },
           "kinds" : 
           [
@@ -2145,8 +2139,7 @@
             {
               "line" : 33,
               "path" : "IntentTarget.java"
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V"
+            }
           },
           "kinds" : 
           [
@@ -2204,8 +2197,7 @@
             {
               "line" : 51,
               "path" : "IntentTarget.java"
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V"
+            }
           },
           "kinds" : 
           [
@@ -2263,8 +2255,7 @@
             {
               "line" : 20,
               "path" : "IntentTarget.java"
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V"
+            }
           },
           "kinds" : 
           [

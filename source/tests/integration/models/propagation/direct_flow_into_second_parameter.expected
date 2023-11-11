@@ -28,8 +28,7 @@
                 {
                   "line" : 2,
                   "path" : "Flow.java"
-                },
-                "resolves_to" : "LSink;.sink_in_second_parameter:(II)V"
+                }
               },
               "kinds" :
               [
@@ -64,8 +63,7 @@
                 {
                   "line" : 1,
                   "path" : "Flow.java"
-                },
-                "resolves_to" : "LSource;.source:()LData;"
+                }
               },
               "kinds" :
               [

@@ -1220,8 +1220,7 @@
               "line" : 62,
               "path" : "Flow.java",
               "start" : 24
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/Flow;.source:()Lcom/facebook/marianatrench/integrationtests/Flow$IrrelevantField;"
+            }
           },
           "kinds" : 
           [
@@ -1391,8 +1390,7 @@
               "line" : 88,
               "path" : "Flow.java",
               "start" : 45
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;"
+            }
           },
           "kinds" : 
           [
@@ -1931,8 +1929,7 @@
               "line" : 26,
               "path" : "Flow.java",
               "start" : 16
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V"
+            }
           },
           "kinds" : 
           [

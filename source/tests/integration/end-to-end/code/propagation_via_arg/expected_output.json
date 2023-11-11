@@ -1417,8 +1417,7 @@
               "line" : 16,
               "path" : "propagateViaArg.java",
               "start" : 16
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V"
+            }
           },
           "kinds" : 
           [
@@ -1455,8 +1454,7 @@
               "line" : 13,
               "path" : "propagateViaArg.java",
               "start" : 37
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;"
+            }
           },
           "kinds" : 
           [
@@ -1537,8 +1535,7 @@
               "line" : 59,
               "path" : "propagateViaArg.java",
               "start" : 16
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V"
+            }
           },
           "kinds" : 
           [
@@ -1575,8 +1572,7 @@
               "line" : 55,
               "path" : "propagateViaArg.java",
               "start" : 37
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;"
+            }
           },
           "kinds" : 
           [
@@ -1662,8 +1658,7 @@
               "line" : 23,
               "path" : "propagateViaArg.java",
               "start" : 16
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V"
+            }
           },
           "kinds" : 
           [
@@ -1700,8 +1695,7 @@
               "line" : 20,
               "path" : "propagateViaArg.java",
               "start" : 37
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;"
+            }
           },
           "kinds" : 
           [
@@ -1782,8 +1776,7 @@
               "line" : 66,
               "path" : "propagateViaArg.java",
               "start" : 16
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V"
+            }
           },
           "kinds" : 
           [
@@ -1820,8 +1813,7 @@
               "line" : 63,
               "path" : "propagateViaArg.java",
               "start" : 37
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;"
+            }
           },
           "kinds" : 
           [
@@ -1902,8 +1894,7 @@
               "line" : 80,
               "path" : "propagateViaArg.java",
               "start" : 16
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V"
+            }
           },
           "kinds" : 
           [
@@ -1940,8 +1931,7 @@
               "line" : 77,
               "path" : "propagateViaArg.java",
               "start" : 37
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;"
+            }
           },
           "kinds" : 
           [
@@ -2035,8 +2025,7 @@
               "line" : 105,
               "path" : "propagateViaArg.java",
               "start" : 16
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V"
+            }
           },
           "kinds" : 
           [
@@ -2073,8 +2062,7 @@
               "line" : 103,
               "path" : "propagateViaArg.java",
               "start" : 37
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;"
+            }
           },
           "kinds" : 
           [
@@ -2140,8 +2128,7 @@
               "line" : 105,
               "path" : "propagateViaArg.java",
               "start" : 16
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V"
+            }
           },
           "kinds" : 
           [
@@ -2178,8 +2165,7 @@
               "line" : 103,
               "path" : "propagateViaArg.java",
               "start" : 37
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;"
+            }
           },
           "kinds" : 
           [
@@ -2266,8 +2252,7 @@
             {
               "line" : 44,
               "path" : "propagateViaArg.java"
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V"
+            }
           },
           "kinds" : 
           [
@@ -2329,8 +2314,7 @@
               "line" : 30,
               "path" : "propagateViaArg.java",
               "start" : 16
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V"
+            }
           },
           "kinds" : 
           [
@@ -2367,8 +2351,7 @@
               "line" : 27,
               "path" : "propagateViaArg.java",
               "start" : 37
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;"
+            }
           },
           "kinds" : 
           [
@@ -2449,8 +2432,7 @@
               "line" : 73,
               "path" : "propagateViaArg.java",
               "start" : 16
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V"
+            }
           },
           "kinds" : 
           [
@@ -2487,8 +2469,7 @@
               "line" : 70,
               "path" : "propagateViaArg.java",
               "start" : 37
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;"
+            }
           },
           "kinds" : 
           [
@@ -2569,8 +2550,7 @@
               "line" : 87,
               "path" : "propagateViaArg.java",
               "start" : 16
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V"
+            }
           },
           "kinds" : 
           [
@@ -2607,8 +2587,7 @@
               "line" : 84,
               "path" : "propagateViaArg.java",
               "start" : 37
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;"
+            }
           },
           "kinds" : 
           [
@@ -2702,8 +2681,7 @@
               "line" : 98,
               "path" : "propagateViaArg.java",
               "start" : 16
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V"
+            }
           },
           "kinds" : 
           [
@@ -2740,8 +2718,7 @@
               "line" : 91,
               "path" : "propagateViaArg.java",
               "start" : 37
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;"
+            }
           },
           "kinds" : 
           [
@@ -2828,8 +2805,7 @@
             {
               "line" : 51,
               "path" : "propagateViaArg.java"
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V"
+            }
           },
           "kinds" : 
           [
@@ -2891,8 +2867,7 @@
               "line" : 37,
               "path" : "propagateViaArg.java",
               "start" : 16
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V"
+            }
           },
           "kinds" : 
           [
@@ -2929,8 +2904,7 @@
               "line" : 34,
               "path" : "propagateViaArg.java",
               "start" : 37
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;"
+            }
           },
           "kinds" : 
           [

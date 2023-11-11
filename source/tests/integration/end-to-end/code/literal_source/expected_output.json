@@ -1236,8 +1236,7 @@
               "line" : 92,
               "path" : "RegexSource.java",
               "start" : 16
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V"
+            }
           },
           "kinds" : 
           [
@@ -1311,8 +1310,7 @@
               "line" : 28,
               "path" : "RegexSource.java",
               "start" : 16
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/RegexSource;.sink:(Ljava/lang/String;Ljava/lang/String;)V"
+            }
           },
           "kinds" : 
           [
@@ -1350,8 +1348,7 @@
               "line" : 27,
               "path" : "RegexSource.java",
               "start" : 17
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/RegexSource;.getAttackerControlledInput:()Ljava/lang/String;"
+            }
           },
           "kinds" : 
           [
@@ -1413,8 +1410,7 @@
               "line" : 85,
               "path" : "RegexSource.java",
               "start" : 62
-            },
-            "resolves_to" : "Ljava/text/MessageFormat;.format:(Ljava/lang/String;[Ljava/lang/Object;)Ljava/lang/String;"
+            }
           },
           "kinds" : 
           [
@@ -1456,8 +1452,7 @@
               "line" : 84,
               "path" : "RegexSource.java",
               "start" : 17
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/RegexSource;.getAttackerControlledInput:()Ljava/lang/String;"
+            }
           },
           "kinds" : 
           [
@@ -1538,8 +1533,7 @@
               "line" : 70,
               "path" : "RegexSource.java",
               "start" : 17
-            },
-            "resolves_to" : "Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;"
+            }
           },
           "kinds" : 
           [
@@ -1614,8 +1608,7 @@
               "line" : 61,
               "path" : "RegexSource.java",
               "start" : 17
-            },
-            "resolves_to" : "Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;"
+            }
           },
           "kinds" : 
           [
@@ -1653,8 +1646,7 @@
               "line" : 59,
               "path" : "RegexSource.java",
               "start" : 17
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/RegexSource;.getAttackerControlledInput:()Ljava/lang/String;"
+            }
           },
           "kinds" : 
           [
@@ -1712,8 +1704,7 @@
               "line" : 52,
               "path" : "RegexSource.java",
               "start" : 0
-            },
-            "resolves_to" : "Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;"
+            }
           },
           "kinds" : 
           [
@@ -1788,8 +1779,7 @@
               "line" : 43,
               "path" : "RegexSource.java",
               "start" : 0
-            },
-            "resolves_to" : "Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;"
+            }
           },
           "kinds" : 
           [
@@ -1827,8 +1817,7 @@
               "line" : 41,
               "path" : "RegexSource.java",
               "start" : 17
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/RegexSource;.getAttackerControlledInput:()Ljava/lang/String;"
+            }
           },
           "kinds" : 
           [
@@ -1890,8 +1879,7 @@
               "line" : 78,
               "path" : "RegexSource.java",
               "start" : 26
-            },
-            "resolves_to" : "Ljava/lang/String;.format:(Ljava/lang/String;[Ljava/lang/Object;)Ljava/lang/String;"
+            }
           },
           "kinds" : 
           [
@@ -1933,8 +1921,7 @@
               "line" : 77,
               "path" : "RegexSource.java",
               "start" : 17
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/RegexSource;.getAttackerControlledInput:()Ljava/lang/String;"
+            }
           },
           "kinds" : 
           [
