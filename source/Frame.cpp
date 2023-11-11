@@ -335,6 +335,19 @@ void Frame::update_maximum_collapse_depth(
       });
 }
 
+void Frame::set_call_position(const Position* MT_NULLABLE position) {
+  call_position_ = position;
+}
+
+Frame Frame::with_call_position_and_origins(
+    const Position* MT_NULLABLE position,
+    OriginSet origins) const {
+  auto copy = *this;
+  copy.call_position_ = position;
+  copy.origins_ = std::move(origins);
+  return copy;
+}
+
 Json::Value Frame::to_json(ExportOriginsMode export_origins_mode) const {
   auto value = Json::Value(Json::objectValue);
 

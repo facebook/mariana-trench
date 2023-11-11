@@ -1000,8 +1000,10 @@
             "port" : "Argument(0)",
             "position" : 
             {
+              "end" : 0,
               "line" : 45,
-              "path" : "AddFeatureToCheckCast.java"
+              "path" : "AddFeatureToCheckCast.java",
+              "start" : 0
             }
           },
           "kinds" : 
@@ -1029,7 +1031,9 @@
           "local_positions" : 
           [
             {
-              "line" : 45
+              "end" : 0,
+              "line" : 45,
+              "start" : 0
             }
           ]
         }
@@ -1536,8 +1540,10 @@
             "port" : "Argument(0)",
             "position" : 
             {
+              "end" : 0,
               "line" : 27,
-              "path" : "AddFeatureToCheckCast.java"
+              "path" : "AddFeatureToCheckCast.java",
+              "start" : 0
             }
           },
           "kinds" : 

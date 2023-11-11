@@ -195,12 +195,13 @@ class Taint final : public sparta::AbstractDomain<Taint> {
    * `new_call_position` is given callee, callee_port and (existing) position.
    * `new_local_positions` is given existing local positions.
    */
-  void update_non_leaf_positions(
-      const std::function<
-          const Position*(const Method*, const AccessPath&, const Position*)>&
-          new_call_position,
+  Taint update_non_declaration_positions(
+      const std::function<const Position*(
+          const Method*,
+          const AccessPath* MT_NULLABLE,
+          const Position* MT_NULLABLE)>& new_call_position,
       const std::function<LocalPositionSet(const LocalPositionSet&)>&
-          new_local_positions);
+          new_local_positions) const;
 
   /**
    * Drops frames that are considered invalid.

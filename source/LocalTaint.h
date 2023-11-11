@@ -302,12 +302,20 @@ class LocalTaint final : public sparta::AbstractDomain<LocalTaint> {
 
   void update_maximum_collapse_depth(CollapseDepth collapse_depth);
 
-  void update_non_leaf_positions(
-      const std::function<
-          const Position*(const Method*, const AccessPath&, const Position*)>&
-          new_call_position,
+  std::vector<LocalTaint> update_non_declaration_positions(
+      const std::function<const Position*(
+          const Method*,
+          const AccessPath* MT_NULLABLE,
+          const Position* MT_NULLABLE)>& new_call_position,
       const std::function<LocalPositionSet(const LocalPositionSet&)>&
-          new_local_positions);
+          new_local_positions) const;
+
+  std::vector<LocalTaint> update_origin_positions(
+      const std::function<const Position*(
+          const Method*,
+          const AccessPath* MT_NULLABLE,
+          const Position* MT_NULLABLE)>& new_call_position,
+      const LocalPositionSet& new_local_positions) const;
 
   void filter_invalid_frames(
       const std::function<

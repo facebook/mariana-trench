@@ -1242,10 +1242,8 @@
             "port" : "Argument(1)",
             "position" : 
             {
-              "end" : 32,
               "line" : 13,
-              "path" : "Flow.java",
-              "start" : 18
+              "path" : "Flow.java"
             },
             "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/Flow;.flow_to_field:(Ljava/lang/Object;Ljava/lang/Object;)V"
           },

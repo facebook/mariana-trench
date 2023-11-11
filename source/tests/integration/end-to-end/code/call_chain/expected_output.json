@@ -1279,8 +1279,10 @@
             "call_kind" : "Origin",
             "position" : 
             {
+              "end" : 11,
               "line" : 25,
-              "path" : "CallChain.java"
+              "path" : "CallChain.java",
+              "start" : 7
             }
           },
           "kinds" : 

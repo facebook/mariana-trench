@@ -1079,8 +1079,10 @@
             "call_kind" : "Origin",
             "position" : 
             {
+              "end" : 0,
               "line" : 19,
-              "path" : "Flow.java"
+              "path" : "Flow.java",
+              "start" : 0
             }
           },
           "kinds" : 
@@ -1273,8 +1275,10 @@
             "call_kind" : "Origin",
             "position" : 
             {
+              "end" : 0,
               "line" : 46,
-              "path" : "Flow.java"
+              "path" : "Flow.java",
+              "start" : 0
             }
           },
           "kinds" : 
@@ -1468,8 +1472,10 @@
             "call_kind" : "Origin",
             "position" : 
             {
+              "end" : 0,
               "line" : 70,
-              "path" : "Flow.java"
+              "path" : "Flow.java",
+              "start" : 0
             }
           },
           "kinds" : 
@@ -2001,8 +2007,10 @@
             "call_kind" : "Origin",
             "position" : 
             {
+              "end" : 0,
               "line" : 13,
-              "path" : "Flow.java"
+              "path" : "Flow.java",
+              "start" : 0
             }
           },
           "kinds" : 
@@ -2029,7 +2037,9 @@
           "local_positions" : 
           [
             {
-              "line" : 12
+              "end" : 25,
+              "line" : 12,
+              "start" : 25
             }
           ]
         }
@@ -2110,8 +2120,10 @@
             "call_kind" : "Origin",
             "position" : 
             {
+              "end" : 0,
               "line" : 40,
-              "path" : "Flow.java"
+              "path" : "Flow.java",
+              "start" : 0
             }
           },
           "kinds" : 

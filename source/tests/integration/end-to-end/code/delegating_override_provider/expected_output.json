@@ -1051,8 +1051,10 @@
             "call_kind" : "Origin",
             "position" : 
             {
+              "end" : 0,
               "line" : 17,
-              "path" : "AbstractContentProvider.java"
+              "path" : "AbstractContentProvider.java",
+              "start" : 0
             }
           },
           "kinds" : 

@@ -56,7 +56,7 @@ class Highlights {
       const DexMethod* callee,
       const FileLines& lines,
       int callee_line_number,
-      const AccessPath& callee_port);
+      const Root& callee_port);
 
   /*
    * If there are multiple overlapping local positions on a line, choose the one

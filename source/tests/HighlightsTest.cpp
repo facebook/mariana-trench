@@ -55,11 +55,11 @@ TEST_F(HighlightsTest, TestGeneratedBounds) {
       /* method_name */ "<init>",
       /* parameter_types */ "Ljava/lang/Object;",
       /* return_type */ "Ljava/lang/Object;");
-  auto return_port = AccessPath(Root(Root::Kind::Return));
-  auto argument_port0 = AccessPath(Root(Root::Kind::Argument, 0));
-  auto argument_port1 = AccessPath(Root(Root::Kind::Argument, 1));
-  auto argument_port2 = AccessPath(Root(Root::Kind::Argument, 2));
-  auto argument_port3 = AccessPath(Root(Root::Kind::Argument, 3));
+  auto return_port = Root(Root::Kind::Return);
+  auto argument_port0 = Root(Root::Kind::Argument, 0);
+  auto argument_port1 = Root(Root::Kind::Argument, 1);
+  auto argument_port2 = Root(Root::Kind::Argument, 2);
+  auto argument_port3 = Root(Root::Kind::Argument, 3);
 
   // Test return port
   EXPECT_EQ(

@@ -2844,16 +2844,27 @@ TEST_F(TaintTest, AppendOutputPaths) {
               })}));
 }
 
-TEST_F(TaintTest, UpdateNonLeafPositions) {
+TEST_F(TaintTest, UpdateNonDeclarationPositions) {
   auto context = test::make_empty_context();
 
   Scope scope;
   auto* method_one =
       context.methods->create(redex::create_void_method(scope, "LOne;", "one"));
-  auto* method_two2 =
+  auto* method_two =
       context.methods->create(redex::create_void_method(scope, "LTwo;", "two"));
   auto* method_three = context.methods->create(
       redex::create_void_method(scope, "LThree;", "three"));
+
+  auto* leaf_port =
+      context.access_path_factory->get(AccessPath(Root(Root::Kind::Leaf)));
+  auto* anchor_port =
+      context.access_path_factory->get(AccessPath(Root(Root::Kind::Anchor)));
+  auto* method1_origin =
+      context.origin_factory->method_origin(method_one, leaf_port);
+  auto* method2_origin =
+      context.origin_factory->method_origin(method_two, leaf_port);
+  auto* crtex_origin =
+      context.origin_factory->crtex_origin("canonical_name", anchor_port);
 
   auto dex_position1 =
       DexPosition(DexString::make_string("UnknownSource"), /* line */ 1);
@@ -2863,8 +2874,8 @@ TEST_F(TaintTest, UpdateNonLeafPositions) {
       DexPosition(DexString::make_string("UnknownSource"), /* line */ 3);
 
   auto position1 = context.positions->get(method_one, &dex_position1);
-  auto position2 = context.positions->get(method_two2, &dex_position2);
-  auto position3 = context.positions->get(method_two2, &dex_position3);
+  auto position2 = context.positions->get(method_two, &dex_position2);
+  auto position3 = context.positions->get(method_two, &dex_position3);
 
   auto taint = Taint{
       test::make_taint_config(
@@ -2882,7 +2893,7 @@ TEST_F(TaintTest, UpdateNonLeafPositions) {
           /* kind */ context.kind_factory->get("NonLeafFrame2"),
           test::FrameProperties{
               .callee_port = AccessPath(Root(Root::Kind::Argument)),
-              .callee = method_two2,
+              .callee = method_two,
               .call_position = position2,
               .call_kind = CallKind::callsite(),
           }),
@@ -2893,16 +2904,35 @@ TEST_F(TaintTest, UpdateNonLeafPositions) {
               .callee = method_three,
               .call_position = position3,
               .call_kind = CallKind::callsite(),
-          })};
+          }),
+      test::make_taint_config(
+          /* kind */ context.kind_factory->get("OriginFrame1"),
+          test::FrameProperties{
+              .callee_port = *leaf_port,
+              .callee = nullptr,
+              .call_position = position1,
+              .origins = OriginSet{method1_origin, method2_origin},
+              .call_kind = CallKind::origin(),
+          }),
+      test::make_taint_config(
+          /* kind */ context.kind_factory->get("OriginFrame2"),
+          test::FrameProperties{
+              .callee_port = *anchor_port,
+              .callee = nullptr,
+              .call_position = position1,
+              .origins = OriginSet{crtex_origin},
+              .call_kind = CallKind::origin(),
+          }),
+  };
 
-  taint.update_non_leaf_positions(
+  taint = taint.update_non_declaration_positions(
       [&](const Method* callee,
-          const AccessPath& callee_port,
+          const AccessPath* callee_port,
           const Position* position) {
         if (callee == method_one) {
           return context.positions->get(
               position, /* line */ 10, /* start */ 11, /* end */ 12);
-        } else if (callee_port == AccessPath(Root(Root::Kind::Argument))) {
+        } else if (*callee_port == AccessPath(Root(Root::Kind::Argument))) {
           return context.positions->get(
               position, /* line */ 20, /* start */ 21, /* end */ 22);
         }
@@ -2915,37 +2945,78 @@ TEST_F(TaintTest, UpdateNonLeafPositions) {
       });
   EXPECT_EQ(taint.local_positions(), LocalPositionSet{position1});
 
-  // Verify that local positions were updated only in non-leaf frames.
-  auto partitioned_is_leaf =
-      taint.partition_by_kind<bool>([&](const Kind* kind) {
-        return kind == context.kind_factory->get("LeafFrame");
-      });
-  EXPECT_EQ(partitioned_is_leaf[true].local_positions(), LocalPositionSet{});
-  EXPECT_EQ(
-      partitioned_is_leaf[false].local_positions(),
-      LocalPositionSet{position1});
-
+  // Verify that local positions were updated only in non-declaration frames.
   // Verify that call positions were updated only in non-leaf frames.
-  for (const auto& frame : taint.frames_iterator()) {
-    if (frame.callee() == method_one) {
-      EXPECT_EQ(
-          frame.call_position(),
-          context.positions->get(
-              position1, /* line */ 10, /* start */ 11, /* end */ 12));
-    } else if (frame.callee() == method_two2) {
-      EXPECT_EQ(
-          frame.call_position(),
-          context.positions->get(
-              position2, /* line */ 20, /* start */ 21, /* end */ 22));
-    } else if (frame.callee() == method_three) {
-      EXPECT_EQ(frame.call_position(), position3);
-    } else if (frame.callee() == nullptr) {
-      EXPECT_EQ(frame.call_position(), nullptr);
-    } else {
-      // There should be no other frames.
-      EXPECT_TRUE(false);
-    }
-  }
+  EXPECT_EQ(
+      taint,
+      (Taint{
+          test::make_taint_config(
+              /* kind */ context.kind_factory->get("LeafFrame"),
+              test::FrameProperties{}),
+          test::make_taint_config(
+              /* kind */ context.kind_factory->get("NonLeafFrame1"),
+              test::FrameProperties{
+                  .callee_port = AccessPath(Root(Root::Kind::Return)),
+                  .callee = method_one,
+                  .call_position = context.positions->get(
+                      position1, /* line */ 10, /* start */ 11, /* end */ 12),
+                  .local_positions = LocalPositionSet{position1},
+                  .call_kind = CallKind::callsite(),
+              }),
+          test::make_taint_config(
+              /* kind */ context.kind_factory->get("NonLeafFrame2"),
+              test::FrameProperties{
+                  .callee_port = AccessPath(Root(Root::Kind::Argument)),
+                  .callee = method_two,
+                  .call_position = context.positions->get(
+                      position2, /* line */ 20, /* start */ 21, /* end */ 22),
+                  .local_positions = LocalPositionSet{position1},
+                  .call_kind = CallKind::callsite(),
+              }),
+          test::make_taint_config(
+              /* kind */ context.kind_factory->get("NonLeafFrame3"),
+              test::FrameProperties{
+                  .callee_port = AccessPath(Root(Root::Kind::Argument, 1)),
+                  .callee = method_three,
+                  .call_position = position3, // no change in position
+                  .local_positions = LocalPositionSet{position1},
+                  .call_kind = CallKind::callsite(),
+              }),
+          test::make_taint_config(
+              /* kind */ context.kind_factory->get("OriginFrame1"),
+              test::FrameProperties{
+                  .callee_port = *leaf_port,
+                  .callee = nullptr,
+                  // Only method1_origin's position is changed.
+                  .call_position = context.positions->get(
+                      position1, /* line */ 10, /* start */ 11, /* end */ 12),
+                  .origins = OriginSet{method1_origin},
+                  .local_positions = LocalPositionSet{position1},
+                  .call_kind = CallKind::origin(),
+              }),
+          test::make_taint_config(
+              /* kind */ context.kind_factory->get("OriginFrame1"),
+              test::FrameProperties{
+                  .callee_port = *leaf_port,
+                  .callee = nullptr,
+                  // No change to method2_origin's position.
+                  .call_position = position1,
+                  .origins = OriginSet{method2_origin},
+                  .local_positions = LocalPositionSet{position1},
+                  .call_kind = CallKind::origin(),
+              }),
+          test::make_taint_config(
+              /* kind */ context.kind_factory->get("OriginFrame2"),
+              test::FrameProperties{
+                  .callee_port = *anchor_port,
+                  .callee = nullptr,
+                  // No change to position.
+                  .call_position = position1,
+                  .origins = OriginSet{crtex_origin},
+                  .local_positions = LocalPositionSet{position1},
+                  .call_kind = CallKind::origin(),
+              }),
+      }));
 }
 
 TEST_F(TaintTest, FilterInvalidFrames) {

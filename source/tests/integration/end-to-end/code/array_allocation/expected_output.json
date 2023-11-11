@@ -1000,8 +1000,10 @@
             "port" : "Argument(0)",
             "position" : 
             {
+              "end" : 0,
               "line" : 64,
-              "path" : "ArrayAllocation.java"
+              "path" : "ArrayAllocation.java",
+              "start" : 0
             }
           },
           "kinds" : 
@@ -1029,7 +1031,9 @@
           "local_positions" : 
           [
             {
-              "line" : 64
+              "end" : 0,
+              "line" : 64,
+              "start" : 0
             }
           ]
         }
@@ -1058,8 +1062,10 @@
             "port" : "Argument(0)",
             "position" : 
             {
+              "end" : 0,
               "line" : 13,
-              "path" : "ArrayAllocation.java"
+              "path" : "ArrayAllocation.java",
+              "start" : 0
             }
           },
           "kinds" : 
@@ -1251,8 +1257,10 @@
             "port" : "Argument(0)",
             "position" : 
             {
+              "end" : 0,
               "line" : 18,
-              "path" : "ArrayAllocation.java"
+              "path" : "ArrayAllocation.java",
+              "start" : 0
             }
           },
           "kinds" : 
@@ -1348,8 +1356,10 @@
             "port" : "Argument(0)",
             "position" : 
             {
+              "end" : 0,
               "line" : 22,
-              "path" : "ArrayAllocation.java"
+              "path" : "ArrayAllocation.java",
+              "start" : 0
             }
           },
           "kinds" : 
@@ -1445,8 +1455,10 @@
             "port" : "Argument(0)",
             "position" : 
             {
+              "end" : 0,
               "line" : 24,
-              "path" : "ArrayAllocation.java"
+              "path" : "ArrayAllocation.java",
+              "start" : 0
             }
           },
           "kinds" : 
@@ -1549,8 +1561,10 @@
             "port" : "Argument(0)",
             "position" : 
             {
+              "end" : 0,
               "line" : 36,
-              "path" : "ArrayAllocation.java"
+              "path" : "ArrayAllocation.java",
+              "start" : 0
             }
           },
           "kinds" : 
@@ -1638,8 +1652,10 @@
             "port" : "Argument(0)",
             "position" : 
             {
+              "end" : 0,
               "line" : 49,
-              "path" : "ArrayAllocation.java"
+              "path" : "ArrayAllocation.java",
+              "start" : 0
             }
           },
           "kinds" : 
@@ -1727,8 +1743,10 @@
             "port" : "Argument(0)",
             "position" : 
             {
+              "end" : 0,
               "line" : 42,
-              "path" : "ArrayAllocation.java"
+              "path" : "ArrayAllocation.java",
+              "start" : 0
             }
           },
           "kinds" : 
@@ -1816,8 +1834,10 @@
             "port" : "Argument(0)",
             "position" : 
             {
+              "end" : 0,
               "line" : 55,
-              "path" : "ArrayAllocation.java"
+              "path" : "ArrayAllocation.java",
+              "start" : 0
             }
           },
           "kinds" : 
@@ -1905,8 +1925,10 @@
             "port" : "Argument(0)",
             "position" : 
             {
+              "end" : 0,
               "line" : 30,
-              "path" : "ArrayAllocation.java"
+              "path" : "ArrayAllocation.java",
+              "start" : 0
             }
           },
           "kinds" : 

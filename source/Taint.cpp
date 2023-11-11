@@ -230,20 +230,22 @@ void Taint::update_maximum_collapse_depth(CollapseDepth collapse_depth) {
   });
 }
 
-void Taint::update_non_leaf_positions(
-    const std::function<
-        const Position*(const Method*, const AccessPath&, const Position*)>&
-        new_call_position,
+Taint Taint::update_non_declaration_positions(
+    const std::function<const Position*(
+        const Method*,
+        const AccessPath* MT_NULLABLE,
+        const Position* MT_NULLABLE)>& new_call_position,
     const std::function<LocalPositionSet(const LocalPositionSet&)>&
-        new_local_positions) {
+        new_local_positions) const {
   Taint result;
   for (const auto& [_, local_taint] : map_.bindings()) {
-    auto new_local_taint = local_taint;
-    new_local_taint.update_non_leaf_positions(
+    auto new_local_taints = local_taint.update_non_declaration_positions(
         new_call_position, new_local_positions);
-    result.add(new_local_taint);
+    for (const auto& new_local_taint : new_local_taints) {
+      result.add(new_local_taint);
+    }
   }
-  map_ = std::move(result.map_);
+  return result;
 }
 
 void Taint::filter_invalid_frames(

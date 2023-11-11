@@ -1532,6 +1532,56 @@
             "port" : "Anchor.Argument(0)",
             "position" : 
             {
+              "line" : 25,
+              "path" : "Crtex.java"
+            },
+            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/Crtex;.startActivityHelper:(Landroid/content/Intent;Landroid/app/Activity;)V"
+          },
+          "kinds" : 
+          [
+            {
+              "always_features" : 
+              [
+                "via-type:Lcom/facebook/marianatrench/integrationtests/Crtex;"
+              ],
+              "call_kind" : "Origin",
+              "callee_interval" : 
+              [
+                7,
+                8
+              ],
+              "canonical_names" : 
+              [
+                {
+                  "instantiated" : "Lcom/facebook/marianatrench/integrationtests/Crtex;.startActivityHelper:(Landroid/content/Intent;Landroid/app/Activity;)V__via-type:Lcom/facebook/marianatrench/integrationtests/Crtex;"
+                }
+              ],
+              "kind" : "Sink",
+              "origins" : 
+              [
+                {
+                  "canonical_name" : "Lcom/facebook/marianatrench/integrationtests/Crtex;.startActivityHelper:(Landroid/content/Intent;Landroid/app/Activity;)V__via-type:Lcom/facebook/marianatrench/integrationtests/Crtex;",
+                  "port" : "Anchor.Argument(0)"
+                }
+              ],
+              "preserves_type_context" : true
+            }
+          ],
+          "local_user_features" : 
+          {
+            "always_features" : 
+            [
+              "via-type:Lcom/facebook/marianatrench/integrationtests/Crtex;"
+            ]
+          }
+        },
+        {
+          "call_info" : 
+          {
+            "call_kind" : "Origin",
+            "port" : "Anchor.Argument(0)",
+            "position" : 
+            {
               "end" : 28,
               "line" : 25,
               "path" : "Crtex.java",
@@ -1561,10 +1611,6 @@
               "kind" : "Sink",
               "origins" : 
               [
-                {
-                  "canonical_name" : "Lcom/facebook/marianatrench/integrationtests/Crtex;.startActivityHelper:(Landroid/content/Intent;Landroid/app/Activity;)V__via-type:Lcom/facebook/marianatrench/integrationtests/Crtex;",
-                  "port" : "Anchor.Argument(0)"
-                },
                 {
                   "method" : "Lcom/facebook/marianatrench/integrationtests/Crtex;.startActivityHelper:(Landroid/content/Intent;Landroid/app/Activity;)V",
                   "port" : "Argument(0)"

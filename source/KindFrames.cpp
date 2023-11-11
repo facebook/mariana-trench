@@ -459,6 +459,11 @@ KindFrames KindFrames::with_kind(const Kind* kind) const {
   return result;
 }
 
+void KindFrames::set_call_position(const Position* position) {
+  frames_.transform(
+      [position](Frame* frame) -> void { frame->set_call_position(position); });
+}
+
 void KindFrames::add_inferred_features(const FeatureMayAlwaysSet& features) {
   frames_.transform([&features](Frame* frame) -> void {
     frame->add_inferred_features(features);

@@ -182,6 +182,8 @@ class KindFrames final : public sparta::AbstractDomain<KindFrames> {
 
   KindFrames with_kind(const Kind* kind) const;
 
+  void set_call_position(const Position* MT_NULLABLE position);
+
   void add_inferred_features(const FeatureMayAlwaysSet& features);
 
   friend std::ostream& operator<<(std::ostream& out, const KindFrames& frames);

@@ -319,6 +319,11 @@ class Frame final : public sparta::AbstractDomain<Frame> {
       const std::vector<std::optional<std::string>>& source_constant_arguments)
       const;
 
+  void set_call_position(const Position* MT_NULLABLE call_position);
+  Frame with_call_position_and_origins(
+      const Position* MT_NULLABLE call_position,
+      OriginSet origins) const;
+
   Json::Value to_json(ExportOriginsMode export_origins_mode) const;
 
   friend std::ostream& operator<<(std::ostream& out, const Frame& frame);

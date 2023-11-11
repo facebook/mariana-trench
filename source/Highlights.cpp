@@ -224,15 +224,16 @@ LocalPositionSet augment_local_positions(
 
 const Position* augment_frame_position(
     const Method* callee,
-    const AccessPath& callee_port,
+    const AccessPath* callee_port,
     const Position* position,
     const FileLines& lines,
     const Context& context) {
   mt_assert(position != nullptr);
   mt_assert(callee != nullptr);
+  mt_assert(callee_port != nullptr);
 
   auto bounds = Highlights::get_callee_highlight_bounds(
-      callee->dex_method(), lines, position->line(), callee_port);
+      callee->dex_method(), lines, position->line(), callee_port->root());
   return context.positions->get(
       position, bounds.line, bounds.start, bounds.end);
 }
@@ -241,18 +242,22 @@ Taint augment_taint_positions(
     Taint taint,
     const FileLines& lines,
     const Context& context) {
-  taint.update_non_leaf_positions(
+  return taint.update_non_declaration_positions(
       [&lines, &context](
           const Method* callee,
-          const AccessPath& callee_port,
-          const Position* position) {
+          const AccessPath* MT_NULLABLE callee_port,
+          const Position* MT_NULLABLE position) {
+        if (callee_port == nullptr || position == nullptr) {
+          // Cannot determine position if callee port and existing position
+          // are unknown. Return the original position.
+          return position;
+        }
         return augment_frame_position(
             callee, callee_port, position, lines, context);
       },
       [&lines, &context](const LocalPositionSet& local_positions) {
         return augment_local_positions(local_positions, lines, context);
       });
-  return taint;
 }
 
 TaintAccessPathTree augment_taint_tree_positions(
@@ -443,7 +448,7 @@ Bounds Highlights::get_local_position_bounds(
         callee_dex_method->as_def(),
         lines,
         local_position.line(),
-        AccessPath(*local_position.port()));
+        *local_position.port());
   }
   return empty_bounds;
 }
@@ -452,7 +457,7 @@ Bounds Highlights::get_callee_highlight_bounds(
     const DexMethod* callee,
     const FileLines& lines,
     int callee_line_number,
-    const AccessPath& callee_port) {
+    const Root& callee_port_root) {
   if (!lines.has_line_number(callee_line_number)) {
     WARNING(
         3,
@@ -480,17 +485,16 @@ Bounds Highlights::get_callee_highlight_bounds(
       callee_line_number,
       static_cast<int>(callee_start),
       static_cast<int>(callee_end)};
-  if (!callee_port.root().is_argument() ||
-      (method::is_init(callee) &&
-       callee_port.root().parameter_position() == 0)) {
+  if (!callee_port_root.is_argument() ||
+      (method::is_init(callee) && callee_port_root.parameter_position() == 0)) {
     return callee_name_bounds;
   }
   bool is_static = ::is_static(callee);
-  if (callee_port.root().parameter_position() == 0 && !is_static) {
+  if (callee_port_root.parameter_position() == 0 && !is_static) {
     return get_callee_this_parameter_bounds(line, callee_name_bounds);
   }
   return get_argument_bounds(
-      callee_port.root().parameter_position(),
+      callee_port_root.parameter_position(),
       is_static ? 0 : 1,
       lines,
       callee_name_bounds);

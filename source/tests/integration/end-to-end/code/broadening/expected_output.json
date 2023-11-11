@@ -1522,8 +1522,10 @@
             "call_kind" : "Origin",
             "position" : 
             {
+              "end" : 0,
               "line" : 23,
-              "path" : "Flow.java"
+              "path" : "Flow.java",
+              "start" : 0
             }
           },
           "kinds" : 
@@ -1649,8 +1651,10 @@
             "call_kind" : "Origin",
             "position" : 
             {
+              "end" : 0,
               "line" : 23,
-              "path" : "Flow.java"
+              "path" : "Flow.java",
+              "start" : 0
             }
           },
           "kinds" : 
@@ -1677,7 +1681,9 @@
           "local_positions" : 
           [
             {
-              "line" : 17
+              "end" : 0,
+              "line" : 17,
+              "start" : 0
             }
           ]
         },

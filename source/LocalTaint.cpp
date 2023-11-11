@@ -420,46 +420,106 @@ void LocalTaint::update_maximum_collapse_depth(CollapseDepth collapse_depth) {
   });
 }
 
-void LocalTaint::update_non_leaf_positions(
-    const std::function<
-        const Position*(const Method*, const AccessPath&, const Position*)>&
-        map_call_position,
+std::vector<LocalTaint> LocalTaint::update_non_declaration_positions(
+    const std::function<const Position*(
+        const Method*,
+        const AccessPath* MT_NULLABLE,
+        const Position* MT_NULLABLE)>& map_call_position,
     const std::function<LocalPositionSet(const LocalPositionSet&)>&
-        map_local_positions) {
-  if (is_bottom()) {
-    return;
+        map_local_positions) const {
+  if (is_bottom() || call_kind().is_declaration()) {
+    // Nothing to update.
+    return std::vector{*this};
   }
 
-  if (callee() == nullptr) {
-    // This is a leaf.
-    return;
+  auto new_local_positions = map_local_positions(local_positions_);
+
+  if (call_kind().is_origin()) {
+    // There can be mulitple callee(s) for origins. These are stored in
+    // Frame::origins.
+    return update_origin_positions(map_call_position, new_local_positions);
   }
 
-  auto new_call_position =
-      map_call_position(callee(), *callee_port(), call_position());
+  const auto* callee = this->callee();
+  // This should have call kind == CallSite, callee should not be nullptr.
+  mt_assert(callee != nullptr);
 
-  call_info_ =
-      CallInfo(callee(), call_kind(), callee_port(), new_call_position);
-  frames_ =
-      map_frames_by_kind(frames_, [new_call_position](const Frame& frame) {
-        return Frame(
-            frame.kind(),
-            frame.callee_port(),
-            frame.callee(),
-            new_call_position,
-            frame.class_interval_context(),
-            frame.distance(),
-            frame.origins(),
-            frame.inferred_features(),
-            frame.user_features(),
-            frame.via_type_of_ports(),
-            frame.via_value_of_ports(),
-            frame.canonical_names(),
-            frame.call_kind(),
-            /* output_paths */ {},
-            frame.extra_traces());
-      });
-  local_positions_ = map_local_positions(local_positions_);
+  const auto* callee_port = this->callee_port();
+  const auto* call_position = this->call_position();
+
+  const auto* MT_NULLABLE new_call_position =
+      map_call_position(callee, callee_port, call_position);
+  auto new_call_info =
+      CallInfo(callee, call_kind(), callee_port, new_call_position);
+  // TODO(T163918472): Do not duplicate fields from LocalTaint in Frame.
+  // This updating of frames can be removed if we did that.
+  auto new_frames = frames_;
+  new_frames.transform([new_call_position](KindFrames kind_frames) {
+    kind_frames.set_call_position(new_call_position);
+    return kind_frames;
+  });
+
+  return {LocalTaint(
+      new_call_info,
+      new_frames,
+      new_local_positions,
+      locally_inferred_features_)};
+}
+
+std::vector<LocalTaint> LocalTaint::update_origin_positions(
+    const std::function<const Position*(
+        const Method*,
+        const AccessPath* MT_NULLABLE,
+        const Position* MT_NULLABLE)>& map_call_position,
+    const LocalPositionSet& new_local_positions) const {
+  mt_assert(this->call_kind().is_origin());
+  std::vector<LocalTaint> results;
+
+  const auto* callee_port = this->callee_port();
+  const auto* call_position = this->call_position();
+
+  for (const auto& frame : *this) {
+    OriginSet non_method_origins{};
+    for (const auto* origin : frame.origins()) {
+      const auto* method_origin = origin->as<MethodOrigin>();
+      if (method_origin == nullptr) {
+        // Only method origins have callee information
+        non_method_origins.add(origin);
+        continue;
+      }
+
+      const auto* MT_NULLABLE new_call_position = map_call_position(
+          method_origin->method(), callee_port, call_position);
+      auto new_call_info =
+          CallInfo(callee(), call_kind(), callee_port, new_call_position);
+      results.emplace_back(LocalTaint(
+          new_call_info,
+          FramesByKind({std::pair(
+              frame.kind(),
+              KindFrames(frame.with_call_position_and_origins(
+                  new_call_position, OriginSet{method_origin})))}),
+          new_local_positions,
+          locally_inferred_features_));
+    }
+
+    // Non-method origins will not have positions updated but their information
+    // should be retained.
+    if (!non_method_origins.empty()) {
+      results.emplace_back(LocalTaint(
+          call_info_,
+          FramesByKind({std::pair(
+              frame.kind(),
+              KindFrames(frame.with_call_position_and_origins(
+                  call_position, non_method_origins)))}),
+          new_local_positions,
+          locally_inferred_features_));
+    }
+  }
+
+  // This can only happen if there are no origins to begin with, which points
+  // to a problem with populating them correctly during model generation.
+  mt_assert(!results.empty());
+  return results;
 }
 
 void LocalTaint::filter_invalid_frames(
