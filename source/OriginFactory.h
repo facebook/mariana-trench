@@ -31,6 +31,8 @@ class OriginFactory final {
       std::string_view canonical_name,
       const AccessPath* port) const;
 
+  const StringOrigin* string_origin(std::string_view name) const;
+
   static const OriginFactory& singleton();
 
  private:
@@ -45,6 +47,7 @@ class OriginFactory final {
       CrtexOrigin,
       TupleHash<const DexString*, const AccessPath*>>
       crtex_origins_;
+  UniquePointerFactory<const DexString*, StringOrigin> string_origins_;
 };
 
 } // namespace marianatrench

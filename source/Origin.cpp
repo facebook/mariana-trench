@@ -41,4 +41,16 @@ Json::Value CrtexOrigin::to_json() const {
   return value;
 }
 
+std::string StringOrigin::to_string() const {
+  return name_->str_copy();
+}
+
+Json::Value StringOrigin::to_json() const {
+  auto value = Json::Value(Json::objectValue);
+  // Rename key to something more descriptive. Using "method" for now to
+  // remain compatible with the parser.
+  value["method"] = name_->str_copy();
+  return value;
+}
+
 } // namespace marianatrench

@@ -27,6 +27,11 @@ const CrtexOrigin* OriginFactory::crtex_origin(
       std::make_tuple(dex_canonical_name, port), dex_canonical_name, port);
 }
 
+const StringOrigin* OriginFactory::string_origin(std::string_view name) const {
+  const auto* origin_name = DexString::make_string(name);
+  return string_origins_.create(origin_name);
+}
+
 const OriginFactory& OriginFactory::singleton() {
   // Thread-safe global variable, initialized on first call.
   static OriginFactory instance;

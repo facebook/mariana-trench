@@ -448,13 +448,7 @@ TaintConfig generator::sink(
     Root::Kind callee_port,
     RootSetAbstractDomain via_type_of_ports,
     RootSetAbstractDomain via_value_of_ports,
-    CanonicalNameSetAbstractDomain canonical_names) {
-  // If canonical names are defined, this is a CRTEX taint and the callee port
-  // must be "Anchor". "Producer" ports are also for CRTEX, but cannot be
-  // created programatically here as they need to contain an ID that can only be
-  // determined externally.
-  mt_assert(canonical_names.size() != 0 || callee_port != Root::Kind::Anchor);
-
+    OriginSet origins) {
   CallKind call_kind = CallKind::declaration();
   FeatureSet user_features;
   for (const auto& feature : features) {
@@ -472,12 +466,12 @@ TaintConfig generator::sink(
       /* call_position */ nullptr,
       /* class_interval_context */ CallClassIntervalContext(),
       /* distance */ 0,
-      /* origins */ {},
+      /* origins */ std::move(origins),
       /* inferred features */ FeatureMayAlwaysSet::bottom(),
       /* user features */ user_features,
       /* via_type_of_ports */ via_type_of_ports,
       /* via_type_of_ports */ via_value_of_ports,
-      /* canonical_names */ canonical_names,
+      /* canonical_names */ {},
       /* output_paths */ {},
       /* local_positions */ {},
       /* locally_inferred_features */ FeatureMayAlwaysSet::bottom(),

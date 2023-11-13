@@ -253,8 +253,7 @@ TaintConfig sink(
     Root::Kind callee_port = Root::Kind::Leaf,
     RootSetAbstractDomain via_type_of_ports = {},
     RootSetAbstractDomain via_value_of_ports = {},
-    CanonicalNameSetAbstractDomain canonical_names =
-        CanonicalNameSetAbstractDomain{});
+    OriginSet origins = {});
 TaintConfig partial_sink(
     Context& context,
     const Method* method,

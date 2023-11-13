@@ -111,4 +111,19 @@ class CrtexOrigin final : public Origin {
   const AccessPath* port_;
 };
 
+/**
+ * Represents a generic origin that refers to a user-declared callee.
+ */
+class StringOrigin final : public Origin {
+ public:
+  explicit StringOrigin(const DexString* name) : name_(name) {}
+
+  std::string to_string() const override;
+
+  Json::Value to_json() const override;
+
+ private:
+  const DexString* name_;
+};
+
 } // namespace marianatrench
