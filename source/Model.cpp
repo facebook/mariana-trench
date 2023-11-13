@@ -1790,7 +1790,7 @@ bool Model::check_call_effect_port_consistency(
 
 void Model::add_generation(AccessPath port, Taint source) {
   if (method_) {
-    source.set_origins_if_declaration(
+    source.add_origins_if_declaration(
         method_, AccessPathFactory::singleton().get(port));
   }
 
@@ -1813,7 +1813,7 @@ void Model::add_generation(AccessPath port, Taint source) {
 
 void Model::add_parameter_source(AccessPath port, Taint source) {
   if (method_) {
-    source.set_origins_if_declaration(
+    source.add_origins_if_declaration(
         method_, AccessPathFactory::singleton().get(port));
   }
 
@@ -1837,7 +1837,7 @@ void Model::add_parameter_source(AccessPath port, Taint source) {
 
 void Model::add_sink(AccessPath port, Taint sink) {
   if (method_) {
-    sink.set_origins_if_declaration(
+    sink.add_origins_if_declaration(
         method_, AccessPathFactory::singleton().get(port));
   }
 
@@ -1863,7 +1863,7 @@ void Model::add_call_effect_source(AccessPath port, Taint source) {
   }
 
   if (method_) {
-    source.set_origins_if_declaration(
+    source.add_origins_if_declaration(
         method_, AccessPathFactory::singleton().get(port));
   }
 
@@ -1890,7 +1890,7 @@ void Model::add_call_effect_sink(AccessPath port, Taint sink) {
   }
 
   if (method_) {
-    sink.set_origins_if_declaration(
+    sink.add_origins_if_declaration(
         method_, AccessPathFactory::singleton().get(port));
   }
 
@@ -1917,7 +1917,7 @@ void Model::add_propagation(AccessPath input_path, Taint output) {
   }
 
   if (method_) {
-    output.set_origins_if_declaration(
+    output.add_origins_if_declaration(
         method_, AccessPathFactory::singleton().get(input_path));
   }
 

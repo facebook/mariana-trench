@@ -100,7 +100,7 @@ class Taint final : public sparta::AbstractDomain<Taint> {
    * For use when instantiating the `Model` of a method, once the concrete
    * method (i.e. the origin of the `Taint`) becomes known.
    */
-  void set_origins_if_declaration(const Method* method, const AccessPath* port);
+  void add_origins_if_declaration(const Method* method, const AccessPath* port);
 
   /**
    * For use when instantiating `FieldModel` once the concrete field is known.
@@ -109,7 +109,7 @@ class Taint final : public sparta::AbstractDomain<Taint> {
    * [method]callee == nullptr, because `FieldModel`s are always leaves. There
    * is no field-to-field taint propagation.
    */
-  void set_origins_if_declaration(const Field* field);
+  void add_origins_if_declaration(const Field* field);
 
   void add_locally_inferred_features(const FeatureMayAlwaysSet& features);
 

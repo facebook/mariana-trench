@@ -428,8 +428,7 @@ TaintConfig generator::source(
       /* call_position */ nullptr,
       /* class_interval_context */ CallClassIntervalContext(),
       /* distance */ 0,
-      /* origins */
-      OriginSet{context.origin_factory->method_origin(method, port)},
+      /* origins */ {},
       /* inferred features */ FeatureMayAlwaysSet::bottom(),
       /* user features */ user_features,
       /* via_type_of_ports */ via_type_of_ports,
@@ -473,8 +472,7 @@ TaintConfig generator::sink(
       /* call_position */ nullptr,
       /* class_interval_context */ CallClassIntervalContext(),
       /* distance */ 0,
-      /* origins */
-      OriginSet{context.origin_factory->method_origin(method, port)},
+      /* origins */ {},
       /* inferred features */ FeatureMayAlwaysSet::bottom(),
       /* user features */ user_features,
       /* via_type_of_ports */ via_type_of_ports,
@@ -515,8 +513,7 @@ TaintConfig generator::partial_sink(
       /* call_position */ nullptr,
       /* class_interval_context */ CallClassIntervalContext(),
       /* distance */ 0,
-      /* origins */
-      OriginSet{context.origin_factory->method_origin(method, port)},
+      /* origins */ {},
       /* inferred features */ FeatureMayAlwaysSet::bottom(),
       /* user features */ user_features,
       /* via_type_of_ports */ via_type_of_ports,

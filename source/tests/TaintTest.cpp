@@ -1840,7 +1840,7 @@ TEST_F(TaintTest, Difference) {
           })});
 }
 
-TEST_F(TaintTest, SetMethodOrigins) {
+TEST_F(TaintTest, AddMethodOrigins) {
   auto context = test::make_empty_context();
 
   Scope scope;
@@ -1855,8 +1855,7 @@ TEST_F(TaintTest, SetMethodOrigins) {
   auto* two_origin = context.origin_factory->method_origin(method_two, leaf);
 
   auto taint = Taint{
-      // Only the "TestSource" frame should be affected (it is a leaf with empty
-      // origins)
+      // Only the Declaration frames should be affected
       test::make_taint_config(
           /* kind */ context.kind_factory->get("TestSource"),
           test::FrameProperties{}),
@@ -1868,7 +1867,7 @@ TEST_F(TaintTest, SetMethodOrigins) {
           test::FrameProperties{
               .callee = method_two, .call_kind = CallKind::callsite()}),
   };
-  taint.set_origins_if_declaration(method_one, leaf);
+  taint.add_origins_if_declaration(method_one, leaf);
   EXPECT_EQ(
       taint,
       (Taint{
@@ -1877,7 +1876,8 @@ TEST_F(TaintTest, SetMethodOrigins) {
               test::FrameProperties{.origins = OriginSet{one_origin}}),
           test::make_taint_config(
               /* kind */ context.kind_factory->get("TestSource2"),
-              test::FrameProperties{.origins = OriginSet{one_origin}}),
+              test::FrameProperties{
+                  .origins = OriginSet{one_origin, two_origin}}),
           test::make_taint_config(
               /* kind */ context.kind_factory->get("TestSource3"),
               test::FrameProperties{
@@ -1885,7 +1885,7 @@ TEST_F(TaintTest, SetMethodOrigins) {
       }));
 }
 
-TEST_F(TaintTest, SetFieldOrigins) {
+TEST_F(TaintTest, AddFieldOrigins) {
   Scope scope;
   const auto* field_one = redex::create_field(
       scope, "LClassA", {"field_one", type::java_lang_String()});
@@ -1911,7 +1911,7 @@ TEST_F(TaintTest, SetFieldOrigins) {
           test::FrameProperties{.origins = OriginSet{two_origin}}),
   };
 
-  taint.set_origins_if_declaration(one);
+  taint.add_origins_if_declaration(one);
   EXPECT_EQ(
       taint,
       (Taint{
@@ -1920,7 +1920,8 @@ TEST_F(TaintTest, SetFieldOrigins) {
               test::FrameProperties{.origins = OriginSet{one_origin}}),
           test::make_taint_config(
               /* kind */ context.kind_factory->get("TestSource2"),
-              test::FrameProperties{.origins = OriginSet{one_origin}}),
+              test::FrameProperties{
+                  .origins = OriginSet{one_origin, two_origin}}),
       }));
 }
 

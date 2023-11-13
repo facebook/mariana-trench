@@ -10,7 +10,7 @@
 namespace marianatrench {
 
 std::string MethodOrigin::to_string() const {
-  return method_->show();
+  return "method=" + method_->show() + ",port=" + port_->to_string();
 }
 
 Json::Value MethodOrigin::to_json() const {

@@ -48,22 +48,22 @@ void Taint::difference_with(const Taint& other) {
       });
 }
 
-void Taint::set_origins_if_declaration(
+void Taint::add_origins_if_declaration(
     const Method* method,
     const AccessPath* port) {
   map_.transform([method, port](LocalTaint* local_taint) {
     if (local_taint->callee() == nullptr &&
         !local_taint->call_kind().is_propagation_without_trace()) {
-      local_taint->set_origins_if_declaration(method, port);
+      local_taint->add_origins_if_declaration(method, port);
     }
   });
 }
 
-void Taint::set_origins_if_declaration(const Field* field) {
+void Taint::add_origins_if_declaration(const Field* field) {
   map_.transform([field](LocalTaint* local_taint) -> void {
     // Setting a field callee must always be done on non-propagated leaves.
     mt_assert(local_taint->callee() == nullptr);
-    local_taint->set_origins_if_declaration(field);
+    local_taint->add_origins_if_declaration(field);
   });
 }
 

@@ -220,9 +220,9 @@ class LocalTaint final : public sparta::AbstractDomain<LocalTaint> {
     return ConstIterator(frames_.bindings().end(), frames_.bindings().end());
   }
 
-  void set_origins_if_declaration(const Method* method, const AccessPath* port);
+  void add_origins_if_declaration(const Method* method, const AccessPath* port);
 
-  void set_origins_if_declaration(const Field* field);
+  void add_origins_if_declaration(const Field* field);
 
   void add_locally_inferred_features(const FeatureMayAlwaysSet& features);
 

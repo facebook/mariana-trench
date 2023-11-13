@@ -220,7 +220,7 @@ std::ostream& operator<<(std::ostream& out, const FieldModel& model) {
 
 void FieldModel::add_source(Taint source) {
   if (field_) {
-    source.set_origins_if_declaration(field_);
+    source.add_origins_if_declaration(field_);
   }
   check_taint_consistency(source, "source");
   sources_.join_with(source);
@@ -228,7 +228,7 @@ void FieldModel::add_source(Taint source) {
 
 void FieldModel::add_sink(Taint sink) {
   if (field_) {
-    sink.set_origins_if_declaration(field_);
+    sink.add_origins_if_declaration(field_);
   }
   check_taint_consistency(sink, "sink");
   sinks_.join_with(sink);
