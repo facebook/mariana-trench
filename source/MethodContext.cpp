@@ -12,6 +12,7 @@
 #include <mariana-trench/FeatureFactory.h>
 #include <mariana-trench/Log.h>
 #include <mariana-trench/Overrides.h>
+#include <mariana-trench/Positions.h>
 
 namespace marianatrench {
 
@@ -127,6 +128,54 @@ Model MethodContext::model_at_callsite(
 
   callsite_model_cache_.emplace(CacheKey{call_target, position}, model);
   return model;
+}
+
+namespace {
+
+Taint propagate_field_taint(
+    const Taint& taint,
+    const Position* call_position,
+    const Options& options,
+    Context& context) {
+  return taint.propagate(
+      /* callee */ nullptr,
+      /* callee_port */ AccessPath(Root(Root::Kind::Leaf)),
+      call_position,
+      options.maximum_source_sink_distance(),
+      /* extra_features */ {},
+      context,
+      /* source_register_types */ {},
+      /* source_constant_arguments */ {},
+      /* class_interval_context */ CallClassIntervalContext(),
+      /* caller_class_interval */ ClassIntervals::Interval::top());
+}
+
+} // namespace
+
+Taint MethodContext::field_sources_at_callsite(
+    const FieldTarget& field_target,
+    const InstructionAliasResults& aliasing) const {
+  auto declared_field_model = registry.get(field_target.field);
+  if (declared_field_model.empty()) {
+    return Taint::bottom();
+  }
+
+  auto* call_position = positions.get(method(), aliasing.position());
+  return propagate_field_taint(
+      declared_field_model.sources(), call_position, options, context_);
+}
+
+Taint MethodContext::field_sinks_at_callsite(
+    const FieldTarget& field_target,
+    const InstructionAliasResults& aliasing) const {
+  auto declared_field_model = registry.get(field_target.field);
+  if (declared_field_model.empty()) {
+    return Taint::bottom();
+  }
+
+  auto* call_position = positions.get(method(), aliasing.position());
+  return propagate_field_taint(
+      declared_field_model.sinks(), call_position, options, context_);
 }
 
 } // namespace marianatrench

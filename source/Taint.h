@@ -132,7 +132,7 @@ class Taint final : public sparta::AbstractDomain<Taint> {
    * Return bottom if the taint should not be propagated.
    */
   Taint propagate(
-      const Method* callee,
+      const Method* MT_NULLABLE callee,
       const AccessPath& callee_port,
       const Position* call_position,
       int maximum_source_sink_distance,

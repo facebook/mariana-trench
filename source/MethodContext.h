@@ -51,6 +51,14 @@ class MethodContext final {
       const std::vector<std::optional<std::string>>& source_constant_arguments,
       const CallClassIntervalContext& class_interval_context) const;
 
+  Taint field_sources_at_callsite(
+      const FieldTarget& field_target,
+      const InstructionAliasResults& aliasing) const;
+
+  Taint field_sinks_at_callsite(
+      const FieldTarget& field_target,
+      const InstructionAliasResults& aliasing) const;
+
   const Options& options;
   const ArtificialMethods& artificial_methods;
   const Methods& methods;

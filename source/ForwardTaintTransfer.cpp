@@ -85,24 +85,20 @@ bool ForwardTaintTransfer::analyze_iget(
         3,
         "Unable to resolve access of instance field {}",
         show(instruction->get_field()));
-  }
-
-  // Read user defined field model.
-  auto declared_field_model =
-      field_target ? context->registry.get(field_target->field) : FieldModel();
-
-  if (!declared_field_model.empty()) {
+  } else {
     const auto& aliasing = context->aliasing.get(instruction);
-    LOG_OR_DUMP(
-        context,
-        4,
-        "Tainting register {} with {}",
-        k_result_register,
-        declared_field_model.sources());
-    environment->write(
-        aliasing.result_memory_locations(),
-        declared_field_model.sources(),
-        UpdateKind::Weak);
+    auto field_sources =
+        context->field_sources_at_callsite(*field_target, aliasing);
+    if (!field_sources.is_bottom()) {
+      LOG_OR_DUMP(
+          context,
+          4,
+          "Tainting register {} with {}",
+          k_result_register,
+          field_sources);
+      environment->write(
+          aliasing.result_memory_locations(), field_sources, UpdateKind::Weak);
+    }
   }
 
   return false;

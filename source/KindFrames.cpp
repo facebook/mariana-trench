@@ -227,7 +227,7 @@ CallClassIntervalContext propagate_interval(
 FeatureMayAlwaysSet propagate_features(
     const Frame& frame,
     const FeatureMayAlwaysSet& locally_inferred_features,
-    const Method* callee,
+    const Method* MT_NULLABLE callee,
     Context& context,
     const std::vector<const DexType * MT_NULLABLE>& source_register_types,
     const std::vector<std::optional<std::string>>& source_constant_arguments,
@@ -251,9 +251,11 @@ FeatureMayAlwaysSet propagate_features(
     propagated_user_features = FeatureSet::bottom();
   }
 
-  // Address clangtidy nullptr dereference warning. `callee` cannot actually
-  // be nullptr here in practice.
-  mt_assert(callee != nullptr);
+  // If the callee is nullptr (e.g. "call" to a field), there are no via-*
+  // ports to materialize
+  if (callee == nullptr) {
+    return propagated_local_features;
+  }
 
   // The via-type/value-of features are also treated as user features.
   // They need to show up on the frame in which they are materialized.
@@ -275,13 +277,17 @@ FeatureMayAlwaysSet propagate_features(
 
 CanonicalNameSetAbstractDomain propagate_canonical_names(
     const Frame& frame,
-    const Method* callee,
+    const Method* MT_NULLABLE callee,
     const std::vector<const Feature*>& via_type_of_features_added) {
   auto canonical_names = frame.canonical_names();
   if (!canonical_names.is_value() || canonical_names.elements().empty()) {
     // Non-crtex frame
     return CanonicalNameSetAbstractDomain{};
   }
+
+  // Callee should not be nullptr for CRTEX frames because models with
+  // canonical names are always defined on methods (as opposed to fields).
+  mt_assert(callee != nullptr);
 
   auto first_name = canonical_names.elements().begin();
   if (first_name->instantiated_value().has_value()) {
@@ -307,7 +313,7 @@ CanonicalNameSetAbstractDomain propagate_canonical_names(
 } // namespace
 
 KindFrames KindFrames::propagate(
-    const Method* callee,
+    const Method* MT_NULLABLE callee,
     const CallInfo& propagated_call_info,
     const FeatureMayAlwaysSet& locally_inferred_features,
     int maximum_source_sink_distance,

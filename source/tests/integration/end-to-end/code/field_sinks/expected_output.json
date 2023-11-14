@@ -1235,23 +1235,27 @@
         {
           "call_info" : 
           {
-            "call_kind" : "Origin",
+            "call_kind" : "CallSite",
             "port" : "Argument(1)",
             "position" : 
             {
+              "end" : 32,
               "line" : 13,
-              "path" : "Flow.java"
-            }
+              "path" : "Flow.java",
+              "start" : 18
+            },
+            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/Flow;.flow_to_field:(Ljava/lang/Object;Ljava/lang/Object;)V"
           },
           "kinds" : 
           [
             {
-              "call_kind" : "Origin",
+              "call_kind" : "CallSite",
               "callee_interval" : 
               [
                 34,
                 35
               ],
+              "distance" : 1,
               "kind" : "Sink",
               "origins" : 
               [
@@ -1326,19 +1330,30 @@
         {
           "call_info" : 
           {
-            "call_kind" : "Declaration"
+            "call_kind" : "Origin",
+            "position" : 
+            {
+              "line" : 20,
+              "path" : "Flow.java"
+            }
           },
           "kinds" : 
           [
             {
-              "call_kind" : "Declaration",
+              "call_kind" : "Origin",
+              "callee_interval" : 
+              [
+                0,
+                4294967295
+              ],
               "kind" : "Sink",
               "origins" : 
               [
                 {
                   "field" : "Lcom/facebook/marianatrench/integrationtests/TaintedFieldClass;.field:Ljava/lang/Object;"
                 }
-              ]
+              ],
+              "preserves_type_context" : true
             }
           ]
         }

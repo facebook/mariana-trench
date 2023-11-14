@@ -241,7 +241,7 @@ class LocalTaint final : public sparta::AbstractDomain<LocalTaint> {
    * Return bottom if the taint should not be propagated.
    */
   LocalTaint propagate(
-      const Method* callee,
+      const Method* MT_NULLABLE callee,
       const AccessPath& callee_port,
       const Position* call_position,
       int maximum_source_sink_distance,

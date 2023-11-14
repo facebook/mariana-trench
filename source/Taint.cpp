@@ -116,7 +116,7 @@ void Taint::add_locally_inferred_features_and_local_position(
 }
 
 Taint Taint::propagate(
-    const Method* callee,
+    const Method* MT_NULLABLE callee,
     const AccessPath& callee_port,
     const Position* call_position,
     int maximum_source_sink_distance,

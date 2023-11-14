@@ -740,19 +740,19 @@ void check_flows_to_field_sink(
     return;
   }
 
-  auto field_model =
-      field_target ? context->registry.get(field_target->field) : FieldModel();
-  auto sinks = field_model.sinks();
-  if (sinks.empty()) {
-    return;
+  auto field_sinks = context->field_sinks_at_callsite(*field_target, aliasing);
+  if (!field_sinks.is_bottom()) {
+    LOG_OR_DUMP(
+        context,
+        4,
+        "Tainting register {} with {}",
+        instruction->src(0),
+        field_sinks);
+    environment->write(
+        aliasing.register_memory_locations(instruction->src(0)),
+        std::move(field_sinks),
+        UpdateKind::Weak);
   }
-
-  LOG_OR_DUMP(
-      context, 4, "Tainting register {} with {}", instruction->src(0), sinks);
-  environment->write(
-      aliasing.register_memory_locations(instruction->src(0)),
-      std::move(sinks),
-      UpdateKind::Weak);
 }
 
 } // namespace

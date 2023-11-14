@@ -225,7 +225,7 @@ map_frames_by_kind(
 } // namespace
 
 LocalTaint LocalTaint::propagate(
-    const Method* callee,
+    const Method* MT_NULLABLE callee,
     const AccessPath& callee_port,
     const Position* call_position,
     int maximum_source_sink_distance,
