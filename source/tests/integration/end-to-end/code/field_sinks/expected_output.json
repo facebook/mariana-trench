@@ -1139,19 +1139,30 @@
         {
           "call_info" : 
           {
-            "call_kind" : "Declaration"
+            "call_kind" : "Origin",
+            "position" : 
+            {
+              "line" : 17,
+              "path" : "ChildClass.java"
+            }
           },
           "kinds" : 
           [
             {
-              "call_kind" : "Declaration",
+              "call_kind" : "Origin",
+              "callee_interval" : 
+              [
+                0,
+                4294967295
+              ],
               "kind" : "Sink",
               "origins" : 
               [
                 {
                   "field" : "Lcom/facebook/marianatrench/integrationtests/TaintedFieldClass;.field:Ljava/lang/Object;"
                 }
-              ]
+              ],
+              "preserves_type_context" : true
             }
           ]
         }
@@ -1463,19 +1474,30 @@
         {
           "call_info" : 
           {
-            "call_kind" : "Declaration"
+            "call_kind" : "Origin",
+            "position" : 
+            {
+              "line" : 17,
+              "path" : "TaintedFieldClass.java"
+            }
           },
           "kinds" : 
           [
             {
-              "call_kind" : "Declaration",
+              "call_kind" : "Origin",
+              "callee_interval" : 
+              [
+                0,
+                4294967295
+              ],
               "kind" : "Sink",
               "origins" : 
               [
                 {
                   "field" : "Lcom/facebook/marianatrench/integrationtests/TaintedFieldClass;.staticFinalStringField:Ljava/lang/String;"
                 }
-              ]
+              ],
+              "preserves_type_context" : true
             }
           ]
         }
@@ -1602,19 +1624,30 @@
         {
           "call_info" : 
           {
-            "call_kind" : "Declaration"
+            "call_kind" : "Origin",
+            "position" : 
+            {
+              "line" : 16,
+              "path" : "TaintedFieldClass.java"
+            }
           },
           "kinds" : 
           [
             {
-              "call_kind" : "Declaration",
+              "call_kind" : "Origin",
+              "callee_interval" : 
+              [
+                0,
+                4294967295
+              ],
               "kind" : "Sink",
               "origins" : 
               [
                 {
                   "field" : "Lcom/facebook/marianatrench/integrationtests/TaintedFieldClass;.finalStringField:Ljava/lang/String;"
                 }
-              ]
+              ],
+              "preserves_type_context" : true
             }
           ]
         }
@@ -1775,19 +1808,30 @@
         {
           "call_info" : 
           {
-            "call_kind" : "Declaration"
+            "call_kind" : "Origin",
+            "position" : 
+            {
+              "line" : 20,
+              "path" : "TaintedFieldClass.java"
+            }
           },
           "kinds" : 
           [
             {
-              "call_kind" : "Declaration",
+              "call_kind" : "Origin",
+              "callee_interval" : 
+              [
+                0,
+                4294967295
+              ],
               "kind" : "Sink",
               "origins" : 
               [
                 {
                   "field" : "Lcom/facebook/marianatrench/integrationtests/TaintedFieldClass;.field:Ljava/lang/Object;"
                 }
-              ]
+              ],
+              "preserves_type_context" : true
             }
           ]
         }
@@ -1852,19 +1896,30 @@
         {
           "call_info" : 
           {
-            "call_kind" : "Declaration"
+            "call_kind" : "Origin",
+            "position" : 
+            {
+              "line" : 21,
+              "path" : "TaintedFieldClass.java"
+            }
           },
           "kinds" : 
           [
             {
-              "call_kind" : "Declaration",
+              "call_kind" : "Origin",
+              "callee_interval" : 
+              [
+                0,
+                4294967295
+              ],
               "kind" : "Sink",
               "origins" : 
               [
                 {
                   "field" : "Lcom/facebook/marianatrench/integrationtests/TaintedFieldClass;.staticField:Ljava/lang/Object;"
                 }
-              ]
+              ],
+              "preserves_type_context" : true
             }
           ]
         }
@@ -1929,19 +1984,30 @@
         {
           "call_info" : 
           {
-            "call_kind" : "Declaration"
+            "call_kind" : "Origin",
+            "position" : 
+            {
+              "line" : 23,
+              "path" : "TaintedFieldClass.java"
+            }
           },
           "kinds" : 
           [
             {
-              "call_kind" : "Declaration",
+              "call_kind" : "Origin",
+              "callee_interval" : 
+              [
+                0,
+                4294967295
+              ],
               "kind" : "Sink",
               "origins" : 
               [
                 {
                   "field" : "Lcom/facebook/marianatrench/integrationtests/TaintedFieldClass;.staticStringField:Ljava/lang/String;"
                 }
-              ]
+              ],
+              "preserves_type_context" : true
             }
           ]
         }

@@ -922,17 +922,18 @@ void check_flows_to_field_sink(
         instruction->opcode());
     return;
   }
-  auto field_model =
-      field_target ? context->registry.get(field_target->field) : FieldModel();
-  auto sinks = field_model.sinks();
-  if (sinks.empty()) {
+
+  const auto& aliasing = context->aliasing.get(instruction);
+  auto field_sinks = context->field_sinks_at_callsite(*field_target, aliasing);
+  if (field_sinks.is_bottom()) {
     return;
   }
+
   for (const auto& [port, sources] : source_taint.elements()) {
     check_sources_sinks_flows(
         context,
         sources,
-        sinks,
+        field_sinks,
         position,
         /* sink_index */ field_target->field_sink_index,
         /* callee */ show(field_target->field),
