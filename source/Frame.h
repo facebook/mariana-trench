@@ -204,9 +204,9 @@ class Frame final : public sparta::AbstractDomain<Frame> {
     return canonical_names_;
   }
 
-  void add_origins_if_declaration(const Method* method, const AccessPath* port);
+  void add_origin(const Method* method, const AccessPath* port);
 
-  void add_origins_if_declaration(const Field* field);
+  void add_origin(const Field* field);
 
   const OriginSet& origins() const {
     return origins_;
