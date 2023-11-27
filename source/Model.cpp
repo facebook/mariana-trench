@@ -1495,9 +1495,11 @@ std::ostream& operator<<(std::ostream& out, const Model& model) {
     out << ",\n  generations={\n";
     for (const auto& binding : model.generations_.elements()) {
       const AccessPath& port = binding.first;
-      binding.second.visit_frames([&out, port](const Frame& generation) {
-        out << "    " << port << ": " << generation << ",\n";
-      });
+      binding.second.visit_frames(
+          [&out, port](const CallInfo& call_info, const Frame& generation) {
+            out << "    " << port << ": call_info=" << call_info
+                << ", generation=" << generation << ",\n";
+          });
     }
     out << "  }";
   }
@@ -1505,9 +1507,12 @@ std::ostream& operator<<(std::ostream& out, const Model& model) {
     out << ",\n  parameter_sources={\n";
     for (const auto& binding : model.parameter_sources_.elements()) {
       const AccessPath& port = binding.first;
-      binding.second.visit_frames([&out, &port](const Frame& parameter_source) {
-        out << "    " << port << ": " << parameter_source << ",\n";
-      });
+      binding.second.visit_frames(
+          [&out, &port](
+              const CallInfo& call_info, const Frame& parameter_source) {
+            out << "    " << port << ": call_info=" << call_info
+                << ", parameter_source=" << parameter_source << ",\n";
+          });
     }
     out << "  }";
   }
@@ -1515,9 +1520,11 @@ std::ostream& operator<<(std::ostream& out, const Model& model) {
     out << ",\n  sinks={\n";
     for (const auto& binding : model.sinks_.elements()) {
       const AccessPath& port = binding.first;
-      binding.second.visit_frames([&out, &port](const Frame& sink) {
-        out << "    " << port << ": " << sink << ",\n";
-      });
+      binding.second.visit_frames(
+          [&out, &port](const CallInfo& call_info, const Frame& sink) {
+            out << "    " << port << ": call_info=" << call_info
+                << ", sink=" << sink << ",\n";
+          });
     }
     out << "  }";
   }
@@ -1531,9 +1538,11 @@ std::ostream& operator<<(std::ostream& out, const Model& model) {
     out << ",\n  propagation={\n";
     for (const auto& binding : model.propagations_.elements()) {
       const AccessPath& input_path = binding.first;
-      binding.second.visit_frames([&out, &input_path](const Frame& output) {
-        out << "    " << input_path << ": " << output << ",\n";
-      });
+      binding.second.visit_frames(
+          [&out, &input_path](const CallInfo& call_info, const Frame& output) {
+            out << "    " << input_path << ": call_info=" << call_info
+                << ", output=" << output << ",\n";
+          });
     }
     out << "  }";
   }
@@ -1707,7 +1716,7 @@ bool Model::check_taint_config_consistency(
 
 bool Model::check_taint_consistency(const Taint& taint, std::string_view kind)
     const {
-  taint.visit_frames([this](const Frame& frame) {
+  taint.visit_frames([this](const CallInfo&, const Frame& frame) {
     if (!frame.via_type_of_ports().is_bottom()) {
       for (const auto& root : frame.via_type_of_ports()) {
         // Logs invalid ports specifed for via_type_of but does not prevent the

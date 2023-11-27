@@ -57,6 +57,10 @@ class CallInfo final {
     return CallInfo(nullptr, CallKind::declaration(), nullptr, nullptr);
   }
 
+  bool is_leaf() const {
+    return call_kind().is_origin();
+  }
+
   CallInfo propagate(
       const Method* MT_NULLABLE callee,
       const AccessPath& callee_port,

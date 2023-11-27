@@ -326,13 +326,15 @@ void get_frames_files_to_methods(
       } else if (frame_type == FrameType::Sink) {
         taint = callee_model.sinks().raw_read(*callee_port).root();
       }
-      taint.visit_frames([&seen_frames,
-                          &new_frames_to_check](const Frame& callee_frame) {
-        if (callee_frame.is_leaf() || !seen_frames->emplace(&callee_frame)) {
-          return;
-        }
-        new_frames_to_check->emplace(&callee_frame);
-      });
+      taint.visit_frames(
+          [&seen_frames, &new_frames_to_check](
+              const CallInfo& call_info, const Frame& callee_frame) {
+            if (call_info.callee() == nullptr ||
+                !seen_frames->emplace(&callee_frame)) {
+              return;
+            }
+            new_frames_to_check->emplace(&callee_frame);
+          });
     });
     for (const auto& frame : *frames_to_check) {
       queue.add_item(frame);
@@ -362,18 +364,20 @@ get_issue_files_to_methods(const Context& context, const Registry& registry) {
     }
     for (const auto& issue : model.issues()) {
       const auto& issue_sinks = issue.sinks();
-      issue_sinks.visit_frames([&sinks](const Frame& sink) {
-        if (!sink.is_leaf()) {
-          sinks.emplace(&sink);
-        }
-      });
+      issue_sinks.visit_frames(
+          [&sinks](const CallInfo& call_info, const Frame& sink) {
+            if (!call_info.is_leaf()) {
+              sinks.emplace(&sink);
+            }
+          });
 
       const auto& issue_sources = issue.sources();
-      issue_sources.visit_frames([&sources](const Frame& source) {
-        if (!source.is_leaf()) {
-          sources.emplace(&source);
-        }
-      });
+      issue_sources.visit_frames(
+          [&sources](const CallInfo& call_info, const Frame& source) {
+            if (!call_info.is_leaf()) {
+              sources.emplace(&source);
+            }
+          });
     }
     auto* method_position = context.positions->get(method);
     if (!method_position || !method_position->path()) {

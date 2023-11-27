@@ -399,33 +399,34 @@ void apply_propagations(
 
     auto* position =
         context->positions.get(callee.position, input.root(), instruction);
-    propagations.visit_frames([context,
-                               &aliasing,
-                               previous_environment,
-                               new_environment,
-                               instruction,
-                               &callee,
-                               &source_constant_arguments,
-                               &result_taint,
-                               propagations,
-                               &input,
-                               position](const Frame& propagation) {
-      auto locally_inferred_features =
-          propagations.locally_inferred_features(propagation.call_info());
-      apply_propagation(
-          context,
-          aliasing,
-          previous_environment,
-          new_environment,
-          instruction,
-          callee,
-          source_constant_arguments,
-          result_taint,
-          locally_inferred_features,
-          position,
-          input,
-          propagation);
-    });
+    propagations.visit_frames(
+        [context,
+         &aliasing,
+         previous_environment,
+         new_environment,
+         instruction,
+         &callee,
+         &source_constant_arguments,
+         &result_taint,
+         propagations,
+         &input,
+         position](const CallInfo& call_info, const Frame& propagation) {
+          auto locally_inferred_features =
+              propagations.locally_inferred_features(call_info);
+          apply_propagation(
+              context,
+              aliasing,
+              previous_environment,
+              new_environment,
+              instruction,
+              callee,
+              source_constant_arguments,
+              result_taint,
+              locally_inferred_features,
+              position,
+              input,
+              propagation);
+        });
   }
 }
 

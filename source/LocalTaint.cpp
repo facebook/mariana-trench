@@ -375,7 +375,7 @@ LocalTaint LocalTaint::apply_transform(
   FramesByKind new_frames;
   this->visit_frames(
       [&new_frames, &kind_factory, &transforms, &used_kinds, local_transforms](
-          const Frame& frame) {
+          const CallInfo&, const Frame& frame) {
         auto new_frame = frame.apply_transform(
             kind_factory, transforms, used_kinds, local_transforms);
         if (!new_frame.is_bottom()) {
@@ -477,7 +477,7 @@ std::vector<LocalTaint> LocalTaint::update_origin_positions(
                       &call_kind,
                       callee,
                       callee_port,
-                      call_position](const Frame& frame) {
+                      call_position](const CallInfo&, const Frame& frame) {
     OriginSet non_method_origins{};
     for (const auto* origin : frame.origins()) {
       const auto* method_origin = origin->as<MethodOrigin>();
@@ -544,7 +544,7 @@ bool LocalTaint::contains_kind(const Kind* kind) const {
 
 FeatureMayAlwaysSet LocalTaint::features_joined() const {
   auto features = FeatureMayAlwaysSet::bottom();
-  this->visit_frames([&features, this](const Frame& frame) {
+  this->visit_frames([&features, this](const CallInfo&, const Frame& frame) {
     auto combined_features = frame.features();
     combined_features.add(locally_inferred_features_);
     features.join_with(combined_features);
@@ -597,9 +597,10 @@ Json::Value LocalTaint::to_json(ExportOriginsMode export_origins_mode) const {
   mt_assert(taint.isObject() && !taint.isNull());
 
   auto kinds = Json::Value(Json::arrayValue);
-  this->visit_frames([&kinds, export_origins_mode](const Frame& frame) {
-    kinds.append(frame.to_json(export_origins_mode));
-  });
+  this->visit_frames(
+      [&kinds, export_origins_mode](const CallInfo&, const Frame& frame) {
+        kinds.append(frame.to_json(export_origins_mode));
+      });
   taint["kinds"] = kinds;
 
   if (!locally_inferred_features_.is_bottom() &&
@@ -614,9 +615,10 @@ Json::Value LocalTaint::to_json(ExportOriginsMode export_origins_mode) const {
     // defined on different kinds and do not apply to all frames within the
     // propagated CalleePortFrame.
     FeatureMayAlwaysSet local_user_features;
-    this->visit_frames([&local_user_features](const Frame& frame) {
-      local_user_features.add_always(frame.user_features());
-    });
+    this->visit_frames(
+        [&local_user_features](const CallInfo&, const Frame& frame) {
+          local_user_features.add_always(frame.user_features());
+        });
     if (!local_user_features.is_bottom() && !local_user_features.empty()) {
       taint["local_user_features"] = local_user_features.to_json();
     }

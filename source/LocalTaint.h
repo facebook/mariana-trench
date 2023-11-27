@@ -169,15 +169,19 @@ class LocalTaint final : public sparta::AbstractDomain<LocalTaint> {
     }
   }
 
-  template <typename Visitor> // void(const Frame&)
+  template <typename Visitor> // void(const CallInfo&, const Frame&)
   void visit_frames(Visitor&& visitor) const {
     static_assert(
-        std::is_void_v<decltype(visitor(std::declval<const Frame&>()))>);
+        std::is_void_v<decltype(visitor(
+            std::declval<const CallInfo&>(), std::declval<const Frame&>()))>);
 
-    frames_.visit([visitor = std::forward<Visitor>(visitor)](
-                      const std::pair<const Kind*, KindFrames>& binding) {
-      binding.second.visit(visitor);
-    });
+    frames_.visit(
+        [visitor = std::forward<Visitor>(visitor), call_info = call_info_](
+            const std::pair<const Kind*, KindFrames>& binding) {
+          binding.second.visit([visitor, &call_info](const Frame& frame) {
+            visitor(call_info, frame);
+          });
+        });
   }
 
   template <typename Visitor> // void(const KindFrames&)

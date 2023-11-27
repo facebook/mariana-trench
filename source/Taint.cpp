@@ -21,7 +21,7 @@ Taint::Taint(std::initializer_list<TaintConfig> configs) {
 
 std::size_t Taint::num_frames() const {
   std::size_t count = 0;
-  this->visit_frames([&count](const Frame&) { ++count; });
+  this->visit_frames([&count](const CallInfo&, const Frame&) { ++count; });
   return count;
 }
 
@@ -271,7 +271,8 @@ void Taint::intersect_intervals_with(const Taint& other) {
   // does not allow us to do that.
   class frame_does_not_preserve_type_context {};
   try {
-    other.visit_frames([&other_intervals](const Frame& other_frame) {
+    other.visit_frames([&other_intervals](
+                           const CallInfo&, const Frame& other_frame) {
       const auto& other_frame_interval = other_frame.class_interval_context();
       // All frames in `this` will intersect with a frame in `other` that does
       // not preserve type context.
@@ -362,7 +363,7 @@ Taint Taint::propagation_taint(
 
 Taint Taint::essential() const {
   Taint result;
-  this->visit_frames([&result](const Frame& frame) {
+  this->visit_frames([&result](const CallInfo&, const Frame& frame) {
     auto callee_port = AccessPath(Root(Root::Kind::Return));
     CallKind call_kind = CallKind::declaration();
 

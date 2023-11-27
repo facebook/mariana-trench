@@ -284,7 +284,9 @@ void apply_propagations(
                                context,
                                instruction,
                                new_environment,
-                               position](const Frame& propagation) {
+                               position](
+                                  const CallInfo& call_info,
+                                  const Frame& propagation) {
       LOG_OR_DUMP(
           context,
           4,
@@ -300,8 +302,7 @@ void apply_propagations(
       FeatureMayAlwaysSet features = FeatureMayAlwaysSet::make_always(
           callee.model.add_features_to_arguments(output_root));
       features.add(propagation.features());
-      features.add(
-          propagations.locally_inferred_features(propagation.call_info()));
+      features.add(propagations.locally_inferred_features(call_info));
       features.add_always(
           callee.model.add_features_to_arguments(input_path.root()));
 
@@ -424,11 +425,12 @@ void create_issue(
   }
 
   std::unordered_set<const Kind*> kinds;
-  source.visit_frames([&kinds](const Frame& source_frame) {
+  source.visit_frames([&kinds](const CallInfo&, const Frame& source_frame) {
     kinds.emplace(source_frame.kind());
   });
-  sink.visit_frames(
-      [&kinds](const Frame& sink_frame) { kinds.emplace(sink_frame.kind()); });
+  sink.visit_frames([&kinds](const CallInfo&, const Frame& sink_frame) {
+    kinds.emplace(sink_frame.kind());
+  });
 
   source.add_locally_inferred_features(
       context->class_properties.issue_features(context->method(), kinds));

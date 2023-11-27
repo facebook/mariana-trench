@@ -76,10 +76,11 @@ class Taint final : public sparta::AbstractDomain<Taint> {
         });
   }
 
-  template <typename Visitor> // void(const Frame&)
+  template <typename Visitor> // void(const CallInfo&, const Frame&)
   void visit_frames(Visitor&& visitor) const {
     static_assert(
-        std::is_void_v<decltype(visitor(std::declval<const Frame&>()))>);
+        std::is_void_v<decltype(visitor(
+            std::declval<const CallInfo&>(), std::declval<const Frame&>()))>);
 
     map_.visit([visitor = std::forward<Visitor>(visitor)](
                    const std::pair<CallInfo, LocalTaint>& binding) {

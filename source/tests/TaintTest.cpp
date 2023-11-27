@@ -3509,8 +3509,9 @@ TEST_F(TaintTest, VisitFrames) {
           test::FrameProperties{})};
 
   std::unordered_set<const Kind*> kinds;
-  taint.visit_frames(
-      [&kinds](const Frame& frame) { kinds.insert(frame.kind()); });
+  taint.visit_frames([&kinds](const CallInfo&, const Frame& frame) {
+    kinds.insert(frame.kind());
+  });
 
   EXPECT_EQ(kinds.size(), 2);
   EXPECT_NE(kinds.find(context.kind_factory->get("TestSource1")), kinds.end());
