@@ -10,11 +10,9 @@
 #include <initializer_list>
 #include <ostream>
 
-#include <boost/iterator/transform_iterator.hpp>
 #include <json/json.h>
 
 #include <sparta/AbstractDomain.h>
-#include <sparta/FlattenIterator.h>
 #include <sparta/PatriciaTreeMapAbstractPartition.h>
 
 #include <mariana-trench/Access.h>
@@ -35,33 +33,6 @@ class LocalTaint final : public sparta::AbstractDomain<LocalTaint> {
  private:
   using FramesByKind =
       sparta::PatriciaTreeMapAbstractPartition<const Kind*, KindFrames>;
-
- private:
-  struct KeyToFramesMapDereference {
-    static KindFrames::iterator begin(
-        const std::pair<const Kind*, KindFrames>& iterator) {
-      return iterator.second.begin();
-    }
-    static KindFrames::iterator end(
-        const std::pair<const Kind*, KindFrames>& iterator) {
-      return iterator.second.end();
-    }
-  };
-
-  using ConstIterator = sparta::FlattenIterator<
-      /* OuterIterator */ typename FramesByKind::MapType::iterator,
-      /* InnerIterator */ typename KindFrames::iterator,
-      KeyToFramesMapDereference>;
-
- public:
-  // C++ container concept member types
-  using iterator = ConstIterator;
-  using const_iterator = ConstIterator;
-  using value_type = Frame;
-  using difference_type = std::ptrdiff_t;
-  using size_type = std::size_t;
-  using const_reference = const Frame&;
-  using const_pointer = const Frame*;
 
  private:
   explicit LocalTaint(
@@ -198,6 +169,28 @@ class LocalTaint final : public sparta::AbstractDomain<LocalTaint> {
     }
   }
 
+  template <typename Visitor> // void(const Frame&)
+  void visit_frames(Visitor&& visitor) const {
+    static_assert(
+        std::is_void_v<decltype(visitor(std::declval<const Frame&>()))>);
+
+    frames_.visit([visitor = std::forward<Visitor>(visitor)](
+                      const std::pair<const Kind*, KindFrames>& binding) {
+      binding.second.visit(visitor);
+    });
+  }
+
+  template <typename Visitor> // void(const KindFrames&)
+  void visit_kind_frames(Visitor&& visitor) const {
+    static_assert(
+        std::is_void_v<decltype(visitor(std::declval<const KindFrames&>()))>);
+
+    frames_.visit([visitor = std::forward<Visitor>(visitor)](
+                      const std::pair<const Kind*, KindFrames>& binding) {
+      visitor(binding.second);
+    });
+  }
+
   template <typename Predicate> // bool(const Frame&)
   void filter_frames(Predicate&& predicate) {
     static_assert(
@@ -210,14 +203,6 @@ class LocalTaint final : public sparta::AbstractDomain<LocalTaint> {
     if (frames_.is_bottom()) {
       set_to_bottom();
     }
-  }
-
-  ConstIterator begin() const {
-    return ConstIterator(frames_.bindings().begin(), frames_.bindings().end());
-  }
-
-  ConstIterator end() const {
-    return ConstIterator(frames_.bindings().end(), frames_.bindings().end());
   }
 
   void add_origins_if_declaration(const Method* method, const AccessPath* port);

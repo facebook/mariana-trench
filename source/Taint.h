@@ -14,7 +14,6 @@
 #include <json/json.h>
 
 #include <sparta/AbstractDomain.h>
-#include <sparta/FlattenIterator.h>
 #include <sparta/PatriciaTreeHashMapAbstractPartition.h>
 
 #include <mariana-trench/CallInfo.h>
@@ -28,8 +27,6 @@
 
 namespace marianatrench {
 
-class TaintFramesIterator;
-
 /**
  * Represents an abstract taint, as a map from taint kind to set of frames.
  */
@@ -39,8 +36,6 @@ class Taint final : public sparta::AbstractDomain<Taint> {
       sparta::PatriciaTreeHashMapAbstractPartition<CallInfo, LocalTaint>;
 
   explicit Taint(Map map) : map_(std::move(map)) {}
-
-  friend class TaintFramesIterator;
 
  public:
   /* Create the bottom (i.e, empty) taint. */
@@ -56,11 +51,8 @@ class Taint final : public sparta::AbstractDomain<Taint> {
     return map_.is_bottom();
   }
 
-  TaintFramesIterator frames_iterator() const;
-
   /**
-   * Uses `frames_iterator()` to compute number of frames. This iterates over
-   * every frame and can be expensive. Use for testing only.
+   * This iterates over every frame and can be expensive. Use for testing only.
    */
   std::size_t num_frames() const;
 
@@ -82,6 +74,39 @@ class Taint final : public sparta::AbstractDomain<Taint> {
         [f = std::forward<Function>(f)](LocalTaint* local_taint) -> void {
           local_taint->transform_frames(f);
         });
+  }
+
+  template <typename Visitor> // void(const Frame&)
+  void visit_frames(Visitor&& visitor) const {
+    static_assert(
+        std::is_void_v<decltype(visitor(std::declval<const Frame&>()))>);
+
+    map_.visit([visitor = std::forward<Visitor>(visitor)](
+                   const std::pair<CallInfo, LocalTaint>& binding) {
+      binding.second.visit_frames(visitor);
+    });
+  }
+
+  template <typename Visitor> // void(const KindFrames&)
+  void visit_kind_frames(Visitor&& visitor) const {
+    static_assert(
+        std::is_void_v<decltype(visitor(std::declval<const KindFrames&>()))>);
+
+    map_.visit([visitor = std::forward<Visitor>(visitor)](
+                   const std::pair<CallInfo, LocalTaint>& binding) {
+      binding.second.visit_kind_frames(visitor);
+    });
+  }
+
+  template <typename Visitor> // void(const LocalTaint&)
+  void visit_local_taint(Visitor&& visitor) const {
+    static_assert(
+        std::is_void_v<decltype(visitor(std::declval<const LocalTaint&>()))>);
+
+    map_.visit([visitor = std::forward<Visitor>(visitor)](
+                   const std::pair<CallInfo, LocalTaint>& binding) {
+      visitor(binding.second);
+    });
   }
 
   template <typename Predicate> // bool(const Frame&)
@@ -287,53 +312,6 @@ class Taint final : public sparta::AbstractDomain<Taint> {
 
  private:
   Map map_;
-};
-
-class TaintFramesIterator {
- private:
-  struct KeyToFramesMapDereference {
-    static LocalTaint::iterator begin(
-        const std::pair<CallInfo, LocalTaint>& iterator) {
-      return iterator.second.begin();
-    }
-    static LocalTaint::iterator end(
-        const std::pair<CallInfo, LocalTaint>& iterator) {
-      return iterator.second.end();
-    }
-  };
-
-  using ConstIterator = sparta::FlattenIterator<
-      /* OuterIterator */ Taint::Map::MapType::iterator,
-      /* InnerIterator */ LocalTaint::iterator,
-      KeyToFramesMapDereference>;
-
- public:
-  // C++ container concept member types
-  using iterator = ConstIterator;
-  using const_iterator = ConstIterator;
-  using value_type = Frame;
-  using difference_type = std::ptrdiff_t;
-  using size_type = std::size_t;
-  using const_reference = const Frame&;
-  using const_pointer = const Frame*;
-
- public:
-  explicit TaintFramesIterator(const Taint& taint) : taint_(taint) {}
-
-  DELETE_COPY_CONSTRUCTORS_AND_ASSIGNMENTS(TaintFramesIterator)
-
-  const_iterator begin() const {
-    return ConstIterator(
-        taint_.map_.bindings().begin(), taint_.map_.bindings().end());
-  }
-
-  const_iterator end() const {
-    return ConstIterator(
-        taint_.map_.bindings().end(), taint_.map_.bindings().end());
-  }
-
- private:
-  const Taint& taint_;
 };
 
 } // namespace marianatrench

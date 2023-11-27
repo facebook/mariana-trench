@@ -238,8 +238,9 @@ void apply_propagations(
       "Processing propagations for call to `{}`",
       show(callee.method_reference));
 
-  for (const auto& [input_path, propagations] :
-       callee.model.propagations().elements()) {
+  for (const auto& binding : callee.model.propagations().elements()) {
+    const AccessPath& input_path = binding.first;
+    const Taint& propagations = binding.second;
     LOG_OR_DUMP(context, 4, "Processing propagations from {}", input_path);
     if (!input_path.root().is_argument()) {
       WARNING_OR_DUMP(
@@ -273,7 +274,17 @@ void apply_propagations(
     auto position =
         context->positions.get(callee.position, input_path.root(), instruction);
 
-    for (const auto& propagation : propagations.frames_iterator()) {
+    propagations.visit_frames([&aliasing,
+                               &callee,
+                               &input_path,
+                               &input_taint_tree,
+                               &propagations,
+                               &result_taint,
+                               &source_constant_arguments,
+                               context,
+                               instruction,
+                               new_environment,
+                               position](const Frame& propagation) {
       LOG_OR_DUMP(
           context,
           4,
@@ -374,7 +385,7 @@ void apply_propagations(
             mt_unreachable();
         }
       }
-    }
+    });
   }
 }
 
@@ -413,12 +424,11 @@ void create_issue(
   }
 
   std::unordered_set<const Kind*> kinds;
-  for (const auto& source_frame : source.frames_iterator()) {
+  source.visit_frames([&kinds](const Frame& source_frame) {
     kinds.emplace(source_frame.kind());
-  }
-  for (const auto& sink_frame : sink.frames_iterator()) {
-    kinds.emplace(sink_frame.kind());
-  }
+  });
+  sink.visit_frames(
+      [&kinds](const Frame& sink_frame) { kinds.emplace(sink_frame.kind()); });
 
   source.add_locally_inferred_features(
       context->class_properties.issue_features(context->method(), kinds));

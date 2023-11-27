@@ -3497,7 +3497,7 @@ TEST_F(TaintTest, FeaturesJoined) {
           /* always */ FeatureSet{feature1}));
 }
 
-TEST_F(TaintTest, FramesIterator) {
+TEST_F(TaintTest, VisitFrames) {
   auto context = test::make_empty_context();
 
   auto taint = Taint{
@@ -3509,9 +3509,8 @@ TEST_F(TaintTest, FramesIterator) {
           test::FrameProperties{})};
 
   std::unordered_set<const Kind*> kinds;
-  for (const auto& frame : taint.frames_iterator()) {
-    kinds.insert(frame.kind());
-  }
+  taint.visit_frames(
+      [&kinds](const Frame& frame) { kinds.insert(frame.kind()); });
 
   EXPECT_EQ(kinds.size(), 2);
   EXPECT_NE(kinds.find(context.kind_factory->get("TestSource1")), kinds.end());

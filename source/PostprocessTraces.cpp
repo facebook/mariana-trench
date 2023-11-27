@@ -33,25 +33,33 @@ bool check_callee_kinds(
     return callee_taint.contains_kind(base_kind);
   }
 
-  for (const auto& frame : callee_taint.frames_iterator()) {
-    const auto* frame_kind = frame.kind();
-    if (frame_kind == nullptr) {
-      continue;
-    }
+  // Using an exception to break out of the loop early since `visit_frames`
+  // does not allow us to do that.
+  class frame_found : public std::exception {};
+  try {
+    callee_taint.visit_frames(
+        [base_kind, global_transforms, &context](const Frame& frame) {
+          const auto* frame_kind = frame.kind();
+          if (frame_kind == nullptr) {
+            return;
+          }
 
-    const auto* frame_transform_kind = frame_kind->as<TransformKind>();
-    if (frame_transform_kind == nullptr ||
-        frame_transform_kind->base_kind() != base_kind) {
-      // No match
-      continue;
-    }
+          const auto* frame_transform_kind = frame_kind->as<TransformKind>();
+          if (frame_transform_kind == nullptr ||
+              frame_transform_kind->base_kind() != base_kind) {
+            // No match
+            return;
+          }
 
-    if (global_transforms ==
-        context.transforms_factory->concat(
-            frame_transform_kind->local_transforms(),
-            frame_transform_kind->global_transforms())) {
-      return true;
-    }
+          if (global_transforms ==
+              context.transforms_factory->concat(
+                  frame_transform_kind->local_transforms(),
+                  frame_transform_kind->global_transforms())) {
+            throw frame_found();
+          }
+        });
+  } catch (const frame_found&) {
+    return true;
   }
 
   return false;

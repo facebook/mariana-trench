@@ -373,18 +373,20 @@ LocalTaint LocalTaint::apply_transform(
     const UsedKinds& used_kinds,
     const TransformList* local_transforms) const {
   FramesByKind new_frames;
-  for (const auto& frame : *this) {
-    auto new_frame = frame.apply_transform(
-        kind_factory, transforms, used_kinds, local_transforms);
-    if (!new_frame.is_bottom()) {
-      new_frames.update(
-          new_frame.kind(), [&new_frame](const KindFrames& old_frames) {
-            auto frames_copy = old_frames;
-            frames_copy.add(new_frame);
-            return frames_copy;
-          });
-    }
-  }
+  this->visit_frames(
+      [&new_frames, &kind_factory, &transforms, &used_kinds, local_transforms](
+          const Frame& frame) {
+        auto new_frame = frame.apply_transform(
+            kind_factory, transforms, used_kinds, local_transforms);
+        if (!new_frame.is_bottom()) {
+          new_frames.update(
+              new_frame.kind(), [&new_frame](const KindFrames& old_frames) {
+                auto frames_copy = old_frames;
+                frames_copy.add(new_frame);
+                return frames_copy;
+              });
+        }
+      });
 
   if (new_frames.is_bottom()) {
     return LocalTaint::bottom();
@@ -463,10 +465,19 @@ std::vector<LocalTaint> LocalTaint::update_origin_positions(
   mt_assert(this->call_kind().is_origin());
   std::vector<LocalTaint> results;
 
+  const auto* callee = this->callee();
+  const auto call_kind = this->call_kind();
   const auto* callee_port = this->callee_port();
   const auto* call_position = this->call_position();
 
-  for (const auto& frame : *this) {
+  this->visit_frames([this,
+                      &map_call_position,
+                      &new_local_positions,
+                      &results,
+                      &call_kind,
+                      callee,
+                      callee_port,
+                      call_position](const Frame& frame) {
     OriginSet non_method_origins{};
     for (const auto* origin : frame.origins()) {
       const auto* method_origin = origin->as<MethodOrigin>();
@@ -479,7 +490,7 @@ std::vector<LocalTaint> LocalTaint::update_origin_positions(
       const auto* MT_NULLABLE new_call_position = map_call_position(
           method_origin->method(), callee_port, call_position);
       auto new_call_info =
-          CallInfo(callee(), call_kind(), callee_port, new_call_position);
+          CallInfo(callee, call_kind, callee_port, new_call_position);
       results.emplace_back(LocalTaint(
           new_call_info,
           FramesByKind({std::pair(
@@ -490,8 +501,8 @@ std::vector<LocalTaint> LocalTaint::update_origin_positions(
           locally_inferred_features_));
     }
 
-    // Non-method origins will not have positions updated but their information
-    // should be retained.
+    // Non-method origins will not have positions updated but their
+    // information should be retained.
     if (!non_method_origins.empty()) {
       results.emplace_back(LocalTaint(
           call_info_,
@@ -502,7 +513,7 @@ std::vector<LocalTaint> LocalTaint::update_origin_positions(
           new_local_positions,
           locally_inferred_features_));
     }
-  }
+  });
 
   // This can only happen if there are no origins to begin with, which points
   // to a problem with populating them correctly during model generation.
@@ -533,11 +544,11 @@ bool LocalTaint::contains_kind(const Kind* kind) const {
 
 FeatureMayAlwaysSet LocalTaint::features_joined() const {
   auto features = FeatureMayAlwaysSet::bottom();
-  for (const auto& frame : *this) {
+  this->visit_frames([&features, this](const Frame& frame) {
     auto combined_features = frame.features();
     combined_features.add(locally_inferred_features_);
     features.join_with(combined_features);
-  }
+  });
   return features;
 }
 
@@ -582,13 +593,13 @@ void LocalTaint::add(const Frame& frame) {
 }
 
 Json::Value LocalTaint::to_json(ExportOriginsMode export_origins_mode) const {
-  auto kinds = Json::Value(Json::arrayValue);
-  for (const auto& frame : *this) {
-    kinds.append(frame.to_json(export_origins_mode));
-  }
-
   auto taint = call_info_.to_json();
   mt_assert(taint.isObject() && !taint.isNull());
+
+  auto kinds = Json::Value(Json::arrayValue);
+  this->visit_frames([&kinds, export_origins_mode](const Frame& frame) {
+    kinds.append(frame.to_json(export_origins_mode));
+  });
   taint["kinds"] = kinds;
 
   if (!locally_inferred_features_.is_bottom() &&
@@ -603,9 +614,9 @@ Json::Value LocalTaint::to_json(ExportOriginsMode export_origins_mode) const {
     // defined on different kinds and do not apply to all frames within the
     // propagated CalleePortFrame.
     FeatureMayAlwaysSet local_user_features;
-    for (const auto& frame : *this) {
+    this->visit_frames([&local_user_features](const Frame& frame) {
       local_user_features.add_always(frame.user_features());
-    }
+    });
     if (!local_user_features.is_bottom() && !local_user_features.empty()) {
       taint["local_user_features"] = local_user_features.to_json();
     }

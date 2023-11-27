@@ -19,14 +19,9 @@ Taint::Taint(std::initializer_list<TaintConfig> configs) {
   }
 }
 
-TaintFramesIterator Taint::frames_iterator() const {
-  return TaintFramesIterator(*this);
-}
-
 std::size_t Taint::num_frames() const {
   std::size_t count = 0;
-  auto iterator = frames_iterator();
-  std::for_each(iterator.begin(), iterator.end(), [&count](auto) { ++count; });
+  this->visit_frames([&count](const Frame&) { ++count; });
   return count;
 }
 
@@ -271,15 +266,23 @@ std::unordered_map<const Kind*, Taint> Taint::partition_by_kind() const {
 
 void Taint::intersect_intervals_with(const Taint& other) {
   std::unordered_set<CallClassIntervalContext> other_intervals;
-  for (const auto& other_frame : other.frames_iterator()) {
-    const auto& other_frame_interval = other_frame.class_interval_context();
-    // All frames in `this` will intersect with a frame in `other` that does not
-    // preserve type context.
-    if (!other_frame_interval.preserves_type_context()) {
-      return;
-    }
 
-    other_intervals.insert(other_frame_interval);
+  // Using an exception to break out of the loop early since `visit_frames`
+  // does not allow us to do that.
+  class frame_does_not_preserve_type_context {};
+  try {
+    other.visit_frames([&other_intervals](const Frame& other_frame) {
+      const auto& other_frame_interval = other_frame.class_interval_context();
+      // All frames in `this` will intersect with a frame in `other` that does
+      // not preserve type context.
+      if (!other_frame_interval.preserves_type_context()) {
+        throw frame_does_not_preserve_type_context();
+      }
+
+      other_intervals.insert(other_frame_interval);
+    });
+  } catch (const frame_does_not_preserve_type_context&) {
+    return;
   }
 
   // Keep only frames that intersect with some interval in `other`.
@@ -359,7 +362,7 @@ Taint Taint::propagation_taint(
 
 Taint Taint::essential() const {
   Taint result;
-  for (const auto& frame : frames_iterator()) {
+  this->visit_frames([&result](const Frame& frame) {
     auto callee_port = AccessPath(Root(Root::Kind::Return));
     CallKind call_kind = CallKind::declaration();
 
@@ -388,7 +391,7 @@ Taint Taint::essential() const {
         /* local_positions */ {},
         /* locally_inferred_features */ FeatureMayAlwaysSet::bottom(),
         /* extra_traces */ {}));
-  }
+  });
   return result;
 }
 

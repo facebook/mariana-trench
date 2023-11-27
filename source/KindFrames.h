@@ -10,7 +10,6 @@
 #include <initializer_list>
 #include <ostream>
 
-#include <boost/iterator/transform_iterator.hpp>
 #include <json/json.h>
 
 #include <sparta/AbstractDomain.h>
@@ -32,32 +31,6 @@ class KindFrames final : public sparta::AbstractDomain<KindFrames> {
  private:
   using FramesByInterval =
       sparta::HashedAbstractPartition<CallClassIntervalContext, Frame>;
-
- private:
-  struct GetFrameReference {
-    using Reference = typename std::iterator_traits<typename std::unordered_map<
-        CallClassIntervalContext,
-        Frame>::const_iterator>::reference;
-
-    const Frame& operator()(Reference element) const {
-      return element.second;
-    }
-  };
-
-  using ConstIterator = boost::transform_iterator<
-      GetFrameReference,
-      typename std::unordered_map<CallClassIntervalContext, Frame>::
-          const_iterator>;
-
- public:
-  // C++ container concept member types
-  using iterator = ConstIterator;
-  using const_iterator = ConstIterator;
-  using value_type = Frame;
-  using difference_type = std::ptrdiff_t;
-  using size_type = std::size_t;
-  using const_reference = const Frame&;
-  using const_pointer = const Frame*;
 
  private:
   explicit KindFrames(const Kind* MT_NULLABLE kind, FramesByInterval frames)
@@ -124,6 +97,18 @@ class KindFrames final : public sparta::AbstractDomain<KindFrames> {
     }
   }
 
+  template <typename Visitor> // void(const Frame&)
+  void visit(Visitor&& visitor) const {
+    static_assert(
+        std::is_void_v<decltype(visitor(std::declval<const Frame&>()))>);
+
+    frames_.visit(
+        [visitor = std::forward<Visitor>(visitor)](
+            const std::pair<const CallClassIntervalContext, Frame>& binding) {
+          visitor(binding.second);
+        });
+  }
+
   template <typename Predicate> // bool(const Frame&)
   void filter(Predicate&& predicate) {
     static_assert(
@@ -141,15 +126,10 @@ class KindFrames final : public sparta::AbstractDomain<KindFrames> {
     }
   }
 
-  ConstIterator begin() const {
-    return boost::make_transform_iterator(
-        frames_.bindings().begin(), GetFrameReference());
-  }
-
-  ConstIterator end() const {
-    return boost::make_transform_iterator(
-        frames_.bindings().end(), GetFrameReference());
-  }
+  /**
+   * This iterates over every frame and can be expensive. Use for testing only.
+   */
+  std::size_t num_frames() const;
 
   /**
    * Appends `path_element` to the output paths of all propagation frames.

@@ -383,8 +383,9 @@ void apply_propagations(
       "Processing propagations for call to `{}`",
       show(callee.method_reference));
 
-  for (const auto& [input, propagations] :
-       callee.model.propagations().elements()) {
+  for (const auto& binding : callee.model.propagations().elements()) {
+    const AccessPath& input = binding.first;
+    const Taint& propagations = binding.second;
     LOG_OR_DUMP(context, 4, "Processing propagations from {}", input);
     if (!input.root().is_argument() &&
         !input.root().is_call_effect_for_local_propagation_input()) {
@@ -398,7 +399,17 @@ void apply_propagations(
 
     auto* position =
         context->positions.get(callee.position, input.root(), instruction);
-    for (const auto& propagation : propagations.frames_iterator()) {
+    propagations.visit_frames([context,
+                               &aliasing,
+                               previous_environment,
+                               new_environment,
+                               instruction,
+                               &callee,
+                               &source_constant_arguments,
+                               &result_taint,
+                               propagations,
+                               &input,
+                               position](const Frame& propagation) {
       auto locally_inferred_features =
           propagations.locally_inferred_features(propagation.call_info());
       apply_propagation(
@@ -414,7 +425,7 @@ void apply_propagations(
           position,
           input,
           propagation);
-    }
+    });
   }
 }
 

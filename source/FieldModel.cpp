@@ -88,7 +88,7 @@ void FieldModel::check_taint_config_consistency(
 void FieldModel::check_taint_consistency(
     const Taint& taint,
     std::string_view kind) const {
-  for (const auto& frame : taint.frames_iterator()) {
+  taint.visit_frames([kind, this](const Frame& frame) {
     // If a field_ exists, there should be exactly one origin at the
     // declaration frame..
     const auto* origin = frame.origins().elements().singleton();
@@ -98,7 +98,7 @@ void FieldModel::check_taint_consistency(
           show(field_),
           kind));
     }
-  }
+  });
 }
 
 void FieldModel::add_source(TaintConfig source) {
@@ -157,21 +157,22 @@ Json::Value FieldModel::to_json(ExportOriginsMode export_origins_mode) const {
 
   if (!sources_.is_bottom()) {
     auto sources_value = Json::Value(Json::arrayValue);
-    for (const auto& source : sources_.frames_iterator()) {
-      mt_assert(!source.is_bottom());
-      // Field models do not have local positions/features
-      sources_value.append(source.to_json(export_origins_mode));
-    }
+    sources_.visit_frames(
+        [&sources_value, export_origins_mode](const Frame& source) {
+          mt_assert(!source.is_bottom());
+          // Field models do not have local positions/features
+          sources_value.append(source.to_json(export_origins_mode));
+        });
     value["sources"] = sources_value;
   }
 
   if (!sinks_.is_bottom()) {
     auto sinks_value = Json::Value(Json::arrayValue);
-    for (const auto& sink : sinks_.frames_iterator()) {
+    sinks_.visit_frames([&sinks_value, export_origins_mode](const Frame& sink) {
       mt_assert(!sink.is_bottom());
       // Field models do not have local positions/features
       sinks_value.append(sink.to_json(export_origins_mode));
-    }
+    });
     value["sinks"] = sinks_value;
   }
 
@@ -196,16 +197,14 @@ std::ostream& operator<<(std::ostream& out, const FieldModel& model) {
   out << "\nFieldModel(field=`" << show(model.field_) << "`";
   if (!model.sources_.is_bottom()) {
     out << ",\n  sources={\n";
-    for (const auto& source : model.sources_.frames_iterator()) {
-      out << "    " << source << ",\n";
-    }
+    model.sources_.visit_frames(
+        [&out](const Frame& source) { out << "    " << source << ",\n"; });
     out << "  }";
   }
   if (!model.sinks_.is_bottom()) {
     out << ",\n  sinks={\n";
-    for (const auto& sink : model.sinks_.frames_iterator()) {
-      out << "    " << sink << ",\n";
-    }
+    model.sinks_.visit_frames(
+        [&out](const Frame& sink) { out << "    " << sink << ",\n"; });
     out << "  }";
   }
   if (!model.model_generators_.is_bottom()) {

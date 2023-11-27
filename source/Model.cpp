@@ -1493,30 +1493,31 @@ std::ostream& operator<<(std::ostream& out, const Model& model) {
   }
   if (!model.generations_.is_bottom()) {
     out << ",\n  generations={\n";
-    for (const auto& [port, generation_taint] : model.generations_.elements()) {
-      for (const auto& generation : generation_taint.frames_iterator()) {
+    for (const auto& binding : model.generations_.elements()) {
+      const AccessPath& port = binding.first;
+      binding.second.visit_frames([&out, port](const Frame& generation) {
         out << "    " << port << ": " << generation << ",\n";
-      }
+      });
     }
     out << "  }";
   }
   if (!model.parameter_sources_.is_bottom()) {
     out << ",\n  parameter_sources={\n";
-    for (const auto& [port, parameter_source_taint] :
-         model.parameter_sources_.elements()) {
-      for (const auto& parameter_source :
-           parameter_source_taint.frames_iterator()) {
+    for (const auto& binding : model.parameter_sources_.elements()) {
+      const AccessPath& port = binding.first;
+      binding.second.visit_frames([&out, &port](const Frame& parameter_source) {
         out << "    " << port << ": " << parameter_source << ",\n";
-      }
+      });
     }
     out << "  }";
   }
   if (!model.sinks_.is_bottom()) {
     out << ",\n  sinks={\n";
-    for (const auto& [port, sink_taint] : model.sinks_.elements()) {
-      for (const auto& sink : sink_taint.frames_iterator()) {
+    for (const auto& binding : model.sinks_.elements()) {
+      const AccessPath& port = binding.first;
+      binding.second.visit_frames([&out, &port](const Frame& sink) {
         out << "    " << port << ": " << sink << ",\n";
-      }
+      });
     }
     out << "  }";
   }
@@ -1528,11 +1529,11 @@ std::ostream& operator<<(std::ostream& out, const Model& model) {
   }
   if (!model.propagations_.is_bottom()) {
     out << ",\n  propagation={\n";
-    for (const auto& [input_path, propagation_taint] :
-         model.propagations_.elements()) {
-      for (const auto& output : propagation_taint.frames_iterator()) {
+    for (const auto& binding : model.propagations_.elements()) {
+      const AccessPath& input_path = binding.first;
+      binding.second.visit_frames([&out, &input_path](const Frame& output) {
         out << "    " << input_path << ": " << output << ",\n";
-      }
+      });
     }
     out << "  }";
   }
@@ -1706,7 +1707,7 @@ bool Model::check_taint_config_consistency(
 
 bool Model::check_taint_consistency(const Taint& taint, std::string_view kind)
     const {
-  for (const auto& frame : taint.frames_iterator()) {
+  taint.visit_frames([this](const Frame& frame) {
     if (!frame.via_type_of_ports().is_bottom()) {
       for (const auto& root : frame.via_type_of_ports()) {
         // Logs invalid ports specifed for via_type_of but does not prevent the
@@ -1721,7 +1722,7 @@ bool Model::check_taint_consistency(const Taint& taint, std::string_view kind)
         check_root_consistency(root);
       }
     }
-  }
+  });
   return true;
 }
 

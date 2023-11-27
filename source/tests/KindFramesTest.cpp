@@ -55,9 +55,7 @@ TEST_F(KindFramesTest, Add) {
               source_kind_one,
               test::FrameProperties{.origins = OriginSet{one_origin}}),
       }));
-  EXPECT_EQ(1, std::count_if(frames.begin(), frames.end(), [](auto) {
-              return true;
-            }));
+  EXPECT_EQ(1, frames.num_frames());
 
   // Add frame with a different interval
   frames.add(test::make_taint_config(
@@ -73,9 +71,7 @@ TEST_F(KindFramesTest, Add) {
               source_kind_one,
               test::FrameProperties{.class_interval_context = interval}),
       }));
-  EXPECT_EQ(2, std::count_if(frames.begin(), frames.end(), [](auto) {
-              return true;
-            }));
+  EXPECT_EQ(2, frames.num_frames());
 }
 
 TEST_F(KindFramesTest, Leq) {
@@ -485,9 +481,7 @@ TEST_F(KindFramesTest, Iterator) {
   };
 
   std::vector<Frame> frames;
-  for (const auto& frame : kind_frames) {
-    frames.push_back(frame);
-  }
+  kind_frames.visit([&frames](const Frame& frame) { frames.push_back(frame); });
 
   EXPECT_EQ(frames.size(), 2);
   EXPECT_NE(

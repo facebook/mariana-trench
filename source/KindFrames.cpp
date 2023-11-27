@@ -161,6 +161,12 @@ void KindFrames::difference_with(const KindFrames& other) {
   }
 }
 
+std::size_t KindFrames::num_frames() const {
+  std::size_t count = 0;
+  this->visit([&count](const Frame&) { ++count; });
+  return count;
+}
+
 void KindFrames::append_to_propagation_output_paths(
     Path::Element path_element) {
   frames_.transform([path_element](Frame* frame) -> void {
@@ -440,10 +446,9 @@ bool KindFrames::contains_kind(const Kind* kind) const {
 
 KindFrames KindFrames::with_kind(const Kind* kind) const {
   KindFrames result;
-  for (const auto& frame : *this) {
-    auto frame_with_kind = frame.with_kind(kind);
-    result.add(frame_with_kind);
-  }
+  this->visit([&result, kind](const Frame& frame) {
+    result.add(frame.with_kind(kind));
+  });
   return result;
 }
 
