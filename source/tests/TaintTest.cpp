@@ -2047,7 +2047,7 @@ TEST_F(TaintTest, LocallyInferredFeatures) {
       FeatureMayAlwaysSet{feature_two});
   EXPECT_EQ(
       taint.locally_inferred_features(CallInfo(
-          /* callee */ method_one,
+          /* callee */ nullptr,
           /* call_kind */ CallKind::origin(),
           /* callee_port */
           AccessPathFactory::singleton().get(

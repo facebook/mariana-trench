@@ -140,20 +140,6 @@ class Frame final : public sparta::AbstractDomain<Frame> {
     mt_assert(kind_ != nullptr);
     mt_assert(callee_port_ != nullptr);
     mt_assert(distance_ >= 0);
-
-    if (auto* propagation_kind =
-            kind_->discard_transforms()->as<PropagationKind>()) {
-      mt_assert(!output_paths_.is_bottom());
-      mt_assert(call_kind_.is_propagation());
-      if (call_kind_.is_propagation_without_trace()) {
-        // Retaining previous invariant of callee port == output port
-        // for propagations without traces.
-        mt_assert(*callee_port_ == AccessPath(propagation_kind->root()));
-      }
-    }
-    if (callee != nullptr && !callee_port_->root().is_anchor()) {
-      mt_assert(call_kind.is_callsite());
-    }
   }
 
   explicit Frame(const TaintConfig& config);

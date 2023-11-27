@@ -28,7 +28,12 @@ class CallInfo final {
       const Position* MT_NULLABLE call_position)
       : method_call_kind_(callee, call_kind.encode()),
         callee_port_(callee_port),
-        call_position_(call_position) {}
+        call_position_(call_position) {
+    if (callee != nullptr) {
+      mt_assert(callee_port_ != nullptr);
+      mt_assert(call_kind.is_callsite());
+    }
+  }
 
   INCLUDE_DEFAULT_COPY_CONSTRUCTORS_AND_ASSIGNMENTS(CallInfo)
 
