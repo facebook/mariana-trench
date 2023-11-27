@@ -294,50 +294,52 @@ IssueSet augment_issue_positions(
 void get_frames_files_to_methods(
     ConcurrentMap<const std::string*, std::unordered_set<const Method*>>&
         issue_files_to_methods,
-    const ConcurrentSet<const Frame*>& frames,
+    const ConcurrentSet<const LocalTaint*>& frames,
     const Context& context,
     const Registry& registry,
     FrameType frame_type) {
-  auto frames_to_check = std::make_unique<ConcurrentSet<const Frame*>>(frames);
-  auto seen_frames = std::make_unique<ConcurrentSet<const Frame*>>(frames);
+  auto frames_to_check =
+      std::make_unique<ConcurrentSet<const LocalTaint*>>(frames);
+  auto seen_frames = std::make_unique<ConcurrentSet<const LocalTaint*>>(frames);
 
   while (frames_to_check->size() != 0) {
-    auto new_frames_to_check = std::make_unique<ConcurrentSet<const Frame*>>();
-    auto queue = sparta::work_queue<const Frame*>([&](const Frame* frame) {
-      const auto* callee = frame->callee();
-      if (!callee) {
-        return;
-      }
-      auto callee_model = registry.get(callee);
-      const auto* callee_port = frame->callee_port();
-      const auto* method_position = context.positions->get(callee);
-      if (method_position && method_position->path()) {
-        issue_files_to_methods.update(
-            method_position->path(),
-            [callee](
-                const std::string* /*filepath*/,
-                std::unordered_set<const Method*>& methods,
-                bool) { methods.emplace(callee); });
-      }
+    auto new_frames_to_check =
+        std::make_unique<ConcurrentSet<const LocalTaint*>>();
+    auto queue =
+        sparta::work_queue<const LocalTaint*>([&](const LocalTaint* frame) {
+          const auto* callee = frame->callee();
+          if (!callee) {
+            return;
+          }
+          auto callee_model = registry.get(callee);
+          const auto* callee_port = frame->callee_port();
+          const auto* method_position = context.positions->get(callee);
+          if (method_position && method_position->path()) {
+            issue_files_to_methods.update(
+                method_position->path(),
+                [callee](
+                    const std::string* /*filepath*/,
+                    std::unordered_set<const Method*>& methods,
+                    bool) { methods.emplace(callee); });
+          }
 
-      Taint taint;
-      if (frame_type == FrameType::Source) {
-        taint = callee_model.generations().raw_read(*callee_port).root();
-      } else if (frame_type == FrameType::Sink) {
-        taint = callee_model.sinks().raw_read(*callee_port).root();
-      }
-      taint.visit_frames(
-          [&seen_frames, &new_frames_to_check](
-              const CallInfo& call_info, const Frame& callee_frame) {
-            if (call_info.callee() == nullptr ||
-                !seen_frames->emplace(&callee_frame)) {
+          Taint taint;
+          if (frame_type == FrameType::Source) {
+            taint = callee_model.generations().raw_read(*callee_port).root();
+          } else if (frame_type == FrameType::Sink) {
+            taint = callee_model.sinks().raw_read(*callee_port).root();
+          }
+          taint.visit_local_taint([&seen_frames, &new_frames_to_check](
+                                      const LocalTaint& local_taint) {
+            if (local_taint.callee() == nullptr ||
+                !seen_frames->emplace(&local_taint)) {
               return;
             }
-            new_frames_to_check->emplace(&callee_frame);
+            new_frames_to_check->emplace(&local_taint);
           });
-    });
-    for (const auto& frame : *frames_to_check) {
-      queue.add_item(frame);
+        });
+    for (const auto* taint : *frames_to_check) {
+      queue.add_item(taint);
     }
     queue.run_all();
     frames_to_check = std::move(new_frames_to_check);
@@ -354,8 +356,8 @@ ConcurrentMap<const std::string*, std::unordered_set<const Method*>>
 get_issue_files_to_methods(const Context& context, const Registry& registry) {
   ConcurrentMap<const std::string*, std::unordered_set<const Method*>>
       issue_files_to_methods;
-  ConcurrentSet<const Frame*> sources;
-  ConcurrentSet<const Frame*> sinks;
+  ConcurrentSet<const LocalTaint*> sources;
+  ConcurrentSet<const LocalTaint*> sinks;
 
   auto queue = sparta::work_queue<const Method*>([&](const Method* method) {
     auto model = registry.get(method);
@@ -364,18 +366,17 @@ get_issue_files_to_methods(const Context& context, const Registry& registry) {
     }
     for (const auto& issue : model.issues()) {
       const auto& issue_sinks = issue.sinks();
-      issue_sinks.visit_frames(
-          [&sinks](const CallInfo& call_info, const Frame& sink) {
-            if (!call_info.is_leaf()) {
-              sinks.emplace(&sink);
-            }
-          });
+      issue_sinks.visit_local_taint([&sinks](const LocalTaint& local_taint) {
+        if (!local_taint.call_info().is_leaf()) {
+          sinks.emplace(&local_taint);
+        }
+      });
 
       const auto& issue_sources = issue.sources();
-      issue_sources.visit_frames(
-          [&sources](const CallInfo& call_info, const Frame& source) {
-            if (!call_info.is_leaf()) {
-              sources.emplace(&source);
+      issue_sources.visit_local_taint(
+          [&sources](const LocalTaint& local_taint) {
+            if (!local_taint.call_info().is_leaf()) {
+              sources.emplace(&local_taint);
             }
           });
     }
