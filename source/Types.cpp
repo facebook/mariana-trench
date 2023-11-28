@@ -291,7 +291,8 @@ std::unique_ptr<TypeEnvironments> Types::infer_types_for_method(
     return environments;
   }
   auto per_method_global_type_analyzer =
-      global_type_analyzer_->get_local_analysis(method->dex_method());
+      global_type_analyzer_->get_replayable_local_analysis(
+          method->dex_method());
 
   for (auto* block : code->cfg().blocks()) {
     auto current_state =
