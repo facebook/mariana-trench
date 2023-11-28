@@ -14,10 +14,11 @@
 
 #include <json/json.h>
 
+#include <sparta/Flags.h>
+
 #include <mariana-trench/Access.h>
 #include <mariana-trench/Context.h>
 #include <mariana-trench/FeatureSet.h>
-#include <mariana-trench/Flags.h>
 #include <mariana-trench/IncludeMacros.h>
 #include <mariana-trench/Issue.h>
 #include <mariana-trench/IssueSet.h>
@@ -123,7 +124,7 @@ class Model final {
     Normal = 0,
   };
 
-  using Modes = Flags<Mode>;
+  using Modes = sparta::Flags<Mode>;
 
   enum class FreezeKind : unsigned {
     None = 0,
@@ -133,7 +134,7 @@ class Model final {
     Propagations = 0x8,
   };
 
-  using Frozen = Flags<FreezeKind>;
+  using Frozen = sparta::Flags<FreezeKind>;
 
  public:
   /* Create an empty model. */
