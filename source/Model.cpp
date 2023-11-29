@@ -67,8 +67,6 @@ void join_with_frozen(
 
 std::string model_mode_to_string(Model::Mode mode) {
   switch (mode) {
-    case Model::Mode::Normal:
-      return "normal";
     case Model::Mode::SkipAnalysis:
       return "skip-analysis";
     case Model::Mode::AddViaObscureFeature:
@@ -85,14 +83,14 @@ std::string model_mode_to_string(Model::Mode mode) {
       return "alias-memory-location-on-invoke";
     case Model::Mode::StrongWriteOnPropagation:
       return "strong-write-on-propagation";
+    case Model::Mode::_Count:
+      mt_unreachable();
   }
   mt_unreachable();
 }
 
 std::optional<Model::Mode> string_to_model_mode(const std::string& mode) {
-  if (mode == "normal") {
-    return Model::Mode::Normal;
-  } else if (mode == "skip-analysis") {
+  if (mode == "skip-analysis") {
     return Model::Mode::SkipAnalysis;
   } else if (mode == "add-via-obscure-feature") {
     return Model::Mode::AddViaObscureFeature;
@@ -115,8 +113,6 @@ std::optional<Model::Mode> string_to_model_mode(const std::string& mode) {
 
 std::string model_freeze_kind_to_string(Model::FreezeKind freeze_kind) {
   switch (freeze_kind) {
-    case Model::FreezeKind::None:
-      return "none";
     case Model::FreezeKind::Generations:
       return "generations";
     case Model::FreezeKind::ParameterSources:
@@ -125,15 +121,15 @@ std::string model_freeze_kind_to_string(Model::FreezeKind freeze_kind) {
       return "sinks";
     case Model::FreezeKind::Propagations:
       return "propagation";
+    case Model::FreezeKind::_Count:
+      mt_unreachable();
   }
   mt_unreachable();
 }
 
 std::optional<Model::FreezeKind> string_to_freeze_kind(
     const std::string& freeze_kind) {
-  if (freeze_kind == "none") {
-    return Model::FreezeKind::None;
-  } else if (freeze_kind == "generations") {
+  if (freeze_kind == "generations") {
     return Model::FreezeKind::Generations;
   } else if (freeze_kind == "parameter_sources") {
     return Model::FreezeKind::ParameterSources;

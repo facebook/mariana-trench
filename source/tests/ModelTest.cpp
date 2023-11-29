@@ -33,8 +33,8 @@ TEST_F(ModelTest, remove_kinds) {
   Model model_with_removable_kind(
       /* method */ nullptr,
       context,
-      /* modes */ Model::Mode::Normal,
-      /* frozen */ Model::FreezeKind::None,
+      /* modes */ {},
+      /* frozen */ {},
       /* generations */
       {{AccessPath(Root(Root::Kind::Producer, 0)),
         test::make_leaf_taint_config(source_kind)}},
@@ -50,8 +50,8 @@ TEST_F(ModelTest, remove_kinds) {
   Model model_without_removable_kind(
       /* method */ nullptr,
       context,
-      /* modes */ Model::Mode::Normal,
-      /* frozen */ Model::FreezeKind::None,
+      /* modes */ {},
+      /* frozen */ {},
       /* generations */
       {{AccessPath(Root(Root::Kind::Producer, 0)),
         test::make_leaf_taint_config(source_kind)}},
@@ -227,27 +227,27 @@ TEST_F(ModelTest, LessOrEqual) {
   EXPECT_TRUE(Model(
                   /* method */ nullptr,
                   context,
-                  /* modes */ Model::Mode::Normal,
-                  /* frozen */ Model::FreezeKind::None,
+                  /* modes */ {},
+                  /* frozen */ {},
                   /* generations */ {})
                   .leq(Model(
                       /* method */ nullptr,
                       context,
-                      /* modes */ Model::Mode::Normal,
+                      /* modes */ {},
                       /* generations */ {})));
   EXPECT_TRUE(Model(
                   /* method */ nullptr,
                   context,
-                  /* modes */ Model::Mode::Normal,
-                  /* frozen */ Model::FreezeKind::None,
+                  /* modes */ {},
+                  /* frozen */ {},
                   /* generations */
                   {{AccessPath(Root(Root::Kind::Return)),
                     test::make_leaf_taint_config(source_kind)}})
                   .leq(Model(
                       /* method */ nullptr,
                       context,
-                      /* modes */ Model::Mode::Normal,
-                      /* frozen */ Model::FreezeKind::None,
+                      /* modes */ {},
+                      /* frozen */ {},
                       /* generations */
                       {{AccessPath(Root(Root::Kind::Return)),
                         test::make_leaf_taint_config(source_kind)}})));
@@ -256,16 +256,16 @@ TEST_F(ModelTest, LessOrEqual) {
   EXPECT_TRUE(Model(
                   /* method */ nullptr,
                   context,
-                  /* modes */ Model::Mode::Normal,
-                  /* frozen */ Model::FreezeKind::None,
+                  /* modes */ {},
+                  /* frozen */ {},
                   /* generations */
                   {{AccessPath(Root(Root::Kind::Return)),
                     test::make_leaf_taint_config(source_kind)}})
                   .leq(Model(
                       /* method */ nullptr,
                       context,
-                      /* modes */ Model::Mode::Normal,
-                      /* frozen */ Model::FreezeKind::None,
+                      /* modes */ {},
+                      /* frozen */ {},
                       /* generations */
                       {
                           {AccessPath(Root(Root::Kind::Return)),
@@ -276,8 +276,8 @@ TEST_F(ModelTest, LessOrEqual) {
   EXPECT_FALSE(Model(
                    /* method */ nullptr,
                    context,
-                   /* modes */ Model::Mode::Normal,
-                   /* frozen */ Model::FreezeKind::None,
+                   /* modes */ {},
+                   /* frozen */ {},
                    /* generations */
                    {
                        {AccessPath(Root(Root::Kind::Return)),
@@ -288,8 +288,8 @@ TEST_F(ModelTest, LessOrEqual) {
                    .leq(Model(
                        /* method */ nullptr,
                        context,
-                       /* modes */ Model::Mode::Normal,
-                       /* frozen */ Model::FreezeKind::None,
+                       /* modes */ {},
+                       /* frozen */ {},
                        /* generations */
                        {{AccessPath(Root(Root::Kind::Return)),
                          test::make_leaf_taint_config(source_kind)}})));
@@ -297,8 +297,8 @@ TEST_F(ModelTest, LessOrEqual) {
   EXPECT_TRUE(Model(
                   /* method */ nullptr,
                   context,
-                  /* modes */ Model::Mode::Normal,
-                  /* frozen */ Model::FreezeKind::None,
+                  /* modes */ {},
+                  /* frozen */ {},
                   /* generations */ {},
                   /* parameter_sources */
                   {{AccessPath(Root(Root::Kind::Argument, 1)),
@@ -306,8 +306,8 @@ TEST_F(ModelTest, LessOrEqual) {
                   .leq(Model(
                       /* method */ nullptr,
                       context,
-                      /* modes */ Model::Mode::Normal,
-                      /* frozen */ Model::FreezeKind::None,
+                      /* modes */ {},
+                      /* frozen */ {},
                       /* generations */ {},
                       /* parameter_sources */
                       {{AccessPath(Root(Root::Kind::Argument, 1)),
@@ -317,8 +317,8 @@ TEST_F(ModelTest, LessOrEqual) {
   EXPECT_FALSE(Model(
                    /* method */ nullptr,
                    context,
-                   /* modes */ Model::Mode::Normal,
-                   /* frozen */ Model::FreezeKind::None,
+                   /* modes */ {},
+                   /* frozen */ {},
                    /* generations */ {},
                    /* parameter_sources */
                    {{AccessPath(Root(Root::Kind::Argument, 1)),
@@ -326,8 +326,8 @@ TEST_F(ModelTest, LessOrEqual) {
                    .leq(Model(
                        /* method */ nullptr,
                        context,
-                       /* modes */ Model::Mode::Normal,
-                       /* frozen */ Model::FreezeKind::None,
+                       /* modes */ {},
+                       /* frozen */ {},
                        /* generations */ {},
                        /* parameter_sources */
                        {{AccessPath(Root(Root::Kind::Argument, 2)),
@@ -335,8 +335,8 @@ TEST_F(ModelTest, LessOrEqual) {
   EXPECT_FALSE(Model(
                    /* method */ nullptr,
                    context,
-                   /* modes */ Model::Mode::Normal,
-                   /* frozen */ Model::FreezeKind::None,
+                   /* modes */ {},
+                   /* frozen */ {},
                    /* generations */
                    {{AccessPath(Root(Root::Kind::Return)),
                      test::make_leaf_taint_config(source_kind)}},
@@ -346,8 +346,8 @@ TEST_F(ModelTest, LessOrEqual) {
                    .leq(Model(
                        /* method */ nullptr,
                        context,
-                       /* modes */ Model::Mode::Normal,
-                       /* frozen */ Model::FreezeKind::None,
+                       /* modes */ {},
+                       /* frozen */ {},
                        /* generations */
                        {{AccessPath(Root(Root::Kind::Return)),
                          test::make_leaf_taint_config(source_kind)}},
@@ -359,8 +359,8 @@ TEST_F(ModelTest, LessOrEqual) {
       Model(
           /* method */ nullptr,
           context,
-          /* modes */ Model::Mode::Normal,
-          /* frozen */ Model::FreezeKind::None,
+          /* modes */ {},
+          /* frozen */ {},
           /* generations */ {},
           /* parameter_sources */ {},
           /* sinks */ {},
@@ -379,8 +379,8 @@ TEST_F(ModelTest, LessOrEqual) {
           .leq(Model(
               /* method */ nullptr,
               context,
-              /* modes */ Model::Mode::Normal,
-              /* frozen */ Model::FreezeKind::None,
+              /* modes */ {},
+              /* frozen */ {},
               /* generations */ {},
               /* parameter_sources */ {},
               /* sinks */ {},
@@ -403,8 +403,8 @@ TEST_F(ModelTest, LessOrEqual) {
       Model(
           /* method */ nullptr,
           context,
-          /* modes */ Model::Mode::Normal,
-          /* frozen */ Model::FreezeKind::None,
+          /* modes */ {},
+          /* frozen */ {},
           /* generations */ {},
           /* parameter_sources */ {},
           /* sinks */ {},
@@ -414,8 +414,8 @@ TEST_F(ModelTest, LessOrEqual) {
           .leq(Model(
               /* method */ nullptr,
               context,
-              /* modes */ Model::Mode::Normal,
-              /* frozen */ Model::FreezeKind::None,
+              /* modes */ {},
+              /* frozen */ {},
               /* generations */ {},
               /* parameter_sources */ {},
               /* sinks */ {},
@@ -428,8 +428,8 @@ TEST_F(ModelTest, LessOrEqual) {
       Model(
           /* method */ nullptr,
           context,
-          /* modes */ Model::Mode::Normal,
-          /* frozen */ Model::FreezeKind::None,
+          /* modes */ {},
+          /* frozen */ {},
           /* generations */ {},
           /* parameter_sources */ {},
           /* sinks */ {},
@@ -441,8 +441,8 @@ TEST_F(ModelTest, LessOrEqual) {
           .leq(Model(
               /* method */ nullptr,
               context,
-              /* modes */ Model::Mode::Normal,
-              /* frozen */ Model::FreezeKind::None,
+              /* modes */ {},
+              /* frozen */ {},
               /* generations */ {},
               /* parameter_sources */ {},
               /* sinks */ {},
@@ -456,8 +456,8 @@ TEST_F(ModelTest, LessOrEqual) {
       Model(
           /* method */ nullptr,
           context,
-          /* modes */ Model::Mode::Normal,
-          /* frozen */ Model::FreezeKind::None,
+          /* modes */ {},
+          /* frozen */ {},
           /* generations */ {},
           /* parameter_sources */ {},
           /* sinks */ {},
@@ -471,8 +471,8 @@ TEST_F(ModelTest, LessOrEqual) {
           .leq(Model(
               /* method */ nullptr,
               context,
-              /* modes */ Model::Mode::Normal,
-              /* frozen */ Model::FreezeKind::None,
+              /* modes */ {},
+              /* frozen */ {},
               /* generations */ {},
               /* parameter_sources */ {},
               /* sinks */ {},
@@ -490,8 +490,8 @@ TEST_F(ModelTest, LessOrEqual) {
       Model(
           /* method */ nullptr,
           context,
-          /* modes */ Model::Mode::Normal,
-          /* frozen */ Model::FreezeKind::None,
+          /* modes */ {},
+          /* frozen */ {},
           /* generations */ {},
           /* parameter_sources */ {},
           /* sinks */ {},
@@ -504,8 +504,8 @@ TEST_F(ModelTest, LessOrEqual) {
           .leq(Model(
               /* method */ nullptr,
               context,
-              /* modes */ Model::Mode::Normal,
-              /* frozen */ Model::FreezeKind::None,
+              /* modes */ {},
+              /* frozen */ {},
               /* generations */ {},
               /* parameter_sources */ {},
               /* sinks */ {},
@@ -520,26 +520,26 @@ TEST_F(ModelTest, LessOrEqual) {
   EXPECT_FALSE(Model(
                    /* method */ nullptr,
                    context,
-                   /* modes */ Model::Mode::Normal,
+                   /* modes */ {},
                    /* frozen */ Model::FreezeKind::Generations,
                    /* generations */ {})
                    .leq(Model(
                        /* method */ nullptr,
                        context,
-                       /* modes */ Model::Mode::Normal,
+                       /* modes */ {},
                        /* generations */ {})));
   EXPECT_TRUE(Model(
                   /* method */ nullptr,
                   context,
-                  /* modes */ Model::Mode::Normal,
-                  /* frozen */ Model::FreezeKind::None,
+                  /* modes */ {},
+                  /* frozen */ {},
                   /* generations */
                   {{AccessPath(Root(Root::Kind::Return)),
                     test::make_leaf_taint_config(source_kind)}})
                   .leq(Model(
                       /* method */ nullptr,
                       context,
-                      /* modes */ Model::Mode::Normal,
+                      /* modes */ {},
                       /* frozen */ Model::FreezeKind::Generations,
                       /* generations */
                       {})));
@@ -548,14 +548,14 @@ TEST_F(ModelTest, LessOrEqual) {
   Model model_with_frozen_generation(
       /* method */ nullptr,
       context,
-      /* modes */ Model::Mode::Normal,
+      /* modes */ {},
       /* frozen */ Model::FreezeKind::Generations,
       /* generations */ {},
       /* parameter_sources */ {});
   Model model_with_frozen_parameter_sources(
       /* method */ nullptr,
       context,
-      /* modes */ Model::Mode::Normal,
+      /* modes */ {},
       /* frozen */ Model::FreezeKind::Generations,
       /* generations */ {},
       /* parameter_sources */
@@ -590,8 +590,8 @@ TEST_F(ModelTest, Join) {
   Model model_with_trace(
       /* method */ nullptr,
       context,
-      /* modes */ Model::Mode::Normal,
-      /* frozen */ Model::FreezeKind::None,
+      /* modes */ {},
+      /* frozen */ {},
       /* generations */ {},
       /* parameter_sources */ {},
       /* sinks */ {},
@@ -630,8 +630,8 @@ TEST_F(ModelTest, Join) {
   Model model_with_source(
       /* method */ nullptr,
       context,
-      /* modes */ Model::Mode::Normal,
-      /* frozen */ Model::FreezeKind::None,
+      /* modes */ {},
+      /* frozen */ {},
       /* generations */
       {{AccessPath(Root(Root::Kind::Return)),
         test::make_leaf_taint_config(source_kind)}});
@@ -656,8 +656,8 @@ TEST_F(ModelTest, Join) {
   Model model_with_other_source(
       /* method */ nullptr,
       context,
-      /* modes */ Model::Mode::Normal,
-      /* frozen */ Model::FreezeKind::None,
+      /* modes */ {},
+      /* frozen */ {},
       /* generations */
       {{AccessPath(Root(Root::Kind::Return)),
         test::make_leaf_taint_config(other_source_kind)}});
@@ -675,8 +675,8 @@ TEST_F(ModelTest, Join) {
   Model model_with_sink(
       /* method */ nullptr,
       context,
-      /* modes */ Model::Mode::Normal,
-      /* frozen */ Model::FreezeKind::None,
+      /* modes */ {},
+      /* frozen */ {},
       /* generations */ {},
       /* parameter_sources */ {},
       /* sinks */
@@ -700,8 +700,8 @@ TEST_F(ModelTest, Join) {
   Model model_with_propagation(
       /* method */ nullptr,
       context,
-      /* modes */ Model::Mode::Normal,
-      /* frozen */ Model::FreezeKind::None,
+      /* modes */ {},
+      /* frozen */ {},
       /* generations */ {},
       /* parameter_sources */ {},
       /* sinks */ {},
@@ -738,8 +738,8 @@ TEST_F(ModelTest, Join) {
   Model model_with_more_propagation(
       /* method */ nullptr,
       context,
-      /* modes */ Model::Mode::Normal,
-      /* frozen */ Model::FreezeKind::None,
+      /* modes */ {},
+      /* frozen */ {},
       /* generations */ {},
       /* parameter_sources */ {},
       /* sinks */ {},
@@ -787,8 +787,8 @@ TEST_F(ModelTest, Join) {
   Model model_with_conflicting_propagation(
       /* method */ nullptr,
       context,
-      /* modes */ Model::Mode::Normal,
-      /* frozen */ Model::FreezeKind::None,
+      /* modes */ {},
+      /* frozen */ {},
       /* generations */ {},
       /* parameter_sources */ {},
       /* sinks */ {},
@@ -825,8 +825,8 @@ TEST_F(ModelTest, Join) {
   Model model_with_propagation_with_features(
       /* method */ nullptr,
       context,
-      /* modes */ Model::Mode::Normal,
-      /* frozen */ Model::FreezeKind::None,
+      /* modes */ {},
+      /* frozen */ {},
       /* generations */ {},
       /* parameter_sources */ {},
       /* sinks */ {},
@@ -895,8 +895,8 @@ TEST_F(ModelTest, Join) {
   auto model_with_sanitizers = Model(
       /* method */ nullptr,
       context,
-      /* modes */ Model::Mode::Normal,
-      /* frozen */ Model::FreezeKind::None,
+      /* modes */ {},
+      /* frozen */ {},
       /* generations */ {},
       /* parameter_sources */ {},
       /* sinks */ {},
@@ -906,8 +906,8 @@ TEST_F(ModelTest, Join) {
   model_with_sanitizers.join_with(Model(
       /* method */ nullptr,
       context,
-      /* modes */ Model::Mode::Normal,
-      /* frozen */ Model::FreezeKind::None,
+      /* modes */ {},
+      /* frozen */ {},
       /* generations */ {},
       /* parameter_sources */ {},
       /* sinks */ {},
@@ -919,8 +919,8 @@ TEST_F(ModelTest, Join) {
       Model(
           /* method */ nullptr,
           context,
-          /* modes */ Model::Mode::Normal,
-          /* frozen */ Model::FreezeKind::None,
+          /* modes */ {},
+          /* frozen */ {},
           /* generations */ {},
           /* parameter_sources */ {},
           /* sinks */ {},
@@ -933,8 +933,8 @@ TEST_F(ModelTest, Join) {
   model_with_sanitizers.join_with(Model(
       /* method */ nullptr,
       context,
-      /* modes */ Model::Mode::Normal,
-      /* frozen */ Model::FreezeKind::None,
+      /* modes */ {},
+      /* frozen */ {},
       /* generations */ {},
       /* parameter_sources */ {},
       /* sinks */ {},
@@ -946,8 +946,8 @@ TEST_F(ModelTest, Join) {
       Model(
           /* method */ nullptr,
           context,
-          /* modes */ Model::Mode::Normal,
-          /* frozen */ Model::FreezeKind::None,
+          /* modes */ {},
+          /* frozen */ {},
           /* generations */ {},
           /* parameter_sources */ {},
           /* sinks */ {},
@@ -962,8 +962,8 @@ TEST_F(ModelTest, Join) {
   auto model_with_port_sanitizers = Model(
       /* method */ nullptr,
       context,
-      /* modes */ Model::Mode::Normal,
-      /* frozen */ Model::FreezeKind::None,
+      /* modes */ {},
+      /* frozen */ {},
       /* generations */ {},
       /* parameter_sources */ {},
       /* sinks */ {},
@@ -976,8 +976,8 @@ TEST_F(ModelTest, Join) {
   model_with_port_sanitizers.join_with(Model(
       /* method */ nullptr,
       context,
-      /* modes */ Model::Mode::Normal,
-      /* frozen */ Model::FreezeKind::None,
+      /* modes */ {},
+      /* frozen */ {},
       /* generations */ {},
       /* parameter_sources */ {},
       /* sinks */ {},
@@ -992,8 +992,8 @@ TEST_F(ModelTest, Join) {
       Model(
           /* method */ nullptr,
           context,
-          /* modes */ Model::Mode::Normal,
-          /* frozen */ Model::FreezeKind::None,
+          /* modes */ {},
+          /* frozen */ {},
           /* generations */ {},
           /* parameter_sources */ {},
           /* sinks */ {},
@@ -1009,8 +1009,8 @@ TEST_F(ModelTest, Join) {
   model_with_port_sanitizers.join_with(Model(
       /* method */ nullptr,
       context,
-      /* modes */ Model::Mode::Normal,
-      /* frozen */ Model::FreezeKind::None,
+      /* modes */ {},
+      /* frozen */ {},
       /* generations */ {},
       /* parameter_sources */ {},
       /* sinks */ {},
@@ -1025,8 +1025,8 @@ TEST_F(ModelTest, Join) {
       Model(
           /* method */ nullptr,
           context,
-          /* modes */ Model::Mode::Normal,
-          /* frozen */ Model::FreezeKind::None,
+          /* modes */ {},
+          /* frozen */ {},
           /* generations */ {},
           /* parameter_sources */ {},
           /* sinks */ {},
@@ -1044,15 +1044,15 @@ TEST_F(ModelTest, Join) {
   Model model_with_frozen_generation(
       /* method */ nullptr,
       context,
-      /* modes */ Model::Mode::Normal,
+      /* modes */ {},
       /* frozen */ Model::FreezeKind::Generations,
       /* generations */ {});
 
   model_with_frozen_generation.join_with(Model(
       /* method */ nullptr,
       context,
-      /* modes */ Model::Mode::Normal,
-      /* frozen */ Model::FreezeKind::None,
+      /* modes */ {},
+      /* frozen */ {},
       /* generations */
       {{AccessPath(Root(Root::Kind::Return)),
         test::make_leaf_taint_config(source_kind)}}));
@@ -1062,7 +1062,7 @@ TEST_F(ModelTest, Join) {
       Model(
           /* method */ nullptr,
           context,
-          /* modes */ Model::Mode::Normal,
+          /* modes */ {},
           /* frozen */ Model::FreezeKind::Generations,
           /* generations */ {}));
 
@@ -1070,8 +1070,8 @@ TEST_F(ModelTest, Join) {
   model_with_frozen_generation.join_with(Model(
       /* method */ nullptr,
       context,
-      /* modes */ Model::Mode::Normal,
-      /* frozen */ Model::FreezeKind::None,
+      /* modes */ {},
+      /* frozen */ {},
       /* generations */
       {{AccessPath(Root(Root::Kind::Return)),
         test::make_leaf_taint_config(source_kind)}},
@@ -1085,7 +1085,7 @@ TEST_F(ModelTest, Join) {
       Model(
           /* method */ nullptr,
           context,
-          /* modes */ Model::Mode::Normal,
+          /* modes */ {},
           /* frozen */ Model::FreezeKind::Generations,
           /* generations */ {},
           /* parameter_sources */ {},
@@ -1096,7 +1096,7 @@ TEST_F(ModelTest, Join) {
   model_with_frozen_generation.join_with(Model(
       /* method */ nullptr,
       context,
-      /* modes */ Model::Mode::Normal,
+      /* modes */ {},
       /* frozen */ Model::FreezeKind::Sinks,
       /* generations */
       {{AccessPath(Root(Root::Kind::Return)),
@@ -1110,7 +1110,7 @@ TEST_F(ModelTest, Join) {
       Model(
           /* method */ nullptr,
           context,
-          /* modes */ Model::Mode::Normal,
+          /* modes */ {},
           /* frozen */ Model::FreezeKind::Generations |
               Model::FreezeKind::Sinks,
           /* generations */ {},

@@ -98,40 +98,40 @@ class Model final {
    */
   enum class Mode : unsigned {
     // Skip the analysis of this method.
-    SkipAnalysis = 0x1,
+    SkipAnalysis,
 
     // Add the 'via-obscure' feature to sources flowing through this method.
-    AddViaObscureFeature = 0x2,
+    AddViaObscureFeature,
 
     // Taint-in-taint-out (taint on arguments flow into the return value).
-    TaintInTaintOut = 0x4,
+    TaintInTaintOut,
 
     // Taint-in-taint-this (taint on arguments flow into `this`).
-    TaintInTaintThis = 0x8,
+    TaintInTaintThis,
 
     // Do not join all overrides at virtual call sites.
-    NoJoinVirtualOverrides = 0x10,
+    NoJoinVirtualOverrides,
 
     // Do not collapse input paths when applying propagations.
-    NoCollapseOnPropagation = 0x40,
+    NoCollapseOnPropagation,
 
     // Alias existing memory location on method invokes.
-    AliasMemoryLocationOnInvoke = 0x80,
+    AliasMemoryLocationOnInvoke,
 
     // Perform a strong write on propagation
-    StrongWriteOnPropagation = 0x100,
+    StrongWriteOnPropagation,
 
-    Normal = 0,
+    _Count,
   };
 
   using Modes = sparta::EnumBitSet<Mode>;
 
   enum class FreezeKind : unsigned {
-    None = 0,
-    Generations = 0x1,
-    ParameterSources = 0x2,
-    Sinks = 0x4,
-    Propagations = 0x8,
+    Generations,
+    ParameterSources,
+    Sinks,
+    Propagations,
+    _Count,
   };
 
   using Frozen = sparta::EnumBitSet<FreezeKind>;
@@ -146,8 +146,8 @@ class Model final {
   explicit Model(
       const Method* MT_NULLABLE method,
       Context& context,
-      Modes modes = Mode::Normal,
-      Frozen frozen = FreezeKind::None,
+      Modes modes = {},
+      Frozen frozen = {},
       const std::vector<std::pair<AccessPath, TaintConfig>>& generations = {},
       const std::vector<std::pair<AccessPath, TaintConfig>>& parameter_sources =
           {},

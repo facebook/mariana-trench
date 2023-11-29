@@ -47,8 +47,8 @@ TEST_F(DataCastFeatureGeneratorTest, CastToInt) {
   auto expected_model = Model(
       /* method */ method,
       context,
-      /* modes */ Model::Mode::Normal,
-      /* frozen */ Model::FreezeKind::None,
+      /* modes */ {},
+      /* frozen */ {},
       /* generations */ std::vector<std::pair<AccessPath, TaintConfig>>{},
       /* parameter_sources */ {},
       /* sinks */ {},
@@ -92,8 +92,8 @@ TEST_F(DataCastFeatureGeneratorTest, CastToBool) {
   auto expected_model = Model(
       /* method */ method,
       context,
-      /* modes */ Model::Mode::Normal,
-      /* frozen */ Model::FreezeKind::None,
+      /* modes */ {},
+      /* frozen */ {},
       /* generations */ std::vector<std::pair<AccessPath, TaintConfig>>{},
       /* parameter_sources */ {},
       /* sinks */ {},

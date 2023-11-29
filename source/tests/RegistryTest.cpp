@@ -220,8 +220,8 @@ TEST_F(RegistryTest, ConstructorUseJoin) {
   Model model_with_source(
       /* method */ method,
       context,
-      /* modes */ Model::Mode::Normal,
-      /* frozen */ Model::FreezeKind::None,
+      /* modes */ {},
+      /* frozen */ {},
       /* generations */
       {{AccessPath(Root(Root::Kind::Return)),
         test::make_leaf_taint_config(source_kind)}});
@@ -229,8 +229,8 @@ TEST_F(RegistryTest, ConstructorUseJoin) {
   Model model_with_other_source(
       /* method */ method,
       context,
-      /* modes */ Model::Mode::Normal,
-      /* frozen */ Model::FreezeKind::None,
+      /* modes */ {},
+      /* frozen */ {},
       /* generations */
       {{AccessPath(Root(Root::Kind::Argument, 2)),
         test::make_leaf_taint_config(source_kind)}});
