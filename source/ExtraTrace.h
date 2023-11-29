@@ -25,9 +25,9 @@ class ExtraTrace final {
       const AccessPath* callee_port,
       CallKind call_kind)
       : kind_(kind), call_info_(callee, call_kind, callee_port, position) {
-    mt_assert(
-        call_info_.call_kind().is_propagation_with_trace() &&
-        kind_ != nullptr && call_info_.call_position() != nullptr);
+    mt_assert(call_info_.call_kind().is_propagation_with_trace());
+    mt_assert(kind_ != nullptr);
+    mt_assert(call_info_.call_position() != nullptr);
 
     // Callee is nullptr iff this trace is an origin (i.e. no next hop).
     // Unlike LocalTaint, in which origins indicate where a user-declared taint

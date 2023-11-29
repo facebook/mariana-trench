@@ -63,7 +63,6 @@
           "kinds" : 
           [
             {
-              "call_kind" : "Declaration",
               "kind" : "TestParameterSource",
               "origins" : 
               [
@@ -89,7 +88,6 @@
           "kinds" : 
           [
             {
-              "call_kind" : "Declaration",
               "kind" : "TestParameterSource",
               "origins" : 
               [
@@ -124,7 +122,6 @@
           "kinds" : 
           [
             {
-              "call_kind" : "Propagation",
               "kind" : "LocalArgument(1)",
               "output_paths" : 
               {
@@ -150,7 +147,6 @@
           "kinds" : 
           [
             {
-              "call_kind" : "Declaration",
               "kind" : "TestSink",
               "origins" : 
               [

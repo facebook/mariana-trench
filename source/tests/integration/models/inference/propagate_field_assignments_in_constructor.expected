@@ -32,7 +32,6 @@
               "kinds" :
               [
                 {
-                  "call_kind" : "Propagation",
                   "kind" : "LocalArgument(0)",
                   "output_paths" :
                   {

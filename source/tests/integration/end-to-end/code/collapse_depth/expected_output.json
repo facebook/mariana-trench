@@ -260,7 +260,6 @@
           "kinds" : 
           [
             {
-              "call_kind" : "Propagation",
               "kind" : "LocalReturn",
               "output_paths" : 
               {
@@ -284,7 +283,6 @@
           "kinds" : 
           [
             {
-              "call_kind" : "Propagation",
               "kind" : "LocalReturn",
               "output_paths" : 
               {
@@ -308,7 +306,6 @@
           "kinds" : 
           [
             {
-              "call_kind" : "Propagation",
               "kind" : "LocalReturn",
               "output_paths" : 
               {
@@ -342,7 +339,6 @@
           "kinds" : 
           [
             {
-              "call_kind" : "Propagation",
               "kind" : "LocalReturn",
               "output_paths" : 
               {
@@ -366,7 +362,6 @@
           "kinds" : 
           [
             {
-              "call_kind" : "Propagation",
               "kind" : "LocalArgument(0)",
               "output_paths" : 
               {
@@ -384,7 +379,6 @@
           "kinds" : 
           [
             {
-              "call_kind" : "Propagation",
               "kind" : "LocalReturn",
               "output_paths" : 
               {
@@ -418,7 +412,6 @@
           "kinds" : 
           [
             {
-              "call_kind" : "Propagation",
               "kind" : "LocalReturn",
               "output_paths" : 
               {
@@ -442,7 +435,6 @@
           "kinds" : 
           [
             {
-              "call_kind" : "Propagation",
               "kind" : "LocalArgument(0)",
               "output_paths" : 
               {
@@ -460,7 +452,6 @@
           "kinds" : 
           [
             {
-              "call_kind" : "Propagation",
               "kind" : "LocalReturn",
               "output_paths" : 
               {
@@ -494,7 +485,6 @@
           "kinds" : 
           [
             {
-              "call_kind" : "Propagation",
               "kind" : "LocalReturn",
               "output_paths" : 
               {
@@ -518,7 +508,6 @@
           "kinds" : 
           [
             {
-              "call_kind" : "Propagation",
               "kind" : "LocalArgument(0)",
               "output_paths" : 
               {
@@ -536,7 +525,6 @@
           "kinds" : 
           [
             {
-              "call_kind" : "Propagation",
               "kind" : "LocalReturn",
               "output_paths" : 
               {
@@ -577,7 +565,6 @@
           "kinds" : 
           [
             {
-              "call_kind" : "Propagation",
               "kind" : "LocalArgument(0)",
               "output_paths" : 
               {
@@ -601,7 +588,6 @@
           "kinds" : 
           [
             {
-              "call_kind" : "Propagation",
               "kind" : "LocalArgument(0)",
               "output_paths" : 
               {
@@ -625,7 +611,6 @@
           "kinds" : 
           [
             {
-              "call_kind" : "Propagation",
               "kind" : "LocalArgument(0)",
               "output_paths" : 
               {
@@ -667,7 +652,6 @@
           "kinds" : 
           [
             {
-              "call_kind" : "Propagation",
               "kind" : "LocalReturn",
               "output_paths" : 
               {
@@ -709,7 +693,6 @@
           "kinds" : 
           [
             {
-              "call_kind" : "Propagation",
               "kind" : "LocalReturn",
               "output_paths" : 
               {
@@ -750,7 +733,6 @@
           "kinds" : 
           [
             {
-              "call_kind" : "Propagation",
               "kind" : "LocalReturn",
               "output_paths" : 
               {
@@ -774,7 +756,6 @@
           "kinds" : 
           [
             {
-              "call_kind" : "Propagation",
               "kind" : "LocalReturn",
               "output_paths" : 
               {
@@ -798,7 +779,6 @@
           "kinds" : 
           [
             {
-              "call_kind" : "Propagation",
               "kind" : "LocalReturn",
               "output_paths" : 
               {
@@ -1002,7 +982,6 @@
           "kinds" : 
           [
             {
-              "call_kind" : "Propagation",
               "kind" : "LocalReturn",
               "output_paths" : 
               {
@@ -1044,7 +1023,6 @@
           "kinds" : 
           [
             {
-              "call_kind" : "Propagation",
               "kind" : "LocalReturn",
               "output_paths" : 
               {
@@ -1079,7 +1057,6 @@
           "kinds" : 
           [
             {
-              "call_kind" : "Propagation",
               "kind" : "LocalReturn",
               "output_paths" : 
               {
@@ -1114,7 +1091,6 @@
           "kinds" : 
           [
             {
-              "call_kind" : "Propagation",
               "kind" : "LocalReturn",
               "output_paths" : 
               {
@@ -1149,7 +1125,6 @@
           "kinds" : 
           [
             {
-              "call_kind" : "Propagation",
               "kind" : "LocalReturn",
               "output_paths" : 
               {
@@ -1184,7 +1159,6 @@
           "kinds" : 
           [
             {
-              "call_kind" : "Propagation",
               "kind" : "LocalReturn",
               "output_paths" : 
               {
@@ -1219,7 +1193,6 @@
           "kinds" : 
           [
             {
-              "call_kind" : "Propagation",
               "kind" : "LocalReturn",
               "output_paths" : 
               {
@@ -1254,7 +1227,6 @@
           "kinds" : 
           [
             {
-              "call_kind" : "Propagation",
               "kind" : "LocalReturn",
               "output_paths" : 
               {
@@ -1289,7 +1261,6 @@
           "kinds" : 
           [
             {
-              "call_kind" : "Propagation",
               "kind" : "LocalReturn",
               "output_paths" : 
               {
@@ -1324,7 +1295,6 @@
           "kinds" : 
           [
             {
-              "call_kind" : "Propagation",
               "kind" : "LocalReturn",
               "output_paths" : 
               {
@@ -1359,7 +1329,6 @@
           "kinds" : 
           [
             {
-              "call_kind" : "Propagation",
               "kind" : "LocalReturn",
               "output_paths" : 
               {
@@ -1394,7 +1363,6 @@
           "kinds" : 
           [
             {
-              "call_kind" : "Propagation",
               "kind" : "LocalReturn",
               "output_paths" : 
               {
@@ -1429,7 +1397,6 @@
           "kinds" : 
           [
             {
-              "call_kind" : "Propagation",
               "kind" : "LocalReturn",
               "output_paths" : 
               {
@@ -1464,7 +1431,6 @@
           "kinds" : 
           [
             {
-              "call_kind" : "Propagation",
               "kind" : "LocalReturn",
               "output_paths" : 
               {
@@ -1499,7 +1465,6 @@
           "kinds" : 
           [
             {
-              "call_kind" : "Propagation",
               "kind" : "LocalReturn",
               "output_paths" : 
               {
@@ -1534,7 +1499,6 @@
           "kinds" : 
           [
             {
-              "call_kind" : "Propagation",
               "kind" : "LocalReturn",
               "output_paths" : 
               {
@@ -1569,7 +1533,6 @@
           "kinds" : 
           [
             {
-              "call_kind" : "Propagation",
               "kind" : "LocalReturn",
               "output_paths" : 
               {
@@ -1604,7 +1567,6 @@
           "kinds" : 
           [
             {
-              "call_kind" : "Propagation",
               "kind" : "LocalReturn",
               "output_paths" : 
               {
@@ -1639,7 +1601,6 @@
           "kinds" : 
           [
             {
-              "call_kind" : "Propagation",
               "kind" : "LocalReturn",
               "output_paths" : 
               {
@@ -1688,7 +1649,6 @@
           "kinds" : 
           [
             {
-              "call_kind" : "Origin",
               "callee_interval" : 
               [
                 34,
@@ -1725,7 +1685,6 @@
           "kinds" : 
           [
             {
-              "call_kind" : "Origin",
               "callee_interval" : 
               [
                 34,
@@ -1811,7 +1770,6 @@
           "kinds" : 
           [
             {
-              "call_kind" : "Origin",
               "callee_interval" : 
               [
                 34,
@@ -1848,7 +1806,6 @@
           "kinds" : 
           [
             {
-              "call_kind" : "Origin",
               "callee_interval" : 
               [
                 34,
@@ -1932,7 +1889,6 @@
           "kinds" : 
           [
             {
-              "call_kind" : "Origin",
               "callee_interval" : 
               [
                 34,
@@ -1969,7 +1925,6 @@
           "kinds" : 
           [
             {
-              "call_kind" : "Origin",
               "callee_interval" : 
               [
                 34,
@@ -2051,7 +2006,6 @@
           "kinds" : 
           [
             {
-              "call_kind" : "Origin",
               "callee_interval" : 
               [
                 34,
@@ -2088,7 +2042,6 @@
           "kinds" : 
           [
             {
-              "call_kind" : "Origin",
               "callee_interval" : 
               [
                 34,
@@ -2153,7 +2106,6 @@
           "kinds" : 
           [
             {
-              "call_kind" : "Propagation",
               "kind" : "LocalReturn",
               "output_paths" : 
               {
@@ -2189,7 +2141,6 @@
           "kinds" : 
           [
             {
-              "call_kind" : "Propagation",
               "kind" : "LocalReturn",
               "output_paths" : 
               {
@@ -2225,7 +2176,6 @@
           "kinds" : 
           [
             {
-              "call_kind" : "Propagation",
               "kind" : "LocalReturn",
               "output_paths" : 
               {
@@ -2261,7 +2211,6 @@
           "kinds" : 
           [
             {
-              "call_kind" : "Propagation",
               "kind" : "LocalReturn",
               "output_paths" : 
               {
@@ -2297,7 +2246,6 @@
           "kinds" : 
           [
             {
-              "call_kind" : "Propagation",
               "kind" : "LocalReturn",
               "output_paths" : 
               {
@@ -2334,7 +2282,6 @@
           "kinds" : 
           [
             {
-              "call_kind" : "Propagation",
               "kind" : "LocalReturn",
               "output_paths" : 
               {
@@ -2419,7 +2366,6 @@
           "kinds" : 
           [
             {
-              "call_kind" : "Origin",
               "callee_interval" : 
               [
                 34,
@@ -2456,7 +2402,6 @@
           "kinds" : 
           [
             {
-              "call_kind" : "Origin",
               "callee_interval" : 
               [
                 34,
@@ -2533,7 +2478,6 @@
           "kinds" : 
           [
             {
-              "call_kind" : "Propagation",
               "kind" : "LocalReturn",
               "output_paths" : 
               {
@@ -2568,7 +2512,6 @@
           "kinds" : 
           [
             {
-              "call_kind" : "Propagation",
               "kind" : "LocalReturn",
               "output_paths" : 
               {
@@ -2604,7 +2547,6 @@
           "kinds" : 
           [
             {
-              "call_kind" : "Propagation",
               "kind" : "LocalReturn",
               "output_paths" : 
               {
@@ -2639,7 +2581,6 @@
           "kinds" : 
           [
             {
-              "call_kind" : "Propagation",
               "kind" : "LocalReturn",
               "output_paths" : 
               {
@@ -2674,7 +2615,6 @@
           "kinds" : 
           [
             {
-              "call_kind" : "Propagation",
               "kind" : "LocalReturn",
               "output_paths" : 
               {
@@ -2709,7 +2649,6 @@
           "kinds" : 
           [
             {
-              "call_kind" : "Propagation",
               "kind" : "LocalReturn",
               "output_paths" : 
               {
@@ -2751,7 +2690,6 @@
           "kinds" : 
           [
             {
-              "call_kind" : "Propagation",
               "kind" : "LocalReturn",
               "output_paths" : 
               {
@@ -2784,7 +2722,6 @@
           "kinds" : 
           [
             {
-              "call_kind" : "Declaration",
               "kind" : "Sink",
               "origins" : 
               [
@@ -2815,7 +2752,6 @@
           "kinds" : 
           [
             {
-              "call_kind" : "Declaration",
               "kind" : "Source",
               "origins" : 
               [
@@ -2950,7 +2886,6 @@
           "kinds" : 
           [
             {
-              "call_kind" : "Propagation",
               "kind" : "LocalReturn",
               "output_paths" : 
               {
@@ -3064,7 +2999,6 @@
           "kinds" : 
           [
             {
-              "call_kind" : "Propagation",
               "kind" : "LocalReturn",
               "output_paths" : 
               {
@@ -3088,7 +3022,6 @@
           "kinds" : 
           [
             {
-              "call_kind" : "Propagation",
               "kind" : "LocalReturn",
               "output_paths" : 
               {
@@ -3200,7 +3133,6 @@
           "kinds" : 
           [
             {
-              "call_kind" : "Propagation",
               "kind" : "LocalReturn",
               "output_paths" : 
               {
@@ -3234,7 +3166,6 @@
           "kinds" : 
           [
             {
-              "call_kind" : "Propagation",
               "kind" : "LocalArgument(0)",
               "output_paths" : 
               {

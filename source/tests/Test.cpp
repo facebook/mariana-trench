@@ -125,15 +125,16 @@ std::unique_ptr<Options> make_default_options() {
 }
 
 Frame make_taint_frame(const Kind* kind, const FrameProperties& properties) {
-  // Local positions/features should not be specified when making a Frame
-  // because it is not stored in the Frame.
+  // The following fields should not be specified when making a Frame because
+  // they are not stored in the Frame.
+  mt_assert(properties.callee_port.root().is_leaf_port());
+  mt_assert(properties.callee == nullptr);
+  mt_assert(properties.call_position == nullptr);
+  mt_assert(properties.call_kind.is_declaration());
   mt_assert(properties.local_positions == LocalPositionSet{});
   mt_assert(properties.locally_inferred_features == FeatureMayAlwaysSet{});
   return Frame(
       kind,
-      AccessPathFactory::singleton().get(properties.callee_port),
-      properties.callee,
-      properties.call_position,
       properties.class_interval_context,
       properties.distance,
       properties.origins,
@@ -142,7 +143,6 @@ Frame make_taint_frame(const Kind* kind, const FrameProperties& properties) {
       properties.via_type_of_ports,
       properties.via_value_of_ports,
       properties.canonical_names,
-      properties.call_kind,
       properties.output_paths,
       properties.extra_traces);
 }

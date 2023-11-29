@@ -152,16 +152,11 @@ class KindFrames final : public sparta::AbstractDomain<KindFrames> {
       const CallClassIntervalContext& class_interval_context,
       const ClassIntervals::Interval& caller_class_interval) const;
 
-  void filter_invalid_frames(
-      const std::function<
-          bool(const Method* MT_NULLABLE, const AccessPath&, const Kind*)>&
-          is_valid);
+  void filter_invalid_frames(const std::function<bool(const Kind*)>& is_valid);
 
   bool contains_kind(const Kind*) const;
 
   KindFrames with_kind(const Kind* kind) const;
-
-  void set_call_position(const Position* MT_NULLABLE position);
 
   void add_inferred_features(const FeatureMayAlwaysSet& features);
 

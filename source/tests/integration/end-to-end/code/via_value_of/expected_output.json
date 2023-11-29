@@ -260,7 +260,6 @@
           "kinds" : 
           [
             {
-              "call_kind" : "Propagation",
               "kind" : "LocalReturn",
               "output_paths" : 
               {
@@ -284,7 +283,6 @@
           "kinds" : 
           [
             {
-              "call_kind" : "Propagation",
               "kind" : "LocalReturn",
               "output_paths" : 
               {
@@ -308,7 +306,6 @@
           "kinds" : 
           [
             {
-              "call_kind" : "Propagation",
               "kind" : "LocalReturn",
               "output_paths" : 
               {
@@ -342,7 +339,6 @@
           "kinds" : 
           [
             {
-              "call_kind" : "Propagation",
               "kind" : "LocalReturn",
               "output_paths" : 
               {
@@ -366,7 +362,6 @@
           "kinds" : 
           [
             {
-              "call_kind" : "Propagation",
               "kind" : "LocalArgument(0)",
               "output_paths" : 
               {
@@ -384,7 +379,6 @@
           "kinds" : 
           [
             {
-              "call_kind" : "Propagation",
               "kind" : "LocalReturn",
               "output_paths" : 
               {
@@ -418,7 +412,6 @@
           "kinds" : 
           [
             {
-              "call_kind" : "Propagation",
               "kind" : "LocalReturn",
               "output_paths" : 
               {
@@ -442,7 +435,6 @@
           "kinds" : 
           [
             {
-              "call_kind" : "Propagation",
               "kind" : "LocalArgument(0)",
               "output_paths" : 
               {
@@ -460,7 +452,6 @@
           "kinds" : 
           [
             {
-              "call_kind" : "Propagation",
               "kind" : "LocalReturn",
               "output_paths" : 
               {
@@ -494,7 +485,6 @@
           "kinds" : 
           [
             {
-              "call_kind" : "Propagation",
               "kind" : "LocalReturn",
               "output_paths" : 
               {
@@ -518,7 +508,6 @@
           "kinds" : 
           [
             {
-              "call_kind" : "Propagation",
               "kind" : "LocalArgument(0)",
               "output_paths" : 
               {
@@ -536,7 +525,6 @@
           "kinds" : 
           [
             {
-              "call_kind" : "Propagation",
               "kind" : "LocalReturn",
               "output_paths" : 
               {
@@ -577,7 +565,6 @@
           "kinds" : 
           [
             {
-              "call_kind" : "Propagation",
               "kind" : "LocalArgument(0)",
               "output_paths" : 
               {
@@ -601,7 +588,6 @@
           "kinds" : 
           [
             {
-              "call_kind" : "Propagation",
               "kind" : "LocalArgument(0)",
               "output_paths" : 
               {
@@ -625,7 +611,6 @@
           "kinds" : 
           [
             {
-              "call_kind" : "Propagation",
               "kind" : "LocalArgument(0)",
               "output_paths" : 
               {
@@ -667,7 +652,6 @@
           "kinds" : 
           [
             {
-              "call_kind" : "Propagation",
               "kind" : "LocalReturn",
               "output_paths" : 
               {
@@ -709,7 +693,6 @@
           "kinds" : 
           [
             {
-              "call_kind" : "Propagation",
               "kind" : "LocalReturn",
               "output_paths" : 
               {
@@ -750,7 +733,6 @@
           "kinds" : 
           [
             {
-              "call_kind" : "Propagation",
               "kind" : "LocalReturn",
               "output_paths" : 
               {
@@ -774,7 +756,6 @@
           "kinds" : 
           [
             {
-              "call_kind" : "Propagation",
               "kind" : "LocalReturn",
               "output_paths" : 
               {
@@ -798,7 +779,6 @@
           "kinds" : 
           [
             {
-              "call_kind" : "Propagation",
               "kind" : "LocalReturn",
               "output_paths" : 
               {
@@ -1009,7 +989,6 @@
           "kinds" : 
           [
             {
-              "call_kind" : "Propagation",
               "kind" : "LocalReturn",
               "output_paths" : 
               {
@@ -1042,7 +1021,6 @@
           "kinds" : 
           [
             {
-              "call_kind" : "Declaration",
               "kind" : "Sink",
               "origins" : 
               [
@@ -1073,7 +1051,6 @@
           "kinds" : 
           [
             {
-              "call_kind" : "Declaration",
               "kind" : "Source",
               "origins" : 
               [
@@ -1117,7 +1094,6 @@
           "kinds" : 
           [
             {
-              "call_kind" : "Declaration",
               "kind" : "Source",
               "origins" : 
               [
@@ -1158,7 +1134,6 @@
           "kinds" : 
           [
             {
-              "call_kind" : "Declaration",
               "kind" : "Source",
               "origins" : 
               [
@@ -1199,7 +1174,6 @@
           "kinds" : 
           [
             {
-              "call_kind" : "Declaration",
               "kind" : "Source",
               "origins" : 
               [
@@ -1256,7 +1230,6 @@
           "kinds" : 
           [
             {
-              "call_kind" : "Propagation",
               "kind" : "LocalReturn",
               "output_paths" : 
               {
@@ -1292,7 +1265,6 @@
           "kinds" : 
           [
             {
-              "call_kind" : "Propagation",
               "kind" : "LocalReturn",
               "output_paths" : 
               {
@@ -1326,7 +1298,6 @@
           "kinds" : 
           [
             {
-              "call_kind" : "Declaration",
               "kind" : "Sink",
               "origins" : 
               [
@@ -1367,7 +1338,6 @@
           "kinds" : 
           [
             {
-              "call_kind" : "Declaration",
               "kind" : "Sink",
               "origins" : 
               [
@@ -1408,7 +1378,6 @@
           "kinds" : 
           [
             {
-              "call_kind" : "Declaration",
               "kind" : "Sink",
               "origins" : 
               [
@@ -1475,7 +1444,6 @@
               [
                 "via-value:Foo"
               ],
-              "call_kind" : "Origin",
               "callee_interval" : 
               [
                 38,
@@ -1523,7 +1491,6 @@
               [
                 "via-value:Bar"
               ],
-              "call_kind" : "Origin",
               "callee_interval" : 
               [
                 38,
@@ -1588,7 +1555,6 @@
           "kinds" : 
           [
             {
-              "call_kind" : "Origin",
               "callee_interval" : 
               [
                 38,
@@ -1625,7 +1591,6 @@
           "kinds" : 
           [
             {
-              "call_kind" : "Origin",
               "callee_interval" : 
               [
                 38,
@@ -1691,7 +1656,6 @@
               [
                 "via-value:42"
               ],
-              "call_kind" : "Origin",
               "callee_interval" : 
               [
                 38,
@@ -1735,7 +1699,6 @@
           "kinds" : 
           [
             {
-              "call_kind" : "Origin",
               "callee_interval" : 
               [
                 38,
@@ -1801,7 +1764,6 @@
               [
                 "via-value:42"
               ],
-              "call_kind" : "Origin",
               "callee_interval" : 
               [
                 38,
@@ -1845,7 +1807,6 @@
           "kinds" : 
           [
             {
-              "call_kind" : "Origin",
               "callee_interval" : 
               [
                 38,
@@ -1911,7 +1872,6 @@
               [
                 "via-value:Bar"
               ],
-              "call_kind" : "Origin",
               "callee_interval" : 
               [
                 38,
@@ -1955,7 +1915,6 @@
           "kinds" : 
           [
             {
-              "call_kind" : "Origin",
               "callee_interval" : 
               [
                 38,
@@ -2021,7 +1980,6 @@
               [
                 "via-value:Foo"
               ],
-              "call_kind" : "Origin",
               "callee_interval" : 
               [
                 38,
@@ -2065,7 +2023,6 @@
           "kinds" : 
           [
             {
-              "call_kind" : "Origin",
               "callee_interval" : 
               [
                 38,
@@ -2127,7 +2084,6 @@
           "kinds" : 
           [
             {
-              "call_kind" : "Origin",
               "callee_interval" : 
               [
                 38,
@@ -2168,7 +2124,6 @@
               [
                 "via-value:42"
               ],
-              "call_kind" : "Origin",
               "callee_interval" : 
               [
                 38,
@@ -2237,7 +2192,6 @@
           "kinds" : 
           [
             {
-              "call_kind" : "Origin",
               "callee_interval" : 
               [
                 38,
@@ -2278,7 +2232,6 @@
               [
                 "via-value:42"
               ],
-              "call_kind" : "Origin",
               "callee_interval" : 
               [
                 38,
@@ -2347,7 +2300,6 @@
           "kinds" : 
           [
             {
-              "call_kind" : "Origin",
               "callee_interval" : 
               [
                 38,
@@ -2388,7 +2340,6 @@
               [
                 "via-value:Bar"
               ],
-              "call_kind" : "Origin",
               "callee_interval" : 
               [
                 38,
@@ -2457,7 +2408,6 @@
           "kinds" : 
           [
             {
-              "call_kind" : "Origin",
               "callee_interval" : 
               [
                 38,
@@ -2498,7 +2448,6 @@
               [
                 "via-value:Foo"
               ],
-              "call_kind" : "Origin",
               "callee_interval" : 
               [
                 38,
@@ -2572,7 +2521,6 @@
               [
                 "via-value:tito"
               ],
-              "call_kind" : "Origin",
               "callee_interval" : 
               [
                 38,
@@ -2620,7 +2568,6 @@
               [
                 "via-value:unknown"
               ],
-              "call_kind" : "Origin",
               "callee_interval" : 
               [
                 38,
@@ -2693,7 +2640,6 @@
               [
                 "via-value:unknown"
               ],
-              "call_kind" : "Origin",
               "callee_interval" : 
               [
                 38,
@@ -2741,7 +2687,6 @@
               [
                 "via-value:unknown"
               ],
-              "call_kind" : "Origin",
               "callee_interval" : 
               [
                 38,
@@ -2882,7 +2827,6 @@
           "kinds" : 
           [
             {
-              "call_kind" : "Propagation",
               "kind" : "LocalReturn",
               "output_paths" : 
               {
@@ -2996,7 +2940,6 @@
           "kinds" : 
           [
             {
-              "call_kind" : "Propagation",
               "kind" : "LocalReturn",
               "output_paths" : 
               {
@@ -3020,7 +2963,6 @@
           "kinds" : 
           [
             {
-              "call_kind" : "Propagation",
               "kind" : "LocalReturn",
               "output_paths" : 
               {
@@ -3132,7 +3074,6 @@
           "kinds" : 
           [
             {
-              "call_kind" : "Propagation",
               "kind" : "LocalReturn",
               "output_paths" : 
               {
@@ -3166,7 +3107,6 @@
           "kinds" : 
           [
             {
-              "call_kind" : "Propagation",
               "kind" : "LocalArgument(0)",
               "output_paths" : 
               {

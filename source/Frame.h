@@ -54,16 +54,7 @@ using CanonicalNameSetAbstractDomain =
  *
  * The `kind` is the label of the taint, e.g "UserInput".
  *
- * The `callee_port` is the port to the next method in the trace, or
- * `Root::Kind::Leaf` for a leaf frame.
- *
- * `callee` is the next method in the trace. This is `nullptr` for a leaf frame.
- *
- * `call_position` is the position of the call to the `callee`. This is
- * `nullptr` for a leaf frame. This can be non-null for leaf frames inside
- * issues, to describe the position of a parameter source or return sink.
- *
- * `distance` is the shortest length of the trace, i.e from this frame to the
+* `distance` is the shortest length of the trace, i.e from this frame to the
  * closest leaf. This is `0` for a leaf frame.
  *
  * `origins` is the set of methods that originated the taint. This is the
@@ -99,18 +90,11 @@ class Frame final : public sparta::AbstractDomain<Frame> {
   /* Create the bottom frame. */
   explicit Frame()
       : kind_(nullptr),
-        callee_port_(nullptr),
-        callee_(nullptr),
-        call_position_(nullptr),
         class_interval_context_(CallClassIntervalContext()),
-        distance_(0),
-        call_kind_(CallKind::declaration()) {}
+        distance_(0) {}
 
   explicit Frame(
       const Kind* kind,
-      const AccessPath* callee_port,
-      const Method* MT_NULLABLE callee,
-      const Position* MT_NULLABLE call_position,
       CallClassIntervalContext class_interval_context,
       int distance,
       OriginSet origins,
@@ -119,13 +103,9 @@ class Frame final : public sparta::AbstractDomain<Frame> {
       RootSetAbstractDomain via_type_of_ports,
       RootSetAbstractDomain via_value_of_ports,
       CanonicalNameSetAbstractDomain canonical_names,
-      CallKind call_kind,
       PathTreeDomain output_paths,
       ExtraTraceSet extra_traces)
       : kind_(kind),
-        callee_port_(callee_port),
-        callee_(callee),
-        call_position_(call_position),
         class_interval_context_(std::move(class_interval_context)),
         distance_(distance),
         origins_(std::move(origins)),
@@ -134,11 +114,9 @@ class Frame final : public sparta::AbstractDomain<Frame> {
         via_type_of_ports_(std::move(via_type_of_ports)),
         via_value_of_ports_(std::move(via_value_of_ports)),
         canonical_names_(std::move(canonical_names)),
-        call_kind_(std::move(call_kind)),
         output_paths_(std::move(output_paths)),
         extra_traces_(std::move(extra_traces)) {
     mt_assert(kind_ != nullptr);
-    mt_assert(callee_port_ != nullptr);
     mt_assert(distance_ >= 0);
   }
 
@@ -154,21 +132,6 @@ class Frame final : public sparta::AbstractDomain<Frame> {
   /* If this frame represents a propagation, return the PropagationKind.
    * Asserts otherwise. */
   const PropagationKind* propagation_kind() const;
-
-  const AccessPath* callee_port() const {
-    mt_assert(callee_port_ != nullptr);
-    return callee_port_;
-  }
-
-  /* Return the callee, or `nullptr` if this is a leaf frame. */
-  const Method* MT_NULLABLE callee() const {
-    return callee_;
-  }
-
-  /* Return the position of the call, or `nullptr` if this is a leaf frame. */
-  const Position* MT_NULLABLE call_position() const {
-    return call_position_;
-  }
 
   const CallClassIntervalContext& class_interval_context() const {
     return class_interval_context_;
@@ -196,14 +159,6 @@ class Frame final : public sparta::AbstractDomain<Frame> {
 
   const OriginSet& origins() const {
     return origins_;
-  }
-
-  const CallKind& call_kind() const {
-    return call_kind_;
-  }
-
-  CallInfo call_info() const {
-    return CallInfo(callee_, call_kind_, callee_port_, call_position_);
   }
 
   void append_to_propagation_output_paths(Path::Element path_element);
@@ -250,18 +205,6 @@ class Frame final : public sparta::AbstractDomain<Frame> {
     return false;
   }
 
-  bool is_leaf() const {
-    return callee_ == nullptr;
-  }
-
-  bool is_crtex_producer_declaration() const {
-    // If true, this frame corresponds to the crtex leaf frame declared by
-    // the user (callee == nullptr). Also, the producer run declarations use
-    // the `Anchor` port, while consumer runs use the `Producer` port.
-    return kind_ != nullptr && callee_ == nullptr &&
-        callee_port_->root().is_anchor();
-  }
-
   void set_to_bottom() {
     kind_ = nullptr;
   }
@@ -305,20 +248,16 @@ class Frame final : public sparta::AbstractDomain<Frame> {
       const std::vector<std::optional<std::string>>& source_constant_arguments)
       const;
 
-  void set_call_position(const Position* MT_NULLABLE call_position);
-  Frame with_call_position_and_origins(
-      const Position* MT_NULLABLE call_position,
-      OriginSet origins) const;
+  Frame with_origins(OriginSet origins) const;
 
-  Json::Value to_json(ExportOriginsMode export_origins_mode) const;
+  Json::Value to_json(
+      const CallInfo& call_info,
+      ExportOriginsMode export_origins_mode) const;
 
   friend std::ostream& operator<<(std::ostream& out, const Frame& frame);
 
  private:
   const Kind* MT_NULLABLE kind_;
-  const AccessPath* MT_NULLABLE callee_port_;
-  const Method* MT_NULLABLE callee_;
-  const Position* MT_NULLABLE call_position_;
   CallClassIntervalContext class_interval_context_;
   int distance_;
   OriginSet origins_;
@@ -327,7 +266,6 @@ class Frame final : public sparta::AbstractDomain<Frame> {
   RootSetAbstractDomain via_type_of_ports_;
   RootSetAbstractDomain via_value_of_ports_;
   CanonicalNameSetAbstractDomain canonical_names_;
-  CallKind call_kind_;
   PathTreeDomain output_paths_;
   ExtraTraceSet extra_traces_;
 };

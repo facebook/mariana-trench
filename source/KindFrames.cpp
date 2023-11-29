@@ -196,12 +196,13 @@ const Kind* propagate_kind(const Kind* kind, Context& context) {
 
 CallClassIntervalContext propagate_interval(
     const Frame& frame,
+    const CallInfo& propagated_call_info,
     const CallClassIntervalContext& class_interval_context,
     const ClassIntervals::Interval& caller_class_interval) {
   const auto& frame_interval = frame.class_interval_context();
-  if (frame.call_kind().is_declaration()) {
-    // The source/sink declaration is the base case. Its propagated frame
-    // (caller -> callee with source/sink) should have the properties:
+  if (propagated_call_info.call_kind().is_origin()) {
+    // The source/sink declaration is the base case. Its propagated (origin)
+    // frame (caller -> callee with source/sink) should have the properties:
     //
     // 1. Propagated interval is that of the caller's class since the
     //    source/sink call occurs in the context of the caller's class.
@@ -232,6 +233,7 @@ CallClassIntervalContext propagate_interval(
 // argument.
 FeatureMayAlwaysSet propagate_features(
     const Frame& frame,
+    const CallInfo& propagated_call_info,
     const FeatureMayAlwaysSet& locally_inferred_features,
     const Method* MT_NULLABLE callee,
     Context& context,
@@ -240,15 +242,13 @@ FeatureMayAlwaysSet propagate_features(
     FeatureSet& propagated_user_features,
     std::vector<const Feature*>& via_type_of_features_added) {
   auto propagated_local_features = locally_inferred_features;
-  if (frame.call_kind().is_declaration()) {
-    // If propagating a declaration, user features are kept as user features
-    // in the propagated frame(s). Inferred features are not expected on
-    // declarations.
+  if (propagated_call_info.call_kind().is_origin()) {
+    // Inferred features are not expected on an unpropagated declaration frame.
     mt_assert(
         frame.inferred_features().is_bottom() ||
         frame.inferred_features().empty());
     // User features should be propagated from the declaration frame in order
-    // for them to show up at the leaf frame (e.g. in the UI).
+    // for them to show up at the origin (leaf) frame (e.g. in the UI).
     propagated_user_features = frame.user_features();
   } else {
     // Otherwise, user features are considered part of the propagated set of
@@ -342,7 +342,10 @@ KindFrames KindFrames::propagate(
     }
 
     auto propagated_interval = propagate_interval(
-        frame, class_interval_context, caller_class_interval);
+        frame,
+        propagated_call_info,
+        class_interval_context,
+        caller_class_interval);
     if (propagated_interval.callee_interval().is_bottom()) {
       // Intervals do not intersect. Do not propagate this frame.
       continue;
@@ -352,6 +355,7 @@ KindFrames KindFrames::propagate(
     auto propagated_user_features = FeatureSet::bottom();
     auto propagated_inferred_features = propagate_features(
         frame,
+        propagated_call_info,
         locally_inferred_features,
         callee,
         context,
@@ -374,21 +378,19 @@ KindFrames KindFrames::propagate(
         propagated_canonical_names, *propagated_call_info.callee_port()));
 
     int propagated_distance = frame.distance() + 1;
-    auto call_kind = frame.call_kind();
-    if (call_kind.is_declaration()) {
-      // When propagating a declaration, set the callee to nullptr explicitly to
-      // avoid emitting an invalid frame.
+    auto propagated_call_kind = propagated_call_info.call_kind();
+    if (propagated_call_kind.is_origin()) {
+      // Origins are the "leaf" of a trace and start at distance 0.
       propagated_distance = 0;
     }
     mt_assert(propagated_distance <= maximum_source_sink_distance);
 
     auto propagated_output_paths = PathTreeDomain::bottom();
-    if (call_kind.is_propagation_with_trace()) {
+    if (propagated_call_kind.is_propagation_with_trace()) {
       // Propagate the output paths for PropagationWithTrace frames.
       propagated_output_paths.join_with(frame.output_paths());
     }
 
-    CallKind propagated_call_kind = propagated_call_info.call_kind();
     if (propagated_distance > 0) {
       mt_assert(
           !propagated_call_kind.is_declaration() &&
@@ -399,9 +401,6 @@ KindFrames KindFrames::propagate(
 
     auto propagated_frame = Frame(
         kind,
-        propagated_call_info.callee_port(),
-        propagated_call_info.callee(),
-        propagated_call_info.call_position(),
         propagated_interval,
         propagated_distance,
         propagated_origins,
@@ -410,7 +409,6 @@ KindFrames KindFrames::propagate(
         /* via_type_of_ports */ {},
         /* via_value_of_ports */ {},
         propagated_canonical_names,
-        propagated_call_kind,
         propagated_output_paths,
         /* extra_traces */ {});
 
@@ -428,10 +426,9 @@ KindFrames KindFrames::propagate(
 }
 
 void KindFrames::filter_invalid_frames(
-    const std::function<bool(const Method*, const AccessPath&, const Kind*)>&
-        is_valid) {
+    const std::function<bool(const Kind*)>& is_valid) {
   frames_.transform([&is_valid](Frame* frame) -> void {
-    if (!is_valid(frame->callee(), *frame->callee_port(), frame->kind())) {
+    if (!is_valid(frame->kind())) {
       frame->set_to_bottom();
     }
   });
@@ -450,11 +447,6 @@ KindFrames KindFrames::with_kind(const Kind* kind) const {
     result.add(frame.with_kind(kind));
   });
   return result;
-}
-
-void KindFrames::set_call_position(const Position* position) {
-  frames_.transform(
-      [position](Frame* frame) -> void { frame->set_call_position(position); });
 }
 
 void KindFrames::add_inferred_features(const FeatureMayAlwaysSet& features) {

@@ -113,9 +113,9 @@ Json::Value LiteralModel::to_json(
   if (!sources_.is_bottom()) {
     auto sources_value = Json::Value(Json::arrayValue);
     sources_.visit_frames([&sources_value, export_origins_mode](
-                              const CallInfo&, const Frame& source) {
+                              const CallInfo& call_info, const Frame& source) {
       mt_assert(!source.is_bottom());
-      sources_value.append(source.to_json(export_origins_mode));
+      sources_value.append(source.to_json(call_info, export_origins_mode));
     });
     value["sources"] = sources_value;
   }

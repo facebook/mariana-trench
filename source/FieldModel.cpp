@@ -158,10 +158,10 @@ Json::Value FieldModel::to_json(ExportOriginsMode export_origins_mode) const {
   if (!sources_.is_bottom()) {
     auto sources_value = Json::Value(Json::arrayValue);
     sources_.visit_frames([&sources_value, export_origins_mode](
-                              const CallInfo&, const Frame& source) {
+                              const CallInfo& call_info, const Frame& source) {
       mt_assert(!source.is_bottom());
       // Field models do not have local positions/features
-      sources_value.append(source.to_json(export_origins_mode));
+      sources_value.append(source.to_json(call_info, export_origins_mode));
     });
     value["sources"] = sources_value;
   }
@@ -169,10 +169,10 @@ Json::Value FieldModel::to_json(ExportOriginsMode export_origins_mode) const {
   if (!sinks_.is_bottom()) {
     auto sinks_value = Json::Value(Json::arrayValue);
     sinks_.visit_frames([&sinks_value, export_origins_mode](
-                            const CallInfo&, const Frame& sink) {
+                            const CallInfo& call_info, const Frame& sink) {
       mt_assert(!sink.is_bottom());
       // Field models do not have local positions/features
-      sinks_value.append(sink.to_json(export_origins_mode));
+      sinks_value.append(sink.to_json(call_info, export_origins_mode));
     });
     value["sinks"] = sinks_value;
   }

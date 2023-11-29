@@ -339,21 +339,22 @@ LocalTaint LocalTaint::attach_position(const Position* call_position) const {
     return LocalTaint::bottom();
   }
 
+  // Since attach_position is used (only) for parameter_sinks and return
+  // sources which may be included in an issue as a leaf, we need to make
+  // sure that those leaf frames in issues contain the user_features as being
+  // locally inferred.
   FeatureSet user_features;
   FramesByKind frames = map_frames_by_kind(
       frames_,
-      [call_position,
-       locally_inferred_features = locally_inferred_features_,
-       user_features = &user_features](const Frame& frame) {
-        user_features->join_with(
+      [&locally_inferred_features = locally_inferred_features_,
+       &user_features](const Frame& frame) {
+        user_features.join_with(
             frame.user_features()); // Collect all user features.
         auto inferred_features = frame.features();
         inferred_features.add(locally_inferred_features);
+        // Consider using a propagate() call here.
         return Frame(
             frame.kind(),
-            frame.callee_port(),
-            /* callee */ nullptr,
-            call_position,
             // TODO(T158171922): Re-visit what the appropriate interval
             // should be when implementing class intervals.
             frame.class_interval_context(),
@@ -364,15 +365,10 @@ LocalTaint LocalTaint::attach_position(const Position* call_position) const {
             /* via_type_of_ports */ {},
             /* via_value_of_ports */ {},
             frame.canonical_names(),
-            /* call_kind */ CallKind::origin(),
             /* output_paths */ {},
             frame.extra_traces());
       });
 
-  // Since CallPositionFrames::attach_position is used (only) for
-  // parameter_sinks and return sources which may be included in an issue as a
-  // leaf, we need to make sure that those leaf frames in issues contain the
-  // user_features as being locally inferred.
   auto locally_inferred_features = user_features.is_bottom()
       ? FeatureMayAlwaysSet::bottom()
       : FeatureMayAlwaysSet::make_always(user_features);
@@ -461,19 +457,9 @@ std::vector<LocalTaint> LocalTaint::update_non_declaration_positions(
       map_call_position(callee, callee_port, call_position);
   auto new_call_info =
       CallInfo(callee, call_kind(), callee_port, new_call_position);
-  // TODO(T163918472): Do not duplicate fields from LocalTaint in Frame.
-  // This updating of frames can be removed if we did that.
-  auto new_frames = frames_;
-  new_frames.transform([new_call_position](KindFrames kind_frames) {
-    kind_frames.set_call_position(new_call_position);
-    return kind_frames;
-  });
 
   return {LocalTaint(
-      new_call_info,
-      new_frames,
-      new_local_positions,
-      locally_inferred_features_)};
+      new_call_info, frames_, new_local_positions, locally_inferred_features_)};
 }
 
 std::vector<LocalTaint> LocalTaint::update_origin_positions(
@@ -515,8 +501,7 @@ std::vector<LocalTaint> LocalTaint::update_origin_positions(
           new_call_info,
           FramesByKind({std::pair(
               frame.kind(),
-              KindFrames(frame.with_call_position_and_origins(
-                  new_call_position, OriginSet{method_origin})))}),
+              KindFrames(frame.with_origins(OriginSet{method_origin})))}),
           new_local_positions,
           locally_inferred_features_));
     }
@@ -528,8 +513,7 @@ std::vector<LocalTaint> LocalTaint::update_origin_positions(
           call_info_,
           FramesByKind({std::pair(
               frame.kind(),
-              KindFrames(frame.with_call_position_and_origins(
-                  call_position, non_method_origins)))}),
+              KindFrames(frame.with_origins(non_method_origins)))}),
           new_local_positions,
           locally_inferred_features_));
     }
@@ -542,14 +526,18 @@ std::vector<LocalTaint> LocalTaint::update_origin_positions(
 }
 
 void LocalTaint::filter_invalid_frames(
-    const std::function<bool(const Method*, const AccessPath&, const Kind*)>&
+    const std::function<
+        bool(const Method* MT_NULLABLE, const AccessPath&, const Kind*)>&
         is_valid) {
   if (is_bottom()) {
     return;
   }
 
-  frames_.transform([&is_valid](KindFrames kind_frames) {
-    kind_frames.filter_invalid_frames(is_valid);
+  frames_.transform([&is_valid,
+                     &call_info = call_info_](KindFrames kind_frames) {
+    kind_frames.filter_invalid_frames([&is_valid, call_info](const Kind* kind) {
+      return is_valid(call_info.callee(), *call_info.callee_port(), kind);
+    });
     return kind_frames;
   });
 
@@ -599,12 +587,6 @@ void LocalTaint::add(const Frame& frame) {
     return;
   }
 
-  if (is_bottom()) {
-    call_info_ = frame.call_info();
-  } else {
-    mt_assert(call_info_ == frame.call_info());
-  }
-
   frames_.update(frame.kind(), [&frame](const KindFrames& old_frames) {
     auto frames_copy = old_frames;
     frames_copy.add(frame);
@@ -617,10 +599,10 @@ Json::Value LocalTaint::to_json(ExportOriginsMode export_origins_mode) const {
   mt_assert(taint.isObject() && !taint.isNull());
 
   auto kinds = Json::Value(Json::arrayValue);
-  this->visit_frames(
-      [&kinds, export_origins_mode](const CallInfo&, const Frame& frame) {
-        kinds.append(frame.to_json(export_origins_mode));
-      });
+  this->visit_frames([&kinds, export_origins_mode](
+                         const CallInfo& call_info, const Frame& frame) {
+    kinds.append(frame.to_json(call_info, export_origins_mode));
+  });
   taint["kinds"] = kinds;
 
   if (!locally_inferred_features_.is_bottom() &&

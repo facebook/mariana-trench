@@ -22,9 +22,6 @@ namespace marianatrench {
 Frame::Frame(const TaintConfig& config)
     : Frame(
           config.kind(),
-          AccessPathFactory::singleton().get(config.callee_port()),
-          config.callee(),
-          config.call_position(),
           config.class_interval_context(),
           config.distance(),
           config.origins(),
@@ -33,7 +30,6 @@ Frame::Frame(const TaintConfig& config)
           config.via_type_of_ports(),
           config.via_value_of_ports(),
           config.canonical_names(),
-          config.call_kind(),
           config.output_paths(),
           config.extra_traces()) {}
 
@@ -75,9 +71,7 @@ bool Frame::leq(const Frame& other) const {
   } else if (other.is_bottom()) {
     return false;
   } else {
-    return kind_ == other.kind_ && callee_port_ == other.callee_port_ &&
-        callee_ == other.callee_ && call_position_ == other.call_position_ &&
-        call_kind_ == other.call_kind_ && distance_ >= other.distance_ &&
+    return kind_ == other.kind_ && distance_ >= other.distance_ &&
         class_interval_context_ == other.class_interval_context_ &&
         origins_.leq(other.origins_) &&
         inferred_features_.leq(other.inferred_features_) &&
@@ -96,9 +90,7 @@ bool Frame::equals(const Frame& other) const {
   } else if (other.is_bottom()) {
     return false;
   } else {
-    return kind_ == other.kind_ && callee_port_ == other.callee_port_ &&
-        callee_ == other.callee_ && call_position_ == other.call_position_ &&
-        call_kind_ == other.call_kind_ &&
+    return kind_ == other.kind_ &&
         class_interval_context_ == other.class_interval_context_ &&
         distance_ == other.distance_ && origins_ == other.origins_ &&
         inferred_features_ == other.inferred_features_ &&
@@ -120,10 +112,6 @@ void Frame::join_with(const Frame& other) {
     return;
   } else {
     mt_assert(kind_ == other.kind_);
-    mt_assert(callee_ == other.callee_);
-    mt_assert(call_position_ == other.call_position_);
-    mt_assert(callee_port_ == other.callee_port_);
-    mt_assert(call_kind_ == other.call_kind_);
     mt_assert(class_interval_context_ == other.class_interval_context_);
 
     distance_ = std::min(distance_, other.distance_);
@@ -177,9 +165,6 @@ Frame Frame::update_with_propagation_trace(
     const Frame& propagation_frame) const {
   return Frame(
       kind_,
-      propagation_frame.callee_port_,
-      propagation_frame.callee_,
-      propagation_frame.call_position_,
       class_interval_context_,
       propagation_frame.distance_,
       propagation_frame.origins_,
@@ -188,7 +173,6 @@ Frame Frame::update_with_propagation_trace(
       /* via_type_of_ports */ {},
       /* via_value_of_ports */ {},
       /* canonical_names */ {},
-      propagation_frame.call_kind_,
       output_paths_,
       extra_traces_);
 }
@@ -319,20 +303,15 @@ void Frame::update_maximum_collapse_depth(
       });
 }
 
-void Frame::set_call_position(const Position* MT_NULLABLE position) {
-  call_position_ = position;
-}
-
-Frame Frame::with_call_position_and_origins(
-    const Position* MT_NULLABLE position,
-    OriginSet origins) const {
+Frame Frame::with_origins(OriginSet origins) const {
   auto copy = *this;
-  copy.call_position_ = position;
   copy.origins_ = std::move(origins);
   return copy;
 }
 
-Json::Value Frame::to_json(ExportOriginsMode export_origins_mode) const {
+Json::Value Frame::to_json(
+    const CallInfo& call_info,
+    ExportOriginsMode export_origins_mode) const {
   auto value = Json::Value(Json::objectValue);
 
   mt_assert(kind_ != nullptr);
@@ -347,7 +326,7 @@ Json::Value Frame::to_json(ExportOriginsMode export_origins_mode) const {
   }
 
   if (!origins_.empty()) {
-    if (call_kind_.is_origin() ||
+    if (call_info.call_kind().is_origin() ||
         export_origins_mode == ExportOriginsMode::Always) {
       value["origins"] = origins_.to_json();
     }
@@ -382,8 +361,6 @@ Json::Value Frame::to_json(ExportOriginsMode export_origins_mode) const {
     value["canonical_names"] = canonical_names;
   }
 
-  value["call_kind"] = Json::Value(call_kind_.to_trace_string());
-
   if (!output_paths_.is_bottom()) {
     auto output_paths_value = Json::Value(Json::objectValue);
     for (const auto& [output_path, collapse_depth] : output_paths_.elements()) {
@@ -414,16 +391,8 @@ Json::Value Frame::to_json(ExportOriginsMode export_origins_mode) const {
 }
 
 std::ostream& operator<<(std::ostream& out, const Frame& frame) {
-  out << "Frame(kind=`" << show(frame.kind_)
-      << "`, callee_port=" << show(frame.callee_port_);
-  if (frame.callee_ != nullptr) {
-    out << ", callee=`" << show(frame.callee_) << "`";
-  }
-  if (frame.call_position_ != nullptr) {
-    out << ", call_position=" << show(frame.call_position_);
-  }
+  out << "Frame(kind=`" << show(frame.kind_);
   out << ", class_interval_context=" << show(frame.class_interval_context_);
-  out << ", call_kind=" << frame.call_kind_.to_trace_string();
   if (frame.distance_ != 0) {
     out << ", distance=" << frame.distance_;
   }

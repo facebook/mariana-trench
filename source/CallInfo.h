@@ -15,6 +15,21 @@
 
 namespace marianatrench {
 
+/**
+ * Represents a "next hop" in a trace.
+ *
+ * The `callee_port` is the port to the next method in the trace, or
+ * `Root::Kind::Leaf` for a leaf frame.
+ *
+ * `call_kind`. See `CallKind`.
+ *
+ * `callee` is the next method in the trace. This is `nullptr` for a leaf frame.
+ *
+ * `call_position` is the position of the call to the `callee`. This is
+ * `nullptr` for a leaf frame. This can be non-null for leaf frames inside
+ * issues, to describe the position of a parameter source or return sink.
+ *
+ */
 class CallInfo final {
  private:
   using MethodCallKindPair =
