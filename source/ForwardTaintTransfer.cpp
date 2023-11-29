@@ -295,8 +295,8 @@ void apply_propagations(
           propagation);
 
       const PropagationKind* propagation_kind = propagation.propagation_kind();
-      auto transformed_taint_tree =
-          transforms::apply_propagation(context, propagation, input_taint_tree);
+      auto transformed_taint_tree = transforms::apply_propagation(
+          context, call_info, propagation, input_taint_tree);
 
       auto output_root = propagation_kind->root();
       FeatureMayAlwaysSet features = FeatureMayAlwaysSet::make_always(

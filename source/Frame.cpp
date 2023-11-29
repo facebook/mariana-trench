@@ -65,17 +65,8 @@ FeatureMayAlwaysSet Frame::features() const {
   return features;
 }
 
-void Frame::add_extra_trace(const Frame& propagation_frame) {
-  if (call_kind_.is_propagation_without_trace()) {
-    // These should be added as the next hop of the trace.
-    return;
-  }
-  extra_traces_.add(ExtraTrace(
-      propagation_frame.kind_,
-      propagation_frame.callee_,
-      propagation_frame.call_position_,
-      propagation_frame.callee_port_,
-      propagation_frame.call_kind_));
+void Frame::add_extra_trace(ExtraTrace&& extra_trace) {
+  extra_traces_.add(std::move(extra_trace));
 }
 
 bool Frame::leq(const Frame& other) const {

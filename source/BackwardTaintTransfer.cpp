@@ -275,11 +275,17 @@ void apply_propagation(
     const FeatureMayAlwaysSet& locally_inferred_features,
     const Position* position,
     const AccessPath& input,
-    const Frame& propagation) {
+    const CallInfo& propagation_call_info,
+    const Frame& propagation_frame) {
   LOG_OR_DUMP(
-      context, 4, "Processing propagation from {} to {}", input, propagation);
+      context,
+      4,
+      "Processing propagation from {} to {}",
+      input,
+      propagation_frame);
 
-  const PropagationKind* propagation_kind = propagation.propagation_kind();
+  const PropagationKind* propagation_kind =
+      propagation_frame.propagation_kind();
   auto output_root = propagation_kind->root();
 
   TaintTree output_taint_tree = TaintTree::bottom();
@@ -304,11 +310,14 @@ void apply_propagation(
   }
 
   output_taint_tree = transforms::apply_propagation(
-      context, propagation, std::move(output_taint_tree));
+      context,
+      propagation_call_info,
+      propagation_frame,
+      std::move(output_taint_tree));
 
   FeatureMayAlwaysSet features = FeatureMayAlwaysSet::make_always(
       callee.model.add_features_to_arguments(output_root));
-  features.add(propagation.features());
+  features.add(propagation_frame.features());
   features.add(locally_inferred_features);
   features.add_always(callee.model.add_features_to_arguments(input.root()));
 
@@ -316,7 +325,7 @@ void apply_propagation(
       features, position);
 
   for (const auto& [output_path, collapse_depth] :
-       propagation.output_paths().elements()) {
+       propagation_frame.output_paths().elements()) {
     auto output_path_resolved = output_path.resolve(source_constant_arguments);
 
     auto input_taint_tree = output_taint_tree.read(
@@ -425,6 +434,7 @@ void apply_propagations(
               locally_inferred_features,
               position,
               input,
+              call_info,
               propagation);
         });
   }

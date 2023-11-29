@@ -214,7 +214,9 @@ class Taint final : public sparta::AbstractDomain<Taint> {
 
   void update_maximum_collapse_depth(CollapseDepth collapse_depth);
 
-  Taint update_with_propagation_trace(const Frame& propagation_frame) const;
+  Taint update_with_propagation_trace(
+      const CallInfo& propagation_call_info,
+      const Frame& propagation_frame) const;
 
   /**
    * Update call and local positions of all non-leaf frames.

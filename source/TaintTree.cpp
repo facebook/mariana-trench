@@ -114,11 +114,15 @@ void TaintTree::update_maximum_collapse_depth(CollapseDepth collapse_depth) {
   });
 }
 
-void TaintTree::update_with_propagation_trace(const Frame& propagation_frame) {
-  mt_assert(propagation_frame.call_kind().is_propagation_with_trace());
-  tree_.transform([&propagation_frame](const Taint& taint) {
-    return taint.update_with_propagation_trace(propagation_frame);
-  });
+void TaintTree::update_with_propagation_trace(
+    const CallInfo& propagation_call_info,
+    const Frame& propagation_frame) {
+  mt_assert(propagation_call_info.call_kind().is_propagation_with_trace());
+  tree_.transform(
+      [&propagation_call_info, &propagation_frame](const Taint& taint) {
+        return taint.update_with_propagation_trace(
+            propagation_call_info, propagation_frame);
+      });
 }
 
 TaintTree TaintAccessPathTree::read(Root root) const {

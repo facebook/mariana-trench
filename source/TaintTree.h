@@ -126,7 +126,9 @@ class TaintTree final : public sparta::AbstractDomain<TaintTree> {
 
   /* Update the propagation taint tree with the trace information collected from
    * the propagation frame. */
-  void update_with_propagation_trace(const Frame& propagation_frame);
+  void update_with_propagation_trace(
+      const CallInfo& propagation_call_info,
+      const Frame& propagation_frame);
 
   /* Apply the given function on all taint. */
   template <typename Function> // Taint(Taint)

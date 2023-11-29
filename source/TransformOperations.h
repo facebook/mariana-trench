@@ -17,7 +17,8 @@ namespace transforms {
 
 TaintTree apply_propagation(
     MethodContext* context,
-    const Frame& propagation,
+    const CallInfo& propagation_call_info,
+    const Frame& propagation_frame,
     TaintTree input_taint_tree);
 
 } // namespace transforms

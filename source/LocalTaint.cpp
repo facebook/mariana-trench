@@ -283,6 +283,7 @@ LocalTaint LocalTaint::propagate(
 }
 
 LocalTaint LocalTaint::update_with_propagation_trace(
+    const CallInfo& propagation_call_info,
     const Frame& propagation_frame) const {
   if (is_bottom()) {
     return LocalTaint::bottom();
@@ -295,10 +296,21 @@ LocalTaint LocalTaint::update_with_propagation_trace(
     // All these (prior) transform hops are tracked as ExtraTrace hop
     // frames to create a subtrace.
     LocalTaint result = *this;
-    result.transform_frames([&propagation_frame](Frame frame) {
-      frame.add_extra_trace(propagation_frame);
-      return frame;
-    });
+    result.transform_frames(
+        [&propagation_call_info, &propagation_frame](Frame frame) {
+          auto call_kind = propagation_call_info.call_kind();
+          if (call_kind.is_propagation_without_trace()) {
+            // These should be added as the next hop of the trace.
+            return frame;
+          }
+          frame.add_extra_trace(ExtraTrace(
+              propagation_frame.kind(),
+              propagation_call_info.callee(),
+              propagation_call_info.call_position(),
+              propagation_call_info.callee_port(),
+              call_kind));
+          return frame;
+        });
 
     return result;
   }
@@ -311,7 +323,7 @@ LocalTaint LocalTaint::update_with_propagation_trace(
       });
 
   return LocalTaint(
-      propagation_frame.call_info(),
+      propagation_call_info,
       std::move(frames),
       local_positions_,
       locally_inferred_features_);

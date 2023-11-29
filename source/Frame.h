@@ -228,7 +228,7 @@ class Frame final : public sparta::AbstractDomain<Frame> {
 
   FeatureMayAlwaysSet features() const;
 
-  void add_extra_trace(const Frame& propagation_frame);
+  void add_extra_trace(ExtraTrace&& extra_trace);
 
   const ExtraTraceSet& extra_traces() const {
     return extra_traces_;

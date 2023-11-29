@@ -178,11 +178,13 @@ Taint Taint::apply_transform(
 }
 
 Taint Taint::update_with_propagation_trace(
+    const CallInfo& propagation_call_info,
     const Frame& propagation_frame) const {
   Taint result;
 
   for (const auto& [_, local_taint] : map_.bindings()) {
-    result.add(local_taint.update_with_propagation_trace(propagation_frame));
+    result.add(local_taint.update_with_propagation_trace(
+        propagation_call_info, propagation_frame));
   }
 
   return result;

@@ -245,6 +245,7 @@ class LocalTaint final : public sparta::AbstractDomain<LocalTaint> {
    * for taints with CallInfo kind PropagationWithTrace.
    */
   LocalTaint update_with_propagation_trace(
+      const CallInfo& propagation_call_info,
       const Frame& propagation_frame) const;
 
   template <typename TransformKind, typename AddFeatures>

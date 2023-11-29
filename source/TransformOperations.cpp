@@ -15,9 +15,10 @@ namespace transforms {
 
 TaintTree apply_propagation(
     MethodContext* context,
-    const Frame& propagation,
+    const CallInfo& propagation_call_info,
+    const Frame& propagation_frame,
     TaintTree input_taint_tree) {
-  const auto* kind = propagation.kind();
+  const auto* kind = propagation_frame.kind();
   mt_assert(kind != nullptr);
 
   if (kind->is<PropagationKind>()) {
@@ -26,7 +27,7 @@ TaintTree apply_propagation(
 
   const auto* transform_kind = kind->as<TransformKind>();
   mt_assert(transform_kind != nullptr);
-  mt_assert(propagation.call_kind().is_propagation_with_trace());
+  mt_assert(propagation_call_info.call_kind().is_propagation_with_trace());
   // For propagations with traces, we can have local and global transforms the
   // same as with source/sink traces. Regardless, both local and global
   // transforms in the propagation are local to the call-site where it's
@@ -53,7 +54,8 @@ TaintTree apply_propagation(
 
   // For propagation with traces, we need to update the output taint tree with
   // the trace information from the propagation frame.
-  output_taint_tree.update_with_propagation_trace(propagation);
+  output_taint_tree.update_with_propagation_trace(
+      propagation_call_info, propagation_frame);
 
   return output_taint_tree;
 }
