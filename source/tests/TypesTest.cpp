@@ -381,10 +381,11 @@ TEST_F(TypesTest, NoProguardNarrowedGlobalFieldTypes) {
 
   auto method2 = context.methods->get(dex_method2);
   auto register_types2 = register_types_for_method(context, method2);
-  // The type is narrowed from LSuper
+  // The type is not narrowed from LSuper, since the field is modified outside
+  // of the ctor
   EXPECT_EQ(
       register_types2.at(0),
-      DexType::make_type(DexString::make_string("LSubclass;")));
+      DexType::make_type(DexString::make_string("LSuper;")));
 }
 
 TEST_F(TypesTest, InvokeWithLocalReflectionArgument) {
