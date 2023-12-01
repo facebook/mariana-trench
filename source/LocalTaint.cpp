@@ -179,6 +179,17 @@ void LocalTaint::add_origins_if_declaration(const Field* field) {
   });
 }
 
+void LocalTaint::add_origins_if_declaration(std::string_view literal) {
+  if (!call_kind().is_declaration()) {
+    return;
+  }
+
+  transform_frames([literal](Frame frame) {
+    frame.add_origin(literal);
+    return frame;
+  });
+}
+
 void LocalTaint::add_locally_inferred_features(
     const FeatureMayAlwaysSet& features) {
   if (features.empty()) {

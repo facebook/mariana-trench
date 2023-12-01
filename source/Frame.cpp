@@ -41,6 +41,10 @@ void Frame::add_origin(const Field* field) {
   origins_.add(OriginFactory::singleton().field_origin(field));
 }
 
+void Frame::add_origin(std::string_view literal) {
+  origins_.add(OriginFactory::singleton().string_origin(literal));
+}
+
 void Frame::add_inferred_features(const FeatureMayAlwaysSet& features) {
   inferred_features_.add(features);
 }

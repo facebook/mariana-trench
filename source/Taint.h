@@ -137,6 +137,11 @@ class Taint final : public sparta::AbstractDomain<Taint> {
    */
   void add_origins_if_declaration(const Field* field);
 
+  /**
+   * For use when instantiating `LiteralModel` when the literal is known.
+   */
+  void add_origins_if_declaration(std::string_view literal);
+
   void add_locally_inferred_features(const FeatureMayAlwaysSet& features);
 
   void add_local_position(const Position* position);

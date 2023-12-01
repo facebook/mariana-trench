@@ -157,6 +157,8 @@ class Frame final : public sparta::AbstractDomain<Frame> {
 
   void add_origin(const Field* field);
 
+  void add_origin(std::string_view literal);
+
   const OriginSet& origins() const {
     return origins_;
   }

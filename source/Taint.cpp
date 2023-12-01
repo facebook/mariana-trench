@@ -62,6 +62,14 @@ void Taint::add_origins_if_declaration(const Field* field) {
   });
 }
 
+void Taint::add_origins_if_declaration(std::string_view literal) {
+  map_.transform([literal](LocalTaint* local_taint) -> void {
+    // Setting a field callee must always be done on non-propagated leaves.
+    mt_assert(local_taint->callee() == nullptr);
+    local_taint->add_origins_if_declaration(literal);
+  });
+}
+
 void Taint::add_locally_inferred_features(const FeatureMayAlwaysSet& features) {
   if (features.empty()) {
     return;

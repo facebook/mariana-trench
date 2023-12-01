@@ -213,6 +213,8 @@ class LocalTaint final : public sparta::AbstractDomain<LocalTaint> {
 
   void add_origins_if_declaration(const Field* field);
 
+  void add_origins_if_declaration(std::string_view literal);
+
   void add_locally_inferred_features(const FeatureMayAlwaysSet& features);
 
   void add_local_position(const Position* position);

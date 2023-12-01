@@ -5,7 +5,13 @@
   "sources" : 
   [
     {
-      "kind" : "GoogleAPIKey"
+      "kind" : "GoogleAPIKey",
+      "origins" : 
+      [
+        {
+          "method" : "AI[0-9A-Z]{16}"
+        }
+      ]
     }
   ]
 }
@@ -15,7 +21,13 @@
   "sources" : 
   [
     {
-      "kind" : "Regex"
+      "kind" : "Regex",
+      "origins" : 
+      [
+        {
+          "method" : "SELECT \\*.*"
+        }
+      ]
     }
   ]
 }
@@ -1242,7 +1254,13 @@
           "kinds" : 
           [
             {
-              "kind" : "GoogleAPIKey"
+              "kind" : "GoogleAPIKey",
+              "origins" : 
+              [
+                {
+                  "method" : "AI[0-9A-Z]{16}"
+                }
+              ]
             }
           ]
         }
@@ -1534,7 +1552,13 @@
           "kinds" : 
           [
             {
-              "kind" : "Regex"
+              "kind" : "Regex",
+              "origins" : 
+              [
+                {
+                  "method" : "SELECT \\*.*"
+                }
+              ]
             }
           ]
         }
@@ -1701,7 +1725,13 @@
           "kinds" : 
           [
             {
-              "kind" : "Regex"
+              "kind" : "Regex",
+              "origins" : 
+              [
+                {
+                  "method" : "SELECT \\*.*"
+                }
+              ]
             }
           ]
         }

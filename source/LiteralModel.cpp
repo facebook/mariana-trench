@@ -38,9 +38,11 @@ static Taint create_taint(
   Taint all_sources;
   for (const auto& source : sources) {
     mt_assert(source.is_leaf());
+    mt_assert(source.call_kind().is_declaration());
     check_taint_config_consistency(pattern, source);
     all_sources.join_with(Taint{source});
   }
+  all_sources.add_origins_if_declaration(pattern);
   return all_sources;
 }
 
