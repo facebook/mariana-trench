@@ -1223,21 +1223,18 @@ bool ForwardTaintTransfer::analyze_const_string(
   log_instruction(context, instruction);
 
   const std::string_view literal{instruction->get_string()->str()};
-  const LiteralModel model{context->registry.match_literal(literal)};
-  if (model.empty()) {
+  const auto& aliasing = context->aliasing.get(instruction);
+
+  auto sources = context->literal_sources_at_callsite(literal, aliasing);
+  if (sources.empty()) {
     return false;
   }
 
   LOG_OR_DUMP(
-      context,
-      4,
-      "Tainting register {} with {}",
-      k_result_register,
-      model.sources());
+      context, 4, "Tainting register {} with {}", k_result_register, sources);
 
-  const auto& aliasing = context->aliasing.get(instruction);
   environment->write(
-      aliasing.result_memory_locations(), model.sources(), UpdateKind::Strong);
+      aliasing.result_memory_locations(), sources, UpdateKind::Strong);
 
   return false;
 }

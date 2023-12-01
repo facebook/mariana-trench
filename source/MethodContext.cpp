@@ -132,7 +132,7 @@ Model MethodContext::model_at_callsite(
 
 namespace {
 
-Taint propagate_field_taint(
+Taint propagate_field_or_literal_taint(
     const Taint& taint,
     const Position* call_position,
     const Options& options,
@@ -161,7 +161,7 @@ Taint MethodContext::field_sources_at_callsite(
   }
 
   auto* call_position = positions.get(method(), aliasing.position());
-  return propagate_field_taint(
+  return propagate_field_or_literal_taint(
       declared_field_model.sources(), call_position, options, context_);
 }
 
@@ -174,8 +174,17 @@ Taint MethodContext::field_sinks_at_callsite(
   }
 
   auto* call_position = positions.get(method(), aliasing.position());
-  return propagate_field_taint(
+  return propagate_field_or_literal_taint(
       declared_field_model.sinks(), call_position, options, context_);
+}
+
+Taint MethodContext::literal_sources_at_callsite(
+    std::string_view literal,
+    const InstructionAliasResults& aliasing) const {
+  const LiteralModel model{registry.match_literal(literal)};
+  auto* call_position = positions.get(method(), aliasing.position());
+  return propagate_field_or_literal_taint(
+      model.sources(), call_position, options, context_);
 }
 
 } // namespace marianatrench

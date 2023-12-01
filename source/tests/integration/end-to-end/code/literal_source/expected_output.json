@@ -1249,18 +1249,29 @@
         {
           "call_info" : 
           {
-            "call_kind" : "Declaration"
+            "call_kind" : "Origin",
+            "position" : 
+            {
+              "line" : 91,
+              "path" : "RegexSource.java"
+            }
           },
           "kinds" : 
           [
             {
+              "callee_interval" : 
+              [
+                0,
+                4294967295
+              ],
               "kind" : "GoogleAPIKey",
               "origins" : 
               [
                 {
                   "method" : "AI[0-9A-Z]{16}"
                 }
-              ]
+              ],
+              "preserves_type_context" : true
             }
           ]
         }
@@ -1547,18 +1558,29 @@
         {
           "call_info" : 
           {
-            "call_kind" : "Declaration"
+            "call_kind" : "Origin",
+            "position" : 
+            {
+              "line" : 67,
+              "path" : "RegexSource.java"
+            }
           },
           "kinds" : 
           [
             {
+              "callee_interval" : 
+              [
+                0,
+                4294967295
+              ],
               "kind" : "Regex",
               "origins" : 
               [
                 {
                   "method" : "SELECT \\*.*"
                 }
-              ]
+              ],
+              "preserves_type_context" : true
             }
           ]
         }
@@ -1720,18 +1742,29 @@
         {
           "call_info" : 
           {
-            "call_kind" : "Declaration"
+            "call_kind" : "Origin",
+            "position" : 
+            {
+              "line" : 49,
+              "path" : "RegexSource.java"
+            }
           },
           "kinds" : 
           [
             {
+              "callee_interval" : 
+              [
+                0,
+                4294967295
+              ],
               "kind" : "Regex",
               "origins" : 
               [
                 {
                   "method" : "SELECT \\*.*"
                 }
-              ]
+              ],
+              "preserves_type_context" : true
             }
           ]
         }

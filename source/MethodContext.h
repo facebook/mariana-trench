@@ -59,6 +59,10 @@ class MethodContext final {
       const FieldTarget& field_target,
       const InstructionAliasResults& aliasing) const;
 
+  Taint literal_sources_at_callsite(
+      std::string_view literal,
+      const InstructionAliasResults& aliasing) const;
+
   const Options& options;
   const ArtificialMethods& artificial_methods;
   const Methods& methods;
