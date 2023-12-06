@@ -149,13 +149,9 @@ void redex::remove_unreachable(
     return;
   }
 
-  auto scope = build_class_scope(stores);
-  auto method_override_graph = method_override_graph::build_graph(scope);
-
   reachability::ReachableAspects reachable_aspects;
   auto reachables = reachability::compute_reachable_objects(
-      scope,
-      *method_override_graph,
+      stores,
       /* empty ignore sets */ reachability::IgnoreSets(),
       /* number of ignore check strings */ nullptr,
       &reachable_aspects,
