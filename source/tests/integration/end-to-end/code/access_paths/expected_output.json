@@ -2025,6 +2025,14 @@
   }
 }
 {
+  "method" : "Lcom/facebook/marianatrench/integrationtests/AccessPaths;.testStrongWriteBackward:(Ljava/lang/String;)V",
+  "position" : 
+  {
+    "line" : 167,
+    "path" : "AccessPaths.java"
+  }
+}
+{
   "issues" : 
   [
     {

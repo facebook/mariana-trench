@@ -163,4 +163,11 @@ public class AccessPaths {
 
     Origin.sink(d.getIndex(Constants.FOO)); // expect no sink, currently a false positive.
   }
+
+  public static void testStrongWriteBackward(String x) {
+    Dictionary d = new Dictionary();
+    d.setIndex("x", x); // strong-write-on-propagation should NOT be directional.
+    Origin.sink(d.getIndex("y"));
+    Origin.sink(x);
+  }
 }

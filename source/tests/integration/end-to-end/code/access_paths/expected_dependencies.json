@@ -73,6 +73,7 @@
     "Lcom/facebook/marianatrench/integrationtests/AccessPaths;.testSinkOnIndexFromValueOf:()V",
     "Lcom/facebook/marianatrench/integrationtests/AccessPaths;.testSinkOnIndexFromValueOfWrapper:()V",
     "Lcom/facebook/marianatrench/integrationtests/AccessPaths;.testStrongUpdate:()V",
+    "Lcom/facebook/marianatrench/integrationtests/AccessPaths;.testStrongWriteBackward:(Ljava/lang/String;)V",
     "Lcom/facebook/marianatrench/integrationtests/AccessPaths;.testUnresolvedKey:()V",
     "Lcom/facebook/marianatrench/integrationtests/AccessPaths;.testWeakUpdate:()V",
     "Lcom/facebook/marianatrench/integrationtests/AccessPaths;.testWrappers:()V",
@@ -87,6 +88,7 @@
     "Lcom/facebook/marianatrench/integrationtests/AccessPaths;.testNoSinkStrongUpdateEmptyTaint:(Ljava/lang/String;)V",
     "Lcom/facebook/marianatrench/integrationtests/AccessPaths;.testSimple:()V",
     "Lcom/facebook/marianatrench/integrationtests/AccessPaths;.testStrongUpdate:()V",
+    "Lcom/facebook/marianatrench/integrationtests/AccessPaths;.testStrongWriteBackward:(Ljava/lang/String;)V",
     "Lcom/facebook/marianatrench/integrationtests/AccessPaths;.testUnresolvedKey:()V",
     "Lcom/facebook/marianatrench/integrationtests/AccessPaths;.testWeakUpdate:()V"
   ],
@@ -104,6 +106,7 @@
     "Lcom/facebook/marianatrench/integrationtests/AccessPaths;.testNoSinkStrongUpdateEmptyTaint:(Ljava/lang/String;)V",
     "Lcom/facebook/marianatrench/integrationtests/AccessPaths;.testSimple:()V",
     "Lcom/facebook/marianatrench/integrationtests/AccessPaths;.testStrongUpdate:()V",
+    "Lcom/facebook/marianatrench/integrationtests/AccessPaths;.testStrongWriteBackward:(Ljava/lang/String;)V",
     "Lcom/facebook/marianatrench/integrationtests/AccessPaths;.testUnresolvedKey:()V",
     "Lcom/facebook/marianatrench/integrationtests/AccessPaths;.testWeakUpdate:()V"
   ],
@@ -118,6 +121,7 @@
     "Lcom/facebook/marianatrench/integrationtests/AccessPaths;.testNoSinkStrongUpdateEmptyTaint:(Ljava/lang/String;)V",
     "Lcom/facebook/marianatrench/integrationtests/AccessPaths;.testSimple:()V",
     "Lcom/facebook/marianatrench/integrationtests/AccessPaths;.testStrongUpdate:()V",
+    "Lcom/facebook/marianatrench/integrationtests/AccessPaths;.testStrongWriteBackward:(Ljava/lang/String;)V",
     "Lcom/facebook/marianatrench/integrationtests/AccessPaths;.testUnresolvedKey:()V",
     "Lcom/facebook/marianatrench/integrationtests/AccessPaths;.testWeakUpdate:()V",
     "Lcom/facebook/marianatrench/integrationtests/AccessPaths;.testWrappersToSource:()V"
