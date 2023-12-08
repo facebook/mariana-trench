@@ -177,7 +177,7 @@ const DexMethod* MT_NULLABLE LifecycleMethod::create_dex_method(
       invoke_with_registers.push_back(argument_register);
     }
     main_block->invoke(
-        IROpcode::OPCODE_INVOKE_DIRECT, dex_method, invoke_with_registers);
+        IROpcode::OPCODE_INVOKE_VIRTUAL, dex_method, invoke_with_registers);
   }
 
   if (callee_count < 2) {

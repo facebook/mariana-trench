@@ -1241,7 +1241,7 @@
                   "port" : "Argument(0)"
                 }
               ],
-              "preserves_type_context" : false
+              "preserves_type_context" : true
             }
           ]
         }
@@ -1279,7 +1279,7 @@
                   "port" : "Argument(0)"
                 }
               ],
-              "preserves_type_context" : false
+              "preserves_type_context" : true
             }
           ]
         }
@@ -2780,6 +2780,11 @@
           "kinds" : 
           [
             {
+              "callee_interval" : 
+              [
+                8,
+                9
+              ],
               "distance" : 2,
               "kind" : "Sink",
               "origins" : 
@@ -2788,7 +2793,8 @@
                   "method" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
                   "port" : "Argument(0)"
                 }
-              ]
+              ],
+              "preserves_type_context" : false
             }
           ],
           "local_features" : 
@@ -2880,6 +2886,11 @@
           "kinds" : 
           [
             {
+              "callee_interval" : 
+              [
+                8,
+                9
+              ],
               "distance" : 2,
               "kind" : "Sink",
               "origins" : 
@@ -2888,7 +2899,8 @@
                   "method" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
                   "port" : "Argument(0)"
                 }
-              ]
+              ],
+              "preserves_type_context" : false
             }
           ],
           "local_features" : 
@@ -3233,6 +3245,11 @@
           "kinds" : 
           [
             {
+              "callee_interval" : 
+              [
+                8,
+                9
+              ],
               "distance" : 2,
               "kind" : "Sink",
               "origins" : 
@@ -3241,7 +3258,8 @@
                   "method" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
                   "port" : "Argument(0)"
                 }
-              ]
+              ],
+              "preserves_type_context" : false
             }
           ],
           "local_features" : 

@@ -83,6 +83,10 @@
   [
     "Lcom/facebook/marianatrench/integrationtests/BaseFragment;.onCreate:(Landroid/os/Bundle;)V"
   ],
+  "Lcom/facebook/marianatrench/integrationtests/ChildFragment;.onStart:()V" : 
+  [
+    "Lcom/facebook/marianatrench/integrationtests/BaseFragment;.activity_lifecycle_wrapper:(Landroid/os/Bundle;)V"
+  ],
   "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V" : 
   [
     "Lcom/facebook/marianatrench/integrationtests/ChildFragment;.onAfterActivityCreate:()V",

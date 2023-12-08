@@ -961,88 +961,6 @@
   }
 }
 {
-  "issues" : 
-  [
-    {
-      "callee" : "Lcom/facebook/marianatrench/integrationtests/BaseActivity;.onStart:()V",
-      "position" : 
-      {
-        "line" : 0
-      },
-      "rule" : 1,
-      "sink_index" : "0",
-      "sinks" : 
-      [
-        {
-          "call_info" : 
-          {
-            "call_kind" : "CallSite",
-            "port" : "Argument(0).mSource",
-            "position" : 
-            {
-              "line" : 0
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/BaseActivity;.onStart:()V"
-          },
-          "kinds" : 
-          [
-            {
-              "callee_interval" : 
-              [
-                9,
-                10
-              ],
-              "distance" : 2,
-              "kind" : "Sink",
-              "origins" : 
-              [
-                {
-                  "method" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
-                  "port" : "Argument(0)"
-                }
-              ],
-              "preserves_type_context" : false
-            }
-          ]
-        }
-      ],
-      "sources" : 
-      [
-        {
-          "call_info" : 
-          {
-            "call_kind" : "CallSite",
-            "port" : "Argument(0).mSource",
-            "position" : 
-            {
-              "line" : 0
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/BaseActivity;.onCreate:(Landroid/os/Bundle;)V"
-          },
-          "kinds" : 
-          [
-            {
-              "callee_interval" : 
-              [
-                11,
-                12
-              ],
-              "distance" : 2,
-              "kind" : "Source",
-              "origins" : 
-              [
-                {
-                  "method" : "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;",
-                  "port" : "Return"
-                }
-              ],
-              "preserves_type_context" : false
-            }
-          ]
-        }
-      ]
-    }
-  ],
   "method" : "Lcom/facebook/marianatrench/integrationtests/BaseActivity;.activity_lifecycle_wrapper:(Landroid/os/Bundle;)V",
   "position" : {},
   "sinks" : 
@@ -1079,7 +997,7 @@
                   "port" : "Argument(0)"
                 }
               ],
-              "preserves_type_context" : false
+              "preserves_type_context" : true
             }
           ]
         }
@@ -1125,10 +1043,8 @@
             "port" : "Argument(0).mSource",
             "position" : 
             {
-              "end" : 7,
               "line" : 22,
-              "path" : "BaseActivity.java",
-              "start" : 4
+              "path" : "BaseActivity.java"
             },
             "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/MainActivity;.doCreate:(Landroid/os/Bundle;)V"
           },
@@ -1183,10 +1099,8 @@
             "port" : "Argument(0).mSource",
             "position" : 
             {
-              "end" : 7,
               "line" : 28,
-              "path" : "BaseActivity.java",
-              "start" : 4
+              "path" : "BaseActivity.java"
             },
             "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/MainActivity2;.doStart:()V"
           },
@@ -1251,10 +1165,8 @@
             "port" : "Argument(0)",
             "position" : 
             {
-              "end" : 22,
               "line" : 23,
-              "path" : "MainActivity2.java",
-              "start" : 16
+              "path" : "MainActivity2.java"
             }
           },
           "kinds" : 
@@ -1303,10 +1215,8 @@
             "port" : "Return",
             "position" : 
             {
-              "end" : 26,
               "line" : 17,
-              "path" : "MainActivity.java",
-              "start" : 21
+              "path" : "MainActivity.java"
             }
           },
           "kinds" : 
@@ -1331,9 +1241,7 @@
           "local_positions" : 
           [
             {
-              "end" : 29,
-              "line" : 17,
-              "start" : 14
+              "line" : 17
             }
           ]
         }

@@ -255,7 +255,7 @@
   },
   "Lcom/facebook/marianatrench/integrationtests/FragmentActivity;.activity_lifecycle_wrapper:(Landroid/os/Bundle;Ljava/lang/Object;)V" : 
   {
-    "static" : 
+    "virtual" : 
     [
       "Lcom/facebook/marianatrench/integrationtests/FragmentActivity;.<init>:()V",
       "Lcom/facebook/marianatrench/integrationtests/FragmentActivity;.onCreate:(Landroid/os/Bundle;)V",
