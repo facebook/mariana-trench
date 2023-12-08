@@ -9,6 +9,15 @@
     ]
   },
   {
+    "method": "Landroid/content/Intent;.<init>:()V",
+    "generations": [
+      {
+        "kind": "Source",
+        "port": "Argument(0)"
+      }
+    ]
+  },
+  {
     "method": "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
     "sinks": [
       {

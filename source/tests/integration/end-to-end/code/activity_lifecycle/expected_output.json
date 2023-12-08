@@ -7,6 +7,45 @@
   }
 }
 {
+  "generations" : 
+  [
+    {
+      "port" : "Return",
+      "taint" : 
+      [
+        {
+          "call_info" : 
+          {
+            "call_kind" : "Origin",
+            "port" : "Argument(0)",
+            "position" : 
+            {
+              "line" : 23
+            }
+          },
+          "kinds" : 
+          [
+            {
+              "callee_interval" : 
+              [
+                5,
+                14
+              ],
+              "kind" : "Source",
+              "origins" : 
+              [
+                {
+                  "method" : "Landroid/content/Intent;.<init>:()V",
+                  "port" : "Argument(0)"
+                }
+              ],
+              "preserves_type_context" : true
+            }
+          ]
+        }
+      ]
+    }
+  ],
   "method" : "Landroid/app/Activity;.getIntent:()Landroid/content/Intent;",
   "position" : 
   {
@@ -70,6 +109,34 @@
   }
 }
 {
+  "generations" : 
+  [
+    {
+      "port" : "Argument(0)",
+      "taint" : 
+      [
+        {
+          "call_info" : 
+          {
+            "call_kind" : "Declaration"
+          },
+          "kinds" : 
+          [
+            {
+              "kind" : "Source",
+              "origins" : 
+              [
+                {
+                  "method" : "Landroid/content/Intent;.<init>:()V",
+                  "port" : "Argument(0)"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ],
   "method" : "Landroid/content/Intent;.<init>:()V",
   "position" : 
   {
@@ -911,6 +978,45 @@
   }
 }
 {
+  "generations" : 
+  [
+    {
+      "port" : "Return",
+      "taint" : 
+      [
+        {
+          "call_info" : 
+          {
+            "call_kind" : "Origin",
+            "port" : "Argument(0)",
+            "position" : 
+            {
+              "line" : 15
+            }
+          },
+          "kinds" : 
+          [
+            {
+              "callee_interval" : 
+              [
+                36,
+                37
+              ],
+              "kind" : "Source",
+              "origins" : 
+              [
+                {
+                  "method" : "Landroid/content/Intent;.<init>:()V",
+                  "port" : "Argument(0)"
+                }
+              ],
+              "preserves_type_context" : true
+            }
+          ]
+        }
+      ]
+    }
+  ],
   "method" : "Lcom/facebook/base/activity/FragmentBaseActivityUtil;.getDefaultActivityIntent:()Landroid/content/Intent;",
   "position" : 
   {
@@ -961,6 +1067,88 @@
   }
 }
 {
+  "issues" : 
+  [
+    {
+      "callee" : "Lcom/facebook/marianatrench/integrationtests/BaseActivity;.onStart:()V",
+      "position" : 
+      {
+        "line" : 0
+      },
+      "rule" : 1,
+      "sink_index" : "0",
+      "sinks" : 
+      [
+        {
+          "call_info" : 
+          {
+            "call_kind" : "CallSite",
+            "port" : "Argument(0).mSource",
+            "position" : 
+            {
+              "line" : 0
+            },
+            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/BaseActivity;.onStart:()V"
+          },
+          "kinds" : 
+          [
+            {
+              "callee_interval" : 
+              [
+                9,
+                10
+              ],
+              "distance" : 2,
+              "kind" : "Sink",
+              "origins" : 
+              [
+                {
+                  "method" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
+                  "port" : "Argument(0)"
+                }
+              ],
+              "preserves_type_context" : true
+            }
+          ]
+        }
+      ],
+      "sources" : 
+      [
+        {
+          "call_info" : 
+          {
+            "call_kind" : "CallSite",
+            "port" : "Argument(0).mSource",
+            "position" : 
+            {
+              "line" : 0
+            },
+            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/BaseActivity;.onCreate:(Landroid/os/Bundle;)V"
+          },
+          "kinds" : 
+          [
+            {
+              "callee_interval" : 
+              [
+                9,
+                10
+              ],
+              "distance" : 2,
+              "kind" : "Source",
+              "origins" : 
+              [
+                {
+                  "method" : "Landroid/content/Intent;.<init>:()V",
+                  "port" : "Argument(0)"
+                }
+              ],
+              "preserves_type_context" : true
+            }
+          ]
+        }
+      ]
+    }
+  ],
   "method" : "Lcom/facebook/marianatrench/integrationtests/BaseActivity;.activity_lifecycle_wrapper:(Landroid/os/Bundle;)V",
   "position" : {},
   "sinks" : 
@@ -1043,8 +1231,45 @@
             "port" : "Argument(0).mSource",
             "position" : 
             {
+              "end" : 7,
               "line" : 22,
-              "path" : "BaseActivity.java"
+              "path" : "BaseActivity.java",
+              "start" : 4
+            },
+            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/MainActivity2;.doCreate:(Landroid/os/Bundle;)V"
+          },
+          "kinds" : 
+          [
+            {
+              "callee_interval" : 
+              [
+                9,
+                10
+              ],
+              "distance" : 1,
+              "kind" : "Source",
+              "origins" : 
+              [
+                {
+                  "method" : "Landroid/content/Intent;.<init>:()V",
+                  "port" : "Argument(0)"
+                }
+              ],
+              "preserves_type_context" : true
+            }
+          ]
+        },
+        {
+          "call_info" : 
+          {
+            "call_kind" : "CallSite",
+            "port" : "Argument(0).mSource",
+            "position" : 
+            {
+              "end" : 7,
+              "line" : 22,
+              "path" : "BaseActivity.java",
+              "start" : 4
             },
             "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/MainActivity;.doCreate:(Landroid/os/Bundle;)V"
           },
@@ -1099,8 +1324,10 @@
             "port" : "Argument(0).mSource",
             "position" : 
             {
+              "end" : 7,
               "line" : 28,
-              "path" : "BaseActivity.java"
+              "path" : "BaseActivity.java",
+              "start" : 4
             },
             "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/MainActivity2;.doStart:()V"
           },
@@ -1138,6 +1365,56 @@
   }
 }
 {
+  "generations" : 
+  [
+    {
+      "port" : "Argument(0).mSource",
+      "taint" : 
+      [
+        {
+          "call_info" : 
+          {
+            "call_kind" : "Origin",
+            "port" : "Argument(0)",
+            "position" : 
+            {
+              "end" : 23,
+              "line" : 18,
+              "path" : "MainActivity2.java",
+              "start" : 14
+            }
+          },
+          "kinds" : 
+          [
+            {
+              "callee_interval" : 
+              [
+                9,
+                10
+              ],
+              "kind" : "Source",
+              "origins" : 
+              [
+                {
+                  "method" : "Landroid/content/Intent;.<init>:()V",
+                  "port" : "Argument(0)"
+                }
+              ],
+              "preserves_type_context" : true
+            }
+          ],
+          "local_positions" : 
+          [
+            {
+              "end" : 26,
+              "line" : 18,
+              "start" : 14
+            }
+          ]
+        }
+      ]
+    }
+  ],
   "method" : "Lcom/facebook/marianatrench/integrationtests/MainActivity2;.doCreate:(Landroid/os/Bundle;)V",
   "position" : 
   {
@@ -1165,8 +1442,10 @@
             "port" : "Argument(0)",
             "position" : 
             {
+              "end" : 22,
               "line" : 23,
-              "path" : "MainActivity2.java"
+              "path" : "MainActivity2.java",
+              "start" : 16
             }
           },
           "kinds" : 
@@ -1215,8 +1494,10 @@
             "port" : "Return",
             "position" : 
             {
+              "end" : 26,
               "line" : 17,
-              "path" : "MainActivity.java"
+              "path" : "MainActivity.java",
+              "start" : 21
             }
           },
           "kinds" : 
@@ -1241,7 +1522,9 @@
           "local_positions" : 
           [
             {
-              "line" : 17
+              "end" : 29,
+              "line" : 17,
+              "start" : 14
             }
           ]
         }
