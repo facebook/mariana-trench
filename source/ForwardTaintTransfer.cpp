@@ -267,7 +267,8 @@ void apply_propagations(
         aliasing.register_memory_locations(input_register_id),
         input_path.path().resolve(source_constant_arguments));
 
-    if (input_taint_tree.is_bottom()) {
+    if (input_taint_tree.is_bottom() &&
+        !callee.model.strong_write_on_propagation()) {
       continue;
     }
 

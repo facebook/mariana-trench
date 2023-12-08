@@ -1206,6 +1206,71 @@
   ]
 }
 {
+  "method" : "Lcom/facebook/marianatrench/integrationtests/AccessPaths;.testNoIssueStrongUpdateEmptyTaint:()V",
+  "position" : 
+  {
+    "line" : 149,
+    "path" : "AccessPaths.java"
+  }
+}
+{
+  "method" : "Lcom/facebook/marianatrench/integrationtests/AccessPaths;.testNoSinkStrongUpdateEmptyTaint:(Ljava/lang/String;)V",
+  "position" : 
+  {
+    "line" : 158,
+    "path" : "AccessPaths.java"
+  },
+  "sinks" : 
+  [
+    {
+      "port" : "Argument(0)",
+      "taint" : 
+      [
+        {
+          "call_info" : 
+          {
+            "call_kind" : "Origin",
+            "port" : "Argument(0)",
+            "position" : 
+            {
+              "line" : 164,
+              "path" : "AccessPaths.java"
+            }
+          },
+          "kinds" : 
+          [
+            {
+              "callee_interval" : 
+              [
+                34,
+                35
+              ],
+              "kind" : "Sink",
+              "origins" : 
+              [
+                {
+                  "method" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
+                  "port" : "Argument(0)"
+                }
+              ],
+              "preserves_type_context" : true
+            }
+          ],
+          "local_positions" : 
+          [
+            {
+              "line" : 161
+            },
+            {
+              "line" : 164
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
+{
   "issues" : 
   [
     {

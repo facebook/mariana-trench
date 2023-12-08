@@ -145,4 +145,22 @@ public class AccessPaths {
     d.putExtra("source", getDifferentSource());
     sinkIndexWrapper(d); // expect issue for DifferentSource only
   }
+
+  public static void testNoIssueStrongUpdateEmptyTaint() {
+    Dictionary d = new Dictionary();
+
+    d.setIndex(Constants.FOO, Origin.source());
+    d.setIndex(Constants.FOO, "");
+
+    Origin.sink(d.getIndex(Constants.FOO)); // expect no issue
+  }
+
+  public static void testNoSinkStrongUpdateEmptyTaint(String x) {
+    Dictionary d = new Dictionary();
+
+    d.setIndex(Constants.FOO, x);
+    d.setIndex(Constants.FOO, "");
+
+    Origin.sink(d.getIndex(Constants.FOO)); // expect no sink, currently a false positive.
+  }
 }
