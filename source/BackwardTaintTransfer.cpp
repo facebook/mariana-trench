@@ -266,6 +266,30 @@ void taint_propagation_input(
         input_taint_tree);
     infer_input_taint(context, std::move(call_effect_path), input_taint_tree);
   }
+
+  if (callee.model.strong_write_on_propagation() &&
+      output.root().is_argument() && input.root() != output.root()) {
+    // If we want a strong write on the propagation, we should clear the taint
+    // on the output, similar to the behaviour of an iput instruction.
+    auto output_parameter_position = output.root().parameter_position();
+    auto output_register_id = instruction->src(output_parameter_position);
+    auto output_memory_locations =
+        aliasing.register_memory_locations(output_register_id);
+    if (auto* output_memory_location = output_memory_locations.singleton();
+        output_memory_location != nullptr) {
+      LOG_OR_DUMP(
+          context,
+          4,
+          "Clearing the taint for register {} path {}",
+          output_register_id,
+          output.path());
+      new_environment->write(
+          *output_memory_location,
+          output.path(),
+          TaintTree::bottom(),
+          UpdateKind::Strong);
+    }
+  }
 }
 
 void apply_propagation(

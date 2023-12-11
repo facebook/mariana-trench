@@ -161,7 +161,7 @@ public class AccessPaths {
     d.setIndex(Constants.FOO, x);
     d.setIndex(Constants.FOO, "");
 
-    Origin.sink(d.getIndex(Constants.FOO)); // expect no sink, currently a false positive.
+    Origin.sink(d.getIndex(Constants.FOO)); // expect no sink on x
   }
 
   public static void testStrongWriteBackward(String x) {
