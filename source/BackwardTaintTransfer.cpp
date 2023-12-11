@@ -221,6 +221,7 @@ void taint_propagation_input(
     const IRInstruction* instruction,
     const CalleeModel& callee,
     const std::vector<std::optional<std::string>>& source_constant_arguments,
+    const AccessPath& output,
     const AccessPath& input,
     TaintTree input_taint_tree) {
   auto input_path_resolved = input.path().resolve(source_constant_arguments);
@@ -248,8 +249,12 @@ void taint_propagation_input(
         aliasing.register_memory_locations(input_register_id),
         input_path_resolved,
         std::move(input_taint_tree),
-        callee.model.strong_write_on_propagation() ? UpdateKind::Strong
-                                                   : UpdateKind::Weak);
+        // We only want strong updates for Arg(x) -> Arg(x) propagations.
+        // See integration tests `propagation_via_arg` for an example.
+        callee.model.strong_write_on_propagation() &&
+                output.root() == input.root()
+            ? UpdateKind::Strong
+            : UpdateKind::Weak);
   } else {
     mt_assert(input.root().is_call_effect_for_local_propagation_input());
     auto call_effect_path = AccessPath(input.root(), input_path_resolved);
@@ -305,7 +310,8 @@ void apply_propagation(
       mt_unreachable();
   }
 
-  if (output_taint_tree.is_bottom()) {
+  if (output_taint_tree.is_bottom() &&
+      !callee.model.strong_write_on_propagation()) {
     return;
   }
 
@@ -372,6 +378,7 @@ void apply_propagation(
         instruction,
         callee,
         source_constant_arguments,
+        AccessPath(output_root, output_path_resolved),
         input,
         std::move(input_taint_tree));
   }

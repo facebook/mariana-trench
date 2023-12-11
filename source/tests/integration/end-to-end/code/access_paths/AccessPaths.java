@@ -166,7 +166,7 @@ public class AccessPaths {
 
   public static void testStrongWriteBackward(String x) {
     Dictionary d = new Dictionary();
-    d.setIndex("x", x); // strong-write-on-propagation should NOT be directional.
+    d.setIndex("x", x);
     Origin.sink(d.getIndex("y"));
     Origin.sink(x);
   }
