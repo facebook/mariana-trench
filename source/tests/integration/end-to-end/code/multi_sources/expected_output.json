@@ -260,7 +260,6 @@
           "kinds" : 
           [
             {
-              "call_kind" : "Propagation",
               "kind" : "LocalReturn",
               "output_paths" : 
               {
@@ -284,7 +283,6 @@
           "kinds" : 
           [
             {
-              "call_kind" : "Propagation",
               "kind" : "LocalReturn",
               "output_paths" : 
               {
@@ -308,7 +306,6 @@
           "kinds" : 
           [
             {
-              "call_kind" : "Propagation",
               "kind" : "LocalReturn",
               "output_paths" : 
               {
@@ -342,7 +339,6 @@
           "kinds" : 
           [
             {
-              "call_kind" : "Propagation",
               "kind" : "LocalReturn",
               "output_paths" : 
               {
@@ -366,7 +362,6 @@
           "kinds" : 
           [
             {
-              "call_kind" : "Propagation",
               "kind" : "LocalArgument(0)",
               "output_paths" : 
               {
@@ -384,7 +379,6 @@
           "kinds" : 
           [
             {
-              "call_kind" : "Propagation",
               "kind" : "LocalReturn",
               "output_paths" : 
               {
@@ -418,7 +412,6 @@
           "kinds" : 
           [
             {
-              "call_kind" : "Propagation",
               "kind" : "LocalReturn",
               "output_paths" : 
               {
@@ -442,7 +435,6 @@
           "kinds" : 
           [
             {
-              "call_kind" : "Propagation",
               "kind" : "LocalArgument(0)",
               "output_paths" : 
               {
@@ -460,7 +452,6 @@
           "kinds" : 
           [
             {
-              "call_kind" : "Propagation",
               "kind" : "LocalReturn",
               "output_paths" : 
               {
@@ -494,7 +485,6 @@
           "kinds" : 
           [
             {
-              "call_kind" : "Propagation",
               "kind" : "LocalReturn",
               "output_paths" : 
               {
@@ -518,7 +508,6 @@
           "kinds" : 
           [
             {
-              "call_kind" : "Propagation",
               "kind" : "LocalArgument(0)",
               "output_paths" : 
               {
@@ -536,7 +525,6 @@
           "kinds" : 
           [
             {
-              "call_kind" : "Propagation",
               "kind" : "LocalReturn",
               "output_paths" : 
               {
@@ -577,7 +565,6 @@
           "kinds" : 
           [
             {
-              "call_kind" : "Propagation",
               "kind" : "LocalArgument(0)",
               "output_paths" : 
               {
@@ -601,7 +588,6 @@
           "kinds" : 
           [
             {
-              "call_kind" : "Propagation",
               "kind" : "LocalArgument(0)",
               "output_paths" : 
               {
@@ -625,7 +611,6 @@
           "kinds" : 
           [
             {
-              "call_kind" : "Propagation",
               "kind" : "LocalArgument(0)",
               "output_paths" : 
               {
@@ -667,7 +652,6 @@
           "kinds" : 
           [
             {
-              "call_kind" : "Propagation",
               "kind" : "LocalReturn",
               "output_paths" : 
               {
@@ -709,7 +693,6 @@
           "kinds" : 
           [
             {
-              "call_kind" : "Propagation",
               "kind" : "LocalReturn",
               "output_paths" : 
               {
@@ -750,7 +733,6 @@
           "kinds" : 
           [
             {
-              "call_kind" : "Propagation",
               "kind" : "LocalReturn",
               "output_paths" : 
               {
@@ -774,7 +756,6 @@
           "kinds" : 
           [
             {
-              "call_kind" : "Propagation",
               "kind" : "LocalReturn",
               "output_paths" : 
               {
@@ -798,7 +779,6 @@
           "kinds" : 
           [
             {
-              "call_kind" : "Propagation",
               "kind" : "LocalReturn",
               "output_paths" : 
               {
@@ -991,7 +971,6 @@
               [
                 "source-b"
               ],
-              "call_kind" : "Declaration",
               "kind" : "TestSourceB",
               "origins" : 
               [
@@ -1040,7 +1019,6 @@
           "kinds" : 
           [
             {
-              "call_kind" : "Propagation",
               "kind" : "LocalArgument(0)",
               "output_paths" : 
               {
@@ -1113,7 +1091,6 @@
                 "source-a",
                 "source-b"
               ],
-              "call_kind" : "Origin",
               "callee_interval" : 
               [
                 36,
@@ -1162,7 +1139,6 @@
               [
                 "source-b"
               ],
-              "call_kind" : "Origin",
               "callee_interval" : 
               [
                 36,
@@ -1241,7 +1217,6 @@
                 "sink-b",
                 "source-b"
               ],
-              "call_kind" : "CallSite",
               "callee_interval" : 
               [
                 36,
@@ -1284,7 +1259,6 @@
               [
                 "source-a"
               ],
-              "call_kind" : "Origin",
               "callee_interval" : 
               [
                 36,
@@ -1363,7 +1337,6 @@
                 "sink-b",
                 "source-a"
               ],
-              "call_kind" : "CallSite",
               "callee_interval" : 
               [
                 36,
@@ -1406,7 +1379,6 @@
               [
                 "source-b"
               ],
-              "call_kind" : "Origin",
               "callee_interval" : 
               [
                 36,
@@ -1474,7 +1446,6 @@
               [
                 "sink-a"
               ],
-              "call_kind" : "Declaration",
               "kind" : "Partial:TestSink:a",
               "origins" : 
               [
@@ -1504,7 +1475,6 @@
               [
                 "sink-b"
               ],
-              "call_kind" : "Declaration",
               "kind" : "Partial:TestSink:b",
               "origins" : 
               [
@@ -1539,7 +1509,6 @@
               [
                 "source-a"
               ],
-              "call_kind" : "Declaration",
               "kind" : "TestSourceA",
               "origins" : 
               [
@@ -1580,7 +1549,6 @@
               [
                 "source-b"
               ],
-              "call_kind" : "Declaration",
               "kind" : "TestSourceB",
               "origins" : 
               [
@@ -1621,7 +1589,6 @@
               [
                 "source-d"
               ],
-              "call_kind" : "Declaration",
               "kind" : "TestSourceD",
               "origins" : 
               [
@@ -1678,7 +1645,6 @@
                 "sink-b",
                 "source-b"
               ],
-              "call_kind" : "Origin",
               "callee_interval" : 
               [
                 36,
@@ -1702,7 +1668,6 @@
                 "sink-b",
                 "source-d"
               ],
-              "call_kind" : "Origin",
               "callee_interval" : 
               [
                 36,
@@ -1767,7 +1732,6 @@
                 "sink-b",
                 "source-a"
               ],
-              "call_kind" : "Origin",
               "callee_interval" : 
               [
                 36,
@@ -1859,7 +1823,6 @@
                 "source-b",
                 "via-issue-broadening"
               ],
-              "call_kind" : "Origin",
               "callee_interval" : 
               [
                 38,
@@ -1908,7 +1871,6 @@
               [
                 "source-b"
               ],
-              "call_kind" : "Origin",
               "callee_interval" : 
               [
                 38,
@@ -1968,7 +1930,6 @@
               [
                 "sink-a"
               ],
-              "call_kind" : "Declaration",
               "kind" : "Partial:TestSinkSingleArg:a",
               "origins" : 
               [
@@ -1983,7 +1944,6 @@
               [
                 "sink-b"
               ],
-              "call_kind" : "Declaration",
               "kind" : "Partial:TestSinkSingleArg:b",
               "origins" : 
               [
@@ -2018,7 +1978,6 @@
               [
                 "source-a"
               ],
-              "call_kind" : "Declaration",
               "kind" : "TestSourceA",
               "origins" : 
               [
@@ -2073,7 +2032,6 @@
                 "sink-b",
                 "source-b"
               ],
-              "call_kind" : "Origin",
               "callee_interval" : 
               [
                 38,
@@ -2143,7 +2101,6 @@
                 "source-a",
                 "via-issue-broadening"
               ],
-              "call_kind" : "Origin",
               "callee_interval" : 
               [
                 38,
@@ -2202,7 +2159,6 @@
           "kinds" : 
           [
             {
-              "call_kind" : "Propagation",
               "kind" : "LocalReturn",
               "output_paths" : 
               {
@@ -2335,7 +2291,6 @@
           "kinds" : 
           [
             {
-              "call_kind" : "Propagation",
               "kind" : "LocalReturn",
               "output_paths" : 
               {
@@ -2449,7 +2404,6 @@
           "kinds" : 
           [
             {
-              "call_kind" : "Propagation",
               "kind" : "LocalReturn",
               "output_paths" : 
               {
@@ -2473,7 +2427,6 @@
           "kinds" : 
           [
             {
-              "call_kind" : "Propagation",
               "kind" : "LocalReturn",
               "output_paths" : 
               {
@@ -2585,7 +2538,6 @@
           "kinds" : 
           [
             {
-              "call_kind" : "Propagation",
               "kind" : "LocalReturn",
               "output_paths" : 
               {
@@ -2619,7 +2571,6 @@
           "kinds" : 
           [
             {
-              "call_kind" : "Propagation",
               "kind" : "LocalArgument(0)",
               "output_paths" : 
               {
