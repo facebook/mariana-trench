@@ -271,6 +271,46 @@ void PropagationTemplate::instantiate(
       user_features_));
 }
 
+PortSanitizerTemplate::PortSanitizerTemplate(
+    SanitizerKind sanitizer_kind,
+    RootTemplate port)
+    : sanitizer_kind_(std::move(sanitizer_kind)), port_(std::move(port)) {}
+
+PortSanitizerTemplate PortSanitizerTemplate::from_json(
+    const Json::Value& value) {
+  JsonValidation::validate_object(value);
+  JsonValidation::check_unexpected_members(value, {"port", "sanitize"});
+
+  SanitizerKind sanitizer_kind;
+  auto sanitizer_kind_string =
+      JsonValidation::string(value, /* field */ "sanitize");
+  if (sanitizer_kind_string == "sources") {
+    sanitizer_kind = SanitizerKind::Sources;
+  } else if (sanitizer_kind_string == "sinks") {
+    sanitizer_kind = SanitizerKind::Sinks;
+  } else if (sanitizer_kind_string == "propagations") {
+    sanitizer_kind = SanitizerKind::Propagations;
+  } else {
+    throw JsonValidationError(
+        value,
+        /* field */ "sanitizer",
+        /* expected */ "`sources`, `sinks` or `propagations`");
+  }
+
+  auto port = AccessPathTemplate::from_json(value["port"]);
+
+  return PortSanitizerTemplate(sanitizer_kind, port.root());
+}
+
+void PortSanitizerTemplate::instantiate(
+    const TemplateVariableMapping& parameter_positions,
+    Model& model) const {
+  auto root = port_.instantiate(parameter_positions);
+  auto sanitizer = Sanitizer(sanitizer_kind_, KindSetAbstractDomain::top());
+
+  model.add_port_sanitizers(SanitizerSet(sanitizer), root);
+}
+
 SinkTemplate::SinkTemplate(TaintConfig sink, AccessPathTemplate port)
     : sink_(std::move(sink)), port_(std::move(port)) {}
 
@@ -502,6 +542,7 @@ ForAllParameters::ForAllParameters(
     std::vector<GenerationTemplate> generation_templates,
     std::vector<SourceTemplate> source_templates,
     std::vector<PropagationTemplate> propagation_templates,
+    std::vector<PortSanitizerTemplate> port_sanitizers,
     std::vector<AttachToSourcesTemplate> attach_to_sources_templates,
     std::vector<AttachToSinksTemplate> attach_to_sinks_templates,
     std::vector<AttachToPropagationsTemplate> attach_to_propagations_templates,
@@ -514,6 +555,7 @@ ForAllParameters::ForAllParameters(
       generation_templates_(std::move(generation_templates)),
       source_templates_(std::move(source_templates)),
       propagation_templates_(std::move(propagation_templates)),
+      port_sanitizers_(std::move(port_sanitizers)),
       attach_to_sources_templates_(std::move(attach_to_sources_templates)),
       attach_to_sinks_templates_(std::move(attach_to_sinks_templates)),
       attach_to_propagations_templates_(
@@ -534,6 +576,7 @@ ForAllParameters ForAllParameters::from_json(
        "generations",
        "sources",
        "propagation",
+       "sanitizers",
        "attach_to_sources",
        "attach_to_sinks",
        "attach_to_propagations",
@@ -545,6 +588,7 @@ ForAllParameters ForAllParameters::from_json(
   std::vector<GenerationTemplate> generation_templates;
   std::vector<SourceTemplate> source_templates;
   std::vector<PropagationTemplate> propagation_templates;
+  std::vector<PortSanitizerTemplate> port_sanitizers;
   std::vector<AttachToSourcesTemplate> attach_to_sources_templates;
   std::vector<AttachToSinksTemplate> attach_to_sinks_templates;
   std::vector<AttachToPropagationsTemplate> attach_to_propagations_templates;
@@ -588,6 +632,12 @@ ForAllParameters ForAllParameters::from_json(
         PropagationTemplate::from_json(propagation_value, context));
   }
 
+  for (auto sanitizer_value :
+       JsonValidation::null_or_array(value, /* field */ "sanitizers")) {
+    port_sanitizers.push_back(
+        PortSanitizerTemplate::from_json(sanitizer_value));
+  }
+
   for (auto attach_to_sources_value :
        JsonValidation::null_or_array(value, /* field */ "attach_to_sources")) {
     attach_to_sources_templates.push_back(
@@ -622,6 +672,7 @@ ForAllParameters ForAllParameters::from_json(
       generation_templates,
       source_templates,
       propagation_templates,
+      port_sanitizers,
       attach_to_sources_templates,
       attach_to_sinks_templates,
       attach_to_propagations_templates,
@@ -664,6 +715,10 @@ bool ForAllParameters::instantiate(
       }
       for (const auto& propagation_template : propagation_templates_) {
         propagation_template.instantiate(variable_mapping, model, context);
+        updated = true;
+      }
+      for (const auto& port_sanitizer : port_sanitizers_) {
+        port_sanitizer.instantiate(variable_mapping, model);
         updated = true;
       }
       for (const auto& attach_to_sources_template :

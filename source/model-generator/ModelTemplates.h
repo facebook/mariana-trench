@@ -119,6 +119,24 @@ class PropagationTemplate final {
   CollapseDepth collapse_depth_;
 };
 
+class PortSanitizerTemplate final {
+ public:
+  explicit PortSanitizerTemplate(
+      SanitizerKind sanitizer_kind,
+      RootTemplate port);
+
+  INCLUDE_DEFAULT_COPY_CONSTRUCTORS_AND_ASSIGNMENTS(PortSanitizerTemplate)
+
+  static PortSanitizerTemplate from_json(const Json::Value& value);
+  void instantiate(
+      const TemplateVariableMapping& parameter_positions,
+      Model& model) const;
+
+ private:
+  SanitizerKind sanitizer_kind_;
+  RootTemplate port_;
+};
+
 class SinkTemplate final {
  public:
   explicit SinkTemplate(TaintConfig sink, AccessPathTemplate port);
@@ -273,6 +291,7 @@ class ForAllParameters final {
       std::vector<GenerationTemplate> generation_templates = {},
       std::vector<SourceTemplate> source_templates = {},
       std::vector<PropagationTemplate> propagation_templates = {},
+      std::vector<PortSanitizerTemplate> port_sanitizers = {},
       std::vector<AttachToSourcesTemplate> attach_to_sources_templates = {},
       std::vector<AttachToSinksTemplate> attach_to_sinks_templates = {},
       std::vector<AttachToPropagationsTemplate>
@@ -304,6 +323,7 @@ class ForAllParameters final {
   std::vector<GenerationTemplate> generation_templates_;
   std::vector<SourceTemplate> source_templates_;
   std::vector<PropagationTemplate> propagation_templates_;
+  std::vector<PortSanitizerTemplate> port_sanitizers_;
   std::vector<AttachToSourcesTemplate> attach_to_sources_templates_;
   std::vector<AttachToSinksTemplate> attach_to_sinks_templates_;
   std::vector<AttachToPropagationsTemplate> attach_to_propagations_templates_;
