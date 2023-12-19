@@ -340,6 +340,27 @@ Model Model::at_callsite(
   auto extra_features = context.class_properties->propagate_features(
       caller, callee, *context.feature_factory);
 
+  auto narrowed_class_interval_context = class_interval_context;
+  if (class_interval_context.preserves_type_context()) {
+    // When it is a "this.*" call, `callee`'s class is within the class
+    // hierarchy of `caller`'s class (could be child or parent). The class
+    // interval should be the more precise/derived interval.
+    auto narrowed_interval = class_interval_context.callee_interval().meet(
+        context.class_intervals->get_interval(callee->get_class()));
+    // Intervals should intersect for this.* calls.
+    mt_assert_log(
+        !narrowed_interval.is_bottom(),
+        "Caller and callee intervals do not intersect. Caller: %s %s, Callee: %s %s",
+        show(caller).c_str(),
+        show(class_interval_context.callee_interval()).c_str(),
+        show(callee).c_str(),
+        show(context.class_intervals->get_interval(callee->get_class()))
+            .c_str());
+
+    narrowed_class_interval_context = CallClassIntervalContext(
+        narrowed_interval, class_interval_context.preserves_type_context());
+  }
+
   auto caller_class_interval =
       context.class_intervals->get_interval(caller->get_class());
 
@@ -352,7 +373,7 @@ Model Model::at_callsite(
        &context,
        &source_register_types,
        &source_constant_arguments,
-       &class_interval_context,
+       &narrowed_class_interval_context,
        &caller_class_interval](
           const AccessPath& callee_port, const Taint& generations) {
         model.generations_.write(
@@ -366,7 +387,7 @@ Model Model::at_callsite(
                 context,
                 source_register_types,
                 source_constant_arguments,
-                class_interval_context,
+                narrowed_class_interval_context,
                 caller_class_interval),
             UpdateKind::Weak);
       });
@@ -379,7 +400,7 @@ Model Model::at_callsite(
                 &context,
                 &source_register_types,
                 &source_constant_arguments,
-                &class_interval_context,
+                &narrowed_class_interval_context,
                 &caller_class_interval](
                    const AccessPath& callee_port, const Taint& sinks) {
     model.sinks_.write(
@@ -393,7 +414,7 @@ Model Model::at_callsite(
             context,
             source_register_types,
             source_constant_arguments,
-            class_interval_context,
+            narrowed_class_interval_context,
             caller_class_interval),
         UpdateKind::Weak);
   });
@@ -403,7 +424,7 @@ Model Model::at_callsite(
        callee,
        call_position,
        &context,
-       &class_interval_context,
+       &narrowed_class_interval_context,
        &caller_class_interval](
           const AccessPath& callee_port, const Taint& call_effect) {
         switch (callee_port.root().kind()) {
@@ -420,7 +441,7 @@ Model Model::at_callsite(
                     context,
                     /* source register types */ {},
                     /* source constant arguments */ {},
-                    class_interval_context,
+                    narrowed_class_interval_context,
                     caller_class_interval),
                 UpdateKind::Weak);
           } break;
@@ -438,7 +459,7 @@ Model Model::at_callsite(
        &context,
        &source_register_types,
        &source_constant_arguments,
-       &class_interval_context,
+       &narrowed_class_interval_context,
        &caller_class_interval](
           const AccessPath& callee_port, const Taint& propagations) {
         model.propagations_.write(
@@ -452,7 +473,7 @@ Model Model::at_callsite(
                 context,
                 source_register_types,
                 source_constant_arguments,
-                class_interval_context,
+                narrowed_class_interval_context,
                 caller_class_interval),
             UpdateKind::Weak);
       });
