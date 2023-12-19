@@ -249,6 +249,14 @@
       "Lcom/facebook/marianatrench/integrationtests/BaseFragment;.<init>:()V"
     ]
   },
+  "Lcom/facebook/marianatrench/integrationtests/ChildFragment;.activity_lifecycle_wrapper:(Landroid/os/Bundle;)V" : 
+  {
+    "virtual" : 
+    [
+      "Lcom/facebook/marianatrench/integrationtests/BaseFragment;.onCreate:(Landroid/os/Bundle;)V",
+      "Lcom/facebook/marianatrench/integrationtests/ChildFragment;.onStart:()V"
+    ]
+  },
   "Lcom/facebook/marianatrench/integrationtests/ChildFragment;.onAfterActivityCreate:()V" : 
   {
     "static" : 

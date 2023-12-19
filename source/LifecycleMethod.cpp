@@ -8,6 +8,7 @@
 #include <sparta/WorkQueue.h>
 
 #include <Creators.h>
+#include <Resolver.h>
 
 #include <mariana-trench/ClassHierarchies.h>
 #include <mariana-trench/JsonValidation.h>
@@ -43,8 +44,10 @@ LifecycleMethodCall::get_dex_method(DexType* klass) const {
     return nullptr;
   }
 
-  return DexMethod::get_method(
-      /* type */ klass,
+  const auto* dex_klass = type_class(klass);
+  mt_assert(dex_klass != nullptr);
+  return resolve_virtual(
+      /* type */ dex_klass,
       /* name */ DexString::make_string(method_name_),
       /* proto */
       DexProto::make_proto(return_type, argument_types));
@@ -161,8 +164,11 @@ const DexMethod* MT_NULLABLE LifecycleMethod::create_dex_method(
   for (const auto& callee : callees_) {
     auto* dex_method = callee.get_dex_method(klass);
     if (!dex_method) {
-      // This can be null if `klass` does not override the method, in which
-      // case, it will not be invoked.
+      WARNING(
+          1,
+          "Could not find method `{}` within ancestor class hierarchy of `{}`.",
+          callee.to_string(),
+          klass->str());
       continue;
     }
 

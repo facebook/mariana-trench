@@ -24,7 +24,8 @@ public class ChildFragment extends BaseFragment {
 
   @Override
   protected void onStart() {
-    // Issue should be found here in BaseFragment.activity_lifecycle_wrapper.
+    // Issue should be found here in BaseFragment.activity_lifecycle_wrapper
+    // and ChildFragment.activity_lifecycle_wrapper
     super.onStart();
     Origin.sink(mTainted2);
   }

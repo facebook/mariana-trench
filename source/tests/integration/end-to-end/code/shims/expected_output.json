@@ -902,6 +902,10 @@
   }
 }
 {
+  "method" : "Landroidx/fragment/app/FragmentActivity;.activity_lifecycle_wrapper:(Landroid/os/Bundle;Ljava/lang/Object;)V",
+  "position" : {}
+}
+{
   "method" : "Landroidx/fragment/app/FragmentActivity;.onActivityCreate:()V",
   "position" : 
   {
