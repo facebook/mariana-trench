@@ -36,6 +36,26 @@
     "Lcom/facebook/marianatrench/integrationtests/Basic$Derived1;.<init>:(Lcom/facebook/marianatrench/integrationtests/Basic;)V",
     "Lcom/facebook/marianatrench/integrationtests/Basic$Derived2;.<init>:(Lcom/facebook/marianatrench/integrationtests/Basic;)V"
   ],
+  "Lcom/facebook/marianatrench/integrationtests/Basic$Base;.baseSink:(Ljava/lang/Object;)V" : 
+  [
+    "Lcom/facebook/marianatrench/integrationtests/Basic$Base;.truePositive3:()V",
+    "Lcom/facebook/marianatrench/integrationtests/Basic$Derived1;.truePositive:()V"
+  ],
+  "Lcom/facebook/marianatrench/integrationtests/Basic$Base;.baseSinkNotViaThis:(Ljava/lang/Object;)V" : 
+  [
+    "Lcom/facebook/marianatrench/integrationtests/Basic$Base;.truePositive4:()V",
+    "Lcom/facebook/marianatrench/integrationtests/Basic$Derived1;.truePositive2:()V"
+  ],
+  "Lcom/facebook/marianatrench/integrationtests/Basic$Base;.baseSource:()Ljava/lang/Object;" : 
+  [
+    "Lcom/facebook/marianatrench/integrationtests/Basic$Base;.truePositive3:()V",
+    "Lcom/facebook/marianatrench/integrationtests/Basic$Derived1;.truePositive:()V"
+  ],
+  "Lcom/facebook/marianatrench/integrationtests/Basic$Base;.baseSourceNotViaThis:()Ljava/lang/Object;" : 
+  [
+    "Lcom/facebook/marianatrench/integrationtests/Basic$Base;.truePositive4:()V",
+    "Lcom/facebook/marianatrench/integrationtests/Basic$Derived1;.truePositive2:()V"
+  ],
   "Lcom/facebook/marianatrench/integrationtests/Basic$Base;.derived1Sink:(Ljava/lang/Object;)V" : 
   [
     "Lcom/facebook/marianatrench/integrationtests/Basic$Base;.truePositive:()V"
@@ -43,6 +63,14 @@
   "Lcom/facebook/marianatrench/integrationtests/Basic$Base;.derived1Source:()Ljava/lang/Object;" : 
   [
     "Lcom/facebook/marianatrench/integrationtests/Basic$Base;.truePositive:()V"
+  ],
+  "Lcom/facebook/marianatrench/integrationtests/Basic$Base;.derived2SinkNotViaThis:(Ljava/lang/Object;)V" : 
+  [
+    "Lcom/facebook/marianatrench/integrationtests/Basic$Base;.truePositive2:()V"
+  ],
+  "Lcom/facebook/marianatrench/integrationtests/Basic$Base;.derived2SourceNotViaThis:()Ljava/lang/Object;" : 
+  [
+    "Lcom/facebook/marianatrench/integrationtests/Basic$Base;.truePositive2:()V"
   ],
   "Lcom/facebook/marianatrench/integrationtests/Basic$Base;.potentialSink:(Ljava/lang/Object;)V" : 
   [
@@ -60,6 +88,14 @@
   [
     "Lcom/facebook/marianatrench/integrationtests/Basic$Base;.truePositive:()V"
   ],
+  "Lcom/facebook/marianatrench/integrationtests/Basic$Derived1;.derived2SinkNotViaThis:(Ljava/lang/Object;)V" : 
+  [
+    "Lcom/facebook/marianatrench/integrationtests/Basic$Base;.truePositive2:()V"
+  ],
+  "Lcom/facebook/marianatrench/integrationtests/Basic$Derived1;.derived2SourceNotViaThis:()Ljava/lang/Object;" : 
+  [
+    "Lcom/facebook/marianatrench/integrationtests/Basic$Base;.truePositive2:()V"
+  ],
   "Lcom/facebook/marianatrench/integrationtests/Basic$Derived1;.potentialSink:(Ljava/lang/Object;)V" : 
   [
     "Lcom/facebook/marianatrench/integrationtests/Basic$Base;.noIssue:()V"
@@ -76,6 +112,14 @@
   [
     "Lcom/facebook/marianatrench/integrationtests/Basic$Base;.truePositive:()V"
   ],
+  "Lcom/facebook/marianatrench/integrationtests/Basic$Derived2;.derived2SinkNotViaThis:(Ljava/lang/Object;)V" : 
+  [
+    "Lcom/facebook/marianatrench/integrationtests/Basic$Base;.truePositive2:()V"
+  ],
+  "Lcom/facebook/marianatrench/integrationtests/Basic$Derived2;.derived2SourceNotViaThis:()Ljava/lang/Object;" : 
+  [
+    "Lcom/facebook/marianatrench/integrationtests/Basic$Base;.truePositive2:()V"
+  ],
   "Lcom/facebook/marianatrench/integrationtests/Basic$Derived2;.potentialSink:(Ljava/lang/Object;)V" : 
   [
     "Lcom/facebook/marianatrench/integrationtests/Basic$Base;.noIssue:()V"
@@ -83,6 +127,16 @@
   "Lcom/facebook/marianatrench/integrationtests/Basic$Derived2;.potentialSource:()Ljava/lang/Object;" : 
   [
     "Lcom/facebook/marianatrench/integrationtests/Basic$Base;.noIssue:()V"
+  ],
+  "Lcom/facebook/marianatrench/integrationtests/Basic;.staticSink:(Ljava/lang/Object;)V" : 
+  [
+    "Lcom/facebook/marianatrench/integrationtests/Basic$Base;.baseSinkNotViaThis:(Ljava/lang/Object;)V",
+    "Lcom/facebook/marianatrench/integrationtests/Basic$Derived2;.derived2SinkNotViaThis:(Ljava/lang/Object;)V"
+  ],
+  "Lcom/facebook/marianatrench/integrationtests/Basic;.staticSource:()Ljava/lang/Object;" : 
+  [
+    "Lcom/facebook/marianatrench/integrationtests/Basic$Base;.baseSourceNotViaThis:()Ljava/lang/Object;",
+    "Lcom/facebook/marianatrench/integrationtests/Basic$Derived2;.derived2SourceNotViaThis:()Ljava/lang/Object;"
   ],
   "Lcom/facebook/marianatrench/integrationtests/ClassIntervalDetails$Base;.<init>:(Lcom/facebook/marianatrench/integrationtests/ClassIntervalDetails;)V" : 
   [
@@ -153,8 +207,10 @@
   ],
   "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V" : 
   [
+    "Lcom/facebook/marianatrench/integrationtests/Basic$Base;.baseSink:(Ljava/lang/Object;)V",
     "Lcom/facebook/marianatrench/integrationtests/Basic$Derived1;.derived1Sink:(Ljava/lang/Object;)V",
     "Lcom/facebook/marianatrench/integrationtests/Basic$Derived2;.potentialSink:(Ljava/lang/Object;)V",
+    "Lcom/facebook/marianatrench/integrationtests/Basic;.staticSink:(Ljava/lang/Object;)V",
     "Lcom/facebook/marianatrench/integrationtests/IntervalsForPropagations$Unrelated;.issueViaBase:(Lcom/facebook/marianatrench/integrationtests/IntervalsForPropagations$Base;)V",
     "Lcom/facebook/marianatrench/integrationtests/IntervalsForPropagations$Unrelated;.issueViaDerived:(Lcom/facebook/marianatrench/integrationtests/IntervalsForPropagations$DerivedWithPropagation;)V",
     "Lcom/facebook/marianatrench/integrationtests/IntervalsForPropagations$Unrelated;.noIssue:(Lcom/facebook/marianatrench/integrationtests/IntervalsForPropagations$DerivedWithoutPropagation;)V",
@@ -162,8 +218,10 @@
   ],
   "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;" : 
   [
+    "Lcom/facebook/marianatrench/integrationtests/Basic$Base;.baseSource:()Ljava/lang/Object;",
     "Lcom/facebook/marianatrench/integrationtests/Basic$Derived1;.derived1Source:()Ljava/lang/Object;",
     "Lcom/facebook/marianatrench/integrationtests/Basic$Derived1;.potentialSource:()Ljava/lang/Object;",
+    "Lcom/facebook/marianatrench/integrationtests/Basic;.staticSource:()Ljava/lang/Object;",
     "Lcom/facebook/marianatrench/integrationtests/IntervalsForPropagations$Unrelated;.issueViaBase:(Lcom/facebook/marianatrench/integrationtests/IntervalsForPropagations$Base;)V",
     "Lcom/facebook/marianatrench/integrationtests/IntervalsForPropagations$Unrelated;.issueViaDerived:(Lcom/facebook/marianatrench/integrationtests/IntervalsForPropagations$DerivedWithPropagation;)V",
     "Lcom/facebook/marianatrench/integrationtests/IntervalsForPropagations$Unrelated;.noIssue:(Lcom/facebook/marianatrench/integrationtests/IntervalsForPropagations$DerivedWithoutPropagation;)V",
@@ -255,6 +313,7 @@
     "Lcom/facebook/base/activity/FragmentBaseActivityUtil;.<init>:()V",
     "Lcom/facebook/content/SecureContextHelper;.<init>:()V",
     "Lcom/facebook/marianatrench/integrationtests/Basic$Base;.<init>:(Lcom/facebook/marianatrench/integrationtests/Basic;)V",
+    "Lcom/facebook/marianatrench/integrationtests/Basic$Derived1;.derived2SourceNotViaThis:()Ljava/lang/Object;",
     "Lcom/facebook/marianatrench/integrationtests/Basic$Derived2;.derived1Source:()Ljava/lang/Object;",
     "Lcom/facebook/marianatrench/integrationtests/Basic$Derived2;.potentialSource:()Ljava/lang/Object;",
     "Lcom/facebook/marianatrench/integrationtests/Basic;.<init>:()V",
