@@ -326,20 +326,31 @@ std::unique_ptr<TypeEnvironments> Types::infer_types_for_method(
         }
 
         auto local_type = environment_at_instruction.find(ir_register);
-        if (local_type != environment_at_instruction.end() &&
-            type::check_cast(local_type->second, *globally_inferred_type)) {
-          if (local_type->second &&
-              local_type->second->get_name() !=
-                  (*globally_inferred_type)->get_name()) {
+        if (local_type != environment_at_instruction.end()) {
+          if (type::check_cast(local_type->second, *globally_inferred_type)) {
+            if (local_type->second &&
+                local_type->second->get_name() !=
+                    (*globally_inferred_type)->get_name()) {
+              LOG(log_method ? 0 : 5,
+                  "Local type analysis inferred a narrower type {} than global type analysis {} for register {} in instruction {} of method {}",
+                  local_type->second ? local_type->second->str() : "unknown",
+                  (*globally_inferred_type)->str(),
+                  std::to_string(ir_register),
+                  show(instruction),
+                  method->show());
+            }
+            continue;
+          } else if (!type::check_cast(
+                         *globally_inferred_type, local_type->second)) {
             LOG(log_method ? 0 : 5,
-                "Local type analysis inferred a narrower type {} than global type analysis {} for register {} in instruction {} of method {}",
+                "Local type analysis inferred unrelated type `{}` from global type analysis `{}` for register {} in instruction {} of method {}.",
                 local_type->second ? local_type->second->str() : "unknown",
                 (*globally_inferred_type)->str(),
                 std::to_string(ir_register),
                 show(instruction),
                 method->show());
+            continue;
           }
-          continue;
         }
         LOG(log_method ? 0 : 5,
             "Replacing locally inferred type {} with globally inferred type {} for register {} in instruction {} of method {}",
