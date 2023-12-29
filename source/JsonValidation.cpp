@@ -272,7 +272,7 @@ Json::Value JsonValidation::parse_json(std::string string) {
 
 Json::Value JsonValidation::parse_json_file(
     const boost::filesystem::path& path) {
-  boost::filesystem::ifstream file;
+  std::ifstream file;
   file.exceptions(std::ifstream::failbit | std::ifstream::badbit);
   try {
     file.open(path, std::ios_base::binary);
