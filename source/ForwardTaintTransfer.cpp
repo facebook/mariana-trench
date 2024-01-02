@@ -119,19 +119,20 @@ bool ForwardTaintTransfer::analyze_sget(
         3,
         "Unable to resolve access of static field {}",
         show(instruction->get_field()));
+  } else {
+    auto field_sources =
+        context->field_sources_at_callsite(*field_target, aliasing);
+    LOG_OR_DUMP(
+        context,
+        4,
+        "Tainting register {} with {}",
+        k_result_register,
+        field_sources);
+    environment->write(
+        aliasing.result_memory_location(),
+        TaintTree(field_sources),
+        UpdateKind::Strong);
   }
-  auto field_model =
-      field_target ? context->registry.get(field_target->field) : FieldModel();
-  LOG_OR_DUMP(
-      context,
-      4,
-      "Tainting register {} with {}",
-      k_result_register,
-      field_model.sources());
-  environment->write(
-      aliasing.result_memory_location(),
-      TaintTree(field_model.sources()),
-      UpdateKind::Strong);
 
   return false;
 }
