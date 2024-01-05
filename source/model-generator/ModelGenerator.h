@@ -239,7 +239,6 @@ bool has_annotation(
 
 TaintConfig source(
     Context& context,
-    const Method* method,
     const std::string& kind,
     const std::vector<std::string>& features = {},
     Root::Kind callee_port = Root::Kind::Leaf,
@@ -247,7 +246,6 @@ TaintConfig source(
     RootSetAbstractDomain via_value_of_ports = {});
 TaintConfig sink(
     Context& context,
-    const Method* method,
     const std::string& kind,
     const std::vector<std::string>& features = {},
     Root::Kind callee_port = Root::Kind::Leaf,
@@ -256,7 +254,6 @@ TaintConfig sink(
     OriginSet origins = {});
 TaintConfig partial_sink(
     Context& context,
-    const Method* method,
     const std::string& kind,
     const std::string& label,
     const std::vector<std::string>& features = {},

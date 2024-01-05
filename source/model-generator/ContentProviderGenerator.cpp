@@ -42,7 +42,6 @@ Model create_model(
         AccessPath(Root(Root::Kind::Argument, argument.first)),
         generator::source(
             context,
-            method,
             /* kind */ "ProviderUserInput"));
   }
   auto return_type = generator::get_return_type_string(method);
@@ -54,7 +53,6 @@ Model create_model(
         AccessPath(Root(Root::Kind::Return)),
         generator::sink(
             context,
-            method,
             /* kind */ "ProviderExitNode"));
   }
   return model;

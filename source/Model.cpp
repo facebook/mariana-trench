@@ -1731,8 +1731,7 @@ bool Model::check_taint_config_consistency(
   return true;
 }
 
-bool Model::check_taint_consistency(const Taint& taint, std::string_view kind)
-    const {
+bool Model::check_taint_consistency(const Taint& taint) const {
   taint.visit_frames([this](const CallInfo&, const Frame& frame) {
     if (!frame.via_type_of_ports().is_bottom()) {
       for (const auto& root : frame.via_type_of_ports()) {
@@ -1821,8 +1820,7 @@ void Model::add_generation(AccessPath port, Taint source) {
         method_, AccessPathFactory::singleton().get(port));
   }
 
-  if (!check_port_consistency(port) ||
-      !check_taint_consistency(source, "source")) {
+  if (!check_port_consistency(port) || !check_taint_consistency(source)) {
     return;
   }
 
@@ -1846,7 +1844,7 @@ void Model::add_parameter_source(AccessPath port, Taint source) {
 
   if (!check_port_consistency(port) ||
       !check_parameter_source_port_consistency(port) ||
-      !check_taint_consistency(source, "source")) {
+      !check_taint_consistency(source)) {
     return;
   }
 
@@ -1868,7 +1866,7 @@ void Model::add_sink(AccessPath port, Taint sink) {
         method_, AccessPathFactory::singleton().get(port));
   }
 
-  if (!check_port_consistency(port) || !check_taint_consistency(sink, "sink")) {
+  if (!check_port_consistency(port) || !check_taint_consistency(sink)) {
     return;
   }
 
@@ -1894,7 +1892,7 @@ void Model::add_call_effect_source(AccessPath port, Taint source) {
         method_, AccessPathFactory::singleton().get(port));
   }
 
-  if (!check_taint_consistency(source, "effect source")) {
+  if (!check_taint_consistency(source)) {
     return;
   }
 
@@ -1921,7 +1919,7 @@ void Model::add_call_effect_sink(AccessPath port, Taint sink) {
         method_, AccessPathFactory::singleton().get(port));
   }
 
-  if (!check_taint_consistency(sink, "effect sink")) {
+  if (!check_taint_consistency(sink)) {
     return;
   }
 

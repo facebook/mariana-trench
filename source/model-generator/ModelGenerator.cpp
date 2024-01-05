@@ -402,7 +402,6 @@ bool generator::has_annotation(
 
 TaintConfig generator::source(
     Context& context,
-    const Method* method,
     const std::string& kind,
     const std::vector<std::string>& features,
     Root::Kind callee_port,
@@ -442,7 +441,6 @@ TaintConfig generator::source(
 
 TaintConfig generator::sink(
     Context& context,
-    const Method* method,
     const std::string& kind,
     const std::vector<std::string>& features,
     Root::Kind callee_port,
@@ -480,7 +478,6 @@ TaintConfig generator::sink(
 
 TaintConfig generator::partial_sink(
     Context& context,
-    const Method* method,
     const std::string& kind,
     const std::string& label,
     const std::vector<std::string>& features,

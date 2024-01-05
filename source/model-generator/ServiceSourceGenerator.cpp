@@ -43,7 +43,6 @@ Model source_first_argument(
       AccessPath(Root(Root::Kind::Argument, 1)),
       generator::source(
           context,
-          method,
           /* kind */ "ServiceUserInput"));
   return model;
 }
