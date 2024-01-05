@@ -292,30 +292,11 @@ Json::Value sorted_json(const Json::Value& value) {
 std::filesystem::path find_dex_path(
     const std::filesystem::path& test_directory) {
   auto filename = test_directory.filename().native();
-  const char* dex_path_from_environment = std::getenv(filename.c_str());
-  if (dex_path_from_environment) {
+  if (const char* dex_path_from_environment = std::getenv(filename.c_str())) {
     return dex_path_from_environment;
-  } else {
-    // Buck does not set environment variables when invoked with `buck run` but
-    // this is useful for debugging. Working around by using a default path.
-    // NOTE: we assume the test is run in dev mode.
-
-    auto integration_test_directory =
-        test_directory.parent_path().parent_path().string();
-    auto dex_file_directory = integration_test_directory.substr(
-        integration_test_directory.find("fbandroid"));
-    for (const auto& directory : std::filesystem::directory_iterator(
-             std::filesystem::current_path() / "buck-out/dev/gen")) {
-      auto dex_path = directory.path() / dex_file_directory /
-          fmt::format("test-dex-{}", filename) /
-          fmt::format("test-class-{}.dex", filename);
-      if (std::filesystem::exists(dex_path)) {
-        return dex_path;
-      }
-    }
-
-    throw std::logic_error("Unable to find .dex");
   }
+
+  throw std::logic_error("Unable to find .dex");
 }
 
 std::vector<std::string> sub_directories(
