@@ -275,7 +275,7 @@ Json::Value JsonValidation::parse_json_file(
   std::ifstream file;
   file.exceptions(std::ifstream::failbit | std::ifstream::badbit);
   try {
-    file.open(path, std::ios_base::binary);
+    file.open(path.c_str(), std::ios_base::binary);
   } catch (const std::ifstream::failure&) {
     ERROR(1, "Could not open json file: `{}`.", path.string());
     throw;
@@ -327,7 +327,7 @@ void JsonValidation::write_json_file(
     const Json::Value& value) {
   std::ofstream file;
   file.exceptions(std::ofstream::failbit | std::ofstream::badbit);
-  file.open(path, std::ios_base::binary);
+  file.open(path.c_str(), std::ios_base::binary);
   compact_writer()->write(value, &file);
   file << "\n";
   file.close();
