@@ -62,25 +62,25 @@ class JsonModelGenerator final : public ModelGenerator {
   explicit JsonModelGenerator(
       const ModelGeneratorName* name,
       Context& context,
-      const boost::filesystem::path& json_configuration_file,
+      const std::filesystem::path& json_configuration_file,
       const Json::Value& json);
 
  public:
   static JsonModelGenerator from_file(
       const std::string& name,
       Context& context,
-      const boost::filesystem::path& json_configuration_file);
+      const std::filesystem::path& json_configuration_file);
 
   static JsonModelGenerator from_json(
       const std::string& name,
       Context& context,
-      const boost::filesystem::path& json_configuration_file,
+      const std::filesystem::path& json_configuration_file,
       const Json::Value& json);
 
   static JsonModelGenerator from_json(
       const ModelGeneratorName* name,
       Context& context,
-      const boost::filesystem::path& json_configuration_file,
+      const std::filesystem::path& json_configuration_file,
       const Json::Value& json);
 
   std::vector<Model> emit_method_models(const Methods&) override;
@@ -90,7 +90,7 @@ class JsonModelGenerator final : public ModelGenerator {
   std::vector<FieldModel> emit_field_models(const Fields&) override;
 
  private:
-  boost::filesystem::path json_configuration_file_;
+  std::filesystem::path json_configuration_file_;
   std::vector<JsonModelGeneratorItem> items_;
   std::vector<JsonFieldModelGeneratorItem> field_items_;
 };

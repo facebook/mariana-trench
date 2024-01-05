@@ -380,7 +380,7 @@ std::vector<std::string> filter_existing_jars(
   std::vector<std::string> results;
 
   for (const auto& system_jar_path : system_jar_paths) {
-    if (boost::filesystem::exists(system_jar_path)) {
+    if (std::filesystem::exists(system_jar_path)) {
       results.push_back(system_jar_path);
     } else {
       ERROR(1, "Unable to find system jar `{}`", system_jar_path);

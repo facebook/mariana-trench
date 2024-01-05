@@ -141,7 +141,7 @@ void redex::remove_unreachable(
     DexStoresVector& stores) {
   const std::vector<std::string>& proguard_configuration_paths =
       options.proguard_configuration_paths();
-  const std::optional<boost::filesystem::path>& removed_symbols_path =
+  const std::optional<std::filesystem::path>& removed_symbols_path =
       options.removed_symbols_output_path();
   keep_rules::ProguardConfiguration proguard_configuration;
 

@@ -6,13 +6,12 @@
  */
 
 #include <cstdio>
+#include <filesystem>
 #include <fstream>
 #include <unordered_map>
 
 #include <boost/algorithm/string.hpp>
 #include <boost/algorithm/string/find_iterator.hpp>
-#include <boost/filesystem.hpp>
-#include <boost/filesystem/operations.hpp>
 #include <fmt/format.h>
 #include <re2/re2.h>
 
@@ -241,11 +240,11 @@ Positions::Positions(const Options& options, const DexStoresVector& stores) {
         options.source_root_directory());
 
     // Save current path
-    auto current_path = boost::filesystem::current_path();
-    boost::filesystem::path source_root_directory{
+    auto current_path = std::filesystem::current_path();
+    std::filesystem::path source_root_directory{
         options.source_root_directory()};
     // Switch to source root directory.
-    boost::filesystem::current_path(source_root_directory);
+    std::filesystem::current_path(source_root_directory);
 
     auto exclude_directories = options.source_exclude_directories();
     for (auto& exclude_directory : exclude_directories) {
@@ -336,7 +335,7 @@ Positions::Positions(const Options& options, const DexStoresVector& stores) {
     }
 
     // Switch back to current path.
-    boost::filesystem::current_path(current_path);
+    std::filesystem::current_path(current_path);
     Timer method_paths_timer;
     LOG(2, "Indexing method paths...");
 

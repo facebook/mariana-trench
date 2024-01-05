@@ -7,9 +7,8 @@
 
 #pragma once
 
+#include <filesystem>
 #include <optional>
-
-#include <boost/filesystem.hpp>
 
 #include <DexClass.h>
 #include <DexStore.h>

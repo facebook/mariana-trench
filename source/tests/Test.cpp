@@ -39,7 +39,7 @@ Context make_empty_context() {
 Context make_context(const DexStore& store) {
   Context context;
   auto shims_path =
-      boost::filesystem::path(__FILE__).parent_path() / "shims.json";
+      std::filesystem::path(__FILE__).parent_path() / "shims.json";
   context.options = std::make_unique<Options>(
       /* models_paths */ std::vector<std::string>{},
       /* field_models_path */ std::vector<std::string>{},
@@ -241,9 +241,9 @@ TaintConfig make_propagation_taint_config(
 }
 
 #ifndef MARIANA_TRENCH_FACEBOOK_BUILD
-boost::filesystem::path find_repository_root() {
-  auto path = boost::filesystem::current_path();
-  while (!path.empty() && !boost::filesystem::is_directory(path / "source")) {
+std::filesystem::path find_repository_root() {
+  auto path = std::filesystem::current_path();
+  while (!path.empty() && !std::filesystem::is_directory(path / "source")) {
     path = path.parent_path();
   }
   if (path.empty()) {
@@ -289,8 +289,8 @@ Json::Value sorted_json(const Json::Value& value) {
   return value;
 }
 
-boost::filesystem::path find_dex_path(
-    const boost::filesystem::path& test_directory) {
+std::filesystem::path find_dex_path(
+    const std::filesystem::path& test_directory) {
   auto filename = test_directory.filename().native();
   const char* dex_path_from_environment = std::getenv(filename.c_str());
   if (dex_path_from_environment) {
@@ -304,12 +304,12 @@ boost::filesystem::path find_dex_path(
         test_directory.parent_path().parent_path().string();
     auto dex_file_directory = integration_test_directory.substr(
         integration_test_directory.find("fbandroid"));
-    for (const auto& directory : boost::filesystem::directory_iterator(
-             boost::filesystem::current_path() / "buck-out/dev/gen")) {
+    for (const auto& directory : std::filesystem::directory_iterator(
+             std::filesystem::current_path() / "buck-out/dev/gen")) {
       auto dex_path = directory.path() / dex_file_directory /
           fmt::format("test-dex-{}", filename) /
           fmt::format("test-class-{}.dex", filename);
-      if (boost::filesystem::exists(dex_path)) {
+      if (std::filesystem::exists(dex_path)) {
         return dex_path;
       }
     }
@@ -319,11 +319,11 @@ boost::filesystem::path find_dex_path(
 }
 
 std::vector<std::string> sub_directories(
-    const boost::filesystem::path& directory) {
+    const std::filesystem::path& directory) {
   std::vector<std::string> directories;
 
   for (const auto& sub_directory :
-       boost::filesystem::directory_iterator(directory)) {
+       std::filesystem::directory_iterator(directory)) {
     directories.push_back(sub_directory.path().filename().string());
   }
 

@@ -8,13 +8,13 @@
 #include <cstdio>
 
 #include <boost/algorithm/string/predicate.hpp>
-#include <boost/filesystem/string_file.hpp>
 #include <fmt/format.h>
 #include <json/value.h>
 
 #include <sparta/WorkQueue.h>
 
 #include <mariana-trench/Constants.h>
+#include <mariana-trench/Filesystem.h>
 #include <mariana-trench/JsonValidation.h>
 #include <mariana-trench/Log.h>
 #include <mariana-trench/Methods.h>
@@ -224,7 +224,7 @@ void Registry::join_with(const Registry& other) {
   }
 }
 
-void Registry::dump_metadata(const boost::filesystem::path& path) const {
+void Registry::dump_metadata(const std::filesystem::path& path) const {
   auto value = Json::Value(Json::objectValue);
 
   auto codes = Json::Value(Json::objectValue);
@@ -260,8 +260,7 @@ void Registry::dump_metadata(const boost::filesystem::path& path) const {
   value["tool"] = Json::Value("mariana_trench");
   value["version"] = Json::Value("0.2");
 
-  boost::filesystem::save_string_file(
-      path, JsonValidation::to_styled_string(value));
+  filesystem::save_string_file(path, JsonValidation::to_styled_string(value));
 }
 
 std::string Registry::dump_models() const {
@@ -303,14 +302,14 @@ Json::Value Registry::models_to_json() const {
 }
 
 void Registry::dump_models(
-    const boost::filesystem::path& path,
+    const std::filesystem::path& path,
     const std::size_t batch_size) const {
   // Remove existing model files under this directory.
-  for (auto& file : boost::filesystem::directory_iterator(path)) {
+  for (auto& file : std::filesystem::directory_iterator(path)) {
     const auto& file_path = file.path();
-    if (boost::filesystem::is_regular_file(file_path) &&
+    if (std::filesystem::is_regular_file(file_path) &&
         boost::starts_with(file_path.filename().string(), "model@")) {
-      boost::filesystem::remove(file_path);
+      std::filesystem::remove(file_path);
     }
   }
 

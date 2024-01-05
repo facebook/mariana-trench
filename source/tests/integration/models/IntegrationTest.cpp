@@ -10,7 +10,6 @@
 #include <fmt/format.h>
 
 #include <boost/algorithm/string.hpp>
-#include <boost/filesystem/string_file.hpp>
 
 #include <IRAssembler.h>
 #include <RedexContext.h>
@@ -24,6 +23,7 @@
 #include <mariana-trench/Dependencies.h>
 #include <mariana-trench/FieldCache.h>
 #include <mariana-trench/Fields.h>
+#include <mariana-trench/Filesystem.h>
 #include <mariana-trench/Interprocedural.h>
 #include <mariana-trench/JsonValidation.h>
 #include <mariana-trench/Log.h>
@@ -372,8 +372,8 @@ Scope stubs() {
 struct IntegrationTest : public test::ContextGuard,
                          public testing::TestWithParam<std::string> {};
 
-boost::filesystem::path root_directory() {
-  return boost::filesystem::path(__FILE__).parent_path();
+std::filesystem::path root_directory() {
+  return std::filesystem::path(__FILE__).parent_path();
 }
 
 std::vector<std::string> sexp_paths() {
@@ -381,12 +381,12 @@ std::vector<std::string> sexp_paths() {
   std::vector<std::string> paths;
 
   for (const auto& directory :
-       boost::filesystem::recursive_directory_iterator(root)) {
+       std::filesystem::recursive_directory_iterator(root)) {
     auto path = directory.path();
     if (path.extension() != ".sexp") {
       continue;
     }
-    paths.push_back(boost::filesystem::relative(path, root).native());
+    paths.push_back(std::filesystem::relative(path, root).native());
   }
 
   return paths;
@@ -424,15 +424,15 @@ void add_flow_class_fields(DexStore& store) {
 } // namespace
 
 TEST_P(IntegrationTest, ReturnsExpectedModel) {
-  boost::filesystem::path name = GetParam();
+  std::filesystem::path name = GetParam();
   LOG(1, "Test case `{}`", name);
-  boost::filesystem::path path = root_directory() / name;
+  std::filesystem::path path = root_directory() / name;
 
   Scope scope(stubs());
   std::vector<const DexMethod*> methods;
 
   std::string unparsed_source;
-  boost::filesystem::load_string_file(path, unparsed_source);
+  filesystem::load_string_file(path, unparsed_source);
   auto sources = Parser::parse(unparsed_source);
   auto sorted_sources = Parser::sort_by_hierarchy(sources);
 
@@ -562,8 +562,8 @@ TEST_P(IntegrationTest, ReturnsExpectedModel) {
 
   auto expected_path = path.replace_extension(".expected");
   std::string expected_output;
-  if (boost::filesystem::exists(expected_path)) {
-    boost::filesystem::load_string_file(expected_path, expected_output);
+  if (std::filesystem::exists(expected_path)) {
+    filesystem::load_string_file(expected_path, expected_output);
   }
   auto models_output = JsonValidation::to_styled_string(value);
   models_output =
@@ -571,7 +571,7 @@ TEST_P(IntegrationTest, ReturnsExpectedModel) {
   models_output += "\n";
 
   if (models_output != expected_output) {
-    boost::filesystem::save_string_file(
+    filesystem::save_string_file(
         path.replace_extension(".expected.actual"), models_output);
   }
 

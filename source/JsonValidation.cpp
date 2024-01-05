@@ -270,8 +270,7 @@ Json::Value JsonValidation::parse_json(std::string string) {
   return json;
 }
 
-Json::Value JsonValidation::parse_json_file(
-    const boost::filesystem::path& path) {
+Json::Value JsonValidation::parse_json_file(const std::filesystem::path& path) {
   std::ifstream file;
   file.exceptions(std::ifstream::failbit | std::ifstream::badbit);
   try {
@@ -293,7 +292,7 @@ Json::Value JsonValidation::parse_json_file(
 }
 
 Json::Value JsonValidation::parse_json_file(const std::string& path) {
-  return parse_json_file(boost::filesystem::path(path));
+  return parse_json_file(std::filesystem::path(path));
 }
 
 namespace {
@@ -323,7 +322,7 @@ std::unique_ptr<Json::StreamWriter> JsonValidation::styled_writer() {
 }
 
 void JsonValidation::write_json_file(
-    const boost::filesystem::path& path,
+    const std::filesystem::path& path,
     const Json::Value& value) {
   std::ofstream file;
   file.exceptions(std::ofstream::failbit | std::ofstream::badbit);

@@ -87,9 +87,9 @@ class Registry final {
   void join_with(const LiteralModel& literal_model);
   void join_with(const Registry& other);
 
-  void dump_metadata(const boost::filesystem::path& path) const;
+  void dump_metadata(const std::filesystem::path& path) const;
   void dump_models(
-      const boost::filesystem::path& path,
+      const std::filesystem::path& path,
       const std::size_t shard_limit = k_default_shard_limit) const;
   std::string dump_models() const;
   Json::Value models_to_json() const;

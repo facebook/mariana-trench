@@ -43,7 +43,7 @@ make_model_generators(Context& context) {
   // Find JSON model generators in search path.
   for (const auto& path : context.options->model_generator_search_paths()) {
     LOG(3, "Searching for model generators in `{}`...", path);
-    for (auto& entry : boost::filesystem::recursive_directory_iterator(path)) {
+    for (auto& entry : std::filesystem::recursive_directory_iterator(path)) {
       if (entry.path().extension() != ".json" &&
           entry.path().extension() != ".models") {
         continue;
@@ -140,11 +140,11 @@ ModelGeneratorResult ModelGeneration::run(
         "Removing existing model generators under `{}`...",
         *generated_models_directory);
     for (auto& file :
-         boost::filesystem::directory_iterator(*generated_models_directory)) {
+         std::filesystem::directory_iterator(*generated_models_directory)) {
       const auto& file_path = file.path();
-      if (boost::filesystem::is_regular_file(file_path) &&
+      if (std::filesystem::is_regular_file(file_path) &&
           boost::ends_with(file_path.filename().string(), ".json")) {
-        boost::filesystem::remove(file_path);
+        std::filesystem::remove(file_path);
       }
     }
   }

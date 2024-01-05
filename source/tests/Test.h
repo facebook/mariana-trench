@@ -102,16 +102,16 @@ TaintConfig make_propagation_taint_config(
     FeatureMayAlwaysSet locally_inferred_features,
     FeatureSet user_features);
 
-boost::filesystem::path find_repository_root();
+std::filesystem::path find_repository_root();
 
 Json::Value parse_json(std::string input);
 Json::Value sorted_json(const Json::Value& value);
 
-boost::filesystem::path find_dex_path(
-    const boost::filesystem::path& test_directory);
+std::filesystem::path find_dex_path(
+    const std::filesystem::path& test_directory);
 
 std::vector<std::string> sub_directories(
-    const boost::filesystem::path& directory);
+    const std::filesystem::path& directory);
 
 /**
  * Normalizes input in json-lines form where the json-lines themselves can
@@ -127,7 +127,7 @@ std::string normalize_json_lines(const std::string& input);
       PARAM_GENERATOR,                                                      \
       ([](const ::testing::TestParamInfo<TEST_SUITE_NAME::ParamType>& info) \
            -> std::string {                                                 \
-        boost::filesystem::path name = info.param;                          \
+        std::filesystem::path name = info.param;                            \
         std::string test_name = name.stem().string();                       \
         return test_name;                                                   \
       }));

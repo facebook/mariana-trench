@@ -7,11 +7,11 @@
 
 #pragma once
 
+#include <filesystem>
 #include <optional>
 #include <string>
 #include <vector>
 
-#include <boost/filesystem.hpp>
 #include <boost/program_options.hpp>
 #include <json/json.h>
 
@@ -78,15 +78,15 @@ class Options final {
 
   const std::string& apk_path() const;
 
-  const boost::filesystem::path metadata_output_path() const;
-  const boost::filesystem::path removed_symbols_output_path() const;
-  const boost::filesystem::path models_output_path() const;
-  const boost::filesystem::path methods_output_path() const;
-  const boost::filesystem::path call_graph_output_path() const;
-  const boost::filesystem::path class_hierarchies_output_path() const;
-  const boost::filesystem::path class_intervals_output_path() const;
-  const boost::filesystem::path overrides_output_path() const;
-  const boost::filesystem::path dependencies_output_path() const;
+  const std::filesystem::path metadata_output_path() const;
+  const std::filesystem::path removed_symbols_output_path() const;
+  const std::filesystem::path models_output_path() const;
+  const std::filesystem::path methods_output_path() const;
+  const std::filesystem::path call_graph_output_path() const;
+  const std::filesystem::path class_hierarchies_output_path() const;
+  const std::filesystem::path class_intervals_output_path() const;
+  const std::filesystem::path overrides_output_path() const;
+  const std::filesystem::path dependencies_output_path() const;
 
   bool sequential() const;
   bool skip_source_indexing() const;
@@ -142,7 +142,7 @@ class Options final {
   std::string dex_directory_;
 
   std::string apk_path_;
-  boost::filesystem::path output_directory_;
+  std::filesystem::path output_directory_;
 
   bool sequential_;
   bool skip_source_indexing_;

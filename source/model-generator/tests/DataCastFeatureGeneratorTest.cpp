@@ -5,7 +5,8 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-#include <boost/filesystem.hpp>
+#include <filesystem>
+
 #include <gtest/gtest.h>
 
 #include <mariana-trench/Redex.h>
@@ -17,7 +18,7 @@ using namespace marianatrench;
 
 namespace {
 
-boost::filesystem::path models_file_path() {
+std::filesystem::path models_file_path() {
   return test::find_repository_root() /
       "configuration/model-generators/propagations/DataCastFeatureGenerator.models";
 }

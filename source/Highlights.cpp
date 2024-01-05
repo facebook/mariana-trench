@@ -507,8 +507,8 @@ Bounds Highlights::get_callee_highlight_bounds(
 }
 
 void Highlights::augment_positions(Registry& registry, const Context& context) {
-  auto current_path = boost::filesystem::current_path();
-  boost::filesystem::current_path(context.options->source_root_directory());
+  auto current_path = std::filesystem::current_path();
+  std::filesystem::current_path(context.options->source_root_directory());
 
   auto issue_files_to_methods = get_issue_files_to_methods(context, registry);
   auto file_queue =
@@ -539,7 +539,7 @@ void Highlights::augment_positions(Registry& registry, const Context& context) {
   }
   file_queue.run_all();
 
-  boost::filesystem::current_path(current_path);
+  std::filesystem::current_path(current_path);
 }
 
 LocalPositionSet Highlights::filter_overlapping_highlights(

@@ -103,7 +103,7 @@ std::vector<FieldModel> JsonFieldModelGeneratorItem::visit_field(
 JsonModelGenerator::JsonModelGenerator(
     const ModelGeneratorName* name,
     Context& context,
-    const boost::filesystem::path& json_configuration_file,
+    const std::filesystem::path& json_configuration_file,
     const Json::Value& value)
     : ModelGenerator(name, context),
       json_configuration_file_(json_configuration_file) {
@@ -168,7 +168,7 @@ JsonModelGenerator::JsonModelGenerator(
 JsonModelGenerator JsonModelGenerator::from_file(
     const std::string& name,
     Context& context,
-    const boost::filesystem::path& json_configuration_file) {
+    const std::filesystem::path& json_configuration_file) {
   return JsonModelGenerator::from_json(
       context.model_generator_name_factory->create(name),
       context,
@@ -179,7 +179,7 @@ JsonModelGenerator JsonModelGenerator::from_file(
 JsonModelGenerator JsonModelGenerator::from_json(
     const std::string& name,
     Context& context,
-    const boost::filesystem::path& json_configuration_file,
+    const std::filesystem::path& json_configuration_file,
     const Json::Value& json) {
   return JsonModelGenerator::from_json(
       context.model_generator_name_factory->create(name),
@@ -191,7 +191,7 @@ JsonModelGenerator JsonModelGenerator::from_json(
 JsonModelGenerator JsonModelGenerator::from_json(
     const ModelGeneratorName* name,
     Context& context,
-    const boost::filesystem::path& json_configuration_file,
+    const std::filesystem::path& json_configuration_file,
     const Json::Value& json) {
   return JsonModelGenerator(name, context, json_configuration_file, json);
 }

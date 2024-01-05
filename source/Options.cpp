@@ -19,14 +19,14 @@ namespace marianatrench {
 namespace {
 
 std::string check_path_exists(const std::string& path) {
-  if (!boost::filesystem::exists(path)) {
+  if (!std::filesystem::exists(path)) {
     throw std::invalid_argument(fmt::format("File `{}` does not exist.", path));
   }
   return path;
 }
 
 std::string check_directory_exists(const std::string& path) {
-  if (!boost::filesystem::is_directory(path)) {
+  if (!std::filesystem::is_directory(path)) {
     throw std::invalid_argument(
         fmt::format("Directory `{}` does not exist.", path));
   }
@@ -43,14 +43,14 @@ std::vector<std::string> parse_paths_list(
 
   std::vector<std::string> paths;
   for (const auto& path : input_paths) {
-    if (boost::filesystem::is_directory(path)) {
+    if (std::filesystem::is_directory(path)) {
       for (const auto& entry : boost::make_iterator_range(
-               boost::filesystem::directory_iterator(path), {})) {
+               std::filesystem::directory_iterator(path), {})) {
         if (!extension || entry.path().extension() == *extension) {
           paths.push_back(entry.path().native());
         }
       }
-    } else if (boost::filesystem::exists(path)) {
+    } else if (std::filesystem::exists(path)) {
       paths.push_back(path);
     } else if (!check_exist) {
       WARNING(2, "Argument path does not exist: `{}`", path);
@@ -68,7 +68,7 @@ std::vector<std::string> parse_search_paths(const std::string& input) {
   boost::split(paths, input, boost::is_any_of(",;"));
 
   for (const auto& path : paths) {
-    if (!boost::filesystem::is_directory(path)) {
+    if (!std::filesystem::is_directory(path)) {
       throw std::invalid_argument(
           fmt::format("Directory `{}` does not exist.", path));
     }
@@ -231,7 +231,7 @@ Options::Options(const boost::program_options::variables_map& variables) {
   }
 
   apk_path_ = check_path_exists(variables["apk-path"].as<std::string>());
-  output_directory_ = boost::filesystem::path(
+  output_directory_ = std::filesystem::path(
       check_directory_exists(variables["output-directory"].as<std::string>()));
 
   sequential_ = variables.count("sequential") > 0;
@@ -531,39 +531,39 @@ const std::string& Options::apk_path() const {
   return apk_path_;
 }
 
-const boost::filesystem::path Options::metadata_output_path() const {
+const std::filesystem::path Options::metadata_output_path() const {
   return output_directory_ / "metadata.json";
 }
 
-const boost::filesystem::path Options::removed_symbols_output_path() const {
+const std::filesystem::path Options::removed_symbols_output_path() const {
   return output_directory_ / "removed_symbols.json";
 }
 
-const boost::filesystem::path Options::models_output_path() const {
+const std::filesystem::path Options::models_output_path() const {
   return output_directory_;
 }
 
-const boost::filesystem::path Options::methods_output_path() const {
+const std::filesystem::path Options::methods_output_path() const {
   return output_directory_ / "methods.json";
 }
 
-const boost::filesystem::path Options::call_graph_output_path() const {
+const std::filesystem::path Options::call_graph_output_path() const {
   return output_directory_ / "call_graph.json";
 }
 
-const boost::filesystem::path Options::class_hierarchies_output_path() const {
+const std::filesystem::path Options::class_hierarchies_output_path() const {
   return output_directory_ / "class_hierarchies.json";
 }
 
-const boost::filesystem::path Options::class_intervals_output_path() const {
+const std::filesystem::path Options::class_intervals_output_path() const {
   return output_directory_ / "class_intervals.json";
 }
 
-const boost::filesystem::path Options::overrides_output_path() const {
+const std::filesystem::path Options::overrides_output_path() const {
   return output_directory_ / "overrides.json";
 }
 
-const boost::filesystem::path Options::dependencies_output_path() const {
+const std::filesystem::path Options::dependencies_output_path() const {
   return output_directory_ / "dependencies.json";
 }
 

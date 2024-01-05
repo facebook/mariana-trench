@@ -7,7 +7,6 @@
 
 #include <mutex>
 
-#include <boost/filesystem/string_file.hpp>
 #include <fmt/format.h>
 #include <gtest/gtest.h>
 
@@ -19,6 +18,7 @@
 
 #include <mariana-trench/Context.h>
 #include <mariana-trench/Fields.h>
+#include <mariana-trench/Filesystem.h>
 #include <mariana-trench/JsonValidation.h>
 #include <mariana-trench/Log.h>
 #include <mariana-trench/MarianaTrench.h>
@@ -34,8 +34,8 @@ struct JsonModelGeneratorIntegrationTest
     : public test::ContextGuard,
       public testing::TestWithParam<std::string> {};
 
-boost::filesystem::path root_directory() {
-  return boost::filesystem::path(__FILE__).parent_path() / "code";
+std::filesystem::path root_directory() {
+  return std::filesystem::path(__FILE__).parent_path() / "code";
 }
 
 } // namespace
@@ -43,9 +43,9 @@ boost::filesystem::path root_directory() {
 namespace marianatrench {
 
 TEST_P(JsonModelGeneratorIntegrationTest, CompareModels) {
-  boost::filesystem::path name = GetParam();
+  std::filesystem::path name = GetParam();
   LOG(1, "Test case `{}`", name);
-  boost::filesystem::path directory = root_directory() / name;
+  std::filesystem::path directory = root_directory() / name;
 
   Context context;
 
@@ -71,15 +71,15 @@ TEST_P(JsonModelGeneratorIntegrationTest, CompareModels) {
   // Read from the expected generated models
   std::string expected_output = "";
   try {
-    boost::filesystem::load_string_file(
-        directory / "/expected_output.json", expected_output);
+    filesystem::load_string_file(
+        directory / "expected_output.json", expected_output);
     expected_output = test::normalize_json_lines(expected_output);
   } catch (std::exception& error) {
     LOG(1, "Unable to load expected models: {}", error.what());
   }
 
   // Load test Java classes
-  boost::filesystem::path dex_path = test::find_dex_path(directory);
+  std::filesystem::path dex_path = test::find_dex_path(directory);
   LOG(3, "Dex path is `{}`", dex_path);
 
   // Properly initialize context
@@ -126,7 +126,7 @@ TEST_P(JsonModelGeneratorIntegrationTest, CompareModels) {
       test::normalize_json_lines(registry.dump_models());
 
   if (expected_output != actual_output) {
-    boost::filesystem::save_string_file(
+    filesystem::save_string_file(
         directory / "/expected_output.json.actual", actual_output);
   }
   EXPECT_TRUE(actual_output == expected_output);
