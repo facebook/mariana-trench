@@ -260,7 +260,7 @@ void Registry::dump_metadata(const std::filesystem::path& path) const {
   value["tool"] = Json::Value("mariana_trench");
   value["version"] = Json::Value("0.2");
 
-  filesystem::save_string_file(path, JsonValidation::to_styled_string(value));
+  JsonValidation::write_json_file(path, value);
 }
 
 std::string Registry::dump_models() const {
