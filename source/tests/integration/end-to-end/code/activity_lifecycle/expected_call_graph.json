@@ -218,14 +218,6 @@
       "Landroid/app/Activity;.<init>:()V"
     ]
   },
-  "Lcom/facebook/marianatrench/integrationtests/BaseActivity;.activity_lifecycle_wrapper:(Landroid/os/Bundle;)V" : 
-  {
-    "virtual" : 
-    [
-      "Lcom/facebook/marianatrench/integrationtests/BaseActivity;.onCreate:(Landroid/os/Bundle;)V",
-      "Lcom/facebook/marianatrench/integrationtests/BaseActivity;.onStart:()V"
-    ]
-  },
   "Lcom/facebook/marianatrench/integrationtests/BaseActivity;.onCreate:(Landroid/os/Bundle;)V" : 
   {
     "static" : 

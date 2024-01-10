@@ -64,12 +64,10 @@
   ],
   "Lcom/facebook/marianatrench/integrationtests/BaseFragment;.onCreate:(Landroid/os/Bundle;)V" : 
   [
-    "Lcom/facebook/marianatrench/integrationtests/BaseFragment;.activity_lifecycle_wrapper:(Landroid/os/Bundle;)V",
     "Lcom/facebook/marianatrench/integrationtests/ChildFragment;.activity_lifecycle_wrapper:(Landroid/os/Bundle;)V"
   ],
   "Lcom/facebook/marianatrench/integrationtests/BaseFragment;.onStart:()V" : 
   [
-    "Lcom/facebook/marianatrench/integrationtests/BaseFragment;.activity_lifecycle_wrapper:(Landroid/os/Bundle;)V",
     "Lcom/facebook/marianatrench/integrationtests/ChildFragment;.onStart:()V"
   ],
   "Lcom/facebook/marianatrench/integrationtests/ChildFragment;.onActivityCreate:()V" : 
@@ -86,7 +84,6 @@
   ],
   "Lcom/facebook/marianatrench/integrationtests/ChildFragment;.onStart:()V" : 
   [
-    "Lcom/facebook/marianatrench/integrationtests/BaseFragment;.activity_lifecycle_wrapper:(Landroid/os/Bundle;)V",
     "Lcom/facebook/marianatrench/integrationtests/ChildFragment;.activity_lifecycle_wrapper:(Landroid/os/Bundle;)V"
   ],
   "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V" : 
