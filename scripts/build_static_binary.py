@@ -35,7 +35,7 @@ RE2_VERSION: str = "2021-04-01"
 RE2_URL: str = f"https://github.com/google/re2/archive/{RE2_VERSION}.tar.gz"
 
 BOOST_VERSION: str = "1.76.0"
-BOOST_URL: str = f"https://boostorg.jfrog.io/artifactory/main/release/{BOOST_VERSION}/source/boost_{BOOST_VERSION.replace('.', '_')}.tar.bz2"
+BOOST_URL: str = f"https://archives.boost.io/release/{BOOST_VERSION}/source/boost_{BOOST_VERSION.replace('.', '_')}.tar.bz2"
 
 REDEX_URL: str = "https://github.com/facebook/redex.git"
 
