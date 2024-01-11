@@ -197,8 +197,10 @@ const DexMethod* MT_NULLABLE LifecycleMethod::create_dex_method(
   if (callee_count < 2) {
     // The point of life-cycle methods is to find flows where tainted member
     // variables flow from one callee into another. If only one (or no) method
-    // is overridden, there is no need to create the artificial method.
-    LOG(5,
+    // is overridden, there is no need to create the artificial method. If this
+    // happens, it is likely the life-cycle configuration is incorrect.
+    WARNING(
+        1,
         "Skipped creating life-cycle method for class `{}`. Reason: Insufficient callees.",
         klass->str());
     return nullptr;
