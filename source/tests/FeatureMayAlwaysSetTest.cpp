@@ -25,12 +25,12 @@ TEST_F(FeatureMayAlwaysSetTest, Constructor) {
 
   EXPECT_EQ(
       FeatureMayAlwaysSet(
-          /* may */ FeatureSet{one}, /* always */ FeatureSet{two})
+          /* may */ FeatureSet{one, two}, /* always */ FeatureSet{two})
           .may(),
-      (FeatureSet{one, two}));
+      (FeatureSet{one}));
   EXPECT_EQ(
       FeatureMayAlwaysSet(
-          /* may */ FeatureSet{one}, /* always */ FeatureSet{two})
+          /* may */ FeatureSet{one, two}, /* always */ FeatureSet{two})
           .always(),
       FeatureSet{two});
 
@@ -42,16 +42,16 @@ TEST_F(FeatureMayAlwaysSetTest, Constructor) {
   EXPECT_EQ(
       FeatureMayAlwaysSet::make_may(FeatureSet{one}).always(), FeatureSet{});
 
-  EXPECT_EQ(FeatureMayAlwaysSet::make_always({one}).may(), FeatureSet{one});
+  EXPECT_EQ(FeatureMayAlwaysSet::make_always({one}).may(), FeatureSet{});
   EXPECT_EQ(FeatureMayAlwaysSet::make_always({one}).always(), FeatureSet{one});
 
   EXPECT_EQ(
-      FeatureMayAlwaysSet::make_always(FeatureSet{one}).may(), FeatureSet{one});
+      FeatureMayAlwaysSet::make_always(FeatureSet{one}).may(), FeatureSet{});
   EXPECT_EQ(
       FeatureMayAlwaysSet::make_always(FeatureSet{one}).always(),
       FeatureSet{one});
 
-  EXPECT_EQ(FeatureMayAlwaysSet{one}.may(), FeatureSet{one});
+  EXPECT_EQ(FeatureMayAlwaysSet{one}.may(), FeatureSet{});
   EXPECT_EQ(FeatureMayAlwaysSet{one}.always(), FeatureSet{one});
 }
 

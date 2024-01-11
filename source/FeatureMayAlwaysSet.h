@@ -68,6 +68,7 @@ class FeatureMayAlwaysSet final
     return set_.empty();
   }
 
+  /* Return may-features, excluding always-features. */
   FeatureSet may() const;
 
   FeatureSet always() const;

@@ -112,7 +112,6 @@ Json::Value FeatureMayAlwaysSet::to_json() const {
 
   auto may_features = may();
   auto always_features = always();
-  may_features.difference_with(always_features);
 
   auto value = Json::Value(Json::objectValue);
   if (!may_features.empty()) {
