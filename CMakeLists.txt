@@ -101,7 +101,6 @@ target_link_libraries(mariana-trench-library PUBLIC
                       ZLIB::ZLIB
                       Boost::system
                       Boost::regex
-                      Boost::filesystem
                       Boost::program_options
                       Boost::iostreams
                       Boost::thread
@@ -109,7 +108,8 @@ target_link_libraries(mariana-trench-library PUBLIC
                       JsonCpp::JsonCpp
                       fmt::fmt
                       re2::re2
-                      Redex::LibTool)
+                      Redex::LibTool
+                      Boost::filesystem)
 target_include_directories(mariana-trench-library PUBLIC "${CMAKE_CURRENT_BINARY_DIR}/header-tree")
 
 add_executable(mariana-trench-binary "source/Main.cpp")
