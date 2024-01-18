@@ -30,14 +30,14 @@ class LifecycleMethodsError : public JsonValidationError {
  */
 class LifecycleMethods final {
  public:
-  static void run(
+  static LifecycleMethods run(
       const Options& options,
       const ClassHierarchies& class_hierarchies,
       Methods& methods);
 
   LifecycleMethods() = default;
 
-  DELETE_COPY_CONSTRUCTORS_AND_ASSIGNMENTS(LifecycleMethods)
+  MOVE_CONSTRUCTOR_ONLY(LifecycleMethods)
 
   void add_methods_from_json(const Json::Value& lifecycle_definitions);
 

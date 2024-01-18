@@ -26,6 +26,7 @@
 #include <mariana-trench/Fields.h>
 #include <mariana-trench/IncludeMacros.h>
 #include <mariana-trench/Issue.h>
+#include <mariana-trench/LifecycleMethods.h>
 #include <mariana-trench/Method.h>
 #include <mariana-trench/Options.h>
 #include <mariana-trench/Overrides.h>
@@ -212,6 +213,7 @@ class CallGraph final {
       const Options& options,
       const Types& types,
       const ClassHierarchies& class_hierarchies,
+      const LifecycleMethods& lifecycle_methods,
       const Shims& shims,
       const FeatureFactory& feature_factory,
       Methods& methods,

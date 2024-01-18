@@ -142,16 +142,6 @@ Registry MarianaTrench::analyze(Context& context) {
       field_cache_timer.duration_in_seconds(),
       resident_set_size_in_gb());
 
-  Timer lifecycle_methods_timer;
-  LOG(1, "Creating life-cycle wrapper methods...");
-  LifecycleMethods::run(
-      *context.options, *context.class_hierarchies, *context.methods);
-  context.statistics->log_time("lifecycle_methods", lifecycle_methods_timer);
-  LOG(1,
-      "Created lifecycle methods in {:.2f}s. Memory used, RSS: {:.2f}GB",
-      lifecycle_methods_timer.duration_in_seconds(),
-      resident_set_size_in_gb());
-
   Timer overrides_timer;
   LOG(1, "Building override graph...");
   context.overrides = std::make_unique<Overrides>(
@@ -175,9 +165,21 @@ Registry MarianaTrench::analyze(Context& context) {
   std::vector<Model> generated_models;
   std::vector<FieldModel> generated_field_models;
 
-  // Scope for MethodMappings, Shims and IntentRoutingAnalyzer as they are only
-  // used for shim and model generation steps.
+  // Scope for LifecycleMethods, MethodMappings, Shims and IntentRoutingAnalyzer
+  // as they are only used for callgraph construction, shim and model generation
+  // steps.
   {
+    Timer lifecycle_methods_timer;
+    LOG(1, "Creating life-cycle wrapper methods...");
+    auto lifecycle_methods = LifecycleMethods::run(
+        *context.options, *context.class_hierarchies, *context.methods);
+    context.statistics->log_time("lifecycle_methods", lifecycle_methods_timer);
+
+    LOG(1,
+        "Created lifecycle methods in {:.2f}s. Memory used, RSS: {:.2f}GB",
+        lifecycle_methods_timer.duration_in_seconds(),
+        resident_set_size_in_gb());
+
     Timer method_mapping_timer;
     LOG(1,
         "Building method mappings for shim/model generation over {} methods",
@@ -212,6 +214,7 @@ Registry MarianaTrench::analyze(Context& context) {
         *context.options,
         *context.types,
         *context.class_hierarchies,
+        lifecycle_methods,
         shims,
         *context.feature_factory,
         *context.methods,

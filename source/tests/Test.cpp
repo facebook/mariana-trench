@@ -79,6 +79,7 @@ Context make_context(const DexStore& store) {
       *context.options,
       *context.types,
       *context.class_hierarchies,
+      LifecycleMethods{},
       shims,
       *context.feature_factory,
       *context.methods,

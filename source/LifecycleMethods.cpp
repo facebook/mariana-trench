@@ -16,7 +16,7 @@ LifecycleMethodsError::LifecycleMethodsError(
     const std::string& expected)
     : JsonValidationError(value, field, expected) {}
 
-void LifecycleMethods::run(
+LifecycleMethods LifecycleMethods::run(
     const Options& options,
     const ClassHierarchies& class_hierarchies,
     Methods& methods) {
@@ -26,9 +26,11 @@ void LifecycleMethods::run(
         JsonValidation::parse_json_file(path));
   }
 
-  for (auto& [_, lifecycle_method] : lifecycle_methods.methods()) {
+  for (auto& [_, lifecycle_method] : lifecycle_methods.lifecycle_methods_) {
     lifecycle_method.create_methods(class_hierarchies, methods);
   }
+
+  return lifecycle_methods;
 }
 
 void LifecycleMethods::add_methods_from_json(

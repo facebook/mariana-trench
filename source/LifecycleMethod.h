@@ -10,8 +10,11 @@
 #include <fmt/format.h>
 #include <json/json.h>
 
+#include <ConcurrentContainers.h>
+
 #include <mariana-trench/Context.h>
 #include <mariana-trench/IncludeMacros.h>
+#include <mariana-trench/Method.h>
 #include <mariana-trench/Redex.h>
 
 namespace marianatrench {
@@ -108,19 +111,25 @@ class LifecycleMethod {
    */
   void create_methods(
       const ClassHierarchies& class_hierarchies,
-      Methods& methods) const;
+      Methods& methods);
+
+  const Method* MT_NULLABLE
+  get_method_for_type(const DexType* receiver_type) const {
+    return class_to_lifecycle_method_.get(receiver_type, nullptr);
+  }
 
   bool operator==(const LifecycleMethod& other) const;
 
  private:
   const DexMethod* MT_NULLABLE
-  create_dex_method(DexType* klass, const TypeIndexMap& type_index_map) const;
+  create_dex_method(DexType* klass, const TypeIndexMap& type_index_map);
 
-  const DexTypeList* get_argument_types(const TypeIndexMap&) const;
+  const DexTypeList* get_argument_types(const TypeIndexMap&);
 
   std::string base_class_name_;
   std::string method_name_;
   std::vector<LifecycleMethodCall> callees_;
+  ConcurrentMap<const DexType*, const Method*> class_to_lifecycle_method_;
 };
 
 } // namespace marianatrench

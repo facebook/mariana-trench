@@ -443,6 +443,7 @@ void process_shim_lifecycle(
     const IRInstruction* instruction,
     const Methods& method_factory,
     const Types& types,
+    const LifecycleMethods& lifecycle_methods,
     const Overrides& override_factory,
     const ClassHierarchies& class_hierarchies,
     const FeatureFactory& feature_factory,
@@ -465,24 +466,23 @@ void process_shim_lifecycle(
     return;
   }
 
-  auto result = std::find_if(
-      method_factory.begin(),
-      method_factory.end(),
-      [&method_name, receiver_type](const Method* method) {
-        return method->get_class()->str() == receiver_type->str() &&
-            method->get_name() == method_name;
-      });
-  if (result == method_factory.end()) {
+  auto result = lifecycle_methods.methods().find(method_name);
+  if (result == lifecycle_methods.methods().end()) {
+    WARNING(1, "Specified lifecycle method not found: `{}`", method_name);
+    return;
+  }
+
+  const auto* lifecycle_method =
+      result->second.get_method_for_type(receiver_type);
+  if (lifecycle_method == nullptr) {
     WARNING(
         1,
         "Specified lifecycle method not found: `{}` for class: `{}` in caller: {}",
         method_name,
         receiver_type->str(),
         caller->show());
-
     return;
   }
-  const Method* lifecycle_method = *result;
 
   auto root_registers =
       shim_lifecycle.root_registers(callee, lifecycle_method, instruction);
@@ -509,6 +509,7 @@ std::vector<ArtificialCallee> shim_artificial_callees(
     const IRInstruction* instruction,
     const Methods& method_factory,
     const Types& types,
+    const LifecycleMethods& lifecycle_methods,
     const Overrides& override_factory,
     const ClassHierarchies& class_hierarchies,
     const FeatureFactory& feature_factory,
@@ -556,6 +557,7 @@ std::vector<ArtificialCallee> shim_artificial_callees(
         instruction,
         method_factory,
         types,
+        lifecycle_methods,
         override_factory,
         class_hierarchies,
         feature_factory,
@@ -606,6 +608,7 @@ InstructionCallGraphInformation process_instruction(
     const Options& options,
     const Types& types,
     const ClassHierarchies& class_hierarchies,
+    const LifecycleMethods& lifecycle_methods,
     const Shims& shims,
     const FeatureFactory& feature_factory,
     ConcurrentSet<const Method*>& worklist,
@@ -684,6 +687,7 @@ InstructionCallGraphInformation process_instruction(
         instruction,
         method_factory,
         types,
+        lifecycle_methods,
         override_factory,
         class_hierarchies,
         feature_factory,
@@ -912,6 +916,7 @@ CallGraph::CallGraph(
     const Options& options,
     const Types& types,
     const ClassHierarchies& class_hierarchies,
+    const LifecycleMethods& lifecycle_methods,
     const Shims& shims,
     const FeatureFactory& feature_factory,
     Methods& method_factory,
@@ -990,6 +995,7 @@ CallGraph::CallGraph(
                   options,
                   types,
                   class_hierarchies,
+                  lifecycle_methods,
                   shims,
                   feature_factory,
                   worklist,

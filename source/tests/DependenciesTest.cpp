@@ -64,6 +64,7 @@ Context test_dependencies(const Scope& scope) {
       *context.options,
       *context.types,
       *context.class_hierarchies,
+      LifecycleMethods{},
       Shims{/* global_shims_size */ 0, intent_routing_analyzer},
       *context.feature_factory,
       *context.methods,

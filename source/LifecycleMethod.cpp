@@ -86,7 +86,7 @@ LifecycleMethod LifecycleMethod::from_json(const Json::Value& value) {
 
 void LifecycleMethod::create_methods(
     const ClassHierarchies& class_hierarchies,
-    Methods& methods) const {
+    Methods& methods) {
   // All DexMethods created by `LifecycleMethod` have the same signature:
   //   void <method_name_>(<arguments>)
   // The arguments are determined by the callees' arguments. This creates the
@@ -132,10 +132,10 @@ void LifecycleMethod::create_methods(
       final_children.size());
 
   auto queue = sparta::work_queue<DexType*>([&](DexType* child) {
-    const auto* method = create_dex_method(child, type_index_map);
-    if (method != nullptr) {
+    if (const auto* dex_method = create_dex_method(child, type_index_map)) {
       ++methods_created_count;
-      methods.create(method);
+      const auto* method = methods.create(dex_method);
+      class_to_lifecycle_method_.emplace(child, method);
     }
   });
   for (const auto* final_child : final_children) {
@@ -156,7 +156,7 @@ bool LifecycleMethod::operator==(const LifecycleMethod& other) const {
 
 const DexMethod* MT_NULLABLE LifecycleMethod::create_dex_method(
     DexType* klass,
-    const TypeIndexMap& type_index_map) const {
+    const TypeIndexMap& type_index_map) {
   auto method = MethodCreator(
       /* class */ klass,
       /* name */ DexString::make_string(method_name_),
@@ -218,7 +218,7 @@ const DexMethod* MT_NULLABLE LifecycleMethod::create_dex_method(
 }
 
 const DexTypeList* LifecycleMethod::get_argument_types(
-    const TypeIndexMap& type_index_map) const {
+    const TypeIndexMap& type_index_map) {
   // While the register locations for the arguments start at 1, the actual
   // argument index for the method's prototype start at index 0.
   int num_args = type_index_map.size();

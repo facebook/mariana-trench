@@ -173,7 +173,7 @@ class ShimLifecycleTarget {
       bool is_reflection,
       bool infer_parameter_mapping);
 
-  std::string_view method_name() const {
+  const std::string& method_name() const {
     return method_name_;
   }
 
