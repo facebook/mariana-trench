@@ -210,13 +210,13 @@ Registry MarianaTrench::analyze(Context& context) {
     LOG(1, "Building call graph...");
     context.call_graph = std::make_unique<CallGraph>(
         *context.options,
-        *context.methods,
-        *context.fields,
         *context.types,
         *context.class_hierarchies,
-        *context.overrides,
-        *context.feature_factory,
         shims,
+        *context.feature_factory,
+        *context.methods,
+        *context.fields,
+        *context.overrides,
         method_mappings);
     context.statistics->log_time("call_graph", call_graph_timer);
     LOG(1,

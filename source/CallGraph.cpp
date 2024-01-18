@@ -256,12 +256,12 @@ const Method* get_callee_from_resolved_call(
     const IRInstruction* instruction,
     const ParameterTypeOverrides& parameter_type_overrides,
     const Options& options,
-    Methods& method_factory,
     const FeatureFactory& feature_factory,
+    Methods& method_factory,
+    MethodMappings& method_mappings,
     ArtificialCallees& artificial_callees,
     std::unordered_map<std::string, TextualOrderIndex>&
-        sink_textual_order_index,
-    MethodMappings& method_mappings) {
+        sink_textual_order_index) {
   const Method* callee = nullptr;
   if (dex_callee->get_code() == nullptr) {
     // When passing an anonymous class into an external callee (no code), add
@@ -603,19 +603,19 @@ bool is_field_or_invoke_instruction(const IRInstruction* instruction) {
 InstructionCallGraphInformation process_instruction(
     const Method* caller,
     const IRInstruction* instruction,
+    const Options& options,
+    const Types& types,
+    const ClassHierarchies& class_hierarchies,
+    const Shims& shims,
+    const FeatureFactory& feature_factory,
     ConcurrentSet<const Method*>& worklist,
     ConcurrentSet<const Method*>& processed,
-    const Options& options,
     Methods& method_factory,
     Fields& field_factory,
-    const Types& types,
     Overrides& override_factory,
-    const ClassHierarchies& class_hierarchies,
-    const FeatureFactory& feature_factory,
-    const Shims& shims,
+    MethodMappings& method_mappings,
     std::unordered_map<std::string, TextualOrderIndex>&
-        sink_textual_order_index,
-    MethodMappings& method_mappings) {
+        sink_textual_order_index) {
   InstructionCallGraphInformation instruction_information;
 
   if (is_field_instruction(instruction)) {
@@ -671,11 +671,11 @@ InstructionCallGraphInformation process_instruction(
       instruction,
       parameter_type_overrides,
       options,
-      method_factory,
       feature_factory,
+      method_factory,
+      method_mappings,
       instruction_information.artificial_callees,
-      sink_textual_order_index,
-      method_mappings);
+      sink_textual_order_index);
 
   if (auto shim = shims.get_shim_for_caller(original_callee, caller)) {
     auto artificial_callees = shim_artificial_callees(
@@ -910,13 +910,13 @@ std::ostream& operator<<(std::ostream& out, const FieldTarget& field_target) {
 
 CallGraph::CallGraph(
     const Options& options,
-    Methods& method_factory,
-    Fields& field_factory,
     const Types& types,
     const ClassHierarchies& class_hierarchies,
-    Overrides& override_factory,
-    const FeatureFactory& feature_factory,
     const Shims& shims,
+    const FeatureFactory& feature_factory,
+    Methods& method_factory,
+    Fields& field_factory,
+    Overrides& override_factory,
     MethodMappings& method_mappings)
     : types_(types),
       class_hierarchies_(class_hierarchies),
@@ -987,18 +987,18 @@ CallGraph::CallGraph(
               auto instruction_information = process_instruction(
                   caller,
                   instruction,
+                  options,
+                  types,
+                  class_hierarchies,
+                  shims,
+                  feature_factory,
                   worklist,
                   processed,
-                  options,
                   method_factory,
                   field_factory,
-                  types,
                   override_factory,
-                  class_hierarchies,
-                  feature_factory,
-                  shims,
-                  sink_textual_order_index,
-                  method_mappings);
+                  method_mappings,
+                  sink_textual_order_index);
               if (instruction_information.artificial_callees.size() > 0) {
                 artificial_callees.emplace(
                     instruction, instruction_information.artificial_callees);
@@ -1119,6 +1119,8 @@ const ArtificialCallees& CallGraph::artificial_callees(
 const std::optional<FieldTarget> CallGraph::resolved_field_access(
     const Method* caller,
     const IRInstruction* instruction) const {
+  // Note that `find` is not thread-safe, but this is fine because
+  // `resolved_fields_` is read-only after the constructor completed.
   auto fields = resolved_fields_.find(caller);
   if (fields == resolved_fields_.end()) {
     return std::nullopt;
@@ -1134,6 +1136,8 @@ const std::optional<FieldTarget> CallGraph::resolved_field_access(
 
 const std::vector<FieldTarget> CallGraph::resolved_field_accesses(
     const Method* caller) const {
+  // Note that `find` is not thread-safe, but this is fine because
+  // `resolved_fields_` is read-only after the constructor completed.
   auto fields = resolved_fields_.find(caller);
   if (fields == resolved_fields_.end()) {
     return {};
@@ -1149,6 +1153,8 @@ const std::vector<FieldTarget> CallGraph::resolved_field_accesses(
 TextualOrderIndex CallGraph::return_index(
     const Method* caller,
     const IRInstruction* instruction) const {
+  // Note that `find` is not thread-safe, but this is fine because
+  // `indexed_returns_` is read-only after the constructor completed.
   auto returns = indexed_returns_.find(caller);
   mt_assert(returns != indexed_returns_.end());
 
@@ -1161,6 +1167,8 @@ TextualOrderIndex CallGraph::return_index(
 
 const std::vector<TextualOrderIndex> CallGraph::return_indices(
     const Method* caller) const {
+  // Note that `find` is not thread-safe, but this is fine because
+  // `indexed_returns_` is read-only after the constructor completed.
   auto returns = indexed_returns_.find(caller);
   mt_assert(returns != indexed_returns_.end());
 
@@ -1186,6 +1194,8 @@ TextualOrderIndex CallGraph::array_allocation_index(
 
 const std::vector<TextualOrderIndex> CallGraph::array_allocation_indices(
     const Method* caller) const {
+  // Note that `find` is not thread-safe, but this is fine because
+  // `indexed_array_allocations_` is read-only after the constructor completed.
   auto array_allocations = indexed_array_allocations_.find(caller);
   mt_assert(array_allocations != indexed_array_allocations_.end());
 
@@ -1197,6 +1207,9 @@ const std::vector<TextualOrderIndex> CallGraph::array_allocation_indices(
 }
 
 bool CallGraph::has_callees(const Method* caller) {
+  // Note that `find` is not thread-safe, but this is fine because
+  // `resolved_base_callees_` and `artificial_callees_` are read-only
+  // after the constructor completed.
   auto base_callees = resolved_base_callees_.find(caller);
   if (base_callees != resolved_base_callees_.end() &&
       !base_callees->second.empty()) {

@@ -106,13 +106,13 @@ TEST_P(JsonModelGeneratorIntegrationTest, CompareModels) {
       *context.options, *context.methods, context.stores);
   context.call_graph = std::make_unique<CallGraph>(
       *context.options,
-      *context.methods,
-      *context.fields,
       *context.types,
       *context.class_hierarchies,
-      *context.overrides,
-      *context.feature_factory,
       Shims{/* global_shims_size */ 0, intent_routing_analyzer},
+      *context.feature_factory,
+      *context.methods,
+      *context.fields,
+      *context.overrides,
       method_mappings);
 
   // Run a model generator and compare output

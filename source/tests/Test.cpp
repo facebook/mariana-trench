@@ -77,13 +77,13 @@ Context make_context(const DexStore& store) {
       ShimGeneration::run(context, intent_routing_analyzer, method_mappings);
   context.call_graph = std::make_unique<CallGraph>(
       *context.options,
-      *context.methods,
-      *context.fields,
       *context.types,
       *context.class_hierarchies,
-      *context.overrides,
-      *context.feature_factory,
       shims,
+      *context.feature_factory,
+      *context.methods,
+      *context.fields,
+      *context.overrides,
       method_mappings);
   auto registry = Registry(context);
   context.dependencies = std::make_unique<Dependencies>(

@@ -505,13 +505,13 @@ TEST_P(IntegrationTest, ReturnsExpectedModel) {
       *context.options, *context.methods, context.stores);
   context.call_graph = std::make_unique<CallGraph>(
       *context.options,
-      *context.methods,
-      *context.fields,
       *context.types,
       *context.class_hierarchies,
-      *context.overrides,
-      *context.feature_factory,
       Shims{/* global_shims_size */ 0, intent_routing_analyzer},
+      *context.feature_factory,
+      *context.methods,
+      *context.fields,
+      *context.overrides,
       method_mappings);
   context.rules = std::make_unique<Rules>(context, rules);
   context.used_kinds = std::make_unique<UsedKinds>(

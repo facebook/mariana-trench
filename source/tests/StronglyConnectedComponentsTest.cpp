@@ -57,13 +57,13 @@ Context test_components(const Scope& scope) {
   context.fields = std::make_unique<Fields>();
   context.call_graph = std::make_unique<CallGraph>(
       *context.options,
-      *context.methods,
-      *context.fields,
       *context.types,
       *context.class_hierarchies,
-      *context.overrides,
-      *context.feature_factory,
       Shims{/* global_shims_size */ 0, intent_routing_analyzer},
+      *context.feature_factory,
+      *context.methods,
+      *context.fields,
+      *context.overrides,
       method_mappings);
   context.rules = std::make_unique<Rules>(context);
   auto registry = Registry(context);

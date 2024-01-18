@@ -210,13 +210,13 @@ class CallGraph final {
  public:
   explicit CallGraph(
       const Options& options,
-      Methods& methods,
-      Fields& fields,
       const Types& types,
       const ClassHierarchies& class_hierarchies,
-      Overrides& overrides,
-      const FeatureFactory& feature_factory,
       const Shims& shims,
+      const FeatureFactory& feature_factory,
+      Methods& methods,
+      Fields& fields,
+      Overrides& overrides,
       MethodMappings& method_mappings);
 
   DELETE_COPY_CONSTRUCTORS_AND_ASSIGNMENTS(CallGraph)
