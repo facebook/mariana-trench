@@ -1187,7 +1187,7 @@ TextualOrderIndex CallGraph::array_allocation_index(
 const std::vector<TextualOrderIndex> CallGraph::array_allocation_indices(
     const Method* caller) const {
   auto array_allocations = indexed_array_allocations_.find(caller);
-  mt_assert(array_allocations != indexed_returns_.end());
+  mt_assert(array_allocations != indexed_array_allocations_.end());
 
   std::vector<TextualOrderIndex> array_allocation_indices;
   for (const auto& [_, index] : array_allocations->second) {
