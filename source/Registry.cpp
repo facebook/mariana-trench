@@ -341,7 +341,7 @@ void Registry::dump_models(
         const auto batch_path = path /
             ("model@" + padded_batch + "-of-" + padded_total_batch + ".json");
 
-        std::ofstream batch_stream(batch_path.native(), std::ios_base::out);
+        std::ofstream batch_stream(batch_path, std::ios_base::out);
         if (!batch_stream.is_open()) {
           ERROR(1, "Unable to write models to `{}`.", batch_path.native());
           return;
