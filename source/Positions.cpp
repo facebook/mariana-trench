@@ -12,6 +12,7 @@
 
 #include <boost/algorithm/string.hpp>
 #include <boost/algorithm/string/find_iterator.hpp>
+#include <boost/algorithm/string/replace.hpp>
 #include <fmt/format.h>
 #include <re2/re2.h>
 
@@ -74,13 +75,14 @@ GrepoPaths get_grepo_paths(
     if (splits.size() != 3) {
       WARNING(
           2,
-          "Invalid line. Expected: `<REPO_PROJECT>:<path/to/repo/root>:<path/to/file>`. Skipping...");
+          "Invalid line. Expected: `<REPO_PATH>:<path/to/repo/root>:<path/to/file>`. Skipping...");
       continue;
     }
 
-    // Find the project name
+    // Find the prefix
+    auto lookup_key = boost::algorithm::replace_all_copy(splits[0], "/", "-");
     const auto& metadata =
-        JsonValidation::null_or_object(metadata_json, splits[0]);
+        JsonValidation::null_or_object(metadata_json, lookup_key);
     if (metadata.isNull()) {
       WARNING(
           2, "Could not find metadata for repo: `{}`. Skipping...", splits[0]);
@@ -92,7 +94,9 @@ GrepoPaths get_grepo_paths(
     actual_to_repo_paths.emplace(
         absolute_path,
         fmt::format(
-            "{}/{}", JsonValidation::string(metadata, "project"), splits[2]));
+            "{}/{}",
+            JsonValidation::string(metadata, "sapp_repo_key"),
+            splits[2]));
   }
 
   return GrepoPaths{actual_paths, actual_to_repo_paths};
@@ -266,15 +270,15 @@ Positions::Positions(const Options& options, const DexStoresVector& stores) {
       // `test/*` directories.
       //
       // The output format is:
-      //   <REPO_PROJECT>:<path/to/root/of/subrepo>:<path/to/file/within/subrepo>
+      //   <REPO_PATH>:<path/to/root/of/subrepo>:<path/to/file/within/subrepo>
       // - The absolute path on the filesystem is:
       //   <path/to/root/of/subrepo>/<path/to/file/within/subrepo>
-      // - <REPO_PROJECT> is used to look up the grepo_metadata_json for the
-      //   "project" prefix.
+      // - <REPO_PATH> is used to look up the grepo_metadata_json for the
+      //   <prefix> to use for sapp.
       // - The final path for sapp is:
-      //   <"project"prefix>/<path/to/file/within/subrepo>
+      //   <prefix>/<path/to/file/within/subrepo>
       std::string repo_command =
-          "repo forall -c 'git ls-files -- '\''*java'\'' '\''*kt'\'' '\'':!:test/*'\'' | xargs -n1 printf \"$REPO_PROJECT:$PWD:%s\\n\"'";
+          "repo forall -c 'git ls-files -- '\''*java'\'' '\''*kt'\'' '\'':!:test/*'\'' | xargs -n1 printf \"$REPO_PATH:$PWD:%s\\n\"'";
 
       int return_code = -1;
       std::string output = execute_and_catch_output(repo_command, return_code);
