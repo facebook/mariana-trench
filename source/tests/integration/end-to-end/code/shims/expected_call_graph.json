@@ -543,6 +543,11 @@
   },
   "Lcom/facebook/marianatrench/integrationtests/Shims;.testFragmentBaseClass:(Landroid/app/Activity;)V" : 
   {
+    "artificial" : 
+    [
+      "Landroidx/fragment/app/FragmentActivity;.activity_lifecycle_wrapper:(Landroid/os/Bundle;Ljava/lang/Object;)V",
+      "Lcom/facebook/marianatrench/integrationtests/FragmentActivity;.activity_lifecycle_wrapper:(Landroid/os/Bundle;Ljava/lang/Object;)V"
+    ],
     "static" : 
     [
       "Lcom/facebook/marianatrench/integrationtests/FragmentTest;.<init>:()V",

@@ -472,9 +472,9 @@ void process_shim_lifecycle(
     return;
   }
 
-  const auto* lifecycle_method =
-      result->second.get_method_for_type(receiver_type);
-  if (lifecycle_method == nullptr) {
+  auto target_lifecycle_methods =
+      result->second.get_methods_for_type(class_hierarchies, receiver_type);
+  if (target_lifecycle_methods.size() == 0) {
     WARNING(
         1,
         "Specified lifecycle method not found: `{}` for class: `{}` in caller: {}",
@@ -482,25 +482,39 @@ void process_shim_lifecycle(
         receiver_type->str(),
         caller->show());
     return;
+  } else if (
+      target_lifecycle_methods.size() >= Heuristics::kJoinOverrideThreshold) {
+    // Although this is not a join, shimming to the derived life-cycle methods
+    // simulates the joining the models of these as if they were virtual
+    // overrides. Besides, if there is a large number of overrides, there will
+    // likely be many false positives as well.
+    WARNING(
+        1,
+        "Life-cycle method `{}` exceeds join override threshold of {}",
+        method_name,
+        Heuristics::kJoinOverrideThreshold);
+    return;
   }
 
-  auto root_registers =
-      shim_lifecycle.root_registers(callee, lifecycle_method, instruction);
-  auto call_index =
-      update_index(sink_textual_order_index, lifecycle_method->signature());
+  for (const auto* lifecycle_method : target_lifecycle_methods) {
+    auto root_registers =
+        shim_lifecycle.root_registers(callee, lifecycle_method, instruction);
+    auto call_index =
+        update_index(sink_textual_order_index, lifecycle_method->signature());
 
-  artificial_callees.push_back(ArtificialCallee{
-      /* call_target */ CallTarget::virtual_call(
-          instruction,
-          lifecycle_method,
-          call_index,
-          receiver_type,
-          class_hierarchies,
-          override_factory),
-      /* root_registers */ root_registers,
-      /* features */
-      FeatureSet{feature_factory.get_via_shim_feature(callee)},
-  });
+    artificial_callees.push_back(ArtificialCallee{
+        /* call_target */ CallTarget::virtual_call(
+            instruction,
+            lifecycle_method,
+            call_index,
+            receiver_type,
+            class_hierarchies,
+            override_factory),
+        /* root_registers */ root_registers,
+        /* features */
+        FeatureSet{feature_factory.get_via_shim_feature(callee)},
+    });
+  }
 }
 
 std::vector<ArtificialCallee> shim_artificial_callees(

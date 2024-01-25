@@ -113,10 +113,15 @@ class LifecycleMethod {
       const ClassHierarchies& class_hierarchies,
       Methods& methods);
 
-  const Method* MT_NULLABLE
-  get_method_for_type(const DexType* receiver_type) const {
-    return class_to_lifecycle_method_.get(receiver_type, nullptr);
-  }
+  /**
+   * Returns the created life-cycle methods for the given type. Since life-cycle
+   * methods are created only in the most derived/final classes, if the receiver
+   * type is not final, this returns all the life-cycle methods of its final
+   * derived classes.
+   */
+  std::vector<const Method*> get_methods_for_type(
+      const ClassHierarchies& class_hierarchies,
+      const DexType* receiver_type) const;
 
   bool operator==(const LifecycleMethod& other) const;
 

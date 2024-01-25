@@ -45,6 +45,10 @@
   [
     "Lcom/facebook/marianatrench/integrationtests/Shims;.testSetArguments:()V"
   ],
+  "Landroidx/fragment/app/FragmentActivity;.activity_lifecycle_wrapper:(Landroid/os/Bundle;Ljava/lang/Object;)V" : 
+  [
+    "Lcom/facebook/marianatrench/integrationtests/Shims;.testFragmentBaseClass:(Landroid/app/Activity;)V"
+  ],
   "Lcom/facebook/marianatrench/integrationtests/A;.api:(Ljava/lang/Object;)V" : 
   [
     "Lcom/facebook/marianatrench/integrationtests/ReflectionShims;.testMultipleCallsites:(Z)V",
@@ -89,6 +93,7 @@
   ],
   "Lcom/facebook/marianatrench/integrationtests/FragmentActivity;.activity_lifecycle_wrapper:(Landroid/os/Bundle;Ljava/lang/Object;)V" : 
   [
+    "Lcom/facebook/marianatrench/integrationtests/Shims;.testFragmentBaseClass:(Landroid/app/Activity;)V",
     "Lcom/facebook/marianatrench/integrationtests/Shims;.testFragmentInstance:()V",
     "Lcom/facebook/marianatrench/integrationtests/Shims;.testFragmentReflection:()V",
     "Lcom/facebook/marianatrench/integrationtests/Shims;.testSetArguments:()V"
