@@ -152,6 +152,14 @@ public class Shims {
     ft.add(FragmentActivity.class, Origin.source());
   }
 
+  static void testFragmentBaseClass(Activity activity) {
+    FragmentTest ft = new FragmentTest();
+    // Derived type of Activity is not known here. This should shim to lifecycle
+    // methods of all possible derived types, which is just
+    // FragmentActivity.activity_lifecycle_wrapper in this case.
+    ft.add(activity, Origin.source());
+  }
+
   static ParameterMapping testParameterMappingIssue() {
     return new ParameterMapping(new Handler(), new HandlerOne(), new Object(), Origin.source());
   }

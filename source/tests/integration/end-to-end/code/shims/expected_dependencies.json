@@ -115,12 +115,14 @@
   ],
   "Lcom/facebook/marianatrench/integrationtests/FragmentTest;.<init>:()V" : 
   [
+    "Lcom/facebook/marianatrench/integrationtests/Shims;.testFragmentBaseClass:(Landroid/app/Activity;)V",
     "Lcom/facebook/marianatrench/integrationtests/Shims;.testFragmentInstance:()V",
     "Lcom/facebook/marianatrench/integrationtests/Shims;.testFragmentReflection:()V",
     "Lcom/facebook/marianatrench/integrationtests/Shims;.testSetArguments:()V"
   ],
   "Lcom/facebook/marianatrench/integrationtests/FragmentTest;.add:(Landroid/app/Activity;Ljava/lang/Object;)V" : 
   [
+    "Lcom/facebook/marianatrench/integrationtests/Shims;.testFragmentBaseClass:(Landroid/app/Activity;)V",
     "Lcom/facebook/marianatrench/integrationtests/Shims;.testFragmentInstance:()V",
     "Lcom/facebook/marianatrench/integrationtests/Shims;.testSetArguments:()V"
   ],
@@ -198,6 +200,7 @@
     "Lcom/facebook/marianatrench/integrationtests/Shims;.testDirectShimTarget:()V",
     "Lcom/facebook/marianatrench/integrationtests/Shims;.testDropArgumentDefined:()V",
     "Lcom/facebook/marianatrench/integrationtests/Shims;.testDropArgumentInferred:()V",
+    "Lcom/facebook/marianatrench/integrationtests/Shims;.testFragmentBaseClass:(Landroid/app/Activity;)V",
     "Lcom/facebook/marianatrench/integrationtests/Shims;.testFragmentInstance:()V",
     "Lcom/facebook/marianatrench/integrationtests/Shims;.testFragmentReflection:()V",
     "Lcom/facebook/marianatrench/integrationtests/Shims;.testMessageHandlerOneIssue:()Lcom/facebook/marianatrench/integrationtests/Messenger;",
