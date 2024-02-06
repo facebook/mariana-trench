@@ -1,0 +1,29 @@
+{
+  "model_generators": [
+    {
+      "find": "methods",
+      "where": [
+        {
+          "constraint": "signature_match",
+          "parent": "Landroid/accounts/AccountManager;",
+          "names": [
+            "getAuthToken",
+            "getAuthTokenByFeatures",
+            "getPassword",
+            "getUserData",
+            "blockingGetAuthToken",
+            "peekAuthToken"
+          ]
+        }
+      ],
+      "model": {
+        "sources": [
+          {
+            "kind": "AccountManagerAuth",
+            "port": "Return"
+          }
+        ]
+      }
+    }
+  ]
+}
