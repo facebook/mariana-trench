@@ -21,6 +21,7 @@
 #include <mariana-trench/Log.h>
 #include <mariana-trench/Methods.h>
 #include <mariana-trench/Options.h>
+#include <mariana-trench/Positions.h>
 #include <mariana-trench/Registry.h>
 #include <mariana-trench/Rules.h>
 #include <mariana-trench/Statistics.h>
@@ -381,6 +382,35 @@ void Registry::dump_models(
   queue.run_all();
 
   LOG(1, "Wrote models to {} shards.", total_batch);
+}
+
+void Registry::dump_file_coverage_info(
+    const std::filesystem::path& output_path) const {
+  std::unordered_set<std::string> covered_paths;
+  for (const auto& [method, model] : models_) {
+    if (method->get_code() == nullptr || model.skip_analysis()) {
+      continue;
+    }
+
+    const auto* path = context_.positions->get_path(method->dex_method());
+    if (path) {
+      covered_paths.insert(*path);
+    }
+  }
+
+  std::ofstream output_file;
+  output_file.open(output_path, std::ios_base::out);
+  if (!output_file.is_open()) {
+    ERROR(
+        1, "Unable to write file coverage info to `{}`.", output_path.native());
+    return;
+  }
+
+  for (const auto& path : covered_paths) {
+    output_file << path << std::endl;
+  }
+
+  output_file.close();
 }
 
 } // namespace marianatrench

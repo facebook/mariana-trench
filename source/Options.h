@@ -87,6 +87,7 @@ class Options final {
   const std::filesystem::path class_intervals_output_path() const;
   const std::filesystem::path overrides_output_path() const;
   const std::filesystem::path dependencies_output_path() const;
+  const std::filesystem::path file_coverage_output_path() const;
 
   bool sequential() const;
   bool skip_source_indexing() const;
@@ -108,6 +109,7 @@ class Options final {
   bool dump_call_graph() const;
   bool dump_dependencies() const;
   bool dump_methods() const;
+  bool dump_coverage_info() const;
 
   const std::optional<std::string>& job_id() const;
   const std::optional<std::string>& metarun_id() const;
@@ -164,6 +166,7 @@ class Options final {
   bool dump_call_graph_;
   bool dump_dependencies_;
   bool dump_methods_;
+  bool dump_coverage_info_;
 
   std::optional<std::string> job_id_;
   std::optional<std::string> metarun_id_;

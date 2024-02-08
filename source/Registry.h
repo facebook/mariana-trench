@@ -91,6 +91,7 @@ class Registry final {
   void dump_models(
       const std::filesystem::path& path,
       const std::size_t shard_limit = k_default_shard_limit) const;
+  void dump_file_coverage_info(const std::filesystem::path& path) const;
   std::string dump_models() const;
   Json::Value models_to_json() const;
 

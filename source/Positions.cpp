@@ -513,4 +513,9 @@ const Position* Positions::unknown() const {
   return positions_.insert(Position(nullptr, k_unknown_line)).first;
 }
 
+const std::string* MT_NULLABLE
+Positions::get_path(const DexMethod* method) const {
+  return method_to_path_.get(method, /* default */ nullptr);
+}
+
 } // namespace marianatrench

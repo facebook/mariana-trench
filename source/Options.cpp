@@ -140,6 +140,7 @@ Options::Options(
       dump_call_graph_(false),
       dump_dependencies_(false),
       dump_methods_(false),
+      dump_coverage_info_(false),
       enable_cross_component_analysis_(enable_cross_component_analysis),
       export_origins_mode_(export_origins_mode),
       propagate_across_arguments_(propagate_across_arguments) {}
@@ -270,6 +271,7 @@ Options::Options(const boost::program_options::variables_map& variables) {
   dump_call_graph_ = variables.count("dump-call-graph") > 0;
   dump_dependencies_ = variables.count("dump-dependencies") > 0;
   dump_methods_ = variables.count("dump-methods") > 0;
+  dump_coverage_info_ = variables.count("dump-coverage-info") > 0;
 
   job_id_ = variables.count("job-id") == 0
       ? std::nullopt
@@ -427,6 +429,9 @@ void Options::add_options(
       "dump-dependencies", "Dump the dependency graph in `dependencies.json`.");
   options.add_options()(
       "dump-methods", "Dump the list of method signatures in `methods.json`.");
+  options.add_options()(
+      "dump-coverage-info",
+      "Dump the file coverage info into `file_coverage.txt`.");
 
   options.add_options()(
       "job-id",
@@ -567,6 +572,10 @@ const std::filesystem::path Options::dependencies_output_path() const {
   return output_directory_ / "dependencies.json";
 }
 
+const std::filesystem::path Options::file_coverage_output_path() const {
+  return output_directory_ / "file_coverage.txt";
+}
+
 bool Options::sequential() const {
   return sequential_;
 }
@@ -637,6 +646,10 @@ bool Options::dump_dependencies() const {
 
 bool Options::dump_methods() const {
   return dump_methods_;
+}
+
+bool Options::dump_coverage_info() const {
+  return dump_coverage_info_;
 }
 
 const std::optional<std::string>& Options::job_id() const {
