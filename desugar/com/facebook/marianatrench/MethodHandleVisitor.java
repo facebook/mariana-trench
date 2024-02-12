@@ -7,7 +7,7 @@
 
 package com.facebook.marianatrench;
 
-import static org.objectweb.asm.Opcodes.ASM7;
+import static org.objectweb.asm.Opcodes.ASM9;
 import static org.objectweb.asm.Opcodes.INVOKEVIRTUAL;
 import static org.objectweb.asm.Opcodes.POP;
 
@@ -18,7 +18,7 @@ import org.objectweb.asm.signature.SignatureVisitor;
 
 public class MethodHandleVisitor extends ClassVisitor {
   public MethodHandleVisitor(ClassVisitor next) {
-    super(ASM7, next);
+    super(ASM9, next);
   }
 
   @Override
@@ -29,14 +29,14 @@ public class MethodHandleVisitor extends ClassVisitor {
 
   private static class ProcessVisitMethodInsn extends MethodVisitor {
     public ProcessVisitMethodInsn(MethodVisitor next) {
-      super(ASM7, next);
+      super(ASM9, next);
     }
 
     private static class CountParameters extends SignatureVisitor {
       int mCount;
 
       public CountParameters() {
-        super(ASM7);
+        super(ASM9);
         mCount = 0;
       }
 

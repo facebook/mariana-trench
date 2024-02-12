@@ -7,13 +7,13 @@
 
 package com.facebook.marianatrench;
 
-import static org.objectweb.asm.Opcodes.ASM7;
+import static org.objectweb.asm.Opcodes.ASM9;
 
 import org.objectweb.asm.ClassVisitor;
 
 public class NestVisitor extends ClassVisitor {
   public NestVisitor(ClassVisitor next) {
-    super(ASM7, next);
+    super(ASM9, next);
   }
 
   @Override
