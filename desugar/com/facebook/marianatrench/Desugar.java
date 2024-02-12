@@ -32,9 +32,14 @@ public class Desugar {
       Enumeration<JarEntry> entries = inputJar.entries();
       while (entries.hasMoreElements()) {
         JarEntry entry = entries.nextElement();
+
         File file = new File(temporaryDirectory + File.separator + entry.getName());
+
+        File parentDir = file.getParentFile();
+        if (!parentDir.exists()) {
+          parentDir.mkdirs();
+        }
         if (entry.isDirectory()) {
-          file.mkdir();
           continue;
         }
         try (InputStream inputStream = inputJar.getInputStream(entry)) {
