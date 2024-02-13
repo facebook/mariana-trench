@@ -297,6 +297,11 @@ class Taint final : public sparta::AbstractDomain<Taint> {
   FeatureMayAlwaysSet features_joined() const;
 
   /**
+   * Returns all kinds used.
+   */
+  std::unordered_set<const Kind*> kinds() const;
+
+  /**
    * Return the taint representing the given propagation.
    */
   static Taint propagation(PropagationConfig propagation);

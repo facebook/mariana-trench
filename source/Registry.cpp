@@ -377,7 +377,6 @@ void Registry::dump_rule_coverage_info(
   std::unordered_set<const Kind*> used_sinks;
   std::unordered_set<const Transform*> used_transforms;
 
-  // TODO(T176752830): Repeat for field and literal models
   for (const auto& [_method, model] : models_) {
     auto source_kinds = model.source_kinds();
     used_sources.insert(source_kinds.begin(), source_kinds.end());
@@ -387,6 +386,19 @@ void Registry::dump_rule_coverage_info(
 
     auto transforms = model.propagation_transforms();
     used_transforms.insert(transforms.begin(), transforms.end());
+  }
+
+  for (const auto& [_field, model] : field_models_) {
+    auto source_kinds = model.sources().kinds();
+    used_sources.insert(source_kinds.begin(), source_kinds.end());
+
+    auto sink_kinds = model.sinks().kinds();
+    used_sinks.insert(sink_kinds.begin(), sink_kinds.end());
+  }
+
+  for (const auto& [_literal, model] : literal_models_) {
+    auto source_kinds = model.sources().kinds();
+    used_sources.insert(source_kinds.begin(), source_kinds.end());
   }
 
   auto rule_coverage = RulesCoverage::create(

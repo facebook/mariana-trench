@@ -1079,9 +1079,8 @@ std::unordered_set<const Kind*> kinds_from_taint_tree(
     const TaintAccessPathTree& taint_tree) {
   std::unordered_set<const Kind*> result;
   for (const auto& [_port, taint] : taint_tree.elements()) {
-    taint.visit_kind_frames([&result](const KindFrames& kind_frames) {
-      result.insert(kind_frames.kind());
-    });
+    auto taint_kinds = taint.kinds();
+    result.insert(taint_kinds.begin(), taint_kinds.end());
   }
   return result;
 }

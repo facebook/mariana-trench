@@ -325,6 +325,14 @@ FeatureMayAlwaysSet Taint::features_joined() const {
   return features;
 }
 
+std::unordered_set<const Kind*> Taint::kinds() const {
+  std::unordered_set<const Kind*> result;
+  visit_kind_frames([&result](const KindFrames& kind_frames) {
+    result.insert(kind_frames.kind());
+  });
+  return result;
+}
+
 Taint Taint::propagation(PropagationConfig propagation) {
   return Taint{TaintConfig(
       /* kind */ propagation.kind(),
