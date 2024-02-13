@@ -1073,6 +1073,71 @@ void Model::join_with(const Model& other) {
   mt_expensive_assert(previous.leq(*this) && other.leq(*this));
 }
 
+namespace {
+
+std::unordered_set<const Kind*> kinds_from_taint_tree(
+    const TaintAccessPathTree& taint_tree) {
+  std::unordered_set<const Kind*> result;
+  for (const auto& [_port, taint] : taint_tree.elements()) {
+    taint.visit_kind_frames([&result](const KindFrames& kind_frames) {
+      result.insert(kind_frames.kind());
+    });
+  }
+  return result;
+}
+
+} // namespace
+
+std::unordered_set<const Kind*> Model::source_kinds() const {
+  std::unordered_set<const Kind*> result;
+
+  auto parameter_source_kinds = kinds_from_taint_tree(parameter_sources_);
+  result.insert(parameter_source_kinds.begin(), parameter_source_kinds.end());
+
+  auto generation_kinds = kinds_from_taint_tree(generations_);
+  result.insert(generation_kinds.begin(), generation_kinds.end());
+
+  auto call_effect_kinds = kinds_from_taint_tree(call_effect_sources_);
+  result.insert(call_effect_kinds.begin(), call_effect_kinds.end());
+
+  return result;
+}
+
+std::unordered_set<const Kind*> Model::sink_kinds() const {
+  std::unordered_set<const Kind*> result;
+
+  auto sink_kinds = kinds_from_taint_tree(sinks_);
+  result.insert(sink_kinds.begin(), sink_kinds.end());
+
+  auto call_effect_sink_kinds = kinds_from_taint_tree(call_effect_sinks_);
+  result.insert(call_effect_sink_kinds.begin(), call_effect_sink_kinds.end());
+
+  return result;
+}
+
+std::unordered_set<const Transform*> Model::propagation_transforms() const {
+  std::unordered_set<const Transform*> result;
+
+  auto propagation_kinds = kinds_from_taint_tree(propagations_);
+  for (const Kind* propagation_kind : propagation_kinds) {
+    const auto* transform_kind = propagation_kind->as<TransformKind>();
+    if (transform_kind == nullptr) {
+      continue;
+    }
+
+    const auto* transforms = transform_kind->local_transforms();
+    if (transforms == nullptr) {
+      continue;
+    }
+
+    for (const auto* transform : *transforms) {
+      result.insert(transform);
+    }
+  }
+
+  return result;
+}
+
 Model Model::from_json(
     const Method* method,
     const Json::Value& value,

@@ -241,6 +241,20 @@ TaintConfig make_propagation_taint_config(
       /* extra_traces */ {});
 }
 
+PropagationConfig make_propagation_config(
+    const Kind* kind,
+    const AccessPath& input_path,
+    const AccessPath& output_path) {
+  return PropagationConfig(
+      input_path,
+      kind,
+      /* output_paths */
+      PathTreeDomain{{output_path.path(), CollapseDepth::zero()}},
+      /* inferred_features */ FeatureMayAlwaysSet::bottom(),
+      /* locally_inferred_features */ FeatureMayAlwaysSet::bottom(),
+      /* user_features */ FeatureSet::bottom());
+}
+
 #ifndef MARIANA_TRENCH_FACEBOOK_BUILD
 std::filesystem::path find_repository_root() {
   auto path = std::filesystem::current_path();

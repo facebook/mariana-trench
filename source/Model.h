@@ -323,6 +323,17 @@ class Model final {
   bool leq(const Model& other) const;
   void join_with(const Model& other);
 
+  std::unordered_set<const Kind*> source_kinds() const;
+  std::unordered_set<const Kind*> sink_kinds() const;
+
+  /**
+   * This method is used to detect the presence of specific taint transforms.
+   * Only local transforms are considered and returned because if something
+   * exists as a global transform, it would have came from a local transform
+   * somewhere else (in a different Model).
+   */
+  std::unordered_set<const Transform*> propagation_transforms() const;
+
   static Model from_json(
       const Method* MT_NULLABLE method,
       const Json::Value& value,

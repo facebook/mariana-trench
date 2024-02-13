@@ -102,6 +102,11 @@ TaintConfig make_propagation_taint_config(
     FeatureMayAlwaysSet locally_inferred_features,
     FeatureSet user_features);
 
+PropagationConfig make_propagation_config(
+    const Kind* kind,
+    const AccessPath& input_path,
+    const AccessPath& output_path);
+
 std::filesystem::path find_repository_root();
 
 Json::Value parse_json(std::string input);

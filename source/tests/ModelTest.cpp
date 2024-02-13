@@ -1119,4 +1119,157 @@ TEST_F(ModelTest, Join) {
           {}));
 }
 
+TEST_F(ModelTest, SourceKinds) {
+  auto context = test::make_empty_context();
+  const auto* source_kind1 = context.kind_factory->get("TestSource1");
+  const auto* source_kind2 = context.kind_factory->get("TestSource2");
+  const auto* sink_kind = context.kind_factory->get("TestSink");
+
+  Model model;
+  EXPECT_EQ(0, model.source_kinds().size());
+
+  Model model_with_generation(
+      /* method */ nullptr,
+      context,
+      /* modes */ {},
+      /* frozen */ {},
+      /* generations */
+      {{AccessPath(Root(Root::Kind::Return)),
+        test::make_leaf_taint_config(source_kind1)}});
+  EXPECT_THAT(
+      model_with_generation.source_kinds(),
+      testing::UnorderedElementsAre(source_kind1));
+
+  Model model_with_parameter_sources(
+      /* method */ nullptr,
+      context,
+      /* modes */ {},
+      /* frozen */ {},
+      /* generations */ {},
+      /* parameter_sources */
+      {{AccessPath(Root(Root::Kind::Argument, 0)),
+        test::make_leaf_taint_config(source_kind1)},
+       {AccessPath(Root(Root::Kind::Argument, 1)),
+        test::make_leaf_taint_config(source_kind2)}});
+  EXPECT_THAT(
+      model_with_parameter_sources.source_kinds(),
+      testing::UnorderedElementsAre(source_kind1, source_kind2));
+
+  Model model_with_call_effect_source;
+  model_with_call_effect_source.add_call_effect_source(
+      AccessPath(Root(Root::Kind::CallEffectIntent)),
+      test::make_leaf_taint_config(source_kind1));
+  EXPECT_THAT(
+      model_with_call_effect_source.source_kinds(),
+      testing::UnorderedElementsAre(source_kind1));
+
+  Model model_with_sources_and_sinks(
+      /* method */ nullptr,
+      context,
+      /* modes */ {},
+      /* frozen */ {},
+      /* generations */
+      {{AccessPath(Root(Root::Kind::Return)),
+        test::make_leaf_taint_config(source_kind1)}},
+      /* parameter_sources */
+      {{AccessPath(Root(Root::Kind::Argument, 0)),
+        test::make_leaf_taint_config(source_kind2)}},
+      /* sinks */
+      {{AccessPath(Root(Root::Kind::Argument, 0)),
+        test::make_leaf_taint_config(sink_kind)}});
+  EXPECT_THAT(
+      model_with_sources_and_sinks.source_kinds(),
+      testing::UnorderedElementsAre(source_kind1, source_kind2));
+}
+
+TEST_F(ModelTest, SinkKinds) {
+  auto context = test::make_empty_context();
+  const auto* sink_kind1 = context.kind_factory->get("TestSink1");
+  const auto* sink_kind2 = context.kind_factory->get("TestSink2");
+  const auto* source_kind = context.kind_factory->get("TestSource");
+
+  Model model;
+  EXPECT_EQ(0, model.sink_kinds().size());
+
+  Model model_with_sink(
+      /* method */ nullptr,
+      context,
+      /* modes */ {},
+      /* frozen */ {},
+      /* generations */ {},
+      /* parameter_sources */ {},
+      /* sinks */
+      {{AccessPath(Root(Root::Kind::Return)),
+        test::make_leaf_taint_config(sink_kind1)}});
+  EXPECT_THAT(
+      model_with_sink.sink_kinds(), testing::UnorderedElementsAre(sink_kind1));
+
+  Model model_with_call_effect_sink;
+  model_with_call_effect_sink.add_call_effect_sink(
+      AccessPath(Root(Root::Kind::CallEffectIntent)),
+      test::make_leaf_taint_config(sink_kind1));
+  EXPECT_THAT(
+      model_with_call_effect_sink.sink_kinds(),
+      testing::UnorderedElementsAre(sink_kind1));
+
+  Model model_with_sources_and_sinks(
+      /* method */ nullptr,
+      context,
+      /* modes */ {},
+      /* frozen */ {},
+      /* generations */
+      {{AccessPath(Root(Root::Kind::Return)),
+        test::make_leaf_taint_config(source_kind)}},
+      /* parameter_sources */ {},
+      /* sinks */
+      {{AccessPath(Root(Root::Kind::Argument, 0)),
+        test::make_leaf_taint_config(sink_kind1)},
+       {AccessPath(Root(Root::Kind::Argument, 0)),
+        test::make_leaf_taint_config(sink_kind2)}});
+  EXPECT_THAT(
+      model_with_sources_and_sinks.sink_kinds(),
+      testing::UnorderedElementsAre(sink_kind1, sink_kind2));
+}
+
+TEST_F(ModelTest, PropagationTransforms) {
+  auto context = test::make_empty_context();
+
+  const auto* local_return_kind = context.kind_factory->local_return();
+  const auto* transform1 =
+      context.transforms_factory->create_transform("Transform1");
+  const auto* transform_kind1 = context.kind_factory->transform_kind(
+      /* base_kind */ local_return_kind,
+      /* local_transforms */
+      context.transforms_factory->create({"Transform1"}, context),
+      /* global_transforms */ nullptr);
+  const auto* transform_kind2 = context.kind_factory->transform_kind(
+      /* base_kind */ local_return_kind,
+      /* local_transforms */ nullptr,
+      /* global_transforms */
+      context.transforms_factory->create({"Transform2"}, context));
+
+  const auto input_path = AccessPath(Root(Root::Kind::Argument, 0));
+  const auto output_path = AccessPath(Root(Root::Kind::Return));
+
+  Model model;
+  EXPECT_EQ(0, model.propagation_transforms().size());
+
+  Model model_with_transforms(
+      /* method */ nullptr,
+      context,
+      /* modes */ {},
+      /* frozen */ {},
+      /* generations */ {},
+      /* parameter_sources */ {},
+      /* sinks */ {},
+      /* propagations */
+      {test::make_propagation_config(transform_kind1, input_path, output_path),
+       test::make_propagation_config(transform_kind2, input_path, output_path),
+       test::make_propagation_config(
+           local_return_kind, input_path, output_path)});
+  EXPECT_THAT(
+      model_with_transforms.propagation_transforms(),
+      testing::UnorderedElementsAre(transform1));
+}
+
 } // namespace marianatrench
