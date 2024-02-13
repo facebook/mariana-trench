@@ -7,10 +7,13 @@
 
 #include <sstream>
 
+#include <boost/algorithm/string/predicate.hpp>
 #include <boost/algorithm/string/trim.hpp>
 #include <boost/filesystem/fstream.hpp>
 #include <boost/range/adaptor/transformed.hpp>
 #include <fmt/format.h>
+
+#include <sparta/WorkQueue.h>
 
 #include <mariana-trench/Assert.h>
 #include <mariana-trench/JsonValidation.h>
@@ -336,6 +339,61 @@ std::string JsonValidation::to_styled_string(const Json::Value& value) {
   std::ostringstream string;
   styled_writer()->write(value, &string);
   return string.str();
+}
+
+void JsonValidation::write_sharded_json_files(
+    const std::filesystem::path& output_directory,
+    const std::size_t batch_size,
+    const std::size_t total_elements,
+    const std::string& filename_prefix,
+    const std::function<Json::Value(std::size_t)>& get_json_line) {
+  // Remove existing files with filename_prefix under output_directory.
+  for (auto& file : std::filesystem::directory_iterator(output_directory)) {
+    const auto& file_path = file.path();
+    if (std::filesystem::is_regular_file(file_path) &&
+        boost::starts_with(file_path.filename().string(), filename_prefix)) {
+      std::filesystem::remove(file_path);
+    }
+  }
+
+  const auto total_batch = total_elements / batch_size + 1;
+  const auto padded_total_batch = fmt::format("{:0>5}", total_batch);
+
+  auto queue = sparta::work_queue<std::size_t>(
+      [&](std::size_t batch) {
+        const auto padded_batch = fmt::format("{:0>5}", batch);
+        const auto batch_path = output_directory /
+            (filename_prefix + padded_batch + "-of-" + padded_total_batch +
+             ".json");
+
+        std::ofstream batch_stream;
+        batch_stream.open(batch_path, std::ios_base::out);
+        if (!batch_stream.is_open()) {
+          ERROR(1, "Unable to write json lines to `{}`.", batch_path.native());
+          return;
+        }
+
+        batch_stream << "// @"
+                     << "generated\n";
+
+        // Write the current batch of models to file.
+        auto writer = JsonValidation::compact_writer();
+        for (std::size_t i = batch_size * batch;
+             i < batch_size * (batch + 1) && i < total_elements;
+             i++) {
+          writer->write(get_json_line(i), &batch_stream);
+          batch_stream << "\n";
+        }
+        batch_stream.close();
+      },
+      sparta::parallel::default_num_threads());
+
+  for (std::size_t batch = 0; batch < total_batch; batch++) {
+    queue.add_item(batch);
+  }
+  queue.run_all();
+
+  LOG(1, "Wrote json lines to {} shards.", total_batch);
 }
 
 void JsonValidation::update_object(

@@ -307,15 +307,6 @@ Json::Value Registry::models_to_json() const {
 void Registry::dump_models(
     const std::filesystem::path& path,
     const std::size_t batch_size) const {
-  // Remove existing model files under this directory.
-  for (auto& file : std::filesystem::directory_iterator(path)) {
-    const auto& file_path = file.path();
-    if (std::filesystem::is_regular_file(file_path) &&
-        boost::starts_with(file_path.filename().string(), "model@")) {
-      std::filesystem::remove(file_path);
-    }
-  }
-
   std::vector<Model> models;
   for (const auto& model : models_) {
     models.push_back(model.second);
@@ -331,57 +322,23 @@ void Registry::dump_models(
     literal_models.push_back(literal_model.second);
   }
 
-  const auto total_batch =
-      (models_.size() + field_models_.size() + literal_models_.size()) /
-          batch_size +
-      1;
-  const auto padded_total_batch = fmt::format("{:0>5}", total_batch);
+  std::size_t total_elements =
+      models.size() + field_models.size() + literal_models.size();
 
-  auto queue = sparta::work_queue<std::size_t>(
-      [&](std::size_t batch) {
-        // Construct a valid sharded file name for SAPP.
-        const auto padded_batch = fmt::format("{:0>5}", batch);
-        const auto batch_path = path /
-            ("model@" + padded_batch + "-of-" + padded_total_batch + ".json");
+  auto get_json_line = [&](std::size_t i) -> Json::Value {
+    mt_assert(i < total_elements);
+    if (i < models.size()) {
+      return models[i].to_json(context_);
+    } else if (i < models.size() + field_models.size()) {
+      return field_models[i - models.size()].to_json(context_);
+    } else {
+      return literal_models[i - models.size() - field_models.size()].to_json(
+          context_);
+    }
+  };
 
-        std::ofstream batch_stream;
-        batch_stream.open(batch_path, std::ios_base::out);
-        if (!batch_stream.is_open()) {
-          ERROR(1, "Unable to write models to `{}`.", batch_path.native());
-          return;
-        }
-        batch_stream << "// @"
-                     << "generated\n";
-
-        // Write the current batch of models to file.
-        auto writer = JsonValidation::compact_writer();
-        for (std::size_t i = batch_size * batch; i < batch_size * (batch + 1) &&
-             i < models.size() + field_models.size() + literal_models.size();
-             i++) {
-          if (i < models.size()) {
-            writer->write(models[i].to_json(context_), &batch_stream);
-          } else if (i < models.size() + field_models.size()) {
-            writer->write(
-                field_models[i - models.size()].to_json(context_),
-                &batch_stream);
-          } else {
-            writer->write(
-                literal_models[i - models.size() - field_models.size()].to_json(
-                    context_),
-                &batch_stream);
-          }
-          batch_stream << "\n";
-        }
-        batch_stream.close();
-      },
-      sparta::parallel::default_num_threads());
-
-  for (std::size_t batch = 0; batch < total_batch; batch++) {
-    queue.add_item(batch);
-  }
-  queue.run_all();
-
-  LOG(1, "Wrote models to {} shards.", total_batch);
+  JsonValidation::write_sharded_json_files(
+      path, batch_size, total_elements, "model@", get_json_line);
 }
 
 void Registry::dump_file_coverage_info(

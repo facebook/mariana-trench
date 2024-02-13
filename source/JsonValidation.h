@@ -8,6 +8,7 @@
 #pragma once
 
 #include <filesystem>
+#include <functional>
 #include <optional>
 #include <string>
 #include <unordered_set>
@@ -84,6 +85,14 @@ class JsonValidation final {
   static void write_json_file(
       const std::filesystem::path& path,
       const Json::Value& value);
+
+  static void write_sharded_json_files(
+      const std::filesystem::path& output_directory,
+      const std::size_t batch_size,
+      const std::size_t total_elements,
+      const std::string& filename_prefix,
+      const std::function<Json::Value(std::size_t)>& get_json_line);
+
   static std::string to_styled_string(const Json::Value& value);
 
   /**
