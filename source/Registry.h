@@ -20,12 +20,6 @@
 #include <mariana-trench/LiteralModel.h>
 #include <mariana-trench/Model.h>
 
-namespace {
-
-constexpr std::size_t k_default_shard_limit = 10000;
-
-} // namespace
-
 namespace marianatrench {
 
 class Registry final {
@@ -90,7 +84,8 @@ class Registry final {
   void dump_metadata(const std::filesystem::path& path) const;
   void dump_models(
       const std::filesystem::path& path,
-      const std::size_t shard_limit = k_default_shard_limit) const;
+      const std::size_t shard_limit =
+          JsonValidation::k_default_shard_limit) const;
   void dump_file_coverage_info(const std::filesystem::path& path) const;
   std::string dump_models() const;
   Json::Value models_to_json() const;

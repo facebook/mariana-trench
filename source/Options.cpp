@@ -553,7 +553,7 @@ const std::filesystem::path Options::methods_output_path() const {
 }
 
 const std::filesystem::path Options::call_graph_output_path() const {
-  return output_directory_ / "call_graph.json";
+  return output_directory_;
 }
 
 const std::filesystem::path Options::class_hierarchies_output_path() const {

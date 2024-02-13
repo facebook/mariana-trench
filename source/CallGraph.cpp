@@ -9,6 +9,7 @@
 #include <unordered_map>
 
 #include <boost/algorithm/string/predicate.hpp>
+#include <json/value.h>
 #include <re2/re2.h>
 
 #include <sparta/WorkQueue.h>
@@ -1064,10 +1065,8 @@ CallGraph::CallGraph(
   }
 
   if (options.dump_call_graph()) {
-    auto call_graph_path = options.call_graph_output_path();
-    LOG(1, "Writing call graph to `{}`", call_graph_path.native());
-    JsonValidation::write_json_file(
-        call_graph_path, to_json(/* with_overrides */ false));
+    dump_call_graph(
+        options.call_graph_output_path(), /* with_overrides */ false);
   }
 }
 
@@ -1244,14 +1243,15 @@ bool CallGraph::has_callees(const Method* caller) {
   return false;
 }
 
-Json::Value CallGraph::to_json(bool with_overrides) const {
-  auto value = Json::Value(Json::objectValue);
-  for (const auto& [method, callees] : resolved_base_callees_) {
-    auto method_value = Json::Value(Json::objectValue);
+Json::Value CallGraph::to_json(const Method* method, bool with_overrides)
+    const {
+  auto method_value = Json::Value(Json::objectValue);
 
+  auto resolved_callee = resolved_base_callees_.find(method);
+  if (resolved_callee != resolved_base_callees_.end()) {
     std::unordered_set<const Method*> static_callees;
     std::unordered_set<const Method*> virtual_callees;
-    for (const auto& [instruction, call_target] : callees) {
+    for (const auto& [instruction, call_target] : resolved_callee->second) {
       if (!call_target.resolved()) {
         continue;
       } else if (call_target.is_virtual()) {
@@ -1281,15 +1281,13 @@ Json::Value CallGraph::to_json(bool with_overrides) const {
       }
       method_value["virtual"] = virtual_callees_value;
     }
-
-    value[method->show()] = method_value;
   }
 
-  for (const auto& [method, instruction_artificial_callees] :
-       artificial_callees_) {
+  auto instruction_artificial_callees = artificial_callees_.find(method);
+  if (instruction_artificial_callees != artificial_callees_.end()) {
     std::unordered_set<const Method*> callees;
     for (const auto& [instruction, artificial_callees] :
-         instruction_artificial_callees) {
+         instruction_artificial_callees->second) {
       for (const auto& artificial_callee : artificial_callees) {
         callees.insert(artificial_callee.call_target.resolved_base_callee());
       }
@@ -1299,10 +1297,64 @@ Json::Value CallGraph::to_json(bool with_overrides) const {
     for (const auto* callee : callees) {
       callees_value.append(Json::Value(show(callee)));
     }
-    value[method->show()]["artificial"] = callees_value;
+    method_value["artificial"] = callees_value;
+  }
+
+  JsonValidation::validate_object(method_value);
+
+  return method_value;
+}
+
+Json::Value CallGraph::to_json(bool with_overrides) const {
+  auto value = Json::Value(Json::objectValue);
+  for (const auto& [method, _callees] : resolved_base_callees_) {
+    value[method->show()] = to_json(method, with_overrides);
+  }
+
+  // Add methods that only have artificial callees
+  for (const auto& [method, _callees] : artificial_callees_) {
+    if (resolved_base_callees_.find(method) == resolved_base_callees_.end()) {
+      value[method->show()] = to_json(method, with_overrides);
+    }
   }
 
   return value;
+}
+
+void CallGraph::dump_call_graph(
+    const std::filesystem::path& output_directory,
+    bool with_overrides,
+    const std::size_t batch_size) const {
+  LOG(1, "Writing call graph to `{}`", output_directory.native());
+
+  // Collect all methods in the callgraph
+  std::vector<const Method*> methods;
+  methods.reserve(resolved_base_callees_.size());
+  for (const auto& [method, _callees] : resolved_base_callees_) {
+    methods.push_back(method);
+  }
+
+  // Add methods that only have artificial callees
+  for (const auto& [method, _callees] : artificial_callees_) {
+    if (resolved_base_callees_.find(method) == resolved_base_callees_.end()) {
+      methods.push_back(method);
+    }
+  }
+  std::size_t total_elements = methods.size();
+
+  auto get_json_line = [&](std::size_t i) -> Json::Value {
+    auto value = Json::Value(Json::objectValue);
+    const auto* method = methods.at(i);
+    value[method->show()] = to_json(method, with_overrides);
+    return value;
+  };
+
+  JsonValidation::write_sharded_json_files(
+      output_directory,
+      batch_size,
+      total_elements,
+      "call-graph@",
+      get_json_line);
 }
 
 } // namespace marianatrench

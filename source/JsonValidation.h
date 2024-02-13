@@ -29,6 +29,8 @@ class JsonValidationError : public std::invalid_argument {
 
 class JsonValidation final {
  public:
+  static constexpr std::size_t k_default_shard_limit = 10000;
+
   static void validate_object(const Json::Value& value);
   static void validate_object(
       const Json::Value& value,

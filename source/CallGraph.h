@@ -272,7 +272,14 @@ class CallGraph final {
      intermediate structures. */
   bool has_callees(const Method* caller);
 
+  Json::Value to_json(const Method* method, bool with_overrides = true) const;
   Json::Value to_json(bool with_overrides = true) const;
+
+  void dump_call_graph(
+      const std::filesystem::path& output_directory,
+      bool with_overrides = true,
+      const std::size_t batch_size =
+          JsonValidation::k_default_shard_limit) const;
 
  private:
   const Types& types_;
