@@ -5,8 +5,11 @@
  * LICENSE file in the root directory of this source tree.
  */
 
+#include <vector>
+
 #include <fmt/format.h>
 
+#include <json/value.h>
 #include <sparta/WorkQueue.h>
 
 #include <IRInstruction.h>
@@ -107,9 +110,7 @@ Dependencies::Dependencies(
   }
 
   if (options.dump_dependencies()) {
-    auto dependencies_path = options.dependencies_output_path();
-    LOG(1, "Writing dependencies to `{}`", dependencies_path.native());
-    JsonValidation::write_json_file(dependencies_path, to_json());
+    dump_dependencies(options.dependencies_output_path());
   }
 }
 
@@ -125,16 +126,53 @@ const std::unordered_set<const Method*>& Dependencies::dependencies(
   }
 }
 
+Json::Value Dependencies::to_json(const Method* method) const {
+  auto dependencies = dependencies_.find(method);
+  mt_assert(dependencies != dependencies_.end());
+
+  auto dependencies_value = Json::Value(Json::arrayValue);
+  for (const auto* dependency : dependencies->second) {
+    dependencies_value.append(Json::Value(dependency->show()));
+  }
+
+  JsonValidation::nonempty_array(dependencies_value);
+
+  return dependencies_value;
+}
+
 Json::Value Dependencies::to_json() const {
   auto value = Json::Value(Json::objectValue);
-  for (const auto& [method, dependencies] : dependencies_) {
-    auto dependencies_value = Json::Value(Json::arrayValue);
-    for (const auto* dependency : dependencies) {
-      dependencies_value.append(Json::Value(show(dependency)));
-    }
-    value[method->show()] = dependencies_value;
+  for (const auto& [method, _dependencies] : dependencies_) {
+    value[method->show()] = to_json(method);
   }
   return value;
+}
+
+void Dependencies::dump_dependencies(
+    const std::filesystem::path& output_directory,
+    const std::size_t batch_size) const {
+  LOG(1, "Writing dependencies to `{}`", output_directory.native());
+
+  std::vector<const Method*> methods;
+  methods.reserve(dependencies_.size());
+  for (const auto& [method, _dependencies] : dependencies_) {
+    methods.push_back(method);
+  }
+
+  std::size_t total_elements = methods.size();
+  auto get_json_line = [&](std::size_t i) -> Json::Value {
+    auto value = Json::Value(Json::objectValue);
+    const auto* method = methods.at(i);
+    value[method->show()] = to_json(method);
+    return value;
+  };
+
+  JsonValidation::write_sharded_json_files(
+      output_directory,
+      batch_size,
+      total_elements,
+      "dependencies@",
+      get_json_line);
 }
 
 } // namespace marianatrench

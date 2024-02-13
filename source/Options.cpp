@@ -569,7 +569,7 @@ const std::filesystem::path Options::overrides_output_path() const {
 }
 
 const std::filesystem::path Options::dependencies_output_path() const {
-  return output_directory_ / "dependencies.json";
+  return output_directory_;
 }
 
 const std::filesystem::path Options::file_coverage_output_path() const {

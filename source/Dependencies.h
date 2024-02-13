@@ -40,7 +40,13 @@ class Dependencies final {
   const std::unordered_set<const Method*>& dependencies(
       const Method* method) const;
 
+  Json::Value to_json(const Method* method) const;
   Json::Value to_json() const;
+
+  void dump_dependencies(
+      const std::filesystem::path& output_directory,
+      const std::size_t batch_size =
+          JsonValidation::k_default_shard_limit) const;
 
  private:
   ConcurrentMap<const Method*, std::unordered_set<const Method*>> dependencies_;
