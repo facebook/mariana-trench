@@ -9,7 +9,6 @@
 
 #include <fmt/format.h>
 
-#include <json/value.h>
 #include <sparta/WorkQueue.h>
 
 #include <IRInstruction.h>

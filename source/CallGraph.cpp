@@ -9,7 +9,6 @@
 #include <unordered_map>
 
 #include <boost/algorithm/string/predicate.hpp>
-#include <json/value.h>
 #include <re2/re2.h>
 
 #include <sparta/WorkQueue.h>
