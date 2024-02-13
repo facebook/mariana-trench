@@ -20,15 +20,30 @@
     "find": "methods",
     "where": [
       {
-        "constraint": "signature_pattern",
-        "pattern": "Landroidx/fragment/app/FragmentTransaction;\\.(add|show|replace|attach|doAddOp):\\(Ljava/lang/Class;.*"
+        "constraint": "signature_match",
+        "parent": "Landroidx/fragment/app/FragmentTransaction;",
+        "names": [
+          "add",
+          "show",
+          "replace",
+          "attach"
+        ]
+      },
+      {
+        "constraint": "parameter",
+        "idx": 1,
+        "inner": {
+          "constraint": "name",
+          "pattern": "Ljava/lang/Class;"
+        }
       }
     ],
     "shim": {
       "callees": [
         {
           "reflected_type_of": "Argument(1)",
-          "lifecycle_name": "xfragment_lifecycle_wrapper"
+          "lifecycle_name": "xfragment_lifecycle_wrapper",
+          "infer_parameters_from_types": false
         }
       ]
     }
@@ -37,15 +52,30 @@
     "find": "methods",
     "where": [
       {
-        "constraint": "signature_pattern",
-        "pattern": "Landroidx/fragment/app/FragmentTransaction;\\.(add|show|replace|attach|doAddOp):\\(ILjava/lang/Class;.*"
+        "constraint": "signature_match",
+        "parent": "Landroidx/fragment/app/FragmentTransaction;",
+        "names": [
+          "add",
+          "show",
+          "replace",
+          "attach"
+        ]
+      },
+      {
+        "constraint": "parameter",
+        "idx": 2,
+        "inner": {
+          "constraint": "name",
+          "pattern": "Ljava/lang/Class;"
+        }
       }
     ],
     "shim": {
       "callees": [
         {
           "reflected_type_of": "Argument(2)",
-          "lifecycle_name": "xfragment_lifecycle_wrapper"
+          "lifecycle_name": "xfragment_lifecycle_wrapper",
+          "infer_parameters_from_types": false
         }
       ]
     }
@@ -54,15 +84,30 @@
     "find": "methods",
     "where": [
       {
-        "constraint": "signature_pattern",
-        "pattern": "Landroidx/fragment/app/FragmentTransaction;\\.(add|show|replace|attach|doAddOp):\\(Landroidx/fragment/app/Fragment;.*"
+        "constraint": "signature_match",
+        "parent": "Landroidx/fragment/app/FragmentTransaction;",
+        "names": [
+          "add",
+          "show",
+          "replace",
+          "attach"
+        ]
+      },
+      {
+        "constraint": "parameter",
+        "idx": 1,
+        "inner": {
+          "constraint": "name",
+          "pattern": "Landroidx/fragment/app/Fragment;"
+        }
       }
     ],
     "shim": {
       "callees": [
         {
           "type_of": "Argument(1)",
-          "lifecycle_name": "xfragment_lifecycle_wrapper"
+          "lifecycle_name": "xfragment_lifecycle_wrapper",
+          "infer_parameters_from_types": false
         }
       ]
     }
@@ -71,15 +116,30 @@
     "find": "methods",
     "where": [
       {
-        "constraint": "signature_pattern",
-        "pattern": "Landroidx/fragment/app/FragmentTransaction;\\.(add|show|replace|attach|doAddOp):\\(ILandroidx/fragment/app/Fragment;.*"
+        "constraint": "signature_match",
+        "parent": "Landroidx/fragment/app/FragmentTransaction;",
+        "names": [
+          "add",
+          "show",
+          "replace",
+          "attach"
+        ]
+      },
+      {
+        "constraint": "parameter",
+        "idx": 2,
+        "inner": {
+          "constraint": "name",
+          "pattern": "Landroidx/fragment/app/Fragment;"
+        }
       }
     ],
     "shim": {
       "callees": [
         {
           "type_of": "Argument(2)",
-          "lifecycle_name": "xfragment_lifecycle_wrapper"
+          "lifecycle_name": "xfragment_lifecycle_wrapper",
+          "infer_parameters_from_types": false
         }
       ]
     }
