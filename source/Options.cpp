@@ -431,7 +431,7 @@ void Options::add_options(
       "dump-methods", "Dump the list of method signatures in `methods.json`.");
   options.add_options()(
       "dump-coverage-info",
-      "Dump the file coverage info into `file_coverage.txt`.");
+      "Dump the file coverage info into `file_coverage.txt` and rule coverage info into `rule_coverage.json`.");
 
   options.add_options()(
       "job-id",
@@ -574,6 +574,10 @@ const std::filesystem::path Options::dependencies_output_path() const {
 
 const std::filesystem::path Options::file_coverage_output_path() const {
   return output_directory_ / "file_coverage.txt";
+}
+
+const std::filesystem::path Options::rule_coverage_output_path() const {
+  return output_directory_ / "rule_coverage.json";
 }
 
 bool Options::sequential() const {

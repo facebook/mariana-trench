@@ -88,6 +88,7 @@ class Options final {
   const std::filesystem::path overrides_output_path() const;
   const std::filesystem::path dependencies_output_path() const;
   const std::filesystem::path file_coverage_output_path() const;
+  const std::filesystem::path rule_coverage_output_path() const;
 
   bool sequential() const;
   bool skip_source_indexing() const;

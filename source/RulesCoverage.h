@@ -19,6 +19,8 @@ struct CoveredRule {
   Rule::TransformSet used_transforms;
 
   bool operator==(const CoveredRule& other) const;
+
+  Json::Value to_json() const;
 };
 
 struct RulesCoverage {
@@ -26,6 +28,8 @@ struct RulesCoverage {
   std::unordered_set<int> non_covered_rule_codes;
 
   bool operator==(const RulesCoverage& other) const;
+
+  Json::Value to_json() const;
 
   /**
    * Computes rule(/category) coverage based on the set of known

@@ -448,6 +448,16 @@ void MarianaTrench::run(const program_options::variables_map& variables) {
     LOG(1,
         "Wrote file coverage info in {:.2f}s.",
         file_coverage_timer.duration_in_seconds());
+
+    Timer rule_coverage_timer;
+    auto rule_coverage_output_path = options.rule_coverage_output_path();
+    LOG(1, "Writing rule coverage info to `{}`.", rule_coverage_output_path);
+    registry.dump_rule_coverage_info(rule_coverage_output_path);
+    context.statistics->log_time(
+        "dump_rule_coverage_info", rule_coverage_timer);
+    LOG(1,
+        "Wrote rule coverage info in {:.2f}s.",
+        rule_coverage_timer.duration_in_seconds());
   }
 
   auto metadata_path = options.metadata_output_path();

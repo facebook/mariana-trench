@@ -24,6 +24,7 @@
 #include <mariana-trench/Positions.h>
 #include <mariana-trench/Registry.h>
 #include <mariana-trench/Rules.h>
+#include <mariana-trench/RulesCoverage.h>
 #include <mariana-trench/Statistics.h>
 
 namespace marianatrench {
@@ -368,6 +369,29 @@ void Registry::dump_file_coverage_info(
   }
 
   output_file.close();
+}
+
+void Registry::dump_rule_coverage_info(
+    const std::filesystem::path& output_path) const {
+  std::unordered_set<const Kind*> used_sources;
+  std::unordered_set<const Kind*> used_sinks;
+  std::unordered_set<const Transform*> used_transforms;
+
+  // TODO(T176752830): Repeat for field and literal models
+  for (const auto& [_method, model] : models_) {
+    auto source_kinds = model.source_kinds();
+    used_sources.insert(source_kinds.begin(), source_kinds.end());
+
+    auto sink_kinds = model.sink_kinds();
+    used_sinks.insert(sink_kinds.begin(), sink_kinds.end());
+
+    auto transforms = model.propagation_transforms();
+    used_transforms.insert(transforms.begin(), transforms.end());
+  }
+
+  auto rule_coverage = RulesCoverage::create(
+      *(context_.rules), used_sources, used_sinks, used_transforms);
+  JsonValidation::write_json_file(output_path, rule_coverage.to_json());
 }
 
 } // namespace marianatrench
