@@ -18,6 +18,30 @@ bool SourceSinkRule::uses(const Kind* kind) const {
       sink_kinds_.count(kind->discard_transforms()) != 0;
 }
 
+Rule::KindSet SourceSinkRule::used_sources(const KindSet& sources) const {
+  return Rule::intersecting_kinds(/* rule_kinds */ source_kinds(), sources);
+}
+
+Rule::KindSet SourceSinkRule::used_sinks(const KindSet& sinks) const {
+  return Rule::intersecting_kinds(/* rule_kinds */ sink_kinds(), sinks);
+}
+
+Rule::TransformSet SourceSinkRule::transforms() const {
+  if (transforms_ != nullptr) {
+    return TransformSet(transforms_->begin(), transforms_->end());
+  }
+
+  return TransformSet{};
+}
+
+Rule::TransformSet SourceSinkRule::used_transforms(
+    const TransformSet& transforms) const {
+  auto rule_transforms = this->transforms();
+  // Should not be called unless there are actually transforms in the rule.
+  mt_assert(rule_transforms.size() > 0);
+  return Rule::intersecting_kinds(rule_transforms, transforms);
+}
+
 std::unique_ptr<Rule> SourceSinkRule::from_json(
     const std::string& name,
     int code,

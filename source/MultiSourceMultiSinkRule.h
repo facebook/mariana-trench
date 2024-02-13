@@ -57,6 +57,18 @@ class MultiSourceMultiSinkRule final : public Rule {
 
   bool uses(const Kind*) const override;
 
+  KindSet used_sources(const KindSet& sources) const override;
+  KindSet used_sinks(const KindSet& sinks) const override;
+
+  // Transforms not supported in multi-source/sink rules.
+  TransformSet transforms() const override {
+    return TransformSet{};
+  }
+  TransformSet used_transforms(const TransformSet&) const override {
+    // Should not be called since `transforms()` is always empty.
+    mt_unreachable();
+  }
+
   static std::unique_ptr<Rule> from_json(
       const std::string& name,
       int code,

@@ -35,6 +35,22 @@ bool MultiSourceMultiSinkRule::uses(const Kind* kind) const {
   return partial_sink_kinds_.count(kind->as<PartialKind>()) != 0;
 }
 
+Rule::KindSet MultiSourceMultiSinkRule::used_sources(
+    const KindSet& sources) const {
+  KindSet rule_sources;
+  for (const auto& [_label, kinds] : multi_source_kinds_) {
+    rule_sources.insert(kinds.begin(), kinds.end());
+  }
+  return Rule::intersecting_kinds(rule_sources, sources);
+}
+
+Rule::KindSet MultiSourceMultiSinkRule::used_sinks(const KindSet& sinks) const {
+  return Rule::intersecting_kinds(
+      /* rule_kinds */ KindSet(
+          partial_sink_kinds_.begin(), partial_sink_kinds_.end()),
+      sinks);
+}
+
 std::unique_ptr<Rule> MultiSourceMultiSinkRule::from_json(
     const std::string& name,
     int code,
