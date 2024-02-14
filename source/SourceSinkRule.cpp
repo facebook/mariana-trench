@@ -8,6 +8,7 @@
 #include <mariana-trench/JsonValidation.h>
 #include <mariana-trench/NamedKind.h>
 #include <mariana-trench/Rule.h>
+#include <mariana-trench/RulesCoverage.h>
 #include <mariana-trench/SourceSinkRule.h>
 #include <mariana-trench/TransformsFactory.h>
 
@@ -18,28 +19,42 @@ bool SourceSinkRule::uses(const Kind* kind) const {
       sink_kinds_.count(kind->discard_transforms()) != 0;
 }
 
-Rule::KindSet SourceSinkRule::used_sources(const KindSet& sources) const {
-  return Rule::intersecting_kinds(/* rule_kinds */ source_kinds(), sources);
-}
-
-Rule::KindSet SourceSinkRule::used_sinks(const KindSet& sinks) const {
-  return Rule::intersecting_kinds(/* rule_kinds */ sink_kinds(), sinks);
-}
-
-Rule::TransformSet SourceSinkRule::transforms() const {
-  if (transforms_ != nullptr) {
-    return TransformSet(transforms_->begin(), transforms_->end());
+std::optional<CoveredRule> SourceSinkRule::coverage(
+    const KindSet& sources,
+    const KindSet& sinks,
+    const TransformSet& transforms) const {
+  auto used_rule_sources =
+      Rule::intersecting_kinds(/* rule_kinds */ source_kinds(), sources);
+  if (used_rule_sources.empty()) {
+    return std::nullopt;
   }
 
-  return TransformSet{};
-}
+  auto used_rule_sinks =
+      Rule::intersecting_kinds(/* rule_kinds */ sink_kinds(), sinks);
+  if (used_rule_sinks.empty()) {
+    return std::nullopt;
+  }
 
-Rule::TransformSet SourceSinkRule::used_transforms(
-    const TransformSet& transforms) const {
-  auto rule_transforms = this->transforms();
-  // Should not be called unless there are actually transforms in the rule.
-  mt_assert(rule_transforms.size() > 0);
-  return Rule::intersecting_kinds(rule_transforms, transforms);
+  TransformSet used_rule_transforms;
+  auto rule_transforms = transforms_ != nullptr
+      ? TransformSet(transforms_->begin(), transforms_->end())
+      : TransformSet{};
+  if (!rule_transforms.empty()) {
+    // Not all rules have transforms. Only check for transform usage if the
+    // rule actually involves these.
+    used_rule_transforms =
+        Rule::intersecting_kinds(rule_transforms, transforms);
+    if (used_rule_transforms.empty()) {
+      return std::nullopt;
+    }
+  }
+
+  return CoveredRule{
+      .code = code(),
+      .used_sources = std::move(used_rule_sources),
+      .used_sinks = std::move(used_rule_sinks),
+      .used_transforms = std::move(used_rule_transforms),
+  };
 }
 
 std::unique_ptr<Rule> SourceSinkRule::from_json(

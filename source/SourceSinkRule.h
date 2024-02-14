@@ -56,10 +56,10 @@ class SourceSinkRule final : public Rule {
 
   bool uses(const Kind*) const override;
 
-  KindSet used_sources(const KindSet& sources) const override;
-  KindSet used_sinks(const KindSet& sinks) const override;
-  TransformSet transforms() const override;
-  TransformSet used_transforms(const TransformSet& transforms) const override;
+  std::optional<CoveredRule> coverage(
+      const KindSet& sources,
+      const KindSet& sinks,
+      const TransformSet& transforms) const override;
 
   static std::unique_ptr<Rule> from_json(
       const std::string& name,

@@ -11,6 +11,7 @@
 #include <mariana-trench/NamedKind.h>
 #include <mariana-trench/PartialKind.h>
 #include <mariana-trench/Rule.h>
+#include <mariana-trench/RulesCoverage.h>
 
 namespace marianatrench {
 
@@ -35,20 +36,34 @@ bool MultiSourceMultiSinkRule::uses(const Kind* kind) const {
   return partial_sink_kinds_.count(kind->as<PartialKind>()) != 0;
 }
 
-Rule::KindSet MultiSourceMultiSinkRule::used_sources(
-    const KindSet& sources) const {
+std::optional<CoveredRule> MultiSourceMultiSinkRule::coverage(
+    const KindSet& sources,
+    const KindSet& sinks,
+    const TransformSet& _transforms) const {
   KindSet rule_sources;
   for (const auto& [_label, kinds] : multi_source_kinds_) {
     rule_sources.insert(kinds.begin(), kinds.end());
   }
-  return Rule::intersecting_kinds(rule_sources, sources);
-}
 
-Rule::KindSet MultiSourceMultiSinkRule::used_sinks(const KindSet& sinks) const {
-  return Rule::intersecting_kinds(
+  auto used_rule_sources = Rule::intersecting_kinds(rule_sources, sources);
+  if (used_rule_sources.empty()) {
+    return std::nullopt;
+  }
+
+  auto used_rule_sinks = Rule::intersecting_kinds(
       /* rule_kinds */ KindSet(
           partial_sink_kinds_.begin(), partial_sink_kinds_.end()),
       sinks);
+  if (used_rule_sinks.empty()) {
+    return std::nullopt;
+  }
+
+  return CoveredRule{
+      .code = code(),
+      .used_sources = std::move(used_rule_sources),
+      .used_sinks = std::move(used_rule_sinks),
+      .used_transforms = TransformSet{},
+  };
 }
 
 std::unique_ptr<Rule> MultiSourceMultiSinkRule::from_json(

@@ -22,6 +22,8 @@
 
 namespace marianatrench {
 
+struct CoveredRule;
+
 class Rule {
  public:
   using KindSet = std::unordered_set<const Kind*>;
@@ -49,15 +51,18 @@ class Rule {
 
   virtual bool uses(const Kind*) const = 0;
 
-  virtual KindSet used_sources(const KindSet& sources) const = 0;
-  virtual KindSet used_sinks(const KindSet& sinks) const = 0;
-
-  // Returns the set of Transforms used by the rule. Can be empty as not all
-  // rules have transforms.
-  virtual TransformSet transforms() const = 0;
-  // Should only be called if transforms() is non-empty. Returns the subset of
-  // transforms that are used in the rule.
-  virtual TransformSet used_transforms(
+  /**
+   * A rule is "covered" by a set of kinds/transforms if it can be triggered
+   * by some combination of them. Perhaps more clearly, a rule is not covered
+   * if some kind/transform required for a rule to fire is missing. E.g. Rule
+   * requires SourceA and SinkB, but SinkB is not a valid sink. This rule is
+   * uncovered. Returns `std::nullopt` if non-covered rules. Otherwise, returns
+   * the coverage information containing the specific kinds/transforms that
+   * result in it being considered "covered".
+   */
+  virtual std::optional<CoveredRule> coverage(
+      const KindSet& sources,
+      const KindSet& sinks,
       const TransformSet& transforms) const = 0;
 
   template <typename T>

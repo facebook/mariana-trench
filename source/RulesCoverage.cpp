@@ -77,38 +77,15 @@ RulesCoverage RulesCoverage::create(
     const Rule::TransformSet& used_transforms) {
   RulesCoverage coverage;
   for (const auto* rule : rules) {
-    auto used_sources_for_rule = rule->used_sources(used_sources);
-    if (used_sources_for_rule.empty()) {
+    auto covered_rule =
+        rule->coverage(used_sources, used_sinks, used_transforms);
+    if (!covered_rule.has_value()) {
       coverage.non_covered_rule_codes.insert(rule->code());
-      continue;
+    } else {
+      coverage.covered_rules.emplace(rule->code(), *covered_rule);
     }
-
-    auto used_sinks_for_rule = rule->used_sinks(used_sinks);
-    if (used_sinks_for_rule.empty()) {
-      coverage.non_covered_rule_codes.insert(rule->code());
-      continue;
-    }
-
-    Rule::TransformSet used_transforms_for_rule;
-    auto rule_transforms = rule->transforms();
-    if (rule_transforms.size() > 0) {
-      // Only check intersection with used_transforms if the rule uses them.
-      // Otherwise the intersection will always be empty.
-      used_transforms_for_rule = rule->used_transforms(used_transforms);
-      if (used_transforms_for_rule.empty()) {
-        coverage.non_covered_rule_codes.insert(rule->code());
-        continue;
-      }
-    }
-
-    coverage.covered_rules.emplace(
-        rule->code(),
-        CoveredRule{
-            .code = rule->code(),
-            .used_sources = used_sources_for_rule,
-            .used_sinks = used_sinks_for_rule,
-            .used_transforms = used_transforms_for_rule});
   }
+
   return coverage;
 }
 
