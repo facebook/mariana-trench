@@ -1075,14 +1075,13 @@ void Model::join_with(const Model& other) {
 
 namespace {
 
-std::unordered_set<const Kind*> kinds_from_taint_tree(
-    const TaintAccessPathTree& taint_tree) {
-  std::unordered_set<const Kind*> result;
+void kinds_from_taint_tree(
+    const TaintAccessPathTree& taint_tree,
+    std::unordered_set<const Kind*>& result) {
   for (const auto& [_port, taint] : taint_tree.elements()) {
     auto taint_kinds = taint.kinds();
     result.insert(taint_kinds.begin(), taint_kinds.end());
   }
-  return result;
 }
 
 } // namespace
@@ -1090,14 +1089,9 @@ std::unordered_set<const Kind*> kinds_from_taint_tree(
 std::unordered_set<const Kind*> Model::source_kinds() const {
   std::unordered_set<const Kind*> result;
 
-  auto parameter_source_kinds = kinds_from_taint_tree(parameter_sources_);
-  result.insert(parameter_source_kinds.begin(), parameter_source_kinds.end());
-
-  auto generation_kinds = kinds_from_taint_tree(generations_);
-  result.insert(generation_kinds.begin(), generation_kinds.end());
-
-  auto call_effect_kinds = kinds_from_taint_tree(call_effect_sources_);
-  result.insert(call_effect_kinds.begin(), call_effect_kinds.end());
+  kinds_from_taint_tree(parameter_sources_, result);
+  kinds_from_taint_tree(generations_, result);
+  kinds_from_taint_tree(call_effect_sources_, result);
 
   return result;
 }
@@ -1105,19 +1099,17 @@ std::unordered_set<const Kind*> Model::source_kinds() const {
 std::unordered_set<const Kind*> Model::sink_kinds() const {
   std::unordered_set<const Kind*> result;
 
-  auto sink_kinds = kinds_from_taint_tree(sinks_);
-  result.insert(sink_kinds.begin(), sink_kinds.end());
-
-  auto call_effect_sink_kinds = kinds_from_taint_tree(call_effect_sinks_);
-  result.insert(call_effect_sink_kinds.begin(), call_effect_sink_kinds.end());
+  kinds_from_taint_tree(sinks_, result);
+  kinds_from_taint_tree(call_effect_sinks_, result);
 
   return result;
 }
 
-std::unordered_set<const Transform*> Model::propagation_transforms() const {
+std::unordered_set<const Transform*> Model::local_transform_kinds() const {
   std::unordered_set<const Transform*> result;
 
-  auto propagation_kinds = kinds_from_taint_tree(propagations_);
+  std::unordered_set<const Kind*> propagation_kinds;
+  kinds_from_taint_tree(propagations_, propagation_kinds);
   for (const Kind* propagation_kind : propagation_kinds) {
     const auto* transform_kind = propagation_kind->as<TransformKind>();
     if (transform_kind == nullptr) {

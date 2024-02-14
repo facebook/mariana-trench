@@ -332,7 +332,7 @@ class Model final {
    * exists as a global transform, it would have came from a local transform
    * somewhere else (in a different Model).
    */
-  std::unordered_set<const Transform*> propagation_transforms() const;
+  std::unordered_set<const Transform*> local_transform_kinds() const;
 
   static Model from_json(
       const Method* MT_NULLABLE method,

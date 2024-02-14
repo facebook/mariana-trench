@@ -384,7 +384,7 @@ void Registry::dump_rule_coverage_info(
     auto sink_kinds = model.sink_kinds();
     used_sinks.insert(sink_kinds.begin(), sink_kinds.end());
 
-    auto transforms = model.propagation_transforms();
+    auto transforms = model.local_transform_kinds();
     used_transforms.insert(transforms.begin(), transforms.end());
   }
 

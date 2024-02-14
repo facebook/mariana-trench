@@ -1252,7 +1252,7 @@ TEST_F(ModelTest, PropagationTransforms) {
   const auto output_path = AccessPath(Root(Root::Kind::Return));
 
   Model model;
-  EXPECT_EQ(0, model.propagation_transforms().size());
+  EXPECT_EQ(0, model.local_transform_kinds().size());
 
   Model model_with_transforms(
       /* method */ nullptr,
@@ -1268,7 +1268,7 @@ TEST_F(ModelTest, PropagationTransforms) {
        test::make_propagation_config(
            local_return_kind, input_path, output_path)});
   EXPECT_THAT(
-      model_with_transforms.propagation_transforms(),
+      model_with_transforms.local_transform_kinds(),
       testing::UnorderedElementsAre(transform1));
 }
 
