@@ -36,24 +36,55 @@ bool MultiSourceMultiSinkRule::uses(const Kind* kind) const {
   return partial_sink_kinds_.count(kind->as<PartialKind>()) != 0;
 }
 
+namespace {
+
+// For a multi-source rule to be considered covered, each set of kinds
+// corresponding to each **label** should intersect with the corresponding input
+// sources/sinks, i.e. every branch of the rule should be "covered". This
+// performs that check against `compared_to_kinds` and returns the combined
+// intersection (or empty set if the rule is not covered).
+Rule::KindSet used_kinds_by_label(
+    const std::unordered_map<std::string, Rule::KindSet>& kind_by_label,
+    const Rule::KindSet& compared_to_kinds) {
+  Rule::KindSet used_rule_kinds;
+  for (const auto& [label, label_kinds] : kind_by_label) {
+    auto used_kinds = Rule::intersecting_kinds(
+        /* rule_kinds */ label_kinds, compared_to_kinds);
+    if (used_kinds.empty()) {
+      return Rule::KindSet{};
+    }
+
+    used_rule_kinds.insert(used_kinds.begin(), used_kinds.end());
+  }
+
+  // Because kind_by_label should be non-empty
+  mt_assert(used_rule_kinds.size() > 0);
+
+  return used_rule_kinds;
+}
+} // namespace
+
 std::optional<CoveredRule> MultiSourceMultiSinkRule::coverage(
     const KindSet& sources,
     const KindSet& sinks,
     const TransformSet& _transforms) const {
-  KindSet rule_sources;
-  for (const auto& [_label, kinds] : multi_source_kinds_) {
-    rule_sources.insert(kinds.begin(), kinds.end());
-  }
-
-  auto used_rule_sources = Rule::intersecting_kinds(rule_sources, sources);
+  auto used_rule_sources = used_kinds_by_label(multi_source_kinds_, sources);
   if (used_rule_sources.empty()) {
     return std::nullopt;
   }
 
-  auto used_rule_sinks = Rule::intersecting_kinds(
-      /* rule_kinds */ KindSet(
-          partial_sink_kinds_.begin(), partial_sink_kinds_.end()),
-      sinks);
+  std::unordered_map<std::string, KindSet> sink_kinds_by_label;
+  for (const auto* sink_kind : partial_sink_kinds_) {
+    auto label = sink_kind->label();
+    auto existing = sink_kinds_by_label.find(label);
+    if (existing == sink_kinds_by_label.end()) {
+      sink_kinds_by_label[label] = KindSet{sink_kind};
+    } else {
+      existing->second.insert(sink_kind);
+    }
+  }
+
+  auto used_rule_sinks = used_kinds_by_label(sink_kinds_by_label, sinks);
   if (used_rule_sinks.empty()) {
     return std::nullopt;
   }

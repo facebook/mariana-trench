@@ -121,6 +121,8 @@ TEST_F(RulesCoverageTest, TestCoverageInfo) {
       }));
 
   // Multi-source rule with partial source/sink coverage.
+  // For these rules, *both* branches/labels must have sources/sinks in the
+  // input.
   EXPECT_EQ(
       RulesCoverage::create(
           rules,
@@ -128,12 +130,23 @@ TEST_F(RulesCoverageTest, TestCoverageInfo) {
           /* used_sinks */ {partial_sink_a},
           /* used_transforms */ {}),
       (RulesCoverage{
+          .covered_rules = {},
+          .non_covered_rule_codes = {1, 2, 3},
+      }));
+
+  EXPECT_EQ(
+      RulesCoverage::create(
+          rules,
+          /* used_sources */ {source1, source2},
+          /* used_sinks */ {partial_sink_a, partial_sink_b},
+          /* used_transforms */ {}),
+      (RulesCoverage{
           .covered_rules =
               {{3,
                 CoveredRule{
                     .code = 3,
-                    .used_sources = {source1},
-                    .used_sinks = {partial_sink_a},
+                    .used_sources = {source1, source2},
+                    .used_sinks = {partial_sink_a, partial_sink_b},
                     .used_transforms = {}}}},
           .non_covered_rule_codes = {1, 2},
       }));
