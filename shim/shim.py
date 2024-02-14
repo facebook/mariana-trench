@@ -562,6 +562,11 @@ def _add_debug_arguments(parser: argparse.ArgumentParser) -> None:
         help="Dump a list of the method signatures in `methods.json`.",
     )
     debug_arguments.add_argument(
+        "--dump-coverage-info",
+        action="store_true",
+        help="Dumps file coverage info into `file_coverage.txt` and rule coverage info into `rule_coverage.json`.",
+    )
+    debug_arguments.add_argument(
         "--always-export-origins",
         action="store_true",
         help="Export the origins for every trace frame into the output JSON instead of only on origins.",
@@ -694,6 +699,8 @@ def _get_command_options(
         options.append("--dump-dependencies")
     if arguments.dump_methods:
         options.append("--dump-methods")
+    if arguments.dump_coverage_info:
+        options.append("--dump-coverage-info")
     if arguments.always_export_origins:
         options.append("--always-export-origins")
     return options
