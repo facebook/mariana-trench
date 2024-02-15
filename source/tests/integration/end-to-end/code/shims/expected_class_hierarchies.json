@@ -5,13 +5,23 @@
     "Landroid/app/Activity;" : 
     [
       "Landroidx/fragment/app/FragmentActivity;",
-      "Lcom/facebook/marianatrench/integrationtests/FragmentActivity;"
+      "Lcom/facebook/marianatrench/integrationtests/FragmentOneActivity;",
+      "Lcom/facebook/marianatrench/integrationtests/FragmentThreeActivity;",
+      "Lcom/facebook/marianatrench/integrationtests/FragmentTwoActivity;"
     ],
     "Landroid/content/Context;" : 
     [
       "Landroid/app/Activity;",
       "Landroidx/fragment/app/FragmentActivity;",
-      "Lcom/facebook/marianatrench/integrationtests/FragmentActivity;"
+      "Lcom/facebook/marianatrench/integrationtests/FragmentOneActivity;",
+      "Lcom/facebook/marianatrench/integrationtests/FragmentThreeActivity;",
+      "Lcom/facebook/marianatrench/integrationtests/FragmentTwoActivity;"
+    ],
+    "Landroidx/fragment/app/FragmentActivity;" : 
+    [
+      "Lcom/facebook/marianatrench/integrationtests/FragmentOneActivity;",
+      "Lcom/facebook/marianatrench/integrationtests/FragmentThreeActivity;",
+      "Lcom/facebook/marianatrench/integrationtests/FragmentTwoActivity;"
     ],
     "Lcom/facebook/marianatrench/integrationtests/ActionReceiver;" : 
     [

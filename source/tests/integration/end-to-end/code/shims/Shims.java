@@ -9,6 +9,7 @@ package com.facebook.marianatrench.integrationtests;
 
 import android.app.Activity;
 import android.os.Bundle;
+import androidx.fragment.app.FragmentActivity;
 
 class Handler {
   void handleMessage(Object o) {}
@@ -42,10 +43,10 @@ class Messenger {
   }
 }
 
-class FragmentActivity extends Activity {
+class FragmentOneActivity extends FragmentActivity {
   private Bundle mArguments;
 
-  FragmentActivity() {}
+  FragmentOneActivity() {}
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {}
@@ -68,8 +69,16 @@ class FragmentActivity extends Activity {
   }
 }
 
+class FragmentTwoActivity extends FragmentActivity {
+  FragmentTwoActivity() {}
+}
+
+class FragmentThreeActivity extends FragmentActivity {
+  FragmentThreeActivity() {}
+}
+
 class FragmentTest {
-  public void add(Class<? extends FragmentActivity> fragmentClass, Object o) {
+  public void add(Class<? extends FragmentOneActivity> fragmentClass, Object o) {
     // Expect artificial call: <fragmentClass instance>.activity_lifecycle_wrapper()
   }
 
@@ -144,12 +153,12 @@ public class Shims {
 
   static void testFragmentInstance() {
     FragmentTest ft = new FragmentTest();
-    ft.add(new FragmentActivity(), Origin.source());
+    ft.add(new FragmentOneActivity(), Origin.source());
   }
 
   static void testFragmentReflection() {
     FragmentTest ft = new FragmentTest();
-    ft.add(FragmentActivity.class, Origin.source());
+    ft.add(FragmentOneActivity.class, Origin.source());
   }
 
   static void testFragmentBaseClass(Activity activity) {
@@ -158,6 +167,19 @@ public class Shims {
     // methods of all possible derived types, which is just
     // FragmentActivity.activity_lifecycle_wrapper in this case.
     ft.add(activity, Origin.source());
+  }
+
+  static void testMultipleFragmentChildClasses(boolean useFragmentOne) {
+    Activity fragment = null;
+    if (useFragmentOne) {
+      fragment = new FragmentOneActivity();
+    } else {
+      fragment = new FragmentTwoActivity();
+    }
+
+    // Expect: FP: Shim to all 3 most derived classes of Activity.
+    // even if FragmentThreeActivity is not possible.
+    new FragmentTest().add(fragment, Origin.source());
   }
 
   static ParameterMapping testParameterMappingIssue() {
@@ -192,7 +214,7 @@ public class Shims {
     Bundle b = new Bundle();
     b.putString("something", (String) Origin.source());
 
-    FragmentActivity f = new FragmentActivity();
+    FragmentOneActivity f = new FragmentOneActivity();
     f.setArguments(b);
 
     new FragmentTest().add(f, null);

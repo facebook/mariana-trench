@@ -2,11 +2,11 @@
 {
   "Landroid/app/Activity;.onCreate:(Landroid/os/Bundle;)V" : 
   [
-    "Lcom/facebook/marianatrench/integrationtests/FragmentActivity;.onCreate:(Landroid/os/Bundle;)V"
+    "Lcom/facebook/marianatrench/integrationtests/FragmentOneActivity;.onCreate:(Landroid/os/Bundle;)V"
   ],
   "Landroid/app/Activity;.onStart:()V" : 
   [
-    "Lcom/facebook/marianatrench/integrationtests/FragmentActivity;.onStart:()V"
+    "Lcom/facebook/marianatrench/integrationtests/FragmentOneActivity;.onStart:()V"
   ],
   "Landroid/content/Context;.startActivity:(Landroid/content/Intent;)V" : 
   [

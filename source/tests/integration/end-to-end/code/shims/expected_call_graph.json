@@ -168,14 +168,6 @@
       "Landroid/app/Activity;.<init>:()V"
     ]
   },
-  "Landroidx/fragment/app/FragmentActivity;.activity_lifecycle_wrapper:(Landroid/os/Bundle;Ljava/lang/Object;)V" : 
-  {
-    "virtual" : 
-    [
-      "Landroid/app/Activity;.onCreate:(Landroid/os/Bundle;)V",
-      "Landroid/app/Activity;.onStart:()V"
-    ]
-  },
   "Lcom/facebook/auth/datastore/LoggedInUserAuthDataStore;.<init>:()V" : 
   {
     "static" : 
@@ -254,23 +246,23 @@
       "Ljava/lang/Object;.<init>:()V"
     ]
   },
-  "Lcom/facebook/marianatrench/integrationtests/FragmentActivity;.<init>:()V" : 
+  "Lcom/facebook/marianatrench/integrationtests/FragmentOneActivity;.<init>:()V" : 
   {
     "static" : 
     [
-      "Landroid/app/Activity;.<init>:()V"
+      "Landroidx/fragment/app/FragmentActivity;.<init>:()V"
     ]
   },
-  "Lcom/facebook/marianatrench/integrationtests/FragmentActivity;.activity_lifecycle_wrapper:(Landroid/os/Bundle;Ljava/lang/Object;)V" : 
+  "Lcom/facebook/marianatrench/integrationtests/FragmentOneActivity;.activity_lifecycle_wrapper:(Landroid/os/Bundle;Ljava/lang/Object;)V" : 
   {
     "virtual" : 
     [
-      "Lcom/facebook/marianatrench/integrationtests/FragmentActivity;.onCreate:(Landroid/os/Bundle;)V",
-      "Lcom/facebook/marianatrench/integrationtests/FragmentActivity;.onStart:()V",
-      "Lcom/facebook/marianatrench/integrationtests/FragmentActivity;.onTest:(Ljava/lang/Object;)V"
+      "Lcom/facebook/marianatrench/integrationtests/FragmentOneActivity;.onCreate:(Landroid/os/Bundle;)V",
+      "Lcom/facebook/marianatrench/integrationtests/FragmentOneActivity;.onStart:()V",
+      "Lcom/facebook/marianatrench/integrationtests/FragmentOneActivity;.onTest:(Ljava/lang/Object;)V"
     ]
   },
-  "Lcom/facebook/marianatrench/integrationtests/FragmentActivity;.onStart:()V" : 
+  "Lcom/facebook/marianatrench/integrationtests/FragmentOneActivity;.onStart:()V" : 
   {
     "static" : 
     [
@@ -278,10 +270,10 @@
     ],
     "virtual" : 
     [
-      "Lcom/facebook/marianatrench/integrationtests/FragmentActivity;.getArguments:()Landroid/os/Bundle;"
+      "Lcom/facebook/marianatrench/integrationtests/FragmentOneActivity;.getArguments:()Landroid/os/Bundle;"
     ]
   },
-  "Lcom/facebook/marianatrench/integrationtests/FragmentActivity;.onTest:(Ljava/lang/Object;)V" : 
+  "Lcom/facebook/marianatrench/integrationtests/FragmentOneActivity;.onTest:(Ljava/lang/Object;)V" : 
   {
     "static" : 
     [
@@ -293,6 +285,36 @@
     "static" : 
     [
       "Ljava/lang/Object;.<init>:()V"
+    ]
+  },
+  "Lcom/facebook/marianatrench/integrationtests/FragmentThreeActivity;.<init>:()V" : 
+  {
+    "static" : 
+    [
+      "Landroidx/fragment/app/FragmentActivity;.<init>:()V"
+    ]
+  },
+  "Lcom/facebook/marianatrench/integrationtests/FragmentThreeActivity;.activity_lifecycle_wrapper:(Landroid/os/Bundle;Ljava/lang/Object;)V" : 
+  {
+    "virtual" : 
+    [
+      "Landroid/app/Activity;.onCreate:(Landroid/os/Bundle;)V",
+      "Landroid/app/Activity;.onStart:()V"
+    ]
+  },
+  "Lcom/facebook/marianatrench/integrationtests/FragmentTwoActivity;.<init>:()V" : 
+  {
+    "static" : 
+    [
+      "Landroidx/fragment/app/FragmentActivity;.<init>:()V"
+    ]
+  },
+  "Lcom/facebook/marianatrench/integrationtests/FragmentTwoActivity;.activity_lifecycle_wrapper:(Landroid/os/Bundle;Ljava/lang/Object;)V" : 
+  {
+    "virtual" : 
+    [
+      "Landroid/app/Activity;.onCreate:(Landroid/os/Bundle;)V",
+      "Landroid/app/Activity;.onStart:()V"
     ]
   },
   "Lcom/facebook/marianatrench/integrationtests/Handler;.<init>:()V" : 
@@ -545,8 +567,9 @@
   {
     "artificial" : 
     [
-      "Landroidx/fragment/app/FragmentActivity;.activity_lifecycle_wrapper:(Landroid/os/Bundle;Ljava/lang/Object;)V",
-      "Lcom/facebook/marianatrench/integrationtests/FragmentActivity;.activity_lifecycle_wrapper:(Landroid/os/Bundle;Ljava/lang/Object;)V"
+      "Lcom/facebook/marianatrench/integrationtests/FragmentOneActivity;.activity_lifecycle_wrapper:(Landroid/os/Bundle;Ljava/lang/Object;)V",
+      "Lcom/facebook/marianatrench/integrationtests/FragmentThreeActivity;.activity_lifecycle_wrapper:(Landroid/os/Bundle;Ljava/lang/Object;)V",
+      "Lcom/facebook/marianatrench/integrationtests/FragmentTwoActivity;.activity_lifecycle_wrapper:(Landroid/os/Bundle;Ljava/lang/Object;)V"
     ],
     "static" : 
     [
@@ -562,11 +585,11 @@
   {
     "artificial" : 
     [
-      "Lcom/facebook/marianatrench/integrationtests/FragmentActivity;.activity_lifecycle_wrapper:(Landroid/os/Bundle;Ljava/lang/Object;)V"
+      "Lcom/facebook/marianatrench/integrationtests/FragmentOneActivity;.activity_lifecycle_wrapper:(Landroid/os/Bundle;Ljava/lang/Object;)V"
     ],
     "static" : 
     [
-      "Lcom/facebook/marianatrench/integrationtests/FragmentActivity;.<init>:()V",
+      "Lcom/facebook/marianatrench/integrationtests/FragmentOneActivity;.<init>:()V",
       "Lcom/facebook/marianatrench/integrationtests/FragmentTest;.<init>:()V",
       "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;"
     ],
@@ -579,7 +602,7 @@
   {
     "artificial" : 
     [
-      "Lcom/facebook/marianatrench/integrationtests/FragmentActivity;.activity_lifecycle_wrapper:(Landroid/os/Bundle;Ljava/lang/Object;)V"
+      "Lcom/facebook/marianatrench/integrationtests/FragmentOneActivity;.activity_lifecycle_wrapper:(Landroid/os/Bundle;Ljava/lang/Object;)V"
     ],
     "static" : 
     [
@@ -639,6 +662,26 @@
       "Lcom/facebook/marianatrench/integrationtests/Messenger;.<init>:()V"
     ]
   },
+  "Lcom/facebook/marianatrench/integrationtests/Shims;.testMultipleFragmentChildClasses:(Z)V" : 
+  {
+    "artificial" : 
+    [
+      "Lcom/facebook/marianatrench/integrationtests/FragmentOneActivity;.activity_lifecycle_wrapper:(Landroid/os/Bundle;Ljava/lang/Object;)V",
+      "Lcom/facebook/marianatrench/integrationtests/FragmentThreeActivity;.activity_lifecycle_wrapper:(Landroid/os/Bundle;Ljava/lang/Object;)V",
+      "Lcom/facebook/marianatrench/integrationtests/FragmentTwoActivity;.activity_lifecycle_wrapper:(Landroid/os/Bundle;Ljava/lang/Object;)V"
+    ],
+    "static" : 
+    [
+      "Lcom/facebook/marianatrench/integrationtests/FragmentOneActivity;.<init>:()V",
+      "Lcom/facebook/marianatrench/integrationtests/FragmentTest;.<init>:()V",
+      "Lcom/facebook/marianatrench/integrationtests/FragmentTwoActivity;.<init>:()V",
+      "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;"
+    ],
+    "virtual" : 
+    [
+      "Lcom/facebook/marianatrench/integrationtests/FragmentTest;.add:(Landroid/app/Activity;Ljava/lang/Object;)V"
+    ]
+  },
   "Lcom/facebook/marianatrench/integrationtests/Shims;.testParameterMappingIssue:()Lcom/facebook/marianatrench/integrationtests/ParameterMapping;" : 
   {
     "artificial" : 
@@ -673,19 +716,19 @@
   {
     "artificial" : 
     [
-      "Lcom/facebook/marianatrench/integrationtests/FragmentActivity;.activity_lifecycle_wrapper:(Landroid/os/Bundle;Ljava/lang/Object;)V"
+      "Lcom/facebook/marianatrench/integrationtests/FragmentOneActivity;.activity_lifecycle_wrapper:(Landroid/os/Bundle;Ljava/lang/Object;)V"
     ],
     "static" : 
     [
       "Landroid/os/Bundle;.<init>:()V",
-      "Lcom/facebook/marianatrench/integrationtests/FragmentActivity;.<init>:()V",
+      "Lcom/facebook/marianatrench/integrationtests/FragmentOneActivity;.<init>:()V",
       "Lcom/facebook/marianatrench/integrationtests/FragmentTest;.<init>:()V",
       "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;"
     ],
     "virtual" : 
     [
       "Landroid/os/Bundle;.putString:(Ljava/lang/String;Ljava/lang/String;)V",
-      "Lcom/facebook/marianatrench/integrationtests/FragmentActivity;.setArguments:(Landroid/os/Bundle;)V",
+      "Lcom/facebook/marianatrench/integrationtests/FragmentOneActivity;.setArguments:(Landroid/os/Bundle;)V",
       "Lcom/facebook/marianatrench/integrationtests/FragmentTest;.add:(Landroid/app/Activity;Ljava/lang/Object;)V"
     ]
   },
