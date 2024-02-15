@@ -55,18 +55,20 @@ bool RulesCoverage::operator==(const RulesCoverage& other) const {
 }
 
 Json::Value RulesCoverage::to_json() const {
-  auto result = Json::Value(Json::objectValue);
+  auto category_coverage = Json::Value(Json::objectValue);
 
   auto rules_covered = Json::Value(Json::arrayValue);
   for (const auto& [_code, covered_rule] : covered_rules) {
     rules_covered.append(covered_rule.to_json());
   }
-  result["rules_covered"] = rules_covered;
+  category_coverage["rules_covered"] = rules_covered;
 
   auto rules_lacking_models = Json::Value(Json::arrayValue);
-  result["rules_lacking_models"] = to_json_array<int>(
+  category_coverage["rules_lacking_models"] = to_json_array<int>(
       non_covered_rule_codes, [](int code) { return Json::Value(code); });
 
+  auto result = Json::Value(Json::objectValue);
+  result["category_coverage"] = category_coverage;
   return result;
 }
 
