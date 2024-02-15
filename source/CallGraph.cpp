@@ -31,6 +31,10 @@ namespace marianatrench {
 
 namespace {
 
+bool is_static_invoke(const IRInstruction* instruction) {
+  return opcode::is_invoke_static(instruction->opcode());
+}
+
 bool is_virtual_invoke(const IRInstruction* instruction) {
   switch (instruction->opcode()) {
     case OPCODE_INVOKE_VIRTUAL:
@@ -506,16 +510,10 @@ void process_shim_lifecycle(
         update_index(sink_textual_order_index, lifecycle_method->signature());
 
     artificial_callees.push_back(ArtificialCallee{
-        /* call_target */ CallTarget::virtual_call(
-            instruction,
-            lifecycle_method,
-            call_index,
-            receiver_type,
-            class_hierarchies,
-            override_factory),
+        /* call_target */ CallTarget::direct_call(
+            instruction, lifecycle_method, call_index, receiver_type),
         /* root_registers */ root_registers,
-        /* features */
-        FeatureSet{feature_factory.get_via_shim_feature(callee)},
+        /* features */ FeatureSet{feature_factory.get_via_shim_feature(callee)},
     });
   }
 }
@@ -789,11 +787,23 @@ CallTarget CallTarget::static_call(
     const IRInstruction* instruction,
     const Method* MT_NULLABLE callee,
     TextualOrderIndex call_index) {
+  return CallTarget::direct_call(
+      instruction,
+      callee,
+      call_index,
+      /* receiver_type */ nullptr);
+}
+
+CallTarget CallTarget::direct_call(
+    const IRInstruction* instruction,
+    const Method* MT_NULLABLE callee,
+    TextualOrderIndex call_index,
+    const DexType* MT_NULLABLE receiver_type) {
   return CallTarget(
       instruction,
       /* resolved_base_callee */ callee,
       /* call_index */ call_index,
-      /* receiver_type */ nullptr,
+      /* receiver_type */ receiver_type,
       /* overrides */ nullptr,
       /* receiver_extends */ nullptr);
 }
@@ -852,8 +862,10 @@ CallTarget CallTarget::from_call_instruction(
     const ClassHierarchies& class_hierarchies,
     const Overrides& override_factory) {
   mt_assert(opcode::is_an_invoke(instruction->opcode()));
-
-  if (is_virtual_invoke(instruction)) {
+  if (is_static_invoke(instruction)) {
+    return CallTarget::static_call(
+        instruction, resolved_base_callee, call_index);
+  } else if (is_virtual_invoke(instruction)) {
     return CallTarget::virtual_call(
         instruction,
         resolved_base_callee,
@@ -862,8 +874,11 @@ CallTarget CallTarget::from_call_instruction(
         class_hierarchies,
         override_factory);
   } else {
-    return CallTarget::static_call(
-        instruction, resolved_base_callee, call_index);
+    return CallTarget::direct_call(
+        instruction,
+        resolved_base_callee,
+        call_index,
+        types.receiver_type(caller, instruction));
   }
 }
 
@@ -895,9 +910,11 @@ std::ostream& operator<<(std::ostream& out, const CallTarget& call_target) {
   out << "CallTarget(instruction=`" << show(call_target.instruction())
       << "`, resolved_base_callee=`" << show(call_target.resolved_base_callee())
       << "`, call_index=`" << call_target.call_index_ << "`";
+  if (const auto* receiver_type = call_target.receiver_type()) {
+    out << ", receiver_type=`" << show(receiver_type) << "`";
+  }
   if (call_target.is_virtual()) {
-    out << ", receiver_type=`" << show(call_target.receiver_type())
-        << "`, overrides={";
+    out << ", overrides={";
     for (const auto* method : call_target.overrides()) {
       out << "`" << method->show() << "`, ";
     }

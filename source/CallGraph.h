@@ -53,6 +53,17 @@ class CallTarget final {
       std::unordered_set<const Method*>::const_iterator>>;
 
  public:
+  /**
+   * Call target for invoke-direct (a non-static direct method i.e.,
+   * an instance method that is non-overridable (private or constructor))
+   */
+  static CallTarget direct_call(
+      const IRInstruction* instruction,
+      const Method* MT_NULLABLE callee,
+      TextualOrderIndex call_index,
+      const DexType* MT_NULLABLE receiver_type);
+
+  /* Call target for invoke-static (direct calls without a receiver) */
   static CallTarget static_call(
       const IRInstruction* instruction,
       const Method* MT_NULLABLE callee,
@@ -95,7 +106,7 @@ class CallTarget final {
   }
 
   /**
-   * For a static call, returns the callee.
+   * For a static and direct call, returns the callee.
    * For a virtual call, returns the resolved base callee. This is the base
    * method of all possible callees (i.e, all overrides). The method is
    * resolved, i.e if the method is not defined, we use the first defined
@@ -113,7 +124,7 @@ class CallTarget final {
     return resolved_base_callee_;
   }
 
-  /* For a virtual call, returns the inferred type of `this`. */
+  /* For a direct and virtual call, returns the inferred type of `this`. */
   const DexType* MT_NULLABLE receiver_type() const {
     return receiver_type_;
   }
