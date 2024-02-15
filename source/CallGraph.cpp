@@ -490,8 +490,11 @@ void process_shim_lifecycle(
     // likely be many false positives as well.
     WARNING(
         1,
-        "Life-cycle method `{}` exceeds join override threshold of {}",
+        "Lifecycle method shim target: {} resolved to {} methods in caller: {} "
+        "which exceeds the join override threshold of {}. Shim not created.",
         method_name,
+        target_lifecycle_methods.size(),
+        caller->show(),
         Heuristics::kJoinOverrideThreshold);
     return;
   }
