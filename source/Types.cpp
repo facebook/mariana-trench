@@ -5,8 +5,9 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-#include <fmt/format.h>
 #include <algorithm>
+
+#include <fmt/format.h>
 
 #include <ProguardConfiguration.h>
 #include <ProguardMap.h>
@@ -157,6 +158,75 @@ std::string show_globally_inferred_types(
   }
   types_string.append(")");
   return types_string;
+}
+
+/**
+ * Select the more precise type between local_type and globally_inferred_type
+ * to as a singleton type representation at the ir_register for instruction in
+ * caller.
+ */
+const DexType* MT_NULLABLE select_precise_singleton_type(
+    const DexType* MT_NULLABLE local_type,
+    const DexType* MT_NULLABLE globally_inferred_type,
+    const Method* caller,
+    const IRInstruction* instruction,
+    Register ir_register,
+    bool log_method) {
+  if (local_type == globally_inferred_type) {
+    if (local_type == nullptr) {
+      WARNING(
+          2,
+          "Both Local type analysis and global type analysis could not determine the type for register {} in instruction {} of method {}",
+          std::to_string(ir_register),
+          show(instruction),
+          caller->show());
+    }
+
+    return local_type;
+  }
+
+  if (local_type == nullptr) {
+    return globally_inferred_type;
+  } else if (globally_inferred_type == nullptr) {
+    return local_type;
+  }
+
+  mt_assert(local_type != nullptr && globally_inferred_type != nullptr);
+
+  if (type::check_cast(
+          /* type */ local_type, /* base_type */ globally_inferred_type)) {
+    LOG(log_method ? 0 : 5,
+        "Local type analysis inferred a narrower type {} than global type analysis {} for register {} in instruction {} of method {}",
+        local_type->str(),
+        globally_inferred_type->str(),
+        std::to_string(ir_register),
+        show(instruction),
+        caller->show());
+
+    return local_type;
+  } else if (!type::check_cast(
+                 /* type */ globally_inferred_type,
+                 /* base_type */ local_type)) {
+    LOG(log_method ? 0 : 5,
+        "Local type analysis inferred unrelated type `{}` from global type analysis `{}` for register {} in instruction {} of method {}.",
+        local_type->str(),
+        globally_inferred_type->str(),
+        std::to_string(ir_register),
+        show(instruction),
+        caller->show());
+
+    return local_type;
+  }
+
+  LOG(log_method ? 0 : 5,
+      "Global type analysis inferred a narrower type {} than local type analysis {} for register {} in instruction {} of method {}",
+      local_type->str(),
+      globally_inferred_type->str(),
+      std::to_string(ir_register),
+      show(instruction),
+      caller->show());
+
+  return globally_inferred_type;
 }
 
 } // namespace
@@ -319,49 +389,49 @@ std::unique_ptr<TypeEnvironments> Types::infer_types_for_method(
         continue;
       }
       for (auto& ir_register : instruction->srcs()) {
-        auto globally_inferred_type =
-            global_type_environment.get(ir_register).get_dex_type();
-        if (!globally_inferred_type) {
+        const auto& globally_inferred_type_domain =
+            global_type_environment.get(ir_register);
+
+        // DexTypeDomain is a ReducedProductAbstractDomain.
+        // i.e, if anyone of the abstract domains have a _|_ component, the
+        // DexTypeDomain is equated to _|_.
+        if (globally_inferred_type_domain.is_bottom()) {
           continue;
         }
 
-        auto local_type = environment_at_instruction.find(ir_register);
-        if (local_type != environment_at_instruction.end()) {
-          if (type::check_cast(local_type->second, *globally_inferred_type)) {
-            if (local_type->second &&
-                local_type->second->get_name() !=
-                    (*globally_inferred_type)->get_name()) {
-              LOG(log_method ? 0 : 5,
-                  "Local type analysis inferred a narrower type {} than global type analysis {} for register {} in instruction {} of method {}",
-                  local_type->second ? local_type->second->str() : "unknown",
-                  (*globally_inferred_type)->str(),
-                  std::to_string(ir_register),
-                  show(instruction),
-                  method->show());
-            }
-            continue;
-          } else if (!type::check_cast(
-                         *globally_inferred_type, local_type->second)) {
-            LOG(log_method ? 0 : 5,
-                "Local type analysis inferred unrelated type `{}` from global type analysis `{}` for register {} in instruction {} of method {}.",
-                local_type->second ? local_type->second->str() : "unknown",
-                (*globally_inferred_type)->str(),
-                std::to_string(ir_register),
-                show(instruction),
-                method->show());
-            continue;
-          }
+        const DexType* globally_inferred_type = nullptr;
+        if (auto result = globally_inferred_type_domain.get_dex_type()) {
+          globally_inferred_type = *result;
         }
-        LOG(log_method ? 0 : 5,
-            "Replacing locally inferred type {} with globally inferred type {} for register {} in instruction {} of method {}",
-            local_type != environment_at_instruction.end() && local_type->second
-                ? local_type->second->str()
-                : "unknown",
-            (*globally_inferred_type)->str(),
-            std::to_string(ir_register),
-            show(instruction),
-            method->show());
-        environment_at_instruction[ir_register] = *globally_inferred_type;
+
+        const DexType* local_type = nullptr;
+        if (auto result = environment_at_instruction.find(ir_register);
+            result != environment_at_instruction.end()) {
+          local_type = result->second;
+        }
+
+        const auto* singleton_type = select_precise_singleton_type(
+            local_type,
+            globally_inferred_type,
+            method,
+            instruction,
+            ir_register,
+            log_method);
+
+        if (singleton_type == nullptr) {
+          continue;
+        }
+
+        if (singleton_type != local_type) {
+          LOG(log_method ? 0 : 5,
+              "Replacing locally inferred type {} with globally inferred type {} for register {} in instruction {} of method {}",
+              local_type ? local_type->str() : "unknown",
+              singleton_type->str(),
+              std::to_string(ir_register),
+              show(instruction),
+              method->show());
+          environment_at_instruction[ir_register] = singleton_type;
+        }
       }
     }
   }
@@ -444,7 +514,7 @@ const DexType* MT_NULLABLE Types::source_type(
   return register_type(method, instruction, instruction->src(source_position));
 }
 
-const DexType* Types::receiver_type(
+const DexType* MT_NULLABLE Types::receiver_type(
     const Method* method,
     const IRInstruction* instruction) const {
   mt_assert(opcode::is_an_invoke(instruction->opcode()));
