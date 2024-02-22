@@ -6,6 +6,7 @@
  */
 
 #include <algorithm>
+#include <optional>
 
 #include <fmt/format.h>
 
@@ -29,6 +30,8 @@
 namespace marianatrench {
 
 namespace {
+
+static const TypeValue empty_type_value;
 
 static const TypeEnvironment empty_environment;
 
@@ -114,7 +117,7 @@ TypeEnvironments make_environments(
     for (auto register_id : instruction->srcs()) {
       auto type = types.get_dex_type(register_id);
       if (type && *type != nullptr) {
-        environment.emplace(register_id, *type);
+        environment.emplace(register_id, TypeValue(*type));
       }
     }
     result.emplace(instruction, std::move(environment));
@@ -137,10 +140,11 @@ bool should_log_method(
 std::string show_locally_inferred_types(const TypeEnvironment& environment) {
   std::string types_string = "(";
   for (const auto& [ir_register, type] : environment) {
+    const auto* singleton_type = type.singleton_type();
     types_string = types_string.append(fmt::format(
         "{}: {}, ",
         std::to_string(ir_register),
-        type ? type->str() : "unknown"));
+        singleton_type ? singleton_type->str() : "unknown"));
   }
   types_string.append(")");
   return types_string;
@@ -152,9 +156,17 @@ std::string show_globally_inferred_types(
   std::string types_string = "(";
   for (const auto& ir_register : instruction->srcs()) {
     types_string.append(fmt::format(
-        "{}: {}, ",
+        "\n  Reg {}: {}, ",
         std::to_string(ir_register),
         show(environment.get(ir_register).get_single_domain())));
+
+    if (const auto& result = environment.get(ir_register).get_set_domain();
+        result.kind() == sparta::AbstractValueKind::Value) {
+      types_string.append("Local extends: ");
+      for (const auto& dex_type : result.get_types()) {
+        types_string.append(fmt::format("\n     : {}, ", show(dex_type)));
+      }
+    }
   }
   types_string.append(")");
   return types_string;
@@ -238,6 +250,7 @@ TypeValue::TypeValue(
     const SmallSetDexTypeDomain& small_set_dex_types)
     : singleton_type_(singleton_type) {
   mt_assert(small_set_dex_types.kind() == sparta::AbstractValueKind::Value);
+
   const auto& types = small_set_dex_types.get_types();
   if (types.size() == 0) {
     // SmallSetDexTypeDomain can be empty for a Value kind when creating a
@@ -419,21 +432,24 @@ std::unique_ptr<TypeEnvironments> Types::infer_types_for_method(
       auto& environment_at_instruction = found->second;
 
       const auto& global_type_environment = current_state.get_reg_environment();
-      LOG(log_method ? 0 : 5,
-          "Instruction: {}\nLocally Inferred types: {}\nGlobally Inferred types: {}",
-          show(instruction),
-          show_locally_inferred_types(environment_at_instruction),
-          show_globally_inferred_types(instruction, global_type_environment));
       if (!global_type_environment.is_value()) {
         continue;
       }
+
+      LOG(log_method ? 0 : 5,
+          "Caller: {} Instruction: {}\nLocally Inferred types: {}\nGlobally Inferred types: {}",
+          method->show(),
+          show(instruction),
+          show_locally_inferred_types(environment_at_instruction),
+          show_globally_inferred_types(instruction, global_type_environment));
+
       for (auto& ir_register : instruction->srcs()) {
         const auto& globally_inferred_type_domain =
             global_type_environment.get(ir_register);
 
-        // DexTypeDomain is a ReducedProductAbstractDomain.
-        // i.e, if anyone of the abstract domains have a _|_ component, the
-        // DexTypeDomain is equated to _|_.
+        // DexTypeDomain is a ReducedProductAbstractDomain. i.e, if anyone of
+        // the abstract domains have a _|_ component, the DexTypeDomain is set
+        // to _|_.
         if (globally_inferred_type_domain.is_bottom()) {
           continue;
         }
@@ -446,7 +462,7 @@ std::unique_ptr<TypeEnvironments> Types::infer_types_for_method(
         const DexType* local_type = nullptr;
         if (auto result = environment_at_instruction.find(ir_register);
             result != environment_at_instruction.end()) {
-          local_type = result->second;
+          local_type = result->second.singleton_type();
         }
 
         const auto* singleton_type = select_precise_singleton_type(
@@ -461,15 +477,24 @@ std::unique_ptr<TypeEnvironments> Types::infer_types_for_method(
           continue;
         }
 
-        if (singleton_type != local_type) {
+        std::optional<TypeValue> type_value = std::nullopt;
+        const auto& small_set_domain =
+            globally_inferred_type_domain.get_set_domain();
+        if (small_set_domain.kind() == sparta::AbstractValueKind::Value) {
+          type_value = TypeValue(singleton_type, small_set_domain);
+        } else if (singleton_type != local_type) {
+          type_value = TypeValue(singleton_type);
+        }
+
+        if (type_value) {
           LOG(log_method ? 0 : 5,
-              "Replacing locally inferred type {} with globally inferred type {} for register {} in instruction {} of method {}",
+              "Replacing locally inferred type {} with globally inferred: {} for register {} in instruction {} of method {}",
               local_type ? local_type->str() : "unknown",
-              singleton_type->str(),
+              *type_value,
               std::to_string(ir_register),
               show(instruction),
               method->show());
-          environment_at_instruction[ir_register] = singleton_type;
+          environment_at_instruction[ir_register] = *type_value;
         }
       }
     }
@@ -543,7 +568,7 @@ const DexType* MT_NULLABLE Types::register_type(
     return nullptr;
   }
 
-  return type->second;
+  return type->second.singleton_type();
 }
 
 const DexType* MT_NULLABLE Types::source_type(
@@ -575,7 +600,7 @@ const DexType* MT_NULLABLE Types::register_const_class_type(
     return nullptr;
   }
 
-  return type->second;
+  return type->second.singleton_type();
 }
 
 } // namespace marianatrench

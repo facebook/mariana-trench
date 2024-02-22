@@ -174,7 +174,7 @@ ParameterTypeOverrides anonymous_class_arguments(
     if (found == environment.end()) {
       continue;
     }
-    const auto* type = found->second;
+    const auto* type = found->second.singleton_type();
     if (type && is_anonymous_class(type)) {
       parameters.emplace(parameter_position, type);
     }

@@ -131,7 +131,7 @@ class Transfer final : public InstructionAnalyzerBase<
         return false;
       }
 
-      const auto* type = found->second;
+      const auto* type = found->second.singleton_type();
       LOG_OR_DUMP(
           context,
           4,

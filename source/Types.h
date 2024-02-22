@@ -58,7 +58,8 @@ class TypeValue final {
   std::unordered_set<const DexType*> local_extends_;
 };
 
-using TypeEnvironment = boost::container::flat_map<Register, const DexType*>;
+using TypeEnvironment = boost::container::flat_map<Register, TypeValue>;
+
 using TypeEnvironments =
     std::unordered_map<const IRInstruction*, TypeEnvironment>;
 
