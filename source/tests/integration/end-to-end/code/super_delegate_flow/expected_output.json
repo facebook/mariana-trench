@@ -969,6 +969,66 @@
   }
 }
 {
+  "method" : "Lcom/facebook/marianatrench/integrationtests/InsecureWebViewClient;.<init>:()V",
+  "position" : 
+  {
+    "line" : 16,
+    "path" : "InsecureWebViewClient.java"
+  }
+}
+{
+  "method" : "Lcom/facebook/marianatrench/integrationtests/InsecureWebViewClient;.onPageFinished:(Ljava/lang/String;)V",
+  "position" : 
+  {
+    "line" : 25,
+    "path" : "InsecureWebViewClient.java"
+  },
+  "sinks" : 
+  [
+    {
+      "port" : "Argument(1)",
+      "taint" : 
+      [
+        {
+          "call_info" : 
+          {
+            "call_kind" : "CallSite",
+            "port" : "Argument(1)",
+            "position" : 
+            {
+              "end" : 44,
+              "line" : 26,
+              "path" : "InsecureWebViewClient.java",
+              "start" : 42
+            },
+            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/SinkWebViewClient;.onPageFinished:(Ljava/lang/String;)V"
+          },
+          "kinds" : 
+          [
+            {
+              "callee_interval" : 
+              [
+                28,
+                29
+              ],
+              "distance" : 1,
+              "kind" : "Sink",
+              "origins" : 
+              [
+                {
+                  "method" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
+                  "port" : "Argument(0)"
+                }
+              ],
+              "preserves_type_context" : false
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
+{
   "method" : "Lcom/facebook/marianatrench/integrationtests/Origin;.<init>:()V",
   "position" : 
   {
@@ -1162,6 +1222,162 @@
                 }
               ],
               "preserves_type_context" : true
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
+{
+  "method" : "Lcom/facebook/marianatrench/integrationtests/SourceSinkWebViewClient;.<init>:()V",
+  "position" : 
+  {
+    "line" : 9,
+    "path" : "SourceSinkWebViewClient.java"
+  }
+}
+{
+  "issues" : 
+  [
+    {
+      "callee" : "Lcom/facebook/marianatrench/integrationtests/InsecureWebViewClient;.onPageFinished:(Ljava/lang/String;)V",
+      "position" : 
+      {
+        "line" : 14,
+        "path" : "SourceSinkWebViewClient.java"
+      },
+      "rule" : 1,
+      "sink_index" : "0",
+      "sinks" : 
+      [
+        {
+          "call_info" : 
+          {
+            "call_kind" : "CallSite",
+            "port" : "Argument(1)",
+            "position" : 
+            {
+              "end" : 27,
+              "line" : 14,
+              "path" : "SourceSinkWebViewClient.java",
+              "start" : 25
+            },
+            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/InsecureWebViewClient;.onPageFinished:(Ljava/lang/String;)V"
+          },
+          "kinds" : 
+          [
+            {
+              "distance" : 2,
+              "kind" : "Sink",
+              "origins" : 
+              [
+                {
+                  "method" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
+                  "port" : "Argument(0)"
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "sources" : 
+      [
+        {
+          "call_info" : 
+          {
+            "call_kind" : "Origin",
+            "position" : 
+            {
+              "end" : 27,
+              "line" : 13,
+              "path" : "SourceSinkWebViewClient.java",
+              "start" : 14
+            }
+          },
+          "kinds" : 
+          [
+            {
+              "kind" : "Source",
+              "origins" : 
+              [
+                {
+                  "method" : "Lcom/facebook/marianatrench/integrationtests/SourceSinkWebViewClient;.onPageFinished:(Ljava/lang/String;)V",
+                  "port" : "Argument(1)"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "method" : "Lcom/facebook/marianatrench/integrationtests/SourceSinkWebViewClient;.onPageFinished:(Ljava/lang/String;)V",
+  "parameter_sources" : 
+  [
+    {
+      "port" : "Argument(1)",
+      "taint" : 
+      [
+        {
+          "call_info" : 
+          {
+            "call_kind" : "Declaration"
+          },
+          "kinds" : 
+          [
+            {
+              "kind" : "Source",
+              "origins" : 
+              [
+                {
+                  "method" : "Lcom/facebook/marianatrench/integrationtests/SourceSinkWebViewClient;.onPageFinished:(Ljava/lang/String;)V",
+                  "port" : "Argument(1)"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "position" : 
+  {
+    "line" : 13,
+    "path" : "SourceSinkWebViewClient.java"
+  },
+  "sinks" : 
+  [
+    {
+      "port" : "Argument(1)",
+      "taint" : 
+      [
+        {
+          "call_info" : 
+          {
+            "call_kind" : "CallSite",
+            "port" : "Argument(1)",
+            "position" : 
+            {
+              "end" : 27,
+              "line" : 14,
+              "path" : "SourceSinkWebViewClient.java",
+              "start" : 25
+            },
+            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/InsecureWebViewClient;.onPageFinished:(Ljava/lang/String;)V"
+          },
+          "kinds" : 
+          [
+            {
+              "distance" : 2,
+              "kind" : "Sink",
+              "origins" : 
+              [
+                {
+                  "method" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
+                  "port" : "Argument(0)"
+                }
+              ]
             }
           ]
         }

@@ -9,6 +9,15 @@
     ]
   },
   {
+    "method": "Lcom/facebook/marianatrench/integrationtests/SourceSinkWebViewClient;.onPageFinished:(Ljava/lang/String;)V",
+    "parameter_sources": [
+      {
+        "port": "Argument(1)",
+        "kind": "Source"
+      }
+    ]
+  },
+  {
     "method": "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
     "sinks": [
       {

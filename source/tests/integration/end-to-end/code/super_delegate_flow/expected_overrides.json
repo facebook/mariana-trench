@@ -13,6 +13,10 @@
   [
     "Lcom/facebook/marianatrench/integrationtests/SinkWebViewClient;.onPageFinished:(Ljava/lang/String;)V"
   ],
+  "Lcom/facebook/marianatrench/integrationtests/InsecureWebViewClient;.onPageFinished:(Ljava/lang/String;)V" : 
+  [
+    "Lcom/facebook/marianatrench/integrationtests/SourceSinkWebViewClient;.onPageFinished:(Ljava/lang/String;)V"
+  ],
   "Lcom/facebook/marianatrench/integrationtests/SecureWebViewClient;.onPageFinished:(Ljava/lang/String;)V" : 
   [
     "Lcom/facebook/marianatrench/integrationtests/SourceWebViewClient;.onPageFinished:(Ljava/lang/String;)V"

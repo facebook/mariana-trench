@@ -20,6 +20,10 @@
     [
       "Lcom/facebook/marianatrench/integrationtests/SinkWebViewClient;"
     ],
+    "Lcom/facebook/marianatrench/integrationtests/InsecureWebViewClient;" : 
+    [
+      "Lcom/facebook/marianatrench/integrationtests/SourceSinkWebViewClient;"
+    ],
     "Lcom/facebook/marianatrench/integrationtests/SecureWebViewClient;" : 
     [
       "Lcom/facebook/marianatrench/integrationtests/SourceWebViewClient;"

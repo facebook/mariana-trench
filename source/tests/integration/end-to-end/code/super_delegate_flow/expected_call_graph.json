@@ -217,6 +217,24 @@
       "Landroid/webkit/WebViewClient;.onPageFinished:(Ljava/lang/String;)V"
     ]
   },
+  "Lcom/facebook/marianatrench/integrationtests/InsecureWebViewClient;.<init>:()V" : 
+  {
+    "static" : 
+    [
+      "Landroid/webkit/WebViewClient;.<init>:()V",
+      "Lcom/facebook/marianatrench/integrationtests/SinkWebViewClient;.<init>:()V",
+      "Ljava/lang/Object;.<init>:()V"
+    ]
+  },
+  "Lcom/facebook/marianatrench/integrationtests/InsecureWebViewClient;.onPageFinished:(Ljava/lang/String;)V" : 
+  {
+    "virtual" : 
+    [
+      "Landroid/webkit/WebViewClient;.onPageFinished:(Ljava/lang/String;)V",
+      "Lcom/facebook/marianatrench/integrationtests/FacebookWebViewClient;.onPageFinished:(Ljava/lang/String;)V",
+      "Lcom/facebook/marianatrench/integrationtests/SinkWebViewClient;.onPageFinished:(Ljava/lang/String;)V"
+    ]
+  },
   "Lcom/facebook/marianatrench/integrationtests/Origin;.<init>:()V" : 
   {
     "static" : 
@@ -260,6 +278,20 @@
     "static" : 
     [
       "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V"
+    ]
+  },
+  "Lcom/facebook/marianatrench/integrationtests/SourceSinkWebViewClient;.<init>:()V" : 
+  {
+    "static" : 
+    [
+      "Lcom/facebook/marianatrench/integrationtests/InsecureWebViewClient;.<init>:()V"
+    ]
+  },
+  "Lcom/facebook/marianatrench/integrationtests/SourceSinkWebViewClient;.onPageFinished:(Ljava/lang/String;)V" : 
+  {
+    "static" : 
+    [
+      "Lcom/facebook/marianatrench/integrationtests/InsecureWebViewClient;.onPageFinished:(Ljava/lang/String;)V"
     ]
   },
   "Lcom/facebook/marianatrench/integrationtests/SourceWebViewClient;.<init>:()V" : 
