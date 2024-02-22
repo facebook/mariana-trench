@@ -31,7 +31,7 @@ namespace marianatrench {
 
 namespace {
 
-static const TypeValue empty_type_value;
+static const std::unordered_set<const DexType*> empty_local_extends;
 
 static const TypeEnvironment empty_environment;
 
@@ -88,7 +88,8 @@ TypeEnvironments make_environments(reflection::ReflectionAnalysis& analysis) {
     TypeEnvironment environment;
     for (const auto& [register_id, entry] : reflection_site) {
       auto& abstract_object = entry.first;
-      if (abstract_object.obj_kind == reflection::AbstractObjectKind::CLASS) {
+      if (abstract_object.obj_kind == reflection::AbstractObjectKind::CLASS &&
+          abstract_object.dex_type != nullptr) {
         environment.emplace(register_id, abstract_object.dex_type);
       }
     }
@@ -243,12 +244,16 @@ const DexType* MT_NULLABLE select_precise_singleton_type(
 
 } // namespace
 
-TypeValue::TypeValue(const DexType* dex_type) : singleton_type_(dex_type) {}
+TypeValue::TypeValue(const DexType* singleton_type)
+    : singleton_type_(singleton_type) {
+  mt_assert(singleton_type != nullptr);
+}
 
 TypeValue::TypeValue(
     const DexType* singleton_type,
     const SmallSetDexTypeDomain& small_set_dex_types)
     : singleton_type_(singleton_type) {
+  mt_assert(singleton_type != nullptr);
   mt_assert(small_set_dex_types.kind() == sparta::AbstractValueKind::Value);
 
   const auto& types = small_set_dex_types.get_types();
@@ -494,7 +499,8 @@ std::unique_ptr<TypeEnvironments> Types::infer_types_for_method(
               std::to_string(ir_register),
               show(instruction),
               method->show());
-          environment_at_instruction[ir_register] = *type_value;
+          environment_at_instruction.insert_or_assign(
+              ir_register, std::move(*type_value));
         }
       }
     }
@@ -578,7 +584,7 @@ const std::unordered_set<const DexType*>& Types::register_local_extends(
   const auto& environment = this->environment(method, instruction);
   auto type = environment.find(register_id);
   if (type == environment.end()) {
-    return empty_type_value.local_extends();
+    return empty_local_extends;
   }
 
   return type->second.local_extends();

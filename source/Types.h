@@ -25,15 +25,13 @@ namespace marianatrench {
 
 class TypeValue final {
  public:
-  INCLUDE_DEFAULT_COPY_CONSTRUCTORS_AND_ASSIGNMENTS(TypeValue)
-
-  TypeValue() : singleton_type_(nullptr) {}
-
   explicit TypeValue(const DexType* dex_type);
 
   explicit TypeValue(
       const DexType* singleton_type,
       const SmallSetDexTypeDomain& small_set_dex_types);
+
+  INCLUDE_DEFAULT_COPY_CONSTRUCTORS_AND_ASSIGNMENTS(TypeValue)
 
   void set_local_extends(std::unordered_set<const DexType*> dex_types) {
     local_extends_ = std::move(dex_types);
