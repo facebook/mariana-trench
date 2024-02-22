@@ -210,8 +210,8 @@ ArtificialCallees anonymous_class_artificial_callees(
     auto call_index =
         update_index(sink_textual_order_index, method->signature());
     callees.push_back(ArtificialCallee{
-        /* call_target */ CallTarget::static_call(
-            instruction, method, call_index),
+        /* call_target */ CallTarget::direct_call(
+            instruction, method, call_index, anonymous_class_type),
         /* root_registers */
         {{Root(Root::Kind::Argument, 0), register_id}},
         /* features */ features,

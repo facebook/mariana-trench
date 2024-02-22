@@ -827,15 +827,21 @@ TEST_F(DependenciesTest, ArtificialCalleesInvoke) {
       call_graph.artificial_callees(caller).begin()->second,
       (ArtificialCallees{
           ArtificialCallee{
-              /* call_target */ CallTarget::static_call(
-                  invoke, anonymous_one, /* call_index */ 0),
+              /* call_target */ CallTarget::direct_call(
+                  invoke,
+                  anonymous_one,
+                  /* call_index */ 0,
+                  anonymous_one->parameter_type(0)),
               /* root_registers */ {{Root::argument(0), 1}},
               /* features */
               FeatureSet{context.feature_factory->get(
                   "via-anonymous-class-to-obscure")}},
           ArtificialCallee{
-              /* call_target */ CallTarget::static_call(
-                  invoke, anonymous_two, /* call_index */ 0),
+              /* call_target */ CallTarget::direct_call(
+                  invoke,
+                  anonymous_two,
+                  /* call_index */ 0,
+                  anonymous_two->parameter_type(0)),
               /* root_registers */ {{Root::argument(0), 1}},
               /* features */
               FeatureSet{context.feature_factory->get(
@@ -932,15 +938,21 @@ TEST_F(DependenciesTest, ArtificialCalleesIput) {
       call_graph.artificial_callees(task).begin()->second,
       (ArtificialCallees{
           ArtificialCallee{
-              /* call_target */ CallTarget::static_call(
-                  iput, anonymous_one, /* call_index */ 0),
+              /* call_target */ CallTarget::direct_call(
+                  iput,
+                  anonymous_one,
+                  /* call_index */ 0,
+                  anonymous_one->parameter_type(0)),
               /* root_registers */ {{Root::argument(0), 1}},
               /* features */
               FeatureSet{context.feature_factory->get(
                   "via-anonymous-class-to-field")}},
           ArtificialCallee{
-              /* call_target */ CallTarget::static_call(
-                  iput, anonymous_two, /* call_index */ 0),
+              /* call_target */ CallTarget::direct_call(
+                  iput,
+                  anonymous_two,
+                  /* call_index */ 0,
+                  anonymous_two->parameter_type(0)),
               /* root_registers */ {{Root::argument(0), 1}},
               /* features */
               FeatureSet{context.feature_factory->get(
