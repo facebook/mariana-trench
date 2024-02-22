@@ -515,18 +515,31 @@ TEST_F(DependenciesTest, VirtualCallResolution) {
       /* parameter_types */ "LData;",
       /* return_type */ "V",
       /* super */ dex_override_one->get_class());
+  auto* dex_override_three = redex::create_void_method(
+      scope,
+      "LSubclassThree;",
+      "callee",
+      /* parameter_types */ "LData;",
+      /* return_type */ "V",
+      /* super */ dex_override_one->get_class());
 
   auto* dex_caller = redex::create_method(
       scope,
       "LCaller;",
       R"(
-      (method (public) "LCaller;.caller:()V"
+      (method (public) "LCaller;.caller:(LData;Z)V"
        (
         (load-param-object v1)
-
+        (load-param-object v2)
+        (if-eqz v2 :label)
         (new-instance "LSubclassOne;")
         (move-result-object v0)
-
+        (goto :call)
+        (:label)
+        (new-instance "LSubclassTwo;")
+        (move-result-object v0)
+        (goto :call)
+        (:call)
         (invoke-virtual (v0 v1) "LCallee;.callee:(LData;)V")
         (return-void)
        )
@@ -541,13 +554,16 @@ TEST_F(DependenciesTest, VirtualCallResolution) {
   auto* callee = context.methods->get(dex_callee);
   auto* override_one = context.methods->get(dex_override_one);
   auto* override_two = context.methods->get(dex_override_two);
+  auto* override_three = context.methods->get(dex_override_three);
   auto* caller = context.methods->get(dex_caller);
 
   EXPECT_THAT(
       overrides.get(callee),
-      testing::UnorderedElementsAre(override_one, override_two));
+      testing::UnorderedElementsAre(
+          override_one, override_two, override_three));
   EXPECT_THAT(
-      overrides.get(override_one), testing::UnorderedElementsAre(override_two));
+      overrides.get(override_one),
+      testing::UnorderedElementsAre(override_two, override_three));
   EXPECT_TRUE(overrides.get(override_two).empty());
   EXPECT_TRUE(overrides.get(caller).empty());
 
@@ -569,6 +585,10 @@ TEST_F(DependenciesTest, VirtualCallResolution) {
       testing::UnorderedElementsAre(caller));
   EXPECT_THAT(
       dependencies.dependencies(override_two),
+      testing::UnorderedElementsAre(caller));
+  // FP:
+  EXPECT_THAT(
+      dependencies.dependencies(override_three),
       testing::UnorderedElementsAre(caller));
   EXPECT_TRUE(dependencies.dependencies(caller).empty());
 }

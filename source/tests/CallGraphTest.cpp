@@ -85,43 +85,28 @@ TEST_F(CallGraphTest, CallIndices) {
   EXPECT_TRUE(call_target_indices_are_equal(
       callees,
       {
-          CallTarget::virtual_call(
+          CallTarget::static_call(
               /* intruction */ nullptr,
               callee,
-              /* call_index */ 0,
-              /* receiver_type */ nullptr,
-              *context.class_hierarchies,
-              *context.overrides),
-          CallTarget::virtual_call(
+              /* call_index */ 0),
+          CallTarget::static_call(
               /* intruction */ nullptr,
               callee,
-              /* call_index */ 1,
-              /* receiver_type */ nullptr,
-              *context.class_hierarchies,
-              *context.overrides),
+              /* call_index */ 1),
           // Call targets count the raw callee from the instruction rather than
           // the resolved callee
-          CallTarget::virtual_call(
+          CallTarget::static_call(
               /* intruction */ nullptr,
               inherited_method,
-              /* call_index */ 0,
-              /* receiver_type */ nullptr,
-              *context.class_hierarchies,
-              *context.overrides),
-          CallTarget::virtual_call(
+              /* call_index */ 0),
+          CallTarget::static_call(
               /* intruction */ nullptr,
               inherited_method,
-              /* call_index */ 0,
-              /* receiver_type */ nullptr,
-              *context.class_hierarchies,
-              *context.overrides),
-          CallTarget::virtual_call(
+              /* call_index */ 0),
+          CallTarget::static_call(
               /* intruction */ nullptr,
               inherited_method,
-              /* call_index */ 0,
-              /* receiver_type */ nullptr,
-              *context.class_hierarchies,
-              *context.overrides),
+              /* call_index */ 0),
       }));
 }
 
@@ -251,9 +236,9 @@ TEST_F(CallGraphTest, ArtificialCallIndices) {
 TEST_F(CallGraphTest, ShimCallIndices) {
   Scope scope;
 
-  auto shimmed_method1 =
+  auto dex_shimmed_method1 =
       redex::create_void_method(scope, "LShimmed1;", "method");
-  auto shimmed_method2 = redex::create_void_method(
+  auto dex_shimmed_method2 = redex::create_void_method(
       scope,
       "LShimmed2;",
       "static_method",
@@ -290,30 +275,33 @@ TEST_F(CallGraphTest, ShimCallIndices) {
       artificial_callee_targets.push_back(callee.call_target);
     }
   }
+
+  auto* shimmed_method1 = context.methods->get(dex_shimmed_method1);
+  auto* shimmed_method2 = context.methods->get(dex_shimmed_method2);
   EXPECT_TRUE(call_target_indices_are_equal(
       artificial_callee_targets,
       {
           CallTarget::virtual_call(
               /* intruction */ nullptr,
-              context.methods->get(shimmed_method1),
+              shimmed_method1,
               /* call_index */ 0,
-              /* receiver_type */ nullptr,
+              /* receiver_type */ shimmed_method1->parameter_type(0),
               *context.class_hierarchies,
               *context.overrides),
           CallTarget::static_call(
               /* intruction */ nullptr,
-              context.methods->get(shimmed_method2),
+              shimmed_method2,
               /* call_index */ 0),
           CallTarget::virtual_call(
               /* intruction */ nullptr,
-              context.methods->get(shimmed_method1),
+              shimmed_method1,
               /* call_index */ 1,
-              /* receiver_type */ nullptr,
+              /* receiver_type */ shimmed_method1->parameter_type(0),
               *context.class_hierarchies,
               *context.overrides),
           CallTarget::static_call(
               /* intruction */ nullptr,
-              context.methods->get(shimmed_method2),
+              shimmed_method2,
               /* call_index */ 1),
       }));
 }
