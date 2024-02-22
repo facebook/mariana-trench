@@ -121,7 +121,7 @@ class LifecycleMethod {
    */
   std::vector<const Method*> get_methods_for_type(
       const DexType* receiver_type,
-      const std::unordered_set<const DexType*>& local_extends,
+      const std::unordered_set<const DexType*>& local_derived_receiver_types,
       const ClassHierarchies& class_hierarchies) const;
 
   bool operator==(const LifecycleMethod& other) const;
