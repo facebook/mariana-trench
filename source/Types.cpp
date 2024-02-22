@@ -231,6 +231,45 @@ const DexType* MT_NULLABLE select_precise_singleton_type(
 
 } // namespace
 
+TypeValue::TypeValue(const DexType* dex_type) : singleton_type_(dex_type) {}
+
+TypeValue::TypeValue(
+    const DexType* singleton_type,
+    const SmallSetDexTypeDomain& small_set_dex_types)
+    : singleton_type_(singleton_type) {
+  mt_assert(small_set_dex_types.kind() == sparta::AbstractValueKind::Value);
+  const auto& types = small_set_dex_types.get_types();
+  if (types.size() == 0) {
+    // SmallSetDexTypeDomain can be empty for a Value kind when creating a
+    // initializing a DexTypeDomain with Nullness::IS_NULL.
+    // See DexTypeDomain::null().
+    WARNING(
+        2,
+        "Empty SmallSetDexTypeDomain for singleton_type: {}",
+        singleton_type->str());
+    return;
+  }
+
+  local_extends_ =
+      std::unordered_set<const DexType*>(types.begin(), types.end());
+}
+
+std::ostream& operator<<(std::ostream& out, const TypeValue& value) {
+  out << "TypeValue(";
+  if (value.singleton_type_ != nullptr) {
+    out << "singleton_type=`" << show(value.singleton_type_) << "`,";
+  }
+  if (!value.local_extends_.empty()) {
+    out << "local_extends={";
+    for (const auto* type : value.local_extends_) {
+      out << show(type) << ", ";
+    }
+    out << "}";
+  }
+
+  return out << ")";
+}
+
 Types::Types(const Options& options, const DexStoresVector& stores) {
   Scope scope = build_class_scope(stores);
   log_method_types_ = options.log_method_types();

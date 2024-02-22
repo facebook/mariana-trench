@@ -7,6 +7,8 @@
 
 #pragma once
 
+#include <unordered_set>
+
 #include <boost/container/flat_map.hpp>
 
 #include <DexClass.h>
@@ -21,8 +23,42 @@
 
 namespace marianatrench {
 
-using TypeEnvironment = boost::container::flat_map<Register, const DexType*>;
+class TypeValue final {
+ public:
+  INCLUDE_DEFAULT_COPY_CONSTRUCTORS_AND_ASSIGNMENTS(TypeValue)
 
+  TypeValue() : singleton_type_(nullptr) {}
+
+  explicit TypeValue(const DexType* dex_type);
+
+  explicit TypeValue(
+      const DexType* singleton_type,
+      const SmallSetDexTypeDomain& small_set_dex_types);
+
+  void set_local_extends(std::unordered_set<const DexType*> dex_types) {
+    local_extends_ = std::move(dex_types);
+  }
+
+  const DexType* singleton_type() const {
+    return singleton_type_;
+  }
+
+  const std::unordered_set<const DexType*>& local_extends() const {
+    return local_extends_;
+  }
+
+  friend std::ostream& operator<<(
+      std::ostream& out,
+      const TypeValue& type_value);
+
+ private:
+  const DexType* singleton_type_;
+  // When non-empty, this holds the subset of possible derived
+  // types tracked by global type analysis' SmallSetDexTypeDomain.
+  std::unordered_set<const DexType*> local_extends_;
+};
+
+using TypeEnvironment = boost::container::flat_map<Register, const DexType*>;
 using TypeEnvironments =
     std::unordered_map<const IRInstruction*, TypeEnvironment>;
 
