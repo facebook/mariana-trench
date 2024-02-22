@@ -476,8 +476,11 @@ void process_shim_lifecycle(
     return;
   }
 
-  auto target_lifecycle_methods =
-      result->second.get_methods_for_type(class_hierarchies, receiver_type);
+  const auto& local_extends =
+      types.register_local_extends(caller, instruction, receiver_register);
+
+  auto target_lifecycle_methods = result->second.get_methods_for_type(
+      receiver_type, local_extends, class_hierarchies);
   if (target_lifecycle_methods.size() == 0) {
     WARNING(
         1,

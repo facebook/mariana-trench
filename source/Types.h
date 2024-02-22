@@ -88,6 +88,11 @@ class Types final {
       const IRInstruction* instruction,
       Register register_id) const;
 
+  const std::unordered_set<const DexType*>& register_local_extends(
+      const Method* method,
+      const IRInstruction* instruction,
+      Register register_id) const;
+
   /**
    * Get the type of the given source of the given instruction.
    *

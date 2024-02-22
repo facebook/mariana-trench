@@ -177,8 +177,8 @@ public class Shims {
       fragment = new FragmentTwoActivity();
     }
 
-    // Expect: FP: Shim to all 3 most derived classes of Activity.
-    // even if FragmentThreeActivity is not possible.
+    // Expect: Shim to only FragmentOneActivity and FragmentTwoActivity
+    // as FragmentThreeActivity is not possible.
     new FragmentTest().add(fragment, Origin.source());
   }
 

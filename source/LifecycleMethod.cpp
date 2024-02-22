@@ -150,26 +150,36 @@ void LifecycleMethod::create_methods(
 }
 
 std::vector<const Method*> LifecycleMethod::get_methods_for_type(
-    const ClassHierarchies& class_hierarchies,
-    const DexType* receiver_type) const {
+    const DexType* base_receiver_type,
+    const std::unordered_set<const DexType*>& local_derived_receiver_types,
+    const ClassHierarchies& class_hierarchies) const {
   std::vector<const Method*> methods;
 
   // If the receiver type itself implements the method, return it. It is the
   // most-derived class, and should not have any children.
   // Note that `find` is not thread-safe, but `class_to_lifecycle_method_` is
   // read-only after the constructor completed.
-  auto lifecycle_method = class_to_lifecycle_method_.find(receiver_type);
+  auto lifecycle_method = class_to_lifecycle_method_.find(base_receiver_type);
   if (lifecycle_method != class_to_lifecycle_method_.end()) {
     methods.push_back(lifecycle_method->second);
     return methods;
   }
 
-  // Intermediate receiver_type. Look for most-derived/final classes.
-  const auto& children = class_hierarchies.extends(receiver_type);
-  for (const auto* child : children) {
-    auto child_lifecycle_method = class_to_lifecycle_method_.find(child);
-    if (child_lifecycle_method != class_to_lifecycle_method_.end()) {
-      methods.push_back(child_lifecycle_method->second);
+  if (!local_derived_receiver_types.empty()) {
+    for (const auto* child : local_derived_receiver_types) {
+      auto child_lifecycle_method = class_to_lifecycle_method_.find(child);
+      if (child_lifecycle_method != class_to_lifecycle_method_.end()) {
+        methods.push_back(child_lifecycle_method->second);
+      }
+    }
+  } else {
+    // Intermediate receiver_type. Look for most-derived/final classes.
+    const auto& children = class_hierarchies.extends(base_receiver_type);
+    for (const auto* child : children) {
+      auto child_lifecycle_method = class_to_lifecycle_method_.find(child);
+      if (child_lifecycle_method != class_to_lifecycle_method_.end()) {
+        methods.push_back(child_lifecycle_method->second);
+      }
     }
   }
 

@@ -667,7 +667,6 @@
     "artificial" : 
     [
       "Lcom/facebook/marianatrench/integrationtests/FragmentOneActivity;.activity_lifecycle_wrapper:(Landroid/os/Bundle;Ljava/lang/Object;)V",
-      "Lcom/facebook/marianatrench/integrationtests/FragmentThreeActivity;.activity_lifecycle_wrapper:(Landroid/os/Bundle;Ljava/lang/Object;)V",
       "Lcom/facebook/marianatrench/integrationtests/FragmentTwoActivity;.activity_lifecycle_wrapper:(Landroid/os/Bundle;Ljava/lang/Object;)V"
     ],
     "static" : 

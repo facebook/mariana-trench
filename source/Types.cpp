@@ -571,6 +571,19 @@ const DexType* MT_NULLABLE Types::register_type(
   return type->second.singleton_type();
 }
 
+const std::unordered_set<const DexType*>& Types::register_local_extends(
+    const Method* method,
+    const IRInstruction* instruction,
+    Register register_id) const {
+  const auto& environment = this->environment(method, instruction);
+  auto type = environment.find(register_id);
+  if (type == environment.end()) {
+    return empty_type_value.local_extends();
+  }
+
+  return type->second.local_extends();
+}
+
 const DexType* MT_NULLABLE Types::source_type(
     const Method* method,
     const IRInstruction* instruction,

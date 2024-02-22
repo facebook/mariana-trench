@@ -144,8 +144,7 @@
   ],
   "Lcom/facebook/marianatrench/integrationtests/FragmentThreeActivity;.activity_lifecycle_wrapper:(Landroid/os/Bundle;Ljava/lang/Object;)V" : 
   [
-    "Lcom/facebook/marianatrench/integrationtests/Shims;.testFragmentBaseClass:(Landroid/app/Activity;)V",
-    "Lcom/facebook/marianatrench/integrationtests/Shims;.testMultipleFragmentChildClasses:(Z)V"
+    "Lcom/facebook/marianatrench/integrationtests/Shims;.testFragmentBaseClass:(Landroid/app/Activity;)V"
   ],
   "Lcom/facebook/marianatrench/integrationtests/FragmentTwoActivity;.<init>:()V" : 
   [
