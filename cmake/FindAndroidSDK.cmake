@@ -16,6 +16,13 @@ if (NOT AndroidSDK_FOUND)
 
   file(GLOB ANDROID_BUILD_TOOLS "${ANDROID_SDK_SEARCH_DIR}/build-tools/*")
 
+  message(STATUS "Android search path: ${ANDROID_SDK_SEARCH_DIR}")
+
+  find_program(ANDROID_D8
+    NAMES d8 3
+    HINTS ${ANDROID_BUILD_TOOLS}
+    DOC "Path to the d8 binary")
+
   find_program(ANDROID_DX
     NAMES dx
     HINTS ${ANDROID_BUILD_TOOLS}
@@ -23,8 +30,7 @@ if (NOT AndroidSDK_FOUND)
 
   include(FindPackageHandleStandardArgs)
   find_package_handle_standard_args(AndroidSDK
-    REQUIRED_VARS
-      ANDROID_DX
+    REQUIRED_VARS ANDROID_D8 ANDROID_DX
     FAIL_MESSAGE
       "Could NOT find Android SDK. Please provide -DANDROID_SDK=/path/to/android-sdk")
 endif()

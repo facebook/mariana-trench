@@ -167,6 +167,11 @@ elseif (NOT AndroidSDK_FOUND)
 else()
   include(UseJava)
 
+  # Some test cases fail if switching to D8 as D8 seems to do more local optimization, etc.
+  # Add tests that require the use of LEGACY DX too. When adding tests, please document the
+  # differences between the two dexers.
+  set(LEGACY_DX_TESTS "end-to-end-field_tito_fp;")
+
   function(generate_integration_test_code root_directory test_directory name)
     # Target that compiles the source to a .jar
     set(CMAKE_JAVA_COMPILE_FLAGS -source 7 -target 7 -nowarn)
@@ -178,14 +183,26 @@ else()
     set_property(TARGET java-class-${name} PROPERTY EXCLUDE_FROM_ALL TRUE)
 
     # Target that compiles the .jar to a .dex
-    add_custom_command(OUTPUT java-dex-${name}.dex
-                       COMMAND
-                         ${ANDROID_DX}
-                         --core-library
-                         --dex
-                         --output=java-dex-${name}.dex
-                         $<TARGET_PROPERTY:java-class-${name},JAR_FILE>
-                       DEPENDS java-class-${name})
+    if (name IN_LIST LEGACY_DX_TESTS)
+      message(STATUS "USING DX ${name}")
+      add_custom_command(OUTPUT java-dex-${name}.dex
+                        COMMAND
+                          ${ANDROID_DX}
+                          --core-library
+                          --dex
+                          --output=java-dex-${name}.dex
+                          $<TARGET_PROPERTY:java-class-${name},JAR_FILE>
+                        DEPENDS java-class-${name})
+    else()
+      message(STATUS "USING D8 ${name}")
+      add_custom_command(OUTPUT java-dex-${name}.dex
+                        COMMAND
+                          ${ANDROID_D8}
+                          $<TARGET_PROPERTY:java-class-${name},JAR_FILE>
+                        COMMAND
+                          mv classes.dex java-dex-${name}.dex
+                        DEPENDS java-class-${name})
+    endif()
     add_custom_target(java-dex-${name} DEPENDS java-dex-${name}.dex)
     set_property(TARGET java-dex-${name} PROPERTY EXCLUDE_FROM_ALL TRUE)
   endfunction()
