@@ -1134,9 +1134,36 @@ bool ForwardTaintTransfer::analyze_filled_new_array(
     MethodContext* context,
     const IRInstruction* instruction,
     ForwardTaintEnvironment* environment) {
+  log_instruction(context, instruction);
   check_flows_to_array_allocation(
       context, context->aliasing.get(instruction), environment, instruction);
-  return analyze_default(context, instruction, environment);
+
+  const auto& aliasing = context->aliasing.get(instruction);
+
+  auto features = FeatureMayAlwaysSet::make_always(
+      {context->feature_factory.get("via-array")});
+  auto* position = context->positions.get(
+      context->method(),
+      aliasing.position(),
+      Root(Root::Kind::Return),
+      instruction);
+
+  mt_assert(instruction->srcs_size() >= 1);
+  auto taint = environment->read(
+      aliasing.register_memory_locations(instruction->src(0)));
+  for (size_t i = 1; i < instruction->srcs_size(); ++i) {
+    taint.join_with(environment->read(
+        aliasing.register_memory_locations(instruction->src(i))));
+  }
+
+  taint.add_locally_inferred_features_and_local_position(features, position);
+
+  // We use a single memory location for the array and its elements.
+  auto* memory_location = aliasing.result_memory_location();
+  LOG_OR_DUMP(context, 4, "Tainting {} with {}", show(memory_location), taint);
+  environment->write(memory_location, taint, UpdateKind::Weak);
+
+  return false;
 }
 
 namespace {
