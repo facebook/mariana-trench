@@ -71,9 +71,9 @@ class LifecycleMethodCall {
  * Fields:
  *
  * `base_class_name`: The class whose life-cycle needs to be simulated.
- * Derived classes that do not have children will have an artificial class
- * method created that invokes the relevant life-cycle methods (if the derived
- * class overrides them).
+ * Concrete derived classes that do not have children will have an artificial
+ * class method created that invokes the relevant life-cycle methods (if the
+ * derived class overrides them).
  *
  * `method_name`: Name of the artificial method, e.g. "artificial_method". If an
  * issue is found, this will be part of the issue's full callable name (which

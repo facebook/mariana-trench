@@ -8,6 +8,7 @@
 #include <sparta/WorkQueue.h>
 
 #include <Creators.h>
+#include <DexAccess.h>
 #include <Resolver.h>
 
 #include <mariana-trench/ClassHierarchies.h>
@@ -122,7 +123,10 @@ void LifecycleMethod::create_methods(
   std::unordered_set<const DexType*> final_children;
   for (const auto* child : children) {
     const auto& grandchildren = class_hierarchies.extends(child);
-    if (grandchildren.empty()) {
+    if (!grandchildren.empty()) {
+      continue;
+    }
+    if (!::is_abstract(type_class(child))) {
       final_children.insert(child);
     }
   }
