@@ -91,6 +91,7 @@
   ],
   "Lcom/facebook/marianatrench/integrationtests/FragmentOneActivity;.<init>:()V" : 
   [
+    "Lcom/facebook/marianatrench/integrationtests/FragmentOneActivity;.activity_lifecycle_wrapper:(Landroid/os/Bundle;Ljava/lang/Object;)V",
     "Lcom/facebook/marianatrench/integrationtests/Shims;.testFragmentInstance:()V",
     "Lcom/facebook/marianatrench/integrationtests/Shims;.testMultipleFragmentChildClasses:(Z)V",
     "Lcom/facebook/marianatrench/integrationtests/Shims;.testSetArguments:()V"
@@ -142,12 +143,17 @@
   [
     "Lcom/facebook/marianatrench/integrationtests/Shims;.testFragmentReflection:()V"
   ],
+  "Lcom/facebook/marianatrench/integrationtests/FragmentThreeActivity;.<init>:()V" : 
+  [
+    "Lcom/facebook/marianatrench/integrationtests/FragmentThreeActivity;.activity_lifecycle_wrapper:(Landroid/os/Bundle;Ljava/lang/Object;)V"
+  ],
   "Lcom/facebook/marianatrench/integrationtests/FragmentThreeActivity;.activity_lifecycle_wrapper:(Landroid/os/Bundle;Ljava/lang/Object;)V" : 
   [
     "Lcom/facebook/marianatrench/integrationtests/Shims;.testFragmentBaseClass:(Landroid/app/Activity;)V"
   ],
   "Lcom/facebook/marianatrench/integrationtests/FragmentTwoActivity;.<init>:()V" : 
   [
+    "Lcom/facebook/marianatrench/integrationtests/FragmentTwoActivity;.activity_lifecycle_wrapper:(Landroid/os/Bundle;Ljava/lang/Object;)V",
     "Lcom/facebook/marianatrench/integrationtests/Shims;.testMultipleFragmentChildClasses:(Z)V"
   ],
   "Lcom/facebook/marianatrench/integrationtests/FragmentTwoActivity;.activity_lifecycle_wrapper:(Landroid/os/Bundle;Ljava/lang/Object;)V" : 

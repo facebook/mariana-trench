@@ -46,11 +46,12 @@ LifecycleMethodCall::get_dex_method(DexType* klass) const {
 
   const auto* dex_klass = type_class(klass);
   mt_assert(dex_klass != nullptr);
-  return resolve_virtual(
+  return resolve_method(
       /* type */ dex_klass,
       /* name */ DexString::make_string(method_name_),
       /* proto */
-      DexProto::make_proto(return_type, argument_types));
+      DexProto::make_proto(return_type, argument_types),
+      /* search */ MethodSearch::Any);
 }
 
 const DexTypeList* MT_NULLABLE LifecycleMethodCall::get_argument_types() const {

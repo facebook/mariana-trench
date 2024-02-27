@@ -173,7 +173,8 @@
     "virtual" : 
     [
       "Landroid/app/Activity;.onCreate:(Landroid/os/Bundle;)V",
-      "Landroid/app/Activity;.onStart:()V"
+      "Landroid/app/Activity;.onStart:()V",
+      "Landroidx/fragment/app/FragmentActivity;.<init>:()V"
     ]
   },
   "Lcom/facebook/auth/datastore/LoggedInUserAuthDataStore;.<init>:()V" : 
@@ -256,7 +257,8 @@
     "virtual" : 
     [
       "Lcom/facebook/marianatrench/integrationtests/BaseActivity;.onCreate:(Landroid/os/Bundle;)V",
-      "Lcom/facebook/marianatrench/integrationtests/BaseActivity;.onStart:()V"
+      "Lcom/facebook/marianatrench/integrationtests/BaseActivity;.onStart:()V",
+      "Lcom/facebook/marianatrench/integrationtests/MainActivity2;.<init>:()V"
     ]
   },
   "Lcom/facebook/marianatrench/integrationtests/MainActivity2;.doCreate:(Landroid/os/Bundle;)V" : 
@@ -285,7 +287,8 @@
     "virtual" : 
     [
       "Lcom/facebook/marianatrench/integrationtests/BaseActivity;.onCreate:(Landroid/os/Bundle;)V",
-      "Lcom/facebook/marianatrench/integrationtests/BaseActivity;.onStart:()V"
+      "Lcom/facebook/marianatrench/integrationtests/BaseActivity;.onStart:()V",
+      "Lcom/facebook/marianatrench/integrationtests/MainActivity;.<init>:()V"
     ]
   },
   "Lcom/facebook/marianatrench/integrationtests/MainActivity;.doCreate:(Landroid/os/Bundle;)V" : 

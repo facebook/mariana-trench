@@ -43,6 +43,10 @@
     "Landroid/content/Intent;.getBundleExtra:(Ljava/lang/String;)Landroid/os/Bundle;",
     "Landroid/content/Intent;.getExtras:()Landroid/os/Bundle;"
   ],
+  "Landroidx/fragment/app/FragmentActivity;.<init>:()V" : 
+  [
+    "Landroidx/fragment/app/FragmentActivity;.activity_lifecycle_wrapper:(Landroid/os/Bundle;)V"
+  ],
   "Lcom/facebook/marianatrench/integrationtests/BaseActivity;.<init>:()V" : 
   [
     "Lcom/facebook/marianatrench/integrationtests/MainActivity2;.<init>:()V",
@@ -66,6 +70,10 @@
     "Lcom/facebook/marianatrench/integrationtests/MainActivity2;.activity_lifecycle_wrapper:(Landroid/os/Bundle;)V",
     "Lcom/facebook/marianatrench/integrationtests/MainActivity;.activity_lifecycle_wrapper:(Landroid/os/Bundle;)V"
   ],
+  "Lcom/facebook/marianatrench/integrationtests/MainActivity2;.<init>:()V" : 
+  [
+    "Lcom/facebook/marianatrench/integrationtests/MainActivity2;.activity_lifecycle_wrapper:(Landroid/os/Bundle;)V"
+  ],
   "Lcom/facebook/marianatrench/integrationtests/MainActivity2;.doCreate:(Landroid/os/Bundle;)V" : 
   [
     "Lcom/facebook/marianatrench/integrationtests/BaseActivity;.onCreate:(Landroid/os/Bundle;)V"
@@ -73,6 +81,10 @@
   "Lcom/facebook/marianatrench/integrationtests/MainActivity2;.doStart:()V" : 
   [
     "Lcom/facebook/marianatrench/integrationtests/BaseActivity;.onStart:()V"
+  ],
+  "Lcom/facebook/marianatrench/integrationtests/MainActivity;.<init>:()V" : 
+  [
+    "Lcom/facebook/marianatrench/integrationtests/MainActivity;.activity_lifecycle_wrapper:(Landroid/os/Bundle;)V"
   ],
   "Lcom/facebook/marianatrench/integrationtests/MainActivity;.doCreate:(Landroid/os/Bundle;)V" : 
   [
