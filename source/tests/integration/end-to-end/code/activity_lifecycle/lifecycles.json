@@ -4,6 +4,11 @@
     "method_name": "activity_lifecycle_wrapper",
     "callees": [
       {
+        "method_name": "<init>",
+        "return_type": "V",
+        "argument_types": []
+      },
+      {
         "method_name": "onCreate",
         "return_type": "V",
         "argument_types": [
