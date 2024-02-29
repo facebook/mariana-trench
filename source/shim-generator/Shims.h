@@ -29,7 +29,7 @@ class Shims final {
       : global_shims_(global_shims_size),
         intent_routing_analyzer_(std::cref(intent_routing_analyzer)) {}
 
-  INCLUDE_DEFAULT_COPY_CONSTRUCTORS_AND_ASSIGNMENTS(Shims)
+  MOVE_CONSTRUCTOR_ONLY(Shims)
 
   std::optional<Shim> get_shim_for_caller(
       const Method* original_callee,
