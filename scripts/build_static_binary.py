@@ -18,7 +18,9 @@ from typing import Dict, List, Optional
 LOG: logging.Logger = logging.getLogger(__name__)
 
 ZLIB_VERSION: str = "1.2.11"
-ZLIB_URL: str = f"https://downloads.sourceforge.net/project/libpng/zlib/{ZLIB_VERSION}/zlib-{ZLIB_VERSION}.tar.gz"
+ZLIB_URL: str = (
+    f"https://downloads.sourceforge.net/project/libpng/zlib/{ZLIB_VERSION}/zlib-{ZLIB_VERSION}.tar.gz"
+)
 
 JSONCPP_VERSION: str = "1.9.4"
 JSONCPP_URL: str = (
@@ -35,7 +37,9 @@ RE2_VERSION: str = "2021-04-01"
 RE2_URL: str = f"https://github.com/google/re2/archive/{RE2_VERSION}.tar.gz"
 
 BOOST_VERSION: str = "1.76.0"
-BOOST_URL: str = f"https://boostorg.jfrog.io/artifactory/main/release/{BOOST_VERSION}/source/boost_{BOOST_VERSION.replace('.', '_')}.tar.bz2"
+BOOST_URL: str = (
+    f"https://boostorg.jfrog.io/artifactory/main/release/{BOOST_VERSION}/source/boost_{BOOST_VERSION.replace('.', '_')}.tar.bz2"
+)
 
 REDEX_URL: str = "https://github.com/facebook/redex.git"
 
