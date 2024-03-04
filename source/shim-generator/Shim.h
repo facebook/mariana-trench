@@ -311,7 +311,7 @@ class Shim {
   friend std::ostream& operator<<(std::ostream& out, const Shim& shim);
 
  private:
-  const InstantiatedShim* instantiated_shim_;
+  const InstantiatedShim* MT_NULLABLE instantiated_shim_;
   std::vector<ShimTarget> intent_routing_targets_;
 };
 

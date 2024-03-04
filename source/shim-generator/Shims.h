@@ -8,6 +8,7 @@
 #pragma once
 
 #include <functional>
+#include <memory>
 
 #include <ConcurrentContainers.h>
 
@@ -23,11 +24,14 @@ class Shims final {
   using MethodToShimMap = std::unordered_map<const Method*, InstantiatedShim>;
 
  public:
+  explicit Shims(std::size_t global_shims_size)
+      : Shims(global_shims_size, nullptr) {}
+
   explicit Shims(
       std::size_t global_shims_size,
-      const IntentRoutingAnalyzer& intent_routing_analyzer)
+      std::unique_ptr<IntentRoutingAnalyzer> intent_routing_analyzer)
       : global_shims_(global_shims_size),
-        intent_routing_analyzer_(std::cref(intent_routing_analyzer)) {}
+        intent_routing_analyzer_(std::move(intent_routing_analyzer)) {}
 
   MOVE_CONSTRUCTOR_ONLY(Shims)
 
@@ -37,10 +41,12 @@ class Shims final {
 
   bool add_instantiated_shim(const InstantiatedShim& shim);
 
+  void add_intent_routing_analyzer(
+      std::unique_ptr<IntentRoutingAnalyzer> intent_routing_analyzer);
+
  private:
   MethodToShimMap global_shims_;
-
-  std::reference_wrapper<const IntentRoutingAnalyzer> intent_routing_analyzer_;
+  std::unique_ptr<IntentRoutingAnalyzer> intent_routing_analyzer_;
 };
 
 } // namespace marianatrench

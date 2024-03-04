@@ -51,7 +51,6 @@ Context test_dependencies(const Scope& scope) {
       *context.kind_factory, context.stores);
   context.methods = std::make_unique<Methods>(context.stores);
   MethodMappings method_mappings{*context.methods};
-  auto intent_routing_analyzer = IntentRoutingAnalyzer::run(context);
   context.control_flow_graphs =
       std::make_unique<ControlFlowGraphs>(context.stores);
   context.types = std::make_unique<Types>(*context.options, context.stores);
@@ -65,7 +64,7 @@ Context test_dependencies(const Scope& scope) {
       *context.types,
       *context.class_hierarchies,
       LifecycleMethods{},
-      Shims{/* global_shims_size */ 0, intent_routing_analyzer},
+      Shims{/* global_shims_size */ 0},
       *context.feature_factory,
       *context.methods,
       *context.fields,

@@ -191,22 +191,25 @@ Registry MarianaTrench::analyze(Context& context) {
         method_mapping_timer.duration_in_seconds(),
         resident_set_size_in_gb());
 
-    Timer intent_routing_analyzer_timer;
-    LOG(1, "Running intent routing analyzer...");
-    auto intent_routing_analyzer = IntentRoutingAnalyzer::run(context);
-    LOG(1,
-        "Created intent routing analyzer in {:.2f}s. Memory used, RSS: {:.2f}MB",
-        intent_routing_analyzer_timer.duration_in_seconds(),
-        resident_set_size_in_gb());
-
     Timer shims_timer;
-    LOG(1, "Creating Shims...");
-    Shims shims =
-        ShimGeneration::run(context, intent_routing_analyzer, method_mappings);
+    LOG(1, "Creating user defined shims...");
+    Shims shims = ShimGeneration::run(context, method_mappings);
     LOG(1,
         "Created Shims in {:.2f}s. Memory used, RSS: {:.2f}GB",
         shims_timer.duration_in_seconds(),
         resident_set_size_in_gb());
+
+    if (context.options->enable_cross_component_analysis()) {
+      Timer intent_routing_analyzer_timer;
+      LOG(1, "Running intent routing analyzer...");
+      auto intent_routing_analyzer = IntentRoutingAnalyzer::run(
+          *context.methods, *context.types, *context.options);
+      LOG(1,
+          "Created intent routing analyzer in {:.2f}s. Memory used, RSS: {:.2f}MB",
+          intent_routing_analyzer_timer.duration_in_seconds(),
+          resident_set_size_in_gb());
+      shims.add_intent_routing_analyzer(std::move(intent_routing_analyzer));
+    }
 
     Timer call_graph_timer;
     LOG(1, "Building call graph...");

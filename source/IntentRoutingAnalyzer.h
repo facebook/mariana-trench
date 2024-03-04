@@ -33,7 +33,8 @@ class IntentRoutingAnalyzer final {
   explicit IntentRoutingAnalyzer() = default;
 
  public:
-  static IntentRoutingAnalyzer run(const Context&);
+  static std::unique_ptr<IntentRoutingAnalyzer>
+  run(const Methods& methods, const Types& types, const Options& options);
 
   // Move constructor required for static run() method to return the object.
   MOVE_CONSTRUCTOR_ONLY(IntentRoutingAnalyzer);

@@ -187,10 +187,11 @@ TEST_F(ShimsTest, TestBuildCrossComponentAnalysisShims) {
       });
 
   auto context = test_types(scope);
-  auto intent_routing_analyzer = IntentRoutingAnalyzer::run(context);
+  auto intent_routing_analyzer = IntentRoutingAnalyzer::run(
+      *context.methods, *context.types, *context.options);
 
   auto classes_to_intent_receivers = serialize_classes_to_intent_receivers(
-      intent_routing_analyzer.classes_to_intent_receivers());
+      intent_routing_analyzer->classes_to_intent_receivers());
   SerializedMultimap expected_classes_to_intent_receivers{std::make_pair(
       "LClass;",
       std::vector<std::string>{
@@ -200,7 +201,7 @@ TEST_F(ShimsTest, TestBuildCrossComponentAnalysisShims) {
   EXPECT_EQ(classes_to_intent_receivers, expected_classes_to_intent_receivers);
 
   auto methods_to_routed_intents = serialize_methods_to_routed_intents(
-      intent_routing_analyzer.methods_to_routed_intents());
+      intent_routing_analyzer->methods_to_routed_intents());
   SerializedMultimap expected_methods_to_routed_intents{
       std::make_pair(
           "LClass;.routes_intent_via_constructor:()V",
@@ -284,9 +285,10 @@ TEST_F(ShimsTest, TestGetShimForCaller) {
 
   auto context = test_types(scope);
   MethodMappings method_mappings = MethodMappings(*context.methods);
-  auto intent_routing_analyzer = IntentRoutingAnalyzer::run(context);
-  Shims shims =
-      ShimGeneration::run(context, intent_routing_analyzer, method_mappings);
+  auto intent_routing_analyzer = IntentRoutingAnalyzer::run(
+      *context.methods, *context.types, *context.options);
+  Shims shims = ShimGeneration::run(context, method_mappings);
+  shims.add_intent_routing_analyzer(std::move(intent_routing_analyzer));
 
   const Method* route_intent = context.methods->get(routing_class_methods[0]);
   const Method* start_activity = context.methods->get(routing_class_methods[1]);

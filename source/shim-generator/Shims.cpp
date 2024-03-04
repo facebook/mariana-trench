@@ -39,6 +39,11 @@ bool Shims::add_instantiated_shim(const InstantiatedShim& shim) {
   return global_shims_.emplace(shim.method(), shim).second;
 }
 
+void Shims::add_intent_routing_analyzer(
+    std::unique_ptr<IntentRoutingAnalyzer> intent_routing_analyzer) {
+  intent_routing_analyzer_ = std::move(intent_routing_analyzer);
+}
+
 std::optional<Shim> Shims::get_shim_for_caller(
     const Method* original_callee,
     const Method* caller) const {
@@ -46,18 +51,20 @@ std::optional<Shim> Shims::get_shim_for_caller(
   if (skip_shim_for_caller(caller)) {
     return std::nullopt;
   }
-  const InstantiatedShim* MT_NULLABLE instantiated_shim = nullptr;
+  const InstantiatedShim* instantiated_shim = nullptr;
   if (shim != global_shims_.end()) {
     instantiated_shim = &(shim->second);
   }
 
-  std::vector<ShimTarget> intent_routing_targets =
-      intent_routing_analyzer_.get().get_intent_routing_targets(
-          original_callee, caller);
+  auto intent_routing_targets = intent_routing_analyzer_
+      ? intent_routing_analyzer_->get_intent_routing_targets(
+            original_callee, caller)
+      : std::vector<ShimTarget>{};
 
   if (instantiated_shim == nullptr && intent_routing_targets.empty()) {
     return std::nullopt;
   }
+
   return Shim{instantiated_shim, intent_routing_targets};
 }
 

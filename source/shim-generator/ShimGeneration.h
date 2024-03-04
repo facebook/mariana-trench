@@ -20,10 +20,7 @@ class ShimGeneratorError : public std::invalid_argument {
 
 class ShimGeneration {
  public:
-  static Shims run(
-      Context& context,
-      const IntentRoutingAnalyzer& intent_routing_analyzer,
-      const MethodMappings& method_mappings);
+  static Shims run(Context& context, const MethodMappings& method_mappings);
 };
 
 } // namespace marianatrench

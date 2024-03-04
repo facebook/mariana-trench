@@ -94,7 +94,6 @@ TEST_P(JsonModelGeneratorIntegrationTest, CompareModels) {
       *context.kind_factory, context.stores);
   context.methods = std::make_unique<Methods>(context.stores);
   MethodMappings method_mappings{*context.methods};
-  auto intent_routing_analyzer = IntentRoutingAnalyzer::run(context);
   context.fields = std::make_unique<Fields>(context.stores);
   context.positions = std::make_unique<Positions>(options, context.stores);
   context.control_flow_graphs =
@@ -109,7 +108,7 @@ TEST_P(JsonModelGeneratorIntegrationTest, CompareModels) {
       *context.types,
       *context.class_hierarchies,
       LifecycleMethods{},
-      Shims{/* global_shims_size */ 0, intent_routing_analyzer},
+      Shims{/* global_shims_size */ 0},
       *context.feature_factory,
       *context.methods,
       *context.fields,
