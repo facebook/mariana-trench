@@ -391,10 +391,16 @@ void InstantiatedShim::add_target(ShimTargetVariant target) {
   }
 }
 
-void InstantiatedShim::merge_with(const InstantiatedShim& other) {
-  targets_.insert(other.targets_.begin(), other.targets_.end());
-  reflections_.insert(other.reflections_.begin(), other.reflections_.end());
-  lifecycles_.insert(other.lifecycles_.begin(), other.lifecycles_.end());
+void InstantiatedShim::merge_with(InstantiatedShim other) {
+  targets_.insert(
+      std::make_move_iterator(other.targets_.begin()),
+      std::make_move_iterator(other.targets_.end()));
+  reflections_.insert(
+      std::make_move_iterator(other.reflections_.begin()),
+      std::make_move_iterator(other.reflections_.end()));
+  lifecycles_.insert(
+      std::make_move_iterator(other.lifecycles_.begin()),
+      std::make_move_iterator(other.lifecycles_.end()));
 }
 
 Shim::Shim(

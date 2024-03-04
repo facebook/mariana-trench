@@ -36,13 +36,13 @@ bool skip_shim_for_caller(const Method* caller) {
 
 } // namespace
 
-void Shims::add_instantiated_shim(const InstantiatedShim& shim) {
+void Shims::add_instantiated_shim(InstantiatedShim shim) {
   const auto* method = shim.method();
   auto it = global_shims_.find(method);
   if (it != global_shims_.end()) {
-    it->second.merge_with(shim);
+    it->second.merge_with(std::move(shim));
   } else {
-    global_shims_.emplace(method, shim);
+    global_shims_.emplace(method, std::move(shim));
   }
 }
 

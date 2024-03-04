@@ -47,7 +47,7 @@ class ShimGenerator final {
       LOG(5, "Adding shim: {}", *shim);
       {
         std::lock_guard<std::mutex> lock(mutex);
-        shims.add_instantiated_shim(*shim);
+        shims.add_instantiated_shim(std::move(*shim));
       }
     });
 

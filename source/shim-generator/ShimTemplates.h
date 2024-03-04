@@ -13,7 +13,7 @@
 namespace marianatrench {
 namespace shim {
 
-class ReceiverInfo {
+class ReceiverInfo final {
  public:
   /**
    * `Kind` describes how the receiver of the shim target is interpreted.

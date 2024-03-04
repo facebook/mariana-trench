@@ -39,7 +39,7 @@ class Shims final {
       const Method* original_callee,
       const Method* caller) const;
 
-  void add_instantiated_shim(const InstantiatedShim& shim);
+  void add_instantiated_shim(InstantiatedShim shim);
 
   void add_intent_routing_analyzer(
       std::unique_ptr<IntentRoutingAnalyzer> intent_routing_analyzer);

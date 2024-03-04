@@ -31,7 +31,7 @@ using ShimParameterPosition = ParameterPosition;
  * constraints on the shim generator) with helper methods to query
  * dex-types/positions parameters.
  */
-class ShimMethod {
+class ShimMethod final {
  public:
   explicit ShimMethod(const Method* method);
 
@@ -54,7 +54,7 @@ class ShimMethod {
  * `shim-target` (`ParameterPosition`) to
  * parameter positions in the `shimmed-method` (`ShimParameterPosition`)
  */
-class ShimParameterMapping {
+class ShimParameterMapping final {
  public:
   using MapType = boost::container::flat_map<Root, ShimParameterPosition>;
 
@@ -116,7 +116,7 @@ class ShimParameterMapping {
 /**
  * Represents shim-target methods with static or instance receiver kinds.
  */
-class ShimTarget {
+class ShimTarget final {
  public:
   explicit ShimTarget(
       DexMethodSpec method_spec,
@@ -161,7 +161,7 @@ class ShimTarget {
  * Represents shim-target methods whose receiver types are resolved using
  * reflection.
  */
-class ShimReflectionTarget {
+class ShimReflectionTarget final {
  public:
   explicit ShimReflectionTarget(
       DexMethodSpec method_spec,
@@ -197,7 +197,7 @@ class ShimReflectionTarget {
  * The target lifecycle wrapper method is resolved at the call-site only
  * as each generated wrapper has a unique signature.
  */
-class ShimLifecycleTarget {
+class ShimLifecycleTarget final {
  public:
   explicit ShimLifecycleTarget(
       std::string method_name,
@@ -308,15 +308,15 @@ namespace marianatrench {
 /**
  * Represents an instantiated Shim for one `shimmed-method`.
  */
-class InstantiatedShim {
+class InstantiatedShim final {
  public:
   explicit InstantiatedShim(const Method* method);
 
-  INCLUDE_DEFAULT_COPY_CONSTRUCTORS_AND_ASSIGNMENTS(InstantiatedShim)
+  MOVE_CONSTRUCTOR_ONLY(InstantiatedShim)
 
   void add_target(ShimTargetVariant target);
 
-  void merge_with(const InstantiatedShim& other);
+  void merge_with(InstantiatedShim other);
 
   const Method* method() const {
     return method_;
@@ -349,7 +349,7 @@ class InstantiatedShim {
   std::unordered_set<ShimLifecycleTarget> lifecycles_;
 };
 
-class Shim {
+class Shim final {
  public:
   explicit Shim(
       const InstantiatedShim* MT_NULLABLE instantiated_shim,
