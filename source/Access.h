@@ -114,6 +114,10 @@ class Root final {
     return value_ != other.value_;
   }
 
+  bool operator<(const Root& other) const {
+    return value_ < other.value_;
+  }
+
   bool is_argument() const {
     return value_ <= static_cast<IntegerEncoding>(Kind::MaxArgument);
   }

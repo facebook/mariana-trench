@@ -328,10 +328,11 @@ std::unique_ptr<IntentRoutingAnalyzer> IntentRoutingAnalyzer::run(
   return analyzer;
 }
 
-std::vector<ShimTarget> IntentRoutingAnalyzer::get_intent_routing_targets(
+std::unordered_set<ShimTarget>
+IntentRoutingAnalyzer::get_intent_routing_targets(
     const Method* original_callee,
     const Method* caller) const {
-  std::vector<ShimTarget> intent_routing_targets;
+  std::unordered_set<ShimTarget> intent_routing_targets;
 
   // Check if callee is an intent launcher
   auto [component, position] = get_position_from_callee(original_callee);
@@ -355,7 +356,7 @@ std::vector<ShimTarget> IntentRoutingAnalyzer::get_intent_routing_targets(
           intent_receiver.root == std::nullopt) {
         continue;
       }
-      intent_routing_targets.emplace_back(
+      intent_routing_targets.emplace(
           intent_receiver.method,
           ShimParameterMapping({{*intent_receiver.root, *position}}));
     }

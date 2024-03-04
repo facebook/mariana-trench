@@ -39,7 +39,7 @@ class IntentRoutingAnalyzer final {
   // Move constructor required for static run() method to return the object.
   MOVE_CONSTRUCTOR_ONLY(IntentRoutingAnalyzer);
 
-  std::vector<ShimTarget> get_intent_routing_targets(
+  std::unordered_set<ShimTarget> get_intent_routing_targets(
       const Method* original_callee,
       const Method* caller) const;
 

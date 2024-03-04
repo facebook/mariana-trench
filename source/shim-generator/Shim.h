@@ -11,7 +11,13 @@
 #include <optional>
 #include <variant>
 
+#include <boost/container/flat_map.hpp>
+#include <boost/container_hash/hash_fwd.hpp>
+
+#include <DexMemberRefs.h>
+
 #include <mariana-trench/Access.h>
+#include <mariana-trench/IncludeMacros.h>
 #include <mariana-trench/JsonValidation.h>
 #include <mariana-trench/Method.h>
 
@@ -50,13 +56,15 @@ class ShimMethod {
  */
 class ShimParameterMapping {
  public:
-  using MapType = std::unordered_map<Root, ShimParameterPosition>;
+  using MapType = boost::container::flat_map<Root, ShimParameterPosition>;
 
  public:
   explicit ShimParameterMapping(
       std::initializer_list<MapType::value_type> init = {});
 
   INCLUDE_DEFAULT_COPY_CONSTRUCTORS_AND_ASSIGNMENTS(ShimParameterMapping)
+
+  bool operator==(const ShimParameterMapping& other) const;
 
   static ShimParameterMapping from_json(
       const Json::Value& value,
@@ -98,6 +106,8 @@ class ShimParameterMapping {
       std::ostream& out,
       const ShimParameterMapping& map);
 
+  friend std::hash<ShimParameterMapping>;
+
  private:
   MapType map_;
   bool infer_from_types_;
@@ -117,6 +127,10 @@ class ShimTarget {
       const Method* method,
       ShimParameterMapping parameter_mapping);
 
+  INCLUDE_DEFAULT_COPY_CONSTRUCTORS_AND_ASSIGNMENTS(ShimTarget)
+
+  bool operator==(const ShimTarget& other) const;
+
   const DexMethodSpec& method_spec() const {
     return method_spec_;
   }
@@ -135,6 +149,8 @@ class ShimTarget {
       std::ostream& out,
       const ShimTarget& shim_target);
 
+  friend struct std::hash<ShimTarget>;
+
  private:
   DexMethodSpec method_spec_;
   ShimParameterMapping parameter_mapping_;
@@ -151,6 +167,10 @@ class ShimReflectionTarget {
       DexMethodSpec method_spec,
       ShimParameterMapping parameter_mapping);
 
+  INCLUDE_DEFAULT_COPY_CONSTRUCTORS_AND_ASSIGNMENTS(ShimReflectionTarget)
+
+  bool operator==(const ShimReflectionTarget& other) const;
+
   const DexMethodSpec& method_spec() const {
     return method_spec_;
   }
@@ -164,6 +184,8 @@ class ShimReflectionTarget {
   friend std::ostream& operator<<(
       std::ostream& out,
       const ShimReflectionTarget& shim_reflection_target);
+
+  friend struct std::hash<ShimReflectionTarget>;
 
  private:
   DexMethodSpec method_spec_;
@@ -182,6 +204,10 @@ class ShimLifecycleTarget {
       ShimParameterPosition receiver_position,
       bool is_reflection,
       bool infer_parameter_mapping);
+
+  INCLUDE_DEFAULT_COPY_CONSTRUCTORS_AND_ASSIGNMENTS(ShimLifecycleTarget)
+
+  bool operator==(const ShimLifecycleTarget& other) const;
 
   const std::string& method_name() const {
     return method_name_;
@@ -206,6 +232,8 @@ class ShimLifecycleTarget {
       std::ostream& out,
       const ShimLifecycleTarget& shim_lifecycle_target);
 
+  friend struct std::hash<ShimLifecycleTarget>;
+
  private:
   std::string method_name_;
   ShimParameterPosition receiver_position_;
@@ -216,12 +244,75 @@ class ShimLifecycleTarget {
 using ShimTargetVariant =
     std::variant<ShimTarget, ShimReflectionTarget, ShimLifecycleTarget>;
 
+} // namespace marianatrench
+
+template <>
+struct std::hash<marianatrench::ShimParameterMapping> {
+  std::size_t operator()(
+      const marianatrench::ShimParameterMapping& shim_parameter_mapping) const {
+    std::size_t seed = 0;
+    boost::hash_combine(seed, shim_parameter_mapping.infer_from_types_);
+    for (const auto& [root, position] : shim_parameter_mapping.map_) {
+      boost::hash_combine(seed, std::hash<marianatrench::Root>()(root));
+      boost::hash_combine(seed, position);
+    }
+    return seed;
+  }
+};
+
+template <>
+struct std::hash<marianatrench::ShimTarget> {
+  std::size_t operator()(const marianatrench::ShimTarget& shim_target) const {
+    std::size_t seed = 0;
+    boost::hash_combine(
+        seed, std::hash<DexMethodSpec>()(shim_target.method_spec_));
+    boost::hash_combine(
+        seed,
+        std::hash<marianatrench::ShimParameterMapping>()(
+            shim_target.parameter_mapping_));
+    boost::hash_combine(seed, shim_target.is_static_);
+    return seed;
+  }
+};
+
+template <>
+struct std::hash<marianatrench::ShimReflectionTarget> {
+  std::size_t operator()(
+      const marianatrench::ShimReflectionTarget& shim_reflection_target) const {
+    std::size_t seed = 0;
+    boost::hash_combine(
+        seed, std::hash<DexMethodSpec>()(shim_reflection_target.method_spec_));
+    boost::hash_combine(
+        seed,
+        std::hash<marianatrench::ShimParameterMapping>()(
+            shim_reflection_target.parameter_mapping_));
+    return seed;
+  }
+};
+
+template <>
+struct std::hash<marianatrench::ShimLifecycleTarget> {
+  std::size_t operator()(
+      const marianatrench::ShimLifecycleTarget& shim_lifecycle_target) const {
+    std::size_t seed = 0;
+    boost::hash_combine(seed, shim_lifecycle_target.method_name_);
+    boost::hash_combine(seed, shim_lifecycle_target.receiver_position_);
+    boost::hash_combine(seed, shim_lifecycle_target.is_reflection_);
+    boost::hash_combine(seed, shim_lifecycle_target.infer_from_types_);
+    return seed;
+  }
+};
+
+namespace marianatrench {
+
 /**
  * Represents an instantiated Shim for one `shimmed-method`.
  */
 class InstantiatedShim {
  public:
   explicit InstantiatedShim(const Method* method);
+
+  INCLUDE_DEFAULT_COPY_CONSTRUCTORS_AND_ASSIGNMENTS(InstantiatedShim)
 
   void add_target(ShimTargetVariant target);
 
@@ -233,15 +324,15 @@ class InstantiatedShim {
     return targets_.empty() && reflections_.empty() && lifecycles_.empty();
   }
 
-  const std::vector<ShimTarget>& targets() const {
+  const std::unordered_set<ShimTarget>& targets() const {
     return targets_;
   }
 
-  const std::vector<ShimReflectionTarget>& reflections() const {
+  const std::unordered_set<ShimReflectionTarget>& reflections() const {
     return reflections_;
   }
 
-  const std::vector<ShimLifecycleTarget>& lifecycles() const {
+  const std::unordered_set<ShimLifecycleTarget>& lifecycles() const {
     return lifecycles_;
   }
 
@@ -251,68 +342,41 @@ class InstantiatedShim {
 
  private:
   const Method* method_;
-  std::vector<ShimTarget> targets_;
-  std::vector<ShimReflectionTarget> reflections_;
-  std::vector<ShimLifecycleTarget> lifecycles_;
+  std::unordered_set<ShimTarget> targets_;
+  std::unordered_set<ShimReflectionTarget> reflections_;
+  std::unordered_set<ShimLifecycleTarget> lifecycles_;
 };
 
 class Shim {
  public:
   explicit Shim(
       const InstantiatedShim* MT_NULLABLE instantiated_shim,
-      std::vector<ShimTarget> intent_routing_targets);
+      std::unordered_set<ShimTarget> intent_routing_targets);
 
-  const Method* method() const {
-    return instantiated_shim_->method();
+  const Method* MT_NULLABLE method() const {
+    return instantiated_shim_ ? instantiated_shim_->method() : nullptr;
   }
 
   bool empty() const {
-    return instantiated_shim_->empty() && intent_routing_targets_.empty();
+    return instantiated_shim_ && instantiated_shim_->empty() &&
+        intent_routing_targets_.empty();
   }
 
-  const std::vector<ShimTarget>& targets() const {
-    if (instantiated_shim_ == nullptr) {
-      return Shim::empty_shim_targets();
-    }
-    return instantiated_shim_->targets();
-  }
+  const std::unordered_set<ShimTarget>& targets() const;
 
-  const std::vector<ShimReflectionTarget>& reflections() const {
-    if (instantiated_shim_ == nullptr) {
-      return Shim::empty_reflection_targets();
-    }
-    return instantiated_shim_->reflections();
-  }
+  const std::unordered_set<ShimReflectionTarget>& reflections() const;
 
-  const std::vector<ShimLifecycleTarget>& lifecycles() const {
-    if (instantiated_shim_ == nullptr) {
-      return Shim::empty_lifecycle_targets();
-    }
-    return instantiated_shim_->lifecycles();
-  }
+  const std::unordered_set<ShimLifecycleTarget>& lifecycles() const;
 
-  const std::vector<ShimTarget>& intent_routing_targets() const {
+  const std::unordered_set<ShimTarget>& intent_routing_targets() const {
     return intent_routing_targets_;
-  }
-
-  static const std::vector<ShimTarget>& empty_shim_targets() {
-    static const std::vector<ShimTarget> empty;
-    return empty;
-  }
-  static const std::vector<ShimLifecycleTarget>& empty_lifecycle_targets() {
-    static const std::vector<ShimLifecycleTarget> empty;
-    return empty;
-  }
-  static const std::vector<ShimReflectionTarget>& empty_reflection_targets() {
-    static const std::vector<ShimReflectionTarget> empty;
-    return empty;
   }
 
   friend std::ostream& operator<<(std::ostream& out, const Shim& shim);
 
  private:
   const InstantiatedShim* MT_NULLABLE instantiated_shim_;
-  std::vector<ShimTarget> intent_routing_targets_;
+  std::unordered_set<ShimTarget> intent_routing_targets_;
 };
 
 } // namespace marianatrench

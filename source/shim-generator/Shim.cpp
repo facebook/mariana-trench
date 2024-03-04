@@ -18,6 +18,12 @@
 namespace marianatrench {
 namespace {
 
+static const std::unordered_set<ShimTarget> empty_shim_targets;
+
+static const std::unordered_set<ShimLifecycleTarget> empty_lifecycle_targets;
+
+static const std::unordered_set<ShimReflectionTarget> empty_reflection_targets;
+
 bool verify_has_parameter_type(
     std::string_view method_name,
     const DexType* dex_class,
@@ -89,6 +95,10 @@ std::optional<ShimParameterPosition> ShimMethod::type_position(
 ShimParameterMapping::ShimParameterMapping(
     std::initializer_list<MapType::value_type> init)
     : map_(init), infer_from_types_(false) {}
+
+bool ShimParameterMapping::operator==(const ShimParameterMapping& other) const {
+  return infer_from_types_ == other.infer_from_types_ && map_ == other.map_;
+}
 
 bool ShimParameterMapping::empty() const {
   return map_.empty();
@@ -227,6 +237,11 @@ ShimTarget::ShimTarget(
           std::move(parameter_mapping),
           method->is_static()) {}
 
+bool ShimTarget::operator==(const ShimTarget& other) const {
+  return is_static_ == other.is_static_ && method_spec_ == other.method_spec_ &&
+      parameter_mapping_ == other.parameter_mapping_;
+}
+
 std::optional<Register> ShimTarget::receiver_register(
     const IRInstruction* instruction) const {
   if (is_static_) {
@@ -268,6 +283,11 @@ ShimReflectionTarget::ShimReflectionTarget(
       "Missing parameter mapping for receiver for reflection shim target");
 }
 
+bool ShimReflectionTarget::operator==(const ShimReflectionTarget& other) const {
+  return method_spec_ == other.method_spec_ &&
+      parameter_mapping_ == other.parameter_mapping_;
+}
+
 Register ShimReflectionTarget::receiver_register(
     const IRInstruction* instruction) const {
   auto receiver_position = parameter_mapping_.at(Root::argument(0));
@@ -306,6 +326,13 @@ ShimLifecycleTarget::ShimLifecycleTarget(
       receiver_position_(std::move(receiver_position)),
       is_reflection_(is_reflection),
       infer_from_types_(infer_from_types) {}
+
+bool ShimLifecycleTarget::operator==(const ShimLifecycleTarget& other) const {
+  return infer_from_types_ == other.infer_from_types_ &&
+      is_reflection_ == other.is_reflection_ &&
+      receiver_position_ == other.receiver_position_ &&
+      method_name_ == other.method_name_;
+}
 
 Register ShimLifecycleTarget::receiver_register(
     const IRInstruction* instruction) const {
@@ -354,11 +381,11 @@ InstantiatedShim::InstantiatedShim(const Method* method) : method_(method) {}
 
 void InstantiatedShim::add_target(ShimTargetVariant target) {
   if (std::holds_alternative<ShimTarget>(target)) {
-    targets_.push_back(std::get<ShimTarget>(target));
+    targets_.emplace(std::get<ShimTarget>(target));
   } else if (std::holds_alternative<ShimReflectionTarget>(target)) {
-    reflections_.push_back(std::get<ShimReflectionTarget>(target));
+    reflections_.emplace(std::get<ShimReflectionTarget>(target));
   } else if (std::holds_alternative<ShimLifecycleTarget>(target)) {
-    lifecycles_.push_back(std::get<ShimLifecycleTarget>(target));
+    lifecycles_.emplace(std::get<ShimLifecycleTarget>(target));
   } else {
     mt_unreachable();
   }
@@ -366,9 +393,30 @@ void InstantiatedShim::add_target(ShimTargetVariant target) {
 
 Shim::Shim(
     const InstantiatedShim* MT_NULLABLE instantiated_shim,
-    std::vector<ShimTarget> intent_routing_targets)
+    std::unordered_set<ShimTarget> intent_routing_targets)
     : instantiated_shim_(instantiated_shim),
       intent_routing_targets_(std::move(intent_routing_targets)) {}
+
+const std::unordered_set<ShimTarget>& Shim::targets() const {
+  if (instantiated_shim_ == nullptr) {
+    return empty_shim_targets;
+  }
+  return instantiated_shim_->targets();
+}
+
+const std::unordered_set<ShimReflectionTarget>& Shim::reflections() const {
+  if (instantiated_shim_ == nullptr) {
+    return empty_reflection_targets;
+  }
+  return instantiated_shim_->reflections();
+}
+
+const std::unordered_set<ShimLifecycleTarget>& Shim::lifecycles() const {
+  if (instantiated_shim_ == nullptr) {
+    return empty_lifecycle_targets;
+  }
+  return instantiated_shim_->lifecycles();
+}
 
 std::ostream& operator<<(std::ostream& out, const ShimMethod& shim_method) {
   out << "ShimMethod(method=`";
@@ -463,7 +511,9 @@ std::ostream& operator<<(std::ostream& out, const InstantiatedShim& shim) {
 
 std::ostream& operator<<(std::ostream& out, const Shim& shim) {
   out << "Shim(shim=`";
-  out << *(shim.instantiated_shim_);
+  if (shim.instantiated_shim_) {
+    out << *(shim.instantiated_shim_);
+  }
   out << "`";
 
   if (!shim.intent_routing_targets().empty()) {
