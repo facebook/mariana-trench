@@ -9,7 +9,6 @@
           "names": [
             "getAuthToken",
             "getAuthTokenByFeatures",
-            "getPassword",
             "getUserData",
             "blockingGetAuthToken",
             "peekAuthToken"
@@ -20,6 +19,32 @@
         "sources": [
           {
             "kind": "AccountManagerAuth",
+            "port": "Return"
+          },
+          {
+            "kind": "AccountManagerAuthToken",
+            "port": "Return"
+          }
+        ]
+      }
+    },
+    {
+      "find": "methods",
+      "where": [
+        {
+          "constraint": "signature_match",
+          "parent": "Landroid/accounts/AccountManager;",
+          "name": "getPassword"
+        }
+      ],
+      "model": {
+        "sources": [
+          {
+            "kind": "AccountManagerAuth",
+            "port": "Return"
+          },
+          {
+            "kind": "AccountManagerPassword",
             "port": "Return"
           }
         ]
