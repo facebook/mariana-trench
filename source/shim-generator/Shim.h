@@ -104,16 +104,25 @@ class ShimParameterMapping {
 };
 
 /**
- * Represents shim-targets which are instance methods.
+ * Represents shim-target methods with static or instance receiver kinds.
  */
 class ShimTarget {
  public:
   explicit ShimTarget(
+      DexMethodSpec method_spec,
+      ShimParameterMapping parameter_mapping,
+      bool is_static);
+
+  explicit ShimTarget(
       const Method* method,
       ShimParameterMapping parameter_mapping);
 
-  const Method* method() const {
-    return call_target_;
+  const DexMethodSpec& method_spec() const {
+    return method_spec_;
+  }
+
+  bool is_static() const {
+    return is_static_;
   }
 
   std::optional<Register> receiver_register(
@@ -127,12 +136,14 @@ class ShimTarget {
       const ShimTarget& shim_target);
 
  private:
-  const Method* call_target_;
+  DexMethodSpec method_spec_;
   ShimParameterMapping parameter_mapping_;
+  bool is_static_;
 };
 
 /**
- * Represents shim-targets which are resolved using reflection.
+ * Represents shim-target methods whose receiver types are resolved using
+ * reflection.
  */
 class ShimReflectionTarget {
  public:
@@ -144,8 +155,7 @@ class ShimReflectionTarget {
     return method_spec_;
   }
 
-  std::optional<Register> receiver_register(
-      const IRInstruction* instruction) const;
+  Register receiver_register(const IRInstruction* instruction) const;
 
   std::unordered_map<Root, Register> root_registers(
       const Method* resolved_reflection,
@@ -161,7 +171,7 @@ class ShimReflectionTarget {
 };
 
 /**
- * Represents shim-targets which are the generated lifecycle wrappers.
+ * Represents shim-target methods which are the generated lifecycle wrappers.
  * The target lifecycle wrapper method is resolved at the call-site only
  * as each generated wrapper has a unique signature.
  */

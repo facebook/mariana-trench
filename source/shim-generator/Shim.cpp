@@ -8,6 +8,7 @@
 #include <algorithm>
 
 #include <Show.h>
+#include <TypeUtil.h>
 
 #include <mariana-trench/Assert.h>
 #include <mariana-trench/Log.h>
@@ -204,13 +205,31 @@ ShimParameterMapping ShimParameterMapping::instantiate_parameters(
 }
 
 ShimTarget::ShimTarget(
+    DexMethodSpec method_spec,
+    ShimParameterMapping parameter_mapping,
+    bool is_static)
+    : method_spec_(std::move(method_spec)),
+      parameter_mapping_(std::move(parameter_mapping)),
+      is_static_(is_static) {
+  mt_assert(
+      method_spec_.cls != nullptr && method_spec_.name != nullptr &&
+      method_spec_.proto != nullptr);
+}
+
+ShimTarget::ShimTarget(
     const Method* method,
     ShimParameterMapping parameter_mapping)
-    : call_target_(method), parameter_mapping_(std::move(parameter_mapping)) {}
+    : ShimTarget(
+          DexMethodSpec{
+              method->get_class(),
+              DexString::get_string(method->get_name()),
+              method->get_proto()},
+          std::move(parameter_mapping),
+          method->is_static()) {}
 
 std::optional<Register> ShimTarget::receiver_register(
     const IRInstruction* instruction) const {
-  if (call_target_->is_static()) {
+  if (is_static_) {
     return std::nullopt;
   }
 
@@ -240,15 +259,18 @@ ShimReflectionTarget::ShimReflectionTarget(
     DexMethodSpec method_spec,
     ShimParameterMapping parameter_mapping)
     : method_spec_(method_spec),
-      parameter_mapping_(std::move(parameter_mapping)) {}
+      parameter_mapping_(std::move(parameter_mapping)) {
+  mt_assert(
+      method_spec_.cls == type::java_lang_Class() &&
+      method_spec_.name != nullptr && method_spec_.proto != nullptr);
+  mt_assert_log(
+      parameter_mapping_.contains(Root::argument(0)),
+      "Missing parameter mapping for receiver for reflection shim target");
+}
 
-std::optional<Register> ShimReflectionTarget::receiver_register(
+Register ShimReflectionTarget::receiver_register(
     const IRInstruction* instruction) const {
   auto receiver_position = parameter_mapping_.at(Root::argument(0));
-  if (!receiver_position) {
-    return std::nullopt;
-  }
-
   mt_assert(*receiver_position < instruction->srcs_size());
 
   return instruction->src(*receiver_position);
@@ -369,10 +391,12 @@ std::ostream& operator<<(std::ostream& out, const ShimParameterMapping& map) {
 }
 
 std::ostream& operator<<(std::ostream& out, const ShimTarget& shim_target) {
-  out << "ShimTarget(method=`";
-  if (shim_target.call_target_ != nullptr) {
-    out << shim_target.call_target_->show();
-  }
+  out << "ShimTarget(type=`";
+  out << show(shim_target.method_spec_.cls);
+  out << "`, method_name=`";
+  out << show(shim_target.method_spec_.name);
+  out << "`, proto=`";
+  out << show(shim_target.method_spec_.proto);
   out << "`";
   out << ", " << shim_target.parameter_mapping_;
   return out << ")";

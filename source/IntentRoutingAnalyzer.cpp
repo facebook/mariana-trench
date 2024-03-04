@@ -280,7 +280,7 @@ IntentRoutingData method_routes_intents_to(
       routed_intents.push_back(intent);
     }
   }
-  return {
+  return IntentRoutingData{
       /* receiving_intent_root */ context->method_gets_routed_intent(),
       routed_intents};
 }
@@ -298,7 +298,7 @@ IntentRoutingAnalyzer IntentRoutingAnalyzer::run(const Context& context) {
         method_routes_intents_to(method, *context.types, *context.options);
     if (intent_routing_data.receiving_intent_root.root != std::nullopt) {
       LOG(5,
-          "Shimming {} as a method that receivings an Intent.",
+          "Shimming {} as a method that receives an Intent.",
           method->show());
       auto klass = method->get_class();
       analyzer.classes_to_intent_receivers_.update(

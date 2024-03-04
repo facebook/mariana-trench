@@ -295,7 +295,12 @@ TEST_F(ShimsTest, TestGetShimForCaller) {
   ASSERT_TRUE(found_shim != std::nullopt);
   std::vector<std::string> serialized_routing_targets;
   for (const auto& shim_target : found_shim->intent_routing_targets()) {
-    serialized_routing_targets.push_back(shim_target.method()->show());
+    const auto& method_spec = shim_target.method_spec();
+    serialized_routing_targets.push_back(fmt::format(
+        "{}.{}:{}",
+        show(method_spec.cls),
+        show(method_spec.name),
+        show(method_spec.proto)));
   }
   sort(serialized_routing_targets.begin(), serialized_routing_targets.end());
   EXPECT_EQ(

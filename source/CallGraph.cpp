@@ -308,10 +308,34 @@ void process_shim_target(
         sink_textual_order_index,
     std::vector<ArtificialCallee>& artificial_callees,
     const FeatureSet& extra_features) {
-  const auto* method = shim_target.method();
-  mt_assert(method != nullptr);
+  const auto& method_spec = shim_target.method_spec();
 
-  auto receiver_register = shim_target.receiver_register(instruction);
+  const DexType* receiver_type = nullptr;
+  if (auto receiver_register = shim_target.receiver_register(instruction)) {
+    receiver_type =
+        types.register_type(caller, instruction, *receiver_register);
+  }
+  if (receiver_type == nullptr) {
+    receiver_type = method_spec.cls;
+  }
+
+  const auto* dex_method = resolve_method(
+      type_class(receiver_type),
+      method_spec.name,
+      method_spec.proto,
+      MethodSearch::Any);
+
+  if (!dex_method) {
+    WARNING(
+        1,
+        "Could not resolve method for shim target: {} at instruction {} in caller: {}",
+        shim_target,
+        show(instruction),
+        caller->show());
+    return;
+  }
+
+  const auto* method = method_factory.get(dex_method);
   auto root_registers = shim_target.root_registers(instruction);
 
   auto call_index = update_index(sink_textual_order_index, method->signature());
@@ -319,6 +343,7 @@ void process_shim_target(
       extra_features);
 
   if (method->is_static()) {
+    mt_assert(shim_target.is_static());
     artificial_callees.push_back(ArtificialCallee{
         /* call_target */ CallTarget::static_call(
             instruction, method, call_index),
@@ -327,30 +352,6 @@ void process_shim_target(
     });
     return;
   }
-
-  const auto* receiver_type = method->get_class();
-  // Try to refine the virtual call using the runtime type.
-  if (receiver_register) {
-    auto register_type =
-        types.register_type(caller, instruction, *receiver_register);
-    receiver_type = register_type ? register_type : receiver_type;
-  }
-
-  auto dex_runtime_method = resolve_method(
-      type_class(receiver_type),
-      method->dex_method()->get_name(),
-      method->get_proto(),
-      MethodSearch::Virtual);
-
-  if (!dex_runtime_method) {
-    WARNING(
-        1,
-        "Could not resolve method for artificial call to: {}",
-        method->show());
-    return;
-  }
-
-  method = method_factory.get(dex_runtime_method);
 
   artificial_callees.push_back(ArtificialCallee{
       /* call_target */ CallTarget::virtual_call(
@@ -379,28 +380,15 @@ void process_shim_reflection(
         sink_textual_order_index,
     std::vector<ArtificialCallee>& artificial_callees) {
   const auto& method_spec = shim_reflection.method_spec();
-  mt_assert(
-      method_spec.cls == type::java_lang_Class() &&
-      method_spec.name != nullptr && method_spec.proto != nullptr);
-
-  auto receiver_register = shim_reflection.receiver_register(instruction);
-  if (!receiver_register) {
-    ERROR(
-        1,
-        "Missing parameter mapping for receiver in shim: {} defined for method {}",
-        shim_reflection,
-        callee->show());
-    return;
-  }
-
-  const auto* reflection_type =
-      types.register_const_class_type(caller, instruction, *receiver_register);
+  const auto* reflection_type = types.register_const_class_type(
+      caller, instruction, shim_reflection.receiver_register(instruction));
 
   if (reflection_type == nullptr) {
     WARNING(
         1,
-        "Could not resolve reflected type for shim: {} in caller: {}",
+        "Could not resolve receiver type for shim reflection target: {} at instruction: {} in caller: {}",
         shim_reflection,
+        show(instruction),
         caller->show());
     return;
   }
@@ -409,13 +397,14 @@ void process_shim_reflection(
       type_class(reflection_type),
       method_spec.name,
       method_spec.proto,
-      MethodSearch::Virtual);
+      MethodSearch::Any);
 
   if (!dex_reflection_method) {
     WARNING(
         1,
-        "Could not resolve method for artificial call to: {} in caller: {}",
-        show(dex_reflection_method),
+        "Could not resolve method for shim reflection target: {} at instruction {} in caller: {}",
+        shim_reflection,
+        show(instruction),
         caller->show());
     return;
   }
@@ -445,10 +434,8 @@ void process_shim_lifecycle(
     const Method* callee,
     const ShimLifecycleTarget& shim_lifecycle,
     const IRInstruction* instruction,
-    const Methods& method_factory,
     const Types& types,
     const LifecycleMethods& lifecycle_methods,
-    const Overrides& override_factory,
     const ClassHierarchies& class_hierarchies,
     const FeatureFactory& feature_factory,
     std::unordered_map<std::string, TextualOrderIndex>&
@@ -463,7 +450,7 @@ void process_shim_lifecycle(
   if (receiver_type == nullptr) {
     WARNING(
         1,
-        "Could not resolve receiver type for shim: {} at instruction: {} in caller: {}",
+        "Could not resolve receiver type for shim lifecycle target: {} at instruction: {} in caller: {}",
         shim_lifecycle,
         show(instruction),
         caller->show());
@@ -484,9 +471,9 @@ void process_shim_lifecycle(
   if (target_lifecycle_methods.size() == 0) {
     WARNING(
         1,
-        "Specified lifecycle method not found: `{}` for class: `{}` in caller: {}",
-        method_name,
-        receiver_type->str(),
+        "Could not resolve any method for shim lifecycle target: {} at instruction: {} in caller: {}",
+        shim_lifecycle,
+        show(instruction),
         caller->show());
     return;
   } else if (
@@ -497,10 +484,11 @@ void process_shim_lifecycle(
     // likely be many false positives as well.
     WARNING(
         1,
-        "Lifecycle method shim target: {} resolved to {} methods in caller: {} "
+        "Shim lifecycle target: {} resolved to {} methods at instruction: {} in caller: {} "
         "which exceeds the join override threshold of {}. Shim not created.",
         method_name,
         target_lifecycle_methods.size(),
+        show(instruction),
         caller->show(),
         Heuristics::kJoinOverrideThreshold);
     return;
@@ -573,10 +561,8 @@ std::vector<ArtificialCallee> shim_artificial_callees(
         callee,
         shim_lifecycle,
         instruction,
-        method_factory,
         types,
         lifecycle_methods,
-        override_factory,
         class_hierarchies,
         feature_factory,
         sink_textual_order_index,
@@ -699,7 +685,7 @@ InstructionCallGraphInformation process_instruction(
       sink_textual_order_index);
 
   if (auto shim = shims.get_shim_for_caller(original_callee, caller)) {
-    auto artificial_callees = shim_artificial_callees(
+    instruction_information.artificial_callees = shim_artificial_callees(
         caller,
         resolved_callee,
         instruction,
@@ -711,7 +697,6 @@ InstructionCallGraphInformation process_instruction(
         feature_factory,
         *shim,
         sink_textual_order_index);
-    instruction_information.artificial_callees = std::move(artificial_callees);
   }
 
   auto call_index =
