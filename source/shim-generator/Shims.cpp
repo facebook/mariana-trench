@@ -36,8 +36,14 @@ bool skip_shim_for_caller(const Method* caller) {
 
 } // namespace
 
-bool Shims::add_instantiated_shim(const InstantiatedShim& shim) {
-  return global_shims_.emplace(shim.method(), shim).second;
+void Shims::add_instantiated_shim(const InstantiatedShim& shim) {
+  const auto* method = shim.method();
+  auto it = global_shims_.find(method);
+  if (it != global_shims_.end()) {
+    it->second.merge_with(shim);
+  } else {
+    global_shims_.emplace(method, shim);
+  }
 }
 
 void Shims::add_intent_routing_analyzer(

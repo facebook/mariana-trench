@@ -35,23 +35,23 @@ std::optional<InstantiatedShim> ShimGenerator::visit_method(
   return std::nullopt;
 }
 
-std::vector<InstantiatedShim> ShimGenerator::emit_method_shims(
+void ShimGenerator::emit_method_shims(
     Shims& method_shims,
     const Methods* methods,
     const MethodMappings& method_mappings) {
   MethodHashedSet filtered_methods = constraint_->may_satisfy(method_mappings);
   if (filtered_methods.is_bottom()) {
-    return {};
+    return;
   }
 
   if (!filtered_methods.is_top()) {
-    return visit_methods(
+    visit_methods(
         method_shims,
         filtered_methods.elements().begin(),
         filtered_methods.elements().end());
+  } else {
+    visit_methods(method_shims, methods->begin(), methods->end());
   }
-
-  return visit_methods(method_shims, methods->begin(), methods->end());
 }
 
 } // namespace marianatrench

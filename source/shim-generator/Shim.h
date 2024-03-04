@@ -316,6 +316,8 @@ class InstantiatedShim {
 
   void add_target(ShimTargetVariant target);
 
+  void merge_with(const InstantiatedShim& other);
+
   const Method* method() const {
     return method_;
   }

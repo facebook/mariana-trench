@@ -85,20 +85,8 @@ Shims ShimGeneration::run(
   for (auto& item : all_shims) {
     LOG(1, "Running shim generator ({}/{})", ++iteration, all_shims.size());
 
-    auto duplicate_shims = item.emit_method_shims(
+    item.emit_method_shims(
         method_shims, context.methods.get(), method_mappings);
-
-    if (!duplicate_shims.empty()) {
-      std::vector<std::string> errors{};
-      std::transform(
-          duplicate_shims.cbegin(),
-          duplicate_shims.cend(),
-          std::back_inserter(errors),
-          [](const auto& shim) { return shim.method()->show(); });
-
-      throw ShimGeneratorError(fmt::format(
-          "Duplicate shim defined for: {}", boost::join(errors, ", ")));
-    }
   }
 
   return method_shims;
