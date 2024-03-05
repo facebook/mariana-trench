@@ -66,7 +66,7 @@ std::optional<Shim> Shims::get_shim_for_caller(
   auto intent_routing_targets = intent_routing_analyzer_
       ? intent_routing_analyzer_->get_intent_routing_targets(
             original_callee, caller)
-      : std::unordered_set<ShimTarget>{};
+      : InstantiatedShim::FlatSet<ShimTarget>{};
 
   if (instantiated_shim == nullptr && intent_routing_targets.empty()) {
     return std::nullopt;

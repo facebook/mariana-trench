@@ -328,11 +328,11 @@ std::unique_ptr<IntentRoutingAnalyzer> IntentRoutingAnalyzer::run(
   return analyzer;
 }
 
-std::unordered_set<ShimTarget>
+InstantiatedShim::FlatSet<ShimTarget>
 IntentRoutingAnalyzer::get_intent_routing_targets(
     const Method* original_callee,
     const Method* caller) const {
-  std::unordered_set<ShimTarget> intent_routing_targets;
+  InstantiatedShim::FlatSet<ShimTarget> intent_routing_targets;
 
   // Check if callee is an intent launcher
   auto [component, position] = get_position_from_callee(original_callee);

@@ -12,6 +12,7 @@
 #include <variant>
 
 #include <boost/container/flat_map.hpp>
+#include <boost/container/flat_set.hpp>
 #include <boost/container_hash/hash_fwd.hpp>
 
 #include <DexMemberRefs.h>
@@ -36,7 +37,9 @@ class ShimMethod final {
   explicit ShimMethod(const Method* method);
 
   const Method* method() const;
+
   DexType* MT_NULLABLE parameter_type(ShimParameterPosition argument) const;
+
   std::optional<ShimParameterPosition> type_position(const DexType* type) const;
 
   friend std::ostream& operator<<(
@@ -46,7 +49,8 @@ class ShimMethod final {
  private:
   const Method* method_;
   // Maps parameter type to position in method_
-  std::unordered_map<const DexType*, ShimParameterPosition> types_to_position_;
+  boost::container::flat_map<const DexType*, ShimParameterPosition>
+      types_to_position_;
 };
 
 /**
@@ -66,13 +70,18 @@ class ShimParameterMapping final {
 
   bool operator==(const ShimParameterMapping& other) const;
 
+  bool operator<(const ShimParameterMapping& other) const;
+
   static ShimParameterMapping from_json(
       const Json::Value& value,
       bool infer_from_types);
 
   bool empty() const;
+
   bool contains(const Root& position) const;
+
   std::optional<ShimParameterPosition> at(const Root& parameter_position) const;
+
   void insert(
       const Root& parameter_position,
       ShimParameterPosition shim_parameter_position);
@@ -86,6 +95,7 @@ class ShimParameterMapping final {
   }
 
   void set_infer_from_types(bool value);
+
   bool infer_from_types() const;
 
   void add_receiver(ShimParameterPosition shim_parameter_position);
@@ -131,6 +141,8 @@ class ShimTarget final {
 
   bool operator==(const ShimTarget& other) const;
 
+  bool operator<(const ShimTarget& other) const;
+
   const DexMethodSpec& method_spec() const {
     return method_spec_;
   }
@@ -171,6 +183,8 @@ class ShimReflectionTarget final {
 
   bool operator==(const ShimReflectionTarget& other) const;
 
+  bool operator<(const ShimReflectionTarget& other) const;
+
   const DexMethodSpec& method_spec() const {
     return method_spec_;
   }
@@ -208,6 +222,8 @@ class ShimLifecycleTarget final {
   INCLUDE_DEFAULT_COPY_CONSTRUCTORS_AND_ASSIGNMENTS(ShimLifecycleTarget)
 
   bool operator==(const ShimLifecycleTarget& other) const;
+
+  bool operator<(const ShimLifecycleTarget& other) const;
 
   const std::string& method_name() const {
     return method_name_;
@@ -310,6 +326,10 @@ namespace marianatrench {
  */
 class InstantiatedShim final {
  public:
+  template <typename Element>
+  using FlatSet = boost::container::flat_set<Element>;
+
+ public:
   explicit InstantiatedShim(const Method* method);
 
   MOVE_CONSTRUCTOR_ONLY(InstantiatedShim)
@@ -326,15 +346,15 @@ class InstantiatedShim final {
     return targets_.empty() && reflections_.empty() && lifecycles_.empty();
   }
 
-  const std::unordered_set<ShimTarget>& targets() const {
+  const FlatSet<ShimTarget>& targets() const {
     return targets_;
   }
 
-  const std::unordered_set<ShimReflectionTarget>& reflections() const {
+  const FlatSet<ShimReflectionTarget>& reflections() const {
     return reflections_;
   }
 
-  const std::unordered_set<ShimLifecycleTarget>& lifecycles() const {
+  const FlatSet<ShimLifecycleTarget>& lifecycles() const {
     return lifecycles_;
   }
 
@@ -344,16 +364,16 @@ class InstantiatedShim final {
 
  private:
   const Method* method_;
-  std::unordered_set<ShimTarget> targets_;
-  std::unordered_set<ShimReflectionTarget> reflections_;
-  std::unordered_set<ShimLifecycleTarget> lifecycles_;
+  FlatSet<ShimTarget> targets_;
+  FlatSet<ShimReflectionTarget> reflections_;
+  FlatSet<ShimLifecycleTarget> lifecycles_;
 };
 
 class Shim final {
  public:
   explicit Shim(
       const InstantiatedShim* MT_NULLABLE instantiated_shim,
-      std::unordered_set<ShimTarget> intent_routing_targets);
+      InstantiatedShim::FlatSet<ShimTarget> intent_routing_targets);
 
   const Method* MT_NULLABLE method() const {
     return instantiated_shim_ ? instantiated_shim_->method() : nullptr;
@@ -364,13 +384,13 @@ class Shim final {
         intent_routing_targets_.empty();
   }
 
-  const std::unordered_set<ShimTarget>& targets() const;
+  const InstantiatedShim::FlatSet<ShimTarget>& targets() const;
 
-  const std::unordered_set<ShimReflectionTarget>& reflections() const;
+  const InstantiatedShim::FlatSet<ShimReflectionTarget>& reflections() const;
 
-  const std::unordered_set<ShimLifecycleTarget>& lifecycles() const;
+  const InstantiatedShim::FlatSet<ShimLifecycleTarget>& lifecycles() const;
 
-  const std::unordered_set<ShimTarget>& intent_routing_targets() const {
+  const InstantiatedShim::FlatSet<ShimTarget>& intent_routing_targets() const {
     return intent_routing_targets_;
   }
 
@@ -378,7 +398,7 @@ class Shim final {
 
  private:
   const InstantiatedShim* MT_NULLABLE instantiated_shim_;
-  std::unordered_set<ShimTarget> intent_routing_targets_;
+  InstantiatedShim::FlatSet<ShimTarget> intent_routing_targets_;
 };
 
 } // namespace marianatrench

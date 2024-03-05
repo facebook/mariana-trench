@@ -18,11 +18,13 @@
 namespace marianatrench {
 namespace {
 
-static const std::unordered_set<ShimTarget> empty_shim_targets;
+static const InstantiatedShim::FlatSet<ShimTarget> empty_shim_targets;
 
-static const std::unordered_set<ShimLifecycleTarget> empty_lifecycle_targets;
+static const InstantiatedShim::FlatSet<ShimLifecycleTarget>
+    empty_lifecycle_targets;
 
-static const std::unordered_set<ShimReflectionTarget> empty_reflection_targets;
+static const InstantiatedShim::FlatSet<ShimReflectionTarget>
+    empty_reflection_targets;
 
 bool verify_has_parameter_type(
     std::string_view method_name,
@@ -98,6 +100,12 @@ ShimParameterMapping::ShimParameterMapping(
 
 bool ShimParameterMapping::operator==(const ShimParameterMapping& other) const {
   return infer_from_types_ == other.infer_from_types_ && map_ == other.map_;
+}
+
+bool ShimParameterMapping::operator<(const ShimParameterMapping& other) const {
+  // Lexicographic comparison
+  return std::tie(infer_from_types_, map_) <
+      std::tie(other.infer_from_types_, other.map_);
 }
 
 bool ShimParameterMapping::empty() const {
@@ -242,6 +250,22 @@ bool ShimTarget::operator==(const ShimTarget& other) const {
       parameter_mapping_ == other.parameter_mapping_;
 }
 
+bool ShimTarget::operator<(const ShimTarget& other) const {
+  // Lexicographic comparison
+  return std::tie(
+             is_static_,
+             method_spec_.cls,
+             method_spec_.name,
+             method_spec_.proto,
+             parameter_mapping_) <
+      std::tie(
+             other.is_static_,
+             other.method_spec_.cls,
+             other.method_spec_.name,
+             other.method_spec_.proto,
+             other.parameter_mapping_);
+}
+
 std::optional<Register> ShimTarget::receiver_register(
     const IRInstruction* instruction) const {
   if (is_static_) {
@@ -288,6 +312,20 @@ bool ShimReflectionTarget::operator==(const ShimReflectionTarget& other) const {
       parameter_mapping_ == other.parameter_mapping_;
 }
 
+bool ShimReflectionTarget::operator<(const ShimReflectionTarget& other) const {
+  // Lexicographic comparison
+  return std::tie(
+             method_spec_.cls,
+             method_spec_.name,
+             method_spec_.proto,
+             parameter_mapping_) <
+      std::tie(
+             other.method_spec_.cls,
+             other.method_spec_.name,
+             other.method_spec_.proto,
+             other.parameter_mapping_);
+}
+
 Register ShimReflectionTarget::receiver_register(
     const IRInstruction* instruction) const {
   auto receiver_position = parameter_mapping_.at(Root::argument(0));
@@ -332,6 +370,20 @@ bool ShimLifecycleTarget::operator==(const ShimLifecycleTarget& other) const {
       is_reflection_ == other.is_reflection_ &&
       receiver_position_ == other.receiver_position_ &&
       method_name_ == other.method_name_;
+}
+
+bool ShimLifecycleTarget::operator<(const ShimLifecycleTarget& other) const {
+  // Lexicographic comparison
+  return std::tie(
+             infer_from_types_,
+             is_reflection_,
+             receiver_position_,
+             method_name_) <
+      std::tie(
+             other.infer_from_types_,
+             other.is_reflection_,
+             other.receiver_position_,
+             other.method_name_);
 }
 
 Register ShimLifecycleTarget::receiver_register(
@@ -405,25 +457,26 @@ void InstantiatedShim::merge_with(InstantiatedShim other) {
 
 Shim::Shim(
     const InstantiatedShim* MT_NULLABLE instantiated_shim,
-    std::unordered_set<ShimTarget> intent_routing_targets)
+    InstantiatedShim::FlatSet<ShimTarget> intent_routing_targets)
     : instantiated_shim_(instantiated_shim),
       intent_routing_targets_(std::move(intent_routing_targets)) {}
 
-const std::unordered_set<ShimTarget>& Shim::targets() const {
+const InstantiatedShim::FlatSet<ShimTarget>& Shim::targets() const {
   if (instantiated_shim_ == nullptr) {
     return empty_shim_targets;
   }
   return instantiated_shim_->targets();
 }
 
-const std::unordered_set<ShimReflectionTarget>& Shim::reflections() const {
+const InstantiatedShim::FlatSet<ShimReflectionTarget>& Shim::reflections()
+    const {
   if (instantiated_shim_ == nullptr) {
     return empty_reflection_targets;
   }
   return instantiated_shim_->reflections();
 }
 
-const std::unordered_set<ShimLifecycleTarget>& Shim::lifecycles() const {
+const InstantiatedShim::FlatSet<ShimLifecycleTarget>& Shim::lifecycles() const {
   if (instantiated_shim_ == nullptr) {
     return empty_lifecycle_targets;
   }
