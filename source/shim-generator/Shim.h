@@ -360,7 +360,7 @@ class Shim final {
   }
 
   bool empty() const {
-    return instantiated_shim_ && instantiated_shim_->empty() &&
+    return (instantiated_shim_ == nullptr || instantiated_shim_->empty()) &&
         intent_routing_targets_.empty();
   }
 
