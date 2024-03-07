@@ -1,0 +1,148 @@
+{
+  "model_generators": [
+    {
+      "find": "methods",
+      "where": [
+        {
+          "constraint": "signature_match",
+          "parent": "Ljava/lang/Class;",
+          "name": "forName"
+        }
+      ],
+      "model": {
+        "sinks": [
+          {
+            "kind": "Reflection",
+            "port": "Argument(0)"
+          }
+        ]
+      }
+    },
+    {
+      "find": "methods",
+      "where": [
+        {
+          "constraint": "signature_match",
+          "parents": [
+            "Landroid/app/Fragment;",
+            "Landroidx/fragment/app/Fragment;"
+          ],
+          "name": "instantiate"
+        }
+      ],
+      "model": {
+        "sinks": [
+          {
+            "kind": "ComponentInstantiate",
+            "port": "Argument(1)"
+          }
+        ]
+      }
+    },
+    {
+      "find": "methods",
+      "where": [
+        {
+          "constraint": "any_of",
+          "inners": [
+            {
+              "constraint": "signature_match",
+              "parents": [
+                "Landroid/app/FragmentManager;",
+                "Landroidx/fragment/app/FragmentManager;"
+              ],
+              "name": "findFragmentByTag"
+            }
+          ]
+        }
+      ],
+      "model": {
+        "sinks": [
+          {
+            "kind": "ComponentInstantiate",
+            "port": "Argument(1)"
+          }
+        ]
+      }
+    },
+    {
+      "find": "methods",
+      "where": [
+        {
+          "constraint": "signature_match",
+          "parent": "Landroid/content/ComponentName;",
+          "name": "<init>"
+        }
+      ],
+      "model": {
+        "for_all_parameters": [
+          {
+            "variable": "x",
+            "where": [
+              {
+                "constraint": "name",
+                "pattern": "Ljava/lang/String;"
+              }
+            ],
+            "sinks": [
+              {
+                "kind": "ComponentInstantiate",
+                "port": "Argument(x)"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "find": "methods",
+      "where": [
+        {
+          "constraint": "signature_match",
+          "parent": "Landroid/content/ComponentName;",
+          "name": "unflattenFromString"
+        }
+      ],
+      "model": {
+        "sinks": [
+          {
+            "kind": "ComponentInstantiate",
+            "port": "Argument(0)"
+          }
+        ]
+      }
+    },
+    {
+      "find": "methods",
+      "where": [
+        {
+          "constraint": "signature_match",
+          "parent": "Landroid/content/Intent;",
+          "names": [
+            "setClassName",
+            "setPackage"
+          ]
+        }
+      ],
+      "model": {
+        "for_all_parameters": [
+          {
+            "variable": "x",
+            "where": [
+              {
+                "constraint": "name",
+                "pattern": "Ljava/lang/String;"
+              }
+            ],
+            "sinks": [
+              {
+                "kind": "ComponentInstantiate",
+                "port": "Argument(x)"
+              }
+            ]
+          }
+        ]
+      }
+    }
+  ]
+}

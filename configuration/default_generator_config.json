@@ -39,6 +39,9 @@
     "name": "join_override_generator"
   },
   {
+    "name": "ReflectionGenerator"
+  },
+  {
     "name": "SensitiveCookieDataGenerator"
   },
   {
