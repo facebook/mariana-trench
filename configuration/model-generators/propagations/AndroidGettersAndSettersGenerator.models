@@ -1,0 +1,568 @@
+{
+  "model_generators": [
+    {
+      "find": "methods",
+      "where": [
+        {
+          "constraint": "signature_match",
+          "parent": "Landroid/content/Intent;",
+          "name": "putExtra"
+        }
+      ],
+      "model": {
+        "modes": [
+          "no-collapse-on-propagation",
+          "skip-analysis",
+          "strong-write-on-propagation",
+          "alias-memory-location-on-invoke"
+        ],
+        "freeze": [
+          "propagation"
+        ],
+        "propagation": [
+          {
+            "input": "Argument(2)",
+            "output": "Argument(0)[<Argument(1)>]",
+            "features": [
+              "via-intent-extra-setter"
+            ]
+          },
+          {
+            "input": "Argument(2)",
+            "output": "Return[<Argument(1)>]",
+            "features": [
+              "via-intent-extra-setter"
+            ]
+          }
+        ],
+        "add_features_to_arguments": [
+          {
+            "features": [
+              "has-intent-extras"
+            ],
+            "port": "Argument(0)"
+          }
+        ]
+      }
+    },
+    {
+      "find": "methods",
+      "where": [
+        {
+          "constraint": "name",
+          "pattern": "build"
+        },
+        {
+          "constraint": "parent",
+          "inner": {
+            "constraint": "name",
+            "pattern": "Lcom/google/common/collect/[A-Za-z]+Map\\$Builder;"
+          }
+        }
+      ],
+      "model": {
+        "modes": [
+          "no-collapse-on-propagation",
+          "skip-analysis"
+        ],
+        "freeze": [
+          "propagation"
+        ],
+        "propagation": [
+          {
+            "input": "Argument(0)",
+            "output": "Return"
+          }
+        ]
+      }
+    },
+    {
+      "find": "methods",
+      "where": [
+        {
+          "constraint": "signature_match",
+          "parent": "Landroid/content/Intent;",
+          "names": [
+            "getBooleanArrayExtra",
+            "getBooleanExtra",
+            "getBundleExtra",
+            "getByteArrayExtra",
+            "getByteExtra",
+            "getCharArrayExtra",
+            "getCharExtra",
+            "getCharSequenceArrayExtra",
+            "getCharSequenceArrayListExtra",
+            "getCharSequenceExtra",
+            "getDoubleArrayExtra",
+            "getDoubleExtra",
+            "getFloatArrayExtra",
+            "getFloatExtra",
+            "getIntArrayExtra",
+            "getIntExtra",
+            "getLongArrayExtra",
+            "getLongExtra",
+            "getShortArrayExtra",
+            "getShortExtra",
+            "getStringArrayExtra",
+            "getStringArrayListExtra",
+            "getStringExtra"
+          ]
+        }
+      ],
+      "model": {
+        "modes": [
+          "no-collapse-on-propagation",
+          "skip-analysis"
+        ],
+        "freeze": [
+          "propagation"
+        ],
+        "propagation": [
+          {
+            "input": "Argument(0)[<Argument(1)>]",
+            "output": "Return",
+            "features": [
+              "via-intent-extra-getter"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "find": "methods",
+      "where": [
+        {
+          "constraint": "signature_match",
+          "parent": "Landroid/content/Intent;",
+          "names": [
+            "getParcelableArrayExtra",
+            "getParcelableArrayListExtra",
+            "getParcelableExtra",
+            "getSerializableExtra"
+          ]
+        }
+      ],
+      "model": {
+        "modes": [
+          "no-collapse-on-propagation",
+          "skip-analysis"
+        ],
+        "freeze": [
+          "propagation"
+        ],
+        "propagation": [
+          {
+            "input": "Argument(0)[<Argument(1)>]",
+            "output": "Return"
+          }
+        ]
+      }
+    },
+    {
+      "find": "methods",
+      "where": [
+        {
+          "constraint": "signature_match",
+          "parent": "Landroid/content/Intent;",
+          "name": "putExtras"
+        }
+      ],
+      "model": {
+        "modes": [
+          "no-collapse-on-propagation",
+          "skip-analysis",
+          "alias-memory-location-on-invoke"
+        ],
+        "freeze": [
+          "propagation"
+        ],
+        "propagation": [
+          {
+            "input": "Argument(1)",
+            "output": "Argument(0)",
+            "features": [
+              "via-intent-extra-setter"
+            ]
+          },
+          {
+            "input": "Argument(1)",
+            "output": "Return",
+            "features": [
+              "via-intent-extra-setter"
+            ]
+          }
+        ],
+        "add_features_to_arguments": [
+          {
+            "features": [
+              "has-intent-extras"
+            ],
+            "port": "Argument(0)"
+          }
+        ]
+      }
+    },
+    {
+      "find": "methods",
+      "where": [
+        {
+          "constraint": "signature_match",
+          "parent": "Landroid/content/Intent;",
+          "name": "getExtras"
+        }
+      ],
+      "model": {
+        "modes": [
+          "no-collapse-on-propagation",
+          "skip-analysis"
+        ],
+        "freeze": [
+          "propagation"
+        ],
+        "propagation": [
+          {
+            "input": "Argument(0)",
+            "output": "Return",
+            "features": [
+              "via-intent-extra-getter"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "find": "methods",
+      "where": [
+        {
+          "constraint": "signature_match",
+          "parents": [
+            "Landroid/os/Bundle;",
+            "Landroid/os/BaseBundle;"
+          ],
+          "names": [
+            "getChar",
+            "getString",
+            "getCharSequence",
+            "getCharSequenceArray",
+            "getShort",
+            "getLongArray",
+            "getIntegerArrayList",
+            "getParcelableArray",
+            "getByteArray",
+            "getBinder",
+            "getStringArrayList",
+            "getLong",
+            "getDouble",
+            "get",
+            "getParcelable",
+            "getStringArray",
+            "getFloat",
+            "getBundle",
+            "getIntArray",
+            "getSerializable",
+            "getShortArray",
+            "getByte",
+            "getCharArray",
+            "getBooleanArray",
+            "getInt",
+            "getParcelableArrayList",
+            "getCharSequenceArrayList",
+            "getFloatArray",
+            "getBoolean",
+            "getDoubleArray",
+            "getSparseParcelableArray"
+          ]
+        }
+      ],
+      "model": {
+        "modes": [
+          "no-collapse-on-propagation",
+          "skip-analysis"
+        ],
+        "freeze": [
+          "propagation"
+        ],
+        "propagation": [
+          {
+            "input": "Argument(0)[<Argument(1)>]",
+            "output": "Return",
+            "features": [
+              "via-bundle-getter"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "find": "methods",
+      "where": [
+        {
+          "constraint": "signature_match",
+          "parents": [
+            "Landroid/os/Bundle;",
+            "Landroid/os/BaseBundle;"
+          ],
+          "names": [
+            "putString",
+            "putLong",
+            "putBoolean",
+            "putDoubleArray",
+            "putLongArray",
+            "putBooleanArray",
+            "putDouble",
+            "putInt",
+            "putIntArray",
+            "putStringArray",
+            "putCharArray",
+            "putIntegerArrayList",
+            "putStringArrayList",
+            "putCharSequenceArrayList",
+            "putByte",
+            "putParcelableArrayList",
+            "putFloat",
+            "putChar",
+            "putParcelableArray",
+            "putByteArray",
+            "putBinder",
+            "putParcelable",
+            "putCharSequenceArray",
+            "putSparseParcelableArray",
+            "putShort",
+            "putCharSequence",
+            "putFloatArray",
+            "putBundle",
+            "putShortArray"
+          ]
+        }
+      ],
+      "model": {
+        "modes": [
+          "no-collapse-on-propagation",
+          "skip-analysis",
+          "strong-write-on-propagation"
+        ],
+        "freeze": [
+          "propagation"
+        ],
+        "propagation": [
+          {
+            "input": "Argument(2)",
+            "output": "Argument(0)[<Argument(1)>]",
+            "features": [
+              "via-bundle-setter"
+            ]
+          },
+          {
+            "input": "Argument(2)",
+            "output": "Return[<Argument(1)>]",
+            "features": [
+              "via-bundle-setter"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "find": "methods",
+      "where": [
+        {
+          "constraint": "signature_match",
+          "parents": [
+            "Ljava/util/Map;",
+            "Ljava/util/AbstractMap;",
+            "Ljava/util/EnumMap;",
+            "Ljava/util/HashMap;",
+            "Ljava/util/IdentityHashMap;",
+            "Ljava/util/TreeMap;",
+            "Ljava/util/WeakHashMap;",
+            "Ljava/util/concurrent/ConcurrentHashMap;",
+            "Ljava/util/concurrent/ConcurrentSkipListMap;",
+            "Landroid/util/ArrayMap;",
+            "Landroid/util/LruCache;",
+            "Landroidx/collection/SimpleArrayMap;",
+            "Landroidx/arch/core/internal/SafeIterableMap;",
+            "Landroidx/collection/LruCache;",
+            "Lkotlin/collections/AbstractMutableMap;",
+            "Lkotlin/collections/MutableMapWithDefaultImpl;",
+            "Lkotlin/collections/AbstractMap;",
+            "Lkotlin/collections/MapWithDefaultImpl;"
+          ],
+          "name": "put"
+        },
+        {
+          "constraint": "number_parameters",
+          "inner": {
+            "constraint": "==",
+            "value": 3
+          }
+        }
+      ],
+      "model": {
+        "modes": [
+          "no-collapse-on-propagation",
+          "skip-analysis",
+          "strong-write-on-propagation"
+        ],
+        "freeze": [
+          "propagation"
+        ],
+        "propagation": [
+          {
+            "input": "Argument(2)",
+            "output": "Argument(0)[<Argument(1)>]"
+          }
+        ]
+      }
+    },
+    {
+      "find": "methods",
+      "where": [
+        {
+          "constraint": "name",
+          "pattern": "put"
+        },
+        {
+          "constraint": "parent",
+          "inner": {
+            "constraint": "name",
+            "pattern": "Lcom/google/common/collect/[A-Za-z]+Map(\\$Builder)?;"
+          }
+        },
+        {
+          "constraint": "number_parameters",
+          "inner": {
+            "constraint": "==",
+            "value": 3
+          }
+        }
+      ],
+      "model": {
+        "modes": [
+          "no-collapse-on-propagation",
+          "skip-analysis",
+          "strong-write-on-propagation"
+        ],
+        "freeze": [
+          "propagation"
+        ],
+        "propagation": [
+          {
+            "input": "Argument(2)",
+            "output": "Argument(0)[<Argument(1)>]"
+          }
+        ]
+      }
+    },
+    {
+      "find": "methods",
+      "where": [
+        {
+          "constraint": "signature_match",
+          "parent": "Landroid/os/Bundle;",
+          "name": "putAll"
+        }
+      ],
+      "model": {
+        "modes": [
+          "no-collapse-on-propagation",
+          "skip-analysis"
+        ],
+        "freeze": [
+          "propagation"
+        ],
+        "propagation": [
+          {
+            "input": "Argument(1)",
+            "output": "Argument(0)"
+          },
+          {
+            "input": "Argument(1)",
+            "output": "Return"
+          }
+        ]
+      }
+    },
+    {
+      "find": "methods",
+      "where": [
+        {
+          "constraint": "signature_match",
+          "parents": [
+            "Ljava/util/Map;",
+            "Ljava/util/AbstractMap;",
+            "Ljava/util/EnumMap;",
+            "Ljava/util/HashMap;",
+            "Ljava/util/IdentityHashMap;",
+            "Ljava/util/TreeMap;",
+            "Ljava/util/WeakHashMap;",
+            "Ljava/util/concurrent/ConcurrentHashMap;",
+            "Ljava/util/concurrent/ConcurrentSkipListMap;",
+            "Landroid/util/ArrayMap;",
+            "Landroid/util/LruCache;",
+            "Landroidx/collection/SimpleArrayMap;",
+            "Landroidx/arch/core/internal/SafeIterableMap;",
+            "Landroidx/collection/LruCache;",
+            "Lkotlin/collections/AbstractMutableMap;",
+            "Lkotlin/collections/MutableMapWithDefaultImpl;",
+            "Lkotlin/collections/AbstractMap;",
+            "Lkotlin/collections/MapWithDefaultImpl;"
+          ],
+          "name": "get"
+        }
+      ],
+      "model": {
+        "modes": [
+          "no-collapse-on-propagation",
+          "skip-analysis"
+        ],
+        "freeze": [
+          "propagation"
+        ],
+        "propagation": [
+          {
+            "input": "Argument(0)[<Argument(1)>]",
+            "output": "Return"
+          }
+        ]
+      }
+    },
+    {
+      "find": "methods",
+      "where": [
+        {
+          "constraint": "name",
+          "pattern": "get"
+        },
+        {
+          "constraint": "parent",
+          "inner": {
+            "constraint": "name",
+            "pattern": "Lcom/google/common/collect/[A-Za-z]+Map;"
+          }
+        },
+        {
+          "constraint": "number_parameters",
+          "inner": {
+            "constraint": ">",
+            "value": 1
+          }
+        }
+      ],
+      "model": {
+        "modes": [
+          "no-collapse-on-propagation",
+          "skip-analysis"
+        ],
+        "freeze": [
+          "propagation"
+        ],
+        "propagation": [
+          {
+            "input": "Argument(0)[<Argument(1)>]",
+            "output": "Return"
+          }
+        ]
+      }
+    }
+  ]
+}
