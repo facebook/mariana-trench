@@ -1,0 +1,96 @@
+{
+  "model_generators": [
+    {
+      "find": "methods",
+      "where": [
+        {
+          "constraint": "name",
+          "pattern": "^on.*"
+        },
+        {
+          "constraint": "parent",
+          "inner": {
+            "constraint": "extends",
+            "include_self": false,
+            "inner": {
+              "constraint": "name",
+              "pattern": "Landroid/app/Activity;"
+            }
+          }
+        }
+      ],
+      "model": {
+        "effect_sources": [
+          {
+            "type": "call-chain",
+            "kind": "ActivityLifecycle"
+          }
+        ]
+      }
+    },
+    {
+      "find": "methods",
+      "where": [
+        {
+          "constraint": "signature_match",
+          "parent": "Landroid/app/Activity;",
+          "name": "setResult"
+        },
+        {
+          "constraint": "parameter",
+          "idx": 2,
+          "inner": {
+            "constraint": "name",
+            "pattern": "Landroid/content/Intent;"
+          }
+        }
+      ],
+      "model": {
+        "sinks": [
+          {
+            "kind": "ActivityExitNode",
+            "port": "Argument(2)"
+          }
+        ],
+        "effect_sinks": [
+          {
+            "kind": "SetResult",
+            "type": "call-chain"
+          }
+        ]
+      }
+    },
+    {
+      "find": "methods",
+      "where": [
+        {
+          "constraint": "signature_match",
+          "parent": "Landroidx/activity/result/ActivityResult;",
+          "name": "<init>"
+        },
+        {
+          "constraint": "parameter",
+          "idx": 2,
+          "inner": {
+            "constraint": "name",
+            "pattern": "Landroid/content/Intent;"
+          }
+        }
+      ],
+      "model": {
+        "sinks": [
+          {
+            "kind": "ActivityExitNode",
+            "port": "Argument(2)"
+          }
+        ],
+        "effect_sinks": [
+          {
+            "kind": "SetResult",
+            "type": "call-chain"
+          }
+        ]
+      }
+    }
+  ]
+}
