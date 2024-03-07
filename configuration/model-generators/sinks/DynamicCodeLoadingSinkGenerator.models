@@ -1,0 +1,57 @@
+{
+  "model_generators": [
+    {
+      "find": "methods",
+      "where": [
+        {
+          "constraint": "signature_match",
+          "parents": [
+            "Ldalvik/system/DexClassLoader;",
+            "Ldalvik/system/PathClassLoader;"
+          ],
+          "name": "<init>"
+        }
+      ],
+      "model": {
+        "for_all_parameters": [
+          {
+            "variable": "x",
+            "where": [
+              {
+                "constraint": "name",
+                "pattern": "Ljava/lang/String;"
+              }
+            ],
+            "sinks": [
+              {
+                "kind": "DynamicCodeLoading",
+                "port": "Argument(x)"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "find": "methods",
+      "where": [
+        {
+          "constraint": "signature_match",
+          "parent": "Ljava/lang/System;",
+          "names": [
+            "load",
+            "loadLibrary"
+          ]
+        }
+      ],
+      "model": {
+        "sinks": [
+          {
+            "kind": "DynamicCodeLoading",
+            "port": "Argument(0)"
+          }
+        ]
+      }
+    }
+  ]
+}
