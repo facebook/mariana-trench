@@ -75,11 +75,24 @@
             "variable": "x",
             "where": [
               {
-                "constraint": "name",
-                "pattern": "Landroid/content/Intent;"
+                "constraint": "any_of",
+                "inners": [
+                  {
+                    "constraint": "name",
+                    "pattern": "Landroid/content/Intent;"
+                  },
+                  {
+                    "constraint": "name",
+                    "pattern": "Landroid/content/IntentSender;"
+                  }
+                ]
               }
             ],
             "sinks": [
+              {
+                "kind": "LaunchingComponent",
+                "port": "Argument(x)"
+              },
               {
                 "kind": "LaunchingComponent",
                 "partial_label": "a",
@@ -91,6 +104,205 @@
                 "port": "Argument(x)"
               }
             ]
+          }
+        ]
+      }
+    },
+    {
+      "find": "methods",
+      "where": [
+        {
+          "constraint": "signature_match",
+          "parent": "Landroidx/activity/result/ActivityResultLauncher;",
+          "name": "launch"
+        }
+      ],
+      "model": {
+        "modes": [
+          "no-join-virtual-overrides",
+          "skip-analysis"
+        ],
+        "sinks": [
+          {
+            "kind": "LaunchingComponent",
+            "port": "Argument(1)"
+          },
+          {
+            "kind": "LaunchingComponent",
+            "partial_label": "a",
+            "port": "Argument(1)"
+          },
+          {
+            "kind": "LaunchingComponent",
+            "partial_label": "b",
+            "port": "Argument(1)"
+          }
+        ]
+      }
+    },
+    {
+      "find": "methods",
+      "where": [
+        {
+          "constraint": "signature_match",
+          "parent": "Landroid/text/style/URLSpan;",
+          "name": "<init>"
+        }
+      ],
+      "model": {
+        "sinks": [
+          {
+            "kind": "LaunchingComponent",
+            "port": "Argument(1)"
+          },
+          {
+            "kind": "LaunchingComponent",
+            "partial_label": "a",
+            "port": "Argument(1)"
+          },
+          {
+            "kind": "LaunchingComponent",
+            "partial_label": "b",
+            "port": "Argument(1)"
+          }
+        ]
+      }
+    },
+    {
+      "find": "methods",
+      "where": [
+        {
+          "constraint": "signature_match",
+          "parent": "Landroid/content/IntentSender;",
+          "name": "sendIntent"
+        }
+      ],
+      "model": {
+        "sinks": [
+          {
+            "kind": "LaunchingComponent",
+            "port": "Argument(3)"
+          }
+        ]
+      }
+    },
+    {
+      "find": "methods",
+      "where": [
+        {
+          "constraint": "signature_match",
+          "parents": [
+            "Landroid/app/Notification$Builder;",
+            "Landroid/app/Notification$Action$Builder;",
+            "Landroid/app/Notification$BubbleMetadata$Builder;",
+            "Landroidx/core/app/NotificationCompat$Builder;",
+            "Landroidx/core/app/NotificationCompat$Action;",
+            "Landroidx/core/app/NotificationCompat$Action$Builder;",
+            "Landroidx/core/app/NotificationCompat$BubbleMetadata;",
+            "Landroidx/core/app/NotificationCompat$BubbleMetadata$Builder;"
+          ],
+          "names": [
+            "<init>",
+            "addAction",
+            "setContentIntent",
+            "setDeleteIntent",
+            "setFullScreenIntent",
+            "setIntent"
+          ]
+        }
+      ],
+      "model": {
+        "for_all_parameters": [
+          {
+            "variable": "x",
+            "where": [
+              {
+                "constraint": "name",
+                "pattern": "Landroid/app/PendingIntent;"
+              }
+            ],
+            "sinks": [
+              {
+                "kind": "LaunchingComponent",
+                "port": "Argument(x)"
+              },
+              {
+                "kind": "LaunchingComponent",
+                "partial_label": "a",
+                "port": "Argument(x)"
+              },
+              {
+                "kind": "LaunchingComponent",
+                "partial_label": "b",
+                "port": "Argument(x)"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "find": "methods",
+      "where": [
+        {
+          "constraint": "signature_match",
+          "parents": [
+            "Landroid/app/TaskStackBuilder;",
+            "Landroidx/core/app/TaskStackBuilder;"
+          ],
+          "names": [
+            "addNextIntent",
+            "addNextIntentWithParentStack"
+          ]
+        }
+      ],
+      "model": {
+        "modes": [
+          "skip-analysis",
+          "no-join-virtual-overrides"
+        ],
+        "sinks": [
+          {
+            "kind": "LaunchingComponent",
+            "port": "Argument(1)"
+          },
+          {
+            "kind": "LaunchingComponent",
+            "partial_label": "a",
+            "port": "Argument(1)"
+          },
+          {
+            "kind": "LaunchingComponent",
+            "partial_label": "b",
+            "port": "Argument(1)"
+          }
+        ]
+      }
+    },
+    {
+      "find": "methods",
+      "where": [
+        {
+          "constraint": "signature_match",
+          "parent": "Landroid/app/PendingIntent;",
+          "name": "send"
+        }
+      ],
+      "model": {
+        "sinks": [
+          {
+            "kind": "LaunchingComponent",
+            "port": "Argument(0)"
+          },
+          {
+            "kind": "LaunchingComponent",
+            "partial_label": "a",
+            "port": "Argument(0)"
+          },
+          {
+            "kind": "LaunchingComponent",
+            "partial_label": "b",
+            "port": "Argument(0)"
           }
         ]
       }

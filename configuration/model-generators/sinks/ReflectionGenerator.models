@@ -43,17 +43,12 @@
       "find": "methods",
       "where": [
         {
-          "constraint": "any_of",
-          "inners": [
-            {
-              "constraint": "signature_match",
-              "parents": [
-                "Landroid/app/FragmentManager;",
-                "Landroidx/fragment/app/FragmentManager;"
-              ],
-              "name": "findFragmentByTag"
-            }
-          ]
+          "constraint": "signature_match",
+          "parents": [
+            "Landroid/app/FragmentManager;",
+            "Landroidx/fragment/app/FragmentManager;"
+          ],
+          "name": "findFragmentByTag"
         }
       ],
       "model": {
