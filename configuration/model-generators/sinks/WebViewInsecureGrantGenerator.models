@@ -1,0 +1,66 @@
+{
+  "model_generators": [
+    {
+      "find": "methods",
+      "where": [
+        {
+          "constraint": "signature_match",
+          "parents": [
+            "Landroid/webkit/ClientCertRequest;",
+            "Landroid/webkit/GeolocationPermissions$Callback;",
+            "Landroid/webkit/PermissionRequest;"
+          ],
+          "names": [
+            "proceed",
+            "invoke",
+            "grant"
+          ]
+        }
+      ],
+      "model": {
+        "sinks": [
+          {
+            "kind": "WebViewGrantCheck",
+            "port": "Argument(0)"
+          }
+        ]
+      }
+    },
+    {
+      "find": "methods",
+      "where": [
+        {
+          "constraint": "signature_match",
+          "parent": "Landroid/webkit/SslErrorHandler;",
+          "name": "proceed"
+        }
+      ],
+      "model": {
+        "sinks": [
+          {
+            "kind": "WebViewSslErrorHandlerProceed",
+            "port": "Argument(0)"
+          }
+        ]
+      }
+    },
+    {
+      "find": "methods",
+      "where": [
+        {
+          "constraint": "signature_match",
+          "parent": "Landroid/webkit/GeolocationPermissions;",
+          "name": "allow"
+        }
+      ],
+      "model": {
+        "sinks": [
+          {
+            "kind": "WebViewGrantCheck",
+            "port": "Argument(1)"
+          }
+        ]
+      }
+    }
+  ]
+}
