@@ -1,0 +1,22 @@
+{
+  "model_generators": [
+    {
+      "find": "methods",
+      "where": [
+        {
+          "constraint": "signature_match",
+          "parent": "Landroid/webkit/ValueCallback;",
+          "name": "onReceiveValue"
+        }
+      ],
+      "model": {
+        "sinks": [
+          {
+            "kind": "WebViewFileResolver",
+            "port": "Argument(1)"
+          }
+        ]
+      }
+    }
+  ]
+}
