@@ -19,6 +19,7 @@
 #include <mariana-trench/Access.h>
 #include <mariana-trench/Context.h>
 #include <mariana-trench/FeatureSet.h>
+#include <mariana-trench/Frame.h>
 #include <mariana-trench/IncludeMacros.h>
 #include <mariana-trench/Issue.h>
 #include <mariana-trench/IssueSet.h>
@@ -284,6 +285,9 @@ class Model final {
   FeatureSet attach_to_propagations(Root root) const;
 
   void add_add_features_to_arguments(Root root, FeatureSet features);
+  void add_add_via_value_of_features_to_arguments(
+      Root root,
+      RootSetAbstractDomain via_value_of_ports);
   bool has_add_features_to_arguments() const;
   FeatureSet add_features_to_arguments(Root root) const;
 
@@ -397,6 +401,8 @@ class Model final {
   RootPatriciaTreeAbstractPartition<FeatureSet> attach_to_sinks_;
   RootPatriciaTreeAbstractPartition<FeatureSet> attach_to_propagations_;
   RootPatriciaTreeAbstractPartition<FeatureSet> add_features_to_arguments_;
+  RootPatriciaTreeAbstractPartition<RootSetAbstractDomain>
+      add_via_value_of_features_to_arguments_;
   AccessPathConstantDomain inline_as_getter_;
   SetterAccessPathConstantDomain inline_as_setter_;
   ModelGeneratorNameSet model_generators_;

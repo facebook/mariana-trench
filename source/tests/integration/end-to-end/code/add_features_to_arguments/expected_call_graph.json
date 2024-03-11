@@ -241,6 +241,18 @@
       "Lcom/facebook/marianatrench/integrationtests/Flow;.applyFeature:(Ljava/lang/Object;Ljava/lang/Object;)V"
     ]
   },
+  "Lcom/facebook/marianatrench/integrationtests/Flow;.testViaValueOf:()V" : 
+  {
+    "static" : 
+    [
+      "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
+      "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;"
+    ],
+    "virtual" : 
+    [
+      "Lcom/facebook/marianatrench/integrationtests/Flow;.applyViaValueOf:(Ljava/lang/Object;Ljava/lang/String;)V"
+    ]
+  },
   "Lcom/facebook/marianatrench/integrationtests/Origin;.<init>:()V" : 
   {
     "static" : 

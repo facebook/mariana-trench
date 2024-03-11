@@ -27,5 +27,16 @@
         "port": "Argument(1)"
       }
     ]
+  },
+  {
+    "method": "Lcom/facebook/marianatrench/integrationtests/Flow;.applyViaValueOf:(Ljava/lang/Object;Ljava/lang/String;)V",
+    "add_features_to_arguments": [
+      {
+        "via_value_of": [
+          "Argument(2)"
+        ],
+        "port": "Argument(1)"
+      }
+    ]
   }
 ]

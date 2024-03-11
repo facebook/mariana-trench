@@ -36,6 +36,10 @@
     "Lcom/facebook/marianatrench/integrationtests/Flow;.hop1:(Ljava/lang/Object;Ljava/lang/Object;)V",
     "Lcom/facebook/marianatrench/integrationtests/Flow;.hop2:(Ljava/lang/Object;)V"
   ],
+  "Lcom/facebook/marianatrench/integrationtests/Flow;.applyViaValueOf:(Ljava/lang/Object;Ljava/lang/String;)V" : 
+  [
+    "Lcom/facebook/marianatrench/integrationtests/Flow;.testViaValueOf:()V"
+  ],
   "Lcom/facebook/marianatrench/integrationtests/Flow;.hop1:(Ljava/lang/Object;Ljava/lang/Object;)V" : 
   [
     "Lcom/facebook/marianatrench/integrationtests/Flow;.flow:()V"
@@ -46,11 +50,13 @@
   ],
   "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V" : 
   [
-    "Lcom/facebook/marianatrench/integrationtests/Flow;.flow:()V"
+    "Lcom/facebook/marianatrench/integrationtests/Flow;.flow:()V",
+    "Lcom/facebook/marianatrench/integrationtests/Flow;.testViaValueOf:()V"
   ],
   "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;" : 
   [
-    "Lcom/facebook/marianatrench/integrationtests/Flow;.flow:()V"
+    "Lcom/facebook/marianatrench/integrationtests/Flow;.flow:()V",
+    "Lcom/facebook/marianatrench/integrationtests/Flow;.testViaValueOf:()V"
   ],
   "Lcom/facebook/secure/context/IntentLauncher;.<init>:()V" : 
   [

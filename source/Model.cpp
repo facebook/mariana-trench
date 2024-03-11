@@ -17,6 +17,7 @@
 #include <mariana-trench/Constants.h>
 #include <mariana-trench/EventLogger.h>
 #include <mariana-trench/FeatureFactory.h>
+#include <mariana-trench/FeatureSet.h>
 #include <mariana-trench/FieldCache.h>
 #include <mariana-trench/Heuristics.h>
 #include <mariana-trench/JsonValidation.h>
@@ -246,6 +247,8 @@ bool Model::operator==(const Model& other) const {
       attach_to_sinks_ == other.attach_to_sinks_ &&
       attach_to_propagations_ == other.attach_to_propagations_ &&
       add_features_to_arguments_ == other.add_features_to_arguments_ &&
+      add_via_value_of_features_to_arguments_ ==
+      other.add_via_value_of_features_to_arguments_ &&
       inline_as_getter_ == other.inline_as_getter_ &&
       inline_as_setter_ == other.inline_as_setter_ &&
       model_generators_ == other.model_generators_ && issues_ == other.issues_;
@@ -305,6 +308,11 @@ Model Model::instantiate(const Method* method, Context& context) const {
 
   for (const auto& [root, features] : add_features_to_arguments_) {
     model.add_add_features_to_arguments(root, features);
+  }
+
+  for (const auto& [root, via_value_of_ports] :
+       add_via_value_of_features_to_arguments_) {
+    model.add_add_via_value_of_features_to_arguments(root, via_value_of_ports);
   }
 
   model.set_inline_as_getter(inline_as_getter_);
@@ -479,6 +487,26 @@ Model Model::at_callsite(
       });
 
   model.add_features_to_arguments_ = add_features_to_arguments_;
+  // Materialize via_value_of_ports into features and add them to
+  // add_features_to_arguments
+  for (const auto& [root, via_value_of_ports] :
+       add_via_value_of_features_to_arguments_) {
+    FeatureSet root_features{};
+    for (const auto& port : via_value_of_ports) {
+      if (!port.is_argument() ||
+          port.parameter_position() >= source_constant_arguments.size()) {
+        ERROR(
+            1,
+            "Invalid port {} provided for add_via_value_of_features_to_arguments_ ports of method {}",
+            port,
+            callee->show());
+        continue;
+      }
+      root_features.add(context.feature_factory->get_via_value_of_feature(
+          source_constant_arguments[port.parameter_position()]));
+    }
+    model.add_add_features_to_arguments(root, std::move(root_features));
+  }
 
   model.inline_as_getter_ = inline_as_getter_;
   model.inline_as_setter_ = inline_as_setter_;
@@ -614,9 +642,10 @@ bool Model::empty() const {
       propagations_.is_bottom() && global_sanitizers_.is_bottom() &&
       port_sanitizers_.is_bottom() && attach_to_sources_.is_bottom() &&
       attach_to_sinks_.is_bottom() && attach_to_propagations_.is_bottom() &&
-      add_features_to_arguments_.is_bottom() && inline_as_getter_.is_bottom() &&
-      inline_as_setter_.is_bottom() && model_generators_.is_bottom() &&
-      issues_.is_bottom();
+      add_features_to_arguments_.is_bottom() &&
+      add_via_value_of_features_to_arguments_.is_bottom() &&
+      inline_as_getter_.is_bottom() && inline_as_setter_.is_bottom() &&
+      model_generators_.is_bottom() && issues_.is_bottom();
 }
 
 void Model::add_mode(Model::Mode mode, Context& context) {
@@ -904,6 +933,19 @@ void Model::add_add_features_to_arguments(Root root, FeatureSet features) {
       root, [&features](const FeatureSet& set) { return set.join(features); });
 }
 
+void Model::add_add_via_value_of_features_to_arguments(
+    Root root,
+    RootSetAbstractDomain via_value_of_ports) {
+  if (!check_root_consistency(root)) {
+    return;
+  }
+
+  add_via_value_of_features_to_arguments_.update(
+      root, [&via_value_of_ports](const RootSetAbstractDomain& set) {
+        return set.join(via_value_of_ports);
+      });
+}
+
 bool Model::has_add_features_to_arguments() const {
   return !add_features_to_arguments_.is_bottom();
 }
@@ -1021,6 +1063,8 @@ bool Model::leq(const Model& other) const {
       attach_to_sinks_.leq(other.attach_to_sinks_) &&
       attach_to_propagations_.leq(other.attach_to_propagations_) &&
       add_features_to_arguments_.leq(other.add_features_to_arguments_) &&
+      add_via_value_of_features_to_arguments_.leq(
+          other.add_via_value_of_features_to_arguments_) &&
       inline_as_getter_.leq(other.inline_as_getter_) &&
       inline_as_setter_.leq(other.inline_as_setter_) &&
       model_generators_.leq(other.model_generators_) &&
@@ -1065,6 +1109,8 @@ void Model::join_with(const Model& other) {
   attach_to_sinks_.join_with(other.attach_to_sinks_);
   attach_to_propagations_.join_with(other.attach_to_propagations_);
   add_features_to_arguments_.join_with(other.add_features_to_arguments_);
+  add_via_value_of_features_to_arguments_.join_with(
+      other.add_via_value_of_features_to_arguments_);
   inline_as_getter_.join_with(other.inline_as_getter_);
   inline_as_setter_.join_with(other.inline_as_setter_);
   model_generators_.join_with(other.model_generators_);
@@ -1311,14 +1357,26 @@ Model Model::from_json(
   for (auto add_features_to_arguments_value : JsonValidation::null_or_array(
            value, /* field */ "add_features_to_arguments")) {
     JsonValidation::check_unexpected_members(
-        add_features_to_arguments_value, {"port", "features"});
+        add_features_to_arguments_value, {"port", "features", "via_value_of"});
     JsonValidation::string(add_features_to_arguments_value, /* field */ "port");
     auto root = Root::from_json(add_features_to_arguments_value["port"]);
-    JsonValidation::null_or_array(
-        add_features_to_arguments_value, /* field */ "features");
-    auto features = FeatureSet::from_json(
-        add_features_to_arguments_value["features"], context);
-    model.add_add_features_to_arguments(root, features);
+    if (add_features_to_arguments_value.isMember("features")) {
+      auto features = FeatureSet::from_json(
+          JsonValidation::nonempty_array(
+              add_features_to_arguments_value, /* field */ "features"),
+          context);
+      model.add_add_features_to_arguments(root, features);
+    }
+
+    if (add_features_to_arguments_value.isMember("via_value_of")) {
+      RootSetAbstractDomain via_value_of_ports;
+      for (const auto& port : JsonValidation::nonempty_array(
+               add_features_to_arguments_value, "via_value_of")) {
+        via_value_of_ports.add(Root::from_json(JsonValidation::string(port)));
+      }
+      model.add_add_via_value_of_features_to_arguments(
+          root, std::move(via_value_of_ports));
+    }
   }
 
   if (value.isMember("inline_as_getter")) {
@@ -1492,8 +1550,8 @@ Json::Value Model::to_json(ExportOriginsMode export_origins_mode) const {
     value["attach_to_propagations"] = attach_to_propagations_value;
   }
 
+  auto add_features_to_arguments_value = Json::Value(Json::arrayValue);
   if (!add_features_to_arguments_.is_bottom()) {
-    auto add_features_to_arguments_value = Json::Value(Json::arrayValue);
     for (const auto& [root, features] : add_features_to_arguments_) {
       auto add_features_to_arguments_root_value =
           Json::Value(Json::objectValue);
@@ -1502,6 +1560,25 @@ Json::Value Model::to_json(ExportOriginsMode export_origins_mode) const {
       add_features_to_arguments_value.append(
           add_features_to_arguments_root_value);
     }
+  }
+  if (!add_via_value_of_features_to_arguments_.is_bottom()) {
+    for (const auto& [root, via_value_of] :
+         add_via_value_of_features_to_arguments_) {
+      auto add_via_value_of_features_to_arguments_root_value =
+          Json::Value(Json::objectValue);
+      add_via_value_of_features_to_arguments_root_value["port"] =
+          root.to_json();
+
+      auto ports = Json::Value(Json::arrayValue);
+      for (const auto& port : via_value_of) {
+        ports.append(port.to_json());
+      }
+      add_via_value_of_features_to_arguments_root_value["via_value_of"] = ports;
+      add_features_to_arguments_value.append(
+          add_via_value_of_features_to_arguments_root_value);
+    }
+  }
+  if (!add_features_to_arguments_value.empty()) {
     value["add_features_to_arguments"] = add_features_to_arguments_value;
   }
 
@@ -1654,6 +1731,14 @@ std::ostream& operator<<(std::ostream& out, const Model& model) {
     out << ",\n add_features_to_arguments={\n";
     for (const auto& [root, features] : model.add_features_to_arguments_) {
       out << "    " << root << " -> " << features << ",\n";
+    }
+    out << "  }";
+  }
+  if (!model.add_via_value_of_features_to_arguments_.is_bottom()) {
+    out << ",\n add_via_value_of_features_to_arguments={\n";
+    for (const auto& [root, via_value_of_ports] :
+         model.add_via_value_of_features_to_arguments_) {
+      out << "    " << root << " -> " << via_value_of_ports.elements() << ",\n";
     }
     out << "  }";
   }

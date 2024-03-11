@@ -11,6 +11,8 @@ public class Flow {
 
   void applyFeature(Object attach_features, Object no_attached_features) {}
 
+  void applyViaValueOf(Object source, String via_value) {}
+
   void hop1(Object argument1, Object argument2) {
     // Switching the argument port, to make sure we infer the features on the argument corresponding
     // to the caller (Argument(2) here), not the callee (Argument(1))
@@ -32,5 +34,11 @@ public class Flow {
     Origin.sink(expect_feature);
     Origin.sink(source1);
     Origin.sink(source2);
+  }
+
+  void testViaValueOf() {
+    Object expect_feature = Origin.source();
+    applyViaValueOf(expect_feature, "apply-via-value-of");
+    Origin.sink(expect_feature);
   }
 }
