@@ -29,4 +29,10 @@ public class RecorderActivity extends FragmentActivity {
   public void badViaTypeOfPort() {
     Origin.sink(Origin.source());
   }
+
+  private static void sinkViaClass(Object source, Class klass) {}
+
+  public void reflectionViaTypeOfPort() {
+    sinkViaClass(Origin.source(), TestUri.class);
+  }
 }

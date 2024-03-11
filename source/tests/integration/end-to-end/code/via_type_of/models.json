@@ -43,5 +43,17 @@
         "port": "Argument(0)"
       }
     ]
+  },
+  {
+    "method": "Lcom/facebook/marianatrench/integrationtests/RecorderActivity;.sinkViaClass:(Ljava/lang/Object;Ljava/lang/Class;)V",
+    "sinks": [
+      {
+        "kind": "Sink",
+        "port": "Argument(0)",
+        "via_type_of": [
+          "Argument(1)"
+        ]
+      }
+    ]
   }
 ]

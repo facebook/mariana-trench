@@ -6,6 +6,7 @@
  */
 
 #include <Show.h>
+#include <TypeUtil.h>
 
 #include <mariana-trench/FeatureFactory.h>
 #include <mariana-trench/Log.h>
@@ -25,8 +26,18 @@ std::vector<const DexType * MT_NULLABLE> get_source_register_types(
     const IRInstruction* instruction) {
   std::vector<const DexType* MT_NULLABLE> register_types = {};
   for (auto source_register : instruction->srcs()) {
-    register_types.push_back(context->types.register_type(
-        context->method(), instruction, source_register));
+    const auto* register_type = context->types.register_type(
+        context->method(), instruction, source_register);
+
+    if (register_type == type::java_lang_Class()) {
+      if (const auto* const_class_type =
+              context->types.register_const_class_type(
+                  context->method(), instruction, source_register)) {
+        register_type = const_class_type;
+      }
+    }
+
+    register_types.push_back(register_type);
   }
   return register_types;
 }

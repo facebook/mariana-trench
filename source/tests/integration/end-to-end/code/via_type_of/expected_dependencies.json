@@ -50,7 +50,12 @@
   ],
   "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;" : 
   [
-    "Lcom/facebook/marianatrench/integrationtests/RecorderActivity;.badViaTypeOfPort:()V"
+    "Lcom/facebook/marianatrench/integrationtests/RecorderActivity;.badViaTypeOfPort:()V",
+    "Lcom/facebook/marianatrench/integrationtests/RecorderActivity;.reflectionViaTypeOfPort:()V"
+  ],
+  "Lcom/facebook/marianatrench/integrationtests/RecorderActivity;.sinkViaClass:(Ljava/lang/Object;Ljava/lang/Class;)V" : 
+  [
+    "Lcom/facebook/marianatrench/integrationtests/RecorderActivity;.reflectionViaTypeOfPort:()V"
   ],
   "Lcom/facebook/marianatrench/integrationtests/TestUri;.<init>:()V" : 
   [
