@@ -1,0 +1,47 @@
+{
+  "model_generators": [
+    {
+      "find": "methods",
+      "where": [
+        {
+          "constraint": "signature_match",
+          "parent": "Landroid/net/Uri$Builder;",
+          "names": [
+            "path",
+            "appendEncodedPath",
+            "encodedPath"
+          ]
+        }
+      ],
+      "model": {
+        "sinks": [
+          {
+            "kind": "HTTPPath",
+            "port": "Argument(1)"
+          }
+        ]
+      }
+    },
+    {
+      "find": "methods",
+      "where": [
+        {
+          "constraint": "signature_match",
+          "parent": "Landroid/net/Uri$Builder;",
+          "names": [
+            "authority",
+            "encodedAuthority"
+          ]
+        }
+      ],
+      "model": {
+        "sinks": [
+          {
+            "kind": "HTTPDomain",
+            "port": "Argument(1)"
+          }
+        ]
+      }
+    }
+  ]
+}
