@@ -775,7 +775,7 @@ def main() -> None:
 
         # Build the vanilla java project.
         if configuration.FACEBOOK_SHIM and arguments.java_target:
-            if arguments.java_target.endswith(".jar"):
+            if os.path.isfile(arguments.java_target):
                 jar_file = Path(arguments.java_target)
             else:
                 jar_file = _extract_jex_file_if_exists(
