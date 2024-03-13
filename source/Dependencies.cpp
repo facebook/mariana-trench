@@ -17,6 +17,7 @@
 #include <mariana-trench/Assert.h>
 #include <mariana-trench/Dependencies.h>
 #include <mariana-trench/Heuristics.h>
+#include <mariana-trench/JsonReaderWriter.h>
 #include <mariana-trench/JsonValidation.h>
 #include <mariana-trench/Log.h>
 #include <mariana-trench/Methods.h>
@@ -166,7 +167,7 @@ void Dependencies::dump_dependencies(
     return value;
   };
 
-  JsonValidation::write_sharded_json_files(
+  JsonWriter::write_sharded_json_files(
       output_directory,
       batch_size,
       total_elements,

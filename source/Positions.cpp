@@ -25,6 +25,7 @@
 #include <Walkers.h>
 
 #include <mariana-trench/Assert.h>
+#include <mariana-trench/JsonReaderWriter.h>
 #include <mariana-trench/JsonValidation.h>
 #include <mariana-trench/Log.h>
 #include <mariana-trench/Positions.h>
@@ -262,7 +263,7 @@ Positions::Positions(const Options& options, const DexStoresVector& stores) {
 
     if (auto grepo_metadata_path = options.grepo_metadata_path();
         !grepo_metadata_path.empty()) {
-      auto metadata_json = JsonValidation::parse_json_file(grepo_metadata_path);
+      auto metadata_json = JsonReader::parse_json_file(grepo_metadata_path);
       JsonValidation::validate_object(metadata_json);
 
       // This command lists all tracked java and kotlin files in all sub

@@ -22,7 +22,7 @@
 #include <Resolver.h>
 
 #include <mariana-trench/Assert.h>
-#include <mariana-trench/JsonValidation.h>
+#include <mariana-trench/JsonReaderWriter.h>
 #include <mariana-trench/Log.h>
 #include <mariana-trench/Options.h>
 #include <mariana-trench/Redex.h>
@@ -178,7 +178,7 @@ void redex::remove_unreachable(
     for (const auto& symbol : removed_symbols) {
       value.append(symbol);
     }
-    JsonValidation::write_json_file(*removed_symbols_path, value);
+    JsonWriter::write_json_file(*removed_symbols_path, value);
   }
 
   reachability::ObjectCounts after = reachability::count_objects(stores);

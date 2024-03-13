@@ -13,7 +13,7 @@
 #include <Walkers.h>
 
 #include <mariana-trench/Assert.h>
-#include <mariana-trench/JsonValidation.h>
+#include <mariana-trench/JsonReaderWriter.h>
 #include <mariana-trench/Log.h>
 #include <mariana-trench/Methods.h>
 #include <mariana-trench/Overrides.h>
@@ -50,7 +50,7 @@ Overrides::Overrides(
   if (options.dump_overrides()) {
     auto overrides_path = options.overrides_output_path();
     LOG(1, "Writing override graph to `{}`", overrides_path.native());
-    JsonValidation::write_json_file(overrides_path, to_json());
+    JsonWriter::write_json_file(overrides_path, to_json());
   }
 }
 

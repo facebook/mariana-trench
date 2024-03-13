@@ -11,6 +11,7 @@
 
 #include <mariana-trench/EventLogger.h>
 #include <mariana-trench/IntentRoutingAnalyzer.h>
+#include <mariana-trench/JsonReaderWriter.h>
 #include <mariana-trench/Options.h>
 #include <mariana-trench/shim-generator/ShimGeneration.h>
 #include <mariana-trench/shim-generator/ShimGenerator.h>
@@ -64,7 +65,7 @@ Shims ShimGeneration::run(
     LOG(1, "Processing shim generator at: {}", path);
     try {
       auto shim_generators =
-          get_shim_generators(context, JsonValidation::parse_json_file(path));
+          get_shim_generators(context, JsonReader::parse_json_file(path));
 
       all_shims.insert(
           all_shims.end(),

@@ -5,6 +5,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
+#include <mariana-trench/JsonReaderWriter.h>
 #include <mariana-trench/JsonValidation.h>
 #include <mariana-trench/KindFactory.h>
 #include <mariana-trench/Log.h>
@@ -783,9 +784,9 @@ std::optional<Model> ModelTemplate::instantiate(
         "Method `{}` generates no new sinks/generations/propagations/sources from {} for_all_parameters constraints:\nInstantiated model: {}.\nModel template: {}.",
         method->show(),
         for_all_parameters_.size(),
-        JsonValidation::to_styled_string(
+        JsonWriter::to_styled_string(
             model.to_json(context.options->export_origins_mode())),
-        JsonValidation::to_styled_string(
+        JsonWriter::to_styled_string(
             model_.to_json(context.options->export_origins_mode())));
     return std::nullopt;
   }

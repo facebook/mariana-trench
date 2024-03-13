@@ -10,6 +10,7 @@
 #include <boost/algorithm/string.hpp>
 #include <fmt/format.h>
 
+#include <mariana-trench/JsonReaderWriter.h>
 #include <mariana-trench/JsonValidation.h>
 #include <mariana-trench/Log.h>
 #include <mariana-trench/Options.h>
@@ -80,7 +81,7 @@ std::vector<ModelGeneratorConfiguration> parse_json_configuration_files(
     const std::vector<std::string>& paths) {
   std::vector<ModelGeneratorConfiguration> result;
   for (const auto& path : paths) {
-    Json::Value json = JsonValidation::parse_json_file(path);
+    Json::Value json = JsonReader::parse_json_file(path);
     for (const auto& value : JsonValidation::null_or_array(json)) {
       result.push_back(ModelGeneratorConfiguration::from_json(value));
     }

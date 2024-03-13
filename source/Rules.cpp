@@ -7,6 +7,7 @@
 
 #include <Show.h>
 
+#include <mariana-trench/JsonReaderWriter.h>
 #include <mariana-trench/JsonValidation.h>
 #include <mariana-trench/KindFactory.h>
 #include <mariana-trench/Log.h>
@@ -37,7 +38,7 @@ Rules Rules::load(Context& context, const Options& options) {
   Rules rules(context);
 
   for (const auto& rules_path : options.rules_paths()) {
-    auto rules_value = JsonValidation::parse_json_file(rules_path);
+    auto rules_value = JsonReader::parse_json_file(rules_path);
     for (const auto& rule_value : JsonValidation::null_or_array(rules_value)) {
       rules.add(context, Rule::from_json(rule_value, context));
     }
@@ -53,8 +54,8 @@ void Rules::add(Context& context, std::unique_ptr<Rule> rule) {
         1,
         "A rule for code {} already exists! Duplicate rules are:\n{}\n{}",
         rule->code(),
-        JsonValidation::to_styled_string(rule->to_json()),
-        JsonValidation::to_styled_string(existing->second->to_json()));
+        JsonWriter::to_styled_string(rule->to_json()),
+        JsonWriter::to_styled_string(existing->second->to_json()));
     return;
   }
 

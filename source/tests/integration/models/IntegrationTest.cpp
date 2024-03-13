@@ -25,7 +25,7 @@
 #include <mariana-trench/Fields.h>
 #include <mariana-trench/Filesystem.h>
 #include <mariana-trench/Interprocedural.h>
-#include <mariana-trench/JsonValidation.h>
+#include <mariana-trench/JsonReaderWriter.h>
 #include <mariana-trench/Log.h>
 #include <mariana-trench/Options.h>
 #include <mariana-trench/Overrides.h>
@@ -565,7 +565,7 @@ TEST_P(IntegrationTest, ReturnsExpectedModel) {
   if (std::filesystem::exists(expected_path)) {
     filesystem::load_string_file(expected_path, expected_output);
   }
-  auto models_output = JsonValidation::to_styled_string(value);
+  auto models_output = JsonWriter::to_styled_string(value);
   models_output =
       boost::regex_replace(models_output, boost::regex("\\s+\n"), "\n");
   models_output += "\n";

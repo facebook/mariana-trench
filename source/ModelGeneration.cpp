@@ -15,7 +15,7 @@
 #include <mariana-trench/Context.h>
 #include <mariana-trench/Dependencies.h>
 #include <mariana-trench/EventLogger.h>
-#include <mariana-trench/JsonValidation.h>
+#include <mariana-trench/JsonReaderWriter.h>
 #include <mariana-trench/Log.h>
 #include <mariana-trench/ModelGeneration.h>
 #include <mariana-trench/Options.h>
@@ -56,7 +56,7 @@ make_model_generators(Context& context) {
           context.model_generator_name_factory->create(identifier);
 
       try {
-        Json::Value json = JsonValidation::parse_json_file(entry.path());
+        Json::Value json = JsonReader::parse_json_file(entry.path());
 
         if (!json.isObject()) {
           // TODO(T153463464): We always validate .models files, but still
@@ -233,7 +233,7 @@ ModelGeneratorResult ModelGeneration::run(
 
       // Merge models
       auto registry = Registry(context, models, field_models);
-      JsonValidation::write_json_file(
+      JsonWriter::write_json_file(
           *generated_models_directory + "/" +
               model_generator->name()->identifier() + ".json",
           registry.models_to_json());

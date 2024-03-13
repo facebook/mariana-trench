@@ -17,6 +17,7 @@
 
 #include <mariana-trench/Constants.h>
 #include <mariana-trench/Filesystem.h>
+#include <mariana-trench/JsonReaderWriter.h>
 #include <mariana-trench/JsonValidation.h>
 #include <mariana-trench/Log.h>
 #include <mariana-trench/Methods.h>
@@ -89,7 +90,7 @@ Registry Registry::load(
   for (const auto& models_path : options.models_paths()) {
     registry.join_with(Registry(
         context,
-        /* models_value */ JsonValidation::parse_json_file(models_path),
+        /* models_value */ JsonReader::parse_json_file(models_path),
         /* field_models_value */ Json::Value(Json::arrayValue),
         /* literal_models_value */ Json::Value(Json::arrayValue)));
   }
@@ -98,7 +99,7 @@ Registry Registry::load(
         context,
         /* models_value */ Json::Value(Json::arrayValue),
         /* field_models_value */
-        JsonValidation::parse_json_file(field_models_path),
+        JsonReader::parse_json_file(field_models_path),
         /* literal_models_value */ Json::Value(Json::arrayValue)));
   }
   for (const auto& literal_models_path : options.literal_models_paths()) {
@@ -107,7 +108,7 @@ Registry Registry::load(
         /* models_value */ Json::Value(Json::arrayValue),
         /* field_models_value */ Json::Value(Json::arrayValue),
         /* literal_models_value */
-        JsonValidation::parse_json_file(literal_models_path)));
+        JsonReader::parse_json_file(literal_models_path)));
   }
 
   // Add a default model for methods that don't have one
@@ -264,11 +265,11 @@ void Registry::dump_metadata(const std::filesystem::path& path) const {
   value["tool"] = Json::Value("mariana_trench");
   value["version"] = Json::Value("0.2");
 
-  JsonValidation::write_json_file(path, value);
+  JsonWriter::write_json_file(path, value);
 }
 
 std::string Registry::dump_models() const {
-  auto writer = JsonValidation::compact_writer();
+  auto writer = JsonWriter::compact_writer();
   std::stringstream string;
   string << "// @";
   string << "generated\n";
@@ -338,7 +339,7 @@ void Registry::dump_models(
     }
   };
 
-  JsonValidation::write_sharded_json_files(
+  JsonWriter::write_sharded_json_files(
       path, batch_size, total_elements, "model@", get_json_line);
 }
 
@@ -403,7 +404,7 @@ void Registry::dump_rule_coverage_info(
 
   auto rule_coverage = RulesCoverage::create(
       *(context_.rules), used_sources, used_sinks, used_transforms);
-  JsonValidation::write_json_file(output_path, rule_coverage.to_json());
+  JsonWriter::write_json_file(output_path, rule_coverage.to_json());
 }
 
 } // namespace marianatrench

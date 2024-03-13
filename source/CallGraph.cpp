@@ -22,6 +22,7 @@
 #include <mariana-trench/CallGraph.h>
 #include <mariana-trench/FeatureFactory.h>
 #include <mariana-trench/FeatureSet.h>
+#include <mariana-trench/JsonReaderWriter.h>
 #include <mariana-trench/JsonValidation.h>
 #include <mariana-trench/Log.h>
 #include <mariana-trench/Methods.h>
@@ -1356,7 +1357,7 @@ void CallGraph::dump_call_graph(
     return value;
   };
 
-  JsonValidation::write_sharded_json_files(
+  JsonWriter::write_sharded_json_files(
       output_directory,
       batch_size,
       total_elements,

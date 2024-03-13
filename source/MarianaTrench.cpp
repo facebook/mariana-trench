@@ -26,7 +26,7 @@
 #include <mariana-trench/Fields.h>
 #include <mariana-trench/Highlights.h>
 #include <mariana-trench/Interprocedural.h>
-#include <mariana-trench/JsonValidation.h>
+#include <mariana-trench/JsonReaderWriter.h>
 #include <mariana-trench/Kind.h>
 #include <mariana-trench/LifecycleMethods.h>
 #include <mariana-trench/Log.h>
@@ -77,7 +77,7 @@ Registry MarianaTrench::analyze(Context& context) {
     }
     auto methods_path = context.options->methods_output_path();
     LOG(1, "Writing methods to `{}`.", methods_path.native());
-    JsonValidation::write_json_file(methods_path, method_list);
+    JsonWriter::write_json_file(methods_path, method_list);
   }
   LOG(1,
       "Stored all methods in {:.2f}s. Memory used, RSS: {:.2f}GB",

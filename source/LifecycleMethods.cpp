@@ -5,6 +5,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
+#include <mariana-trench/JsonReaderWriter.h>
 #include <mariana-trench/LifecycleMethods.h>
 #include <mariana-trench/Options.h>
 
@@ -22,8 +23,7 @@ LifecycleMethods LifecycleMethods::run(
     Methods& methods) {
   LifecycleMethods lifecycle_methods;
   for (const auto& path : options.lifecycles_paths()) {
-    lifecycle_methods.add_methods_from_json(
-        JsonValidation::parse_json_file(path));
+    lifecycle_methods.add_methods_from_json(JsonReader::parse_json_file(path));
   }
 
   for (auto& [_, lifecycle_method] : lifecycle_methods.lifecycle_methods_) {

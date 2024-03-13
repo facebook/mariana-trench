@@ -19,6 +19,7 @@
 
 #include <mariana-trench/Context.h>
 #include <mariana-trench/Filesystem.h>
+#include <mariana-trench/JsonReaderWriter.h>
 #include <mariana-trench/JsonValidation.h>
 #include <mariana-trench/Log.h>
 #include <mariana-trench/MarianaTrench.h>
@@ -67,7 +68,7 @@ void compare_expected(
     const std::string& filename,
     const std::string& expected,
     const Json::Value& actual) {
-  auto writer = JsonValidation::compact_writer();
+  auto writer = JsonWriter::compact_writer();
   std::ostringstream actual_string;
   actual_string << "// @";
   actual_string << "generated\n";
@@ -122,7 +123,7 @@ TEST_P(IntegrationTest, CompareFlows) {
     LOG(3, "Found generator configuration.");
 
     Json::Value json =
-        JsonValidation::parse_json_file(generator_configuration_file);
+        JsonReader::parse_json_file(generator_configuration_file);
     for (const auto& value : JsonValidation::null_or_array(json)) {
       model_generators_configurations.emplace_back(
           ModelGeneratorConfiguration::from_json(value));

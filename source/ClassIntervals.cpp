@@ -11,7 +11,7 @@
 #include <json/value.h>
 #include <mariana-trench/Assert.h>
 #include <mariana-trench/ClassIntervals.h>
-#include <mariana-trench/JsonValidation.h>
+#include <mariana-trench/JsonReaderWriter.h>
 #include <mariana-trench/Log.h>
 
 namespace marianatrench {
@@ -71,7 +71,7 @@ ClassIntervals::ClassIntervals(
   if (options.dump_class_intervals()) {
     auto class_intervals_path = options.class_intervals_output_path();
     LOG(1, "Writing class intervals to `{}`", class_intervals_path.native());
-    JsonValidation::write_json_file(class_intervals_path, to_json());
+    JsonWriter::write_json_file(class_intervals_path, to_json());
 
     // Dumping class intervals is test-only, perform additional, otherwise
     // unnecessary/expensive validation here.

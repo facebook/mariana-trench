@@ -16,7 +16,7 @@
 
 #include <mariana-trench/ClassProperties.h>
 #include <mariana-trench/Fields.h>
-#include <mariana-trench/JsonValidation.h>
+#include <mariana-trench/JsonReaderWriter.h>
 #include <mariana-trench/SanitizersOptions.h>
 #include <mariana-trench/shim-generator/ShimGeneration.h>
 #include <mariana-trench/tests/Test.h>
@@ -271,7 +271,7 @@ std::filesystem::path find_repository_root() {
 #endif
 
 Json::Value parse_json(std::string input) {
-  return JsonValidation::parse_json(std::move(input));
+  return JsonReader::parse_json(std::move(input));
 }
 
 Json::Value sorted_json(const Json::Value& value) {
@@ -407,7 +407,7 @@ std::string normalize_json_lines(const std::string& input) {
   std::sort(jsons.begin(), jsons.end(), stable_json_compare);
 
   for (const auto& json : jsons) {
-    auto normalized = JsonValidation::to_styled_string(json);
+    auto normalized = JsonWriter::to_styled_string(json);
     boost::trim(normalized);
     normalized_lines.push_back(normalized);
   }

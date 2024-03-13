@@ -6,6 +6,7 @@
  */
 
 #include <mariana-trench/EventLogger.h>
+#include <mariana-trench/JsonReaderWriter.h>
 #include <mariana-trench/JsonValidation.h>
 #include <mariana-trench/Log.h>
 #include <mariana-trench/model-generator/JsonModelGenerator.h>
@@ -173,7 +174,7 @@ JsonModelGenerator JsonModelGenerator::from_file(
       context.model_generator_name_factory->create(name),
       context,
       json_configuration_file,
-      JsonValidation::parse_json_file(json_configuration_file));
+      JsonReader::parse_json_file(json_configuration_file));
 }
 
 JsonModelGenerator JsonModelGenerator::from_json(

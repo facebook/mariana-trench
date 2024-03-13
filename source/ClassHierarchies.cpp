@@ -10,7 +10,7 @@
 
 #include <mariana-trench/Assert.h>
 #include <mariana-trench/ClassHierarchies.h>
-#include <mariana-trench/JsonValidation.h>
+#include <mariana-trench/JsonReaderWriter.h>
 #include <mariana-trench/Log.h>
 
 namespace marianatrench {
@@ -93,7 +93,7 @@ ClassHierarchies::ClassHierarchies(
     LOG(1,
         "Writing class hierarchies to `{}`",
         class_hierarchies_path.native());
-    JsonValidation::write_json_file(class_hierarchies_path, to_json());
+    JsonWriter::write_json_file(class_hierarchies_path, to_json());
   }
 }
 
