@@ -10,10 +10,6 @@
 
 #include <fmt/format.h>
 
-#include <ProguardConfiguration.h>
-#include <ProguardMap.h>
-#include <ProguardMatcher.h>
-#include <ProguardParser.h>
 #include <ReflectionAnalysis.h>
 #include <Show.h>
 #include <TypeInference.h>
