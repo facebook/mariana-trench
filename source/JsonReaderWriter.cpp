@@ -5,6 +5,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
+#include <fstream>
 #include <sstream>
 
 #include <boost/algorithm/string/predicate.hpp>
