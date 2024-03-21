@@ -17,13 +17,35 @@ import org.objectweb.asm.signature.SignatureReader;
 import org.objectweb.asm.signature.SignatureVisitor;
 
 public class MethodHandleVisitor extends ClassVisitor {
+  private boolean mSkipMethodForClass = false;
+
   public MethodHandleVisitor(ClassVisitor next) {
     super(ASM9, next);
   }
 
   @Override
+  public void visit(
+      int version,
+      int access,
+      String name,
+      String signature,
+      String superName,
+      String[] interfaces) {
+    if (name.contains("io/micrometer/")) {
+      // D8 does not run cleanly on this package. Needs further investigation.
+      // Meanwhile, remove methods in it.
+      System.out.println("Skipping methods in class: " + name);
+      mSkipMethodForClass = true;
+    }
+    super.visit(version, access, name, signature, superName, interfaces);
+  }
+
+  @Override
   public MethodVisitor visitMethod(
       int access, String name, String desc, String signature, String[] exceptions) {
+    if (mSkipMethodForClass) {
+      return null;
+    }
     return new ProcessVisitMethodInsn(super.visitMethod(access, name, desc, signature, exceptions));
   }
 
