@@ -476,7 +476,7 @@ we could use the following JSON to specifiy a via-type feature that would materi
 
 #### Via-value Features
 
-_Via-value_ feature captures the value of the specified callable's port seen at its callsites during taint flow analysis. They are specified similar to `Via-type` features -- in model generators within the "sources" or "sinks" field of a model with the "via_value_of" field. It is mapped to a nonempty list of ports of the method for which we want to create via-value features.
+_Via-value_ feature captures the value of the specified callable's port seen at its callsites during taint flow analysis. They are specified similar to `Via-type` features -- in model generators within the "sources", "sinks"  or "add_features_to_arguments" field of a model with the "via_value_of" field. It is mapped to a nonempty list of ports of the method for which we want to create via-value features.
 
 For example, if we were interested in the specific `mode` with which the method below was called:
 
