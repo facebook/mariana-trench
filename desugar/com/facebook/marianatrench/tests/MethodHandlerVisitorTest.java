@@ -25,7 +25,8 @@ public class MethodHandlerVisitorTest {
     String inputClassString = BytecodeProcessing.bytecodeMethodsToString(inputClass);
     String inputClassStringDesugared =
         inputClassString.replace(
-            "INVOKEVIRTUAL java/lang/invoke/MethodHandle.invokeExact (Ljava/lang/String;CC)Ljava/lang/String;",
+            "INVOKEVIRTUAL java/lang/invoke/MethodHandle.invokeExact"
+                + " (Ljava/lang/String;CC)Ljava/lang/String;",
             "POP\n    POP\n    POP");
     String outputClassString = BytecodeProcessing.bytecodeMethodsToString(writer.toByteArray());
     assertThat(inputClassStringDesugared).isEqualTo(outputClassString);

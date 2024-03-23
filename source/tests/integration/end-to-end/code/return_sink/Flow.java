@@ -34,7 +34,7 @@ public class Flow {
   private static class Tree {
     public Tree foo;
     public Tree bar;
-  };
+  }
 
   static Tree return_sink_foo(Tree tree) {
     return tree;
