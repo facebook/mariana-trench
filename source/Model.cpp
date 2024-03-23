@@ -1185,6 +1185,8 @@ Model Model::from_json(
     JsonValidation::check_unexpected_members(
         value,
         {"method", // Only when called from `Registry`.
+         "model_generators", // Only when parsing previously emitted models.
+         "position", // Only when parsing previously emitted models.
          "modes",
          "freeze",
          "generations",

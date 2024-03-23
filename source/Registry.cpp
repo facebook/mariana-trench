@@ -13,6 +13,7 @@
 #include <fmt/format.h>
 #include <json/value.h>
 
+#include <ConcurrentContainers.h>
 #include <sparta/WorkQueue.h>
 
 #include <mariana-trench/Constants.h>
@@ -75,6 +76,16 @@ Registry::Registry(
   }
 }
 
+Registry::Registry(
+    Context& context,
+    ConcurrentMap<const Method*, Model>&& models,
+    ConcurrentMap<const Field*, FieldModel>&& field_models,
+    ConcurrentMap<std::string, LiteralModel>&& literal_models)
+    : context_(context),
+      models_(std::move(models)),
+      field_models_(std::move(field_models)),
+      literal_models_(std::move(literal_models)) {}
+
 Registry Registry::load(
     Context& context,
     const Options& options,
@@ -109,6 +120,12 @@ Registry Registry::load(
         /* field_models_value */ Json::Value(Json::arrayValue),
         /* literal_models_value */
         JsonReader::parse_json_file(literal_models_path)));
+  }
+
+  if (options.sharded_models_directory().has_value()) {
+    // Create registry from any cached input.
+    registry.join_with(Registry::from_sharded_models_json(
+        context, *options.sharded_models_directory()));
   }
 
   // Add a default model for methods that don't have one
@@ -306,7 +323,7 @@ Json::Value Registry::models_to_json() const {
   return models_value;
 }
 
-void Registry::dump_models(
+void Registry::to_sharded_models_json(
     const std::filesystem::path& path,
     const std::size_t batch_size) const {
   std::vector<Model> models;
@@ -327,7 +344,7 @@ void Registry::dump_models(
   std::size_t total_elements =
       models.size() + field_models.size() + literal_models.size();
 
-  auto get_json_line = [&](std::size_t i) -> Json::Value {
+  auto to_json_line = [&](std::size_t i) -> Json::Value {
     mt_assert(i < total_elements);
     if (i < models.size()) {
       return models[i].to_json(context_);
@@ -340,7 +357,41 @@ void Registry::dump_models(
   };
 
   JsonWriter::write_sharded_json_files(
-      path, batch_size, total_elements, "model@", get_json_line);
+      path, batch_size, total_elements, "model@", to_json_line);
+}
+
+Registry Registry::from_sharded_models_json(
+    Context& context,
+    const std::filesystem::path& path) {
+  ConcurrentMap<const Method*, Model> models;
+  ConcurrentMap<const Field*, FieldModel> field_models;
+  ConcurrentMap<std::string, LiteralModel> literal_models;
+
+  auto from_json_line = [&](const Json::Value& value) -> void {
+    JsonValidation::validate_object(value);
+    if (value.isMember("method")) {
+      const auto* method = Method::from_json(value["method"], context);
+      mt_assert(method != nullptr);
+      models.emplace(method, Model::from_json(method, value, context));
+    } else if (value.isMember("field")) {
+      const auto* field = Field::from_json(value["field"], context);
+      mt_assert(field != nullptr);
+      field_models.emplace(field, FieldModel::from_json(field, value, context));
+    } else if (value.isMember("pattern")) {
+      auto pattern = JsonValidation::string(value, "pattern");
+      literal_models.emplace(pattern, LiteralModel::from_json(value, context));
+    } else {
+      ERROR(1, "Unrecognized model type in JSON: `{}`", value.asString());
+    }
+  };
+
+  JsonReader::read_sharded_json_files(path, "model@", from_json_line);
+
+  return Registry(
+      context,
+      std::move(models),
+      std::move(field_models),
+      std::move(literal_models));
 }
 
 void Registry::dump_file_coverage_info(

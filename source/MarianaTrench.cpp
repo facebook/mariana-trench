@@ -437,7 +437,7 @@ void MarianaTrench::run(const program_options::variables_map& variables) {
   Timer output_timer;
   auto models_path = options.models_output_path();
   LOG(1, "Writing models to `{}`.", models_path.native());
-  registry.dump_models(models_path);
+  registry.to_sharded_models_json(models_path);
   context.statistics->log_time("dump_models", output_timer);
   LOG(1, "Wrote models in {:.2f}s.", output_timer.duration_in_seconds());
 

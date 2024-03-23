@@ -20,6 +20,11 @@ class JsonReader {
   static Json::Value parse_json(std::string string);
   static Json::Value parse_json_file(const std::filesystem::path& path);
   static Json::Value parse_json_file(const std::string& path);
+
+  static void read_sharded_json_files(
+      const std::filesystem::path& input_directory,
+      const std::string& filename_prefix,
+      const std::function<void(const Json::Value&)>& process_json_line);
 };
 
 class JsonWriter {

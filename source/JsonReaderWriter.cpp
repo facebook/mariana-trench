@@ -7,6 +7,7 @@
 
 #include <fstream>
 #include <sstream>
+#include <string>
 
 #include <boost/algorithm/string/predicate.hpp>
 #include <fmt/format.h>
@@ -54,6 +55,50 @@ Json::Value JsonReader::parse_json_file(const std::filesystem::path& path) {
 
 Json::Value JsonReader::parse_json_file(const std::string& path) {
   return parse_json_file(std::filesystem::path(path));
+}
+
+void JsonReader::read_sharded_json_files(
+    const std::filesystem::path& input_directory,
+    const std::string& filename_prefix,
+    const std::function<void(const Json::Value&)>& process_json_line) {
+  // Find relevant files that begin with the given prefix
+  std::vector<std::filesystem::path> files;
+  for (auto& file : std::filesystem::directory_iterator(input_directory)) {
+    const auto& file_path = file.path();
+    if (std::filesystem::is_regular_file(file_path) &&
+        boost::starts_with(file_path.filename().string(), filename_prefix)) {
+      files.emplace_back(file_path);
+    }
+  }
+
+  auto queue = sparta::work_queue<std::filesystem::path>(
+      [&](const std::filesystem::path& batch_path) {
+        std::ifstream batch_stream;
+        try {
+          batch_stream.open(batch_path, std::ios_base::in);
+        } catch (const std::ifstream::failure&) {
+          ERROR(1, "Could not open json file: `{}`.", batch_path.native());
+          throw;
+        }
+
+        std::string line;
+        while (std::getline(batch_stream, line)) {
+          if (boost::starts_with(line, "//")) {
+            // Ignore comments.
+            continue;
+          }
+
+          process_json_line(JsonReader::parse_json(line));
+        }
+
+        batch_stream.close();
+      },
+      sparta::parallel::default_num_threads());
+
+  for (const auto& batch_path : files) {
+    queue.add_item(batch_path);
+  }
+  queue.run_all();
 }
 
 namespace {
