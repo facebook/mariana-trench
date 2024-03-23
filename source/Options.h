@@ -90,6 +90,8 @@ class Options final {
   const std::filesystem::path file_coverage_output_path() const;
   const std::filesystem::path rule_coverage_output_path() const;
 
+  const std::optional<std::filesystem::path> sharded_models_directory() const;
+
   bool sequential() const;
   bool skip_source_indexing() const;
   bool skip_analysis() const;
@@ -146,6 +148,8 @@ class Options final {
 
   std::string apk_path_;
   std::filesystem::path output_directory_;
+
+  std::optional<std::filesystem::path> sharded_models_directory_;
 
   bool sequential_;
   bool skip_source_indexing_;

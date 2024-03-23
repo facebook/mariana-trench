@@ -421,6 +421,11 @@ def _add_configuration_arguments(parser: argparse.ArgumentParser) -> None:
         help="A `;` separated list of literal models files and directories containing literal models files.",
     )
     configuration_arguments.add_argument(
+        "--sharded-models-directory",
+        type=_directory_exists,
+        help="Cached models from a separate analysis run, to be pre-loaded into the analysis.",
+    )
+    configuration_arguments.add_argument(
         "--maximum-source-sink-distance",
         type=int,
         default=configuration.DEFAULT_MAXIMUM_SOURCE_SINK_DISTANCE,
@@ -647,6 +652,10 @@ def _get_command_options(
     if arguments.generated_models_directory:
         options.append("--generated-models-directory")
         options.append(arguments.generated_models_directory)
+
+    if arguments.sharded_models_directory:
+        options.append("--sharded-models-directory")
+        options.append(arguments.sharded_models_directory)
 
     if arguments.emit_all_via_cast_features:
         options.append("--emit-all-via-cast-features")

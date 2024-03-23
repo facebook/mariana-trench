@@ -236,6 +236,11 @@ Options::Options(const boost::program_options::variables_map& variables) {
   output_directory_ = std::filesystem::path(
       check_directory_exists(variables["output-directory"].as<std::string>()));
 
+  if (!variables["sharded-models-directory"].empty()) {
+    sharded_models_directory_ = std::filesystem::path(check_directory_exists(
+        variables["sharded-models-directory"].as<std::string>()));
+  }
+
   sequential_ = variables.count("sequential") > 0;
   skip_source_indexing_ = variables.count("skip-source-indexing") > 0;
   skip_analysis_ = variables.count("skip-analysis") > 0;
@@ -376,6 +381,10 @@ void Options::add_options(
       "output-directory",
       program_options::value<std::string>()->required(),
       "Directory to write results in.");
+  options.add_options()(
+      "sharded-models-directory",
+      program_options::value<std::string>(),
+      "Directory where sharded output models from a previous analysis is stored.");
 
   options.add_options()(
       "sequential", "Run the global fixpoint without parallelization.");
@@ -579,6 +588,11 @@ const std::filesystem::path Options::file_coverage_output_path() const {
 
 const std::filesystem::path Options::rule_coverage_output_path() const {
   return output_directory_ / "rule_coverage.json";
+}
+
+const std::optional<std::filesystem::path> Options::sharded_models_directory()
+    const {
+  return sharded_models_directory_;
 }
 
 bool Options::sequential() const {
