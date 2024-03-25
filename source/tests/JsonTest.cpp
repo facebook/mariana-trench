@@ -1661,11 +1661,11 @@ TEST_F(JsonTest, Model) {
   auto* method = context.methods->get(dex_method);
 
   EXPECT_THROW(
-      Model::from_json(method, test::parse_json(R"(1)"), context),
+      Model::from_config_json(method, test::parse_json(R"(1)"), context),
       JsonValidationError);
 
   EXPECT_EQ(
-      Model::from_json(method, test::parse_json(R"({})"), context),
+      Model::from_config_json(method, test::parse_json(R"({})"), context),
       Model(method, context));
   EXPECT_EQ(
       Model(method, context).to_json(ExportOriginsMode::Always),
@@ -1674,12 +1674,12 @@ TEST_F(JsonTest, Model) {
       })"));
 
   EXPECT_THROW(
-      Model::from_json(
+      Model::from_config_json(
           method, test::parse_json(R"({"modes": ["invalid-mode"]})"), context),
       JsonValidationError);
 
   EXPECT_EQ(
-      Model::from_json(
+      Model::from_config_json(
           method,
           test::parse_json(R"({
             "modes": [
@@ -1765,14 +1765,14 @@ TEST_F(JsonTest, Model) {
       })#"));
 
   EXPECT_THROW(
-      Model::from_json(
+      Model::from_config_json(
           method,
           test::parse_json(R"({"freeze": ["invalid-freeze-kind"]})"),
           context),
       JsonValidationError);
 
   EXPECT_EQ(
-      Model::from_json(
+      Model::from_config_json(
           method,
           test::parse_json(R"({
             "freeze": [
@@ -1805,16 +1805,16 @@ TEST_F(JsonTest, Model) {
       })#"));
 
   EXPECT_THROW(
-      Model::from_json(
+      Model::from_config_json(
           method, test::parse_json(R"({"generations": {}})"), context),
       JsonValidationError);
   EXPECT_THROW(
-      Model::from_json(
+      Model::from_config_json(
           method, test::parse_json(R"({"generations": 1})"), context),
       JsonValidationError);
 
   EXPECT_EQ(
-      Model::from_json(
+      Model::from_config_json(
           method,
           test::parse_json(R"#({
           "generations": [
@@ -1866,12 +1866,12 @@ TEST_F(JsonTest, Model) {
     })#"));
 
   EXPECT_THROW(
-      Model::from_json(
+      Model::from_config_json(
           method, test::parse_json(R"({"parameter_sources": {}})"), context),
       JsonValidationError);
 
   EXPECT_EQ(
-      Model::from_json(
+      Model::from_config_json(
           method,
           test::parse_json(R"#({
           "parameter_sources": [
@@ -1925,7 +1925,7 @@ TEST_F(JsonTest, Model) {
     })#"));
 
   EXPECT_EQ(
-      Model::from_json(
+      Model::from_config_json(
           method,
           test::parse_json(R"#({
           "sources": [
@@ -1946,7 +1946,7 @@ TEST_F(JsonTest, Model) {
                 context.kind_factory->get("source_kind"))}},
           /* parameter_sources */ {}));
   EXPECT_EQ(
-      Model::from_json(
+      Model::from_config_json(
           method,
           test::parse_json(R"#({
           "sources": [
@@ -1968,7 +1968,7 @@ TEST_F(JsonTest, Model) {
                 context.kind_factory->get("source_kind"))}},
           /* parameter_sources */ {}));
   EXPECT_EQ(
-      Model::from_json(
+      Model::from_config_json(
           method,
           test::parse_json(R"#({
           "sources": [
@@ -1991,16 +1991,16 @@ TEST_F(JsonTest, Model) {
                 context.kind_factory->get("source_kind"))}}));
 
   EXPECT_THROW(
-      Model::from_json(
+      Model::from_config_json(
           method, test::parse_json(R"({"propagation": 1})"), context),
       JsonValidationError);
   EXPECT_THROW(
-      Model::from_json(
+      Model::from_config_json(
           method, test::parse_json(R"({"propagation": {}})"), context),
       JsonValidationError);
 
   EXPECT_EQ(
-      Model::from_json(
+      Model::from_config_json(
           method,
           test::parse_json(R"#({
           "propagation": [
@@ -2124,7 +2124,7 @@ TEST_F(JsonTest, Model) {
   const auto* kind2 = context.kind_factory->get_partial("Kind2", "a");
   const auto* kind3 = context.kind_factory->get("Kind3");
   EXPECT_EQ(
-      Model::from_json(
+      Model::from_config_json(
           method,
           test::parse_json(R"#({
           "propagation": [
@@ -2188,7 +2188,7 @@ TEST_F(JsonTest, Model) {
         ]
       })#")));
   EXPECT_EQ(
-      Model::from_json(
+      Model::from_config_json(
           method,
           test::parse_json(R"#({
           "propagation": [
@@ -2266,14 +2266,16 @@ TEST_F(JsonTest, Model) {
     })#")));
 
   EXPECT_THROW(
-      Model::from_json(method, test::parse_json(R"({"sinks": 1})"), context),
+      Model::from_config_json(
+          method, test::parse_json(R"({"sinks": 1})"), context),
       JsonValidationError);
   EXPECT_THROW(
-      Model::from_json(method, test::parse_json(R"({"sinks": {}})"), context),
+      Model::from_config_json(
+          method, test::parse_json(R"({"sinks": {}})"), context),
       JsonValidationError);
 
   EXPECT_EQ(
-      Model::from_json(
+      Model::from_config_json(
           method,
           test::parse_json(R"#({
           "sinks": [
@@ -2366,7 +2368,7 @@ TEST_F(JsonTest, Model) {
       })#"));
 
   EXPECT_EQ(
-      Model::from_json(
+      Model::from_config_json(
           method,
           test::parse_json(R"#({
             "attach_to_sources": [
@@ -2419,7 +2421,7 @@ TEST_F(JsonTest, Model) {
       })#"));
 
   EXPECT_EQ(
-      Model::from_json(
+      Model::from_config_json(
           method,
           test::parse_json(R"#({
             "attach_to_sinks": [
@@ -2474,7 +2476,7 @@ TEST_F(JsonTest, Model) {
       })#"));
 
   EXPECT_EQ(
-      Model::from_json(
+      Model::from_config_json(
           method,
           test::parse_json(R"#({
             "attach_to_propagations": [
@@ -2531,7 +2533,7 @@ TEST_F(JsonTest, Model) {
       })#"));
 
   EXPECT_EQ(
-      Model::from_json(
+      Model::from_config_json(
           method,
           test::parse_json(R"#({
             "add_features_to_arguments": [
@@ -2590,7 +2592,7 @@ TEST_F(JsonTest, Model) {
       })#"));
 
   EXPECT_EQ(
-      Model::from_json(
+      Model::from_config_json(
           method,
           test::parse_json(R"#({
             "inline_as_getter": "Argument(1).foo"
@@ -2642,7 +2644,7 @@ TEST_F(JsonTest, Model) {
       })#"));
 
   EXPECT_EQ(
-      Model::from_json(
+      Model::from_config_json(
           method,
           test::parse_json(R"#({
             "inline_as_setter": {
@@ -2710,13 +2712,16 @@ TEST_F(JsonTest, Model) {
 
   // We do not parse issues for now.
   EXPECT_THROW(
-      Model::from_json(method, test::parse_json(R"({"issues": 1})"), context),
+      Model::from_config_json(
+          method, test::parse_json(R"({"issues": 1})"), context),
       JsonValidationError);
   EXPECT_THROW(
-      Model::from_json(method, test::parse_json(R"({"issues": {}})"), context),
+      Model::from_config_json(
+          method, test::parse_json(R"({"issues": {}})"), context),
       JsonValidationError);
   EXPECT_THROW(
-      Model::from_json(method, test::parse_json(R"({"issues": []})"), context),
+      Model::from_config_json(
+          method, test::parse_json(R"({"issues": []})"), context),
       JsonValidationError);
 
   auto rule = std::make_unique<SourceSinkRule>(

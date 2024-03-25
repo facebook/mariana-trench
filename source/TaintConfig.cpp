@@ -93,9 +93,9 @@ TaintConfig TaintConfig::from_json(const Json::Value& value, Context& context) {
   JsonValidation::validate_object(value);
   JsonValidation::check_unexpected_members(
       value,
-      {"port", // Only when called from `Model::from_json`
-       "caller_port", // Only when called from `Model::from_json`
-       "type", // Only when called from `Model::from_json` for effects
+      {"port", // Only when called from `Model::from_config_json`
+       "caller_port", // Only when called from `Model::from_config_json`
+       "type", // Only when called from `Model::from_config_json` for effects
        "kind",
        "partial_label",
        "callee_port",

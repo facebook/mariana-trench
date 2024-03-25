@@ -1175,7 +1175,7 @@ std::unordered_set<const Transform*> Model::local_transform_kinds() const {
   return result;
 }
 
-Model Model::from_json(
+Model Model::from_config_json(
     const Method* method,
     const Json::Value& value,
     Context& context,

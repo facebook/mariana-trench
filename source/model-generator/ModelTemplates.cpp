@@ -824,7 +824,7 @@ ModelTemplate ModelTemplate::from_json(
   }
 
   return ModelTemplate(
-      Model::from_json(
+      Model::from_config_json(
           /* method */ nullptr,
           model,
           context,

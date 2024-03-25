@@ -63,7 +63,7 @@ Registry::Registry(
   for (const auto& value : JsonValidation::null_or_array(models_value)) {
     const auto* method = Method::from_json(value["method"], context);
     mt_assert(method != nullptr);
-    join_with(Model::from_json(method, value, context));
+    join_with(Model::from_config_json(method, value, context));
   }
   for (const auto& value : JsonValidation::null_or_array(field_models_value)) {
     const auto* field = Field::from_json(value["field"], context);
@@ -372,7 +372,7 @@ Registry Registry::from_sharded_models_json(
     if (value.isMember("method")) {
       const auto* method = Method::from_json(value["method"], context);
       mt_assert(method != nullptr);
-      models.emplace(method, Model::from_json(method, value, context));
+      models.emplace(method, Model::from_config_json(method, value, context));
     } else if (value.isMember("field")) {
       const auto* field = Field::from_json(value["field"], context);
       mt_assert(field != nullptr);

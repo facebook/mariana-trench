@@ -338,7 +338,7 @@ class Model final {
    */
   std::unordered_set<const Transform*> local_transform_kinds() const;
 
-  static Model from_json(
+  static Model from_config_json(
       const Method* MT_NULLABLE method,
       const Json::Value& value,
       Context& context,
