@@ -240,12 +240,7 @@ def _build_apk_from_jar(jar_path: Path) -> Path:
     LOG.info(f"Running d8 on `{jar_path}`...")
     output = subprocess.run(
         [
-            # v33 does not run cleanly in some cases.
-            # Needs further investigation.
-            # Meanwhile v29.0.2 works but produces warnings likely due to lack
-            # of Java 11 support.
-            # "/opt/android/sdk_DEFAULT/build-tools/33.0.0/d8",
-            "/opt/android/sdk_DEFAULT/build-tools/29.0.2/d8",
+            "/opt/android/sdk_DEFAULT/build-tools/33.0.0/d8",
             "-JXmx8G",
             jar_path,
             "--output",
