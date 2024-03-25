@@ -109,8 +109,8 @@ TaintConfig TaintConfig::from_json(const Json::Value& value, Context& context) {
        "via_value_of",
        "canonical_names"});
 
-  const Kind* kind =
-      Kind::from_json(value, context, /* check_unexpected_members */ false);
+  const Kind* kind = Kind::from_config_json(
+      value, context, /* check_unexpected_members */ false);
 
   auto callee_port = AccessPath(Root(Root::Kind::Leaf));
   if (value.isMember("callee_port")) {

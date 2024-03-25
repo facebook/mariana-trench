@@ -30,6 +30,9 @@ class LocalArgumentKind final : public PropagationKind {
   void show(std::ostream&) const override;
 
   std::string to_trace_string() const override;
+  static const LocalArgumentKind* from_trace_string(
+      const std::string& kind,
+      Context& context);
 
   Root root() const override;
 

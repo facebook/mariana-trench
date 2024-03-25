@@ -128,7 +128,7 @@ const Sanitizer Sanitizer::from_json(
     kinds = KindSetAbstractDomain();
     for (const auto& kind_json :
          JsonValidation::nonempty_array(value, "kinds")) {
-      kinds.add(Kind::from_json(kind_json, context));
+      kinds.add(Kind::from_config_json(kind_json, context));
     }
   } else {
     kinds = KindSetAbstractDomain::top();
