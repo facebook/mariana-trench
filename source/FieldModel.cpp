@@ -127,7 +127,7 @@ void FieldModel::join_with(const FieldModel& other) {
   mt_expensive_assert(previous.leq(*this) && other.leq(*this));
 }
 
-FieldModel FieldModel::from_json(
+FieldModel FieldModel::from_config_json(
     const Field* MT_NULLABLE field,
     const Json::Value& value,
     Context& context) {

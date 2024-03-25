@@ -74,7 +74,10 @@ class LiteralModel final {
    */
   bool empty() const;
 
-  static LiteralModel from_json(const Json::Value& value, Context& context);
+  static LiteralModel from_config_json(
+      const Json::Value& value,
+      Context& context);
+
   Json::Value to_json(ExportOriginsMode export_origins_mode) const;
 
   /* Export the model to JSON with undefined literal position. */

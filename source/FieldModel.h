@@ -65,10 +65,11 @@ class FieldModel final {
 
   void join_with(const FieldModel& other);
 
-  static FieldModel from_json(
+  static FieldModel from_config_json(
       const Field* MT_NULLABLE field,
       const Json::Value& value,
       Context& context);
+
   Json::Value to_json(ExportOriginsMode export_origins_mode) const;
 
   void add_source(Taint source);

@@ -2809,15 +2809,15 @@ TEST_F(JsonTest, FieldModel) {
   const auto* feature = context.feature_factory->get("test-feature");
 
   EXPECT_THROW(
-      FieldModel::from_json(field, test::parse_json(R"(1)"), context),
+      FieldModel::from_config_json(field, test::parse_json(R"(1)"), context),
       JsonValidationError);
   EXPECT_EQ(
-      FieldModel::from_json(field, test::parse_json(R"({})"), context),
+      FieldModel::from_config_json(field, test::parse_json(R"({})"), context),
       FieldModel(field));
 
   // Field taint frames must be leaf frames
   EXPECT_THROW(
-      FieldModel::from_json(
+      FieldModel::from_config_json(
           field,
           test::parse_json(R"("sources": [
             {"kind": "TestSource", "callee_port": "Return"},
@@ -2825,7 +2825,7 @@ TEST_F(JsonTest, FieldModel) {
           context),
       JsonValidationError);
   EXPECT_THROW(
-      FieldModel::from_json(
+      FieldModel::from_config_json(
           field,
           test::parse_json(R"("sinks": [
             {"kind": "TestSource", "callee": "LClass;.someMethod:()V"},
@@ -2835,7 +2835,7 @@ TEST_F(JsonTest, FieldModel) {
 
   // Test from_json
   EXPECT_EQ(
-      FieldModel::from_json(
+      FieldModel::from_config_json(
           field,
           test::parse_json(R"({"sources": [
             {"kind": "TestSource"},
@@ -2854,7 +2854,7 @@ TEST_F(JsonTest, FieldModel) {
                    .user_features = FeatureSet{feature}})},
           /* sinks */ {}));
   EXPECT_EQ(
-      FieldModel::from_json(
+      FieldModel::from_config_json(
           field,
           test::parse_json(R"({"sinks": [
             {"kind": "TestSink"},

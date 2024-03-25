@@ -85,7 +85,7 @@ bool LiteralModel::empty() const {
   return sources_.is_bottom();
 }
 
-LiteralModel LiteralModel::from_json(
+LiteralModel LiteralModel::from_config_json(
     const Json::Value& value,
     Context& context) {
   JsonValidation::check_unexpected_members(

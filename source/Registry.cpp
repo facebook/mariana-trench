@@ -68,11 +68,11 @@ Registry::Registry(
   for (const auto& value : JsonValidation::null_or_array(field_models_value)) {
     const auto* field = Field::from_json(value["field"], context);
     mt_assert(field != nullptr);
-    join_with(FieldModel::from_json(field, value, context));
+    join_with(FieldModel::from_config_json(field, value, context));
   }
   for (const auto& value :
        JsonValidation::null_or_array(literal_models_value)) {
-    join_with(LiteralModel::from_json(value, context));
+    join_with(LiteralModel::from_config_json(value, context));
   }
 }
 
@@ -376,10 +376,12 @@ Registry Registry::from_sharded_models_json(
     } else if (value.isMember("field")) {
       const auto* field = Field::from_json(value["field"], context);
       mt_assert(field != nullptr);
-      field_models.emplace(field, FieldModel::from_json(field, value, context));
+      field_models.emplace(
+          field, FieldModel::from_config_json(field, value, context));
     } else if (value.isMember("pattern")) {
       auto pattern = JsonValidation::string(value, "pattern");
-      literal_models.emplace(pattern, LiteralModel::from_json(value, context));
+      literal_models.emplace(
+          pattern, LiteralModel::from_config_json(value, context));
     } else {
       ERROR(1, "Unrecognized model type in JSON: `{}`", value.asString());
     }
