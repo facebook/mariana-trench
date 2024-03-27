@@ -23,14 +23,9 @@ enum class Component {
 
 namespace constants {
 
-struct dfa_annotation {
-  std::string type;
-  std::string pattern_type;
-};
+std::string_view get_dfa_annotation_type();
 
-dfa_annotation get_dfa_annotation();
-
-std::vector<std::string> get_private_uri_schemes();
+std::string_view get_public_access_scope();
 
 std::string_view get_privacy_decision_type();
 

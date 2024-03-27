@@ -47,62 +47,32 @@ bool is_manifest_relevant_kind(const std::string_view kind) {
       kind == "ServiceAIDLExitNode");
 }
 
-bool is_class_exported_via_uri(const DexClass* clazz) {
+bool is_class_accessible_via_dfa(const DexClass* clazz) {
   if (!clazz->get_anno_set()) {
     return false;
   }
 
-  auto dfa_annotation = marianatrench::constants::get_dfa_annotation();
-  auto private_schemes = marianatrench::constants::get_private_uri_schemes();
-
+  auto dfa_annotation_type =
+      marianatrench::constants::get_dfa_annotation_type();
   for (const auto& annotation : clazz->get_anno_set()->get_annotations()) {
     if (!annotation->type() ||
-        annotation->type()->str() != dfa_annotation.type) {
+        annotation->type()->str() != dfa_annotation_type) {
       continue;
     }
 
+    auto public_scope = marianatrench::constants::get_public_access_scope();
     for (const DexAnnotationElement& element : annotation->anno_elems()) {
-      if (element.string->str() != "value") {
-        continue;
+      if (element.string->str() == "enforceScope" &&
+          element.encoded_value->as_value() == 0) {
+        return true;
       }
 
-      auto* patterns =
-          dynamic_cast<DexEncodedValueArray*>(element.encoded_value.get());
-      mt_assert(patterns != nullptr);
-
-      for (auto& encoded_pattern : *patterns->evalues()) {
-        auto* pattern =
-            dynamic_cast<DexEncodedValueAnnotation*>(encoded_pattern.get());
-        mt_assert(pattern != nullptr);
-
-        if (!pattern->type() ||
-            pattern->type()->str() != dfa_annotation.pattern_type) {
-          continue;
-        }
-
-        std::string pattern_value = pattern->show();
-
-        // We only care about patterns that specify a scheme or a pattern
-        if (pattern_value.find("scheme") == std::string::npos &&
-            pattern_value.find("pattern") == std::string::npos) {
-          continue;
-        }
-
-        if (!std::any_of(
-                private_schemes.begin(),
-                private_schemes.end(),
-                [&pattern_value](std::string scheme) {
-                  return pattern_value.find(scheme) != std::string::npos;
-                })) {
-          LOG(2,
-              "Class {} has DFA annotations with a public URI scheme.",
-              clazz->get_name()->str());
-          return true;
-        }
+      if (element.string->str() == "accessScope" &&
+          element.encoded_value->show() == public_scope) {
+        return true;
       }
     }
   }
-
   return false;
 }
 
@@ -196,7 +166,7 @@ ClassProperties::ClassProperties(
   std::mutex mutex;
   for (auto& scope : DexStoreClassesIterator(stores)) {
     walk::parallel::classes(scope, [&mutex, this](DexClass* clazz) {
-      if (is_class_exported_via_uri(clazz)) {
+      if (is_class_accessible_via_dfa(clazz)) {
         std::lock_guard<std::mutex> lock(mutex);
         dfa_public_scheme_classes_.emplace(clazz->str());
       }

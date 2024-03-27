@@ -11,15 +11,12 @@ namespace marianatrench {
 namespace constants {
 
 #ifndef MARIANA_TRENCH_FACEBOOK_BUILD
-dfa_annotation get_dfa_annotation() {
-  return {
-      /* type */ "<undefined>",
-      /* pattern_type */ "<undefined>",
-  };
+std::string_view get_dfa_annotation_type() {
+  return "<undefined>";
 }
 
-std::vector<std::string> get_private_uri_schemes() {
-  return {};
+std::string_view get_public_access_scope() {
+  return "<undefined>";
 }
 
 std::string_view get_privacy_decision_type() {
