@@ -75,9 +75,9 @@ For the parameters and return types use the following table to pick the correct 
 
 Classes take the form `Lpackage/name/ClassName;` - where the leading `L` indicates that it is a class type, `package/name/` is the package that the class is in. A nested class will take the form `Lpackage/name/ClassName$NestedClassName` (the `$` will need to be double escaped `\\$` in json regex).
 
-> **NOTE:** Instance (i.e, non-static) method parameters are indexed starting from 1! The 0th parameter is the `this` parameter in dalvik byte-code. For static method parameter, indices start from 0.
+> **NOTE 1:** Instance (i.e, non-static) method parameters are indexed starting from 1! The 0th parameter is the `this` parameter in dalvik byte-code. For static method parameter, indices start from 0.
 
-> **NOTE:** In a constructor (\<init\> method), parameters are also indexed starting from 1. The 0th parameter refers to the instance being constructed, similar to the `this` reference.
+> **NOTE 2:** In a constructor (\<init\> method), parameters are also indexed starting from 1. The 0th parameter refers to the instance being constructed, similar to the `this` reference.
 
 ### Access path format
 
@@ -112,9 +112,11 @@ A source has a **kind** that describes its content (e.g, user input, file system
 
 ### Sources
 
-Sources describe sources produced or received by a given method. A source can either flow out via the return value or flow via a given parameter. A source has a **kind** that describes its content (e.g, user input, file system, etc).
+Sources describe taint *produced* or *received* by a given method. A source has a **kind** that describes its content (e.g, user input, file system, etc).
+- A method *produces* a source kind if invoking the method implies the source kind *flows out* from it. The source kind can flow out via the return value or through a parameter (pass by reference semantics).
+- A method *receives* a source kind if a source kind is always assumed to *flow in* via an argument regardless of the method's callsite.
 
-Here is an example where the source flows by return value:
+Here is an example where the source *flows out* through the return value:
 
 ```java
 public static String getPath() {
@@ -145,7 +147,7 @@ The JSON model generator for this method could be:
 }
 ```
 
-Here is an example where the source flows in via an argument:
+Here is an example where the source *flows in* via an argument:
 
 ```java
 class MyActivity extends Activity {
@@ -178,7 +180,84 @@ The JSON model generator for this method could be:
 }
 ```
 
-Note that the implicit `this` parameter is considered the argument 0.
+Here is an example where source *flows out* via an argument:
+```java
+public static void updateIntent(Intent intent) {}
+
+void createAndUseIntent() {
+  MyIntent myIntent = new MyIntent();
+  // myIntent is not a source. This is safe.
+  sink(myIntent);
+
+  updateIntent(myIntent);
+  // myIntent is now a source. This is now a flow.
+  sink(myIntent);
+}
+```
+
+The JSON model generator for this method could be:
+
+```json
+{
+  "find": "methods",
+  "where": [
+    {
+     "constraint": "signature_match",
+      "parent": "Lcom/example/Class;",
+      "name": "updateIntent"
+    }
+  ],
+  "model": {
+    "generations": [
+      {
+        "kind": "UserControlled",
+        "port": "Argument(0)"
+      }
+    ]
+  }
+}
+```
+
+Note on the use of "generations" vs "sources": "generations" indicates that the source kind is *produced* and *flows out* via the specified port. When the port is "Return", "generations" and "sources" are equivalent.
+
+"generations" are also useful to mark the `this` reference of an instance as sources. Instances are created using constructors, which are special `<init>` methods with return type void. But, as mentioned in Note 2 above, constructors create a special 0th parameter to refer to the instance being constructed (i.e. `this`). Here is an example where a constructor marks the instance as a source:
+```java
+class SourceIntent extends Intent {
+  SourceIntent() {}
+}
+
+void createAndUseIntent() {
+  SourceIntent sourceIntent = new SourceIntent();
+  // sourceIntent is a source.
+  sink(myIntent);
+}
+```
+
+The JSON model generator for the constructor method could be:
+
+```json
+{
+  "find": "methods",
+  "where": [
+    {
+     "constraint": "signature_match",
+      "parent": "Lcom/example/SourceIntent;",
+      "name": "<init>"
+    }
+  ],
+  "model": {
+    "generations": [
+      {
+        "kind": "UserControlled",
+        "port": "Argument(0)"
+      }
+    ]
+  }
+}
+```
+
+
+
 
 ### Sinks
 
@@ -1007,7 +1086,7 @@ Each "rule" defines a "filter" (which uses "constraints" to specify methods for 
 - `model`: A model, describing sources/sinks/propagations/etc.
 
   - **For method models**
-    - `sources`\*: A list of sources, i.e a source flowing out of the method via return value or flowing in via an argument. A source has the following key/values:
+    - `sources`\*: A list of sources, i.e a source *flowing out* of the method via return value or *flowing in* via an argument. To specify sources *flowing out* via an argument, specify it as `generations`. A source/generation has the following key/values:
       - `kind`: The source name;
       - `port`\*\*: The source access path (e.g, `"Return"` or `"Argument(1)"`);
       - `features`\*: A list of features/breadcrumbs names;
