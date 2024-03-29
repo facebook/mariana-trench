@@ -76,28 +76,6 @@ bool is_class_accessible_via_dfa(const DexClass* clazz) {
   return false;
 }
 
-bool has_privacy_decision_annotation(
-    const std::vector<std::unique_ptr<DexAnnotation>>& annotations) {
-  auto privacy_decision_type =
-      marianatrench::constants::get_privacy_decision_type();
-  for (const auto& annotation : annotations) {
-    if (annotation->type() &&
-        annotation->type()->str() == privacy_decision_type) {
-      return true;
-    }
-  }
-  return false;
-}
-
-bool has_privacy_decision_in_class(const DexClass* clazz) {
-  if (!clazz->get_anno_set()) {
-    return false;
-  }
-
-  return has_privacy_decision_annotation(
-      clazz->get_anno_set()->get_annotations());
-}
-
 bool has_permission_check(const DexClass* clazz) {
   auto methods = clazz->get_all_methods();
   for (DexMethod* method : methods) {
@@ -175,11 +153,6 @@ ClassProperties::ClassProperties(
         std::lock_guard<std::mutex> lock(mutex);
         inline_permission_classes_.emplace(clazz->str());
       }
-
-      if (has_privacy_decision_in_class(clazz)) {
-        std::lock_guard<std::mutex> lock(mutex);
-        privacy_decision_classes_.emplace(clazz->str());
-      }
     });
   }
 }
@@ -252,22 +225,11 @@ bool ClassProperties::is_dfa_public(std::string_view class_name) const {
       dfa_public_scheme_classes_.count(outer_class) > 0;
 }
 
-bool ClassProperties::has_privacy_decision(const Method* method) const {
-  return (method->dex_method()->get_anno_set() &&
-          has_privacy_decision_annotation(
-              method->dex_method()->get_anno_set()->get_annotations())) ||
-      privacy_decision_classes_.count(method->get_class()->str()) > 0;
-}
-
 FeatureMayAlwaysSet ClassProperties::propagate_features(
     const Method* caller,
     const Method* /*callee*/,
     const FeatureFactory& feature_factory) const {
   FeatureSet features;
-
-  if (has_privacy_decision(caller)) {
-    features.add(feature_factory.get("via-privacy-decision"));
-  }
 
   return FeatureMayAlwaysSet::make_always(features);
 }

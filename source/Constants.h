@@ -27,8 +27,6 @@ std::string_view get_dfa_annotation_type();
 
 std::string_view get_public_access_scope();
 
-std::string_view get_privacy_decision_type();
-
 // TODO(T149770577): Should be configurable with model generator syntax.
 // For now, use a mapping of method signature to intent argument position.
 // Taint is routed via the intent, so its position per activity routing method

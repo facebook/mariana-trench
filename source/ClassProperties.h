@@ -46,7 +46,6 @@ class ClassProperties final {
       const;
   bool is_dfa_public(std::string_view class_name) const;
   bool has_inline_permissions(std::string_view class_name) const;
-  bool has_privacy_decision(const Method* method) const;
 
   FeatureSet get_class_features(
       std::string_view clazz,

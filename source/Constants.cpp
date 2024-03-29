@@ -19,10 +19,6 @@ std::string_view get_public_access_scope() {
   return "<undefined>";
 }
 
-std::string_view get_privacy_decision_type() {
-  return "<undefined>";
-}
-
 std::unordered_map<std::string, ParameterPosition>
 get_activity_routing_methods() {
   return {
