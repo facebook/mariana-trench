@@ -2060,6 +2060,7 @@
     {
       "always_features" : 
       [
+        "via-int-value:42",
         "via-value:42"
       ],
       "callee" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
@@ -2126,6 +2127,7 @@
             {
               "always_features" : 
               [
+                "via-int-value:42",
                 "via-value:42"
               ],
               "callee_interval" : 
@@ -2148,6 +2150,7 @@
           {
             "always_features" : 
             [
+              "via-int-value:42",
               "via-value:42"
             ]
           }
@@ -2168,6 +2171,7 @@
     {
       "always_features" : 
       [
+        "via-int-value:42",
         "via-value:42"
       ],
       "callee" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
@@ -2234,6 +2238,7 @@
             {
               "always_features" : 
               [
+                "via-int-value:42",
                 "via-value:42"
               ],
               "callee_interval" : 
@@ -2256,6 +2261,7 @@
           {
             "always_features" : 
             [
+              "via-int-value:42",
               "via-value:42"
             ]
           }

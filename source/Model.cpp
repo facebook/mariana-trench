@@ -504,7 +504,8 @@ Model Model::at_callsite(
         continue;
       }
       root_features.add(context.feature_factory->get_via_value_of_feature(
-          source_constant_arguments[tagged_root.root().parameter_position()]));
+          source_constant_arguments[tagged_root.root().parameter_position()],
+          tagged_root.tag()));
     }
     model.add_add_features_to_arguments(root, std::move(root_features));
   }

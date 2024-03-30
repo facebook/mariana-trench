@@ -5,6 +5,8 @@
  * LICENSE file in the root directory of this source tree.
  */
 
+#include <fmt/format.h>
+
 #include <mariana-trench/FeatureFactory.h>
 
 namespace marianatrench {
@@ -14,9 +16,14 @@ const Feature* FeatureFactory::get(const std::string& data) const {
 }
 
 const Feature* FeatureFactory::get_via_type_of_feature(
-    const DexType* MT_NULLABLE type) const {
+    const DexType* MT_NULLABLE type,
+    const DexString* MT_NULLABLE tag) const {
+  std::string tag_string = "";
+  if (tag != nullptr) {
+    tag_string = fmt::format("{}-", tag->c_str());
+  }
   const auto& type_string = type ? type->str() : "unknown";
-  return factory_.create("via-type:" + type_string);
+  return factory_.create(fmt::format("via-{}type:{}", tag_string, type_string));
 }
 
 const Feature* FeatureFactory::get_via_cast_feature(
@@ -26,9 +33,14 @@ const Feature* FeatureFactory::get_via_cast_feature(
 }
 
 const Feature* FeatureFactory::get_via_value_of_feature(
-    const std::optional<std::string_view>& value) const {
+    const std::optional<std::string_view>& value,
+    const DexString* MT_NULLABLE tag) const {
+  std::string tag_string = "";
+  if (tag != nullptr) {
+    tag_string = fmt::format("{}-", tag->c_str());
+  }
   const auto& via_value = value.value_or("unknown");
-  return factory_.create("via-value:" + via_value);
+  return factory_.create(fmt::format("via-{}value:{}", tag_string, via_value));
 }
 
 const Feature* FeatureFactory::get_via_shim_feature(

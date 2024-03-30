@@ -1242,6 +1242,7 @@
     {
       "always_features" : 
       [
+        "via-activity-type:Lcom/facebook/marianatrench/integrationtests/RecorderActivity;",
         "via-type:Lcom/facebook/marianatrench/integrationtests/RecorderActivity;",
         "via-type:Lcom/facebook/marianatrench/integrationtests/TestUri;"
       ],
@@ -1273,6 +1274,7 @@
             {
               "always_features" : 
               [
+                "via-activity-type:Lcom/facebook/marianatrench/integrationtests/RecorderActivity;",
                 "via-type:Lcom/facebook/marianatrench/integrationtests/RecorderActivity;"
               ],
               "callee_interval" : 
@@ -1295,6 +1297,7 @@
           {
             "always_features" : 
             [
+              "via-activity-type:Lcom/facebook/marianatrench/integrationtests/RecorderActivity;",
               "via-type:Lcom/facebook/marianatrench/integrationtests/RecorderActivity;"
             ]
           }

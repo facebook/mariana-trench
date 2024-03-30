@@ -244,7 +244,8 @@ std::vector<const Feature*> Frame::materialize_via_type_of_ports(
       continue;
     }
     const auto* feature = feature_factory->get_via_type_of_feature(
-        source_register_types[tagged_root.root().parameter_position()]);
+        source_register_types[tagged_root.root().parameter_position()],
+        tagged_root.tag());
     features_added.push_back(feature);
   }
   return features_added;
@@ -277,7 +278,8 @@ std::vector<const Feature*> Frame::materialize_via_value_of_ports(
       continue;
     }
     const auto* feature = feature_factory->get_via_value_of_feature(
-        source_constant_arguments[tagged_root.root().parameter_position()]);
+        source_constant_arguments[tagged_root.root().parameter_position()],
+        tagged_root.tag());
     features_added.push_back(feature);
   }
   return features_added;

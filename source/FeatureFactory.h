@@ -24,10 +24,13 @@ class FeatureFactory final {
 
   const Feature* get(const std::string& data) const;
 
-  const Feature* get_via_type_of_feature(const DexType* MT_NULLABLE type) const;
+  const Feature* get_via_type_of_feature(
+      const DexType* MT_NULLABLE type,
+      const DexString* MT_NULLABLE tag) const;
   const Feature* get_via_cast_feature(const DexType* MT_NULLABLE type) const;
   const Feature* get_via_value_of_feature(
-      const std::optional<std::string_view>& value) const;
+      const std::optional<std::string_view>& value,
+      const DexString* MT_NULLABLE tag) const;
   const Feature* get_via_shim_feature(const Method* MT_NULLABLE method) const;
 
   /**
