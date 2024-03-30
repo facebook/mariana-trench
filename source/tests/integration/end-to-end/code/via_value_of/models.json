@@ -24,7 +24,11 @@
         "kind": "Source",
         "port": "Return",
         "via_value_of": [
-          "Argument(1)"
+          "Argument(1)",
+          {
+            "port": "Argument(1)",
+            "tag": "int"
+          }
         ]
       }
     ]

@@ -18,7 +18,11 @@
         "port": "Argument(1)",
         "kind": "Sink",
         "via_type_of": [
-          "Argument(3)"
+          "Argument(3)",
+          {
+            "port": "Argument(3)",
+            "tag": "activity"
+          }
         ]
       }
     ]
