@@ -33,6 +33,7 @@
 #include <mariana-trench/Rules.h>
 #include <mariana-trench/Scheduler.h>
 #include <mariana-trench/Statistics.h>
+#include <mariana-trench/TaggedRootSet.h>
 #include <mariana-trench/TaintConfig.h>
 #include <mariana-trench/Types.h>
 #include <mariana-trench/UsedKinds.h>
@@ -73,8 +74,8 @@ struct FrameProperties {
   FeatureMayAlwaysSet inferred_features = {};
   FeatureMayAlwaysSet locally_inferred_features = {};
   FeatureSet user_features = {};
-  RootSetAbstractDomain via_type_of_ports = {};
-  RootSetAbstractDomain via_value_of_ports = {};
+  TaggedRootSet via_type_of_ports = {};
+  TaggedRootSet via_value_of_ports = {};
   CanonicalNameSetAbstractDomain canonical_names = {};
   PathTreeDomain output_paths = {};
   LocalPositionSet local_positions = {};

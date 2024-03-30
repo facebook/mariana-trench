@@ -32,6 +32,7 @@
 #include <mariana-trench/Method.h>
 #include <mariana-trench/OriginSet.h>
 #include <mariana-trench/Position.h>
+#include <mariana-trench/TaggedRootSet.h>
 
 namespace marianatrench {
 
@@ -56,8 +57,8 @@ class TaintConfig final {
       OriginSet origins,
       FeatureMayAlwaysSet inferred_features,
       FeatureSet user_features,
-      RootSetAbstractDomain via_type_of_ports,
-      RootSetAbstractDomain via_value_of_ports,
+      TaggedRootSet via_type_of_ports,
+      TaggedRootSet via_value_of_ports,
       CanonicalNameSetAbstractDomain canonical_names,
       PathTreeDomain output_paths,
       LocalPositionSet local_positions,
@@ -164,11 +165,11 @@ class TaintConfig final {
     return user_features_;
   }
 
-  const RootSetAbstractDomain& via_type_of_ports() const {
+  const TaggedRootSet& via_type_of_ports() const {
     return via_type_of_ports_;
   }
 
-  const RootSetAbstractDomain& via_value_of_ports() const {
+  const TaggedRootSet& via_value_of_ports() const {
     return via_value_of_ports_;
   }
 
@@ -206,8 +207,8 @@ class TaintConfig final {
   OriginSet origins_;
   FeatureMayAlwaysSet inferred_features_;
   FeatureSet user_features_;
-  RootSetAbstractDomain via_type_of_ports_;
-  RootSetAbstractDomain via_value_of_ports_;
+  TaggedRootSet via_type_of_ports_;
+  TaggedRootSet via_value_of_ports_;
   CanonicalNameSetAbstractDomain canonical_names_;
   // These are used only for result and receiver sinks (should be bottom in all
   // other cases). They are used for propagation/sink inference in backward

@@ -10,6 +10,7 @@
 #include <mariana-trench/Fields.h>
 #include <mariana-trench/Frame.h>
 #include <mariana-trench/Redex.h>
+#include <mariana-trench/TaggedRootSet.h>
 #include <mariana-trench/tests/Test.h>
 
 namespace marianatrench {
@@ -178,27 +179,31 @@ TEST_F(FrameTest, FrameLeq) {
                                context.feature_factory->get("FeatureOne")}})));
 
   // Compare via_type_of_ports
-  EXPECT_TRUE(test::make_taint_frame(
-                  /* kind */ context.kind_factory->get("TestSource"),
-                  test::FrameProperties{
-                      .via_type_of_ports =
-                          RootSetAbstractDomain({Root(Root::Kind::Return)})})
-                  .leq(test::make_taint_frame(
-                      /* kind */ context.kind_factory->get("TestSource"),
-                      test::FrameProperties{
-                          .via_type_of_ports = RootSetAbstractDomain(
-                              {Root(Root::Kind::Return),
-                               Root(Root::Kind::Argument, 1)})})));
+  EXPECT_TRUE(
+      test::make_taint_frame(
+          /* kind */ context.kind_factory->get("TestSource"),
+          test::FrameProperties{
+              .via_type_of_ports = TaggedRootSet(
+                  {TaggedRoot(Root(Root::Kind::Return), /* tag */ nullptr)})})
+          .leq(test::make_taint_frame(
+              /* kind */ context.kind_factory->get("TestSource"),
+              test::FrameProperties{
+                  .via_type_of_ports = TaggedRootSet(
+                      {TaggedRoot(Root(Root::Kind::Return), /* tag */ nullptr),
+                       TaggedRoot(
+                           Root(Root::Kind::Argument, 1),
+                           /* tag */ nullptr)})})));
   EXPECT_FALSE(test::make_taint_frame(
                    /* kind */ context.kind_factory->get("TestSource"),
                    test::FrameProperties{
-                       .via_type_of_ports =
-                           RootSetAbstractDomain({Root(Root::Kind::Return)})})
+                       .via_type_of_ports = TaggedRootSet({TaggedRoot(
+                           Root(Root::Kind::Return), /* tag */ nullptr)})})
                    .leq(test::make_taint_frame(
                        /* kind */ context.kind_factory->get("TestSource"),
                        test::FrameProperties{
-                           .via_type_of_ports = RootSetAbstractDomain(
-                               {Root(Root::Kind::Argument, 1)})})));
+                           .via_type_of_ports = TaggedRootSet({TaggedRoot(
+                               Root(Root::Kind::Argument, 1),
+                               /* tag */ nullptr)})})));
 
   // Compare canonical names.
   EXPECT_TRUE(test::make_taint_frame(
@@ -413,22 +418,24 @@ TEST_F(FrameTest, FrameJoin) {
           /* kind */ context.kind_factory->get("TestSource"),
           test::FrameProperties{
               .distance = 2,
-              .via_type_of_ports =
-                  RootSetAbstractDomain({Root(Root::Kind::Return)}),
+              .via_type_of_ports = TaggedRootSet(
+                  {TaggedRoot(Root(Root::Kind::Return), /* tag */ nullptr)}),
           })
           .join(test::make_taint_frame(
               /* kind */ context.kind_factory->get("TestSource"),
               test::FrameProperties{
                   .distance = 2,
-                  .via_type_of_ports =
-                      RootSetAbstractDomain({Root(Root::Kind::Argument, 1)}),
+                  .via_type_of_ports = TaggedRootSet({TaggedRoot(
+                      Root(Root::Kind::Argument, 1), /* tag */ nullptr)}),
               })),
       test::make_taint_frame(
           /* kind */ context.kind_factory->get("TestSource"),
           test::FrameProperties{
               .distance = 2,
-              .via_type_of_ports = RootSetAbstractDomain(
-                  {Root(Root::Kind::Return), Root(Root::Kind::Argument, 1)}),
+              .via_type_of_ports = TaggedRootSet(
+                  {TaggedRoot(Root(Root::Kind::Return), /* tag */ nullptr),
+                   TaggedRoot(
+                       Root(Root::Kind::Argument, 1), /* tag */ nullptr)}),
           }));
 
   // Join canonical names.

@@ -37,15 +37,12 @@
 #include <mariana-trench/PathTreeDomain.h>
 #include <mariana-trench/PatriciaTreeSetAbstractDomain.h>
 #include <mariana-trench/Position.h>
+#include <mariana-trench/TaggedRootSet.h>
 #include <mariana-trench/TransformKind.h>
 #include <mariana-trench/TransformsFactory.h>
 
 namespace marianatrench {
 
-using RootSetAbstractDomain = PatriciaTreeSetAbstractDomain<
-    Root,
-    /* bottom_is_empty */ true,
-    /* with_top */ false>;
 using CanonicalNameSetAbstractDomain =
     sparta::HashedSetAbstractDomain<CanonicalName>;
 
@@ -100,8 +97,8 @@ class Frame final : public sparta::AbstractDomain<Frame> {
       OriginSet origins,
       FeatureMayAlwaysSet inferred_features,
       FeatureSet user_features,
-      RootSetAbstractDomain via_type_of_ports,
-      RootSetAbstractDomain via_value_of_ports,
+      TaggedRootSet via_type_of_ports,
+      TaggedRootSet via_value_of_ports,
       CanonicalNameSetAbstractDomain canonical_names,
       PathTreeDomain output_paths,
       ExtraTraceSet extra_traces)
@@ -141,11 +138,11 @@ class Frame final : public sparta::AbstractDomain<Frame> {
     return distance_;
   }
 
-  const RootSetAbstractDomain& via_type_of_ports() const {
+  const TaggedRootSet& via_type_of_ports() const {
     return via_type_of_ports_;
   }
 
-  const RootSetAbstractDomain& via_value_of_ports() const {
+  const TaggedRootSet& via_value_of_ports() const {
     return via_value_of_ports_;
   }
 
@@ -265,8 +262,8 @@ class Frame final : public sparta::AbstractDomain<Frame> {
   OriginSet origins_;
   FeatureMayAlwaysSet inferred_features_;
   FeatureSet user_features_;
-  RootSetAbstractDomain via_type_of_ports_;
-  RootSetAbstractDomain via_value_of_ports_;
+  TaggedRootSet via_type_of_ports_;
+  TaggedRootSet via_value_of_ports_;
   CanonicalNameSetAbstractDomain canonical_names_;
   PathTreeDomain output_paths_;
   ExtraTraceSet extra_traces_;

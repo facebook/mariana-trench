@@ -1055,8 +1055,11 @@ TEST_F(JsonTest, TaintConfig) {
           test::FrameProperties{
               .inferred_features = FeatureMayAlwaysSet::bottom(),
               .locally_inferred_features = FeatureMayAlwaysSet::bottom(),
-              .via_type_of_ports = RootSetAbstractDomain(
-                  {Root(Root::Kind::Return), Root(Root::Kind::Argument, 1)})}));
+              .via_type_of_ports = TaggedRootSet(
+                  {TaggedRoot(Root(Root::Kind::Return), /* tag */ nullptr),
+                   TaggedRoot(
+                       Root(Root::Kind::Argument, 1),
+                       /* tag */ nullptr)})}));
 
   // Consistency checks.
   EXPECT_THROW(

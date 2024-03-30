@@ -23,6 +23,7 @@
 #include <mariana-trench/Model.h>
 #include <mariana-trench/Options.h>
 #include <mariana-trench/Overrides.h>
+#include <mariana-trench/TaggedRootSet.h>
 #include <mariana-trench/TaintConfig.h>
 #include <mariana-trench/model-generator/ModelGeneratorName.h>
 
@@ -242,15 +243,15 @@ TaintConfig source(
     const std::string& kind,
     const std::vector<std::string>& features = {},
     Root::Kind callee_port = Root::Kind::Leaf,
-    RootSetAbstractDomain via_type_of_ports = {},
-    RootSetAbstractDomain via_value_of_ports = {});
+    TaggedRootSet via_type_of_ports = {},
+    TaggedRootSet via_value_of_ports = {});
 TaintConfig sink(
     Context& context,
     const std::string& kind,
     const std::vector<std::string>& features = {},
     Root::Kind callee_port = Root::Kind::Leaf,
-    RootSetAbstractDomain via_type_of_ports = {},
-    RootSetAbstractDomain via_value_of_ports = {},
+    TaggedRootSet via_type_of_ports = {},
+    TaggedRootSet via_value_of_ports = {},
     OriginSet origins = {});
 TaintConfig partial_sink(
     Context& context,
@@ -258,8 +259,8 @@ TaintConfig partial_sink(
     const std::string& label,
     const std::vector<std::string>& features = {},
     Root::Kind callee_port = Root::Kind::Leaf,
-    RootSetAbstractDomain via_type_of_ports = {},
-    RootSetAbstractDomain via_value_of_ports = {});
+    TaggedRootSet via_type_of_ports = {},
+    TaggedRootSet via_value_of_ports = {});
 
 } // namespace generator
 } // namespace marianatrench

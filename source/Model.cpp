@@ -492,18 +492,19 @@ Model Model::at_callsite(
   for (const auto& [root, via_value_of_ports] :
        add_via_value_of_features_to_arguments_) {
     FeatureSet root_features{};
-    for (const auto& port : via_value_of_ports) {
-      if (!port.is_argument() ||
-          port.parameter_position() >= source_constant_arguments.size()) {
+    for (const auto& tagged_root : via_value_of_ports.elements()) {
+      if (!tagged_root.root().is_argument() ||
+          tagged_root.root().parameter_position() >=
+              source_constant_arguments.size()) {
         ERROR(
             1,
             "Invalid port {} provided for add_via_value_of_features_to_arguments_ ports of method {}",
-            port,
+            tagged_root,
             callee->show());
         continue;
       }
       root_features.add(context.feature_factory->get_via_value_of_feature(
-          source_constant_arguments[port.parameter_position()]));
+          source_constant_arguments[tagged_root.root().parameter_position()]));
     }
     model.add_add_features_to_arguments(root, std::move(root_features));
   }
@@ -935,13 +936,13 @@ void Model::add_add_features_to_arguments(Root root, FeatureSet features) {
 
 void Model::add_add_via_value_of_features_to_arguments(
     Root root,
-    RootSetAbstractDomain via_value_of_ports) {
+    TaggedRootSet via_value_of_ports) {
   if (!check_root_consistency(root)) {
     return;
   }
 
   add_via_value_of_features_to_arguments_.update(
-      root, [&via_value_of_ports](const RootSetAbstractDomain& set) {
+      root, [&via_value_of_ports](const TaggedRootSet& set) {
         return set.join(via_value_of_ports);
       });
 }
@@ -1371,10 +1372,11 @@ Model Model::from_config_json(
     }
 
     if (add_features_to_arguments_value.isMember("via_value_of")) {
-      RootSetAbstractDomain via_value_of_ports;
-      for (const auto& port : JsonValidation::nonempty_array(
+      TaggedRootSet via_value_of_ports;
+      for (const auto& tagged_root : JsonValidation::nonempty_array(
                add_features_to_arguments_value, "via_value_of")) {
-        via_value_of_ports.add(Root::from_json(JsonValidation::string(port)));
+        via_value_of_ports.add(
+            TaggedRoot::from_json(JsonValidation::string(tagged_root)));
       }
       model.add_add_via_value_of_features_to_arguments(
           root, std::move(via_value_of_ports));
@@ -1572,8 +1574,8 @@ Json::Value Model::to_json(ExportOriginsMode export_origins_mode) const {
           root.to_json();
 
       auto ports = Json::Value(Json::arrayValue);
-      for (const auto& port : via_value_of) {
-        ports.append(port.to_json());
+      for (const auto& tagged_root : via_value_of.elements()) {
+        ports.append(tagged_root.to_json());
       }
       add_via_value_of_features_to_arguments_root_value["via_value_of"] = ports;
       add_features_to_arguments_value.append(
@@ -1877,17 +1879,17 @@ bool Model::check_taint_config_consistency(
 bool Model::check_taint_consistency(const Taint& taint) const {
   taint.visit_frames([this](const CallInfo&, const Frame& frame) {
     if (!frame.via_type_of_ports().is_bottom()) {
-      for (const auto& root : frame.via_type_of_ports()) {
+      for (const auto& tagged_root : frame.via_type_of_ports().elements()) {
         // Logs invalid ports specifed for via_type_of but does not prevent the
         // model from being created.
-        check_root_consistency(root);
+        check_root_consistency(tagged_root.root());
       }
     }
     if (!frame.via_value_of_ports().is_bottom()) {
-      for (const auto& root : frame.via_value_of_ports()) {
+      for (const auto& tagged_root : frame.via_value_of_ports().elements()) {
         // Logs invalid ports specifed for via_value_of but does not prevent the
         // model from being created.
-        check_root_consistency(root);
+        check_root_consistency(tagged_root.root());
       }
     }
   });

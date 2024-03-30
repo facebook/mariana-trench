@@ -223,7 +223,7 @@ std::vector<const Feature*> Frame::materialize_via_type_of_ports(
     const std::vector<const DexType * MT_NULLABLE>& source_register_types)
     const {
   std::vector<const Feature*> features_added;
-  if (via_type_of_ports().is_bottom()) {
+  if (via_type_of_ports_.is_bottom() || via_type_of_ports_.empty()) {
     return features_added;
   }
 
@@ -232,18 +232,19 @@ std::vector<const Feature*> Frame::materialize_via_type_of_ports(
 
   // Materialize via_type_of_ports into features and add them to the inferred
   // features
-  for (const auto& port : via_type_of_ports()) {
-    if (!port.is_argument() ||
-        port.parameter_position() >= source_register_types.size()) {
+  for (const auto& tagged_root : via_type_of_ports().elements()) {
+    if (!tagged_root.root().is_argument() ||
+        tagged_root.root().parameter_position() >=
+            source_register_types.size()) {
       ERROR(
           1,
           "Invalid port {} provided for via_type_of ports of method {}",
-          port,
+          tagged_root,
           callee->show());
       continue;
     }
     const auto* feature = feature_factory->get_via_type_of_feature(
-        source_register_types[port.parameter_position()]);
+        source_register_types[tagged_root.root().parameter_position()]);
     features_added.push_back(feature);
   }
   return features_added;
@@ -255,7 +256,7 @@ std::vector<const Feature*> Frame::materialize_via_value_of_ports(
     const std::vector<std::optional<std::string>>& source_constant_arguments)
     const {
   std::vector<const Feature*> features_added;
-  if (via_value_of_ports().is_bottom()) {
+  if (via_value_of_ports_.is_bottom() || via_value_of_ports_.empty()) {
     return features_added;
   }
 
@@ -264,18 +265,19 @@ std::vector<const Feature*> Frame::materialize_via_value_of_ports(
 
   // Materialize via_value_of_ports into features and add them to the inferred
   // features
-  for (const auto& port : via_value_of_ports().elements()) {
-    if (!port.is_argument() ||
-        port.parameter_position() >= source_constant_arguments.size()) {
+  for (const auto& tagged_root : via_value_of_ports().elements()) {
+    if (!tagged_root.root().is_argument() ||
+        tagged_root.root().parameter_position() >=
+            source_constant_arguments.size()) {
       ERROR(
           1,
           "Invalid port {} provided for via_value_of ports of method {}",
-          port,
+          tagged_root,
           callee->show());
       continue;
     }
     const auto* feature = feature_factory->get_via_value_of_feature(
-        source_constant_arguments[port.parameter_position()]);
+        source_constant_arguments[tagged_root.root().parameter_position()]);
     features_added.push_back(feature);
   }
   return features_added;
@@ -341,18 +343,19 @@ Json::Value Frame::to_json(
   auto all_features = features();
   JsonValidation::update_object(value, all_features.to_json());
 
-  if (!via_type_of_ports_.is_bottom()) {
+  if (via_type_of_ports_.is_value() && !via_type_of_ports_.elements().empty()) {
     auto ports = Json::Value(Json::arrayValue);
-    for (const auto& root : via_type_of_ports_) {
-      ports.append(root.to_json());
+    for (const auto& tagged_root : via_type_of_ports_.elements()) {
+      ports.append(tagged_root.to_json());
     }
     value["via_type_of"] = ports;
   }
 
-  if (!via_value_of_ports_.is_bottom()) {
+  if (via_value_of_ports_.is_value() &&
+      !via_value_of_ports_.elements().empty()) {
     auto ports = Json::Value(Json::arrayValue);
-    for (const auto& root : via_value_of_ports_) {
-      ports.append(root.to_json());
+    for (const auto& tagged_root : via_value_of_ports_.elements()) {
+      ports.append(tagged_root.to_json());
     }
     value["via_value_of"] = ports;
   }
@@ -409,10 +412,12 @@ std::ostream& operator<<(std::ostream& out, const Frame& frame) {
   if (!frame.user_features_.empty()) {
     out << ", user_features=" << frame.user_features_;
   }
-  if (!frame.via_type_of_ports_.is_bottom()) {
+  if (frame.via_type_of_ports_.is_value() &&
+      !frame.via_type_of_ports_.elements().empty()) {
     out << ", via_type_of_ports=" << frame.via_type_of_ports_.elements();
   }
-  if (!frame.via_value_of_ports_.is_bottom()) {
+  if (frame.via_value_of_ports_.is_value() &&
+      !frame.via_value_of_ports_.elements().empty()) {
     out << ", via_value_of_ports=" << frame.via_value_of_ports_.elements();
   }
   if (frame.canonical_names_.is_value() &&

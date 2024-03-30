@@ -23,6 +23,7 @@
 #include <mariana-trench/OriginFactory.h>
 #include <mariana-trench/OriginSet.h>
 #include <mariana-trench/Redex.h>
+#include <mariana-trench/TaggedRootSet.h>
 #include <mariana-trench/model-generator/ModelGenerator.h>
 #include <mariana-trench/model-generator/ModelGeneratorNameFactory.h>
 
@@ -405,8 +406,8 @@ TaintConfig generator::source(
     const std::string& kind,
     const std::vector<std::string>& features,
     Root::Kind callee_port,
-    RootSetAbstractDomain via_type_of_ports,
-    RootSetAbstractDomain via_value_of_ports) {
+    TaggedRootSet via_type_of_ports,
+    TaggedRootSet via_value_of_ports) {
   // These ports must go with canonical names.
   mt_assert(
       callee_port != Root::Kind::Anchor && callee_port != Root::Kind::Producer);
@@ -444,8 +445,8 @@ TaintConfig generator::sink(
     const std::string& kind,
     const std::vector<std::string>& features,
     Root::Kind callee_port,
-    RootSetAbstractDomain via_type_of_ports,
-    RootSetAbstractDomain via_value_of_ports,
+    TaggedRootSet via_type_of_ports,
+    TaggedRootSet via_value_of_ports,
     OriginSet origins) {
   CallKind call_kind = CallKind::declaration();
   FeatureSet user_features;
@@ -482,8 +483,8 @@ TaintConfig generator::partial_sink(
     const std::string& label,
     const std::vector<std::string>& features,
     Root::Kind callee_port,
-    RootSetAbstractDomain via_type_of_ports,
-    RootSetAbstractDomain via_value_of_ports) {
+    TaggedRootSet via_type_of_ports,
+    TaggedRootSet via_value_of_ports) {
   // These ports must go with canonical names.
   mt_assert(
       callee_port != Root::Kind::Anchor && callee_port != Root::Kind::Producer);

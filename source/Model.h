@@ -287,7 +287,7 @@ class Model final {
   void add_add_features_to_arguments(Root root, FeatureSet features);
   void add_add_via_value_of_features_to_arguments(
       Root root,
-      RootSetAbstractDomain via_value_of_ports);
+      TaggedRootSet via_value_of_ports);
   bool has_add_features_to_arguments() const;
   FeatureSet add_features_to_arguments(Root root) const;
 
@@ -401,7 +401,7 @@ class Model final {
   RootPatriciaTreeAbstractPartition<FeatureSet> attach_to_sinks_;
   RootPatriciaTreeAbstractPartition<FeatureSet> attach_to_propagations_;
   RootPatriciaTreeAbstractPartition<FeatureSet> add_features_to_arguments_;
-  RootPatriciaTreeAbstractPartition<RootSetAbstractDomain>
+  RootPatriciaTreeAbstractPartition<TaggedRootSet>
       add_via_value_of_features_to_arguments_;
   AccessPathConstantDomain inline_as_getter_;
   SetterAccessPathConstantDomain inline_as_setter_;

@@ -18,7 +18,7 @@ AccessPath validate_and_infer_crtex_callee_port(
     const Json::Value& value,
     const AccessPath& callee_port,
     const CanonicalNameSetAbstractDomain& canonical_names,
-    const RootSetAbstractDomain& via_type_of_ports) {
+    const TaggedRootSet& via_type_of_ports) {
   mt_assert(canonical_names.is_value() && !canonical_names.elements().empty());
 
   // Anchor ports only go with templated canonical names. Producer ports only
@@ -149,19 +149,19 @@ TaintConfig TaintConfig::from_json(const Json::Value& value, Context& context) {
     user_features = FeatureSet::from_json(value["features"], context);
   }
 
-  RootSetAbstractDomain via_type_of_ports;
+  TaggedRootSet via_type_of_ports;
   if (value.isMember("via_type_of")) {
-    for (const auto& root :
+    for (const auto& tagged_root :
          JsonValidation::null_or_array(value, /* field */ "via_type_of")) {
-      via_type_of_ports.add(Root::from_json(root));
+      via_type_of_ports.add(TaggedRoot::from_json(tagged_root));
     }
   }
 
-  RootSetAbstractDomain via_value_of_ports;
+  TaggedRootSet via_value_of_ports;
   if (value.isMember("via_value_of")) {
-    for (const auto& root :
+    for (const auto& tagged_root :
          JsonValidation::null_or_array(value, /* field */ "via_value_of")) {
-      via_value_of_ports.add(Root::from_json(root));
+      via_value_of_ports.add(TaggedRoot::from_json(tagged_root));
     }
   }
 
