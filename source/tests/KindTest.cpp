@@ -57,18 +57,65 @@ TEST_F(KindTest, SerializationDeserialization) {
         local_argument_kind);
   }
 
-  // TODO(T176362886): Support parsing transform kinds from json.
-  const auto* transform_kind = context.kind_factory->transform_kind(
-      named_kind,
-      /* local_transforms */
-      context.transforms_factory->create({"LocalTransform1"}, context),
-      /* global_transforms */ nullptr);
-  EXPECT_THROW(
-      Kind::from_json(transform_kind->to_json(), context),
-      KindNotSupportedError);
-  EXPECT_THROW(
-      Kind::from_trace_string(transform_kind->to_trace_string(), context),
-      KindNotSupportedError);
+  {
+    // TransformKind: Local transforms only.
+    const auto* transform_kind = context.kind_factory->transform_kind(
+        named_kind,
+        /* local_transforms */
+        context.transforms_factory->create({"LocalTransform1"}, context),
+        /* global_transforms */ nullptr);
+    EXPECT_EQ(
+        Kind::from_json(transform_kind->to_json(), context), transform_kind);
+    EXPECT_EQ(
+        Kind::from_trace_string(transform_kind->to_trace_string(), context),
+        transform_kind);
+  }
+
+  {
+    // TransformKind: Global transforms only.
+    const auto* transform_kind = context.kind_factory->transform_kind(
+        named_kind,
+        /* local_transforms */ nullptr,
+        /* global_transforms */
+        context.transforms_factory->create({"GlobalTransform1"}, context));
+    EXPECT_EQ(
+        Kind::from_json(transform_kind->to_json(), context), transform_kind);
+    EXPECT_EQ(
+        Kind::from_trace_string(transform_kind->to_trace_string(), context),
+        transform_kind);
+  }
+
+  {
+    // TransformKind: Local and Global transforms.
+    const auto* transform_kind = context.kind_factory->transform_kind(
+        named_kind,
+        /* local_transforms */
+        context.transforms_factory->create({"LocalTransform1"}, context),
+        /* global_transforms */
+        context.transforms_factory->create({"GlobalTransform1"}, context));
+    EXPECT_EQ(
+        Kind::from_json(transform_kind->to_json(), context), transform_kind);
+    EXPECT_EQ(
+        Kind::from_trace_string(transform_kind->to_trace_string(), context),
+        transform_kind);
+  }
+
+  {
+    // TransformKind: Local and Global transforms, multiple transforms
+    const auto* transform_kind = context.kind_factory->transform_kind(
+        named_kind,
+        /* local_transforms */
+        context.transforms_factory->create(
+            {"LocalTransform1", "LocalTransform2"}, context),
+        /* global_transforms */
+        context.transforms_factory->create(
+            {"GlobalTransform1", "GlobalTransform2"}, context));
+    EXPECT_EQ(
+        Kind::from_json(transform_kind->to_json(), context), transform_kind);
+    EXPECT_EQ(
+        Kind::from_trace_string(transform_kind->to_trace_string(), context),
+        transform_kind);
+  }
 
   // Deserializing Partial and Triggered Kinds are not currently supported.
   // These are trickier to parse, and for now, are not needed unless

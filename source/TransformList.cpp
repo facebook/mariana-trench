@@ -5,6 +5,9 @@
  * LICENSE file in the root directory of this source tree.
  */
 
+#include <boost/algorithm/string.hpp>
+#include <boost/algorithm/string/find_iterator.hpp>
+
 #include <mariana-trench/JsonValidation.h>
 #include <mariana-trench/KindFactory.h>
 #include <mariana-trench/TransformList.h>
@@ -53,6 +56,25 @@ std::string TransformList::to_trace_string() const {
   }
 
   return value;
+}
+
+TransformList TransformList::from_trace_string(
+    const std::string& transforms,
+    Context& context) {
+  std::vector<const Transform*> result;
+
+  auto transform_string = transforms;
+  typedef boost::algorithm::split_iterator<std::string::iterator>
+      string_split_iterator;
+  for (string_split_iterator iterator = boost::algorithm::make_split_iterator(
+           transform_string, first_finder(":", boost::is_equal()));
+       iterator != string_split_iterator();
+       ++iterator) {
+    auto transform = std::string(iterator->begin(), iterator->end());
+    result.push_back(context.transforms_factory->create_transform(transform));
+  }
+
+  return TransformList(result);
 }
 
 TransformList TransformList::from_json(

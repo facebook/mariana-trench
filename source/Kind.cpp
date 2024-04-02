@@ -68,10 +68,6 @@ const Kind* Kind::from_trace_string(const std::string& kind, Context& context) {
     return context.kind_factory->local_return();
   } else if (boost::starts_with(kind, "LocalArgument(")) {
     return LocalArgumentKind::from_trace_string(kind, context);
-  } else if (kind.find_first_of(":@") != std::string::npos) {
-    // TODO(T176362886): Support parsing transform kinds
-    // return TransformKind::from_trace_string(kind, context);
-    throw KindNotSupportedError(kind, /* expected */ "Non-Transform Kind");
   } else if (boost::starts_with(kind, "TriggeredPartial:")) {
     throw KindNotSupportedError(
         kind,
@@ -82,6 +78,11 @@ const Kind* Kind::from_trace_string(const std::string& kind, Context& context) {
     throw KindNotSupportedError(
         kind,
         /* expected */ "Non-Partial Kind");
+  } else if (kind.find_first_of(":@") != std::string::npos) {
+    // This case must come after the partial/triggered partial checks above
+    // because ':' is part of a [Triggered]PartialKind string but those are not
+    // TransformKinds.
+    return TransformKind::from_trace_string(kind, context);
   }
 
   // Defaults to NamedKind.

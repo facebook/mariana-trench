@@ -82,6 +82,9 @@ class TransformList final {
   }
 
   std::string to_trace_string() const;
+  static TransformList from_trace_string(
+      const std::string& trace_string,
+      Context& context);
 
   static TransformList from_json(
       const Json::Value& transforms,
